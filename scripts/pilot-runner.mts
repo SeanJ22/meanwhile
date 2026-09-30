@@ -91,9 +91,10 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } fr
 import { hostname } from "node:os";
 import { reserveRoutineRefresh, finishRoutineRefresh } from "../lib/civic-data/owner-refresh.ts";
 import { join } from "node:path";
+import { resolvePilotMirror } from "./pilot-runtime-config.mjs";
 
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
-import { containsCommit, headSha } from "../lib/ops/git-facts.ts";
+import { headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
 import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import {
@@ -101,14 +102,13 @@ import {
   type ControlPlaneRepositories,
 } from "../lib/control-plane/repository/types.ts";
 import { DIGEST_LOG_KEY, RUNNER_ID } from "../lib/control-plane/admin-data.ts";
-import { ADMIN_CONFIG_ID, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import { isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { isAssignmentCycleReading } from "../lib/control-plane/expansion/assignment-budget.ts";
 import { isExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
 import { unacknowledgedResearchResume, unacknowledgedScope } from "../lib/control-plane/scheduler/launch-wake.ts";
 import { continuingDirectedHunt, originalLifetimeHuntContinuation, ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
-import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type RunnerHeartbeat, type RuntimeReleaseAdoption } from "../lib/control-plane/owner-surface.ts";
-import { GATE02_REPAIR_PHASE, GATE02_REQUIRED_BASE_SHA, retainedRuntimeReleaseAdoption, runtimeReleaseAdoptionHash } from "../lib/control-plane/readiness/checklist-running-release-witness.ts";
+import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
 import {
   parseIntakeRuntimeObservation,
   unreadableIntakeRuntimeObservation,
@@ -117,7 +117,6 @@ import {
 import {
   RESEARCH_FORMAT_VERSION,
   RESEARCH_INTENT_LOG_KEY,
-  RESEARCH_STATE_ID,
   readIntents,
   type ResearchIntent,
   type ResearchIntentRequest,
@@ -128,9 +127,7 @@ import { researchDigestLines } from "../lib/control-plane/research-digest.ts";
 import { costSection } from "../lib/control-plane/pilot-cost-digest.ts";
 import { today } from "./doc-dates.mjs";
 import {
-  FLEET_SAFETY_BOUNDS,
   classifyProviderFailure,
-  scheduledBlackoutAt,
   type FleetSafetySnapshot,
   type ProviderCircuit,
 } from "../lib/control-plane/fleet-safety.ts";
@@ -138,33 +135,19 @@ import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "..
 import { cycleLivenessBeat } from "../lib/control-plane/runner-liveness.ts";
 import { startHangWatchdog, hangWatchdogDisabled, type HangWatchdog } from "./runner-hang-watchdog.mts";
 import {
-  STANDING_NEON_REQUEST_DEADLINE_MS,
   installNeonRequestDeadline,
 } from "../lib/ops/neon-request-deadline.ts";
-import {
-  routineRunnerOuterTimeoutMs,
-  runBoundedChildPass,
-} from "../lib/civic-data/bounded-child-pass.ts";
+import { runnerControlReader } from "./pilot-runtime-control.mts";
+import { runRuntimeChildren } from "./pilot-runtime-child.mts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
-  ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,
-  ROUTINE_CLOCK_READ_CONCURRENCY,
-  ROUTINE_SOURCE_TASKS,
   ROUTINE_SUPERVISOR_STARTED_AT_ENV,
-  routineFrontierPassBound,
   routineSupervisorCycleId,
 } from "../lib/civic-data/runner.ts";
 import {
-  ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS,
   routineSupervisorOuterEvidence,
 } from "../lib/civic-data/runner-receipt.ts";
 import { childFatalLine } from "../lib/ops/fatal-line.ts";
-import {
-  ROUTINE_READER_CHILD_CONCURRENCY,
-  ROUTINE_READER_MEETING_TIMEOUT_MS,
-  ROUTINE_READER_SINGLE_TIMEOUT_MS,
-  routineReaderRepairDomains,
-} from "../lib/civic-data/reader-repair-protocol.ts";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
 import {
   appendIntakeRuntimeObservationDigest,
@@ -172,7 +155,6 @@ import {
   intakeRuntimeObservationOutcome,
   routineCivicDataSupervisorOutcome,
 } from "../lib/control-plane/freshness-cycle-outcome.ts";
-import { readLatestProductionIntegrity } from "../lib/ops/production-integrity-data-plane.ts";
 import {
   applyRuntimeRelease,
   fetchGithubCheckRuns,
@@ -183,10 +165,6 @@ import {
   writeRuntimeReleaseHold,
   type RuntimeReleaseInspection,
 } from "../lib/ops/runtime-release-handoff.ts";
-import {
-  ensureMethodCandidateAuthorityAdopted,
-  readMethodCandidateAdoptionCodeProof,
-} from "../lib/control-plane/method-candidate-authority.ts";
 import { fetchServedCommit, PRODUCTION_BASE_URL } from "./post-deploy-observer.mts";
 import {
   acquireProcessSingleton,
@@ -218,10 +196,13 @@ if (!process.env.WTP_BILLING_ENV_FILE) {
 }
 for (const name of BILLING_SECRET_NAMES) delete process.env[name];
 const argv = process.argv.slice(2);
-const AUTO_RELEASE_HANDOFF = argv.includes("--release-handoff");
+const STAGING = argv.includes("--staging") || process.env.WTP_RUNTIME_MODE === "staging";
+if (STAGING && process.env.WTP_DB_ROLE !== "local") throw new Error("Staging runner requires WTP_DB_ROLE=local");
+if (STAGING) process.env.WTP_RUNTIME_MODE = "staging";
+const AUTO_RELEASE_HANDOFF = !STAGING && argv.includes("--release-handoff");
 const provider = argv.includes("--provider=file") ? "file" : "postgres";
 if (provider === "postgres") {
-  if (!AUTO_RELEASE_HANDOFF) {
+  if (!AUTO_RELEASE_HANDOFF && !STAGING) {
     throw new Error("PERMANENT_RUNTIME_AUTHORITY_REFUSED:postgres standing runtime requires --release-handoff");
   }
   assertRuntimeAuthority({ capabilities: ["STANDING_PARENT"] });
@@ -235,7 +216,7 @@ function standingChildEnvironment(
   return provider === "postgres"
     ? admittedRuntimeChildEnvironment({
       parentEnv: ["RESEARCH_CYCLE", "CONSOLE_PUBLISHER", "NIGHTLY_RESEARCH"].includes(capability)
-        ? runtimeProductionReadEnvironment(parentEnv)
+        && !STAGING ? runtimeProductionReadEnvironment(parentEnv)
         : parentEnv,
       capability,
       parentPid: process.pid,
@@ -254,29 +235,6 @@ const PILOT_PROCESS_LEASE = await acquireProcessSingleton(
 
 /** Loaded-code identity, captured before a handoff can move the checkout. */
 const RUNNING_CODE_SHA = headSha(ROOT);
-const PROCESS_IDENTITY = `${hostname()}:${process.pid}:${new Date().toISOString()}`;
-const ROUTINE_READER_DOMAINS = routineReaderRepairDomains();
-// Meeting lanes take up to two reads a pass (C6), so the limit is sized for that pass.
-const ROUTINE_PASS_BOUND = routineFrontierPassBound();
-const ROUTINE_DATA_TIMEOUT_MS = routineRunnerOuterTimeoutMs(
-  ROUTINE_PASS_BOUND.commandCount,
-  ROUTINE_PASS_BOUND.largestFailureDomainSize,
-  {
-    neonRequestDeadlineMs: STANDING_NEON_REQUEST_DEADLINE_MS,
-    settlementRequestsPerCommand: ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS,
-    clockTaskCount: ROUTINE_SOURCE_TASKS.length,
-    clockConcurrency: ROUTINE_CLOCK_READ_CONCURRENCY,
-    clockRequestsPerTask: ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,
-    // Provider-frontier history read, the stated sitting-ends read (C6), the owner's
-    // due-request read (routine-due-request.ts) and the idempotent supervisor digest append.
-    coordinationRequests: 4,
-    readerSingleDomains: ROUTINE_READER_DOMAINS.filter(({ mode }) => mode === "SINGLE").length,
-    readerSingleTimeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,
-    readerMeetingDomains: ROUTINE_READER_DOMAINS.filter(({ mode }) => mode === "MEETING_AGGREGATE").length,
-    readerMeetingTimeoutMs: ROUTINE_READER_MEETING_TIMEOUT_MS,
-    readerConcurrency: ROUTINE_READER_CHILD_CONCURRENCY,
-  },
-);
 const cyclesArg = argv.find((a) => a.startsWith("--cycles="));
 const CYCLES = cyclesArg ? Number(cyclesArg.slice("--cycles=".length)) : Infinity;
 const intervalArg = argv.find((a) => a.startsWith("--interval="));
@@ -292,7 +250,7 @@ const canary = argv.includes("--canary");
  * The Drive mirror. A SYNCED FOLDER, not an API — writing a file into it IS the
  * delivery. The variable name is the one this repository already uses.
  */
-const MIRROR = process.env.WTP_MIRROR ?? "G:/My Drive/we-the-people";
+const MIRROR = resolvePilotMirror(ROOT, process.env.WTP_MIRROR, STAGING);
 const FALLBACK = join(ROOT, ".mirror");
 const RUNS_DIR = join(ROOT, ".runtime", "freshness-shadow-runs");
 /**
@@ -407,19 +365,6 @@ interface RunRecord {
 /* ------------------------------------------------------------- one cycle --- */
 
 /**
- * The child's dispatch budget, in minutes, passed through so the cycle stops
- * starting work BEFORE this supervisor's ceiling and exits clean. The ceiling
- * below is the backstop for a child that hangs, never the normal end of a
- * healthy-but-slow cycle — a kill mid-dispatch leaks open occurrences that the
- * next cycle must resume and pay for again.
- */
-const budgetArg = argv.find((a) => a.startsWith("--budget-min="));
-const requestedBudgetMin = budgetArg ? Number(budgetArg.slice("--budget-min=".length)) : FLEET_SAFETY_BOUNDS.maxWallMsPerCycle / 60_000;
-const BUDGET_MIN = Number.isFinite(requestedBudgetMin) && requestedBudgetMin >= 0
-  ? Math.min(requestedBudgetMin, FLEET_SAFETY_BOUNDS.maxWallMsPerCycle / 60_000)
-  : FLEET_SAFETY_BOUNDS.maxWallMsPerCycle / 60_000;
-
-/**
  * `ownerIntentsUnreadable`: the read before this cycle failed, so the child is
  * told to keep its paid lane closed (`holdWhilePaused`).
  */
@@ -443,7 +388,6 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     "--import", "./scripts/register-test-loader.mjs",
     "scripts/freshness-shadow.mts",
     `--provider=${provider}`,
-    `--budget-min=${BUDGET_MIN}`,
     /* So the child's heartbeat can state when the next cycle is due. */
     `--interval=${INTERVAL_MIN}`,
     ...(maxArg ? [maxArg] : []),
@@ -453,7 +397,7 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     ...(canary ? ["--canary"] : []),
     ...(owner.ownerIntentsUnreadable ? ["--owner-intents-unreadable"] : []),
   ];
-  const [run] = await runBoundedChildPass([{
+  const [run] = await runRuntimeChildren([{
     id: "research-cycle",
     executable: process.execPath,
     args,
@@ -461,10 +405,9 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
   }], {
     cwd: ROOT,
     env: process.env,
-    /* The supervisor is the aggregate wall-clock backstop. */
-    timeoutMs: FLEET_SAFETY_BOUNDS.maxWallMsPerCycle,
+
     maxBufferBytes: 64 * 1024 * 1024,
-    concurrency: 1,
+
   });
   if (!run) throw new Error("RESEARCH_CYCLE_CHILD_RESULT_MISSING");
   const stdout = `${run.stdout ?? ""}${run.stderr ?? ""}`;
@@ -519,7 +462,7 @@ function laneShare(record: RunRecord): string[] {
       `- model spend: cycle ${safety.cycle.modelUsd === null ? "UNMEASURED" : `$${safety.cycle.modelUsd.toFixed(4)}`}; ` +
         `rolling 24h ${safety.rolling24Hours.modelUsd === null ? "UNMEASURED" : `$${safety.rolling24Hours.modelUsd.toFixed(4)}`} / $${safety.bounds.rolling24HourModelUsd.toFixed(2)} (the one spend ceiling)`,
       `- aggregate: dispatches ${safety.cycle.dispatches}; requests ${safety.cycle.requests}; payload bytes ${safety.cycle.payloadBytes}; ` +
-        `per-download cap ${safety.bounds.maxDownloadBytes}; wall ${safety.cycle.elapsedMs}/${safety.bounds.maxWallMsPerCycle}ms`,
+        `per-download cap ${safety.bounds.maxDownloadBytes}; elapsed ${safety.cycle.elapsedMs}ms`,
       `- stopped because: ${safety.stoppedBecause.join("; ") || "no ceiling or circuit stopped work"}`,
       `- provider circuits: ${safety.providerCircuits.map(c => `${c.provider} until ${c.eligibleAt}: ${c.condition}`).join("; ") || "none"}`,
       `- last successful Fleet activity: ${safety.lastSuccessfulActivity ?? "none recorded"}`,
@@ -679,8 +622,8 @@ function buildDigest(record: RunRecord, cycle: number, at: string, ok: boolean):
 /* ---------------------------------------------------------------- delivery --- */
 
 function deliver(body: string, headline: string): { readonly where: string; readonly mirrored: boolean } {
-  const target = existsSync(MIRROR) ? MIRROR : FALLBACK;
-  const mirrored = target === MIRROR;
+  const mirrored = MIRROR !== null && existsSync(MIRROR);
+  const target = mirrored ? MIRROR : FALLBACK;
   if (!mirrored) mkdirSync(FALLBACK, { recursive: true });
   const path = join(target, "pilot-digest.md");
   writeFileSync(path, body, "utf8");
@@ -703,7 +646,7 @@ function deliver(body: string, headline: string): { readonly where: string; read
  * that is always here, so it publishes after every cycle's digest, succeeded
  * or failed — a failed cycle is exactly the reading the console must carry.
  *
- * Each publisher is its own child process under its own five-minute ceiling.
+ * Each publisher runs as its own child process until it finishes.
  * A failure is PRINTED with its exit and last stderr line, never thrown and
  * never silent, and never stops the loop: a console one cycle stale is a
  * defect the next cycle repairs; a runner that stopped cycling because the
@@ -712,7 +655,6 @@ function deliver(body: string, headline: string): { readonly where: string; read
  * The file provider is a local proof with no deployed console to publish to;
  * it says so rather than publishing a proof run over production.
  */
-const PUBLISH_TIMEOUT_MS = 5 * 60_000;
 const CONSOLE_PUBLISHERS: readonly { readonly name: string; readonly args: readonly string[] }[] = [
   /*
    * Owner decision intents already live durably in the control plane. Applying
@@ -726,13 +668,17 @@ const CONSOLE_PUBLISHERS: readonly { readonly name: string; readonly args: reado
 ];
 
 async function publishConsole(): Promise<void> {
+  if (canary && STAGING) {
+    console.log("  console publish: staging canary is scoped to research; billing and live-site readbacks are skipped");
+    return;
+  }
   if (provider !== "postgres") {
     console.log("  console publish: skipped — the file provider is a local proof with no deployed console to publish to");
     return;
   }
   for (const publisher of CONSOLE_PUBLISHERS) {
     const started = Date.now();
-    const [run] = await runBoundedChildPass([{
+    const [run] = await runRuntimeChildren([{
       id: `console-publish:${publisher.name}`,
       executable: process.execPath,
       /* Workers inherit the launch environment. Only the owner snapshot reloads
@@ -742,9 +688,9 @@ async function publishConsole(): Promise<void> {
     }], {
       cwd: ROOT,
       env: process.env,
-      timeoutMs: PUBLISH_TIMEOUT_MS,
+
       maxBufferBytes: 16 * 1024 * 1024,
-      concurrency: 1,
+
     });
     if (!run) {
       console.error(`  console publish: ${publisher.name} FAILED — child result missing`);
@@ -780,7 +726,7 @@ async function runRoutineCivicData(): Promise<void> {
       [ROUTINE_SUPERVISOR_STARTED_AT_ENV]: startedAt,
     },
   );
-  const [run] = await runBoundedChildPass([{
+  const [run] = await runRuntimeChildren([{
     id: "routine-civic-data",
     executable: process.execPath,
     args: ["--experimental-strip-types", "scripts/routine-civic-data-runner.mts", ...(ownerRefresh?.args ?? [])],
@@ -788,9 +734,9 @@ async function runRoutineCivicData(): Promise<void> {
   }], {
     cwd: ROOT,
     env: process.env,
-    timeoutMs: ROUTINE_DATA_TIMEOUT_MS,
+
     maxBufferBytes: 64 * 1024 * 1024,
-    concurrency: 1,
+
   });
   if (!run) throw new Error("ROUTINE_CIVIC_DATA_CHILD_RESULT_MISSING");
   if (ownerRefresh && refreshRepos) await finishRoutineRefresh(refreshRepos, ownerRefresh, new Date().toISOString(), run.status);
@@ -839,7 +785,7 @@ async function runRoutineCivicData(): Promise<void> {
 async function persistOuterRoutineChildFailure(
   cycleId: string,
   startedAt: string,
-  run: Awaited<ReturnType<typeof runBoundedChildPass>>[number],
+  run: Awaited<ReturnType<typeof runRuntimeChildren>>[number],
   output: string,
 ): Promise<void> {
   const outer = routineSupervisorOuterEvidence({
@@ -906,7 +852,7 @@ async function runIntakeRuntime(): Promise<void> {
     return;
   }
   const startedAt = new Date().toISOString();
-  const [run] = await runBoundedChildPass([{
+  const [run] = await runRuntimeChildren([{
     id: "intake-runtime",
     executable: process.execPath,
     args: ["--experimental-strip-types", "scripts/intake-tripwire.mts"],
@@ -914,9 +860,9 @@ async function runIntakeRuntime(): Promise<void> {
   }], {
     cwd: ROOT,
     env: process.env,
-    timeoutMs: PUBLISH_TIMEOUT_MS,
+
     maxBufferBytes: 16 * 1024 * 1024,
-    concurrency: 1,
+
   });
   if (!run) throw new Error("INTAKE_RUNTIME_CHILD_RESULT_MISSING");
   const receiptLines = `${run.stdout ?? ""}${run.stderr ?? ""}`
@@ -1006,7 +952,7 @@ async function runIntakeRuntime(): Promise<void> {
 /**
  * (a) A FAILED cycle must still advance the heartbeat. `freshness-shadow` writes
  * the beat with `lastCycleOk: true` only when it reaches the end of a healthy
- * cycle, so a crash, a 15-minute wall kill, or a provider circuit break returns
+ * cycle, so a crash or a provider circuit break returns
  * here with `beatAt` frozen at the last SUCCESS — which reads as a dead runner
  * and cost real time on 2026-09-18. This records a beat on the non-success
  * outcome so `beatAt` tracks LIVENESS (with `lastCycleOk: false`), not just
@@ -1082,27 +1028,29 @@ const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms
  *
  * The file provider is a local proof and carries no owner intents: NOTHING.
  *
- * The nightly window (RULING 242) keeps its own clock, and the owner's
- * PAUSE_RUNNER holds it as it holds cycles (see holdWhilePaused and
- * sleepUnlessRunNow); a window skipped while paused catches up on its own.
+ * Window work runs after research and on an owner wakeup. PAUSE_RUNNER
+ * holds it as it holds cycles.
  */
 const POLL_MS = 60_000;
 const PAUSE_BEAT_MS = 30 * 60_000;
 /**
  * The runner polls source-owned durable clocks; polling is not acquisition.
  * Five-minute admission lets the 32-partition largest provider frontier drain
- * well inside its daily cadence while one hung provider can delay a new pass
- * by only its one bounded child, never by its entire partition tail.
+ * on their source cadences. Independent lanes settle without a parent wall.
  */
 const INTAKE_RUNTIME_TICK_MS = Math.max(POLL_MS, INTERVAL_MIN * 60_000);
 let intentRepos: ControlPlaneRepositories | null = null;
 let intentReposOpening: Promise<ControlPlaneRepositories> | null = null;
+let controlReader: ReturnType<typeof runnerControlReader> | null = null;
 let intentReadFailed = false;
 let pauseBeatFailed = false;
 let runtimeAdmissionsHeld = false;
 let standingRuntimeTimer: ReturnType<typeof setInterval> | null = null;
 let adminCopyTimer: ReturnType<typeof setInterval> | null = null;
 let adminCopyWork: Promise<void> | null = null;
+let researchCycleActive = false;
+let ownerWakePending = false;
+let activeControlRead: Promise<void> | null = null;
 /** The PAUSE_RUNNER intent whose reason was printed; null while not paused. */
 let announcedPause: string | null = null;
 let lastPauseBeatMs = 0;
@@ -1163,6 +1111,15 @@ async function stopAdminCopyClock(): Promise<void> {
   if (adminCopyWork) await adminCopyWork;
 }
 
+async function readRunnerControls(repos: ControlPlaneRepositories, force = false) {
+  if (controlReader === null) {
+    const url = controlPlaneUrlFromEnv();
+    if (url === null) throw new Error("RUNNER_CONTROLS_UNCONFIGURED");
+    controlReader = runnerControlReader(url, repos);
+  }
+  return controlReader.read(force);
+}
+
 /*
  * Routine civic data and intake observations share this standing host, but
  * they do not share the research cycle's failure domain or pause control. The
@@ -1182,7 +1139,17 @@ function startStandingRuntimeClock(): void {
   if (runtimeAdmissionsHeld || standingRuntimeTimer !== null) return;
   runStandingRuntimeTick("independent standing clock startup", true);
   standingRuntimeTimer = setInterval(
-    () => runStandingRuntimeTick("independent standing clock"),
+    () => {
+      runStandingRuntimeTick("independent standing clock");
+      // Long-running research must not postpone the owner's controls until its end.
+      if (researchCycleActive && !canary && activeControlRead === null) {
+        activeControlRead = ownerSays().then(says => {
+          if (says === "START_NOW") ownerWakePending = true;
+        }).catch(error => {
+          console.error(`  active runner controls could not be applied: ${error instanceof Error ? error.message : String(error)}`);
+        }).finally(() => { activeControlRead = null; });
+      }
+    },
     POLL_MS,
   );
 }
@@ -1208,88 +1175,16 @@ function releaseInspectionRefusal(code: string, detail: string, targetSha: strin
   };
 }
 
-type RuntimeReleaseObserved = RuntimeReleaseInspection & {
-  readonly servedHow?: string;
-  readonly integrityReceiptId?: string;
-  readonly integritySha?: string;
-  readonly integrityObservedAt?: string;
-};
-
-async function inspectRuntimeRelease(): Promise<RuntimeReleaseObserved> {
-  const served = await fetchServedCommit(PRODUCTION_BASE_URL, {
-    runId: `pilot-runtime-release:${process.pid}`,
-    timeoutMs: 15_000,
+async function inspectRuntimeRelease(): Promise<RuntimeReleaseInspection> {
+  const served = await fetchServedCommit(process.env.WTP_RUNTIME_BASE_URL ?? PRODUCTION_BASE_URL, {
+    runId: `pilot-runtime-release:${process.pid}`, timeoutMs: 15_000,
   });
-  let repos: ControlPlaneRepositories | null;
-  try {
-    repos = await ownerRepositories();
-  } catch (error) {
-    return releaseInspectionRefusal(
-      "POST_DEPLOY_INTEGRITY_STORE_UNREACHABLE",
-      `the canonical software-release outcome log could not be opened (${error instanceof Error ? error.name : "error"})`,
-      served.sha,
-    );
-  }
-  if (repos === null) {
-    return releaseInspectionRefusal(
-      "POST_DEPLOY_INTEGRITY_STORE_UNCONFIGURED",
-      "the standing production control-plane connection is not configured",
-      served.sha,
-    );
-  }
-  const integrity = await readLatestProductionIntegrity(repos.softwareReleaseReviews);
   const repository = runtimeGithubRepository(ROOT);
-  if (repository === null) {
-    return releaseInspectionRefusal(
-      "GITHUB_ORIGIN_UNRESOLVED",
-      "the dedicated runtime checkout's origin is not a supported GitHub repository URL",
-      served.sha,
-    );
-  }
+  if (repository === null) return releaseInspectionRefusal("GITHUB_ORIGIN_UNRESOLVED", "runtime origin is not a GitHub repository", served.sha);
   const checkRuns = typeof served.sha === "string" && /^[0-9a-f]{40}$/i.test(served.sha)
-    ? await fetchGithubCheckRuns({
-        repository,
-        sha: served.sha,
-        token: runtimeGithubCredential({ root: ROOT, env: process.env }),
-      })
+    ? await fetchGithubCheckRuns({ repository, sha: served.sha, token: runtimeGithubCredential({ root: ROOT, env: process.env }) })
     : null;
-  const inspected = inspectRuntimeReleaseEvidence({
-    runningSha: RUNNING_CODE_SHA,
-    served,
-    integrity,
-    checkRuns,
-  });
-  return integrity.kind === "HELD" ? {...inspected,servedHow:served.how,
-    integrityReceiptId:integrity.receipt.id,integritySha:integrity.record.deployedSha??undefined,
-    integrityObservedAt:integrity.record.observedAt??undefined} : inspected;
-}
-
-/** A CURRENT inspection is not itself a GATE-02 PASS. Save its exact process,
- * deployed and canonical integrity identities; the later completed heartbeat
- * and phase-base ancestry are checked again by the scoring producer. */
-async function persistCurrentRuntimeRelease(result:RuntimeReleaseObserved):Promise<void> {
-  if(result.state!=="CURRENT"||!RUNNING_CODE_SHA||!result.targetSha||!result.servedHow||
-    !result.integrityReceiptId||!result.integritySha||!result.integrityObservedAt) return;
-  const repos=await ownerRepositories();
-  if(repos===null) return;
-  // Process/deployment inspection time, not a publisher freshness timestamp.
-  const inspectedAt=new Date().toISOString();
-  const fields:Omit<RuntimeReleaseAdoption,"evidenceHash">={
-    formatVersion:1,phase:GATE02_REPAIR_PHASE,requiredBaseSha:GATE02_REQUIRED_BASE_SHA,
-    baseContained:containsCommit(GATE02_REQUIRED_BASE_SHA,RUNNING_CODE_SHA,ROOT),
-    observedAt:inspectedAt,processIdentity:PROCESS_IDENTITY,runningSha:RUNNING_CODE_SHA,servedSha:result.targetSha,servedHow:result.servedHow,
-    inspectionCode:"RUNTIME_RELEASE_CURRENT",integrityReceiptId:result.integrityReceiptId,
-    integritySha:result.integritySha,integrityObservedAt:result.integrityObservedAt,
-  };
-  const runtimeRelease:RuntimeReleaseAdoption={...fields,evidenceHash:runtimeReleaseAdoptionHash(fields)};
-  const current=await repos.runnerHeartbeat.read(RUNNER_ID);
-  const base:RunnerHeartbeat=current?.value??{
-    formatVersion:OWNER_SURFACE_FORMAT_VERSION,beatAt:inspectedAt,lastCycleStartedAt:null,lastCycleFinishedAt:null,
-    nextCycleDueAt:null,lastCycleOk:null,testedSha:RUNNING_CODE_SHA,host:hostname(),
-  };
-  const next={...base,runtimeRelease:retainedRuntimeReleaseAdoption(current?.value.runtimeRelease,runtimeRelease,inspectedAt)};
-  if(current===null) await repos.runnerHeartbeat.put(RUNNER_ID,next,inspectedAt);
-  else await repos.runnerHeartbeat.compareAndSet(RUNNER_ID,current.revision,next,inspectedAt);
+  return inspectRuntimeReleaseEvidence({ runningSha: RUNNING_CODE_SHA, served, checkRuns });
 }
 
 async function persistRuntimeBoundaryFailure(
@@ -1358,8 +1253,6 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
   const startedAt = new Date().toISOString();
   const first = await inspectRuntimeRelease();
   if (first.state === "CURRENT") {
-    try { await persistCurrentRuntimeRelease(first); }
-    catch (error) { console.error(`  runtime adoption observation not saved (${error instanceof Error ? error.name : "error"}); GATE-02 remains unproved`); }
     return null;
   }
 
@@ -1386,8 +1279,6 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
     // Production moved back to the code this process actually loaded. Nothing
     // was switched; admissions may safely resume.
     runtimeAdmissionsHeld = false;
-    try { await persistCurrentRuntimeRelease(final); }
-    catch (error) { console.error(`  runtime adoption observation not saved (${error instanceof Error ? error.name : "error"}); GATE-02 remains unproved`); }
     if (reopenStandingClock) startStandingRuntimeClock();
     if (reopenAdminCopyClock) startAdminCopyClock();
     return null;
@@ -1409,56 +1300,6 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
   }
   console.log(`  ${applied.detail}; exiting for the stable Scheduled Task launcher to relaunch this exact code`);
   return 0;
-}
-
-/**
- * The imported method-candidate LKG cannot receive another write until clean,
- * deployed code has adopted its exact revision into the existing Admin outcome
- * history. This runs before any research/source clock starts.
- */
-async function ensureMethodCandidateAuthorityAtStartup(): Promise<boolean> {
-  if (provider !== "postgres" || canary) return true;
-  const startedAt = new Date().toISOString();
-  let repos: ControlPlaneRepositories | null;
-  try {
-    repos = await ownerRepositories();
-  } catch (error) {
-    const detail = `the canonical control plane could not be opened (${error instanceof Error ? error.name : "error"})`;
-    await persistRuntimeBoundaryFailure(
-      { code: "METHOD_CANDIDATE_ADOPTION_STORE_UNREACHABLE", detail, targetSha: RUNNING_CODE_SHA },
-      startedAt,
-      { taskId: "method-candidate-authority-adoption", headline: "METHOD-CANDIDATE AUTHORITY HELD" },
-    );
-    return false;
-  }
-  if (repos === null) {
-    const detail = "the standing production control plane is not configured";
-    await persistRuntimeBoundaryFailure(
-      { code: "METHOD_CANDIDATE_ADOPTION_STORE_UNCONFIGURED", detail, targetSha: RUNNING_CODE_SHA },
-      startedAt,
-      { taskId: "method-candidate-authority-adoption", headline: "METHOD-CANDIDATE AUTHORITY HELD" },
-    );
-    return false;
-  }
-  const result = await ensureMethodCandidateAuthorityAdopted({
-    repos,
-    codeProof: readMethodCandidateAdoptionCodeProof(ROOT, RUNNING_CODE_SHA),
-    now: startedAt,
-  });
-  if (!result.ok) {
-    await persistRuntimeBoundaryFailure(
-      { code: result.code, detail: result.detail, targetSha: RUNNING_CODE_SHA },
-      startedAt,
-      { taskId: "method-candidate-authority-adoption", headline: "METHOD-CANDIDATE AUTHORITY HELD" },
-    );
-    return false;
-  }
-  console.log(
-    `  method-candidate authority ${result.adoptedNow ? "ADOPTED" : "verified"}: ` +
-      `cp_method_candidates/live revision ${result.status.aggregateRevision ?? "unknown"}; ` +
-      `receipt verifier ${result.status.verifierCodeSha?.slice(0, 8) ?? "unknown"}`,
-  );
-  return true;
 }
 
 /** The latest RESUME_RUNNER with no HONORED record beside it, or null. */
@@ -1553,10 +1394,12 @@ async function ownerSays(): Promise<OwnerSays> {
   if (provider !== "postgres") return "NOTHING";
   let repos: ControlPlaneRepositories | null;
   let log: readonly ResearchIntent[];
+  let controls: Awaited<ReturnType<typeof readRunnerControls>>;
   try {
     repos = await ownerRepositories();
     if (repos === null) throw new Error(`${CONTROL_PLANE_URL_VAR} is not set, so the control plane cannot be opened`);
-    log = await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY);
+    controls = await readRunnerControls(repos);
+    log = controls.research;
   } catch (error) {
     if (!intentReadFailed) {
       intentReadFailed = true;
@@ -1578,7 +1421,9 @@ async function ownerSays(): Promise<OwnerSays> {
       console.log(`  runner paused by owner since ${pause.intent.requestedAt}: ${pause.intent.note ?? "(no reason given)"}`);
     }
     if (pause.honored === null) {
-      await honorRunnerIntent(repos, pause.intent, "idling on the owner's pause; no cycle starts until RESUME_RUNNER");
+      await honorRunnerIntent(repos, pause.intent, researchCycleActive
+        ? "pause applied; the current cycle is settling and no next cycle starts until RESUME_RUNNER"
+        : "idling on the owner's pause; no cycle starts until RESUME_RUNNER");
     }
     if (Date.now() - lastPauseBeatMs >= PAUSE_BEAT_MS) {
       try {
@@ -1602,22 +1447,24 @@ async function ownerSays(): Promise<OwnerSays> {
   if (resume !== null) {
     const first = !actedOn.has(resume.intentId);
     actedOn.add(resume.intentId);
-    await honorRunnerIntent(repos, resume, "resumed; next cycle starts now");
+    await honorRunnerIntent(repos, resume, researchCycleActive
+      ? "resumed; next cycle follows the current active cycle"
+      : "resumed; next cycle starts now");
     if (first) {
       console.log(
         `  runner resumed by owner (${resume.requestedAt}${resume.note ? `: ${resume.note}` : ""}) — ` +
-          `starting the next cycle now at ${new Date().toISOString()}`,
+          (researchCycleActive ? "next cycle follows the current active cycle" : `starting the next cycle now at ${new Date().toISOString()}`),
       );
       return "START_NOW";
     }
   }
   if (reading.pendingRunNow.length > 0) {
-    console.log(`  a RUN_CYCLE_NOW intent is pending — starting the next cycle early at ${new Date().toISOString()}`);
+    if (!researchCycleActive) console.log(`  a RUN_CYCLE_NOW intent is pending — starting the next cycle early at ${new Date().toISOString()}`);
     return "START_NOW";
   }
   if (reading.pendingDispatch.length > 0) {
     const first = reading.pendingDispatch[0];
-    console.log(
+    if (!researchCycleActive) console.log(
       `  ${reading.pendingDispatch.length} DISPATCH intent(s) pending (oldest: "${first.note ?? ""}") — ` +
         `starting the next cycle early at ${new Date().toISOString()}`,
     );
@@ -1634,10 +1481,10 @@ async function ownerSays(): Promise<OwnerSays> {
       return "START_NOW";
     }
     try {
-      const config = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+      const config = controls.config;
       const held = expansionScopesOf(config !== null && isAdminConfig(config.value) ? config.value : null);
       if (held.scopes.length > 0) {
-        const state = await repos.researchState.readNarrowed(RESEARCH_STATE_ID, { assignments: true });
+        const state = controls.state;
         const raw: unknown = (state?.value as { assignments?: unknown } | undefined)?.assignments;
         const last = isAssignmentCycleReading(raw) ? raw : null;
         const pending = unacknowledgedScope(held.scopes, last);
@@ -1654,42 +1501,28 @@ async function ownerSays(): Promise<OwnerSays> {
 }
 /* ===================== THE NIGHTLY RESEARCH WINDOW — begin =====================
  *
- * The window is scheduled INSIDE this runner, on the machine's own clock:
- * between cycles the one-minute poll asks whether the 04:00 America/New_York
- * window for the current local date has run, and runs it when it has not. A
- * runner that was down across 04:00 runs the missed window at its first poll,
- * and the window record names the catch-up. No second Scheduled Task or GitHub
- * Actions workflow is a wakeup or clock for this process.
+ * Research windows run after cycles and when an owner window action arrives.
+ * There is no time-of-day restriction or separate night clock.
  *
  * This child is research-only and has no civic-data acquisition, promotion,
  * Git, build, deploy, or Reader materialization door.
  */
-const WINDOW_INTENT_KEY = "nightly-window";
-const WINDOW_TIMEOUT_MS = 45 * 60_000;
 let windowCheckFailed = false;
 
 async function windowDecision(): Promise<{ readonly run: boolean; readonly trigger: string; readonly reason: string }> {
   if (provider !== "postgres") return { run: false, trigger: "", reason: "file provider" };
   if (canary) return { run: false, trigger: "", reason: "live canary is scoped to its one named cycle" };
-  const checkedAt = new Date().toISOString();
-  if (scheduledBlackoutAt(checkedAt)) {
-    return { run: false, trigger: "", reason: "SCHEDULED BLACKOUT — nightly work and wakeups are suppressed" };
-  }
   try {
     if (intentRepos === null) {
       const url = controlPlaneUrlFromEnv();
       if (url === null) return { run: false, trigger: "", reason: "no control plane" };
       intentRepos = await createPgRepositories(url, new Date().toISOString());
     }
-    const { windowDue, lastWindowLocalDate } = await import("../lib/control-plane/promotion/window.ts");
-    const last = lastWindowLocalDate(await intentRepos.windowRuns.readAll());
-    const due = windowDue({ nowIso: new Date().toISOString(), lastWindowLocalDate: last });
-    if (due.due) return { run: true, trigger: due.trigger, reason: due.reason };
-    const log = await intentRepos.windowIntents.read(WINDOW_INTENT_KEY);
+    const log = (await readRunnerControls(intentRepos)).windows;
     const honored = new Set(log.filter((r) => r.kind === "HONORED").map((r) => (r as { honors: string }).honors));
     const pending = log.filter((r) => r.kind === "INTENT" && !honored.has(r.intentId));
     if (pending.length > 0) return { run: true, trigger: "WAKEUP", reason: `${pending.length} RUN_WINDOW_NOW intent(s) pending` };
-    return { run: false, trigger: "", reason: due.reason };
+    return { run: false, trigger: "", reason: "no window action pending" };
   } catch (error) {
     if (!windowCheckFailed) {
       windowCheckFailed = true;
@@ -1756,13 +1589,9 @@ async function recoverExitedWindowHolder(before: string): Promise<string | null>
 
 async function runNightlyWindow(trigger: string): Promise<void> {
   const startedAt = new Date().toISOString();
-  if (scheduledBlackoutAt(startedAt)) {
-    console.log("\npilot-runner · SCHEDULED BLACKOUT — nightly window refused before process launch");
-    return;
-  }
   await recoverExitedWindowHolder("nightly window");
   console.log(`\npilot-runner · nightly window (${trigger}) started ${startedAt} — SHADOW`);
-  const [run] = await runBoundedChildPass([{
+  const [run] = await runRuntimeChildren([{
     id: "nightly-research-window",
     executable: process.execPath,
     args: ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "scripts/nightly-window.mts", "--shadow", trigger === "WAKEUP" ? "--force" : "", `--trigger=${trigger}`].filter((a) => a !== ""),
@@ -1770,9 +1599,9 @@ async function runNightlyWindow(trigger: string): Promise<void> {
   }], {
     cwd: ROOT,
     env: process.env,
-    timeoutMs: WINDOW_TIMEOUT_MS,
+
     maxBufferBytes: 64 * 1024 * 1024,
-    concurrency: 1,
+
   });
   if (!run) throw new Error("NIGHTLY_WINDOW_CHILD_RESULT_MISSING");
   const lines = `${run.stdout ?? ""}${run.stderr ?? ""}`.split("\n").filter((l) => l.trim() !== "");
@@ -1782,6 +1611,7 @@ async function runNightlyWindow(trigger: string): Promise<void> {
 /* ===================== LANE E — THE NIGHTLY WINDOW (RULING 242) — end ===================== */
 
 async function sleepUnlessRunNow(totalMs: number): Promise<void> {
+  if (ownerWakePending) { ownerWakePending = false; return; }
   const until = Date.now() + totalMs;
   while (Date.now() < until) {
     await sleep(Math.min(POLL_MS, until - Date.now()));
@@ -1805,11 +1635,7 @@ async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
   try {
     const repos = await ownerRepositories();
     if (repos === null) return ordinary;
-    const [policy, state, intents] = await Promise.all([
-      repos.adminConfig.read(ADMIN_CONFIG_ID),
-      repos.researchState.readNarrowed(RESEARCH_STATE_ID, { expansion: true, assignments: true }),
-      repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY),
-    ]);
+    const { config: policy, state, research: intents } = await readRunnerControls(repos, true);
     const intent = readIntents(intents);
     if (intent.runnerPause.paused || intent.paused) return ordinary;
     const scopes = expansionScopesOf(policy !== null && isAdminConfig(policy.value) ? policy.value : null);
@@ -1821,7 +1647,7 @@ async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
     if (lifetime?.reason === "ELIGIBLE_ZERO_DISPATCH") lifetimeHuntStalledCycles = Math.min(lifetimeHuntStalledCycles + 1, 2);
     else if (lifetime?.reason === "DUE_AFTER_PROGRESS") lifetimeHuntStalledCycles = 0;
     const otherScopes = scopes.scopes.filter(scope => scope.key !== ORIGINAL_LIFETIME_HUNT.key || scope.budgetStartedAt !== ORIGINAL_LIFETIME_HUNT.budgetStartedAt);
-    const hunt = lifetime ?? (!cycleOk || scheduledBlackoutAt(new Date().toISOString()) ? null : continuingDirectedHunt(otherScopes, expansion, assignments));
+    const hunt = lifetime ?? (!cycleOk ? null : continuingDirectedHunt(otherScopes, expansion, assignments));
     if (hunt === null) return ordinary;
     const waitMs = lifetime?.delayMs ?? POLL_MS;
     const reason = lifetime?.reason === "ELIGIBLE_ZERO_DISPATCH"
@@ -1862,8 +1688,7 @@ async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
  * runner" means the WHOLE runner: the owner's stated reason on 9.4.26 was
  * usage. The window makes no model calls, but it uses the host and the
  * databases like a cycle does. A window skipped while paused is caught up
- * by the next window decision after RESUME_RUNNER (it reads the last window
- * run, not this clock).
+ * after RESUME_RUNNER.
  *
  * A canary does not wait here: it is one operator-launched cycle, and idling
  * in this loop would hang the command. It is not a way past a pause for paid
@@ -1884,16 +1709,12 @@ async function holdWhilePaused(): Promise<{ readonly ownerIntentsUnreadable: boo
 let handoffExitCode = await reconcileRuntimeReleaseAtBoundary();
 let cycle = 0;
 
-if (handoffExitCode === null && !(await ensureMethodCandidateAuthorityAtStartup())) {
-  handoffExitCode = 2;
-}
-
 if (handoffExitCode === null) {
 console.log(
   `pilot-runner · control plane ${provider}, interval ${INTERVAL_MIN} min, ` +
     `${CYCLES === Infinity ? "running until stopped" : `${CYCLES} cycle(s)`}\n` +
     `  singleton: ${PILOT_PROCESS_LEASE.host}:${PILOT_PROCESS_LEASE.port}\n` +
-    `  mirror: ${MIRROR}${existsSync(MIRROR) ? "" : " (NOT PRESENT — digests fall back to .mirror/ and say so)"}`,
+    `  mirror: ${MIRROR ?? "disabled for staging"}${MIRROR !== null && existsSync(MIRROR) ? "" : " (digests stay in .mirror/)"}`,
 );
 
 /**
@@ -1947,7 +1768,9 @@ while (cycle < CYCLES) {
   );
 
   const leaseRecovered = await recoverExitedWindowHolder("research cycle");
-  const result = await runOneCycle(owner);
+  researchCycleActive = true;
+  const result = await runOneCycle(owner).finally(() => { researchCycleActive = false; });
+  await activeControlRead;
   if (result.circuit) {
     const c = result.circuit;
     const headline = `${new Date().toISOString()} - cycle ${cycle} - CIRCUIT BROKEN - ${c.provider} latched until ${c.eligibleAt}`;
@@ -1967,8 +1790,8 @@ while (cycle < CYCLES) {
       break;
     }
     if (cycle >= CYCLES) break;
-    // The latched provider is not polled through owner/window bookkeeping.
-    await sleep(INTERVAL_MIN * 60_000);
+    // Owner controls remain live while the child's provider circuit is latched.
+    await sleepUnlessRunNow(INTERVAL_MIN * 60_000);
     continue;
   }
   let record: RunRecord = {};
@@ -2031,8 +1854,7 @@ while (cycle < CYCLES) {
   /*
    * A FAILED CYCLE CARRIES ITS OWN DIAGNOSIS. Before this the child's stderr
    * was discarded, so seven hours of NON-ZERO cycles left nothing to read but
-   * "0 providers". The last stderr lines and the kill signal (the supervisor's
-   * ceiling, when it fired) travel into the digest and onto the console.
+   * "0 providers". The last stderr lines and a child signal travel into the digest and onto the console.
    */
   let failureSection = "";
   if (!result.ok) {
@@ -2060,6 +1882,8 @@ while (cycle < CYCLES) {
      failed cycle reads as "alive, last cycle did not pass", not as a dead runner. */
   if (!result.ok) await writeFailedCycleBeat(startedAt);
 
+  if (provider === "postgres" && !canary && await ownerSays() !== "HOLD") await runNightlyWindow("RUNNER_CLOCK");
+
   /* ADM-1: the console is published by the machine after every digest, succeeded or failed. */
   await publishConsole();
 
@@ -2076,6 +1900,7 @@ while (cycle < CYCLES) {
 
 if (standingRuntimeTimer !== null) clearInterval(standingRuntimeTimer);
 await stopAdminCopyClock();
+await activeControlRead;
 if (hangWatchdog !== null) await hangWatchdog.stop();
 await standingRuntimeScheduler.waitForIdle();
 await PILOT_PROCESS_LEASE.release();

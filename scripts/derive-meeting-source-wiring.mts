@@ -55,8 +55,7 @@ import { CURRENT_CALENDAR_READS_SQL, deriveWiringDecisions, latestCalendarWalk, 
 import { readHeldCalendars, type HeldCalendarReading } from "../lib/control-plane/discovery/derived-wiring-reading.ts";
 import { reviewedBodyForGovernment } from "../lib/control-plane/discovery/reviewed-body.ts";
 import { crosswalkEvidenceWorkItem, indexVault, readHeldBytes, type HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-vault.ts";
-import { assertWriteAllowed } from "../lib/db/write-guard.ts";
-import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import type { MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discovery.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { digestValueClosure } from "../lib/ops/generator-digest.ts";
@@ -74,11 +73,7 @@ if (!process.argv.includes("--promote")) {
   throw new Error("usage: scripts/derive-meeting-source-wiring.mts --promote (the standing runner's child; there is no dry mode against production)");
 }
 installNeonRequestDeadline();
-const handle = resolveProductionWriteHandle();
-process.env.DATABASE_URL = handle.connection;
-process.env.WTP_DB_ROLE = "production";
-process.env.WTP_SANCTIONED_WRITE = "routine-civic-data-promotion";
-assertWriteAllowed("a routine civic data candidate/version promotion");
+prepareProductionCivicDataWrite();
 
 const store = new PostgresRoutineDataStore();
 const now = new Date().toISOString();

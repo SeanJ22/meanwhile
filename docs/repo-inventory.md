@@ -8,12 +8,13 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Routes and pages
 
-88 file(s). Paths retain route groups and dynamic segments as written.
+91 file(s). Paths retain route groups and dynamic segments as written.
 
 - `/(admin)/admin/agents` — `app/(admin)/admin/agents/page.tsx`
 - `/(admin)/admin/assignments` — `app/(admin)/admin/assignments/page.tsx`
 - `/(admin)/admin/auth/callback` — `app/(admin)/admin/auth/callback/route.ts`
 - `/(admin)/admin/auth/google` — `app/(admin)/admin/auth/google/route.ts`
+- `/(admin)/admin/changes` — `app/(admin)/admin/changes/page.tsx`
 - `/(admin)/admin/chat` — `app/(admin)/admin/chat/page.tsx`
 - `/(admin)/admin/command-center` — `app/(admin)/admin/command-center/page.tsx`
 - `/(admin)/admin/expansion` — `app/(admin)/admin/expansion/page.tsx`
@@ -42,6 +43,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `/about-area` — `app/about-area/page.tsx`
 - `/api/address/resolve` — `app/api/address/resolve/route.ts`
 - `/api/admin/action` — `app/api/admin/action/route.ts`
+- `/api/admin/bulk-hunts` — `app/api/admin/bulk-hunts/route.ts`
 - `/api/admin/chat` — `app/api/admin/chat/route.ts`
 - `/api/admin/checklist-definitions` — `app/api/admin/checklist-definitions/route.ts`
 - `/api/admin/checklist-instances` — `app/api/admin/checklist-instances/route.ts`
@@ -80,6 +82,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `/api/log` — `app/api/log/route.ts`
 - `/api/meetings` — `app/api/meetings/route.ts`
 - `/api/official-actions/[subject]` — `app/api/official-actions/[subject]/route.ts`
+- `/api/portraits/[...path]` — `app/api/portraits/[...path]/route.ts`
 - `/api/positions/[subject]/[topic]` — `app/api/positions/[subject]/[topic]/route.ts`
 - `/api/profile/[subject]` — `app/api/profile/[subject]/route.ts`
 - `/api/questionnaire` — `app/api/questionnaire/route.ts`
@@ -101,7 +104,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Library directories
 
-112 director(ies), derived from lib/ file paths.
+114 director(ies), derived from lib/ file paths.
 
 - `lib`
 - `lib/admin`
@@ -119,7 +122,9 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane`
 - `lib/control-plane/admin-view`
 - `lib/control-plane/agents`
+- `lib/control-plane/bulk-hunts`
 - `lib/control-plane/campaign-finance`
+- `lib/control-plane/changes`
 - `lib/control-plane/discovery`
 - `lib/control-plane/evidence`
 - `lib/control-plane/expansion`
@@ -218,7 +223,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Schema and migrations
 
-32 file(s).
+35 file(s).
 
 - `lib/control-plane/repository/pg-schema.ts`
 - `lib/db/migrations/0000_square_stryfe.sql`
@@ -251,11 +256,14 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/db/migrations/0027_pdc_candidate_history_shape.sql`
 - `lib/db/migrations/0028_wise_ikaris.sql`
 - `lib/db/migrations/0029_unchanged_confirmation_receipts.sql`
+- `lib/db/migrations/0030_database_transfer_daily.sql`
+- `lib/db/migrations/0031_civic_payload_parts.sql`
+- `lib/db/migrations/0032_feedback_site.sql`
 - `lib/db/schema.ts`
 
 ## Scripts
 
-538 file(s).
+542 file(s).
 
 - `scripts/a001-feedback-backup.mts`
 - `scripts/a001-verify-catalog.mts`
@@ -563,8 +571,12 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/photo-review.mts`
 - `scripts/pill-census.mts`
 - `scripts/pilot-runner.mts`
+- `scripts/pilot-runtime-child.mts`
 - `scripts/pilot-runtime-config.mjs`
+- `scripts/pilot-runtime-control.mts`
+- `scripts/pilot-runtime-launch.mjs`
 - `scripts/pilot-runtime-launch.ps1`
+- `scripts/pilot-runtime-transfer.mts`
 - `scripts/pilot-task.ps1`
 - `scripts/pima-rollcall-walk.mts`
 - `scripts/pima-shadow-report.mts`
@@ -806,7 +818,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-949 file(s).
+958 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -822,8 +834,10 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/address-scope.test.ts`
 - `tests/admin-action-gateway.test.ts`
 - `tests/admin-body-standing.test.ts`
+- `tests/admin-bulk-hunts.test.ts`
 - `tests/admin-c-plain-words.test.ts`
 - `tests/admin-capability-pulse.test.ts`
+- `tests/admin-changes.test.ts`
 - `tests/admin-checklist-definitions.test.ts`
 - `tests/admin-checklist-index-publisher.test.ts`
 - `tests/admin-checklist-instance-index-write.test.ts`
@@ -854,6 +868,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-registration-standing.test.ts`
 - `tests/admin-release-review.test.ts`
 - `tests/admin-research.test.ts`
+- `tests/admin-runner-confirmation.test.ts`
 - `tests/admin-runner-progress.test.ts`
 - `tests/admin-scope-preview.test.ts`
 - `tests/admin-scope-work.test.ts`
@@ -1037,7 +1052,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/checklist-connections.test.ts`
 - `tests/checklist-delivery-score.test.ts`
 - `tests/checklist-dispatch-witness.test.ts`
-- `tests/checklist-running-release-witness.test.ts`
 - `tests/checklist-timings.test.ts`
 - `tests/chromium-pin.test.ts`
 - `tests/ci-preflight.test.ts`
@@ -1051,6 +1065,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/civic-data-read-model-memo.test.ts`
 - `tests/civic-data-read-model.test.ts`
 - `tests/civic-data-store-integrity.test.ts`
+- `tests/civic-payload-parts.test.ts`
 - `tests/civicplus-calendar-feeds.test.ts`
 - `tests/civicplus-category-feed-wiring.test.ts`
 - `tests/class-stamp-sweep.test.ts`
@@ -1113,6 +1128,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/cycle-finalization.test.ts`
 - `tests/cycle-lease-startup.test.ts`
 - `tests/cycle-stall-diagnostic.test.ts`
+- `tests/database-transfer.test.ts`
 - `tests/day-precision.test.ts`
 - `tests/db-schema.test.ts`
 - `tests/dead-lease-sweep.test.ts`
@@ -1157,6 +1173,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/draft-pr-ci.test.ts`
 - `tests/duplicate-sittings.test.ts`
 - `tests/early-hunt-membership.test.ts`
+- `tests/election-field-publication.test.ts`
 - `tests/error-diagnostic.test.ts`
 - `tests/event-identity.test.ts`
 - `tests/everyday-routing-data-plane.test.ts`
@@ -1188,6 +1205,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/failure-diagnosis.test.ts`
 - `tests/federal-roster.test.ts`
 - `tests/federal-votes-data-plane.test.ts`
+- `tests/feedback-store.test.ts`
 - `tests/feedback-sweep.test.ts`
 - `tests/feedback.test.ts`
 - `tests/field-manual-learnings.test.ts`
@@ -1246,6 +1264,8 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/held-directory.test.ts`
 - `tests/held-filing-subjects.test.ts`
 - `tests/held-meeting-partition.test.ts`
+- `tests/held-meetings.test.ts`
+- `tests/held-place-capture.test.ts`
 - `tests/held-roster-publication.test.ts`
 - `tests/holdings-readback.test.ts`
 - `tests/host-spacing.test.ts`
@@ -1438,6 +1458,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/pilot-cost-digest.test.ts`
 - `tests/pilot-health-view.test.ts`
 - `tests/pilot-runtime-config.test.ts`
+- `tests/pilot-runtime-control.test.ts`
 - `tests/pilot-task-installer.test.ts`
 - `tests/pima-edu-source.test.ts`
 - `tests/pima-legistar-outcomes-routine.test.ts`
@@ -1760,7 +1781,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7039 file(s).
+7080 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -1777,6 +1798,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/_mw/action-receipt.ts`
 - `app/(admin)/_mw/admin-v6/action-dialog.tsx`
 - `app/(admin)/_mw/admin-v6/actions.ts`
+- `app/(admin)/_mw/admin-v6/bulk-hunts.tsx`
 - `app/(admin)/_mw/admin-v6/charts.tsx`
 - `app/(admin)/_mw/admin-v6/command-center.tsx`
 - `app/(admin)/_mw/admin-v6/context.tsx`
@@ -1816,6 +1838,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/_mw/body-list.tsx`
 - `app/(admin)/_mw/composer.tsx`
 - `app/(admin)/_mw/data/body-store.ts`
+- `app/(admin)/_mw/data/bulk-places.ts`
 - `app/(admin)/_mw/data/census-universe.ts`
 - `app/(admin)/_mw/data/geography.ts`
 - `app/(admin)/_mw/data/hunt-source-progress.ts`
@@ -1864,6 +1887,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/admin/assignments/page.tsx`
 - `app/(admin)/admin/auth/callback/route.ts`
 - `app/(admin)/admin/auth/google/route.ts`
+- `app/(admin)/admin/changes/page.tsx`
 - `app/(admin)/admin/chat/chat-console.tsx`
 - `app/(admin)/admin/chat/contract.ts`
 - `app/(admin)/admin/chat/page.tsx`
@@ -1915,6 +1939,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/about-area/page.tsx`
 - `app/api/address/resolve/route.ts`
 - `app/api/admin/action/route.ts`
+- `app/api/admin/bulk-hunts/route.ts`
 - `app/api/admin/chat/route.ts`
 - `app/api/admin/checklist-definitions/route.ts`
 - `app/api/admin/checklist-instances/route.ts`
@@ -1953,6 +1978,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/api/log/route.ts`
 - `app/api/meetings/route.ts`
 - `app/api/official-actions/[subject]/route.ts`
+- `app/api/portraits/[...path]/route.ts`
 - `app/api/positions/[subject]/[topic]/route.ts`
 - `app/api/profile/[subject]/route.ts`
 - `app/api/questionnaire/route.ts`
@@ -4252,6 +4278,9 @@ Read each source file for its current exports, configuration, commands and data.
 - `data/workstate/orchestration/2026-09-02-worker-fleet.json` <!-- expected-future: date copied from a file path; no measurement date is claimed -->
 - `data/workstate/orchestration/2026-09-03-autonomous-agent-fleet.json` <!-- expected-future: date copied from a file path; no measurement date is claimed -->
 - `data/workstate/orchestration/2026-09-04-reader-last-mile.json` <!-- expected-future: date copied from a file path; no measurement date is claimed -->
+- `deploy/runner/install.sh`
+- `deploy/runner/meanwhile-runner.service`
+- `deploy/runner/setup.ps1`
 - `docs/DESIGN.md`
 - `docs/Meanwhile-Owner-Checklist.xlsx`
 - `docs/abuse-policy.md`
@@ -4869,6 +4898,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/census-geography/reader.ts`
 - `lib/census-geography/xlsx.ts`
 - `lib/civic-data/attested-promotion.ts`
+- `lib/civic-data/automatic-refresh.ts`
 - `lib/civic-data/bounded-child-pass.ts`
 - `lib/civic-data/campaign-link-refresh.ts`
 - `lib/civic-data/campaign-publication-due.ts`
@@ -4886,8 +4916,12 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/civic-data/derived-door.ts`
 - `lib/civic-data/derived-meeting-family.ts`
 - `lib/civic-data/derived-meeting-wiring.ts`
+- `lib/civic-data/election-field-publication.ts`
+- `lib/civic-data/election-fields.ts`
 - `lib/civic-data/firewall.ts`
 - `lib/civic-data/fixture-policy.ts`
+- `lib/civic-data/held-place-capture.ts`
+- `lib/civic-data/held-place-families.ts`
 - `lib/civic-data/hot-read-catch-up.ts`
 - `lib/civic-data/hunt-source-tasks.ts`
 - `lib/civic-data/jurisdiction-reference-acquisition.ts`
@@ -4910,6 +4944,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/civic-data/official-filings.ts`
 - `lib/civic-data/operational-references.ts`
 - `lib/civic-data/owner-refresh.ts`
+- `lib/civic-data/payload-parts.ts`
 - `lib/civic-data/process-singleton.ts`
 - `lib/civic-data/production-write.ts`
 - `lib/civic-data/promoted-edge-publication.ts`
@@ -4919,6 +4954,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/civic-data/publication-status-store.ts`
 - `lib/civic-data/publication-status.ts`
 - `lib/civic-data/read-model.ts`
+- `lib/civic-data/reader-edge-publication.ts`
 - `lib/civic-data/reader-readback.ts`
 - `lib/civic-data/reader-repair-protocol.ts`
 - `lib/civic-data/reader-verification.ts`
@@ -4948,6 +4984,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/civic-data/website-corrections.ts`
 - `lib/civic-data/worker-body-directory.ts`
 - `lib/civic-data/worker-held-directory.ts`
+- `lib/civic-data/worker-held-meetings.ts`
 - `lib/civic-data/worker-held-roster.ts`
 - `lib/civic-data/worker-national-publication.ts`
 - `lib/civic-data/worker-publication-context.ts`
@@ -5018,6 +5055,9 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/audit.ts`
 - `lib/control-plane/billing-facts.ts`
 - `lib/control-plane/budget.ts`
+- `lib/control-plane/bulk-hunts/parse.ts`
+- `lib/control-plane/bulk-hunts/plan.ts`
+- `lib/control-plane/bulk-hunts/zip-state.ts`
 - `lib/control-plane/cache-defects.ts`
 - `lib/control-plane/campaign-finance/answers.ts`
 - `lib/control-plane/campaign-finance/authority.ts`
@@ -5028,6 +5068,8 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/campaign-finance/obligations.ts`
 - `lib/control-plane/campaign-reader-controls.ts`
 - `lib/control-plane/capability.ts`
+- `lib/control-plane/changes/model.ts`
+- `lib/control-plane/changes/source.ts`
 - `lib/control-plane/code-identity.ts`
 - `lib/control-plane/command-centre.ts`
 - `lib/control-plane/completion.ts`
@@ -5059,6 +5101,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/evidence/admin-copy-runner.ts`
 - `lib/control-plane/evidence/artifact.ts`
 - `lib/control-plane/evidence/durable-store.ts`
+- `lib/control-plane/evidence/netlify-store.ts`
 - `lib/control-plane/evidence/parser-boundary.ts`
 - `lib/control-plane/evidence/read-only-vault.ts`
 - `lib/control-plane/evidence/store.ts`
@@ -5099,11 +5142,14 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/gateway/admin-config.ts`
 - `lib/control-plane/gateway/admin-guard.ts`
 - `lib/control-plane/gateway/agent-job.ts`
+- `lib/control-plane/gateway/bulk-actions.ts`
+- `lib/control-plane/gateway/confirmation.ts`
 - `lib/control-plane/gateway/contract.ts`
 - `lib/control-plane/gateway/gateway.ts`
 - `lib/control-plane/gateway/pulse-read.ts`
 - `lib/control-plane/gateway/receipts.ts`
 - `lib/control-plane/gateway/registry.ts`
+- `lib/control-plane/gateway/write-readback.ts`
 - `lib/control-plane/ids.ts`
 - `lib/control-plane/incident-groups.ts`
 - `lib/control-plane/live-pipeline-read.ts`
@@ -5164,7 +5210,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/readiness/checklist-dispatch-witness.ts`
 - `lib/control-plane/readiness/checklist-profile.json`
 - `lib/control-plane/readiness/checklist-read.ts`
-- `lib/control-plane/readiness/checklist-running-release-witness.ts`
 - `lib/control-plane/readiness/checklist-score.ts`
 - `lib/control-plane/readiness/checklist-timings.ts`
 - `lib/control-plane/readiness/compute.ts`
@@ -5361,6 +5406,9 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/db/migrations/0027_pdc_candidate_history_shape.sql`
 - `lib/db/migrations/0028_wise_ikaris.sql`
 - `lib/db/migrations/0029_unchanged_confirmation_receipts.sql`
+- `lib/db/migrations/0030_database_transfer_daily.sql`
+- `lib/db/migrations/0031_civic_payload_parts.sql`
+- `lib/db/migrations/0032_feedback_site.sql`
 - `lib/db/migrations/meta/0000_snapshot.json`
 - `lib/db/migrations/meta/0001_snapshot.json`
 - `lib/db/migrations/meta/0002_snapshot.json`
@@ -5401,6 +5449,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/db/serving-surfaces.ts`
 - `lib/db/shipping-invariant.ts`
 - `lib/db/speak.ts`
+- `lib/db/transfer.ts`
 - `lib/db/write-alarm.ts`
 - `lib/db/write-guard.ts`
 - `lib/db/write-handle.ts`
@@ -7352,8 +7401,12 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/photo-review.mts`
 - `scripts/pill-census.mts`
 - `scripts/pilot-runner.mts`
+- `scripts/pilot-runtime-child.mts`
 - `scripts/pilot-runtime-config.mjs`
+- `scripts/pilot-runtime-control.mts`
+- `scripts/pilot-runtime-launch.mjs`
 - `scripts/pilot-runtime-launch.ps1`
+- `scripts/pilot-runtime-transfer.mts`
 - `scripts/pilot-task.ps1`
 - `scripts/pima-rollcall-walk.mts`
 - `scripts/pima-shadow-report.mts`
@@ -7622,8 +7675,10 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/address-scope.test.ts`
 - `tests/admin-action-gateway.test.ts`
 - `tests/admin-body-standing.test.ts`
+- `tests/admin-bulk-hunts.test.ts`
 - `tests/admin-c-plain-words.test.ts`
 - `tests/admin-capability-pulse.test.ts`
+- `tests/admin-changes.test.ts`
 - `tests/admin-checklist-definitions.test.ts`
 - `tests/admin-checklist-index-publisher.test.ts`
 - `tests/admin-checklist-instance-index-write.test.ts`
@@ -7654,6 +7709,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-registration-standing.test.ts`
 - `tests/admin-release-review.test.ts`
 - `tests/admin-research.test.ts`
+- `tests/admin-runner-confirmation.test.ts`
 - `tests/admin-runner-progress.test.ts`
 - `tests/admin-scope-preview.test.ts`
 - `tests/admin-scope-work.test.ts`
@@ -7839,7 +7895,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/checklist-connections.test.ts`
 - `tests/checklist-delivery-score.test.ts`
 - `tests/checklist-dispatch-witness.test.ts`
-- `tests/checklist-running-release-witness.test.ts`
 - `tests/checklist-timings.test.ts`
 - `tests/chromium-pin.test.ts`
 - `tests/ci-preflight.test.ts`
@@ -7853,6 +7908,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/civic-data-read-model-memo.test.ts`
 - `tests/civic-data-read-model.test.ts`
 - `tests/civic-data-store-integrity.test.ts`
+- `tests/civic-payload-parts.test.ts`
 - `tests/civicplus-calendar-feeds.test.ts`
 - `tests/civicplus-category-feed-wiring.test.ts`
 - `tests/class-stamp-sweep.test.ts`
@@ -7916,6 +7972,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/cycle-finalization.test.ts`
 - `tests/cycle-lease-startup.test.ts`
 - `tests/cycle-stall-diagnostic.test.ts`
+- `tests/database-transfer.test.ts`
 - `tests/day-precision.test.ts`
 - `tests/db-schema.test.ts`
 - `tests/dead-lease-sweep.test.ts`
@@ -7961,6 +8018,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/draft-pr-ci.test.ts`
 - `tests/duplicate-sittings.test.ts`
 - `tests/early-hunt-membership.test.ts`
+- `tests/election-field-publication.test.ts`
 - `tests/error-diagnostic.test.ts`
 - `tests/event-identity.test.ts`
 - `tests/everyday-routing-data-plane.test.ts`
@@ -7993,6 +8051,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/failure-diagnosis.test.ts`
 - `tests/federal-roster.test.ts`
 - `tests/federal-votes-data-plane.test.ts`
+- `tests/feedback-store.test.ts`
 - `tests/feedback-sweep.test.ts`
 - `tests/feedback.test.ts`
 - `tests/field-manual-learnings.test.ts`
@@ -8264,6 +8323,8 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/held-directory.test.ts`
 - `tests/held-filing-subjects.test.ts`
 - `tests/held-meeting-partition.test.ts`
+- `tests/held-meetings.test.ts`
+- `tests/held-place-capture.test.ts`
 - `tests/held-roster-publication.test.ts`
 - `tests/helpers/ask-gap-unit.ts`
 - `tests/helpers/autonomous-fleet.ts`
@@ -8476,6 +8537,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/pilot-cost-digest.test.ts`
 - `tests/pilot-health-view.test.ts`
 - `tests/pilot-runtime-config.test.ts`
+- `tests/pilot-runtime-control.test.ts`
 - `tests/pilot-task-installer.test.ts`
 - `tests/pima-edu-source.test.ts`
 - `tests/pima-fact-fixtures.ts`

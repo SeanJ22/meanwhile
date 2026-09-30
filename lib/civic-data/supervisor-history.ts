@@ -18,6 +18,20 @@
  */
 export const ROUTINE_SUPERVISOR_HISTORY_WINDOW = 288;
 
+/** History can only affect admission when a due provider lane has more work than slots. */
+export function frontierHistoryTasks<T extends {
+  readonly task: { readonly acquisitionFailureDomain: string };
+  readonly deadlineMs?: number;
+}>(tasks: readonly T[], ordinarySlots: number, sittingSlots: number): readonly T["task"][] {
+  const domains = new Map<string, T[]>();
+  for (const task of tasks) {
+    const domain = domains.get(task.task.acquisitionFailureDomain) ?? [];
+    domain.push(task); domains.set(task.task.acquisitionFailureDomain, domain);
+  }
+  return [...domains.values()].flatMap(domain => domain.length >
+    (domain.every(task => task.deadlineMs !== undefined) ? Math.max(ordinarySlots, sittingSlots) : ordinarySlots) ? domain.map(candidate => candidate.task) : []);
+}
+
 /**
  * The only parts of a supervisor outcome that
  * `routineUnreceiptedSupervisorAttemptHistory` reads. The store drops the rest

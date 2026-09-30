@@ -231,3 +231,43 @@ test("mergeScopeArtifacts dedupes by id and takes the national sources accountin
   assert.equal(merged.sources, snap.sources.length ? merged.sources : merged.sources); // sources carried through
   assert.equal(merged.sources.length, 1);
 });
+
+
+test("authority-only publication carries geographic references and writes no meeting artifacts", async () => {
+  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-carry-")));
+  let geographicWrites = 0;
+  const counted = new Proxy(store, { get(target, key) {
+    const value = Reflect.get(target, key);
+    if (key === "writeArtifact") return (...args: Parameters<typeof store.writeArtifact>) => { geographicWrites++; return target.writeArtifact(...args); };
+    return typeof value === "function" ? value.bind(target) : value;
+  } });
+  const snap = snapshot([meeting("cochise", "ocd-division/country:us/state:az/county:cochise")]);
+  await publishReaderEdgeArtifacts(snap, META, { store: counted, checks: { composition: "held-meetings", freshChecks: { calendar: META.retrievedAt } } });
+  const before = (await store.readManifest())!.manifest;
+  const writesBefore = geographicWrites;
+  const authority = { "campaign-sites": { value: { rows: [] }, versionId: "new-sites" } };
+  const extras = { everydayRouting: { rows: [] }, versionIds: { "everyday-routing": "routing-v1" } };
+  assert.equal((await publishReaderEdgeArtifacts(null, META, { store: counted, authority, extras })).status, "PUBLISHED");
+  const after = (await store.readManifest())!.manifest;
+  assert.deepEqual(after.scopes, before.scopes);
+  assert.deepEqual(after.freshChecks, before.freshChecks);
+  assert.equal(after.composition, before.composition);
+  assert.equal(after.generatedAt, before.generatedAt);
+  assert.equal(geographicWrites, writesBefore);
+  assert.deepEqual(after.extrasVersionIds, extras.versionIds);
+  const same = await publishReaderEdgeArtifacts(null, META, { store: counted, authority: { "campaign-sites": { carried: true, versionId: "new-sites" } }, extras });
+  assert.equal(same.status, "CURRENT");
+  assert.equal(geographicWrites, writesBefore);
+  const read = await readReaderEdgeMeetings({ store });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind === "PROMOTED") assert.equal(read.value.meetings[0].id, "cochise");
+});
+
+test("authority publication works before meeting composition; empty scopes keep the meeting fallback", async () => {
+  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-first-authority-")));
+  assert.equal((await publishReaderEdgeArtifacts(null, META, { store, authority: { "campaign-sites": { value: { rows: [] }, versionId: "first" } } })).status, "PUBLISHED");
+  assert.deepEqual((await store.readManifest())!.manifest.scopes, []);
+  let fallback = false;
+  await readReaderEdgeMeetings({ store, fallback: async () => { fallback = true; return { kind: "NOT_RECORDED" } as never; } });
+  assert.equal(fallback, true);
+});

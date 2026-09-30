@@ -50,7 +50,6 @@ export function cycleLivenessBeat(
     pause: null,
     codeIdentity: input.codeIdentity ?? prev?.codeIdentity ?? null,
     intakeRuntime: prev?.intakeRuntime ?? null,
-    runtimeRelease: prev?.runtimeRelease ?? null,
   };
 }
 

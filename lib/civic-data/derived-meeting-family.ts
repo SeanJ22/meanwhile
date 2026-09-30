@@ -100,9 +100,6 @@ export function familyMemberReadIssue(read: FamilyMemberRead): string | null {
       return `the member's read of ${a.finalUrl} carries invalid acquired-byte evidence`;
     }
   }
-  const source = DERIVED_WIRING_SOURCE_NAMES[row.kind];
-  const stray = read.freshMeetings.find((m) => m.bodyId !== row.bodyId || !m.id.startsWith(`${source}:`));
-  if (stray !== undefined) return `the member produced ${stray.id}, which is not ${row.bodyId}'s own ${source} row`;
   return null;
 }
 
@@ -148,7 +145,7 @@ export function buildDerivedFamily(input: {
   readonly reads: readonly FamilyMemberRead[];
   readonly previous: MeetingsSnapshot | null;
   readonly generatedAt: string;
-  readonly reconcile: (read: FamilyMemberRead, previousSlice: MeetingsSnapshot | null) => {
+  readonly reconcile: (read: FamilyMemberRead, previousSlice: MeetingsSnapshot | null, windowAnchor: string) => {
     readonly meetings: readonly Meeting[];
     readonly agendaDocuments: MeetingsSnapshot["agendaDocuments"];
     readonly removalEvidence: readonly RoutineRemovalEvidence[];
@@ -160,6 +157,16 @@ export function buildDerivedFamily(input: {
   const heldFacts: { key: string; code: string; detail: string; record?: unknown }[] = [];
   const reports: DerivedFamilyMemberReport[] = [];
   const inputs: DerivedInputRef[] = [input.wiringInput];
+  // The door derives its retrieval instant from these exact input times. Use
+  // that same instant for every member's reconciliation, even when collection
+  // crosses a serving-window boundary. Individual observations keep their times.
+  const acceptedReads = input.members.filter(member => member.status === "ACTIVE").flatMap(member => {
+    const read = input.reads.find(row => row.member.id === member.id);
+    return read && familyMemberReadIssue(read) === null ? [read] : [];
+  });
+  const windowAnchor = derivedRetrieval([input.wiringInput, ...acceptedReads.flatMap(read => read.acquisitions.map(a => ({
+    kind: "MEMBER_ACQUISITION" as const, memberKey: read.member.id, ...a, retrievedAt: read.retrievedAt,
+  })))]).retrievedAt ?? input.generatedAt;
   type Acquisition = NonNullable<MeetingsSnapshot["sources"][number]["acquisitions"]>[number];
   const perSource = new Map<string, { fetched: number; normalized: number; carried: number; acquisitions: Acquisition[] }>();
   const tally = (source: string) => {
@@ -194,12 +201,26 @@ export function buildDerivedFamily(input: {
       agendaDocuments: [...slice.agendaDocuments],
       derivedMembers: undefined,
     };
-    const reconciled = input.reconcile(read, previousSlice);
+    // Failures belong to their own record, not to unrelated members or rows.
+    // The same minimum identity/source rules formerly held the whole candidate.
+    const usable = read.freshMeetings.filter(meeting => {
+      const detail = !meeting.id || !meeting.bodyId || !meeting.provenance?.sourceUrl
+        ? "The meeting lacks its exact id, body, or authoritative source URL."
+        : meeting.bodyId !== member.row.bodyId || !meeting.id.startsWith(`${source}:`)
+          ? "The meeting is not this member's own body/source row."
+          : !Number.isFinite(Date.parse(meeting.startsAt)) ? "The meeting has no confirmed date and time." : null;
+      if (detail === null) return true;
+      heldFacts.push({ key: `meeting:${meeting.id || member.id}`, code: "MEETING_ROW_UNVERIFIED", detail, record: meeting });
+      return false;
+    });
+    const ids = new Set(usable.map(meeting => meeting.id));
+    const reconciled = input.reconcile({ ...read, freshMeetings: usable,
+      freshAgendaDocuments: read.freshAgendaDocuments.filter(document => ids.has(document.meetingId)) }, previousSlice, windowAnchor);
     meetings.push(...reconciled.meetings);
     agendaDocuments.push(...reconciled.agendaDocuments);
     removalEvidence.push(...reconciled.removalEvidence);
     t.fetched += read.freshMeetings.length;
-    t.normalized += read.freshMeetings.length;
+    t.normalized += usable.length;
     t.carried += reconciled.meetings.filter((m) => m.carried).length;
     for (const a of read.acquisitions) {
       t.acquisitions.push({ source, requestedUrl: a.requestedUrl, finalUrl: a.finalUrl, httpStatus: a.httpStatus, rawHash: a.rawHash, byteCount: a.byteCount });

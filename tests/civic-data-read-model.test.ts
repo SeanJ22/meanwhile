@@ -6,10 +6,13 @@ import { beforeEach, test } from "node:test";
 import {
   clearPromotedReadModelCache,
   readPromotedCivicData,
+  readPromotedCivicDataBatch,
+  promotedEdgeEntryOf,
   readPromotedCivicDataPredecessors,
   readPromotedOrBootstrap,
   type CivicDataReadStore,
 } from "../lib/civic-data/read-model.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 // The read model now memoises a proven version by its immutable versionId
 // (RULING 288). These tests reuse a single fixture versionId ("candidate-1")
@@ -33,6 +36,24 @@ const failedStore: CivicDataReadStore = {
   readPromotion: async () => { throw new Error("database offline"); },
   readCandidate: async () => { throw new Error("database offline"); },
 };
+
+test("canonical scalar and batch reads use the request's edge copies without a database", async () => {
+  const store = promotedStore({ total: 17 });
+  const read = await readPromotedCivicData("FEC_FUNDING", "federal-supported", { store });
+  const edge = promotedEdgeEntryOf(read, "FEC_FUNDING", "federal-supported", store);
+  assert.ok(edge);
+  await withReaderAuthorityEdge({ promoted: new Map([["FEC_FUNDING:federal-supported", edge]]), edgeOnly: true }, async () => {
+    const scalar = await readPromotedCivicData<{ total: number }>("FEC_FUNDING", "federal-supported");
+    assert.equal(scalar.kind, "PROMOTED");
+    assert.deepEqual(scalar.value, { total: 17 });
+    const batch = await readPromotedCivicDataBatch("FEC_FUNDING", ["federal-supported", "federal-supported"]);
+    assert.equal(batch.length, 2);
+    assert.ok(batch.every(result => result.kind === "PROMOTED"));
+    // Explicit stores still read their own data even inside a Reader context.
+    assert.equal((await readPromotedCivicData("FEC_FUNDING", "federal-supported", { store: noPointer })).kind, "NOT_RECORDED");
+    await assert.rejects(readPromotedCivicData("FEC_FUNDING", "missing"), /not on the reader edge/);
+  });
+});
 
 function promotedStore<T>(payload: T): CivicDataReadStore {
   const payloadHash = normalizedHash(payload);

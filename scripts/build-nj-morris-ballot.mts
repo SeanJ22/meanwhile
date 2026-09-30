@@ -63,8 +63,7 @@ import { njMorrisFilingCandidate, sha256 } from "../lib/civic-data/candidate-bui
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-import { assertWriteAllowed } from "../lib/db/write-guard.ts";
-import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import {
   isSourceAcquisitionFailure,
   readPublisherBody,
@@ -221,11 +220,7 @@ type PriorFile = {
 let prior: PriorFile = { contests: [], candidacies: [] };
 let productionStore: PostgresRoutineDataStore | null = null;
 if (PROMOTE) {
-  const handle = resolveProductionWriteHandle();
-  process.env.DATABASE_URL = handle.connection;
-  process.env.WTP_DB_ROLE = "production";
-  process.env.WTP_SANCTIONED_WRITE = "routine-civic-data-promotion";
-  assertWriteAllowed("a routine civic data candidate/version promotion");
+  prepareProductionCivicDataWrite();
   productionStore = new PostgresRoutineDataStore();
   const promoted = await productionStore.readPromotion<{ ballot: PriorFile }>("BALLOT_FILING", "US-NJ:county:morris:2026-general");
   if (promoted) prior = promoted.payload.ballot;

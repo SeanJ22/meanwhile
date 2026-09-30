@@ -10,6 +10,7 @@ import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { validateOnce } from "./validated-once.ts";
 import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type { CuratedReaderProjection } from "./manual-projections.ts";
+import { electionFieldIssue, type PublishedElectionField } from "./election-fields.ts";
 
 export const CURATED_READER_CONTRACT_IDS = [
   "official-filings",
@@ -63,6 +64,14 @@ export async function readCuratedReaderProjection(
   if (result.kind === "PROMOTED") validate(id, result.value, result.metadata.versionId ?? "unknown");
   states.set(id, result);
   return result;
+}
+
+/** The same proven navigation pointer, projected by exact served territory. */
+export async function readElectionFieldsForDivisions(divisions: readonly string[], options: PromotedCivicDataReadOptions = {}) {
+  const read = await readCuratedReaderProjection("ballot-navigation", options);
+  const fields = read.kind === "PROMOTED" ? read.value.records.filter(row => row.kind === "ELECTION_FIELD" && electionFieldIssue(row) === null)
+    .map(row => row as unknown as PublishedElectionField).filter(row => divisions.includes(row.value.divisionId)) : [];
+  return { read, fields };
 }
 
 export async function refreshCuratedReaderProjection(

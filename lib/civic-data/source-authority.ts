@@ -121,7 +121,7 @@ export const SOURCE_AUTHORITIES = {
     trust: "T2_AUTHORITATIVE_DOCUMENT",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [],
-    jurisdictions: ["US", "US-AZ", "US-NH", "US-NJ"],
+    jurisdictions: ["US", ...REGISTRATION_TARGETS.map((target) => target.jurisdiction)],
     recordClasses: ["CURATED_READER_RECORD"],
     competentFacts: [
       "published public-comment rule",

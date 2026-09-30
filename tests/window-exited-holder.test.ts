@@ -82,7 +82,7 @@ test("an absent, released or expired lease needs nothing and probes no process",
 test("the runner checks for an exited holder before every research cycle and every nightly window", () => {
   const src = readFileSync("scripts/pilot-runner.mts", "utf8");
   const recover = src.indexOf('await recoverExitedWindowHolder("research cycle")');
-  const cycle = src.indexOf("const result = await runOneCycle(owner);");
+  const cycle = src.indexOf("const result = await runOneCycle(owner)");
   assert.ok(recover > 0 && cycle > recover, "the check runs immediately before runOneCycle");
   const windowFn = src.indexOf("async function runNightlyWindow(");
   const windowCheck = src.indexOf('await recoverExitedWindowHolder("nightly window")');

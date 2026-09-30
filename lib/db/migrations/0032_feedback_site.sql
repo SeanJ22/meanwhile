@@ -1,0 +1,1 @@
+ALTER TABLE "feedback" ADD COLUMN IF NOT EXISTS "site" text DEFAULT 'live' NOT NULL;

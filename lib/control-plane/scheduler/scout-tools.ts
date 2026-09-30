@@ -571,6 +571,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   const robotsByHost = new Map<string, HostRobots>();
   const hostCounts = new Map<string, number>();
   const vaulted = new Set<string>();
+  const factEvidence = new Map<string, import('./scout-contract.ts').ScoutFactEvidence>();
   let requestCount = 0;
   let bytesFetched = 0;
   let toolCalls = 0;
@@ -653,7 +654,12 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       },
       input.text,
     );
-    return await put(artifact, () => ctx.vault(artifact, input.text), at, acc);
+    const saved=await put(artifact, () => ctx.vault(artifact, input.text), at, acc);
+    if(saved.stored && artifact.tier!=='RESTRICTED_RAW' && artifact.retentionPolicy!=='DIAGNOSTIC' &&
+      !artifact.methodRouteId.endsWith(':network-observation'))factEvidence.set(artifact.id,{
+      sourceUrl:artifact.canonicalUrl,retrievalUrl:artifact.retrievalUrl,text:input.text,
+      visibleText:artifact.contentType.includes('html')?visibleText(input.text):input.text});
+    return saved;
   }
 
   async function vaultBinary(
@@ -1304,6 +1310,8 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       const withProvenance = (passage: ScoutToolCallResult): ScoutToolCallResult => provenance
         ? { ...passage, provenance: [provenance], forModel: `HELD_VAULT_ENVELOPE ${provenance.artifactId}; retrieved ${provenance.retrievedAt}; permission ${provenance.permission}; HTTP ${provenance.httpStatus ?? "none"}; URL ${provenance.canonicalUrl}.\n${passage.forModel}` }
         : passage;
+      factEvidence.set(evidence.artifactId,{sourceUrl:evidence.canonicalUrl,retrievalUrl:provenance?.retrievalUrl,
+        text:evidence.text,visibleText:visibleText(evidence.text)});
       if (query !== null) {
         const lower = evidence.text.toLowerCase(), needle = query.toLowerCase();
         const positions: number[] = [];
@@ -1448,6 +1456,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
 
   return {
     specs: scoutToolSpecsFor(Boolean(ctx.search)),
+    factEvidence,
     heldEvidenceProtocolAvailable: Boolean(ctx.readHeldArtifact),
     call,
     get vaultedArtifactIds(): ReadonlySet<string> {

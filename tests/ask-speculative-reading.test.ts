@@ -271,7 +271,7 @@ test("ROUTE: a model reading that never comes discards the speculative answer to
 
 test("ROUTE: nothing is started for a question the code reads itself, or where no model key is configured", { concurrency: false }, async () => {
   reading = CONTACT_READING;
-  const lexical = await timedAsk("Who sits on the Vail school board?");
+  const lexical = await timedAsk("What does the Vail school board do?");
   assert.equal(lexical.payload.trace.interpretation.why, "lexical-reading");
   assert.deepEqual(lexical.calls.map((call) => call.kind), ["SYNTHESIZE"], "no reading call, one writer");
   assert.equal(lexical.payload.trace.speculation, undefined);

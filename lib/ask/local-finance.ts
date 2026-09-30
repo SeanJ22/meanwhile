@@ -126,6 +126,18 @@ export function financeQuestionAsked(question: string): boolean {
   return FINANCE_PHRASES.some((p) => p.test(normalized));
 }
 
+/**
+ * Did the reader ask about a person's campaign money and nothing they did in
+ * office? Then their votes, key votes, statements and recorded actions are not
+ * what was asked: they only make the pack (and the writer's bill, and the
+ * reader's wait) larger. A question that also asks how they voted, what they
+ * said or what they signed keeps all of it.
+ */
+export function asksOnlyMoney(question: string): boolean {
+  return financeQuestionAsked(question) &&
+    !/\b(?:vot(?:e|es|ed|ing)|bills?|legislation|positions?|stances?|executive orders?|vetoe[sd]?|signed|sponsor\w*|said|says|statements?|record|done|actions?)\b/i.test(question);
+}
+
 /* -------------------------------------------------------------------------- */
 /* THE CROSSWALK                                                               */
 /* -------------------------------------------------------------------------- */

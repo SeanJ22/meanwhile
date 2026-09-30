@@ -6,7 +6,7 @@ import test from "node:test";
 import { campaignMoneyEvidenceFor } from "../lib/ask/campaign-money.ts";
 import type { EvidencePack, EvidenceRecord, EvidenceSubject } from "../lib/ask/evidence.ts";
 import { overLengthBudget } from "../lib/ask/length-contract.ts";
-import { financeQuestionAsked, financeRegimeNotesFor } from "../lib/ask/local-finance.ts";
+import { asksOnlyMoney, financeQuestionAsked, financeRegimeNotesFor } from "../lib/ask/local-finance.ts";
 import { composeMoneyAnswer, moneyQuestionShape, periodPhrase, raceWordsFitOffice, type MoneyAsk } from "../lib/ask/money-answer.ts";
 import { gateRecordsToSubject } from "../lib/ask/relevance.ts";
 import { validateAnswer } from "../lib/ask/validate.ts";
@@ -216,6 +216,34 @@ test("two committees are stated separately and never added; composition steps as
   assert.equal(composeMoneyAnswer({ ask, subject: ayotte.subject, records: [...ayotte.records, { kind: "FINANCE_SUMMARY", id: "fec:H0XX", subjectId: AYOTTE, text: "x", sourceUrl: "https://fec.example/1" }], gaps: [] }), null, "a federal record is for a writer");
   assert.equal(composeMoneyAnswer({ ask, subject: ayotte.subject, records: ayotte.records.map((record) => ({ ...record, finance: undefined })), gaps: [] }), null, "a record without its structured fields is never parsed");
   assert.equal(composeMoneyAnswer({ ask, subject: ayotte.subject, records: [...ayotte.records, ...[1, 2].map((n) => ({ ...ayotte.records[0], id: `${ayotte.records[0].id}:${n}` }))], gaps: [] }), null, "three committees: the model writes");
+});
+
+test("a federal candidate's money is the FEC record's own sentences, with the agency and the read date — and 'who gave' says we hold totals, not donors", () => {
+  const person: EvidenceSubject = { kind: "PERSON", id: "ballot-az-pima:us-house-6|Juan Ciscomani", name: "Juan Ciscomani" };
+  const fec: EvidenceRecord = {
+    kind: "FINANCE_SUMMARY", id: "fec:H2AZ02360", subjectId: person.id, canonicalSubjectId: "H2AZ02360",
+    text: "This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total.",
+    sourceUrl: "https://www.fec.gov/data/candidate/H2AZ02360/", sourceOrg: "Federal Election Commission", retrievedAt: "2026-09-28",
+  };
+  const how = composeMoneyAnswer({ ask: { kind: "HOW_MUCH", measures: ["RAISED"] }, subject: person, records: [fec], gaps: [] });
+  assert.equal(how?.answer, "Juan Ciscomani's campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total. Filed with the Federal Election Commission; read September 28th, 2026.");
+  assert.deepEqual(how?.citedUrls, ["https://www.fec.gov/data/candidate/H2AZ02360/"]);
+  assert.equal(validateAnswer(how!.answer, how!.citedUrls, pack(person, [fec], "How much money has Juan Ciscomani raised?")).kind, "PASSED");
+  const who = composeMoneyAnswer({ ask: { kind: "WHO_GAVE" }, subject: person, records: [fec], gaps: [] });
+  assert.match(who?.answer ?? "", /^Our records for Juan Ciscomani hold campaign totals, not the identities of donors \(money records we hold for this candidate that name a donor: 0 of 1\)\. Juan Ciscomani's campaign has raised/);
+  assert.doesNotMatch(who?.answer ?? "", /withhold|not published|state does not/i, "the donor gap is ours, never the agency's");
+  assert.equal(composeMoneyAnswer({ ask: { kind: "COMPARE", measure: "RAISED" }, subject: person, other: { id: "x", name: "Other Person" }, records: [fec], gaps: [] }), null, "a comparison with a federal record is for a writer");
+  assert.equal(composeMoneyAnswer({ ask: { kind: "HOW_MUCH", measures: ["RAISED"] }, subject: person, records: [{ ...fec, id: "fec-absence:x" }], gaps: [] }), null, "an FEC absence is not a figure");
+});
+
+test("a question about a person's money and nothing they did in office is money-only; a question that also asks how they voted keeps everything", () => {
+  for (const question of ["How much money has Juan Ciscomani raised?", "Who are Katie Hobbs's biggest donors?", "Has Cinde Warmington raised more money than Kelly Ayotte?", "Who funds the Vail school board candidates?"]) {
+    assert.equal(asksOnlyMoney(question), true, question);
+  }
+  for (const question of ["How did Juan Ciscomani vote on the budget?", "How much money has Juan Ciscomani raised and how did he vote?", "What is Katie Hobbs's record on fundraising and executive orders?", "Who is Katie Hobbs?"]) {
+    assert.equal(asksOnlyMoney(question), false, question);
+  }
+  assert.equal(financeQuestionAsked("Who funds the Vail school board candidates?"), true, "'funds' is a money verb like 'funded'");
 });
 
 test("the relevance gate keeps a compared person's records by exact id, and nobody else's", () => {

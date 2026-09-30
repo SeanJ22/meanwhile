@@ -146,6 +146,7 @@ import {
 import { agendaTopicEvidence } from "@/lib/ask/agenda-topic";
 import { gateContactsToSubject, gateRecordsToSubject } from "@/lib/ask/relevance";
 import {
+  asksOnlyMoney,
   financeQuestionAsked,
   financeRegimeNotesFor,
   financeScopeGapFor,
@@ -1458,6 +1459,9 @@ export async function POST(request: Request) {
       : null;
 
     const records: EvidenceRecord[] = [];
+    /* A person asked about for their campaign money and nothing they did in office: their votes, key votes, statements and
+       recorded actions are not what was asked (the pack for one federal candidate was 104 records, 28,000 tokens). */
+    const moneyOnly = subject?.kind === "PERSON" && asksOnlyMoney(question);
     const heldFiling = subject ? heldFilings.find(row => row.entity.id === subject.id) : null;
     if (heldFiling) records.push(heldFiling.record);
     /** The sittings this request resolved, for the structured half of the payload. */
@@ -1577,7 +1581,7 @@ export async function POST(request: Request) {
              is, and the one an answer about the Governor was missing while it
              listed the reader's state senator. */
           contacts.push(contactForOfficeholder(seat));
-          officeholderActionEvidence(
+          if (!moneyOnly) officeholderActionEvidence(
             seat.id,
             seat.name,
             today,
@@ -1636,7 +1640,7 @@ export async function POST(request: Request) {
        * The office on every record is the one they HOLD, never the one they are
        * running for.
        */
-      if (ballotRecord.kind === "PERSON") {
+      if (ballotRecord.kind === "PERSON" && !moneyOnly) {
         if (candidateSeats.some((seat) => voteEvidenceReadsStateRollCalls(ballotRecord.name, { officeholderId: seat.id }))) await personStateVotes();
         const candidates = await Promise.all(candidateSeats.map((seat) =>
           voteEvidenceForIncludingHistory(ballotRecord.name, { officeholderId: seat.id })));
@@ -2070,7 +2074,9 @@ export async function POST(request: Request) {
        * sentence. "Here is what she did" is not one this corpus can earn, and
        * the difference between them is a number the pack has to carry.
        */
-      if (seat) {
+      if (moneyOnly) {
+        /* Not asked about: no action records, and no gap about them. */
+      } else if (seat) {
         officeholderActionEvidence(
           seat.id,
           seat.name,
@@ -2091,16 +2097,18 @@ export async function POST(request: Request) {
       /* ── ASK-06 ── the same exact identity chain on the officeholder path. A
          sitting legislator asked about by name reaches their own roll calls; a
          governor reaches the honest gap, because a governor casts none. */
-      if (voteEvidenceReadsStateRollCalls(subject.name, { withinStates: statesOf(ocdIds), officeholderId: seat?.id })) await personStateVotes();
-      const votes = await voteEvidenceForIncludingHistory(subject.name,
-        { withinStates: statesOf(ocdIds), officeholderId: seat?.id });
-      if (votes.identity.kind === "JOINED") canonicalSubjectKeys.add(votes.identity.seat.officeholderId);
-      records.push(...votes.records);
-      gaps.push(...votes.gaps);
-      Object.assign(denominators, votes.denominators);
+      if (!moneyOnly) {
+        if (voteEvidenceReadsStateRollCalls(subject.name, { withinStates: statesOf(ocdIds), officeholderId: seat?.id })) await personStateVotes();
+        const votes = await voteEvidenceForIncludingHistory(subject.name,
+          { withinStates: statesOf(ocdIds), officeholderId: seat?.id });
+        if (votes.identity.kind === "JOINED") canonicalSubjectKeys.add(votes.identity.seat.officeholderId);
+        records.push(...votes.records);
+        gaps.push(...votes.gaps);
+        Object.assign(denominators, votes.denominators);
+      }
     }
 
-    if (subject?.kind === "PERSON") {
+    if (subject?.kind === "PERSON" && !moneyOnly) {
       const statements = statementEvidenceFor(subject, question, [...canonicalSubjectKeys]);
       records.push(...statements.records);
       gaps.push(...statements.gaps);
@@ -2148,7 +2156,7 @@ export async function POST(request: Request) {
      * subject this pipeline holds nothing for gets a scope gap that says which
      * store it would be in rather than a bare nothing.
      */
-    if (subject?.kind === "PERSON") {
+    if (subject?.kind === "PERSON" && !moneyOnly) {
       const keyVotes = await keyVoteEvidenceFor(subject, [...canonicalSubjectKeys]);
       records.push(...keyVotes.records);
       gaps.push(...keyVotes.gaps);

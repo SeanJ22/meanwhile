@@ -37,6 +37,8 @@ export interface ReaderOfficialsAsk {
   readonly keys: readonly OfficeKey[];
   /** The reader's own words for the office, for the trace only. */
   readonly phrase: string;
+  /** "How do I contact my state senator?": each person is named with the phone and email their office publishes. */
+  readonly contact?: boolean;
 }
 
 interface OfficePhrase {
@@ -80,6 +82,13 @@ const REPRESENTS_IN: readonly OfficePhrase[] = [
   { pattern: /^(?:the )?state senate$/, keys: ["state_senator"] },
 ];
 
+/** "How do I contact my ...", "What is my ...'s phone number": the same offices, asked for the way to reach them. */
+const CONTACT_FORMS: readonly RegExp[] = [
+  new RegExp("^how (?:do|can|could|would|should) (?:i|we) (?:contact|reach|get in touch with|email|call|phone|write to|talk to|speak to|speak with) (?:my|our) (.+)$"),
+  new RegExp("^what (?:is|s) (?:my|our) (.+?) s (?:phone number|email address|email|contact information|contact info|number)$"),
+  new RegExp("^what (?:is|s) the (?:phone number|email address|email|contact information|contact info) (?:for|of) (?:my|our) (.+)$"),
+];
+
 const FORMS: readonly RegExp[] = [
   /^who (?:is|s|are) (?:my|our) (.+)$/,
   /^(?:list|show|name|tell me) (?:all )?(?:of )?(?:my|our) (.+)$/,
@@ -100,11 +109,13 @@ export function readerOfficialsQuestion(question: string): ReaderOfficialsAsk | 
     const found = REPRESENTS_IN.find((entry) => entry.pattern.test(represents[1]!));
     return found ? { keys: found.keys, phrase: represents[1]! } : null;
   }
-  for (const form of FORMS) {
-    const phrase = form.exec(normalized)?.[1]?.trim();
-    if (!phrase) continue;
-    const found = OFFICE_PHRASES.find((entry) => entry.pattern.test(phrase));
-    if (found) return { keys: found.keys, phrase };
+  for (const [forms, contact] of [[FORMS, false], [CONTACT_FORMS, true]] as const) {
+    for (const form of forms) {
+      const phrase = form.exec(normalized)?.[1]?.trim();
+      if (!phrase) continue;
+      const found = OFFICE_PHRASES.find((entry) => entry.pattern.test(phrase));
+      if (found) return { keys: found.keys, phrase, ...(contact ? { contact: true } : {}) };
+    }
   }
   return null;
 }
@@ -180,8 +191,10 @@ const ADDRESS_DECIDED: Readonly<Record<string, string>> = {
 const list = (items: readonly string[]): string =>
   items.length <= 2 ? items.join(" and ") : `${items.slice(0, -1).join(", ")}, and ${items.at(-1)}`;
 
-const person = (seat: SeatHolder, detail?: string | null): string => {
-  const inner = [seat.partyLabel, detail].filter(Boolean).join(", ");
+const person = (seat: SeatHolder, detail?: string | null, channels = false): string => {
+  /* What the office itself publishes, as the roster holds it: never a guess, never a page. */
+  const reach = channels ? [seat.phone ? `phone ${seat.phone}` : null, seat.email ? `email ${seat.email}` : null] : [];
+  const inner = [seat.partyLabel, detail, ...reach].filter(Boolean).join(", ");
   return inner ? `${seat.name} (${inner})` : seat.name;
 };
 
@@ -223,6 +236,7 @@ export function composeReaderOfficials(input: {
   /** Officeholder records could not be read for this answer: an absence is then a failure of ours, said so. */
   holdingFailed: boolean;
 }): OfficialsComposition | null {
+  const contact = Boolean(input.ask.contact);
   const clauses: string[] = [];
   const sentences: string[] = [];
   const gaps: EvidenceGap[] = [];
@@ -253,6 +267,11 @@ export function composeReaderOfficials(input: {
     for (const held of holders) {
       named.push(held);
       if (held.seat.sourceUrl) urls.add(held.seat.sourceUrl);
+      if (contact && !held.seat.phone && !held.seat.email) {
+        const statement = `We have not recorded a published phone number or email for ${held.seat.name}.`;
+        gap(statement);
+        sentences.push(statement);
+      }
     }
     const be = holders.length === 1 ? "is" : "are";
     const label = holders.length === 1 ? singular : plural;
@@ -265,18 +284,18 @@ export function composeReaderOfficials(input: {
       if (districts.size > 1 && !districts.has("")) {
         /* The ZIP reaches more than one district: every district's holders, each with its district. */
         const parts = [...districts].sort(([a], [b]) => Number(a) - Number(b)).map(([district, group]) =>
-          `${list(group.map((held) => person(held.seat)))} for District ${district}`);
+          `${list(group.map((held) => person(held.seat, null, contact)))} for District ${district}`);
         clauses.push(`your ZIP code reaches ${districts.size} ${DISTRICT_NOUN[key]} districts: ${list(parts)}`);
       } else {
         const [only] = [...districts.keys()];
-        clauses.push(`your ${label} ${be} ${list(holders.map((held) => person(held.seat)))}${only ? ` for District ${only}` : ""}`);
+        clauses.push(`your ${label} ${be} ${list(holders.map((held) => person(held.seat, null, contact)))}${only ? ` for District ${only}` : ""}`);
       }
       continue;
     }
     const bodies = new Map<string, HeldOfficial[]>();
     for (const held of holders) bodies.set(held.bodyName ?? "", [...(bodies.get(held.bodyName ?? "") ?? []), held]);
     for (const [body, group] of bodies) {
-      const items = group.map((held) => person(held.seat, seatDetail(held.seat)));
+      const items = group.map((held) => person(held.seat, seatDetail(held.seat), contact));
       if (!body) clauses.push(`your ${group.length === 1 ? singular : plural} ${group.length === 1 ? "is" : "are"} ${list(items)}`);
       else if (group.length === 1) clauses.push(`on ${proseName(body)}, the ${singular} is ${items[0]}`);
       else clauses.push(`${proseName(body)} has ${group.length} ${plural}: ${list(items)}`);

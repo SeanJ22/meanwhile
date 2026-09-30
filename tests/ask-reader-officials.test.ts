@@ -133,3 +133,25 @@ test("a roster is composed alphabetically with roles beside names, its staff aft
   });
   assert.equal(composeBodyRoster({ bodyName: "Sierra Vista", contacts: [], gaps: [] })?.answer, "We have not recorded who sits on Sierra Vista yet.");
 });
+
+test("how to reach my officials: the same offices, each person with the phone and email their office publishes — and a gap of ours where none is held", () => {
+  for (const [question, keys] of [
+    ["How do I contact my state representative?", ["state_lower_house"]],
+    ["How can I reach my congressman?", ["us_representative"]],
+    ["What is my state senator's phone number?", ["state_senator"]],
+    ["What is the email address for my governor?", ["governor"]],
+  ] as const) {
+    const ask = readerOfficialsQuestion(question);
+    assert.deepEqual(ask?.keys, keys, question);
+    assert.equal(ask?.contact, true, question);
+  }
+  assert.equal(readerOfficialsQuestion("Who is my state senator?")?.contact, undefined);
+  assert.equal(readerOfficialsQuestion("How do I contact my landlord?"), null);
+  const reachable = { ...seat("s19", "David Gowan", "State Senator"), phone: "(602) 926-5154", email: "dgowan@example.gov" };
+  const ask = readerOfficialsQuestion("How do I contact my state senator?")!;
+  const answer = composeReaderOfficials({ ask, holdingFailed: false, held: [held(reachable, [`${AZ}/sldu:19`])] });
+  assert.equal(answer?.answer, "Your state senator is David Gowan (Republican, phone (602) 926-5154, email dgowan@example.gov) for District 19.");
+  const silent = composeReaderOfficials({ ask, holdingFailed: false, held: [held(seat("s19", "David Gowan", "State Senator"), [`${AZ}/sldu:19`])] });
+  assert.match(silent?.answer ?? "", /We have not recorded a published phone number or email for David Gowan\.$/);
+  assert.deepEqual(silent?.gaps.map((gap) => gap.whose), ["OURS"]);
+});

@@ -1,3 +1,4 @@
+import { isOfficialSource, type OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 /**
  * @freshness-reads-here
  *
@@ -973,8 +974,8 @@ export type HoldReason =
 export interface VerificationIdentity {
   /** The page the events were read from. */
   pageUrl: string;
-  /** The body's registered official host plus any the wiring authorizes. */
-  officialHosts: readonly string[];
+  /** Saved official page linking this publisher when its domain is not .gov. */
+  linkingPage?: OfficialLinkingPage | null;
   /** Names of the body and its committees, as the page would write them. */
   nameTerms: readonly string[];
   timeZone: string;
@@ -997,29 +998,7 @@ export interface HeldEvent {
   evidence: string;
 }
 
-function hostOf(url: string): string | null {
-  try {
-    return new URL(url).hostname.toLowerCase();
-  } catch {
-    return null;
-  }
-}
 
-/**
- * Whether `host` is the body's own: its registered official host, or a
- * subdomain of it (`govboard.tusd1.org` under `www.tusd1.org`'s `tusd1.org`),
- * or a host the wiring explicitly authorizes. A vendor's host is never one —
- * `tusd1.thrillshare.com` is not under `tusd1.org`.
- */
-export function isOfficialHost(host: string | null, officialHosts: readonly string[]): boolean {
-  if (!host) return false;
-  const bare = (h: string) => h.trim().toLowerCase().replace(/^www\./, "");
-  const h = bare(host);
-  return officialHosts.some((o) => {
-    const official = bare(o);
-    return Boolean(official) && (h === official || h.endsWith(`.${official}`));
-  });
-}
 
 function namesBody(text: string, terms: readonly string[]): boolean {
   return terms.some((term) => {
@@ -1048,7 +1027,7 @@ export function verifyExtractedEvents(
   extraction: PageExtraction,
   identity: VerificationIdentity,
 ): { published: VerifiedEvent[]; held: HeldEvent[] } {
-  const hostOk = isOfficialHost(hostOf(identity.pageUrl), identity.officialHosts);
+  const hostOk = isOfficialSource(identity.pageUrl, identity.linkingPage);
   const windowStart = identity.now.getTime() - WINDOW_BACK_DAYS * 86_400_000;
   const windowEnd = identity.now.getTime() + WINDOW_FORWARD_DAYS * 86_400_000;
 
@@ -1154,7 +1133,7 @@ export interface OfficialPageBody {
   /** Other names the page uses for the body or its committees ("TUSD", "Joint Committee"). */
   nameTerms?: readonly string[];
   /** Hosts beyond the official domain the route is explicitly authorized to read. */
-  authorizedHosts?: readonly string[];
+  linkingPage?: OfficialLinkingPage | null;
 }
 
 /** One verified event, in the shape a route decision and a recipe need. */
@@ -1185,9 +1164,6 @@ export interface OfficialPageVerification {
   held: HeldEvent[];
 }
 
-function hostOrDomain(value: string): string {
-  return value.includes("://") ? (hostOf(value) ?? "") : value.trim().toLowerCase().replace(/\/.*$/, "");
-}
 
 /**
  * **PURE route verification** for the discovery executor (extractor id
@@ -1219,7 +1195,7 @@ export function verifyOfficialPageEvents(input: {
   const extraction = extractOfficialPageEvents(input.html, { pageUrl: input.url, timeZone: input.body.timeZone });
   const { published, held } = verifyExtractedEvents(extraction, {
     pageUrl: input.url,
-    officialHosts: [hostOrDomain(input.body.officialDomain), ...(input.body.authorizedHosts ?? [])].filter(Boolean),
+    linkingPage: input.body.linkingPage,
     nameTerms: [input.body.name, ...(input.body.nameTerms ?? [])],
     timeZone: input.body.timeZone,
     now,
@@ -1253,6 +1229,7 @@ export function verifyOfficialPageEvents(input: {
 /* ---------------------------------------------------------------- adapter -- */
 
 export interface OfficialPageRaw {
+  linkingPage?: OfficialLinkingPage | null;
   wiring: BodySourceWiring;
   /** The page's HTML; empty when `error` is set. */
   html: string;
@@ -1264,12 +1241,6 @@ export interface OfficialPageRaw {
   error?: string;
 }
 
-/** The hosts a wiring row may read events from: the registered one, plus any it names. */
-export function officialHostsFor(wiring: BodySourceWiring): string[] {
-  return [wiring.config.officialHost, ...(wiring.config.authorizedHosts ?? "").split(",")]
-    .map((h) => (h ?? "").trim().toLowerCase())
-    .filter(Boolean);
-}
 
 function nameTermsFor(wiring: BodySourceWiring): string[] {
   return (wiring.config.nameTerms ?? "").split("|").map((t) => t.trim()).filter(Boolean);
@@ -1344,6 +1315,7 @@ export interface OfficialPageNormalizeReport {
 export function makeOfficialPageEventsSource(
   wiringRows: BodySourceWiring[],
   fetchImpl?: typeof fetch,
+  linkingPageFor?: (url: string) => OfficialLinkingPage | null | undefined,
 ): ReportingMeetingSource<OfficialPageRaw> & {
   normalizeWithHolds(raw: OfficialPageRaw[], now?: Date): OfficialPageNormalizeReport;
 } {
@@ -1355,7 +1327,7 @@ export function makeOfficialPageEventsSource(
     });
     const verified = verifyExtractedEvents(extraction, {
       pageUrl: row.wiring.config.pageUrl,
-      officialHosts: officialHostsFor(row.wiring),
+      linkingPage: row.linkingPage ?? linkingPageFor?.(row.wiring.config.pageUrl),
       nameTerms: nameTermsFor(row.wiring),
       timeZone: row.wiring.timeZone,
       now,
@@ -1429,11 +1401,8 @@ export function makeOfficialPageEventsSource(
       const collected: OfficialPageRaw[] = [];
       for (const wiring of wiringRows) {
         const pageUrl = wiring.config.pageUrl;
-        const allowed = officialHostsFor(wiring);
+        const linkingPage = linkingPageFor?.(pageUrl);
         try {
-          if (!isOfficialHost(hostOf(pageUrl), allowed)) {
-            throw new Error(`OFFICIAL_PAGE_HOST_NOT_AUTHORIZED:${hostOf(pageUrl)}`);
-          }
           const { text } = await politeGetText(pageUrl, {
             fetchImpl,
             accept: "text/html",
@@ -1443,7 +1412,7 @@ export function makeOfficialPageEventsSource(
           const ics: OfficialPageRaw["ics"] = [];
           const icsRefused: OfficialPageRaw["icsRefused"] = [];
           for (const url of icsLinks(parseHtmlTree(text), pageUrl)) {
-            if (!isOfficialHost(hostOf(url), allowed)) {
+            if (!isOfficialSource(url, {url:pageUrl,html:text,linkingPage})) {
               icsRefused.push({ url, reason: "ICS_HOST_NOT_AUTHORIZED" });
               continue;
             }
@@ -1454,7 +1423,7 @@ export function makeOfficialPageEventsSource(
               icsRefused.push({ url, reason: String((error as Error)?.message ?? error) });
             }
           }
-          collected.push({ wiring, html: text, ics, icsRefused, collectedAt });
+          collected.push({ wiring, html: text, ics, icsRefused, collectedAt, linkingPage });
         } catch (error) {
           collected.push({
             wiring,

@@ -1,3 +1,4 @@
+import type { ScoutResult } from '../lib/control-plane/scheduler/scout-result.ts';
 import { SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION } from "../lib/control-plane/scheduler/scout-result.ts";
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -7,7 +8,7 @@ import { adapterWaitReason, investigationRole, subjectScoutHistory } from '../li
 import { retryable } from '../lib/control-plane/scheduler/debt.ts';
 
 test('adapter PR publication creates only adapter files and applies the merge label',async()=>{
- const calls:{method:string;path:string;body:any}[]=[];
+ const calls:{method:string;path:string;body:unknown}[]=[];
  const pr=await publishAdapterPullRequest({platform:'calendar-platform',reason:'Repair recurring parse failures',files:[{path:'lib/sources/platform-adapters/calendar.mjs',content:'export const adapter = true;'}],request:async(method,path,body)=>{
    calls.push({method,path,body});
    if(path.includes('/pulls?'))return [];
@@ -19,7 +20,7 @@ test('adapter PR publication creates only adapter files and applies the merge la
    return {};
  }});
  assert.equal(pr.number,999);assert.deepEqual(calls.at(-1)?.body,{labels:['engineer-adapter']});
- assert.deepEqual(calls.find(c=>c.path.endsWith('/git/trees'))?.body.tree.map((f:any)=>f.path),['lib/sources/platform-adapters/calendar.mjs']);
+ assert.deepEqual((calls.find(c=>c.path.endsWith('/git/trees'))?.body as {tree:{path:string}[]}).tree.map(f=>f.path),['lib/sources/platform-adapters/calendar.mjs']);
 });
 test('Engineer refuses publication outside its adapter-only ownership',async()=>{
  let called=false;
@@ -31,20 +32,20 @@ test('source backoff is per Legistar tenant, not the vendor',()=>{
  assert.equal(sourceReliabilityKey('https://webapi.legistar.com/v1/pima/Events'),sourceReliabilityKey('https://webapi.legistar.com/v1/pima/Bodies'));
 });
 test('failed roles select Detective and adapter work does not keep retrying',()=>{
- const result={recoveryCapabilityVersion:SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION,refusal:null,outcome:'NEEDS_ADAPTER',narrative:'Parser for platform needed',subjectId:'county',recordClass:'meetings',recordedAt:'2026-09-29',workItemId:'other-job'} as any;
+ const result={recoveryCapabilityVersion:SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION,refusal:null,outcome:'NEEDS_ADAPTER',narrative:'Parser for platform needed',subjectId:'county',recordClass:'meetings',recordedAt:'2026-09-29',workItemId:'other-job'} as unknown as ScoutResult;
  assert.equal(investigationRole([result],false),'DETECTIVE');
  assert.match(adapterWaitReason([result])!,/Engineer owns/);
  assert.equal(subjectScoutHistory([result],'county','meetings').length,1);
  assert.equal(subjectScoutHistory([result],'other-county','meetings').length,0);
- assert.deepEqual(retryable([{cause:'AWAITING_ADAPTER',retryAt:'2020-01-01'} as any],Date.now()),[]);
+ assert.deepEqual(retryable([{cause:'AWAITING_ADAPTER',retryAt:'2020-01-01'} as Parameters<typeof retryable>[0][number]],Date.now()),[]);
 });
 test('plain Engineer reuses a dated sitemap implementation across government subjects',async()=>{
- const candidate=plainAdapterFor({refusal:null,outcome:'NEEDS_ADAPTER',narrative:'Streamline dated sitemap needs adapter',candidates:[],nextRungs:[]} as any)!;
+ const candidate=plainAdapterFor({refusal:null,outcome:'NEEDS_ADAPTER',narrative:'Streamline dated sitemap needs adapter',candidates:[],nextRungs:[]} as unknown as ScoutResult)!;
  const source=candidate.files.find(file=>!file.path.includes('.test.'))!.content;
- const module=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
+ const adapterModule=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
  for(const publisherOrigin of ['https://first.gov','https://second.gov']) {
   const url=publisherOrigin+'/2026-09-30-board';
-  const output=module.inventoryStreamlineSitemap({xml:'<urlset><url><loc>'+url+'</loc></url></urlset>',subjectId:publisherOrigin,publisherOrigin});
+  const output=adapterModule.inventoryStreamlineSitemap({xml:'<urlset><url><loc>'+url+'</loc></url></urlset>',subjectId:publisherOrigin,publisherOrigin});
   assert.equal(output.entries[0].sourceUrl,url);
  }
 });

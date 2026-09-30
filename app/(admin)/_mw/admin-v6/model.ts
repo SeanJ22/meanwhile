@@ -453,6 +453,20 @@ export interface MoneyView {
   readonly otherServices: string;
 }
 
+/* ----------------------------------------------------------------- sends */
+
+/** An instruction the owner sent the fleet with "Deploy fleet here", and where it stands (server: v6-sends-read.ts). */
+export interface SentInstruction {
+  readonly id: string;
+  readonly words: string;
+  readonly sentAt: string;
+  readonly state: "waiting" | "carried" | "finished" | "cancel-requested" | "cancelled";
+  readonly stateWords: string;
+  /** What the runner recorded when it read it. */
+  readonly ranAs: string | null;
+  readonly canCancel: boolean;
+}
+
 /* ----------------------------------------------------------------- spend */
 
 /** What the agents cost by model tier and day, and what the database sent (server: v6-spend-read.ts). Whole-system. */
@@ -571,7 +585,7 @@ export type ActionKind =
   | "decide" | "hunt-start" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop"
   | "global-paid" | "global-runner-pause" | "global-runner-resume"
   | "scope-first" | "scope-recheck" | "doc-request" | "use-url" | "reprocess" | "retry-method" | "resume-publish"
-  | "eng-task" | "job-stop" | "focus" | "send-agents";
+  | "eng-task" | "job-stop" | "focus" | "send-agents" | "cancel-send";
 
 export type ReceiptStatus = "queued" | "read" | "running" | "done" | "partial" | "refused" | "failed" | "unknown";
 export const PENDING_STATUSES: readonly ReceiptStatus[] = ["queued", "read", "running", "unknown"];
@@ -650,6 +664,7 @@ export interface AdminV6Data {
   readonly checklist: Sourced<ChecklistView>;
   readonly agents: Sourced<readonly AgentRun[]>;
   readonly spend: Sourced<SpendView>;
+  readonly sends: Sourced<readonly SentInstruction[]>;
   readonly money: Sourced<MoneyView>;
   readonly learning: Sourced<LearningView>;
   readonly fixes: Sourced<FixView>;

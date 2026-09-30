@@ -57,7 +57,8 @@ test("a finished receipt no longer blocks a new send of the same action", () => 
 });
 
 test("only runner pause and resume and send-agents are wired to the deployed gateway without an announcement", () => {
-  assert.deepEqual([...connectedKinds()].sort(), ["global-runner-pause", "global-runner-resume", "send-agents"]);
+  assert.deepEqual([...connectedKinds()].sort(), ["cancel-send", "global-runner-pause", "global-runner-resume", "send-agents"]);
+  assert.equal(actionDef("cancel-send").gateway?.type, "fleet.cancelDispatch");
   assert.equal(actionDef("send-agents").gateway?.type, "fleet.deployHere");
   assert.equal(actionDef("global-runner-pause").gateway?.type, "runner.pause");
   assert.equal(actionDef("global-runner-resume").gateway?.type, "runner.resume");

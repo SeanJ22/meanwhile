@@ -64,6 +64,11 @@ export const SECTION_DEP = {
     owner: "S12 (admin-view)",
     need: "Anthropic spend by model tier and by day from the cost ledger, search spend, and the database's daily transfer.",
   },
+  sends: {
+    id: "DEP-SENT-INSTRUCTIONS",
+    owner: "S12 (admin-view)",
+    need: "The instructions sent to the fleet, where each stands, and whether the runner has recorded a cancel.",
+  },
   workerVersion: {
     id: "DEP-WORKER-VERSION",
     owner: "Codex (runner adoption)",

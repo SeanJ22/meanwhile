@@ -7,7 +7,7 @@
 import { useState } from "react";
 
 import { useV6 } from "./context.tsx";
-import { count, type Lane, type SameCause, type StuckItem, type WorkStage } from "./model.ts";
+import { count, mst, type Lane, type SameCause, type StuckItem, type WorkStage } from "./model.ts";
 import { COUNTRY_KEY, isWithin, relation } from "./places.ts";
 import { HISTORY_FILTERS } from "./receipts.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
@@ -74,6 +74,34 @@ function CauseGroup(props: { readonly cause: SameCause; readonly items: readonly
   );
 }
 
+/**
+ * **INSTRUCTIONS YOU SENT, AND TAKING ONE BACK.** A "Deploy fleet here" instruction keeps being carried by the runner
+ * while it has work left to create, so one click can keep working for many rounds. Each one is listed with where it
+ * stands and a button to take it back. Taken back shows only once the runner has recorded it; until then it is a request.
+ */
+function Sends() {
+  const v = useV6();
+  const src = v.data.sends;
+  const list = (src.data ?? []).filter((x) => x.state !== "finished");
+  if (src.state === "live" && !list.length) return null;
+  return (
+    <Card title="Instructions you sent the fleet" aside={<span className={s.meta}>{src.data ? `${list.filter((x) => x.canCancel).length} still running` : "Reading…"}</span>}>
+      <SourceNote source={src} what="Sent instructions" />
+      <div className={s.stack}>
+        {list.map((x) => (
+          <div key={x.id} className={s.row}>
+            <div className={s.spread}><strong style={{ fontSize: 13 }}>{x.words || "(no words saved)"}</strong><Pill tone={x.state === "carried" || x.state === "waiting" ? "warn" : "slate"}>{x.state === "carried" ? "Running" : x.state === "waiting" ? "Waiting" : x.state === "cancel-requested" ? "Taking back" : "Taken back"}</Pill></div>
+            <span className={s.meta}>Sent {mst(x.sentAt)}</span>
+            <span className={s.small}>{x.stateWords}</span>
+            {x.ranAs && <span className={cx(s.small, s.dim)}>{x.ranAs}</span>}
+            {x.canCancel && <Actions actions={[{ kind: "cancel-send", target: x.id, label: "Take it back", payload: { words: x.words } }]} />}
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
 function Lanes() {
   const v = useV6();
   const [lane, setLane] = useState<Lane | "all">("all");
@@ -84,6 +112,7 @@ function Lanes() {
   const totalStuck = all.reduce((n, c) => n + Number(c.count), 0);
   return (
     <>
+      <Sends />
       <SourceNote source={v.data.stuck.state === "live" ? v.data.stuck : v.data.sameCause} what="Stuck items" />
       <Card title="Blockers by cause" aside={<span className={s.meta}>{v.data.sameCause.data ? `${count(totalStuck)} stuck ${v.scopeKey === COUNTRY_KEY ? "across every place" : "here and in the wider places that cover it"} · ${count(all.length)} ${all.length === 1 ? "cause" : "causes"}` : "Reading…"}</span>}>
         <div className={s.tabs} role="group" aria-label="Filter by who moves it">

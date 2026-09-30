@@ -590,6 +590,25 @@ const defs: ActionDef[] = [
     dependency: null,
   },
   {
+    kind: "cancel-send",
+    label: "Take it back",
+    needs: "owner",
+    doneWords: "Saved as a request. It turns to Taken back only when the runner records that it stopped carrying it.",
+    preview: (ctx) => ({
+      title: "Take back a sent instruction",
+      level: "global",
+      rows: [
+        ["Affects", ctx.words ? `The instruction “${ctx.words}”` : ctx.targetName || "The instruction you sent with Deploy fleet here"],
+        ["What changes", "The runner stops carrying it: it creates no more work for it, and puts nothing first because of it."],
+        ["Won’t", "Won’t undo work it already created or reordered, and won’t pause anything else."],
+        ["Cost", "Nothing"],
+        ["Undo", "Send the same words again. That is a new instruction."],
+      ],
+    }),
+    gateway: { type: "fleet.cancelDispatch" },
+    dependency: null,
+  },
+  {
     kind: "resume-publish",
     label: "Resume checks and publishing, then recheck the reader card",
     needs: "owner",

@@ -37,6 +37,7 @@ export function adminV6ReadCapabilities(input: { readonly configRevision: number
   }
   if (input.snapshotRevision !== null || input.researchRevision !== null) {
     sections.spend = { contract: "admin-v6/spend@1", href: "/api/admin/v6/spend", revision: `spend:${input.snapshotRevision ?? "unread"}:${input.researchRevision ?? "unread"}:${input.workerAgeBucket ?? "clock-unread"}` };
+    sections.sends = { contract: "admin-v6/sends@1", href: "/api/admin/v6/sends", revision: `sends:${input.researchRevision ?? "unread"}:${input.heartbeatRevision ?? "unread"}` };
     sections.agents = { contract: "admin-v6/agents@1", href: "/api/admin/v6/agents", revision: `agents:${input.heartbeatRevision ?? "unread"}:${input.workerAgeBucket ?? "clock-unread"}` };
   }
   if (input.configRevision !== null && input.researchRevision !== null) {
@@ -46,4 +47,4 @@ export function adminV6ReadCapabilities(input: { readonly configRevision: number
   return { ...ADMIN_V6_CAPABILITIES, sections };
 }
 
-export const ADMIN_V6_CAPABILITY_REVISION = "admin-v6/1:receipt/1:hunts/1:money/1:workers/1:checklist/place1:stuck/1:agents/1:spend/1";
+export const ADMIN_V6_CAPABILITY_REVISION = "admin-v6/1:receipt/1:hunts/1:money/1:workers/1:checklist/place1:stuck/1:agents/1:spend/1:sends/1";

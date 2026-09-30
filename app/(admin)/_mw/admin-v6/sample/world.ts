@@ -518,6 +518,7 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
     ], SECTION_DEP.stuck, SAMPLE_AS_OF),
     workRows: sample({ rows: sampleRows(), totals: [{ stage: "waiting", total: 932 }, { stage: "stuck", total: 78 }, { stage: "retrying", total: 731 }, { stage: "done", total: 1069 }, { stage: "retired", total: 591 }] }, SECTION_DEP.work, SAMPLE_AS_OF),
     agents: sample([], SECTION_DEP.agents, SAMPLE_AS_OF),
+    sends: sample([], SECTION_DEP.sends, SAMPLE_AS_OF),
     spend: { state: "not-connected", load: "ready", data: null, asOf: null, dependency: SECTION_DEP.spend },
     history: sample(sampleHistory(), SECTION_DEP.history, SAMPLE_AS_OF),
     workers: sample({
@@ -661,6 +662,8 @@ export function sampleOutcome(kind: ActionKind, target: string, input: { readonl
     case "resume-publish": return { final: "unknown", says: "No answer within 30 seconds. It may still have run. Check what happened before trying again." };
     case "eng-task": return { final: "done", statusWords: "Task created", says: "Task created. Waiting for an engineer to accept it. Later stages come only from the tracker.", effect: (w) => ({ ...w, tasks: [...w.tasks, { fixId: target, id: `ET-${20 + w.tasks.length}` }] }) };
     case "job-stop": return { final: "done", says: "Stopped after its current step. The money set aside is returned once its last call settles.", effect: (w) => ({ ...w, jobsStopped: add(w.jobsStopped, target) }) };
+    case "cancel-send":
+      return { final: "done", statusWords: "Requested", says: "Your request to take it back is saved. It stays a request until the runner records it." };
     case "send-agents":
       return { final: "done", statusWords: "Sent", says: "The fleet was told where to go. The runner puts it first on its next round." };
     case "focus": {

@@ -17,6 +17,17 @@ import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 import { runPlaceSource } from "../lib/hunt/place-source.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 
+test("Census statistical and duplicate subdivisions stay geography without invented government inventories", () => {
+  const items = buildPlaceOwedList({ now: "2026-09-30T00:00:00Z", subjects: [], held: [], divisions: [
+    { id: "active-town", label: "Real town", funcstat: "A" },
+    { id: "duplicate-town", label: "Census duplicate", funcstat: "F" },
+    { id: "statistical-area", label: "Census statistical area", funcstat: "S" },
+  ] });
+  assert.ok(items.some(item => item.subject.id === "active-town#inventory:body"));
+  assert.ok(items.some(item => item.subject.id === "duplicate-town"));
+  assert.ok(!items.some(item => /^(?:duplicate-town|statistical-area)#inventory:/.test(item.subject.id)));
+});
+
 test("the place source reads shared holdings, publishes source data, then uses the actual published projection", async () => {
   const repos = createMemoryRepositories();
   const now = "2026-09-30T00:00:00Z";

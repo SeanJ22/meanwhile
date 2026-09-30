@@ -57,6 +57,10 @@ test('Admin compact acquisitions share chronological source backoff and recovery
  assert.equal(recovered.retryAt,null);assert.equal(recovered.detail,'Source returned captured data');
  const capped = reduceSourceReliability(Array.from({length:2058},()=>rows[0]))[0];
  assert.equal(capped.retryAt,'2026-09-30T08:00:00.000Z');
+ const robots = {...rows[0], blockerCodes:['PERMISSION_DENIED'], blockerText:['Legacy robots refusal']};
+ assert.deepEqual(reduceSourceReliability([robots]),[], 'robots-only history is not a source outage');
+ assert.equal(reduceSourceReliability([{...robots,blockerCodes:['PERMISSION_DENIED','TRANSPORT_FAILED']}])[0].failures,1,
+  'a real retrieval failure still backs off when robots was also observed');
 });
 test('failed roles select Detective and adapter work does not keep retrying',()=>{
  const result={recoveryCapabilityVersion:SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION,refusal:null,outcome:'NEEDS_ADAPTER',narrative:'Parser for platform needed',subjectId:'county',recordClass:'meetings',recordedAt:'2026-09-29',workItemId:'other-job'} as unknown as ScoutResult;

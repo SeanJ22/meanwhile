@@ -137,7 +137,7 @@ import {
 } from "../lib/control-plane/promotion/campaign-site-cycle.ts";
 import { CANDIDATE_PUBLICATION_BUDGET_MS, runCandidatePublicationCycle,
   type CandidatePublicationCycleReport } from "../lib/control-plane/promotion/campaign-publication-cycle.ts";
-import { indexVault } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { indexVault, readHeldBytes } from "../lib/control-plane/evidence/read-only-vault.ts";
 import {
   MEETINGS_DISCOVERY_NAMESPACE,
   dispatchedAddressSource,
@@ -3010,6 +3010,18 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
     if (directoryRegistry && directoryRegistry.kind !== "PROMOTED") throw new Error("Published body directory cannot be read for meeting discovery; its source work remains owed.");
     const meetingHints = directoryRegistry?.kind === "PROMOTED" ? directoryMeetingHints(directoryItems, directoryRegistry.value, ROUTE_HINTS) : ROUTE_HINTS;
     let costSeq = 0;
+    let officialPagesRead: Promise<{canonicalUrl:string;text:string}[]> | undefined;
+    const readOfficialPages = () => officialPagesRead ??= (async () => {
+      const index = await indexVault(join(ROOT, ...VAULT_DIR));
+      const pages: {canonicalUrl:string;text:string}[] = [];
+      for (const held of index.byId.values()) {
+        if (!held.canonicalUrl || held.tier === "RESTRICTED_RAW" || held.retentionPolicy === "DIAGNOSTIC" ||
+          held.httpStatus === null || held.httpStatus < 200 || held.httpStatus >= 300 || !/html/i.test(held.contentType)) continue;
+        try { pages.push({canonicalUrl:held.canonicalUrl,text:new TextDecoder().decode(await readHeldBytes(held))}); }
+        catch { runtimeConditions.push(`Official-source linking evidence unreadable: ${held.id}`); }
+      }
+      return pages;
+    })();
     meetingsDiscovery = await runMeetingsDiscovery(repos, {
       needs: discoveryNeedsToWalk(gapLedgerRead.needs, [...dispatchedNeeds.values()]),
       cycleIndex: Math.floor(Date.parse(NOW) / 3_600_000),
@@ -3033,6 +3045,7 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
         },
         spaceOut: spacer,
         vault: vault.put,
+        readOfficialPages,
         now: nowIso,
         budget: {
           spent: () => Date.now() - discoveryStartedMs >= MEETINGS_DISCOVERY_BUDGET_MS,

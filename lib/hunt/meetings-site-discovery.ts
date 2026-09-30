@@ -44,6 +44,7 @@
 
 import { calendarFeedUrl } from "../sources/legistar-insite/calendar.ts";
 import { verifyOfficialPageEvents } from "../sources/official-page-events/index.ts";
+import type { OfficialLinkingPage } from "../civic-data/source-authority.ts";
 import { detectTenancy } from "./platform-tenancy.ts";
 import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } from "../meetings/constants.ts";
 import { parseDiligentMeetings } from "../sources/diligent/index.ts";
@@ -298,7 +299,7 @@ export interface EndpointVerification {
  * until this is bumped, and anything keyed on it (a saved method, a wiring row)
  * re-keys cleanly.
  */
-export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@23b69a3368c5";
+export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@45b2cf7ddc8a";
 
 /**
  * The zone a state's bodies meet in, for the states that sit in one zone. A
@@ -420,6 +421,7 @@ export function anchorLinks(html: string, pageUrl: string): readonly AnchorLink[
 
 /** The body an official page is verified for. */
 export interface OfficialPageIdentity {
+  readonly linkingPage?: OfficialLinkingPage | null;
   readonly bodyId: string;
   /** The body's recorded name; the name forms its events may carry derive from it (`identityNameTerms`). */
   readonly name: string;
@@ -462,7 +464,7 @@ function verifyOfficialPage(
   const label = identity.pageLabel?.trim() ?? "";
   const nameTerms = label.split(/\s+/).filter((w) => w !== "").length >= 2 ? [...nameForms, label] : [...nameForms];
   const result = verifyOfficialPageEvents({
-    body: { id: identity.bodyId, name, officialDomain: identity.officialHost, timeZone, nameTerms },
+    body: { id: identity.bodyId, name, officialDomain: identity.officialHost, linkingPage: identity.linkingPage, timeZone, nameTerms },
     url: response.finalUrl,
     html: response.body,
     now: identity.now,

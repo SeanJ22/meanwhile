@@ -191,7 +191,7 @@ test("NO SILENT RESUME: only the owner's action writes the switch; no env var ca
   assert.deepEqual(files.filter((f) => read(f).includes("makeDiscoverySearch(") && !f.endsWith("search-runtime.ts")), ["scripts/freshness-shadow.mts"]);
   assert.match(runner, /searchBudget === null \? null : makeDiscoverySearch\(\{/, "discovery search exists only while the switch is on");
   assert.deepEqual(files.filter((f) => read(f).includes("makeScoutSearch(") && !f.endsWith("scout-search.ts")), ["scripts/freshness-shadow.mts"]);
-  assert.match(runner, /const scoutFor = \(scheduled: ScheduledObligation\): DeclaredExecutor => modelLaneEnabled\s*\?/, "Scout search is reachable only while the paid research lane is open, which the research pause closes");
+  assert.match(runner, /const scoutFor = \(scheduled: ScheduledObligation\): DeclaredExecutor => modelLaneEnabled \|\| heldScoutFor\(scheduled\)!==null\s*\?/, "Only solved held reuse can enter the Scout executor while the paid research lane is closed");
 });
 
 test("THE RUNNER ACKNOWLEDGES IT: each cycle's heartbeat carries the decision it applied, its caps and its words; the console matches the receipt", () => {

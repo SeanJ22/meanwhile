@@ -12,6 +12,7 @@ export interface SourceReliabilityRow {
   verdict: string;
   endedAt: string;
   blockerText: readonly string[];
+  blockerCodes?: readonly string[];
 }
 /** One Legistar tenant cannot back off every government using the same vendor. */
 export function sourceReliabilityKey(url: string): string {
@@ -23,6 +24,9 @@ export function sourceReliabilityKey(url: string): string {
 export function reduceSourceReliability(rows: readonly SourceReliabilityRow[]): SourceReliability[] {
   const sources = new Map<string, SourceReliability>();
   for (const row of [...rows].sort((a,b) => a.endedAt.localeCompare(b.endedAt))) {
+    // Historical robots-only refusals never tested the publisher's data route.
+    if (row.blockerCodes?.length && row.blockerCodes.every(code =>
+      code === 'PERMISSION_DENIED' || code === 'PERMISSION_UNKNOWN')) continue;
     const source = sourceReliabilityKey(row.url);
     const previous = sources.get(source);
     const success = row.verdict === 'ACQUIRED';
@@ -41,7 +45,8 @@ export async function readSourceReliability(repos: ControlPlaneRepositories): Pr
     const result = row.result;
     return result.role === 'ACQUIRER' && result.requestCount > 0
       ? [{ url: result.source.url, verdict: result.verdict, endedAt: row.endedAt,
-          blockerText: result.blockers.map(blocker => blocker.description) }]
+          blockerText: result.blockers.map(blocker => blocker.description),
+          blockerCodes: result.blockers.map(blocker => blocker.code) }]
       : [];
   });
   return reduceSourceReliability(rows);

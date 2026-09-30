@@ -60,7 +60,7 @@ function reconfigurationMeetings(): Meeting[] {
   const rows = wiringForMeetingSource("official-page-events");
   assert.equal(rows.length, 1, "Tucson Unified's reconfiguration page is the one wired official page");
   const raw: OfficialPageRaw[] = [
-    { wiring: rows[0]!, html: readFileSync(join(ROOT, PAGE), "utf8"), ics: [], icsRefused: [], collectedAt: COLLECTED },
+    { wiring: rows[0]!, html: readFileSync(join(ROOT, PAGE), "utf8"), ics: [], icsRefused: [], collectedAt: COLLECTED, linkingPage: {url:"https://directory.example.gov/schools", html:'<a href="https://www.tusd1.org">Tucson Unified</a>'} },
   ];
   return makeOfficialPageEventsSource(rows).normalizeWithDrops(raw, new Date(COLLECTED)).meetings;
 }
@@ -131,7 +131,7 @@ test("the list, the body's pin panel and the meeting card show the stated place 
     const rows = wiringForMeetingSource('official-page-events');
     const page = readFileSync(${JSON.stringify(PAGE)}, 'utf8');
     const events = makeOfficialPageEventsSource(rows).normalizeWithDrops(
-      [{ wiring: rows[0], html: page, ics: [], icsRefused: [], collectedAt: ${JSON.stringify(COLLECTED)} }],
+      [{ wiring: rows[0], html: page, ics: [], icsRefused: [], collectedAt: ${JSON.stringify(COLLECTED)}, linkingPage: {url:'https://directory.example.gov/schools',html:'<a href="https://www.tusd1.org">Tucson Unified</a>'} }],
       new Date(${JSON.stringify(COLLECTED)}),
     ).meetings;
     const all = [...fixture.meetings, ...events];

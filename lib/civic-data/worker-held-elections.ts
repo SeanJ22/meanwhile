@@ -18,6 +18,7 @@ import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { isOfficialSource } from "./source-authority.ts";
 import { captureIntact } from "./worker-publication-evidence.ts";
 import { publishElectionFields } from "./election-field-publication.ts";
+import { readManualProjectionPrior } from "./manual-projections.ts";
 
 export interface HeldElectionOffice {
   /** The office as the page names it. */
@@ -130,18 +131,23 @@ export async function publishHeldElectionOffices(input: {
     fieldsByItem.set(item.id, found.length);
     if (!fields.some(row => found.includes(row))) fields.push(...found);
   }
-  let published: Awaited<ReturnType<typeof publishElectionFields>> | null = null, failure: string | null = null;
+  let published: Awaited<ReturnType<typeof publishElectionFields>> | null = null, failure: string | null = null, fresh: string[] = [];
   if (fields.length) {
-    try { published = await publishElectionFields({ store: input.store, now: input.now, fields, verify: section3Record }); }
-    catch (error) { failure = sanitizedErrorDiagnostic(error); }
+    try {
+      // Delivery counts what this pass newly put in front of readers, once, not each re-verified office per owed item.
+      const before = new Set(((await readManualProjectionPrior("ballot-navigation", input.store, input.now))?.payload as { records?: readonly { id: string }[] } | undefined)?.records?.map(row => row.id) ?? []);
+      published = await publishElectionFields({ store: input.store, now: input.now, fields, verify: section3Record });
+      fresh = published.fields.filter(id => !before.has(id));
+    } catch (error) { failure = sanitizedErrorDiagnostic(error); }
   }
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   for (const item of owed) {
     const count = fieldsByItem.get(item.id) ?? 0;
+    const credited = fresh.length > 0 && !report.some(row => row.outcome.acceptedRecordIds?.length);
     const outcome: NonNullable<WorkItem["publicationOutcome"]> = published?.fields.length && count > 0
-      ? { at: input.now, workerResultId: "held:election-offices", status: "PARTIALLY_PUBLISHED", code: "ELECTION_OFFICES_PUBLISHED",
-        detail: `ballot-navigation: ${published.fields.length} election office(s) with their phone lines passed §3 on the government's saved official pages; version ${published.promotedVersionId}. Registration and polling links stay open as work.`,
-        recovery: "WORKER", candidateId: published.candidateId, versionId: published.promotedVersionId, acceptedRecordIds: [...published.fields] }
+      ? { at: input.now, workerResultId: "held:election-offices", status: "PARTIALLY_PUBLISHED", code: credited ? "ELECTION_OFFICES_PUBLISHED" : "VERIFIED_RESULT_REUSED",
+        detail: `ballot-navigation: ${published.fields.length} election office(s) with their phone lines passed §3 on the government's saved official pages (${fresh.length} new this pass); version ${published.promotedVersionId}. Registration and polling links stay open as work.`,
+        recovery: "WORKER", candidateId: published.candidateId, versionId: published.promotedVersionId, ...(credited ? { acceptedRecordIds: fresh } : {}) }
       : { at: input.now, workerResultId: "held:election-offices", status: "HELD",
         code: failure ? failure.split(":")[0] : count < 0 ? "CANONICAL_BODY_MISSING" : "ELECTION_OFFICE_NOT_ON_SAVED_PAGES",
         detail: `${failure ?? (count < 0 ? "The work item's body has no registry division yet" : "No saved official page for this government names an election office with its phone line that passes §3")}. Saved pages are re-read hourly; no approval is required.`,

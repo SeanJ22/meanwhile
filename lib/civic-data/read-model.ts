@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { currentPromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 
 import type {
   CandidateVersionRecord,
@@ -558,6 +559,11 @@ export async function readPromotedCivicData<T>(
   // The reader edge's copy answers without opening the store (and without any cache).
   if (options.edge !== undefined) return readPromotedFromEdge<T>(recordClass, scope, options.edge, now, options.maxAgeMs);
   const injected = options.store !== undefined;
+  if (!injected && !options.bypassCache) {
+    const edge = currentPromotedEdge(recordClass, scope);
+    if (edge !== null) return readPromotedFromEdge<T>(recordClass, scope, edge.value, now, options.maxAgeMs);
+    refuseDatabaseInEdgeOnlyContext(`${recordClass}:${scope}`);
+  }
   if (!injected && !process.env.DATABASE_URL) {
     return {
       kind: "STORE_UNREACHABLE",
@@ -715,6 +721,18 @@ export async function readPromotedCivicDataBatch<T>(
   if (options.edge !== undefined) throw new Error("A batch civic-data read takes no reader edge entry.");
   if (scopes.length === 0) return [];
   const injected = options.store !== undefined;
+  if (!injected && !options.bypassCache) {
+    const edgeScopes = new Set(scopes.filter((scope) => currentPromotedEdge(recordClass, scope) !== null));
+    if (edgeScopes.size > 0) {
+      const remaining = scopes.filter((scope) => !edgeScopes.has(scope));
+      const fromStore = await readPromotedCivicDataBatch<T>(recordClass, remaining, options);
+      const byScope = new Map(remaining.map((scope, index) => [scope, fromStore[index]!]));
+      return Promise.all(scopes.map((scope) => edgeScopes.has(scope)
+        ? readPromotedCivicData<T>(recordClass, scope, options)
+        : byScope.get(scope)!));
+    }
+    for (const scope of scopes) refuseDatabaseInEdgeOnlyContext(`${recordClass}:${scope}`);
+  }
   if (!injected && !process.env.DATABASE_URL) {
     return scopes.map((scope) => ({
       kind: "STORE_UNREACHABLE",

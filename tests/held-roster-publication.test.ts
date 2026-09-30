@@ -86,7 +86,7 @@ test("a complete official roster records a departure; a partial one keeps the pr
   const rows = readHeldRoster(smaller, URL_)!.rows.map((row, i) => ({ recordId: `r${i}`, fields: { ...row } }));
   const complete = workerRosterPublication({ bodyId: BODY, prior: withRoster, now: NOW, reading: { id: "held:b", capture: capture(smaller), linkingPage: null, complete: true, method: "fixture", members: rows } });
   assert.deepEqual(complete.departed, ["Faye Jackson (Council Member)"]);
-  assert.equal(complete.payload.bodyRosters[0].members.length, 2);
+  assert.ok(complete.payload.bodyRosters[0].members.some(m => m.name === "Faye Jackson" && m.membershipSource), "kept on the earlier source until removal is published");
   const partial = workerRosterPublication({ bodyId: BODY, prior: withRoster, now: NOW, reading: { id: "held:c", capture: capture(smaller), linkingPage: null, complete: false, method: "fixture", members: rows } });
   assert.deepEqual(partial.departed, []);
   assert.ok(partial.payload.bodyRosters[0].members.some(m => m.name === "Faye Jackson" && m.membershipSource), "retained on its earlier source");

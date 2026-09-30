@@ -170,11 +170,15 @@ export function workerRosterPublication(input: {
   const departed: string[] = [];
   if (previous) {
     for (const member of previous.members.filter(old => !rendered.roster.members.some(current => current.id === old.id))) {
-      // A complete official roster that no longer lists someone records a departure.
-      if (reading.complete && unresolved.length === 0) { departed.push(`${member.name} (${member.officeTitle})`); continue; }
+      // A complete official roster that no longer lists someone records the departure. The
+      // registry door needs removal evidence to drop a row, so the member stays on their
+      // earlier source until that removal is published; the departure is owed work.
+      if (reading.complete && unresolved.length === 0) departed.push(`${member.name} (${member.officeTitle})`);
       rendered.roster.members.push({ ...member, membershipSource: member.membershipSource ?? { sourceUrl: previous.sourceUrl, sourceOrg: previous.sourceOrg, collectedAt: previous.collectedAt } });
       rendered.dispositions.push({ sourceId: member.id, canonicalId: member.id, state: "READER_ELIGIBLE",
-        reason: "Retained from the prior verified roster; this page was not a complete roster, so it does not establish a departure." });
+        reason: reading.complete && unresolved.length === 0
+          ? "No longer listed on the complete official roster; removal from the reader is owed and the member stays on the earlier source until then."
+          : "Retained from the prior verified roster; this page was not a complete roster, so it does not establish a departure." });
     }
   }
   // Holding office and running for it are separate facts; candidacy stays owed, never asserted.
@@ -326,7 +330,7 @@ ${readingId}`);
       outcome = { at: input.now, workerResultId: readingId, status: unresolved.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
         code: unresolved.length ? directoryPackage ? "DIRECTORY_ROWS_REQUIRE_REPAIR" : "ROSTER_IDENTITIES_REQUIRE_REPAIR" : published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",
         detail: `§3 passed for ${count} reader ${directoryPackage ? "bodies" : "members"}; the registry door accepted ${versionId} and typed reader readback passed.` +
-          (roster?.departed.length ? ` Departures recorded from the complete official roster: ${roster.departed.join("; ")}.` : "") +
+          (roster?.departed.length ? ` Departures recorded from the complete official roster (removal owed): ${roster.departed.join("; ")}.` : "") +
           (unresolved.length ? ` ${unresolved.length} row(s) stay open as work: ${unresolved.join(", ")}.` : " Remaining information stays open as work."),
         ...(unresolved.length ? { recovery: "WORKER" as const } : {}), candidateId, versionId, ...changes,
         ...(roster ? { acceptedRecordIds: roster.accepted.map(row => row.recordId), acceptedMembers: roster.accepted } : {}),

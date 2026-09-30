@@ -85,6 +85,7 @@ test("the national election directory follows its published form for any state",
 });
 
 test("official profile headings produce officeholders; news headlines do not", async () => {
+  const stages: string[] = [];
   const pages: Record<string, string> = {
     "https://www.usa.gov/state-governments": '<a id="mo" href="/states/missouri">Missouri</a>',
     "https://www.usa.gov/states/missouri": '<h1>Missouri</h1><a href="https://ag.example.gov/">Office of the Attorney General</a>',
@@ -93,9 +94,11 @@ test("official profile headings produce officeholders; news headlines do not", a
   };
   const result = await collectNationalPlaceSources({ now: "2026-09-30T00:00:00Z",
     divisions: [{ id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" }],
-    read: async url => { if (!(url in pages)) throw Error("No page"); return { url, text: pages[url], collectedAt: "2026-09-30T00:00:00Z" }; } });
+    onSources: async sources => { stages.push("ready"); assert.equal(sources.officials[0].name, "Jane Doe"); },
+    read: async url => { if (url.includes("eac.gov")) stages.push("elections"); if (!(url in pages)) throw Error("No page"); return { url, text: pages[url], collectedAt: "2026-09-30T00:00:00Z" }; } });
   assert.deepEqual(result.officials.map(o => [o.name, o.officeTitle]), [["Jane Doe", "Attorney General"]]);
   assert.equal(result.officials[0].document.url, "https://ag.example.gov/about");
+  assert.deepEqual(stages, ["ready", "elections"], "a ready officeholder reaches the publisher before unrelated election collection");
 });
 
 test("election dates use explicit source year and official lookup links remain navigation", () => {

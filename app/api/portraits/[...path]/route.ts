@@ -6,8 +6,10 @@ export async function GET(_request: Request, context: { params: Promise<{ path: 
     return new Response(null, { status: 404 });
   }
   const siteID = process.env.WTP_BLOBS_SITE_ID, token = process.env.WTP_BLOBS_TOKEN;
-  if (!siteID || !token) return new Response(null, { status: 503 });
-  const store = getStore({ name: "meanwhile-portraits", siteID, token });
+  // Hosted functions use Netlify's supplied context; the Linux host passes secrets.
+  let store;
+  try { store = getStore({ name: "meanwhile-portraits", ...(siteID && token ? { siteID, token } : {}) }); }
+  catch { return new Response(null, { status: 503 }); }
   const bytes = await store.get(path.join("/"), { type: "arrayBuffer" });
   if (bytes === null) return new Response(null, { status: 404 });
   const extension = path.at(-1)?.split(".").at(-1)?.toLowerCase();

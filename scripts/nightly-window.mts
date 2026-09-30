@@ -66,6 +66,7 @@ import { readMethodStore } from "../lib/method/candidate.ts";
 import { METHOD_STORE, readMethodCandidateStore } from "../lib/control-plane/scheduler/scout-candidates.ts";
 import { readConclusionStore } from "../lib/method/conclusions.ts";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
+import { resolvePilotMirror } from "./pilot-runtime-config.mjs";
 
 const ROOT = process.cwd();
 const HOST = hostname();
@@ -92,7 +93,7 @@ if (triggerArg !== null && !(WINDOW_TRIGGERS as readonly string[]).includes(trig
 }
 
 const WINDOW_INTENT_KEY = "nightly-window";
-const MIRROR = process.env.WTP_MIRROR ?? "G:/My Drive/we-the-people";
+const MIRROR = resolvePilotMirror(ROOT, process.env.WTP_MIRROR, process.env.WTP_RUNTIME_MODE === "staging");
 const FALLBACK = join(ROOT, ".mirror");
 const RUNS_DIR = join(ROOT, ".runtime", "nightly-window-runs");
 const HOLDER = `nightly-window@${HOST}#${process.pid}`;
@@ -167,7 +168,7 @@ function incident(stage: WindowIncident["stage"], code: string, detail: string, 
 /* ---------------------------------------------------------------- deliver --- */
 
 function deliver(body: string, headline: string): { where: string; mirrored: boolean } {
-  const target = existsSync(MIRROR) ? MIRROR : FALLBACK;
+  const target = MIRROR !== null && existsSync(MIRROR) ? MIRROR : FALLBACK;
   const mirrored = target === MIRROR;
   if (!mirrored) mkdirSync(FALLBACK, { recursive: true });
   const path = join(target, "nightly-window-digest.md");

@@ -91,6 +91,7 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } fr
 import { hostname } from "node:os";
 import { reserveRoutineRefresh, finishRoutineRefresh } from "../lib/civic-data/owner-refresh.ts";
 import { join } from "node:path";
+import { resolvePilotMirror } from "./pilot-runtime-config.mjs";
 
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
@@ -196,7 +197,7 @@ if (!process.env.WTP_BILLING_ENV_FILE) {
 }
 for (const name of BILLING_SECRET_NAMES) delete process.env[name];
 const argv = process.argv.slice(2);
-const STAGING = argv.includes("--staging");
+const STAGING = argv.includes("--staging") || process.env.WTP_RUNTIME_MODE === "staging";
 if (STAGING && process.env.WTP_DB_ROLE !== "local") throw new Error("Staging runner requires WTP_DB_ROLE=local");
 if (STAGING) process.env.WTP_RUNTIME_MODE = "staging";
 const AUTO_RELEASE_HANDOFF = !STAGING && argv.includes("--release-handoff");
@@ -251,7 +252,7 @@ const canary = argv.includes("--canary");
  * The Drive mirror. A SYNCED FOLDER, not an API — writing a file into it IS the
  * delivery. The variable name is the one this repository already uses.
  */
-const MIRROR = process.env.WTP_MIRROR ?? "G:/My Drive/we-the-people";
+const MIRROR = resolvePilotMirror(ROOT, process.env.WTP_MIRROR, STAGING);
 const FALLBACK = join(ROOT, ".mirror");
 const RUNS_DIR = join(ROOT, ".runtime", "freshness-shadow-runs");
 /**
@@ -366,13 +367,6 @@ interface RunRecord {
 /* ------------------------------------------------------------- one cycle --- */
 
 /**
- * The child's dispatch budget, in minutes, passed through so the cycle stops
- * starting work BEFORE this supervisor's ceiling and exits clean. The ceiling
- * below is the backstop for a child that hangs, never the normal end of a
- * healthy-but-slow cycle — a kill mid-dispatch leaks open occurrences that the
- * next cycle must resume and pay for again.
- */
-/**
  * `ownerIntentsUnreadable`: the read before this cycle failed, so the child is
  * told to keep its paid lane closed (`holdWhilePaused`).
  */
@@ -471,7 +465,7 @@ function laneShare(record: RunRecord): string[] {
       `- model spend: cycle ${safety.cycle.modelUsd === null ? "UNMEASURED" : `$${safety.cycle.modelUsd.toFixed(4)}`}; ` +
         `rolling 24h ${safety.rolling24Hours.modelUsd === null ? "UNMEASURED" : `$${safety.rolling24Hours.modelUsd.toFixed(4)}`} / $${safety.bounds.rolling24HourModelUsd.toFixed(2)} (the one spend ceiling)`,
       `- aggregate: dispatches ${safety.cycle.dispatches}; requests ${safety.cycle.requests}; payload bytes ${safety.cycle.payloadBytes}; ` +
-        `per-download cap ${safety.bounds.maxDownloadBytes}; wall ${safety.cycle.elapsedMs}/${0}ms`,
+        `per-download cap ${safety.bounds.maxDownloadBytes}; elapsed ${safety.cycle.elapsedMs}ms`,
       `- stopped because: ${safety.stoppedBecause.join("; ") || "no ceiling or circuit stopped work"}`,
       `- provider circuits: ${safety.providerCircuits.map(c => `${c.provider} until ${c.eligibleAt}: ${c.condition}`).join("; ") || "none"}`,
       `- last successful Fleet activity: ${safety.lastSuccessfulActivity ?? "none recorded"}`,
@@ -631,8 +625,8 @@ function buildDigest(record: RunRecord, cycle: number, at: string, ok: boolean):
 /* ---------------------------------------------------------------- delivery --- */
 
 function deliver(body: string, headline: string): { readonly where: string; readonly mirrored: boolean } {
-  const target = existsSync(MIRROR) ? MIRROR : FALLBACK;
-  const mirrored = target === MIRROR;
+  const mirrored = MIRROR !== null && existsSync(MIRROR);
+  const target = mirrored ? MIRROR : FALLBACK;
   if (!mirrored) mkdirSync(FALLBACK, { recursive: true });
   const path = join(target, "pilot-digest.md");
   writeFileSync(path, body, "utf8");
@@ -961,7 +955,7 @@ async function runIntakeRuntime(): Promise<void> {
 /**
  * (a) A FAILED cycle must still advance the heartbeat. `freshness-shadow` writes
  * the beat with `lastCycleOk: true` only when it reaches the end of a healthy
- * cycle, so a crash, a 15-minute wall kill, or a provider circuit break returns
+ * cycle, so a crash or a provider circuit break returns
  * here with `beatAt` frozen at the last SUCCESS — which reads as a dead runner
  * and cost real time on 2026-09-18. This records a beat on the non-success
  * outcome so `beatAt` tracks LIVENESS (with `lastCycleOk: false`), not just
@@ -1057,6 +1051,9 @@ let runtimeAdmissionsHeld = false;
 let standingRuntimeTimer: ReturnType<typeof setInterval> | null = null;
 let adminCopyTimer: ReturnType<typeof setInterval> | null = null;
 let adminCopyWork: Promise<void> | null = null;
+let researchCycleActive = false;
+let ownerWakePending = false;
+let activeControlRead: Promise<void> | null = null;
 /** The PAUSE_RUNNER intent whose reason was printed; null while not paused. */
 let announcedPause: string | null = null;
 let lastPauseBeatMs = 0;
@@ -1117,13 +1114,13 @@ async function stopAdminCopyClock(): Promise<void> {
   if (adminCopyWork) await adminCopyWork;
 }
 
-async function readRunnerControls(repos: ControlPlaneRepositories) {
+async function readRunnerControls(repos: ControlPlaneRepositories, force = false) {
   if (controlReader === null) {
     const url = controlPlaneUrlFromEnv();
     if (url === null) throw new Error("RUNNER_CONTROLS_UNCONFIGURED");
     controlReader = runnerControlReader(url, repos);
   }
-  return controlReader.read();
+  return controlReader.read(force);
 }
 
 /*
@@ -1145,7 +1142,17 @@ function startStandingRuntimeClock(): void {
   if (runtimeAdmissionsHeld || standingRuntimeTimer !== null) return;
   runStandingRuntimeTick("independent standing clock startup", true);
   standingRuntimeTimer = setInterval(
-    () => runStandingRuntimeTick("independent standing clock"),
+    () => {
+      runStandingRuntimeTick("independent standing clock");
+      // Long-running research must not postpone the owner's controls until its end.
+      if (researchCycleActive && !canary && activeControlRead === null) {
+        activeControlRead = ownerSays().then(says => {
+          if (says === "START_NOW") ownerWakePending = true;
+        }).catch(error => {
+          console.error(`  active runner controls could not be applied: ${error instanceof Error ? error.message : String(error)}`);
+        }).finally(() => { activeControlRead = null; });
+      }
+    },
     POLL_MS,
   );
 }
@@ -1417,7 +1424,9 @@ async function ownerSays(): Promise<OwnerSays> {
       console.log(`  runner paused by owner since ${pause.intent.requestedAt}: ${pause.intent.note ?? "(no reason given)"}`);
     }
     if (pause.honored === null) {
-      await honorRunnerIntent(repos, pause.intent, "idling on the owner's pause; no cycle starts until RESUME_RUNNER");
+      await honorRunnerIntent(repos, pause.intent, researchCycleActive
+        ? "pause applied; the current cycle is settling and no next cycle starts until RESUME_RUNNER"
+        : "idling on the owner's pause; no cycle starts until RESUME_RUNNER");
     }
     if (Date.now() - lastPauseBeatMs >= PAUSE_BEAT_MS) {
       try {
@@ -1441,22 +1450,24 @@ async function ownerSays(): Promise<OwnerSays> {
   if (resume !== null) {
     const first = !actedOn.has(resume.intentId);
     actedOn.add(resume.intentId);
-    await honorRunnerIntent(repos, resume, "resumed; next cycle starts now");
+    await honorRunnerIntent(repos, resume, researchCycleActive
+      ? "resumed; next cycle follows the current active cycle"
+      : "resumed; next cycle starts now");
     if (first) {
       console.log(
         `  runner resumed by owner (${resume.requestedAt}${resume.note ? `: ${resume.note}` : ""}) — ` +
-          `starting the next cycle now at ${new Date().toISOString()}`,
+          (researchCycleActive ? "next cycle follows the current active cycle" : `starting the next cycle now at ${new Date().toISOString()}`),
       );
       return "START_NOW";
     }
   }
   if (reading.pendingRunNow.length > 0) {
-    console.log(`  a RUN_CYCLE_NOW intent is pending — starting the next cycle early at ${new Date().toISOString()}`);
+    if (!researchCycleActive) console.log(`  a RUN_CYCLE_NOW intent is pending — starting the next cycle early at ${new Date().toISOString()}`);
     return "START_NOW";
   }
   if (reading.pendingDispatch.length > 0) {
     const first = reading.pendingDispatch[0];
-    console.log(
+    if (!researchCycleActive) console.log(
       `  ${reading.pendingDispatch.length} DISPATCH intent(s) pending (oldest: "${first.note ?? ""}") — ` +
         `starting the next cycle early at ${new Date().toISOString()}`,
     );
@@ -1493,12 +1504,8 @@ async function ownerSays(): Promise<OwnerSays> {
 }
 /* ===================== THE NIGHTLY RESEARCH WINDOW — begin =====================
  *
- * The window is scheduled INSIDE this runner, on the machine's own clock:
- * between cycles the one-minute poll asks whether the 04:00 America/New_York
- * window for the current local date has run, and runs it when it has not. A
- * runner that was down across 04:00 runs the missed window at its first poll,
- * and the window record names the catch-up. No second Scheduled Task or GitHub
- * Actions workflow is a wakeup or clock for this process.
+ * Research windows run after cycles and when an owner window action arrives.
+ * There is no time-of-day restriction or separate night clock.
  *
  * This child is research-only and has no civic-data acquisition, promotion,
  * Git, build, deploy, or Reader materialization door.
@@ -1607,6 +1614,7 @@ async function runNightlyWindow(trigger: string): Promise<void> {
 /* ===================== LANE E — THE NIGHTLY WINDOW (RULING 242) — end ===================== */
 
 async function sleepUnlessRunNow(totalMs: number): Promise<void> {
+  if (ownerWakePending) { ownerWakePending = false; return; }
   const until = Date.now() + totalMs;
   while (Date.now() < until) {
     await sleep(Math.min(POLL_MS, until - Date.now()));
@@ -1630,7 +1638,7 @@ async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
   try {
     const repos = await ownerRepositories();
     if (repos === null) return ordinary;
-    const { config: policy, state, research: intents } = await readRunnerControls(repos);
+    const { config: policy, state, research: intents } = await readRunnerControls(repos, true);
     const intent = readIntents(intents);
     if (intent.runnerPause.paused || intent.paused) return ordinary;
     const scopes = expansionScopesOf(policy !== null && isAdminConfig(policy.value) ? policy.value : null);
@@ -1709,7 +1717,7 @@ console.log(
   `pilot-runner · control plane ${provider}, interval ${INTERVAL_MIN} min, ` +
     `${CYCLES === Infinity ? "running until stopped" : `${CYCLES} cycle(s)`}\n` +
     `  singleton: ${PILOT_PROCESS_LEASE.host}:${PILOT_PROCESS_LEASE.port}\n` +
-    `  mirror: ${MIRROR}${existsSync(MIRROR) ? "" : " (NOT PRESENT — digests fall back to .mirror/ and say so)"}`,
+    `  mirror: ${MIRROR ?? "disabled for staging"}${MIRROR !== null && existsSync(MIRROR) ? "" : " (digests stay in .mirror/)"}`,
 );
 
 /**
@@ -1763,7 +1771,9 @@ while (cycle < CYCLES) {
   );
 
   const leaseRecovered = await recoverExitedWindowHolder("research cycle");
-  const result = await runOneCycle(owner);
+  researchCycleActive = true;
+  const result = await runOneCycle(owner).finally(() => { researchCycleActive = false; });
+  await activeControlRead;
   if (result.circuit) {
     const c = result.circuit;
     const headline = `${new Date().toISOString()} - cycle ${cycle} - CIRCUIT BROKEN - ${c.provider} latched until ${c.eligibleAt}`;
@@ -1783,8 +1793,8 @@ while (cycle < CYCLES) {
       break;
     }
     if (cycle >= CYCLES) break;
-    // The latched provider is not polled through owner/window bookkeeping.
-    await sleep(INTERVAL_MIN * 60_000);
+    // Owner controls remain live while the child's provider circuit is latched.
+    await sleepUnlessRunNow(INTERVAL_MIN * 60_000);
     continue;
   }
   let record: RunRecord = {};
@@ -1893,6 +1903,7 @@ while (cycle < CYCLES) {
 
 if (standingRuntimeTimer !== null) clearInterval(standingRuntimeTimer);
 await stopAdminCopyClock();
+await activeControlRead;
 if (hangWatchdog !== null) await hangWatchdog.stop();
 await standingRuntimeScheduler.waitForIdle();
 await PILOT_PROCESS_LEASE.release();

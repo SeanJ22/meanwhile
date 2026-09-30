@@ -3,7 +3,7 @@ import type { RoutineSourceTask } from "./runner.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
 import { isWorkerReaderContract } from "./worker-reader-contracts.ts";
-import { latestParserResult } from "./worker-publication-evidence.ts";
+import { auditPull, latestParserResult } from "./worker-publication-evidence.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { ZERO_RELEASE_EVENTS } from "./release.ts";
 
@@ -28,7 +28,9 @@ export function workerPublicationTasks(items: readonly WorkItem[], results: read
     const parser = latestParserResult(results, item.id);
     if (parser && Date.parse(parser.endedAt) <= nowMs) {
       // A published extraction, or a hold only new evidence can clear, waits for a newer extraction.
-      if (outcome?.workerResultId === parser.id && (outcome.status !== "HELD" || outcome.recovery === "WORKER")) return [];
+      // ...unless the Auditor broke it after that publication: then it is re-checked once.
+      const pull = auditPull(results, parser);
+      if (outcome?.workerResultId === parser.id && (outcome.status !== "HELD" || outcome.recovery === "WORKER") && !(pull && pull.at > outcome.at)) return [];
       return [{ item, requestedAt: parser.endedAt }];
     }
     // No extraction yet: a roster or a body directory can still be read in code from saved official pages.

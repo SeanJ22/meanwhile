@@ -40,6 +40,8 @@ export function section3SourceReceipt(captures: readonly WorkerPublicationCaptur
  */
 export function verifiedWorkerRecords(input: {
   plan: AutonomousWorkPlan; parser: WorkerResultRecord; captures: readonly WorkerPublicationCapture[]; now: string;
+  /** Every worker result, so a BROKE audit of this extraction pulls what it broke. */
+  results?: readonly WorkerResultRecord[];
 }) {
   const { plan, parser, now } = input;
   const contract = plan.contract;
@@ -48,6 +50,8 @@ export function verifiedWorkerRecords(input: {
   if (contract.schemaVersion !== 2) throw new Error("WORKER_PUBLICATION_CONTRACT_UNRESOLVED");
   requirePublication(extraction.role === "PARSER" && extraction.verdict === "EXTRACTED", "PARSER_RESULT_UNRESOLVED");
   if (extraction.role !== "PARSER") throw new Error("WORKER_PUBLICATION_PARSER_RESULT_UNRESOLVED");
+  const pulled = input.results ? auditPull(input.results, parser) : null;
+  requirePublication(!pulled?.all, "AUDIT_BROKE:the Auditor broke this extraction; a new extraction is owed");
   const primary = input.captures.find(c => c.evidence.artifactId === extraction.artifactId);
   requirePublication(primary && captureIntact(primary), "PRIMARY_CAPTURE_MISSING_OR_INCOMPLETE");
   const linkingPage = linkingPageFrom(primary.evidence.canonicalUrl, input.captures.filter(captureIntact).map(c => c.evidence));
@@ -68,7 +72,7 @@ ${f.field}`));
     const fields = Object.fromEntries(Object.entries(record.fields).filter(([field]) => !badFields.has(`${record.id}
 ${field}`)));
     const verdict = section3Record({ recordClass: contract.recordClass, fields, page, now, pageVerdict, minimums });
-    if (heldIds.has(record.id) || !verdict.live) { heldRecordIds.push(record.id); continue; }
+    if (heldIds.has(record.id) || pulled?.recordIds.has(record.id) || !verdict.live) { heldRecordIds.push(record.id); continue; }
     // Only verified values publish; the rest stay blank and owed.
     records.push({ ...record, fields: Object.fromEntries(Object.entries(record.fields).filter(([field]) => verdict.verifiedFields.includes(field))) });
   }
@@ -133,4 +137,21 @@ export function validatorObservation(input: {
  */
 export function registryEdition(label: string): string {
   return `worker-roster:wr-${createHash("sha256").update(label).digest("hex").slice(0, 24)}`;
+}
+
+/**
+ * What a BROKE post-publication audit (S5's Auditor) pulls from an extraction:
+ * the records it names, or the whole extraction when it names none. Null when
+ * no audit broke it. `at` is the newest such audit, so the publisher re-checks
+ * once after it.
+ */
+export function auditPull(results: readonly WorkerResultRecord[], parser: WorkerResultRecord): { readonly all: boolean; readonly recordIds: ReadonlySet<string>; readonly at: string } | null {
+  if (parser.result.role !== "PARSER") return null;
+  const attemptId = parser.result.attemptId;
+  const broke = results.filter(r => r.workItemId === parser.workItemId && r.result.role === "ADVERSARIAL_AUDITOR" &&
+    r.result.verdict === "BROKE" && r.result.producerAttemptId === attemptId);
+  if (!broke.length) return null;
+  const named = broke.map(r => (r.result as { brokenRecordIds?: readonly string[] }).brokenRecordIds ?? null);
+  return { all: named.some(ids => ids === null || ids.length === 0), recordIds: new Set(named.flatMap(ids => ids ?? [])),
+    at: broke.map(r => r.endedAt).sort().at(-1)! };
 }

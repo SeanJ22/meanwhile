@@ -14,7 +14,7 @@ import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { heldDirectoryReading, materializeBodyDirectoryWork, workerBodyDirectoryPackage, type DirectoryReading } from "./worker-body-directory.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
-import { capturesForPublication, captureIntact, latestParserResult, registryEdition, section3SourceReceipt, validatorObservation } from "./worker-publication-evidence.ts";
+import { auditPull, capturesForPublication, captureIntact, latestParserResult, registryEdition, section3SourceReceipt, validatorObservation } from "./worker-publication-evidence.ts";
 import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
 import { readHeldRoster } from "./worker-held-roster.ts";
 import { localHeldCaptureReader } from "./worker-publication-context.ts";
@@ -304,7 +304,9 @@ export async function publishWorkerRosterResults(input: {
         if (!heldDirectory) continue;
       }
       if (!directory) {
-        reading = parser ? parserReading(parser, plan.contract, captures) : null;
+        const pull = parser ? auditPull(records, parser) : null;
+        reading = parser && !pull?.all ? parserReading(parser, plan.contract, captures) : null;
+        if (reading && pull) reading = { ...reading, members: reading.members.filter(member => !pull.recordIds.has(member.recordId)) };
         if (!reading) {
           if (!heldByBody.has(bodyId)) heldByBody.set(bodyId, (async () => {
             const siblings = allItems.filter(other => other.autonomousPlan?.publication?.bodyId === bodyId);
@@ -316,11 +318,12 @@ export async function publishWorkerRosterResults(input: {
         if (!reading) continue;
       }
       readingId = directory ? parser?.id ?? heldDirectory!.id : reading!.id;
-      if (item.publicationOutcome?.workerResultId === readingId && item.publicationOutcome.status !== "HELD") { report.push({ workItemId: id, outcome: item.publicationOutcome }); continue; }
+      const brokeAfter = parser ? auditPull(records, parser) : null;
+      if (item.publicationOutcome?.workerResultId === readingId && item.publicationOutcome.status !== "HELD" && !(brokeAfter && brokeAfter.at > item.publicationOutcome.at)) { report.push({ workItemId: id, outcome: item.publicationOutcome }); continue; }
       const already = publishedByBody.get(`${bodyId}
 ${readingId}`);
       if (already) throw Object.assign(new Error("REUSED"), { reused: already });
-      const directoryPackage = !directory ? null : parser ? workerBodyDirectoryPackage({ plan, parser, captures, prior, now: input.now })
+      const directoryPackage = !directory ? null : parser ? workerBodyDirectoryPackage({ plan, parser, captures, prior, now: input.now, results: records })
         : workerBodyDirectoryPackage({ plan, held: heldDirectory!, prior, now: input.now });
       const roster = directory ? null : workerRosterPublication({ bodyId, reading: reading!, prior, now: input.now });
       const prepared: RegistryRuntimePackage = directoryPackage?.prepared ?? roster!;

@@ -14,7 +14,7 @@ import { processRegisteredManualCandidate } from "./promotion.ts";
 import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
-import { capturesForPublication, latestParserResult, verifiedWorkerRecords, requirePublication, validatorObservation } from "./worker-publication-evidence.ts";
+import { auditPull, capturesForPublication, latestParserResult, verifiedWorkerRecords, requirePublication, validatorObservation } from "./worker-publication-evidence.ts";
 import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
 import { workerReaderClassMatches, isWorkerReaderContract, type WorkerReaderContract } from "./worker-reader-contracts.ts";
 import { createHash } from "node:crypto";
@@ -144,7 +144,9 @@ export async function publishWorkerReaderResults(input: {
     // The Validator's §3 check runs here on the latest extraction; no auditor or Send is needed.
     const parser = latestParserResult(results, id);
     if (!parser || plan?.publication?.contractId !== input.contractId) continue;
-    if (item.publicationOutcome?.workerResultId === parser.id && item.publicationOutcome.recovery !== "PUBLISHER") {
+    // A BROKE audit after this publication is re-checked once; otherwise a published or worker-owed result waits for a newer extraction.
+    const pull = auditPull(results, parser);
+    if (item.publicationOutcome?.workerResultId === parser.id && item.publicationOutcome.recovery !== "PUBLISHER" && !(pull && pull.at > item.publicationOutcome.at)) {
       report.push({ workItemId: id, outcome: item.publicationOutcome }); continue;
     }
     let outcome: NonNullable<WorkItem["publicationOutcome"]>, candidateId: string | null = null, versionId: string | null = null;
@@ -153,7 +155,7 @@ export async function publishWorkerReaderResults(input: {
       requirePublication(parser.result.role === "PARSER" && plan.contract.schemaVersion === 2, "INPUT_CHAIN_MISSING");
       captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture: input.readCapture, officialLinks: manual.officialLinks });
       const registry = await readRegistryRuntimePrior(input.store, input.now);
-      const checked = workerReaderPackage({ plan, parser, captures, registry, now: input.now });
+      const checked = workerReaderPackage({ plan, parser, captures, registry, now: input.now, results });
       const prior = await readManualProjectionPrior(input.contractId, input.store, input.now);
       const before = (prior?.payload as CuratedReaderProjection | undefined)?.records ?? [];
       const prepared = input.contractId === "comment-access" ? inheritVerifiedCommentDetails(checked, prior) : checked;

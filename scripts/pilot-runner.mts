@@ -622,8 +622,8 @@ function buildDigest(record: RunRecord, cycle: number, at: string, ok: boolean):
 /* ---------------------------------------------------------------- delivery --- */
 
 function deliver(body: string, headline: string): { readonly where: string; readonly mirrored: boolean } {
-  const target = MIRROR !== null && existsSync(MIRROR) ? MIRROR : FALLBACK;
-  const mirrored = target === MIRROR;
+  const mirrored = MIRROR !== null && existsSync(MIRROR);
+  const target = mirrored ? MIRROR : FALLBACK;
   if (!mirrored) mkdirSync(FALLBACK, { recursive: true });
   const path = join(target, "pilot-digest.md");
   writeFileSync(path, body, "utf8");

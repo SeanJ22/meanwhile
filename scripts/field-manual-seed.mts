@@ -19,18 +19,20 @@
  *     [--target=control-plane|file|memory] [--dry]
  */
 
-import { readFileSync, statSync } from "node:fs";
+import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 import {
-  emptyFieldManual,
   fieldManualEntryId,
-  upsertEntries,
+  readFieldManual,
+  writeFieldManual,
   type FieldManualEntry,
   type FieldManualOutcome,
   type FieldManualRole,
 } from "../lib/control-plane/field-manual.ts";
 import { readMethodStore } from "../lib/method/candidate.ts";
+import { KNOWLEDGE_SOURCE, knowledgeEntries } from "../lib/method/manual-bridge.ts";
+import { leadLine, researchDocEntries, splitMarkdownDocument } from "../lib/method/research-docs.ts";
 import { MANIFEST_ROUTES } from "../lib/hunt/branch-manifest.ts";
 import { KNOWN_PLATFORMS } from "../lib/hunt/platform-tenancy.ts";
 import { DESCENT_SEEDS } from "../lib/hunt/descent-seeds.ts";
@@ -85,12 +87,6 @@ function latestDate(...values: (string | null | undefined)[]): string | null {
   return dates.length === 0 ? null : dates.sort().at(-1)!;
 }
 
-/** The first bare http(s) URL in a block of prose, trailing punctuation trimmed. A route sitting in a sentence. */
-function firstUrl(text: string): string | null {
-  const m = /\bhttps?:\/\/[^\s)>\]"'`]+/.exec(text);
-  return m ? m[0].replace(/[.,;:]+$/, "") : null;
-}
-
 const PLATFORM_TOKENS: readonly [RegExp, string][] = [
   [/legistar[- ]?insite/i, "legistar-insite"], [/legistar/i, "legistar"], [/civicclerk/i, "civicclerk"],
   [/civicplus/i, "civicplus"], [/granicus/i, "granicus"], [/novus\s?agenda|novus/i, "novusagenda"],
@@ -104,35 +100,6 @@ function platformHints(text: string): string[] {
   return [...out];
 }
 
-/**
- * Split a Markdown doc into its `##`/`###` sections (the `#` title is skipped),
- * fence-aware so a `##` inside a ``` block is never read as a heading. The unit
- * a worker inherits from the per-state dossiers and the playbook: one titled,
- * queryable finding rather than a 292 KB file behind a filename.
- */
-function splitMarkdownSections(text: string): { level: number; heading: string; body: string }[] {
-  const out: { level: number; heading: string; body: string }[] = [];
-  let cur: { level: number; heading: string; body: string[] } | null = null;
-  let inFence = false;
-  for (const line of text.split(/\r?\n/)) {
-    if (/^\s*```/.test(line)) inFence = !inFence;
-    const m = inFence ? null : /^(#{2,3})\s+(.*\S)\s*$/.exec(line);
-    if (m) {
-      if (cur) out.push({ level: cur.level, heading: cur.heading, body: cur.body.join("\n").trim() });
-      cur = { level: m[1]!.length, heading: m[2]!.trim(), body: [] };
-    } else if (cur) {
-      cur.body.push(line);
-    }
-  }
-  if (cur) out.push({ level: cur.level, heading: cur.heading, body: cur.body.join("\n").trim() });
-  return out;
-}
-
-function firstProseLine(body: string): string {
-  return body.split("\n").find((l) => l.trim() && !/^[|>`#-]/.test(l.trim()))?.replace(/\s+/g, " ").trim()
-    ?? body.split("\n").find((l) => l.trim())?.replace(/\s+/g, " ").trim() ?? "";
-}
-
 /* ------------------------------------------------------------- importers --- */
 
 const perSource = new Map<string, number>();
@@ -143,28 +110,7 @@ function collect(source: string, entries: FieldManualEntry[]): FieldManualEntry[
 
 function fromKnowledge(): FieldManualEntry[] {
   const store = readMethodStore(join(ROOT, "data", "method", "knowledge.json"));
-  const src = "data/method/knowledge.json";
-  return collect(src, store.routes.map((route) => {
-    const r = route as unknown as Record<string, unknown>;
-    const applicability = (r.applicability ?? {}) as Record<string, unknown>;
-    const outcomes = (r.outcomes as { outcome?: unknown; walkedOn?: unknown }[] | undefined) ?? [];
-    return {
-      id: fieldManualEntryId(src, String(r.id)),
-      role: "SCOUT" as FieldManualRole,
-      kind: "ROUTE",
-      title: String(r.title ?? r.id),
-      summary: `${String(r.kind ?? "RETRIEVAL")}; ${strings(r.fields).join(", ") || "any field"}; ${String((r as { note?: unknown }).note ?? "")}`.slice(0, 300),
-      states: strings(applicability.states),
-      recordClasses: strings(r.fields),
-      platforms: strings(applicability.platforms),
-      outcome: bestOutcome(outcomes),
-      url: null,
-      source: src,
-      observedAt: latestDate(store.updatedOn, ...outcomes.map((o) => String(o.walkedOn ?? ""))),
-      tier: typeof r.tier === "string" ? r.tier : null,
-      payload: route,
-    };
-  }));
+  return collect(KNOWLEDGE_SOURCE, knowledgeEntries(store));
 }
 
 function fromManifest(): FieldManualEntry[] {
@@ -299,19 +245,6 @@ function fromDocs(): FieldManualEntry[] {
     { path: "docs/branch-manifest.md", kind: "PLAYBOOK", role: "SCOUT", states: [], title: "The branch manifest, question-indexed (candidate field → ordered route ids)" },
     { path: "docs/sources.md", kind: "SOURCE_REGISTER", role: "SHARED", states: [], title: "The global source & credential register (wired/auth/licence)" },
   ];
-  for (const state of ["az", "nh", "nj"]) {
-    for (const name of ["sources", "NOTES", "tenancy"] as const) {
-      docs.push({
-        path: `states/${state}/${name}.md`,
-        kind: name === "sources" ? "SOURCE_REGISTER" : name === "tenancy" ? "PLATFORM_FINGERPRINT" : "STATE_NOTE",
-        role: "SHARED",
-        states: [state],
-        title: `${state.toUpperCase()} ${name === "NOTES" ? "dossier — jurisdiction-specific walls, vendor quirks, statutes" : name === "sources" ? "source register & filing-officer statute shape" : "platform-tenancy evidence"}`,
-      });
-    }
-    docs.push({ path: `states/${state}/descent.md`, kind: "DESCENT_NOTE", role: "SHARED", states: [state], title: `${state.toUpperCase()} descent narrative — the tier walk, per level found/followed/yielded/barren` });
-    docs.push({ path: `states/${state}/descent-candidates.md`, kind: "DESCENT_NOTE", role: "SHARED", states: [state], title: `${state.toUpperCase()} descent candidates — harvested bodies not yet matched to the registry` });
-  }
   const entries: FieldManualEntry[] = [];
   for (const doc of docs) {
     let bytes = 0;
@@ -504,35 +437,33 @@ function fromCitationConfirmations(): FieldManualEntry[] {
   return collect(path, entries);
 }
 
-/** The per-state dossiers, section by section — each `##`/`###` finding (a wall, a vendor quirk, a statute, a route in prose) as its own queryable entry, the full section kept in payload. */
-function fromStateNotes(): FieldManualEntry[] {
+/** Every markdown file under a directory, repo-relative with forward slashes. */
+function markdownUnder(dir: string): string[] {
+  const out: string[] = [];
+  let names: import("node:fs").Dirent[];
+  try { names = readdirSync(join(ROOT, dir), { withFileTypes: true }); } catch { return out; }
+  for (const d of names) {
+    const rel = `${dir}/${d.name}`;
+    if (d.isDirectory()) out.push(...markdownUnder(rel));
+    else if (d.name.endsWith(".md")) out.push(rel);
+  }
+  return out.sort();
+}
+
+/**
+ * The research docs, IN FULL: every `states/**` and `docs/detective/` markdown file,
+ * each `##`/`###` section its own entry with its whole body in the payload. Not a
+ * pointer to the file: the text itself is in the manual every worker reads.
+ */
+function fromResearchDocs(): FieldManualEntry[] {
   const entries: FieldManualEntry[] = [];
-  for (const state of ["az", "nh", "nj"]) {
-    const path = `states/${state}/NOTES.md`;
+  for (const path of [...markdownUnder("states"), ...markdownUnder("docs/detective")]) {
     let text: string;
     try { text = readFileSync(join(ROOT, path), "utf8"); } catch { continue; }
-    for (const sec of splitMarkdownSections(text)) {
-      if (!sec.body) continue;
-      const lead = firstProseLine(sec.body);
-      entries.push({
-        id: fieldManualEntryId(path, sec.heading),
-        role: "SHARED",
-        kind: "STATE_NOTE",
-        title: `${state.toUpperCase()} — ${sec.heading}`.slice(0, 200),
-        summary: (lead || sec.heading).slice(0, 300),
-        states: [state],
-        recordClasses: [],
-        platforms: platformHints(`${sec.heading}\n${sec.body.slice(0, 600)}`),
-        outcome: "REFERENCE",
-        url: firstUrl(sec.body),
-        source: path,
-        observedAt: latestDate(sec.heading, ...sec.body.split("\n").slice(0, 8)),
-        tier: null,
-        payload: { heading: sec.heading, level: sec.level, body: sec.body },
-      });
-    }
+    const state = /^states\/([a-z]{2})\//.exec(path)?.[1];
+    entries.push(...researchDocEntries({ path, text, states: state ? [state] : stateOf(path, text.slice(0, 400)), platformHints }));
   }
-  return collect("states/*/NOTES.md", entries);
+  return collect("states/** and docs/detective/ (full text)", entries);
 }
 
 /** The ZIP playbook, indexed — every `##`/`###` rung/recipe as a queryable entry (the "what to try for a township clerk" index). The 292 KB of prose stays the pointer entry; the index is what a worker can actually reach. */
@@ -542,8 +473,8 @@ function fromPlaybookIndex(): FieldManualEntry[] {
   let text: string;
   try { text = readFileSync(join(ROOT, path), "utf8"); } catch { return collect(src, []); }
   const entries: FieldManualEntry[] = [];
-  for (const sec of splitMarkdownSections(text)) {
-    const lead = firstProseLine(sec.body);
+  for (const sec of splitMarkdownDocument(text).sections) {
+    const lead = leadLine(sec.body);
     entries.push({
       id: fieldManualEntryId(src, sec.heading),
       role: "SHARED",
@@ -591,7 +522,7 @@ async function main(): Promise<void> {
     ...fromTiers(),
     ...fromDescentResults(),
     ...fromCitationConfirmations(),
-    ...fromStateNotes(),
+    ...fromResearchDocs(),
     ...fromPlaybookIndex(),
   ];
 
@@ -612,20 +543,11 @@ async function main(): Promise<void> {
     return;
   }
 
-  const now = new Date().toISOString();
-  for (let attempt = 0; attempt < 5; attempt += 1) {
-    const current = await repos.fieldManual.read("live");
-    const next = upsertEntries(current?.value ?? emptyFieldManual(), entries, now);
-    try {
-      if (current === null) await repos.fieldManual.put("live", next, now);
-      else await repos.fieldManual.compareAndSet("live", current.revision, next, now);
-      console.log(`\nWrote cp_field_manual/live (${target}): ${next.entries.length} entries total.`);
-      return;
-    } catch (error) {
-      if (attempt === 4) throw error;
-      console.log(`  retry ${attempt + 1}: ${error instanceof Error ? error.message : String(error)}`);
-    }
-  }
+  const written = await writeFieldManual(repos, entries, new Date().toISOString());
+  if (written.error) throw new Error(`field-manual-seed: the write failed: ${written.error}`);
+  const total = (await readFieldManual(repos)).store.entries.length;
+  console.log(`
+Wrote cp_field_manual/live (${target}): ${total} entries total (${written.written} offered by this seed).`);
 }
 
 await main();

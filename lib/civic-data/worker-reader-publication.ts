@@ -21,6 +21,9 @@ import { createHash } from "node:crypto";
 import { officialFilingIssue } from "./official-filings.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
 import type { CommentAccess } from "../registry/comment-access-client.ts";
+import type { ArtifactRecord } from "../control-plane/repository/types.ts";
+import { publishHeldElectionOffices } from "./worker-held-elections.ts";
+import { localHeldCaptureReader } from "./worker-publication-context.ts";
 import { EVERYDAY_TOPIC_IDS, everydayRoutingProjectionFromRecords, type EverydayRoutingRecord } from "../routing/everyday.ts";
 const text = (value: FieldValue | undefined) => typeof value === "string" ? value : "";
 const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
@@ -132,9 +135,17 @@ export function workerReaderPackage(input: Parameters<typeof verifiedWorkerRecor
 export async function publishWorkerReaderResults(input: {
   repos: ControlPlaneRepositories; store: RoutineDataStore; contractId: WorkerReaderContract; workItemIds: readonly string[]; now: string;
   readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;
+  /** Reads a held page straight from the vault by its artifact record; enables reuse of any job's saved evidence. */
+  readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
 }) {
   const results = await readCompletedWorkerResults(input.repos);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
+  // Owed election work with no extraction yet: the government's saved election pages are read in code.
+  if (input.contractId === "ballot-navigation") {
+    const held = input.workItemIds.filter(id => !latestParserResult(results, id));
+    if (held.length) report.push(...await publishHeldElectionOffices({ repos: input.repos, store: input.store, workItemIds: held, now: input.now,
+      readHeld: input.readHeld ?? localHeldCaptureReader() }));
+  }
   // The Validator reads what earlier passes learned before it checks anything, and writes back once at the end.
   const manual = await readValidatorManual(input.repos);
   const learned: ValidatorObservation[] = [];

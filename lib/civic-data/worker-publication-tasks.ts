@@ -33,8 +33,10 @@ export function workerPublicationTasks(items: readonly WorkItem[], results: read
       if (outcome?.workerResultId === parser.id && (outcome.status !== "HELD" || outcome.recovery === "WORKER") && !(pull && pull.at > outcome.at)) return [];
       return [{ item, requestedAt: parser.endedAt }];
     }
-    // No extraction yet: a roster or a body directory can still be read in code from saved official pages.
-    if (target !== "registry-runtime-bindings" || !["OFFICIAL_ROSTER", "OFFICIAL_BOARD_DIRECTORY"].includes(plan.contract.recordClass)) return [];
+    // No extraction yet: a roster, a body directory or a government's election offices can still be read in code from saved official pages.
+    const heldReadable = target === "registry-runtime-bindings" ? ["OFFICIAL_ROSTER", "OFFICIAL_BOARD_DIRECTORY"].includes(plan.contract.recordClass)
+      : target === "ballot-navigation" && plan.contract.recordClass === "VOTER_ACCESS_ROUTE";
+    if (!heldReadable) return [];
     if (outcome && nowMs - Date.parse(outcome.at) < HOUR) return [];
     return [{ item, requestedAt: hour }];
   });

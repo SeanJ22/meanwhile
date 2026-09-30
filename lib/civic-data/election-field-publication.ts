@@ -57,9 +57,12 @@ export async function publishElectionFields(input: {
       gap("Saved complete source capture is missing or does not match these bytes."); continue;
     }
     const page = { url: field.sourceUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: field.linkingPage };
-    const values: Record<string, unknown> = { value: field.value };
+    // An election office's phone line is a fact too: it must be on the saved page.
+    const office = field.kind === "election_office";
+    if (office && !field.phone?.trim()) { gap("Election office has no phone line on the saved page."); continue; }
+    const values: Record<string, unknown> = { value: field.value, ...(office ? { phone: field.phone } : {}) };
     field.quote.split(/\r?\n/).filter(Boolean).forEach((line, index) => { values[`quote${index}`] = line; });
-    const verdict = input.verify({ recordClass: field.kind.endsWith("_lookup") ? "VOTER_ACCESS_ROUTE" : "BALLOT_CONTEST",
+    const verdict = input.verify({ recordClass: office ? "SERVICE_CONTACT" : field.kind.endsWith("_lookup") ? "VOTER_ACCESS_ROUTE" : "BALLOT_CONTEST",
       fields: values, minimums: Object.keys(values), page, now: input.now });
     if (!verdict.live) { gap(verdict.reason ?? "Value or quote is unverified."); continue; }
     const dates = datesInQuote(field.quote);
@@ -75,6 +78,7 @@ export async function publishElectionFields(input: {
     records.set(id, { id, kind: "ELECTION_FIELD", value: {
       state, divisionId: field.divisionId, fieldKind: field.kind, text: field.value, quote: field.quote, dates: field.dates,
       url: field.sourceUrl, navigationUrl: field.kind.endsWith("_lookup") ? field.value : null,
+      ...(office ? { phone: field.phone } : {}),
       verifiedAt: input.now, collectedAt: capture.observedAt, sourceOrg: capture.evidence.sourceId,
     } });
     sources.set(field.sourceUrl, { requestedUrl: field.sourceUrl, finalUrl: field.sourceUrl, publisher: capture.evidence.sourceId,

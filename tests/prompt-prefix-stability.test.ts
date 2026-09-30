@@ -36,7 +36,7 @@ import type { IndependentAuditContext, WorkerEvidence } from "../lib/control-pla
 import { contentHash } from "../lib/control-plane/ids.ts";
 import { synthesisRequestBody } from "../lib/ask/synthesize.ts";
 import type { EvidencePack } from "../lib/ask/evidence.ts";
-import { interpretPrompt, interpretQuestion } from "../lib/ask/interpret.ts";
+import { interpretSystem, interpretQuestion } from "../lib/ask/interpret.ts";
 import { classifierPrompt, classifyQuestion } from "../lib/routing/classifier.ts";
 import { askUnsourced } from "../lib/routing/unsourced-fallback.ts";
 
@@ -151,18 +151,23 @@ async function captureBody(run: (fetchImpl: typeof fetch) => Promise<unknown>): 
   return body!;
 }
 
-test("PC-3 Ask interpret: the system prompt is identical for the same ZIP context; the question and the conversation are messages (unmarked at 406 static tokens)", async () => {
+test("PC-3 Ask interpret: the ZIP's context is the marked prefix, identical for the same ZIP; the date and surface follow it; the question and the conversation are messages", async () => {
   const context = { inventory: [{ name: "Vail Unified District", divisionType: "school_district" }], today: "2026-09-06", approximateLocation: "Vail, Arizona", surface: "MAP" as const };
   const a = await captureBody((f) => interpretQuestion("what is on the agenda", context, { fetchImpl: f, apiKey: "sk-test" }));
   const b = await captureBody((f) => interpretQuestion("who is on the board", { ...context, priorTurns: [{ question: "did the council vote on the pothole budget", resolvedSubject: null }] }, { fetchImpl: f, apiKey: "sk-test" }));
+  const blocks = (body: Record<string, unknown>) => body.system as { type: string; text: string; cache_control?: unknown }[];
   assert.equal(sha(a.system), sha(b.system));
-  assert.equal(a.system, interpretPrompt(context));
-  assert.ok(!String(a.system).includes("what is on the agenda"), "the question is not in the system prompt");
-  assert.ok(!String(b.system).includes("pothole budget"), "the prior turn is not in the system prompt");
+  assert.deepEqual(blocks(a).map((block) => block.text), [interpretSystem(context).stable, interpretSystem(context).volatile]);
+  assert.ok(!JSON.stringify(a.system).includes("what is on the agenda"), "the question is not in the system prompt");
+  assert.ok(!JSON.stringify(b.system).includes("pothole budget"), "the prior turn is not in the system prompt");
   assert.match(JSON.stringify(b.messages), /pothole budget/, "the conversation rides as messages");
-  assert.equal(a.cache_control, undefined, "unmarked: the static instructions alone are under the model minimum");
-  /* Recorded, not fixed here: the date is still in this system prompt (interpret.ts is outside the reader receipt's renewable boundary). */
-  assert.match(String(a.system), /Today is 2026-09-06\./);
+  assert.ok(blocks(a)[0].cache_control !== undefined, "the ZIP's context is the breakpoint (it caches once it is over the model's minimum: 4,096 tokens on Haiku 4.5)");
+  assert.equal(blocks(a)[1].cache_control, undefined, "the volatile block is after it");
+  /* The date is after the breakpoint (2026-09-29): a new day never invalidates the ZIP's cached context. */
+  assert.ok(!blocks(a)[0].text.includes("2026-09-06") && !blocks(a)[0].text.includes("Vail, Arizona"), "no per-day or per-reader value in the cached block");
+  assert.match(blocks(a)[1].text, /Today is 2026-09-06\./);
+  const nextDay = await captureBody((f) => interpretQuestion("what is on the agenda", { ...context, today: "2026-09-07" }, { fetchImpl: f, apiKey: "sk-test" }));
+  assert.equal(sha(blocks(a)[0]), sha(blocks(nextDay)[0]), "a new day changes only the volatile block");
 });
 
 test("PC-3 Ask classify and the unsourced fallback: the system prompt is static and the question is the message (both unmarked, under the minimum)", async () => {

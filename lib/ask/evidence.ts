@@ -193,6 +193,8 @@ export interface EvidenceRecord {
    * date ride with them (2026-09-25), so a composed money answer states the
    * record's own fields rather than re-reading its sentence.
    */
+  /** A roll call's own fields, beside its sentence (2026-09-29): what a composed vote answer states without re-reading the text. */
+  rollCall?: { position: string; what: string; when: string; result: string };
   finance?: {
     jurisdiction: string; filingState: string;
     totals: { receipts: number | null; expenditures: number | null; cashOnHand: number | null; reportCount: number | null; coveringPeriod: string | null };

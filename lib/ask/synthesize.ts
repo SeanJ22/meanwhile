@@ -3,7 +3,7 @@ import { writerSelection } from "./writer-selection.ts";
 import { stanceAnswerability } from "./stance-answerability.ts";
 import { gapWords, packHasEvidence, type EvidencePack } from "./evidence.ts";
 import { askModelTakesEffort, resolveAskEffort, resolveAskFastWriter, resolveAskModel, type AskEffort, type AskModelEnv } from "./model.ts";
-import { askRequestFields, servedModelOf } from "./model-registry.ts";
+import { modelRequestFields, servedModelOf } from "../models.ts";
 import type { ValidationVerdict } from "./validate.ts";
 import {
   SYNTHESIS_CACHE_TTL,
@@ -169,10 +169,15 @@ export function synthesisPrompt(pack: EvidencePack): string {
     "- Never state a fact about a government that the records do not contain. Do not fill a gap with what is likely, typical, or what you may remember.",
     "- The named gaps are part of the evidence. Say them plainly when they matter to the answer.",
     ...(writerSelection(pack).note
-      ? ["- You were given a selection of the per-member vote rows; writerSelection says how many exist. Never say or imply that the others were not published, not recorded or not available."] : []),
+      ? ["- You were given a selection of the vote records; writerSelection says how many exist. Never say or imply that the others were not published, not recorded or not available."] : []),
     ...(pack.records.some(record => record.meetingListingIdentity?.uniqueMeetingCount === null)
       ? ["- Calendar listings with uniqueMeetingCount:null have an unresolved distinct-meeting count. State their source-listing count and the identity gap; never call that number a count of meetings or merge their agendas, minutes or votes."] : []),
     "- A gap marked OURS is about us — say we have not recorded it. A gap marked THEIRS is about the government — say what they have not published. Never swap these.",
+    ...(pack.records.some(record => record.kind === "FINANCE_SUMMARY" || record.kind === "FINANCE_TRANSACTION" || record.kind === "FINANCE_COMMITTEE")
+      ? [
+        "- CAMPAIGN MONEY: state each figure exactly as its record states it, and whose committee reported it. A total is not a list of donors: when no record names who gave, say the records we hold give totals and do not name donors. That is what WE hold; never say the state, the county or the committee withholds donors or did not file.",
+        "- When the question names more than one person, give each person's figures from that person's own records. Never say we hold no money records for a person whose records are in the list; if one person has none, say so for that person alone.",
+      ] : []),
     "- Never tell the reader how to vote, never rank or score candidates, and never say who to support.",
     "- Never state a candidate's or official's position, stance or vote unless a supplied record states it.",
     "- SOURCE_PASSAGE is a matched quotation from a linked page. It does not establish who spoke or adopted the words. Attribute it to the page, never to the person.",
@@ -432,9 +437,9 @@ export function synthesisRequestBody(
    * system field stays the plain string the comparison seam measures.
    */
   if (shape.cached) context.cache_control = SYNTHESIS_CACHE_TTL.cacheControl;
-  /* What this model accepts, from the registry (lib/ask/model-registry.ts): adaptive thinking where it
+  /* What this model accepts, from the registry (lib/models.ts): adaptive thinking where it
      takes it (none on Haiku 4.5), the effort only where it takes one. */
-  const fields = askRequestFields(shape.model, { thinking: "ADAPTIVE", effort: shape.effort ?? resolveAskEffort() });
+  const fields = modelRequestFields(shape.model, { thinking: "ADAPTIVE", effort: shape.effort ?? resolveAskEffort() });
   const system: string | { type: "text"; text: string; cache_control: typeof SYNTHESIS_CACHE_TTL.cacheControl }[] = shape.cached
     ? [{ type: "text", text: synthesisPrompt(pack), cache_control: SYNTHESIS_CACHE_TTL.cacheControl }]
     : synthesisPrompt(pack);
@@ -578,47 +583,11 @@ export function frontierRung(env: AskModelEnv = process.env): SynthesisRung {
  * `resolveAskFastWriter()`; `WTP_ASK_FAST_MODEL=off` collapses the ladder to
  * the frontier alone without a deploy.
  */
-export function synthesisLadder(env: AskModelEnv = process.env, context: { question?: string } = {}): SynthesisRung[] {
+export function synthesisLadder(env: AskModelEnv = process.env): SynthesisRung[] {
   const frontier = frontierRung(env);
   const fast = resolveAskFastWriter(env);
   if (!fast || fast === frontier.model) return [frontier];
-  /* A kind the fast writer measurably gets wrong is written by the escalation writer first. */
-  if (context.question && escalationFirstReason(context.question, env)) return [frontier];
   return [{ model: fast, effort: askModelTakesEffort(fast) ? "low" : null, role: "FAST", timeoutMs: ASK_FAST_WRITER_TIMEOUT_MS }, frontier];
-}
-
-/** `off` sends every question through the default ladder (fast writer first) without a deploy. */
-export const ASK_WRITER_ROUTING_ENV = "WTP_ASK_WRITER_ROUTING";
-
-const MONEY_WORDS = /\b(money|raised?|raising|donat\w*|donors?|contribut\w*|fund\w*|financ\w*|spent|spend\w*|pacs?|backers?)\b/i;
-const WHO_OR_COMPARISON = /\b(who|whom|whose|donors?|contributors?|backers?|funders?|biggest|largest|top|most|more|less|fewer|than|versus|vs|compare\w*)\b/i;
-
-/**
- * **WHY THIS QUESTION'S ANSWER IS WRITTEN BY THE ESCALATION WRITER FIRST, OR
- * NULL.** (2026-09-25, the Ask model-routing test.)
- *
- * Measured on production read-only packs, the same pack to each writer: on
- * campaign-money questions that ask WHO gave or COMPARE candidates, Haiku 4.5
- * was wrong 6 times in 8 — in ways the validator cannot see. It listed a
- * committee's one contribution without saying the donor is not named ("Who
- * funded the Vail school board candidates?"); it put our gap on the state
- * ("Campaign money records filed with Arizona describe totals, not the
- * identities of people who gave money"); it said we hold no fundraising for
- * Kelly Ayotte when we do ("Has Cinde Warmington raised more money than Kelly
- * Ayotte?"). Opus 5.5 was right 7 times in 8 on the same packs; Sonnet 5 was
- * wrong 4 times in 8 (the who-funded and the comparison questions). On money questions that ask HOW MUCH
- * one candidate raised or spent, Haiku 4.5 was right every time, so those
- * keep the fast writer.
- *
- * The price is time: Opus 5.5 writes in 2.7-6.1 s, so these answers do not
- * meet the three-second bar — reported, not hidden. Deliberately a wording
- * test on the reader's question (money words AND a who/comparison word): it
- * must be decided before the pack exists, so the speculative and sequential
- * paths use one ladder. It errs toward the stronger writer.
- */
-export function escalationFirstReason(question: string, env: AskModelEnv = process.env): string | null {
-  if ((typeof env[ASK_WRITER_ROUTING_ENV] === "string" ? env[ASK_WRITER_ROUTING_ENV]!.trim() : "") === "off") return null;
-  return MONEY_WORDS.test(question) && WHO_OR_COMPARISON.test(question) ? "money-who-or-comparison" : null;
 }
 
 /** The ladder as strings for a cache key: a changed rung is a new key. */

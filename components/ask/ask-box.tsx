@@ -339,37 +339,16 @@ export function AskBox({
   // render, which would freeze one line into the HTML or mismatch on
   // hydration. Seeded with the first entry so the type is never null.
   const [beat, setBeat] = useState<string>(ASK_BEAT_POOL[0]);
-  const beatTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const debounce = useRef<number | undefined>(undefined);
   const blurTimer = useRef<number | undefined>(undefined);
   const listRef = useRef<HTMLDivElement>(null);
-  // 6e (2026-08-14 second session), the author's retune: the beat showed
-  // ~250ms and disappeared too quickly. It now holds ~3 seconds with the
-  // trailing dots animating in sequence for the duration. Presentation
-  // only, still: routing and logging happen before the timer starts.
-  /**
-   * **ASK-6 (2026-08-24, the author's instruction) — the beat is DRAWN, not
-   * fixed.**
-   *
-   * It held exactly 3000ms on every ask since 2026-08-14, and a beat that is
-   * the same length every single time reads as a progress bar somebody set to
-   * a constant. The draw is between 2.4 and 3.1 seconds in 0.1-second steps —
-   * eight values — taken FRESH PER SUBMISSION, so two asks in a row do not
-   * match.
-   *
-   * **Presentation only, exactly as before.** The routing runs
-   * deterministically on-device before this timer starts and nothing is logged
-   * inside it, so the draw cannot change an answer or a record — it changes how
-   * long the acknowledgment holds and nothing else. The floor and the ceiling
-   * are named constants because the test reads them rather than a literal.
+  /*
+   * **The beat is shown only while the answer is being worked out.** (2026-09-30,
+   * Sean's rulings §6: a user-facing action over three seconds fails, measured
+   * until the result is usable.) It used to be held for a drawn 2.4-3.1 seconds
+   * (ASK-6) whatever the answer cost, which made every ask take at least that
+   * long on screen. The answer now replaces it the moment it is ready.
    */
-  const BEAT_MIN_MS = 2400;
-  const BEAT_MAX_MS = 3100;
-  const BEAT_STEP_MS = 100;
-  const drawBeatMs = () =>
-    BEAT_MIN_MS +
-    Math.floor(Math.random() * ((BEAT_MAX_MS - BEAT_MIN_MS) / BEAT_STEP_MS + 1)) *
-      BEAT_STEP_MS;
   const [dots, setDots] = useState(1);
   useEffect(() => {
     if (!working) return;
@@ -384,7 +363,6 @@ export function AskBox({
     return () => {
       window.clearTimeout(debounce.current);
       window.clearTimeout(blurTimer.current);
-      if (beatTimer.current) clearTimeout(beatTimer.current);
     };
   }, []);
 
@@ -609,7 +587,6 @@ export function AskBox({
     // The beat starts immediately — it now covers real work on the refusal
     // path (one network call) as well as the deterministic path, and the
     // reader sees the same acknowledgment either way.
-    if (beatTimer.current) clearTimeout(beatTimer.current);
     setAsked(null);
     setDigest(null);
     /* The standing grounded answer goes with the question it answered — a
@@ -626,7 +603,6 @@ export function AskBox({
     dispatch({ type: "search/open", open: false });
 
     void (async () => {
-      const started = Date.now();
       let result = answerQuestion(question, coverage, zip, { entities, everydayRouting });
 
       /*
@@ -803,16 +779,10 @@ export function AskBox({
         ? buildDigest(coverage, allMeetings, Date.now())
         : null;
 
-      // The beat holds its full drawn length whatever the rung cost, so the
-      // box never flickers on a fast answer or feels stalled on a slow one.
-      // ASK-6: drawn once per submission, here, so the ask that started it is
-      // the ask that gets that length.
-      const remaining = Math.max(0, drawBeatMs() - (Date.now() - started));
-      beatTimer.current = setTimeout(() => {
-        setAsked(result);
-        setDigest(built);
-        setWorking(false);
-      }, remaining);
+      // The answer replaces the beat the moment it is ready: no held minimum.
+      setAsked(result);
+      setDigest(built);
+      setWorking(false);
     })();
   };
 

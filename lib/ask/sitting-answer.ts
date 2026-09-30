@@ -74,7 +74,7 @@ function atTime(sitting: ComposableSitting): string {
  * them in depends on the question: an outcome question leads with whether the
  * outcome is held.
  */
-export type SittingGapRole = "NO_SITTING" | "LISTING" | "AGENDA" | "NOTICE" | "MINUTES" | "OUTCOME";
+export type SittingGapRole = "NO_SITTING" | "LISTING" | "AGENDA" | "NOTICE" | "MINUTES" | "OUTCOME" | "COMMENT";
 
 export interface SittingGap {
   role: SittingGapRole;
@@ -458,7 +458,9 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
   }
   const summarisable = input.records.some((record) => CONTENT_KINDS.has(record.kind) &&
     !(input.shape === "MEETING_OUTCOME" && (record.kind === "AGENDA_ITEM" || record.kind === "AGENDA_MENTION")));
-  if (input.shape !== "MEETING_TIME" && summarisable) return null;
+  /* "How can I comment?" is a meeting-time answer with the body's standing comment rules beside it. */
+  const timeLike = input.shape === "MEETING_TIME" || input.shape === "PUBLIC_COMMENT";
+  if (!timeLike && summarisable) return null;
   /* An agenda or outcome question about a sitting is answered by the gap that
      says what is not held. Without one, there is no composed answer to give. */
   const roles = new Set(input.sittingGaps.map((entry) => entry.role));
@@ -491,7 +493,7 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
       ? `The next ${subjectName} meeting is on ${dayOf(chosen)}${atTime(chosen)}, listed as ${quoted(chosen.title)}`
       : `The most recent ${subjectName} meeting we hold was on ${dayOf(chosen)}${atTime(chosen)}, listed as ${quoted(chosen.title)}`;
     if (!add(lead)) return null;
-    if (input.includeLocation) {
+    if (input.includeLocation || input.shape === "PUBLIC_COMMENT") {
       const venue = sittingVenue(chosen);
       if (!add(venue ? `The listed location is ${venue}` : "We do not hold a verified location for this meeting")) return null;
     }
@@ -511,7 +513,7 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
     if (later.length) add(`Later that day: ${listed(later)}`);
     if (earlier.length) add(`Earlier that day: ${listed(earlier)}`);
     if (untimed.length) add(`Also that day: ${listed(untimed)}`);
-    if (input.shape === "MEETING_TIME") {
+    if (timeLike) {
       // Held agenda items, counted per sitting: two sittings one day are two dockets.
       for (const sitting of input.sittings) {
         const items = input.records.filter((record) => record.kind === "AGENDA_ITEM" &&
@@ -521,21 +523,40 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
     }
   }
 
+  /* A public-comment question states the body's standing rules in their own words, as many as fit. */
+  if (input.shape === "PUBLIC_COMMENT") {
+    const rules = input.records.filter((record) => record.kind === "PUBLIC_COMMENT_ACCESS");
+    let stated = 0;
+    for (const record of rules) {
+      if (!add(record.text)) continue;
+      stated += 1;
+      if (record.sourceUrl && !cited.includes(record.sourceUrl)) cited.push(record.sourceUrl);
+    }
+    if (rules.length > 0 && stated === 0) return null;
+  }
+
   /* The named gaps, in their own words. An outcome question leads with
      whether the outcome is held; every other question with the agenda. */
   const order: readonly SittingGapRole[] = input.shape === "MEETING_OUTCOME"
     ? ["NO_SITTING", "OUTCOME", "MINUTES", "AGENDA", "NOTICE", "LISTING"]
-    : ["NO_SITTING", "AGENDA", "LISTING", "NOTICE", "MINUTES", "OUTCOME"];
+    : input.shape === "PUBLIC_COMMENT"
+      /* The comment gap is the answer to a comment question: before the agenda's. */
+      ? ["NO_SITTING", "COMMENT", "AGENDA", "LISTING", "NOTICE", "MINUTES", "OUTCOME"]
+      : ["NO_SITTING", "AGENDA", "COMMENT", "LISTING", "NOTICE", "MINUTES", "OUTCOME"];
   const required: readonly SittingGapRole[] = input.shape === "MEETING_OUTCOME"
     ? ["NO_SITTING", "OUTCOME", "MINUTES"]
-    : input.shape === "BODY_AGENDA" ? ["NO_SITTING", "AGENDA"] : ["NO_SITTING"];
+    : input.shape === "BODY_AGENDA" ? ["NO_SITTING", "AGENDA"]
+      : input.shape === "PUBLIC_COMMENT" && !input.records.some((record) => record.kind === "PUBLIC_COMMENT_ACCESS") ? ["NO_SITTING", "COMMENT"] : ["NO_SITTING"];
   const said = new Set<string>();
   const zone = chosen?.timeZone ?? null;
   for (const role of order) {
     for (const { gap } of input.sittingGaps.filter((entry) => entry.role === role)) {
       if (said.has(gap.statement)) continue;
       said.add(gap.statement);
-      const plain = plainGapStatement(gap.statement, zone);
+      /* A comment gap that points at the body's own page carries a link no record holds: the sentence is said without it (the gap, link and all, is still in the reader's gaps). */
+      const statement = role === "COMMENT" ? gap.statement.replace(/; its own page is \S+?\.?$/, ".") : gap.statement;
+      if (role === "COMMENT" && /https?:/.test(statement)) return null;
+      const plain = plainGapStatement(statement, zone);
       // A gap that cannot be said plainly is never dropped from a composed
       // answer: the model writes the answer instead.
       if (plain === null) return null;

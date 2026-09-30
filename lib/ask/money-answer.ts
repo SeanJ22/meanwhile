@@ -96,6 +96,11 @@ const MONEY_PATTERNS: readonly MoneyPattern[] = [
     pattern: new RegExp("^who (?:funded|funds|is funding|has funded|financed|is financing|has financed|bankrolled|is bankrolling|is paying for|paid for) (?<name>.+?) s (?:campaign committee|campaign|race|bid|reelection campaign)$"),
     read: () => ({ kind: "WHO_GAVE" }),
   },
+  /* "Who is funding Andy Biggs?": the slot must bind a held PERSON, so "who is funding the school district" and "who is backing Prop 141" are not this. */
+  {
+    pattern: new RegExp(`^who (?:is |has |are )?(?:funding|funded|funds|financing|financed|finances|bankrolling|bankrolled|bankrolls|backing|backed|backs|paying for|paid for|pays for) (?!(?:the|this|that|these|those|our|my|your|a|an|all|every|any|some) )(?<name>.+?)${OF_CAMPAIGN}$`),
+    read: () => ({ kind: "WHO_GAVE" }),
+  },
   {
     pattern: new RegExp(`^who (?:are|is|were|was) (?<name>.+?) s (?:campaign )?${DONORS}$`),
     read: () => ({ kind: "WHO_GAVE" }),
@@ -198,6 +203,30 @@ function heldFor(records: readonly EvidenceRecord[], personId: string): Held[] |
 }
 
 /**
+ * A federal candidate's money: the one FEC summary record held for them, stated
+ * in the record's own sentences ("This campaign has raised $6.2 million ..."),
+ * with the Federal Election Commission and the day we read it. Null when the
+ * person has anything else (a state committee, an absence) or more than one record.
+ */
+function federalHeld(records: readonly EvidenceRecord[], personId: string): EvidenceRecord | null {
+  const mine = records.filter((record) => record.kind === "FINANCE_SUMMARY" && record.subjectId === personId);
+  return mine.length === 1 && mine[0]!.id.startsWith("fec:") && mine[0]!.sourceUrl && mine[0]!.text.trim() ? mine[0]! : null;
+}
+
+function composeFederalMoney(input: MoneyAnswerInput, record: EvidenceRecord): { answer: string; citedUrls: string[] } | null {
+  const person = input.subject;
+  const text = record.text.trim();
+  const body = /^This\s+campaign\b/.test(text) ? text.replace(/^This\s+campaign\b/, `${possessive(person.name)} campaign`) : `For ${person.name}: ${text}`;
+  const read = record.retrievedAt ? formatDateLong(record.retrievedAt) ?? record.retrievedAt : null;
+  const source = `Filed with the Federal Election Commission${read ? `; read ${read}` : ""}`;
+  const lead = input.ask.kind === "WHO_GAVE"
+    ? [`Our records for ${person.name} hold campaign totals, not the identities of donors (${floorLine(floored("money records we hold for this candidate that name a donor", `a composed money answer for ${person.id}`, 1, 0))})`]
+    : [];
+  const answer = assemble([...(input.lead ? [input.lead] : []), ...lead, body, source], []);
+  return answer ? { answer, citedUrls: [record.sourceUrl!] } : null;
+}
+
+/**
  * The period as the agency states it, spelled for a reader, with the filer's
  * report count where the agency gives one: "for the 2026 Election Cycle",
  * "for the Arizona 2026 election cycle, activity recorded January 1st, 2025
@@ -296,6 +325,10 @@ function assemble(required: readonly string[], optional: readonly string[]): str
 export function composeMoneyAnswer(input: MoneyAnswerInput): { answer: string; citedUrls: string[] } | null {
   // Anything the pack holds beyond state committee totals is for a writer to read.
   if (input.records.some((record) => record.kind === "FINANCE_COMMITTEE" || record.kind === "FINANCE_TRANSACTION")) return null;
+  if (input.ask.kind !== "COMPARE") {
+    const federal = federalHeld(input.records, input.subject.id);
+    if (federal) return composeFederalMoney(input, federal);
+  }
   const people = [input.subject, ...(input.ask.kind === "COMPARE" && input.other ? [input.other] : [])];
   if (input.ask.kind === "COMPARE" && (people.length !== 2 || input.lead)) return null;
   const first = input.lead ? [input.lead] : [];

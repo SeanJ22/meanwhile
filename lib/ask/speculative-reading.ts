@@ -85,8 +85,17 @@ export interface CodeReading {
 
 /**
  * The code's best reading of a question the lexical reading could not settle,
- * or null when it has no guess worth a call: nothing binds, or no wording rule
- * names an intent. A null only means the model reads first, as before.
+ * or null when it has no guess worth a call: nothing binds. A null only means
+ * the model reads first, as before.
+ *
+ * Where no wording rule names an intent, the guess is the subject's own kind
+ * of question (a person's record, a measure) or UNKNOWN — 2026-09-29: measured
+ * on staging, a free-form question about a bound body ("How can I comment at
+ * the Vail school board meeting?") had no wording rule, so no guess, so the
+ * model's reading (1.1-1.7 s, with 5 s stalls) and the writer (1.4-3.5 s) ran
+ * one after the other. The intent is a label for the writer; what decides
+ * whether the guess is kept is that the model's reading selects the same
+ * subject, the same sittings and byte-identical evidence (`speculationVerdict`).
  */
 export function codeBestReading(input: CodeReadingInput): CodeReading | null {
   const temporal = interpretWithoutModel(input.question).temporal;
@@ -121,7 +130,8 @@ export function codeBestReading(input: CodeReadingInput): CodeReading | null {
     return { interpretation: { ...unavailableInterpretation(), intent: "PERSON_RECORD", temporal: { kind: "NONE" }, referent }, basis: "SHAPE", subjectId: entity.id };
   }
   const shaped = shapeIntentFor(input.question, kind, temporal);
-  const intent = shaped?.intent ?? wordingIntent(input.question, temporal, kind);
+  const named = shaped?.intent ?? wordingIntent(input.question, temporal, kind);
+  const intent = named ?? (kind === "PERSON" ? "PERSON_RECORD" : kind === "MEASURE" ? "MEASURE" : kind ? "UNKNOWN" : null);
   if (!intent) return null;
   return { interpretation: { ...unavailableInterpretation(), intent, temporal, referent }, basis: shaped ? "SHAPE" : "WORDING", subjectId: entity.id };
 }
@@ -146,7 +156,13 @@ export interface ReadingOutcome {
   temporal: AskTemporal;
   /** NEXT / LAST / DATE / ANY — the sitting selection the reading produced. */
   selection: string;
-  /** The synthesis cache key of the pack the writer is sent (`synthesisCacheKey`). */
+  /**
+   * The synthesis cache key of the pack the writer is sent, with the intent
+   * LABEL left out (`synthesisCacheKey` over `{ ...pack, intent }` with one
+   * constant intent): the label names what the reader asked for, and two
+   * readings that select the same subject, sittings and evidence differ in
+   * nothing the answer is written from but that word.
+   */
   writerInput: string;
 }
 
@@ -167,7 +183,7 @@ export function speculationVerdict(
   if (code.subjectId !== model.subjectId) return { keep: false, why: "different-subject" };
   const bodies = (ids: readonly string[]) => JSON.stringify([...new Set(ids)].sort());
   if (bodies(code.bodyIds) !== bodies(model.bodyIds)) return { keep: false, why: "different-body" };
-  if (code.intent !== model.intent || code.selection !== model.selection || JSON.stringify(sortedKeys(code.temporal)) !== JSON.stringify(sortedKeys(model.temporal))) {
+  if (code.selection !== model.selection || JSON.stringify(sortedKeys(code.temporal)) !== JSON.stringify(sortedKeys(model.temporal))) {
     return { keep: false, why: "different-question-kind" };
   }
   if (code.writerInput !== model.writerInput) return { keep: false, why: "different-writer-input" };

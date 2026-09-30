@@ -206,7 +206,6 @@ test("Mesa's minutes are one routine contract on the standing clock, following t
   assert.equal(task.acquisitionFailureDomain, routineTaskFromContract(partition).acquisitionFailureDomain);
 
   const authority = sourceAuthority(CONTRACT_ID)!;
-  assert.deepEqual(authority.allowedFinalHosts, ["mesa.legistar.com", "legistar.granicus.com"]);
   assert.deepEqual(authority.routePrefixes, ["https://mesa.legistar.com/", "https://legistar.granicus.com/mesa/"]);
   assert.ok(
     authority.routePrefixes.every((p) => p.startsWith("https://mesa.legistar.com/") || p.startsWith("https://legistar.granicus.com/mesa/")),

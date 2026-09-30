@@ -954,7 +954,7 @@ test("an unregistered redirect that also returns malformed bytes remains SOURCE_
     ...base,
     retrieval: { ...base.retrieval, finalUrl: "https://attacker.example/fec" },
     normalization: { ...base.normalization, succeeded: false, normalizedHash: null, failureDetail: "not JSON" },
-  }), "SOURCE_BLOCKED", "FINAL_HOST_NOT_AUTHORIZED");
+  }), "SOURCE_BLOCKED", "FINAL_ROUTE_NOT_REGISTERED");
 });
 
 test("ambiguous FEC identity is refused", async () => {

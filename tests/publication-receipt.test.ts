@@ -1,0 +1,26 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { printWorkerPublicationReceipt } from "../lib/civic-data/worker-publication-tasks.ts";
+
+const record = (id: string) => ({ candidate: { id }, acquisitionSucceeded: true, state: "PROMOTED", receipt: { decision: "GOOD" }, lastKnownGoodVersion: id });
+const store = { readCandidate: async (id: string) => (["cv-old", "cv-new"].includes(id) ? record(id) : null) } as never;
+const outcome = (at: string, versionId: string, extra: Record<string, unknown> = {}) =>
+  ({ at, status: "PUBLISHED", code: "VERIFIED_RESULT_PUBLISHED", detail: "", workerResultId: "r", candidateId: versionId, versionId, ...extra });
+
+test("the receipt names this pass's publication and counts only what this pass put live", async () => {
+  const lines: string[] = [];
+  const log = console.log;
+  console.log = (line: string) => { lines.push(line); };
+  try {
+    // An item published in an earlier pass reports its old outcome, and can come last.
+    await printWorkerPublicationReceipt(store, "registry-runtime-bindings", [
+      { workItemId: "wi-roster", outcome: outcome("2026-09-30T19:14:00.000Z", "cv-new", { acceptedRecordIds: ["m1", "m2", "m3"] }) },
+      { workItemId: "wi-sibling", outcome: outcome("2026-09-30T19:14:00.000Z", "cv-new", { code: "VERIFIED_RESULT_REUSED" }) },
+      { workItemId: "wi-held", outcome: outcome("2026-09-30T19:14:00.000Z", "", { status: "HELD", code: "ROSTER_PAGE_NOT_THIS_BODY", versionId: null }) },
+      { workItemId: "wi-directory", outcome: outcome("2026-09-30T17:58:00.000Z", "cv-old", { bodyIds: ["b1", "b2"] }) },
+    ] as never);
+  } finally { console.log = log; }
+  const receipt = JSON.parse(lines.find(line => line.startsWith("RCD_RECEIPT="))!.slice("RCD_RECEIPT=".length));
+  assert.equal(receipt.candidateId, "cv-new");
+  assert.deepEqual(receipt.delivered, { records: 3, gaps: 1, gapReasons: { ROSTER_PAGE_NOT_THIS_BODY: 1 } });
+});

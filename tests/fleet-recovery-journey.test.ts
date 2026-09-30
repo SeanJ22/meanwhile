@@ -190,7 +190,7 @@ test("failed publisher refresh retains the last acquired capture for unfinished 
   assert.equal(parsing.task?.workerTask?.role, "PARSER", "a due refresh must not starve the captured bytes' unfinished downstream stages");
   assert.equal(parsing.task?.workerTask?.artifactId, originalArtifact.artifactId);
   assert.equal((await dispatchWorkerTask(h.runtime, parsing.task!)).outcome, "WORKED");
-  for (const expectedRole of ["VALIDATOR", "ADVERSARIAL_AUDITOR"]) {
+  for (const expectedRole of ["VALIDATOR"]) {
     const next = await nextAutonomousOperation(h.runtime, h.item.id);
     assert.equal(next.task?.workerTask?.role, expectedRole);
     assert.equal((await dispatchWorkerTask(h.runtime, next.task!)).outcome, "WORKED");

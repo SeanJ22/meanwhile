@@ -5,26 +5,25 @@
  * > Acquisition without promotion is inventory, not product. An acquisition
  * > obligation's completion contract extends to the READER: the WorkItem does
  * > not close when evidence reaches the vault; it closes when the reader-facing
- * > surface reflects the acquired truth or renders the honest gap state. While
- * > unattended promotion is OFF, the pipeline runs automatically through
- * > normalization and snapshot to a STAGED, PROMOTION-READY state, and session
- * > shipping carries the last mile under existing law. Held data with no live
- * > promotion tail is a defect.
+ * > surface reflects the acquired truth or renders the honest gap state. Held
+ * > data with no live promotion tail is a defect.
  *
- * ## The split this file draws, and the exact line it does not cross
+ * Research promotion is ON (docs/rulings.md §3, §9; the activation gate in
+ * `promotion/activation-policy.ts`). A staged record publishes as soon as it
+ * passes §3, through the typed reader door for its class; a class with no door
+ * yet stays staged as the named gap it is.
+ *
+ * ## The split this file draws
  *
  * ```
- *   AUTOMATIC, EVERY CYCLE, NO OPERATOR
+ *   HERE, EVERY CYCLE, NO OPERATOR
  *     acquire -> vault -> extract -> normalize -> snapshot -> STAGED
  *
- *   ------------------ the promotion boundary ------------------
- *
- *   SESSION SHIPPING, HUMAN-GATED
- *     STAGED -> reader-visible
+ *   THE PUBLICATION DOORS, EVERY CYCLE, NO OPERATOR
+ *     STAGED -> §3 -> reader-visible
  * ```
  *
- * Everything above the line runs here, unattended, on every cycle. Nothing
- * below it does. **This module writes only under `.runtime/control-plane/staging/`
+ * This module does the first line only. **This module writes only under `.runtime/control-plane/staging/`
  * and can write nowhere else** — it never touches `data/funding/`,
  * `data/meetings-snapshot.json`, `data/ballot/` or any other reader-content
  * path, and `tests/obligation-registry.test.ts` asserts that over the module's
@@ -60,6 +59,7 @@ import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
 import type { RouteDescriptor } from "./registry.ts";
+import { ACTIVATION_GATE } from "../promotion/activation-policy.ts";
 
 /** The one directory this module may write to. Enforced, not just documented. */
 export const STAGING_DIR = [".runtime", "control-plane", "staging"] as const;
@@ -357,7 +357,8 @@ export interface StagedEntry {
 
 export interface StagingManifest {
   readonly stagedOn: string;
-  readonly promotionEnabled: false;
+  /** The activation gate's decision when the manifest was written. */
+  readonly promotionEnabled: boolean;
   readonly entries: readonly StagedEntry[];
 }
 
@@ -618,7 +619,7 @@ export function writeStagingManifest(
 
   const manifest: StagingManifest = {
     stagedOn,
-    promotionEnabled: false,
+    promotionEnabled: ACTIVATION_GATE.promotionEnabled,
     entries: [...merged.values()].sort((a, b) =>
       a.obligationId < b.obligationId ? -1 : a.obligationId > b.obligationId ? 1 : 0,
     ),
@@ -641,7 +642,7 @@ export function promotionLines(entries: readonly StagedEntry[]): string[] {
   const out: string[] = [];
   out.push(
     `  promotion tail     ${entries.length} entry(ies) staged — ${ready.length} PROMOTION-READY, ` +
-      `${gaps.length} honest gap(s). Promotion itself is OFF.`,
+      `${gaps.length} honest gap(s). Promotion is ${ACTIVATION_GATE.promotionEnabled ? "ON" : "OFF"}.`,
   );
   for (const e of ready) {
     out.push(

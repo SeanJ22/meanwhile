@@ -12,3 +12,6 @@ export function workerReaderClassMatches(id: WorkerReaderContract, recordClass: 
 export function isWorkerReaderContract(id: string): id is WorkerReaderContract {
   return Object.hasOwn(WORKER_READER_CLASSES, id);
 }
+
+/** The publication passes the runner can be asked for by id (`--only=`): the registry door and each reader door. */
+export const WORKER_PUBLICATION_TASK_IDS: readonly string[] = ["registry-runtime-bindings", ...Object.keys(WORKER_READER_CLASSES)];

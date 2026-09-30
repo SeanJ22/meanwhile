@@ -253,7 +253,8 @@ test("a question about a person's money and nothing they did in office is money-
   assert.equal(financeQuestionAskedFor("Who is funding the Vail school district?", "BODY"), false);
   assert.equal(financeQuestionAskedFor("Who is backing Prop 141?", "MEASURE"), false);
   assert.equal(asksOnlyMoney("Who is funding Andy Biggs?", "PERSON"), true);
-  assert.equal(moneyQuestionShape("Who is funding the Vail school district?")?.ask.kind, "WHO_GAVE", "the shape is only a reading of the words: the slot must still bind a held person");
+  assert.equal(moneyQuestionShape("Who is funding the Vail school district?"), null, "a slot led by an article is never a person's name");
+  assert.equal(moneyQuestionShape("Who is backing Prop 141?")?.slot, "prop 141", "the shape is only a reading of the words: the slot must still bind a held person, and a measure is not one");
 });
 
 test("the relevance gate keeps a compared person's records by exact id, and nobody else's", () => {

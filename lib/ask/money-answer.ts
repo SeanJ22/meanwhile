@@ -98,7 +98,7 @@ const MONEY_PATTERNS: readonly MoneyPattern[] = [
   },
   /* "Who is funding Andy Biggs?": the slot must bind a held PERSON, so "who is funding the school district" and "who is backing Prop 141" are not this. */
   {
-    pattern: new RegExp(`^who (?:is |has |are )?(?:funding|funded|funds|financing|financed|finances|bankrolling|bankrolled|bankrolls|backing|backed|backs|paying for|paid for|pays for) (?<name>.+?)${OF_CAMPAIGN}$`),
+    pattern: new RegExp(`^who (?:is |has |are )?(?:funding|funded|funds|financing|financed|finances|bankrolling|bankrolled|bankrolls|backing|backed|backs|paying for|paid for|pays for) (?!(?:the|this|that|these|those|our|my|your|a|an|all|every|any|some) )(?<name>.+?)${OF_CAMPAIGN}$`),
     read: () => ({ kind: "WHO_GAVE" }),
   },
   {

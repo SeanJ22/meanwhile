@@ -1,3 +1,4 @@
+import { adapterWaitReason } from "./detective.ts";
 import { randomUUID } from "node:crypto";
 import type { WorkItem } from "../work-item.ts";
 import { ZERO_COST, type Attempt } from "../attempt.ts";
@@ -125,7 +126,7 @@ async function scoutSources(runtime: FleetRuntime, item: WorkItem, knownScouts?:
   const plan = item.autonomousPlan!;
   const out: ObservedResearchRoute[] = [];
   for (const scout of knownScouts ?? await runtime.repos.scoutResults.readAll()) {
-    if (scout.workItemId !== item.id || scout.refusal !== null) continue;
+    if (scout.subjectId !== item.subject || scout.recordClass !== plan.contract.recordClass || scout.refusal !== null) continue;
     const attempt = (await runtime.repos.attempts.mustRead(scout.attemptId)).value;
     if (attempt.outcome !== "COMPLETED") continue;
     for (const candidate of scout.candidates) {
@@ -219,6 +220,8 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     const {history,debt}=autonomousScoutHistory(task,knownHistory?.routeTasks ?? (await repos.routeTasks.list()).map(row=>row.value),attempts);
     const scoutHistory=[...(knownHistory?.scouts ?? (await repos.scoutResults.readAll()).filter(result=>result.workItemId===item.id))]
       .sort((a,b)=>a.recordedAt.localeCompare(b.recordedAt)||a.attemptId.localeCompare(b.attemptId));
+    const adapterWait = adapterWaitReason(scoutHistory);
+    if (adapterWait) return decision("BLOCKED",adapterWait,task);
     const retained = (item as WorkItem & { readonly planRepair?: { readonly retainedEvidenceIds?: readonly string[]; readonly sourceArtifactId?: string } }).planRepair;
     const handedHeldIds = [...new Set([...scoutHistory.flatMap(result => result.artifactIds),
       ...(retained?.retainedEvidenceIds ?? []), ...(retained?.sourceArtifactId ? [retained.sourceArtifactId] : []),
@@ -512,7 +515,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
         if (!lifetimeScout) scoutsLimitedAdmitted++;
         const item=(await runtime.repos.workItems.mustRead(id)).value; const plan=item.autonomousPlan!;
         const denial=!runtime.scoutFor?"SCOUT_MODEL_TRANSPORT_UNAVAILABLE":!runtime.lifetimeHuntSubject?.(item.subject)&&!ceilingPermits(spend.windowUsd,RESEARCH_BOUNDS.dailyCeilingUsd).permits?"SCOUT_COST_CEILING":null;
-        const history=(await runtime.repos.scoutResults.readAll()).filter(result=>result.workItemId===item.id).sort((a,b)=>a.recordedAt.localeCompare(b.recordedAt)||a.attemptId.localeCompare(b.attemptId));
+        const history=(await runtime.repos.scoutResults.readAll()).filter(result=>result.subjectId===item.subject && result.recordClass===item.autonomousPlan!.contract.recordClass).sort((a,b)=>a.recordedAt.localeCompare(b.recordedAt)||a.attemptId.localeCompare(b.attemptId));
         const executor:DeclaredExecutor=denial?{lane:"BOUNDED_MODEL_WORKER",workerFor:({holder})=>({role:"SCOUT",provider:"unavailable",version:FLEET_POLICY_VERSION,instance:holder}),run:async()=>({kind:"ABORTED",ranAs:"BOUNDED_MODEL_WORKER",failureOutcome:"DENIED_BY_POLICY",endedAt:now(),cost:{...ZERO_COST,requestCount:0,inputTokens:0,outputTokens:0,usd:0},detail:`DENIED_BY_POLICY:${denial}`})}:runtime.scoutFor!(item,d.task!,history);
         // Charge the exact standing obligation that opened this WorkItem. A
         // synthetic Scout obligation without its Send marks would reserve the

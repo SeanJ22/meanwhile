@@ -1,3 +1,4 @@
+import { SOURCE_API_TOOLS } from "./scout-api.ts";
 /**
  * **THE SEAM BETWEEN A SCOUT AND ITS RESEARCH TOOLS.**
  * (Level 1 activation, 2026-09-01. Machine-owned provenance, 2026-09-02,
@@ -240,6 +241,7 @@ export interface ScoutToolContext {
    * content and vaults nothing.
    */
   readonly search?: ScoutSearch;
+  readonly sourceApi?: import("./scout-api.ts").SourceApiOptions;
 }
 
 /** One pointer a search index returned. A URL and its title, never page content. */
@@ -247,6 +249,7 @@ export interface SearchHit {
   readonly url: string;
   readonly title: string;
   readonly provider: "brave" | "exa";
+  readonly text?: string;
 }
 
 /** What one `search` call produced, across every configured provider. */
@@ -289,7 +292,7 @@ export interface ScoutToolkit {
 }
 
 /** The research tool names. `finish` and `record_rung` are the executor's own. */
-export const SCOUT_RESEARCH_TOOLS = ["read_permission", "fetch_public", "browse", "read_inherited", "find_manual", "read_manual", "read_held", "search"] as const;
+export const SCOUT_RESEARCH_TOOLS = ["read_permission", "fetch_public", "browse", "read_inherited", "find_manual", "read_manual", "read_held", "search", ...SOURCE_API_TOOLS] as const;
 export type ScoutResearchTool = (typeof SCOUT_RESEARCH_TOOLS)[number];
 
 /** The prefix every public-source representation is wrapped in. Data, never instructions. */

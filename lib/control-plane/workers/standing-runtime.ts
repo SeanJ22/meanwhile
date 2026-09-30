@@ -1,3 +1,5 @@
+import { detectiveExecutor, investigationRole, subjectScoutHistory } from "./detective.ts";
+import { readFieldManual, writeFieldManual, newFieldManualEntry } from "../field-manual.ts";
 import { isAbsolute, join, relative, resolve, sep } from "node:path";
 import { readFile } from "node:fs/promises";
 import { DurableEvidenceStore } from "../evidence/durable-store.ts";
@@ -68,9 +70,9 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     await input.repos.workItems.compareAndSet(row.id, row.revision, { ...row.value,
       autonomousPlan: { ...plan, contract: { ...plan.contract, methodVersion: knowledge.version } } }, now());
   }
-  const fmRead = await input.repos.fieldManual.read("live").catch(() => null);
-  let fieldManual: FieldManualStore = fmRead?.value ?? emptyFieldManual();
-  let fieldManualRevision = fmRead?.revision ?? 0;
+  const fmRead = await readFieldManual(input.repos,{role:"SCOUT"});
+  let fieldManual: FieldManualStore = fmRead.store;
+  let fieldManualRevision = fmRead.revision ?? 0;
   const inheritedFieldManualCounts = new Map<string, number>();
   const inheritedManualStores = new Map<string, FieldManualStore>();
   const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly availableIds: readonly string[]; readonly lines: readonly string[] }>();
@@ -120,7 +122,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const runtime:AutonomousCoordinatorRuntime={...heldRuntime,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",
     authorizedSiblingHeldArtifactIdsFor:item=>sharedHeldByRoot.get(item.id)??[],
     roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder),
-    ...(input.transport?{scoutFor:(item,task,currentHistory)=>scoutExecutor({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,
+    ...(input.transport?{scoutFor:(item,task,currentHistory)=>(investigationRole(subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass),priorWorkers.some(w=>w.workItemId===item.id && (!["ACQUIRED","EXTRACTED","PASS","SUPPORTED","SURVIVED","CANDIDATE_PROVED"].includes(w.result.verdict) || ("warnings" in w.result ? w.result.warnings : w.result.findings).some(f=>f.severity==="BLOCKING")))) === "DETECTIVE" ? detectiveExecutor : scoutExecutor)({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,
       ...(input.reserveScoutEscalation?{reserveEscalation:input.reserveScoutEscalation}:{}),
       toolkitFor:ctx=>buildScoutToolkit({...ctx,...durableResearchTools(tools,{project:item.project,attemptId:ctx.attemptId,workItemId:item.id,routeTaskId:task.id,subjectId:item.subject}),
         readHeldArtifact: async id => {
@@ -140,7 +142,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         },
         ...((input.searchFor?.(item.subject) ?? input.search) ? { search: input.searchFor?.(item.subject) ?? input.search } : {})}),
       contextFor:()=>{
-        const history=(currentHistory??prior).filter(p=>p.workItemId===item.id);
+        const history=subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass);
         const plan=item.autonomousPlan!;
         const workers=priorWorkers.filter(w=>w.workItemId===item.id);
         const walks=workers.flatMap(w=>{
@@ -218,6 +220,11 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
             }
           }
         }
+        await writeFieldManual(input.repos,[newFieldManualEntry("investigation",recorded.subjectId+":"+recorded.recordClass,{
+          role:"SHARED",kind:"INVESTIGATION_RESULT",title:recorded.subjectId,
+          summary:recorded.outcome+": "+recorded.narrative,outcome:recorded.candidates.length||recorded.findings.length?"YIELDED":"BLOCKED",
+          recordClasses:[recorded.recordClass],observedAt:recorded.recordedAt,
+          payload:{subjectId:recorded.subjectId,recordClass:recorded.recordClass,facts:recorded.findings,routes:recorded.candidates,tried:recorded.rungs,nextRungs:recorded.nextRungs}})],recorded.recordedAt);
         await input.repos.scoutResults.append(recorded.obligationId,recorded.attemptId,recorded,recorded.recordedAt);
         return recorded;
       }

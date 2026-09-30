@@ -5,13 +5,15 @@ import { compareCandidateWithSource, stableValue, valuesOf, verifyExternalAuthor
 import { auditCoverage, recordOutcome } from "./audit-outcome.ts";
 import { isQuotedExtraction, quotedSourceFindings } from "./quoted-proof.ts";
 
-const finding = (code: string, detail: string, severity: WorkerFinding["severity"] = "BLOCKING"): WorkerFinding => ({ code, detail, severity });
+const finding = (code: string, detail: string, severity: WorkerFinding["severity"] = "BLOCKING", recordId?: string): WorkerFinding => ({ code, detail, severity, ...(recordId ? { recordId } : {}) });
 
 export function auditGeneralizedExtraction(input: AuditorWorkerInput, contract: GeneralizedCivicExtractionContract): AuditorResult {
   const context = input.context;
   // Build the authoritative occurrence inventory before reading any candidate.
+  // A record type with no parsing rule has no row inventory to build; its quotes are re-proved against the artifact itself below.
+  const quoted = isQuotedExtraction(contract, input.candidate.extraction);
   const independent = context.evidence.map(evidence => {
-    try { assertGeneralizedScope(contract, evidence); return { evidence, inventory: inventoryRecordEvidence(evidence, contract.extraction), error: null }; }
+    try { assertGeneralizedScope(contract, evidence); return { evidence, inventory: quoted ? null : inventoryRecordEvidence(evidence, contract.extraction), error: null }; }
     catch (error) { if (!(error instanceof RecordEvidenceRefusal)) throw error; return { evidence, inventory: null, error }; }
   });
   const candidate = input.candidate; const extraction = candidate.extraction;
@@ -43,7 +45,7 @@ export function auditGeneralizedExtraction(input: AuditorWorkerInput, contract: 
   const provenance: WorkerFinding[] = [];
   for (const basis of ["CANONICAL_SUBJECT_IDENTITY", "PUBLISHER_SOURCE_UNIVERSE", "METHOD_REGISTRY", "EVIDENCE_VAULT"] as const) if (!context.startedFrom.includes(basis)) provenance.push(finding("AUDIT_STARTING_CONTEXT_NOT_INDEPENDENT", `Independent starting basis ${basis} is absent.`));
   if (context.startedFrom.includes("OUR_SUMMARY")) provenance.push(finding("AUDIT_STARTING_CONTEXT_NOT_INDEPENDENT", "Our own summary cannot establish the independent evidence base."));
-  if (!captured || (!captured.inventory && !isQuotedExtraction(contract, extraction))) provenance.push(finding("AUDIT_ARTIFACT_IDENTITY_MISMATCH", "No independently inventoried captured artifact supports the candidate."));
+  if (!captured || (!captured.inventory && !quoted)) provenance.push(finding("AUDIT_ARTIFACT_IDENTITY_MISMATCH", "No independently inventoried captured artifact supports the candidate."));
   for (const entry of independent) {
     if (!context.publisherSurfaces.some(surface => {
       const observed = /^https:\/\/([^/?#]+)(?:[/?#]|$)/i.exec(entry.evidence.canonicalUrl)?.[1]?.toLowerCase();
@@ -52,7 +54,7 @@ export function auditGeneralizedExtraction(input: AuditorWorkerInput, contract: 
     })) provenance.push(finding("AUDIT_NON_FIRST_PARTY_EVIDENCE", `Artifact ${entry.evidence.artifactId} has no independently named publisher surface.`));
   }
   const sourceComparisons: WorkerFinding[] = [];
-  if (captured && isQuotedExtraction(contract, extraction)) {
+  if (captured && quoted) {
     // No parsing rule exists for this record type: re-prove every quote against the immutable artifact itself.
     sourceComparisons.push(...quotedSourceFindings(extraction, contract, captured.evidence));
   } else if (captured?.inventory) {
@@ -85,7 +87,7 @@ export function auditGeneralizedExtraction(input: AuditorWorkerInput, contract: 
   const external = externalSource ? verifyExternalAuthorities({ attemptId: input.attemptId, producerAttemptId: candidate.producerAttemptId, candidate: extraction,
     evidence: externalSource, authorityEvidence: context.authorityEvidence }, contract) : [];
   coverage.push(...external.flatMap(result => result.discrepancies.filter(f => f.code !== "VERIFICATION_TIMESTAMP_MISSING")));
-  const complete = scoped.length > 0 && scoped.every(entry => entry.inventory !== null);
+  const complete = scoped.length > 0 && scoped.every(entry => entry.error === null && (entry.inventory !== null || quoted));
   add("COVERAGE", "Challenge captured identities, independent official contradictions, and explicit external denominator evidence.", coverage, true, complete);
   const absence = candidate.claimsAbsence || extraction.actualRowCount === 0;
   const absenceFindings = absence ? [finding("AUDIT_UNSUPPORTED_ABSENCE", "A capture, missing row, failed extraction, or unwitnessed route never establishes publisher absence.")] : [];
@@ -111,7 +113,7 @@ export function auditGeneralizedExtraction(input: AuditorWorkerInput, contract: 
   const recordIds = extraction.records.map(record => record.id);
   const { brokenRecordIds, survivingRecordIds: intact } = recordOutcome(recordIds, findings, unsafeIds);
   const survivingRecordIds = unresolved ? [] : intact;
-  const sourceRecords = global ? expected.size : captured?.inventory ? captured.inventory.rows.length : isQuotedExtraction(contract, extraction) ? extraction.records.length : null;
+  const sourceRecords = global ? expected.size : captured?.inventory ? captured.inventory.rows.length : quoted ? extraction.records.length : null;
   return { role: "ADVERSARIAL_AUDITOR", attemptId: input.attemptId, producerAttemptId: candidate.producerAttemptId, validatorAttemptId: candidate.validatorAttemptId,
     verdict, startedFrom: context.startedFrom, attacks: ordered, findings, artifactIds: [...new Set(allArtifacts.map(e => e.artifactId))], survivingRecordIds, survivingRecordCount: survivingRecordIds.length,
     brokenRecordIds, coverage: auditCoverage({ routesApplicable: applicableRoutes.length, routesChecked, sourceRecords, extractedRecords: extraction.records.length }), reopenRequired: verdict === "BROKE" };

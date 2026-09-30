@@ -14,8 +14,9 @@ import { researchSpendInWindow } from "../lib/control-plane/scheduler/research-p
 import { MODEL_FOR_CLASS } from "../lib/control-plane/scheduler/model-routing.ts";
 import type { ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { modelParseReasoner } from "../lib/control-plane/workers/model-parser.ts";
-import { dispatchWorkerTask, enqueueWorkerTask, FLEET_POLICY_VERSION, type FleetRuntime } from "../lib/control-plane/workers/runtime.ts";
-import type { GeneralizedCivicExtractionContract } from "../lib/control-plane/workers/types.ts";
+import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION, type FleetRuntime } from "../lib/control-plane/workers/runtime.ts";
+import { auditCoverageReport } from "../lib/control-plane/workers/audit-sampling.ts";
+import type { GeneralizedCivicExtractionContract, IndependentAuditContext } from "../lib/control-plane/workers/types.ts";
 
 const START = "2026-09-29T04:00:00.000Z";
 const PROJECT = "model-parser-runtime";
@@ -27,7 +28,7 @@ const TEXT = [
   "Special Meeting: Thursday, October 23, 2026 at 5:30 PM",
 ].join("\n");
 
-test("a record type with no parsing rule runs through the real fleet: Haiku quotes, code confirms, the ledger shows the spend, the Validator passes it", async () => {
+async function fixture() {
   const repos = createMemoryRepositories();
   const store = new MemoryEvidenceStore();
   let clock = Date.parse(START);
@@ -76,6 +77,11 @@ test("a record type with no parsing rule runs through the real fleet: Haiku quot
   const runtime: FleetRuntime = { repos, methodVersion: 61, now, readEvidence, parseReasoner: modelParseReasoner(repos, transport, now),
     independentContext: async () => { throw new Error("not used"); } };
 
+  return { repos, runtime, item, artifact, contract, now, calls, store };
+}
+
+test("a record type with no parsing rule runs through the real fleet: Haiku quotes, code confirms, the ledger shows the spend, the Validator passes it", async () => {
+  const { repos, runtime, item, artifact, contract, now, calls } = await fixture();
   const task = await enqueueWorkerTask(repos, { workItemId: item.id, role: "PARSER", artifactId: artifact.id, contract, now: now() });
   const dispatch = await dispatchWorkerTask(runtime, task);
   assert.equal(dispatch.outcome, "WORKED", dispatch.detail);
@@ -105,4 +111,65 @@ test("a record type with no parsing rule runs through the real fleet: Haiku quot
   // And the manual now says what worked here.
   const manual = await readFieldManual(repos, { role: "PARSER", state: "az", recordClass: "PLANNING_MEETING" });
   assert.ok(manual.projection.lines.some((l) => /PARSE_OUTCOME YIELDED/.test(l)));
+});
+
+test("the Auditor runs after the record can publish, samples the model review, and writes what it found where the next agent reads it", async () => {
+  const f = await fixture();
+  const { repos, item, artifact, contract, now } = f;
+  const parserTask = await enqueueWorkerTask(repos, { workItemId: item.id, role: "PARSER", artifactId: artifact.id, contract, now: now() });
+  await dispatchWorkerTask(f.runtime, parserTask);
+  const parser = (await repos.workerResults.readAll()).find((r) => r.result.role === "PARSER")!;
+  const validatorTask = await enqueueWorkerTask(repos, { workItemId: item.id, role: "VALIDATOR", artifactId: artifact.id, contract, producerResultId: parser.id, now: now() });
+  await dispatchWorkerTask(f.runtime, validatorTask);
+  const validator = (await repos.workerResults.readAll()).find((r) => r.result.role === "VALIDATOR")!;
+
+  const held = (await readForParser(f.store, PROJECT, artifact as Artifact)).input;
+  const context: IndependentAuditContext = {
+    subjectId: contract.subjectId, contract, publisherSurfaces: [`https://${new globalThis.URL(URL).host}/`], methodVersion: 61,
+    routes: [{ routeId: "route-agenda", canonicalUrl: URL, applicable: true, status: "HELD", artifactIds: [artifact.id], reason: "held" },
+      { routeId: "route-minutes", canonicalUrl: "https://www.exampletonaz.gov/minutes", applicable: true, status: "OPEN", artifactIds: [], reason: "not fetched yet" }],
+    evidence: [evidenceProjection(held)],
+    startedFrom: ["CANONICAL_SUBJECT_IDENTITY", "PUBLISHER_SOURCE_UNIVERSE", "METHOD_REGISTRY", "EVIDENCE_VAULT"], scope: "CAPTURED_ARTIFACT",
+  };
+  let reviews = 0;
+  const auditReasoner: NonNullable<FleetRuntime["auditReasoner"]> = { workerProvider: "test-double", workerVersion: "review/1", review: async () => {
+    reviews += 1;
+    return { review: { step: "adversarial-audit", model: "review/1", effort: "low", contextHash: "c", verdict: "SURVIVED", challenges: [], elapsedMs: 0 }, usd: null,
+      usage: { inputTokens: null, outputTokens: null, cacheReadInputTokens: null, cacheCreationInputTokens: null, uncachedInputTokens: null } };
+  } };
+  let sampled = false;
+  const audited: FleetRuntime = { ...f.runtime, independentContext: async () => context, auditReasoner, modelAuditSample: async () => sampled };
+
+  // Not sampled: the deterministic audit still runs on the record, with no model call.
+  const first = await dispatchWorkerTask(audited, await enqueueWorkerTask(repos, { workItemId: item.id, role: "ADVERSARIAL_AUDITOR", artifactId: artifact.id, contract,
+    producerResultId: parser.id, validatorResultId: validator.id, auditScope: "CAPTURED_ARTIFACT", now: now() }));
+  assert.equal(first.outcome, "WORKED", first.detail);
+  const unsampled = (await repos.workerResults.readAll()).find((r) => r.attemptId === first.attemptId)!;
+  assert.equal(unsampled.executionMode, "DETERMINISTIC");
+  assert.equal(unsampled.modelReview, undefined);
+  assert.equal(reviews, 0);
+  assert.equal(unsampled.result.verdict, "SURVIVED", JSON.stringify(unsampled.result));
+  if (unsampled.result.role !== "ADVERSARIAL_AUDITOR") throw new Error("role");
+  assert.equal(unsampled.result.survivingRecordCount, 2);
+  assert.deepEqual([unsampled.result.coverage?.routesApplicable, unsampled.result.coverage?.routesChecked, unsampled.result.coverage?.sourcesPercent], [2, 1, 50], "the unchecked minutes route is a number, not a hold");
+
+  // Sampled: the model reviews it, on the reasoner the runtime was given.
+  sampled = true;
+  const second = await dispatchWorkerTask(audited, await enqueueWorkerTask(repos, { workItemId: item.id, role: "ADVERSARIAL_AUDITOR", artifactId: artifact.id, contract,
+    producerResultId: parser.id, validatorResultId: validator.id, auditScope: "CAPTURED_ARTIFACT", replayLabel: "sampled", now: now() }));
+  assert.equal(second.outcome, "WORKED", second.detail);
+  const reviewed = (await repos.workerResults.readAll()).find((r) => r.attemptId === second.attemptId)!;
+  assert.equal(reviewed.executionMode, "MODEL_ASSISTED");
+  assert.equal(reviews, 1);
+
+  // The coverage number: both audited, one model-reviewed.
+  const report = auditCoverageReport(await repos.workerResults.readAll());
+  assert.equal(report.validated, 1);
+  assert.equal(report.audited, 1);
+  assert.equal(report.modelReviewed, 1);
+  assert.equal(report.sourcesCheckedPercent, 50);
+
+  // And what the audit found is in the manual.
+  const manual = await readFieldManual(repos, { role: "AUDITOR", state: "az", recordClass: "PLANNING_MEETING" });
+  assert.ok(manual.projection.lines.some((l) => l.includes("AUDITOR/AUDIT_STRATUM YIELDED") && l.includes("50% of applicable official sources checked")), manual.projection.lines.join("\n"));
 });

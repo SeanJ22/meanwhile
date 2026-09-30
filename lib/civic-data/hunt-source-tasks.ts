@@ -21,7 +21,8 @@ export function admittedHuntSourceScopes(scopes: readonly ResolvedScope[], now: 
     scope.decision.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd);
 }
 
-/** Only completed audits for an actual current Send reach this existing writer.
+/** Only completed independent validations for an actual current Send reach this existing writer.
+ * The Auditor samples after publishing and is not waited for (rulings section 3).
  * A retained publication receipt prevents unchanged re-publication. */
 export function workerRosterSourceTasks(scopes: readonly ResolvedScope[], items: readonly WorkItem[], results: readonly WorkerResultRecord[], now: string): RoutineSourceTask[] {
   const current = new Set(scopes.filter(scope => scope.kind === "RESOLVED" && scope.decision.sourceWorkVersion === 1)
@@ -31,9 +32,9 @@ export function workerRosterSourceTasks(scopes: readonly ResolvedScope[], items:
     if (!target || (target !== "registry-runtime-bindings" && !isWorkerReaderContract(target))) return [];
     const instructions = (item.autonomousPlan.ownerInstructions ?? []).filter(id => current.has(id));
     if (!instructions.length) return [];
-    const latest = results.filter(record => record.workItemId === item.id && record.result.role === "ADVERSARIAL_AUDITOR")
+    const latest = results.filter(record => record.workItemId === item.id && record.result.role === "VALIDATOR" && record.result.verdict === "PASS")
       .sort((a, b) => b.endedAt.localeCompare(a.endedAt) || b.id.localeCompare(a.id))[0];
-    if (!latest || latest.result.verdict !== "SURVIVED" || Date.parse(latest.endedAt) > Date.parse(now) ||
+    if (!latest || Date.parse(latest.endedAt) > Date.parse(now) ||
       (item.publicationOutcome?.workerResultId === latest.id && item.publicationOutcome.code !== "ROSTER_READER_IDENTITY_UNRESOLVED" &&
         (item.publicationOutcome.recovery !== "PUBLISHER" || Date.parse(now) - Date.parse(item.publicationOutcome.at) < 15 * 60_000))) return [];
     return [{ item, latest, instructions }];

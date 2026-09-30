@@ -8,7 +8,7 @@ import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { putArtifact } from "../lib/control-plane/evidence/store.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { registerRouteTask, claimRouteTask, beginAttemptFor, recordArtifactMetadata, disposeRouteTask } from "../lib/control-plane/repository/coordinator.ts";
-import { dispatchWorkerTask, evidenceProjection, FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
+import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
 import { nextAutonomousOperation } from "../lib/control-plane/workers/coordinator.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { publishWorkerRosterResults } from "../lib/civic-data/worker-roster-publication.ts";
@@ -80,11 +80,30 @@ async function proveRosterPublication(partial = false, auditLadder = false) {
   };
   const runtime = { ...h.runtime, ...(auditLadder ? { auditReasoner: modelAuditReasoner(h.repos, transport, h.now) } : {}),
     independentContext: async (scope: Parameters<typeof h.runtime.independentContext>[0]) => ({ ...await h.runtime.independentContext(scope), authorityEvidence: [authorityEvidence] }) };
-  for (const role of ["ACQUIRER", "PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR", ...(auditLadder ? ["ADVERSARIAL_AUDITOR", "ADVERSARIAL_AUDITOR"] : [])]) {
+  for (const role of ["ACQUIRER", "PARSER", "VALIDATOR"]) {
     const next = await nextAutonomousOperation(runtime, h.item.id);
     assert.equal(next.task?.workerTask?.role, role, JSON.stringify(next));
     const dispatch = await dispatchWorkerTask(runtime, next.task!);
     assert.equal(dispatch.outcome, "WORKED", JSON.stringify(dispatch));
+  }
+  // A validated roster is ready to publish before any audit exists (rulings section 3). The Auditor samples afterwards; this fixture runs
+  // it, and its escalation ladder, ahead of the publish call so the assertions below can see an audit that has already happened.
+  assert.equal((await nextAutonomousOperation(runtime, h.item.id)).action, "STAGED");
+  {
+    const so = await h.repos.workerResults.read(h.item.id);
+    const parser = so.find(row => row.result.role === "PARSER")!, validator = so.find(row => row.result.role === "VALIDATOR")!;
+    const held = (await h.repos.workItems.mustRead(h.item.id)).value.autonomousPlan!;
+    let spec: Parameters<typeof enqueueWorkerTask>[1] = { workItemId: h.item.id, role: "ADVERSARIAL_AUDITOR", artifactId: (parser.result as { artifactId: string }).artifactId,
+      contract: held.contract, producerResultId: parser.id, validatorResultId: validator.id, auditScope: held.auditScope, now: h.now() };
+    for (;;) {
+      const task = await enqueueWorkerTask(h.repos, spec);
+      const dispatch = await dispatchWorkerTask(runtime, task);
+      assert.equal(dispatch.outcome, "WORKED", JSON.stringify(dispatch));
+      const record = (await h.repos.workerResults.read(h.item.id)).find(row => row.attemptId === dispatch.attemptId)!;
+      const escalation = nextAuditEscalation(record);
+      if (!escalation) break;
+      spec = { ...spec, auditEscalation: escalation };
+    }
   }
   const results = await h.repos.workerResults.read(h.item.id);
   assert.deepEqual(results.map(row => row.result.verdict), ["ACQUIRED", "EXTRACTED", "PASS", ...(auditLadder ? ["INCONCLUSIVE", "INCONCLUSIVE"] : []), "SURVIVED"]);

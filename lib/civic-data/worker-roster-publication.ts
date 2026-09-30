@@ -18,6 +18,7 @@ import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { isScheduled, scheduleObligation } from "../control-plane/scheduler/obligation.ts";
 import { materializeBodyDirectoryWork, workerBodyDirectoryPackage } from "./worker-body-directory.ts";
+import { independentChain } from "./worker-publication-evidence.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
 
 export interface WorkerPublicationCapture {
@@ -40,7 +41,8 @@ export function workerRosterPublication(input: {
   readonly plan: AutonomousWorkPlan;
   readonly parser: WorkerResultRecord;
   readonly validator: WorkerResultRecord;
-  readonly auditor: WorkerResultRecord;
+  /** Optional: a roster publishes on its Parser and Validator results; the Auditor samples afterwards and only a BROKE one holds it. */
+  readonly auditor?: WorkerResultRecord;
   readonly captures: readonly WorkerPublicationCapture[];
   readonly prior: RegistryRuntimePrior;
   readonly now: string;
@@ -49,22 +51,18 @@ export function workerRosterPublication(input: {
   const contract = plan.contract;
   const target = plan.publication;
   requireThat(target?.contractId === "registry-runtime-bindings" && contract.schemaVersion === 2 &&
-    contract.recordClass === "OFFICIAL_ROSTER" && plan.auditScope === "SOURCE_UNIVERSE", "ROSTER_PUBLICATION_CONTRACT_UNRESOLVED");
+    contract.recordClass === "OFFICIAL_ROSTER", "ROSTER_PUBLICATION_CONTRACT_UNRESOLVED");
   if (!target || contract.schemaVersion !== 2) throw new Error("ROSTER_PUBLICATION_CONTRACT_UNRESOLVED");
   const extraction = parser.result;
   const verification = validator.result;
-  const audit = auditor.result;
-  requireThat(extraction.role === "PARSER" && verification.role === "VALIDATOR" && audit.role === "ADVERSARIAL_AUDITOR", "ROSTER_PUBLICATION_WORKER_ROLES_INVALID");
-  if (extraction.role !== "PARSER" || verification.role !== "VALIDATOR" || audit.role !== "ADVERSARIAL_AUDITOR") throw new Error("ROSTER_PUBLICATION_WORKER_ROLES_INVALID");
+  const audit = auditor?.result;
+  requireThat(extraction.role === "PARSER" && verification.role === "VALIDATOR" && (audit === undefined || audit.role === "ADVERSARIAL_AUDITOR"), "ROSTER_PUBLICATION_WORKER_ROLES_INVALID");
+  if (extraction.role !== "PARSER" || verification.role !== "VALIDATOR") throw new Error("ROSTER_PUBLICATION_WORKER_ROLES_INVALID");
+  requireThat(audit === undefined || audit.verdict !== "BROKE", "ROSTER_AUDIT_BROKE");
   requireThat(extraction.verdict === "EXTRACTED" && verification.extractionVerdict === "PASS" &&
     extraction.warnings.every(f => f.severity === "INFO"), "ROSTER_REQUIRED_VERIFICATION_UNFINISHED");
-  requireThat(new Set([parser.worker.instance, validator.worker.instance, auditor.worker.instance]).size === 3 &&
-    new Set([parser.attemptId, validator.attemptId, auditor.attemptId]).size === 3 &&
-    parser.workItemId === validator.workItemId && parser.workItemId === auditor.workItemId &&
-    verification.producerAttemptId === parser.attemptId && audit.producerAttemptId === parser.attemptId && audit.validatorAttemptId === validator.attemptId &&
-    validator.inputResultIds.includes(parser.id) && auditor.inputResultIds.includes(parser.id) && auditor.inputResultIds.includes(validator.id), "ROSTER_INDEPENDENT_WORKER_CHAIN_INVALID");
-  requireThat([parser, validator, auditor].every(record => canonicalJson(record.completion.completedTask.workerTask?.contract) === canonicalJson(contract)) &&
-    auditor.completion.completedTask.workerTask?.auditScope === "SOURCE_UNIVERSE", "ROSTER_WORKER_CONTRACT_MISMATCH");
+  requireThat(independentChain(parser, validator, auditor), "ROSTER_INDEPENDENT_WORKER_CHAIN_INVALID");
+  requireThat([parser, validator, ...(auditor ? [auditor] : [])].every(record => canonicalJson(record.completion.completedTask.workerTask?.contract) === canonicalJson(contract)), "ROSTER_WORKER_CONTRACT_MISMATCH");
   requireThat(contract.verification.required && contract.verification.authorities.length > 0 &&
     ["name", "office"].every(field => contract.requiredFields.includes(field) && contract.verification.authorities.some(a =>
       ["RECORD_VALUES", "RECORD_VALUES_SUBSET"].includes(a.comparison.kind) && a.comparison.fields.includes(field))), "ROSTER_MEMBERSHIP_VERIFICATION_MISSING");
@@ -95,18 +93,15 @@ export function workerRosterPublication(input: {
   const replayLocalCodes = new Set(external.flatMap(check => check.discrepancies.filter(f => f.severity !== "INFO" && f.recordId).map(f => `${f.code}|${f.recordId}|${f.field ?? ""}`)));
   const localFinding = (f: { severity: string; code: string; recordId?: string; field?: string }) =>
     f.severity === "INFO" || (Boolean(f.recordId) && replayLocalCodes.has(`${f.code}|${f.recordId}|${f.field ?? ""}`));
-  requireThat(verification.findings.every(localFinding) && audit.findings.every(localFinding) &&
-    audit.attacks.every(attack => attack.mode === "COVERAGE" ? attack.executed && attack.findings.every(localFinding) :
-      attack.verdict === "SURVIVED" || attack.verdict === "NOT_APPLICABLE"), "ROSTER_GLOBAL_CHALLENGE_UNRESOLVED");
+  requireThat(verification.findings.every(localFinding), "ROSTER_GLOBAL_CHALLENGE_UNRESOLVED");
   const localBadIds = new Set(external.flatMap(check => check.discrepancies.filter(f => f.severity !== "INFO").map(f => f.recordId!)));
   const expectedSafeIds = extraction.records.map(record => record.id).filter(id => !localBadIds.has(id));
   const sameIds = (actual: readonly string[] | undefined) => actual !== undefined && actual.length === expectedSafeIds.length &&
     new Set(actual).size === actual.length && actual.every(id => expectedSafeIds.includes(id));
-  const completeChain = verification.verdict === "PASS" && audit.verdict === "SURVIVED" && !audit.reopenRequired;
+  const completeChain = verification.verdict === "PASS";
   requireThat((sameIds(verification.validatedRecordIds) || (completeChain && verification.validatedRecordCount === extraction.actualRowCount)) &&
-    (sameIds(audit.survivingRecordIds) || (completeChain && audit.survivingRecordCount === extraction.actualRowCount)) &&
-    verification.validatedRecordCount === expectedSafeIds.length && audit.survivingRecordCount === expectedSafeIds.length &&
-    (completeChain || (verification.validatedRecordIds !== undefined && audit.survivingRecordIds !== undefined)), "ROSTER_ISOLATED_RECEIPTS_MISMATCH");
+    verification.validatedRecordCount === expectedSafeIds.length &&
+    (completeChain || verification.validatedRecordIds !== undefined), "ROSTER_ISOLATED_RECEIPTS_MISMATCH");
   const verifiedFields = new Map<string, Set<string>>();
   for (const check of external) {
     if (check.comparison.kind !== "RECORD_VALUES" && check.comparison.kind !== "RECORD_VALUES_SUBSET") continue;
@@ -206,9 +201,9 @@ export function workerRosterPublication(input: {
   const sourceReviews: ManualSourceReview[] = captures.map(capture => ({ requestedUrl: capture.evidence.canonicalUrl,
     finalUrl: capture.evidence.canonicalUrl, publisher: capture.evidence.sourceId, sourceClass: "OFFICIAL_PUBLISHER",
     retrievedAt: capture.observedAt, httpStatus: capture.httpStatus!, rawHash: (capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash).slice(7),
-    reviewedEvidence: `Independent worker chain ${parser.id}, ${validator.id}, ${auditor.id}; exact source and authority replay, canonical body assertion, nonzero counts, reader symmetry and two known-answer controls passed.`, reviewOutcome: "SUPPORTED" }));
-  return { contractId: "registry-runtime-bindings", version: `worker-roster:${auditor.id}`, sourceThrough: now,
-    sourceReceipt: { contractVersion: 1, reviewedAt: now, reviewedBy: `worker-roster-publication:${auditor.worker.instance}`, sources: sourceReviews },
+    reviewedEvidence: `Independent worker chain ${parser.id}, ${validator.id}${auditor ? `, ${auditor.id}` : ""}; exact source and authority replay, canonical body assertion, nonzero counts, reader symmetry and two known-answer controls passed.`, reviewOutcome: "SUPPORTED" }));
+  return { contractId: "registry-runtime-bindings", version: `worker-roster:${validator.id}`, sourceThrough: now,
+    sourceReceipt: { contractVersion: 1, reviewedAt: now, reviewedBy: `worker-roster-publication:${validator.worker.instance}`, sources: sourceReviews },
     // The existing source-scoped door carries unchanged members on their own
     // prior authority. This review supplies only the independently checked roster.
     payload: { ...prior.payload, registry: { ...prior.payload.registry, divisions: [], bodies: [] },
@@ -231,18 +226,20 @@ export async function publishWorkerRosterResults(input: {
     const item = (await input.repos.workItems.mustRead(id)).value;
     const plan = item.autonomousPlan;
     const own = records.filter(record => record.workItemId === id);
-    const auditor = own.filter(record => record.result.role === "ADVERSARIAL_AUDITOR")
+    // A roster publishes on its Validator result; the Auditor samples afterwards and is never waited for. Keyed on the Validator so a later audit cannot cause a re-publication.
+    const validator = own.filter(record => record.result.role === "VALIDATOR" && record.result.verdict === "PASS")
       .sort((a, b) => b.endedAt.localeCompare(a.endedAt) || b.id.localeCompare(a.id))[0];
-    if (!auditor || !plan?.ownerInstructions?.length) throw new Error(`ROSTER_OWNER_WORK_INSTRUCTIONS_MISSING:${id}`);
-    if (item.publicationOutcome?.workerResultId === auditor.id && item.publicationOutcome.recovery !== "PUBLISHER" &&
+    if (!validator || !plan?.ownerInstructions?.length) throw new Error(`ROSTER_OWNER_WORK_INSTRUCTIONS_MISSING:${id}`);
+    const auditor = own.filter(record => record.result.role === "ADVERSARIAL_AUDITOR" && record.inputResultIds.includes(validator.id))
+      .sort((a, b) => b.endedAt.localeCompare(a.endedAt) || b.id.localeCompare(a.id))[0];
+    if (item.publicationOutcome?.workerResultId === validator.id && item.publicationOutcome.recovery !== "PUBLISHER" &&
       item.publicationOutcome.code !== "ROSTER_READER_IDENTITY_UNRESOLVED") { report.push({ workItemId: id, outcome: item.publicationOutcome }); continue; }
     let outcome: NonNullable<WorkItem["publicationOutcome"]>;
     let candidateId: string | null = null;
     let versionId: string | null = null;
     try {
-      const validator = own.find(record => auditor.inputResultIds.includes(record.id) && record.result.role === "VALIDATOR");
-      const parser = own.find(record => auditor.inputResultIds.includes(record.id) && record.result.role === "PARSER");
-      if (!validator || !parser || parser.result.role !== "PARSER" || plan.contract.schemaVersion !== 2) throw new Error("ROSTER_WORKER_INPUT_CHAIN_MISSING");
+      const parser = own.find(record => validator.inputResultIds.includes(record.id) && record.result.role === "PARSER");
+      if (!parser || parser.result.role !== "PARSER" || plan.contract.schemaVersion !== 2) throw new Error("ROSTER_WORKER_INPUT_CHAIN_MISSING");
       const ids = [...new Set([parser.result.artifactId, ...plan.contract.verification.authorities.flatMap(authority => [...authority.artifactIds, ...authority.authorityEvidenceArtifactIds])])];
       const captures = await Promise.all(ids.map(artifact => input.readCapture(artifact, records)));
       const prior = await readRegistryRuntimePrior(input.store, input.now);
@@ -285,7 +282,7 @@ export async function publishWorkerRosterResults(input: {
       const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(input.store,
         requiredManualProductionContract("registry-runtime-bindings"), published.promoted, input.now);
       if (readback?.status !== "PASS") throw new Error(`ROSTER_READER_READBACK_FAILED:${readback?.detail ?? "missing typed reader receipt"}`);
-      outcome = { at: input.now, workerResultId: auditor.id, status: unresolved.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
+      outcome = { at: input.now, workerResultId: validator.id, status: unresolved.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
         code: unresolved.length ? directory ? "DIRECTORY_ROWS_REQUIRE_REPAIR" : "ROSTER_IDENTITIES_REQUIRE_REPAIR" : published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",
         detail: `Independent ${directory ? "body directory" : "roster"} checks passed for ${directory ? prepared.payload.registry.bodies.length : prepared.payload.bodyRosters[0].members.length} reader ${directory ? "bodies" : "members"}, the existing registry door accepted ${versionId}, and typed reader readback passed. ${unresolved.length ? `${unresolved.length} source rows remain identity-unresolved: ${unresolved.join(", ")}. Repair these automatically; do not infer unsupported people or territory.` : "Remaining information families are still owed."}`,
         ...(unresolved.length ? { recovery: "WORKER" as const } : {}), candidateId, versionId, ...changes,
@@ -299,7 +296,7 @@ export async function publishWorkerRosterResults(input: {
       const detail = sanitizedErrorDiagnostic(error);
       const code = detail.split(":")[0];
       const recovery = (code.startsWith("ROSTER_") && !["ROSTER_PRIOR_READER_AUTHORITY_MISSING", "ROSTER_READER_READBACK_FAILED"].includes(code)) || code.startsWith("WORKER_PUBLICATION_") ? "WORKER" : "PUBLISHER";
-      outcome = { at: input.now, workerResultId: auditor.id, status: "HELD", code: detail.split(":")[0],
+      outcome = { at: input.now, workerResultId: validator.id, status: "HELD", code: detail.split(":")[0],
         detail: `${detail}. ${recovery === "WORKER" ? "Continue verification or source repair through the existing worker" : "Retry the existing publication operation with the verified evidence retained"}; no owner publication approval is required.`, recovery, candidateId, versionId };
     }
     // The data operation is already durable. Failure to store this receipt is

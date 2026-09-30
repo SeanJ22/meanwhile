@@ -101,14 +101,58 @@ const FORMS: readonly RegExp[] = [
   /^who (?:are|is) the (.+) (?:for|of|in) (?:my|our) (?:area|district|zip|zip code|neighborhood|town|city|county)$/,
 ];
 
+/** The states by name, lowercase, for "who is the governor of Arizona": two-letter code to name. */
+const STATE_NAMES: Readonly<Record<string, string>> = {
+  al: "alabama", ak: "alaska", az: "arizona", ar: "arkansas", ca: "california", co: "colorado", ct: "connecticut", de: "delaware", dc: "district of columbia",
+  fl: "florida", ga: "georgia", hi: "hawaii", id: "idaho", il: "illinois", in: "indiana", ia: "iowa", ks: "kansas", ky: "kentucky", la: "louisiana",
+  me: "maine", md: "maryland", ma: "massachusetts", mi: "michigan", mn: "minnesota", ms: "mississippi", mo: "missouri", mt: "montana", ne: "nebraska",
+  nv: "nevada", nh: "new hampshire", nj: "new jersey", nm: "new mexico", ny: "new york", nc: "north carolina", nd: "north dakota", oh: "ohio",
+  ok: "oklahoma", or: "oregon", pa: "pennsylvania", ri: "rhode island", sc: "south carolina", sd: "south dakota", tn: "tennessee", tx: "texas",
+  ut: "utah", vt: "vermont", va: "virginia", wa: "washington", wv: "west virginia", wi: "wisconsin", wy: "wyoming",
+};
+
+/** The offices one person holds for a whole state: the ones "the governor of Arizona" can mean. */
+const STATEWIDE_OFFICES: ReadonlySet<OfficeKey> = new Set(["governor", "attorney_general", "secretary_of_state", "state_treasurer", "superintendent_of_public_instruction", "corporation_commissioner", "us_senator"]);
+
+/**
+ * "Who is the governor of Arizona?", "Who are Arizona's senators?", and — when the
+ * reader's divisions sit in exactly one state — "Who is the governor?": a statewide
+ * office of the state the reader is in. A state the reader's divisions do not reach
+ * is not this (the model reads it), so we never answer for a state we did not resolve.
+ */
+function statewideOffice(normalized: string, readerStates: readonly string[]): ReaderOfficialsAsk | null {
+  const officeOf = (phrase: string): readonly OfficeKey[] | null => {
+    const words = phrase.replace(/^the /, "").trim();
+    const found = /^senators?$/.test(words) ? { keys: ["us_senator"] as readonly OfficeKey[] } : OFFICE_PHRASES.find((entry) => entry.pattern.test(words));
+    return found && found.keys.length > 0 && found.keys.every((key) => STATEWIDE_OFFICES.has(key)) ? found.keys : null;
+  };
+  for (const code of readerStates) {
+    const name = STATE_NAMES[code];
+    if (!name) continue;
+    const tail = new RegExp(`^who (?:is|s|are) (?:the )?(.+?) (?:of|from|in|for) (?:the state of )?${name}$`).exec(normalized)?.[1];
+    const lead = new RegExp(`^who (?:is|s|are) (?:the )?${name} s (.+)$`).exec(normalized)?.[1];
+    const keys = officeOf(tail ?? lead ?? "");
+    if (keys) return { keys, phrase: tail ?? lead! };
+  }
+  if (readerStates.length === 1) {
+    const bare = /^who (?:is|s|are) (?:the )?(.+)$/.exec(normalized)?.[1];
+    const keys = bare ? officeOf(bare) : null;
+    if (keys) return { keys, phrase: bare! };
+  }
+  return null;
+}
+
 /**
  * The offices a question about the reader's OWN officials asks for, or null.
  * The whole question must be one of the closed forms: a qualifier ("...and how
  * did she vote"), a second subject or an unlisted office is left to the model.
+ * `readerStates` are the two-letter codes (lowercase) the reader's divisions sit in.
  */
-export function readerOfficialsQuestion(question: string): ReaderOfficialsAsk | null {
+export function readerOfficialsQuestion(question: string, readerStates: readonly string[] = []): ReaderOfficialsAsk | null {
   const normalized = normalizeName(question);
   if (!normalized || normalized.length > 90) return null;
+  const statewide = statewideOffice(normalized, readerStates);
+  if (statewide) return statewide;
   const represents = /^who (?:represents|represent) me(?: in (.+))?$/.exec(normalized);
   if (represents) {
     if (!represents[1]) return { keys: ELECTED_OFFICIALS, phrase: "who represents me" };

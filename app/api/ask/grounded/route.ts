@@ -720,7 +720,7 @@ export async function POST(request: Request) {
    */
   const topicRoute = topicFocusedQuestion(question);
   /* "Who is my state senator?": a lookup in the officeholders held for the reader's divisions (lib/ask/reader-officials.ts). It reads the registry and the federal directory and nothing else. */
-  const officialsAsk = !topicRoute && ocdIds.length > 0 ? readerOfficialsQuestion(question) : null;
+  const officialsAsk = !topicRoute && ocdIds.length > 0 ? readerOfficialsQuestion(question, statesOf(ocdIds).map((state) => state.toLowerCase())) : null;
   /* "What meetings are happening this week?": the sittings held for the reader's divisions (lib/ask/area-meetings.ts). It reads the registry and the calendar and nothing else. */
   /* Not when the reader has a card open: "is there a meeting soon?" is then about that body. An earlier turn does not change it — the shapes name no body and carry no pronoun. */
   const areaMeetingsAsk = !topicRoute && !officialsAsk && ocdIds.length > 0 &&
@@ -2851,7 +2851,7 @@ export async function POST(request: Request) {
     return path.respond();
   }
   lapAt("resolutionAndRetrieval", path.retrievedAt);
-  const { pack, packRecords, packGaps, subject, composed, topicComposed, topicTimeline, areaTimelines, shownContacts, resolvedSittings, agendaQuestion, capture, composedWhy } = path;
+  const { pack, packRecords, packGaps, subject, composed, topicTimeline, areaTimelines, shownContacts, resolvedSittings, agendaQuestion, capture, composedWhy } = path;
   /*
    * **THE WRITING LADDER.** (2026-09-25, the Ask latency repair.) The fast
    * writer answers first; the frontier model writes only when that answer fails

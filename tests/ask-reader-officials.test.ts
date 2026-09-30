@@ -165,3 +165,19 @@ test("a ZIP that reaches more than one place does not say which city's mayor or 
   assert.equal(readerOfficialsQuestion("Who is my sheriff?")?.keys[0], "county_sheriff");
   assert.equal(composeReaderOfficials({ ask: readerOfficialsQuestion("Who is my sheriff?")!, holdingFailed: false, held: [] })?.answer, "We have not recorded who your county sheriff is yet.");
 });
+
+test("a statewide office of the state the reader is in is read too — 'the governor of Arizona', 'Arizona's senators', and a bare 'who is the governor' — and no other state", () => {
+  const az = ["az"];
+  for (const [question, keys] of [
+    ["Who is the governor of Arizona?", ["governor"]],
+    ["Who is Arizona's attorney general?", ["attorney_general"]],
+    ["Who are the senators from Arizona?", ["us_senator"]],
+    ["Who is the secretary of state of Arizona?", ["secretary_of_state"]],
+    ["Who is the governor?", ["governor"]],
+  ] as const) assert.deepEqual(readerOfficialsQuestion(question, az)?.keys, keys, question);
+  assert.equal(readerOfficialsQuestion("Who is the governor of Texas?", az), null, "a state the reader's divisions do not reach is the model's");
+  assert.equal(readerOfficialsQuestion("Who is the governor?", ["az", "nj"]), null, "a bare office with two states in view is ambiguous");
+  assert.equal(readerOfficialsQuestion("Who is the governor of Arizona?", []), null, "no state resolved: never answered");
+  assert.equal(readerOfficialsQuestion("Who is the state senator of Arizona?", az), null, "a legislator is a district's, not the state's");
+  assert.equal(readerOfficialsQuestion("Who is the mayor of Arizona?", az), null);
+});

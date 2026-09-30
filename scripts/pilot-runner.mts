@@ -365,13 +365,6 @@ interface RunRecord {
 /* ------------------------------------------------------------- one cycle --- */
 
 /**
- * The child's dispatch budget, in minutes, passed through so the cycle stops
- * starting work BEFORE this supervisor's ceiling and exits clean. The ceiling
- * below is the backstop for a child that hangs, never the normal end of a
- * healthy-but-slow cycle — a kill mid-dispatch leaks open occurrences that the
- * next cycle must resume and pay for again.
- */
-/**
  * `ownerIntentsUnreadable`: the read before this cycle failed, so the child is
  * told to keep its paid lane closed (`holdWhilePaused`).
  */
@@ -653,7 +646,7 @@ function deliver(body: string, headline: string): { readonly where: string; read
  * that is always here, so it publishes after every cycle's digest, succeeded
  * or failed — a failed cycle is exactly the reading the console must carry.
  *
- * Each publisher is its own child process under its own five-minute ceiling.
+ * Each publisher runs as its own child process until it finishes.
  * A failure is PRINTED with its exit and last stderr line, never thrown and
  * never silent, and never stops the loop: a console one cycle stale is a
  * defect the next cycle repairs; a runner that stopped cycling because the
@@ -1035,17 +1028,15 @@ const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms
  *
  * The file provider is a local proof and carries no owner intents: NOTHING.
  *
- * The nightly window (RULING 242) keeps its own clock, and the owner's
- * PAUSE_RUNNER holds it as it holds cycles (see holdWhilePaused and
- * sleepUnlessRunNow); a window skipped while paused catches up on its own.
+ * Window work runs after research and on an owner wakeup. PAUSE_RUNNER
+ * holds it as it holds cycles.
  */
 const POLL_MS = 60_000;
 const PAUSE_BEAT_MS = 30 * 60_000;
 /**
  * The runner polls source-owned durable clocks; polling is not acquisition.
  * Five-minute admission lets the 32-partition largest provider frontier drain
- * well inside its daily cadence while one hung provider can delay a new pass
- * by only its one bounded child, never by its entire partition tail.
+ * on their source cadences. Independent lanes settle without a parent wall.
  */
 const INTAKE_RUNTIME_TICK_MS = Math.max(POLL_MS, INTERVAL_MIN * 60_000);
 let intentRepos: ControlPlaneRepositories | null = null;
@@ -1683,8 +1674,7 @@ async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
  * runner" means the WHOLE runner: the owner's stated reason on 9.4.26 was
  * usage. The window makes no model calls, but it uses the host and the
  * databases like a cycle does. A window skipped while paused is caught up
- * by the next window decision after RESUME_RUNNER (it reads the last window
- * run, not this clock).
+ * after RESUME_RUNNER.
  *
  * A canary does not wait here: it is one operator-launched cycle, and idling
  * in this loop would hang the command. It is not a way past a pause for paid
@@ -1848,8 +1838,7 @@ while (cycle < CYCLES) {
   /*
    * A FAILED CYCLE CARRIES ITS OWN DIAGNOSIS. Before this the child's stderr
    * was discarded, so seven hours of NON-ZERO cycles left nothing to read but
-   * "0 providers". The last stderr lines and the kill signal (the supervisor's
-   * ceiling, when it fired) travel into the digest and onto the console.
+   * "0 providers". The last stderr lines and a child signal travel into the digest and onto the console.
    */
   let failureSection = "";
   if (!result.ok) {

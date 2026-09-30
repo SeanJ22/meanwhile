@@ -51,5 +51,5 @@ test("a pass with nothing new confirms the door's current version and delivers n
     ] as never, null, "2026-09-30T21:04:00.000Z"), true);
   } finally { console.log = log; }
   const receipt = JSON.parse(lines.find(line => line.startsWith("RCD_RECEIPT="))!.slice("RCD_RECEIPT=".length));
-  assert.deepEqual([receipt.candidateId, receipt.promotedVersion, receipt.confirmedAt, receipt.delivered.records], ["cv-new", "cv-new", "2026-09-30T21:04:00.000Z", 0]);
+  assert.deepEqual([receipt.candidateId, receipt.promotedVersion, receipt.confirmedAt, receipt.delivered.records], ["cv-new", "cv-new", undefined, 0], "the runner re-proves the canonical version; only the store records a confirmation");
 });

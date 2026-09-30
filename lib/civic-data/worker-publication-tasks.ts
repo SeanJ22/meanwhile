@@ -77,7 +77,8 @@ export async function printWorkerPublicationReceipt(store: Pick<RoutineDataStore
   if (!last && now && report.length > 0 && store.readPromotionIdentity) {
     const contract = requiredManualProductionContract(source as Parameters<typeof requiredManualProductionContract>[0]);
     const pointer = await store.readPromotionIdentity(contract.recordClass, contract.scope);
-    if (pointer) last = { at: now, candidateId: null, versionId: pointer.versionId };
+    // Named as the canonical candidate, never as a confirmation: only the store records a confirmation, and the runner re-proves this one.
+    if (pointer) last = { at: now, candidateId: pointer.versionId, versionId: pointer.versionId };
   }
   const created = last?.candidateId ? await store.readCandidate(last.candidateId) : null;
   const record = created ?? (last?.versionId ? await store.readCandidate(last.versionId) : null);

@@ -34,8 +34,10 @@ test("F01 2.4: the large surface is a stack, and closing pops one frame", () => 
     ENTRY,
     /const large = largeStack\.length > 0 \? largeStack\[largeStack\.length - 1\] : null/,
   );
-  // Closing removes exactly one frame — never the whole stack.
-  assert.match(ENTRY, /setLargeStack\(\(stack\) => stack\.slice\(0, -1\)\)/);
+  // Approved reader design (2026-09-28): the one large card keeps a BACK stack
+  // of every view it left, and "← Back to …" (and the browser's Back) removes
+  // exactly one frame — never the whole stack. ✕ Close closes the card.
+  assert.match(ENTRY, /setBackStack\(\(stack\) => stack\.slice\(0, -1\)\)/);
 });
 
 test("F01 2.4: a card opened from INSIDE another pushes; one opened from outside replaces", () => {
@@ -53,12 +55,13 @@ test("F01 2.4: a card opened from INSIDE another pushes; one opened from outside
   assert.match(placeBody.slice(0, 700), /pushLarge\(\{/, "a place card's body row must stack");
 });
 
-test("F01 2.4: both large surfaces close through the pop, not through a reset", () => {
-  // Two modals render off the stack. If either one reset it, the fix would be
-  // half-applied and the reader would lose their place from one card and not
-  // the other — which is exactly the shape that produced the defect.
-  const closes = [...ENTRY.matchAll(/onClose=\{closeLarge\}/g)];
-  assert.equal(closes.length, 2, "both the entity modal and the official modal must pop");
+test("F01 2.4: both large surfaces go back through the pop, not through a reset", () => {
+  // Both modals render EMBEDDED in the one card, whose frame owns Back. If
+  // either kept its own close-and-reset, the reader would lose their place from
+  // one card and not the other — the shape that produced the defect.
+  assert.equal([...ENTRY.matchAll(/<EntityModal\s+embedded/g)].length, 1, "the entity card renders inside the card frame");
+  assert.equal([...ENTRY.matchAll(/<OfficialModal\s+embedded/g)].length, 1, "the person card renders inside the card frame");
+  assert.match(ENTRY, /onBack=\{onCardBack\}/, "the frame's Back pops one view");
 });
 
 test("F01 2.4: the stack is bounded, and it drops the OLDEST frame", () => {

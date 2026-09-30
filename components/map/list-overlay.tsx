@@ -68,6 +68,16 @@ const GROUPS: { value: ListGroupBy; label: string }[] = [
   { value: "date", label: "Date" },
 ];
 
+/** "Published by X" — the office(s) whose calendar these meetings came from. */
+function creditFor(items: readonly Meeting[]): string | null {
+  const offices = [
+    ...new Set(items.map((m) => m.provenance.sourceOrg.trim()).filter(Boolean)),
+  ];
+  if (offices.length === 0) return null;
+  if (offices.length <= 2) return `Published by ${offices.join(" and ")}`;
+  return `Published by ${offices[0]}, ${offices[1]} and ${offices.length - 2} other office${offices.length === 3 ? "" : "s"}`;
+}
+
 function groupKeyFor(meeting: Meeting, groupBy: ListGroupBy): string {
   switch (groupBy) {
     case "jurisdiction":
@@ -89,8 +99,11 @@ function groupKeyFor(meeting: Meeting, groupBy: ListGroupBy): string {
 
 export function ListOverlay({
   onPickMeeting,
+  embedded = false,
 }: {
   onPickMeeting: (meeting: Meeting) => void;
+  /** Rendered inside the design card, which owns the frame, Escape and Close. */
+  embedded?: boolean;
 }) {
   const { meetings, location, result, governing, zipPartial, basis } = useShellData();
   const listingIdentity = useMeetingListingIdentity();
@@ -118,13 +131,13 @@ export function ListOverlay({
    */
 
   useEffect(() => {
-    if (!ui.listOverlayOpen) return;
+    if (!ui.listOverlayOpen || embedded) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") dispatch({ type: "list/open", open: false });
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [ui.listOverlayOpen, dispatch]);
+  }, [ui.listOverlayOpen, dispatch, embedded]);
 
   /*
    * ONE `now` for the whole render.
@@ -187,7 +200,7 @@ export function ListOverlay({
      [meetings, ui],
    );
 
-   const sorted = useMemo(() => {
+   const ordered = useMemo(() => {
     const list = [...focused.list];
     const center = ui.nearMe ?? location;
 
@@ -222,6 +235,25 @@ export function ListOverlay({
     }
   }, [focused, ui.listSort, ui.nearMe, location, now]);
 
+  /*
+   * Meetings of the bodies that govern this ZIP lead; nearby ones follow. The
+   * chosen sort still orders each block, so a reader who sorts by date sees
+   * their own government's next meeting first rather than a bigger neighbour's
+   * ninety. When the division lookup failed (`governing` is null) nothing is
+   * known to govern, so nothing is promoted.
+   */
+  const sorted = useMemo(() => {
+    if (!governing) return ordered;
+    const rank = (m: Meeting) => {
+      const badge = badgeFor(m, governing, basis, zipPartial);
+      return badge === "GOVERNS" ? 0 : badge === "COULD_GOVERN" ? 1 : 2;
+    };
+    return ordered
+      .map((meeting, index) => ({ meeting, index, rank: rank(meeting) }))
+      .sort((a, b) => a.rank - b.rank || a.index - b.index)
+      .map((entry) => entry.meeting);
+  }, [ordered, governing, basis, zipPartial]);
+
   const groups = useMemo(() => {
     if (ui.listGroupBy === "none") {
       return [{ key: "", items: sorted.slice(0, limit) }];
@@ -246,10 +278,11 @@ export function ListOverlay({
 
   return (
     <div
-      className="al-overlay"
-      role="dialog"
-      aria-label={`Visible ${listingCount.heading.toLowerCase()}`}
+      className={embedded ? "al-overlay mw-embedded" : "al-overlay"}
+      role={embedded ? undefined : "dialog"}
+      aria-label={embedded ? undefined : `Visible ${listingCount.heading.toLowerCase()}`}
       onClick={(e) => {
+        if (embedded) return;
         // A large popup, not a takeover (3): clicking the backdrop closes.
         if (e.target === e.currentTarget)
           dispatch({ type: "list/open", open: false });
@@ -285,6 +318,7 @@ export function ListOverlay({
             {focused.chip}
           </span>
         )}
+        {!embedded && (
         <button
           type="button"
           className="icon-btn al-overlay-close"
@@ -293,6 +327,7 @@ export function ListOverlay({
         >
           ✕
         </button>
+        )}
       </div>
 
       <div className="al-overlay-controls">
@@ -406,6 +441,10 @@ export function ListOverlay({
                 would be a claim about rows that do not carry it — so those
                 keep their per-row badges and this renders nothing.
               */}
+              {!collapsed && creditFor(group.items) && (
+                <p className="al-group-credit">{creditFor(group.items)}</p>
+              )}
+
               {!collapsed && groupBadge !== null && (
                 <p className="al-group-jurisdiction">
                   <JurisdictionPill

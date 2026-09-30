@@ -858,7 +858,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1px;
+  gap: var(--mw-1);
   color: var(--text);
 }
 
@@ -5431,6 +5431,10 @@ main[data-sidebar="closed"] .map-top-row {
   margin-inline-end: -0.06em;
 }
 
+/* The reader design labels (app/reader.css) track at 0.08em too. */
+.mw-card-kicker,
+.mw-row-link-label,
+.mw-money-tile-label,
 .trailing-space-trimmed-8 {
   margin-inline-end: -0.08em;
 }
@@ -6156,4 +6160,107 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
 }
 @media (prefers-reduced-motion: reduce) {
   .boundary-info-pill { animation: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   READER DESIGN (2026-09-28) — the approved Meanwhile reader surfaces.
+   Source: Meanwhile-Implementation-Handoff (DESIGN-SPEC §1–§7). New token
+   names only, so nothing above and nothing in Admin changes meaning.
+   Dark Lumen control glow: the package says keep Admin's value where it
+   differs (README §4.9), so --ctl-img reads Admin's --mw-control gradient.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root {
+  --ground: #0f1117;
+  --sheet: #181a20;
+  --sheet-img: radial-gradient(ellipse 120% 90% at 50% 100%, #232733 0%, #181a20 62%);
+  --ctl: #1e2129;
+  --ctl-img: radial-gradient(ellipse at bottom, rgba(71, 81, 92, 1) 0%, rgba(11, 21, 30, 1) 45%);
+  --ctl-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09), 0 4px 10px -4px rgba(0, 0, 0, 0.7);
+  --sheet-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07), 0 24px 48px -20px rgba(0, 0, 0, 0.85);
+  --card-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07), 0 24px 48px -20px rgba(0, 0, 0, 0.85), 0 40px 80px -30px rgba(0, 0, 0, 0.55);
+  --well: inset 0 2px 6px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --hair: rgba(255, 255, 255, 0.08);
+  --hair-strong: rgba(255, 255, 255, 0.18);
+  --divider: rgba(255, 255, 255, 0.22);
+  --scrim: rgba(5, 6, 9, 0.68);
+  --speak: #8fb4f0;
+  --speak-on: #0f1117;
+  --speak-shadow: 0 10px 26px -10px rgba(143, 180, 240, 0.7), inset 0 -8px 16px -8px rgba(255, 255, 255, 0.35);
+  --pick: #6fcf8f;
+  --ballot-glow: rgba(186, 228, 255, 0.85);
+  --unsure: #5d6270;
+  --bar: #8f9bb3;
+  --cat-policy: #a3adc2;
+  --cat-attackPolicy: #7fa6e8;
+  --cat-attackPersonal: #e3a174;
+  --cat-credit: #dc8fb8;
+  --cat-bipartisan: #72c6a3;
+  --knob: #ffffff;
+  --knob-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --press-inset: inset 0 2px 4px rgba(0, 0, 0, 0.25);
+
+  /* Geometry named for the rhythm guard (lib/design/rhythm.ts). */
+  --radius-ctl: 12px;
+  --radius-tile: 14px;
+  --radius-pop: 18px;
+  --radius-sheet: 20px;
+  --radius-phone: 22px;
+  --mw-1: 1px;
+  --mw-2: 2px;
+  --mw-3: 3px;
+  --mw-5: 5px;
+  --mw-6: 6px;
+  --mw-10: 10px;
+  --mw-14: 14px;
+  --mw-18: 18px;
+  --mw-20: 20px;
+  --mw-22: 22px;
+  --mw-28: 28px;
+  --mw-44: 44px;
+  --text-mw-11: 0.6875rem;
+  --text-mw-12: 0.75rem;
+  --text-mw-13: 0.8125rem;
+  --text-mw-14: 0.875rem;
+  --text-mw-15: 0.9375rem;
+  --text-mw-16: 1rem;
+  --text-mw-17: 1.0625rem;
+  --text-mw-18: 1.125rem;
+  --text-mw-22: 1.375rem;
+  --text-mw-24: 1.5rem;
+  --ease-press: cubic-bezier(0.15, 0.83, 0.66, 1);
+  --dur-press: 420ms;
+  --dur-shift: 240ms;
+  --dur-bar: 600ms;
+  --dur-instant: 1ms;
+  --sidebar-w: 368px;
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  :root { --sidebar-w: 332px; }
+}
+[data-theme="light"] {
+  --ground: #eceef1;
+  --sheet: #f7f8fa;
+  --sheet-img: radial-gradient(ellipse 120% 90% at 50% 100%, #eef0f4 0%, #f9fafb 62%);
+  --ctl: #f7f8fa;
+  --ctl-img: radial-gradient(ellipse 130% 100% at 50% 100%, #e6e9ee 0%, #fbfbfc 62%);
+  --ctl-shadow: inset 0 0 0 1px rgba(20, 22, 28, 0.09), inset 0 1px 0 #fff, 0 3px 8px -3px rgba(96, 104, 122, 0.42);
+  --sheet-shadow: inset 0 0 0 1px rgba(20, 22, 28, 0.07), 0 18px 38px -16px rgba(96, 104, 122, 0.48);
+  --card-shadow: inset 0 0 0 1px rgba(20, 22, 28, 0.07), 0 18px 38px -16px rgba(96, 104, 122, 0.48), 0 40px 80px -30px rgba(0, 0, 0, 0.35);
+  --well: inset 0 2px 5px rgba(96, 104, 122, 0.28), inset 0 -1px 1px rgba(255, 255, 255, 0.8), inset 0 0 0 1px rgba(20, 22, 28, 0.05);
+  --hair: rgba(20, 22, 28, 0.09);
+  --hair-strong: rgba(20, 22, 28, 0.24);
+  --divider: rgba(20, 22, 28, 0.2);
+  --scrim: rgba(30, 34, 44, 0.5);
+  --speak: #16264a;
+  --speak-on: #fdfaf4;
+  --speak-shadow: 0 10px 24px -12px rgba(22, 38, 74, 0.6);
+  --pick: #1f6b45;
+  --ballot-glow: rgba(120, 178, 255, 0.8);
+  --unsure: #5b6270;
+  --bar: #5d6780;
+  --cat-policy: #4d5566;
+  --cat-attackPolicy: #3b6bc4;
+  --cat-attackPersonal: #b8652a;
+  --cat-credit: #b0457e;
+  --cat-bipartisan: #2f8a66;
 }

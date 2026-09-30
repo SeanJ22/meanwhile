@@ -223,12 +223,25 @@ const RUNTIME_DECLARED: Record<string, string> = {
   "--font-eb-garamond": "app/layout.tsx (next/font)",
 };
 
-test("the Ask positioning token is set on its cluster from initialized state", () => {
-  const cluster = readFileSync(join(ROOT, "components", "shell", "pill-cluster.tsx"), "utf8");
-  assert.match(cluster, /const \[expansionTop, setExpansionTop\] = useState\(0\)/,
-    "the runtime token must have a value even before layout measurement");
-  assert.match(cluster, /data-pill-cluster=\{placement\}[^>]*style=\{\{\s*"--ask-expansion-top":\s*`\$\{expansionTop\}px`\s*\} as CSSProperties\}/,
-    "the token must be set in pixels on the ancestor that contains .ask-expansion");
+test("the Ask popup's placement tokens have values before layout measurement", () => {
+  /*
+   * Approved reader design (2026-09-28): Ask is one of the three small popups
+   * and is placed by `.mw-pop[data-anchor]` in app/reader.css. The collapsed
+   * header's bottom edge (`--hdr-bottom`) and the phone sheet's height
+   * (`--sheet-h`) are measured at runtime, so every read carries a fallback
+   * and the popup is placed on the very first paint.
+   */
+  const css = readFileSync(join(ROOT, "app", "reader.css"), "utf8");
+  for (const token of ["--hdr-bottom", "--sheet-h"]) {
+    const reads = [...css.matchAll(new RegExp(`var\\(${token}([,)])`, "g"))];
+    assert.ok(reads.length > 0, `${token} is read by the reader stylesheet`);
+    assert.ok(reads.every((m) => m[1] === ","), `every read of ${token} carries a fallback`);
+  }
+  assert.match(css, /\.mw-pop\[data-anchor="sidebar"\]\[data-pop="ask"\]/,
+    "Ask has its own anchor beside the sidebar");
+  const entry = readFileSync(join(ROOT, "components", "map", "map-entry.tsx"), "utf8");
+  assert.match(entry, /"--hdr-bottom": `\$\{headerBottom\}px`/,
+    "the measured header bottom is set in pixels on the reader root");
 });
 
 function declaredCssTokens(css: string): Set<string> {

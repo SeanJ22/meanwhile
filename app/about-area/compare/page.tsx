@@ -146,7 +146,7 @@ export default async function CompareStatesPage({
   const comparison = a && b ? compareStates(a, b) : null;
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-8 text-paper">
+    <main className="mw-page mx-auto max-w-4xl px-4 py-8 text-paper">
       {/*
         **AZ-2 (item 5, 2026-08-23, the author's ruling) — Back goes to the
         MAP.**
@@ -165,7 +165,7 @@ export default async function CompareStatesPage({
       <p className="text-[0.8125rem]">
         <Link
           href={zip ? `/?zip=${zip}` : "/"}
-          className="text-muted underline decoration-dotted underline-offset-2 hover:text-signal"
+          className="mw-back-pill"
         >
           ← Back to the map
         </Link>

@@ -152,7 +152,10 @@ export function PickControl({
         — this STATES the pick instead of asking for it again. It asks only
         when there is nothing to state, or when the answers disagree.
       */}
-      <p className={prominent ? "reaction-box-prompt text-link" : "reaction-box-prompt"}>
+      <p
+        className={prominent ? "reaction-box-prompt text-link" : "reaction-box-prompt"}
+        data-picked={resolution.asks ? undefined : "true"}
+      >
         {resolution.asks
           ? `Your pick for this race${voteFor > 1 ? ` (pick up to ${voteFor})` : ""}`
           : `Your pick for this race: ${resolution.chosen.map(labelOf).join(", ")}`}

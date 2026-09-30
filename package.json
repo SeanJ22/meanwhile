@@ -324,7 +324,7 @@
     "territory:resolve": "tsx scripts/resolve-census-territory.mts",
     "territory:dependent-schools": "tsx scripts/build-dependent-school-territories.mts",
     "territory:school-observations": "tsx scripts/build-census-school-scope-observations.mts",
-    "test": "node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/**/*.test.ts tests/**/*.test.tsx",
+    "test": "node scripts/ci-tests.mjs",
     "test:bundle": "node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/feedback.test.ts",
     "tier:directory": "tsx scripts/tier-directory.mts",
     "tiers:stamp": "tsx scripts/stamp-coverage-tiers.mts",

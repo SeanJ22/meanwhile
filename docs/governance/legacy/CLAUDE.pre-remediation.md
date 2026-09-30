@@ -1,3 +1,5 @@
+> Historical implementation record. This is not current policy or a release requirement. Read docs/rulings.md §0, §3 and §5 for current instructions.
+
 # CLAUDE.md
 
 Civic app, two halves. Consumer side shows what's on a user's ballot with sourced candidate positions, translates ballot measures into plain language, and alerts users to nearby local government meetings. Data side captures user reactions and sells anonymized aggregates to political organizations. Consumers never pay.

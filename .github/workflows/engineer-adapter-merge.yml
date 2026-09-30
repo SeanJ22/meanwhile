@@ -1,0 +1,31 @@
+name: Merge engineer adapters
+on:
+  pull_request_target:
+    types: [labeled]
+  workflow_run:
+    workflows: [Build check]
+    types: [completed]
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+concurrency:
+  group: engineer-adapter-merge
+  cancel-in-progress: false
+jobs:
+  merge:
+    if: github.event_name == 'workflow_run' || github.event.label.name == 'engineer-adapter'
+    runs-on: ubuntu-latest
+    steps:
+      # Default-branch code only; a candidate PR cannot execute in this job.
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - run: node scripts/merge-engineer-adapters.mjs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPOSITORY: ${{ github.repository }}

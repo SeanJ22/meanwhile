@@ -27,6 +27,7 @@
 import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { appendFileSync } from "node:fs";
 
 import { gitFor } from "./git-lite.mjs";
 
@@ -111,6 +112,10 @@ async function main() {
     ({ classifyDeploy } = await import("../lib/ops/deploy-paths.ts"));
   } catch (err) {
     log(`could not load the predicate (${err?.message ?? err}) — BUILDING`);
+    if (process.argv.includes("--ci")) {
+      if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, "build=yes\n");
+      return;
+    }
     process.exit(BUILD);
   }
 
@@ -134,6 +139,10 @@ async function main() {
   }
 
   log(`${decision.verdict.toUpperCase()} — ${decision.reason}`);
+  if (process.argv.includes("--ci")) {
+    if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, `build=${decision.verdict === "cancel" ? "no" : "yes"}\n`);
+    return;
+  }
   process.exit(decision.verdict === "cancel" ? CANCEL : BUILD);
 }
 

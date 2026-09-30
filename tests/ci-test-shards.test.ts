@@ -134,12 +134,12 @@ test("missing and invalid hints fall back to deterministic complete count balanc
   assert.throws(() => partitionTests([files[0], files[0]], 2, empty), /unique/);
 });
 
-test("file processes stay serial within a checkout so root-mutating fixtures cannot race readers", () => {
-  assert.deepEqual([1, 2, 3, 32].map(testFileConcurrency), [1, 1, 1, 1]);
+test("file processes use two workers without oversubscribing one-core runners", () => {
+  assert.deepEqual([1, 2, 3, 32].map(testFileConcurrency), [1, 2, 2, 2]);
   for (const available of [0, -1, Infinity, 1.5]) assert.throws(() => testFileConcurrency(available));
   const plan = planTests(ROOT, "1/4");
-  assert.equal(plan.concurrency.effective, 1);
-  assert.equal(plan.scheduling.model.workers, 1);
+  assert.equal(plan.concurrency.effective, testFileConcurrency(plan.concurrency.available));
+  assert.equal(plan.scheduling.model.workers, plan.concurrency.effective);
   assert.ok(!plan.args.some((arg) => /force-exit|isolation=none|test-name-pattern/.test(arg)));
 });
 
@@ -219,7 +219,7 @@ test("an affected TSX assertion is selected, executed and propagates failure wit
     assert.deepEqual(manifest.timing.files.map((row: { file: string }) => row.file), [affected]);
     assert.ok(manifest.configInputs.includes("scripts/ci-test-timing-reporter.mjs"));
     assert.ok(manifest.configInputs.includes("scripts/ci-test-scheduling-hints.mjs"));
-    assert.ok(manifest.invocationArgs.includes("--test-concurrency=1"));
+    assert.ok(manifest.invocationArgs.includes(`--test-concurrency=${manifest.concurrency.effective}`));
     assert.equal(manifest.runner.platform, process.platform);
     assert.equal(manifest.runner.arch, process.arch);
     assert.ok(manifest.runner.totalMemoryBytes > 0);

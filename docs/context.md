@@ -1,3 +1,5 @@
+> Historical implementation record. This is not current policy or a release requirement. Read docs/rulings.md §0, §3 and §5 for current instructions.
+
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**

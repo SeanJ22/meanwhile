@@ -1,3 +1,5 @@
+> Historical implementation record. This is not current policy or a release requirement. Read docs/rulings.md §0, §3 and §5 for current instructions.
+
 # Rulings — the author's decisions that are not law
 
 **Created 2026-08-20 (Prompt C item 5).** Append-only. Dated. One entry per

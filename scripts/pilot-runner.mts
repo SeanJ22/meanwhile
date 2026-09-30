@@ -1043,6 +1043,9 @@ let intentReadFailed = false;
 let pauseBeatFailed = false;
 let runtimeAdmissionsHeld = false;
 let standingRuntimeTimer: ReturnType<typeof setInterval> | null = null;
+let researchCycleActive = false;
+let ownerWakePending = false;
+let activeControlRead: Promise<void> | null = null;
 /** The PAUSE_RUNNER intent whose reason was printed; null while not paused. */
 let announcedPause: string | null = null;
 let lastPauseBeatMs = 0;
@@ -1097,7 +1100,17 @@ function startStandingRuntimeClock(): void {
   if (runtimeAdmissionsHeld || standingRuntimeTimer !== null) return;
   runStandingRuntimeTick("independent standing clock startup", true);
   standingRuntimeTimer = setInterval(
-    () => runStandingRuntimeTick("independent standing clock"),
+    () => {
+      runStandingRuntimeTick("independent standing clock");
+      // Long-running research must not postpone the owner's controls until its end.
+      if (researchCycleActive && !canary && activeControlRead === null) {
+        activeControlRead = ownerSays().then(says => {
+          if (says === "START_NOW") ownerWakePending = true;
+        }).catch(error => {
+          console.error(`  active runner controls could not be applied: ${error instanceof Error ? error.message : String(error)}`);
+        }).finally(() => { activeControlRead = null; });
+      }
+    },
     POLL_MS,
   );
 }
@@ -1366,7 +1379,9 @@ async function ownerSays(): Promise<OwnerSays> {
       console.log(`  runner paused by owner since ${pause.intent.requestedAt}: ${pause.intent.note ?? "(no reason given)"}`);
     }
     if (pause.honored === null) {
-      await honorRunnerIntent(repos, pause.intent, "idling on the owner's pause; no cycle starts until RESUME_RUNNER");
+      await honorRunnerIntent(repos, pause.intent, researchCycleActive
+        ? "pause applied; the current cycle is settling and no next cycle starts until RESUME_RUNNER"
+        : "idling on the owner's pause; no cycle starts until RESUME_RUNNER");
     }
     if (Date.now() - lastPauseBeatMs >= PAUSE_BEAT_MS) {
       try {
@@ -1390,22 +1405,24 @@ async function ownerSays(): Promise<OwnerSays> {
   if (resume !== null) {
     const first = !actedOn.has(resume.intentId);
     actedOn.add(resume.intentId);
-    await honorRunnerIntent(repos, resume, "resumed; next cycle starts now");
+    await honorRunnerIntent(repos, resume, researchCycleActive
+      ? "resumed; next cycle follows the current active cycle"
+      : "resumed; next cycle starts now");
     if (first) {
       console.log(
         `  runner resumed by owner (${resume.requestedAt}${resume.note ? `: ${resume.note}` : ""}) — ` +
-          `starting the next cycle now at ${new Date().toISOString()}`,
+          (researchCycleActive ? "next cycle follows the current active cycle" : `starting the next cycle now at ${new Date().toISOString()}`),
       );
       return "START_NOW";
     }
   }
   if (reading.pendingRunNow.length > 0) {
-    console.log(`  a RUN_CYCLE_NOW intent is pending — starting the next cycle early at ${new Date().toISOString()}`);
+    if (!researchCycleActive) console.log(`  a RUN_CYCLE_NOW intent is pending — starting the next cycle early at ${new Date().toISOString()}`);
     return "START_NOW";
   }
   if (reading.pendingDispatch.length > 0) {
     const first = reading.pendingDispatch[0];
-    console.log(
+    if (!researchCycleActive) console.log(
       `  ${reading.pendingDispatch.length} DISPATCH intent(s) pending (oldest: "${first.note ?? ""}") — ` +
         `starting the next cycle early at ${new Date().toISOString()}`,
     );
@@ -1552,6 +1569,7 @@ async function runNightlyWindow(trigger: string): Promise<void> {
 /* ===================== LANE E — THE NIGHTLY WINDOW (RULING 242) — end ===================== */
 
 async function sleepUnlessRunNow(totalMs: number): Promise<void> {
+  if (ownerWakePending) { ownerWakePending = false; return; }
   const until = Date.now() + totalMs;
   while (Date.now() < until) {
     await sleep(Math.min(POLL_MS, until - Date.now()));
@@ -1707,7 +1725,9 @@ while (cycle < CYCLES) {
   );
 
   const leaseRecovered = await recoverExitedWindowHolder("research cycle");
-  const result = await runOneCycle(owner);
+  researchCycleActive = true;
+  const result = await runOneCycle(owner).finally(() => { researchCycleActive = false; });
+  await activeControlRead;
   if (result.circuit) {
     const c = result.circuit;
     const headline = `${new Date().toISOString()} - cycle ${cycle} - CIRCUIT BROKEN - ${c.provider} latched until ${c.eligibleAt}`;
@@ -1727,8 +1747,8 @@ while (cycle < CYCLES) {
       break;
     }
     if (cycle >= CYCLES) break;
-    // The latched provider is not polled through owner/window bookkeeping.
-    await sleep(INTERVAL_MIN * 60_000);
+    // Owner controls remain live while the child's provider circuit is latched.
+    await sleepUnlessRunNow(INTERVAL_MIN * 60_000);
     continue;
   }
   let record: RunRecord = {};
@@ -1836,6 +1856,7 @@ while (cycle < CYCLES) {
 }
 
 if (standingRuntimeTimer !== null) clearInterval(standingRuntimeTimer);
+await activeControlRead;
 if (hangWatchdog !== null) await hangWatchdog.stop();
 await standingRuntimeScheduler.waitForIdle();
 await PILOT_PROCESS_LEASE.release();

@@ -4,6 +4,7 @@ import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { hostname, tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import { createContext, runInContext } from "node:vm";
 
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { buildResearchIntent } from "../lib/control-plane/research-view.ts";
@@ -248,7 +249,7 @@ function checkRunnerPublishesConsole(src: string): void {
   const call = src.indexOf("\n  await publishConsole();");
   assert.ok(call >= 0, "the loop never calls publishConsole()");
   const delivered = src.indexOf("const delivered = deliver(");
-  const sleep = src.indexOf("await sleepUnlessRunNow(");
+  const sleep = src.indexOf("await sleepUnlessRunNow(", call);
   assert.ok(delivered >= 0 && sleep >= 0, "the loop's delivery and sleep anchors moved");
   assert.ok(call > delivered, "publishConsole() runs BEFORE the digest is delivered");
   assert.ok(call < sleep, "publishConsole() runs after the inter-cycle sleep, not after the digest");
@@ -306,8 +307,34 @@ test("pilot-runner.mts publishes the console after every digest (ADM-1)", () => 
   checkRunnerPublishesConsole(source("scripts/pilot-runner.mts"));
 });
 
-test("pilot-runner.mts honors PAUSE_RUNNER / RESUME_RUNNER and ends the sleep on a pending DISPATCH (ADM-5, ADM-8)", () => {
-  checkRunnerHonorsOwnerIntents(source("scripts/pilot-runner.mts"));
+test("pilot-runner.mts honors PAUSE_RUNNER / RESUME_RUNNER and ends the sleep on a pending DISPATCH (ADM-5, ADM-8)", async () => {
+  const src = source("scripts/pilot-runner.mts");
+  checkRunnerHonorsOwnerIntents(src);
+  const clock = src.match(/function startStandingRuntimeClock\(\): void \{[\s\S]*?\n\}/)?.[0];
+  assert.ok(clock);
+  let tick: (() => void) | null = null;
+  let finishRead: (value: string) => void = () => { throw new Error("read not started"); };
+  let reads = 0;
+  const context = createContext({
+    runtimeAdmissionsHeld: false, standingRuntimeTimer: null, researchCycleActive: false,
+    canary: false, activeControlRead: null, ownerWakePending: false, POLL_MS: 60_000,
+    runStandingRuntimeTick: () => {}, console,
+    setInterval: (callback: () => void) => { tick = callback; return 1; },
+    ownerSays: () => { reads++; return new Promise<string>(resolve => { finishRead = resolve; }); },
+  });
+  // Execute the actual clock with a controlled child lifetime and control read.
+  runInContext(clock.replace("(): void", "()") + "\nstartStandingRuntimeClock();", context);
+  assert.ok(tick);
+  const advance = tick as () => void;
+  advance();
+  assert.equal(reads, 0, "idle polling remains with the existing sleep path");
+  context.researchCycleActive = true;
+  advance(); advance();
+  assert.equal(reads, 1, "a long active cycle reads controls without overlapping reads");
+  finishRead("START_NOW");
+  await context.activeControlRead;
+  assert.equal(context.ownerWakePending, true, "the wake survives the active child finishing");
+  assert.equal(context.activeControlRead, null);
 });
 
 test("POSITIVE CONTROL: a runner that drops the publish call, the readiness target, or the dispatch check fails its checker", () => {

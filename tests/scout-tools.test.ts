@@ -1,3 +1,4 @@
+import { SOURCE_API_SPECS } from "../lib/control-plane/scheduler/scout-api.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -192,7 +193,7 @@ test("robots: transport shapes — 404 is NO_ROBOTS; 403/429/3xx/5xx/timeout/HTM
 /* ======================================================== the specs */
 
 test("the toolkit exposes exactly the research tools with their required locator and rationale", () => {
-  assert.deepEqual([...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC].map((s) => s.name), [...SCOUT_RESEARCH_TOOLS]);
+  assert.deepEqual([...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, ...SOURCE_API_SPECS].map((s) => s.name), [...SCOUT_RESEARCH_TOOLS]);
   const locatorByTool: Readonly<Record<string, string | null>> = {
     read_permission: "url",
     fetch_public: "url",

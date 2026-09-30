@@ -1,3 +1,5 @@
+import { SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION } from "../scheduler/scout-result.ts";
+import { scoutExecutor } from "../scheduler/scout-executor.ts";
 import { requireCapability } from "../capability.ts";
 import { contentHash } from "../ids.ts";
 import { indexJson } from "./parser.ts";
@@ -106,4 +108,27 @@ export function runDetective(input: DetectiveWorkerInput): DetectiveResult {
     walk: input.walk, walkState: input.walkState };
   assertResearchResult(result, "DETECTIVE", input.attemptId);
   return result;
+}
+
+/** Reuses the research loop and every source tool for failure response. */
+export function detectiveExecutor(deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps) {
+  return scoutExecutor({...deps, role:'DETECTIVE', contextFor:row=>{
+    const context=deps.contextFor(row);
+    return {...context,reason:'DETECTIVE FAILURE RESPONSE: '+context.reason,
+      inherited:{...context.inherited,summary:'Investigate the recorded blank field, blocked route, failed parse or retry loop. Read inherited facts and methods first, then use every available API/tool. Return a reusable new route with field/value/exactQuote data, or a documented dead end naming what was tried and what evidence would reopen it. Never retry the same unchanged failure.\n'+context.inherited.summary}};
+  }});
+}
+
+/** The latest result for a civic subject serves all work items for that subject and class. */
+export function subjectScoutHistory(results: readonly import('../scheduler/scout-result.ts').ScoutResult[], subjectId:string, recordClass:string) {
+  return results.filter(result=>result.subjectId===subjectId && result.recordClass===recordClass)
+    .sort((a,b)=>a.recordedAt.localeCompare(b.recordedAt));
+}
+export function investigationRole(results: readonly import('../scheduler/scout-result.ts').ScoutResult[], failedWorkers:boolean): 'SCOUT'|'DETECTIVE' {
+  return failedWorkers || results.some(result=>result.refusal !== null || ['BLOCKED','NO_PROGRESS','NEEDS_ADAPTER'].includes(result.outcome)) ? 'DETECTIVE':'SCOUT';
+}
+export function adapterWaitReason(results: readonly import('../scheduler/scout-result.ts').ScoutResult[]): string|null {
+  const latest=results.at(-1);
+  return latest?.refusal === null && latest.outcome === 'NEEDS_ADAPTER' && latest.recoveryCapabilityVersion === SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION
+    ? 'AWAITING_ADAPTER: '+latest.narrative+'; Engineer owns this work. Resume when its adapter is available.' : null;
 }

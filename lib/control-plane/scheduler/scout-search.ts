@@ -1,25 +1,4 @@
-/**
- * **COMPLIANT SEARCH-INDEX POINTERS FOR THE SCOUT LANE.** (2026-09-19.)
- *
- * Scouts hit NO_PROGRESS not because a candidate has no site but because every
- * general web-search route they could reach was robots-disallowed or
- * captcha-walled (DuckDuckGo, Mojeek, Marginalia, TAPinto). A live test against
- * real scout misses showed Brave and Exa surface the candidate's own campaign
- * site at #1 for races the scouts gave up on (Rogers, Hagaman, Rubino), while
- * still finding nothing for the genuinely siteless (Bradstreet, Fitting) — so
- * this recovers the reachable-but-blocked and leaves the true absences to the
- * durable-absence clock.
- *
- * **The compliance boundary is exact.** These are APIs we hold a key for, so the
- * lookup is authorized access, not a crawl, and does not pass the robots gate.
- * But the lookup returns POINTERS ONLY — a URL and its title. No provider is
- * asked for page content (Exa's `contents` object is omitted; Brave's default
- * pointer response carries none to strip), and neither `outputSchema` nor an
- * `/answer` endpoint is used, because a synthesized claim has no verifiable path
- * back to a source. The model must then open each pointer with fetch_public or
- * browse, and THOSE read and record robots.txt (never a gate) and vault with provenance. Nothing here is
- * vaulted and nothing is evidence.
- */
+/** Search excerpts remain leads until verified against the official source. */
 
 import type { ScoutSearch, SearchHit, SearchProvidersResult } from "./scout-contract.ts";
 
@@ -104,6 +83,7 @@ export async function braveSearch(
   const u = new URL(BRAVE_ENDPOINT);
   u.searchParams.set("q", query);
   u.searchParams.set("count", String(count));
+  u.searchParams.set("extra_snippets", "true");
   const res = await withTimeout(timeoutMs, (signal) =>
     fetchImpl(u.toString(), {
       method: "GET",
@@ -113,11 +93,11 @@ export async function braveSearch(
   );
   const body = await res.text();
   if (!res.ok) throw new Error(`brave HTTP ${res.status}: ${body.slice(0, 160)}`);
-  const json = JSON.parse(body) as { web?: { results?: { title?: string; url?: string }[] } };
+  const json = JSON.parse(body) as { web?: { results?: { title?: string; url?: string; description?: string; text?: string; extra_snippets?: string[] }[] } };
   const results = json.web?.results ?? [];
   const hits: SearchHit[] = results
-    .filter((r): r is { title?: string; url: string } => typeof r.url === "string" && r.url.length > 0)
-    .map((r) => ({ url: r.url, title: (r.title ?? "").slice(0, 200), provider: "brave" as const }));
+    .filter(r => typeof r.url === "string" && r.url.length > 0)
+    .map((r) => ({ url: r.url!, title: (r.title ?? "").slice(0, 200), provider: "brave" as const, text: [r.description, ...(r.extra_snippets ?? [])].filter(Boolean).join("\n").slice(0, 6000) }));
   return { hits, bytes: body.length };
 }
 
@@ -130,8 +110,8 @@ export async function exaSearch(
   numResults: number,
   includeDomains?: readonly string[],
 ): Promise<{ readonly hits: SearchHit[]; readonly bytes: number }> {
-  // URL-only: NO `contents` object, NO outputSchema, NOT the /answer endpoint. type "fast": a URL, not reasoning.
-  const payload: Record<string, unknown> = { query, type: "fast", numResults };
+  // Source text, never synthesized answers; the existing paid-search budget admits each call.
+  const payload: Record<string, unknown> = { query, type: "fast", numResults, contents: {text: {maxCharacters:6000}} };
   if (includeDomains && includeDomains.length > 0) payload.includeDomains = [...includeDomains];
   const res = await withTimeout(timeoutMs, (signal) =>
     fetchImpl(EXA_ENDPOINT, {
@@ -143,11 +123,11 @@ export async function exaSearch(
   );
   const body = await res.text();
   if (!res.ok) throw new Error(`exa HTTP ${res.status}: ${body.slice(0, 160)}`);
-  const json = JSON.parse(body) as { results?: { title?: string; url?: string }[] };
+  const json = JSON.parse(body) as { results?: { title?: string; url?: string; description?: string; text?: string; extra_snippets?: string[] }[] };
   const results = json.results ?? [];
   const hits: SearchHit[] = results
-    .filter((r): r is { title?: string; url: string } => typeof r.url === "string" && r.url.length > 0)
-    .map((r) => ({ url: r.url, title: (r.title ?? "").slice(0, 200), provider: "exa" as const }));
+    .filter(r => typeof r.url === "string" && r.url.length > 0)
+    .map((r) => ({ url: r.url!, title: (r.title ?? "").slice(0, 200), provider: "exa" as const, text: (r.text ?? "").slice(0, 6000) }));
   return { hits, bytes: body.length };
 }
 

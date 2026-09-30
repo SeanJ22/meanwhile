@@ -1,3 +1,4 @@
+import { SOURCE_API_TOOLS, SOURCE_API_SPECS, readSourceApi, type SourceApiTool } from "./scout-api.ts";
 /**
  * **THE SCOUT'S RESEARCH TOOLS.** (Level 1 activation, 2026-09-01.)
  *
@@ -161,8 +162,8 @@ export const SCOUT_TOOL_SPECS: readonly ScoutToolSpec[] = [
 export const SEARCH_TOOL_SPEC: ScoutToolSpec = {
   name: "search",
   description:
-    "Look up a query in the compliant paid search indexes (Brave and Exa) and return POINTERS ONLY — a " +
-    "ranked list of result URLs and titles, no page content. Use it when direct routes are walled, or to " +
+    "Look up a query in the compliant paid search indexes (Brave and Exa) and return sourced search data — a " +
+    "ranked list of source URLs, titles and source excerpts. Use it when direct routes are walled, or to " +
     "discover a candidate's own publication: the \"<name> for <office>\" committee phrasing surfaces campaign " +
     "sites well. It fetches nothing itself — open any promising hit with fetch_public or browse, which read and " +
     "record robots.txt (never a refusal of a public page) and vault the evidence; an access control there is a " +
@@ -194,7 +195,7 @@ export const SEARCH_TOOL_SPEC: ScoutToolSpec = {
  * switch is on.
  */
 export function scoutToolSpecsFor(search: boolean): readonly ScoutToolSpec[] {
-  return search ? [...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC] : SCOUT_TOOL_SPECS;
+  return [...SCOUT_TOOL_SPECS, ...SOURCE_API_SPECS, ...(search ? [SEARCH_TOOL_SPEC] : [])];
 }
 
 /* ------------------------------------------------------------ transport */
@@ -1284,7 +1285,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const forModel =
       res.hits.length === 0
         ? header
-        : `${header}\n${DATA_BEGIN}\n${res.hits.map((h, i) => `${i + 1}. ${h.url}  [${h.provider}]  ${h.title}`).join("\n")}\n${DATA_END}`;
+        : `${header}\n${DATA_BEGIN}\n${res.hits.map((h, i) => `${i + 1}. ${h.url}  [${h.provider}]  ${h.title}\n${h.text ?? ""}`).join("\n")}\n${DATA_END}`;
     const rung: Rung = {
       rung: input.rung,
       tool: "search",
@@ -1298,6 +1299,26 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       nextHopUrls: res.hits.map((h) => h.url),
     };
     return result(answered, forModel, rung, acc);
+  }
+
+  async function sourceApi(name: SourceApiTool, raw: unknown, input: ParsedInput): Promise<ScoutToolCallResult> {
+    const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
+    try {
+      const response = await readSourceApi(name, raw, { ...ctx.sourceApi, timeoutMs,
+        spaceOut: async host => { const exceeded = overCap(host); if (exceeded) throw new Error(exceeded);
+          hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1); await ctx.spaceOut(host); } });
+      acc.requests = response.requests; acc.bytes = response.bytes;
+      requestCount += response.requests; bytesFetched += response.bytes;
+      const ok = response.status >= 200 && response.status < 300;
+      const saved = await vaultText({url:new URL(response.sourceUrl),finalUrl:response.sourceUrl,status:response.status,
+        contentType:'application/json',text:response.text,methodRouteId:'scout:'+name,permission:'NOT_APPLICABLE',
+        transport:ok?'REACHABLE':'FAILED_AT_RUNG',...(ok?{}:{retention:'DIAGNOSTIC' as const})},acc);
+      const rung: Rung = {rung:input.rung,tool:name,target:response.sourceUrl,observed:'HTTP '+response.status,
+        artifactIds:acc.artifacts.map(a=>a.artifactId),transport:ok?'REACHABLE':'FAILED_AT_RUNG',httpStatus:response.status,
+        returnedCount:null,applicableBecause:input.why,nextHopUrls:[]};
+      if (!saved.stored) return result(false, saved.why, rung, acc);
+      return result(ok, 'SOURCE '+response.sourceUrl+' | artifact '+saved.artifact.id+' | retrieved '+saved.artifact.retrievedAt+' | permission NOT_APPLICABLE\n'+DATA_BEGIN+'\n'+capText(response.text).text+'\n'+DATA_END,rung,acc);
+    } catch(error) { return refusal(name+': '+(error instanceof Error ? error.message : String(error))); }
   }
 
   /* -------------------------------------------------------------- call */
@@ -1317,6 +1338,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const needsUrl = tool === "read_permission" || tool === "fetch_public" || tool === "browse";
     const parsed = parseInput(input, rungLabel, needsUrl);
     if (!parsed.ok) return refusal(parsed.why);
+    if ((SOURCE_API_TOOLS as readonly string[]).includes(tool)) return sourceApi(tool as SourceApiTool, input, parsed.value);
     switch (tool) {
       case "read_permission":
         return await readPermission(parsed.value);

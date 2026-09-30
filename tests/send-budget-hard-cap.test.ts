@@ -41,6 +41,8 @@ import type { IndependentAuditContext } from "../lib/control-plane/workers/types
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { MODELS } from "../lib/models.ts";
+
 const NOW = "2026-09-26T05:00:00.000Z";
 const WORST = scoutJobWorstCaseUsd(RESEARCH_BOUNDS.perDispatch)!;
 
@@ -63,26 +65,26 @@ function fakeTransport(outputTokens = 1_000) {
   return { sent, transport };
 }
 
-const request = (maxTokens = 8_192): ModelRequest => ({ model: "claude-sonnet-5", max_tokens: maxTokens, system: [], tools: [], messages: [{ role: "user", content: "x" }] }) as unknown as ModelRequest;
+const request = (maxTokens = 8_192): ModelRequest => ({ model: MODELS.sonnet.model, max_tokens: maxTokens, system: [], tools: [], messages: [{ role: "user", content: "x" }] }) as unknown as ModelRequest;
 
-test("the job's worst case is derived from the loop's own bound and the start model's rate, not a flat $0.60", () => {
-  assert.equal(WORST, scoutAttemptWorstCaseUsd("claude-haiku-4-5-20251001", RESEARCH_BOUNDS.perDispatch));
-  /* (400,000 tokens + one 8,192-token turn) at Sonnet 5's dearest per-token rate, $10/MTok output. */
-  assert.ok(Math.abs(WORST - 2.04096) < 1e-9, `worst case ${WORST}`);
-  assert.ok(Math.abs(scoutAttemptWorstCaseUsd("claude-opus-5-5", RESEARCH_BOUNDS.perDispatch)! - 8.16384) < 1e-9, "the escalation's worst case at Opus 5.5");
+test("the initial hold uses the response allowance at the starting tier; requests extend it before sending", () => {
+  assert.equal(WORST, scoutAttemptWorstCaseUsd(MODELS.haiku.model, RESEARCH_BOUNDS.perDispatch));
+  /* One maximum response initially held at each execution tier. */
+  assert.ok(Math.abs(WORST - 0.04096) < 1e-9, `worst case ${WORST}`);
+  assert.ok(Math.abs(scoutAttemptWorstCaseUsd(MODELS.opus.model, RESEARCH_BOUNDS.perDispatch)! - 0.16384) < 1e-9, "the escalation's worst case at Opus 5.5");
 });
 
 test("a job that would exceed the Send's budget is refused before any spend", async () => {
   const { spend } = holds();
-  const job = new JobSpend(spend, "job-1", "ob-1", lines([send(5, 4)]));
+  const job = new JobSpend(spend, "job-1", "ob-1", lines([send(0.05, 0.04)]));
   const { sent, transport } = fakeTransport();
   const admitted = await job.admit(WORST, "one Scout job");
   assert.equal(admitted.admit, false);
   assert.equal(!admitted.admit && admitted.code, "ASSIGNMENT_BUDGET");
-  assert.match(!admitted.admit ? admitted.why : "", /\$1\.00 left.*\$2\.04\) does not fit/);
+  assert.match(!admitted.admit ? admitted.why : "", /\$0\.01 left.*\$0\.04\) does not fit/);
   assert.equal(sent.length, 0, "no request was ever sent");
   /* The area's own cap refuses the same way, even with the Send's room. */
-  const other = new JobSpend(spend, "job-2", "ob-2", lines([send(100)], [area(4, 3.5)]));
+  const other = new JobSpend(spend, "job-2", "ob-2", lines([send(100)], [area(0.04, 0.035)]));
   const byArea = await other.admit(WORST, "one Scout job");
   assert.equal(!byArea.admit && byArea.code, "SCOPE_BUDGET");
   void transport;
@@ -90,15 +92,15 @@ test("a job that would exceed the Send's budget is refused before any spend", as
 
 test("a follow-up that would exceed is refused before it is sent: an escalation, and a request past the job's hold", async () => {
   const { spend } = holds();
-  /* $10: the job's $4.08 fits; the escalation's $8.16 on top does not. */
-  const job = new JobSpend(spend, "job-esc", "ob-1", lines([send(10)]));
+  /* The first tier fits; adding the frontier response hold would exceed $0.15. */
+  const job = new JobSpend(spend, "job-esc", "ob-1", lines([send(0.15)]));
   assert.equal((await job.admit(WORST, "one Scout job")).admit, true);
-  const escalation = await job.extend(scoutAttemptWorstCaseUsd("claude-opus-5-5", RESEARCH_BOUNDS.perDispatch)!, "the escalation to claude-opus-5-5");
+  const escalation = await job.extend(scoutAttemptWorstCaseUsd(MODELS.opus.model, RESEARCH_BOUNDS.perDispatch)!, "the escalation to claude-opus-5-5");
   assert.equal(escalation.admit, false);
   assert.match(!escalation.admit ? escalation.why : "", /the escalation to claude-opus-5-5's worst case/);
   assert.equal(job.heldUsd, WORST, "a refused escalation holds nothing");
 
-  /* A request past the hold: each worst case is $3 (a fake rate); the second would pass the $4.08 hold, and the $5 budget has $0.92 left. */
+  /* Each request reserves $3: one fits the $5 budget, a second cannot. */
   const { spend: spend2 } = holds();
   const tight = new JobSpend(spend2, "job-req", "ob-2", lines([send(5)]));
   assert.equal((await tight.admit(WORST, "one Scout job")).admit, true);
@@ -154,11 +156,11 @@ test("settling releases the unused hold; a failed or unmeasured job keeps its ho
   assert.equal((await second.admit(WORST, "job b")).admit, true);
   /* Full: a third waits. */
   assert.equal((await new JobSpend(spend, "job-c", "ob-3", lines([line])).admit(WORST, "job c")).admit, false);
-  /* Job a finishes having spent $0.50: the rest of its hold is released, and the retry fits. */
+  /* Job a spends half its hold; two further full holds cannot fit. */
   now = "2026-09-26T05:05:00.000Z";
-  assert.equal(await spend.settle("job-a", 0.5, now), null);
+  assert.equal(await spend.settle("job-a", WORST / 2, now), null);
   const retry = new JobSpend(spend, "job-c-retry", "ob-3", lines([line]));
-  assert.equal((await retry.admit(WORST, "the retry")).admit, false, "0.50 spent + 4.08 held + 4.08 more exceeds 8.16");
+  assert.equal((await retry.admit(WORST, "the retry")).admit, false, "settled spend plus two full holds exceeds the original two-hold budget");
   /* Job b fails with its spend unknown (settled unmeasured): its whole hold stands. */
   assert.equal(await spend.settle("job-b", null, now), null);
   const ledger = (await repos.budget.read()).value;

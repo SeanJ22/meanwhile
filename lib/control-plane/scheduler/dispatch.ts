@@ -108,8 +108,8 @@ export type ExecutorKind = (typeof EXECUTOR_KINDS)[number];
 export interface WorkerBound {
   readonly maxAttempts: number;
   readonly maxWallMs: number;
-  /** Tokens, or whatever unit the cost ledger counts. Zero is not "unlimited". */
-  readonly maxCostUnits: number;
+  /** Legacy diagnostic annotation; actual spend is reserved per request. */
+  readonly maxCostUnits?: number;
 }
 
 export const DEFAULT_WORKER_BOUND: WorkerBound = {

@@ -525,13 +525,8 @@ const SCOUT_MAX = boundedNumber(
    pauses once it could not afford even one scout. */
 const SCOUT_WORST_CASE_USD = 0.6;
 /*
- * MW-021 (2026-09-25): what one Scout job holds against a Send or area budget
- * before it starts — its first attempt's worst case under the bound the loop
- * enforces (`scoutJobWorstCaseUsd`: (400,000 + 8,192) tokens at Sonnet 5's
- * dearest $10/MTok = $4.08), never the flat $0.60 above, which sizes only the
- * Fleet lane's pause. An escalation and every request past the hold must win
- * their own holds first (`spend-holds.ts`). Null (no stated rate): budgeted
- * work waits.
+ * Initial response allowance; the existing request guard holds full input/output
+ * cost before every request and extends this hold when needed.
  */
 const SCOUT_JOB_WORST_CASE_USD = scoutJobWorstCaseUsd(RESEARCH_BOUNDS.perDispatch);
 const intervalArg = argv.find((a) => a.startsWith("--interval="));
@@ -3645,7 +3640,7 @@ const researchLines = [
   "RESEARCH — LEVEL 1 (RULING 240)",
   `  lane               ${modelLaneEnabled ? "ENABLED" : `CLOSED — ${laneDisabledReason}`}`,
   `  credential         ${WORKER_CREDENTIAL_VAR} configured in this process: ${credentialConfigured ? "yes" : "NO"} (by name; the value reaches only the provider request)`,
-  `  model              ${SCOUT_MODEL} · concurrency ${RESEARCH_BOUNDS.maxConcurrentScouts} · no per-cycle cap ($${effectiveCeilingUsd}/day ${rollingCeiling.source.toLowerCase()} + wall) · per Attempt ${RESEARCH_BOUNDS.perDispatch.maxTurns} turns / ${RESEARCH_BOUNDS.perDispatch.maxToolCalls} tools / ${Math.round(RESEARCH_BOUNDS.perDispatch.maxWallMs / 60_000)} min`,
+  `  model              ${SCOUT_MODEL} · concurrency ${RESEARCH_BOUNDS.maxConcurrentScouts} · no per-cycle cap ($${effectiveCeilingUsd}/day ${rollingCeiling.source.toLowerCase()} + wall) · per website ${RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost} requests; turns/tools/tokens follow the owner budget`,
   `  scouts             ${laneCounts.modelDispatched} dispatched of ${dueModel.length} due model-class (${modelClassUnits.length} registered model-class of ${allUnits.length}) · ` +
     `deferred ${cycle.lanes?.model.deferred ?? 0}${deferredByLine ? ` (${deferredByLine})` : ""}` +
     (dueModel.length - openedModel > 0 ? ` · ${dueModel.length - openedModel} not reached before the wall` : ""),

@@ -60,7 +60,7 @@ if (!admitted.permits || intents.paused || !key) {
   const priorResults = await repos.scoutResults.read(task.id);
   const executor = scoutExecutor({
     transport: anthropicTransport(key, (url, init) => fetch(url, { ...init, signal: AbortSignal.timeout(90_000) })),
-    bound: { ...RESEARCH_BOUNDS.perDispatch, maxTurns: 8, maxToolCalls: 12, maxWallMs: 240_000 }, now,
+    bound: { ...RESEARCH_BOUNDS.perDispatch, maxWallMs: 240_000 }, now,
     toolkitFor: ctx => {
       const grant = defaultGrant({ role: "SCOUT", project: item.project, policyVersion: FLEET_POLICY_VERSION, grantedAt: now() });
       requireCapability(grant, "NETWORK_PUBLIC_READ"); requireCapability(grant, "VAULT_WRITE");

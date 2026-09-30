@@ -1411,12 +1411,6 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     if (!(SCOUT_RESEARCH_TOOLS as readonly string[]).includes(name)) {
       return refusal(`${JSON.stringify(name)} is not a research tool; the research tools are ${SCOUT_RESEARCH_TOOLS.join(", ")}.`);
     }
-    if (toolCalls >= ctx.bound.maxToolCalls) {
-      return refusal(
-        `the Attempt's research tool-call bound (${ctx.bound.maxToolCalls}) is reached; no further tool runs. ` +
-          "Finish with what the walk established and name the next rungs so the next Attempt resumes rather than restarts.",
-      );
-    }
     toolCalls += 1;
     const tool = name as ScoutResearchTool;
     const needsUrl = tool === "read_permission" || tool === "fetch_public" || tool === "browse";

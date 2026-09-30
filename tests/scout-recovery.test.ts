@@ -142,6 +142,18 @@ test('batch history finds the same subject under other job keys without download
  assert.deepEqual(rows.map(r=>r.obligationId),['old-job']);
 });
 
+test('legacy discovery reuses the solved field across jobs without closing other blanks',()=>{
+ const solved={refusal:null,outcome:'EVIDENCE_FOUND',subjectId:'county',recordClass:'local-jurisdiction',attemptId:'roster',
+   obligationId:'old-job#coverage-discovery:officeholders',routeId:'coverage-discovery:officeholders',recordedAt:'2026-09-29',
+   candidates:[],findings:[{kind:'RECORD',field:'holder',value:'Ada',exactQuote:'Clerk Ada',sourceUrl:'https://county.gov/clerk',artifactIds:['held']}]} as unknown as ScoutResult;
+ const unrelatedFailure={...solved,routeId:'coverage-discovery:public-comment',outcome:'BLOCKED' as const,recordedAt:'2026-09-30'};
+ assert.equal(solvedScoutResult([solved],'county','local-jurisdiction','coverage-discovery:public-comment'),null);
+ assert.equal(solvedScoutResult([solved,unrelatedFailure],'county','local-jurisdiction','coverage-discovery:officeholders'),solved);
+ assert.equal(solvedScoutResult([solved,{...unrelatedFailure,routeId:solved.routeId}],'county','local-jurisdiction',solved.routeId),null);
+ const legacy={...solved,routeId:undefined} as unknown as ScoutResult;
+ assert.equal(solvedScoutResult([legacy],'county','local-jurisdiction','coverage-discovery:officeholders'),legacy);
+});
+
 test('Engineer uses guarded named tiers, preserves held context, accounts requests and stops exhausted repeats',async()=>{
  const repos=createMemoryRepositories(),models:string[]=[];
  const source={refusal:null,outcome:'NEEDS_ADAPTER',subjectId:'county',recordClass:'officials',attemptId:'failed-parse',

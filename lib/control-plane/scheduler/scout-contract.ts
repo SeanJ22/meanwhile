@@ -73,6 +73,8 @@ export interface ScoutToolSpec {
 export interface ArtifactProvenance {
   readonly artifactId: string;
   readonly canonicalUrl: string;
+  readonly retrievalUrl?: string;
+  readonly contentType?: string;
   /** The vault stamp. The date part is a candidate's `observedOn`. */
   readonly retrievedAt: string;
   /** The verdict the retrieval ran under. A robots document's own record says ALLOWED; it is the instrument, not the route. */

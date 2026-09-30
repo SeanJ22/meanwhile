@@ -818,7 +818,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-958 file(s).
+959 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -1262,6 +1262,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/health-contracts.test.ts`
 - `tests/held-agenda-projection.test.ts`
 - `tests/held-directory.test.ts`
+- `tests/held-election-offices.test.ts`
 - `tests/held-filing-subjects.test.ts`
 - `tests/held-meeting-partition.test.ts`
 - `tests/held-meetings.test.ts`
@@ -1781,7 +1782,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7081 file(s).
+7085 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -4278,6 +4279,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `data/workstate/orchestration/2026-09-02-worker-fleet.json` <!-- expected-future: date copied from a file path; no measurement date is claimed -->
 - `data/workstate/orchestration/2026-09-03-autonomous-agent-fleet.json` <!-- expected-future: date copied from a file path; no measurement date is claimed -->
 - `data/workstate/orchestration/2026-09-04-reader-last-mile.json` <!-- expected-future: date copied from a file path; no measurement date is claimed -->
+- `deploy/runner/README.md`
 - `deploy/runner/install.sh`
 - `deploy/runner/meanwhile-runner.service`
 - `deploy/runner/setup.ps1`
@@ -4843,6 +4845,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/ballot/dated-events.ts`
 - `lib/ballot/derived-picks.ts`
 - `lib/ballot/election-dates.ts`
+- `lib/ballot/election-offices.ts`
 - `lib/ballot/general-lineup.ts`
 - `lib/ballot/hunt-state-server.ts`
 - `lib/ballot/hunt-state.ts`
@@ -4984,6 +4987,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/civic-data/website-corrections.ts`
 - `lib/civic-data/worker-body-directory.ts`
 - `lib/civic-data/worker-held-directory.ts`
+- `lib/civic-data/worker-held-elections.ts`
 - `lib/civic-data/worker-held-meetings.ts`
 - `lib/civic-data/worker-held-roster.ts`
 - `lib/civic-data/worker-national-publication.ts`
@@ -8322,6 +8326,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/health-contracts.test.ts`
 - `tests/held-agenda-projection.test.ts`
 - `tests/held-directory.test.ts`
+- `tests/held-election-offices.test.ts`
 - `tests/held-filing-subjects.test.ts`
 - `tests/held-meeting-partition.test.ts`
 - `tests/held-meetings.test.ts`

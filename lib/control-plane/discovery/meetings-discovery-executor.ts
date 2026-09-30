@@ -815,7 +815,8 @@ export async function walkMeetingsDiscoveryNeed(
         });
         for (const hit of res.hits) {
           if (followed.length >= MAX_HITS_FOLLOWED_PER_QUERY) break;
-          if (hitStanding(hit.url, identity.domain) === null || tried.has(hit.url)) continue;
+          const standing = hitStanding(hit.url, identity.domain, homePage && homeHtml ? { url: homePage.page, html: homeHtml } : null);
+          if (standing === null || tried.has(hit.url)) continue;
           tried.add(hit.url);
           const page = await get(hit.url, "endpoint", ACCEPT_PAGE);
           /* Listed once asked for: a result the time cut off before its request is not "followed". */
@@ -825,7 +826,7 @@ export async function walkMeetingsDiscoveryNeed(
           const direct = meetingEndpointCandidates(`<a href="${hit.url.replace(/"/g, "%22")}"></a>`, page.finalUrl).filter((c) => c.verifiable);
           const onPage = meetingEndpointCandidates(page.body, page.finalUrl).filter((c) => c.verifiable && !tried.has(c.url));
           /* A result on the government's own domain may itself be the page that dates its sessions: checked from the body already read. */
-          const selfPage = hitStanding(hit.url, identity.domain) === "OWN_SITE"
+          const selfPage = standing === "OWN_SITE"
             ? [{ vendor: "official-page-events", url: hit.url, basis: "SEARCH" as const, evidence: hit.url, verifiable: true }]
             : [];
           for (const c of [...direct, ...selfPage, ...onPage].slice(0, 3)) {

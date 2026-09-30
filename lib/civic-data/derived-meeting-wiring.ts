@@ -41,13 +41,14 @@ import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE, derivedRequestedUrl 
 import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
 
 /** The adapter kinds a derived row wires, as the crosswalk names them. */
-export type DerivedWiringKind = "ICAL" | "OFFICIAL_PAGE_EVENTS" | "DILIGENT";
+export type DerivedWiringKind = "ICAL" | "OFFICIAL_PAGE_EVENTS" | "DILIGENT" | "LEGISTAR";
 
 /** The meeting source (adapter) name each kind's meetings carry. */
 export const DERIVED_WIRING_SOURCE_NAMES: Readonly<Record<DerivedWiringKind, string>> = {
   ICAL: "ical",
   OFFICIAL_PAGE_EVENTS: "official-page-events",
   DILIGENT: "diligent",
+  LEGISTAR: "legistar",
 };
 
 /** One wired route of one body: exactly what the reader adapter needs, and where it came from. */
@@ -108,6 +109,11 @@ export function derivedAdapterConfig(input: {
   readonly filter: Readonly<Record<string, string>>;
 }): Readonly<Record<string, string>> {
   const common = { slug: derivedMeetingSlug(input.bodyId), bodyName: input.bodyName };
+  if (input.kind === "LEGISTAR") {
+    const slug = /^\/v1\/([a-z0-9_-]+)\/events\/?$/i.exec(new URL(input.route).pathname)?.[1];
+    if (!slug) throw new Error("Invalid Legistar calendar route");
+    return { ...common, slug, ...pick(input.filter, ["eventBodyId"]) };
+  }
   if (input.kind === "DILIGENT") return { ...common, serviceBase: new URL(input.route).origin, meetingPath: "/Portal/MeetingInformation.aspx?Id=", ...pick(input.filter, ["titleMatch", "titleExclude"]) };
   return input.kind === "ICAL"
     ? { ...common, feedUrl: input.route, ...pick(input.filter, ["titleMatch", "categoryMatch", "titleExclude", "feedScope"]) }
@@ -145,7 +151,7 @@ export function derivedWiringProjectionIssue(value: unknown): string | null {
     ids.add(record.id);
     if (record.status !== "ACTIVE" && record.status !== "SUSPENDED") return `${record.id} has no status`;
     if ((record.status === "SUSPENDED") !== (record.suspension !== undefined)) return `${record.id}: only a suspended record carries a suspension`;
-    if (!row || !["ICAL", "OFFICIAL_PAGE_EVENTS", "DILIGENT"].includes(row.kind) || record.id !== derivedWiringKey(row.kind, row.bodyId)) {
+    if (!row || !["ICAL", "OFFICIAL_PAGE_EVENTS", "DILIGENT", "LEGISTAR"].includes(row.kind) || record.id !== derivedWiringKey(row.kind, row.bodyId)) {
       return `${record.id} is not keyed by its own route and body`;
     }
     if (!/^https:\/\//.test(row.route) || typeof row.officialHost !== "string" || new URL(row.route).hostname.toLowerCase() !== row.officialHost.toLowerCase()) {

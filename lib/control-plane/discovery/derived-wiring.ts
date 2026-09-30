@@ -71,6 +71,7 @@ const CONFIRMING_VENDORS: Readonly<Record<DerivedWiringKind, readonly string[]>>
   ICAL: ["ical"],
   OFFICIAL_PAGE_EVENTS: ["official-page-events"],
   DILIGENT: ["diligent"],
+  LEGISTAR: ["legistar-api"],
 };
 
 /** A discovery vendor's route as the wiring kind the reader runs, or why it cannot be one. */
@@ -86,6 +87,10 @@ export function wiringShapeFor(find: Pick<DiscoveryFind, "vendor" | "url">): Wir
     return { held: "ADAPTER_CONFIG_INCOMPLETE", detail: `the route ${find.url} is not a URL` };
   }
   if (find.vendor === "ical") return { kind: "ICAL", endpoint: { feedUrl: url.toString() } };
+  if (find.vendor === "legistar-api" && url.hostname === "webapi.legistar.com") {
+    const slug = /^\/v1\/([a-z0-9_-]+)\/events\/?$/i.exec(url.pathname)?.[1];
+    if (slug) return { kind: "LEGISTAR", endpoint: { slug } };
+  }
   if (find.vendor === "diligent" && url.pathname === "/Services/MeetingsService.svc/meetings") return { kind: "DILIGENT", endpoint: { serviceBase: url.origin } };
   if (find.vendor === "official-page-events") return { kind: "OFFICIAL_PAGE_EVENTS", endpoint: { pageUrl: url.toString(), officialHost: url.host } };
   if (find.vendor === "civicplus-agendacenter") {

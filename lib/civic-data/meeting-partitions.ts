@@ -62,6 +62,11 @@ export function meetingAcquisitionFailureDomain(
   sourceName: string,
   wiring: BodySourceWiring,
 ): string {
+  if (sourceName === "legistar") {
+    const tenant = wiring.config.slug?.trim().toLowerCase();
+    if (!tenant || !/^[a-z0-9_-]+$/.test(tenant)) throw new Error(`LEGISTAR_SOURCE_WIRING_INVALID:${wiring.bodyId}`);
+    return `meeting-upstream:webapi.legistar.com/${tenant}`;
+  }
   const endpoint = (() => {
     switch (sourceName) {
       case "legistar": return "https://webapi.legistar.com";

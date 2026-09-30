@@ -1,3 +1,51 @@
+/** The ordinary public-page reader for collectors: held bytes, then HTTP, then the existing browser. */
+export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:number}={}) {
+  const fresh=(at:string)=>{
+    const age=Date.parse(context.now())-Date.parse(at);
+    return Number.isFinite(age) && age>=0 && age<=(options.maxAgeMs??Infinity);
+  };
+  const parseable=(type:string)=>/^(?:text\/|application\/(?:json|[\w.+-]+\+json|xml|[\w.+-]+\+xml|csv|javascript))(?:[^;]*)(?:;|$)/i.test(type);
+  const captured=new Map<string,{artifact:Artifact;text:string}>();
+  const toolkit=buildScoutToolkit({...context,vault:async(artifact,text)=>{
+    const saved=await context.vault(artifact,text);
+    if(saved.stored && artifact.tier!=='RESTRICTED_RAW' && artifact.retentionPolicy!=='DIAGNOSTIC' &&
+      ['scout:fetch_public','scout:browse'].includes(artifact.methodRouteId))captured.set(artifact.id,{artifact,text});
+    return saved;
+  }});
+  return async(url:string):Promise<{url:string;text:string;contentType:string|null;collectedAt:string;artifactId:string;artifacts:readonly WorkArtifact[]}>=>{
+    for(const saved of captured.values()) {
+      if((saved.artifact.canonicalUrl===url || saved.artifact.retrievalUrl===url) && saved.artifact.httpStatus===200 &&
+        parseable(saved.artifact.contentType) && fresh(saved.artifact.retrievedAt))
+        return {url:saved.artifact.retrievalUrl,text:saved.text,contentType:saved.artifact.contentType,collectedAt:saved.artifact.retrievedAt,artifactId:saved.artifact.id,artifacts:[]};
+    }
+    for(const provenance of context.inherited.provenance??[]) {
+      if((provenance.canonicalUrl!==url && provenance.retrievalUrl!==url) || provenance.httpStatus!==200 ||
+        provenance.methodRouteId.endsWith(':network-observation') ||
+        !fresh(provenance.retrievedAt) || (provenance.contentType && !parseable(provenance.contentType)) || !context.readHeldArtifact)continue;
+      try {
+        const held=await context.readHeldArtifact(provenance.artifactId);
+        if(held.canonicalUrl===provenance.canonicalUrl && fresh(held.retrievedAt))return {url:provenance.retrievalUrl??held.canonicalUrl,
+          text:held.text,contentType:provenance.contentType??null,collectedAt:held.retrievedAt,artifactId:held.artifactId,artifacts:[]};
+      } catch { /* The same source remains owed when its prior bytes cannot be read. */ }
+    }
+    const artifacts:WorkArtifact[]=[];
+    const failures:string[]=[];
+    for(const tool of context.browse?['fetch_public','browse']:['fetch_public']) {
+      const result=await toolkit.call(tool,{url,why:'Read the official source for the collector, retaining its exact bytes.'},'other:collector-source');
+      artifacts.push(...result.artifacts);
+      if(result.ok) {
+        for(const row of [...result.artifacts].reverse()) {
+          const saved=captured.get(row.artifactId);
+          if(saved && saved.artifact.canonicalUrl===url && saved.artifact.httpStatus===200 &&
+            parseable(saved.artifact.contentType))return {url:saved.artifact.retrievalUrl,text:saved.text,contentType:saved.artifact.contentType,
+              collectedAt:saved.artifact.retrievedAt,artifactId:saved.artifact.id,artifacts};
+        }
+      }
+      failures.push(result.rung?.observed??result.forModel);
+    }
+    throw new Error('SOURCE_PAGE_UNREADABLE: '+failures.join('; '));
+  };
+}
 /**
  * **THE SCOUT'S RESEARCH TOOLS.** (Level 1 activation, 2026-09-01.)
  *

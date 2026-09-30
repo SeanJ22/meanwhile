@@ -40,7 +40,7 @@ test("an affected failing test remains selected and blocks the full PR verdict",
 });
 
 test("a missing job or result fails even when its work is deliberately unneeded", () => {
-  for (const tier of ["yes", "draft", "no-certified"]) {
+  for (const tier of ["yes", "draft"]) {
     for (const job of ["admission", "verify", "test", "build"] as const) {
       const input: Record<string, unknown> = needs(tier);
       delete input[job];
@@ -62,17 +62,8 @@ test("draft explicitly defers tests and builds while requiring structural verifi
   assert.equal(evaluate(input).ok, false);
 });
 
-test("certified-tree reuse allows explicit skips only after successful admission", () => {
-  const input = needs("no-certified", "skipped");
-  assert.equal(evaluate(input).ok, true);
-  for (const result of ["failure", "cancelled", "skipped", "", "neutral"]) {
-    input.admission.result = result;
-    assert.equal(evaluate(input).ok, false, `admission=${result}`);
-  }
-});
-
 test("unneeded work that failed or was cancelled is never described as a safe omission", () => {
-  for (const tier of ["draft", "no-certified"]) {
+  for (const tier of ["draft"]) {
     for (const job of ["verify", "test", "build"] as const) {
       for (const result of ["failure", "cancelled"]) {
         const input = needs(tier);

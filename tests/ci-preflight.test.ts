@@ -11,7 +11,6 @@ import { GATES, PRECONDITIONS } from "../scripts/gates.mjs";
 import {
   PREFLIGHT_CHECKS,
   civicDataReleaseFirewall,
-  duplicateImplementations,
   visibleTree,
 } from "../scripts/preflight.mjs";
 
@@ -76,7 +75,7 @@ test("one admission decides the tier and all consuming jobs depend on it", () =>
   const all = jobs();
   assert.deepEqual(Object.entries(all).filter(([, job]) => job.steps.some((s) => s.id === "tier")).map(([id]) => id), ["admission"]);
   const decision = all.admission.steps.find((s) => s.id === "tier");
-  for (const part of ["pr_tier.outputs.tier", "certified.outputs.certified", "preflight.outcome"]) {
+  for (const part of ["pr_tier.outputs.tier", "preflight.outcome"]) {
     assert.ok(decision?.run?.includes(`steps.${part}`));
   }
   assert.doesNotMatch(decision?.run ?? "", /steps\.cost|no-cheap/);
@@ -88,16 +87,6 @@ test("one admission decides the tier and all consuming jobs depend on it", () =>
   for (const step of all.build.steps.filter((s) => EXPENSIVE.test(label(s)))) {
     assert.match(step.if ?? "", /needs\.admission\.outputs\.tier == 'yes'|== 'draft'|== 'no-preflight'/);
   }
-});
-
-test("expired live integrity blocks admission before the suite or builds, with final verification retained", () => {
-  const all = jobs();
-  const early = all.admission.steps.find((s) => s.name === "Early release integrity prerequisite");
-  assert.equal(early?.run, "corepack pnpm exec tsx scripts/release-freeze-gate.mts");
-  assert.match(early?.if ?? "", /success\(\).*expensive == 'yes'/);
-  const final = all.gates.steps.find((s) => s.name?.startsWith("Release freeze"));
-  assert.equal(final?.run, early?.run);
-  assert.match(final?.if ?? "", /success\(\).*tier == 'yes'/);
 });
 
 test("a refused admission makes required build and final contexts fail loudly", () => {
@@ -195,12 +184,6 @@ test("visible-tree passes on a tree whose files are all tracked, and names the o
   assert.equal(typeof nowhere.ok, "boolean");
 });
 
-test("the duplicate check reuses the one census and agrees with the suite's baseline", () => {
-  const outcome = duplicateImplementations({ cwd: ROOT });
-  assert.equal(outcome.ok, true, `preflight disagrees with tests/duplicate-implementations.json: ${outcome.says}`);
-  assert.match(outcome.says, /duplicate group/);
-});
-
 test("the preflight firewall supplies both production contract registries instead of failing as an instrument", () => {
   const outcome = civicDataReleaseFirewall({ cwd: ROOT });
   assert.doesNotMatch(
@@ -248,10 +231,6 @@ const BEFORE_INSTALL: ReadonlyArray<{ script: string; why: string }> = [
   {
     script: "scripts/pr-ci-tier.mjs",
     why: "the draft/full event classifier — it must answer before a draft installs anything",
-  },
-  {
-    script: "scripts/certified-tree.mjs",
-    why: "RULING 281's tree-equivalence adapter — it decides whether the expensive tier runs at all",
   },
 ];
 

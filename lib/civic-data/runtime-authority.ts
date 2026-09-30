@@ -302,7 +302,7 @@ export function assertRuntimeAuthority(
       }
       return existing;
     }
-    const repo = resolve(options.cwd ?? process.cwd());
+    const repo = resolve(/* turbopackIgnore: true */ options.cwd ?? process.cwd());
     const sha = env[RUNTIME_AUTHORITY_ENV.sha] ?? execFileSync("git", ["rev-parse", "HEAD"], gitOptions(repo)).trim();
     return { repo, sha, capability: expectation.capabilities[0]!, contract: expectation.contract ?? null,
       parentPid: process.ppid, nonce: randomBytes(32).toString("hex") };

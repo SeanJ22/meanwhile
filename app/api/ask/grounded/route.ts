@@ -54,7 +54,7 @@ import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-questio
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
 import { groupMoneyShapeForBoundSubject, lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, personVotesShapeForBoundPerson, shapeForBoundBody } from "@/lib/ask/lexical-reading";
 import { composePersonVotes } from "@/lib/ask/person-votes";
-import { composeBodyRoster, composeReaderOfficials, readerOfficialsQuestion } from "@/lib/ask/reader-officials";
+import { composeBodyRoster, composeReaderOfficials, placeNamesOf, readerOfficialsQuestion } from "@/lib/ask/reader-officials";
 import { areaMeetingsQuestion, composeAreaMeetings, type AreaSitting } from "@/lib/ask/area-meetings";
 import { ballotQuestionShape, composeBallotSummary, composeOfficeField, contestsOfOffice } from "@/lib/ask/ballot-summary";
 import { composeSittingAnswerWithBasis, settleSittingComposition, sittingVenue, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
@@ -720,7 +720,7 @@ export async function POST(request: Request) {
    */
   const topicRoute = topicFocusedQuestion(question);
   /* "Who is my state senator?": a lookup in the officeholders held for the reader's divisions (lib/ask/reader-officials.ts). It reads the registry and the federal directory and nothing else. */
-  const officialsAsk = !topicRoute && ocdIds.length > 0 ? readerOfficialsQuestion(question, statesOf(ocdIds).map((state) => state.toLowerCase())) : null;
+  const officialsAsk = !topicRoute && ocdIds.length > 0 ? readerOfficialsQuestion(question, statesOf(ocdIds).map((state) => state.toLowerCase()), placeNamesOf(ocdIds)) : null;
   /* "What meetings are happening this week?": the sittings held for the reader's divisions (lib/ask/area-meetings.ts). It reads the registry and the calendar and nothing else. */
   /* Not when the reader has a card open: "is there a meeting soon?" is then about that body. An earlier turn does not change it — the shapes name no body and carry no pronoun. */
   const areaMeetingsAsk = !topicRoute && !officialsAsk && ocdIds.length > 0 &&
@@ -1339,11 +1339,14 @@ export async function POST(request: Request) {
     }
 
     // ── 2. CANONICAL RESOLUTION ──────────────────────────────────────────
-    const initialResolution = resolveInterpretation(interpretation, question, inventory, {
-      activeSubjects,
-      priorSubjects,
-    });
-    let bodyDecision = decideNamedBody(question, namedBodies, body.confirmation,
+    /* "Who is the mayor of Sierra Vista?" names the city its answer is filtered to; the city is not a subject to bind or to ask which of. */
+    const initialResolution: ReturnType<typeof resolveInterpretation> = officialsAsk?.place
+      ? { binding: { kind: "NONE" }, basis: "NONE", boundOn: null }
+      : resolveInterpretation(interpretation, question, inventory, {
+        activeSubjects,
+        priorSubjects,
+      });
+    let bodyDecision: ReturnType<typeof decideNamedBody> = officialsAsk?.place ? { kind: "NONE" } : decideNamedBody(question, namedBodies, body.confirmation,
       initialResolution.binding.kind === "BOUND" && initialResolution.binding.entity.level === "BODY"
         ? interpretation.entityMentions : []);
     if (!explicitBodyClass && initialResolution.binding.kind === "BOUND" && initialResolution.binding.entity.level !== "BODY") bodyDecision = { kind: "NONE" };
@@ -2332,7 +2335,7 @@ export async function POST(request: Request) {
      * already loaded for the reader's divisions and bodies are the answer. Each one
      * named is a record beside the composed sentence, with their published contact.
      */
-    const officials = officialsAsk && !subject ? composeReaderOfficials({ ask: officialsAsk, held: officeholders.held, holdingFailed: officeholders.loaderFailures > 0, placesReached: new Set(ocdIds.filter((id) => /[/]place:[a-z_]+$/.test(id) && !id.endsWith("_ccd"))).size }) : null;
+    const officials = officialsAsk && (!subject || officialsAsk.place) ? composeReaderOfficials({ ask: officialsAsk, held: officeholders.held, holdingFailed: officeholders.loaderFailures > 0, placesReached: new Set(ocdIds.filter((id) => /[/]place:[a-z_]+$/.test(id) && !id.endsWith("_ccd"))).size }) : null;
     if (officials) {
       for (const { seat, bodyName } of officials.named) {
         records.push(officeholderEvidence(seat));

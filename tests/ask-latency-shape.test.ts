@@ -390,6 +390,14 @@ test("ROUTE: who is my state senator is read from the words and composed from th
   assert.equal(payload.trace.sourcesLoaded, "ESSENTIAL", "the registry and the federal directory are all it reads");
 });
 
+test("ROUTE: who is the mayor of a city the reader's divisions reach is answered for that city, whatever else its name matches, with no clarifying question", { concurrency: false }, async () => {
+  const { payload, calls: made } = await ask("Who is the mayor of Tucson?", [AZ, PIMA, `${AZ}/place:tucson`, `${AZ}/place:tucson_southeast`]);
+  assert.deepEqual(made, [], "neither rung called a model");
+  assert.equal(payload.mode, "GROUNDED_COMPOSED");
+  assert.equal(payload.trace.interpretation.why, "reader-officials-shape");
+  assert.match(payload.answer ?? "", /^On Tucson Mayor & Council, the mayor is Regina Romero/);
+});
+
 test("ROUTE: what meetings are coming up is read from the words and composed from the sittings held for the reader's divisions — no model call, and no other source read", { concurrency: false }, async () => {
   const { payload, calls: made } = await ask("What meetings are coming up?", [AZ, PIMA, VAIL], { today: "2026-08-28" });
   assert.deepEqual(made, [], "neither rung called a model");

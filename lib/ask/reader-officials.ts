@@ -39,6 +39,8 @@ export interface ReaderOfficialsAsk {
   readonly phrase: string;
   /** "How do I contact my state senator?": each person is named with the phone and email their office publishes. */
   readonly contact?: boolean;
+  /** "Who is the mayor of Sierra Vista?": the city named, as its division id spells it ("sierra_vista"); the answer is that city's holders alone. */
+  readonly place?: string;
 }
 
 interface OfficePhrase {
@@ -143,16 +145,38 @@ function statewideOffice(normalized: string, readerStates: readonly string[]): R
 }
 
 /**
+ * "Who is the mayor of Sierra Vista?", "Who is Sierra Vista's mayor?": the mayor or
+ * council of a city the reader's divisions reach, named by its own name. A city the
+ * reader's divisions do not reach is the model's.
+ */
+function namedPlaceOffice(normalized: string, readerPlaces: readonly string[]): ReaderOfficialsAsk | null {
+  const officeOf = (phrase: string): readonly OfficeKey[] | null => {
+    const found = OFFICE_PHRASES.find((entry) => entry.pattern.test(phrase.replace(/^the /, "").trim()));
+    return found && found.keys.every((key) => key === "mayor" || key === "municipal_council") ? found.keys : null;
+  };
+  for (const place of readerPlaces) {
+    const tail = new RegExp(`^who (?:is|s|are) (?:the )?(.+?) (?:of|for) (?:the )?(?:city of |town of )?${place}(?: az| arizona)?$`).exec(normalized)?.[1];
+    const lead = new RegExp(`^who (?:is|s|are) (?:the )?${place} s (.+)$`).exec(normalized)?.[1];
+    const phrase = tail ?? lead;
+    const keys = phrase ? officeOf(phrase) : null;
+    if (keys && phrase) return { keys, phrase, place: place.replace(/ /g, "_") };
+  }
+  return null;
+}
+
+/**
  * The offices a question about the reader's OWN officials asks for, or null.
  * The whole question must be one of the closed forms: a qualifier ("...and how
  * did she vote"), a second subject or an unlisted office is left to the model.
  * `readerStates` are the two-letter codes (lowercase) the reader's divisions sit in.
  */
-export function readerOfficialsQuestion(question: string, readerStates: readonly string[] = []): ReaderOfficialsAsk | null {
+export function readerOfficialsQuestion(question: string, readerStates: readonly string[] = [], readerPlaces: readonly string[] = []): ReaderOfficialsAsk | null {
   const normalized = normalizeName(question);
   if (!normalized || normalized.length > 90) return null;
   const statewide = statewideOffice(normalized, readerStates);
   if (statewide) return statewide;
+  const named = namedPlaceOffice(normalized, readerPlaces);
+  if (named) return named;
   const represents = /^who (?:represents|represent) me(?: in (.+))?$/.exec(normalized);
   if (represents) {
     if (!represents[1]) return { keys: ELECTED_OFFICIALS, phrase: "who represents me" };
@@ -168,6 +192,14 @@ export function readerOfficialsQuestion(question: string, readerStates: readonly
     }
   }
   return null;
+}
+
+/** The names of the cities among these divisions ("place:sierra_vista" is "sierra vista"), in the words a question normalizes to. */
+export function placeNamesOf(ocdIds: readonly string[]): string[] {
+  return [...new Set(ocdIds.flatMap((id) => {
+    const match = /[/]place:([a-z_]+)$/.exec(id);
+    return match && !match[1]!.endsWith("_ccd") ? [match[1]!.replace(/_/g, " ")] : [];
+  }))];
 }
 
 /** The state division each of these divisions sits in: the U.S. Senators and statewide executives are held there, and a ZIP's own divisions never name it. */
@@ -270,6 +302,10 @@ const districtOf = (held: HeldOfficial, key: string): string | null => {
   return null;
 };
 
+/** A seat held under the named city's division or on its governing body. */
+const inPlace = (held: HeldOfficial, place: string): boolean =>
+  [...held.divisionIds, ...(held.bodyId ? [held.bodyId] : [])].some((id) => new RegExp(`[/]place:${place}(?:#|$)`).test(id));
+
 export interface OfficialsComposition {
   answer: string;
   citedUrls: string[];
@@ -306,6 +342,7 @@ export function composeReaderOfficials(input: {
     const seats = new Map<string, HeldOfficial>();
     for (const held of input.held) {
       if (officeKeyOf(held) !== key) continue;
+      if (input.ask.place && !inPlace(held, input.ask.place)) continue;
       const prior = seats.get(held.seat.id);
       seats.set(held.seat.id, prior
         ? { ...prior, divisionIds: [...new Set([...prior.divisionIds, ...held.divisionIds])], bodyId: prior.bodyId ?? held.bodyId, bodyName: prior.bodyName ?? held.bodyName }
@@ -317,8 +354,9 @@ export function composeReaderOfficials(input: {
         gap("Our officeholder records could not be read for this answer. This is a failure of our holding, not a finding that no one holds the office.");
         clauses.push(`we could not read our officeholder records for your ${singular}`);
       } else {
-        gap(`We have not recorded who holds the office of ${singular} for your area yet.`);
-        clauses.push(`we have not recorded who your ${singular} is yet`);
+        const where = input.ask.place ? input.ask.place.split("_").map((word) => word[0]!.toUpperCase() + word.slice(1)).join(" ") : null;
+        gap(`We have not recorded who holds the office of ${singular} for ${where ?? "your area"} yet.`);
+        clauses.push(where ? `we have not recorded who the ${singular} of ${where} is yet` : `we have not recorded who your ${singular} is yet`);
       }
       continue;
     }
@@ -365,7 +403,7 @@ export function composeReaderOfficials(input: {
       sentences.push(statement);
     }
     /* A ZIP code is an area, not a city: the mayor and the council named are those of a city the area reaches. */
-    if ((key === "mayor" || key === "municipal_council") && (input.placesReached ?? 0) > 1) {
+    if ((key === "mayor" || key === "municipal_council") && !input.ask.place && (input.placesReached ?? 0) > 1) {
       const statement = `Your ZIP code reaches ${input.placesReached} places, so a ZIP code alone does not say which city's ${singular} is yours.`;
       gap(statement);
       sentences.push(statement);

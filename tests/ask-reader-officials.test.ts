@@ -181,3 +181,26 @@ test("a statewide office of the state the reader is in is read too — 'the gove
   assert.equal(readerOfficialsQuestion("Who is the state senator of Arizona?", az), null, "a legislator is a district's, not the state's");
   assert.equal(readerOfficialsQuestion("Who is the mayor of Arizona?", az), null);
 });
+
+test("the mayor or council of the one city the reader's divisions reach can be asked for by the city's name", () => {
+  const sierraVista = ["sierra vista"];
+  assert.deepEqual(readerOfficialsQuestion("Who is the mayor of Sierra Vista?", ["az"], sierraVista)?.keys, ["mayor"]);
+  assert.deepEqual(readerOfficialsQuestion("Who is the mayor of the city of Sierra Vista, AZ?", ["az"], sierraVista)?.keys, ["mayor"]);
+  assert.deepEqual(readerOfficialsQuestion("Who is Sierra Vista's mayor?", ["az"], sierraVista)?.keys, ["mayor"]);
+  assert.deepEqual(readerOfficialsQuestion("Who are the council members of Sierra Vista?", ["az"], sierraVista)?.keys, ["municipal_council"]);
+  assert.equal(readerOfficialsQuestion("Who is the mayor of Tucson?", ["az"], sierraVista), null, "a city the reader's divisions do not reach is the model's");
+  assert.equal(readerOfficialsQuestion("Who is the mayor of Sierra Vista?", ["az"], ["sierra vista", "huachuca city"])?.place, "sierra_vista", "the city named is the city answered, however many the ZIP reaches");
+  assert.equal(readerOfficialsQuestion("Who is the mayor of Huachuca City?", ["az"], ["sierra vista", "huachuca city"])?.place, "huachuca_city");
+  assert.equal(readerOfficialsQuestion("Who is the mayor of Sierra Vista Southeast?", ["az"], ["sierra vista"]), null, "a longer name is not the shorter city");
+  assert.equal(readerOfficialsQuestion("Who is the sheriff of Sierra Vista?", ["az"], sierraVista), null, "a county office is not a city's");
+  assert.equal(readerOfficialsQuestion("Who is the mayor of Sierra Vista?"), null, "no reader places, no reading");
+});
+
+test("a city named in the question is answered from that city's holders alone, even when the ZIP reaches other places", () => {
+  const ask = readerOfficialsQuestion("Who is the mayor of Sierra Vista?", ["az"], ["sierra vista", "sierra vista southeast"])!;
+  const mayor = held(seat("m1", "Clea McCaa II", "Mayor"), [`${AZ}/place:sierra_vista`]);
+  const other = held(seat("m2", "Someone Else", "Mayor"), [`${AZ}/place:huachuca_city`]);
+  const answer = composeReaderOfficials({ ask, holdingFailed: false, held: [mayor, other], placesReached: 3 });
+  assert.match(answer?.answer ?? "", /Clea McCaa II/);
+  assert.doesNotMatch(answer?.answer ?? "", /Someone Else|reaches 3 places/);
+});

@@ -26,12 +26,10 @@ import { researchVaultResolver } from "../lib/control-plane/workers/vault-object
 import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
 import { evidenceProjection } from "../lib/control-plane/workers/evidence-projection.ts";
 import { runNationalPlaceTask } from "../lib/hunt/place-source-task.ts";
-import { publishNationalPlaceSources, type NationalPlacePublication } from "../lib/civic-data/worker-national-publication.ts";
+import { nationalDelivery, publishNationalPlaceSources, type NationalPlacePublication } from "../lib/civic-data/worker-national-publication.ts";
 import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
 import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
 import { browseWithPlaywright } from "./scout-browse.mts";
-import { writeRoutineReceiptLine } from "../lib/civic-data/receipt-output.ts";
-import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 
 async function main(): Promise<void> {
   if (!process.argv.includes("--promote")) {
@@ -85,14 +83,7 @@ async function main(): Promise<void> {
     console.log(JSON.stringify({ contractId: "registry-runtime-bindings", candidateId: published.at(-1)?.outcome.candidateId ?? nationalVersion ?? null,
       promotedVersionId: published.at(-1)?.outcome.versionId ?? nationalVersion ?? null,
       workerPublications: report, nationalPlaces, nationalPublications, failures }, null, 2));
-    if (!published.length && nationalVersion) {
-      const record = await store.readCandidateSummary(nationalVersion);
-      if (!record) throw new Error(`National publication ${nationalVersion} could not be read back`);
-      await writeRoutineReceiptLine("RCD_RECEIPT=" + JSON.stringify({ source: "registry-runtime-bindings",
-        candidateId: record.candidate.id, acquisitionSucceeded: record.acquisitionSucceeded, state: record.state,
-        decision: record.receipt?.decision ?? null, promotedVersion: record.promotedVersion,
-        lastKnownGoodVersion: record.lastKnownGoodVersion, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
-    } else await printWorkerPublicationReceipt(store, "registry-runtime-bindings", report);
+    await printWorkerPublicationReceipt(store, "registry-runtime-bindings", report, nationalDelivery(nationalPublications));
     if (failures.length && !published.length && !nationalVersion) throw new Error(failures.join("; "));
     return;
   }

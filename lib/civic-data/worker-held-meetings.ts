@@ -52,19 +52,27 @@ function content(html: string): string {
   return main.replace(/<(script|style|template|nav|header|footer|aside)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, " ");
 }
 
-/** The regular schedule and meeting links a saved meeting page states, or null when it states neither. */
-export function readHeldMeetingSchedule(html: string, pageUrl: string): HeldMeetingSchedule | null {
-  const title = visible(/<title\b[^>]*>([\s\S]*?)<\/title\s*>/i.exec(html)?.[1] ?? "");
-  const body = content(html);
+/**
+ * The sentences of an HTML fragment that state when a body regularly meets,
+ * with the time, in the page's own words; null when it states none.
+ */
+export function scheduleSentences(html: string): string | null {
   // A schedule sentence names a recurring day; its time may follow in the next sentence of the same block.
-  const lines = body.split(/<\/(?:p|h[1-6]|li|div|td|tr|dd|dt|section|article)\s*>|<br\s*\/?>/i).map(visible).filter(Boolean).flatMap(sentences);
+  const lines = html.split(/<\/(?:p|h[1-6]|li|div|td|tr|dd|dt|section|article)\s*>|<br\s*\/?>/i).map(visible).filter(Boolean).flatMap(sentences);
   const kept: string[] = [];
   for (let i = 0; i < lines.length; i++) {
     if (!RECURRING.test(lines[i]) || !MEETS.test(lines[i]) || lines[i].length > 400) continue;
     kept.push(lines[i]);
     if (!TIME.test(lines[i]) && lines[i + 1] && TIME.test(lines[i + 1]) && !RECURRING.test(lines[i + 1])) kept.push(lines[++i]);
   }
-  const cadence = kept.some(line => TIME.test(line)) ? kept.join(" ") : null;
+  return kept.some(line => TIME.test(line)) ? kept.join(" ") : null;
+}
+
+/** The regular schedule and meeting links a saved meeting page states, or null when it states neither. */
+export function readHeldMeetingSchedule(html: string, pageUrl: string): HeldMeetingSchedule | null {
+  const title = visible(/<title\b[^>]*>([\s\S]*?)<\/title\s*>/i.exec(html)?.[1] ?? "");
+  const body = content(html);
+  const cadence = scheduleSentences(body);
   let agendaUrl: string | null = null, calendarUrl: string | null = null;
   for (const link of body.matchAll(/<a\b[^>]*\bhref\s*=\s*(?:"([^"]*)"|'([^']*)')[^>]*>([\s\S]*?)<\/a\s*>/gi)) {
     const url = absolute(link[1] ?? link[2], pageUrl);

@@ -62,7 +62,7 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
   for (const record of checked.extraction.records) {
     try {
       const f = record.fields;
-      requirePublication(Object.keys(f).every(key => ["bodyName", "bodyClass", "homepageUrl", "jurisdictionName", "coverage", "coverageEvidence", "territoryNames"].includes(key)), "DIRECTORY_FIELD_UNSUPPORTED");
+      requirePublication(Object.keys(f).every(key => ["bodyName", "bodyClass", "homepageUrl", "jurisdictionName", "coverage", "coverageEvidence", "territoryNames", "meetingCadence"].includes(key)), "DIRECTORY_FIELD_UNSUPPORTED");
       const classification = bodyClasses[words(f.bodyClass)];
       requirePublication(classification && words(f.bodyName), "DIRECTORY_BODY_IDENTITY_MISSING");
       // A home page attaches when verified; its absence is an open blank, not a hold.
@@ -96,6 +96,8 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
         agendaSourceRef: null, meetingCadence: null, demandCount: 0 }), name: String(f.bodyName), bodyClass: classification,
         alsoServesOcdIds: territoryIds.filter(id => id !== primaryDivision),
         homepageUrl: url?.href ?? prior?.homepageUrl ?? null, bodyOrigin: "SOURCED", sourceDataset: "GOV_DIRECTORY",
+        // The directory page's own statement of the schedule; its source is the body's provenance below.
+        ...(typeof f.meetingCadence === "string" ? { meetingCadence: f.meetingCadence, meetingCadenceSource: undefined } : {}),
         provenance: { sourceUrl: (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl, sourceOrg: checked.contract.sourceScope.publisher,
           collectedAt: (checked.sourceOf?.get(record.id) ?? checked.primary).observedAt, verifiedAt: input.now } });
     } catch (error) {
@@ -149,8 +151,11 @@ export async function heldDirectoryReading(input: {
     let kept = false;
     for (const row of rows) {
       const id = `held:${createHash("sha256").update(row.bodyName.toLowerCase()).digest("hex").slice(0, 16)}`;
-      if (sourceOf.has(id) || !section3Record({ recordClass: contract.recordClass, fields: { ...row }, page, now: input.now, pageVerdict }).live) continue;
-      records.push({ id, fields: { ...row } }); sourceOf.set(id, capture); kept = true;
+      const verdict = section3Record({ recordClass: contract.recordClass, fields: { ...row }, page, now: input.now, pageVerdict });
+      if (sourceOf.has(id) || !verdict.live) continue;
+      // A schedule attaches only when code found it on the page; the body is live without it.
+      const fields = verdict.verifiedFields.includes("meetingCadence") ? { ...row } : { bodyName: row.bodyName, bodyClass: row.bodyClass };
+      records.push({ id, fields }); sourceOf.set(id, capture); kept = true;
     }
     if (kept) used.push(capture);
   }

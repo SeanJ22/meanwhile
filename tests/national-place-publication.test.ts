@@ -60,7 +60,7 @@ test("a place with no prepared registry gets its Census divisions, their bodies 
   assert.deepEqual(result.divisions, [`${OH}/place:columbus`, `${OH}/sldl:7`]);
   assert.deepEqual(result.bodies, [`${OH}/place:columbus#governing`, `${OH}/sldl:7#seat`]);
   assert.deepEqual(result.members.map(m => [m.bodyId, m.discoveryIds]), [[OH, ["dewine"]], [`${OH}/sldl:7#seat`, ["russo"]]]);
-  assert.deepEqual(result.gaps.map(g => g.key).sort(), ["division:" + OH, "official:unsaved"]);
+  assert.deepEqual(result.gaps.map(g => g.key).sort(), ["official:unsaved"], "the state is the registry's scope, not a missing row");
   assert.ok(result.promotedVersionId);
   // A door package speaks only for its own members: the thousands it omits are retained, not listed as excluded (the 313 MB candidate).
   const written = (await s.readCandidate(result.candidateId!))!;
@@ -75,6 +75,23 @@ test("a place with no prepared registry gets its Census divisions, their bodies 
 
   const again = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography, sources: { officials: [] } });
   assert.deepEqual([again.divisions, again.bodies, again.candidateId], [[], [], null], "a second call with the same evidence adds nothing");
+});
+
+test("a township that governs is published as a place with its governing body; a fictitious Census subdivision is neither a row nor a gap", async () => {
+  const s = await store();
+  const cousubUrl = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/1/query?geometry=43085";
+  const saved = capture(`{"features":[{"attributes":{"NAME":"Sharon township","GEOID":"3904971248","LSAD":"44","FUNCSTAT":"A"}},{"attributes":{"NAME":"Columbus city","GEOID":"3904918000","LSAD":"25","FUNCSTAT":"F"}}]}`, cousubUrl);
+  const township = `${OH}/county:franklin/place:sharon_township`;
+  const result = await publishNationalPlaceSources({ store: s, now: NOW, geographyCaptures: [saved], sources: { officials: [] }, divisions: [
+    { id: township, label: "Sharon township", divisionType: "cousub", geoid: "3904971248", sourceUrl: cousubUrl, sourceDataset: "TIGER_CB2023", lsad: "44", funcstat: "A" },
+    { id: `${OH}/county:franklin/place:columbus_city`, label: "Columbus city", divisionType: "cousub", geoid: "3904918000", sourceUrl: cousubUrl, sourceDataset: "TIGER_CB2023", lsad: "25", funcstat: "F" },
+  ] });
+  assert.deepEqual(result.divisions, [township]);
+  assert.deepEqual(result.bodies, [`${township}#governing`]);
+  assert.deepEqual(result.gaps, []);
+  const after = (await readRegistryRuntimePrior(s, NOW))!;
+  const row = after.payload.registry.divisions.find(d => d.ocdId === township);
+  assert.deepEqual([row?.divisionType, row?.funcstat, row?.parentOcdId], ["place", "A", `${OH}/county:franklin`]);
 });
 
 test("an official whose page does not name the district, and a division its saved Census response does not show, stay gaps", async () => {
@@ -95,5 +112,26 @@ test("an official page whose text is not the saved bytes is a named gap, and the
     { discoveryId: "dewine", divisionId: OH, name: "Mike DeWine", officeTitle: "Governor", officialUrl: governorUrl, document: { url: governorUrl, capture: altered } }] } });
   assert.match(result.gaps.find(g => g.key === "official:dewine")!.detail, /^OFFICIAL_PAGE_UNUSABLE:CONTENT_HASH_MISMATCH/);
   const delivered = nationalDelivery([result]);
-  assert.deepEqual([delivered.records, delivered.gaps.length, delivered.versionId === result.promotedVersionId], [0, 2, true]);
+  assert.deepEqual([delivered.records, delivered.gaps.length, delivered.versionId === result.promotedVersionId], [0, 1, true]);
+});
+
+test("a statewide office's holder: the same one is confirmed without losing their live facts; a new one owes the candidacy check again", async () => {
+  const s = await store();
+  const AZ = "ocd-division/country:us/state:az";
+  const agUrl = "https://www.azag.gov/office/about-ag";
+  const page = (name: string) => capture(`<html><head><title>About the Attorney General | Arizona Attorney General</title></head><body><h1>Attorney General ${name}</h1><p>Arizona's chief legal officer.</p></body></html>`, agUrl);
+  const official = (name: string) => ({ discoveryId: `ag-${name}`, divisionId: AZ, name, officeTitle: "Attorney General", officialUrl: agUrl, document: { url: agUrl, capture: page(name) } });
+  const azDivision = [{ id: AZ, label: "Arizona", divisionType: "state", geoid: "04", sourceUrl: agUrl, sourceDataset: "TIGER_CB2023" as const }];
+  const before = (await readRegistryRuntimePrior(s, NOW))!;
+  const live = before.payload.statewideExecutives.find(row => row.holder.id === "statewide:az/attorney-general")!;
+  const same = await publishNationalPlaceSources({ store: s, now: NOW, divisions: azDivision, geographyCaptures: [], sources: { officials: [official("Kris Mayes")] } });
+  assert.deepEqual([same.candidateId, same.gaps, same.members.map(m => m.discoveryIds)], [null, [], [["ag-Kris Mayes"]]], "confirmed, not replaced");
+  assert.deepEqual((await readRegistryRuntimePrior(s, NOW))!.payload.statewideExecutives.find(row => row.holder.id === live.holder.id), live);
+
+  const changed = await publishNationalPlaceSources({ store: s, now: NOW, divisions: azDivision, geographyCaptures: [], sources: { officials: [official("Jordan Reyes")] } });
+  assert.deepEqual(changed.gaps, [], "a new holder of the office is not refused as a holder/candidacy mismatch");
+  const after = (await readRegistryRuntimePrior(s, NOW))!;
+  assert.equal(after.payload.statewideExecutives.find(row => row.holder.id === live.holder.id)?.holder.name, "Jordan Reyes");
+  const bridge = after.payload.officialCandidacies.rows.find(row => row.holder.id === live.holder.id)!;
+  assert.deepEqual([bridge.holder.name, bridge.status, bridge.candidacy], ["Jordan Reyes", "NOT_CHECKED", null], "the last holder's candidacy is never carried to the new one");
 });

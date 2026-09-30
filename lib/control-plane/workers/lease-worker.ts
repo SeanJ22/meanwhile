@@ -36,17 +36,19 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
   const repos = url ? await createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true })
     : await createFileRepositories(config.fileStoreRoot ?? join(config.root, ".runtime/control-plane/freshness-shadow"));
   if (config.nationalZips) {
-    const [{ runNationalPlaceTask }, { PostgresRoutineDataStore }, { publishNationalPlaceSources },
+    const [{ runNationalPlaceTask }, { PostgresRoutineDataStore },
       { DurableEvidenceStore }, { VAULT_DIR }, { hostSpacer }, { serializeHostSpacing }] = await Promise.all([
       import("../../hunt/place-source-task.ts"), import("../../civic-data/store.ts"),
-      import("../../civic-data/worker-national-publication.ts"), import("../evidence/durable-store.ts"),
+      import("../evidence/durable-store.ts"),
       import("../scheduler/vault.ts"), import("../scheduler/http-executor.ts"), import("./host-spacing.ts")]);
     const tools = { repos, store: new DurableEvidenceStore(join(config.root, ...VAULT_DIR)),
       spaceOut: serializeHostSpacing(hostSpacer()), browse: browseWithPlaywright, now: () => new Date().toISOString() };
     for (const zip of config.taskIds) {
-      await runNationalPlaceTask({ tools, store: new PostgresRoutineDataStore(), zips: [zip], publish: input =>
-        publishNationalPlaceSources({ ...input, divisions: input.divisions.filter(row => row.sourceDataset)
-          .map(row => ({ ...row, sourceDataset: row.sourceDataset! })) }) });
+      taskId = `national-place:${zip}`;
+      const reports = await runNationalPlaceTask({ tools, store: new PostgresRoutineDataStore(), zips: [zip],
+        publish: ({ store: _store, ...input }) => call("national-publication", input),
+        publishElection: (fields, now) => call("election-publication", { fields, now }) });
+      for (const report of reports) await call("national-result", report);
     }
     send("finished", "", config.taskIds);
     process.disconnect();

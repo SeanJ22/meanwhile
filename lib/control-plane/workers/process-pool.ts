@@ -5,6 +5,12 @@ import type { DispatchResult } from "../scheduler/dispatch.ts";
 import type { ModelRequest, ModelTransport, ScoutExecutorDeps } from "../scheduler/scout-executor.ts";
 import type { ScoutToolContext } from "../scheduler/scout-contract.ts";
 import type { AutonomousJurisdiction } from "../expansion/spend-holds.ts";
+import type { runNationalPlaceTask } from "../../hunt/place-source-task.ts";
+import type { NationalPlacePublicationInput } from "../../hunt/place-source.ts";
+
+export type NationalPlaceReport = Awaited<ReturnType<typeof runNationalPlaceTask>>[number];
+type NationalPublication = Omit<NationalPlacePublicationInput, "store">;
+type ElectionPublisher = NonNullable<Parameters<typeof runNationalPlaceTask>[0]["publishElection"]>;
 
 export interface LeaseWorkerConfig {
   readonly root: string;
@@ -24,12 +30,29 @@ export async function runNationalPlaceWorkerProcesses(input: {
   readonly zips: readonly string[];
   readonly capacity: () => number;
   readonly onStarted?: (pid: number) => void;
-}): Promise<void> {
+  readonly store: NationalPlacePublicationInput["store"];
+  readonly publish: (input: NationalPlacePublicationInput) => Promise<unknown>;
+  readonly publishElection: ElectionPublisher;
+  readonly onResult?: (report: NationalPlaceReport) => void | Promise<void>;
+}): Promise<NationalPlaceReport[]> {
+  const reports: NationalPlaceReport[] = [];
+  let publicationTail: Promise<unknown> = Promise.resolve();
+  const serialize = <T>(operation: () => Promise<T>): Promise<T> => {
+    const next = publicationTail.then(operation);
+    publicationTail = next.catch(() => undefined);
+    return next;
+  };
   await runLeaseWorkerProcesses({ config: { root: input.root, postgres: true,
     taskIds: [...new Set(input.zips)], nationalZips: [...new Set(input.zips)], modelEnabled: false,
     searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] }, capacity: input.capacity,
     transportFor: () => async () => { throw new Error("NATIONAL_SOURCE_MODEL_CALL_REFUSED"); },
-    onStarted: input.onStarted });
+    onStarted: input.onStarted,
+    national: {
+      publish: request => serialize(() => input.publish({ ...request, store: input.store })),
+      publishElection: (fields, now) => serialize(() => input.publishElection(fields, now)),
+      onResult: async report => { reports.push(report); await input.onResult?.(report); },
+    } });
+  return reports;
 }
 
 /** IPC carries transient provider requests; work, leases and costs stay in the existing repositories. */
@@ -40,6 +63,11 @@ export async function runLeaseWorkerProcesses(input: {
   readonly searchFor?: (subjectId: string) => ScoutToolContext["search"];
   readonly reserveEscalation?: ScoutExecutorDeps["reserveEscalation"];
   readonly onStarted?: (pid: number) => void;
+  readonly national?: {
+    readonly publish: (input: NationalPublication) => Promise<unknown>;
+    readonly publishElection: ElectionPublisher;
+    readonly onResult: (report: NationalPlaceReport) => void | Promise<void>;
+  };
 }): Promise<DispatchResult[]> {
   const results: DispatchResult[] = [];
   const pending = new Set(input.config.taskIds);
@@ -80,7 +108,18 @@ export async function runLeaseWorkerProcesses(input: {
       }
       try {
         let body: unknown;
-        if (message.kind === "model") body = await input.transportFor(message.jurisdiction, message.taskId)(message.body as ModelRequest);
+        if (message.kind === "national-publication") {
+          if (!input.national) throw new Error("NATIONAL_PUBLICATION_BROKER_UNAVAILABLE");
+          body = await input.national.publish(message.body as NationalPublication);
+        } else if (message.kind === "election-publication") {
+          if (!input.national) throw new Error("NATIONAL_PUBLICATION_BROKER_UNAVAILABLE");
+          const request = message.body as { fields: Parameters<ElectionPublisher>[0]; now: string };
+          body = await input.national.publishElection(request.fields, request.now);
+        } else if (message.kind === "national-result") {
+          if (!input.national) throw new Error("NATIONAL_PUBLICATION_BROKER_UNAVAILABLE");
+          await input.national.onResult(message.body as NationalPlaceReport);
+          body = null;
+        } else if (message.kind === "model") body = await input.transportFor(message.jurisdiction, message.taskId)(message.body as ModelRequest);
         else if (message.kind === "search") {
           const search = input.searchFor?.(message.jurisdiction.subjectId);
           if (!search) throw new Error("PAID_SEARCH_DISABLED");

@@ -10,11 +10,12 @@ import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { scheduleAutonomousAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
 import { FIRST_BACKOFF_MINUTES } from "../lib/control-plane/scheduler/debt.ts";
 import type { LegacyCivicExtractionContract } from "../lib/control-plane/workers/types.ts";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, rm, mkdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
-import { runLeaseWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
+import { runLeaseWorkerProcesses, runNationalPlaceWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { unchangedScoutFailure } from "../lib/control-plane/workers/scout-scheduling.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { registerRouteTask } from "../lib/control-plane/repository/coordinator.ts";
@@ -405,4 +406,59 @@ test("unresolved identity permits independent diagnosis but never staging", asyn
   assert.equal(unchangedScoutFailure({ ...base, outcome: "ABORTED", abortReason: "HTTP 400: malformed schema" }), true);
   assert.equal(unchangedScoutFailure({ ...base, outcome: "ABORTED", abortReason: "HTTP 429: rate limited" }), false);
   assert.equal(unchangedScoutFailure({ ...base, outcome: "ABORTED", abortReason: "HTTP 503: provider unavailable" }), false);
+});
+
+test("ZIP process reports return after parent registry and election publication, with one shared pointer writer", async () => {
+  const root = await mkdtemp(join(tmpdir(), "s7-national-ipc-"));
+  try {
+    await mkdir(join(root, "scripts"), { recursive: true });
+    await mkdir(join(root, "lib/control-plane/workers"), { recursive: true });
+    await writeFile(join(root, "scripts/register-test-loader.mjs"), "export {};\n");
+    await writeFile(join(root, "lib/control-plane/workers/lease-worker.ts"), `
+      const replies = new Map(); let sequence = 0;
+      const call = (kind, body) => new Promise((resolve, reject) => {
+        const id = String(++sequence); replies.set(id, { resolve, reject }); process.send({ kind, id, body });
+      });
+      process.on('message', async message => {
+        if (message.id) {
+          const reply = replies.get(message.id); replies.delete(message.id);
+          message.error ? reply.reject(Error(message.error.message)) : reply.resolve(message.body); return;
+        }
+        try {
+          const zip = message.taskIds[0];
+          const request = { now: '2026-09-30T21:00:00Z', divisions: [], geographyCaptures: [], sources: { zip } };
+          const publication = await call('national-publication', request).catch(error => ({ error: error.message }));
+          const election = await call('election-publication', { fields: [], now: request.now });
+          await call('national-result', { zip, publications: [publication], electionPublications: [election] });
+          process.send({ kind: 'finished', body: message.taskIds }); process.disconnect();
+        } catch (error) { console.error(error.message); process.exitCode = 1; process.disconnect(); }
+      });
+    `);
+    const store = new MemoryRoutineDataStore();
+    let active = 0, peak = 0, registryCalls = 0;
+    const published: string[] = [], delivered: string[] = [], pids: number[] = [];
+    const write = async (kind: string) => {
+      active++; peak = Math.max(peak, active);
+      await new Promise(resolve => setTimeout(resolve, 15));
+      active--; published.push(kind);
+      return { kind };
+    };
+    const reports = await runNationalPlaceWorkerProcesses({ root, zips: ["10001", "10002"], capacity: () => 2, store,
+      onStarted: pid => pids.push(pid),
+      publish: async input => {
+        assert.equal(input.store, store, "the real store is supplied in the parent");
+        registryCalls++;
+        await write("registry");
+        if (registryCalls === 1) throw new Error("one registry publication failed");
+        return { registry: "published" };
+      },
+      publishElection: async () => { await write("election"); return { candidateId: null, promotedVersionId: null, fields: [], gaps: [] }; },
+      onResult: report => { delivered.push(report.zip); assert.equal(report.electionPublications.length, 1); } });
+    assert.equal(pids.length, 2);
+    assert.equal(peak, 1, "registry and election callbacks share the parent critical section");
+    assert.equal(published.length, 4, "one failure does not poison later pointer writes");
+    assert.deepEqual(reports.map(report => report.zip).sort(), ["10001", "10002"]);
+    assert.deepEqual(delivered.sort(), ["10001", "10002"]);
+    assert.equal(reports.filter(report => "error" in (report.publications[0] as object)).length, 1);
+  } finally { await rm(root, { recursive: true, force: true }); }
 });

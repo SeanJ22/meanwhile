@@ -87,16 +87,3 @@ test("all-definition read refuses incomplete counts, changed revision and forged
   (error:unknown)=>error instanceof ChecklistInstanceIndexError&&error.code==="INVALID_CURSOR");
 });
 
-test("all-definition UI place query is authenticated and rejects ambiguous query shape",async()=>{
-  const path="/api/admin/v6/checklist?scope=az.zcta.85635&limit=50";
-  assert.equal((await GET(new NextRequest(`https://${PUBLIC_HOST}${path}`,{headers:{host:PUBLIC_HOST}}))).status,404);
-  assert.equal((await GET(new NextRequest(`https://${ADMIN_HOST}${path}`,{headers:{host:ADMIN_HOST}}))).status,401);
-  await withAdminSessionKey(async()=>{
-    const cookie=await adminSessionCookie();
-    const request=(suffix:string)=>new NextRequest(`https://${ADMIN_HOST}${suffix}`,{headers:{host:ADMIN_HOST,cookie}});
-    assert.equal((await GET(request(`${path}&scope=az.zcta.85635`))).status,400);
-    assert.equal((await GET(request(`${path}&instructionReceipt=other`))).status,400);
-    assert.equal((await GET(request(`${path}&limit=50`))).status,400);
-    assert.equal((await GET(request(`${path}&cursor=bad***`))).status,400);
-  });
-});

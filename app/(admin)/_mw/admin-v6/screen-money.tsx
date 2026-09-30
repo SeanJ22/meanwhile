@@ -16,6 +16,79 @@ import s from "./v6.module.css";
 
 const CLS = ["c-blue", "c-teal", "c-amber", "c-violet", "c-coral", "c-gray"];
 
+const TIER_CLS: Readonly<Record<string, string>> = { haiku: "c-teal", sonnet: "c-blue", opus: "c-amber", older: "c-violet", unrecorded: "c-gray" };
+const gigabytes = (bytes: number) => `${(bytes / 1e9).toFixed(bytes < 1e8 ? 3 : 2)} GB`;
+const dayWords = (day: string) => new Date(`${day}T12:00:00Z`).toLocaleDateString("en-US", { timeZone: "America/New_York", weekday: "short", month: "short", day: "numeric" });
+
+/**
+ * **SPEND IN ONE PLACE.** Anthropic by model tier, search, the database's daily transfer and hosting, by day.
+ * It reads the cost ledger (whole-system: the ledger is not split by place), so every place shows the same figures and
+ * says so. A price the ledger never had is counted beside the dollars and never shown as $0; a database counter that
+ * is not installed says "not recorded yet", never zero.
+ */
+function SpendCard() {
+  const v = useV6();
+  const src = v.data.spend;
+  const sp = src.data;
+  const account = v.data.money.data?.account ?? [];
+  const hosting = account.filter((a) => /netlify|github/i.test(a.provider));
+  const neonToday = sp?.neon.kind === "recorded" ? sp.neon.days[0] ?? null : null;
+  const top = Math.max(0.0001, ...(sp?.byTier.map((x) => x.usd) ?? [0]));
+  const neonByDay = new Map((sp?.neon.days ?? []).map((d) => [d.day, d]));
+  return (
+    <Card title="Spend in one place" aside={<span className={s.meta}>{sp ? `Last ${sp.windowDays} days · whole system, not split by place` : "Reading…"}</span>}>
+      <SourceNote source={src} what="Spend" />
+      {sp && (
+        <>
+          <div className={s.gridTiles}>
+            <div className={s.row}><span className={s.eyebrow}>Anthropic (AI models)</span><span className={s.big}>{usd(sp.anthropicUsd)}</span><span className={s.meta}>Priced charges by tier, below</span></div>
+            <div className={s.row}><span className={s.eyebrow}>Search</span><span className={s.big}>{usd(sp.searchUsd)}</span><span className={s.meta}>Brave and Exa requests recorded in the ledger</span></div>
+            <div className={s.row}>
+              <span className={s.eyebrow}>Neon (database sent)</span>
+              {neonToday ? <><span className={s.big}>{gigabytes(neonToday.responseBytes)}</span><span className={s.meta}>Sent {dayWords(neonToday.day)}, from the byte counter</span></>
+                : <><span className={cx(s.big, s.textWarn)}>Not recorded yet</span><span className={s.meta}>{sp.neon.detail ?? "The counter has no rows yet."}</span></>}
+            </div>
+            <div className={s.row}>
+              <span className={s.eyebrow}>Hosting</span>
+              {hosting.length ? hosting.map((h) => <span key={h.provider} className={s.small}>{h.provider}: <span className={cx(s.mono, h.amountUsd === null && s.textWarn)}>{h.amountUsd === null ? "no dollar reading" : usd(h.amountUsd)}</span></span>)
+                : <span className={cx(s.big, s.textWarn)}>No reading</span>}
+              <span className={s.meta}>Provider readings for the whole account</span>
+            </div>
+          </div>
+          <h3 className={s.h3}>By model tier</h3>
+          <div className={s.stack}>
+            {sp.byTier.map((x) => (
+              <div key={x.key} className={s.row}>
+                <span className={s.spread}><strong style={{ fontSize: 13 }}>{x.name}</strong><span className={cx(s.meta, s.mono)}>{usd(x.usd)} · {count(x.requests)} charges</span></span>
+                <div className={s.meter}><span className={s.meterFill} style={{ width: `${Math.max(1, (x.usd / top) * 100)}%`, background: `var(--v6-${(TIER_CLS[x.tier] ?? "c-gray").slice(2)}, var(--pill-cyan-text))` }} /></div>
+              </div>
+            ))}
+            {sp.unpricedRows > 0 && <p className={cx(s.p, s.meta)}>{count(sp.unpricedRows)} ledger rows have no price recorded. They are counted here, not priced, and never shown as $0.</p>}
+          </div>
+          <h3 className={s.h3}>By day</h3>
+          <div className={s.tableWrap}>
+            <table className={s.table}>
+              <thead><tr><th scope="col">Day (Eastern)</th><th scope="col" className={s.num}>Anthropic</th><th scope="col">By model</th><th scope="col" className={s.num}>Search</th><th scope="col" className={s.num}>Database sent</th></tr></thead>
+              <tbody>
+                {sp.byDay.map((d) => (
+                  <tr key={d.day}>
+                    <th scope="row" style={{ textTransform: "none", fontSize: 13, color: "var(--text)" }}>{dayWords(d.day)}</th>
+                    <td className={s.num}>{usd(d.anthropicUsd)}</td>
+                    <td className={s.small}>{d.byModel.map((m) => `${m.name} ${usd(m.usd)}`).join(" · ")}</td>
+                    <td className={s.num}>{usd(d.searchUsd)}</td>
+                    <td className={s.num}>{sp.neon.kind === "recorded" ? (neonByDay.has(d.day) ? gigabytes(neonByDay.get(d.day)!.responseBytes) : "—") : "Not recorded yet"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className={cx(s.p, s.meta)}>Per hunt, see the hunt cards above: each shows its own spent, set aside and left. A dash means the counter recorded nothing that day.</p>
+        </>
+      )}
+    </Card>
+  );
+}
+
 export function MoneyScreen() {
   const v = useV6();
   const m = v.data.money.data;
@@ -55,6 +128,8 @@ export function MoneyScreen() {
           ))}
         </div>
       </Card>
+
+      <SpendCard />
 
       <div className={s.grid2}>
         <Card title={`The account · ${m?.accountMonth ?? ""}`}>

@@ -453,6 +453,21 @@ export interface MoneyView {
   readonly otherServices: string;
 }
 
+/* ----------------------------------------------------------------- spend */
+
+/** What the agents cost by model tier and day, and what the database sent (server: v6-spend-read.ts). Whole-system. */
+export interface SpendView {
+  readonly windowDays: number;
+  readonly byTier: readonly { readonly key: string; readonly tier: "haiku" | "sonnet" | "opus" | "older" | "unrecorded"; readonly name: string; readonly usd: number; readonly requests: number }[];
+  readonly byDay: readonly { readonly day: string; readonly anthropicUsd: number; readonly searchUsd: number; readonly byModel: readonly { readonly name: string; readonly usd: number }[]; readonly rows: number }[];
+  readonly anthropicUsd: number;
+  readonly searchUsd: number;
+  /** Ledger rows with no price. Counted beside the dollars, never as $0. */
+  readonly unpricedRows: number;
+  readonly neon: { readonly kind: "recorded" | "not-recorded"; readonly detail: string | null;
+    readonly days: readonly { readonly day: string; readonly responseBytes: number; readonly requestBytes: number; readonly requests: number }[] };
+}
+
 /* -------------------------------------------------------------- learning */
 
 export interface TrendWeek {
@@ -634,6 +649,7 @@ export interface AdminV6Data {
   readonly workers: Sourced<{ readonly status: WorkerStatus; readonly jobs: readonly WorkerJob[] | null; readonly waiting: readonly WaitingItem[] | null; readonly events: readonly WorkerEvent[] | null; readonly update: UpdateCard | null; readonly next: readonly string[] | null }>;
   readonly checklist: Sourced<ChecklistView>;
   readonly agents: Sourced<readonly AgentRun[]>;
+  readonly spend: Sourced<SpendView>;
   readonly money: Sourced<MoneyView>;
   readonly learning: Sourced<LearningView>;
   readonly fixes: Sourced<FixView>;

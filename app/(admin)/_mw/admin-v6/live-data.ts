@@ -85,6 +85,7 @@ export function buildLiveBundle(snapshot: Readonly<Record<SectionId, SectionStat
     workers: workers as AdminV6Data["workers"],
     checklist,
     agents: src("agents", SECTION_DEP.agents),
+    spend: src("spend", SECTION_DEP.spend),
     money: src("money", SECTION_DEP.money),
     learning: src("learning", SECTION_DEP.learning),
     fixes: src("fixes", SECTION_DEP.fixes),

@@ -43,6 +43,18 @@ function shape(value: unknown): RecordExtractionShape {
   return candidate;
 }
 
+/**
+ * A proposal that binds the captured source and names no parsing rule (`format: "UNSUPPORTED"`). It is admitted as a bound contract:
+ * the Parser then pulls the fields with exact quotes and code confirms each one (model-parser.ts), and the Validator and Auditor replay
+ * those quotes against the immutable artifact. Nothing is invented here: no mapping, no fields, no authority is created.
+ */
+function unmappedShape(value: unknown): (RecordExtractionShape & { readonly format: "UNSUPPORTED" }) | null {
+  if (!value || typeof value !== "object" || Array.isArray(value) || (value as { format?: unknown }).format !== "UNSUPPORTED") return null;
+  const mediaType = (value as { mediaType?: unknown }).mediaType;
+  return { format: "UNSUPPORTED", fields: {}, mediaType: typeof mediaType === "string" && /^[w.+/-]{1,100}$/.test(mediaType) ? mediaType : "unobserved",
+    reason: "Bound to the captured source. No parsing rule exists for this record type, so a model pulls the fields with exact quotes and code confirms each quote is in the saved document." };
+}
+
 /** No side effects and no civic receipt: replay only decides whether instructions are executable. */
 export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate: ScoutCandidate; evidence: readonly WorkerEvidence[]; now: string;
   observedAtByArtifact?: ReadonlyMap<string, string>; registeredPublisherAddress?: string | null }) {
@@ -89,8 +101,11 @@ export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate:
   requireThat(trustedOrigins.includes(primaryOrigin) || registeredOrigin === primaryOrigin, "REPAIR_PUBLISHER_SCOPE_MISMATCH");
   // Neither subject, jurisdiction, class, identity, required fields nor any
   // identity/denominator Detective can be weakened by a model proposal.
-  const extraction = shape(proposal.extraction);
-  if (plan.contract.recordClass === "OFFICIAL_ROSTER") {
+  const unmapped = unmappedShape(proposal.extraction);
+  // An authority compares mapped record values, so it cannot ride with a source that has no mapping.
+  requireThat(!unmapped || (proposal.authorities as unknown[]).length === 0, "REPAIR_ADAPTER_IMPLEMENTATION_REQUIRED");
+  const extraction = unmapped ?? shape(proposal.extraction);
+  if (plan.contract.recordClass === "OFFICIAL_ROSTER" && !unmapped) {
     const omissions = rosterTableFieldOmissions(primary, extraction);
     requireThat(omissions.length === 0, `REPAIR_SUPPORTED_FIELDS_OMITTED:${omissions.join(",")}`);
   }
@@ -129,6 +144,11 @@ export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate:
     routeIds: [...new Set([candidate.routeId, primary.methodRouteId])], observationArtifactIds: [...cited] };
   const contract: GeneralizedCivicExtractionContract = { ...plan.contract, sourceScope, extraction, verification: { required: true, authorities } };
   assertGeneralizedScope(contract, primary);
+  if (unmapped) {
+    return { contract, primary, unresolved: ["EXTRACTION_BY_QUOTED_MODEL", ...(!authorities.length ? ["EXTERNAL_VERIFICATION_MISSING"] : []),
+      ...(plan.detective.length ? ["PARENT_DETECTIVE_BURDENS_RETAINED"] : [])], profileRoutes: [] as ObservedResearchRoute[],
+      proposalHash: fingerprint([canonicalJson(contract), primary.contentHash]) };
+  }
   // These local replay IDs are not Attempts and are never written as worker
   // results, counts, verification timestamps or promotion evidence.
   const replay = parseGeneralizedRecords({ attemptId: "contract-instruction-replay", worker: { role: "PARSER", provider: "local-preflight", version: "1", instance: "contract-instruction-replay" }, evidence: primary, contract }, contract);
@@ -191,7 +211,8 @@ export function planRepairBrief(plan: AutonomousWorkPlan): string {
     comparison: { kind: "RECORD_VALUES", keyFields: [...plan.contract.identity.keyFields], fields: Object.keys(fields) } };
   const grammar = ` Exact extraction descriptor examples: ${JSON.stringify(examples)}. Replace every example locator with one inspected in retained bytes. JSON rowsPointer is an RFC6901 pointer to an array (empty string selects a root array); optional countPointer locates a published count. JSON field source is an RFC6901 pointer relative to each row. XML rowTag and field source are element names. HTML tableIndex and numeric field source are zero-based indexes; headerRows counts excluded headers. An HTML_TABLE field may use attribute:"href" only when the source cell contains one explicit anchor; its URL resolves against the captured page and remains bound to that exact cell span. Delimited text accepts only comma or tab. Every fields entry is {source:string|number,type:STRING|NUMBER|BOOLEAN|SCALAR}; map every required and identity field plus all independently supported contact and profile-link fields, at most32. Do not infer emails from an Email button or assign a shared office phone to a person. Exact authority descriptor example: ${JSON.stringify(authority)}. For independently captured official profile records, RECORD_VALUES_SUBSET with keyFields:["name"] and fields:["name","office"] may corroborate only explicitly matched members; all other members remain unverified. Up to16 separately mapped authorities and16 cited artifacts permit a seven-profile council without a four-source ceiling; continue through linked repair successors when a technical slice is incomplete. Examples are grammar only, never evidence or permission to guess values.`;
   const brief = `CONTRACT REPAIR remains owed. Existing class ${plan.contract.recordClass}; required fields ${plan.contract.requiredFields.join(", ")}; identity ${plan.contract.identity.keyFields.join(", ")}; shape ${plan.contract.extraction.format}; independent authorities ${plan.contract.verification.authorities.length}. Acquire actual official source bytes using the existing tools, then optionally attach contractRepair to a finish candidate: {schemaVersion:1,sourceArtifactId,extraction,authorities}. Extraction uses an implemented JSON_RECORDS, XML_RECORDS, HTML_TABLE, DELIMITED_TEXT or TEXT_BLOCKS mapping; cite every source/authority artifact in evidenceArtifactIds. For PDFs, cite the retained PDF_TEXT or PDF_TABLES transcription artifact, never the binary id as text. PDF_TABLES uses JSON_RECORDS over /tables/<index>/rows with numeric member pointers and an explicitly observed headerRows count. TEXT_BLOCKS uses exact literal recordStart/recordEnd boundaries and field source labels from retained text; no guessed offsets or regular expressions. Incomplete pages remain unverified and require another source or extraction repair. Each proposed authority needs an actual government register, statutory record or official denominator, exact source identity evidence, sourceId/canonicalUrls/artifactIds/authorityEvidenceArtifactIds, a documented DISTINCT_AUTHORITY or INDEPENDENT_OFFICIAL_RECORD basis, extraction and a RECORD_VALUES comparison covering all required/identity fields. For a roster only, separate official profile captures may use RECORD_VALUES_SUBSET over name and office; this verifies matched members individually and never proves all source rows or the government's full roster. A .org/.edu or other non-government-suffix publisher must already be established by the parent plan with the same source ID, publisher and origin. A separate record from the primary publisher must name that exact publisher and use different captured bytes and a different URL; repeating the source is refused. An empty authorities list preserves required verification and remains unresolved. Subject, class, identity and existing Detective burdens cannot change. A replayed proposal creates only linked work instructions; independent workers must still execute every real check.`;
-  return brief + grammar;
+  const unmapped = ` When the retained bytes are real but no honest mapping exists (a PDF, a scanned agenda, a prose page), propose ${JSON.stringify({ schemaVersion: 1, sourceArtifactId: "<the retained artifact id>", extraction: { format: "UNSUPPORTED", mediaType: "<its media type>" }, authorities: [] })}: the Parser will pull the fields with exact quotes and code will confirm each quote is in the retained text. Cite the retained PDF_TEXT transcription for a PDF. Never combine this form with authorities.`;
+  return brief + grammar + unmapped;
 }
 
 /** A successor may cite the exact retained bytes that its repair chain handed

@@ -1,5 +1,6 @@
 import type { GeneralizedCivicExtractionContract, ValidatorResult, ValidatorWorkerInput, WorkerFinding } from "./types.ts";
 import { assertGeneralizedScope, inventoryRecordEvidence, RecordEvidenceRefusal } from "./record-evidence.ts";
+import { isQuotedExtraction, quotedSourceFindings } from "./quoted-proof.ts";
 import { compareCandidateWithSource, findingsVerdict, issue, verifyExternalAuthorities } from "./record-verification.ts";
 import { linkingPageFrom, needsSecondSource, SECTION3_MINIMUMS, section3Page, section3Record } from "../promotion/section3.ts";
 
@@ -25,7 +26,10 @@ export function validateGeneralizedExtraction(input: ValidatorWorkerInput, contr
   findings.push(...input.candidate.warnings);
   try {
     assertGeneralizedScope(contract, input.evidence);
-    for (const finding of compareCandidateWithSource(input.candidate, contract, input.evidence, inventoryRecordEvidence(input.evidence, contract.extraction))) {
+    // A record type with no parsing rule is checked from the quotes the Parser took (S5); every other from its source rows.
+    const replay = isQuotedExtraction(contract, input.candidate) ? quotedSourceFindings(input.candidate, contract, input.evidence)
+      : compareCandidateWithSource(input.candidate, contract, input.evidence, inventoryRecordEvidence(input.evidence, contract.extraction));
+    for (const finding of replay) {
       // A field beyond the minimums that fails stays open as work; it never holds its record.
       const open = COVERAGE_CODES.has(finding.code) || (finding.recordId && finding.field && !minimums.includes(finding.field));
       findings.push(open ? { ...finding, severity: "INFO" } : finding);

@@ -5,6 +5,7 @@ import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } fro
 import { VAULT_DIR } from "../scheduler/vault.ts";
 import type { ModelTransport } from "../scheduler/scout-executor.ts";
 import { modelAuditReasoner } from "./model-audit.ts";
+import { modelParseReasoner } from "./model-parser.ts";
 import { workerVaultResolver } from "./vault.ts";
 import { drainWorkerQueue, enqueueWorkerTask, evidenceProjection, WORKER_MAX_WALL_MS, type FleetRuntime } from "./runtime.ts";
 import type { GeneralizedCivicExtractionContract, LegacyCivicExtractionContract, IndependentAuditContext, OfficialRouteExpectation } from "./types.ts";
@@ -307,9 +308,11 @@ export function standingFleetRuntime(input: { root: string; vaultRoot?: string; 
   const readEvidence = workerVaultResolver(input.repos, new DurableEvidenceStore(input.vaultRoot ?? join(input.root, ...VAULT_DIR)), "freshness");
   return { repos: input.repos, readEvidence, methodVersion: method.version, now, requireModelAudit: true,
     ...(input.lifetimeHuntSubject === undefined ? {} : { lifetimeHuntSubject: input.lifetimeHuntSubject }),
-    ...(input.transport ? { auditReasoner: modelAuditReasoner(input.repos, input.transport, now,
-      { ...(input.auditCeilingUsd === undefined ? {} : { ceilingUsd: input.auditCeilingUsd }), ...(input.transportFor === undefined ? {} : { transportFor: input.transportFor }),
-        ...(input.lifetimeHuntSubject === undefined ? {} : { lifetimeHuntSubject: input.lifetimeHuntSubject }) }) } : {}),
+    ...(input.transport ? (() => {
+      const modelOptions = { ...(input.auditCeilingUsd === undefined ? {} : { ceilingUsd: input.auditCeilingUsd }), ...(input.transportFor === undefined ? {} : { transportFor: input.transportFor }),
+        ...(input.lifetimeHuntSubject === undefined ? {} : { lifetimeHuntSubject: input.lifetimeHuntSubject }) };
+      return { auditReasoner: modelAuditReasoner(input.repos, input.transport, now, modelOptions), parseReasoner: modelParseReasoner(input.repos, input.transport, now, modelOptions) };
+    })() : {}),
     independentContext: async ({ artifactId, contract, auditScope, methodVersion, workItemId }): Promise<IndependentAuditContext> => {
       if (methodVersion !== method.version) throw new Error("AUDIT_METHOD_VERSION_MISMATCH");
       if (contract.schemaVersion === 2) return generalizedIndependentContext({ ...input, method, readEvidence, artifactId, contract, auditScope, methodVersion, workItemId });

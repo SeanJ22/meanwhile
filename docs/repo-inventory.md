@@ -806,7 +806,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-941 file(s).
+943 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -947,6 +947,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/assignment-identity.test.ts`
 - `tests/assignment-view.test.ts`
 - `tests/attribution.test.ts`
+- `tests/audit-sampling.test.ts`
 - `tests/auto-crosswalk-expansion.test.ts`
 - `tests/auto-crosswalk.test.ts`
 - `tests/automatic-venue-resolutions.test.ts`
@@ -1468,6 +1469,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/publication-record-changes.test.ts`
 - `tests/questionnaire-store.test.ts`
 - `tests/questionnaire.test.ts`
+- `tests/quoted-audit.test.ts`
 - `tests/reaction-pill.test.ts`
 - `tests/reaction-run-class.test.ts`
 - `tests/reactions.test.ts`
@@ -1752,7 +1754,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7015 file(s).
+7019 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -5245,6 +5247,8 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/workers/acquirer.ts`
 - `lib/control-plane/workers/activity.ts`
 - `lib/control-plane/workers/audit-escalation.ts`
+- `lib/control-plane/workers/audit-outcome.ts`
+- `lib/control-plane/workers/audit-sampling.ts`
 - `lib/control-plane/workers/auditor.ts`
 - `lib/control-plane/workers/autonomous-plan.ts`
 - `lib/control-plane/workers/coordinator.ts`
@@ -7725,6 +7729,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/assignment-identity.test.ts`
 - `tests/assignment-view.test.ts`
 - `tests/attribution.test.ts`
+- `tests/audit-sampling.test.ts`
 - `tests/auto-crosswalk-expansion.test.ts`
 - `tests/auto-crosswalk.test.ts`
 - `tests/automatic-venue-resolutions.test.ts`
@@ -8483,6 +8488,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/publication-record-changes.test.ts`
 - `tests/questionnaire-store.test.ts`
 - `tests/questionnaire.test.ts`
+- `tests/quoted-audit.test.ts`
 - `tests/reaction-pill.test.ts`
 - `tests/reaction-run-class.test.ts`
 - `tests/reactions.test.ts`

@@ -81,7 +81,7 @@ export function auditGeneralizedExtraction(input: AuditorWorkerInput, contract: 
     const notYet = [...expected.keys()].filter(id => !extractedIds.has(id));
     if (notYet.length) coverage.push(finding("AUDIT_SOURCE_RECORDS_NOT_YET_EXTRACTED", `${notYet.length} of ${expected.size} independently inventoried source record(s) are not in this extraction yet; counted in coverage, and the records that are here are unaffected.`, "INFO"));
   }
-  if (contract.verification.required && !contract.verification.authorities.length) coverage.push(finding("AUDIT_EXTERNAL_AUTHORITY_MISSING", "The domain requires an independent authority that has not yet been established; counted in coverage.", "INFO"));
+  if (contract.verification.required && !contract.verification.authorities.length) coverage.push(finding("AUDIT_EXTERNAL_AUTHORITY_MISSING", "The contract requires an independent authority (a judgment call, rulings section 3) and none is established, so this record is not verified and no survivors are listed.", "WARNING"));
   // This is a challenge, not a new Validator receipt: it deliberately issues no verification timestamp.
   const externalSource = captured?.evidence ?? context.evidence[0];
   const external = externalSource ? verifyExternalAuthorities({ attemptId: input.attemptId, producerAttemptId: candidate.producerAttemptId, candidate: extraction,

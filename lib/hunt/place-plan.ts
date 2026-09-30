@@ -9,6 +9,8 @@ import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 export interface PlaceCapture {
   readonly subjects: readonly PlaceSubject[];
   readonly held: readonly HeldPlaceField[];
+  /** A canonical read after publication replaces the earlier snapshot. */
+  readonly replacesHeld?: boolean;
 }
 
 /** One existing WorkItem per canonical field, shared by every applicable ZIP.
@@ -63,7 +65,9 @@ export async function planPlaceHunt(input: {
   const before = buildPlaceOwedList({ ...input, ...held });
   const blanks = missingPlaceWork(before);
   const national = blanks.length ? await input.acquireNational(blanks, knowledge) : { subjects: [], held: [] };
-  const items = buildPlaceOwedList({ ...input, subjects: [...held.subjects, ...national.subjects], held: [...held.held, ...national.held] });
+  const items = buildPlaceOwedList({ ...input,
+    subjects: national.replacesHeld ? national.subjects : [...held.subjects, ...national.subjects],
+    held: national.replacesHeld ? national.held : [...held.held, ...national.held] });
   const closed = await closePublishedPlaceWork(input.repos, items, input.now);
   return { items, work: missingPlaceWork(items), open: openPlaceWork(items), closed, knowledge,
     conditions: knowledge.error ? [`Shared knowledge could not be read: ${knowledge.error}`] : [] };

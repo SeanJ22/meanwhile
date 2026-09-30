@@ -357,16 +357,14 @@ export function assertRegisteredRuntimeContract(
 export function assertSanctionedRuntimeAuthority(
   operation: string,
   env: Readonly<Record<string, string | undefined>> = process.env,
-): void {
+): RuntimeAuthorityEnvelope {
   if (operation === "an intake limiter purge") {
-    assertRuntimeAuthority({ capabilities: ["INTAKE_RUNTIME"] }, env);
-    return;
+    return assertRuntimeAuthority({ capabilities: ["INTAKE_RUNTIME"] }, env);
   }
   if (operation === "a routine civic data candidate/version promotion") {
-    assertRuntimeAuthority({
+    return assertRuntimeAuthority({
       capabilities: ["ROUTINE_SUPERVISOR", "ROUTINE_CONTRACT", "MANUAL_CONTRACT"],
     }, env);
-    return;
   }
   throw new RuntimeAuthorityRefused(`sanctioned operation ${JSON.stringify(operation)} has no permanent runtime capability`);
 }

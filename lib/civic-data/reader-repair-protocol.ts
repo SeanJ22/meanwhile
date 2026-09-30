@@ -16,6 +16,16 @@ export const ROUTINE_READER_MEETING_TIMEOUT_MS = 5 * 60_000;
 
 export type ReaderRepairContract = RoutineSourceContract | ManualProductionSourceContract;
 
+/** A scoped source pass repairs only the reader contracts for those same pointers. */
+export function selectedReaderRepairContracts(
+  contracts: readonly ReaderRepairContract[],
+  tasks: readonly Pick<ReaderRepairContract, "recordClass" | "scope">[] | null,
+): readonly ReaderRepairContract[] {
+  if (tasks === null) return contracts;
+  const pointers = new Set(tasks.map(task => `${task.recordClass}:${task.scope}`));
+  return contracts.filter(contract => pointers.has(`${contract.recordClass}:${contract.scope}`));
+}
+
 export interface RoutineReaderRepairDomain {
   readonly id: string;
   readonly mode: "SINGLE" | "MEETING_AGGREGATE";

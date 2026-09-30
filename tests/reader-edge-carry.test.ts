@@ -159,14 +159,17 @@ test("R28: every condition that could change the edge reads the prepared row and
   }
 });
 
-test("R28: the aggregate child decides the carry before it reads the prepared row, and reads it only to publish", () => {
-  const child = readFileSync("scripts/routine-civic-data-reader-repair.mts", "utf8");
+test("R28: shared publication decides the meeting carry before it reads the prepared row, and reads it only to publish", () => {
+  // §0/§5: publication moved out of the repair child; authority-only updates
+  // carry meetings without repeating the prepared payload read.
+  const child = readFileSync("lib/civic-data/reader-edge-publication.ts", "utf8");
   const manifestRead = child.indexOf("await artifactStore.readManifest()");
-  const carry = child.indexOf("readerEdgeCarriesForward({ prepared, servedManifest, extras, authority, registrations })");
-  const current = child.indexOf("if (carry.current) {");
+  const carry = child.indexOf("const sameComposition = prepared?.status === \"CURRENT\"");
+  const current = child.indexOf("if (prepared !== null && !sameComposition");
   const rowRead = child.indexOf("await readPreparedMeetingsProjection({ store })");
   const publish = child.indexOf("await publishReaderEdgeArtifacts(");
   assert.ok(manifestRead > 0 && manifestRead < carry, "the served manifest is read before the decision");
+  assert.match(child.slice(carry, current), /servedManifest\.composition === prepared\.composition/, "carry compares the serving copy's actual composition");
   assert.ok(carry < current && current < rowRead && rowRead < publish, "the prepared row is read only past the carry");
   assert.equal(child.match(/readPreparedMeetingsProjection\(/g)?.length, 1, "one prepared-row read, on the publish path");
   assert.match(child, /if \(artifactStore === null\) \{\s*console\.log\(JSON\.stringify\(\{ readerEdge: "SKIPPED_NO_STORE" \}\)\);/);

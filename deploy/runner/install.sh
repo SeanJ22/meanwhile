@@ -2,7 +2,7 @@
 set -euo pipefail
 # Run on an approved Ubuntu 24.04 x86-64 host. Installation leaves the runner off.
 apt-get update
-apt-get install -y ca-certificates curl git xz-utils build-essential
+apt-get install -y ca-certificates curl git gh xz-utils build-essential
 curl -fsSL https://deb.nodesource.com/setup_24.x -o /tmp/meanwhile-node-setup.sh
 bash /tmp/meanwhile-node-setup.sh
 apt-get install -y nodejs
@@ -14,6 +14,7 @@ install -d -o root -g meanwhile -m 750 /etc/meanwhile
 if [[ ! -e /opt/meanwhile/.git ]]; then
   runuser -u meanwhile -- git clone https://github.com/SeanJ22/meanwhile.git /opt/meanwhile
 fi
+runuser -u meanwhile -- git config --global credential.https://github.com.helper '!gh auth git-credential'
 cd /opt/meanwhile
 runuser -u meanwhile -- git switch --detach origin/main
 runuser -u meanwhile -- pnpm install --frozen-lockfile

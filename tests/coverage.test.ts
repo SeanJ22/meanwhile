@@ -11,6 +11,120 @@ import { summarizeCoverage } from "../lib/registry/coverage.ts";
 import { type GeoFeature } from "../lib/registry/resolve.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { planPlaceHunt, placeFieldWork } from "../lib/hunt/place-plan.ts";
+import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
+import { runPlaceSource } from "../lib/hunt/place-source.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { loadStateDistrictBoundaries } from "../lib/control-plane/expansion/national-geography.ts";
+
+test("national district provenance identifies its saved query rather than layer metadata", async () => {
+  const captures = new Map<string, string>();
+  const districts = await loadStateDistrictBoundaries("OH", { congress: 119, legislativeYear: 2024,
+    capture: async (url, text) => { captures.set(url, text); },
+    fetchImpl: (async (url, options) => {
+      if (String(url).endsWith("?f=json")) return Response.json({ layers: [
+        { id: 1, type: "Feature Layer", name: "119th Congressional Districts" },
+        { id: 2, type: "Feature Layer", name: "2024 State Legislative Districts - Upper" },
+        { id: 3, type: "Feature Layer", name: "2024 State Legislative Districts - Lower" },
+      ] });
+      assert.equal(options?.method, "POST");
+      return Response.json({ features: [{ attributes: { STATE: "39", GEOID: "39007", NAME: "District 7", CD: "7", SLDU: "7", SLDL: "7" } }] });
+    }) as typeof fetch });
+  assert.equal(districts.length, 3);
+  for (const district of districts) {
+    assert.equal(district.sourceDataset, "TIGERWEB_CURRENT");
+    assert.equal(new URL(district.sourceUrl).searchParams.get("where"), "STATE='39'");
+    assert.match(captures.get(district.sourceUrl) ?? "", /39007/);
+  }
+});
+
+test("Census statistical and duplicate subdivisions stay geography without invented government inventories", () => {
+  const items = buildPlaceOwedList({ now: "2026-09-30T00:00:00Z", subjects: [], held: [], divisions: [
+    { id: "active-town", label: "Real town", funcstat: "A" },
+    { id: "duplicate-town", label: "Census duplicate", funcstat: "F" },
+    { id: "statistical-area", label: "Census statistical area", funcstat: "S" },
+  ] });
+  assert.ok(items.some(item => item.subject.id === "active-town#inventory:body"));
+  assert.ok(items.some(item => item.subject.id === "duplicate-town"));
+  assert.ok(!items.some(item => /^(?:duplicate-town|statistical-area)#inventory:/.test(item.subject.id)));
+});
+
+test("the place source reads shared holdings, publishes source data, then uses the actual published projection", async () => {
+  const repos = createMemoryRepositories();
+  const now = "2026-09-30T00:00:00Z";
+  const division = { id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" };
+  const body = { id: `${division.id}#executive`, label: "Governor", kind: "body" as const, divisionIds: [division.id] };
+  const events: string[] = [];
+  let live = false;
+  let clock = now;
+  const acquiredAt = "2026-09-30T00:02:00Z";
+  const name = buildPlaceOwedList({ divisions: [division], subjects: [body], held: [], now })
+    .find(item => item.subject.id === body.id && item.checklistId === "GOV-01")!;
+  const work = placeFieldWork(name, now);
+  await repos.workItems.put(work.id, work, now);
+  let canonicalReads = 0;
+  const result = await runPlaceSource({ repos, store: new MemoryRoutineDataStore(), zip: "65101", divisions: [division], now,
+    clock: () => clock,
+    geographyCaptures: [], readSource: async (url, knowledge) => {
+      events.push("source"); assert.equal(knowledge.error, undefined);
+      clock = acquiredAt;
+      return { url, text: "<h1>Public source</h1>", collectedAt: acquiredAt };
+    },
+    readHeld: async () => {
+      if (++canonicalReads === 3) assert.equal((await repos.workItems.mustRead(work.id)).value.state, "VERIFIED_COMPLETE",
+        "the publication closes its own field before the final whole-place read");
+      events.push("held"); return { subjects: [body], held: live ? [{ subjectId: body.id,
+      checklistId: "GOV-01", state: "published", sourceUrl: "https://example.gov", checkedAt: acquiredAt, freshUntil: "2026-10-01T00:00:00Z" }] : [] }; },
+    publish: async input => { assert.equal(input.now, acquiredAt); events.push("publish"); live = true; return { published: true }; } });
+  assert.equal(events[0], "held");
+  assert.equal(events.at(-1), "held");
+  assert.ok(events.indexOf("source") < events.indexOf("publish"));
+  assert.deepEqual(result.closed, [work.id]);
+  assert.equal(result.items.find(item => item.subject.id === body.id && item.checklistId === "GOV-01")?.state, "published");
+});
+
+test("a place inherits other jobs' published fields before national acquisition and closes only those fields", async () => {
+  const repos = createMemoryRepositories();
+  const now = "2026-09-30T00:00:00Z";
+  const division = { id: "ocd-division/country:us/state:az/county:test", label: "Test County" };
+  const subject = { id: `${division.id}#governing`, label: "Test County Board", kind: "body" as const, divisionIds: [division.id] };
+  const owed = buildPlaceOwedList({ divisions: [division], subjects: [subject], held: [], now });
+  const name = owed.find(i => i.subject.id === subject.id && i.checklistId === "GOV-01")!;
+  const contact = owed.find(i => i.subject.id === subject.id && i.checklistId === "GOV-08")!;
+  await repos.workItems.put(placeFieldWork(name, now).id, placeFieldWork(name, now), now);
+  await repos.workItems.put(placeFieldWork(contact, now).id, placeFieldWork(contact, now), now);
+  const seen: string[] = [];
+  const bank = repos.fieldManual.read.bind(repos.fieldManual);
+  repos.fieldManual.read = async id => { seen.push("knowledge"); return bank(id); };
+  const result = await planPlaceHunt({ repos, divisions: [division], now,
+    readHeld: async ids => {
+      seen.push("held"); assert.deepEqual(ids, [division.id]);
+      return { subjects: [subject], held: [{ subjectId: subject.id, checklistId: "GOV-01", state: "published", sourceUrl: "https://county.example.gov/board", checkedAt: now, freshUntil: "2026-10-01T00:00:00Z", value: "Test County Board", workItemId: "some-other-job" }] };
+    },
+    acquireNational: async blanks => {
+      seen.push("national");
+      assert.ok(!blanks.some(i => i.id === name.id), "already published facts are not reacquired");
+      assert.ok(blanks.some(i => i.id === contact.id), "contact stays open");
+      return { subjects: [], held: [] };
+    } });
+  assert.deepEqual(seen, ["knowledge", "held", "national"]);
+  assert.deepEqual(result.closed, [placeFieldWork(name, now).id]);
+  assert.equal((await repos.workItems.mustRead(placeFieldWork(name, now).id)).value.state, "VERIFIED_COMPLETE");
+  assert.equal((await repos.workItems.mustRead(placeFieldWork(contact, now).id)).value.state, "OPEN");
+  assert.ok(result.work.some(i => i.id === contact.id));
+  const expired = await planPlaceHunt({ repos, divisions: [division], now: "2026-10-02T00:00:00Z",
+    readHeld: async () => ({ subjects: [subject], held: [{ subjectId: subject.id, checklistId: "GOV-01", state: "published",
+      sourceUrl: "https://county.example.gov/board", checkedAt: now, freshUntil: "2026-10-01T00:00:00Z" }] }),
+    acquireNational: async () => ({ subjects: [], held: [] }) });
+  assert.equal((await repos.workItems.mustRead(placeFieldWork(name, now).id)).value.state, "REOPENED");
+  assert.ok(expired.work.some(i => i.id === name.id), "expired fields return to standing work using the same identity");
+  assert.equal(expired.items.find(i => i.id === name.id)?.state, "stale");
+  assert.match(expired.items.find(i => i.id === name.id)?.label ?? "", /source refresh due/);
+  await assert.rejects(planPlaceHunt({ repos, divisions: [division], now,
+    readHeld: async () => { throw Error("Shared holdings unavailable"); },
+    acquireNational: async () => { throw Error("Must not acquire from a failed empty read"); } }), /Shared holdings unavailable/);
+});
 
 await installRegistryRuntimeFirstSeeds();
 

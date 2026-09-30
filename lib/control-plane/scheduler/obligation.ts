@@ -107,6 +107,8 @@ export interface FreshnessObligation {
    * meeting start, a filing deadline, an election. ISO, or null.
    */
   readonly readerImpactAt: string | null;
+  /** Retained upcoming and concluded sittings, for the rolling §4 clock. */
+  readonly meetingStartsAt?: readonly string[];
   /**
    * Mean hours between OBSERVED changes at the publisher. Null until we have
    * enough readings to mean anything; a rate derived from one observation is
@@ -311,6 +313,13 @@ export function scheduleObligation(
       "this row says so rather than reading like a measured cadence";
   }
 
+  const isMeeting = /meeting|calendar|agenda|minutes/i.test(obligation.recordClass);
+  const nearbyMeeting = [obligation.readerImpactAt, ...(obligation.meetingStartsAt ?? [])]
+    .some(at => at !== null && Math.abs(Date.parse(at) - nowMs) <= 7 * 86_400_000);
+  if (isMeeting) {
+    hours = Math.min(hours, nearbyMeeting ? 1 : 12);
+    basis = `Meeting sources are checked ${nearbyMeeting ? "hourly within seven days before or after a sitting" : "twice daily"} (§4). ${basis}`;
+  }
   const cadenceHours = clamp(hours);
 
   /*
@@ -325,7 +334,8 @@ export function scheduleObligation(
   if (Number.isFinite(absentUntilMs) && absentUntilMs > nowMs) {
     return {
       obligation,
-      nextDueAt: new Date(absentUntilMs).toISOString(),
+      nextDueAt: new Date(isMeeting ? Math.min(absentUntilMs,
+        (obligation.lastWorkedAt ? Date.parse(obligation.lastWorkedAt) : nowMs) + cadenceHours * 3_600_000) : absentUntilMs).toISOString(),
       cadenceHours,
       cadenceSource: "ARGUED_ABSENT",
       basis:

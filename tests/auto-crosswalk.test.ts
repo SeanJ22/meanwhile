@@ -237,8 +237,8 @@ test("HELD: bytes not vaulted, a government registration does not pair, a hand-w
   assert.ok(wired.held.some((h) => h.reason === "ALREADY_WIRED" && h.bodyName === "City Council"));
   assert.deepEqual(wired.accepted.map((a) => a.row.bodyName), ["Housing Commission"]);
 
-  const legistar = { ...attempt, found: [{ ...attempt.found[0]!, vendor: "legistar-api", url: "https://webapi.legistar.com/v1/testburg/events?$top=5" }] };
-  assert.deepEqual(reasons(review(legistar, bodies)), ["KIND_NOT_REVIEWABLE:-"]);
+  const unsupported = { ...attempt, found: [{ ...attempt.found[0]!, vendor: "boardbook", url: "https://meetings.boardbook.org/Public/Organization/100" }] };
+  assert.deepEqual(reasons(review(unsupported, bodies)), ["KIND_NOT_REVIEWABLE:-"]);
 });
 
 test("HELD: robots not shown for a read, a UTC-stamped calendar, and a state whose clock is not one zone", async () => {

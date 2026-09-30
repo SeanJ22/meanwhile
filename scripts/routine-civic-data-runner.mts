@@ -117,6 +117,9 @@ import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/co
 import { assertDurableRepositories } from "../lib/control-plane/repository/types.ts";
 import { getDb } from "../lib/db/index.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+
+import { withNationalPlaceTasks } from "../lib/hunt/place-source-admission.ts";
+import { AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
@@ -133,7 +136,8 @@ installFatalLine("routine-civic-data-runner", () => step);
 
 const ROOT = process.cwd();
 const FORCE = process.argv.includes("--force");
-const TASK_SELECTION = routineTaskSelection(process.argv.slice(2));
+const STANDING_SOURCE_TASKS = await withNationalPlaceTasks([...ROUTINE_SOURCE_TASKS, ...AUTOMATIC_REFRESH_TASKS], process.argv.slice(2));
+const TASK_SELECTION = routineTaskSelection(process.argv.slice(2), STANDING_SOURCE_TASKS);
 const ONLY = TASK_SELECTION.ok ? TASK_SELECTION.only : null;
 const inheritedStartedAt = process.env[ROUTINE_SUPERVISOR_STARTED_AT_ENV];
 const RUN_STARTED_AT = inheritedStartedAt && Number.isFinite(Date.parse(inheritedStartedAt)) &&
@@ -454,7 +458,8 @@ try {
   supervisorFailures.push({ taskId: "hunt-source-admission", code: "HUNT_SCOPE_UNREAD", detail });
   console.error(`RCD_TASK hunt-source-admission: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
-const selectedTasks = [...ROUTINE_SOURCE_TASKS, ...huntTasks].filter((task) => !ONLY || ONLY.has(task.id));
+const selectedTasks = [...STANDING_SOURCE_TASKS, ...huntTasks.filter(task => !STANDING_SOURCE_TASKS.some(standing => standing.id === task.id))]
+  .filter((task) => !ONLY || ONLY.has(task.id));
 step = "reading the routine task clocks";
 const clockReads = FORCE
   ? selectedTasks.map((task) => ({ task, ok: true as const, clock: undefined, error: null }))

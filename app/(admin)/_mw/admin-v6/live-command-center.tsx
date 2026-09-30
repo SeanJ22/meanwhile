@@ -55,6 +55,7 @@ export function LiveCommandCenter(props: LiveCommandCenterProps) {
   const snapshot = useSyncExternalStore((fn) => sync.subscribe(fn), () => sync.snapshot(), () => sync.snapshot());
   const conn = usePulseFeed({ onPulse: (pulse) => sync.onPulse(pulse), onReconnected: () => sync.catchUp() });
   const executor = useMemo(() => liveExecutor({ capabilities: () => sync.capabilities(), stateVersion: () => sync.revision() }), [sync]);
+  useEffect(() => () => executor.dispose?.(), [executor]);
   const data = useMemo(() => buildLiveBundle(snapshot, props.reference, workerStatusFromPulse(conn.pulse)), [snapshot, props.reference, conn.pulse]);
 
   const onScopeChange = (key: string) => {

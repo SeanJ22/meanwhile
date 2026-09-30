@@ -58,7 +58,7 @@ export type ChangesReading =
 
 export interface ChangesOptions {
   readonly fetchImpl?: typeof fetch;
-  readonly env?: NodeJS.ProcessEnv;
+  readonly env?: Readonly<Record<string, string | undefined>>;
   readonly nowMs?: () => number;
   readonly force?: boolean;
 }
@@ -122,7 +122,7 @@ async function json(url: string, init: RequestInit, fetchImpl: typeof fetch): Pr
 }
 
 /** The live site's commit: this build's own stamp, else the public endpoint. */
-async function liveSha(env: NodeJS.ProcessEnv, fetchImpl: typeof fetch): Promise<string | null> {
+async function liveSha(env: Readonly<Record<string, string | undefined>>, fetchImpl: typeof fetch): Promise<string | null> {
   const stamped = (env.WTP_BUILD_COMMIT ?? "").trim();
   if (/^[0-9a-f]{40}$/.test(stamped)) return stamped;
   try {

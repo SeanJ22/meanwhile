@@ -53,6 +53,7 @@ import { ADMIN_ORIGIN } from "@/lib/ops/origins.ts";
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
 import { consoleReturnPath } from "@/lib/control-plane/console-paths.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
+import { confirmReceipt } from "@/lib/control-plane/gateway/confirmation.ts";
 import { submit } from "@/lib/control-plane/gateway/gateway.ts";
 import { readPulse } from "@/lib/control-plane/gateway/pulse-read.ts";
 import { inputDigest } from "@/lib/control-plane/gateway/receipts.ts";
@@ -217,7 +218,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       ),
   });
 
-  if (wantsJson(request)) return NextResponse.json(outcome, { status: 200 });
+  if (wantsJson(request)) {
+    /*
+     * A saved request is not a done request. The answer also says whether the
+     * runner has picked the action up, read from the runner's own records, so a
+     * replay of an old click comes back already confirmed and a fresh one comes
+     * back waiting. The screen keeps asking the receipt lookup until it is.
+     */
+    const confirmation = outcome.ok ? await confirmReceipt(opened.repos, outcome.receipt) : null;
+    return NextResponse.json({ ...outcome, confirmation }, { status: 200 });
+  }
 
   const destination = consoleReturnPath(body.envelope.returnTo ?? "", "/admin");
   return NextResponse.redirect(

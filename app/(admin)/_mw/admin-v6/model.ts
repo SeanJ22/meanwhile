@@ -312,6 +312,26 @@ export interface WorkerStatus {
   readonly unread: readonly string[];
 }
 
+/* ----------------------------------------------------------------- agents */
+
+/** One agent run (server: v6-agents-read.ts). Newest first; a run still open past the runner's wall is "did-not-finish", never "running". */
+export interface AgentRun {
+  readonly id: string;
+  readonly role: string;
+  readonly state: "running" | "done" | "stopped" | "did-not-finish";
+  readonly stateWords: string;
+  readonly title: string;
+  readonly placeKey: string;
+  readonly startedAt: string | null;
+  readonly endedAt: string | null;
+  readonly model: { readonly tier: "haiku" | "sonnet" | "opus" | "plain-code" | "older"; readonly name: string };
+  /** Dollars for this run, or null when the ledger has no price for it (never $0). */
+  readonly costUsd: number | null;
+  readonly costWords: string;
+  readonly found: string;
+  readonly source: { readonly url: string | null; readonly savedPages: number; readonly copy: { readonly path: string; readonly byteLength: number } | null } | null;
+}
+
 /* ------------------------------------------------------------- checklist */
 
 export type ItemStatus = "checked" | "published" | "collected" | "can-do" | "needs-fix" | "unsure" | "absent";
@@ -613,6 +633,7 @@ export interface AdminV6Data {
   readonly history: Sourced<readonly UiReceipt[]>;
   readonly workers: Sourced<{ readonly status: WorkerStatus; readonly jobs: readonly WorkerJob[] | null; readonly waiting: readonly WaitingItem[] | null; readonly events: readonly WorkerEvent[] | null; readonly update: UpdateCard | null; readonly next: readonly string[] | null }>;
   readonly checklist: Sourced<ChecklistView>;
+  readonly agents: Sourced<readonly AgentRun[]>;
   readonly money: Sourced<MoneyView>;
   readonly learning: Sourced<LearningView>;
   readonly fixes: Sourced<FixView>;

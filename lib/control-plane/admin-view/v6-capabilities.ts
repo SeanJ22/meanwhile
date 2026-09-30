@@ -35,6 +35,9 @@ export function adminV6ReadCapabilities(input: { readonly configRevision: number
     sections.stuck = { contract: "admin-v6/stuck@1", href: "/api/admin/v6/stuck", revision: `stuck:${input.snapshotRevision}` };
     sections.sameCause = { contract: "admin-v6/sameCause@1", href: "/api/admin/v6/same-cause", revision: `sameCause:${input.snapshotRevision}` };
   }
+  if (input.snapshotRevision !== null || input.researchRevision !== null) {
+    sections.agents = { contract: "admin-v6/agents@1", href: "/api/admin/v6/agents", revision: `agents:${input.heartbeatRevision ?? "unread"}:${input.workerAgeBucket ?? "clock-unread"}` };
+  }
   if (input.configRevision !== null && input.researchRevision !== null) {
     sections.workers = { contract: "admin-v6/workers@1", href: "/api/admin/v6/workers",
       revision: `workers:${input.configRevision}:${input.researchRevision}:${input.heartbeatRevision ?? "unread"}:${input.sourceProgressId ?? "none"}:${input.workerAgeBucket ?? "clock-unread"}` };
@@ -42,4 +45,4 @@ export function adminV6ReadCapabilities(input: { readonly configRevision: number
   return { ...ADMIN_V6_CAPABILITIES, sections };
 }
 
-export const ADMIN_V6_CAPABILITY_REVISION = "admin-v6/1:receipt/1:hunts/1:money/1:workers/1:checklist/place1:stuck/1";
+export const ADMIN_V6_CAPABILITY_REVISION = "admin-v6/1:receipt/1:hunts/1:money/1:workers/1:checklist/place1:stuck/1:agents/1";

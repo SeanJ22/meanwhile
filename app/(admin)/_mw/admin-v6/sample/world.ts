@@ -517,6 +517,7 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
       { key: "retry", cause: "Retries repeating the same failure", lane: "auto", count: "319", itemIds: ["i-retry"], action: a("stoprepeats", "i-retry") },
     ], SECTION_DEP.stuck, SAMPLE_AS_OF),
     workRows: sample({ rows: sampleRows(), totals: [{ stage: "waiting", total: 932 }, { stage: "stuck", total: 78 }, { stage: "retrying", total: 731 }, { stage: "done", total: 1069 }, { stage: "retired", total: 591 }] }, SECTION_DEP.work, SAMPLE_AS_OF),
+    agents: sample([], SECTION_DEP.agents, SAMPLE_AS_OF),
     history: sample(sampleHistory(), SECTION_DEP.history, SAMPLE_AS_OF),
     workers: sample({
       status: { lastCheckIn: "2026-09-28T06:53:12.000Z", lastUsefulProgress: { at: "2026-09-28T06:50:00.000Z", what: "New congressional vote records were ready to publish" }, roundStartedAt: "2026-09-28T06:39:00.000Z", lastRoundFinishedAt: "2026-09-28T06:38:00.000Z", nextRoundDueAt: null, runnerState: w.runnerPaused ? "PAUSED" : "ALIVE", lanes: null, unread: [] },

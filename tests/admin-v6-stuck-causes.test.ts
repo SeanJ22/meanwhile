@@ -84,5 +84,5 @@ test("the views count every stuck row by cause, list the most urgent, scope them
   const az = stuckViews(rows, "st:az", "2026-09-30T00:00:00.000Z");
   assert.equal(az.total, 2);
   assert.match(STUCK_INDEX_SQL, /allRowsIndex/, "the published index is unpacked in the database, not loaded whole");
-  assert.match(STUCK_INDEX_SQL, /FAILED.*BLOCKED.*UNKNOWN/s);
+  assert.match(STUCK_INDEX_SQL, /FAILED[sS]*BLOCKED[sS]*UNKNOWN/);
 });

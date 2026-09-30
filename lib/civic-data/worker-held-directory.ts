@@ -6,11 +6,14 @@
  * are taken from the page as written; the §3 check then confirms each one is
  * on the page.
  */
+import { scheduleSentences } from "./worker-held-meetings.ts";
 
 export interface HeldDirectoryRow {
   readonly bodyName: string;
   /** A category label the reader assigns: a commission, or an appointed advisory board, committee or trust. */
   readonly bodyClass: "Commission" | "Advisory";
+  /** When the body regularly meets, as its own section of the page says it, with the time. */
+  readonly meetingCadence?: string;
 }
 
 const DIRECTORY_PAGE = /\b(boards|commissions|committees)\b/i;
@@ -31,11 +34,14 @@ export function readHeldDirectory(html: string): readonly HeldDirectoryRow[] | n
   // Site navigation repeats every page's name; only the page's own content lists its bodies.
   const content = html.replace(/<(script|style|template|nav|header|footer)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, " ");
   const rows = new Map<string, HeldDirectoryRow>();
-  const titles = content.matchAll(/<(h[2-4])\b[^>]*>([\s\S]*?)<\/\1\s*>|<(div|span|button|summary)\b[^>]*\bclass\s*=\s*["'](?:[^"']*\s)?(?:title|accordion-title|accordion-header)(?:\s[^"']*)?["'][^>]*>([\s\S]*?)<\/\3\s*>/gi);
-  for (const match of titles) {
+  const titles = [...content.matchAll(/<(h[2-4])\b[^>]*>([\s\S]*?)<\/\1\s*>|<(div|span|button|summary)\b[^>]*\bclass\s*=\s*["'](?:[^"']*\s)?(?:title|accordion-title|accordion-header)(?:\s[^"']*)?["'][^>]*>([\s\S]*?)<\/\3\s*>/gi)];
+  titles.forEach((match, index) => {
     const name = visible(match[2] ?? match[4] ?? "");
-    if (name.length < 4 || name.length > 90 || !/^[A-Z]/.test(name) || BARE.test(name) || !BODY_NAME.test(name)) continue;
-    rows.set(name.toLowerCase(), { bodyName: name, bodyClass: /\bcommission\b/i.test(name) ? "Commission" : "Advisory" });
-  }
+    if (name.length < 4 || name.length > 90 || !/^[A-Z]/.test(name) || BARE.test(name) || !BODY_NAME.test(name)) return;
+    // The body's own section runs to the next title; its schedule is read there and nowhere else.
+    const section = content.slice((match.index ?? 0) + match[0].length, titles[index + 1]?.index ?? content.length);
+    const meetingCadence = scheduleSentences(section);
+    rows.set(name.toLowerCase(), { bodyName: name, bodyClass: /\bcommission\b/i.test(name) ? "Commission" : "Advisory", ...(meetingCadence ? { meetingCadence } : {}) });
+  });
   return rows.size ? [...rows.values()] : null;
 }

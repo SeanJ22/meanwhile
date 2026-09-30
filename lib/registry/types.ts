@@ -472,7 +472,10 @@ export interface Body {
    * the link ladder renders this field and a slug in an `href` is a dead link.
    */
   agendaSourceRef: string | null;
+  /** When the body regularly meets, in its official page's own words; never computed into dates. */
   meetingCadence: string | null;
+  /** The saved official page that states `meetingCadence`, when it is not the body's own source. */
+  meetingCadenceSource?: { sourceUrl: string; collectedAt: string };
   homepageUrl: string | null;
   /**
    * How many readers said this division applies to them. A bare count, never

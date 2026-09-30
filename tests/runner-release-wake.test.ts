@@ -11,7 +11,7 @@ test("a wake reconciles the deployed release before admitting another research c
   const releaseExit = loop.indexOf("if (wakeReleaseExit !== null) {", reconciled);
   const breakOnRelease = loop.indexOf("break;", releaseExit);
   const incremented = loop.indexOf("cycle += 1;", held);
-  const child = loop.indexOf("const result = await runOneCycle(owner);", incremented);
+  const child = loop.indexOf("const result = await runOneCycle(owner)", incremented);
   const slept = loop.indexOf("await sleepUnlessRunNow(await nextCycleWaitMs(result.ok));", child);
   assert.ok(held >= 0 && held < reconciled);
   assert.ok(reconciled < releaseExit && releaseExit < breakOnRelease && breakOnRelease < incremented);

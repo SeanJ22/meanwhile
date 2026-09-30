@@ -83,7 +83,7 @@ async function main(): Promise<void> {
     console.log(JSON.stringify({ contractId: "registry-runtime-bindings", candidateId: published.at(-1)?.outcome.candidateId ?? nationalVersion ?? null,
       promotedVersionId: published.at(-1)?.outcome.versionId ?? nationalVersion ?? null,
       workerPublications: report, nationalPlaces, nationalPublications, failures }, null, 2));
-    await printWorkerPublicationReceipt(store, "registry-runtime-bindings", report, nationalDelivery(nationalPublications));
+    await printWorkerPublicationReceipt(store, "registry-runtime-bindings", report, nationalDelivery(nationalPublications), now);
     if (failures.length && !published.length && !nationalVersion) throw new Error(failures.join("; "));
     return;
   }

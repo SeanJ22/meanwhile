@@ -24,3 +24,32 @@ test("the receipt names this pass's publication and counts only what this pass p
   assert.equal(receipt.candidateId, "cv-new");
   assert.deepEqual(receipt.delivered, { records: 3, gaps: 1, gapReasons: { ROSTER_PAGE_NOT_THIS_BODY: 1 } });
 });
+
+test("without the door pointer, a pass that only re-reports earlier publications prints no receipt and exits non-zero", async () => {
+  const lines: string[] = [];
+  const log = console.log;
+  const exitCode = process.exitCode;
+  console.log = (line: string) => { lines.push(line); };
+  try {
+    const printed = await printWorkerPublicationReceipt(store, "registry-runtime-bindings", [
+      { workItemId: "wi-roster", outcome: outcome("2026-09-30T17:55:00.000Z", "cv-old", { acceptedRecordIds: ["m1"] }) },
+    ] as never, null, "2026-09-30T21:04:00.000Z");
+    assert.equal(printed, false, "an earlier version is never this pass's receipt");
+    assert.equal(process.exitCode, 2);
+  } finally { console.log = log; process.exitCode = exitCode; }
+  assert.equal(lines.some(line => line.startsWith("RCD_RECEIPT=")), false);
+});
+
+test("a pass with nothing new confirms the door's current version and delivers nothing", async () => {
+  const lines: string[] = [];
+  const log = console.log;
+  console.log = (line: string) => { lines.push(line); };
+  try {
+    const confirming = { ...(store as object), readPromotionIdentity: async () => ({ versionId: "cv-new" }) } as never;
+    assert.equal(await printWorkerPublicationReceipt(confirming, "registry-runtime-bindings", [
+      { workItemId: "wi-roster", outcome: outcome("2026-09-30T17:55:00.000Z", "cv-old", { acceptedRecordIds: ["m1"] }) },
+    ] as never, null, "2026-09-30T21:04:00.000Z"), true);
+  } finally { console.log = log; }
+  const receipt = JSON.parse(lines.find(line => line.startsWith("RCD_RECEIPT="))!.slice("RCD_RECEIPT=".length));
+  assert.deepEqual([receipt.candidateId, receipt.promotedVersion, receipt.confirmedAt, receipt.delivered.records], ["cv-new", "cv-new", undefined, 0], "the runner re-proves the canonical version; only the store records a confirmation");
+});

@@ -119,10 +119,9 @@ import {
 import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/connect-retry.ts";
 import { assertDurableRepositories } from "../lib/control-plane/repository/types.ts";
 import { getDb } from "../lib/db/index.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
 import { publishRoutineReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
-import { assertWriteAllowed } from "../lib/db/write-guard.ts";
-import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
@@ -395,11 +394,7 @@ async function persistSupervisorOutcome(input: {
 
 if (ROUTINE_DATA_PROCESS_LEASE !== null) {
 step = "opening the production store";
-const handle = resolveProductionWriteHandle();
-process.env.DATABASE_URL = handle.connection;
-process.env.WTP_DB_ROLE = "production";
-process.env.WTP_SANCTIONED_WRITE = "routine-civic-data-promotion";
-assertWriteAllowed("a routine civic data candidate/version promotion");
+prepareProductionCivicDataWrite();
 const store = new PostgresRoutineDataStore();
 let attempted = 0;
 let verifiedSourceSuccesses = 0;

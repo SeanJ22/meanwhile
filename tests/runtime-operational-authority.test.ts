@@ -266,17 +266,16 @@ test("production children are hidden behind the installed runtime and local proo
   assert.match(runner, /"ROUTINE_SUPERVISOR"/);
 });
 
-test("the immutable runner adopts method authority before opening clocks and invokes no tracked writer", () => {
+test("the runner opens clocks without the retired method-adoption gate and invokes no tracked writer", () => {
   const runner = readFileSync(join(ROOT, "scripts", "pilot-runner.mts"), "utf8");
-  const adoption = runner.lastIndexOf("await ensureMethodCandidateAuthorityAtStartup()");
   const clock = runner.lastIndexOf("startStandingRuntimeClock();");
-  assert.ok(adoption >= 0, "the standing runtime has no clean-code method-authority adoption gate");
-  assert.ok(clock > adoption, "a runtime clock can open before method authority is adopted");
+  assert.doesNotMatch(runner, /ensureMethodCandidateAuthorityAtStartup/);
+  assert.ok(clock >= 0, "the standing runtime still opens its source clock");
   assert.match(runner, /const reopenStandingClock = standingRuntimeTimer !== null;[\s\S]*if \(reopenStandingClock\) startStandingRuntimeClock\(\);/);
   assert.doesNotMatch(
     runner,
     /runtimeAdmissionsHeld = false;\s*startStandingRuntimeClock\(\);/,
-    "startup reconciliation can reopen a source clock that never passed authority adoption",
+    "startup reconciliation can open a source clock that was not previously running",
   );
   assert.doesNotMatch(runner, /args:\s*\["scripts\/apply-owner-decisions\.mts"\]/);
   assert.doesNotMatch(runner, /scripts\/scout-candidates-rederive\.mts/);

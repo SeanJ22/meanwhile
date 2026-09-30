@@ -79,6 +79,9 @@ test("a saved meeting page from any job names the council's schedule and agenda 
   const stale = await heldBodySchedule({ body: { id: BODY, name: "Benson City Council" }, divisionLabel: "Benson", now: NOW,
     artifacts: [artifact(capture(MEETINGS, MEETINGS_URL, "2026-07-01T00:00:00.000Z"))], readHeld: async () => capture(MEETINGS, MEETINGS_URL, "2026-07-01T00:00:00.000Z") });
   assert.equal(stale, null, "a capture outside its freshness window attaches nothing");
+  const plain = capture(MEETINGS, MEETINGS_URL.replace("https://", "http://"));
+  assert.equal(await heldBodySchedule({ body: { id: BODY, name: "Benson City Council" }, divisionLabel: "Benson", now: NOW,
+    artifacts: [artifact(plain)], readHeld: async () => plain }), null, "the door accepts only HTTPS sources, so an http copy never holds the roster beside it");
 
   const published = workerRosterPublication({ bodyId: BODY, prior: base, now: NOW, schedule, reading: { id: `held:${roster.evidence.artifactId}`, capture: roster, linkingPage: null, complete: true,
     method: "fixture", members: readHeldRoster(ROSTER, ROSTER_URL)!.rows.map((row, i) => ({ recordId: `r${i}`, fields: { ...row } })) } });

@@ -25,7 +25,8 @@ const COVERAGE_CODES = new Set(["COMPLETENESS_SOURCE_ROW_OMITTED", "DECLARED_COU
  */
 export function heldPageCopies(artifacts: readonly ArtifactRecord[], pages: number): readonly ArtifactRecord[] {
   const hashes = new Set<string>(), urls = new Set<string>();
-  return [...artifacts].filter(a => !a.partial && /html/i.test(a.contentType) && isOfficialSource(a.canonicalUrl))
+  // Only HTTPS copies: the publication door accepts no other source, and a page it would refuse must not hold the facts beside it.
+  return [...artifacts].filter(a => !a.partial && /html/i.test(a.contentType) && a.canonicalUrl.startsWith("https://") && isOfficialSource(a.canonicalUrl))
     .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt))
     .filter(a => !hashes.has(a.contentHash) && Boolean(hashes.add(a.contentHash)))
     .filter(a => urls.has(a.canonicalUrl) || (urls.size < pages && Boolean(urls.add(a.canonicalUrl))));

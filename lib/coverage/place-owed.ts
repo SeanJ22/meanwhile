@@ -23,7 +23,7 @@ export interface PlaceOwedItem {
   readonly subject: PlaceSubject;
   readonly checklistId: string;
   readonly requirement: string;
-  readonly state: HeldPlaceField["state"] | "missing";
+  readonly state: HeldPlaceField["state"] | "missing" | "stale";
   readonly held: readonly HeldPlaceField[];
   readonly label: string;
 }
@@ -78,19 +78,21 @@ export function buildPlaceOwedList(input: {
       const current = held.filter(field => Date.parse(field.freshUntil) >= now);
       const state = current.some(f => f.state === "published") ? "published"
         : current.some(f => f.state === "held") ? "held"
-        : current.some(f => f.state === "unpublished") ? "unpublished" : "missing";
+        : current.some(f => f.state === "unpublished") ? "unpublished" : held.length ? "stale" : "missing";
       const requirement = inventory ? `Discover every ${subject.kind} for ${subject.label.split(": ")[0]}` : definition.requirement;
       return { id, subject, checklistId: definition.id, requirement, state, held,
         label: state === "missing" ? `${requirement} — not covered yet`
+          : state === "stale" ? `${requirement} — captured; source refresh due`
           : state === "held" ? `${requirement} — captured, not published yet`
           : state === "unpublished" ? `${requirement} — not published by the government` : requirement };
     });
   });
 }
 
-/** Captured fields await their existing verification/publication work. */
+/** Fresh captured fields await their existing verification/publication work.
+ * Stale fields retain their sources so the worker refreshes a known route. */
 export function missingPlaceWork(items: readonly PlaceOwedItem[]): PlaceOwedItem[] {
-  return items.filter(item => item.state === "missing");
+  return items.filter(item => item.state === "missing" || item.state === "stale");
 }
 
 /** Recompute after each field publishes; never wait for the rest of a body. */

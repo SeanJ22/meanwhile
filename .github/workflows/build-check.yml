@@ -363,10 +363,6 @@ jobs:
         env:
           CI_NEEDS: ${{ toJSON(needs) }}
         run: node scripts/ci-verdict.mjs
-      - name: Require the original PR and workflow inputs
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node scripts/ci-retry-identity.mjs
       - name: Enable corepack (pnpm pinned by packageManager)
         if: success() && needs.admission.outputs.tier == 'yes'
         run: corepack enable

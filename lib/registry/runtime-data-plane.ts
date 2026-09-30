@@ -82,6 +82,13 @@ export interface RegistryRuntimePackage {
   readonly sourceThrough: string;
   readonly sourceReceipt: ManualSourceSetReceipt;
   readonly payload: RegistryRuntimeReadModel;
+  /**
+   * "MEMBERS": the package speaks only for the members it lists (a publication
+   * door: one roster, a directory, a place). A prior member it omits is
+   * retained unchanged, not an attempted removal, so it is not recorded as an
+   * excluded fact. Omitted, a package speaks for the whole registry.
+   */
+  readonly scope?: "MEMBERS";
 }
 
 export interface RegistryRuntimePrior {
@@ -482,7 +489,8 @@ function sourceScopedRegistryProjection(
           detail: `${source.requestedUrl} was blocked and could not authorize any current registry member: ${source.failureDetail}.`,
           record: source,
         })),
-      ...reconciled.excludedFacts.filter((fact) => !removedKeys.has(fact.key)),
+      ...reconciled.excludedFacts.filter((fact) => !removedKeys.has(fact.key) &&
+        !(input.scope === "MEMBERS" && fact.code === "MANUAL_MEMBER_REMOVAL_EVIDENCE_MISSING")),
       ...reconciled.members.filter((member) => removedKeys.has(member.key)).map((member) => ({
         key: member.key,
         code: "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT",

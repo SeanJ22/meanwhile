@@ -195,7 +195,7 @@ export function workerRosterPublication(input: {
       divisions: body.ocdId ? [body.ocdId] : [], authority: "REGISTRY_BODY_ROSTER", sourceUrl: source.sourceUrl },
       status: "NOT_CHECKED", candidacy: null, unresolvedCandidacyIds: [],
       reason: "Officeholding verified on the body's official page. Ballot candidacy remains owed; no candidacy or absence is asserted." }));
-  return { contractId: "registry-runtime-bindings", version: registryEdition(`section3-roster:${reading.id}`), sourceThrough: now,
+  return { contractId: "registry-runtime-bindings", scope: "MEMBERS", version: registryEdition(`section3-roster:${reading.id}`), sourceThrough: now,
     sourceReceipt: section3SourceReceipt([capture], now, `section3-validator:${reading.id}`,
       `${reading.method}: ${members.length} member(s) with seat and name on the saved official page inside its freshness window (§3).`),
     // The source-scoped door carries unchanged bodies on their prior authority; this supplies only the verified roster.

@@ -178,7 +178,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
     const sourceReceipt = section3SourceReceipt(captures, input.now, "section3-validator:national-place",
       `${divisions.length} Census division(s) found on their saved Census responses inside the freshness window (§3); ${bodies.length} implied body row(s).`);
     const digest = createHash("sha256").update(canonicalJson({ divisions, bodies: bodies.map(b => b.id) })).digest("hex").slice(0, 16);
-    const published = await promote(input.store, { contractId: "registry-runtime-bindings", version: registryEdition(`national-place:${digest}`), sourceThrough: input.now, sourceReceipt,
+    const published = await promote(input.store, { contractId: "registry-runtime-bindings", scope: "MEMBERS", version: registryEdition(`national-place:${digest}`), sourceThrough: input.now, sourceReceipt,
       payload: { ...prior.payload, registry: { ...prior.payload.registry, divisions, bodies },
         bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
         officialCandidacies: { ...prior.payload.officialCandidacies, rows: [] } } }, prior, input.now);
@@ -200,7 +200,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
       const sourceReceipt = section3SourceReceipt(statewide.map(s => s.capture), input.now, "section3-validator:national-statewide",
         `${statewide.length} statewide official(s): name and office found on their own saved official page inside the freshness window (§3).`);
       const digest = createHash("sha256").update(canonicalJson(statewide.map(s => s.row))).digest("hex").slice(0, 16);
-      const published = await promote(input.store, { contractId: "registry-runtime-bindings", version: registryEdition(`national-statewide:${digest}`), sourceThrough: input.now, sourceReceipt,
+      const published = await promote(input.store, { contractId: "registry-runtime-bindings", scope: "MEMBERS", version: registryEdition(`national-statewide:${digest}`), sourceThrough: input.now, sourceReceipt,
         payload: { ...prior.payload, registry: { ...prior.payload.registry, divisions: [], bodies: [] },
           bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: statewide.map(s => s.row), officialPhotos: { photos: [] }, rosterPhotos: {},
           officialCandidacies: { ...prior.payload.officialCandidacies, rows: statewide

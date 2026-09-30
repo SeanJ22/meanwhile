@@ -62,6 +62,9 @@ test("a place with no prepared registry gets its Census divisions, their bodies 
   assert.deepEqual(result.members.map(m => [m.bodyId, m.discoveryIds]), [[OH, ["dewine"]], [`${OH}/sldl:7#seat`, ["russo"]]]);
   assert.deepEqual(result.gaps.map(g => g.key).sort(), ["division:" + OH, "official:unsaved"]);
   assert.ok(result.promotedVersionId);
+  // A door package speaks only for its own members: the thousands it omits are retained, not listed as excluded (the 313 MB candidate).
+  const written = (await s.readCandidate(result.candidateId!))!;
+  assert.equal((written.candidate.excludedFacts ?? []).filter(f => f.code === "MANUAL_MEMBER_REMOVAL_EVIDENCE_MISSING").length, 0);
   const after = (await readRegistryRuntimePrior(s, NOW))!;
   const roster = after.payload.bodyRosters.find(r => r.bodyId === `${OH}/sldl:7#seat`);
   assert.deepEqual(roster?.members.map(m => [m.name, m.officeTitle]), [["Allison Russo", "Representative"]]);

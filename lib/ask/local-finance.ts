@@ -126,6 +126,20 @@ export function financeQuestionAsked(question: string): boolean {
   return FINANCE_PHRASES.some((p) => p.test(normalized));
 }
 
+/** "Who is funding Andy Biggs?": a funding verb aimed at a NAMED PERSON. For a school district the same words are a budget question. */
+const PERSON_FUNDING = new RegExp(`\\bwho (?:is |has |are )?(?:funding|funded|funds|financing|financed|finances|bankrolling|bankrolled|bankrolls|backing|backed|backs|paying for|paid for|pays for)\\b`);
+
+/**
+ * Did the reader ask about campaign money, given what the question resolved to?
+ * A funding verb needs campaign words after it to be a money question ("who is
+ * funding the school district?" is a budget question) — unless the subject is a
+ * person, whose funding is their campaign's (2026-09-29: "Who is funding Andy
+ * Biggs?" retrieved no money and the writer said we hold none, over three filings).
+ */
+export function financeQuestionAskedFor(question: string, subjectKind: string | null): boolean {
+  return financeQuestionAsked(question) || (subjectKind === "PERSON" && PERSON_FUNDING.test(normalizeName(question)));
+}
+
 /**
  * Did the reader ask about a person's campaign money and nothing they did in
  * office? Then their votes, key votes, statements and recorded actions are not
@@ -133,8 +147,8 @@ export function financeQuestionAsked(question: string): boolean {
  * reader's wait) larger. A question that also asks how they voted, what they
  * said or what they signed keeps all of it.
  */
-export function asksOnlyMoney(question: string): boolean {
-  return financeQuestionAsked(question) &&
+export function asksOnlyMoney(question: string, subjectKind: string | null = null): boolean {
+  return financeQuestionAskedFor(question, subjectKind) &&
     !/\b(?:vot(?:e|es|ed|ing)|bills?|legislation|positions?|stances?|executive orders?|vetoe[sd]?|signed|sponsor\w*|said|says|statements?|record|done|actions?)\b/i.test(question);
 }
 

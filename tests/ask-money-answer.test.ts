@@ -6,7 +6,7 @@ import test from "node:test";
 import { campaignMoneyEvidenceFor } from "../lib/ask/campaign-money.ts";
 import type { EvidencePack, EvidenceRecord, EvidenceSubject } from "../lib/ask/evidence.ts";
 import { overLengthBudget } from "../lib/ask/length-contract.ts";
-import { asksOnlyMoney, financeQuestionAsked, financeRegimeNotesFor } from "../lib/ask/local-finance.ts";
+import { asksOnlyMoney, financeQuestionAsked, financeQuestionAskedFor, financeRegimeNotesFor } from "../lib/ask/local-finance.ts";
 import { composeMoneyAnswer, moneyQuestionShape, periodPhrase, raceWordsFitOffice, type MoneyAsk } from "../lib/ask/money-answer.ts";
 import { gateRecordsToSubject } from "../lib/ask/relevance.ts";
 import { validateAnswer } from "../lib/ask/validate.ts";
@@ -75,6 +75,9 @@ test("the comparison that retrieved no money is now a money question, and so is 
     ["Who donated to Katie Hobbs's campaign?", "WHO_GAVE", "katie hobbs"],
     ["Who are Tayfun Selen's biggest donors?", "WHO_GAVE", "tayfun selen"],
     ["Who is funding Kelly Ayotte's campaign?", "WHO_GAVE", "kelly ayotte"],
+    ["Who is funding Kelly Ayotte?", "WHO_GAVE", "kelly ayotte"],
+    ["Who funds Andy Biggs?", "WHO_GAVE", "andy biggs"],
+    ["Who is backing Katie Hobbs?", "WHO_GAVE", "katie hobbs"],
     ["Has Cinde Warmington raised more money than Kelly Ayotte?", "COMPARE", "cinde warmington", "kelly ayotte"],
     ["Who has raised more, Kelly Ayotte or Cinde Warmington?", "COMPARE", "kelly ayotte", "cinde warmington"],
     ["Has Katie Hobbs outraised Andy Biggs?", "COMPARE", "katie hobbs", "andy biggs"],
@@ -84,7 +87,7 @@ test("the comparison that retrieved no money is now a money question, and so is 
     assert.equal(shape?.ask.kind, kind, question);
     assert.equal(shape?.slot, slot, question);
     assert.equal(shape?.otherSlot, other, question);
-    assert.equal(financeQuestionAsked(question), true, `retrieval reads it as money too: ${question}`);
+    assert.equal(financeQuestionAskedFor(question, "PERSON"), true, `retrieval reads it as money too, for the person it binds: ${question}`);
   }
   assert.deepEqual(moneyQuestionShape("How much has Kelly Ayotte raised and spent?")?.ask, { kind: "HOW_MUCH", measures: ["RAISED", "SPENT"] });
   assert.equal(moneyQuestionShape("How much has Rebecca Harned raised for her state senate race?")?.raceWords, "state senate");
@@ -244,6 +247,13 @@ test("a question about a person's money and nothing they did in office is money-
     assert.equal(asksOnlyMoney(question), false, question);
   }
   assert.equal(financeQuestionAsked("Who funds the Vail school board candidates?"), true, "'funds' is a money verb like 'funded'");
+  /* A funding verb aimed at a named person is a money question; aimed at a district it is a budget question. */
+  assert.equal(financeQuestionAsked("Who is funding Andy Biggs?"), false);
+  assert.equal(financeQuestionAskedFor("Who is funding Andy Biggs?", "PERSON"), true);
+  assert.equal(financeQuestionAskedFor("Who is funding the Vail school district?", "BODY"), false);
+  assert.equal(financeQuestionAskedFor("Who is backing Prop 141?", "MEASURE"), false);
+  assert.equal(asksOnlyMoney("Who is funding Andy Biggs?", "PERSON"), true);
+  assert.equal(moneyQuestionShape("Who is funding the Vail school district?")?.ask.kind, "WHO_GAVE", "the shape is only a reading of the words: the slot must still bind a held person");
 });
 
 test("the relevance gate keeps a compared person's records by exact id, and nobody else's", () => {

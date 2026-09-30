@@ -149,6 +149,7 @@ import { gateContactsToSubject, gateRecordsToSubject } from "@/lib/ask/relevance
 import {
   asksOnlyMoney,
   financeQuestionAsked,
+  financeQuestionAskedFor,
   financeRegimeNotesFor,
   financeScopeGapFor,
   localFinanceEvidenceFor,
@@ -1476,7 +1477,8 @@ export async function POST(request: Request) {
     const records: EvidenceRecord[] = [];
     /* A person asked about for their campaign money and nothing they did in office: their votes, key votes, statements and
        recorded actions are not what was asked (the pack for one federal candidate was 104 records, 28,000 tokens). */
-    const moneyOnly = subject?.kind === "PERSON" && asksOnlyMoney(question);
+    const financeAsked = financeQuestionAskedFor(question, subject?.kind ?? null);
+    const moneyOnly = subject?.kind === "PERSON" && asksOnlyMoney(question, "PERSON");
     const heldFiling = subject ? heldFilings.find(row => row.entity.id === subject.id) : null;
     if (heldFiling) records.push(heldFiling.record);
     /** The sittings this request resolved, for the structured half of the payload. */
@@ -2188,7 +2190,7 @@ export async function POST(request: Request) {
      * retrieved and stamped as hers, and the relevance gate keeps exactly those.
      */
     const comparedIds = new Set<string>();
-    if (subject?.kind === "PERSON" && financeQuestionAsked(question)) {
+    if (subject?.kind === "PERSON" && financeAsked) {
       const other = otherNamedPerson(question, inventory, subject.id);
       const otherRecord = other ? ballotInventory.subjects.get(other.id) ?? null : null;
       const otherSubject: EvidenceSubject | null = other
@@ -2209,7 +2211,7 @@ export async function POST(request: Request) {
     }
 
     /* The party-conflict card's money is its filing's, retrieved under the filing's own id (never restamped as the card's). */
-    if (partyConflictFiling && subject?.kind === "PERSON" && financeQuestionAsked(question)) {
+    if (partyConflictFiling && subject?.kind === "PERSON" && financeAsked) {
       comparedIds.add(partyConflictFiling.id);
       const filed = campaignMoneyEvidenceFor(ballotSubject(partyConflictFiling), partyConflictFiling.id, partyConflictFiling.contestId);
       records.push(...filed.records);
@@ -2227,7 +2229,7 @@ export async function POST(request: Request) {
      * race the authority says is not on the ballot: that statement, for the
      * body's own division, is retrieved beside the body's register records.
      */
-    const groupAsk = subject && (subject.kind === "CONTEST" || subject.kind === "BODY") && financeQuestionAsked(question)
+    const groupAsk = subject && (subject.kind === "CONTEST" || subject.kind === "BODY") && financeAsked
       ? groupMoneyShapeForBoundSubject(question, inventory, subject.id) : null;
     const groupCandidates: { id: string; name: string; matched: boolean }[] = [];
     let groupStateRecords = 0;
@@ -2265,7 +2267,7 @@ export async function POST(request: Request) {
       }
     }
 
-    if (subject && financeQuestionAsked(question)) {
+    if (subject && financeAsked) {
       const normalized = campaignMoneyEvidenceFor(subject, ballotRecord?.id ?? subject.id, ballotRecord?.contestId);
       records.push(...normalized.records);
       gaps.push(...normalized.gaps);
@@ -2616,7 +2618,7 @@ export async function POST(request: Request) {
      * same figures, and got the who/comparison kinds wrong 6 times in 8 on the
      * fast writer. The same validator decides; a refusal goes to the model.
      */
-    const moneyShape = !topicComposed && !sittingSettled.composed && subject?.kind === "PERSON" && financeQuestionAsked(question)
+    const moneyShape = !topicComposed && !sittingSettled.composed && subject?.kind === "PERSON" && financeAsked
       ? moneyShapeForBoundPerson(question, inventory, subject.id, officeOf) : null;
     const moneyOther = moneyShape?.otherId ? ballotInventory.subjects.get(moneyShape.otherId)?.name ?? inventory.find((entity) => entity.id === moneyShape.otherId)?.name ?? null : null;
     const moneySettled = settleSittingComposition(

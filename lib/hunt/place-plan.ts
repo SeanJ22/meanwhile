@@ -3,6 +3,8 @@ import { readFieldManual } from "../control-plane/field-manual.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { createWorkItem, type WorkItem } from "../control-plane/work-item.ts";
 import { transitionWorkItem } from "../control-plane/repository/coordinator.ts";
+import { readHeldPlaceCapture } from "../civic-data/held-place-capture.ts";
+import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 
 export interface PlaceCapture {
   readonly subjects: readonly PlaceSubject[];
@@ -52,16 +54,17 @@ export async function planPlaceHunt(input: {
   readonly divisions: readonly { readonly id: string; readonly label: string }[];
   readonly now: string;
   readonly knowledge?: Awaited<ReturnType<typeof readFieldManual>>;
-  readonly readHeld: (divisionIds: readonly string[]) => Promise<PlaceCapture>;
+  readonly readHeld?: (divisionIds: readonly string[]) => Promise<PlaceCapture>;
+  readonly readOptions?: PromotedCivicDataReadOptions;
   readonly acquireNational: (missing: readonly PlaceOwedItem[], knowledge: Awaited<ReturnType<typeof readFieldManual>>) => Promise<PlaceCapture>;
 }) {
   const knowledge = input.knowledge ?? await readFieldManual(input.repos);
-  if (knowledge.error) throw new Error(`Shared knowledge could not be read: ${knowledge.error}`);
-  const held = await input.readHeld(input.divisions.map(d => d.id));
+  const held = await (input.readHeld ?? (ids => readHeldPlaceCapture(ids, { ...input.readOptions, now: input.now })))(input.divisions.map(d => d.id));
   const before = buildPlaceOwedList({ ...input, ...held });
   const blanks = missingPlaceWork(before);
   const national = blanks.length ? await input.acquireNational(blanks, knowledge) : { subjects: [], held: [] };
   const items = buildPlaceOwedList({ ...input, subjects: [...held.subjects, ...national.subjects], held: [...held.held, ...national.held] });
   const closed = await closePublishedPlaceWork(input.repos, items, input.now);
-  return { items, work: missingPlaceWork(items), open: openPlaceWork(items), closed, knowledge };
+  return { items, work: missingPlaceWork(items), open: openPlaceWork(items), closed, knowledge,
+    conditions: knowledge.error ? [`Shared knowledge could not be read: ${knowledge.error}`] : [] };
 }

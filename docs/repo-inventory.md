@@ -806,7 +806,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-947 file(s).
+948 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -1469,6 +1469,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/protection-state.test.ts`
 - `tests/provider-access.test.ts`
 - `tests/provider-billing.test.ts`
+- `tests/publication-receipt.test.ts`
 - `tests/publication-record-changes.test.ts`
 - `tests/questionnaire-store.test.ts`
 - `tests/questionnaire.test.ts`
@@ -1758,7 +1759,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7027 file(s).
+7028 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -8496,6 +8497,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/protection-state.test.ts`
 - `tests/provider-access.test.ts`
 - `tests/provider-billing.test.ts`
+- `tests/publication-receipt.test.ts`
 - `tests/publication-record-changes.test.ts`
 - `tests/questionnaire-store.test.ts`
 - `tests/questionnaire.test.ts`

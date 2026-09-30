@@ -4,6 +4,8 @@ import type { WorkItem } from "../control-plane/work-item.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
 import { isWorkerReaderContract } from "./worker-reader-contracts.ts";
 import { latestParserResult } from "./worker-publication-evidence.ts";
+import type { RoutineDataStore } from "./store.ts";
+import { ZERO_RELEASE_EVENTS } from "./release.ts";
 
 const HOUR = 3_600_000;
 
@@ -45,4 +47,22 @@ export function workerPublicationTasks(items: readonly WorkItem[], results: read
       contract: { readerProjection: contract.readerProjection, cadence: { description: "Publish owed work that now meets §3", defaultEveryMs: Number.POSITIVE_INFINITY } },
       ownerInvocation: { publicationPending: true, requestedAt: group.map(row => row.requestedAt).sort().at(-1)!, instructions: ["section3-publication"] } };
   });
+}
+
+/**
+ * The one runner receipt line for a publication pass: the last version this
+ * pass promoted (or confirmed unchanged), read back from the store it was
+ * written to. A pass that published nothing prints none and exits non-zero,
+ * so the runner records that nothing went live.
+ */
+export async function printWorkerPublicationReceipt(store: Pick<RoutineDataStore, "readCandidate">, source: string,
+  report: readonly { readonly outcome: NonNullable<WorkItem["publicationOutcome"]> }[]): Promise<boolean> {
+  const last = report.filter(row => row.outcome.status !== "HELD" && row.outcome.versionId).at(-1)?.outcome;
+  const created = last?.candidateId ? await store.readCandidate(last.candidateId) : null;
+  const record = created ?? (last?.versionId ? await store.readCandidate(last.versionId) : null);
+  if (!last || !record) { process.exitCode = 2; return false; }
+  console.log("RCD_RECEIPT=" + JSON.stringify({ source, candidateId: record.candidate.id, acquisitionSucceeded: record.acquisitionSucceeded,
+    state: record.state, decision: record.receipt?.decision ?? null, promotedVersion: last.versionId, lastKnownGoodVersion: record.lastKnownGoodVersion,
+    ...(created ? {} : { confirmedAt: last.at }), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+  return true;
 }

@@ -427,7 +427,7 @@ export function scoutSpendInWindow(
 
 /** Both model lanes consume the existing rolling research ceiling; deterministic USD null is not model spend. */
 export function researchSpendInWindow(costs: readonly CostEntry[], nowIso: string, windowHours = RESEARCH_BOUNDS.windowHours) {
-  return scoutSpendInWindow(costs.filter(c => c.role === "SCOUT" || (c.role === "ADVERSARIAL_AUDITOR" && c.cost.requestCount !== 0))
+  return scoutSpendInWindow(costs.filter(c => c.role === "SCOUT" || ((c.role === "ADVERSARIAL_AUDITOR" || c.role === "PARSER") && c.cost.requestCount !== 0))
     .map(c => ({ ...c, role: "SCOUT" as const })), nowIso, windowHours);
 }
 

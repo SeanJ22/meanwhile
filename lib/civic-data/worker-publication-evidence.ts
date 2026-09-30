@@ -125,3 +125,12 @@ export function validatorObservation(input: {
     linking: linkingCapture ? { url: linkingCapture.evidence.canonicalUrl, artifactId: linkingCapture.evidence.artifactId } : null,
     refusal: input.published === 0 && outcome.status === "HELD" && outcome.recovery === "WORKER" ? { code: outcome.code, detail: outcome.detail } : null };
 }
+
+/**
+ * The registry edition a door publishes. Every door shares one registry
+ * pointer, so its editions are ordered by when their sources were read
+ * (source-through), not by a label; the opaque worker form says exactly that.
+ */
+export function registryEdition(label: string): string {
+  return `worker-roster:wr-${createHash("sha256").update(label).digest("hex").slice(0, 24)}`;
+}

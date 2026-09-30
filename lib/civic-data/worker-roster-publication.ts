@@ -14,7 +14,7 @@ import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { heldDirectoryReading, materializeBodyDirectoryWork, workerBodyDirectoryPackage, type DirectoryReading } from "./worker-body-directory.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
-import { capturesForPublication, captureIntact, latestParserResult, section3SourceReceipt, validatorObservation } from "./worker-publication-evidence.ts";
+import { capturesForPublication, captureIntact, latestParserResult, registryEdition, section3SourceReceipt, validatorObservation } from "./worker-publication-evidence.ts";
 import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
 import { readHeldRoster } from "./worker-held-roster.ts";
 import { localHeldCaptureReader } from "./worker-publication-context.ts";
@@ -195,7 +195,7 @@ export function workerRosterPublication(input: {
       divisions: body.ocdId ? [body.ocdId] : [], authority: "REGISTRY_BODY_ROSTER", sourceUrl: source.sourceUrl },
       status: "NOT_CHECKED", candidacy: null, unresolvedCandidacyIds: [],
       reason: "Officeholding verified on the body's official page. Ballot candidacy remains owed; no candidacy or absence is asserted." }));
-  return { contractId: "registry-runtime-bindings", version: `section3-roster:${reading.id}`, sourceThrough: now,
+  return { contractId: "registry-runtime-bindings", version: registryEdition(`section3-roster:${reading.id}`), sourceThrough: now,
     sourceReceipt: section3SourceReceipt([capture], now, `section3-validator:${reading.id}`,
       `${reading.method}: ${members.length} member(s) with seat and name on the saved official page inside its freshness window (§3).`),
     // The source-scoped door carries unchanged bodies on their prior authority; this supplies only the verified roster.
@@ -366,7 +366,8 @@ ${readingId}`);
 ${readingId}`, outcome);
     } catch (error) {
       const reused = (error as { reused?: NonNullable<WorkItem["publicationOutcome"]> }).reused;
-      if (reused) outcome = { ...reused, at: input.now, code: "VERIFIED_RESULT_REUSED",
+      // The same reading for the same body gets the same result in one pass: its publication, or its hold.
+      if (reused) outcome = reused.status === "HELD" ? { ...reused, at: input.now } : { ...reused, at: input.now, code: "VERIFIED_RESULT_REUSED",
         detail: `The same verified reading was published for this body in this pass (${reused.versionId}). ${reused.detail}` };
       else {
       const detail = sanitizedErrorDiagnostic(error);
@@ -374,6 +375,8 @@ ${readingId}`, outcome);
       const recovery = (code.startsWith("ROSTER_") && !["ROSTER_PRIOR_READER_AUTHORITY_MISSING", "ROSTER_READER_READBACK_FAILED"].includes(code)) || code.startsWith("WORKER_PUBLICATION_") ? "WORKER" : "PUBLISHER";
       outcome = { at: input.now, workerResultId: readingId ?? "none", status: "HELD", code,
         detail: `${detail}. ${recovery === "WORKER" ? "Continue source work through the existing worker" : "Retry the publication with the verified evidence retained"}; no owner approval is required.`, recovery, candidateId, versionId };
+      // A moved base is retried by the next job for this body; any other hold is this reading's result for the pass.
+      if (readingId && code !== "PROMOTION_BASE_CHANGED") publishedByBody.set(`${bodyId}\n${readingId}`, outcome);
       }
     }
     // The data operation is already durable; failing to store this receipt never marks it published.

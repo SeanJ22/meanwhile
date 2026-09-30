@@ -5,7 +5,7 @@ import { jurisdictionDiscoveryPlan, publicCommentDiscoveryPlan } from "../contro
 import type { RegistryRuntimePackage, RegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
 import type { Body, BodyClass } from "../registry/types.ts";
 import type { JurisdictionSource } from "../hunt/jurisdiction-universe.ts";
-import { captureIntact, section3SourceReceipt, verifiedWorkerRecords, requirePublication } from "./worker-publication-evidence.ts";
+import { captureIntact, registryEdition, section3SourceReceipt, verifiedWorkerRecords, requirePublication } from "./worker-publication-evidence.ts";
 import { readHeldDirectory } from "./worker-held-directory.ts";
 import { isOfficialSource } from "./source-authority.ts";
 import { pageWords, section3Page, section3Record } from "../control-plane/promotion/section3.ts";
@@ -99,7 +99,7 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
     }
   }
   requirePublication(bodies.length > 0, `DIRECTORY_NO_ADMISSIBLE_BODY:${unresolved.join("; ")}`);
-  return { unresolved, prepared: { contractId: "registry-runtime-bindings", version: `worker-directory:${readingId}`,
+  return { unresolved, prepared: { contractId: "registry-runtime-bindings", version: registryEdition(`worker-directory:${readingId}`),
     sourceThrough: input.now, sourceReceipt: checked.sourceReceipt,
     payload: { ...input.prior.payload, registry: { ...input.prior.payload.registry, divisions: [], bodies },
       bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},

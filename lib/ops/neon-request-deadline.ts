@@ -12,11 +12,6 @@ type FetchLike = (
   init?: Parameters<typeof fetch>[1],
 ) => Promise<Response>;
 
-function deadlineSignal(prior: AbortSignal | null | undefined, timeoutMs: number): AbortSignal {
-  const timeout = AbortSignal.timeout(timeoutMs);
-  return prior ? AbortSignal.any([prior, timeout]) : timeout;
-}
-
 /**
  * Compose a real transport cancellation around a fetch implementation.
  * Unlike Promise.race, aborting the signal tells the underlying request to
@@ -29,10 +24,20 @@ export function neonRequestDeadlineFetch(
   if (!Number.isSafeInteger(timeoutMs) || timeoutMs <= 0) {
     throw new Error(`NEON_REQUEST_DEADLINE_INVALID:${timeoutMs}`);
   }
-  return async (input, init) => underlying(input, {
-    ...init,
-    signal: deadlineSignal(init?.signal, timeoutMs),
-  });
+  return async (input, init) => {
+    const deadline = new AbortController();
+    // Keep an outstanding request alive even when its transport has no active
+    // socket (including mocked transports). AbortSignal.timeout is unref'd.
+    const timer = setTimeout(() => deadline.abort(new DOMException("Neon request timed out", "TimeoutError")), timeoutMs);
+    try {
+      return await underlying(input, {
+        ...init,
+        signal: init?.signal ? AbortSignal.any([init.signal, deadline.signal]) : deadline.signal,
+      });
+    } finally {
+      clearTimeout(timer);
+    }
+  };
 }
 
 /** Install before constructing any Neon client; safe to compose with the circuit breaker. */

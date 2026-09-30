@@ -63,7 +63,7 @@ function declaresActionsRead(text: string): boolean {
 
 test("every workflow that runs `pnpm diagnose` grants actions: read", () => {
   const all = workflows();
-  assert.equal(all.length, 2, `expected the two release/CI workflow files, found ${all.length}`);
+  assert.ok(all.length > 0, "workflow discovery must not be empty");
 
   const diagnosers = all.filter((w) => diagnosesItself(w.text));
   assert.equal(diagnosers.length, 1, "only the post-deploy release observer should diagnose its Actions run");

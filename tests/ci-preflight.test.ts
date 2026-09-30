@@ -20,9 +20,6 @@ import {
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const WORKFLOW = join(ROOT, ".github", "workflows", "build-check.yml");
-const PACKAGE = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as {
-  readonly scripts?: Readonly<Record<string, string>>;
-};
 
 interface Step {
   readonly name?: string;
@@ -48,7 +45,7 @@ const EXPENSIVE = /install|playwright|browser|build|pnpm test\b/i;
 
 test("the certified suite executes owner-facing TSX projection contracts", () => {
   assert.match(
-    PACKAGE.scripts?.test ?? "",
+    readFileSync(join(ROOT, "scripts", "ci-tests.mjs"), "utf8"),
     /tests\/\*\*\/\*\.test\.tsx/,
     "the Admin runtime-outcome render test is outside pnpm test",
   );

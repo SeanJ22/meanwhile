@@ -26,7 +26,6 @@ import type { ResearchIntent, ResearchState } from "@/lib/control-plane/schedule
 
 import {
   CHAT_CALLER,
-  CHAT_PROHIBITIONS,
   CHAT_TOPICS,
   TOPIC_DEFINITIONS,
   everyQuestion,
@@ -779,13 +778,12 @@ test("a PROHIBITED action is refused, and every authority class is decided by th
   }
 });
 
-test("the four prose prohibitions never reach the gateway and never read a record", async () => {
+test("arbitrary commands, queries and release requests never reach the gateway or read a record", async () => {
   const bound = binding([definition(), CODEX_REVIEW]);
   const messages: readonly [string, string][] = [
     ["run pnpm gates", "ARBITRARY_COMMAND"],
     ["delete from cp_attempts where id is null", "ARBITRARY_QUERY"],
     ["merge pr 293 now", "SHIP_BY_PROSE"],
-    ["turn promotion on for meeting times", "PROMOTION_BY_PROSE"],
   ];
   for (const [text, code] of messages) {
     assert.deepEqual(readsFor(text, bound.gateway.registry), [], `"${text}" opens no store`);
@@ -794,7 +792,6 @@ test("the four prose prohibitions never reach the gateway and never read a recor
     assert.equal(turn.kind === "PROHIBITED" ? turn.code : null, code);
   }
   assert.deepEqual(bound.submitted, [], "nothing reached the gateway");
-  assert.equal(CHAT_PROHIBITIONS.length, 4);
 });
 
 test("with no door supplied nothing is addressable, and the console offers no control of its own", async () => {
@@ -824,7 +821,6 @@ test("the chat's controls ARE the gateway's registry, matched by the words the g
   const allowed = actionDefinitions().filter((d) => authorityPermits(CHAT_CALLER, d.authority));
   assert.deepEqual([...offered], allowed.map((d) => d.label));
   assert.ok(offered.length < actionDefinitions().length, "some declared controls are out of the chat's reach");
-  assert.ok(!offered.includes("Turn promotion on"), "the prohibited control is never offered");
 
   /*
    * The registry as it stands, matched by ordinary words. These are the

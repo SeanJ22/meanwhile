@@ -1,3 +1,5 @@
+> Historical implementation record. This is not current policy or a release requirement. Read docs/rulings.md §0, §3 and §5 for current instructions.
+
 # The pilot runner — the machine that keeps running
 
 *(Session C, PART G2, 2026-08-31. Operative code: `scripts/pilot-runner.mts`,

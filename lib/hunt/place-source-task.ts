@@ -41,7 +41,8 @@ export async function runNationalPlaceTask(input: {
     const occurrenceId = "id" in opened ? opened.id : opened.occurrence.id;
     const scheduled = scheduleObligation(definition, Date.parse(now));
     if (!("cadenceHours" in scheduled)) throw new Error(scheduled.reason);
-    const ttlMs = RESEARCH_BOUNDS.perDispatch.maxWallMs;
+    // A renewable ownership lease, independent of how long acquisition takes.
+    const ttlMs = 120_000;
     let report: Awaited<ReturnType<typeof runPlaceSource>> | undefined;
     const result = await dispatchOne(tools.repos, { obligation: scheduled, routeTaskId, holder, now, clock: tools.now,
       leaseTtlMs: ttlMs, maturity: () => "GRADUATED", executor: {
@@ -61,7 +62,7 @@ export async function runNationalPlaceTask(input: {
               obligation: scheduled, route: null, providerId: null, attemptId, workItemId, routeTaskId, holder, now: tools.now,
               // This finite national walk is plain code; it retains the shared
               // ten-request limit for each website.
-              bound: { ...RESEARCH_BOUNDS.perDispatch, maxToolCalls: Infinity, maxWallMs: Infinity },
+              bound: RESEARCH_BOUNDS.perDispatch,
             } });
             const geographyRequests = new Map<string, number>();
             report = await runPlaceSource({ repos: tools.repos, store: input.store, zip, now, clock: tools.now, knowledge,

@@ -60,7 +60,7 @@ test("a place with no prepared registry gets its Census divisions, their bodies 
   assert.deepEqual(result.divisions, [`${OH}/place:columbus`, `${OH}/sldl:7`]);
   assert.deepEqual(result.bodies, [`${OH}/place:columbus#governing`, `${OH}/sldl:7#seat`]);
   assert.deepEqual(result.members.map(m => [m.bodyId, m.discoveryIds]), [[OH, ["dewine"]], [`${OH}/sldl:7#seat`, ["russo"]]]);
-  assert.deepEqual(result.gaps.map(g => g.key).sort(), ["division:" + OH, "official:unsaved"]);
+  assert.deepEqual(result.gaps.map(g => g.key).sort(), ["official:unsaved"]);
   assert.ok(result.promotedVersionId);
   // A door package speaks only for its own members: the thousands it omits are retained, not listed as excluded (the 313 MB candidate).
   const written = (await s.readCandidate(result.candidateId!))!;
@@ -95,5 +95,5 @@ test("an official page whose text is not the saved bytes is a named gap, and the
     { discoveryId: "dewine", divisionId: OH, name: "Mike DeWine", officeTitle: "Governor", officialUrl: governorUrl, document: { url: governorUrl, capture: altered } }] } });
   assert.match(result.gaps.find(g => g.key === "official:dewine")!.detail, /^OFFICIAL_PAGE_UNUSABLE:CONTENT_HASH_MISMATCH/);
   const delivered = nationalDelivery([result]);
-  assert.deepEqual([delivered.records, delivered.gaps.length, delivered.versionId === result.promotedVersionId], [0, 2, true]);
+  assert.deepEqual([delivered.records, delivered.gaps.length, delivered.versionId === result.promotedVersionId], [0, 1, true]);
 });

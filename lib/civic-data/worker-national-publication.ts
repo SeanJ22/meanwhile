@@ -161,6 +161,9 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
   const divisions: Division[] = [], bodies: Body[] = [], used = new Set<string>();
   const officialDivisions = new Set(input.sources.officials.map(o => o.divisionId));
   for (const row of input.divisions) {
+    // These scope identities have separate federal/statewide readers; they are
+    // not missing polygon rows in the district/body registry.
+    if (row.divisionType === "country" || row.divisionType === "state") continue;
     const division = heldDivisions.get(row.id) ?? divisionRow(row, input.geographyCaptures, input.now);
     if (typeof division === "string") { gaps.push({ key: `division:${row.id}`, detail: division }); continue; }
     if (!heldDivisions.has(row.id)) { divisions.push(division); used.add(row.sourceUrl); }

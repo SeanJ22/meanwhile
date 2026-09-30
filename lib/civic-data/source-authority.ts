@@ -12,6 +12,46 @@ import {
  */
 
 /**
+ * The official-page linking the source, as saved bytes. It may itself be
+ * vouched for by a page that links to it.
+ */
+export interface OfficialLinkingPage {
+  readonly url: string;
+  readonly html: string;
+  readonly linkingPage?: OfficialLinkingPage | null;
+}
+
+// Plain string parsing: this runs inside the isolated Validator realm, which has no URL global.
+const hostOf = (url: string, base?: string): string | null => {
+  const absolute = /^(https?):\/\/([^/?#\s]+)/i.exec(url.trim());
+  if (absolute) {
+    const host = absolute[2].replace(/^[^@]*@/, "").replace(/:\d*$/, "").toLowerCase();
+    return /^[a-z0-9.-]+$/.test(host) ? host.replace(/^www\./, "") : null;
+  }
+  if (/^[a-z][a-z0-9+.-]*:/i.test(url.trim())) return null; // mailto:, tel:, javascript: — not a page
+  if (url.trim().startsWith("//")) return hostOf(`https:${url.trim()}`);
+  return base === undefined ? null : hostOf(base);
+};
+
+/**
+ * Whether a page is an official government source (Sean, 2026-09-29). Any
+ * `.gov` site is official automatically. Any other site — a vendor-hosted
+ * government portal (Legistar, CivicPlus, BoardDocs, Granicus) or a government
+ * site on `.us`, `.org` or `.com` — is official once an official government
+ * page links to it. There is no host list: the link is the evidence.
+ */
+export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage | null): boolean {
+  const host = hostOf(url);
+  if (host === null) return false;
+  if (/(^|\.)gov$/.test(host)) return true;
+  if (!linkingPage || !isOfficialSource(linkingPage.url, linkingPage.linkingPage)) return false;
+  for (const match of linkingPage.html.matchAll(/\b(?:href|src)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi)) {
+    if (hostOf((match[1] ?? match[2] ?? match[3]).replace(/&amp;/g, "&"), linkingPage.url) === host) return true;
+  }
+  return false;
+}
+
+/**
  * OWNER POLICY (Sean, 2026-09-21) — official-government auto-qualification.
  *
  * An official government publisher qualifies BY DEFAULT for automatic ingestion

@@ -1,7 +1,16 @@
 /** Installed, reviewed platform code runs against held source bytes. */
 import { readdir } from 'node:fs/promises';
+import {readFileSync} from 'node:fs';
+import {contentHash} from '../ids.ts';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 const directory = new URL('../../sources/platform-adapters/', import.meta.url);
+/** The implementation version travels in the existing Scout rung, so a replaced adapter can wake its work. */
+export function installedAdapterVersion(name:string):string|null {
+  if(!/^[a-z0-9-]+$/.test(name))return null;
+  for(const extension of ['ts','mjs'])try{return contentHash(readFileSync(new URL(name+'.'+extension,directory),'utf8'));}
+  catch(error){if((error as NodeJS.ErrnoException).code!=='ENOENT')throw error;}
+  return null;
+}
 export async function installedAdapters(): Promise<string[]> {
   try { return (await readdir(directory)).filter(name => /\.(ts|mjs)$/.test(name) && !name.includes('.test.')).map(name => name.replace(/\.(ts|mjs)$/, '')).sort(); }
   catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return []; throw error; }

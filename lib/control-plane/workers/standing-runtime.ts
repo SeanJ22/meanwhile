@@ -63,8 +63,6 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const [prior, priorWorkers] = await Promise.all([
     input.repos.scoutResults.readAll(), readCompletedWorkerResults(input.repos),
   ]);
-  // Plain-code Engineer work consumes the same persisted adapter queue before another Scout can retry it.
-  await workAdapterQueue({repos:input.repos,results:prior,now:now()});
   const knowledge=readMethodStore(join(input.root,"data","method","knowledge.json"));
   for (const row of await input.repos.workItems.list()) {
     const plan = row.value.autonomousPlan;
@@ -80,6 +78,9 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const inheritedManualStores = new Map<string, FieldManualStore>();
   const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly availableIds: readonly string[]; readonly lines: readonly string[] }>();
   const heldRuntime = standingFleetRuntime({...input,siblingHeldRootFor: held=>siblingHeldRootFor(held)});
+  // Held data and plain adapters first; generated adapters use the same guarded area transport as research.
+  await workAdapterQueue({repos:input.repos,results:prior,now:now(),readEvidence:async id=>evidenceProjection(await heldRuntime.readEvidence(id)),
+    ...(input.transportFor?{transportFor:result=>input.transportFor!({subjectId:result.subjectId,state:scoutStateHint(result.subjectId,result.obligationId)[0]??null})}:{})});
   const readRepairCapture = researchVaultResolver(input.repos, tools.store, "freshness");
   const installed = promotedRegistries();
   const registeredPublisherAddressFor = (subjectId:string):string|null => {

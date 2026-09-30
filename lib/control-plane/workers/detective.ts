@@ -1,5 +1,7 @@
 import { SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION } from "../scheduler/scout-result.ts";
 import { scoutExecutor } from "../scheduler/scout-executor.ts";
+import { ZERO_COST } from "../attempt.ts";
+import {installedAdapters,installedAdapterVersion} from '../scheduler/scout-adapters.ts';
 import { requireCapability } from "../capability.ts";
 import { contentHash } from "../ids.ts";
 import { indexJson } from "./parser.ts";
@@ -123,7 +125,9 @@ export function detectiveExecutor(deps: import('../scheduler/scout-executor.ts')
 }
 
 /** Both Scout lanes use the same failure responder and keep their existing budgets and tools. */
-export function failureResponderExecutor(deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps): import('../scheduler/dispatch.ts').DeclaredExecutor {
+export function failureResponderExecutor(deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps & {
+  solved?: import('../scheduler/scout-result.ts').ScoutResult | null;
+}): import('../scheduler/dispatch.ts').DeclaredExecutor {
   const contexts=new Map<string,{value?:ReturnType<typeof deps.contextFor>;error?:unknown}>();
   const contextFor: typeof deps.contextFor = row=>{
     let saved=contexts.get(row.obligation.id);
@@ -136,10 +140,28 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
     try {
       const inherited=contextFor(row).inherited;
       return (inherited.priorRungs ?? []).some(r=>r.ok===false || /transport failure|HTTP [45]\d\d|NOT VAULTED/i.test(r.observed)) ||
-        /REFUSED:|failed parse|REQUIRED_FIELD_MISSING|blocked route|retry loop/i.test(inherited.summary) ? detective : scout;
+        /\b(?:REFUSED|BLOCKED|NO_PROGRESS|NEEDS_ADAPTER|REQUIRED_FIELD_MISSING)\b|failed parse|blocked route|retry loop/i.test(inherited.summary) ? detective : scout;
     } catch { return scout; }
   };
-  return {lane:'BOUNDED_MODEL_WORKER',workerFor:input=>choose(input.obligation).workerFor!(input),run:input=>choose(input.obligation).run(input)};
+  const held=deps.solved;
+  return {lane:held?'DETERMINISTIC':'BOUNDED_MODEL_WORKER',workerFor:input=>held
+    ? {role:'ACQUIRER',provider:'we-the-people',version:'held-subject-route',instance:input.holder}
+    : choose(input.obligation).workerFor!(input),run:async input=>{
+      if (!held) return choose(input.obligation).run(input);
+      // Discovery is solved; reuse its route without pretending old facts were freshly fetched.
+      return {ranAs:'DETERMINISTIC',kind:'DISPOSED',artifacts:[],endedAt:deps.now?.()??new Date().toISOString(),
+        cost:{...ZERO_COST,inputTokens:0,outputTokens:0,usd:0,durationMs:0,bytesFetched:0,requestCount:0},
+        disposition:{disposition:'DISCOVERED',observation:null,permission:'NOT_APPLICABLE',transport:'REACHABLE',
+          note:`Reuse solved subject/class from ${held.attemptId}; acquisition and verification remain owed. Sources: ${reusableScoutCandidates(held).map(c=>c.url).join(', ')}`},
+        detail:`HELD_SUBJECT_REUSED: ${held.attemptId}; no Scout or model request; original observation ${held.recordedAt}`};
+    }};
+}
+
+/** A later real failure reopens investigation; an accepted source route is never scouted again. */
+export function solvedScoutResult(results: readonly import('../scheduler/scout-result.ts').ScoutResult[],subjectId:string,recordClass:string) {
+  const latest=subjectScoutHistory(results,subjectId,recordClass).at(-1);
+  return latest?.refusal===null && ['ROUTE_CANDIDATE','EVIDENCE_FOUND'].includes(latest.outcome) &&
+    reusableScoutCandidates(latest).length>0 ? latest : null;
 }
 
 /** The latest result for a civic subject serves all work items for that subject and class. */
@@ -147,15 +169,59 @@ export function subjectScoutHistory(results: readonly import('../scheduler/scout
   return results.filter(result=>result.subjectId===subjectId && result.recordClass===recordClass)
     .sort((a,b)=>a.recordedAt.localeCompare(b.recordedAt));
 }
+
+/** Locate cross-job history with small identity projections, then read only this batch's recent source context. */
+export async function readSubjectScoutHistory(repos:import('../repository/types.ts').ControlPlaneRepositories,
+  subjects:readonly {subjectId:string;recordClass:string}[]):Promise<import('../scheduler/scout-result.ts').ScoutResult[]> {
+  const wanted=new Set(subjects.map(s=>s.subjectId+'\u0000'+s.recordClass));
+  const keys=await repos.scoutResults.keys();
+  const identities=await repos.scoutResults.readLatest(keys,{subjectId:true,recordClass:true});
+  const results:import('../scheduler/scout-result.ts').ScoutResult[]=[];
+  const projection=Object.fromEntries(['formatVersion','attemptId','obligationId','routeTaskId','workItemId','subjectId','routeId',
+    'recordClass','providerId','reason','outcome','stoppedBy','rungs','distinctEvidenceRungs','candidates','findings','nextRungs',
+    'unverified','narrative','worker','usage','usd','elapsedMs','artifactIds','recoveryCapabilityVersion','methodCandidateIds',
+    'refusal','startedAt','recordedAt','researchRole'].map(key=>[key,true as const]));
+  for(const [key,value] of identities) {
+    const identity=value as {subjectId?:string;recordClass?:string};
+    if(!identity?.subjectId || !identity.recordClass || !wanted.has(identity.subjectId+'\u0000'+identity.recordClass))continue;
+    const rows=await repos.scoutResults.readRecentWhere(key,['recordClass'],identity.recordClass,2,projection);
+    for(const row of rows) {
+      const result=row as import('../scheduler/scout-result.ts').ScoutResult;
+      if(result?.subjectId===identity.subjectId && result.recordClass===identity.recordClass && Array.isArray(result.rungs) &&
+        Array.isArray(result.candidates) && Array.isArray(result.findings))results.push(result);
+    }
+  }
+  return results;
+}
 export function investigationRole(results: readonly import('../scheduler/scout-result.ts').ScoutResult[], failedWorkers:boolean): 'SCOUT'|'DETECTIVE' {
   return failedWorkers || results.some(result=>result.refusal !== null || ['BLOCKED','NO_PROGRESS','NEEDS_ADAPTER'].includes(result.outcome)) ? 'DETECTIVE':'SCOUT';
 }
+function hasUntriedAdapter(latest:import('../scheduler/scout-result.ts').ScoutResult|undefined,installed:readonly string[]) {
+  const description = latest ? [latest.narrative,...(latest.nextRungs ?? []),...(latest.candidates ?? []).map(c=>c.routeId)].join(' ').toLowerCase() : '';
+  return installed.some(name=>(description.includes(name) || (name==='uncapped-source-links' && /uncapped.link|raw.html extraction|verified webpages/.test(description)) || (name==='dated-sitemap' && /streamline|dated.sitemap/.test(description))) &&
+    !(latest?.rungs??[]).some(r=>r.tool==='run_adapter' && r.observed.includes(name+'@'+installedAdapterVersion(name))));
+}
 export function adapterWaitReason(results: readonly import('../scheduler/scout-result.ts').ScoutResult[], installed: readonly string[] = []): string|null {
   const latest=results.at(-1);
-  const description = latest ? [latest.narrative,...(latest.nextRungs ?? []),...(latest.candidates ?? []).map(c=>c.routeId)].join(' ').toLowerCase() : '';
-  if (installed.some(name=>description.includes(name) || (name==='uncapped-source-links' && /uncapped.link|raw.html extraction|verified webpages/.test(description)) || (name==='dated-sitemap' && /streamline|dated.sitemap/.test(description)))) return null;
+  if(hasUntriedAdapter(latest,installed))return null;
   return latest?.refusal === null && latest.outcome === 'NEEDS_ADAPTER' && latest.recoveryCapabilityVersion === SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION
     ? 'AWAITING_ADAPTER: '+latest.narrative+'; Engineer owns this work. Resume when its adapter is available.' : null;
+}
+
+/** Reopen adapter waits only when a matching installed implementation has not already been tried. */
+export async function wakeInstalledAdapterDebts(repos:import('../repository/types.ts').ControlPlaneRepositories,
+  debts:readonly import('../scheduler/debt.ts').FreshnessDebt[],now:string) {
+  const waiting=debts.filter(debt=>debt.cause==='AWAITING_ADAPTER');
+  if(!waiting.length)return debts;
+  const adapters=await installedAdapters();
+  const latest=await repos.scoutResults.readLatest(waiting.map(debt=>debt.obligationId),{
+    refusal:true,outcome:true,recoveryCapabilityVersion:true,narrative:true,nextRungs:true,candidates:true,rungs:true});
+  return debts.map(debt=>{
+    const result=latest.get(debt.obligationId) as import('../scheduler/scout-result.ts').ScoutResult|undefined;
+    if(debt.cause!=='AWAITING_ADAPTER' || !result || result.outcome!=='NEEDS_ADAPTER' || result.refusal!==null ||
+      !hasUntriedAdapter(result,adapters))return debt;
+    return {...debt,cause:'EXTRACTION_FAILED' as const,retryAt:now,detail:debt.detail+'; installed adapter changed: Detective can try the saved bytes.'};
+  });
 }
 
 /** A completed failed worker reaches Detective before the same acquisition is retried. */

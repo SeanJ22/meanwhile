@@ -15,6 +15,7 @@ import {
   resolveAskModel,
 } from "../lib/ask/model.ts";
 import { synthesisRequestBody } from "../lib/ask/synthesize.ts";
+import { MODELS } from "../lib/models.ts";
 import type { EvidencePack } from "../lib/ask/evidence.ts";
 
 /**
@@ -95,7 +96,7 @@ test("a set override is honoured, and is REPORTED as an override", () => {
    * and that is exactly why the value must not be hardcoded here at runtime.
    */
   const current: string = ASK_SYNTHESIS_MODEL;
-  const other = current === "claude-sonnet-5" ? "claude-opus-5-5" : "claude-sonnet-5";
+  const other = current === MODELS.sonnet.model ? MODELS.opus.model : MODELS.sonnet.model;
   const env = { [ASK_MODEL_ENV]: other };
   assert.notEqual(other, ASK_SYNTHESIS_MODEL, "the override must differ from the default");
   assert.equal(resolveAskModel(env), other);

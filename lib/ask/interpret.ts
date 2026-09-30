@@ -1,7 +1,9 @@
 import { scrubFreeText } from "../log/scrub.ts";
 import { resolveAskRoleModel, ASK_MODEL_ROLES } from "./model.ts";
-import { askRequestFields, servedModelOf } from "./model-registry.ts";
+import { modelRequestFields, servedModelOf } from "../models.ts";
 import { asksForBodyAgenda } from "../routing/named-entity.ts";
+import { askHedgeMs, hedgedFetch } from "./hedged-fetch.ts";
+import { SYNTHESIS_CACHE_TTL } from "./prompt-cache.ts";
 
 import {
   readInterpretation,
@@ -173,24 +175,22 @@ export function interpretSchema(): Record<string, unknown> {
  * The instruction. About READING, never about answering — the words "answer",
  * "explain" and "advise" are absent on purpose, exactly as they are in the
  * topic classifier's prompt, because this rung is not doing any of those.
+ *
+ * **TWO PARTS, THE ZIP'S CONTEXT FIRST.** (2026-09-29, S3.) The stable part is
+ * the instructions and the governments and people this ZIP's reader could be
+ * naming; it is byte-identical for every question asked from one ZIP and is the
+ * cached prefix. Today's date, where the reader says they are and what they are
+ * looking at follow it, so a new day or a new surface never invalidates the
+ * ZIP's cached context. (Before, the date sat on the second line, ahead of the
+ * inventory: nothing here could ever be a cache hit across midnight.)
  */
-export function interpretPrompt(context: InterpretContext): string {
+export function interpretSystem(context: InterpretContext): { stable: string; volatile: string } {
   const inventory = context.inventory
     .slice(0, MAX_INVENTORY)
     .map((e) => (e.divisionType ? `${e.name} (${e.divisionType})` : e.name));
 
-  return [
+  const stable = [
     "You are reading one question a resident asked about their government, and reporting what it MEANS. You are not answering it and you will not be shown any records.",
-    "",
-    `Today is ${context.today}.`,
-    context.approximateLocation
-      ? `The reader has told us they are in ${context.approximateLocation}.`
-      : "The reader has not told us where they are.",
-    context.surface === "BALLOT"
-      ? "They are looking at their ballot."
-      : context.surface === "MAP"
-        ? "They are looking at the map of governments near them."
-        : "",
     "",
     "Governments and people this product holds records for, as a reader would name them:",
     ...(inventory.length > 0 ? inventory.map((n) => `- ${n}`) : ["(none available)"]),
@@ -203,9 +203,26 @@ export function interpretPrompt(context: InterpretContext): string {
     "- referent: if the question uses a pronoun that depends on something said earlier, the name it refers to; otherwise null.",
     "",
     "Be literal. 'What did they discuss last time' is LAST, not NEXT. 'What's on the agenda' with no other time words is NEXT.",
-  ]
-    .filter((line) => line !== "")
-    .join("\n");
+  ].join("\n");
+
+  const volatile = [
+    `Today is ${context.today}.`,
+    context.approximateLocation
+      ? `The reader has told us they are in ${context.approximateLocation}.`
+      : "The reader has not told us where they are.",
+    context.surface === "BALLOT"
+      ? "They are looking at their ballot."
+      : context.surface === "MAP"
+        ? "They are looking at the map of governments near them."
+        : "",
+  ].filter((line) => line !== "").join("\n");
+  return { stable, volatile };
+}
+
+/** The whole instruction as one string: the stable part, then the volatile one. */
+export function interpretPrompt(context: InterpretContext): string {
+  const { stable, volatile } = interpretSystem(context);
+  return `${stable}\n\n${volatile}`;
 }
 
 export interface InterpretOptions {
@@ -232,8 +249,9 @@ export async function interpretQuestion(
   const impl = options.fetchImpl ?? fetch;
   /* Resolved once: the same id is sent and recorded. */
   const model = askModel();
-  const fields = askRequestFields(model, { thinking: ASK_MODEL_ROLES.READER.thinking, effort: ASK_MODEL_ROLES.READER.effort });
+  const fields = modelRequestFields(model, { thinking: ASK_MODEL_ROLES.READER.thinking, effort: ASK_MODEL_ROLES.READER.effort });
   const priorTurns = (context.priorTurns ?? []).slice(-MAX_PRIOR_TURNS);
+  const system = interpretSystem(context);
 
   /*
    * The conversation rides as real turns rather than as a blob inside the
@@ -269,18 +287,18 @@ export async function interpretQuestion(
   });
 
   try {
-    const response = await impl(MESSAGES_URL, {
+    // A bounded wait (2026-09-24): an unbounded model call is how the first
+    // live Pima request outlived the platform limit and reached the reader as
+    // "that didn't reach us". Past the bound, the deterministic reading
+    // stands in, exactly as it does for any other unavailable model. A reading
+    // that has not answered by the hedge time is asked again (lib/ask/hedged-fetch.ts).
+    const response = await hedgedFetch(impl, MESSAGES_URL, {
       method: "POST",
       headers: {
         "content-type": "application/json",
         "x-api-key": apiKey,
         "anthropic-version": "2023-06-01",
       },
-      // A bounded wait (2026-09-24): an unbounded model call is how the first
-      // live Pima request outlived the platform limit and reached the reader as
-      // "that didn't reach us". Past the bound, the deterministic reading
-      // stands in, exactly as it does for any other unavailable model.
-      signal: AbortSignal.timeout(ASK_INTERPRET_TIMEOUT_MS),
       body: JSON.stringify({
         model,
         max_tokens: Math.max(1024, fields.minMaxTokens),
@@ -291,10 +309,14 @@ export async function interpretQuestion(
           ...(fields.effort ? { effort: fields.effort } : {}),
           format: { type: "json_schema", schema: interpretSchema() },
         },
-        system: interpretPrompt(context),
+        /* The ZIP's context is the cached prefix; the date and the surface follow it (interpretSystem). */
+        system: [
+          { type: "text", text: system.stable, cache_control: SYNTHESIS_CACHE_TTL.cacheControl },
+          { type: "text", text: system.volatile },
+        ],
         messages,
       }),
-    });
+    }, { hedgeAfterMs: askHedgeMs(), timeoutMs: ASK_INTERPRET_TIMEOUT_MS });
     if (!response.ok) return { kind: "UNAVAILABLE", why: "error", ms: elapsed() };
 
     const body = (await response.json()) as {

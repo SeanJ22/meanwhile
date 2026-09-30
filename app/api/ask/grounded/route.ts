@@ -2,6 +2,7 @@ import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
 import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "@/lib/registry/runtime-edge";
 import { AUTHORITY_FAMILIES, type AuthorityFamily, type PromotedAuthorityFamily } from "@/lib/meetings/edge-artifacts";
+import { READER_MAP_AUTHORITY_FAMILIES } from "@/lib/meetings/edge-serving";
 import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
@@ -51,7 +52,11 @@ import { formatDateLong } from "@/lib/text/format-date";
 import { unavailableInterpretation, type AskIntent, type AskInterpretation, type AskTemporal } from "@/lib/ask/intent";
 import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-question";
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
-import { groupMoneyShapeForBoundSubject, lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, shapeForBoundBody } from "@/lib/ask/lexical-reading";
+import { groupMoneyShapeForBoundSubject, lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, personVotesShapeForBoundPerson, shapeForBoundBody } from "@/lib/ask/lexical-reading";
+import { composePersonVotes } from "@/lib/ask/person-votes";
+import { composeBodyRoster, composeReaderOfficials, placeNamesOf, readerOfficialsQuestion } from "@/lib/ask/reader-officials";
+import { areaMeetingsQuestion, composeAreaMeetings, type AreaSitting } from "@/lib/ask/area-meetings";
+import { ballotQuestionShape, composeBallotSummary, composeOfficeField, contestsOfOffice } from "@/lib/ask/ballot-summary";
 import { composeSittingAnswerWithBasis, settleSittingComposition, sittingVenue, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
 import { composeGroupMoneyAnswer, composeMoneyAnswer, composeNoRaceMoneyAnswer, contestFitsBody, moneyQuestionShape } from "@/lib/ask/money-answer";
 import { codeBestReading, speculationVerdict, type ReadingOutcome } from "@/lib/ask/speculative-reading";
@@ -108,7 +113,7 @@ import {
   interpretationCacheKey,
   synthesisCacheKey,
 } from "@/lib/ask/model-result-cache";
-import { escalationFirstReason, ladderIdentity, synthesisLadder, synthesizeWithLadder, type LadderResult } from "@/lib/ask/synthesize";
+import { ladderIdentity, synthesisLadder, synthesizeWithLadder, type LadderResult } from "@/lib/ask/synthesize";
 import { writerSelection } from "@/lib/ask/writer-selection";
 import { sittingsOnSameLocalDay, selectSitting, type AgendaSelection } from "@/lib/ask/select";
 import { meetingDateInQuestion } from "@/lib/ask/meeting-date";
@@ -144,7 +149,9 @@ import {
 import { agendaTopicEvidence } from "@/lib/ask/agenda-topic";
 import { gateContactsToSubject, gateRecordsToSubject } from "@/lib/ask/relevance";
 import {
+  asksOnlyMoney,
   financeQuestionAsked,
+  financeQuestionAskedFor,
   financeRegimeNotesFor,
   financeScopeGapFor,
   localFinanceEvidenceFor,
@@ -712,13 +719,30 @@ export async function POST(request: Request) {
    * request or relabelling every unrelated source as unavailable.
    */
   const topicRoute = topicFocusedQuestion(question);
+  /* "Who is my state senator?": a lookup in the officeholders held for the reader's divisions (lib/ask/reader-officials.ts). It reads the registry and the federal directory and nothing else. */
+  const officialsAsk = !topicRoute && ocdIds.length > 0 ? readerOfficialsQuestion(question, statesOf(ocdIds).map((state) => state.toLowerCase()), placeNamesOf(ocdIds)) : null;
+  /* "What meetings are happening this week?": the sittings held for the reader's divisions (lib/ask/area-meetings.ts). It reads the registry and the calendar and nothing else. */
+  /* Not when the reader has a card open: "is there a meeting soon?" is then about that body. An earlier turn does not change it — the shapes name no body and carry no pronoun. */
+  const areaMeetingsAsk = !topicRoute && !officialsAsk && ocdIds.length > 0 &&
+    readSubjectRefs(body.activeSubjects).every((ref) => !ref.focused)
+    ? areaMeetingsQuestion(question) : null;
+  /* Both answer from the registry and what is already held for the reader's divisions: no ballot, no money, no votes, no recorded outcomes. */
+  const leanAsk = Boolean(officialsAsk || areaMeetingsAsk);
   // A shape is only a scheduling hint here. The complete subject inventory
   // still loads, and lexicalReading below must prove the body binding before
   // unrelated evidence may stay unread. A failed/ambiguous binding restores
   // every family before the normal interpretation and retrieval path runs.
-  const sittingShapes = new Set(["MEETING_TIME", "BODY_AGENDA", "MEETING_OUTCOME"]);
-  const deferUnrelatedEvidence = !topicRoute && sittingShapes.has(lexicalQuestionShape(question)?.shape ?? "");
-  const unrelatedFamilies = new Set<AuthorityFamily>(["pima-finance", "federal-votes", "federal-key-votes", "officeholder-statements", "executive-actions"]);
+  const sittingShapes = new Set(["MEETING_TIME", "BODY_AGENDA", "MEETING_OUTCOME", "PUBLIC_COMMENT"]);
+  /* Shapes whose subject is never a person: their answer reads no vote, statement or action record, and no county finance
+     unless it is a money question. Deferred the same way the sitting shapes are, on the same proof (2026-09-29, S3). */
+  const noPersonRecordShapes = new Set([...sittingShapes, "BODY_ROSTER", "BODY_CIVICS", "MEASURE_EXPLAIN", "CONTEST_FIELD"]);
+  const deferShape = !topicRoute && !financeQuestionAsked(question) && noPersonRecordShapes.has(lexicalQuestionShape(question)?.shape ?? "");
+  /* A question about a person's campaign money and nothing they did in office reads none of their votes, key votes,
+     statements or actions (`moneyOnly` below), whoever the subject turns out to be: no proof is needed to leave them unread. */
+  const deferPersonRecords = !topicRoute && !deferShape && asksOnlyMoney(question);
+  const deferUnrelatedEvidence = deferShape || deferPersonRecords;
+  const personRecordFamilies = ["federal-votes", "federal-key-votes", "officeholder-statements", "executive-actions"] as const;
+  const unrelatedFamilies = new Set<AuthorityFamily>(deferShape ? ["pima-finance", ...personRecordFamilies] : personRecordFamilies);
   /*
    * **WHICH READ A COLD REQUEST WAITS ON, NAMED.** (2026-09-24, C20.) A cold
    * Pima topic request spent 2,525 ms in `sourcePreloads` with no breakdown,
@@ -757,9 +781,9 @@ export async function POST(request: Request) {
   const onEdge = (family: AuthorityFamily) => Boolean(edgeManifest?.authorityArtifacts?.[family]);
   // Each database read is observed at once, so a failure while the edge is
   // fetched is never an unhandled rejection; the settle below still records it.
-  const outcomesFromDatabase = onEdge("meeting-outcomes") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
+  const outcomesFromDatabase = leanAsk || onEdge("meeting-outcomes") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
   outcomesFromDatabase?.catch(() => undefined);
-  const commentAccessFromDatabase = production && !onEdge("comment-access")
+  const commentAccessFromDatabase = production && !leanAsk && !onEdge("comment-access")
     // Public-comment rules are an independent optional family. Initialize its
     // pointer, but do not let a store outage suppress meetings, ballots,
     // officials, or any other source's answer.
@@ -770,7 +794,8 @@ export async function POST(request: Request) {
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
   if (edgeManifest?.authorityArtifacts) {
     authorityEdge = await timed("authorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined,
-      deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => !unrelatedFamilies.has(family)) : AUTHORITY_FAMILIES).catch(() => null))();
+      leanAsk ? READER_MAP_AUTHORITY_FAMILIES
+        : deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => !unrelatedFamilies.has(family)) : AUTHORITY_FAMILIES).catch(() => null))();
     if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
   }
   const essentialPreloads = [
@@ -828,13 +853,16 @@ export async function POST(request: Request) {
     stateVotesRead ??= settleGroundedSourcePreloads([...stateVoteScopes].map((scope) => timed(`stateVotes:${scope}`, () => refreshStateVotesFromPromoted(scope))));
     return stateVotesRead;
   };
-  const unrelatedPreloads = [
-    timed("azPimaFinance", settleAzPimaFinanceRead),
+  const pimaFinancePreload = timed("azPimaFinance", settleAzPimaFinanceRead);
+  const personRecordPreloads = [
     timed("federalVotes", settleFederalVotesRead),
     timed("federalKeyVotes", settleFederalKeyVotesRead),
     timed("officeholderStatements", settleOfficeholderStatementsRead),
     timed("executiveActions", settleExecutiveActionsRead),
   ];
+  const unrelatedPreloads = [pimaFinancePreload, ...personRecordPreloads];
+  /* What this question lets the request leave unread: every unrelated source, or only a person's records. */
+  const skippedPreloads = deferShape ? unrelatedPreloads : deferPersonRecords ? personRecordPreloads : [];
   const deferrablePreloads = [
     () => { deferrableSourcesLoaded = true; return Promise.resolve(); },
     timed("funding", settleFundingRead),
@@ -842,9 +870,10 @@ export async function POST(request: Request) {
     timed("azBallot", async () => promotedVersionOrThrow(await settleAzBallotRead())),
     timed("candidateProfiles", settleCandidateProfilesRead),
     timed("candidateCorpus", settleCandidateCorpusRead),
-    ...(!deferUnrelatedEvidence ? unrelatedPreloads : []),
+    ...unrelatedPreloads.filter((preload) => !skippedPreloads.includes(preload)),
   ];
-  await settleGroundedSourcePreloads(topicRoute ? essentialPreloads : [...essentialPreloads, ...deferrablePreloads]);
+  /* The registry and the federal directory are the first two; an officials lookup needs no other source. */
+  await settleGroundedSourcePreloads(topicRoute ? essentialPreloads : leanAsk ? essentialPreloads.slice(0, 2) : [...essentialPreloads, ...deferrablePreloads]);
   // The recorded outcomes are what a topic answer leads with. A cold read that
   // failed (a transient connect timeout on the first request) is retried once
   // rather than silently answering from agenda lines alone. A retry that
@@ -953,7 +982,7 @@ export async function POST(request: Request) {
     }
     if (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute) await settleGroundedSourcePreloads(deferrablePreloads);
   }
-  trace.sourcesLoaded = !topicRoute || (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute) ? "ALL" : "ESSENTIAL";
+  trace.sourcesLoaded = leanAsk ? "ESSENTIAL" : !topicRoute || (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute) ? "ALL" : "ESSENTIAL";
   const officeholders = await readerOfficeholders(ocdIds, scopedBodies.map((body) => body.bodyId));
   let namedPeople = 0;
   try {
@@ -988,7 +1017,7 @@ export async function POST(request: Request) {
    */
   // A topic question bound lexically to a body is not a ballot question; its
   // ballot is not read (loadBallotForDivisions([]) is the empty holding).
-  const ballot = await loadBallotForDivisions(deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute ? [] : ocdIds);
+  const ballot = await loadBallotForDivisions(deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk ? [] : ocdIds);
   const ballotLoadGaps: EvidenceGap[] = ballot.loaderFailures.length ? [{ whose: "OURS", statement: "The canonical ballot records for this area could not be read for this answer. That is a failure of our holding, not a statement that no candidates or ballot items exist." }] : [];
   const meetingLoadGaps: EvidenceGap[] = meetingDataState === "STORE_UNREACHABLE"
     ? [{ whose: "OURS", statement: `Our canonical meeting records could not be read for this answer. This holding failure does not mean no meetings or agendas exist. ${meetingDataDetail}` }]
@@ -1004,7 +1033,7 @@ export async function POST(request: Request) {
   const ballotInventory = ballotAskInventory(ballot.set, ballot.contests, ballot.nominees,
     [...preferredOfficialIds, ...[question, ...comparedSlots].flatMap((text) => namedSourceFilingIds(text, ballot.set))]);
   let heldFilings: HeldFilingSubject[] = [];
-  if (ocdIds.some(id => /\/state:az(?:\/|$)/.test(id)) && !deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute) {
+  if (ocdIds.some(id => /\/state:az(?:\/|$)/.test(id)) && !deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute && !leanAsk) {
     try {
       const represented = new Set([...ballotInventory.subjects.values()].flatMap(row => [row.id, ...(row.kind === "PERSON" && row.candidacyId ? [row.candidacyId] : [])]));
       heldFilings = requestedHeldFilings(azHeldFilingSubjects(), question, preferredOfficialIds, represented);
@@ -1093,14 +1122,31 @@ export async function POST(request: Request) {
   const activeSubjects: AskSubjectRef[] = readSubjectRefs(body.activeSubjects).map(canonicalReference);
   const priorSubjects: AskSubjectRef[] = readSubjectRefs(body.priorSubjects, 8).map(canonicalReference);
 
+  /*
+   * **THE READER'S BALLOT, AND AN OFFICE'S FIELD.** (2026-09-29, S3; `lib/ask/ballot-summary.ts`.)
+   * "What is on my ballot?" and "Who is running for state senate in my district?" name no
+   * contest the binder can bind. They are answered from the contests the reader's divisions
+   * reach — and only when the composition can be made: an office with no held contest, or a
+   * contest whose candidates carry a party conflict between two authorities, goes the
+   * ordinary way (the model reads it and the records are retrieved by subject).
+   */
+  const ballotShape = !topicRoute && !leanAsk && ballot.set ? ballotQuestionShape(question) : null;
+  const ballotComposed = !ballotShape || !ballot.set ? null
+    : ballotShape.kind === "SUMMARY"
+      ? composeBallotSummary({ contests: ballot.contests, election: ballot.set.election })
+      : contestsOfOffice(ballot.contests, ballotShape.key).some((contest) => [...partyConflictFilings.keys()].some((key) => key.startsWith(`${contest.id}|`)))
+        ? null
+        : composeOfficeField({
+          key: ballotShape.key, contests: ballot.contests, election: ballot.set.election, nominees: ballot.nominees, candidacies: ballot.set.candidacies,
+          removedCandidacyIds: new Set((ballot.set.removals ?? []).map((removal) => removal.id)),
+        });
+  const ballotAsk = ballotComposed ? ballotShape : null;
   lap("officeholdersAndBallot");
   // A literal reader date outranks inferred tense, including a model's reading (applied in `answerPath`).
   const requestedMeetingDate = meetingDateInQuestion(question);
   const residency = stampResidency(readLocationOrigin(body.locationOrigin));
-  /* The writing ladder for THIS question: a kind the fast writer measurably gets wrong starts
-     on the escalation writer (`escalationFirstReason`), recorded on the trace. */
-  const ladder = synthesisLadder(process.env, { question });
-  const writerRoute = escalationFirstReason(question);
+  /* The writing ladder: the fast writer first for every question; the frontier only when its answer fails a check. */
+  const ladder = synthesisLadder();
   const ladderKey = ladderIdentity(ladder);
   const callerKey = askCallerKey(process.env, markerFromRequest(request).runClass);
   const lapAt = (name: string, at: number) => { stageMs[name] = at - stageMark; stageMark = at; };
@@ -1112,7 +1158,7 @@ export async function POST(request: Request) {
     intent: path.pack.intent,
     temporal: path.pack.temporal,
     selection: path.selection,
-    writerInput: synthesisCacheKey(path.pack, ladderKey.model, ladderKey.effort),
+    writerInput: synthesisCacheKey({ ...path.pack, intent: "UNKNOWN" }, ladderKey.model, ladderKey.effort),
   });
   /*
    * **START THE ANSWER FROM THE CODE'S OWN READING WHILE THE MODEL READS.**
@@ -1134,7 +1180,7 @@ export async function POST(request: Request) {
       if (path.kind !== "PACK" || path.composed || !packHasEvidence(path.pack) ||
         stanceAnswerability(path.pack) === "UNVERIFIED_PERSONAL_STANCE") return { started: false, why: "code-reading-needs-no-writer", ...guess };
       const outcome = readingOutcome(path);
-      const cached = synthesisCache.get(outcome.writerInput);
+      const cached = synthesisCache.get(synthesisCacheKey(path.pack, ladderKey.model, ladderKey.effort));
       const controller = new AbortController();
       let settled = Boolean(cached);
       const writing = cached ? Promise.resolve(cached) : synthesizeWithLadder(path.pack, {
@@ -1164,7 +1210,7 @@ export async function POST(request: Request) {
       : [],
     activeSubjects: activeSubjects.map((s) => s.name).slice(0, 6),
   };
-  const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute;
+  const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk || Boolean(ballotAsk);
   /*
    * **THE LEXICAL READING.** (2026-09-25, the Ask latency repair.) A question
    * in one of a few canonical shapes ("when does the Mesa City Council meet
@@ -1176,10 +1222,15 @@ export async function POST(request: Request) {
    */
   const lexical = modelFreeTopicRoute ? null : lexicalReading({
     question, inventory, namedBodies, confirmation: body.confirmation, activeSubjects, priorSubjects, officeOf,
+    readerGoverning: scopedBodies.filter((entry) => entry.ocdId && (entry.bodyId === `${entry.ocdId}#governing` || entry.bodyId === `${entry.ocdId}#board`))
+      .flatMap((entry) => inventory.filter((entity) => entity.id === entry.bodyId)),
   });
-  if (deferUnrelatedEvidence) {
-    if (lexical && sittingShapes.has(lexical.shape)) {
-      trace.sourcesLoaded = "IDENTITY_AND_MEETINGS";
+  if (deferPersonRecords) {
+    trace.sourcesLoaded = "WITHOUT_PERSON_RECORDS";
+    for (const key of ["federalVotes", "federalKeyVotes", "officeholderStatements", "executiveActions"]) delete trace.preloadSources![key];
+  } else if (deferShape) {
+    if (lexical && noPersonRecordShapes.has(lexical.shape)) {
+      trace.sourcesLoaded = sittingShapes.has(lexical.shape) ? "IDENTITY_AND_MEETINGS" : "WITHOUT_PERSON_RECORDS";
       for (const key of ["azPimaFinance", "federalVotes", "federalKeyVotes", "officeholderStatements", "executiveActions"]) {
         delete trace.preloadSources![key];
       }
@@ -1207,7 +1258,11 @@ export async function POST(request: Request) {
   const outcome = modelFreeTopicRoute || lexical ? null : cachedInterpretation ?? await modelReading!;
   if (interpretationKey && !cachedInterpretation && outcome?.kind === "READ") interpretationCache.set(interpretationKey, outcome);
 
-  if (outcome === null && lexical) {
+  if (outcome === null && (leanAsk || ballotAsk)) {
+    /* The reader's own officials, the meetings held for their area, or their ballot: read from the words, answered from what is held. */
+    interpretation = { ...unavailableInterpretation(), intent: officialsAsk ? "PERSON_RECORD" : areaMeetingsAsk ? "MEETING_TIME" : "UNKNOWN", temporal: areaMeetingsAsk ? { kind: "NEXT" } : { kind: "NONE" } };
+    trace.interpretation = { ran: false, why: officialsAsk ? "reader-officials-shape" : areaMeetingsAsk ? "area-meetings-shape" : "ballot-shape", ms: Date.now() - interpretationStarted, intent: interpretation.intent, temporal: interpretation.temporal, fellBackToDeterministic: true };
+  } else if (outcome === null && lexical) {
     interpretation = structuredClone(lexical.interpretation);
     trace.interpretation = {
       ran: false,
@@ -1286,11 +1341,14 @@ export async function POST(request: Request) {
     }
 
     // ── 2. CANONICAL RESOLUTION ──────────────────────────────────────────
-    const initialResolution = resolveInterpretation(interpretation, question, inventory, {
-      activeSubjects,
-      priorSubjects,
-    });
-    let bodyDecision = decideNamedBody(question, namedBodies, body.confirmation,
+    /* "Who is the mayor of Sierra Vista?" names the city its answer is filtered to; the city is not a subject to bind or to ask which of. */
+    const initialResolution: ReturnType<typeof resolveInterpretation> = officialsAsk?.place
+      ? { binding: { kind: "NONE" }, basis: "NONE", boundOn: null }
+      : resolveInterpretation(interpretation, question, inventory, {
+        activeSubjects,
+        priorSubjects,
+      });
+    let bodyDecision: ReturnType<typeof decideNamedBody> = officialsAsk?.place ? { kind: "NONE" } : decideNamedBody(question, namedBodies, body.confirmation,
       initialResolution.binding.kind === "BOUND" && initialResolution.binding.entity.level === "BODY"
         ? interpretation.entityMentions : []);
     if (!explicitBodyClass && initialResolution.binding.kind === "BOUND" && initialResolution.binding.entity.level !== "BODY") bodyDecision = { kind: "NONE" };
@@ -1298,7 +1356,11 @@ export async function POST(request: Request) {
     // answer. No lexical candidate means a neutral clarification, not a default.
     if (bodyDecision.kind === "NONE" && initialResolution.binding.kind === "BOUND" &&
       initialResolution.binding.entity.level === "BODY" && initialResolution.basis.startsWith("MODEL_EXPANSION")) bodyDecision = { kind: "CLARIFY" };
-    const resolution = applyNamedBodyDecision(bodyDecision, initialResolution, question);
+    const resolved = applyNamedBodyDecision(bodyDecision, initialResolution, question);
+    /* A kind of body was named ("the school board") and the reader's ZIP reaches several: ask which, naming them. */
+    const resolution: ReturnType<typeof resolveInterpretation> = lexical?.areaChoices
+      ? { binding: { kind: "AMBIGUOUS", mention: lexical.areaChoices.mention, candidates: [...lexical.areaChoices.bodies] }, basis: "WHOLE_QUESTION", boundOn: question }
+      : resolved;
     trace.resolution = {
       state: resolution.binding.kind,
       basis: resolution.basis,
@@ -1450,6 +1512,10 @@ export async function POST(request: Request) {
       : null;
 
     const records: EvidenceRecord[] = [];
+    /* A person asked about for their campaign money and nothing they did in office: their votes, key votes, statements and
+       recorded actions are not what was asked (the pack for one federal candidate was 104 records, 28,000 tokens). */
+    const financeAsked = financeQuestionAskedFor(question, subject?.kind ?? null);
+    const moneyOnly = subject?.kind === "PERSON" && asksOnlyMoney(question, "PERSON");
     const heldFiling = subject ? heldFilings.find(row => row.entity.id === subject.id) : null;
     if (heldFiling) records.push(heldFiling.record);
     /** The sittings this request resolved, for the structured half of the payload. */
@@ -1569,7 +1635,7 @@ export async function POST(request: Request) {
              is, and the one an answer about the Governor was missing while it
              listed the reader's state senator. */
           contacts.push(contactForOfficeholder(seat));
-          officeholderActionEvidence(
+          if (!moneyOnly) officeholderActionEvidence(
             seat.id,
             seat.name,
             today,
@@ -1628,7 +1694,7 @@ export async function POST(request: Request) {
        * The office on every record is the one they HOLD, never the one they are
        * running for.
        */
-      if (ballotRecord.kind === "PERSON") {
+      if (ballotRecord.kind === "PERSON" && !moneyOnly) {
         if (candidateSeats.some((seat) => voteEvidenceReadsStateRollCalls(ballotRecord.name, { officeholderId: seat.id }))) await personStateVotes();
         const candidates = await Promise.all(candidateSeats.map((seat) =>
           voteEvidenceForIncludingHistory(ballotRecord.name, { officeholderId: seat.id })));
@@ -1645,6 +1711,12 @@ export async function POST(request: Request) {
       const access = commentAccessEvidenceFor(subject.id, bound?.ocdId ?? null, subject.name);
       records.push(...access.records);
       gaps.push(...access.gaps);
+      /* "How can I comment at the Vail school board meeting?": with no standing rule held, the answer says we have not recorded how
+         (the model used to say the district has not published it — a claim about them made from a gap of ours). */
+      const publicCommentAsk = shapeForBoundBody(question, inventory, subject.id) === "PUBLIC_COMMENT";
+      if (publicCommentAsk) {
+        for (const gap of access.gaps) sittingGaps.push({ role: "COMMENT", gap });
+      }
       denominators.publicCommentAccessRecordsReturned = access.records.length;
       if (identity?.nameIsBodysOwn && identity.sourceUrl) {
         records.push({ kind: "BODY", id: subject.id, bodyId: subject.id,
@@ -2017,6 +2089,9 @@ export async function POST(request: Request) {
        * "Superintendent" — never an assessment of who matters. See
        * `lib/ask/contacts.ts` for why "most influential" is unbuildable here.
        */
+      if (publicCommentAsk && access.records.length === 0 && access.gaps.length === 0) {
+        attachSittingGaps("COMMENT", [{ whose: "OURS", statement: `We have not recorded how the public can comment at ${subject.name}.` }]);
+      }
       contacts.push(
         ...contactsForBody(
           {
@@ -2062,7 +2137,9 @@ export async function POST(request: Request) {
        * sentence. "Here is what she did" is not one this corpus can earn, and
        * the difference between them is a number the pack has to carry.
        */
-      if (seat) {
+      if (moneyOnly) {
+        /* Not asked about: no action records, and no gap about them. */
+      } else if (seat) {
         officeholderActionEvidence(
           seat.id,
           seat.name,
@@ -2083,16 +2160,18 @@ export async function POST(request: Request) {
       /* ── ASK-06 ── the same exact identity chain on the officeholder path. A
          sitting legislator asked about by name reaches their own roll calls; a
          governor reaches the honest gap, because a governor casts none. */
-      if (voteEvidenceReadsStateRollCalls(subject.name, { withinStates: statesOf(ocdIds), officeholderId: seat?.id })) await personStateVotes();
-      const votes = await voteEvidenceForIncludingHistory(subject.name,
-        { withinStates: statesOf(ocdIds), officeholderId: seat?.id });
-      if (votes.identity.kind === "JOINED") canonicalSubjectKeys.add(votes.identity.seat.officeholderId);
-      records.push(...votes.records);
-      gaps.push(...votes.gaps);
-      Object.assign(denominators, votes.denominators);
+      if (!moneyOnly) {
+        if (voteEvidenceReadsStateRollCalls(subject.name, { withinStates: statesOf(ocdIds), officeholderId: seat?.id })) await personStateVotes();
+        const votes = await voteEvidenceForIncludingHistory(subject.name,
+          { withinStates: statesOf(ocdIds), officeholderId: seat?.id });
+        if (votes.identity.kind === "JOINED") canonicalSubjectKeys.add(votes.identity.seat.officeholderId);
+        records.push(...votes.records);
+        gaps.push(...votes.gaps);
+        Object.assign(denominators, votes.denominators);
+      }
     }
 
-    if (subject?.kind === "PERSON") {
+    if (subject?.kind === "PERSON" && !moneyOnly) {
       const statements = statementEvidenceFor(subject, question, [...canonicalSubjectKeys]);
       records.push(...statements.records);
       gaps.push(...statements.gaps);
@@ -2140,7 +2219,7 @@ export async function POST(request: Request) {
      * subject this pipeline holds nothing for gets a scope gap that says which
      * store it would be in rather than a bare nothing.
      */
-    if (subject?.kind === "PERSON") {
+    if (subject?.kind === "PERSON" && !moneyOnly) {
       const keyVotes = await keyVoteEvidenceFor(subject, [...canonicalSubjectKeys]);
       records.push(...keyVotes.records);
       gaps.push(...keyVotes.gaps);
@@ -2157,7 +2236,7 @@ export async function POST(request: Request) {
      * retrieved and stamped as hers, and the relevance gate keeps exactly those.
      */
     const comparedIds = new Set<string>();
-    if (subject?.kind === "PERSON" && financeQuestionAsked(question)) {
+    if (subject?.kind === "PERSON" && financeAsked) {
       const other = otherNamedPerson(question, inventory, subject.id);
       const otherRecord = other ? ballotInventory.subjects.get(other.id) ?? null : null;
       const otherSubject: EvidenceSubject | null = other
@@ -2178,7 +2257,7 @@ export async function POST(request: Request) {
     }
 
     /* The party-conflict card's money is its filing's, retrieved under the filing's own id (never restamped as the card's). */
-    if (partyConflictFiling && subject?.kind === "PERSON" && financeQuestionAsked(question)) {
+    if (partyConflictFiling && subject?.kind === "PERSON" && financeAsked) {
       comparedIds.add(partyConflictFiling.id);
       const filed = campaignMoneyEvidenceFor(ballotSubject(partyConflictFiling), partyConflictFiling.id, partyConflictFiling.contestId);
       records.push(...filed.records);
@@ -2196,7 +2275,7 @@ export async function POST(request: Request) {
      * race the authority says is not on the ballot: that statement, for the
      * body's own division, is retrieved beside the body's register records.
      */
-    const groupAsk = subject && (subject.kind === "CONTEST" || subject.kind === "BODY") && financeQuestionAsked(question)
+    const groupAsk = subject && (subject.kind === "CONTEST" || subject.kind === "BODY") && financeAsked
       ? groupMoneyShapeForBoundSubject(question, inventory, subject.id) : null;
     const groupCandidates: { id: string; name: string; matched: boolean }[] = [];
     let groupStateRecords = 0;
@@ -2234,7 +2313,7 @@ export async function POST(request: Request) {
       }
     }
 
-    if (subject && financeQuestionAsked(question)) {
+    if (subject && financeAsked) {
       const normalized = campaignMoneyEvidenceFor(subject, ballotRecord?.id ?? subject.id, ballotRecord?.contestId);
       records.push(...normalized.records);
       gaps.push(...normalized.gaps);
@@ -2254,6 +2333,57 @@ export async function POST(request: Request) {
         county: Boolean(finance?.records.length),
       })) gaps.push(note.gap);
       denominators.financeRegimesNamed = 3;
+    }
+
+    /*
+     * **THE READER'S OWN OFFICIALS.** (2026-09-29, S3; `lib/ask/reader-officials.ts`.)
+     * "Who is my state senator?" names no subject; the officeholders the route
+     * already loaded for the reader's divisions and bodies are the answer. Each one
+     * named is a record beside the composed sentence, with their published contact.
+     */
+    const officials = officialsAsk && (!subject || officialsAsk.place) ? composeReaderOfficials({ ask: officialsAsk, held: officeholders.held, holdingFailed: officeholders.loaderFailures > 0, placesReached: new Set(ocdIds.filter((id) => /[/]place:[a-z_]+$/.test(id) && !id.endsWith("_ccd"))).size }) : null;
+    if (officials) {
+      for (const { seat, bodyName } of officials.named) {
+        records.push(officeholderEvidence(seat));
+        contacts.push({
+          id: seat.id, name: seat.name, officeTitle: seat.officeTitle,
+          relationship: bodyName ? `${seat.officeTitle} on ${bodyName}` : `Your ${seat.officeTitle}`,
+          basis: bodyName ? "BODY_MEMBER" : "READER_REPRESENTATIVE",
+          email: seat.email, phone: seat.phone, websiteUrl: seat.websiteUrl,
+          sourceUrl: seat.sourceUrl, sourceOrg: seat.provenance?.sourceOrg ?? null, retrievedAt: seat.provenance?.collectedAt ?? null,
+        });
+      }
+      gaps.push(...officials.gaps);
+      denominators.officeholderRecords = officials.named.length;
+    }
+
+    /* The reader's ballot, composed above from the contests their divisions reach: each contest is a record they are shown. */
+    if (ballotAsk && ballotComposed && !subject) {
+      records.push(...ballotComposed.records);
+      for (const statement of ballotComposed.gaps) gaps.push({ whose: "OURS", statement });
+      denominators.contestsOnTheBallot = ballot.contests.length;
+    }
+
+    /*
+     * **THE MEETINGS HELD FOR THE READER'S AREA.** (2026-09-29, S3; `lib/ask/area-meetings.ts`.)
+     * "What meetings are happening this week?" names no body: the sittings held for
+     * the divisions the reader is in, in the window they named, are the answer.
+     */
+    const areaMeetings = areaMeetingsAsk && !subject && snapshot
+      ? composeAreaMeetings({
+        ask: areaMeetingsAsk, now: selectionNow,
+        label: (sitting) => {
+          const identity = canonicalBodyIdentity(sitting.bodyId);
+          return identity ? `${identity.name}${identity.divisionLabel && !identity.name.includes(identity.divisionLabel) ? ` — ${identity.divisionLabel}` : ""}` : sitting.bodyName;
+        },
+        sittings: meetings.filter((meeting) => meeting.ocdId !== null && ocdIds.includes(meeting.ocdId) && meeting.bodyId !== null) as unknown as AreaSitting[],
+      })
+      : null;
+    if (areaMeetings) {
+      records.push(...areaMeetings.records);
+      gaps.push(...areaMeetings.gaps);
+      resolvedSittings.push(...(areaMeetings.inWindow.slice(0, 3) as unknown as AskSitting[]));
+      denominators.meetingsHeldInTheWindow = areaMeetings.inWindow.length;
     }
 
     /*
@@ -2528,7 +2658,7 @@ export async function POST(request: Request) {
      * a check can never reach a reader.
      */
     const candidateSittingShape = !topicComposed && !topicFocus && snapshot && subject?.kind === "BODY"
-      ? shapeForBoundBody(question, inventory, subject.id) : null;
+      ? (lexical && sittingShapes.has(lexical.shape) && lexical.subjectId === subject.id ? lexical.shape as "MEETING_TIME" | "BODY_AGENDA" | "MEETING_OUTCOME" | "PUBLIC_COMMENT" : shapeForBoundBody(question, inventory, subject.id)) : null;
     // An explicit outcome date uses its quoted actions or its named outcome
     // gap. Tell the composer this is the requested date, never next/latest.
     const sittingShape = !requestedMeetingDate || (requestedMeetingDate.date && candidateSittingShape === "MEETING_OUTCOME")
@@ -2563,7 +2693,7 @@ export async function POST(request: Request) {
      * same figures, and got the who/comparison kinds wrong 6 times in 8 on the
      * fast writer. The same validator decides; a refusal goes to the model.
      */
-    const moneyShape = !topicComposed && !sittingSettled.composed && subject?.kind === "PERSON" && financeQuestionAsked(question)
+    const moneyShape = !topicComposed && !sittingSettled.composed && subject?.kind === "PERSON" && financeAsked
       ? moneyShapeForBoundPerson(question, inventory, subject.id, officeOf) : null;
     const moneyOther = moneyShape?.otherId ? ballotInventory.subjects.get(moneyShape.otherId)?.name ?? inventory.find((entity) => entity.id === moneyShape.otherId)?.name ?? null : null;
     const moneySettled = settleSittingComposition(
@@ -2613,11 +2743,99 @@ export async function POST(request: Request) {
         ...(groupSettled.verdict?.kind === "FAILED" ? { failed: groupSettled.verdict.failed } : {}),
       };
     }
-    const composed = topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed;
+    /* The reader's own officials (lib/ask/reader-officials.ts): composed from the held officeholders, held to the same validator. */
+    const officialsSettled = settleSittingComposition(
+      officials && !topicComposed ? { answer: officials.answer, citedUrls: officials.citedUrls } : null,
+      (text, urls) => validateAnswer(text, urls, pack, bodies),
+    );
+    if (officialsAsk) {
+      trace.composition = {
+        kind: "OFFICIALS",
+        shape: officialsAsk.keys.join("+"),
+        basis: "HELD_OFFICEHOLDERS",
+        composed: Boolean(officialsSettled.verdict),
+        ...(officialsSettled.verdict ? { passed: officialsSettled.verdict.kind === "PASSED" } : {}),
+        ...(officialsSettled.verdict?.kind === "FAILED" ? { failed: officialsSettled.verdict.failed } : {}),
+      };
+    }
+    /* Who sits on a named body, from its roster (lib/ask/reader-officials.ts): the same validator decides. */
+    const rosterSettled = settleSittingComposition(
+      !topicComposed && !sittingSettled.composed && subject?.kind === "BODY" && lexical?.shape === "BODY_ROSTER" && lexical.subjectId === subject.id
+        ? composeBodyRoster({ bodyName: subject.name, contacts: shownContacts, gaps: rosterGaps.gaps })
+        : null,
+      (text, urls) => validateAnswer(text, urls, pack, bodies),
+    );
+    if (subject?.kind === "BODY" && lexical?.shape === "BODY_ROSTER") {
+      trace.composition = {
+        kind: "ROSTER",
+        shape: "BODY_ROSTER",
+        basis: "HELD_ROSTER",
+        composed: Boolean(rosterSettled.verdict),
+        ...(rosterSettled.verdict ? { passed: rosterSettled.verdict.kind === "PASSED" } : {}),
+        ...(rosterSettled.verdict?.kind === "FAILED" ? { failed: rosterSettled.verdict.failed } : {}),
+      };
+    }
+    /* How a named person voted (lib/ask/person-votes.ts): the roll calls we hold, in the chamber's own fields; the same validator decides. */
+    const votesShape = !topicComposed && !sittingSettled.composed && !moneySettled.composed && subject?.kind === "PERSON"
+      ? personVotesShapeForBoundPerson(question, inventory, subject.id) : null;
+    const votesSettled = settleSittingComposition(
+      votesShape && subject ? composePersonVotes({ name: subject.name, topic: votesShape.topic, records: packRecords }) : null,
+      (text, urls) => validateAnswer(text, urls, pack, bodies),
+    );
+    if (votesShape) {
+      trace.composition = {
+        kind: "VOTES",
+        shape: votesShape.topic ? "PERSON_VOTES_ON_A_TOPIC" : "PERSON_VOTES",
+        basis: "HELD_ROLL_CALLS",
+        composed: Boolean(votesSettled.verdict),
+        ...(votesSettled.verdict ? { passed: votesSettled.verdict.kind === "PASSED" } : {}),
+        ...(votesSettled.verdict?.kind === "FAILED" ? { failed: votesSettled.verdict.failed } : {}),
+      };
+    }
+    /* The meetings held for the reader's area (lib/ask/area-meetings.ts): composed from the calendar, held to the same validator. */
+    const calendarSettled = settleSittingComposition(
+      areaMeetings && !topicComposed ? { answer: areaMeetings.answer, citedUrls: areaMeetings.citedUrls } : null,
+      (text, urls) => validateAnswer(text, urls, pack, bodies),
+    );
+    if (areaMeetingsAsk) {
+      trace.composition = {
+        kind: "CALENDAR",
+        shape: areaMeetingsAsk.window,
+        basis: "HELD_MEETINGS",
+        composed: Boolean(calendarSettled.verdict),
+        ...(calendarSettled.verdict ? { passed: calendarSettled.verdict.kind === "PASSED" } : {}),
+        ...(calendarSettled.verdict?.kind === "FAILED" ? { failed: calendarSettled.verdict.failed } : {}),
+      };
+    }
+    /* The reader's ballot (lib/ask/ballot-summary.ts): composed above, held to the same validator. */
+    const ballotSettled = settleSittingComposition(
+      ballotAsk && ballotComposed && !topicComposed && (!subject || (subject.kind === "CONTEST" && ballotAsk.kind === "OFFICE" && contestsOfOffice(ballot.contests, ballotAsk.key).some((contest) => contest.id === subject.id)))
+        ? { answer: ballotComposed.answer, citedUrls: ballotComposed.citedUrls } : null,
+      (text, urls) => validateAnswer(text, urls, pack, bodies),
+    );
+    if (ballotAsk) {
+      trace.composition = {
+        kind: "BALLOT",
+        shape: ballotAsk.kind === "SUMMARY" ? "SUMMARY" : `OFFICE_${ballotAsk.key}`,
+        basis: "HELD_BALLOT",
+        composed: Boolean(ballotSettled.verdict),
+        ...(ballotSettled.verdict ? { passed: ballotSettled.verdict.kind === "PASSED" } : {}),
+        ...(ballotSettled.verdict?.kind === "FAILED" ? { failed: ballotSettled.verdict.failed } : {}),
+      };
+    }
+    const composed = topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
+    const composedWhy = topicComposed ? "composed-from-structured-evidence"
+      : sittingSettled.composed ? "composed-from-sitting-records"
+        : moneySettled.composed ?? groupSettled.composed ? "composed-from-money-records"
+          : officialsSettled.composed ? "composed-from-officeholder-records"
+            : rosterSettled.composed ? "composed-from-roster-records"
+              : votesSettled.composed ? "composed-from-vote-records"
+                : calendarSettled.composed ? "composed-from-calendar-records"
+                  : ballotSettled.composed ? "composed-from-ballot-records" : "composed-from-sitting-records";
     return {
       kind: "PACK" as const, retrievedAt, pack, packRecords, packGaps, subject, selection, composed, topicComposed, topicTimeline, areaTimelines,
       shownContacts, resolvedSittings, agendaQuestion, capture,
-      moneyComposed: Boolean(moneySettled.composed ?? groupSettled.composed) && !topicComposed && !sittingSettled.composed,
+      composedWhy,
     };
   }
 
@@ -2651,7 +2869,7 @@ export async function POST(request: Request) {
     return path.respond();
   }
   lapAt("resolutionAndRetrieval", path.retrievedAt);
-  const { pack, packRecords, packGaps, subject, composed, topicComposed, topicTimeline, areaTimelines, shownContacts, resolvedSittings, agendaQuestion, capture, moneyComposed } = path;
+  const { pack, packRecords, packGaps, subject, composed, topicTimeline, areaTimelines, shownContacts, resolvedSittings, agendaQuestion, capture, composedWhy } = path;
   /*
    * **THE WRITING LADDER.** (2026-09-25, the Ask latency repair.) The fast
    * writer answers first; the frontier model writes only when that answer fails
@@ -2676,10 +2894,12 @@ export async function POST(request: Request) {
   const selectionForWriter = composed ? null : writerSelection(pack);
   const writerTrace = written ? {
     writers: written.attempts,
-    ...(writerRoute ? { writerRoute } : {}),
     ...(written.escalation ? { escalation: written.escalation } : {}),
-    ...(selectionForWriter && selectionForWriter.withheld.memberVoteRows > 0
-      ? { writerSelection: { memberVoteRowsShown: selectionForWriter.shown.memberVoteRows, memberVoteRowsWithheld: selectionForWriter.withheld.memberVoteRows, rollCallsWithheld: selectionForWriter.withheld.rollCalls } }
+    ...(selectionForWriter && (selectionForWriter.withheld.memberVoteRows > 0 || (selectionForWriter.withheld.personVoteRecords ?? 0) > 0)
+      ? { writerSelection: {
+        memberVoteRowsShown: selectionForWriter.shown.memberVoteRows, memberVoteRowsWithheld: selectionForWriter.withheld.memberVoteRows, rollCallsWithheld: selectionForWriter.withheld.rollCalls,
+        ...(selectionForWriter.withheld.personVoteRecords ? { personVoteRecordsShown: selectionForWriter.shown.personVoteRecords ?? 0, personVoteRecordsWithheld: selectionForWriter.withheld.personVoteRecords } : {}),
+      } }
       : {}),
   } : {};
   let answer: string | null = null;
@@ -2692,7 +2912,7 @@ export async function POST(request: Request) {
   let mode: AnswerMode = packRecords.length > 0 ? "STRUCTURED_GROUNDED" : "NO_EVIDENCE";
 
   if (composed) {
-    trace.synthesis = { ran: false, why: topicComposed ? "composed-from-structured-evidence" : moneyComposed ? "composed-from-money-records" : "composed-from-sitting-records", ms: 0 };
+    trace.synthesis = { ran: false, why: composedWhy, ms: 0 };
     const verdict = validateAnswer(composed.answer, composed.citedUrls, pack, bodies);
     validationPassed = verdict.kind === "PASSED";
     trace.validation = {

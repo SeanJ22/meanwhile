@@ -216,7 +216,8 @@ export function validateAnswer(
    * available is refused.
    */
   checked.push("no-withheld-votes-called-unpublished");
-  if (writerSelection(pack).withheld.memberVoteRows > 0 && pack.records.some((r) => r.kind === "MEETING_MEMBER_VOTE")) {
+  const withheld = writerSelection(pack).withheld;
+  if ((withheld.memberVoteRows > 0 && pack.records.some((r) => r.kind === "MEETING_MEMBER_VOTE")) || (withheld.personVoteRecords ?? 0) > 0) {
     const sentences = answer.split(/(?<=[.!?])\s+/);
     if (sentences.some((sentence) => /\bvot(?:e|es|ed|ing)\b/i.test(sentence) &&
       /\b(?:not|never|no|hasn't|haven't|didn't|isn't|aren't|wasn't|weren't)\b/i.test(sentence) &&

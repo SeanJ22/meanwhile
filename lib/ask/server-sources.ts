@@ -20,6 +20,8 @@ import type { SeatHolder } from "../officials/lookup.ts";
 import { membersOfBody } from "../registry/body-membership.ts";
 import { bindNamedEntity } from "../routing/named-entity.ts";
 import type { AskNominee } from "./ballot-inventory.ts";
+import { canonicalBodyIdentity } from "./body-identity.ts";
+import { stateDivisionsOf, type HeldOfficial } from "./reader-officials.ts";
 
 /**
  * A reader may ask about a held person outside our mapped divisions. Match the
@@ -47,17 +49,39 @@ export async function namedOfficeholders(question: string, explicitIds: readonly
   return held.filter((seat) => wanted.has(seat.id));
 }
 
-/** The representation selector supplies Ask's officials, with the same IDs and provenance. */
-export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: readonly string[] = []): Promise<{ seats: SeatHolder[]; loaderFailures: number }> {
+/**
+ * The representation selector supplies Ask's officials, with the same IDs and provenance.
+ *
+ * `held` says where each was found: the division ids (a district, the county, the
+ * state) and, for a member of a governing body, that body's name. The state each
+ * division sits in is read too — a reader's ZIP divisions name the districts and
+ * places, and the U.S. Senators and statewide executives are held under the state
+ * itself.
+ */
+export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: readonly string[] = []): Promise<{ seats: SeatHolder[]; loaderFailures: number; held: HeldOfficial[] }> {
   const seats = new Map(statewideExecutivesFor([...ocdIds]).map((seat) => [seat.id, seat]));
+  const where = new Map<string, { divisionIds: Set<string>; bodyId: string | null; bodyName: string | null }>();
+  const at = (seat: SeatHolder) => {
+    let row = where.get(seat.id);
+    if (!row) where.set(seat.id, row = { divisionIds: new Set(), bodyId: null, bodyName: null });
+    return row;
+  };
   for (const bodyId of bodyIds) {
-    for (const seat of membersOfBody(bodyId).members) seats.set(seat.id, seat);
+    const governing = /#(?:governing|board)$/.test(bodyId);
+    for (const seat of membersOfBody(bodyId).members) {
+      seats.set(seat.id, seat);
+      if (governing && !at(seat).bodyId) Object.assign(at(seat), { bodyId, bodyName: canonicalBodyIdentity(bodyId)?.name ?? null });
+    }
   }
   let loaderFailures = 0;
-  for (const ocdId of new Set(ocdIds)) {
+  const divisions = new Set([...ocdIds, ...stateDivisionsOf(ocdIds)]);
+  for (const ocdId of divisions) {
     try {
       const held = await seatHoldersForDivision(ocdId);
-      for (const seat of held) seats.set(seat.id, seat);
+      for (const seat of held) {
+        seats.set(seat.id, seat);
+        at(seat).divisionIds.add(ocdId);
+      }
       if (!mayReadRetiredPluralRoster() && /\/(?:sldu|sldl):/.test(ocdId) && held.length === 0) {
         loaderFailures += 1;
       }
@@ -68,6 +92,7 @@ export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: re
   return {
     seats: [...seats.values()],
     loaderFailures,
+    held: [...seats.values()].map((seat) => ({ seat, divisionIds: [...(where.get(seat.id)?.divisionIds ?? [])], bodyId: where.get(seat.id)?.bodyId ?? null, bodyName: where.get(seat.id)?.bodyName ?? null })),
   };
 }
 

@@ -136,17 +136,11 @@ export interface AskTrace {
     /** Why the frontier writer ran: the fast writer's failed checks, or why it could not answer. */
     escalation?: string;
     /**
-     * Why the escalation writer wrote FIRST, skipping the fast writer: a
-     * question kind the fast writer measurably gets wrong (2026-09-25;
-     * `escalationFirstReason` in lib/ask/synthesize.ts). Absent on the default ladder.
-     */
-    writerRoute?: string;
-    /**
      * What the writer was NOT sent (`lib/ask/writer-selection.ts`): per-member
      * vote rows beyond the bound, by whole roll call. The reader's records and
      * the pack's denominators still carry every row.
      */
-    writerSelection?: { memberVoteRowsShown: number; memberVoteRowsWithheld: number; rollCallsWithheld: number };
+    writerSelection?: { memberVoteRowsShown: number; memberVoteRowsWithheld: number; rollCallsWithheld: number; personVoteRecordsShown?: number; personVoteRecordsWithheld?: number };
   };
   validation: {
     ran: boolean;
@@ -162,11 +156,11 @@ export interface AskTrace {
    * named here and was never shown; the model wrote the answer instead.
    */
   composition?: {
-    /** SITTING: a body's sitting (`lib/ask/sitting-answer.ts`); MONEY: a person's held campaign-money records (`lib/ask/money-answer.ts`). */
-    kind: "SITTING" | "MONEY";
+    /** SITTING: a body's sitting (`lib/ask/sitting-answer.ts`); MONEY: a person's held campaign-money records (`lib/ask/money-answer.ts`); OFFICIALS: the reader's own officeholders (`lib/ask/reader-officials.ts`). */
+    kind: "SITTING" | "MONEY" | "OFFICIALS" | "ROSTER" | "VOTES" | "CALENDAR" | "BALLOT";
     shape: string;
     /** Which records it was read from: recorded actions, roll calls, the sitting and its named gaps, or state committee filings. */
-    basis?: "RECORDED_ACTIONS" | "ROLL_CALLS" | "SITTING_AND_GAPS" | "STATE_COMMITTEE_FILINGS" | "BALLOT_ABSENCE_AND_COUNTY_REGISTER";
+    basis?: "RECORDED_ACTIONS" | "ROLL_CALLS" | "SITTING_AND_GAPS" | "STATE_COMMITTEE_FILINGS" | "BALLOT_ABSENCE_AND_COUNTY_REGISTER" | "HELD_OFFICEHOLDERS" | "HELD_ROSTER" | "HELD_ROLL_CALLS" | "HELD_MEETINGS" | "HELD_BALLOT";
     composed: boolean;
     passed?: boolean;
     failed?: string[];
@@ -227,7 +221,7 @@ export interface AskTrace {
    * registry, the federal directory and the recorded outcomes) on a topic
    * route, ALL otherwise. A fact about our machinery, never about a reader.
    */
-  sourcesLoaded?: "ESSENTIAL" | "IDENTITY_AND_MEETINGS" | "ALL";
+  sourcesLoaded?: "ESSENTIAL" | "IDENTITY_AND_MEETINGS" | "WITHOUT_PERSON_RECORDS" | "ALL";
   /** What the reader actually got. The single most important line here. */
   answerMode: AnswerMode;
   totalMs: number;

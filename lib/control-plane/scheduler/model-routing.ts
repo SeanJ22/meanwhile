@@ -34,6 +34,7 @@
  * can run anywhere.
  */
 
+import { MODELS } from "../../models.ts";
 import { MODEL_WORKER_MODEL, rateFor } from "../model-cost.ts";
 
 /** The model classes a step may route to. Cheapest first. */
@@ -42,9 +43,9 @@ export type ModelClass = (typeof MODEL_CLASSES)[number];
 
 /** The exact model id each class runs today. Ids as the claude-api reference lists them. */
 export const MODEL_FOR_CLASS: Readonly<Record<ModelClass, string>> = {
-  haiku: "claude-haiku-4-5-20251001",
-  sonnet: "claude-sonnet-5",
-  frontier: "claude-opus-5-5",
+  haiku: MODELS.haiku.model,
+  sonnet: MODELS.sonnet.model,
+  frontier: MODELS.opus.model,
 };
 
 export type ModelEffort = "low" | "medium" | "high";

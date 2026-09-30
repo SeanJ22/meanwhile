@@ -38,7 +38,7 @@ const DEADLINE_ITEMS = new Set(["ELE-06", "ELE-08", "ELE-09", "ELE-20", "ELE-21"
  * Unknown inventories remain explicit discovery work; an empty input cannot
  * look like a place with no governments, seats, elections or funding. */
 export function buildPlaceOwedList(input: {
-  readonly divisions: readonly { readonly id: string; readonly label: string }[];
+  readonly divisions: readonly { readonly id: string; readonly label: string; readonly funcstat?: string }[];
   readonly subjects: readonly PlaceSubject[];
   readonly held: readonly HeldPlaceField[];
   readonly now: string;
@@ -54,6 +54,9 @@ export function buildPlaceOwedList(input: {
   }
   for (const division of input.divisions) {
     subjects.set(division.id, { id: division.id, label: division.label, kind: "division", divisionIds: [division.id] });
+    // Retain Census geography, but its explicit statistical, inactive and
+    // fictitious duplicate rows do not imply another government to discover.
+    if (["F", "N", "S", "I"].includes(division.funcstat ?? "")) continue;
     // Discovery is owed even after the first member of a family is found.
     for (const kind of Object.keys(GROUPS).filter(k => k !== "division") as PlaceSubjectKind[]) {
       const id = `${division.id}#inventory:${kind}`;

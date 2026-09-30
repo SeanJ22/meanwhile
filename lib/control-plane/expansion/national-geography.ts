@@ -1,5 +1,5 @@
 import { FIPS_TO_STATE, districtIdentity } from "../../ocd/fips.ts";
-import { countyIdentity, legislativeIdentity, placeIdentity, schoolIdentity } from "../../ocd/divisions.ts";
+import { countyIdentity, legislativeIdentity, placeIdentity, schoolIdentity, stateBase, subdivisionIdentity } from "../../ocd/divisions.ts";
 
 const TIGER = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb";
 type Polygon = { rings: number[][][]; spatialReference?: { wkid: number } };
@@ -20,6 +20,9 @@ export interface PlaceDivision {
   geoid: string;
   sourceUrl: string;
   boundary?: Polygon;
+  lsad?: string;
+  funcstat?: string;
+  classfp?: string;
 }
 
 async function readJson<T>(url: string, options: GeographyReadOptions, body?: URLSearchParams): Promise<T> {
@@ -71,17 +74,25 @@ async function legislativeLayers(options: GeographyReadOptions): Promise<{ type:
   ].map(async row => ({ type: row.type, url: await layer("Legislative", row.name, options) })));
 }
 
-function division(feature: Feature, type: string, sourceUrl: string): PlaceDivision | null {
+function division(feature: Feature, type: string, sourceUrl: string, counties: ReadonlyMap<string, string> = new Map()): PlaceDivision | null {
   const a = feature.attributes;
   const state = String(a.STATE ?? a.STATEFP ?? "");
   const name = String(a.BASENAME ?? a.NAME ?? "");
+  if (type === "state") {
+    const identity = stateBase(state);
+    return identity ? { id: identity.base, label: name, divisionType: type, geoid: String(a.GEOID ?? state), sourceUrl, boundary: feature.geometry } : null;
+  }
+  const lsad = String(a.LSAD ?? a.LSADC ?? ""), funcstat = String(a.FUNCSTAT ?? ""), classfp = String(a.CLASSFP ?? a.COUSUBCC ?? a.PLACECC ?? "");
+  const countyName = type === "cousub" ? counties.get(`${state}${a.COUNTY}`) : undefined;
+  if (type === "cousub" && !countyName) throw new Error(`Census subdivision ${a.GEOID} has no resolved parent county`);
   const identity = type === "cd" ? districtIdentity(state, String(a.CD ?? String(a.GEOID).slice(2)))
     : type === "sldu" || type === "sldl" ? legislativeIdentity(state, type, String(a[type.toUpperCase()] ?? String(a.GEOID).slice(2)), name)
     : type === "county" ? countyIdentity(state, name)
-    : type === "place" ? placeIdentity(state, name, String(a.LSAD ?? ""), String(a.FUNCSTAT ?? ""), String(a.CLASSFP ?? ""))
+    : type === "place" ? placeIdentity(state, name, lsad, funcstat, classfp)
+    : type === "cousub" ? subdivisionIdentity(state, countyName!, String(a.NAME ?? name), lsad, funcstat, classfp)
     : schoolIdentity(state, name);
   if (!identity) return null;
-  return { id: identity.ocdId, label: String(a.NAME ?? name), divisionType: type, geoid: String(a.GEOID ?? ""), sourceUrl, boundary: feature.geometry };
+  return { id: identity.ocdId, label: String(a.NAME ?? name), divisionType: type, geoid: String(a.GEOID ?? ""), sourceUrl, boundary: feature.geometry, lsad, funcstat, classfp };
 }
 
 /** Download any state's serving legislative boundaries without a state dossier. */
@@ -101,19 +112,21 @@ export async function divisionsForZip(zip: string, options: GeographyReadOptions
   if (!area?.geometry) throw new Error("This ZIP has no Census ZCTA boundary; an address is needed");
   const layers = await legislativeLayers(options);
   const additional = [
+    { type: "state", service: "State_County", name: /^States$/ },
     { type: "county", service: "State_County", name: /^Counties$/ },
     { type: "place", service: "Places_CouSub_ConCity_SubMCD", name: /^Incorporated Places$/ },
+    { type: "cousub", service: "Places_CouSub_ConCity_SubMCD", name: /^County Subdivisions$/ },
     { type: "school", service: "School", name: /^Unified School Districts$/ },
     { type: "school", service: "School", name: /^Elementary School Districts$/ },
     { type: "school", service: "School", name: /^Secondary School Districts$/ },
   ];
   layers.push(...await Promise.all(additional.map(async l => ({ type: l.type, url: await layer(l.service, l.name, options) }))));
-  const divisions = (await Promise.all(layers.map(async l => (await query(l.url, spatial(area.geometry!), options))
-    .flatMap(f => division(f, l.type, l.url) ?? [])))).flat();
-  const states = [...new Set(divisions.flatMap(d => /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}/.exec(d.id)?.[0] ?? []))];
+  const readings = await Promise.all(layers.map(async l => ({ ...l, features: await query(l.url, spatial(area.geometry!), options) })));
+  const counties = new Map(readings.filter(l => l.type === "county").flatMap(l => l.features.map(f =>
+    [String(f.attributes.GEOID), String(f.attributes.NAME ?? f.attributes.BASENAME)] as const)));
+  const divisions = readings.flatMap(l => l.features.flatMap(f => division(f, l.type, l.url, counties) ?? []));
   return [...new Map([
     { id: "ocd-division/country:us", label: "United States", divisionType: "country", geoid: "US", sourceUrl: zipLayer },
-    ...states.map(id => ({ id, label: id.split(":").at(-1)!.toUpperCase(), divisionType: "state", geoid: "", sourceUrl: zipLayer })),
     ...divisions,
   ].map(d => [d.id, d])).values()];
 }

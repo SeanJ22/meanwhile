@@ -19,6 +19,40 @@ import {
 } from "../lib/sources/plural/index.ts";
 import { coverageAt } from "../lib/registry/server.ts";
 import registry from "../lib/registry/registry.json" with { type: "json" };
+import { collectNationalPlaceSources, electionDirectorySelection } from "../lib/sources/plural/place.ts";
+import { electionPageFields } from "../lib/hunt/election-page.ts";
+
+test("the national election directory follows its published form for any state", () => {
+  const page = { url: "https://www.eac.gov/voters/register-and-vote-in-your-state", collectedAt: "2026-09-30T00:00:00Z",
+    text: '<form action="/voters/state" method="get"><select name="state_id"><option value="12">Missouri</option><option value="13">Utah</option></select></form>' };
+  assert.equal(electionDirectorySelection(page, "Utah"), "https://www.eac.gov/voters/state?state_id=13");
+  assert.equal(electionDirectorySelection(page, "Unknown"), null);
+});
+
+test("official profile headings produce officeholders; news headlines do not", async () => {
+  const pages: Record<string, string> = {
+    "https://www.usa.gov/state-governments": '<a id="mo" href="/states/missouri">Missouri</a>',
+    "https://www.usa.gov/states/missouri": '<h1>Missouri</h1><a href="https://ag.example.gov/">Office of the Attorney General</a>',
+    "https://ag.example.gov/": '<h2>TRUE TRANSPARENCY</h2><a href="/about">Attorney General</a>',
+    "https://ag.example.gov/about": '<h1>Attorney General Jane Doe</h1>',
+  };
+  const result = await collectNationalPlaceSources({ now: "2026-09-30T00:00:00Z",
+    divisions: [{ id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" }],
+    read: async url => { if (!(url in pages)) throw Error("No page"); return { url, text: pages[url], collectedAt: "2026-09-30T00:00:00Z" }; } });
+  assert.deepEqual(result.officials.map(o => [o.name, o.officeTitle]), [["Jane Doe", "Attorney General"]]);
+  assert.equal(result.officials[0].document.url, "https://ag.example.gov/about");
+});
+
+test("election dates use explicit source year and official lookup links remain navigation", () => {
+  const page = { url: "https://elections.example.gov/calendar", collectedAt: "2026-09-30T00:00:00Z",
+    text: '<h1>2027 Voting Schedule</h1><p>October 5: Deadline to register to vote.</p><p>October 6: Early in-person voting begins.</p><a href="/poll">Find My Polling Place</a>' };
+  const fields = electionPageFields(page, "ocd-division/country:us/state:mo");
+  assert.deepEqual(fields.find(f => f.kind === "registration_deadline")?.dates, ["2027-10-05"]);
+  assert.match(fields[0].quote, /2027 Voting Schedule/);
+  assert.equal(fields.find(f => f.kind === "polling_lookup")?.value, "https://elections.example.gov/poll");
+  assert.equal(electionPageFields({ ...page, text: "<p>October 5: Deadline to register to vote.</p>" }, "division").length, 0);
+  assert.equal(electionPageFields({ ...page, text: "<p>February 30, 2027: Deadline to register to vote.</p>" }, "division").length, 0);
+});
 
 /**
  * State legislators, and the reconciliation that makes them attachable.

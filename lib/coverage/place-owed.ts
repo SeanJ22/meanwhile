@@ -46,7 +46,12 @@ export function buildPlaceOwedList(input: {
   const now = Date.parse(input.now);
   if (!Number.isFinite(now)) throw new Error("Invalid place capture time");
   const divisionIds = new Set(input.divisions.map(d => d.id));
-  const subjects = new Map(input.subjects.filter(s => s.divisionIds.some(id => divisionIds.has(id))).map(s => [s.id, s]));
+  const subjects = new Map<string, PlaceSubject>();
+  for (const subject of input.subjects) {
+    if (!subject.divisionIds.some(id => divisionIds.has(id))) continue;
+    const prior = subjects.get(subject.id);
+    subjects.set(subject.id, { ...subject, divisionIds: [...new Set([...(prior?.divisionIds ?? []), ...subject.divisionIds])] });
+  }
   for (const division of input.divisions) {
     subjects.set(division.id, { id: division.id, label: division.label, kind: "division", divisionIds: [division.id] });
     // Discovery is owed even after the first member of a family is found.

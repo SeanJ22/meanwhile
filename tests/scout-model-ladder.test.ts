@@ -61,13 +61,14 @@ import {
 } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { MIN_DISTINCT_RUNGS, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import { SCOUT_TOOL_SPECS } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { MODELS } from "../lib/models.ts";
 import type { WorkOutcome } from "../lib/control-plane/scheduler/dispatch.ts";
 
 const NOW = "2026-09-23T18:00:00.000Z"; // a Wednesday: outside the Saturday blackout the controller enforces
 const NOW_MS = Date.parse(NOW);
-const HAIKU = "claude-haiku-4-5";
-const SONNET = "claude-sonnet-5-5";
-const OPUS = "claude-opus-5-5";
+const HAIKU = MODELS.haiku.model;
+const SONNET = MODELS.sonnet.model;
+const OPUS = MODELS.opus.model;
 
 const OBLIGATION: FreshnessObligation = {
   id: "freshness:test:scout#ladder",

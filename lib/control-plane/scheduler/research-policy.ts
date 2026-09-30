@@ -44,14 +44,8 @@ export const WORKER_CREDENTIAL_VAR = "WTP_WORKERS_ANTHROPIC_API_KEY";
 export const SCOUT_PREWARM_ROUTE_ID = "scout:prewarm";
 
 export interface ScoutBound {
-  /** Model turns (requests) per Attempt. */
-  readonly maxTurns: number;
-  /** Research tool calls per Attempt. */
-  readonly maxToolCalls: number;
   /** Wall clock per Attempt. */
   readonly maxWallMs: number;
-  /** Provider-reported input+output tokens per Attempt. */
-  readonly maxTokens: number;
   /** Public requests per host per Attempt. Politeness that does not multiply. */
   readonly maxRequestsPerHost: number;
   /** `max_tokens` on each model response. */
@@ -75,10 +69,7 @@ export interface ResearchBounds {
 export const RESEARCH_BOUNDS: ResearchBounds = {
   maxConcurrentScouts: 4,
   perDispatch: {
-    maxTurns: 18,
-    maxToolCalls: 16,
     maxWallMs: 5 * 60_000,
-    maxTokens: 400_000,
     maxRequestsPerHost: 10,
     maxOutputTokensPerTurn: 8_192,
   },

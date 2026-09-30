@@ -464,7 +464,7 @@ export function scoutSystemPrompt(bound: ScoutBound, minRungs: number): string {
     "10. Provenance is the machine's. In finish, a candidate's observedOn is the `retrieved` date on the cited artifact's envelope, its permission is the `permission` verdict on that envelope, and its recordClass is the obligation's. State them as shown; the executor derives the values from the vault record and refuses a finish whose claims disagree with it.",
     "",
     "BOUNDS",
-    `${bound.maxTurns} model turns, ${bound.maxToolCalls} tool calls, ${bound.maxRequestsPerHost} requests per host, ${Math.round(bound.maxWallMs / 60_000)} minutes. When you are told BOUND REACHED, call finish immediately: outcome from what you have, rungsWalked complete, nextRungs naming exactly what you would have tried next so the next Attempt resumes rather than restarts.`,
+    `Continue until the work is done or the owner's budget reservation refuses another request. There is no fixed turn, tool-call or cumulative-token limit. Keep ${bound.maxRequestsPerHost} requests per host and each provider's request limits. When told to finish, return the evidence-supported outcome and the remaining nextRungs.`,
     "",
     "OUTCOMES: ROUTE_CANDIDATE (an evidence-backed route to the record), EVIDENCE_FOUND (the record or a pointer to it was acquired and vaulted), NEEDS_ADAPTER (a specific adapter is all that remains), BLOCKED (every walked rung hit an access control; robots.txt is never one), NO_PROGRESS (the ladder was walked and nothing advanced), HUMAN_REQUIRED (only a human or offline act remains).",
     "Be terse. Prose outside tool calls is wasted budget.",
@@ -640,29 +640,24 @@ export const SCOUT_ESCALATION_MIN_WALL_MS = 60_000;
 export const SCOUT_ESCALATION_EVIDENCE_MAX_CHARS = 300;
 
 /**
- * **THE MOST ONE MODEL ATTEMPT UNDER `bound` CAN COST AT `model`'s RATE.**
- * (2026-09-25.) Every token the attempt's token bound admits, plus one turn's
- * output past it (the bound is checked before a turn), priced at the dearest
- * per-token rate the model bills — its output rate, or a 5-minute cache write
- * if that were dearer. An upper bound for a reservation, not an estimate; the
- * per-request guard still reserves every request's own worst case on top.
+ * Initial response allowance at the model's dearest token rate. The attempt
+ * has no cumulative token cap. This starts the existing job/escalation hold;
+ * before sending, the request guard extends it for that request's full input
+ * and maximum output. Later requests must reserve their own cost the same way.
  * Null for a model with no stated rate.
  */
 export function scoutAttemptWorstCaseUsd(model: string, bound: ScoutBound): number | null {
   const rate = rateFor(model);
   if (rate === null) return null;
   const dearest = Math.max(rate.inputUsdPerMillion * CACHE_RATE_MULTIPLIERS.cacheCreation, rate.outputUsdPerMillion);
-  return ((bound.maxTokens + bound.maxOutputTokensPerTurn) / 1_000_000) * dearest;
+  return (bound.maxOutputTokensPerTurn / 1_000_000) * dearest;
 }
 
 /**
  * **WHAT ONE SCOUT JOB HOLDS AGAINST A SEND OR AREA BUDGET BEFORE IT STARTS.**
- * (MW-021, 2026-09-25.) Its first attempt's worst case at the model the loop
- * starts on (`scoutAttemptWorstCaseUsd`, from the same bound the loop
- * enforces), replacing the flat $0.60 the budgets held. An escalation holds
- * its own worst case before it runs, and every request past the job's hold
- * must win a further hold first (`spend-holds.ts`), so this need not cover
- * them. Null when the start model has no stated rate: no budget can be held,
+ * Initial response allowance at the starting tier. Every request, including
+ * the first, must hold its full worst-case cost before sending (spend-holds.ts).
+ * Null when the start model has no stated rate: no budget can be held,
  * and budgeted work waits.
  */
 export function scoutJobWorstCaseUsd(bound: ScoutBound, modelOverride?: string): number | null {
@@ -1297,14 +1292,10 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       let earlyAbsenceRefusedAtRungs: number | null = null;
       let representationBytesThisTurn = 0;
       /*
-       * PER MODEL ATTEMPT (MW-033, 2026-09-25). The turn and token bounds are
-       * per model attempt, so an escalated attempt gets its own; the wall clock,
-       * the tool-call bound and the per-host bound are the ATTEMPT's and are
-       * shared — an escalation buys a stronger model, never more requests to a
-       * publisher and never a longer lease.
+       * Escalation changes the model, never the website request allowance.
+       * Every model request still passes the existing budget reservation.
        */
       let attemptTurns = 0;
-      let attemptTokensBase = 0;
       /*
        * EARLY STOP (2026-09-19). A walk that has cleared the minRungs floor and
        * then adds no new distinct evidence-backed rung for STALL_TURNS turns is
@@ -1337,12 +1328,8 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         ];
       }
 
-      const tokensSoFar = () => usage.input + usage.output + usage.cacheRead + usage.cacheCreate;
       const boundReached = (): string | null => {
-        if (attemptTurns >= bound.maxTurns) return `the turn bound (${bound.maxTurns}) is reached`;
-        if (toolkit.toolCalls >= bound.maxToolCalls) return `the tool-call bound (${bound.maxToolCalls}) is reached`;
         if (Date.now() - startedMs >= bound.maxWallMs) return `the wall-clock bound (${Math.round(bound.maxWallMs / 1000)}s) is reached`;
-        if (tokensSoFar() - attemptTokensBase >= bound.maxTokens) return `the token bound (${bound.maxTokens}) is reached`;
         return null;
       };
 
@@ -1646,8 +1633,8 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
               budgetBytes: SCOUT_CONTEXT_TOOL_RESULT_BUDGET,
               restart: contextRestarts,
               state:
-                `WHERE THE ATTEMPT STANDS: ${attemptTurns} of ${bound.maxTurns} turns used by this model; ` +
-                `${toolkit.toolCalls} of ${bound.maxToolCalls} research tool calls used.` +
+                `WHERE THE ATTEMPT STANDS: ${attemptTurns} turns used by this model; ` +
+                `${toolkit.toolCalls} research tool calls used. The owner's budget governs continuation.` +
                 (boundNotice !== null ? ` BOUND REACHED: ${boundNotice}. Call finish NOW with the typed result; no research tool will run.` : ""),
             });
             messages.splice(0, messages.length, {
@@ -1812,7 +1799,6 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
            */
           const resetForSecondAttempt = (): void => {
             attemptTurns = 0;
-            attemptTokensBase = tokensSoFar();
             stoppedBy = "MODEL";
             boundNotice = null;
             graceUsed = 0;
@@ -1824,7 +1810,6 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             stallTurns = 0;
           };
           resetForSecondAttempt();
-          const toolsLeft = Math.max(0, bound.maxToolCalls - toolkit.toolCalls);
           /*
            * THE FRONTIER CONTINUES THE SAME CONVERSATION, APPENDED TO — NOT A
            * FRESH ONE, AND NO SONNET BLOCK IS STRIPPED (2026-09-25). Why this is
@@ -1862,7 +1847,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
                 text:
                   `ESCALATED: this investigation moves from ${previousAttempt.model} to ${escalationTarget.model} because ${reason}: ${observed.evidence}. ` +
                   "Everything above carries forward — the rungs walked, the vaulted artifacts and their representations; do not re-walk or re-read them (a re-read is refused). " +
-                  `The Attempt's public-host bounds are shared: ${toolsLeft} research tool call(s) remain. Continue from what is established and call finish with the typed result.`,
+                  `The Attempt's public-host bounds are shared. Continue from what is established within the owner's budget and call finish with the typed result.`,
               },
             ] satisfies UserContent,
           });

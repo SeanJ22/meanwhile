@@ -226,7 +226,7 @@ function context(overrides: Partial<ScoutToolContext> & { readonly openOne: Open
     holder: "scout-test",
     vault: recordingVault().put,
     spaceOut: async () => {},
-    bound: { ...RESEARCH_BOUNDS.perDispatch, maxRequestsPerHost: 3, maxToolCalls: 16 },
+    bound: { ...RESEARCH_BOUNDS.perDispatch, maxRequestsPerHost: 3 },
     now: () => NOW,
     inherited: { artifactIds: [], summary: "" },
     ...overrides,
@@ -800,6 +800,21 @@ test('browser text and observed network URLs come only from saved sanitized deri
   assert.ok(saved.every(p=>p.artifact.tier==='SANITIZED_DERIVED'&&!p.body.includes(key)));
 });
 
+test('collector reads a sanitized profile after robots404 and preserves its redirect and raw hash',async()=>{
+ const key=['AI','za'].join('')+'SyD4mQ8vX1nR7pLbT2wCzE0jHfGuY5aKs_-3xNp'.slice(0,35);
+ const url='https://ohiohouse.gov/c-allison-russo',finalUrl='https://ohiohouse.gov/members/c-allison-russo';
+ const body=`<html><body><h1>C. Allison Russo</h1><script>const k="${key}"</script></body></html>`;
+ const vault=recordingVault();
+ const read=savedPageReader(context({openOne:fakeTransport({}).open,openBytes:async({url:target})=>({
+   status:target.endsWith('/robots.txt')?404:200,bytes:Buffer.from(target.endsWith('/robots.txt')?'Not found':body),
+   contentType:'text/html;charset=UTF-8',finalUrl:target.endsWith('/robots.txt')?target:finalUrl,durationMs:1,transportError:null}),
+   vault:async(a,text)=>a.tier==='RESTRICTED_RAW'?{stored:false,where:'',why:'restricted provider absent'}:vault.put(a,text)}));
+ const page=await read(url),saved=vault.puts.find(row=>row.artifact.id===page.artifactId)!;
+ assert.equal(page.url,finalUrl);assert.match(page.text,/C\. Allison Russo/);assert.ok(!page.text.includes(key));
+ assert.equal(saved.artifact.tier,'SANITIZED_DERIVED');assert.equal(saved.artifact.derivation?.rawHash,contentHash(body));
+ assert.ok(vault.puts.some(row=>row.artifact.methodRouteId==='scout:read_permission'&&row.artifact.httpStatus===404));
+});
+
 function minimalPdf(text: string, contentStream?: string): Uint8Array {
   const stream = contentStream ?? `BT /F1 18 Tf 10 50 Td (${text}) Tj ET`;
   const pdf =
@@ -1022,19 +1037,17 @@ test("browse with a refusing vault shows nothing of the page or the request list
 
 /* ================================================= bounds and refusals */
 
-test("the tool-call bound refuses the (N+1)th call and names it; read_inherited counts as a call", async () => {
+test("held reads continue past the retired tool-call cap without network requests", async () => {
   const { open } = fakeTransport({});
-  const kit = buildScoutToolkit(context({ openOne: open, bound: { ...RESEARCH_BOUNDS.perDispatch, maxToolCalls: 2 }, inherited: { artifactIds: ["ar-inherited"], summary: "prior: 4get answered 200 with zero result links" } }));
+  const kit = buildScoutToolkit(context({ openOne: open, inherited: { artifactIds: ["ar-inherited"], summary: "prior: 4get answered 200 with zero result links" } }));
   const a = await kit.call("read_inherited", IN, null);
   assert.equal(a.ok, true);
   assert.equal(a.rung, null);
   assert.match(a.forModel, /ar-inherited/);
   assert.match(a.forModel, /zero result links/);
-  assert.equal((await kit.call("read_inherited", IN, null)).ok, true);
-  const third = await kit.call("read_inherited", IN, null);
-  assert.equal(third.ok, false);
-  assert.match(third.forModel, /tool-call bound \(2\) is reached/);
-  assert.equal(kit.toolCalls, 2, "a refused over-bound call is not a research call");
+  for(let i=1;i<40;i++)assert.equal((await kit.call("read_inherited",IN,null)).ok,true);
+  assert.equal(kit.toolCalls,40);
+  assert.equal(kit.requestCount,0);
 });
 
 test("input refusals: a private host, a missing rung, an unknown rung, an unknown tool — nothing is requested", async () => {

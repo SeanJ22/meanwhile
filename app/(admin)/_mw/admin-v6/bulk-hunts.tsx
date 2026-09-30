@@ -85,8 +85,7 @@ export function BulkHunts(props: {
   const [picks, setPicks] = useState<readonly BulkPick[]>(props.initialPick ? [props.initialPick] : []);
   const [pickState, setPickState] = useState(props.initialPick?.state ?? "AZ");
   const [pickType, setPickType] = useState<"state" | "congressional_district" | "county">("congressional_district");
-  const [choices, setChoices] = useState<readonly { readonly geoid: string; readonly label: string }[] | null>(null);
-  const [choiceNote, setChoiceNote] = useState<string | null>(null);
+  const [lists, setLists] = useState<Readonly<Record<string, { readonly items: readonly { readonly geoid: string; readonly label: string }[] | null; readonly note: string | null }>>>({});
   const [mode, setMode] = useState<Mode>("same");
   const [amount, setAmount] = useState("5");
   const [priority, setPriority] = useState("1");
@@ -100,21 +99,25 @@ export function BulkHunts(props: {
 
   useEffect(() => { dialogRef.current?.focus(); }, []);
 
-  // The districts or counties of the chosen state, when picking those.
+  // The districts or counties of the chosen state, when picking those. Each answer is kept under the question it answers.
+  const listKey = source === "pick" && pickType !== "state" ? `${pickType}:${pickState}` : null;
+  const held = listKey === null ? null : lists[listKey] ?? null;
+  const choices = held?.items ?? null;
+  const choiceNote = listKey === null ? null : held === null ? "Reading the list…" : held.note;
   useEffect(() => {
-    if (source !== "pick" || pickType === "state") { setChoices(null); setChoiceNote(null); return; }
+    if (listKey === null || lists[listKey] !== undefined) return;
     const ctl = new AbortController();
-    setChoices(null);
-    setChoiceNote("Reading the list…");
-    fetch(`/api/admin/bulk-hunts?list=${pickType}&state=${pickState}`, { signal: ctl.signal, headers: { accept: "application/json" } })
+    const [type, state] = listKey.split(":");
+    const keep = (value: { items: readonly { geoid: string; label: string }[] | null; note: string | null }) => { if (!ctl.signal.aborted) setLists((m) => ({ ...m, [listKey]: value })); };
+    fetch(`/api/admin/bulk-hunts?list=${type}&state=${state}`, { signal: ctl.signal, headers: { accept: "application/json" } })
       .then(async (r) => ({ ok: r.ok, body: (await r.json().catch(() => null)) as { items?: { geoid: string; label: string }[]; says?: string } | null }))
       .then(({ ok, body }) => {
-        if (ok && body?.items) { setChoices(body.items); setChoiceNote(body.items.length === 0 ? "Nothing is published for that yet." : null); }
-        else setChoiceNote(body?.says ?? "The list could not be read.");
+        if (ok && body?.items) keep({ items: body.items, note: body.items.length === 0 ? "Nothing is published for that yet." : null });
+        else keep({ items: null, note: body?.says ?? "The list could not be read." });
       })
-      .catch(() => { if (!ctl.signal.aborted) setChoiceNote("The list could not be read."); });
+      .catch(() => keep({ items: null, note: "The list could not be read." }));
     return () => ctl.abort();
-  }, [source, pickType, pickState]);
+  }, [listKey, lists]);
 
   const addPick = (p: BulkPick) => { setPicks((list) => (list.some((x) => x.kind === p.kind && x.state === p.state && x.geoid === p.geoid) ? list : [...list, p])); invalidate(); };
 

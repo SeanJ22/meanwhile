@@ -194,7 +194,8 @@ export async function readPulse(
       snapshotRevision: snapshot.value?.revision ?? null, researchRevision: research.value?.revision ?? null,
       heartbeatRevision: heartbeat.value?.revision ?? null,
       sourceProgressId: sourceProgress.value?.[0]?.digestId ?? null,
-      workerAgeBucket: Math.floor(Date.parse(nowIso) / 300_000) }),
+      workerAgeBucket: Math.floor(Date.parse(nowIso) / 300_000),
+      historyRevision: receipts.value !== null && intents.value !== null ? `${receipts.value.length}:${intents.value.length}` : null }),
     runner: {
       beatAt: beat?.beatAt ?? null,
       lastCycleFinishedAt: beat?.lastCycleFinishedAt ?? null,

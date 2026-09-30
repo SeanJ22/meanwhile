@@ -160,7 +160,7 @@ test("the pulse from the narrowed rows is the pulse from the whole rows, field f
 test("a saved owner policy and snapshot announce Money and Hunts on the existing pulse", async () => {
   const repos = await publishedWorld();
   const before = await readPulse(repos, NOW);
-  assert.deepEqual(before.v6?.sections, {}, "an unread owner policy cannot claim a hunt list");
+  assert.deepEqual(Object.keys(before.v6?.sections ?? {}), ["history"], "an unread owner policy cannot claim a hunt list; saved receipts can still claim History");
   await repos.adminConfig.put("current", any({ expansionScopes: [], fleetSpendCeiling: null }), NOW);
   const after = await readPulse(repos, NOW);
   assert.equal(after.v6?.sections.hunts?.contract, "admin-v6/hunts@1");

@@ -34,7 +34,7 @@ export function meetingFetchPass(options: {
           take(url);
           const headers = new Headers(init?.headers ?? (input instanceof Request ? input.headers : undefined));
           const result = await (options.curl ?? curlGetText)(url, curlRequestHeaders(headers.get("accept") ?? undefined), signal ?? undefined);
-          response = new Response(result.bytes, { status: result.status, headers: { "content-type": result.contentType } });
+          response = new Response(new Uint8Array(result.bytes).buffer, { status: result.status, headers: { "content-type": result.contentType } });
           Object.defineProperty(response, "url", { value: result.finalUrl || url });
         }
         if (!response.ok || challengeIn(await response.clone().text()) !== null) responses.delete(key);

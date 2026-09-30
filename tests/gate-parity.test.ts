@@ -58,6 +58,9 @@ const NOT_A_GATE = [
   "corepack enable",
   "corepack pnpm install --frozen-lockfile",
   "corepack pnpm exec playwright install --with-deps chromium",
+  // APT archive reuse is installation scaffolding; dependency validation stays.
+  'mkdir -p "$RUNNER_TEMP/playwright-apt"',
+  String.raw`printf 'Dir::Cache::archives "%s";\nBinary::apt-get::APT::Keep-Downloaded-Packages "true";\n' "$RUNNER_TEMP/playwright-apt" | sudo tee /etc/apt/apt.conf.d/99-playwright-cache > /dev/null`,
   "echo \"path=$(corepack pnpm store path --silent)\" >> \"$GITHUB_OUTPUT\"",
   "node scripts/trace-census.mjs --files trace-files.txt",
   "node scripts/netlify-ignore.mjs --ci",

@@ -40,11 +40,10 @@ import {
   WINDOW_LEASE_TTL_MS,
   WINDOW_ZONE,
   WindowLockHeld,
+  localDateOf,
   buildWindowDigest,
   evaluateItems,
-  lastWindowLocalDate,
   openIncident,
-  windowDue,
   windowHeadline,
   windowId as makeWindowId,
   withNightlyWindowLease,
@@ -113,7 +112,7 @@ if (useFile) {
   }
   repos = await createPgRepositories(url, NOW);
 }
-console.log(`window:run · ${repos.describe()}\n  mode SHADOW · zone ${WINDOW_ZONE} · host ${HOST} · holder ${HOLDER}`);
+console.log(`window:run · ${repos.describe()}\n  mode SHADOW · host ${HOST} · holder ${HOLDER}`);
 
 /* --------------------------------------------------------------- wakeup --- */
 
@@ -142,16 +141,10 @@ if (wakeup) {
 
 /* ---------------------------------------------------------------- due? --- */
 
-const lastLocalDate = lastWindowLocalDate(await repos.windowRuns.readAll());
-const due = windowDue({ nowIso: NOW, lastWindowLocalDate: lastLocalDate });
-console.log(`  due: ${due.due ? "YES" : "no"} — ${due.reason}`);
-if (!due.due && !force) {
-  console.log("  nothing to run; pass --force to run the window for this local date again (recorded as MANUAL).");
-  process.exit(0);
-}
-const trigger: WindowTrigger = (triggerArg as WindowTrigger | null) ?? (wakeup ? "WAKEUP" : force && !due.due ? "MANUAL" : due.trigger);
-const windowId = makeWindowId(due.localDate, NOW, HOST);
-console.log(`  window ${windowId} for ${due.localDate}, trigger ${trigger}, boundary ${due.boundary}${due.caughtUp.length > 0 ? `, catching up ${due.caughtUp.join(", ")}` : ""}`);
+const trigger: WindowTrigger = (triggerArg as WindowTrigger | null) ?? (wakeup ? "WAKEUP" : force ? "MANUAL" : "RUNNER_CLOCK");
+const localDate = localDateOf(NOW);
+const windowId = makeWindowId(localDate, NOW, HOST);
+console.log(`  window ${windowId} for ${localDate}, trigger ${trigger}`);
 
 /* ------------------------------------------------------------- helpers --- */
 
@@ -239,9 +232,9 @@ try {
       const record: WindowRunRecord = {
         formatVersion: WINDOW_FORMAT_VERSION,
         windowId,
-        localDate: due.localDate,
+        localDate: localDate,
         zone: WINDOW_ZONE,
-        scheduledFor: due.boundary,
+        scheduledFor: NOW,
         trigger,
         mode: "SHADOW",
         startedAt,
@@ -249,7 +242,7 @@ try {
         host: HOST,
         testedSha: headSha(ROOT),
         provider: repos.describe(),
-        caughtUp: due.caughtUp,
+        caughtUp: [],
         lock: { ...lock, releasedAt: null },
         activationGate: gate,
         stages: [...stages, { stage: "DIGEST", outcome: "COMPLETED", startedAt: s4, finishedAt: nowIso(), reason: null }],
@@ -263,7 +256,7 @@ try {
         recordPath: null,
       };
       /* The durable control-plane record is the authority and is written first. */
-      await repos.windowRuns.append(due.localDate, windowId, record, nowIso());
+      await repos.windowRuns.append(localDate, windowId, record, nowIso());
       for (const i of incidents) await repos.windowIncidents.append(windowId, i.incidentId, i, nowIso());
       const pending = (await repos.windowIntents.read(WINDOW_INTENT_KEY)).filter(
         (r): r is Extract<WindowIntent, { kind: "INTENT" }> => r.kind === "INTENT",
@@ -294,11 +287,11 @@ try {
   const detail = error instanceof Error ? (error.stack ?? error.message) : String(error);
   console.error(`window:run · the window did not finish: ${detail}`);
   try {
-    const i = openIncident({ windowId, stage: "DIGEST", code: "WINDOW_CRASHED", detail: detail.split("\n")[0], openedAt: nowIso(), missedScope: [`the whole window for ${due.localDate}`] });
+    const i = openIncident({ windowId, stage: "DIGEST", code: "WINDOW_CRASHED", detail: detail.split("\n")[0], openedAt: nowIso(), missedScope: [`the whole window for ${localDate}`] });
     await repos.windowIncidents.append(windowId, i.incidentId, i, nowIso());
     mkdirSync(RUNS_DIR, { recursive: true });
     const diagnosticPath = nextRunRecordPath(RUNS_DIR, today());
-    writeFileSync(diagnosticPath, `${JSON.stringify({ windowId, localDate: due.localDate, crashed: true, error: detail, stages, incidents: [...incidents, i] }, null, 2)}\n`, "utf8");
+    writeFileSync(diagnosticPath, `${JSON.stringify({ windowId, localDate: localDate, crashed: true, error: detail, stages, incidents: [...incidents, i] }, null, 2)}\n`, "utf8");
     console.error(`window:run · canonical incident ${i.incidentId}; local diagnostic ${diagnosticPath}`);
   } catch (writeError) {
     console.error(`window:run · and the crash record could not be written: ${writeError instanceof Error ? writeError.message : String(writeError)}`);

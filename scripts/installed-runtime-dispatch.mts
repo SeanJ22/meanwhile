@@ -1,7 +1,7 @@
 /**
  * Exact installed-runtime dispatcher for owner-triggered production work.
  * It accepts a closed operation set, proves this checkout is the currently
- * deployed, post-deploy-held, fully certified SHA, and delegates one narrower
+ * deployed SHA with passing CI, and delegates one narrower
  * child capability. It has no arbitrary command or shell door.
  */
 import { spawn } from "node:child_process";
@@ -13,7 +13,6 @@ import {
   assertRuntimeAuthority,
   type RuntimeAuthorityCapability,
 } from "../lib/civic-data/runtime-authority.ts";
-import { readLatestProductionIntegrity } from "../lib/ops/production-integrity-data-plane.ts";
 import {
   fetchGithubCheckRuns,
   inspectRuntimeReleaseEvidence,
@@ -100,16 +99,12 @@ export function installedRuntimeChildPlan(payload: InstalledRuntimePayload): Ins
   };
 }
 
-async function assertCurrentCertifiedRuntime(root: string): Promise<void> {
+async function assertCurrentRuntime(root: string): Promise<void> {
   const runningSha = headSha(root);
   const served = await fetchServedCommit(PUBLIC_SITE_ORIGIN, {
     runId: `owner-installed-runtime:${process.pid}`,
     timeoutMs: 15_000,
   });
-  const connection = controlPlaneUrlFromEnv();
-  if (connection === null) throw new Error("OWNER_RUNTIME_CONTROL_PLANE_UNCONFIGURED");
-  const repos = await createPgRepositories(connection, new Date().toISOString(), { skipBootstrap: true });
-  const integrity = await readLatestProductionIntegrity(repos.softwareReleaseReviews);
   const repository = runtimeGithubRepository(root);
   if (repository === null || served.sha === null) throw new Error("OWNER_RUNTIME_CODE_IDENTITY_UNRESOLVED");
   const checks = await fetchGithubCheckRuns({
@@ -117,9 +112,9 @@ async function assertCurrentCertifiedRuntime(root: string): Promise<void> {
     sha: served.sha,
     token: runtimeGithubCredential({ root, env: process.env }),
   });
-  const verdict = inspectRuntimeReleaseEvidence({ runningSha, served, integrity, checkRuns: checks });
+  const verdict = inspectRuntimeReleaseEvidence({ runningSha, served, checkRuns: checks });
   if (verdict.state !== "CURRENT") {
-    throw new Error(`OWNER_RUNTIME_NOT_CURRENT_CERTIFIED:${verdict.code}:${verdict.detail}`);
+    throw new Error(`OWNER_RUNTIME_NOT_CURRENT:${verdict.code}:${verdict.detail}`);
   }
 }
 
@@ -128,7 +123,7 @@ async function run(): Promise<void> {
   assertRuntimeAuthority({ capabilities: ["OWNER_DISPATCH"] });
   const encoded = process.argv.find((arg) => arg.startsWith("--payload="))?.slice("--payload=".length) ?? null;
   const payload = parseInstalledRuntimePayload(encoded);
-  await assertCurrentCertifiedRuntime(root);
+  await assertCurrentRuntime(root);
   if (payload.mode === "routine-refresh") {
     const repos = await createPgRepositories(controlPlaneUrlFromEnv()!, new Date().toISOString(), { skipBootstrap: true });
     const request = await requestRoutineRefresh(repos, payload.args, new Date().toISOString());

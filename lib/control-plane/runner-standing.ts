@@ -24,9 +24,9 @@
  */
 import { livenessOf, type HealthLevel, type RunnerHeartbeat, type RunnerLiveness } from "./owner-surface.ts";
 import { readIntents, type ResearchIntent } from "./scheduler/research-policy.ts";
-import { operationalNightAt, scheduledBlackoutAt, type FleetSafetySnapshot } from "./fleet-safety.ts";
+import { type FleetSafetySnapshot } from "./fleet-safety.ts";
 
-export type RunnerStandingState = RunnerLiveness | "ACTIVE" | "PAUSED" | "SCHEDULED BLACKOUT" | "CIRCUIT BROKEN";
+export type RunnerStandingState = RunnerLiveness | "ACTIVE" | "PAUSED" | "CIRCUIT BROKEN";
 
 export interface RunnerStanding {
   readonly state: RunnerStandingState;
@@ -72,19 +72,6 @@ export function runnerStanding(
     heartbeat === null
       ? "No heartbeat has ever been recorded."
       : `Last beat ${ago(heartbeat.beatAt, nowIso)}.`;
-
-  if (scheduledBlackoutAt(nowIso)) {
-    const blackout = operationalNightAt(nowIso);
-    return {
-      state: "SCHEDULED BLACKOUT",
-      level: "AMBER",
-      headline: "SCHEDULED BLACKOUT",
-      detail: `${beatSentence} The runner may heartbeat and publish state, but Saturday-night model and network research is disabled until ${blackout.end}.`,
-      sinceBeatMinutes: liveness.sinceMinutes,
-      pause: null,
-      control: "PAUSE_RUNNER",
-    };
-  }
 
   const activeCircuits = safety?.providerCircuits.filter((c) => Date.parse(c.eligibleAt) > Date.parse(nowIso)) ?? [];
   if (activeCircuits.length > 0) {

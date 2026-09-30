@@ -1,5 +1,6 @@
 import type { GeneralizedCivicExtractionContract, ValidatorResult, ValidatorWorkerInput, WorkerFinding } from "./types.ts";
 import { assertGeneralizedScope, inventoryRecordEvidence, RecordEvidenceRefusal } from "./record-evidence.ts";
+import { isQuotedExtraction, quotedSourceFindings } from "./quoted-proof.ts";
 import { compareCandidateWithSource, findingsVerdict, issue, verifyExternalAuthorities } from "./record-verification.ts";
 export function validateGeneralizedExtraction(input: ValidatorWorkerInput, contract: GeneralizedCivicExtractionContract): ValidatorResult {
   const findings: WorkerFinding[] = [];
@@ -7,7 +8,8 @@ export function validateGeneralizedExtraction(input: ValidatorWorkerInput, contr
   if (input.candidate.attemptId !== input.producerAttemptId || !input.worker.provider || !input.worker.version || !input.producer.provider || !input.producer.version) findings.push(issue("MACHINE_PROVENANCE_MISMATCH", "Candidate and worker identities must match machine-issued producer provenance."));
   if (input.candidate.verdict !== "EXTRACTED") findings.push(issue("PARSER_RESULT_UNRESOLVED", "Failed or ambiguous parser results cannot supply fully validated records.", input.candidate.verdict === "FAILED" ? "BLOCKING" : "WARNING"));
   findings.push(...input.candidate.warnings);
-  try { assertGeneralizedScope(contract, input.evidence); findings.push(...compareCandidateWithSource(input.candidate, contract, input.evidence, inventoryRecordEvidence(input.evidence, contract.extraction))); }
+  try { assertGeneralizedScope(contract, input.evidence); findings.push(...(isQuotedExtraction(contract, input.candidate) ? quotedSourceFindings(input.candidate, contract, input.evidence)
+    : compareCandidateWithSource(input.candidate, contract, input.evidence, inventoryRecordEvidence(input.evidence, contract.extraction)))); }
   catch (error) { if (!(error instanceof RecordEvidenceRefusal)) throw error; findings.push(issue(error.code, error.message)); }
   const extractionVerdict = findingsVerdict(findings);
   const externalVerifications = verifyExternalAuthorities(input, contract);

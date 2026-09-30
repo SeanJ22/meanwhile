@@ -7,7 +7,6 @@
 import { canonicalInstant } from "../../civic-data/routine-due-request.ts";
 import { DIGEST_LOG_KEY } from "../admin-data.ts";
 import type { RunnerHeartbeat } from "../owner-surface.ts";
-import { runtimeReleaseAdoptionHash } from "../readiness/checklist-running-release-witness.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
 import type { Sql } from "../repository/pg-store.ts";
 
@@ -110,25 +109,12 @@ export function workerVersionReading(input: {
   if (!input.latest.available) missingParts.push(input.latest.reason ?? "LATEST_CYCLE_UNREADABLE");
   else if (!cycle) missingParts.push("NO_SAVED_CYCLE");
   else if (!lastExecutedSha) missingParts.push("CYCLE_TESTED_SHA_UNKNOWN");
-  // A heartbeat can preserve a previous process's adoption proof across a
-  // restart; without a process identity on each cycle it cannot certify this
-  // current process. Expose its original clock only when it matches the cycle.
-  const proof = input.heartbeat?.runtimeRelease;
-  const proofMatches = proof && cycle && lastExecutedSha &&
-    proof.formatVersion === 1 && proof.inspectionCode === "RUNTIME_RELEASE_CURRENT" &&
-    nonempty(proof.processIdentity) && validSha(proof.integritySha) &&
-    proof.runningSha === lastExecutedSha && proof.servedSha === servedSha &&
-    proof.integritySha === servedSha &&
-    canonicalInstant(proof.observedAt) && Date.parse(proof.observedAt) <= Date.parse(cycle.startedAt) &&
-    canonicalInstant(proof.integrityObservedAt) && Date.parse(proof.integrityObservedAt) <= Date.parse(proof.observedAt) &&
-    canonicalInstant(input.heartbeat?.beatAt) && Date.parse(input.heartbeat.beatAt) >= Date.parse(cycle.finishedAt) &&
-    input.heartbeat?.testedSha === lastExecutedSha &&
-    runtimeReleaseAdoptionHash((({ evidenceHash: _evidenceHash, ...rest }) => rest)(proof)) === proof.evidenceHash;
-  if (!proofMatches) missingParts.push("CURRENT_PROCESS_ADOPTION_UNPROVED");
+  // Version comes from the saved execution and normal heartbeat, without an adoption receipt.
+  // Neither clock records the instant the process switched code.
   return {
     servedSha, lastExecutedSha, lastCycleAt: cycle?.finishedAt ?? null,
     lastCycleDigestId: cycle?.digestId ?? null, versionRelation: relation,
-    updatePending: null, adoptionObservedAt: proofMatches ? proof.observedAt : null,
+    updatePending: null, adoptionObservedAt: null,
     nextAdoptionPath: servedSha && relation === "DIFFERS_FROM_LAST_CYCLE"
       ? "The permanent runner supports release-handoff at a normal quiescent boundary, followed by supervisor relaunch. Whether this process has that mode enabled or a handoff scheduled is not saved here."
       : null,

@@ -64,6 +64,18 @@ const nextConfig: NextConfig = {
     WTP_BUILD_DEPLOY_ID: process.env.DEPLOY_ID ?? "",
     WTP_BUILD_ON_NETLIFY: process.env.NETLIFY ?? "",
   },
+  async rewrites() {
+    if (process.env.WTP_VAULT_PROVIDER !== "netlify") return [];
+    return {
+      // Use the selected remote provider even while retained public originals
+      // still exist. Enable it in the destination project's build settings
+      // after the transfer; existing URLs remain the same.
+      beforeFiles: ["officials", "candidates"].map(family => ({
+        source: `/${family}/:path*`, destination: `/api/portraits/${family}/:path*`,
+      })),
+      afterFiles: [], fallback: [],
+    };
+  },
   // Only static geography/schema inputs remain file-backed in production.
   // `readdir`/dynamic paths defeat Next's static tracing, so those inputs are
   // named per consuming route. Tracked civic-data first seeds are deliberately

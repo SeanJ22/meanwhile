@@ -31,7 +31,7 @@ export const RADIUS_LADDER_KM = [25, 60, 150] as const;
  * It is still a BUDGET and never a completion condition: a body publishing
  * further ahead than this is trimmed here, and that trim is ours to name.
  */
-export const UPCOMING_HORIZON_DAYS = 120;
+export const UPCOMING_HORIZON_DAYS = 90;
 
 /**
  * How far back the served window reaches (3g, 2026-08-16: 30 → 90). This

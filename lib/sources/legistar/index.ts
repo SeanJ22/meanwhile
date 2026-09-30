@@ -541,7 +541,7 @@ export function makeLegistarSource(
       // before spending a request on it. Venue coordinates are the only
       // geography the adapter has, and they are known locally; a client with
       // none is read (see `venuesWithinRadius`).
-      if (!venuesWithinRadius(client.venues, query)) continue;
+      if (!venuesWithinRadius(client.venues, query)) return;
 
       const events = await fetchEvents<LegistarEvent>(client.slug, { from, to }, {
         signal: query.signal,

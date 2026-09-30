@@ -33,17 +33,34 @@ process.on("disconnect", () => {
 async function work(config: LeaseWorkerConfig): Promise<void> {
   const url = config.postgres ? controlPlaneUrlFromEnv() : null;
   if (config.postgres && !url) throw new Error("CONTROL_PLANE_DATABASE_UNCONFIGURED");
-  const repos = url ? await createPgRepositories(url) : await createFileRepositories(config.fileStoreRoot ?? join(config.root, ".runtime/control-plane/freshness-shadow"));
+  const repos = url ? await createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true })
+    : await createFileRepositories(config.fileStoreRoot ?? join(config.root, ".runtime/control-plane/freshness-shadow"));
+  if (config.nationalZips) {
+    const [{ runNationalPlaceTask }, { PostgresRoutineDataStore }, { publishNationalPlaceSources },
+      { DurableEvidenceStore }, { VAULT_DIR }, { hostSpacer }, { serializeHostSpacing }] = await Promise.all([
+      import("../../hunt/place-source-task.ts"), import("../../civic-data/store.ts"),
+      import("../../civic-data/worker-national-publication.ts"), import("../evidence/durable-store.ts"),
+      import("../scheduler/vault.ts"), import("../scheduler/http-executor.ts"), import("./host-spacing.ts")]);
+    const tools = { repos, store: new DurableEvidenceStore(join(config.root, ...VAULT_DIR)),
+      spaceOut: serializeHostSpacing(hostSpacer()), browse: browseWithPlaywright, now: () => new Date().toISOString() };
+    for (const zip of config.taskIds) {
+      await runNationalPlaceTask({ tools, store: new PostgresRoutineDataStore(), zips: [zip], publish: input =>
+        publishNationalPlaceSources({ ...input, divisions: input.divisions.filter(row => row.sourceDataset)
+          .map(row => ({ ...row, sourceDataset: row.sourceDataset! })) }) });
+    }
+    send("finished", "", config.taskIds);
+    process.disconnect();
+    return;
+  }
   const safety = new FleetSafetyController({ now: new Date().toISOString(), costs: [], rollingCeilingUsd: config.ceilingUsd });
   const pending = new Set(config.taskIds);
   // Each process runs one live lease at a time, always pulling current task state.
   // The first process to claim wins in the existing repository dispatcher.
   while (pending.size) {
-    const tasks = new Map((await repos.routeTasks.list()).map(row => [row.id, row.value]));
     let ran = false;
     for (const id of pending) {
       pending.delete(id);
-      const task = tasks.get(id);
+      const task = (await repos.routeTasks.read(id))?.value;
       if (!task || !["PENDING", "RECLAIMABLE"].includes(task.state)) continue;
       taskId = id;
       const item = (await repos.workItems.mustRead(task.workItemId)).value;

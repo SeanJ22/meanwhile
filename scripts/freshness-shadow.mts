@@ -15,6 +15,8 @@ import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { isRetiredRoutineMeetingAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
 import { planRepairBrief } from "../lib/control-plane/workers/plan-repair.ts";
 import { observeCyclePhases } from "../lib/control-plane/scheduler/cycle-phases.ts";
+import { cycleStateWriter } from "../lib/control-plane/scheduler/cycle-state-writer.ts";
+import { selectedCycleRepositories } from "../lib/control-plane/scheduler/cycle-selection.ts";
 import { readRelaunchTriggerVerification } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { runAdminEvidenceMirror } from "../lib/control-plane/evidence/admin-bridge-runner.ts";
@@ -511,6 +513,7 @@ const ONLY = onlyArg ? onlyArg.slice("--only=".length) : null;
 /* Exact obligation ids, comma-separated. A DIAGNOSTIC filter like --only, for a proof run. */
 const idsArg = argv.find((a) => a.startsWith("--ids="));
 const IDS = idsArg ? new Set(idsArg.slice("--ids=".length).split(",").map((s) => s.trim()).filter(Boolean)) : null;
+const filteredCycle = canary || IDS !== null || ONLY !== null;
 if (canary && (IDS === null || IDS.size !== 1)) {
   console.error("freshness:shadow · --canary requires exactly one registered obligation via --ids=<id>.");
   process.exit(1);
@@ -726,7 +729,7 @@ if (ONLY !== null || IDS !== null) {
 const LEGACY_MEETINGS_OBLIGATION_PREFIX = "freshness:meetings:";
 const LEGACY_MEETINGS_RETIREMENT_REASON =
   "PDC authority transferred to the matching source/body production meeting-partition contract";
-const meetingsRetirement = await retireObligationsByPrefix(
+const meetingsRetirement = filteredCycle ? { retired: [], alreadyRetired: [] } : await retireObligationsByPrefix(
   repos,
   [LEGACY_MEETINGS_OBLIGATION_PREFIX],
   NOW,
@@ -736,7 +739,7 @@ console.log(
   `  legacy tracked-snapshot meetings clocks: ${meetingsRetirement.retired.length} retired this cycle; ` +
     `${meetingsRetirement.alreadyRetired.length} already inactive with no next-due`,
 );
-const factClockRetirement = await retireObligationsByPrefix(
+const factClockRetirement = filteredCycle ? { retired: [], alreadyRetired: [] } : await retireObligationsByPrefix(
   repos,
   ["freshness:meeting-times:", "freshness:agendas:"],
   NOW,
@@ -748,7 +751,7 @@ console.log(
 );
 const LEGACY_FEC_MODEL_OBLIGATION_PREFIX =
   "freshness:campaign-finance:ballot-az-pima:us-house-6#";
-const fecModelRetirement = await retireObligationsByPrefix(
+const fecModelRetirement = filteredCycle ? { retired: [], alreadyRetired: [] } : await retireObligationsByPrefix(
   repos,
   [LEGACY_FEC_MODEL_OBLIGATION_PREFIX],
   NOW,
@@ -759,7 +762,7 @@ console.log(
     `${fecModelRetirement.alreadyRetired.length} already inactive with no next-due`,
 );
 
-let sync = await syncObligations(repos, corpus, NOW, { exactReads: canary });
+let sync = await syncObligations(repos, corpus, NOW, { exactReads: filteredCycle });
 finishPhase("references-and-registration");
 console.log(
   `  ${floorLine(
@@ -1321,7 +1324,8 @@ if (!dry && !canary && !intents.runnerPause.paused) {
     runtimeConditions.push(`permanent meeting evidence could not enter independent workers: ${error instanceof Error ? error.message : "ROUTINE_MEETING_INTAKE_FAILED"}`);
   }
 }
-const allPlannedWork = canary ? [] : (await repos.workItems.list()).filter(item =>
+const recoveryRepos = filteredCycle ? await selectedCycleRepositories(repos, sync.all.map(row => row.id)) : repos;
+const allPlannedWork = canary ? [] : (await recoveryRepos.workItems.list()).filter(item =>
   item.value.autonomousPlan && !isRetiredRoutineMeetingAcquisition(item.value.autonomousPlan.contract)
 );
 for (const item of allPlannedWork) if (lifetimeHuntSubjects.has(item.value.subject)) lifetimeHuntWorkIds.add(item.id);
@@ -1330,7 +1334,7 @@ const plannedWork = allPlannedWork;
 // stage is enqueued by advanceHeldWorkerFleet, so completed producer tasks also
 // reserve downstream time until that pass can inspect their retained evidence.
 const [heldWorkIds, settledTaskIds, neverClaimedTaskIds] = await (async () => {
-  const listing = canary ? [] : await repos.routeTasks.list();
+  const listing = canary ? [] : await recoveryRepos.routeTasks.list();
   for (const row of listing) if (row.value.workerTask && lifetimeHuntSubjects.has(row.value.workerTask.contract.subjectId)) {
     lifetimeHuntWorkIds.add(row.id);
     lifetimeHuntWorkIds.add(row.value.workItemId);
@@ -2237,7 +2241,7 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
  * about 3.3 MB; the four tries used to fail silently, and at 30 s a request
  * they could hold a finalization for four minutes without a word.
  */
-async function writeResearchState(cycleFinishedAt: string | null): Promise<void> {
+const writeResearchState = cycleStateWriter(async (cycleFinishedAt) => {
   await (async () => {
     for (let tries = 0; tries < 4; tries += 1) {
       try {
@@ -2257,7 +2261,7 @@ async function writeResearchState(cycleFinishedAt: string | null): Promise<void>
       }
     }
   })();
-}
+});
 
 await writeResearchState(null);
 
@@ -2560,7 +2564,8 @@ if (modelLaneEnabled && freeWalkSubjects.length > 0) {
 async function projectRetainedFacts(phase: string): Promise<void> {
   const readEvidence = workerVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness", { snapshot: true });
   try {
-    const report = await pending.step(phase, () => projectFleetPipeline(repos, {
+    const selected = filteredCycle ? await selectedCycleRepositories(repos, sync.all.map(row => row.id)) : repos;
+    const report = await pending.step(phase, () => projectFleetPipeline(selected, {
         readArtifactText: async id => (await readEvidence(id)).text,
         now: nowIso(), root: ROOT,
         freshness: createPermanentMeetingFreshness({ connection: process.env.WTP_PRODUCTION_DATABASE_URL_READONLY,
@@ -2579,6 +2584,7 @@ if (!dry && !canary) await projectRetainedFacts("retained-results:fact-projectio
 
 const cycle = await runCycle({
   repos,
+  recoveryRepos,
   obligations: sync.all,
   debts: debtsIn,
   routeTaskFor: (id) => occurrenceByObligation.get(id)?.routeTaskId ?? null,

@@ -1276,6 +1276,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       let stoppedBy = "MODEL" as ScoutStop;
       let boundNotice = null as string | null;
       let transportFailure = null as string | null;
+      let policyRefusedBeforeSending = false;
       /** The provider's HTTP status on a transport failure; a 400 on the cheaper model is the CAPABILITY_ERROR signal. */
       let transportStatus = null as number | null;
       let lastStopReason = null as string | null;
@@ -1414,6 +1415,8 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
               && [400, 401, 402, 403, 404, 413, 429].includes(error.status);
             const refusedBeforeSending = enteredTransport && deps.refusedBeforeSending?.(error) === true;
             if (refusedBeforeSending) {
+              policyRefusedBeforeSending = true;
+              stoppedBy = "BOUND";
               transportInvocations -= 1;
               transportInvocationsByModel.set(current.model, (transportInvocationsByModel.get(current.model) ?? 1) - 1);
             }
@@ -1951,7 +1954,9 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       if (finish === null) {
         refusal =
           transportFailure !== null
-            ? [{ code: "SCOUT_TRANSPORT_FAILED", detail: `the provider did not answer or refused: ${transportFailure}` }]
+            ? [{ code: policyRefusedBeforeSending ? "SCOUT_POLICY_DENIED" : "SCOUT_TRANSPORT_FAILED",
+                detail: policyRefusedBeforeSending ? `request refused before sending by the spending or execution policy: ${transportFailure}`
+                  : `the provider did not answer or refused: ${transportFailure}` }]
             : (lastRefusal ?? [
                 {
                   code: "SCOUT_NO_FINISH",
@@ -2080,6 +2085,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         return {
           ...common,
           kind: "ABORTED",
+          ...(policyRefusedBeforeSending ? { failureOutcome: "DENIED_BY_POLICY" as const } : {}),
           detail:
             `SCOUT_RESULT_REFUSED after ${turns} turn(s), ${toolkit.toolCalls} tool call(s), ${rungs.length} rung(s): ` +
             persisted.refusal.map((i) => `${i.code} — ${i.detail}`).join("; "),

@@ -15,6 +15,21 @@ export interface LeaseWorkerConfig {
   readonly searchEnabled: boolean;
   readonly ceilingUsd: number;
   readonly fundedSubjects: readonly string[];
+  /** Plain-code ZIP tasks use S9's ordinary canonical acquisition lease. */
+  readonly nationalZips?: readonly string[];
+}
+
+export async function runNationalPlaceWorkerProcesses(input: {
+  readonly root: string;
+  readonly zips: readonly string[];
+  readonly capacity: () => number;
+  readonly onStarted?: (pid: number) => void;
+}): Promise<void> {
+  await runLeaseWorkerProcesses({ config: { root: input.root, postgres: true,
+    taskIds: [...new Set(input.zips)], nationalZips: [...new Set(input.zips)], modelEnabled: false,
+    searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] }, capacity: input.capacity,
+    transportFor: () => async () => { throw new Error("NATIONAL_SOURCE_MODEL_CALL_REFUSED"); },
+    onStarted: input.onStarted });
 }
 
 /** IPC carries transient provider requests; work, leases and costs stay in the existing repositories. */
@@ -28,19 +43,23 @@ export async function runLeaseWorkerProcesses(input: {
 }): Promise<DispatchResult[]> {
   const results: DispatchResult[] = [];
   const pending = new Set(input.config.taskIds);
+  const assigned = new Set<string>();
   const active = new Set<Promise<void>>();
   let launched = 0;
   let failure: unknown = null;
   const launch = (): Promise<void> => new Promise((resolve, reject) => {
+    const ids = input.config.nationalZips ? [[...pending].find(id => !assigned.has(id))!]
+      : input.config.taskIds;
+    for (const id of ids) assigned.add(id);
     const child = fork(join(input.config.root, "lib/control-plane/workers/lease-worker.ts"), [], {
       cwd: input.config.root, env: { ...process.env },
       execArgv: ["--experimental-strip-types", "--import", pathToFileURL(join(input.config.root, "scripts/register-test-loader.mjs")).href],
       stdio: ["ignore", "inherit", "inherit", "ipc"], serialization: "advanced",
     });
     const reservations = new Map<string, Awaited<ReturnType<NonNullable<ScoutExecutorDeps["reserveEscalation"]>>>>();
-    const offset = (launched - 1) % input.config.taskIds.length;
+    const offset = (launched - 1) % ids.length;
     child.once("spawn", () => { input.onStarted?.(child.pid!); child.send({ ...input.config,
-      taskIds: [...input.config.taskIds.slice(offset), ...input.config.taskIds.slice(0, offset)] }); });
+      taskIds: [...ids.slice(offset), ...ids.slice(0, offset)] }); });
     child.on("error", reject);
     child.on("message", async (raw: unknown) => {
       const message = raw as { kind: string; id: string; taskId: string; jurisdiction: AutonomousJurisdiction; body: unknown };
@@ -81,16 +100,19 @@ export async function runLeaseWorkerProcesses(input: {
       }
     });
     child.once("exit", code => {
+      if (input.config.nationalZips) for (const id of ids) { assigned.delete(id); pending.delete(id); }
       for (const reserved of reservations.values()) if (reserved.admit) reserved.release();
       if (code === 0) resolve(); else reject(new Error(`LEASE_WORKER_EXIT:${child.pid}:${code}`));
     });
   });
-  while (pending.size && failure === null) {
+  while (pending.size && (failure === null || input.config.nationalZips)) {
     const capacity = Math.min(pending.size, input.capacity());
     if (!Number.isSafeInteger(capacity) || capacity < 0) throw new Error("LEASE_WORKER_CAPACITY_INVALID");
     // Every child drains the shared task list. A finished child needs no replacement;
     // siblings may still own the remaining leases when their result is in transit.
-    while (launched < capacity) {
+    while (input.config.nationalZips
+      ? active.size < capacity && [...pending].some(id => !assigned.has(id))
+      : launched < capacity) {
       launched++;
       const worker = launch().catch(error => { failure ??= error; }).finally(() => { active.delete(worker); });
       active.add(worker);

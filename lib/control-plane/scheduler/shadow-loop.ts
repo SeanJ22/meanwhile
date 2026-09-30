@@ -77,6 +77,8 @@ import type { ControlPlaneRepositories } from "../repository/types.ts";
 /** One cycle's inputs. Every clock and every seam is injected. */
 export interface CycleInput {
   readonly repos: ControlPlaneRepositories;
+  /** Only filtered occurrence histories are recovered; dispatch still uses the shared repositories. */
+  readonly recoveryRepos?: ControlPlaneRepositories;
   readonly obligations: readonly FreshnessObligation[];
   /** Debt carried in from the previous cycle. Durable state, passed through. */
   readonly debts: readonly FreshnessDebt[];
@@ -377,7 +379,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
    */
   const reclaim = input.skipReclaim
     ? { reclaimed: [], releasedSettled: [], stillLive: [], refused: [] }
-    : await sweepExpiredLeases(input.repos, {
+    : await sweepExpiredLeases(input.recoveryRepos ?? input.repos, {
         now: input.now,
         observedBy: input.holder,
       });

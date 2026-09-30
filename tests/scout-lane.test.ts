@@ -926,6 +926,11 @@ test("proven pre-send Scout refusals settle unused holds without erasing earlier
     const result = await dispatchOne(repos, { obligation: scheduledFixture(OBLIGATION, NOW_MS), routeTaskId: task.id,
       holder: mode, now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec });
     const expectedSent = mode === "fleet-after-metered" || mode === "unpriced-after-response" ? 1 : 0;
+    if (mode !== "unpriced-after-response") {
+      assert.equal((await repos.attempts.mustRead(result.attemptId!)).value.outcome, "DENIED_BY_POLICY", mode);
+      assert.match(result.detail, /SCOUT_POLICY_DENIED/);
+      assert.doesNotMatch(result.detail, /SCOUT_TRANSPORT_FAILED/);
+    }
     assert.equal(sent, expectedSent, mode);
     assert.equal(result.cost?.requestCount, mode === "unpriced-after-response" ? null : expectedSent, mode);
     if (mode === "unpriced-after-response") assert.equal(result.cost?.usd, null);

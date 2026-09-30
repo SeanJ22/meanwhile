@@ -110,6 +110,26 @@ test("the lexical reading binds exactly what every binder binds, with the tense 
   assert.deepEqual(outcome?.interpretation.temporal, { kind: "LAST" });
 });
 
+test("a kind of body named with no name is the reader's own body of that kind, or asks which of several", () => {
+  const governing = (id: string, name: string, divisionType: string): BindableEntity => ({ id, name, nameClass: "body", divisionType, level: "BODY" } as BindableEntity);
+  const vail = governing("ocd-division/country:us/state:az/school_district:vail_unified_district#board", "Vail Unified School District Governing Board", "school_district");
+  const empire = governing("ocd-division/country:us/state:az/school_district:empire_elementary_district#board", "Empire Elementary District Governing Board", "school_district");
+  const tucson = governing("ocd-division/country:us/state:az/place:tucson#governing", "Tucson Mayor & Council", "place");
+  const read = (question: string, readerGoverning: BindableEntity[]) =>
+    lexicalReading({ question, inventory: [...INVENTORY, vail, empire, tucson], namedBodies: INVENTORY, readerGoverning });
+  const one = read("When is the next school board meeting?", [vail, tucson]);
+  assert.equal(one?.subjectId, vail.id, "the one school district the ZIP reaches");
+  assert.equal(one?.interpretation.intent, "MEETING_TIME");
+  assert.deepEqual(one?.interpretation.entityMentions, [vail.name]);
+  assert.equal(read("When does the city council meet?", [vail, tucson])?.subjectId, tucson.id);
+  assert.equal(read("Can I speak at the next school board meeting?", [vail, tucson])?.shape, "PUBLIC_COMMENT");
+  const several = read("When is the next school board meeting?", [vail, empire, tucson]);
+  assert.deepEqual(several?.areaChoices?.bodies.map((body) => body.id), [vail.id, empire.id], "asks which, naming the ones the ZIP reaches");
+  assert.equal(several?.subjectId, "");
+  assert.equal(read("When is the next county board of supervisors meeting?", [vail, tucson]), null, "no county body reached: the model reads it");
+  assert.notEqual(read("When is the next Mesa school board meeting?", [vail])?.subjectId, vail.id, "a name in the slot is not a kind of body alone");
+});
+
 test("the lexical reading refuses what it cannot settle, so the model reads it as before", () => {
   const refuse = (question: string, inventory: BindableEntity[] = INVENTORY) =>
     assert.equal(lexicalReading({ question, inventory, namedBodies: inventory }), null, question);

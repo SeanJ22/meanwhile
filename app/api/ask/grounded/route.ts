@@ -1222,6 +1222,8 @@ export async function POST(request: Request) {
    */
   const lexical = modelFreeTopicRoute ? null : lexicalReading({
     question, inventory, namedBodies, confirmation: body.confirmation, activeSubjects, priorSubjects, officeOf,
+    readerGoverning: scopedBodies.filter((entry) => entry.ocdId && (entry.bodyId === `${entry.ocdId}#governing` || entry.bodyId === `${entry.ocdId}#board`))
+      .flatMap((entry) => inventory.filter((entity) => entity.id === entry.bodyId)),
   });
   if (deferPersonRecords) {
     trace.sourcesLoaded = "WITHOUT_PERSON_RECORDS";
@@ -1354,7 +1356,11 @@ export async function POST(request: Request) {
     // answer. No lexical candidate means a neutral clarification, not a default.
     if (bodyDecision.kind === "NONE" && initialResolution.binding.kind === "BOUND" &&
       initialResolution.binding.entity.level === "BODY" && initialResolution.basis.startsWith("MODEL_EXPANSION")) bodyDecision = { kind: "CLARIFY" };
-    const resolution = applyNamedBodyDecision(bodyDecision, initialResolution, question);
+    const resolved = applyNamedBodyDecision(bodyDecision, initialResolution, question);
+    /* A kind of body was named ("the school board") and the reader's ZIP reaches several: ask which, naming them. */
+    const resolution: ReturnType<typeof resolveInterpretation> = lexical?.areaChoices
+      ? { binding: { kind: "AMBIGUOUS", mention: lexical.areaChoices.mention, candidates: [...lexical.areaChoices.bodies] }, basis: "WHOLE_QUESTION", boundOn: question }
+      : resolved;
     trace.resolution = {
       state: resolution.binding.kind,
       basis: resolution.basis,
@@ -2652,7 +2658,7 @@ export async function POST(request: Request) {
      * a check can never reach a reader.
      */
     const candidateSittingShape = !topicComposed && !topicFocus && snapshot && subject?.kind === "BODY"
-      ? shapeForBoundBody(question, inventory, subject.id) : null;
+      ? (lexical && sittingShapes.has(lexical.shape) && lexical.subjectId === subject.id ? lexical.shape as "MEETING_TIME" | "BODY_AGENDA" | "MEETING_OUTCOME" | "PUBLIC_COMMENT" : shapeForBoundBody(question, inventory, subject.id)) : null;
     // An explicit outcome date uses its quoted actions or its named outcome
     // gap. Tell the composer this is the requested date, never next/latest.
     const sittingShape = !requestedMeetingDate || (requestedMeetingDate.date && candidateSittingShape === "MEETING_OUTCOME")

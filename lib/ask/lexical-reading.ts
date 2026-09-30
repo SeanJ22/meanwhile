@@ -1,6 +1,7 @@
 import { normalizeName } from "../routing/exact-name.ts";
 import {
   bindNamedEntity,
+  CLASS_PHRASE_DIVISIONS,
   classPhraseIn,
   COMMON_QUESTION_NOUNS,
   distinctiveTokens,
@@ -456,6 +457,11 @@ export interface LexicalReadingInput {
   priorSubjects?: readonly AskSubjectRef[];
   /** The office a held person is on the ballot for, so a race the reader names can be checked against it. */
   officeOf?: (id: string) => string | null | undefined;
+  /**
+   * The governing bodies of the divisions the reader's ZIP reaches (each division's own
+   * council, board or supervisors), for a question that names only the class of body.
+   */
+  readerGoverning?: readonly BindableEntity[];
 }
 
 export interface LexicalReading {
@@ -463,6 +469,68 @@ export interface LexicalReading {
   interpretation: AskInterpretation;
   /** The canonical subject every binder agreed on. */
   subjectId: string;
+  /** A kind of body was named and the reader's ZIP reaches several of that kind: the reader is asked which, from these. */
+  areaChoices?: { readonly mention: string; readonly bodies: readonly BindableEntity[] };
+}
+
+/**
+ * The intent a sitting or other body shape carries for this tense, or null when the tense is one
+ * the model must read.
+ */
+function tenseIntent(shape: LexicalShape, temporal: AskInterpretation["temporal"]): AskIntent | null {
+  let intent: AskIntent;
+  if (SITTING_SHAPES.has(shape)) {
+    /*
+     * The deterministic tense, unchanged: it is what the model returned on
+     * every question of these shapes in the 2026-09-25 agreement check (12 of
+     * 12 against the model then in use), including NONE for "when does the Vail
+     * school board meet?" — the route's selection turns MEETING_TIME into the
+     * next sitting either way. The one intent the model reads differently
+     * from the shape is a past meeting-time question ("when did the Mesa City
+     * Council last meet?"), which it calls PAST_MEETING; so does this.
+     */
+    if (temporal.kind === "RANGE" || (temporal.kind === "DATE" && shape !== "MEETING_OUTCOME")) return null;
+    /* How to take part is asked of the next sitting: a tense that says otherwise is the model's. */
+    if (shape === "PUBLIC_COMMENT" && temporal.kind !== "NONE" && temporal.kind !== "NEXT") return null;
+    if (shape === "MEETING_OUTCOME" && temporal.kind !== "LAST" && temporal.kind !== "DATE") return null;
+    intent = shapeIntent(shape, temporal);
+  } else {
+    if (temporal.kind !== "NONE") return null;
+    intent = shapeIntent(shape, temporal);
+  }
+  return intent;
+}
+
+/** The words a reader uses for a kind of governing body, by the kind of division it governs. */
+const AREA_CLASS_DIVISIONS: Readonly<Record<string, readonly string[]>> = {
+  ...CLASS_PHRASE_DIVISIONS,
+  "county board of supervisors": ["county"],
+  "county supervisors": ["county"],
+  "county commission": ["county"],
+  "governing board": ["school_district"],
+  "school district board": ["school_district"],
+  "town board": ["place"],
+  "city commission": ["place"],
+};
+
+/**
+ * **"WHEN IS THE NEXT SCHOOL BOARD MEETING?" NAMES A KIND OF BODY, NOT ONE.**
+ * (2026-09-30.) With no name in the question, the body is the one governing body
+ * of that kind among the divisions the reader's ZIP reaches: their school board, their
+ * city council. Exactly one settles it; several ask which of them (a handful, named); none
+ * leaves the model to read it.
+ */
+function areaBodyOfClass(matches: readonly { shape: LexicalShape; kind: SubjectKind; slot: string }[], governing: readonly BindableEntity[]): { entity: BindableEntity | null; choices: readonly BindableEntity[]; mention: string; match: { shape: LexicalShape; kind: SubjectKind; slot: string } } | null {
+  for (const match of matches) {
+    if (match.kind !== "BODY") continue;
+    const words = match.slot.replace(/^(?:(?:my|our|the|local|city s|town s) )+/, "").trim();
+    const wanted = AREA_CLASS_DIVISIONS[words];
+    if (!wanted) continue;
+    const candidates = governing.filter((entity) => entity.level === "BODY" && wanted.includes(entity.divisionType ?? ""));
+    if (candidates.length === 1) return { entity: candidates[0]!, choices: candidates, mention: words, match };
+    if (candidates.length > 1 && candidates.length <= 6) return { entity: null, choices: candidates, mention: words, match };
+  }
+  return null;
 }
 
 /**
@@ -485,6 +553,13 @@ export function lexicalReading(input: LexicalReadingInput): LexicalReading | nul
   const temporal: AskInterpretation["temporal"] = explicitDate?.date
     ? { kind: "DATE", localDate: explicitDate.date }
     : interpretWithoutModel(input.question).temporal;
+  const area = areaBodyOfClass(matches, input.readerGoverning ?? []);
+  if (area && !area.choices.some((choice) => namesAnotherSubject(input.question, input.inventory, choice.id))) {
+    const areaIntent = tenseIntent(area.match.shape, temporal);
+    if (!areaIntent) return null;
+    if (!area.entity) return { shape: area.match.shape, interpretation: { ...unavailableInterpretation(), intent: areaIntent, temporal }, subjectId: "", areaChoices: { mention: area.mention, bodies: area.choices } };
+    return { shape: area.match.shape, interpretation: { ...unavailableInterpretation(), intent: areaIntent, temporal, entityMentions: [area.entity.name] }, subjectId: area.entity.id };
+  }
   const resolved = resolveInterpretation({ ...unavailableInterpretation(), temporal }, input.question, input.inventory, {
     activeSubjects: input.activeSubjects ?? [],
     priorSubjects: input.priorSubjects ?? [],
@@ -510,26 +585,8 @@ export function lexicalReading(input: LexicalReadingInput): LexicalReading | nul
   }
 
   // 4. The tense, read identically either way.
-  let intent: AskIntent;
-  if (SITTING_SHAPES.has(found.shape)) {
-    /*
-     * The deterministic tense, unchanged: it is what the model returned on
-     * every question of these shapes in the 2026-09-25 agreement check (12 of
-     * 12 against `claude-opus-5`), including NONE for "when does the Vail
-     * school board meet?" — the route's selection turns MEETING_TIME into the
-     * next sitting either way. The one intent the model reads differently
-     * from the shape is a past meeting-time question ("when did the Mesa City
-     * Council last meet?"), which it calls PAST_MEETING; so does this.
-     */
-    if (temporal.kind === "RANGE" || (temporal.kind === "DATE" && found.shape !== "MEETING_OUTCOME")) return null;
-    /* How to take part is asked of the next sitting: a tense that says otherwise is the model's. */
-    if (found.shape === "PUBLIC_COMMENT" && temporal.kind !== "NONE" && temporal.kind !== "NEXT") return null;
-    if (found.shape === "MEETING_OUTCOME" && temporal.kind !== "LAST" && temporal.kind !== "DATE") return null;
-    intent = shapeIntent(found.shape, temporal);
-  } else {
-    if (temporal.kind !== "NONE") return null;
-    intent = shapeIntent(found.shape, temporal);
-  }
+  const intent = tenseIntent(found.shape, temporal);
+  if (!intent) return null;
 
   return { shape: found.shape, interpretation: { ...unavailableInterpretation(), intent, temporal }, subjectId: entity.id };
 }

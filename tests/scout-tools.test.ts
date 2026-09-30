@@ -1090,3 +1090,51 @@ test("read_permission returns the verdict and operative lines, vaults robots.txt
   assert.deepEqual(seen, [`${HOST}/robots.txt`], "one read per host per Attempt");
   assert.equal(kit.requestCount, 1);
 });
+
+test('collector reads held bytes before HTTP and preserves their observation time',async()=>{
+  const url='https://county.gov/clerk',old='2026-08-30T00:00:00Z';
+  const read=savedPageReader(context({openOne:async()=>{throw Error('No network for held bytes');},
+    inherited:{artifactIds:['held'],summary:'',provenance:[{artifactId:'held',canonicalUrl:url,retrievedAt:old,httpStatus:200,permission:'ALLOWED',methodRouteId:'scout:fetch_public'}]},
+    readHeldArtifact:async()=>({artifactId:'held',canonicalUrl:url,text:'Clerk Ada',retrievedAt:old} as never)}));
+  assert.deepEqual(await read(url),{url,text:'Clerk Ada',contentType:null,collectedAt:old,artifactId:'held',artifacts:[]});
+});
+
+test('collector refreshes stale held CSV and returns complete saved parseable text',async()=>{
+  for(const contentType of ['text/csv','application/json','text/plain']) {
+    const url='https://county.gov/roster',body=contentType==='application/json'?'[{"name":"Ada"}]':'name\nAda\n';
+    const http=fakeTransport({[url]:{status:200,body,contentType}}),vault=recordingVault();
+    const read=savedPageReader(context({openOne:http.open,vault:vault.put,
+      inherited:{artifactIds:['old'],summary:'',provenance:[{artifactId:'old',canonicalUrl:url,contentType,retrievedAt:'2026-08-01T00:00:00Z',httpStatus:200,permission:'ALLOWED',methodRouteId:'scout:fetch_public'}]},
+      readHeldArtifact:async()=>{throw Error('Stale bytes must not be read');}}),{maxAgeMs:86400000});
+    const got=await read(url);
+    assert.equal(got.text,body);assert.equal(got.contentType,contentType);assert.equal(got.collectedAt,NOW);
+    assert.ok(vault.puts.some(row=>row.artifact.id===got.artifactId && row.body===body));
+    assert.equal((await read(url)).artifactId,got.artifactId);assert.equal(http.seen.filter(u=>u===url).length,1);
+    const partial=savedPageReader(context({openOne:fakeTransport({[url]:{status:206,body,contentType}}).open}));
+    await assert.rejects(partial(url),/SOURCE_PAGE_UNREADABLE/);
+  }
+});
+
+test('collector preserves redirected source identity when reusing saved text',async()=>{
+ const url='https://county.gov/old-roster',finalUrl='https://county.gov/current-roster';
+ const read=savedPageReader(context({openOne:async()=>{throw Error('Held source must be reused');},
+   inherited:{artifactIds:['held'],summary:'',provenance:[{artifactId:'held',canonicalUrl:url,retrievalUrl:finalUrl,
+     contentType:'text/csv',retrievedAt:NOW,httpStatus:200,permission:'ALLOWED',methodRouteId:'scout:fetch_public'}]},
+   readHeldArtifact:async()=>({artifactId:'held',canonicalUrl:url,text:'name\nAda',retrievedAt:NOW} as never)}),{maxAgeMs:86400000});
+ assert.equal((await read(url)).url,finalUrl);assert.equal((await read(finalUrl)).url,finalUrl);
+});
+
+test('collector falls back to the existing browser and returns only saved public page bytes',async()=>{
+  const url='https://county.gov/clerk',html='<html><body>Clerk Ada</body></html>';
+  const http=fakeTransport({[url]:{status:403,body:'Forbidden'}}),vault=recordingVault();let browsed=0;
+  const read=savedPageReader(context({openOne:http.open,vault:vault.put,browse:async()=>{
+    browsed++;return {finalUrl:url,status:200,html,text:'Clerk Ada',requests:[],transportError:null,durationMs:1};
+  }}));
+  const got=await read(url);
+  assert.equal(got.text,html);assert.equal(got.collectedAt,NOW);assert.equal(browsed,1);
+  assert.ok(vault.puts.some(row=>row.artifact.id===got.artifactId && row.body===html));
+  assert.equal((await read(url)).artifactId,got.artifactId);assert.equal(browsed,1);
+  const refused=savedPageReader(context({openOne:fakeTransport({[url]:{status:200,body:html}}).open,vault:recordingVault('refuse').put}));
+  await assert.rejects(refused(url),/SOURCE_PAGE_UNREADABLE/);
+});
+

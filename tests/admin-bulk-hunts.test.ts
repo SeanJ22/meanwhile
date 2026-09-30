@@ -137,3 +137,16 @@ test("a hunt's budget can be changed, paused at zero and resumed at what it had"
   const missing = await submit(ask("expansion.scope.budget", "budget-key-0000005", { key: "zcta:2020/99999", change: "pause" }), deps(repos));
   assert.equal(missing.ok, false);
 });
+
+test("an Excel workbook is read through the repository's own reader, and a ZIP that lost its zero is fixed", async () => {
+  const { buildWorkbook, readWorkbook, toCsv } = await import("../scripts/xlsx.mjs");
+  const book = buildWorkbook(
+    [{ name: "Toss-ups", header: ["district", "zip", "evidence"], rows: [["MA-01", "2135", ""], ["AZ-06", "85635", ""], ["AZ-06", "85641", "REMOVED_2026 left the district"]], widths: [10, 10, 20] }],
+    "2026-09-30",
+  ) as Buffer;
+  const sheet = (readWorkbook(book) as { name: string; rows: string[][] }[])[0];
+  const parsed = parseZips(toCsv(sheet.rows[0], sheet.rows.slice(1)) as string);
+  assert.deepEqual(parsed.zips.map((z) => `${z.zip}:${z.group}`), ["02135:MA-01", "85635:AZ-06"]);
+  assert.equal(parsed.paddedZeros, 1);
+  assert.equal(parsed.skipped.find((s) => /removed/.test(s.why))?.count, 1);
+});

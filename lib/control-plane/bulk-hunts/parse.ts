@@ -47,7 +47,7 @@ export interface ParsedZips {
 
 export const BULK_MAX_ZIPS = 5000;
 const EXAMPLES = 5;
-const ZIP_COLUMN = /^(?:zip|zips|zcta|zcta5|zip_?code|zipcode|postal_?code|zip5)$/i;
+export const ZIP_COLUMN = /^(?:zip|zips|zcta|zcta5|zip_?code|zipcode|postal_?code|zip5)$/i;
 const GROUP_COLUMN = /^(?:district|group|name|place|area|label|cd)$/i;
 
 class Skips {

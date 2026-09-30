@@ -16,7 +16,9 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
-import { BULK_MAX_ZIPS, parseZips } from "@/lib/control-plane/bulk-hunts/parse.ts";
+import { BULK_MAX_ZIPS, ZIP_COLUMN, parseZips } from "@/lib/control-plane/bulk-hunts/parse.ts";
+// The repository's own workbook reader (there is no spreadsheet library here): a ZIP of XML parts, read without one.
+import { readWorkbook, toCsv } from "../../../../scripts/xlsx.mjs";
 import { planBudgets, type BudgetSpec } from "@/lib/control-plane/bulk-hunts/plan.ts";
 import { describeZips, pickable, validPick, zipsForPick } from "@/app/(admin)/_mw/data/bulk-places.ts";
 
@@ -24,6 +26,8 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 const TEXT_MAX_CHARS = 2_000_000;
+/** A workbook arrives as base64 text: about 5 MB of file. */
+const XLSX_MAX_CHARS = 7_000_000;
 const PICKS_MAX = 80;
 const headers = { "cache-control": "private, no-store, max-age=0" };
 
@@ -78,7 +82,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   } catch {
     return NextResponse.json({ says: "That request could not be read, so nothing was previewed." }, { status: 400, headers });
   }
-  const text = typeof body.text === "string" ? body.text : "";
+  let text = typeof body.text === "string" ? body.text : "";
+  const workbook = typeof body.xlsx === "string" ? body.xlsx : "";
+  if (workbook.length > XLSX_MAX_CHARS) return NextResponse.json({ says: "That workbook is too large to read here. Save it as CSV and send it in parts." }, { status: 413, headers });
+  if (workbook !== "") {
+    // The first sheet that has a column named zip. Every other sheet is left alone.
+    try {
+      const sheets = readWorkbook(Buffer.from(workbook, "base64")) as { name: string; rows: string[][] }[];
+      const sheet = sheets.find((s) => (s.rows[0] ?? []).some((h) => ZIP_COLUMN.test(String(h).trim())));
+      if (!sheet) return NextResponse.json({ ok: false, says: "No sheet in that workbook has a column named zip." }, { status: 200, headers });
+      text = toCsv(sheet.rows[0], sheet.rows.slice(1)) as string;
+    } catch {
+      return NextResponse.json({ ok: false, says: "That file could not be read as an Excel workbook. Save it as CSV and upload that." }, { status: 200, headers });
+    }
+  }
   if (text.length > TEXT_MAX_CHARS) return NextResponse.json({ says: "That file is too large to read here. Split it and send it in parts." }, { status: 413, headers });
   const rawPicks = Array.isArray(body.picks) ? body.picks : [];
   if (rawPicks.length > PICKS_MAX) return NextResponse.json({ says: `Pick at most ${PICKS_MAX} places at a time.` }, { status: 400, headers });

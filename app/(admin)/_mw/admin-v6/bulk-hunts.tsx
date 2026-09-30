@@ -81,6 +81,8 @@ export function BulkHunts(props: {
   const [source, setSource] = useState<Source>(props.initialPick ? "pick" : "paste");
   const [pasted, setPasted] = useState("");
   const [fileText, setFileText] = useState("");
+  /** An Excel workbook, as base64, when that is what was uploaded; the server reads it. */
+  const [fileXlsx, setFileXlsx] = useState("");
   const [fileName, setFileName] = useState<string | null>(null);
   const [picks, setPicks] = useState<readonly BulkPick[]>(props.initialPick ? [props.initialPick] : []);
   const [pickState, setPickState] = useState(props.initialPick?.state ?? "AZ");
@@ -124,7 +126,16 @@ export function BulkHunts(props: {
   const onFile = async (file: File | undefined) => {
     if (!file) return;
     setFileName(file.name);
-    setFileText(await file.text());
+    if (/\.xlsx$/i.test(file.name)) {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      let bin = "";
+      for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+      setFileXlsx(btoa(bin));
+      setFileText("");
+    } else {
+      setFileXlsx("");
+      setFileText(await file.text());
+    }
     invalidate();
   };
 
@@ -139,7 +150,7 @@ export function BulkHunts(props: {
       const res = await fetch("/api/admin/bulk-hunts", {
         method: "POST",
         headers: { "content-type": "application/json", accept: "application/json" },
-        body: JSON.stringify({ text: source === "paste" ? pasted : source === "file" ? fileText : "", picks: source === "pick" ? picks.map((p) => ({ kind: p.kind, state: p.state, geoid: p.geoid })) : [], budget: budget() }),
+        body: JSON.stringify({ text: source === "paste" ? pasted : source === "file" ? fileText : "", xlsx: source === "file" ? fileXlsx : "", picks: source === "pick" ? picks.map((p) => ({ kind: p.kind, state: p.state, geoid: p.geoid })) : [], budget: budget() }),
       });
       const body = (await res.json().catch(() => null)) as (Preview & { ok?: boolean; says?: string }) | null;
       if (res.ok && body?.ok) setPreview(body);
@@ -184,10 +195,10 @@ export function BulkHunts(props: {
         {source === "file" && (
           <div className={s.stack} style={{ gap: 6 }}>
             <label className={s.stack} style={{ gap: 4 }}>
-              <span className={s.small}>A spreadsheet saved as CSV. It needs a column named zip. A column named district groups the ZIPs. Rows the file marks removed or inactive are left out and counted.</span>
-              <input type="file" accept=".csv,.tsv,.txt,text/csv,text/plain" onChange={(e) => void onFile(e.target.files?.[0])} />
+              <span className={s.small}>A spreadsheet, as an Excel file or saved as CSV. It needs a column named zip. A column named district groups the ZIPs. Rows the file marks removed or inactive are left out and counted.</span>
+              <input type="file" accept=".csv,.tsv,.txt,.xlsx,text/csv,text/plain,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={(e) => void onFile(e.target.files?.[0])} />
             </label>
-            {fileName && <span className={s.meta}>{fileName} · {fileText.length.toLocaleString("en-US")} characters read</span>}
+            {fileName && <span className={s.meta}>{fileName} · {fileXlsx ? "Excel workbook ready to read" : `${fileText.length.toLocaleString("en-US")} characters read`}</span>}
           </div>
         )}
 

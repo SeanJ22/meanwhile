@@ -8,11 +8,16 @@ import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import {
   crosswalkEvidenceWorkItem,
+  findHeldCapture,
   indexVault,
   READ_ONLY_VAULT_PROJECT,
   readHeldBytes,
 } from "../lib/control-plane/evidence/read-only-vault.ts";
-import { putArtifact } from "../lib/control-plane/evidence/store.ts";
+import { artifactMeta, objectKey, putArtifact } from "../lib/control-plane/evidence/store.ts";
+import { NetlifyEvidenceStore } from "../lib/control-plane/evidence/netlify-store.ts";
+import type { Store } from "@netlify/blobs";
+import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
+import { copyVaultObjects } from "../scripts/pilot-runtime-transfer.mts";
 
 /**
  * **THE VAULT, READ BY A ROUTINE CHILD THAT MAY NOT WRITE.** (C16, 2026-09-24.)
@@ -60,4 +65,87 @@ test("C16: the derived wiring child's closure reaches no filesystem writer", () 
   const reviewer = readFileSync("scripts/derive-meeting-body-crosswalk.mts", "utf8");
   assert.doesNotMatch(reviewer, /durable-store|DurableEvidenceStore|writeFile|appendFile/);
   assert.match(reviewer, /read-only-vault\.ts/);
+});
+
+test("Admin capture lookup finds remote originals without a local vault or full metadata scan", async () => {
+  const { artifact } = recordAcquisition({
+    canonicalUrl: "https://city.example.gov/agenda.pdf", retrievedAt: "2026-09-24T20:00:00.000Z", httpStatus: 200,
+    contentType: "application/pdf", sourceId: "city.example.gov", methodRouteId: "official-page",
+    workItemId: "wi-original", attemptId: "at-original", permission: "ALLOWED", transport: "REACHABLE",
+  }, "official agenda");
+  const record: ArtifactRecord = { artifactId: artifact.id, workItemId: artifact.workItemId,
+    routeTaskId: null, attemptId: artifact.attemptId, tier: artifact.tier, contentHash: artifact.contentHash,
+    byteLength: artifact.byteLength, contentType: artifact.contentType, canonicalUrl: artifact.canonicalUrl,
+    partial: false, recordedAt: artifact.retrievedAt };
+  const key = objectKey("freshness", artifact);
+  const metadata = { meta: artifactMeta(artifact), bodySha256: artifact.contentHash };
+  const described: string[] = [];
+  let directoriesRead = 0;
+  let source = artifact.sourceId;
+  let heldMetadata = metadata;
+  const remote = {
+    async describe(candidate: string) {
+      described.push(candidate);
+      return candidate === key.replace("/city.example.gov/", `/${source}/`) ? heldMetadata : null;
+    },
+    async directories(prefix: string) { directoriesRead++; return [prefix + "city.example.gov", prefix + source]; },
+  };
+  const held = await findHeldCapture("absent-local-vault", record, remote);
+  assert.ok(held);
+  assert.equal(held.bodyPath, `netlify:${key}`);
+  assert.equal(held.attemptId, record.attemptId);
+  assert.equal(held.retrievalUrl, artifact.retrievalUrl);
+  assert.equal(held.retentionPolicy, artifact.retentionPolicy);
+  assert.deepEqual(described, [key]);
+  assert.equal(directoriesRead, 0, "a host-keyed capture needs one metadata read");
+
+  source = "registered-source";
+  described.length = 0;
+  const registered = await findHeldCapture("absent-local-vault", record, remote);
+  assert.equal(registered?.bodyPath, `netlify:${key.replace("/city.example.gov/", "/registered-source/")}`);
+  assert.equal(directoriesRead, 1);
+  assert.equal(described.length, 2, "only exact capture keys are read across source directories");
+
+  heldMetadata = { ...metadata, meta: { ...metadata.meta,
+    custom: { ...metadata.meta.custom, attemptId: "at-another-capture" } } };
+  assert.equal(await findHeldCapture("absent-local-vault", record, remote), null);
+  heldMetadata = { ...metadata, meta: { ...metadata.meta,
+    custom: { ...metadata.meta.custom, canonicalUrl: "https://wrong.example.gov/agenda.pdf" } } };
+  await assert.rejects(findHeldCapture("absent-local-vault", record, remote), /VAULT_CAPTURE_SIDECAR_MISMATCH/);
+});
+
+test("remote source directory listing paginates without fetching bodies or metadata", async () => {
+  const prefix = "project/freshness/source/";
+  const store = new NetlifyEvidenceStore({
+    async *list(options: unknown) {
+      assert.deepEqual(options, { prefix, directories: true, paginate: true });
+      yield { directories: [prefix + "city.example.gov/"], blobs: [] };
+      yield { directories: ["registered-source"], blobs: [] };
+    },
+  } as unknown as Store);
+  assert.deepEqual(await store.directories(prefix), [prefix + "city.example.gov", prefix + "registered-source"]);
+});
+
+test("vault transfer keeps healthy originals moving after a missing body and stops on destination failure", async () => {
+  const transferred: string[] = [], failures: string[] = [];
+  const bytes = new TextEncoder().encode("held original");
+  const source = {
+    async list() { return ["missing-body", "healthy-original", "later-original"]; },
+    async get(key: string) {
+      if (key === "missing-body") throw new Error("ENOENT");
+      return { key, bytes, meta: { contentType: "text/plain", contentHash: "sha256-held", byteLength: bytes.length } };
+    },
+  };
+  const result = await copyVaultObjects(source, {
+    async put(key, body) { transferred.push(key); assert.deepEqual(body, bytes); },
+  }, key => { failures.push(key); });
+  assert.deepEqual(result, { transferred: 2, failed: 1 });
+  assert.deepEqual(transferred, ["healthy-original", "later-original"]);
+  assert.deepEqual(failures, ["missing-body"]);
+
+  let destinationCalls = 0;
+  await assert.rejects(copyVaultObjects(source, {
+    async put() { destinationCalls++; throw new Error("DESTINATION_UNAVAILABLE"); },
+  }, () => {}), /DESTINATION_UNAVAILABLE/);
+  assert.equal(destinationCalls, 1);
 });

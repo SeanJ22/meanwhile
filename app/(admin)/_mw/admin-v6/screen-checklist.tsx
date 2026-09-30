@@ -13,7 +13,7 @@ import { useV6 } from "./context.tsx";
 import { count, ITEM_STATUS_ORDER, mst, type ItemStatus, type PlaceScoreView, type ScoreGroup } from "./model.ts";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 
-import { Actions, Card, cx, Empty, SourceNote, useListView, usePager } from "./ui.tsx";
+import { Actions, Card, cx, Empty, Loading, SourceNote, useListView, usePager } from "./ui.tsx";
 import s from "./v6.module.css";
 
 const SYS_WORDS = ["Partly built", "Known gap", "Not checked yet", "Other"];
@@ -105,6 +105,7 @@ export function ChecklistScreen() {
         <p className={cx(s.p, s.small, s.dim)}>A checklist item is one requirement, for one body or place, over a set time period. All {c?.definitionCount ?? 325} definitions stay required.</p>
       </header>
 
+      {v.data.checklist.load === "loading" && !c?.score && <Loading what="what this place is owed and what we hold for it (the first read of a place takes a few seconds)" />}
       {c?.score && <PlaceScoreCard score={c.score} group={group} onGroup={(g) => { setGroup(g); reset(); }} />}
 
       {!c?.score && <Card title="Facts about places" aside={<span className={s.meta}>Choose a group to list its items</span>}>

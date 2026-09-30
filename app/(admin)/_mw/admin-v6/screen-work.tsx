@@ -11,7 +11,7 @@ import { count, type Lane, type SameCause, type StuckItem, type WorkStage } from
 import { COUNTRY_KEY, isWithin, relation } from "./places.ts";
 import { HISTORY_FILTERS } from "./receipts.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
-import { LANE_MEANS, LANE_TONE, LANE_WORDS, StuckRow, useScoped } from "./screen-now.tsx";
+import { LANE_MEANS, LANE_TONE, LANE_WORDS, StuckRow } from "./screen-now.tsx";
 import { Actions, Card, cx, Empty, Pill, SourceNote, Tabs, useListView, usePager } from "./ui.tsx";
 import s from "./v6.module.css";
 

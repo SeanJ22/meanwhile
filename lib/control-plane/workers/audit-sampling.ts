@@ -99,11 +99,12 @@ export function auditHistoryFromManual(store: Pick<FieldManualStore, "entries">)
   const history = new Map<string, StratumHistory>();
   for (const entry of store.entries) {
     if (entry.kind !== "AUDIT_STRATUM") continue;
-    const recordClass = entry.payload.recordClass; const host = entry.payload.host;
+    const payload = (entry.payload ?? {}) as Record<string, unknown>;
+    const recordClass = payload.recordClass; const host = payload.host;
     if (typeof recordClass !== "string" || typeof host !== "string") continue;
     const broke = entry.outcome === "FAILED";
     history.set(`${recordClass}|${host}`, {
-      reviewed: entry.payload.modelReviewed === true ? 1 : 0,
+      reviewed: payload.modelReviewed === true ? 1 : 0,
       survivedSinceBreak: broke ? 0 : entry.outcome === "YIELDED" ? 1 : 0,
       everBroken: broke,
     });

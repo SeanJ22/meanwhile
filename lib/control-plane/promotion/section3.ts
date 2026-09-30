@@ -33,6 +33,8 @@ export const SECTION3_MINIMUMS: Readonly<Record<string, readonly string[]>> = {
   VOTER_ACCESS_ROUTE: ["kind", "url"],
   PUBLIC_COMMENT_RULE: ["commentPeriod"],
   SERVICE_CONTACT: ["service"],
+  /** The official candidate list is the saved page itself. */
+  BALLOT_CONTEST: ["election", "office"],
 };
 
 /**
@@ -79,6 +81,7 @@ export const FRESHNESS_WINDOW_HOURS: Readonly<Record<string, number>> = {
   OFFICIAL_BOARD_DIRECTORY: 30 * DAY,
   PUBLIC_COMMENT_RULE: 30 * DAY,
   SERVICE_CONTACT: 30 * DAY,
+  BALLOT_CONTEST: 7 * DAY,
 };
 const DEFAULT_WINDOW_HOURS = 7 * DAY;
 
@@ -173,4 +176,23 @@ export function section3Record(input: {
     openFields: present.filter((field) => !verified.has(field)).sort(),
     reason: missing.length ? `MINIMUM_FACTS_UNVERIFIED: ${missing.join(", ")}` : null,
   };
+}
+
+/**
+ * §3 for one contest on a saved official ballot or candidate list (for
+ * unattended ballot refresh). The contest goes live when its election and
+ * office are on the page; each candidate attaches when their name is on it
+ * too; the rest stay open as work.
+ */
+export function section3Contest(input: {
+  readonly page: Section3Page;
+  readonly now: string;
+  readonly contest: { readonly election: string; readonly office: string; readonly candidates: readonly string[] };
+}): { readonly live: boolean; readonly verifiedCandidates: readonly string[]; readonly openCandidates: readonly string[]; readonly reason: string | null } {
+  const pageVerdict = section3Page(input.page, "BALLOT_CONTEST", input.now);
+  const verdict = section3Record({ recordClass: "BALLOT_CONTEST", fields: { election: input.contest.election, office: input.contest.office }, page: input.page, now: input.now, pageVerdict });
+  if (!verdict.live) return { live: false, verifiedCandidates: [], openCandidates: [...input.contest.candidates], reason: verdict.reason };
+  const words = pageWords(input.page.text);
+  const verifiedCandidates = input.contest.candidates.filter(name => valueOnPage(name, input.page.text, words));
+  return { live: true, verifiedCandidates, openCandidates: input.contest.candidates.filter(name => !verifiedCandidates.includes(name)), reason: null };
 }

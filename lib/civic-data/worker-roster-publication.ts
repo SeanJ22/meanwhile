@@ -63,6 +63,9 @@ const governmentOf = <D extends { readonly ocdId: string }>(divisions: readonly 
  * bodies. An extraction bound to this body needs only to name it.
  */
 export function pageIsAboutBody(html: string, body: { readonly id: string; readonly name: string | null }, divisionLabel: string | null, inTitle = true): boolean {
+  // A legislative seat: its holder's own page names the district.
+  const seat = /\/(?:sldl|sldu|cd):([a-z0-9-]+)#seat$/.exec(body.id)?.[1];
+  if (seat) return seat === "at-large" ? ` ${words(html)} `.includes(" at large ") : ` ${words(html)} `.includes(` district ${seat.replace(/^0+/, "")} `);
   if (!inTitle && body.name) return words(html).includes(words(body.name));
   const title = titleOf(html);
   if (body.name) {

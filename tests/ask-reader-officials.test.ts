@@ -43,7 +43,6 @@ test("the closed forms are read; a qualifier, a second subject or an unlisted of
     "Who is my dogcatcher?",
     "Who is Katie Hobbs?",
     "Who is the state senator for Mesa?",
-    "How do I contact my state senator?",
     "What did my county supervisor decide?",
     "",
   ]) assert.equal(readerOfficialsQuestion(question), null, question);

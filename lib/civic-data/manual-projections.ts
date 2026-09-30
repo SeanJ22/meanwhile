@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { officialFilingIssue } from "./official-filings.ts";
+import { electionFieldIssue } from "./election-fields.ts";
 
 import type { BallotSet } from "../ballot/types.ts";
 import type { CandidateCardData } from "../ballot/candidate-cards.ts";
@@ -152,8 +153,19 @@ function jurisdictionForCandidateKey(key: string): string {
 
 function receiptCoverageProblems(payload: unknown, receipt: ManualSourceSetReceipt): string[] {
   const receipted = new Set(receipt.sources.flatMap((source) => [source.requestedUrl, source.finalUrl]));
-  const missing = [...directPositiveSourceUrls(payload)].filter((url) => !receipted.has(url)).sort();
+  const held = object(payload);
+  const citations = held?.kind === "ballot-navigation"
+    ? new Set(rows(held, "records").flatMap(row => manualRecordSourceUrls(row)))
+    : directPositiveSourceUrls(payload);
+  const missing = [...citations].filter((url) => !receipted.has(url)).sort();
   return missing.map((url) => `The projection cites ${url} without exact-byte evidence in the reviewed source set.`);
+}
+
+/** An official page's linked lookup is a fact on that page, not another acquired source. */
+function manualRecordSourceUrls(record: unknown): readonly string[] {
+  const row = object(record);
+  if (row?.kind === "ELECTION_FIELD") return [string(object(row.value)?.url)].filter(Boolean);
+  return [...directPositiveSourceUrls(record)];
 }
 
 function duplicateProblems(values: readonly string[], noun: string): string[] {
@@ -233,6 +245,7 @@ function curatedRecordIssue(
       : null;
   }
   if (contractId === "ballot-navigation") {
+    if (row.kind === "ELECTION_FIELD") return electionFieldIssue(row);
     const value = object(row.value);
     return !["POLLING_PLACE_LINK", "REGISTRATION_LINK"].includes(string(row.kind)) ||
         !/^[A-Z]{2}$/.test(string(value?.state)) ||
@@ -462,6 +475,7 @@ function sourceScopedProjection(
 ): IsolatedManualProjection {
   const currentMembers = sourceScopedMembers(input.contractId, input.payload);
   const reconciled = reconcileSourceScopedMembers({
+    sourceUrls: member => manualRecordSourceUrls(member.record),
     current: currentMembers,
     currentReceipt: input.sourceReceipt,
     prior: prior ? {

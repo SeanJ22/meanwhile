@@ -154,6 +154,14 @@ export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicR
     const { checkedAt: _checkedAt, ...facts } = row;
     return facts;
   }
+  if (recordClass === "CURATED_READER_RECORD") {
+    const row = object(member.record);
+    const value = object(row?.value);
+    if (row?.kind === "ELECTION_FIELD" && value) {
+      const { verifiedAt: _verifiedAt, collectedAt: _collectedAt, ...facts } = value;
+      return { ...row, value: facts };
+    }
+  }
   return member.record;
 }
 

@@ -17,6 +17,7 @@ import type { CuratedReaderProjection } from "./manual-projections.ts";
 import { officialFilingIssue, type OfficialFiling } from "./official-filings.ts";
 import { readPromotedCivicData, readPromotedCivicDataBatch, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "./read-model.ts";
 import type { HeldPlaceCapture } from "./held-place-capture.ts";
+import { electionFieldIssue, type PublishedElectionField } from "./election-fields.ts";
 
 /** Canonical published families, plus the existing explicitly adopted election calendars. */
 export interface HeldPlaceFamilies {
@@ -27,6 +28,7 @@ export interface HeldPlaceFamilies {
   readonly stateMoney?: readonly StateMoneySnapshot[];
   readonly filings?: readonly OfficialFiling[];
   readonly electionDates?: readonly ElectionDates[];
+  readonly electionFields?: readonly PublishedElectionField[];
 }
 
 function value<T>(read: CivicDataReadResult<T>): T | null {
@@ -45,8 +47,9 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
     .filter(state => states.has(state)).map(state => STATE_CAMPAIGN_FINANCE_SOURCES[state].scope);
   const nj = requiredRoutineContract("nj-morris-filing");
   const filings = requiredManualProductionContract("official-filings");
+  const navigation = requiredManualProductionContract("ballot-navigation");
   const fec = requiredRoutineContract("fec-funding");
-  const [federal, legislators, ballots, njBallot, votingSites, funding, money, filingRead] = await Promise.all([
+  const [federal, legislators, ballots, njBallot, votingSites, funding, money, filingRead, navigationRead] = await Promise.all([
     readPromotedCivicData<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_SCOPE, options),
     Promise.all(stateTargets.map(target => readOfficialStateLegislatorsProjection(target.jurisdiction, options))),
     readPromotedCivicDataBatch<{ ballot: BallotSet }>("BALLOT_CANDIDACY", manualBallots.map(contract => contract.scope), options),
@@ -55,6 +58,7 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
     readPromotedCivicData<FundingSnapshot>(fec.recordClass, fec.scope, options),
     readPromotedCivicDataBatch<StateMoneySnapshot>("STATE_CAMPAIGN_FINANCE", moneyScopes, options),
     readPromotedCivicData<CuratedReaderProjection>(filings.recordClass, filings.scope, options),
+    readPromotedCivicData<CuratedReaderProjection>(navigation.recordClass, navigation.scope, options),
   ]);
   return {
     rosters: [value(federal)?.roster, ...legislators.map(read => value(read)?.roster)].filter((row): row is OfficeholderSet => row !== undefined),
@@ -62,6 +66,7 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
     votingSites: value(votingSites), funding: value(funding), stateMoney: money.flatMap(read => value(read) ?? []),
     filings: (value(filingRead)?.records ?? []).filter(row => officialFilingIssue(row) === null) as unknown as OfficialFiling[],
     electionDates: ELECTION_DATES.filter(row => states.has(row.state)),
+    electionFields: (value(navigationRead)?.records ?? []).filter(row => electionFieldIssue(row) === null) as unknown as PublishedElectionField[],
   };
 }
 
@@ -150,6 +155,11 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
       // Version-adopted source facts are held on their actual date, never relabeled as a fresh canonical publication.
       field(id, /filing|certification/i.test(step.label) ? "ELE-06" : "ELE-08", step, calendar.sourceUrl, calendar.collectedAt, 24, "held");
     }
+  }
+  for (const row of families.electionFields ?? []) {
+    if (electionFieldIssue(row) !== null || !subject(row.id, row.value.fieldKind === "certified_outcome" ? "contest" : "deadline", [row.value.divisionId], row.value.quote)) continue;
+    field(row.id, row.value.fieldKind === "certified_outcome" ? "ELE-15" : row.value.fieldKind.endsWith("_lookup") ? "ELE-09" : "ELE-08", row.value,
+      row.value.url, row.value.collectedAt, 7 * 24);
   }
   const moneyDivisions = (keys: readonly string[]) => [...new Set(keys.flatMap(key => targets.get(key) ?? []))];
   for (const record of families.funding?.candidates ?? []) {

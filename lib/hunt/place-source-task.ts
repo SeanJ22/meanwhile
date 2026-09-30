@@ -83,7 +83,8 @@ export async function runNationalPlaceTask(input: {
                 observation: { rawCount: artifacts.length, normalizedCount: report.sources?.officials.length ?? 0,
                   routeOnlyCount: null, earliest: null, latest: null },
                 note: "Saved national sources acquired; published fields come only from canonical readback; remaining fields stay owed. " +
-                  JSON.stringify({ sourceGaps: report.sources?.gaps ?? [], publications: report.publications }) },
+                  JSON.stringify({ inherited: report.inherited, sourceGaps: report.sources?.gaps ?? [], publications: report.publications,
+                    electionPublications: report.electionPublications }) },
               cost: { ...ZERO_COST, ...saved.cost, durationMs: Date.now() - started },
               detail: `ZIP ${zip}: ${report.items.filter(item => item.state === "published").length} published fields, ${report.work.length} source gaps` };
           } finally { clearInterval(timer); await renewing; }

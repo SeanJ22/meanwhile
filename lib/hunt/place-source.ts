@@ -7,6 +7,8 @@ import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publi
 import { collectNationalPlaceSources, type HeldSourcePage, type NationalPlaceSources } from "../sources/plural/place.ts";
 import { closePublishedPlaceWork, planPlaceHunt, type PlaceCapture } from "./place-plan.ts";
 import { buildPlaceOwedList } from "../coverage/place-owed.ts";
+import { publishElectionFields } from "../civic-data/election-field-publication.ts";
+import { section3Record } from "../control-plane/promotion/section3.ts";
 
 export interface NationalPlacePublicationInput {
   readonly store: RoutineDataStore;
@@ -45,6 +47,7 @@ export async function runPlaceSource(input: {
   let sources: NationalPlaceSources | null = null;
   let publication: unknown = null;
   const publications: unknown[] = [];
+  const electionPublications: (Awaited<ReturnType<typeof publishElectionFields>> | { error: string })[] = [];
   const closed = new Set<string>();
   const plan = await planPlaceHunt({ repos: input.repos, divisions, now: input.now, clock: input.clock, knowledge, readHeld,
     acquireNational: async () => {
@@ -57,6 +60,12 @@ export async function runPlaceSource(input: {
           publication = await input.publish({ store: input.store, now: input.clock?.() ?? input.now, divisions,
             geographyCaptures: input.geographyCaptures, sources: ready });
           publications.push(publication);
+          if (ready.electionFields.length) {
+            try { electionPublications.push(await publishElectionFields({
+              store: input.store, now: input.clock?.() ?? input.now, fields: ready.electionFields, verify: section3Record,
+            })); }
+            catch (error) { electionPublications.push({ error: error instanceof Error ? error.message : String(error) }); }
+          }
           const now = input.clock?.() ?? input.now;
           const captured = await readHeld(ids);
           const items = buildPlaceOwedList({ divisions, ...captured, now });
@@ -65,7 +74,7 @@ export async function runPlaceSource(input: {
         });
         return publicationQueue;
       };
-      sources = await collectNationalPlaceSources({ divisions, now: input.now,
+      sources = await collectNationalPlaceSources({ divisions, now: input.now, knowledge,
         read: url => input.readSource(url, knowledge), onSources: publish });
       if (!publishedBatches) await publish(sources);
       await publicationQueue;
@@ -73,5 +82,5 @@ export async function runPlaceSource(input: {
       // successful function return or a collected field for a published value.
       return { ...await readHeld(ids), replacesHeld: true };
     } });
-  return { ...plan, closed: [...new Set([...closed, ...plan.closed])], zip: input.zip, divisions, sources: sources as NationalPlaceSources | null, publication, publications };
+  return { ...plan, closed: [...new Set([...closed, ...plan.closed])], zip: input.zip, divisions, sources: sources as NationalPlaceSources | null, publication, publications, electionPublications };
 }

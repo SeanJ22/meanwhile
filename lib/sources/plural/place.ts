@@ -4,6 +4,7 @@ import type { PlaceDivision } from "../../control-plane/expansion/national-geogr
 import { isOfficialSource, type OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 import { electionPageFields, type ElectionFieldCandidate } from "../../hunt/election-page.ts";
 import type { WorkerPublicationCapture } from "../../civic-data/worker-roster-publication.ts";
+import { fieldManualForSource, type FieldManualRead } from "../../control-plane/field-manual.ts";
 
 export interface HeldSourcePage {
   readonly url: string;
@@ -71,11 +72,26 @@ export async function collectNationalPlaceSources(input: {
   readonly divisions: readonly PlaceDivision[];
   readonly now: string;
   readonly read: (url: string) => Promise<HeldSourcePage>;
+  readonly knowledge?: FieldManualRead;
   readonly onSources?: (sources: NationalPlaceSources) => Promise<void>;
 }): Promise<NationalPlaceSources> {
   const documents = new Map<string, HeldSourcePage>();
   const inFlight = new Map<string, Promise<HeldSourcePage>>();
   const gaps: { sourceUrl: string; detail: string }[] = [];
+  const sourceKnowledge = new Map<string, ReturnType<typeof fieldManualForSource>>();
+  const learned = (url: string, state: string) => {
+    const key = `${state}|${new URL(url).origin}`;
+    if (!sourceKnowledge.has(key)) sourceKnowledge.set(key, input.knowledge ? fieldManualForSource(input.knowledge, url, state) : []);
+    return sourceKnowledge.get(key)!;
+  };
+  const orderRoutes = (urls: readonly string[], state: string) => [...new Set(urls)].sort((a, b) => {
+    const rank = (url: string) => {
+      const entry = learned(url, state).filter(entry => entry.url === url)
+        .sort((a, b) => (b.observedAt ?? "").localeCompare(a.observedAt ?? ""))[0];
+      return entry?.outcome === "YIELDED" ? 0 : entry?.outcome === "FAILED" || entry?.outcome === "BLOCKED" ? 2 : 1;
+    };
+    return rank(a) - rank(b);
+  });
   const read = (url: string) => {
     const prior = inFlight.get(url);
     if (prior) return prior;
@@ -211,8 +227,12 @@ export async function collectNationalPlaceSources(input: {
       if (!page) {
         // A stale landing path does not establish that the government's site
         // is unavailable. Try its other routes published by the directory.
-        for (const route of stateLinks.filter(l => l.url !== government && new URL(l.url).origin === new URL(government).origin)) {
-          page = await attempt(route.url);
+        const alternatives = orderRoutes([
+          ...learned(government, state).filter(entry => entry.outcome === "YIELDED").flatMap(entry => entry.url ?? []),
+          ...stateLinks.filter(l => l.url !== government && new URL(l.url).origin === new URL(government).origin).map(link => link.url),
+        ], state);
+        for (const route of alternatives) {
+          page = await attempt(route);
           if (page) break;
         }
       }
@@ -254,7 +274,10 @@ export async function collectNationalPlaceSources(input: {
         const office = new RegExp(`^(?:Office of (?:the )?)?(${OFFICE})$`, "i").exec(l.label)?.[1];
         return office ? [followOffice({ url: l.url, office }, provenance)] : [];
       }));
-      const routes = [...new Set(links(page).filter(l => /registration|deadline|early voting|polling|voting location|voting schedule|certified|canvass|election results/i.test(l.label)).map(l => l.url))];
+      const routes = orderRoutes([
+        ...learned(page.url, state).filter(entry => entry.outcome === "YIELDED" && entry.recordClasses.some(kind => /election|ballot|voter/i.test(kind))).flatMap(entry => entry.url ?? []),
+        ...links(page).filter(l => /registration|deadline|early voting|polling|voting location|voting schedule|certified|canvass|election results/i.test(l.label)).map(l => l.url),
+      ], state);
       await Promise.all(routes.map(async route => {
         const document = await attempt(route);
         if (!document) return;

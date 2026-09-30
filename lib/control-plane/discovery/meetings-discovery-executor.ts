@@ -1049,9 +1049,10 @@ export function walkableByFreeWalk(need: Pick<MeetingsDiscoveryNeed, "basis" | "
 export function discoveryNeedsToWalk(
   ledger: readonly MeetingsDiscoveryNeed[],
   dispatched: readonly MeetingsDiscoveryNeed[],
+  accepts: (need: MeetingsDiscoveryNeed) => boolean = () => true,
 ): readonly MeetingsDiscoveryNeed[] {
   const ids = new Set(dispatched.map((n) => n.jurisdictionId));
-  return [...dispatched, ...ledger.filter((n) => !ids.has(n.jurisdictionId))];
+  return [...dispatched, ...ledger.filter((n) => !ids.has(n.jurisdictionId))].filter(accepts);
 }
 
 /**

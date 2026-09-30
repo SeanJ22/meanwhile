@@ -235,6 +235,8 @@ test("DISPATCHED NEEDS REACH THE FREE WALK: derived from each state's registry, 
   const toWalk = discoveryNeedsToWalk(ledger, [aj, newTown]);
   assert.deepEqual(toWalk.map((n) => n.jurisdictionId), [AJ, "az:city:town-of-newly-promoted", "az:city:city-of-avondale"]);
   assert.equal(toWalk.find((n) => n.jurisdictionId === AJ)?.ownWebAddress, "http://www.ajcity.net", "the registry's copy wins over the ledger's");
+  assert.deepEqual(discoveryNeedsToWalk(ledger, [aj, newTown], need => need.jurisdictionId === AJ), [aj],
+    "a narrow discovery pass keeps the current selected need and excludes every other government's work");
 
   for (const [label, repos] of await eachStore("wtp-free-walks-first-")) {
     const opened: string[] = [];
@@ -268,5 +270,5 @@ test("THE RUNNER IS WIRED: it reads the walk before dispatch while the paid lane
   assert.match(runner, /paidDiscoveryHold\(row\.obligation\.id, freeWalks\)/, "the hold reads it");
   assert.doesNotMatch(runner, /paidDiscoveryHold\([^)]*UNREAD_FREE_DISCOVERY_WALKS/, "the hold no longer reads the unwired stand-in");
   assert.match(runner, /freeWalks\.evidenceFor\?\.\(discovery\.jurisdictionId\)/, "the Scout's brief carries the walk's line");
-  assert.match(runner, /needs: discoveryNeedsToWalk\(gapLedgerRead\.needs, \[\.\.\.dispatchedNeeds\.values\(\)\]\)/, "the walk list carries the dispatched needs");
+  assert.match(runner, /needs: discoveryNeedsToWalk\(gapLedgerRead\.needs, \[\.\.\.dispatchedNeeds\.values\(\)\], need =>/, "the walk list carries the dispatched needs with exact selection");
 });

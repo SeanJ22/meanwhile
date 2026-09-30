@@ -28,6 +28,26 @@ import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { beginAttemptFor, claimRouteTask, registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.ts";
+import { emptyFieldManual, newFieldManualEntry, projectFieldManual } from "../lib/control-plane/field-manual.ts";
+
+test("a national walk reuses another role's working source route after a directory's dead landing page", async () => {
+  const now = "2026-09-30T00:00:00Z";
+  const entries = [newFieldManualEntry("detective", "working", { role: "DETECTIVE", kind: "ROUTE", title: "Officials",
+    summary: "Replacement landing page", outcome: "YIELDED", states: ["mo"], url: "https://state.example.gov/leaders", payload: { procedure: "open leaders" } })];
+  const store = { ...emptyFieldManual(), entries };
+  const opened: string[] = [];
+  const pages: Record<string, string> = {
+    "https://www.usa.gov/state-governments": '<a id="mo" href="/states/missouri">Missouri</a>',
+    "https://www.usa.gov/states/missouri": '<h1>Missouri</h1><div class="field--name-field-website"><a href="https://state.example.gov/old">State</a></div>',
+    "https://state.example.gov/leaders": '<a href="/governor">Governor Jane Doe</a>',
+  };
+  const result = await collectNationalPlaceSources({ now, knowledge: { store, revision: 1, projection: projectFieldManual(store) },
+    divisions: [{ id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" }],
+    read: async url => { opened.push(url); if (!(url in pages)) throw Error("Source unavailable"); return { url, text: pages[url], collectedAt: now }; } });
+  assert.ok(opened.includes("https://state.example.gov/leaders"));
+  assert.deepEqual(result.officials.map(row => row.name), ["Jane Doe"]);
+  assert.equal(result.officials[0].document.text, pages["https://state.example.gov/leaders"], "the newly saved official page supplies the fact, not the manual");
+});
 import type { ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
 
 test("national collector binds saved CSV to its real Attempt and reuses another job without renewing its age", async () => {

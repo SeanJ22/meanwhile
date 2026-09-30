@@ -46,7 +46,8 @@ async function main(): Promise<void> {
     const vault = new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
     const store = new PostgresRoutineDataStore();
     const nationalPublications: NationalPlacePublication[] = [];
-    const nationalPlaces: { zip: string; officials: number; publishedFields: number; owedFields: number; sourceGaps: unknown }[] = [];
+    const nationalPlaces: { zip: string; officials: number; publishedFields: number; owedFields: number; sourceGaps: unknown;
+      inherited: unknown; electionPublications: unknown }[] = [];
     const failures: string[] = [];
     if (nationalZips) {
       try {
@@ -60,7 +61,8 @@ async function main(): Promise<void> {
           } });
         nationalPlaces.push(...places.map(place => ({ zip: place.zip, officials: place.sources?.officials.length ?? 0,
           publishedFields: place.items.filter(item => item.state === "published").length,
-          owedFields: place.work.length, sourceGaps: place.sources?.gaps ?? [] })));
+          owedFields: place.work.length, sourceGaps: place.sources?.gaps ?? [],
+          inherited: place.inherited, electionPublications: place.electionPublications })));
       } catch (error) { failures.push(error instanceof Error ? error.message : String(error)); }
     }
     const readObject = researchVaultResolver(repos, vault, "freshness");

@@ -183,7 +183,7 @@ test("MW-031/MW-033: the Scout line states the class chosen, why, and an escalat
     escalationEvidence: "finish refused after 4 turn(s): SCOUT_CANDIDATE_WITHOUT_EVIDENCE",
     escalationRefused: null,
     modelAttempts: [
-      { modelClass: "sonnet", model: "claude-sonnet-5", turns: 4, usd: 0.0124, accepted: false },
+      { modelClass: "sonnet", model: "claude-sonnet-5-5", turns: 4, usd: 0.0124, accepted: false },
       { modelClass: "frontier", model: "claude-opus-5-5", turns: 2, usd: 0.0305, accepted: true },
     ],
   });
@@ -191,8 +191,8 @@ test("MW-031/MW-033: the Scout line states the class chosen, why, and an escalat
   const row = buildAssignments(sources(scouts)).find((r) => r.id === OB)!;
   const detail = standingDetail(row, { scouts });
   const line = detail.models.find((m) => m.step.includes("Scout"))!;
-  assert.match(line.why, /Started on Claude Sonnet 5: Sonnet 5 is the cheapest class that accepts this loop's request/, "the class chosen and why, from the result");
-  assert.match(line.why, /A Scout moved from Claude Sonnet 5 to Claude Opus 5\.5 on Sep 25 because its answer failed our checks and was never fixed \(finish refused after 4 turn\(s\): SCOUT_CANDIDATE_WITHOUT_EVIDENCE\); both tries together cost \$0\.0429 \(\$0\.0124 \+ \$0\.0305\)\./);
+  assert.match(line.why, /Started on Claude Sonnet 5.5: Sonnet 5 is the cheapest class that accepts this loop's request/, "the class chosen and why, from the result");
+  assert.match(line.why, /A Scout moved from Claude Sonnet 5.5 to Claude Opus 5\.5 on Sep 25 because its answer failed our checks and was never fixed \(finish refused after 4 turn\(s\): SCOUT_CANDIDATE_WITHOUT_EVIDENCE\); both tries together cost \$0\.0429 \(\$0\.0124 \+ \$0\.0305\)\./);
   assert.doesNotMatch(line.why, /most capable class by standing rule/);
   const all = `${detail.costLine} ${detail.modelsNote}`;
   assert.doesNotMatch(all, /recorded nowhere/);
@@ -200,7 +200,7 @@ test("MW-031/MW-033: the Scout line states the class chosen, why, and an escalat
 
   /* A measured cost line counts the escalations from the walks read with the work — or says they were not read. */
   const counted = standingDetail({ ...row, cost: { ...row.cost, dollars: { kind: "MEASURED", amount: 0.4429 } } } as typeof row, { scouts });
-  assert.match(counted.costLine, /Model-routing escalations: 1 on record for this work\. Latest: A Scout moved from Claude Sonnet 5 to Claude Opus 5\.5/);
+  assert.match(counted.costLine, /Model-routing escalations: 1 on record for this work\. Latest: A Scout moved from Claude Sonnet 5.5 to Claude Opus 5\.5/);
   const none = standingDetail({ ...row, cost: { ...row.cost, dollars: { kind: "MEASURED", amount: 0.4 } } } as typeof row, { scouts: [scout()] });
   assert.match(none.costLine, /Model-routing escalations: none — its Scout walk finished on the class it started on\./);
   const unread = standingDetail({ ...row, cost: { ...row.cost, dollars: { kind: "MEASURED", amount: 0.4 } } } as typeof row);

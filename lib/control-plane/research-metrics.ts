@@ -32,6 +32,7 @@
  * state.
  */
 
+import { MODELS } from "../models.ts";
 import { cacheMeteringOf, type CostEntry } from "./cost.ts";
 import type { WorkerRole } from "./attempt.ts";
 import { cacheReadMultiplierFor, rateFor } from "./model-cost.ts";
@@ -358,8 +359,8 @@ export function modelShareTrend(input: {
  * guessed rate.
  */
 export const ROLE_MODEL: Readonly<Partial<Record<WorkerRole, string>>> = {
-  SCOUT: "claude-opus-5-5",
-  ADVERSARIAL_AUDITOR: "claude-opus-5-5",
+  SCOUT: MODELS.opus.model,
+  ADVERSARIAL_AUDITOR: MODELS.opus.model,
 };
 
 export interface CacheHitRate {

@@ -1,3 +1,4 @@
+import { WORKER_PUBLICATION_TASK_IDS } from "./worker-reader-contracts.ts";
 import { VALIDATION_CHECKS, type RoutineRecordClass } from "./types.ts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
@@ -485,7 +486,7 @@ export type RoutineTaskSelection =
  */
 export function routineTaskSelection(
   args: readonly string[],
-  tasks: readonly Pick<RoutineSourceTask, "id">[] = ROUTINE_SOURCE_TASKS,
+  tasks: readonly Pick<RoutineSourceTask, "id">[] = [...ROUTINE_SOURCE_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id }))],
 ): RoutineTaskSelection {
   const onlyArgs = args.filter((arg) => arg === "--only" || arg.startsWith("--only="));
   if (onlyArgs.length === 0) return { ok: true, only: null };

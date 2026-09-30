@@ -83,6 +83,7 @@ import { loadPublishedLookupState } from "../lib/census-geography/reader.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
 import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
+import { WORKER_PUBLICATION_TASK_IDS } from "../lib/civic-data/worker-reader-contracts.ts";
 import { readCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import {
@@ -286,7 +287,8 @@ async function readRoutineDueRequests(): Promise<{ readonly requests: readonly R
  * already meets §3 needs no Send (it is not paid work); a paused runner or an
  * unreadable control still admits nothing. */
 async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
-  if (FORCE || ONLY) return [];
+  // An explicit selection of a publication door (`--only=registry-runtime-bindings`) still reads its owed work.
+  if (FORCE || (ONLY && !WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) return [];
   const connection = controlPlaneUrlFromEnv();
   if (!connection) throw new Error("control-plane reporting connection is unavailable");
   const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });

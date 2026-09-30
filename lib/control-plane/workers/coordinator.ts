@@ -234,6 +234,9 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       const existing=await repos.routeTasks.read(continuation.id);
       const recovery = eligibleHeldProtocolRecovery({ latest: lastScout ?? null, heldArtifactIds: handedHeldIds,
         continuationAttempted: history.some(attempt => attempt.routeTaskId === continuation.id) });
+      if (!existing && !recovery && !lastScout?.nextRungs.some(rung => typeof rung === "string" && rung.trim().length > 0)) {
+        return decision("BLOCKED", "The completed Scout supplied no next rung; changed inputs or a repaired method must create its successor.", task);
+      }
       if (recovery) recoveryTaskId = continuation.id;
       if(!existing && debt && Date.parse(debt.retryAt)>Date.parse(now) && !recovery) return decision("BLOCKED",`Scout completed without settling the obligation; its next rungs remain owed after ${debt.retryAt}.`,task);
       task=existing?.value??(await registerRouteTask(repos,continuation,now)).value;

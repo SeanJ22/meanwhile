@@ -29,6 +29,7 @@ export async function runLeaseWorkerProcesses(input: {
   const results: DispatchResult[] = [];
   const pending = new Set(input.config.taskIds);
   const active = new Set<Promise<void>>();
+  let launched = 0;
   let failure: unknown = null;
   const launch = (): Promise<void> => new Promise((resolve, reject) => {
     const child = fork(join(input.config.root, "lib/control-plane/workers/lease-worker.ts"), [], {
@@ -67,8 +68,8 @@ export async function runLeaseWorkerProcesses(input: {
           const reserve = input.reserveEscalation;
           if (!reserve) throw new Error("SCOUT_ESCALATION_RESERVATION_UNAVAILABLE");
           const reserved = await reserve(message.body as Parameters<typeof reserve>[0]);
-          reservations.set(message.id, reserved);
-          body = reserved.admit ? { admit: true, reservedUsd: reserved.reservedUsd } : reserved;
+          if (reserved.admit) reservations.set(message.id, reserved);
+          body = reserved.admit ? { admit: true, reservedUsd: reserved.reservedUsd, reservationId: message.id } : reserved;
         } else throw new Error("WORKER_IPC_OPERATION_UNKNOWN");
         if (child.connected) child.send({ id: message.id, body });
       } catch (error) {
@@ -85,7 +86,10 @@ export async function runLeaseWorkerProcesses(input: {
   while (pending.size && failure === null) {
     const capacity = Math.min(pending.size, input.capacity());
     if (!Number.isSafeInteger(capacity) || capacity < 0) throw new Error("LEASE_WORKER_CAPACITY_INVALID");
-    while (active.size < capacity) {
+    // Every child drains the shared task list. A finished child needs no replacement;
+    // siblings may still own the remaining leases when their result is in transit.
+    while (launched < capacity) {
+      launched++;
       const worker = launch().catch(error => { failure ??= error; }).finally(() => { active.delete(worker); });
       active.add(worker);
     }

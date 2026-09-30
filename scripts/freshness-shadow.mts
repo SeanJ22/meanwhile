@@ -1,11 +1,11 @@
-import { boundedAuditTransport } from "../lib/control-plane/workers/model-audit.ts";
+import { backgroundBatchTransport, batchEnabledFor } from "../lib/control-plane/model-batch.ts";
+import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { createHash, randomUUID } from "node:crypto";
 import { runLeaseWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
-import { runHeldWorkerFleetCycle } from "../lib/control-plane/workers/standing.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
 import { persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
 import { browseWithPlaywright } from "./scout-browse.mts";
-import { autonomousCycleAllowed, exactInstructionAutonomousWorkIds, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
+import { autonomousCycleAllowed, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { MODELS } from "../lib/models.ts";
 import { researchWorkerCapacity } from "../lib/control-plane/scheduler/research-policy.ts";
 import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
@@ -129,16 +129,13 @@ import {
   preloadCandidateEnrichmentAuthorities,
 } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import {
-  CAMPAIGN_SITE_BUDGET_MS,
-  CAMPAIGN_SITE_STOP_GRACE_MS,
   campaignSiteCycleLine,
   campaignSiteSubjectsFromHoldings,
   heldMarginaliaFromManifest,
   runCampaignSiteCycle,
   type CampaignSiteCycleReport,
-  withinWallTime,
 } from "../lib/control-plane/promotion/campaign-site-cycle.ts";
-import { CANDIDATE_PUBLICATION_BUDGET_MS, runCandidatePublicationCycle,
+import { runCandidatePublicationCycle,
   type CandidatePublicationCycleReport } from "../lib/control-plane/promotion/campaign-publication-cycle.ts";
 import { indexVault } from "../lib/control-plane/evidence/read-only-vault.ts";
 import {
@@ -358,26 +355,13 @@ import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/co
 import {
   isControlPlaneRequestTimeout,
   observeControlPlaneTimeouts,
-  withStoreBudget,
 } from "../lib/control-plane/repository/request-bounds.ts";
 import {
-  CYCLE_STALL_LEAD_MS,
   PendingOperations,
   trackStoreCalls,
   type CycleStallDiagnostic,
 } from "../lib/control-plane/scheduler/cycle-stall.ts";
-import {
-  CYCLE_FINALIZATION_BUDGETS_MS,
-  DIGEST_AND_RECORD_RESERVE_MS,
-  LOCAL_RECORD_RESERVE_MS,
-  CycleStepTimeout,
-  cycleClock,
-  lateWorkDeadlineMs,
-  recordFailedCycle,
-  runBoundedStep,
-  stepBudgetMs,
-  type CycleClock,
-} from "../lib/control-plane/scheduler/cycle-finalization.ts";
+import { recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
 import { CYCLE_DRAIN_GRACE_MS, chosenExitCode, exitAfterDrainGrace } from "../lib/control-plane/scheduler/cycle-exit.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
@@ -407,19 +391,12 @@ const nowIso = (): string => new Date().toISOString();
  * of the last phase, the labelled await and the store calls in flight, which
  * the stall diagnostic reads from its own thread (cycle-stall.ts).
  */
-const PROCESS_STARTED_MS = Math.round(performance.timeOrigin);
 const RUNNING_CODE_SHA = headSha(ROOT);
 /* The provenance is of the tree this run STARTED from (run-provenance.ts): read here, not by git calls in finalization. */
 const RUN_PROVENANCE = readRunProvenance(RUNNING_CODE_SHA, ROOT);
 const CYCLE_ID = `freshness-cycle:${HOST}:${NOW}`;
 const RUN_RECORD_PATH = nextRunRecordPath(RUNS_DIR, today());
 const pending = new PendingOperations();
-/** Set once the argv is read; before that the wall is the Fleet ceiling. */
-let CLOCK: CycleClock = cycleClock({
-  processStartedMs: PROCESS_STARTED_MS,
-  wallMs: Number.POSITIVE_INFINITY,
-  stallLeadMs: CYCLE_STALL_LEAD_MS,
-});
 const stallDiagnostic: CycleStallDiagnostic | null = null;
 /** True once the cycle wrote its own record; a later failure must not overwrite it. */
 let finalRecordWritten = false;
@@ -467,12 +444,6 @@ async function recordCrash(error: unknown): Promise<void> {
     testedSha: RUNNING_CODE_SHA,
     host: HOST,
     pending: pendingAtCrash,
-    digestBudgetMs: stepBudgetMs({
-      nowMs: Date.now(),
-      budgetMs: CYCLE_FINALIZATION_BUDGETS_MS.crashDigest,
-      deadlineMs: CLOCK.recordsDeadlineMs,
-      reservedAfterMs: LOCAL_RECORD_RESERVE_MS,
-    }),
     writeLocalRecord: writeCycleRecord,
     log: (line) => console.error(line),
   }));
@@ -549,13 +520,7 @@ if (canary && (IDS === null || IDS.size !== 1)) {
  * dying mid-write. Measured from process start because that is what the
  * supervisor's ceiling is measured from.
  */
-const BUDGET_MIN = Number.POSITIVE_INFINITY;
-const FINALIZATION_RESERVE_MS = 0;
-const CYCLE_STARTED_MS = Date.now();
-const DISPATCH_DEADLINE_MS = Number.POSITIVE_INFINITY;
 const scheduledBlackout = false;
-CLOCK = cycleClock({ processStartedMs: PROCESS_STARTED_MS, wallMs: Number.POSITIVE_INFINITY, stallLeadMs: 0 });
-const lateWorkBudgetMs = (): number => 120_000;
 observeControlPlaneTimeouts((timeout) => console.error(`freshness:shadow · ${timeout.message}`));
 
 /* ------------------------------------------------------------- provider --- */
@@ -1274,7 +1239,8 @@ const lifetimeHuntWorkIds = new Set(sync.all.filter(o => lifetimeHuntSubjects.ha
 const lifetimeHuntWork = (work: string): boolean => lifetimeHuntSubjects.has(work) || lifetimeHuntWorkIds.has(work);
 const hasLifetimeHunt = lifetimeHuntSubjects.size > 0;
 const fundedHunts = (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED" && scope.decision.budgetUsd > 0);
-let providerLimits: import("../lib/control-plane/scheduler/scout-executor.ts").AnthropicRateLimits | null = null;
+const providerQueue = new ModelProviderQueue({
+  ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}) });
 const workerCapacity = researchWorkerCapacity({ hunts: Math.max(1, fundedHunts.length),
   availableUsd: fundedHunts.reduce((sum, scope) => sum + scope.decision.budgetUsd, 0),
   requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
@@ -1461,6 +1427,9 @@ finishPhase("open-occurrences");
 
 /* The credential, BY NAME. Its value goes into the transport and nowhere else. */
 const workerKey = (process.env[WORKER_CREDENTIAL_VAR] ?? "").trim();
+const workerMessages = providerQueue.transport(anthropicTransport(workerKey, fetch, undefined, {
+  onRateLimits: (limits, request) => { providerQueue.observe(request.model, limits); } }));
+const workerBatch = backgroundBatchTransport({ apiKey: workerKey });
 const credentialConfigured = workerKey.length > 0;
 
 /*
@@ -2278,7 +2247,7 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
  * they could hold a finalization for four minutes without a word.
  */
 async function writeResearchState(cycleFinishedAt: string | null): Promise<void> {
-  await withStoreBudget("research-state", CYCLE_FINALIZATION_BUDGETS_MS.researchState, async () => {
+  await (async () => {
     for (let tries = 0; tries < 4; tries += 1) {
       try {
         const current = await repos.researchState.read(RESEARCH_STATE_ID);
@@ -2296,7 +2265,7 @@ async function writeResearchState(cycleFinishedAt: string | null): Promise<void>
         }
       }
     }
-  });
+  })();
 }
 
 await writeResearchState(null);
@@ -2368,7 +2337,7 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
       const held = await prewarmHold.admit(worst, "the cycle's pre-warm");
       if (!held.admit) return { status: "SKIPPED", at, model, code: held.code, detail: `no paid call: ${held.why}`, durationMs: Date.now() - started };
     }
-    const transport = fleetSafety.guardedModelTransport("anthropic", prewarmHold?.obligationId ?? "scout-prewarm", anthropicTransport(workerKey));
+    const transport = fleetSafety.guardedModelTransport("anthropic", prewarmHold?.obligationId ?? "scout-prewarm", workerMessages);
     /* A failed pre-warm leaves its hold standing: what it was billed is unknown. */
     const response = await transport(request);
     const metered = readMeteredUsage(response.usage ?? {});
@@ -2416,7 +2385,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
   ? scoutExecutor({
       /* MW-021: every request is checked against what the job holds on its Send and area budgets before the Fleet guard reserves it. */
       transport: budgetGuardedTransport({
-        transport: fleetSafety.guardedModelTransport("anthropic", scheduled.obligation.id, anthropicTransport(workerKey)),
+        transport: fleetSafety.guardedModelTransport("anthropic", scheduled.obligation.id, workerMessages),
         job: () => jobSpend.get(scheduled.obligation.id) ?? null,
         worstCaseOf: modelRequestWorstCaseUsd,
         priceOf: modelResponseUsd,
@@ -2533,7 +2502,6 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
 
 // Keep a bounded share of the existing cycle for registered multi-worker work.
 // Otherwise an always-full refresh queue could starve the fleet indefinitely.
-const fleetReserveMs = !dry && !canary && downstreamWorkCount ? Math.min(360_000, BUDGET_MIN * 30_000) : 0;
 // Registered investigations also need Scout after a known source fails or leaves
 // verification unresolved; initial source discovery is not the only model work.
 finishPhase("worker-context");
@@ -2600,19 +2568,15 @@ if (modelLaneEnabled && freeWalkSubjects.length > 0) {
 async function projectRetainedFacts(phase: string): Promise<void> {
   const readEvidence = workerVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness", { snapshot: true });
   try {
-    const report = await pending.step(phase, () => runBoundedStep({
-      label: phase,
-      budgetMs: Math.min(120_000, lateWorkBudgetMs()),
-      fn: () => projectFleetPipeline(repos, {
+    const report = await pending.step(phase, () => projectFleetPipeline(repos, {
         readArtifactText: async id => (await readEvidence(id)).text,
         now: nowIso(), root: ROOT,
         freshness: createPermanentMeetingFreshness({ connection: process.env.WTP_PRODUCTION_DATABASE_URL_READONLY,
           onUnavailable: detail => runtimeConditions.push(detail) }),
-      }),
-    }));
+      }));
     if (report !== null) for (const line of factChainLines(report)) console.log(line);
   } catch (error) {
-    const reason = error instanceof CycleStepTimeout || isControlPlaneRequestTimeout(error)
+    const reason = isControlPlaneRequestTimeout(error)
       ? error.message
       : error instanceof Error && /^[A-Z][A-Z0-9_]{2,100}$/.test(error.message)
         ? error.message : "RETAINED_FACT_PROJECTION_FAILED";
@@ -2819,14 +2783,7 @@ for (const row of cycle.deferred) {
   );
 }
 
-const budgetDeferred = cycle.deferred.filter((d) => d.why.includes("dispatch budget was spent")).length;
-console.log(
-  `\n  dispatch budget: ${Math.max(0, BUDGET_MIN - FINALIZATION_RESERVE_MS / 60_000)} min; hard cycle wall ${BUDGET_MIN} min` +
-    (budgetDeferred > 0
-      ? ` — SPENT; ${budgetDeferred} due item(s) deferred to a later cycle rather than run past the ` +
-        "runner's ceiling and be killed mid-write"
-      : " — not reached"),
-);
+
 
 /* ------------------------------------------------- close, and persist debt --- */
 
@@ -2854,11 +2811,8 @@ console.log(
 // discovery/publication passes run. These passes are joined below, before
 // finalization: no paid request or repository write is abandoned at the wall.
 // The ordinary lanes have already completed and kept their own dispatch budget.
-const autonomousStoreDeadlineMs = lateWorkDeadlineMs(CLOCK) - 15_000;
-const autonomousDeadlineMs = Math.min(DISPATCH_DEADLINE_MS - 60_000, autonomousStoreDeadlineMs - 30_000);
 async function makeAutonomousFleet() {
-  const fleetTransport = modelLaneEnabled ? anthropicTransport(workerKey, fetch, undefined,
-    { onRateLimits: limits => { providerLimits = limits; } }) : null;
+  const fleetTransport = modelLaneEnabled ? workerMessages : null;
   return autonomousStandingRuntime({ root: ROOT, repos, now: nowIso, environment: process.env,
     ...(scoutSearch ? { search: scoutSearch } : {}),
     ...(scoutSearchLifetime ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime : scoutSearch ?? undefined } : {}),
@@ -2882,9 +2836,9 @@ async function runAutonomousProcesses() {
       searchEnabled: scoutSearch !== null, ceilingUsd: effectiveCeilingUsd, fundedSubjects: [...lifetimeHuntSubjects] },
     capacity: () => modelLaneEnabled ? researchWorkerCapacity({ hunts: taskIds.length, availableUsd,
       requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
-      requestsPerMinute: providerLimits?.requestsPerMinute ?? Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ?? 1),
-      inputTokensPerMinute: providerLimits?.inputTokensPerMinute ?? undefined,
-      outputTokensPerMinute: providerLimits?.outputTokensPerMinute ?? undefined,
+      requestsPerMinute: providerQueue.limits(MODELS.haiku.model)?.requestsPerMinute ?? undefined,
+      inputTokensPerMinute: providerQueue.limits(MODELS.haiku.model)?.inputTokensPerMinute ?? undefined,
+      outputTokensPerMinute: providerQueue.limits(MODELS.haiku.model)?.outputTokensPerMinute ?? undefined,
       inputTokensPerRequest: 8192, outputTokensPerRequest: RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn }) : taskIds.length,
     transportFor: (jurisdiction, taskId) => async request => {
       const task = (await repos.routeTasks.mustRead(taskId)).value;
@@ -2895,9 +2849,17 @@ async function runAutonomousProcesses() {
       const job = new JobSpend(spendHolds, `worker-request:${taskId}:${randomUUID()}`, owner?.value.obligationId ?? task.id, found.lines);
       const transport = budgetGuardedTransport({ job: () => job,
         transport: fleetSafety.guardedModelTransport("anthropic", jurisdiction.subjectId,
-          anthropicTransport(workerKey, fetch, undefined, { onRateLimits: limits => { providerLimits = limits; } })),
+          task.workerTask?.role === "ADVERSARIAL_AUDITOR" && batchEnabledFor("background-worker-audit") ? workerBatch : workerMessages),
         worstCaseOf: modelRequestWorstCaseUsd, priceOf: modelResponseUsd });
-      const response = await transport(request);
+      let response;
+      try { response = await transport(request); }
+      catch (error) {
+        if (error instanceof FleetPreSendRefusal || error instanceof SendBudgetRefusal) {
+          const failed = await spendHolds.settle(job.jobId, 0, nowIso());
+          if (failed !== null) runtimeConditions.push(`unsent request hold ${job.jobId} release failed: ${failed}`);
+        }
+        throw error;
+      }
       const measured = modelResponseUsd(response);
       if (measured !== null) await spendHolds.settle(job.jobId, measured, nowIso());
       return response;
@@ -2944,7 +2906,6 @@ try {
  * lanes, and shares the cycle's host spacing and vault.
  */
 /* On unless the kill switch says off (NS28, decided by the owner 2026-09-24: meetings discovery is always on). */
-const MEETINGS_DISCOVERY_BUDGET_MS = 60_000;
 const MEETINGS_DISCOVERY_MAX_WALKS = 12;
 /*
  * The search rung's caps (Brave and Exa combined, pointers only) are
@@ -2959,10 +2920,7 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
   meetingsDiscoveryState = "not run: a dry, canary, filtered or blackout cycle walks nothing";
 } else if ("unreadable" in gapLedgerRead) {
   meetingsDiscoveryState = `not run: ${gapLedgerRead.unreadable}`;
-} else if (Date.now() + MEETINGS_DISCOVERY_BUDGET_MS > DISPATCH_DEADLINE_MS) {
-  meetingsDiscoveryState = "not run: less of the cycle's admission window remains than the discovery budget";
 } else {
-  const discoveryStartedMs = Date.now();
   const openDiscovery = fleetSafety.guardedOpenBytes("discovery-web", "meetings-discovery", fetch, { followRedirects: false });
   /* Named to the stall diagnostic while it runs: its waits on government sites are not store calls, so nothing else would name them. */
   const leaveDiscovery = pending.enter("meetings-discovery");
@@ -3010,8 +2968,8 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
         vault: vault.put,
         now: nowIso,
         budget: {
-          spent: () => Date.now() - discoveryStartedMs >= MEETINGS_DISCOVERY_BUDGET_MS,
-          remainingMs: () => discoveryStartedMs + MEETINGS_DISCOVERY_BUDGET_MS - Date.now(),
+          spent: () => false,
+          remainingMs: () => Number.POSITIVE_INFINITY,
         },
         recipes: knownRecipes(manual?.value.entries ?? []),
         /* Committed route hints: the current official site where the recorded address is stale, and routes found on a government's own publications. */
@@ -3066,16 +3024,13 @@ if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
   campaignSitesState = "not run: a dry, canary, filtered or blackout cycle reads nothing";
 } else if (intents.runnerPause.paused) {
   campaignSitesState = "not run: the owner has paused the runner";
-} else if (Date.now() + CAMPAIGN_SITE_BUDGET_MS + 2 * CAMPAIGN_SITE_STOP_GRACE_MS > DISPATCH_DEADLINE_MS) {
-  campaignSitesState = "not run: less of the cycle's admission window remains than the pass's budget";
 } else {
   const leaveCampaignSites = pending.enter("campaign-sites");
   /* The pass's budget runs from HERE, its loading included (2026-09-25: loading and store work sat outside it, 93–160 s passes and one 4.5-minute hang). */
   const campaignStartedMs = Date.now();
   /* The cycle's own backstop, one grace past the pass's own hard stop: whatever the pass awaits (its loading too), the cycle moves on. */
-  const campaignHardStopMs = CAMPAIGN_SITE_BUDGET_MS + 2 * CAMPAIGN_SITE_STOP_GRACE_MS;
   try {
-    const pass = await withinWallTime((async () => {
+    const pass = await (async () => {
       const holdings = candidateEnrichmentHoldings();
       if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
       const { subjects, linked } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
@@ -3115,15 +3070,10 @@ if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
           `ran over ${subjects.size} canonical candidacies (${linked.size} already carrying a campaign link, read last) and ${held.responses.length} held Marginalia answer(s) of ${held.entries} staged` +
           (held.unreadable > 0 ? ` (${held.unreadable} answer(s) the vault could not produce)` : ""),
       };
-    })(), campaignHardStopMs - (Date.now() - campaignStartedMs));
-    if (pass.done) {
-      campaignSites = pass.value.report;
-      campaignSitesState = pass.value.state;
+    })();
+      campaignSites = pass.report;
+      campaignSitesState = pass.state;
       if (campaignSites.stoppedAtDeadline === true) runtimeConditions.push(`campaign-site pass stopped at its hard deadline after ${Math.round(campaignSites.elapsedMs / 1000)}s; the leads it had not weighed stay owed (NOT_READ) for the next cycle`);
-    } else {
-      campaignSitesState = `STOPPED: the pass did not return by the cycle's ${campaignHardStopMs / 1000}s backstop (its loading or its own stop hung), so the cycle moved on; every lead it had not weighed stays owed (NOT_READ) for the next cycle`;
-      runtimeConditions.push(`campaign-site pass ${campaignSitesState}`);
-    }
   } catch (error) {
     campaignSitesState = `could not run: ${error instanceof Error ? error.message : String(error)}`;
     runtimeConditions.push(`campaign-site pass ${campaignSitesState}`);
@@ -3141,19 +3091,16 @@ if (dry || canary || ONLY !== null || IDS !== null || intents.runnerPause.paused
   candidatePublicationsState = "not run: dry, canary, filtered or paused cycle";
 } else if (!hasLifetimeHunt) {
   candidatePublicationsState = "not run: exact selected hunt receipt is unavailable";
-} else if (Date.now() + CANDIDATE_PUBLICATION_BUDGET_MS + 5_000 > DISPATCH_DEADLINE_MS) {
-  candidatePublicationsState = "not run: insufficient dispatch time for bounded publication acquisition";
 } else {
   const leavePublications = pending.enter("candidate-publications");
   try {
-    const vaultRead = await withinWallTime(indexVault(join(ROOT, ...VAULT_DIR)), CANDIDATE_PUBLICATION_BUDGET_MS);
-    if (!vaultRead.done) throw new Error("CANDIDATE_PUBLICATION_VAULT_INDEX_TIMEOUT");
+    const vaultRead = await indexVault(join(ROOT, ...VAULT_DIR));
     // Once an ACQUIRER begins committing a captured page or a typed blocked
     // disposition, let that repository operation settle. Racing a writer with
     // a wall timer would leave an apparently stopped pass writing in the back.
     const pass = await runCandidatePublicationCycle({
       repos, eligibleCandidacyIds: lifetimeHuntSubjects,
-      heldVault: vaultRead.value, vaultRoot: join(ROOT, ...VAULT_DIR),
+      heldVault: vaultRead, vaultRoot: join(ROOT, ...VAULT_DIR),
       methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version,
       clock: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)), spaceOut: spacer,
       openFor: candidacyId => {
@@ -3413,7 +3360,7 @@ if (canary) {
   runtimeConditions.push("live canary: whole-store metrics scans were intentionally skipped");
   metrics = null;
 } else {
-  metrics = await pending.step("metrics", () => withStoreBudget("metrics", lateWorkBudgetMs(), computeMetrics));
+  metrics = await pending.step("metrics", () => computeMetrics());
 }
 
 /* -------------------------------------------- research state, heartbeat --- */
@@ -3422,7 +3369,7 @@ const finishedAt = nowIso();
 if (!dry && !canary) {
   const leaveProgression = pending.enter("research-progression");
   try {
-    researchProgression = await withStoreBudget("research-progression", lateWorkBudgetMs(), async () => readResearchProgression(repos, {
+    researchProgression = await (async () => readResearchProgression(repos, {
       windowId: researchWindowId, through: finishedAt, gate: readActivationGate(ROOT),
       candidates: (await readMethodCandidateStore(repos)).candidates,
       knowledge: readMethodStore(join(ROOT,...METHOD_STORE)),
@@ -3431,7 +3378,7 @@ if (!dry && !canary) {
         since: priorResearchState?.researchProgression?.through ?? priorResearchState?.cycleFinishedAt ?? NOW,
         previousCompletedWindowId: priorResearchState?.researchProgression?.windowId ?? (priorResearchState?.cycleFinishedAt ? `research:${priorResearchState.host}:${priorResearchState.cycleStartedAt}` : null),
       },
-    }));
+    }))();
   } catch (error) {
     researchProgressionFailure = error instanceof Error ? error.message : String(error);
     runtimeConditions.push(`RESEARCH_PROGRESSION_UNAVAILABLE: ${researchProgressionFailure}; no zero-progress claim was produced`);
@@ -3451,10 +3398,7 @@ finishPhase("metrics-and-finalization");
  * canonical append ends the cycle, through the crash handler, with a FAILED
  * outcome and a local crash record.
  */
-const finalStepBudgetMs = (budgetMs: number, reservedAfterMs: number): number =>
-  stepBudgetMs({ nowMs: Date.now(), budgetMs, deadlineMs: CLOCK.recordsDeadlineMs, reservedAfterMs });
-const finalStep = <T,>(label: string, budgetMs: number, reservedAfterMs: number, fn: () => Promise<T>): Promise<T> =>
-  pending.step(label, () => runBoundedStep({ label, budgetMs: finalStepBudgetMs(budgetMs, reservedAfterMs), fn }));
+const finalStep = <T,>(label: string, fn: () => Promise<T>): Promise<T> => pending.step(label, fn);
 const failedStep = (step: string, error: unknown): string => {
   const detail = error instanceof Error ? error.message : String(error);
   console.error(`freshness:shadow · finalization step ${step} failed: ${detail}`);
@@ -3462,7 +3406,7 @@ const failedStep = (step: string, error: unknown): string => {
 };
 
 try {
-  await finalStep("research-state:final", CYCLE_FINALIZATION_BUDGETS_MS.researchState, DIGEST_AND_RECORD_RESERVE_MS, () =>
+  await finalStep("research-state:final", () =>
     writeResearchState(finishedAt));
 } catch (error) {
   runtimeConditions.push(`the final research state was not written: ${failedStep("research-state:final", error)}`);
@@ -3484,7 +3428,6 @@ const codeIdentity = pending.sync("code-identity", () => {
       runnerTestedSha: RUNNING_CODE_SHA,
       now: finishedAt,
       fetch: !dry && !canary,
-      budgetMs: finalStepBudgetMs(CYCLE_FINALIZATION_BUDGETS_MS.codeIdentity, DIGEST_AND_RECORD_RESERVE_MS),
     });
   } catch (error) {
     runtimeConditions.push(`the code identity could not be read: ${error instanceof Error ? error.message : String(error)}`);
@@ -3515,7 +3458,7 @@ const heartbeat: RunnerHeartbeat = {
   },
 };
 try {
-  await finalStep("heartbeat", CYCLE_FINALIZATION_BUDGETS_MS.heartbeat, DIGEST_AND_RECORD_RESERVE_MS, async () => {
+  await finalStep("heartbeat", async () => {
     const beat = await pending.step("heartbeat:read", () => repos.runnerHeartbeat.read(RUNNER_ID));
     const nextHeartbeat: RunnerHeartbeat = {
       ...heartbeat,
@@ -3638,11 +3581,6 @@ const lines = [
   "",
   ...promotionLines(staged),
   `  staging manifest   ${manifest.total} entry(ies) held, ${manifest.written} written this cycle`,
-  `  dispatch budget    ${Math.max(0, BUDGET_MIN - FINALIZATION_RESERVE_MS / 60_000)} min admission + ${FINALIZATION_RESERVE_MS / 60_000} min finalization reserve inside ${BUDGET_MIN} min hard wall — ${
-    budgetDeferred > 0
-      ? `SPENT; ${budgetDeferred} due item(s) deferred to a later cycle rather than run past the runner's ceiling`
-      : "not reached"
-  }`,
 ];
 console.log();
 for (const line of lines) console.log(line);
@@ -3941,7 +3879,7 @@ const canonicalOutcome: FreshnessCycleOutcome = {
  * identity makes an uncertain retry a no-op success, never a second record. A
  * failure here is the cycle's crash — a FAILED outcome and a local crash record.
  */
-await finalStep("digest:append", CYCLE_FINALIZATION_BUDGETS_MS.digestAppend, LOCAL_RECORD_RESERVE_MS, () =>
+await finalStep("digest:append", () =>
   withControlPlaneConnectRetry(() => appendFreshnessCycleDigest(repos, { outcome: canonicalOutcome, lines }), {
     maxAttempts: 3,
     onRetry: ({ attempt, delayMs, error }) =>
@@ -3956,7 +3894,7 @@ const path = pending.sync("local-record:write", () => writeCycleRecord(runRecord
 console.log(`  local diagnostic: ${path}`);
 /* The lease's TTL and the runner's exited-holder release cover a miss; it is named, never a crash after a recorded outcome. */
 try {
-  await finalStep("window-lease:release", CYCLE_FINALIZATION_BUDGETS_MS.windowLease, 0, () =>
+  await finalStep("window-lease:release", () =>
     releaseWindowLease(repos, CYCLE_LEASE_HOLDER, nowIso()));
 } catch (error) {
   failedStep("window-lease:release", error);

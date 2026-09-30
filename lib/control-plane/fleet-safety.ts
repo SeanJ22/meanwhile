@@ -7,7 +7,7 @@
  * concurrent model requests until their provider-reported cost is persisted.
  */
 import type { CostEntry } from "./cost.ts";
-import { CACHE_RATE_MULTIPLIERS, rateFor, usdForModelUsage } from "./model-cost.ts";
+import { CACHE_RATE_MULTIPLIERS, rateFor, priceMeteredUsage, readMeteredUsage } from "./model-cost.ts";
 import type { ModelRequest, ModelResponse, ModelTransport, ScoutEscalationAdmission, ScoutEscalationRequest } from "./scheduler/scout-executor.ts";
 import { ModelTransportError } from "./scheduler/scout-executor.ts";
 import type { OpenBytes } from "./scheduler/scout-contract.ts";
@@ -246,12 +246,7 @@ export function modelRequestWorstCaseUsd(request: ModelRequest): number | null {
 
 /** What a model response cost, from its provider-reported usage; null when the usage is incomplete. */
 export function modelResponseUsd(response: ModelResponse): number | null {
-  return usdForModelUsage(response.model, {
-    inputTokens: response.usage.input_tokens ?? null,
-    outputTokens: response.usage.output_tokens ?? null,
-    cacheReadInputTokens: response.usage.cache_read_input_tokens ?? null,
-    cacheCreationInputTokens: response.usage.cache_creation_input_tokens ?? null,
-  });
+  return priceMeteredUsage(response.model, readMeteredUsage(response.usage, response.batch === true), "5m").usd;
 }
 
 export class FleetSafetyController {
@@ -425,12 +420,7 @@ export class FleetSafetyController {
     this.releaseReservation(reservation);
     const responseBytes = Buffer.byteLength(JSON.stringify(response));
     this.recordInboundBytes(reservation.work, responseBytes);
-    const usd = usdForModelUsage(response.model, {
-      inputTokens: response.usage.input_tokens ?? null,
-      outputTokens: response.usage.output_tokens ?? null,
-      cacheReadInputTokens: response.usage.cache_read_input_tokens ?? null,
-      cacheCreationInputTokens: response.usage.cache_creation_input_tokens ?? null,
-    });
+    const usd = modelResponseUsd(response);
     if (usd === null) {
       this.cycleModelSpendMeasured = false;
       this.refuse(reservation.work, "UNMEASURED_MODEL_SPEND", `provider did not return complete metered usage for ${response.model}`);
@@ -549,10 +539,8 @@ export class FleetSafetyController {
 
   /** A fetch seam that hard-caps application payload consumption by streaming. */
   guardedOpenOne(provider: string, work: string, fetchImpl: typeof fetch = fetch): OpenOne {
-    return async ({ url, method, headers, body, timeoutMs }) => {
+    return async ({ url, method, headers, body }) => {
       const started = Date.now();
-      const abort = new AbortController();
-      const timer = setTimeout(() => abort.abort(), timeoutMs);
       try {
         let currentUrl = url;
         let currentMethod = method;
@@ -564,7 +552,6 @@ export class FleetSafetyController {
           try {
             response = await fetchImpl(currentUrl, {
               method: currentMethod,
-              signal: abort.signal,
               redirect: "manual",
               headers: { ...headers, range: `bytes=0-${Math.max(0, reservation.streamCapBytes - 1)}` },
               ...(currentBody === undefined ? {} : { body: currentBody }),
@@ -606,8 +593,6 @@ export class FleetSafetyController {
           durationMs: Date.now() - started,
           transportError: error instanceof Error ? error.message : String(error),
         };
-      } finally {
-        clearTimeout(timer);
       }
     };
   }
@@ -625,10 +610,8 @@ export class FleetSafetyController {
     options: { readonly followRedirects?: boolean } = {},
   ): OpenBytes {
     const follow = options.followRedirects !== false;
-    return async ({ url, headers, timeoutMs }) => {
+    return async ({ url, headers }) => {
       const started = Date.now();
-      const abort = new AbortController();
-      const timer = setTimeout(() => abort.abort(), timeoutMs);
       try {
         let currentUrl = url;
         let response: Response;
@@ -639,7 +622,6 @@ export class FleetSafetyController {
           try {
             response = await fetchImpl(currentUrl, {
               method: "GET",
-              signal: abort.signal,
               redirect: "manual",
               headers: { ...headers, range: `bytes=0-${Math.max(0, reservation.streamCapBytes - 1)}` },
             });
@@ -675,8 +657,6 @@ export class FleetSafetyController {
           durationMs: Date.now() - started,
           transportError: error instanceof Error ? error.message : String(error),
         };
-      } finally {
-        clearTimeout(timer);
       }
     };
   }

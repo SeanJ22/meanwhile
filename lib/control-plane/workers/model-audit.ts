@@ -12,7 +12,6 @@ import type { IndependentAuditContext, WorkerEvidence, WorkerResultRecord, Recor
 import { SendBudgetRefusal } from "../expansion/spend-holds.ts";
 import { inventoryRecordEvidence } from "./record-evidence.ts";
 
-export const AUDIT_REVIEW_TIMEOUT_MS = 60_000;
 export const AUDIT_RESPONSE_MAX_BYTES = 16_384;
 export const AUDIT_CONTEXT_MAX_BYTES = 32_000;
 
@@ -64,9 +63,9 @@ const RECORD_AUDIT = {
   cache_control: { type: "ephemeral" as const },
 };
 
-/** The standing runner and manual proof share the same cancellation bound. */
+/** The provider call ends on its response or failure, without an attempt clock. */
 export function boundedAuditTransport(apiKey: string): ModelTransport {
-  return anthropicTransport(apiKey, (url, options) => fetch(url, { ...options, signal: AbortSignal.timeout(AUDIT_REVIEW_TIMEOUT_MS) }));
+  return anthropicTransport(apiKey);
 }
 
 function object(value: unknown): value is Record<string, unknown> { return value !== null && typeof value === "object" && !Array.isArray(value); }
@@ -230,17 +229,6 @@ function validateAnswer(response: ModelResponse, expectedModel: string, context:
   return { verdict: answer.verdict as Review["verdict"], challenges };
 }
 
-/** Bounds the whole injected review path, even if a test or provider transport never settles. */
-export async function withinBound<T>(operation: (signal: AbortSignal) => Promise<T>, timeoutMs: number, failure = "AUDIT_PROVIDER_FAILURE"): Promise<T> {
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  const controller = new AbortController();
-  try {
-    return await Promise.race([operation(controller.signal), new Promise<never>((_, reject) => {
-      timer = setTimeout(() => { controller.abort(); reject(new Error(`${failure}:TIMEOUT; usage NOT MEASURED`)); }, timeoutMs);
-    })]);
-  } finally { if (timer !== undefined) clearTimeout(timer); }
-}
-
 /**
  * `ceilingUsd` is the rolling ceiling IN FORCE — the owner's console override,
  * the same number the Scout admission reads (2026-09-25). Before this the
@@ -249,7 +237,6 @@ export async function withinBound<T>(operation: (signal: AbortSignal) => Promise
  */
 export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: ModelTransport, now: () => string,
   options: {
-    readonly timeoutMs?: number;
     readonly ceilingUsd?: number;
     /** MW-021 (2026-09-25): the transport for the jurisdiction a record is about, so the review is held on the area budget covering it. */
     readonly transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport;
@@ -257,14 +244,11 @@ export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: M
     readonly lifetimeHuntSubject?: (subjectId: string) => boolean;
   } = {}): NonNullable<FleetRuntime["auditReasoner"]> {
   const initial = assertStepMayInvokeModel("adversarial-audit");
-  const timeoutMs = options.timeoutMs ?? AUDIT_REVIEW_TIMEOUT_MS;
-  if (!Number.isFinite(timeoutMs) || timeoutMs <= 0 || timeoutMs > AUDIT_REVIEW_TIMEOUT_MS) throw new Error("AUDIT_REVIEW_BOUND_INVALID");
   const ceilingUsd = options.ceilingUsd ?? RESEARCH_BOUNDS.dailyCeilingUsd;
   if (!Number.isFinite(ceilingUsd) || ceilingUsd <= 0) throw new Error("AUDIT_CEILING_INVALID");
-  return { workerProvider: "anthropic", workerVersion: initial.model, review: async (context, attemptId, escalation) => withinBound(async (signal) => {
+  return { workerProvider: "anthropic", workerVersion: initial.model, review: async (context, attemptId, escalation) => {
     const started = performance.now();
     const spend = researchSpendInWindow(await repos.costs.readAll(), now());
-    signal.throwIfAborted();
     if (!options.lifetimeHuntSubject?.(context.subjectId)) {
       const admission = ceilingPermits(spend.windowUsd, ceilingUsd);
       if (!admission.permits) throw new Error(`DENIED_BY_POLICY:AUDIT_ROLLING_COST_CEILING; ${admission.why}`);
@@ -292,14 +276,13 @@ export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: M
       const status = error && typeof error === "object" && "status" in error && typeof error.status === "number" ? String(error.status) : "UNAVAILABLE";
       throw new Error(`AUDIT_PROVIDER_FAILURE:${status}; usage NOT MEASURED`);
     });
-    signal.throwIfAborted();
     /*
      * The provider's usage block, read once through the shared parser (2026-09-06):
      * the five billed quantities with the cache-write split, priced by the one
      * pricing function and carried onto the cost ledger by `meteredCostFields`.
      * `inputTokens` on the worker usage stays the UNCACHED remainder, as before.
      */
-    const metered: MeteredUsage = readMeteredUsage(response.usage);
+    const metered: MeteredUsage = readMeteredUsage(response.usage, response.batch === true);
     const usage = { inputTokens: metered.uncachedInputTokens, outputTokens: metered.outputTokens,
       cacheReadInputTokens: metered.cacheReadInputTokens, cacheCreationInputTokens: metered.cacheCreationInputTokens,
       uncachedInputTokens: metered.uncachedInputTokens };
@@ -320,5 +303,5 @@ export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: M
       ...(escalation ? { escalation: { ...escalation, at: now() } } : {}),
       verdict, challenges, validationError, responseText, elapsedMs: Math.round(performance.now() - started) },
       usage, usd: priceMeteredUsage(response.model, metered, "5m").usd, metering: meteredCostFields(metered) };
-  }, timeoutMs) };
+  } };
 }

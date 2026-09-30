@@ -337,7 +337,7 @@ test("a provider response with incomplete usage keeps the durable autonomous are
     return { id: "msg-unpriced", model: asked.model, role: "assistant", content: [{ type: "text", text: "done" }],
       stop_reason: "end_turn", usage: { input_tokens: 100 } } as unknown as ModelResponse;
   };
-  const controller = new FleetSafetyController({ now: NOW, costs: [], clock: () => Date.parse(NOW) });
+  const controller = new FleetSafetyController({ now: NOW, costs: [], rollingCeilingUsd: 100, clock: () => Date.parse(NOW) });
   const afterResponse = autonomous(spend, scope, { subjectId: PIMA, state: "AZ" },
     controller.guardedModelTransport("anthropic", PIMA, incomplete), (error) => error instanceof FleetPreSendRefusal);
   await assert.rejects(afterResponse(request()), (error: unknown) =>
@@ -360,6 +360,7 @@ test("a provider response with incomplete usage keeps the durable autonomous are
 test("the auditor's review goes through the jurisdiction's transport, and a budget refusal is a policy denial, not a provider failure", async () => {
   const asked: { subjectId: string; state: string | null }[] = [];
   const reasoner = modelAuditReasoner(createMemoryRepositories(), async () => { throw new Error("the shared transport must not be used"); }, () => NOW, {
+    ceilingUsd: 100,
     transportFor: (j) => {
       asked.push(j);
       return async () => { throw new SendBudgetRefusal("SCOPE_BUDGET", "ZIP 85701 has $0.00 left"); };
@@ -382,6 +383,6 @@ test("the runner wires autonomous work to its jurisdiction's area only, never to
   assert.match(block, /expansionBudget\.gate\.linesFor\(j\.subjectId, j\.state\)/);
   assert.doesNotMatch(block, /assignmentBudget|sends:/, "no Send budget is consulted for autonomous work");
   assert.match(runner, /transportFor: autonomousTransportFor\(fleetTransport\)/);
-  assert.match(runner, /const fleetTransport = modelLaneEnabled \? boundedAuditTransport\(workerKey\) : null/, "the autonomous transport exists only while the paid lane is open");
+  assert.match(runner, /const fleetTransport = modelLaneEnabled \? workerMessages : null/, "the autonomous transport exists only while the paid lane is open");
   assert.doesNotMatch(runner, /unattributedBudgetGuard|allLines\(/);
 });

@@ -12,8 +12,54 @@ import { fileURLToPath } from "node:url";
 
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import { deliveryPathOpen, modelLaneClosure, type DeliveryGate, type ModelLaneFacts } from "../lib/control-plane/scheduler/model-lane.ts";
+import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
+import { ModelTransportError, type ModelRequest } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { MODELS } from "../lib/models.ts";
 
 const OPEN_GATE: DeliveryGate = { promotionEnabled: true, openRecordClasses: ["candidate-enrichment"] };
+
+test("concurrent calls share request capacity while each named tier can proceed", async () => {
+  let now = 0;
+  let resume!: () => void;
+  let sleeping!: () => void;
+  const waiting = new Promise<void>(resolve => { sleeping = resolve; });
+  const queue = new ModelProviderQueue({ now: () => now, sleep: async ms => {
+    sleeping();
+    await new Promise<void>(resolve => { resume = () => { now += ms; resolve(); }; });
+  } });
+  for (const model of [MODELS.haiku.model, MODELS.sonnet.model]) queue.observe(model, {
+    requestsPerMinute: 1, inputTokensPerMinute: 10000, outputTokensPerMinute: 10000, retryAfterMs: null });
+  const starts: string[] = [];
+  const send = queue.transport(async request => {
+    starts.push(request.model);
+    return { model: request.model, content: [], stop_reason: "end_turn", usage: { input_tokens: 1, cache_creation_input_tokens: 0, output_tokens: 1 } };
+  });
+  const request = (model: string): ModelRequest => ({ model, max_tokens: 10, system: [], tools: [], messages: [] });
+  const first = send(request(MODELS.haiku.model));
+  const second = send(request(MODELS.haiku.model));
+  const other = send(request(MODELS.sonnet.model));
+  await waiting;
+  await Promise.all([first, other]);
+  assert.deepEqual(starts.sort(), [MODELS.haiku.model, MODELS.sonnet.model].sort());
+  resume();
+  await second;
+  assert.equal(starts.length, 3);
+  assert.equal(now, 60000);
+});
+
+test("provider errors are returned once; subsequent admission honors Retry-After", async () => {
+  let now = 0;
+  const sleeps: number[] = [];
+  const queue = new ModelProviderQueue({ now: () => now, sleep: async ms => { sleeps.push(ms); now += ms; }, requestsPerMinute: 100 });
+  let calls = 0;
+  const send = queue.transport(async () => { calls++; throw new ModelTransportError("rate limited", 429, 2500); });
+  const request: ModelRequest = { model: MODELS.haiku.model, max_tokens: 1, system: [], tools: [], messages: [] };
+  await assert.rejects(send(request), /rate limited/);
+  assert.equal(calls, 1);
+  await assert.rejects(send(request), /rate limited/);
+  assert.equal(calls, 2);
+  assert.deepEqual(sleeps, [2500]);
+});
 const CLOSED_GATE: DeliveryGate = { promotionEnabled: false, openRecordClasses: [] };
 
 function facts(over: Partial<ModelLaneFacts> = {}): ModelLaneFacts {

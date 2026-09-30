@@ -53,10 +53,9 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
         ...(config.modelEnabled ? { transport: request => call<ModelResponse>("model", request),
           transportFor: current => { jurisdiction = current; return request => call<ModelResponse>("model", request); },
           reserveScoutEscalation: async request => {
-            const response = await call<Omit<Extract<ScoutEscalationAdmission, { admit: true }>, "draw" | "release"> |
+            const response = await call<(Omit<Extract<ScoutEscalationAdmission, { admit: true }>, "draw" | "release"> & { reservationId: string }) |
               Extract<ScoutEscalationAdmission, { admit: false }>>("escalation", request);
-            const id = `${process.pid}:${sequence}`;
-            return response.admit ? { ...response, draw: usd => send("draw", id, usd), release: () => send("release", id, null) } : response;
+            return response.admit ? { ...response, draw: usd => send("draw", response.reservationId, usd), release: () => send("release", response.reservationId, null) } : response;
           } } : {}),
         ...(config.searchEnabled ? { search: request => call("search", request) } : {}),
         auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => config.fundedSubjects.includes(subject) });

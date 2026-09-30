@@ -207,6 +207,7 @@ export interface InputTransformation {
 }
 
 export interface ModelResponse {
+  readonly batch?: boolean;
   readonly model: string;
   readonly stop_reason: string | null;
   readonly content: readonly ContentBlock[];
@@ -329,6 +330,13 @@ export function anthropicBetasFor(request: ModelRequest): string[] {
   return request.thinking?.block_binding !== undefined ? [THINKING_BINDING_BETA] : [];
 }
 
+export function cachedModelRequest(request: ModelRequest): ModelRequest {
+  return request.cache_control || request.system.some(block => block.cache_control) ||
+    request.tools.some(tool => tool.cache_control) || request.messages.some(message => Array.isArray(message.content) &&
+      message.content.some(block => block && typeof block === "object" && "cache_control" in block))
+    ? request : { ...request, cache_control: { type: "ephemeral" } };
+}
+
 /**
  * The real transport, against the Messages API. `apiKey` is passed in by the
  * runner, which read it by NAME; it is never logged and never placed in a
@@ -339,7 +347,7 @@ export function anthropicTransport(
   apiKey: string,
   fetchImpl: typeof fetch = fetch,
   endpoint = "https://api.anthropic.com/v1/messages",
-  options: { readonly onRateLimits?: (limits: AnthropicRateLimits) => void } = {},
+  options: { readonly onRateLimits?: (limits: AnthropicRateLimits, request: ModelRequest) => void } = {},
 ): ModelTransport {
   return async (request) => {
     const betas = anthropicBetasFor(request);
@@ -351,13 +359,10 @@ export function anthropicTransport(
         "anthropic-version": "2023-06-01",
         ...(betas.length > 0 ? { "anthropic-beta": betas.join(",") } : {}),
       },
-      body: JSON.stringify(request.cache_control || request.system.some(block => block.cache_control) ||
-        request.tools.some(tool => tool.cache_control) || request.messages.some(message => Array.isArray(message.content) &&
-          message.content.some(block => block && typeof block === "object" && "cache_control" in block))
-        ? request : { ...request, cache_control: { type: "ephemeral" } }),
+      body: JSON.stringify(cachedModelRequest(request)),
     });
     const limits = anthropicRateLimits(response.headers);
-    options.onRateLimits?.(limits);
+    options.onRateLimits?.(limits, request);
     if (!response.ok) {
       const body = await response.text();
       throw new ModelTransportError(`HTTP ${response.status}: ${body.slice(0, 300)}`, response.status, limits.retryAfterMs);
@@ -1502,7 +1507,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             });
           }
           /* The provider's usage block, through the one parser every lane reads it with. */
-          const metered = readMeteredUsage(response.usage ?? {});
+          const metered = readMeteredUsage(response.usage ?? {}, response.batch === true);
           if (metered.uncachedInputTokens !== null || metered.outputTokens !== null) usage.reported = true;
           meteredTurns.push(metered);
           const turnTokens = {

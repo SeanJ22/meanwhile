@@ -2,6 +2,7 @@ import { scrubFreeText } from "../log/scrub.ts";
 import { resolveAskRoleModel, ASK_MODEL_ROLES } from "./model.ts";
 import { askRequestFields, servedModelOf } from "./model-registry.ts";
 import { asksForBodyAgenda } from "../routing/named-entity.ts";
+import { askHedgeMs, hedgedFetch } from "./hedged-fetch.ts";
 
 import {
   readInterpretation,
@@ -269,18 +270,18 @@ export async function interpretQuestion(
   });
 
   try {
-    const response = await impl(MESSAGES_URL, {
+    // A bounded wait (2026-09-24): an unbounded model call is how the first
+    // live Pima request outlived the platform limit and reached the reader as
+    // "that didn't reach us". Past the bound, the deterministic reading
+    // stands in, exactly as it does for any other unavailable model. A reading
+    // that has not answered by the hedge time is asked again (lib/ask/hedged-fetch.ts).
+    const response = await hedgedFetch(impl, MESSAGES_URL, {
       method: "POST",
       headers: {
         "content-type": "application/json",
         "x-api-key": apiKey,
         "anthropic-version": "2023-06-01",
       },
-      // A bounded wait (2026-09-24): an unbounded model call is how the first
-      // live Pima request outlived the platform limit and reached the reader as
-      // "that didn't reach us". Past the bound, the deterministic reading
-      // stands in, exactly as it does for any other unavailable model.
-      signal: AbortSignal.timeout(ASK_INTERPRET_TIMEOUT_MS),
       body: JSON.stringify({
         model,
         max_tokens: Math.max(1024, fields.minMaxTokens),
@@ -294,7 +295,7 @@ export async function interpretQuestion(
         system: interpretPrompt(context),
         messages,
       }),
-    });
+    }, { hedgeAfterMs: askHedgeMs(), timeoutMs: ASK_INTERPRET_TIMEOUT_MS });
     if (!response.ok) return { kind: "UNAVAILABLE", why: "error", ms: elapsed() };
 
     const body = (await response.json()) as {

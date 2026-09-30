@@ -722,8 +722,16 @@ export async function POST(request: Request) {
   // unrelated evidence may stay unread. A failed/ambiguous binding restores
   // every family before the normal interpretation and retrieval path runs.
   const sittingShapes = new Set(["MEETING_TIME", "BODY_AGENDA", "MEETING_OUTCOME"]);
-  const deferUnrelatedEvidence = !topicRoute && sittingShapes.has(lexicalQuestionShape(question)?.shape ?? "");
-  const unrelatedFamilies = new Set<AuthorityFamily>(["pima-finance", "federal-votes", "federal-key-votes", "officeholder-statements", "executive-actions"]);
+  /* Shapes whose subject is never a person: their answer reads no vote, statement or action record, and no county finance
+     unless it is a money question. Deferred the same way the sitting shapes are, on the same proof (2026-09-29, S3). */
+  const noPersonRecordShapes = new Set([...sittingShapes, "BODY_ROSTER", "BODY_CIVICS", "MEASURE_EXPLAIN", "CONTEST_FIELD"]);
+  const deferShape = !topicRoute && !financeQuestionAsked(question) && noPersonRecordShapes.has(lexicalQuestionShape(question)?.shape ?? "");
+  /* A question about a person's campaign money and nothing they did in office reads none of their votes, key votes,
+     statements or actions (`moneyOnly` below), whoever the subject turns out to be: no proof is needed to leave them unread. */
+  const deferPersonRecords = !topicRoute && !deferShape && asksOnlyMoney(question);
+  const deferUnrelatedEvidence = deferShape || deferPersonRecords;
+  const personRecordFamilies = ["federal-votes", "federal-key-votes", "officeholder-statements", "executive-actions"] as const;
+  const unrelatedFamilies = new Set<AuthorityFamily>(deferShape ? ["pima-finance", ...personRecordFamilies] : personRecordFamilies);
   /*
    * **WHICH READ A COLD REQUEST WAITS ON, NAMED.** (2026-09-24, C20.) A cold
    * Pima topic request spent 2,525 ms in `sourcePreloads` with no breakdown,
@@ -834,13 +842,16 @@ export async function POST(request: Request) {
     stateVotesRead ??= settleGroundedSourcePreloads([...stateVoteScopes].map((scope) => timed(`stateVotes:${scope}`, () => refreshStateVotesFromPromoted(scope))));
     return stateVotesRead;
   };
-  const unrelatedPreloads = [
-    timed("azPimaFinance", settleAzPimaFinanceRead),
+  const pimaFinancePreload = timed("azPimaFinance", settleAzPimaFinanceRead);
+  const personRecordPreloads = [
     timed("federalVotes", settleFederalVotesRead),
     timed("federalKeyVotes", settleFederalKeyVotesRead),
     timed("officeholderStatements", settleOfficeholderStatementsRead),
     timed("executiveActions", settleExecutiveActionsRead),
   ];
+  const unrelatedPreloads = [pimaFinancePreload, ...personRecordPreloads];
+  /* What this question lets the request leave unread: every unrelated source, or only a person's records. */
+  const skippedPreloads = deferShape ? unrelatedPreloads : deferPersonRecords ? personRecordPreloads : [];
   const deferrablePreloads = [
     () => { deferrableSourcesLoaded = true; return Promise.resolve(); },
     timed("funding", settleFundingRead),
@@ -848,7 +859,7 @@ export async function POST(request: Request) {
     timed("azBallot", async () => promotedVersionOrThrow(await settleAzBallotRead())),
     timed("candidateProfiles", settleCandidateProfilesRead),
     timed("candidateCorpus", settleCandidateCorpusRead),
-    ...(!deferUnrelatedEvidence ? unrelatedPreloads : []),
+    ...unrelatedPreloads.filter((preload) => !skippedPreloads.includes(preload)),
   ];
   /* The registry and the federal directory are the first two; an officials lookup needs no other source. */
   await settleGroundedSourcePreloads(topicRoute ? essentialPreloads : officialsAsk ? essentialPreloads.slice(0, 2) : [...essentialPreloads, ...deferrablePreloads]);
@@ -1117,7 +1128,7 @@ export async function POST(request: Request) {
     intent: path.pack.intent,
     temporal: path.pack.temporal,
     selection: path.selection,
-    writerInput: synthesisCacheKey(path.pack, ladderKey.model, ladderKey.effort),
+    writerInput: synthesisCacheKey({ ...path.pack, intent: "UNKNOWN" }, ladderKey.model, ladderKey.effort),
   });
   /*
    * **START THE ANSWER FROM THE CODE'S OWN READING WHILE THE MODEL READS.**
@@ -1139,7 +1150,7 @@ export async function POST(request: Request) {
       if (path.kind !== "PACK" || path.composed || !packHasEvidence(path.pack) ||
         stanceAnswerability(path.pack) === "UNVERIFIED_PERSONAL_STANCE") return { started: false, why: "code-reading-needs-no-writer", ...guess };
       const outcome = readingOutcome(path);
-      const cached = synthesisCache.get(outcome.writerInput);
+      const cached = synthesisCache.get(synthesisCacheKey(path.pack, ladderKey.model, ladderKey.effort));
       const controller = new AbortController();
       let settled = Boolean(cached);
       const writing = cached ? Promise.resolve(cached) : synthesizeWithLadder(path.pack, {
@@ -1182,9 +1193,12 @@ export async function POST(request: Request) {
   const lexical = modelFreeTopicRoute ? null : lexicalReading({
     question, inventory, namedBodies, confirmation: body.confirmation, activeSubjects, priorSubjects, officeOf,
   });
-  if (deferUnrelatedEvidence) {
-    if (lexical && sittingShapes.has(lexical.shape)) {
-      trace.sourcesLoaded = "IDENTITY_AND_MEETINGS";
+  if (deferPersonRecords) {
+    trace.sourcesLoaded = "WITHOUT_PERSON_RECORDS";
+    for (const key of ["federalVotes", "federalKeyVotes", "officeholderStatements", "executiveActions"]) delete trace.preloadSources![key];
+  } else if (deferShape) {
+    if (lexical && noPersonRecordShapes.has(lexical.shape)) {
+      trace.sourcesLoaded = sittingShapes.has(lexical.shape) ? "IDENTITY_AND_MEETINGS" : "WITHOUT_PERSON_RECORDS";
       for (const key of ["azPimaFinance", "federalVotes", "federalKeyVotes", "officeholderStatements", "executiveActions"]) {
         delete trace.preloadSources![key];
       }

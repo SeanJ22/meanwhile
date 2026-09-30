@@ -221,7 +221,7 @@ export interface AskTrace {
    * registry, the federal directory and the recorded outcomes) on a topic
    * route, ALL otherwise. A fact about our machinery, never about a reader.
    */
-  sourcesLoaded?: "ESSENTIAL" | "IDENTITY_AND_MEETINGS" | "ALL";
+  sourcesLoaded?: "ESSENTIAL" | "IDENTITY_AND_MEETINGS" | "WITHOUT_PERSON_RECORDS" | "ALL";
   /** What the reader actually got. The single most important line here. */
   answerMode: AnswerMode;
   totalMs: number;

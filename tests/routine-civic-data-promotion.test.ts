@@ -782,7 +782,7 @@ test("the identity readback records a failed pointer read as evidence and refuse
     retrieval: { ...first.retrieval, retrievedAt: laterAt },
     readModel: { formatVersion: 1, candidates: [], absences: [] },
   });
-  assert.equal((await processRoutineCandidate(store, second, laterAt)).promoted?.versionId, second.id);
+  assert.equal((await processRoutineCandidate(store, second, laterAt, undefined, null, null, { confirmUnchanged: false })).promoted?.versionId, second.id);
   const staleEvents = await store.events(first.id);
   await assert.rejects(
     recordRoutineReaderProjectionReadback(store, contract, inspected, "2026-09-07T13:00:00.001Z", READER_CODE_SHA_A),

@@ -73,6 +73,23 @@ async function promotedAzStore() {
   return { store, candidate };
 }
 
+test("default rechecks keep one candidate and advance freshness; explicit false stores a new version", async () => {
+  const { store, candidate } = await promotedAzStore();
+  const recheck = { ...candidate, id: `${candidate.id}-recheck`,
+    retrieval: { ...candidate.retrieval, retrievedAt: T1, rawHash: "b".repeat(64) } };
+  const outcome = await processRegisteredManualCandidate(store, AZ.contractId, recheck, T1);
+  assert.equal(outcome.confirmed?.versionId, candidate.id);
+  assert.equal(await store.readCandidate(recheck.id), null, "an unchanged payload is not stored again");
+  assert.equal((await store.readPromotion(candidate.recordClass, candidate.scope))?.versionId, candidate.id);
+  const read = await readStateMoneyProjection("AZ", { store, now: T1, bypassCache: true });
+  assert.equal(read.metadata.retrievedAt, T1);
+  const forced = { ...recheck, id: `${candidate.id}-forced` };
+  const distinct = await processRegisteredManualCandidate(store, AZ.contractId, forced, T1, undefined, { confirmUnchanged: false });
+  assert.equal(distinct.confirmed, undefined);
+  assert.equal(distinct.candidate.state, "PROMOTED");
+  assert.equal((await store.readPromotion(candidate.recordClass, candidate.scope))?.versionId, forced.id);
+});
+
 const stateMoneyPointers = (states: readonly ("AZ" | "NH" | "NJ")[]): readonly PromotedEdgePointer[] =>
   promotedEdgePointers()["state-money"].filter((pointer) => states.some((state) => STATE_CAMPAIGN_FINANCE_SOURCES[state].scope === pointer.scope));
 

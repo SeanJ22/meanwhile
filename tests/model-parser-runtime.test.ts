@@ -113,6 +113,20 @@ test("a record type with no parsing rule runs through the real fleet: Haiku quot
   assert.ok(manual.projection.lines.some((l) => /PARSE_OUTCOME YIELDED/.test(l)));
 });
 
+test("a reply carrying the provider's dated model id is the same model: Haiku stays the tier that parsed", async () => {
+  const f = await fixture();
+  const field = (name: string, value: string) => ({ name, value, quote: value });
+  const dated: ModelTransport = async (request) => ({ model: `${request.model}-20251001`, stop_reason: "tool_use", usage: { input_tokens: 900, output_tokens: 200 },
+    content: [{ type: "tool_use", id: "t", name: "record_extraction", input: { records: [{ fields: [field("title", "Regular Meeting"), field("when", "Tuesday, October 14, 2026 at 6:00 PM")] }] } }] });
+  const runtime: FleetRuntime = { ...f.runtime, parseReasoner: modelParseReasoner(f.repos, dated, f.now) };
+  const task = await enqueueWorkerTask(f.repos, { workItemId: f.item.id, role: "PARSER", artifactId: f.artifact.id, contract: f.contract, now: f.now() });
+  const dispatch = await dispatchWorkerTask(runtime, task);
+  assert.equal(dispatch.outcome, "WORKED", dispatch.detail);
+  const parser = (await f.repos.workerResults.readAll()).find((r) => r.attemptId === dispatch.attemptId)!;
+  assert.equal(parser.modelParse?.tier, "haiku", "no fall-up to Sonnet because of how the provider spells the id");
+  assert.equal(parser.modelParse?.confirmed, 1);
+});
+
 test("the Auditor runs after the record can publish, samples the model review, and writes what it found where the next agent reads it", async () => {
   const f = await fixture();
   const { repos, item, artifact, contract, now } = f;

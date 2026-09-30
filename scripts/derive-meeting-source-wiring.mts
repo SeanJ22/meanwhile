@@ -170,7 +170,6 @@ async function main(): Promise<void> {
     readonly input: DerivedInputRef;
     readonly bodies: readonly { id: string; ocdId: string; jurisdictionId: string | null }[];
     readonly referenceSha256: string;
-    readonly reviewedRegistryVersionId: string;
   } | { readonly unread: string }>();
   for (const state of new Set(rows.map((row) => stateOf(row.ocdId)).filter((s): s is string => s !== null))) {
     try {
@@ -182,8 +181,7 @@ async function main(): Promise<void> {
       }
       registrations.set(state, { input,
         bodies: read.value.bodies.map((b) => ({ id: b.id, ocdId: b.ocdId, jurisdictionId: b.jurisdictionId })),
-        referenceSha256: read.value.vintage.referenceSha256,
-        reviewedRegistryVersionId: read.value.reviewedRegistryVersionId });
+        referenceSha256: read.value.vintage.referenceSha256 });
     } catch (error) {
       registrations.set(state, { unread: `${state} registration could not be read: ${error instanceof Error ? error.message : String(error)}` });
     }
@@ -258,9 +256,6 @@ async function main(): Promise<void> {
       }
       if (reviewed.kind !== "PROMOTED" || reviewedInput === null) {
         return { notRegistered: `registration pairs ${row.jurisdictionId} with no body and the reviewed registry is ${reviewed.kind}` };
-      }
-      if (reg.reviewedRegistryVersionId !== reviewed.metadata.versionId) {
-        return { notRegistered: `registration and reviewed registry name different identity versions for ${row.jurisdictionId}` };
       }
       let resolved: ReturnType<typeof reviewedBodyForGovernment>;
       try {

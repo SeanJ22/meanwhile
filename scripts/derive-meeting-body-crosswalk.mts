@@ -124,7 +124,6 @@ async function main(): Promise<void> {
     readonly input: DerivedInputRef;
     readonly bodies: ReadonlyMap<string, RegisteredGovernment>;
     readonly reference: LoadedReference;
-    readonly reviewedRegistryVersionId: string;
   } | { readonly unread: string }>();
   for (const state of new Set(walks.map((w) => w.attempt.stateCode.toUpperCase()))) {
     try {
@@ -145,7 +144,7 @@ async function main(): Promise<void> {
         if (body.jurisdictionId === null || bodies.has(body.jurisdictionId)) continue;
         bodies.set(body.jurisdictionId, { bodyId: body.id, ocdId: body.ocdId, publishingOrg: labels.get(body.ocdId) ?? body.jurisdictionId, input });
       }
-      registrations.set(state, { input, bodies, reference, reviewedRegistryVersionId: read.value.reviewedRegistryVersionId });
+      registrations.set(state, { input, bodies, reference });
     } catch (error) {
       registrations.set(state, { unread: `${state} registration could not be read: ${error instanceof Error ? error.message : String(error)}` });
     }
@@ -189,9 +188,6 @@ async function main(): Promise<void> {
         : registration.bodies.get(walk.attempt.jurisdictionId) ?? (() => {
             if (reviewed.kind !== "PROMOTED" || reviewedInput === null) {
               return { notRegistered: `${state} registration omits the body and the reviewed registry is ${reviewed.kind}` };
-            }
-            if (registration.reviewedRegistryVersionId !== reviewed.metadata.versionId) {
-              return { notRegistered: `${state} registration and reviewed registry name different identity versions` };
             }
             const resolved = reviewedBodyForGovernment(
               registration.reference, walk.attempt.jurisdictionId, reviewed.value.registry.bodies,

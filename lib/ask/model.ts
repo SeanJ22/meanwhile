@@ -137,12 +137,12 @@ export interface AskModelRoleSpec {
  *   no better, so it has no role.
  * - FAST_WRITER → Haiku 4.5: the only writer inside three seconds (complete
  *   call median 2.0 s, 90th percentile 3.4 s; Sonnet 5 2.8 s / 5.0 s; Opus
- *   5.5 3.7 s / 5.9 s). Every answer correct outside the money questions
- *   below.
+ *   5.5 3.7 s / 5.9 s). It writes every question first, money and comparison
+ *   questions included (Sean, 2026-09-29); the frontier writes only when its
+ *   answer fails a check.
  * - ESCALATION_WRITER → Opus 5.5: 32 of 34 answers correct, none rejected for
- *   length (Sonnet 5: 28 of 34, including a miscounted list). It also writes
- *   first for the money questions Haiku 4.5 got wrong (see
- *   `escalationFirstReason` in lib/ask/synthesize.ts).
+ *   length (Sonnet 5: 28 of 34, including a miscounted list). It writes only
+ *   when the fast writer's answer fails a check or cannot be had.
  * - CLASSIFIER → Haiku 4.5: 17 of 17 labels right, 0.7-1.7 s. Sonnet 5 sent
  *   the election-day weather question to "elections" 3 of 3 times; Opus 5.5
  *   took 1.3-6.2 s.

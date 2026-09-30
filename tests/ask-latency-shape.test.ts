@@ -318,7 +318,7 @@ interface Payload {
   trace: {
     interpretation: { ran: boolean; why?: string; cached?: boolean };
     speculation?: { ran: boolean; why: string; delivered: string };
-    synthesis: { ran: boolean; why?: string; cached?: boolean; model?: string; writers?: { model: string; role: string; result: string; failed?: string[]; detail?: string }[]; escalation?: string; writerRoute?: string; writerSelection?: { memberVoteRowsShown: number; memberVoteRowsWithheld: number; rollCallsWithheld: number } };
+    synthesis: { ran: boolean; why?: string; cached?: boolean; model?: string; writers?: { model: string; role: string; result: string; failed?: string[]; detail?: string }[]; escalation?: string; writerSelection?: { memberVoteRowsShown: number; memberVoteRowsWithheld: number; rollCallsWithheld: number } };
     validation: { ran: boolean; passed?: boolean; failed?: string[] };
     composition?: { shape: string; composed: boolean; passed?: boolean };
   };
@@ -390,13 +390,13 @@ test("ROUTE: the same question over unchanged records is served from the cache, 
   assert.equal(second.payload.answer, first.payload.answer);
 });
 
-test("ROUTE: a money question asking WHO gave is written by the escalation writer first, and the trace says why", { concurrency: false }, async () => {
+test("ROUTE: a money question asking WHO gave is written by the fast writer first, like every other question", { concurrency: false }, async () => {
   const { payload, calls: made } = await ask("Who funded the Vail school board?", [AZ, PIMA, VAIL]);
   const writers = made.filter((call) => call.kind === "SYNTHESIZE");
   assert.ok(writers.length >= 1, "a writer ran");
-  assert.ok(writers.every((call) => call.model === ASK_SYNTHESIS_MODEL), `only the escalation writer wrote: ${writers.map((call) => call.model).join(", ")}`);
-  assert.equal(payload.trace.synthesis.writerRoute, "money-who-or-comparison");
-  assert.deepEqual(payload.trace.synthesis.writers?.map((writer) => writer.role), writers.map(() => "FRONTIER"));
+  assert.equal(writers[0].model, ASK_FAST_WRITER_MODEL, "the fast writer wrote first");
+  assert.deepEqual(payload.trace.synthesis.writers?.map((writer) => writer.role), ["FAST"]);
+  assert.equal(payload.trace.synthesis.escalation, undefined, "the frontier writer did not run");
 });
 
 test("ROUTE: the frontier writer runs ONLY when the fast answer fails a check, and the reason is recorded", { concurrency: false }, async () => {

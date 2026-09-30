@@ -108,7 +108,7 @@ import {
   interpretationCacheKey,
   synthesisCacheKey,
 } from "@/lib/ask/model-result-cache";
-import { escalationFirstReason, ladderIdentity, synthesisLadder, synthesizeWithLadder, type LadderResult } from "@/lib/ask/synthesize";
+import { ladderIdentity, synthesisLadder, synthesizeWithLadder, type LadderResult } from "@/lib/ask/synthesize";
 import { writerSelection } from "@/lib/ask/writer-selection";
 import { sittingsOnSameLocalDay, selectSitting, type AgendaSelection } from "@/lib/ask/select";
 import { meetingDateInQuestion } from "@/lib/ask/meeting-date";
@@ -1097,10 +1097,8 @@ export async function POST(request: Request) {
   // A literal reader date outranks inferred tense, including a model's reading (applied in `answerPath`).
   const requestedMeetingDate = meetingDateInQuestion(question);
   const residency = stampResidency(readLocationOrigin(body.locationOrigin));
-  /* The writing ladder for THIS question: a kind the fast writer measurably gets wrong starts
-     on the escalation writer (`escalationFirstReason`), recorded on the trace. */
-  const ladder = synthesisLadder(process.env, { question });
-  const writerRoute = escalationFirstReason(question);
+  /* The writing ladder: the fast writer first for every question; the frontier only when its answer fails a check. */
+  const ladder = synthesisLadder();
   const ladderKey = ladderIdentity(ladder);
   const callerKey = askCallerKey(process.env, markerFromRequest(request).runClass);
   const lapAt = (name: string, at: number) => { stageMs[name] = at - stageMark; stageMark = at; };
@@ -2676,7 +2674,6 @@ export async function POST(request: Request) {
   const selectionForWriter = composed ? null : writerSelection(pack);
   const writerTrace = written ? {
     writers: written.attempts,
-    ...(writerRoute ? { writerRoute } : {}),
     ...(written.escalation ? { escalation: written.escalation } : {}),
     ...(selectionForWriter && selectionForWriter.withheld.memberVoteRows > 0
       ? { writerSelection: { memberVoteRowsShown: selectionForWriter.shown.memberVoteRows, memberVoteRowsWithheld: selectionForWriter.withheld.memberVoteRows, rollCallsWithheld: selectionForWriter.withheld.rollCalls } }

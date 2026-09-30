@@ -24,7 +24,7 @@ import {
   canonicalAskModelId,
 } from "../lib/ask/model-registry.ts";
 import { interpretQuestion } from "../lib/ask/interpret.ts";
-import { escalationFirstReason, synthesisLadder, synthesisRequestBody, synthesizeWithLadder, type SynthesisRung } from "../lib/ask/synthesize.ts";
+import { synthesisLadder, synthesisRequestBody, synthesizeWithLadder, type SynthesisRung } from "../lib/ask/synthesize.ts";
 import { classifyQuestion, resetClassifierState } from "../lib/routing/classifier.ts";
 import { askUnsourced } from "../lib/routing/unsourced-fallback.ts";
 import type { EvidencePack } from "../lib/ask/evidence.ts";
@@ -167,31 +167,9 @@ test("the measured routing: Haiku 4.5 reads, writes first and labels; Opus 5.5 e
   );
 });
 
-test("money questions that ask WHO gave or COMPARE are written by the escalation writer first; how-much questions keep the fast writer", () => {
-  /* The measured questions, by what the fast writer did with them. */
-  for (const question of [
-    "Who funded the Vail school board candidates?", // Haiku 4.5 wrong 2 of 2
-    "Who donated to Katie Hobbs's campaign?", // wrong 2 of 2
-    "Has Cinde Warmington raised more money than Kelly Ayotte?", // wrong 2 of 2
-    "Who are Tayfun Selen's biggest donors?", // right 2 of 2, same kind: routed conservatively
-  ]) {
-    assert.equal(escalationFirstReason(question, {}), "money-who-or-comparison", question);
-    const ladder = synthesisLadder({}, { question });
-    assert.deepEqual(ladder.map((rung) => [rung.model, rung.role]), [["claude-opus-5-5", "FRONTIER"]], question);
-  }
-  for (const question of [
-    "How much campaign money has Katie Hobbs raised?", // right 2 of 2
-    "How much money has Tayfun Selen raised for his campaign?", // right 2 of 2
-    "How much has Kelly Ayotte raised and spent?", // right 2 of 2
-    "When does the Mesa City Council meet next?",
-    "Who sits on the Mesa City Council?",
-  ]) {
-    assert.equal(escalationFirstReason(question, {}), null, question);
-    assert.deepEqual(synthesisLadder({}, { question }).map((rung) => rung.role), ["FAST", "FRONTIER"], question);
-  }
-  /* One switch turns the kind routing off without a deploy. */
-  assert.equal(escalationFirstReason("Who donated to Katie Hobbs's campaign?", { WTP_ASK_WRITER_ROUTING: "off" }), null);
-  assert.deepEqual(synthesisLadder({ WTP_ASK_WRITER_ROUTING: "off" }, { question: "Who donated to Katie Hobbs's campaign?" }).map((rung) => rung.role), ["FAST", "FRONTIER"]);
+test("every question, money and comparison questions included, is written by the fast writer first; the frontier writes only after a failed check", () => {
+  assert.deepEqual(synthesisLadder({}).map((rung) => [rung.model, rung.role]), [["claude-haiku-4-5", "FAST"], ["claude-opus-5-5", "FRONTIER"]]);
+  assert.deepEqual(synthesisLadder({ WTP_ASK_FAST_MODEL: "off" }).map((rung) => rung.role), ["FRONTIER"], "the fast writer can still be switched off without a deploy");
 });
 
 /* ── 3. an unknown model fails safe ──────────────────────────────────────── */

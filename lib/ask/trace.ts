@@ -136,12 +136,6 @@ export interface AskTrace {
     /** Why the frontier writer ran: the fast writer's failed checks, or why it could not answer. */
     escalation?: string;
     /**
-     * Why the escalation writer wrote FIRST, skipping the fast writer: a
-     * question kind the fast writer measurably gets wrong (2026-09-25;
-     * `escalationFirstReason` in lib/ask/synthesize.ts). Absent on the default ladder.
-     */
-    writerRoute?: string;
-    /**
      * What the writer was NOT sent (`lib/ask/writer-selection.ts`): per-member
      * vote rows beyond the bound, by whole roll call. The reader's records and
      * the pack's denominators still carry every row.

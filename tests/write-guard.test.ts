@@ -363,7 +363,7 @@ test("g13 audit: GitHub workflows have no production write handle or runtime san
   assert.ok(databaseNames.length > 0, "the reader found no database variable to check at all");
   assert.deepEqual(
     [...new Set(databaseNames)].sort(),
-    ["WTP_PRODUCTION_DATABASE_URL_READONLY", "WTP_CONTROL_PLANE_DATABASE_URL_READONLY"].sort(),
+    ["WTP_PRODUCTION_DATABASE_URL_READONLY"],
     "build-check.yml may name only the read-only serving and control-plane variables. " +
       "A write-capable string here is reachable from any change.",
   );

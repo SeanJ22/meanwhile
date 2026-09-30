@@ -29,7 +29,7 @@
  *
  * The alternative was to convert the script into a replay that seeds only valid
  * A/B observations plus typed SUPERSEDED C/D history. That work is already done
- * and already has an owner: `pnpm method:learn-legistar-insite` writes the
+ * and already has an owner: the field manual now holds the
  * corrected route knowledge, and `pnpm method:amend-claim-classes-pima` writes
  * the typed classification and the two retractions. Rebuilding either inside a
  * second script would give one canonical store two independent writers of the
@@ -99,7 +99,7 @@ export const SCHEDULE_VS_EVENTS_RETIRED: RetiredWriter = {
     "vendor-api-and-vendor-web-ui-are-different-records#pima-september-individually-published (the current truth)",
     "reconciled-is-not-complete#reconciliation-answers-loss-not-sufficiency (the current truth)",
   ],
-  currentCommand: "pnpm method:learn-legistar-insite",
+  currentCommand: "the field manual (readFieldManual / writeFieldManual in lib/control-plane/field-manual.ts); no learn script runs any more",
   alsoRun: ["pnpm method:amend-claim-classes-pima"],
   readInstead:
     "projectMethodFor() in lib/method/projection.ts — the method-inheritance read path, which hands over route identity, observations as tuples, and only the substantive claims whose retraction and validation state permit inheritance",
@@ -235,11 +235,6 @@ export const KNOWN_UNGOVERNED_METHOD_WRITERS: readonly KnownUngovernedWriter[] =
     file: "scripts/ladder-monotonicity.mts",
     why: "records route outcomes directly into the store",
     wanted: "read with readMethodStore and write through writeMethodStore with the version it read",
-  },
-  {
-    file: "scripts/learn-legistar-insite.mts",
-    why: "a learn script that predates runLearnBatch and writes the store itself",
-    wanted: "call runLearnBatch, which is now the validated admission path",
   },
   {
     file: "scripts/manifest-walk.mts",

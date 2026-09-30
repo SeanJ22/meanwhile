@@ -326,13 +326,13 @@ interface Payload {
   };
 }
 
-async function ask(question: string, ocdIds: string[], options: { reset?: boolean; today?: string } = {}): Promise<{ payload: Payload; calls: Call[] }> {
+async function ask(question: string, ocdIds: string[], options: { reset?: boolean; today?: string; extra?: Record<string, unknown> } = {}): Promise<{ payload: Payload; calls: Call[] }> {
   if (options.reset !== false) resetGroundedState();
   const before = calls.length;
   const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
     method: "POST",
     headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-latency-shape-test" },
-    body: JSON.stringify({ question, ocdIds, today: options.today ?? "2026-08-28" }),
+    body: JSON.stringify({ question, ocdIds, today: options.today ?? "2026-08-28", ...options.extra }),
   }));
   const text = await response.text();
   assert.equal(response.status, 200, text);
@@ -386,6 +386,21 @@ test("ROUTE: who is my state senator is read from the words and composed from th
   assert.match(payload.answer ?? "", /^Your state senator is .+ for District 19\.$/);
   assert.ok(payload.records.some((record) => record.kind === "OFFICEHOLDER"), "the person the prose names is a record the reader is shown");
   assert.equal(payload.trace.sourcesLoaded, "ESSENTIAL", "the registry and the federal directory are all it reads");
+});
+
+test("ROUTE: what meetings are coming up is read from the words and composed from the sittings held for the reader's divisions — no model call, and no other source read", { concurrency: false }, async () => {
+  const { payload, calls: made } = await ask("What meetings are coming up?", [AZ, PIMA, VAIL], { today: "2026-08-28" });
+  assert.deepEqual(made, [], "neither rung called a model");
+  assert.equal(payload.trace.interpretation.why, "area-meetings-shape");
+  assert.equal(payload.trace.synthesis.why, "composed-from-calendar-records");
+  assert.equal(payload.mode, "GROUNDED_COMPOSED");
+  assert.equal(payload.trace.validation.passed, true);
+  assert.match(payload.answer ?? "", /^We hold \d+ meetings? in the next 14 days for the governments in your area: /);
+  assert.ok(payload.records.some((record) => record.kind === "MEETING"), "the sittings the prose names are records the reader is shown");
+  assert.equal(payload.trace.sourcesLoaded, "ESSENTIAL");
+  /* With a card open the question is about that card: the reader's own area is not assumed. */
+  const focused = await ask("What meetings are coming up?", [AZ, PIMA, VAIL], { today: "2026-08-28", extra: { activeSubjects: [{ id: "ocd-division/country:us/state:az/school_district:vail_unified_district#board", name: "Vail Unified School District Governing Board", kind: "BODY", focused: true }] } });
+  assert.notEqual(focused.payload.trace.interpretation.why, "area-meetings-shape");
 });
 
 test("ROUTE: who represents me in Congress names the two U.S. Senators the state holds beside the district's Representative", { concurrency: false }, async () => {

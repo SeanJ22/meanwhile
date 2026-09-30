@@ -44,12 +44,6 @@ export const WORKER_CREDENTIAL_VAR = "WTP_WORKERS_ANTHROPIC_API_KEY";
 export const SCOUT_PREWARM_ROUTE_ID = "scout:prewarm";
 
 export interface ScoutBound {
-  /** Model turns (requests) per Attempt. */
-  readonly maxTurns: number;
-  /** Research tool calls per Attempt. */
-  readonly maxToolCalls: number;
-  /** Provider-reported input+output tokens per Attempt. */
-  readonly maxTokens: number;
   /** Public requests per host per Attempt. Politeness that does not multiply. */
   readonly maxRequestsPerHost: number;
   /** `max_tokens` on each model response. */
@@ -57,7 +51,7 @@ export interface ScoutBound {
 }
 
 export interface ResearchBounds {
-  readonly workerCapacity: number;
+  readonly maxConcurrentScouts: number;
   readonly perDispatch: ScoutBound;
   /**
    * The rolling daily model-spend ceiling — the ONE spend limit standing
@@ -71,15 +65,12 @@ export interface ResearchBounds {
 }
 
 export const RESEARCH_BOUNDS: ResearchBounds = {
-  workerCapacity: 0,
+  maxConcurrentScouts: 4,
   perDispatch: {
-    maxTurns: 18,
-    maxToolCalls: 16,
-    maxTokens: 400_000,
     maxRequestsPerHost: 10,
     maxOutputTokensPerTurn: 8_192,
   },
-  dailyCeilingUsd: 0,
+  dailyCeilingUsd: 100,
   windowHours: 24,
 };
 
@@ -635,22 +626,3 @@ export function deriveLevel1(input: {
  * model on its own result (`ScoutResult.modelClass`, `modelAttempts`).
  */
 export const SCOUT_MODEL = MODEL_FOR_CLASS[SCOUT_STEPS["scout-research-loop"].modelClass];
-
-/** Available processes, derived from funded hunts and the provider's request capacity. */
-export function researchWorkerCapacity(input: {
-  readonly hunts: number; readonly availableUsd: number;
-  readonly requestUsd: number; readonly requestsPerMinute?: number;
-  readonly inputTokensPerMinute?: number; readonly outputTokensPerMinute?: number;
-  readonly inputTokensPerRequest?: number; readonly outputTokensPerRequest?: number;
-}): number {
-  if (![input.hunts, input.availableUsd, input.requestUsd, ...[input.requestsPerMinute,
-    input.inputTokensPerMinute, input.outputTokensPerMinute, input.inputTokensPerRequest,
-    input.outputTokensPerRequest].filter(value => value !== undefined)].every(value => Number.isFinite(value) && value! >= 0)) return 0;
-  if (input.hunts <= 0 || input.availableUsd <= 0 || input.requestUsd <= 0) return 0;
-  const provider = input.requestsPerMinute === undefined ? input.hunts : Math.floor(input.requestsPerMinute);
-  const inputCapacity = input.inputTokensPerMinute === undefined ? input.hunts
-    : Math.floor(input.inputTokensPerMinute / Math.max(1, input.inputTokensPerRequest ?? 1));
-  const outputCapacity = input.outputTokensPerMinute === undefined ? input.hunts
-    : Math.floor(input.outputTokensPerMinute / Math.max(1, input.outputTokensPerRequest ?? 1));
-  return Math.max(0, Math.min(input.hunts, Math.floor(input.availableUsd / input.requestUsd), provider, inputCapacity, outputCapacity));
-}

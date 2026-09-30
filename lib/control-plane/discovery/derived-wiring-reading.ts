@@ -30,7 +30,7 @@ import type { PromotedCivicDataReadOptions } from "../../civic-data/read-model.t
 import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } from "../../meetings/constants.ts";
 import { makeIcalSource, parseIcs } from "../../sources/ical/index.ts";
 import { ZeroRowExtractionError } from "../../sources/normalize-account.ts";
-import { makeOfficialPageEventsSource } from "../../sources/official-page-events/index.ts";
+import { makeOfficialPageEventsSource, officialLinkingPageFrom } from "../../sources/official-page-events/index.ts";
 import { makeDiligentSource } from "../../sources/diligent/index.ts";
 import type { Meeting } from "../../sources/types.ts";
 import { sameRoute, type WiringVerification } from "./derived-wiring.ts";
@@ -39,6 +39,8 @@ type VaultedEvidence = Extract<DerivedInputRef, { kind: "VAULTED_EVIDENCE" }>;
 
 /** One held calendar to read for one reviewed row. */
 export interface HeldCalendarReading {
+  /** Official pages already held with the calendar; bytes are the authority chain. */
+  readonly linkingPages?: readonly {canonicalUrl:string;text:string}[];
   /** The caller's key for this reading. */
   readonly key: string;
   readonly row: DerivedWiringRow;
@@ -82,7 +84,8 @@ export async function readHeldCalendars(input: {
     return { kind: "UNREADABLE", detail: `The venue resolutions every adapter reading resolves through could not be read: ${message(error)}` };
   }
   const verifications = new Map<string, WiringVerification>();
-  for (const reading of input.readings) verifications.set(reading.key, await readOne(reading, input.now, input.adapterDigest));
+  const pages=input.readings.flatMap(reading=>[...(reading.linkingPages ?? []),...('unreadable' in reading.held?[]:[{canonicalUrl:reading.row.route,text:reading.held.text}])]);
+  for (const reading of input.readings) verifications.set(reading.key, await readOne({...reading,linkingPages:pages}, input.now, input.adapterDigest));
   return { kind: "READ", verifications };
 }
 
@@ -107,7 +110,7 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
   let meetings: readonly Meeting[];
   try {
     const wiring = bodySourceWiringFor(row);
-    const source = row.kind === "ICAL" ? makeIcalSource([wiring], fetchImpl) : row.kind === "DILIGENT" ? makeDiligentSource([wiring], fetchImpl) : makeOfficialPageEventsSource([wiring], fetchImpl);
+    const source = row.kind === "ICAL" ? makeIcalSource([wiring], fetchImpl) : row.kind === "DILIGENT" ? makeDiligentSource([wiring], fetchImpl) : makeOfficialPageEventsSource([wiring], fetchImpl,url=>officialLinkingPageFrom(url,reading.linkingPages ?? []));
     const nowMs = Date.parse(now);
     const raw = row.kind === "DILIGENT" ? [{ wiring, meetings: JSON.parse(text), collectedAt: reading.evidence.retrievedAt }] : await source.fetch({
       lat: 39.5, lng: -98.35, radiusKm: 5000,

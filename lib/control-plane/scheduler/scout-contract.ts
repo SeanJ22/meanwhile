@@ -1,3 +1,4 @@
+import { SOURCE_API_TOOLS } from "./scout-api.ts";
 /**
  * **THE SEAM BETWEEN A SCOUT AND ITS RESEARCH TOOLS.**
  * (Level 1 activation, 2026-09-01. Machine-owned provenance, 2026-09-02,
@@ -72,6 +73,8 @@ export interface ScoutToolSpec {
 export interface ArtifactProvenance {
   readonly artifactId: string;
   readonly canonicalUrl: string;
+  readonly retrievalUrl?: string;
+  readonly contentType?: string;
   /** The vault stamp. The date part is a candidate's `observedOn`. */
   readonly retrievedAt: string;
   /** The verdict the retrieval ran under. A robots document's own record says ALLOWED; it is the instrument, not the route. */
@@ -240,6 +243,7 @@ export interface ScoutToolContext {
    * content and vaults nothing.
    */
   readonly search?: ScoutSearch;
+  readonly sourceApi?: import("./scout-api.ts").SourceApiOptions;
 }
 
 /** One pointer a search index returned. A URL and its title, never page content. */
@@ -247,6 +251,7 @@ export interface SearchHit {
   readonly url: string;
   readonly title: string;
   readonly provider: "brave" | "exa";
+  readonly text?: string;
 }
 
 /** What one `search` call produced, across every configured provider. */
@@ -271,8 +276,18 @@ export type ScoutSearch = (
   input: { readonly query: string; readonly includeDomains?: readonly string[] },
 ) => Promise<SearchProvidersResult>;
 
+export interface ScoutFactEvidence {
+  readonly sourceUrl: string;
+  readonly retrievalUrl?: string;
+  readonly retrievedAt: string;
+  readonly text: string;
+  readonly visibleText: string;
+}
+
 export interface ScoutToolkit {
   readonly specs: readonly ScoutToolSpec[];
+  /** Only text actually saved or opened from the vault during this attempt. */
+  readonly factEvidence?: ReadonlyMap<string, ScoutFactEvidence>;
   /** Runtime evidence that this Attempt actually had brokered held-byte reading. */
   readonly heldEvidenceProtocolAvailable?: boolean;
   /**
@@ -289,7 +304,7 @@ export interface ScoutToolkit {
 }
 
 /** The research tool names. `finish` and `record_rung` are the executor's own. */
-export const SCOUT_RESEARCH_TOOLS = ["read_permission", "fetch_public", "browse", "read_inherited", "find_manual", "read_manual", "read_held", "search"] as const;
+export const SCOUT_RESEARCH_TOOLS = ["plural_roster", "legistar_events", "run_adapter", "read_permission", "fetch_public", "browse", "read_inherited", "find_manual", "read_manual", "read_held", "search", ...SOURCE_API_TOOLS] as const;
 export type ScoutResearchTool = (typeof SCOUT_RESEARCH_TOOLS)[number];
 
 /** The prefix every public-source representation is wrapped in. Data, never instructions. */

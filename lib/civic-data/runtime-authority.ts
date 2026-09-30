@@ -290,6 +290,15 @@ export function assertRuntimeAuthority(
     readonly immediateParentPid?: number;
   } = {},
 ): RuntimeAuthorityEnvelope {
+  if (env.WTP_RUNTIME_MODE === "staging") {
+    if (env.WTP_DB_ROLE !== "local" || !env.DATABASE_URL || !env.WTP_CONTROL_PLANE_DATABASE_URL) {
+      throw new RuntimeAuthorityRefused("staging requires WTP_DB_ROLE=local and explicit staging database/control-plane URLs");
+    }
+    const repo = resolve(options.cwd ?? process.cwd());
+    const sha = env[RUNTIME_AUTHORITY_ENV.sha] ?? execFileSync("git", ["rev-parse", "HEAD"], gitOptions(repo)).trim();
+    return { repo, sha, capability: expectation.capabilities[0]!, contract: expectation.contract ?? null,
+      parentPid: process.ppid, nonce: randomBytes(32).toString("hex") };
+  }
   // This checkout inspection runs only when a sanctioned non-Next writer asks
   // for authority. It is deliberately runtime-dynamic; it is not a request for
   // Turbopack to trace the entire repository (including tests and credentials)
@@ -326,6 +335,10 @@ export function admittedRuntimeChildEnvironment(input: {
   readonly billingCollector?: boolean;
 }): NodeJS.ProcessEnv {
   const env = input.parentEnv ?? process.env;
+  if (env.WTP_RUNTIME_MODE === "staging") {
+    if (env.WTP_DB_ROLE !== "local") throw new RuntimeAuthorityRefused("staging children require WTP_DB_ROLE=local");
+    return input.billingCollector ? { ...env } : withoutBillingSecrets(env);
+  }
   const repo = env[RUNTIME_AUTHORITY_ENV.repo];
   const sha = env[RUNTIME_AUTHORITY_ENV.sha];
   if (!repo || !sha || !FULL_SHA.test(sha)) {

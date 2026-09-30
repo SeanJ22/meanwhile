@@ -45,7 +45,7 @@ import {
   makeDiscoverySearch,
   type SearchBudget,
 } from "../lib/control-plane/discovery/search-runtime.ts";
-import type { FetchLike } from "../lib/control-plane/scheduler/scout-search.ts";
+import { SEARCH_REQUEST_LIFETIME_MS, type FetchLike } from "../lib/control-plane/scheduler/scout-search.ts";
 import { SEARCH_PRICES, hitStanding, plannedQueries, requestPrice } from "../lib/hunt/discovery-search.ts";
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
 import { SEED_RECIPES, identityFor, knownRecipes } from "../lib/hunt/meetings-recipes.ts";
@@ -190,6 +190,35 @@ test("BUDGET: the cycle's cap and the day's cap refuse by name; the day's cap ho
 
     const blackout = durableSearchBudget({ repos, perCycle: 5, perDay: 3, admit: () => "network/provider execution is disabled during the Saturday blackout", now });
     assert.match((await blackout.take(SEARCH_HOSTS.brave)) ?? "", /blackout/, `${label}: FleetSafety's refusal passes through`);
+  }
+});
+
+test('abandoned search slots expire without raising caps or letting an old completion release the replacement', async()=>{
+  for(const [label,repos] of await eachStore('wtp-search-expiry-')) {
+    let clock=Date.parse(NOW);
+    const now=()=>new Date(clock).toISOString();
+    const old=durableSearchBudget({repos,perCycle:5,perDay:10,admit:()=>null,now});
+    assert.equal(await old.take(SEARCH_HOSTS.brave),null,label);
+    assert.equal(await old.take(SEARCH_HOSTS.exa),null,label);
+    const next=durableSearchBudget({repos,perCycle:5,perDay:10,admit:()=>null,admitLifetimeHunt:()=>null,now});
+    clock+=2_000;
+    assert.notEqual(await next.take(SEARCH_HOSTS.brave),null,'live occupancy still refuses');
+    clock+=SEARCH_REQUEST_LIFETIME_MS;
+    assert.equal(await next.take(SEARCH_HOSTS.brave),null,'next admission reclaims expired occupancy');
+    assert.equal(await next.lifetimeHunt.take(SEARCH_HOSTS.exa),null,'hunt search uses the same recovery');
+    await old.done(SEARCH_HOSTS.brave);
+    await old.done(SEARCH_HOSTS.exa);
+    let ledger=(await repos.budget.read()).value;
+    for(const host of Object.values(SEARCH_HOSTS)) {
+      assert.equal(ledger.hostState[host].inFlight,1,'late completion cannot release replacement');
+      assert.equal(ledger.hostState[host].requestsToday,2,'recovery does not erase request accounting');
+      assert.equal(ledger.hosts[host].maxConcurrent,1,'limits unchanged');
+    }
+    assert.equal(ledger.vendors[DISCOVERY_SEARCH_VENDOR].dailyRequestCap,10);
+    await next.done(SEARCH_HOSTS.brave);
+    await next.lifetimeHunt.done(SEARCH_HOSTS.exa);
+    ledger=(await repos.budget.read()).value;
+    assert.ok(Object.values(SEARCH_HOSTS).every(host=>ledger.hostState[host].inFlight===0));
   }
 });
 

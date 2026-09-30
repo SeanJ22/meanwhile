@@ -1,3 +1,6 @@
+import { workAdapterQueue } from "./engineering-adapter.ts";
+import { detectiveExecutor, investigationRole, subjectScoutHistory } from "./detective.ts";
+import { readFieldManual, writeFieldManual, newFieldManualEntry } from "../field-manual.ts";
 import { isAbsolute, join, relative, resolve, sep } from "node:path";
 import { readFile } from "node:fs/promises";
 import { DurableEvidenceStore } from "../evidence/durable-store.ts";
@@ -12,7 +15,7 @@ import { computeRouteFloor } from "../preflight.ts";
 import { readMethodStore } from "../../method/candidate.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { proposeScoutCandidates } from "../scheduler/scout-candidates.ts";
-import { emptyFieldManual, type FieldManualStore } from "../field-manual.ts";
+import { type FieldManualStore } from "../field-manual.ts";
 import {
   compoundingPair,
   scoutFieldManualCatalog,
@@ -69,13 +72,16 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     await input.repos.workItems.compareAndSet(row.id, row.revision, { ...row.value,
       autonomousPlan: { ...plan, contract: { ...plan.contract, methodVersion: knowledge.version } } }, now());
   }
-  const fmRead = await input.repos.fieldManual.read("live").catch(() => null);
-  let fieldManual: FieldManualStore = fmRead?.value ?? emptyFieldManual();
-  let fieldManualRevision = fmRead?.revision ?? 0;
+  const fmRead = await readFieldManual(input.repos,{role:"SCOUT"});
+  let fieldManual: FieldManualStore = fmRead.store;
+  let fieldManualRevision = fmRead.revision ?? 0;
   const inheritedFieldManualCounts = new Map<string, number>();
   const inheritedManualStores = new Map<string, FieldManualStore>();
   const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly availableIds: readonly string[]; readonly lines: readonly string[] }>();
   const heldRuntime = standingFleetRuntime({...input,siblingHeldRootFor: held=>siblingHeldRootFor(held)});
+  // Held data and plain adapters first; generated adapters use the same guarded area transport as research.
+  await workAdapterQueue({repos:input.repos,results:prior,now:now(),readEvidence:async id=>evidenceProjection(await heldRuntime.readEvidence(id)),
+    ...(input.transportFor?{transportFor:result=>input.transportFor!({subjectId:result.subjectId,state:scoutStateHint(result.subjectId,result.obligationId)[0]??null})}:{})});
   const readRepairCapture = researchVaultResolver(input.repos, tools.store, "freshness");
   const installed = promotedRegistries();
   const registeredPublisherAddressFor = (subjectId:string):string|null => {
@@ -121,7 +127,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const runtime:AutonomousCoordinatorRuntime={...heldRuntime,rollingCeilingUsd:input.auditCeilingUsd??0,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",
     authorizedSiblingHeldArtifactIdsFor:item=>sharedHeldByRoot.get(item.id)??[],
     roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder),
-    ...(input.transport?{scoutFor:(item,task,currentHistory)=>scoutExecutor({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,
+    ...(input.transport?{scoutFor:(item,task,currentHistory)=>(investigationRole(subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass),task.routeLabel.includes('UNRESOLVED_INVESTIGATION') || priorWorkers.some(w=>w.workItemId===item.id && (!["ACQUIRED","EXTRACTED","PASS","SUPPORTED","SURVIVED","CANDIDATE_PROVED"].includes(w.result.verdict) || ("warnings" in w.result ? w.result.warnings : w.result.findings).some(f=>f.severity==="BLOCKING")))) === "DETECTIVE" ? detectiveExecutor : scoutExecutor)({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,
       ...(input.reserveScoutEscalation?{reserveEscalation:input.reserveScoutEscalation}:{}),
       toolkitFor:ctx=>buildScoutToolkit({...ctx,...(input.environment?{sourceApi:{env:input.environment}}:{}),...durableResearchTools(tools,{project:item.project,attemptId:ctx.attemptId,workItemId:item.id,routeTaskId:task.id,subjectId:item.subject}),
         readHeldArtifact: async id => {
@@ -142,7 +148,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         },
         ...((input.searchFor?.(item.subject) ?? input.search) ? { search: input.searchFor?.(item.subject) ?? input.search } : {})}),
       contextFor:()=>{
-        const history=(currentHistory??prior).filter(p=>p.workItemId===item.id);
+        const history=subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass);
         const plan=item.autonomousPlan!;
         const workers=priorWorkers.filter(w=>w.workItemId===item.id);
         const walks=workers.flatMap(w=>{
@@ -206,7 +212,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
           ...(doors?{inheritedFieldManualEntryIds:doors.entryIds,availableFieldManualEntryIds:doors.availableIds,inheritedFieldManualLines:doors.lines,
             // MW-025: which handed doors this walk actually went through.
             usedFieldManualEntryIds:usedFieldManualEntryIds(result,doors.availableIds,handedManual)}:{})};
-        if(result.refusal===null&&result.candidates.length>0){
+        if((result.refusal===null&&result.candidates.length>0)||result.sourceDeadEnds?.length){
           const written=await writeFieldManualDiscoveries(input.repos,scoutDiscoveryEntries(result,scoutStateHint(result.subjectId,result.obligationId)),result.recordedAt);
           if(written.error) recorded={...recorded,unverified:[...recorded.unverified,`field manual write-back failed: ${written.error}`]};
           else {
@@ -220,6 +226,11 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
             }
           }
         }
+        await writeFieldManual(input.repos,[newFieldManualEntry("investigation",recorded.subjectId+":"+recorded.recordClass,{
+          role:"SHARED",kind:"INVESTIGATION_RESULT",title:recorded.subjectId,
+          summary:recorded.outcome+": "+recorded.narrative,outcome:recorded.candidates.length||recorded.findings.length?"YIELDED":"BLOCKED",
+          recordClasses:[recorded.recordClass],observedAt:recorded.recordedAt,
+          payload:{subjectId:recorded.subjectId,recordClass:recorded.recordClass,facts:recorded.findings,routes:recorded.candidates,tried:recorded.rungs,nextRungs:recorded.nextRungs}})],recorded.recordedAt);
         await input.repos.scoutResults.append(recorded.obligationId,recorded.attemptId,recorded,recorded.recordedAt);
         return recorded;
       }

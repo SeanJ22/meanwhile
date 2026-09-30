@@ -7,19 +7,30 @@ import {
   meetingPartitionForRow,
   meetingPartitionId,
 } from "../lib/civic-data/meeting-partitions.ts";
-import { SOURCE_AUTHORITIES } from "../lib/civic-data/source-authority.ts";
+import { SOURCE_AUTHORITIES, isOfficialSource } from "../lib/civic-data/source-authority.ts";
 import { isOnlineOnly } from "../lib/meetings/online.ts";
 import { wiringForMeetingSource } from "../lib/registry/source-wiring.ts";
 import {
   extractOfficialPageEvents,
-  isOfficialHost,
   makeOfficialPageEventsSource,
+  officialLinkingPageFrom,
   statedTime,
   verifyExtractedEvents,
   verifyOfficialPageEvents,
   type OfficialPageBody,
   type OfficialPageRaw,
 } from "../lib/sources/official-page-events/index.ts";
+
+test('saved official chains reach external calendars without trusting an unlinked host',()=>{
+ for(const government of ['https://county.gov','https://city.gov']) {
+  const pages=[{canonicalUrl:government+'/education',text:'<a href="https://school.example.org">School</a>'},
+    {canonicalUrl:'https://school.example.org',text:'<a href="https://calendar.example.edu/events">Meetings</a>'}];
+  const chain=officialLinkingPageFrom('https://calendar.example.edu/events',pages);
+  assert.ok(chain);assert.equal(isOfficialSource('https://calendar.example.edu/events',chain),true);
+  assert.equal(officialLinkingPageFrom('https://unlinked.example.org',pages),null);
+  assert.equal(officialLinkingPageFrom('https://calendar.example.edu/events',pages.slice(1)),null);
+ }
+});
 
 /**
  * Official-page events (2026-09-23) — against pages recorded with one
@@ -48,6 +59,7 @@ const TUSD: OfficialPageBody = {
   id: TUSD_BODY_ID,
   name: "Tucson Unified School District",
   officialDomain: "https://www.tusd1.org/",
+  linkingPage: {url:"https://directory.example.gov/schools",html:'<a href="https://www.tusd1.org">District</a><a href="https://govboard.tusd1.org">Board</a>'},
   timeZone: "America/Phoenix",
   nameTerms: ["Tucson Unified", "TUSD", "Joint Committee"],
 };
@@ -63,6 +75,7 @@ const SFPS: OfficialPageBody = {
   id: "test:nm:santa-fe-public-schools",
   name: "Santa Fe Public Schools",
   officialDomain: "http://www.sfps.info",
+  linkingPage: {url:"https://directory.example.gov/schools",html:'<a href="https://www.sfps.info">District</a>'},
   timeZone: "America/Denver",
   nameTerms: ["SFPS", "Board of Education", "Audit Committee", "Community Review Committee"],
 };
@@ -95,7 +108,7 @@ test("TUSD: the wired adapter publishes five partition rows with named gaps and 
   const rows = wiringForMeetingSource("official-page-events");
   assert.equal(rows.length, 1);
   const [wiring] = rows;
-  const source = makeOfficialPageEventsSource(rows);
+  const source = makeOfficialPageEventsSource(rows,undefined,()=>TUSD.linkingPage);
   const raw: OfficialPageRaw[] = [{ wiring, html: TUSD_HTML, ics: [], icsRefused: [], collectedAt: "2026-09-23T23:25:27.424Z" }];
   const { meetings, drops } = source.normalizeWithDrops(raw, NOW);
   assert.equal(meetings.length, 5);
@@ -135,7 +148,7 @@ test("TUSD wiring: official host is the registry body's homepageUrl, its own par
   const body = bodies.find((b) => b.id === wiring.bodyId);
   assert.ok(body, "the wiring row keys on a registry body");
   assert.equal(new URL(body.homepageUrl ?? "").hostname, wiring.config.officialHost);
-  assert.ok(isOfficialHost(new URL(wiring.config.pageUrl).hostname, [wiring.config.officialHost]));
+  assert.ok(isOfficialSource(wiring.config.pageUrl,TUSD.linkingPage));
 
   const partition = meetingPartitionForRow("official-page-events", wiring.bodyId);
   assert.equal(partition.id, meetingPartitionId("official-page-events", TUSD_BODY_ID));
@@ -207,7 +220,7 @@ test("negative: an Arizona fact cannot satisfy a New Mexico verification, nor th
   assert.ok(nextJoint);
   const smuggled = verifyExtractedEvents(
     { events: [nextJoint], yearless: [], icsLinks: [], pageLinks: [] },
-    { pageUrl: SFPS_URL, officialHosts: ["www.sfps.info"], nameTerms: [SFPS.name, ...(SFPS.nameTerms ?? [])], timeZone: SFPS.timeZone, now: NOW },
+    { pageUrl: SFPS_URL, linkingPage: SFPS.linkingPage, nameTerms: [SFPS.name, ...(SFPS.nameTerms ?? [])], timeZone: SFPS.timeZone, now: NOW },
   );
   assert.deepEqual(smuggled.published, []);
   assert.deepEqual(smuggled.held.map((h) => h.reasons), [["TITLE_DOES_NOT_NAME_BODY"]]);
@@ -223,7 +236,7 @@ test("a scheduled event with no agenda and no venue is still published, as a nam
   const [wiring] = wiringForMeetingSource("official-page-events");
   const html = `<html><body><div class="ContentBlock"><div class="SectionTitle">Joint Committee Meeting Oct. 15, 2026</div>
     <div class="SectionContent">The committee will review community feedback.</div></div></body></html>`;
-  const source = makeOfficialPageEventsSource([wiring]);
+  const source = makeOfficialPageEventsSource([wiring],undefined,()=>TUSD.linkingPage);
   const [meeting] = source.normalize([{ wiring, html, ics: [], icsRefused: [], collectedAt: NOW.toISOString() }], NOW);
   assert.ok(meeting, "published without an agenda or a venue");
   assert.equal(meeting.status, "SCHEDULED");
@@ -254,7 +267,7 @@ test("structured shapes: JSON-LD with an offset, cancellation only in the publis
   ].join("\r\n");
   const extraction = extractOfficialPageEvents(html, { pageUrl: TUSD_URL, timeZone: "America/Phoenix", ics: [{ url: "https://www.tusd1.org/files/tusd-sessions.ics", text: ics }] });
   assert.deepEqual(extraction.icsLinks, ["https://www.tusd1.org/files/tusd-sessions.ics"]);
-  const { published } = verifyExtractedEvents(extraction, { pageUrl: TUSD_URL, officialHosts: ["www.tusd1.org"], nameTerms: body.nameTerms, timeZone: body.timeZone, now: NOW });
+  const { published } = verifyExtractedEvents(extraction, { pageUrl: TUSD_URL, linkingPage: TUSD.linkingPage, nameTerms: body.nameTerms, timeZone: body.timeZone, now: NOW });
   const brief = published.map((v) => [v.event.shape, v.startsAt, v.endsAt, v.precision, v.event.venue, v.event.canceled]);
   assert.deepEqual(brief, [
     // 01:00Z on Oct 6 is 6:00pm on Oct 5 in Tucson: the publisher's instant, read back into local time.
@@ -285,8 +298,8 @@ test("verification holds, by name, what cannot be verified — and an empty page
   const offHost = verifyOfficialPageEvents({ body: TUSD, url: "https://tusd1.thrillshare.com/Reconfiguration", html: dated, now: NOW });
   assert.equal(offHost.verdict, "NOT_CONFIRMED");
   assert.equal(offHost.reason, "HOST_NOT_OFFICIAL");
-  assert.ok(isOfficialHost("govboard.tusd1.org", ["www.tusd1.org"]));
-  assert.ok(!isOfficialHost("tusd1.org.example.com", ["www.tusd1.org"]));
+  assert.ok(isOfficialSource("https://govboard.tusd1.org",TUSD.linkingPage));
+  assert.ok(!isOfficialSource("https://tusd1.org.example.com",TUSD.linkingPage));
 
   const empty = verifyOfficialPageEvents({ body: TUSD, url: TUSD_URL, html: "<p>Welcome to TUSD.</p>", now: NOW });
   assert.deepEqual([empty.verdict, empty.reason], ["EMPTY", "NO_DATED_EVENTS_ON_PAGE"]);

@@ -666,7 +666,7 @@ test("a recovered WALKED_NO_YIELD discharges this period's reading only: the obl
   }
 });
 
-test("a recovered non-reading disposition leaves the obligation owed: unresolved, in debt, and retried under a new RouteTask", async () => {
+test("a recovered adapter wait leaves the obligation owed without retrying unchanged missing code", async () => {
   for (const [label, repos] of await eachStore("wtp-settled-")) {
     const walled = await interrupted(repos, obligation("ob-walled"), disposes("REQUIRES_NEW_ADAPTER"));
 
@@ -683,8 +683,9 @@ test("a recovered non-reading disposition leaves the obligation owed: unresolved
     assert.ok(heldBack.cycle.deferred.some((d) => d.obligationId === "ob-walled"), `${label}: deferred by name, never dropped`);
 
     const retried = await cycleAt(repos, "2026-09-22T20:20:00.000Z", disposes("REQUIRES_NEW_ADAPTER"));
-    assert.equal(retried.ran, 1, `${label}: retried once the backoff elapsed`);
-    assert.notEqual(retried.open.get("ob-walled")?.routeTaskId, walled.routeTaskId, `${label}: under a new RouteTask`);
+    assert.equal(retried.ran, 0, `${label}: elapsed backoff cannot supply a missing adapter`);
+    assert.ok(retried.cycle.deferred.some(row=>row.obligationId==='ob-walled' && /AWAITING_ADAPTER/.test(row.why)),JSON.stringify(retried.cycle.deferred));
+    assert.equal((await repos.obligations.mustRead('ob-walled')).value.lastWorkedAt,null);
     assert.equal((await repos.routeTasks.mustRead(walled.routeTaskId)).value.state, "DISPOSED", `${label}: the settled one untouched`);
   }
 });

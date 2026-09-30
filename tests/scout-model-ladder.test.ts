@@ -24,7 +24,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { FleetSafetyController, scoutEscalationReservation } from "../lib/control-plane/fleet-safety.ts";
+import { FleetSafetyController, FleetPreSendRefusal, scoutEscalationReservation } from "../lib/control-plane/fleet-safety.ts";
 import { costSection } from "../lib/control-plane/pilot-cost-digest.ts";
 import { minimumCacheablePrefixTokensFor, priceMeteredUsage, readMeteredUsage } from "../lib/control-plane/model-cost.ts";
 import {
@@ -61,13 +61,14 @@ import {
 } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { MIN_DISTINCT_RUNGS, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import { SCOUT_TOOL_SPECS } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { MODELS } from "../lib/models.ts";
 import type { WorkOutcome } from "../lib/control-plane/scheduler/dispatch.ts";
 
 const NOW = "2026-09-23T18:00:00.000Z"; // a Wednesday: outside the Saturday blackout the controller enforces
 const NOW_MS = Date.parse(NOW);
-const HAIKU = "claude-haiku-4-5";
-const SONNET = "claude-sonnet-5-5";
-const OPUS = "claude-opus-5-5";
+const HAIKU = MODELS.haiku.model;
+const SONNET = MODELS.sonnet.model;
+const OPUS = MODELS.opus.model;
 
 const OBLIGATION: FreshnessObligation = {
   id: "freshness:test:scout#ladder",
@@ -81,7 +82,7 @@ const OBLIGATION: FreshnessObligation = {
 };
 
 /** A toolkit whose fetch_public / read_permission vault one artifact per call; it enforces the Attempt's tool-call bound like the real one. */
-function fakeToolkit(bound: ScoutBound): ScoutToolkit {
+function fakeToolkit(): ScoutToolkit {
   const vaulted = new Set<string>();
   let toolCalls = 0;
   const spec = (name: string) => ({ name, description: "fake", input_schema: { type: "object", properties: { url: { type: "string" }, rung: { type: "string" }, why: { type: "string" } }, required: ["url", "rung", "why"] } });
@@ -96,9 +97,6 @@ function fakeToolkit(bound: ScoutBound): ScoutToolkit {
     requestCount: 0,
     bytesFetched: 0,
     async call(name, input, rungLabel) {
-      if (toolCalls >= bound.maxToolCalls) {
-        return { ok: false, forModel: "tool-call bound reached", artifacts: [], rung: null, requestCount: 0, bytesFetched: 0 };
-      }
       toolCalls += 1;
       const url = String((input as { url?: string }).url ?? "");
       const id = `art-${toolCalls}`;
@@ -165,7 +163,7 @@ function perModelTransport(
     if (script === undefined) throw new Error(`the fake provider has no script for ${request.model}`);
     const turn = (turnOf.get(request.model) ?? 0) + 1;
     turnOf.set(request.model, turn);
-    const entry = script[Math.min(turn - 1, script.length - 1)];
+    const entry = script[turn - 1] ?? [text("script complete")];
     if (entry instanceof Error) throw entry;
     return {
       model: request.model,
@@ -199,10 +197,10 @@ async function runLadder(input: {
   readonly inherited?: InheritedEvidence;
 }): Promise<{ readonly outcome: WorkOutcome; readonly result: ScoutResult }> {
   const bound: ScoutBound = { ...RESEARCH_BOUNDS.perDispatch, ...(input.bound ?? {}) };
-  const toolkit = fakeToolkit(bound);
+  const toolkit = fakeToolkit();
   const results: ScoutResult[] = [];
   const exec = scoutExecutor({
-    transport: input.transport,
+    transport: input.transport, refusedBeforeSending:error=>error instanceof FleetPreSendRefusal,
     ...(input.model !== undefined ? { model: input.model } : { model: SONNET }),
     ...(input.reserveEscalation !== undefined ? { reserveEscalation: input.reserveEscalation } : {}),
     toolkitFor: (_ctx: ScoutToolContext) => toolkit,
@@ -235,6 +233,25 @@ async function runLadder(input: {
 const turnUsd = (model: string, usage: Usage): number => priceMeteredUsage(model, readMeteredUsage(usage), "5m").usd ?? Number.NaN;
 const close = (a: number | null | undefined, b: number): boolean => a !== null && a !== undefined && Math.abs(a - b) < 1e-12;
 
+test('a long Scout walks beyond the former turn, tool, token and wall limits until finished or the real budget refuses',async()=>{
+ const actualNow=Date.now;let elapsed=actualNow();Date.now=()=>elapsed;
+ try {
+ const walks=Array.from({length:40},(_,i)=>[fetchOf('u'+i,`https://source${i}.gov/meetings`)]);
+ const script=[...walks,[candidateFinish('done','art-40',walks.map((_,index)=>({index,note:'opened source'})))]];
+ for(const ceiling of [100,0.75]) {
+  const controller=new FleetSafetyController({now:NOW,costs:[],rollingCeilingUsd:ceiling,clock:()=>NOW_MS});
+  const fake=perModelTransport({[HAIKU]:script},()=>{elapsed+=60_000;return {input_tokens:20_000,output_tokens:100};});
+  const {outcome,result}=await runLadder({model:HAIKU,transport:controller.guardedModelTransport('anthropic',OBLIGATION.id,fake)});
+  assert.ok(fake.requests.length>18,'long work passes the old model turn cap');
+  assert.ok(result.usage.toolCalls>16,'long work passes the old tool cap');
+  assert.ok((result.modelAttempts?.[0]?.turns??0) * 20_000>400_000,'long work passes the old cumulative token cap');
+  if(ceiling===100){assert.equal(outcome.kind,'DISPOSED');assert.equal(fake.requests.length,41);assert.equal(result.refusal,null);}
+  else {assert.equal(outcome.kind,'ABORTED');assert.ok(fake.requests.length<41);assert.match(result.refusal?.map(row=>row.detail).join(" ")??"",/CEILING|budget/i);
+   assert.ok(controller.snapshot(NOW).deferred.some(row=>row.code==='ROLLING_24_HOUR_MODEL_SPEND_CEILING'));}
+ }
+ }finally{Date.now=actualNow;}
+});
+
 /* --------------------------------------------------------------------- L1 */
 
 test("L1: acquisition starts with Haiku and omits unsupported effort and adaptive thinking", async () => {
@@ -254,7 +271,8 @@ test("L1: acquisition starts with Haiku and omits unsupported effort and adaptiv
   }
   assert.equal(minimumCacheablePrefixTokensFor(HAIKU), 4096);
   const prewarm = scoutPrewarmPlan({ toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
-  assert.equal(prewarm.kind, "SKIP", "do not spend on a prefix below Haiku's cache minimum");
+  assert.equal(prewarm.kind, "SEND", "the full direct-API toolkit now clears Haiku's cache minimum");
+  if (prewarm.kind === "SEND") assert.ok(prewarm.prefixTokensAtLeast >= minimumCacheablePrefixTokensFor(HAIKU)!);
   assert.equal(result.modelClass, "haiku");
   assert.equal(result.worker.model, HAIKU);
   assert.equal(result.escalatedFrom, null);
@@ -269,7 +287,7 @@ test("Haiku then Sonnet then Opus records both justified escalations and all cos
     [OPUS]: [[candidateFinish("f", "art-1", [{ index: 0, note: "inherited meeting page" }])]],
   });
   const reservation = recordingReservation();
-  const { result, outcome } = await runLadder({ model: HAIKU, transport, reserveEscalation: reservation.seam, bound: { maxTurns: 2 } });
+  const { result, outcome } = await runLadder({ model: HAIKU, transport, reserveEscalation: reservation.seam });
   assert.equal(outcome.kind, "DISPOSED");
   assert.deepEqual(result.modelAttempts?.map(a => a.model), [HAIKU, SONNET, OPUS]);
   assert.deepEqual(result.modelAttempts?.slice(1).map(a => a.escalation?.from), [HAIKU, SONNET]);
@@ -323,21 +341,12 @@ const FRONTIER_LATER: Usage = { input_tokens: 2, output_tokens: 80, cache_read_i
 
 const REASON_CASES: readonly ReasonCase[] = [
   {
-    reason: "BOUND_EXHAUSTED_WITHOUT_RESULT",
-    bound: { maxTurns: 2 },
-    /* Two research turns reach the turn bound; both grace turns ignore the BOUND-REACHED instruction. */
-    sonnet: [[fetchOf("u1", "https://a.gov/")], [fetchOf("u2", "https://a.gov/meetings")], [fetchOf("u3", "https://a.gov/x")], [fetchOf("u4", "https://a.gov/y")]],
-    opus: [[candidateFinish("f", "art-2", [{ index: 0, note: "home" }, { index: 1, note: "meetings page" }])]],
-    evidence: /the turn bound \(2\) is reached; no typed result in 4 turn\(s\) including 2 grace turn\(s\)/,
-    carried: "art-2",
-  },
-  {
     reason: "RESULT_REFUSED",
-    bound: { maxTurns: 2 },
+    bound: {},
     /* Sonnet cites an artifact no vault holds, and keeps doing so through the bound. */
     sonnet: [[fetchOf("u1", "https://a.gov/meetings")], [candidateFinish("f", "art-ghost", [{ index: 0, note: "x" }])]],
     opus: [[candidateFinish("f2", "art-1", [{ index: 0, note: "meetings page" }])]],
-    evidence: /finish refused after 4 turn\(s\): .*SCOUT_CANDIDATE_WITHOUT_EVIDENCE/,
+    evidence: /finish refused after 5 turn\(s\): .*SCOUT_CANDIDATE_WITHOUT_EVIDENCE/,
     carried: "art-1",
   },
   {
@@ -443,11 +452,11 @@ test("L4: a provider overload (HTTP 529) is not the model's failing and never es
 const LOOPING_SONNET = { [SONNET]: [[text("thinking")]] as readonly (readonly ContentBlock[])[], [OPUS]: [[text("never")]] as readonly (readonly ContentBlock[])[] };
 
 test("L5 CEILING: with the real FleetSafety controller, an escalation whose worst case the rolling ceiling cannot cover is refused before any frontier request, deferred by name, and recorded after the root cause", async () => {
-  const controller = new FleetSafetyController({ now: NOW, costs: [], rollingCeilingUsd: 5, clock: () => NOW_MS });
+  const controller = new FleetSafetyController({ now: NOW, costs: [], rollingCeilingUsd: 0.15, clock: () => NOW_MS });
   const fake = perModelTransport(LOOPING_SONNET);
   const guarded = controller.guardedModelTransport("anthropic", OBLIGATION.id, fake);
   const { outcome, result } = await runLadder({ transport: guarded, reserveEscalation: scoutEscalationReservation(controller) });
-  assert.ok((scoutAttemptWorstCaseUsd(OPUS, RESEARCH_BOUNDS.perDispatch) ?? 0) > 5, "the frontier attempt's worst case is over this $5 ceiling");
+  assert.ok((scoutAttemptWorstCaseUsd(OPUS, RESEARCH_BOUNDS.perDispatch) ?? 0) > 0.15, "the frontier attempt's worst case is over this $0.15 ceiling");
   assert.equal(outcome.kind, "ABORTED");
   assert.equal(fake.requests.filter((r) => r.model === OPUS).length, 0, "no frontier request was sent");
   assert.equal(result.escalationReason, "NO_TYPED_RESULT", "the reason is recorded even though the escalation was refused");
@@ -544,8 +553,8 @@ test("L6: the pre-warm warms the model the loop STARTS on — byte-identical to 
   assert.equal(JSON.stringify(captured[0].system), JSON.stringify(plan.request.system), "byte-identical system");
   assert.deepEqual(captured[0].output_config, plan.request.output_config, "the same effort, so the warmed entry is the one read");
 
-  /* Haiku 4.5's minimum is 4,096; the prefix's lower bound does not prove it clears that, so no paid call is made. */
-  const haiku = scoutPrewarmPlan({ toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS, model: "claude-haiku-4-5" });
+  /* A small toolkit does not clear Haiku's 4,096-token minimum, so no paid call is made. */
+  const haiku = scoutPrewarmPlan({ toolkitSpecs: [], bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS, model: HAIKU });
   assert.equal(haiku.kind, "SKIP");
   assert.equal(haiku.kind === "SKIP" ? haiku.code : null, "BELOW_CACHE_MINIMUM");
   assert.match(haiku.kind === "SKIP" ? haiku.detail : "", /4096-token cacheable minimum/);

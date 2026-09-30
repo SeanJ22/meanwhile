@@ -9,7 +9,9 @@
  *    governing board, a school board; none for a statistical or fictitious
  *    Census row). A legislative district gets one seat body, named by its
  *    Census label, because the chamber sits elsewhere.
- * 2. Each official whose name and seat are on their own saved official page,
+ * 2. Each statewide official (governor, attorney general) whose name and
+ *    office are on their own saved official page, as a statewide executive.
+ * 3. Each official whose name and seat are on their own saved official page,
  *    inside its freshness window, as a partial roster reading of that body.
  *    A one-person profile is never a complete roster, so no one departs.
  *
@@ -27,7 +29,8 @@ import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts"
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { captureIntact, section3SourceReceipt } from "./worker-publication-evidence.ts";
 import { publishRosterReading, type RosterReading, type WorkerPublicationCapture } from "./worker-roster-publication.ts";
-import { section3Page, valueOnPage } from "../control-plane/promotion/section3.ts";
+import { section3Page, section3Record, valueOnPage } from "../control-plane/promotion/section3.ts";
+import type { StatewideExecutive } from "../officials/statewide-executives.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
 import { createHash } from "node:crypto";
 
@@ -81,6 +84,24 @@ const DIVISION_TYPES: Readonly<Record<string, Division["divisionType"]>> = {
 };
 const TIERS: Readonly<Record<Division["divisionType"], Tier>> = { cd: "national", sldu: "state", sldl: "state", county: "local", place: "local", school_district: "local" };
 const LEGISLATIVE = new Set<Division["divisionType"]>(["cd", "sldu", "sldl"]);
+const STATE_DIVISION = /^ocd-division\/country:us\/state:[a-z]{2}$/;
+const slug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+/** A statewide officeholder's row, when their name and office are on their own saved official page (§3). */
+function statewideRow(official: NationalOfficialInput, capture: WorkerPublicationCapture, now: string, stateLabel: string | null): StatewideExecutive | string {
+  const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: official.linkingPage ?? null };
+  const verdict = section3Record({ recordClass: "OFFICIAL_ROSTER", fields: { name: official.name, office: official.officeTitle }, page, now });
+  if (!verdict.live) return verdict.reason ?? "STATEWIDE_OFFICIAL_UNVERIFIED";
+  // The right place: the page names the state it serves.
+  if (stateLabel && !valueOnPage(stateLabel, capture.evidence.text)) return "STATEWIDE_PAGE_NOT_THIS_STATE";
+  const state = official.divisionId.slice(-2);
+  return { stateOcdId: official.divisionId,
+    holder: { id: `statewide:${state}/${slug(official.officeTitle)}`, name: official.name, officeTitle: official.officeTitle, partyLabel: null,
+      websiteUrl: capture.evidence.canonicalUrl, email: null, phone: null, contactFormUrl: null, photoUrl: null, campaignUrl: null, termEnd: null, birthDate: null },
+    sourceUrl: capture.evidence.canonicalUrl, sourceOrg: capture.evidence.sourceId,
+    partyAbsence: "The officeholder's own page does not state a party; no election filing has been read for it yet.",
+    collectedAt: capture.observedAt.slice(0, 10), verification: "PAGE_FETCHED" } as StatewideExecutive;
+}
 
 /** The body an official of this division sits on. */
 export function nationalBodyId(division: Pick<Division, "ocdId" | "divisionType">): string {
@@ -164,10 +185,41 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
     prior = (await readRegistryRuntimePrior(input.store, input.now))!;
   }
 
-  // 2. Officials, one partial roster reading per body.
+  // 2. Statewide officials (a governor, an attorney general): each on their own saved official page.
+  const statewide: { official: NationalOfficialInput; row: StatewideExecutive; capture: WorkerPublicationCapture }[] = [];
+  for (const official of input.sources.officials.filter(o => STATE_DIVISION.test(o.divisionId))) {
+    const capture = official.document.capture;
+    const row = capture && captureIntact(capture) ? statewideRow(official, capture, input.now, input.divisions.find(d => d.id === official.divisionId)?.label ?? null) : `OFFICIAL_PAGE_NOT_SAVED:${official.document.url}`;
+    if (typeof row === "string") gaps.push({ key: `official:${official.discoveryId}`, detail: row });
+    else statewide.push({ official, row, capture: capture! });
+  }
+  const statewideMembers: { bodyId: string; versionId: string; discoveryIds: string[] }[] = [];
+  if (statewide.length) {
+    try {
+      const sourceReceipt = section3SourceReceipt(statewide.map(s => s.capture), input.now, "section3-validator:national-statewide",
+        `${statewide.length} statewide official(s): name and office found on their own saved official page inside the freshness window (§3).`);
+      const digest = createHash("sha256").update(canonicalJson(statewide.map(s => s.row))).digest("hex").slice(0, 16);
+      const published = await promote(input.store, { contractId: "registry-runtime-bindings", version: `national-statewide:${digest}`, sourceThrough: input.now, sourceReceipt,
+        payload: { ...prior.payload, registry: { ...prior.payload.registry, divisions: [], bodies: [] },
+          bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: statewide.map(s => s.row), officialPhotos: { photos: [] }, rosterPhotos: {},
+          officialCandidacies: { ...prior.payload.officialCandidacies, rows: statewide
+            .filter(s => !prior!.payload.officialCandidacies.rows.some(row => row.holder.id === s.row.holder.id))
+            .map(s => ({ holder: { id: s.row.holder.id, name: s.row.holder.name, officeTitle: s.row.holder.officeTitle, divisions: [s.row.stateOcdId],
+              authority: "REGISTRY_STATEWIDE_EXECUTIVE" as const, sourceUrl: s.row.sourceUrl }, status: "NOT_CHECKED" as const, candidacy: null, unresolvedCandidacyIds: [],
+              reason: "Officeholding verified on the official's own page. Ballot candidacy remains owed; no candidacy or absence is asserted." })) } } }, prior, input.now);
+      ({ candidateId } = published); promotedVersionId = published.versionId;
+      prior = (await readRegistryRuntimePrior(input.store, input.now))!;
+      for (const s of statewide) statewideMembers.push({ bodyId: s.row.stateOcdId, versionId: published.versionId, discoveryIds: [s.official.discoveryId] });
+    } catch (error) {
+      for (const s of statewide) gaps.push({ key: `official:${s.official.discoveryId}`, detail: error instanceof Error ? error.message : String(error) });
+    }
+  }
+
+  // 3. Officials of a division, one partial roster reading per body.
   const byBody = new Map<string, NationalOfficialInput[]>();
   const registered = new Map(prior.payload.registry.divisions.map(d => [d.ocdId, d]));
   for (const official of input.sources.officials) {
+    if (STATE_DIVISION.test(official.divisionId)) continue;
     const division = registered.get(official.divisionId);
     const capture = official.document.capture;
     if (!division) { gaps.push({ key: `official:${official.discoveryId}`, detail: "OFFICIAL_DIVISION_NOT_REGISTERED" }); continue; }
@@ -176,7 +228,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
     if (!prior.payload.registry.bodies.some(b => b.id === bodyId)) { gaps.push({ key: `official:${official.discoveryId}`, detail: `OFFICIAL_BODY_NOT_REGISTERED:${bodyId}` }); continue; }
     byBody.set(bodyId, [...(byBody.get(bodyId) ?? []), official]);
   }
-  const members: { bodyId: string; versionId: string; discoveryIds: string[] }[] = [];
+  const members: { bodyId: string; versionId: string; discoveryIds: string[] }[] = [...statewideMembers];
   for (const [bodyId, officials] of byBody) {
     // One saved page per reading: the §3 check reads each official's own page.
     for (const official of officials) {

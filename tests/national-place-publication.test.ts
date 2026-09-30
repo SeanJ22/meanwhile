@@ -46,23 +46,28 @@ const divisions: NationalDivisionInput[] = [
   { id: OH, label: "Ohio", divisionType: "state", geoid: "39", sourceUrl: placeUrl, sourceDataset: "TIGER_CB2023" },
 ];
 const profileUrl = "https://ohiohouse.gov/members/allison-russo";
+const governorUrl = "https://governor.ohio.gov/about/governor-mike-dewine";
+const governor = capture("<html><head><title>Governor Mike DeWine | Governor of Ohio</title></head><body><h1>Governor Mike DeWine</h1><p>The 70th Governor of the State of Ohio.</p></body></html>", governorUrl);
 const profile = capture(`<html><head><title>Representative Allison Russo | Ohio House</title></head><body><h1>Representative Allison Russo</h1><p>District 7</p></body></html>`, profileUrl);
 
 test("a place with no prepared registry gets its Census divisions, their bodies and its verified officials through the registry door (§3)", async () => {
   const s = await store();
   const result = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography, sources: { officials: [
     { discoveryId: "russo", divisionId: `${OH}/sldl:7`, name: "Allison Russo", officeTitle: "Representative", officialUrl: profileUrl, document: { url: profileUrl, capture: profile } },
+    { discoveryId: "dewine", divisionId: OH, name: "Mike DeWine", officeTitle: "Governor", officialUrl: governorUrl, document: { url: governorUrl, capture: governor } },
     { discoveryId: "unsaved", divisionId: `${OH}/sldl:7`, name: "Someone Else", officeTitle: "Representative", officialUrl: profileUrl, document: { url: profileUrl } },
   ] } });
   assert.deepEqual(result.divisions, [`${OH}/place:columbus`, `${OH}/sldl:7`]);
   assert.deepEqual(result.bodies, [`${OH}/place:columbus#governing`, `${OH}/sldl:7#seat`]);
-  assert.deepEqual(result.members.map(m => [m.bodyId, m.discoveryIds]), [[`${OH}/sldl:7#seat`, ["russo"]]]);
+  assert.deepEqual(result.members.map(m => [m.bodyId, m.discoveryIds]), [[OH, ["dewine"]], [`${OH}/sldl:7#seat`, ["russo"]]]);
   assert.deepEqual(result.gaps.map(g => g.key).sort(), ["division:" + OH, "official:unsaved"]);
   assert.ok(result.promotedVersionId);
   const after = (await readRegistryRuntimePrior(s, NOW))!;
   const roster = after.payload.bodyRosters.find(r => r.bodyId === `${OH}/sldl:7#seat`);
   assert.deepEqual(roster?.members.map(m => [m.name, m.officeTitle]), [["Allison Russo", "Representative"]]);
   assert.equal(roster?.sourceUrl, profileUrl);
+  const executive = after.payload.statewideExecutives.find(row => row.stateOcdId === OH);
+  assert.deepEqual([executive?.holder.id, executive?.holder.name, executive?.holder.officeTitle, executive?.sourceUrl], ["statewide:oh/governor", "Mike DeWine", "Governor", governorUrl]);
   assert.equal(after.payload.registry.bodies.find(b => b.id === `${OH}/place:columbus#governing`)?.name, null, "a council's name is a sourced fact, never minted");
 
   const again = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography, sources: { officials: [] } });

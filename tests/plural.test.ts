@@ -21,6 +21,61 @@ import { coverageAt } from "../lib/registry/server.ts";
 import registry from "../lib/registry/registry.json" with { type: "json" };
 import { collectNationalPlaceSources, electionDirectorySelection } from "../lib/sources/plural/place.ts";
 import { electionPageFields } from "../lib/hunt/election-page.ts";
+import { placeSourceReader } from "../lib/hunt/place-source-reader.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { createWorkItem } from "../lib/control-plane/work-item.ts";
+import { createRouteTask } from "../lib/control-plane/route-task.ts";
+import { beginAttemptFor, claimRouteTask, registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
+import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.ts";
+import type { ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
+
+test("national collector binds saved CSV to its real Attempt and reuses another job without renewing its age", async () => {
+  const repos = createMemoryRepositories();
+  const store = new MemoryEvidenceStore();
+  const url = "https://legislature.gov/members.csv";
+  const body = "id,name\n1,Ada Smith\n";
+  let fetched = 0;
+  const reader = async (now: string, subject: string) => {
+    const work = createWorkItem({ project: "freshness", subject, obligation: "Read national sources", why: "Capture", now });
+    const task = createRouteTask({ workItemId: work.id, routeId: "national-place-sources", routeLabel: "National sources", target: subject, inherited: false, now });
+    await registerWorkItem(repos, work, now);
+    await registerRouteTask(repos, task, now);
+    const claimed = await claimRouteTask(repos, { routeTaskId: task.id, holder: subject, now, ttlMs: 300_000 });
+    const attempt = await beginAttemptFor(repos, { routeTaskId: task.id, workItemId: work.id,
+      worker: { role: "ACQUIRER", provider: "test", version: "1", instance: subject }, lease: claimed.lease.value,
+      now, methodVersion: 1, policyVersion: "test" });
+    const obligation: ScheduledObligation = { obligation: { id: subject, subjectId: subject, recordClass: "OFFICIAL_ROSTER",
+      routeId: "national-place-sources", active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null },
+      nextDueAt: now, cadenceHours: 24, cadenceSource: "DEFAULT_NO_SIGNAL", basis: "test" };
+    return placeSourceReader({ project: "freshness", context: { obligation, route: null, providerId: null,
+      attemptId: attempt.id, workItemId: work.id, routeTaskId: task.id, holder: subject,
+      now: () => now, bound: RESEARCH_BOUNDS.perDispatch }, tools: {
+      repos, store, now: () => now, spaceOut: async () => {}, openBytes: async request => {
+        const robots = request.url.endsWith("/robots.txt");
+        if (!robots) fetched++;
+        return { status: 200, bytes: Buffer.from(robots ? "User-agent: *\nAllow: /" : body),
+          contentType: robots ? "text/plain" : "text/csv", finalUrl: request.url, durationMs: 1, transportError: null };
+      },
+    } });
+  };
+  const first = await reader("2026-09-30T00:00:00.000Z", "job:first");
+  const acquired = await first.read(url);
+  assert.equal(acquired.text, body);
+  assert.equal(acquired.capture?.evidence.acquiredByAttemptId, (await repos.attempts.list())[0].id);
+  assert.equal(fetched, 1);
+  const second = await reader("2026-09-30T01:00:00.000Z", "job:other-place");
+  const reused = await second.read(url);
+  assert.equal(fetched, 1);
+  assert.equal(reused.capture?.evidence.artifactId, acquired.capture?.evidence.artifactId);
+  assert.equal(reused.collectedAt, acquired.collectedAt);
+  assert.equal(second.artifacts.size, 0);
+  const third = await reader("2026-10-02T01:00:00.000Z", "job:refresh");
+  const refreshed = await third.read(url);
+  assert.equal(fetched, 2);
+  assert.equal(refreshed.collectedAt, "2026-10-02T01:00:00.000Z");
+  assert.notEqual(refreshed.capture?.evidence.acquiredByAttemptId, acquired.capture?.evidence.acquiredByAttemptId);
+});
 
 test("the national election directory follows its published form for any state", () => {
   const page = { url: "https://www.eac.gov/voters/register-and-vote-in-your-state", collectedAt: "2026-09-30T00:00:00Z",

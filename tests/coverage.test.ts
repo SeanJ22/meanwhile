@@ -35,14 +35,18 @@ test("the place source reads shared holdings, publishes source data, then uses t
   const body = { id: `${division.id}#executive`, label: "Governor", kind: "body" as const, divisionIds: [division.id] };
   const events: string[] = [];
   let live = false;
+  let clock = now;
+  const acquiredAt = "2026-09-30T00:02:00Z";
   const result = await runPlaceSource({ repos, store: new MemoryRoutineDataStore(), zip: "65101", divisions: [division], now,
+    clock: () => clock,
     geographyCaptures: [], readSource: async (url, knowledge) => {
       events.push("source"); assert.equal(knowledge.error, undefined);
-      return { url, text: "<h1>Public source</h1>", collectedAt: now };
+      clock = acquiredAt;
+      return { url, text: "<h1>Public source</h1>", collectedAt: acquiredAt };
     },
     readHeld: async () => { events.push("held"); return { subjects: [body], held: live ? [{ subjectId: body.id,
-      checklistId: "GOV-01", state: "published", sourceUrl: "https://example.gov", checkedAt: now, freshUntil: "2026-10-01T00:00:00Z" }] : [] }; },
-    publish: async () => { events.push("publish"); live = true; return { published: true }; } });
+      checklistId: "GOV-01", state: "published", sourceUrl: "https://example.gov", checkedAt: acquiredAt, freshUntil: "2026-10-01T00:00:00Z" }] : [] }; },
+    publish: async input => { assert.equal(input.now, acquiredAt); events.push("publish"); live = true; return { published: true }; } });
   assert.equal(events[0], "held");
   assert.equal(events.at(-1), "held");
   assert.ok(events.indexOf("source") < events.indexOf("publish"));

@@ -404,6 +404,7 @@ test("unresolved identity permits independent diagnosis but never staging", asyn
   const h = await autonomousHarness();
   const base = (await h.repos.attempts.list())[0]!.value;
   assert.equal(unchangedScoutFailure({ ...base, outcome: "ABORTED", abortReason: "HTTP 400: malformed schema" }), true);
+  assert.equal(unchangedScoutFailure({ ...base, outcome: "ABORTED", abortReason: "HTTP 400: invalid network tool schema" }), true);
   assert.equal(unchangedScoutFailure({ ...base, outcome: "ABORTED", abortReason: "HTTP 429: rate limited" }), false);
   assert.equal(unchangedScoutFailure({ ...base, outcome: "ABORTED", abortReason: "HTTP 503: provider unavailable" }), false);
 });

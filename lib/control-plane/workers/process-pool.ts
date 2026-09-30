@@ -4,6 +4,7 @@ import { pathToFileURL } from "node:url";
 import type { DeclaredExecutor, DispatchResult } from "../scheduler/dispatch.ts";
 import { scoutExecutor, type ModelRequest, type ModelTransport, type ScoutExecutorDeps } from "../scheduler/scout-executor.ts";
 import type { ScoutToolContext } from "../scheduler/scout-contract.ts";
+import { buildScoutToolkit } from "../scheduler/scout-tools.ts";
 import type { AutonomousJurisdiction } from "../expansion/spend-holds.ts";
 import type { runNationalPlaceTask } from "../../hunt/place-source-task.ts";
 import type { NationalPlacePublicationInput } from "../../hunt/place-source.ts";
@@ -44,11 +45,11 @@ export function scoutProcessExecutor(input: {
   readonly root: string;
   readonly postgres: boolean;
   readonly fileStoreRoot?: string;
-  readonly deps: ScoutExecutorDeps;
+  readonly deps: Omit<ScoutExecutorDeps, "toolkitFor">;
   readonly search?: ScoutToolContext["search"];
   readonly onStarted?: (pid: number) => void;
 }): DeclaredExecutor {
-  const original = scoutExecutor(input.deps);
+  const original = scoutExecutor({ ...input.deps, toolkitFor: buildScoutToolkit });
   return { ...original, dispatch: async request => {
     let context: Omit<ScoutContext, "tools"> | undefined;
     let contextError: string | undefined;

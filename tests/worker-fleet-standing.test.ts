@@ -238,6 +238,7 @@ test("unchanged permanent failures stay terminal while provider failures back of
   for (const role of ["AUDIT", "PARSE"]) {
     const rejected = attemptFor(task, 1, "ABORTED", `${role}_PROVIDER_FAILURE:400; usage NOT MEASURED`);
     assert.equal(workerTaskAdmission(task, [rejected], "2027-01-01T00:00:00.000Z").state, "TERMINAL");
+    assert.equal(workerTaskAdmission(task, [{ ...rejected, abortReason: `${role}_PROVIDER_FAILURE:400; invalid network tool schema` }], "2027-01-01T00:00:00.000Z").state, "TERMINAL");
     for (const status of [429, 503]) {
       const upstream = attemptFor(task, 1, "ABORTED", `${role}_PROVIDER_FAILURE:${status}; usage NOT MEASURED`);
       const waiting = workerTaskAdmission(task, [upstream], upstream.endedAt!);

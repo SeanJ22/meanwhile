@@ -42,7 +42,7 @@ export function scoutTransientDenial(reason: string | null): "TRANSPORT" | "COST
 /** Provider outages may recover; unchanged request/schema failures cannot. */
 export function unchangedScoutFailure(attempt: Attempt | undefined): boolean {
   if (!attempt?.endedAt || ["COMPLETED", "DENIED_BY_POLICY", "CRASHED", "LEASE_EXPIRED"].includes(attempt.outcome ?? "")) return false;
-  return !/\bHTTP (?:429|5\d\d)\b|provider[^\n]*(?:429|5\d\d)|timeout|timed out|network|econnreset|eai_again|fetch failed/i.test(attempt.abortReason ?? "");
+  return !workerFailureCanRetry(attempt.abortReason ?? "");
 }
 
 export interface ScoutTaskAdmission {
@@ -100,3 +100,4 @@ export function scoutTaskAdmission(task: RouteTask, tasks: readonly RouteTask[],
   }
   return reading("UNKNOWN", "This task state has no automatic Scout continuation established by the joined evidence.");
 }
+import { workerFailureCanRetry } from "./scheduling.ts";

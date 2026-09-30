@@ -177,7 +177,6 @@ async function ordinaryScoutProcessFailures() {
             return result;
           },
           transport: async () => { modelCalls++; throw new ModelTransportError("HTTP 400: fixture unchanged request", 400); },
-          toolkitFor: fakeToolkit,
           contextFor: () => {
             if (contextFailure) throw new Error("fixture context unavailable");
             return { route: null, providerId: "fixture", reason: "ordinary ungraduated route", decision: "BOUNDED_MODEL_WORKER",

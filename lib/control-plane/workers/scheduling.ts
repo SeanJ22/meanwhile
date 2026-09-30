@@ -25,6 +25,14 @@ function debtCause(attempt: Attempt): DebtCause {
   return "EXTRACTION_FAILED";
 }
 
+/** An explicit permanent HTTP rejection wins over words inside its diagnostic body. */
+export function workerFailureCanRetry(detail: string): boolean {
+  const status = /\b(?:HTTP[\s:]+|(?:AUDIT|PARSE)_PROVIDER_FAILURE:)(\d{3})\b/i.exec(detail);
+  const code = status ? Number(status[1]) : null;
+  if (code !== null && code >= 400 && code < 500 && code !== 408 && code !== 429) return false;
+  return /\bHTTP (?:408|429|5\d\d)\b|provider[^\n]*(?:408|429|5\d\d)|timeout|timed out|network|econnreset|eai_again|fetch failed/i.test(detail);
+}
+
 /** A reading of canonical Attempts, not a second retry store or a lifetime attempt limit. */
 export function workerTaskAdmission(task: RouteTask, attempts: readonly Attempt[], now: string): WorkerTaskAdmission {
   const result = (state: WorkerTaskAdmission["state"], reason: string, debt: FreshnessDebt | null = null,
@@ -49,7 +57,7 @@ export function workerTaskAdmission(task: RouteTask, attempts: readonly Attempt[
     return result("POLICY_DENIED", task.policyDenial?.requiredChange ?? latest?.abortReason ?? "The denied capability or policy requires an explicit authorized change.");
   }
   if (latest?.endedAt && !mayRecheck && !["CRASHED", "LEASE_EXPIRED"].includes(latest.outcome ?? "") &&
-    !/(?:AUDIT|PARSE)_PROVIDER_FAILURE:(?:429|5\d\d)|\bHTTP (?:429|5\d\d)\b|timeout|timed out|network|econnreset|eai_again|fetch failed/i.test(latest.abortReason ?? "")) {
+    !workerFailureCanRetry(latest.abortReason ?? "")) {
     return result("TERMINAL", "The same task already failed; a changed source, method or input must create its successor before another attempt.");
   }
   let debt: FreshnessDebt | null = null;

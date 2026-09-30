@@ -2404,10 +2404,6 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         fleet.release();
         return { admit: false, code: "CEILING", why: `${more.code}: ${more.why}` };
       },
-      toolkitFor: (toolCtx) => {
-        const search = lifetimeHuntWork(toolCtx.obligation.obligation.id) ? scoutSearchLifetime : scoutSearch;
-        return buildScoutToolkit(search !== null ? { ...toolCtx, search } : toolCtx);
-      },
       contextFor: (row) => ({
         route: registry.routeFor(row.obligation.id),
         providerId: registry.providerOf(row.obligation.id),

@@ -44,6 +44,12 @@ test("a place inherits other jobs' published fields before national acquisition 
   assert.equal((await repos.workItems.mustRead(placeFieldWork(name, now).id)).value.state, "VERIFIED_COMPLETE");
   assert.equal((await repos.workItems.mustRead(placeFieldWork(contact, now).id)).value.state, "OPEN");
   assert.ok(result.work.some(i => i.id === contact.id));
+  const expired = await planPlaceHunt({ repos, divisions: [division], now: "2026-10-02T00:00:00Z",
+    readHeld: async () => ({ subjects: [subject], held: [{ subjectId: subject.id, checklistId: "GOV-01", state: "published",
+      sourceUrl: "https://county.example.gov/board", checkedAt: now, freshUntil: "2026-10-01T00:00:00Z" }] }),
+    acquireNational: async () => ({ subjects: [], held: [] }) });
+  assert.equal((await repos.workItems.mustRead(placeFieldWork(name, now).id)).value.state, "REOPENED");
+  assert.ok(expired.work.some(i => i.id === name.id), "expired fields return to standing work using the same identity");
   await assert.rejects(planPlaceHunt({ repos, divisions: [division], now,
     readHeld: async () => { throw Error("Shared holdings unavailable"); },
     acquireNational: async () => { throw Error("Must not acquire from a failed empty read"); } }), /Shared holdings unavailable/);

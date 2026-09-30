@@ -91,6 +91,7 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } fr
 import { hostname } from "node:os";
 import { reserveRoutineRefresh, finishRoutineRefresh } from "../lib/civic-data/owner-refresh.ts";
 import { join } from "node:path";
+import { resolvePilotMirror } from "./pilot-runtime-config.mjs";
 
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
@@ -195,7 +196,7 @@ if (!process.env.WTP_BILLING_ENV_FILE) {
 }
 for (const name of BILLING_SECRET_NAMES) delete process.env[name];
 const argv = process.argv.slice(2);
-const STAGING = argv.includes("--staging");
+const STAGING = argv.includes("--staging") || process.env.WTP_RUNTIME_MODE === "staging";
 if (STAGING && process.env.WTP_DB_ROLE !== "local") throw new Error("Staging runner requires WTP_DB_ROLE=local");
 if (STAGING) process.env.WTP_RUNTIME_MODE = "staging";
 const AUTO_RELEASE_HANDOFF = !STAGING && argv.includes("--release-handoff");
@@ -212,7 +213,6 @@ function standingChildEnvironment(
   parentEnv: NodeJS.ProcessEnv = process.env,
   billingCollector = false,
 ): NodeJS.ProcessEnv {
-  if (STAGING) return billingCollector ? { ...parentEnv } : withoutBillingSecrets(parentEnv);
   return provider === "postgres"
     ? admittedRuntimeChildEnvironment({
       parentEnv: ["RESEARCH_CYCLE", "CONSOLE_PUBLISHER", "NIGHTLY_RESEARCH"].includes(capability)
@@ -250,7 +250,7 @@ const canary = argv.includes("--canary");
  * The Drive mirror. A SYNCED FOLDER, not an API — writing a file into it IS the
  * delivery. The variable name is the one this repository already uses.
  */
-const MIRROR = process.env.WTP_MIRROR ?? "G:/My Drive/we-the-people";
+const MIRROR = resolvePilotMirror(ROOT, process.env.WTP_MIRROR, STAGING);
 const FALLBACK = join(ROOT, ".mirror");
 const RUNS_DIR = join(ROOT, ".runtime", "freshness-shadow-runs");
 /**
@@ -622,7 +622,7 @@ function buildDigest(record: RunRecord, cycle: number, at: string, ok: boolean):
 /* ---------------------------------------------------------------- delivery --- */
 
 function deliver(body: string, headline: string): { readonly where: string; readonly mirrored: boolean } {
-  const target = existsSync(MIRROR) ? MIRROR : FALLBACK;
+  const target = MIRROR !== null && existsSync(MIRROR) ? MIRROR : FALLBACK;
   const mirrored = target === MIRROR;
   if (!mirrored) mkdirSync(FALLBACK, { recursive: true });
   const path = join(target, "pilot-digest.md");
@@ -1700,7 +1700,7 @@ console.log(
   `pilot-runner · control plane ${provider}, interval ${INTERVAL_MIN} min, ` +
     `${CYCLES === Infinity ? "running until stopped" : `${CYCLES} cycle(s)`}\n` +
     `  singleton: ${PILOT_PROCESS_LEASE.host}:${PILOT_PROCESS_LEASE.port}\n` +
-    `  mirror: ${MIRROR}${existsSync(MIRROR) ? "" : " (NOT PRESENT — digests fall back to .mirror/ and say so)"}`,
+    `  mirror: ${MIRROR ?? "disabled for staging"}${MIRROR !== null && existsSync(MIRROR) ? "" : " (digests stay in .mirror/)"}`,
 );
 
 /**

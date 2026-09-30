@@ -18,6 +18,17 @@ import { fileURLToPath } from "node:url";
 
 const FULL_SHA = /^[0-9a-f]{40}$/i;
 
+/** Staging digests stay in their worktree; the shared production mirror is never a fallback. */
+export function resolvePilotMirror(root, configured, staging) {
+  if (!staging) return configured ?? "G:/My Drive/we-the-people";
+  if (!configured?.trim()) return null;
+  const target = resolve(root, configured);
+  const canonicalRoot = realpathSync(root);
+  const canonicalTarget = existsSync(target) ? realpathSync(target) : target;
+  const within = relative(canonicalRoot, canonicalTarget);
+  return within === "" || (!isAbsolute(within) && within !== ".." && !within.startsWith(`..${sep}`)) ? target : null;
+}
+
 function git(cwd, args, { allowFailure = false } = {}) {
   try {
     return execFileSync("git", args, {

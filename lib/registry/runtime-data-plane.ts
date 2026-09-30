@@ -82,6 +82,26 @@ export interface RegistryRuntimePackage {
   readonly sourceThrough: string;
   readonly sourceReceipt: ManualSourceSetReceipt;
   readonly payload: RegistryRuntimeReadModel;
+  /**
+   * "MEMBERS": the package speaks only for the members it lists (a publication
+   * door: one roster, a directory, a place). A prior member it omits is
+   * retained unchanged, not an attempted removal, so it is not recorded as an
+   * excluded fact. Omitted, a package speaks for the whole registry.
+   */
+  readonly scope?: "MEMBERS";
+  /** Holders a complete official roster in this package no longer lists (rulings §3: complete rosters record departures). */
+  readonly departures?: readonly { readonly bodyId: string; readonly holderId: string; readonly sourceUrl: string }[];
+}
+
+/** The rows that leave with a departed holder, by change-set key. */
+const departureKeys = (holderId: string) => ["roster-disposition", "official-candidacy", "official-photo", "roster-photo"].map(kind => `${kind}:${holderId}`);
+
+/** A departure stands only when this package's roster for the body, from that page, no longer lists the holder. */
+function provenDepartures(input: Pick<RegistryRuntimePackage, "departures" | "payload">) {
+  return (input.departures ?? []).filter(departure => {
+    const roster = input.payload.bodyRosters.find(row => row.bodyId === departure.bodyId);
+    return roster !== undefined && roster.sourceUrl === departure.sourceUrl && !roster.members.some(member => member.id === departure.holderId);
+  });
 }
 
 export interface RegistryRuntimePrior {
@@ -463,8 +483,9 @@ function sourceScopedRegistryProjection(
     member.record.kind === "DIVISION" && isCensusPlaceholderDivision(member.record.value) ? [member.record.value.ocdId] : []));
   const removedKeys = new Set(reconciled.members.flatMap((member) =>
     member.record.kind === "BODY" && member.record.value.row.ocdId !== null && placeholderDivisionIds.has(member.record.value.row.ocdId) ? [member.key] : []));
+  const departedKeys = new Set(provenDepartures(input).flatMap(departure => departureKeys(departure.holderId)));
   const members = reconciled.members
-    .filter((member) => !removedKeys.has(member.key))
+    .filter((member) => !removedKeys.has(member.key) && !departedKeys.has(member.key))
     .map((member) => {
       if (member.record.kind !== "DIVISION") return member;
       const plain = CENSUS_PLACEHOLDER_LABELS[member.record.value.label];
@@ -482,7 +503,8 @@ function sourceScopedRegistryProjection(
           detail: `${source.requestedUrl} was blocked and could not authorize any current registry member: ${source.failureDetail}.`,
           record: source,
         })),
-      ...reconciled.excludedFacts.filter((fact) => !removedKeys.has(fact.key)),
+      ...reconciled.excludedFacts.filter((fact) => !removedKeys.has(fact.key) && !departedKeys.has(fact.key) &&
+        !(input.scope === "MEMBERS" && fact.code === "MANUAL_MEMBER_REMOVAL_EVIDENCE_MISSING")),
       ...reconciled.members.filter((member) => removedKeys.has(member.key)).map((member) => ({
         key: member.key,
         code: "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT",
@@ -647,6 +669,21 @@ function placeholderBodyRemovals(payload: RegistryRuntimeReadModel, prior: Regis
   }).sort((left, right) => left.key.localeCompare(right.key));
 }
 
+/** Removal evidence for each row a proven departure took out of the prior projection. */
+function departureRemovals(input: RegistryRuntimePackage, payload: RegistryRuntimeReadModel, prior: RegistryRuntimePrior | null): RoutineRemovalEvidence[] {
+  if (!prior) return [];
+  const present = (model: RegistryRuntimeReadModel) => new Set([
+    ...model.rosterReaderDispositions.map(row => `roster-disposition:${row.sourceId}`),
+    ...model.officialCandidacies.rows.map(row => `official-candidacy:${row.holder.id}`),
+    ...model.officialPhotos.photos.map(photo => `official-photo:${photo.officeholderId}`),
+    ...Object.keys(model.rosterPhotos).map(key => `roster-photo:${key}`),
+  ]);
+  const before = present(prior.payload), after = present(payload);
+  return provenDepartures(input).flatMap(departure => departureKeys(departure.holderId)
+    .filter(key => before.has(key) && !after.has(key))
+    .map(key => ({ key, code: "OFFICIAL_ROSTER_NO_LONGER_LISTS" as const, bodyId: departure.bodyId, holderId: departure.holderId, sourceUrl: departure.sourceUrl })));
+}
+
 /**
  * Exact GOOD registry projection used as the member-scoped merge base.
  * Store/readback failures are never treated as an empty registry: doing so
@@ -737,7 +774,8 @@ export function registryRuntimeCandidate(
     for (const url of urls) if (!receipted.has(url) && !inheritedSourceKeys.has(`${key}\n${url}`)) unreceipted.add(url);
   }
   for (const url of [...unreceipted].sort()) issues.push(`RUNTIME_SOURCE_NOT_RECEIPTED:${url}`);
-  const removalEvidence = placeholderBodyRemovals(payload, options.prior ?? null);
+  const removalEvidence = [...placeholderBodyRemovals(payload, options.prior ?? null), ...departureRemovals(input, payload, options.prior ?? null)]
+    .sort((left, right) => left.key.localeCompare(right.key));
   if (!isolated.hasProjectionMetadata) {
     issues.push("REGISTRY_PROJECTION_METADATA_UNSUPPORTED");
   }

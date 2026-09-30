@@ -147,7 +147,7 @@ test("TUSD wiring: official host is the registry body's homepageUrl, its own par
 
   const authority = SOURCE_AUTHORITIES["meetings-public-bodies"];
   assert.ok(authority.routePrefixes.some((p) => wiring.config.pageUrl.startsWith(p)));
-  assert.ok((authority.allowedFinalHosts as readonly string[]).includes("www.tusd1.org"));
+  assert.ok(authority.routePrefixes.some((p) => new URL(p).hostname === "www.tusd1.org"));
 });
 
 test("cross-state transfer: the same extractor reads Santa Fe Public Schools (NM) with NM identity only", () => {

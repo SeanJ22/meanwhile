@@ -8,6 +8,8 @@ test("campaign refresh preserves conflicts and unverifiable or non-newer dates",
   assert.equal(campaignLinkRefreshIssue(prior, next), null);
   assert.equal(campaignLinkRefreshIssue(null, next), null);
   assert.match(campaignLinkRefreshIssue(prior, { ...next, url: "https://other.example/" })!, /^CONFLICTING_CAMPAIGN_URL/);
+  // Another page on the same site is the same campaign site, not a conflict.
+  assert.equal(campaignLinkRefreshIssue({ url: "https://tobinmenard.com/", attemptedAt: "2026-08-21" }, { url: "https://www.tobinmenard.com/about", attemptedAt: "2026-09-21" }), null);
   for (const attemptedAt of ["2026-09-20", "2026-09-19"]) {
     assert.match(campaignLinkRefreshIssue(prior, { ...next, attemptedAt })!, /^CAMPAIGN_READ_NOT_NEWER/);
   }

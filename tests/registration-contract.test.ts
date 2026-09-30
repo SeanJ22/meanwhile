@@ -79,7 +79,7 @@ test("one registration contract per state, DC and territory in the FIPS table, e
   const authority = SOURCE_AUTHORITIES["census-governments-registration"];
   assert.deepEqual([...authority.jurisdictions].sort(), REGISTRATION_TARGETS.map((t) => t.jurisdiction).sort(), "every state's jurisdiction is inside the authority");
   assert.equal(authority.routineAutoPromotion, true);
-  assert.deepEqual([...authority.allowedFinalHosts], ["www2.census.gov"]);
+  assert.ok(authority.routePrefixes.every((p) => new URL(p).hostname === "www2.census.gov"));
   const index = JSON.parse(readFileSync(join(ROOT, "data", "derived", "registration", "index.json"), "utf8")) as { states: Record<string, unknown> };
   assert.deepEqual(Object.keys(index.states).sort(), REGISTRATION_TARGETS.map((t) => t.state.toLowerCase()).sort(), "the reference carries exactly the FIPS table's states");
 });

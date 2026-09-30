@@ -272,7 +272,9 @@ export type SourceDataset =
    */
   | "TIGER_CB2023"
   /** Full TIGER/Line 2023, read for its attribute table only: the territories' functional status. */
-  | "TIGER_LINE2023";
+  | "TIGER_LINE2023"
+  /** Census TIGERweb current map services, queried live by place (S9 place-first hunts); the saved query response is the source. */
+  | "TIGERWEB_CURRENT";
 
 /**
  * How well this repo's identifier matches the canonical OCD vocabulary.

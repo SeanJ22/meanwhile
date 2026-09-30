@@ -114,8 +114,10 @@
  * scope head. No writer is enabled by this schema move: a missing head remains
  * UNAVAILABLE, never a zero-instance claim.
  * Version 16 adds atomic action-history companions and the active-claim and
- * latest-cycle indexes. Historical receipts remain readable without backfill. */
-export const BOOTSTRAP_VERSION = 16;
+ * latest-cycle indexes. Historical receipts remain readable without backfill.
+ * Version 17 preserves writes from older receipt providers while invalidating
+ * partial history instead of demanding a companion from those providers. */
+export const BOOTSTRAP_VERSION = 17;
 
 /**
  * The tables, and the shape each one carries.
@@ -647,23 +649,21 @@ AFTER INSERT ON cp_admin_action_history_scope_ref DEFERRABLE INITIALLY DEFERRED
 FOR EACH ROW EXECUTE FUNCTION cp_admin_action_history_assert_scope();
   END IF;
 END $$;`,
-  `CREATE OR REPLACE FUNCTION cp_admin_action_history_assert_receipt() RETURNS trigger
+  `CREATE OR REPLACE FUNCTION cp_admin_action_history_invalidate_readiness() RETURNS trigger
 LANGUAGE plpgsql AS $$
 BEGIN
   IF NEW.log_key <> 'admin-action' THEN RETURN NEW; END IF;
-  IF NOT EXISTS (SELECT 1 FROM cp_admin_action_history_projection
-    WHERE gateway_receipt_id = NEW.record_id AND source_position = NEW.position)
-  THEN RAISE EXCEPTION 'admin receipt lacks atomic history companion' USING ERRCODE = '23514'; END IF;
-  IF EXISTS (SELECT 1 FROM cp_admin_action_history_readiness
-    WHERE singleton = true AND status = 'READY' AND source_through_position < NEW.position)
-  THEN RAISE EXCEPTION 'admin history READY watermark was not invalidated' USING ERRCODE = '23514'; END IF;
+  UPDATE cp_admin_action_history_readiness SET status = 'INCOMPLETE'
+    WHERE singleton = true AND status = 'READY';
   RETURN NEW;
 END $$;`,
   `DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'cp_admin_action_history_receipt_companion' AND tgrelid = 'cp_log_admin_receipts'::regclass) THEN
-    CREATE CONSTRAINT TRIGGER cp_admin_action_history_receipt_companion
+  DROP TRIGGER IF EXISTS cp_admin_action_history_receipt_companion ON cp_log_admin_receipts;
+  DROP FUNCTION IF EXISTS cp_admin_action_history_assert_receipt();
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'cp_admin_action_history_receipt_invalidation' AND tgrelid = 'cp_log_admin_receipts'::regclass) THEN
+    CREATE CONSTRAINT TRIGGER cp_admin_action_history_receipt_invalidation
 AFTER INSERT ON cp_log_admin_receipts DEFERRABLE INITIALLY DEFERRED
-FOR EACH ROW EXECUTE FUNCTION cp_admin_action_history_assert_receipt();
+FOR EACH ROW EXECUTE FUNCTION cp_admin_action_history_invalidate_readiness();
   END IF;
 END $$;`,
   `CREATE INDEX IF NOT EXISTS cp_attempts_lease_id ON cp_attempts ((value->>'leaseId'));`,

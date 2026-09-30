@@ -95,7 +95,7 @@ test("missing, incomplete, duplicate or partial source census never appears as e
 });
 
 test("provider SQL preserves the canonical receipt and instruction relationships", () => {
-  const sql = readFileSync(new URL("../docs/migration-proposals/admin-action-history-cp-v16.sql", import.meta.url), "utf8");
+  const sql = readFileSync(new URL("../docs/migration-proposals/admin-action-history-cp-v17.sql", import.meta.url), "utf8");
   assert.match(sql, /FOREIGN KEY \(gateway_log_key, gateway_receipt_id\)/);
   assert.match(sql, /FOREIGN KEY \(instruction_log_key, instruction_receipt_id\)/);
   assert.match(sql, /DEFERRABLE INITIALLY DEFERRED/);

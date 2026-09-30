@@ -56,10 +56,11 @@ export function workerPublicationTasks(items: readonly WorkItem[], results: read
 /**
  * The one runner receipt line for a publication pass: the last version this
  * pass promoted (or confirmed unchanged), read back from the store it was
- * written to. A pass that published nothing prints none and exits non-zero,
- * so the runner records that nothing went live.
+ * written to. A pass with nothing new confirms the door's current version
+ * with nothing delivered; a pass whose items were all held prints none and
+ * exits non-zero, so the runner records that nothing went live.
  */
-export async function printWorkerPublicationReceipt(store: Pick<RoutineDataStore, "readCandidate">, source: string,
+export async function printWorkerPublicationReceipt(store: Pick<RoutineDataStore, "readCandidate"> & Partial<Pick<RoutineDataStore, "readPromotionIdentity">>, source: string,
   report: readonly { readonly workItemId: string; readonly outcome: NonNullable<WorkItem["publicationOutcome"]> }[],
   /** Anything else this pass published outside work items (the national place publisher), with its gaps. */
   extra: { readonly records: number; readonly versionId: string | null; readonly candidateId: string | null; readonly gaps: readonly { readonly key: string; readonly detail: string }[] } | null = null,
@@ -68,8 +69,15 @@ export async function printWorkerPublicationReceipt(store: Pick<RoutineDataStore
   const delivered = publicationDelivery(report, extra, now);
   // Only this pass's own publications; a pass that only re-reports earlier ones published nothing.
   const passAt = now ?? report.map(row => row.outcome.at).sort().at(-1);
-  const last = [...report.filter(row => row.outcome.status !== "HELD" && row.outcome.versionId && row.outcome.at === passAt).map(row => row.outcome),
-    ...(extra?.versionId ? [{ at: "", candidateId: extra.candidateId, versionId: extra.versionId }] : [])].at(-1);
+  let last: { readonly at: string; readonly candidateId?: string | null; readonly versionId?: string | null } | undefined =
+    [...report.filter(row => row.outcome.status !== "HELD" && row.outcome.versionId && row.outcome.at === passAt).map(row => row.outcome),
+      ...(extra?.versionId ? [{ at: "", candidateId: extra.candidateId, versionId: extra.versionId }] : [])].at(-1);
+  // Nothing new, but every item it holds is still published: the door confirms the current version, delivering nothing.
+  if (!last && now && report.some(row => row.outcome.status !== "HELD" && row.outcome.versionId) && store.readPromotionIdentity) {
+    const contract = requiredManualProductionContract(source as Parameters<typeof requiredManualProductionContract>[0]);
+    const pointer = await store.readPromotionIdentity(contract.recordClass, contract.scope);
+    if (pointer) last = { at: now, candidateId: null, versionId: pointer.versionId };
+  }
   const created = last?.candidateId ? await store.readCandidate(last.candidateId) : null;
   const record = created ?? (last?.versionId ? await store.readCandidate(last.versionId) : null);
   if (!last || !record) { process.exitCode = 2; return false; }

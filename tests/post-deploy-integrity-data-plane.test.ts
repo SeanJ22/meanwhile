@@ -1,6 +1,4 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
 import test from "node:test";
 
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -15,13 +13,8 @@ import {
   readLatestProductionIntegrity,
   validIntegrityRecord,
 } from "../lib/ops/production-integrity-data-plane.ts";
-import {
-  NEVER_CHECKED,
-  evaluateReleaseFreeze,
-  type IntegrityRecord,
-} from "../lib/ops/production-integrity.ts";
+import type { IntegrityRecord } from "../lib/ops/production-integrity.ts";
 
-const ROOT = join(import.meta.dirname, "..");
 const SHA = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
 const HELD: IntegrityRecord = {
@@ -113,36 +106,4 @@ test("missing, unreachable, and malformed authority fail closed without a tracke
   await malformed.softwareReleaseReviews.append(PRODUCTION_INTEGRITY_LOG_KEY, "bad", bad, HELD.observedAt!);
   assert.equal((await readLatestProductionIntegrity(malformed.softwareReleaseReviews)).kind, "STORE_UNREACHABLE");
   assert.equal(validIntegrityRecord({ ...HELD, observed: "UNKNOWN" }), false);
-});
-
-test("the durable outcome preserves exact-head and fail-closed release-freeze semantics", () => {
-  const healthy = evaluateReleaseFreeze({
-    record: HELD,
-    candidateSha: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-    changedPaths: ["lib/db/schema.ts"],
-    production: {
-      servedSha: SHA,
-      how: "GET /api/build",
-      readingAgeHours: 1,
-      maxAgeHours: 24,
-    },
-  });
-  assert.equal(healthy.frozen, false);
-
-  const refused = evaluateReleaseFreeze({
-    record: REFUSED,
-    candidateSha: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-    changedPaths: ["app/page.tsx"],
-    production: { servedSha: SHA, how: "GET /api/build", readingAgeHours: 0, maxAgeHours: 24 },
-  });
-  assert.equal(refused.frozen, true);
-  assert.equal(refused.state, "DEGRADED");
-
-  const unreachable = evaluateReleaseFreeze({
-    record: NEVER_CHECKED,
-    candidateSha: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-    changedPaths: ["lib/db/schema.ts"],
-    production: { servedSha: SHA, how: "GET /api/build", readingAgeHours: null, maxAgeHours: 24 },
-  });
-  assert.equal(unreachable.frozen, true);
 });

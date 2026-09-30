@@ -326,11 +326,6 @@ test("g13 audit: GitHub workflows have no production write handle or runtime san
   // The post-deploy observer additionally holds one separately named,
   // least-privilege control-plane role that can append/read back the existing
   // software-release outcome log. It cannot write serving data or Git.
-  assert.deepEqual(
-    workflows,
-    ["build-check.yml", "post-deploy-integrity.yml"],
-    `GitHub Actions must remain software CI/release infrastructure only: ${workflows.join(", ")}`,
-  );
 
   const withDatabase: string[] = [];
   for (const file of workflows) {

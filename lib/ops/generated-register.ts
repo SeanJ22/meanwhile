@@ -351,9 +351,8 @@ export const GENERATED: GeneratedArtifact[] = [
     command: "corepack pnpm repo-map",
     pure: false,
     impurity:
-      "reads HEAD SHA and the wall clock for its generated-at stamp, and git ls-files for " +
-      "the tree; the carried-stamp rule keeps it idempotent when the rendered body is " +
-      "unchanged, so only a changed body earns a fresh stamp.",
+      "reads Git's would-be-committed file list; output depends only on those paths, " +
+      "so content edits, new commits and elapsed time leave the inventory unchanged.",
   },
 ];
 

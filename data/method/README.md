@@ -9,3 +9,14 @@ runtime process may read or write it. The mutable candidate lifecycle lives at
 deployed runtime binds the imported revision to this evidence with a canonical
 `METHOD_CANDIDATE_AUTHORITY_ADOPTION` receipt in the existing owner outcome
 history.
+
+## The live method store is the field manual
+
+Learned routes now live in the field manual (`cp_field_manual/live`), read and
+written by every role through `readFieldManual` / `writeFieldManual` in
+`lib/control-plane/field-manual.ts`. `knowledge.json` is the frozen input the
+seed (`scripts/field-manual-seed.mts`) folds in through
+`lib/method/manual-bridge.ts`; nothing has to be admitted back into it. Dispatch
+reads which routes are learned from the manual (`methodMaturityFromManual`), so a
+route an agent writes as a `ROUTE` entry graduates on the next dispatch with no
+`method:learn-*` step.

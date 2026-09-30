@@ -300,6 +300,14 @@ export interface AnthropicRateLimits {
   readonly inputTokensPerMinute: number | null;
   readonly outputTokensPerMinute: number | null;
   readonly retryAfterMs: number | null;
+  readonly remaining?: {
+    readonly requests: number | null;
+    readonly inputTokens: number | null;
+    readonly outputTokens: number | null;
+    readonly requestsResetAt: number | null;
+    readonly inputResetAt: number | null;
+    readonly outputResetAt: number | null;
+  };
 }
 
 export function anthropicRateLimits(headers: Headers): AnthropicRateLimits {
@@ -312,11 +320,23 @@ export function anthropicRateLimits(headers: Headers): AnthropicRateLimits {
   const retry = headers.get("retry-after");
   const seconds = number("retry-after");
   const retryDate = retry === null ? NaN : Date.parse(retry);
+  const reset = (name: string): number | null => {
+    const value = Date.parse(headers.get(name) ?? "");
+    return Number.isFinite(value) ? value : null;
+  };
   return {
     requestsPerMinute: number("anthropic-ratelimit-requests-limit"),
     inputTokensPerMinute: number("anthropic-ratelimit-input-tokens-limit"),
     outputTokensPerMinute: number("anthropic-ratelimit-output-tokens-limit"),
     retryAfterMs: seconds !== null ? seconds * 1000 : Number.isFinite(retryDate) ? Math.max(0, retryDate - Date.now()) : null,
+    remaining: {
+      requests: number("anthropic-ratelimit-requests-remaining"),
+      inputTokens: number("anthropic-ratelimit-input-tokens-remaining"),
+      outputTokens: number("anthropic-ratelimit-output-tokens-remaining"),
+      requestsResetAt: reset("anthropic-ratelimit-requests-reset"),
+      inputResetAt: reset("anthropic-ratelimit-input-tokens-reset"),
+      outputResetAt: reset("anthropic-ratelimit-output-tokens-reset"),
+    },
   };
 }
 

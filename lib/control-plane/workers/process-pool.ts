@@ -38,7 +38,9 @@ export async function runLeaseWorkerProcesses(input: {
       stdio: ["ignore", "inherit", "inherit", "ipc"], serialization: "advanced",
     });
     const reservations = new Map<string, Awaited<ReturnType<NonNullable<ScoutExecutorDeps["reserveEscalation"]>>>>();
-    child.once("spawn", () => { input.onStarted?.(child.pid!); child.send(input.config); });
+    const offset = (launched - 1) % input.config.taskIds.length;
+    child.once("spawn", () => { input.onStarted?.(child.pid!); child.send({ ...input.config,
+      taskIds: [...input.config.taskIds.slice(offset), ...input.config.taskIds.slice(0, offset)] }); });
     child.on("error", reject);
     child.on("message", async (raw: unknown) => {
       const message = raw as { kind: string; id: string; taskId: string; jurisdiction: AutonomousJurisdiction; body: unknown };

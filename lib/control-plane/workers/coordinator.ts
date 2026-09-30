@@ -45,10 +45,8 @@ export interface AutonomousDecision {
 
 /** A filtered or paused cycle cannot start either autonomous entry point. */
 export function autonomousCycleAllowed(input: { readonly dry: boolean; readonly canary: boolean;
-  readonly only: string | null; readonly ids: ReadonlySet<string> | null; readonly runnerPaused: boolean;
-  readonly scheduledBlackout: boolean; readonly hasLifetimeHunt: boolean }): boolean {
-  return !input.dry && !input.canary && input.only === null && input.ids === null && !input.runnerPaused &&
-    true;
+  readonly only: string | null; readonly ids: ReadonlySet<string> | null; readonly runnerPaused: boolean }): boolean {
+  return !input.dry && !input.canary && input.only === null && input.ids === null && !input.runnerPaused;
 }
 
 /** Exact immutable instruction lineage for an early technical slice. An old
@@ -565,6 +563,8 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   }));
   const failed=lanes.find((lane): lane is PromiseRejectedResult => lane.status==="rejected");
   if(failed) throw failed.reason;
+  const order = new Map(ids.map((id, index) => [id, index]));
+  decisions.sort((a, b) => order.get(a.workItemId)! - order.get(b.workItemId)!);
   for (const id of ids.slice(cursor)) deferred.push(admitted>=maximum
     ? {workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached before this registered work item; work remains owed`}
     : {workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"insufficient cycle wall time remained before this registered work item; work remains owed"});

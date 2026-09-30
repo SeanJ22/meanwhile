@@ -146,7 +146,7 @@ test("a parse with no rule: cheapest tier is asked, escalates once when no quote
     if (request.model === MODEL_FOR_CLASS.haiku) return respond(request.model, [good("Regular Meeting", "Tuesday 10/14 at six", [])].map((r) => ({ fields: r.fields.map((f) => ({ ...f, quote: `invented ${f.quote}` })) })));
     return respond(request.model, GOOD_PROPOSAL);
   };
-  const parser = modelParseReasoner(repos, transport, () => NOW);
+  const parser = modelParseReasoner(repos, transport, () => NOW, { ceilingUsd: 100 });
   const first = await parser.parse(input(), input().worker);
   assert.deepEqual(seen, [MODEL_FOR_CLASS.haiku, MODEL_FOR_CLASS.sonnet], "haiku first, one step up when nothing confirmed");
   assert.equal(first.result.verdict, "EXTRACTED");
@@ -164,7 +164,7 @@ test("a parse with no rule: cheapest tier is asked, escalates once when no quote
 
   // ...so the next agent to parse this record type routes differently.
   seen.length = 0;
-  const second = await modelParseReasoner(repos, transport, () => NOW).parse({ ...input(), attemptId: "parse-2" }, input().worker);
+  const second = await modelParseReasoner(repos, transport, () => NOW, { ceilingUsd: 100 }).parse({ ...input(), attemptId: "parse-2" }, input().worker);
   assert.deepEqual(seen, [MODEL_FOR_CLASS.sonnet], "the second parse skips the tier that failed here before");
   assert.equal(second.result.verdict, "EXTRACTED");
   assert.match(second.review.route.reason, /haiku failed to confirm quotes on www\.exampletonaz\.gov/);
@@ -175,7 +175,7 @@ test("a parse with no rule: cheapest tier is asked, escalates once when no quote
 test("no proposed field confirming is a failed extraction, never an empty document", async () => {
   const repos = createMemoryRepositories();
   const transport: ModelTransport = async (request) => respond(request.model, []);
-  const out = await modelParseReasoner(repos, transport, () => NOW).parse(input(), input().worker);
+  const out = await modelParseReasoner(repos, transport, () => NOW, { ceilingUsd: 100 }).parse(input(), input().worker);
   assert.equal(out.result.verdict, "FAILED");
   assert.equal(out.result.warnings[0]!.code, "ZERO_ROW_EXTRACTION");
   assert.equal(out.result.warnings[0]!.severity, "BLOCKING");
@@ -185,12 +185,12 @@ test("no proposed field confirming is a failed extraction, never an empty docume
 test("a response without the record_extraction call is refused, not read as prose", async () => {
   const repos = createMemoryRepositories();
   const transport: ModelTransport = async (request) => ({ model: request.model, stop_reason: "end_turn", content: [{ type: "text", text: JSON.stringify({ records: GOOD_PROPOSAL }) }], usage: { input_tokens: 10, output_tokens: 10 } });
-  const out = await modelParseReasoner(repos, transport, () => NOW).parse(input(), input().worker);
+  const out = await modelParseReasoner(repos, transport, () => NOW, { ceilingUsd: 100 }).parse(input(), input().worker);
   assert.equal(out.result.verdict, "FAILED");
   assert.match(out.review.validationError ?? "", /PARSE_MODEL_NO_TOOL_CALL/);
 });
 
 test("the lane refuses a contract that already has a parsing rule", async () => {
   const withRule = { ...contract, extraction: { format: "JSON_RECORDS", rowsPointer: "/rows", fields: {} } } as GeneralizedCivicExtractionContract;
-  await assert.rejects(modelParseReasoner(createMemoryRepositories(), async (r) => respond(r.model, []), () => NOW).parse({ ...input(), contract: withRule }, input().worker), /PARSE_MODEL_LANE_NOT_APPLICABLE/);
+  await assert.rejects(modelParseReasoner(createMemoryRepositories(), async (r) => respond(r.model, []), () => NOW, { ceilingUsd: 100 }).parse({ ...input(), contract: withRule }, input().worker), /PARSE_MODEL_LANE_NOT_APPLICABLE/);
 });

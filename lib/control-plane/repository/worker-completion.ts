@@ -54,6 +54,7 @@ async function applyWorkerCompletion(repos: ControlPlaneRepositories, record: Wo
     attemptId: record.attemptId, workItemId: record.workItemId, routeTaskId: record.routeTaskId,
     routeId: task.value.routeId, source: task.value.target, jurisdiction: task.value.workerTask!.contract.subjectId,
     project: record.grant.project, role: record.worker.role, cost: record.cost, recordedAt: now,
+    model: record.executionMode === "MODEL_ASSISTED" ? (record.modelParse?.model ?? record.modelReview?.model ?? record.worker.version) : null,
   }, now);
   // An explicitly requested replay measures reproducibility. Its Attempt,
   // result and accounting survive, but it cannot rewind the civic workflow.

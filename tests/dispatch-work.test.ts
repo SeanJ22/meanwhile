@@ -532,7 +532,6 @@ test("creating work opens no paid lane: the owner's PAUSE stands, nothing but ob
 
   /* The lane stays closed on the same facts: the activation gate is a code constant and the PAUSE stands. */
   const closure = modelLaneClosure({
-    scheduledBlackout: false,
     dry: false,
     noModel: false,
     credentialConfigured: true,

@@ -267,7 +267,7 @@ export async function reauthorizeWorkerTask(runtime: FleetRuntime, task: RouteTa
 
 export async function drainWorkerQueue(
   runtime: FleetRuntime,
-  maximum = 3,
+  maximum = Infinity,
   accepts: (task: RouteTask) => boolean = () => true,
   admitDispatch: (task: RouteTask) => { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string } = () => ({ admit: true }),
 ): Promise<readonly DispatchResult[]> {

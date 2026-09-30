@@ -13,7 +13,7 @@ import { fileURLToPath } from "node:url";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import { deliveryPathOpen, modelLaneClosure, type DeliveryGate, type ModelLaneFacts } from "../lib/control-plane/scheduler/model-lane.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
-import { ModelTransportError, type ModelRequest } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { anthropicRateLimits, ModelTransportError, type ModelRequest } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { MODELS } from "../lib/models.ts";
 
 const OPEN_GATE: DeliveryGate = { promotionEnabled: true, openRecordClasses: ["candidate-enrichment"] };
@@ -62,9 +62,42 @@ test("provider errors are returned once; subsequent admission honors Retry-After
 });
 const CLOSED_GATE: DeliveryGate = { promotionEnabled: false, openRecordClasses: [] };
 
+test("provider errors without Retry-After back off once per failure and reset after recovery", async () => {
+  let now = 0, calls = 0;
+  const sleeps: number[] = [];
+  const queue = new ModelProviderQueue({ now: () => now, requestsPerMinute: 100,
+    sleep: async ms => { sleeps.push(ms); now += ms; } });
+  const send = queue.transport(async request => {
+    calls++;
+    if (calls <= 2 || calls === 4) throw new ModelTransportError("provider unavailable", 503);
+    return { model: request.model, content: [], stop_reason: "end_turn", usage: { input_tokens: 1, cache_creation_input_tokens: 0, output_tokens: 1 } };
+  });
+  const request: ModelRequest = { model: MODELS.haiku.model, max_tokens: 1, system: [], tools: [], messages: [] };
+  await assert.rejects(send(request), /provider unavailable/);
+  await assert.rejects(send(request), /provider unavailable/);
+  await send(request);
+  await assert.rejects(send(request), /provider unavailable/);
+  await send(request);
+  assert.equal(calls, 5);
+  assert.deepEqual(sleeps, [2000, 4000, 2000]);
+});
+
+test("a consumed provider bucket waits for the returned reset, including usage from other sessions", async () => {
+  let now = 0;
+  const sleeps: number[] = [];
+  const queue = new ModelProviderQueue({ now: () => now, sleep: async ms => { sleeps.push(ms); now += ms; } });
+  queue.observe(MODELS.haiku.model, anthropicRateLimits(new Headers({
+    "anthropic-ratelimit-requests-limit": "100", "anthropic-ratelimit-requests-remaining": "0",
+    "anthropic-ratelimit-requests-reset": new Date(10000).toISOString(),
+  })));
+  const send = queue.transport(async request => ({ model: request.model, content: [], stop_reason: "end_turn",
+    usage: { input_tokens: 1, cache_creation_input_tokens: 0, output_tokens: 1 } }));
+  await send({ model: MODELS.haiku.model, max_tokens: 1, system: [], tools: [], messages: [] });
+  assert.deepEqual(sleeps, [10000]);
+});
+
 function facts(over: Partial<ModelLaneFacts> = {}): ModelLaneFacts {
   return {
-    scheduledBlackout: false,
     dry: false,
     noModel: false,
     credentialConfigured: true,
@@ -102,15 +135,15 @@ test("the real activation gate decides: the lane is open exactly when a delivery
   assert.equal(modelLaneClosure(facts({ activation: gate })) === null, deliveryPathOpen(gate));
 });
 
-test("reasons are ordered: blackout, dry, no-model, owner pause, runner pause, unreadable control, credential, delivery", () => {
+test("reasons are ordered: dry, no-model, owner pause, runner pause, unreadable control, credential, delivery", () => {
   const all = facts({
-    scheduledBlackout: true, dry: true, noModel: true, credentialConfigured: false, activation: CLOSED_GATE,
+    dry: true, noModel: true, credentialConfigured: false, activation: CLOSED_GATE,
     paused: true, pauseIntentId: "ri-1", runnerPaused: true, runnerPauseIntentId: "PAUSE_RUNNER:x", unreadableControls: ["the log could not be read"],
   });
   assert.equal(modelLaneClosure(all)?.code, "LANE_DISABLED");
-  assert.match(modelLaneClosure({ ...all, scheduledBlackout: false })!.reason, /^--dry/);
-  assert.match(modelLaneClosure({ ...all, scheduledBlackout: false, dry: false })!.reason, /^--no-model/);
-  const invocation = { scheduledBlackout: false, dry: false, noModel: false };
+  assert.match(modelLaneClosure(all)!.reason, /^--dry/);
+  assert.match(modelLaneClosure({ ...all, dry: false })!.reason, /^--no-model/);
+  const invocation = { dry: false, noModel: false };
   assert.deepEqual(modelLaneClosure({ ...all, ...invocation }), { code: "PAUSED", reason: "paused by owner intent ri-1" });
   assert.match(modelLaneClosure({ ...all, ...invocation, paused: false })!.reason, /^the owner paused the runner \(intent PAUSE_RUNNER:x\)/);
   assert.match(modelLaneClosure({ ...all, ...invocation, paused: false, runnerPaused: false })!.reason, /^held closed as if paused.*the log could not be read/);

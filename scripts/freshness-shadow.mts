@@ -3,6 +3,8 @@ import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts
 import { createHash, randomUUID } from "node:crypto";
 import { runLeaseWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
+import { planHeldWorkerFleet } from "../lib/control-plane/workers/standing.ts";
+import { costEntryWithModel } from "../lib/control-plane/cost.ts";
 import { persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
 import { browseWithPlaywright } from "./scout-browse.mts";
 import { autonomousCycleAllowed, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
@@ -520,7 +522,6 @@ if (canary && (IDS === null || IDS.size !== 1)) {
  * dying mid-write. Measured from process start because that is what the
  * supervisor's ceiling is measured from.
  */
-const scheduledBlackout = false;
 observeControlPlaneTimeouts((timeout) => console.error(`freshness:shadow · ${timeout.message}`));
 
 /* ------------------------------------------------------------- provider --- */
@@ -842,12 +843,12 @@ if (canonicalCandidateCounts === null) {
  * Each open occurrence closes unresolved, never with a disposition, and a
  * retired row's debt is tombstoned as retired by `persistDebts`. The judgement
  * is always made against the FULL registry, never a filtered one. Only a full
- * standing cycle writes; a --dry, --canary, --only/--ids or blackout cycle
+ * standing cycle writes; a --dry, --canary, --only/--ids cycle
  * prints the plan and writes nothing. A failure is named in the digest and the
  * run record, and the cycle continues: the rows stay as they were and are
  * planned again next cycle.
  */
-const retirementWrites = !dry && !canary && !scheduledBlackout;
+const retirementWrites = !dry && !canary;
 const retirementOutside = sync.outside !== null && ONLY === null && IDS === null ? sync.outside : null;
 const residueItems = retirementOutside === null ? [] : planRetiredResidue(retirementOutside);
 const corpusUnits = allUnits.map((u) => ({ providerId: u.providerId, obligationId: u.obligation.id }));
@@ -1174,9 +1175,6 @@ for (const pending of intents.pendingDispatch) {
     registered: allUnits.length,
   });
   dispatchDetails.push({ intent: pending, detail });
-  if (scheduledBlackout) {
-    console.log("  owner dispatch: SCHEDULED BLACKOUT; intent remains pending for the next eligible cycle.");
-  }
   console.log(
     `  owner dispatch: ${detail}` +
       (matched.length > 0 ? ` ${dueAmongMatched} of the ${matched.length} are due this cycle; the rest keep their next-due.` : ""),
@@ -1321,7 +1319,7 @@ const compareScoutRows = (left: ScheduledObligation, right: ScheduledObligation)
   return compareReaderImpact(orderable(left), orderable(right), orderingInputs);
 };
 /* Plain-code intake: an unreadable intent log does not stop it (the paid lane is what fails closed, above). */
-if (!dry && !canary && !scheduledBlackout && !intents.runnerPause.paused) {
+if (!dry && !canary && !intents.runnerPause.paused) {
   try {
     const retained = await retainRecentRoutineMeetingEvidence({ repos,
       store: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
@@ -1335,7 +1333,7 @@ const allPlannedWork = canary ? [] : (await repos.workItems.list()).filter(item 
   item.value.autonomousPlan && !isRetiredRoutineMeetingAcquisition(item.value.autonomousPlan.contract)
 );
 for (const item of allPlannedWork) if (lifetimeHuntSubjects.has(item.value.subject)) lifetimeHuntWorkIds.add(item.id);
-const plannedWork = scheduledBlackout ? allPlannedWork.filter(item => lifetimeHuntWork(item.id)) : allPlannedWork;
+const plannedWork = allPlannedWork;
 // A held Parser/Validator chain has no autonomous acquisition plan. Its next
 // stage is enqueued by advanceHeldWorkerFleet, so completed producer tasks also
 // reserve downstream time until that pass can inspect their retained evidence.
@@ -1345,7 +1343,7 @@ const [heldWorkIds, settledTaskIds, neverClaimedTaskIds] = await (async () => {
     lifetimeHuntWorkIds.add(row.id);
     lifetimeHuntWorkIds.add(row.value.workItemId);
   }
-  const eligible = scheduledBlackout ? listing.filter(row => lifetimeHuntWork(row.id) || lifetimeHuntWork(row.value.workItemId)) : listing;
+  const eligible = listing;
   return [
     new Set(eligible
       .filter(row => row.value.workerTask?.contract.schemaVersion === 1 &&
@@ -1389,7 +1387,6 @@ const openOccurrenceInStep = async (
 ): Promise<boolean | { readonly settled: SettledOccurrence }> => {
   const id = row.obligation.id;
   if (occurrenceByObligation.has(id)) return true;
-  if (scheduledBlackout && !lifetimeHuntWork(id)) return false;
   // The dispatcher hands a FreshnessObligation; opening needs the fuller
   // StandingObligation (occurrence count, open-occurrence id), looked up by id.
   const obligation = standingById.get(id);
@@ -1507,7 +1504,6 @@ const unreadableControls: string[] = [
    PAUSE_RUNNER Admin's runner card issues — and so does any control above that
    could not be read (2026-09-25). */
 const laneClosure = modelLaneClosure({
-  scheduledBlackout: scheduledBlackout && !hasLifetimeHunt,
   dry,
   noModel,
   credentialConfigured,
@@ -1677,7 +1673,7 @@ let expansionReading: ExpansionCycleReading | null = expansionBudget === null ||
  * budgets as every other row. Only a full standing cycle writes.
  */
 /* Obligation rows only, no spend: an unreadable intent log does not stop them; what they create waits behind the closed lane. */
-const dispatchWorkWrites = !dry && !canary && ONLY === null && IDS === null && (!scheduledBlackout || hasLifetimeHunt) && !intents.runnerPause.paused;
+const dispatchWorkWrites = !dry && !canary && ONLY === null && IDS === null && !intents.runnerPause.paused;
 const dispatchWorkPlanOnlyWhy = dispatchWorkWrites
   ? null
   : dry
@@ -1686,12 +1682,8 @@ const dispatchWorkPlanOnlyWhy = dispatchWorkWrites
       ? "a canary cycle writes only its one obligation"
       : ONLY !== null || IDS !== null
         ? "a filtered diagnostic cycle writes nothing it did not look at"
-        : scheduledBlackout
-          ? "the scheduled blackout"
-          : "the owner has paused the runner";
+        : "the owner has paused the runner";
 const dispatchTargets: DispatchWorkTarget[] = [];
-// The original saved hunt may continue through a scheduled blackout. That
-// exception does not reopen other dispatch intents or expansion scopes.
 const dispatchScopes = expansionPlan?.scopes ?? [];
 {
   const seen = new Set<string>();
@@ -1700,10 +1692,8 @@ const dispatchScopes = expansionPlan?.scopes ?? [];
     seen.add(t.key);
     dispatchTargets.push(t);
   };
-  if (!scheduledBlackout) {
-    for (const { intent } of dispatchDetails) add(dispatchWorkTarget({ intentId: intent.intentId, note: intent.note ?? "", requestedAt: intent.requestedAt }));
-    for (const t of carriedDispatchTargets(priorResearchState?.dispatchWork ?? null)) add(t);
-  }
+  for (const { intent } of dispatchDetails) add(dispatchWorkTarget({ intentId: intent.intentId, note: intent.note ?? "", requestedAt: intent.requestedAt }));
+  for (const t of carriedDispatchTargets(priorResearchState?.dispatchWork ?? null)) add(t);
   for (const scope of dispatchScopes) add(scopeWorkTarget(scope));
 }
 let dispatchWork: DispatchWorkReading | null = null;
@@ -1792,7 +1782,6 @@ for (let i = 0; i < ownerDispatches.length; i += 1) {
 }
 /* Each DISPATCH is honored after the step, so its HONORED record says what was matched AND what was created. */
 for (const { intent, detail } of dispatchDetails) {
-  if (scheduledBlackout) continue;
   const work = dispatchWork?.targets.find((t) => t.key === `dispatch:${intent.intentId}`) ?? null;
   if (await honorIntent(intent, work === null ? detail : `${detail} ${dispatchWorkSentence(work)}`)) honoredDispatch.push(intent.intentId);
 }
@@ -2363,7 +2352,7 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
         /* Charged to the budgeted work it was held for, so the Send's and area's history carries it (MW-021); otherwise as before. */
         jurisdiction: prewarmHold === null ? null : (jobSubject.get(prewarmHold.obligationId) ?? null),
         ...(prewarmHold === null ? {} : { obligationId: prewarmHold.obligationId }),
-        project: "freshness", role: "SCOUT", cost, recordedAt: at,
+        project: "freshness", role: "SCOUT", model: response.model, cost, recordedAt: at,
       },
       at,
     ).catch(() => undefined);
@@ -2524,7 +2513,7 @@ let settledOccurrences: readonly SettledOccurrence[] = [];
  */
 let abandonedOccurrences: readonly AbandonedOccurrence[] = [];
 let abandonedClosed: Awaited<ReturnType<typeof closeAbandonedOccurrences>> | null = null;
-if (!canary && (!scheduledBlackout || hasLifetimeHunt)) {
+if (!canary) {
   try {
     const scan = await scanOccurrences(repos, {
       obligations: sync.all,
@@ -2583,7 +2572,7 @@ async function projectRetainedFacts(phase: string): Promise<void> {
     runtimeConditions.push(phase + ": " + reason + "; retained records remain owed, existing reader data is preserved");
   }
 }
-if (!dry && !canary && (!scheduledBlackout || hasLifetimeHunt)) await projectRetainedFacts("retained-results:fact-projection");
+if (!dry && !canary) await projectRetainedFacts("retained-results:fact-projection");
 
 const cycle = await runCycle({
   repos,
@@ -2824,12 +2813,14 @@ async function makeAutonomousFleet() {
     auditCeilingUsd: effectiveCeilingUsd,
     lifetimeHuntSubject: subject => lifetimeHuntSubjects.has(subject) });
 }
-async function runAutonomousProcesses() {
+async function runAutonomousWave() {
   const fleet = await makeAutonomousFleet();
+  const held = await planHeldWorkerFleet(ROOT, fleet, true);
   const planned = await runAutonomousCoordinator(fleet, { planOnly: true,
     prioritizedInstructions: (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED")
       .map(scope => ({ receiptId: scope.decision.receiptId, priority: scope.decision.priority })) });
-  const taskIds = planned.decisions.filter(row => row.task && ["SCOUT", "WORKER"].includes(row.action)).map(row => row.task!.id);
+  const taskIds = [...new Set([...held.map(task => task.id),
+    ...planned.decisions.filter(row => row.task && ["SCOUT", "WORKER"].includes(row.action)).map(row => row.task!.id)])];
   const availableUsd = Math.max(0, effectiveCeilingUsd - (spendWindow.windowUsd ?? effectiveCeilingUsd));
   const dispatches = await runLeaseWorkerProcesses({
     config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: modelLaneEnabled,
@@ -2870,8 +2861,19 @@ async function runAutonomousProcesses() {
   const scouts = dispatches.filter(row => row.attemptId && row.worker?.role === "SCOUT").length;
   return { ...planned, dispatches, scoutsAdmitted: scouts, scoutsLimitedAdmitted: scouts };
 }
+async function runAutonomousProcesses() {
+  let report = await runAutonomousWave();
+  while (report.dispatches.some(row => row.outcome === "WORKED")) {
+    const next = await runAutonomousWave();
+    report = { ...next, dispatches: [...report.dispatches, ...next.dispatches],
+      scoutsAdmitted: report.scoutsAdmitted + next.scoutsAdmitted,
+      scoutsLimitedAdmitted: report.scoutsLimitedAdmitted + next.scoutsLimitedAdmitted };
+    if (!next.dispatches.some(row => row.outcome === "WORKED")) break;
+  }
+  return report;
+}
 const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
-  runnerPaused: intents.runnerPause.paused, scheduledBlackout, hasLifetimeHunt });
+  runnerPaused: intents.runnerPause.paused });
 const earlyOriginal = autonomousCycleOpen ? runAutonomousProcesses().catch(error => {
   runtimeConditions.push(`autonomous worker processes failed: ${error instanceof Error ? error.message : String(error)}; work remains owed`);
   return null;
@@ -2916,8 +2918,8 @@ const MEETINGS_DISCOVERY_MAX_WALKS = 12;
  */
 if (!MEETINGS_DISCOVERY_ENABLED) {
   meetingsDiscoveryState = "OFF: WTP_MEETINGS_DISCOVERY=off, the kill switch";
-} else if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
-  meetingsDiscoveryState = "not run: a dry, canary, filtered or blackout cycle walks nothing";
+} else if (dry || canary || ONLY !== null || IDS !== null) {
+  meetingsDiscoveryState = "not run: a dry, canary, filtered cycle walks nothing";
 } else if ("unreadable" in gapLedgerRead) {
   meetingsDiscoveryState = `not run: ${gapLedgerRead.unreadable}`;
 } else {
@@ -2978,7 +2980,8 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
         searchScopeFor: (subjectId) => huntSearchScope({ selected: config?.expansionScopes ?? [], plan: expansionPlan, subjectId }),
         recordCost: async (entry) => {
           costSeq += 1;
-          await repos.costs.append(entry.workItemId, `ce-ds-${fingerprint([entry.attemptId, entry.source, entry.recordedAt, costSeq])}`, entry, nowIso());
+          await repos.costs.append(entry.workItemId, `ce-ds-${fingerprint([entry.attemptId, entry.source, entry.recordedAt, costSeq])}`,
+            costEntryWithModel(entry, null), nowIso());
         },
       },
     });
@@ -3020,8 +3023,8 @@ finishPhase("meetings-discovery");
  * own clock, with no owner step. Only a full standing cycle with the budget
  * left runs it.
  */
-if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
-  campaignSitesState = "not run: a dry, canary, filtered or blackout cycle reads nothing";
+if (dry || canary || ONLY !== null || IDS !== null) {
+  campaignSitesState = "not run: a dry, canary, filtered cycle reads nothing";
 } else if (intents.runnerPause.paused) {
   campaignSitesState = "not run: the owner has paused the runner";
 } else {

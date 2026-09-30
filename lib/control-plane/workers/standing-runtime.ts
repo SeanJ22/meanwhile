@@ -129,6 +129,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
           return { ...evidenceProjection(evidence), provenance: {
             artifactId: id, canonicalUrl: artifact.canonicalUrl, retrievedAt: artifact.retrievedAt,
             permission: artifact.permission, methodRouteId: artifact.methodRouteId, httpStatus: artifact.httpStatus,
+            retrievalUrl: artifact.retrievalUrl, contentType: artifact.contentType,
           } };
         },
         readManualDocument: async path => {

@@ -17,7 +17,7 @@ import { createRouteTask, denyByPolicy, type RouteTask } from "../lib/control-pl
 import { createWorkItem, type WorkItem } from "../lib/control-plane/work-item.ts";
 import { dispatchWorkerTask, drainWorkerQueue, enqueueWorkerTask, FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
 import { workerTaskAdmission } from "../lib/control-plane/workers/scheduling.ts";
-import { advanceHeldWorkerFleet, heldEventContract, HELD_AUDIT_CONTEXT_MAX_BYTES, standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
+import { advanceHeldWorkerFleet, planHeldWorkerFleet, heldEventContract, HELD_AUDIT_CONTEXT_MAX_BYTES, standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
 import {
   installOperationalReferenceBundle,
   operationalReferenceBundle,
@@ -35,6 +35,18 @@ const API = "https://avondaleaz.api.civicclerk.com/v1/Events";
 const WP = "https://avondaleaz.gov/wp-json/wp/v2/pages?search=Meeting%20Agendas%20and%20Minutes";
 const PORTAL = "https://avondaleaz.portal.civicclerk.com/";
 const METHOD = JSON.parse(readFileSync(path.join(ROOT, "data/method/knowledge.json"), "utf8"));
+
+test("held planning enqueues every captured document without running a computation", async t => {
+  const h = await harness(t);
+  for (let id = 1; id <= 20; id++) await h.hold(feed(id));
+  const before = (await h.repos.attempts.list()).length;
+  const tasks = await planHeldWorkerFleet(ROOT, h.runtime, true);
+  assert.equal(tasks.length, 20);
+  assert.ok(tasks.every(task => task.workerTask?.role === "PARSER" && task.state === "PENDING"));
+  assert.equal((await h.repos.attempts.list()).length, before);
+  assert.equal((await h.repos.workerResults.readAll()).length, 0);
+  assert.equal((await planHeldWorkerFleet(ROOT, h.runtime, true)).length, 20);
+});
 
 function feed(id: number, wrongDate = false) {
   return JSON.stringify({ "@odata.context": "https://avondaleaz.api.civicclerk.com/v1/$metadata#Events", value: [{

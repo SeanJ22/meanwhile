@@ -44,7 +44,6 @@ export interface DeliveryGate {
 }
 
 export interface ModelLaneFacts {
-  readonly scheduledBlackout: boolean;
   readonly dry: boolean;
   readonly noModel: boolean;
   readonly credentialConfigured: boolean;
@@ -65,7 +64,7 @@ export interface ModelLaneFacts {
 }
 
 export interface ModelLaneClosure {
-  readonly code: "SCHEDULED_BLACKOUT" | "LANE_DISABLED" | "PAUSED";
+  readonly code: "LANE_DISABLED" | "PAUSED";
   readonly reason: string;
 }
 
@@ -137,7 +136,7 @@ interface ProviderTurn {
  * Waiting for capacity never expires a scout or retries a failed request.
  */
 export class ModelProviderQueue {
-  private readonly tiers = new Map<string, { limits: AnthropicRateLimits | null; turns: ProviderTurn[]; active: number; tail: Promise<void>; retryAt: number }>();
+  private readonly tiers = new Map<string, { limits: AnthropicRateLimits | null; turns: ProviderTurn[]; active: number; tail: Promise<void>; retryAt: number; failures: number }>();
   private readonly options: {
     now?: () => number;
     sleep?: (ms: number) => Promise<void>;
@@ -148,7 +147,7 @@ export class ModelProviderQueue {
   private tier(model: string) {
     let tier = this.tiers.get(model);
     if (!tier) {
-      tier = { limits: null, turns: [], active: 0, tail: Promise.resolve(), retryAt: 0 };
+      tier = { limits: null, turns: [], active: 0, tail: Promise.resolve(), retryAt: 0, failures: 0 };
       this.tiers.set(model, tier);
     }
     return tier;
@@ -162,6 +161,14 @@ export class ModelProviderQueue {
       outputTokensPerMinute: limits.outputTokensPerMinute ?? prior?.outputTokensPerMinute ?? null,
       retryAfterMs: limits.retryAfterMs };
     if (limits.retryAfterMs !== null) tier.retryAt = Math.max(tier.retryAt, this.now() + limits.retryAfterMs);
+    const remaining = limits.remaining;
+    if (remaining) {
+      const now = this.now();
+      for (const [left, reset] of [[remaining.requests, remaining.requestsResetAt],
+        [remaining.inputTokens, remaining.inputResetAt], [remaining.outputTokens, remaining.outputResetAt]]) {
+        if (left === 0) tier.retryAt = Math.max(tier.retryAt, reset ?? now + 60_000);
+      }
+    }
   }
 
   limits(model: string): AnthropicRateLimits | null { return this.tier(model).limits; }
@@ -202,12 +209,17 @@ export class ModelProviderQueue {
       await admission;
       try {
         const response = await transport(request);
+        tier.failures = 0;
         const usage = response.usage;
         if (usage.input_tokens !== undefined && usage.cache_creation_input_tokens !== undefined) turn.input = usage.input_tokens + usage.cache_creation_input_tokens;
         if (usage.output_tokens !== undefined) turn.output = usage.output_tokens;
         return response;
       } catch (error) {
-        if (error instanceof ModelTransportError && error.retryAfterMs !== null) tier.retryAt = Math.max(tier.retryAt, this.now() + error.retryAfterMs);
+        if (error instanceof ModelTransportError && (error.status === 429 || (error.status ?? 0) >= 500 || error.status === null)) {
+          tier.failures++;
+          const delay = error.retryAfterMs ?? Math.min(6 * 3_600_000, 1000 * 2 ** Math.min(tier.failures, 15));
+          tier.retryAt = Math.max(tier.retryAt, this.now() + delay);
+        }
         throw error;
       } finally { tier.active--; }
     };

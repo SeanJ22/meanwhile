@@ -78,7 +78,7 @@ import {
   type BudgetLedger,
 } from "../budget.ts";
 import type { CompletionSnapshot } from "../completion.ts";
-import type { CostEntry } from "../cost.ts";
+import { costEntryWithModel, type CostEntry } from "../cost.ts";
 import { fingerprint } from "../ids.ts";
 import {
   disposeRoute,
@@ -1037,7 +1037,7 @@ export async function recordCost(
   now: string,
 ): Promise<AppendOutcome<CostEntry>> {
   const recordId = `ce-${fingerprint([entry.attemptId, entry.routeTaskId, entry.recordedAt])}`;
-  return repos.costs.append(entry.workItemId, recordId, entry, now);
+  return repos.costs.append(entry.workItemId, recordId, costEntryWithModel(entry, entry.model ?? null), now);
 }
 
 /** ----------------------------------------------------------- completion */

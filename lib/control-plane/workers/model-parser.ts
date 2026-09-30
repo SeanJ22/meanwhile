@@ -50,7 +50,6 @@ import { assertStepMayEscalate, assertStepMayInvokeModel, MODEL_FOR_CLASS, type 
 import { ceilingPermits, RESEARCH_BOUNDS, researchSpendInWindow } from "../scheduler/research-policy.ts";
 import type { ModelRequest, ModelResponse, ModelTransport } from "../scheduler/scout-executor.ts";
 import { SendBudgetRefusal } from "../expansion/spend-holds.ts";
-import { withinBound } from "./model-audit.ts";
 import { confirmQuotedRecords, MODEL_PARSER_IMPLEMENTATION, type ProposedRecord, type Rejection } from "./quoted-proof.ts";
 import type {
   GeneralizedCivicExtractionContract,
@@ -62,7 +61,6 @@ import type {
 
 export const MODEL_PARSER_VERSION = "1.0.0";
 export const PARSE_STEP = "extraction";
-export const PARSE_TIMEOUT_MS = 90_000;
 export const PARSE_RESPONSE_MAX_TOKENS = 8_192;
 /** One model call reads at most this many characters of the document. */
 export const PARSE_WINDOW_CHARS = 24_000;
@@ -272,19 +270,16 @@ export function modelParseReasoner(
   transport: ModelTransport,
   now: () => string,
   options: {
-    readonly timeoutMs?: number;
     readonly ceilingUsd?: number;
     readonly transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport;
     readonly lifetimeHuntSubject?: (subjectId: string) => boolean;
   } = {},
 ): { readonly workerProvider: string; readonly workerVersion: string; readonly parse: (input: ParserWorkerInput, worker: WorkerRef) => Promise<ModelParseOutcome> } {
   const initial = assertStepMayInvokeModel(PARSE_STEP);
-  const timeoutMs = options.timeoutMs ?? PARSE_TIMEOUT_MS;
-  if (!Number.isFinite(timeoutMs) || timeoutMs <= 0 || timeoutMs > PARSE_TIMEOUT_MS) throw new Error("PARSE_BOUND_INVALID");
   const ceilingUsd = options.ceilingUsd ?? RESEARCH_BOUNDS.dailyCeilingUsd;
   if (!Number.isFinite(ceilingUsd) || ceilingUsd <= 0) throw new Error("PARSE_CEILING_INVALID");
 
-  return { workerProvider: "anthropic", workerVersion: initial.model, parse: (input) => withinBound(async (signal) => {
+  return { workerProvider: "anthropic", workerVersion: initial.model, parse: async (input) => {
     const started = performance.now();
     const contract = input.contract;
     if (contract.schemaVersion !== 2 || contract.extraction.format !== "UNSUPPORTED") throw new Error("PARSE_MODEL_LANE_NOT_APPLICABLE");
@@ -293,7 +288,6 @@ export function modelParseReasoner(
       const admission = ceilingPermits(spend.windowUsd, ceilingUsd);
       if (!admission.permits) throw new Error(`DENIED_BY_POLICY:PARSE_ROLLING_COST_CEILING; ${admission.why}`);
     }
-    signal.throwIfAborted();
     const host = (() => { try { return new URL(input.evidence.canonicalUrl).host.toLowerCase(); } catch { return input.evidence.canonicalUrl; } })();
     const manual = await readFieldManual(repos, { role: "PARSER", state: contract.jurisdiction.state.toLowerCase(), recordClass: contract.recordClass });
     const route = routeParse(manual.store, { recordClass: contract.recordClass, host });
@@ -330,7 +324,6 @@ export function modelParseReasoner(
         });
         return { response, window: w };
       }));
-      signal.throwIfAborted();
       for (const { response, window: w } of calls) {
         const usage = readMeteredUsage(response.usage);
         metered.push(usage);
@@ -386,5 +379,5 @@ export function modelParseReasoner(
         cacheCreationInputTokens: summed.cacheCreationInputTokens, uncachedInputTokens: summed.uncachedInputTokens },
       usd, metering: meteredCostFields(summed),
     };
-  }, timeoutMs, "PARSE_PROVIDER_FAILURE") };
+  } };
 }

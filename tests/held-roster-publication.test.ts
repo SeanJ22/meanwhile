@@ -86,7 +86,9 @@ test("a complete official roster records a departure; a partial one keeps the pr
   const rows = readHeldRoster(smaller, URL_)!.rows.map((row, i) => ({ recordId: `r${i}`, fields: { ...row } }));
   const complete = workerRosterPublication({ bodyId: BODY, prior: withRoster, now: NOW, reading: { id: "held:b", capture: capture(smaller), linkingPage: null, complete: true, method: "fixture", members: rows } });
   assert.deepEqual(complete.departed, ["Faye Jackson (Council Member)"]);
-  assert.ok(complete.payload.bodyRosters[0].members.some(m => m.name === "Faye Jackson" && m.membershipSource), "kept on the earlier source until removal is published");
+  assert.equal(complete.payload.bodyRosters[0].members.some(m => m.name === "Faye Jackson"), false, "a complete official roster removes who it no longer lists");
+  const faye = first.payload.bodyRosters[0].members.find(m => m.name === "Faye Jackson")!;
+  assert.deepEqual(complete.departures, [{ bodyId: BODY, holderId: faye.id, sourceUrl: URL_ }]);
   const partial = workerRosterPublication({ bodyId: BODY, prior: withRoster, now: NOW, reading: { id: "held:c", capture: capture(smaller), linkingPage: null, complete: false, method: "fixture", members: rows } });
   assert.deepEqual(partial.departed, []);
   assert.ok(partial.payload.bodyRosters[0].members.some(m => m.name === "Faye Jackson" && m.membershipSource), "retained on its earlier source");
@@ -109,4 +111,30 @@ test("a single official's profile page publishes through the same door without a
   assert.ok(published.versionId);
   const after = (await readRegistryRuntimePrior(store, NOW))!;
   assert.deepEqual(after.payload.bodyRosters.find(r => r.bodyId === BODY)?.members.map(m => m.name), ["Ana Rivera"]);
+});
+
+test("a departure publishes through the registry door: the holder's rows leave with removal evidence the validator accepts", async () => {
+  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
+  const store = new MemoryRoutineDataStore();
+  Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
+  const imported = (await readRegistryRuntimePrior(store, NOW))!;
+  const divisions = imported.payload.registry.divisions.filter(row => CENSUS_PLACEHOLDER_LABELS[row.label]).map(row => ({ ...row, label: CENSUS_PLACEHOLDER_LABELS[row.label] }));
+  const corrected = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: "fixture-census-correction", sourceThrough: NOW,
+    sourceReceipt: { contractVersion: 1, reviewedAt: NOW, reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER" as const, retrievedAt: NOW, httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district." })) },
+    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
+  assert.ok((await processRegisteredManualCandidate(store, "registry-runtime-bindings", corrected, NOW, imported.versionId)).promoted);
+  const full = capture(page("Contact the Mayor & Council"));
+  await publishRosterReading({ store, bodyId: BODY, now: NOW, reading: { id: "held:full", capture: full, linkingPage: null, complete: true, method: "fixture",
+    members: readHeldRoster(full.evidence.text, URL_)!.rows.map((row, i) => ({ recordId: `r${i}`, fields: { ...row } })) } });
+  const before = (await readRegistryRuntimePrior(store, NOW))!;
+  const faye = before.payload.bodyRosters.find(r => r.bodyId === BODY)!.members.find(m => m.name === "Faye Jackson")!;
+  assert.ok(before.payload.officialCandidacies.rows.some(row => row.holder.id === faye.id));
+  const smaller = capture(page("Contact the Mayor & Council", member(1, "McCaa II, Clea", "Mayor") + member(2, "Flowers, Carolyn", "Vice Mayor")));
+  const published = await publishRosterReading({ store, bodyId: BODY, now: NOW, reading: { id: "held:smaller", capture: smaller, linkingPage: null, complete: true, method: "fixture",
+    members: readHeldRoster(smaller.evidence.text, URL_)!.rows.map((row, i) => ({ recordId: `r${i}`, fields: { ...row } })) } });
+  assert.deepEqual(published.departed, ["Faye Jackson (Council Member)"]);
+  const after = (await readRegistryRuntimePrior(store, NOW))!;
+  assert.deepEqual(after.payload.bodyRosters.find(r => r.bodyId === BODY)!.members.map(m => m.name).sort(), ["Carolyn Flowers", "Clea McCaa II"]);
+  assert.equal(after.payload.officialCandidacies.rows.some(row => row.holder.id === faye.id), false);
+  assert.equal(after.payload.rosterReaderDispositions.some(row => row.sourceId === faye.id), false);
 });

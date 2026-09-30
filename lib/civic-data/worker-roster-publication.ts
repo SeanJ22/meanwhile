@@ -175,17 +175,19 @@ export function workerRosterPublication(input: {
   for (const recordId of unresolved) rendered.dispositions.push({ sourceId: recordId, canonicalId: null, state: "IDENTITY_UNRESOLVED",
     reason: "The row's seat or name is not yet verified on the saved official page; it stays open as work." });
   const departed: string[] = [];
+  const departures: { bodyId: string; holderId: string; sourceUrl: string }[] = [];
   if (previous) {
     for (const member of previous.members.filter(old => !rendered.roster.members.some(current => current.id === old.id))) {
-      // A complete official roster that no longer lists someone records the departure. The
-      // registry door needs removal evidence to drop a row, so the member stays on their
-      // earlier source until that removal is published; the departure is owed work.
-      if (reading.complete && unresolved.length === 0) departed.push(`${member.name} (${member.officeTitle})`);
+      // A complete official roster that no longer lists someone is the departure's evidence:
+      // the member leaves the reader with their disposition, candidacy and photo rows.
+      if (reading.complete && unresolved.length === 0) {
+        departed.push(`${member.name} (${member.officeTitle})`);
+        departures.push({ bodyId: body.id, holderId: member.id, sourceUrl: source.sourceUrl });
+        continue;
+      }
       rendered.roster.members.push({ ...member, membershipSource: member.membershipSource ?? { sourceUrl: previous.sourceUrl, sourceOrg: previous.sourceOrg, collectedAt: previous.collectedAt } });
       rendered.dispositions.push({ sourceId: member.id, canonicalId: member.id, state: "READER_ELIGIBLE",
-        reason: reading.complete && unresolved.length === 0
-          ? "No longer listed on the complete official roster; removal from the reader is owed and the member stays on the earlier source until then."
-          : "Retained from the prior verified roster; this page was not a complete roster, so it does not establish a departure." });
+        reason: "Retained from the prior verified roster; this page was not a complete roster, so it does not establish a departure." });
     }
   }
   // Holding office and running for it are separate facts; candidacy stays owed, never asserted.
@@ -195,7 +197,7 @@ export function workerRosterPublication(input: {
       divisions: body.ocdId ? [body.ocdId] : [], authority: "REGISTRY_BODY_ROSTER", sourceUrl: source.sourceUrl },
       status: "NOT_CHECKED", candidacy: null, unresolvedCandidacyIds: [],
       reason: "Officeholding verified on the body's official page. Ballot candidacy remains owed; no candidacy or absence is asserted." }));
-  return { contractId: "registry-runtime-bindings", scope: "MEMBERS", version: registryEdition(`section3-roster:${reading.id}`), sourceThrough: now,
+  return { contractId: "registry-runtime-bindings", scope: "MEMBERS", ...(departures.length ? { departures } : {}), version: registryEdition(`section3-roster:${reading.id}`), sourceThrough: now,
     sourceReceipt: section3SourceReceipt([capture], now, `section3-validator:${reading.id}`,
       `${reading.method}: ${members.length} member(s) with seat and name on the saved official page inside its freshness window (§3).`),
     // The source-scoped door carries unchanged bodies on their prior authority; this supplies only the verified roster.
@@ -355,7 +357,7 @@ ${readingId}`);
       outcome = { at: input.now, workerResultId: readingId, status: unresolved.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
         code: unresolved.length ? directoryPackage ? "DIRECTORY_ROWS_REQUIRE_REPAIR" : "ROSTER_IDENTITIES_REQUIRE_REPAIR" : published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",
         detail: `§3 passed for ${count} reader ${directoryPackage ? "bodies" : "members"}; the registry door accepted ${versionId} and typed reader readback passed.` +
-          (roster?.departed.length ? ` Departures recorded from the complete official roster (removal owed): ${roster.departed.join("; ")}.` : "") +
+          (roster?.departed.length ? ` No longer on the complete official roster, so removed from the reader: ${roster.departed.join("; ")}.` : "") +
           (unresolved.length ? ` ${unresolved.length} row(s) stay open as work: ${unresolved.join(", ")}.` : " Remaining information stays open as work."),
         ...(unresolved.length ? { recovery: "WORKER" as const } : {}), candidateId, versionId, ...changes,
         ...(roster ? { acceptedRecordIds: roster.accepted.map(row => row.recordId), acceptedMembers: roster.accepted } : {}),

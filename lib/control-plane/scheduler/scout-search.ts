@@ -92,7 +92,7 @@ export async function braveSearch(
     }),
   );
   const body = await res.text();
-  if (!res.ok) throw new Error(`brave HTTP ${res.status}: ${body.slice(0, 160)}`);
+  if (!res.ok) throw new Error(`brave HTTP ${res.status}: ${body.split(key).join("[REDACTED]").slice(0, 160)}`);
   const json = JSON.parse(body) as { web?: { results?: { title?: string; url?: string; description?: string; text?: string; extra_snippets?: string[] }[] } };
   const results = json.web?.results ?? [];
   const hits: SearchHit[] = results
@@ -101,7 +101,7 @@ export async function braveSearch(
   return { hits, bytes: body.length };
 }
 
-/** Exa neural/keyword search — URL-only (no `contents`, no synthesis). */
+/** Exa neural/keyword search with source excerpts and no synthesis. */
 export async function exaSearch(
   query: string,
   key: string,
@@ -122,7 +122,7 @@ export async function exaSearch(
     }),
   );
   const body = await res.text();
-  if (!res.ok) throw new Error(`exa HTTP ${res.status}: ${body.slice(0, 160)}`);
+  if (!res.ok) throw new Error(`exa HTTP ${res.status}: ${body.split(key).join("[REDACTED]").slice(0, 160)}`);
   const json = JSON.parse(body) as { results?: { title?: string; url?: string; description?: string; text?: string; extra_snippets?: string[] }[] };
   const results = json.results ?? [];
   const hits: SearchHit[] = results

@@ -72,7 +72,7 @@ export async function readSourceApi(name: SourceApiTool, raw: unknown, options: 
         catalog.searchParams.set('search_context',input.domain); catalog.searchParams.set('ids',input.dataset);
         const found = await get(catalog);
         const entries = JSON.parse(found.text).results ?? [];
-        if (found.status !== 200 || !entries.some((e:any) => e.resource?.id === input.dataset && e.metadata?.domain === input.domain)) throw new Error('Dataset/domain not found in Socrata catalog');
+        if (found.status !== 200 || !entries.some((e:{resource?:{id?:string};metadata?:{domain?:string}}) => e.resource?.id === input.dataset && e.metadata?.domain === input.domain)) throw new Error('Dataset/domain not found in Socrata catalog');
         url = new URL(`https://${input.domain}/resource/${input.dataset}.json`);
         if (env.SOCRATA_APP_TOKEN) headers['X-App-Token'] = env.SOCRATA_APP_TOKEN;
         // SOCRATA_SECRET_TOKEN is an OAuth application secret, not a Basic Auth password.

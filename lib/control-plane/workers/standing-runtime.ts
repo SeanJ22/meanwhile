@@ -1,3 +1,4 @@
+import { workAdapterQueue } from "./engineering-adapter.ts";
 import { detectiveExecutor, investigationRole, subjectScoutHistory } from "./detective.ts";
 import { readFieldManual, writeFieldManual, newFieldManualEntry } from "../field-manual.ts";
 import { isAbsolute, join, relative, resolve, sep } from "node:path";
@@ -14,7 +15,7 @@ import { computeRouteFloor } from "../preflight.ts";
 import { readMethodStore } from "../../method/candidate.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { proposeScoutCandidates } from "../scheduler/scout-candidates.ts";
-import { emptyFieldManual, type FieldManualStore } from "../field-manual.ts";
+import { type FieldManualStore } from "../field-manual.ts";
 import {
   compoundingPair,
   scoutFieldManualCatalog,
@@ -62,6 +63,8 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const [prior, priorWorkers] = await Promise.all([
     input.repos.scoutResults.readAll(), readCompletedWorkerResults(input.repos),
   ]);
+  // Plain-code Engineer work consumes the same persisted adapter queue before another Scout can retry it.
+  await workAdapterQueue({repos:input.repos,results:prior,now:now()});
   const knowledge=readMethodStore(join(input.root,"data","method","knowledge.json"));
   for (const row of await input.repos.workItems.list()) {
     const plan = row.value.autonomousPlan;

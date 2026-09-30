@@ -6,7 +6,11 @@ import { STREAMLINE_INVENTORY_SOURCE } from './engineering-candidate.ts';
 export const ENGINEER_ADAPTER_PREFIX = 'lib/sources/platform-adapters/';
 export interface AdapterFile {path:string;content:string}
 export interface AdapterPullRequest {url:string;number:number;branch:string}
-export type GitHubRequest = (method:string,path:string,body?:unknown)=>Promise<any>;
+type GitRef = {object:{sha:string}};
+type GitCommit = {tree:{sha:string}};
+type GitObject = {sha:string};
+type GitPull = {html_url:string;number:number};
+export type GitHubRequest = (method:string,path:string,body?:unknown)=>Promise<unknown>;
 /** JSON goes over stdin, never shell interpolation. */
 export const githubRequest: GitHubRequest = async (method,path,body) => {
   const args=['api','--method',method,path];
@@ -27,20 +31,20 @@ export async function publishAdapterPullRequest(input:{platform:string;files:rea
   const platform=adapterBranchKey(input.platform);
   if(!platform || !input.files.length || input.files.some(file=>!file.path.startsWith(ENGINEER_ADAPTER_PREFIX) || file.path.includes('..') || !/\.(?:ts|mjs)$/.test(file.path))) throw new Error('ENGINEER_ADAPTER_FILES_ONLY');
   const branch='engineer-adapter/'+platform;
-  const existing=await request('GET',`repos/${repo}/pulls?state=open&head=${encodeURIComponent(repo.split('/')[0]+':'+branch)}`);
-  if(existing.length)return {url:existing[0].html_url,number:existing[0].number,branch};
-  const main=await request('GET',`repos/${repo}/git/ref/heads/main`);
-  const parent=await request('GET',`repos/${repo}/git/commits/${main.object.sha}`);
-  const tree=await request('POST',`repos/${repo}/git/trees`,{base_tree:parent.tree.sha,tree:input.files.map(file=>({path:file.path,mode:'100644',type:'blob',content:file.content}))});
-  const commit=await request('POST',`repos/${repo}/git/commits`,{message:`Add ${platform} source adapter`,tree:tree.sha,parents:[main.object.sha]});
+  const existing=await request('GET',`repos/${repo}/pulls?state=open&head=${encodeURIComponent(repo.split('/')[0]+':'+branch)}`) as GitPull[];
+  if(existing.length){await request('POST',`repos/${repo}/issues/${existing[0].number}/labels`,{labels:['engineer-adapter']});return {url:existing[0].html_url,number:existing[0].number,branch};}
+  const main=await request('GET',`repos/${repo}/git/ref/heads/main`) as GitRef;
+  const parent=await request('GET',`repos/${repo}/git/commits/${main.object.sha}`) as GitCommit;
+  const tree=await request('POST',`repos/${repo}/git/trees`,{base_tree:parent.tree.sha,tree:input.files.map(file=>({path:file.path,mode:'100644',type:'blob',content:file.content}))}) as GitObject;
+  const commit=await request('POST',`repos/${repo}/git/commits`,{message:`Add ${platform} source adapter`,tree:tree.sha,parents:[main.object.sha]}) as GitObject;
   try {await request('POST',`repos/${repo}/git/refs`,{ref:'refs/heads/'+branch,sha:commit.sha});}
   catch(error){
     // An interrupted prior publication may have left this branch; never overwrite it.
-    const ref=await request('GET',`repos/${repo}/git/ref/heads/${branch}`);
-    const held=await request('GET',`repos/${repo}/git/commits/${ref.object.sha}`);
+    const ref=await request('GET',`repos/${repo}/git/ref/heads/${branch}`) as GitRef;
+    const held=await request('GET',`repos/${repo}/git/commits/${ref.object.sha}`) as GitCommit;
     if(held.tree.sha!==tree.sha)throw error;
   }
-  const pr=await request('POST',`repos/${repo}/pulls`,{title:`Engineer adapter: ${platform}`,head:branch,base:'main',body:input.reason+'\n\nPlatform adapter only. CI runs the focused adapter tests. Auto-merge belongs to the engineer-adapter workflow; no production runner is started.'});
+  const pr=await request('POST',`repos/${repo}/pulls`,{title:`Engineer adapter: ${platform}`,head:branch,base:'main',body:input.reason+'\n\nPlatform adapter only. CI runs the focused adapter tests. Auto-merge belongs to the engineer-adapter workflow; no production runner is started.'}) as GitPull;
   await request('POST',`repos/${repo}/issues/${pr.number}/labels`,{labels:['engineer-adapter']});
   return {url:pr.html_url,number:pr.number,branch};
 }
@@ -79,6 +83,7 @@ export async function workAdapterQueue(input:{repos:import('../repository/types.
   for(const result of pending) {
     const platform=adapterBranchKey(result.candidates[0]?.routeId ?? result.recordClass);
     if(done.has(platform))continue;
+    try {
     let candidate=plainAdapterFor(result);
     if(!candidate && input.transport) {
       const {MODELS}=await import('../../models.ts');
@@ -95,6 +100,10 @@ export async function workAdapterQueue(input:{repos:import('../repository/types.
     await writeFieldManual(input.repos,[newFieldManualEntry('engineer-adapter',platform,{role:'SHARED',kind:'ENGINEER_ADAPTER_PR',title:platform,
       summary:'Adapter implementation in '+pr.url,outcome:'REFERENCE',observedAt:input.now,recordClasses:[result.recordClass],url:pr.url,
       payload:{platform,pr,subjectId:result.subjectId,sourceAttemptId:result.attemptId,files:candidate.files.map(file=>file.path)}})],input.now);
+    } catch(error) {
+      await writeFieldManual(input.repos,[newFieldManualEntry('engineer-adapter-blocker',platform,{role:'ENGINEER',kind:'ENGINEER_BLOCKER',title:platform,
+        summary:error instanceof Error?error.message:String(error),outcome:'BLOCKED',observedAt:input.now,payload:{sourceAttemptId:result.attemptId,nextAction:'Continue the existing adapter branch/PR after the recorded publication failure is repaired.'}})],input.now);
+    }
   }
   return opened;
 }

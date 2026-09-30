@@ -30,6 +30,8 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { readFieldManual, type FieldManualRepos } from "../field-manual.ts";
+import { learnedRouteIds } from "../../method/manual-bridge.ts";
 import type { MethodMaturity } from "./dispatch.ts";
 
 /**
@@ -65,5 +67,28 @@ export function knownRouteIds(root: string): ReadonlySet<string> {
 /** The dispatch rule's input, answered from the method store. */
 export function methodMaturityFrom(root: string): MethodMaturity {
   const known = knownRouteIds(root);
+  return (route) => (route !== null && known.has(route) ? "GRADUATED" : "UNGRADUATED");
+}
+
+/**
+ * The dispatch rule's input, answered from the FIELD MANUAL (the one store agents
+ * read and write live). The manual holds every route of `data/method/knowledge.json`
+ * (the seed folds them in) plus every route an agent has written since as a
+ * `ROUTE` entry, so a route learned by an agent graduates on the next dispatch
+ * without a human running a `method:learn` script.
+ *
+ * Same failure rule as the file read above: an unreadable manual, or one with no
+ * learned routes at all (never seeded), THROWS. Either would send every route to
+ * the bounded worker, which is a decision nobody made.
+ */
+export async function methodMaturityFromManual(repos: FieldManualRepos): Promise<MethodMaturity> {
+  const read = await readFieldManual(repos);
+  if (read.error !== undefined) {
+    throw new Error(`the field manual could not be read (${read.error}). This is a FAILED read and is raised rather than treated as an empty manual.`);
+  }
+  const known = learnedRouteIds(read.store);
+  if (known.size === 0) {
+    throw new Error("the field manual holds no learned routes; it has not been seeded (scripts/field-manual-seed.mts). An empty manual would send every route to the bounded worker.");
+  }
   return (route) => (route !== null && known.has(route) ? "GRADUATED" : "UNGRADUATED");
 }

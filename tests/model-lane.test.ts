@@ -93,10 +93,9 @@ test("an owner control that could not be read holds the lane closed as if paused
   assert.match(closed!.reason, /Plain-code work, routine publication and free discovery walks continue/);
 });
 
-test("PRODUCTION TODAY — research paused, delivery gate closed: the lane stays closed and now leads with the owner's pause", () => {
-  // Before 2026-09-25 this read LANE_DISABLED (no delivery path); either way no paid model work runs.
-  const today = modelLaneClosure(facts({ activation: CLOSED_GATE, paused: true, pauseIntentId: "PAUSE:2026-09-22" }));
-  assert.deepEqual(today, { code: "PAUSED", reason: "paused by owner intent PAUSE:2026-09-22" });
+test("the owner pause stops paid work with delivery enabled", () => {
+  const paused = modelLaneClosure(facts({ activation: OPEN_GATE, paused: true, pauseIntentId: "PAUSE:2026-09-22" }));
+  assert.deepEqual(paused, { code: "PAUSED", reason: "paused by owner intent PAUSE:2026-09-22" });
   assert.notEqual(modelLaneClosure(facts({ activation: readActivationGate("."), paused: true, pauseIntentId: "p" })), null);
 });
 

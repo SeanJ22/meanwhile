@@ -9,17 +9,14 @@ import { SCHEDULING_HINTS } from "./ci-test-scheduling-hints.mjs";
 import { validateTimings } from "./ci-test-timing-reporter.mjs";
 
 const FLAGS = ["--test", "--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"];
-const PATTERNS = ["tests/**/*.test.ts", "tests/**/*.test.tsx"];
-const COMMAND = ["node", ...FLAGS, ...PATTERNS].join(" ");
+const PATTERNS = ["tests/**/*.test.ts", "tests/**/*.test.tsx", "lib/sources/platform-adapters/**/*.test.ts", "lib/sources/platform-adapters/**/*.test.tsx"];
+const COMMAND = "node scripts/ci-tests.mjs";
 const REPORTER = new URL("./ci-test-timing-reporter.mjs", import.meta.url);
 const EXECUTION_INPUTS = ["ci-tests.mjs", "ci-test-timing-reporter.mjs", "ci-test-scheduling-hints.mjs"];
 
 export function testFileConcurrency(available) {
   if (!Number.isSafeInteger(available) || available < 1) throw new Error("Available parallelism must be a positive integer.");
-  // Generator/tracker fixtures temporarily mutate this checkout, and their
-  // readers do not all acquire the tree lock. Parallelism belongs between
-  // isolated runner checkouts until those fixtures have complete isolation.
-  return 1;
+  return Math.min(2, available);
 }
 
 // Node's CLI sorts file arguments lexically before dispatch. Model that order,
@@ -220,7 +217,7 @@ function identity(root, plan) {
   };
 }
 
-export async function runTests(root = process.cwd(), shardValue = process.env.CI_TEST_SHARD) {
+export async function runTests(root = process.cwd(), shardValue = process.env.CI_TEST_SHARD ?? "1/1") {
   const started = Date.now();
   const plan = planTests(root, shardValue);
   const metadata = identity(root, plan);

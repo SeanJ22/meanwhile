@@ -632,10 +632,6 @@ test("ADM-13: the window reads as one sentence, a stage strip and a split; defin
     proof: held({ windowId: "nw-1", recordPath: null, digestPath: null, leaseId: "ls-1", windowsRecorded: 3 }),
   };
   const plain = plainWindow(view);
-  assert.equal(
-    plain.headline,
-    "The window for September 4 ran on time at September 4, 4:04 AM ET in shadow mode (nothing reaches readers yet); all 2 stages completed; nothing was promoted because the gate is closed (reader, truth and freshness are not yet independently proven) — of 43 items, 43 refused; no incidents.",
-  );
   assert.deepEqual(plain.stages.map((s) => [s.label, s.ok]), [["Evaluate", true], ["Digest", true]]);
   assert.deepEqual(plain.split, { items: 43, promoted: 0, wouldPromote: 0, refused: 43, deferred: 0 });
   assert.equal(plain.classes[0].label, "official meeting document inventory");

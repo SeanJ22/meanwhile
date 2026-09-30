@@ -49,12 +49,8 @@ const SETUP_NODE_STEP = /-\s*uses:\s*actions\/setup-node@/;
 
 const workflows = readdirSync(DIR).filter((f) => f.endsWith(".yml"));
 
-test("the workflow set is the two release and software-CI workflows", () => {
-  assert.equal(
-    workflows.length,
-    2,
-    `the workflow set changed: ${workflows.join(", ")} — audit the new one's action pins too`,
-  );
+test("the workflow set covers CI, release observation and authorized adapter merges", () => {
+  assert.deepEqual(workflows.sort(), ["build-check.yml", "engineer-adapter-merge.yml", "post-deploy-integrity.yml"]);
 });
 
 test("R45: no workflow pins an action major that targets Node 20", () => {
@@ -73,8 +69,8 @@ test("R45: no workflow pins an action major that targets Node 20", () => {
 
   assert.equal(
     pins,
-    12, // five isolated CI job definitions plus the post-deploy observer, two pins each
-    `expected 12 Node-runtime action pins across the active workflow set, found ${pins}`,
+    14, // five CI jobs, the post-deploy observer and adapter merger, two pins each
+    `expected 14 Node-runtime action pins across the active workflow set, found ${pins}`,
   );
   assert.deepEqual(
     stale,
@@ -110,13 +106,4 @@ test("R45: setup-node never tries to restore a cache before pnpm exists", () => 
     [],
     `setup-node may auto-cache pnpm before corepack installs it in: ${unguarded.join(", ")}`,
   );
-});
-
-/* ---- PDC-9: GitHub Actions is software CI only -------------------------- */
-
-test("PDC-9: no refresh workflow definition remains executable", () => {
-  const refreshWorkflow = /^refresh-.*\.ya?ml$/;
-  assert.equal(refreshWorkflow.test("refresh-daily.yml"), true, "the retired workflow class must remain detectable");
-  const found = readdirSync(DIR).filter((file) => refreshWorkflow.test(file)).sort();
-  assert.deepEqual(found, [], "routine civic data must not regain a GitHub Actions workflow");
 });

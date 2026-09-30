@@ -29,8 +29,7 @@
  */
 
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
-import { mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
@@ -426,15 +425,6 @@ test("the raw applicability primitive has no consumers outside the method layer"
 
 /* ------------------------------------------------------------------------ (g) */
 
-function seedStore(name: string, k: MethodKnowledge): { dir: string; storePath: string } {
-  const dir = join(ROOT, ".scratch", `retired-writer-${name}`);
-  rmSync(dir, { recursive: true, force: true });
-  mkdirSync(join(dir, "data", "method"), { recursive: true });
-  const storePath = join(dir, "data", "method", "knowledge.json");
-  writeFileSync(storePath, `${JSON.stringify(k, null, 2)}\n`, "utf8");
-  return { dir, storePath };
-}
-
 /**
  * The three substantive sentences the retired writer used to seed, as patterns.
  * A store that matches any of them has had the corrected conclusion re-created.
@@ -446,93 +436,33 @@ const FALSE_PIMA = [
   /only as that recurring rule/i,
 ];
 
-test("the retired Pima writer cannot re-seed the false conclusion into a fresh store", () => {
-  // A FRESH EMPTY STORE is the case duplicate-id protection does not cover: the
-  // `learned` branch runs, and the false prose lands as current knowledge with
-  // no claim on it and therefore no retraction able to reach it.
-  const { dir, storePath } = seedStore("fresh", emptyKnowledge());
-  const before = readFileSync(storePath, "utf8");
-
-  const run = spawnSync(
-    process.execPath,
-    ["--experimental-strip-types", join(ROOT, "scripts", "learn-schedule-vs-events.mts")],
-    { cwd: dir, encoding: "utf8", maxBuffer: 8 * 1024 * 1024 },
-  );
-
-  assert.notEqual(run.status, 0, "a retired writer FAILS LOUDLY; a warning followed by a run is worse");
-  const said = `${run.stdout}${run.stderr}`;
-  assert.match(said, /RETIRED/);
-  assert.match(said, /pnpm method:learn-legistar-insite/, "the refusal names the ONE current command");
-  assert.match(said, /projectMethodFor/, "and where to READ what is inherited instead");
-
-  assert.equal(readFileSync(storePath, "utf8"), before, "nothing was written");
-  const after = JSON.parse(before) as MethodKnowledge;
-  assert.deepEqual(after.routes, []);
-  for (const pattern of FALSE_PIMA) {
-    assert.ok(!pattern.test(before), `the fresh store must not hold ${pattern}`);
+test("the retired Pima writer is deleted: it cannot re-seed the false conclusion into a fresh or a legacy-shaped store", () => {
+  // The strongest form of the retirement: the script that seeded the false sentences no longer exists,
+  // and no learn script does. What it taught was folded into the field manual (scripts/field-manual-seed.mts).
+  assert.equal(existsSync(join(ROOT, "scripts", "learn-schedule-vs-events.mts")), false);
+  for (const shape of ["fresh", "legacy"]) {
+    let store = emptyKnowledge();
+    if (shape === "legacy") {
+      // The two route ids present, unclassified, exactly as a pre-claim-classes store held them.
+      for (const id of [SCHEDULE, RECONCILE]) {
+        store = learnRoute(store, { id, title: id, tier: "A0", fields: ["meeting"], applicability: unknownApplicability("a legacy entry that declared no claim class"),
+          outcomes: [], subBranches: [], origin: "a legacy entry that declared no claim class", learnedOn: ON }, ON).knowledge;
+      }
+    }
+    const text = JSON.stringify(store);
+    for (const pattern of FALSE_PIMA) assert.ok(!pattern.test(text), `the ${shape} store must not hold ${pattern}`);
+    const p = projectMethodFor(store, AZ);
+    for (const id of shape === "legacy" ? [SCHEDULE, RECONCILE] : []) {
+      assert.ok(projectionHasRoute(p, id), `${id} survives; the retirement deletes no route knowledge`);
+      assert.equal(p.routes.find((r) => r.identity.id === id)!.namedGap, LEGACY_UNCLASSIFIED_GAP);
+    }
+    assert.deepEqual(substantiveAssertions(p), []);
   }
-  rmSync(dir, { recursive: true, force: true });
 });
 
-test("nor into a legacy-shaped store that already holds the two routes", () => {
-  // The other shape: the two route ids already present, unclassified, exactly as
-  // a pre-claim-classes store held them. Here the writer would take the "already
-  // known" branch — and would still record an outcome note carrying the withdrawn
-  // coverage claim, which is how the false sentence survived its own correction.
-  let legacy = emptyKnowledge();
-  for (const id of [SCHEDULE, RECONCILE]) {
-    legacy = learnRoute(
-      legacy,
-      {
-        id,
-        title: id,
-        tier: "A0",
-        fields: ["meeting"],
-        applicability: unknownApplicability("a legacy entry that declared no claim class"),
-        outcomes: [],
-        subBranches: [],
-        origin: "a legacy entry that declared no claim class",
-        learnedOn: ON,
-      },
-      ON,
-    ).knowledge;
-  }
-
-  const { dir, storePath } = seedStore("legacy", legacy);
-  const before = readFileSync(storePath, "utf8");
-
-  const run = spawnSync(
-    process.execPath,
-    ["--experimental-strip-types", join(ROOT, "scripts", "learn-schedule-vs-events.mts")],
-    { cwd: dir, encoding: "utf8", maxBuffer: 8 * 1024 * 1024 },
-  );
-  assert.notEqual(run.status, 0);
-  assert.equal(readFileSync(storePath, "utf8"), before, "nothing was written");
-
-  // The routes are still there, still inherited, and still assert nothing.
-  const k = JSON.parse(before) as MethodKnowledge;
-  const p = projectMethodFor(k, AZ);
-  for (const id of [SCHEDULE, RECONCILE]) {
-    assert.ok(projectionHasRoute(p, id), `${id} survives — the retirement deletes no route knowledge`);
-    assert.equal(p.routes.find((r) => r.identity.id === id)!.namedGap, LEGACY_UNCLASSIFIED_GAP);
-  }
-  assert.deepEqual(substantiveAssertions(p), []);
-  for (const pattern of FALSE_PIMA) {
-    assert.ok(!pattern.test(before), `the legacy store must not gain ${pattern}`);
-  }
-  rmSync(dir, { recursive: true, force: true });
-});
-
-test("the retired writer's own source carries no executable seeding path", () => {
-  const src = readFileSync(join(ROOT, "scripts", "learn-schedule-vs-events.mts"), "utf8");
-  assert.ok(!/runLearnBatch|learnBatch\s*\(/.test(src), "it must not be able to write a store");
-  assert.ok(!/LearnedRoute\[\]/.test(src), "it must not carry route data to seed");
-  assert.match(src, /refuseRetiredWriter/);
-
-  // And the refusal itself teaches: what was false, where the correction lives,
-  // and the one command to run instead.
+test("the retired writer's refusal remains the record of what was false and where the correction lives", () => {
   const refusal = retiredWriterRefusal(SCHEDULE_VS_EVENTS_RETIRED);
-  assert.match(refusal, /pnpm method:learn-legistar-insite/);
+  assert.match(refusal, /field manual/);
   assert.match(refusal, /pnpm method:amend-claim-classes-pima/);
   assert.match(refusal, /lib\/method\/projection\.ts/);
   assert.ok(SCHEDULE_VS_EVENTS_RETIRED.falseAssertions.length >= 3);

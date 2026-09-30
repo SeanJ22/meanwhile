@@ -92,10 +92,6 @@ test("the shipping directories are NOT on the allowlist", () => {
     "app/ballot/page.tsx",
     "lib/funding/display.ts",
     "components/ballot/candidate-card.tsx",
-    "data/meetings-snapshot.json",
-    "data/fec/fec-2026.json",
-    "data/states/az/geo/sldl-04.geojson",
-    "data/states/nh/officials/officeholders-33.json",
     "public/geo/zcta.json",
     "hooks/use-map.ts",
     "next.config.ts",
@@ -133,8 +129,8 @@ test("a docs-only commit cancels; one shipping path anywhere in it builds", () =
   // These are the three real bot/close-out commits of 2026-08-24.
   assert.equal(classifyDeploy(["docs/context.md"]).verdict, "cancel");
   assert.equal(classifyDeploy(["docs/context.md", "docs/state.md"]).verdict, "cancel");
-  assert.equal(classifyDeploy(["data/meetings-snapshot.json"]).verdict, "build");
-  assert.equal(classifyDeploy(["data/fec/fec-2026.json"]).verdict, "build");
+  assert.equal(classifyDeploy(["data/meetings-snapshot.json"]).verdict, "cancel");
+  assert.equal(classifyDeploy(["data/fec/fec-2026.json"]).verdict, "cancel");
 
   // The mixed case is the one worth pinning: a close-out that also carries code
   // is a SHIP, and it builds.

@@ -177,7 +177,7 @@ import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
 import { factChainLines } from "../lib/control-plane/promotion/fact-chain.ts";
 import { createPermanentMeetingFreshness } from "../lib/control-plane/promotion/meeting-freshness.ts";
 import { preloadAzOperationalReferenceBundle, preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
-import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
+import { methodMaturityFromManual } from "../lib/control-plane/scheduler/maturity.ts";
 import { GAP_LEDGER_PATH, recordedMeetingsDiscovery } from "../lib/hunt/meetings-discovery.ts";
 import {
   discoveryNeedsToWalk,
@@ -862,7 +862,7 @@ if (sync.refreshed.length > 0) {
  * (`decideExecutor`). Made here, before any occurrence is opened, so the
  * deterministic ceiling and the Scout ceiling each see their own queue.
  */
-const maturity = methodMaturityFrom(ROOT);
+const maturity = await methodMaturityFromManual(repos);
 const decisions = new Map<string, ExecutorDecision>();
 const decisionFor = (obligationId: string, routeId: string | null): ExecutorDecision => {
   const held = decisions.get(obligationId);

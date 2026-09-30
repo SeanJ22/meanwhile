@@ -60,6 +60,8 @@ const NOT_A_GATE = [
   "corepack pnpm exec playwright install --with-deps chromium",
   "echo \"path=$(corepack pnpm store path --silent)\" >> \"$GITHUB_OUTPUT\"",
   "node scripts/trace-census.mjs --files trace-files.txt",
+  "node scripts/netlify-ignore.mjs --ci",
+  'echo "No application rebuild; tests, lint and types still run."',
   // Shallow-checkout preparation for exact equality with the frozen holdings base.
   `holdings_base=$(node --input-type=module -e "import{readFileSync}from'node:fs';console.log(JSON.parse(readFileSync('data/state-holdings/move-plan.json','utf8')).baseSha)")`,
   '[[ "$holdings_base" =~ ^[0-9a-f]{40}$ ]] || exit 1',

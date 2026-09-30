@@ -1,3 +1,5 @@
+> Historical discovery notes. The definition of done and append-only release obligations below are superseded by docs/rulings.md §0 and §3. Keep useful source methods; they do not gate publication or releases.
+
 # The zip playbook
 
 **What "done" means for a zip code, and how to get there.** Born 2026-08-15

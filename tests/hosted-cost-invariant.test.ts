@@ -38,12 +38,12 @@ test("PDC · Build Check has no runtime-path cost exception", () => {
   assert.equal(classifyDeploy(["app/page.tsx"]).verdict, "build");
 });
 
-test("FCP-9D · deploy classification remains distinct from software certification", () => {
+test("data-only and proof-only changes do not trigger application builds", () => {
   assert.equal(classifyDeploy(["docs/rulings.md"]).verdict, "cancel");
-  assert.equal(classifyDeploy(["data/meetings-snapshot.json"]).verdict, "build");
+  assert.equal(classifyDeploy(["data/meetings-snapshot.json"]).verdict, "cancel");
   assert.equal(
     classifyDeploy(["data/ops/production-integrity.json", "data/meetings-snapshot.json"]).verdict,
-    "build",
+    "cancel",
   );
 });
 

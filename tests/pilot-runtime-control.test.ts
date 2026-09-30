@@ -15,15 +15,21 @@ test("runner control reads coalesce polls and retain later-committed lower posit
   const high = buildResearchIntent("PAUSE_RUNNER", "2026-09-30T01:00:00.000Z", "test", null, "test");
   const low = buildResearchIntent("RESUME_RUNNER", "2026-09-30T02:00:00.000Z", "test", null, "test");
   let rows = [{ id: high.intentId, position: "2", record: high }];
+  let lastPositions = "{}";
+  const contained = (position: string, ranges: string) => [...ranges.matchAll(/\[(\d+),(\d+)\)/g)]
+    .some(([, start, end]) => BigInt(position) >= BigInt(start) && BigInt(position) < BigInt(end));
   repos.adminConfig.read = async () => { configReads++; return null; };
   repos.researchState.readNarrowed = async () => { stateReads++; return null; };
   repos.researchIntents.read = async () => { throw new Error("whole log should never be transferred"); };
   const reader = runnerControlReader("unused", repos, {
     now: () => now,
-    query: async (_sql, params) => {
+    query: async (sql, params) => {
       calls++;
       if (fail) throw new Error("unreachable");
-      return [{ research: rows.filter(row => !(params[4] as string[]).includes(row.id)), windows: [], config: revision, state: "same relevant fields" }];
+      assert.match(sql, /position <@ \$5::int8multirange/);
+      assert.match(sql, /position <@ \$6::int8multirange/);
+      lastPositions = params[4] as string;
+      return [{ research: rows.filter(row => !contained(row.position, lastPositions)), windows: [], config: revision, state: "same relevant fields" }];
     },
   });
   const first = await reader.read();
@@ -49,4 +55,17 @@ test("runner control reads coalesce polls and retain later-committed lower posit
   const recovered = await reader.read();
   assert.strictEqual(recovered.research, late.research);
   assert.equal(calls, 5, "failed reads are retried without waiting for the cache period");
+  assert.equal(lastPositions, "{[1,3)}");
+
+  // History length does not put every old intent ID back on the wire. A gap
+  // (including a burned allocation) stays open until its row actually arrives.
+  rows = Array.from({ length: 10_000 }, (_, i) => ({ id: `history-${i}`, position: String(i + 4), record: high }));
+  await reader.read(true);
+  await reader.read(true);
+  assert.equal(lastPositions, "{[1,3),[4,10004)}");
+  rows.push({ id: "late-gap", position: "3", record: low });
+  const filled = await reader.read(true);
+  assert.strictEqual(filled.research[2], low, "the late row belongs between positions 2 and 4");
+  await reader.read(true);
+  assert.equal(lastPositions, "{[1,10004)}", "only committed adjacent positions collapse");
 });

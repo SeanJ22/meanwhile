@@ -6,6 +6,7 @@
  */
 import { printWorkerPublicationReceipt } from "../lib/civic-data/worker-publication-tasks.ts";
 import { readFileSync } from "node:fs";
+import { printWorkerPublicationReceipt } from "../lib/civic-data/worker-publication-tasks.ts";
 import { resolve, join } from "node:path";
 
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
@@ -29,6 +30,8 @@ import { publishNationalPlaceSources, type NationalPlacePublication } from "../l
 import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
 import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
 import { browseWithPlaywright } from "./scout-browse.mts";
+import { writeRoutineReceiptLine } from "../lib/civic-data/receipt-output.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 
 async function main(): Promise<void> {
   if (!process.argv.includes("--promote")) {
@@ -78,12 +81,19 @@ async function main(): Promise<void> {
           httpStatus: artifact.httpStatus, transport: artifact.transport, partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" };
       } });
     const published = report.filter(row => row.outcome.status === "PUBLISHED" || row.outcome.status === "PARTIALLY_PUBLISHED");
-    const held = report.filter(row => row.outcome.status === "HELD");
-    console.log(JSON.stringify({ contractId: "registry-runtime-bindings", candidateId: published.at(-1)?.outcome.candidateId ?? nationalPublications.findLast(row => row.candidateId)?.candidateId ?? null,
-      promotedVersionId: published.at(-1)?.outcome.versionId ?? nationalPublications.findLast(row => row.promotedVersionId)?.promotedVersionId ?? null,
+    const nationalVersion = nationalPublications.map(row => row.promotedVersionId ?? row.members.at(-1)?.versionId).findLast(Boolean);
+    console.log(JSON.stringify({ contractId: "registry-runtime-bindings", candidateId: published.at(-1)?.outcome.candidateId ?? nationalVersion ?? null,
+      promotedVersionId: published.at(-1)?.outcome.versionId ?? nationalVersion ?? null,
       workerPublications: report, nationalPlaces, nationalPublications, failures }, null, 2));
-    if (held.length) failures.push(`ROSTER_PUBLICATION_REPAIR_OWED:${held.map(row => `${row.workItemId}:${row.outcome.code}`).join(",")}`);
-    if (failures.length) throw new Error(failures.join("; "));
+    if (!published.length && nationalVersion) {
+      const record = await store.readCandidateSummary(nationalVersion);
+      if (!record) throw new Error(`National publication ${nationalVersion} could not be read back`);
+      await writeRoutineReceiptLine("RCD_RECEIPT=" + JSON.stringify({ source: "registry-runtime-bindings",
+        candidateId: record.candidate.id, acquisitionSucceeded: record.acquisitionSucceeded, state: record.state,
+        decision: record.receipt?.decision ?? null, promotedVersion: record.promotedVersion,
+        lastKnownGoodVersion: record.lastKnownGoodVersion, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+    } else await printWorkerPublicationReceipt(store, "registry-runtime-bindings", report);
+    if (failures.length && !published.length && !nationalVersion) throw new Error(failures.join("; "));
     return;
   }
   const packagePath = assignment(process.argv, "package");

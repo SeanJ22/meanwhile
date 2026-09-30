@@ -146,7 +146,7 @@ test("RED CONTROL: 'What's on the Vail school district agenda?' resolves Vail an
   );
 });
 
-test("a named body we don't hold gets a plain calendar gap without a model or unrelated sources", async () => {
+test("a named body we don't hold gets a plain calendar gap without a model after restoring deferred sources", async () => {
   const body = await ask("When does the Unheld Example City Council meet next?");
   assert.equal(body.mode, "NO_EVIDENCE");
   assert.equal(body.answer, "We don't have Unheld Example City Council's calendar yet.");
@@ -154,9 +154,9 @@ test("a named body we don't hold gets a plain calendar gap without a model or un
   assert.equal(body.clarification, undefined);
   assert.equal(body.records?.length, 0);
   assert.deepEqual(body.gaps, [{ whose: "OURS", statement: body.answer }]);
-  assert.equal(body.trace?.sourcesLoaded, "IDENTITY_AND_MEETINGS");
+  assert.equal(body.trace?.sourcesLoaded, "ALL");
   for (const key of ["azPimaFinance", "federalVotes", "federalKeyVotes", "officeholderStatements", "executiveActions"]) {
-    assert.equal(body.trace?.preloads?.[key], undefined, `a missing calendar doesn't need ${key}`);
+    assert.equal(typeof body.trace?.preloads?.[key], "number", `an unresolved body restores ${key} before its gap`);
   }
 });
 

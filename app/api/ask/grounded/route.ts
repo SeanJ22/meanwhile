@@ -1226,8 +1226,8 @@ export async function POST(request: Request) {
     trace.sourcesLoaded = "WITHOUT_PERSON_RECORDS";
     for (const key of ["federalVotes", "federalKeyVotes", "officeholderStatements", "executiveActions"]) delete trace.preloadSources![key];
   } else if (deferShape) {
-    if (unheldBody || (lexical && noPersonRecordShapes.has(lexical.shape))) {
-      trace.sourcesLoaded = unheldBody || (lexical && sittingShapes.has(lexical.shape)) ? "IDENTITY_AND_MEETINGS" : "WITHOUT_PERSON_RECORDS";
+    if (lexical && noPersonRecordShapes.has(lexical.shape)) {
+      trace.sourcesLoaded = sittingShapes.has(lexical.shape) ? "IDENTITY_AND_MEETINGS" : "WITHOUT_PERSON_RECORDS";
       for (const key of ["azPimaFinance", "federalVotes", "federalKeyVotes", "officeholderStatements", "executiveActions"]) {
         delete trace.preloadSources![key];
       }

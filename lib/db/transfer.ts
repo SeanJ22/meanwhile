@@ -92,6 +92,8 @@ export function installDatabaseTransferCounter(): void {
   // Long-running processes flush once a minute. The supervisor also awaits a flush before it exits.
   const timer = setInterval(() => { if (Date.now() - lastFlush >= 60_000) void flushDatabaseTransfer(); }, 60_000);
   timer.unref();
+  // Short-lived acquisition/repair children also save their final partial minute.
+  process.once("beforeExit", () => { void flushDatabaseTransfer(); });
 }
 
 export type DailyDatabaseTransferRead =

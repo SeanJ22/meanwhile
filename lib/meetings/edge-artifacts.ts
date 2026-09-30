@@ -99,6 +99,8 @@ export interface ReaderManifest {
    */
   readonly commentAccess?: readonly unknown[];
   readonly everydayRouting?: unknown;
+  /** Pointer identities for the embedded serving copies; old manifests refresh once. */
+  readonly extrasVersionIds?: Readonly<Partial<Record<"comment-access" | "everyday-routing", string | null>>>;
   /**
    * The large "authority" reader families — the map's division/coverage/roster
    * bindings (registry-runtime, ~3.7 MB), the federal directory (~1.2 MB) and

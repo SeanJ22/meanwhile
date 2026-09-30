@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { after, test } from "node:test";
 
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { publishRoutineReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import {
   readPromotedCivicData,
@@ -254,4 +255,34 @@ test("published, fetched and entered: a reader request reads the family from the
     ReaderEdgeOnlyRefusal,
   );
   assert.equal(called, 0, "an edge-only context read the database");
+});
+
+
+test("direct scoped runner publication skips unrelated contracts and every unchanged payload", async () => {
+  const store = new MemoryRoutineDataStore();
+  const current = JSON.parse(readFileSync(join(process.cwd(), "data", "voting-sites.json"), "utf8")) as VotingSitesFile;
+  const candidate = votingSitesCandidate({ current, prior: null, failures: [], rawBodies: ["official voting sites"],
+    successfulAuthorityReads: 1, requestedUrl: "https://www.pima.gov/3199/Pima-Votes", finalUrl: "https://www.pima.gov/3199/Pima-Votes", retrievedAt: T0 });
+  assert.ok((await processRegisteredManualCandidate(store, "voting-sites", candidate, T0)).promoted);
+  let payloadReads = 0;
+  const scoped = new Proxy(store, { get(target, key) {
+    const value = Reflect.get(target, key);
+    if (key === "readPromotionIdentities") return async (recordClass: string, scopes: readonly string[]) => {
+      assert.equal(recordClass, VOTING_SITES_CONTRACT.recordClass);
+      assert.deepEqual(scopes, [VOTING_SITES_CONTRACT.scope]);
+      return target.readPromotionIdentities(recordClass as never, scopes);
+    };
+    if (String(key).startsWith("readPrepared")) return () => { throw new Error("scoped voting must not read meetings"); };
+    if (["readPromotion", "readCandidate", "readCandidateProof"].includes(String(key))) return (...args: unknown[]) => { payloadReads++; return value.apply(target, args); };
+    return typeof value === "function" ? value.bind(target) : value;
+  } });
+  const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "runner-scoped-edge-")));
+  assert.equal(await publishRoutineReaderEdge(scoped, T1, [VOTING_SITES_CONTRACT], { artifactStore: artifacts }), true);
+  assert.ok((await artifacts.readManifest())!.manifest.authorityArtifacts?.["voting-sites"]);
+  const initialReads = payloadReads;
+  assert.ok(initialReads > 0);
+  const initialSequence = (await artifacts.readManifest())!.manifest.sequence;
+  assert.equal(await publishRoutineReaderEdge(scoped, T1, [VOTING_SITES_CONTRACT], { artifactStore: artifacts }), true);
+  assert.equal(payloadReads, initialReads);
+  assert.equal((await artifacts.readManifest())!.manifest.sequence, initialSequence);
 });

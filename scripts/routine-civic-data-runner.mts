@@ -92,6 +92,7 @@ import {
   ROUTINE_READER_SINGLE_TIMEOUT_MS,
   reconcileRoutineReaderRepairDomain,
   routineReaderRepairDomains,
+  selectedReaderRepairContracts,
   type RoutineReaderRepairDomain,
 } from "../lib/civic-data/reader-repair-protocol.ts";
 import {
@@ -118,6 +119,7 @@ import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/co
 import { assertDurableRepositories } from "../lib/control-plane/repository/types.ts";
 import { getDb } from "../lib/db/index.ts";
 import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
+import { publishRoutineReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
 import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
@@ -829,10 +831,10 @@ async function settlePendingRun(pending: PendingRun, run: BoundedChildResult): P
 // actual Reader composes them together exactly once. Parent settlement only
 // parses/correlates protocol lines, so a hung application read cannot leave an
 // orphan Promise, delay source attribution, or mutate any source disposition.
-const readerContracts = [
+const readerContracts = selectedReaderRepairContracts([
   ...observableRoutineContracts(),
   ...MANUAL_PRODUCTION_SOURCE_CONTRACTS,
-];
+], ONLY === null ? null : selectedTasks);
 const readerDomains = routineReaderRepairDomains(readerContracts);
 const readerReadbackReferences: RoutineCivicDataReaderReadbackReference[] = readerContracts
   .filter(({ readerProjection }) => readerProjection === null)
@@ -918,6 +920,7 @@ function startReaderRepair(
         "--experimental-strip-types",
         "scripts/routine-civic-data-reader-repair.mts",
         domain.mode === "MEETING_AGGREGATE" ? "--meeting-aggregate" : `--contract=${domain.contracts[0]!.id}`,
+        ...(domain.mode === "MEETING_AGGREGATE" ? [`--contracts=${domain.contracts.map(contract => contract.id).join(",")}`] : []),
         `--observed-at=${readerObservedAt}`,
       ],
       timeoutMs: domain.timeoutMs,
@@ -1025,6 +1028,11 @@ for (const error of pass.errors) {
   console.error(`RCD_TASK routine-civic-data-hot-read-catch-up: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
 const readerRuns = pass.repair;
+// Source settlement publishes serving copies even when a readback child fails.
+step = "publishing changed reader edge copies";
+if (!await publishRoutineReaderEdge(store, new Date().toISOString(), ONLY === null ? null : selectedTasks)) {
+  supervisorFailures.push({ taskId: "reader-edge-publication", code: "READER_EDGE_PUBLISH_FAILED", detail: "Reader edge publication failed; the previous serving copies remain available." });
+}
 for (const run of readerRuns) {
   if (run.settlementErrorMessage === null) continue;
   const detail = safeFailure(run.settlementErrorMessage ?? "unknown Reader settlement failure");

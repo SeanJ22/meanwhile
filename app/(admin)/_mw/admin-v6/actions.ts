@@ -16,6 +16,11 @@
 import type { ActionKind, DecisionSpec, Dependency, Hunt } from "./model.ts";
 import { usd } from "./model.ts";
 
+/** A ZIP place key, the only kind of place a single hunt starts from (the rest start from the many-hunts panel). */
+export function isZipPlace(target: string): boolean {
+  return /^geo:[a-z]{2}.zcta.d{5}$/.test(target);
+}
+
 export interface PreviewItem {
   readonly id: string;
   readonly name: string;
@@ -102,16 +107,6 @@ export const DEP = {
     id: "DEP-SAVED-COPY",
     owner: "Codex (exact saved-copy route, default off)",
     need: "The exact saved-copy request route, enabled and deployed. A request receipt alone is not a downloadable copy.",
-  },
-  huntStart: {
-    id: "DEP-HUNT-START",
-    owner: "Codex (geography identity)",
-    need: "The Census geography identity with its plan version for this place. `expansion.scope.set` needs it, and this screen does not have it yet.",
-  },
-  paidPause: {
-    id: "DEP-PAID-PAUSE",
-    owner: "Codex (gateway)",
-    need: "A gateway action that pauses only paid research everywhere. Today’s registry can pause all workers, but not paid research on its own.",
   },
   receiptLookup: {
     id: "DEP-RECEIPT-LOOKUP",
@@ -332,11 +327,28 @@ const defs: ActionDef[] = [
       amount: { label: "Lifetime limit in dollars", initial: "25" },
       invalid: ({ amount }) => {
         const n = Number(amount);
+        if (!isZipPlace(ctx.target)) return "A hunt starts from ZIPs. Use Start many hunts to start one from a county, district or state.";
         return !Number.isFinite(n) || n <= 0 ? "Enter a limit above $0." : null;
       },
     }),
-    gateway: null,
-    dependency: DEP.huntStart,
+    gateway: { type: "expansion.scope.setMany" },
+    dependency: null,
+  },
+  {
+    kind: "hunt-start-many",
+    label: "Start many hunts",
+    needs: "spend",
+    doneWords: "Hunts started. Done means they were saved and the runner read them, not that any is finished.",
+    preview: () => ({
+      title: "Start many hunts",
+      level: "global",
+      rows: [
+        ["Creates", "A hunt for each ZIP in the list, each with its own budget for paid work."],
+        ["Spending", "Each budget can only hold paid work back. The Fleet ceiling still binds first."],
+      ],
+    }),
+    gateway: { type: "expansion.scope.setMany" },
+    dependency: null,
   },
   {
     kind: "hunt-pause",
@@ -352,8 +364,8 @@ const defs: ActionDef[] = [
         ["Keeps", "The hunt, its proof, its charges and the money set aside."],
       ],
     }),
-    gateway: null,
-    dependency: DEP.typedPlans,
+    gateway: { type: "expansion.scope.budget" },
+    dependency: null,
   },
   {
     kind: "hunt-resume",
@@ -365,8 +377,8 @@ const defs: ActionDef[] = [
       level: "local",
       rows: [["Scope", "This hunt only"], ["What changes", "Paid work starts again, within the remaining limit."]],
     }),
-    gateway: null,
-    dependency: DEP.typedPlans,
+    gateway: { type: "expansion.scope.budget" },
+    dependency: null,
   },
   {
     kind: "hunt-limit",
@@ -392,8 +404,8 @@ const defs: ActionDef[] = [
         },
       };
     },
-    gateway: null,
-    dependency: DEP.typedPlans,
+    gateway: { type: "expansion.scope.budget" },
+    dependency: null,
   },
   {
     kind: "hunt-stop",
@@ -408,8 +420,8 @@ const defs: ActionDef[] = [
         ["Keeps", "Everything found stays published. Unfinished checklist items stay listed as missing."],
       ],
     }),
-    gateway: null,
-    dependency: DEP.typedPlans,
+    gateway: { type: "expansion.scope.remove" },
+    dependency: null,
   },
   {
     kind: "global-paid",
@@ -424,8 +436,8 @@ const defs: ActionDef[] = [
         ["What changes", "No new paid AI calls anywhere. Free plain-code work continues. Nothing is lost."],
       ],
     }),
-    gateway: null,
-    dependency: DEP.paidPause,
+    gateway: { type: "research.pause" },
+    dependency: null,
   },
   {
     kind: "global-runner-pause",

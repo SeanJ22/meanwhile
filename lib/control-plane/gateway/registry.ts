@@ -97,6 +97,8 @@ import {
 import { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET } from "../expansion/dispatch-work-bounds.ts";
 import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
 import { WORK_QUESTION_WORDS, validateWorkQuestions, type WorkQuestion } from "../work-question.ts";
+import { huntPlaceKey } from "../admin-view/v6-hunts-read.ts";
+import { BULK_ACTIONS } from "./bulk-actions.ts";
 import type { ActionDefinition, ActionRequest, ReceiptOutcome, RefusalCode } from "./contract.ts";
 
 /** How much the runner creates for one Send, in the words every receipt below quotes (MW-028). */
@@ -960,6 +962,11 @@ const REGISTRY: readonly RegisteredAction[] = [
       refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
     },
     validate(input) {
+      // A hunt is named by its scope key, or by the place key a screen shows it under (S11).
+      const placeKey = typeof input.placeKey === "string" ? input.placeKey.trim() : "";
+      if (placeKey !== "") {
+        return /^geo:[a-z]{2}.[a-z_]+.[0-9A-Za-z]{2,12}$/.test(placeKey) ? { ok: true, value: { key: placeKey } } : bad("say which hunt, by its place");
+      }
       const key = validateScopeKey(input.key);
       return key.ok ? { ok: true, value: { key: key.value } } : bad(key.why);
     },
@@ -980,7 +987,8 @@ const REGISTRY: readonly RegisteredAction[] = [
             `${held.malformed} stored scope entr${held.malformed === 1 ? "y" : "ies"} on your policy row could not be read, so nothing was changed — rewriting the list would silently drop them.`,
           );
         }
-        const next = withScopeRemoved(held.scopes, key);
+        const named = held.scopes.find((s) => s.key === key || huntPlaceKey(s) === key);
+        const next = withScopeRemoved(held.scopes, named?.key ?? key);
         if (next.removed === null) {
           return { ok: true, outcome: "DONE", subject: key, says: "That geography was not on your expansion list, so nothing changed.", openedWork: [], readBackAt: "/admin/work", undo: null };
         }
@@ -1002,6 +1010,9 @@ const REGISTRY: readonly RegisteredAction[] = [
       };
     },
   },
+
+  /* ------------------------------------ expansion.scope.setMany and .budget */
+  ...BULK_ACTIONS,
 
   /* ---------------------------------------------------- billing.fact.record */
   {

@@ -33,7 +33,7 @@ export default async function CommandCenterPage({ searchParams }: { searchParams
       <LiveRefresh />
       <Suspense fallback={<p role="status">Loading the command center…</p>}>
         <LiveCommandCenter reference={reference} initialScopeKey={placeKeyOf(scope)}
-          access={{ role: "owner", canSpend: false, outreachAuthorized: false }} initialView="now" />
+          access={{ role: "owner", canSpend: true, outreachAuthorized: false }} initialView="now" />
       </Suspense>
     </div>
   );

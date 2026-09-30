@@ -504,7 +504,7 @@ export interface FixView {
 
 export type ActionKind =
   | "contain" | "uncontain" | "recheck" | "workfirst" | "fixfirst" | "stopmethod" | "scope-stop" | "stoprepeats"
-  | "decide" | "hunt-start" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop"
+  | "decide" | "hunt-start" | "hunt-start-many" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop"
   | "global-paid" | "global-runner-pause" | "global-runner-resume"
   | "scope-first" | "scope-recheck" | "doc-request" | "use-url" | "reprocess" | "retry-method" | "resume-publish"
   | "eng-task" | "job-stop" | "focus";

@@ -175,14 +175,21 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return { scope: "us" };
     case "decide":
       return { decisionId: s.target, option: s.option, words: s.words.trim() || null };
-    case "hunt-start":
-      return { place: s.target, lifetimeLimitUsd: limit() };
+    case "hunt-start": {
+      // A single hunt starts from one ZIP place (`geo:az.zcta.85635`). Anything wider starts from the many-hunts panel.
+      const zip = /^geo:([a-z]{2}).zcta.(d{5})$/.exec(s.target);
+      return { items: zip ? [{ zip: zip[2], stateAbbr: zip[1].toUpperCase(), budgetUsd: limit() }] : [], priority: 1, huntBudget: true };
+    }
+    case "hunt-start-many":
+      return { items: JSON.parse(s.payload?.items ?? "[]") as unknown, priority: Number(s.payload?.priority ?? 1), note: s.payload?.note ?? null, huntBudget: true };
     case "hunt-limit":
-      return { huntPlace: s.target, lifetimeLimitUsd: limit() };
+      return { placeKey: s.target, change: "set", budgetUsd: limit() };
     case "hunt-pause":
+      return { placeKey: s.target, change: "pause" };
     case "hunt-resume":
+      return { placeKey: s.target, change: "resume" };
     case "hunt-stop":
-      return { huntPlace: s.target };
+      return { placeKey: s.target };
     case "global-paid":
       return {};
     case "global-runner-pause":

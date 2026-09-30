@@ -66,6 +66,8 @@ const ROUND_ACTIONS: ReadonlySet<string> = new Set([
   "config.setFleetSpendCeiling",
   "config.setDiscoverySearch",
   "expansion.scope.set",
+  "expansion.scope.setMany",
+  "expansion.scope.budget",
   "expansion.scope.remove",
 ]);
 
@@ -77,6 +79,8 @@ const APPLIED_WORDS: Readonly<Record<string, string>> = {
   "research.pause": "Paid research is paused. The runner confirmed it; no new paid work starts.",
   "fleet.deployHere": "Sent. The runner read it and put that work first.",
   "expansion.scope.set": "The runner has read it and is working on it.",
+  "expansion.scope.setMany": "The runner has read the list and is creating the work for each place.",
+  "expansion.scope.budget": "The runner is using the new budget.",
   "expansion.scope.remove": "The runner has read the new list; that place is off it.",
   "config.setFleetSpendCeiling": "The runner is using the new spending ceiling.",
   "config.setDiscoverySearch": "The runner is using the new search setting.",
@@ -89,6 +93,8 @@ const WAITING_WORDS: Readonly<Record<string, string>> = {
   "research.pause": "Saved. Waiting for the next round to close the paid lane.",
   "fleet.deployHere": "Saved. Waiting for the runner to read it.",
   "expansion.scope.set": "Saved. Waiting for the runner to read it.",
+  "expansion.scope.setMany": "Saved. Waiting for the runner to read the list.",
+  "expansion.scope.budget": "Saved. The runner uses it when its next round starts.",
   "expansion.scope.remove": "Saved. Waiting for the runner to read the new list.",
   "config.setFleetSpendCeiling": "Saved. The runner uses it when its next round starts.",
   "config.setDiscoverySearch": "Saved. The runner uses it when its next round starts.",
@@ -128,7 +134,7 @@ export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: A
     if (type === "config.setDiscoverySearch" && heartbeat?.discoverySearch?.receiptId === receipt.receiptId) {
       return applied(heartbeat.discoverySearch.appliedAt ?? null);
     }
-    if (type === "expansion.scope.set") {
+    if (type === "expansion.scope.set" || type === "expansion.scope.setMany") {
       const state = await repos.researchState.readNarrowed(RESEARCH_STATE_ID, { assignments: true });
       const refs = (state?.value as AssignmentReading | undefined)?.assignments?.assignments ?? [];
       if (refs.some((a) => a.ref === receipt.receiptId)) return applied(heartbeat?.lastCycleStartedAt ?? null);

@@ -58,11 +58,11 @@ test("an escalation on record reads as the classes by name, the reason, the evid
   const line = ladderHeadline({ ladder, lastPaidAt: LAST_PAID, pausedByOwner: false });
   assert.equal(
     line,
-    "Escalations recorded: 3. 1 more was called for and refused. Latest: A Scout moved from Claude Sonnet 5 to Claude Opus 5.5 on Oct 1 because its answer failed our checks and was never fixed " +
+    "Escalations recorded: 3. 1 more was called for and refused. Latest: A Scout moved from Claude Sonnet 5.5 to Claude Opus 5.5 on Oct 1 because its answer failed our checks and was never fixed " +
       "(finish refused after 4 turn(s): SCOUT_CANDIDATE_WITHOUT_EVIDENCE); both tries together cost $0.0429 ($0.0124 + $0.0305).",
   );
   const refused = escalationSentence({ ...ladder.latest[0], to: null, refused: "CEILING", reason: "NO_TYPED_RESULT", evidence: null, attemptsUsd: [0.0093], combinedUsd: 0.0093 });
-  assert.equal(refused, "A Scout stayed on Claude Sonnet 5 on Oct 1 although it stopped without giving an answer, because the spending ceiling could not cover a second try; it cost $0.0093.");
+  assert.equal(refused, "A Scout stayed on Claude Sonnet 5.5 on Oct 1 although it stopped without giving an answer, because the spending ceiling could not cover a second try; it cost $0.0093.");
   const unmeasured = escalationSentence({ ...ladder.latest[0], combinedUsd: null, attemptsUsd: [null, 0.03] });
   assert.match(unmeasured, /both tries together cost an unmeasured amount \(an unmeasured amount \+ \$0\.0300\)/, "an unmeasured cost is never shown as $0");
 });
@@ -80,8 +80,8 @@ test("one Scout result for an assignment's standing view: the class chosen, why,
   assert.equal(before.escalation, null);
 
   const why = "Sonnet 5 is the cheapest class that accepts this loop's request";
-  const stayed = scoutModelLine({ ...common, worker: { ...common.worker, model: "claude-sonnet-5" }, usd: 0.01, modelClass: "sonnet", modelClassWhy: why, escalatedFrom: null, escalationReason: null, escalationEvidence: null, escalationRefused: null, modelAttempts: [{ modelClass: "sonnet", model: "claude-sonnet-5", turns: 3, usd: 0.01, accepted: true }] });
-  assert.deepEqual(stayed, { chosen: "Claude Sonnet 5", why, escalation: null });
+  const stayed = scoutModelLine({ ...common, worker: { ...common.worker, model: "claude-sonnet-5-5" }, usd: 0.01, modelClass: "sonnet", modelClassWhy: why, escalatedFrom: null, escalationReason: null, escalationEvidence: null, escalationRefused: null, modelAttempts: [{ modelClass: "sonnet", model: "claude-sonnet-5-5", turns: 3, usd: 0.01, accepted: true }] });
+  assert.deepEqual(stayed, { chosen: "Claude Sonnet 5.5", why, escalation: null });
 
   const moved = scoutModelLine({
     ...common,
@@ -93,14 +93,14 @@ test("one Scout result for an assignment's standing view: the class chosen, why,
     escalationEvidence: "the turn bound (18) is reached; no typed result in 20 turn(s) including 2 grace turn(s)",
     escalationRefused: null,
     modelAttempts: [
-      { modelClass: "sonnet", model: "claude-sonnet-5", turns: 20, usd: 0.0124, accepted: false },
+      { modelClass: "sonnet", model: "claude-sonnet-5-5", turns: 20, usd: 0.0124, accepted: false },
       { modelClass: "frontier", model: "claude-opus-5-5", turns: 2, usd: 0.0305, accepted: true },
     ],
   });
-  assert.equal(moved.chosen, "Claude Sonnet 5", "the class CHOSEN is the one it started on, not the one it ended on");
+  assert.equal(moved.chosen, "Claude Sonnet 5.5", "the class CHOSEN is the one it started on, not the one it ended on");
   assert.equal(moved.why, why);
   assert.equal(
     moved.escalation,
-    "A Scout moved from Claude Sonnet 5 to Claude Opus 5.5 on Oct 1 because it used up its turns without a usable answer (the turn bound (18) is reached; no typed result in 20 turn(s) including 2 grace turn(s)); both tries together cost $0.0429 ($0.0124 + $0.0305).",
+    "A Scout moved from Claude Sonnet 5.5 to Claude Opus 5.5 on Oct 1 because it used up its turns without a usable answer (the turn bound (18) is reached; no typed result in 20 turn(s) including 2 grace turn(s)); both tries together cost $0.0429 ($0.0124 + $0.0305).",
   );
 });

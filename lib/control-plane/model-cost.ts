@@ -30,64 +30,26 @@
  * thousand more of them.*
  */
 
-/**
- * The model a bounded worker's FRONTIER step runs. Stated once; the proof
- * asserts it. Opus 5.5 replaced Opus 5 here on 2026-09-22 (owner directive):
- * it is cheaper ($4/$20 vs $5/$25) and its cache read is 0.05x, not 0.1x.
- */
-export const MODEL_WORKER_MODEL = "claude-opus-5-5";
+import { MODELS, MODEL_TIERS, MODEL_PRICE_SOURCE, MODEL_PRICES_STATED_ON, modelTierFor } from "../models.ts";
 
+export const MODEL_WORKER_MODEL = MODELS.opus.model;
 export interface ModelRate {
   readonly model: string;
   readonly inputUsdPerMillion: number;
   readonly outputUsdPerMillion: number;
-  /** The date this rate was read. A price with no date is a price nobody can check. */
   readonly statedOn: string;
   readonly source: string;
 }
-
 export const MODEL_WORKER_RATES: ModelRate = {
-  model: MODEL_WORKER_MODEL,
-  inputUsdPerMillion: 4.0,
-  outputUsdPerMillion: 20.0,
-  statedOn: "2026-09-22",
-  source: "Anthropic first-party API rates, read from platform.claude.com (Claude Opus 5.5)",
+  ...MODELS.opus, statedOn: MODEL_PRICES_STATED_ON, source: MODEL_PRICE_SOURCE,
 };
-
-/**
- * **THE RATE TABLE.** One row per model a step may route to. Each row is read
- * from the claude-api reference's model table (its cached price list is dated
- * 2026-06-24) on the day stated. `claude-haiku-4-5` and `claude-sonnet-5` are
- * the exact ids that reference lists; it warns by name against appending a
- * date suffix to a model id.
- */
 export const MODEL_RATES: readonly ModelRate[] = [
-  MODEL_WORKER_RATES,
-  {
-    // LEGACY. Claude Opus 5 was replaced by Opus 5.5 as the frontier on
-    // 2026-09-22 (owner directive) and is no longer selected. Its rate is kept
-    // so cost math over historical Opus-5 ledger rows stays accurate — this
-    // change governs future execution, never the past bill.
-    model: "claude-opus-5",
-    inputUsdPerMillion: 5.0,
-    outputUsdPerMillion: 25.0,
-    statedOn: "2026-08-31",
-    source: "Anthropic first-party API rates, read from the claude-api reference (Opus 5, legacy)",
-  },
-  {
-    model: "claude-sonnet-5",
-    inputUsdPerMillion: 2.0,
-    outputUsdPerMillion: 10.0,
-    statedOn: "2026-09-02",
-    source: "Anthropic first-party API rates, read from the claude-api reference (model table cached 2026-06-24)",
-  },
-  {
-    model: "claude-haiku-4-5",
-    inputUsdPerMillion: 1.0,
-    outputUsdPerMillion: 5.0,
-    statedOn: "2026-09-02",
-    source: "Anthropic first-party API rates, read from the claude-api reference (model table cached 2026-06-24)",
-  },
+  ...MODEL_TIERS.map((tier) => ({ ...MODELS[tier], statedOn: MODEL_PRICES_STATED_ON, source: MODEL_PRICE_SOURCE })),
+  // Historical ledger rows retain their original prices.
+  { model: "claude-opus-5", inputUsdPerMillion: 5, outputUsdPerMillion: 25,
+    statedOn: "2026-08-31", source: "Anthropic first-party API rates (legacy Opus 5)" },
+  { model: "claude-sonnet-5", inputUsdPerMillion: 2, outputUsdPerMillion: 10,
+    statedOn: "2026-09-02", source: "Anthropic first-party API rates (legacy Sonnet 5)" },
 ];
 
 /**
@@ -104,7 +66,8 @@ export const MODEL_ID_ALIASES: Readonly<Record<string, string>> = {
 
 /** The rate row for a model id (aliases resolved), or null when no row is stated. */
 export function rateFor(model: string): ModelRate | null {
-  const id = MODEL_ID_ALIASES[model] ?? model;
+  const tier = modelTierFor(model);
+  const id = tier ? MODELS[tier].model : MODEL_ID_ALIASES[model] ?? model;
   return MODEL_RATES.find((r) => r.model === id) ?? null;
 }
 
@@ -130,10 +93,9 @@ export const MODEL_CACHE_MINIMUMS = {
      * Claude Opus 5.5", lists "prompt caching with the 512-token minimum" as
      * carried over from Opus 5. The recorded value stands.
      */
-    "claude-opus-5-5": 512,
+    ...Object.fromEntries(MODEL_TIERS.map((tier) => [MODELS[tier].model, MODELS[tier].minimumCacheablePrefixTokens])),
     "claude-opus-5": 512,
     "claude-sonnet-5": 1024,
-    "claude-haiku-4-5": 4096,
   } as Readonly<Record<string, number>>,
   statedOn: "2026-09-22",
   source: "Anthropic first-party prompt-caching reference (per-model minimum cacheable prefix)",
@@ -148,12 +110,13 @@ export const MODEL_CACHE_MINIMUMS = {
  * only the read differs.
  */
 export const MODEL_CACHE_READ_MULTIPLIER: Readonly<Record<string, number>> = {
-  "claude-opus-5-5": 0.05,
+  ...Object.fromEntries(MODEL_TIERS.map((tier) => [MODELS[tier].model, MODELS[tier].cacheReadMultiplier])),
 };
 
 /** The minimum cacheable prefix for a model id (aliases resolved), or null when no row states one. */
 export function minimumCacheablePrefixTokensFor(model: string): number | null {
-  const id = MODEL_ID_ALIASES[model] ?? model;
+  const tier = modelTierFor(model);
+  const id = tier ? MODELS[tier].model : MODEL_ID_ALIASES[model] ?? model;
   return MODEL_CACHE_MINIMUMS.values[id] ?? null;
 }
 
@@ -180,7 +143,8 @@ export const CACHE_RATE_MULTIPLIERS = {
 
 /** The cache-read multiplier for a model id (aliases resolved); the standard 0.1x default unless the model states its own (Opus 5.5 = 0.05x). */
 export function cacheReadMultiplierFor(model: string): number {
-  const id = MODEL_ID_ALIASES[model] ?? model;
+  const tier = modelTierFor(model);
+  const id = tier ? MODELS[tier].model : MODEL_ID_ALIASES[model] ?? model;
   return MODEL_CACHE_READ_MULTIPLIER[id] ?? CACHE_RATE_MULTIPLIERS.cacheRead;
 }
 

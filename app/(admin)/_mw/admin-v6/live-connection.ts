@@ -67,6 +67,7 @@ export function usePulseFeed(opts: { readonly onPulse: (pulse: LivePulse) => voi
   const [receivedAt, setReceivedAt] = useState<number | null>(null);
   const [now, setNow] = useState(0);
   const [recovered, setRecovered] = useState(false);
+  const [awaitingPulse, setAwaitingPulse] = useState(false);
   // navigator.onLine can already be true again when the next pulse arrives.
   // Remember an intervening offline event until that pulse catches up.
   const lostSincePulse = useRef(false);
@@ -77,12 +78,13 @@ export function usePulseFeed(opts: { readonly onPulse: (pulse: LivePulse) => voi
   useEffect(() => {
     let recoverTimer: ReturnType<typeof setTimeout> | undefined;
     const clock = setInterval(() => setNow(Date.now()), 5_000);
-    const markOffline = () => { lostSincePulse.current = true; };
+    const markOffline = () => { lostSincePulse.current = true; setAwaitingPulse(true); };
     const handler = (e: Event) => {
       const detail = (e as CustomEvent<unknown>).detail;
       if (!isUsablePulse(detail)) return;
       const lost = lostSincePulse.current || wasLost();
       lostSincePulse.current = false;
+      setAwaitingPulse(false);
       const t = Date.now();
       setPulse(detail);
       setReceivedAt(t);
@@ -101,7 +103,7 @@ export function usePulseFeed(opts: { readonly onPulse: (pulse: LivePulse) => voi
   }, []);
 
   return {
-    connection: online && lostSincePulse.current ? "reconnecting" :
+    connection: online && awaitingPulse ? "reconnecting" :
       connectionOf({ online, receivedAt, now: Math.max(now, receivedAt ?? 0) }),
     pulse,
     lastGoodAt: pulse?.at ?? null,

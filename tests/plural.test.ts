@@ -145,6 +145,16 @@ test("election dates use explicit source year and official lookup links remain n
   assert.deepEqual(linked[0].linkingPage, linkingPage, "official ancestry survives to the publisher");
 });
 
+test("redirected election pages keep their saved source identity and resolve links from the final location", () => {
+  const page = { url: "https://elections.example.gov/start", baseUrl: "https://elections.example.gov/voters/current/",
+    text: '<a href="polling">Find my polling place</a>', collectedAt: "2026-09-30T00:00:00Z" };
+  const [field] = electionPageFields(page, "ocd-division/country:us/state:mo");
+  assert.equal(field.sourceUrl, page.url);
+  assert.equal(field.value, "https://elections.example.gov/voters/current/polling");
+  const directory = { ...page, text: '<form method="get" action="states"><select name="state"><option value="MO">Missouri</option></select></form>' };
+  assert.equal(electionDirectorySelection(directory, "Missouri"), "https://elections.example.gov/voters/current/states?state=MO");
+});
+
 /**
  * State legislators, and the reconciliation that makes them attachable.
  *

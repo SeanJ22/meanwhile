@@ -50,7 +50,7 @@ export function electionPageFields(page: HeldSourcePage, divisionId: string, lin
       : /(?:sample )?ballot.*(?:look.?up|search)/i.test(label) ? "ballot_lookup" : null;
     if (!kind) continue;
     try {
-      const url = new URL(decodeEntities(match[1]), page.url);
+      const url = new URL(decodeEntities(match[1]), page.baseUrl ?? page.url);
       if (isOfficialSource(url.href, { url: page.url, html: page.text, linkingPage })) add(kind, url.href, label);
     } catch { /* An invalid link is left open, never fabricated. */ }
   }

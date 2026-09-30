@@ -8,6 +8,8 @@ import { fieldManualForSource, type FieldManualRead } from "../../control-plane/
 
 export interface HeldSourcePage {
   readonly url: string;
+  /** Final retrieval location for relative links; url remains the saved source identity. */
+  readonly baseUrl?: string;
   readonly text: string;
   readonly collectedAt: string;
   /** Metadata for these same bytes in the ordinary shared evidence vault. */
@@ -37,7 +39,7 @@ export interface NationalPlaceSources {
 function links(page: HeldSourcePage): { url: string; label: string }[] {
   return [...page.text.matchAll(/<a\b[^>]*href\s*=\s*["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi)].flatMap(match => {
     try {
-      const url = new URL(decodeEntities(match[1]), page.url);
+      const url = new URL(decodeEntities(match[1]), page.baseUrl ?? page.url);
       return url.protocol === "https:" ? [{ url: url.href, label: cellText(match[2]).replace(/\s+/g, " ").trim() }] : [];
     } catch { return []; }
   });
@@ -56,7 +58,8 @@ export function electionDirectorySelection(page: HeldSourcePage, stateName: stri
       if (!name) continue;
       for (const option of select[2].matchAll(/<option\b[^>]*value=["']([^"']+)["'][^>]*>([\s\S]*?)<\/option>/gi)) {
         if (cellText(option[2]).toLowerCase() !== stateName.toLowerCase()) continue;
-        const url = new URL(/\baction=["']([^"']+)["']/i.exec(form[1])?.[1] ?? page.url, page.url);
+        const base = page.baseUrl ?? page.url;
+        const url = new URL(/\baction=["']([^"']+)["']/i.exec(form[1])?.[1] ?? base, base);
         url.searchParams.set(name, decodeEntities(option[1]));
         return url.href;
       }
@@ -159,7 +162,7 @@ export async function collectNationalPlaceSources(input: {
       .find(m => new RegExp(`\\bid=["']${state}["']`, "i").test(m[1]));
     const path = anchor && /href=["']([^"']+)["']/i.exec(anchor[1])?.[1];
     if (!path) { gaps.push({ sourceUrl: directory.url, detail: `The national directory has no ${state.toUpperCase()} link` }); return; }
-    const statePage = await attempt(new URL(path, directory.url).href);
+    const statePage = await attempt(new URL(path, directory.baseUrl ?? directory.url).href);
     if (!statePage) return;
     const divisionId = input.divisions.find(d => d.divisionType === "state" && d.id.endsWith(`:${state}`))?.id;
     if (!divisionId) return;

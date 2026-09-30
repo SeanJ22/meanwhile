@@ -337,7 +337,7 @@ export async function publishRoutineReaderEdge(store: RoutineDataStore, observed
           : { sourceThrough: servedManifest?.sourceThrough ?? null, retrievedAt: prepared?.status === "CURRENT" ? prepared.checkedAt : servedManifest?.retrievedAt ?? null, promotedThrough: servedManifest?.promotedThrough ?? null },
         { store: artifactStore, now: observedAt, extras, authority, registrations, ...(checks ? { checks } : {}) });
       if (edge.status === "FAILED") throw new Error(edge.error);
-      const purge = edge.status === "PUBLISHED" ? await purgeReaderCacheTags([READER_MANIFEST_CACHE_TAG]) : null;
+      const purge = edge.status === "PUBLISHED" && artifactStore.kind === "netlify-blobs" ? await purgeReaderCacheTags([READER_MANIFEST_CACHE_TAG]) : null;
       console.log(JSON.stringify({ readerEdge: edge.status, ...("sequence" in edge ? { sequence: edge.sequence } : {}), ...(purge ? { purged: purge.purged } : {}) }));
 
     }

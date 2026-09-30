@@ -62,12 +62,14 @@ import {
   CENSUS_GEOCODER_URL,
   parseCensusPoint,
 } from "../lib/geo/census-geocoder.ts";
-import type {
-  SiteKind,
-  VotingJurisdiction,
-  VotingSite,
-  VotingSitesFile,
-  SiteRung,
+import {
+  heldVotingSiteCoordinates,
+  votingSiteAddressKey,
+  type SiteKind,
+  type VotingJurisdiction,
+  type VotingSite,
+  type VotingSitesFile,
+  type SiteRung,
 } from "../lib/ballot/voting-sites.ts";
 
 /**
@@ -108,7 +110,7 @@ let successfulAuthorityReads = 0;
 
 async function getText(url: string): Promise<{ status: number; body: string }> {
   await sleep(SPACING_MS);
-  const res = await fetch(url, { headers: { "user-agent": UA }, redirect: "follow" });
+  const res = await fetch(url, { headers: { "user-agent": UA }, redirect: "follow", signal: AbortSignal.timeout(30_000) });
   const body = await res.text();
   officialRawBodies.push(`${url}\n${res.url}\nHTTP ${res.status}\n${body}`);
   if (res.ok) successfulAuthorityReads += 1;
@@ -119,7 +121,7 @@ async function getJson<T>(url: string): Promise<T> {
   await sleep(SPACING_MS);
   const res = await fetch(url, {
     headers: { "user-agent": UA, accept: "application/json" },
-    redirect: "follow",
+    redirect: "follow", signal: AbortSignal.timeout(30_000),
   });
   const body = await res.text();
   officialRawBodies.push(`${url}\n${res.url}\nHTTP ${res.status}\n${body}`);
@@ -186,7 +188,7 @@ async function geocodeOnce(address: string): Promise<{ lat: number; lng: number 
   url.searchParams.set("format", "json");
   await sleep(SPACING_MS);
   try {
-    const res = await fetch(url, { headers: { "user-agent": UA, accept: "application/json" } });
+    const res = await fetch(url, { headers: { "user-agent": UA, accept: "application/json" }, signal: AbortSignal.timeout(10_000) });
     if (!res.ok) return null;
     return parseCensusPoint(await res.json());
   } catch {
@@ -203,7 +205,7 @@ async function geocodeOnce(address: string): Promise<{ lat: number; lng: number 
  * published string as the thing we cite while still landing a point.
  */
 async function geocode(address: string): Promise<{ lat: number; lng: number } | null> {
-  const key = address.toLowerCase().replace(/\s+/g, " ").trim();
+  const key = votingSiteAddressKey(address);
   if (geocodeCache.has(key)) return geocodeCache.get(key) ?? null;
 
   const variants = [address];
@@ -848,6 +850,7 @@ async function main(): Promise<void> {
   const priorRead = await readVotingSitesProjection({ store, bypassCache: true });
   if (priorRead.kind === "STORE_UNREACHABLE") throw new Error(priorRead.detail);
   const prior = priorRead.kind === "PROMOTED" ? priorRead.value : null;
+  for (const [address, point] of heldVotingSiteCoordinates(prior)) geocodeCache.set(address, point);
 
   if (COCHISE_ONLY) {
     const cochise = await retrieveCochise();

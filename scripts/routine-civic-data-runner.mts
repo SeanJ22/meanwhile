@@ -457,7 +457,7 @@ async function recordHuntSourceProgress(task: RoutineSourceTask, stage: HuntSour
 // from entering the next pass.
 const admissionNowMs = Date.now();
 let huntTasks: readonly RoutineSourceTask[] = [];
-try {
+if (ONLY === null) try {
   huntTasks = await readHuntSourceTasks();
 } catch (error) {
   const detail = safeFailure(sanitizedErrorDiagnostic(error));
@@ -479,7 +479,7 @@ const clockReads = FORCE
 // publisher-stated end, where one exists, decides when it concluded (C6); an
 // unreadable end set falls back to the day bound and is reported.
 let statedEndsByTask: ReadonlyMap<string, ReadonlyMap<string, number>> = new Map();
-if (!FORCE) {
+if (!FORCE && selectedTasks.some(task => task.recordClass === "MEETING")) {
   try {
     const byScope = statedSittingEndsByScope(await statedSittingEndsRead(getDb()));
     statedEndsByTask = new Map(selectedTasks.flatMap((task) =>

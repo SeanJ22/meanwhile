@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PULSE_ACTIVE_INTERVAL_MS, PULSE_INTERVAL_MS, PULSE_STALE_MS, type LivePulse } from "@/lib/control-plane/live-pulse.ts";
+import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import s from "./mw.module.css";
 
 /** One visible-tab subscription shared by every page in the Admin shell. */
@@ -57,7 +58,7 @@ export function LiveRefresh() {
   const age = lastSuccessfulAt === null ? null : clock - Date.parse(lastSuccessfulAt);
   const stale = failed || age !== null && age > PULSE_STALE_MS;
   const checked = lastSuccessfulAt === null ? "No live check has succeeded yet" :
-    `Last live check ${new Intl.DateTimeFormat("en-US", { timeZone: "America/Phoenix", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }).format(new Date(lastSuccessfulAt))} MST`;
+    `Last live check ${formatEastern(lastSuccessfulAt)}`;
   return <p className={s.note} role="status">{lastSuccessfulAt === null && !failed
     ? "Connecting to live updates. No live check has succeeded yet."
     : stale

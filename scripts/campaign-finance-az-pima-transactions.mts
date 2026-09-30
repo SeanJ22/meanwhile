@@ -79,6 +79,7 @@ import { stamp } from "./stamp.mts";
 import { pimaCampaignFinanceCandidate } from "../lib/funding/data-plane.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type {
@@ -457,6 +458,7 @@ async function main(): Promise<void> {
     candidate,
     retrievedAt,
   );
+  printSourceRunnerReceipt("az-pima-local-finance", candidate, outcome);
   if (!outcome.promoted) throw new Error(`Pima campaign-finance promotion refused: ${outcome.candidate.failureCode}`);
   console.log(`\npromoted ${outcome.promoted.versionId}; no tracked runtime artifact was written`);
   console.log(`  ${contributions.rows.length} contribution rows, ${distributions.rows.length} distribution rows`);
@@ -478,7 +480,8 @@ try {
       failureDetail: error instanceof Error ? error.message : String(error),
       parserVersion: "pima-campaign-finance/2",
     });
-    await processRegisteredManualCandidate(new PostgresRoutineDataStore(), "az-pima-local-finance", failed, attemptedAt);
+    const outcome = await processRegisteredManualCandidate(new PostgresRoutineDataStore(), "az-pima-local-finance", failed, attemptedAt);
+    printSourceRunnerReceipt("az-pima-local-finance", failed, outcome);
   }
   throw error;
 }

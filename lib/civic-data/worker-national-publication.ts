@@ -79,9 +79,19 @@ export interface NationalPlacePublication {
   readonly gaps: readonly { readonly key: string; readonly detail: string }[];
 }
 
+/**
+ * A governing county subdivision (a township or town that governs) is a
+ * `place` in the registry, as the registration layer already files it; its
+ * body is that government's council or board.
+ */
 const DIVISION_TYPES: Readonly<Record<string, Division["divisionType"]>> = {
   place: "place", county: "county", school: "school_district", school_district: "school_district", cd: "cd", sldu: "sldu", sldl: "sldl",
+  cousub: "place", county_subdivision: "place",
 };
+/** The country and its states are the registry's scope, never its rows; statewide officials publish on their own. */
+const SCOPE_DIVISIONS = new Set(["country", "state"]);
+/** Census functional statuses of a government (active, partially consolidated, consolidated, subordinate). */
+const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
 const TIERS: Readonly<Record<Division["divisionType"], Tier>> = { cd: "national", sldu: "state", sldl: "state", county: "local", place: "local", school_district: "local" };
 const LEGISLATIVE = new Set<Division["divisionType"]>(["cd", "sldu", "sldl"]);
 const STATE_DIVISION = /^ocd-division\/country:us\/state:[a-z]{2}$/;
@@ -110,7 +120,10 @@ export function nationalBodyId(division: Pick<Division, "ocdId" | "divisionType"
 }
 
 /** The registry row for a division, when its saved Census response supports it (§3). */
-function divisionRow(input: NationalDivisionInput, captures: readonly WorkerPublicationCapture[], now: string): Division | string {
+function divisionRow(input: NationalDivisionInput, captures: readonly WorkerPublicationCapture[], now: string): Division | string | null {
+  if (SCOPE_DIVISIONS.has(input.divisionType)) return null;
+  // A statistical or fictitious subdivision is not a government; Census has said so, and the place layer holds the one that is.
+  if (["cousub", "county_subdivision"].includes(input.divisionType) && !GOVERNING_FUNCSTAT.has((input.funcstat ?? "").toUpperCase())) return null;
   const divisionType = DIVISION_TYPES[input.divisionType];
   if (!divisionType) return `DIVISION_TYPE_NOT_A_REGISTRY_DIVISION:${input.divisionType}`;
   const state = /\/state:([a-z]{2})\b/.exec(input.id)?.[1]?.toUpperCase();
@@ -162,6 +175,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
   const officialDivisions = new Set(input.sources.officials.map(o => o.divisionId));
   for (const row of input.divisions) {
     const division = heldDivisions.get(row.id) ?? divisionRow(row, input.geographyCaptures, input.now);
+    if (division === null) continue;
     if (typeof division === "string") { gaps.push({ key: `division:${row.id}`, detail: division }); continue; }
     if (!heldDivisions.has(row.id)) { divisions.push(division); used.add(row.sourceUrl); }
     const implied = LEGISLATIVE.has(division.divisionType)
@@ -195,6 +209,13 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
     else statewide.push({ official, row, capture: capture! });
   }
   const statewideMembers: { bodyId: string; versionId: string; discoveryIds: string[] }[] = [];
+  // The office's holder already live under the same name and title is confirmed, never replaced:
+  // replacing would drop the contact, party and photo facts that row already carries.
+  const live = (s: typeof statewide[number]) => prior!.payload.statewideExecutives.find(row => row.holder.id === s.row.holder.id);
+  for (const s of statewide.filter(s => live(s)?.holder.name === s.row.holder.name && live(s)?.holder.officeTitle === s.row.holder.officeTitle)) {
+    statewideMembers.push({ bodyId: s.row.stateOcdId, versionId: prior.versionId, discoveryIds: [s.official.discoveryId] });
+  }
+  statewide.splice(0, statewide.length, ...statewide.filter(s => !(live(s)?.holder.name === s.row.holder.name && live(s)?.holder.officeTitle === s.row.holder.officeTitle)));
   if (statewide.length) {
     try {
       const sourceReceipt = section3SourceReceipt(statewide.map(s => s.capture), input.now, "section3-validator:national-statewide",
@@ -203,8 +224,9 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
       const published = await promote(input.store, { contractId: "registry-runtime-bindings", scope: "MEMBERS", version: registryEdition(`national-statewide:${digest}`), sourceThrough: input.now, sourceReceipt,
         payload: { ...prior.payload, registry: { ...prior.payload.registry, divisions: [], bodies: [] },
           bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: statewide.map(s => s.row), officialPhotos: { photos: [] }, rosterPhotos: {},
+          // Every holder this package states gets a bridge row stating the same facts: a new holder of an
+          // office keyed by its seat owes its candidacy check again, rather than inheriting the last holder's.
           officialCandidacies: { ...prior.payload.officialCandidacies, rows: statewide
-            .filter(s => !prior!.payload.officialCandidacies.rows.some(row => row.holder.id === s.row.holder.id))
             .map(s => ({ holder: { id: s.row.holder.id, name: s.row.holder.name, officeTitle: s.row.holder.officeTitle, divisions: [s.row.stateOcdId],
               authority: "REGISTRY_STATEWIDE_EXECUTIVE" as const, sourceUrl: s.row.sourceUrl }, status: "NOT_CHECKED" as const, candidacy: null, unresolvedCandidacyIds: [],
               reason: "Officeholding verified on the official's own page. Ballot candidacy remains owed; no candidacy or absence is asserted." })) } } }, prior, input.now);

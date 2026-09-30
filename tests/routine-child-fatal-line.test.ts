@@ -82,7 +82,7 @@ test("the routine runner installs the fatal line before its first statement that
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const install = source.indexOf('installFatalLine("routine-civic-data-runner", () => step);');
   assert.ok(install > 0, "the routine runner no longer installs its fatal line");
-  for (const later of ["routineTaskSelection(", "assertRuntimeAuthority(", "acquireProcessSingleton(", "resolveProductionWriteHandle();"]) {
+  for (const later of ["routineTaskSelection(", "assertRuntimeAuthority(", "acquireProcessSingleton(", "prepareProductionCivicDataWrite();"]) {
     const at = source.indexOf(later, source.indexOf("\nconst ROOT"));
     assert.ok(at > install, `${later} runs before the fatal line is installed`);
   }

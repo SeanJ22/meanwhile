@@ -147,7 +147,7 @@ test("an unchanged authority version carries its served artifact forward; the ru
 
   // The runner asks the served manifest first and reads a family's value only
   // when its pointer has moved past the served version.
-  const script = readFileSync("scripts/routine-civic-data-reader-repair.mts", "utf8");
+  const script = readFileSync("lib/civic-data/reader-edge-publication.ts", "utf8");
   for (const family of ["registry-runtime", "federal-directory", "campaign-sites", "state-legislators", "meeting-outcomes", "comment-access"]) {
     assert.match(script, new RegExp(`servedIfCurrent\\("${family}"`), `${family} is checked against the served manifest`);
     assert.match(script, new RegExp(`authority\\["${family}"\\] = \\{ versionId: carried, carried: true \\}`), `${family} carries forward`);

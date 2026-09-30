@@ -70,6 +70,8 @@ export interface ScoutToolSpec {
  * a candidate's `observedOn` and `permission` are DERIVED from (RULING 243).
  */
 export interface ArtifactProvenance {
+  readonly retrievalUrl?: string;
+  readonly contentType?: string;
   readonly artifactId: string;
   readonly canonicalUrl: string;
   /** The vault stamp. The date part is a candidate's `observedOn`. */

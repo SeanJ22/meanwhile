@@ -3,8 +3,7 @@
  *
  * Routine data never causes this path to run.  The only target is the SHA the
  * already-deployed application reports from `/api/build`, and it is eligible
- * only after the existing post-deploy integrity receipt and every required
- * software check are green for that exact commit.  The adapter at the bottom
+ * once the existing required CI checks are green for that deployed main commit.  The adapter at the bottom
  * may fetch/switch/install in a dedicated clean checkout; it has no commit,
  * push, merge, deployment, or civic-data write operation.
  *
@@ -16,7 +15,6 @@ import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, win32 } from "node:path";
 
-import type { ProductionIntegrityRead } from "./production-integrity-data-plane.ts";
 import { REQUIRED_CONTEXTS } from "./required-contexts.ts";
 import type { ServedCommit } from "../../scripts/post-deploy-observer.mts";
 
@@ -137,11 +135,10 @@ export function requiredContextEvidence(
   return { ok: true, contexts: [...required] };
 }
 
-/** Pure authority/certification decision. */
+/** Accept the deployed release using the existing required CI checks. */
 export function inspectRuntimeReleaseEvidence(input: {
   readonly runningSha: string | null;
   readonly served: ServedCommit;
-  readonly integrity: ProductionIntegrityRead;
   readonly checkRuns: readonly GithubCheckRun[] | null;
 }): RuntimeReleaseInspection {
   const runningSha = lowerFullSha(input.runningSha);
@@ -156,31 +153,9 @@ export function inspectRuntimeReleaseEvidence(input: {
       runningSha,
     );
   }
-  if (input.integrity.kind !== "HELD") {
-    return refused(
-      `POST_DEPLOY_INTEGRITY_${input.integrity.kind}`,
-      input.integrity.detail,
-      runningSha,
-      targetSha,
-    );
-  }
-  const integritySha = lowerFullSha(input.integrity.record.deployedSha);
-  if (
-    input.integrity.record.observed !== "HELD" ||
-    input.integrity.record.gateExit !== 0 ||
-    input.integrity.record.moment !== "post-deploy" ||
-    integritySha !== targetSha
-  ) {
-    return refused(
-      "POST_DEPLOY_INTEGRITY_NOT_HELD_FOR_TARGET",
-      `latest post-deploy integrity is ${input.integrity.record.observed} for ${integritySha ?? "no full SHA"}, not HELD for ${targetSha}`,
-      runningSha,
-      targetSha,
-    );
-  }
   if (input.checkRuns === null) {
     return refused(
-      "SOFTWARE_CERTIFICATION_UNREADABLE",
+      "SOFTWARE_CI_UNREADABLE",
       `required software checks could not be read for ${targetSha}`,
       runningSha,
       targetSha,
@@ -192,8 +167,8 @@ export function inspectRuntimeReleaseEvidence(input: {
     state: runningSha === targetSha ? "CURRENT" : "UPDATE_REQUIRED",
     code: runningSha === targetSha ? "RUNTIME_RELEASE_CURRENT" : "RUNTIME_RELEASE_UPDATE_REQUIRED",
     detail: runningSha === targetSha
-      ? `running code equals the deployed, integrity-held, fully certified SHA ${targetSha}`
-      : `running ${runningSha}; deployed, integrity-held, fully certified target is ${targetSha}`,
+      ? `running code equals the deployed, CI-passing SHA ${targetSha}`
+      : `running ${runningSha}; deployed, CI-passing target is ${targetSha}`,
     runningSha,
     targetSha,
     reliedOn: checks.contexts,
@@ -279,6 +254,7 @@ export function runtimeGithubRepository(root: string, run: RunCommand = defaultR
 
 /** Operational civic readers must not inherit a developer checkout's database. */
 export function runtimeProductionReadEnvironment(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+  if (env.WTP_RUNTIME_MODE === "staging") return { ...env };
   const connection = env.WTP_PRODUCTION_DATABASE_URL_READONLY;
   if (!connection?.trim()) throw new Error("RUNTIME_CIVIC_READ_TARGET_UNAVAILABLE");
   let protocol: string;

@@ -1,6 +1,6 @@
 # Meanwhile — Sean's standing decisions
 
-Adopted as a consolidated replacement — September 25, 2026. Adoption records Sean's approval of this wording; it does not prove approval of older AI-written rulings. Updated September 29, 2026: section 0 added; verification defined in §3; §1, §2, §5, §6, §7 and §9 aligned with section 0. Also September 29, 2026: which sources count as official (§3), the State Run Checklist's role (§3), plans without durations or dates (§5), and Admin in Eastern time (§10).
+Adopted as a consolidated replacement — September 25, 2026. Adoption records Sean's approval of this wording; it does not prove approval of older AI-written rulings. Updated September 29, 2026: section 0 added; verification defined in §3; §1, §2, §5, §6, §7 and §9 aligned with section 0. Also September 29, 2026: which sources count as official (§3), the State Run Checklist's role (§3), plans without durations or dates (§5), and Admin in Eastern time (§10). Updated September 30, 2026: no Admin page outside the command center (§0).
 
 ## 0. What Meanwhile is, and how all work is judged
 
@@ -23,7 +23,7 @@ Everything comes from official sources, shows when it was last checked, and stay
 1. **Every hunt starts from the place.** Resolve every division the ZIP touches, including ZIPs split across districts. List everything a reader there is owed from the picture above: every seat and who holds it, every body with its members, contact, calendar and decisions, every funding record, every contest on the ballot, every deadline. Fill it first from national sources (Congress, Census, Open States, FEC, the Polarization Research Lab, state election offices) and from everything already held for those places, whichever job, ZIP or pipeline captured it. Send agents only for what is still blank. A fact researched once for a county, city or district serves every ZIP it covers.
 2. **Set the table.** A record goes live when its minimum facts check out against the official source they came from (§3). Every other fact attaches as it is verified. Each blank stays open as standing work until it is filled or shown to be unpublished by the government. Nothing waits on the rest of the checklist, and getting the basics never ends the work.
 3. **Agents run in parallel, at scale.** They use every API, feed and tool Sean has provided, and learn from each place so the next one is faster and cheaper. Scale is limited by the budget Sean sets, not by one-at-a-time processing.
-4. **Admin is the command center.** It shows what readers have for any place, what agents are doing right now and what they found, where work is stuck and why, and lets Sean send agents and budget to any gap or blocker. It works with Sean's PC off.
+4. **Admin is the command center.** It shows what readers have for any place, what agents are doing right now and what they found, where work is stuck and why, and lets Sean send agents and budget to any gap or blocker. It works with Sean's PC off. There is no Admin page outside the command center: a fix to Admin goes into the command center, and the old page it replaces is deleted in the same change (Sean, September 30, 2026).
 
 **Every plan, change and report is judged by these tests:**
 

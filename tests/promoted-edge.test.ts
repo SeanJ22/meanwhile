@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { after, test } from "node:test";
 
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { publishRoutineReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import {
   readPromotedCivicData,
@@ -23,6 +24,9 @@ import { ensureReaderAuthorityEdge, publishReaderEdgeArtifacts, type PublishAuth
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import type { PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
 import { readPromotedEdgeFirst, ReaderEdgeOnlyRefusal, withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { VOTING_SITES_CONTRACT, votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";
+import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
+import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
 
 /**
  * **A PROVEN POINTER ON THE READER EDGE READS EXACTLY AS THE DATABASE READ OF
@@ -70,6 +74,23 @@ async function promotedAzStore() {
   return { store, candidate };
 }
 
+test("default rechecks keep one candidate and advance freshness; explicit false stores a new version", async () => {
+  const { store, candidate } = await promotedAzStore();
+  const recheck = { ...candidate, id: `${candidate.id}-recheck`,
+    retrieval: { ...candidate.retrieval, retrievedAt: T1, rawHash: "b".repeat(64) } };
+  const outcome = await processRegisteredManualCandidate(store, AZ.contractId, recheck, T1);
+  assert.equal(outcome.confirmed?.versionId, candidate.id);
+  assert.equal(await store.readCandidate(recheck.id), null, "an unchanged payload is not stored again");
+  assert.equal((await store.readPromotion(candidate.recordClass, candidate.scope))?.versionId, candidate.id);
+  const read = await readStateMoneyProjection("AZ", { store, now: T1, bypassCache: true });
+  assert.equal(read.metadata.retrievedAt, T1);
+  const forced = { ...recheck, id: `${candidate.id}-forced` };
+  const distinct = await processRegisteredManualCandidate(store, AZ.contractId, forced, T1, undefined, { confirmUnchanged: false });
+  assert.equal(distinct.confirmed, undefined);
+  assert.equal(distinct.candidate.state, "PROMOTED");
+  assert.equal((await store.readPromotion(candidate.recordClass, candidate.scope))?.versionId, forced.id);
+});
+
 const stateMoneyPointers = (states: readonly ("AZ" | "NH" | "NJ")[]): readonly PromotedEdgePointer[] =>
   promotedEdgePointers()["state-money"].filter((pointer) => states.some((state) => STATE_CAMPAIGN_FINANCE_SOURCES[state].scope === pointer.scope));
 
@@ -83,6 +104,32 @@ const comparable = <T,>(read: CivicDataReadResult<T> | { kind: string }) => {
   const { kind, value, metadata, projection } = read as { kind: string; value?: unknown; metadata?: unknown; projection?: unknown };
   return { kind, value, metadata, projection };
 };
+
+test("published voting sites serve the same jurisdictions and sites from the request edge without a database", async () => {
+  const store = new MemoryRoutineDataStore();
+  const current = JSON.parse(readFileSync(join(process.cwd(), "data", "voting-sites.json"), "utf8")) as VotingSitesFile;
+  const candidate = votingSitesCandidate({
+    current, prior: null, failures: [], rawBodies: ["official voting sites"],
+    successfulAuthorityReads: 1, requestedUrl: "https://www.pima.gov/3199/Pima-Votes",
+    finalUrl: "https://www.pima.gov/3199/Pima-Votes", retrievedAt: T0,
+  });
+  assert.equal((await processRegisteredManualCandidate(store, "voting-sites", candidate, T0)).candidate.state, "PROMOTED");
+  const database = await readVotingSitesProjection({ store, bypassCache: true, now: T1 });
+  const published = await readPromotedEdgeFamilies({
+    store, servedManifest: null, now: T1,
+    families: { "voting-sites": promotedEdgePointers()["voting-sites"] },
+  });
+  assert.deepEqual(published.skipped, []);
+  const family = published.authority["voting-sites"];
+  assert.ok(family && "value" in family);
+  const entries = (family.value as PromotedFamilyArtifactValue).entries;
+  assert.equal(entries.length, 1);
+  const edge = await withReaderAuthorityEdge({
+    edgeOnly: true,
+    promoted: new Map([[`${VOTING_SITES_CONTRACT.recordClass}:${VOTING_SITES_CONTRACT.scope}`, entries[0]!]]),
+  }, () => readVotingSitesProjection({ now: T1 }));
+  assert.deepEqual(comparable(edge), comparable(database));
+});
 
 test("the edge copy of a proven pointer reads exactly as the database read of it, through the family's own Reader", async () => {
   const { store } = await promotedAzStore();
@@ -208,4 +255,34 @@ test("published, fetched and entered: a reader request reads the family from the
     ReaderEdgeOnlyRefusal,
   );
   assert.equal(called, 0, "an edge-only context read the database");
+});
+
+
+test("direct scoped runner publication skips unrelated contracts and every unchanged payload", async () => {
+  const store = new MemoryRoutineDataStore();
+  const current = JSON.parse(readFileSync(join(process.cwd(), "data", "voting-sites.json"), "utf8")) as VotingSitesFile;
+  const candidate = votingSitesCandidate({ current, prior: null, failures: [], rawBodies: ["official voting sites"],
+    successfulAuthorityReads: 1, requestedUrl: "https://www.pima.gov/3199/Pima-Votes", finalUrl: "https://www.pima.gov/3199/Pima-Votes", retrievedAt: T0 });
+  assert.ok((await processRegisteredManualCandidate(store, "voting-sites", candidate, T0)).promoted);
+  let payloadReads = 0;
+  const scoped = new Proxy(store, { get(target, key) {
+    const value = Reflect.get(target, key);
+    if (key === "readPromotionIdentities") return async (recordClass: string, scopes: readonly string[]) => {
+      assert.equal(recordClass, VOTING_SITES_CONTRACT.recordClass);
+      assert.deepEqual(scopes, [VOTING_SITES_CONTRACT.scope]);
+      return target.readPromotionIdentities(recordClass as never, scopes);
+    };
+    if (String(key).startsWith("readPrepared")) return () => { throw new Error("scoped voting must not read meetings"); };
+    if (["readPromotion", "readCandidate", "readCandidateProof"].includes(String(key))) return (...args: unknown[]) => { payloadReads++; return value.apply(target, args); };
+    return typeof value === "function" ? value.bind(target) : value;
+  } });
+  const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "runner-scoped-edge-")));
+  assert.equal(await publishRoutineReaderEdge(scoped, T1, [VOTING_SITES_CONTRACT], { artifactStore: artifacts }), true);
+  assert.ok((await artifacts.readManifest())!.manifest.authorityArtifacts?.["voting-sites"]);
+  const initialReads = payloadReads;
+  assert.ok(initialReads > 0);
+  const initialSequence = (await artifacts.readManifest())!.manifest.sequence;
+  assert.equal(await publishRoutineReaderEdge(scoped, T1, [VOTING_SITES_CONTRACT], { artifactStore: artifacts }), true);
+  assert.equal(payloadReads, initialReads);
+  assert.equal((await artifacts.readManifest())!.manifest.sequence, initialSequence);
 });

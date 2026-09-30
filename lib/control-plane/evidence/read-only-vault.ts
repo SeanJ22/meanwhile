@@ -22,6 +22,8 @@ import type { Dirent } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 
+import { netlifyEvidenceStoreFromEnv, type NetlifyEvidenceStore } from "./netlify-store.ts";
+import { extensionFor } from "./store.ts";
 import { ARTIFACT_TIERS, artifactId, type ArtifactTier } from "./artifact.ts";
 import type { ArtifactRecord } from "../repository/types.ts";
 
@@ -77,6 +79,35 @@ export async function indexVault(root: string, project: string = READ_ONLY_VAULT
   const byId = new Map<string, HeldVaultArtifact>();
   const byHash = new Map<string, HeldVaultArtifact>();
   const byWorkItem = new Map<string, HeldVaultArtifact[]>();
+  const add = (sidecar: Sidecar, bodyPath: string): void => {
+    const meta = sidecar.meta;
+    const tier = meta?.custom?.tier;
+    const hash = meta?.contentHash;
+    if (!meta || typeof hash !== "string" || !/^sha256-[0-9a-f]{64}$/.test(hash) || typeof tier !== "string" || !TIERS.includes(tier)) return;
+    if (typeof sidecar.bodySha256 !== "string") return;
+    const status = Number(meta.custom?.httpStatus);
+    const held: HeldVaultArtifact = {
+      id: artifactId(tier as ArtifactTier, hash),
+      tier: tier as ArtifactTier,
+      contentHash: hash,
+      contentType: meta.contentType ?? "",
+      canonicalUrl: meta.custom?.canonicalUrl ?? null,
+      retrievalUrl: meta.custom?.retrievalUrl ?? null,
+      retrievedAt: meta.custom?.retrievedAt ?? null,
+      httpStatus: Number.isInteger(status) ? status : null,
+      sourceId: meta.custom?.sourceId ?? null,
+      workItemId: meta.custom?.workItemId ?? null,
+      attemptId: meta.custom?.attemptId ?? null,
+      methodRouteId: meta.custom?.methodRouteId ?? null,
+      permission: meta.custom?.permission ?? null,
+      retentionPolicy: meta.custom?.retentionPolicy ?? null,
+      bodyPath,
+      bodySha256: sidecar.bodySha256,
+    };
+    byId.set(held.id, held);
+    byHash.set(hash.slice("sha256-".length), held);
+    if (held.workItemId !== null) byWorkItem.set(held.workItemId, [...(byWorkItem.get(held.workItemId) ?? []), held]);
+  };
   const walk = async (directory: string): Promise<void> => {
     let entries: Dirent[];
     try {
@@ -94,36 +125,18 @@ export async function indexVault(root: string, project: string = READ_ONLY_VAULT
       }
       if (!entry.name.endsWith(SIDECAR_SUFFIX)) continue;
       const sidecar = JSON.parse(await readFile(path, "utf8")) as Sidecar;
-      const meta = sidecar.meta;
-      const tier = meta?.custom?.tier;
-      const hash = meta?.contentHash;
-      if (!meta || typeof hash !== "string" || !/^sha256-[0-9a-f]{64}$/.test(hash) || typeof tier !== "string" || !TIERS.includes(tier)) continue;
-      if (typeof sidecar.bodySha256 !== "string") continue;
-      const status = Number(meta.custom?.httpStatus);
-      const held: HeldVaultArtifact = {
-        id: artifactId(tier as ArtifactTier, hash),
-        tier: tier as ArtifactTier,
-        contentHash: hash,
-        contentType: meta.contentType ?? "",
-        canonicalUrl: meta.custom?.canonicalUrl ?? null,
-        retrievalUrl: meta.custom?.retrievalUrl ?? null,
-        retrievedAt: meta.custom?.retrievedAt ?? null,
-        httpStatus: Number.isInteger(status) ? status : null,
-        sourceId: meta.custom?.sourceId ?? null,
-        workItemId: meta.custom?.workItemId ?? null,
-        attemptId: meta.custom?.attemptId ?? null,
-        methodRouteId: meta.custom?.methodRouteId ?? null,
-        permission: meta.custom?.permission ?? null,
-        retentionPolicy: meta.custom?.retentionPolicy ?? null,
-        bodyPath: path.slice(0, -SIDECAR_SUFFIX.length),
-        bodySha256: sidecar.bodySha256,
-      };
-      byId.set(held.id, held);
-      byHash.set(hash.slice("sha256-".length), held);
-      if (held.workItemId !== null) byWorkItem.set(held.workItemId, [...(byWorkItem.get(held.workItemId) ?? []), held]);
+      add(sidecar, path.slice(0, -SIDECAR_SUFFIX.length));
     }
   };
-  await walk(join(root, "project", project));
+  const remote = netlifyEvidenceStoreFromEnv();
+  if (remote) {
+    for (const key of await remote.list(`project/${project}/`)) {
+      const description = await remote.describe(key);
+      if (description) add(description, `netlify:${key}`);
+    }
+  } else {
+    await walk(join(root, "project", project));
+  }
   return { byId, byHash, byWorkItem };
 }
 
@@ -137,7 +150,11 @@ export function crosswalkEvidenceWorkItem(rawSha256: string): string {
 
 /** The held bytes, proved to be the bytes the sidecar committed. */
 export async function readHeldBytes(artifact: HeldVaultArtifact): Promise<Uint8Array> {
-  const bytes = await readFile(artifact.bodyPath);
+  const remote = artifact.bodyPath.startsWith("netlify:") ? netlifyEvidenceStoreFromEnv() : null;
+  if (artifact.bodyPath.startsWith("netlify:") && !remote) throw new Error("NETLIFY_VAULT_UNCONFIGURED");
+  const held = remote ? await remote.get(artifact.bodyPath.slice("netlify:".length)) : null;
+  if (remote && !held) throw new Error(`VAULT_BODY_MISSING:${artifact.id}`);
+  const bytes = held?.bytes ?? await readFile(artifact.bodyPath);
   const actual = `sha256-${createHash("sha256").update(bytes).digest("hex")}`;
   if (actual !== artifact.bodySha256) {
     throw new Error(`VAULT_BODY_CORRUPTED:${artifact.id}: the sidecar committed ${artifact.bodySha256}, the body hashes to ${actual}`);
@@ -149,17 +166,40 @@ export async function readHeldBytes(artifact: HeldVaultArtifact): Promise<Uint8A
  * The record supplies date/work/hash; source directories are trusted names read
  * from the vault root, never a caller-supplied path. A missing sidecar is a miss,
  * while unreadable or malformed matching metadata is a failed read. */
-export async function findHeldCapture(root: string, record: ArtifactRecord): Promise<HeldVaultArtifact | null> {
+export async function findHeldCapture(root: string, record: ArtifactRecord,
+  remote: Pick<NetlifyEvidenceStore, "directories" | "describe"> | null = netlifyEvidenceStoreFromEnv(),
+): Promise<HeldVaultArtifact | null> {
   if (!/^sha256-[0-9a-f]{64}$/.test(record.contentHash) || !/^[a-z][a-z0-9-]{1,120}$/.test(record.workItemId) ||
       !Number.isFinite(Date.parse(record.recordedAt))) throw new Error("VAULT_CAPTURE_LOOKUP_IDENTITY_INVALID");
+  let host: string | null = null;
+  try { host = new URL(record.canonicalUrl).hostname; } catch { /* Other registered source IDs are still searched. */ }
+  const day = new Date(record.recordedAt).toISOString().slice(0, 10).replaceAll("-", "/");
+  if (remote) {
+    const sourcePrefix = `project/${READ_ONLY_VAULT_PROJECT}/source/`;
+    const filename = `${record.contentHash}.${extensionFor(record.contentType)}`;
+    const lookup = async (source: string): Promise<HeldVaultArtifact | null> => {
+      const key = `${source}/${day}/${record.workItemId}/${filename}`;
+      const description = await remote.describe(key);
+      return description ? attributedCapture(record, description, `netlify:${key}`) : null;
+    };
+    // The publisher host is the common source ID. Only list source directories
+    // if it misses; no vault-wide body or metadata scan is needed for one copy.
+    if (host) {
+      const held = await lookup(sourcePrefix + host);
+      if (held) return held;
+    }
+    for (const source of await remote.directories(sourcePrefix)) {
+      if (source === sourcePrefix + host) continue;
+      const held = await lookup(source);
+      if (held) return held;
+    }
+    return null;
+  }
   const sourceRoot = join(root, "project", READ_ONLY_VAULT_PROJECT, "source");
   let sources: string[];
   try { sources = (await readdir(sourceRoot, { withFileTypes: true })).filter(row => row.isDirectory()).map(row => row.name); }
   catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") return null; throw error; }
-  let host: string | null = null;
-  try { host = new URL(record.canonicalUrl).hostname; } catch { /* Other registered source IDs are still searched. */ }
   if (host && sources.includes(host)) sources = [host, ...sources.filter(source => source !== host)];
-  const day = new Date(record.recordedAt).toISOString().slice(0, 10).replaceAll("-", "/");
   for (const source of sources) {
     const directory = join(sourceRoot, source, day, record.workItemId);
     let entries: string[];
@@ -168,24 +208,27 @@ export async function findHeldCapture(root: string, record: ArtifactRecord): Pro
     for (const name of entries.filter(name => name.startsWith(`${record.contentHash}.`) && name.endsWith(SIDECAR_SUFFIX))) {
       const sidecarPath = join(directory, name);
       const sidecar = JSON.parse(await readFile(sidecarPath, "utf8")) as Sidecar;
-      const meta = sidecar.meta;
-      // The same bytes can be captured by two Attempts. A sibling sidecar is
-      // not this record's provenance, even when the hash and WorkItem match.
-      if (meta?.custom?.attemptId !== record.attemptId) continue;
-      if (!meta || meta.contentHash !== record.contentHash || meta.custom?.tier !== record.tier ||
-          meta.custom?.workItemId !== record.workItemId ||
-          meta.custom?.canonicalUrl !== record.canonicalUrl || meta.custom?.retrievedAt !== record.recordedAt ||
-          typeof sidecar.bodySha256 !== "string") throw new Error(`VAULT_CAPTURE_SIDECAR_MISMATCH:${record.artifactId}`);
-      const status = Number(meta.custom?.httpStatus);
-      return { id: artifactId(record.tier, record.contentHash), tier: record.tier, contentHash: record.contentHash,
-        contentType: meta.contentType ?? "", canonicalUrl: meta.custom.canonicalUrl,
-        retrievalUrl: meta.custom.retrievalUrl ?? null, retrievedAt: meta.custom.retrievedAt,
-        httpStatus: Number.isInteger(status) ? status : null, sourceId: meta.custom.sourceId ?? null,
-        workItemId: meta.custom.workItemId, attemptId: meta.custom.attemptId,
-        methodRouteId: meta.custom.methodRouteId ?? null, permission: meta.custom.permission ?? null,
-        retentionPolicy: meta.custom.retentionPolicy ?? null,
-        bodyPath: sidecarPath.slice(0, -SIDECAR_SUFFIX.length), bodySha256: sidecar.bodySha256 };
+      const held = attributedCapture(record, sidecar, sidecarPath.slice(0, -SIDECAR_SUFFIX.length));
+      if (held) return held;
     }
   }
   return null;
+}
+
+function attributedCapture(record: ArtifactRecord, sidecar: Sidecar, bodyPath: string): HeldVaultArtifact | null {
+  const meta = sidecar.meta;
+  // Identical bytes acquired by another Attempt are not this record's capture.
+  if (meta?.custom?.attemptId !== record.attemptId) return null;
+  if (!meta || meta.contentHash !== record.contentHash || meta.custom?.tier !== record.tier ||
+      meta.custom?.workItemId !== record.workItemId ||
+      meta.custom?.canonicalUrl !== record.canonicalUrl || meta.custom?.retrievedAt !== record.recordedAt ||
+      typeof sidecar.bodySha256 !== "string") throw new Error(`VAULT_CAPTURE_SIDECAR_MISMATCH:${record.artifactId}`);
+  const status = Number(meta.custom?.httpStatus);
+  return { id: artifactId(record.tier, record.contentHash), tier: record.tier, contentHash: record.contentHash,
+    contentType: meta.contentType ?? "", canonicalUrl: meta.custom.canonicalUrl,
+    retrievalUrl: meta.custom.retrievalUrl ?? null, retrievedAt: meta.custom.retrievedAt,
+    httpStatus: Number.isInteger(status) ? status : null, sourceId: meta.custom.sourceId ?? null,
+    workItemId: meta.custom.workItemId, attemptId: meta.custom.attemptId,
+    methodRouteId: meta.custom.methodRouteId ?? null, permission: meta.custom.permission ?? null,
+    retentionPolicy: meta.custom.retentionPolicy ?? null, bodyPath, bodySha256: sidecar.bodySha256 };
 }

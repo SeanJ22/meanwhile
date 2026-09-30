@@ -26,7 +26,8 @@ export function prepareProductionCivicDataWrite(
 ): WriteHandle {
   const handle = resolveProductionWriteHandle(env);
   env.DATABASE_URL = handle.connection;
-  env.WTP_DB_ROLE = "production";
+  if (env.WTP_RUNTIME_MODE === "staging") env.WTP_DB_ROLE = "local";
+  else env.WTP_DB_ROLE = "production";
   env.WTP_SANCTIONED_WRITE = CIVIC_DATA_PROMOTION_SANCTION;
   assertWriteAllowed(CIVIC_DATA_PROMOTION_OPERATION, env);
   return handle;

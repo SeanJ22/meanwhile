@@ -75,6 +75,7 @@
  * of any identity — a name that exists for the duration of one `rename`.
  */
 
+import { netlifyEvidenceStoreFromEnv } from "./netlify-store.ts";
 import { randomBytes } from "node:crypto";
 import type { Dirent } from "node:fs";
 import { mkdir, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
@@ -312,6 +313,8 @@ interface Sidecar {
 /** ------------------------------------------------------- the adapter */
 
 export interface DurableEvidenceStoreOptions {
+  /** Null selects the local source during an explicit transfer. */
+  readonly remote?: EvidenceStore | null;
   /**
    * The substrate for `RESTRICTED_RAW` bodies. Absent means this store refuses
    * them by name — which is the correct behaviour and not a degraded one.
@@ -339,6 +342,7 @@ export class DurableEvidenceStore implements EvidenceStore {
   readonly root: string;
 
   private readonly restricted: RestrictedEvidenceProvider | null;
+  private readonly remote: EvidenceStore | null;
 
   constructor(root: string, options: DurableEvidenceStoreOptions = {}) {
     if (typeof root !== "string" || root.trim().length === 0) {
@@ -348,6 +352,7 @@ export class DurableEvidenceStore implements EvidenceStore {
           "reads back as missing evidence rather than as a misconfiguration.",
       );
     }
+    this.remote = options.remote === undefined ? netlifyEvidenceStoreFromEnv() : options.remote;
     this.durable = true;
     this.root = resolve(root);
     this.restricted = options.restricted ?? null;
@@ -478,6 +483,7 @@ export class DurableEvidenceStore implements EvidenceStore {
   async put(key: string, bytes: Uint8Array, meta: ObjectMeta): Promise<void> {
     const provider = this.restrictedRouting(key, meta);
     if (provider) return provider.put(key, bytes, meta);
+    if (this.remote) return this.remote.put(key, bytes, meta);
 
     const bodyPath = this.bodyPath(key);
     const offeredSha = contentHash(bytes);
@@ -560,6 +566,7 @@ export class DurableEvidenceStore implements EvidenceStore {
       const fromProvider = await this.restricted.head(key);
       if (fromProvider) return fromProvider;
     }
+    if (this.remote) return this.remote.head(key);
     const sidecar = await this.readSidecar(key);
     return sidecar ? sidecar.meta : null;
   }
@@ -583,6 +590,7 @@ export class DurableEvidenceStore implements EvidenceStore {
       if (fromProvider) return fromProvider;
     }
 
+    if (this.remote) return this.remote.get(key);
     const sidecar = await this.readSidecar(key);
     if (!sidecar) return null;
 
@@ -616,7 +624,7 @@ export class DurableEvidenceStore implements EvidenceStore {
    * read in — which differs between filesystems.
    */
   async list(prefix: string): Promise<string[]> {
-    const keys = await this.walk(this.root, "");
+    const keys = this.remote ? await this.remote.list(prefix) : await this.walk(this.root, "");
     if (this.restricted) keys.push(...(await this.restricted.list(prefix)));
     return [...new Set(keys.filter((k) => k.startsWith(prefix)))].sort();
   }

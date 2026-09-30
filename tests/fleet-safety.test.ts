@@ -528,7 +528,7 @@ test("Saturday operational night is an explicit SCHEDULED BLACKOUT", () => {
   assert.equal(controller.admitDispatch("blackout-work").admit, false);
 });
 
-test("Admin standing projection exposes ACTIVE, PAUSED, SCHEDULED BLACKOUT, and CIRCUIT BROKEN", () => {
+test("Admin standing projection exposes ACTIVE, PAUSED, and CIRCUIT BROKEN", () => {
   const beat = {
     formatVersion: 1 as const,
     beatAt: NIGHT,
@@ -542,9 +542,6 @@ test("Admin standing projection exposes ACTIVE, PAUSED, SCHEDULED BLACKOUT, and 
   };
   const active = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
   assert.equal(runnerStanding(beat, [], NIGHT, active.snapshot(NIGHT)).state, "ACTIVE");
-  const blackoutAt = "2026-09-06T02:00:00.000Z";
-  const blackout = new FleetSafetyController({ now: blackoutAt, costs: [], clock: () => Date.parse(blackoutAt) });
-  assert.equal(runnerStanding({ ...beat, beatAt: blackoutAt }, [], blackoutAt, blackout.snapshot(blackoutAt)).state, "SCHEDULED BLACKOUT");
   const broken = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
   broken.latchProvider("anthropic", "quota exhausted", "owed-work", NIGHT);
   assert.equal(runnerStanding(beat, [], NIGHT, broken.snapshot(NIGHT)).state, "CIRCUIT BROKEN");

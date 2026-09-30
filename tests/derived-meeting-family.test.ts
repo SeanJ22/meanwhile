@@ -54,6 +54,8 @@ import { walkMeetingsDiscoveryNeed, type DiscoveryOpen } from "../lib/control-pl
 import { readMeetingsProjection } from "../lib/meetings/snapshot.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
+import { reconcileSuccessfulMeetingPartition } from "../scripts/ingest.ts";
+import { meetingReaderServingWindowAt } from "../lib/meetings/constants.ts";
 
 const sha256 = (text: string): string => createHash("sha256").update(text).digest("hex");
 const OCD = "ocd-division/country:us/state:az/place:testville";
@@ -195,7 +197,7 @@ function readFeed(feed: string, now: string): Meeting[] {
   return makeIcalSource([wiring]).normalizeWithDrops([{ wiring, ics: feed, collectedAt: now, sourceUrl: ROUTE }], new Date(now)).meetings;
 }
 
-async function promoteFamily(store: MemoryRoutineDataStore, now: string, feed: string | null, host = HOST, options: { readonly confirmUnchanged?: boolean } = {}) {
+async function promoteFamily(store: MemoryRoutineDataStore, now: string, feed: string | null, host = HOST, options: { readonly confirmUnchanged?: boolean } = {}, alter?: (read: FamilyMemberRead) => FamilyMemberRead) {
   const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now });
   assert.equal(wiring.kind, "PROMOTED");
   if (wiring.kind !== "PROMOTED") throw new Error("no wiring");
@@ -210,18 +212,64 @@ async function promoteFamily(store: MemoryRoutineDataStore, now: string, feed: s
       acquisitions: [{ requestedUrl: url, finalUrl: url, httpStatus: 200, rawHash: sha256(feed!), byteCount: feed!.length }],
       ok: true, error: null, freshMeetings: readFeed(feed!, now).filter((m) => m.bodyId === member.row.bodyId), freshAgendaDocuments: [], retrievedAt: now,
     };
-  });
+  }).map(read => alter ? alter(read) : read);
   const build = buildDerivedFamily({
     wiringInput: {
       kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US:meeting-source-wiring",
       versionId: wiring.metadata.versionId!, readModelSha256: sha256(canonicalCivicDataJson(wiring.value as DerivedWiringProjection)), promotedAt: wiring.metadata.promotedAt!,
     },
     members, reads, previous, generatedAt: now,
-    reconcile: (read) => ({ meetings: read.freshMeetings, agendaDocuments: [], removalEvidence: [] }),
+    reconcile: (read, previousSlice, windowAnchor) => reconcileSuccessfulMeetingPartition({
+      sourceName: "ical", generatedAt: windowAnchor, freshMeetings: read.freshMeetings,
+      freshAgendaDocuments: read.freshAgendaDocuments, previous: previousSlice,
+    }),
   });
   const candidate = derivedFamilyCandidate(partition, build);
-  return { build, candidate, outcome: await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, now, undefined, options) };
+  const validatedAt = reads.map(read => read.retrievedAt).concat(now).sort().at(-1)!;
+  return { build, candidate, outcome: await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, validatedAt, undefined, options) };
 }
+
+test("a serving-window boundary crossed during collection uses the actual final input anchor", async () => {
+  const store = new MemoryRoutineDataStore();
+  const crosswalk = await promoteCrosswalk(store);
+  await deriveWiring(store, crosswalk, FEED, T_WIRING);
+  const prior = await promoteFamily(store, T_FAMILY, FEED, HOST, {}, read => ({ ...read, freshMeetings: [
+    ...read.freshMeetings, { ...read.freshMeetings[0], id: "ical:expires", startsAt: "2026-06-26T21:30:05.000Z" },
+  ] }));
+  assert.ok(prior.outcome.promoted, prior.outcome.candidate.failureDetail ?? "");
+  const readAt = "2026-09-24T21:30:10.574Z";
+  const next = await promoteFamily(store, T_SECOND, FEED, HOST, {}, read => ({ ...read, retrievedAt: readAt }));
+  assert.ok(next.outcome.promoted, next.outcome.candidate.failureDetail ?? "");
+  assert.equal(next.candidate.retrieval.retrievedAt, readAt);
+  assert.equal(next.build.inputs.find(row => row.kind === "MEMBER_ACQUISITION")?.retrievedAt, readAt);
+  const evidence = next.build.removalEvidence.find(row => row.key === "meeting:ical:expires");
+  assert.equal(evidence?.code, "OUTSIDE_REGISTERED_SERVING_WINDOW");
+  if (evidence?.code !== "OUTSIDE_REGISTERED_SERVING_WINDOW") return;
+  assert.equal(evidence.lowerBound, meetingReaderServingWindowAt(readAt)?.lowerBound);
+  assert.ok(!next.build.snapshot.meetings.some(row => row.id === "ical:expires"));
+});
+
+test("an unverified row stays open while its verified sibling publishes and its prior good row survives", async () => {
+  const store = new MemoryRoutineDataStore();
+  const crosswalk = await promoteCrosswalk(store);
+  await deriveWiring(store, crosswalk, FEED, T_WIRING);
+  const first = await promoteFamily(store, T_FAMILY, FEED);
+  const prior = first.build.snapshot.meetings[0];
+  const next = await promoteFamily(store, T_SECOND, FEED, HOST, {}, read => ({ ...read, freshMeetings: [
+    { ...prior, startsAt: "unconfirmed" },
+    { ...read.freshMeetings[0], id: "ical:new", title: "New verified sitting", startsAt: "2026-11-05T23:00:00.000Z" },
+    { ...read.freshMeetings[0], id: "ical:foreign", bodyId: "another-body" },
+  ] }));
+  assert.ok(next.outcome.promoted, next.outcome.candidate.failureDetail ?? "");
+  assert.equal(next.build.heldFacts.filter(row => row.code === "MEETING_ROW_UNVERIFIED").length, 2);
+  assert.equal(next.build.snapshot.meetings.find(row => row.id === prior.id)?.startsAt, prior.startsAt);
+  assert.ok(next.build.snapshot.meetings.find(row => row.id === prior.id)?.carried);
+  assert.ok(next.build.snapshot.meetings.some(row => row.id === "ical:new"));
+  assert.ok(!next.build.snapshot.meetings.some(row => row.id === "ical:foreign"));
+  const reader = await readMeetingsProjection({ store, now: T_SECOND, bypassCache: true });
+  assert.equal(reader.kind, "PROMOTED");
+  if (reader.kind === "PROMOTED") assert.ok(reader.value.meetings.some(row => row.id === "ical:new"));
+});
 
 test("C16 END TO END: a reviewed crosswalk row plus a validated route publishes through the doors with no code release", async () => {
   const store = new MemoryRoutineDataStore();

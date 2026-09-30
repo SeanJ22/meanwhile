@@ -14,6 +14,7 @@ import { ROUTINE_SOURCE_TASKS, routineTaskFromContract } from "../lib/civic-data
 import { durableRoutineRunnerReceiptIssue, parseRoutineRunnerReceipt, successfulRoutineRunnerReceiptIssue } from "../lib/civic-data/runner-receipt.ts";
 import { sourceAuthority } from "../lib/civic-data/source-authority.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { latestUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 import { NEVER_READ } from "../lib/ops/freshness.ts";
 import { MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, pimaLegistarOutcomesCandidate } from "../lib/outcomes/data-plane.ts";
 import { applyMinutesApprovals, minutesLinkFor, minutesSitting } from "../lib/outcomes/minutes-ingest.ts";
@@ -267,7 +268,9 @@ test("a routine pass reads the minutes the portal links, records the rest as not
   assert.ok(!again.requests.some((request) => request.includes("View.ashx")), "no document is read twice");
   const secondProof = await verdict(store, second.result.receiptLine, second.result.exitCode);
   assert.deepEqual({ outcome: secondProof.outcome, issue: secondProof.issue }, { outcome: "SUCCESS", issue: null });
-  assert.equal((await store.readCandidate(secondProof.candidateId))?.candidate.changeSet?.outcome, "UNCHANGED");
+  // §0/§5/§7 + Sean's S6 instruction: unchanged facts confirm the live candidate.
+  assert.equal(secondProof.candidateId, pointerBefore?.versionId);
+  assert.equal(latestUnchangedConfirmation(await store.events(secondProof.candidateId!), secondProof.candidateId!)?.retrieval.retrievedAt, "2026-09-25T17:45:03.000Z");
   assert.deepEqual((await store.readPromotion("MEETING_OUTCOME", SCOPE))?.payload, pointerBefore?.payload);
   resetOutcomeSnapshotCache();
 });
@@ -343,7 +346,9 @@ test("minutes whose extraction fails are held as a failed extraction and not dow
   assert.equal(second.result.heldFailedExtractions, 1);
   assert.match(second.lines.join("\n"), /FAILED_DOCUMENT_UNCHANGED/);
   const secondProof = await verdict(store, second.result.receiptLine, second.result.exitCode);
-  assert.equal((await store.readCandidate(secondProof.candidateId))?.candidate.changeSet?.outcome, "UNCHANGED");
+  // Preserve the failed extraction on the same version, without another payload (§0/§5/§7).
+  assert.equal(secondProof.candidateId, pointer?.versionId);
+  assert.equal(latestUnchangedConfirmation(await store.events(secondProof.candidateId!), secondProof.candidateId!)?.retrieval.retrievedAt, "2026-09-25T18:50:03.000Z");
   assert.deepEqual((await store.readPromotion("MEETING_OUTCOME", SCOPE))?.payload, pointer?.payload);
 
   // The portal does not answer the check: still no download; the failure stays held.

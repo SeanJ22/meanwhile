@@ -21,6 +21,7 @@
  *
  * PURE.
  */
+import { EASTERN_ZONE } from "../eastern-time.ts";
 import { modelName } from "../plain-words.ts";
 import { MODEL_FOR_CLASS, type ModelClass, type ModelEscalationReason, type ModelEscalationRefusal } from "../scheduler/model-routing.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
@@ -74,7 +75,7 @@ export interface LadderFacts {
   readonly latest: readonly EscalationFact[];
 }
 
-const DAY = new Intl.DateTimeFormat("en-US", { timeZone: "America/Phoenix", month: "short", day: "numeric" });
+const DAY = new Intl.DateTimeFormat("en-US", { timeZone: EASTERN_ZONE, month: "short", day: "numeric" });
 
 function day(iso: string): string {
   const t = Date.parse(iso);

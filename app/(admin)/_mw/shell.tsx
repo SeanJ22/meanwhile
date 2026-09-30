@@ -56,6 +56,12 @@ export interface MwShellProps {
   readonly children: ReactNode;
 }
 
+/** The readiness standard's id (`readiness/instrument-derived@2`) as words: "readiness standard, version 2". */
+export function standardWords(id: string): string {
+  const m = /^([a-z]+)\/[a-z-]+@(\d+)$/.exec(id);
+  return m ? `${m[1]} standard, version ${m[2]}` : id;
+}
+
 export function MwShell(props: MwShellProps) {
   const tabs = props.area === "fleet" ? FLEET_TABS : READINESS_TABS;
   const scopeValue = scopeParam(props.scope) ?? "all";
@@ -110,7 +116,7 @@ export function MwShell(props: MwShellProps) {
         </span>
         <span aria-hidden="true">·</span>
         <span>
-          STANDARD <span className={props.standard ? s.stripVal : s.stripWarn}>{props.standard !== null ? props.standard : "not versioned yet"}</span>
+          MEASURED BY <span className={props.standard ? s.stripVal : s.stripWarn} title={props.standard ?? undefined}>{props.standard !== null ? standardWords(props.standard) : "not versioned yet"}</span>
         </span>
         <span aria-hidden="true">·</span>
         <span>

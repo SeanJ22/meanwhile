@@ -5,7 +5,6 @@ import type { RunnerHeartbeat } from "../owner-surface.ts";
 import { CHECKLIST_PROFILE, checklistObligationKey, checklistRequiredClauses, type ChecklistInstance, type ChecklistSnapshot } from "./checklist-score.ts";
 import { checklistDeliveryTimings, type WorkDeliveryTiming } from "./checklist-timings.ts";
 import { checklistDispatchWitness } from "./checklist-dispatch-witness.ts";
-import { checklistRunningReleaseWitness } from "./checklist-running-release-witness.ts";
 
 /** A census projection, not a dispatcher. A receipt proves membership; matching
  * a state, a URL or a successful attempt never establishes object applicability. */
@@ -119,8 +118,7 @@ export function buildChecklistCensus(input: {
   return {profile:CHECKLIST_PROFILE.version,scopeId:scope.key,scopeRevision,observedAt,censusVersion:"checklist-census/1",instructionReceipt:scope.receiptId,
     inventory:{complete:false,evidenceIds:[scope.receiptId,...members],unresolvedObjects:objects.filter(o=>o.kind==="UNRESOLVED").length},
     readsComplete:sources!==null&&sources.pipeline!==null,instances,
-    witnesses:[...(sources ? checklistDispatchWitness({scope,sources,instances,observedAt}) : []),
-      ...checklistRunningReleaseWitness({scope,instances,heartbeat:input.heartbeat??null,observedAt})],
+    witnesses:sources ? checklistDispatchWitness({scope,sources,instances,observedAt}) : [],
     population:{knownSubjects:members.size,knownRecords:recordObjects.size,expectedObjects:null},
     // Older snapshots without the occurrence population cannot establish an
     // exact receipt timing count. Leave it unmeasured instead of showing zero.

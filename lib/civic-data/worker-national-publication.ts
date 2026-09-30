@@ -79,9 +79,19 @@ export interface NationalPlacePublication {
   readonly gaps: readonly { readonly key: string; readonly detail: string }[];
 }
 
+/**
+ * A governing county subdivision (a township or town that governs) is a
+ * `place` in the registry, as the registration layer already files it; its
+ * body is that government's council or board.
+ */
 const DIVISION_TYPES: Readonly<Record<string, Division["divisionType"]>> = {
   place: "place", county: "county", school: "school_district", school_district: "school_district", cd: "cd", sldu: "sldu", sldl: "sldl",
+  cousub: "place", county_subdivision: "place",
 };
+/** The country and its states are the registry's scope, never its rows; statewide officials publish on their own. */
+const SCOPE_DIVISIONS = new Set(["country", "state"]);
+/** Census functional statuses of a government (active, partially consolidated, consolidated, subordinate). */
+const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
 const TIERS: Readonly<Record<Division["divisionType"], Tier>> = { cd: "national", sldu: "state", sldl: "state", county: "local", place: "local", school_district: "local" };
 const LEGISLATIVE = new Set<Division["divisionType"]>(["cd", "sldu", "sldl"]);
 const STATE_DIVISION = /^ocd-division\/country:us\/state:[a-z]{2}$/;
@@ -110,7 +120,10 @@ export function nationalBodyId(division: Pick<Division, "ocdId" | "divisionType"
 }
 
 /** The registry row for a division, when its saved Census response supports it (§3). */
-function divisionRow(input: NationalDivisionInput, captures: readonly WorkerPublicationCapture[], now: string): Division | string {
+function divisionRow(input: NationalDivisionInput, captures: readonly WorkerPublicationCapture[], now: string): Division | string | null {
+  if (SCOPE_DIVISIONS.has(input.divisionType)) return null;
+  // A statistical or fictitious subdivision is not a government; Census has said so, and the place layer holds the one that is.
+  if (["cousub", "county_subdivision"].includes(input.divisionType) && !GOVERNING_FUNCSTAT.has((input.funcstat ?? "").toUpperCase())) return null;
   const divisionType = DIVISION_TYPES[input.divisionType];
   if (!divisionType) return `DIVISION_TYPE_NOT_A_REGISTRY_DIVISION:${input.divisionType}`;
   const state = /\/state:([a-z]{2})\b/.exec(input.id)?.[1]?.toUpperCase();
@@ -162,6 +175,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
   const officialDivisions = new Set(input.sources.officials.map(o => o.divisionId));
   for (const row of input.divisions) {
     const division = heldDivisions.get(row.id) ?? divisionRow(row, input.geographyCaptures, input.now);
+    if (division === null) continue;
     if (typeof division === "string") { gaps.push({ key: `division:${row.id}`, detail: division }); continue; }
     if (!heldDivisions.has(row.id)) { divisions.push(division); used.add(row.sourceUrl); }
     const implied = LEGISLATIVE.has(division.divisionType)

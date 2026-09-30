@@ -60,7 +60,7 @@ test("a place with no prepared registry gets its Census divisions, their bodies 
   assert.deepEqual(result.divisions, [`${OH}/place:columbus`, `${OH}/sldl:7`]);
   assert.deepEqual(result.bodies, [`${OH}/place:columbus#governing`, `${OH}/sldl:7#seat`]);
   assert.deepEqual(result.members.map(m => [m.bodyId, m.discoveryIds]), [[OH, ["dewine"]], [`${OH}/sldl:7#seat`, ["russo"]]]);
-  assert.deepEqual(result.gaps.map(g => g.key).sort(), ["division:" + OH, "official:unsaved"]);
+  assert.deepEqual(result.gaps.map(g => g.key).sort(), ["official:unsaved"], "the state is the registry's scope, not a missing row");
   assert.ok(result.promotedVersionId);
   // A door package speaks only for its own members: the thousands it omits are retained, not listed as excluded (the 313 MB candidate).
   const written = (await s.readCandidate(result.candidateId!))!;
@@ -75,6 +75,23 @@ test("a place with no prepared registry gets its Census divisions, their bodies 
 
   const again = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography, sources: { officials: [] } });
   assert.deepEqual([again.divisions, again.bodies, again.candidateId], [[], [], null], "a second call with the same evidence adds nothing");
+});
+
+test("a township that governs is published as a place with its governing body; a fictitious Census subdivision is neither a row nor a gap", async () => {
+  const s = await store();
+  const cousubUrl = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/1/query?geometry=43085";
+  const saved = capture(`{"features":[{"attributes":{"NAME":"Sharon township","GEOID":"3904971248","LSAD":"44","FUNCSTAT":"A"}},{"attributes":{"NAME":"Columbus city","GEOID":"3904918000","LSAD":"25","FUNCSTAT":"F"}}]}`, cousubUrl);
+  const township = `${OH}/county:franklin/place:sharon_township`;
+  const result = await publishNationalPlaceSources({ store: s, now: NOW, geographyCaptures: [saved], sources: { officials: [] }, divisions: [
+    { id: township, label: "Sharon township", divisionType: "cousub", geoid: "3904971248", sourceUrl: cousubUrl, sourceDataset: "TIGER_CB2023", lsad: "44", funcstat: "A" },
+    { id: `${OH}/county:franklin/place:columbus_city`, label: "Columbus city", divisionType: "cousub", geoid: "3904918000", sourceUrl: cousubUrl, sourceDataset: "TIGER_CB2023", lsad: "25", funcstat: "F" },
+  ] });
+  assert.deepEqual(result.divisions, [township]);
+  assert.deepEqual(result.bodies, [`${township}#governing`]);
+  assert.deepEqual(result.gaps, []);
+  const after = (await readRegistryRuntimePrior(s, NOW))!;
+  const row = after.payload.registry.divisions.find(d => d.ocdId === township);
+  assert.deepEqual([row?.divisionType, row?.funcstat, row?.parentOcdId], ["place", "A", `${OH}/county:franklin`]);
 });
 
 test("an official whose page does not name the district, and a division its saved Census response does not show, stay gaps", async () => {
@@ -95,5 +112,5 @@ test("an official page whose text is not the saved bytes is a named gap, and the
     { discoveryId: "dewine", divisionId: OH, name: "Mike DeWine", officeTitle: "Governor", officialUrl: governorUrl, document: { url: governorUrl, capture: altered } }] } });
   assert.match(result.gaps.find(g => g.key === "official:dewine")!.detail, /^OFFICIAL_PAGE_UNUSABLE:CONTENT_HASH_MISMATCH/);
   const delivered = nationalDelivery([result]);
-  assert.deepEqual([delivered.records, delivered.gaps.length, delivered.versionId === result.promotedVersionId], [0, 2, true]);
+  assert.deepEqual([delivered.records, delivered.gaps.length, delivered.versionId === result.promotedVersionId], [0, 1, true]);
 });

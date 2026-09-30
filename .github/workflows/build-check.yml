@@ -328,10 +328,19 @@ jobs:
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}
+      # Chromium's cache excludes the OS/font packages installed by --with-deps.
+      - uses: actions/cache@v4
+        if: needs.admission.outputs.tier == 'yes'
+        with:
+          path: ${{ runner.temp }}/playwright-apt/*.deb
+          key: playwright-apt-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('node_modules/.pnpm/playwright-core@*/node_modules/playwright-core/browsers.json') }}
       - name: Install the browser the suite needs
         if: success() && needs.admission.outputs.tier == 'yes'
         timeout-minutes: 15
-        run: corepack pnpm exec playwright install --with-deps chromium
+        run: |
+          mkdir -p "$RUNNER_TEMP/playwright-apt"
+          printf 'Dir::Cache::archives "%s";\nBinary::apt-get::APT::Keep-Downloaded-Packages "true";\n' "$RUNNER_TEMP/playwright-apt" | sudo tee /etc/apt/apt.conf.d/99-playwright-cache > /dev/null
+          corepack pnpm exec playwright install --with-deps chromium
       - name: Prove the browser is actually there
         if: success() && needs.admission.outputs.tier == 'yes'
         timeout-minutes: 5

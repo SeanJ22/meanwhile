@@ -179,6 +179,38 @@ test("a roster repair schedules only profile URLs grounded in exact official hre
   assert.deepEqual(repaired.unresolved, ["EXTERNAL_VERIFICATION_MISSING", "UNVERIFIED_ROSTER_MEMBERS:2"]);
 });
 
+test("roster repair isolates an independently contradicted person without crediting that row", async () => {
+  const f = await fixture();
+  const { createHash } = await import("node:crypto");
+  const repair = f.candidate.contractRepair as Record<string, unknown>;
+  const subset = { ...f.authority, comparison: { kind: "RECORD_VALUES_SUBSET" as const,
+    keyFields: ["id"], fields: ["id", "name"] } };
+  const authorityBody = JSON.parse(f.evidence[1].text) as { publisher: string; records: { id: string; name: string }[] };
+  authorityBody.records[1] = { ...authorityBody.records[1], name: "A different independently published name" };
+  const text = JSON.stringify(authorityBody);
+  const authorityEvidence = { ...f.evidence[1], text,
+    contentHash: `sha256-${createHash("sha256").update(text).digest("hex")}` };
+  const candidate = { ...f.candidate, contractRepair: { ...repair, authorities: [subset] } };
+  const input = { plan: f.h.item.autonomousPlan!, candidate, evidence: [f.evidence[0], authorityEvidence], now: f.h.now() };
+  const partial = evaluatePlanRepair(input);
+  assert.deepEqual(partial.unresolved, ["UNVERIFIED_ROSTER_MEMBERS:1"],
+    "a separately captured contradiction does not verify the disputed person or erase the other match");
+  assert.equal(partial.contract.verification.required, true);
+
+  const exact = { ...f.authority, comparison: { ...subset.comparison, kind: "RECORD_VALUES" as const } };
+  assert.throws(() => evaluatePlanRepair({ ...input, candidate: { ...candidate,
+    contractRepair: { ...repair, authorities: [exact] } } }), /REPAIR_AUTHORITY_COMPARISON_REFUSED:EXTERNAL_FIELD_MISMATCH/,
+  "full-roster comparison still refuses a field conflict");
+
+  const orphanText = JSON.stringify({ ...authorityBody, records: [...authorityBody.records,
+    { id: "authority-only", name: "An independently listed person absent from the roster" }] });
+  const orphanEvidence = { ...authorityEvidence, text: orphanText,
+    contentHash: `sha256-${createHash("sha256").update(orphanText).digest("hex")}` };
+  assert.throws(() => evaluatePlanRepair({ ...input, evidence: [f.evidence[0], orphanEvidence] }),
+    /REPAIR_AUTHORITY_COMPARISON_REFUSED:.*EXTERNAL_IDENTITY_MISMATCH/,
+    "an unbound independent identity is a global defect, not a record-local disagreement");
+});
+
 test("repair admits established school publishers and independent official records but refuses invented publishers and repeated source bytes", async () => {
   const f = await fixture();
   const plan = f.h.item.autonomousPlan!;

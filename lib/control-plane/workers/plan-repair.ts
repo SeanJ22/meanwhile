@@ -135,8 +135,22 @@ export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate:
   requireThat(replay.verdict === "EXTRACTED" && replay.warnings.length === 0, `REPAIR_EXTRACTION_REFUSED:${replay.warnings.map(issue => issue.code).join(",")}`);
   const checks = verifyExternalAuthorities({ attemptId: "contract-instruction-comparison", producerAttemptId: replay.attemptId, candidate: replay,
     evidence: primary, authorityEvidence: evidence, verifiedAt: now }, contract);
-  requireThat(checks.every(check => check.verdict === "PASS"), `REPAIR_AUTHORITY_COMPARISON_REFUSED:${checks.flatMap(check => check.discrepancies.map(issue => issue.code)).join(",")}`);
-  const verifiedIds = new Set(checks.flatMap(check => check.verdict === "PASS" ? check.verifiedRecordIds ?? [] : []));
+  // A separately captured person profile can contradict one source row while
+  // confirming another. The ordinary validator and publisher isolate those
+  // exact people; a repair preflight must not turn a local office disagreement
+  // into a global refusal. Identity, source, count, and incomplete-capture
+  // defects remain global holds, and no contradicted person earns credit.
+  const localSubsetDisagreement = (check: typeof checks[number]) =>
+    contract.recordClass === "OFFICIAL_ROSTER" && check.comparison.kind === "RECORD_VALUES_SUBSET" &&
+    check.discrepancies.length > 0 && check.discrepancies.every(issue =>
+      issue.code === "EXTERNAL_FIELD_MISMATCH" && issue.severity === "BLOCKING" &&
+      Boolean(issue.recordId && issue.field && replay.records.some(record => record.id === issue.recordId) &&
+        check.comparison.fields.includes(issue.field)));
+  requireThat(checks.every(check => check.verdict === "PASS" || localSubsetDisagreement(check)),
+    `REPAIR_AUTHORITY_COMPARISON_REFUSED:${checks.flatMap(check => check.discrepancies.map(issue => issue.code)).join(",")}`);
+  const contradictedIds = new Set(checks.flatMap(check => check.discrepancies
+    .filter(issue => issue.severity !== "INFO" && issue.recordId).map(issue => issue.recordId!)));
+  const verifiedIds = new Set(checks.flatMap(check => check.verifiedRecordIds ?? []).filter(id => !contradictedIds.has(id)));
   const rosterUnverified = contract.recordClass === "OFFICIAL_ROSTER" ? replay.records.filter(record => !verifiedIds.has(record.id)).length : 0;
   const unresolved = [...(!authorities.length ? ["EXTERNAL_VERIFICATION_MISSING"] : []),
     ...(rosterUnverified ? [`UNVERIFIED_ROSTER_MEMBERS:${rosterUnverified}`] : []),

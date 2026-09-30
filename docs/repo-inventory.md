@@ -806,7 +806,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-941 file(s).
+950 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -947,6 +947,8 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/assignment-identity.test.ts`
 - `tests/assignment-view.test.ts`
 - `tests/attribution.test.ts`
+- `tests/audit-pull.test.ts`
+- `tests/audit-sampling.test.ts`
 - `tests/auto-crosswalk-expansion.test.ts`
 - `tests/auto-crosswalk.test.ts`
 - `tests/automatic-venue-resolutions.test.ts`
@@ -1241,8 +1243,10 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/handoff-gate.test.ts`
 - `tests/health-contracts.test.ts`
 - `tests/held-agenda-projection.test.ts`
+- `tests/held-directory.test.ts`
 - `tests/held-filing-subjects.test.ts`
 - `tests/held-meeting-partition.test.ts`
+- `tests/held-roster-publication.test.ts`
 - `tests/holdings-readback.test.ts`
 - `tests/host-spacing.test.ts`
 - `tests/hosted-cost-invariant.test.ts`
@@ -1369,6 +1373,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/municipal-layer.test.ts`
 - `tests/name-case.test.ts`
 - `tests/narrowing.test.ts`
+- `tests/national-place-publication.test.ts`
 - `tests/neutrality-guards.test.ts`
 - `tests/new-zip-readiness.test.ts`
 - `tests/new-zip-render.test.ts`
@@ -1465,9 +1470,11 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/protection-state.test.ts`
 - `tests/provider-access.test.ts`
 - `tests/provider-billing.test.ts`
+- `tests/publication-receipt.test.ts`
 - `tests/publication-record-changes.test.ts`
 - `tests/questionnaire-store.test.ts`
 - `tests/questionnaire.test.ts`
+- `tests/quoted-audit.test.ts`
 - `tests/reaction-pill.test.ts`
 - `tests/reaction-run-class.test.ts`
 - `tests/reactions.test.ts`
@@ -1603,6 +1610,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/search-rows.test.ts`
 - `tests/seat-grouping.test.ts`
 - `tests/secret-redaction.test.ts`
+- `tests/section3.test.ts`
 - `tests/send-budget-hard-cap.test.ts`
 - `tests/served-reader.test.ts`
 - `tests/server-client-boundary.test.ts`
@@ -1683,6 +1691,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/tusd-schedule-union.test.ts`
 - `tests/unchanged-confirmation-migration.test.ts`
 - `tests/unsourced-fallback.test.ts`
+- `tests/validator-manual.test.ts`
 - `tests/venue-gap-adapters.test.ts`
 - `tests/venue-gap-class.test.ts`
 - `tests/verification-vocabulary.test.ts`
@@ -1752,7 +1761,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7015 file(s).
+7032 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -4939,8 +4948,12 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/civic-data/website-correction-acquisition.ts`
 - `lib/civic-data/website-corrections.ts`
 - `lib/civic-data/worker-body-directory.ts`
+- `lib/civic-data/worker-held-directory.ts`
+- `lib/civic-data/worker-held-roster.ts`
+- `lib/civic-data/worker-national-publication.ts`
 - `lib/civic-data/worker-publication-context.ts`
 - `lib/civic-data/worker-publication-evidence.ts`
+- `lib/civic-data/worker-publication-tasks.ts`
 - `lib/civic-data/worker-reader-contracts.ts`
 - `lib/civic-data/worker-reader-publication.ts`
 - `lib/civic-data/worker-roster-publication.ts`
@@ -5136,7 +5149,9 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/promotion/pipeline.ts`
 - `lib/control-plane/promotion/production-meetings.ts`
 - `lib/control-plane/promotion/reader-projection.ts`
+- `lib/control-plane/promotion/section3.ts`
 - `lib/control-plane/promotion/types.ts`
+- `lib/control-plane/promotion/validator-manual.ts`
 - `lib/control-plane/promotion/window.ts`
 - `lib/control-plane/provider-billing-attribution.ts`
 - `lib/control-plane/provider-billing-collector.ts`
@@ -5245,6 +5260,8 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/workers/acquirer.ts`
 - `lib/control-plane/workers/activity.ts`
 - `lib/control-plane/workers/audit-escalation.ts`
+- `lib/control-plane/workers/audit-outcome.ts`
+- `lib/control-plane/workers/audit-sampling.ts`
 - `lib/control-plane/workers/auditor.ts`
 - `lib/control-plane/workers/autonomous-plan.ts`
 - `lib/control-plane/workers/coordinator.ts`
@@ -7725,6 +7742,8 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/assignment-identity.test.ts`
 - `tests/assignment-view.test.ts`
 - `tests/attribution.test.ts`
+- `tests/audit-pull.test.ts`
+- `tests/audit-sampling.test.ts`
 - `tests/auto-crosswalk-expansion.test.ts`
 - `tests/auto-crosswalk.test.ts`
 - `tests/automatic-venue-resolutions.test.ts`
@@ -8235,8 +8254,10 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/handoff-gate.test.ts`
 - `tests/health-contracts.test.ts`
 - `tests/held-agenda-projection.test.ts`
+- `tests/held-directory.test.ts`
 - `tests/held-filing-subjects.test.ts`
 - `tests/held-meeting-partition.test.ts`
+- `tests/held-roster-publication.test.ts`
 - `tests/helpers/ask-gap-unit.ts`
 - `tests/helpers/autonomous-fleet.ts`
 - `tests/helpers/campaign-sites.ts`
@@ -8382,6 +8403,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/municipal-layer.test.ts`
 - `tests/name-case.test.ts`
 - `tests/narrowing.test.ts`
+- `tests/national-place-publication.test.ts`
 - `tests/neutrality-guards.test.ts`
 - `tests/new-zip-readiness.test.ts`
 - `tests/new-zip-render.test.ts`
@@ -8480,9 +8502,11 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/protection-state.test.ts`
 - `tests/provider-access.test.ts`
 - `tests/provider-billing.test.ts`
+- `tests/publication-receipt.test.ts`
 - `tests/publication-record-changes.test.ts`
 - `tests/questionnaire-store.test.ts`
 - `tests/questionnaire.test.ts`
+- `tests/quoted-audit.test.ts`
 - `tests/reaction-pill.test.ts`
 - `tests/reaction-run-class.test.ts`
 - `tests/reactions.test.ts`
@@ -8621,6 +8645,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/search-rows.test.ts`
 - `tests/seat-grouping.test.ts`
 - `tests/secret-redaction.test.ts`
+- `tests/section3.test.ts`
 - `tests/send-budget-hard-cap.test.ts`
 - `tests/served-reader.test.ts`
 - `tests/server-client-boundary.test.ts`
@@ -8702,6 +8727,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/tusd-schedule-union.test.ts`
 - `tests/unchanged-confirmation-migration.test.ts`
 - `tests/unsourced-fallback.test.ts`
+- `tests/validator-manual.test.ts`
 - `tests/venue-gap-adapters.test.ts`
 - `tests/venue-gap-class.test.ts`
 - `tests/verification-vocabulary.test.ts`

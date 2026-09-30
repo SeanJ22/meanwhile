@@ -6,6 +6,9 @@ import { researchVaultResolver } from "../control-plane/workers/vault-object.ts"
 import { workerVaultResolver } from "../control-plane/workers/vault.ts";
 import { evidenceProjection } from "../control-plane/workers/evidence-projection.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
+import type { ArtifactRecord } from "../control-plane/repository/types.ts";
+import { datePath, type EvidenceStore } from "../control-plane/evidence/store.ts";
+import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 
 /** Server-side publisher reads the same durable evidence used by the workers. */
 export async function workerPublicationContext(now: string) {
@@ -27,4 +30,37 @@ export async function workerPublicationContext(now: string) {
     return { evidence, observedAt: [evidence.retrievedAt, ...observations].sort().at(-1)!, httpStatus: artifact.httpStatus,
       transport: artifact.transport, partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false };
   } };
+}
+
+/**
+ * Read a saved page straight from the vault by its artifact record — any job's
+ * capture — without listing the whole vault. The key is content-addressed
+ * under the page's host, capture day and work item (`objectKey`).
+ */
+export function heldCaptureReader(store: EvidenceStore, project = "freshness") {
+  const listed = new Map<string, Promise<string[]>>();
+  return async (record: ArtifactRecord): Promise<WorkerPublicationCapture | null> => {
+    const host = /^https?:\/\/([^/?#:]+)/i.exec(record.canonicalUrl)?.[1]?.toLowerCase();
+    if (!host) return null;
+    const recorded = Date.parse(record.recordedAt);
+    for (const day of [0, -1, 1].map(offset => datePath(new Date(recorded + offset * 86_400_000).toISOString()))) {
+      const prefix = `project/${project}/source/${host}/${day}/${record.workItemId}/`;
+      if (!listed.has(prefix)) listed.set(prefix, store.list(prefix).catch(() => []));
+      const key = (await listed.get(prefix)!).find(k => k.startsWith(`${prefix}${record.contentHash}.`) && !k.endsWith(".meta.json"));
+      if (!key) continue;
+      const object = await store.get(key);
+      const m = object?.meta.custom;
+      if (!object || !m || object.meta.contentHash !== record.contentHash) return null;
+      const text = new TextDecoder().decode(object.bytes);
+      return { evidence: { artifactId: record.artifactId, contentHash: record.contentHash, text, acquiredByAttemptId: record.attemptId,
+        canonicalUrl: record.canonicalUrl, retrievedAt: m.retrievedAt ?? record.recordedAt, sourceId: m.sourceId ?? host, methodRouteId: m.methodRouteId ?? "held" },
+        observedAt: m.retrievedAt ?? record.recordedAt, httpStatus: Number(m.httpStatus ?? 0) || null, transport: m.transport ?? "UNKNOWN", partial: record.partial };
+    }
+    return null;
+  };
+}
+
+/** The default held-page reader over this checkout's vault. */
+export function localHeldCaptureReader() {
+  return heldCaptureReader(new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)));
 }

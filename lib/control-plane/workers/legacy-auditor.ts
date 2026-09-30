@@ -3,6 +3,7 @@ import type {
   AuditAttackResult, AuditorResult, AuditorWorkerInput, FieldValue,
   CivicExtractionContract, IndependentAuditContext, WorkerEvidence, WorkerFinding,
 } from "./types.ts";
+import { auditCoverage, recordOutcome } from "./audit-outcome.ts";
 
 /** Portable procedure executed by the disposable worker broker. No ambient I/O. */
 export const AUDITOR_IMPLEMENTATION = "civic-events-independent-evidence-auditor";
@@ -121,15 +122,16 @@ export function auditExtraction(input: AuditorWorkerInput): AuditorResult {
   for (const route of applicableRoutes) {
     const covered = candidate.coveredRouteIds.includes(route.routeId);
     const evidenceHeld = route.artifactIds.length > 0 && route.artifactIds.every((id) => independent.some((entry) => entry.evidence.artifactId === id) || context.surfaceEvidence?.some(e => e.artifactId === id));
-    if (globalClaim && (!covered || route.status !== "HELD" || !evidenceHeld)) {
-      routeFindings.push(finding("AUDIT_OFFICIAL_ROUTE_OMITTED", `Applicable official route ${route.routeId} is ${route.status}; coverage claimed=${covered}, cited evidence held=${evidenceHeld}.`));
-    } else if (route.status !== "HELD" || !covered) {
-      routeFindings.push(finding("AUDIT_ROUTE_REMAINS_OWED", `Route ${route.routeId} remains ${route.status}; this audit is limited to the captured artifact. ${route.reason}`, "INFO"));
+    // Another official source not yet checked is a coverage number, never a reason to hold back a record that checked out (rulings section 3).
+    if (route.status !== "HELD" || !covered || !evidenceHeld) {
+      routeFindings.push(finding("AUDIT_ROUTE_REMAINS_OWED", `Route ${route.routeId} remains ${route.status}; coverage claimed=${covered}, cited evidence held=${evidenceHeld}. Counted in coverage; it holds back nothing. ${route.reason}`, "INFO"));
     }
   }
+  const routesChecked = applicableRoutes.filter((route) => route.status === "HELD" && candidate.coveredRouteIds.includes(route.routeId) && route.artifactIds.length > 0 &&
+    route.artifactIds.every((id) => independent.some((entry) => entry.evidence.artifactId === id) || context.surfaceEvidence?.some(e => e.artifactId === id))).length;
   const contextReady = context.publisherSurfaces.length > 0 && applicableRoutes.length > 0 && independent.length > 0 && Number.isSafeInteger(context.methodVersion) && context.methodVersion > 0;
-  if (!contextReady) routeFindings.push(finding("AUDIT_SOURCE_UNIVERSE_UNESTABLISHED", "The independent publisher, applicable method-route floor, version, or vault inventory is missing.", "WARNING"));
-  add("SOURCE_UNIVERSE", true, globalClaim ? "Compare the claimed complete universe with independently inherited official routes." : "Audit captured extraction; retain every outstanding official route without declaring the universe complete.", routeFindings, contextReady);
+  if (!contextReady) routeFindings.push(finding("AUDIT_SOURCE_UNIVERSE_UNESTABLISHED", "The independent publisher, applicable method-route floor, version, or vault inventory is missing; the coverage number shows how much is unchecked.", "INFO"));
+  add("SOURCE_UNIVERSE", true, "Count how much of the independently inherited official route floor is checked; sources not yet checked lower the coverage number and break nothing.", routeFindings);
 
   const identityFindings: WorkerFinding[] = [];
   if (context.subjectId !== contract.subjectId || extraction.subjectId !== context.subjectId) identityFindings.push(finding("AUDIT_IDENTITY_MISMATCH", "Candidate, canonical context, and governing contract name different subjects."));
@@ -204,8 +206,10 @@ export function auditExtraction(input: AuditorWorkerInput): AuditorResult {
 
   const coverageFindings: WorkerFinding[] = [];
   const missing = [...expected.keys()].filter((id) => !records.has(id));
-  if ((evidenceComplete && (missing.length || expected.size !== records.size)) || records.size !== extraction.records.length || extraction.actualRowCount !== extraction.records.length) coverageFindings.push(finding("AUDIT_DENOMINATOR_INCOMPLETE", `Independent ${globalClaim ? "source-universe" : "captured-artifact"} denominator=${expected.size}; unique claimed=${records.size}; reported=${extraction.actualRowCount}; omitted=${missing.join(",") || "none"}.`));
-  for (const entry of sources) if (entry.declared !== null && entry.declared !== entry.rows.length) coverageFindings.push(finding("AUDIT_DENOMINATOR_INCOMPLETE", `Artifact ${entry.evidence.artifactId} declares ${entry.declared} rows and contains ${entry.rows.length}.`));
+  // A count that contradicts itself is a break; records of the source the extraction has not reached yet are coverage (the ones it has are unaffected).
+  if (records.size !== extraction.records.length || extraction.actualRowCount !== extraction.records.length) coverageFindings.push(finding("AUDIT_DENOMINATOR_INCOMPLETE", `Unique claimed=${records.size}; reported=${extraction.actualRowCount}; listed=${extraction.records.length}.`));
+  if (evidenceComplete && missing.length) coverageFindings.push(finding("AUDIT_SOURCE_RECORDS_NOT_YET_EXTRACTED", `${missing.length} of ${expected.size} independently inventoried source record(s) are not in this extraction yet (${missing.slice(0, 5).join(",")}${missing.length > 5 ? ",…" : ""}); counted in coverage, and the records that are here are unaffected.`, "INFO"));
+  for (const entry of sources) if (entry.declared !== null && entry.declared !== entry.rows.length) coverageFindings.push(finding("AUDIT_SOURCE_RECORDS_NOT_YET_EXTRACTED", `Artifact ${entry.evidence.artifactId} declares ${entry.declared} rows and contains ${entry.rows.length}; the rest are not held yet.`, "INFO"));
   if (extraction.declaredRowCount !== null && extraction.declaredRowCount !== extraction.actualRowCount) coverageFindings.push(finding("AUDIT_DENOMINATOR_INCOMPLETE", "The producer's declared and extracted row counts disagree."));
   const officialValues = new Map<string, { row: SourceRow; artifactId: string }>();
   for (const entry of independent) for (const row of entry.rows) {
@@ -249,12 +253,16 @@ export function auditExtraction(input: AuditorWorkerInput): AuditorResult {
   const findings = attacks.flatMap((attack) => attack.findings);
   const verdict = attacks.some((attack) => attack.verdict === "BROKE") ? "BROKE"
     : attacks.some((attack) => attack.verdict === "INCONCLUSIVE") ? "INCONCLUSIVE" : "SURVIVED";
+  // Unchecked is not broken: an inconclusive audit lists no survivors and pulls nothing; a BROKE audit pulls only the records it names.
+  const { brokenRecordIds, survivingRecordIds: intact } = recordOutcome(extraction.records.map((record) => record.id), findings);
+  const survivingRecordIds = verdict === "INCONCLUSIVE" ? [] : intact;
   return {
     role: "ADVERSARIAL_AUDITOR", attemptId: input.attemptId,
     producerAttemptId: candidate.producerAttemptId, validatorAttemptId: candidate.validatorAttemptId,
     verdict, startedFrom: context.startedFrom, attacks, findings,
     artifactIds: [...new Set([...independent.map((entry) => entry.evidence.artifactId), ...(context.surfaceEvidence?.map(e => e.artifactId) ?? [])])],
-    survivingRecordCount: verdict === "SURVIVED" ? records.size : 0,
+    survivingRecordIds, survivingRecordCount: survivingRecordIds.length, brokenRecordIds,
+    coverage: auditCoverage({ routesApplicable: applicableRoutes.length, routesChecked, sourceRecords: evidenceComplete ? expected.size : null, extractedRecords: extraction.records.length }),
     reopenRequired: verdict === "BROKE",
   };
 }

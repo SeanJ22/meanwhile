@@ -14,7 +14,7 @@ const window = {windowId:"fixture-window",previousCompletedWindowId:null,since:F
 
 test("actual worker results are counted once; extraction and legacy PASS do not certify independent civic truth",async()=>{
   const h=await autonomousHarness();
-  for (let stage = 0; stage < 4; stage++) {
+  for (let stage = 0; stage < 3; stage++) {
     const run = await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
     assert.equal(run.dispatches[0]?.outcome,"WORKED",run.dispatches[0]?.detail);
   }
@@ -31,7 +31,7 @@ test("actual worker results are counted once; extraction and legacy PASS do not 
   assert.equal(result.promoted.count,0);
   assert.equal(result.readerVisible.count,0);
   assert.equal(result.activity.obligationsWorked,1);
-  assert.equal(result.activity.completedResults.reduce((sum,row)=>sum+row.count,0),4);
+  assert.equal(result.activity.completedResults.reduce((sum,row)=>sum+row.count,0),3);
   assert.ok(result.activity.newEvidenceArtifacts>0);
   const again=projectResearchProgression({...window,activities,since:window.through,through:"2026-09-03T20:00:00.000Z",previousCompletedWindowId:window.windowId});
   assert.equal(again.milestones.acquired.newlyReached,0);

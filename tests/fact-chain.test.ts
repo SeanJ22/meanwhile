@@ -179,11 +179,11 @@ test("PRDY-3/PDC: immutable facts can read the permanent meetings receipt, but c
   assert.equal(pass3.offers.filter((o) => o.error !== null).length, 0);
   assert.equal(pass3.counts.byStage.APPROVED_FOR_PROMOTION, 36);
 
-  /* The old writer stays OFF even when the PDC intake can read approved facts. */
+  /* Meeting facts are open under §3 (2026-09-29): every approved fact is a would-promote. They
+     reach readers through the permanent meeting partition; the window itself stays SHADOW and writes nothing. */
   const verdicts = evaluateItems(pass3.states, ACTIVATION_GATE);
-  /* The gate opens candidate-enrichment for campaign sites only (2026-09-21); no meeting-fact class is open to the old writer. */
-  assert.ok(!ACTIVATION_GATE.openRecordClasses.includes("meeting-times") && !ACTIVATION_GATE.openRecordClasses.includes("agendas"));
-  assert.ok(verdicts.verdicts.every((v) => v.verdict === "REFUSE_WOULD"));
+  assert.ok(ACTIVATION_GATE.openRecordClasses.includes("meeting-times") && ACTIVATION_GATE.openRecordClasses.includes("agendas"));
+  assert.equal(verdicts.verdicts.filter((v) => v.verdict === "PROMOTE_WOULD").length, 36);
 });
 
 test("PDC: a failed permanent meetings attempt stays a data-plane LKG/retry receipt and never becomes a legacy acquisition clock", () => {

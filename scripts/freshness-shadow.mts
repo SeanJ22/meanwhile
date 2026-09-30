@@ -1179,6 +1179,11 @@ async function honorIntent(intent: ResearchIntentRequest, detail: string): Promi
   }
 }
 
+/* A CANCEL_DISPATCH is honored by the cycle that stops carrying the Send it names (the filter is in carriedDispatchTargets). */
+for (const pending of intents.pendingCancel) {
+  await honorIntent(pending, `${pending.note} is no longer carried: the cycle creates nothing more for it. Work it already created stays.`);
+}
+
 /* A pending RUN_CYCLE_NOW is honored by the cycle that runs. This is it. */
 const honoredIntents: string[] = [];
 for (const pending of intents.pendingRunNow) {
@@ -1767,7 +1772,7 @@ const dispatchScopes = (expansionPlan?.scopes ?? []).filter(scope => !scheduledB
   };
   if (!scheduledBlackout) {
     for (const { intent } of dispatchDetails) add(dispatchWorkTarget({ intentId: intent.intentId, note: intent.note ?? "", requestedAt: intent.requestedAt }));
-    for (const t of carriedDispatchTargets(priorResearchState?.dispatchWork ?? null)) add(t);
+    for (const t of carriedDispatchTargets(priorResearchState?.dispatchWork ?? null, intents.cancelledDispatch)) add(t);
   }
   for (const scope of dispatchScopes) add(scopeWorkTarget(scope));
 }

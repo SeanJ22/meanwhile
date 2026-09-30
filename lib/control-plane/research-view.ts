@@ -245,6 +245,11 @@ export function validateIntentNote(
   if (action === "DISPATCH" && text.length === 0) {
     return { ok: false, detail: "a DISPATCH needs a target — say what the fleet should go do" };
   }
+  if (action === "CANCEL_DISPATCH") {
+    return /^DISPATCH:\d{4}-\d{2}-\d{2}T[0-9:.]+Z$/.test(text)
+      ? { ok: true, note: text }
+      : { ok: false, detail: "say which sent instruction to take back (its DISPATCH id)" };
+  }
   if (action !== "DISPATCH" && action !== "PAUSE_RUNNER" && action !== "RESUME_RUNNER") {
     return { ok: true, note: null };
   }

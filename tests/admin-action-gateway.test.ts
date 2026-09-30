@@ -123,7 +123,7 @@ test("ADM-C6: the registry is closed and every entry carries a full definition",
    * dropped in a refactor would otherwise leave every assertion passing over a
    * smaller population.
    */
-  assert.equal(definitions.length, 18, "the registry no longer holds the eighteen actions declared");
+  assert.equal(definitions.length, 19, "the registry no longer holds the nineteen actions declared");
   assert.deepEqual(
     [...ACTION_TYPES],
     [
@@ -134,6 +134,7 @@ test("ADM-C6: the registry is closed and every entry carries a full definition",
       "runner.resume",
       "runner.runCycleNow",
       "fleet.deployHere",
+      "fleet.cancelDispatch",
       "fleet.retryWorkItem",
       "fleet.requestReadback",
       "config.setApiFallback",
@@ -321,6 +322,24 @@ test("ADM-C6 acceptance 3: a duplicate submission returns the same receipt and d
   const intents = await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY);
   assert.equal(intents.length, 1, "the runner was told to pause twice");
   assert.equal((await readReceipts(repos)).length, 1, "the log holds two receipts for one action");
+});
+
+test("fleet.cancelDispatch takes back one sent instruction: the intent is saved, the send is no longer pending, and a bad id is refused", async () => {
+  const repos = createMemoryRepositories();
+  const sent = await submit(ask({ type: "fleet.deployHere", subject: "fleet", input: { note: "Deploy fleet to Arizona" }, idempotencyKey: "send-key-000001" }), deps(repos));
+  assert.equal(sent.ok, true, sent.receipt.says);
+  const dispatchId = sent.receipt.subject;
+  assert.match(dispatchId, /^DISPATCH:/);
+  assert.equal(readIntents(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)).pendingDispatch.length, 1);
+  const refused = await submit(ask({ type: "fleet.cancelDispatch", subject: "fleet", input: { intentId: "Deploy fleet to Arizona" }, idempotencyKey: "cancel-bad-0001" }), deps(repos));
+  assert.equal(refused.ok, false);
+  const cancelled = await submit(ask({ type: "fleet.cancelDispatch", subject: dispatchId, input: { intentId: dispatchId }, idempotencyKey: "cancel-key-00001" }), deps(repos));
+  assert.equal(cancelled.ok, true, cancelled.receipt.says);
+  assert.equal(cancelled.receipt.outcome, "QUEUED", "a request until the runner records that it stopped carrying it");
+  const saved = readIntents(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY));
+  assert.deepEqual([...saved.cancelledDispatch], [dispatchId]);
+  assert.equal(saved.pendingDispatch.length, 0, "a cancelled send that no cycle has read yet is never read");
+  assert.equal(saved.pendingCancel.length, 1);
 });
 
 test("research.pause records one versioned paid-lane intent and idempotent receipt without pausing the runner", async () => {

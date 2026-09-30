@@ -657,6 +657,8 @@ test("a DISPATCH naming a registered state creates there, counts it on the owner
     }).length,
     1,
   );
+  assert.equal(carriedDispatchTargets(reading, new Set(["i-1"])).length, 0, "a Send the owner took back (CANCEL_DISPATCH) is no longer carried");
+  assert.equal(carriedDispatchTargets(reading, new Set(["another"])).length, 1, "taking back one Send leaves the others carried");
   assert.equal(carriedDispatchTargets({ nonsense: true }).length, 0, "an unreadable prior reading carries nothing, never throws");
   assert.equal(isDispatchWorkReading(reading), true);
 

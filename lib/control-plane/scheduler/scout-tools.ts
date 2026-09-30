@@ -2,23 +2,33 @@ import { SOURCE_API_TOOLS, SOURCE_API_SPECS, readSourceApi, type SourceApiTool }
 import { installedAdapters, installedAdapterVersion, runInstalledAdapter } from './scout-adapters.ts';
 
 /** The ordinary public-page reader for collectors: held bytes, then HTTP, then the existing browser. */
-export function savedPageReader(context:ScoutToolContext) {
+export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:number}={}) {
+  const fresh=(at:string)=>{
+    const age=Date.parse(context.now())-Date.parse(at);
+    return Number.isFinite(age) && age>=0 && age<=(options.maxAgeMs??Infinity);
+  };
+  const parseable=(type:string)=>/^(?:text\/|application\/(?:json|[\w.+-]+\+json|xml|[\w.+-]+\+xml|csv|javascript))(?:[^;]*)(?:;|$)/i.test(type);
   const captured=new Map<string,{artifact:Artifact;text:string}>();
   const toolkit=buildScoutToolkit({...context,vault:async(artifact,text)=>{
     const saved=await context.vault(artifact,text);
-    if(saved.stored && artifact.tier!=='RESTRICTED_RAW' && artifact.retentionPolicy!=='DIAGNOSTIC')captured.set(artifact.id,{artifact,text});
+    if(saved.stored && artifact.tier!=='RESTRICTED_RAW' && artifact.retentionPolicy!=='DIAGNOSTIC' &&
+      ['scout:fetch_public','scout:browse'].includes(artifact.methodRouteId))captured.set(artifact.id,{artifact,text});
     return saved;
   }});
-  return async(url:string):Promise<{url:string;text:string;collectedAt:string;artifactId:string;artifacts:readonly WorkArtifact[]}>=>{
+  return async(url:string):Promise<{url:string;text:string;contentType:string|null;collectedAt:string;artifactId:string;artifacts:readonly WorkArtifact[]}>=>{
     for(const saved of captured.values()) {
-      if(saved.artifact.canonicalUrl===url && saved.artifact.httpStatus===200 && saved.artifact.contentType.includes('text/html'))
-        return {url:saved.artifact.retrievalUrl,text:saved.text,collectedAt:saved.artifact.retrievedAt,artifactId:saved.artifact.id,artifacts:[]};
+      if((saved.artifact.canonicalUrl===url || saved.artifact.retrievalUrl===url) && saved.artifact.httpStatus===200 &&
+        parseable(saved.artifact.contentType) && fresh(saved.artifact.retrievedAt))
+        return {url:saved.artifact.retrievalUrl,text:saved.text,contentType:saved.artifact.contentType,collectedAt:saved.artifact.retrievedAt,artifactId:saved.artifact.id,artifacts:[]};
     }
     for(const provenance of context.inherited.provenance??[]) {
-      if(provenance.canonicalUrl!==url || provenance.httpStatus!==200 || !context.readHeldArtifact)continue;
+      if((provenance.canonicalUrl!==url && provenance.retrievalUrl!==url) || provenance.httpStatus!==200 ||
+        provenance.methodRouteId.endsWith(':network-observation') ||
+        !fresh(provenance.retrievedAt) || (provenance.contentType && !parseable(provenance.contentType)) || !context.readHeldArtifact)continue;
       try {
         const held=await context.readHeldArtifact(provenance.artifactId);
-        if(held.canonicalUrl===url)return {url,text:held.text,collectedAt:held.retrievedAt,artifactId:held.artifactId,artifacts:[]};
+        if(held.canonicalUrl===provenance.canonicalUrl && fresh(held.retrievedAt))return {url:provenance.retrievalUrl??held.canonicalUrl,
+          text:held.text,contentType:provenance.contentType??null,collectedAt:held.retrievedAt,artifactId:held.artifactId,artifacts:[]};
       } catch { /* The same source remains owed when its prior bytes cannot be read. */ }
     }
     const artifacts:WorkArtifact[]=[];
@@ -30,7 +40,7 @@ export function savedPageReader(context:ScoutToolContext) {
         for(const row of [...result.artifacts].reverse()) {
           const saved=captured.get(row.artifactId);
           if(saved && saved.artifact.canonicalUrl===url && saved.artifact.httpStatus===200 &&
-            saved.artifact.contentType.includes('text/html'))return {url:saved.artifact.retrievalUrl,text:saved.text,
+            parseable(saved.artifact.contentType))return {url:saved.artifact.retrievalUrl,text:saved.text,contentType:saved.artifact.contentType,
               collectedAt:saved.artifact.retrievedAt,artifactId:saved.artifact.id,artifacts};
         }
       }
@@ -702,6 +712,8 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     acc.provenance.push({
       artifactId: artifact.id,
       canonicalUrl: artifact.canonicalUrl,
+      retrievalUrl: artifact.retrievalUrl,
+      contentType: artifact.contentType,
       retrievedAt: artifact.retrievedAt,
       permission: artifact.permission,
       methodRouteId: artifact.methodRouteId,

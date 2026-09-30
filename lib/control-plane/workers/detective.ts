@@ -158,8 +158,12 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
 }
 
 /** A later real failure reopens investigation; an accepted source route is never scouted again. */
-export function solvedScoutResult(results: readonly import('../scheduler/scout-result.ts').ScoutResult[],subjectId:string,recordClass:string) {
-  const latest=subjectScoutHistory(results,subjectId,recordClass).at(-1);
+export function solvedScoutResult(results: readonly import('../scheduler/scout-result.ts').ScoutResult[],subjectId:string,recordClass:string,routeId?:string|null) {
+  // Legacy providers group several distinct blanks under local-jurisdiction.
+  // Share their evidence, but a roster result cannot solve public-comment rules.
+  const field=routeId?.startsWith('coverage-discovery:') ? routeId : null;
+  const latest=subjectScoutHistory(results,subjectId,recordClass).filter(result=>!field ||
+    (result.routeId ?? result.obligationId?.split('#').at(-1))===field).at(-1);
   return latest?.refusal===null && ['ROUTE_CANDIDATE','EVIDENCE_FOUND'].includes(latest.outcome) &&
     reusableScoutCandidates(latest).length>0 ? latest : null;
 }

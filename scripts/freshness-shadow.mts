@@ -2445,7 +2445,7 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
  */
 const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled
   ? failureResponderExecutor({
-      solved:solvedScoutResult([...priorScoutResults.values()].flat(),scheduled.obligation.subjectId,scheduled.obligation.recordClass),
+      solved:solvedScoutResult([...priorScoutResults.values()].flat(),scheduled.obligation.subjectId,scheduled.obligation.recordClass,scheduled.obligation.routeId),
       /* MW-021: every request is checked against what the job holds on its Send and area budgets before the Fleet guard reserves it. */
       transport: budgetGuardedTransport({
         transport: fleetSafety.guardedModelTransport("anthropic", scheduled.obligation.id, anthropicTransport(workerKey)),

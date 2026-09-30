@@ -27,7 +27,10 @@ function ConvertTo-LinuxRunnerSettings {
     }
     $lines = New-Object 'System.Collections.Generic.List[string]'
     foreach ($line in ($Text.TrimStart([char]0xFEFF) -split '\r?\n')) {
-        if ($line -match '^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=' -and $overrides.Contains($Matches[1])) { continue }
+        if ($line -match '^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=') {
+            $name = $Matches[1]
+            if ($name -match 'PROD' -or $name -eq 'WTP_ADMIN_SESSION_KEY' -or $overrides.Contains($name)) { continue }
+        }
         $lines.Add($line)
     }
     foreach ($entry in $overrides.GetEnumerator()) { $lines.Add("$($entry.Key)=$($entry.Value)") }
@@ -54,6 +57,10 @@ try {
         [IO.File]::WriteAllText((Join-Path $localDirectory $name), $text, $utf8)
     }
     Write-Host 'Copying staging settings securely. Their contents will not be printed.'
+    Write-Host 'Setting names being uploaded:'
+    foreach ($line in ($settingsText -split "`n")) {
+        if ($line -match '^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=') { Write-Host "  $($Matches[1])" }
+    }
     Invoke-RunnerCommand $sshProgram ($sshOptions + @($destination, "umask 077; mkdir -p '$remoteDirectory'"))
     $uploads = @('runner.env', 'install.sh', 'meanwhile-runner.service') | ForEach-Object { Join-Path $localDirectory $_ }
     Invoke-RunnerCommand $scpProgram ($sshOptions + $uploads + @("${destination}:$remoteDirectory/"))

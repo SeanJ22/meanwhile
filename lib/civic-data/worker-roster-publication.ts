@@ -259,6 +259,10 @@ export async function publishWorkerRosterResults(input: {
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   // The registry is large; read it once and again only after this pass moves it.
   let registry: RegistryRuntimePrior | null | undefined;
+  // Several jobs can owe the same body. Its saved pages are read once per pass, and
+  // once a reading is published every other job for that body reuses that publication.
+  const heldByBody = new Map<string, Promise<RosterReading | null>>();
+  const publishedByBody = new Map<string, NonNullable<WorkItem["publicationOutcome"]>>();
   for (const id of [...new Set(input.workItemIds)]) {
     const item = (await input.repos.workItems.mustRead(id)).value;
     const plan = item.autonomousPlan;
@@ -277,14 +281,20 @@ export async function publishWorkerRosterResults(input: {
       if (!directory) {
         reading = parser ? parserReading(parser, plan.contract, captures) : null;
         if (!reading) {
-          const siblings = allItems.filter(other => other.autonomousPlan?.publication?.bodyId === bodyId);
-          const artifacts = (await Promise.all(siblings.map(other => input.repos.artifacts.read(other.id)))).flat();
-          reading = await heldRosterReading({ bodyId, prior, now: input.now, artifacts, readHeld });
+          if (!heldByBody.has(bodyId)) heldByBody.set(bodyId, (async () => {
+            const siblings = allItems.filter(other => other.autonomousPlan?.publication?.bodyId === bodyId);
+            const artifacts = (await Promise.all(siblings.map(other => input.repos.artifacts.read(other.id)))).flat();
+            return heldRosterReading({ bodyId, prior, now: input.now, artifacts, readHeld });
+          })());
+          reading = await heldByBody.get(bodyId)!;
         }
         if (!reading) continue;
       }
       readingId = directory ? parser!.id : reading!.id;
       if (item.publicationOutcome?.workerResultId === readingId && item.publicationOutcome.status !== "HELD") { report.push({ workItemId: id, outcome: item.publicationOutcome }); continue; }
+      const already = publishedByBody.get(`${bodyId}
+${readingId}`);
+      if (already) throw Object.assign(new Error("REUSED"), { reused: already });
       const directoryPackage = directory ? workerBodyDirectoryPackage({ plan, parser: parser!, captures, prior, now: input.now }) : null;
       const roster = directory ? null : workerRosterPublication({ bodyId, reading: reading!, prior, now: input.now });
       const prepared: RegistryRuntimePackage = directoryPackage?.prepared ?? roster!;
@@ -325,12 +335,19 @@ export async function publishWorkerRosterResults(input: {
         try { await materializeBodyDirectoryWork({ repos: input.repos, parent: { ...item, publicationOutcome: outcome }, bodies: prepared.payload.registry.bodies, now: input.now }); }
         catch { throw new Error("DIRECTORY_DOWNSTREAM_WRITE_FAILED:Verified bodies remain published; recover their downstream assignments on the next publisher cycle"); }
       }
+      if (outcome.status !== "HELD") publishedByBody.set(`${bodyId}
+${readingId}`, outcome);
     } catch (error) {
+      const reused = (error as { reused?: NonNullable<WorkItem["publicationOutcome"]> }).reused;
+      if (reused) outcome = { ...reused, at: input.now, code: "VERIFIED_RESULT_REUSED",
+        detail: `The same verified reading was published for this body in this pass (${reused.versionId}). ${reused.detail}` };
+      else {
       const detail = sanitizedErrorDiagnostic(error);
       const code = detail.split(":")[0];
       const recovery = (code.startsWith("ROSTER_") && !["ROSTER_PRIOR_READER_AUTHORITY_MISSING", "ROSTER_READER_READBACK_FAILED"].includes(code)) || code.startsWith("WORKER_PUBLICATION_") ? "WORKER" : "PUBLISHER";
       outcome = { at: input.now, workerResultId: readingId ?? "none", status: "HELD", code,
         detail: `${detail}. ${recovery === "WORKER" ? "Continue source work through the existing worker" : "Retry the publication with the verified evidence retained"}; no owner approval is required.`, recovery, candidateId, versionId };
+      }
     }
     // The data operation is already durable; failing to store this receipt never marks it published.
     const current = await input.repos.workItems.mustRead(id);

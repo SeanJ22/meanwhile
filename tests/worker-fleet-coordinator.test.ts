@@ -190,7 +190,7 @@ test("an elapsed acquisition cadence finishes retained worker handoffs before a 
   const calls=h.calls.length; assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).task?.workerTask?.role,"PARSER"); assert.equal(h.calls.length,calls);
   const schedule=scheduleAutonomousAcquisition(h.item.autonomousPlan!,first.result,h.now()); assert.ok("nextDueAt" in schedule); if(!("nextDueAt" in schedule))throw new Error("unscheduled"); assert.equal(schedule.cadenceSource,"DEFAULT_NO_SIGNAL");
   h.advanceTo(new Date(Date.parse(schedule.nextDueAt)+86_400_000).toISOString());
-  for (const role of ["PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR"]) {
+  for (const role of ["PARSER", "VALIDATOR"]) {
     const next = await nextAutonomousOperation(h.runtime, h.item.id);
     assert.equal(next.task?.workerTask?.role, role, "Due refreshes cannot starve a retained extraction chain.");
     const advanced = await dispatchWorkerTask(h.runtime, next.task!);
@@ -207,24 +207,24 @@ test("an elapsed acquisition cadence finishes retained worker handoffs before a 
   assert.notEqual((await nextAutonomousOperation(h.runtime,h.item.id)).task?.workerTask?.role,"ACQUIRER","A real unchanged-content fetch must not create a hot refresh loop.");
 });
 
-test("the same coordinator advances real procedures Hunter → Parser → Validator → Auditor and preserves canonical accounting", async () => {
+test("the same coordinator advances real procedures Hunter → Parser → Validator (§3, no audit stage) and preserves canonical accounting", async () => {
   const h=await autonomousHarness(); const roles:string[]=[];
-  for(let index=0;index<4;index++) {
+  for(let index=0;index<3;index++) {
     const run=await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
     roles.push(run.decisions[0].task!.workerTask!.role); assert.equal(run.dispatches[0].outcome,"WORKED",run.dispatches[0].detail);
   }
-  assert.deepEqual(roles,["ACQUIRER","PARSER","VALIDATOR","ADVERSARIAL_AUDITOR"]);
+  assert.deepEqual(roles,["ACQUIRER","PARSER","VALIDATOR"]);
   const terminal=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(terminal.action,"STAGED");
   const count=(await h.repos.attempts.list()).length; await runAutonomousCoordinator(h.runtime,{maximum:2,concurrency:2}); assert.equal((await h.repos.attempts.list()).length,count);
   const activity=(await readAutonomousActivity(h.repos,undefined,{observedAt:h.now()}))[0];
-  assert.equal(activity.timeline.filter(event=>event.kind==="WORKER_RESULT").length,4);
+  assert.equal(activity.timeline.filter(event=>event.kind==="WORKER_RESULT").length,3);
   assert.deepEqual(activity.accounting.attemptIds,(await h.repos.attempts.list()).map(row=>row.id).sort());
   assert.deepEqual(activity.accounting.transitionIds,(await h.repos.transitions.readAll()).map(t=>t.transitionId).sort());
   assert.deepEqual(activity.evidenceGaps,[]); assert.equal((await h.repos.promotionPipeline.readAll()).length,0);
 });
 
-test("an independent Auditor break remains blocked and never becomes staged inventory", async () => {
-  const h=await autonomousHarness();
+test("a judgment call (one person matched across sources) still gets an independent audit, and a break keeps it blocked", async () => {
+  const h=await autonomousHarness({plan:plan=>({...plan,contract:{...plan.contract,recordClass:"CROSS_SOURCE_IDENTITY"} as typeof plan.contract})});
   for(let index=0;index<3;index++) await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
   const runtime={...h.runtime,independentContext:async (scope:Parameters<typeof h.runtime.independentContext>[0])=>{
     const context=await h.runtime.independentContext(scope); return {...context,subjectId:context.subjectId,startedFrom:["CANONICAL_SUBJECT_IDENTITY" as const]};
@@ -237,9 +237,10 @@ test("an independent Auditor break remains blocked and never becomes staged inve
 
 test("a stored plan that still demands verification with no authorities validates on §3 instead of sitting inconclusive", async () => {
   const h=await autonomousHarness({plan:plan=>({...plan,contract:{...plan.contract,schemaVersion:2,verification:{required:true,authorities:[]}} as typeof plan.contract})});
-  for(let index=0;index<4;index++) {
+  for(let index=0;index<3;index++) {
     const run=await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1}); assert.equal(run.dispatches[0]?.outcome,"WORKED",run.dispatches[0]?.detail);
   }
+  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"STAGED");
   const records=await h.repos.workerResults.readAll(); const validated=records.find(r=>r.result.role==="VALIDATOR")?.result;
   assert.equal(validated?.verdict,"PASS",JSON.stringify(validated));
   assert.ok(validated?.role==="VALIDATOR" && !validated.findings.some(f=>f.code==="EXTERNAL_VERIFICATION_MISSING"),"the empty-authority demand no longer makes every result inconclusive");
@@ -258,12 +259,12 @@ test("unresolved identity permits independent diagnosis but never staging", asyn
     }}]};
   }});
   const roles:string[]=[];
-  for(let index=0;index<5;index++) {
+  for(let index=0;index<4;index++) {
     const run=await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
     roles.push(run.decisions[0].task!.workerTask!.role);
     assert.equal(run.dispatches[0]?.outcome,"WORKED",run.dispatches[0]?.detail);
   }
-  assert.deepEqual(roles,["ACQUIRER","PARSER","DETECTIVE","VALIDATOR","ADVERSARIAL_AUDITOR"]);
+  assert.deepEqual(roles,["ACQUIRER","PARSER","DETECTIVE","VALIDATOR"]);
   assert.equal((await h.repos.workerResults.readAll()).find(r=>r.result.role==="DETECTIVE")?.result.verdict,"UNRESOLVED");
   assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");
   assert.equal((await h.repos.promotionPipeline.readAll()).length,0);

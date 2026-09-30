@@ -97,13 +97,15 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   const authorityEvidence = evidenceProjection(await h.runtime.readEvidence(artifact.id));
   const runtime = { ...h.runtime, independentContext: async (scope: Parameters<typeof h.runtime.independentContext>[0]) => ({
     ...await h.runtime.independentContext(scope), authorityEvidence: [authorityEvidence] }) };
-  for (const role of ["ACQUIRER", "PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR"]) {
+  // §3: the Validator is the last stage for facts that are not judgment calls.
+  for (const role of ["ACQUIRER", "PARSER", "VALIDATOR"]) {
     const next = await nextAutonomousOperation(runtime, h.item.id);
     assert.equal(next.task?.workerTask?.role, role, JSON.stringify(next));
     assert.equal((await dispatchWorkerTask(runtime, next.task!)).outcome, "WORKED");
   }
   const results = await h.repos.workerResults.read(h.item.id);
-  assert.deepEqual(results.map(row => row.result.verdict), ["ACQUIRED", "EXTRACTED", "PASS", "SURVIVED"]);
+  assert.deepEqual(results.map(row => row.result.verdict), ["ACQUIRED", "EXTRACTED", "PASS"]);
+  assert.equal((await nextAutonomousOperation(runtime, h.item.id)).action, "STAGED", "no auditor is dispatched");
   const queued = workerPublicationTasks([(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now());
   assert.equal(queued.length, 1);
   if (!directory) assert.ok(queued[0].command.includes(`--contract=${contractId}`));

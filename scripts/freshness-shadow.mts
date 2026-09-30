@@ -3328,8 +3328,8 @@ finishPhase("autonomous-workers-and-projection");
 /*
  * RULING 224. Acquisition without promotion is inventory, not product. The tail
  * runs on EVERY cycle with no operator: acquire -> vault -> normalize ->
- * snapshot -> STAGED. Promotion itself is OFF and a session carries the last
- * mile, so nothing below writes outside ignored `.runtime/control-plane/staging/` diagnostics.
+ * snapshot -> STAGED. Promotion is on (§3): staged records publish through the
+ * typed reader doors; this block itself writes only `.runtime/control-plane/staging/` diagnostics.
  */
 const leavePromotionTail = pending.enter("promotion-tail");
 const staged: StagedEntry[] = [];
@@ -3671,7 +3671,6 @@ const researchLines = [
         ` · guard refusals ${r.guardRefusals?.length ?? 0} · overruns ${r.representationOverruns?.length ?? 0} · resumed from ${r.resumedFromRungs ?? 0} rung(s)`,
     ];
   }),
-  "  PROMOTION          OFF. A Scout finding is inventory and a candidate; nothing it produced changed what a reader is told.",
   "",
   ...(metrics === null ? ["RESEARCH METRICS   NOT COMPUTED this cycle (a named runtime condition says why)"] : researchDigestLines(metrics)),
 ];

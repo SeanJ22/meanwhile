@@ -81,7 +81,8 @@ import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
 import { loadPublishedLookupState } from "../lib/census-geography/reader.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
-import { admittedHuntSourceScopes, huntSourceTasks, workerRosterSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
+import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
+import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
 import { readCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import {
@@ -281,31 +282,34 @@ async function readRoutineDueRequests(): Promise<{ readonly requests: readonly R
   return parseRoutineDueRequests(row?.value.routineDueRequests);
 }
 
-/** Resolve the actual Admin Send. No scope, paused runner or unreadable control admits no hunt work. */
+/** Resolve the actual Admin Send for hunt work. Publication of work that
+ * already meets §3 needs no Send (it is not paid work); a paused runner or an
+ * unreadable control still admits nothing. */
 async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
   if (FORCE || ONLY) return [];
   const connection = controlPlaneUrlFromEnv();
   if (!connection) throw new Error("control-plane reporting connection is unavailable");
   const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
+  const intents = readIntents([...(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]);
+  if (intents.runnerPause.paused) return [];
+  const items = (await repos.workItems.list()).map(row => row.value);
+  const workers = items.some(item => item.autonomousPlan?.publication) ? await readCompletedWorkerResults(repos) : [];
+  const publication = workerPublicationTasks(items, workers, RUN_STARTED_AT);
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
-  if (row === null) return [];
+  if (row === null) return publication;
   if (!isAdminConfig(row.value)) throw new Error("the owner's policy row is unreadable");
   const held = expansionScopesOf(row.value);
   if (held.malformed) throw new Error("the owner's scope list contains unreadable decisions");
   const currentSends = held.scopes.filter(scope => scope.sourceWorkVersion === 1);
-  if (currentSends.length === 0) return [];
-  const intents = readIntents([...(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]);
-  if (intents.runnerPause.paused) return [];
+  if (currentSends.length === 0) return publication;
   const lookup = await loadPublishedLookupState({ bypassCache: true });
   const resolved = await resolveScopes(currentSends, lookup, null);
   for (const scope of resolved.scopes) {
     if (scope.kind === "UNRESOLVED") throw new Error(`scope ${scope.decision.key}: ${scope.why}`);
   }
   const admitted = admittedHuntSourceScopes(resolved.scopes, RUN_STARTED_AT);
-  if (admitted.length === 0) return [];
-  const items = (await repos.workItems.list()).map(row => row.value);
-  const workers = items.some(item => item.autonomousPlan?.publication) ? await readCompletedWorkerResults(repos) : [];
-  return [...huntSourceTasks(admitted, RUN_STARTED_AT, items), ...workerRosterSourceTasks(admitted, items, workers, RUN_STARTED_AT)];
+  if (admitted.length === 0) return publication;
+  return [...huntSourceTasks(admitted, RUN_STARTED_AT, items), ...publication];
 }
 
 function newestConsideredAt(

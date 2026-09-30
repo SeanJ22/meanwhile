@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 914,
-    "named": 8519,
+    "files": 916,
+    "named": 8525,
     "dynamic": 33
   },
   "files": {
@@ -2684,7 +2684,7 @@
       "names": [
         "gate open + owner pause: the paid lane stays CLOSED (PAUSED); the pause is what holds it",
         "the campaign-site path is plain code: it never reaches the model lane, a Scout, a paid search or a model client",
-        "the gate opens candidate-enrichment for campaignSite only, and cites the owner's authorization",
+        "the gate opens the §3 classes, keeps candidate-enrichment to its implemented fields, and cites the owner's authorization",
         "the window promotes-would only an approved item of an open class AND an open field"
       ],
       "dynamic": 0
@@ -4320,11 +4320,11 @@
     },
     "tests/delivery-experience-subset-verification.test.ts": {
       "names": [
+        "a copy of the source offered as an authority is not a check, and never holds facts found on the official page",
         "a copy of the source, its URL, or its acquisition cannot be an independent profile",
-        "a global authority defect cannot issue any isolated validator IDs",
         "a wrong office cannot confirm a named member",
         "one independent profile confirms only its own roster row",
-        "one profile contradiction fails the whole chain but preserves only the unrelated row's safe IDs"
+        "one profile contradiction holds only the disputed row; the unrelated row validates (§6)"
       ],
       "dynamic": 0
     },
@@ -5819,6 +5819,15 @@
         "the prepared reader snapshot couples to the held version, then recomposes on the successor's first promotion",
         "the successor's first promotion supersedes the held version, which stays in the store untouched",
         "until its successor promotes, the retired route's held version is composed in its place and named"
+      ],
+      "dynamic": 0
+    },
+    "tests/held-roster-publication.test.ts": {
+      "names": [
+        "a complete official roster records a departure; a partial one keeps the prior member on its own source",
+        "a saved official page puts an unnamed council live with seat, name, office phone and source link (§3)",
+        "plain code reads a CMS staff-directory roster once, with display names and relative bio links",
+        "the wrong page, a stale page and an unlinked non-government page never publish"
       ],
       "dynamic": 0
     },
@@ -8048,6 +8057,14 @@
         "negative: an Arizona fact cannot satisfy a New Mexico verification, nor the reverse",
         "structured shapes: JSON-LD with an offset, cancellation only in the publisher's words, microdata, and a linked .ics",
         "verification holds, by name, what cannot be verified — and an empty page is EMPTY"
+      ],
+      "dynamic": 0
+    },
+    "tests/official-source.test.ts": {
+      "names": [
+        "a vendor portal or a .us/.org/.com government site is official once an official page links it",
+        "any .gov site is official by itself",
+        "the linking page must itself be official, directly or through its own link"
       ],
       "dynamic": 0
     },
@@ -12668,15 +12685,15 @@
         "Hunter transport failure is durable OPEN evidence and retry reuses the canonical scheduling debt",
         "PDC: the production standing runtime refuses queued or newly due legacy meeting acquisitions without opening the source",
         "Scout cycle cap and remaining wall time defer dispatch without inventing failed Attempts",
+        "a judgment call (one person matched across sources) still gets an independent audit, and a break keeps it blocked",
         "a newly observed Scout route flows to Hunter without rewriting its extraction contract",
+        "a stored plan that still demands verification with no authorities validates on §3 instead of sitting inconclusive",
         "an elapsed acquisition cadence finishes retained worker handoffs before a real refresh",
         "an exact URL quotation from a publisher outside canonical seed scope cannot ground acquisition",
-        "an independent Auditor break remains blocked and never becomes staged inventory",
         "completed Scout without a candidate continues after canonical backoff with durable rungs and immutable prior history",
-        "explicitly required external verification remains missing while the diagnostic audit records an honest inconclusive result",
         "missing Scout transport creates one attributable policy denial; retry requires both elapsed backoff and actual availability",
         "shared model admission contention defers Scout without an Attempt and releases for a later cycle",
-        "the same coordinator advances real procedures Hunter → Parser → Validator → Auditor and preserves canonical accounting",
+        "the same coordinator advances real procedures Hunter → Parser → Validator (§3, no audit stage) and preserves canonical accounting",
         "unknown source routes to existing Scout and restart deduplicates the durable task without asserting absence",
         "unresolved identity permits independent diagnosis but never staging"
       ],
@@ -12695,12 +12712,12 @@
     "tests/worker-fleet-generalized.test.ts": {
       "names": [
         "XML sitemap is record inventory with exact loc spans, never a derived meeting date or universe claim",
-        "acquired but unverified remains distinct from external disagreement and self-verification",
-        "cross-row repeated quotations, missing mapped fields, source-scope forgery and duplicate identity fail independently",
+        "a row whose quotation points at another row is held on its own; missing fields, scope forgery and duplicate identity fail",
+        "a same-publisher authority without an independent-record basis is not a check, and never holds the facts",
+        "an unchecked outside source never holds a verified fact; a contradicting one holds only its row",
         "external official comparison is a distinct durable receipt with exact authority and no source text",
         "generalized parser, validator, and auditor execute through the scrubbed disposable realm",
-        "retained document text uses literal record boundaries and still requires independent official agreement",
-        "same-publisher authority requires an explicit independent-record basis and never accepts a duplicate capture",
+        "retained document text uses literal record boundaries; a contradicting official record holds only the disputed row (§3, §6)",
         "unsupported acquired media retains its media type and adapter reason without manufacturing parsed records",
         "v2 office rows in HTML and tabular election records preserve exact markup and quoted CSV source spans",
         "v2 roster JSON retains source occurrence, jurisdiction and identity through independent validation and audit"
@@ -12882,7 +12899,6 @@
     "tests/worker-roster-publication.test.ts": {
       "names": [
         "a stranded mixed roster publishes verified members while unresolved identities enter automatic repair",
-        "normal audit work escalates unresolved Haiku and Sonnet attempts then publishes after independent checks pass",
         "ordinary independent workers publish a roster through the existing reader door, preserve prior facts, and reuse the receipt"
       ],
       "dynamic": 0

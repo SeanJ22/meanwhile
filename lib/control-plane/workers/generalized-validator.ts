@@ -36,6 +36,9 @@ export function validateGeneralizedExtraction(input: ValidatorWorkerInput, contr
     linkingPage: linkingPageFrom(input.evidence.canonicalUrl, input.authorityEvidence ?? []) };
   const pageVerdict = section3Page(page, contract.recordClass, now);
   if (!pageVerdict.ok) findings.push(issue(pageVerdict.reason!.split(":")[0], pageVerdict.reason!));
+  // Findings about one record hold that record only; anything else holds the capture.
+  const recordScoped = (f: WorkerFinding) => Boolean(f.recordId) && f.severity !== "INFO";
+  const extractionVerdict = findingsVerdict(findings.filter(f => !recordScoped(f)));
   // A second source is required only for judgment calls. A declared source that
   // contradicts one record still holds that record (§6); anything else it says is coverage.
   const secondSource = needsSecondSource(contract);
@@ -44,18 +47,16 @@ export function validateGeneralizedExtraction(input: ValidatorWorkerInput, contr
   for (const verification of externalVerifications) for (const finding of verification.discrepancies) {
     findings.push(secondSource || (finding.recordId && finding.severity === "BLOCKING") ? finding : { ...finding, severity: "INFO" });
   }
-  // Findings about one record hold that record only; anything else holds the capture.
-  const recordScoped = (f: WorkerFinding) => Boolean(f.recordId) && f.severity !== "INFO";
-  const extractionVerdict = findingsVerdict(findings.filter(f => !recordScoped(f)));
+  const overall = findingsVerdict(findings.filter(f => !recordScoped(f)));
   const held = new Set(findings.filter(recordScoped).map(f => f.recordId!));
-  const validatedRecordIds = extractionVerdict !== "PASS" ? [] : input.candidate.records.flatMap(record => {
+  const validatedRecordIds = overall !== "PASS" ? [] : input.candidate.records.flatMap(record => {
     if (held.has(record.id)) return [];
     const verdict = section3Record({ recordClass: contract.recordClass, fields: record.fields, page, now, pageVerdict, minimums });
     if (verdict.live) return [record.id];
     findings.push(issue("MINIMUM_FACTS_UNVERIFIED", verdict.reason ?? "The record's minimum facts are not on the page.", "INFO", record.id));
     return [];
   });
-  const verdict = extractionVerdict !== "PASS" ? extractionVerdict : validatedRecordIds.length ? "PASS" : "FAIL";
+  const verdict = overall !== "PASS" ? overall : validatedRecordIds.length ? "PASS" : "FAIL";
   return { role: "VALIDATOR", attemptId: input.attemptId, producerAttemptId: input.producerAttemptId, extractionVerdict, externalVerifications, verdict,
     checked: ["PRODUCER_INDEPENDENCE", "CONTRACT_SCOPE", "EXACT_SOURCE_OCCURRENCES", "OFFICIAL_SOURCE", "FRESHNESS_WINDOW", "VALUES_ON_PAGE"], findings,
     artifactIds: [...new Set([input.evidence.artifactId, ...externalVerifications.flatMap(v => v.evidence.map(e => e.artifactId))])], validatedRecordIds, validatedRecordCount: validatedRecordIds.length };

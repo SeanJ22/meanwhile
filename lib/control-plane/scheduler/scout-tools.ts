@@ -1373,7 +1373,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       rung: input.rung,
       tool: "search",
       target: query,
-      observed: `${res.hits.length} pointer(s) from ${res.providersUsed.join("+") || "none"}${res.errors.length > 0 ? `; ${res.errors.length} provider error(s)` : ""}`,
+      observed: `${res.hits.length} pointer(s) from ${res.providersUsed.join("+") || "none"}${res.errors.length > 0 ? `; ${res.errors.join('; ')}` : ""}`,
       artifactIds: [],
       transport: answered ? "REACHABLE" : "OTHER_NAMED_FAILURE",
       httpStatus: null,

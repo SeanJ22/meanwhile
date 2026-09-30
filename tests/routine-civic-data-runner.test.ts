@@ -1082,6 +1082,8 @@ test("--only selection refuses typos and empty tokens before store access", () =
   ]);
   assert.equal(publication.ok, true, "targeted publication must stay selectable beside automatic refresh tasks");
   if (publication.ok) assert.deepEqual([...publication.only ?? []], ["registry-runtime-bindings"]);
+  assert.match(runner, /let huntTasks: readonly RoutineSourceTask\[\] = \[\];\s*try \{\s*huntTasks = await readHuntSourceTasks\(\);/,
+    "a selected publication door must read its owed work; readHuntSourceTasks skips selected source-only passes itself");
   const refusal = runner.indexOf("if (!TASK_SELECTION.ok)");
   const singleton = runner.indexOf("await acquireProcessSingleton(");
   const writeHandle = runner.indexOf("resolveProductionWriteHandle()");

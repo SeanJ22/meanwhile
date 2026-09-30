@@ -458,7 +458,7 @@ async function recordHuntSourceProgress(task: RoutineSourceTask, stage: HuntSour
 // from entering the next pass.
 const admissionNowMs = Date.now();
 let huntTasks: readonly RoutineSourceTask[] = [];
-if (ONLY === null) try {
+try {
   huntTasks = await readHuntSourceTasks();
 } catch (error) {
   const detail = safeFailure(sanitizedErrorDiagnostic(error));

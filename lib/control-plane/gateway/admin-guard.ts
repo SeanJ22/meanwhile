@@ -42,6 +42,18 @@ import {
 } from "../admin-auth.ts";
 import { ADMIN_ORIGIN } from "../../ops/origins.ts";
 
+/**
+ * A page on the developer's own machine posting to its own dev server. Accepted
+ * only when the server is not a production build, so a click in the local walk
+ * (`pnpm admin:walk`, a local dev server on staging) can reach the gateway, and
+ * a deployed site never accepts a localhost origin.
+ */
+const LOCAL_DEV_ORIGIN = /^http:\/\/(?:localhost|127\.0\.0\.1)(?::\d{1,5})?$/;
+
+export function localDevOriginAllowed(origin: string | null, env: NodeJS.ProcessEnv): boolean {
+  return env.NODE_ENV !== "production" && origin !== null && LOCAL_DEV_ORIGIN.test(origin);
+}
+
 export type AdminGuardVerdict =
   | { readonly ok: true; readonly sessionRef: string }
   | {
@@ -68,14 +80,18 @@ export async function guardAdminRequest(input: {
   if (!isAdminHostRequest(input.headers, ADMIN_ORIGIN)) {
     return { ok: false, status: 404, says: "There is nothing here." };
   }
-  if (input.checkOrigin && !originAllowed(input.headers.get("origin"), ADMIN_ORIGIN)) {
+  const env = input.env ?? process.env;
+  if (
+    input.checkOrigin &&
+    !originAllowed(input.headers.get("origin"), ADMIN_ORIGIN) &&
+    !localDevOriginAllowed(input.headers.get("origin"), env)
+  ) {
     return {
       ok: false,
       status: 403,
       says: "That came from somewhere the console does not accept requests from, so nothing was done.",
     };
   }
-  const env = input.env ?? process.env;
   const verdict = await verifySession(input.cookie, env[ADMIN_SESSION_KEY_VAR], input.nowSeconds);
   if (!verdict.ok) {
     return { ok: false, status: 401, says: "You need to be signed in for this. Nothing was done." };

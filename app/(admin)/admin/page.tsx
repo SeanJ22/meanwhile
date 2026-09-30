@@ -2,16 +2,15 @@
  * **FLEET · NOW.** (Admin redesign, 2026-09-23 — the design package's first
  * screen, replacing the long Pilot health page.)
  *
- * Three cards (what is working, what isn't, where to put effort), the
- * decisions only the owner can make, and every body we watch — each card's
- * figures derived from the lists drawn beneath it, so no card can claim what
- * its list does not show.
+ * Two cards (what is working, what isn't) and every body we watch — each
+ * card's figures derived from the lists drawn beneath it, so no card can claim
+ * what its list does not show. The old tracker's decision cards are not drawn
+ * here: they were rows from a spreadsheet, not decisions the product waits on
+ * (Sean, 2026-09-30).
  *
  * ```
  *   the bodies       every public body with a registered meeting source, read
  *                    narrowly from the production data plane (body-store.ts)
- *   the decisions    the published decision cards, minus those already decided
- *                    on the owner's decision log
  *   the scope        everywhere, a state, or a selected geography; a scope in a
  *                    state not tracked with figures answers in sentences that
  *                    say whether its registration is promoted
@@ -21,7 +20,6 @@
  * denominator and a stated meaning, and every stated count equals the rows
  * drawn. A failed audit replaces the numbers with the reason.
  */
-import { readDecisionCards, readDecisions } from "@/lib/control-plane/admin-data.ts";
 import Link from "next/link";
 import type { OwnerSnapshot } from "@/lib/control-plane/owner-surface.ts";
 import type { ControlPlaneRepositories } from "@/lib/control-plane/repository/types.ts";
@@ -31,16 +29,11 @@ import { CHECKLIST_PROFILE } from "@/lib/control-plane/readiness/checklist-score
 import { servedWitness } from "@/lib/control-plane/served-reader.ts";
 import type { ExpansionScopeDecision } from "@/lib/control-plane/expansion/scopes.ts";
 import { nowFigures, type BodyView } from "@/lib/control-plane/admin-view/bodies.ts";
-import { collapseDecisionLog } from "@/lib/control-plane/decision-log.ts";
-import { SYNC_CADENCE, receiptHeadline, splitDecided } from "@/lib/control-plane/decision-receipt.ts";
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
-import { readPulse } from "@/lib/control-plane/gateway/pulse-read.ts";
 import {
   auditRenderedNumbers,
   checkStatedEqualsRendered,
-  decisionCardKind,
   type CountClaim,
-  type OwnerDecisionCard,
   type RenderedNumber,
 } from "@/lib/control-plane/owner-surface.ts";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
@@ -55,19 +48,15 @@ import { censusEntryOf } from "../_mw/data/census-universe.ts";
 import { divisionsOf, loadContainer, loadZcta } from "../_mw/data/geography.ts";
 import { loadWatchedBodies } from "../_mw/data/load-bodies.ts";
 import { isTrackedState, stateName } from "../_mw/load-shell.ts";
-import { NextSteps, type StepCard } from "../_mw/next-steps.tsx";
 import { openPage, type SearchParams } from "../_mw/page-base.ts";
 import { parseScope, withScope, type MwScope } from "../_mw/scope.ts";
 import { MwShell } from "../_mw/shell.tsx";
-import { Dash, FigList, Pill, Refusal, Section, mw as s, type FigLine } from "../_mw/ui.tsx";
+import { Dash, FigList, Refusal, Section, mw as s, type FigLine } from "../_mw/ui.tsx";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const runtime = "nodejs";
 
-const ACTION_ROUTE = "/api/admin/action";
-const LIVE_ROUTE = "/api/admin/live";
-const PRIORITY_ORDER: Readonly<Record<string, number>> = { P0: 0, P1: 1, P2: 2, P3: 3 };
 const FIRST_BODIES_SHOWN = 12;
 
 type HuntOverviewFields = Pick<OwnerSnapshot, "publishedAt" | "assignments" | "billingAttribution" | "checklists" | "servedReaderReadback">;
@@ -82,34 +71,6 @@ async function readHuntOverview(repos: ControlPlaneRepositories): Promise<{ valu
   } catch {
     return { value: null, gap: "The saved hunt overview could not be read. Its counts and costs are unknown." };
   }
-}
-
-function stepsFrom(waiting: readonly OwnerDecisionCard[]): StepCard[] {
-  const kindOrder = { DECISION: 0, ACKNOWLEDGE: 1, BLOCKED_WHILE: 2 } as const;
-  return [...waiting]
-    .sort(
-      (a, b) =>
-        kindOrder[decisionCardKind(a)] - kindOrder[decisionCardKind(b)] ||
-        (PRIORITY_ORDER[a.priority] ?? 9) - (PRIORITY_ORDER[b.priority] ?? 9) ||
-        (b.ageDays ?? -1) - (a.ageDays ?? -1) ||
-        a.rowId.localeCompare(b.rowId),
-    )
-    .map((c, i) => {
-      const kind = decisionCardKind(c);
-      return {
-        rowId: c.rowId,
-        rank: i + 1,
-        title: c.title,
-        whatIsNeeded: c.whatIsNeeded,
-        why: c.whyNoMachineCanDecide,
-        options: kind === "BLOCKED_WHILE" ? [] : c.options,
-        priority: c.priority,
-        ageDays: c.ageDays,
-        kind,
-        blocker: c.blocker ?? null,
-        ownWords: kind === "DECISION",
-      };
-    });
 }
 
 function SavedHuntOverview({ decision, scope, now, read }: {
@@ -224,11 +185,7 @@ export default async function FleetNowPage({ searchParams }: { searchParams: Pro
   const repos = base.repos;
   const selectedHunt = base.scope.kind === "geo" ? base.shell.decision : null;
   const container = base.scope.kind === "geo" ? base.scope.type === "zcta" ? loadZcta(base.scope.geoid) : loadContainer(base.scope.type, base.scope.geoid) : null;
-  const [snapshotOut, decisionsOut, pulse, bodiesRead, containerRead, huntOverview] = await Promise.all([
-    // The one field of the snapshot this page draws, narrowed by the store: 88 KB of the 449 KB row (2026-09-25).
-    readDecisionCards(repos),
-    readDecisions(repos),
-    readPulse(repos, base.nowIso),
+  const [bodiesRead, containerRead, huntOverview] = await Promise.all([
     bodiesEarly ?? loadWatchedBodies(base.nowIso),
     container,
     selectedHunt ? readHuntOverview(repos) : Promise.resolve({ value: null, gap: null }),
@@ -255,19 +212,6 @@ export default async function FleetNowPage({ searchParams }: { searchParams: Pro
   }
   const figures = nowFigures(bodies);
 
-  /* ------------------------------------------------------------ decisions */
-  const snapshot = snapshotOut.kind === "HELD" ? snapshotOut.value : null;
-  const decisionLog = decisionsOut.kind === "HELD" ? decisionsOut.value : null;
-  const split = snapshot && decisionLog ? splitDecided(snapshot.decisionCards, collapseDecisionLog(decisionLog)) : null;
-  const waiting = split ? split.waiting : [];
-  // What he decided, newest first, with the three-leg receipt the gateway's answer promises ("the card will say when that has happened").
-  const decided = split ? split.decided : [];
-  const DECIDED_SHOWN = 8;
-  const steps = stepsFrom(waiting);
-  const decisionCount = steps.filter((c) => c.kind === "DECISION").length;
-  const optionalCount = steps.filter((c) => c.kind === "ACKNOWLEDGE").length;
-  const wallCount = steps.filter((c) => c.kind === "BLOCKED_WHILE").length;
-
   /* ------------------------------------------------------------ the page's audit */
   const numbers: RenderedNumber[] = [];
   const claims: CountClaim[] = [];
@@ -285,9 +229,6 @@ export default async function FleetNowPage({ searchParams }: { searchParams: Pro
     }
     claims.push({ label: "bodies", stated: bodies.length, rendered: bodies.length });
   }
-  numbers.push({ label: "decisions only you can make", value: decisionCount, denominator: steps.length, contract: "decision cards waiting on the owner, of every card waiting" });
-  numbers.push({ label: "optional items", value: optionalCount, denominator: steps.length, contract: "acknowledgement cards waiting, of every card waiting" });
-  claims.push({ label: "suggested next steps", stated: steps.length, rendered: steps.length });
   const numberAudit = auditRenderedNumbers(numbers);
   const countAudit = checkStatedEqualsRendered(claims);
 
@@ -411,72 +352,7 @@ export default async function FleetNowPage({ searchParams }: { searchParams: Pro
               Could not get into is not the same as nothing wrong. Where a body could not be read, the figures above are floors — the real number can only be higher.
             </p>
           </div>
-          <div className={s.card}>
-            <h2 className={s.h2Card}>Where to put effort</h2>
-            <FigList
-              lines={[
-                { key: "decisions", fig: String(decisionCount), tone: "gold", text: "decisions only you can make, each one listed below" },
-                { key: "minutes", fig: null, unknown: "NOT ESTIMATED", text: "minutes of your time — no card records how long it takes" },
-                { key: "optional", fig: String(optionalCount), tone: "muted", text: "optional items, counted apart so they never inflate the number needing you" },
-              ]}
-            />
-            <p className={s.footnote}>
-              Every figure here is counted from the list below, so this card cannot claim a decision the list does not offer.
-              {wallCount > 0 ? ` ${wallCount} more ${wallCount === 1 ? "card waits" : "cards wait"} on a check the machine reruns, not on you; they close on their own.` : ""}
-              {base.scope.kind !== "all" ? " Decisions are not tied to a place, so this list is the same in every scope." : ""}
-            </p>
-          </div>
         </div>
-      )}
-
-      <Section
-        title="Suggested next steps"
-        lede="Ranked by kind, then priority, then how long each has waited — nothing records what each one unblocks or how long it takes you, so neither is used. Anything the system can settle itself never appears here."
-      />
-      {snapshotOut.kind !== "HELD" ? (
-        <p className={s.note} style={{ marginBottom: 36 }}>
-          {snapshotOut.detail} The decisions waiting on you are unknown until it is read — not zero.
-        </p>
-      ) : decisionsOut.kind !== "HELD" ? (
-        <p className={s.note} style={{ marginBottom: 36 }}>
-          {decisionsOut.detail} Without the decision log, a card you already answered would be offered again, so none is shown.
-        </p>
-      ) : steps.length === 0 ? (
-        <p className={s.note} style={{ marginBottom: 36 }}>
-          Nothing is waiting on you: every published card has a recorded decision.
-        </p>
-      ) : (
-        <NextSteps cards={steps} renderedRevision={pulse.revision} actionRoute={ACTION_ROUTE} liveRoute={LIVE_ROUTE} returnTo={base.here} firstShown={6} />
-      )}
-
-      {decided.length > 0 && (
-        <>
-          <Section
-            title="What you decided"
-            lede={`Newest first${decided.length > DECIDED_SHOWN ? `, the latest ${DECIDED_SHOWN} of ${decided.length}` : ""}. Each one is recorded at once; ${SYNC_CADENCE}, and each line below says how far it has got.`}
-          />
-          <div className={s.stack10} style={{ marginBottom: 36 }}>
-            {decided.slice(0, DECIDED_SHOWN).map((entry) => (
-              <details key={entry.decision.intentId} className={`${s.card} ${s.cardSlim}`}>
-                <summary className={s.row10} style={{ cursor: "pointer" }}>
-                  <Pill tone={receiptHeadline(entry.steps).includes("refused") ? "amber" : receiptHeadline(entry.steps).includes("work opened") ? "teal" : "cyan"}>
-                    {receiptHeadline(entry.steps).toUpperCase()}
-                  </Pill>
-                  <span className={`${s.text14} ${s.grow}`}>{entry.card ? entry.card.title : entry.decision.subjectId}</span>
-                  <span className={s.note}>{formatEastern(entry.decision.decidedAt)}</span>
-                </summary>
-                <div className={s.stack6} style={{ marginTop: 10 }}>
-                  {entry.steps.map((step) => (
-                    <p key={step.key} className={s.text14}>
-                      <span className={s.strong}>{step.label}: </span>
-                      {step.says}
-                    </p>
-                  ))}
-                </div>
-              </details>
-            ))}
-          </div>
-        </>
       )}
 
       <Section

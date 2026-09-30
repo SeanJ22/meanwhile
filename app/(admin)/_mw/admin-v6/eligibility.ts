@@ -33,8 +33,14 @@ export const CONNECTION_REASON: Readonly<Record<Exclude<Connection, "live">, str
   offline: "Disconnected. Buttons that change things are off. Nothing you did now would be saved.",
 };
 
+/**
+ * An earlier send that has not settled. A send the gateway has SAVED is settled
+ * as far as sending again goes: it is durable, and waiting for the runner to
+ * pick it up must not stop the owner giving a newer instruction (a corrected
+ * limit, say). Only a send whose outcome is not known blocks another.
+ */
 export function pendingFor(receipts: readonly UiReceipt[], def: Pick<ActionDef, "kind">, target: string): UiReceipt | null {
-  return receipts.find((r) => r.kind === def.kind && r.target === target && PENDING_STATUSES.includes(r.status)) ?? null;
+  return receipts.find((r) => r.kind === def.kind && r.target === target && PENDING_STATUSES.includes(r.status) && (r.gatewayReceiptId === null || r.status === "unknown")) ?? null;
 }
 
 export function whyNot(input: {

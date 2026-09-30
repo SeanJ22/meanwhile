@@ -325,9 +325,6 @@ test("the four prohibitions refuse an instruction and let the matching QUESTION 
     ["deploy to production", "SHIP_BY_PROSE"],
     ["can you merge this?", "SHIP_BY_PROSE"],
     ["push it to main", "SHIP_BY_PROSE"],
-    ["turn promotion on", "PROMOTION_BY_PROSE"],
-    ["promote the meeting-times class", "PROMOTION_BY_PROSE"],
-    ["activate promotion for agendas", "PROMOTION_BY_PROSE"],
   ];
   for (const [asked, code] of refused) {
     const hit = prohibitionOf(asked);
@@ -749,16 +746,16 @@ test("chat may not bypass action authority: an owner-gated action is refused in 
   assert.equal(outcome.ok, false);
 
   /*
-   * And the prose form of the same thing is refused a step earlier, before any
-   * registry is consulted: "open a record class" is one of the four things chat
-   * may never do, whatever the gateway happens to declare.
+   * And the prose form of the same thing is no longer refused a step earlier:
+   * promotion is automatic under rulings section 3, so "open a record class" is
+   * not one of the things chat may never do.
    */
   const byProse = await respondToOperator({ gateway: bound.gateway, actorRef: "adm_test" }, fullContext(), {
     text: "open a record class for meeting times",
     from: "/admin/chat",
   });
-  assert.equal(byProse.kind, "PROHIBITED");
-  assert.equal(byProse.kind === "PROHIBITED" ? byProse.code : null, "PROMOTION_BY_PROSE");
+  // Rulings section 3 (Sean, 2026-09-29): verified facts publish automatically, so chat has no promotion refusal to give.
+  assert.notEqual(byProse.kind, "PROHIBITED");
 });
 
 test("a PROHIBITED action is refused, and every authority class is decided by the shared ladder", async () => {

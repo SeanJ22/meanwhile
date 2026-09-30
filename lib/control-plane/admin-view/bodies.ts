@@ -35,6 +35,7 @@
  * sittings that version lists.
  */
 
+import { displayNameOf } from "../display-name.ts";
 import type { SittingWindowSchedule } from "../../civic-data/contracts.ts";
 import {
   sittingWindowHotByConclusion,
@@ -375,7 +376,9 @@ function plural(n: number, one: string, many = `${one}s`): string {
 
 /** "Newbury, NH — Planning Board". The source's own words, never a name invented from a slug. */
 export function bodyDisplayName(contract: WatchedContract, version: VersionFacts | null): string {
-  const where = version?.jurisdiction ?? contract.jurisdiction ?? contract.publishingOrg ?? null;
+  const raw = version?.jurisdiction ?? contract.jurisdiction ?? contract.publishingOrg ?? null;
+  // A jurisdiction that arrives as a key ("az:county:county-of-cochise") is named the way the rest of Admin names it.
+  const where = raw !== null && /^[a-z]{2}:[a-z_]+:/.test(raw) ? displayNameOf(raw).name : raw;
   const what = version?.bodyName ?? suffixWords(contract.bodyId);
   return where ? `${where} — ${what}` : what;
 }
@@ -383,7 +386,7 @@ export function bodyDisplayName(contract: WatchedContract, version: VersionFacts
 function suffixWords(bodyId: string): string {
   const hash = bodyId.lastIndexOf("#");
   const raw = hash >= 0 ? bodyId.slice(hash + 1) : bodyId;
-  const words = raw.replace(/[-_]+/g, " ").trim();
+  const words = raw.replace(/^body:/, "").replace(/[-_]+/g, " ").trim();
   if (words === "" || words === "governing") return "Governing body";
   return words.charAt(0).toUpperCase() + words.slice(1);
 }

@@ -1,3 +1,4 @@
+import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import type { ResearchProgressHealth } from "@/lib/control-plane/research-progress-health.ts";
 
 /** Small server-rendered projection. Never ships the full research state to the browser. */
@@ -15,8 +16,8 @@ export function ResearchProgress({ reading }: { readonly reading: ResearchProgre
         <dt>Model spending</dt><dd>{reading.spend}</dd>
       </dl>
       <p><a href="/admin/sources">Routine source acquisition and publication</a> shows source refreshes, validated production versions, and Reader readback separately.</p>
-      <p className="note">{reading.asOf ? <>Dispatch observation: <time dateTime={reading.asOf}>{reading.asOf}</time>.</> : "No current observation."}
-        {reading.window && <> Research evidence window: <time dateTime={reading.window.since}>{reading.window.since}</time> to <time dateTime={reading.window.through}>{reading.window.through}</time>.</>}
+      <p className="note">{reading.asOf ? <>Dispatch observation: <time dateTime={reading.asOf}>{formatEastern(reading.asOf)}</time>.</> : "No current observation."}
+        {reading.window && <> Research evidence window: <time dateTime={reading.window.since}>{formatEastern(reading.window.since)}</time> to <time dateTime={reading.window.through}>{formatEastern(reading.window.through)}</time>.</>}
       </p>
     </section>
   );

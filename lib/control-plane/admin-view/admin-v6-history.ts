@@ -1,6 +1,7 @@
 /** Exact, partial Admin v6 history. This section is not announced in live pulse. */
 import { createHash } from "node:crypto";
 import { ADMIN_RECEIPT_LOG_KEY, type ActionReceipt } from "../gateway/contract.ts";
+import { confirmReceipt, type Confirmation } from "../gateway/confirmation.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 
 export const ADMIN_V6_HISTORY_CONTRACT = "admin-v6/history@1" as const;
@@ -14,7 +15,7 @@ export interface V6HistoryReceipt {
   readonly status: V6ReceiptStatus; readonly statusWords: string;
   readonly steps: readonly { readonly label: string; readonly at: string }[];
   readonly says: string; readonly items: readonly [];
-  readonly lifecycle: { readonly saved: string | null; readonly workersReceived: null;
+  readonly lifecycle: { readonly saved: string | null; readonly workersReceived: string | null;
     readonly workStarted: null; readonly workFinished: null; readonly factsChecked: null;
     readonly published: null; readonly checkedOnPublicPage: null };
   readonly simulated: false; readonly gatewayType: string; readonly gatewayReceiptId: string;
@@ -31,7 +32,7 @@ export type V6HistoryQuery = { readonly scope: string; readonly asOf: string; re
 
 const MISSING = [
   "Only saved pause and resume requests for the whole runner are shown. Place-specific instructions lack a durable scope and action-kind link; their total is unknown.",
-  "A saved request does not prove the runner applied it. Worker receipt, repair, verification, publication and public-page effects remain unknown here.",
+  "A saved request is shown as done only when the runner's own record confirms it. Repair, verification, publication and public-page effects remain unknown here.",
   "The historical receipt does not record whether a caller replayed the same idempotency key.",
 ] as const;
 const STATUSES = new Set<V6ReceiptStatus>(["queued", "read", "running", "done", "partial", "refused", "failed", "unknown"]);
@@ -47,26 +48,29 @@ function statusOf(receipt: ActionReceipt): V6ReceiptStatus {
   if (receipt.outcome === "IN_PROGRESS") return "running";
   return eventTime(receipt.completedAt) ? "done" : "unknown";
 }
-function mapped(receipt: ActionReceipt, scope: string): V6HistoryReceipt | null {
+function mapped(receipt: ActionReceipt, scope: string, confirmation: Confirmation | null = null): V6HistoryReceipt | null {
   if (scope !== "us" || receipt.formatVersion !== 1 ||
     (receipt.type !== "runner.pause" && receipt.type !== "runner.resume") ||
     receipt.subjectKind !== "the standing runner" || !receipt.receiptId || !receipt.idempotencyKey ||
     !eventTime(receipt.startedAt)) return null;
-  const status = statusOf(receipt);
+  const confirmed = confirmation?.state === "applied" && receipt.outcome !== "REFUSED";
+  const status = confirmed ? "done" : statusOf(receipt);
   const completed = eventTime(receipt.completedAt);
+  const confirmedAt = confirmed ? eventTime(confirmation!.at) ?? completed : null;
   return {
     key: receipt.idempotencyKey,
     kind: receipt.type === "runner.pause" ? "global-runner-pause" : "global-runner-resume",
     target: "runner", targetName: "the standing runner", label: receipt.label,
     scopeKey: "us", scopeName: "United States", level: "global", status,
     statusWords: status === "queued" ? "Request saved; runner response unknown" :
-      status === "refused" ? "Request refused" : status === "done" ? "Gateway action recorded" :
+      status === "refused" ? "Request refused" : confirmed ? "Done" : status === "done" ? "Gateway action recorded" :
       status === "running" ? "Gateway action in progress" : "Outcome unknown",
     steps: [{ label: "Sent", at: receipt.startedAt },
-      ...(completed ? [{ label: status === "refused" ? "Refused" : "Gateway receipt recorded", at: completed }] : [])],
-    says: receipt.says, items: [],
+      ...(completed ? [{ label: status === "refused" ? "Refused" : "Gateway receipt recorded", at: completed }] : []),
+      ...(confirmedAt ? [{ label: "Runner confirmed", at: confirmedAt }] : [])],
+    says: confirmed ? confirmation!.words : receipt.says, items: [],
     lifecycle: { saved: status === "queued" || status === "done" ? completed : null,
-      workersReceived: null, workStarted: null, workFinished: null, factsChecked: null,
+      workersReceived: confirmedAt, workStarted: null, workFinished: null, factsChecked: null,
       published: null, checkedOnPublicPage: null },
     simulated: false, gatewayType: receipt.type, gatewayReceiptId: receipt.receiptId,
     readBackAt: receipt.readBackAt, replayed: false, sentAt: receipt.startedAt,
@@ -88,14 +92,19 @@ function parseCursor(raw: string | null | undefined, query: { scope: string; q: 
 }
 
 /** Pure adapter over exact gateway types. Receipt timestamps order the rows; no append-order claim. */
-export function projectV6History(rows: readonly ActionReceipt[], query: V6HistoryQuery): V6HistorySection {
+export function projectV6History(
+  rows: readonly ActionReceipt[],
+  query: V6HistoryQuery,
+  /** What the runner did about each receipt, by receipt id. Absent means nothing is known. */
+  confirmations: ReadonlyMap<string, Confirmation> = new Map(),
+): V6HistorySection {
   const q = (query.q ?? "").trim().toLowerCase();
   const status = query.status ?? "all";
   const limit = Number.isInteger(query.limit) ? Math.max(1, Math.min(ADMIN_V6_HISTORY_MAX_LIMIT, query.limit!)) : ADMIN_V6_HISTORY_MAX_LIMIT;
   const cursor = parseCursor(query.cursor, { scope: query.scope, q, status });
-  const mappedRows = rows.map(row => mapped(row, query.scope)).filter((row): row is V6HistoryReceipt => row !== null)
+  const mappedRows = rows.map(row => mapped(row, query.scope, confirmations.get(row.receiptId) ?? null)).filter((row): row is V6HistoryReceipt => row !== null)
     .sort((a, b) => Date.parse(b.sentAt) - Date.parse(a.sentAt) || a.gatewayReceiptId.localeCompare(b.gatewayReceiptId));
-  const revision = createHash("sha256").update(JSON.stringify(mappedRows.map(row => [row.gatewayReceiptId, row.sentAt]))).digest("hex").slice(0, 24);
+  const revision = createHash("sha256").update(JSON.stringify(mappedRows.map(row => [row.gatewayReceiptId, row.sentAt, row.status]))).digest("hex").slice(0, 24);
   if (cursor && cursor.revision !== revision) throw new Error("STALE_HISTORY_CURSOR");
   const filtered = mappedRows.filter(row => (status === "all" || row.status === status) &&
     (!q || [row.label, row.targetName, row.says].some(value => value.toLowerCase().includes(q))));
@@ -115,7 +124,12 @@ export async function readV6History(repos: ControlPlaneRepositories, query: V6Hi
     repos.adminReceipts.readWhere(ADMIN_RECEIPT_LOG_KEY, ["type"], "runner.pause"),
     repos.adminReceipts.readWhere(ADMIN_RECEIPT_LOG_KEY, ["type"], "runner.resume"),
   ]);
-  return projectV6History([...pauses, ...resumes], query);
+  const all = [...pauses, ...resumes];
+  // Only the newest requests that are still open are asked about; a finished one never changes.
+  const open = all.filter(r => r.outcome === "QUEUED").sort((a, b) => b.startedAt.localeCompare(a.startedAt)).slice(0, ADMIN_V6_HISTORY_MAX_LIMIT);
+  const confirmations = new Map<string, Confirmation>();
+  await Promise.all(open.map(async r => { confirmations.set(r.receiptId, await confirmReceipt(repos, r)); }));
+  return projectV6History(all, query, confirmations);
 }
 export function validV6HistoryStatus(value: string): value is V6ReceiptStatus | "all" {
   return value === "all" || STATUSES.has(value as V6ReceiptStatus);

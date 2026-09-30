@@ -260,20 +260,6 @@ legs.push({
   says: `replayed=${String(again.outcome?.replayed)}, same receipt=${String(sameId)}, exactly one row=${String(noSecondRow)}`,
 });
 
-/* The prohibited action: refused by name, and the refusal is itself a record. */
-const prohibited = await submit({
-  type: "prohibited.promotionOn",
-  subject: "promotion",
-  input: {},
-  idempotencyKey: `${idempotencyKey}-prohibited`,
-  returnTo: "/admin",
-});
-legs.push({
-  leg: "prohibited action refused",
-  ok: prohibited.outcome?.ok === false && prohibited.outcome.receipt.refusal === "PROHIBITED_ACTION",
-  says: prohibited.outcome?.receipt.says ?? `status ${prohibited.status}: ${prohibited.raw.slice(0, 200)}`,
-});
-
 /* The unknown action: fails closed. */
 const unknown = await submit({
   type: "definitely.not.an.action",

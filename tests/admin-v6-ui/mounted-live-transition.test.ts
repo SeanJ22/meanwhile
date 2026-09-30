@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { build } from "esbuild";
-import { chromium } from "playwright";
+import { launchGuarded } from "../../scripts/browser.mts";
 
 const entry = `
   import React, { useState, useSyncExternalStore } from "react";
@@ -36,9 +36,9 @@ const entry = `
 test("an already-mounted v6 adapter picks up readiness, scoped changes and a brief disconnect without reload or mutation", async () => {
   const bundle = await build({ stdin: { contents: entry, resolveDir: process.cwd(), sourcefile: "mounted-admin-adapter.tsx", loader: "tsx" },
     alias: { "@": process.cwd() }, bundle: true, platform: "browser", format: "iife", write: false });
-  const browser = await chromium.launch({ headless: true });
+  const browser = await launchGuarded({ label: "admin-v6-mounted-transition", headless: true });
   try {
-    const page = await browser.newPage();
+    const page = await browser.page();
     let rows = ["first"];
     let reads = 0;
     let mutations = 0;

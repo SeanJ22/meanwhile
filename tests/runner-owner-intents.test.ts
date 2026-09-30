@@ -363,8 +363,7 @@ function checkCycleHonorsDispatch(src: string): void {
   assert.ok(read < sort, "the intent log is read AFTER the deterministic sort, so a dispatch cannot reorder it");
   assert.ok(sort < bands, "the reader-impact bands come before the deterministic order");
 
-  assert.match(src, /"model lane closed for this cycle"/, "a lane PAUSE gets no HONORED record");
-  assert.match(src, /"model lane reopened"/, "a lane RESUME gets no HONORED record");
+  assert.match(src, /pendingResearchLaneAcknowledgment\(/, "lane PAUSE and RESUME acknowledgments use the shared owner-intent boundary");
   assert.match(src, /pause: null,/, "the working heartbeat does not say it is not paused");
 }
 

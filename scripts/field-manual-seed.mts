@@ -31,7 +31,7 @@ import {
   type FieldManualRole,
 } from "../lib/control-plane/field-manual.ts";
 import { readMethodStore } from "../lib/method/candidate.ts";
-import { KNOWLEDGE_SOURCE, knowledgeEntries } from "../lib/method/manual-bridge.ts";
+import { KNOWLEDGE_SOURCE, knowledgeEntries, methodVersionEntry } from "../lib/method/manual-bridge.ts";
 import { leadLine, researchDocEntries, splitMarkdownDocument } from "../lib/method/research-docs.ts";
 import { MANIFEST_ROUTES } from "../lib/hunt/branch-manifest.ts";
 import { KNOWN_PLATFORMS } from "../lib/hunt/platform-tenancy.ts";
@@ -110,7 +110,7 @@ function collect(source: string, entries: FieldManualEntry[]): FieldManualEntry[
 
 function fromKnowledge(): FieldManualEntry[] {
   const store = readMethodStore(join(ROOT, "data", "method", "knowledge.json"));
-  return collect(KNOWLEDGE_SOURCE, knowledgeEntries(store));
+  return collect(KNOWLEDGE_SOURCE, [...knowledgeEntries(store), methodVersionEntry(store)]);
 }
 
 function fromManifest(): FieldManualEntry[] {

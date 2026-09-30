@@ -154,3 +154,14 @@ test("how to reach my officials: the same offices, each person with the phone an
   assert.match(silent?.answer ?? "", /We have not recorded a published phone number or email for David Gowan\.$/);
   assert.deepEqual(silent?.gaps.map((gap) => gap.whose), ["OURS"]);
 });
+
+test("a ZIP that reaches more than one place does not say which city's mayor or council is the reader's", () => {
+  const mayor = held(seat("m", "Regina Romero", "Mayor", "Democratic"), [], { id: "x#governing", name: "Tucson Mayor & Council" });
+  const ask = readerOfficialsQuestion("Who is my mayor?")!;
+  const many = composeReaderOfficials({ ask, holdingFailed: false, held: [mayor], placesReached: 4 });
+  assert.equal(many?.answer, "On Tucson Mayor & Council, the mayor is Regina Romero (Democratic). Your ZIP code reaches 4 places, so a ZIP code alone does not say which city's mayor is yours.");
+  assert.deepEqual(many?.gaps.map((gap) => gap.whose), ["OURS"]);
+  assert.equal(composeReaderOfficials({ ask, holdingFailed: false, held: [mayor], placesReached: 1 })?.answer, "On Tucson Mayor & Council, the mayor is Regina Romero (Democratic).");
+  assert.equal(readerOfficialsQuestion("Who is my sheriff?")?.keys[0], "county_sheriff");
+  assert.equal(composeReaderOfficials({ ask: readerOfficialsQuestion("Who is my sheriff?")!, holdingFailed: false, held: [] })?.answer, "We have not recorded who your county sheriff is yet.");
+});

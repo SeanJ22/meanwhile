@@ -63,6 +63,12 @@ const OFFICE_PHRASES: readonly OfficePhrase[] = [
   { pattern: /^(?:city |town )?mayor$/, keys: ["mayor"] },
   { pattern: /^(?:county )?supervisors?$/, keys: ["county_supervisor"] },
   { pattern: /^county commissioners?$/, keys: ["county_commissioner"] },
+  { pattern: /^(?:county )?sheriff$/, keys: ["county_sheriff"] },
+  { pattern: /^county attorney$/, keys: ["county_attorney"] },
+  { pattern: /^county assessor$/, keys: ["county_assessor"] },
+  { pattern: /^county recorder$/, keys: ["county_recorder"] },
+  { pattern: /^county treasurer$/, keys: ["county_treasurer"] },
+  { pattern: /^county clerk$/, keys: ["county_clerk"] },
   { pattern: /^(?:city |town )?(?:council ?(?:members?|men|man|women|woman|ors?)|alder(?:men|man|woman|persons?))$/, keys: ["municipal_council"] },
   { pattern: /^school board (?:members?|trustees?|representatives?)$|^school board$/, keys: ["school_board"] },
   { pattern: /^attorney general$/, keys: ["attorney_general"] },
@@ -160,6 +166,12 @@ const LABELS: Readonly<Record<string, readonly [string, string]>> = {
   state_lower_house: ["state representative", "state representatives"],
   county_supervisor: ["county supervisor", "county supervisors"],
   county_commissioner: ["county commissioner", "county commissioners"],
+  county_sheriff: ["county sheriff", "county sheriffs"],
+  county_attorney: ["county attorney", "county attorneys"],
+  county_assessor: ["county assessor", "county assessors"],
+  county_recorder: ["county recorder", "county recorders"],
+  county_treasurer: ["county treasurer", "county treasurers"],
+  county_clerk: ["county clerk", "county clerks"],
   mayor: ["mayor", "mayors"],
   municipal_council: ["city council member", "city council members"],
   school_board: ["school board member", "school board members"],
@@ -235,6 +247,8 @@ export function composeReaderOfficials(input: {
   held: readonly HeldOfficial[];
   /** Officeholder records could not be read for this answer: an absence is then a failure of ours, said so. */
   holdingFailed: boolean;
+  /** How many places (cities, towns, census places) the reader's ZIP code reaches: more than one, and a ZIP does not say which city is theirs. */
+  placesReached?: number;
 }): OfficialsComposition | null {
   const contact = Boolean(input.ask.contact);
   const clauses: string[] = [];
@@ -303,6 +317,12 @@ export function composeReaderOfficials(input: {
     const decided = ADDRESS_DECIDED[key];
     if (decided && holders.length > 1) {
       const statement = `We have not recorded which ${decided} your address is in, so we cannot say which of them is yours.`;
+      gap(statement);
+      sentences.push(statement);
+    }
+    /* A ZIP code is an area, not a city: the mayor and the council named are those of a city the area reaches. */
+    if ((key === "mayor" || key === "municipal_council") && (input.placesReached ?? 0) > 1) {
+      const statement = `Your ZIP code reaches ${input.placesReached} places, so a ZIP code alone does not say which city's ${singular} is yours.`;
       gap(statement);
       sentences.push(statement);
     }

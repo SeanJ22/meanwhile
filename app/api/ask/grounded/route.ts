@@ -2304,7 +2304,7 @@ export async function POST(request: Request) {
      * already loaded for the reader's divisions and bodies are the answer. Each one
      * named is a record beside the composed sentence, with their published contact.
      */
-    const officials = officialsAsk && !subject ? composeReaderOfficials({ ask: officialsAsk, held: officeholders.held, holdingFailed: officeholders.loaderFailures > 0 }) : null;
+    const officials = officialsAsk && !subject ? composeReaderOfficials({ ask: officialsAsk, held: officeholders.held, holdingFailed: officeholders.loaderFailures > 0, placesReached: new Set(ocdIds.filter((id) => /[/]place:[a-z_]+$/.test(id) && !id.endsWith("_ccd"))).size }) : null;
     if (officials) {
       for (const { seat, bodyName } of officials.named) {
         records.push(officeholderEvidence(seat));

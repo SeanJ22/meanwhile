@@ -11,6 +11,7 @@ import { evaluateCompletion } from "../lib/control-plane/completion.ts";
 import { recordAcquisition, type Artifact } from "../lib/control-plane/evidence/artifact.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { MemoryEvidenceStore, putArtifact, readForParser, type EvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { contentHash } from "../lib/control-plane/ids.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import {
@@ -321,7 +322,7 @@ test("malformed evidence produces a persisted typed failure and blocks the item,
   assert.match(validation.detail, /WORKER_EXACT_CANDIDATE_BINDING_REFUSED/);
 });
 
-test("a Validator-passing captured result is broken by another official route and dependent work reopens", async () => {
+test("a Validator-passing captured result is broken by a contradicting official capture and dependent work reopens", async () => {
   const h = await harness();
   const artifact = await h.hold(CAPTURE);
   const parser = await run(h, artifact, "PARSER");
@@ -332,18 +333,18 @@ test("a Validator-passing captured result is broken by another official route an
     dependencies: [{ upstreamId: h.item.id, kind: "PRODUCES_CONSUMES", reason: "Consumes the audited event records", evidence: [parser.id] }] });
   await registerWorkItem(h.repos, dependent, h.now());
   const rows = JSON.parse(CAPTURE) as Record<string, unknown>[];
-  await h.hold(JSON.stringify([...rows, { ...rows[0], EventId: 999999, EventDate: "2026-12-15T00:00:00" }]),
+  await h.hold(JSON.stringify(rows.map((row, index) => index ? row : { ...row, EventDate: "2026-12-15T00:00:00" })),
     "https://webapi.legistar.com/v1/pima/events?source=independent-control");
   const auditor = await run(h, artifact, "ADVERSARIAL_AUDITOR", { producerResultId: parser.id, validatorResultId: validator.id, auditScope: "SOURCE_UNIVERSE" });
   assert.equal(auditor.result.role, "ADVERSARIAL_AUDITOR");
   if (auditor.result.role !== "ADVERSARIAL_AUDITOR") throw new Error("wrong result role");
   assert.equal(auditor.result.verdict, "BROKE");
   assert.equal(auditor.result.reopenRequired, true);
-  assert.ok(auditor.result.findings.some((finding) => finding.code === "AUDIT_OFFICIAL_ROUTE_OMITTED"));
+  assert.ok(auditor.result.findings.some((finding) => finding.code === "AUDIT_OFFICIAL_CONTRADICTION"));
   for (const workItemId of [h.item.id, dependent.id]) {
     const item = (await h.repos.workItems.mustRead(workItemId)).value;
     assert.equal(item.state, "REOPENED");
-    assert.ok(item.transitions.some((transition) => transition.by === `worker-result:${auditor.id}` && transition.why.includes("AUDIT_OFFICIAL_ROUTE_OMITTED")));
+    assert.ok(item.transitions.some((transition) => transition.by === `worker-result:${auditor.id}` && transition.why.includes("AUDIT_OFFICIAL_CONTRADICTION")));
   }
 });
 
@@ -509,8 +510,12 @@ test("BROKE remains blocking through captured audit/replay until a newer exact i
   const validator = await run(h, artifact, "VALIDATOR", { producerResultId: parser.id });
   const challenged: FleetRuntime = { ...h.runtime, independentContext: async (scope) => {
     const context = await h.runtime.independentContext(scope);
-    return { ...context, routes: [...context.routes, { routeId: "seeded-unresolved-applicable-route", canonicalUrl: "https://webapi.legistar.com/v1/pima/eventdates",
-      applicable: true, status: "OPEN", artifactIds: [], reason: "Seeded independent route omission." }] };
+    const rows = JSON.parse(CAPTURE) as Record<string, unknown>[];
+    const text = JSON.stringify(rows.map((row, index) => index ? row : { ...row, EventDate: "2026-12-15T00:00:00" }));
+    const contradicting = { artifactId: "seeded-contradicting-capture", contentHash: contentHash(text), text, acquiredByAttemptId: "seeded-acquirer",
+      canonicalUrl: "https://webapi.legistar.com/v1/pima/events?source=seeded-contradiction", retrievedAt: START, sourceId: "legistar-pima", methodRouteId: "seeded-contradicting-route" };
+    return { ...context, evidence: [...context.evidence, contradicting], routes: [...context.routes, { routeId: contradicting.methodRouteId, canonicalUrl: contradicting.canonicalUrl,
+      applicable: true, status: "HELD" as const, artifactIds: [contradicting.artifactId], reason: "Seeded first-party capture that contradicts the extraction." }] };
   } };
   const broken = await run(h, artifact, "ADVERSARIAL_AUDITOR", { producerResultId: parser.id, validatorResultId: validator.id,
     auditScope: "SOURCE_UNIVERSE", runtime: challenged });

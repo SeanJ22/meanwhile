@@ -6,6 +6,7 @@ import { VAULT_DIR } from "../scheduler/vault.ts";
 import type { ModelTransport } from "../scheduler/scout-executor.ts";
 import { modelAuditReasoner } from "./model-audit.ts";
 import { modelParseReasoner } from "./model-parser.ts";
+import { createModelAuditSampler } from "./audit-sampling.ts";
 import { workerVaultResolver } from "./vault.ts";
 import { drainWorkerQueue, enqueueWorkerTask, evidenceProjection, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import type { RouteTask } from "../route-task.ts";
@@ -312,7 +313,8 @@ export function standingFleetRuntime(input: { root: string; vaultRoot?: string; 
     ...(input.transport ? (() => {
       const modelOptions = { ...(input.auditCeilingUsd === undefined ? {} : { ceilingUsd: input.auditCeilingUsd }), ...(input.transportFor === undefined ? {} : { transportFor: input.transportFor }),
         ...(input.lifetimeHuntSubject === undefined ? {} : { lifetimeHuntSubject: input.lifetimeHuntSubject }) };
-      return { auditReasoner: modelAuditReasoner(input.repos, input.transport, now, modelOptions), parseReasoner: modelParseReasoner(input.repos, input.transport, now, modelOptions) };
+      return { auditReasoner: modelAuditReasoner(input.repos, input.transport, now, modelOptions), parseReasoner: modelParseReasoner(input.repos, input.transport, now, modelOptions),
+        modelAuditSample: createModelAuditSampler(input.repos) };
     })() : {}),
     independentContext: async ({ artifactId, contract, auditScope, methodVersion, workItemId }): Promise<IndependentAuditContext> => {
       if (methodVersion !== method.version) throw new Error("AUDIT_METHOD_VERSION_MISMATCH");

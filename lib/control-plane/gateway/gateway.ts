@@ -74,6 +74,7 @@ import {
 } from "./contract.ts";
 import { lookupAction, type ActionContext, type GatewayDeps, type RegisteredAction } from "./registry.ts";
 import { appendReceipt, buildReceipt, findReceipt } from "./receipts.ts";
+import { withWriteReadback } from "./write-readback.ts";
 
 /**
  * What a well-formed action envelope looks like.
@@ -237,7 +238,8 @@ export async function submit(request: ActionRequest, deps: GatewayDeps): Promise
   const context: ActionContext = { request: normalised, receiptId, at: deps.now() };
   let result;
   try {
-    result = await entry.execute(deps, context, validated.value);
+    // Every store write the action makes is read back if it times out, so a timeout never becomes "nothing was recorded" when it may have landed.
+    result = await entry.execute({ ...deps, repos: withWriteReadback(deps.repos) }, context, validated.value);
   } catch (error) {
     return refuseWith(
       "DOWNSTREAM_REFUSED",

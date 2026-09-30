@@ -603,7 +603,7 @@ export function Composer(props: {
             </div>
             <p className={s.note} style={{ fontSize: 14, marginBottom: 18, maxWidth: "76ch" }}>
               {sent.replayed ? "This is the same saved action receipt returned for a repeat submission. " : ""}The receipt states what happened to this action; the runner and public result are checked separately.
-              {sent.readBackAt ? ` Saved state read back at ${new Date(sent.readBackAt).toLocaleString("en-US", { timeZone: "America/Phoenix" })} Arizona time.` : " The receipt has no saved-state readback time yet."}
+              {sent.readBackAt ? ` Saved state read back at ${formatEastern(sent.readBackAt)}.` : " The receipt has no saved-state readback time yet."}
             </p>
             <div className={s.stack2}>
               {[

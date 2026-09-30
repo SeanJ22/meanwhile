@@ -133,8 +133,8 @@ test("ADM-4: the decision route accepts an answer in the owner's own words, and 
   assert.match(island, /record\(card, p\.option, p\.consequence, null\)/, "the consequence sent is the one the confirm box showed for that option");
   assert.match(island, /type: "decision\.record"/, "the decision goes through the one typed gateway, same as every other action");
   const page = src("app/(admin)/admin/page.tsx");
-  // ADM-16 (evening): a decided card leaves the queue and shows its receipt; the split is the live log's.
-  assert.match(page, /splitDecided\(/, "a decided card shows its decision instead of buttons");
+  // S11 (2026-09-30): the home screen no longer draws the old tracker's decision cards at all.
+  assert.doesNotMatch(page, /splitDecided\(|NextSteps/, "the home screen does not draw the old tracker decisions");
 });
 
 const INTENT = (over: Partial<OwnerDecisionIntent>): OwnerDecisionIntent => ({

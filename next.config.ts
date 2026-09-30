@@ -70,6 +70,10 @@ const nextConfig: NextConfig = {
   // absent: production resolves the canonical store and fails closed when its
   // pointer has not been recorded.
   outputFileTracingIncludes: {
+    // Start many hunts checks each ZIP against the ZIP index's shards (`lib/control-plane/bulk-hunts/zip-state.ts`).
+    // The shard name is computed, so the tracer cannot see it; untraced, every ZIP would read as "not a ZIP the site
+    // knows" on production while passing every local test.
+    "/api/admin/bulk-hunts": ["./data/derived/zip-divisions/*.json"],
     "/api/admin/geography-preview": [
       "./data/derived/census-unit-zips.json",
       "./data/derived/zip-governments.json",

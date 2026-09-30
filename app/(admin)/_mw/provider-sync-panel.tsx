@@ -1,8 +1,9 @@
 import { billingStale, billingTotal, type ProviderBillingSnapshot } from "@/lib/control-plane/provider-billing.ts";
+import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import s from "./mw.module.css";
 import type { BillingAttribution } from "@/lib/control-plane/provider-billing-attribution.ts";
 
-const mst = (iso: string) => new Intl.DateTimeFormat("en-US", { timeZone: "America/Phoenix", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }).format(new Date(iso)) + " MST";
+const mst = (iso: string) => formatEastern(iso);
 /** Server-rendered cached figures: no billing credential or provider request reaches the browser. */
 const dollars = (value: number | null) => value === null ? "unavailable" : `$${value.toFixed(2)}`;
 export function ProviderSyncPanel({ snapshot, attribution, now }: { readonly snapshot: ProviderBillingSnapshot | null; readonly attribution: BillingAttribution | null; readonly now: string }) {

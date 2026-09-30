@@ -2,6 +2,7 @@ import { performance } from "node:perf_hooks";
 import { contentHash } from "../ids.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "../repository/types.ts";
 import { meteredCostFields, priceMeteredUsage, readMeteredUsage, type MeteredUsage } from "../model-cost.ts";
+import { canonicalModelId } from "../../models.ts";
 import { assertStepMayInvokeModel, MODEL_FOR_CLASS } from "../scheduler/model-routing.ts";
 import { readCompletedWorkerResult } from "../repository/worker-completion.ts";
 import { nextAuditEscalation } from "./audit-escalation.ts";
@@ -199,7 +200,8 @@ function rawResponse(response: ModelResponse): string {
     : block.type === "tool_use" ? canonicalJson({ type: block.type, name: block.name, input: block.input }) : "").filter(Boolean).join("\n");
 }
 function validateAnswer(response: ModelResponse, expectedModel: string, context: IndependentAuditContext): Pick<Review, "verdict" | "challenges"> {
-  if (response.model !== expectedModel) validationFailure("AUDIT_MODEL_IDENTITY_MISMATCH");
+  // The provider answers with the dated alias of a tier's model (claude-haiku-4-5-20251001): the same model.
+  if (canonicalModelId(String(response.model)) !== canonicalModelId(expectedModel)) validationFailure("AUDIT_MODEL_IDENTITY_MISMATCH");
   if (!Array.isArray(response.content)) validationFailure("AUDIT_MODEL_CONTENT_INVALID");
   const tools = response.content.filter((block) => block.type === "tool_use");
   /*

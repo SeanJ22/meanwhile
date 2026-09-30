@@ -231,7 +231,8 @@ import {
   type RunWork,
   type WorkArtifact,
 } from "../lib/control-plane/scheduler/dispatch.ts";
-import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutExecutor, scoutJobWorstCaseUsd, scoutPrewarmPlan, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutJobWorstCaseUsd, scoutPrewarmPlan, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { failureResponderExecutor } from '../lib/control-plane/workers/detective.ts';
 import { buildScoutToolkit, scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
 import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
@@ -2447,7 +2448,7 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
  * reaches.
  */
 const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled
-  ? scoutExecutor({
+  ? failureResponderExecutor({
       /* MW-021: every request is checked against what the job holds on its Send and area budgets before the Fleet guard reserves it. */
       transport: budgetGuardedTransport({
         transport: fleetSafety.guardedModelTransport("anthropic", scheduled.obligation.id, anthropicTransport(workerKey)),

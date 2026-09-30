@@ -19,6 +19,7 @@ import { SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, buildScoutToolkit, extractPdf } fro
 import { cannotRun, extracted } from "../lib/extract/types.ts";
 import type { ScoutSearch } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { carriesCredential } from "../lib/hunt/access-control.ts";
+import { contentHash } from '../lib/control-plane/ids.ts';
 import { MemoryEvidenceStore, objectKey, putArtifact, readForParser } from "../lib/control-plane/evidence/store.ts";
 import { issueParserInput } from "../lib/control-plane/evidence/parser-boundary.ts";
 import { defaultGrant } from "../lib/control-plane/capability.ts";
@@ -134,6 +135,19 @@ const PAGE = `<!doctype html><html><head><title>Board Agendas &amp; Minutes</tit
 
 const IN = { rung: "primary-site-navigation", why: "find the agenda packet route" };
 
+test('installed adapters use handed bytes and preserve their source provenance without HTTP',async()=>{
+ const text=Array.from({length:95},(_,i)=>'<a href="/record/'+i+'">Record '+i+'</a>').join('');
+ const id='held-source', hash=contentHash(text);
+ const kit=buildScoutToolkit(context({openOne:async()=>{throw Error('Must not fetch');},inherited:{artifactIds:[id],summary:''},readHeldArtifact:async()=>({
+  artifactId:id,contentHash:hash,text,canonicalUrl:HOST,retrievedAt:NOW,acquiredByAttemptId:'held-attempt',sourceId:HOST,methodRouteId:'held-page',provenance:{artifactId:id,canonicalUrl:HOST,retrievedAt:NOW,permission:'ALLOWED',methodRouteId:'held-page',httpStatus:200}
+ })}));
+ const output=await kit.call('run_adapter',{...IN,adapter:'uncapped-source-links',artifactId:id},null);
+ assert.equal(output.ok,true);assert.match(output.forModel,/source https:\/\/clerk.example.gov/);assert.equal(output.requestCount,0);
+ assert.equal(output.knowledgeRead?.contentHash,hash);assert.equal(output.knowledgeRead?.length,text.length);
+ const refused=await kit.call('run_adapter',{...IN,adapter:'uncapped-source-links',artifactId:'other-job'},null);
+ assert.equal(refused.ok,false);assert.match(refused.forModel,/NOT_HANDED/);
+});
+
 /* ================================================= (h) the evaluator */
 
 test("robots: longest match decides, Allow winning a tie (Wikipedia's exact shape)", () => {
@@ -202,6 +216,9 @@ test("the toolkit exposes exactly the research tools with their required locator
     find_manual: "query",
     read_manual: "entryId",
     read_held: "artifactId",
+    run_adapter: null,
+    plural_roster: 'state',
+    legistar_events: 'tenant',
     search: "query",
   };
   for (const spec of [...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC]) {

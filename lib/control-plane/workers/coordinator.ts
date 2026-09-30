@@ -1,4 +1,5 @@
-import { adapterWaitReason } from "./detective.ts";
+import { adapterWaitReason, reusableScoutCandidates, subjectScoutHistory, scoutFactGrounded, failureNeedsInvestigation } from "./detective.ts";
+import { installedAdapters } from '../scheduler/scout-adapters.ts';
 import { randomUUID } from "node:crypto";
 import type { WorkItem } from "../work-item.ts";
 import { ZERO_COST, type Attempt } from "../attempt.ts";
@@ -129,7 +130,7 @@ async function scoutSources(runtime: FleetRuntime, item: WorkItem, knownScouts?:
     if (scout.subjectId !== item.subject || scout.recordClass !== plan.contract.recordClass || scout.refusal !== null) continue;
     const attempt = (await runtime.repos.attempts.mustRead(scout.attemptId)).value;
     if (attempt.outcome !== "COMPLETED") continue;
-    for (const candidate of scout.candidates) {
+    for (const candidate of reusableScoutCandidates(scout)) {
       for (const id of candidate.evidenceArtifactIds) {
         const evidence = evidenceProjection(await runtime.readEvidence(id));
         const start = evidence.text.indexOf(candidate.url);
@@ -137,7 +138,9 @@ async function scoutSources(runtime: FleetRuntime, item: WorkItem, knownScouts?:
         if (start < 0 && !direct) continue;
         const anchors=[...plan.seedUrls,...plan.sources.map(source=>source.url),...(plan.contract.schemaVersion===2?plan.contract.sourceScope.canonicalUrls:[])];
         const observedOrigin=new URL(evidence.canonicalUrl).origin;
-        if(!anchors.some(anchor=>new URL(anchor).origin===observedOrigin)) continue;
+        const fact = candidate.routeId.startsWith('held-fact:') && direct && scoutFactGrounded(scout,candidate.url,evidence.text);
+        if(candidate.routeId.startsWith('held-fact:') && !fact) continue;
+        if(!fact && !anchors.some(anchor=>new URL(anchor).origin===observedOrigin)) continue;
         const spanStart = start >= 0 ? start : 0;
         const quote = start >= 0 ? candidate.url : evidence.text.slice(0,128);
         if (!quote) continue;
@@ -218,9 +221,8 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     const prior = await repos.routeTasks.read(created.id);
     let task = prior?.value ?? (await registerRouteTask(repos,created,now)).value;
     const {history,debt}=autonomousScoutHistory(task,knownHistory?.routeTasks ?? (await repos.routeTasks.list()).map(row=>row.value),attempts);
-    const scoutHistory=[...(knownHistory?.scouts ?? (await repos.scoutResults.readAll()).filter(result=>result.workItemId===item.id))]
-      .sort((a,b)=>a.recordedAt.localeCompare(b.recordedAt)||a.attemptId.localeCompare(b.attemptId));
-    const adapterWait = adapterWaitReason(scoutHistory);
+    const scoutHistory=subjectScoutHistory(knownHistory?.scouts ?? await repos.scoutResults.readAll(),item.subject,plan.contract.recordClass);
+    const adapterWait = adapterWaitReason(scoutHistory,await installedAdapters());
     if (adapterWait) return decision("BLOCKED",adapterWait,task);
     const retained = (item as WorkItem & { readonly planRepair?: { readonly retainedEvidenceIds?: readonly string[]; readonly sourceArtifactId?: string } }).planRepair;
     const handedHeldIds = [...new Set([...scoutHistory.flatMap(result => result.artifactIds),
@@ -253,6 +255,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     if (["PENDING","RECLAIMABLE"].includes(task.state) && (!debt||Date.parse(debt.retryAt)<=Date.parse(now)||task.id===recoveryTaskId)) return decision("SCOUT",scope,task);
     return decision("BLOCKED","Scout has no accepted grounded route; preserve its next rungs and retry state.",task);
   };
+  if (failureNeedsInvestigation(records,subjectScoutHistory(await repos.scoutResults.readAll(),item.subject,plan.contract.recordClass))) return scoutOperation(true);
   if (!acquisitions.length) return scoutOperation(false);
   let staged = false;
   let unresolved = false;

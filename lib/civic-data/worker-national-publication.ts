@@ -27,7 +27,7 @@ import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntim
 import { processRegisteredManualCandidate } from "./promotion.ts";
 import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
-import { captureIntact, registryEdition, section3SourceReceipt } from "./worker-publication-evidence.ts";
+import { captureProblem, registryEdition, section3SourceReceipt } from "./worker-publication-evidence.ts";
 import { publishRosterReading, type RosterReading, type WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import { section3Page, section3Record, valueOnPage } from "../control-plane/promotion/section3.ts";
 import type { StatewideExecutive } from "../officials/statewide-executives.ts";
@@ -116,7 +116,8 @@ function divisionRow(input: NationalDivisionInput, captures: readonly WorkerPubl
   const state = /\/state:([a-z]{2})\b/.exec(input.id)?.[1]?.toUpperCase();
   if (!state) return "DIVISION_STATE_UNRESOLVED";
   const capture = captures.find(c => c.evidence.canonicalUrl === input.sourceUrl);
-  if (!capture || !captureIntact(capture)) return `DIVISION_SOURCE_NOT_SAVED:${input.sourceUrl}`;
+  if (!capture) return `DIVISION_SOURCE_NOT_SAVED:${input.sourceUrl}`;
+  if (captureProblem(capture)) return `DIVISION_SOURCE_UNUSABLE:${captureProblem(capture)}`;
   const verdict = section3Page({ url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt }, "CENSUS_GEOGRAPHY", now);
   if (!verdict.ok) return verdict.reason!;
   if (!valueOnPage(input.label, capture.evidence.text) || (input.geoid !== null && !capture.evidence.text.includes(input.geoid))) return "DIVISION_NOT_ON_SAVED_SOURCE";
@@ -189,7 +190,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
   const statewide: { official: NationalOfficialInput; row: StatewideExecutive; capture: WorkerPublicationCapture }[] = [];
   for (const official of input.sources.officials.filter(o => STATE_DIVISION.test(o.divisionId))) {
     const capture = official.document.capture;
-    const row = capture && captureIntact(capture) ? statewideRow(official, capture, input.now, input.divisions.find(d => d.id === official.divisionId)?.label ?? null) : `OFFICIAL_PAGE_NOT_SAVED:${official.document.url}`;
+    const row = capture && !captureProblem(capture) ? statewideRow(official, capture, input.now, input.divisions.find(d => d.id === official.divisionId)?.label ?? null) : capture ? `OFFICIAL_PAGE_UNUSABLE:${captureProblem(capture)}` : `OFFICIAL_PAGE_NOT_SAVED:${official.document.url}`;
     if (typeof row === "string") gaps.push({ key: `official:${official.discoveryId}`, detail: row });
     else statewide.push({ official, row, capture: capture! });
   }
@@ -223,7 +224,8 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
     const division = registered.get(official.divisionId);
     const capture = official.document.capture;
     if (!division) { gaps.push({ key: `official:${official.discoveryId}`, detail: "OFFICIAL_DIVISION_NOT_REGISTERED" }); continue; }
-    if (!capture || !captureIntact(capture)) { gaps.push({ key: `official:${official.discoveryId}`, detail: `OFFICIAL_PAGE_NOT_SAVED:${official.document.url}` }); continue; }
+    if (!capture) { gaps.push({ key: `official:${official.discoveryId}`, detail: `OFFICIAL_PAGE_NOT_SAVED:${official.document.url}` }); continue; }
+    if (captureProblem(capture)) { gaps.push({ key: `official:${official.discoveryId}`, detail: `OFFICIAL_PAGE_UNUSABLE:${captureProblem(capture)}` }); continue; }
     const bodyId = nationalBodyId(division);
     if (!prior.payload.registry.bodies.some(b => b.id === bodyId)) { gaps.push({ key: `official:${official.discoveryId}`, detail: `OFFICIAL_BODY_NOT_REGISTERED:${bodyId}` }); continue; }
     byBody.set(bodyId, [...(byBody.get(bodyId) ?? []), official]);
@@ -246,4 +248,11 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
     }
   }
   return { candidateId, promotedVersionId, divisions: divisions.map(d => d.ocdId), bodies: bodies.map(b => b.id), members, gaps };
+}
+
+/** What national publications put live, for the pass's runner receipt (`printWorkerPublicationReceipt`'s `extra`). */
+export function nationalDelivery(publications: readonly NationalPlacePublication[]) {
+  const last = publications.filter(p => p.promotedVersionId).at(-1) ?? null;
+  return { records: publications.reduce((sum, p) => sum + p.members.reduce((n, m) => n + m.discoveryIds.length, 0), 0),
+    versionId: last?.promotedVersionId ?? null, candidateId: last?.candidateId ?? null, gaps: publications.flatMap(p => p.gaps) };
 }

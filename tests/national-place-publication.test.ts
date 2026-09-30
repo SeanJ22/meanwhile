@@ -8,7 +8,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readRegistryRuntimePrior, registryRuntimeCandidate } from "../lib/registry/runtime-data-plane.ts";
 import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
-import { publishNationalPlaceSources, type NationalDivisionInput } from "../lib/civic-data/worker-national-publication.ts";
+import { nationalDelivery, publishNationalPlaceSources, type NationalDivisionInput } from "../lib/civic-data/worker-national-publication.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 
 const NOW = "2026-09-29T20:00:00.000Z";
@@ -83,4 +83,14 @@ test("an official whose page does not name the district, and a division its save
   assert.deepEqual(result.members, []);
   assert.match(result.gaps.find(g => g.key === "official:russo")!.detail, /ROSTER_PAGE_NOT_THIS_BODY/);
   assert.equal(result.gaps.find(g => g.key === `division:${OH}/place:bexley`)?.detail, "DIVISION_NOT_ON_SAVED_SOURCE");
+});
+
+test("an official page whose text is not the saved bytes is a named gap, and the pass reports what it delivered", async () => {
+  const s = await store();
+  const altered = { ...governor, evidence: { ...governor.evidence, text: governor.evidence.text.replace("DeWine</h1>", "DeWine </h1>") } };
+  const result = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: geography, sources: { officials: [
+    { discoveryId: "dewine", divisionId: OH, name: "Mike DeWine", officeTitle: "Governor", officialUrl: governorUrl, document: { url: governorUrl, capture: altered } }] } });
+  assert.match(result.gaps.find(g => g.key === "official:dewine")!.detail, /^OFFICIAL_PAGE_UNUSABLE:CONTENT_HASH_MISMATCH/);
+  const delivered = nationalDelivery([result]);
+  assert.deepEqual([delivered.records, delivered.gaps.length, delivered.versionId === result.promotedVersionId], [0, 2, true]);
 });

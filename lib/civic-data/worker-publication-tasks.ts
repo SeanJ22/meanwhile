@@ -58,13 +58,33 @@ export function workerPublicationTasks(items: readonly WorkItem[], results: read
  * so the runner records that nothing went live.
  */
 export async function printWorkerPublicationReceipt(store: Pick<RoutineDataStore, "readCandidate">, source: string,
-  report: readonly { readonly outcome: NonNullable<WorkItem["publicationOutcome"]> }[]): Promise<boolean> {
-  const last = report.filter(row => row.outcome.status !== "HELD" && row.outcome.versionId).at(-1)?.outcome;
+  report: readonly { readonly workItemId: string; readonly outcome: NonNullable<WorkItem["publicationOutcome"]> }[],
+  /** Anything else this pass published outside work items (the national place publisher), with its gaps. */
+  extra: { readonly records: number; readonly versionId: string | null; readonly candidateId: string | null; readonly gaps: readonly { readonly key: string; readonly detail: string }[] } | null = null): Promise<boolean> {
+  const delivered = publicationDelivery(report, extra);
+  const last = [...report.filter(row => row.outcome.status !== "HELD" && row.outcome.versionId).map(row => row.outcome),
+    ...(extra?.versionId ? [{ at: "", candidateId: extra.candidateId, versionId: extra.versionId }] : [])].at(-1);
   const created = last?.candidateId ? await store.readCandidate(last.candidateId) : null;
   const record = created ?? (last?.versionId ? await store.readCandidate(last.versionId) : null);
   if (!last || !record) { process.exitCode = 2; return false; }
   console.log("RCD_RECEIPT=" + JSON.stringify({ source, candidateId: record.candidate.id, acquisitionSucceeded: record.acquisitionSucceeded,
     state: record.state, decision: record.receipt?.decision ?? null, promotedVersion: last.versionId, lastKnownGoodVersion: record.lastKnownGoodVersion,
-    ...(created ? {} : { confirmedAt: last.at }), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+    ...(created ? {} : { confirmedAt: last.at || new Date().toISOString() }), delivered, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
   return true;
+}
+
+/**
+ * What a publication pass actually put in front of readers, and what stayed
+ * owed with its reason — so a promoted version is never read as delivery.
+ */
+export function publicationDelivery(
+  report: readonly { readonly workItemId: string; readonly outcome: NonNullable<WorkItem["publicationOutcome"]> }[],
+  extra: { readonly records: number; readonly gaps: readonly { readonly key: string; readonly detail: string }[] } | null = null,
+): { readonly records: number; readonly gaps: number; readonly gapReasons: Readonly<Record<string, number>> } {
+  const live = report.filter(row => row.outcome.status !== "HELD" && row.outcome.code !== "VERIFIED_RESULT_REUSED");
+  const gaps = [...report.filter(row => row.outcome.status === "HELD").map(row => row.outcome.code), ...(extra?.gaps ?? []).map(gap => gap.detail.split(":")[0])];
+  const gapReasons: Record<string, number> = {};
+  for (const code of gaps) gapReasons[code] = (gapReasons[code] ?? 0) + 1;
+  return { records: live.reduce((sum, row) => sum + (row.outcome.acceptedRecordIds?.length ?? row.outcome.bodyIds?.length ?? 0), 0) + (extra?.records ?? 0),
+    gaps: gaps.length, gapReasons };
 }

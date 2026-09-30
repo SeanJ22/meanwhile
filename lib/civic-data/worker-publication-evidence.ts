@@ -19,8 +19,17 @@ const COVERAGE_CODES = new Set(["COMPLETENESS_SOURCE_ROW_OMITTED", "DECLARED_COU
 
 /** The saved page is intact: fully read, a success status, and the bytes hash to their recorded identity. */
 export function captureIntact(capture: WorkerPublicationCapture): boolean {
-  return capture.transport === "REACHABLE" && !capture.partial && capture.httpStatus !== null && capture.httpStatus >= 200 && capture.httpStatus < 300 &&
-    capture.evidence.contentHash === `sha256-${createHash("sha256").update(capture.evidence.text).digest("hex")}`;
+  return captureProblem(capture) === null;
+}
+
+/** Why a saved page cannot carry §3, in words the gap keeps; null when it can. */
+export function captureProblem(capture: WorkerPublicationCapture): string | null {
+  if (capture.transport !== "REACHABLE") return `TRANSPORT_${capture.transport}`;
+  if (capture.partial) return "PARTIAL_CAPTURE";
+  if (capture.httpStatus === null || capture.httpStatus < 200 || capture.httpStatus >= 300) return `HTTP_STATUS_${capture.httpStatus}`;
+  const hash = `sha256-${createHash("sha256").update(capture.evidence.text).digest("hex")}`;
+  return capture.evidence.contentHash === hash ? null
+    : `CONTENT_HASH_MISMATCH: the page text hashes to ${hash.slice(0, 19)}…, not its recorded ${capture.evidence.contentHash.slice(0, 19)}… (pass the exact saved text)`;
 }
 
 /** One reader-facing source receipt for the saved pages a publication rests on. */

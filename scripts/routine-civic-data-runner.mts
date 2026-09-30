@@ -791,7 +791,9 @@ async function settlePendingRun(pending: PendingRun, run: BoundedChildResult): P
     verifiedSourceSuccesses += 1;
     captureTaskReceipt(pending, child.receipt, "VERIFIED_SOURCE_SUCCESS");
     console.log("RCD_RECEIPT=" + JSON.stringify(child.receipt));
-    console.log(`RCD_TASK ${pending.task.id}: GOOD (${child.state})`);
+    const delivered = (child.receipt as { delivered?: { records: number; gaps: number; gapReasons: Record<string, number> } }).delivered;
+    // A publication pass says what reached readers, so a new version is never read as delivery.
+    console.log(`RCD_TASK ${pending.task.id}: GOOD (${child.state})${delivered ? ` — delivered ${delivered.records} record(s); ${delivered.gaps} owed: ${Object.entries(delivered.gapReasons).map(([code, n]) => `${code}×${n}`).join(", ") || "none"}` : ""}`);
   } else if (child.kind === "VERIFIED_SOURCE_FAILURE") {
     verifiedSourceFailures += 1;
     captureTaskReceipt(pending, child.receipt, "VERIFIED_SOURCE_FAILURE");

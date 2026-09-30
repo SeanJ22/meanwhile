@@ -22,6 +22,7 @@ import { When } from "../../console-ui.tsx";
 
 /** The live list is the newest of a long history; the rest is on GitHub. */
 const LIVE_SHOWN = 20;
+const NO_SESSION = "no session named";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -34,7 +35,7 @@ function Line({ row }: { readonly row: ChangeRow }) {
       </a>
       <span className="note">
         {" "}
-        · {row.session ?? "no session named"} · {row.why} · <When iso={row.at} />
+        · {row.session ?? NO_SESSION} · {row.why} · <When iso={row.at} />
       </span>
     </li>
   );

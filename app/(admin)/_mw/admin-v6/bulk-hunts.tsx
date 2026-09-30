@@ -68,6 +68,8 @@ export function bulkPickOf(target: string, name: string): BulkPick | null {
 
 const money = (n: number): string => `$${n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const SHOWN_ROWS = 100;
+const LIST_UNREAD = "The list could not be read.";
+const CHECK_FAILED = "The list could not be checked, so nothing was prepared.";
 
 export function BulkHunts(props: {
   readonly initialPick?: BulkPick | null;
@@ -115,7 +117,7 @@ export function BulkHunts(props: {
       .then(async (r) => ({ ok: r.ok, body: (await r.json().catch(() => null)) as { items?: { geoid: string; label: string }[]; says?: string } | null }))
       .then(({ ok, body }) => {
         if (ok && body?.items) keep({ items: body.items, note: body.items.length === 0 ? "Nothing is published for that yet." : null });
-        else keep({ items: null, note: body?.says ?? "The list could not be read." });
+        else keep({ items: null, note: body?.says ?? LIST_UNREAD });
       })
       .catch(() => keep({ items: null, note: "The list could not be read." }));
     return () => ctl.abort();
@@ -154,7 +156,7 @@ export function BulkHunts(props: {
       });
       const body = (await res.json().catch(() => null)) as (Preview & { ok?: boolean; says?: string }) | null;
       if (res.ok && body?.ok) setPreview(body);
-      else setProblem(body?.says ?? "The list could not be checked, so nothing was prepared.");
+      else setProblem(body?.says ?? CHECK_FAILED);
     } catch {
       setProblem("The list could not be checked, so nothing was prepared.");
     } finally {

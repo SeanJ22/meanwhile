@@ -2,6 +2,9 @@
  * **READING THE CHANGES FROM GITHUB — server side, cached, never a blank that
  * looks like "nothing changed".** (S11.)
  *
+ * @freshness-reads-here — `observedAt` is the instant of this module's own read of GitHub,
+ * stamped when that read is made, never a date carried from earlier work.
+ *
  * The repository is private, so an unauthenticated read answers 404. The page
  * needs one read-only token, named `WTP_GITHUB_READ_TOKEN`, with Pull requests,
  * Contents and Metadata read access on this one repository. Without it the page
@@ -23,6 +26,7 @@
  * locally there is no stamp and the public endpoint answers instead.
  */
 import { isNonShippingPath } from "../../ops/deploy-paths.ts";
+import { PUBLIC_SITE_ORIGIN } from "../../ops/origins.ts";
 import {
   changeRowOf,
   type ChangePr,
@@ -39,7 +43,7 @@ export const CHANGES_FETCH_TIMEOUT_MS = 10_000;
 export const CHANGES_PR_COUNT = 60;
 /** Merged work older than this stops being listed; it is history, not news. */
 export const CHANGES_MERGED_DAYS = 14;
-const LIVE_SITE_BUILD_URL = "https://meanwhileusa.com/api/build";
+const LIVE_SITE_BUILD_URL = `${PUBLIC_SITE_ORIGIN}/api/build`;
 
 export type ChangesReading =
   | {

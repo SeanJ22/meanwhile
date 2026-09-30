@@ -26,6 +26,8 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 const TEXT_MAX_CHARS = 2_000_000;
+const NOTHING_FOUND = "No ZIPs were found in what you pasted, uploaded or picked.";
+const NO_GROUP = "No group";
 /** A workbook arrives as base64 text: about 5 MB of file. */
 const XLSX_MAX_CHARS = 7_000_000;
 const PICKS_MAX = 80;
@@ -121,7 +123,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     for (const z of got.zips) if (!groupOf.has(z.zip)) groupOf.set(z.zip, z.group);
   }
   if (groupOf.size === 0) {
-    return NextResponse.json({ ok: false, says: pickNotes[0] ?? "No ZIPs were found in what you pasted, uploaded or picked.", skipped: parsed.skipped, pickNotes }, { status: 200, headers });
+    return NextResponse.json({ ok: false, says: pickNotes[0] ?? NOTHING_FOUND, skipped: parsed.skipped, pickNotes }, { status: 200, headers });
   }
   if (groupOf.size > BULK_MAX_ZIPS) {
     return NextResponse.json({ ok: false, says: `That is ${groupOf.size.toLocaleString("en-US")} ZIPs; one send takes at most ${BULK_MAX_ZIPS.toLocaleString("en-US")}. Split it.`, pickNotes }, { status: 200, headers });
@@ -138,7 +140,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const stateOf = new Map(known.map((f) => [f.zip, f.stateAbbr as string]));
   const items = planned.items.map((i) => ({ zip: i.zip, stateAbbr: stateOf.get(i.zip)!, budgetUsd: i.budgetUsd, group: groupOf.get(i.zip) ?? null }));
   const groups = new Map<string, number>();
-  for (const i of items) groups.set(i.group ?? "No group", (groups.get(i.group ?? "No group") ?? 0) + 1);
+  for (const i of items) groups.set(i.group ?? NO_GROUP, (groups.get(i.group ?? NO_GROUP) ?? 0) + 1);
   return NextResponse.json(
     {
       ok: true,

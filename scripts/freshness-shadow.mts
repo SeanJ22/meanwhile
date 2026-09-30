@@ -179,6 +179,7 @@ import {
   type OwnerDispatchWork,
 } from "../lib/control-plane/expansion/dispatch-work.ts";
 import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
+import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
 import { factChainLines } from "../lib/control-plane/promotion/fact-chain.ts";
 import { createPermanentMeetingFreshness } from "../lib/control-plane/promotion/meeting-freshness.ts";
 import { preloadAzOperationalReferenceBundle, preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";

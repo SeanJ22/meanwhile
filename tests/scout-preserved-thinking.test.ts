@@ -244,7 +244,9 @@ test("transport carries provider capacity and Retry-After from an unsent retry",
       error instanceof ModelTransportError && error.status === 429 && error.retryAfterMs === 1_200_000);
   assert.equal(calls, 1);
   assert.deepEqual(limits, [{ requestsPerMinute: 120, inputTokensPerMinute: 80000,
-    outputTokensPerMinute: 16000, retryAfterMs: 1_200_000 }]);
+    outputTokensPerMinute: 16000, retryAfterMs: 1_200_000,
+    remaining: { requests: null, inputTokens: null, outputTokens: null,
+      requestsResetAt: null, inputResetAt: null, outputResetAt: null } }]);
 });
 
 /* --------------------------------------------------------------------- PT-2 */

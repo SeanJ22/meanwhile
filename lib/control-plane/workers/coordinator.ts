@@ -427,7 +427,7 @@ export async function dispatchAutonomousTask(runtime: AutonomousCoordinatorRunti
         return dispatchOne(runtime.repos,{obligation:{obligation:{id:task.id,subjectId:item.subject,recordClass:plan.contract.recordClass,
           routeId:task.routeId,active:true,readerImpactAt:null,observedChangeRateHours:null,lastWorkedAt:null,assignments},nextDueAt:task.createdAt,cadenceHours:24,
           cadenceSource:"DEFAULT_NO_SIGNAL",basis:"Canonical obligation needs source discovery"},routeTaskId:task.id,holder:`autonomous:SCOUT:${randomUUID()}`,
-          now:now(),clock:now,leaseTtlMs:300_000,bound:{maxAttempts:3,maxWallMs:0,maxCostUnits:RESEARCH_BOUNDS.perDispatch.maxTokens},
+          now:now(),clock:now,leaseTtlMs:300_000,bound:{maxAttempts:3,maxWallMs:0,maxCostUnits:0},
           maturity:()=>"UNGRADUATED",executor,methodVersion:runtime.methodVersion,policyVersion:FLEET_POLICY_VERSION,...proofChargeOf(item.project)});
 }
 

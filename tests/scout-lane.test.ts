@@ -33,6 +33,7 @@ import { decideExecutor, dispatchOne, type DeclaredExecutor } from "../lib/contr
 import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { scheduledFixture } from "./control-plane-fixtures.ts";
 import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { failureResponderExecutor } from "../lib/control-plane/workers/detective.ts";
 import {
   cacheTtlOrderProblems,
   withCacheBreakpoints,
@@ -237,7 +238,7 @@ function scriptedTransport(turns: readonly ModelResponse["content"][]): ModelTra
   let i = 0;
   const t = (async (request: ModelRequest) => {
     requests.push(request);
-    const content = turns[Math.min(i, turns.length - 1)];
+    const content = turns[i] ?? [{ type: "text" as const, text: "script complete" }];
     i += 1;
     return {
       /* The provider reports the model it served: the one the request named. */
@@ -351,7 +352,7 @@ test("a later toolkit construction failure remains unpriced and cannot release a
 
 test("a recorded Admin Send carries its selected questions into the actual Scout request without claiming publication", async () => {
   const transport = scriptedTransport([[finish("f", "NO_PROGRESS")]]);
-  const { exec } = executorWith(transport, fakeToolkit(), { bound: { maxTurns: 1 } });
+  const { exec } = executorWith(transport, fakeToolkit(), { bound: {} });
   const obligation = { ...OBLIGATION, assignments: [{ assignmentKey: "zcta:2020/85635", ref: "isolated-send", relation: "REORDERED" as const, at: NOW, questions: ["ANYTHING_MISSING", "READER_CAN_SEE"] as const }] };
   const { repos, task } = await registered(createMemoryRepositories(), obligation);
   await dispatchOne(repos, { obligation: scheduledFixture(obligation, NOW_MS), routeTaskId: task.id, holder: "test", now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec, decision: { kind: "BOUNDED_MODEL_WORKER", why: "source investigation", disagreement: null } });
@@ -503,7 +504,7 @@ test("4. SEEDED: an early NO_PROGRESS below the rung minimum is refused, ABORTS,
     /* the model repeats the refused finish until the grace runs out */
     [finish("f2", "NO_PROGRESS", { rungsWalked: [{ index: 0, note: "nothing" }], nextRungs: ["site-search-or-sitemap"] })],
   ]);
-  const { exec, results } = executorWith(transport, toolkit, { bound: { maxTurns: 3 } });
+  const { exec, results } = executorWith(transport, toolkit, { bound: {} });
   const result = await dispatchOne(repos, {
     obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
@@ -529,7 +530,7 @@ test("4. SEEDED: an early NO_PROGRESS below the rung minimum is refused, ABORTS,
 
 /* ---------------------------------------------------------------------- 5 */
 
-test("5. the bound reached: the typed result carries rungs walked and next rungs, and stoppedBy is BOUND", async () => {
+test("5. a deliberate stop preserves next rungs without an artificial tool cap", async () => {
   const { repos, task } = await registered();
   const toolkit = fakeToolkit();
   const transport = scriptedTransport([
@@ -537,7 +538,7 @@ test("5. the bound reached: the typed result carries rungs walked and next rungs
     [toolUse("u2", "fetch_public", { url: "https://a.gov/sitemap.xml", rung: "site-search-or-sitemap", why: "map" })],
     [finish("f", "NO_PROGRESS", { rungsWalked: [{ index: 0, note: "home" }, { index: 1, note: "sitemap" }], nextRungs: ["open-data-portal", "alternate-official-host-or-mirror"] })],
   ]);
-  const { exec, results } = executorWith(transport, toolkit, { bound: { maxToolCalls: 2 } });
+  const { exec, results } = executorWith(transport, toolkit, { minRungs: 2 });
   const result = await dispatchOne(repos, {
     obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
@@ -548,15 +549,15 @@ test("5. the bound reached: the typed result carries rungs walked and next rungs
     executor: exec,
   });
   assert.equal(result.outcome, "FAILED", "NO_PROGRESS aborts the Attempt; the obligation stays owed");
-  assert.match(result.detail, /SCOUT_NO_PROGRESS \(BOUND\)/);
+  assert.match(result.detail, /SCOUT_NO_PROGRESS \(MODEL\)/);
   const r = results[0];
-  assert.equal(r.refusal, null, "a bound-ended result below the minimum is legitimate, not refused");
-  assert.equal(r.stoppedBy, "BOUND");
+  assert.equal(r.refusal, null, "a result after the actual rung floor is legitimate");
+  assert.equal(r.stoppedBy, "MODEL");
   assert.equal(r.rungs.length, 2);
   assert.deepEqual(r.nextRungs, ["open-data-portal", "alternate-official-host-or-mirror"]);
   assert.equal(r.rungs[1].note, "sitemap");
   const last = transport.requests.at(-1)!;
-  assert.deepEqual(last.tool_choice, { type: "auto" }, "the bound turn stays auto — no cache-invalidating forced-finish rewrite; the BOUND-REACHED message and tool refusal drive the finish");
+  assert.deepEqual(last.tool_choice, { type: "auto" }, "the finish stays auto without a cache-invalidating forced-tool rewrite");
 });
 
 /* -------------------------------------------------------------- 5b (early stop) */
@@ -592,7 +593,7 @@ test("EARLY STOP: a walk that stalls past minRungs finishes early instead of run
     },
     { requests: [] as ModelRequest[] },
   ) as ModelTransport & { requests: ModelRequest[] };
-  const { exec, results } = executorWith(transport, toolkit, { minRungs: 2, bound: { maxTurns: 20, maxToolCalls: 20 } });
+  const { exec, results } = executorWith(transport, toolkit, { minRungs: 2 });
   await dispatchOne(repos, {
     obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
@@ -1101,7 +1102,7 @@ test("14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is reco
   /* A growing loop whose turn 2 finds nothing in the cache and re-writes the prefix plus what it appended; the uncached tail stays tiny. */
   const coldOnTurnTwo: ModelTransport = async (request) => {
     requests.push(request);
-    const content = turns[Math.min(i, turns.length - 1)];
+    const content = turns[i] ?? [{ type: "text" as const, text: "script complete" }];
     i += 1;
     const usage = [
       { input_tokens: 2, output_tokens: 100, cache_read_input_tokens: 0, cache_creation_input_tokens: 4000 },

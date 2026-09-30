@@ -493,6 +493,8 @@ export const SCOUT_REFUSALS = [
   "SCOUT_CANDIDATE_OUTCOME_WITHOUT_CANDIDATE",
   /** The provider never answered, or refused the request. Nothing the model said stands. */
   "SCOUT_TRANSPORT_FAILED",
+  /** Admin or assignment policy refused the call before it was sent. */
+  "SCOUT_POLICY_DENIED",
   /** The turns ran out with no accepted finish. */
   "SCOUT_NO_FINISH",
   /** RULING 243: a candidate omits observedOn, permission or recordClass, so no claim was made to check. */

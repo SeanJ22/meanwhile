@@ -590,7 +590,7 @@ test("NOTHING applies a migration automatically, and no gate may heal what it fi
    */
   const offenders: string[] = [];
   const files = readdirSync(WORKFLOWS).filter((f) => f.endsWith(".yml"));
-  assert.equal(files.length, 2, `expected the two release/CI workflow files, found ${files.length}`);
+  assert.equal(files.length, 3, `expected CI, release observer and authorized adapter merger workflows, found ${files.length}`);
   for (const file of files) {
     const text = readFileSync(join(WORKFLOWS, file), "utf8");
     for (const line of text.split("\n")) {

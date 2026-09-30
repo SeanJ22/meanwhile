@@ -44,7 +44,7 @@ test("canonical TS and TSX discovery is covered exactly once with balanced deter
       return entry.isDirectory() ? discover(file) : /\.test\.tsx?$/.test(entry.name) ? [file] : [];
     });
   }
-  const expected = discover("tests").sort();
+  const expected = [...discover("tests"), ...discover("lib/sources/platform-adapters")].sort();
   const plans = [1, 2, 3, 4].map((index) => planTests(ROOT, `${index}/4`));
   const all = plans.flatMap((plan) => plan.selected);
   assert.deepEqual([...all].sort(), expected);

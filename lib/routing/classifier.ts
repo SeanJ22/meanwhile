@@ -1,6 +1,6 @@
 import { scrubFreeText } from "../log/scrub.ts";
 import { ASK_MODEL_ROLES, resolveAskRoleModel } from "../ask/model.ts";
-import { askRequestFields, servedModelOf } from "../ask/model-registry.ts";
+import { modelRequestFields, servedModelOf } from "../models.ts";
 
 import { TOPIC_ROUTES } from "./topics.ts";
 
@@ -235,9 +235,9 @@ export async function classifyQuestion(
   /* Resolved once: the same id is sent and recorded. Thinking OFF where the
      model accepts `{type: "disabled"}`; on a model that always thinks (Opus
      5.5, where the field is a 400) it is omitted, effort stays low and
-     `max_tokens` leaves room for the thinking (lib/ask/model-registry.ts). */
+     `max_tokens` leaves room for the thinking (lib/models.ts). */
   const model = askModel();
-  const fields = askRequestFields(model, { thinking: ASK_MODEL_ROLES.CLASSIFIER.thinking, effort: ASK_MODEL_ROLES.CLASSIFIER.effort });
+  const fields = modelRequestFields(model, { thinking: ASK_MODEL_ROLES.CLASSIFIER.thinking, effort: ASK_MODEL_ROLES.CLASSIFIER.effort });
   try {
     const response = await impl(MESSAGES_URL, {
       method: "POST",

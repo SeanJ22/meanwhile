@@ -63,6 +63,8 @@ test("the canonical shapes are read, and anything with more in it is not", () =>
     ["When did the Mesa City Council last meet?", "MEETING_TIME"],
     ["When's the Chandler City Council's next meeting?", "MEETING_TIME"],
     ["What's on the Pima County Board of Supervisors agenda?", "BODY_AGENDA"],
+    ["What's on the agenda for the next Pima County Board of Supervisors meeting?", "BODY_AGENDA"],
+    ["What is on the agenda for the upcoming Vail school board meeting?", "BODY_AGENDA"],
     ["What is on the agenda for the Tucson City Council?", "BODY_AGENDA"],
     ["What did the Mesa City Council decide recently?", "MEETING_OUTCOME"],
     ["How did the Pima County Board of Supervisors vote last time?", "MEETING_OUTCOME"],
@@ -106,6 +108,26 @@ test("the lexical reading binds exactly what every binder binds, with the tense 
   const outcome = lexicalReading({ question: "What did the Mesa City Council decide recently?", inventory: INVENTORY, namedBodies: INVENTORY });
   assert.equal(outcome?.interpretation.intent, "PAST_MEETING");
   assert.deepEqual(outcome?.interpretation.temporal, { kind: "LAST" });
+});
+
+test("a kind of body named with no name is the reader's own body of that kind, or asks which of several", () => {
+  const governing = (id: string, name: string, divisionType: string): BindableEntity => ({ id, name, nameClass: "body", divisionType, level: "BODY" } as BindableEntity);
+  const vail = governing("ocd-division/country:us/state:az/school_district:vail_unified_district#board", "Vail Unified School District Governing Board", "school_district");
+  const empire = governing("ocd-division/country:us/state:az/school_district:empire_elementary_district#board", "Empire Elementary District Governing Board", "school_district");
+  const tucson = governing("ocd-division/country:us/state:az/place:tucson#governing", "Tucson Mayor & Council", "place");
+  const read = (question: string, readerGoverning: BindableEntity[]) =>
+    lexicalReading({ question, inventory: [...INVENTORY, vail, empire, tucson], namedBodies: INVENTORY, readerGoverning });
+  const one = read("When is the next school board meeting?", [vail, tucson]);
+  assert.equal(one?.subjectId, vail.id, "the one school district the ZIP reaches");
+  assert.equal(one?.interpretation.intent, "MEETING_TIME");
+  assert.deepEqual(one?.interpretation.entityMentions, [vail.name]);
+  assert.equal(read("When does the city council meet?", [vail, tucson])?.subjectId, tucson.id);
+  assert.equal(read("Can I speak at the next school board meeting?", [vail, tucson])?.shape, "PUBLIC_COMMENT");
+  const several = read("When is the next school board meeting?", [vail, empire, tucson]);
+  assert.deepEqual(several?.areaChoices?.bodies.map((body) => body.id), [vail.id, empire.id], "asks which, naming the ones the ZIP reaches");
+  assert.equal(several?.subjectId, "");
+  assert.equal(read("When is the next county board of supervisors meeting?", [vail, tucson]), null, "no county body reached: the model reads it");
+  assert.notEqual(read("When is the next Mesa school board meeting?", [vail])?.subjectId, vail.id, "a name in the slot is not a kind of body alone");
 });
 
 test("the lexical reading refuses what it cannot settle, so the model reads it as before", () => {
@@ -293,8 +315,9 @@ delete process.env.WTP_ASK_FAST_MODEL;
 globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   const url = input instanceof Request ? input.url : String(input);
   if (!url.startsWith("https://api.anthropic.com/")) throw new Error(`latency test refused an outbound request: ${url}`);
-  const body = JSON.parse(String(init?.body)) as { system: unknown; model: string; thinking?: unknown; output_config?: { effort?: unknown } };
-  const synthesis = Array.isArray(body.system);
+  const body = JSON.parse(String(init?.body)) as { system: unknown; model: string; thinking?: unknown; output_config?: { effort?: unknown; format?: { schema?: { properties?: Record<string, unknown> } } } };
+  /* The writer's schema has an answer; the reading's does not (both marks their system prompt now). */
+  const synthesis = body.output_config?.format?.schema?.properties?.answer !== undefined;
   calls.push({ kind: synthesis ? "SYNTHESIZE" : "INTERPRET", model: body.model, thinking: body.thinking !== undefined, effort: body.output_config?.effort !== undefined, at: Date.now() });
   const planned = writerAnswers[body.model] ?? writerAnswers.default;
   if (synthesis && planned === "HTTP_529") return new Response(JSON.stringify({ error: { type: "overloaded_error" } }), { status: 529 });
@@ -318,19 +341,20 @@ interface Payload {
   trace: {
     interpretation: { ran: boolean; why?: string; cached?: boolean };
     speculation?: { ran: boolean; why: string; delivered: string };
-    synthesis: { ran: boolean; why?: string; cached?: boolean; model?: string; writers?: { model: string; role: string; result: string; failed?: string[]; detail?: string }[]; escalation?: string; writerRoute?: string; writerSelection?: { memberVoteRowsShown: number; memberVoteRowsWithheld: number; rollCallsWithheld: number } };
+    synthesis: { ran: boolean; why?: string; cached?: boolean; model?: string; writers?: { model: string; role: string; result: string; failed?: string[]; detail?: string }[]; escalation?: string; writerSelection?: { memberVoteRowsShown: number; memberVoteRowsWithheld: number; rollCallsWithheld: number } };
     validation: { ran: boolean; passed?: boolean; failed?: string[] };
     composition?: { shape: string; composed: boolean; passed?: boolean };
+    sourcesLoaded?: string;
   };
 }
 
-async function ask(question: string, ocdIds: string[], options: { reset?: boolean; today?: string } = {}): Promise<{ payload: Payload; calls: Call[] }> {
+async function ask(question: string, ocdIds: string[], options: { reset?: boolean; today?: string; extra?: Record<string, unknown> } = {}): Promise<{ payload: Payload; calls: Call[] }> {
   if (options.reset !== false) resetGroundedState();
   const before = calls.length;
   const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
     method: "POST",
     headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-latency-shape-test" },
-    body: JSON.stringify({ question, ocdIds, today: options.today ?? "2026-08-28" }),
+    body: JSON.stringify({ question, ocdIds, today: options.today ?? "2026-08-28", ...options.extra }),
   }));
   const text = await response.text();
   assert.equal(response.status, 200, text);
@@ -363,11 +387,76 @@ test("ROUTE: a settled question whose records need writing makes ONE call — th
   assert.equal(payload.trace.synthesis.escalation, undefined, "the frontier writer did not run");
 });
 
-test("ROUTE: a named-subject question is read in code too — one writing call, no reading call", { concurrency: false }, async () => {
+test("ROUTE: who sits on a named body is read in code and composed from its roster — no model call at all", { concurrency: false }, async () => {
   const { payload, calls: made } = await ask("Who sits on the Vail school board?", [AZ, PIMA, VAIL]);
-  assert.deepEqual(made.map((call) => call.kind), ["SYNTHESIZE"]);
+  assert.deepEqual(made, [], "neither rung called a model");
   assert.equal(payload.trace.interpretation.why, "lexical-reading");
-  assert.equal(payload.mode, "GROUNDED_CLAUDE");
+  assert.equal(payload.trace.synthesis.why, "composed-from-roster-records");
+  assert.equal(payload.mode, "GROUNDED_COMPOSED");
+  assert.equal(payload.trace.validation.passed, true, "the composed prose passed the same validator a model answer faces");
+  assert.match(payload.answer ?? "", /^Vail Unified School District Governing Board has \d+ members: /);
+  assert.ok(payload.records.some((record) => record.kind === "CONTACT"), "the people the prose names are records the reader is shown");
+});
+
+test("ROUTE: who is my state senator is read from the words and composed from the officeholders held for the reader's divisions — no model call, no other source read", { concurrency: false }, async () => {
+  const { payload, calls: made } = await ask("Who is my state senator?", [AZ, PIMA, VAIL, "ocd-division/country:us/state:az/sldu:19", "ocd-division/country:us/state:az/sldl:19"]);
+  assert.deepEqual(made, [], "neither rung called a model");
+  assert.equal(payload.trace.interpretation.why, "reader-officials-shape");
+  assert.equal(payload.trace.synthesis.why, "composed-from-officeholder-records");
+  assert.equal(payload.trace.composition?.composed, true);
+  assert.equal(payload.mode, "GROUNDED_COMPOSED");
+  assert.match(payload.answer ?? "", /^Your state senator is .+ for District 19\.$/);
+  assert.ok(payload.records.some((record) => record.kind === "OFFICEHOLDER"), "the person the prose names is a record the reader is shown");
+  assert.equal(payload.trace.sourcesLoaded, "ESSENTIAL", "the registry and the federal directory are all it reads");
+});
+
+test("ROUTE: who is the mayor of a city the reader's divisions reach is answered for that city, whatever else its name matches, with no clarifying question", { concurrency: false }, async () => {
+  const { payload, calls: made } = await ask("Who is the mayor of Tucson?", [AZ, PIMA, `${AZ}/place:tucson`, `${AZ}/place:tucson_southeast`]);
+  assert.deepEqual(made, [], "neither rung called a model");
+  assert.equal(payload.mode, "GROUNDED_COMPOSED");
+  assert.equal(payload.trace.interpretation.why, "reader-officials-shape");
+  assert.match(payload.answer ?? "", /^On Tucson Mayor & Council, the mayor is Regina Romero/);
+});
+
+test("ROUTE: what meetings are coming up is read from the words and composed from the sittings held for the reader's divisions — no model call, and no other source read", { concurrency: false }, async () => {
+  const { payload, calls: made } = await ask("What meetings are coming up?", [AZ, PIMA, VAIL], { today: "2026-08-28" });
+  assert.deepEqual(made, [], "neither rung called a model");
+  assert.equal(payload.trace.interpretation.why, "area-meetings-shape");
+  assert.equal(payload.trace.synthesis.why, "composed-from-calendar-records");
+  assert.equal(payload.mode, "GROUNDED_COMPOSED");
+  assert.equal(payload.trace.validation.passed, true);
+  assert.match(payload.answer ?? "", /^We hold \d+ meetings? in the next 14 days for the governments in your area: /);
+  assert.ok(payload.records.some((record) => record.kind === "MEETING"), "the sittings the prose names are records the reader is shown");
+  assert.equal(payload.trace.sourcesLoaded, "ESSENTIAL");
+  /* With a card open the question is about that card: the reader's own area is not assumed. */
+  const focused = await ask("What meetings are coming up?", [AZ, PIMA, VAIL], { today: "2026-08-28", extra: { activeSubjects: [{ id: "ocd-division/country:us/state:az/school_district:vail_unified_district#board", name: "Vail Unified School District Governing Board", kind: "BODY", focused: true }] } });
+  assert.notEqual(focused.payload.trace.interpretation.why, "area-meetings-shape");
+});
+
+test("ROUTE: what is on my ballot is read from the words and composed from the contests the reader's divisions reach — no model call", { concurrency: false }, async () => {
+  const { payload, calls: made } = await ask("What is on my ballot?", [AZ, PIMA, VAIL]);
+  assert.deepEqual(made, [], "neither rung called a model");
+  assert.equal(payload.trace.interpretation.why, "ballot-shape");
+  assert.equal(payload.trace.synthesis.why, "composed-from-ballot-records");
+  assert.equal(payload.mode, "GROUNDED_COMPOSED");
+  assert.match(payload.answer ?? "", /^Your ballot for the .+ on .+ has \d+ races? and \d+ ballot measures?\./);
+  assert.ok(payload.records.some((record) => record.kind === "CONTEST"), "each contest is a record the reader is shown");
+});
+
+test("ROUTE: who represents me in Congress names the two U.S. Senators the state holds beside the district's Representative", { concurrency: false }, async () => {
+  const { payload, calls: made } = await ask("Who represents me in Congress?", [PIMA, VAIL, "ocd-division/country:us/state:az/cd:6"]);
+  assert.deepEqual(made, []);
+  assert.match(payload.answer ?? "", /^Your United States Senators are .+ and .+; your United States Representative is .+ for District 6\.$/);
+});
+
+test("ROUTE: can I speak at a meeting is read from the words and composed from the sitting and the held comment rules — no model call", { concurrency: false }, async () => {
+  for (const question of ["Can I speak at the next Vail school board meeting?", "Does the Vail school board take public comment?"]) {
+    const { payload, calls: made } = await ask(question, [AZ, PIMA, VAIL]);
+    assert.deepEqual(made, [], `${question}: neither rung called a model`);
+    assert.equal(payload.mode, "GROUNDED_COMPOSED", question);
+    assert.equal(payload.trace.validation.passed, true, question);
+    assert.match(payload.answer ?? "", /Vail|We have not recorded how the public can comment/, question);
+  }
 });
 
 test("ROUTE: any other question is still read by the model; the answer starts from the code's reading meanwhile and is kept because the readings agree", { concurrency: false }, async () => {
@@ -390,13 +479,13 @@ test("ROUTE: the same question over unchanged records is served from the cache, 
   assert.equal(second.payload.answer, first.payload.answer);
 });
 
-test("ROUTE: a money question asking WHO gave is written by the escalation writer first, and the trace says why", { concurrency: false }, async () => {
+test("ROUTE: a money question asking WHO gave is written by the fast writer first, like every other question", { concurrency: false }, async () => {
   const { payload, calls: made } = await ask("Who funded the Vail school board?", [AZ, PIMA, VAIL]);
   const writers = made.filter((call) => call.kind === "SYNTHESIZE");
   assert.ok(writers.length >= 1, "a writer ran");
-  assert.ok(writers.every((call) => call.model === ASK_SYNTHESIS_MODEL), `only the escalation writer wrote: ${writers.map((call) => call.model).join(", ")}`);
-  assert.equal(payload.trace.synthesis.writerRoute, "money-who-or-comparison");
-  assert.deepEqual(payload.trace.synthesis.writers?.map((writer) => writer.role), writers.map(() => "FRONTIER"));
+  assert.equal(writers[0].model, ASK_FAST_WRITER_MODEL, "the fast writer wrote first");
+  assert.deepEqual(payload.trace.synthesis.writers?.map((writer) => writer.role), ["FAST"]);
+  assert.equal(payload.trace.synthesis.escalation, undefined, "the frontier writer did not run");
 });
 
 test("ROUTE: the frontier writer runs ONLY when the fast answer fails a check, and the reason is recorded", { concurrency: false }, async () => {

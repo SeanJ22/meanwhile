@@ -25,6 +25,7 @@ jobs:
         with:
           node-version: 24
           package-manager-cache: false
+      - run: corepack enable
       - run: node scripts/merge-engineer-adapters.mjs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

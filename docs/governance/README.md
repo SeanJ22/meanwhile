@@ -8,6 +8,10 @@ guide that applies them.** The ledger and every view generated from it are
 historical evidence, not independently active instructions (`docs/rulings.md` §9).
 This page still describes how that machinery works.
 
+The files in `legacy/` are historical records, preserved with their original
+bytes. Their instructions are superseded by `docs/rulings.md` and the current
+root `CLAUDE.md`; they are not release requirements.
+
 This directory replaces a pair of hand-maintained authorities with one canonical
 store and a set of generated views. What follows is what a person needs to
 operate it. The rules it implements are RULINGS 172 through 186; the reasoning

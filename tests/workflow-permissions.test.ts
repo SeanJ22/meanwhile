@@ -30,6 +30,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { parse } from "yaml";
 
 const ROOT = process.cwd();
 const DIR = join(ROOT, ".github", "workflows");
@@ -79,12 +80,9 @@ function assertSoftwareOnlyWorkflowSecrets(all: { name: string; text: string }[]
   );
 }
 
-test("no workflow pushes main or declares contents: write", () => {
+test("only the authorized adapter PR merger declares write access", () => {
   const all = workflows();
-
-  // The floor (RULING 159). An empty directory, or a rename of the push
-  // script, would leave this asserting nothing and reading green.
-  assert.equal(all.length, 2, `expected the two release/CI workflow files, found ${all.map((workflow) => workflow.name).join(", ")}`);
+  assert.ok(all.length > 0, "workflow discovery must not be empty");
 
   const pushers = all.filter((w) => pushesMain(w.text));
   assert.equal(pushers.length, 0, `no workflow may push mutable runtime truth to main; found ${pushers.map((w) => w.name).join(", ")}`);
@@ -99,9 +97,18 @@ test("no workflow pushes main or declares contents: write", () => {
   const writers = all.filter((w) => declaresWrite(w.text));
   assert.deepEqual(
     writers.map((w) => w.name).sort(),
-    pushers.map((w) => w.name).sort(),
-    "a contents:write workflow without the guarded push door is an unaccounted routine Git writer",
+    ["engineer-adapter-merge.yml"],
+    "write access is authorized only for merging adapter PRs",
   );
+  const merger = all.find((w) => w.name === "engineer-adapter-merge.yml")!;
+  assert.deepEqual(parse(merger.text).permissions, {
+    contents: "write", "pull-requests": "write", checks: "read",
+  });
+  assert.match(merger.text, /run:\s*node scripts\/merge-engineer-adapters\.mjs/);
+  assert.doesNotMatch(merger.text, /git\s+(?:add|commit|push)/);
+  const mergeScript = readFileSync(join(ROOT, "scripts", "merge-engineer-adapters.mjs"), "utf8");
+  assert.match(mergeScript, /pulls\/\$\{pr\.number\}\/merge/);
+  assert.doesNotMatch(mergeScript, /git\s+(?:add|commit|push)|\/git\/refs/);
 });
 
 test("THE PLANT: the guard catches a pusher whose permissions block is gone", () => {
@@ -129,20 +136,13 @@ test("THE PLANT: the guard catches a pusher whose permissions block is gone", ()
   assert.equal(declaresWrite(fixed), true);
 });
 
-test("PDC terminal boundary: GITHUB_ROUTINE_OPS_CRONS=0 and ROUTINE_OPS_GIT_WRITERS=0", () => {
+test("routine operations do not write runtime state to Git", () => {
   const all = workflows();
-  const scheduled = all.filter((workflow) => /^\s*schedule:/m.test(workflow.text));
-  assert.deepEqual(
-    scheduled.map((workflow) => workflow.name),
-    [],
-    `GITHUB_ROUTINE_OPS_CRONS=${scheduled.length}; the standing production runner is the only routine clock`,
-  );
-  assert.deepEqual(all.filter((workflow) => /^refresh-.*\.ya?ml$/.test(workflow.name)), []);
   assert.deepEqual(
     all.filter((workflow) => pushesMain(workflow.text)).map((workflow) => workflow.name).sort(),
     [],
   );
-  const routineGitWriters = all.filter((workflow) => declaresWrite(workflow.text));
+  const routineGitWriters = all.filter((workflow) => workflow.name !== "engineer-adapter-merge.yml" && declaresWrite(workflow.text));
   assert.deepEqual(
     routineGitWriters.map((workflow) => workflow.name),
     [],

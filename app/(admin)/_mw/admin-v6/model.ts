@@ -9,6 +9,7 @@
  *
  * PURE: types and tiny helpers only. No fetch, no clock, no store.
  */
+import { EASTERN_ZONE } from "@/lib/control-plane/eastern-time.ts";
 
 /* ------------------------------------------------------------ provenance */
 
@@ -601,24 +602,32 @@ export function pctDown(part: number, whole: number): string {
   return (Math.floor((part / whole) * 1000) / 10).toFixed(1) + "%";
 }
 
-/** A calendar day in Arizona time, for dates without a meaningful clock time. */
+/**
+ * A calendar day in Eastern time, for dates without a meaningful clock time.
+ * (Admin shows Eastern time, rulings §10. The name is older than that ruling
+ * and is kept so the screen files that import it keep compiling.)
+ */
 export function mstDay(iso: string | null): string {
   if (!iso || !Number.isFinite(Date.parse(iso))) return "not reported";
-  return new Intl.DateTimeFormat("en-US", { timeZone: "America/Phoenix", month: "short", day: "numeric" }).format(new Date(iso));
+  return new Intl.DateTimeFormat("en-US", { timeZone: EASTERN_ZONE, month: "short", day: "numeric" }).format(new Date(iso));
 }
 
 export function count(n: number): string {
   return n.toLocaleString("en-US");
 }
 
-/** Arizona time, as the owner reads schedules. */
+/**
+ * Eastern time, as Admin shows every time (rulings §10). "ET" covers EST and
+ * EDT; the hour printed is already the local one. The name predates the
+ * Eastern ruling and is kept so the screen files that import it keep compiling.
+ */
 export function mst(iso: string | null, withDay = true): string {
   if (!iso || !Number.isFinite(Date.parse(iso))) return "not reported";
   const f = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/Phoenix",
+    timeZone: EASTERN_ZONE,
     ...(withDay ? { month: "short", day: "numeric" } : {}),
     hour: "numeric",
     minute: "2-digit",
   });
-  return `${f.format(new Date(iso))} MST`;
+  return `${f.format(new Date(iso))} ET`;
 }

@@ -12,8 +12,8 @@
  *   (`lib/hunt/meetings-recipes.ts`), filled with the government's identity,
  *   then the defaults below. A query with an unfilled slot is never sent.
  * - **A result is a pointer, never evidence.** Only a result on the
- *   government's own domain, or on a meeting-publisher host the adapters know,
- *   is followed at all. The executor then opens it robots-first and confirms it
+ *   official government source, including a portal linked by an official page,
+ *   is followed. The executor then opens it robots-first and confirms it
  *   by content like every other candidate.
  * - **Every request has a price.** The published per-request price of each
  *   provider, with the page it was read from and the date, travels into the
@@ -111,8 +111,8 @@ export type HitStanding = "OWN_SITE" | "PUBLISHER";
 
 /**
  * Whether a search result is worth opening for this government: on its own
- * registrable domain, or on a known meeting-publisher host. Anything else is
- * someone else's page about the government, never its record.
+ * domain or another official publisher. Source authority is separate from
+ * the executor's subsequent check that the content names the correct body.
  */
 export function hitStanding(hitUrl: string, domain: string, linkingPage?: OfficialLinkingPage | null): HitStanding | null {
   let host: string;

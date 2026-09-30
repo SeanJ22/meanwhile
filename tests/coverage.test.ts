@@ -11,6 +11,43 @@ import { summarizeCoverage } from "../lib/registry/coverage.ts";
 import { type GeoFeature } from "../lib/registry/resolve.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { planPlaceHunt, placeFieldWork } from "../lib/hunt/place-plan.ts";
+import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
+
+test("a place inherits other jobs' published fields before national acquisition and closes only those fields", async () => {
+  const repos = createMemoryRepositories();
+  const now = "2026-09-30T00:00:00Z";
+  const division = { id: "ocd-division/country:us/state:az/county:test", label: "Test County" };
+  const subject = { id: `${division.id}#governing`, label: "Test County Board", kind: "body" as const, divisionIds: [division.id] };
+  const owed = buildPlaceOwedList({ divisions: [division], subjects: [subject], held: [], now });
+  const name = owed.find(i => i.subject.id === subject.id && i.checklistId === "GOV-01")!;
+  const contact = owed.find(i => i.subject.id === subject.id && i.checklistId === "GOV-08")!;
+  await repos.workItems.put(placeFieldWork(name, now).id, placeFieldWork(name, now), now);
+  await repos.workItems.put(placeFieldWork(contact, now).id, placeFieldWork(contact, now), now);
+  const seen: string[] = [];
+  const bank = repos.fieldManual.read.bind(repos.fieldManual);
+  repos.fieldManual.read = async id => { seen.push("knowledge"); return bank(id); };
+  const result = await planPlaceHunt({ repos, divisions: [division], now,
+    readHeld: async ids => {
+      seen.push("held"); assert.deepEqual(ids, [division.id]);
+      return { subjects: [subject], held: [{ subjectId: subject.id, checklistId: "GOV-01", state: "published", sourceUrl: "https://county.example.gov/board", checkedAt: now, freshUntil: "2026-10-01T00:00:00Z", value: "Test County Board", workItemId: "some-other-job" }] };
+    },
+    acquireNational: async blanks => {
+      seen.push("national");
+      assert.ok(!blanks.some(i => i.id === name.id), "already published facts are not reacquired");
+      assert.ok(blanks.some(i => i.id === contact.id), "contact stays open");
+      return { subjects: [], held: [] };
+    } });
+  assert.deepEqual(seen, ["knowledge", "held", "national"]);
+  assert.deepEqual(result.closed, [placeFieldWork(name, now).id]);
+  assert.equal((await repos.workItems.mustRead(placeFieldWork(name, now).id)).value.state, "VERIFIED_COMPLETE");
+  assert.equal((await repos.workItems.mustRead(placeFieldWork(contact, now).id)).value.state, "OPEN");
+  assert.ok(result.work.some(i => i.id === contact.id));
+  await assert.rejects(planPlaceHunt({ repos, divisions: [division], now,
+    readHeld: async () => { throw Error("Shared holdings unavailable"); },
+    acquireNational: async () => { throw Error("Must not acquire from a failed empty read"); } }), /Shared holdings unavailable/);
+});
 
 await installRegistryRuntimeFirstSeeds();
 

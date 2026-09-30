@@ -107,6 +107,7 @@ export const defaultPlaceOwedDeps: PlaceOwedDeps = {
 };
 
 const MEMO_MS = 5 * 60_000;
+const MEMO_PLACES = 24;
 const memo = new Map<string, { at: number; read: PlaceOwedRead }>();
 
 export async function readPlaceOwed(placeKey: string, deps: PlaceOwedDeps = defaultPlaceOwedDeps, options: { readonly fresh?: boolean } = {}): Promise<PlaceOwedRead | PlaceOwedRefusal> {
@@ -131,6 +132,8 @@ export async function readPlaceOwed(placeKey: string, deps: PlaceOwedDeps = defa
   const read: PlaceOwedRead = { state: "READ", placeKey, label: resolved.label, covers: resolved.covers,
     divisions: resolved.divisions.map((d) => ({ id: d.id, label: d.label })), rows, observedAt: now, readMs: { geography: t1 - t0, held: Date.now() - t1 } };
   memo.set(placeKey, { at: Date.now(), read });
+  // A long-lived server holds at most a couple of dozen places; the oldest goes first.
+  while (memo.size > MEMO_PLACES) memo.delete(memo.keys().next().value as string);
   return read;
 }
 

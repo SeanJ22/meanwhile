@@ -128,7 +128,9 @@ export function fieldManualBriefLines(projection: FieldManualProjection): string
  * own upsert dedups by id so a re-discovery refreshes rather than forks.
  */
 export function scoutDiscoveryEntries(result: ScoutResult, stateHint: readonly string[]): FieldManualEntry[] {
-  return result.candidates.map((c: ScoutCandidate) => ({
+  const rejected = new Set((result.sourceDeadEnds ?? []).map(source => source.artifactId));
+  const discoveries: FieldManualEntry[] = (result.refusal === null ? result.candidates : []).filter(c =>
+    !c.evidenceArtifactIds.some(id => rejected.has(id))).map((c: ScoutCandidate) => ({
     id: fieldManualEntryId(SCOUT_DISCOVERY_SOURCE, c.routeId),
     role: "SCOUT",
     kind: "SCOUT_DISCOVERY",
@@ -153,6 +155,14 @@ export function scoutDiscoveryEntries(result: ScoutResult, stateHint: readonly s
       evidenceArtifactIds: c.evidenceArtifactIds,
     },
   }));
+  return [...discoveries, ...(result.sourceDeadEnds ?? []).map(source => ({
+    id: fieldManualEntryId('source-dead-end', `${result.subjectId}:${result.recordClass}:${source.url}`),
+    role: 'SHARED' as const, kind: 'SOURCE_DEAD_END', title: `Historical source: ${source.url}`,
+    summary: `${source.sourceDate ?? 'Unknown source date'}: ${source.reason}`.slice(0, 300),
+    states: [...stateHint], recordClasses: [result.recordClass], platforms: [], outcome: 'FAILED' as const,
+    url: source.url, source: 'source-dead-end', observedAt: result.recordedAt, tier: null,
+    payload: { ...source, subjectId: result.subjectId, recordClass: result.recordClass, attemptId: result.attemptId },
+  }))];
 }
 
 /** Every route id the manual already holds — a newly-built candidate that matches one is a rebuilt-existing defect (RULING 63). */

@@ -159,6 +159,7 @@ import {
   SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION,
   classifyPriorRung,
   distinctEvidenceRungs,
+  scoutSourceDeadEnds,
   validateScoutFinishWithCandidates,
   type PriorFailureClass,
   type ScoutCacheDefect,
@@ -456,7 +457,7 @@ export function scoutSystemPrompt(bound: ScoutBound, minRungs: number): string {
     `3. The ladder (a starting point, never a limit): ${SCOUT_LADDER.join("; ")}. "The long way is still a way": a slower compliant route beats a fast forbidden one, and a compliant route beats none. Hidden means obscure, never forbidden.`,
     "4. Never bypass an access control: a login or 401, a paywall, a 403, a bot challenge, a 429 rate limit, an IP block. Send no credential, cookie or token, solve no challenge, and never push through a rate limit. A wall is a technical failure of that route: record it and walk another public route (an alternate official host, a mirror, an open-data portal, a feed or API, a public archive, linked documents) — never retry the walled path. robots.txt is different: the tools read and record it automatically, and it never refuses a public page (an owner decision), so a DISALLOWED or CANNOT_TELL verdict is evidence to report, not a reason to stop.",
     "5. A candidate route is GROUNDED: it cites artifact ids that tool results returned in THIS investigation (or inherited artifact ids you were given). A URL from memory is not a candidate. You may propose method knowledge; you may never promote it.",
-    "6. Never generate a claim about a government, a candidate's position, or a record's contents beyond what a vaulted artifact shows. A Scout that only writes prose has failed.",
+    "6. Facts are field/value/exactQuote/sourceUrl data: copy a contiguous exact quote containing the literal value from opened source bytes. Never invent, normalize, or join quotations with ellipses. A current official page outranks an archive. An archive can guide navigation but can never verify a current fact; an out-of-window capture is a dead end, recorded with its date and reason. The existing fact obligation cadence decides freshness. A Scout that only writes prose has failed.",
     "7. Label EVERY tool call with `rung` (a ladder name above, or other:<name>) and `why`. Use record_rung to note what a rung returned. Call finish exactly once, covering every rung index you walked.",
     "8. Reuse saved knowledge before another source call. find_manual searches the full applicable catalog beyond the short brief; read_manual opens a handed full method or document; read_held opens a handed sanitized artifact by offset or searches its saved bytes for a literal query such as a table heading, then returns a bounded passage and exact offset. These are free local reads. A URL already vaulted in this investigation is in this conversation; a second fetch_public or browse of it is refused and hands back the artifact id. Open a materially different representation only when needed.",
     "9. Never re-walk. The brief lists the rungs prior investigations already walked on this obligation and what each returned; a rung recorded as durably failed (an access control, a not-found) is refused if you try it again. A rung an older investigation refused for robots.txt alone is not a failure and may be walked. Start from the NEXT RUNGS the prior investigation named.",
@@ -1533,7 +1534,8 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
                 vaulted: toolkit.vaultedArtifactIds,
                 inherited,
                 minRungs,
-                machine: { provenance, recordClass: sourceRecordClass, factEvidence:toolkit.factEvidence },
+                machine: { provenance, recordClass: sourceRecordClass, factEvidence:toolkit.factEvidence,
+                  freshness: { now: clock(), cadenceHours: row.cadenceHours } },
               });
               const issues = validated.issues;
               /*
@@ -2071,6 +2073,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         artifactIds: artifacts.map((a) => a.artifactId),
         ...(toolkit.heldEvidenceProtocolAvailable ? { recoveryCapabilityVersion: SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION } : {}),
         ...(knowledgeReads.length ? { knowledgeReads } : {}),
+        ...(toolkit.factEvidence ? { sourceDeadEnds: scoutSourceDeadEnds(toolkit.factEvidence, clock(), row.cadenceHours) } : {}),
         methodCandidateIds: [],
         refusal,
         startedAt,

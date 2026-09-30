@@ -210,7 +210,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
           ...(doors?{inheritedFieldManualEntryIds:doors.entryIds,availableFieldManualEntryIds:doors.availableIds,inheritedFieldManualLines:doors.lines,
             // MW-025: which handed doors this walk actually went through.
             usedFieldManualEntryIds:usedFieldManualEntryIds(result,doors.availableIds,handedManual)}:{})};
-        if(result.refusal===null&&result.candidates.length>0){
+        if((result.refusal===null&&result.candidates.length>0)||result.sourceDeadEnds?.length){
           const written=await writeFieldManualDiscoveries(input.repos,scoutDiscoveryEntries(result,scoutStateHint(result.subjectId,result.obligationId)),result.recordedAt);
           if(written.error) recorded={...recorded,unverified:[...recorded.unverified,`field manual write-back failed: ${written.error}`]};
           else {

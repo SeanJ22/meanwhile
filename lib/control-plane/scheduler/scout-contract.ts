@@ -279,6 +279,7 @@ export type ScoutSearch = (
 export interface ScoutFactEvidence {
   readonly sourceUrl: string;
   readonly retrievalUrl?: string;
+  readonly retrievedAt: string;
   readonly text: string;
   readonly visibleText: string;
 }

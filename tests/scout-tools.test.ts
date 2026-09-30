@@ -20,7 +20,9 @@ import { cannotRun, extracted } from "../lib/extract/types.ts";
 import type { ScoutSearch } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { carriesCredential } from "../lib/hunt/access-control.ts";
 import { contentHash } from '../lib/control-plane/ids.ts';
-import { validateScoutFinish } from '../lib/control-plane/scheduler/scout-result.ts';
+import { validateScoutFinish, scoutSourceDeadEnds, type ScoutResult } from '../lib/control-plane/scheduler/scout-result.ts';
+import { scoutDiscoveryEntries, writeFieldManualDiscoveries, scoutFieldManualProjection } from '../lib/control-plane/scheduler/field-manual-scout.ts';
+import { createMemoryRepositories } from '../lib/control-plane/repository/memory.ts';
 import { MemoryEvidenceStore, objectKey, putArtifact, readForParser } from "../lib/control-plane/evidence/store.ts";
 import { issueParserInput } from "../lib/control-plane/evidence/parser-boundary.ts";
 import { defaultGrant } from "../lib/control-plane/capability.ts";
@@ -44,6 +46,43 @@ import { evidenceProjection } from "../lib/control-plane/workers/evidence-projec
  */
 
 const NOW = "2026-09-01T12:00:00.000Z";
+
+test('the actual Palominas archive capture is a dead end; only the current page can supply a current fact', async()=>{
+  // URL, redirect, capture timestamp and short literal text from the staging failure.
+  const archive='https://web.archive.org/web/20211027002420/http://www.psd49.net/Contact-Us';
+  const finalUrl='https://web.archive.org/web/20210925094251/http://www.psd49.net/Contact-Us';
+  const current='https://www.psd49.net/Contact-Us', quote='Palominas Elementary School District';
+  const captured='2026-09-30T17:30:01.620Z';
+  const kit=buildScoutToolkit(context({openOne:fakeTransport({}).open,now:()=>captured,openBytes:async({url})=>({
+    status:200,bytes:Buffer.from(url.endsWith('robots.txt')?'User-agent: *\nAllow: /':
+      `<html><head><title>${url===current?'Current district':'Archived district'}</title></head><body>${quote}</body></html>`),
+    contentType:url.endsWith('robots.txt')?'text/plain':'text/html',finalUrl:url===archive?finalUrl:url,durationMs:1,transportError:null,
+  })}));
+  const old=await kit.call('fetch_public',{url:archive,...IN},null);
+  const live=await kit.call('fetch_public',{url:current,...IN},null);
+  const oldId=old.artifacts.at(-1)!.artifactId,liveId=live.artifacts.at(-1)!.artifactId;
+  const finding={kind:'RECORD' as const,summary:'District name',field:'body.name',value:quote,exactQuote:quote,sourceUrl:archive,artifactIds:[oldId]};
+  const freshness={now:captured,cadenceHours:obligation().cadenceHours};
+  const check=(fact:typeof finding)=>validateScoutFinish({toolCalls:kit.toolCalls,rungs:[],stoppedBy:'MODEL',
+    vaulted:kit.vaultedArtifactIds,inherited:new Set(),machine:{provenance:new Map(),recordClass:'PUBLIC_COMMENT_RULE',factEvidence:kit.factEvidence,freshness},
+    finish:{outcome:'EVIDENCE_FOUND',candidates:[],findings:[fact],rungsWalked:[],nextRungs:[],unverified:[],narrative:'Captured name'}});
+  assert.ok(check(finding).some(issue=>issue.detail.includes('Archives cannot verify current facts')));
+  assert.deepEqual(check({...finding,sourceUrl:current,artifactIds:[liveId]}),[],'current page wins even when the historical quote is identical');
+  const sourceDeadEnds=scoutSourceDeadEnds(kit.factEvidence!,freshness.now,freshness.cadenceHours);
+  assert.equal(sourceDeadEnds.length,1);
+  assert.equal(sourceDeadEnds[0].sourceDate,'2021-09-25T09:42:51Z','redirect capture date, never 2026 retrieval time');
+  const repos=createMemoryRepositories();
+  const entries=scoutDiscoveryEntries({subjectId:'az:school:palominas-school-district-49',recordClass:'PUBLIC_COMMENT_RULE',
+    attemptId:'archive-failure',recordedAt:captured,sourceDeadEnds,candidates:[],refusal:[]} as unknown as ScoutResult,['az']);
+  await writeFieldManualDiscoveries(repos,entries,captured);
+  const store=(await repos.fieldManual.read('live'))!.value;
+  assert.equal(store.entries[0].kind,'SOURCE_DEAD_END');
+  assert.equal(store.entries[0].outcome,'FAILED');
+  assert.equal(store.entries[0].url,finalUrl);
+  assert.match(scoutFieldManualProjection(store,{subjectId:'az:school:palominas-school-district-49'}).lines.join('\n'),/2021-09-25.*Archived capture/);
+  const expired=scoutSourceDeadEnds(kit.factEvidence!,new Date(Date.parse(captured)+(freshness.cadenceHours+1)*3_600_000).toISOString(),freshness.cadenceHours);
+  assert.ok(expired.some(source=>source.artifactId===liveId && source.reason.includes('outside')),'held current pages also expire on their own cadence');
+});
 
 test('Scout facts require a literal value and exact quotation from opened source bytes',async()=>{
   const url='https://county.gov/clerk',text='<p>Clerk <b>Ada</b></p><p>Call 555-0100</p>';

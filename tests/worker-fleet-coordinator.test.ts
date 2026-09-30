@@ -314,13 +314,13 @@ test("an independent Auditor break remains blocked and never becomes staged inve
   assert.equal((await h.repos.workItems.mustRead(h.item.id)).value.state,"REOPENED");
 });
 
-test("explicitly required external verification remains missing: the Validator stays inconclusive, and the audit counts it in coverage without breaking anything", async () => {
+test("explicitly required external verification remains missing while the diagnostic audit records an honest inconclusive result", async () => {
   const h=await autonomousHarness({plan:plan=>({...plan,contract:{...plan.contract,schemaVersion:2,verification:{required:true,authorities:[]}} as typeof plan.contract})});
   for(let index=0;index<4;index++) {
     const run=await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1}); assert.equal(run.dispatches[0]?.outcome,"WORKED",run.dispatches[0]?.detail);
   }
   const records=await h.repos.workerResults.readAll(); assert.equal(records.find(r=>r.result.role==="VALIDATOR")?.result.verdict,"INCONCLUSIVE");
-  assert.equal(records.find(r=>r.result.role==="ADVERSARIAL_AUDITOR")?.result.verdict,"SURVIVED","a second authority not yet on file is coverage, not a defect in the record");
+  assert.equal(records.find(r=>r.result.role==="ADVERSARIAL_AUDITOR")?.result.verdict,"INCONCLUSIVE");
   assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");
   assert.ok(Date.parse(FIXTURE_NOW)<Date.parse(h.now()));
 });
@@ -346,26 +346,4 @@ test("unresolved identity permits independent diagnosis but never staging", asyn
   assert.equal((await h.repos.workerResults.readAll()).find(r=>r.result.role==="DETECTIVE")?.result.verdict,"UNRESOLVED");
   assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");
   assert.equal((await h.repos.promotionPipeline.readAll()).length,0);
-});
-
-test("a validated record is STAGED to publish before any audit exists; the Auditor is dispatched after it publishes and never holds it", async () => {
-  const h = await autonomousHarness({ plan: plan => ({ ...plan, publication: { contractId: "comment-access" as const, bodyId: "fixture-body" } }) });
-  const roles: string[] = [];
-  for (let index = 0; index < 3; index++) {
-    const run = await runAutonomousCoordinator(h.runtime, { maximum: 1, concurrency: 1 });
-    roles.push(run.decisions[0].task!.workerTask!.role); assert.equal(run.dispatches[0].outcome, "WORKED", run.dispatches[0].detail);
-  }
-  assert.deepEqual(roles, ["ACQUIRER", "PARSER", "VALIDATOR"]);
-  assert.equal((await nextAutonomousOperation(h.runtime, h.item.id)).action, "STAGED", "no audit stands between a validated record and its publication");
-  assert.equal((await h.repos.workerResults.readAll()).some(record => record.result.role === "ADVERSARIAL_AUDITOR"), false);
-
-  const row = await h.repos.workItems.mustRead(h.item.id);
-  const validator = (await h.repos.workerResults.readAll()).find(record => record.result.role === "VALIDATOR")!;
-  await h.repos.workItems.compareAndSet(h.item.id, row.revision, { ...row.value, publicationOutcome: { at: h.now(), workerResultId: validator.id, status: "PUBLISHED",
-    code: "VERIFIED_RESULT_PUBLISHED", detail: "fixture", candidateId: "c", versionId: "v" } as never }, h.now());
-  const afterPublishing = await nextAutonomousOperation(h.runtime, h.item.id);
-  assert.equal(afterPublishing.task?.workerTask?.role, "ADVERSARIAL_AUDITOR", "the audit runs after publishing");
-  const audited = await dispatchWorkerTask(h.runtime, afterPublishing.task!);
-  assert.equal(audited.outcome, "WORKED", audited.detail);
-  assert.equal((await nextAutonomousOperation(h.runtime, h.item.id)).action, "STAGED");
 });

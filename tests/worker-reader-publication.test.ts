@@ -10,8 +10,7 @@ import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { registerRouteTask, claimRouteTask, beginAttemptFor, recordArtifactMetadata, disposeRouteTask } from "../lib/control-plane/repository/coordinator.ts";
 import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { putArtifact } from "../lib/control-plane/evidence/store.ts";
-import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
-import type { CivicExtractionContract } from "../lib/control-plane/workers/types.ts";
+import { dispatchWorkerTask, evidenceProjection, FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
 import { nextAutonomousOperation } from "../lib/control-plane/workers/coordinator.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
@@ -34,16 +33,7 @@ import { createElement } from "react";
 import { OfficialFilings } from "../components/ballot/official-filings.tsx";
 import { collectWorkerRosterReadback } from "../lib/control-plane/worker-reader-readback.ts";
 
-/** The Auditor samples after the record can publish; the fixtures that exercise an audit that has already run dispatch it the way the coordinator does. */
-async function runAudit(h: Awaited<ReturnType<typeof autonomousHarness>>, runtime: Parameters<typeof dispatchWorkerTask>[0], plan: { contract: CivicExtractionContract; auditScope: "CAPTURED_ARTIFACT" | "SOURCE_UNIVERSE" }) {
-  const so = await h.repos.workerResults.read(h.item.id);
-  const parser = so.find(row => row.result.role === "PARSER")!, validator = so.find(row => row.result.role === "VALIDATOR")!;
-  const task = await enqueueWorkerTask(h.repos, { workItemId: h.item.id, role: "ADVERSARIAL_AUDITOR", artifactId: (parser.result as { artifactId: string }).artifactId, contract: plan.contract,
-    producerResultId: parser.id, validatorResultId: validator.id, auditScope: plan.auditScope, now: h.now() });
-  assert.equal((await dispatchWorkerTask(runtime, task)).outcome, "WORKED");
-}
-
-async function workerFixture(contractId: WorkerReaderContract | "registry-runtime-bindings", facts: Record<string, string | number> | Record<string, string | number>[] | ((prior: RegistryRuntimePrior, bodyId: string) => Record<string, string | number>[]), classOverride?: "CAMPAIGN_FINANCE_FILING", options: { readonly audit?: boolean } = {}) {
+async function workerFixture(contractId: WorkerReaderContract | "registry-runtime-bindings", facts: Record<string, string | number> | Record<string, string | number>[] | ((prior: RegistryRuntimePrior, bodyId: string) => Record<string, string | number>[]), classOverride?: "CAMPAIGN_FINANCE_FILING") {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
   const store = new MemoryRoutineDataStore();
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
@@ -107,16 +97,13 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   const authorityEvidence = evidenceProjection(await h.runtime.readEvidence(artifact.id));
   const runtime = { ...h.runtime, independentContext: async (scope: Parameters<typeof h.runtime.independentContext>[0]) => ({
     ...await h.runtime.independentContext(scope), authorityEvidence: [authorityEvidence] }) };
-  for (const role of ["ACQUIRER", "PARSER", "VALIDATOR"]) {
+  for (const role of ["ACQUIRER", "PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR"]) {
     const next = await nextAutonomousOperation(runtime, h.item.id);
     assert.equal(next.task?.workerTask?.role, role, JSON.stringify(next));
     assert.equal((await dispatchWorkerTask(runtime, next.task!)).outcome, "WORKED");
   }
-  // A validated record is ready to publish: the coordinator stages it before any audit exists.
-  assert.equal((await nextAutonomousOperation(runtime, h.item.id)).action, "STAGED");
-  if (options.audit !== false) await runAudit(h, runtime, ready);
   const results = await h.repos.workerResults.read(h.item.id);
-  assert.deepEqual(results.map(row => row.result.verdict), options.audit === false ? ["ACQUIRED", "EXTRACTED", "PASS"] : ["ACQUIRED", "EXTRACTED", "PASS", "SURVIVED"]);
+  assert.deepEqual(results.map(row => row.result.verdict), ["ACQUIRED", "EXTRACTED", "PASS", "SURVIVED"]);
   const scope = { kind: "RESOLVED", decision: { sourceWorkVersion: 1, receiptId: "offline-send" } } as ResolvedScope;
   const queued = workerRosterSourceTasks([scope], [(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now());
   assert.equal(queued.length, 1);
@@ -246,15 +233,6 @@ test("independent normal workers automatically publish public-comment rules thro
   // The current evidence can omit a detail without suppressing its verified
   // neighbours or deleting independently proven last-good instructions.
   const packageNow = workerReaderPackage(checked);
-  // Rulings section 3: a record publishes on its Parser and Validator. The Auditor samples afterwards, is never waited for,
-  // and only a BROKE one holds a publication. The version is keyed on the Validator so a later audit cannot cause a re-publication.
-  const withoutAudit = workerReaderPackage({ ...checked, auditor: undefined });
-  assert.equal(withoutAudit.version, `worker:${validator.id}`);
-  assert.deepEqual(withoutAudit.payload, packageNow.payload, "the audit changes no published fact");
-  assert.equal(packageNow.version, withoutAudit.version, "a survived audit arriving later changes nothing about the publication");
-  const inconclusive = { ...auditor, result: { ...auditor.result, verdict: "INCONCLUSIVE" as const, survivingRecordIds: [], survivingRecordCount: 0 } } as typeof auditor;
-  assert.deepEqual(workerReaderPackage({ ...checked, auditor: inconclusive }).payload, packageNow.payload, "an inconclusive sample holds nothing back");
-  assert.throws(() => workerReaderPackage({ ...checked, auditor: { ...auditor, result: { ...auditor.result, verdict: "BROKE" as const, reopenRequired: true } } as typeof auditor }), /AUDIT_BROKE/);
   const currentRule = (packageNow.payload as CuratedReaderProjection).records[0];
   const commentPrior = await readManualProjectionPrior("comment-access", store, h.now());
   const complementary = inheritVerifiedCommentDetails({ ...packageNow, payload: { kind: "comment-access", records: [{ ...currentRule, signup: null }] } }, commentPrior);
@@ -306,20 +284,4 @@ test("normal voter-access workers publish the independently verified statewide r
   assert.equal(read.value.records[0].kind, "REGISTRATION_LINK");
   assert.equal((read.value.records[0].value as { url: string }).url, FIXTURE_URL);
   assert.deepEqual(await publishWorkerReaderResults(input), result);
-});
-
-test("a record publishes with no Auditor at all; the audit that runs afterwards changes nothing already published, and a BROKE one holds the next publication", async () => {
-  const f = await workerFixture("comment-access", { commentPeriod: "YES", commentPeriodDetail: "The board provides a public comment period.", signup: "Sign up before the meeting." }, undefined, { audit: false });
-  assert.equal(f.results.some(row => row.result.role === "ADVERSARIAL_AUDITOR"), false, "no audit exists when the record publishes");
-  const published = await publishWorkerReaderResults(f.input);
-  assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
-  const validator = f.results.find(row => row.result.role === "VALIDATOR")!;
-  assert.equal(published[0].outcome.workerResultId, validator.id, "the publication is keyed on the Validator result");
-
-  // The sampled audit arrives later: publication is not repeated and nothing is pulled.
-  await runAudit(f.h, f.runtime, f.ready);
-  const after = await publishWorkerReaderResults(f.input);
-  assert.deepEqual(after, published, "a later audit causes no re-publication");
-  const audit = (await f.h.repos.workerResults.read(f.h.item.id)).find(row => row.result.role === "ADVERSARIAL_AUDITOR")!;
-  assert.equal(audit.result.verdict, "SURVIVED");
 });

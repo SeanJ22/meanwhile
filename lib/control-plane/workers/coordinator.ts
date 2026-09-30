@@ -340,25 +340,18 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       const validator=records.find(r=>r.routeTaskId===validatorTask.id && r.result.role==="VALIDATOR");
       if (!validator) { const next=await taskFor({...spec,role:"VALIDATOR",producerResultId:parser.id}); if(next)return next; unresolved=true; continue; }
       if (validator.result.role!=="VALIDATOR" || (validator.result.verdict!=="PASS" && validator.result.extractionVerdict!=="PASS")) { unresolved=true; continue; }
-      // A validated record is ready to publish (rulings section 3: its value is on the saved official page and code confirmed it).
-      // The Auditor runs AFTER publishing and never holds a record back; it only pulls what it breaks.
-      const ready = !identityUnresolved && validator.result.verdict === "PASS";
-      if (ready) staged = true; else unresolved = true;
-      const published = item.publicationOutcome?.status === "PUBLISHED" || item.publicationOutcome?.status === "PARTIALLY_PUBLISHED";
-      // Only a record that is ready to publish waits for its publication; one that cannot publish yet (open identity, inconclusive Validator) is audited now, as a diagnosis.
-      if (ready && !published && plan.publication) continue;
       let auditSpec: Parameters<typeof enqueueWorkerTask>[1] = {...spec,role:"ADVERSARIAL_AUDITOR",producerResultId:parser.id,validatorResultId:validator.id,auditScope:plan.auditScope};
       for (;;) {
         const auditTask = await enqueueWorkerTask(repos, auditSpec);
         const audit = records.find(r => r.routeTaskId === auditTask.id);
-        if (!audit) { const next = await taskFor(auditSpec); if (next) return next; break; }
+        if (!audit) { const next = await taskFor(auditSpec); if (next) return next; unresolved = true; break; }
         const escalation = nextAuditEscalation(audit);
-        if (escalation) {
+        if (escalation && validator.result.verdict === "PASS" && !identityUnresolved) {
           auditSpec = { ...auditSpec, auditEscalation: escalation };
           continue; // At most Haiku → Sonnet → Opus; each is one durable attempt.
         }
-        // A broken audit reopens the work (worker-completion) and holds what it names; a survived or inconclusive one changes nothing here.
-        if (audit.result.role === "ADVERSARIAL_AUDITOR" && audit.result.verdict === "BROKE") { staged = false; unresolved = true; }
+        if (!identityUnresolved && validator.result.verdict === "PASS" && audit.result.role === "ADVERSARIAL_AUDITOR" && audit.result.verdict === "SURVIVED") staged = true;
+        else unresolved = true;
         break;
       }
     }

@@ -123,7 +123,7 @@ export function workerReaderPackage(input: Parameters<typeof verifiedWorkerRecor
         sourceUrl: checked.primary.evidence.canonicalUrl, collectedAt: checked.primary.observedAt, verifiedAt: input.now };
   });
   requirePublication(records.length === checked.extraction.actualRowCount && new Set(records.map(r => r.id)).size === records.length, "READER_IDENTITY_COLLISION");
-  return { contractId, version: `worker:${input.validator.id}`, sourceThrough: input.now,
+  return { contractId, version: `worker:${input.auditor.id}`, sourceThrough: input.now,
     sourceReceipt: checked.sourceReceipt, payload: contractId === "everyday-routing"
       ? everydayRoutingProjectionFromRecords(records as unknown as EverydayRoutingRecord[]) : { kind: contractId, records } };
 }
@@ -138,21 +138,17 @@ export async function publishWorkerReaderResults(input: {
     const item = (await input.repos.workItems.mustRead(id)).value;
     const plan: AutonomousWorkPlan | undefined = item.autonomousPlan;
     const own = results.filter(r => r.workItemId === id);
-    // A record publishes on its Validator result. The Auditor samples afterwards and is never waited for; the outcome is keyed on the Validator so a later audit cannot cause a re-publication.
-    const newest = (role: "VALIDATOR" | "ADVERSARIAL_AUDITOR") => own.filter(r => r.result.role === role && (role === "ADVERSARIAL_AUDITOR" || r.result.verdict === "PASS"))
-      .sort((a, b) => b.endedAt.localeCompare(a.endedAt) || b.id.localeCompare(a.id))[0];
-    const validator = newest("VALIDATOR");
-    requirePublication(validator && plan?.ownerInstructions?.length && plan.publication?.contractId === input.contractId, "OWNER_INSTRUCTIONS_MISSING");
-    const auditor = own.filter(r => r.result.role === "ADVERSARIAL_AUDITOR" && r.inputResultIds.includes(validator.id))
-      .sort((a, b) => b.endedAt.localeCompare(a.endedAt) || b.id.localeCompare(a.id))[0];
-    if (item.publicationOutcome?.workerResultId === validator.id && item.publicationOutcome.recovery !== "PUBLISHER") {
+    const auditor = own.filter(r => r.result.role === "ADVERSARIAL_AUDITOR").sort((a, b) => b.endedAt.localeCompare(a.endedAt) || b.id.localeCompare(a.id))[0];
+    requirePublication(auditor && plan?.ownerInstructions?.length && plan.publication?.contractId === input.contractId, "OWNER_INSTRUCTIONS_MISSING");
+    if (item.publicationOutcome?.workerResultId === auditor.id && item.publicationOutcome.recovery !== "PUBLISHER") {
       report.push({ workItemId: id, outcome: item.publicationOutcome }); continue;
     }
     let outcome: NonNullable<WorkItem["publicationOutcome"]>, candidateId: string | null = null, versionId: string | null = null;
     let workerChecksComplete = false;
     try {
-      const parser = own.find(r => validator.inputResultIds.includes(r.id) && r.result.role === "PARSER");
-      requirePublication(parser?.result.role === "PARSER" && plan.contract.schemaVersion === 2, "INPUT_CHAIN_MISSING");
+      const parser = own.find(r => auditor.inputResultIds.includes(r.id) && r.result.role === "PARSER");
+      const validator = own.find(r => auditor.inputResultIds.includes(r.id) && r.result.role === "VALIDATOR");
+      requirePublication(parser?.result.role === "PARSER" && validator && plan.contract.schemaVersion === 2, "INPUT_CHAIN_MISSING");
       const ids = [...new Set([parser.result.artifactId, ...plan.contract.verification.authorities.flatMap(a => [...a.artifactIds, ...a.authorityEvidenceArtifactIds])])];
       const captures = await Promise.all(ids.map(id => input.readCapture(id, results)));
       const registry = await readRegistryRuntimePrior(input.store, input.now);
@@ -178,13 +174,13 @@ export async function publishWorkerReaderResults(input: {
       if (readback?.status !== "PASS") throw new Error(`WORKER_PUBLICATION_READER_READBACK_FAILED:${readback?.detail ?? "missing receipt"}`);
       const changes = publicationRecordChanges({ previousVersionId: prior?.versionId ?? null,
         accepted: delivered.map(row => ({ recordId: row.id, readerId: row.id, value: row, previous: before.find(old => old.id === row.id) })) });
-      outcome = { at: input.now, workerResultId: validator.id, status: "PUBLISHED", code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",
+      outcome = { at: input.now, workerResultId: auditor.id, status: "PUBLISHED", code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",
         detail: `Independent ${input.contractId} verification passed, automatic promotion completed and the existing typed Reader readback passed.`, candidateId, versionId,
         ...changes, acceptedRecordIds: delivered.map(row => row.id) };
     } catch (error) {
       const detail = sanitizedErrorDiagnostic(error);
       const recovery = workerChecksComplete || !detail.startsWith("WORKER_PUBLICATION_") ? "PUBLISHER" : "WORKER";
-      outcome = { at: input.now, workerResultId: validator.id, status: "HELD", code: detail.split(":")[0],
+      outcome = { at: input.now, workerResultId: auditor.id, status: "HELD", code: detail.split(":")[0],
         detail: `${detail}. ${recovery === "WORKER" ? "Automatic evidence or contract repair remains owed" : "The existing publisher retries the retained result"}; no manual approval is required.`, recovery, candidateId, versionId };
     }
     const latest = await input.repos.workItems.mustRead(id);

@@ -90,7 +90,7 @@ export function workerBodyDirectoryPackage(input: Parameters<typeof verifiedWork
     }
   }
   requirePublication(bodies.length > 0, `DIRECTORY_NO_ADMISSIBLE_BODY:${unresolved.join("; ")}`);
-  return { unresolved, prepared: { contractId: "registry-runtime-bindings", version: `worker-directory:${input.validator.id}`,
+  return { unresolved, prepared: { contractId: "registry-runtime-bindings", version: `worker-directory:${input.auditor.id}`,
     sourceThrough: input.now, sourceReceipt: checked.sourceReceipt,
     payload: { ...input.prior.payload, registry: { ...input.prior.payload.registry, divisions: [], bodies },
       bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},

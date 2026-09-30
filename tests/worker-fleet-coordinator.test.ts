@@ -195,7 +195,7 @@ test("a brokered sibling capture admits one old-protocol Scout continuation befo
   const h = await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})});
   const heldId = (await h.repos.artifacts.readAll())[0]!.artifactId;
   let walks = 0;
-  const runtime: AutonomousCoordinatorRuntime = {...h.runtime, scoutFor:(item,task)=>({
+  const runtime: AutonomousCoordinatorRuntime = {...h.runtime, rollingCeilingUsd:100, scoutFor:(item,task)=>({
     lane:"BOUNDED_MODEL_WORKER", workerFor:({holder})=>({role:"SCOUT",provider:"offline-fixture",version:"1",instance:holder}),
     run:async({attemptId})=>{
       walks++;
@@ -216,7 +216,7 @@ test("a brokered sibling capture admits one old-protocol Scout continuation befo
     },
   })};
   const first = await runAutonomousCoordinator(runtime,{maximum:1,concurrency:1});
-  assert.equal(first.dispatches[0]?.outcome,"WORKED");
+  assert.equal(first.dispatches[0]?.outcome,"WORKED",first.dispatches[0]?.detail);
   assert.equal((await nextAutonomousOperation(runtime,h.item.id)).action,"BLOCKED",
     "a sibling's capture must not bypass backoff unless the standing broker handed it to this root");
   const brokered: AutonomousCoordinatorRuntime = {...runtime,lifetimeHuntSubject:subject=>subject===h.item.subject,

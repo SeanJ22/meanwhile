@@ -210,6 +210,7 @@ export function parseLearningEntries(
 /* ------------------------------------------------------------ the reasoner */
 
 export interface ModelParseRecord {
+  readonly byModel?: readonly CostModelShare[];
   readonly step: "extraction";
   readonly model: string;
   readonly tier: ModelClass;
@@ -296,6 +297,7 @@ export function modelParseReasoner(
       : options.transportFor({ subjectId: contract.subjectId, state: contract.jurisdiction.state });
 
     const metered: MeteredUsage[] = [];
+    const byModel: CostModelShare[] = [];
     let usd: number | null = 0;
     let firstBody = "";
     let escalation: ModelParseRecord["escalation"];
@@ -325,9 +327,13 @@ export function modelParseReasoner(
         return { response, window: w };
       }));
       for (const { response, window: w } of calls) {
-        const usage = readMeteredUsage(response.usage);
+        const usage = readMeteredUsage(response.usage, response.batch === true);
         metered.push(usage);
         const price = priceMeteredUsage(response.model, usage, "5m").usd;
+        const { batch: _batch, ...fields } = meteredCostFields(usage);
+        byModel.push({ model: response.model, tier: activeModelTierFor(response.model), requestCount: 1, usd: price,
+          inputTokens: usage.uncachedInputTokens === null ? null : usage.uncachedInputTokens + (usage.cacheReadInputTokens ?? 0) + (usage.cacheCreationInputTokens ?? 0),
+          outputTokens: usage.outputTokens, ...fields });
         usd = usd === null || price === null ? null : usd + price;
         try { for (const p of proposalsFrom(toolInput(response, model))) proposals.push({ ...p, windowStart: w.start }); }
         catch (error) { validationError = error instanceof Error ? error.message : "PARSE_MODEL_RESPONSE_INVALID"; }
@@ -372,7 +378,7 @@ export function modelParseReasoner(
 
     return {
       result,
-      review: { step: "extraction", model, tier, effort, contextHash: contentHash(firstBody), route: { tier: route.tier, reason: route.reason, inheritedEntryIds: route.inheritedEntryIds },
+      review: { step: "extraction", model, tier, effort, byModel, contextHash: contentHash(firstBody), route: { tier: route.tier, reason: route.reason, inheritedEntryIds: route.inheritedEntryIds },
         ...(escalation ? { escalation } : {}), windows: windows.length, unreadFrom, proposed: confirmed.proposed, confirmed: confirmed.records.length,
         rejections: confirmed.rejections.slice(0, MAX_FINDINGS), validationError, elapsedMs: Math.round(performance.now() - started) },
       usage: { inputTokens: summed.uncachedInputTokens, outputTokens: summed.outputTokens, cacheReadInputTokens: summed.cacheReadInputTokens,
@@ -381,3 +387,5 @@ export function modelParseReasoner(
     };
   } };
 }
+import type { CostModelShare } from "../cost.ts";
+import { activeModelTierFor } from "../../models.ts";

@@ -1,4 +1,4 @@
-import { backgroundBatchTransport, batchEnabledFor } from "../lib/control-plane/model-batch.ts";
+import { attemptBatchJournal, backgroundBatchTransport, batchEnabledFor } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { createHash, randomUUID } from "node:crypto";
 import { runLeaseWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
@@ -2840,7 +2840,8 @@ async function runAutonomousWave() {
       const job = new JobSpend(spendHolds, `worker-request:${taskId}:${randomUUID()}`, owner?.value.obligationId ?? task.id, found.lines);
       const transport = budgetGuardedTransport({ job: () => job,
         transport: fleetSafety.guardedModelTransport("anthropic", jurisdiction.subjectId,
-          task.workerTask?.role === "ADVERSARIAL_AUDITOR" && batchEnabledFor("background-worker-audit") ? workerBatch : workerMessages),
+          task.workerTask?.role === "ADVERSARIAL_AUDITOR" && batchEnabledFor("background-worker-audit")
+            ? workerBatch.withJournal(attemptBatchJournal(repos, taskId, nowIso)) : workerMessages),
         worstCaseOf: modelRequestWorstCaseUsd, priceOf: modelResponseUsd });
       let response;
       try { response = await transport(request); }
@@ -3908,12 +3909,9 @@ await (stallDiagnostic as CycleStallDiagnostic | null)?.stop();
 // truth, and the next ordinary cycle resumes the rotating reconciliation cursor.
 if (!dry && !canary && process.env.WTP_ADMIN_EVIDENCE_MIRROR_ENABLED === "1") {
   try {
-    const mirrorDeadlineMs = Math.min(Date.now() + 15_000, CLOCK.recordsDeadlineMs);
-    const mirror = await runBoundedStep({ label: "private-admin-evidence-mirror",
-      budgetMs: Math.max(0, mirrorDeadlineMs - Date.now()),
-      fn: () => runAdminEvidenceMirror({ repos, vaultRoot: join(ROOT, ...VAULT_DIR),
+    const mirror = await runAdminEvidenceMirror({ repos, vaultRoot: join(ROOT, ...VAULT_DIR),
         cursorPath: join(ROOT, "data", "control-plane", "admin-evidence-mirror.cursor.json"),
-        deadlineMs: mirrorDeadlineMs }) });
+        deadlineMs: Number.POSITIVE_INFINITY });
     console.log(`  private Admin evidence mirror: ${mirror.state}; examined ${mirror.examined}, copied ${mirror.copied}, verified existing ${mirror.alreadyVerified}, refused ${mirror.refused}`);
     if (mirror.failures.length) console.error(`  private Admin evidence copy remains owed: ${mirror.failures.slice(0, 8).join("; ")}`);
   } catch (error) {

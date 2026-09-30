@@ -155,6 +155,9 @@ test("a parse with no rule: cheapest tier is asked, escalates once when no quote
   assert.equal(first.review.escalation?.to, "sonnet");
   assert.equal(quotesHoldAgainst(first.result, TEXT).ok, true);
   assert.ok(first.usd !== null && first.usd > 0, "both calls are costed");
+  assert.deepEqual(first.review.byModel?.map(s=>s.tier), ["haiku", "sonnet"]);
+  assert.equal(first.review.byModel?.reduce((n,s)=>n+(s.usd??0),0),first.usd);
+  assert.equal(first.review.byModel?.reduce((n,s)=>n+s.requestCount,0),2);
 
   // What that parse learned is in the manual...
   const manual = await readFieldManual(repos, { role: "PARSER", state: "az", recordClass: "PLANNING_MEETING" });

@@ -185,7 +185,7 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
      * provider bills it. The worker usage keeps `inputTokens` as the uncached
      * remainder, which is what its own `uncachedInputTokens` restates.
      */
-    const cost = { ...ZERO_COST, durationMs, inputTokens: wholePrompt(usage), outputTokens: usage.outputTokens, usd: model?.usd ?? parsed?.usd ?? null, requestCount: model || parsed ? 1 : 0, ...(model?.metering ?? parsed?.metering ?? {}) };
+    const cost = { ...ZERO_COST, durationMs, inputTokens: wholePrompt(usage), outputTokens: usage.outputTokens, usd: model?.usd ?? parsed?.usd ?? null, requestCount: parsed?.review.byModel?.reduce((n,s)=>n+s.requestCount,0) ?? (model || parsed ? 1 : 0), ...(model?.metering ?? parsed?.metering ?? {}) };
     const workerResult: UncommittedWorkerResult = { id: `wr-${fingerprint([attemptId])}`, schemaVersion: 1,
       workItemId, routeTaskId, attemptId, worker, grant, methodVersion: attempt.methodVersion, policyVersion: attempt.policyVersion,
       startedAt: attempt.startedAt, endedAt: now(), executionMode: assisted ? "MODEL_ASSISTED" : "DETERMINISTIC", cost, usage,
@@ -201,7 +201,7 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
       ...(model ? { modelReview: model.review } : {}),
       ...(parsed ? { modelParse: parsed.review } : {}),
     };
-    return { kind: "RESULT_RECORDED", ranAs: lane, workerResult, cost, detail: `${role} ${result.verdict}; ${workerResult.id}; promotion authority absent` };
+    return { kind: "RESULT_RECORDED", ranAs: lane, workerResult, cost, ...(parsed?.review.byModel ? { costByModel: parsed.review.byModel } : {}), detail: `${role} ${result.verdict}; ${workerResult.id}; promotion authority absent` };
     } catch (error) {
       const detail = error instanceof Error ? error.message : "WORKER_EXECUTION_FAILED";
       const denied = detail.startsWith("DENIED_BY_POLICY") || (error instanceof Error && error.name === "NetworkAccessDenied");

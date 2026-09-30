@@ -1,5 +1,7 @@
 /** Message Batches for independent unattended work. Reader responses and dependent tool turns use Messages. */
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
+import type { AttemptProviderBatch } from "./attempt.ts";
+import { canonicalJson, type ControlPlaneRepositories } from "./repository/types.ts";
 import { anthropicBetasFor, cachedModelRequest, ModelTransportError, type ModelRequest, type ModelResponse, type ModelTransport } from "./scheduler/scout-executor.ts";
 
 export const MESSAGE_BATCHES_ENDPOINT = "https://api.anthropic.com/v1/messages/batches";
@@ -42,6 +44,7 @@ export interface BatchRequestItem {
 }
 
 export interface MessageBatch {
+  readonly created_at?: string;
   readonly id: string;
   readonly processing_status: "in_progress" | "canceling" | "ended" | string;
   readonly request_counts: { readonly processing: number; readonly succeeded: number; readonly errored: number; readonly canceled: number; readonly expired: number };
@@ -159,43 +162,113 @@ export async function runSingleRequestBatch(
  * This uses the provider's existing batch state, not a second queue or budget store.
  * A failed submission/result is surfaced once and never resubmitted here.
  */
-export function backgroundBatchTransport(options: Omit<SingleRequestBatchOptions, "customId" | "deadlineMs">): ModelTransport {
-  type Pending = { id: string; request: ModelRequest; resolve: (response: ModelResponse) => void; reject: (error: unknown) => void };
+export interface BatchJournal {
+  readonly read: (requestHash: string) => Promise<AttemptProviderBatch | null>;
+  readonly write: (record: AttemptProviderBatch) => Promise<void>;
+}
+
+/** Reclaimed tasks inherit provider identities, while writes require the new live lease. */
+export function attemptBatchJournal(repos: ControlPlaneRepositories, taskId: string, now: () => string): BatchJournal {
+  return {
+    read: async hash => {
+      const attempts = await repos.attempts.listWhere(["routeTaskId"], taskId);
+      return attempts.flatMap(a => a.value.providerBatches ?? []).find(r => r.requestHash === hash && r.batchId !== null)
+        ?? attempts.flatMap(a => a.value.providerBatches ?? []).find(r => r.requestHash === hash) ?? null;
+    },
+    write: async record => {
+      const lease = await repos.leases.mustRead(taskId);
+      const attempts = await repos.attempts.listWhere(["routeTaskId"], taskId);
+      const active = attempts.find(a => a.value.outcome === null && a.value.leaseId === lease.value.id);
+      const at = now();
+      if (!active || lease.value.released || Date.parse(lease.value.expiresAt) <= Date.parse(at)) throw new ModelTransportError("BATCH_JOURNAL_LEASE_NOT_HELD", 400);
+      await repos.attempts.compareAndSet(active.id, active.revision, { ...active.value,
+        providerBatches: [...(active.value.providerBatches ?? []).filter(r => r.requestHash !== record.requestHash), record] }, at);
+    },
+  };
+}
+
+export function backgroundBatchTransport(options: Omit<SingleRequestBatchOptions, "customId" | "deadlineMs"> & {
+  readonly journal?: BatchJournal;
+}): ModelTransport & { readonly withJournal: (journal: BatchJournal) => ModelTransport } {
+  type Pending = { id: string; request: ModelRequest; record: AttemptProviderBatch | null;
+    journal?: BatchJournal;
+    resolve: (response: ModelResponse) => void; reject: (error: unknown) => void };
   let pending: Pending[] = [];
   let scheduled = false;
   const fetchImpl = options.fetchImpl ?? fetch;
   const sleep = options.sleep ?? (ms => new Promise<void>(resolve => setTimeout(resolve, ms)));
+  async function recoverUncertain(record: AttemptProviderBatch): Promise<MessageBatch> {
+    // The POST may have succeeded before its id was saved. List is read-only;
+    // correlate the prewritten custom id from results, never resubmit the request.
+    for (;;) {
+      let cursor: string | null = null;
+      let processing = false;
+      do {
+        const url = new URL(options.endpoint ?? MESSAGE_BATCHES_ENDPOINT);
+        url.searchParams.set("limit", "100");
+        if (cursor) url.searchParams.set("after_id", cursor);
+        const response = await fetchImpl(url.href, { headers: headers(options.apiKey) });
+        if (!response.ok) throw new MessageBatchError(`BATCH_RECOVERY_LIST_HTTP_${response.status}`, response.status);
+        const page = await response.json() as { data: MessageBatch[]; has_more: boolean; last_id: string | null };
+        for (const batch of page.data) {
+          if (batch.created_at && Date.parse(batch.created_at) < Date.parse(record.submittedAt) - 300_000) continue;
+          if (batch.processing_status !== "ended") { processing = true; continue; }
+          if (batch.results_url && (await readMessageBatchResults(options.apiKey, batch.results_url, fetchImpl)).some(r => r.custom_id === record.customId)) return batch;
+        }
+        cursor = page.has_more ? page.last_id : null;
+      } while (cursor);
+      if (!processing) throw new ModelTransportError("BATCH_SUBMISSION_UNRESOLVED: provider result not found; unchanged request will not be resubmitted", 400);
+      await sleep(options.pollIntervalMs ?? 60_000);
+    }
+  }
+  async function finish(entries: Pending[], initial: MessageBatch) {
+    let batch = initial;
+    while (batch.processing_status !== "ended") {
+      await sleep(options.pollIntervalMs ?? 60_000);
+      batch = await retrieveMessageBatch(options.apiKey, batch.id, fetchImpl, options.endpoint);
+    }
+    if (!batch.results_url) throw new MessageBatchError(`batch ${batch.id} ended without results`, null);
+    const results = new Map((await readMessageBatchResults(options.apiKey, batch.results_url, fetchImpl)).map(result => [result.custom_id, result.result]));
+    for (const entry of entries) {
+      const result = results.get(entry.id);
+      if (result?.type === "succeeded") entry.resolve({ ...result.message, batch: true } as unknown as ModelResponse);
+      else {
+        const error = result?.type === "errored" ? result.error as { type?: string } : undefined;
+        // A completed batch request is not submitted again, even for a provider error.
+        entry.reject(new ModelTransportError(`BACKGROUND_BATCH_${result?.type ?? "missing"}:${error?.type ?? ""}`, 400));
+      }
+    }
+  }
   async function flush() {
     const entries = pending;
     pending = [];
     scheduled = false;
     try {
-      let batch = await submitMessageBatch(options.apiKey, entries.map(entry => ({ custom_id: entry.id,
+      const batch = await submitMessageBatch(options.apiKey, entries.map(entry => ({ custom_id: entry.id,
         params: cachedModelRequest(entry.request) as unknown as Record<string, unknown> })), fetchImpl, options.endpoint,
         [...new Set(entries.flatMap(entry => anthropicBetasFor(entry.request)))]);
-      while (batch.processing_status !== "ended") {
-        await sleep(options.pollIntervalMs ?? 60_000);
-        batch = await retrieveMessageBatch(options.apiKey, batch.id, fetchImpl, options.endpoint);
-      }
-      if (!batch.results_url) throw new MessageBatchError(`batch ${batch.id} ended without results`, null);
-      const results = new Map((await readMessageBatchResults(options.apiKey, batch.results_url, fetchImpl)).map(result => [result.custom_id, result.result]));
-      for (const entry of entries) {
-        const result = results.get(entry.id);
-        if (result?.type === "succeeded") entry.resolve({ ...result.message, batch: true } as unknown as ModelResponse);
-        else {
-          const error = result?.type === "errored" ? result.error as { type?: string; message?: string } : undefined;
-          const transient = error?.type === "rate_limit_error" || error?.type === "overloaded_error" || error?.type === "api_error";
-          entry.reject(new ModelTransportError(`BACKGROUND_BATCH_${result?.type ?? "missing"}:${error?.type ?? ""}:${error?.message ?? ""}`, transient ? 503 : 400));
-        }
-      }
+      for (const entry of entries) if (entry.record) await entry.journal!.write({ ...entry.record, batchId: batch.id });
+      await finish(entries, batch);
     } catch (error) {
       const failure = error instanceof MessageBatchError ? new ModelTransportError(error.message, error.status) : error;
       for (const entry of entries) entry.reject(failure);
     }
   }
-  return request => new Promise<ModelResponse>((resolve, reject) => {
-    if (request.max_tokens < 1) { reject(new ModelTransportError("BACKGROUND_BATCH_MAX_TOKENS_INVALID", 400)); return; }
-    pending.push({ id: randomUUID(), request, resolve, reject });
+  const send = async (request: ModelRequest, journal = options.journal): Promise<ModelResponse> => {
+    if (request.max_tokens < 1) throw new ModelTransportError("BACKGROUND_BATCH_MAX_TOKENS_INVALID", 400);
+    const hash = createHash("sha256").update(canonicalJson(cachedModelRequest(request))).digest("hex");
+    const existing = await journal?.read(hash);
+    if (existing) {
+      const batch = existing.batchId ? await retrieveMessageBatch(options.apiKey, existing.batchId, fetchImpl, options.endpoint) : await recoverUncertain(existing);
+      await journal!.write({ ...existing, batchId: batch.id });
+      return new Promise<ModelResponse>((resolve, reject) => { void finish([{ id: existing.customId, request, record: existing, resolve, reject }], batch).catch(reject); });
+    }
+    const record = journal ? { requestHash: hash, customId: randomUUID(), batchId: null, submittedAt: new Date().toISOString() } : null;
+    if (record) await journal!.write(record);
+    return new Promise<ModelResponse>((resolve, reject) => {
+    pending.push({ id: record?.customId ?? randomUUID(), request, record, journal, resolve, reject });
     if (!scheduled) { scheduled = true; setImmediate(() => { void flush(); }); }
-  });
+    });
+  };
+  return Object.assign((request: ModelRequest) => send(request), { withJournal: (journal: BatchJournal): ModelTransport => request => send(request, journal) });
 }

@@ -135,7 +135,7 @@ export interface CostEntry {
   /** OCD id or equivalent. Null when the work spans jurisdictions. */
   readonly jurisdiction: string | null;
   readonly project: string;
-  readonly role: WorkerRole;
+  readonly role: WorkerRole | "ASK";
   readonly cost: AttemptCost;
   /** Caller-supplied ISO stamp. This module never reads a clock. */
   readonly recordedAt: string;

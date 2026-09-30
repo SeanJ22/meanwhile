@@ -351,8 +351,11 @@ export async function publishWorkerRosterResults(input: {
         })());
         schedule = await schedules.get(bodyId)!;
       }
-      // A newly saved schedule page is new evidence for the body even when its roster is unchanged.
-      readingId = directory ? parser?.id ?? heldDirectory!.id : `${reading!.id}${schedule ? `+${schedule.capture.evidence.artifactId}` : ""}`;
+      // The roster package is pure code over the reading, so it is built before the "already published" check:
+      // a newly saved schedule page, or a body fact the reading now supports, is new work even when the roster is unchanged.
+      const roster = directory ? null : workerRosterPublication({ bodyId, reading: reading!, prior, now: input.now, schedule });
+      const bodyChange = roster?.payload.registry.bodies.length ? `+body:${digest(canonicalJson(roster.payload.registry.bodies)).slice(0, 12)}` : "";
+      readingId = directory ? parser?.id ?? heldDirectory!.id : `${reading!.id}${schedule ? `+${schedule.capture.evidence.artifactId}` : ""}${bodyChange}`;
       const brokeAfter = parser ? auditPull(records, parser) : null;
       if (item.publicationOutcome?.workerResultId === readingId && item.publicationOutcome.status !== "HELD" && !(brokeAfter && brokeAfter.at > item.publicationOutcome.at)) { report.push({ workItemId: id, outcome: item.publicationOutcome }); continue; }
       const already = publishedByBody.get(`${bodyId}
@@ -360,7 +363,6 @@ ${readingId}`);
       if (already) throw Object.assign(new Error("REUSED"), { reused: already });
       const directoryPackage = !directory ? null : parser ? workerBodyDirectoryPackage({ plan, parser, captures, prior, now: input.now, results: records })
         : workerBodyDirectoryPackage({ plan, held: heldDirectory!, prior, now: input.now });
-      const roster = directory ? null : workerRosterPublication({ bodyId, reading: reading!, prior, now: input.now, schedule });
       const prepared: RegistryRuntimePackage = directoryPackage?.prepared ?? roster!;
       const unresolved = directoryPackage?.unresolved ?? roster!.unresolved;
       const before = prior.payload.bodyRosters.find(r => r.bodyId === bodyId)?.members ?? [];

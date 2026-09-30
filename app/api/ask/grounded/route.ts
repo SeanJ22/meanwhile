@@ -52,7 +52,8 @@ import { formatDateLong } from "@/lib/text/format-date";
 import { unavailableInterpretation, type AskIntent, type AskInterpretation, type AskTemporal } from "@/lib/ask/intent";
 import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-question";
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
-import { groupMoneyShapeForBoundSubject, lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, shapeForBoundBody } from "@/lib/ask/lexical-reading";
+import { groupMoneyShapeForBoundSubject, lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, personVotesShapeForBoundPerson, shapeForBoundBody } from "@/lib/ask/lexical-reading";
+import { composePersonVotes } from "@/lib/ask/person-votes";
 import { composeBodyRoster, composeReaderOfficials, readerOfficialsQuestion } from "@/lib/ask/reader-officials";
 import { composeSittingAnswerWithBasis, settleSittingComposition, sittingVenue, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
 import { composeGroupMoneyAnswer, composeMoneyAnswer, composeNoRaceMoneyAnswer, contestFitsBody, moneyQuestionShape } from "@/lib/ask/money-answer";
@@ -2697,12 +2698,30 @@ export async function POST(request: Request) {
         ...(rosterSettled.verdict?.kind === "FAILED" ? { failed: rosterSettled.verdict.failed } : {}),
       };
     }
-    const composed = topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed;
+    /* How a named person voted (lib/ask/person-votes.ts): the roll calls we hold, in the chamber's own fields; the same validator decides. */
+    const votesShape = !topicComposed && !sittingSettled.composed && !moneySettled.composed && subject?.kind === "PERSON"
+      ? personVotesShapeForBoundPerson(question, inventory, subject.id) : null;
+    const votesSettled = settleSittingComposition(
+      votesShape && subject ? composePersonVotes({ name: subject.name, topic: votesShape.topic, records: packRecords }) : null,
+      (text, urls) => validateAnswer(text, urls, pack, bodies),
+    );
+    if (votesShape) {
+      trace.composition = {
+        kind: "VOTES",
+        shape: votesShape.topic ? "PERSON_VOTES_ON_A_TOPIC" : "PERSON_VOTES",
+        basis: "HELD_ROLL_CALLS",
+        composed: Boolean(votesSettled.verdict),
+        ...(votesSettled.verdict ? { passed: votesSettled.verdict.kind === "PASSED" } : {}),
+        ...(votesSettled.verdict?.kind === "FAILED" ? { failed: votesSettled.verdict.failed } : {}),
+      };
+    }
+    const composed = topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed;
     const composedWhy = topicComposed ? "composed-from-structured-evidence"
       : sittingSettled.composed ? "composed-from-sitting-records"
         : moneySettled.composed ?? groupSettled.composed ? "composed-from-money-records"
           : officialsSettled.composed ? "composed-from-officeholder-records"
-            : rosterSettled.composed ? "composed-from-roster-records" : "composed-from-sitting-records";
+            : rosterSettled.composed ? "composed-from-roster-records"
+              : votesSettled.composed ? "composed-from-vote-records" : "composed-from-sitting-records";
     return {
       kind: "PACK" as const, retrievedAt, pack, packRecords, packGaps, subject, selection, composed, topicComposed, topicTimeline, areaTimelines,
       shownContacts, resolvedSittings, agendaQuestion, capture,
@@ -2766,8 +2785,11 @@ export async function POST(request: Request) {
   const writerTrace = written ? {
     writers: written.attempts,
     ...(written.escalation ? { escalation: written.escalation } : {}),
-    ...(selectionForWriter && selectionForWriter.withheld.memberVoteRows > 0
-      ? { writerSelection: { memberVoteRowsShown: selectionForWriter.shown.memberVoteRows, memberVoteRowsWithheld: selectionForWriter.withheld.memberVoteRows, rollCallsWithheld: selectionForWriter.withheld.rollCalls } }
+    ...(selectionForWriter && (selectionForWriter.withheld.memberVoteRows > 0 || (selectionForWriter.withheld.personVoteRecords ?? 0) > 0)
+      ? { writerSelection: {
+        memberVoteRowsShown: selectionForWriter.shown.memberVoteRows, memberVoteRowsWithheld: selectionForWriter.withheld.memberVoteRows, rollCallsWithheld: selectionForWriter.withheld.rollCalls,
+        ...(selectionForWriter.withheld.personVoteRecords ? { personVoteRecordsShown: selectionForWriter.shown.personVoteRecords ?? 0, personVoteRecordsWithheld: selectionForWriter.withheld.personVoteRecords } : {}),
+      } }
       : {}),
   } : {};
   let answer: string | null = null;

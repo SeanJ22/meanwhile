@@ -140,7 +140,7 @@ export interface AskTrace {
      * vote rows beyond the bound, by whole roll call. The reader's records and
      * the pack's denominators still carry every row.
      */
-    writerSelection?: { memberVoteRowsShown: number; memberVoteRowsWithheld: number; rollCallsWithheld: number };
+    writerSelection?: { memberVoteRowsShown: number; memberVoteRowsWithheld: number; rollCallsWithheld: number; personVoteRecordsShown?: number; personVoteRecordsWithheld?: number };
   };
   validation: {
     ran: boolean;
@@ -157,10 +157,10 @@ export interface AskTrace {
    */
   composition?: {
     /** SITTING: a body's sitting (`lib/ask/sitting-answer.ts`); MONEY: a person's held campaign-money records (`lib/ask/money-answer.ts`); OFFICIALS: the reader's own officeholders (`lib/ask/reader-officials.ts`). */
-    kind: "SITTING" | "MONEY" | "OFFICIALS" | "ROSTER";
+    kind: "SITTING" | "MONEY" | "OFFICIALS" | "ROSTER" | "VOTES";
     shape: string;
     /** Which records it was read from: recorded actions, roll calls, the sitting and its named gaps, or state committee filings. */
-    basis?: "RECORDED_ACTIONS" | "ROLL_CALLS" | "SITTING_AND_GAPS" | "STATE_COMMITTEE_FILINGS" | "BALLOT_ABSENCE_AND_COUNTY_REGISTER" | "HELD_OFFICEHOLDERS" | "HELD_ROSTER";
+    basis?: "RECORDED_ACTIONS" | "ROLL_CALLS" | "SITTING_AND_GAPS" | "STATE_COMMITTEE_FILINGS" | "BALLOT_ABSENCE_AND_COUNTY_REGISTER" | "HELD_OFFICEHOLDERS" | "HELD_ROSTER" | "HELD_ROLL_CALLS";
     composed: boolean;
     passed?: boolean;
     failed?: string[];

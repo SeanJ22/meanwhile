@@ -13,6 +13,7 @@ import { interpretWithoutModel } from "./interpret.ts";
 import { meetingDateInQuestion } from "./meeting-date.ts";
 import { groupMoneyQuestionShape, moneyQuestionShape, raceWordsFitOffice, type GroupMoneyAsk, type MoneyAsk } from "./money-answer.ts";
 import { outcomeQuestionClass } from "./outcome-question.ts";
+import { personVotesQuestionShape, type PersonVotesQuestion } from "./person-votes.ts";
 import { resolveInterpretation } from "./resolve.ts";
 import type { AskSubjectRef } from "./subject.ts";
 
@@ -68,7 +69,7 @@ export type SittingShape = "MEETING_TIME" | "BODY_AGENDA" | "MEETING_OUTCOME";
  * the module that composes its answer. `CONTACT` is how to reach a named
  * person or body.
  */
-export type LexicalShape = SittingShape | "BODY_ROSTER" | "BODY_CIVICS" | "MEASURE_EXPLAIN" | "PERSON_RECORD" | "CONTEST_FIELD" | "CONTACT" | "MONEY" | "GROUP_MONEY";
+export type LexicalShape = SittingShape | "BODY_ROSTER" | "BODY_CIVICS" | "MEASURE_EXPLAIN" | "PERSON_RECORD" | "CONTEST_FIELD" | "CONTACT" | "MONEY" | "GROUP_MONEY" | "PERSON_VOTES";
 
 export type SubjectKind = "BODY" | "MEASURE" | "CONTEST" | "PERSON";
 
@@ -170,6 +171,8 @@ const SHAPE_INTENT: Readonly<Record<Exclude<LexicalShape, SittingShape>, AskInte
   MONEY: "PERSON_RECORD",
   /* A race's candidates' money (2026-09-25): the same reading as one person's; no sitting is selected for it. */
   GROUP_MONEY: "PERSON_RECORD",
+  /* How a named person voted (2026-09-29): a person's record, with no tense — it selects no sitting. */
+  PERSON_VOTES: "PERSON_RECORD",
 };
 
 const SLOT_PRONOUNS: ReadonlySet<string> = new Set([
@@ -345,6 +348,40 @@ export function groupMoneyShapeForBoundSubject(
 }
 
 /**
+ * **HOW A NAMED PERSON VOTED, FOR THE COMPOSER.** (2026-09-29.) The name slot must
+ * be that person's name and nothing else, exactly as for their money.
+ */
+export function personVotesShapeForBoundPerson(
+  question: string,
+  inventory: readonly BindableEntity[],
+  personId: string,
+): PersonVotesQuestion | null {
+  const votes = personVotesQuestionShape(question);
+  return votes && slotNames(votes.slot, inventory, personId) ? votes : null;
+}
+
+/**
+ * **HOW A NAMED PERSON VOTED, READ IN CODE.** (2026-09-29.) The same conditions as
+ * every other shape: the slot is the person's name and nothing else, the route's
+ * own resolver binds that person on the reader's words, no other subject is named,
+ * and no tense is read — a person's votes select no sitting. Null means "not
+ * settled here" and the general shapes and then the model read it as before.
+ */
+function personVotesReading(input: LexicalReadingInput): LexicalReading | null {
+  const votes = personVotesQuestionShape(input.question);
+  if (!votes) return null;
+  const person = boundPersonFor(votes.slot, input.inventory);
+  if (!person) return null;
+  const temporal = { kind: "NONE" as const };
+  const resolved = resolveInterpretation({ ...unavailableInterpretation(), temporal }, input.question, input.inventory, {
+    activeSubjects: input.activeSubjects ?? [], priorSubjects: input.priorSubjects ?? [],
+  });
+  if (resolved.binding.kind !== "BOUND" || resolved.basis !== "WHOLE_QUESTION" || resolved.binding.entity.id !== person.id) return null;
+  if (namesAnotherSubject(input.question, input.inventory, person.id) || classPhraseIn(input.question)) return null;
+  return { shape: "PERSON_VOTES", interpretation: { ...unavailableInterpretation(), intent: SHAPE_INTENT.PERSON_VOTES, temporal }, subjectId: person.id };
+}
+
+/**
  * **A RACE'S CANDIDATES' MONEY, READ IN CODE.** (2026-09-25.) Undefined when
  * the question is not a race money shape; null when it is and cannot be
  * settled here. The same conditions as every other shape: the race words bind
@@ -432,6 +469,8 @@ export function lexicalReading(input: LexicalReadingInput): LexicalReading | nul
   if (money !== undefined) return money;
   const group = groupMoneyReading(input);
   if (group !== undefined) return group;
+  const votes = personVotesReading(input);
+  if (votes) return votes;
   const matches = shapeMatches(input.question);
   if (matches.length === 0) return null;
 

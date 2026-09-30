@@ -5,9 +5,11 @@ import { createHash } from "node:crypto";
 import test from "node:test";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { readRegistryRuntimePrior, type RegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
+import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
+import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { readHeldRoster } from "../lib/civic-data/worker-held-roster.ts";
-import { heldRosterReading, pageIsAboutBody, workerRosterPublication, type WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
+import { heldRosterReading, pageIsAboutBody, publishRosterReading, workerRosterPublication, type WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 
 const NOW = "2026-09-29T20:00:00.000Z";
@@ -88,4 +90,23 @@ test("a complete official roster records a departure; a partial one keeps the pr
   const partial = workerRosterPublication({ bodyId: BODY, prior: withRoster, now: NOW, reading: { id: "held:c", capture: capture(smaller), linkingPage: null, complete: false, method: "fixture", members: rows } });
   assert.deepEqual(partial.departed, []);
   assert.ok(partial.payload.bodyRosters[0].members.some(m => m.name === "Faye Jackson" && m.membershipSource), "retained on its earlier source");
+});
+
+test("a single official's profile page publishes through the same door without a work item, keeping the rest of the roster", async () => {
+  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
+  const store = new MemoryRoutineDataStore();
+  Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
+  // Replay the deployed Census placeholder correction the recorded fixture predates (as tests/worker-roster-publication.test.ts does).
+  const imported = (await readRegistryRuntimePrior(store, NOW))!;
+  const divisions = imported.payload.registry.divisions.filter(row => CENSUS_PLACEHOLDER_LABELS[row.label]).map(row => ({ ...row, label: CENSUS_PLACEHOLDER_LABELS[row.label] }));
+  const corrected = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: "fixture-census-correction", sourceThrough: NOW,
+    sourceReceipt: { contractVersion: 1, reviewedAt: NOW, reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER" as const, retrievedAt: NOW, httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district." })) },
+    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
+  assert.ok((await processRegisteredManualCandidate(store, "registry-runtime-bindings", corrected, NOW, imported.versionId)).promoted);
+  const held = capture(page("Contact the Mayor & Council", member(9, "Rivera, Ana", "Council Member")));
+  const published = await publishRosterReading({ store, bodyId: BODY, now: NOW, reading: { id: `held:${held.evidence.artifactId}`, capture: held, linkingPage: null, complete: false,
+    method: "fixture profile page", members: [{ recordId: "p1", fields: { name: "Ana Rivera", nameAsWritten: "Rivera, Ana", office: "Council Member" } }] } });
+  assert.ok(published.versionId);
+  const after = (await readRegistryRuntimePrior(store, NOW))!;
+  assert.deepEqual(after.payload.bodyRosters.find(r => r.bodyId === BODY)?.members.map(m => m.name), ["Ana Rivera"]);
 });

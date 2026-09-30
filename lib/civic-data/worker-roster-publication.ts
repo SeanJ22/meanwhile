@@ -356,3 +356,26 @@ ${readingId}`, outcome);
   }
   return report;
 }
+
+/**
+ * Publish one §3 roster reading that did not come from a work item — for
+ * example an official's own profile page found through a national lead. The
+ * reading's members go live on the same registry door; a one-person reading
+ * is partial, so prior members stay on their own source.
+ */
+export async function publishRosterReading(input: {
+  readonly store: RoutineDataStore; readonly bodyId: string; readonly reading: RosterReading; readonly now: string;
+}): Promise<{ readonly versionId: string; readonly confirmed: boolean; readonly departed: readonly string[]; readonly unresolved: readonly string[] }> {
+  const prior = await readRegistryRuntimePrior(input.store, input.now);
+  if (!prior) throw new Error("ROSTER_PRIOR_READER_AUTHORITY_MISSING");
+  const roster = workerRosterPublication({ bodyId: input.bodyId, reading: input.reading, prior, now: input.now });
+  const candidate = registryRuntimeCandidate(roster, { prior });
+  requireThat(canonicalJson((candidate.readModel as RegistryRuntimeReadModel).bodyRosters.find(r => r.bodyId === input.bodyId)) ===
+    canonicalJson(roster.payload.bodyRosters[0]), "ROSTER_READER_FACTS_HELD");
+  const published = await processRegisteredManualCandidate(input.store, "registry-runtime-bindings", candidate, input.now, prior.versionId);
+  if (!published.promoted) throw new Error(`ROSTER_READER_GATE_HELD:${published.candidate.failureCode ?? ""}:${published.candidate.failureDetail ?? published.candidate.state}`);
+  const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(input.store,
+    requiredManualProductionContract("registry-runtime-bindings"), published.promoted, input.now);
+  if (readback?.status !== "PASS") throw new Error(`ROSTER_READER_READBACK_FAILED:${readback?.detail ?? "missing typed reader receipt"}`);
+  return { versionId: published.promoted.versionId, confirmed: Boolean(published.confirmed), departed: roster.departed, unresolved: roster.unresolved };
+}

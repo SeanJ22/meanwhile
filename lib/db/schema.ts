@@ -1371,6 +1371,13 @@ export const demandSignals = pgTable(
  * operational data, never repository snapshots. A failed candidate remains
  * evidence that acquisition happened, while the promoted pointer stays on LKG.
  */
+/** Immutable payload storage. A candidate names reused parts instead of
+ * rewriting the national registry and its duplicate evidence copies. */
+export const civicDataPayloadParts = pgTable("civic_data_payload_parts", {
+  hash: text("hash").primaryKey(),
+  payload: jsonb("payload").notNull(),
+});
+
 export const civicDataCandidates = pgTable(
   "civic_data_candidates",
   {

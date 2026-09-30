@@ -218,6 +218,13 @@
       "when": 1790748000000,
       "tag": "0030_database_transfer_daily",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1790798400000,
+      "tag": "0031_civic_payload_parts",
+      "breakpoints": true
     }
   ]
 }

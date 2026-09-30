@@ -5,6 +5,7 @@ import { drizzle } from "drizzle-orm/neon-http";
 // strip-types resolver, which the search-log tests run through.
 import * as schema from "./schema.ts";
 import { installDatabaseTransferCounter } from "./transfer.ts";
+import { installConnectAttemptWindow } from "../ops/connect-attempt-window.ts";
 
 /*
   Lazy on purpose. Nothing in the map entry screen reads Postgres, so a missing
@@ -16,6 +17,7 @@ let cached: ReturnType<typeof drizzle<typeof schema>> | null = null;
 export function getDb() {
   installDatabaseTransferCounter();
   if (cached) return cached;
+  installConnectAttemptWindow();
 
   const url = process.env.DATABASE_URL;
   if (!url) {

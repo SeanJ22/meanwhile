@@ -71,6 +71,7 @@ export async function collectNationalPlaceSources(input: {
   readonly divisions: readonly PlaceDivision[];
   readonly now: string;
   readonly read: (url: string) => Promise<HeldSourcePage>;
+  readonly onSources?: (sources: NationalPlaceSources) => Promise<void>;
 }): Promise<NationalPlaceSources> {
   const documents = new Map<string, HeldSourcePage>();
   const inFlight = new Map<string, Promise<HeldSourcePage>>();
@@ -90,6 +91,18 @@ export async function collectNationalPlaceSources(input: {
   const officials: NationalOfficialCandidate[] = [];
   const electionDocuments: HeldSourcePage[] = [];
   const electionFields: ElectionFieldCandidate[] = [];
+  const offeredOfficials = new Set<NationalOfficialCandidate>();
+  const offeredElectionFields = new Set<ElectionFieldCandidate>();
+  const flush = async () => {
+    if (!input.onSources) return;
+    const readyOfficials = officials.filter(row => !offeredOfficials.has(row));
+    const readyFields = electionFields.filter(row => !offeredElectionFields.has(row));
+    if (!readyOfficials.length && !readyFields.length) return;
+    readyOfficials.forEach(row => offeredOfficials.add(row));
+    readyFields.forEach(row => offeredElectionFields.add(row));
+    await input.onSources({ officials: readyOfficials, electionFields: readyFields,
+      electionDocuments: [...electionDocuments], documents: [...documents.values()], gaps: [] });
+  };
   const directory = await attempt("https://www.usa.gov/state-governments");
   let electionDirectory: Promise<HeldSourcePage | null> | undefined;
   await Promise.all(states.map(async state => {
@@ -121,6 +134,7 @@ export async function collectNationalPlaceSources(input: {
           officials.push({ discoveryId: person.id, divisionId, name,
             officeTitle: office, seatLabel: person.officeTitle, officialUrl: person.websiteUrl, document,
             quote: text.slice(Math.max(0, at - 100), at + name.length + 160) });
+          await flush();
         }));
       }
     }
@@ -168,6 +182,7 @@ export async function collectNationalPlaceSources(input: {
       }
     };
     addOfficials(statePage);
+    await flush();
     const stateProvenance = { url: statePage.url, html: statePage.text };
     // Office landing pages often name the office but link a separate biography.
     // Read that profile rather than trying to infer a person from a URL slug.
@@ -179,10 +194,11 @@ export async function collectNationalPlaceSources(input: {
       const page = await attempt(link.url);
       if (!page) return;
       addOfficials(page, link.office, parent);
+      await flush();
       const provenance = { url: page.url, html: page.text, linkingPage: parent };
       await Promise.all(links(page).filter(l => new RegExp(`^(?:About (?:the )?)?${link.office}$`, "i").test(l.label)).map(async l => {
         const profile = await attempt(l.url);
-        if (profile) addOfficials(profile, link.office, provenance);
+        if (profile) { addOfficials(profile, link.office, provenance); await flush(); }
       }));
     };
     await Promise.all(officeLinks.map(link => followOffice(link, stateProvenance)));
@@ -199,12 +215,14 @@ export async function collectNationalPlaceSources(input: {
       }
       if (page) {
         addOfficials(page, undefined, stateProvenance);
+        await flush();
         const offices = [...new Set(links(page).filter(l => /elected officials|state officials|executive branch|leadership/i.test(l.label)).map(l => l.url))];
         await Promise.all(offices.map(async url => {
           const found = await attempt(url);
           if (!found) return;
           const parent = { url: page.url, html: page.text, linkingPage: stateProvenance };
           addOfficials(found, undefined, parent);
+          await flush();
           await Promise.all(links(found).flatMap(l => {
             const office = new RegExp(`^(?:Office of (?:the )?)?(${OFFICE})(?:\\s+[A-Z][\\p{L}.'’ -]+)?$`, "u").exec(l.label)?.[1];
             return office ? [followOffice({ url: l.url, office }, { url: found.url, html: found.text, linkingPage: parent })] : [];
@@ -227,6 +245,7 @@ export async function collectNationalPlaceSources(input: {
       electionDocuments.push(page);
       electionFields.push(...electionPageFields(page, divisionId, parent));
       addOfficials(page, undefined, parent);
+      await flush();
       const provenance = { url: page.url, html: page.text, linkingPage: parent };
       await Promise.all(links(page).flatMap(l => {
         const office = new RegExp(`^(?:Office of (?:the )?)?(${OFFICE})$`, "i").exec(l.label)?.[1];
@@ -238,11 +257,13 @@ export async function collectNationalPlaceSources(input: {
         if (!document) return;
         electionDocuments.push(document);
         electionFields.push(...electionPageFields(document, divisionId, provenance));
+        await flush();
         await Promise.all(links(document).filter(l => /text.only|accessible version/i.test(l.label)).map(async l => {
           const accessible = await attempt(l.url);
           if (accessible) {
             electionDocuments.push(accessible);
             electionFields.push(...electionPageFields(accessible, divisionId, { url: document.url, html: document.text, linkingPage: provenance }));
+            await flush();
           }
         }));
       }));

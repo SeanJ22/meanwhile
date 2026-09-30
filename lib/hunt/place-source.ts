@@ -45,9 +45,22 @@ export async function runPlaceSource(input: {
   let publication: unknown = null;
   const plan = await planPlaceHunt({ repos: input.repos, divisions, now: input.now, clock: input.clock, knowledge, readHeld,
     acquireNational: async () => {
-      sources = await collectNationalPlaceSources({ divisions, now: input.now, read: url => input.readSource(url, knowledge) });
-      publication = await input.publish({ store: input.store, now: input.clock?.() ?? input.now, divisions,
-        geographyCaptures: input.geographyCaptures, sources });
+      // One pointer is updated serially, while source reads remain parallel.
+      // A ready official never waits behind the state's election-page walk.
+      let publicationQueue = Promise.resolve();
+      let publishedBatches = 0;
+      const publish = (ready: NationalPlaceSources) => {
+        publicationQueue = publicationQueue.then(async () => {
+          publication = await input.publish({ store: input.store, now: input.clock?.() ?? input.now, divisions,
+            geographyCaptures: input.geographyCaptures, sources: ready });
+          publishedBatches++;
+        });
+        return publicationQueue;
+      };
+      sources = await collectNationalPlaceSources({ divisions, now: input.now,
+        read: url => input.readSource(url, knowledge), onSources: publish });
+      if (!publishedBatches) await publish(sources);
+      await publicationQueue;
       // Re-read the canonical pointer after publication. Do not substitute a
       // successful function return or a collected field for a published value.
       return { ...await readHeld(ids), replacesHeld: true };

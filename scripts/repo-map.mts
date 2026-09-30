@@ -92,6 +92,6 @@ if (invoked) {
     process.exitCode = 1;
   } else {
     writeFileSync(DOC, next, "utf8");
-    console.log(`docs/repo-inventory.md written — ${next.split("\n").length} line(s)`);
+    console.log("docs/repo-inventory.md updated — file paths changed");
   }
 }

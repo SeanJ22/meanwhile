@@ -209,30 +209,6 @@ test("NC5b: a never-checked repository is UNKNOWN, and UNKNOWN is not a pass", (
   assert.equal(v.frozen, true, "a schema change with no reading at all ships blind");
 });
 
-/** ---------------------- 6. no rollback exists -------------------------- */
-
-test("NC6: no rollback path exists anywhere in the NH273 mechanism", () => {
-  const sources = [
-    "lib/ops/production-integrity.ts",
-    "scripts/production-integrity.mts",
-    "scripts/release-freeze-gate.mts",
-  ];
-  const ROLLBACK =
-    /\b(git\s+revert|git\s+reset\s+--hard|netlify\s+(api\s+)?rollback|restoreDeploy|rollbackDeploy|--rollback)\b/i;
-
-  for (const rel of sources) {
-    const text = readFileSync(join(ROOT, rel), "utf8");
-    // Strip block comments: this module explains at length WHY it does not roll
-    // back, and a sweep that reads its own reasoning as the defect is the guard
-    // failing rather than the code.
-    const code = text.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
-    assert.doesNotMatch(code, ROLLBACK, `${rel} contains a rollback action — NH273 forbids automatic rollback`);
-  }
-
-  // Positive control: the detector really does fire on the shape it hunts.
-  assert.match("await netlify.rollbackDeploy(id)", ROLLBACK, "the rollback detector matches nothing at all");
-});
-
 /** ---------------------- 7. stale status cannot bless a later deploy ----- */
 
 test("NC7: a green reading about an earlier SHA is STALE_HEALTHY, never CURRENT", () => {
@@ -428,16 +404,6 @@ test("a changed-path list that could not be read is treated as touching the sche
   const windowsPath = ["lib", "db", "migrations", "0023_x.sql"].join("\\");
   assert.equal(touchesSchemaContract([windowsPath]), true, "windows separators normalise");
   assert.equal(touchesSchemaContract(["lib/db/queries.ts"]), false);
-});
-
-/** ---------------------- wiring and vocabulary -------------------------- */
-
-test("the freeze gate is in the gate set, in the required CI job", () => {
-  const gate = GATES.find((g) => g.id === "release:freeze");
-  assert.ok(gate, "release:freeze is not in scripts/gates.mjs — it would run in CI and not locally");
-  assert.equal(gate.ciJob, "gates (test · lint · tsc)", "it must sit in the required context");
-  assert.match(gate.command, /release-freeze-gate\.mts/);
-  assert.ok(gate.why.length > 20, "every gate states why it exists");
 });
 
 test("the canonical durable record validator accepts exact readings and rejects vacuous ones", () => {

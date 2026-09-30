@@ -8,6 +8,10 @@ import { readSnapshot } from "../lib/meetings/snapshot.ts";
 
 import { NOTICE_SUMMARIES } from "../lib/meetings/notice-summary.ts";
 
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
+
 test("notice summaries require the current exact content hash and cannot answer an outcome question", () => {
   const snapshot = readSnapshot()!;
   const meetingId = NOTICE_SUMMARIES[0].meetingId;

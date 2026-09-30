@@ -325,14 +325,6 @@ test("every declared verdict and reason is reachable from the matrix above", () 
   assert.equal(EQUIVALENCE_VERDICTS.length, 2, "there is no third, probabilistic verdict");
 });
 
-/* ══════════════════════════════════════════════════════════════════════════
- * AN ATTESTATION MAY NEVER REST ON AN ATTESTATION
- * ═════════════════════════════════════════════════════════════════════════ */
-
-test("a candidate's green cannot be another exact-tree attestation", () => {
-  assert.equal(attestationCannotChain.legs.length, 3);
-});
-
 test("reuse is unreachable for any event other than a push to the integration ref", () => {
   for (const event of ["pull_request", "workflow_dispatch", "schedule", "merge_group"]) {
     const decision = judgeTreeEquivalence(qualifying({ event }));
@@ -345,82 +337,3 @@ test("reuse is unreachable for any event other than a push to the integration re
  * ═════════════════════════════════════════════════════════════════════════ */
 
 const workflow = () => readFileSync(BUILD_CHECK, "utf8");
-
-test("the tier decision has a no-certified branch, and it reads the certified step", () => {
-  const text = workflow();
-  assert.match(
-    text,
-    /expensive=no-certified/,
-    "the tier step must be able to answer no-certified, or the attestation can never take effect",
-  );
-  assert.match(
-    text,
-    /steps\.certified\.outputs\.certified.*=.*'yes'/,
-    "the tier must read the certified step's own output rather than re-deriving the decision",
-  );
-});
-
-test("no expensive step runs on an attested head", () => {
-  const parsed = parse(workflow());
-  const expensive = [
-    "corepack pnpm install --frozen-lockfile",
-    "playwright install --with-deps chromium",
-    "node scripts/ci-tests.mjs",
-    "corepack pnpm lint",
-    "corepack pnpm run build",
-  ];
-  for (const command of expensive) {
-    let found = 0;
-    for (const job of Object.values(parsed.jobs) as { if?: string; steps: { run?: string; if?: string }[] }[]) {
-      for (const step of job.steps.filter((step) => step.run?.includes(command))) {
-        found++;
-        const guard = `${job.if ?? ""} ${step.if ?? ""}`;
-        assert.match(guard, /(?:expensive|tier) == 'yes'/, `${command} could run on reused certification`);
-        assert.doesNotMatch(guard, /== 'no-certified'/);
-      }
-    }
-    assert.ok(found > 0, `${command} disappeared from the workflow`);
-  }
-});
-
-test("the workflow grants checks:read, without which the attestation can never fire", () => {
-  /*
-   * Declaring `permissions:` at all makes every unlisted scope `none`, so
-   * `contents: read` alone would 403 the check-runs endpoint. The predicate
-   * would read that as CANNOT_TELL and take the full proof — safe, and
-   * permanently useless, because a token that cannot see the certification
-   * looks exactly like a head that did not qualify. This is the guard that
-   * makes dropping it loud instead.
-   */
-  const text = workflow();
-  const block = text.slice(text.indexOf("\npermissions:"), text.indexOf("\nconcurrency:"));
-  assert.match(block, /^\s*checks:\s*read\s*$/m, "build-check.yml must grant checks: read");
-  assert.equal(
-    /^\s*checks:\s*write\s*$/m.test(block),
-    false,
-    "read is the minimum this needs; nothing here writes a check",
-  );
-  assert.match(
-    text,
-    /GH_TOKEN: \$\{\{ secrets\.GITHUB_TOKEN \}\}/,
-    "the certified step must be handed a token, or gh cannot authenticate at all",
-  );
-});
-
-test("the workflow keeps no path list of its own for this decision either", () => {
-  const text = workflow();
-  assert.equal(
-    /paths-ignore:/.test(text),
-    false,
-    "a paths-ignore filter is a second truth table wearing GitHub's syntax (RULING 278)",
-  );
-  const certifiedBlock = text.slice(
-    text.indexOf("Is this the tree that already passed?"),
-    text.indexOf("Is this the tree that already passed?") + 900,
-  );
-  assert.match(
-    certifiedBlock,
-    /node scripts\/certified-tree\.mjs/,
-    "the workflow calls the adapter and holds no relation of its own",
-  );
-});

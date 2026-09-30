@@ -12,6 +12,10 @@ import { type StateMoneyRecord } from "../lib/funding/state-money.ts";
 
 import { stateMoneyForTarget, resetStateMoneyCache } from "../lib/funding/state-snapshot.ts";
 
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
+
 test("current normalized state-money records survive the canonical exact-key selector; leads never enter", () => {
   resetStateMoneyCache();
   let eligible = 0;

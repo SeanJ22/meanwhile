@@ -46,9 +46,29 @@ import { GET as representationGET } from "../app/api/representation/[...division
 
 import { primeReaderEdge } from "../app/api/warm/route.ts";
 
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+delete process.env.ANTHROPIC_API_KEY;
+
+for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]) delete process.env[key];
+
+await installRegistryRuntimeFirstSeeds();
+
 const dirs: string[] = [];
 
+const previousEdgeDir = process.env.WTP_READER_EDGE_DIR;
+
+after(() => {
+  if (previousEdgeDir === undefined) delete process.env.WTP_READER_EDGE_DIR;
+  else process.env.WTP_READER_EDGE_DIR = previousEdgeDir;
+  for (const dir of dirs) rmSync(dir, { recursive: true, force: true });
+});
+
+await refreshOutcomeSnapshotFromPromoted();
+
 const outcomes = outcomeProjectionReadState();
+
+assert.ok(outcomes.kind === "BOOTSTRAP" || outcomes.kind === "PROMOTED", "the outcome fixture is readable");
 
 const commentAccessProjection: CuratedReaderProjection = {
   kind: "comment-access",

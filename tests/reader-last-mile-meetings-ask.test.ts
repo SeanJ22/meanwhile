@@ -8,6 +8,10 @@ import { selectSitting } from "../lib/ask/select.ts";
 
 import { meetingOutcomeEvidenceFor } from "../lib/ask/meeting-outcomes.ts";
 
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
+
 test("invalid, multiple and unheld dates never select a different sitting", () => {
   for (const text of ["February 31, 2026", "2026-02-31", "2026-08-01 and 2026-08-02"]) assert.equal(meetingDateInQuestion(text)?.date, null);
   for (const text of ["May 12, 2026", "May 12th 2026", "12 May 2026", "2026-05-12"]) assert.equal(meetingDateInQuestion(text)?.date, "2026-05-12");

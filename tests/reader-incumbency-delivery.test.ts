@@ -6,6 +6,10 @@ import { committedIncumbentHolderFor, contestIncumbency, sameSeatDiscriminators 
 
 import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
+
 const bridge = getRegistryRuntimeReadModel().officialCandidacies;
 
 const county = { ocdId: "ocd-division/country:us/state:nj/county:morris", title: "Member of the Board of County Commissioners" };

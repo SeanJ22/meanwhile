@@ -1947,15 +1947,6 @@ function MapEntryInner() {
     [drawnDistricts, dispatch, setShowDistricts],
   );
 
-  // The Jurisdiction select also shows that jurisdiction's whole boundary
-  // (approved design, INTERACTIONS §3), on top of filtering the meetings.
-  const seenJurisdiction = useRef(ui.jurisdiction);
-  useEffect(() => {
-    if (ui.jurisdiction === seenJurisdiction.current) return;
-    seenJurisdiction.current = ui.jurisdiction;
-    if (ui.jurisdiction) showDistrictOnMap(ui.jurisdiction);
-  }, [ui.jurisdiction, showDistrictOnMap]);
-
   const selectionTop =
     pillVenue || pillDistrict ? (layoutBp === "phone" && (parked || pillVenue) ? 112 : 64) : 0;
   const mapInsets = useMemo(
@@ -2354,6 +2345,7 @@ function MapEntryInner() {
           onNearMePoint={onNearMePoint}
           nav={sidebarUp ? cluster : null}
           snapshot={shown?.snapshot ?? null}
+          onJurisdictionChosen={showDistrictOnMap}
         />
 
         {pop && (

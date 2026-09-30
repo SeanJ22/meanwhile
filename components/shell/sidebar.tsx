@@ -44,6 +44,7 @@ export function Sidebar({
   onNearMePoint,
   nav,
   snapshot,
+  onJurisdictionChosen,
 }: {
   onReset: () => void;
   /** Owned by use-district-layer, which persists it. The store mirrors it. */
@@ -58,6 +59,8 @@ export function Sidebar({
   onNearMePoint?: (point: { lat: number; lng: number }) => void;
   /** The compound nav and the Ask pill, built once in map-entry. */
   nav?: ReactNode;
+  /** A jurisdiction was picked — the map shows its whole boundary. */
+  onJurisdictionChosen?: (ocdId: string) => void;
   /** The meetings snapshot, for the About this data freshness line. */
   snapshot?: SnapshotStatus | null;
 }) {
@@ -107,7 +110,7 @@ export function Sidebar({
         )}
 
         <ViewToggle />
-        <ScopeSelectors />
+        <ScopeSelectors onJurisdictionChosen={onJurisdictionChosen} />
       </div>
 
       <div className="sidebar-scroll">

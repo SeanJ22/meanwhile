@@ -55,6 +55,7 @@ export async function planPlaceHunt(input: {
   readonly repos: ControlPlaneRepositories;
   readonly divisions: readonly { readonly id: string; readonly label: string }[];
   readonly now: string;
+  readonly clock?: () => string;
   readonly knowledge?: Awaited<ReturnType<typeof readFieldManual>>;
   readonly readHeld?: (divisionIds: readonly string[]) => Promise<PlaceCapture>;
   readonly readOptions?: PromotedCivicDataReadOptions;
@@ -65,10 +66,11 @@ export async function planPlaceHunt(input: {
   const before = buildPlaceOwedList({ ...input, ...held });
   const blanks = missingPlaceWork(before);
   const national = blanks.length ? await input.acquireNational(blanks, knowledge) : { subjects: [], held: [] };
-  const items = buildPlaceOwedList({ ...input,
+  const observedAt = input.clock?.() ?? input.now;
+  const items = buildPlaceOwedList({ ...input, now: observedAt,
     subjects: national.replacesHeld ? national.subjects : [...held.subjects, ...national.subjects],
     held: national.replacesHeld ? national.held : [...held.held, ...national.held] });
-  const closed = await closePublishedPlaceWork(input.repos, items, input.now);
+  const closed = await closePublishedPlaceWork(input.repos, items, observedAt);
   return { items, work: missingPlaceWork(items), open: openPlaceWork(items), closed, knowledge,
     conditions: knowledge.error ? [`Shared knowledge could not be read: ${knowledge.error}`] : [] };
 }

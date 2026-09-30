@@ -24,7 +24,9 @@ export async function runPlaceSource(input: {
   readonly store: RoutineDataStore;
   readonly zip: string;
   readonly now: string;
+  readonly clock?: () => string;
   readonly readSource: (url: string, knowledge: Awaited<ReturnType<typeof readFieldManual>>) => Promise<HeldSourcePage>;
+  readonly knowledge?: Awaited<ReturnType<typeof readFieldManual>>;
   readonly publish: (input: NationalPlacePublicationInput) => Promise<unknown>;
   readonly geography?: GeographyReadOptions;
   readonly geographyCaptures: readonly WorkerPublicationCapture[];
@@ -34,21 +36,21 @@ export async function runPlaceSource(input: {
   if (!/^\d{5}$/.test(input.zip)) throw new Error("A five-digit ZIP is required");
   // This is before even national geography, so every acquisition inherits the
   // same bank. A failed bank read remains visible without holding verified facts.
-  const knowledge = await readFieldManual(input.repos);
+  const knowledge = input.knowledge ?? await readFieldManual(input.repos);
   const divisions = input.divisions ?? await divisionsForZip(input.zip, input.geography);
   const ids = divisions.map(division => division.id);
   const readHeld = input.readHeld ?? (divisionIds => readHeldPlaceCapture(divisionIds,
-    { store: input.store, now: input.now, bypassCache: true }));
+    { store: input.store, now: input.clock?.() ?? input.now, bypassCache: true }));
   let sources: NationalPlaceSources | null = null;
   let publication: unknown = null;
-  const plan = await planPlaceHunt({ repos: input.repos, divisions, now: input.now, knowledge, readHeld,
+  const plan = await planPlaceHunt({ repos: input.repos, divisions, now: input.now, clock: input.clock, knowledge, readHeld,
     acquireNational: async () => {
       sources = await collectNationalPlaceSources({ divisions, now: input.now, read: url => input.readSource(url, knowledge) });
-      publication = await input.publish({ store: input.store, now: input.now, divisions,
+      publication = await input.publish({ store: input.store, now: input.clock?.() ?? input.now, divisions,
         geographyCaptures: input.geographyCaptures, sources });
       // Re-read the canonical pointer after publication. Do not substitute a
       // successful function return or a collected field for a published value.
       return { ...await readHeld(ids), replacesHeld: true };
     } });
-  return { ...plan, zip: input.zip, divisions, sources, publication };
+  return { ...plan, zip: input.zip, divisions, sources: sources as NationalPlaceSources | null, publication };
 }

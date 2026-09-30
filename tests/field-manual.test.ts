@@ -5,10 +5,14 @@ import {
   emptyFieldManual,
   fieldManualEntryId,
   fieldManualLine,
+  newFieldManualEntry,
   projectFieldManual,
+  readFieldManual,
   upsertEntries,
+  writeFieldManual,
   type FieldManualEntry,
 } from "../lib/control-plane/field-manual.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 
 function entry(over: Partial<FieldManualEntry> & Pick<FieldManualEntry, "id">): FieldManualEntry {
   return {
@@ -90,4 +94,54 @@ test("projectFieldManual ranks yielded, jurisdiction-specific, fresher first", (
 test("fieldManualLine renders a compact one-liner with the door and jurisdiction", () => {
   const line = fieldManualLine(entry({ id: "fm-x", states: ["az"], recordClasses: ["meetings"], url: "https://x.gov", title: "AZ portal", summary: "GET the calendar", observedAt: "2026-09-19T00:00:00Z" }));
   assert.match(line, /SCOUT\/ROUTE YIELDED \(AZ\) \[meetings\]: AZ portal <https:\/\/x\.gov> — GET the calendar seen 2026-09-19/);
+});
+
+test("the one write then the one read: what a role wrote is what the next role is shown", async () => {
+  const repos = createMemoryRepositories();
+  const empty = await readFieldManual(repos, { role: "PARSER" });
+  assert.equal(empty.revision, null);
+  assert.deepEqual(empty.projection.lines, []);
+
+  const learned = newFieldManualEntry("parser-learning", "nh:minutes", {
+    role: "PARSER",
+    kind: "PARSE_RULE",
+    title: "NH minutes",
+    summary: "quote the vote line",
+    outcome: "YIELDED",
+    states: ["NH"],
+  });
+  assert.deepEqual(await writeFieldManual(repos, [learned], "2026-09-29"), { written: 1 });
+  assert.deepEqual(await writeFieldManual(repos, [], "2026-09-29"), { written: 0 });
+
+  const seen = await readFieldManual(repos, { role: "PARSER", state: "nh" });
+  assert.equal(seen.revision, 1);
+  assert.deepEqual(seen.projection.entryIds, [learned.id]);
+  assert.match(seen.projection.lines[0]!, /PARSER\/PARSE_RULE YIELDED \(NH\).*quote the vote line/);
+  // A parser in another state does not inherit a state-specific rule, and a different role does not see a PARSER-only entry.
+  assert.equal((await readFieldManual(repos, { role: "PARSER", state: "az" })).projection.entryIds.length, 0);
+  assert.equal((await readFieldManual(repos, { role: "AUDITOR", state: "nh" })).projection.entryIds.length, 0);
+});
+
+test("a second write grows the store and keeps the first entry", async () => {
+  const repos = createMemoryRepositories();
+  await writeFieldManual(repos, [entry({ id: "fm-a" })], "2026-09-28");
+  await writeFieldManual(repos, [entry({ id: "fm-b", role: "SHARED" })], "2026-09-29");
+  const all = await readFieldManual(repos);
+  assert.equal(all.store.entries.length, 2);
+  assert.equal(all.revision, 2);
+});
+
+test("a failed read is returned as an error with an empty projection, not thrown", async () => {
+  const repos = createMemoryRepositories();
+  const broken = { fieldManual: { ...repos.fieldManual, read: async () => { throw new Error("store down"); } } };
+  const read = await readFieldManual(broken as never, { role: "SCOUT" });
+  assert.equal(read.error, "store down");
+  assert.equal(read.projection.entryIds.length, 0);
+});
+
+test("newFieldManualEntry derives its id from (source, key) so a rewrite refreshes one row", () => {
+  const a = newFieldManualEntry("s", "k", { role: "SHARED", kind: "K", title: "t", summary: "x", outcome: "REFERENCE" });
+  const b = newFieldManualEntry("s", "k", { role: "SHARED", kind: "K", title: "t", summary: "y", outcome: "REFERENCE" });
+  assert.equal(a.id, b.id);
+  assert.equal(a.id, fieldManualEntryId("s", "k"));
 });

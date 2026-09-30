@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFileSync } from "node:fs";
 
 import { NextRequest } from "next/server";
 
@@ -34,7 +35,8 @@ import { AGENT_JOB_LOG_KEY, liveJobCount, type AgentJobRecord } from "@/lib/cont
 import { readPulse } from "@/lib/control-plane/gateway/pulse-read.ts";
 import { DECISION_LOG_KEY, RUNNER_ID, SNAPSHOT_ID } from "@/lib/control-plane/admin-data.ts";
 import { HUNT_SOURCE_PROGRESS_LOG_KEY } from "@/lib/control-plane/owner-surface.ts";
-import { RESEARCH_INTENT_LOG_KEY } from "@/lib/control-plane/scheduler/research-policy.ts";
+import { RESEARCH_INTENT_LOG_KEY, readIntents } from "@/lib/control-plane/scheduler/research-policy.ts";
+import { modelLaneClosure, pendingResearchLaneAcknowledgment } from "@/lib/control-plane/scheduler/model-lane.ts";
 import { ADD_TO_QUEUE_OPTION, fixSubjectId } from "@/lib/control-plane/fix-queue.ts";
 import { POST } from "@/app/api/admin/action/route.ts";
 import { GET } from "@/app/api/admin/live/route.ts";
@@ -318,6 +320,55 @@ test("ADM-C6 acceptance 3: a duplicate submission returns the same receipt and d
   const intents = await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY);
   assert.equal(intents.length, 1, "the runner was told to pause twice");
   assert.equal((await readReceipts(repos)).length, 1, "the log holds two receipts for one action");
+});
+
+test("research.pause records one versioned paid-lane intent and idempotent receipt without pausing the runner", async () => {
+  const repos = createMemoryRepositories();
+  const request = ask({ type: "research.pause", subject: "system", input: {}, idempotencyKey: "paid-pause-0001" });
+  const first = await submit(request, deps(repos));
+  assert.equal(first.ok, true, first.receipt.says);
+  assert.equal(first.receipt.outcome, "QUEUED");
+  assert.match(first.receipt.says, /paid research lane/i);
+  const saved = await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY);
+  assert.equal(saved.length, 1);
+  assert.equal(saved[0]?.action, "PAUSE");
+  assert.equal(saved[0]?.formatVersion, 1);
+  assert.equal(readIntents(saved).paused, true);
+  assert.equal(readIntents(saved).runnerPause.paused, false);
+  const applied = readIntents(saved);
+  const lane = modelLaneClosure({ scheduledBlackout: false, dry: false, noModel: false,
+    credentialConfigured: true, credentialVar: "ANTHROPIC_API_KEY",
+    activation: { promotionEnabled: true, openRecordClasses: ["OFFICIAL_ROSTER"] },
+    paused: applied.paused, pauseIntentId: applied.pauseIntentId,
+    runnerPaused: applied.runnerPause.paused, runnerPauseIntentId: applied.runnerPause.intent?.intentId ?? null,
+    unreadableControls: [] });
+  assert.deepEqual(lane, { code: "PAUSED", reason: `paused by owner intent ${saved[0]?.intentId}` });
+  const pending = pendingResearchLaneAcknowledgment(saved, lane);
+  assert.equal(pending?.intent.intentId, saved[0]?.intentId);
+  assert.equal(pending?.detail, "model lane closed for this cycle");
+  const acknowledged = [...saved, { formatVersion: 1, kind: "HONORED" as const,
+    intentId: `${pending?.intent.intentId}:honored`, honors: pending!.intent.intentId,
+    action: "PAUSE" as const, honoredAt: NOW, honoredBy: "offline-test-cycle", detail: pending!.detail }];
+  assert.equal(pendingResearchLaneAcknowledgment(acknowledged, lane), null, "the same pause is acknowledged once");
+  const resumed = { ...pending!.intent, action: "RESUME" as const,
+    intentId: "RESUME:2026-09-06T13:00:00.000Z", requestedAt: "2026-09-06T13:00:00.000Z" };
+  assert.equal(pendingResearchLaneAcknowledgment([...acknowledged, resumed], null)?.detail, "model lane reopened");
+  assert.match(pendingResearchLaneAcknowledgment([...acknowledged, resumed],
+    { code: "LANE_DISABLED", reason: "no credential" })?.detail ?? "", /stays closed this cycle: no credential/);
+  // The ordinary cycle, not the Admin gateway, consumes this reading and
+  // acknowledges the exact intent once. No cycle or paid transport runs here.
+  const cycle = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
+  assert.match(cycle, /const intents = readIntents\(intentLog\);/);
+  assert.match(cycle, /const laneClosure = modelLaneClosure\(\{[\s\S]*?paused: intents\.paused,/);
+  assert.match(cycle, /const modelLaneEnabled = laneClosure === null;/);
+  assert.match(cycle, /if \(!modelLaneEnabled\) return \{ admit: false, code: laneDisabledCode/);
+  assert.match(cycle, /pendingResearchLaneAcknowledgment\(intentLog, laneClosure\)/);
+  assert.match(cycle, /honorIntent\(pendingAcknowledgment\.intent, pendingAcknowledgment\.detail\)/);
+
+  const replay = await submit(request, deps(repos, { now: tickingClock("2026-09-06T18:00:00.000Z") }));
+  assert.equal(replay.replayed, true);
+  assert.deepEqual(replay.receipt, first.receipt);
+  assert.equal((await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)).length, 1);
 });
 
 test("ADM-C6: two DIFFERENT actions sharing an idempotency key are two actions", async () => {

@@ -322,7 +322,7 @@ import {
 } from "../lib/control-plane/gateway/admin-config.ts";
 import { installNeonCircuitBreaker, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
-import { modelLaneClosure } from "../lib/control-plane/scheduler/model-lane.ts";
+import { modelLaneClosure, pendingResearchLaneAcknowledgment } from "../lib/control-plane/scheduler/model-lane.ts";
 import {
   armExpansionBudget,
   countByScope,
@@ -1146,9 +1146,6 @@ try {
   );
 }
 const intents = readIntents(intentLog);
-const intentByTime = (a: ResearchIntentRequest, b: ResearchIntentRequest): number =>
-  a.requestedAt < b.requestedAt ? -1 : a.requestedAt > b.requestedAt ? 1 : 0;
-const honoredBefore = new Set(intentLog.filter((r) => r.kind === "HONORED").map((r) => r.honors));
 
 /**
  * Append this cycle's HONORED record beside an intent. The runner never edits
@@ -1594,18 +1591,11 @@ const modelLaneEnabled = laneClosure === null;
  */
 const honoredLaneIntents: string[] = [];
 {
-  const laneIntents = intentLog
-    .filter((r): r is ResearchIntentRequest => r.kind === "INTENT" && (r.action === "PAUSE" || r.action === "RESUME"))
-    .sort(intentByTime);
-  const latest = laneIntents.at(-1);
-  if (latest !== undefined && !honoredBefore.has(latest.intentId)) {
-    const detail =
-      latest.action === "PAUSE"
-        ? "model lane closed for this cycle"
-        : modelLaneEnabled
-          ? "model lane reopened"
-          : `model lane reopened by the owner, but it stays closed this cycle: ${laneDisabledReason}`;
-    if (await honorIntent(latest, detail)) honoredLaneIntents.push(latest.intentId);
+  const pendingAcknowledgment = pendingResearchLaneAcknowledgment(intentLog, laneClosure);
+  if (pendingAcknowledgment !== null) {
+    if (await honorIntent(pendingAcknowledgment.intent, pendingAcknowledgment.detail)) {
+      honoredLaneIntents.push(pendingAcknowledgment.intent.intentId);
+    }
   }
 }
 

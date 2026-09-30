@@ -88,7 +88,7 @@ import {
   type SwitchVerdict,
 } from "../lib/ask/model-economics.ts";
 import { ASK_EFFORT_LEVELS, resolveAskEffort, type AskEffort } from "../lib/ask/model.ts";
-import { askModelRefusal } from "../lib/ask/model-registry.ts";
+import { modelRefusal } from "../lib/models.ts";
 import { batchEnabledFor } from "../lib/control-plane/model-batch.ts";
 import { validateAnswer, type KnownSubjectName } from "../lib/ask/validate.ts";
 import {
@@ -229,7 +229,7 @@ const COMPARE_BATCH = batchEnabledFor("ask-model-comparison");
 // records retain old IDs; a new run cannot send the replaced Sonnet 5 tier.
 if (!REGENERATE) {
   for (const model of [INCUMBENT_ARM, CHALLENGER_ARM]) {
-    const refusal = askModelRefusal(model);
+    const refusal = modelRefusal(model);
     if (refusal) {
       console.error(`ask:model-compare REFUSED - ${refusal}`);
       process.exit(1);

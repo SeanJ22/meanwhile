@@ -139,7 +139,7 @@ test("THE SHAPE: a confirmed route maps to a kind the reviewed filter is defined
   assert.deepEqual(wiringShapeFor({ vendor: "official-page-events", url: "https://t.gov/Calendar.aspx?EID=1" }), { kind: "OFFICIAL_PAGE_EVENTS", endpoint: { pageUrl: "https://t.gov/Calendar.aspx?EID=1", officialHost: "t.gov" } });
   const agenda = wiringShapeFor({ vendor: "civicplus-agendacenter", url: "https://t.gov/AgendaCenter" });
   assert.ok("held" in agenda && agenda.held === "ADAPTER_CONFIG_INCOMPLETE" && /icalUrl/.test(agenda.detail));
-  assert.ok("held" in wiringShapeFor({ vendor: "legistar-api", url: "https://webapi.legistar.com/v1/x/events" }));
+  assert.deepEqual(wiringShapeFor({ vendor: "legistar-api", url: "https://webapi.legistar.com/v1/x/events" }), { kind: "LEGISTAR", endpoint: { slug: "x" } });
 });
 
 test("THE ATTESTATION: the recorded address, each redirect, and the homepage that linked the route, each with its vaulted artifact", async () => {

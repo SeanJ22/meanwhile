@@ -237,7 +237,7 @@ const lines: string[] = [
   `junk that later reads as verified.`,
   "",
   `${asked.length} queries asked · ${answered} returned anything · ${allUrls.length} candidates ·`,
-  `${fresh.length} not already in \`${gate.path}\`.`,
+  `${fresh.length} not already in \`states/${code}/sources.md\`.`,
   "",
 ];
 if (fresh.length > 0) {

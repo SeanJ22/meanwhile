@@ -62,7 +62,7 @@ test("New Jersey's lower chamber members are Assemblymembers", () => {
   assert.equal(CHAMBER_TITLE.az.lower, "State Representative");
 });
 
-test("a state with no chamber-title entry reports rather than inventing one", () => {
+test("a state beyond the original pilots normalizes without a local registry", () => {
   const set = normalize(
     [person({ id: "ocd-person/x", state: "tx", current_district: "1" })],
     new Map(),
@@ -70,8 +70,9 @@ test("a state with no chamber-title entry reports rather than inventing one", ()
     "48",
   );
 
-  assert.equal(set.officeholders.length, 0);
-  assert.match(set.unmatched[0].reason, /no chamber title/);
+  assert.equal(set.officeholders.length, 1);
+  assert.equal(set.officeholders[0].officeTitle, "State Representative");
+  assert.match(set.unmatched[0].reason, /no lower division/);
 });
 
 test("a district outside the clipped coverage is reported, not dropped silently", () => {

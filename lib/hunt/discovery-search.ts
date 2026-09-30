@@ -25,6 +25,7 @@
 
 import type { MeetingsRecipe, RecipeIdentity } from "./meetings-recipes.ts";
 import { substitute } from "./meetings-recipes.ts";
+import { isOfficialSource, type OfficialLinkingPage } from "../civic-data/source-authority.ts";
 
 export type SearchProvider = "brave" | "exa";
 
@@ -106,9 +107,6 @@ export function plannedQueries(
   return out.map((q) => ({ ...q, query: q.query.replace(/\s*\bsite:\S+/g, "").trim() }));
 }
 
-/** Meeting-publisher hosts the adapters or the classifier know. A result on one of these is worth opening. */
-const PUBLISHER_HOSTS = /(^|\.)(legistar\.com|civicclerk\.com|iqm2\.com|boardbook\.org|novusagenda\.com|granicus\.com|escribemeetings\.com|primegov\.com|boarddocs\.com|diligentoneplatform\.com|highbond\.com|civicweb\.net|municodemeetings\.com|swagit\.com|civicplus\.com)$/i;
-
 export type HitStanding = "OWN_SITE" | "PUBLISHER";
 
 /**
@@ -116,7 +114,7 @@ export type HitStanding = "OWN_SITE" | "PUBLISHER";
  * registrable domain, or on a known meeting-publisher host. Anything else is
  * someone else's page about the government, never its record.
  */
-export function hitStanding(hitUrl: string, domain: string): HitStanding | null {
+export function hitStanding(hitUrl: string, domain: string, linkingPage?: OfficialLinkingPage | null): HitStanding | null {
   let host: string;
   try {
     const u = new URL(hitUrl);
@@ -126,8 +124,8 @@ export function hitStanding(hitUrl: string, domain: string): HitStanding | null 
     return null;
   }
   const own = domain.toLowerCase();
-  if (host === own || host.endsWith(`.${own}`)) return "OWN_SITE";
-  return PUBLISHER_HOSTS.test(host) ? "PUBLISHER" : null;
+  if (!isOfficialSource(hitUrl, linkingPage)) return null;
+  return host === own || host.endsWith(`.${own}`) ? "OWN_SITE" : "PUBLISHER";
 }
 
 /** The price record a request is charged at: the published price when established, otherwise null (UNMEASURED). */

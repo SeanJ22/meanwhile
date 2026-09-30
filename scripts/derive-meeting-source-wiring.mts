@@ -96,6 +96,7 @@ const ADAPTER_ENTRY: Readonly<Record<DerivedWiringKind, string>> = {
   ICAL: "lib/sources/ical/index.ts",
   OFFICIAL_PAGE_EVENTS: "lib/sources/official-page-events/index.ts",
   DILIGENT: "lib/sources/diligent/index.ts",
+  LEGISTAR: "lib/sources/legistar/index.ts",
 };
 const digests = new Map<DerivedWiringKind, string>();
 const adapterDigest = (kind: DerivedWiringKind): string => {

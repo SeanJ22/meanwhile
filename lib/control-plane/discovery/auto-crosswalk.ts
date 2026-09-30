@@ -121,7 +121,7 @@ export interface AutoCrosswalkReviewInput {
   readonly now: string;
 }
 
-const KIND_OF_VENDOR: Readonly<Record<string, CrosswalkKind>> = { ical: "ICAL", "official-page-events": "OFFICIAL_PAGE_EVENTS", diligent: "DILIGENT" };
+const KIND_OF_VENDOR: Readonly<Record<string, CrosswalkKind>> = { ical: "ICAL", "official-page-events": "OFFICIAL_PAGE_EVENTS", diligent: "DILIGENT", "legistar-api": "LEGISTAR" };
 
 const flat = (s: string): string => s.replace(/\s+/g, " ").trim();
 const low = (s: string): string => flat(s).toLowerCase();
@@ -521,6 +521,13 @@ const titleHas = (title: string, terms: readonly string[]): boolean => terms.som
  * A title's other printed names are read to tell a longer name (excluded by its exact words) from a second body.
  */
 function selectFor(kind: CrosswalkKind, proposal: Proposal, events: readonly CalendarEvent[], jurisdictionId: string): Selected {
+  if (kind === "LEGISTAR") {
+    const selected = events.filter(e => proposal.spellings.some(s => wordAt(e.title, s) >= 0));
+    const ids = [...new Set(selected.flatMap(e => e.categories))];
+    if (ids.length !== 1 || !/^\d+$/.test(ids[0])) return { held: "AMBIGUOUS_TITLE", detail: "No unique Legistar body id matches this body" };
+    if (events.some(e => e.categories.includes(ids[0]) && !selected.includes(e))) return { held: "AMBIGUOUS_TITLE", detail: "The vendor body id also names another body" };
+    return { filter: { eventBodyId: ids[0] }, selected };
+  }
   if (kind === "DILIGENT") {
     const selected = events.filter(e => proposal.spellings.some(s => wordAt(`${e.title} ${e.context}`, s) >= 0));
     if (!selected.length) return { held: "SELECTS_NOTHING", detail: "no Diligent event names the reviewed body" };
@@ -706,8 +713,8 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       hold(route, attested.held === "EVIDENCE_NOT_VAULTED" ? "EVIDENCE_NOT_VAULTED" : "HOST_NOT_ATTESTED", attested.detail);
       continue;
     }
-    const linkedDiligent = kind === "DILIGENT" && /(^|\.)(highbond\.com|civicweb\.net|diligentoneplatform\.com)$/i.test(routeHost) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
-    if (homeHost === null || (bare(homeHost) !== bare(routeHost) && !linkedDiligent)) {
+    const linkedPublisher = (kind === "DILIGENT" || kind === "LEGISTAR") && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
+    if (homeHost === null || (bare(homeHost) !== bare(routeHost) && !linkedPublisher)) {
       hold(route, "HOST_NOT_OWN", `the calendar is on ${routeHost}; the walk attested ${homeHost ?? "no homepage"} as the government's own`);
       continue;
     }
@@ -741,6 +748,13 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       }
       events = read.events;
       calendarZone = read.calendarZone;
+    } else if (kind === "LEGISTAR") {
+      let rows: { EventId: number; EventBodyId: number; EventBodyName: string; EventDate: string; EventInSiteURL?: string }[];
+      try { rows = JSON.parse(calendar.text); } catch { rows = []; }
+      if (!Array.isArray(rows) || !rows.length) { hold(route, "CALENDAR_UNREADABLE", "The Legistar response holds no events"); continue; }
+      events = rows.filter(r => Number.isInteger(r.EventBodyId) && r.EventBodyName && r.EventDate)
+        .map(r => ({ title: flat(r.EventBodyName), context: "", categories: [String(r.EventBodyId)],
+          identity: `${r.EventId}|${r.EventDate}`, tzid: null, utc: false, floating: true, url: r.EventInSiteURL ?? route }));
     } else if (kind === "DILIGENT") {
       const rows = parseDiligentMeetings(calendar.text);
       if (!rows?.length) { hold(route, "CALENDAR_UNREADABLE", "the held public Diligent response has no dated meetings"); continue; }
@@ -763,7 +777,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       .filter((s) => (s.purpose === "homepage" || s.purpose === "endpoint") && readOk(s) && s.artifactId !== null && !sameRoute(s.url, route))
       .filter((s) => {
         const h = httpsHost(s.url);
-        return h !== null && bare(h) === bare(routeHost) && robotsRead(h);
+        return h !== null && (bare(h) === bare(routeHost) || (linkedPublisher && h === homeHost)) && robotsRead(h);
       })
       .sort((a, b) => {
         const rank = (s: DiscoveryStep) => {

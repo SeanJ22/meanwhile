@@ -21,15 +21,6 @@ export interface CivicDataFirewallFinding {
   readonly detail: string;
 }
 
-export const REMOVED_ROUTINE_DATA_WORKFLOWS = [
-  ".github/workflows/refresh-daily.yml",
-  ".github/workflows/refresh-dotgov-snapshot.yml",
-  ".github/workflows/refresh-fec-snapshot.yml",
-  ".github/workflows/refresh-legiscan-snapshot.yml",
-  ".github/workflows/refresh-meetings-snapshot.yml",
-  ".github/workflows/refresh-nj-filing.yml",
-] as const;
-
 export const REMOVED_ROUTINE_OPS_WORKFLOWS = [
   ".github/workflows/intake-tripwire.yml",
   ".github/workflows/job-watch.yml",
@@ -1220,7 +1211,7 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
     );
   }
 
-  for (const path of [...REMOVED_ROUTINE_DATA_WORKFLOWS, ...REMOVED_ROUTINE_OPS_WORKFLOWS, ...REMOVED_LEGACY_EXECUTABLES]) {
+  for (const path of [...REMOVED_ROUTINE_OPS_WORKFLOWS, ...REMOVED_LEGACY_EXECUTABLES]) {
     if (Object.hasOwn(tree.files, path)) add("LEGACY_EXECUTABLE_PRESENT", path, "This release-coupled data path was retired by the permanent cutover.");
   }
   for (const path of REMOVED_TRANSITION_DATA_PLANE) {

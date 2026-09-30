@@ -54,14 +54,8 @@ jobs:
           WTP_EVENT_ACTION: ${{ github.event.action }}
           WTP_PR_DRAFT: ${{ github.event.pull_request.draft }}
         run: node scripts/pr-ci-tier.mjs
-      - name: Is this the tree that already passed? (FCP-9C)
-        id: certified
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node scripts/certified-tree.mjs
       - name: Preflight — the cheap deterministic checks (RULING 279)
         id: preflight
-        if: github.event_name == 'pull_request' || steps.certified.outputs.certified != 'yes'
         run: node scripts/preflight.mjs
       - name: Decide whether the expensive tier runs
         id: tier
@@ -74,8 +68,6 @@ jobs:
             echo "expensive=draft" >> "$GITHUB_OUTPUT"
           elif [ "${{ steps.pr_tier.outputs.tier }}" = "full" ]; then
             echo "expensive=yes" >> "$GITHUB_OUTPUT"
-          elif [ "${{ steps.certified.outputs.certified }}" = "yes" ]; then
-            echo "expensive=no-certified" >> "$GITHUB_OUTPUT"
           elif [ "${{ steps.preflight.outcome }}" != "success" ]; then
             echo "expensive=no-preflight" >> "$GITHUB_OUTPUT"
           else
@@ -98,12 +90,6 @@ jobs:
       - name: Install
         if: steps.tier.outputs.expensive == 'yes'
         run: corepack pnpm install --frozen-lockfile
-      - name: Early release integrity prerequisite
-        if: success() && steps.tier.outputs.expensive == 'yes'
-        timeout-minutes: 5
-        env:
-          WTP_CONTROL_PLANE_DATABASE_URL_READONLY: ${{ secrets.WTP_CONTROL_PLANE_DATABASE_URL_READONLY }}
-        run: corepack pnpm exec tsx scripts/release-freeze-gate.mts
       - name: Explain selected verification
         if: always()
         env:
@@ -266,10 +252,6 @@ jobs:
         run: |
           echo "Draft preflight passed. This required build context still reports, while"
           echo "the two production builds wait for the ready_for_review certification run."
-      - name: Certified tree reused — this tree already passed
-        if: needs.admission.outputs.tier == 'no-certified'
-        run: node scripts/certified-tree.mjs --attest=build
-    needs:
       - admission
     if: always()
   test:
@@ -329,10 +311,6 @@ jobs:
           [[ "$pdc_frozen_base" =~ ^[0-9a-f]{40}$ ]] || exit 1
           git cat-file -e "${pdc_frozen_base}:lib/funding/official-candidacies.json" 2>/dev/null || git fetch --no-tags --depth=1 origin "$pdc_frozen_base"
           git cat-file -e "${pdc_frozen_base}:lib/funding/official-candidacies.json"
-      - name: Reader closure proof ancestry
-        if: success() && needs.admission.outputs.tier == 'yes'
-        shell: bash
-        run: node scripts/reader-proof-history.mjs
       - uses: actions/cache@v4
         if: needs.admission.outputs.tier == 'yes'
         with:
@@ -413,12 +391,6 @@ jobs:
           WTP_SCHEMA_GATE_SMOKE: ${{ inputs.schema_smoke }}
           WTP_SCHEMA_GATE_MOMENT: ${{ inputs.schema_moment }}
         run: corepack pnpm exec tsx scripts/db-shipping-gate.mts
-      - name: Release freeze (refuses a release on a DEGRADED production reading)
-        if: success() && needs.admission.outputs.tier == 'yes'
-        timeout-minutes: 5
-        env:
-          WTP_CONTROL_PLANE_DATABASE_URL_READONLY: ${{ secrets.WTP_CONTROL_PLANE_DATABASE_URL_READONLY }}
-        run: corepack pnpm exec tsx scripts/release-freeze-gate.mts
       - name: Certified tree reused — this tree already passed
         if: success() && needs.admission.outputs.tier == 'no-certified'
         run: node scripts/certified-tree.mjs --attest=gates

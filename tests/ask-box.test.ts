@@ -260,49 +260,21 @@ test("the hang-tight beat is presentation only — routed and logged before the 
     "the trailing dots animate in sequence for the beat's duration",
   );
   /*
-   * **ASK-6 (2026-08-24)** — the author's retune of his own retune. The fixed
-   * 3000ms is replaced by a DRAW between 2.4 and 3.1 seconds in 0.1-second
-   * steps, taken fresh per submission.
-   *
-   * The bounds are asserted as named constants rather than as a literal
-   * anywhere in the file, so the range cannot be widened by an edit that
-   * leaves the guard green. The draw itself is asserted for being AT THE
-   * SUBMISSION, not at mount — a beat drawn once per component would be fixed
-   * again for the life of the panel, which is the thing this replaced.
+   * **2026-09-30 — no held minimum.** Sean's rulings §6 fail any user-facing
+   * action over three seconds, measured until the result is usable, so the
+   * drawn 2.4-3.1 second hold (ASK-6) is gone: the answer replaces the beat the
+   * moment it is ready.
    */
-  assert.ok(
-    source.includes("BEAT_MIN_MS = 2400"),
-    "the beat's floor is not 2.4 seconds",
-  );
-  assert.ok(
-    source.includes("BEAT_MAX_MS = 3100"),
-    "the beat's ceiling is not 3.1 seconds",
-  );
-  assert.ok(
-    source.includes("BEAT_STEP_MS = 100"),
-    "the beat is not drawn in 0.1-second steps",
-  );
-  assert.ok(
-    !source.includes("BEAT_MS = 3000"),
-    "the fixed three-second beat is back",
-  );
-  assert.ok(
-    /const remaining = Math\.max\(0, drawBeatMs\(\)/.test(source),
-    "the beat length is not drawn fresh at the submission",
-  );
+  assert.ok(!/BEAT_(MIN|MAX|STEP)_MS|drawBeatMs|beatTimer/.test(source), "an artificial hold on a ready answer is back");
   // Never "Thinking" or anything implying AI — the transparency page says
   // no AI answers questions and the label must not contradict it.
   assert.ok(!/Thinking|thinking\.\.\.|AI is/.test(source));
-  // The answer and the log both happen BEFORE the beat timer starts: the
-  // routing stays instant and deterministic; only the rendering waits.
+  // The answer is routed and logged BEFORE it is shown, and showing it logs nothing.
   const answerAt = source.indexOf("answerQuestion(question");
   const logAt = source.indexOf("logEvent(");
-  const timerAt = source.indexOf("beatTimer.current = setTimeout(");
-  assert.ok(answerAt > 0 && logAt > answerAt && timerAt > logAt,
-    "route → log → beat, in that order; nothing new logs inside the beat");
-  // Nothing is logged inside the timer callback.
-  const timerBody = source.slice(timerAt, source.indexOf("}, remaining)"));
-  assert.ok(!timerBody.includes("logEvent"), "the beat must not log");
+  const shownAt = source.indexOf("setAsked(result);");
+  assert.ok(answerAt > 0 && logAt > answerAt && shownAt > logAt,
+    "route → log → show, in that order");
 });
 
 /**

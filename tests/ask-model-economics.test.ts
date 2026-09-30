@@ -15,6 +15,7 @@ import {
 import { comparabilityFailure } from "../lib/ask/model-comparison.ts";
 import { ASK_SYNTHESIS_MODEL } from "../lib/ask/synthesize.ts";
 import { ASK_FAST_WRITER_MODEL } from "../lib/ask/model.ts";
+import { MODELS } from "../lib/models.ts";
 
 /**
  * **H2 — ASK MODEL ECONOMICS, UNDER RULING 230.** (Session C, lane B, amended
@@ -85,11 +86,10 @@ test("H2: every Ask call site reads its model from the ONE declaring module — 
    * declares either.
    */
   const declared = declarations(DECLARING_MODULE);
-  assert.deepEqual(
-    declared,
-    [ASK_INCUMBENT_MODEL, ASK_FAST_WRITER_MODEL],
-    `${DECLARING_MODULE} must declare the Ask model and the fast writer exactly once each and declare no other`,
-  );
+  /* Since 2026-09-30 no Ask file names a model id: they are tiers, read from lib/models.ts. */
+  assert.deepEqual(declared, [], `${DECLARING_MODULE} must name no model id; the Ask models are the tiers of lib/models.ts`);
+  assert.equal(ASK_INCUMBENT_MODEL, MODELS.opus.model);
+  assert.equal(ASK_FAST_WRITER_MODEL, MODELS.haiku.model);
 
   for (const site of sites) {
     assert.deepEqual(
@@ -120,7 +120,7 @@ test("H2: the incumbent is read from the code, never from a constant that can dr
    * one shipped. Re-making the switch means editing this line too, on purpose.
    */
   /* 2026-09-25: Opus 5 retired from Ask (Sean, 7:25 and 7:50 PM MST); the frontier is Opus 5.5. */
-  assert.equal(ASK_SYNTHESIS_MODEL, "claude-opus-5-5");
+  assert.equal(ASK_SYNTHESIS_MODEL, MODELS.opus.model);
 });
 
 test("H2: both candidates' rates carry a date and a source", () => {
@@ -154,7 +154,7 @@ test("the standing comparison is Opus 5.5 against the cheaper Sonnet 5, never a 
    * `switchVerdict` never reads a price.
    */
   /* 2026-09-25: the incumbent became Opus 5.5 (Opus 5 retired), so the standing arm moved to Sonnet 5. */
-  assert.equal(ASK_CHALLENGER_MODEL, "claude-sonnet-5");
+  assert.equal(ASK_CHALLENGER_MODEL, MODELS.sonnet.model);
   assert.notEqual(
     ASK_CHALLENGER_MODEL,
     ASK_INCUMBENT_MODEL,

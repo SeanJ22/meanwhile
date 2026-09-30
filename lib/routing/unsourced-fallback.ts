@@ -52,7 +52,7 @@
 import { ripcordPulled } from "../ripcords.ts";
 import { scrubFreeText } from "../log/scrub.ts";
 import { ASK_MODEL_ROLES, resolveAskRoleModel } from "../ask/model.ts";
-import { askRequestFields } from "../ask/model-registry.ts";
+import { modelRequestFields } from "../models.ts";
 
 /**
  * The mark, in plain language, rendered ABOVE the answer.
@@ -214,9 +214,9 @@ export async function askUnsourced(
   const impl = options.fetchImpl ?? fetch;
   /* Thinking OFF where the model accepts it; on an always-thinking model (Opus
      5.5, where `{type: "disabled"}` is a 400) it is omitted and `max_tokens`
-     leaves room for the thinking (lib/ask/model-registry.ts). */
+     leaves room for the thinking (lib/models.ts). */
   const model = askModel();
-  const fields = askRequestFields(model, { thinking: ASK_MODEL_ROLES.UNSOURCED.thinking, effort: ASK_MODEL_ROLES.UNSOURCED.effort });
+  const fields = modelRequestFields(model, { thinking: ASK_MODEL_ROLES.UNSOURCED.thinking, effort: ASK_MODEL_ROLES.UNSOURCED.effort });
   try {
     const response = await impl(MESSAGES_URL, {
       method: "POST",

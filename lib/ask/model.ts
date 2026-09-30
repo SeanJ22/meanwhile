@@ -1,4 +1,7 @@
-import { askModelEntry, askModelRefusal, canonicalAskModelId, type AskThinkingMode } from "./model-registry.ts";
+import { MODELS, activeModelOverrideId, activeModelTierFor, modelRefusal, type ModelThinkingMode, type ModelTier } from "../models.ts";
+
+/** How a rung wants the model to think; what is sent is decided in `lib/models.ts`. */
+export type AskThinkingMode = ModelThinkingMode;
 
 /**
  * **THE ASK MODELS: ONE TABLE OF ROLES, ONE MODULE, AND THIS IS IT.**
@@ -28,7 +31,7 @@ import { askModelEntry, askModelRefusal, canonicalAskModelId, type AskThinkingMo
  * fallback — names its default model, its effort, how it wants the model to
  * think, and its own environment override. Changing a role's model is a
  * config change (the override) or one edited line (the default); what the
- * model ACCEPTS is `lib/ask/model-registry.ts`, and every request builds its
+ * model ACCEPTS is `MODELS[tier].capabilities` in `lib/models.ts`, and every request builds its
  * fields from there, so a change cannot send a field the new model rejects.
  *
  * ## The overrides, and the two conditions they are allowed under
@@ -40,7 +43,7 @@ import { askModelEntry, askModelRefusal, canonicalAskModelId, type AskThinkingMo
  *      also records the model the API says served the call.
  * ```
  *
- * An override naming a model the registry does not hold, or a RETIRED model
+ * An override naming a model that is not a tier, or a RETIRED model
  * (`claude-opus-5`, retired 2026-09-25 by Sean), is REFUSED by name and the
  * role keeps its default — a typo in a deploy variable must not take Ask down.
  * `WTP_ASK_MODEL` and `WTP_ASK_FAST_MODEL` keep working: the first is an alias
@@ -71,7 +74,7 @@ export type AskEffort = (typeof ASK_EFFORT_LEVELS)[number];
  * 2026-09-25 on all three current models (Sonnet 5 still routes it to
  * elections; Haiku 4.5 and Opus 5.5 refuse it).
  */
-export const ASK_SYNTHESIS_MODEL = "claude-opus-5-5";
+export const ASK_SYNTHESIS_MODEL: string = MODELS.opus.model;
 
 /**
  * **THE ESCALATION WRITER'S EFFORT, AND IT WAS MEASURED RATHER THAN REASONED.**
@@ -94,7 +97,7 @@ export const ASK_SYNTHESIS_EFFORT: AskEffort = "medium";
  * (medium) 3.7 s. Only this model can write inside the bar.
  * Dateless alias; `claude-haiku-4-5-20251001` is the same model.
  */
-export const ASK_FAST_WRITER_MODEL = "claude-haiku-4-5";
+export const ASK_FAST_WRITER_MODEL: string = MODELS.haiku.model;
 
 /** The override names. Declared once so the log and the docs agree. */
 export const ASK_MODEL_ENV = "WTP_ASK_MODEL";
@@ -109,6 +112,8 @@ export type AskModelRole = (typeof ASK_MODEL_ROLE_NAMES)[number];
 export interface AskModelRoleSpec {
   /** What the role does, for the startup line and the trace. */
   readonly does: string;
+  /** The tier the role uses when no override is set; its model id is `MODELS[defaultTier].model`. */
+  readonly defaultTier: ModelTier;
   /** The model the role uses when no override is set. */
   readonly defaultModel: string;
   /** Overrides, most specific first. The first set, valid one wins. */
@@ -120,6 +125,9 @@ export interface AskModelRoleSpec {
   /** Whether `off`/`none` may switch the role off (only the fast writer: the ladder still has the escalation writer). */
   readonly canBeOff: boolean;
 }
+
+/** A role's spec with its default model read from its tier. */
+const roleSpec = (spec: Omit<AskModelRoleSpec, "defaultModel">): AskModelRoleSpec => ({ ...spec, defaultModel: MODELS[spec.defaultTier].model });
 
 /**
  * **THE ONE TABLE.** Every Ask model call resolves its model here.
@@ -137,60 +145,61 @@ export interface AskModelRoleSpec {
  *   no better, so it has no role.
  * - FAST_WRITER → Haiku 4.5: the only writer inside three seconds (complete
  *   call median 2.0 s, 90th percentile 3.4 s; Sonnet 5 2.8 s / 5.0 s; Opus
- *   5.5 3.7 s / 5.9 s). Every answer correct outside the money questions
- *   below.
+ *   5.5 3.7 s / 5.9 s). It writes every question first, money and comparison
+ *   questions included (Sean, 2026-09-29); the frontier writes only when its
+ *   answer fails a check.
  * - ESCALATION_WRITER → Opus 5.5: 32 of 34 answers correct, none rejected for
- *   length (Sonnet 5: 28 of 34, including a miscounted list). It also writes
- *   first for the money questions Haiku 4.5 got wrong (see
- *   `escalationFirstReason` in lib/ask/synthesize.ts).
+ *   length (Sonnet 5: 28 of 34, including a miscounted list). It writes only
+ *   when the fast writer's answer fails a check or cannot be had.
  * - CLASSIFIER → Haiku 4.5: 17 of 17 labels right, 0.7-1.7 s. Sonnet 5 sent
  *   the election-day weather question to "elections" 3 of 3 times; Opus 5.5
  *   took 1.3-6.2 s.
- * - UNSOURCED → Opus 5.5 (not part of the comparison; the rung is gated).
+ * - UNSOURCED → Haiku 4.5 (2026-09-30, Sean's cheapest-first rule: the answer starts on the
+ *   cheapest tier and nothing about an out-of-scope, labelled-unsourced reply needs more).
  *
  * `WTP_ASK_MODEL` is an alias only on roles whose default is the frontier.
  */
 export const ASK_MODEL_ROLES: Readonly<Record<AskModelRole, AskModelRoleSpec>> = {
-  READER: {
+  READER: roleSpec({
     does: "reads the question (intent, tense, the government named)",
-    defaultModel: ASK_FAST_WRITER_MODEL,
+    defaultTier: "haiku",
     env: ["WTP_ASK_READER_MODEL"],
     effort: "low",
     thinking: "ADAPTIVE",
     canBeOff: false,
-  },
-  FAST_WRITER: {
+  }),
+  FAST_WRITER: roleSpec({
     does: "writes the answer first",
-    defaultModel: ASK_FAST_WRITER_MODEL,
+    defaultTier: "haiku",
     env: [ASK_FAST_WRITER_ENV],
     effort: "low",
     thinking: "ADAPTIVE",
     canBeOff: true,
-  },
-  ESCALATION_WRITER: {
+  }),
+  ESCALATION_WRITER: roleSpec({
     does: "writes when the fast answer fails a check, and the kinds routed to it",
-    defaultModel: ASK_SYNTHESIS_MODEL,
+    defaultTier: "opus",
     env: ["WTP_ASK_ESCALATION_MODEL", ASK_MODEL_ENV],
     effort: ASK_SYNTHESIS_EFFORT,
     thinking: "ADAPTIVE",
     canBeOff: false,
-  },
-  CLASSIFIER: {
+  }),
+  CLASSIFIER: roleSpec({
     does: "labels an unanswered question with a curated topic, or refuses it",
-    defaultModel: ASK_FAST_WRITER_MODEL,
+    defaultTier: "haiku",
     env: ["WTP_ASK_CLASSIFIER_MODEL"],
     effort: "low",
     thinking: "OFF",
     canBeOff: false,
-  },
-  UNSOURCED: {
+  }),
+  UNSOURCED: roleSpec({
     does: "answers an out-of-scope question, labelled unsourced",
-    defaultModel: ASK_SYNTHESIS_MODEL,
-    env: ["WTP_ASK_UNSOURCED_MODEL", ASK_MODEL_ENV],
+    defaultTier: "haiku",
+    env: ["WTP_ASK_UNSOURCED_MODEL"],
     effort: "low",
     thinking: "OFF",
     canBeOff: false,
-  },
+  }),
 };
 
 export interface AskRoleResolution {
@@ -225,12 +234,13 @@ export function resolveAskRole(role: AskModelRole, env: AskModelEnv = process.en
       overriddenBy = name;
       break;
     }
-    const refusal = askModelRefusal(raw);
+    const active = activeModelOverrideId(raw);
+    const refusal = modelRefusal(active);
     if (refusal) {
       refused.push(`${name}="${raw}" REFUSED — ${refusal}`);
       continue;
     }
-    model = canonicalAskModelId(raw);
+    model = MODELS[activeModelTierFor(active)!].model;
     overriddenBy = model === spec.defaultModel ? null : name;
     break;
   }
@@ -256,9 +266,10 @@ export function resolveAskModel(env: AskModelEnv = process.env): string {
   return resolveAskRoleModel("ESCALATION_WRITER", env);
 }
 
-/** Does this model take `output_config.effort`? Read from the registry. */
+/** Does this model take `output_config.effort`? Read from `MODELS[tier].capabilities`. */
 export function askModelTakesEffort(model: string): boolean {
-  return askModelEntry(model)?.capabilities.effort ?? false;
+  const tier = activeModelTierFor(model);
+  return tier ? MODELS[tier].capabilities.effort : false;
 }
 
 /**

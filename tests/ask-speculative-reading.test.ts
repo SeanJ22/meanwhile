@@ -62,7 +62,8 @@ test("the code's best reading: a guess from the reader's words, the page or the 
   assert.equal(read("Who can I talk to?"), null, "no subject bound");
   assert.equal(read("When do they meet next?"), null, "a pronoun with no earlier turn binds nothing");
   assert.equal(read("When do they meet next?", [], [{ id: MESA, name: "Mesa", kind: "BODY" }, { id: MESA_SCHOOLS, name: "Mesa Unified School District Governing Board", kind: "BODY" }]), null, "two cards on the page, none focused: no guess");
-  assert.equal(read("Tell me something interesting about the Mesa City Council budget process"), null, "no wording rule names an intent");
+  // No wording rule names an intent: the guess is UNKNOWN (a label for the writer); the model's reading still decides.
+  assert.deepEqual(read("Tell me something interesting about the Mesa City Council budget process"), { intent: "UNKNOWN", temporal: "NONE", basis: "WORDING", subject: MESA, mentions: 0, referent: null });
 });
 
 const AGREED: ReadingOutcome = { subjectId: MESA, bodyIds: [MESA], intent: "CONTACT", temporal: { kind: "NONE" }, selection: "ANY", writerInput: "key-1" };
@@ -71,7 +72,8 @@ test("the verdict keeps the speculative answer only on the same subject, body, q
   assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, bodyIds: [MESA, MESA] }), { keep: true, why: "same-subject-body-kind-and-writer-input" });
   assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, subjectId: MESA_SCHOOLS, bodyIds: [MESA_SCHOOLS], writerInput: "key-2" }), { keep: false, why: "different-subject" });
   assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, bodyIds: [MESA, MESA_SCHOOLS] }), { keep: false, why: "different-body" });
-  assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, intent: "PERSON_RECORD" }), { keep: false, why: "different-question-kind" });
+  /* The intent is a label for the writer: a reading that names another one but selects the same subject, sittings and evidence keeps the answer. */
+  assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, intent: "PERSON_RECORD" }), { keep: true, why: "same-subject-body-kind-and-writer-input" });
   assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, temporal: { kind: "NEXT" } }), { keep: false, why: "different-question-kind" });
   assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, selection: "NEXT" }), { keep: false, why: "different-question-kind" });
   assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, temporal: { kind: "RANGE", trailingMonths: 12 } }), { keep: false, why: "different-question-kind" });
@@ -125,8 +127,8 @@ delete process.env.WTP_ASK_SPECULATION;
 globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   const url = input instanceof Request ? input.url : String(input);
   if (!url.startsWith("https://api.anthropic.com/")) throw new Error(`speculation test refused an outbound request: ${url}`);
-  const body = JSON.parse(String(init?.body)) as { system: unknown; model: string };
-  const synthesis = Array.isArray(body.system);
+  const body = JSON.parse(String(init?.body)) as { system: unknown; model: string; output_config?: { format?: { schema?: { properties?: Record<string, unknown> } } } };
+  const synthesis = body.output_config?.format?.schema?.properties?.answer !== undefined;
   const call: Call = { kind: synthesis ? "SYNTHESIZE" : "INTERPRET", model: body.model, startedAt: performance.now() };
   calls.push(call);
   const planned = synthesis ? writerQueue.shift() ?? PASSING : reading;
@@ -233,7 +235,7 @@ test("ROUTE: a pronoun follow-up the code cannot read overlaps too, bound to the
 });
 
 test("ROUTE: a model reading that disagrees discards the speculative answer — its call is stopped and the answer is written from the model's reading", { concurrency: false }, async () => {
-  reading = { ...CONTACT_READING, intent: "PERSON_RECORD" };
+  reading = { ...CONTACT_READING, temporal: { kind: "LAST" } };
   const SPECULATIVE = { answer: "SPECULATIVE: the board's contacts are in the records below.", citedSources: [1] };
   const MODEL = { answer: "The board's members are in the records below.", citedSources: [1] };
   writerQueue = [SPECULATIVE, MODEL];
@@ -271,7 +273,7 @@ test("ROUTE: a model reading that never comes discards the speculative answer to
 
 test("ROUTE: nothing is started for a question the code reads itself, or where no model key is configured", { concurrency: false }, async () => {
   reading = CONTACT_READING;
-  const lexical = await timedAsk("Who sits on the Vail school board?");
+  const lexical = await timedAsk("What does the Vail school board do?");
   assert.equal(lexical.payload.trace.interpretation.why, "lexical-reading");
   assert.deepEqual(lexical.calls.map((call) => call.kind), ["SYNTHESIZE"], "no reading call, one writer");
   assert.equal(lexical.payload.trace.speculation, undefined);

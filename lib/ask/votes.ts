@@ -460,6 +460,11 @@ function readableDate(raw: string): string {
   return formatDateLong(isoDateOf(raw)) ?? raw;
 }
 
+/** The roll call's own fields, in the words its sentence uses. */
+function federalRollCall(vote: RollCallVote, position: string): NonNullable<EvidenceRecord["rollCall"]> {
+  return { position, what: `${vote.title}${vote.legisNum ? ` (${vote.legisNum})` : ""}`, when: readableDate(vote.date), result: String(vote.result) };
+}
+
 function federalVoteText(seat: VoteSubjectSeat, vote: RollCallVote, position: string): string {
   /* Person AND office, always — identity is never either alone. The office is
      the one they HOLD, read off the roster, never the one they seek. */
@@ -603,6 +608,7 @@ export function voteEvidenceFor(
         kind: "ROLL_CALL_VOTE",
         id: `${seat.officeholderId}#${vote.id}`,
         text: federalVoteText(seat, vote, position),
+        rollCall: federalRollCall(vote, position),
         occurredAt: isoDateOf(vote.date),
         sourceUrl: vote.rollCallUrl,
         sourceOrg: federalPublisher(vote.chamber),
@@ -655,6 +661,7 @@ export function voteEvidenceFor(
       kind: "ROLL_CALL_VOTE",
       id: `${seat.officeholderId}#${roll.id}`,
       text: stateVoteText(seat, roll, position),
+      rollCall: { position, what: `${roll.billNumber} — ${roll.billTitle}`, when: readableDate(roll.date), result: String(roll.result) },
       occurredAt: isoDateOf(roll.date),
       sourceUrl: roll.rollCallUrl,
       // Official promoted rows retain their actual publisher. Legacy vendor
@@ -705,6 +712,7 @@ export async function voteEvidenceForIncludingHistory(
       seenVoteIds.add(id);
       records.push({ kind: "ROLL_CALL_VOTE", id,
         text: `${federalVoteText(seat, vote, vote.position)} Earlier recorded vote.`,
+        rollCall: federalRollCall(vote, vote.position),
         occurredAt: isoDateOf(vote.date), sourceUrl: vote.rollCallUrl,
         sourceOrg: federalPublisher(vote.chamber), retrievedAt: vote.retrievedAt });
     }

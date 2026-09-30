@@ -85,3 +85,19 @@ test("the runner offers a directory with no extraction yet, hourly, so its saved
   assert.match(task.command.at(-1)!, /--worker-rosters=wi-directory$/);
   assert.deepEqual(workerPublicationTasks([{ ...item, publicationOutcome: { at: "2026-09-29T19:30:00.000Z" } } as unknown as WorkItem], [], NOW), [], "not again within the hour");
 });
+
+test("each board's own section gives its regular schedule in the page's words; another board's schedule never crosses over", async () => {
+  const scheduled = (name: string, schedule: string) => section(name).replace("<p>Members are appointed", `<p>${schedule}</p><p>Members are appointed`);
+  const html = page("Commissions", scheduled("Neighborhoods Commission", "The commission meets on the second Monday of each month at 4:30 p.m. in City Hall.") +
+    scheduled("Tourism Commission", "The commission meets quarterly.") + section("Planning &amp; Zoning Commission"));
+  assert.deepEqual(readHeldDirectory(html)?.map(row => [row.bodyName, row.meetingCadence ?? null]), [
+    ["Neighborhoods Commission", "The commission meets on the second Monday of each month at 4:30 p.m. in City Hall."],
+    ["Tourism Commission", null], ["Planning & Zoning Commission", null]], "\"quarterly\" names no day or time, so it is not a schedule");
+  const base = await prior();
+  const saved = capture(html, URL_);
+  const reading = await heldDirectoryReading({ plan, prior: base, now: NOW, artifacts: [artifact(saved)], readHeld: async () => saved });
+  const model = registryRuntimeCandidate(workerBodyDirectoryPackage({ plan, held: reading!, prior: base, now: NOW }).prepared, { prior: base }).readModel as RegistryRuntimeReadModel;
+  const neighborhoods = model.registry.bodies.find(body => body.name === "Neighborhoods Commission")!;
+  assert.deepEqual([neighborhoods.meetingCadence, neighborhoods.provenance.sourceUrl], ["The commission meets on the second Monday of each month at 4:30 p.m. in City Hall.", URL_]);
+  assert.equal(model.registry.bodies.find(body => body.name === "Tourism Commission")?.meetingCadence, null);
+});

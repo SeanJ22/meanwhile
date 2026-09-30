@@ -2753,6 +2753,33 @@ function bodySubject(
             },
           ]
         : []),
+      // The body's own statement of when it meets, until a dated meeting is
+      // held. Never turned into dates: the page says to check its calendar.
+      ...(body.meetingCadence && meetings.length === 0
+        ? [
+            {
+              label: "Regular meetings",
+              value: (
+                <>
+                  {body.meetingCadence.text}
+                  {body.meetingCadence.sourceUrl ? (
+                    <>
+                      {" "}
+                      <a
+                        href={body.meetingCadence.sourceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+                      >
+                        {new URL(body.meetingCadence.sourceUrl).hostname.replace(/^www\./, "")} →
+                      </a>
+                    </>
+                  ) : null}
+                </>
+              ),
+            },
+          ]
+        : []),
     ],
     representation: seated,
     rosterGaps: [...projectedBodyRoster(body).gaps],

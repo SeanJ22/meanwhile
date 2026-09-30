@@ -4,6 +4,7 @@ import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { hostname, tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import { createContext, runInContext } from "node:vm";
 
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { buildResearchIntent } from "../lib/control-plane/research-view.ts";
@@ -237,12 +238,10 @@ function checkRunnerPublishesConsole(src: string): void {
   assert.ok(fn, "pilot-runner.mts has no publishConsole()");
   const body = fn[0];
   assert.match(body, /for \(const publisher of CONSOLE_PUBLISHERS\)/, "publishConsole does not run every listed publisher");
-  assert.match(body, /await runBoundedChildPass\(/, "each publisher is an asynchronously bounded child process");
+  assert.match(body, /await runRuntimeChildren\(/, "each publisher is an asynchronous child process");
   assert.match(body, /args: \["--experimental-strip-types", \.\.\.publisher\.args\]/, "a publisher is not run through inherited parent environment");
   assert.doesNotMatch(src, /--env-file=\.env\.local/, "a standing child reopens cwd-relative environment state instead of inheriting the validated parent environment");
-  assert.match(body, /env: process\.env/, "the bounded child does not inherit the validated parent environment");
-  assert.match(body, /timeoutMs: PUBLISH_TIMEOUT_MS/, "no ceiling on a publisher");
-  assert.match(src, /const PUBLISH_TIMEOUT_MS = 5 \* 60_000/, "the publisher ceiling is not five minutes");
+  assert.match(body, /env: process\.env/, "the child does not inherit the validated parent environment");
   assert.match(body, /console publish: \$\{publisher\.name\} OK/, "no OK line");
   assert.match(body, /console publish: \$\{publisher\.name\} FAILED exit/, "no FAILED line");
   assert.doesNotMatch(body, /\bthrow\b/, "a publish failure is printed, never thrown");
@@ -250,7 +249,7 @@ function checkRunnerPublishesConsole(src: string): void {
   const call = src.indexOf("\n  await publishConsole();");
   assert.ok(call >= 0, "the loop never calls publishConsole()");
   const delivered = src.indexOf("const delivered = deliver(");
-  const sleep = src.indexOf("await sleepUnlessRunNow(");
+  const sleep = src.indexOf("await sleepUnlessRunNow(", call);
   assert.ok(delivered >= 0 && sleep >= 0, "the loop's delivery and sleep anchors moved");
   assert.ok(call > delivered, "publishConsole() runs BEFORE the digest is delivered");
   assert.ok(call < sleep, "publishConsole() runs after the inter-cycle sleep, not after the digest");
@@ -263,7 +262,7 @@ function checkRunnerHonorsOwnerIntents(src: string): void {
   assert.ok(says, "pilot-runner.mts has no ownerSays()");
   const body = says[0];
   assert.match(body, /readIntents\(log\)/, "ownerSays does not read the intent log through readIntents");
-  assert.equal((body.match(/researchIntents\.read\(/g) ?? []).length, 1, "ownerSays must read the log exactly once");
+  assert.equal((body.match(/readRunnerControls\(repos\)/g) ?? []).length, 1, "ownerSays must use the changed-control cache");
   assert.match(body, /\.runnerPause\b/, "ownerSays never looks at runnerPause");
   assert.match(body, /\.pendingRunNow\.length > 0/, "a pending RUN_CYCLE_NOW no longer ends the sleep");
   assert.match(body, /\.pendingDispatch\.length > 0/, "a pending DISPATCH does not end the sleep early");
@@ -292,7 +291,7 @@ function checkRunnerHonorsOwnerIntents(src: string): void {
   assert.ok(src.indexOf("startStandingRuntimeClock();") < src.indexOf("while (cycle < CYCLES)"), "the runtime clock starts after research");
   assert.match(src, /if \(runtimeAdmissionsHeld\) return;/, "a release hold cannot close runtime admission");
   assert.match(src, /await standingRuntimeScheduler\.waitForIdle\(\)/, "release handoff does not wait for independently running source lanes");
-  assert.match(src, /const AUTO_RELEASE_HANDOFF = argv\.includes\("--release-handoff"\)/, "developer checkouts cannot be distinguished from the installed runtime checkout");
+  assert.match(src, /const AUTO_RELEASE_HANDOFF = !STAGING && argv\.includes\("--release-handoff"\)/, "developer checkouts cannot be distinguished from the installed runtime checkout");
   assert.doesNotMatch(src, /--installed-sha=/, "runner still relies on an immutable installed SHA instead of automatic release handoff");
   assert.match(src, /await holdWhilePaused\(\);[\s\S]*cycle \+= 1;/, "the owner pause no longer holds research cycles");
   const hold = src.match(/async function holdWhilePaused\(\): Promise<\{ readonly ownerIntentsUnreadable: boolean \}> \{[\s\S]*?\n\}/);
@@ -308,8 +307,34 @@ test("pilot-runner.mts publishes the console after every digest (ADM-1)", () => 
   checkRunnerPublishesConsole(source("scripts/pilot-runner.mts"));
 });
 
-test("pilot-runner.mts honors PAUSE_RUNNER / RESUME_RUNNER and ends the sleep on a pending DISPATCH (ADM-5, ADM-8)", () => {
-  checkRunnerHonorsOwnerIntents(source("scripts/pilot-runner.mts"));
+test("pilot-runner.mts honors PAUSE_RUNNER / RESUME_RUNNER and ends the sleep on a pending DISPATCH (ADM-5, ADM-8)", async () => {
+  const src = source("scripts/pilot-runner.mts");
+  checkRunnerHonorsOwnerIntents(src);
+  const clock = src.match(/function startStandingRuntimeClock\(\): void \{[\s\S]*?\n\}/)?.[0];
+  assert.ok(clock);
+  let tick: (() => void) | null = null;
+  let finishRead: (value: string) => void = () => { throw new Error("read not started"); };
+  let reads = 0;
+  const context = createContext({
+    runtimeAdmissionsHeld: false, standingRuntimeTimer: null, researchCycleActive: false,
+    canary: false, activeControlRead: null, ownerWakePending: false, POLL_MS: 60_000,
+    runStandingRuntimeTick: () => {}, console,
+    setInterval: (callback: () => void) => { tick = callback; return 1; },
+    ownerSays: () => { reads++; return new Promise<string>(resolve => { finishRead = resolve; }); },
+  });
+  // Execute the actual clock with a controlled child lifetime and control read.
+  runInContext(clock.replace("(): void", "()") + "\nstartStandingRuntimeClock();", context);
+  assert.ok(tick);
+  const advance = tick as () => void;
+  advance();
+  assert.equal(reads, 0, "idle polling remains with the existing sleep path");
+  context.researchCycleActive = true;
+  advance(); advance();
+  assert.equal(reads, 1, "a long active cycle reads controls without overlapping reads");
+  finishRead("START_NOW");
+  await context.activeControlRead;
+  assert.equal(context.ownerWakePending, true, "the wake survives the active child finishing");
+  assert.equal(context.activeControlRead, null);
 });
 
 test("POSITIVE CONTROL: a runner that drops the publish call, the readiness target, or the dispatch check fails its checker", () => {

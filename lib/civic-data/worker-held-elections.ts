@@ -15,8 +15,7 @@ import type { RoutineDataStore } from "./store.ts";
 import { readRegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
 import { pageWords, section3Record } from "../control-plane/promotion/section3.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
-import { isOfficialSource } from "./source-authority.ts";
-import { captureIntact } from "./worker-publication-evidence.ts";
+import { captureIntact, heldPageCopies } from "./worker-publication-evidence.ts";
 import { publishElectionFields } from "./election-field-publication.ts";
 import { readManualProjectionPrior } from "./manual-projections.ts";
 
@@ -107,13 +106,7 @@ export async function publishHeldElectionOffices(input: {
     if (!read.has(key)) read.set(key, (async () => {
       const place = all.filter(other => other.autonomousPlan?.contract.subjectId === plan.contract.subjectId);
       const artifacts = (await Promise.all(place.map(other => input.repos.artifacts.read(other.id)))).flat();
-      // Newest first, each content once, at most `limit` distinct pages with every copy of each kept; HTTPS only,
-      // since the publication door refuses any other source. (#478's heldPageCopies once both merge.)
-      const hashes = new Set<string>(), urls = new Set<string>();
-      const candidates = artifacts.filter(a => !a.partial && /html/i.test(a.contentType) && a.canonicalUrl.startsWith("https://") && isOfficialSource(a.canonicalUrl))
-        .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt))
-        .filter(a => !hashes.has(a.contentHash) && Boolean(hashes.add(a.contentHash)))
-        .filter(a => urls.has(a.canonicalUrl) || (urls.size < (input.limit ?? 60) && Boolean(urls.add(a.canonicalUrl))));
+      const candidates = heldPageCopies(artifacts, input.limit ?? 60);
       const found: ElectionFieldInput[] = [];
       // The newest usable copy of each page speaks for it; a later "Access Denied" capture never shadows a good one.
       const readUrls = new Set<string>();

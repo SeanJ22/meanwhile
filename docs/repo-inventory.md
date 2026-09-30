@@ -8,7 +8,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Routes and pages
 
-90 file(s). Paths retain route groups and dynamic segments as written.
+91 file(s). Paths retain route groups and dynamic segments as written.
 
 - `/(admin)/admin/agents` — `app/(admin)/admin/agents/page.tsx`
 - `/(admin)/admin/assignments` — `app/(admin)/admin/assignments/page.tsx`
@@ -82,6 +82,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `/api/log` — `app/api/log/route.ts`
 - `/api/meetings` — `app/api/meetings/route.ts`
 - `/api/official-actions/[subject]` — `app/api/official-actions/[subject]/route.ts`
+- `/api/portraits/[...path]` — `app/api/portraits/[...path]/route.ts`
 - `/api/positions/[subject]/[topic]` — `app/api/positions/[subject]/[topic]/route.ts`
 - `/api/profile/[subject]` — `app/api/profile/[subject]/route.ts`
 - `/api/questionnaire` — `app/api/questionnaire/route.ts`
@@ -262,7 +263,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Scripts
 
-538 file(s).
+542 file(s).
 
 - `scripts/a001-feedback-backup.mts`
 - `scripts/a001-verify-catalog.mts`
@@ -570,8 +571,12 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/photo-review.mts`
 - `scripts/pill-census.mts`
 - `scripts/pilot-runner.mts`
+- `scripts/pilot-runtime-child.mts`
 - `scripts/pilot-runtime-config.mjs`
+- `scripts/pilot-runtime-control.mts`
+- `scripts/pilot-runtime-launch.mjs`
 - `scripts/pilot-runtime-launch.ps1`
+- `scripts/pilot-runtime-transfer.mts`
 - `scripts/pilot-task.ps1`
 - `scripts/pima-rollcall-walk.mts`
 - `scripts/pima-shadow-report.mts`
@@ -813,7 +818,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-959 file(s).
+960 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -1047,7 +1052,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/checklist-connections.test.ts`
 - `tests/checklist-delivery-score.test.ts`
 - `tests/checklist-dispatch-witness.test.ts`
-- `tests/checklist-running-release-witness.test.ts`
 - `tests/checklist-timings.test.ts`
 - `tests/chromium-pin.test.ts`
 - `tests/ci-preflight.test.ts`
@@ -1261,6 +1265,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/held-election-offices.test.ts`
 - `tests/held-filing-subjects.test.ts`
 - `tests/held-meeting-partition.test.ts`
+- `tests/held-meetings.test.ts`
 - `tests/held-place-capture.test.ts`
 - `tests/held-roster-publication.test.ts`
 - `tests/holdings-readback.test.ts`
@@ -1454,6 +1459,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/pilot-cost-digest.test.ts`
 - `tests/pilot-health-view.test.ts`
 - `tests/pilot-runtime-config.test.ts`
+- `tests/pilot-runtime-control.test.ts`
 - `tests/pilot-task-installer.test.ts`
 - `tests/pima-edu-source.test.ts`
 - `tests/pima-legistar-outcomes-routine.test.ts`
@@ -1777,7 +1783,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7066 file(s).
+7076 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -1974,6 +1980,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/api/log/route.ts`
 - `app/api/meetings/route.ts`
 - `app/api/official-actions/[subject]/route.ts`
+- `app/api/portraits/[...path]/route.ts`
 - `app/api/positions/[subject]/[topic]/route.ts`
 - `app/api/profile/[subject]/route.ts`
 - `app/api/questionnaire/route.ts`
@@ -4273,6 +4280,9 @@ Read each source file for its current exports, configuration, commands and data.
 - `data/workstate/orchestration/2026-09-02-worker-fleet.json` <!-- expected-future: date copied from a file path; no measurement date is claimed -->
 - `data/workstate/orchestration/2026-09-03-autonomous-agent-fleet.json` <!-- expected-future: date copied from a file path; no measurement date is claimed -->
 - `data/workstate/orchestration/2026-09-04-reader-last-mile.json` <!-- expected-future: date copied from a file path; no measurement date is claimed -->
+- `deploy/runner/install.sh`
+- `deploy/runner/meanwhile-runner.service`
+- `deploy/runner/setup.ps1`
 - `docs/DESIGN.md`
 - `docs/Meanwhile-Owner-Checklist.xlsx`
 - `docs/abuse-policy.md`
@@ -4978,6 +4988,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/civic-data/worker-body-directory.ts`
 - `lib/civic-data/worker-held-directory.ts`
 - `lib/civic-data/worker-held-elections.ts`
+- `lib/civic-data/worker-held-meetings.ts`
 - `lib/civic-data/worker-held-roster.ts`
 - `lib/civic-data/worker-national-publication.ts`
 - `lib/civic-data/worker-publication-context.ts`
@@ -5094,6 +5105,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/evidence/admin-copy-runner.ts`
 - `lib/control-plane/evidence/artifact.ts`
 - `lib/control-plane/evidence/durable-store.ts`
+- `lib/control-plane/evidence/netlify-store.ts`
 - `lib/control-plane/evidence/parser-boundary.ts`
 - `lib/control-plane/evidence/read-only-vault.ts`
 - `lib/control-plane/evidence/store.ts`
@@ -5201,7 +5213,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/readiness/checklist-dispatch-witness.ts`
 - `lib/control-plane/readiness/checklist-profile.json`
 - `lib/control-plane/readiness/checklist-read.ts`
-- `lib/control-plane/readiness/checklist-running-release-witness.ts`
 - `lib/control-plane/readiness/checklist-score.ts`
 - `lib/control-plane/readiness/checklist-timings.ts`
 - `lib/control-plane/readiness/compute.ts`
@@ -7386,8 +7397,12 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/photo-review.mts`
 - `scripts/pill-census.mts`
 - `scripts/pilot-runner.mts`
+- `scripts/pilot-runtime-child.mts`
 - `scripts/pilot-runtime-config.mjs`
+- `scripts/pilot-runtime-control.mts`
+- `scripts/pilot-runtime-launch.mjs`
 - `scripts/pilot-runtime-launch.ps1`
+- `scripts/pilot-runtime-transfer.mts`
 - `scripts/pilot-task.ps1`
 - `scripts/pima-rollcall-walk.mts`
 - `scripts/pima-shadow-report.mts`
@@ -7876,7 +7891,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/checklist-connections.test.ts`
 - `tests/checklist-delivery-score.test.ts`
 - `tests/checklist-dispatch-witness.test.ts`
-- `tests/checklist-running-release-witness.test.ts`
 - `tests/checklist-timings.test.ts`
 - `tests/chromium-pin.test.ts`
 - `tests/ci-preflight.test.ts`
@@ -8306,6 +8320,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/held-election-offices.test.ts`
 - `tests/held-filing-subjects.test.ts`
 - `tests/held-meeting-partition.test.ts`
+- `tests/held-meetings.test.ts`
 - `tests/held-place-capture.test.ts`
 - `tests/held-roster-publication.test.ts`
 - `tests/helpers/ask-gap-unit.ts`
@@ -8519,6 +8534,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/pilot-cost-digest.test.ts`
 - `tests/pilot-health-view.test.ts`
 - `tests/pilot-runtime-config.test.ts`
+- `tests/pilot-runtime-control.test.ts`
 - `tests/pilot-task-installer.test.ts`
 - `tests/pima-edu-source.test.ts`
 - `tests/pima-fact-fixtures.ts`

@@ -66,6 +66,7 @@ interface GroundedBody {
     sourceUrl?: string | null;
     canonicalSubjectId?: string;
     candidateProfile?: EvidenceRecord["candidateProfile"];
+    rollCall?: EvidenceRecord["rollCall"];
   }[];
   gaps?: { whose: string; statement: string }[];
   contacts?: { id: string; name: string; relationship: string; sourceUrl: string | null }[];
@@ -867,6 +868,17 @@ test("ASK-06 (a): a reader asking about their sitting representative gets his ro
     /* Person AND office, and the office is the one he HOLDS. */
     assert.match(vote.text, /Juan Ciscomani, U\.S\. Representative: voted /);
   }
+});
+
+test("ASK-06 (a2): 'How has <person> voted?' is composed from the roll calls we hold — newest first, with how many we hold — with no model", async () => {
+  const body = await ask("How has Juan Ciscomani voted?", { ocdIds: [AZ, PIMA, CD6] });
+  assert.equal(body.mode, "GROUNDED_COMPOSED");
+  assert.match(body.answer ?? "", /^Juan Ciscomani's most recent recorded votes: (?:YES|NO|Not Voting|Present)[^;]* on .+ \(.+; .+\)/);
+  assert.match(body.answer ?? "", /We hold 20 recorded votes for Juan Ciscomani; the rest are listed below\.$/);
+  const votes = (body.records ?? []).filter((record) => record.kind === "ROLL_CALL_VOTE");
+  assert.equal(votes.length, 20, "the reader is shown every roll call, whatever the answer names");
+  const newest = [...votes].sort((a, b) => (b.occurredAt ?? "").localeCompare(a.occurredAt ?? ""))[0]!;
+  assert.ok((body.answer ?? "").includes(newest.rollCall!.what), "the newest recorded vote is the first one named");
 });
 
 test("ASK-06 (b): a candidate without a permanent voting-office identity gets a NAMED gap, never silence", async () => {

@@ -868,6 +868,14 @@ async function main(): Promise<void> {
   const jurisdictions: VotingJurisdiction[] = [];
   const failures: VotingSiteAcquisitionFailure[] = [];
 
+  // Every supported adapter belongs to the automatic pass, including ones first acquired by a scoped Send.
+  try {
+    jurisdictions.push(await retrieveCochise());
+  } catch (error) {
+    failures.push({ jurisdictionId: "ocd-division/country:us/state:az/county:cochise",
+      code: "COCHISE_VOTING_SITES_UNAVAILABLE", detail: error instanceof Error ? error.message : String(error) });
+  }
+
   try {
     const pima = await retrievePima();
     if (pima.sites.length === 0) throw new Error("Pima County returned zero current official sites");

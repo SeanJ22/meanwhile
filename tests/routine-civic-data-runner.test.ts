@@ -5,6 +5,7 @@ import test from "node:test";
 import { failedAcquisitionCandidate, fecFundingCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredRoutineCandidate, processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
 import {
   ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,
   ROUTINE_CLOCK_READ_CONCURRENCY,
@@ -41,6 +42,22 @@ import {
   routineSupervisorCycleIsolationIssue,
 } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+
+test("source refreshes are admitted daily without a Send and retry failed sources hourly", () => {
+  const now = Date.parse("2026-09-30T12:00:00Z");
+  for (const task of AUTOMATIC_REFRESH_TASKS) {
+    assert.equal(task.ownerInvocation, undefined);
+    assert.equal(automaticRefreshContract(task.id), task.id);
+    assert.equal(routineTaskSelection([`--only=${task.id}`], [...ROUTINE_SOURCE_TASKS, ...AUTOMATIC_REFRESH_TASKS]).ok, true);
+    assert.equal(routineTaskDue(task, undefined, now), true);
+    const checked = "2026-09-29T12:00:00Z";
+    assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked }, now - 1), false);
+    assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked }, now), true);
+    const failed = "2026-09-30T11:00:00Z";
+    assert.equal(routineTaskDue(task, { lastAttemptedAt: failed, lastSucceededAt: null }, now - 1), false);
+    assert.equal(routineTaskDue(task, { lastAttemptedAt: failed, lastSucceededAt: null }, now), true);
+  }
+});
 import {
   ROUTINE_CHILD_CONCURRENCY,
   ROUTINE_CHILD_TIMEOUT_MS,
@@ -1057,7 +1074,7 @@ test("--only selection refuses typos and empty tokens before store access", () =
   });
 
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  const selection = runner.indexOf("routineTaskSelection(process.argv.slice(2))");
+  const selection = runner.indexOf("routineTaskSelection(process.argv.slice(2), STANDING_SOURCE_TASKS)");
   const refusal = runner.indexOf("if (!TASK_SELECTION.ok)");
   const singleton = runner.indexOf("await acquireProcessSingleton(");
   const writeHandle = runner.indexOf("resolveProductionWriteHandle()");

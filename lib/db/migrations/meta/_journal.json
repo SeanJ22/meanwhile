@@ -211,6 +211,13 @@
       "when": 1790277413783,
       "tag": "0029_unchanged_confirmation_receipts",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1790748000000,
+      "tag": "0030_database_transfer_daily",
+      "breakpoints": true
     }
   ]
 }

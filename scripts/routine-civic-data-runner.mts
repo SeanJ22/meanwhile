@@ -9,6 +9,7 @@
  * and never replaces a candidate's own source-through or retrieved-at facts.
  */
 import { hostname } from "node:os";
+import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
 import { neon } from "@neondatabase/serverless";
 import { campaignPublicationInputsDue, readCampaignPublicationInputs, CAMPAIGN_PUBLICATION_TASK, type CampaignPublicationInputs } from "../lib/civic-data/campaign-publication-due.ts";
 
@@ -116,6 +117,7 @@ import {
 import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/connect-retry.ts";
 import { assertDurableRepositories } from "../lib/control-plane/repository/types.ts";
 import { getDb } from "../lib/db/index.ts";
+import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
 import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
@@ -134,7 +136,8 @@ installFatalLine("routine-civic-data-runner", () => step);
 
 const ROOT = process.cwd();
 const FORCE = process.argv.includes("--force");
-const TASK_SELECTION = routineTaskSelection(process.argv.slice(2));
+const STANDING_SOURCE_TASKS = [...ROUTINE_SOURCE_TASKS, ...AUTOMATIC_REFRESH_TASKS];
+const TASK_SELECTION = routineTaskSelection(process.argv.slice(2), STANDING_SOURCE_TASKS);
 const ONLY = TASK_SELECTION.ok ? TASK_SELECTION.only : null;
 const inheritedStartedAt = process.env[ROUTINE_SUPERVISOR_STARTED_AT_ENV];
 const RUN_STARTED_AT = inheritedStartedAt && Number.isFinite(Date.parse(inheritedStartedAt)) &&
@@ -459,7 +462,9 @@ try {
   supervisorFailures.push({ taskId: "hunt-source-admission", code: "HUNT_SCOPE_UNREAD", detail });
   console.error(`RCD_TASK hunt-source-admission: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
-const selectedTasks = [...ROUTINE_SOURCE_TASKS, ...huntTasks].filter((task) => !ONLY || ONLY.has(task.id));
+// A standing refresh already covers a Send for its source; don't launch duplicate children for the same pointer.
+const selectedTasks = [...STANDING_SOURCE_TASKS, ...huntTasks.filter(task => !STANDING_SOURCE_TASKS.some(standing => standing.id === task.id))]
+  .filter((task) => !ONLY || ONLY.has(task.id));
 step = "reading the routine task clocks";
 const clockReads = FORCE
   ? selectedTasks.map((task) => ({ task, ok: true as const, clock: undefined, error: null }))
@@ -658,10 +663,10 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
     executable: process.execPath,
     args: ["--experimental-strip-types", ...pending.command],
     env: {
-      ...(pending.task.ownerInvocation ? admittedRuntimeChildEnvironment({
+      ...(pending.task.ownerInvocation || automaticRefreshContract(pending.task.id) ? admittedRuntimeChildEnvironment({
         parentEnv: process.env,
         capability: "MANUAL_CONTRACT",
-        contract: pending.task.registeredContractId ?? pending.task.id,
+        contract: pending.task.registeredContractId ?? automaticRefreshContract(pending.task.id) ?? pending.task.id,
         parentPid: process.pid,
       }) : admittedRuntimeChildEnvironment({
         parentEnv: process.env,
@@ -1113,7 +1118,7 @@ try {
 const attemptedCount = floored(
   "attempted routine source tasks",
   "the configured routine source/body partition registry",
-  ROUTINE_SOURCE_TASKS.length,
+  STANDING_SOURCE_TASKS.length,
   attempted,
 );
 console.log("RCD_RUN=" + JSON.stringify({
@@ -1139,6 +1144,8 @@ console.log("RCD_RUN=" + JSON.stringify({
 // A source refusal is a durable data-plane event, not a failed supervisor
 // process. Only a process/protocol failure makes the runner nonzero.
 if (supervisorFailures.length > 0) process.exitCode = 2;
+step = "saving the daily database byte counter";
+if (!await flushDatabaseTransfer()) console.warn("RCD_TRANSFER daily byte counter could not be saved; data results are unchanged.");
 step = "releasing the host-local singleton";
 await ROUTINE_DATA_PROCESS_LEASE.release();
 }

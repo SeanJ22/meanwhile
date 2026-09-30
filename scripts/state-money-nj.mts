@@ -111,6 +111,7 @@ import { today } from "./doc-dates.mjs";
 import { stateCampaignFinanceCandidate } from "../lib/funding/data-plane.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readNjMorrisFiling } from "../lib/sources/ballot-nj-morris/index.ts";
@@ -802,6 +803,7 @@ const promotion = await processRegisteredManualCandidate(
   candidate,
   candidate.retrieval.retrievedAt,
 );
+printSourceRunnerReceipt("nj-elec-campaign-finance", candidate, promotion);
 if (!promotion.promoted) throw new Error(`NJ campaign-finance promotion refused: ${promotion.candidate.failureCode}`);
 console.log(`  promoted ${promotion.promoted.versionId}; no tracked runtime artifact was written`);
 }
@@ -820,7 +822,8 @@ try {
       failureDetail: error instanceof Error ? error.message : String(error),
       parserVersion: "nj-campaign-finance/2",
     });
-    await processRegisteredManualCandidate(new PostgresRoutineDataStore(), "nj-elec-campaign-finance", failed, attemptedAt);
+    const outcome = await processRegisteredManualCandidate(new PostgresRoutineDataStore(), "nj-elec-campaign-finance", failed, attemptedAt);
+    printSourceRunnerReceipt("nj-elec-campaign-finance", failed, outcome);
   }
   throw error;
 }

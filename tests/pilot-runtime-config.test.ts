@@ -5,7 +5,20 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
-import { validateRuntimeConfig } from "../scripts/pilot-runtime-config.mjs";
+import { resolvePilotMirror, validateRuntimeConfig } from "../scripts/pilot-runtime-config.mjs";
+
+test("staging has no shared mirror and accepts only a mirror inside its worktree", () => {
+  const dir = mkdtempSync(join(tmpdir(), "wtp-staging-mirror-"));
+  const root = join(dir, "worktree");
+  mkdirSync(root);
+  try {
+    assert.equal(resolvePilotMirror(root, undefined, true), null);
+    assert.equal(resolvePilotMirror(root, join(dir, "shared"), true), null);
+    assert.equal(resolvePilotMirror(root, join(dir, "worktree-other"), true), null);
+    assert.equal(resolvePilotMirror(root, join(root, "mirror"), true), join(root, "mirror"));
+    assert.equal(resolvePilotMirror(root, undefined, false), "G:/My Drive/we-the-people");
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
 
 interface Fixture {
   readonly dir: string;

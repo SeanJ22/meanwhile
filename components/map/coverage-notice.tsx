@@ -874,7 +874,7 @@ function CoverageBody({
       {/* What Meanwhile holds for this ZIP, level by level, so a blank reads as
           "not collected yet" and never as "nothing here". Counts come from the
           same arrays the sections below render. */}
-      <p className="mt-1 text-[0.75rem] leading-relaxed text-muted" data-mw-covers>
+      <p className="mt-1 text-[0.75rem] leading-relaxed text-voice" data-mw-covers>
         <strong className="font-semibold text-voice">What Meanwhile has for {zip}:</strong>{" "}
         {[
           seats.some((seat) => seat.tier === "national" && seat.representatives.length > 0) || senators.length > 0

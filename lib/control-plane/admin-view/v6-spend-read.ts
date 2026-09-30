@@ -94,10 +94,10 @@ export function neonTransferOf(read: DailyDatabaseTransferRead | null): NeonTran
 
 export const SPEND_SQL = `WITH rows AS (
   SELECT to_char((c.recorded_at AT TIME ZONE 'America/New_York')::date, 'YYYY-MM-DD') AS day, c.record->>'role' AS role,
-    c.record->'byModel' AS by_model, (c.record->'cost'->>'usd')::float8 AS usd, c.record->>'attemptId' AS attempt_id
+    c.record->'byModel' AS by_model, c.record->>'model' AS row_model, (c.record->'cost'->>'usd')::float8 AS usd, c.record->>'attemptId' AS attempt_id
   FROM cp_log_costs c WHERE c.recorded_at > now() - ($1::int * interval '1 day')
 ) SELECT day, role, model, sum(usd) AS usd, count(*)::int AS n FROM (
-  SELECT r.day, r.role, COALESCE(m->>'model', a.value->'worker'->>'version') AS model, COALESCE((m->>'usd')::float8, r.usd) AS usd
+  SELECT r.day, r.role, COALESCE(m->>'model', r.row_model, a.value->'worker'->>'version') AS model, COALESCE((m->>'usd')::float8, r.usd) AS usd
   FROM rows r LEFT JOIN LATERAL jsonb_array_elements(CASE WHEN jsonb_typeof(r.by_model) = 'array' THEN r.by_model END) m ON true
   LEFT JOIN cp_attempts a ON a.id = r.attempt_id
 ) x WHERE x.role <> 'ACQUIRER' OR x.usd IS NOT NULL GROUP BY 1, 2, 3`;

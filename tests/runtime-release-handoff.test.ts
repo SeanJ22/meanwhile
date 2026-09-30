@@ -18,7 +18,6 @@ import {
   type GithubCheckRun,
 } from "../lib/ops/runtime-release-handoff.ts";
 import { REQUIRED_CONTEXTS } from "../lib/ops/required-contexts.ts";
-import type { ProductionIntegrityRead } from "../lib/ops/production-integrity-data-plane.ts";
 
 const RUNNING = "1".repeat(40);
 const TARGET = "2".repeat(40);
@@ -77,7 +76,7 @@ test("missing, failed, malformed and multiple CLI credentials preserve the certi
   assert.equal(runtimeGithubCredential({ root: ".", env: {}, runCommand: () => { throw new Error("fixture_secret"); } }), null);
   const runner = readFileSync("scripts/pilot-runner.mts", "utf8");
   assert.match(runner, /token: runtimeGithubCredential\(\{ root: ROOT, env: process\.env \}\)/);
-  assert.equal(inspectRuntimeReleaseEvidence({ runningSha: TARGET, served: { sha: TARGET, how: "fixture", httpStatus: 200 }, integrity: integrity(), checkRuns: null }).code, "SOFTWARE_CERTIFICATION_UNREADABLE");
+  assert.equal(inspectRuntimeReleaseEvidence({ runningSha: TARGET, served: { sha: TARGET, how: "fixture", httpStatus: 200 }, checkRuns: null }).code, "SOFTWARE_CI_UNREADABLE");
 });
 
 function checks(conclusion: string | null = "success"): GithubCheckRun[] {
@@ -89,45 +88,10 @@ function checks(conclusion: string | null = "success"): GithubCheckRun[] {
   }));
 }
 
-function integrity(sha = TARGET, observed: "HELD" | "REFUSED" = "HELD"): ProductionIntegrityRead {
-  const record = {
-    formatVersion: 1 as const,
-    deployedSha: sha,
-    mainSha: sha,
-    observed,
-    failureClass: null,
-    detail: `${observed} in fixture`,
-    observedAt: "2026-09-09T00:00:00.000Z",
-    moment: "post-deploy" as const,
-    gateExit: observed === "HELD" ? 0 as const : 1 as const,
-  };
-  return {
-    kind: "HELD",
-    record,
-    receipt: {
-      formatVersion: 1,
-      id: `fixture:${sha}`,
-      stagingSha: sha,
-      deployId: null,
-      section: null,
-      decision: "POST_DEPLOY_INTEGRITY",
-      raisedStateChoice: null,
-      feedback: null,
-      actor: "fixture",
-      composedFrom: null,
-      createdAt: record.observedAt,
-      manifest: { prompt3Status: null, reviewState: null, stagingBoundary: null, reportedAt: null },
-      productionIntegrity: record,
-      sourceRunId: "fixture",
-    },
-  };
-}
-
-test("the exact served, integrity-held, fully certified SHA is current or requires one handoff", () => {
+test("the exact served, CI-passing SHA is current or requires one handoff", () => {
   const update = inspectRuntimeReleaseEvidence({
     runningSha: RUNNING,
     served: { sha: TARGET, how: "fixture /api/build", httpStatus: 200 },
-    integrity: integrity(),
     checkRuns: checks(),
   });
   assert.equal(update.state, "UPDATE_REQUIRED");
@@ -137,23 +101,19 @@ test("the exact served, integrity-held, fully certified SHA is current or requir
   const current = inspectRuntimeReleaseEvidence({
     runningSha: TARGET,
     served: { sha: TARGET, how: "fixture /api/build", httpStatus: 200 },
-    integrity: integrity(),
     checkRuns: checks(),
   });
   assert.equal(current.state, "CURRENT");
 });
 
-test("handoff fails closed on short/unknown served SHA, stale or refused integrity, and unreadable certification", () => {
+test("handoff fails closed on short/unknown served SHA, unreadable or failed CI", () => {
   const base = {
     runningSha: RUNNING,
     served: { sha: TARGET, how: "fixture /api/build", httpStatus: 200 },
-    integrity: integrity(),
     checkRuns: checks(),
   };
   assert.equal(inspectRuntimeReleaseEvidence({ ...base, served: { ...base.served, sha: TARGET.slice(0, 7) } }).code, "DEPLOYED_SHA_UNRESOLVED");
-  assert.equal(inspectRuntimeReleaseEvidence({ ...base, integrity: integrity(RUNNING) }).code, "POST_DEPLOY_INTEGRITY_NOT_HELD_FOR_TARGET");
-  assert.equal(inspectRuntimeReleaseEvidence({ ...base, integrity: integrity(TARGET, "REFUSED") }).code, "POST_DEPLOY_INTEGRITY_NOT_HELD_FOR_TARGET");
-  assert.equal(inspectRuntimeReleaseEvidence({ ...base, checkRuns: null }).code, "SOFTWARE_CERTIFICATION_UNREADABLE");
+  assert.equal(inspectRuntimeReleaseEvidence({ ...base, checkRuns: null }).code, "SOFTWARE_CI_UNREADABLE");
   assert.equal(inspectRuntimeReleaseEvidence({ ...base, checkRuns: checks("failure") }).code, "REQUIRED_CONTEXT_NOT_GREEN");
   assert.equal(inspectRuntimeReleaseEvidence({ ...base, checkRuns: checks(null) }).code, "REQUIRED_CONTEXT_NOT_GREEN");
   assert.equal(inspectRuntimeReleaseEvidence({ ...base, checkRuns: checks().slice(1) }).code, "REQUIRED_CONTEXT_MISSING");

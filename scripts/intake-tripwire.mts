@@ -31,7 +31,8 @@ try {
   assertRuntimeAuthority({ capabilities: ["INTAKE_RUNTIME"] });
   const handle = resolveProductionWriteHandle();
   process.env.DATABASE_URL = handle.connection;
-  process.env.WTP_DB_ROLE = "production";
+  if (process.env.WTP_RUNTIME_MODE === "staging") process.env.WTP_DB_ROLE = "local";
+  else process.env.WTP_DB_ROLE = "production";
   process.env.WTP_SANCTIONED_WRITE = "intake-limiter-purge";
   assertWriteAllowed("an intake limiter purge");
   observation = await collectIntakeRuntimeObservation({

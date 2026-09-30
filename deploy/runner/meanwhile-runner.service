@@ -1,0 +1,29 @@
+[Unit]
+Description=Meanwhile continuous civic data runner
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=meanwhile
+Group=meanwhile
+WorkingDirectory=/opt/meanwhile
+EnvironmentFile=/etc/meanwhile/runner.env
+Environment=PLAYWRIGHT_BROWSERS_PATH=/var/lib/meanwhile/browsers
+Environment=WTP_MIRROR=/var/lib/meanwhile/digests
+ExecStart=/usr/bin/node /opt/meanwhile/scripts/pilot-runtime-launch.mjs
+Restart=always
+RestartSec=10
+KillMode=control-group
+TimeoutStopSec=90
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/opt/meanwhile /var/lib/meanwhile
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

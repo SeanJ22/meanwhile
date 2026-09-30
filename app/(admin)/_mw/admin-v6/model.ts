@@ -217,7 +217,8 @@ export interface SameCause {
   readonly lane: Lane;
   readonly count: string;
   readonly itemIds: readonly string[];
-  readonly action: ActionRef;
+  /** Absent when the group names no state the fleet could be sent to. */
+  readonly action?: ActionRef;
 }
 
 /* ------------------------------------------------------------------ work */
@@ -344,7 +345,34 @@ export interface ChecklistItem {
   readonly next: string;
   readonly parts: readonly { readonly text: string; readonly status: string; readonly proof: string; readonly tone: "good" | "warn" | "muted" }[];
   readonly resultId?: string;
+  /** The saved official page this fact came from, when we hold one. */
+  readonly sourceUrl?: string | null;
   readonly actions: readonly ActionRef[];
+}
+
+/** One group of Sean’s capture score (server: place-scorecard.ts). */
+export interface ScoreGroup {
+  readonly group: string;
+  readonly name: string;
+  readonly published: number;
+  readonly held: number;
+  readonly unpublished: number;
+  readonly stale: number;
+  readonly missing: number;
+  readonly total: number;
+  readonly captured: number;
+  readonly percent: number | null;
+}
+
+/** Sean’s checklist score for one place, overall and by group. It measures capture and never gates publishing. */
+export interface PlaceScoreView {
+  readonly placeKey: string;
+  readonly placeLabel: string;
+  readonly covers: string;
+  readonly observedAt: string;
+  readonly divisionCount: number;
+  readonly overall: ScoreGroup;
+  readonly groups: readonly ScoreGroup[];
 }
 
 export interface SystemGroup {
@@ -363,6 +391,8 @@ export interface ChecklistView {
   readonly placeGroups: readonly ChecklistGroupCount[] | null;
   readonly items: readonly ChecklistItem[] | null;
   readonly systemGroups: readonly SystemGroup[];
+  /** Present for a ZIP, county or state; null or absent where no owed list is measured. */
+  readonly score?: PlaceScoreView | null;
 }
 
 /* ----------------------------------------------------------------- money */
@@ -506,7 +536,7 @@ export type ActionKind =
   | "decide" | "hunt-start" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop"
   | "global-paid" | "global-runner-pause" | "global-runner-resume"
   | "scope-first" | "scope-recheck" | "doc-request" | "use-url" | "reprocess" | "retry-method" | "resume-publish"
-  | "eng-task" | "job-stop" | "focus";
+  | "eng-task" | "job-stop" | "focus" | "send-agents";
 
 export type ReceiptStatus = "queued" | "read" | "running" | "done" | "partial" | "refused" | "failed" | "unknown";
 export const PENDING_STATUSES: readonly ReceiptStatus[] = ["queued", "read", "running", "unknown"];

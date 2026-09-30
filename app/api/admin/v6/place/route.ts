@@ -28,7 +28,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   const limit = limitText === null ? PLACE_ITEM_PAGE : /^\d{1,3}$/.test(limitText) ? Number(limitText) : NaN;
   const cursor = params.get("cursor");
   const offset = cursor === null ? 0 : /^\d{1,7}$/.test(cursor) ? Number(cursor) : NaN;
-  const status = params.get("status");
+  const statusParam = params.get("status");
+  const status = statusParam === "all" ? null : statusParam;
   const group = params.get("group");
   const q = params.get("q");
   if (!Number.isInteger(limit) || limit < 1 || limit > 200 || !Number.isInteger(offset) || (status !== null && owedStatesOf(status) === null) ||

@@ -59,7 +59,7 @@ test("only a ZIP, a county or a state is a place", () => {
   assert.deepEqual(resolvePlaceKey("st:az"), { kind: "state", state: "az" });
   for (const bad of ["us", "geo:az.congressional_district.06", "body:x", "geo:az.zcta.856"]) {
     const r = resolvePlaceKey(bad);
-    assert.ok("state" in r && r.state === "REFUSED", bad);
+    assert.ok("says" in r && r.state === "REFUSED", bad);
   }
 });
 
@@ -93,7 +93,7 @@ test("the section carries the score on top, the status bars, one window of items
   assert.equal(section.data.definitionCount, 325);
   assert.equal(section.data.items.length, 2);
   const missing = section.data.items.find((i) => i.key === "2")!;
-  assert.deepEqual(missing.actions, [{ kind: "send-agents", target: "geo:az.zcta.85635", label: "Send agents" }]);
+  assert.deepEqual(missing.actions, [{ kind: "send-agents", target: "geo:az.zcta.85635", label: "Send agents", payload: { words: "Deploy fleet to Arizona 85635" } }]);
   assert.deepEqual(section.data.items.find((i) => i.key === "1")!.actions, []);
   assert.equal(section.data.items.find((i) => i.key === "1")!.sourceUrl, "https://a.gov");
   const gov = section.data.placeGroups.find((g) => g.group === "GOV")!;

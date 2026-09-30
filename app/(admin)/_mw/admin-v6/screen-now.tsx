@@ -355,6 +355,8 @@ export function StuckRow(props: { readonly item: StuckItem; readonly shared?: bo
   );
 }
 
+const STUCK_SHOWN_ON_NOW = 6;
+
 function Stuck() {
   const v = useV6();
   const { stuck } = useScoped();
@@ -376,7 +378,8 @@ function Stuck() {
         </div>
       )}
       {v.data.stuck.state !== "not-connected" && !shown.length && <Empty>{lane === "auto" ? "No automatic repair is recorded here. That doesn’t mean nothing is failing." : `Nothing ${lane === "all" ? "is stuck" : "in this group"} in ${v.place.name}.`}</Empty>}
-      <div className={s.stack}>{shown.map((x) => <StuckRow key={x.item.id} item={x.item} shared={x.rel === "shared"} withActions />)}</div>
+      <div className={s.stack}>{shown.slice(0, STUCK_SHOWN_ON_NOW).map((x) => <StuckRow key={x.item.id} item={x.item} shared={x.rel === "shared"} withActions />)}</div>
+      {shown.length > STUCK_SHOWN_ON_NOW && <p className={cx(s.p, s.meta)}>The {STUCK_SHOWN_ON_NOW} most urgent of {count(shown.length)} listed here. <button type="button" className={s.btnLink} onClick={() => v.go("work")}>See them grouped by cause →</button></p>}
     </Card>
   );
 }

@@ -10,12 +10,82 @@ import { useState } from "react";
 
 import { STATUS_COLOR, STATUS_LABEL, StatusBar, StatusLegend, StatusTable, Swatch } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
-import { count, ITEM_STATUS_ORDER, type ItemStatus } from "./model.ts";
-import { Card, cx, Empty, SourceNote, useListView, usePager } from "./ui.tsx";
+import { count, ITEM_STATUS_ORDER, mst, type ItemStatus, type PlaceScoreView, type ScoreGroup } from "./model.ts";
+import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
+
+import { Actions, Card, cx, Empty, SourceNote, useListView, usePager } from "./ui.tsx";
 import s from "./v6.module.css";
 
 const SYS_WORDS = ["Partly built", "Known gap", "Not checked yet", "Other"];
 const SYS_CLASS = ["c-blue", "c-coral", "c-hatch", "c-dark"];
+
+/** The five parts of a captured-or-owed fact, in the order Sean reads them. Colors reuse the checklist's own status colors. */
+const SCORE_PARTS = [
+  { key: "published", words: "Published", cls: "c-blue" },
+  { key: "held", words: "Captured, not published yet", cls: "c-amber" },
+  { key: "unpublished", words: "The government doesn’t publish it", cls: "c-violet" },
+  { key: "stale", words: "Captured earlier, refresh due", cls: "c-gray" },
+  { key: "missing", words: "Not captured yet", cls: "c-hatch" },
+] as const;
+
+function ScoreBar(props: { readonly g: ScoreGroup; readonly label: string; readonly tall?: boolean }) {
+  const { g } = props;
+  const words = SCORE_PARTS.map((p) => `${p.words}: ${count(g[p.key])}`).join("; ");
+  return (
+    <div className={cx(s.bar, props.tall && s.barTall)} role="img" aria-label={`${props.label}. ${words}`}>
+      {SCORE_PARTS.map((p) => (g[p.key] && g.total ? <span key={p.key} className={cx(s.seg, s[p.cls])} style={{ width: `${(g[p.key] / g.total) * 100}%` }} title={`${p.words}: ${count(g[p.key])}`} /> : null))}
+    </div>
+  );
+}
+
+/**
+ * The words a send-agents instruction carries for a place. The runner reads them as a target: the state, plus terms a
+ * unit must contain. "Deploy" and "fleet" are filler it drops, so nothing else goes in.
+ */
+function placeSendWords(scopeKey: string, placeName: string): string | null {
+  const m = /^(?:geo:|st:)([a-z]{2})(?:.([a-z_]+).([0-9A-Za-z]+))?$/.exec(scopeKey);
+  const state = m ? US_STATES.find((x) => x.code === m[1])?.name : null;
+  if (!m || !state) return null;
+  const term = m[2] === "zcta" ? m[3] : m[2] === "county" ? placeName.replace(/,.*$/, "").replace(/s+County$/i, "").trim() : "";
+  return ["Deploy fleet to", state, term].filter(Boolean).join(" ");
+}
+
+const percentWords = (g: ScoreGroup) => (g.percent === null ? "—" : `${g.percent.toFixed(1)}%`);
+
+/**
+ * **SEAN'S CHECKLIST SCORE FOR THIS PLACE.** How much of what the place is owed
+ * is captured, overall and by group. It counts capture only: it never holds
+ * back publishing, and a fact that passes verification is published whatever
+ * this says.
+ */
+function PlaceScoreCard(props: { readonly score: PlaceScoreView; readonly group: string; readonly onGroup: (g: string) => void }) {
+  const v = useV6();
+  const { score } = props;
+  const o = score.overall;
+  const words = placeSendWords(v.scopeKey, v.place.name);
+  return (
+    <Card title={`Checklist score · ${score.placeLabel}`} aside={<span className={s.meta}>Read {mst(score.observedAt)}</span>}>
+      <div className={s.stack}>
+        <div className={s.spread} style={{ alignItems: "baseline" }}>
+          <span className={s.mono} style={{ fontSize: 34, fontWeight: 600 }} aria-label={`Captured: ${percentWords(o)}`}>{percentWords(o)}</span>
+          <span className={cx(s.p, s.small)}>{count(o.captured)} of {count(o.total)} things this place is owed are captured. {count(o.missing)} aren’t captured yet{o.stale ? `, and ${count(o.stale)} were captured earlier and are due for a refresh` : ""}.</span>
+        </div>
+        <ScoreBar g={o} label="Everything this place is owed" tall />
+        <div className={s.legend}>{SCORE_PARTS.map((p) => <span key={p.key} className={s.legendItem}><Swatch cls={p.cls} />{p.words} · {count(o[p.key])}</span>)}</div>
+        <p className={cx(s.p, s.small, s.dim)}>{score.covers} Captured means we hold it from an official source. The score never holds back publishing: a fact that passes verification goes live whatever it says.</p>
+        {words && <Actions actions={[{ kind: "send-agents", target: v.scopeKey, label: "Send agents to fill the blanks", payload: { words } }]} primaryFirst />}
+        <div className={s.stack}>
+          {score.groups.map((g) => (
+            <button key={g.group} type="button" className={cx(s.row, s.rowButton)} aria-pressed={props.group === g.group} style={props.group === g.group ? { boxShadow: "inset 0 0 0 1px var(--ring)" } : undefined} onClick={() => props.onGroup(g.group)}>
+              <span className={s.spread}><strong style={{ fontSize: 13 }}>{g.name}</strong><span className={cx(s.meta, s.mono)}>{percentWords(g)} · {count(g.captured)} of {count(g.total)} captured</span></span>
+              <ScoreBar g={g} label={`${g.name}: ${count(g.captured)} of ${count(g.total)} captured`} />
+            </button>
+          ))}
+        </div>
+      </div>
+    </Card>
+  );
+}
 
 export function ChecklistScreen() {
   const v = useV6();
@@ -35,7 +105,9 @@ export function ChecklistScreen() {
         <p className={cx(s.p, s.small, s.dim)}>A checklist item is one requirement, for one body or place, over a set time period. All {c?.definitionCount ?? 325} definitions stay required.</p>
       </header>
 
-      <Card title="Facts about places" aside={<span className={s.meta}>Choose a group to list its items</span>}>
+      {c?.score && <PlaceScoreCard score={c.score} group={group} onGroup={(g) => { setGroup(g); reset(); }} />}
+
+      {!c?.score && <Card title="Facts about places" aside={<span className={s.meta}>Choose a group to list its items</span>}>
         <SourceNote source={{ ...v.data.checklist, state: c?.placeGroups ? v.data.checklist.state : v.data.checklist.state === "sample" ? "sample" : "not-connected" }} what="Checklist counts" />
         {c?.placeGroups && (
           <>
@@ -55,7 +127,7 @@ export function ChecklistScreen() {
             <StatusTable rows={c.placeGroups.map((g) => ({ name: g.name, counts: g.counts }))} />
           </>
         )}
-      </Card>
+      </Card>}
 
       <Card title={`${c?.groupNames[group] ?? group} checklist items in ${v.place.name}`}>
         <div className={s.inline}>

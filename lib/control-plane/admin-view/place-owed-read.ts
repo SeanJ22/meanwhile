@@ -111,12 +111,12 @@ const memo = new Map<string, { at: number; read: PlaceOwedRead }>();
 
 export async function readPlaceOwed(placeKey: string, deps: PlaceOwedDeps = defaultPlaceOwedDeps, options: { readonly fresh?: boolean } = {}): Promise<PlaceOwedRead | PlaceOwedRefusal> {
   const place = resolvePlaceKey(placeKey);
-  if ("state" in place && place.state === "REFUSED") return place;
+  if ("says" in place) return place;
   const cached = memo.get(placeKey);
   if (!options.fresh && cached && Date.now() - cached.at < MEMO_MS) return cached.read;
   const t0 = Date.now();
   let resolved: Awaited<ReturnType<PlaceOwedDeps["resolveDivisions"]>>;
-  try { resolved = await deps.resolveDivisions(place as ResolvedPlace); }
+  try { resolved = await deps.resolveDivisions(place); }
   catch (error) {
     return { state: "REFUSED", code: "GEOGRAPHY_UNREAD", says: `The Census boundaries for this place could not be read just now (${error instanceof Error ? error.message : "unknown error"}). Nothing is shown rather than an empty place.` };
   }

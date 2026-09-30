@@ -29,6 +29,12 @@ export function adminV6ReadCapabilities(input: { readonly configRevision: number
     sections.money = { contract: "admin-v6/money@1", href: "/api/admin/v6/money",
       revision: `money:${common}:${input.researchRevision ?? "unread"}` };
   }
+  if (input.snapshotRevision !== null) {
+    // The place score reads held data for the place itself; the published snapshot revision moves when the runner finishes a cycle.
+    sections.checklist = { contract: "admin-v6/checklist@1", href: "/api/admin/v6/place", revision: `checklist:${input.snapshotRevision}:${input.researchRevision ?? "unread"}` };
+    sections.stuck = { contract: "admin-v6/stuck@1", href: "/api/admin/v6/stuck", revision: `stuck:${input.snapshotRevision}` };
+    sections.sameCause = { contract: "admin-v6/sameCause@1", href: "/api/admin/v6/same-cause", revision: `sameCause:${input.snapshotRevision}` };
+  }
   if (input.configRevision !== null && input.researchRevision !== null) {
     sections.workers = { contract: "admin-v6/workers@1", href: "/api/admin/v6/workers",
       revision: `workers:${input.configRevision}:${input.researchRevision}:${input.heartbeatRevision ?? "unread"}:${input.sourceProgressId ?? "none"}:${input.workerAgeBucket ?? "clock-unread"}` };
@@ -36,4 +42,4 @@ export function adminV6ReadCapabilities(input: { readonly configRevision: number
   return { ...ADMIN_V6_CAPABILITIES, sections };
 }
 
-export const ADMIN_V6_CAPABILITY_REVISION = "admin-v6/1:receipt/1:hunts/1:money/1:workers/1";
+export const ADMIN_V6_CAPABILITY_REVISION = "admin-v6/1:receipt/1:hunts/1:money/1:workers/1:checklist/place1:stuck/1";

@@ -659,6 +659,8 @@ export function sampleOutcome(kind: ActionKind, target: string, input: { readonl
     case "resume-publish": return { final: "unknown", says: "No answer within 30 seconds. It may still have run. Check what happened before trying again." };
     case "eng-task": return { final: "done", statusWords: "Task created", says: "Task created. Waiting for an engineer to accept it. Later stages come only from the tracker.", effect: (w) => ({ ...w, tasks: [...w.tasks, { fixId: target, id: `ET-${20 + w.tasks.length}` }] }) };
     case "job-stop": return { final: "done", says: "Stopped after its current step. The money set aside is returned once its last call settles.", effect: (w) => ({ ...w, jobsStopped: add(w.jobsStopped, target) }) };
+    case "send-agents":
+      return { final: "done", statusWords: "Sent", says: "The fleet was told where to go. The runner puts it first on its next round." };
     case "focus": {
       if (option === "eng" && ENG_REFUSE[target]) return { final: "refused", says: `Refused: ${ENG_REFUSE[target]} Nothing was changed or spent.` };
       if ((option === "research" || option === "model") && target !== "A-1") return { final: "refused", says: `Refused: ${option === "research" ? "this is waiting on a code change, so more workers wouldn’t make it faster" : "a code fix doesn’t use AI models"}. Nothing was changed or spent.` };

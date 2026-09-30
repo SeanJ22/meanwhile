@@ -137,6 +137,7 @@ export function CommandCenter(props: CommandCenterProps) {
       fix: openFix ? { id: openFix.id, title: openFix.title, owner: openFix.owner, resourcesNow: openFix.resourcesNow, helps: openFix.helps, needsCode: openFix.origin === "engineering" && openFix.tab !== "update" }
         : stuckForFix ? { id: ref.target, title: nameOf(ref.target), owner: stuckForFix.owner, resourcesNow: "Not reported", helps: stuckForFix.title, needsCode: true } : undefined,
       url: ref.payload?.url,
+      words: ref.payload?.words,
       waitingCount: scopeKey === COUNTRY_KEY ? data.workRows.data?.totals.find((t) => t.stage === "waiting")?.total ?? null : null,
       outreachAuthorized: props.access.outreachAuthorized,
     };

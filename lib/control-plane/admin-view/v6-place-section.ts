@@ -3,6 +3,8 @@ import type { OwedState } from "./place-scorecard.ts";
 import { OWED_STATE_WORDS, pageOwed, scorePlace, type GroupScore, type OwedListItem, type OwedRowLike } from "./place-scorecard.ts";
 import { GROUP_NAMES, PLACE_GROUPS, ADMIN_V6_CHECKLIST_CONTRACT } from "./v6-checklist-section.ts";
 import type { PlaceOwedRead } from "./place-owed-read.ts";
+import { US_STATES } from "../readiness/catalog.ts";
+import { sendWordsFor } from "./blocker-causes.ts";
 
 /**
  * **`admin-v6/checklist@1` FOR ANY PLACE: SEAN'S SCORE AND THE OWED LIST BEHIND IT.**
@@ -48,7 +50,7 @@ export interface AdminV6PlaceItem {
   readonly next: string;
   readonly parts: readonly { readonly text: string; readonly status: string; readonly proof: string; readonly tone: "good" | "warn" | "muted" }[];
   readonly sourceUrl: string | null;
-  readonly actions: readonly { readonly kind: "send-agents"; readonly target: string; readonly label: string }[];
+  readonly actions: readonly { readonly kind: "send-agents"; readonly target: string; readonly label: string; readonly payload: { readonly words: string } }[];
 }
 export interface AdminV6PlaceChecklistView {
   readonly profileVersion: string;
@@ -61,7 +63,16 @@ export interface AdminV6PlaceChecklistView {
   readonly score: AdminV6PlaceScore;
 }
 
-function itemOf(item: OwedListItem, placeKey: string): AdminV6PlaceItem {
+/** What the runner should read as this place: the state, plus the ZIP or the county's own name as the one term. */
+export function placeSendWords(placeKey: string, label: string): string | null {
+  const m = /^(?:geo:|st:)([a-z]{2})(?:.([a-z_]+).([0-9A-Za-z]+))?$/.exec(placeKey);
+  const state = m ? US_STATES.find((s) => s.code === m[1])?.name ?? null : null;
+  if (!m || state === null) return null;
+  const county = m[2] === "county" ? label.replace(/s+County$/i, "").trim() : null;
+  return sendWordsFor({ stateNames: [state], zip: m[2] === "zcta" ? m[3] : county, subject: null, label: null });
+}
+
+function itemOf(item: OwedListItem, placeKey: string, words: string | null): AdminV6PlaceItem {
   const status = STATUS_NAME[item.state];
   const open = item.state === "missing" || item.state === "stale";
   return {
@@ -77,7 +88,7 @@ function itemOf(item: OwedListItem, placeKey: string): AdminV6PlaceItem {
     parts: [{ text: item.requirement, status: OWED_STATE_WORDS[item.state], tone: open ? "warn" : "good",
       proof: item.sourceUrl ? `Saved from ${item.sourceUrl}${item.checkedAt ? `, checked ${item.checkedAt}` : ""}.` : "No saved official page yet." }],
     sourceUrl: item.sourceUrl,
-    actions: open ? [{ kind: "send-agents", target: placeKey, label: "Send agents" }] : [],
+    actions: open && words !== null ? [{ kind: "send-agents", target: placeKey, label: "Send agents", payload: { words } }] : [],
   };
 }
 
@@ -86,7 +97,7 @@ export interface PlaceSectionQuery { readonly group: string | null; readonly sta
 export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery): {
   readonly contract: typeof ADMIN_V6_CHECKLIST_CONTRACT; readonly scope: string; readonly revision: string; readonly asOf: string;
   readonly data: AdminV6PlaceChecklistView; readonly missingParts: readonly string[];
-  readonly page: { readonly total: number; readonly nextCursor: string | null; readonly prevCursor: null };
+  readonly page: { readonly total: number; readonly nextCursor: string | null; readonly prevCursor: string | null };
 } {
   const rows = read.rows as readonly OwedRowLike[];
   const score = scorePlace(rows, GROUP_NAMES, GROUP_ORDER);
@@ -103,7 +114,7 @@ export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery): {
     asOf: read.observedAt,
     data: {
       profileVersion: CHECKLIST_PROFILE.version, definitionCount: CHECKLIST_PROFILE.definitionCount, definitions: DEFINITIONS,
-      groupNames: GROUP_NAMES, placeGroups, items: windowed.items.map((i) => itemOf(i, read.placeKey)), systemGroups: SYSTEM_GROUPS,
+      groupNames: GROUP_NAMES, placeGroups, items: windowed.items.map((i) => itemOf(i, read.placeKey, placeSendWords(read.placeKey, read.label))), systemGroups: SYSTEM_GROUPS,
       score: { placeKey: read.placeKey, placeLabel: read.label, covers: read.covers, observedAt: read.observedAt,
         divisionCount: read.divisions.length, overall: score.overall, groups: score.groups },
     },

@@ -391,7 +391,7 @@ test("C6: catch-up starts only due sitting-window reads, one a lane, the lane's 
   assert.deepEqual(limited.pastLimit.map(({ id }) => id), [candidates[3]!.task.id]);
 });
 
-test("C6: no catch-up read may outlast the pilot's own outer limit on the pass, and one begun beside the source reads leaves the repair its own worst case", () => {
+test("C6: catch-up reads reserve repair time without restoring the retired pilot timeout", () => {
   const domains = routineReaderRepairDomains();
   const bound = routineFrontierPassBound();
   const outer = routineRunnerOuterTimeoutMs(bound.commandCount, bound.largestFailureDomainSize, {
@@ -413,9 +413,11 @@ test("C6: no catch-up read may outlast the pilot's own outer limit on the pass, 
   const readerWorst = Math.ceil(domains.filter(({ mode }) => mode === "SINGLE").length / ROUTINE_READER_CHILD_CONCURRENCY) * ROUTINE_READER_SINGLE_TIMEOUT_MS +
     domains.filter(({ mode }) => mode === "MEETING_AGGREGATE").length * ROUTINE_READER_MEETING_TIMEOUT_MS;
   assert.equal(routinePassSourceCatchUpDeadlineMs(T0, domains), work - readerWorst);
-  // The pilot sizes its limit from exactly these inputs.
+  // The parent launcher no longer imposes the retired whole-pass timeout.
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
-  assert.match(pilot, /ROUTINE_DATA_TIMEOUT_MS = routineRunnerOuterTimeoutMs\(\s*ROUTINE_PASS_BOUND\.commandCount,\s*ROUTINE_PASS_BOUND\.largestFailureDomainSize,\s*\{\s*neonRequestDeadlineMs: STANDING_NEON_REQUEST_DEADLINE_MS,\s*settlementRequestsPerCommand: ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS,\s*clockTaskCount: ROUTINE_SOURCE_TASKS\.length,\s*clockConcurrency: ROUTINE_CLOCK_READ_CONCURRENCY,\s*clockRequestsPerTask: ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,[\s\S]*?coordinationRequests: 4,\s*readerSingleDomains: ROUTINE_READER_DOMAINS\.filter\(\(\{ mode \}\) => mode === "SINGLE"\)\.length,\s*readerSingleTimeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,\s*readerMeetingDomains: ROUTINE_READER_DOMAINS\.filter\(\(\{ mode \}\) => mode === "MEETING_AGGREGATE"\)\.length,\s*readerMeetingTimeoutMs: ROUTINE_READER_MEETING_TIMEOUT_MS,\s*readerConcurrency: ROUTINE_READER_CHILD_CONCURRENCY,/);
+  assert.match(pilot, /await runRuntimeChildren\(/);
+  const launcher = readFileSync("scripts/pilot-runtime-child.mts", "utf8");
+  assert.doesNotMatch(launcher, /\btimeout\s*:/);
   // One read settles within its child's ceiling and its durable settlement.
   const settlementMs = ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS * STANDING_NEON_REQUEST_DEADLINE_MS;
   assert.equal(hotReadCatchUpReadWorstCaseMs(), ROUTINE_CHILD_TIMEOUT_MS + settlementMs);

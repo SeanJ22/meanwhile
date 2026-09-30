@@ -63,9 +63,14 @@ export async function runNationalPlaceTask(input: {
               // ten-request limit for each website.
               bound: { ...RESEARCH_BOUNDS.perDispatch, maxToolCalls: Infinity, maxWallMs: Infinity },
             } });
+            const geographyRequests = new Map<string, number>();
             report = await runPlaceSource({ repos: tools.repos, store: input.store, zip, now, clock: tools.now, knowledge,
               readSource: async url => { if (leaseError) throw leaseError; return saved.read(url); },
               geography: { capture: saved.captureGeography, readHeld: saved.readGeography, fetchImpl: async (url, options) => {
+                const host = new URL(url instanceof Request ? url.url : String(url)).hostname.toLowerCase().replace(/^www\./, "");
+                const count = geographyRequests.get(host) ?? 0;
+                if (count >= RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost) throw new Error(`Geography source ${host}: shared website request bound reached; saved responses remain available for the next pass`);
+                geographyRequests.set(host, count + 1);
                 saved.cost.requestCount++;
                 const response = await fetch(url, options);
                 return response;

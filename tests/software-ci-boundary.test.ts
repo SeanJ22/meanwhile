@@ -32,16 +32,13 @@ test("Build Check has no transitional path-cost or OPS_ONLY tier", () => {
   assert.doesNotMatch(readFileSync(join(ROOT, "lib", "ops", "deploy-paths.ts"), "utf8"), /classifyCommitCost|OPS_ONLY_ARTIFACTS|CHEAP_PATH_PROOFS/);
 });
 
-test("the single admission defaults non-draft, non-reused work to full certification", () => {
+test("admission runs preflight and defaults non-draft work to full tests", () => {
   for (const [jobId, job] of Object.entries(workflow(BUILD_PATH).jobs).filter(([id]) => id === "admission")) {
     const tier = job.steps.find((step) => step.id === "tier");
-    const certified = job.steps.find((step) => step.id === "certified");
     const preflight = job.steps.find((step) => step.id === "preflight");
-    assert.ok(tier && certified && preflight, `${jobId} lost the tier, exact-tree, or preflight step`);
-    assert.equal(certified.if, undefined, `${jobId} conditionally suppresses the fail-closed exact-tree answer`);
-    assert.match(preflight.if ?? "", /steps\.certified\.outputs\.certified != 'yes'/);
+    assert.ok(tier && preflight, `${jobId} lost the tier or preflight step`);
+    assert.equal(preflight.if, undefined, `${jobId} suppresses deterministic preflight`);
     assert.match(tier.run ?? "", /steps\.pr_tier\.outputs\.tier.*full/);
-    assert.match(tier.run ?? "", /steps\.certified\.outputs\.certified.*yes/);
     assert.match(tier.run ?? "", /else[\s\S]+echo "expensive=yes"/, `${jobId} does not default to the full tier`);
     assert.doesNotMatch(tier.run ?? "", /path|cost|cheap/i, `${jobId} retained a path-cost decision`);
   }

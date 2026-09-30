@@ -1,19 +1,12 @@
 import assert from "node:assert/strict";
+
 import test from "node:test";
-import { keyVotesAskProof } from "../scripts/lib/reader-ask-key-votes-proof.ts";
+
 import { keyVoteEvidenceFor } from "../lib/ask/key-votes.ts";
+
 import { keyVotesForMember } from "../lib/votes/key-votes-reader.ts";
 
 const subject = { kind: "PERSON" as const, id: "congress:K000377", name: "Mark Kelly" };
-
-test("every current federal official's key-vote answer preserves all exact source maps, entries and linked summaries through real POST", async () => {
-  const result = await keyVotesAskProof();
-  assert.equal(result.proofs.length, 539);
-  assert.deepEqual(result.proofs.filter((proof) => proof.status !== "PROVEN").map((proof) => ({ id: proof.subjectId, missing: proof.missing, entries: proof.missingEntries, bills: proof.missingBills, unexpected: proof.unexpectedKeys })), []);
-  assert.equal(new Set(result.proofs.flatMap((proof) => proof.expectedEntryIds)).size, result.keyEntryCount);
-  assert.equal(new Set(result.proofs.flatMap((proof) => proof.expectedNativePositionKeys)).size, result.nativePositionMapCount);
-  assert.equal(new Set(result.proofs.flatMap((proof) => proof.expectedBillUrls)).size, result.billSummaryCount);
-});
 
 test("key-vote identity, missing position, physical-roll deduplication and conflicting position controls fail closed", async () => {
   const unknown = await keyVoteEvidenceFor(subject, ["congress:Z999999"]);

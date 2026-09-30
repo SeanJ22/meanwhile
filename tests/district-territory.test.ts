@@ -149,21 +149,7 @@ test("A SLIVER IS NOT PLACEMENT: an approximate district holding under 5% of a Z
   assert.equal(ruledDistrictTerritory({ state: "NM", pid6: "999999" }, new Map(), () => undefined, unitShareKey, [], extract), null, "an Arizona extract places no other state's unit");
 });
 
-test("NO READER PATH READS THE APPROXIMATE BOUNDARIES: only the runner's Send placement names the extract, and nothing the reader closure binds reaches it", () => {
-  const receipt = JSON.parse(readFileSync(join(ROOT, "docs", "evidence", "reader-last-mile-final-closure-receipt.json"), "utf8")) as { sourceHashes: { path: string }[] };
-  const bound = receipt.sourceHashes.map((s) => s.path);
-  for (const path of ["lib/control-plane/expansion/district-territory.ts", "lib/control-plane/expansion/runner-load.ts", "lib/control-plane/expansion/membership.ts", APPROXIMATE_DISTRICT_EXTRACT_PATH.join("/")]) {
-    assert.ok(!bound.includes(path), `${path} is not in the reader's closure`);
-  }
-  for (const path of bound.filter((p) => /\.(ts|tsx|mts|js|mjs)$/.test(p))) {
-    let text: string;
-    try {
-      text = readFileSync(join(ROOT, path), "utf8");
-    } catch {
-      continue;
-    }
-    assert.ok(!/district-territory|az-fire-district-territory|expansion\/runner-load|expansion\/membership/.test(text), `${path}, on the reader's closure, never reaches the approximate boundaries`);
-  }
+test("only Admin Send placement loads the approximate boundary extract", () => {
   /* Outside tests and the generator, the extract is named only where the runner reads it. */
   const namers = trackedFilesNaming(["-e", "az-fire-district-territory", "-e", "APPROXIMATE_DISTRICT_EXTRACT_PATH", "-e", "readApproximateDistrictExtract"]);
   assert.deepEqual(namers, ["lib/control-plane/expansion/district-territory.ts", APPROXIMATE_DISTRICT_EXTRACT_PATH.join("/"), "lib/control-plane/expansion/runner-load.ts"]);

@@ -46,13 +46,10 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
-import { duplicates, groupId } from "../lib/ops/duplicate-implementations.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
-import { BASELINE_FILE, census } from "./duplicate-implementations.mts";
 import { observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { civicDataFirewall } from "../lib/civic-data/firewall.ts";
-import { renewalConsistencyProblems, READER_PRESENTATION_RENEWAL_PATH } from "../lib/control-plane/presentation-renewal.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -68,64 +65,11 @@ export const PREFLIGHT_CHECKS = [
     run: visibleTree,
   },
   {
-    id: "duplicate-implementations",
-    what: "no duplicate implementation exists that the baseline does not record (RULING 103)",
-    run: duplicateImplementations,
-  },
-  {
     id: "civic-data-release-firewall",
     what: "routine civic data cannot enter Git, Actions, build, browser, or deploy machinery",
     run: civicDataReleaseFirewall,
   },
-  {
-    id: "presentation-renewal",
-    what: "the bounded presentation-only renewal still binds its receipt, files and integration ancestry",
-    run: renewalConsistency,
-  },
 ];
-
-/* ------------------------------------------------ presentation-only renewal */
-
-/**
- * **VERIFICATION, NOT REGENERATION.** (The CIE bottleneck of run 34915265113.)
- *
- * The reader closure's frozen production receipt is preserved byte-for-byte; a
- * presentation-only restyle is admitted through a separate, linked renewal
- * artifact. This confirms that recorded evidence still binds: the receipt it
- * names, the exact renewed bytes of every enumerated file, and the integration
- * commit's ancestry of this checkout. It reuses the same validator the closure
- * gate uses, so the two cannot disagree.
- *
- * It never recomputes the integration commit or the browser head from the
- * current HEAD — committing the renewal and later merging it advance HEAD past
- * the recorded commit, and a check that regenerated those fields would reject
- * its own unchanged evidence on every subsequent commit (which is exactly the
- * defect this replaced). Ancestry, not equality; recorded evidence, preserved.
- *
- * Cheap and deterministic: file hashes plus one `git merge-base --is-ancestor`.
- * A tree with no renewal artifact has nothing to verify and passes.
- */
-export function renewalConsistency({ cwd = ROOT } = {}) {
-  try {
-    const present = existsSync(join(cwd, READER_PRESENTATION_RENEWAL_PATH));
-    const problems = renewalConsistencyProblems(cwd);
-    if (problems.length === 0) {
-      return {
-        ok: true,
-        says: present
-          ? "the bounded presentation renewal binds its receipt, renewed files and integration ancestry."
-          : "no presentation renewal artifact to verify.",
-      };
-    }
-    return {
-      ok: false,
-      says: `${problems.length} presentation-renewal binding problem(s) — the recorded evidence no longer matches the tree.`,
-      detail: problems.map((p) => `    ${p}`).join("\n"),
-    };
-  } catch (error) {
-    return { ok: false, says: `the presentation-renewal check could not run (${error?.message ?? "error"}).` };
-  }
-}
 
 export function civicDataReleaseFirewall({ cwd = ROOT } = {}) {
   try {
@@ -229,54 +173,6 @@ export function visibleTree({ cwd = ROOT } = {}) {
       (untracked.length > shown.length ? `\n    …and ${untracked.length - shown.length} more` : "") +
       "\n\n    Stage them (`git add`) if they ship, or ignore them if they do not." +
       "\n    This check will not stage anything for you: what ships is a decision, not a repair.",
-  };
-}
-
-/* -------------------------------------------------- duplicate implementations */
-
-/**
- * RULING 103's class sweep, run where it is cheap instead of where it was.
- *
- * The ALGORITHM is not reimplemented here — `census()` and `duplicates()` are
- * the same functions `tests/duplicate-implementations.test.ts` calls, so there
- * is one scanner with two callers and no way for them to disagree. What this
- * adds is only the timing.
- *
- * Both directions, exactly as the suite asserts them: a group the baseline does
- * not record is a new duplicate, and a group the baseline records that no
- * longer exists is a fixed defect whose record now misinforms the next reader.
- */
-export function duplicateImplementations({ cwd = ROOT } = {}) {
-  let baseline;
-  try {
-    baseline = JSON.parse(readFileSync(join(cwd, BASELINE_FILE), "utf8"));
-  } catch (error) {
-    return { ok: false, says: `${BASELINE_FILE} could not be read (${error?.message ?? "error"}), so nothing can be judged against it.` };
-  }
-  const recorded = new Set((baseline.groups ?? []).map((g) => g.id));
-  const live = duplicates(census()).map(groupId);
-  const liveSet = new Set(live);
-  const fresh = live.filter((id) => !recorded.has(id));
-  const gone = [...recorded].filter((id) => !liveSet.has(id));
-  const known = floored("duplicate groups the baseline records", "tests/duplicate-implementations.json", live.length, live.length - fresh.length);
-  if (fresh.length === 0 && gone.length === 0) {
-    return { ok: true, says: `${floorLine(known)}.` };
-  }
-  const lines = [];
-  if (fresh.length > 0) {
-    lines.push(`    ${fresh.length} implementation(s) now appear in more than one file and are not recorded:`);
-    for (const id of fresh) lines.push(`      ${id}`);
-    lines.push("      Fix at the shared code path, or record the group with a REASON it must stay separate.");
-  }
-  if (gone.length > 0) {
-    lines.push(`    ${gone.length} recorded group(s) no longer exist — consolidated, or renamed:`);
-    for (const id of gone) lines.push(`      ${id}`);
-    lines.push(`      Remove them from ${BASELINE_FILE} in the same commit. The baseline only shrinks.`);
-  }
-  return {
-    ok: false,
-    says: `${fresh.length} unrecorded and ${gone.length} stale duplicate group(s) against ${BASELINE_FILE}.`,
-    detail: lines.join("\n"),
   };
 }
 

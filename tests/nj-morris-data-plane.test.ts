@@ -161,7 +161,7 @@ test("NJ ballot and filed contacts bootstrap only after an answered missing poin
   assert.match(result.detail, /store answered with no promoted pointer/);
   assert.ok(result.value.ballot.contests.length >= 80);
   assert.equal(candidateContactCensus().contacts.length, result.value.ballot.candidacies.length);
-  assert.match(ballotNjMorrisSource.normalize([result.value.ballot]).coverageNotes?.[0] ?? "", /bundled first-bootstrap/);
+  assert.match(ballotNjMorrisSource.normalize([result.value.ballot]).coverageNotes?.[0] ?? "", /first saved copy of the Morris County ballot/);
 });
 
 test("NJ Reader uses the promoted ballot/contact projection and exposes its exact LKG", async () => {

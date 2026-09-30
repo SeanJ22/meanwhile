@@ -15,6 +15,7 @@ test("staging has no shared mirror and accepts only a mirror inside its worktree
     assert.equal(resolvePilotMirror(root, undefined, true), null);
     assert.equal(resolvePilotMirror(root, join(dir, "shared"), true), null);
     assert.equal(resolvePilotMirror(root, join(dir, "worktree-other"), true), null);
+    if (process.platform === "win32") assert.equal(resolvePilotMirror(root, "Z:/missing-drive/mirror", true), null);
     assert.equal(resolvePilotMirror(root, join(root, "mirror"), true), join(root, "mirror"));
     const shared = join(dir, "shared");
     mkdirSync(shared);

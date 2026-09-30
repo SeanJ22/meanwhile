@@ -658,7 +658,6 @@ test("NH328: canonical reader-impact priority reaches the Scout pool before an o
       modelExecutor: { lane: "BOUNDED_MODEL_WORKER", run: async () => ({ ranAs: "BOUNDED_MODEL_WORKER", kind: "ABORTED", detail: "fixture" }) },
       workerCapacity: 1,
       scoutLeaseTtlMs: 60_000,
-      scoutWallMs: 1_000,
     },
   });
 

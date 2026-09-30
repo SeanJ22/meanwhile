@@ -98,7 +98,6 @@ async function heldEverywhereCycle() {
         modelExecutor: { lane: "BOUNDED_MODEL_WORKER", run: async () => { throw new Error("no Scout may start"); } },
         workerCapacity: 2,
         scoutLeaseTtlMs: 420_000,
-        scoutWallMs: 300_000,
       },
     }),
   };

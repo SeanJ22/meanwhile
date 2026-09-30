@@ -805,7 +805,6 @@ function closedScoutLane(modelIds: ReadonlySet<string>): ResearchLanes {
     modelExecutor: { lane: "BOUNDED_MODEL_WORKER", run: neverRuns },
     workerCapacity: 2,
     scoutLeaseTtlMs: TTL,
-    scoutWallMs: 60_000,
   };
 }
 

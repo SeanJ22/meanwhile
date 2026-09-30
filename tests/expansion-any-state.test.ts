@@ -310,7 +310,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   const preview = registrationGovernmentsPlaced(codes, slice.value);
   assert.ok(preview.certain.length > 30, `Franklin County holds dozens of governments (${preview.certain.length})`);
   for (const id of ["oh:county:county-of-franklin", COLUMBUS]) assert.ok(preview.certain.includes(id), `${id} is in the preview`);
-  const sentence = stateSendPreviewSentence({ kind: "REGISTRATION", state: "OH", versionId, governments: preview.certain, edge: preview.edge }, 1000);
+  const sentence = stateSendPreviewSentence({ kind: "REGISTRATION", state: "OH", versionId, governments: preview.certain, edge: preview.edge });
   assert.match(sentence, new RegExp(`creates work for ${preview.certain.length} governments here`));
   assert.match(sentence, /from registration \(the 2022 Census of Governments, promoted version .+\) — no reviewed registry exists for OH/);
 
@@ -319,11 +319,11 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   const dry = (await runnerCycle(repos, store, FRANKLIN, T_CYCLE, "PLAN_ONLY")).reading.targets[0]!;
   assert.equal(dry.requirements.created, 0, "a cycle that may not write creates nothing");
   const first = (await runnerCycle(repos, store, FRANKLIN, T_CYCLE)).reading.targets[0]!;
-  assert.equal(first.requirements.created + first.requirements.deferred, dry.requirements.deferred, "the cycle bound retains every deferred obligation");
-  assert.ok(first.requirements.deferred > 0, "the added families exercise continuation beyond the existing 200-write cycle bound");
+  assert.equal(first.requirements.created + first.requirements.deferred, dry.requirements.deferred, "all planned missing requirements are created");
+  assert.equal(first.requirements.deferred, 0, "one pass creates all work beyond the former 200-row cap");
   const second = (await runnerCycle(repos, store, FRANKLIN, T_NEXT)).reading.targets[0]!;
-  assert.equal(second.requirements.createdThisCycle, 200, "the second cycle preserves the normal write bound");
-  assert.ok(second.requirements.deferred > 0, "the directory obligation remains owed beyond two cycles");
+  assert.equal(second.requirements.createdThisCycle, 0, "the second pass creates no duplicates");
+  assert.equal(second.requirements.deferred, 0);
   const { reading } = await runnerCycle(repos, store, FRANKLIN, new Date(Date.parse(T_NEXT) + 3_600_000).toISOString());
   const [target] = reading.targets;
   assert.ok(target !== undefined);

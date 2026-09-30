@@ -209,7 +209,6 @@ async function cycleWith(input: { readonly rows: number; readonly admit: boolean
       modelExecutor: scout,
       workerCapacity: 2,
       scoutLeaseTtlMs: 60_000,
-      scoutWallMs: 1000,
       prewarm,
     },
   } as never);

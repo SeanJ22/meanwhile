@@ -285,11 +285,38 @@ export type ModelTransport = (request: ModelRequest) => Promise<ModelResponse>;
 
 export class ModelTransportError extends Error {
   readonly status: number | null;
-  constructor(message: string, status: number | null) {
+  readonly retryAfterMs: number | null;
+  constructor(message: string, status: number | null, retryAfterMs: number | null = null) {
     super(message);
     this.name = "ModelTransportError";
     this.status = status;
+    this.retryAfterMs = retryAfterMs;
   }
+}
+
+export interface AnthropicRateLimits {
+  readonly requestsPerMinute: number | null;
+  readonly inputTokensPerMinute: number | null;
+  readonly outputTokensPerMinute: number | null;
+  readonly retryAfterMs: number | null;
+}
+
+export function anthropicRateLimits(headers: Headers): AnthropicRateLimits {
+  const number = (name: string): number | null => {
+    const raw = headers.get(name);
+    if (raw === null) return null;
+    const value = Number(raw);
+    return Number.isFinite(value) && value >= 0 ? value : null;
+  };
+  const retry = headers.get("retry-after");
+  const seconds = number("retry-after");
+  const retryDate = retry === null ? NaN : Date.parse(retry);
+  return {
+    requestsPerMinute: number("anthropic-ratelimit-requests-limit"),
+    inputTokensPerMinute: number("anthropic-ratelimit-input-tokens-limit"),
+    outputTokensPerMinute: number("anthropic-ratelimit-output-tokens-limit"),
+    retryAfterMs: seconds !== null ? seconds * 1000 : Number.isFinite(retryDate) ? Math.max(0, retryDate - Date.now()) : null,
+  };
 }
 
 /**
@@ -312,6 +339,7 @@ export function anthropicTransport(
   apiKey: string,
   fetchImpl: typeof fetch = fetch,
   endpoint = "https://api.anthropic.com/v1/messages",
+  options: { readonly onRateLimits?: (limits: AnthropicRateLimits) => void } = {},
 ): ModelTransport {
   return async (request) => {
     const betas = anthropicBetasFor(request);
@@ -323,11 +351,16 @@ export function anthropicTransport(
         "anthropic-version": "2023-06-01",
         ...(betas.length > 0 ? { "anthropic-beta": betas.join(",") } : {}),
       },
-      body: JSON.stringify(request),
+      body: JSON.stringify(request.cache_control || request.system.some(block => block.cache_control) ||
+        request.tools.some(tool => tool.cache_control) || request.messages.some(message => Array.isArray(message.content) &&
+          message.content.some(block => block && typeof block === "object" && "cache_control" in block))
+        ? request : { ...request, cache_control: { type: "ephemeral" } }),
     });
+    const limits = anthropicRateLimits(response.headers);
+    options.onRateLimits?.(limits);
     if (!response.ok) {
       const body = await response.text();
-      throw new ModelTransportError(`HTTP ${response.status}: ${body.slice(0, 300)}`, response.status);
+      throw new ModelTransportError(`HTTP ${response.status}: ${body.slice(0, 300)}`, response.status, limits.retryAfterMs);
     }
     return (await response.json()) as ModelResponse;
   };

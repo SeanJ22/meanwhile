@@ -48,8 +48,6 @@ export interface ScoutBound {
   readonly maxTurns: number;
   /** Research tool calls per Attempt. */
   readonly maxToolCalls: number;
-  /** Wall clock per Attempt. */
-  readonly maxWallMs: number;
   /** Provider-reported input+output tokens per Attempt. */
   readonly maxTokens: number;
   /** Public requests per host per Attempt. Politeness that does not multiply. */
@@ -77,7 +75,6 @@ export const RESEARCH_BOUNDS: ResearchBounds = {
   perDispatch: {
     maxTurns: 18,
     maxToolCalls: 16,
-    maxWallMs: 5 * 60_000,
     maxTokens: 400_000,
     maxRequestsPerHost: 10,
     maxOutputTokensPerTurn: 8_192,

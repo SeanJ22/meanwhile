@@ -113,7 +113,7 @@ const CONTEXT = { at: T0, modelLaneClosed: null, ceilingUsd: 105, ceilingSource:
 test("a Send records itself on what it created and on what it found already on a clock — appended, never overwritten", async () => {
   const repos = createMemoryRepositories();
   const first = dispatchWorkTarget({ intentId: "i-1", note: "Pima Arizona", requestedAt: T0 });
-  const plan1 = planDispatchWork({ targets: [first], world: await cycleWorld(repos, T0), writeBudget: 10_000 });
+  const plan1 = planDispatchWork({ targets: [first], world: await cycleWorld(repos, T0) });
   const carried = plan1.targets[0].instances.filter((p) => p.state === "CARRIED" && p.instance.carriage === "OWED").map((p) => p.instance.obligation.id);
   assert.ok(carried.length > 0, "Pima's standing custodian clocks are carried: the Send reaches them without creating them");
   const a1 = await applyDispatchWork(repos, plan1, { now: T0 });
@@ -137,7 +137,7 @@ test("a Send records itself on what it created and on what it found already on a
 
   /* A second Send reaching the same rows appends; the first Send's record is untouched. */
   const second = dispatchWorkTarget({ intentId: "i-2", note: "Pima Arizona again", requestedAt: T1 });
-  const a2 = await applyDispatchWork(repos, planDispatchWork({ targets: [second], world: await cycleWorld(repos, T1), writeBudget: 10_000 }), { now: T1 });
+  const a2 = await applyDispatchWork(repos, planDispatchWork({ targets: [second], world: await cycleWorld(repos, T1) }), { now: T1 });
   assert.equal(a2.written.length, 0, "nothing is created twice");
   const created = (await repos.obligations.mustRead(a1.written[0])).value.assignments!;
   assert.deepEqual(created[0], { assignmentKey: "dispatch:i-1", ref: "i-1", relation: "CREATED", at: T0 }, "never overwritten");
@@ -145,7 +145,7 @@ test("a Send records itself on what it created and on what it found already on a
   assert.equal((await repos.obligations.mustRead(carried[0])).value.assignments?.length, 2, "one obligation serves both Sends");
 
   /* The same Send again records nothing new. */
-  const again = planDispatchWork({ targets: [first], world: await cycleWorld(repos, T2), writeBudget: 10_000 });
+  const again = planDispatchWork({ targets: [first], world: await cycleWorld(repos, T2) });
   assert.equal(again.marks.length, 0);
   const a3 = await applyDispatchWork(repos, again, { now: T2 });
   assert.equal(a3.written.length + (a3.marked?.length ?? 0), 0);
@@ -163,21 +163,21 @@ test("a new Send to the same key appends a new receipt and does not erase the ol
   assert.equal(members.byInstruction.get(JSON.stringify([key,"new-receipt"]))?.reordered.size,1);
 });
 
-test("REORDERED records share the per-cycle write budget after the creations, and the remainder is carried, not dropped", async () => {
+test("all REORDERED records persist alongside all creations in one pass", async () => {
   const repos = createMemoryRepositories();
   const target = dispatchWorkTarget({ intentId: "i-9", note: "Pima Arizona", requestedAt: T0 });
-  const plan = planDispatchWork({ targets: [target], world: await cycleWorld(repos, T0), writeBudget: plan0Writes(await cycleWorld(createMemoryRepositories(), T0), target) + 1 });
+  const plan = planDispatchWork({ targets: [target], world: await cycleWorld(repos, T0) });
   const applied = await applyDispatchWork(repos, plan, { now: T0 });
   assert.equal(applied.written.length, plan.writes.length, "creations go first");
-  assert.equal(applied.marked?.length, 1, "one record fits in what is left");
-  assert.equal(applied.marksDeferred?.length, plan.marks.length - 1);
+  assert.equal(applied.marked?.length, plan.marks.length);
+  assert.equal(applied.marksDeferred?.length, 0);
   const reading = dispatchWorkReading(plan, applied, CONTEXT);
-  assert.equal(reading.targets[0].assignment?.marksDeferred, plan.marks.length - 1);
-  assert.match(reading.targets[0].says.join(" "), /do not record it yet; they are recorded inside the same per-cycle write budget/);
+  assert.equal(reading.targets[0].assignment?.marksDeferred, 0);
+  assert.doesNotMatch(reading.targets[0].says.join(" "), /do not record it yet|write budget/);
 });
 
 function plan0Writes(world: DispatchWorkWorld, target: DispatchWorkTarget): number {
-  return planDispatchWork({ targets: [target], world, writeBudget: 10_000 }).writes.length;
+  return planDispatchWork({ targets: [target], world }).writes.length;
 }
 
 test("a created row whose creator is not on record is never guessed into a Send", () => {
@@ -190,19 +190,17 @@ test("a created row whose creator is not on record is never guessed into a Send"
     meetingPartitions: UNREAD_MEETING_PARTITIONS,
   };
   const target = dispatchWorkTarget({ intentId: "i-3", note: "Pima Arizona", requestedAt: T0 });
-  const plan = planDispatchWork({ targets: [target], world, writeBudget: 10_000 });
+  const plan = planDispatchWork({ targets: [target], world });
   const id = plan.writes[0].instance.obligation.id;
   /* The same row, created by a Send before Sends were kept on the row: materialized, no record. */
   const legacy = planDispatchWork({
     targets: [target],
     world: { ...world, durable: new Map([[id, { active: true, materializedBy: OWNER_DISPATCH }]]) },
-    writeBudget: 10_000,
   });
   assert.equal(legacy.marks.filter((m) => m.obligationId === id).length, 0, "no REORDERED is written over an unknown creator");
   const known = planDispatchWork({
     targets: [target],
     world: { ...world, durable: new Map([[id, { active: true, materializedBy: OWNER_DISPATCH, assignments: [{ assignmentKey: "county:2020/04019", ref: "r", relation: "CREATED", at: T0 }] }]]) },
-    writeBudget: 10_000,
   });
   assert.equal(known.marks.filter((m) => m.obligationId === id).length, 1, "a row another Send created is recorded REORDERED for this one");
 });

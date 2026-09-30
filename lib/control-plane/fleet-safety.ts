@@ -442,14 +442,15 @@ export class FleetSafetyController {
   failModelRequest(reservation: Reservation, error: unknown, at: string = new Date(this.clock()).toISOString()): void {
     this.releaseReservation(reservation);
     const failure = classifyProviderFailure(error);
-    if (failure.class === "HARD" || failure.class === "TRANSIENT") this.latchProvider(reservation.provider, failure.condition, reservation.work, at);
+    if (failure.class === "HARD" || failure.class === "TRANSIENT") this.latchProvider(reservation.provider, failure.condition, reservation.work, at,
+      error instanceof ModelTransportError ? error.retryAfterMs : null);
   }
 
-  latchProvider(provider: string, condition: string, work: string, at: string): ProviderCircuit {
+  latchProvider(provider: string, condition: string, work: string, at: string, retryAfterMs: number | null = null): ProviderCircuit {
     const existing = this.circuits.get(provider);
     const circuit: ProviderCircuit = existing
       ? { ...existing, workDeferred: [...new Set([...existing.workDeferred, work])] }
-      : { provider, condition, firstObservedAt: at, workDeferred: [work], eligibleAt: new Date(Date.parse(at) + 15 * 60_000).toISOString() };
+      : { provider, condition, firstObservedAt: at, workDeferred: [work], eligibleAt: new Date(Date.parse(at) + Math.max(15 * 60_000, retryAfterMs ?? 0)).toISOString() };
     this.circuits.set(provider, circuit);
     this.defer(work, "PROVIDER_CIRCUIT_BROKEN", `${provider} hard-refused work: ${condition}; no automated retry before ${circuit.eligibleAt}`);
     return circuit;

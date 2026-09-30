@@ -1778,7 +1778,7 @@ if (dispatchTargets.length > 0) {
     });
     plannedSendMarks = plan.marks.map((m) => ({ obligationId: m.obligationId, key: m.target.key }));
     const applied = dispatchWorkWrites
-      ? await applyDispatchWork(repos, plan, { now: NOW, deadlineReached: () => false })
+      ? await applyDispatchWork(repos, plan, { now: NOW })
       : null;
     dispatchRecorded = applied?.recorded ?? [];
     dispatchWork = dispatchWorkReading(plan, applied, {
@@ -1790,7 +1790,7 @@ if (dispatchTargets.length > 0) {
       planOnlyWhy: dispatchWorkPlanOnlyWhy,
     });
     console.log(
-      `  dispatch work: ${dispatchWork.targets.length} target(s); ${dispatchWork.written} obligation(s) created this cycle of a ${dispatchWork.writeBudget}-row budget, ` +
+      `  dispatch work: ${dispatchWork.targets.length} target(s); ${dispatchWork.written} obligation(s) created this cycle, ` +
         `${dispatchWork.deferred} deferred` + (dispatchWork.writes === "PLAN_ONLY" ? ` (plan only: ${dispatchWorkPlanOnlyWhy})` : ""),
     );
     for (const t of dispatchWork.targets) console.log(`      ${dispatchWorkSentence(t)}`);
@@ -1808,7 +1808,7 @@ if (dispatchTargets.length > 0) {
 if (dispatchWorkWrites && expansionPlan !== null) {
   try {
     const gaps = await applyManualSourceGaps(repos, dispatchScopes, {
-      now: NOW, deadlineReached: () => Date.now() + 150_000 >= DISPATCH_DEADLINE_MS,
+      now: NOW,
     });
     console.log(`  source capability gaps: ${gaps.created} created, ${gaps.carried} carried, ${gaps.deferred} deferred`);
   } catch (error) {
@@ -2648,7 +2648,6 @@ const cycle = await runCycle({
   onRecoveryComplete: () => finishPhase("lease-and-completion-recovery"),
   skipReclaim: canary,
   admitDispatch: (row) => fleetSafety.admitDispatch(row.obligation.id),
-  budget: { deadlineMs: DISPATCH_DEADLINE_MS - fleetReserveMs, now: () => Date.now() },
   /* ADM-8: the owner's dispatch goes first in the dispatcher's own due order too. */
   placeFirst: dispatchPriority,
   /* With no DISPATCH pending (the set above is empty), the selected expansion scopes' due work goes first instead. */
@@ -2746,8 +2745,7 @@ const cycle = await runCycle({
     },
     modelExecutor: scoutFor,
     workerCapacity: workerCapacity,
-    scoutLeaseTtlMs: RESEARCH_BOUNDS.perDispatch.maxWallMs + 120_000,
-    scoutWallMs: RESEARCH_BOUNDS.perDispatch.maxWallMs,
+    scoutLeaseTtlMs: 300_000,
     /*
      * The Scout lane admits against the HARD dispatch wall, not the reserve-reduced
      * deadline the deterministic lane runs under (2026-09-18). `fleetReserveMs` caps
@@ -2755,7 +2753,6 @@ const cycle = await runCycle({
      * Scout deadline too was starving the Scouts instead — two clean cycles deferred
      * every Scout for BUDGET while the cycle finished at half the hard wall.
      */
-    scoutDeadlineMs: DISPATCH_DEADLINE_MS,
     /* The pre-warm of the static prefix, once per cycle before the first admitted Scout (2026-09-06). Never in a dry cycle. */
     ...(modelLaneEnabled && !dry ? { prewarm: prewarmScoutPrefix } : {}),
     onDispatched: async (result: DispatchResult, lane) => {
@@ -2859,7 +2856,7 @@ const autonomousStoreDeadlineMs = lateWorkDeadlineMs(CLOCK) - 15_000;
 const autonomousDeadlineMs = Math.min(DISPATCH_DEADLINE_MS - 60_000, autonomousStoreDeadlineMs - 30_000);
 async function makeAutonomousFleet() {
   const fleetTransport = modelLaneEnabled ? boundedAuditTransport(workerKey) : null;
-  return autonomousStandingRuntime({ root: ROOT, repos, now: nowIso,
+  return autonomousStandingRuntime({ root: ROOT, repos, now: nowIso, environment: process.env,
     ...(scoutSearch ? { search: scoutSearch } : {}),
     ...(scoutSearchLifetime ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime : scoutSearch ?? undefined } : {}),
     spaceOut: spacer, browse: browseWithPlaywright,
@@ -3597,7 +3594,7 @@ const researchLines = [
   "RESEARCH — LEVEL 1 (RULING 240)",
   `  lane               ${modelLaneEnabled ? "ENABLED" : `CLOSED — ${laneDisabledReason}`}`,
   `  credential         ${WORKER_CREDENTIAL_VAR} configured in this process: ${credentialConfigured ? "yes" : "NO"} (by name; the value reaches only the provider request)`,
-  `  model              ${SCOUT_MODEL} · concurrency ${RESEARCH_BOUNDS.workerCapacity} · no per-cycle cap ($${effectiveCeilingUsd}/day ${rollingCeiling.source.toLowerCase()} + wall) · per Attempt ${RESEARCH_BOUNDS.perDispatch.maxTurns} turns / ${RESEARCH_BOUNDS.perDispatch.maxToolCalls} tools / ${Math.round(RESEARCH_BOUNDS.perDispatch.maxWallMs / 60_000)} min`,
+  `  model              ${SCOUT_MODEL} · ${workerCapacity} workers · Admin spend dial $${effectiveCeilingUsd}/day; each hunt retains its own budget`,
   `  scouts             ${laneCounts.modelDispatched} dispatched of ${dueModel.length} due model-class (${modelClassUnits.length} registered model-class of ${allUnits.length}) · ` +
     `deferred ${cycle.lanes?.model.deferred ?? 0}${deferredByLine ? ` (${deferredByLine})` : ""}` +
     (dueModel.length - openedModel > 0 ? ` · ${dueModel.length - openedModel} not reached before the wall` : ""),

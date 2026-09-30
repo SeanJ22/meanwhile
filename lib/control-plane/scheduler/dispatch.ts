@@ -57,6 +57,7 @@ import {
   reclaimRouteTask,
   recordArtifactMetadata,
   recordCost,
+  renewLease,
   type ClaimOutcome,
 } from "../repository/coordinator.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
@@ -751,6 +752,17 @@ export async function dispatchOne(
   });
 
   let outcome: WorkOutcome;
+  // The TTL detects a dead process; it does not end a live investigation.
+  let renewal: Promise<unknown> | null = null;
+  let renewalFailure: unknown = null;
+  const renew = setInterval(() => {
+    if (renewal !== null || renewalFailure !== null) return;
+    renewal = renewLease(repos, { routeTaskId: input.routeTaskId!, holder: input.holder,
+      now: input.clock?.() ?? new Date().toISOString(), ttlMs: input.leaseTtlMs })
+      .catch(error => { renewalFailure = error; })
+      .finally(() => { renewal = null; });
+  }, Math.max(1, Math.floor(input.leaseTtlMs / 3)));
+  renew.unref();
   try {
     outcome = await input.executor.run({
       obligation: input.obligation,
@@ -761,6 +773,9 @@ export async function dispatchOne(
       bound: input.bound ?? DEFAULT_WORKER_BOUND,
       holder: input.holder,
     });
+    clearInterval(renew);
+    await renewal;
+    if (renewalFailure !== null) throw renewalFailure;
   } catch (error) {
     /*
      * A THROWN error is a defect in the worker, not a fact about the route.
@@ -789,6 +804,9 @@ export async function dispatchOne(
       cost: null,
       detail: `${executor.why}; the worker threw and the Attempt was abandoned: ${why}`,
     };
+  } finally {
+    clearInterval(renew);
+    await renewal;
   }
 
   // The executor's measured end is authoritative when it supplies one. A

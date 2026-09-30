@@ -36,6 +36,7 @@ import {
   THINKING_BINDING_BETA,
   anthropicBetasFor,
   anthropicTransport,
+  ModelTransportError,
   representationBytesIn,
   scoutExecutor,
   type ContentBlock,
@@ -181,7 +182,7 @@ async function runScout(transport: ModelTransport, bound: Partial<ScoutBound> = 
     attemptId: "at-pt",
     holder: "h",
     executor: "BOUNDED_MODEL_WORKER",
-    bound: { maxAttempts: 1, maxWallMs: b.maxWallMs, maxCostUnits: 1 },
+    bound: { maxAttempts: 1, maxWallMs: 0, maxCostUnits: 1 },
   } as never);
   assert.equal(results.length, 1);
   return { outcome, result: results[0] };
@@ -226,6 +227,24 @@ test("PT-1: the conversation is append-only — each request extends the one bef
   /* The accepted finish cites the page the restarted conversation carried. */
   assert.deepEqual(result.candidates[0]?.evidenceArtifactIds, ["art-5"]);
   assert.deepEqual(result.inputTransformations, []);
+});
+
+test("transport carries provider capacity and Retry-After from an unsent retry", async () => {
+  const limits: unknown[] = [];
+  let calls = 0;
+  const transport = anthropicTransport("test-key-not-real", (async () => {
+    calls++;
+    return new Response("rate limited", { status: 429, headers: {
+      "retry-after": "1200", "anthropic-ratelimit-requests-limit": "120",
+      "anthropic-ratelimit-input-tokens-limit": "80000", "anthropic-ratelimit-output-tokens-limit": "16000",
+    } });
+  }) as typeof fetch, "https://example.invalid/v1/messages", { onRateLimits: value => limits.push(value) });
+  await assert.rejects(() => transport({ model: SONNET, max_tokens: 1, system: [], tools: [],
+    messages: [{ role: "user", content: "fixture" }] }), (error: unknown) =>
+      error instanceof ModelTransportError && error.status === 429 && error.retryAfterMs === 1_200_000);
+  assert.equal(calls, 1);
+  assert.deepEqual(limits, [{ requestsPerMinute: 120, inputTokensPerMinute: 80000,
+    outputTokensPerMinute: 16000, retryAfterMs: 1_200_000 }]);
 });
 
 /* --------------------------------------------------------------------- PT-2 */
@@ -291,6 +310,7 @@ test("PT-4: the transport sends the thinking-binding beta header exactly when th
   assert.equal(seen[0].headers["anthropic-version"], "2023-06-01");
 
   await transport(base);
+  assert.deepEqual(seen[1].body.cache_control, { type: "ephemeral" }, "every transport call has a cache breakpoint");
   assert.equal(seen[1].headers["anthropic-beta"], undefined, "no field, no beta header");
   assert.deepEqual(anthropicBetasFor(base), []);
   assert.deepEqual(anthropicBetasFor({ ...base, thinking: { type: "adaptive" } }), [], "adaptive alone needs no beta");

@@ -24,8 +24,6 @@ import { assertFleetResult, type AuditCandidate, type AuditorResult, type CivicE
 
 export const FLEET_IMPLEMENTATION_VERSION = "civic-record-workers/2.0.0";
 export const FLEET_POLICY_VERSION = "worker-fleet/2; R248 R252 R263 R264 R268";
-/** The existing dispatcher bound, also used to avoid planning work that cannot fit. */
-export const WORKER_MAX_WALL_MS = 120_000;
 const NULL_USAGE: WorkerUsage = { inputTokens: null, outputTokens: null, cacheReadInputTokens: null, cacheCreationInputTokens: null, uncachedInputTokens: null };
 
 /** The whole prompt a worker usage describes: uncached remainder plus cache reads and writes. Null when the base count is unmeasured. */
@@ -250,7 +248,7 @@ async function dispatchAdmittedWorkerTask(runtime: FleetRuntime, task: RouteTask
   const proof = proofChargeOf((await runtime.repos.workItems.read(task.workItemId).catch(() => null))?.value.project);
   return dispatchOne(runtime.repos, { obligation, routeTaskId: task.id, holder, now, leaseTtlMs: 300_000,
     clock: runtime.now ?? (()=>new Date().toISOString()),
-    bound: { maxAttempts: 3, maxWallMs: WORKER_MAX_WALL_MS, maxCostUnits: 20_000 }, maturity: () => executor.lane === "DETERMINISTIC" ? "GRADUATED" : "UNGRADUATED",
+    bound: { maxAttempts: 3, maxWallMs: 0, maxCostUnits: 20_000 }, maturity: () => executor.lane === "DETERMINISTIC" ? "GRADUATED" : "UNGRADUATED",
     executor, methodVersion: runtime.methodVersion, policyVersion: FLEET_POLICY_VERSION, ...proof });
 }
 

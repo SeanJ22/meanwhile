@@ -48,6 +48,10 @@ export function workerTaskAdmission(task: RouteTask, attempts: readonly Attempt[
   if (policyDenied && !mayRecheck) {
     return result("POLICY_DENIED", task.policyDenial?.requiredChange ?? latest?.abortReason ?? "The denied capability or policy requires an explicit authorized change.");
   }
+  if (latest?.endedAt && !mayRecheck && !["CRASHED", "LEASE_EXPIRED"].includes(latest.outcome ?? "") &&
+    !/AUDIT_PROVIDER_FAILURE:(?:429|5\d\d)|\bHTTP (?:429|5\d\d)\b|timeout|timed out|network|econnreset|eai_again|fetch failed/i.test(latest.abortReason ?? "")) {
+    return result("TERMINAL", "The same task already failed; a changed source, method or input must create its successor before another attempt.");
+  }
   let debt: FreshnessDebt | null = null;
   for (const attempt of history) {
     if (attempt.outcome === "COMPLETED") { debt = null; continue; }

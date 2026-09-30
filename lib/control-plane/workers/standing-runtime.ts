@@ -37,6 +37,7 @@ import { brokeredSiblingCaptures, selectStandingLineages } from "./standing-line
 
 /** One runtime over the same stores and bounded Scout infrastructure used by the standing runner. */
 export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:string;repos:ControlPlaneRepositories;transport?:ModelTransport;
+  environment?: Readonly<NodeJS.ProcessEnv>;
   now?:()=>string;spaceOut?:ScoutToolContext["spaceOut"];browse?:ScoutToolContext["browse"];openBytes?:ScoutToolContext["openBytes"];
   openBytesFor?:(subjectId:string)=>ScoutToolContext["openBytes"];
   /** The existing guarded search service, with the same accounting and owner settings as the first Scout. */
@@ -122,7 +123,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder),
     ...(input.transport?{scoutFor:(item,task,currentHistory)=>scoutExecutor({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,
       ...(input.reserveScoutEscalation?{reserveEscalation:input.reserveScoutEscalation}:{}),
-      toolkitFor:ctx=>buildScoutToolkit({...ctx,...durableResearchTools(tools,{project:item.project,attemptId:ctx.attemptId,workItemId:item.id,routeTaskId:task.id,subjectId:item.subject}),
+      toolkitFor:ctx=>buildScoutToolkit({...ctx,...(input.environment?{sourceApi:{env:input.environment}}:{}),...durableResearchTools(tools,{project:item.project,attemptId:ctx.attemptId,workItemId:item.id,routeTaskId:task.id,subjectId:item.subject}),
         readHeldArtifact: async id => {
           const [{ artifact }, evidence] = await Promise.all([readRepairCapture(id), heldRuntime.readEvidence(id)]);
           return { ...evidenceProjection(evidence), provenance: {

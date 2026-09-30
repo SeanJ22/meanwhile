@@ -216,6 +216,19 @@ test("canonical failure history stays retryable after three failures and uses th
   assert.equal(workerTaskAdmission(reclaimable, [...attempts, attemptFor(task, 10, null, "")], atFailure.retryAt!).state, "IN_FLIGHT");
 });
 
+test("unchanged permanent failures stay terminal while provider failures back off", async t => {
+  const h = await harness(t);
+  const artifact = await h.hold(feed(1));
+  const task = await enqueueWorkerTask(h.repos, { workItemId: h.item.id, role: "PARSER", artifactId: artifact.artifactId,
+    contract: heldEventContract(ROOT, artifact)!, now: h.now() });
+  const unchanged = attemptFor(task, 1, "ABORTED", "INVALID_INPUT_SCHEMA");
+  assert.equal(workerTaskAdmission(task, [unchanged], "2027-01-01T00:00:00.000Z").state, "TERMINAL");
+  const upstream = attemptFor(task, 1, "ABORTED", "AUDIT_PROVIDER_FAILURE:503; usage NOT MEASURED");
+  const waiting = workerTaskAdmission(task, [upstream], upstream.endedAt!);
+  assert.equal(waiting.state, "BACKOFF");
+  assert.equal(workerTaskAdmission(task, [upstream], waiting.retryAt!).due, true);
+});
+
 test("only exact transient denials become due for current-policy reauthorization", async t => {
   const h = await harness(t);
   const artifact = await h.hold(feed(1));

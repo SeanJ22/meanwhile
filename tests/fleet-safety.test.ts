@@ -501,6 +501,7 @@ test("a hard Neon response is host-latched before any second database probe", as
 test("transient 429/5xx/network failures make one call and back off", async () => {
   for (const error of [
     new ModelTransportError("HTTP 429: slow down", 429),
+    new ModelTransportError("HTTP 429: Retry-After exceeds default backoff", 429, 1_200_000),
     new ModelTransportError("HTTP 503: unavailable", 503),
     new Error("network timeout"),
   ]) {
@@ -513,6 +514,10 @@ test("transient 429/5xx/network failures make one call and back off", async () =
     await assert.rejects(() => guarded(REQUEST));
     assert.equal(calls, 1, "the transport performs no implicit retry");
     assert.equal(controller.snapshot(NIGHT).providerCircuits.length, 1);
+    if (error instanceof ModelTransportError && error.retryAfterMs) {
+      assert.equal(controller.snapshot(NIGHT).providerCircuits[0].eligibleAt,
+        new Date(Date.parse(NIGHT) + error.retryAfterMs).toISOString());
+    }
   }
 });
 

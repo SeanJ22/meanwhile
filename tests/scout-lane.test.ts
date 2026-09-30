@@ -78,7 +78,6 @@ test("full-size due queue dispatches an opened Scout before its deadline and nev
     routeTaskFor: id => id === OBLIGATION.id ? task.id : null,
     maturity: () => "UNGRADUATED", holder: "scaled-cycle", now: NOW, leaseTtlMs: 60_000,
     executor: { lane: "DETERMINISTIC", run: async () => { throw new Error("unopened deterministic dispatched"); } },
-    budget: { deadlineMs: NOW_MS + 7 * 60_000, now: () => NOW_MS + 90_000 },
     reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
     truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
     research: {
@@ -88,7 +87,7 @@ test("full-size due queue dispatches an opened Scout before its deadline and nev
         executions += 1;
         return { ranAs: "BOUNDED_MODEL_WORKER", kind: "ABORTED", detail: "bounded recorded fixture attempt" };
       } },
-      workerCapacity: 2, scoutLeaseTtlMs: 420_000, scoutWallMs: 300_000,
+      workerCapacity: 2, scoutLeaseTtlMs: 420_000,
     },
   });
   assert.equal(executions, 1);
@@ -402,7 +401,6 @@ test("1. SEEDED: a route declared DETERMINISTIC never consumes a model", async (
       modelExecutor: exec,
       workerCapacity: 2,
       scoutLeaseTtlMs: 60_000,
-      scoutWallMs: 1000,
     },
   });
   assert.equal(transport.requests.length, 0, "no model request may be made for a deterministic route");
@@ -618,7 +616,6 @@ test("6. SEEDED: the rolling ceiling DEFERS model work by name and disposes noth
       modelExecutor: exec,
       workerCapacity: 2,
       scoutLeaseTtlMs: 60_000,
-      scoutWallMs: 1000,
     },
   });
   assert.equal(transport.requests.length, 0);
@@ -893,7 +890,7 @@ test("proven pre-send Scout refusals settle unused holds without erasing earlier
     const job = new JobSpend(holds, mode, OBLIGATION.id, { sends: [], areas: [line] });
     assert.equal((await job.admit(2, "Scout")).admit, true);
     const heldFleet = new FleetSafetyController({ now: NOW, costs: [], modelHold: "lane closed", clock: () => NOW_MS });
-    const openFleet = new FleetSafetyController({ now: NOW, costs: [], clock: () => NOW_MS });
+    const openFleet = new FleetSafetyController({ now: NOW, costs: [], rollingCeilingUsd: 50, clock: () => NOW_MS });
     let sent = 0;
     const provider: ModelTransport = async request => {
       sent++;

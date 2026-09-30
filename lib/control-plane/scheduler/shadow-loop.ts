@@ -168,25 +168,6 @@ export interface CycleInput {
   /** A tightly scoped canary may skip the whole lease sweep; normal cycles never do. */
   readonly skipReclaim?: boolean;
   /**
-   * **A WALL-CLOCK BUDGET FOR DISPATCH, SO THE CYCLE FINISHES CLEANLY.**
-   * (Autonomy-recovery session, 2026-09-01.)
-   *
-   * The runner supervises each cycle under a hard ceiling and kills a child
-   * that outlives it. A kill lands mid-dispatch: occurrences opened and not
-   * closed, an Attempt with no outcome, a lease that expires unrenewed — and
-   * the next cycle resumes that state and pays for it again. A cycle over the
-   * real backlog can outlive the ceiling on latency alone, so the overrun is a
-   * recovery seam and not an edge case.
-   *
-   * With a budget the cycle stops STARTING work once the injected clock passes
-   * `deadlineMs`: every remaining due item is DEFERRED with a named reason, the
-   * record is written, and the process exits clean inside the supervisor's
-   * ceiling. Nothing is lost — a deferred item keeps its next-due and is
-   * dispatched by a later cycle. Injected, never `Date.now()` here, so a test
-   * can move the clock.
-   */
-  readonly budget?: { readonly deadlineMs: number; readonly now: () => number };
-  /**
    * **THE OWNER'S DISPATCH REORDERS THE DUE SET.** (ADM-8, 9.4.26 admin
    * feedback, 2026-09-04.)
    *
@@ -236,23 +217,6 @@ export interface ResearchLanes {
   readonly workerCapacity: number;
   readonly scoutLeaseTtlMs: number;
   /** A Scout is not STARTED when it could not finish inside the dispatch budget. */
-  readonly scoutWallMs: number;
-  /**
-   * **THE SCOUT LANE'S OWN ADMISSION DEADLINE — A FLOOR THE RESERVE CANNOT ZERO.**
-   * (2026-09-18. Two clean cycles deferred every scout for BUDGET.)
-   *
-   * `budget.deadlineMs` is reduced by the downstream reserve (`fleetReserveMs`)
-   * to cap the always-full DETERMINISTIC refresh queue. That reserve exists to
-   * protect the fleet from the refresh queue — but applied to the SHARED
-   * `budget.deadlineMs` it starved the very Scouts it should protect: the model
-   * lane starts after the pre-dispatch phases, and the reserved deadline minus a
-   * Scout's wall left no window, so every Scout deferred BUDGET while the cycle
-   * finished at half the hard wall. The Scout lane admits against THIS deadline
-   * — the hard dispatch wall, which already keeps the finalization reserve — so
-   * the downstream reserve caps deterministic dispatch alone. Absent, the Scout
-   * lane falls back to `budget.deadlineMs` (the pre-2026-09-18 behaviour).
-   */
-  readonly scoutDeadlineMs?: number;
   readonly onDispatched?: (result: DispatchResult, lane: ExecutorKind) => void | Promise<void>;
   /**
    * A Scout `admitScout` admitted that then did not run (its occurrence could
@@ -591,18 +555,6 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
        a backlog. */
   };
 
-  const budgetSpent = (): boolean =>
-    input.budget !== undefined && input.budget.now() >= input.budget.deadlineMs;
-  const deferForBudget = (row: ScheduledObligation): void => {
-    deferred.push({
-      obligationId: row.obligation.id,
-      why:
-        `the cycle's dispatch budget was spent at ${new Date(input.budget!.deadlineMs).toISOString()} ` +
-        "before this item was reached. It keeps its next-due and is dispatched by a later cycle — " +
-        "a cycle that ends on its own budget leaves recoverable state; one killed mid-write by its " +
-        "supervisor does not",
-    });
-  };
 
   /*
    * **ONE OBLIGATION'S THROW MAY NOT ABORT THE CYCLE.** (Autonomy-recovery
@@ -764,11 +716,6 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
       if (input.openOccurrence === undefined && input.requireOpenOccurrence && input.routeTaskFor(row.obligation.id) === null) {
         deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: outside this cycle's reserved lane slots; work remains due." });
         holdDeterministic(row, "NO_OPEN_OCCURRENCE");
-        continue;
-      }
-      if (budgetSpent()) {
-        deferForBudget(row);
-        holdDeterministic(row, "BUDGET");
         continue;
       }
       if (admitted >= ceiling) {

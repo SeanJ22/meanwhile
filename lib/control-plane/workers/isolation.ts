@@ -41,7 +41,7 @@ try {
     'Object.defineProperty(globalThis,"browser",{value:Object.freeze({open:deny}),writable:false,configurable:false});'+
     'Object.defineProperty(globalThis,"require",{value:()=>{denied="HOST_IMPORT";throw new Error("DENIED_BY_POLICY:HOST_IMPORT")},writable:false,configurable:false});return ()=>denied;})();';
   const answer=new vm.Script(prelude+request.source).runInContext(context,request.timeoutMs > 0 ? {timeout:request.timeoutMs} : {});
-  new vm.Script('if(DENIAL_CHECK())throw new Error("DENIED_BY_POLICY:"+DENIAL_CHECK())').runInContext(context,{timeout:request.timeoutMs});
+  new vm.Script('if(DENIAL_CHECK())throw new Error("DENIED_BY_POLICY:"+DENIAL_CHECK())').runInContext(context,request.timeoutMs > 0 ? {timeout:request.timeoutMs} : {});
   process.stdout.write(JSON.stringify({ok:true,result:JSON.parse(answer)}));
 } catch(e) { process.stdout.write(JSON.stringify({ok:false,error:String(e?.message??e)})); process.exitCode=1; }
 `;

@@ -379,7 +379,32 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
   return outsideExtractionScope ? {...novelty,reason:`EXTRACTION_SCOPE_UNESTABLISHED: the acquired representation needs a compatible extraction contract. ${novelty.reason}`} : novelty;
 }
 
-/** Independent obligations run concurrently; leases provide process-independent ownership. */
+/** Serve one item per hunt in each round; priority orders a round, never drains a whole hunt first. */
+export function fairAutonomousWorkIds(items: readonly WorkItem[], lastServed: ReadonlyMap<string, string>,
+  priorities: readonly { receiptId: string; priority: number }[] = []): string[] {
+  const priority = new Map(priorities.map(row => [row.receiptId, row.priority] as const));
+  const groups = new Map<string, { priority: number; lastServed: string; items: WorkItem[] }>();
+  for (const item of items) {
+    const refs = [...(item.autonomousPlan?.ownerInstructions ?? [])]
+      .sort((a, b) => (priority.get(a) ?? Infinity) - (priority.get(b) ?? Infinity) || a.localeCompare(b));
+    const key = refs[0] ?? "standing";
+    const group = groups.get(key) ?? { priority: priority.get(key) ?? Infinity, lastServed: "", items: [] };
+    group.items.push(item);
+    if ((lastServed.get(item.id) ?? "") > group.lastServed) group.lastServed = lastServed.get(item.id)!;
+    groups.set(key, group);
+  }
+  const ordered = [...groups].sort(([ak, a], [bk, b]) =>
+    a.lastServed.localeCompare(b.lastServed) || a.priority - b.priority || ak.localeCompare(bk));
+  for (const [, group] of ordered) group.items.sort((a, b) =>
+    (lastServed.get(a.id) ?? "").localeCompare(lastServed.get(b.id) ?? "") ||
+    a.createdAt.localeCompare(b.createdAt) || a.id.localeCompare(b.id));
+  const ids: string[] = [];
+  for (let round = 0; ids.length < items.length; round++) {
+    for (const [, group] of ordered) if (group.items[round]) ids.push(group.items[round].id);
+  }
+  return ids;
+}
+
 export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRuntime, options:{
   maximum?:number; concurrency?:number; deadlineMs?:number; maxScoutDispatches?:number;
   acceptsWorkItem?:(item:WorkItem)=>boolean;
@@ -443,20 +468,11 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   for (const attempt of attempts) {
     if (attempt.startedAt>(lastServed.get(attempt.workItemId)??"")) lastServed.set(attempt.workItemId,attempt.startedAt);
   }
-  const priorityByReceipt=new Map(options.prioritizedInstructions?.map(row=>[row.receiptId,row.priority] as const)??[]);
-  const ownerPriority=(item:WorkItem)=>Math.min(...(item.autonomousPlan?.ownerInstructions??[])
-    .map(ref=>priorityByReceipt.get(ref)??Number.POSITIVE_INFINITY));
-  const ids=items.sort((a,b)=>{
-    const ap=ownerPriority(a.value), bp=ownerPriority(b.value);
-    return (ap===bp?0:ap<bp?-1:1) ||
-      (lastServed.get(a.id)??"").localeCompare(lastServed.get(b.id)??"") ||
-      a.value.createdAt.localeCompare(b.value.createdAt) || a.id.localeCompare(b.id);
-  }).map(i=>i.id);
+  const ids=fairAutonomousWorkIds(items.map(row => row.value), lastServed, options.prioritizedInstructions);
   const decisions:AutonomousDecision[]=[]; const dispatches:DispatchResult[]=[];
   const deferred:{workItemId:string;reason:string;detail:string}[]=[...duplicateLineageDeferred];
-  const maximum=options.maximum??ids.length; const concurrency=Math.min(options.concurrency??4,Math.max(1,ids.length));
-  // No standing per-cycle Scout cap: the coordinator's own `maximum` (and the
-  // wall) bound autonomous Scouts. A caller may still pass a finite diagnostic
+  const maximum=options.maximum??ids.length; const concurrency=Math.min(options.concurrency??Math.max(1,ids.length),Math.max(1,ids.length));
+  // A caller may still pass a finite diagnostic
   // sub-cap; an unbounded value clamps to `maximum`.
   const maxScoutDispatches=Math.min(options.maxScoutDispatches??maximum,maximum);
   if (!Number.isSafeInteger(maximum)||maximum<0||!Number.isSafeInteger(concurrency)||concurrency<1||!Number.isSafeInteger(maxScoutDispatches)||maxScoutDispatches<0) throw new Error("AUTONOMOUS_COORDINATOR_BOUND_INVALID");
@@ -507,7 +523,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
         scoutsAdmitted++;
         if (!lifetimeScout) scoutsLimitedAdmitted++;
         const item=(await runtime.repos.workItems.mustRead(id)).value; const plan=item.autonomousPlan!;
-        const denial=!runtime.scoutFor?"SCOUT_MODEL_TRANSPORT_UNAVAILABLE":!runtime.lifetimeHuntSubject?.(item.subject)&&!ceilingPermits(spend.windowUsd,RESEARCH_BOUNDS.dailyCeilingUsd).permits?"SCOUT_COST_CEILING":null;
+        const denial=!runtime.scoutFor?"SCOUT_MODEL_TRANSPORT_UNAVAILABLE":!runtime.lifetimeHuntSubject?.(item.subject)&&!ceilingPermits(spend.windowUsd,runtime.rollingCeilingUsd ?? 0).permits?"SCOUT_COST_CEILING":null;
         const history=(await runtime.repos.scoutResults.readAll()).filter(result=>result.workItemId===item.id).sort((a,b)=>a.recordedAt.localeCompare(b.recordedAt)||a.attemptId.localeCompare(b.attemptId));
         const executor:DeclaredExecutor=denial?{lane:"BOUNDED_MODEL_WORKER",workerFor:({holder})=>({role:"SCOUT",provider:"unavailable",version:FLEET_POLICY_VERSION,instance:holder}),run:async()=>({kind:"ABORTED",ranAs:"BOUNDED_MODEL_WORKER",failureOutcome:"DENIED_BY_POLICY",endedAt:now(),cost:{...ZERO_COST,requestCount:0,inputTokens:0,outputTokens:0,usd:0},detail:`DENIED_BY_POLICY:${denial}`})}:runtime.scoutFor!(item,d.task!,history);
         // Charge the exact standing obligation that opened this WorkItem. A
@@ -521,7 +537,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
         dispatches.push(await dispatchOne(runtime.repos,{obligation:{obligation:{id:d.task!.id,subjectId:item.subject,recordClass:plan.contract.recordClass,
           routeId:d.task!.routeId,active:true,readerImpactAt:null,observedChangeRateHours:null,lastWorkedAt:null,assignments},nextDueAt:d.task!.createdAt,cadenceHours:24,
           cadenceSource:"DEFAULT_NO_SIGNAL",basis:"Canonical obligation needs source discovery"},routeTaskId:d.task!.id,holder:`autonomous:SCOUT:${randomUUID()}`,
-          now:now(),clock:now,leaseTtlMs:RESEARCH_BOUNDS.perDispatch.maxWallMs+120_000,bound:{maxAttempts:3,maxWallMs:RESEARCH_BOUNDS.perDispatch.maxWallMs,maxCostUnits:RESEARCH_BOUNDS.perDispatch.maxTokens},
+          now:now(),clock:now,leaseTtlMs:300_000,bound:{maxAttempts:3,maxWallMs:0,maxCostUnits:RESEARCH_BOUNDS.perDispatch.maxTokens},
           maturity:()=>"UNGRADUATED",executor,methodVersion:runtime.methodVersion,policyVersion:FLEET_POLICY_VERSION,...proofChargeOf(item.project)}));
       };
       // The lifetime hunt's durable reservation ledger arbitrates concurrent model calls.

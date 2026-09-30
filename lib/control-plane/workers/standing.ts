@@ -7,7 +7,7 @@ import type { ModelTransport } from "../scheduler/scout-executor.ts";
 import { modelAuditReasoner } from "./model-audit.ts";
 import { modelParseReasoner } from "./model-parser.ts";
 import { workerVaultResolver } from "./vault.ts";
-import { drainWorkerQueue, enqueueWorkerTask, evidenceProjection, WORKER_MAX_WALL_MS, type FleetRuntime } from "./runtime.ts";
+import { drainWorkerQueue, enqueueWorkerTask, evidenceProjection, type FleetRuntime } from "./runtime.ts";
 import type { GeneralizedCivicExtractionContract, LegacyCivicExtractionContract, IndependentAuditContext, OfficialRouteExpectation } from "./types.ts";
 import type { WorkItem } from "../work-item.ts";
 import type { MethodKnowledge } from "../../method/knowledge.ts";
@@ -475,18 +475,8 @@ export async function runHeldWorkerFleetCycle(
 ) {
   const results = [];
   const maximum = Math.max(0, Math.min(options.maximumDispatches ?? 3, 3));
-  const nowMs = options.nowMs ?? Date.now;
-  const hasWorkerTime = () => nowMs() + WORKER_MAX_WALL_MS <= (options.deadlineMs ?? Infinity);
   for (let stage = 0; stage < maximum; stage++) {
-    if (!hasWorkerTime()) {
-      options.onDeferred?.("insufficient cycle wall remained to start held-worker selection; held work remains queued or discoverable");
-      break;
-    }
     await advanceHeldWorkerFleet(root, runtime, 1, legacyOnly);
-    if (!hasWorkerTime()) {
-      options.onDeferred?.("held-worker selection used the remaining dispatch window; enqueued work remains owed for the next cycle");
-      break;
-    }
     results.push(...await drainWorkerQueue(
       runtime,
       1,

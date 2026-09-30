@@ -226,7 +226,7 @@ async function runLadder(input: {
     attemptId: "at-ladder",
     holder: "h",
     executor: "BOUNDED_MODEL_WORKER",
-    bound: { maxAttempts: 1, maxWallMs: bound.maxWallMs, maxCostUnits: 1 },
+    bound: { maxAttempts: 1, maxWallMs: 0, maxCostUnits: 1 },
   } as never);
   assert.equal(results.length, 1, "the typed result was handed to onResult exactly once");
   return { outcome, result: results[0] };
@@ -489,13 +489,7 @@ test("L5 FleetSafety.holdModelBudget: the hold counts against the rolling ceilin
   assert.throws(() => controller.holdModelBudget("w2", 10.5), /ROLLING_24_HOUR_MODEL_SPEND_CEILING/);
 });
 
-test("L5 WALL_CLOCK / UNMEASURED_SPEND / NOT_RESERVED: each refusal is named, recorded, and sends no frontier request", async () => {
-  /* WALL_CLOCK: a 30-second Attempt cannot leave the minute a second attempt needs. */
-  const wall = perModelTransport(LOOPING_SONNET);
-  const w = await runLadder({ transport: wall, bound: { maxWallMs: 30_000 }, reserveEscalation: recordingReservation().seam });
-  assert.equal(w.result.escalationRefused?.code, "WALL_CLOCK");
-  assert.equal(wall.requests.filter((r) => r.model === OPUS).length, 0);
-
+test("L5 UNMEASURED_SPEND / NOT_RESERVED: each refusal is named, recorded, and sends no frontier request", async () => {
   /* UNMEASURED_SPEND: a Sonnet attempt that reported no usage cannot be combined with anything. */
   const unmeasured = perModelTransport(LOOPING_SONNET, () => ({}));
   const u = await runLadder({ transport: unmeasured, reserveEscalation: recordingReservation().seam });

@@ -160,7 +160,8 @@ export async function heldDirectoryReading(input: {
     if (kept) used.push(capture);
   }
   if (!records.length) return null;
-  const id = `held-directory:${createHash("sha256").update(used.map(c => c.evidence.contentHash).sort().join(" ")).digest("hex").slice(0, 16)}`;
+  // The reading is the pages and what code read from them: a newly verified fact on the same pages is a new reading.
+  const id = `held-directory:${createHash("sha256").update(used.map(c => c.evidence.contentHash).sort().join(" ") + canonicalJson(records)).digest("hex").slice(0, 16)}`;
   return { id, checked: { contract, primary: used[0], sourceOf, extraction: { records },
     sourceReceipt: section3SourceReceipt(used, input.now, `section3-validator:${id}`,
       `${records.length} body name(s) read in code from ${used.length} saved official directory page(s), each inside its freshness window (§3).`) } };

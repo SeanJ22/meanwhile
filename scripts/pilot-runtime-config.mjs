@@ -13,7 +13,7 @@
 
 import { execFileSync } from "node:child_process";
 import { existsSync, realpathSync, statSync } from "node:fs";
-import { isAbsolute, relative, resolve, sep } from "node:path";
+import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const FULL_SHA = /^[0-9a-f]{40}$/i;
@@ -24,7 +24,9 @@ export function resolvePilotMirror(root, configured, staging) {
   if (!configured?.trim()) return null;
   const target = resolve(root, configured);
   const canonicalRoot = realpathSync(root);
-  const canonicalTarget = existsSync(target) ? realpathSync(target) : target;
+  let ancestor = target;
+  while (!existsSync(ancestor)) ancestor = dirname(ancestor);
+  const canonicalTarget = resolve(realpathSync(ancestor), relative(ancestor, target));
   const within = relative(canonicalRoot, canonicalTarget);
   return within === "" || (!isAbsolute(within) && within !== ".." && !within.startsWith(`..${sep}`)) ? target : null;
 }

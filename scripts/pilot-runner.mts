@@ -950,7 +950,7 @@ async function runIntakeRuntime(): Promise<void> {
 /**
  * (a) A FAILED cycle must still advance the heartbeat. `freshness-shadow` writes
  * the beat with `lastCycleOk: true` only when it reaches the end of a healthy
- * cycle, so a crash, a 15-minute wall kill, or a provider circuit break returns
+ * cycle, so a crash or a provider circuit break returns
  * here with `beatAt` frozen at the last SUCCESS — which reads as a dead runner
  * and cost real time on 2026-09-18. This records a beat on the non-success
  * outcome so `beatAt` tracks LIVENESS (with `lastCycleOk: false`), not just
@@ -1069,13 +1069,13 @@ async function ownerRepositories(): Promise<ControlPlaneRepositories | null> {
   return intentRepos;
 }
 
-async function readRunnerControls(repos: ControlPlaneRepositories) {
+async function readRunnerControls(repos: ControlPlaneRepositories, force = false) {
   if (controlReader === null) {
     const url = controlPlaneUrlFromEnv();
     if (url === null) throw new Error("RUNNER_CONTROLS_UNCONFIGURED");
     controlReader = runnerControlReader(url, repos);
   }
-  return controlReader.read();
+  return controlReader.read(force);
 }
 
 /*
@@ -1442,12 +1442,8 @@ async function ownerSays(): Promise<OwnerSays> {
 }
 /* ===================== THE NIGHTLY RESEARCH WINDOW — begin =====================
  *
- * The window is scheduled INSIDE this runner, on the machine's own clock:
- * between cycles the one-minute poll asks whether the 04:00 America/New_York
- * window for the current local date has run, and runs it when it has not. A
- * runner that was down across 04:00 runs the missed window at its first poll,
- * and the window record names the catch-up. No second Scheduled Task or GitHub
- * Actions workflow is a wakeup or clock for this process.
+ * Research windows run after cycles and when an owner window action arrives.
+ * There is no time-of-day restriction or separate night clock.
  *
  * This child is research-only and has no civic-data acquisition, promotion,
  * Git, build, deploy, or Reader materialization door.
@@ -1579,7 +1575,7 @@ async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
   try {
     const repos = await ownerRepositories();
     if (repos === null) return ordinary;
-    const { config: policy, state, research: intents } = await readRunnerControls(repos);
+    const { config: policy, state, research: intents } = await readRunnerControls(repos, true);
     const intent = readIntents(intents);
     if (intent.runnerPause.paused || intent.paused) return ordinary;
     const scopes = expansionScopesOf(policy !== null && isAdminConfig(policy.value) ? policy.value : null);

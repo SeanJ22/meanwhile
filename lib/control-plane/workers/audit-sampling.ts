@@ -25,6 +25,7 @@ import { createHash } from "node:crypto";
 import { newFieldManualEntry, readFieldManual, type FieldManualEntry, type FieldManualStore } from "../field-manual.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { ModelClass } from "../scheduler/model-routing.ts";
+import { needsSecondSource } from "../promotion/section3.ts";
 import { parseLearningEntries } from "./model-parser.ts";
 import { emptyFieldManual } from "../field-manual.ts";
 import type { AuditCoverage, AuditorResult, CivicExtractionContract, WorkerResultRecord, WorkerTaskSpec } from "./types.ts";
@@ -112,7 +113,7 @@ export function auditHistoryFromManual(store: Pick<FieldManualStore, "entries">)
   return history;
 }
 
-export type SampleReason = "ESCALATION" | "NEW_STRATUM" | "BROKEN_STRATUM" | "SAMPLED" | "NOT_SAMPLED";
+export type SampleReason = "ESCALATION" | "JUDGMENT_CALL" | "NEW_STRATUM" | "BROKEN_STRATUM" | "SAMPLED" | "NOT_SAMPLED";
 
 /** A stable value in [0, 1) from a result key: the same result always lands the same side of the line. */
 export function stableFraction(key: string): number {
@@ -131,6 +132,8 @@ export function sampleDecision(
 ): { readonly sample: boolean; readonly reason: SampleReason; readonly stratum: string } {
   const stratum = stratumOf(spec.contract);
   if (spec.auditEscalation) return { sample: true, reason: "ESCALATION", stratum };
+  // A judgment call (portrait, statement or position summary, one person matched across sources) is the one kind of fact a model always re-reads (rulings section 3).
+  if (needsSecondSource(spec.contract)) return { sample: true, reason: "JUDGMENT_CALL", stratum };
   const h = history.get(stratum);
   if (!h || h.reviewed < policy.floorPerStratum) return { sample: true, reason: "NEW_STRATUM", stratum };
   if (h.everBroken && h.survivedSinceBreak < policy.survivedAfterBreak) return { sample: true, reason: "BROKEN_STRATUM", stratum };

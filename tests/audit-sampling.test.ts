@@ -77,6 +77,20 @@ test("an escalation is always reviewed, and the sampler counts its own decisions
   assert.ok(decisions.filter(Boolean).length < 15, "after the floor, only the fixed fraction is reviewed");
 });
 
+test("a judgment call is always model-reviewed, even in a settled stratum; an ordinary record is only sampled", () => {
+  const settled = new Map([[stratumOf(contractFor("www.a.gov", "OFFICIAL_PORTRAIT")), { reviewed: 50, survivedSinceBreak: 50, everBroken: false }],
+    [stratumOf(contractFor("www.a.gov")), { reviewed: 50, survivedSinceBreak: 50, everBroken: false }]]);
+  let judgment = 0; let ordinary = 0;
+  for (let i = 0; i < 200; i++) {
+    const call = sampleDecision(spec("www.a.gov", `j-${i}`, { contract: contractFor("www.a.gov", "OFFICIAL_PORTRAIT") }), settled, false);
+    if (call.sample) judgment += 1; else assert.fail("a judgment call was not reviewed");
+    assert.equal(call.reason, "JUDGMENT_CALL");
+    if (sampleDecision(spec("www.a.gov", `o-${i}`), settled, false).sample) ordinary += 1;
+  }
+  assert.equal(judgment, 200);
+  assert.ok(ordinary < 60, "ordinary records in a settled stratum are still only a fraction");
+});
+
 test("what the manual remembers of a stratum keeps it under review after its results have aged out; the results, when present, win", async () => {
   const stratumRow = (host: string, outcome: "FAILED" | "YIELDED", modelReviewed: boolean) => newFieldManualEntry("auditor-learning", `stratum|PLANNING_MEETING|${host}`, {
     role: "AUDITOR", kind: "AUDIT_STRATUM", title: "t", summary: "s", outcome, payload: { recordClass: "PLANNING_MEETING", host, modelReviewed } });

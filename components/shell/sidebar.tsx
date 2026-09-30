@@ -66,6 +66,7 @@ export function Sidebar({
 }) {
   const { location } = useShellData();
   const [aboutOpen, setAboutOpen] = useState(false);
+  const carriedShown = (snapshot?.carried?.count ?? 0) > 0;
 
   return (
     <aside
@@ -124,6 +125,14 @@ export function Sidebar({
         <div className="mw-phone-legend">
           <Legend inline />
         </div>
+        {carriedShown && snapshot && (
+          // Listings this refresh could not re-fetch are older than the
+          // header's "Checked … ago" — the reader sees that without opening
+          // About this data.
+          <div className="mw-carried-note">
+            <DataFreshness snapshot={snapshot} />
+          </div>
+        )}
         <div className="mw-disclosure" data-open={aboutOpen || undefined}>
           <button
             type="button"
@@ -143,7 +152,7 @@ export function Sidebar({
           </button>
           {aboutOpen && (
             <div className="mw-disclosure-body">
-              {snapshot && <DataFreshness snapshot={snapshot} />}
+              {snapshot && !carriedShown && <DataFreshness snapshot={snapshot} />}
               <div className="mw-link-row">
                 <a href="/about-area/compare">Compare states</a>
                 {location && (

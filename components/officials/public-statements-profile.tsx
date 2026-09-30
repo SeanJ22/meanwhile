@@ -54,9 +54,17 @@ function ProfileForIdentity({ subjectId }: { subjectId: string }) {
   switch (load.kind) {
     case "not-applicable":
     case "none":
-      // No PRL profile is held for this person: the section is omitted rather
-      // than rendered empty, exactly as before the redesign.
-      return null;
+      // A blank never reads as "nothing here": the section says what is not
+      // held, and why it might not be.
+      return (
+        <CardSection title="Public statements">
+          <p className="mw-feed-gap" data-statement-feed="not-held">
+            {load.kind === "none"
+              ? "We don’t hold a Polarization Research Lab profile for this member of Congress yet."
+              : "The Polarization Research Lab tracks public statements for members of Congress. We don’t hold tracked statements for this official yet."}
+          </p>
+        </CardSection>
+      );
     case "loading":
       return (
         <CardSection title="Public statements" defaultOpen>
@@ -196,7 +204,12 @@ export function PublicStatementsProfileContent({ profile }: { profile: PrlReader
             )}
           </>
         ) : (
-          categories.map(category => <p key={category.id}>{category.sentence}</p>)
+          <>
+            <p className="mw-feed-gap" data-statement-chart="not-held">
+              The chart of each category&apos;s share isn&apos;t available for this member yet. The Polarization Research Lab&apos;s own sentences follow.
+            </p>
+            {categories.map(category => <p key={category.id}>{category.sentence}</p>)}
+          </>
         )}
         {/*
           R2 (lead holding inventory, 2026-09-29): no verified per-statement

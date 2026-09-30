@@ -78,6 +78,53 @@ export interface MeetingSearchResult {
   partialOcdIds?: string[] | null;
 }
 
+const SMALL_WORDS = new Set(["of", "and", "the", "for", "at", "in"]);
+
+function titleWords(slug: string): string {
+  return slug
+    .split(/[-_]+/)
+    .filter(Boolean)
+    .map((word, i) =>
+      i > 0 && SMALL_WORDS.has(word) ? word : word.charAt(0).toUpperCase() + word.slice(1),
+    )
+    .join(" ");
+}
+
+/**
+ * A reader-facing jurisdiction name for a meeting.
+ *
+ * Some calendars are wired under the internal id of the government they belong
+ * to ("az:county:county-of-cochise", or an OCD division id) rather than its
+ * name, and every reader surface prints `meeting.jurisdiction` as it finds it.
+ * An id-shaped value becomes the name it spells — "Cochise County, AZ" — and
+ * anything already a name comes back untouched, so the fix holds for every
+ * calendar wired this way and not for one county.
+ */
+export function readerJurisdictionLabel(jurisdiction: string): string {
+  const internal = /^([a-z]{2}):([a-z_]+):([a-z0-9][a-z0-9_-]*)$/.exec(jurisdiction);
+  const ocd = /^ocd-division\/country:us(?:\/state:([a-z]{2}))?(?:.*\/)?([a-z_]+):([a-z0-9_~.'-]+)$/.exec(
+    jurisdiction,
+  );
+  const [state, kind, slug] = internal
+    ? [internal[1], internal[2], internal[3]]
+    : ocd
+      ? [ocd[1] ?? "", ocd[2], ocd[3]]
+      : [null, "", ""];
+  if (state === null) return jurisdiction;
+
+  let name: string;
+  const prefixed = /^(county|city|town|village|borough|township)-of-(.+)$/.exec(slug);
+  if (prefixed) {
+    const rest = titleWords(prefixed[2]);
+    name = prefixed[1] === "county" ? `${rest} County` : prefixed[1] === "township" ? `${rest} Township` : rest;
+  } else if (kind === "county" && !/-county$/.test(slug)) {
+    name = `${titleWords(slug)} County`;
+  } else {
+    name = titleWords(slug);
+  }
+  return state ? `${name}, ${state.toUpperCase()}` : name;
+}
+
 function byStartAscending(a: Meeting, b: Meeting) {
   return Date.parse(a.startsAt) - Date.parse(b.startsAt);
 }
@@ -224,16 +271,21 @@ export async function searchMeetings(
   const horizonMs = UPCOMING_HORIZON_DAYS * 86_400_000;
   const lookbackMs = CONCLUDED_LOOKBACK_DAYS * 86_400_000;
 
-  const all = await source.load(
-    {
-      lat,
-      lng,
-      radiusKm: widest,
-      startsAfter: new Date(now.getTime() - lookbackMs).toISOString(),
-      startsBefore: new Date(now.getTime() + horizonMs).toISOString(),
-    },
-    now,
-  );
+  const all = (
+    await source.load(
+      {
+        lat,
+        lng,
+        radiusKm: widest,
+        startsAfter: new Date(now.getTime() - lookbackMs).toISOString(),
+        startsBefore: new Date(now.getTime() + horizonMs).toISOString(),
+      },
+      now,
+    )
+  ).map((m) => {
+    const jurisdiction = readerJurisdictionLabel(m.jurisdiction);
+    return jurisdiction === m.jurisdiction ? m : { ...m, jurisdiction };
+  });
 
   const upcoming = all
     .filter((m) => m.status === "SCHEDULED")

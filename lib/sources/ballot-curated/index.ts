@@ -39,6 +39,13 @@ const CURATED_FILES: Record<string, CuratedEntry> = {
   },
 };
 
+/** " on August 14, 2026" for a usable timestamp, otherwise nothing. */
+function readOn(sourceThrough: string | null): string {
+  const at = sourceThrough ? new Date(sourceThrough) : null;
+  if (!at || Number.isNaN(at.getTime())) return "";
+  return ` on ${at.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" })}`;
+}
+
 /** The names a curated source may be registered under — the map's own keys. */
 export const CURATED_BALLOT_NAMES = Object.keys(CURATED_FILES);
 
@@ -75,10 +82,12 @@ export function curatedBallotSource(name: string): BallotSource {
       validateBallotFile(parsed);
       const notes = curatedCoverageNotes(name, parsed as { coverageNotes?: unknown; scopedCoverageNotes?: unknown });
       const state = entry.state();
+      // Said the way a reader would ask it: how old is this, and is a fresh
+      // read coming — never how the copy was stored.
       const authorityNote = state.kind === "BOOTSTRAP"
-        ? "This ballot is using its bundled first-bootstrap seed because the canonical store answered with no promoted pointer."
+        ? "This is our first saved copy of this ballot from the election authorities; a fresh read of their filings has not run yet."
         : state.kind === "PROMOTED" && state.metadata.stale === "STALE"
-          ? "This ballot is serving its last known good manual projection; its source-through receipt is stale."
+          ? `We last read the election authorities' filings for this ballot${readOn(state.metadata.sourceThrough)}; a fresh read is due.`
           : null;
       return {
         election: parsed.election,

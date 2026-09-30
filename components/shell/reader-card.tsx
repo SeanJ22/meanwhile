@@ -154,6 +154,19 @@ export function ReaderCard({
         >
           {children}
         </div>
+        {/* Every card, one path: a reader who sees something wrong can say so
+            from where they are. New tab, so the view they were reading and
+            any draft stay put. */}
+        <footer className="mw-card-foot">
+          <a
+            className="mw-report-link"
+            href={`/feedback?about=${encodeURIComponent(kicker)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Report a problem with this card
+          </a>
+        </footer>
       </section>
     </>
   );

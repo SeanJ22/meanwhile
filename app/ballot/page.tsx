@@ -170,6 +170,18 @@ import {
 
 export const runtime = "nodejs";
 
+/** What each supporting holding means to a reader, in their words. */
+const AUXILIARY_READER_LABEL: Record<BallotAuxiliaryFamily, string> = {
+  "candidate-profiles": "candidate profiles",
+  "candidate-publications": "what candidates say in their own words",
+  "federal-funding": "federal campaign money",
+  "state-money": "state campaign money",
+  "federal-directory": "federal officeholders",
+  "registry-runtime": "the officials and districts that go with this ZIP",
+  "nh-members": "New Hampshire legislators",
+  "ballot-navigation": "registration and polling-place links",
+};
+
 /**
  * **F01 11.3 and 11.4 (2026-08-19, the author).**
  *
@@ -1524,12 +1536,12 @@ export default async function BallotPage({
           data-ballot-canonical-holding-gaps
         >
           <p>
-            The ballot below came from its canonical election authority, but one or more independent supporting holdings could not be read for this request. Their sections are marked unknown; the ballot and every other available holding remain in place.
+            The ballot below is complete as filed. A few extras that go with it could not be loaded just now, and each is marked as not loaded where it would appear:
           </p>
           <ul className="mt-2 list-disc pl-5">
-            {divisionHoldingUnavailable && <li>registry division and officeholder resolution</li>}
+            {divisionHoldingUnavailable && <li>the officials and districts that go with this ZIP</li>}
             {auxiliaryFailures.map((family) => (
-              <li key={family}>{family.replaceAll("-", " ")}</li>
+              <li key={family}>{AUXILIARY_READER_LABEL[family]}</li>
             ))}
           </ul>
         </section>
@@ -2966,6 +2978,18 @@ export default async function BallotPage({
         them to stay distinguishable from ours rather than deleted. The heading
         now names what the block is instead of what the product lacks.
       */}
+      {matched && !matched.contests.some((c) => tierForOcdId(c.ocdId) === "local") && (
+        <section
+          className="mt-6 rounded-[10px] border border-dashed border-[var(--panel-border)] p-4 lg:max-w-2xl"
+          data-ballot-no-local-races
+        >
+          <h2 className="t-structure text-paper-dim">County, city and school-board races</h2>
+          <p className="mt-2 text-[0.8125rem] leading-relaxed text-voice">
+            No local races are on this ballot yet. The state and federal races above are read from the official filings; the county, city, town and school-district contests that share this ballot appear here once their election office publishes them and we have read them. Your county election office has the complete ballot for your address.
+          </p>
+        </section>
+      )}
+
       {matched && coverageNotes.length > 0 && (
         <section className="mt-6 rounded-[10px] border border-dashed border-[var(--panel-border)] p-4 lg:max-w-2xl">
           <h2 className="t-structure text-paper-dim">Notes on this ballot</h2>

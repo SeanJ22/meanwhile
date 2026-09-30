@@ -316,6 +316,11 @@ function MoneyOverview({ data }: { data: FundingDisplayData }) {
           <MoneyTile label="Cash on hand" amount={totals.cashOnHand} />
         </div>
       )}
+      {!totals && (
+        <p className="mw-share-note" data-money-chart="totals-not-held">
+          Raised, spent and cash on hand aren’t loaded for this committee yet. The filing’s own sentences below carry what we hold.
+        </p>
+      )}
     </div>
   );
 }
@@ -356,7 +361,14 @@ function usd(n: number): string {
  */
 function OriginBars({ data }: { data: FundingDisplayData }) {
   const c = data.concentration;
-  if (!c || c.totalAmount <= 0) return null;
+  if (!c) return null;
+  if (c.totalAmount <= 0) {
+    return (
+      <p className="mw-share-note" data-money-chart="origin-not-held">
+        The chart of where this money came from isn’t available yet — no itemized contribution amounts are held to draw it from.
+      </p>
+    );
+  }
   const outCount = c.contributionCount - c.inStateCount;
   const outAmount = c.totalAmount - c.inStateAmount;
   return (
@@ -405,7 +417,13 @@ function OriginBars({ data }: { data: FundingDisplayData }) {
 function TypeBars({ data }: { data: FundingDisplayData }) {
   const rows = data.contributorGroups.organizations;
   const total = rows.reduce((sum, row) => sum + row.amount, 0);
-  if (rows.length === 0 || total <= 0) return null;
+  if (rows.length === 0 || total <= 0) {
+    return (
+      <p className="mw-share-note" data-money-chart="type-not-held">
+        The chart of what kind of money it was isn’t available yet — no committee or organization contributions are held to draw it from.
+      </p>
+    );
+  }
   const byType = new Map<string, { label: string; amount: number; count: number }>();
   for (const row of rows) {
     const label = contributorTypeLabel(row);

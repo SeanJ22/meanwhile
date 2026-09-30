@@ -871,6 +871,25 @@ function CoverageBody({
         {lead}
       </p>
 
+      {/* What Meanwhile holds for this ZIP, level by level, so a blank reads as
+          "not collected yet" and never as "nothing here". Counts come from the
+          same arrays the sections below render. */}
+      <p className="mt-1 text-[0.75rem] leading-relaxed text-muted" data-mw-covers>
+        <strong className="font-semibold text-voice">What Meanwhile has for {zip}:</strong>{" "}
+        {[
+          seats.some((seat) => seat.tier === "national" && seat.representatives.length > 0) || senators.length > 0
+            ? "your federal representatives and senators"
+            : "federal officials not collected yet",
+          seats.some((seat) => seat.tier === "state" && seat.representatives.length > 0) || statewideExecutives.length > 0
+            ? "state officials"
+            : "state officials not collected yet",
+          g.total === 0
+            ? "local bodies not mapped yet"
+            : `${g.total} local ${g.total === 1 ? "body" : "bodies"}${g.withSource > 0 ? `, with ${g.withSource === 1 ? "one calendar" : `${g.withSource} calendars`}` : ", calendars not collected yet"}`,
+        ].join(" · ")}
+        .
+      </p>
+
       {/* WGH-15: which question this card answers, said once, at the top. */}
       <SubjectLine zip={zip} standing={subject.location.certainty} />
 
@@ -1592,8 +1611,8 @@ function CoverageBody({
           {counts.withoutSource > 0 && (
             <>
               We know these bodies exist because the district boundaries do. We
-              haven&apos;t sourced their names or meeting schedules yet.{" "}
-              The published coverage list does not establish which agenda searches have already been tried.
+              haven&apos;t collected their names or meeting schedules yet, and
+              finding them is open work. This list fills in as we do.
             </>
           )}
           {counts.withoutSource > 0 && seatCounts.named < seatCounts.total && " "}

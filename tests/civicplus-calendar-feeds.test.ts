@@ -5,7 +5,7 @@
  * Cochise County, AZ publishes on CivicPlus. The free walk found only its AgendaCenter, which no wiring kind reads.
  * Its `/iCalendar.aspx` index lists one iCal feed per calendar category; the walk now reads that index on a site
  * whose own markup shows CivicPlus, matches each category to the body it names by the C16 reviewer's own rule, and
- * proposes only a category naming the government's registered body, as an iCal feed. The fixtures are the county's
+ * reads every category feed; event names identify bodies independently of department category names. The fixtures are the county's
  * real index and its real "Board of Supervisors" feed, read 2026-09-26T04:52Z.
  */
 
@@ -93,13 +93,18 @@ const HOME = `<html><head><title>Cochise County, AZ | Official Website</title><s
 const AGENDA_CENTER = `<html><body><h2>Board of Supervisors</h2><a href="/AgendaCenter/ViewFile/Agenda/_09292026-2981">Agenda</a></body></html>`;
 const ROBOTS: RecordedReply = { status: 200, body: "User-agent: *\nDisallow: /admin\nDisallow: /Search\n", contentType: "text/plain" };
 
-test("THE WALK: a CivicPlus site's index is read robots-first, and only the governing body's category feed is requested and found, attested through the index", async () => {
+test("THE WALK: a CivicPlus site's index is read robots-first, and every category feed is requested, with event attribution kept separate", async () => {
   const seen: string[] = [];
+  const feeds = civicPlusCategoryFeeds(INDEX, INDEX_URL);
+  const department = feeds.find(f => f.name === "Development Services")!;
+  const departmentIcs = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:planning-1\r\nDTSTART;TZID=America/Phoenix:20261014T160000\r\nSUMMARY:Cochise County Planning and Zoning Commission Meeting\r\nEND:VEVENT\r\nEND:VCALENDAR";
   const rt = runtime({
+    ...Object.fromEntries(feeds.map(f => [f.url, { status: 200, body: "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nEND:VCALENDAR", contentType: "text/calendar" }])),
     "https://www.cochise.az.gov/robots.txt": ROBOTS,
     "https://www.cochise.az.gov/": { status: 200, body: HOME },
     "https://www.cochise.az.gov/AgendaCenter": { status: 200, body: AGENDA_CENTER },
     [INDEX_URL]: { status: 200, body: INDEX },
+    [department.url]: { status: 200, body: departmentIcs, contentType: "text/calendar" },
     [BOS_FEED]: { status: 200, body: BOS_ICS, contentType: "text/calendar; charset=utf-8" },
   }, seen);
   const need: MeetingsDiscoveryNeed = {
@@ -107,10 +112,17 @@ test("THE WALK: a CivicPlus site's index is read robots-first, and only the gove
     basis: "SOURCE_DISCOVERY_OWED", sources: ["MEETINGS:THIS_JURISDICTION:this-government-itself"],
     addressSource: { source: "GAP_LEDGER", versionId: "b".repeat(64) },
   };
-  const attempt = await walkMeetingsDiscoveryNeed(need, rt);
-
-  assert.deepEqual(seen, ["https://www.cochise.az.gov/robots.txt", "https://www.cochise.az.gov/", INDEX_URL, BOS_FEED, "https://www.cochise.az.gov/AgendaCenter"],
-    "robots first; the index, then the one matched feed, then the AgendaCenter; no other category feed is requested");
+  const attempts: Awaited<ReturnType<typeof walkMeetingsDiscoveryNeed>>[] = [];
+  for (let pass = 0; pass < 4; pass++) attempts.push(await walkMeetingsDiscoveryNeed(need, { ...rt, priorAttempts: [...attempts] }));
+  const attempt = attempts[0];
+  assert.ok(attempts.every(a => a.requestCount <= 10), "each walk retains the shared ten-request website limit");
+  assert.deepEqual(seen.slice(0, 3), ["https://www.cochise.az.gov/robots.txt", "https://www.cochise.az.gov/", INDEX_URL]);
+  assert.ok(feeds.every(f => seen.includes(f.url)), "later walks read every category, including those beyond the original cutoffs");
+  assert.equal(attempt.recheckAfter, attempt.finishedAt, "unread source routes remain due instead of waiting for the successful feed's recheck");
+  const departmentFind = attempts.flatMap(a => a.found).find(f => f.url === department.url);
+  assert.ok(departmentFind, "a department calendar's named commission meeting remains discoverable");
+  assert.match(departmentFind.evidence, /category is not a body attribution/);
+  assert.equal(departmentFind.count, 1);
   assert.equal(attempt.outcome, "FOUND");
   const feed = attempt.found.find((f) => f.url === BOS_FEED);
   assert.ok(feed !== undefined, "the Board of Supervisors feed is a find");

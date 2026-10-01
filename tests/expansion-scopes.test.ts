@@ -60,6 +60,29 @@ import type { JurisdictionRegistry } from "@/lib/hunt/jurisdiction-universe.ts";
 
 const NOW = "2026-09-23T04:00:00.000Z";
 
+test("an unprepared ZIP resolves national divisions after held geography fails, including split states", async () => {
+  const repos = createMemoryRepositories();
+  const zip = { type: "zcta" as const, geoid: "12345", version: "zcta:2020", label: "ZIP 12345", stateAbbr: "MO" };
+  await repos.adminConfig.put(ADMIN_CONFIG_ID, withExpansionScopes(defaultAdminConfig(), { scopes: [decision(zip, 1, 0)], decidedAt: NOW }), NOW);
+  const seen: string[] = [];
+  const loaded = await loadExpansionPlan({ repos, root: ".", now: NOW, obligations: [],
+    loadLookup: async () => { throw Error("No published ZIP yet"); },
+    loadNationalZip: async code => {
+      seen.push(code);
+      return ["mo", "ks"].flatMap(state => [{ id: `ocd-division/country:us/state:${state}/county:test`, label: "Test County", divisionType: "county", geoid: "001", sourceUrl: "https://census.gov/lookup" }]);
+    },
+    loadTerritory: () => ({ bySubject: new Map(), unplaced: new Map(), statewide: new Set(), unregisteredUnitsByState: new Map() }) });
+  assert.deepEqual(seen, ["12345"]);
+  assert.equal(loaded.plan?.scopes[0].kind, "RESOLVED");
+  assert.deepEqual([...loaded.plan!.scopes[0].states].sort(), ["KS", "MO"]);
+  assert.equal(loaded.nationalPlaces?.get("12345")?.length, 2);
+  const failed = await loadExpansionPlan({ repos, root: ".", now: NOW, obligations: [],
+    loadLookup: async () => { throw Error("No published ZIP yet"); }, loadNationalZip: async () => { throw Error("Census down"); },
+    loadTerritory: () => ({ bySubject: new Map(), unplaced: new Map(), statewide: new Set(), unregisteredUnitsByState: new Map() }) });
+  assert.equal(failed.plan?.scopes[0].kind, "UNRESOLVED");
+  assert.match(failed.conditions.join(" "), /Census down/);
+});
+
 const PIMA: ExpansionScopeGeography = {
   type: "county",
   geoid: "04019",

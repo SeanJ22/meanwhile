@@ -109,6 +109,17 @@ const SITE = (feed = FEED, home = HOME): Record<string, RecordedReply> => ({
   [ROUTE]: { status: 200, body: feed, contentType: "text/calendar" },
 });
 
+test("route selection leaves the original saved walk intact and does not re-review superseded calendars", async () => {
+  const recorded = await walk(SITE());
+  const before = JSON.stringify(recorded.attempt);
+  const selected = review(recorded.attempt, recorded.bodies, { routes: [ROUTE] });
+  assert.ok(selected.accepted.length > 0);
+  const superseded = review(recorded.attempt, recorded.bodies, { routes: ["https://elsewhere.example.gov/another.ics"] });
+  assert.deepEqual(superseded.accepted, []);
+  assert.deepEqual(superseded.held, []);
+  assert.equal(JSON.stringify(recorded.attempt), before);
+});
+
 test("an official school's linked Diligent portal becomes a reviewed, body-filtered reader connection", async () => {
   const portal = "https://fixture.community.highbond.com/Portal/";
   const portalHtml = '<h1>Fixture Accommodation Schools</h1><h2>Governing Board</h2><a href="/Portal/MeetingSchedule.aspx">Calendar</a>';
@@ -162,7 +173,7 @@ test("ACCEPTED: the registered governing body and a printed sub-body, each on it
   assert.equal(attempt.outcome, "FOUND");
   const r = review(attempt, bodies);
   const rows = new Map(r.accepted.map((a) => [a.row.bodyName, a.row]));
-  assert.deepEqual([...rows.keys()].sort(), ["City Council", "Housing Commission"]);
+  assert.deepEqual([...rows.keys()].sort(), ["City Council", "Fair Housing Commission", "Housing Commission", "Tourism Commission", "Youth City Council"]);
 
   const council = rows.get("City Council")!;
   assert.equal(council.bodyId, `${OCD}#governing`, "the registered body, never a name-derived one");
@@ -183,15 +194,13 @@ test("ACCEPTED: the registered governing body and a printed sub-body, each on it
     assert.equal(crosswalkRowIssue(row), null);
     assert.equal(row.reviewedBy, REVIEWER, "the reviewer is the reviewer's code version, never the owner");
     assert.equal(row.evidence.calendar.sha256, textSha256(FEED), "the calendar is cited by the sha256 of the bytes the walk vaulted");
-    assert.equal(row.evidence.bodyPage.sha256, textSha256(HOME));
-    assert.equal(row.evidence.bodyPage.url, `https://${HOST}/`);
+    const separatePage = row.bodyName === "City Council" || row.bodyName === "Housing Commission";
+    assert.equal(row.evidence.bodyPage.sha256, textSha256(separatePage ? HOME : FEED));
+    assert.equal(row.evidence.bodyPage.url, separatePage ? `https://${HOST}/` : ROUTE);
     assert.ok(row.evidence.bodyPage.quote.includes(row.bodyName));
     assert.equal(row.authorization, CROSSWALK_CITATION);
   }
   assert.deepEqual(reasons(r), [
-    "NAME_NOT_PRINTED_ON_OWN_PAGE:Fair Housing Commission",
-    "NAME_NOT_PRINTED_ON_OWN_PAGE:Tourism Commission",
-    "NAME_NOT_PRINTED_ON_OWN_PAGE:Youth City Council",
     "SEPARATE_GOVERNMENT_NAME:Franklin County Commission",
   ], "every other printed name is held by name, never guessed");
   for (const h of r.held) {
@@ -235,10 +244,10 @@ test("HELD: bytes not vaulted, a government registration does not pair, a hand-w
   assert.deepEqual(reasons(review(attempt, bodies, { registered: { notRegistered: "OH registration pairs oh:city:city-of-testburg with no body" } })), ["BODY_NOT_REGISTERED:-"]);
   const wired = review(attempt, bodies, { handWired: (id) => id === `${OCD}#governing` });
   assert.ok(wired.held.some((h) => h.reason === "ALREADY_WIRED" && h.bodyName === "City Council"));
-  assert.deepEqual(wired.accepted.map((a) => a.row.bodyName), ["Housing Commission"]);
+  assert.deepEqual(wired.accepted.map((a) => a.row.bodyName), ["Fair Housing Commission", "Housing Commission", "Tourism Commission", "Youth City Council"]);
 
-  const legistar = { ...attempt, found: [{ ...attempt.found[0]!, vendor: "legistar-api", url: "https://webapi.legistar.com/v1/testburg/events?$top=5" }] };
-  assert.deepEqual(reasons(review(legistar, bodies)), ["KIND_NOT_REVIEWABLE:-"]);
+  const unsupported = { ...attempt, found: [{ ...attempt.found[0]!, vendor: "boardbook", url: "https://meetings.boardbook.org/Public/Organization/100" }] };
+  assert.deepEqual(reasons(review(unsupported, bodies)), ["KIND_NOT_REVIEWABLE:-"]);
 });
 
 test("HELD: robots not shown for a read, a UTC-stamped calendar, and a state whose clock is not one zone", async () => {
@@ -278,7 +287,7 @@ test("ROBOTS IS RECORDED, NOT BLOCKING: a robots.txt that disallows every path, 
     const recorded = walked.attempt.steps.filter((s) => s.purpose !== "robots").map((s) => s.permission);
     assert.ok(recorded.length > 0 && recorded.every((p) => p !== "ALLOWED" && p !== "NO_ROBOTS"), `${label}: the verdict travels on every read (${recorded.join(", ")})`);
     const r = review(walked.attempt, walked.bodies);
-    assert.deepEqual(r.accepted.map((a) => a.row.bodyName).sort(), ["City Council", "Housing Commission"], `${label}: accepted on the same checks as any read`);
+    assert.deepEqual(r.accepted.map((a) => a.row.bodyName).sort(), ["City Council", "Fair Housing Commission", "Housing Commission", "Tourism Commission", "Youth City Council"], `${label}: accepted on the same checks as any read`);
     assert.ok(r.held.every((h) => h.reason !== "PERMISSION_NOT_SHOWN" && h.reason !== "ROBOTS_NOT_READ"), `${label}: ${reasons(r).join(", ")}`);
   }
 
@@ -288,8 +297,23 @@ test("ROBOTS IS RECORDED, NOT BLOCKING: a robots.txt that disallows every path, 
   const challenged = new Map(bodies);
   challenged.set(home.artifactId!, { ...bodies.get(home.artifactId!)!, text: `<html><head><title>Just a moment...</title></head><body>${HOME}</body></html>` });
   const r = review(attempt, challenged);
-  assert.deepEqual(r.accepted, []);
-  assert.ok(r.held.some((h) => h.reason === "NAME_NOT_PRINTED_ON_OWN_PAGE" && h.bodyName === "City Council"), reasons(r).join(", "));
+  assert.ok(r.accepted.length > 0, "the independently accessible official calendar still supplies its facts");
+  assert.ok(r.accepted.every(({ row }) => row.evidence.bodyPage.url === ROUTE), "the challenge page is never cited as the naming document");
+});
+
+test("an official calendar names a county sub-body without a second page or a duplicate county-prefixed identity", async () => {
+  const feed = ics([{ uid: "board", summary: "Testburg County Board of Adjustment Meeting", start: "20261021T170000" }]);
+  const recorded = await walk(SITE(feed, '<a href="/calendar/meetings.ics">Development Services calendar</a>'), {
+    jurisdictionId: "oh:county:county-of-testburg", govClass: "COUNTY", name: "TESTBURG COUNTY",
+  });
+  const r = review(recorded.attempt, recorded.bodies);
+  const row = r.accepted.find(({ row }) => row.bodyName === "Board of Adjustment")?.row;
+  assert.ok(row, reasons(r).join(", "));
+  assert.equal(row.bodyId, subBodyId(OCD, "Board of Adjustment"));
+  assert.equal(row.evidence.bodyPage.url, ROUTE);
+  assert.equal(row.evidence.bodyPage.sha256, textSha256(feed));
+  assert.match(row.evidence.bodyPage.quote, /County Board of Adjustment/);
+  assert.equal(row.evidence.calendar.selected, 1);
 });
 
 test("HELD: two bodies selecting one event, and a category that is a body's name", async () => {

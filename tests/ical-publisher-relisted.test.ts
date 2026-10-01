@@ -39,15 +39,13 @@ const GOVERNING: BodySourceWiring = SOURCE_WIRING.find((row) => row.agendaSource
 const id = (node: number) => `ical:${SLUG}:calendar.${node}.field_date_and_time.0@www.newbury.nh.gov`;
 const page = (node: number) => `https://www.newbury.nh.gov/home/events/${node}`;
 
-/** The seven in-window sittings the town lists under both series: [survivor node, relisted node, UTC start]. */
+/** The five in-window sittings the town lists under both series: [survivor node, relisted node, UTC start]. */
 const TWICE: readonly (readonly [number, number, string])[] = [
   [42976, 44076, "2026-10-26T22:00:00.000Z"],
   [42981, 44081, "2026-11-09T23:00:00.000Z"],
   [42986, 44086, "2026-11-23T23:00:00.000Z"],
   [42991, 44091, "2026-12-07T23:00:00.000Z"],
   [42996, 44096, "2026-12-21T23:00:00.000Z"],
-  [43001, 44101, "2027-01-04T23:00:00.000Z"],
-  [43006, 44106, "2027-01-18T23:00:00.000Z"],
 ];
 
 function normalize(ics: string, now = READ_AT) {
@@ -68,11 +66,11 @@ function block(node: number): string {
 
 const calendar = (...events: string[]) => `BEGIN:VCALENDAR\r\nVERSION:2.0\r\n${events.join("")}END:VCALENDAR\r\n`;
 
-test("RELISTED · the town's seven twice-listed Selectboard sittings are seven sittings, each keeping both listings", () => {
+test("RELISTED · the town's five in-window twice-listed Selectboard sittings are five sittings, each keeping both listings", () => {
   const result = normalize(FIXTURE);
   assert.equal(result.accounting.outcome, "CONSERVED");
-  assert.equal(result.meetings.length, 14, "21 selected events, 7 of them a second listing of a sitting already held");
-  assert.equal(result.duplicateIdentity?.publisherRelisted, 7);
+  assert.equal(result.meetings.length, 12, "17 in-window events, 5 of them a second listing of a sitting already held");
+  assert.equal(result.duplicateIdentity?.publisherRelisted, 5);
 
   for (const [kept, relisted, startsAt] of TWICE) {
     const onThatInstant = result.meetings.filter((m) => m.startsAt === startsAt);
@@ -164,7 +162,7 @@ test("RELISTED · the listing the merge retires yields to the one kept, and is n
     if (!listings) return [single];
     return [single, { ...single, id: listings.sourceIds[1], provenance: { ...single.provenance, sourceUrl: listings.sourceUrls[1] } }];
   });
-  assert.equal(before.length, 21);
+  assert.equal(before.length, 17);
 
   const reconciled = reconcileSuccessfulMeetingPartition({
     sourceName: "ical",

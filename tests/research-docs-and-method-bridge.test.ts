@@ -84,6 +84,32 @@ test("a route an agent writes as a ROUTE entry is learned on the next read, with
   assert.equal(learnedRouteIds(manual).has("agent-found-route"), true);
 });
 
+test("the method version lives in the manual: the frozen store's number, plus one per route an agent learns, never double counted", async () => {
+  const { methodVersionEntry, methodVersionFromManual, readMethodVersion } = await import("../lib/method/manual-bridge.ts");
+  const { createMemoryRepositories } = await import("../lib/control-plane/repository/memory.ts");
+  const { writeFieldManual } = await import("../lib/control-plane/field-manual.ts");
+  const store = readMethodStore(join(ROOT, "data", "method", "knowledge.json"));
+  const agentRoute = (id: string, source = "agent") => ({
+    id: fieldManualEntryId(source, id), role: "SCOUT" as const, kind: "ROUTE", title: id, summary: "x", states: [], recordClasses: [], platforms: [],
+    outcome: "YIELDED" as const, url: null, source, observedAt: "2026-09-30", tier: null, payload: { routeId: id } });
+
+  assert.equal(methodVersionFromManual(emptyFieldManual()), null, "an unseeded manual says so instead of guessing");
+  let manual = upsertEntries(emptyFieldManual(), [...knowledgeEntries(store), methodVersionEntry(store)], "2026-09-30");
+  assert.equal(methodVersionFromManual(manual), store.version, "seeded, it equals the file's number");
+
+  manual = upsertEntries(manual, [agentRoute("agent-route-a"), agentRoute("agent-route-b")], "2026-09-30");
+  assert.equal(methodVersionFromManual(manual), store.version + 2);
+  manual = upsertEntries(manual, [{ ...agentRoute("agent-route-a"), summary: "updated in place" }], "2026-09-30");
+  assert.equal(methodVersionFromManual(manual), store.version + 2, "rewriting a route is not a new route");
+  manual = upsertEntries(manual, [agentRoute(store.routes[0]!.id, "another-source")], "2026-09-30");
+  assert.equal(methodVersionFromManual(manual), store.version + 2, "a route the frozen store already held is not new");
+
+  const repos = createMemoryRepositories();
+  assert.equal(await readMethodVersion(repos), null);
+  await writeFieldManual(repos, [...knowledgeEntries(store), methodVersionEntry(store), agentRoute("agent-route-a")], "2026-09-30");
+  assert.equal(await readMethodVersion(repos), store.version + 1, "read back through the live aggregate");
+});
+
 test("dispatch routes differently after an agent writes a route: UNGRADUATED before, GRADUATED after, no human step", async () => {
   const { methodMaturityFromManual } = await import("../lib/control-plane/scheduler/maturity.ts");
   const { decideExecutor } = await import("../lib/control-plane/scheduler/dispatch.ts");

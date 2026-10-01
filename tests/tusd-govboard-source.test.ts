@@ -92,7 +92,7 @@ test("the WIRED Diligent row links a concluded board sitting's own Board Actions
 
 test("the window's months are the ones fetched", () => {
   assert.deepEqual(monthsInWindow(NOW), [
-    "2026-06-01", "2026-07-01", "2026-08-01", "2026-09-01", "2026-10-01", "2026-11-01", "2026-12-01", "2027-01-01",
+    "2026-06-01", "2026-07-01", "2026-08-01", "2026-09-01", "2026-10-01", "2026-11-01", "2026-12-01",
   ]);
 });
 

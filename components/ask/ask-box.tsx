@@ -28,6 +28,7 @@ import { readLocationOriginFor } from "@/lib/state/location-origin";
 import { subjectKindOf, type AskSubjectRef } from "@/lib/ask/subject";
 import {
   readAskAnswer,
+  answerSaysSomething,
   unresolvedReadLine,
   transportFailure,
   type AskAnswerPayload,
@@ -698,7 +699,7 @@ export function AskBox({
        * put a vaguer second reply under a specific first one, which is the
        * two-answers-on-one-screen problem this follow-up exists to end.
        */
-      if (result.answer.kind !== "ROUTED" && !groundedAnswer?.subject && groundedAnswer.mode !== "CLARIFY" && groundedAnswer.mode !== "UNRESOLVED") {
+      if (result.answer.kind !== "ROUTED" && !answerSaysSomething(groundedAnswer)) {
         const topic = await classify(question);
         if (topic) {
           result = answerQuestion(question, coverage, zip, {
@@ -1618,7 +1619,7 @@ export function AskBox({
         being a second one.
       */}
 
-      {asked && asked.answer.kind === "ROUTED" && asked.answer.topic && !grounded?.subject && !grounded?.confirmation && !grounded?.clarification && grounded?.mode !== "UNRESOLVED" && (
+      {asked && asked.answer.kind === "ROUTED" && asked.answer.topic && !answerSaysSomething(grounded) && (
         <div className="mt-3">
           {/* The answer's own header: eyebrow naming the register, the
               topic as the heading. Same data as before, dressed to be

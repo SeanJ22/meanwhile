@@ -18,6 +18,7 @@ import { NetlifyEvidenceStore } from "../lib/control-plane/evidence/netlify-stor
 import type { Store } from "@netlify/blobs";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import { copyVaultObjects } from "../scripts/pilot-runtime-transfer.mts";
+import { contentHash } from "../lib/control-plane/ids.ts";
 
 /**
  * **THE VAULT, READ BY A ROUTINE CHILD THAT MAY NOT WRITE.** (C16, 2026-09-24.)
@@ -148,4 +149,29 @@ test("vault transfer keeps healthy originals moving after a missing body and sto
     async put() { destinationCalls++; throw new Error("DESTINATION_UNAVAILABLE"); },
   }, () => {}), /DESTINATION_UNAVAILABLE/);
   assert.equal(destinationCalls, 1);
+
+  // Direct transfer must not count matching destination metadata as copied
+  // when the retained body is corrupt. Healthy immutable reuse remains a no-op.
+  const meta = { contentType: "text/plain", contentHash: contentHash(bytes), byteLength: bytes.length,
+    objectClass: "IMMUTABLE_BODY" as const };
+  let storedMeta: typeof meta | (Omit<typeof meta, "objectClass"> & { objectClass: "MUTABLE_INDEX" }) = meta;
+  let storedBytes = Uint8Array.from(bytes);
+  let writes = 0;
+  const remote = new NetlifyEvidenceStore({
+    async getMetadata() { return { metadata: { meta: storedMeta, bodySha256: meta.contentHash } }; },
+    async getWithMetadata() { return { data: storedBytes.buffer, metadata: { meta: storedMeta, bodySha256: meta.contentHash } }; },
+    async set() { writes++; return { modified: true }; },
+  } as unknown as Store);
+  const retained = { async list() { return ["held-original"]; },
+    async get(key: string) { return { key, bytes, meta }; } };
+  assert.deepEqual(await copyVaultObjects(retained, remote, () => {}), { transferred: 1, failed: 0 });
+  assert.equal(writes, 0, "healthy immutable reuse does not rewrite the object");
+  storedBytes = Uint8Array.from(bytes);
+  storedBytes[0] ^= 1;
+  await assert.rejects(copyVaultObjects(retained, remote, () => {}), /Stored evidence is corrupt/);
+  assert.equal(writes, 0, "a corrupt held body cannot be counted as copied or silently replaced");
+
+  storedMeta = { ...meta, objectClass: "MUTABLE_INDEX", contentHash: "manifest:held" };
+  await remote.put("manifest.json", bytes, storedMeta);
+  assert.equal(writes, 1, "a damaged mutable index remains rebuildable");
 });

@@ -98,7 +98,7 @@ export function meetingAreaScope(ocdId: string | null | undefined): string {
 
 /** Old state artifacts remain readable while the runner publishes area pieces. */
 export function readerScopeApplies(
-  scope: ReaderManifestScope,
+  scope: Pick<ReaderManifestScope, "scope" | "ocdId" | "bounds" | "meetingIds" | "agendaOnly">,
   area: { readonly states?: readonly string[]; readonly ocdIds?: readonly string[];
     readonly meetingId?: string; readonly includeAgenda?: boolean;
     readonly nearby?: { readonly lat: number; readonly lng: number; readonly radiusKm: number } },

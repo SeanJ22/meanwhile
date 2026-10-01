@@ -509,6 +509,33 @@ export interface SentInstruction {
   readonly canCancel: boolean;
 }
 
+/* ----------------------------------------------------------------- trail */
+
+/** One step of a piece of work's source-to-public-result trail (server: v6-trail-read.ts). */
+export interface TrailEvent {
+  readonly id: string;
+  readonly stage: "SOURCE" | "ATTEMPT" | "SAVED" | "EXTRACTED" | "CHECKED" | "PUBLISHED" | "READER";
+  readonly at: string | null;
+  readonly title: string;
+  readonly says: string;
+  readonly nextAction: string | null;
+  readonly sourceUrl: string | null;
+  readonly publicUrl: string | null;
+  /** Only an exact RAW capture on this work has one: the private original-copy control. */
+  readonly privateCopy: { readonly path: string; readonly byteLength: number } | null;
+  readonly references: readonly (readonly [string, string])[];
+}
+export interface TrailView {
+  readonly events: readonly TrailEvent[];
+  readonly eventsHidden: number;
+  readonly gaps: readonly string[];
+}
+/** The standing work an instruction marked when the runner created or reordered it. */
+export interface ReachedView {
+  readonly total: number;
+  readonly rows: readonly { readonly id: string; readonly label: string; readonly relation: "created" | "reordered" | "other"; readonly at: string }[];
+}
+
 /* ----------------------------------------------------------------- spend */
 
 /** What the agents cost by model tier and day, and what the database sent (server: v6-spend-read.ts). Whole-system. */

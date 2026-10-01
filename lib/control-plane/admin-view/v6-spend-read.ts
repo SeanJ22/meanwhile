@@ -175,11 +175,11 @@ const titleCase = (slug: string) => slug.replace(/^(city|town|county|village|bor
 /** A readable name for work by its obligation: the jurisdiction's own name and the kind of record (`...:az:city:city-of-phoenix#campaign-finance-0`). */
 export function workName(work: string, jurisdiction: string | null): string {
   if (/^scout-prewarm/.test(work) || /#?scout:prewarm/.test(work)) return "Hourly prompt-cache warm-up (no place)";
-  const family = /#([a-z0-9-]+?)(?:-\d+)?$/.exec(work)?.[1];
+  const family = /#([a-z0-9:_-]+?)(?:-\d+)?$/.exec(work)?.[1];
   const jur = jurisdiction ?? /(?:^|:)([a-z]{2}:[a-z_]+:[a-z0-9-]+)/.exec(work)?.[1] ?? null;
   const parts = jur?.split(":") ?? [];
   const place = parts.length >= 3 ? `${titleCase(parts[2])}, ${parts[0].toUpperCase()}` : parts.length === 1 && parts[0] ? parts[0].toUpperCase() : null;
-  const kind = family ? family.replaceAll("-", " ") : null;
+  const kind = family ? family.replaceAll("-", " ").replaceAll("_", " ").replaceAll(":", " · ") : null;
   return place && kind ? `${place} · ${kind}` : place ?? kind ?? work.slice(0, 80);
 }
 

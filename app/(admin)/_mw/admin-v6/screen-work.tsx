@@ -12,6 +12,7 @@ import { COUNTRY_KEY, isWithin, relation } from "./places.ts";
 import { HISTORY_FILTERS } from "./receipts.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
 import { LANE_MEANS, LANE_TONE, LANE_WORDS, StuckRow } from "./screen-now.tsx";
+import { WorkReached } from "./trail-view.tsx";
 import { Actions, Card, cx, Empty, Pill, SourceNote, Tabs, useListView, usePager } from "./ui.tsx";
 import s from "./v6.module.css";
 
@@ -82,7 +83,7 @@ function CauseGroup(props: { readonly cause: SameCause; readonly items: readonly
 function Sends() {
   const v = useV6();
   const src = v.data.sends;
-  const list = (src.data ?? []).filter((x) => x.state !== "finished");
+  const list = src.data ?? [];
   if (src.state === "live" && !list.length) return null;
   return (
     <Card title="Instructions you sent the fleet" aside={<span className={s.meta}>{src.data ? `${list.filter((x) => x.canCancel).length} still running` : "Reading…"}</span>}>
@@ -94,6 +95,7 @@ function Sends() {
             <span className={s.meta}>Sent {mst(x.sentAt)}</span>
             <span className={s.small}>{x.stateWords}</span>
             {x.ranAs && <span className={cx(s.small, s.dim)}>{x.ranAs}</span>}
+            {x.state !== "waiting" && <WorkReached sendId={x.id} />}
             {x.canCancel && <Actions actions={[{ kind: "cancel-send", target: x.id, label: "Take it back", payload: { words: x.words } }]} />}
           </div>
         ))}

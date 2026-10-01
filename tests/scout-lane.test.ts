@@ -33,6 +33,9 @@ import { decideExecutor, dispatchOne, type DeclaredExecutor } from "../lib/contr
 import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { scheduledFixture } from "./control-plane-fixtures.ts";
 import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { failureResponderExecutor } from "../lib/control-plane/workers/detective.ts";
+import { scoutProcessExecutor } from "../lib/control-plane/workers/scout-process.ts";
+import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import {
   cacheTtlOrderProblems,
   withCacheBreakpoints,
@@ -64,6 +67,25 @@ import {
 const NOW = "2026-09-01T12:00:00.000Z";
 const NOW_MS = Date.parse(NOW);
 
+test('a solved held route bypasses paid admission and prewarming and counts as deterministic',async()=>{
+  const {repos,task}=await registered();let requests=0,admissions=0,warms=0;
+  const solved={refusal:null,outcome:'EVIDENCE_FOUND',subjectId:OBLIGATION.subjectId,recordClass:OBLIGATION.recordClass,
+    attemptId:'held-attempt',recordedAt:NOW,candidates:[],findings:[{kind:'RECORD',field:'holder',value:'Ada',exactQuote:'Clerk Ada',
+      sourceUrl:'https://county.gov/clerk',artifactIds:['held']}]} as unknown as ScoutResult;
+  const held=failureResponderExecutor({solved,transport:async()=>{requests++;throw Error('No model');},
+    toolkitFor:()=>{throw Error('No tools');},contextFor:()=>{throw Error('No new research');},now:()=>NOW});
+  const cycle=await runCycle({repos,obligations:[OBLIGATION],debts:[],routeTaskFor:()=>task.id,maturity:()=> 'UNGRADUATED',
+    holder:'held-cycle',now:NOW,leaseTtlMs:60_000,executor:{lane:'DETERMINISTIC',run:async()=>{throw Error('Use the held executor');}},
+    reader:{contract:'READER',state:'NOT_READY',reason:'fixture'},truth:{contract:'TRUTH',state:'NOT_READY',reason:'fixture'},
+    research:{decide:()=>({kind:'BOUNDED_MODEL_WORKER',why:'old route classification',disagreement:null}),
+      admitScout:()=>{admissions++;return {admit:false,code:'PAUSED',why:'Paid work paused'};},
+      prewarm:async()=>{warms++;throw Error('No prewarm');},modelExecutor:()=>held,workerCapacity:1,scoutLeaseTtlMs:420_000}});
+  assert.equal(requests,0);assert.equal(admissions,0);assert.equal(warms,0);
+  assert.equal(cycle.lanes?.model.dispatched,0);assert.equal(cycle.lanes?.deterministic.dispatched,1);
+  assert.equal(cycle.dispatched[0].executor,'DETERMINISTIC');assert.equal(cycle.dispatched[0].cost?.usd,0);
+  assert.equal(cycle.dispatched[0].cost?.requestCount,0);assert.equal(cycle.dispatched[0].executorMismatch,false);
+});
+
 test("full-size due queue dispatches an opened Scout before its deadline and never charges unopened rows", async () => {
   const { repos, task } = await registered();
   const obligations = [
@@ -78,7 +100,6 @@ test("full-size due queue dispatches an opened Scout before its deadline and nev
     routeTaskFor: id => id === OBLIGATION.id ? task.id : null,
     maturity: () => "UNGRADUATED", holder: "scaled-cycle", now: NOW, leaseTtlMs: 60_000,
     executor: { lane: "DETERMINISTIC", run: async () => { throw new Error("unopened deterministic dispatched"); } },
-    budget: { deadlineMs: NOW_MS + 7 * 60_000, now: () => NOW_MS + 90_000 },
     reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
     truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
     research: {
@@ -88,7 +109,7 @@ test("full-size due queue dispatches an opened Scout before its deadline and nev
         executions += 1;
         return { ranAs: "BOUNDED_MODEL_WORKER", kind: "ABORTED", detail: "bounded recorded fixture attempt" };
       } },
-      maxConcurrentScouts: 2, scoutLeaseTtlMs: 420_000, scoutWallMs: 300_000,
+      workerCapacity: 2, scoutLeaseTtlMs: 420_000,
     },
   });
   assert.equal(executions, 1);
@@ -129,6 +150,93 @@ async function registered(repos = createMemoryRepositories(), o: FreshnessObliga
   await registerWorkItem(repos, item, NOW);
   await registerRouteTask(repos, task, NOW);
   return { repos, item, task };
+}
+
+async function ordinaryWorkerProcesses() {
+  const { mkdtemp, rm } = await import("node:fs/promises");
+  const { tmpdir } = await import("node:os");
+  const { join, dirname, resolve } = await import("node:path");
+  const { createFileRepositories } = await import("../lib/control-plane/repository/file-store.ts");
+  for (const contextFailure of [false, true]) {
+    const root = await mkdtemp(join(tmpdir(), "s7-ordinary-scout-"));
+    try {
+      const repos = await createFileRepositories(root);
+      const { task } = await registered(repos);
+      const pids: number[] = [];
+      let modelCalls = 0;
+      let starts = 0, results = 0;
+      const executor = scoutProcessExecutor({ root: process.cwd(), postgres: false, fileStoreRoot: root,
+        onStarted: pid => pids.push(pid), deps: {
+          now: () => NOW,
+          onStart: async ({ attemptId }) => {
+            assert.equal((await repos.attempts.mustRead(attemptId)).value.outcome, null);
+            starts++;
+          },
+          onResult: async result => {
+            assert.equal((await repos.attempts.mustRead(result.attemptId)).value.outcome, null);
+            results++;
+            return result;
+          },
+          transport: async () => { modelCalls++; throw new ModelTransportError("HTTP 400: fixture unchanged request", 400); },
+          contextFor: () => {
+            if (contextFailure) throw new Error("fixture context unavailable");
+            return { route: null, providerId: "fixture", reason: "ordinary ungraduated route", decision: "BOUNDED_MODEL_WORKER",
+              inherited: { artifactIds: [], summary: "" }, tools: { vault: async () => ({ stored: true, where: "fixture", why: "fixture" }), spaceOut: async () => {} } };
+          },
+        } });
+      const cycle = await runCycle({ repos, obligations: [OBLIGATION], debts: [],
+        routeTaskFor: () => task.id, maturity: () => "UNGRADUATED", holder: "ordinary-process-test",
+        now: NOW, leaseTtlMs: 60_000, executor: { lane: "DETERMINISTIC", run: async () => { throw new Error("wrong lane"); } },
+        reader: { contract: "READER", state: "NOT_READY", reason: "fixture" }, truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
+        research: { decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "fixture", disagreement: null }),
+          admitScout: () => ({ admit: true }), modelExecutor: executor, workerCapacity: 2, scoutLeaseTtlMs: 60_000 } });
+      assert.equal(pids.length, 1);
+      assert.notEqual(pids[0], process.pid);
+      const attempts = (await repos.attempts.list()).map(row => row.value);
+      assert.equal(attempts.length, 1);
+      assert.ok(attempts[0]!.worker.instance.endsWith(`:worker:${pids[0]}`));
+      assert.equal(cycle.dispatched.length, 1);
+      assert.equal(modelCalls, contextFailure ? 0 : 1);
+      assert.equal(starts, contextFailure ? 0 : 1);
+      assert.equal(results, contextFailure ? 0 : 1);
+      assert.notEqual(attempts[0]!.outcome, null);
+      if (contextFailure) assert.equal(attempts[0]!.cost.usd, 0);
+    } finally { await rm(root, { recursive: true, force: true }); }
+  }
+  const root = await mkdtemp(join(tmpdir(), "s7-ordinary-route-"));
+  assert.equal(dirname(resolve(root)), resolve(tmpdir()));
+  try {
+    const repos = await createFileRepositories(root);
+    const { task } = await registered(repos);
+    const pids: number[] = [];
+    let opened = 0, vaulted = 0;
+    const body = "<html><p>Observed official fixture record</p></html>";
+    const executor = routeProcessExecutor({ root: process.cwd(), postgres: false, fileStoreRoot: root,
+      route: { routeId: task.routeId, label: "fixture GET", executorClass: "DETERMINISTIC",
+        executorReason: "The request is held plain code", citation: "offline fixture",
+        open: { kind: "HTTP_GET", url: "https://fixture.example.gov/record" } },
+      onStarted: pid => pids.push(pid), spaceOut: async () => {},
+      openOne: async () => { opened++; return { status: 200, bytes: Buffer.byteLength(body),
+        body, contentType: "text/html", durationMs: 1, transportError: null }; },
+      vault: async (_artifact, text) => { assert.equal(text, body); vaulted++;
+        return { stored: true, where: "fixture", why: "offline capture" }; },
+    });
+    const cycle = await runCycle({ repos, obligations: [OBLIGATION], debts: [], routeTaskFor: () => task.id,
+      maturity: () => "GRADUATED", holder: "ordinary-route-process-test", now: NOW, leaseTtlMs: 60_000,
+      executor, workerCapacity: 2,
+      reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
+      truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" } });
+    assert.equal(pids.length, 1);
+    assert.notEqual(pids[0], process.pid);
+    assert.equal(opened, 1);
+    assert.equal(vaulted, 1);
+    assert.equal(cycle.dispatched[0]!.outcome, "WORKED");
+    assert.equal(cycle.dispatched[0]!.cost?.requestCount, 1);
+    const attempts = (await repos.attempts.list()).map(row => row.value);
+    assert.equal(attempts.length, 1);
+    assert.equal(attempts[0]!.outcome, "COMPLETED");
+    assert.ok(attempts[0]!.worker.instance.endsWith(`:worker:${pids[0]}`));
+  } finally { await rm(root, { recursive: true, force: true }); }
 }
 
 /** A toolkit whose fetch_public vaults one artifact per call and returns a rung. */
@@ -219,7 +327,7 @@ function scriptedTransport(turns: readonly ModelResponse["content"][]): ModelTra
   let i = 0;
   const t = (async (request: ModelRequest) => {
     requests.push(request);
-    const content = turns[Math.min(i, turns.length - 1)];
+    const content = turns[i] ?? [{ type: "text" as const, text: "script complete" }];
     i += 1;
     return {
       /* The provider reports the model it served: the one the request named. */
@@ -311,6 +419,7 @@ test("context assembly failure records a durable zero before any toolkit or prov
   assert.equal(costs.length, 1);
   assert.equal(costs[0].cost.usd, 0);
   assert.equal(costs[0].cost.requestCount, 0);
+  await ordinaryWorkerProcesses();
 });
 
 test("a later toolkit construction failure remains unpriced and cannot release an unknown hold", async () => {
@@ -333,7 +442,7 @@ test("a later toolkit construction failure remains unpriced and cannot release a
 
 test("a recorded Admin Send carries its selected questions into the actual Scout request without claiming publication", async () => {
   const transport = scriptedTransport([[finish("f", "NO_PROGRESS")]]);
-  const { exec } = executorWith(transport, fakeToolkit(), { bound: { maxTurns: 1 } });
+  const { exec } = executorWith(transport, fakeToolkit(), { bound: {} });
   const obligation = { ...OBLIGATION, assignments: [{ assignmentKey: "zcta:2020/85635", ref: "isolated-send", relation: "REORDERED" as const, at: NOW, questions: ["ANYTHING_MISSING", "READER_CAN_SEE"] as const }] };
   const { repos, task } = await registered(createMemoryRepositories(), obligation);
   await dispatchOne(repos, { obligation: scheduledFixture(obligation, NOW_MS), routeTaskId: task.id, holder: "test", now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec, decision: { kind: "BOUNDED_MODEL_WORKER", why: "source investigation", disagreement: null } });
@@ -400,9 +509,8 @@ test("1. SEEDED: a route declared DETERMINISTIC never consumes a model", async (
       decide: () => ({ kind: "DETERMINISTIC", why: "declared", disagreement: null }),
       admitScout: () => ({ admit: true }),
       modelExecutor: exec,
-      maxConcurrentScouts: 2,
+      workerCapacity: 2,
       scoutLeaseTtlMs: 60_000,
-      scoutWallMs: 1000,
     },
   });
   assert.equal(transport.requests.length, 0, "no model request may be made for a deterministic route");
@@ -486,7 +594,7 @@ test("4. SEEDED: an early NO_PROGRESS below the rung minimum is refused, ABORTS,
     /* the model repeats the refused finish until the grace runs out */
     [finish("f2", "NO_PROGRESS", { rungsWalked: [{ index: 0, note: "nothing" }], nextRungs: ["site-search-or-sitemap"] })],
   ]);
-  const { exec, results } = executorWith(transport, toolkit, { bound: { maxTurns: 3 } });
+  const { exec, results } = executorWith(transport, toolkit, { bound: {} });
   const result = await dispatchOne(repos, {
     obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
@@ -512,7 +620,7 @@ test("4. SEEDED: an early NO_PROGRESS below the rung minimum is refused, ABORTS,
 
 /* ---------------------------------------------------------------------- 5 */
 
-test("5. the bound reached: the typed result carries rungs walked and next rungs, and stoppedBy is BOUND", async () => {
+test("5. a deliberate stop preserves next rungs without an artificial tool cap", async () => {
   const { repos, task } = await registered();
   const toolkit = fakeToolkit();
   const transport = scriptedTransport([
@@ -520,7 +628,7 @@ test("5. the bound reached: the typed result carries rungs walked and next rungs
     [toolUse("u2", "fetch_public", { url: "https://a.gov/sitemap.xml", rung: "site-search-or-sitemap", why: "map" })],
     [finish("f", "NO_PROGRESS", { rungsWalked: [{ index: 0, note: "home" }, { index: 1, note: "sitemap" }], nextRungs: ["open-data-portal", "alternate-official-host-or-mirror"] })],
   ]);
-  const { exec, results } = executorWith(transport, toolkit, { bound: { maxToolCalls: 2 } });
+  const { exec, results } = executorWith(transport, toolkit, { minRungs: 2 });
   const result = await dispatchOne(repos, {
     obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
@@ -531,15 +639,15 @@ test("5. the bound reached: the typed result carries rungs walked and next rungs
     executor: exec,
   });
   assert.equal(result.outcome, "FAILED", "NO_PROGRESS aborts the Attempt; the obligation stays owed");
-  assert.match(result.detail, /SCOUT_NO_PROGRESS \(BOUND\)/);
+  assert.match(result.detail, /SCOUT_NO_PROGRESS \(MODEL\)/);
   const r = results[0];
-  assert.equal(r.refusal, null, "a bound-ended result below the minimum is legitimate, not refused");
-  assert.equal(r.stoppedBy, "BOUND");
+  assert.equal(r.refusal, null, "a result after the actual rung floor is legitimate");
+  assert.equal(r.stoppedBy, "MODEL");
   assert.equal(r.rungs.length, 2);
   assert.deepEqual(r.nextRungs, ["open-data-portal", "alternate-official-host-or-mirror"]);
   assert.equal(r.rungs[1].note, "sitemap");
   const last = transport.requests.at(-1)!;
-  assert.deepEqual(last.tool_choice, { type: "auto" }, "the bound turn stays auto — no cache-invalidating forced-finish rewrite; the BOUND-REACHED message and tool refusal drive the finish");
+  assert.deepEqual(last.tool_choice, { type: "auto" }, "the finish stays auto without a cache-invalidating forced-tool rewrite");
 });
 
 /* -------------------------------------------------------------- 5b (early stop) */
@@ -575,7 +683,7 @@ test("EARLY STOP: a walk that stalls past minRungs finishes early instead of run
     },
     { requests: [] as ModelRequest[] },
   ) as ModelTransport & { requests: ModelRequest[] };
-  const { exec, results } = executorWith(transport, toolkit, { minRungs: 2, bound: { maxTurns: 20, maxToolCalls: 20 } });
+  const { exec, results } = executorWith(transport, toolkit, { minRungs: 2 });
   await dispatchOne(repos, {
     obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
@@ -616,9 +724,8 @@ test("6. SEEDED: the rolling ceiling DEFERS model work by name and disposes noth
       decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "novel", disagreement: null }),
       admitScout: () => ({ admit: false, code: "CEILING", why: "the rolling daily research ceiling is reached: $25.0000 of $25" }),
       modelExecutor: exec,
-      maxConcurrentScouts: 2,
+      workerCapacity: 2,
       scoutLeaseTtlMs: 60_000,
-      scoutWallMs: 1000,
     },
   });
   assert.equal(transport.requests.length, 0);
@@ -893,7 +1000,7 @@ test("proven pre-send Scout refusals settle unused holds without erasing earlier
     const job = new JobSpend(holds, mode, OBLIGATION.id, { sends: [], areas: [line] });
     assert.equal((await job.admit(2, "Scout")).admit, true);
     const heldFleet = new FleetSafetyController({ now: NOW, costs: [], modelHold: "lane closed", clock: () => NOW_MS });
-    const openFleet = new FleetSafetyController({ now: NOW, costs: [], clock: () => NOW_MS });
+    const openFleet = new FleetSafetyController({ now: NOW, costs: [], rollingCeilingUsd: 50, clock: () => NOW_MS });
     let sent = 0;
     const provider: ModelTransport = async request => {
       sent++;
@@ -910,6 +1017,11 @@ test("proven pre-send Scout refusals settle unused holds without erasing earlier
     const result = await dispatchOne(repos, { obligation: scheduledFixture(OBLIGATION, NOW_MS), routeTaskId: task.id,
       holder: mode, now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec });
     const expectedSent = mode === "fleet-after-metered" || mode === "unpriced-after-response" ? 1 : 0;
+    if (mode !== "unpriced-after-response") {
+      assert.equal((await repos.attempts.mustRead(result.attemptId!)).value.outcome, "DENIED_BY_POLICY", mode);
+      assert.match(result.detail, /SCOUT_POLICY_DENIED/);
+      assert.doesNotMatch(result.detail, /SCOUT_TRANSPORT_FAILED/);
+    }
     assert.equal(sent, expectedSent, mode);
     assert.equal(result.cost?.requestCount, mode === "unpriced-after-response" ? null : expectedSent, mode);
     if (mode === "unpriced-after-response") assert.equal(result.cost?.usd, null);
@@ -1080,7 +1192,7 @@ test("14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is reco
   /* A growing loop whose turn 2 finds nothing in the cache and re-writes the prefix plus what it appended; the uncached tail stays tiny. */
   const coldOnTurnTwo: ModelTransport = async (request) => {
     requests.push(request);
-    const content = turns[Math.min(i, turns.length - 1)];
+    const content = turns[i] ?? [{ type: "text" as const, text: "script complete" }];
     i += 1;
     const usage = [
       { input_tokens: 2, output_tokens: 100, cache_read_input_tokens: 0, cache_creation_input_tokens: 4000 },

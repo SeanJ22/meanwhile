@@ -127,11 +127,11 @@ test("Admin's preview: the registration slice, and the governments a Send must p
   assert.equal((await registrationGovernments("OH", [], slicedFrom(null, []))).kind, "NOT_PUBLISHED");
   assert.equal((await registrationGovernments("OH", [], null)).kind, "UNREAD");
   assert.match(
-    stateSendPreviewSentence({ kind: "REGISTRATION", state: "OH", versionId: "cv-oh-1", governments: ["a", "b"], edge: ["c"] }, 1000),
+    stateSendPreviewSentence({ kind: "REGISTRATION", state: "OH", versionId: "cv-oh-1", governments: ["a", "b"], edge: ["c"] }),
     /^OH: a Send creates work for 2 governments here, and up to 1 more at the edge .+, from registration \(the 2022 Census of Governments, promoted version cv-oh-1\) — no reviewed registry exists for OH\. A new Send discovers meetings, officeholders, elections and finance sources where missing/,
   );
-  assert.match(stateSendPreviewSentence({ kind: "REVIEWED_REGISTRY", state: "AZ" }, 1000), /^AZ: its governments come from the reviewed AZ jurisdiction registry/);
-  assert.match(stateSendPreviewSentence({ kind: "NOT_READ", state: "TX", why: "its registration is not promoted in this store yet" }, 1000), /no count is claimed/);
+  assert.match(stateSendPreviewSentence({ kind: "REVIEWED_REGISTRY", state: "AZ" }), /^AZ: its governments come from the reviewed AZ jurisdiction registry/);
+  assert.match(stateSendPreviewSentence({ kind: "NOT_READ", state: "TX", why: "its registration is not promoted in this store yet" }), /no count is claimed/);
 
   /* A DISPATCH ("deep dive on Ohio") says where Ohio's governments come from, and what is blocked is only an unreadable registration. */
   const ohio = deployPreview({ note: "deep dive on Ohio", obligations: [], obligationsRead: true, ceilings: { rolling24HourModelUsd: 105 } }).creates[0]!.says;
@@ -153,12 +153,11 @@ test("Admin's instruction card says what a Send created and that its governments
     key: decision!.key, kind: "SCOPE", label: "Franklin County, Ohio", requestedAt: decision!.decidedAt, ref: decision!.receiptId,
     units: { placed: 52, fromRegistration: 52, blocked: 0, unplaced: 1048, placedSample: [] },
     blocked: [],
-    requirements: { defined: 52, carried: 0, created: 52, createdThisCycle: 52, deferred: 0, capped: 0, failed: 0, held: 0, createdDeterministic: 0, createdModel: 52, createdMeetingsDiscovery: 52, createdFromRegistration: 52 },
+    requirements: { defined: 52, carried: 0, created: 52, createdThisCycle: 52, deferred: 0, failed: 0, held: 0, createdDeterministic: 0, createdModel: 52, createdMeetingsDiscovery: 52, createdFromRegistration: 52 },
     reordered: { obligations: 0, of: 0 },
-    cap: 1000,
     says: [],
   };
-  const reading: DispatchWorkReading = { formatVersion: 1, at: "2026-09-25T11:00:00.000Z", writes: "APPLIED", planOnlyWhy: null, writeBudget: 200, written: 52, deferred: 0, failed: [], stoppedBy: "DONE", targets: [target] };
+  const reading: DispatchWorkReading = { formatVersion: 1, at: "2026-09-25T11:00:00.000Z", writes: "APPLIED", planOnlyWhy: null, written: 52, deferred: 0, failed: [], stoppedBy: "DONE", targets: [target] };
   assert.equal(dispatchWorkReadingOf(reading), reading);
   assert.equal(dispatchWorkReadingOf({ formatVersion: 2, targets: [] }), null, "anything else is no reading, never an empty one");
   const view = instructionView({ decision: decision!, reading: null, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null, dispatchWork: reading });

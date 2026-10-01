@@ -160,7 +160,7 @@ test("shared token charges are reported once but consume every exact beneficiary
   assert.equal(unknown.hunts?.reduce((sum,hunt)=>sum+hunt.knownCombinedUsd,0),5);
 });
 
-test("a lifetime-hunt job bypasses secondary time and rolling limits while unrelated work remains held", () => {
+test("all work ignores blackout while every hunt obeys the Admin spend dial", () => {
   const blackout = "2026-09-27T02:00:00.000Z"; // Saturday 19:00 Arizona.
   const controller = new FleetSafetyController({ now: blackout, costs: [{
     source: "api.anthropic.com", role: "SCOUT", recordedAt: "2026-09-27T01:00:00.000Z",
@@ -168,12 +168,12 @@ test("a lifetime-hunt job bypasses secondary time and rolling limits while unrel
   }] as never, rollingCeilingUsd: 105, clock: () => Date.parse(blackout),
   lifetimeHuntWork: work => work === member.id });
   assert.equal(controller.admitDispatch(member.id).admit, true);
-  assert.deepEqual(controller.rollingCeilingReached(1, member.id).reached, false);
-  assert.equal(controller.admitDispatch("outside").admit, false);
+  assert.deepEqual(controller.rollingCeilingReached(1, member.id).reached, true);
+  assert.equal(controller.admitDispatch("outside").admit, true);
   const request = { model: "claude-haiku-4-5-20251001", max_tokens: 256,
     system: [{ type: "text", text: "test" }], tools: [], messages: [{ role: "user", content: "one" }] };
-  const reserved = controller.reserveModelRequest("anthropic", member.id, request as never);
-  assert.ok(reserved.usd > 0);
+  assert.throws(() => controller.reserveModelRequest("anthropic", member.id, request as never),
+    error => error instanceof FleetSafetyRefusal && error.code === "ROLLING_24_HOUR_MODEL_SPEND_CEILING");
   assert.throws(() => controller.reserveModelRequest("anthropic", "outside", request as never),
     error => error instanceof FleetSafetyRefusal && error.code === "ROLLING_24_HOUR_MODEL_SPEND_CEILING");
 });

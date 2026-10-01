@@ -210,6 +210,7 @@ const askModel = (): string => resolveAskRoleModel("CLASSIFIER");
 export interface ClassifyOptions {
   /** Overridden in tests so the suite never touches the network. */
   fetchImpl?: typeof fetch;
+  recordCost?: AskCostWriter;
 }
 
 /**
@@ -231,7 +232,7 @@ export async function classifyQuestion(
   if (!apiKey) return { kind: "UNAVAILABLE", why: "no-key" };
   if (!noteCall()) return { kind: "UNAVAILABLE", why: "ceiling" };
 
-  const impl = options.fetchImpl ?? fetch;
+  const impl = meteredAskFetch(options.fetchImpl ?? fetch, "classifier", options.recordCost);
   /* Resolved once: the same id is sent and recorded. Thinking OFF where the
      model accepts `{type: "disabled"}`; on a model that always thinks (Opus
      5.5, where the field is a 400) it is omitted, effort stays low and
@@ -279,3 +280,4 @@ export async function classifyQuestion(
     return { kind: "UNAVAILABLE", why: "error" };
   }
 }
+import { meteredAskFetch, type AskCostWriter } from "../ask/cost.ts";

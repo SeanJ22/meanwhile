@@ -17,7 +17,7 @@ import { createRouteTask, denyByPolicy, type RouteTask } from "../lib/control-pl
 import { createWorkItem, type WorkItem } from "../lib/control-plane/work-item.ts";
 import { dispatchWorkerTask, drainWorkerQueue, enqueueWorkerTask, FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
 import { workerTaskAdmission } from "../lib/control-plane/workers/scheduling.ts";
-import { advanceHeldWorkerFleet, heldEventContract, HELD_AUDIT_CONTEXT_MAX_BYTES, standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
+import { advanceHeldWorkerFleet, planHeldWorkerFleet, heldEventContract, HELD_AUDIT_CONTEXT_MAX_BYTES, standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
 import {
   installOperationalReferenceBundle,
   operationalReferenceBundle,
@@ -36,6 +36,18 @@ const API = "https://avondaleaz.api.civicclerk.com/v1/Events";
 const WP = "https://avondaleaz.gov/wp-json/wp/v2/pages?search=Meeting%20Agendas%20and%20Minutes";
 const PORTAL = "https://avondaleaz.portal.civicclerk.com/";
 const METHOD = methodFixture();
+
+test("held planning enqueues every captured document without running a computation", async t => {
+  const h = await harness(t);
+  for (let id = 1; id <= 20; id++) await h.hold(feed(id));
+  const before = (await h.repos.attempts.list()).length;
+  const tasks = await planHeldWorkerFleet(ROOT, h.runtime, true);
+  assert.equal(tasks.length, 20);
+  assert.ok(tasks.every(task => task.workerTask?.role === "PARSER" && task.state === "PENDING"));
+  assert.equal((await h.repos.attempts.list()).length, before);
+  assert.equal((await h.repos.workerResults.readAll()).length, 0);
+  assert.equal((await planHeldWorkerFleet(ROOT, h.runtime, true)).length, 20);
+});
 
 function feed(id: number, wrongDate = false) {
   return JSON.stringify({ "@odata.context": "https://avondaleaz.api.civicclerk.com/v1/$metadata#Events", value: [{
@@ -215,6 +227,26 @@ test("canonical failure history stays retryable after three failures and uses th
   assert.equal(due.debt?.cause, "WORKER_LOST");
   assert.equal(workerTaskAdmission({ ...reclaimable, state: "CLAIMED" }, attempts, atFailure.retryAt!).state, "IN_FLIGHT");
   assert.equal(workerTaskAdmission(reclaimable, [...attempts, attemptFor(task, 10, null, "")], atFailure.retryAt!).state, "IN_FLIGHT");
+});
+
+test("unchanged permanent failures stay terminal while provider failures back off", async t => {
+  const h = await harness(t);
+  const artifact = await h.hold(feed(1));
+  const task = await enqueueWorkerTask(h.repos, { workItemId: h.item.id, role: "PARSER", artifactId: artifact.artifactId,
+    contract: heldEventContract(ROOT, artifact)!, now: h.now() });
+  const unchanged = attemptFor(task, 1, "ABORTED", "INVALID_INPUT_SCHEMA");
+  assert.equal(workerTaskAdmission(task, [unchanged], "2027-01-01T00:00:00.000Z").state, "TERMINAL");
+  for (const role of ["AUDIT", "PARSE"]) {
+    const rejected = attemptFor(task, 1, "ABORTED", `${role}_PROVIDER_FAILURE:400; usage NOT MEASURED`);
+    assert.equal(workerTaskAdmission(task, [rejected], "2027-01-01T00:00:00.000Z").state, "TERMINAL");
+    assert.equal(workerTaskAdmission(task, [{ ...rejected, abortReason: `${role}_PROVIDER_FAILURE:400; invalid network tool schema` }], "2027-01-01T00:00:00.000Z").state, "TERMINAL");
+    for (const status of [429, 503]) {
+      const upstream = attemptFor(task, 1, "ABORTED", `${role}_PROVIDER_FAILURE:${status}; usage NOT MEASURED`);
+      const waiting = workerTaskAdmission(task, [upstream], upstream.endedAt!);
+      assert.equal(waiting.state, "BACKOFF");
+      assert.equal(workerTaskAdmission(task, [upstream], waiting.retryAt!).due, true);
+    }
+  }
 });
 
 test("only exact transient denials become due for current-policy reauthorization", async t => {

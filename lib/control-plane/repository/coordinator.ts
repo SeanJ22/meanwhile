@@ -78,7 +78,7 @@ import {
   type BudgetLedger,
 } from "../budget.ts";
 import type { CompletionSnapshot } from "../completion.ts";
-import type { CostEntry } from "../cost.ts";
+import { costEntryWithModel, type CostEntry } from "../cost.ts";
 import { fingerprint } from "../ids.ts";
 import {
   disposeRoute,
@@ -316,6 +316,12 @@ export async function claimRouteTask(
   // Read the task FRESH, after winning. Reading it before the race and writing
   // it after would reintroduce the window the conditional write just closed.
   const current = await repos.routeTasks.mustRead(input.routeTaskId);
+  // A sibling may have read PENDING before the previous worker recorded its
+  // policy denial and released the lease. Only the scheduler can reauthorize it.
+  if (!current.value.workerTask && current.value.state === "POLICY_DENIED") {
+    await repos.leases.compareAndSet(input.routeTaskId, lease.revision, releaseLease(lease.value), input.now);
+    throw new AttemptContract("ROUTE_TASK_POLICY_DENIED");
+  }
   if (current.value.workerTask && !["PENDING", "RECLAIMABLE"].includes(current.value.state)) {
     await repos.leases.compareAndSet(input.routeTaskId, lease.revision, releaseLease(lease.value), input.now);
     throw new AttemptContract("WORKER_TASK_NOT_DISPATCHABLE");
@@ -1037,7 +1043,7 @@ export async function recordCost(
   now: string,
 ): Promise<AppendOutcome<CostEntry>> {
   const recordId = `ce-${fingerprint([entry.attemptId, entry.routeTaskId, entry.recordedAt])}`;
-  return repos.costs.append(entry.workItemId, recordId, entry, now);
+  return repos.costs.append(entry.workItemId, recordId, costEntryWithModel(entry, entry.model ?? null), now);
 }
 
 /** ----------------------------------------------------------- completion */

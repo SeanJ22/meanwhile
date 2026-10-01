@@ -10,7 +10,7 @@
  * request is sent once more; the first response to arrive is the one used and the
  * other is stopped. A reading is small (about 3,500 input tokens, 60 output), so
  * the second call costs a fraction of a cent and only on the slow one in six. A
- * request that FAILS before the hedge time is retried at once, the same way.
+ * request that fails returns its failure; an unchanged failure is not retried.
  *
  * Nothing about the request changes between the two sends, so the answer the
  * winner returns is the answer either would have.
@@ -54,8 +54,7 @@ export async function hedgedFetch(
         (error) => {
           failed += 1;
           if (settled) return;
-          if (controllers.length < 2) start();
-          else if (failed >= controllers.length) { settled = true; clearTimeout(timer); reject(error); }
+          if (failed >= controllers.length) { settled = true; clearTimeout(timer); reject(error); }
         },
       );
     };

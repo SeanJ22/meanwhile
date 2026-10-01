@@ -108,7 +108,7 @@ function state(over: Record<string, unknown> = {}): ResearchState {
       context: "standing runner",
     },
     model: "scout-model-fixture",
-    bounds: RESEARCH_BOUNDS,
+    bounds: { ...RESEARCH_BOUNDS, dailyCeilingUsd: 100 },
     spend: { windowUsd: 1.5, measuredAttempts: 3, unmeasuredAttempts: 0, asOf: FRESH },
     queue: {
       registeredUnits: 40,
@@ -667,14 +667,14 @@ test("the metrics and ordering panels are OUR named gaps until a cycle computes 
 test("SEEDED: every number the page emits carries a denominator and a contract, and stated N equals rendered rows", () => {
   const view = buildResearchView(healthyInput());
   const numbers = renderedNumbersOf(view);
-  assert.ok(numbers.length >= 18, `only ${numbers.length} number(s) collected — the collector lost a panel`);
+  assert.ok(numbers.length >= 17, `only ${numbers.length} number(s) collected — the collector lost a panel`);
   const audit = auditRenderedNumbers(numbers);
   assert.equal(audit.ok, true, audit.detail);
   assert.equal(audit.checked, numbers.length);
   for (const n of numbers) assert.ok(n.contract && n.contract.trim().length > 20, `${n.label} has a thin contract`);
 
   const claims = countClaimsOf(view);
-  assert.ok(claims.length >= 3);
+  assert.ok(claims.length >= 2, "results and intents retain their rendered-row accounting; there is no fixed Scout pool denominator");
   assert.equal(checkStatedEqualsRendered(claims).ok, true);
 
   // Positive control: the audit refuses a bare number.
@@ -698,7 +698,7 @@ test("spend at or over the ceiling renders as a number over its ceiling; the lan
   assert.ok(view.spend.windowUsd.held, "an over-ceiling spend is a fact, not a gap");
   if (view.spend.windowUsd.held) {
     assert.equal(view.spend.windowUsd.value.value, 106.5);
-    assert.equal(view.spend.windowUsd.value.denominator, RESEARCH_BOUNDS.dailyCeilingUsd);
+    assert.equal(view.spend.windowUsd.value.denominator, 100);
   }
   assert.equal(auditRenderedNumbers(renderedNumbersOf(view)).ok, true);
 });

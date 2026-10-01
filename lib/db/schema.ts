@@ -472,8 +472,7 @@ export const reactions = pgTable(
     }),
     /**
      * **The optional verbatim** (P03, 2026-08-18; free text unblocked by the
-     * author for the testing window, and shipped behind
-     * `ripcord.reactionFreeText`).
+     * author, and captured without a switch since 2026-10-01).
      *
      * "Binary carries volume; text carries color. Never require the text."
      * — CLAUDE.md. Nullable, and null is the ordinary case.

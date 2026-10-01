@@ -11,7 +11,6 @@ import {
 import { intakeWindows } from "@/lib/db/intake-windows";
 import {
   CONTEXT_RESTRICTED_VALUES,
-  FREE_TEXT_CLOSED_HEADER,
   isPlausibleTargetId,
   isValidFreeText,
   isValidReactionKey,
@@ -334,24 +333,9 @@ export async function POST(request: Request) {
     }
   }
 
-  /*
-   * THE FREE-TEXT RIPCORD (P03/T05, 2026-08-18).
-   *
-   * Pulled, the verbatim is DROPPED and the binary is still stored. The
-   * asymmetry is deliberate: free text is the part with the open question,
-   * reaction capture is the revenue path, and taking the second down to
-   * close the first would cost more than it saves.
-   *
-   * The reader is TOLD. A 204 with no signal would let the control render
-   * "saved" over words that went nowhere, which is exactly the quiet lie
-   * this codebase keeps catching. The header rides back on the same 204 and
-   * the client turns it into FREE_TEXT_CLOSED_LINE.
-   */
-  const freeTextClosed = ripcordPulled("ripcord.reactionFreeText");
-  const submitted = normalizeFreeText(submission.text);
-  const freeText = freeTextClosed ? null : submitted;
-  // Only say text was dropped when there was text to drop.
-  const droppedText = freeTextClosed && submitted !== null;
+  // Everything a reader types is captured (Sean, October 1, 2026); the verbatim
+  // is still validated and scrubbed by `normalizeFreeText`.
+  const freeText = normalizeFreeText(submission.text);
 
   try {
     const stored = await writeReaction({
@@ -369,10 +353,7 @@ export async function POST(request: Request) {
       // sitting in a column definition where nobody looks.
       marker: markerFromRequest(request),
     });
-    return new Response(null, {
-      status: stored ? 204 : 202,
-      headers: droppedText ? { [FREE_TEXT_CLOSED_HEADER]: "closed" } : undefined,
-    });
+    return new Response(null, { status: stored ? 204 : 202 });
   } catch (error) {
     /*
      * **RULING 25 — UNCHANGED FOR THE READER** (Prompt D item 6, D73). The

@@ -4,7 +4,8 @@ import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 import { gunzipSync } from "node:zlib";
 
-import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
+import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
+import { recordRoutineReaderProjectionReadback } from "../lib/civic-data/reader-verification.ts";
 import { candidateChangeSet, canonicalCivicDataJson, civicRecordsFor } from "../lib/civic-data/changes.ts";
 import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
 import { promotionProofIssue } from "../lib/civic-data/read-model.ts";
@@ -226,6 +227,30 @@ test("registry civic member ordering is independent of JSONB object-key order", 
   assert.deepEqual(roundTrippedRecords, originalRecords);
   const keys = originalRecords.map(({ key }) => key);
   assert.deepEqual(keys, [...keys].sort((left, right) => left.localeCompare(right)));
+});
+
+test("two registry publications in one pass never reuse a clock before the scope's latest event", async () => {
+  for (const changed of [false, true]) {
+    const store = new MemoryRoutineDataStore();
+    const firstPackage = await registryPackage(T0, "same-pass-first");
+    const first = await processRegisteredManualCandidate(store, "registry-runtime-bindings", registryRuntimeCandidate(firstPackage), T0);
+    assert.equal(first.candidate.state, "PROMOTED");
+    const contract = requiredManualProductionContract("registry-runtime-bindings");
+    await recordRoutineReaderProjectionReadback(store, contract, first.promoted!, T1);
+    const secondPackage = await registryPackage(T0, "same-pass-second");
+    const payload = changed ? { ...secondPackage.payload, bodyRosters: secondPackage.payload.bodyRosters.map((roster, index) => index ? roster : {
+      ...roster, members: roster.members.map((member, index) => index ? member : { ...member, phone: "520-555-0100" }),
+    }) } : secondPackage.payload;
+    const second = await processRegisteredManualCandidate(store, "registry-runtime-bindings", registryRuntimeCandidate({ ...secondPackage, payload }), T0);
+    assert.equal(second.candidate.state, "PROMOTED", second.candidate.failureDetail ?? undefined);
+    assert.equal(Boolean(second.confirmed), !changed);
+    const readback = second.readerReadback ?? await recordRoutineReaderProjectionReadback(store, contract, second.promoted!, T0);
+    assert.equal(readback?.status, "PASS");
+    assert.ok(Date.parse(readback!.observedAt) >= Date.parse(T1));
+    assert.ok(Date.parse(second.confirmed?.at ?? second.candidate.receipt!.validatedAt) >= Date.parse(T1));
+    const events = await store.events(second.promoted!.versionId);
+    assert.ok(events.every((event, index) => index === 0 || Date.parse(event.at) >= Date.parse(events[index - 1]!.at)));
+  }
 });
 
 test("registry relational bindings remain coherent while exact member deltas promote and bad successors leave LKG live", async () => {

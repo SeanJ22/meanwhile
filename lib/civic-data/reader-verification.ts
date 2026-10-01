@@ -1,4 +1,4 @@
-import { readLatestReaderReadbacks, type RoutineDataStore } from "./store.ts";
+import { readLatestReaderReadbacks, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
 import type { CandidateEvent, PromotedPointerIdentity } from "./types.ts";
@@ -439,6 +439,7 @@ async function appendReaderProjectionReadback(
         `The typed Reader result cannot be certified because its executing code commit was not resolvable. ${readerVerification.detail}`,
       )
     : readerVerification;
+  observedAt = await routineEventObservedAt(store, promoted.recordClass, promoted.scope, observedAt);
   const receipt: ReaderProjectionReadbackReceipt = {
     contractVersion: 2,
     kind: "READER_PROJECTION_READBACK",

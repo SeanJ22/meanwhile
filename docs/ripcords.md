@@ -130,30 +130,7 @@ wrong side of the tense that was asked for — and a rejected answer is DISCARDE
 rather than repaired. This flag is what to reach for when that turns out not to
 have been enough.
 
-## Ask signal capture — ALREADY PULLED, and raising it is the author's call
-
-**Flag:** `ripcord.askSignalCapture` · **Env var:** `WTP_RIPCORD_ASK_SIGNAL_CAPTURE`
-
-Added 2026-08-27 (ASK03). **Ships PULLED.** This is the one entry on this page
-that is not a procedure for an emergency: nothing is running, and the question
-is whether to START it.
-
-It gates every write of the Ask interaction record — the scrubbed question, the
-answer the reader received, the civic subject it resolved to, and the zip
-cohort. Down, Ask logs exactly what it logged before: the topic id, and the
-capped question on a refusal.
-
-**Why it is down.** The data-privacy policy requires **honest disclosure at the
-box** — one line, plain language, before the reader types — for any store whose
-aggregates may be shared with campaigns, organizations and researchers. A
-reader typing a question into such a store is exactly that case. The disclosure
-copy is drafted on **NH246** and has not been approved.
-
-**Do not raise this flag until that copy is live.** Raising it first would start
-collecting the very thing the disclosure exists to disclose, which is the
-coupling rule failing in the one direction it cannot survive.
-
-## The FEC pair
+## The FEC contributor ripcord
 
 Documented for completeness; the procedure is identical (env var, value
 `pulled` or `live`, trigger deploy).
@@ -164,23 +141,10 @@ Documented for completeness; the procedure is identical (env var, value
   one is unchanged: § 30111(a)(4) restricts commercial use of FEC
   contributor DATA, and that question is still open.
 
-- `ripcord.fundingReactionsInAggregates` /
-  `WTP_RIPCORD_FUNDING_REACTIONS_IN_AGGREGATES` — keeps funding reactions
-  out of aggregates and exports. **Shipped pulled with D34; flipped LIVE
-  2026-08-15 on the author's ruling.**
-
-  The ruling, verbatim: *"The author rules the exclusion wrong as product
-  truth: what is licensed is reader-attention signal (anonymous reactions),
-  never FEC-derived data — a buyer receives opinions about displays, not
-  contributor records. This is the author's documented, settled position."*
-
-  The distinction the original framing collapsed: a reader's anonymous
-  feeling about a display is not contributor data and is not derived from
-  it. It carries no contributor's name, amount or filing anywhere. The
-  switch stays as a **belt, not a blocker** — the provenance tags, the
-  filter and this procedure are unchanged, so counsel (the B05 hire) may
-  re-pull it and the re-pull is still a filter, never a migration or a hunt.
-  Closer: **author-ruled; counsel review welcome and may re-pull.**
+Ask capture and funding reactions in aggregates are no longer ripcords (Sean,
+2026-10-01): every Ask is saved once the reader carries the anonymous
+continuity key, and funding reactions count like every other reaction. FEC
+contributor records themselves are never sold.
 
 ## After any pull
 

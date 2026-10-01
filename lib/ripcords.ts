@@ -45,44 +45,6 @@ export const RIPCORDS = {
     filters: "FEC_CONTRIBUTOR rows and the CONTRIBUTOR_REACTION control",
   },
   /**
-   * Excludes funding reactions (FUNDING_TOTAL_REACTION and
-   * CONTRIBUTOR_REACTION rows) from aggregation and every export.
-   *
-   * **Shipped PULLED with D34; flipped LIVE 2026-08-15 on the author's
-   * ruling.** The ruling, verbatim:
-   *
-   * > The author rules the exclusion wrong as product truth: what is
-   * > licensed is reader-attention signal (anonymous reactions), never
-   * > FEC-derived data — a buyer receives opinions about displays, not
-   * > contributor records. This is the author's documented, settled
-   * > position.
-   *
-   * The reasoning is a distinction the original framing collapsed. The
-   * § 30111(a)(4) question is about the CONTRIBUTOR DATA — whose commercial
-   * use is restricted — and it is still open, still governing
-   * `ripcord.fecContributorDisplay`, and still counsel's to close. A
-   * reader's anonymous feeling about a display is not that data and is not
-   * derived from it: it is a fact about a reader, collected by us,
-   * identifier-free, and it carries no contributor's name, amount or filing
-   * into anything.
-   *
-   * **The switch stays, as a belt rather than a blocker.** The provenance
-   * tags, the filter and the pull procedure are unchanged, so if counsel's
-   * read differs the exclusion is one flag away and is still a filter, never
-   * a migration or a hunt.
-   */
-  "ripcord.fundingReactionsInAggregates": {
-    pulled: false,
-    envVar: "WTP_RIPCORD_FUNDING_REACTIONS_IN_AGGREGATES",
-    question:
-      "RULED by the author 2026-08-15: what is licensed is reader-attention signal — anonymous reactions — and never FEC-derived data; a buyer receives opinions about displays, not contributor records. The separate § 30111(a)(4) question over the underlying contributor DATA is untouched by this ruling and still governs ripcord.fecContributorDisplay (D23).",
-    closer:
-      "Author-ruled 2026-08-15; counsel review welcome (the B05 hire) and may re-pull it",
-    trackerRows: "D23, D34, D61",
-    filters:
-      "FUNDING_TOTAL_REACTION and CONTRIBUTOR_REACTION rows out of aggregateReactions and every export",
-  },
-  /**
    * The tunable intake protections (T08): the per-device burst limits, the
    * soft velocity-quarantine threshold, the per-device daily ceiling, the
    * per-IP windows, and same-origin enforcement on /api/reactions and
@@ -167,52 +129,6 @@ export const RIPCORDS = {
     trackerRows: "ASK01, ASK02",
     filters:
       "Both model rungs of the grounded pipeline: Ask falls back to deterministic interpretation and the structured evidence answer, with no generated prose",
-  },
-  /**
-   * **Ask signal capture** (ASK03, 2026-08-27; the basis corrected 2026-08-28).
-   * **SHIPS PULLED.**
-   *
-   * ## The gating basis, stated honestly
-   *
-   * This header used to say the DATA-PRIVACY POLICY required the gate. **That
-   * citation was wrong and is withdrawn.** "Honest disclosure at the box" is
-   * RULING 141's clause and RULING 141 governs the Speak Your Mind store's four
-   * rules; the root constitution's friction exceptions name the transparency
-   * disclosure at REACTION capture and consent to collection, neither of which
-   * is an Ask-specific rule. Reading a rule about one store as binding law over
-   * another is how a policy grows clauses nobody adopted.
-   *
-   * The real basis needs no invented law and is higher precedence anyway:
-   * **an operator decision.** The author has instructed that new Ask/privacy
-   * copy does not ship and that NH246 stays P2 / NEEDS SEAN.
-   *
-   * ## What "built" now means, and what it did not
-   *
-   * Until 2026-08-28 `captureAskInteraction` had NO PRODUCTION CALLER — only
-   * its own module and its tests — so raising this flag would have changed
-   * nothing at all. `app/api/ask/grounded/route.ts` now calls it, after the
-   * delivered answer is known, on every outcome including CLARIFY and
-   * UNRESOLVED.
-   *
-   * ## Activation is three things, not one
-   *
-   * The disclosure copy, this flag, AND minting the Ask continuity key — which
-   * the surfaces deliberately READ and never mint while capture is off, so no
-   * identifier is placed on a reader's device for a switched-off capability.
-   * `captureAskInteraction` REFUSES a row with no continuity key rather than
-   * digesting the empty string, which would give every reader the same hash and
-   * report one distinct reader forever. Doing two of the three writes nothing.
-   */
-  "ripcord.askSignalCapture": {
-    pulled: true,
-    envVar: "WTP_RIPCORD_ASK_SIGNAL_CAPTURE",
-    question:
-      "Consent, not product: may the scrubbed question and the answer a reader received be kept as sellable civic-interest signal, and what exact line must a reader see before they type for that to be honest?",
-    closer:
-      "The author — UNANSWERED as of 2026-08-28. An OPERATOR DECISION pending privacy approval, not a clause of current law: no current rule names Ask specifically, and RULING 141 governs Speak Your Mind. Draft copy is on NH246. Activation is the copy, this flag AND minting the continuity key.",
-    trackerRows: "ASK03, NH246",
-    filters:
-      "Every write of the Ask interaction record: Ask logs exactly what it logged before, the topic id and the capped refusal question",
   },
   /**
    * The master ripcord (T08): closes reaction and search/ask intake

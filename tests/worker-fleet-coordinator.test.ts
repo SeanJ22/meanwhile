@@ -18,7 +18,7 @@ import { runLeaseWorkerProcesses, runNationalPlaceWorkerProcesses } from "../lib
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { unchangedScoutFailure } from "../lib/control-plane/workers/scout-scheduling.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
-import { registerRouteTask } from "../lib/control-plane/repository/coordinator.ts";
+import { claimRouteTask, registerRouteTask } from "../lib/control-plane/repository/coordinator.ts";
 
 async function acceptRecordedScout(h:Awaited<ReturnType<typeof autonomousHarness>>) {
   const metadata=(await h.repos.artifacts.readAll())[0]; const held=await researchVaultResolver(h.repos,h.store,h.item.project)(metadata.artifactId);
@@ -396,6 +396,12 @@ test("unresolved identity permits independent diagnosis but never staging", asyn
     assert.equal(attempts.length, 1);
     assert.equal(attempts[0]!.outcome, "DENIED_BY_POLICY");
     assert.equal(results.filter(row => row.attemptId !== null).length, 2);
+    assert.equal((await repos.attempts.list()).filter(row => row.value.routeTaskId === second.id).length, 1);
+    // Model the late sibling arriving after a denial released its lease.
+    await assert.rejects(claimRouteTask(repos, { routeTaskId: second.id,
+      holder: "late-sibling", now: h.now(), ttlMs: 300_000 }), /ROUTE_TASK_POLICY_DENIED/);
+    assert.equal((await repos.routeTasks.mustRead(second.id)).value.state, "POLICY_DENIED");
+    assert.equal((await repos.leases.mustRead(second.id)).value.released, true);
     assert.equal((await repos.attempts.list()).filter(row => row.value.routeTaskId === second.id).length, 1);
   } finally { await rm(root, { recursive: true, force: true }); }
 });

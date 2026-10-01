@@ -782,17 +782,18 @@ test("the real child boundary enforces both timeout and per-stream output limits
     {
       id: "progressing",
       executable: process.execPath,
-      args: ["-e", "let n=0; const timer=setInterval(()=>{console.log('RCD_PROGRESS='+JSON.stringify({key:'fact:'+ ++n,records:1})); if(n===5)clearInterval(timer)},200)"],
+      args: ["-e", "let n=0; const timer=setInterval(()=>{console.log('RCD_PROGRESS='+JSON.stringify({key:'fact:'+ ++n,records:1})); if(n===7)clearInterval(timer)},1000)"],
     },
     {
       id: "unchanged",
       executable: process.execPath,
-      args: ["-e", "console.log('RCD_PROGRESS='+JSON.stringify({key:'same',records:1}));setInterval(()=>console.log('RCD_PROGRESS='+JSON.stringify({key:'same',records:1})),150)"],
+      args: ["-e", "console.log('RCD_PROGRESS='+JSON.stringify({key:'same',records:1}));setInterval(()=>console.log('RCD_PROGRESS='+JSON.stringify({key:'same',records:1})),1000)"],
     },
   ], {
     cwd: process.cwd(),
     env: process.env,
-    timeoutMs: 500,
+    // Allow loaded CI hosts to start Node; seven facts still outlive this idle allowance.
+    timeoutMs: 5_000,
     maxBufferBytes: 1_024,
   });
   assert.equal(results[0]?.termination, "TIMED_OUT");

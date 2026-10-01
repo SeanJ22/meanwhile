@@ -142,7 +142,8 @@ import {
 } from "../lib/control-plane/promotion/campaign-site-cycle.ts";
 import { runCandidatePublicationCycle,
   type CandidatePublicationCycleReport } from "../lib/control-plane/promotion/campaign-publication-cycle.ts";
-import { indexVault } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { indexVault, readHeldBytes } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { officialLinkingPageFrom } from "../lib/sources/official-page-events/index.ts";
 import {
   MEETINGS_DISCOVERY_NAMESPACE,
   meetingsDiscoveryObligationId,
@@ -2961,6 +2962,7 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
     if (directoryRegistry && directoryRegistry.kind !== "PROMOTED") throw new Error("Published body directory cannot be read for meeting discovery; its source work remains owed.");
     const meetingHints = directoryRegistry?.kind === "PROMOTED" ? directoryMeetingHints(directoryItems, directoryRegistry.value, ROUTE_HINTS) : ROUTE_HINTS;
     let costSeq = 0;
+    let officialPages: Promise<readonly { canonicalUrl: string; text: string }[]> | null = null;
     meetingsDiscovery = await runMeetingsDiscovery(repos, {
       needs: discoveryNeedsToWalk(gapLedgerRead.needs, [...dispatchedNeeds.values()], need => {
         const id = meetingsDiscoveryObligationId(need);
@@ -2974,6 +2976,20 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
         sync.all.filter((o) => o.id.startsWith("freshness:meetings-discovery:") && o.openOccurrenceId !== null).map((o) => o.subjectId),
       ),
       runtime: {
+        officialLinkingPageFor: async url => {
+          // Resolve authority from previously captured pages, shared by every walk.
+          officialPages ??= (async () => {
+            const held = await indexVault(join(ROOT, ...VAULT_DIR));
+            const pages = [...held.byId.values()].filter(page => page.canonicalUrl &&
+              page.tier !== "RESTRICTED_RAW" && page.httpStatus !== null && page.httpStatus >= 200 && page.httpStatus < 300 &&
+              /html/i.test(page.contentType));
+            const reads = await Promise.allSettled(pages.map(async page => ({
+              canonicalUrl: page.canonicalUrl!, text: new TextDecoder().decode(await readHeldBytes(page)),
+            })));
+            return reads.flatMap(read => read.status === "fulfilled" ? [read.value] : []);
+          })();
+          return officialLinkingPageFrom(url, await officialPages);
+        },
         open: async ({ url, headers, timeoutMs }) => {
           const got = await openDiscovery({ url, headers, timeoutMs });
           return {

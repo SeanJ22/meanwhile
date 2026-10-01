@@ -85,6 +85,7 @@ import { writeFieldManualDiscoveries } from "../scheduler/field-manual-scout.ts"
 import { DEFAULT_ROBOTS_TOKEN, evaluatePermission } from "../scheduler/robots.ts";
 import { DEFAULT_USER_AGENT, type VaultPut } from "../scheduler/route-executor.ts";
 import { categoryBodyOf } from "./auto-crosswalk.ts";
+import type { OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 
 /** One HTTP hop. It never follows a redirect: the executor asks permission of every new host first. */
 export type DiscoveryOpen = (input: {
@@ -102,6 +103,8 @@ export type DiscoveryOpen = (input: {
 }>;
 
 export interface DiscoveryRuntime {
+  /** Saved official-page links establish authority for government and vendor hosts. */
+  readonly officialLinkingPageFor?: (url: string) => OfficialLinkingPage | null | Promise<OfficialLinkingPage | null>;
   readonly open: DiscoveryOpen;
   /** The runner's shared per-host spacing. */
   readonly spaceOut: (host: string) => Promise<void>;
@@ -555,11 +558,12 @@ export async function walkMeetingsDiscoveryNeed(
    * attested: the recorded address, the current official site a route hint records with its evidence, or a host
    * one of those named by its own redirect. Before any homepage is read, the first origin tried.
    */
-  const pageIdentity = (pageLabel: string | null): OfficialPageIdentity => ({
+  const pageIdentity = async (pageLabel: string | null): Promise<OfficialPageIdentity> => ({
     bodyId: need.jurisdictionId,
     name: need.name,
     pageLabel,
     officialHost: new URL(homeOrigin ?? origins[0] ?? "https://invalid.invalid").host,
+    linkingPage: await runtime.officialLinkingPageFor?.(homeOrigin ?? origins[0] ?? "https://invalid.invalid"),
     stateCode: need.stateCode,
     now: runtime.now(),
   });
@@ -737,7 +741,7 @@ export async function walkMeetingsDiscoveryNeed(
                   ? "a witness corroborates a sitting and is never one on its own"
                   : `no content check covers a ${hint.kind.toLowerCase()} yet: a lead, not a route`),
             }
-          : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, pageIdentity(label));
+          : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, await pageIdentity(label));
       const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail, via };
       if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got?.artifactId ?? null });
       else if (candidate.basis !== "RECIPE") leads.push(base);
@@ -772,7 +776,7 @@ export async function walkMeetingsDiscoveryNeed(
         checked += 1;
         const check = got === null
           ? { verdict: "NOT_CONFIRMED" as const, count: null, detail: "the route could not be read this walk" }
-          : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, pageIdentity(null));
+          : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, await pageIdentity(null));
         const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail, via };
         if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got?.artifactId ?? null });
         else leads.push(base);
@@ -840,7 +844,7 @@ export async function walkMeetingsDiscoveryNeed(
           for (const c of [...direct, ...selfPage, ...onPage].slice(0, 3)) {
             const body = c.url === hit.url ? page : (tried.add(c.url), await get(c.url, "endpoint", ACCEPT_PAGE));
             if (body === null) continue;
-            const check = verifyEndpointBody(c, { status: body.status, body: body.body, finalUrl: body.finalUrl }, pageIdentity(null));
+            const check = verifyEndpointBody(c, { status: body.status, body: body.body, finalUrl: body.finalUrl }, await pageIdentity(null));
             const via: Via = onPage.includes(c) ? { page: page.finalUrl, artifactId: page.artifactId } : null;
             const base = { vendor: c.vendor, url: c.url, basis: "SEARCH" as const, evidence: `search "${q.query}" found ${hit.url}`, detail: check.detail, via };
             if (check.verdict !== "YIELDED") {

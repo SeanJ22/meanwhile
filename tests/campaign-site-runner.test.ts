@@ -712,15 +712,14 @@ test("the paid lane stays closed under the owner's pause, and the pass is plain 
   /* The runner's pass: after meetings discovery, gated on the cycle kind, the runner pause and the time left, never on the paid lane. */
   const runner = readFileSync(join(ROOT, "scripts", "freshness-shadow.mts"), "utf8");
   const meetingsEnd = runner.indexOf('finishPhase("meetings-discovery");');
-  const start = runner.indexOf("if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {", meetingsEnd);
+  const start = runner.indexOf("if (dry || canary || ONLY !== null || IDS !== null) {", meetingsEnd);
   const end = runner.indexOf('finishPhase("campaign-sites");');
   assert.ok(start > meetingsEnd && end > start, "the executable pass is its own phase, after meetings discovery");
   const block = runner.slice(start, end);
   assert.doesNotMatch(block, /modelLaneEnabled|laneClosure|guardedModelTransport|scoutFor|workerKey/);
   assert.match(block, /intents\.runnerPause\.paused/);
   /* The pass starts only with its whole budget and the cycle's backstop left, and the backstop bounds it in wall time (2026-09-25). */
-  assert.match(block, /CAMPAIGN_SITE_BUDGET_MS \+ 2 \* CAMPAIGN_SITE_STOP_GRACE_MS > DISPATCH_DEADLINE_MS/);
-  assert.match(block, /withinWallTime\(\(async \(\) => \{[\s\S]*startedAtMs: campaignStartedMs[\s\S]*\}\)\(\), campaignHardStopMs - \(Date\.now\(\) - campaignStartedMs\)\)/);
+  assert.doesNotMatch(block, /withinWallTime|DISPATCH_DEADLINE_MS|CAMPAIGN_SITE_BUDGET_MS|scheduledBlackout/, "plain-code work has no clock limit");
   assert.match(block, /guardedOpenBytes\("discovery-web", "campaign-site-chain", fetch, \{ followRedirects: false \}\)/);
   assert.match(block, /spaceOut: spacer/);
   assert.match(runner, /campaignSiteCycleLine\(campaignSites\)/, "the pass reaches the cycle's digest");

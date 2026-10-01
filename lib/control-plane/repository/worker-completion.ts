@@ -4,6 +4,7 @@ import type { RouteTask } from "../route-task.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "./types.ts";
 import { recordCost, transitionWorkItem } from "./coordinator.ts";
 import { assertFleetResult, type WorkerResultRecord } from "../workers/types.ts";
+import { costEntryWithModel } from "../cost.ts";
 
 export type UncommittedWorkerResult = Omit<WorkerResultRecord, "completion">;
 
@@ -105,11 +106,13 @@ export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories
     const noTransition = record.completion.completedTask.workerTask?.purpose === "DIAGNOSTIC_REPLAY" ||
       result.role === "ACQUIRER" || result.role === "DETECTIVE" || result.role === "ENGINEERING";
     const transitioned = noTransition || items.get(record.workItemId)?.transitions.some(t => t.by === `worker-result:${record.id}`);
-    const costApplied = task?.workerTask && recordedCosts.has(canonicalJson({
+    const costApplied = task?.workerTask && recordedCosts.has(canonicalJson(costEntryWithModel({
       attemptId: record.attemptId, workItemId: record.workItemId, routeTaskId: record.routeTaskId,
       routeId: task.routeId, source: task.target, jurisdiction: task.workerTask.contract.subjectId,
       project: record.grant.project, role: record.worker.role, cost: record.cost, recordedAt: record.endedAt,
-    }));
+      model: record.executionMode === "MODEL_ASSISTED" ? (record.modelParse?.model ?? record.modelReview?.model ?? record.worker.version) : null,
+      ...(record.modelParse?.byModel ? { byModel: record.modelParse.byModel } : {}),
+    }, record.executionMode === "MODEL_ASSISTED" ? (record.modelParse?.model ?? record.modelReview?.model ?? record.worker.version) : null)));
     const dependentsApplied = noTransition || result.role !== "ADVERSARIAL_AUDITOR" || result.verdict !== "BROKE" ||
       itemRows.every(row => !row.value.dependencies.some(d => d.upstreamId === record.workItemId) ||
         row.value.transitions.some(t => t.by === `worker-result:${record.id}`));

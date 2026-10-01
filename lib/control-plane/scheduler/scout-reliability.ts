@@ -20,6 +20,9 @@ export async function readSourceReliability(repos: ControlPlaneRepositories): Pr
   for (const row of rows) {
     const result = row.result;
     if (result.role !== 'ACQUIRER' || result.requestCount === 0) continue;
+    // Historical robots-only refusals are policy readings, not source outages.
+    if (result.verdict === 'BLOCKED' && result.blockers.length > 0 &&
+      result.blockers.every(b => b.code === 'PERMISSION_DENIED' || b.code === 'PERMISSION_UNKNOWN')) continue;
     const source = sourceReliabilityKey(result.source.url);
     const previous = sources.get(source);
     const success = result.verdict === 'ACQUIRED';

@@ -11,7 +11,7 @@ import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { registerRouteTask } from "../lib/control-plane/repository/coordinator.ts";
 import { dispatchOne } from "../lib/control-plane/scheduler/dispatch.ts";
-import { emptyFieldManual, fieldManualEntryId, upsertEntries } from "../lib/control-plane/field-manual.ts";
+import { fieldManualEntryId, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 
 test("the actual Scout request inherits a learned method and the failed Hunter route before novelty",async t=>{
   const h=await autonomousHarness({response:{transportError:"socket timeout"}});
@@ -29,14 +29,14 @@ test("the actual Scout request inherits a learned method and the failed Hunter r
   // obligation regardless of its jurisdiction, then assert the walk both READS it
   // in the request and RECORDS it as captured input on the result.
   const doorId=fieldManualEntryId("test-seed","novelty-door");
-  await h.repos.fieldManual.put("live",upsertEntries(emptyFieldManual(),[{
+  await writeFieldManual(h.repos,[{
     id:doorId,role:"SHARED",kind:"VENDOR_TENANT",title:"Seeded test door",
     summary:"a portable inherited door for the capture assertion",states:[],recordClasses:[],
     platforms:[],outcome:"YIELDED",url:"https://seeded.example/door",source:"test-seed",
-    observedAt:"2026-09-19",tier:null,payload:{}}],h.now()),h.now());
+    observedAt:"2026-09-19",tier:null,payload:{}}],h.now());
   const requests:ModelRequest[]=[];
   const searches: string[] = [];
-  const runtime=await autonomousStandingRuntime({root,repos:h.repos,now:h.now,
+  const runtime=await autonomousStandingRuntime({root,repos:h.repos,now:h.now,auditCeilingUsd:1,
     search: async input => { searches.push(input.query); return { hits: [], requestCount: 1, bytesFetched: 0, providersUsed: ["offline-fixture"], errors: [] }; },
     transport:async request=>{
     requests.push(request);
@@ -73,7 +73,7 @@ test("one running worker runtime saves a new observed route and hands it to its 
   await writeFile(join(root, "data", "method", "knowledge.json"), JSON.stringify({ version: 56, updatedOn: "2026-09-03", routes: [] }));
   const discovered = "https://fixture-clerk.example.gov/alternate-roster.json";
   const requests: ModelRequest[] = [];
-  const runtime = await autonomousStandingRuntime({ root, repos: h.repos, now: h.now, spaceOut: async () => {},
+  const runtime = await autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, spaceOut: async () => {},
     openBytes: async ({ url }) => ({ status: 200, bytes: Buffer.from(url.endsWith("robots.txt") ? "User-agent: *\nDisallow:\n" : '[{"id":"clerk","name":"Clerk"}]'), contentType: "text/plain", finalUrl: url, durationMs: 1, transportError: null }),
     transport: async request => {
       requests.push(request);

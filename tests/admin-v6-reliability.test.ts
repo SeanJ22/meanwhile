@@ -25,4 +25,5 @@ test("the read is one bounded statement over completed plain-code reads that mad
   assert.match(RELIABILITY_SQL, /cp_log_worker_results/);
   assert.match(RELIABILITY_SQL, /'ACQUIRER'/);
   assert.match(RELIABILITY_SQL, /COMPLETED/);
+  assert.match(RELIABILITY_SQL, /NOT IN ('PERMISSION_DENIED', 'PERMISSION_UNKNOWN')/, "an old robots-only refusal is a wall, not an outage, so it is not a failed attempt");
 });

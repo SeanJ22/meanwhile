@@ -9,6 +9,8 @@ import { reduceSourceReliability, type SourceReliability, type SourceReliability
  * and the runner can never disagree about a source's backoff. It is fed from one
  * bounded statement over the completed plain-code reads that made a request,
  * projecting only the four fields the reducer takes. Nothing loads every attempt.
+ * An old refusal recorded for robots.txt alone (coordinator.ts ROBOTS_ONLY_BLOCKERS, before the owner decision of 2026-09-25) is a wall, not an
+ * outage, so it never counts as a failed attempt here.
  * A source failing outside our control is shown as source reliability, not as
  * something to investigate each time (rulings §6).
  */
@@ -20,6 +22,8 @@ export const RELIABILITY_SQL = `SELECT r.record->'result'->'source'->>'url' AS u
   COALESCE((SELECT array_agg(left(b->>'description', 240)) FROM jsonb_array_elements(COALESCE(r.record->'result'->'blockers', '[]'::jsonb)) b), ARRAY[]::text[]) AS blocker_text
   FROM cp_log_worker_results r JOIN cp_attempts a ON a.id = r.record->>'attemptId'
   WHERE r.record->'result'->>'role' = 'ACQUIRER' AND COALESCE((r.record->'result'->>'requestCount')::int, 0) > 0
+    AND NOT (jsonb_array_length(COALESCE(r.record->'result'->'blockers', '[]'::jsonb)) > 0 AND NOT EXISTS (
+      SELECT 1 FROM jsonb_array_elements(r.record->'result'->'blockers') b WHERE b->>'code' NOT IN ('PERMISSION_DENIED', 'PERMISSION_UNKNOWN')))
     AND a.value->>'outcome' = 'COMPLETED' AND a.value->>'endedAt' IS NOT NULL AND r.record->'result'->'source'->>'url' ~ '^https?://'`;
 
 /** Structurally `SourceReliabilityRow` in app/(admin)/_mw/admin-v6/model.ts. */

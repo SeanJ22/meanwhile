@@ -911,7 +911,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       }
       const readAt = [calendar.evidence.retrievedAt, printed.bytes.evidence.retrievedAt].sort().at(-1)!;
       const row: MeetingBodyCrosswalkRow = {
-        id: crosswalkRowId(bodyId, kind),
+        id: crosswalkRowId(bodyId, kind, route),
         jurisdictionId,
         ocdId: registered.ocdId,
         bodyId,

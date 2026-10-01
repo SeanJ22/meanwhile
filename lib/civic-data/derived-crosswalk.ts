@@ -37,7 +37,7 @@
  *
  * The wiring derive composes these rows with the manual crosswalk
  * (`composeCrosswalk`): a manually reviewed row wins over an automatic one for
- * the same body and kind (withdrawn or not), and over one claiming its
+ * the same body, kind and route (withdrawn or not), and over one claiming its
  * calendar and filter for another body.
  */
 import { createHash } from "node:crypto";
@@ -45,7 +45,7 @@ import { createHash } from "node:crypto";
 import { canonicalCivicDataJson } from "./changes.ts";
 import { derivedRetrieval, type DerivedInputRef } from "./derived-authority.ts";
 import { derivedRequestedUrl } from "./derived-door.ts";
-import { crosswalkListIssues, crosswalkRowIssue, type MeetingBodyCrosswalkRow } from "./meeting-body-crosswalk.ts";
+import { crosswalkListIssues, crosswalkRowId, crosswalkRowIssue, type MeetingBodyCrosswalkRow } from "./meeting-body-crosswalk.ts";
 import {
   civicDataReadNotInitialized,
   readPromotedCivicData,
@@ -230,6 +230,8 @@ export function planDerivedCrosswalk(input: {
 }): DerivedCrosswalkPlan {
   const before = new Map(input.previous.map((row) => [row.id, row]));
   const next = new Map(before);
+  const routeKey = (row: MeetingBodyCrosswalkRow) => crosswalkRowId(row.bodyId, row.kind, row.route);
+  const routes = new Map(input.previous.map(row => [routeKey(row), row]));
   const accepted: string[] = [];
   const renewed: string[] = [];
   const inputs = new Map<string, DerivedInputRef>();
@@ -238,11 +240,16 @@ export function planDerivedCrosswalk(input: {
     for (const h of review.held) held.set(h.key, h);
     /* A walk reviewed is an input whether it was accepted or held: the holds it produced are this version's too. */
     for (const i of review.inputs) inputs.set(inputKey(i), i);
-    for (const { row, inputs: rowInputs } of review.accepted) {
+    for (const { row: reviewed, inputs: rowInputs } of review.accepted) {
       for (const i of rowInputs) inputs.set(inputKey(i), i);
-      const prior = before.get(row.id);
+      const key = routeKey(reviewed);
+      const prior = routes.get(key);
+      // Keep existing identities and their evidence. A new route must never
+      // overwrite the legacy body/kind row for another verified calendar.
+      const row = { ...reviewed, id: prior?.id ?? (next.has(reviewed.id) ? key : reviewed.id) };
       if (prior === undefined) {
         next.set(row.id, row);
+        routes.set(key, row);
         accepted.push(row.id);
         continue;
       }
@@ -253,6 +260,7 @@ export function planDerivedCrosswalk(input: {
       /* Never backward: a review of an older walk than the row's own evidence does not replace it. */
       if (Date.parse(row.evidence.readAt) < Date.parse(prior.evidence.readAt)) continue;
       next.set(row.id, row);
+      routes.set(key, row);
       renewed.push(row.id);
     }
   }
@@ -412,7 +420,7 @@ export interface ComposedCrosswalk {
 
 /**
  * **MANUAL ROWS WIN.** The rows the wiring derive decides: every well-formed manual row, and every automatic row no
- * manual row shadows. A manual row shadows an automatic one for the same body and kind, whatever its status (a
+ * manual row shadows. A manual row shadows an automatic one for the same body, kind and route, whatever its status (a
  * withdrawal by review is never undone by the reviewer), and an automatic row claiming a manual ACTIVE row's
  * calendar and filter for another body.
  */
@@ -421,15 +429,16 @@ export function composeCrosswalk(
   automatic: readonly MeetingBodyCrosswalkRow[] | null,
 ): ComposedCrosswalk {
   const reviewed = (manual ?? []).filter((row) => crosswalkRowIssue(row) === null);
-  const ids = new Set(reviewed.map((row) => row.id));
+  const routeKey = (row: MeetingBodyCrosswalkRow) => crosswalkRowId(row.bodyId, row.kind, row.route);
+  const ids = new Set(reviewed.map(routeKey));
   const claim = (row: MeetingBodyCrosswalkRow): string => `${row.route}\n${JSON.stringify(Object.entries(row.filter).sort())}`;
   const claims = new Map(reviewed.filter((row) => row.status === "ACTIVE").map((row) => [claim(row), row] as const));
   const kept: MeetingBodyCrosswalkRow[] = [];
   const shadowed: { id: string; why: string }[] = [];
   for (const row of automatic ?? []) {
     if (crosswalkRowIssue(row) !== null) continue;
-    if (ids.has(row.id)) {
-      shadowed.push({ id: row.id, why: "a manually reviewed row for the same body and calendar kind wins" });
+    if (ids.has(routeKey(row))) {
+      shadowed.push({ id: row.id, why: "a manually reviewed row for the same body, calendar kind and route wins" });
       continue;
     }
     const other = claims.get(claim(row));

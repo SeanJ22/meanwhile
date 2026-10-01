@@ -34,6 +34,7 @@
  * PURE: no fetch, no clock, no store.
  */
 
+import { createHash } from "node:crypto";
 import { httpsHost } from "./derived-door.ts";
 
 /** The owner's authorization, cited on every row. */
@@ -54,7 +55,7 @@ const FILTER_KEYS: Readonly<Record<CrosswalkKind, { readonly allowed: readonly s
 };
 
 export interface MeetingBodyCrosswalkRow {
-  /** `${bodyId}|${kind}`: one reviewed calendar of one kind per body. */
+  /** Body, kind and calendar route; legacy body/kind ids remain readable. */
   readonly id: string;
   readonly jurisdictionId: string;
   /** The government's registered division. */
@@ -99,8 +100,8 @@ export function subBodyId(ocdId: string, bodyName: string): string {
   return `${ocdId}#body:${crosswalkSlug(bodyName)}`;
 }
 
-export function crosswalkRowId(bodyId: string, kind: CrosswalkKind): string {
-  return `${bodyId}|${kind}`;
+export function crosswalkRowId(bodyId: string, kind: CrosswalkKind, route?: string): string {
+  return `${bodyId}|${kind}${typeof route === "string" && route ? `|${createHash("sha256").update(route).digest("hex").slice(0, 16)}` : ""}`;
 }
 
 /**
@@ -143,7 +144,9 @@ export function crosswalkRowIssue(value: unknown): string | null {
   if (row.bodyId !== expectedBody) return `${who}: a ${row.bodyRole} body's id is ${expectedBody}, derived from its division${row.bodyRole === "SUB_BODY" ? " and its printed name" : ""}`;
   if (!CROSSWALK_KINDS.includes(row.kind as CrosswalkKind)) return `${who}: no reviewed filter is defined for a ${String(row.kind)} calendar`;
   const kind = row.kind as CrosswalkKind;
-  if (row.id !== crosswalkRowId(row.bodyId, kind)) return `${who}: the id is ${crosswalkRowId(row.bodyId, kind)}`;
+  if (row.id !== crosswalkRowId(row.bodyId, kind) && row.id !== crosswalkRowId(row.bodyId, kind, row.route)) {
+    return `${who}: the id must name its own body, kind and calendar route`;
+  }
   const routeHost = text(row.route) ? httpsHost(row.route) : null;
   if (routeHost === null) return `${who}: the calendar is not an https URL`;
   if (row.officialHost !== routeHost) return `${who}: the calendar's host is ${routeHost}, not ${String(row.officialHost)}`;

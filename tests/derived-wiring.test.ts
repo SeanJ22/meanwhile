@@ -21,7 +21,7 @@ import test from "node:test";
 
 import { planDerivedVersion, type DerivedInputRef, type DerivedVersionEntry } from "../lib/civic-data/derived-authority.ts";
 import type { DerivedWiringRow } from "../lib/civic-data/derived-meeting-wiring.ts";
-import { CROSSWALK_CITATION, subBodyId, type MeetingBodyCrosswalkRow } from "../lib/civic-data/meeting-body-crosswalk.ts";
+import { CROSSWALK_CITATION, crosswalkRowId, subBodyId, type MeetingBodyCrosswalkRow } from "../lib/civic-data/meeting-body-crosswalk.ts";
 import {
   attestationFor,
   deriveWiringDecisions,
@@ -123,7 +123,23 @@ function inputs(attempt: MeetingsDiscoveryAttempt, over: Partial<DerivedWiringIn
   };
 }
 
-const KEY = derivedWiringKey("ICAL", `${OCD}#governing`);
+const KEY = derivedWiringKey("ICAL", `${OCD}#governing`, ROUTE);
+
+test("distinct routes for one body both wire; a held legacy route keeps its original identity", async () => {
+  const route = "https://www.example.gov/second.ics";
+  const site = { ...SITE, "https://www.example.gov/": { status: 200, body: '<a href="/council.ics">Council calendar</a><a href="/second.ics">Council meetings</a>' },
+    [route]: { status: 200, body: ICS, contentType: "text/calendar" } };
+  const attempt = await walk(site, "example.gov");
+  const first = crosswalkRow();
+  const second = crosswalkRow({ id: crosswalkRowId(first.bodyId, first.kind, route), route,
+    evidence: { ...first.evidence, calendar: { ...first.evidence.calendar, url: route } } });
+  const decisions = deriveWiringDecisions(inputs(attempt, {}, [first, second]));
+  assert.deepEqual(decisions.map(decision => decision.disposition), ["PROMOTE", "PROMOTE"]);
+  assert.equal(new Set(decisions.map(decision => decision.key)).size, 2);
+  const legacy = { ...await promotedEntry(), key: derivedWiringKey("ICAL", first.bodyId) };
+  const renewed = deriveWiringDecisions(inputs(attempt, { previous: [legacy] }, [first, second]));
+  assert.deepEqual(renewed.map(decision => decision.key), [legacy.key, derivedWiringKey("ICAL", first.bodyId, route)]);
+});
 
 test("a later walk of other categories does not hide this calendar's saved source reading", async () => {
   const original = await walk(SITE, "example.gov");

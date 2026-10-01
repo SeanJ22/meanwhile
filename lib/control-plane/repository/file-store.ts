@@ -729,6 +729,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
   const resolved = path.resolve(root);
   await mkdir(resolved, { recursive: true });
   const locks = fileLockManager(resolved);
+  const artifacts = fileAppendOnlyRepository<ArtifactRecord>(resolved, "artifacts");
 
   return {
     workItems: fileAggregateRepository<WorkItem>(resolved, "WorkItem", "work-items"),
@@ -750,7 +751,11 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     transitions: fileAppendOnlyRepository<RecordedTransition>(resolved, "transitions"),
     escalations: fileAppendOnlyRepository<Escalation>(resolved, "escalations"),
     dispositions: fileAppendOnlyRepository<DispositionCommit>(resolved, "dispositions"),
-    artifacts: fileAppendOnlyRepository<ArtifactRecord>(resolved, "artifacts"),
+    artifacts,
+    artifactsByCanonicalUrl: async (url, limit) =>
+      (await artifacts.readAll()).filter(record => record.canonicalUrl === url)
+        .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt) || a.artifactId.localeCompare(b.artifactId))
+        .slice(0, Math.max(0, Math.trunc(limit))),
     adminEvidenceCopyRequests: fileAggregateRepository<AdminEvidenceCopyRequest>(resolved, "AdminEvidenceCopyRequest", "admin-evidence-copy-requests"),
     costs: fileAppendOnlyRepository<CostEntry>(resolved, "costs"),
     /* The owner control centre's data plane (ITEM H). */

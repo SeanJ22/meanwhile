@@ -815,6 +815,16 @@ export function pgAppendOnlyRepository<T>(
   };
 }
 
+/** Bounded source lookup; the canonical URL and newest-capture order use the artifact index. */
+export async function pgArtifactsByCanonicalUrl(sql: Sql, url: string, limit: number, options: PgRepositoryBounds = {}): Promise<readonly ArtifactRecord[]> {
+  const run = boundedRunner(sql, "cp_log_artifacts", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  const rows = await run("artifactsByCanonicalUrl", "PAGE",
+    `SELECT record FROM cp_log_artifacts WHERE md5(record->>'canonicalUrl') = md5($1) AND record->>'canonicalUrl' = $1
+     ORDER BY record->>'recordedAt' DESC NULLS LAST, record->>'artifactId' ASC LIMIT $2`,
+    [url, Math.max(0, Math.trunc(limit))]) as Record<string, unknown>[];
+  return rows.map(row => parseValue<ArtifactRecord>(row.record, "cp_log_artifacts source capture"));
+}
+
 /** Locks use one pinned WebSocket transaction. HTTP queries have no shared session. */
 function pgLockManager(connectionString: string): LockManager {
   return {
@@ -980,6 +990,7 @@ export async function createPgRepositories(
     escalations: pgAppendOnlyRepository<Escalation>(sql, "escalations", bounded),
     dispositions: pgAppendOnlyRepository<DispositionCommit>(sql, "dispositions", bounded),
     artifacts: pgAppendOnlyRepository<ArtifactRecord>(sql, "artifacts", bounded),
+    artifactsByCanonicalUrl: (url, limit) => pgArtifactsByCanonicalUrl(sql, url, limit, bounded),
     adminEvidenceCopyRequests: pgAggregateRepository<AdminEvidenceCopyRequest>(sql, "AdminEvidenceCopyRequest", "cp_admin_evidence_copy_requests", bounded),
     costs: pgAppendOnlyRepository<CostEntry>(sql, "costs", bounded),
     /* The owner control centre's data plane (ITEM H, schema v3). */

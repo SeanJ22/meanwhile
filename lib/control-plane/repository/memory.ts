@@ -282,6 +282,7 @@ export function memoryLockManager(): LockManager {
 export function createMemoryRepositories(): ControlPlaneRepositories {
   const locks = memoryLockManager();
   const budgetAggregate = memoryAggregateRepository<BudgetLedger>("BudgetLedger");
+  const artifacts = memoryAppendOnlyRepository<ArtifactRecord>("artifacts");
 
   return {
     workItems: memoryAggregateRepository<WorkItem>("WorkItem"),
@@ -295,7 +296,11 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     transitions: memoryAppendOnlyRepository<RecordedTransition>("transitions"),
     escalations: memoryAppendOnlyRepository<Escalation>("escalations"),
     dispositions: memoryAppendOnlyRepository<DispositionCommit>("dispositions"),
-    artifacts: memoryAppendOnlyRepository<ArtifactRecord>("artifacts"),
+    artifacts,
+    artifactsByCanonicalUrl: async (url, limit) =>
+      (await artifacts.readAll()).filter(record => record.canonicalUrl === url)
+        .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt) || a.artifactId.localeCompare(b.artifactId))
+        .slice(0, Math.max(0, Math.trunc(limit))),
     adminEvidenceCopyRequests: memoryAggregateRepository<AdminEvidenceCopyRequest>("AdminEvidenceCopyRequest"),
     costs: memoryAppendOnlyRepository<CostEntry>("costs"),
     /* The owner control centre's data plane (ITEM H). */

@@ -20,7 +20,7 @@ import { publishElectionFields } from "./election-field-publication.ts";
 import { readManualProjectionPrior } from "./manual-projections.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { US_STATES } from "../control-plane/readiness/catalog.ts";
-import { inventoryRecordEvidence } from "../control-plane/workers/record-evidence.ts";
+import { inventoryRecordEvidence, RecordEvidenceRefusal } from "../control-plane/workers/record-evidence.ts";
 import { electionFieldState } from "./election-fields.ts";
 
 export const NATIONAL_ELECTION_OFFICES_URL = "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/";
@@ -28,8 +28,14 @@ export const NATIONAL_ELECTION_OFFICES_URL = "https://www.fec.gov/introduction-c
 /** One saved national directory supplies offices for every jurisdiction it names. */
 export function heldNationalElectionOfficeFields(capture: WorkerPublicationCapture): readonly ElectionFieldInput[] {
   if (capture.evidence.canonicalUrl !== NATIONAL_ELECTION_OFFICES_URL || !captureIntact(capture)) return [];
-  const inventory = inventoryRecordEvidence(capture.evidence, { format: "HTML_TABLE", tableIndex: 0, headerRows: 1,
-    fields: { jurisdiction: { source: 0, type: "STRING" }, office: { source: 1, type: "STRING" }, phone: { source: 3, type: "STRING" } } });
+  let inventory: ReturnType<typeof inventoryRecordEvidence>;
+  try {
+    inventory = inventoryRecordEvidence(capture.evidence, { format: "HTML_TABLE", tableIndex: 0, headerRows: 1,
+      fields: { jurisdiction: { source: 0, type: "STRING" }, office: { source: 1, type: "STRING" }, phone: { source: 3, type: "STRING" } } });
+  } catch (error) {
+    if (error instanceof RecordEvidenceRefusal) return [];
+    throw error;
+  }
   const nameKey = (name: string) => name.toLowerCase().replace(/\s*\([^)]*\)/g, "").replace(/^u\.?s\.?\s+/, "").replace(/[^a-z]/g, "");
   return inventory.rows.flatMap(row => {
     const jurisdiction = String(row.jurisdiction.value), office = String(row.office.value);
@@ -123,6 +129,19 @@ export async function publishHeldElectionOffices(input: {
   const all = (await input.repos.workItems.list()).map(row => row.value);
   const owed = input.workItemIds.map(id => all.find(item => item.id === id)).filter((item): item is WorkItem => Boolean(item?.autonomousPlan?.publication));
   const fields: ElectionFieldInput[] = [], fieldsByItem = new Map<string, number>(), read = new Map<string, Promise<readonly ElectionFieldInput[]>>();
+  let nationalFields: readonly ElectionFieldInput[] = [], nationalFailure: string | null = null;
+  try {
+    const nationalArtifacts = owed.length && input.repos.artifactsByCanonicalUrl
+      ? await input.repos.artifactsByCanonicalUrl(NATIONAL_ELECTION_OFFICES_URL, input.limit ?? 60) : [];
+    for (const artifact of heldPageCopies(nationalArtifacts, input.limit ?? 60)) {
+      const capture = await input.readHeld(artifact);
+      if (!capture || !captureIntact(capture)) continue;
+      nationalFields = heldNationalElectionOfficeFields(capture);
+      if (nationalFields.length) break;
+    }
+  } catch (error) {
+    nationalFailure = `NATIONAL_ELECTION_OFFICE_SOURCE_UNAVAILABLE:${sanitizedErrorDiagnostic(error)}`;
+  }
   for (const item of owed) {
     const plan = item.autonomousPlan!;
     const body = registry?.payload.registry.bodies.find(row => row.id === plan.publication!.bodyId);
@@ -149,11 +168,11 @@ export async function publishHeldElectionOffices(input: {
       }
       return found;
     })());
-    const found = await read.get(key)!;
+    const found = [...await read.get(key)!, ...nationalFields.filter(field => electionFieldState(field.divisionId) === electionFieldState(division.ocdId))];
     fieldsByItem.set(item.id, found.length);
     for (const field of found) if (!fields.includes(field)) fields.push(field);
   }
-  let published: Awaited<ReturnType<typeof publishElectionFields>> | null = null, failure: string | null = null, fresh: string[] = [];
+  let published: Awaited<ReturnType<typeof publishElectionFields>> | null = null, failure: string | null = nationalFailure, fresh: string[] = [];
   if (fields.length) {
     try {
       // Delivery counts what this pass newly put in front of readers, once, not each re-verified office per owed item.

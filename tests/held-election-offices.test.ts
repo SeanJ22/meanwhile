@@ -1,9 +1,16 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { gunzipSync } from "node:zlib";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
+import type { WorkItem } from "../lib/control-plane/work-item.ts";
+import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
+import { readRegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
 import { publishElectionFields } from "../lib/civic-data/election-field-publication.ts";
 import { readElectionFieldsForDivisions } from "../lib/civic-data/curated-reader-read-model.ts";
-import { heldElectionOfficeFields, heldNationalElectionOfficeFields, NATIONAL_ELECTION_OFFICES_URL, readHeldElectionOffices } from "../lib/civic-data/worker-held-elections.ts";
+import { heldElectionOfficeFields, heldNationalElectionOfficeFields, NATIONAL_ELECTION_OFFICES_URL, publishHeldElectionOffices, readHeldElectionOffices } from "../lib/civic-data/worker-held-elections.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { section3Record } from "../lib/control-plane/promotion/section3.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
@@ -79,4 +86,40 @@ test("a city's saved voting page puts its county election offices on the ballot 
   const invented = heldElectionOfficeFields({ divisionId: CITY, capture: capture(PAGE) }).map(row => ({ ...row, phone: "(520) 555-0100" }));
   const refused = await publishElectionFields({ store, now: NOW, fields: invented, verify: section3Record });
   assert.equal(refused.fields.length, 0, "a phone line that is not on the saved page never publishes");
+});
+
+test("owed jobs reuse a national capture from an unrelated job and pass over a newer denied page", async () => {
+  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
+  const store = new MemoryRoutineDataStore();
+  Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
+  const prior = (await readRegistryRuntimePrior(store, NOW))!;
+  const repos = createMemoryRepositories();
+  const states = ["az", "nj"];
+  const ids: string[] = [];
+  for (const state of states) {
+    const body = prior.payload.registry.bodies.find(body => body.ocdId?.startsWith("ocd-division/country:us/state:" + state + "/"))!;
+    assert.ok(body);
+    const id = "owed-" + state; ids.push(id);
+    const item = { id, autonomousPlan: { contract: { subjectId: "unrelated-place-" + state }, publication: { bodyId: body.id } } } as unknown as WorkItem;
+    await repos.workItems.put(id, item, NOW);
+  }
+  const page = '<table><tr><th>State</th><th>Office</th><th>Website</th><th>Phone</th></tr>' +
+    '<tr><td>Arizona</td><td>Secretary of State</td><td>office website</td><td>602-542-8683</td></tr>' +
+    '<tr><td>New Jersey</td><td>Division of Elections</td><td>office website</td><td>609-292-3760</td></tr></table>';
+  const saved = capture(page, NATIONAL_ELECTION_OFFICES_URL, "2026-09-29T00:00:00Z");
+  assert.equal(heldNationalElectionOfficeFields(saved).length, 2);
+  const denied = capture('<html><p>Access denied</p></html>', NATIONAL_ELECTION_OFFICES_URL, NOW);
+  const copies = new Map<string, WorkerPublicationCapture>();
+  for (const c of [saved, denied]) {
+    copies.set(c.evidence.artifactId, c);
+    const artifact: ArtifactRecord = { artifactId: c.evidence.artifactId, workItemId: "national-source-other-job", routeTaskId: null,
+      attemptId: c.evidence.acquiredByAttemptId, tier: "RAW", contentHash: c.evidence.contentHash, byteLength: c.evidence.text.length,
+      contentType: "text/html", canonicalUrl: c.evidence.canonicalUrl, partial: false, recordedAt: c.observedAt };
+    await repos.artifacts.append(artifact.workItemId, artifact.artifactId, artifact, NOW);
+  }
+  const outcomes = await publishHeldElectionOffices({ repos, store, workItemIds: ids, now: NOW, readHeld: async record => copies.get(record.artifactId) ?? null });
+  assert.ok(outcomes.every(row => row.outcome.status === "PARTIALLY_PUBLISHED"), JSON.stringify(outcomes));
+  const read = await readElectionFieldsForDivisions(states.map(state => "ocd-division/country:us/state:" + state), { store, now: NOW, bypassCache: true });
+  assert.equal(read.fields.length, 2);
+  assert.ok(read.fields.every(row => row.value.url === NATIONAL_ELECTION_OFFICES_URL));
 });

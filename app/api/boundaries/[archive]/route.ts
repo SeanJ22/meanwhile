@@ -25,7 +25,7 @@ export async function GET(request: Request, context: { params: Promise<{ archive
   const siteID = process.env.WTP_BLOBS_SITE_ID, token = process.env.WTP_BLOBS_TOKEN;
   let upstream: Response | undefined;
   try {
-    const store = getStore({ name: "meanwhile-boundaries", ...(siteID && token ? { siteID, token } : {}),
+    const store = getStore({ name: "map-tiles", ...(siteID && token ? { siteID, token } : {}),
       fetch: async (input, init) => {
         const headers = new Headers(init?.headers);
         headers.set("Range", `bytes=${range.start}-${range.end}`);

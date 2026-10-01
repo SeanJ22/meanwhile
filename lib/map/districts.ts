@@ -50,6 +50,8 @@ export interface DistrictCollection {
 
 /** Where each overlay's geometry lives, and which tier it belongs to. */
 interface LayerSpec {
+  /** Census layers represented by this boundary kind, independent of state coverage. */
+  censusLayers: readonly string[];
   /**
    * Draw only features whose FUNCSTAT says a government sits there — M14.
    *
@@ -103,24 +105,28 @@ interface LayerSpec {
 
 export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
   congressional: {
+    censusLayers: ["cd119"],
     label: "Congressional",
     dash: [8, 3],
     weight: 1.3,
     labelMinZoom: 5,
   },
   "state-senate": {
+    censusLayers: ["sldu"],
     label: "State Senate",
     dash: [5, 2],
     weight: 1.1,
     labelMinZoom: 7,
   },
   "state-house": {
+    censusLayers: ["sldl"],
     label: "State House",
     dash: [2, 2],
     weight: 0.9,
     labelMinZoom: 8,
   },
   county: {
+    censusLayers: ["county"],
     label: "County",
     // The widest Local shape keeps a strong stroke. Its long dash + two dots
     // reads apart from Congress's long dashes even in the monochrome key.
@@ -129,6 +135,7 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
     labelMinZoom: 6,
   },
   municipal: {
+    censusLayers: ["place","cousub"],
     // Both halves of the municipal picture (M14): places, and the county
     // subdivisions that ARE the municipalities in New Jersey and New
     // Hampshire — Rockaway Township and Newbury have no place polygon at
@@ -161,6 +168,7 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
    * z8 is the noise the 4.5.2 pass was fixing.
    */
   "school-unified": {
+    censusLayers: ["unsd"],
     label: "School (unified)",
     // ACC-1: paired short dashes distinguish this from State House even when
     // hue is unavailable. Every sample in the boundary key reads this spec.
@@ -169,12 +177,14 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
     labelMinZoom: 10,
   },
   "school-elementary": {
+    censusLayers: ["elsd"],
     label: "School (elementary)",
     dash: [1, 2],
     weight: 0.75,
     labelMinZoom: 10,
   },
   "school-secondary": {
+    censusLayers: ["scsd"],
     label: "School (secondary)",
     dash: [6, 2, 1, 2],
     weight: 0.75,
@@ -199,7 +209,7 @@ export const DISTRICT_LINE_OPACITY = 0.82;
 
 export const NATIONAL_BOUNDARIES_SOURCE = "national-boundaries";
 const sourceId = (_type: DistrictType) => NATIONAL_BOUNDARIES_SOURCE;
-export const BOUNDARY_ARCHIVE_URL = process.env.NEXT_PUBLIC_BOUNDARY_PMTILES_URL ?? "/api/boundaries/census-2025-v1.pmtiles";
+export const BOUNDARY_ARCHIVE_URL = process.env.NEXT_PUBLIC_BOUNDARY_PMTILES_URL ?? "/api/boundaries/census-2025-b24d0345381f69be.pmtiles";
 export const fillLayerId = (type: DistrictType) => `district-${type}-fill`;
 export const lineLayerId = (type: DistrictType) => `district-${type}-line`;
 export const labelLayerId = (type: DistrictType) => `district-${type}-label`;
@@ -297,7 +307,7 @@ export function addDistrictLayer(
     // `promoteId` is what makes feature-state work: selection is expressed as
     // state on a feature rather than by mutating the source, so selecting a
     // district never re-tiles the geometry.
-    map.addSource(source, { type: "vector", url: `pmtiles://${new URL(BOUNDARY_ARCHIVE_URL, window.location.href).href}`, promoteId: "ocdId" });
+    map.addSource(source, { type: "vector", url: `pmtiles://${new URL(BOUNDARY_ARCHIVE_URL, typeof window === "undefined" ? "http://localhost" : window.location.href).href}`, promoteId: "ocdId" });
   }
 
   const before = firstSymbolLayerId(map);

@@ -11,14 +11,18 @@ import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 import { inflateRawSync, gzipSync, gunzipSync } from 'node:zlib';
 import { spawnSync } from 'node:child_process';
-import { DatabaseSync } from 'node:sqlite';
+import { createRequire } from 'node:module';
+type SqlValue = string | number | Uint8Array | null;
+interface SqlStatement { run(...params:SqlValue[]):void; get(...params:SqlValue[]):Record<string,SqlValue>|undefined; iterate(...params:SqlValue[]):Iterable<Record<string,SqlValue>> }
+interface SqlDatabase { exec(sql:string):void; prepare(sql:string):SqlStatement; close():void }
+const {DatabaseSync} = createRequire(import.meta.url)('node:sqlite') as {DatabaseSync: new(path:string,options?:{readOnly:boolean})=>SqlDatabase};
 import { GeoJSONVT } from '@maplibre/geojson-vt';
 import { fromGeojsonVt, fromVectorTileJs } from '@maplibre/vt-pbf';
 import { VectorTile } from '@mapbox/vector-tile';
 import { PbfReader } from 'pbf';
 import { countyIdentity, legislativeIdentity, placeIdentity, schoolIdentity, subdivisionIdentity, type DivisionIdentity } from '../lib/ocd/divisions.ts';
 import { districtIdentity } from '../lib/ocd/fips.ts';
-import type { Feature, MultiPolygon } from 'geojson';
+
 
 const VINTAGE = '2025';
 const BASE = `https://www2.census.gov/geo/tiger/GENZ${VINTAGE}/shp`;
@@ -251,7 +255,7 @@ async function buildLayer(layer: string, boundaryType: string) {
       }
     }
   }
-  const features: Feature<MultiPolygon>[] = [];
+  const features: {type:"Feature"; properties: DivisionIdentity & {boundaryType:string;censusLayer:string;geoid:string;west:number;south:number;east:number;north:number};geometry:{type:"MultiPolygon";coordinates:Polygon[]}}[] = [];
   for (let i=0;i<rows.length;i++) {
     const row = rows[i], id = identity(layer, row), polygons = shapes[i];
     if (!id || polygons.length === 0) continue;
@@ -284,7 +288,7 @@ async function buildLayer(layer: string, boundaryType: string) {
 async function main() {
   await mkdir(cache,{recursive:true});
   const one = argument('layer');
-  if (one) { const layer=layers.find(([key])=>key===one); if (!layer) throw new Error(`Unknown layer ${one}`); await buildLayer(...layer); return; }
+  if (one) { const layer=layers.find(([key])=>key===one); if (!layer) throw new Error(`Unknown layer ${one}`); await buildLayer(layer[0],layer[1]); return; }
   for (const [layer] of layers) {
     if (process.argv.includes('--reuse-tiles') && existsSync(join(cache,`${layer}.sqlite`))) continue;
     const child=spawnSync(process.execPath,['--max-old-space-size=3072','--experimental-strip-types',process.argv[1],`--layer=${layer}`,`--output=${output}`,`--maxzoom=${maxZoom}`],{stdio:'inherit'});

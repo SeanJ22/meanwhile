@@ -204,6 +204,12 @@ test("completed worker history recovers with bulk reads and no per-result replay
     workItems: { ...h.repos.workItems, read: fail, mustRead: fail, compareAndSet: fail },
   };
   await reconcileWorkerCompletions(observed);
+  const costs = await h.repos.costs.readAll();
+  const historicalCosts = costs.map(({ model: _model, tier: _tier, ...cost }) => cost);
+  await reconcileWorkerCompletions({ ...observed,
+    costs: { ...observed.costs, readAll: async () => historicalCosts },
+  });
+  assert.deepEqual(await h.repos.costs.readAll(), costs, "Recovery preserves immutable historical charge content.");
   // Losing the cost append is a real partial commit, even with both aggregates
   // present. It must reach recovery, never the historical-success fast path.
   await assert.rejects(reconcileWorkerCompletions({ ...observed,

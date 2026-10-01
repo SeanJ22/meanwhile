@@ -2581,9 +2581,8 @@ if (modelLaneEnabled && freeWalkSubjects.length > 0) {
   freeWalks = await pending.step("free-walks:read", () => readFreeDiscoveryWalks(repos, freeWalkSubjects));
 }
 
-// Retained results get their verification/publication opportunity BEFORE new
-// acquisition can consume the cycle. This reads held bytes and writes only the
-// existing gated pipeline. A second pass is justified only by new worker output.
+// Retained results publish alongside acquisition rather than holding ready leases.
+// Join this pass before the later projection of new worker output.
 async function projectRetainedFacts(phase: string): Promise<void> {
   const readEvidence = workerVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness", { snapshot: true });
   try {
@@ -2603,7 +2602,8 @@ async function projectRetainedFacts(phase: string): Promise<void> {
     runtimeConditions.push(phase + ": " + reason + "; retained records remain owed, existing reader data is preserved");
   }
 }
-if (!dry && !canary) await projectRetainedFacts("retained-results:fact-projection");
+const retainedProjection = !dry && !canary
+  ? projectRetainedFacts("retained-results:fact-projection") : Promise.resolve();
 
 const cycle = await runCycle({
   repos,
@@ -2773,6 +2773,7 @@ const cycle = await runCycle({
     },
   },
 });
+await retainedProjection;
 finishPhase("dispatch");
 if (expansionReading !== null && expansionBudget !== null) {
   /* The scopes' dispatch outcome: what each budget admitted and held this cycle. */

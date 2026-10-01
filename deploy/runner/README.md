@@ -62,11 +62,12 @@ without secrets.
 ### 3. Make the first sends in Admin's command center
 
 Open the live site's **/admin**, sign in as owner, and use the command center.
-First set the **rolling 24-hour Fleet ceiling** to your daily dollar limit,
-then enable **paid discovery search**. **These two controls are currently
-missing from the command center; S0 must have S11 connect them before this
-step is usable.** The gateway actions already exist; paid research's resume
-button does not enable paid search. Do not use a retired Admin page.
+Choose **Now** → open **Direct work** → **Whole system · affects every state**.
+Click **Set the daily budget**, type your dollar limit, review the preview,
+then **Send**. This sets the rolling 24-hour Fleet ceiling. Next click **Turn
+paid search on**, review the preview, then **Send**. These buttons arrive with
+S11's PR #497; the runner confirms the settings when a round starts. Paid
+research's resume button does not enable paid search.
 
 For the first hunt, choose the ZIP in the place picker → **Now** → **Direct work** → **Start a
 hunt here** → enter its **Lifetime limit in dollars** → **Send**. For several

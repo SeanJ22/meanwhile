@@ -49,6 +49,11 @@ import { readActivationGate } from "../lib/control-plane/promotion/activation-ga
 import type { PromotionPipelineRecord } from "../lib/control-plane/promotion/types.ts";
 import { deriveItemState } from "../lib/control-plane/promotion/pipeline.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
+import type { AggregateRepository } from "../lib/control-plane/repository/types.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
+import { buildChecklistCensus } from "../lib/control-plane/readiness/checklist-census.ts";
+import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
 import type { RouteDisposition, RouteTask } from "../lib/control-plane/route-task.ts";
 import type { FreshnessDebt } from "../lib/control-plane/scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../lib/control-plane/scheduler/durable.ts";
@@ -705,6 +710,52 @@ function rowOf(rows: readonly AssignmentRow[], idPart: string): AssignmentRow {
 }
 
 /* ---------------------------------------------------------------- tests */
+
+test("projected publisher listings retain the full assignment view and named gaps", async () => {
+  const original = world();
+  const scope = { key: "exact-send", receiptId: "receipt" } as ExpansionScopeDecision;
+  const source = { ...original,
+    obligations: [...original.obligations, obligation("timed-obligation", { subjectId: "timed-subject",
+      assignments: [{ assignmentKey: scope.key, ref: scope.receiptId, relation: "CREATED" as const, at: PAST }] })],
+    occurrences: [...original.occurrences, occurrence("timed-obligation", 1, "timed-work", "timed-route")],
+    workItems: [...original.workItems, workItem("timed-work", { subject: "timed-subject", createdAt: PAST,
+      autonomousPlan: { contract: { recordClass: "OFFICIAL_ROSTER" }, ownerInstructions: [scope.receiptId] } as never })],
+    attempts: [...original.attempts, attempt("timed-attempt", "timed-route", "timed-work", {
+      startedAt: NOW, endedAt: NOW, cost: { ...original.attempts[0].cost, durationMs: 43131 } })],
+  };
+  const repos = createMemoryRepositories();
+  const seed = async <T,>(repo: AggregateRepository<T>, rows: readonly T[], id: (row: T) => string) => {
+    for (const row of rows) await repo.put(id(row), row, NOW);
+  };
+  await seed(repos.obligations, source.obligations, row => row.id);
+  await seed(repos.occurrences, source.occurrences, row => row.id);
+  await seed(repos.workItems, source.workItems, row => row.id);
+  await seed(repos.routeTasks, source.routeTasks, row => row.id);
+  await seed(repos.attempts, source.attempts, row => row.id);
+  await seed(repos.debts, source.debts, row => row.obligationId);
+  await seed(repos.leases, source.leases ?? [], row => row.routeTaskId);
+  for (const [i, row] of source.artifacts.entries()) await repos.artifacts.append(row.workItemId, `artifact-${i}`, row, NOW);
+  for (const [i, row] of source.scoutResults.entries()) await repos.scoutResults.append(row.workItemId, `scout-${i}`, row, NOW);
+  for (const [i, row] of source.workerResults.entries()) await repos.workerResults.append(row.workItemId, `worker-${i}`, row, NOW);
+  const full = <T,>(repo: AggregateRepository<T>): AggregateRepository<T> => ({ ...repo, listNarrowed: () => repo.list() });
+  const fullRepos = { ...repos, obligations: full(repos.obligations), occurrences: full(repos.occurrences),
+    workItems: full(repos.workItems), routeTasks: full(repos.routeTasks), attempts: full(repos.attempts), debts: full(repos.debts) };
+  const base = { nowIso: NOW, activation: source.activation, pilotZips: source.pilotZips };
+  const already = { costs: source.costs, pipeline: source.pipeline };
+  const before = await readAllAssignmentSources(fullRepos, base, already);
+  const after = await readAllAssignmentSources(repos, base, already);
+  assert.deepEqual(buildAssignments(after), buildAssignments(before));
+  assert.deepEqual(buildAssignmentView(after), buildAssignmentView(before));
+  const census = (sources: AssignmentSources) => buildChecklistCensus({ scope, sources, observedAt: NOW });
+  assert.deepEqual(census(after), census(before));
+  const timing = census(after).deliveryTimings?.find(row => row.workItemId === "timed-work");
+  assert.equal(timing?.timingIssue, true, "measured execution with identical endpoint stamps stays unknown");
+  assert.equal(timing?.firstStartedAt, null);
+  assert.ok(Buffer.byteLength(JSON.stringify(after)) < Buffer.byteLength(JSON.stringify(before)),
+    "unused replay and task fields no longer reach the publisher");
+  assert.ok(after.attempts.every(row => !("usd" in row.cost) && !("policyVersion" in row)));
+  assert.ok((await repos.attempts.list()).every(row => "cost" in row.value && "policyVersion" in row.value));
+});
 
 test("succeeded (plain code, INGESTED with a document): downloads counted, the parse gap named, the cost plain code — never $0", () => {
   const rows = buildAssignments(world());

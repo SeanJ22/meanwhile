@@ -33,10 +33,24 @@ into nano; never paste them into chat, GitHub, screenshots or a shell command.
 
 Keep the Linux paths, provider API keys and service user's GitHub sign-in.
 Keep `WTP_VAULT_STORE` identical on the live Admin host and Linux (default:
-`meanwhile-evidence`). In the live Netlify project's environment settings,
-also set `WTP_VAULT_PROVIDER=netlify`, `WTP_BLOBS_SITE_ID` and
-`WTP_BLOBS_TOKEN` to this same production destination, then redeploy so Admin
-can send wake hints. A transfer to staging alone does not populate production.
+`meanwhile-evidence`). In Netlify → the live project → **Site configuration →
+Environment variables**, add or edit these values with **Functions** scope and
+the **Production** deploy context:
+
+| Admin host setting | Value and private source |
+| --- | --- |
+| `WTP_VAULT_PROVIDER` | `netlify`, matching `/etc/meanwhile/runner.env`. |
+| `WTP_BLOBS_SITE_ID` | The live project's Project ID from General → Project details; use the same ID as the Linux runner. |
+| `WTP_BLOBS_TOKEN` | The authorized personal access token from User settings → Applications → Personal access tokens; use the same token as the Linux runner. |
+| `WTP_VAULT_STORE` | The runner's configured store name, or `meanwhile-evidence` when it is unset. |
+
+Enter the token privately in Netlify; never include its value in a report.
+Redeploy the live site after saving. Admin and the Linux runner must point to
+the same production project and evidence store so an Admin send can wake the
+runner. After starting the service in step 3, send an instruction in step 4
+and confirm its receipt appears on the runner's next control-plane poll and
+in Admin's instruction history. Give S0 a missing receipt or refusal.
+A transfer to staging alone does not populate production.
 Save nano with **Ctrl+O**, **Enter**, then **Ctrl+X**.
 
 ### 2. Copy the retained vault and portraits to production

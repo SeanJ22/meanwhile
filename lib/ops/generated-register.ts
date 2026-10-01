@@ -341,19 +341,6 @@ export const GENERATED: GeneratedArtifact[] = [
       "keeps it idempotent when the rendered body is unchanged, so only a changed body earns " +
       "a fresh stamp.",
   },
-  {
-    /*
-     * **Registered 2026-08-30, the same commit that created it** (Session A,
-     * Work Item 7). The mechanical repo inventory, joined to the Drive mirror
-     * via scripts/mirror-set.mjs.
-     */
-    path: "docs/repo-inventory.md",
-    command: "corepack pnpm repo-map",
-    pure: false,
-    impurity:
-      "reads Git's would-be-committed file list; output depends only on those paths, " +
-      "so content edits, new commits and elapsed time leave the inventory unchanged.",
-  },
 ];
 
 /** Where the recorded generator digests live. Repo-relative. */

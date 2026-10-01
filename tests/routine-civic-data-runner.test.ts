@@ -1640,6 +1640,13 @@ test("the durable receipt check proves a Reader-projected pointer by identity an
     structuralReleaseContract: ZERO_RELEASE_EVENTS,
   };
   assert.equal(await durableRoutineRunnerReceiptIssue(success, task, store, "SUCCESS"), null);
+  const placeJob = { ...task, id: "national-place:85635", registeredContractId: task.id };
+  assert.equal(await durableRoutineRunnerReceiptIssue(success, placeJob, store, "SUCCESS"), null,
+    "an independent job keeps its canonical source authority");
+  assert.equal(await durableRoutineRunnerReceiptIssue({ ...success, source: placeJob.id }, placeJob, store, "SUCCESS"), null,
+    "the parent-attributed exact job receipt remains readable");
+  assert.match(await durableRoutineRunnerReceiptIssue({ ...success, source: "national-place:03000" }, placeJob, store, "SUCCESS") ?? "",
+    /does not match registered task/);
   assert.deepEqual(store.whole, [], "success: identity only; the Reader repair reads the new version in full");
 
   // A contract no Reader readback ever proves keeps the full proven read on

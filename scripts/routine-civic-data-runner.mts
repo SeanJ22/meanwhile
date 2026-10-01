@@ -467,7 +467,7 @@ try {
 }
 // A standing refresh already covers a Send for its source; don't launch duplicate children for the same pointer.
 const selectedTasks = [...STANDING_SOURCE_TASKS, ...huntTasks.filter(task => !STANDING_SOURCE_TASKS.some(standing => standing.id === task.id))]
-  .filter((task) => !ONLY || ONLY.has(task.id));
+  .filter((task) => !ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId)));
 step = "reading the routine task clocks";
 const clockReads = FORCE
   ? selectedTasks.map((task) => ({ task, ok: true as const, clock: undefined, error: null }))
@@ -788,7 +788,9 @@ async function settlePendingRun(pending: PendingRun, run: BoundedChildResult): P
     ? await durableRoutineRunnerReceiptIssue(parsedReceipt.receipt, pending.task, store, receiptOutcome)
     : null;
   const child = classifyRoutineChildOutcome({
-    parsed: parsedReceipt,
+    parsed: parsedReceipt.ok && durableIssue === null
+      ? { ...parsedReceipt, receipt: { ...parsedReceipt.receipt, source: pending.task.id } }
+      : parsedReceipt,
     durableIssue,
     exitStatus: run.status,
     childDiagnostic: run.status === 0 ? null : safeFailure(`${run.errorMessage ?? ""}\n${output}`),

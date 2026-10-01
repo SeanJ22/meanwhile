@@ -7,8 +7,26 @@ import { scheduleObligation } from "../control-plane/scheduler/obligation.ts";
 import { RESEARCH_BOUNDS } from "../control-plane/scheduler/research-policy.ts";
 import type { ResearchRuntimeTools } from "../control-plane/workers/research-runtime.ts";
 import type { RoutineDataStore } from "../civic-data/store.ts";
+import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { runPlaceSource, type NationalPlacePublicationInput } from "./place-source.ts";
 import { placeSourceReader, PlaceSourceDeferred } from "./place-source-reader.ts";
+
+/** Read the existing clocks before assigning processes; untouched places lead. */
+export async function dueNationalPlaceZips(repos: ControlPlaneRepositories, zips: readonly string[], now: string): Promise<string[]> {
+  const unique = [...new Set(zips)];
+  if (unique.some(zip => !/^\d{5}$/.test(zip))) throw new Error("A five-digit ZIP is required");
+  const held = new Map((await repos.obligations.listWhere(["routeId"], "national-place-sources")).map(row => [row.id, row.value]));
+  const nowMs = Date.parse(now);
+  return unique.filter(zip => {
+    const row = held.get(`national-place:${zip}`);
+    if (!row) return true;
+    const scheduled = scheduleObligation(row, nowMs);
+    return "cadenceHours" in scheduled && Date.parse(scheduled.nextDueAt) <= nowMs;
+  }).sort((a, b) => {
+    const age = (zip: string) => Date.parse(held.get(`national-place:${zip}`)?.lastWorkedAt ?? "") || 0;
+    return age(a) - age(b) || a.localeCompare(b);
+  });
+}
 
 /** The registered registry source uses the ordinary acquiring Attempt, vault
  * and occurrence lifecycle. It costs no model tokens; remaining blanks stay
@@ -24,10 +42,8 @@ export async function runNationalPlaceTask(input: {
   let deferred: string | null = null;
   const { tools } = input;
   const holder = `national-place:${hostname()}:${process.pid}`;
-  for (const zip of [...new Set(input.zips)]) {
-    if (!/^\d{5}$/.test(zip)) throw new Error("A five-digit ZIP is required");
+  for (const zip of await dueNationalPlaceZips(tools.repos, input.zips, tools.now())) {
     const now = tools.now();
-    const knowledge = deferred ? undefined : await readFieldManual(tools.repos);
     const definition = { id: `national-place:${zip}`, subjectId: `zip:${zip}`, recordClass: "OFFICIAL_ROSTER" as const,
       routeId: "national-place-sources", active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null };
     const synced = await syncObligations(tools.repos, [definition], now, { exactReads: true });
@@ -36,12 +52,17 @@ export async function runNationalPlaceTask(input: {
       await closeSettledOccurrence(tools.repos, { settled: prior.settled, now });
       prior = null;
     }
-    const opened = prior ?? await openOccurrence(tools.repos, { obligation: synced.all[0], dueAt: now, now });
+    // Settlement can advance the clock, and another worker may have worked it
+    // since admission. Always schedule the durable row, never a fresh null anchor.
+    const durable = (await tools.repos.obligations.mustRead(definition.id)).value;
+    const scheduled = scheduleObligation(durable, Date.parse(now));
+    if (!("cadenceHours" in scheduled)) throw new Error(scheduled.reason);
+    if (Date.parse(scheduled.nextDueAt) > Date.parse(now)) continue;
+    const knowledge = deferred ? undefined : await readFieldManual(tools.repos);
+    const opened = prior ?? await openOccurrence(tools.repos, { obligation: durable, dueAt: scheduled.nextDueAt, now });
     if (!opened) throw new Error("National source occurrence could not open");
     const routeTaskId = "routeTaskId" in opened ? opened.routeTaskId : opened.routeTask.id;
     const occurrenceId = "id" in opened ? opened.id : opened.occurrence.id;
-    const scheduled = scheduleObligation(definition, Date.parse(now));
-    if (!("cadenceHours" in scheduled)) throw new Error(scheduled.reason);
     // A renewable ownership lease, independent of how long acquisition takes.
     const ttlMs = 120_000;
     let report: Awaited<ReturnType<typeof runPlaceSource>> | undefined;

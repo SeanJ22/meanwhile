@@ -239,7 +239,7 @@ function Reliability() {
           <div key={r.source} className={s.row}>
             <div className={s.spread}><strong style={{ fontSize: 13 }}>{r.source.replace(/^https?:\/\//, "")}</strong><Pill tone={r.state === "failing" ? "warn" : r.state === "recovering" ? "gold" : "good"}>{r.state === "failing" ? `${r.consecutiveFailures} failed in a row` : r.state === "recovering" ? "Recovered" : "Healthy"}</Pill></div>
             <span className={s.meta}>{count(r.successes)} worked · {count(r.failures)} failed · last try {mst(r.lastAttemptAt)}{r.retryAt ? ` · next try ${mst(r.retryAt)}` : ""}</span>
-            {r.state === "failing" && <span className={s.small}>{r.detail || "No reason recorded."}</span>}
+            {r.state === "failing" && <span className={s.small}>{r.detail ? r.detail : "The reason isn’t known yet."}</span>}
           </div>
         ))}
       </div>

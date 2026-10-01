@@ -426,6 +426,12 @@ test("unresolved identity permits independent diagnosis but never staging", asyn
 
 test("ZIP process reports return after parent registry and election publication, with one shared pointer writer", async () => {
   const root = await mkdtemp(join(tmpdir(), "s7-national-ipc-"));
+  const progress: string[] = [];
+  const log = console.log;
+  console.log = (...args: unknown[]) => {
+    if (typeof args[0] === "string" && args[0].startsWith("RCD_PROGRESS=")) progress.push(JSON.parse(args[0].slice("RCD_PROGRESS=".length)).key);
+    else log(...args);
+  };
   try {
     await mkdir(join(root, "scripts"), { recursive: true });
     await mkdir(join(root, "lib/control-plane/workers"), { recursive: true });
@@ -442,9 +448,10 @@ test("ZIP process reports return after parent registry and election publication,
         }
         try {
           const zip = message.taskIds[0];
-          const request = { now: '2026-09-30T21:00:00Z', divisions: [], geographyCaptures: [], sources: { zip } };
+          const request = { now: '2026-09-30T21:00:00Z', divisions: [], geographyCaptures: [], sources: { zip, officials: [] } };
           const publication = await call('national-publication', request).catch(error => ({ error: error.message }));
-          const election = await call('election-publication', { fields: [], now: request.now });
+          const election = await call('election-publication', { fields: [{ divisionId: 'ocd-division/country:us/state:ny',
+            kind: 'registration_deadline', sourceUrl: 'https://elections.ny.gov/calendar', value: '2026-10-05', dates: ['2026-10-05'] }], now: request.now });
           await call('national-result', { zip, publications: [publication], electionPublications: [election] });
           process.send({ kind: 'finished', body: message.taskIds }); process.disconnect();
         } catch (error) { console.error(error.message); process.exitCode = 1; process.disconnect(); }
@@ -459,7 +466,7 @@ test("ZIP process reports return after parent registry and election publication,
       active--; published.push(kind);
       return { kind };
     };
-    const reports = await runNationalPlaceWorkerProcesses({ root, zips: ["10001", "10002"], capacity: () => 2, store,
+    const reports = await runNationalPlaceWorkerProcesses({ root, zips: ["10001", "10002", "10003"], capacity: () => 2, store,
       orderPending: async ids => [...ids].reverse(),
       slots: workerProcessSlots(() => 2, { availableBytes: () => 1000, headroomBytes: 100, peakBytes: () => 600 }),
       onStarted: pid => {
@@ -471,17 +478,21 @@ test("ZIP process reports return after parent registry and election publication,
         registryCalls++;
         await write("registry");
         if (registryCalls === 1) throw new Error("one registry publication failed");
-        return { registry: "published" };
+        return { promotedVersionId: `version:${registryCalls}`, divisions: [], bodies: [],
+          members: [{ bodyId: "same-body", discoveryIds: ["same-official"], versionId: `version:${registryCalls}` }] };
       },
-      publishElection: async () => { await write("election"); return { candidateId: null, promotedVersionId: null, fields: [], gaps: [] }; },
+      publishElection: async () => { await write("election"); return { candidateId: "candidate:election",
+        promotedVersionId: `election:${registryCalls}`, fields: ["same-deadline"], gaps: [] }; },
       onResult: report => { if ("deferred" in report) assert.fail(report.deferred);
         delivered.push(report.zip); assert.equal(report.electionPublications.length, 1); } });
-    assert.equal(pids.length, 2);
+    assert.equal(pids.length, 3);
     assert.equal(peak, 1, "registry and election callbacks share the parent critical section");
-    assert.equal(published.length, 4, "one failure does not poison later pointer writes");
-    assert.deepEqual(reports.map(report => report.zip).sort(), ["10001", "10002"]);
-    assert.equal(delivered[0], "10002", "national workers pull the current owner place priority before launch");
-    assert.deepEqual(delivered.sort(), ["10001", "10002"]);
+    assert.equal(published.length, 6, "one failure does not poison later pointer writes");
+    assert.deepEqual(reports.map(report => report.zip).sort(), ["10001", "10002", "10003"]);
+    assert.equal(delivered[0], "10003", "national workers pull the current owner place priority before launch");
+    assert.deepEqual(delivered.sort(), ["10001", "10002", "10003"]);
+    assert.equal(progress.length, 5);
+    assert.equal(new Set(progress).size, 2, "new versions of the same registry and election facts cannot renew an idle child's progress clock");
     assert.equal(reports.filter(report => !("deferred" in report) && "error" in (report.publications[0] as object)).length, 1);
-  } finally { await rm(root, { recursive: true, force: true }); }
+  } finally { console.log = log; await rm(root, { recursive: true, force: true }); }
 });

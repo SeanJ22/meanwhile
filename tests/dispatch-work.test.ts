@@ -759,6 +759,8 @@ test("Admin reads the creation receipt for the decision it belongs to, with ever
   ];
   const config = { placeTargets: [{ key: "az.cd.06", goalPercent: 95, setAt: T0, receiptId: "owner-target" }] };
   assert.deepEqual(orderPlaceWork(config, places), ["target", "lowest", "middle"]);
+  assert.deepEqual(orderPlaceWork({ placeTargets: [{ ...config.placeTargets[0], key: "geo:az.congressional_district.06" }] }, places),
+    ["target", "lowest", "middle"], "the existing v6 hunt key and checklist place key identify the same target");
   assert.deepEqual(orderPlaceWork({}, places), ["lowest", "middle", "target"], "official unpublished fields count as resolved");
   assert.deepEqual(orderPlaceWork({ placeTargets: [{ ...config.placeTargets[0], goalPercent: 60 }] }, places),
     ["lowest", "middle", "target"], "a reached owner target returns to ordinary completion order");

@@ -34,6 +34,7 @@ import { resolveScopes } from "./runner-load.ts";
 import { loadPublishedLookupState } from "../../census-geography/reader.ts";
 import { declaredWorkMembers } from "./declared-work-scope.ts";
 import { censusWorkDivision } from "../../census-geography/division-id.ts";
+import { parseV6PlaceKey } from "../admin-view/v6-hunts-read.ts";
 
 export interface PlaceWorkReading {
   readonly key: string;
@@ -43,6 +44,10 @@ export interface PlaceWorkReading {
 
 /** Order the existing place capture rows; this creates no score or policy store. */
 export function orderPlaceWork(config: unknown, places: readonly PlaceWorkReading[]): string[] {
+  const placeKey = (key: string): string => {
+    const parsed = parseV6PlaceKey(key);
+    return parsed?.kind === "geo" ? `${parsed.state}.${VERSION_PREFIX[parsed.type]}.${parsed.geoid.toLowerCase()}` : key;
+  };
   const value = config as { placeTargets?: unknown } | null;
   const raw = value?.placeTargets;
   if (raw !== undefined && !Array.isArray(raw)) throw new Error("PLACE_TARGETS_UNREADABLE");
@@ -53,13 +58,14 @@ export function orderPlaceWork(config: unknown, places: readonly PlaceWorkReadin
       !Number.isFinite(target.goalPercent) || target.goalPercent < 1 || target.goalPercent > 100 ||
       typeof target.setAt !== "string" || !Number.isFinite(Date.parse(target.setAt)) ||
       typeof target.receiptId !== "string" || !target.receiptId) throw new Error("PLACE_TARGETS_UNREADABLE");
-    const previous = targets.get(target.key);
-    if (!previous || Date.parse(target.setAt) >= Date.parse(previous.setAt)) targets.set(target.key, target as { goalPercent: number; setAt: string });
+    const key = placeKey(target.key);
+    const previous = targets.get(key);
+    if (!previous || Date.parse(target.setAt) >= Date.parse(previous.setAt)) targets.set(key, target as { goalPercent: number; setAt: string });
   }
   const readings = places.map(place => {
     const resolved = place.items.filter(item => item.state === "published" || item.state === "unpublished").length;
     const percent = place.items.length ? resolved / place.items.length * 100 : 0;
-    const target = targets.get(place.key);
+    const target = targets.get(placeKey(place.key));
     return { ...place, percent, target: target && percent < target.goalPercent ? target : null };
   });
   return readings.sort((a, b) => Number(Boolean(b.target)) - Number(Boolean(a.target)) ||

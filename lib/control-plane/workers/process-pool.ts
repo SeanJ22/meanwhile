@@ -1,4 +1,5 @@
 import { fork } from "node:child_process";
+import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import type { RouteDescriptor } from "../scheduler/registry.ts";
@@ -174,18 +175,35 @@ export async function runLeaseWorkerProcesses(input: {
           body = null;
         } else if (message.kind === "national-publication") {
           if (!input.national) throw new Error("NATIONAL_PUBLICATION_BROKER_UNAVAILABLE");
-          body = await input.national.publish(message.body as NationalPublication);
+          const request = message.body as NationalPublication;
+          body = await input.national.publish(request);
           const publication = body as { promotedVersionId?: string | null; divisions?: readonly unknown[];
-            bodies?: readonly unknown[]; members?: readonly unknown[] } | null;
+            bodies?: readonly unknown[]; members?: readonly { bodyId: string; discoveryIds: readonly string[] }[] } | null;
           const records = (publication?.divisions?.length ?? 0) + (publication?.bodies?.length ?? 0) + (publication?.members?.length ?? 0);
-          if (publication?.promotedVersionId && records) console.log("RCD_PROGRESS=" + JSON.stringify({ key: publication.promotedVersionId, records }));
+          if (publication?.promotedVersionId && records) {
+            const accepted = new Set(publication.members?.flatMap(member => member.discoveryIds));
+            const facts = { divisions: publication.divisions?.map(String).sort(), bodies: publication.bodies?.map(String).sort(),
+              members: publication.members?.map(member => ({ bodyId: member.bodyId, discoveryIds: [...member.discoveryIds].sort() }))
+                .sort((a, b) => a.bodyId.localeCompare(b.bodyId)),
+              officials: request.sources.officials.filter(official => accepted.has(official.discoveryId))
+                .map(official => ({ id: official.discoveryId, name: official.name, office: official.officeTitle, url: official.officialUrl }))
+                .sort((a, b) => a.id.localeCompare(b.id)) };
+            const key = createHash("sha256").update(JSON.stringify(facts)).digest("hex");
+            console.log("RCD_PROGRESS=" + JSON.stringify({ key, records }));
+          }
         } else if (message.kind === "election-publication") {
           if (!input.national) throw new Error("NATIONAL_PUBLICATION_BROKER_UNAVAILABLE");
           const request = message.body as { fields: Parameters<ElectionPublisher>[0]; now: string };
           body = await input.national.publishElection(request.fields, request.now);
           const publication = body as Awaited<ReturnType<ElectionPublisher>>;
-          if (publication.promotedVersionId && publication.fields.length) console.log("RCD_PROGRESS=" +
-            JSON.stringify({ key: publication.promotedVersionId, records: publication.fields.length }));
+          if (publication.promotedVersionId && publication.fields.length) {
+            const facts = { ids: [...publication.fields].sort(), fields: request.fields
+              .filter(field => !publication.gaps.some(gap => gap.divisionId === field.divisionId && gap.kind === field.kind))
+              .map(field => ({ division: field.divisionId, kind: field.kind, text: field.value, dates: field.dates, phone: "phone" in field ? field.phone : null,
+                url: field.sourceUrl })).sort((a, b) => a.division.localeCompare(b.division) || a.kind.localeCompare(b.kind)) };
+            const key = createHash("sha256").update(JSON.stringify(facts)).digest("hex");
+            console.log("RCD_PROGRESS=" + JSON.stringify({ key, records: publication.fields.length }));
+          }
         } else if (message.kind === "national-result") {
           if (!input.national) throw new Error("NATIONAL_PUBLICATION_BROKER_UNAVAILABLE");
           await input.national.onResult(message.body as NationalPlaceReport);

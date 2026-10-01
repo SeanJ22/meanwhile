@@ -1,6 +1,6 @@
 import { basename, join } from "node:path";
 import { existsSync, readFileSync } from "node:fs";
-import { stateDomainFiles } from "../holdings/files.ts";
+import { stateDomainFiles } from "../holdings/discovery.ts";
 import { readRecords } from "../reference/index.ts";
 import { US_JURISDICTIONS, type StateIdentity } from "./states.ts";
 

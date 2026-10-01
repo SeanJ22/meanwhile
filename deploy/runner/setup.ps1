@@ -66,8 +66,7 @@ try {
     Invoke-RunnerCommand $scpProgram ($sshOptions + $uploads + @("${destination}:$remoteDirectory/"))
     Write-Host 'Opening GitHub sign-in on your PC. When the terminal displays a one-time code, enter it in the browser and approve the sign-in.'
     Start-Process 'https://github.com/login/device'
-    # Use S13's staging branch until S0 merges the runner installation files.
-    $remoteCommand = "chmod 600 '$remoteDirectory/runner.env'; bash '$remoteDirectory/install.sh' --ref codex/s13-continuous-runner --env-file '$remoteDirectory/runner.env'; result=`$?; rm -f '$remoteDirectory/runner.env'; exit `$result"
+    $remoteCommand = "chmod 600 '$remoteDirectory/runner.env'; bash '$remoteDirectory/install.sh' --ref main --env-file '$remoteDirectory/runner.env'; result=`$?; rm -f '$remoteDirectory/runner.env'; exit `$result"
     Invoke-RunnerCommand $sshProgram ($sshOptions + @('-t', $destination, $remoteCommand))
 } finally {
     # Remove only this invocation's temporary upload files, never the source settings.

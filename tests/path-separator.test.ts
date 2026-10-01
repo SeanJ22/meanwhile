@@ -210,13 +210,14 @@ test("RULING 14: no file URL is used as a path without fileURLToPath", () => {
   const BANNED = new RegExp(String.raw`new URL\([^)]*\)\.` + "pathname");
 
   /*
-   * This one expression parses the final path segment of an acquired HTTPS
-   * URL and never supplies that URL component to a filesystem API. Keep the
+   * These expressions parse acquired HTTPS routes and never supply those
+   * URL components to a filesystem API. Keep each
    * exception expression-exact: exempting the file would also hide a later
    * import.meta.url pathname defect in the same acquisition module.
    */
   const URL_COMPONENT_ONLY = new Map<string, string>([
     ["lib/officials/federal-directory-data-plane.ts", ["new URL(row.finalUrl)", "pathname"].join(".")],
+    ["lib/civic-data/derived-meeting-wiring.ts", ["new URL(input.route)", "pathname"].join(".")],
   ]);
 
   const offenders: string[] = [];

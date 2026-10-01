@@ -56,8 +56,8 @@ import { PIMA_MEETING_FIELDS } from "../lib/control-plane/shadow/pima-run.ts";
 import { emptyKnowledge, learnRoute, type MethodKnowledge } from "../lib/method/knowledge.ts";
 import { gradeApplicability, unknownApplicability } from "../lib/method/portability.ts";
 import { FIRST_PARTY_ROUTES } from "../lib/sources/legistar-insite/horizon.ts";
-import { loadMethodStore } from "../lib/workstate/load.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
+import { methodFixture } from "./method-store-fixture.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const T0 = "2026-08-29T00:00:00.000Z";
@@ -75,7 +75,7 @@ function realFloor(fields: readonly string[] = PIMA_MEETING_FIELDS): {
   knowledge: MethodKnowledge;
   floor: RouteFloor;
 } {
-  const knowledge = loadMethodStore(ROOT);
+  const knowledge = methodFixture();
   if (knowledge === null) {
     throw new Error(
       `the committed method store could not be read from ${ROOT}; this suite proves the floor ` +

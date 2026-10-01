@@ -92,7 +92,7 @@ const NOW_MS = Date.parse(NOW);
 function obligation(over: Partial<FreshnessObligation> = {}): FreshnessObligation {
   return {
     id: "ob-1",
-    recordClass: "meetings",
+    recordClass: "filings",
     subjectId: "wtp-body/pima#governing",
     routeId: "legistar:events",
     active: true,
@@ -119,6 +119,9 @@ test("W3.3: an obligation with NO signal takes the daily default and SAYS so", (
   assert.equal(row.cadenceHours, DEFAULT_CADENCE_HOURS);
   assert.equal(row.cadenceSource, "DEFAULT_NO_SIGNAL");
   assert.match(row.basis, /DEFAULT and not a derivation/);
+  const meeting = scheduleObligation(obligation({ recordClass: "meetings" }), NOW_MS);
+  assert.ok(isScheduled(meeting));
+  assert.equal(meeting.cadenceHours, 12, "meeting sources follow §4 even without another signal");
 });
 
 test("W3.3: a reader deadline places the check BEFORE it, not on it", () => {
@@ -131,6 +134,12 @@ test("W3.3: a reader deadline places the check BEFORE it, not on it", () => {
   assert.ok(isScheduled(row));
   assert.equal(row.cadenceSource, "READER_IMPACT");
   assert.equal(row.cadenceHours, 5);
+  for (const offset of [-6, 6]) {
+    const meeting = scheduleObligation(obligation({ recordClass: "meetings",
+      meetingStartsAt: [new Date(NOW_MS + offset * 86_400_000).toISOString()] }), NOW_MS);
+    assert.ok(isScheduled(meeting));
+    assert.equal(meeting.cadenceHours, 1, "upcoming and concluded meetings within seven days are checked hourly");
+  }
 });
 
 test("W3.3: where both signals exist the SHORTER binds", () => {
@@ -656,7 +665,7 @@ test("NH328: canonical reader-impact priority reaches the Scout pool before an o
           : { admit: false, code: "CYCLE_MAX", why: "the one-slot fixture ceiling is spent" };
       },
       modelExecutor: { lane: "BOUNDED_MODEL_WORKER", run: async () => ({ ranAs: "BOUNDED_MODEL_WORKER", kind: "ABORTED", detail: "fixture" }) },
-      maxConcurrentScouts: 1,
+      workerCapacity: 1,
       scoutLeaseTtlMs: 60_000,
     },
   });

@@ -1,16 +1,4 @@
-/**
- * **THE SCOUT LANE'S ADMISSION TIME HAS A FLOOR THE DOWNSTREAM RESERVE CANNOT ZERO.**
- * (2026-09-18. Measured live: two clean runner cycles deferred every Scout for
- * BUDGET while the cycle finished at ~half the hard wall.)
- *
- * `fleetReserveMs` reduces the SHARED `budget.deadlineMs` to keep the always-full
- * deterministic refresh queue from starving the fleet. Applied to the Scout lane
- * too, it did the opposite: the model lane starts after the pre-dispatch phases,
- * and `reducedDeadline - scoutWallMs` left no window, so a Scout WITH an open
- * occurrence still deferred BUDGET. The Scout lane now admits against its own
- * `scoutDeadlineMs` (the hard dispatch wall). These tests move an injected clock
- * to prove the floor holds and that the pre-fix behaviour is the control.
- */
+/** Scouts are admitted by funding and provider availability. */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -20,13 +8,6 @@ import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligat
 import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
 
 const NOW = "2026-09-02T00:00:00.000Z";
-const NOW_MS = Date.parse(NOW);
-/* The injected clock reads 100s into the cycle — after the pre-dispatch phases. */
-const CLOCK_MS = NOW_MS + 100_000;
-/* The deterministic lane deadline expired during pre-dispatch work. */
-const RESERVED_DEADLINE = NOW_MS + 50_000;
-/* The hard dispatch wall the Scout lane should admit against: 13 min, room to spare. */
-const HARD_DEADLINE = NOW_MS + 780_000;
 
 function modelObligation(id: string): FreshnessObligation {
   return { id, recordClass: "meetings", subjectId: `body:${id}`, routeId: `route:${id}`, active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null };
@@ -38,7 +19,7 @@ const modelExecutor: DeclaredExecutor = {
 };
 const modelDecision: ExecutorDecision = { kind: "BOUNDED_MODEL_WORKER", why: "test model row", disagreement: null };
 
-async function runScoutCycle(scoutDeadlineMs: number | undefined) {
+async function runScoutCycle() {
   return runCycle({
     repos: createMemoryRepositories(),
     obligations: [modelObligation("m")],
@@ -56,42 +37,18 @@ async function runScoutCycle(scoutDeadlineMs: number | undefined) {
     reader: { contract: "READER", state: "NOT_READY", reason: "test" },
     truth: { contract: "TRUTH", state: "NOT_READY", reason: "test" },
     requireOpenOccurrence: true,
-    budget: { deadlineMs: RESERVED_DEADLINE, now: () => CLOCK_MS },
     research: {
       decide: () => modelDecision,
       admitScout: () => ({ admit: true }),
       modelExecutor,
-      maxConcurrentScouts: 2,
+      workerCapacity: 2,
       scoutLeaseTtlMs: 1000,
-      ...(scoutDeadlineMs !== undefined ? { scoutDeadlineMs } : {}),
     },
   });
 }
 
-test("CONTROL: without a scout floor, the reduced deterministic deadline defers the Scout for BUDGET", async () => {
-  const cycle = await runScoutCycle(undefined);
-  assert.equal(cycle.lanes?.model.dispatched, 0, "the Scout was NOT started — the reserve zeroed its window");
-  assert.equal(cycle.lanes?.model.deferredBy.BUDGET, 1, "and it deferred for BUDGET by name");
-  assert.ok(
-    cycle.deferred.some((d) => d.obligationId === "m" && /dispatch budget was spent/.test(d.why)),
-    "the deferral names the budget",
-  );
-});
-
-test("FIX: scoutDeadlineMs floors admission to the hard wall, so the same Scout is admitted", async () => {
-  const cycle = await runScoutCycle(HARD_DEADLINE);
-  assert.equal(cycle.lanes?.model.dispatched, 1, "the Scout was admitted against the hard wall despite the reduced deterministic deadline");
-  assert.ok(!cycle.lanes?.model.deferredBy.BUDGET, "nothing deferred for BUDGET in the model lane");
-  assert.ok(
-    !cycle.deferred.some((d) => d.obligationId === "m" && /dispatch budget was spent/.test(d.why)),
-    "the Scout is not on the budget-deferred list",
-  );
-});
-
-test("Scout admission uses the actual cycle deadline without a predicted five-minute duration", async () => {
-  const live=await runScoutCycle(CLOCK_MS + 100_000);
-  assert.equal(live.lanes?.model.dispatched,1);
-  const expired=await runScoutCycle(CLOCK_MS);
-  assert.equal(expired.lanes?.model.dispatched,0);
-  assert.equal(expired.lanes?.model.deferredBy.BUDGET,1);
+test("a funded Scout is dispatched without a cycle wall", async () => {
+  const cycle = await runScoutCycle();
+  assert.equal(cycle.lanes?.model.dispatched, 1);
+  assert.ok(!cycle.lanes?.model.deferredBy.BUDGET);
 });

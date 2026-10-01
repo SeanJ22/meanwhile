@@ -31,7 +31,9 @@ import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import type { SourceSnapshot, StatementCorpus } from "../lib/corpus/types.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
-const { POST, resetGroundedState, settleGroundedSourcePreloads } = await import("../app/api/ask/grounded/route.ts");
+const { POST } = await import("../app/api/ask/grounded/route.ts");
+const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
+const { settleGroundedSourcePreloads } = await import("../lib/ask/grounded-preloads.ts");
 const AZ = "ocd-division/country:us/state:az";
 const NJ = "ocd-division/country:us/state:nj";
 const NH = "ocd-division/country:us/state:nh";
@@ -275,7 +277,7 @@ test("an unreadable applicable ballot is a failed holding, never an empty civic 
     assert.deepEqual(ballot.loaderFailures, ["nj"]);
     const body = await ask("Who is running for U.S. House in the 11th District?", "NJ");
     assert.equal(body.denominators.ballotLoaderFailures, 1);
-    assert.ok(body.gaps.some((gap) => gap.whose === "OURS" && /ballot records.*could not be read/.test(gap.statement)));
+    assert.ok(body.gaps.some((gap) => gap.whose === "OURS" && /couldn't load the ballot for your area/.test(gap.statement)));
     const unaffected = await loadBallotForDivisions(divisions.AZ);
     assert.ok(unaffected.set);
     assert.deepEqual(unaffected.loaderFailures, []);

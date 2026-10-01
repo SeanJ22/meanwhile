@@ -13,6 +13,8 @@ import {
   FEEDBACK_MAX_CHARS,
   FEEDBACK_SURFACES,
   isFeedbackSurface,
+  feedbackContext,
+  feedbackHref,
 } from "../lib/feedback/shape.ts";
 import {
   classifyFeedbackSubmission,
@@ -34,6 +36,17 @@ import {
  */
 
 const ROOT = process.cwd();
+
+test("report links round-trip the card, ZIP and public record, with bounds and no invented ZIP", () => {
+  const context = { about: "Cochise supervisors & meetings", zip: "85635", recordId: "cochise:supervisors" };
+  const url = new URL(feedbackHref(context), "https://example.org");
+  assert.equal(url.searchParams.get("about"), context.about);
+  assert.equal(url.searchParams.get("zip"), "85635");
+  assert.equal(url.searchParams.get("recordId"), context.recordId);
+  assert.deepEqual(feedbackContext({}), { about: null, zip: null, recordId: null });
+  assert.equal(feedbackContext({ zip: "85635-1234" }).zip, null);
+  assert.equal(feedbackContext({ about: "x".repeat(100) }).about?.length, 80);
+});
 
 /** The address, assembled rather than written, so this file is not itself a hit. */
 const ADDRESS = ["seanj22", "gmail.com"].join("@");
@@ -248,12 +261,10 @@ test("R41: T09 still scrubs the MESSAGE, and the exception is exactly one field"
     !/scrubFreeText\(\s*(submission\.)?replyTo/.test(source),
     "the reply address is stored as typed; scrubbing it would delete what the reader asked for",
   );
-  // Exactly one scrub call in the write path: the message's.
-  assert.equal(
-    (source.match(/scrubFreeText\(/g) ?? []).length,
-    1,
-    "there must be exactly one scrub call — the message's",
-  );
+  // Sean's 2026-09-30 report-context request adds two prose fields. R41's
+  // exception remains the optional reply address; those fields must be scrubbed too.
+  assert.match(source, /scrubFreeText\(context.about\)/);
+  assert.match(source, /scrubFreeText\(context.recordId\)/);
 });
 
 test("R41: the reply address is filled only from its own field, never the message", () => {

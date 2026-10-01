@@ -15,7 +15,6 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
-import type { MethodKnowledge } from "../method/knowledge.ts";
 import type { Workstream } from "./workstream.ts";
 
 /** The three states the descent currently owes. */
@@ -40,14 +39,4 @@ export function loadAllWorkstreams(root: string): Workstream[] {
     .filter((f) => f.endsWith(".json") && f !== "migration-summary.json")
     .sort()
     .map((f) => JSON.parse(readFileSync(join(dir, f), "utf8")) as Workstream);
-}
-
-export function methodStorePath(root: string): string {
-  return join(root, "data", "method", "knowledge.json");
-}
-
-/** The cumulative method store, or null when it has not been ingested. */
-export function loadMethodStore(root: string): MethodKnowledge | null {
-  const p = methodStorePath(root);
-  return existsSync(p) ? (JSON.parse(readFileSync(p, "utf8")) as MethodKnowledge) : null;
 }

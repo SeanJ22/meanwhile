@@ -55,6 +55,8 @@ const FIXTURES = new URL("./fixtures/official-page-events/", import.meta.url);
 const TUSD_HOME = readFileSync(new URL("tusd-home.html", FIXTURES), "utf8");
 const TUSD_PAGE = readFileSync(new URL("tusd-reconfiguration.html", FIXTURES), "utf8");
 const SFPS_PAGE = readFileSync(new URL("sfps-board-of-education.html", FIXTURES), "utf8");
+// Offline official directory links, independent of the publisher event pages.
+const OFFICIAL_DIRECTORY = { url: "https://fixture-directory.gov/schools", html: '<a href="https://www.tusd1.org/">Tucson Unified</a><a href="https://www.sfps.info/">Santa Fe Public Schools</a>' };
 /** The instant the recorded pages were read (their .meta.json). */
 const NOW = "2026-09-23T23:25:27.424Z";
 // Synthetic saved government directory: authority is explicit evidence in this fixture.
@@ -108,6 +110,7 @@ function runtime(open: DiscoveryOpen, recipes = knownRecipes([]), now = NOW): Di
     now: () => now,
     budget: { spent: () => false },
     recipes,
+    officialLinkingPageFor: () => OFFICIAL_DIRECTORY,
   };
 }
 
@@ -139,7 +142,7 @@ test("TERMS AND ZONES: a body's name forms come from its recorded name alone; a 
   const ohio = verifyEndpointBody(
     { vendor: "official-page-events", url: "https://www.sfps.info/page/board-of-education-2" },
     { status: 200, body: SFPS_PAGE, finalUrl: "https://www.sfps.info/page/board-of-education-2" },
-    { bodyId: "oh:school:santa-fe-public-schools", name: "SANTA FE PUBLIC SCHOOLS", pageLabel: "Board of Education", officialHost: "www.sfps.info", linkingPage: DIRECTORY, stateCode: "OH", now: NOW },
+    { bodyId: "oh:school:santa-fe-public-schools", name: "SANTA FE PUBLIC SCHOOLS", pageLabel: "Board of Education", officialHost: "www.sfps.info", linkingPage: OFFICIAL_DIRECTORY, stateCode: "OH", now: NOW },
   );
   assert.equal(ohio.verdict, "YIELDED", ohio.detail);
   const texas = verifyEndpointBody(
@@ -222,7 +225,7 @@ test("LABELS AND BOUNDS: only a label of two words or more names a body; a link 
   const board = (pageLabel: string | null) => verifyEndpointBody(
     { vendor: "official-page-events", url: "https://www.sfps.info/page/board-of-education-2" },
     { status: 200, body: SFPS_PAGE, finalUrl: "https://www.sfps.info/page/board-of-education-2" },
-    { bodyId: SFPS.jurisdictionId, name: SFPS.name, pageLabel, officialHost: "www.sfps.info", linkingPage: DIRECTORY, stateCode: "NM", now: NOW },
+    { bodyId: SFPS.jurisdictionId, name: SFPS.name, pageLabel, officialHost: "www.sfps.info", linkingPage: OFFICIAL_DIRECTORY, stateCode: "NM", now: NOW },
   ).verdict;
   assert.equal(board("Board of Education"), "YIELDED");
   assert.equal(board("Board"), "NOT_CONFIRMED", "one word is too general to say whose page this is");
@@ -237,15 +240,15 @@ test("LABELS AND BOUNDS: only a label of two words or more names a body; a link 
 
 test("SEARCH: a search result on the body's own domain that is itself its events page is confirmed from the page already read", async () => {
   const site = fakeOpen({
-    "https://www.tusd1.org/robots.txt": ALLOW,
-    "https://www.tusd1.org/": { status: 200, body: "<html><body>Welcome</body></html>" },
-    "https://www.tusd1.org/Reconfiguration": { status: 200, body: TUSD_PAGE },
+    "https://district.gov/robots.txt": ALLOW,
+    "https://district.gov/": { status: 200, body: "<html><body>Welcome</body></html>" },
+    "https://district.gov/Reconfiguration": { status: 200, body: TUSD_PAGE },
   });
   const costs: unknown[] = [];
-  const walk = await walkMeetingsDiscoveryNeed(TUSD, {
+  const walk = await walkMeetingsDiscoveryNeed({ ...TUSD, ownWebAddress: "https://district.gov/" }, {
     ...runtime(site.open),
     search: async () => ({
-      hits: [{ url: "https://www.tusd1.org/Reconfiguration", title: "Reconfiguration", provider: "brave" as const }],
+      hits: [{ url: "https://district.gov/Reconfiguration", title: "Reconfiguration", provider: "brave" as const }],
       requests: [{ provider: "brave" as const, status: "DELIVERED" as const, error: null, bytes: 100, hitCount: 1 }],
     }),
     recordCost: async (entry) => {
@@ -253,16 +256,16 @@ test("SEARCH: a search result on the body's own domain that is itself its events
     },
   });
   assert.equal(walk.outcome, "FOUND");
-  const find = walk.found.find((f) => f.url === "https://www.tusd1.org/Reconfiguration");
+  const find = walk.found.find((f) => f.url === "https://district.gov/Reconfiguration");
   assert.ok(find);
   assert.deepEqual([find.vendor, find.basis, find.count], ["official-page-events", "SEARCH", 2]);
-  assert.equal(site.seen.filter((u) => u === "https://www.tusd1.org/Reconfiguration").length, 1, "one request for the page");
+  assert.equal(site.seen.filter((u) => u === "https://district.gov/Reconfiguration").length, 1, "one request for the page");
   assert.equal(costs.length, 1, "the one search request sent is charged");
 });
 
 test("TUSD PROOF: the executor alone, from TUSD's homepage, confirms the reconfiguration page's sessions for Tucson Unified", async () => {
   const unproven = await walkMeetingsDiscoveryNeed(TUSD, {
-    ...runtime(fakeOpen(TUSD_SITE).open), readOfficialPages: async () => [],
+    ...runtime(fakeOpen(TUSD_SITE).open), readOfficialPages: async () => [], officialLinkingPageFor: () => null,
   });
   assert.ok(!unproven.found.some(row => row.vendor === "official-page-events"),
     "a registry hostname and the site's own links cannot replace saved government endorsement");

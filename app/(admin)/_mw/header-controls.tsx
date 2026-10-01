@@ -86,18 +86,9 @@ export function ScopeSelect(props: { value: string; groups: readonly ScopeOption
  * there is no second navigation competing with the areas and tabs.
  */
 export const OTHER_PAGES: readonly { readonly href: string; readonly label: string; readonly note: string }[] = [
-  { href: "/admin/command-center", label: "Command center", note: "Seven connected views; unavailable readings are labelled until their backend is ready" },
-  { href: "/admin/changes", label: "Changes", note: "One line per change from any session: building, on test, deploying, live" },
-  { href: "/admin/research", label: "Runner and research detail", note: "Pause, resume, start a cycle now, every attempt" },
+  { href: "/admin", label: "Command center", note: "Now, Workers, Work, Checklist, Money, Learning, Fix list, Reports, Changes and Ask the console" },
   { href: "/admin/sources", label: "Sources and APIs", note: "Published versus reader-visible, per routine contract" },
-  { href: "/admin/release-review", label: "Software release review", note: "Staging to production, bound to the exact commit" },
-  { href: "/admin/steward", label: "Shipping and integration", note: "What is merged, deployed and waiting" },
-  { href: "/admin/reader", label: "What readers are doing", note: "Aggregate reader activity" },
-  { href: "/admin/feedback", label: "Feedback", note: "Your feedback folders and what became of them" },
   { href: "/admin/agents", label: "Delegated work", note: "Work handed to agents and its state" },
-  { href: "/admin/chat", label: "Ask the console", note: "Questions about the system, answered from its records" },
-  { href: "/admin/fleet", label: "Fleet operations map", note: "Triage bands, work in flight, panels and blind spots" },
-  { href: "/admin/system-map", label: "System map", note: "How the parts fit together" },
 ];
 
 export function OtherPages(props: { scope: string }) {

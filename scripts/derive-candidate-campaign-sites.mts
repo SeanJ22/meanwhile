@@ -120,11 +120,19 @@ async function linkedPublicationReads(vault: VaultIndex, approvals: readonly Pub
       const record = (typeof row.record === "string" ? JSON.parse(row.record) : row.record) as HeldLinkedPublicationRead["record"];
       const attempt = (typeof row.attempt === "string" ? JSON.parse(row.attempt) : row.attempt) as HeldLinkedPublicationRead["attempt"];
       const workItem = (typeof row.work_item === "string" ? JSON.parse(row.work_item) : row.work_item) as { subject?: unknown };
+      // One unreadable capture holds only its own publication (it stays unverified, owed work);
+      // it never blocks every other approved campaign link from reaching readers (§3).
       const artifact = vault.byId.get(record.artifactId);
-      if (!artifact || artifact.tier === "RESTRICTED_RAW") return { unreadable: `Publication capture ${record.artifactId} is missing or restricted in the vault` };
+      if (!artifact || artifact.tier === "RESTRICTED_RAW") {
+        process.stderr.write(`LINKED_PUBLICATION_CAPTURE_UNREADABLE ${record.artifactId}: missing or restricted in this vault\n`);
+        continue;
+      }
       let body: string;
       try { body = new TextDecoder("utf-8", { fatal: true }).decode(await readHeldBytes(artifact)); }
-      catch { return { unreadable: `Publication capture ${record.artifactId} failed exact vault read` }; }
+      catch {
+        process.stderr.write(`LINKED_PUBLICATION_CAPTURE_UNREADABLE ${record.artifactId}: failed exact vault read\n`);
+        continue;
+      }
       out.push({ record, attempt, workItemSubject: typeof workItem.subject === "string" ? workItem.subject : "",
         body, vaultSha256: artifact.contentHash.replace(/^sha256-/, ""),
         vaultCanonicalUrl: artifact.canonicalUrl, vaultRetrievalUrl: artifact.retrievalUrl,

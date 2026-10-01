@@ -107,7 +107,7 @@ import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { isAssignmentCycleReading } from "../lib/control-plane/expansion/assignment-budget.ts";
 import { isExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
 import { unacknowledgedResearchResume, unacknowledgedScope } from "../lib/control-plane/scheduler/launch-wake.ts";
-import { continuingDirectedHunt, originalLifetimeHuntContinuation, ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
+import { continuingDirectedHunt, originalLifetimeHuntContinuation } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
 import {
   parseIntakeRuntimeObservation,
@@ -137,7 +137,8 @@ import { startHangWatchdog, hangWatchdogDisabled, type HangWatchdog } from "./ru
 import {
   installNeonRequestDeadline,
 } from "../lib/ops/neon-request-deadline.ts";
-import { runnerControlReader } from "./pilot-runtime-control.mts";
+import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
+import { consoleInputReader, consolePublisher } from "./pilot-runtime-publish.mts";
 import { runRuntimeChildren } from "./pilot-runtime-child.mts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
@@ -213,6 +214,7 @@ function standingChildEnvironment(
   parentEnv: NodeJS.ProcessEnv = process.env,
   billingCollector = false,
 ): NodeJS.ProcessEnv {
+  if (STAGING) return billingCollector ? { ...parentEnv } : withoutBillingSecrets(parentEnv);
   return provider === "postgres"
     ? admittedRuntimeChildEnvironment({
       parentEnv: ["RESEARCH_CYCLE", "CONSOLE_PUBLISHER", "NIGHTLY_RESEARCH"].includes(capability)
@@ -405,9 +407,9 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
   }], {
     cwd: ROOT,
     env: process.env,
-
     maxBufferBytes: 64 * 1024 * 1024,
-
+    onStdout: (_id, output) => { process.stdout.write(output); },
+    onStderr: (_id, output) => { process.stderr.write(output); },
   });
   if (!run) throw new Error("RESEARCH_CYCLE_CHILD_RESULT_MISSING");
   const stdout = `${run.stdout ?? ""}${run.stderr ?? ""}`;
@@ -634,7 +636,7 @@ function deliver(body: string, headline: string): { readonly where: string; read
 /* -------------------------------------------------------- console publish --- */
 
 /**
- * **THE ADMIN CONSOLE IS PUBLISHED BY THE MACHINE, EVERY CYCLE.** (ADM-1,
+ * **THE ADMIN CONSOLE IS PUBLISHED BY THE MACHINE WHEN ITS INPUTS CHANGE.** (ADM-1,
  * 9.4.26 admin feedback, 2026-09-04.)
  *
  * The deployed admin pages read a PUBLISHED control-plane record, never this
@@ -643,8 +645,9 @@ function deliver(body: string, headline: string): { readonly where: string; read
  * person stopped: the readiness panel read
  * REQUIRES_REPUBLISH for a day while the runner cycled underneath it, doing
  * work the console could not show. The standing runner is the one process
- * that is always here, so it publishes after every cycle's digest, succeeded
- * or failed — a failed cycle is exactly the reading the console must carry.
+ * that is always here, so it checks after every cycle's digest, succeeded
+ * or failed. Changed execution facts and failures publish; another unchanged
+ * idle reading does not reload the entire assignment history.
  *
  * Each publisher runs as its own child process until it finishes.
  * A failure is PRINTED with its exit and last stderr line, never thrown and
@@ -667,6 +670,20 @@ const CONSOLE_PUBLISHERS: readonly { readonly name: string; readonly args: reado
   { name: "readiness", args: ["scripts/readiness-refresh.mts", "--target=control-plane"] },
 ];
 
+const publishChangedConsole = consolePublisher({
+  readInputs: async () => {
+    // Match the publishers' existing reader target, including the installed
+    // runtime's read-only connection. A developer URL is never a substitute.
+    const env = STAGING ? process.env : runtimeProductionReadEnvironment(process.env);
+    const controlUrl = controlPlaneUrlFromEnv(env);
+    const readerUrl = env.DATABASE_URL;
+    if (!controlUrl || !readerUrl) throw new Error("CONSOLE_INPUTS_UNCONFIGURED");
+    return consoleInputReader(controlUrl, readerUrl, RUNNING_CODE_SHA)();
+  },
+  inputReadFailed: error => console.error(`  console publish: inputs unreadable (${(error as Error)?.name ?? "error"}); publishing without reuse`),
+  publish: publishConsoleChildren,
+});
+
 async function publishConsole(): Promise<void> {
   if (canary && STAGING) {
     console.log("  console publish: staging canary is scoped to research; billing and live-site readbacks are skipped");
@@ -676,6 +693,13 @@ async function publishConsole(): Promise<void> {
     console.log("  console publish: skipped — the file provider is a local proof with no deployed console to publish to");
     return;
   }
+  if (await publishChangedConsole() === "UNCHANGED") {
+    console.log("  console publish: unchanged inputs; owner snapshot and readiness retained");
+  }
+}
+
+async function publishConsoleChildren(): Promise<boolean> {
+  let succeeded = true;
   for (const publisher of CONSOLE_PUBLISHERS) {
     const started = Date.now();
     const [run] = await runRuntimeChildren([{
@@ -693,6 +717,7 @@ async function publishConsole(): Promise<void> {
 
     });
     if (!run) {
+      succeeded = false;
       console.error(`  console publish: ${publisher.name} FAILED — child result missing`);
       continue;
     }
@@ -702,10 +727,12 @@ async function publishConsole(): Promise<void> {
       continue;
     }
     const stderrLines = (run.stderr ?? "").split("\n").map((l) => l.trimEnd()).filter((l) => l.trim() !== "");
+    succeeded = false;
     const last = stderrLines.at(-1) ?? run.errorMessage ?? "(nothing on stderr)";
     const exit = run.status === null ? `signal ${run.signal ?? "none"}` : String(run.status);
     console.error(`  console publish: ${publisher.name} FAILED exit ${exit} — ${last}`);
   }
+  return succeeded;
 }
 
 /** The same standing clock runs the production data plane after each cycle. */
@@ -1046,6 +1073,7 @@ let intentReadFailed = false;
 let pauseBeatFailed = false;
 let runtimeAdmissionsHeld = false;
 let standingRuntimeTimer: ReturnType<typeof setInterval> | null = null;
+let ownerControlTimer: ReturnType<typeof setInterval> | null = null;
 let adminCopyTimer: ReturnType<typeof setInterval> | null = null;
 let adminCopyWork: Promise<void> | null = null;
 let researchCycleActive = false;
@@ -1141,16 +1169,20 @@ function startStandingRuntimeClock(): void {
   standingRuntimeTimer = setInterval(
     () => {
       runStandingRuntimeTick("independent standing clock");
-      // Long-running research must not postpone the owner's controls until its end.
-      if (researchCycleActive && !canary && activeControlRead === null) {
-        activeControlRead = ownerSays().then(says => {
-          if (says === "START_NOW") ownerWakePending = true;
-        }).catch(error => {
-          console.error(`  active runner controls could not be applied: ${error instanceof Error ? error.message : String(error)}`);
-        }).finally(() => { activeControlRead = null; });
-      }
     },
     POLL_MS,
+  );
+  // Source admissions keep their own clock. Admin hints are read independently.
+  ownerControlTimer = setInterval(() => {
+    if (researchCycleActive && !canary && activeControlRead === null) {
+      activeControlRead = ownerSays().then(says => {
+        if (says === "START_NOW") ownerWakePending = true;
+      }).catch(error => {
+        console.error(`  active runner controls could not be applied: ${error instanceof Error ? error.message : String(error)}`);
+      }).finally(() => { activeControlRead = null; });
+    }
+    },
+    CONTROL_WAKE_POLL_MS,
   );
 }
 
@@ -1161,6 +1193,8 @@ async function holdStandingRuntimeAtQuiescence(): Promise<void> {
     clearInterval(standingRuntimeTimer);
     standingRuntimeTimer = null;
   }
+  if (ownerControlTimer !== null) { clearInterval(ownerControlTimer); ownerControlTimer = null; }
+  await activeControlRead;
   await standingRuntimeScheduler.waitForIdle();
 }
 
@@ -1325,7 +1359,7 @@ async function honorRunnerIntent(
   const id = `${intent.intentId}:honored`;
   const at = new Date().toISOString();
   try {
-    await repos.researchIntents.append(
+    const committed = await repos.researchIntents.append(
       RESEARCH_INTENT_LOG_KEY,
       id,
       {
@@ -1340,6 +1374,7 @@ async function honorRunnerIntent(
       },
       at,
     );
+    controlReader?.rememberResearchAppend(committed);
     return true;
   } catch (error) {
     if (!honorFailurePrinted.has(intent.intentId)) {
@@ -1614,7 +1649,7 @@ async function sleepUnlessRunNow(totalMs: number): Promise<void> {
   if (ownerWakePending) { ownerWakePending = false; return; }
   const until = Date.now() + totalMs;
   while (Date.now() < until) {
-    await sleep(Math.min(POLL_MS, until - Date.now()));
+    await sleep(Math.min(CONTROL_WAKE_POLL_MS, until - Date.now()));
     /* One read: a pause holds, a resume / RUN_CYCLE_NOW / DISPATCH ends the sleep early. */
     const says = await ownerSays();
     if (says === "START_NOW") return;
@@ -1646,7 +1681,7 @@ async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
     const lifetime = originalLifetimeHuntContinuation(scopes.scopes, expansion, assignments, cycleOk ? lifetimeHuntStalledCycles : Math.max(1,lifetimeHuntStalledCycles));
     if (lifetime?.reason === "ELIGIBLE_ZERO_DISPATCH") lifetimeHuntStalledCycles = Math.min(lifetimeHuntStalledCycles + 1, 2);
     else if (lifetime?.reason === "DUE_AFTER_PROGRESS") lifetimeHuntStalledCycles = 0;
-    const otherScopes = scopes.scopes.filter(scope => scope.key !== ORIGINAL_LIFETIME_HUNT.key || scope.budgetStartedAt !== ORIGINAL_LIFETIME_HUNT.budgetStartedAt);
+    const otherScopes = scopes.scopes.filter(scope => !scope.budgetStartedAt);
     const hunt = lifetime ?? (!cycleOk ? null : continuingDirectedHunt(otherScopes, expansion, assignments));
     if (hunt === null) return ordinary;
     const waitMs = lifetime?.delayMs ?? POLL_MS;
@@ -1700,7 +1735,7 @@ async function holdWhilePaused(): Promise<{ readonly ownerIntentsUnreadable: boo
   if (canary) return { ownerIntentsUnreadable: false };
   let says = await ownerSays();
   while (says === "HOLD") {
-    await sleep(POLL_MS);
+    await sleep(CONTROL_WAKE_POLL_MS);
     says = await ownerSays();
   }
   return { ownerIntentsUnreadable: says === "UNREADABLE" };
@@ -1899,6 +1934,7 @@ while (cycle < CYCLES) {
 }
 
 if (standingRuntimeTimer !== null) clearInterval(standingRuntimeTimer);
+if (ownerControlTimer !== null) clearInterval(ownerControlTimer);
 await stopAdminCopyClock();
 await activeControlRead;
 if (hangWatchdog !== null) await hangWatchdog.stop();

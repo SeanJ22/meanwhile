@@ -48,6 +48,7 @@ import type { OfficialLinkingPage } from "../civic-data/source-authority.ts";
 import { detectTenancy } from "./platform-tenancy.ts";
 import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } from "../meetings/constants.ts";
 import { parseDiligentMeetings } from "../sources/diligent/index.ts";
+import { meetingSourceCadenceHours } from "../control-plane/scheduler/obligation.ts";
 
 /**
  * How a candidate was evidenced. The first three come from the government's
@@ -299,7 +300,7 @@ export interface EndpointVerification {
  * until this is bumped, and anything keyed on it (a saved method, a wiring row)
  * re-keys cleanly.
  */
-export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@45b2cf7ddc8a";
+export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@204ec0009871";
 
 /**
  * The zone a state's bodies meet in, for the states that sit in one zone. A
@@ -421,7 +422,6 @@ export function anchorLinks(html: string, pageUrl: string): readonly AnchorLink[
 
 /** The body an official page is verified for. */
 export interface OfficialPageIdentity {
-  readonly linkingPage?: OfficialLinkingPage | null;
   readonly bodyId: string;
   /** The body's recorded name; the name forms its events may carry derive from it (`identityNameTerms`). */
   readonly name: string;
@@ -433,6 +433,7 @@ export interface OfficialPageIdentity {
   readonly pageLabel: string | null;
   /** The host the walk attested as the body's own: the recorded site, or a host its own redirect named. */
   readonly officialHost: string;
+  readonly linkingPage?: OfficialLinkingPage | null;
   readonly stateCode: string;
   readonly now: string;
 }
@@ -579,15 +580,6 @@ export type DiscoveryOutcome =
   | "BLOCKED"
   /** The site could not be read: a transport failure, a server error, or permission rules that could not be read. */
   | "COULD_NOT_READ";
-
-/** Days until a need is walked again, by outcome. A recheck is a schedule, never a verdict. */
-export const RECHECK_DAYS: Readonly<Record<DiscoveryOutcome, number>> = {
-  FOUND: 90,
-  LEAD: 14,
-  NOTHING_DETECTED: 30,
-  BLOCKED: 30,
-  COULD_NOT_READ: 7,
-};
 
 export type StepPermission = "ALLOWED" | "NO_ROBOTS" | "DISALLOWED" | "CANNOT_TELL" | "RECORDED_WALL";
 
@@ -756,7 +748,8 @@ export function decideOutcome(input: {
   return "COULD_NOT_READ";
 }
 
-/** The recheck instant for an outcome. */
-export function recheckAfter(outcome: DiscoveryOutcome, finishedAt: string): string {
-  return new Date(Date.parse(finishedAt) + RECHECK_DAYS[outcome] * 86_400_000).toISOString();
+/** Discovery keeps checking for new calendars on the same §4 source cadence. */
+export function recheckAfter(finishedAt: string, meetingStartsAt: readonly string[] = []): string {
+  const at = Date.parse(finishedAt);
+  return new Date(at + meetingSourceCadenceHours(at, meetingStartsAt) * 3_600_000).toISOString();
 }

@@ -1,119 +1,3 @@
-/**
- * **MW-028 — SENDING THE FLEET TO A GEOGRAPHY CREATES THE WORK IT IS MISSING.**
- * (2026-09-23. RULING 248, RULING 250, RULING 251, RULING 271, RULING 273,
- * RULING 282/283.)
- *
- * The owner's direction, 2026-09-23: *"This shouldn't be a code change — new
- * areas states will be added rapidly, it needs to be able to track and keep up
- * everywhere, not just a small subset."* Until now a Send only REORDERED work
- * the registry had already put on a clock. A geography with no clocks got
- * nothing, and the Send screen said so.
- *
- * ## The data it reads, and nothing else
- *
- * ```
- *   the owner's intent      AdminConfig.expansionScopes (expansion.scope.set) and
- *                           the DISPATCH research intents (fleet.deployHere). The
- *                           gateway records them; it never creates work
- *   the geography           the published Census geography lookup
- *                           (CENSUS_GEOGRAPHY, US:zcta-geography-overlaps): every
- *                           ZCTA of the scope, whole or partial
- *   who is in it            data/derived/census-unit-zips.json (the ZCTA territory
- *                           of every Census of Governments unit, nationally) and
- *                           data/derived/zip-governments.json (each unit's share of
- *                           each ZCTA), joined to the registries by the
- *                           generator's own id rule (membership.ts)
- *   what each one owes      the promoted operational-reference jurisdiction
- *                           registries (OPERATIONAL_REFERENCE,
- *                           US:covered-jurisdiction-routing:v1): every source the
- *                           registry defines for the government, custodian-
- *                           deduped (local-jurisdictions.ts), and its meetings
- *                           discovery need in the gap ledger's shape
- *                           (lib/hunt/meetings-discovery.ts, the same derivation
- *                           that writes data/derived/gap-ledger.json). A state
- *                           with no reviewed registry is read from its promoted
- *                           REGISTRATION (2026-09-25,
- *                           lib/registration/jurisdictions.ts): every government
- *                           it names owes its meetings discovery and nothing
- *                           else, and each row created from it says so
- *                           (`materializedFrom: REGISTRATION`)
- *   what already exists     this cycle's registry corpus and the durable
- *                           obligation rows (cp_obligations)
- * ```
- *
- * No state list, no county list and no body list is written here or anywhere
- * this module reaches. A geography in a state with neither a promoted registry
- * nor a registration this cycle could read has governments the Census names and
- * no requirement definitions, so it is BLOCKED by name: a Census unit is a
- * government, but a requirement no registry defines is a lead, never work
- * (RULING 251). Every state, DC and territory is registered, so in practice a
- * state is blocked only while its registration cannot be read, and says why.
- *
- * ## The state machine
- *
- * For each target (a selected scope, or a DISPATCH that names a state) and each
- * government in it, every requirement instance lands in exactly one state:
- *
- * ```
- *   CARRIED    a standing provider already has it on a clock (or a production
- *              meeting partition carries it). The Send puts it first — the
- *              "reordered" count — and records itself on the row as REORDERED
- *              (MW-001); nothing else about the row changes
- *   CREATED    the owner's dispatch materialized it: a durable obligation in
- *              the same shape `syncObligations` registers (`standing()`),
- *              marked `materializedBy: OWNER_DISPATCH` and recording the Send
- *              that created it (MW-001). The providers keep it in their corpus
- *              from the next cycle, so it is scheduled, owed and retired like
- *              any other clock
- *   DEFERRED   missing, inside the cap, and not written this cycle because the
- *              per-cycle write budget ran out (or the dispatch wall came). The
- *              next cycle writes it: the remainder is counted, never dropped
- *   CAPPED     missing, beyond this cycle's target window. Named and retried
- *              automatically as earlier missing rows are created
- *   HELD       a machine-openable meetings route whose partition ownership
- *              cannot be read: never a second meetings clock
- * ```
- *
- * A government the target holds but no dataset can give requirements to is
- * BLOCKED, with the missing dataset named: the lookup did not resolve the
- * geography, the territory files could not be read, the state has no promoted
- * registry, or the registry does not carry that Census unit.
- *
- * ## The bounds, and the authority it does not have
- *
- * - **Idempotent.** Ids are derived from (government, requirement), never from
- *   the target, so the same requirement is one row however many overlapping
- *   geographies or repeated Sends reach it. Sending the same scope twice creates
- *   nothing new. Each Send is recorded on a row once per relation, appended to
- *   what the row already records (MW-001).
- * - **Bounded.** At most `DISPATCH_WORK_WRITE_BUDGET` rows are written per cycle
- *   across every target (owner DISPATCH first, then scopes in priority order),
- *   and at most `DISPATCH_WORK_TARGET_CAP` missing rows considered for each
- *   target in one cycle. Created rows no longer consume later cycles' window.
- * - **One writer.** Only the standing runner calls `applyDispatchWork`, inside
- *   its cycle lease. The gateway actions record the owner's intent and nothing
- *   else; Admin reads the counts this module writes onto the research state.
- * - **No paid work.** Creating a row calls no model, appends no intent, and
- *   never touches the research pause or the activation gate (a code constant).
- *   A created row that needs a model is model-class work and waits exactly as
- *   every other one does: the paid lane is closed while the owner's PAUSE
- *   stands or no delivery path is open, and when it opens every Scout still
- *   passes the Fleet's rolling ceiling (AdminConfig.fleetSpendCeiling, or the
- *   FLEET_SAFETY_BOUNDS fallback), the budget of every Send recorded on the row
- *   (`AssignmentBudgetGate`, MW-021) and the scope's own budget
- *   (`ScopeBudgetGate`). Deterministic rows
- *   run on the plain-code lane as they come due. A meetings-discovery row goes
- *   to the unpaid discovery walk where suitable; paid admission reuses that
- *   walk's findings without requiring it to fail first (`paidDiscoveryHold`).
- * - **The denominator stays the authority's.** A geography orders which part
- *   of the registry's universe is materialized first (RULING 248 cl. 6); every
- *   requirement it creates was already owed, and the gap ledger keeps recording
- *   the rest.
- *
- * PURE apart from `applyDispatchWork`, which writes only through the
- * repositories it is handed. No clock, no environment, no file.
- */
-
 import { OWNER_DISPATCH, withAssignment, type FreshnessObligation, type ObligationAssignment } from "../scheduler/obligation.ts";
 import type { WorkQuestion } from "../work-question.ts";
 import { standing } from "../scheduler/durable.ts";
@@ -138,60 +22,49 @@ import {
   type TerritoryIndex,
 } from "./membership.ts";
 import { READING_LIST_CAP, isVersionedCycleReading } from "./reading.ts";
-import { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET } from "./dispatch-work-bounds.ts";
 import { manualProducerInvocationMatrix } from "../../civic-data/manual-producer-invocation.ts";
 import { createWorkItem } from "../work-item.ts";
 import { registerWorkItem } from "../repository/coordinator.ts";
-import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
 import type { ResolvedScope } from "./membership.ts";
 
-/* ------------------------------------------------------------------ bounds */
-
+/** A Send creates every missing requirement; shared governments keep one row. */
 export const DISPATCH_WORK_FORMAT_VERSION = 1;
 
 /** Persist an owed source capability without inventing an executable route. */
 export async function applyManualSourceGaps(
   repos: ControlPlaneRepositories,
   scopes: readonly ResolvedScope[],
-  input: { readonly now: string; readonly deadlineReached?: () => boolean },
+  input: { readonly now: string },
 ): Promise<{ readonly created: number; readonly carried: number; readonly deferred: number }> {
   const applicable = scopes.filter(scope => scope.kind === "RESOLVED" && scope.decision.sourceWorkVersion === 1);
-  const exactOriginal = applicable.find(scope => scope.decision.key === ORIGINAL_LIFETIME_HUNT.key &&
-    scope.decision.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
-    scope.decision.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
-    scope.decision.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd);
-  let created = 0, carried = 0, deferred = 0;
+  let created = 0, carried = 0;
+  const deferred = 0;
+  if (applicable.length === 0) return { created, carried, deferred };
+  const heldIds = new Set((await repos.workItems.list()).map(row => row.id));
   for (const row of manualProducerInvocationMatrix(applicable, input.now)) {
     if (row.mode !== "REVIEWED_INPUT" && row.mode !== "SCOPED_ADAPTER_OWED") continue;
     const receipts = [...row.instructionIds];
-    // These two gaps are owed by the original AZ Send, but the existing
-    // commands have no scoped source path. County-only adapters are not linked
-    // from state membership because that would imply unproved applicability.
-    if (row.mode === "SCOPED_ADAPTER_OWED" && exactOriginal?.kind === "RESOLVED" &&
-      exactOriginal.states.includes("AZ") &&
-      (row.id === "jurisdiction-operational-reference" || row.id === "voting-sites")) {
-      receipts.push(exactOriginal.decision.receiptId);
+    // An unscoped adapter gap is owed by every resolved hunt, irrespective of ZIP.
+    if (row.mode === "SCOPED_ADAPTER_OWED") {
+      receipts.push(...applicable.map(scope => scope.decision.receiptId));
     }
     for (const receipt of new Set(receipts)) {
-      if (input.deadlineReached?.()) { deferred += 1; continue; }
       const scope = applicable.find(candidate => candidate.decision.receiptId === receipt);
       if (!scope) continue;
       const work = createWorkItem({ project: "freshness", subject: `manual-source:${scope.decision.key}`,
         obligation: `source capability ${row.id} for instruction ${receipt}`,
         why: row.reason, priority: "P1", now: input.now });
-      if (await repos.workItems.read(work.id)) { carried += 1; continue; }
+      if (heldIds.has(work.id)) { carried += 1; continue; }
       await registerWorkItem(repos, { ...work, manualSourceGap: {
         contractId: row.id, mode: row.mode, reason: row.reason, instructionReceipt: receipt,
         assignmentKey: scope.decision.key,
       } }, input.now);
+      heldIds.add(work.id);
       created += 1;
     }
   }
   return { created, carried, deferred };
 }
-
-/* The two bounds live in a pure module the gateway, the preview and the Send screen also quote. */
-export { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET };
 
 /** Where the datasets a blocked reason names live, in the words a receipt prints. */
 export const DATASET = {
@@ -550,7 +423,7 @@ function dispatchUnits(target: DispatchTarget, world: DispatchWorkWorld): Target
 
 /* -------------------------------------------------------------------- plan */
 
-export type InstanceState = "CARRIED" | "CREATED" | "MISSING" | "CAPPED" | "HELD";
+export type InstanceState = "CARRIED" | "CREATED" | "MISSING" | "HELD";
 
 export interface PlannedInstance {
   readonly instance: RequirementInstance;
@@ -585,10 +458,8 @@ export interface DispatchWorkPlan {
   readonly targets: readonly TargetPlan[];
   /** Every MISSING instance, in write order, each once. */
   readonly writes: readonly PlannedWrite[];
-  /** Every REORDERED record still to write, in target order; written after the creations, inside the same write budget. */
+
   readonly marks: readonly PlannedMark[];
-  readonly writeBudget: number;
-  readonly cap: number;
   readonly corpusSize: number;
 }
 
@@ -613,11 +484,7 @@ export function assignmentEntry(target: DispatchWorkTarget, relation: Obligation
 export function planDispatchWork(input: {
   readonly targets: readonly DispatchWorkTarget[];
   readonly world: DispatchWorkWorld;
-  readonly writeBudget?: number;
-  readonly cap?: number;
 }): DispatchWorkPlan {
-  const writeBudget = input.writeBudget ?? DISPATCH_WORK_WRITE_BUDGET;
-  const cap = input.cap ?? DISPATCH_WORK_TARGET_CAP;
   const world = input.world;
   const corpusIds = new Set(world.corpus.map((o) => o.id));
   const needsByState = new Map<string, Map<string, MeetingsDiscoveryNeed>>();
@@ -650,7 +517,6 @@ export function planDispatchWork(input: {
     /* MW-001: does the row already record this Send, in any relation? */
     const recorded = (row: DurableRowFacts | undefined): boolean => (row?.assignments ?? []).some((a) => a.assignmentKey === target.key && a.ref === target.ref);
 
-    let window = 0;
     const planned: PlannedInstance[] = [];
     for (const instance of instances) {
       const id = instance.obligation.id;
@@ -675,11 +541,6 @@ export function planDispatchWork(input: {
         if (row !== undefined && !recorded(row)) marks.push({ obligationId: id, target });
         continue;
       }
-      if (window >= cap) {
-        planned.push({ instance, state: "CAPPED", existsUnmarked: row !== undefined });
-        continue;
-      }
-      window += 1;
       const entry: PlannedInstance = { instance, state: "MISSING", existsUnmarked: row !== undefined };
       planned.push(entry);
       if (!queued.has(id)) {
@@ -706,7 +567,7 @@ export function planDispatchWork(input: {
           : world.corpus.filter((o) => unitMatchesTarget(target.target, o) && world.durable.get(o.id)?.materializedBy !== OWNER_DISPATCH).length;
     targets.push({ target, units, instances: planned, reordered });
   }
-  return { targets, writes, marks, writeBudget, cap, corpusSize: world.corpus.length };
+  return { targets, writes, marks, corpusSize: world.corpus.length };
 }
 
 /* ------------------------------------------------------------------- apply */
@@ -716,32 +577,21 @@ export interface DispatchWorkApplied {
   readonly failed: readonly { readonly obligationId: string; readonly why: string }[];
   /** Planned writes not reached this cycle: the budget or the wall ran out first. */
   readonly deferred: readonly string[];
-  readonly stoppedBy: "DONE" | "WRITE_BUDGET" | "DEADLINE";
+  readonly stoppedBy: "DONE";
   /** MW-001: REORDERED records written this cycle. */
   readonly marked?: readonly { readonly obligationId: string; readonly assignmentKey: string }[];
   readonly markFailed?: readonly { readonly obligationId: string; readonly assignmentKey: string; readonly why: string }[];
-  /** REORDERED records not reached this cycle (the same budget and wall); the next cycle plans them again. */
+
   readonly marksDeferred?: readonly { readonly obligationId: string; readonly assignmentKey: string }[];
   /** Every Send recorded on a row this cycle — created or reordered — for the runner's assignment budgets. */
   readonly recorded?: readonly { readonly obligationId: string; readonly subjectId: string; readonly entry: ObligationAssignment }[];
 }
 
-/**
- * **APPLY.** Write the plan's missing rows in order, up to the write budget,
- * stopping early when `deadlineReached` says the cycle's wall is near. A row
- * nobody holds is registered exactly as `syncObligations` registers a new one
- * (`standing()`), marked OWNER_DISPATCH and recording the Send that created it
- * (MW-001). A row that exists unmarked — retired, or live outside the corpus —
- * is marked and made active again, keeping its runtime history (occurrences,
- * last work, argued absence, earlier Sends). Then, inside what is left of the
- * same budget, every row the Sends reached on an existing clock records them
- * as REORDERED — appended, never overwriting. One row's failure is named and
- * never stops the others. The runner is the only caller.
- */
+
 export async function applyDispatchWork(
   repos: ControlPlaneRepositories,
   plan: DispatchWorkPlan,
-  input: { readonly now: string; readonly deadlineReached?: () => boolean },
+  input: { readonly now: string },
 ): Promise<DispatchWorkApplied> {
   const written: string[] = [];
   const failed: { obligationId: string; why: string }[] = [];
@@ -750,24 +600,9 @@ export async function applyDispatchWork(
   const markFailed: { obligationId: string; assignmentKey: string; why: string }[] = [];
   const marksDeferred: { obligationId: string; assignmentKey: string }[] = [];
   const recorded: { obligationId: string; subjectId: string; entry: ObligationAssignment }[] = [];
-  let stoppedBy: DispatchWorkApplied["stoppedBy"] = "DONE";
-  const spent = (): number => written.length + failed.length + marked.length + markFailed.length;
+  const stoppedBy = "DONE" as const;
   for (const entry of plan.writes) {
     const id = entry.instance.obligation.id;
-    if (stoppedBy !== "DONE") {
-      deferred.push(id);
-      continue;
-    }
-    if (spent() >= plan.writeBudget) {
-      stoppedBy = "WRITE_BUDGET";
-      deferred.push(id);
-      continue;
-    }
-    if (input.deadlineReached?.() === true) {
-      stoppedBy = "DEADLINE";
-      deferred.push(id);
-      continue;
-    }
     const created = assignmentEntry(entry.target, "CREATED", input.now);
     try {
       /* The Send is recorded only where this write is what made the row this Send's. */
@@ -803,31 +638,20 @@ export async function applyDispatchWork(
       failed.push({ obligationId: id, why: error instanceof Error ? error.message : String(error) });
     }
   }
+  // Existing Sends share one held read; CAS still arbitrates every actual change.
+  // Keep each successful revision so overlapping hunts update the same row in order.
+  const heldMarks = new Map((plan.marks.length ? await repos.obligations.list() : []).map(row => [row.id, row]));
   for (const mark of plan.marks) {
     const key = { obligationId: mark.obligationId, assignmentKey: mark.target.key };
-    if (stoppedBy !== "DONE") {
-      marksDeferred.push(key);
-      continue;
-    }
-    if (spent() >= plan.writeBudget) {
-      stoppedBy = "WRITE_BUDGET";
-      marksDeferred.push(key);
-      continue;
-    }
-    if (input.deadlineReached?.() === true) {
-      stoppedBy = "DEADLINE";
-      marksDeferred.push(key);
-      continue;
-    }
     const reordered = assignmentEntry(mark.target, "REORDERED", input.now);
     try {
-      const held = await repos.obligations.mustRead(mark.obligationId);
+      const held = heldMarks.get(mark.obligationId) ?? await repos.obligations.mustRead(mark.obligationId);
       const next = withAssignment(held.value.assignments, reordered);
       const autonomousPlan = inheritPublicationConnection(held.value.autonomousPlan, plan.targets.find(target => target.target.key === mark.target.key)?.instances
         .find(instance => instance.instance.obligation.id === mark.obligationId)?.instance.obligation.autonomousPlan);
       if (next !== held.value.assignments || autonomousPlan !== held.value.autonomousPlan) {
-        await repos.obligations.compareAndSet(mark.obligationId, held.revision, { ...held.value, assignments: next,
-          ...(autonomousPlan ? { autonomousPlan } : {}), updatedAt: input.now }, input.now);
+        heldMarks.set(mark.obligationId, await repos.obligations.compareAndSet(mark.obligationId, held.revision, { ...held.value, assignments: next,
+          ...(autonomousPlan ? { autonomousPlan } : {}), updatedAt: input.now }, input.now));
       }
       marked.push(key);
       recorded.push({ obligationId: mark.obligationId, subjectId: held.value.subjectId, entry: reordered });
@@ -848,10 +672,9 @@ export interface DispatchWorkRequirementCounts {
   /** Materialized by the owner's dispatch, cumulative, this cycle's included. */
   readonly created: number;
   readonly createdThisCycle: number;
-  /** Missing, inside the cap, not written this cycle. The next cycle writes them. */
+
   readonly deferred: number;
-  /** Missing, beyond this cycle's per-target window; the next cycle retries it. */
-  readonly capped: number;
+
   /** Written this cycle and refused by the store; retried next cycle. */
   readonly failed: number;
   /** Machine-openable meetings routes held because the partition wiring could not be read. */
@@ -895,7 +718,6 @@ export interface DispatchWorkTargetReading {
    * written before Sends were kept on the row.
    */
   readonly assignment?: { readonly recordedThisCycle: number; readonly marksDeferred: number; readonly marksFailed: number };
-  readonly cap: number;
   /** Plain sentences: why created work waits, which budgets bind, what is not built. */
   readonly says: readonly string[];
 }
@@ -906,7 +728,6 @@ export interface DispatchWorkReading {
   /** PLAN_ONLY on a cycle that may not write (dry, canary, filtered, blackout, runner paused), with why. */
   readonly writes: "APPLIED" | "PLAN_ONLY";
   readonly planOnlyWhy: string | null;
-  readonly writeBudget: number;
   readonly written: number;
   readonly deferred: number;
   readonly failed: readonly { readonly obligationId: string; readonly why: string }[];
@@ -945,7 +766,6 @@ export function dispatchWorkReading(
     let created = 0;
     let createdThisCycle = 0;
     let deferred = 0;
-    let capped = 0;
     let failedHere = 0;
     let held = 0;
     let createdDeterministic = 0;
@@ -964,7 +784,6 @@ export function dispatchWorkReading(
         if (p.instance.obligation.materializedFrom === "REGISTRATION") createdFromRegistration += 1;
       } else if (p.state === "CARRIED") carried += 1;
       else if (p.state === "HELD") held += 1;
-      else if (p.state === "CAPPED") capped += 1;
       else if (failed.has(id)) failedHere += 1;
       else deferred += 1;
     }
@@ -1008,11 +827,9 @@ export function dispatchWorkReading(
     if (createdDeterministic > 0) says.push(`${createdDeterministic} run on the plain-code lane as they come due, at no model cost.`);
     if (deferred > 0) {
       says.push(
-        `${deferred} more are owed and not yet written: at most ${plan.writeBudget} are written per cycle across every geography` +
-          (applied?.stoppedBy === "DEADLINE" ? ", and this cycle's wall came first" : "") + "; the next cycle continues.",
+        `${deferred} more are owed and not yet written; the next cycle continues.`,
       );
     }
-    if (capped > 0) says.push(`${capped} are beyond this cycle's window of ${plan.cap} missing requirements for this geography; later cycles continue automatically.`);
     if (held > 0) {
       const reasons = [...new Set(t.instances.filter(p => p.state === "HELD").map(p => p.instance.heldReason).filter((reason): reason is string => Boolean(reason)))];
       says.push(`${held} machine-openable meetings route(s) are held: ${reasons.length ? reasons.join("; ") : `${DATASET.wiring} could not be read`}; a second meetings clock is never risked.`);
@@ -1037,7 +854,7 @@ export function dispatchWorkReading(
     if (assignment.marksDeferred + assignment.marksFailed > 0) {
       says.push(
         `${assignment.marksDeferred + assignment.marksFailed} obligation(s) this Send reached on an existing clock do not record it yet; ` +
-          "they are recorded inside the same per-cycle write budget as the next cycles run.",
+          "repository failures are retried by the next cycle.",
       );
     }
     return {
@@ -1060,7 +877,6 @@ export function dispatchWorkReading(
         created,
         createdThisCycle,
         deferred,
-        capped,
         failed: failedHere,
         held,
         createdDeterministic,
@@ -1070,7 +886,6 @@ export function dispatchWorkReading(
       },
       reordered: { obligations: t.reordered, of: plan.corpusSize },
       assignment,
-      cap: plan.cap,
       says,
     };
   });
@@ -1079,7 +894,6 @@ export function dispatchWorkReading(
     at: context.at,
     writes: context.writes,
     planOnlyWhy: context.planOnlyWhy,
-    writeBudget: plan.writeBudget,
     written: applied?.written.length ?? 0,
     deferred: applied?.deferred.length ?? (context.writes === "PLAN_ONLY" ? plan.writes.length : 0),
     failed: applied?.failed ?? [],
@@ -1099,7 +913,7 @@ export function dispatchWorkSentence(t: DispatchWorkTargetReading): string {
       : `${t.units.blocked} of ${t.units.placed + t.units.blocked} governments blocked`;
   return (
     `${t.label}: created ${r.created} of ${r.defined} requirement(s) the registry defines here (${r.createdThisCycle} this cycle` +
-    `${r.deferred > 0 ? `, ${r.deferred} deferred to the next cycles` : ""}${r.capped > 0 ? `, ${r.capped} beyond this cycle's window of ${t.cap}` : ""}); ` +
+    `${r.deferred > 0 ? `, ${r.deferred} deferred to the next cycles` : ""}); ` +
     `reordered ${t.reordered.obligations} of ${t.reordered.of} standing obligations; ${blocked} by missing data.`
   );
 }
@@ -1118,7 +932,6 @@ export interface OwnerDispatchWork {
   /** Already on a standing clock: reordered, not created. */
   readonly carried: number;
   readonly deferred: number;
-  readonly capped: number;
   /** Governments no dataset can give requirements to; null when that count cannot be taken. */
   readonly blockedUnits: number | null;
   /** Each blocked reason: its code, and the plain sentence naming the missing dataset. */
@@ -1137,7 +950,6 @@ export function ownerDispatchWorkOf(reading: DispatchWorkReading | null, intentI
     createdThisCycle: t.requirements.createdThisCycle,
     carried: t.requirements.carried,
     deferred: t.requirements.deferred,
-    capped: t.requirements.capped,
     blockedUnits: t.units.blocked,
     blocked: t.blocked.map((b) => ({ code: b.code, says: `${b.why} (${b.dataset})` })),
   };

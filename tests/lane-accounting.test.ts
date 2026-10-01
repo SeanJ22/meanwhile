@@ -96,7 +96,7 @@ async function heldEverywhereCycle() {
               ? { admit: false, code: "FREE_WALK_FIRST", why: "fixture free walk" }
               : { admit: true },
         modelExecutor: { lane: "BOUNDED_MODEL_WORKER", run: async () => { throw new Error("no Scout may start"); } },
-        maxConcurrentScouts: 2,
+        workerCapacity: 2,
         scoutLeaseTtlMs: 420_000,
       },
     }),

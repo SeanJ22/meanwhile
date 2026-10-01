@@ -70,7 +70,7 @@ test("one budget for all is split evenly and can never add up to more than the t
 });
 
 const NOW = "2026-09-30T18:00:00.000Z";
-const deps = (repos: ReturnType<typeof createMemoryRepositories>): GatewayDeps => ({ repos, now: () => NOW, currentStateVersion: null, codeSha: null, recordReview: null });
+const deps = (repos: ReturnType<typeof createMemoryRepositories>): GatewayDeps => ({ repos, now: () => NOW, currentStateVersion: null, codeSha: null });
 const ask = (type: string, key: string, input: Record<string, unknown>): ActionRequest => ({ type, subject: "", input, stateVersion: null, idempotencyKey: key, caller: "OWNER_SESSION", actorRef: "adm_test" });
 
 test("send many writes every hunt in ONE config write, with its own budget and group", async () => {

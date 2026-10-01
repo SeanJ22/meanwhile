@@ -130,7 +130,7 @@ test("BAL-34: every surface deciding these sections asks the ONE scope predicate
 
   assert.match(
     PREDICATE,
-    /export function memberDirectoryReaches\(holderId: string\): boolean/,
+    /export function memberDirectoryReaches\(holderId: string, section: "committees" \| "offices" = "committees"\): boolean/,
     "the shared predicate must exist as one exported function",
   );
   /*
@@ -173,7 +173,7 @@ test("BAL-34: every surface deciding these sections asks the ONE scope predicate
     const before = BALLOT_PAGE.slice(Math.max(0, at - 400), at);
     assert.match(
       before,
-      /memberDirectoryReaches\(recordHolder\.id\)/,
+      slot === "MemberOfficesContent" ? /memberDirectoryReaches\(recordHolder\.id, "offices"\)/ : /memberDirectoryReaches\(recordHolder\.id\)/,
       `${slot}'s slot must be null where the source does not reach the person, or the ` +
         "battlecard's `content ?? emptyLine` fallback tests a slot that renders nothing and " +
         "the reader gets an empty box instead of the named gap",

@@ -5,6 +5,8 @@ import type { RoutineSourceTask } from "./runner.ts";
 export const AUTOMATIC_REFRESH_CONTRACT_IDS = [
   "voting-sites", "az-sos-campaign-finance", "nh-sos-campaign-finance",
   "nj-elec-campaign-finance", "az-pima-local-finance",
+  // State legislators' offices from Open States, joined to each official roster (lib/officials/member-offices-publication.ts).
+  "member-offices",
 ] as const satisfies readonly ManualProductionContractId[];
 
 export const AUTOMATIC_REFRESH_TASKS: readonly RoutineSourceTask[] = AUTOMATIC_REFRESH_CONTRACT_IDS.map(id => {

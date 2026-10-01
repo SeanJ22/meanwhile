@@ -382,6 +382,8 @@ export interface AggregateRepository<T> {
   ): Promise<Persisted<T>>;
   /** Every aggregate of this kind, ordered by id so reports are diffable. */
   list(): Promise<readonly Persisted<T>[]>;
+  /** Every row in the same id order, with only projected value fields crossing the wire. */
+  listNarrowed(projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
   /**
    * The aggregates whose JSON value at `path` (a scalar `#>>` text extraction,
    * the same reading as `AppendOnlyRepository.readWhere`) equals `value`.

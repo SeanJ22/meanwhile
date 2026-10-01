@@ -1,5 +1,5 @@
 import type { CandidateState, CandidateVersionRecord, PromotedProjection, RoutineCandidate, ValidationReceipt } from "./types.ts";
-import { PostgresRoutineDataStore, PromotionBaseChangedError, type RoutineDataStore } from "./store.ts";
+import { PostgresRoutineDataStore, PromotionBaseChangedError, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
 import { validateRoutineCandidate } from "./validate.ts";
 import { canonicalCivicDataJson, candidateChangeSet } from "./changes.ts";
 import { promotionProofIssue } from "./read-model.ts";
@@ -34,34 +34,6 @@ function trustedLkgPredecessorVersionId(candidate: RoutineCandidate): string | n
 
 function sourceProjectionObservedAt(store: RoutineDataStore, requested: string): string {
   return store instanceof PostgresRoutineDataStore ? new Date().toISOString() : requested;
-}
-
-type ObserveProductionNow = () => string;
-
-/**
- * A production Reader readback happens after the pointer move, so its durable
- * event must use a fresh local observation rather than an adapter/import-plan
- * timestamp. Clamp a backwards wall-clock step to the promotion instant: an
- * observation can be simultaneous with promotion, but never precede it in the
- * candidate event history. Memory retains its caller-controlled test clock.
- *
- * `observeProductionNow` is an explicit deterministic seam for this pure
- * clock rule. The standing mutation path never accepts a clock from callers.
- */
-export function promotionReaderReadbackObservedAt(
-  store: RoutineDataStore,
-  requested: string,
-  promotedAt: string,
-  observeProductionNow: ObserveProductionNow = () => new Date().toISOString(),
-): string {
-  if (!(store instanceof PostgresRoutineDataStore)) return requested;
-  const observedAt = observeProductionNow();
-  const observedMs = Date.parse(observedAt);
-  const promotedMs = Date.parse(promotedAt);
-  if (!Number.isFinite(observedMs) || !Number.isFinite(promotedMs)) {
-    throw new Error("PRODUCTION_READER_READBACK_TIME_INVALID");
-  }
-  return observedMs >= promotedMs ? new Date(observedMs).toISOString() : promotedAt;
 }
 
 /**
@@ -111,12 +83,7 @@ async function appendTypedReaderProjectionReadback(
 ): Promise<PromotionOutcome> {
   // A confirmation leaves the pointed version, and its readback, as they were.
   if (outcome.promoted === null || outcome.confirmed || contract.readerProjection === null) return outcome;
-  const observedAt = promotionReaderReadbackObservedAt(
-    store,
-    requestedAt,
-    outcome.promoted.promotedAt,
-  );
-  const receipt = await recordRoutineReaderProjectionReadback(store, contract, outcome.promoted, observedAt);
+  const receipt = await recordRoutineReaderProjectionReadback(store, contract, outcome.promoted, requestedAt);
   return { ...outcome, readerReadback: receipt };
 }
 
@@ -487,10 +454,6 @@ export async function processRoutineCandidate(
   if (Object.prototype.hasOwnProperty.call(inputCandidate, "bootstrapImport") && inputCandidate.bootstrapImport !== undefined) {
     throw new Error("TRUSTED_LKG_ADMISSION_RETIRED");
   }
-  // Production validation and durable events use a locally observed instant,
-  // never an adapter-supplied clock. A future-dated adapter envelope is then
-  // refused by TEMPORAL_VALIDITY before it can replace a serviceable LKG.
-  const transitionAt = productionStore ? new Date().toISOString() : now;
   const current = await store.readPromotion(inputCandidate.recordClass, inputCandidate.scope);
   const observedBaseVersionId = current?.versionId ?? null;
   const preloadedBaseChanged = expectedBaseVersionId !== undefined && expectedBaseVersionId !== observedBaseVersionId;
@@ -545,6 +508,9 @@ export async function processRoutineCandidate(
   const validationLkg = preloadedBaseChanged
     ? exactDeclaredBase
     : continuingExactLkg || lkgProofIssue === null ? lkg : null;
+  // A prior publication/readback in this pass may be later than its start.
+  // Production observes this write's time and never trusts an adapter clock.
+  const transitionAt = await routineEventObservedAt(store, candidate.recordClass, candidate.scope, now);
   const validated = validateRoutineCandidate(
     candidate,
     validationLkg,

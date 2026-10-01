@@ -1,15 +1,24 @@
-import { boundedAuditTransport } from "../lib/control-plane/workers/model-audit.ts";
-import { createHash } from "node:crypto";
-import { runHeldWorkerFleetCycle } from "../lib/control-plane/workers/standing.ts";
+import { attemptBatchJournal, backgroundBatchTransport, batchEnabledFor, batchRequestHash } from "../lib/control-plane/model-batch.ts";
+import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
+import { createHash, randomUUID } from "node:crypto";
+import { runLeaseWorkerProcesses, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
+import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
+import { scoutProcessExecutor } from "../lib/control-plane/workers/scout-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
+import { planHeldWorkerFleet } from "../lib/control-plane/workers/standing.ts";
+import { costEntryWithModel } from "../lib/control-plane/cost.ts";
 import { persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
 import { browseWithPlaywright } from "./scout-browse.mts";
-import { autonomousCycleAllowed, exactInstructionAutonomousWorkIds, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
+import { autonomousCycleAllowed, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
+import { MODELS } from "../lib/models.ts";
+import { researchWorkerCapacity } from "../lib/control-plane/scheduler/research-policy.ts";
 import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { isRetiredRoutineMeetingAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
 import { planRepairBrief } from "../lib/control-plane/workers/plan-repair.ts";
 import { observeCyclePhases } from "../lib/control-plane/scheduler/cycle-phases.ts";
+import { cycleStateWriter } from "../lib/control-plane/scheduler/cycle-state-writer.ts";
+import { selectedCycleRepositories } from "../lib/control-plane/scheduler/cycle-selection.ts";
 import { readRelaunchTriggerVerification } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { runAdminEvidenceMirror } from "../lib/control-plane/evidence/admin-bridge-runner.ts";
@@ -106,6 +115,7 @@ import {
   digestLines,
   placeFirstRows,
   runCycle,
+  runPool,
 } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import {
   describeDispatchMatch,
@@ -126,20 +136,18 @@ import {
   preloadCandidateEnrichmentAuthorities,
 } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import {
-  CAMPAIGN_SITE_BUDGET_MS,
-  CAMPAIGN_SITE_STOP_GRACE_MS,
   campaignSiteCycleLine,
   campaignSiteSubjectsFromHoldings,
   heldMarginaliaFromManifest,
   runCampaignSiteCycle,
   type CampaignSiteCycleReport,
-  withinWallTime,
 } from "../lib/control-plane/promotion/campaign-site-cycle.ts";
-import { CANDIDATE_PUBLICATION_BUDGET_MS, runCandidatePublicationCycle,
+import { runCandidatePublicationCycle,
   type CandidatePublicationCycleReport } from "../lib/control-plane/promotion/campaign-publication-cycle.ts";
 import { indexVault, readHeldBytes } from "../lib/control-plane/evidence/read-only-vault.ts";
 import {
   MEETINGS_DISCOVERY_NAMESPACE,
+  meetingsDiscoveryObligationId,
   dispatchedAddressSource,
   materializedDiscoveryNeeds,
   meetingsDiscoveryProvider,
@@ -192,7 +200,7 @@ import { knownRecipes } from "../lib/hunt/meetings-recipes.ts";
 import { ROUTE_HINTS } from "../lib/hunt/meetings-route-hints.ts";
 import { directoryMeetingHints } from "../lib/civic-data/worker-body-directory.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
-import { DEFAULT_SEARCH_BUDGET, durableSearchBudget, makeDiscoverySearch } from "../lib/control-plane/discovery/search-runtime.ts";
+import { durableSearchBudget, makeDiscoverySearch } from "../lib/control-plane/discovery/search-runtime.ts";
 import { huntSearchScope } from "../lib/control-plane/discovery/hunt-search-scope.ts";
 import { fingerprint } from "../lib/control-plane/ids.ts";
 import {
@@ -207,7 +215,6 @@ import {
   openOccurrence,
   resumeOpenOccurrence,
   persistDebts,
-  recordNextDue,
   recordArguedAbsence,
   retireObligationsByPrefix,
   syncObligations,
@@ -216,7 +223,6 @@ import {
   FRESHNESS_PROJECT,
 } from "../lib/control-plane/scheduler/durable.ts";
 import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
-import { routeExecutor } from "../lib/control-plane/scheduler/route-executor.ts";
 import { cycleVault, VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import {
   promotionLines,
@@ -256,7 +262,7 @@ import {
   type ResearchState,
   type RunningScout,
 } from "../lib/control-plane/scheduler/research-policy.ts";
-import { candidateStoreCounts, proposeScoutCandidates, readMethodCandidateStore, METHOD_STORE, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
+import { candidateStoreCounts, proposeScoutCandidates, readMethodCandidateStore, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
 import { emptyFieldManual, readFieldManual, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
 import {
   compoundingPair,
@@ -269,9 +275,8 @@ import {
   writeFieldManualDiscoveries,
 } from "../lib/control-plane/scheduler/field-manual-scout.ts";
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
-import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
-import { readMethodStore } from "../lib/method/candidate.ts";
+import { readMethodKnowledge } from "../lib/method/manual-bridge.ts";
 import { readConclusionStore } from "../lib/method/conclusions.ts";
 import {
   NO_PIPELINE_RECORDED,
@@ -310,7 +315,6 @@ import {
   FleetSafetyController,
   FleetPreSendRefusal,
   resolveRollingCeiling,
-  scheduledBlackoutAt,
   scoutEscalationReservation,
   modelRequestWorstCaseUsd,
   modelResponseUsd,
@@ -360,27 +364,13 @@ import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/co
 import {
   isControlPlaneRequestTimeout,
   observeControlPlaneTimeouts,
-  withStoreBudget,
 } from "../lib/control-plane/repository/request-bounds.ts";
 import {
-  CYCLE_STALL_LEAD_MS,
   PendingOperations,
-  startCycleStallDiagnostic,
   trackStoreCalls,
   type CycleStallDiagnostic,
 } from "../lib/control-plane/scheduler/cycle-stall.ts";
-import {
-  CYCLE_FINALIZATION_BUDGETS_MS,
-  DIGEST_AND_RECORD_RESERVE_MS,
-  LOCAL_RECORD_RESERVE_MS,
-  CycleStepTimeout,
-  cycleClock,
-  lateWorkDeadlineMs,
-  recordFailedCycle,
-  runBoundedStep,
-  stepBudgetMs,
-  type CycleClock,
-} from "../lib/control-plane/scheduler/cycle-finalization.ts";
+import { recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
 import { CYCLE_DRAIN_GRACE_MS, chosenExitCode, exitAfterDrainGrace } from "../lib/control-plane/scheduler/cycle-exit.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
@@ -410,20 +400,13 @@ const nowIso = (): string => new Date().toISOString();
  * of the last phase, the labelled await and the store calls in flight, which
  * the stall diagnostic reads from its own thread (cycle-stall.ts).
  */
-const PROCESS_STARTED_MS = Math.round(performance.timeOrigin);
 const RUNNING_CODE_SHA = headSha(ROOT);
 /* The provenance is of the tree this run STARTED from (run-provenance.ts): read here, not by git calls in finalization. */
 const RUN_PROVENANCE = readRunProvenance(RUNNING_CODE_SHA, ROOT);
 const CYCLE_ID = `freshness-cycle:${HOST}:${NOW}`;
 const RUN_RECORD_PATH = nextRunRecordPath(RUNS_DIR, today());
 const pending = new PendingOperations();
-/** Set once the argv is read; before that the wall is the Fleet ceiling. */
-let CLOCK: CycleClock = cycleClock({
-  processStartedMs: PROCESS_STARTED_MS,
-  wallMs: FLEET_SAFETY_BOUNDS.maxWallMsPerCycle,
-  stallLeadMs: CYCLE_STALL_LEAD_MS,
-});
-let stallDiagnostic: CycleStallDiagnostic | null = null;
+const stallDiagnostic: CycleStallDiagnostic | null = null;
 /** True once the cycle wrote its own record; a later failure must not overwrite it. */
 let finalRecordWritten = false;
 
@@ -470,12 +453,6 @@ async function recordCrash(error: unknown): Promise<void> {
     testedSha: RUNNING_CODE_SHA,
     host: HOST,
     pending: pendingAtCrash,
-    digestBudgetMs: stepBudgetMs({
-      nowMs: Date.now(),
-      budgetMs: CYCLE_FINALIZATION_BUDGETS_MS.crashDigest,
-      deadlineMs: CLOCK.recordsDeadlineMs,
-      reservedAfterMs: LOCAL_RECORD_RESERVE_MS,
-    }),
     writeLocalRecord: writeCycleRecord,
     log: (line) => console.error(line),
   }));
@@ -536,55 +513,11 @@ const ONLY = onlyArg ? onlyArg.slice("--only=".length) : null;
 /* Exact obligation ids, comma-separated. A DIAGNOSTIC filter like --only, for a proof run. */
 const idsArg = argv.find((a) => a.startsWith("--ids="));
 const IDS = idsArg ? new Set(idsArg.slice("--ids=".length).split(",").map((s) => s.trim()).filter(Boolean)) : null;
+const filteredCycle = canary || IDS !== null || ONLY !== null;
 if (canary && (IDS === null || IDS.size !== 1)) {
   console.error("freshness:shadow · --canary requires exactly one registered obligation via --ids=<id>.");
   process.exit(1);
 }
-/*
- * The hard wall budget, in minutes from PROCESS START. The runner kills a child
- * at fifteen minutes; dispatch admission stops two minutes earlier,
- * so it finishes cleanly — record written, occurrences closable — instead of
- * dying mid-write. Measured from process start because that is what the
- * supervisor's ceiling is measured from.
- */
-const budgetArg = argv.find((a) => a.startsWith("--budget-min="));
-const BUDGET_MIN = boundedNumber(
-  budgetArg?.slice("--budget-min=".length),
-  FLEET_SAFETY_BOUNDS.maxWallMsPerCycle / 60_000,
-  FLEET_SAFETY_BOUNDS.maxWallMsPerCycle / 60_000,
-);
-const CYCLE_STARTED_MS = Date.now();
-/** Leave two minutes inside the 15-minute hard process ceiling to close records and publish state. */
-const FINALIZATION_RESERVE_MS = 2 * 60_000;
-const DISPATCH_DEADLINE_MS = CYCLE_STARTED_MS + Math.max(0, BUDGET_MIN * 60_000 - FINALIZATION_RESERVE_MS);
-const scheduledBlackout = scheduledBlackoutAt(NOW);
-
-/*
- * **THE STALL DIAGNOSTIC AND THE LOUD STORE.** (2026-09-23.) The wall is the
- * budget above, from process start. About 90 s before it, a worker thread
- * writes what the cycle is waiting on to stderr and to the reserved record,
- * unless the cycle already wrote its record; it never ends the cycle. And every
- * control-plane timeout is said on stderr as it happens, even where its caller
- * absorbs it into a named runtime condition: before this, a killed cycle's
- * stderr was empty (request-bounds.ts, cycle-stall.ts).
- */
-CLOCK = cycleClock({ processStartedMs: PROCESS_STARTED_MS, wallMs: BUDGET_MIN * 60_000, stallLeadMs: CYCLE_STALL_LEAD_MS });
-/*
- * The late work (the metrics, the research progression, the worker fleet's fact projection) yields here, so
- * the research state and the heartbeat Admin reads keep their whole budgets (cycle-finalization.ts,
- * `lateWorkDeadlineMs`: 735 s on the fifteen-minute wall).
- */
-const lateWorkBudgetMs = (): number => Math.max(0, lateWorkDeadlineMs(CLOCK) - Date.now());
-stallDiagnostic = startCycleStallDiagnostic({
-  pending,
-  fireAtMs: CLOCK.stallAtMs,
-  processStartedMs: PROCESS_STARTED_MS,
-  wallAtMs: CLOCK.wallAtMs,
-  recordPath: RUN_RECORD_PATH,
-  startedAt: NOW,
-  cycleId: CYCLE_ID,
-  testedSha: RUNNING_CODE_SHA,
-});
 observeControlPlaneTimeouts((timeout) => console.error(`freshness:shadow · ${timeout.message}`));
 
 /* ------------------------------------------------------------- provider --- */
@@ -661,18 +594,17 @@ if (wantsPostgres) {
  * authority as Admin. A missing/unreachable pointer is a named failed cycle;
  * the retired tracked jurisdiction projections are never a silent fallback.
  */
-const legacyOperationalReference = await retryStartupRead(
+const [legacyOperationalReference, azOperationalReference] = await Promise.all([retryStartupRead(
   () => preloadOperationalReferenceBundle({ bypassCache: true }), () => null, startupReadRetry,
 ).catch(error => {
   console.log(`  legacy multi-state operational reference unavailable: ${error instanceof Error ? error.message : String(error)}`);
   return null;
-});
-const azOperationalReference = await retryStartupRead(
+}), retryStartupRead(
   () => preloadAzOperationalReferenceBundle({ bypassCache: true }), () => null, startupReadRetry,
 ).catch(error => {
   console.log(`  scoped AZ operational reference unavailable: ${error instanceof Error ? error.message : String(error)}`);
   return null;
-});
+})]);
 if (!legacyOperationalReference && !azOperationalReference) throw new Error(
   "OPERATIONAL_REFERENCE_READ_NOT_INITIALIZED: neither the scoped AZ pointer nor the legacy reviewed pointer could be read",
 );
@@ -797,7 +729,7 @@ if (ONLY !== null || IDS !== null) {
 const LEGACY_MEETINGS_OBLIGATION_PREFIX = "freshness:meetings:";
 const LEGACY_MEETINGS_RETIREMENT_REASON =
   "PDC authority transferred to the matching source/body production meeting-partition contract";
-const meetingsRetirement = await retireObligationsByPrefix(
+const meetingsRetirement = filteredCycle ? { retired: [], alreadyRetired: [] } : await retireObligationsByPrefix(
   repos,
   [LEGACY_MEETINGS_OBLIGATION_PREFIX],
   NOW,
@@ -807,7 +739,7 @@ console.log(
   `  legacy tracked-snapshot meetings clocks: ${meetingsRetirement.retired.length} retired this cycle; ` +
     `${meetingsRetirement.alreadyRetired.length} already inactive with no next-due`,
 );
-const factClockRetirement = await retireObligationsByPrefix(
+const factClockRetirement = filteredCycle ? { retired: [], alreadyRetired: [] } : await retireObligationsByPrefix(
   repos,
   ["freshness:meeting-times:", "freshness:agendas:"],
   NOW,
@@ -819,7 +751,7 @@ console.log(
 );
 const LEGACY_FEC_MODEL_OBLIGATION_PREFIX =
   "freshness:campaign-finance:ballot-az-pima:us-house-6#";
-const fecModelRetirement = await retireObligationsByPrefix(
+const fecModelRetirement = filteredCycle ? { retired: [], alreadyRetired: [] } : await retireObligationsByPrefix(
   repos,
   [LEGACY_FEC_MODEL_OBLIGATION_PREFIX],
   NOW,
@@ -830,7 +762,7 @@ console.log(
     `${fecModelRetirement.alreadyRetired.length} already inactive with no next-due`,
 );
 
-let sync = await syncObligations(repos, corpus, NOW, { exactReads: canary });
+let sync = await syncObligations(repos, corpus, NOW, { exactReads: filteredCycle });
 finishPhase("references-and-registration");
 console.log(
   `  ${floorLine(
@@ -906,12 +838,12 @@ if (canonicalCandidateCounts === null) {
  * Each open occurrence closes unresolved, never with a disposition, and a
  * retired row's debt is tombstoned as retired by `persistDebts`. The judgement
  * is always made against the FULL registry, never a filtered one. Only a full
- * standing cycle writes; a --dry, --canary, --only/--ids or blackout cycle
+ * standing cycle writes; a --dry, --canary, --only/--ids cycle
  * prints the plan and writes nothing. A failure is named in the digest and the
  * run record, and the cycle continues: the rows stay as they were and are
  * planned again next cycle.
  */
-const retirementWrites = !dry && !canary && !scheduledBlackout;
+const retirementWrites = !dry && !canary;
 const retirementOutside = sync.outside !== null && ONLY === null && IDS === null ? sync.outside : null;
 const residueItems = retirementOutside === null ? [] : planRetiredResidue(retirementOutside);
 const corpusUnits = allUnits.map((u) => ({ providerId: u.providerId, obligationId: u.obligation.id }));
@@ -984,7 +916,6 @@ const retirementHolds = retirementHeldBack.reduce<Record<string, number>>(
  * a few cycles and the dispatch lanes keep their time. Residue and superseded
  * rows go first, so the large move never starves them.
  */
-const RETIREMENT_BUDGET_MS = 45_000;
 let retirementApplied: Awaited<ReturnType<typeof settleRetirements>> | null = null;
 let retirementError: string | null = null;
 /** Retired obligations, id → reason: their debt stays out of the cycle and is tombstoned as retired. */
@@ -1000,18 +931,17 @@ if (movedPlan !== null && supersededPlan !== null && retirementOutside !== null)
   if (retirementWrites) {
     if (items.length > 0) {
       try {
-        const budgetStartedMs = Date.now();
         retirementApplied = await settleRetirements(repos, {
           items,
           now: NOW,
-          budget: { spent: () => Date.now() - budgetStartedMs >= RETIREMENT_BUDGET_MS },
+          budget: { spent: () => false },
         });
         console.log(
           `  retirement: ${retirementApplied.retired.length} obligation(s) retired, ` +
             `${retirementApplied.occurrencesClosed.length} open occurrence(s) closed unresolved` +
             (retirementApplied.failed.length > 0 ? `, ${retirementApplied.failed.length} did not complete and are planned again` : "") +
             (retirementApplied.deferred.length > 0
-              ? `, ${retirementApplied.deferred.length} deferred untouched to the next cycle (${RETIREMENT_BUDGET_MS / 1000} s budget spent)`
+              ? `, ${retirementApplied.deferred.length} deferred untouched to the next cycle (remaining retirement work)`
               : ""),
         );
       } catch (error) {
@@ -1039,7 +969,6 @@ const nextDueByObligation = new Map<string, string>();
 let openedDeterministic = 0;
 let openedModel = 0;
 /** Occurrences a previous cycle opened and did not reach, picked back up. */
-let resumedCount = 0;
 /** Obligations whose open/resume threw and were isolated. Never silent. */
 const preOpenSkipped: { obligationId: string; why: string }[] = [];
 const dueThisCycle: { obligation: (typeof sync.all)[number]; nextDueAt: string; cadenceHours: number }[] = [];
@@ -1077,12 +1006,13 @@ if (publicationAnchors.anchored.length) {
   console.log(`  verified standing publications advanced ${publicationAnchors.anchored.length} source clock(s)`);
 }
 
+const nextDueWrites: string[] = [];
 for (const o of sync.all) {
   const row = scheduleObligation(o, nowMs);
   if (!isScheduled(row)) continue;
   /* Do not pay a round trip to write a value that is already there. */
   if (o.nextDueAt !== row.nextDueAt) {
-    await recordNextDue(repos, { obligationId: o.id, nextDueAt: row.nextDueAt, now: NOW });
+    nextDueWrites.push(o.id);
   }
   nextDueByObligation.set(o.id, row.nextDueAt);
   if (backedOff.has(o.id)) continue;
@@ -1238,9 +1168,6 @@ for (const pending of intents.pendingDispatch) {
     registered: allUnits.length,
   });
   dispatchDetails.push({ intent: pending, detail });
-  if (scheduledBlackout) {
-    console.log("  owner dispatch: SCHEDULED BLACKOUT; intent remains pending for the next eligible cycle.");
-  }
   console.log(
     `  owner dispatch: ${detail}` +
       (matched.length > 0 ? ` ${dueAmongMatched} of the ${matched.length} are due this cycle; the rest keep their next-due.` : ""),
@@ -1297,12 +1224,18 @@ runtimeConditions.push(...expansionLoad.conditions);
 const expansionPlan = expansionLoad.plan;
 const subjectByObligation = new Map(sync.all.map((o) => [o.id, o.subjectId]));
 const lifetimeHuntSubjects = new Set((expansionPlan?.scopes ?? [])
-  .filter(scope => scope.kind === "RESOLVED" && scope.decision.key === ORIGINAL_LIFETIME_HUNT.key && scope.decision.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
-    scope.decision.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt && scope.decision.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd)
+  .filter(scope => scope.kind === "RESOLVED" && scope.decision.budgetStartedAt !== null && scope.decision.budgetUsd > 0)
   .flatMap(scope => [...scope.members]));
 const lifetimeHuntWorkIds = new Set(sync.all.filter(o => lifetimeHuntSubjects.has(o.subjectId)).map(o => o.id));
 const lifetimeHuntWork = (work: string): boolean => lifetimeHuntSubjects.has(work) || lifetimeHuntWorkIds.has(work);
 const hasLifetimeHunt = lifetimeHuntSubjects.size > 0;
+const fundedHunts = (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED" && scope.decision.budgetUsd > 0);
+const providerQueue = new ModelProviderQueue({
+  ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}) });
+const workerCapacity = researchWorkerCapacity({ hunts: Math.max(1, fundedHunts.length),
+  availableUsd: fundedHunts.reduce((sum, scope) => sum + scope.decision.budgetUsd, 0),
+  requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
+  ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}) });
 /** 0 = the owner's DISPATCH; 1 + n = the n-th selected scope in run order; null = neither. */
 const placementRank = (obligationId: string): number | null => {
   if (dispatchPriority.has(obligationId)) return 0;
@@ -1379,44 +1312,35 @@ const compareScoutRows = (left: ScheduledObligation, right: ScheduledObligation)
   return compareReaderImpact(orderable(left), orderable(right), orderingInputs);
 };
 /* Plain-code intake: an unreadable intent log does not stop it (the paid lane is what fails closed, above). */
-if (!dry && !canary && !scheduledBlackout && !intents.runnerPause.paused) {
+if (!dry && !canary && !intents.runnerPause.paused) {
   try {
     const retained = await retainRecentRoutineMeetingEvidence({ repos,
       store: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
-      methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version, now: nowIso });
+      methodVersion: (await readMethodKnowledge(repos)).version, now: nowIso });
     console.log(`  permanent meeting captures retained for independent workers: ${retained.length}`);
   } catch (error) {
     runtimeConditions.push(`permanent meeting evidence could not enter independent workers: ${error instanceof Error ? error.message : "ROUTINE_MEETING_INTAKE_FAILED"}`);
   }
 }
-const allPlannedWork = canary ? [] : (await repos.workItems.list()).filter(item =>
+const recoveryRepos = filteredCycle ? await selectedCycleRepositories(repos, sync.all.map(row => row.id)) : repos;
+const allPlannedWork = canary ? [] : (await recoveryRepos.workItems.list()).filter(item =>
   item.value.autonomousPlan && !isRetiredRoutineMeetingAcquisition(item.value.autonomousPlan.contract)
 );
 for (const item of allPlannedWork) if (lifetimeHuntSubjects.has(item.value.subject)) lifetimeHuntWorkIds.add(item.id);
-const plannedWork = scheduledBlackout ? allPlannedWork.filter(item => lifetimeHuntWork(item.id)) : allPlannedWork;
-// A held Parser/Validator chain has no autonomous acquisition plan. Its next
-// stage is enqueued by advanceHeldWorkerFleet, so completed producer tasks also
-// reserve downstream time until that pass can inspect their retained evidence.
-const [heldWorkIds, settledTaskIds, neverClaimedTaskIds] = await (async () => {
-  const listing = canary ? [] : await repos.routeTasks.list();
+const [settledTaskIds, neverClaimedTaskIds] = await (async () => {
+  const listing = canary ? [] : await recoveryRepos.routeTasks.list();
   for (const row of listing) if (row.value.workerTask && lifetimeHuntSubjects.has(row.value.workerTask.contract.subjectId)) {
     lifetimeHuntWorkIds.add(row.id);
     lifetimeHuntWorkIds.add(row.value.workItemId);
   }
-  const eligible = scheduledBlackout ? listing.filter(row => lifetimeHuntWork(row.id) || lifetimeHuntWork(row.value.workItemId)) : listing;
+  const eligible = listing;
   return [
-    new Set(eligible
-      .filter(row => row.value.workerTask?.contract.schemaVersion === 1 &&
-        (row.value.state === "PENDING" || row.value.state === "RECLAIMABLE" ||
-          (row.value.state === "RESULT_RECORDED" && row.value.workerTask.role !== "ADVERSARIAL_AUDITOR")))
-      .map(row => row.value.workItemId)),
     /* The same read names the settled RouteTasks the pre-dispatch recovery starts from (2026-09-23). Only ids outlive it. */
     settledRouteTaskIds(eligible),
     /* And the freshness RouteTasks never claimed, which an abandoned occurrence must sit on (2026-09-23). */
     new Set(eligible.filter(row => row.value.state === "PENDING" && !row.value.workerTask).map(row => row.id)),
   ] as const;
 })();
-const downstreamWorkCount = plannedWork.length + heldWorkIds.size;
 finishPhase("schedule-and-intents");
 if (dispatchOrdering !== null) {
   console.log(
@@ -1447,7 +1371,6 @@ const openOccurrenceInStep = async (
 ): Promise<boolean | { readonly settled: SettledOccurrence }> => {
   const id = row.obligation.id;
   if (occurrenceByObligation.has(id)) return true;
-  if (scheduledBlackout && !lifetimeHuntWork(id)) return false;
   // The dispatcher hands a FreshnessObligation; opening needs the fuller
   // StandingObligation (occurrence count, open-occurrence id), looked up by id.
   const obligation = standingById.get(id);
@@ -1465,7 +1388,6 @@ const openOccurrenceInStep = async (
     }
     if (resumed !== null) {
       occurrenceByObligation.set(id, { id: resumed.id, routeTaskId: resumed.routeTaskId });
-      resumedCount += 1;
     } else {
       const occ = await openOccurrence(repos, { obligation, dueAt: row.nextDueAt, now: NOW });
       if (occ === null) return false;
@@ -1485,6 +1407,9 @@ finishPhase("open-occurrences");
 
 /* The credential, BY NAME. Its value goes into the transport and nowhere else. */
 const workerKey = (process.env[WORKER_CREDENTIAL_VAR] ?? "").trim();
+const workerMessages = providerQueue.transport(anthropicTransport(workerKey, fetch, undefined, {
+  onRateLimits: (limits, request) => { providerQueue.observe(request.model, limits); } }));
+const workerBatch = backgroundBatchTransport({ apiKey: workerKey });
 const credentialConfigured = workerKey.length > 0;
 
 /*
@@ -1562,7 +1487,6 @@ const unreadableControls: string[] = [
    PAUSE_RUNNER Admin's runner card issues — and so does any control above that
    could not be read (2026-09-25). */
 const laneClosure = modelLaneClosure({
-  scheduledBlackout: scheduledBlackout && !hasLifetimeHunt,
   dry,
   noModel,
   credentialConfigured,
@@ -1651,12 +1575,8 @@ if (ledgerUnreadable !== null) {
  * under the `discovery-search` vendor, and FleetSafety on its own provider key.
  * The Scout tool is reached only inside the paid model lane besides.
  */
-const searchCap = (name: string, fallback: number): number => {
-  const raw = Number(process.env[name]);
-  return Number.isInteger(raw) && raw >= 0 && raw <= 1000 ? raw : fallback;
-};
-const SEARCH_PER_CYCLE = searchCap("WTP_DISCOVERY_SEARCH_PER_CYCLE", DEFAULT_SEARCH_BUDGET.perCycle);
-const SEARCH_PER_DAY = searchCap("WTP_DISCOVERY_SEARCH_PER_DAY", DEFAULT_SEARCH_BUDGET.perDay);
+const SEARCH_PER_CYCLE = Number.MAX_SAFE_INTEGER;
+const SEARCH_PER_DAY = Number.MAX_SAFE_INTEGER;
 const searchBudget = !discoverySearchOn ? null : durableSearchBudget({
   repos,
   perCycle: SEARCH_PER_CYCLE,
@@ -1736,7 +1656,7 @@ let expansionReading: ExpansionCycleReading | null = expansionBudget === null ||
  * budgets as every other row. Only a full standing cycle writes.
  */
 /* Obligation rows only, no spend: an unreadable intent log does not stop them; what they create waits behind the closed lane. */
-const dispatchWorkWrites = !dry && !canary && ONLY === null && IDS === null && (!scheduledBlackout || hasLifetimeHunt) && !intents.runnerPause.paused;
+const dispatchWorkWrites = !dry && !canary && ONLY === null && IDS === null && !intents.runnerPause.paused;
 const dispatchWorkPlanOnlyWhy = dispatchWorkWrites
   ? null
   : dry
@@ -1745,17 +1665,9 @@ const dispatchWorkPlanOnlyWhy = dispatchWorkWrites
       ? "a canary cycle writes only its one obligation"
       : ONLY !== null || IDS !== null
         ? "a filtered diagnostic cycle writes nothing it did not look at"
-        : scheduledBlackout
-          ? "the scheduled blackout"
-          : "the owner has paused the runner";
+        : "the owner has paused the runner";
 const dispatchTargets: DispatchWorkTarget[] = [];
-// The original saved hunt may continue through a scheduled blackout. That
-// exception does not reopen other dispatch intents or expansion scopes.
-const dispatchScopes = (expansionPlan?.scopes ?? []).filter(scope => !scheduledBlackout ||
-  (scope.kind === "RESOLVED" && scope.decision.key === ORIGINAL_LIFETIME_HUNT.key &&
-    scope.decision.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
-    scope.decision.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
-    scope.decision.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd));
+const dispatchScopes = expansionPlan?.scopes ?? [];
 {
   const seen = new Set<string>();
   const add = (t: DispatchWorkTarget): void => {
@@ -1763,10 +1675,8 @@ const dispatchScopes = (expansionPlan?.scopes ?? []).filter(scope => !scheduledB
     seen.add(t.key);
     dispatchTargets.push(t);
   };
-  if (!scheduledBlackout) {
-    for (const { intent } of dispatchDetails) add(dispatchWorkTarget({ intentId: intent.intentId, note: intent.note ?? "", requestedAt: intent.requestedAt }));
-    for (const t of carriedDispatchTargets(priorResearchState?.dispatchWork ?? null)) add(t);
-  }
+  for (const { intent } of dispatchDetails) add(dispatchWorkTarget({ intentId: intent.intentId, note: intent.note ?? "", requestedAt: intent.requestedAt }));
+  for (const t of carriedDispatchTargets(priorResearchState?.dispatchWork ?? null)) add(t);
   for (const scope of dispatchScopes) add(scopeWorkTarget(scope));
 }
 let dispatchWork: DispatchWorkReading | null = null;
@@ -1812,7 +1722,7 @@ if (dispatchTargets.length > 0) {
     });
     plannedSendMarks = plan.marks.map((m) => ({ obligationId: m.obligationId, key: m.target.key }));
     const applied = dispatchWorkWrites
-      ? await applyDispatchWork(repos, plan, { now: NOW, deadlineReached: () => Date.now() + 150_000 >= DISPATCH_DEADLINE_MS })
+      ? await applyDispatchWork(repos, plan, { now: NOW })
       : null;
     dispatchRecorded = applied?.recorded ?? [];
     dispatchWork = dispatchWorkReading(plan, applied, {
@@ -1824,7 +1734,7 @@ if (dispatchTargets.length > 0) {
       planOnlyWhy: dispatchWorkPlanOnlyWhy,
     });
     console.log(
-      `  dispatch work: ${dispatchWork.targets.length} target(s); ${dispatchWork.written} obligation(s) created this cycle of a ${dispatchWork.writeBudget}-row budget, ` +
+      `  dispatch work: ${dispatchWork.targets.length} target(s); ${dispatchWork.written} obligation(s) created this cycle, ` +
         `${dispatchWork.deferred} deferred` + (dispatchWork.writes === "PLAN_ONLY" ? ` (plan only: ${dispatchWorkPlanOnlyWhy})` : ""),
     );
     for (const t of dispatchWork.targets) console.log(`      ${dispatchWorkSentence(t)}`);
@@ -1842,7 +1752,7 @@ if (dispatchTargets.length > 0) {
 if (dispatchWorkWrites && expansionPlan !== null) {
   try {
     const gaps = await applyManualSourceGaps(repos, dispatchScopes, {
-      now: NOW, deadlineReached: () => Date.now() + 150_000 >= DISPATCH_DEADLINE_MS,
+      now: NOW,
     });
     console.log(`  source capability gaps: ${gaps.created} created, ${gaps.carried} carried, ${gaps.deferred} deferred`);
   } catch (error) {
@@ -1855,7 +1765,6 @@ for (let i = 0; i < ownerDispatches.length; i += 1) {
 }
 /* Each DISPATCH is honored after the step, so its HONORED record says what was matched AND what was created. */
 for (const { intent, detail } of dispatchDetails) {
-  if (scheduledBlackout) continue;
   const work = dispatchWork?.targets.find((t) => t.key === `dispatch:${intent.intentId}`) ?? null;
   if (await honorIntent(intent, work === null ? detail : `${detail} ${dispatchWorkSentence(work)}`)) honoredDispatch.push(intent.intentId);
 }
@@ -1943,6 +1852,39 @@ const autonomousTransportFor = (transport: ModelTransport) => (jurisdiction: Aut
     now: nowIso,
     refusedBeforeSending: (error) => error instanceof FleetPreSendRefusal,
   });
+const spacer = serializeHostSpacing(hostSpacer());
+const workerSlots = workerProcessSlots(() => {
+  const limits = providerQueue.limits(MODELS.haiku.model);
+  const spent = fleetSafety.snapshot(nowIso()).rolling24Hours.modelUsd;
+  return Math.max(1, researchWorkerCapacity({ hunts: Math.max(1, fundedHunts.length),
+    availableUsd: spent === null ? 0 : Math.max(0, effectiveCeilingUsd - spent),
+    requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
+    requestsPerMinute: limits?.requestsPerMinute ?? undefined,
+    inputTokensPerMinute: limits?.inputTokensPerMinute ?? undefined,
+    outputTokensPerMinute: limits?.outputTokensPerMinute ?? undefined,
+    inputTokensPerRequest: 8192, outputTokensPerRequest: RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn }));
+});
+// Hand out durable leases before unrelated histories or parent execution.
+const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
+  runnerPaused: intents.runnerPause.paused });
+const earlyOriginal = autonomousCycleOpen ? runAutonomousProcesses().catch(error => {
+  runtimeConditions.push(`autonomous worker processes failed: ${error instanceof Error ? error.message : String(error)}; work remains owed`);
+  return null;
+}) : null;
+let earlyAutonomous: Awaited<typeof earlyOriginal> = null;
+// Persist derived scheduling projections alongside workers, using current facts and CAS.
+const nextDuePersistence = runPool(nextDueWrites, Math.max(1, workerCapacity), async id => {
+  try {
+    const held = await repos.obligations.mustRead(id);
+    const derived = scheduleObligation(held.value, Date.now());
+    if (isScheduled(derived) && held.value.nextDueAt !== derived.nextDueAt) {
+      await repos.obligations.compareAndSet(id, held.revision, { ...held.value, nextDueAt: derived.nextDueAt, updatedAt: nowIso() }, nowIso());
+    }
+  } catch (error) {
+    runtimeConditions.push(`derived due time remains owed for ${id}: ${error instanceof Error ? error.message : String(error)}`);
+  }
+});
+
 /* MW-015: visited is not finished. Each Send is evaluated from its members' own records as this cycle
    read them (obligations at sync, debts at load): settled, or named as refused or not yet settled. */
 const debtByObligation = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
@@ -2245,7 +2187,7 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
     // (the owner's override, or the fallback) — the same number the admission
     // gates below use — never the compile-time RESEARCH_BOUNDS default, so the
     // console can never show a ceiling that is not the one being enforced.
-    bounds: { ...RESEARCH_BOUNDS, dailyCeilingUsd: effectiveCeilingUsd },
+    bounds: { ...RESEARCH_BOUNDS, workerCapacity, dailyCeilingUsd: effectiveCeilingUsd },
     spend: {
       windowUsd: window,
       measuredAttempts: measuredSpend.measured,
@@ -2305,8 +2247,8 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
  * about 3.3 MB; the four tries used to fail silently, and at 30 s a request
  * they could hold a finalization for four minutes without a word.
  */
-async function writeResearchState(cycleFinishedAt: string | null): Promise<void> {
-  await withStoreBudget("research-state", CYCLE_FINALIZATION_BUDGETS_MS.researchState, async () => {
+const writeResearchState = cycleStateWriter(async (cycleFinishedAt) => {
+  await (async () => {
     for (let tries = 0; tries < 4; tries += 1) {
       try {
         const current = await repos.researchState.read(RESEARCH_STATE_ID);
@@ -2324,8 +2266,8 @@ async function writeResearchState(cycleFinishedAt: string | null): Promise<void>
         }
       }
     }
-  });
-}
+  })();
+});
 
 await writeResearchState(null);
 
@@ -2334,7 +2276,6 @@ await writeResearchState(null);
 const vault = cycleVault(join(ROOT, ...VAULT_DIR));
 const readScoutEvidence = workerVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness");
 const readScoutCapture = researchVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness");
-const spacer = serializeHostSpacing(hostSpacer());
 
 const simulated: RunWork = async ({ executor, routeTaskId }) => ({
   ranAs: "DETERMINISTIC",
@@ -2345,6 +2286,10 @@ const simulated: RunWork = async ({ executor, routeTaskId }) => ({
 /** The deterministic lane: an HTTP GET or POST from a committed descriptor. Never a model. */
 const executorFor = (obligation: { obligation: { id: string } }): DeclaredExecutor => {
   const route = registry.routeFor(obligation.obligation.id);
+  if (!dry) return routeProcessExecutor({ root: ROOT, postgres: wantsPostgres, fileStoreRoot: CONTROL_PLANE_ROOT,
+    route, slots: workerSlots, spaceOut: spacer, vault: vault.put,
+    openOne: fleetSafety.guardedOpenOne("public-web", obligation.obligation.id),
+    onStarted: pid => console.log(`  route lease worker process: pid ${pid}; ${obligation.obligation.id}`) });
   return {
     lane: "DETERMINISTIC",
     workerFor: ({ holder }) => ({
@@ -2353,14 +2298,7 @@ const executorFor = (obligation: { obligation: { id: string } }): DeclaredExecut
       version: dry ? "shadow-decision/1.0" : `route-executor/1.0 (${route?.routeId ?? "unrouted"})`,
       instance: holder,
     }),
-    run: dry
-      ? simulated
-      : routeExecutor({
-          routeFor: (id) => registry.routeFor(id),
-          spaceOut: spacer,
-          vault: vault.put,
-          openOne: fleetSafety.guardedOpenOne("public-web", obligation.obligation.id),
-        }),
+    run: simulated,
   };
 };
 
@@ -2398,7 +2336,7 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
       const held = await prewarmHold.admit(worst, "the cycle's pre-warm");
       if (!held.admit) return { status: "SKIPPED", at, model, code: held.code, detail: `no paid call: ${held.why}`, durationMs: Date.now() - started };
     }
-    const transport = fleetSafety.guardedModelTransport("anthropic", prewarmHold?.obligationId ?? "scout-prewarm", anthropicTransport(workerKey));
+    const transport = fleetSafety.guardedModelTransport("anthropic", prewarmHold?.obligationId ?? "scout-prewarm", workerMessages);
     /* A failed pre-warm leaves its hold standing: what it was billed is unknown. */
     const response = await transport(request);
     const metered = readMeteredUsage(response.usage ?? {});
@@ -2424,7 +2362,7 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
         /* Charged to the budgeted work it was held for, so the Send's and area's history carries it (MW-021); otherwise as before. */
         jurisdiction: prewarmHold === null ? null : (jobSubject.get(prewarmHold.obligationId) ?? null),
         ...(prewarmHold === null ? {} : { obligationId: prewarmHold.obligationId }),
-        project: "freshness", role: "SCOUT", cost, recordedAt: at,
+        project: "freshness", role: "SCOUT", model: response.model, cost, recordedAt: at,
       },
       at,
     ).catch(() => undefined);
@@ -2447,9 +2385,14 @@ const heldScoutFor = (scheduled: ScheduledObligation) => solvedScoutResult([...p
 const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled || heldScoutFor(scheduled)!==null
   ? failureResponderExecutor({
       solved:heldScoutFor(scheduled),
+      toolkitFor: buildScoutToolkit,
+      executorFactory: deps => scoutProcessExecutor({ root: ROOT, postgres: wantsPostgres,
+        fileStoreRoot: CONTROL_PLANE_ROOT, slots: workerSlots,
+        search: (lifetimeHuntWork(scheduled.obligation.id) ? scoutSearchLifetime : scoutSearch) ?? undefined,
+        onStarted: pid => console.log(`  Scout lease worker process: pid ${pid}; ${scheduled.obligation.id}`), deps }),
       /* MW-021: every request is checked against what the job holds on its Send and area budgets before the Fleet guard reserves it. */
       transport: budgetGuardedTransport({
-        transport: fleetSafety.guardedModelTransport("anthropic", scheduled.obligation.id, anthropicTransport(workerKey)),
+        transport: fleetSafety.guardedModelTransport("anthropic", scheduled.obligation.id, workerMessages),
         job: () => jobSpend.get(scheduled.obligation.id) ?? null,
         worstCaseOf: modelRequestWorstCaseUsd,
         priceOf: modelResponseUsd,
@@ -2466,10 +2409,6 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         if (more.admit) return fleet;
         fleet.release();
         return { admit: false, code: "CEILING", why: `${more.code}: ${more.why}` };
-      },
-      toolkitFor: (toolCtx) => {
-        const search = lifetimeHuntWork(toolCtx.obligation.obligation.id) ? scoutSearchLifetime : scoutSearch;
-        return buildScoutToolkit(search !== null ? { ...toolCtx, search } : toolCtx);
       },
       contextFor: (row) => ({
         route: registry.routeFor(row.obligation.id),
@@ -2505,7 +2444,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         let amended = result;
         if ((result.refusal === null && result.candidates.length > 0) || result.sourceDeadEnds?.length) {
           try {
-            const report = await proposeScoutCandidates({ repos, root: ROOT, result, artifacts, stamp: today() });
+            const report = await proposeScoutCandidates({ repos, result, artifacts, stamp: today() });
             candidateReports.push(report);
             canonicalCandidateCounts = report.counts;
             amended = {
@@ -2573,9 +2512,6 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
 
 /* --------------------------------------------------------------- the cycle --- */
 
-// Keep a bounded share of the existing cycle for registered multi-worker work.
-// Otherwise an always-full refresh queue could starve the fleet indefinitely.
-const fleetReserveMs = !dry && !canary && downstreamWorkCount ? Math.min(360_000, BUDGET_MIN * 30_000) : 0;
 // Registered investigations also need Scout after a known source fails or leaves
 // verification unresolved; initial source discovery is not the only model work.
 finishPhase("worker-context");
@@ -2598,7 +2534,7 @@ let settledOccurrences: readonly SettledOccurrence[] = [];
  */
 let abandonedOccurrences: readonly AbandonedOccurrence[] = [];
 let abandonedClosed: Awaited<ReturnType<typeof closeAbandonedOccurrences>> | null = null;
-if (!canary && (!scheduledBlackout || hasLifetimeHunt)) {
+if (!canary) {
   try {
     const scan = await scanOccurrences(repos, {
       obligations: sync.all,
@@ -2636,40 +2572,43 @@ if (modelLaneEnabled && freeWalkSubjects.length > 0) {
   freeWalks = await pending.step("free-walks:read", () => readFreeDiscoveryWalks(repos, freeWalkSubjects));
 }
 
-// Retained results get their verification/publication opportunity BEFORE new
-// acquisition can consume the cycle. This reads held bytes and writes only the
-// existing gated pipeline. A second pass is justified only by new worker output.
+// Retained results publish alongside acquisition rather than holding ready leases.
+// Join this pass before the later projection of new worker output.
 async function projectRetainedFacts(phase: string): Promise<void> {
   const readEvidence = workerVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness", { snapshot: true });
   try {
-    const report = await pending.step(phase, () => runBoundedStep({
-      label: phase,
-      budgetMs: Math.min(120_000, lateWorkBudgetMs()),
-      fn: () => projectFleetPipeline(repos, {
+    const selected = filteredCycle ? await selectedCycleRepositories(repos, sync.all.map(row => row.id)) : repos;
+    const report = await pending.step(phase, () => projectFleetPipeline(selected, {
         readArtifactText: async id => (await readEvidence(id)).text,
         now: nowIso(), root: ROOT,
         freshness: createPermanentMeetingFreshness({ connection: process.env.WTP_PRODUCTION_DATABASE_URL_READONLY,
           onUnavailable: detail => runtimeConditions.push(detail) }),
-      }),
-    }));
+      }));
     if (report !== null) for (const line of factChainLines(report)) console.log(line);
   } catch (error) {
-    const reason = error instanceof CycleStepTimeout || isControlPlaneRequestTimeout(error)
+    const reason = isControlPlaneRequestTimeout(error)
       ? error.message
       : error instanceof Error && /^[A-Z][A-Z0-9_]{2,100}$/.test(error.message)
         ? error.message : "RETAINED_FACT_PROJECTION_FAILED";
     runtimeConditions.push(phase + ": " + reason + "; retained records remain owed, existing reader data is preserved");
   }
 }
-if (!dry && !canary && (!scheduledBlackout || hasLifetimeHunt)) await projectRetainedFacts("retained-results:fact-projection");
+const retainedProjection = !dry && !canary
+  ? projectRetainedFacts("retained-results:fact-projection") : Promise.resolve();
 
 const cycle = await runCycle({
   repos,
+  recoveryRepos,
   obligations: sync.all,
   debts: debtsIn,
   routeTaskFor: (id) => occurrenceByObligation.get(id)?.routeTaskId ?? null,
   maturity,
   executor: executorFor,
+  workerCapacity: Math.max(1, workerCapacity),
+  huntFor: row => {
+    const rank = placementRank(row.obligation.id);
+    return rank === 0 ? "dispatch" : rank === null ? null : expansionPlan?.scopes[rank - 1]?.decision.receiptId ?? null;
+  },
   holder: `freshness-shadow@${process.pid}`,
   now: NOW,
   clock: nowIso,
@@ -2692,7 +2631,6 @@ const cycle = await runCycle({
   onRecoveryComplete: () => finishPhase("lease-and-completion-recovery"),
   skipReclaim: canary,
   admitDispatch: (row) => fleetSafety.admitDispatch(row.obligation.id),
-  budget: { deadlineMs: DISPATCH_DEADLINE_MS - fleetReserveMs, now: () => Date.now() },
   /* ADM-8: the owner's dispatch goes first in the dispatcher's own due order too. */
   placeFirst: dispatchPriority,
   /* With no DISPATCH pending (the set above is empty), the selected expansion scopes' due work goes first instead. */
@@ -2789,16 +2727,8 @@ const cycle = await runCycle({
       if (failed !== null) runtimeConditions.push(`a budget hold for ${row.obligation.id} could not be released (${failed}); it counts in full for its window`);
     },
     modelExecutor: scoutFor,
-    maxConcurrentScouts: RESEARCH_BOUNDS.maxConcurrentScouts,
+    workerCapacity: workerCapacity,
     scoutLeaseTtlMs: 300_000,
-    /*
-     * The Scout lane admits against the HARD dispatch wall, not the reserve-reduced
-     * deadline the deterministic lane runs under (2026-09-18). `fleetReserveMs` caps
-     * the always-full refresh queue so it cannot starve the fleet; passing it as the
-     * Scout deadline too was starving the Scouts instead — two clean cycles deferred
-     * every Scout for BUDGET while the cycle finished at half the hard wall.
-     */
-    scoutDeadlineMs: DISPATCH_DEADLINE_MS,
     /* The pre-warm of the static prefix, once per cycle before the first admitted Scout (2026-09-06). Never in a dry cycle. */
     ...(modelLaneEnabled && !dry ? { prewarm: prewarmScoutPrefix } : {}),
     onDispatched: async (result: DispatchResult, lane) => {
@@ -2827,6 +2757,7 @@ const cycle = await runCycle({
     },
   },
 });
+await retainedProjection;
 finishPhase("dispatch");
 if (expansionReading !== null && expansionBudget !== null) {
   /* The scopes' dispatch outcome: what each budget admitted and held this cycle. */
@@ -2863,14 +2794,7 @@ for (const row of cycle.deferred) {
   );
 }
 
-const budgetDeferred = cycle.deferred.filter((d) => d.why.includes("dispatch budget was spent")).length;
-console.log(
-  `\n  dispatch budget: ${Math.max(0, BUDGET_MIN - FINALIZATION_RESERVE_MS / 60_000)} min; hard cycle wall ${BUDGET_MIN} min` +
-    (budgetDeferred > 0
-      ? ` — SPENT; ${budgetDeferred} due item(s) deferred to a later cycle rather than run past the ` +
-        "runner's ceiling and be killed mid-write"
-      : " — not reached"),
-);
+
 
 /* ------------------------------------------------- close, and persist debt --- */
 
@@ -2881,6 +2805,7 @@ await pending.step("occurrences:close", () => closeCycleOccurrences(repos, {
   now: NOW,
 }));
 
+await nextDuePersistence;
 const persisted = await pending.step("debts:persist", () => persistDebts(
   repos,
   cycle.debts,
@@ -2894,15 +2819,11 @@ console.log(
     (persisted.clearedAsRetired.length > 0 ? `, ${persisted.clearedAsRetired.length} tombstoned as retired` : ""),
 );
 
-// Start the exact original instruction's owed work while the independent
-// discovery/publication passes run. These passes are joined below, before
-// finalization: no paid request or repository write is abandoned at the wall.
-// The ordinary lanes have already completed and kept their own dispatch budget.
-const autonomousStoreDeadlineMs = lateWorkDeadlineMs(CLOCK) - 15_000;
-const autonomousDeadlineMs = Math.min(DISPATCH_DEADLINE_MS - 60_000, autonomousStoreDeadlineMs - 30_000);
+// Worker processes pull the existing ledger. Their results are joined before
+// finalization, alongside the independent discovery/publication passes.
 async function makeAutonomousFleet() {
-  const fleetTransport = modelLaneEnabled ? boundedAuditTransport(workerKey) : null;
-  return autonomousStandingRuntime({ root: ROOT, repos, now: nowIso,
+  const fleetTransport = modelLaneEnabled ? workerMessages : null;
+  return autonomousStandingRuntime({ root: ROOT, repos, now: nowIso, environment: process.env,
     ...(scoutSearch ? { search: scoutSearch } : {}),
     ...(scoutSearchLifetime ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime : scoutSearch ?? undefined } : {}),
     spaceOut: spacer, browse: browseWithPlaywright,
@@ -2913,33 +2834,78 @@ async function makeAutonomousFleet() {
     auditCeilingUsd: effectiveCeilingUsd,
     lifetimeHuntSubject: subject => lifetimeHuntSubjects.has(subject) });
 }
-const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
-  runnerPaused: intents.runnerPause.paused, scheduledBlackout, hasLifetimeHunt });
-let earlyExactWorkIds: ReadonlySet<string> | null = null;
-const earlyOriginal = autonomousCycleOpen && hasLifetimeHunt && Date.now() + 150_000 < autonomousDeadlineMs
-  ? (async () => {
-      const leave = pending.enter("original-hunt-early-workers");
-      try {
-        return await withStoreBudget("original-hunt-early-workers", Math.max(0, autonomousStoreDeadlineMs - Date.now()), async () => {
-          const [occurrences, workItems] = await Promise.all([repos.occurrences.list(), repos.workItems.list()]);
-          const exactWorkIds = exactInstructionAutonomousWorkIds({ obligations: sync.all,
-            occurrences: occurrences.map(row => row.value), workItems: workItems.map(row => row.value),
-            assignmentKey: ORIGINAL_LIFETIME_HUNT.key, receiptId: ORIGINAL_LIFETIME_HUNT.receiptId });
-          earlyExactWorkIds = exactWorkIds;
-          const fleet = await makeAutonomousFleet();
-          return runAutonomousCoordinator(fleet, { concurrency: 4, deadlineMs: autonomousDeadlineMs,
-            prioritizedInstructions: (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED")
-              .map(scope => ({ receiptId: scope.decision.receiptId, priority: scope.decision.priority })),
-            acceptsWorkItem: item => lifetimeHuntSubjects.has(item.subject) && exactWorkIds.has(item.id),
-            admitDispatch: work => fleetSafety.admitDispatch(work) });
-        });
-      } catch (error) {
-        runtimeConditions.push(`original hunt's early autonomous slice could not complete: ${error instanceof Error ? error.message : "WORKER_FLEET_FAILED"}; work remains owed`);
-        return null;
-      } finally { leave(); }
-    })()
-  : null;
-let earlyAutonomous: Awaited<typeof earlyOriginal> = null;
+async function runAutonomousWave() {
+  const fleet = await makeAutonomousFleet();
+  const held = await planHeldWorkerFleet(ROOT, fleet, true);
+  const planned = await runAutonomousCoordinator(fleet, { planOnly: true,
+    prioritizedInstructions: (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED")
+      .map(scope => ({ receiptId: scope.decision.receiptId, priority: scope.decision.priority })) });
+  const taskIds = [...new Set([...held.map(task => task.id),
+    ...planned.decisions.filter(row => row.task && ["SCOUT", "WORKER"].includes(row.action)).map(row => row.task!.id)])];
+  const availableUsd = Math.max(0, effectiveCeilingUsd - (spendWindow.windowUsd ?? effectiveCeilingUsd));
+  const dispatches = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
+    slots: workerSlots,
+    config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: modelLaneEnabled,
+      searchEnabled: scoutSearch !== null, ceilingUsd: effectiveCeilingUsd, fundedSubjects: [...lifetimeHuntSubjects] },
+    capacity: () => modelLaneEnabled ? researchWorkerCapacity({ hunts: taskIds.length, availableUsd,
+      requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
+      requestsPerMinute: providerQueue.limits(MODELS.haiku.model)?.requestsPerMinute ?? undefined,
+      inputTokensPerMinute: providerQueue.limits(MODELS.haiku.model)?.inputTokensPerMinute ?? undefined,
+      outputTokensPerMinute: providerQueue.limits(MODELS.haiku.model)?.outputTokensPerMinute ?? undefined,
+      inputTokensPerRequest: 8192, outputTokensPerRequest: RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn }) : taskIds.length,
+    transportFor: (jurisdiction, taskId) => async request => {
+      const task = (await repos.routeTasks.mustRead(taskId)).value;
+      const batching = task.workerTask?.role === "ADVERSARIAL_AUDITOR" ? batchEnabledFor("background-worker-audit")
+        : task.workerTask?.role === "PARSER" && batchEnabledFor("background-worker-parse");
+      const journal = attemptBatchJournal(repos, taskId, nowIso);
+      const requestJobId = `worker-request:${taskId}:${batching ? batchRequestHash(request) : randomUUID()}`;
+      if (batching && await journal.read(batchRequestHash(request))) {
+        // Recovery reads an already submitted request, so it neither reserves
+        // nor spends a second request allowance. Settle its original hold.
+        const response = await workerBatch.withJournal(journal)(request);
+        const measured = modelResponseUsd(response);
+        if (measured !== null) await spendHolds.settle(requestJobId, measured, nowIso());
+        return response;
+      }
+      const occurrences = await repos.occurrences.listWhere(["workItemId"], task.workItemId);
+      const owner = occurrences.find(row => row.value.routeTaskId === task.id) ?? (occurrences.length === 1 ? occurrences[0] : null);
+      const found = budgetLinesFor(owner?.value.obligationId ?? task.id, jurisdiction.subjectId);
+      if ("code" in found) throw new SendBudgetRefusal(found.code, found.why);
+      const job = new JobSpend(spendHolds, requestJobId, owner?.value.obligationId ?? task.id, found.lines);
+      const transport = budgetGuardedTransport({ job: () => job,
+        transport: fleetSafety.guardedModelTransport("anthropic", jurisdiction.subjectId,
+          batching ? workerBatch.withJournal(journal) : workerMessages),
+        worstCaseOf: modelRequestWorstCaseUsd, priceOf: modelResponseUsd });
+      let response;
+      try { response = await transport(request); }
+      catch (error) {
+        if (error instanceof FleetPreSendRefusal || error instanceof SendBudgetRefusal) {
+          const failed = await spendHolds.settle(job.jobId, 0, nowIso());
+          if (failed !== null) runtimeConditions.push(`unsent request hold ${job.jobId} release failed: ${failed}`);
+        }
+        throw error;
+      }
+      const measured = modelResponseUsd(response);
+      if (measured !== null) await spendHolds.settle(job.jobId, measured, nowIso());
+      return response;
+    },
+    ...(scoutSearch ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime ?? scoutSearch : scoutSearch } : {}),
+    reserveEscalation: scoutEscalationReservation(fleetSafety),
+    onStarted: pid => console.log(`  lease worker process: pid ${pid}; pulls existing RouteTasks`) });
+  const scouts = dispatches.filter(row => row.attemptId && row.worker?.role === "SCOUT").length;
+  return { ...planned, dispatches, scoutsAdmitted: scouts, scoutsLimitedAdmitted: scouts };
+}
+async function runAutonomousProcesses() {
+  let report = await runAutonomousWave();
+  while (report.dispatches.some(row => row.outcome === "WORKED")) {
+    const next = await runAutonomousWave();
+    report = { ...next, dispatches: [...report.dispatches, ...next.dispatches],
+      scoutsAdmitted: report.scoutsAdmitted + next.scoutsAdmitted,
+      scoutsLimitedAdmitted: report.scoutsLimitedAdmitted + next.scoutsLimitedAdmitted };
+    if (!next.dispatches.some(row => row.outcome === "WORKED")) break;
+  }
+  return report;
+}
 let meetingsDiscovery: MeetingsDiscoveryPass | null = null;
 let meetingsDiscoveryState = "not run: the meetings discovery pass has not started";
 let campaignSites: CampaignSiteCycleReport | null = null;
@@ -2969,7 +2935,6 @@ try {
  * lanes, and shares the cycle's host spacing and vault.
  */
 /* On unless the kill switch says off (NS28, decided by the owner 2026-09-24: meetings discovery is always on). */
-const MEETINGS_DISCOVERY_BUDGET_MS = 60_000;
 const MEETINGS_DISCOVERY_MAX_WALKS = 12;
 /*
  * The search rung's caps (Brave and Exa combined, pointers only) are
@@ -2980,14 +2945,11 @@ const MEETINGS_DISCOVERY_MAX_WALKS = 12;
  */
 if (!MEETINGS_DISCOVERY_ENABLED) {
   meetingsDiscoveryState = "OFF: WTP_MEETINGS_DISCOVERY=off, the kill switch";
-} else if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
-  meetingsDiscoveryState = "not run: a dry, canary, filtered or blackout cycle walks nothing";
+} else if (dry || canary) {
+  meetingsDiscoveryState = "not run: a dry or canary cycle walks nothing";
 } else if ("unreadable" in gapLedgerRead) {
   meetingsDiscoveryState = `not run: ${gapLedgerRead.unreadable}`;
-} else if (Date.now() + MEETINGS_DISCOVERY_BUDGET_MS > DISPATCH_DEADLINE_MS) {
-  meetingsDiscoveryState = "not run: less of the cycle's admission window remains than the discovery budget";
 } else {
-  const discoveryStartedMs = Date.now();
   const openDiscovery = fleetSafety.guardedOpenBytes("discovery-web", "meetings-discovery", fetch, { followRedirects: false });
   /* Named to the stall diagnostic while it runs: its waits on government sites are not store calls, so nothing else would name them. */
   const leaveDiscovery = pending.enter("meetings-discovery");
@@ -3023,7 +2985,10 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
       return pages;
     })();
     meetingsDiscovery = await runMeetingsDiscovery(repos, {
-      needs: discoveryNeedsToWalk(gapLedgerRead.needs, [...dispatchedNeeds.values()]),
+      needs: discoveryNeedsToWalk(gapLedgerRead.needs, [...dispatchedNeeds.values()], need => {
+        const id = meetingsDiscoveryObligationId(need);
+        return (ONLY === null || id.startsWith(ONLY)) && (IDS === null || IDS.has(id));
+      }),
       cycleIndex: Math.floor(Date.parse(NOW) / 3_600_000),
       maxWalks: MEETINGS_DISCOVERY_MAX_WALKS,
       /* An owner-dispatched meetings-discovery obligation goes first; one with an open occurrence is another executor's. */
@@ -3048,8 +3013,8 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
         readOfficialPages,
         now: nowIso,
         budget: {
-          spent: () => Date.now() - discoveryStartedMs >= MEETINGS_DISCOVERY_BUDGET_MS,
-          remainingMs: () => discoveryStartedMs + MEETINGS_DISCOVERY_BUDGET_MS - Date.now(),
+          spent: () => false,
+          remainingMs: () => Number.POSITIVE_INFINITY,
         },
         recipes: knownRecipes(manual?.value.entries ?? []),
         /* Committed route hints: the current official site where the recorded address is stale, and routes found on a government's own publications. */
@@ -3058,7 +3023,8 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
         searchScopeFor: (subjectId) => huntSearchScope({ selected: config?.expansionScopes ?? [], plan: expansionPlan, subjectId }),
         recordCost: async (entry) => {
           costSeq += 1;
-          await repos.costs.append(entry.workItemId, `ce-ds-${fingerprint([entry.attemptId, entry.source, entry.recordedAt, costSeq])}`, entry, nowIso());
+          await repos.costs.append(entry.workItemId, `ce-ds-${fingerprint([entry.attemptId, entry.source, entry.recordedAt, costSeq])}`,
+            costEntryWithModel(entry, null), nowIso());
         },
       },
     });
@@ -3100,20 +3066,16 @@ finishPhase("meetings-discovery");
  * own clock, with no owner step. Only a full standing cycle with the budget
  * left runs it.
  */
-if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
-  campaignSitesState = "not run: a dry, canary, filtered or blackout cycle reads nothing";
+if (dry || canary || ONLY !== null || IDS !== null) {
+  campaignSitesState = "not run: a dry, canary, filtered cycle reads nothing";
 } else if (intents.runnerPause.paused) {
   campaignSitesState = "not run: the owner has paused the runner";
-} else if (Date.now() + CAMPAIGN_SITE_BUDGET_MS + 2 * CAMPAIGN_SITE_STOP_GRACE_MS > DISPATCH_DEADLINE_MS) {
-  campaignSitesState = "not run: less of the cycle's admission window remains than the pass's budget";
 } else {
   const leaveCampaignSites = pending.enter("campaign-sites");
-  /* The pass's budget runs from HERE, its loading included (2026-09-25: loading and store work sat outside it, 93–160 s passes and one 4.5-minute hang). */
+  /* Loading is included in elapsed-time reporting. */
   const campaignStartedMs = Date.now();
-  /* The cycle's own backstop, one grace past the pass's own hard stop: whatever the pass awaits (its loading too), the cycle moves on. */
-  const campaignHardStopMs = CAMPAIGN_SITE_BUDGET_MS + 2 * CAMPAIGN_SITE_STOP_GRACE_MS;
   try {
-    const pass = await withinWallTime((async () => {
+    const pass = await (async () => {
       const holdings = candidateEnrichmentHoldings();
       if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
       const { subjects, linked } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
@@ -3145,7 +3107,7 @@ if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
         spaceOut: spacer,
         vaultRoot: join(ROOT, ...VAULT_DIR),
         heldVault: vaultIndex,
-        methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version,
+        methodVersion: (await readMethodKnowledge(repos)).version,
       });
       return {
         report,
@@ -3153,15 +3115,9 @@ if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
           `ran over ${subjects.size} canonical candidacies (${linked.size} already carrying a campaign link, read last) and ${held.responses.length} held Marginalia answer(s) of ${held.entries} staged` +
           (held.unreadable > 0 ? ` (${held.unreadable} answer(s) the vault could not produce)` : ""),
       };
-    })(), campaignHardStopMs - (Date.now() - campaignStartedMs));
-    if (pass.done) {
-      campaignSites = pass.value.report;
-      campaignSitesState = pass.value.state;
-      if (campaignSites.stoppedAtDeadline === true) runtimeConditions.push(`campaign-site pass stopped at its hard deadline after ${Math.round(campaignSites.elapsedMs / 1000)}s; the leads it had not weighed stay owed (NOT_READ) for the next cycle`);
-    } else {
-      campaignSitesState = `STOPPED: the pass did not return by the cycle's ${campaignHardStopMs / 1000}s backstop (its loading or its own stop hung), so the cycle moved on; every lead it had not weighed stays owed (NOT_READ) for the next cycle`;
-      runtimeConditions.push(`campaign-site pass ${campaignSitesState}`);
-    }
+    })();
+      campaignSites = pass.report;
+      campaignSitesState = pass.state;
   } catch (error) {
     campaignSitesState = `could not run: ${error instanceof Error ? error.message : String(error)}`;
     runtimeConditions.push(`campaign-site pass ${campaignSitesState}`);
@@ -3173,26 +3129,23 @@ console.log(campaignSites === null ? `  campaign sites     ${campaignSitesState}
 finishPhase("campaign-sites");
 
 /* Linked publication pages are a separate bounded deterministic pass. Its
- * candidates are exact members of the original authorized 85635 receipt; a
+ * candidates are exact members of the selected hunt receipts; a
  * broadly tracked candidate universe does not itself authorize a new walk. */
 if (dry || canary || ONLY !== null || IDS !== null || intents.runnerPause.paused) {
   candidatePublicationsState = "not run: dry, canary, filtered or paused cycle";
 } else if (!hasLifetimeHunt) {
-  candidatePublicationsState = "not run: exact original 85635 receipt is unavailable";
-} else if (Date.now() + CANDIDATE_PUBLICATION_BUDGET_MS + 5_000 > DISPATCH_DEADLINE_MS) {
-  candidatePublicationsState = "not run: insufficient dispatch time for bounded publication acquisition";
+  candidatePublicationsState = "not run: exact selected hunt receipt is unavailable";
 } else {
   const leavePublications = pending.enter("candidate-publications");
   try {
-    const vaultRead = await withinWallTime(indexVault(join(ROOT, ...VAULT_DIR)), CANDIDATE_PUBLICATION_BUDGET_MS);
-    if (!vaultRead.done) throw new Error("CANDIDATE_PUBLICATION_VAULT_INDEX_TIMEOUT");
+    const vaultRead = await indexVault(join(ROOT, ...VAULT_DIR));
     // Once an ACQUIRER begins committing a captured page or a typed blocked
     // disposition, let that repository operation settle. Racing a writer with
     // a wall timer would leave an apparently stopped pass writing in the back.
     const pass = await runCandidatePublicationCycle({
       repos, eligibleCandidacyIds: lifetimeHuntSubjects,
-      heldVault: vaultRead.value, vaultRoot: join(ROOT, ...VAULT_DIR),
-      methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version,
+      heldVault: vaultRead, vaultRoot: join(ROOT, ...VAULT_DIR),
+      methodVersion: (await readMethodKnowledge(repos)).version,
       clock: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)), spaceOut: spacer,
       openFor: candidacyId => {
         const opened = fleetSafety.guardedOpenBytes("public-web", candidacyId, fetch, { followRedirects: false });
@@ -3266,74 +3219,22 @@ if (earlyAutonomous !== null) {
   if (autonomousWorked) fleetSafety.recordSuccessfulActivity(nowIso());
   for (const row of earlyAutonomous.dispatches) console.log(`  original hunt early worker: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
 }
-if (autonomousCycleOpen && Date.now() + 150_000 < autonomousDeadlineMs) {
+if (autonomousCycleOpen) {
   const leaveAutonomous = pending.enter("autonomous-workers");
   try {
-    await withStoreBudget("autonomous-workers", Math.max(0, autonomousStoreDeadlineMs - Date.now()), async () => {
-    const fleet = await makeAutonomousFleet();
-    // Retained civic bytes get one stage before new discovery.
-    // A held worker first scans retained evidence before its 120 s execution
-    // bound. Do not open that scan when only enough time for execution remains.
-    const heldWorkerAdmissionMs = 240_000;
-    const heldFirst = Date.now() + heldWorkerAdmissionMs <= autonomousDeadlineMs
-      ? await runHeldWorkerFleetCycle(ROOT, fleet, true, {
-          maximumDispatches: 1, deadlineMs: autonomousDeadlineMs,
-          onDeferred: reason => runtimeConditions.push(`held worker deferred: ${reason}`),
-          admitDispatch: work => fleetSafety.admitDispatch(work),
-        })
-      : [];
-    const autonomous = await runAutonomousCoordinator(fleet, { concurrency: 4,
-      prioritizedInstructions: (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED")
-        .map(scope => ({ receiptId: scope.decision.receiptId, priority: scope.decision.priority })),
-      deadlineMs: autonomousDeadlineMs,
-      ...(Number.isFinite(SCOUT_MAX) ? { maxScoutDispatches: Math.max(0, SCOUT_MAX - scoutsAdmittedOutsideLifetime) } : {}),
-      ...(scheduledBlackout ? { acceptsWorkItem: (item: { readonly id: string; readonly subject: string }) =>
-        lifetimeHuntSubjects.has(item.subject) && earlyExactWorkIds?.has(item.id) === true } : {}),
-      admitDispatch: work => fleetSafety.admitDispatch(work) });
+    const autonomous = await runAutonomousProcesses();
     for (const row of autonomous.deferred) fleetSafety.defer(row.workItemId, row.reason, row.detail);
-    /* MW-014: the coordinator's deferrals AND its silent non-dispatches (BLOCKED, STAGED), counted by reason. */
-    if (finalQueueLanes !== null) {
-      const lateLane = coordinatorLane(autonomous);
-      // Two operations on one WorkItem are two durable attempts but one due
-      // assignment in the queue; the separate research counter counts attempts.
-      const dispatchedTasks = new Set([...(earlyAutonomous?.dispatches ?? []), ...autonomous.dispatches]
-        .map(row => row.routeTaskId).filter((id): id is string => id !== null));
-      const dispatchedItems = new Set([...(earlyAutonomous?.decisions ?? []), ...autonomous.decisions]
-        .filter(row => row.task !== null && dispatchedTasks.has(row.task.id)).map(row => row.workItemId));
-      const dispatched = dispatchedItems.size;
-      finalQueueLanes = { ...finalQueueLanes, autonomous: { ...lateLane, dispatched,
-        waiting: Math.max(0, lateLane.due - dispatched) } };
-    }
+    if (finalQueueLanes !== null) finalQueueLanes = { ...finalQueueLanes, autonomous: coordinatorLane(autonomous) };
     scoutsAdmittedThisCycle += autonomous.scoutsAdmitted;
     scoutsAdmittedOutsideLifetime += autonomous.scoutsLimitedAdmitted;
-    const legacy = [...heldFirst];
-    // No per-cycle dispatch cap: the held-worker loop runs until the wall
-    // (checked in the loop condition) or until no held work remains.
-    const remaining = Number.POSITIVE_INFINITY;
-    for (let slot = 0; slot < remaining && Date.now() + heldWorkerAdmissionMs <= autonomousDeadlineMs; slot += 1) {
-      const next = await runHeldWorkerFleetCycle(ROOT, fleet, true, {
-        maximumDispatches: 1, deadlineMs: autonomousDeadlineMs,
-        onDeferred: reason => runtimeConditions.push(`held worker deferred: ${reason}`),
-        admitDispatch: work => fleetSafety.admitDispatch(work),
-      });
-      legacy.push(...next);
-      if (next.length === 0) break;
-    }
-    const fleetDispatches = [...legacy, ...autonomous.dispatches];
-    autonomousDispatchedThisCycle += fleetDispatches.filter(row => row.attemptId !== null).length;
-    if (fleetDispatches.some(row => row.outcome === "WORKED")) { autonomousWorked = true; fleetSafety.recordSuccessfulActivity(nowIso()); }
-    for (const row of fleetDispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
-    });
+    autonomousDispatchedThisCycle += autonomous.dispatches.filter(row => row.attemptId !== null).length;
+    if (autonomous.dispatches.some(row => row.outcome === "WORKED")) { autonomousWorked = true; fleetSafety.recordSuccessfulActivity(nowIso()); }
+    for (const row of autonomous.dispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
   } catch (error) {
-    runtimeConditions.push(`worker fleet could not complete this bounded pass: ${error instanceof Error ? error.message : "WORKER_FLEET_FAILED"}`);
-  } finally {
-    leaveAutonomous();
-  }
-} else if (autonomousCycleOpen) {
-  runtimeConditions.push("autonomous work deferred: the remaining technical slice could not admit and settle another normal worker before the cycle's finalization reserve; work remains owed");
+    runtimeConditions.push(`worker processes failed: ${error instanceof Error ? error.message : String(error)}; work remains owed`);
+  } finally { leaveAutonomous(); }
 }
-if (autonomousWorked) await projectRetainedFacts("new-worker-results:fact-projection");
-finishPhase("autonomous-workers-and-projection");
+
 /* ------------------------------------------------------- the promotion tail --- */
 
 /*
@@ -3503,7 +3404,7 @@ if (canary) {
   runtimeConditions.push("live canary: whole-store metrics scans were intentionally skipped");
   metrics = null;
 } else {
-  metrics = await pending.step("metrics", () => withStoreBudget("metrics", lateWorkBudgetMs(), computeMetrics));
+  metrics = await pending.step("metrics", () => computeMetrics());
 }
 
 /* -------------------------------------------- research state, heartbeat --- */
@@ -3512,16 +3413,16 @@ const finishedAt = nowIso();
 if (!dry && !canary) {
   const leaveProgression = pending.enter("research-progression");
   try {
-    researchProgression = await withStoreBudget("research-progression", lateWorkBudgetMs(), async () => readResearchProgression(repos, {
+    researchProgression = await (async () => readResearchProgression(repos, {
       windowId: researchWindowId, through: finishedAt, gate: readActivationGate(ROOT),
       candidates: (await readMethodCandidateStore(repos)).candidates,
-      knowledge: readMethodStore(join(ROOT,...METHOD_STORE)),
+      knowledge: await readMethodKnowledge(repos),
       conclusions: readConclusionStore(join(ROOT,"data","method","conclusions.json")),
       researchBoundary: {
         since: priorResearchState?.researchProgression?.through ?? priorResearchState?.cycleFinishedAt ?? NOW,
         previousCompletedWindowId: priorResearchState?.researchProgression?.windowId ?? (priorResearchState?.cycleFinishedAt ? `research:${priorResearchState.host}:${priorResearchState.cycleStartedAt}` : null),
       },
-    }));
+    }))();
   } catch (error) {
     researchProgressionFailure = error instanceof Error ? error.message : String(error);
     runtimeConditions.push(`RESEARCH_PROGRESSION_UNAVAILABLE: ${researchProgressionFailure}; no zero-progress claim was produced`);
@@ -3541,10 +3442,7 @@ finishPhase("metrics-and-finalization");
  * canonical append ends the cycle, through the crash handler, with a FAILED
  * outcome and a local crash record.
  */
-const finalStepBudgetMs = (budgetMs: number, reservedAfterMs: number): number =>
-  stepBudgetMs({ nowMs: Date.now(), budgetMs, deadlineMs: CLOCK.recordsDeadlineMs, reservedAfterMs });
-const finalStep = <T,>(label: string, budgetMs: number, reservedAfterMs: number, fn: () => Promise<T>): Promise<T> =>
-  pending.step(label, () => runBoundedStep({ label, budgetMs: finalStepBudgetMs(budgetMs, reservedAfterMs), fn }));
+const finalStep = <T,>(label: string, fn: () => Promise<T>): Promise<T> => pending.step(label, fn);
 const failedStep = (step: string, error: unknown): string => {
   const detail = error instanceof Error ? error.message : String(error);
   console.error(`freshness:shadow · finalization step ${step} failed: ${detail}`);
@@ -3552,7 +3450,7 @@ const failedStep = (step: string, error: unknown): string => {
 };
 
 try {
-  await finalStep("research-state:final", CYCLE_FINALIZATION_BUDGETS_MS.researchState, DIGEST_AND_RECORD_RESERVE_MS, () =>
+  await finalStep("research-state:final", () =>
     writeResearchState(finishedAt));
 } catch (error) {
   runtimeConditions.push(`the final research state was not written: ${failedStep("research-state:final", error)}`);
@@ -3574,7 +3472,6 @@ const codeIdentity = pending.sync("code-identity", () => {
       runnerTestedSha: RUNNING_CODE_SHA,
       now: finishedAt,
       fetch: !dry && !canary,
-      budgetMs: finalStepBudgetMs(CYCLE_FINALIZATION_BUDGETS_MS.codeIdentity, DIGEST_AND_RECORD_RESERVE_MS),
     });
   } catch (error) {
     runtimeConditions.push(`the code identity could not be read: ${error instanceof Error ? error.message : String(error)}`);
@@ -3605,7 +3502,7 @@ const heartbeat: RunnerHeartbeat = {
   },
 };
 try {
-  await finalStep("heartbeat", CYCLE_FINALIZATION_BUDGETS_MS.heartbeat, DIGEST_AND_RECORD_RESERVE_MS, async () => {
+  await finalStep("heartbeat", async () => {
     const beat = await pending.step("heartbeat:read", () => repos.runnerHeartbeat.read(RUNNER_ID));
     const nextHeartbeat: RunnerHeartbeat = {
       ...heartbeat,
@@ -3643,7 +3540,7 @@ const researchLines = [
   `  model spend        cycle ${safety.cycle.modelUsd === null ? "UNMEASURED" : `$${safety.cycle.modelUsd.toFixed(4)}`} · ` +
     `rolling 24h ${safety.rolling24Hours.modelUsd === null ? "UNMEASURED" : `$${safety.rolling24Hours.modelUsd.toFixed(4)}`} / $${safety.bounds.rolling24HourModelUsd.toFixed(2)} (the one spend ceiling)`,
   `  aggregate          dispatches ${safety.cycle.dispatches} · requests ${safety.cycle.requests} · payload bytes ${safety.cycle.payloadBytes} · ` +
-    `per-download cap ${safety.bounds.maxDownloadBytes} · wall ${safety.cycle.elapsedMs}/${safety.bounds.maxWallMsPerCycle}ms`,
+    `per-download cap ${safety.bounds.maxDownloadBytes} · elapsed ${safety.cycle.elapsedMs}ms`,
   `  stopped/deferred   ${safety.stoppedBecause.length === 0 ? "none" : safety.stoppedBecause.join("; ")}`,
   `  circuits           ${safety.providerCircuits.length === 0 ? "none" : safety.providerCircuits.map(c => `${c.provider}: ${c.condition} (latched until ${c.eligibleAt})`).join("; ")}`,
   `  last success       ${safety.lastSuccessfulActivity ?? "none recorded"}`,
@@ -3651,10 +3548,10 @@ const researchLines = [
   "RESEARCH — LEVEL 1 (RULING 240)",
   `  lane               ${modelLaneEnabled ? "ENABLED" : `CLOSED — ${laneDisabledReason}`}`,
   `  credential         ${WORKER_CREDENTIAL_VAR} configured in this process: ${credentialConfigured ? "yes" : "NO"} (by name; the value reaches only the provider request)`,
-  `  model              ${SCOUT_MODEL} · concurrency ${RESEARCH_BOUNDS.maxConcurrentScouts} · no per-cycle cap ($${effectiveCeilingUsd}/day ${rollingCeiling.source.toLowerCase()} + wall) · per website ${RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost} requests; turns/tools/tokens follow the owner budget`,
+  `  model              ${SCOUT_MODEL} · ${workerCapacity} workers · Admin spend dial $${effectiveCeilingUsd}/day; each hunt retains its own budget`,
   `  scouts             ${laneCounts.modelDispatched} dispatched of ${dueModel.length} due model-class (${modelClassUnits.length} registered model-class of ${allUnits.length}) · ` +
     `deferred ${cycle.lanes?.model.deferred ?? 0}${deferredByLine ? ` (${deferredByLine})` : ""}` +
-    (dueModel.length - openedModel > 0 ? ` · ${dueModel.length - openedModel} not reached before the wall` : ""),
+    (dueModel.length - openedModel > 0 ? ` · ${dueModel.length - openedModel} not opened` : ""),
   `  spend              rolling ${RESEARCH_BOUNDS.windowHours}h: ${spendWindow.windowUsd === null ? "UNMEASURED" : `$${(spendWindow.windowUsd + spentThisCycle).toFixed(4)}`} of $${effectiveCeilingUsd} ceiling (${rollingCeiling.source.toLowerCase()}) ` +
     `(measured ${spendWindow.measured}, unmeasured ${spendWindow.unmeasured} before this cycle) · this cycle $${spentThisCycle.toFixed(4)}`,
   `  results            ${scoutResultsThisCycle.length} typed result(s)${outcomeCounts.size > 0 ? ` — ${[...outcomeCounts].map(([k, v]) => `${k} ${v}`).join(", ")}` : ""}` +
@@ -3727,11 +3624,6 @@ const lines = [
   "",
   ...promotionLines(staged),
   `  staging manifest   ${manifest.total} entry(ies) held, ${manifest.written} written this cycle`,
-  `  dispatch budget    ${Math.max(0, BUDGET_MIN - FINALIZATION_RESERVE_MS / 60_000)} min admission + ${FINALIZATION_RESERVE_MS / 60_000} min finalization reserve inside ${BUDGET_MIN} min hard wall — ${
-    budgetDeferred > 0
-      ? `SPENT; ${budgetDeferred} due item(s) deferred to a later cycle rather than run past the runner's ceiling`
-      : "not reached"
-  }`,
 ];
 console.log();
 for (const line of lines) console.log(line);
@@ -3858,7 +3750,6 @@ const runRecord = {
               offers: { accepted: campaignSites.chain.offers.filter((o) => o.accepted).length, refused: campaignSites.chain.offers.filter((o) => !o.accepted).length },
               approved: campaignSites.chain.approved.map((a) => ({ itemId: a.itemId, candidacyId: a.campaignSite.candidacyId, url: a.campaignSite.url })),
               unjoined: campaignSites.chain.unjoined.length,
-              budgetSpent: campaignSites.budgetSpent,
               elapsedMs: campaignSites.elapsedMs,
               read: campaignSites.chain.leads.filter((l) => l.via === "READ").map((l) => ({ subjectId: l.subjectId, url: l.lead.url, outcome: l.outcome, codes: l.refusals.map((r) => r.code) })),
             },
@@ -4030,7 +3921,7 @@ const canonicalOutcome: FreshnessCycleOutcome = {
  * identity makes an uncertain retry a no-op success, never a second record. A
  * failure here is the cycle's crash — a FAILED outcome and a local crash record.
  */
-await finalStep("digest:append", CYCLE_FINALIZATION_BUDGETS_MS.digestAppend, LOCAL_RECORD_RESERVE_MS, () =>
+await finalStep("digest:append", () =>
   withControlPlaneConnectRetry(() => appendFreshnessCycleDigest(repos, { outcome: canonicalOutcome, lines }), {
     maxAttempts: 3,
     onRetry: ({ attempt, delayMs, error }) =>
@@ -4045,23 +3936,20 @@ const path = pending.sync("local-record:write", () => writeCycleRecord(runRecord
 console.log(`  local diagnostic: ${path}`);
 /* The lease's TTL and the runner's exited-holder release cover a miss; it is named, never a crash after a recorded outcome. */
 try {
-  await finalStep("window-lease:release", CYCLE_FINALIZATION_BUDGETS_MS.windowLease, 0, () =>
+  await finalStep("window-lease:release", () =>
     releaseWindowLease(repos, CYCLE_LEASE_HOLDER, nowIso()));
 } catch (error) {
   failedStep("window-lease:release", error);
 }
-await stallDiagnostic?.stop();
+await (stallDiagnostic as CycleStallDiagnostic | null)?.stop();
 // Optional private Admin copy of verified originals. This follows the canonical
 // cycle outcome: an unavailable mirror can never rewrite acquisition/publication
 // truth, and the next ordinary cycle resumes the rotating reconciliation cursor.
 if (!dry && !canary && process.env.WTP_ADMIN_EVIDENCE_MIRROR_ENABLED === "1") {
   try {
-    const mirrorDeadlineMs = Math.min(Date.now() + 15_000, CLOCK.recordsDeadlineMs);
-    const mirror = await runBoundedStep({ label: "private-admin-evidence-mirror",
-      budgetMs: Math.max(0, mirrorDeadlineMs - Date.now()),
-      fn: () => runAdminEvidenceMirror({ repos, vaultRoot: join(ROOT, ...VAULT_DIR),
+    const mirror = await runAdminEvidenceMirror({ repos, vaultRoot: join(ROOT, ...VAULT_DIR),
         cursorPath: join(ROOT, "data", "control-plane", "admin-evidence-mirror.cursor.json"),
-        deadlineMs: mirrorDeadlineMs }) });
+        deadlineMs: Number.POSITIVE_INFINITY });
     console.log(`  private Admin evidence mirror: ${mirror.state}; examined ${mirror.examined}, copied ${mirror.copied}, verified existing ${mirror.alreadyVerified}, refused ${mirror.refused}`);
     if (mirror.failures.length) console.error(`  private Admin evidence copy remains owed: ${mirror.failures.slice(0, 8).join("; ")}`);
   } catch (error) {

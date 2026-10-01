@@ -14,6 +14,8 @@ import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { Jurisdiction } from "../lib/hunt/jurisdiction-universe.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
 
 const NOW = "2026-09-29T20:00:00.000Z";
 const DIVISION = "ocd-division/country:us/state:az/place:benson";
@@ -100,4 +102,28 @@ test("each board's own section gives its regular schedule in the page's words; a
   const neighborhoods = model.registry.bodies.find(body => body.name === "Neighborhoods Commission")!;
   assert.deepEqual([neighborhoods.meetingCadence, neighborhoods.provenance.sourceUrl], ["The commission meets on the second Monday of each month at 4:30 p.m. in City Hall.", URL_]);
   assert.equal(model.registry.bodies.find(body => body.name === "Tourism Commission")?.meetingCadence, null);
+});
+
+test("a board's schedule publishes through the registry door itself, not only into a candidate", async () => {
+  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
+  const store = new MemoryRoutineDataStore();
+  Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
+  // Replay the deployed Census placeholder correction the recorded fixture predates (as the roster tests do).
+  const imported = (await readRegistryRuntimePrior(store, NOW))!;
+  const divisions = imported.payload.registry.divisions.filter(row => CENSUS_PLACEHOLDER_LABELS[row.label]).map(row => ({ ...row, label: CENSUS_PLACEHOLDER_LABELS[row.label] }));
+  const corrected = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: "fixture-census-correction", sourceThrough: NOW,
+    sourceReceipt: { contractVersion: 1, reviewedAt: NOW, reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER" as const, retrievedAt: NOW, httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district." })) },
+    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
+  assert.ok((await processRegisteredManualCandidate(store, "registry-runtime-bindings", corrected, NOW, imported.versionId)).promoted);
+  const base = (await readRegistryRuntimePrior(store, NOW))!;
+  const html = page("Commissions", section("Neighborhoods Commission").replace("<p>Members are appointed",
+    "<p>The commission meets on the second Monday of each month at 4:30 p.m. in City Hall.</p><p>Members are appointed"));
+  const saved = capture(html, URL_);
+  const reading = await heldDirectoryReading({ plan, prior: base, now: NOW, artifacts: [artifact(saved)], readHeld: async () => saved });
+  const candidate = registryRuntimeCandidate(workerBodyDirectoryPackage({ plan, held: reading!, prior: base, now: NOW }).prepared, { prior: base });
+  const published = await processRegisteredManualCandidate(store, "registry-runtime-bindings", candidate, NOW, base.versionId);
+  assert.ok(published.promoted, published.candidate.failureDetail ?? "held at the door");
+  const after = (await readRegistryRuntimePrior(store, NOW))!;
+  assert.equal(after.payload.registry.bodies.find(body => body.name === "Neighborhoods Commission")?.meetingCadence,
+    "The commission meets on the second Monday of each month at 4:30 p.m. in City Hall.");
 });

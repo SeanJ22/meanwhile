@@ -126,9 +126,10 @@ test("PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts ac
   /* The runner: the pre-warm's list and the Scout's toolkit follow the same `scoutSearch` switch. */
   const runner = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   assert.match(runner, /scoutPrewarmPlan\(\{ toolkitSpecs: scoutToolSpecsFor\(scoutSearch !== null\),/, "the pre-warm warms the list the switch gives the Attempts");
-  assert.match(runner, /const search = lifetimeHuntWork\(toolCtx\.obligation\.obligation\.id\) \? scoutSearchLifetime : scoutSearch;/, "the original lifetime hunt uses its matching search budget");
+  assert.match(runner, /search: \(lifetimeHuntWork\(scheduled\.obligation\.id\) \? scoutSearchLifetime : scoutSearch\) \?\? undefined/, "funded hunts use their matching search budget");
   assert.match(runner, /const scoutSearchLifetime = searchBudget === null \|\| !hasLifetimeHunt \? null : makeScoutSearch\(/, "the lifetime route preserves the same owner-controlled search switch");
-  assert.match(runner, /buildScoutToolkit\(search !== null \? \{ \.\.\.toolCtx, search \} : toolCtx\)/, "the toolkit offers the selected search implementation with the same tool schema");
+  const child = readFileSync(new URL("../lib/control-plane/workers/scout-worker.ts", import.meta.url), "utf8");
+  assert.match(child, /buildScoutToolkit\(\{ \.\.\.ctx, \.\.\.tools, sourceApi: \{ env: process\.env \} \}\)/, "the child offers search and every configured source API through the shared toolkit");
   assert.doesNotMatch(runner, /toolkitSpecs: SCOUT_TOOL_SPECS/, "no pre-warm from the list without search");
 });
 
@@ -209,7 +210,7 @@ async function cycleWith(input: { readonly rows: number; readonly admit: boolean
       decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "test", disagreement: null }),
       admitScout: () => (input.admit ? { admit: true } : { admit: false, code: "CEILING", why: "test" }),
       modelExecutor: scout,
-      maxConcurrentScouts: 2,
+      workerCapacity: 2,
       scoutLeaseTtlMs: 60_000,
       prewarm,
     },

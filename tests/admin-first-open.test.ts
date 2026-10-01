@@ -330,15 +330,3 @@ test("Work reads an opened piece of standing work beside its other reads, and th
   assert.doesNotMatch(src, /readDigests\(/);
   assert.match(src, /const bodiesEarly = loadWatchedBodies\(nowIso\);\s*const base = await openPage\(path, sp, nowIso\);/, "the body read starts before the policy row");
 });
-
-test("Fleet · Now sends the body list only the views it draws until the whole list is asked for", () => {
-  const src = readFileSync("app/(admin)/admin/page.tsx", "utf8");
-  assert.match(src, /sent: every \? bodies : bodies\.slice\(0, FIRST_BODIES_SHOWN\)/);
-  assert.match(src, /bodies=\{bodyList\.sent\}/);
-  assert.match(src, /total=\{bodies\.length\}/);
-  assert.match(src, /for \(const b of bodyList\.sent\)/, "work links only for the views sent");
-  assert.match(src, /key=\{bodyList\.every \? "every" : "first"\}/, "the island starts over when the rest arrive");
-  const list = readFileSync("app/(admin)/_mw/body-list.tsx", "utf8");
-  assert.match(list, /<Link href=\{keepOpen\(props\.showAllHref, open\)\} scroll=\{false\}/, "the body open now is still open when the rest arrive");
-  assert.match(list, /Show all \$\{props\.total\} bodies/);
-});

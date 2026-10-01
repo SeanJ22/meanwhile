@@ -19,7 +19,7 @@ import {
   planDerivedCrosswalk,
   type AutoCrosswalkReview,
 } from "../lib/civic-data/derived-crosswalk.ts";
-import { CROSSWALK_CITATION, crosswalkRowIssue, subBodyId, type MeetingBodyCrosswalkRow } from "../lib/civic-data/meeting-body-crosswalk.ts";
+import { CROSSWALK_CITATION, crosswalkRowId, crosswalkRowIssue, subBodyId, type MeetingBodyCrosswalkRow } from "../lib/civic-data/meeting-body-crosswalk.ts";
 import {
   autoCrosswalkReviewerId,
   printedNames,
@@ -31,7 +31,7 @@ import {
 import { deriveWiringDecisions, type DerivedWiringInputs } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { walkMeetingsDiscoveryNeed } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import { planDerivedVersion } from "../lib/civic-data/derived-authority.ts";
-import { bodySourceWiringFor, derivedAdapterConfig, type DerivedWiringRow } from "../lib/civic-data/derived-meeting-wiring.ts";
+import { bodySourceWiringFor, derivedWiringKey, derivedAdapterConfig, type DerivedWiringRow } from "../lib/civic-data/derived-meeting-wiring.ts";
 import { makeDiligentSource } from "../lib/sources/diligent/index.ts";
 import { meetingEndpointCandidates } from "../lib/hunt/meetings-site-discovery.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
@@ -109,6 +109,17 @@ const SITE = (feed = FEED, home = HOME): Record<string, RecordedReply> => ({
   [ROUTE]: { status: 200, body: feed, contentType: "text/calendar" },
 });
 
+test("route selection leaves the original saved walk intact and does not re-review superseded calendars", async () => {
+  const recorded = await walk(SITE());
+  const before = JSON.stringify(recorded.attempt);
+  const selected = review(recorded.attempt, recorded.bodies, { routes: [ROUTE] });
+  assert.ok(selected.accepted.length > 0);
+  const superseded = review(recorded.attempt, recorded.bodies, { routes: ["https://elsewhere.example.gov/another.ics"] });
+  assert.deepEqual(superseded.accepted, []);
+  assert.deepEqual(superseded.held, []);
+  assert.equal(JSON.stringify(recorded.attempt), before);
+});
+
 test("an official school's linked Diligent portal becomes a reviewed, body-filtered reader connection", async () => {
   const portal = "https://fixture.community.highbond.com/Portal/";
   const portalHtml = '<h1>Fixture Accommodation Schools</h1><h2>Governing Board</h2><a href="/Portal/MeetingSchedule.aspx">Calendar</a>';
@@ -162,7 +173,7 @@ test("ACCEPTED: the registered governing body and a printed sub-body, each on it
   assert.equal(attempt.outcome, "FOUND");
   const r = review(attempt, bodies);
   const rows = new Map(r.accepted.map((a) => [a.row.bodyName, a.row]));
-  assert.deepEqual([...rows.keys()].sort(), ["City Council", "Housing Commission"]);
+  assert.deepEqual([...rows.keys()].sort(), ["City Council", "Fair Housing Commission", "Housing Commission", "Tourism Commission", "Youth City Council"]);
 
   const council = rows.get("City Council")!;
   assert.equal(council.bodyId, `${OCD}#governing`, "the registered body, never a name-derived one");
@@ -183,15 +194,13 @@ test("ACCEPTED: the registered governing body and a printed sub-body, each on it
     assert.equal(crosswalkRowIssue(row), null);
     assert.equal(row.reviewedBy, REVIEWER, "the reviewer is the reviewer's code version, never the owner");
     assert.equal(row.evidence.calendar.sha256, textSha256(FEED), "the calendar is cited by the sha256 of the bytes the walk vaulted");
-    assert.equal(row.evidence.bodyPage.sha256, textSha256(HOME));
-    assert.equal(row.evidence.bodyPage.url, `https://${HOST}/`);
+    const separatePage = row.bodyName === "City Council" || row.bodyName === "Housing Commission";
+    assert.equal(row.evidence.bodyPage.sha256, textSha256(separatePage ? HOME : FEED));
+    assert.equal(row.evidence.bodyPage.url, separatePage ? `https://${HOST}/` : ROUTE);
     assert.ok(row.evidence.bodyPage.quote.includes(row.bodyName));
     assert.equal(row.authorization, CROSSWALK_CITATION);
   }
   assert.deepEqual(reasons(r), [
-    "NAME_NOT_PRINTED_ON_OWN_PAGE:Fair Housing Commission",
-    "NAME_NOT_PRINTED_ON_OWN_PAGE:Tourism Commission",
-    "NAME_NOT_PRINTED_ON_OWN_PAGE:Youth City Council",
     "SEPARATE_GOVERNMENT_NAME:Franklin County Commission",
   ], "every other printed name is held by name, never guessed");
   for (const h of r.held) {
@@ -235,10 +244,10 @@ test("HELD: bytes not vaulted, a government registration does not pair, a hand-w
   assert.deepEqual(reasons(review(attempt, bodies, { registered: { notRegistered: "OH registration pairs oh:city:city-of-testburg with no body" } })), ["BODY_NOT_REGISTERED:-"]);
   const wired = review(attempt, bodies, { handWired: (id) => id === `${OCD}#governing` });
   assert.ok(wired.held.some((h) => h.reason === "ALREADY_WIRED" && h.bodyName === "City Council"));
-  assert.deepEqual(wired.accepted.map((a) => a.row.bodyName), ["Housing Commission"]);
+  assert.deepEqual(wired.accepted.map((a) => a.row.bodyName), ["Fair Housing Commission", "Housing Commission", "Tourism Commission", "Youth City Council"]);
 
-  const legistar = { ...attempt, found: [{ ...attempt.found[0]!, vendor: "legistar-api", url: "https://webapi.legistar.com/v1/testburg/events?$top=5" }] };
-  assert.deepEqual(reasons(review(legistar, bodies)), ["KIND_NOT_REVIEWABLE:-"]);
+  const unsupported = { ...attempt, found: [{ ...attempt.found[0]!, vendor: "boardbook", url: "https://meetings.boardbook.org/Public/Organization/100" }] };
+  assert.deepEqual(reasons(review(unsupported, bodies)), ["KIND_NOT_REVIEWABLE:-"]);
 });
 
 test("HELD: robots not shown for a read, a UTC-stamped calendar, and a state whose clock is not one zone", async () => {
@@ -278,7 +287,7 @@ test("ROBOTS IS RECORDED, NOT BLOCKING: a robots.txt that disallows every path, 
     const recorded = walked.attempt.steps.filter((s) => s.purpose !== "robots").map((s) => s.permission);
     assert.ok(recorded.length > 0 && recorded.every((p) => p !== "ALLOWED" && p !== "NO_ROBOTS"), `${label}: the verdict travels on every read (${recorded.join(", ")})`);
     const r = review(walked.attempt, walked.bodies);
-    assert.deepEqual(r.accepted.map((a) => a.row.bodyName).sort(), ["City Council", "Housing Commission"], `${label}: accepted on the same checks as any read`);
+    assert.deepEqual(r.accepted.map((a) => a.row.bodyName).sort(), ["City Council", "Fair Housing Commission", "Housing Commission", "Tourism Commission", "Youth City Council"], `${label}: accepted on the same checks as any read`);
     assert.ok(r.held.every((h) => h.reason !== "PERMISSION_NOT_SHOWN" && h.reason !== "ROBOTS_NOT_READ"), `${label}: ${reasons(r).join(", ")}`);
   }
 
@@ -288,8 +297,23 @@ test("ROBOTS IS RECORDED, NOT BLOCKING: a robots.txt that disallows every path, 
   const challenged = new Map(bodies);
   challenged.set(home.artifactId!, { ...bodies.get(home.artifactId!)!, text: `<html><head><title>Just a moment...</title></head><body>${HOME}</body></html>` });
   const r = review(attempt, challenged);
-  assert.deepEqual(r.accepted, []);
-  assert.ok(r.held.some((h) => h.reason === "NAME_NOT_PRINTED_ON_OWN_PAGE" && h.bodyName === "City Council"), reasons(r).join(", "));
+  assert.ok(r.accepted.length > 0, "the independently accessible official calendar still supplies its facts");
+  assert.ok(r.accepted.every(({ row }) => row.evidence.bodyPage.url === ROUTE), "the challenge page is never cited as the naming document");
+});
+
+test("an official calendar names a county sub-body without a second page or a duplicate county-prefixed identity", async () => {
+  const feed = ics([{ uid: "board", summary: "Testburg County Board of Adjustment Meeting", start: "20261021T170000" }]);
+  const recorded = await walk(SITE(feed, '<a href="/calendar/meetings.ics">Development Services calendar</a>'), {
+    jurisdictionId: "oh:county:county-of-testburg", govClass: "COUNTY", name: "TESTBURG COUNTY",
+  });
+  const r = review(recorded.attempt, recorded.bodies);
+  const row = r.accepted.find(({ row }) => row.bodyName === "Board of Adjustment")?.row;
+  assert.ok(row, reasons(r).join(", "));
+  assert.equal(row.bodyId, subBodyId(OCD, "Board of Adjustment"));
+  assert.equal(row.evidence.bodyPage.url, ROUTE);
+  assert.equal(row.evidence.bodyPage.sha256, textSha256(feed));
+  assert.match(row.evidence.bodyPage.quote, /County Board of Adjustment/);
+  assert.equal(row.evidence.calendar.selected, 1);
 });
 
 test("HELD: two bodies selecting one event, and a category that is a body's name", async () => {
@@ -350,6 +374,22 @@ const reviewOf = (rows: readonly MeetingBodyCrosswalkRow[], held: AutoCrosswalkR
   inputs: [{ kind: "DISCOVERY_ATTEMPT", attemptId: "da-1", recordId: "7", recordedAt: T_WALK }],
   accepted: rows.map((r) => ({ row: r, inputs: [] })),
   held,
+});
+
+test("every verified route survives beside a legacy calendar; renewing or withdrawing one does not replace another", () => {
+  const legacy = row();
+  const route = `https://${HOST}/other-calendar.ics`;
+  const other = row({ id: crosswalkRowId(legacy.bodyId, "ICAL", route), route,
+    evidence: { ...legacy.evidence, calendar: { ...legacy.evidence.calendar, url: route } } });
+  const updated = { ...legacy, id: crosswalkRowId(legacy.bodyId, "ICAL", legacy.route) };
+  const plan = planDerivedCrosswalk({ previous: [legacy], reviews: [reviewOf([updated, other])] });
+  assert.equal(plan.rows.length, 2);
+  assert.deepEqual(plan.rows.find(value => value.route === legacy.route), legacy, "held identity and evidence stay exact");
+  assert.deepEqual(plan.accepted, [other.id]);
+  assert.deepEqual(derivedCrosswalkProjectionIssue({ kind: "meeting-body-crosswalk-derived", formatVersion: 1, records: plan.rows }), null);
+  const withdrawn = { ...legacy, status: "WITHDRAWN" as const, reviewedBy: "reviewing agent", withdrawal: { reason: "route replaced" } };
+  assert.deepEqual(composeCrosswalk([withdrawn], plan.rows).rows.map(value => value.id), [withdrawn.id, other.id]);
+  assert.deepEqual(planDerivedCrosswalk({ previous: plan.rows, reviews: [] }).rows, plan.rows, "an outage keeps both calendars");
 });
 
 test("THE PLAN: an accepted row is never dropped; the same walk carries it byte-exactly, a newer walk renews it, an older one never does", () => {
@@ -446,7 +486,7 @@ test("THE C16 TRIGGERS APPLY TO AUTOMATIC ROWS EXACTLY: a 404 suspends it, an ou
   const accepted = review(first.attempt, first.bodies).accepted.find((a) => a.row.bodyName === "Housing Commission")!.row;
   const auto = new Set([accepted.id]);
   const promoted = planDerivedVersion([], deriveWiringDecisions(wiringInputs(first, [accepted], auto, [], NOW)));
-  assert.deepEqual(promoted.promoted, [`ical:${accepted.bodyId}`]);
+  assert.deepEqual(promoted.promoted, [derivedWiringKey(accepted.kind, accepted.bodyId, accepted.route)]);
 
   /* The calendar now answers 404: ROUTE_GONE suspends the automatic row, exactly as a reviewed one. */
   const gone = await walk({ ...SITE(), [ROUTE]: { status: 404, body: "gone" } });
@@ -469,8 +509,8 @@ test("THE C16 TRIGGERS APPLY TO AUTOMATIC ROWS EXACTLY: a 404 suspends it, an ou
   });
   assert.deepEqual(renewedRows.renewed, [accepted.id]);
   const restored = planDerivedVersion(suspended.rows, deriveWiringDecisions(wiringInputs(back, renewedRows.rows, new Set(renewedRows.rows.map((r) => r.id)), suspended.rows, later(3))));
-  assert.ok(restored.promoted.includes(`ical:${accepted.bodyId}`));
-  assert.equal(restored.rows.find((e) => e.key === `ical:${accepted.bodyId}`)!.suspension, undefined, "restored by a review after its suspension");
+  assert.ok(restored.promoted.includes(derivedWiringKey(accepted.kind, accepted.bodyId, accepted.route)));
+  assert.equal(restored.rows.find((e) => e.key === derivedWiringKey(accepted.kind, accepted.bodyId, accepted.route))!.suspension, undefined, "restored by a review after its suspension");
 
   /* A person's withdrawal wins over the reviewer: CROSSWALK_WITHDRAWN suspends the connection the automatic row made. */
   const withdrawn = { ...accepted, reviewedBy: "a reviewing agent session", status: "WITHDRAWN" as const, withdrawal: { reason: "not the city's commission" } };
@@ -493,8 +533,8 @@ test("A REVIEWED ROW WINS A CONFLICT: where a manual and an automatic row select
   assert.deepEqual(composed.rows.map((r) => r.id).sort(), [accepted.id, manual.id].sort(), "different filters: both are decided");
   const decisions = deriveWiringDecisions(wiringInputs(first, composed.rows, composed.automaticIds, [], NOW));
   const byKey = new Map(decisions.map((d) => [d.key, d]));
-  assert.equal(byKey.get(`ical:${otherId}`)?.disposition, "PROMOTE", `the reviewed row stands: ${JSON.stringify(byKey.get(`ical:${otherId}`)).slice(0, 300)}`);
-  const lost = byKey.get(`ical:${accepted.bodyId}`);
+  assert.equal(byKey.get(derivedWiringKey(manual.kind, otherId, manual.route))?.disposition, "PROMOTE", `the reviewed row stands: ${JSON.stringify(byKey.get(derivedWiringKey(manual.kind, otherId, manual.route))).slice(0, 300)}`);
+  const lost = byKey.get(derivedWiringKey(accepted.kind, accepted.bodyId, accepted.route));
   assert.equal(lost?.disposition, "HOLD");
   assert.match(lost?.disposition === "HOLD" ? lost.detail : "", /^CONFLICTING_EVIDENCE/);
 });

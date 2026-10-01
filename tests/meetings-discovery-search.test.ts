@@ -124,12 +124,13 @@ test("QUERIES: a saved method's templates first, then the defaults; unfilled slo
   assert.equal(plannedQueries([custom, wp], identity, 2).length, 2, "at most the limit");
 });
 
-test("POINTERS: only the government's own domain or a known meeting publisher is worth opening", () => {
+test("POINTERS: official sources qualify by government links rather than a publisher host list", () => {
   assert.equal(hitStanding("https://www.benson.gov/meetings", "benson.gov"), "OWN_SITE");
   assert.equal(hitStanding("https://benson.gov/x", "benson.gov"), "OWN_SITE");
-  assert.equal(hitStanding("https://bensonaz.legistar.com/Calendar.aspx", "benson.gov"), "PUBLISHER");
+  assert.equal(hitStanding("https://bensonaz.legistar.com/Calendar.aspx", "benson.gov"), null, "a known vendor alone is not authority");
+  assert.equal(hitStanding("https://bensonaz.legistar.com/Calendar.aspx", "benson.gov", { url: "https://benson.gov/meetings", html: '<a href="https://bensonaz.legistar.com/Calendar.aspx">Meetings</a>' }), "PUBLISHER");
   assert.equal(hitStanding("https://www.bensonnews.com/council-meeting", "benson.gov"), null, "someone else's page about the government is not its record");
-  assert.equal(hitStanding("https://notbenson.gov/", "benson.gov"), null);
+  assert.equal(hitStanding("https://notbenson.gov/", "benson.gov"), "PUBLISHER", "official source qualification is separate from correct body identity");
   assert.equal(hitStanding("mailto:clerk@benson.gov", "benson.gov"), null);
 });
 

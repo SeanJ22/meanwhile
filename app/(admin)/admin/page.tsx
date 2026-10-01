@@ -1,398 +1,49 @@
 /**
- * **FLEET · NOW.** (Admin redesign, 2026-09-23 — the design package's first
- * screen, replacing the long Pilot health page.)
- *
- * Two cards (what is working, what isn't) and every body we watch — each
- * card's figures derived from the lists drawn beneath it, so no card can claim
- * what its list does not show. The old tracker's decision cards are not drawn
- * here: they were rows from a spreadsheet, not decisions the product waits on
- * (Sean, 2026-09-30).
- *
- * ```
- *   the bodies       every public body with a registered meeting source, read
- *                    narrowly from the production data plane (body-store.ts)
- *   the scope        everywhere, a state, or a selected geography; a scope in a
- *                    state not tracked with figures answers in sentences that
- *                    say whether its registration is promoted
- * ```
- *
- * The page audits itself before it shows anything: every figure carries a
- * denominator and a stated meaning, and every stated count equals the rows
- * drawn. A failed audit replaces the numbers with the reason.
+ * **THE ADMIN HOME IS THE COMMAND CENTER.** (rulings §0: there is no Admin page
+ * outside it.) Now, Workers, Work, Checklist, Money, Is it learning, Fix list,
+ * Reports, Changes and Ask the console are views of this one page; `?view=` says
+ * which, and `?scope=` says where. The pages this replaced are gone, and an old
+ * link to one of them is sent here by `middleware.ts`.
  */
-import Link from "next/link";
-import type { OwnerSnapshot } from "@/lib/control-plane/owner-surface.ts";
-import type { ControlPlaneRepositories } from "@/lib/control-plane/repository/types.ts";
-import { rankedWorkBlockers } from "@/lib/control-plane/admin-view/work-view.ts";
-import { exactInstructionMembership } from "@/lib/control-plane/admin-view/instruction-membership.ts";
-import { CHECKLIST_PROFILE } from "@/lib/control-plane/readiness/checklist-score.ts";
-import { servedWitness } from "@/lib/control-plane/served-reader.ts";
-import type { ExpansionScopeDecision } from "@/lib/control-plane/expansion/scopes.ts";
-import { nowFigures, type BodyView } from "@/lib/control-plane/admin-view/bodies.ts";
-import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
-import {
-  auditRenderedNumbers,
-  checkStatedEqualsRendered,
-  type CountClaim,
-  type RenderedNumber,
-} from "@/lib/control-plane/owner-surface.ts";
-import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
-import { censusUniverseWords } from "@/lib/control-plane/admin-view/census-universe.ts";
-import { routineAssignmentId } from "@/lib/control-plane/assignment-routine.ts";
-import { plainText } from "@/lib/control-plane/plain-words.ts";
-import { ORIGINAL_LIFETIME_HUNT } from "@/lib/control-plane/scheduler/hunt-continuation.ts";
-
-import { BodyList } from "../_mw/body-list.tsx";
-import { AuditFooter, EmptyScope, NotAsked } from "../_mw/blocks.tsx";
-import { censusEntryOf } from "../_mw/data/census-universe.ts";
-import { divisionsOf, loadContainer, loadZcta } from "../_mw/data/geography.ts";
-import { loadWatchedBodies } from "../_mw/data/load-bodies.ts";
-import { isTrackedState, stateName } from "../_mw/load-shell.ts";
-import { openPage, type SearchParams } from "../_mw/page-base.ts";
-import { parseScope, withScope, type MwScope } from "../_mw/scope.ts";
-import { MwShell } from "../_mw/shell.tsx";
-import { Dash, FigList, Refusal, Section, mw as s, type FigLine } from "../_mw/ui.tsx";
+import { Suspense } from "react";
+import { cookies, headers } from "next/headers";
+import { notFound, redirect } from "next/navigation";
+import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
+import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
+import { everyControl } from "@/lib/control-plane/operator-chat/gateway-binding.ts";
+import { LiveRefresh } from "../_mw/live-refresh.tsx";
+import { LiveCommandCenter } from "../_mw/admin-v6/live-command-center.tsx";
+import { liveReference } from "../_mw/admin-v6/reference.ts";
+import { placeKeyOf } from "../_mw/admin-v6/places.ts";
+import { parseView } from "../_mw/admin-v6/view-param.ts";
+import { parseScope, type MwScope } from "../_mw/scope.ts";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const runtime = "nodejs";
 
-const FIRST_BODIES_SHOWN = 12;
+type SearchParams = Record<string, string | string[] | undefined>;
 
-type HuntOverviewFields = Pick<OwnerSnapshot, "publishedAt" | "assignments" | "billingAttribution" | "checklists" | "servedReaderReadback">;
-
-/** Only the existing publisher's saved facts; no body/state inference or full snapshot read. */
-async function readHuntOverview(repos: ControlPlaneRepositories): Promise<{ value: HuntOverviewFields | null; gap: string | null }> {
-  try {
-    const row = await repos.ownerSnapshots.readNarrowed("current", {
-      publishedAt: true, assignments: true, billingAttribution: true, checklists: true, servedReaderReadback: true,
-    });
-    return row ? { value: row.value as HuntOverviewFields, gap: null } : { value: null, gap: "No hunt overview has been published yet." };
-  } catch {
-    return { value: null, gap: "The saved hunt overview could not be read. Its counts and costs are unknown." };
+export default async function AdminHome({ searchParams }: { searchParams: Promise<SearchParams> }) {
+  const [requestHeaders, jar, params] = await Promise.all([headers(), cookies(), searchParams]);
+  const observedAt = new Date().toISOString();
+  const guard = await guardAdminRequest({ headers: requestHeaders,
+    cookie: jar.get(ADMIN_SESSION_COOKIE)?.value, checkOrigin: false,
+    nowSeconds: Math.floor(Date.parse(observedAt) / 1000) });
+  if (!guard.ok) {
+    if (guard.status === 404) notFound();
+    redirect("/admin/login");
   }
-}
-
-function SavedHuntOverview({ decision, scope, now, read }: {
-  decision: ExpansionScopeDecision; scope: MwScope; now: string;
-  read: { value: HuntOverviewFields | null; gap: string | null };
-}) {
-  const fields = read.value;
-  const view = fields?.assignments?.kind === "BUILT" ? fields.assignments.view : null;
-  const exact = exactInstructionMembership(view,decision.key,decision.receiptId);
-  const members = exact.index;
-  const counts = exact.counts;
-  const stateCount = (state: string) => counts?.[state as keyof typeof counts] ?? null;
-  const total = counts ? Object.values(counts).reduce((n, value) => n + value, 0) : null;
-  const active = stateCount("WORKING"), waiting = stateCount("WAITING");
-  const blocked = counts ? (counts.BLOCKED ?? 0) + (counts.FAILED ?? 0) + (counts.UNKNOWN ?? 0) : null;
-  const blockers = rankedWorkBlockers(members ?? [], now).slice(0, 5);
-  const cost = decision.budgetStartedAt ? fields?.billingAttribution?.hunts?.find(row =>
-    row.key === decision.key && row.receiptId === decision.receiptId && row.startedAt === decision.budgetStartedAt) ?? null : null;
-  const legacyCost = !cost && decision.key === ORIGINAL_LIFETIME_HUNT.key && decision.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
-    decision.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt
-    ? fields?.billingAttribution?.hunts?.find(row => row.key === decision.key && row.startedAt === decision.budgetStartedAt && !row.receiptId) ?? null : null;
-  const census = fields?.checklists?.find(row => row.scopeId === decision.key && row.instructionReceipt === decision.receiptId) ?? null;
-  const instantiated = new Set(census?.instances.flatMap(row => row.definitionIds) ?? []);
-  const missingDefinitions = census ? CHECKLIST_PROFILE.definitions.length - instantiated.size : null;
-  const attempts = exact.bodyAttempts;
-  const visible = attempts?.flatMap(attempt => {
-    if (attempt.status === "HELD" || !attempt.versionId) return [];
-    const witness = servedWitness(fields?.servedReaderReadback ?? null, attempt.workItemId, attempt.workerResultId, now);
-    return witness?.versionId === attempt.versionId && witness.readerKey === attempt.bodyId ? [{ attempt, witness }] : [];
-  }).sort((a, b) => b.attempt.at.localeCompare(a.attempt.at)).slice(0, 3) ?? null;
-  const workHref = withScope("/admin/work", scope, { instruction: decision.key });
-  const moneyHref = withScope("/admin/money", scope);
-  const doneHref = withScope("/readiness/done", scope);
-  const figure = (n: number | null) => n === null ? "Not measured" : n.toLocaleString("en-US");
-  const dollars = (n: number | null) => n === null ? "not measured" : `$${n.toFixed(2)}`;
-  const categoryWords: Record<string,string> = {NEEDS_OWNER_DECISION:"Needs your decision",AUTOMATIC_REPAIR:"Automatic repair",WAITING_ON_PUBLISHER:"Waiting on the publisher",NEEDS_CODE_CHANGE:"Needs a code change",OWNER_UNCLEAR:"Next owner unclear"};
-  const ownerWords: Record<string,string> = {OWNER:"you",SOURCE:"publisher",ENGINEERING:"engineering",AUTOMATION:"the system",NOBODY:"not assigned"};
-  return <>
-    <Section title={`Your saved hunt · ${decision.geography.label}`}
-      lede={`Started ${formatEastern(decision.budgetStartedAt ?? decision.decidedAt, { year: true })}. Last overview ${fields ? formatEastern(fields.publishedAt, { year: true }) : "not read"}. This is tracked progress toward your saved instruction; the checklist and public results require separate proof.`} />
-    <details className={s.note} style={{ marginBottom: 16 }}><summary>How this overview is connected</summary><p>Instruction key {decision.key}; receipt {decision.receiptId}. Work and public attempts use this exact saved receipt; cost uses its budget start and the checklist uses its receipt. Earlier snapshots without receipt attribution remain unmeasured here.</p></details>
-    {read.gap && <p className={s.goldNote}>{read.gap}</p>}
-    <div className={s.gridAuto220} style={{ marginBottom: 20 }}>
-      <div className={s.insetTile}><span className={s.titleStrong14}>Work linked to this saved instruction</span><p className={s.fig}>{figure(total)}</p><p className={s.note}>{figure(active)} working · {figure(waiting)} waiting · {figure(blocked)} blocked, failed or unknown. These are receipt-linked tracked assignments, not complete coverage.</p></div>
-      <div className={s.insetTile}><span className={s.titleStrong14}>Money since this hunt started</span><p className={s.fig}>{cost?.budgetConsumedKnownUsd === undefined ? "Not measured" : dollars(cost.budgetConsumedKnownUsd)}</p><p className={s.note}>Known Anthropic charges consuming this {dollars(decision.budgetUsd)} allowance, including shared requests. {cost?.budgetConsumedKnownUsd !== undefined ? `${dollars(cost.reservedUsd)} reserved · ${dollars(cost.budgetUnpriced ? null : cost.availableUsd)} available · ${cost.budgetUnpriced ?? 0} unpriced token request${cost.budgetUnpriced === 1 ? "" : "s"}. ${dollars(cost.anthropicKnownUsd)} Anthropic and ${dollars(cost.otherKnownUsd)} other known costs allocated here once for reporting; ${dollars(cost.knownCombinedUsd)} combined allocated known. ${cost.anthropicUsd === null || cost.otherUsd === null ? "At least one service total is incomplete; known combined cost is a subtotal, not the final total." : ""} ${cost.unpriced > 0 ? `${cost.unpriced} provider request${cost.unpriced === 1 ? "" : "s"} still need pricing.` : ""}` : legacyCost ? `Earlier billing linked by hunt key and start, without the saved instruction receipt, records ${dollars(legacyCost.anthropicKnownUsd ?? legacyCost.anthropicUsd)} known Anthropic charges. Other-service total is ${legacyCost.otherUsd === null ? "incomplete" : dollars(legacyCost.otherKnownUsd ?? legacyCost.otherUsd)}. These are historical amounts, not exact receipt attribution or confirmed remaining allowance. ${legacyCost.unpriced} request${legacyCost.unpriced === 1 ? "" : "s"} still need pricing.` : "No exact allowance-consumption reading is published; zero is not implied."}</p></div>
-      <div className={s.insetTile}><span className={s.titleStrong14}>Full checklist</span><p className={s.fig}>{census ? `${census.instances.length} represented items` : "Not measured"}</p><p className={s.note}>{census ? `${missingDefinitions} of ${CHECKLIST_PROFILE.definitions.length} original definitions are not represented in this census; ${census.inventory.unresolvedObjects} source inventories unresolved. Representation earns no passing credit. ${census.gaps.length > 0 ? census.gaps[0] : "No gap summary is recorded; this does not establish completeness."}` : "No census matches this exact instruction and receipt. Missing requirements are unknown, not passed."}</p></div>
-    </div>
-    <div className={s.row10} style={{ marginBottom: 20 }}><Link className={s.btnLink} href={workHref}>Open all linked work</Link><Link className={s.btnLink} href={moneyHref}>See money</Link><Link className={s.btnLink} href={doneHref}>See checklist and delivery</Link></div>
-    <div className={s.card} style={{ marginBottom: 24 }}><h3 className={s.h3}>Next blockers on this instruction</h3>
-      {members === null ? <p className={s.note}>The full assignment index is not published; ranked blockers cannot be measured.</p>
-        : blockers.length === 0 ? <p className={s.note}>No blocker is classified among the linked tracked assignments. This does not establish complete source coverage.</p>
-          : <div className={s.stack8}>{blockers.map(({row,ageDays,category,rankingWhy}) => <div key={row.id} className={s.insetRow}>
-            <Link className={s.btnLink} href={withScope("/admin/work", scope, { instruction: decision.key, open: row.id })}>{row.label}</Link>
-            <span className={s.note}>{categoryWords[category]} · {ageDays === null ? "waiting age unknown" : `${ageDays} days waiting`} · next owner: {row.owner in ownerWords ? ownerWords[row.owner] : "Owner is not recorded"} · last attempt: {row.lastAttemptAt ? formatEastern(row.lastAttemptAt) : "not recorded"}</span>
-            <span className={s.text14}>{plainText(row.blocker) || "Overdue"}. Next: {plainText(row.nextAction) ? plainText(row.nextAction) : "Next action is not recorded on this work item."}</span>
-            {(row.blocker && plainText(row.blocker) !== row.blocker || plainText(row.nextAction) !== row.nextAction) && <details className={s.note}><summary>Recorded reason and action</summary>{row.blocker ? row.blocker : "No blocker reason is recorded on this work item."} · {row.nextAction}</details>}
-            <span className={s.note}>Why it is high on the list: {rankingWhy.replace(" Downstream work unlocked is not measured.", "")}{row.readyAfterThisSettlesCount === null || row.readyAfterThisSettlesCount === undefined ? " · Work this would unlock is not measured." : ` · ${row.readyAfterThisSettlesCount} directly dependent item${row.readyAfterThisSettlesCount === 1 ? "" : "s"} would be ready once this settles.`}</span>
-          </div>)}</div>}
-    </div>
-    <div className={s.card} style={{ marginBottom: 30 }}><h3 className={s.h3}>Latest confirmed public results</h3>
-      {visible === null ? <p className={s.note}>The publisher-attempt projection is unavailable; public results cannot be attributed here.</p>
-        : visible.length === 0 ? <p className={s.note}>No linked publisher attempt has a current matching public readback. This does not mean no source work happened.</p>
-          : <div className={s.stack8}>{visible.map(({attempt,witness}) => <div key={`${attempt.workItemId}:${attempt.workerResultId}`} className={s.insetRow}>
-            <a className={s.btnLink} href={witness.url}>Open published result</a><span className={s.note}>{attempt.status === "PARTIALLY_PUBLISHED" ? "Partial publication · " : ""}{attempt.acceptedCount === null ? "accepted count unrecorded" : `${attempt.acceptedCount} accepted`} · reader confirmed {formatEastern(witness.checkedAt)}</span><details className={s.note}><summary>Result reference and recorded changes</summary>{attempt.bodyId} · version {witness.versionId}
-              {attempt.recordChanges?.length ? <ul>{attempt.recordChanges.map(row => <li key={row.recordId}>{row.change === "NEW" ? "New" : row.change === "UPDATED" ? "Updated" : "Reused unchanged"} · {row.readerId}{row.previousVersionId ? ` · compared with ${row.previousVersionId}` : " · no prior published record"}</li>)}</ul> : <p>Record changes were not recorded for this publication.</p>}
-            </details>
-          </div>)}</div>}
-      <p className={s.note}>New, updated and reused labels come from accepted records compared with the prior verified version. Reuse does not establish an avoided paid call or dollar saving; those amounts are not measured here.</p>
-    </div>
-  </>;
-}
-
-export default async function FleetNowPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
-  const sp = await searchParams;
-  // The body read is the longest one a first open waits for (all of it database work), so it starts before the policy row is read.
-  const nowIso = new Date().toISOString();
-  const asked = parseScope(sp.scope);
-  const bodiesEarly = asked.kind === "all" || isTrackedState(asked.state) ? loadWatchedBodies(nowIso) : null;
-  const base = await openPage("/admin", sp, nowIso);
-  const shellProps = {
-    area: "fleet" as const,
-    tab: "now" as const,
-    scope: base.scope,
-    scopeLabel: base.shell.label,
-    scopeGroups: base.shell.groups,
-    here: base.here,
-    observedAt: base.nowIso,
-    standard: base.standard,
-  };
-
-  if (!base.shell.tracked && base.shell.decision === null) {
-    const name = base.scope.kind === "all" ? "Everywhere" : stateName(base.scope.state);
-    return (
-      <MwShell {...shellProps}>
-        <EmptyScope
-          name={name}
-          scope={base.scope}
-          standing={base.shell.standing}
-          census={base.scope.kind === "all" ? undefined : censusUniverseWords(name, censusEntryOf(base.scope.state))}
-        />
-      </MwShell>
-    );
-  }
-  if (base.repos === null) {
-    return (
-      <MwShell {...shellProps}>
-        <NotAsked detail={base.controlPlaneGap} />
-      </MwShell>
-    );
-  }
-
-  const repos = base.repos;
-  const selectedHunt = base.scope.kind === "geo" ? base.shell.decision : null;
-  const container = base.scope.kind === "geo" ? base.scope.type === "zcta" ? loadZcta(base.scope.geoid) : loadContainer(base.scope.type, base.scope.geoid) : null;
-  const [bodiesRead, containerRead, huntOverview] = await Promise.all([
-    bodiesEarly ?? loadWatchedBodies(base.nowIso),
-    container,
-    selectedHunt ? readHuntOverview(repos) : Promise.resolve({ value: null, gap: null }),
-  ]);
-
-  /* ------------------------------------------------------------ the scope's bodies */
-  let bodies: readonly BodyView[] = [];
-  let scopeNote: string | null = null;
-  if (bodiesRead.kind === "HELD") {
-    if (base.scope.kind === "all") bodies = bodiesRead.views.filter((b) => b.stateCode !== null);
-    else if (base.scope.kind === "state") {
-      const st = base.scope.state;
-      bodies = bodiesRead.views.filter((b) => b.stateCode === st);
-    } else if (containerRead && containerRead.kind === "HELD") {
-      const divisions = divisionsOf(containerRead.value.zctas);
-      bodies = bodiesRead.views.filter((b) => b.ocdId !== null && divisions.has(b.ocdId));
-      const outside = containerRead.value.zctas.filter((z) => !z.indexed).length;
-      if (outside > 0) {
-        scopeNote = `${outside} of this geography's ${containerRead.value.zctas.length} ZCTAs are outside the ZIP index this repository has geometry for, so bodies reaching only those codes are not listed — the list is a floor.`;
-      }
-    } else {
-      scopeNote = containerRead?.kind === "UNREAD" ? containerRead.detail : "This geography could not be resolved, so no body is placed in it.";
-    }
-  }
-  const figures = nowFigures(bodies);
-
-  /* ------------------------------------------------------------ the page's audit */
-  const numbers: RenderedNumber[] = [];
-  const claims: CountClaim[] = [];
-  const bodiesHeld = bodiesRead.kind === "HELD";
-  if (bodiesHeld) {
-    numbers.push({ label: "bodies that got in", value: figures.gotIn, denominator: Math.max(figures.bodies, figures.gotIn), contract: "watched bodies whose own last read got in, of every watched body in scope" });
-    // The card draws could-not-get-in and not-read-in-seven-days as one figure, so the audit declares that figure.
-    numbers.push({ label: "bodies we could not get into or have not read", value: figures.couldNot + figures.notRead, denominator: Math.max(figures.bodies, figures.couldNot + figures.notRead), contract: "watched bodies whose own last read could not get in, or with no read in seven days, of every watched body in scope" });
-    numbers.push({ label: "records held", value: figures.records, denominator: figures.records, contract: "meetings in the versions held for the bodies in scope, now" });
-    numbers.push({ label: "records a reader can open", value: figures.readerVisible, denominator: figures.records, contract: "meetings in versions the typed Reader read back, of all meetings held" });
-    numbers.push({ label: "past meetings with no agenda", value: figures.noAgendaLink, denominator: figures.records, contract: "past meetings carrying neither an agenda link nor an attached agenda, of all meetings held" });
-    if (figures.day) {
-      const total = figures.day.added + figures.day.changed + figures.day.removed;
-      numbers.push({ label: "changes in 24 hours", value: total, denominator: total, contract: "records added, revised or removed in versions promoted in the last 24 hours" });
-    }
-    claims.push({ label: "bodies", stated: bodies.length, rendered: bodies.length });
-  }
-  const numberAudit = auditRenderedNumbers(numbers);
-  const countAudit = checkStatedEqualsRendered(claims);
-
-  if (!numberAudit.ok || !countAudit.ok) {
-    return (
-      <MwShell {...shellProps}>
-        <Refusal title="This page refused to draw its own numbers.">
-          {!numberAudit.ok && <p>{numberAudit.detail}</p>}
-          {!countAudit.ok && <p>{countAudit.detail}</p>}
-          <p>A number without a denominator, or a headline that disagrees with the rows beneath it, is worse than a blank page: you would act on it.</p>
-        </Refusal>
-      </MwShell>
-    );
-  }
-
-  /* ------------------------------------------------------------ the three cards */
-  const floor = figures.floor;
-  const unreadable = figures.couldNot + figures.notRead;
-  const dayTotal = figures.day ? figures.day.added + figures.day.changed + figures.day.removed : null;
-  const working: FigLine[] = bodiesHeld
-    ? [
-        {
-          key: "got-in",
-          fig: String(figures.gotIn),
-          tone: "gold",
-          text: `of ${figures.bodies} ${figures.bodies === 1 ? "body" : "bodies"} got in when they last looked — each at its own last read`,
-        },
-        {
-          key: "changes",
-          fig: dayTotal === null ? null : dayTotal.toLocaleString("en-US"),
-          unknown: "NOT READ IN 24H",
-          floor: floor && dayTotal !== null,
-          tone: "text",
-          text:
-            figures.day === null
-              ? "changes: no body in scope was read in the last 24 hours"
-              : `changes caught in the last 24 hours${unreadable > 0 ? `, not counting ${unreadable} ${unreadable === 1 ? "body" : "bodies"} we could not read` : ""}`,
-        },
-        {
-          key: "held",
-          fig: figures.records.toLocaleString("en-US"),
-          floor: figures.recordsFloor,
-          tone: "accent",
-          text: `records held as of now; ${figures.readerVisible.toLocaleString("en-US")} of them in versions a reader was confirmed able to open${
-            figures.recordsFloor ? ". A body read through two sources counts the larger, since both may list the same sitting" : ""
-          }`,
-        },
-      ]
-    : [];
-  /*
-   * The breakdown of the 24-hour figure, and what its size says. Revisions many
-   * times the records held can only be the same records re-issued on repeated
-   * reads, so the page says so — from the two figures, not from a belief.
-   */
-  let revisionsNote = "";
-  if (figures.day) {
-    const d = figures.day;
-    revisionsNote = ` The 24 hours: ${d.added.toLocaleString("en-US")} added, ${d.changed.toLocaleString("en-US")} revised, ${d.removed.toLocaleString("en-US")} removed.`;
-    const perRecord = figures.records > 0 ? d.changed / figures.records : 0;
-    if (perRecord >= 2) {
-      revisionsNote += ` ${d.changed.toLocaleString("en-US")} revisions against ${figures.records.toLocaleString("en-US")} records held is about ${Math.round(perRecord)} per record in a day, so most are the same records re-issued on repeated reads, not new facts.`;
-    }
-  }
-  const isnt: FigLine[] = bodiesHeld
-    ? [
-        {
-          key: "could-not",
-          fig: String(unreadable),
-          tone: unreadable > 0 ? "amber" : "muted",
-          text: unreadable > 0 ? "bodies we could not get into or have not read in seven days, so we do not know what we are missing" : "bodies we could not get into",
-        },
-        {
-          key: "disagrees",
-          fig: null,
-          unknown: "NOT CHECKED",
-          text: "records that disagree with something else we hold — nothing checks this for meetings yet, so it is unknown, not zero",
-        },
-        {
-          key: "gaps",
-          fig: figures.noAgendaLink.toLocaleString("en-US"),
-          floor,
-          tone: figures.noAgendaLink > 0 ? "gold" : "muted",
-          text: `past meetings we hold with no agenda attached${figures.held > 0 ? `, and ${figures.held} ${figures.held === 1 ? "record" : "records"} held back by a check` : ""}${floor ? ", before counting the bodies we could not read" : ""}`,
-        },
-      ]
-    : [];
-
-  const stateNames: Record<string, string> = Object.fromEntries(US_STATES.map((st) => [st.code, st.name]));
-  /*
-   * The body list is sent only the views it draws: the first few, or every one
-   * when the list was asked for whole or a link names a body past the first
-   * few. Each view sent travels in the page as data (689 KB for all 120 on
-   * 2026-09-25, twelve of them drawn), so the rest come when "show all" asks.
-   */
-  const askedBody = typeof sp.body === "string" ? sp.body : null;
-  const askedAll = sp.bodies === "all";
-  const every = askedAll || (askedBody !== null && bodies.findIndex((b) => b.id === askedBody) >= FIRST_BODIES_SHOWN);
-  const bodyList = { sent: every ? bodies : bodies.slice(0, FIRST_BODIES_SHOWN), every, asked: askedBody, askedAll };
-  const workHref: Record<string, string> = {};
-  for (const b of bodyList.sent) for (const id of b.contractIds) workHref[id] = withScope(`/admin/work?open=${encodeURIComponent(routineAssignmentId(id))}`, base.scope);
-
+  const scope: MwScope = parseScope(params.scope);
+  const reference = liveReference({ scope, observedAt });
   return (
-    <MwShell {...shellProps} extraStrip={[{ label: "BODIES READ", value: bodiesRead.kind === "HELD" ? formatEastern(bodiesRead.asOf) : "not read", warn: bodiesRead.kind !== "HELD" }]}>
-      {selectedHunt && <SavedHuntOverview decision={selectedHunt} scope={base.scope} now={base.nowIso} read={huntOverview} />}
-      {bodiesRead.kind === "UNREAD" ? (
-        <Refusal title="The bodies could not be read just now.">{bodiesRead.detail}</Refusal>
-      ) : (
-        <div className={s.gridAuto320} style={{ marginBottom: 32 }}>
-          <div className={s.card}>
-            <h2 className={s.h2Card}>What is working</h2>
-            <FigList lines={working} />
-            <p className={s.footnote}>
-              Three different windows: the first line is each body&rsquo;s own last read, the second is the last 24 hours, the third is how things stand right now.
-              They are not one number and are never added together.{revisionsNote}
-            </p>
-          </div>
-          <div className={s.card}>
-            <h2 className={s.h2Card}>What isn&rsquo;t</h2>
-            <FigList lines={isnt} />
-            <p className={s.footnote}>
-              Could not get into is not the same as nothing wrong. Where a body could not be read, the figures above are floors — the real number can only be higher.
-            </p>
-          </div>
-        </div>
-      )}
-
-      <Section
-        title="Every body we watch"
-        lede={
-          bodiesRead.kind === "HELD" ? (
-            <>
-              {bodies.length} {bodies.length === 1 ? "body" : "bodies"}
-              {base.scope.kind === "all" ? "" : ` in ${base.shell.label}`}. Each shows where it stands on the six things we are always trying to find out, as of its own
-              last read. Open one to see everything happening to it.{scopeNote ? ` ${scopeNote}` : ""}
-            </>
-          ) : (
-            "The bodies could not be read, so none is listed — that is not an empty list."
-          )
-        }
-      />
-      {bodiesRead.kind === "HELD" &&
-        (bodies.length === 0 ? (
-          <div className={s.dashedCard}>
-            <div className={s.row}>
-              <Dash large>NONE REGISTERED HERE</Dash>
-              <span className={s.note}>No body with a registered meeting source sits in this scope. That is a fact about what is registered, not about what governs here.</span>
-            </div>
-          </div>
-        ) : (
-          // Keyed by what was sent, so the island starts over (showing every body) when "show all" brings the rest.
-          <BodyList
-            key={bodyList.every ? "every" : "first"}
-            bodies={bodyList.sent}
-            total={bodies.length}
-            stateNames={stateNames}
-            workHref={workHref}
-            firstShown={FIRST_BODIES_SHOWN}
-            initiallyOpen={bodyList.asked}
-            initiallyAll={bodyList.askedAll}
-            showAllHref={withScope("/admin", base.scope, { bodies: "all", body: bodyList.asked })}
-          />
-        ))}
-
-      <AuditFooter numbers={numbers} claims={claims} readAt={formatEastern(base.nowIso, { year: true })} />
-    </MwShell>
+    <div className="admin">
+      <LiveRefresh />
+      <Suspense fallback={<p role="status">Loading the command center…</p>}>
+        <LiveCommandCenter reference={reference} initialScopeKey={placeKeyOf(scope)}
+          access={{ role: "owner", canSpend: true, outreachAuthorized: false }}
+          initialView={parseView(params.view)} chatControls={everyControl()} />
+      </Suspense>
+    </div>
   );
 }

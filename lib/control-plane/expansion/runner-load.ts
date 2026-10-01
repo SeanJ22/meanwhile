@@ -48,6 +48,8 @@ import { expansionScopesOf, type ExpansionScopeDecision } from "./scopes.ts";
 import { declaredWorkMembers, type ScopedStandingWork } from "./declared-work-scope.ts";
 import { addCensusSchoolShares, withCensusSchoolTerritories } from "./census-scope-observations.ts";
 import dependentSchools from "./reference/census-dependent-school-territories.json" with { type: "json" };
+import { readFieldManual, type FieldManualRead } from "../field-manual.ts";
+import { divisionsForZip, type PlaceDivision } from "./national-geography.ts";
 
 /** Where the committed Census unit territories live, relative to the repository root. */
 export const CENSUS_UNIT_TERRITORY_PATH = ["data", "derived", "census-unit-zips.json"] as const;
@@ -228,6 +230,11 @@ export async function resolveScopes(
 type LookupState = { readonly lookup: CensusGeographyLookup; readonly source: PublishedLookupSource; readonly versionId: string };
 
 export interface ExpansionLoad {
+  /** Fresh Census divisions for ZIPs not yet in the shared published lookup.
+   * Acquisition inputs for held-first hunts, not invented registry bodies. */
+  readonly nationalPlaces?: ReadonlyMap<string, readonly PlaceDivision[]>;
+  /** Inherited sources, methods and dead ends, read before geography or dispatch. */
+  readonly knowledge?: FieldManualRead;
   /** Null when no scope is selected and nothing on the policy row is unreadable: the cycle runs exactly as before. */
   readonly plan: ExpansionPlan | null;
   /** Named runtime conditions for the research state. Empty when nothing went wrong. */
@@ -256,6 +263,7 @@ export async function loadExpansionPlan(input: {
   readonly loadLookup?: () => Promise<LookupState>;
   /** Injected in tests; the runner reads the committed territories and the preloaded registries. */
   readonly loadTerritory?: () => TerritoryIndex;
+  readonly loadNationalZip?: (zip: string) => Promise<readonly PlaceDivision[]>;
   /**
    * Called once the scopes are resolved, with every state they span (a metro's member states included), before
    * the territory is read: the runner reads there the registration of each state with no reviewed registry
@@ -297,6 +305,8 @@ export async function loadExpansionPlan(input: {
     );
   }
   if (decisions.length === 0 && malformed === 0) return { plan: null, conditions };
+  const knowledge = await readFieldManual(input.repos);
+  if (knowledge.error) conditions.push(`Shared knowledge could not be read: ${knowledge.error}`);
   if (malformed > 0 && conditions.length === 0) {
     conditions.push(`${malformed} entr${malformed === 1 ? "y" : "ies"} on the owner's expansion scope list could not be read; paid Scout work is held this cycle`);
   }
@@ -308,15 +318,31 @@ export async function loadExpansionPlan(input: {
       state = await (input.loadLookup ?? (() => loadPublishedLookupState({ bypassCache: true })))();
     } catch (error) {
       unreadable = error instanceof Error ? error.message : String(error);
-      conditions.push(`the Census geography lookup could not be read (${unreadable}); no expansion scope is resolved this cycle`);
+      conditions.push(`the published Census geography lookup could not be read (${unreadable}); ZIPs try the national Census source`);
     }
   }
   const resolved = await resolveScopes(decisions, state, unreadable);
+  const nationalPlaces = new Map<string, readonly PlaceDivision[]>();
+  const scopes = await Promise.all(resolved.scopes.map(async scope => {
+    const geography = scope.decision.geography;
+    if (scope.kind !== "UNRESOLVED" || geography.type !== "zcta" || geography.version !== "zcta:2020") return scope;
+    try {
+      const divisions = await (input.loadNationalZip ?? divisionsForZip)(geography.geoid);
+      const states = [...new Set(divisions.flatMap(d => /^ocd-division\/country:us\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(d.id)?.[1].toUpperCase() ?? []))];
+      if (!states.length || !divisions.some(d => d.divisionType === "county")) throw new Error("Census returned no county/state divisions for the ZIP");
+      nationalPlaces.set(geography.geoid, divisions);
+      return { kind: "RESOLVED" as const, decision: scope.decision, states,
+        zctas: new Set([geography.geoid]), whole: new Set([geography.geoid]), fractions: new Map<string, number>() };
+    } catch (error) {
+      conditions.push(`National Census lookup for ${geography.geoid} failed: ${error instanceof Error ? error.message : String(error)}`);
+      return scope;
+    }
+  }));
 
   let territory: TerritoryIndex | null = null;
   let territoryDetail: string | null = null;
   if (decisions.length > 0 && input.beforeTerritory !== undefined) {
-    const states = [...new Set(resolved.scopes.flatMap((s) => s.states.map((st) => st.toUpperCase())))].sort();
+    const states = [...new Set(scopes.flatMap((s) => s.states.map((st) => st.toUpperCase())))].sort();
     try {
       conditions.push(...(await input.beforeTerritory(states)));
     } catch (error) {
@@ -342,10 +368,12 @@ export async function loadExpansionPlan(input: {
     catch (error) { malformed += 1; conditions.push(`Shared-work scope attribution failed; paid work is held: ${error instanceof Error ? error.message : String(error)}`); }
   }
   return {
+    knowledge,
+    nationalPlaces,
     plan: planExpansion({
       declaredMembers,
       now: input.now,
-      scopes: resolved.scopes,
+      scopes,
       malformedScopes: malformed,
       lookup: resolved.lookup,
       territory,

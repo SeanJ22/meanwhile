@@ -24,7 +24,7 @@
  * ## The guards, and the one that is deliberately absent
  *
  * Host and session, both enforced. **No origin check**, matching the existing
- * read route (`GET /api/admin/release-review`): an origin check on a GET buys
+ * read routes: an origin check on a GET buys
  * nothing, because a cross-site reader cannot see the response. The asymmetry is
  * named at the call site rather than left to be inferred.
  *

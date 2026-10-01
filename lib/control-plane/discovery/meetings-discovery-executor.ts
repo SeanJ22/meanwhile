@@ -39,6 +39,7 @@ import { officialLinkingPageFrom } from "../../sources/official-page-events/inde
  */
 
 import { createHash } from "node:crypto";
+import { RESEARCH_BOUNDS } from "../scheduler/research-policy.ts";
 
 import { accessControlIn } from "../../hunt/access-control.ts";
 import { assertPublicUrl } from "../../hunt/egress.ts";
@@ -85,6 +86,7 @@ import { writeFieldManualDiscoveries } from "../scheduler/field-manual-scout.ts"
 import { DEFAULT_ROBOTS_TOKEN, evaluatePermission } from "../scheduler/robots.ts";
 import { DEFAULT_USER_AGENT, type VaultPut } from "../scheduler/route-executor.ts";
 import { categoryBodyOf } from "./auto-crosswalk.ts";
+import type { OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 
 /** One HTTP hop. It never follows a redirect: the executor asks permission of every new host first. */
 export type DiscoveryOpen = (input: {
@@ -104,6 +106,8 @@ export type DiscoveryOpen = (input: {
 export interface DiscoveryRuntime {
   /** Previously saved, readable publisher pages; never inferred from a hostname. */
   readonly readOfficialPages?: () => Promise<readonly { canonicalUrl: string; text: string }[]>;
+  /** Saved official-page links establish authority for government and vendor hosts. */
+  readonly officialLinkingPageFor?: (url: string) => OfficialLinkingPage | null | Promise<OfficialLinkingPage | null>;
   readonly open: DiscoveryOpen;
   /** The runner's shared per-host spacing. */
   readonly spaceOut: (host: string) => Promise<void>;
@@ -117,6 +121,8 @@ export interface DiscoveryRuntime {
    */
   readonly budget: { readonly spent: () => boolean; readonly remainingMs?: () => number };
   readonly maxRequestsPerWalk?: number;
+  /** Actual prior source reads; unvisited routes precede previously read ones. */
+  readonly priorAttempts?: readonly MeetingsDiscoveryAttempt[];
   readonly timeoutMs?: number;
   /**
    * The saved methods the runner knows (`knownRecipes` over the field manual).
@@ -215,14 +221,14 @@ export function searchCostEntry(input: {
 export { RECORDED_WALLS } from "../../hunt/recorded-walls.ts";
 import { RECORDED_WALLS } from "../../hunt/recorded-walls.ts";
 
-export const DEFAULT_MAX_REQUESTS_PER_WALK = 12;
+// Plain-code walks read the finite source inventory; the caller still owns its actual time/resource allowance.
+export const DEFAULT_MAX_REQUESTS_PER_WALK = Infinity;
 const DEFAULT_TIMEOUT_MS = 20_000;
 /** Less time than this left, and a request is not sent: it could not come back inside the budget. */
 const MIN_REQUEST_MS = 2_000;
 const MAX_REDIRECT_HOPS = 4;
 /** RFC 9309 §2.3.1.2: at least five consecutive redirects are followed for robots.txt. */
 const MAX_ROBOTS_REDIRECTS = 5;
-const MAX_ENDPOINTS_PER_WALK = 6;
 const ACCEPT_PAGE = "text/html,application/xhtml+xml,application/json,text/calendar,*/*;q=0.8";
 const ACCEPT_ROBOTS = "text/plain,*/*;q=0.5";
 const SOURCE_ID = "meetings-discovery";
@@ -308,6 +314,9 @@ export async function walkMeetingsDiscoveryNeed(
   const searchScope = runtime.search === undefined ? null : runtime.searchScopeFor?.(need.jurisdictionId) ?? null;
   const robotsByHost = new Map<string, { readonly verdict: StepPermission; readonly detail: string; readonly rateLimited?: true }>();
   let requests = 0;
+  const requestsByHost = new Map<string, number>();
+  const hostKey = (url: URL) => url.hostname.toLowerCase().replace(/^www\./, "");
+  const hostSpent = (url: URL) => (requestsByHost.get(hostKey(url)) ?? 0) >= RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost;
 
   const skipped = (purpose: DiscoveryStep["purpose"], url: string, permission: StepPermission, note: string): void => {
     steps.push({ purpose, url, permission, status: null, transportError: null, bytes: 0, artifactId: null, rung: null, note });
@@ -388,6 +397,8 @@ export async function walkMeetingsDiscoveryNeed(
     await runtime.spaceOut(url.host.toLowerCase());
     const left = timeLeftMs();
     if (left < MIN_REQUEST_MS) throw new OutOfTime();
+    if (hostSpent(url)) return { status: null, body: "", bytes: 0, contentType: "", location: null, transportError: "shared per-website request bound reached" };
+    requestsByHost.set(hostKey(url), (requestsByHost.get(hostKey(url)) ?? 0) + 1);
     requests += 1;
     return runtime.open({
       url: url.toString(),
@@ -477,8 +488,10 @@ export async function walkMeetingsDiscoveryNeed(
         skipped(purpose, url.toString(), permission.verdict, "not requested: the host answered HTTP 429 to robots.txt; a rate limit is honoured, never pushed through");
         return null;
       }
-      if (requests >= maxRequests) {
-        skipped(purpose, url.toString(), permission.verdict, `not requested: the walk reached its ${maxRequests}-request bound`);
+      if (requests >= maxRequests || hostSpent(url)) {
+        skipped(purpose, url.toString(), permission.verdict, hostSpent(url)
+          ? `not requested: the website reached its ${RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost}-request bound; source remains owed`
+          : `not requested: the walk reached its ${maxRequests}-request bound`);
         return null;
       }
       const got = await hop(url, accept);
@@ -552,11 +565,11 @@ export async function walkMeetingsDiscoveryNeed(
    * attested: the recorded address, the current official site a route hint records with its evidence, or a host
    * one of those named by its own redirect. Before any homepage is read, the first origin tried.
    */
-  const pageIdentity = (pageLabel: string | null, pageUrl: string): OfficialPageIdentity => ({
+  const pageIdentity = async (pageLabel: string | null, pageUrl: string): Promise<OfficialPageIdentity> => ({
     bodyId: need.jurisdictionId,
     name: need.name,
     pageLabel,
-    linkingPage: officialLinkingPageFrom(pageUrl, officialPages),
+    linkingPage: officialLinkingPageFrom(pageUrl, officialPages) ?? await runtime.officialLinkingPageFor?.(pageUrl),
     officialHost: new URL(homeOrigin ?? origins[0] ?? "https://invalid.invalid").host,
     stateCode: need.stateCode,
     now: runtime.now(),
@@ -617,15 +630,9 @@ export async function walkMeetingsDiscoveryNeed(
       }
     }
 
-    /*
-     * 2b. A CivicPlus site's calendar feeds (2026-09-25, the 85635 expansion). An AgendaCenter page cannot be wired;
-     * the ICAL wiring reads a feed, and every CivicPlus site lists one per calendar category on its iCalendar index.
-     * On a site whose own markup shows CivicPlus, the index is read robots-first like any page, and each category is
-     * matched to the body it names by the reviewer's own rule (`categoryBodyOf`). Only a category naming the
-     * government's registered body is proposed, as an iCal feed the index links, so the ICAL wiring and the C16
-     * reviewer take it; every other category is recorded unmatched, with its reason. Nothing is guessed. The index
-     * is recorded as a lead: it is the page the proposed feeds' attestation chains through.
-     */
+    /* Read every category the official index links. A department or general
+     * calendar can carry meetings of several bodies. Category names may help
+     * attribution, but never decide whether to acquire the feed. */
     const civicPlusFeeds: { candidate: EndpointCandidate; via: Via }[] = [];
     // Retain the linked public portal itself before using its API: the exact
     // body name and the official site's link are required for automatic review.
@@ -653,17 +660,15 @@ export async function walkMeetingsDiscoveryNeed(
         const unmatched: string[] = [];
         for (const feed of feeds) {
           const named = categoryBodyOf(feed.name, need.jurisdictionId);
-          if ("unmatched" in named) {
-            unmatched.push(`${named.unmatched} (catID ${feed.catId})`);
-            continue;
-          }
-          proposed.push(`"${feed.name}" (catID ${feed.catId})`);
+          if ("unmatched" in named) unmatched.push(`${named.unmatched} (catID ${feed.catId})`);
+          else proposed.push(`"${feed.name}" (catID ${feed.catId})`);
           civicPlusFeeds.push({
             candidate: {
               vendor: "ical",
               url: feed.url,
               basis: "LINKED",
-              evidence: `CivicPlus calendar category "${feed.name}" (catID ${feed.catId}), listed on ${index.finalUrl}: it names the government's governing body, "${named.name}"`,
+              evidence: `CivicPlus calendar category "${feed.name}" (catID ${feed.catId}), listed on ${index.finalUrl}: ` +
+                ("unmatched" in named ? "read each event for its own body; the category is not a body attribution" : `it names the government's governing body, "${named.name}"`),
               verifiable: true,
             },
             via: { page: index.finalUrl, artifactId: index.artifactId },
@@ -721,7 +726,13 @@ export async function walkMeetingsDiscoveryNeed(
         via: homePage,
       });
     }
-    for (const { candidate, recipeIds, label, via } of planned.slice(0, MAX_ENDPOINTS_PER_WALK)) {
+    const lastRead = new Map<string, string>();
+    for (const prior of runtime.priorAttempts ?? []) for (const step of prior.steps) {
+      if (step.purpose !== "endpoint" || step.status === null) continue;
+      if ((lastRead.get(step.url) ?? "") < prior.finishedAt) lastRead.set(step.url, prior.finishedAt);
+    }
+    planned.sort((a, b) => (lastRead.get(a.candidate.url) ?? "").localeCompare(lastRead.get(b.candidate.url) ?? ""));
+    for (const { candidate, recipeIds, label, via } of planned) {
       const got = await get(candidate.url, "endpoint", ACCEPT_PAGE);
       checked += 1;
       if (got !== null) readPages.push({ url: candidate.url, body: got.body, finalUrl: got.finalUrl, artifactId: got.artifactId });
@@ -737,7 +748,7 @@ export async function walkMeetingsDiscoveryNeed(
                   ? "a witness corroborates a sitting and is never one on its own"
                   : `no content check covers a ${hint.kind.toLowerCase()} yet: a lead, not a route`),
             }
-          : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, pageIdentity(label, got.finalUrl));
+          : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, await pageIdentity(label, got.finalUrl));
       const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail, via };
       if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got?.artifactId ?? null });
       else if (candidate.basis !== "RECIPE") leads.push(base);
@@ -767,12 +778,12 @@ export async function walkMeetingsDiscoveryNeed(
           else leads.push({ vendor: c.vendor, url: c.url, basis: c.basis, evidence: linked.evidence, detail: "recognised but not readable by any content check yet", via: pageVia });
         }
       }
-      for (const { candidate, via } of nextHop.slice(0, Math.max(0, MAX_ENDPOINTS_PER_WALK - checked))) {
+      for (const { candidate, via } of nextHop) {
         const got = await get(candidate.url, "endpoint", ACCEPT_PAGE);
         checked += 1;
         const check = got === null
           ? { verdict: "NOT_CONFIRMED" as const, count: null, detail: "the route could not be read this walk" }
-          : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, pageIdentity(null, got.finalUrl));
+          : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, await pageIdentity(null, got.finalUrl));
         const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail, via };
         if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got?.artifactId ?? null });
         else leads.push(base);
@@ -823,7 +834,8 @@ export async function walkMeetingsDiscoveryNeed(
         });
         for (const hit of res.hits) {
           if (followed.length >= MAX_HITS_FOLLOWED_PER_QUERY) break;
-          if (hitStanding(hit.url, identity.domain) === null || tried.has(hit.url)) continue;
+          const standing = hitStanding(hit.url, identity.domain, homePage && homeHtml ? { url: homePage.page, html: homeHtml } : null);
+          if (standing === null || tried.has(hit.url)) continue;
           tried.add(hit.url);
           const page = await get(hit.url, "endpoint", ACCEPT_PAGE);
           /* Listed once asked for: a result the time cut off before its request is not "followed". */
@@ -833,13 +845,13 @@ export async function walkMeetingsDiscoveryNeed(
           const direct = meetingEndpointCandidates(`<a href="${hit.url.replace(/"/g, "%22")}"></a>`, page.finalUrl).filter((c) => c.verifiable);
           const onPage = meetingEndpointCandidates(page.body, page.finalUrl).filter((c) => c.verifiable && !tried.has(c.url));
           /* A result on the government's own domain may itself be the page that dates its sessions: checked from the body already read. */
-          const selfPage = hitStanding(hit.url, identity.domain) === "OWN_SITE"
+          const selfPage = standing === "OWN_SITE"
             ? [{ vendor: "official-page-events", url: hit.url, basis: "SEARCH" as const, evidence: hit.url, verifiable: true }]
             : [];
           for (const c of [...direct, ...selfPage, ...onPage].slice(0, 3)) {
             const body = c.url === hit.url ? page : (tried.add(c.url), await get(c.url, "endpoint", ACCEPT_PAGE));
             if (body === null) continue;
-            const check = verifyEndpointBody(c, { status: body.status, body: body.body, finalUrl: body.finalUrl }, pageIdentity(null, body.finalUrl));
+            const check = verifyEndpointBody(c, { status: body.status, body: body.body, finalUrl: body.finalUrl }, await pageIdentity(null, body.finalUrl));
             const via: Via = onPage.includes(c) ? { page: page.finalUrl, artifactId: page.artifactId } : null;
             const base = { vendor: c.vendor, url: c.url, basis: "SEARCH" as const, evidence: `search "${q.query}" found ${hit.url}`, detail: check.detail, via };
             if (check.verdict !== "YIELDED") {
@@ -867,7 +879,7 @@ export async function walkMeetingsDiscoveryNeed(
      * so. A saved method not reached is neither credited nor charged: the time ran
      * out, not the method.
      */
-    for (const { candidate, via } of planned.slice(checked, MAX_ENDPOINTS_PER_WALK)) {
+    for (const { candidate, via } of planned.slice(checked)) {
       if (candidate.basis === "RECIPE") continue;
       leads.push({ vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: "not checked: the cycle's discovery time ran out first", via });
     }
@@ -894,7 +906,7 @@ export async function walkMeetingsDiscoveryNeed(
     recipes: { applied: recipeApplied, skipped: recipeSkips, learned },
     search: queryTrail,
     requestCount: requests,
-    recheckAfter: recheckAfter(outcome, finishedAt),
+    recheckAfter: steps.some(step => step.status === null && /request bound/.test(step.note)) ? finishedAt : recheckAfter(finishedAt),
     site: { address: need.addressSource ?? null, homepage: homeProvenance },
     note: noteFor(need, outcome, found, leads, origins.length) + siteNote(hintedSite, homeFromHint, hintedSiteRefused) + (searchScope?.hold ? ` ${searchScope.hold}` : ""),
     ...(hints === null
@@ -1048,9 +1060,10 @@ export function walkableByFreeWalk(need: Pick<MeetingsDiscoveryNeed, "basis" | "
 export function discoveryNeedsToWalk(
   ledger: readonly MeetingsDiscoveryNeed[],
   dispatched: readonly MeetingsDiscoveryNeed[],
+  accepts: (need: MeetingsDiscoveryNeed) => boolean = () => true,
 ): readonly MeetingsDiscoveryNeed[] {
   const ids = new Set(dispatched.map((n) => n.jurisdictionId));
-  return [...dispatched, ...ledger.filter((n) => !ids.has(n.jurisdictionId))];
+  return [...dispatched, ...ledger.filter((n) => !ids.has(n.jurisdictionId))].filter(accepts);
 }
 
 /**
@@ -1096,12 +1109,16 @@ export async function runMeetingsDiscovery(
 
   for (const need of window) {
     if (walked.length >= input.maxWalks) break;
-    const [latest] = await repos.discoveryAttempts.readRecent(need.jurisdictionId, 1);
+    const priorAttempts = await repos.discoveryAttempts.read(need.jurisdictionId);
+    const latest = priorAttempts.at(-1);
     /* A walk made without the government's current hints set its recheck without them: the need is due again now. */
     const hintsChanged = hinted.has(need.jurisdictionId) && latest?.routeHints?.fingerprint !== hinted.get(need.jurisdictionId);
     /* A find recorded before walks carried their provenance cannot be attested for wiring (NH330): walk it again. */
     const findWithoutProvenance = latest?.outcome === "FOUND" && latest.site === undefined;
-    if (latest !== undefined && !hintsChanged && !findWithoutProvenance && Date.parse(latest.recheckAfter) > nowMs) {
+    // Older walks used multi-day holds. They cannot silence a calendar index
+    // beyond the current source cadence, even before a new walk is recorded.
+    const nextCheck = latest === undefined ? 0 : Math.min(Date.parse(latest.recheckAfter), Date.parse(recheckAfter(latest.finishedAt)));
+    if (latest !== undefined && !hintsChanged && !findWithoutProvenance && nextCheck > nowMs) {
       notDue.push(need.jurisdictionId);
       continue;
     }
@@ -1111,7 +1128,7 @@ export async function runMeetingsDiscovery(
     }
     let attempt: MeetingsDiscoveryAttempt;
     try {
-      attempt = await walkMeetingsDiscoveryNeed(need, input.runtime);
+      attempt = await walkMeetingsDiscoveryNeed(need, { ...input.runtime, priorAttempts });
     } catch (error) {
       if (error instanceof DiscoveryTimeSpent) {
         deferred.push(need.jurisdictionId);

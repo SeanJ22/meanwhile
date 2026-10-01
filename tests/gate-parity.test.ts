@@ -45,7 +45,7 @@ const WORKFLOW = ".github/workflows/build-check.yml";
  * `method:ingest`, `orchestration:closeout`, the tracker and workstream
  * writers) are excluded by name in `scripts/gates.mjs` and in the workflow.
  */
-const CANONICAL_AUTHORITY_GATES = ["governance:check", "orchestration:check", "method:check"];
+const CANONICAL_AUTHORITY_GATES = ["governance:check", "orchestration:check"];
 
 const NOT_A_GATE = [
   // These interpret upstream outcomes or explain routing; they do not replace

@@ -422,6 +422,28 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     bootstrapFixturePaths: ["lib/officials/campaign-sites.ts"],
     lkgBehavior: "A failed site verification, retired identity, or missing exact source receipt holds only campaign-site bindings and leaves their prior GOOD version live.",
   },
+  /*
+   * STATE LEGISLATORS' CAPITOL AND DISTRICT OFFICES (Sean, 2026-10-01: Open States is an acceptable source for these
+   * offices; official values win; an office no official page states carries `official: false`). The continuous
+   * runner refreshes it daily (lib/civic-data/automatic-refresh.ts); each office is joined to the legislature's own
+   * roster row (lib/officials/member-offices.ts) and published through this one curated pointer.
+   */
+  {
+    id: "member-offices",
+    execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
+    sourceId: "curated-reader-primary-sources",
+    recordClass: "CURATED_READER_RECORD",
+    scope: "US:state-legislator-member-offices",
+    command: ["scripts/publish-member-offices.mts", "--promote"],
+    parserNormalizerVersion: "curated-reader-records/2",
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "curated-reader-primary-sources" },
+    validationContract: VALIDATION_CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: "state-legislator-member-offices", consumers: ["directory", "ballot", "map"] },
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+    lkgBehavior: "A state whose official roster or Open States file cannot be read is a gap and keeps its prior GOOD offices; an office with no exact roster member, address or phone is never published; a refused pass leaves the prior GOOD version live.",
+  },
   {
     id: "venue-resolutions",
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",

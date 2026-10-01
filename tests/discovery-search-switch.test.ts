@@ -57,7 +57,6 @@ function deps(repos: ControlPlaneRepositories): GatewayDeps {
     },
     currentStateVersion: "world-1",
     codeSha: null,
-    recordReview: null,
   };
 }
 

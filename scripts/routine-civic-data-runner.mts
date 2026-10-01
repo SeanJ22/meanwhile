@@ -119,6 +119,8 @@ import {
 import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/connect-retry.ts";
 import { assertDurableRepositories } from "../lib/control-plane/repository/types.ts";
 import { getDb } from "../lib/db/index.ts";
+import { startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
+import { withNationalPlaceTasks } from "../lib/hunt/place-source-admission.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
 import { publishRoutineReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
@@ -137,8 +139,11 @@ let step = "reading its task selection";
 installFatalLine("routine-civic-data-runner", () => step);
 
 const ROOT = process.cwd();
+// Place-task expansion also reads canonical geography. Give those startup
+// reads the same held copies as the later source and Reader children.
+const readCacheHost = await startCivicReadCacheHost();
 const FORCE = process.argv.includes("--force");
-const STANDING_SOURCE_TASKS = [...ROUTINE_SOURCE_TASKS, ...AUTOMATIC_REFRESH_TASKS];
+const STANDING_SOURCE_TASKS = await withNationalPlaceTasks([...ROUTINE_SOURCE_TASKS, ...AUTOMATIC_REFRESH_TASKS], process.argv.slice(2));
 const TASK_SELECTION = routineTaskSelection(process.argv.slice(2), [...STANDING_SOURCE_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id }))]);
 const ONLY = TASK_SELECTION.ok ? TASK_SELECTION.only : null;
 const inheritedStartedAt = process.env[ROUTINE_SUPERVISOR_STARTED_AT_ENV];
@@ -1158,3 +1163,4 @@ if (!await flushDatabaseTransfer()) console.warn("RCD_TRANSFER daily byte counte
 step = "releasing the host-local singleton";
 await ROUTINE_DATA_PROCESS_LEASE.release();
 }
+await readCacheHost.close();

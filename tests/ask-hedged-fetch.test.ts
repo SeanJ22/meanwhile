@@ -50,13 +50,12 @@ test("a stalled call is asked again at the hedge time; the first answer wins and
   assert.deepEqual(seen.map((call) => call.aborted), [true, false]);
 });
 
-test("a call that fails before the hedge time is retried at once", async () => {
+test("a call that fails before the hedge time returns without an unchanged retry", async () => {
   const { impl, seen } = planned(["fail", 20]);
   const started = Date.now();
-  const response = await hedgedFetch(impl, "https://x.example", {}, { hedgeAfterMs: 1_000, timeoutMs: 2_000 });
-  assert.equal(await response.text(), "answer 1");
+  await assert.rejects(hedgedFetch(impl, "https://x.example", {}, { hedgeAfterMs: 1_000, timeoutMs: 2_000 }), /network/);
   assert.ok(Date.now() - started < 400, "not held for the hedge time");
-  assert.equal(seen.length, 2);
+  assert.equal(seen.length, 1);
 });
 
 test("both calls failing is a failure, and the overall timeout still bounds the wait", async () => {

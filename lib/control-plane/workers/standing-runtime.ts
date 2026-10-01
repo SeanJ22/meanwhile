@@ -12,7 +12,7 @@ import { hostSpacer } from "../scheduler/http-executor.ts";
 import { VAULT_DIR } from "../scheduler/vault.ts";
 import { methodFields, standingFleetRuntime } from "./standing.ts";
 import { computeRouteFloor } from "../preflight.ts";
-import { readMethodStore } from "../../method/candidate.ts";
+import { readMethodKnowledge } from "../../method/manual-bridge.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { proposeScoutCandidates } from "../scheduler/scout-candidates.ts";
 import { type FieldManualStore } from "../field-manual.ts";
@@ -40,6 +40,7 @@ import { brokeredSiblingCaptures, selectStandingLineages } from "./standing-line
 
 /** One runtime over the same stores and bounded Scout infrastructure used by the standing runner. */
 export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:string;repos:ControlPlaneRepositories;transport?:ModelTransport;
+  environment?: Readonly<NodeJS.ProcessEnv>;
   now?:()=>string;spaceOut?:ScoutToolContext["spaceOut"];browse?:ScoutToolContext["browse"];openBytes?:ScoutToolContext["openBytes"];
   openBytesFor?:(subjectId:string)=>ScoutToolContext["openBytes"];
   /** The existing guarded search service, with the same accounting and owner settings as the first Scout. */
@@ -63,7 +64,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const [prior, priorWorkers] = await Promise.all([
     input.repos.scoutResults.readAll(), readCompletedWorkerResults(input.repos),
   ]);
-  const knowledge=readMethodStore(join(input.root,"data","method","knowledge.json"));
+  const knowledge=await readMethodKnowledge(input.repos);
   for (const row of await input.repos.workItems.list()) {
     const plan = row.value.autonomousPlan;
     if (plan?.contract.schemaVersion !== 2 || plan.contract.methodVersion !== 0 ||
@@ -77,7 +78,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const inheritedFieldManualCounts = new Map<string, number>();
   const inheritedManualStores = new Map<string, FieldManualStore>();
   const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly availableIds: readonly string[]; readonly lines: readonly string[] }>();
-  const heldRuntime = standingFleetRuntime({...input,siblingHeldRootFor: held=>siblingHeldRootFor(held)});
+  const heldRuntime = standingFleetRuntime({...input,method:knowledge,siblingHeldRootFor: held=>siblingHeldRootFor(held)});
   // Held data and plain adapters first; generated adapters use the same guarded area transport as research.
   await workAdapterQueue({repos:input.repos,results:prior,now:now(),readEvidence:async id=>evidenceProjection(await heldRuntime.readEvidence(id)),
     ...(input.transportFor?{transportFor:result=>input.transportFor!({subjectId:result.subjectId,state:scoutStateHint(result.subjectId,result.obligationId)[0]??null})}:{})});
@@ -123,17 +124,18 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
       return { evidence: evidenceProjection(await heldRuntime.readEvidence(id)), permission: artifact.permission, transport: artifact.transport,
         httpStatus: artifact.httpStatus, partial: artifact.httpStatus === 206 || Boolean(artifact.headers["content-range"]) || artifact.retentionPolicy === "DIAGNOSTIC" };
     } });
-  const runtime:AutonomousCoordinatorRuntime={...heldRuntime,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",
+  const runtime:AutonomousCoordinatorRuntime={...heldRuntime,rollingCeilingUsd:input.auditCeilingUsd??0,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",
     authorizedSiblingHeldArtifactIdsFor:item=>sharedHeldByRoot.get(item.id)??[],
     roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder),
     ...(input.transport?{scoutFor:(item,task,currentHistory)=>(investigationRole(subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass),task.routeLabel.includes('UNRESOLVED_INVESTIGATION') || priorWorkers.some(w=>w.workItemId===item.id && (!["ACQUIRED","EXTRACTED","PASS","SUPPORTED","SURVIVED","CANDIDATE_PROVED"].includes(w.result.verdict) || ("warnings" in w.result ? w.result.warnings : w.result.findings).some(f=>f.severity==="BLOCKING")))) === "DETECTIVE" ? detectiveExecutor : scoutExecutor)({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,
       ...(input.reserveScoutEscalation?{reserveEscalation:input.reserveScoutEscalation}:{}),
-      toolkitFor:ctx=>buildScoutToolkit({...ctx,...durableResearchTools(tools,{project:item.project,attemptId:ctx.attemptId,workItemId:item.id,routeTaskId:task.id,subjectId:item.subject}),
+      toolkitFor:ctx=>buildScoutToolkit({...ctx,...(input.environment?{sourceApi:{env:input.environment}}:{}),...durableResearchTools(tools,{project:item.project,attemptId:ctx.attemptId,workItemId:item.id,routeTaskId:task.id,subjectId:item.subject}),
         readHeldArtifact: async id => {
           const [{ artifact }, evidence] = await Promise.all([readRepairCapture(id), heldRuntime.readEvidence(id)]);
           return { ...evidenceProjection(evidence), provenance: {
             artifactId: id, canonicalUrl: artifact.canonicalUrl, retrievedAt: artifact.retrievedAt,
             permission: artifact.permission, methodRouteId: artifact.methodRouteId, httpStatus: artifact.httpStatus,
+            retrievalUrl: artifact.retrievalUrl, contentType: artifact.contentType,
           } };
         },
         readManualDocument: async path => {
@@ -189,7 +191,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
       },onResult:async (result,artifacts)=>{
         let recorded=result;
         try {
-          const proposal=await proposeScoutCandidates({repos:input.repos,root:input.root,result,artifacts,stamp:result.recordedAt.slice(0,10)});
+          const proposal=await proposeScoutCandidates({repos:input.repos,result,artifacts,stamp:result.recordedAt.slice(0,10)});
           recorded={...result,methodCandidateIds:proposal.proposed.map(p=>p.candidateId),
             unverified:[...result.unverified,...proposal.notProposed.map(p=>`Method candidate ${p.routeId} not admitted: ${p.why}`)]};
         } catch(error) {

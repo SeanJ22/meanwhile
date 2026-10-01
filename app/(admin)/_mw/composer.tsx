@@ -31,7 +31,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET } from "@/lib/control-plane/expansion/dispatch-work-bounds.ts";
 import { WORK_QUESTIONS, WORK_QUESTION_WORDS, type WorkQuestion } from "@/lib/control-plane/work-question.ts";
 import type { PreviewScopeBody } from "@/lib/control-plane/admin-view/scope-preview.ts";
 import type { ScopeWorkPreview } from "@/lib/control-plane/admin-view/scope-work.ts";
@@ -512,8 +511,7 @@ export function Composer(props: {
           <div className={s.row}>
             <Pill tone="slate">CREATES MISSING WORK</Pill>
             <span className={`${s.note} ${s.growWide}`} style={{ fontSize: 14 }}>
-              At its next cycle the runner creates the work the registry defines here that no clock carries yet — at most {DISPATCH_WORK_WRITE_BUDGET} written a cycle and{" "}
-              {DISPATCH_WORK_TARGET_CAP.toLocaleString("en-US")} missing rows considered for this geography each cycle; later cycles continue automatically. It counts what it created, reordered and could not reach. It invents nothing no
+              At its next cycle the runner creates the work the registry defines here that no clock carries yet. It counts what it created, reordered and could not reach. It invents nothing no
               registry defines: a state&apos;s governments come from its reviewed registry, or where it has none from its registration (the 2022 Census of Governments),
               and a state whose registration cannot be read is named as blocked.
               {sendCount !== null

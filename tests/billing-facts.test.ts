@@ -45,7 +45,7 @@ function tickingClock(from = NOW): () => string {
 }
 
 function deps(repos: ControlPlaneRepositories): GatewayDeps {
-  return { repos, now: tickingClock(), currentStateVersion: "world-1", codeSha: null, recordReview: null };
+  return { repos, now: tickingClock(), currentStateVersion: "world-1", codeSha: null };
 }
 
 function record(input: Record<string, unknown>, key: string): ActionRequest {

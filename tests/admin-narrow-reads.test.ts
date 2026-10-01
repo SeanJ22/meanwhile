@@ -44,6 +44,7 @@ const any = <T>(value: unknown): T => value as T;
 /* ------------------------------------------------------------------ readNarrowed, every provider */
 
 async function narrowsAlike(repo: AggregateRepository<Record<string, unknown>>) {
+  assert.deepEqual(await repo.listNarrowed({ kept: true }), []);
   const whole = { kept: 1, nested: { x: 1, y: 2 }, dropped: "a large document", list: [1, 2] };
   await repo.put("row", whole, NOW);
   const moved = await repo.compareAndSet("row", 1, { ...whole, kept: 2 }, LATER);
@@ -59,6 +60,16 @@ async function narrowsAlike(repo: AggregateRepository<Record<string, unknown>>) 
   assert.deepEqual(revisionOnly?.value, {}, "an empty projection is the revision alone");
   assert.equal(revisionOnly?.revision, 2);
   assert.equal(await repo.readNarrowed("absent", { kept: true }), null, "absent is null, never an empty row");
+  await repo.put("before", { kept: 3, nested: null, dropped: "unused" }, NOW);
+  const listed = await repo.listNarrowed({ kept: true, nested: ["x"] });
+  assert.deepEqual(listed.map(row => ({ id: row.id, value: row.value })), [
+    { id: "before", value: { kept: 3, nested: null } },
+    { id: "row", value: { kept: 2, nested: { x: 1 } } },
+  ]);
+  assert.equal(listed[1].revision, 2);
+  assert.equal(listed[1].updatedAt, LATER);
+  assert.deepEqual((await repo.listNarrowed({})).map(row => row.value), [{}, {}]);
+  assert.deepEqual((await repo.read("row"))?.value, { ...whole, kept: 2 }, "narrowing never changes held records");
 }
 
 test("readNarrowed narrows alike in the memory provider", async () => {
@@ -152,7 +163,7 @@ test("the pulse from the narrowed rows is the pulse from the whole rows, field f
   assert.equal(narrowed.counts.incidents, 1);
   assert.notEqual(narrowed.lanes, null, "the lane gauges ride on the narrowed queue");
   assert.ok(narrowed.revision.startsWith("2026-09-25T22:00:00.000Z|1|1|-|1|0|0|-|admin-capabilities/1:"), "the decision count is no longer part of the pulse revision");
-  assert.match(ADMIN_V6_CAPABILITY_REVISION, /:workers\/1$/, "Workers has its own v6 capability revision");
+  assert.match(ADMIN_V6_CAPABILITY_REVISION, /:fixes\/1$/, "the last section announced has its own v6 capability revision");
   assert.ok(narrowed.revision.includes(`|${ADMIN_V6_CAPABILITY_REVISION}|-`),
     "the pulse revision names the current Admin v6 contracts, including Workers");
 });
@@ -160,7 +171,7 @@ test("the pulse from the narrowed rows is the pulse from the whole rows, field f
 test("a saved owner policy and snapshot announce Money and Hunts on the existing pulse", async () => {
   const repos = await publishedWorld();
   const before = await readPulse(repos, NOW);
-  assert.deepEqual(Object.keys(before.v6?.sections ?? {}), ["history"], "an unread owner policy cannot claim a hunt list; saved receipts can still claim History");
+  assert.deepEqual(Object.keys(before.v6?.sections ?? {}), ["history", "fixes", "learning"], "an unread owner policy cannot claim a hunt list; saved receipts can still claim History, and the weekly learning series needs neither");
   await repos.adminConfig.put("current", any({ expansionScopes: [], fleetSpendCeiling: null }), NOW);
   const after = await readPulse(repos, NOW);
   assert.equal(after.v6?.sections.hunts?.contract, "admin-v6/hunts@1");

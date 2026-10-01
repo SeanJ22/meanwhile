@@ -81,6 +81,34 @@ interface RequestOptions {
   signal?: AbortSignal;
 }
 
+// Tenants share a vendor hostname, not a connection slot. Keep paging,
+// agenda and outcome reads for one tenant serialized across all callers.
+const clientSlots = new Map<string, Promise<void>>();
+
+export function legistarConnectionKey(slug: string): string {
+  if (!/^[a-z0-9_-]+$/i.test(slug)) throw new Error("Invalid Legistar client slug");
+  return `legistar:${slug.toLowerCase()}`;
+}
+
+async function inClientSlot<T>(slug: string, options: RequestOptions, read: () => Promise<T>): Promise<T> {
+  const key = legistarConnectionKey(slug);
+  const previous = clientSlots.get(key) ?? Promise.resolve();
+  let release!: () => void;
+  const current = new Promise<void>(resolve => { release = resolve; });
+  clientSlots.set(key, current);
+  await previous;
+  try {
+    options.signal?.throwIfAborted();
+    return await read();
+  } finally {
+    try { await sourceAcquisitionSleep(REQUEST_SPACING_MS, options.signal); }
+    finally {
+      release();
+      if (clientSlots.get(key) === current) clientSlots.delete(key);
+    }
+  }
+}
+
 async function requestOnce(
   url: string,
   options: RequestOptions,
@@ -103,6 +131,10 @@ async function requestOnce(
  * `Retry-After` wins over our own schedule when the server sends one.
  */
 async function getJson<T>(path: string, options: RequestOptions): Promise<T> {
+  return inClientSlot(path.split("/")[0], options, () => getJsonInSlot<T>(path, options));
+}
+
+async function getJsonInSlot<T>(path: string, options: RequestOptions): Promise<T> {
   const url = `${API_ROOT}/${path}`;
   let lastStatus = 0;
 
@@ -207,7 +239,6 @@ async function pageById<T>(
         path,
       );
     }
-    await sourceAcquisitionSleep(REQUEST_SPACING_MS, options.signal);
   }
 
   return collected;

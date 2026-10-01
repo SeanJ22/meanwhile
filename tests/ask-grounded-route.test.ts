@@ -35,7 +35,8 @@ import type { EvidenceRecord } from "../lib/ask/evidence.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
 
-const { POST, resetGroundedState } = await import("@/app/api/ask/grounded/route");
+const { POST } = await import("@/app/api/ask/grounded/route");
+const { resetGroundedState } = await import("@/lib/ask/grounded-state");
 
 const VAIL = "ocd-division/country:us/state:az/school_district:vail_unified_district";
 /**
@@ -146,11 +147,17 @@ test("RED CONTROL: 'What's on the Vail school district agenda?' resolves Vail an
   );
 });
 
-test("a meeting-shaped question without a proved body restores all evidence before fallback", async () => {
+test("a named body we don't hold gets a plain calendar gap without a model after restoring deferred sources", async () => {
   const body = await ask("When does the Unheld Example City Council meet next?");
+  assert.equal(body.mode, "NO_EVIDENCE");
+  assert.equal(body.answer, "We don't have Unheld Example City Council's calendar yet.");
+  assert.equal(body.subject, null);
+  assert.equal(body.clarification, undefined);
+  assert.equal(body.records?.length, 0);
+  assert.deepEqual(body.gaps, [{ whose: "OURS", statement: body.answer }]);
   assert.equal(body.trace?.sourcesLoaded, "ALL");
   for (const key of ["azPimaFinance", "federalVotes", "federalKeyVotes", "officeholderStatements", "executiveActions"]) {
-    assert.equal(typeof body.trace?.preloads?.[key], "number", `fallback still reads ${key}`);
+    assert.equal(typeof body.trace?.preloads?.[key], "number", `an unresolved body restores ${key} before its gap`);
   }
 });
 
@@ -235,8 +242,9 @@ test("a question about a government we do not hold says so, and never substitute
        to come from the reader's own words — which is exactly the floor the
        deterministic path is supposed to hold on its own. */
   });
-  assert.equal(body.mode, "CLARIFY");
-  assert.match(body.clarification ?? "", /Which government/);
+  assert.equal(body.mode, "NO_EVIDENCE");
+  assert.equal(body.answer, "We don't have Cienega School District's agendas yet.");
+  assert.equal(body.clarification, undefined);
   assert.equal(body.candidates, undefined);
   assert.equal(body.subject ?? null, null, "nothing is bound, so nothing is answered about");
 });
@@ -908,11 +916,11 @@ test("ASK-06 (b): a candidate without a permanent voting-office identity gets a 
     0,
   );
 
-  const gap = (body.gaps ?? []).find((g) => /canonical voting-office identity/i.test(g.statement));
+  const gap = (body.gaps ?? []).find((g) => /confirmed which voting record belongs/i.test(g.statement));
   assert.ok(gap, "an unproved permanent identity must produce a sentence, not silence");
   assert.equal(gap.whose, "OURS");
   assert.match(gap.statement, /Warren Petersen/);
-  assert.match(gap.statement, /no other person's voting record has been attached/i);
+  assert.match(gap.statement, /haven't shown anyone else's votes/i);
   assert.doesNotMatch(gap.statement, /did not vote|has not voted|no votes cast/i);
 });
 
@@ -931,8 +939,8 @@ test("ASK-06 (c): a retired intermediary bridge cannot attach Senate votes besid
   assert.equal(votes.length, 0);
   assert.ok((body.gaps ?? []).some((gap) =>
     gap.whose === "OURS" &&
-    /canonical voting-office identity for Sally Ann Gonzales/i.test(gap.statement) &&
-    /no other person's voting record has been attached/i.test(gap.statement)
+    /which voting record belongs to Sally Ann Gonzales/i.test(gap.statement) &&
+    /haven't shown anyone else's votes/i.test(gap.statement)
   ));
   const { officeholderIdentityMayEnterReader } = await import("../lib/officials/roster-authority.ts");
   assert.equal(

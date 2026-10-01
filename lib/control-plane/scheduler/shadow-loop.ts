@@ -77,6 +77,8 @@ import type { ControlPlaneRepositories } from "../repository/types.ts";
 /** One cycle's inputs. Every clock and every seam is injected. */
 export interface CycleInput {
   readonly repos: ControlPlaneRepositories;
+  /** Only filtered occurrence histories are recovered; dispatch still uses the shared repositories. */
+  readonly recoveryRepos?: ControlPlaneRepositories;
   readonly obligations: readonly FreshnessObligation[];
   /** Debt carried in from the previous cycle. Durable state, passed through. */
   readonly debts: readonly FreshnessDebt[];
@@ -157,6 +159,9 @@ export interface CycleInput {
   readonly truth: ContractReading;
   /** A ceiling on how many due items one cycle dispatches. Stated, not implied. */
   readonly maxDispatches?: number;
+  readonly workerCapacity?: number;
+  /** Within each hunt preserve service order; serve one row per hunt per round. */
+  readonly huntFor?: (row: ScheduledObligation) => string | null;
   /**
    * Aggregate Fleet admission, shared with the worker lanes that follow this
    * scheduler. A refusal is durably named in `deferred`; it never becomes an
@@ -167,25 +172,6 @@ export interface CycleInput {
   ) => { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string };
   /** A tightly scoped canary may skip the whole lease sweep; normal cycles never do. */
   readonly skipReclaim?: boolean;
-  /**
-   * **A WALL-CLOCK BUDGET FOR DISPATCH, SO THE CYCLE FINISHES CLEANLY.**
-   * (Autonomy-recovery session, 2026-09-01.)
-   *
-   * The runner supervises each cycle under a hard ceiling and kills a child
-   * that outlives it. A kill lands mid-dispatch: occurrences opened and not
-   * closed, an Attempt with no outcome, a lease that expires unrenewed — and
-   * the next cycle resumes that state and pays for it again. A cycle over the
-   * real backlog can outlive the ceiling on latency alone, so the overrun is a
-   * recovery seam and not an edge case.
-   *
-   * With a budget the cycle stops STARTING work once the injected clock passes
-   * `deadlineMs`: every remaining due item is DEFERRED with a named reason, the
-   * record is written, and the process exits clean inside the supervisor's
-   * ceiling. Nothing is lost — a deferred item keeps its next-due and is
-   * dispatched by a later cycle. Injected, never `Date.now()` here, so a test
-   * can move the clock.
-   */
-  readonly budget?: { readonly deadlineMs: number; readonly now: () => number };
   /**
    * **THE OWNER'S DISPATCH REORDERS THE DUE SET.** (ADM-8, 9.4.26 admin
    * feedback, 2026-09-04.)
@@ -233,24 +219,9 @@ export interface ResearchLanes {
     row: ScheduledObligation,
   ) => ScoutAdmission | Promise<ScoutAdmission>;
   readonly modelExecutor: DeclaredExecutor | ((row: ScheduledObligation) => DeclaredExecutor);
-  readonly maxConcurrentScouts: number;
+  readonly workerCapacity: number;
   readonly scoutLeaseTtlMs: number;
-  /**
-   * **THE SCOUT LANE'S OWN ADMISSION DEADLINE — A FLOOR THE RESERVE CANNOT ZERO.**
-   * (2026-09-18. Two clean cycles deferred every scout for BUDGET.)
-   *
-   * `budget.deadlineMs` is reduced by the downstream reserve (`fleetReserveMs`)
-   * to cap the always-full DETERMINISTIC refresh queue. That reserve exists to
-   * protect the fleet from the refresh queue — but applied to the SHARED
-   * `budget.deadlineMs` it starved the very Scouts it should protect: the model
-   * lane starts after the pre-dispatch phases, and the reserved deadline minus a
-   * Scout's wall left no window, so every Scout deferred BUDGET while the cycle
-   * finished at half the hard wall. The Scout lane admits against THIS deadline
-   * — the hard dispatch wall, which already keeps the finalization reserve — so
-   * the downstream reserve caps deterministic dispatch alone. Absent, the Scout
-   * lane falls back to `budget.deadlineMs` (the pre-2026-09-18 behaviour).
-   */
-  readonly scoutDeadlineMs?: number;
+  /** A Scout is not STARTED when it could not finish inside the dispatch budget. */
   readonly onDispatched?: (result: DispatchResult, lane: ExecutorKind) => void | Promise<void>;
   /**
    * A Scout `admitScout` admitted that then did not run (its occurrence could
@@ -364,7 +335,7 @@ export interface RecoveredOccurrence extends SettledOccurrence {
 /** A bounded pool: at most `limit` items in flight, in input order. */
 export type ScoutAdmission = { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string };
 
-async function runPool<T>(items: readonly T[], limit: number, fn: (item: T) => Promise<void>): Promise<void> {
+export async function runPool<T>(items: readonly T[], limit: number, fn: (item: T) => Promise<void>): Promise<void> {
   let next = 0;
   const workers = Array.from({ length: Math.max(1, Math.min(limit, items.length || 1)) }, async () => {
     while (next < items.length) {
@@ -411,7 +382,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
    */
   const reclaim = input.skipReclaim
     ? { reclaimed: [], releasedSettled: [], stillLive: [], refused: [] }
-    : await sweepExpiredLeases(input.repos, {
+    : await sweepExpiredLeases(input.recoveryRepos ?? input.repos, {
         now: input.now,
         observedBy: input.holder,
       });
@@ -591,18 +562,6 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
        a backlog. */
   };
 
-  const budgetSpent = (): boolean =>
-    input.budget !== undefined && input.budget.now() >= input.budget.deadlineMs;
-  const deferForBudget = (row: ScheduledObligation): void => {
-    deferred.push({
-      obligationId: row.obligation.id,
-      why:
-        `the cycle's dispatch budget was spent at ${new Date(input.budget!.deadlineMs).toISOString()} ` +
-        "before this item was reached. It keeps its next-due and is dispatched by a later cycle — " +
-        "a cycle that ends on its own budget leaves recoverable state; one killed mid-write by its " +
-        "supervisor does not",
-    });
-  };
 
   /*
    * **ONE OBLIGATION'S THROW MAY NOT ABORT THE CYCLE.** (Autonomy-recovery
@@ -629,7 +588,8 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   ): Promise<DispatchResult> => {
     let result: DispatchResult;
     try {
-      result = await dispatchOne(input.repos, {
+      const dispatch = opts.executor.dispatch ?? (request => dispatchOne(input.repos, { ...request, executor: opts.executor }));
+      result = await dispatch({
         obligation: row,
         routeTaskId: input.routeTaskFor(row.obligation.id),
         holder: input.holder,
@@ -638,7 +598,6 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         leaseTtlMs: opts.leaseTtlMs,
         bound: input.bound,
         maturity: input.maturity,
-        executor: opts.executor,
         ...(opts.decision !== undefined ? { decision: opts.decision } : {}),
         ...(input.methodVersion !== undefined ? { methodVersion: input.methodVersion } : {}),
         ...(input.policyVersion !== undefined ? { policyVersion: input.policyVersion } : {}),
@@ -714,7 +673,20 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
    */
   const debtAtCycleStart = new Map(input.debts.map((d) => [d.obligationId, d] as const));
   const debtOf = (obligationId: string) => debtAtCycleStart.get(obligationId);
-  const plainCodeQueue = placeFirstRows(plainCodeQueueOrder(deterministicRows, debtOf), input.placeFirst);
+  const fairQueue = (rows: readonly ScheduledObligation[]): readonly ScheduledObligation[] => {
+    if (!input.huntFor) return rows;
+    const groups = new Map<string, ScheduledObligation[]>();
+    for (const row of rows) {
+      const key = input.huntFor(row) ?? "standing";
+      const group = groups.get(key) ?? []; group.push(row); groups.set(key, group);
+    }
+    const ordered: ScheduledObligation[] = [];
+    for (let round = 0; ordered.length < rows.length; round++) {
+      for (const group of groups.values()) if (group[round]) ordered.push(group[round]);
+    }
+    return ordered;
+  };
+  const plainCodeQueue = fairQueue(placeFirstRows(plainCodeQueueOrder(deterministicRows, debtOf), input.placeFirst));
   const deferredBy: Record<string, number> = {};
   let modelDispatched = 0;
   let modelDeferred = 0;
@@ -767,19 +739,14 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     }
   };
 
-  /* THE DETERMINISTIC LANE — the serial queue, longest wait first. */
+  /* Shared worker processes preserve each hunt's longest-wait order. */
   const deterministicLane = async (): Promise<void> => {
     let admitted = 0;
-    for (const row of plainCodeQueue) {
+    await runPool(plainCodeQueue, input.workerCapacity ?? 1, async row => {
       if (input.openOccurrence === undefined && input.requireOpenOccurrence && input.routeTaskFor(row.obligation.id) === null) {
         deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: outside this cycle's reserved lane slots; work remains due." });
         holdDeterministic(row, "NO_OPEN_OCCURRENCE");
-        continue;
-      }
-      if (budgetSpent()) {
-        deferForBudget(row);
-        holdDeterministic(row, "BUDGET");
-        continue;
+        return;
       }
       if (admitted >= ceiling) {
         deferred.push({
@@ -791,25 +758,28 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
             "whatever the backlog was",
         });
         holdDeterministic(row, "DISPATCH_CEILING");
-        continue;
+        return;
       }
+      admitted += 1;
       const opened = await tryOpen(row);
       if (opened === false) {
+        admitted--;
         deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: the occurrence could not be opened in step with dispatch this cycle; work remains due." });
         holdDeterministic(row, "NO_OPEN_OCCURRENCE");
-        continue;
+        return;
       }
       if (opened !== true) {
+        admitted--;
         recover(row, opened.settled);
         deterministicRecovered += 1;
-        continue;
+        return;
       }
       const refusedBy = aggregateRefusal(row);
       if (refusedBy !== null) {
+        admitted--;
         holdDeterministic(row, refusedBy);
-        continue;
+        return;
       }
-      admitted += 1;
       deterministicDispatched += 1;
       const result = await dispatchRow(row, {
         executor: resolvedDeterministic.get(row.obligation.id) ?? (typeof input.executor === "function" ? input.executor(row) : input.executor),
@@ -817,7 +787,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         ...(research !== undefined ? { decision: decisions.get(row.obligation.id) } : {}),
       });
       if (research?.onDispatched) await research.onDispatched(result, "DETERMINISTIC");
-    }
+    });
   };
 
   /*
@@ -846,33 +816,10 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
 
   const modelLane = async (): Promise<void> => {
     if (research === undefined) return;
-    await runPool(modelRows, research.maxConcurrentScouts, async (row) => {
+    await runPool(fairQueue(modelRows), research.workerCapacity, async (row) => {
       if (input.openOccurrence === undefined && input.requireOpenOccurrence && input.routeTaskFor(row.obligation.id) === null) {
         deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: outside this cycle's reserved lane slots; work remains due." });
         holdModel(row, "NO_OPEN_OCCURRENCE");
-        return;
-      }
-      /*
-       * The Scout lane admits against its OWN deadline (`scoutDeadlineMs`,
-       * floored to the hard dispatch wall), NOT the reserve-reduced deterministic
-       * deadline. `budgetSpent()` is deliberately not consulted here: it reads
-       * the reduced `budget.deadlineMs`, which is the shared value the downstream
-       * reserve shrank — and gating Scouts on it is what starved them. A Scout
-       * with an open occurrence runs while it can still finish before the wall.
-       */
-      const scoutDeadline = research.scoutDeadlineMs ?? input.budget?.deadlineMs;
-      if (
-        scoutDeadline !== undefined &&
-        input.budget !== undefined &&
-        input.budget.now() >= scoutDeadline
-      ) {
-        deferred.push({
-          obligationId: row.obligation.id,
-          why:
-            `the cycle's dispatch budget was spent at ${new Date(scoutDeadline).toISOString()}. It keeps ` +
-            "its next-due and is dispatched by a later cycle.",
-        });
-        holdModel(row, "BUDGET");
         return;
       }
       const admit = await research.admitScout(row);

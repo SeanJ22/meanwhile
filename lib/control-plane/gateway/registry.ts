@@ -18,8 +18,7 @@
  * through `appendDecisionIntent`. The four runner and fleet controls build
  * research intents through `buildResearchIntent` / `appendResearchIntent`, the
  * same quadruple `/api/admin/research` has used since Level 1 activation.
- * `review.decide` calls the release-review writer that already runs end to end
- * against in-memory repositories. Nothing is reimplemented, so nothing can
+ * Nothing is reimplemented, so nothing can
  * drift from the path the rest of the console uses (RULING 103).
  *
  * The admin surface still WRITES AND NOTHING ELSE. Every entry below appends a
@@ -57,6 +56,7 @@ import {
 } from "../research-view.ts";
 import { RESEARCH_STATE_ID } from "../scheduler/research-policy.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
+import type { WakeHintWriter } from "./wake-hint.ts";
 import {
   ADMIN_CONFIG_ID,
   defaultAdminConfig,
@@ -94,7 +94,6 @@ import {
   withScopeSet,
   type ExpansionScopeGeography,
 } from "../expansion/scopes.ts";
-import { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET } from "../expansion/dispatch-work-bounds.ts";
 import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
 import { WORK_QUESTION_WORDS, validateWorkQuestions, type WorkQuestion } from "../work-question.ts";
 import { huntPlaceKey } from "../admin-view/v6-hunts-read.ts";
@@ -103,7 +102,7 @@ import { appendFailureSays, writeFailureSays } from "./write-readback.ts";
 import type { ActionDefinition, ActionRequest, ReceiptOutcome, RefusalCode } from "./contract.ts";
 
 /** How much the runner creates for one Send, in the words every receipt below quotes (MW-028). */
-const CREATION_BOUNDS = `at most ${DISPATCH_WORK_WRITE_BUDGET} written a cycle and ${DISPATCH_WORK_TARGET_CAP.toLocaleString("en-US")} missing rows considered per instruction each cycle; later cycles continue automatically`;
+const CREATION_SCOPE = "all missing work for the requested geography";
 
 /* ------------------------------------------------------------------ deps */
 
@@ -122,31 +121,9 @@ export interface GatewayDeps {
   readonly currentStateVersion: string | null;
   /** The deploy that is running this, for the receipt. Null when the runtime cannot say. */
   readonly codeSha: string | null;
-  /**
-   * The release-review writer, wired by the route.
-   *
-   * Structurally typed rather than imported, so `lib/` does not depend on a
-   * module under `app/`. The route passes `recordReview` from
-   * `app/(admin)/admin/release-review/write.ts` — the existing path, not a copy
-   * of it. Null when nothing wired it, and the action then refuses by name
-   * instead of pretending the decision was recorded.
-   */
-  readonly recordReview: ReleaseReviewRecorder | null;
+  /** Tells the runner its controls changed, after an action is durably applied. Absent when the host has no Blobs destination. Never part of an action's result. */
+  readonly wake?: WakeHintWriter | null;
 }
-
-export type ReleaseReviewRecorder = (input: {
-  readonly action: string;
-  readonly stagingSha: string;
-  readonly section: string | null;
-  readonly decision: string | null;
-  readonly feedback: string | null;
-  readonly choice: string | null;
-}) => Promise<{
-  readonly ok: boolean;
-  readonly code: string;
-  readonly detail: string;
-  readonly rowIds?: readonly string[];
-}>;
 
 /* --------------------------------------------------------------- results */
 
@@ -528,7 +505,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         "Tells the fleet where to go next, in your words. Where your words name a state, the runner also creates the work " +
         "that state's registry defines and no clock carries yet.",
       doesNot:
-        `Does not start paid research, publish anything, or invent work no registry defines, and it creates ${CREATION_BOUNDS}. ` +
+        `Does not start paid research, publish anything, or invent work no registry defines, and it creates ${CREATION_SCOPE}. ` +
         "Without a state in your words it only reorders the work the fleet already has.",
       authority: "REVERSIBLE_NONPRODUCTION",
       subjectKind: "where you want the fleet to work",
@@ -555,7 +532,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         {
           says:
             "The fleet has been told where to go. The next cycle puts what matches first and records what it matched — including nothing, by name, if nothing is registered there. " +
-            `Where your words name a state, it also creates the work that state's registry defines and no clock carries yet (${CREATION_BOUNDS}), ` +
+            `Where your words name a state, it also creates the work that state's registry defines and no clock carries yet (${CREATION_SCOPE}), ` +
             "and its acknowledgement counts what it created, what it reordered and what missing data blocked. Work that needs a model waits for the paid lane." +
             (budgetUsd === null
               ? " It carries no budget of its own, so only the Fleet ceiling bounds paid work on it."
@@ -869,7 +846,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         "Records a geography you chose from the Census lookup, with its priority and selected lifetime or rolling 24-hour budget for paid work there, durably. " +
         "When research is enabled, the standing runner wakes promptly for this Send. At the start of its next cycle it creates the work the registry defines there that no clock carries yet, and puts all work there first.",
       doesNot:
-        `Does not open the paid lane, add a government or a source no registry defines, or raise any spend limit, and it creates ${CREATION_BOUNDS}. ` +
+        `Does not open the paid lane, add a government or a source no registry defines, or raise any spend limit, and it creates ${CREATION_SCOPE}. ` +
         "Its budget can only hold paid work back.",
       authority: "OWNER_DECISION_REQUIRED",
       subjectKind: "a geography you want worked first",
@@ -951,7 +928,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         says:
           `Recorded: ${what} is priority ${priority} with a $${budgetUsd.toFixed(2)} ${lifetime ? "Anthropic token budget for this hunt" : "rolling 24-hour budget"} for paid work there (${was}), and that survives a restart. ` +
           "Recording it makes no model call itself. If research is enabled, the standing runner wakes promptly for this Send; if a cycle is already active, it finishes first. At the start of its next cycle the runner creates the work the registry defines there that no clock carries yet " +
-          `(${CREATION_BOUNDS}) and puts all work there first; the acknowledgement counts what was created, reordered and blocked. ` +
+          `(${CREATION_SCOPE}) and puts all work there first; the acknowledgement counts what was created, reordered and blocked. ` +
           "Work that needs a model waits: the paid lane stays exactly as it is, " +
           (originalLifetime
             ? `and this exact original $${ORIGINAL_LIFETIME_HUNT.budgetUsd.toFixed(2)} lifetime hunt keeps its instruction receipt and allowance; the $${ceilingUsd.toFixed(2)} Fleet rolling ceiling does not bind its exact work. This action has its own saved receipt.`
@@ -1154,84 +1131,6 @@ const REGISTRY: readonly RegisteredAction[] = [
         openedWork: [],
         readBackAt: "/admin/money",
         undo: `Enter ${factAmountWords(removed)} again, read ${removed.asOf} from ${removed.source}.`,
-      };
-    },
-  },
-
-  /* ---------------------------------------------------------- review.decide */
-  {
-    definition: {
-      type: "review.decide",
-      label: "Record your review decision",
-      does: "Records what you decided about the exact build you were looking at.",
-      doesNot: "Does not merge, deploy, promote or notify anyone — the record is the end of the line.",
-      authority: "OWNER_DECISION_REQUIRED",
-      subjectKind: "one build of the software",
-      // The build under review moves on its own. The writer re-fetches the live
-      // manifest and refuses a decision aimed at a build that has been replaced,
-      // and quoting the render's version here catches the same thing earlier.
-      requiresStateVersion: true,
-      refusals: ["INVALID_INPUT", "STALE_STATE", "ALREADY_DONE", "DOWNSTREAM_REFUSED"],
-    },
-    validate(input) {
-      const action = text(input.action);
-      if (action === "") return bad("say which kind of review decision this is");
-      const stagingSha = text(input.stagingSha);
-      if (stagingSha === "") return bad("a review decision has to name the exact build it is about");
-      return {
-        ok: true,
-        value: {
-          action,
-          stagingSha,
-          section: text(input.section) || null,
-          decision: text(input.decision) || null,
-          feedback: typeof input.feedback === "string" ? input.feedback : null,
-          choice: text(input.choice) || null,
-        },
-      };
-    },
-    async execute(deps, _context, input) {
-      if (deps.recordReview === null) {
-        return refuse(
-          "DOWNSTREAM_REFUSED",
-          "The review writer is not wired into this console, so nothing was recorded. " +
-            "Nothing has been decided and nothing is pretending otherwise.",
-        );
-      }
-      const outcome = await deps.recordReview({
-        action: String(input.action),
-        stagingSha: String(input.stagingSha),
-        section: input.section === null ? null : String(input.section),
-        decision: input.decision === null ? null : String(input.decision),
-        feedback: input.feedback === null ? null : String(input.feedback),
-        choice: input.choice === null ? null : String(input.choice),
-      });
-      if (!outcome.ok) {
-        /*
-         * The writer's refusals are richer than the gateway's, so they are
-         * MAPPED rather than flattened: a decision aimed at a build that has
-         * been replaced is the gateway's own staleness, and one that is already
-         * recorded is its own idempotency. Everything else is honestly "the
-         * system that would do this refused".
-         */
-        const mapped: RefusalCode =
-          outcome.code === "STALE_SHA"
-            ? "STALE_STATE"
-            : outcome.code === "BAD_REQUEST"
-              ? "INVALID_INPUT"
-              : outcome.code === "ALREADY_RECORDED"
-                ? "ALREADY_DONE"
-                : "DOWNSTREAM_REFUSED";
-        return refuse(mapped, `Nothing was recorded — ${outcome.detail}.`);
-      }
-      return {
-        ok: true,
-        outcome: "DONE",
-        subject: String(input.stagingSha),
-        says: `Recorded against the build you were looking at. ${outcome.detail}.`,
-        openedWork: (outcome.rowIds ?? []).map((id) => ({ kind: "review record", id, title: "your review decision" })),
-        readBackAt: "/admin/release-review",
-        undo: "Record a different decision on the same build; both are kept and the later one is the one that counts.",
       };
     },
   },

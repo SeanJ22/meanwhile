@@ -1140,7 +1140,7 @@ const MEETING_PARTITION_AUTHORITY_GATES = [
   },
   {
     path: "lib/sources/composite/wiring.ts",
-    required: [/wiringForMeetingSource/, /capability\.make\(rows\)/],
+    required: [/wiringForMeetingSource/, /capability\.make\(rows(?:, *[\w.]+)?\)/],
   },
   {
     path: "lib/meetings/snapshot.ts",

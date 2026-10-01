@@ -36,8 +36,8 @@
  * 3. the calendar's bytes and the naming page's bytes are held in the vault,
  *    cited by their sha256;
  * 4. the state's registration pairs the government with a body;
- * 5. a page of the government's own host the walk saved prints the body's name,
- *    and that page is not the calendar itself. When no title names the
+ * 5. a saved official document prints the body's name; the attested calendar
+ *    itself counts under rulings §3. When no title names the
  *    governing body, a CivicPlus category feed whose own site files it under
  *    exactly that body's name (the vaulted iCalendar index that linked it,
  *    re-read here) names it instead, and the whole feed is its
@@ -119,9 +119,12 @@ export interface AutoCrosswalkReviewInput {
   /** `auto-crosswalk-reviewer@<12 hex>`: the reviewer's code version. */
   readonly reviewer: string;
   readonly now: string;
+  /** Routes whose newest actual read is this original saved walk. */
+  readonly routes?: readonly string[];
 }
 
-const KIND_OF_VENDOR: Readonly<Record<string, CrosswalkKind>> = { ical: "ICAL", "official-page-events": "OFFICIAL_PAGE_EVENTS", diligent: "DILIGENT" };
+const KIND_OF_VENDOR: Readonly<Record<string, CrosswalkKind>> = { ical: "ICAL", "official-page-events": "OFFICIAL_PAGE_EVENTS", diligent: "DILIGENT", "legistar-api": "LEGISTAR" };
+export const AUTO_CROSSWALK_VENDORS: ReadonlySet<string> = new Set(Object.keys(KIND_OF_VENDOR));
 
 const flat = (s: string): string => s.replace(/\s+/g, " ").trim();
 const low = (s: string): string => flat(s).toLowerCase();
@@ -521,6 +524,13 @@ const titleHas = (title: string, terms: readonly string[]): boolean => terms.som
  * A title's other printed names are read to tell a longer name (excluded by its exact words) from a second body.
  */
 function selectFor(kind: CrosswalkKind, proposal: Proposal, events: readonly CalendarEvent[], jurisdictionId: string): Selected {
+  if (kind === "LEGISTAR") {
+    const selected = events.filter(e => proposal.spellings.some(s => wordAt(e.title, s) >= 0));
+    const ids = [...new Set(selected.flatMap(e => e.categories))];
+    if (ids.length !== 1 || !/^\d+$/.test(ids[0])) return { held: "AMBIGUOUS_TITLE", detail: "No unique Legistar body id matches this body" };
+    if (events.some(e => e.categories.includes(ids[0]) && !selected.includes(e))) return { held: "AMBIGUOUS_TITLE", detail: "The vendor body id also names another body" };
+    return { filter: { eventBodyId: ids[0] }, selected };
+  }
   if (kind === "DILIGENT") {
     const selected = events.filter(e => proposal.spellings.some(s => wordAt(`${e.title} ${e.context}`, s) >= 0));
     if (!selected.length) return { held: "SELECTS_NOTHING", detail: "no Diligent event names the reviewed body" };
@@ -691,6 +701,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
   for (const find of attempt.found) if (!byRoute.has(find.url)) byRoute.set(find.url, find);
   for (const find of byRoute.values()) {
     const route = find.url;
+    if (input.routes && !input.routes.some(current => sameRoute(current, route))) continue;
     const kind = KIND_OF_VENDOR[find.vendor];
     if (kind === undefined) {
       hold(route, "KIND_NOT_REVIEWABLE", `a ${find.vendor} route confirmed by content; the reviewer defines filters for iCal feeds and official events pages only`);
@@ -706,8 +717,8 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       hold(route, attested.held === "EVIDENCE_NOT_VAULTED" ? "EVIDENCE_NOT_VAULTED" : "HOST_NOT_ATTESTED", attested.detail);
       continue;
     }
-    const linkedDiligent = kind === "DILIGENT" && /(^|\.)(highbond\.com|civicweb\.net|diligentoneplatform\.com)$/i.test(routeHost) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
-    if (homeHost === null || (bare(homeHost) !== bare(routeHost) && !linkedDiligent)) {
+    const linkedPublisher = (kind === "DILIGENT" || kind === "LEGISTAR") && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
+    if (homeHost === null || (bare(homeHost) !== bare(routeHost) && !linkedPublisher)) {
       hold(route, "HOST_NOT_OWN", `the calendar is on ${routeHost}; the walk attested ${homeHost ?? "no homepage"} as the government's own`);
       continue;
     }
@@ -741,6 +752,13 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       }
       events = read.events;
       calendarZone = read.calendarZone;
+    } else if (kind === "LEGISTAR") {
+      let rows: { EventId: number; EventBodyId: number; EventBodyName: string; EventDate: string; EventInSiteURL?: string }[];
+      try { rows = JSON.parse(calendar.text); } catch { rows = []; }
+      if (!Array.isArray(rows) || !rows.length) { hold(route, "CALENDAR_UNREADABLE", "The Legistar response holds no events"); continue; }
+      events = rows.filter(r => Number.isInteger(r.EventBodyId) && r.EventBodyName && r.EventDate)
+        .map(r => ({ title: flat(r.EventBodyName), context: "", categories: [String(r.EventBodyId)],
+          identity: `${r.EventId}|${r.EventDate}`, tzid: null, utc: false, floating: true, url: r.EventInSiteURL ?? route }));
     } else if (kind === "DILIGENT") {
       const rows = parseDiligentMeetings(calendar.text);
       if (!rows?.length) { hold(route, "CALENDAR_UNREADABLE", "the held public Diligent response has no dated meetings"); continue; }
@@ -757,13 +775,13 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       }
     }
 
-    /* The pages that may name a body: saved, read (2xx) with robots.txt read first, on the calendar's own host, never the calendar itself. */
+    /* Prefer a separate saved naming page when available; the official calendar can supply the same fact itself. */
     const pageOrder = [find.via?.page ?? null, homepage?.url ?? null];
     const pages = steps
       .filter((s) => (s.purpose === "homepage" || s.purpose === "endpoint") && readOk(s) && s.artifactId !== null && !sameRoute(s.url, route))
       .filter((s) => {
         const h = httpsHost(s.url);
-        return h !== null && bare(h) === bare(routeHost) && robotsRead(h);
+        return h !== null && (bare(h) === bare(routeHost) || (linkedPublisher && h === homeHost)) && robotsRead(h);
       })
       .sort((a, b) => {
         const rank = (s: DiscoveryStep) => {
@@ -868,13 +886,20 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
         continue;
       }
       /* A category feed's naming page is the index that files the feed under the body's name, and no other. */
-      const printed = proposal.scope !== undefined ? printedOn(proposal.spellings, [proposal.scope.page]) : printedOn(proposal.category !== null ? [proposal.category, ...proposal.spellings] : proposal.spellings);
+      const names = proposal.category !== null ? [proposal.category, ...proposal.spellings] : proposal.spellings;
+      const printed = proposal.scope !== undefined ? printedOn(proposal.spellings, [proposal.scope.page])
+        : printedOn(names) ?? printedOn(names, [calendarStep]);
       if (printed === null) {
         const eventPage = selection.selected.map((e) => e.url).find((u) => u !== null && httpsHost(u) !== null && bare(httpsHost(u)!) === bare(routeHost));
         hold(route, "NAME_NOT_PRINTED_ON_OWN_PAGE", `no page of ${routeHost} the walk saved prints "${shown}"${eventPage ? `; the event page ${eventPage} may` : ""}`, shown);
         continue;
       }
-      const bodyId = proposal.role === "SUB_BODY" ? subBodyId(registered.ocdId, printed.bodyName) : proposal.bodyId;
+      // The jurisdiction already owns the prefix. Keep the body's exact
+      // printed suffix so "County Board of Adjustment" and "Board of
+      // Adjustment" in that county do not create two identities.
+      const nameAt = proposal.role === "SUB_BODY" ? wordAt(printed.bodyName, proposal.key) : -1;
+      const bodyName = nameAt < 0 ? printed.bodyName : printed.bodyName.slice(nameAt);
+      const bodyId = proposal.role === "SUB_BODY" ? subBodyId(registered.ocdId, bodyName) : proposal.bodyId;
       if (input.handWired(bodyId)) {
         hold(route, "ALREADY_WIRED", `a hand-wired route serves ${bodyId}`, printed.bodyName, bodyId);
         continue;
@@ -886,12 +911,12 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       }
       const readAt = [calendar.evidence.retrievedAt, printed.bytes.evidence.retrievedAt].sort().at(-1)!;
       const row: MeetingBodyCrosswalkRow = {
-        id: crosswalkRowId(bodyId, kind),
+        id: crosswalkRowId(bodyId, kind, route),
         jurisdictionId,
         ocdId: registered.ocdId,
         bodyId,
         bodyRole: proposal.role,
-        bodyName: printed.bodyName,
+        bodyName,
         kind,
         route,
         officialHost: routeHost,

@@ -114,7 +114,6 @@ test("draft runs install and every named deterministic gate", () => {
     "Types (fresh checkout, no build)",
     "Governance ledger and its generated views",
     "Orchestration plans (RULING 190)",
-    "Method knowledge store",
     "Canonical state holdings and residual paths",
     "Generated state manifests against committed observations",
   ];

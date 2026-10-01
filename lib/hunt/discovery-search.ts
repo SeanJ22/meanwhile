@@ -12,8 +12,8 @@
  *   (`lib/hunt/meetings-recipes.ts`), filled with the government's identity,
  *   then the defaults below. A query with an unfilled slot is never sent.
  * - **A result is a pointer, never evidence.** Only a result on the
- *   government's own domain, or on a meeting-publisher host the adapters know,
- *   is followed at all. The executor then opens it robots-first and confirms it
+ *   official government source, including a portal linked by an official page,
+ *   is followed. The executor then opens it robots-first and confirms it
  *   by content like every other candidate.
  * - **Every request has a price.** The published per-request price of each
  *   provider, with the page it was read from and the date, travels into the
@@ -25,6 +25,7 @@
 
 import type { MeetingsRecipe, RecipeIdentity } from "./meetings-recipes.ts";
 import { substitute } from "./meetings-recipes.ts";
+import { isOfficialSource, type OfficialLinkingPage } from "../civic-data/source-authority.ts";
 
 export type SearchProvider = "brave" | "exa";
 
@@ -106,17 +107,14 @@ export function plannedQueries(
   return out.map((q) => ({ ...q, query: q.query.replace(/\s*\bsite:\S+/g, "").trim() }));
 }
 
-/** Meeting-publisher hosts the adapters or the classifier know. A result on one of these is worth opening. */
-const PUBLISHER_HOSTS = /(^|\.)(legistar\.com|civicclerk\.com|iqm2\.com|boardbook\.org|novusagenda\.com|granicus\.com|escribemeetings\.com|primegov\.com|boarddocs\.com|diligentoneplatform\.com|highbond\.com|civicweb\.net|municodemeetings\.com|swagit\.com|civicplus\.com)$/i;
-
 export type HitStanding = "OWN_SITE" | "PUBLISHER";
 
 /**
  * Whether a search result is worth opening for this government: on its own
- * registrable domain, or on a known meeting-publisher host. Anything else is
- * someone else's page about the government, never its record.
+ * domain or another official publisher. Source authority is separate from
+ * the executor's subsequent check that the content names the correct body.
  */
-export function hitStanding(hitUrl: string, domain: string): HitStanding | null {
+export function hitStanding(hitUrl: string, domain: string, linkingPage?: OfficialLinkingPage | null): HitStanding | null {
   let host: string;
   try {
     const u = new URL(hitUrl);
@@ -126,8 +124,8 @@ export function hitStanding(hitUrl: string, domain: string): HitStanding | null 
     return null;
   }
   const own = domain.toLowerCase();
-  if (host === own || host.endsWith(`.${own}`)) return "OWN_SITE";
-  return PUBLISHER_HOSTS.test(host) ? "PUBLISHER" : null;
+  if (!isOfficialSource(hitUrl, linkingPage)) return null;
+  return host === own || host.endsWith(`.${own}`) ? "OWN_SITE" : "PUBLISHER";
 }
 
 /** The price record a request is charged at: the published price when established, otherwise null (UNMEASURED). */

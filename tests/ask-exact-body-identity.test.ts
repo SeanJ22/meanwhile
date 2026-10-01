@@ -69,7 +69,8 @@ await Promise.all([
    before synthesis either way. */
 delete process.env.ANTHROPIC_API_KEY;
 
-const { POST, resetGroundedState } = await import("@/app/api/ask/grounded/route");
+const { POST } = await import("@/app/api/ask/grounded/route");
+const { resetGroundedState } = await import("@/lib/ask/grounded-state");
 
 const AZ = "ocd-division/country:us/state:az";
 const PIMA_DIVISION = "ocd-division/country:us/state:az/county:pima";

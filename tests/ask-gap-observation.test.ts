@@ -68,7 +68,8 @@ import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
 await Promise.all([initializeFederalVoteFirstSeed(), installRegistryRuntimeFirstSeeds(), installOutcomeFirstSeed()]);
 delete process.env.ANTHROPIC_API_KEY;
 
-const { POST, resetGroundedState } = await import("@/app/api/ask/grounded/route");
+const { POST } = await import("@/app/api/ask/grounded/route");
+const { resetGroundedState } = await import("@/lib/ask/grounded-state");
 
 const NOW_ISO = "2026-09-24T12:00:00.000Z";
 const NOW = Date.parse(NOW_ISO);
@@ -422,7 +423,7 @@ test("CREATES: a body readers were told we hold no meeting of gets its own work,
   try {
     const body = await ask("when does the marana town council meet next");
     assert.equal(body.subject?.id, MARANA);
-    assert.ok(body.gaps.some((g) => g.code === "MEETINGS_NOT_HELD" && g.bodyId === MARANA && g.statement === "We have not recorded any meetings for Marana yet."));
+    assert.ok(body.gaps.some((g) => g.code === "MEETINGS_NOT_HELD" && g.bodyId === MARANA && g.statement === "We don't have Marana Town Council's calendar yet."));
     const observed = await readAskGapObservations(store);
     assert.ok(!("unreadable" in observed));
     assert.deepEqual(observed.rows, [{ bodyId: MARANA, code: "MEETINGS_NOT_HELD", recordClass: "MEETING", day: DAY, count: 1 }]);

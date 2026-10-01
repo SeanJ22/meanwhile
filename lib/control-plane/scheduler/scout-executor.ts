@@ -209,6 +209,7 @@ export interface InputTransformation {
 }
 
 export interface ModelResponse {
+  readonly batch?: boolean;
   readonly model: string;
   readonly stop_reason: string | null;
   readonly content: readonly ContentBlock[];
@@ -287,11 +288,58 @@ export type ModelTransport = (request: ModelRequest) => Promise<ModelResponse>;
 
 export class ModelTransportError extends Error {
   readonly status: number | null;
-  constructor(message: string, status: number | null) {
+  readonly retryAfterMs: number | null;
+  constructor(message: string, status: number | null, retryAfterMs: number | null = null) {
     super(message);
     this.name = "ModelTransportError";
     this.status = status;
+    this.retryAfterMs = retryAfterMs;
   }
+}
+
+export interface AnthropicRateLimits {
+  readonly requestsPerMinute: number | null;
+  readonly inputTokensPerMinute: number | null;
+  readonly outputTokensPerMinute: number | null;
+  readonly retryAfterMs: number | null;
+  readonly remaining?: {
+    readonly requests: number | null;
+    readonly inputTokens: number | null;
+    readonly outputTokens: number | null;
+    readonly requestsResetAt: number | null;
+    readonly inputResetAt: number | null;
+    readonly outputResetAt: number | null;
+  };
+}
+
+export function anthropicRateLimits(headers: Headers): AnthropicRateLimits {
+  const number = (name: string): number | null => {
+    const raw = headers.get(name);
+    if (raw === null) return null;
+    const value = Number(raw);
+    return Number.isFinite(value) && value >= 0 ? value : null;
+  };
+  const retry = headers.get("retry-after");
+  const seconds = number("retry-after");
+  const retryDate = retry === null ? NaN : Date.parse(retry);
+  const reset = (name: string): number | null => {
+    const value = Date.parse(headers.get(name) ?? "");
+    return Number.isFinite(value) ? value : null;
+  };
+  return {
+    requestsPerMinute: number("anthropic-ratelimit-requests-limit"),
+    inputTokensPerMinute: number("anthropic-ratelimit-input-tokens-limit"),
+    outputTokensPerMinute: number("anthropic-ratelimit-output-tokens-limit"),
+    retryAfterMs: seconds !== null ? seconds * 1000 : Number.isFinite(retryDate) ? Math.max(0, retryDate - Date.now()) : null,
+    remaining: {
+      requests: number("anthropic-ratelimit-requests-remaining"),
+      inputTokens: number("anthropic-ratelimit-input-tokens-remaining"),
+      outputTokens: number("anthropic-ratelimit-output-tokens-remaining"),
+      requestsResetAt: reset("anthropic-ratelimit-requests-reset"),
+      inputResetAt: reset("anthropic-ratelimit-input-tokens-reset"),
+      outputResetAt: reset("anthropic-ratelimit-output-tokens-reset"),
+    },
+  };
 }
 
 /**
@@ -304,6 +352,13 @@ export function anthropicBetasFor(request: ModelRequest): string[] {
   return request.thinking?.block_binding !== undefined ? [THINKING_BINDING_BETA] : [];
 }
 
+export function cachedModelRequest(request: ModelRequest): ModelRequest {
+  return request.cache_control || request.system.some(block => block.cache_control) ||
+    request.tools.some(tool => tool.cache_control) || request.messages.some(message => Array.isArray(message.content) &&
+      message.content.some(block => block && typeof block === "object" && "cache_control" in block))
+    ? request : { ...request, cache_control: { type: "ephemeral" } };
+}
+
 /**
  * The real transport, against the Messages API. `apiKey` is passed in by the
  * runner, which read it by NAME; it is never logged and never placed in a
@@ -314,6 +369,7 @@ export function anthropicTransport(
   apiKey: string,
   fetchImpl: typeof fetch = fetch,
   endpoint = "https://api.anthropic.com/v1/messages",
+  options: { readonly onRateLimits?: (limits: AnthropicRateLimits, request: ModelRequest) => void } = {},
 ): ModelTransport {
   return async (request) => {
     const betas = anthropicBetasFor(request);
@@ -325,11 +381,13 @@ export function anthropicTransport(
         "anthropic-version": "2023-06-01",
         ...(betas.length > 0 ? { "anthropic-beta": betas.join(",") } : {}),
       },
-      body: JSON.stringify(request),
+      body: JSON.stringify(cachedModelRequest(request)),
     });
+    const limits = anthropicRateLimits(response.headers);
+    options.onRateLimits?.(limits, request);
     if (!response.ok) {
       const body = await response.text();
-      throw new ModelTransportError(`HTTP ${response.status}: ${body.slice(0, 300)}`, response.status);
+      throw new ModelTransportError(`HTTP ${response.status}: ${body.slice(0, 300)}`, response.status, limits.retryAfterMs);
     }
     return (await response.json()) as ModelResponse;
   };
@@ -1276,6 +1334,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       let stoppedBy = "MODEL" as ScoutStop;
       let boundNotice = null as string | null;
       let transportFailure = null as string | null;
+      let policyRefusedBeforeSending = false;
       /** The provider's HTTP status on a transport failure; a 400 on the cheaper model is the CAPABILITY_ERROR signal. */
       let transportStatus = null as number | null;
       let lastStopReason = null as string | null;
@@ -1414,6 +1473,8 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
               && [400, 401, 402, 403, 404, 413, 429].includes(error.status);
             const refusedBeforeSending = enteredTransport && deps.refusedBeforeSending?.(error) === true;
             if (refusedBeforeSending) {
+              policyRefusedBeforeSending = true;
+              stoppedBy = "BOUND";
               transportInvocations -= 1;
               transportInvocationsByModel.set(current.model, (transportInvocationsByModel.get(current.model) ?? 1) - 1);
             }
@@ -1434,7 +1495,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             });
           }
           /* The provider's usage block, through the one parser every lane reads it with. */
-          const metered = readMeteredUsage(response.usage ?? {});
+          const metered = readMeteredUsage(response.usage ?? {}, response.batch === true);
           if (metered.uncachedInputTokens !== null || metered.outputTokens !== null) usage.reported = true;
           meteredTurns.push(metered);
           const turnTokens = {
@@ -1951,7 +2012,9 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       if (finish === null) {
         refusal =
           transportFailure !== null
-            ? [{ code: "SCOUT_TRANSPORT_FAILED", detail: `the provider did not answer or refused: ${transportFailure}` }]
+            ? [{ code: policyRefusedBeforeSending ? "SCOUT_POLICY_DENIED" : "SCOUT_TRANSPORT_FAILED",
+                detail: policyRefusedBeforeSending ? `request refused before sending by the spending or execution policy: ${transportFailure}`
+                  : `the provider did not answer or refused: ${transportFailure}` }]
             : (lastRefusal ?? [
                 {
                   code: "SCOUT_NO_FINISH",
@@ -2080,6 +2143,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         return {
           ...common,
           kind: "ABORTED",
+          ...(policyRefusedBeforeSending ? { failureOutcome: "DENIED_BY_POLICY" as const } : {}),
           detail:
             `SCOUT_RESULT_REFUSED after ${turns} turn(s), ${toolkit.toolCalls} tool call(s), ${rungs.length} rung(s): ` +
             persisted.refusal.map((i) => `${i.code} — ${i.detail}`).join("; "),

@@ -19,6 +19,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { repairMeetingReaderProjectionReadbacks } from "../lib/civic-data/reader-verification.ts";
 import { promoteMeetingPartitions } from "../scripts/ingest.ts";
 import type { FactFreshnessReading } from "../lib/control-plane/promotion/fact-freshness.ts";
+import { methodFixture } from "./method-store-fixture.ts";
 
 test("routine acquisition bytes reach independent workers, approved facts, the sole partition door and Reader readback", async t => {
   const vaultRoot = mkdtempSync(join(tmpdir(), "fleet-pdc-intake-"));
@@ -33,7 +34,7 @@ test("routine acquisition bytes reach independent workers, approved facts, the s
   })), "legistar", value => value === url).finally(() => { globalThis.fetch = originalFetch; });
   assert.equal(captured.value.value, "existing-fetch-result"); assert.equal(captured.responses.length, 1);
   assert.deepEqual(captured.responses[0].bytes, bytes); assert.deepEqual(captured.refusals, []);
-  const methodVersion = JSON.parse(readFileSync("data/method/knowledge.json", "utf8")).version as number;
+  const methodVersion = methodFixture().version;
   const partition = meetingPartitionForRow("legistar", PIMA_LEGISTAR_CONTRACT.subjectId);
   let clock = Date.parse("2026-09-05T18:00:00.000Z"); const now = () => new Date(clock += 1000).toISOString();
   const first = await retainRoutineMeetingForWorkers({ repos, store, subjectId: partition.bodyId, methodVersion,
@@ -47,7 +48,7 @@ test("routine acquisition bytes reach independent workers, approved facts, the s
     now, candidateVersionId: "fixture-candidate-two", response: { ...captured.responses[0], retrievedAt: now() } }), null);
   assert.equal((await repos.attempts.list()).length, priorAttemptCount, "A repeated candidate import creates no synthetic acquisition receipt.");
   assert.equal((await repos.workItems.list()).length, 1); assert.equal((await repos.obligations.list()).length, 0, "No second acquisition clock.");
-  const runtime = { ...standingFleetRuntime({ root: process.cwd(), vaultRoot, repos, now }), requireModelAudit: false };
+  const runtime = { ...standingFleetRuntime({ root: process.cwd(), method: methodFixture(), vaultRoot, repos, now }), requireModelAudit: false };
   const results = await runHeldWorkerFleetCycle(process.cwd(), runtime, true, { maximumDispatches: 3 });
   assert.equal(results.length, 3); assert.ok(results.every(result => result.outcome === "WORKED"), JSON.stringify(results));
   const workers = await repos.workerResults.readAll();

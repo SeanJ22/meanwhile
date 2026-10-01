@@ -34,7 +34,7 @@ const clock = (from = T0) => {
     return at;
   };
 };
-const deps = (repos: ControlPlaneRepositories): GatewayDeps => ({ repos, now: clock(), currentStateVersion: null, codeSha: null, recordReview: null });
+const deps = (repos: ControlPlaneRepositories): GatewayDeps => ({ repos, now: clock(), currentStateVersion: null, codeSha: null });
 const ask = (type: string, key: string, input: Record<string, unknown> = {}): ActionRequest => ({
   type,
   subject: "",

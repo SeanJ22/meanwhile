@@ -749,14 +749,11 @@ test("SOURCES: an answer does not carry documents it did not rest on", async () 
    THE SIGNAL PATH IS REACHED AND WRITES NOTHING
    ══════════════════════════════════════════════════════════════════════ */
 
-test("SIGNAL: a real reader Ask through the real route writes no interaction row", async () => {
+test("SIGNAL: a real reader Ask through the real route writes no interaction row without a continuity key", async () => {
   /*
-   * The gate is checked inside `captureAskInteraction`, which the route calls
-   * on every outcome — so this proves the caller EXISTS and that the flag holds
-   * it shut, which are two different facts and the first one was missing.
+   * The route calls `captureAskInteraction` on every outcome; a request that
+   * carries no continuity key writes nothing, and the reader still gets the answer.
    */
-  const { RIPCORDS } = await import("../lib/ripcords.ts");
-  assert.equal(RIPCORDS["ripcord.askSignalCapture"].pulled, true);
 
   const body = await ask("What's on the Vail school district agenda?");
   assert.ok(body.subject, "the reader still gets their answer while nothing is stored");

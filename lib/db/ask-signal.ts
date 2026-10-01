@@ -12,51 +12,20 @@ import {
   tierDistributionForOcdIds,
 } from "../coverage/zip-tier.ts";
 import { redactSelfDisclosure, type SelfDisclosureFlag } from "../speak/self-disclosure.ts";
-import { ripcordPulled } from "../ripcords.ts";
 import type { AnswerMode } from "../ask/trace.ts";
 import type { EvidenceProvenance } from "../ask/evidence.ts";
 import type { LocationConfidence, ResidencyRelation } from "../ask/residency.ts";
 
 /**
- * **THE ASK INTERACTION WRITE PATH — built, wired, and NOT RUNNING.**
- * (ASK03, 2026-08-27. Corrected 2026-08-28.)
+ * **THE ASK INTERACTION WRITE PATH.** (ASK03, 2026-08-27.)
  *
- * ## The gate, and the honest reason for it
+ * Capture is on (Sean, 2026-10-01): every Ask is saved once the reader's device
+ * carries the anonymous continuity key, which the Ask surfaces mint. The
+ * former Ask-capture switch is removed; the one disclosure lives on
+ * "What this site collects".
  *
- * `ripcord.askSignalCapture` ships PULLED. The first version of this header
- * said the data-privacy policy REQUIRED the gate, quoting *"HONEST DISCLOSURE
- * AT THE BOX"*. **That citation was wrong and is withdrawn.** That clause is
- * RULING 141's, and RULING 141 governs the Speak Your Mind store's four rules.
- * The root constitution's friction exceptions name *"the transparency
- * disclosure at reaction capture"* and *"anything constituting consent to
- * collection"* — neither of which is an Ask-specific disclosure rule, and
- * neither of which extends 141 to a different store by itself.
- *
- * Reading a rule about one store as binding law over another is how a policy
- * quietly grows clauses nobody adopted. The correct statement of why this is
- * off is simpler and does not need to invent law:
- *
- * > **OPERATOR DECISION, PENDING PRIVACY APPROVAL.** The author has
- * > instructed that new Ask/privacy copy does not ship yet and that NH246 stays
- * > P2 / NEEDS SEAN. Until he approves what a reader sees before they type,
- * > their typed question does not enter a store whose aggregates may reach
- * > campaigns.
- *
- * That is a decision at precedence 1, which is the highest there is. It does
- * not need to be dressed as current law to be binding, and dressing it that way
- * would have made a future session believe an amendment had happened.
- *
- * ## What "wired" now means, and what it did not mean before
- *
- * The previous version described this as one-flip activation. It was not:
- * `captureAskInteraction` had **no production caller**. Only its own module and
- * its tests referenced it, and the grounded route said in its header that it
- * stored nothing. Pulling the ripcord up would have changed nothing at all.
- *
- * `app/api/ask/grounded/route.ts` now calls it, after the delivered answer,
- * mode and evidence are known — so the row describes what the reader actually
- * received rather than what was about to be attempted. The flag is still down.
- * That is the difference between a path that is built and a path that is real.
+ * `app/api/ask/grounded/route.ts` calls it after the delivered answer, mode and
+ * evidence are known, so the row describes what the reader actually received.
  *
  * ## The continuity key has its own digest space, and that is the boundary
  *
@@ -412,31 +381,16 @@ export type AskCaptureInput = Omit<
 
 export type AskCaptureOutcome =
   | { kind: "WROTE" }
-  /** The flag is down. The only outcome today, and it is not an error. */
-  | { kind: "GATED"; why: "ripcord" }
   | { kind: "FAILED"; why: string };
 
 /**
- * Write one interaction — **if the capability is live, which today it is not.**
- *
- * The gate is checked here rather than at the call site so that no future
- * caller can reach the store by forgetting to ask. A gated result is a normal
- * return value, not an error: the reader's answer is unaffected either way,
- * and an Ask that answers correctly while storing nothing is precisely the
- * product that ships today.
- *
- * **The row is not even BUILT while the flag is down.** The gate returns before
- * `prepareAskInteraction` runs, so a gated request never materialises the
- * reader's text into a row shape at all — there is nothing to leak into a log,
- * a trace or an error object on the path that ships.
+ * Write one interaction. A missing continuity key or write path is a normal
+ * FAILED return, not an error: the reader's answer is unaffected either way.
  */
 export async function captureAskInteraction(
   input: AskCaptureInput,
   write?: (row: AskInteractionRow) => Promise<void>,
 ): Promise<AskCaptureOutcome> {
-  if (ripcordPulled("ripcord.askSignalCapture")) {
-    return { kind: "GATED", why: "ripcord" };
-  }
   /*
    * **NO CONTINUITY KEY, NO ROW — and this refusal is the point.**
    * (PR #212 follow-up, 2026-08-28.)

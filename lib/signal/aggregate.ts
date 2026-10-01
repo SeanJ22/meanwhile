@@ -1,6 +1,4 @@
-import { ripcordPulled } from "../ripcords.ts";
 import {
-  FUNDING_REACTION_TYPES,
   SCALE_BREAKS,
   VERIFICATION_TIERS,
   questionForRow,
@@ -129,19 +127,10 @@ export function scaleBreaksFor(targetType: ReactionTargetType) {
 }
 
 /**
- * The ripcord filter (D34): while `ripcord.fundingReactionsInAggregates`
- * is pulled, funding reactions are stored but never aggregated, so nothing
- * derived from them can enter an export or a licensed aggregate. The
- * targetType is the provenance tag, which is what makes the pull a filter
- * rather than a hunt.
- *
- * **The flag ships LIVE from 2026-08-15, on the author's ruling** (see
- * lib/ripcords.ts for the ruling verbatim): what is licensed is
- * reader-attention signal — anonymous opinions about a display — and never
- * FEC-derived data. A buyer receives what readers felt, not contributor
- * records. The switch stays in the code as a belt: the machinery, the
- * provenance tag and the filter are unchanged, so a pull is still one flag
- * away and still a filter rather than a migration.
+ * Rows that count: not quarantined, and organic traffic only. Funding
+ * reactions count like every other reaction (Sean, 2026-10-01: the
+ * funding-aggregates switch is removed; FEC contributor records themselves
+ * are never sold, reactions are).
  */
 export function rowsEligibleForAggregation(
   rows: ReactionRowForAggregation[],
@@ -160,8 +149,7 @@ export function rowsEligibleForAggregation(
     // column nobody reads is not a claim, and the claim a buyer pays for is
     // that our own traffic is separable from a reader's.
     .filter((row) => (row.runClass ?? "UNKNOWN") === "ORGANIC");
-  if (!ripcordPulled("ripcord.fundingReactionsInAggregates")) return clean;
-  return clean.filter((row) => !FUNDING_REACTION_TYPES.includes(row.targetType));
+  return clean;
 }
 
 /**

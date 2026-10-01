@@ -340,6 +340,7 @@ function MapEntryInner() {
   // card can read it without a second source of truth for the value.
   const {
     enabled: showDistricts,
+    restored: districtsRestored,
     setEnabled: setShowDistricts,
   } = useDistrictLayer();
 
@@ -2190,7 +2191,7 @@ function MapEntryInner() {
         }
       >
         <div className="mw-map-layer absolute inset-0">
-          <MapCanvas
+          {districtsRestored && <MapCanvas
             onPresentationReadyChange={onMapPresentationReady}
             venues={allVenues}
             visibleVenueKeys={visibleVenueKeys}
@@ -2221,7 +2222,7 @@ function MapEntryInner() {
             votingAddressPoint={votingAddressPoint}
             onSelectVotingSite={setSelectedVotingSiteId}
             selectedVotingSiteId={selectedVotingSiteId}
-          />
+          />}
           {focusState.crossing && (
             <StateCrossingPrompt
               fromName={focusState.crossing.fromName}

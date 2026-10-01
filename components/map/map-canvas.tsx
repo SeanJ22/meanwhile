@@ -304,7 +304,9 @@ function onSettledSourceChange(map: MapLibreMap, run: () => void): () => void {
 
   schedule();
   map.on("sourcedata", schedule);
-  map.on("idle", schedule);
+  // Idle can reveal cached layers after software-rendered motion. Read that
+  // settled frame directly; scheduling another repaint here would loop.
+  map.on("idle", flush);
   // A move that consumed no sourcedata still has to report: a camera arriving
   // somewhere new IS a change in which districts are drawn.
   map.on("moveend", schedule);
@@ -314,7 +316,7 @@ function onSettledSourceChange(map: MapLibreMap, run: () => void): () => void {
     map.off("render", flush);
     scheduled = false;
     map.off("sourcedata", schedule);
-    map.off("idle", schedule);
+    map.off("idle", flush);
     map.off("moveend", schedule);
   };
 }

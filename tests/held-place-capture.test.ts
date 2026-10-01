@@ -5,6 +5,7 @@ import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { HeldPlaceFamilies } from "../lib/civic-data/held-place-families.ts";
+import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
 
 const county = "ocd-division/country:us/state:az/county:cochise";
 const neighbour = "ocd-division/country:us/state:az/county:pima";
@@ -39,6 +40,28 @@ test("only published present fields count, and failed reads cannot look like emp
   assert.ok(result.held.some(field => field.checklistId === "MTG-08"));
   const failure = { kind: "STORE_UNREACHABLE", metadata: { recordClass: "MEETING", scope: "held" } } as unknown as CivicDataReadResult<MeetingsSnapshot>;
   assert.throws(() => projectHeldPlaceCapture([county], registry, [failure], at), /HELD_PLACE_READ_FAILED/);
+  const sitting = { meetingId: meeting.id, bodyId: meeting.bodyId, ocdId: county, bodyName: "Shared district board",
+    startsAt: meeting.startsAt, sourceUrl: provenance.sourceUrl, extraction: "NOT_YET_PUBLISHED",
+    extractionNote: "The official minutes cell reads Not available.",
+    publication: { observedAt: at, agendaFile: null, minutesFile: null },
+    publicationObservations: [{ meetingId: meeting.id, provenance: "FIRST_PARTY_PUBLISHER", report: "NOT_AVAILABLE",
+      observedAt: at, observedUrl: provenance.sourceUrl, sourceOrg: "County", evidenceQuote: "Not available", routeId: "INSITE_CALENDAR" }] };
+  const outcomes = published({ sittings: [sitting] } as unknown as OutcomeSnapshot);
+  const absent = projectHeldPlaceCapture([county], registry, [meetings], at, {}, [outcomes]);
+  assert.deepEqual(absent.held.filter(field => field.state === "unpublished").map(field => field.checklistId),
+    ["DOC-01", "DOC-02", "DOC-03", "DOC-06"]);
+  assert.ok(absent.held.filter(field => field.state === "unpublished").every(field => field.checkedAt === at),
+    "reading an official absence retains its actual source clock");
+  const later = projectHeldPlaceCapture([county], registry, [meetings], "2026-10-02T06:00:00.000Z", {}, [outcomes]);
+  assert.equal(later.held.filter(field => field.state === "unpublished").length, 0, "expired findings reopen the blanks");
+  const failed = published({ sittings: [{ ...sitting, extraction: "REQUEST_FAILED", publicationObservations: [] }] } as unknown as OutcomeSnapshot);
+  assert.equal(projectHeldPlaceCapture([county], registry, [meetings], at, {}, [failed]).held.filter(field => field.state === "unpublished").length, 0,
+    "an empty or failed read is not an official absence");
+  const available = published({ sittings: [{ ...sitting, extraction: "RETRIEVED", publicationObservations: [
+    ...sitting.publicationObservations, { ...sitting.publicationObservations[0], routeId: "WEB_API", report: "AVAILABLE", observedAt: "2026-09-30T05:59:59.000Z" },
+  ] }] } as unknown as OutcomeSnapshot);
+  assert.equal(projectHeldPlaceCapture([county], registry, [meetings], at, {}, [available]).held.filter(field => field.state === "unpublished").length, 0,
+    "conflicting official surfaces stay open");
 });
 
 test("retained roster contacts keep separate values and their earlier source dates", () => {

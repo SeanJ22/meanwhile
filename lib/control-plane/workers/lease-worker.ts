@@ -23,7 +23,7 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
   // The first process to claim wins in the existing repository dispatcher.
   while (pending.size) {
     let ran = false;
-    for (const id of pending) {
+    for (const id of await broker.call<readonly string[]>("pending-order", [...pending])) {
       pending.delete(id);
       const task = (await repos.routeTasks.read(id))?.value;
       if (!task || !["PENDING", "RECLAIMABLE"].includes(task.state)) continue;
@@ -49,6 +49,7 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
       }
       if (ran) break;
     }
+    if (!ran) break;
   }
   broker.send("finished", "", config.taskIds);
   process.disconnect();

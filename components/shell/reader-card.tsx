@@ -1,5 +1,7 @@
 "use client";
 
+import { feedbackHref } from "@/lib/feedback/shape";
+
 import {
   useCallback,
   useEffect,
@@ -32,6 +34,8 @@ export function ReaderCard({
   kicker,
   kickerTone,
   zipContext,
+  zip,
+  recordId,
   backLabel,
   onBack,
   onClose,
@@ -47,6 +51,8 @@ export function ReaderCard({
   kickerTone?: string;
   /** "Near 85701 · orientation, not your exact districts" on list views. */
   zipContext?: string | null;
+  zip?: string | null;
+  recordId?: string | null;
   backLabel: string | null;
   onBack: () => void;
   onClose: () => void;
@@ -160,7 +166,7 @@ export function ReaderCard({
         <footer className="mw-card-foot">
           <a
             className="mw-report-link"
-            href={`/feedback?about=${encodeURIComponent(kicker)}`}
+            href={feedbackHref({ about: kicker, zip, recordId })}
             target="_blank"
             rel="noopener noreferrer"
           >

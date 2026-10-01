@@ -212,7 +212,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Schema and migrations
 
-35 file(s).
+36 file(s).
 
 - `lib/control-plane/repository/pg-schema.ts`
 - `lib/db/migrations/0000_square_stryfe.sql`
@@ -248,11 +248,12 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/db/migrations/0030_database_transfer_daily.sql`
 - `lib/db/migrations/0031_civic_payload_parts.sql`
 - `lib/db/migrations/0032_feedback_site.sql`
+- `lib/db/migrations/0033_feedback_context.sql`
 - `lib/db/schema.ts`
 
 ## Scripts
 
-543 file(s).
+544 file(s).
 
 - `scripts/a001-feedback-backup.mts`
 - `scripts/a001-verify-catalog.mts`
@@ -326,6 +327,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/campaign-finance-az-pima-transactions.mts`
 - `scripts/candidate-site-probe.mts`
 - `scripts/canonicalize-owner-decisions.mts`
+- `scripts/carry-over-feedback.mts`
 - `scripts/census-gap-walk.mts`
 - `scripts/census-geo-build.mts`
 - `scripts/census-geography-refresh.mts`
@@ -808,7 +810,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-953 file(s).
+954 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -1305,6 +1307,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/level-filter.test.ts`
 - `tests/level1-supervision.test.ts`
 - `tests/link-ladder.test.ts`
+- `tests/link-zip.test.ts`
 - `tests/local-regimes-arizona.test.ts`
 - `tests/main-green.test.ts`
 - `tests/manual-ballot-profile-data-plane.test.ts`
@@ -1766,7 +1769,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7048 file(s).
+7052 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -5321,6 +5324,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/db/ask-signal.ts`
 - `lib/db/demand-signal.ts`
 - `lib/db/demo-deletion.ts`
+- `lib/db/feedback-carryover.ts`
 - `lib/db/feedback.ts`
 - `lib/db/identity-domains.ts`
 - `lib/db/index.ts`
@@ -5362,6 +5366,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/db/migrations/0030_database_transfer_daily.sql`
 - `lib/db/migrations/0031_civic_payload_parts.sql`
 - `lib/db/migrations/0032_feedback_site.sql`
+- `lib/db/migrations/0033_feedback_context.sql`
 - `lib/db/migrations/meta/0000_snapshot.json`
 - `lib/db/migrations/meta/0001_snapshot.json`
 - `lib/db/migrations/meta/0002_snapshot.json`
@@ -7124,6 +7129,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/campaign-finance-az-pima-transactions.mts`
 - `scripts/candidate-site-probe.mts`
 - `scripts/canonicalize-owner-decisions.mts`
+- `scripts/carry-over-feedback.mts`
 - `scripts/census-gap-walk.mts`
 - `scripts/census-geo-build.mts`
 - `scripts/census-geography-refresh.mts`
@@ -8350,6 +8356,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/level-filter.test.ts`
 - `tests/level1-supervision.test.ts`
 - `tests/link-ladder.test.ts`
+- `tests/link-zip.test.ts`
 - `tests/local-regimes-arizona.test.ts`
 - `tests/main-green.test.ts`
 - `tests/manual-ballot-profile-data-plane.test.ts`

@@ -2405,6 +2405,12 @@ function MapEntryInner() {
             viewKey={cardKey ?? "card"}
             kicker={cardKicker}
             kickerTone={cardTone}
+            zip={clusterZip}
+            recordId={cardView.kind === "large"
+              ? cardView.surface.kind === "entity"
+                ? cardView.surface.subject.subjectId
+                : cardView.surface.holder.id
+              : cardView.kind === "venue" ? cardView.venue.key : null}
             zipContext={
               cardView.kind === "list" ||
               cardView.kind === "door" ||

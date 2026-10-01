@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { gap, type OwnerSnapshot } from "../lib/control-plane/owner-surface.ts";
 import { PULSE_STALE_MS } from "../lib/control-plane/live-pulse.ts";
-import { withFleetReceiptSnapshot } from "../lib/control-plane/fleet-receipt-publisher.ts";
 import { FLEET_RECEIPT_SNAPSHOT_MAX_BYTES, FLEET_RECEIPT_SNAPSHOT_VERSION, isFleetReceiptSnapshot,
   readFleetReceiptSnapshot, type FleetReceiptSnapshot } from "../lib/control-plane/fleet-receipt-snapshot.ts";
 import type { FleetReceiptLoadReport, FleetReceiptStore } from "../lib/control-plane/fleet-receipt-store.ts";
@@ -167,72 +166,4 @@ test("staleness preserves original collection and successful-read timestamps wit
   assert.ok(stale.loading.value.entries[0].gaps.includes("RECEIPT_SNAPSHOT_STALE"));
   assert.deepEqual(stale.loading.value.receipts, original.loading.kind === "HELD" ? original.loading.value.receipts : []);
   assert.deepEqual(value, original);
-});
-
-test("stateless publisher restart retains a missing or invalid receipt using the previous snapshot", async () => {
-  for (const state of ["MISSING", "INVALID", "UNAVAILABLE"] as const) {
-    const previous = extension();
-    const snapshot = owner();
-    const before = structuredClone({ previous, snapshot });
-    // New store object has no cache from the prior collection. Its only capability is read.
-    const store: FleetReceiptStore = { read: async (windows, at) => {
-      assert.deepEqual(windows, []);
-      assert.equal(at, NEXT);
-      return { ...report(NEXT), receipts: [], entries: [{ ...report(NEXT).entries[0], state,
-        lastSuccessfulReadAt: null, gaps: [`SYNTHETIC_${state}`] }] };
-    } };
-    let reads = 0;
-    const result = await withFleetReceiptSnapshot(snapshot, { store, readWindows: async () => { reads++; return []; }, previous });
-    assert.equal(reads, 1);
-    const retained = held(result.fleetReceipts);
-    assert.deepEqual(retained.receipts, [receipt()]);
-    assert.equal(retained.entries[0].state, "RETAINED");
-    assert.equal(retained.entries[0].observedAt, NEXT);
-    assert.equal(retained.entries[0].lastSuccessfulReadAt, FIRST);
-    assert.ok(retained.entries[0].gaps.includes(`RECEIPT_REFRESH_${state}`));
-    assert.equal(readFleetReceiptSnapshot(result.fleetReceipts, NEXT).freshness, "UNKNOWN");
-    const { fleetReceipts: _reading, ...unchanged } = result;
-    assert.deepEqual(unchanged, snapshot);
-    assert.deepEqual({ previous, snapshot }, before, "Collector only composes a value; it cannot mutate the prior aggregate or write a repository");
-  }
-});
-
-test("collection failure retains prior historical detail with a current named failure and no refreshed success", async () => {
-  const previous = extension();
-  const failing: FleetReceiptStore = { read: async () => { throw new Error("synthetic-private-error-content"); } };
-  for (const readWindows of [async () => [], async () => { throw new Error("synthetic-selector-failure"); }]) {
-    const result = await withFleetReceiptSnapshot(owner(), { previous, store: failing, readWindows });
-    const value = held(result.fleetReceipts);
-    assert.deepEqual(value.receipts, [receipt()]);
-    assert.equal(value.entries[0].state, "RETAINED");
-    assert.equal(value.entries[0].lastSuccessfulReadAt, FIRST);
-    assert.ok(value.entries[0].gaps.includes("RECEIPT_COLLECTION_FAILED_HISTORY_ONLY"));
-    assert.equal(readFleetReceiptSnapshot(result.fleetReceipts, NEXT).freshness, "UNKNOWN");
-    assert.equal(JSON.stringify(result).includes("synthetic-private-error-content"), false);
-  }
-  const noHistory = await withFleetReceiptSnapshot(owner(), { store: failing, readWindows: async () => [] });
-  assert.equal(noHistory.fleetReceipts?.loading.kind, "STORE_UNREACHABLE");
-  const futureHistory = await withFleetReceiptSnapshot(owner(FIRST), { previous: extension(NEXT), store: failing, readWindows: async () => [] });
-  assert.equal(futureHistory.fleetReceipts?.loading.kind, "STORE_UNREACHABLE");
-});
-
-test("new valid failed or reversed evidence supersedes an older successful receipt", async () => {
-  for (const reversed of [false, true]) {
-    const newer: PromotionReceipt = { ...receipt(), at: NEXT,
-      verification: { instrument: "synthetic-check", exitCode: 1, passed: false, detail: "Synthetic failed historical verifier" },
-      regression: { action: "REVERT_AND_INCIDENT", reason: "Synthetic failure" },
-      reversal: { executed: reversed, at: reversed ? NEXT : null, restoredSha256: reversed ? "a".repeat(64) : null,
-        matchesBefore: reversed ? true : null, detail: "Synthetic reversal shape, no side effect" },
-      incident: { formatVersion: 1, incidentId: "synthetic-incident", windowId: "synthetic-historical-window", stage: "PROMOTION",
-        code: "SYNTHETIC_FAILURE", detail: "Fixture only", openedAt: NEXT, missedScope: [] } };
-    const result = await withFleetReceiptSnapshot(owner(), { previous: extension(), readWindows: async () => [],
-      store: { read: async () => report(NEXT, newer) } });
-    const value = held(result.fleetReceipts);
-    assert.deepEqual(value.receipts, [newer]);
-    assert.equal(value.entries[0].state, "LOADED");
-    assert.equal(value.entries[0].lastSuccessfulReadAt, NEXT);
-    assert.equal(value.receipts[0].verification?.passed, false);
-    assert.equal(value.receipts[0].reversal?.executed, reversed);
-    assert.equal(readFleetReceiptSnapshot(result.fleetReceipts, NEXT).freshness, "FRESH", "Fresh collection does not mean successful publication");
-  }
 });

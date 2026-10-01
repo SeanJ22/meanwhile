@@ -187,5 +187,9 @@ export async function readReaderEventTotals(options: { period?: EventPeriod; day
 /** S12's existing weekly topic read, with optional day grouping for recipes. */
 export async function readTopicCounts(options: { weeks?: number; days?: number; period?: EventPeriod; limit?: number } = {}) {
   const read = await readReaderEventTotals({ ...options, period: options.period ?? "WEEK", topicsOnly: true });
-  return read.kind === "NOT_INSTALLED" ? read : { ...read, rows: read.rows.filter(row => row.topic !== "*" && row.eventType === "*") };
+  return read.kind === "NOT_INSTALLED" ? read : { ...read, rows: read.rows
+    .filter(row => row.topic !== "*" && row.eventType === "*")
+    .map(row => ({ period: row.day, grain: row.period === "DAY" ? "day" as const : "week" as const,
+      week: row.week, zip: row.zip, district: row.district, topic: row.topic,
+      events: row.events, users: row.users, totalUsers: row.totalUsers })) };
 }

@@ -87,7 +87,7 @@ import { buildDeliveryTrail } from "../lib/control-plane/delivery-trail.ts";
 import { collectPublishedCampaignReadback, collectPublishedWorkerReadback, collectPublishedManualReaderReadback } from "../lib/control-plane/served-reader-production.ts";
 import type { ServedReaderReadback } from "../lib/control-plane/served-reader.ts";
 import { buildAssignmentView, type AssignmentPublication, type AssignmentSources } from "../lib/control-plane/assignment-view.ts";
-import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
+import { ASSIGNMENT_ATTEMPT_PROJECTION, ASSIGNMENT_OBLIGATION_PROJECTION, readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
 import { readPipelineStates, stageCounts } from "../lib/control-plane/promotion/pipeline.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import { PILOT_ZIPS } from "../lib/health/owner-corpus-compile.ts";
@@ -444,8 +444,8 @@ async function readControlPlane(repos: ControlPlaneRepositories): Promise<Contro
   ]);
   const [costs, attempts, obligations, research] = await Promise.all([
     repos.costs.readAll(),
-    repos.attempts.list(),
-    repos.obligations.list(),
+    repos.attempts.listNarrowed(ASSIGNMENT_ATTEMPT_PROJECTION).then(rows => rows.map(row => ({ ...row, value: row.value as AssignmentSources["attempts"][number] }))),
+    repos.obligations.listNarrowed(ASSIGNMENT_OBLIGATION_PROJECTION).then(rows => rows.map(row => ({ ...row, value: row.value as AssignmentSources["obligations"][number] }))),
     repos.researchState.read(RESEARCH_STATE_ID),
   ]);
   let verifiedRecords: number | null = null;
@@ -922,6 +922,13 @@ async function main(): Promise<void> {
     `published: snapshot; ${canonicalCycle ? `canonical cycle ${canonicalCycle.outcome.cycleId}` : "no canonical cycle recorded"}; the heartbeat is the runner's own; ` +
       `${decisions.length} owner decision intent(s) on record`,
   );
+  // A named gap is still published, but a transient failed input read must not
+  // become the standing runner's reusable successful publication.
+  if (reads && (!reads.assignmentSources.ok || reads.billingScopes === null ||
+      reads.billingHolds === null || reads.verifiedRecords === null)) {
+    log("published with incomplete control-plane inputs; the standing runner will retry");
+    process.exitCode = 1;
+  }
 }
 
 await main();

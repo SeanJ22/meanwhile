@@ -556,6 +556,8 @@ test("a CORRECTED provider signal reaches a row that is already durable", async 
     /* The signal as it was first written: the election date, which says
        staleness is free until November. */
     readerImpactAt: "2026-11-03T07:00:00.000Z",
+    meetingStartsAt: ["2026-11-03T07:00:00.000Z"],
+    scopeDivisions: ["ocd-division/country:us/state:az"],
     observedChangeRateHours: null,
     lastWorkedAt: null,
   };
@@ -584,8 +586,21 @@ test("a CORRECTED provider signal reaches a row that is already durable", async 
   assert.equal(after.nextDueAt, "2026-09-30T00:00:00.000Z");
 
   /* An unchanged pass writes nothing and reports nothing. */
-  const third = await syncObligations(repos, [{ ...base, readerImpactAt: null }], NOW);
+  const beforeIdle = await repos.obligations.mustRead(base.id);
+  const later = "2026-09-01T12:00:00.000Z";
+  const third = await syncObligations(repos, [JSON.parse(JSON.stringify({ ...base, readerImpactAt: null }))], later);
   assert.equal(third.refreshed.length, 0);
+  assert.deepEqual(await repos.obligations.mustRead(base.id), beforeIdle,
+    "equal provider arrays retain the revision, updated-at and runtime-owned state");
+
+  const corrected = await syncObligations(repos, [{ ...base, readerImpactAt: null,
+    meetingStartsAt: ["2026-11-04T07:00:00.000Z"] }], later);
+  assert.deepEqual(corrected.refreshed, [{ id: base.id, changed: ["meetingStartsAt"] }]);
+  const final = await repos.obligations.mustRead(base.id);
+  assert.equal(final.revision, beforeIdle.revision + 1);
+  assert.equal(final.value.lastWorkedAt, NOW);
+  assert.equal(final.value.occurrenceCount, 3);
+  assert.equal(final.value.nextDueAt, "2026-09-30T00:00:00.000Z");
 });
 
 /* ----------------------------------------------------------- the promotion tail */

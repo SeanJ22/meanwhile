@@ -4,6 +4,31 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { buildResearchIntent } from "../lib/control-plane/research-view.ts";
 import { readIntents, type ResearchIntent } from "../lib/control-plane/scheduler/research-policy.ts";
 import { runnerControlReader, runnerWakeReaderFromEnv } from "../scripts/pilot-runtime-control.mts";
+import { consoleInputReader, CONSOLE_INPUT_SQL, CONSOLE_READER_INPUT_SQL } from "../scripts/pilot-runtime-publish.mts";
+
+test("console versions remain on the server and failed metadata reads cannot look unchanged", async () => {
+  let control = "control-v1", reader = "reader-v1";
+  const queries: string[] = [];
+  const read = consoleInputReader("unused", "unused", "sha", {
+    controlSql: { query: async sql => { queries.push(sql); return [{ signature: control }]; } },
+    readerSql: { query: async sql => { queries.push(sql); return [{ signature: reader }]; } },
+  });
+  const first = await read();
+  control = "control-v2";
+  assert.notEqual(await read(), first);
+  const second = await read();
+  reader = "reader-v2";
+  assert.notEqual(await read(), second);
+  assert.ok(queries.includes(CONSOLE_INPUT_SQL));
+  assert.ok(queries.includes(CONSOLE_READER_INPUT_SQL));
+  assert.match(CONSOLE_INPUT_SQL, /count\(\*\), max\(position\)/, "late lower-position commits change the count");
+  assert.doesNotMatch(CONSOLE_INPUT_SQL, /cp_owner_snapshots|cp_readiness_snapshots|cp_runner_heartbeat/);
+  assert.match(CONSOLE_INPUT_SQL, /\['cycleId','startedAt','finishedAt'\]/);
+  const unreadable = consoleInputReader("unused", "unused", "sha", {
+    controlSql: { query: async () => [] }, readerSql: { query: async () => [{ signature: "ok" }] },
+  });
+  await assert.rejects(unreadable(), /CONSOLE_INPUTS_UNREADABLE/);
+});
 
 test("committed runner acknowledgments are visible during unchanged hint polls", async () => {
   const repos = createMemoryRepositories();

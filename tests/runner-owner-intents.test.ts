@@ -5,6 +5,7 @@ import { hostname, tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { createContext, runInContext } from "node:vm";
+import { CONTROL_WAKE_POLL_MS } from "../scripts/pilot-runtime-control.mts";
 
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { buildResearchIntent } from "../lib/control-plane/research-view.ts";
@@ -316,8 +317,8 @@ test("pilot-runner.mts honors PAUSE_RUNNER / RESUME_RUNNER and ends the sleep on
   let finishRead: (value: string) => void = () => { throw new Error("read not started"); };
   let reads = 0;
   const context = createContext({
-    runtimeAdmissionsHeld: false, standingRuntimeTimer: null, researchCycleActive: false,
-    canary: false, activeControlRead: null, ownerWakePending: false, POLL_MS: 60_000,
+    runtimeAdmissionsHeld: false, standingRuntimeTimer: null, ownerControlTimer: null, researchCycleActive: false,
+    canary: false, activeControlRead: null, ownerWakePending: false, POLL_MS: 60_000, CONTROL_WAKE_POLL_MS,
     runStandingRuntimeTick: () => {}, console,
     setInterval: (callback: () => void) => { tick = callback; return 1; },
     ownerSays: () => { reads++; return new Promise<string>(resolve => { finishRead = resolve; }); },

@@ -54,6 +54,7 @@ import { MeetingStatusPill } from "@/components/map/meeting-status-pill";
 import { CalendarLinks } from "@/components/map/popup/calendar-links";
 import { useResolvedLocation } from "@/hooks/use-resolved-location";
 import { tierVars } from "@/components/shell/tier-style";
+import { bodyDisplayName } from "@/lib/text/reader-names";
 
 /**
  * THE ASK PANEL — one input, two jobs, and ONE Ask engine behind the second.
@@ -1886,7 +1887,7 @@ function AnswerBodies({
             onClick={() => onOpenBody(body)}
             className="text-left text-link underline decoration-dotted underline-offset-2 hover:text-paper"
           >
-            {body.name ?? body.divisionLabel}
+            {bodyDisplayName(body)}
           </button>
         </span>
       ))}

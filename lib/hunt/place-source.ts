@@ -7,7 +7,7 @@ import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publi
 import { collectNationalPlaceSources, type HeldSourcePage, type NationalPlaceSources } from "../sources/plural/place.ts";
 import { closePublishedPlaceWork, planPlaceHunt, type PlaceCapture } from "./place-plan.ts";
 import { buildPlaceOwedList } from "../coverage/place-owed.ts";
-import { publishElectionFields } from "../civic-data/election-field-publication.ts";
+import type { publishElectionFields } from "../civic-data/election-field-publication.ts";
 import { section3Record } from "../control-plane/promotion/section3.ts";
 
 export interface NationalPlacePublicationInput {
@@ -71,7 +71,8 @@ export async function runPlaceSource(input: {
               const now = input.clock?.() ?? input.now;
               electionPublications.push(await (input.publishElection
                 ? input.publishElection(ready.electionFields, now)
-                : publishElectionFields({ store: input.store, now, fields: ready.electionFields, verify: section3Record })));
+                : (await import("../civic-data/election-field-publication.ts")).publishElectionFields({
+                  store: input.store, now, fields: ready.electionFields, verify: section3Record })));
             }
             catch (error) { electionPublications.push({ error: error instanceof Error ? error.message : String(error) }); }
           }

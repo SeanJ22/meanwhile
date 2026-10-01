@@ -47,7 +47,7 @@ function SpendCard() {
             <div className={s.row}>
               <span className={s.eyebrow}>Neon (database sent)</span>
               {neonToday ? <><span className={s.big}>{gigabytes(neonToday.responseBytes)}</span><span className={s.meta}>Sent {dayWords(neonToday.day)}, from the byte counter</span></>
-                : <><span className={cx(s.big, s.textWarn)}>Not recorded yet</span><span className={s.meta}>{sp.neon.detail ?? "The counter has no rows yet."}</span></>}
+                : <><span className={cx(s.big, s.textWarn)}>Not recorded yet</span><span className={s.meta}>{sp.neon.detail !== null ? sp.neon.detail : "Why isn’t known yet."}</span></>}
             </div>
             <div className={s.row}>
               <span className={s.eyebrow}>Hosting</span>

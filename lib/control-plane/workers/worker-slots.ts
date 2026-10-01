@@ -2,8 +2,8 @@ import { freemem, platform } from "node:os";
 import { readFileSync } from "node:fs";
 
 const MIB = 1024 * 1024;
-/** Conservative rounded sampler peaks; unmeasured entries retain the largest observed worker reserve. */
-export const WORKER_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = { route: 233, scout: 402, lease: 402, national: 403 };
+/** Rounded-up measured RSS peaks of each entry; headroom covers parent, standing work and browsers. */
+export const WORKER_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = { route: 242, scout: 241, lease: 342, national: 403 };
 export const WORKER_MEMORY_HEADROOM_MIB = 4096;
 
 export function availableWorkerMemoryBytes(): number {

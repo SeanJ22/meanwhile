@@ -3066,9 +3066,8 @@ if (dry || canary || ONLY !== null || IDS !== null) {
   campaignSitesState = "not run: the owner has paused the runner";
 } else {
   const leaveCampaignSites = pending.enter("campaign-sites");
-  /* The pass's budget runs from HERE, its loading included (2026-09-25: loading and store work sat outside it, 93–160 s passes and one 4.5-minute hang). */
+  /* Loading is included in elapsed-time reporting. */
   const campaignStartedMs = Date.now();
-  /* The cycle's own backstop, one grace past the pass's own hard stop: whatever the pass awaits (its loading too), the cycle moves on. */
   try {
     const pass = await (async () => {
       const holdings = candidateEnrichmentHoldings();
@@ -3113,7 +3112,6 @@ if (dry || canary || ONLY !== null || IDS !== null) {
     })();
       campaignSites = pass.report;
       campaignSitesState = pass.state;
-      if (campaignSites.stoppedAtDeadline === true) runtimeConditions.push(`campaign-site pass stopped at its hard deadline after ${Math.round(campaignSites.elapsedMs / 1000)}s; the leads it had not weighed stay owed (NOT_READ) for the next cycle`);
   } catch (error) {
     campaignSitesState = `could not run: ${error instanceof Error ? error.message : String(error)}`;
     runtimeConditions.push(`campaign-site pass ${campaignSitesState}`);
@@ -3746,7 +3744,6 @@ const runRecord = {
               offers: { accepted: campaignSites.chain.offers.filter((o) => o.accepted).length, refused: campaignSites.chain.offers.filter((o) => !o.accepted).length },
               approved: campaignSites.chain.approved.map((a) => ({ itemId: a.itemId, candidacyId: a.campaignSite.candidacyId, url: a.campaignSite.url })),
               unjoined: campaignSites.chain.unjoined.length,
-              budgetSpent: campaignSites.budgetSpent,
               elapsedMs: campaignSites.elapsedMs,
               read: campaignSites.chain.leads.filter((l) => l.via === "READ").map((l) => ({ subjectId: l.subjectId, url: l.lead.url, outcome: l.outcome, codes: l.refusals.map((r) => r.code) })),
             },

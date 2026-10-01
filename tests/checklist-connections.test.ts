@@ -6,7 +6,7 @@ test("complete definition and dataset inventory never turns missing store reads 
   assert.deepEqual(checklistConnectionIssues(),[]);
   const view=checklistConnections({publication:{kind:"STORE_UNREACHABLE",detail:"read failed"}});
   assert.equal(view.definitions.length,325);assert.equal(view.families.length,42);
-  assert.equal(view.manualContracts.filter(c=>c.id!=="jurisdiction-operational-reference-az").length,24);
+  assert.equal(view.manualContracts.filter(c=>c.id!=="jurisdiction-operational-reference-az").length,25);
   assert.ok(view.manualContracts.some(c=>c.id==="jurisdiction-operational-reference-az"));
   assert.equal(view.assessment,null);assert.equal(view.readFailure,"read failed");assert.ok(view.families.every(f=>f.observation==="UNREAD"));
 });

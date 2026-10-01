@@ -101,6 +101,7 @@ function verifierIdFor(contract: ReaderContract): string {
     case "comment-access":
     case "ballot-navigation":
     case "campaign-sites":
+    case "member-offices":
     case "venue-resolutions":
     case "meeting-body-crosswalk": return "lib/civic-data/curated-reader-read-model.ts#readCuratedReaderProjection";
     case "meeting-source-wiring": return "lib/civic-data/derived-meeting-wiring.ts#readDerivedMeetingWiring";
@@ -295,6 +296,7 @@ export async function verifyRoutineReaderProjection(
     case "comment-access":
       case "ballot-navigation":
       case "campaign-sites":
+      case "member-offices":
       case "venue-resolutions":
       case "meeting-body-crosswalk": {
         const { readCuratedReaderProjection } = await import("./curated-reader-read-model.ts");

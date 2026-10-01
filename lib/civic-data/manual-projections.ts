@@ -51,6 +51,7 @@ export const MANUAL_PROJECTION_CONTRACT_IDS = [
   "comment-access",
   "ballot-navigation",
   "campaign-sites",
+  "member-offices",
   "venue-resolutions",
   "everyday-routing",
   "meeting-body-crosswalk",
@@ -88,7 +89,7 @@ export interface CandidateProfilesProjection {
 }
 
 export interface CuratedReaderProjection {
-  readonly kind: "official-filings" | "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk";
+  readonly kind: "official-filings" | "comment-access" | "ballot-navigation" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk";
   /** Stable exact members. Each family has its own contract, pointer, and LKG. */
   readonly records: readonly (Readonly<Record<string, unknown>> & { readonly id: string })[];
   /** Present on denominator-governed Reader families such as everyday routing. */
@@ -193,6 +194,7 @@ const SOURCE_ISOLATED_MANUAL_CONTRACTS = new Set<ManualProjectionContractId>([
   "comment-access",
   "ballot-navigation",
   "campaign-sites",
+  "member-offices",
   "venue-resolutions",
   "everyday-routing",
   "meeting-body-crosswalk",
@@ -208,7 +210,7 @@ interface IsolatedManualProjection {
 }
 
 function curatedRecordIssue(
-  contractId: "official-filings" | "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk",
+  contractId: "official-filings" | "comment-access" | "ballot-navigation" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk",
   row: Record<string, unknown>,
 ): string | null {
   if (!string(row.id)) return `A ${contractId} row has no stable id.`;
@@ -263,6 +265,18 @@ function curatedRecordIssue(
       ? `${string(row.id)} lacks an eligible exact identity, verified HTTPS site, or attempt date.`
       : null;
   }
+  if (contractId === "member-offices") {
+    const office = object(row.office);
+    return row.kind !== "MEMBER_OFFICE" ||
+        !string(row.officeholderId) || !officeholderIdentityMayEnterReader(string(row.officeholderId), null) ||
+        !["CAPITOL", "DISTRICT"].includes(string(row.officeKind)) ||
+        !/^https:\/\//.test(string(row.sourceUrl)) || !string(row.sourceOrg) ||
+        !Number.isFinite(Date.parse(string(row.collectedAt))) ||
+        typeof row.official !== "boolean" ||
+        !(string(office?.address).trim() || string(office?.phone).trim())
+      ? `${string(row.id)} lacks its eligible member, office kind, HTTPS source, collection time, official flag, or an address or phone.`
+      : null;
+  }
   const bodyOcdId = row.bodyOcdId;
   return !string(row.sourceId) ||
       !string(row.match) ||
@@ -310,7 +324,7 @@ function sourceScopedMembers(
   if (contractId === "candidate-corpus") return corpusMembers(payload);
   if (contractId === "officeholder-statements") return statementMembers(payload);
   if (contractId === "official-filings" || contractId === "comment-access" || contractId === "ballot-navigation" ||
-      contractId === "campaign-sites" || contractId === "venue-resolutions" ||
+      contractId === "campaign-sites" || contractId === "member-offices" || contractId === "venue-resolutions" ||
       contractId === "everyday-routing" || contractId === "meeting-body-crosswalk") {
     return curatedMembers(payload);
   }
@@ -391,7 +405,7 @@ function sourceScopedMemberIssue(
     return null;
   }
   if (contractId === "official-filings" || contractId === "comment-access" || contractId === "ballot-navigation" ||
-      contractId === "campaign-sites" || contractId === "venue-resolutions" ||
+      contractId === "campaign-sites" || contractId === "member-offices" || contractId === "venue-resolutions" ||
       contractId === "everyday-routing" || contractId === "meeting-body-crosswalk") {
     const row = object(member.record);
     if (!row) return `${member.key} is not a curated Reader record.`;
@@ -792,7 +806,7 @@ function officeholderStatementProjection(
 }
 
 function curatedReaderProjection(
-  contractId: "official-filings" | "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk",
+  contractId: "official-filings" | "comment-access" | "ballot-navigation" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk",
   payload: ManualProjectionPayload,
   sourceReceipt: ManualSourceSetReceipt,
 ): BuiltProjection {
@@ -803,7 +817,12 @@ function curatedReaderProjection(
   if (held?.kind !== contractId) shapeProblems.push(`The projection kind does not match ${contractId}.`);
 
   const referenceSources = sourceReceipt.sources.filter((source) => source.sourceClass === "REFERENCE_PUBLISHER");
-  if (referenceSources.length > 0 && contractId !== "venue-resolutions") {
+  // Open States is an acceptable source for a legislator's offices (Sean, 2026-10-01); each record says `official: false`.
+  if (referenceSources.length > 0 && contractId === "member-offices") {
+    if (records.some((row) => row.official !== false && referenceSources.some((source) => source.finalUrl === string(row.sourceUrl) || source.requestedUrl === string(row.sourceUrl)))) {
+      shapeProblems.push("A member office read from a reference publisher cannot be marked official.");
+    }
+  } else if (referenceSources.length > 0 && contractId !== "venue-resolutions") {
     shapeProblems.push(`REFERENCE_PUBLISHER evidence cannot authorize ${contractId} records.`);
   } else if (contractId === "venue-resolutions") {
     const coordinateUrls = new Set(records.map((row) => string(row.coordinateSourceUrl)).filter(Boolean));
@@ -834,7 +853,7 @@ function curatedReaderProjection(
     const value = object(row.value);
     const subjectId = contractId === "official-filings" ? string(row.id) : contractId === "comment-access" || contractId === "meeting-body-crosswalk"
       ? string(row.bodyId)
-      : contractId === "campaign-sites"
+      : contractId === "campaign-sites" || contractId === "member-offices"
         ? string(row.officeholderId)
         : contractId === "venue-resolutions"
           ? `${string(row.sourceId)}:${string(row.bodyOcdId) || string(row.tenant)}:${string(row.match)}`
@@ -866,6 +885,8 @@ function curatedReaderProjection(
           ? "ballot and where-to-vote official navigation"
           : contractId === "campaign-sites"
             ? "directory/map/ballot campaign-site binding"
+            : contractId === "member-offices"
+              ? "directory/ballot/map state legislator capitol and district offices"
             : contractId === "venue-resolutions"
               ? "meeting acquisition venue-resolution dependency"
               : contractId === "meeting-body-crosswalk"

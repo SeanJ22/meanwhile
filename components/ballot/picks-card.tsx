@@ -307,7 +307,7 @@ export function PicksCardControls({
             */}
             <div className="panel relative w-full max-w-sm p-5">
               <p className="text-[0.9375rem] font-semibold leading-snug text-paper">
-                Really clear every pick on this device?
+                Really clear every pick?
               </p>
               <div className="mt-4 grid grid-cols-2 gap-2">
                 <button
@@ -396,7 +396,7 @@ export function PicksCardControls({
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={cardUrl}
-                  alt="My picks card — your own choices, drawn on this device"
+                  alt="My picks card — your own choices"
                   className="picks-phone-shot"
                 />
               </div>
@@ -418,8 +418,7 @@ export function PicksCardControls({
                 </button>
               </p>
               <p className="mt-1 text-center text-[0.6875rem] leading-relaxed text-muted">
-                Or just screenshot it. Drawn on your device; nothing is sent
-                anywhere.
+                Or just screenshot it.
               </p>
             </div>
           </div>,

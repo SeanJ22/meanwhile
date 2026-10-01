@@ -53,6 +53,7 @@ import { agendaAbsenceNote, collapseFootnotes } from "@/lib/registry/wording";
 import { formatDateLong } from "@/lib/text/format-date";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
+import { bodyDisplayName, readerPartyLabel } from "@/lib/text/reader-names";
 import { groupBySeatLabel } from "@/lib/officials/seat-grouping";
 
 /**
@@ -471,7 +472,7 @@ function Holder({
               { color: partyColorVar(holder.partyLabel) } as React.CSSProperties
             }
           >
-            {holder.partyLabel}
+            {readerPartyLabel(holder.partyLabel)}
           </span>
         )}
         {/*
@@ -859,7 +860,7 @@ function CoverageBody({
           {(() => {
             const county = bodies.find((b) => b.divisionType === "county");
             return county
-              ? ` The ${county.name ?? `${county.divisionLabel} County board`} is the closest thing here.`
+              ? ` The ${county.name === null ? `${bodyDisplayName(county)} board` : bodyDisplayName(county)} is the closest thing here.`
               : "";
           })()}
         </p>
@@ -957,7 +958,7 @@ function CoverageBody({
                   onClick={onOpenBody ? () => onOpenBody(body) : undefined}
                   className="min-w-0 flex-1 truncate text-left text-[0.75rem] leading-snug text-paper hover:underline"
                 >
-                  {body.name ?? body.divisionLabel}
+                  {bodyDisplayName(body)}
                 </button>
                 <span className={TYPE_LABEL_CLASS}>{bodyClassShort(body.bodyClass)}</span>
               </li>
@@ -1098,14 +1099,14 @@ function CoverageBody({
                   <button
                     type="button"
                     onClick={() => onOpenBody(body)}
-                    title={`More about ${body.name ?? body.divisionLabel}`}
+                    title={`More about ${bodyDisplayName(body)}`}
                     className="cursor-pointer text-left text-[0.8125rem] leading-snug text-paper hover:text-link hover:underline"
                   >
-                    {body.name ?? body.divisionLabel}
+                    {bodyDisplayName(body)}
                   </button>
                 ) : (
                   <span className="text-[0.8125rem] leading-snug">
-                    {body.name ?? body.divisionLabel}
+                    {bodyDisplayName(body)}
                   </span>
                 )}
                 {/*
@@ -1124,7 +1125,7 @@ function CoverageBody({
                   44 is not weakened; see components/ballot/jurisdiction-note.tsx.
                 */}
                 {body.couldGovern && (
-                  <CouldGovernMark jurisdiction={body.name ?? body.divisionLabel} />
+                  <CouldGovernMark jurisdiction={bodyDisplayName(body)} />
                 )}
                 {/*
                   RULING 222: there is no exclusion mark here any more. A body

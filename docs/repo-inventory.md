@@ -52,7 +52,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `/api/admin/v6/sends` — `app/api/admin/v6/sends/route.ts`
 - `/api/admin/v6/spend` — `app/api/admin/v6/spend/route.ts`
 - `/api/admin/v6/stuck` — `app/api/admin/v6/stuck/route.ts`
-- `/api/admin/v6/topic-counts` — `app/api/admin/v6/topic-counts/route.ts`
 - `/api/admin/v6/trail` — `app/api/admin/v6/trail/route.ts`
 - `/api/admin/v6/workers` — `app/api/admin/v6/workers/route.ts`
 - `/api/admin/work-progress` — `app/api/admin/work-progress/route.ts`
@@ -61,6 +60,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `/api/ask/classify` — `app/api/ask/classify/route.ts`
 - `/api/ask/grounded` — `app/api/ask/grounded/route.ts`
 - `/api/ballot/scope` — `app/api/ballot/scope/route.ts`
+- `/api/boundaries/[archive]` — `app/api/boundaries/[archive]/route.ts`
 - `/api/build` — `app/api/build/route.ts`
 - `/api/census-geography/zctas` — `app/api/census-geography/zctas/route.ts`
 - `/api/demand-signal` — `app/api/demand-signal/route.ts`
@@ -253,7 +253,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Scripts
 
-522 file(s).
+524 file(s).
 
 - `scripts/a001-feedback-backup.mts`
 - `scripts/a001-verify-catalog.mts`
@@ -583,6 +583,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/prove-map-ask-endpoint.mts`
 - `scripts/prove-subscriber-guards.mts`
 - `scripts/provider-smoke.mts`
+- `scripts/publish-boundaries.mts`
 - `scripts/publish-member-offices.mts`
 - `scripts/publish-owner-snapshot.mts`
 - `scripts/purge-synthetic-rows.mts`
@@ -727,6 +728,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/trap-outbound.mjs`
 - `scripts/try-run.mjs`
 - `scripts/twig-pair.mts`
+- `scripts/upload-map-tiles.ps1`
 - `scripts/url-sweep.mts`
 - `scripts/vault-crosswalk-evidence.mts`
 - `scripts/vault-readback.mts`
@@ -788,7 +790,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-959 file(s).
+958 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -1431,7 +1433,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/pilot-task-installer.test.ts`
 - `tests/pima-edu-source.test.ts`
 - `tests/pima-legistar-outcomes-routine.test.ts`
-- `tests/place-target.test.ts`
 - `tests/plain-code-queue-order.test.ts`
 - `tests/plain-work.test.ts`
 - `tests/plan-repair.test.ts`
@@ -1502,6 +1503,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/reader-last-mile-registry-failure.test.ts`
 - `tests/reader-last-mile-trace.test.ts`
 - `tests/reader-meeting-listing-count.test.ts`
+- `tests/reader-names.test.ts`
 - `tests/reader-official-actions.test.ts`
 - `tests/reader-polling-fallback.test.ts`
 - `tests/reader-prl-delivery.test.ts`
@@ -1670,7 +1672,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/tier-grouping.test.ts`
 - `tests/tiers.test.ts`
 - `tests/top-offices.test.ts`
-- `tests/topic-counts.test.ts`
 - `tests/tracker-handoff-contract.test.ts`
 - `tests/tracker-integrity.test.ts`
 - `tests/tracker-predicates.test.ts`
@@ -1752,7 +1753,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7022 file(s).
+7024 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -1808,7 +1809,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/_mw/admin-v6/screen-now.tsx`
 - `app/(admin)/_mw/admin-v6/screen-work.tsx`
 - `app/(admin)/_mw/admin-v6/screen-workers.tsx`
-- `app/(admin)/_mw/admin-v6/topic-counts.tsx`
 - `app/(admin)/_mw/admin-v6/trail-view.tsx`
 - `app/(admin)/_mw/admin-v6/ui.tsx`
 - `app/(admin)/_mw/admin-v6/use-reading.ts`
@@ -1882,7 +1882,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/api/admin/v6/sends/route.ts`
 - `app/api/admin/v6/spend/route.ts`
 - `app/api/admin/v6/stuck/route.ts`
-- `app/api/admin/v6/topic-counts/route.ts`
 - `app/api/admin/v6/trail/route.ts`
 - `app/api/admin/v6/workers/route.ts`
 - `app/api/admin/work-progress/route.ts`
@@ -1891,6 +1890,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/api/ask/classify/route.ts`
 - `app/api/ask/grounded/route.ts`
 - `app/api/ballot/scope/route.ts`
+- `app/api/boundaries/[archive]/route.ts`
 - `app/api/build/route.ts`
 - `app/api/census-geography/zctas/route.ts`
 - `app/api/demand-signal/route.ts`
@@ -4934,7 +4934,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/admin-view/runner-progress-read.ts`
 - `lib/control-plane/admin-view/scope-preview.ts`
 - `lib/control-plane/admin-view/scope-work.ts`
-- `lib/control-plane/admin-view/topic-counts.ts`
 - `lib/control-plane/admin-view/v6-agents-read.ts`
 - `lib/control-plane/admin-view/v6-agents-route.ts`
 - `lib/control-plane/admin-view/v6-capabilities.ts`
@@ -5232,6 +5231,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/workers/autonomous-plan.ts`
 - `lib/control-plane/workers/coordinator.ts`
 - `lib/control-plane/workers/detective.ts`
+- `lib/control-plane/workers/durable-research-tools.ts`
 - `lib/control-plane/workers/engineering-adapter.ts`
 - `lib/control-plane/workers/engineering-candidate.ts`
 - `lib/control-plane/workers/engineering-types.ts`
@@ -5536,6 +5536,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/log/client.ts`
 - `lib/log/scrub.ts`
 - `lib/map/anchor-in-viewport.ts`
+- `lib/map/boundary-archive.ts`
 - `lib/map/camera-memory.ts`
 - `lib/map/carry-pins.ts`
 - `lib/map/cluster-placement.ts`
@@ -5913,6 +5914,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/text/boilerplate.ts`
 - `lib/text/format-date.ts`
 - `lib/text/mojibake.ts`
+- `lib/text/reader-names.ts`
 - `lib/text/refusal-shapes.ts`
 - `lib/time/zoned.ts`
 - `lib/tracker/obligation-handoff.ts`
@@ -7354,6 +7356,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/prove-map-ask-endpoint.mts`
 - `scripts/prove-subscriber-guards.mts`
 - `scripts/provider-smoke.mts`
+- `scripts/publish-boundaries.mts`
 - `scripts/publish-member-offices.mts`
 - `scripts/publish-owner-snapshot.mts`
 - `scripts/purge-synthetic-rows.mts`
@@ -7498,6 +7501,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/trap-outbound.mjs`
 - `scripts/try-run.mjs`
 - `scripts/twig-pair.mts`
+- `scripts/upload-map-tiles.ps1`
 - `scripts/url-sweep.mts`
 - `scripts/vault-crosswalk-evidence.mts`
 - `scripts/vault-readback.mts`
@@ -8453,7 +8457,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/pima-edu-source.test.ts`
 - `tests/pima-fact-fixtures.ts`
 - `tests/pima-legistar-outcomes-routine.test.ts`
-- `tests/place-target.test.ts`
 - `tests/plain-code-queue-order.test.ts`
 - `tests/plain-work.test.ts`
 - `tests/plan-repair.test.ts`
@@ -8525,6 +8528,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/reader-last-mile-registry-failure.test.ts`
 - `tests/reader-last-mile-trace.test.ts`
 - `tests/reader-meeting-listing-count.test.ts`
+- `tests/reader-names.test.ts`
 - `tests/reader-official-actions.test.ts`
 - `tests/reader-polling-fallback.test.ts`
 - `tests/reader-prl-delivery.test.ts`
@@ -8695,7 +8699,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/tier-grouping.test.ts`
 - `tests/tiers.test.ts`
 - `tests/top-offices.test.ts`
-- `tests/topic-counts.test.ts`
 - `tests/tracker-handoff-contract.test.ts`
 - `tests/tracker-integrity.test.ts`
 - `tests/tracker-predicates.test.ts`

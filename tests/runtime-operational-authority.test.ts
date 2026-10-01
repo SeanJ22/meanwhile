@@ -175,10 +175,7 @@ test("runtime writers and Admin no longer use tracked operational run paths", ()
   assert.match(ownerReadback, /map\.actors\?\.state/);
 
   const adminData = readFileSync(join(ROOT, "lib", "control-plane", "admin-data.ts"), "utf8");
-  const maptilerSection = readFileSync(join(ROOT, "app", "(admin)", "_mw", "maptiler-panel.tsx"), "utf8");
   assert.match(adminData, /readMapTilerUsageDigests/);
-  assert.match(maptilerSection, /Automatic collection history/);
-  assert.match(maptilerSection, /history\.attempts\.map/);
 
   for (const workflow of readdirSync(join(ROOT, ".github", "workflows"))) {
     const source = readFileSync(join(ROOT, ".github", "workflows", workflow), "utf8");

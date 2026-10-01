@@ -137,7 +137,24 @@ export interface AdminConfig {
    * Optional because a config written before this field existed carries none.
    */
   readonly placeTargets?: readonly PlaceTargetDecision[] | null;
+  /**
+   * Who may see each number the data business makes (`lib/control-plane/data-business/`): one switch per recipe per audience, set
+   * through the gateway with the receipt that set it. An audience with no entry takes the default in `data-business/switches.ts`:
+   * Admin on; the dashboard and every customer off, so nothing leaves until the owner flips a switch. Read when a number is read,
+   * so a flip takes effect at once and no runner has to pick it up. Optional because a config written before this field existed holds none.
+   */
+  readonly dataSwitches?: readonly DataSwitchDecision[] | null;
   readonly updatedAt: string;
+}
+
+/** One switch: this number, for this audience, on or off. `audience` is `admin`, `dashboard` or `customer:<id>`. */
+export interface DataSwitchDecision {
+  readonly recipe: string;
+  readonly audience: string;
+  readonly on: boolean;
+  readonly setAt: string;
+  readonly decidedBy: string;
+  readonly receiptId: string;
 }
 
 /** One place's target. `key` is a v6 place key (`us`, `st:az`, `geo:az.county.04019`, `geo:az.zcta.85635`). */
@@ -170,6 +187,26 @@ export function withPlaceTarget(
 export function placeTargetOf(config: AdminConfig | null, key: string): PlaceTargetDecision | null {
   const t = (config?.placeTargets ?? []).find((x) => x?.key === key);
   return t && Number.isFinite(t.goalPercent) && t.goalPercent >= 1 && t.goalPercent <= 100 ? t : null;
+}
+
+/**
+ * The next row after the owner flips one switch. One entry per recipe and audience, the later flip wins; every other decision on the
+ * row is carried through. Pure, like its siblings. Defaults are not stored: a flip back to the default is still an entry, so the
+ * receipt that set it is kept.
+ */
+export function withDataSwitch(
+  current: AdminConfig,
+  change: { readonly recipe: string; readonly audience: string; readonly on: boolean; readonly decidedAt: string; readonly decidedBy: string; readonly receiptId: string },
+): AdminConfig {
+  const others = (current.dataSwitches ?? []).filter((x) => !(x?.recipe === change.recipe && x?.audience === change.audience));
+  const next = [...others, { recipe: change.recipe, audience: change.audience, on: change.on, setAt: change.decidedAt, decidedBy: change.decidedBy, receiptId: change.receiptId }];
+  return { ...current, formatVersion: ADMIN_CONFIG_FORMAT_VERSION, dataSwitches: next.sort((a, b) => a.recipe.localeCompare(b.recipe) || a.audience.localeCompare(b.audience)), updatedAt: change.decidedAt };
+}
+
+/** The owner's explicit decision for a recipe and audience, or null. A malformed entry reads as none, never as ON. */
+export function dataSwitchOf(config: AdminConfig | null, recipe: string, audience: string): DataSwitchDecision | null {
+  const x = (config?.dataSwitches ?? []).find((d) => d?.recipe === recipe && d?.audience === audience);
+  return x && typeof x.on === "boolean" ? x : null;
 }
 
 /** One owner decision about paid discovery search. */

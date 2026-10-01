@@ -145,7 +145,6 @@ import {
 import { runCandidatePublicationCycle,
   type CandidatePublicationCycleReport } from "../lib/control-plane/promotion/campaign-publication-cycle.ts";
 import { indexVault, readHeldBytes } from "../lib/control-plane/evidence/read-only-vault.ts";
-import { officialLinkingPageFrom } from "../lib/sources/official-page-events/index.ts";
 import {
   MEETINGS_DISCOVERY_NAMESPACE,
   meetingsDiscoveryObligationId,
@@ -187,6 +186,8 @@ import {
 import { readHeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
+import { evidenceProjection } from "../lib/control-plane/workers/evidence-projection.ts";
+import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
 import { factChainLines } from "../lib/control-plane/promotion/fact-chain.ts";
 import { createPermanentMeetingFreshness } from "../lib/control-plane/promotion/meeting-freshness.ts";
 import { preloadAzOperationalReferenceBundle, preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
@@ -242,7 +243,8 @@ import {
   type WorkArtifact,
 } from "../lib/control-plane/scheduler/dispatch.ts";
 import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutJobWorstCaseUsd, scoutPrewarmPlan, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { failureResponderExecutor, readSubjectScoutHistory, solvedScoutResult, subjectScoutHistory, wakeInstalledAdapterDebts } from '../lib/control-plane/workers/detective.ts';
+import { buildScoutToolkit, scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
 import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { MIN_DISTINCT_RUNGS, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
@@ -264,7 +266,7 @@ import {
   type RunningScout,
 } from "../lib/control-plane/scheduler/research-policy.ts";
 import { candidateStoreCounts, proposeScoutCandidates, readMethodCandidateStore, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
-import { emptyFieldManual, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
+import { emptyFieldManual, readFieldManual, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
 import {
   compoundingPair,
   fieldManualBriefLines,
@@ -503,13 +505,8 @@ const SCOUT_MAX = boundedNumber(
    pauses once it could not afford even one scout. */
 const SCOUT_WORST_CASE_USD = 0.6;
 /*
- * MW-021 (2026-09-25): what one Scout job holds against a Send or area budget
- * before it starts — its first attempt's worst case under the bound the loop
- * enforces (`scoutJobWorstCaseUsd`: (400,000 + 8,192) tokens at Sonnet 5's
- * dearest $10/MTok = $4.08), never the flat $0.60 above, which sizes only the
- * Fleet lane's pause. An escalation and every request past the hold must win
- * their own holds first (`spend-holds.ts`). Null (no stated rate): budgeted
- * work waits.
+ * Initial response allowance; the existing request guard holds full input/output
+ * cost before every request and extends this hold when needed.
  */
 const SCOUT_JOB_WORST_CASE_USD = scoutJobWorstCaseUsd(RESEARCH_BOUNDS.perDispatch);
 const intervalArg = argv.find((a) => a.startsWith("--interval="));
@@ -980,12 +977,12 @@ const preOpenSkipped: { obligationId: string; why: string }[] = [];
 const dueThisCycle: { obligation: (typeof sync.all)[number]; nextDueAt: string; cadenceHours: number }[] = [];
 
 /* A retired obligation owes no freshness: its debt stays out of the cycle, and `persistDebts` tombstones it as retired (2026-09-23). */
-const debtsIn = (canary
+const debtsIn = await wakeInstalledAdapterDebts(repos,(canary
   ? (await Promise.all(corpus.map((obligation) => repos.debts.read(obligation.id))))
       .filter((row) => row !== null)
       .map((row) => row.value)
   : await loadDebts(repos)
-).filter((debt) => !retiredDebtReasons.has(debt.obligationId));
+).filter((debt) => !retiredDebtReasons.has(debt.obligationId)),NOW);
 /* The plain-code lane's queue key reads this debt (`waitingSince`); so does its reading while the cycle runs. */
 const debtAtCycleStart = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
 const debtIds = new Set(debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
@@ -1416,7 +1413,7 @@ const openOccurrenceInStep = async (
     const resumed = await resumeOpenOccurrence(repos, obligation);
     if (resumed?.kind === "SETTLED") {
       /* The model lane admits a row before opening it; a recovery runs no Scout, so it hands its admission back. */
-      if (decisionFor(id, obligation.routeId).kind === "BOUNDED_MODEL_WORKER") {
+      if (decisionFor(id, obligation.routeId).kind === "BOUNDED_MODEL_WORKER" && scoutFor(row).lane !== "DETERMINISTIC") {
         openedModel += 1;
         scoutsAdmittedThisCycle = Math.max(0, scoutsAdmittedThisCycle - 1);
         if (!lifetimeHuntWork(id)) scoutsAdmittedOutsideLifetime = Math.max(0, scoutsAdmittedOutsideLifetime - 1);
@@ -1430,7 +1427,7 @@ const openOccurrenceInStep = async (
       if (occ === null) return false;
       occurrenceByObligation.set(id, { id: occ.occurrence.id, routeTaskId: occ.routeTask.id });
     }
-    if (decisionFor(id, obligation.routeId).kind === "BOUNDED_MODEL_WORKER") openedModel += 1;
+    if (decisionFor(id, obligation.routeId).kind === "BOUNDED_MODEL_WORKER" && scoutFor(row).lane !== "DETERMINISTIC") openedModel += 1;
     else openedDeterministic += 1;
     return true;
   } catch (error) {
@@ -1960,9 +1957,7 @@ const inheritedFieldManualCounts = new Map<string, number>();
 const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly lines: readonly string[] }>();
 if (modelLaneEnabled && dueModel.length > 0) {
   try {
-    const priorResults = canary
-      ? (await Promise.all(dueModel.map((row) => repos.scoutResults.read(row.obligation.id)))).flat()
-      : await repos.scoutResults.readAll();
+    const priorResults = await readSubjectScoutHistory(repos,dueModel.map(row=>row.obligation));
     for (const r of priorResults) {
       const list = priorScoutResults.get(r.obligationId) ?? [];
       list.push(r);
@@ -1972,11 +1967,9 @@ if (modelLaneEnabled && dueModel.length > 0) {
     runtimeConditions.push(`prior Scout results could not be read: ${error instanceof Error ? error.message : String(error)}`);
   }
   try {
-    const fm = await repos.fieldManual.read("live");
-    if (fm) {
-      fieldManual = fm.value;
-      fieldManualRevision = fm.revision;
-    }
+    const fm = await readFieldManual(repos,{role:'SCOUT'});
+    fieldManual = fm.store;
+    fieldManualRevision = fm.revision??0;
   } catch (error) {
     runtimeConditions.push(`the field manual could not be read: ${error instanceof Error ? error.message : String(error)}`);
   }
@@ -2019,7 +2012,7 @@ const PRIOR_RUNGS_BRIEFED = 40;
 
 function inheritedFor(row: ScheduledObligation): InheritedEvidence {
   const id = row.obligation.id;
-  const all = [...(priorScoutResults.get(id) ?? [])].sort((a, b) => (a.recordedAt < b.recordedAt ? -1 : a.recordedAt > b.recordedAt ? 1 : 0));
+  const all = subjectScoutHistory([...priorScoutResults.values()].flat(),row.obligation.subjectId,row.obligation.recordClass);
   const prior = all.slice(-2);
   const dispositions = (priorDispositionsByObligation.get(id) ?? []).slice(-3);
   const debt = debtsIn.find((d) => d.obligationId === id);
@@ -2315,6 +2308,8 @@ await writeResearchState(null);
 /* ----------------------------------------------------------- the executor --- */
 
 const vault = cycleVault(join(ROOT, ...VAULT_DIR));
+const readScoutEvidence = workerVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness");
+const readScoutCapture = researchVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness");
 
 const simulated: RunWork = async ({ executor, routeTaskId }) => ({
   ranAs: "DETERMINISTIC",
@@ -2419,12 +2414,16 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
  * lane is enabled; otherwise a refusing stand-in that `admitScout` never
  * reaches.
  */
-const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled
-  ? scoutProcessExecutor({ root: ROOT, postgres: wantsPostgres,
-      fileStoreRoot: CONTROL_PLANE_ROOT, slots: workerSlots,
-      search: (lifetimeHuntWork(scheduled.obligation.id) ? scoutSearchLifetime : scoutSearch) ?? undefined,
-      onStarted: pid => console.log(`  Scout lease worker process: pid ${pid}; ${scheduled.obligation.id}`),
-      deps: {
+const heldScoutFor = (scheduled: ScheduledObligation) => solvedScoutResult([...priorScoutResults.values()].flat(),
+  scheduled.obligation.subjectId,scheduled.obligation.recordClass,scheduled.obligation.routeId);
+const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled || heldScoutFor(scheduled)!==null
+  ? failureResponderExecutor({
+      solved:heldScoutFor(scheduled),
+      toolkitFor: buildScoutToolkit,
+      executorFactory: deps => scoutProcessExecutor({ root: ROOT, postgres: wantsPostgres,
+        fileStoreRoot: CONTROL_PLANE_ROOT, slots: workerSlots,
+        search: (lifetimeHuntWork(scheduled.obligation.id) ? scoutSearchLifetime : scoutSearch) ?? undefined,
+        onStarted: pid => console.log(`  Scout lease worker process: pid ${pid}; ${scheduled.obligation.id}`), deps }),
       /* MW-021: every request is checked against what the job holds on its Send and area budgets before the Fleet guard reserves it. */
       transport: budgetGuardedTransport({
         transport: fleetSafety.guardedModelTransport("anthropic", scheduled.obligation.id, workerMessages),
@@ -2457,6 +2456,14 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         tools: {
           vault: vault.put,
           vaultBytes: vault.putBytes,
+          readHeldArtifact: async id => {
+            const [evidence, { artifact }] = await Promise.all([readScoutEvidence(id), readScoutCapture(id)]);
+            return { ...evidenceProjection(evidence), provenance: {
+              artifactId: id, canonicalUrl: artifact.canonicalUrl, retrievalUrl: artifact.retrievalUrl,
+              contentType: artifact.contentType, retrievedAt: artifact.retrievedAt, permission: artifact.permission,
+              methodRouteId: artifact.methodRouteId, httpStatus: artifact.httpStatus,
+            } };
+          },
           spaceOut: spacer,
           openOne: fleetSafety.guardedOpenOne("public-web", scheduled.obligation.id),
           openBytes: fleetSafety.guardedOpenBytes("public-web", scheduled.obligation.id),
@@ -2469,7 +2476,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
       },
       onResult: async (result: ScoutResult, artifacts: readonly WorkArtifact[]) => {
         let amended = result;
-        if (result.refusal === null && result.candidates.length > 0) {
+        if ((result.refusal === null && result.candidates.length > 0) || result.sourceDeadEnds?.length) {
           try {
             const report = await proposeScoutCandidates({ repos, result, artifacts, stamp: today() });
             candidateReports.push(report);
@@ -2515,8 +2522,8 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
             amended = { ...amended, unverified: [...amended.unverified, `field manual write-back failed: ${written.error}`] };
           } else {
             try {
-              const refreshed = await repos.fieldManual.read("live");
-              if (refreshed && refreshed.revision >= fieldManualRevision) { fieldManualRevision = refreshed.revision; fieldManual = refreshed.value; }
+              const refreshed = await readFieldManual(repos,{role:'SCOUT'});
+              if ((refreshed.revision??0) >= fieldManualRevision) { fieldManualRevision = refreshed.revision??0; fieldManual = refreshed.store; }
             } catch (error) {
               amended = { ...amended, unverified: [...amended.unverified, `field manual saved but refresh failed: ${String(error)}`] };
             }
@@ -2524,9 +2531,10 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         }
         await repos.scoutResults.append(amended.obligationId, amended.attemptId, amended, nowIso());
         scoutResultsThisCycle.push(amended);
+        priorScoutResults.set(amended.obligationId,[...(priorScoutResults.get(amended.obligationId)??[]),amended]);
         return amended;
       },
-    } })
+    })
   : {
       lane: "BOUNDED_MODEL_WORKER",
       run: async () => ({
@@ -3017,7 +3025,18 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
     if (directoryRegistry && directoryRegistry.kind !== "PROMOTED") throw new Error("Published body directory cannot be read for meeting discovery; its source work remains owed.");
     const meetingHints = directoryRegistry?.kind === "PROMOTED" ? directoryMeetingHints(directoryItems, directoryRegistry.value, ROUTE_HINTS) : ROUTE_HINTS;
     let costSeq = 0;
-    let officialPages: Promise<readonly { canonicalUrl: string; text: string }[]> | null = null;
+    let officialPagesRead: Promise<{canonicalUrl:string;text:string}[]> | undefined;
+    const readOfficialPages = () => officialPagesRead ??= (async () => {
+      const index = await indexVault(join(ROOT, ...VAULT_DIR));
+      const pages: {canonicalUrl:string;text:string}[] = [];
+      for (const held of index.byId.values()) {
+        if (!held.canonicalUrl || held.tier === "RESTRICTED_RAW" || held.retentionPolicy === "DIAGNOSTIC" ||
+          held.httpStatus === null || held.httpStatus < 200 || held.httpStatus >= 300 || !/html/i.test(held.contentType)) continue;
+        try { pages.push({canonicalUrl:held.canonicalUrl,text:new TextDecoder().decode(await readHeldBytes(held))}); }
+        catch { runtimeConditions.push(`Official-source linking evidence unreadable: ${held.id}`); }
+      }
+      return pages;
+    })();
     meetingsDiscovery = await runMeetingsDiscovery(repos, {
       needs: discoveryNeedsToWalk(gapLedgerRead.needs, [...dispatchedNeeds.values()], need => {
         const id = meetingsDiscoveryObligationId(need);
@@ -3031,20 +3050,6 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
         sync.all.filter((o) => o.id.startsWith("freshness:meetings-discovery:") && o.openOccurrenceId !== null).map((o) => o.subjectId),
       ),
       runtime: {
-        officialLinkingPageFor: async url => {
-          // Resolve authority from previously captured pages, shared by every walk.
-          officialPages ??= (async () => {
-            const held = await indexVault(join(ROOT, ...VAULT_DIR));
-            const pages = [...held.byId.values()].filter(page => page.canonicalUrl &&
-              page.tier !== "RESTRICTED_RAW" && page.httpStatus !== null && page.httpStatus >= 200 && page.httpStatus < 300 &&
-              /html/i.test(page.contentType));
-            const reads = await Promise.allSettled(pages.map(async page => ({
-              canonicalUrl: page.canonicalUrl!, text: new TextDecoder().decode(await readHeldBytes(page)),
-            })));
-            return reads.flatMap(read => read.status === "fulfilled" ? [read.value] : []);
-          })();
-          return officialLinkingPageFrom(url, await officialPages);
-        },
         open: async ({ url, headers, timeoutMs }) => {
           const got = await openDiscovery({ url, headers, timeoutMs });
           return {
@@ -3058,6 +3063,7 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
         },
         spaceOut: spacer,
         vault: vault.put,
+        readOfficialPages,
         now: nowIso,
         budget: {
           spent: () => false,

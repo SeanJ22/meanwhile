@@ -150,6 +150,7 @@ import { LevelTag } from "@/components/ui/level-tag";
 import { tierForOcdId } from "@/lib/ocd/tiers";
 import { Logo } from "@/components/brand/logo";
 import { PRODUCT_NAME } from "@/lib/brand";
+import { readerPartyLabel } from "@/lib/text/reader-names";
 import {
   IncumbencyFootnote,
   IncumbencyMarker,
@@ -2258,7 +2259,7 @@ export default async function BallotPage({
                           <>
                             {/* 3a: display only, colored per the palette. */}
                             <span style={{ color: partyColorVar(nominee.partyLabel) }}>
-                              {nominee.partyLabel}
+                              {readerPartyLabel(nominee.partyLabel)}
                             </span>
                             {nominee.note && <> · {nominee.note}</>}
                           </>
@@ -2291,8 +2292,8 @@ export default async function BallotPage({
                         battlecardSlot={
                           <BallotBattlecard
                             name={nominee.name}
-                            partyLine={nominee.partyLabel}
-                            partyLabel={nominee.partyLabel ?? null}
+                            partyLine={readerPartyLabel(nominee.partyLabel)}
+                            partyLabel={readerPartyLabel(nominee.partyLabel)}
                             card={availableCardForNominee(contest.id, nominee.name)}
                             links={availableLinksForNominee(contest.id, nominee.name)}
                             targetKey={`${contest.id}|${nominee.name}`}
@@ -2426,7 +2427,7 @@ export default async function BallotPage({
                               */}
                               {cand.partyLabel !== null && (
                                 <span style={{ color: partyColorVar(cand.partyLabel) }}>
-                                  {cand.partyLabel}
+                                  {readerPartyLabel(cand.partyLabel)}
                                 </span>
                               )}
                               {cand.slogan && (
@@ -2465,8 +2466,8 @@ export default async function BallotPage({
                           battlecardSlot={
                             <BallotBattlecard
                               name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
-                              partyLine={cand.partyLabel}
-                              partyLabel={cand.partyLabel ?? null}
+                              partyLine={readerPartyLabel(cand.partyLabel)}
+                              partyLabel={readerPartyLabel(cand.partyLabel)}
                               card={availableCardForCandidacy(cand.id)}
                               links={availableLinksForCandidacy(cand.id)}
                               targetKey={cand.id}

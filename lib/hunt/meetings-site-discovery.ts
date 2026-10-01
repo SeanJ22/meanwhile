@@ -300,7 +300,7 @@ export interface EndpointVerification {
  * until this is bumped, and anything keyed on it (a saved method, a wiring row)
  * re-keys cleanly.
  */
-export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@cf83a519b81a";
+export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@204ec0009871";
 
 /**
  * The zone a state's bodies meet in, for the states that sit in one zone. A
@@ -465,7 +465,7 @@ function verifyOfficialPage(
   const label = identity.pageLabel?.trim() ?? "";
   const nameTerms = label.split(/\s+/).filter((w) => w !== "").length >= 2 ? [...nameForms, label] : [...nameForms];
   const result = verifyOfficialPageEvents({
-    body: { id: identity.bodyId, name, officialDomain: identity.officialHost, timeZone, nameTerms, linkingPage: identity.linkingPage },
+    body: { id: identity.bodyId, name, officialDomain: identity.officialHost, linkingPage: identity.linkingPage, timeZone, nameTerms },
     url: response.finalUrl,
     html: response.body,
     now: identity.now,

@@ -91,6 +91,9 @@ export function rememberCamera(camera: RememberedCamera): void {
 
 export function recallCamera(): RememberedCamera | null {
   if (typeof window === "undefined") return null;
+  // A URL names the place to open. Never restore another place while its
+  // centroid loads (or if the link's ZIP is invalid).
+  if (new URLSearchParams(window.location.search).has("zip")) return null;
   try {
     const raw = window.sessionStorage.getItem(KEY);
     if (!raw) return null;

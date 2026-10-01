@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readZipChoice, resolveStoredZip } from "../hooks/use-stored-zip.ts";
+import { recallCamera } from "../lib/map/camera-memory.ts";
 
 test("a link's ZIP overrides a tab's previous ZIP before the map resolves", () => {
   const previous = Object.getOwnPropertyDescriptor(globalThis, "window");
@@ -9,21 +10,25 @@ test("a link's ZIP overrides a tab's previous ZIP before the map resolves", () =
   let blocked = false;
   Object.defineProperty(globalThis, "window", { configurable: true, value: {
     location: { get search() { return search; } },
-    sessionStorage: { getItem() {
+    sessionStorage: { getItem(key: string) {
       if (blocked) throw new Error("Storage disabled");
+      if (key === "wtp:map-camera") return JSON.stringify({ lat: 43.32, lng: -72.03, zoom: 10 });
       return JSON.stringify({ zip: "85701", savedAt: "2026-09-29" });
     } },
   } });
   try {
     assert.equal(resolveStoredZip(table, readZipChoice())?.zip, "85635");
+    assert.equal(recallCamera(), null, "the linked place takes priority over the remembered map");
     blocked = true;
     assert.equal(resolveStoredZip(table, readZipChoice())?.zip, "85635");
     blocked = false;
     search = "";
     assert.equal(resolveStoredZip(table, readZipChoice())?.zip, "85701");
+    assert.deepEqual(recallCamera(), { lat: 43.32, lng: -72.03, zoom: 10 }, "ordinary returns retain camera memory");
     for (const query of ["?zip=99999", "?zip=8563", "?zip="]) {
       search = query;
       assert.equal(resolveStoredZip(table, readZipChoice()), null, "an unusable link must not open a different place");
+      assert.equal(recallCamera(), null);
     }
   } finally {
     if (previous) Object.defineProperty(globalThis, "window", previous);

@@ -183,11 +183,12 @@ export function makeScoutSearch(options: ScoutSearchOptions): ScoutSearch | null
     try {
       settled = await Promise.all(jobs.map(j => j.pending));
     } finally {
-      // A failed release must not strand the other provider's slot as well.
-      const releases = await Promise.allSettled(jobs.map(j => options.budget.done(j.host)));
-      releases.forEach((release, index) => {
-        if (release.status === 'rejected') errors.push(`${jobs[index].name}: budget slot release failed; acquisition ended but shared capacity needs recovery`);
-      });
+      // Both slots live in one durable budget row. Release serially so our own
+      // writes cannot conflict, and still release the second if the first fails.
+      for(const job of jobs) {
+        try { await options.budget.done(job.host); }
+        catch { errors.push(`${job.name}: budget slot release failed; acquisition ended but shared capacity needs recovery`); }
+      }
     }
     let bytesFetched = 0;
     let requestCount = 0;

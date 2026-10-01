@@ -359,11 +359,15 @@
     "maplibre-gl": "6.3.0",
     "next": "16.3.0",
     "pdfjs-dist": "^6.2.108",
+    "pmtiles": "^4.5.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
+    "@mapbox/vector-tile": "^3.0.0",
+    "@maplibre/geojson-vt": "^6.1.1",
+    "@maplibre/vt-pbf": "^4.3.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -373,6 +377,7 @@
     "esbuild": "^0.28.2",
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
+    "pbf": "^5.1.2",
     "playwright": "1.62.1",
     "tailwindcss": "^4",
     "tsx": "^4.20.7",

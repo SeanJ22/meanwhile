@@ -54,6 +54,34 @@ export interface SnapshotStatus {
   carried?: SnapshotCarriedNote;
 }
 
+/**
+ * The snapshot as it bears on what the reader has IN VIEW.
+ *
+ * `snapshot.carried` counts every row the refresh carried forward, anywhere in
+ * the country, so 10001 said "2 calendar listings are older than that" under a
+ * map with no listings at all. The note describes the listings on screen: the
+ * count is of the carried rows among `meetings`, the shared date is theirs, and
+ * with none in view the sentence is not said.
+ */
+export function snapshotInView(
+  snapshot: SnapshotStatus | null | undefined,
+  meetings: ReadonlyArray<{ carried?: { lastFreshAt: string } }>,
+): SnapshotStatus | null {
+  if (!snapshot) return null;
+  if (!snapshot.carried) return snapshot;
+  const carried = meetings.flatMap((m) => (m.carried ? [m.carried.lastFreshAt] : []));
+  if (carried.length === 0) {
+    const { carried: _wholeSnapshotNote, ...rest } = snapshot;
+    void _wholeSnapshotNote;
+    return rest;
+  }
+  const days = new Set(carried.map((at) => at.slice(0, 10)));
+  return {
+    ...snapshot,
+    carried: { count: carried.length, lastFreshAt: days.size === 1 ? carried[0] : null },
+  };
+}
+
 /** "3 minutes ago" / "2 hours ago" / "4 days ago", coarse on purpose. */
 export function relativeAge(iso: string, now: Date = new Date()): string {
   const ms = now.getTime() - Date.parse(iso);

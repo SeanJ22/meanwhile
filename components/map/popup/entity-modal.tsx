@@ -23,6 +23,7 @@ import { displayPersonName } from "@/lib/officials/person-name";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
+import { readerPartyLabel } from "@/lib/text/reader-names";
 import {
   sourceCountLabel,
   type CardSource,
@@ -1259,7 +1260,7 @@ export function Representation({
                 provenance line stays muted. */}
             {holder.partyLabel ? (
               <span style={{ color: partyColorVar(holder.partyLabel) }}>
-                {holder.partyLabel} ·{" "}
+                {readerPartyLabel(holder.partyLabel)} ·{" "}
               </span>
             ) : (
               ""

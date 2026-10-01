@@ -38,6 +38,8 @@
 
 import type { StateMoneyRecord } from "@/lib/funding/state-money";
 import { stateMoneyRecordsForDisplay } from "@/lib/funding/state-money-reader";
+import { ReactionControl } from "@/components/reactions/reaction-control";
+import type { ReactionViewContext } from "@/lib/reactions/client";
 import { formatDateLong } from "@/lib/text/format-date";
 
 const SECTION_LABEL_CLASS = "text-xs font-medium uppercase tracking-wide text-muted-foreground";
@@ -277,9 +279,12 @@ function OurGapRecord({ record }: { record: StateMoneyRecord }) {
 export function StateMoneySection({
   records,
   bare = false,
+  context = null,
 }: {
   records: readonly StateMoneyRecord[];
   bare?: boolean;
+  /** The reaction's location context, as the federal money cards take it. */
+  context?: ReactionViewContext | null;
 }) {
   if (records.length === 0) return null;
 
@@ -298,6 +303,12 @@ export function StateMoneySection({
    */
   const shown = stateMoneyRecordsForDisplay(records);
   const agency = shown[0]?.agency ?? "";
+  // The same five-point question the federal money cards ask, on the state or
+  // local committee's own candidacy key. Only where there is money to feel
+  // something about: a filed record, or a registered committee with no activity.
+  const reactionTarget = shown.find(
+    (r) => r.filingState === "FILED" || r.filingState === "REGISTERED_NO_ACTIVITY_REPORTED",
+  )?.targetKeys[0];
 
   return (
     <div data-state-money-targets={[...new Set(shown.flatMap(r => r.targetKeys))].join(" ")} data-state-money-record-count={shown.length}>
@@ -323,6 +334,14 @@ export function StateMoneySection({
         }
         return <AbsentRecord key={record.committeeId ?? i} record={record} />;
       })}
+      {reactionTarget && (
+        <ReactionControl
+          targetType="FUNDING_TOTAL_REACTION"
+          targetId={reactionTarget}
+          prompt="How do you feel about how this campaign is funded?"
+          context={context}
+        />
+      )}
       {shown.length > 1 && (
         <p className="mt-2 text-xs text-muted-foreground">
           This candidate has more than one committee registered. Every one the

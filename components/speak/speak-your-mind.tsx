@@ -6,10 +6,8 @@ import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 
 import {
   SPEAK_CONFIRMATION,
-  SPEAK_FINE_PRINT,
   SPEAK_LABEL,
   SPEAK_PLACEHOLDER,
-  SPEAK_THREAT_NOTICE,
   speakFraming,
 } from "@/lib/speak/copy";
 import {
@@ -51,14 +49,12 @@ import { SPEAK_MAX_CHARS } from "@/lib/speak/limits";
  * and corrupts the data. Nothing a reader writes here is shown to anybody.
  * **The author recorded that default as REVERSIBLE** — his call, later.
  *
- * ## The three things this surface says, and each is required by a rule
- *
- * 1. `SPEAK_DISCLOSURE` — RULE 2, at the box, before the reader types.
- * 2. `SPEAK_THREAT_NOTICE` — `CLAUDE.md` requires it adjacent to any free-text
- *    field about named real people, worded "may" rather than "will".
- * 3. The honest outcome — a submission never silently succeeds into a void, so
- *    "there is no store" and "it failed" get different sentences and only
- *    `RECORDED` is thanked.
+ * ## What this surface says
+
+ * The honest outcome only: a submission never silently succeeds into a void, so
+ * "there is no store" and "it failed" get different sentences and only
+ * `RECORDED` is thanked. There is no notice at the box; what the site collects
+ * is stated once, on /transparency (Sean, October 1, 2026).
  */
 /**
  * Unsent drafts, per subject, for this tab only (approved reader design:
@@ -217,26 +213,6 @@ export function SpeakYourMind({
         }}
       />
 
-      {/*
-        **BC-19 (2026-08-25, the author's ruling) — THE DISCLOSURE PARAGRAPH
-        COMES OUT OF THE PANEL.** RULING 154 records the supersession; it
-        amends RULE 2 of RULING 141 and nothing else.
-
-        **THE COMMITMENT IS NOT WEAKENED, AND THIS IS THE CLAUSE MOST LIKELY
-        TO BE LOST.** The no-name promise is not a promise at all here — it is
-        ARCHITECTURE. `speak_your_mind` has no column that could hold a name,
-        which is the fact the paragraph was asserting, and a schema with
-        nowhere to put a name cannot be talked out of it. It is stated in the
-        fine print below, and in full on /transparency, which gained a Speak
-        Your Mind section in this same change — it had none, which was its own
-        gap and is now closed.
-
-        The THREAT NOTICE stays exactly where it was. `CLAUDE.md` requires it
-        adjacent to any free-text input about named real people, and BC-19 says
-        nothing about it.
-      */}
-      <p className="speak-disclosure">{SPEAK_THREAT_NOTICE}</p>
-
       <div className="speak-actions">
         <button
           type="button"
@@ -249,9 +225,6 @@ export function SpeakYourMind({
         </button>
         <span className="speak-count">{remaining}</span>
       </div>
-
-      {/* BC-19: the fine print. The full sentence is on /transparency. */}
-      <p className="speak-fine-print">{SPEAK_FINE_PRINT}</p>
 
       {result !== null && (
         <p className="speak-outcome" data-speak-outcome={result}>

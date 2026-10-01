@@ -30,6 +30,9 @@ import {
   refreshFundingFromPromoted,
 } from "@/lib/funding/snapshot";
 import { getVoteIds, refreshFederalVotesFromPromoted } from "@/lib/votes/snapshot";
+import type { StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
+import { settleStateMoneyRead, stateMoneyForTarget } from "@/lib/funding/state-snapshot";
+import { FEDERAL_CONTEST, directFundingTargetPlan } from "@/lib/funding/target-authorities";
 
 /**
  * POST /api/reactions — the reaction write path (P03), hardened (T08).
@@ -77,6 +80,8 @@ interface ReactionAuthorityReaders {
   readonly provisionTargets: () => Set<string>;
   readonly refreshFunding: () => Promise<unknown>;
   readonly fundingTargets: () => Set<string>;
+  readonly refreshStateMoney: (state: StateCampaignFinanceJurisdiction) => Promise<unknown>;
+  readonly stateMoneyTargets: (targetId: string) => Set<string>;
   readonly contributorTargets: () => Set<string>;
   readonly refreshVotes: () => Promise<unknown>;
   readonly voteTargets: () => Set<string>;
@@ -87,6 +92,13 @@ const reactionAuthorityReaders: ReactionAuthorityReaders = {
   provisionTargets: getProvisionTargetIds,
   refreshFunding: refreshFundingFromPromoted,
   fundingTargets: getFundingTargetIds,
+  refreshStateMoney: (state) => settleStateMoneyRead(state),
+  stateMoneyTargets: (targetId) =>
+    stateMoneyForTarget(targetId).some(
+      (r) => r.filingState === "FILED" || r.filingState === "REGISTERED_NO_ACTIVITY_REPORTED",
+    )
+      ? new Set([targetId])
+      : new Set(),
   contributorTargets: getContributorReactionTargetIds,
   refreshVotes: refreshFederalVotesFromPromoted,
   voteTargets: getVoteIds,
@@ -107,9 +119,18 @@ export async function validReactionTargetsFor(
       return readers.candidateTargets(targetId);
     case "MEASURE_PROVISION":
       return readers.provisionTargets();
-    case "FUNDING_TOTAL_REACTION":
+    case "FUNDING_TOTAL_REACTION": {
+      // A state or local candidacy key (`ballot-xx-...`) is valid when that
+      // state's promoted money holds a committee for it; anything else is an
+      // FEC candidate id, as before.
+      const state = directFundingTargetPlan(targetId).state;
+      if (state !== null && !FEDERAL_CONTEST.test(targetId)) {
+        await readers.refreshStateMoney(state);
+        return readers.stateMoneyTargets(targetId);
+      }
       await readers.refreshFunding();
       return readers.fundingTargets();
+    }
     case "CONTRIBUTOR_REACTION":
       await readers.refreshFunding();
       return readers.contributorTargets();

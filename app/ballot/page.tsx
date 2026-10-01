@@ -148,6 +148,7 @@ import {
 } from "@/lib/registry/server";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LevelTag } from "@/components/ui/level-tag";
+import type { ReactionViewContext } from "@/lib/reactions/client";
 import { tierForOcdId } from "@/lib/ocd/tiers";
 import { Logo } from "@/components/brand/logo";
 import { PRODUCT_NAME, titleFor } from "@/lib/brand";
@@ -445,6 +446,7 @@ async function CandidateFunding({
 function stateCandidateFunding(
   targetKey: string,
   records: ReturnType<typeof stateMoneyForCard>["records"],
+  context: ReactionViewContext | null,
 ) {
   const state = directFundingTargetPlan(targetKey).state;
   const read = state === null ? null : stateMoneyReadState(state);
@@ -457,7 +459,7 @@ function stateCandidateFunding(
   if (records.length === 0 && !freshness) return null;
   return <>
     {freshness && <p className="funding-data-freshness">{freshness}</p>}
-    <StateMoneySection records={records} bare />
+    <StateMoneySection records={records} bare context={context} />
   </>;
 }
 
@@ -793,7 +795,7 @@ async function BallotBattlecard({
           <CandidateFunding targetKey={targetKey} context={context} available={authorityAvailability.funding} readerEdge={readerEdge} />
         ) : stateMoneyUnavailable ? (
           unavailableHolding("state campaign-finance")
-        ) : stateCandidateFunding(targetKey, stateMoney),
+        ) : stateCandidateFunding(targetKey, stateMoney, context),
         /* BC-3: the record, in the card. Not `columns` — the two-column form
            builds its own top-level sections, which would compete with the
            seven this card owns. */

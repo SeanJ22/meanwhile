@@ -25,6 +25,7 @@ import { researchVaultResolver } from "../lib/control-plane/workers/vault-object
 import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
 import { evidenceProjection } from "../lib/control-plane/workers/evidence-projection.ts";
 import { runNationalPlaceWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
+import { orderNationalPlaceWork } from "../lib/control-plane/expansion/dispatch-work.ts";
 import { publishElectionFields } from "../lib/civic-data/election-field-publication.ts";
 import { section3Record } from "../lib/control-plane/promotion/section3.ts";
 import { nationalDelivery, publishNationalPlaceSources, type NationalPlacePublication } from "../lib/civic-data/worker-national-publication.ts";
@@ -51,6 +52,7 @@ async function main(): Promise<void> {
       try {
         const zips = [...new Set(nationalZips.split(",").filter(Boolean))];
         await runNationalPlaceWorkerProcesses({ root: process.cwd(), store, zips,
+          orderPending: ready => orderNationalPlaceWork(repos, ready, new Date().toISOString()),
           capacity: () => zips.length, publish: async input => {
             const publication = await publishNationalPlaceSources({ ...input,
               divisions: input.divisions.filter(row => row.sourceDataset).map(row => ({ ...row, sourceDataset: row.sourceDataset! })) });

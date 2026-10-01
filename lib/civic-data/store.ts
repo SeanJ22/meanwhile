@@ -1817,7 +1817,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     assertInitialRecord(record, firstEvent);
     // Preserve scalar evidence used by SQL constraints and clocks. Partition
     // datasets only; normalized evidence and the read model share their parts.
-    const stored = record.candidate.recordClass === "REGISTRY_RUNTIME_BINDING"
+    const stored = ["REGISTRY_RUNTIME_BINDING", "STATE_ROLL_CALL"].includes(record.candidate.recordClass)
       ? await this.payloadParts.store(record.candidate,
         ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport"]) as RoutineCandidate
       : record.candidate;

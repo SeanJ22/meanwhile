@@ -102,6 +102,8 @@ test("reaction intake opens only the authority named by its submitted target fam
       throw new Error("PLANTED_FEC_AUTHORITY_UNAVAILABLE");
     },
     fundingTargets: () => new Set(["funding:one"]),
+    refreshStateMoney: async () => { calls.push("stateMoney"); },
+    stateMoneyTargets: () => new Set<string>(),
     contributorTargets: () => new Set(["contributor:one"]),
     refreshVotes: async () => {
       calls.push("votes");

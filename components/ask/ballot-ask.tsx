@@ -9,7 +9,7 @@ import { AskAnswerRecords } from "@/components/ask/answer-records";
 import { AskAnswerContacts } from "./answer-contacts";
 import { readAskAnswer, unresolvedReadLine, type AskAnswerPayload } from "@/lib/ask/answer";
 import { sourceLinks } from "@/lib/ask/host";
-import { readBrowserKey } from "@/lib/state/browser-key";
+import { getOrCreateBrowserKey } from "@/lib/state/browser-key";
 import { readLocationOriginFor } from "@/lib/state/location-origin";
 import type { AskSubjectRef } from "@/lib/ask/subject";
 import { gapsNotInAnswer } from "@/lib/text/say-once";
@@ -140,12 +140,11 @@ export function BallotAsk({
           /* WHAT THE READER DID, never what it proves — `stampResidency` on
              the server decides that, so no client can assert a confidence. */
           locationOrigin: readLocationOriginFor(zip),
-          /* READ, never minted — the capture path is gated, and putting a new
-             identifier on a device for a switched-off capability is storage
-             nobody consented to. Its OWN slot for the day it is switched on:
-             sharing one with reactions or Speak Your Mind would make one browser
-             produce one value across stores that share no key. */
-          continuityKey: readBrowserKey("wtp.ask_key") ?? "",
+          /* The returning-reader ID: random, minted on this browser's first
+             question, anonymous, and in its OWN slot (sharing one with
+             reactions or Speak Your Mind would make one browser produce one
+             value across stores that share no key). */
+          continuityKey: getOrCreateBrowserKey("wtp.ask_key"),
         }),
         signal: controller.signal,
       });

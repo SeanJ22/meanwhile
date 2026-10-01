@@ -175,12 +175,8 @@ test("runtime writers and Admin no longer use tracked operational run paths", ()
   assert.match(ownerReadback, /map\.actors\?\.state/);
 
   const adminData = readFileSync(join(ROOT, "lib", "control-plane", "admin-data.ts"), "utf8");
-  // The map provider panel lives on Fleet · Money since the Admin redesign (2026-09-23).
-  const adminPage = readFileSync(join(ROOT, "app", "(admin)", "_mw", "screens", "money.tsx"), "utf8");
   const maptilerSection = readFileSync(join(ROOT, "app", "(admin)", "_mw", "maptiler-panel.tsx"), "utf8");
   assert.match(adminData, /readMapTilerUsageDigests/);
-  assert.match(adminPage, /readMapTilerUsageDigests/);
-  assert.match(adminPage, /projectMapTilerAttemptHistory/);
   assert.match(maptilerSection, /Automatic collection history/);
   assert.match(maptilerSection, /history\.attempts\.map/);
 

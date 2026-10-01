@@ -1,3 +1,6 @@
+import { SOURCE_API_TOOLS, SOURCE_API_SPECS, readSourceApi, type SourceApiTool } from "./scout-api.ts";
+import { installedAdapters, installedAdapterVersion, runInstalledAdapter } from './scout-adapters.ts';
+
 /** The ordinary public-page reader for collectors: held bytes, then HTTP, then the existing browser. */
 export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:number}={}) {
   const fresh=(at:string)=>{
@@ -46,6 +49,7 @@ export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:numb
     throw new Error('SOURCE_PAGE_UNREADABLE: '+failures.join('; '));
   };
 }
+import { readClientSource, type ClientTool } from './scout-clients.ts';
 /**
  * **THE SCOUT'S RESEARCH TOOLS.** (Level 1 activation, 2026-09-01.)
  *
@@ -80,6 +84,7 @@ import type { PermissionState, TransportState } from "../../workstate/types.ts";
 import {
   artifactId,
   recordAcquisition,
+  deriveSanitized,
   type Artifact,
   type RetentionPolicy,
 } from "../evidence/artifact.ts";
@@ -125,6 +130,12 @@ const WHY_SCHEMA = {
 const URL_SCHEMA = { type: "string", description: "An absolute public http(s) URL." };
 
 export const SCOUT_TOOL_SPECS: readonly ScoutToolSpec[] = [
+  {name:'plural_roster',description:'Read a whole state legislature with the Plural bulk client and parser. Returns people, official links and exact raw CSV with its source URL. No API key needed; prefer this to per-person requests.',input_schema:{type:'object',properties:{state:{type:'string'},rung:RUNG_SCHEMA,why:WHY_SCHEMA},required:['state','rung','why']}},
+  {name:'legistar_events',description:'Read a Legistar tenant calendar through the shared paged client within a date window of up to 97 days. Returns event data and raw source responses with links.',input_schema:{type:'object',properties:{tenant:{type:'string'},from:{type:'string'},to:{type:'string'},rung:RUNG_SCHEMA,why:WHY_SCHEMA},required:['tenant','from','to','rung','why']}},
+  {
+    name: 'run_adapter', description: 'Run installed platform adapters over inherited sanitized bytes with no network. Omit adapter to list installed names; supply adapter and artifactId to extract source-attributed data. offset pages long results.',
+    input_schema: {type:'object', properties:{adapter:{type:'string'},artifactId:{type:'string'},offset:{type:'integer'},rung:RUNG_SCHEMA,why:WHY_SCHEMA},required:['rung','why']},
+  },
   {
     name: "read_permission",
     description:
@@ -209,8 +220,8 @@ export const SCOUT_TOOL_SPECS: readonly ScoutToolSpec[] = [
 export const SEARCH_TOOL_SPEC: ScoutToolSpec = {
   name: "search",
   description:
-    "Look up a query in the compliant paid search indexes (Brave and Exa) and return POINTERS ONLY — a " +
-    "ranked list of result URLs and titles, no page content. Use it when direct routes are walled, or to " +
+    "Look up a query in the compliant paid search indexes (Brave and Exa) and return sourced search data — a " +
+    "ranked list of source URLs, titles and source excerpts. Use it when direct routes are walled, or to " +
     "discover a candidate's own publication: the \"<name> for <office>\" committee phrasing surfaces campaign " +
     "sites well. It fetches nothing itself — open any promising hit with fetch_public or browse, which read and " +
     "record robots.txt (never a refusal of a public page) and vault the evidence; an access control there is a " +
@@ -242,7 +253,7 @@ export const SEARCH_TOOL_SPEC: ScoutToolSpec = {
  * switch is on.
  */
 export function scoutToolSpecsFor(search: boolean): readonly ScoutToolSpec[] {
-  return search ? [...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC] : SCOUT_TOOL_SPECS;
+  return [...SCOUT_TOOL_SPECS, ...SOURCE_API_SPECS, ...(search ? [SEARCH_TOOL_SPEC] : [])];
 }
 
 /* ------------------------------------------------------------ transport */
@@ -561,6 +572,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   const robotsByHost = new Map<string, HostRobots>();
   const hostCounts = new Map<string, number>();
   const vaulted = new Set<string>();
+  const factEvidence = new Map<string, import('./scout-contract.ts').ScoutFactEvidence>();
   let requestCount = 0;
   let bytesFetched = 0;
   let toolCalls = 0;
@@ -609,6 +621,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     readonly artifact: Artifact;
     readonly stored: boolean;
     readonly why: string;
+    readonly text?: string;
   }
 
   async function vaultText(
@@ -643,7 +656,23 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       },
       input.text,
     );
-    return await put(artifact, () => ctx.vault(artifact, input.text), at, acc);
+    let saved=await put(artifact, () => ctx.vault(artifact, input.text), at, acc);
+    let text=input.text;
+    if(artifact.tier==='RESTRICTED_RAW' && artifact.retentionPolicy!=='DIAGNOSTIC') {
+      // Same acquisition path as the meetings collector: retain the raw hash
+      // and redaction derivation even when no restricted substrate is present.
+      const derived=deriveSanitized(artifact,input.text,at);
+      const rawNote=saved.stored?'Restricted original vaulted.':`Restricted original not retained: ${saved.why}.`;
+      saved=await put(derived.artifact,()=>ctx.vault(derived.artifact,derived.text),at,acc);
+      saved={...saved,why:`${rawNote} Sanitized derivative: ${saved.why}`};
+      text=derived.text;
+    }
+    const held=saved.artifact;
+    if(saved.stored && held.tier!=='RESTRICTED_RAW' && held.retentionPolicy!=='DIAGNOSTIC' &&
+      held.methodRouteId!=='scout:read_permission' && !held.methodRouteId.endsWith(':network-observation'))factEvidence.set(held.id,{
+      sourceUrl:held.canonicalUrl,retrievalUrl:held.retrievalUrl,retrievedAt:held.retrievedAt,text,
+      visibleText:held.contentType.includes('html')?visibleText(text):text});
+    return {...saved,text:saved.stored && held.tier!=='RESTRICTED_RAW'?text:''};
   }
 
   async function vaultBinary(
@@ -702,6 +731,8 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     acc.provenance.push({
       artifactId: artifact.id,
       canonicalUrl: artifact.canonicalUrl,
+      retrievalUrl: artifact.retrievalUrl,
+      contentType: artifact.contentType,
       retrievedAt: artifact.retrievedAt,
       permission: artifact.permission,
       methodRouteId: artifact.methodRouteId,
@@ -843,7 +874,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   /** The shared front half of fetch_public and browse. A string is a refusal. */
   async function admit(
     input: ParsedInput,
-    tool: "fetch_public" | "browse",
+    _tool: "fetch_public" | "browse",
   ): Promise<
     | { readonly kind: "GO"; readonly url: URL; readonly acc: CallAccount; readonly reading: PermissionReading; readonly robots: HostRobots }
     | { readonly kind: "REFUSED"; readonly result: ScoutToolCallResult }
@@ -940,7 +971,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         { url, finalUrl, status, contentType: got.contentType, text, methodRouteId: "scout:fetch_public", permission, transport: "REACHABLE" },
         acc,
       );
-      const head = `${envelope(report.artifact, url.toString(), finalUrl, status, got.byteLength)}\n${permLine}`;
+      const head = `${envelope(report.artifact, url.toString(), finalUrl, status, got.byteLength)}\n${permLine}${report.artifact.tier==='SANITIZED_DERIVED'?`\n${report.why}`:''}`;
       if (!report.stored) {
         return result(
           false,
@@ -955,11 +986,12 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
           rung(`HTTP ${status}, ${got.byteLength} bytes, RESTRICTED_RAW`), acc, permission
         );
       }
-      if (/html/i.test(got.contentType)) nextHopUrls = extractLinks(text, url).map(link => link.url);
+      const readable=report.text??'';
+      if (/html/i.test(got.contentType)) nextHopUrls = extractLinks(readable, url).map(link => link.url);
       if (/json/i.test(got.contentType)) {
-        try { const rows: unknown = JSON.parse(text); if (Array.isArray(rows)) returnedCount = rows.length; } catch { /* Raw bytes remain evidence; parsing is another worker's burden. */ }
+        try { const rows: unknown = JSON.parse(readable); if (Array.isArray(rows)) returnedCount = rows.length; } catch { /* Saved bytes remain evidence; parsing is another worker's burden. */ }
       }
-      return result(true, textRepresentation(head, text, got.contentType, url), rung(`HTTP ${status}, ${got.byteLength} bytes, ${got.contentType}`), acc, permission);
+      return result(true, textRepresentation(head, readable, got.contentType, url), rung(`HTTP ${status}, ${got.byteLength} bytes, ${got.contentType}${report.artifact.tier==='SANITIZED_DERIVED'?'; '+report.why:''}`), acc, permission);
     }
 
     /* Non-2xx: the answer is DIAGNOSTIC evidence that the rung was walked; the body is never shown. */
@@ -1182,14 +1214,16 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     } else if (page.artifact.tier === "RESTRICTED_RAW") {
       parts.push(`${head}\nQUARANTINED: the rendered page carries a confirmed third-party credential and is stored RESTRICTED_RAW. Nothing of it is shown.`);
     } else {
-      browserNextHopUrls = extractLinks(obs.html, new URL(finalUrl), 200).map(link => link.url);
-      const body = capText(visibleText(obs.html));
-      parts.push(UNTRUSTED_CONTENT_HEADER, head, DATA_BEGIN, `TITLE: ${htmlTitle(obs.html) ?? "(none)"}`, `TEXT (${body.note}):`, body.text, DATA_END);
+      const readable=page.text??'';
+      browserNextHopUrls = extractLinks(readable, new URL(finalUrl), 200).map(link => link.url);
+      const body = capText(visibleText(readable));
+      parts.push(UNTRUSTED_CONTENT_HEADER, head, ...(page.artifact.tier==='SANITIZED_DERIVED'?[page.why]:[]), DATA_BEGIN, `TITLE: ${htmlTitle(readable) ?? "(none)"}`, `TEXT (${body.note}):`, body.text, DATA_END);
     }
     if (!network.stored) {
       parts.push(`NETWORK OBSERVATION not vaulted: ${network.why}. The request list is not shown.`);
     } else {
-      const ordered = [...obs.requests]
+      const requests=(JSON.parse(network.text??'{"requests":[]}') as {requests:typeof obs.requests}).requests;
+      const ordered = [...requests]
         .map((r, i) => ({ r, i }))
         .sort((a, b) => rank(a.r, host) - rank(b.r, host) || a.i - b.i)
         .slice(0, REQUEST_LIST_CAP)
@@ -1292,6 +1326,8 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       const withProvenance = (passage: ScoutToolCallResult): ScoutToolCallResult => provenance
         ? { ...passage, provenance: [provenance], forModel: `HELD_VAULT_ENVELOPE ${provenance.artifactId}; retrieved ${provenance.retrievedAt}; permission ${provenance.permission}; HTTP ${provenance.httpStatus ?? "none"}; URL ${provenance.canonicalUrl}.\n${passage.forModel}` }
         : passage;
+      if(evidence.methodRouteId!=='scout:read_permission' && !evidence.methodRouteId.endsWith(':network-observation'))factEvidence.set(evidence.artifactId,{sourceUrl:evidence.canonicalUrl,retrievalUrl:provenance?.retrievalUrl,retrievedAt:evidence.retrievedAt,
+        text:evidence.text,visibleText:visibleText(evidence.text)});
       if (query !== null) {
         const lower = evidence.text.toLowerCase(), needle = query.toLowerCase();
         const positions: number[] = [];
@@ -1332,12 +1368,12 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const forModel =
       res.hits.length === 0
         ? header
-        : `${header}\n${DATA_BEGIN}\n${res.hits.map((h, i) => `${i + 1}. ${h.url}  [${h.provider}]  ${h.title}`).join("\n")}\n${DATA_END}`;
+        : `${header}\n${DATA_BEGIN}\n${res.hits.map((h, i) => `${i + 1}. ${h.url}  [${h.provider}]  ${h.title}\n${h.text ?? ""}`).join("\n")}\n${DATA_END}`;
     const rung: Rung = {
       rung: input.rung,
       tool: "search",
       target: query,
-      observed: `${res.hits.length} pointer(s) from ${res.providersUsed.join("+") || "none"}${res.errors.length > 0 ? `; ${res.errors.length} provider error(s)` : ""}`,
+      observed: `${res.hits.length} pointer(s) from ${res.providersUsed.join("+") || "none"}${res.errors.length > 0 ? `; ${res.errors.join('; ')}` : ""}`,
       artifactIds: [],
       transport: answered ? "REACHABLE" : "OTHER_NAMED_FAILURE",
       httpStatus: null,
@@ -1348,23 +1384,40 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     return result(answered, forModel, rung, acc);
   }
 
+  async function sourceApi(name: SourceApiTool | ClientTool, raw: unknown, input: ParsedInput): Promise<ScoutToolCallResult> {
+    const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
+    try {
+      const options = { ...ctx.sourceApi, timeoutMs,
+        spaceOut: async host => { const exceeded = overCap(host); if (exceeded) throw new Error(exceeded);
+          hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1); await ctx.spaceOut(host); } } satisfies import('./scout-api.ts').SourceApiOptions;
+      const response = name === 'plural_roster' || name === 'legistar_events' ? await readClientSource(name,raw as Record<string,unknown>,options) : await readSourceApi(name,raw,options);
+      acc.requests = response.requests; acc.bytes = response.bytes;
+      requestCount += response.requests; bytesFetched += response.bytes;
+      const ok = response.status >= 200 && response.status < 300;
+      const saved = await vaultText({url:new URL(response.sourceUrl),finalUrl:response.sourceUrl,status:response.status,
+        contentType:'application/json',text:response.text,methodRouteId:'scout:'+name,permission:'NOT_APPLICABLE',
+        transport:ok?'REACHABLE':'FAILED_AT_RUNG',...(ok?{}:{retention:'DIAGNOSTIC' as const})},acc);
+      const rung: Rung = {rung:input.rung,tool:name,target:response.sourceUrl,observed:'HTTP '+response.status,
+        artifactIds:acc.artifacts.map(a=>a.artifactId),transport:ok?'REACHABLE':'FAILED_AT_RUNG',httpStatus:response.status,
+        returnedCount:null,applicableBecause:input.why,nextHopUrls:[]};
+      if (!saved.stored) return result(false, saved.why, rung, acc);
+      return result(ok, 'SOURCE '+response.sourceUrl+' | artifact '+saved.artifact.id+' | retrieved '+saved.artifact.retrievedAt+' | permission NOT_APPLICABLE\n'+DATA_BEGIN+'\n'+capText(saved.text??'').text+'\n'+DATA_END,rung,acc);
+    } catch(error) { return refusal(name+': '+(error instanceof Error ? error.message : String(error))); }
+  }
+
   /* -------------------------------------------------------------- call */
 
   async function call(name: string, input: unknown, rungLabel: string | null): Promise<ScoutToolCallResult> {
     if (!(SCOUT_RESEARCH_TOOLS as readonly string[]).includes(name)) {
       return refusal(`${JSON.stringify(name)} is not a research tool; the research tools are ${SCOUT_RESEARCH_TOOLS.join(", ")}.`);
     }
-    if (toolCalls >= ctx.bound.maxToolCalls) {
-      return refusal(
-        `the Attempt's research tool-call bound (${ctx.bound.maxToolCalls}) is reached; no further tool runs. ` +
-          "Finish with what the walk established and name the next rungs so the next Attempt resumes rather than restarts.",
-      );
-    }
     toolCalls += 1;
     const tool = name as ScoutResearchTool;
     const needsUrl = tool === "read_permission" || tool === "fetch_public" || tool === "browse";
     const parsed = parseInput(input, rungLabel, needsUrl);
     if (!parsed.ok) return refusal(parsed.why);
+    if ((SOURCE_API_TOOLS as readonly string[]).includes(tool)) return sourceApi(tool as SourceApiTool, input, parsed.value);
+    if (tool === 'plural_roster' || tool === 'legistar_events') return sourceApi(tool,input,parsed.value);
     switch (tool) {
       case "read_permission":
         return await readPermission(parsed.value);
@@ -1380,6 +1433,24 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         return await readManual(input);
       case "read_held":
         return await readHeld(input);
+      case "run_adapter": {
+        const raw = input as Record<string, unknown>;
+        if (typeof raw.adapter !== 'string') return {ok:true,forModel:JSON.stringify(await installedAdapters()),artifacts:[],provenance:[],rung:null,requestCount:0,bytesFetched:0};
+        if (typeof raw.artifactId !== 'string' || !ctx.inherited.artifactIds.includes(raw.artifactId) || !ctx.readHeldArtifact) return refusal('ADAPTER_ARTIFACT_NOT_HANDED');
+        const adapterIdentity=raw.adapter+'@'+installedAdapterVersion(raw.adapter);
+        try {
+          const held = await ctx.readHeldArtifact(raw.artifactId);
+          if (held.artifactId !== raw.artifactId || held.contentHash !== contentHash(held.text) || !held.provenance) return refusal('ADAPTER_ARTIFACT_IDENTITY_MISMATCH');
+          const data = await runInstalledAdapter(raw.adapter, held.text, held.canonicalUrl);
+          const serialized=JSON.stringify({sourceUrl:held.canonicalUrl,data}), offset=readOffset(input) ?? 0;
+          if (offset>serialized.length) return refusal('ADAPTER_OUTPUT_OFFSET_OUT_OF_RANGE');
+          const end=Math.min(serialized.length,offset+READ_PASSAGE_CHARS);
+          return {ok:true,forModel:`ADAPTER ${raw.adapter} read held artifact ${held.artifactId}; source ${held.canonicalUrl}. Derived result ${offset}..${end} of ${serialized.length}${end<serialized.length?`; continue at offset ${end}`:''}. Exact fact quotes must still occur in the held source.\n${UNTRUSTED_CONTENT_HEADER}\n${DATA_BEGIN}\n${serialized.slice(offset,end)}\n${DATA_END}`,
+            artifacts:[],requestCount:0,bytesFetched:0,knowledgeRead:{kind:'HELD_ARTIFACT',id:held.artifactId,contentHash:held.contentHash,offset:0,length:held.text.length},
+            provenance:[held.provenance],rung:{rung:parsed.value.rung,tool:'run_adapter',target:held.canonicalUrl,observed:'Installed adapter '+adapterIdentity,artifactIds:[held.artifactId]}};
+        } catch(error) { const detail='ADAPTER_FAILED: '+(error instanceof Error?error.message:String(error));
+          return {...refusal(detail),rung:{rung:parsed.value.rung,tool:'run_adapter',target:raw.artifactId,observed:'Installed adapter '+adapterIdentity+'; '+detail,artifactIds:[],ok:false}}; }
+      }
       case "search": {
         const o = (input !== null && typeof input === "object" ? input : {}) as Record<string, unknown>;
         const query = typeof o.query === "string" ? o.query.trim() : "";
@@ -1395,6 +1466,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
 
   return {
     specs: scoutToolSpecsFor(Boolean(ctx.search)),
+    factEvidence,
     heldEvidenceProtocolAvailable: Boolean(ctx.readHeldArtifact),
     call,
     get vaultedArtifactIds(): ReadonlySet<string> {

@@ -92,8 +92,8 @@ test("§9A.4: every role the cost policy calls plain code is one no executor han
   }
   assert.deepEqual(
     WORKER_ROLES.filter((r) => ROLE_COST_POLICY[r].access === "ROUTED_TO_A_PAID_MODEL").sort(),
-    ["ADVERSARIAL_AUDITOR", "SCOUT"],
-    "exactly two roles reach a paid model today",
+    ["ADVERSARIAL_AUDITOR", "DETECTIVE", "ENGINEERING", "PARSER", "SCOUT"],
+    "every role that may escalate is distinguished from roles that always run plain code",
   );
 
   /*
@@ -101,9 +101,9 @@ test("§9A.4: every role the cost policy calls plain code is one no executor han
    * call, so every model-spending path in lib/ is a caller of it. Two files
    * call it, and each declares which role it runs as.
    */
-  const callers = ["scheduler/scout-executor.ts", "workers/model-audit.ts", "scheduler/model-routing.ts"];
+  const callers = ["scheduler/scout-executor.ts", "workers/model-audit.ts", "workers/model-parser.ts", "scheduler/model-routing.ts"];
   const swept: string[] = [];
-  for (const file of ["scheduler/scout-executor.ts", "workers/model-audit.ts", "workers/runtime.ts", "workers/research-runtime.ts", "scheduler/model-routing.ts", "scheduler/dispatch.ts"]) {
+  for (const file of ["scheduler/scout-executor.ts", "workers/model-audit.ts", "workers/model-parser.ts", "workers/runtime.ts", "workers/research-runtime.ts", "scheduler/model-routing.ts", "scheduler/dispatch.ts"]) {
     const code = codeOf("lib/control-plane", file);
     assert.ok(code.length > 500, `the sweep must reach ${file}; read ${code.length} chars`);
     if (/assertStepMayInvokeModel\s*\(/.test(code)) swept.push(file);
@@ -111,16 +111,17 @@ test("§9A.4: every role the cost policy calls plain code is one no executor han
   assert.deepEqual(swept.sort(), [...callers].sort(), "a new caller of the model gate means a new row in ROLE_COST_POLICY");
 
   const scout = codeOf("lib/control-plane/scheduler", "scout-executor.ts");
-  assert.match(scout, /role:\s*"SCOUT",\s*provider:\s*"anthropic"/, "the Scout executor still declares the Anthropic provider");
+  assert.match(scout, /role:\s*deps\.role\s*\?\?\s*"SCOUT",\s*provider:\s*"anthropic"/, "the shared research executor declares the Anthropic provider for its selected role");
 
   const runtime = codeOf("lib/control-plane/workers", "runtime.ts");
   assert.match(
     runtime,
     /role === "ADVERSARIAL_AUDITOR" && runtime\.auditReasoner !== undefined/,
-    "the model-assisted branch still names the auditor and nothing else",
+    "the adversarial audit retains its model path",
   );
   const otherAssisted = [...runtime.matchAll(/role === "([A-Z_]+)"[^;\n]*auditReasoner/g)].map((m) => m[1]);
   assert.deepEqual([...new Set(otherAssisted)], ["ADVERSARIAL_AUDITOR"], "only one role is ever model-assisted here");
+  assert.match(runtime, /const parseAssisted = usesModelParse\(runtime, spec\)/, "Parser model fallback is included in the spend policy");
 
   const research = codeOf("lib/control-plane/workers", "research-runtime.ts");
   assert.match(research, /\["ACQUIRER","DETECTIVE","ENGINEERING"\]/, "the research executor still owns exactly those three roles");
@@ -134,7 +135,7 @@ test("§9A.4: every role the cost policy calls plain code is one no executor han
   const PLANT = 'const assisted = role === "DETECTIVE" && runtime.auditReasoner !== undefined;';
   const planted = [...PLANT.matchAll(/role === "([A-Z_]+)"[^;\n]*auditReasoner/g)].map((m) => m[1]);
   assert.deepEqual(planted, ["DETECTIVE"], "the detector reads the role out of an assisted branch");
-  assert.notEqual(ROLE_COST_POLICY.DETECTIVE.access, "ROUTED_TO_A_PAID_MODEL", "and DETECTIVE is not in the routed set, so the plant would fail the guard above");
+  assert.equal(ROLE_COST_POLICY.DETECTIVE.access, "ROUTED_TO_A_PAID_MODEL", "Detective failure response must never be presented as free by design");
 });
 
 /* ================================================================== *
@@ -170,8 +171,8 @@ test("ADM-33: a role that can spend and did not reads '$0 this run'; only a role
   assert.match(of("ADVERSARIAL_AUDITOR").says, /not a claim the role is free/);
 
   for (const role of ["DETECTIVE", "PARSER"]) {
-    assert.equal(of(role).cls, "PLAIN_CODE", `${role} is proven plain code by the execution policy`);
-    assert.match(of(role).says, /routes no model step to this role/);
+    assert.equal(of(role).cls, "ZERO_THIS_RUN", `${role} can escalate, although these attempts ran plain code`);
+    assert.match(of(role).says, /not a claim the role is free/);
     assert.ok(of(role).provenIn?.includes("lib/control-plane/workers/"), "and the row carries where that is written");
   }
 });
@@ -235,12 +236,12 @@ test("§9A.4: the capacity sentence is computed from the ledger and matches the 
   const now = "2026-09-06T18:00:00.000Z";
   /* Six hunts at $0.3164 each: $100 / 0.3164 = 316.05 -> 316. */
   const costs = Array.from({ length: 6 }, (_, i) => entry(`s${i}`, "SCOUT", 0.3164, "2026-09-06T12:00:00.000Z"));
-  const panel = buildCostPanel({ costs, attempts: [], cacheByRole: null, share: null, verifiedRecords: null, nowIso: now });
+  const panel = buildCostPanel({ costs, attempts: [], cacheByRole: null, share: null, verifiedRecords: null, nowIso: now, dailyCeilingUsd: 100 });
   assert.equal(
     capacitySentence(panel.capacity),
     "At the current average cost, the $100.00 daily limit buys about 316 hunts at roughly $0.32 each.",
   );
-  assert.equal(DEFAULT_DAILY_CEILING_USD, 100);
+  assert.equal(DEFAULT_DAILY_CEILING_USD, 0, "a missing Admin spend dial does not authorize a fixed dollar budget");
 
   const quiet = buildCostPanel({
     costs: [entry("s9", "SCOUT", null, "2026-09-06T12:00:00.000Z")],

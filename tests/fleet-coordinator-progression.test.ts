@@ -45,7 +45,7 @@ test("unserved obligations receive a turn before an earlier item consumes anothe
   assert.equal(nextCycle.dispatches[0].outcome, "WORKED");
 });
 
-test("insufficient dispatch time stops expensive planning and reports the actual ceiling", async () => {
+test("a short legacy deadline does not stop planning or dispatch within the stated diagnostic count", async () => {
   const h = await autonomousHarness({ plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
   for (let i = 0; i < 24; i++) await addUnknownSource(h, i);
   let resultReads = 0;
@@ -56,18 +56,17 @@ test("insufficient dispatch time stops expensive planning and reports the actual
   const cycle = await runAutonomousCoordinator(h.runtime, {
     maximum: 3, concurrency: 2, deadlineMs: Date.now() + 60_000,
   });
-  assert.equal(cycle.dispatches.length, 0);
-  assert.equal(resultReads, 0, "No worker result histories are read when no existing dispatch bound fits");
-  assert.equal(cycle.deferred.length, 25);
-  assert.ok(cycle.deferred.every(row => row.reason === "WALL_CLOCK_CEILING"));
-  assert.deepEqual(await h.repos.routeTasks.list(), beforeTasks);
-  assert.deepEqual(await h.repos.attempts.list(), beforeAttempts);
+  assert.equal(cycle.dispatches.length, 3);
+  assert.ok(resultReads > 0, "Worker histories still inform admission");
+  assert.ok(cycle.deferred.every(row => row.reason !== "WALL_CLOCK_CEILING"));
+  assert.ok((await h.repos.routeTasks.list()).length > beforeTasks.length);
+  assert.equal((await h.repos.attempts.list()).length, beforeAttempts.length + 3);
 });
 
-test("an already elapsed deadline is never described as a dispatch count limit", async () => {
+test("an already elapsed legacy deadline does not hold free work", async () => {
   const h = await autonomousHarness();
   const cycle = await runAutonomousCoordinator(h.runtime, { deadlineMs: Date.now() - 1 });
-  assert.equal(cycle.deferred.length, 1);
-  assert.equal(cycle.deferred[0].reason, "WALL_CLOCK_CEILING");
-  assert.equal(cycle.decisions.length, 0);
+  assert.equal(cycle.deferred.length, 0);
+  assert.equal(cycle.decisions.length, 1);
+  assert.equal(cycle.dispatches.length, 1);
 });

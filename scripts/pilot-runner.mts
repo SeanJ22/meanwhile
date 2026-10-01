@@ -107,7 +107,7 @@ import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { isAssignmentCycleReading } from "../lib/control-plane/expansion/assignment-budget.ts";
 import { isExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
 import { unacknowledgedResearchResume, unacknowledgedScope } from "../lib/control-plane/scheduler/launch-wake.ts";
-import { continuingDirectedHunt, originalLifetimeHuntContinuation, ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
+import { continuingDirectedHunt, originalLifetimeHuntContinuation } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
 import {
   parseIntakeRuntimeObservation,
@@ -214,6 +214,7 @@ function standingChildEnvironment(
   parentEnv: NodeJS.ProcessEnv = process.env,
   billingCollector = false,
 ): NodeJS.ProcessEnv {
+  if (STAGING) return billingCollector ? { ...parentEnv } : withoutBillingSecrets(parentEnv);
   return provider === "postgres"
     ? admittedRuntimeChildEnvironment({
       parentEnv: ["RESEARCH_CYCLE", "CONSOLE_PUBLISHER", "NIGHTLY_RESEARCH"].includes(capability)
@@ -406,9 +407,9 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
   }], {
     cwd: ROOT,
     env: process.env,
-
     maxBufferBytes: 64 * 1024 * 1024,
-
+    onStdout: (_id, output) => { process.stdout.write(output); },
+    onStderr: (_id, output) => { process.stderr.write(output); },
   });
   if (!run) throw new Error("RESEARCH_CYCLE_CHILD_RESULT_MISSING");
   const stdout = `${run.stdout ?? ""}${run.stderr ?? ""}`;
@@ -1680,7 +1681,7 @@ async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
     const lifetime = originalLifetimeHuntContinuation(scopes.scopes, expansion, assignments, cycleOk ? lifetimeHuntStalledCycles : Math.max(1,lifetimeHuntStalledCycles));
     if (lifetime?.reason === "ELIGIBLE_ZERO_DISPATCH") lifetimeHuntStalledCycles = Math.min(lifetimeHuntStalledCycles + 1, 2);
     else if (lifetime?.reason === "DUE_AFTER_PROGRESS") lifetimeHuntStalledCycles = 0;
-    const otherScopes = scopes.scopes.filter(scope => scope.key !== ORIGINAL_LIFETIME_HUNT.key || scope.budgetStartedAt !== ORIGINAL_LIFETIME_HUNT.budgetStartedAt);
+    const otherScopes = scopes.scopes.filter(scope => !scope.budgetStartedAt);
     const hunt = lifetime ?? (!cycleOk ? null : continuingDirectedHunt(otherScopes, expansion, assignments));
     if (hunt === null) return ordinary;
     const waitMs = lifetime?.delayMs ?? POLL_MS;

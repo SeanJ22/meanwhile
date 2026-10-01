@@ -189,7 +189,7 @@ try {
     planOnlyWhy: "a read-only dry run writes nothing",
   });
 
-  console.log(`\nPLANNED ONLY — nothing was written. At most ${plan.writeBudget} obligations are written a cycle.`);
+  console.log(`\nPLANNED ONLY - nothing was written. All missing obligations are planned.`);
   for (const t of reading.targets) {
     const r = t.requirements;
     console.log(`\n${t.label} (${t.key})`);
@@ -205,7 +205,6 @@ try {
     const noRequirement = "no requirement is defined here: every government is blocked or unplaceable";
     console.log(`  ${floorLine(floored("requirements that would be created", t.label, r.defined, r.deferred, noRequirement))}`);
     console.log(`  ${floorLine(floored("requirements already on a clock (reordered)", t.label, r.defined, r.carried, noRequirement))}`);
-    console.log(`  requirements beyond the cap of ${t.cap}: ${r.capped} · held: ${r.held} · created before this run: ${r.created}`);
     console.log(`  ${floorLine(floored("standing obligations reordered", "the standing corpus", t.reordered.of, t.reordered.obligations, "the corpus is empty"))}`);
     const planned = plan.targets.find((p) => p.target.key === t.key);
     const wouldCreate = planned?.instances.filter((p) => p.state === "MISSING") ?? [];

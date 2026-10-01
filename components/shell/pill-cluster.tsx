@@ -2,10 +2,6 @@
 
 import Link from "next/link";
 
-import {
-  ballotCoveredForState,
-  stateFromOcdIds,
-} from "@/lib/ballot/covered-states";
 import type { CoverageSummary } from "@/lib/registry/coverage";
 import { ASK_PILL_LABELS } from "@/lib/routing/ask-pill-labels";
 import type { AskPillPlacement } from "@/lib/map/cluster-placement";
@@ -34,7 +30,6 @@ export type ReaderPop = "zip" | "vote" | "ask" | null;
 export function PillCluster({
   placement,
   zip,
-  coverage,
   pop,
   governsOpen,
   onOpenPop,
@@ -55,13 +50,6 @@ export function PillCluster({
   onOpenBallot?: () => void;
 }) {
   const validZip = zip && /^\d{5}$/.test(zip) ? zip : null;
-  const state = coverage
-    ? stateFromOcdIds([
-        ...coverage.seats.map((s) => s.ocdId),
-        ...coverage.bodies.map((b) => b.ocdId),
-      ])
-    : null;
-  const covered = state === null || ballotCoveredForState(state);
   // The design gives Ask its full example label at every placement: the pill
   // is always alone on its row (300–380px), never beside the ballot pill.
   const pill = ASK_PILL_LABELS.sidebar;
@@ -73,11 +61,7 @@ export function PillCluster({
           href={validZip ? `/ballot?zip=${validZip}` : "/ballot"}
           className="mw-nav-seg mw-nav-ballot"
           onClick={onOpenBallot}
-          title={
-            covered
-              ? `What's on the ballot${validZip ? ` near ${validZip}` : ""}`
-              : "Ballot for this area coming soon"
-          }
+          title={`What's on the ballot${validZip ? ` near ${validZip}` : ""}`}
         >
           {/* A marked ballot sheet, not a check in a box: ✓ already means
               "concluded" and "yes" elsewhere in this product. */}
@@ -97,7 +81,6 @@ export function PillCluster({
             <path d="M8.3 16.4h7.4" />
           </svg>
           <span>Ballot</span>
-          {!covered && <span className="ballot-pill-soon">soon</span>}
         </Link>
         <button
           type="button"

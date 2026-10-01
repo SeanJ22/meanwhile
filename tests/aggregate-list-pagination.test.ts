@@ -62,7 +62,7 @@ function fakeAggregateSql(rows: readonly Row[]) {
         return rows.filter((r) => r.id > after).sort(byId).slice(0, limit).map(project);
       }
       // list() first page: ORDER BY id ASC, no WHERE cursor
-      if (/ORDER BY\s+id ASC/i.test(text) && !/WHERE/i.test(text)) {
+      if (/ORDER BY\s+id ASC/i.test(text) && !/WHERE\s+id\s*>/i.test(text)) {
         return rows.slice().sort(byId).slice(0, limit).map(project);
       }
       throw new Error(`fake Sql did not recognize query: ${text.replace(/\s+/g, " ").trim()}`);
@@ -97,6 +97,25 @@ test("list() of an empty table is one empty bounded page", async () => {
   const repo = pgAggregateRepository<{ seq: number }>(sql, "WorkItem", "cp_work_items");
   assert.deepEqual(await repo.list(), []);
   assert.equal(calls.length, 1);
+});
+
+test("listNarrowed projects every bounded page in the database and keeps row order", async () => {
+  const rows = seq(AGGREGATE_LIST_READ_PAGE * 2 + 1);
+  const { sql, calls } = fakeAggregateSql(rows);
+  const repo = pgAggregateRepository<{ seq: number }>(sql, "WorkItem", "cp_work_items");
+  const out = await repo.listNarrowed({ seq: true });
+  assert.deepEqual(out.map(row => row.id), rows.map(row => row.id));
+  assert.equal(calls.length, 3);
+  for (const query of calls) {
+    assert.match(query, /jsonb_each\(cp_work_items\.value\) AS t WHERE t\.key IN \('seq'\)/);
+    assert.match(query, /END AS value FROM cp_work_items/);
+    assert.match(query, /LIMIT 100/);
+  }
+  assert.match(calls[1], /WHERE id > \$1/);
+  await assert.rejects(() => repo.listNarrowed({ "unsafe') --": true }), /unsafe projection key/);
+  const empty = fakeAggregateSql([]);
+  assert.deepEqual(await pgAggregateRepository(empty.sql, "WorkItem", "cp_work_items").listNarrowed({}), []);
+  assert.match(empty.calls[0], /'\{\}'::jsonb AS value/);
 });
 
 test("list() of exactly one full page still terminates on the short second page", async () => {

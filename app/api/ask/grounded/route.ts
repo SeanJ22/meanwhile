@@ -199,15 +199,16 @@ import { statesOf, voteEvidenceForIncludingHistory, voteEvidenceReadsStateRollCa
  *
  * ## What this route deliberately does NOT do
  *
- * **It writes nothing about the reader.** `captureAskInteraction` is called at
- * the end, with the delivered answer, and `ripcord.askSignalCapture` ships
- * PULLED so the call returns `GATED` and no row exists. The gate is an operator
- * decision pending the author's approval of reader-facing disclosure copy
- * (NH246) — see `lib/db/ask-signal.ts`, which states that basis honestly rather
- * than citing a rule that governs a different store. The one write that runs
- * (2026-09-25, the owner's decision of that day) is a count: for each coded
- * gap the answer stated, one more for that body, gap and day in the control
- * plane — no question, no reader, no instant (`lib/ask/gap-observation.ts`).
+ * **It saves every question, anonymously** (October 1, 2026, Sean).
+ * `captureAskInteraction` is called at the end, with the delivered answer; a
+ * row is written when the request carries the browser-minted returning-reader
+ * ID (the Ask continuity key), which the ask box mints on a reader's first
+ * question. The ID is random, lives on the device and is never tied to a name,
+ * an email or an address; the question and the answer are scrubbed of contact
+ * shapes at the single write path (`lib/db/ask-signal.ts`). A request with no
+ * ID writes no row rather than digesting an empty string. The coded-gap count
+ * (2026-09-25) is a separate write: one more for that body, gap and day in the
+ * control plane (`lib/ask/gap-observation.ts`).
  *
  * **It never lets the model reach past the pack.** The synthesis rung has no
  * corpus, no tools and no network. Its inability to look anything up is
@@ -3012,8 +3013,8 @@ export async function POST(request: Request) {
    * that actually stood behind it — and none of those are known any earlier. A
    * row written at the top of the handler would record an intention.
    *
-   * It ships gated. `captureAskInteraction` checks `ripcord.askSignalCapture`
-   * itself, returns GATED, and builds no row at all.
+   * `captureAskInteraction` builds the row only when the request carries the
+   * returning-reader ID; without one it writes nothing.
    */
   await capture(mode, subject ? [subject.id] : [], answer, answerModel, validationPassed, packRecords, packGaps);
 

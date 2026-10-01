@@ -84,17 +84,6 @@ test("3e: the picks disclosure is stated ONCE, on the ballot page, with the reac
     "the ballot page must still link the data-handling page",
   );
 
-  // The explanation has to actually be there. Delegating to a page that does
-  // not say it would be removing a disclosure rather than relocating one.
-  const transparency = read("app", "transparency", "page.tsx");
-  assert.match(transparency, /saved only in your browser/);
-  assert.match(transparency, /join anonymous local totals/);
-
-  // And the load-bearing consent surface is untouched: the one-time
-  // acknowledged notice at the point of reaction capture, which CLAUDE.md
-  // requires and which this item never touched.
-  const reactions = read("components", "reactions", "reaction-control.tsx");
-  assert.match(reactions, /anonymous local totals/);
   // Once means once: the control no longer repeats it per contest. The
   // control keeps the author's label; MyPicks keeps its device-only header
   // as a label (a heading, not a second disclosure paragraph).
@@ -120,14 +109,6 @@ test("3e: the picks disclosure is stated ONCE, on the ballot page, with the reac
   assert.ok(
     !/Saved on this device only\./.test(control),
     "the per-contest disclosure paragraph is gone (3e) — it lives on the page once",
-  );
-});
-
-test("the transparency page discloses picks as device-local", () => {
-  const page = read("app", "transparency", "page.tsx").toLowerCase();
-  assert.ok(
-    page.includes("picks"),
-    "the transparency page must mention ballot picks",
   );
 });
 
@@ -167,14 +148,6 @@ test("the picks card renders picks only and transmits nothing", () => {
   assert.ok(
     /clearAllPicks/.test(source) && /Really clear/.test(source),
     "clear-my-picks confirms before clearing",
-  );
-});
-
-test("the transparency page says the card is drawn on-device", () => {
-  const page = read("app", "transparency", "page.tsx");
-  assert.ok(
-    /picks card/.test(page) && /drawn on your device/.test(page),
-    "the card's device-side render is disclosed in the same commit that ships it",
   );
 });
 

@@ -58,8 +58,12 @@ export interface PluralPerson {
   current_chamber: "upper" | "lower" | string;
   email: string;
   image: string;
+  /** The capitol office address, as Open States publishes it ("…, City, ST 12345"). */
+  capitol_address: string;
   /** The capitol office phone, as the legislature publishes it. */
   capitol_voice: string;
+  /** The district office address, where one is published. */
+  district_address: string;
   /** The district office phone, where one is published. */
   district_voice: string;
   /** Semicolon-separated. */
@@ -197,7 +201,9 @@ export function rowsToPeople(csv: string, state: string): PluralPerson[] {
       current_chamber: at(row, "current_chamber"),
       email: at(row, "email"),
       image: at(row, "image"),
+      capitol_address: at(row, "capitol_address"),
       capitol_voice: at(row, "capitol_voice"),
+      district_address: at(row, "district_address"),
       district_voice: at(row, "district_voice"),
       links: at(row, "links"),
       sources: at(row, "sources"),

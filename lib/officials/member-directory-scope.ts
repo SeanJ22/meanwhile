@@ -1,3 +1,5 @@
+import { officialStateVoteScopeForOfficeholderId } from "../state-rollcalls/authority.ts";
+
 /**
  * **DOES THE MEMBER DIRECTORY SOURCE REACH THIS PERSON AT ALL?**
  * (Part C, 2026-08-31. BAL-33's class, found by grading `vac:ballot-offices-from-record`.)
@@ -37,9 +39,11 @@
  */
 
 /**
- * The member directory — committee seats and district offices — is sourced
- * from the congressional directory snapshot, whose scope is SITTING FEDERAL
- * MEMBERS. A holder id outside that namespace is not covered by the source.
+ * The member directory's committee seats are sourced from the congressional
+ * directory snapshot, whose scope is SITTING FEDERAL MEMBERS. Its offices are
+ * sourced for federal members from the same snapshot, and for state
+ * legislators from Open States joined to the legislature's own roster
+ * (`lib/officials/member-offices.ts`). Anyone else is not covered by the source.
  *
  * This answers a question about OUR SOURCING and never one about the person:
  * false here means "this source does not reach them", never "they sit on no
@@ -47,6 +51,9 @@
  * `lib/ballot/battlecard-sections.ts` is worded to say exactly that, and both
  * surfaces render it from that one table.
  */
-export function memberDirectoryReaches(holderId: string): boolean {
-  return holderId.startsWith("congress:");
+export function memberDirectoryReaches(holderId: string, section: "committees" | "offices" = "committees"): boolean {
+  if (holderId.startsWith("congress:")) return true;
+  // Offices also reach state legislators (Sean, 2026-10-01): their capitol and district offices
+  // are carried from Open States onto the legislature's own roster row. Committees stay federal.
+  return section === "offices" && officialStateVoteScopeForOfficeholderId(holderId) !== null;
 }

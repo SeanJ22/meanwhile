@@ -254,7 +254,9 @@ function person(overrides: Partial<PluralPerson>): PluralPerson {
     current_chamber: "lower",
     email: "",
     image: "",
+    capitol_address: "",
     capitol_voice: "",
+    district_address: "",
     district_voice: "",
     links: "",
     sources: "",
@@ -262,3 +264,10 @@ function person(overrides: Partial<PluralPerson>): PluralPerson {
     ...overrides,
   };
 }
+
+test("the bulk CSV's capitol and district office addresses are carried, not dropped", () => {
+  const csv = "id,name,current_party,current_district,current_chamber,email,image,links,sources,capitol_address,capitol_voice,district_address,district_voice\n" +
+    'ocd-person/n1,Al Abdelaziz,Democratic,35,lower,,,,,,,"680 Broadway Suite 207, Paterson, NJ 07514",862-264-2540\n';
+  const [row] = rowsToPeople(csv, "nj");
+  assert.deepEqual([row.capitol_address, row.district_address, row.district_voice], ["", "680 Broadway Suite 207, Paterson, NJ 07514", "862-264-2540"]);
+});

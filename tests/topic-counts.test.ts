@@ -5,13 +5,25 @@ import { FREE_FORM_TOPIC, NO_TOPIC_COUNTS_YET, TOPIC_ROW_LIMIT, readTopicCounts,
 const row = (over: Partial<TopicCountRow> = {}): TopicCountRow => ({ period: "2026-09-28", grain: "week", zip: "85635", district: null, topic: "property-tax", users: 12, totalUsers: 98, ...over });
 const READ_AT = "2026-10-01T18:00:00.000Z";
 
-test("until S6's read exists, the answer is 'no topic counts yet', never an empty list or a zero", async () => {
-  const seam = await readTopicCounts();
+test("a store that is not installed answers 'no topic counts yet', never an empty list or a zero", async () => {
+  const seam = await readTopicCounts(async () => ({ kind: "NOT_INSTALLED", detail: "" }));
   assert.equal(seam.kind, "NOT_INSTALLED");
   const view = topicCountsView(seam);
   assert.equal(view.kind, "NOT_INSTALLED");
   assert.equal((view as { says: string }).says, NO_TOPIC_COUNTS_YET);
   assert.match(NO_TOPIC_COUNTS_YET, /No topic counts yet/);
+});
+
+test("the store's totals become topic counts for everyone: a topic's readers beside all readers in the same week or day", async () => {
+  const total = (grain: "day" | "week", period: string, topic: string, type: string, users: number) => ({ grain, period, zip: null, district: null, topic, type, events: users, users });
+  const read = await readTopicCounts(async (q) => ({ kind: "ROWS", rows: q.grain === "week"
+    ? [total("week", "2026-09-28", "*", "*", 10), total("week", "2026-09-28", "water", "*", 4), total("week", "2026-09-28", "water", "ASK", 3), total("week", "2026-09-28", "free-form", "*", 2)]
+    : [total("day", "2026-10-01", "*", "*", 5), total("day", "2026-10-01", "water", "*", 1)] }), new Date("2026-10-01T12:00:00Z"));
+  assert.equal(read.kind, "RECORDED");
+  const view = topicCountsView(read);
+  assert.equal(view.kind, "READ");
+  assert.deepEqual((view as { rows: { period: string; grain: string; topic: string; users: number; totalUsers: number; percent: number | null }[] }).rows.map((r) => [r.grain, r.period, r.topic, r.users, r.totalUsers, r.percent]),
+    [["day", "2026-10-01", "water", 1, 5, 20], ["week", "2026-09-28", "water", 4, 10, 40], ["week", "2026-09-28", "free-form", 2, 10, 20]]);
 });
 
 test("each row is a percentage of users with the count beside it, and a small group is shown exactly like a large one", () => {

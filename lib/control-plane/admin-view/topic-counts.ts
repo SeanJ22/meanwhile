@@ -7,9 +7,14 @@
  * or suppressed. Free-form questions stay as their own topic. Nothing here carries a name, an address, or a user, session or
  * device id: a row with only the aggregate fields below is all this module will pass on, whatever else it was handed.
  *
- * Until S6's read exists, `readTopicCounts()` answers NOT_INSTALLED, and the view says "no topic counts yet". An empty list is
- * never shown as "nobody asked".
+ * `readTopicCounts()` reads S6's store (`reader_event_totals`, migration 0034) through the data business's live totals, for everyone (no
+ * ZIP or district split): the last twelve weeks and the last fourteen days. A store that is not installed answers NOT_INSTALLED and the
+ * view says "no topic counts yet". An empty list is never shown as "nobody asked".
  */
+import { liveTotals } from "../data-business/live.ts";
+import { daysBefore, todayUtc } from "../data-business/slice.ts";
+import type { Sources } from "../data-business/read.ts";
+
 export const FREE_FORM_TOPIC = "free-form";
 export const TOPIC_ROW_LIMIT = 500;
 
@@ -86,7 +91,15 @@ export function topicCountsView(read: TopicCountsRead): TopicCountsView {
   };
 }
 
-/** The seam S6's read plugs into. Until it exists this is NOT_INSTALLED, never an empty list. */
-export async function readTopicCounts(): Promise<TopicCountsRead> {
-  return { kind: "NOT_INSTALLED", detail: NO_TOPIC_COUNTS_YET };
+/** The topic counts for everyone, by week and by day: a topic's distinct readers beside all readers in the same period. */
+export async function readTopicCounts(totals: Sources["totals"] = liveTotals(), now: Date = new Date()): Promise<TopicCountsRead> {
+  const to = todayUtc(now);
+  const rows: TopicCountRow[] = [];
+  for (const [grain, from] of [["week", daysBefore(to, 12 * 7)], ["day", daysBefore(to, 13)]] as const) {
+    const read = await totals({ grain, from, to, family: "all" });
+    if (read.kind === "NOT_INSTALLED") return { kind: "NOT_INSTALLED", detail: read.detail };
+    const all = new Map(read.rows.filter((r) => r.topic === "*" && r.type === "*").map((r) => [r.period, r.users]));
+    for (const r of read.rows) if (r.topic !== "*" && r.type === "*") rows.push({ period: r.period, grain, zip: null, district: null, topic: r.topic, users: r.users, totalUsers: all.get(r.period) ?? 0 });
+  }
+  return { kind: "RECORDED", observedAt: now.toISOString(), rows };
 }

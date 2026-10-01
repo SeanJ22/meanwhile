@@ -57,6 +57,9 @@ const FILLER = new Set([
   "about", "around", "from", "this", "that", "these", "those", "our", "your",
   "state", "county", "city", "town", "district", "area", "focus", "prioritise",
   "prioritize", "priority", "first",
+  // The command itself ("send agents to Arizona"): who is being sent and the verb that sends them are not
+  // part of the place. Left in, "agents" became a term no registered unit contains, and the target matched nothing.
+  "agents", "agent", "workers", "worker", "scouts", "scout", "crew", "team", "dispatch", "put", "point", "aim", "there", "here", "out", "more",
 ]);
 
 const NAME_TO_CODE: ReadonlyMap<string, string> = new Map(

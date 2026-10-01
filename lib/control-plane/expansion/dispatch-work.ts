@@ -985,12 +985,14 @@ export function scopeWorkTarget(scope: PlannedScope): DispatchWorkTarget {
  * A DISPATCH is honored once; the remainder of what it owes is not dropped
  * with the honoring. A scope needs no carrying: it stays selected.
  */
-export function carriedDispatchTargets(prior: unknown): DispatchWorkTarget[] {
+export function carriedDispatchTargets(prior: unknown, cancelled: ReadonlySet<string> = new Set()): DispatchWorkTarget[] {
   if (!isDispatchWorkReading(prior)) return [];
   return prior.targets
     .filter(
       (t) =>
         t.kind === "DISPATCH" &&
+        /* The owner took this Send back (CANCEL_DISPATCH): it is no longer carried. */
+        !cancelled.has(t.ref) &&
         (t.requirements.deferred > 0 ||
           t.requirements.failed > 0 ||
           /* MW-001: a Send is carried until every row it reached records it. */

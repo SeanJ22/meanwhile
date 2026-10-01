@@ -7,12 +7,12 @@
 import { useState } from "react";
 
 import { useV6 } from "./context.tsx";
-import { count, type Lane, type WorkStage } from "./model.ts";
+import { count, mst, type Lane, type SameCause, type StuckItem, type WorkStage } from "./model.ts";
 import { COUNTRY_KEY, isWithin, relation } from "./places.ts";
 import { HISTORY_FILTERS } from "./receipts.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
-import { LANE_MEANS, LANE_TONE, LANE_WORDS, StuckRow, useScoped } from "./screen-now.tsx";
-import { Actions, Card, cx, Empty, Pill, SourceNote, Tabs, useListView } from "./ui.tsx";
+import { LANE_MEANS, LANE_TONE, LANE_WORDS, StuckRow } from "./screen-now.tsx";
+import { Actions, Card, cx, Empty, Pill, SourceNote, Tabs, useListView, usePager } from "./ui.tsx";
 import s from "./v6.module.css";
 
 type Tab = "lanes" | "rows" | "history";
@@ -35,38 +35,101 @@ export function WorkScreen() {
   );
 }
 
+const LANES: readonly (Lane | "all")[] = ["all", "decision", "auto", "publisher", "software"];
+const ITEMS_PER_GROUP_PAGE = 6;
+
+/**
+ * **BLOCKERS BY CAUSE.** Every stuck item across places, grouped by the cause
+ * behind it in plain English, most stuck first. "Send agents" is on every item
+ * and on each whole group. The server counts every stuck row in a group and
+ * lists the most urgent ones, and says so when it lists fewer than it counts.
+ */
+function CauseGroup(props: { readonly cause: SameCause; readonly items: readonly StuckItem[]; readonly open: boolean; readonly onToggle: () => void }) {
+  const v = useV6();
+  const { cause, items } = props;
+  const { page, pager, reset } = usePager(items, ITEMS_PER_GROUP_PAGE);
+  const total = Number(cause.count);
+  const places = [...new Set(items.map((i) => v.index.get(i.applies[0])?.name).filter((x): x is string => !!x))];
+  return (
+    <div className={s.row}>
+      <div className={s.spread}>
+        <strong style={{ fontSize: 14 }}>{cause.cause}</strong>
+        <Pill tone={LANE_TONE[cause.lane]}>{LANE_WORDS[cause.lane]}</Pill>
+      </div>
+      <span className={s.meta}>
+        {count(total)} {total === 1 ? "item" : "items"} stuck{places.length ? ` · ${places.slice(0, 4).join(" · ")}${places.length > 4 ? ` · and ${places.length - 4} more` : ""}` : ""}
+        {items.length < total ? ` · the ${count(items.length)} most urgent are listed` : ""}
+      </span>
+      <div className={s.inline}>
+        <Actions actions={cause.action ? [cause.action] : []} primaryFirst />
+        {!!items.length && <button type="button" className={s.btn} aria-expanded={props.open} onClick={() => { props.onToggle(); reset(); }}>{props.open ? "Hide the items" : "Show the items"}</button>}
+      </div>
+      {props.open && (
+        <div className={s.stack}>
+          {page.map((i) => <StuckRow key={i.id} item={i} withActions />)}
+          {pager}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * **INSTRUCTIONS YOU SENT, AND TAKING ONE BACK.** A "Deploy fleet here" instruction keeps being carried by the runner
+ * while it has work left to create, so one click can keep working for many rounds. Each one is listed with where it
+ * stands and a button to take it back. Taken back shows only once the runner has recorded it; until then it is a request.
+ */
+function Sends() {
+  const v = useV6();
+  const src = v.data.sends;
+  const list = (src.data ?? []).filter((x) => x.state !== "finished");
+  if (src.state === "live" && !list.length) return null;
+  return (
+    <Card title="Instructions you sent the fleet" aside={<span className={s.meta}>{src.data ? `${list.filter((x) => x.canCancel).length} still running` : "Reading…"}</span>}>
+      <SourceNote source={src} what="Sent instructions" />
+      <div className={s.stack}>
+        {list.map((x) => (
+          <div key={x.id} className={s.row}>
+            <div className={s.spread}><strong style={{ fontSize: 13 }}>{x.words || "(no words saved)"}</strong><Pill tone={x.state === "carried" || x.state === "waiting" ? "warn" : "slate"}>{x.state === "carried" ? "Running" : x.state === "waiting" ? "Waiting" : x.state === "cancel-requested" ? "Taking back" : "Taken back"}</Pill></div>
+            <span className={s.meta}>Sent {mst(x.sentAt)}</span>
+            <span className={s.small}>{x.stateWords}</span>
+            {x.ranAs && <span className={cx(s.small, s.dim)}>{x.ranAs}</span>}
+            {x.canCancel && <Actions actions={[{ kind: "cancel-send", target: x.id, label: "Take it back", payload: { words: x.words } }]} />}
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
 function Lanes() {
   const v = useV6();
-  const { stuck } = useScoped();
-  const causes = (v.data.sameCause.data ?? []).map((c) => ({ c, items: (v.data.stuck.data ?? []).filter((i) => c.itemIds.includes(i.id) && relation(v.index, i.applies, v.scopeKey) !== null) })).filter((x) => x.items.length);
+  const [lane, setLane] = useState<Lane | "all">("all");
+  const [open, setOpen] = useState<string | null>(null);
+  const groups = (v.data.sameCause.data ?? []).filter((c) => lane === "all" || c.lane === lane);
+  const scoped = (v.data.stuck.data ?? []).filter((i) => relation(v.index, i.applies, v.scopeKey) !== null);
+  const all = v.data.sameCause.data ?? [];
+  const totalStuck = all.reduce((n, c) => n + Number(c.count), 0);
   return (
     <>
-      <SourceNote source={v.data.stuck} what="Stuck items" />
-      <div className={s.grid2}>
-        {(["decision", "auto", "publisher", "software"] as Lane[]).map((lane) => {
-          const list = stuck.filter((x) => x.item.lane === lane);
-          return (
-            <Card key={lane} title={<span className={s.inline}><Pill tone={LANE_TONE[lane]}>{LANE_WORDS[lane]}</Pill><span className={s.mono}>{v.data.stuck.data ? list.length : "—"}</span></span>}>
-              <p className={cx(s.p, s.meta)}>{LANE_MEANS[lane]}</p>
-              {v.data.stuck.state !== "not-connected" && !list.length && <Empty>{({ decision: "Nothing here needs your decision.", auto: "No automatic repair is recorded here.", publisher: "Nothing here is waiting on a publisher.", software: "No software fixes are waiting here." })[lane]}</Empty>}
-              <div className={s.stack}>{list.map((x) => <StuckRow key={x.item.id} item={x.item} shared={x.rel === "shared"} withActions />)}</div>
-            </Card>
-          );
-        })}
-      </div>
-      {!!causes.length && (
-        <Card title="Same cause, many places">
-          <div className={s.stack}>
-            {causes.map(({ c, items }) => (
-              <div key={c.key} className={s.row}>
-                <div className={s.spread}><strong style={{ fontSize: 13 }}>{c.cause}</strong><Pill tone={LANE_TONE[c.lane]}>{LANE_WORDS[c.lane]}</Pill></div>
-                <span className={s.meta}>{c.count} {c.count === "1" ? "item" : "items"} · {[...new Set(items.map((i) => v.index.get(i.applies[0])?.name))].join(" · ")}</span>
-                <Actions actions={[{ ...c.action, target: c.action.target || v.scopeKey }]} />
-              </div>
-            ))}
-          </div>
-        </Card>
-      )}
+      <Sends />
+      <SourceNote source={v.data.stuck.state === "live" ? v.data.stuck : v.data.sameCause} what="Stuck items" />
+      <Card title="Blockers by cause" aside={<span className={s.meta}>{v.data.sameCause.data ? `${count(totalStuck)} stuck ${v.scopeKey === COUNTRY_KEY ? "across every place" : "here and in the wider places that cover it"} · ${count(all.length)} ${all.length === 1 ? "cause" : "causes"}` : "Reading…"}</span>}>
+        <div className={s.tabs} role="group" aria-label="Filter by who moves it">
+          {LANES.map((k) => (
+            <button key={k} type="button" className={s.tab} aria-pressed={lane === k} onClick={() => setLane(k)}>
+              {k === "all" ? "Everything" : LANE_WORDS[k]}<span className={s.tabCount}>{v.data.sameCause.data ? count(all.filter((c) => k === "all" || c.lane === k).reduce((n, c) => n + Number(c.count), 0)) : "—"}</span>
+            </button>
+          ))}
+        </div>
+        {lane !== "all" && <p className={cx(s.p, s.meta)}>{LANE_MEANS[lane]}</p>}
+        {v.data.sameCause.state !== "not-connected" && !groups.length && <Empty>{lane === "all" ? `Nothing is stuck in ${v.place.name}.` : "Nothing in this group."}</Empty>}
+        <div className={s.stack}>
+          {groups.map((c) => (
+            <CauseGroup key={c.key} cause={c} items={scoped.filter((i) => i.group === c.key)} open={open === c.key} onToggle={() => setOpen(open === c.key ? null : c.key)} />
+          ))}
+        </div>
+      </Card>
     </>
   );
 }

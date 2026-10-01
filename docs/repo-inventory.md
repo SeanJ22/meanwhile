@@ -8,7 +8,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Routes and pages
 
-80 file(s). Paths retain route groups and dynamic segments as written.
+87 file(s). Paths retain route groups and dynamic segments as written.
 
 - `/(admin)/admin/agents` — `app/(admin)/admin/agents/page.tsx`
 - `/(admin)/admin/auth/callback` — `app/(admin)/admin/auth/callback/route.ts`
@@ -46,13 +46,20 @@ Read each source file for its current exports, configuration, commands and data.
 - `/api/admin/research` — `app/api/admin/research/route.ts`
 - `/api/admin/runner-progress` — `app/api/admin/runner-progress/route.ts`
 - `/api/admin/session` — `app/api/admin/session/route.ts`
+- `/api/admin/v6/agents` — `app/api/admin/v6/agents/route.ts`
 - `/api/admin/v6/checklist` — `app/api/admin/v6/checklist/route.ts`
 - `/api/admin/v6/fixes` — `app/api/admin/v6/fixes/route.ts`
 - `/api/admin/v6/history` — `app/api/admin/v6/history/route.ts`
 - `/api/admin/v6/hunts` — `app/api/admin/v6/hunts/route.ts`
 - `/api/admin/v6/learning` — `app/api/admin/v6/learning/route.ts`
 - `/api/admin/v6/money` — `app/api/admin/v6/money/route.ts`
+- `/api/admin/v6/place` — `app/api/admin/v6/place/route.ts`
 - `/api/admin/v6/receipt` — `app/api/admin/v6/receipt/route.ts`
+- `/api/admin/v6/reliability` — `app/api/admin/v6/reliability/route.ts`
+- `/api/admin/v6/same-cause` — `app/api/admin/v6/same-cause/route.ts`
+- `/api/admin/v6/sends` — `app/api/admin/v6/sends/route.ts`
+- `/api/admin/v6/spend` — `app/api/admin/v6/spend/route.ts`
+- `/api/admin/v6/stuck` — `app/api/admin/v6/stuck/route.ts`
 - `/api/admin/v6/workers` — `app/api/admin/v6/workers/route.ts`
 - `/api/admin/work-progress` — `app/api/admin/work-progress/route.ts`
 - `/api/agenda` — `app/api/agenda/route.ts`
@@ -790,7 +797,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-957 file(s).
+963 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -814,7 +821,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-checklist-index-publisher.test.ts`
 - `tests/admin-checklist-instance-index-write.test.ts`
 - `tests/admin-checklist-instance-index.test.ts`
-- `tests/admin-checklist-place-binding.test.ts`
 - `tests/admin-control-centre.test.ts`
 - `tests/admin-copy-request.test.ts`
 - `tests/admin-dead-ends.test.ts`
@@ -847,13 +853,19 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-select-contrast.test.ts`
 - `tests/admin-source-registry.test.ts`
 - `tests/admin-standard-in-force.test.ts`
+- `tests/admin-v6-agents.test.ts`
 - `tests/admin-v6-checklist-all-definitions.test.ts`
 - `tests/admin-v6-checklist-section.test.ts`
 - `tests/admin-v6-fixes.test.ts`
 - `tests/admin-v6-hunts-money.test.ts`
 - `tests/admin-v6-instruction-draft.test.ts`
 - `tests/admin-v6-learning.test.ts`
+- `tests/admin-v6-place-scorecard.test.ts`
 - `tests/admin-v6-receipt-lookup.test.ts`
+- `tests/admin-v6-reliability.test.ts`
+- `tests/admin-v6-sends.test.ts`
+- `tests/admin-v6-spend.test.ts`
+- `tests/admin-v6-stuck-causes.test.ts`
 - `tests/admin-v6-ui/live-sync.test.ts`
 - `tests/admin-v6-ui/mounted-live-transition.test.ts`
 - `tests/admin-v6-ui/v6-ui.test.tsx`
@@ -1132,6 +1144,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/diligent-portal-reading.test.ts`
 - `tests/discovery-search-switch.test.ts`
 - `tests/discovery-tree.test.ts`
+- `tests/dispatch-target-command-words.test.ts`
 - `tests/dispatch-work.test.ts`
 - `tests/district-hits.test.ts`
 - `tests/district-layer-deps.test.ts`
@@ -1752,7 +1765,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7051 file(s).
+7077 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -1901,13 +1914,20 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/api/admin/research/route.ts`
 - `app/api/admin/runner-progress/route.ts`
 - `app/api/admin/session/route.ts`
+- `app/api/admin/v6/agents/route.ts`
 - `app/api/admin/v6/checklist/route.ts`
 - `app/api/admin/v6/fixes/route.ts`
 - `app/api/admin/v6/history/route.ts`
 - `app/api/admin/v6/hunts/route.ts`
 - `app/api/admin/v6/learning/route.ts`
 - `app/api/admin/v6/money/route.ts`
+- `app/api/admin/v6/place/route.ts`
 - `app/api/admin/v6/receipt/route.ts`
+- `app/api/admin/v6/reliability/route.ts`
+- `app/api/admin/v6/same-cause/route.ts`
+- `app/api/admin/v6/sends/route.ts`
+- `app/api/admin/v6/spend/route.ts`
+- `app/api/admin/v6/stuck/route.ts`
 - `app/api/admin/v6/workers/route.ts`
 - `app/api/admin/work-progress/route.ts`
 - `app/api/agenda/route.ts`
@@ -4939,6 +4959,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/admin-view/admin-v6-history.ts`
 - `lib/control-plane/admin-view/assignment-evidence-trail.ts`
 - `lib/control-plane/admin-view/assignment-history.ts`
+- `lib/control-plane/admin-view/blocker-causes.ts`
 - `lib/control-plane/admin-view/bodies.ts`
 - `lib/control-plane/admin-view/capabilities.ts`
 - `lib/control-plane/admin-view/census-universe.ts`
@@ -4946,7 +4967,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/admin-view/checklist-index-publisher.ts`
 - `lib/control-plane/admin-view/checklist-instance-index-read.ts`
 - `lib/control-plane/admin-view/checklist-instance-index-write.ts`
-- `lib/control-plane/admin-view/checklist-place-binding.ts`
 - `lib/control-plane/admin-view/coverage.ts`
 - `lib/control-plane/admin-view/dead-ends.ts`
 - `lib/control-plane/admin-view/fix-prevention-history.ts`
@@ -4955,6 +4975,8 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/admin-view/learning-trends.ts`
 - `lib/control-plane/admin-view/model-ladder-view.ts`
 - `lib/control-plane/admin-view/money-view.ts`
+- `lib/control-plane/admin-view/place-owed-read.ts`
+- `lib/control-plane/admin-view/place-scorecard.ts`
 - `lib/control-plane/admin-view/promoted-slices.ts`
 - `lib/control-plane/admin-view/public-reader-observation-read.ts`
 - `lib/control-plane/admin-view/readiness-view.ts`
@@ -4964,6 +4986,8 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/admin-view/scope-preview-words.ts`
 - `lib/control-plane/admin-view/scope-preview.ts`
 - `lib/control-plane/admin-view/scope-work.ts`
+- `lib/control-plane/admin-view/v6-agents-read.ts`
+- `lib/control-plane/admin-view/v6-agents-route.ts`
 - `lib/control-plane/admin-view/v6-capabilities.ts`
 - `lib/control-plane/admin-view/v6-checklist-section.ts`
 - `lib/control-plane/admin-view/v6-fixes-read.ts`
@@ -4971,6 +4995,15 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/admin-view/v6-learning-read.ts`
 - `lib/control-plane/admin-view/v6-money-hunts-route.ts`
 - `lib/control-plane/admin-view/v6-money-read.ts`
+- `lib/control-plane/admin-view/v6-place-section.ts`
+- `lib/control-plane/admin-view/v6-reliability-read.ts`
+- `lib/control-plane/admin-view/v6-reliability-route.ts`
+- `lib/control-plane/admin-view/v6-sends-read.ts`
+- `lib/control-plane/admin-view/v6-sends-route.ts`
+- `lib/control-plane/admin-view/v6-spend-read.ts`
+- `lib/control-plane/admin-view/v6-spend-route.ts`
+- `lib/control-plane/admin-view/v6-stuck-read.ts`
+- `lib/control-plane/admin-view/v6-stuck-route.ts`
 - `lib/control-plane/admin-view/v6-workers-read.ts`
 - `lib/control-plane/admin-view/work-view.ts`
 - `lib/control-plane/admin-view/worker-progress.ts`
@@ -7624,7 +7657,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-checklist-index-publisher.test.ts`
 - `tests/admin-checklist-instance-index-write.test.ts`
 - `tests/admin-checklist-instance-index.test.ts`
-- `tests/admin-checklist-place-binding.test.ts`
 - `tests/admin-control-centre.test.ts`
 - `tests/admin-copy-request.test.ts`
 - `tests/admin-dead-ends.test.ts`
@@ -7659,13 +7691,19 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-source-registry.test.ts`
 - `tests/admin-standard-in-force.test.ts`
 - `tests/admin-surface.ts`
+- `tests/admin-v6-agents.test.ts`
 - `tests/admin-v6-checklist-all-definitions.test.ts`
 - `tests/admin-v6-checklist-section.test.ts`
 - `tests/admin-v6-fixes.test.ts`
 - `tests/admin-v6-hunts-money.test.ts`
 - `tests/admin-v6-instruction-draft.test.ts`
 - `tests/admin-v6-learning.test.ts`
+- `tests/admin-v6-place-scorecard.test.ts`
 - `tests/admin-v6-receipt-lookup.test.ts`
+- `tests/admin-v6-reliability.test.ts`
+- `tests/admin-v6-sends.test.ts`
+- `tests/admin-v6-spend.test.ts`
+- `tests/admin-v6-stuck-causes.test.ts`
 - `tests/admin-v6-ui/live-sync.test.ts`
 - `tests/admin-v6-ui/mounted-live-transition.test.ts`
 - `tests/admin-v6-ui/v6-ui.test.tsx`
@@ -7946,6 +7984,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/diligent-portal-reading.test.ts`
 - `tests/discovery-search-switch.test.ts`
 - `tests/discovery-tree.test.ts`
+- `tests/dispatch-target-command-words.test.ts`
 - `tests/dispatch-work.test.ts`
 - `tests/district-hits.test.ts`
 - `tests/district-layer-deps.test.ts`

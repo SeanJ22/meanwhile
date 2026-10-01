@@ -119,4 +119,5 @@ const INTENT_WORDS: Readonly<Record<(typeof RESEARCH_INTENT_ACTIONS)[number], st
   DISPATCH: "your instruction to deploy the fleet",
   PAUSE_RUNNER: "you paused the runner",
   RESUME_RUNNER: "you resumed the runner",
+  CANCEL_DISPATCH: "you took back a sent instruction",
 };

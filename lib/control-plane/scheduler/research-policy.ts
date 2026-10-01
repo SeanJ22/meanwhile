@@ -257,6 +257,8 @@ export interface ResearchState {
  *                          by `pnpm pilot:stop`, so a red SILENT can be told from a
  *                          deliberate pause without leaving the page
  *   RESUME_RUNNER          the pause is over
+ *   CANCEL_DISPATCH        take back one DISPATCH: `note` is that DISPATCH's intent id. The
+ *                          runner stops carrying the target and records that it did
  */
 /**
  * What the newest cycle did with the owner's DISPATCH (ADM-8): the intent it
@@ -285,6 +287,7 @@ export const RESEARCH_INTENT_ACTIONS = [
   "DISPATCH",
   "PAUSE_RUNNER",
   "RESUME_RUNNER",
+  "CANCEL_DISPATCH",
 ] as const;
 export type ResearchIntentAction = (typeof RESEARCH_INTENT_ACTIONS)[number];
 
@@ -352,8 +355,12 @@ export function readIntents(log: readonly ResearchIntent[]): {
   readonly paused: boolean;
   readonly pauseIntentId: string | null;
   readonly pendingRunNow: readonly ResearchIntentRequest[];
-  /** DISPATCH intents no cycle has honored yet, oldest first. */
+  /** DISPATCH intents no cycle has honored yet and the owner has not cancelled, oldest first. */
   readonly pendingDispatch: readonly ResearchIntentRequest[];
+  /** The DISPATCH intent ids the owner has taken back. */
+  readonly cancelledDispatch: ReadonlySet<string>;
+  /** CANCEL_DISPATCH intents no cycle has honored yet. */
+  readonly pendingCancel: readonly ResearchIntentRequest[];
   readonly runnerPause: RunnerPauseReading;
 } {
   const intents = log.filter((r): r is ResearchIntentRequest => r.kind === "INTENT");
@@ -361,6 +368,8 @@ export function readIntents(log: readonly ResearchIntent[]): {
   const honored = new Set(honoredRecords.map((r) => r.honors));
   const byTime = (a: ResearchIntentRequest, b: ResearchIntentRequest) =>
     a.requestedAt < b.requestedAt ? -1 : a.requestedAt > b.requestedAt ? 1 : 0;
+  const cancels = intents.filter((i) => i.action === "CANCEL_DISPATCH" && typeof i.note === "string" && i.note !== "");
+  const cancelled = new Set(cancels.map((i) => i.note as string));
   const pauses = intents.filter((i) => i.action === "PAUSE" || i.action === "RESUME").sort(byTime);
   const last = pauses.at(-1) ?? null;
   const runnerPauses = intents
@@ -372,7 +381,9 @@ export function readIntents(log: readonly ResearchIntent[]): {
     paused: last?.action === "PAUSE",
     pauseIntentId: last?.action === "PAUSE" ? last.intentId : null,
     pendingRunNow: intents.filter((i) => i.action === "RUN_CYCLE_NOW" && !honored.has(i.intentId)),
-    pendingDispatch: intents.filter((i) => i.action === "DISPATCH" && !honored.has(i.intentId)).sort(byTime),
+    pendingDispatch: intents.filter((i) => i.action === "DISPATCH" && !honored.has(i.intentId) && !cancelled.has(i.intentId)).sort(byTime),
+    cancelledDispatch: cancelled,
+    pendingCancel: cancels.filter((i) => !honored.has(i.intentId)).sort(byTime),
     runnerPause: {
       paused: runnerPaused,
       intent: runnerPaused ? lastRunner : null,

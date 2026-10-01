@@ -226,7 +226,7 @@ function decisionIntent(input: {
 async function appendIntent(
   deps: GatewayDeps,
   context: ActionContext,
-  action: "PAUSE" | "RESUME" | "PAUSE_RUNNER" | "RESUME_RUNNER" | "RUN_CYCLE_NOW" | "DISPATCH",
+  action: "PAUSE" | "RESUME" | "PAUSE_RUNNER" | "RESUME_RUNNER" | "RUN_CYCLE_NOW" | "DISPATCH" | "CANCEL_DISPATCH",
   note: string | null,
   said: { readonly says: string; readonly undo: string | null },
   /** MW-021: a DISPATCH's own rolling 24-hour budget for paid work on what it reaches. */
@@ -541,6 +541,30 @@ const REGISTRY: readonly RegisteredAction[] = [
         },
         budgetUsd,
       );
+    },
+  },
+
+  /* ------------------------------------------------ fleet.cancelDispatch */
+  {
+    definition: {
+      type: "fleet.cancelDispatch",
+      label: "Take back a sent instruction",
+      does: "Asks the runner to stop carrying one instruction you sent with Deploy fleet here. The runner records when it has.",
+      doesNot: "Does not undo work the instruction already created or reordered, and does not pause anything else.",
+      authority: "REVERSIBLE_NONPRODUCTION",
+      subjectKind: "an instruction you sent to the fleet",
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const note = validateIntentNote("CANCEL_DISPATCH", input.intentId);
+      return note.ok && note.note !== null ? { ok: true, value: { intentId: note.note } } : bad(note.ok ? "say which sent instruction to take back" : note.detail);
+    },
+    execute(deps, context, input) {
+      return appendIntent(deps, context, "CANCEL_DISPATCH", String(input.intentId), {
+        says: "Your request to take it back is saved. The next cycle stops carrying that instruction and records it; until it does, it is still a request.",
+        undo: "Send the same words again; that is a new instruction.",
+      });
     },
   },
 

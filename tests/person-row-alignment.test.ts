@@ -159,7 +159,7 @@ test("WGH-11: the could-govern mark is inside the name's own flex item", () => {
   assert.ok(rowIdx >= 0, "the governing row is no longer recognisable in coverage-notice.tsx");
   const row = [src.slice(rowIdx)];
 
-  const nameIdx = row[0].indexOf("body.name ?? body.divisionLabel");
+  const nameIdx = row[0].indexOf("bodyDisplayName(body)");
   const markIdx = row[0].indexOf("<CouldGovernMark");
   const labelIdx = row[0].indexOf("TYPE_LABEL_CLASS");
   assert.ok(nameIdx >= 0 && markIdx >= 0 && labelIdx >= 0, "the row lost one of its three parts");

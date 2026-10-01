@@ -25,6 +25,7 @@ import { applyFilters, noticeShouldExpand } from "@/lib/state/derive";
 import { deriveActiveDistrictTypes } from "@/lib/state/district-intent";
 import { RADIUS_LADDER_KM } from "@/lib/meetings/constants";
 import { carryPins } from "@/lib/map/carry-pins";
+import { bodyDisplayName, readerGovernmentName, withReaderNames } from "@/lib/text/reader-names";
 import { requestRadiusKm, shouldRequery } from "@/lib/map/viewport-radius";
 import { useStateFocus } from "@/hooks/use-state-focus";
 import { StateCrossingPrompt } from "./state-crossing-prompt";
@@ -46,7 +47,7 @@ import type { SnapshotStatus } from "@/lib/meetings/freshness";
 import { logEvent } from "@/lib/log/client";
 import { groupByVenue, placelessSittingsOfVenueBodies, type Venue } from "@/lib/meetings/venues";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
-import { lastReadByDivision } from "@/lib/meetings/freshness";
+import { lastReadByDivision, snapshotInView } from "@/lib/meetings/freshness";
 import type { MeetingListingIdentityReadback } from "@/lib/meetings/listing-identity";
 import { joinLine, onlineAccessFor, placelessWhereLine } from "@/lib/meetings/online";
 import type { Meeting } from "@/lib/sources/types";
@@ -426,7 +427,7 @@ function MapEntryInner() {
           await response.json();
         if (controller.signal.aborted) return;
         setResult({
-          ...payload,
+          ...withReaderNames(payload),
           // The label the notices speak: the typed zip, the settled area's
           // nearest zip, or — far from every centroid — an honest generic.
           zip: zip ?? payload.nearZip ?? "the area shown",
@@ -2344,7 +2345,7 @@ function MapEntryInner() {
           onMobileClose={collapseSidebar}
           onNearMePoint={onNearMePoint}
           nav={sidebarUp ? cluster : null}
-          snapshot={shown?.snapshot ?? null}
+          snapshot={snapshotInView(shown?.snapshot, meetings)}
           onJurisdictionChosen={showDistrictOnMap}
         />
 
@@ -2730,8 +2731,8 @@ function bodySubject(
     // governments answer to "Township Council".
     subjectId: body.bodyId,
     subjectKind: "BODY" as const,
-    title: body.name ?? body.divisionLabel,
-    subtitle: body.divisionLabel,
+    title: bodyDisplayName(body),
+    subtitle: readerGovernmentName(body.divisionLabel, body.divisionType),
     tier: body.tier,
     // LBL-1 (2026-08-22): decides whether this card carries a Who runs it
     // heading at all. A county board runs a county; a district does not run.
@@ -2955,7 +2956,7 @@ function placeSubject(
           ), listingIdentity);
           return {
             key: b.bodyId,
-            name: b.name ?? b.divisionLabel,
+            name: bodyDisplayName(b),
             tier: b.tier,
             // A count of sittings we hold, never a judgement. Omitted at zero
             // rather than rendered as "0", which reads as "sits never".

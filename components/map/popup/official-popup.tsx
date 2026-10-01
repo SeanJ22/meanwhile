@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
+import { readerPartyLabel } from "@/lib/text/reader-names";
 import { ageFrom, inSeatUntil } from "@/lib/officials/tenure";
 import type { Tier } from "@/lib/ocd/tiers";
 import type { RollCallVote, VotePosition } from "@/lib/votes/types";
@@ -474,7 +475,7 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
                     {vote.partyBreakdown.map((t, j) => (
                       <span key={t.party}>
                         {j > 0 && <span className="text-muted"> · </span>}
-                        {t.party} {t.yes} for, {t.no} against
+                        {readerPartyLabel(t.party) ?? t.party} {t.yes} for, {t.no} against
                       </span>
                     ))}
                   </p>
@@ -721,7 +722,7 @@ export function OfficialIdentity({
             className="mt-0.5 text-[0.75rem]"
             style={{ color: partyColorVar(holder.partyLabel) }}
           >
-            {holder.partyLabel}
+            {readerPartyLabel(holder.partyLabel)}
           </p>
         )}
         {/*

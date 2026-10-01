@@ -787,7 +787,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-955 file(s).
+957 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -1037,6 +1037,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/civic-data-read-model.test.ts`
 - `tests/civic-data-store-integrity.test.ts`
 - `tests/civic-payload-parts.test.ts`
+- `tests/civic-read-cache.test.ts`
 - `tests/civicplus-calendar-feeds.test.ts`
 - `tests/civicplus-category-feed-wiring.test.ts`
 - `tests/class-stamp-sweep.test.ts`
@@ -1498,6 +1499,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/reader-last-mile-registry-failure.test.ts`
 - `tests/reader-last-mile-trace.test.ts`
 - `tests/reader-meeting-listing-count.test.ts`
+- `tests/reader-names.test.ts`
 - `tests/reader-official-actions.test.ts`
 - `tests/reader-polling-fallback.test.ts`
 - `tests/reader-prl-delivery.test.ts`
@@ -1747,7 +1749,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7042 file(s).
+7047 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -5315,6 +5317,8 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/coverage/zip-tier.ts`
 - `lib/db/applied-migrations.ts`
 - `lib/db/ask-signal.ts`
+- `lib/db/civic-read-cache-host.ts`
+- `lib/db/civic-read-cache.ts`
 - `lib/db/demand-signal.ts`
 - `lib/db/demo-deletion.ts`
 - `lib/db/feedback-carryover.ts`
@@ -5931,6 +5935,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/text/boilerplate.ts`
 - `lib/text/format-date.ts`
 - `lib/text/mojibake.ts`
+- `lib/text/reader-names.ts`
 - `lib/text/refusal-shapes.ts`
 - `lib/time/zoned.ts`
 - `lib/tracker/obligation-handoff.ts`
@@ -7840,6 +7845,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/civic-data-read-model.test.ts`
 - `tests/civic-data-store-integrity.test.ts`
 - `tests/civic-payload-parts.test.ts`
+- `tests/civic-read-cache.test.ts`
 - `tests/civicplus-calendar-feeds.test.ts`
 - `tests/civicplus-category-feed-wiring.test.ts`
 - `tests/class-stamp-sweep.test.ts`
@@ -8541,6 +8547,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/reader-last-mile-registry-failure.test.ts`
 - `tests/reader-last-mile-trace.test.ts`
 - `tests/reader-meeting-listing-count.test.ts`
+- `tests/reader-names.test.ts`
 - `tests/reader-official-actions.test.ts`
 - `tests/reader-polling-fallback.test.ts`
 - `tests/reader-prl-delivery.test.ts`

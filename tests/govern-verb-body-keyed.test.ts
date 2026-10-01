@@ -8,6 +8,7 @@ import {
   REPRESENTATION_NOTE_UNSOURCED,
 } from "../lib/meetings/jurisdiction-badge.ts";
 import { governVerbMayAttach } from "../lib/registry/body-class-labels.ts";
+import { readerGovernmentName } from "../lib/text/reader-names.ts";
 import type { BodyClass, DivisionType } from "../lib/registry/types.ts";
 
 /**
@@ -117,7 +118,9 @@ test("a division's OWN governing body still carries the verb", () => {
       `${bodyId} lost the govern verb — the repair over-corrected and silenced a true claim`,
     );
     assert.equal(claim.label, "Governs");
-    assert.equal(claim.value, label);
+    // The area is printed as the government it is ("Pima County"), not as the
+    // Census's short label ("Pima").
+    assert.equal(claim.value, readerGovernmentName(label, type));
   }
 });
 

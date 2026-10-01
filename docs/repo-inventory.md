@@ -1746,7 +1746,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7041 file(s).
+7040 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -5062,7 +5062,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/fixtures/pima-meetings.ts`
 - `lib/control-plane/fleet-delivery.ts`
 - `lib/control-plane/fleet-operations.ts`
-- `lib/control-plane/fleet-receipt-publisher.ts`
 - `lib/control-plane/fleet-receipt-snapshot.ts`
 - `lib/control-plane/fleet-receipt-store.ts`
 - `lib/control-plane/fleet-safety.ts`

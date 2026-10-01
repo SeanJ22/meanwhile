@@ -60,6 +60,29 @@ export function familyMemberSlice(previous: MeetingsSnapshot | null, member: Der
  */
 export const carriedMember = markCarried;
 
+/** One sitting may be listed by several verified routes. Prefer a fresh,
+ * newer reading; a failed sibling must never replace it with carried data. */
+function combineMeetings(rows: readonly Meeting[]): { meetings: Meeting[]; dropped: Meeting[] } {
+  const kept = new Map<string, Meeting>();
+  const dropped: Meeting[] = [];
+  const richness = (row: Meeting) => Number(!!row.agendaUrl) * 4 + Number(!!row.location) * 2 + Number(!!row.online);
+  for (const row of rows) {
+    // A conflicting body remains two rows for the existing identity validator.
+    const key = `${row.id}\u0000${row.bodyId}`;
+    const prior = kept.get(key);
+    if (!prior) { kept.set(key, row); continue; }
+    const order = Number(!row.carried) - Number(!prior.carried) ||
+      Date.parse(row.provenance.collectedAt) - Date.parse(prior.provenance.collectedAt) || richness(row) - richness(prior);
+    const [winner, other] = order > 0 ? [row, prior] : [prior, row];
+    const sameSitting = Date.parse(winner.startsAt) === Date.parse(other.startsAt);
+    kept.set(key, sameSitting && !winner.agendaUrl && other.agendaUrl
+      ? { ...winner, agendaUrl: other.agendaUrl, agendaSlotObservedEmpty: false }
+      : winner);
+    dropped.push(other);
+  }
+  return { meetings: [...kept.values()], dropped };
+}
+
 /** One member's read, as the family child made it. */
 export interface FamilyMemberRead {
   readonly member: DerivedWiringRecord;
@@ -168,11 +191,11 @@ export function buildDerivedFamily(input: {
     kind: "MEMBER_ACQUISITION" as const, memberKey: read.member.id, ...a, retrievedAt: read.retrievedAt,
   })))]).retrievedAt ?? input.generatedAt;
   type Acquisition = NonNullable<MeetingsSnapshot["sources"][number]["acquisitions"]>[number];
-  const perSource = new Map<string, { fetched: number; normalized: number; carried: number; acquisitions: Acquisition[] }>();
+  const perSource = new Map<string, { fetched: number; normalized: number; acquisitions: Acquisition[] }>();
   const tally = (source: string) => {
     const existing = perSource.get(source);
     if (existing) return existing;
-    const fresh = { fetched: 0, normalized: 0, carried: 0, acquisitions: [] as Acquisition[] };
+    const fresh = { fetched: 0, normalized: 0, acquisitions: [] as Acquisition[] };
     perSource.set(source, fresh);
     return fresh;
   };
@@ -190,7 +213,6 @@ export function buildDerivedFamily(input: {
       const carried = slice.meetings.map((m) => carriedMember(m, source, input.previous?.generatedAt ?? input.generatedAt));
       meetings.push(...carried);
       agendaDocuments.push(...slice.agendaDocuments);
-      t.carried += carried.length;
       heldFacts.push({ key: `derived-member:${member.id}`, code: "DERIVED_MEMBER_HELD_LKG", detail: `${member.id}: ${issue}; ${carried.length} prior sitting(s) retained.`, record: { memberId: member.id, status: member.status } });
       reports.push({ id: member.id, source, bodyId: member.row.bodyId, status: member.status, outcome: "HELD", detail: issue ?? "not read" });
       continue;
@@ -221,7 +243,6 @@ export function buildDerivedFamily(input: {
     removalEvidence.push(...reconciled.removalEvidence);
     t.fetched += read.freshMeetings.length;
     t.normalized += usable.length;
-    t.carried += reconciled.meetings.filter((m) => m.carried).length;
     for (const a of read.acquisitions) {
       t.acquisitions.push({ source, requestedUrl: a.requestedUrl, finalUrl: a.finalUrl, httpStatus: a.httpStatus, rawHash: a.rawHash, byteCount: a.byteCount });
       inputs.push({ kind: "MEMBER_ACQUISITION", memberKey: member.id, requestedUrl: a.requestedUrl, finalUrl: a.finalUrl, httpStatus: a.httpStatus, rawHash: a.rawHash, retrievedAt: read.retrievedAt });
@@ -229,23 +250,34 @@ export function buildDerivedFamily(input: {
     reports.push({ id: member.id, source, bodyId: member.row.bodyId, status: member.status, outcome: "FRESH" });
   }
 
-  const carriedCount = meetings.filter((m) => m.carried).length;
+  const combined = combineMeetings(meetings);
+  const carriedCount = combined.meetings.filter((m) => m.carried).length;
   const snapshot: MeetingsSnapshot = {
     formatVersion: 1,
     generatedAt: input.generatedAt,
-    counts: { fresh: meetings.length - carriedCount, carried: carriedCount, total: meetings.length },
-    sources: [...perSource.entries()].sort(([a], [b]) => (a < b ? -1 : 1)).map(([source, t]) => ({
-      source,
-      ok: t.acquisitions.length > 0,
-      error: t.acquisitions.length > 0 ? null : "every member of this adapter is held on its last verified sittings",
-      fetched: t.fetched,
-      normalized: t.normalized,
-      ...(t.carried > 0 ? { carriedForward: t.carried } : {}),
-      drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
-      ...(t.acquisitions.length > 0 ? { acquisitions: t.acquisitions } : {}),
-    })),
-    meetings,
-    agendaDocuments,
+    counts: { fresh: combined.meetings.length - carriedCount, carried: carriedCount, total: combined.meetings.length,
+      duplicatesCollapsed: combined.dropped.filter(row => !row.carried).length },
+    sources: [...perSource.entries()].sort(([a], [b]) => (a < b ? -1 : 1)).flatMap(([source, t]) => {
+      const answered = t.acquisitions.length > 0;
+      const carried = combined.meetings.filter(row => row.carried?.source === source);
+      const dropped = combined.dropped.filter(row => row.carried?.source === source);
+      const successful = (row: Meeting) => row.carried?.reason === "UNEXPLAINED_DISAPPEARANCE";
+      const report = (ok: boolean, rows: Meeting[], collapsed: Meeting[], acquired: boolean) => ({
+        source, ok, error: ok ? null : "calendar routes are held on their last verified sittings",
+        fetched: acquired ? t.fetched : 0, normalized: acquired ? t.normalized : 0,
+        ...(rows.length ? { carriedForward: rows.length } : {}),
+        ...(collapsed.length ? { carriedCollapsed: collapsed.length } : {}),
+        drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
+        ...(acquired ? { acquisitions: t.acquisitions } : {}),
+      });
+      if (!answered) return [report(false, carried, dropped, false)];
+      const reports = [report(true, carried.filter(successful), dropped.filter(successful), true)];
+      const held = carried.filter(row => !successful(row)), heldDropped = dropped.filter(row => !successful(row));
+      if (held.length || heldDropped.length) reports.push(report(false, held, heldDropped, false));
+      return reports;
+    }),
+    meetings: combined.meetings,
+    agendaDocuments: [...new Map(agendaDocuments.map(document => [document.id, document])).values()],
     derivedMembers: reports,
   };
   return { snapshot, removalEvidence, heldFacts, inputs };

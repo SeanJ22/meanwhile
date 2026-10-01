@@ -76,7 +76,7 @@ export interface DerivedWiringRow {
 }
 
 export interface DerivedWiringRecord {
-  /** `${adapter source name}:${bodyId}`. */
+  /** Adapter, body and calendar route; legacy body keys remain readable. */
   readonly id: string;
   readonly status: "ACTIVE" | "SUSPENDED";
   readonly row: DerivedWiringRow;
@@ -90,8 +90,8 @@ export interface DerivedWiringProjection {
 }
 
 /** The store key of a row: one route of one body, as its meetings' source names it. */
-export function derivedWiringKey(kind: DerivedWiringKind, bodyId: string): string {
-  return `${DERIVED_WIRING_SOURCE_NAMES[kind]}:${bodyId}`;
+export function derivedWiringKey(kind: DerivedWiringKind, bodyId: string, route?: string): string {
+  return `${DERIVED_WIRING_SOURCE_NAMES[kind]}:${bodyId}${typeof route === "string" && route ? `:${createHash("sha256").update(route).digest("hex").slice(0, 16)}` : ""}`;
 }
 
 /** A body's slug for meeting ids, from its id alone: stable, and never another body's. */
@@ -151,7 +151,8 @@ export function derivedWiringProjectionIssue(value: unknown): string | null {
     ids.add(record.id);
     if (record.status !== "ACTIVE" && record.status !== "SUSPENDED") return `${record.id} has no status`;
     if ((record.status === "SUSPENDED") !== (record.suspension !== undefined)) return `${record.id}: only a suspended record carries a suspension`;
-    if (!row || !["ICAL", "OFFICIAL_PAGE_EVENTS", "DILIGENT", "LEGISTAR"].includes(row.kind) || record.id !== derivedWiringKey(row.kind, row.bodyId)) {
+    if (!row || !["ICAL", "OFFICIAL_PAGE_EVENTS", "DILIGENT", "LEGISTAR"].includes(row.kind) ||
+      (record.id !== derivedWiringKey(row.kind, row.bodyId) && record.id !== derivedWiringKey(row.kind, row.bodyId, row.route))) {
       return `${record.id} is not keyed by its own route and body`;
     }
     if (!/^https:\/\//.test(row.route) || typeof row.officialHost !== "string" || new URL(row.route).hostname.toLowerCase() !== row.officialHost.toLowerCase()) {

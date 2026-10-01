@@ -41,6 +41,7 @@ import { buildDerivedFamily, derivedFamilyCandidate, type FamilyMemberRead } fro
 import {
   bodySourceWiringFor,
   derivedWiringCandidate,
+  derivedWiringKey,
   familyMembers,
   readDerivedMeetingWiring,
 } from "../lib/civic-data/derived-meeting-wiring.ts";
@@ -315,7 +316,7 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
     previous: [],
     now: T_WIRING,
   });
-  assert.deepEqual(decisions.map((d) => [d.key, d.disposition]), [[`ical:${COUNTY_BODY}`, "PROMOTE"]]);
+  assert.deepEqual(decisions.map((d) => [d.key, d.disposition]), [[derivedWiringKey("ICAL", COUNTY_BODY, COUNTY_ROUTE), "PROMOTE"]]);
   const wiringPlan = planDerivedVersion([], decisions);
   assert.deepEqual(wiringPlan.refusals, []);
   const wiringOutcome = await processRegisteredRoutineCandidate(store, "meeting-source-wiring", derivedWiringCandidate(wiringPlan, [automaticInput], T_WIRING), T_WIRING);
@@ -327,7 +328,7 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   if (wiring.kind !== "PROMOTED") return;
   const partition = requiredMeetingPartitionContract(derivedMeetingFamilyId("US-OH"));
   const members = familyMembers(wiring.value, "US-OH");
-  assert.deepEqual(members.map((m) => [m.id, m.status]), [[`ical:${COUNTY_BODY}`, "ACTIVE"]]);
+  assert.deepEqual(members.map((m) => [m.id, m.status]), [[derivedWiringKey("ICAL", COUNTY_BODY, COUNTY_ROUTE), "ACTIVE"]]);
   const reads: FamilyMemberRead[] = members.map((member) => {
     const source = makeIcalSource([bodySourceWiringFor(member.row)]);
     const fresh = source.normalizeWithDrops([{ wiring: bodySourceWiringFor(member.row), ics: COUNTY_FEED, collectedAt: T_FAMILY, sourceUrl: member.row.route }], new Date(T_FAMILY)).meetings;

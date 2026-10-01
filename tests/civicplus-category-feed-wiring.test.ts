@@ -17,7 +17,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { planDerivedVersion, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
-import { bodySourceWiringFor } from "../lib/civic-data/derived-meeting-wiring.ts";
+import { bodySourceWiringFor, derivedWiringKey } from "../lib/civic-data/derived-meeting-wiring.ts";
 import { categoryFeedIssue, crosswalkRowIssue, type MeetingBodyCrosswalkRow } from "../lib/civic-data/meeting-body-crosswalk.ts";
 import { autoCrosswalkReviewerId, reviewDiscoveryWalk, type HeldBytes, type RegisteredGovernment } from "../lib/control-plane/discovery/auto-crosswalk.ts";
 import { deriveWiringDecisions, wiringRowFor, type DerivedWiringInputs } from "../lib/control-plane/discovery/derived-wiring.ts";
@@ -141,7 +141,7 @@ test("COCHISE WIRES: the Board of Supervisors' category feed becomes its whole-f
   };
   const decisions = deriveWiringDecisions(inputs);
   assert.deepEqual(decisions.map((d) => d.disposition), ["PROMOTE"]);
-  assert.deepEqual(planDerivedVersion([], decisions).promoted, [`ical:${OCD}#governing`]);
+  assert.deepEqual(planDerivedVersion([], decisions).promoted, [derivedWiringKey("ICAL", `${OCD}#governing`, BOS_FEED)]);
 });
 
 test("STRICT: a category naming another body, a generic category, a partial name and a feed on another host never give a whole-feed row", async () => {

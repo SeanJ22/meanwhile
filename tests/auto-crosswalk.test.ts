@@ -19,7 +19,7 @@ import {
   planDerivedCrosswalk,
   type AutoCrosswalkReview,
 } from "../lib/civic-data/derived-crosswalk.ts";
-import { CROSSWALK_CITATION, crosswalkRowIssue, subBodyId, type MeetingBodyCrosswalkRow } from "../lib/civic-data/meeting-body-crosswalk.ts";
+import { CROSSWALK_CITATION, crosswalkRowId, crosswalkRowIssue, subBodyId, type MeetingBodyCrosswalkRow } from "../lib/civic-data/meeting-body-crosswalk.ts";
 import {
   autoCrosswalkReviewerId,
   printedNames,
@@ -31,7 +31,7 @@ import {
 import { deriveWiringDecisions, type DerivedWiringInputs } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { walkMeetingsDiscoveryNeed } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import { planDerivedVersion } from "../lib/civic-data/derived-authority.ts";
-import { bodySourceWiringFor, derivedAdapterConfig, type DerivedWiringRow } from "../lib/civic-data/derived-meeting-wiring.ts";
+import { bodySourceWiringFor, derivedWiringKey, derivedAdapterConfig, type DerivedWiringRow } from "../lib/civic-data/derived-meeting-wiring.ts";
 import { makeDiligentSource } from "../lib/sources/diligent/index.ts";
 import { meetingEndpointCandidates } from "../lib/hunt/meetings-site-discovery.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
@@ -376,6 +376,22 @@ const reviewOf = (rows: readonly MeetingBodyCrosswalkRow[], held: AutoCrosswalkR
   held,
 });
 
+test("every verified route survives beside a legacy calendar; renewing or withdrawing one does not replace another", () => {
+  const legacy = row();
+  const route = `https://${HOST}/other-calendar.ics`;
+  const other = row({ id: crosswalkRowId(legacy.bodyId, "ICAL", route), route,
+    evidence: { ...legacy.evidence, calendar: { ...legacy.evidence.calendar, url: route } } });
+  const updated = { ...legacy, id: crosswalkRowId(legacy.bodyId, "ICAL", legacy.route) };
+  const plan = planDerivedCrosswalk({ previous: [legacy], reviews: [reviewOf([updated, other])] });
+  assert.equal(plan.rows.length, 2);
+  assert.deepEqual(plan.rows.find(value => value.route === legacy.route), legacy, "held identity and evidence stay exact");
+  assert.deepEqual(plan.accepted, [other.id]);
+  assert.deepEqual(derivedCrosswalkProjectionIssue({ kind: "meeting-body-crosswalk-derived", formatVersion: 1, records: plan.rows }), null);
+  const withdrawn = { ...legacy, status: "WITHDRAWN" as const, reviewedBy: "reviewing agent", withdrawal: { reason: "route replaced" } };
+  assert.deepEqual(composeCrosswalk([withdrawn], plan.rows).rows.map(value => value.id), [withdrawn.id, other.id]);
+  assert.deepEqual(planDerivedCrosswalk({ previous: plan.rows, reviews: [] }).rows, plan.rows, "an outage keeps both calendars");
+});
+
 test("THE PLAN: an accepted row is never dropped; the same walk carries it byte-exactly, a newer walk renews it, an older one never does", () => {
   const first = planDerivedCrosswalk({ previous: [], reviews: [reviewOf([row()])] });
   assert.deepEqual(first.accepted, [row().id]);
@@ -470,7 +486,7 @@ test("THE C16 TRIGGERS APPLY TO AUTOMATIC ROWS EXACTLY: a 404 suspends it, an ou
   const accepted = review(first.attempt, first.bodies).accepted.find((a) => a.row.bodyName === "Housing Commission")!.row;
   const auto = new Set([accepted.id]);
   const promoted = planDerivedVersion([], deriveWiringDecisions(wiringInputs(first, [accepted], auto, [], NOW)));
-  assert.deepEqual(promoted.promoted, [`ical:${accepted.bodyId}`]);
+  assert.deepEqual(promoted.promoted, [derivedWiringKey(accepted.kind, accepted.bodyId, accepted.route)]);
 
   /* The calendar now answers 404: ROUTE_GONE suspends the automatic row, exactly as a reviewed one. */
   const gone = await walk({ ...SITE(), [ROUTE]: { status: 404, body: "gone" } });
@@ -493,8 +509,8 @@ test("THE C16 TRIGGERS APPLY TO AUTOMATIC ROWS EXACTLY: a 404 suspends it, an ou
   });
   assert.deepEqual(renewedRows.renewed, [accepted.id]);
   const restored = planDerivedVersion(suspended.rows, deriveWiringDecisions(wiringInputs(back, renewedRows.rows, new Set(renewedRows.rows.map((r) => r.id)), suspended.rows, later(3))));
-  assert.ok(restored.promoted.includes(`ical:${accepted.bodyId}`));
-  assert.equal(restored.rows.find((e) => e.key === `ical:${accepted.bodyId}`)!.suspension, undefined, "restored by a review after its suspension");
+  assert.ok(restored.promoted.includes(derivedWiringKey(accepted.kind, accepted.bodyId, accepted.route)));
+  assert.equal(restored.rows.find((e) => e.key === derivedWiringKey(accepted.kind, accepted.bodyId, accepted.route))!.suspension, undefined, "restored by a review after its suspension");
 
   /* A person's withdrawal wins over the reviewer: CROSSWALK_WITHDRAWN suspends the connection the automatic row made. */
   const withdrawn = { ...accepted, reviewedBy: "a reviewing agent session", status: "WITHDRAWN" as const, withdrawal: { reason: "not the city's commission" } };
@@ -517,8 +533,8 @@ test("A REVIEWED ROW WINS A CONFLICT: where a manual and an automatic row select
   assert.deepEqual(composed.rows.map((r) => r.id).sort(), [accepted.id, manual.id].sort(), "different filters: both are decided");
   const decisions = deriveWiringDecisions(wiringInputs(first, composed.rows, composed.automaticIds, [], NOW));
   const byKey = new Map(decisions.map((d) => [d.key, d]));
-  assert.equal(byKey.get(`ical:${otherId}`)?.disposition, "PROMOTE", `the reviewed row stands: ${JSON.stringify(byKey.get(`ical:${otherId}`)).slice(0, 300)}`);
-  const lost = byKey.get(`ical:${accepted.bodyId}`);
+  assert.equal(byKey.get(derivedWiringKey(manual.kind, otherId, manual.route))?.disposition, "PROMOTE", `the reviewed row stands: ${JSON.stringify(byKey.get(derivedWiringKey(manual.kind, otherId, manual.route))).slice(0, 300)}`);
+  const lost = byKey.get(derivedWiringKey(accepted.kind, accepted.bodyId, accepted.route));
   assert.equal(lost?.disposition, "HOLD");
   assert.match(lost?.disposition === "HOLD" ? lost.detail : "", /^CONFLICTING_EVIDENCE/);
 });

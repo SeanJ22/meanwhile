@@ -284,6 +284,12 @@ type Decision = DerivedRowDecision<DerivedWiringRow>;
  */
 export function deriveWiringDecisions(inputs: DerivedWiringInputs): readonly Decision[] {
   const previous = new Map(inputs.previous.map((entry) => [entry.key, entry]));
+  const previousRoutes = new Map(inputs.previous.map(entry =>
+    [derivedWiringKey(entry.row.kind, entry.row.bodyId, entry.row.route), entry.key]));
+  const keyFor = (row: Pick<MeetingBodyCrosswalkRow, "kind" | "bodyId" | "route">) => {
+    const routeKey = derivedWiringKey(row.kind, row.bodyId, row.route);
+    return previousRoutes.get(routeKey) ?? routeKey;
+  };
   const decisions = new Map<string, Decision>();
   const crosswalkInput = inputs.crosswalk.input;
   const active = inputs.crosswalk.rows.filter((row) => row.status === "ACTIVE");
@@ -305,7 +311,7 @@ export function deriveWiringDecisions(inputs: DerivedWiringInputs): readonly Dec
   const rowIdByKey = new Map<string, string>();
 
   for (const reviewed of active) {
-    const key = derivedWiringKey(reviewed.kind, reviewed.bodyId);
+    const key = keyFor(reviewed);
     if (decisions.has(key)) continue;
     rowIdByKey.set(key, reviewed.id);
     const base: DerivedInputRef[] = [inputFor(reviewed.id)];
@@ -441,7 +447,7 @@ export function deriveWiringDecisions(inputs: DerivedWiringInputs): readonly Dec
   }
 
   /* A promoted row whose reviewed crosswalk row is withdrawn, or gone, publishes nothing new until reviewed again. */
-  const reviewedKeys = new Map(inputs.crosswalk.rows.map((row) => [derivedWiringKey(row.kind, row.bodyId), row] as const));
+  const reviewedKeys = new Map(inputs.crosswalk.rows.map((row) => [keyFor(row), row] as const));
   for (const [key, entry] of previous) {
     if (decisions.has(key)) continue;
     const reviewed = reviewedKeys.get(key);

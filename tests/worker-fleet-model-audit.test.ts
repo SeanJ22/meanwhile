@@ -9,6 +9,7 @@ import { AUDIT_CONTEXT_MAX_BYTES, AUDIT_RESPONSE_MAX_BYTES, auditReasoningContex
 import type { IndependentAuditContext, WorkerEvidence } from "../lib/control-plane/workers/types.ts";
 import { standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
+import { methodFixture } from "./method-store-fixture.ts";
 
 const NOW = "2026-09-03T10:00:00.000Z";
 const MODEL = assertStepMayInvokeModel("adversarial-audit").model;
@@ -47,6 +48,12 @@ test("typed record_audit output preserves grounded challenge, actual model usage
   assert.equal(result.usd, usdForModelUsage(MODEL, result.usage));
   assert.ok(result.review.elapsedMs >= 0);
   assert.equal(result.review.contextHash, contentHash(String(request?.messages[0].content)));
+});
+
+test("the provider's dated alias of the requested model is the same model, not an identity mismatch", async () => {
+  const reviewed = await run(response({ verdict: "SURVIVED", challenges: [] }, { model: `${MODEL}-20251001` }));
+  assert.equal(reviewed.review.verdict, "SURVIVED");
+  assert.ok(!reviewed.review.validationError);
 });
 
 test("cheaper-first audit uses auto tool choice and a strict schema compatible with the later Opus escalation", async () => {
@@ -242,7 +249,7 @@ test("the auditor admits against the owner's ceiling in force, lowered or raised
 test("the standing runtime hands the auditor the ceiling in force", async () => {
   let requests = 0;
   const transport: ModelTransport = async () => { requests += 1; return response({ verdict: "SURVIVED", challenges: [] }); };
-  const runtime = standingFleetRuntime({ root: process.cwd(), repos: await reposWithAuditSpend(60), transport, now: () => NOW, auditCeilingUsd: 50 });
+  const runtime = standingFleetRuntime({ root: process.cwd(), method: methodFixture(), repos: await reposWithAuditSpend(60), transport, now: () => NOW, auditCeilingUsd: 50 });
   await assert.rejects(runtime.auditReasoner!.review(context(), "standing"), /AUDIT_ROLLING_COST_CEILING/);
   assert.equal(requests, 0);
 });

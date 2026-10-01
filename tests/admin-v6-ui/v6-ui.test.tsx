@@ -56,12 +56,24 @@ test("a finished receipt no longer blocks a new send of the same action", () => 
   }
 });
 
-test("only runner pause and resume and send-agents are wired to the deployed gateway without an announcement", () => {
-  assert.deepEqual([...connectedKinds()].sort(), ["cancel-send", "global-runner-pause", "global-runner-resume", "send-agents"]);
+test("only the kinds a real registry action carries out are wired, each to its own gateway type", () => {
+  assert.deepEqual([...connectedKinds()].sort(), [
+    "cancel-send", "fix-go", "global-ceiling", "global-paid", "global-paid-resume", "global-runner-pause", "global-runner-resume", "global-search-off", "global-search-on", "hunt-limit", "hunt-pause", "hunt-resume", "hunt-start", "hunt-start-many", "hunt-stop", "send-agents",
+  ]);
   assert.equal(actionDef("cancel-send").gateway?.type, "fleet.cancelDispatch");
   assert.equal(actionDef("send-agents").gateway?.type, "fleet.deployHere");
   assert.equal(actionDef("global-runner-pause").gateway?.type, "runner.pause");
   assert.equal(actionDef("global-runner-resume").gateway?.type, "runner.resume");
+  assert.equal(actionDef("global-paid").gateway?.type, "research.pause");
+  assert.equal(actionDef("global-paid-resume").gateway?.type, "research.resume");
+  assert.equal(actionDef("fix-go").gateway?.type, "decision.record");
+  assert.equal(actionDef("global-ceiling").gateway?.type, "config.setFleetSpendCeiling");
+  assert.equal(actionDef("global-search-on").gateway?.type, "config.setDiscoverySearch");
+  assert.equal(actionDef("global-search-off").gateway?.type, "config.setDiscoverySearch");
+  assert.equal(actionDef("hunt-start").gateway?.type, "expansion.scope.setMany");
+  assert.equal(actionDef("hunt-start-many").gateway?.type, "expansion.scope.setMany");
+  for (const k of ["hunt-limit", "hunt-pause", "hunt-resume"] as const) assert.equal(actionDef(k).gateway?.type, "expansion.scope.budget");
+  assert.equal(actionDef("hunt-stop").gateway?.type, "expansion.scope.remove");
   for (const d of ACTIONS.values()) if (!d.gateway) assert.ok(d.dependency, `${d.kind} names what it is waiting for`);
 });
 

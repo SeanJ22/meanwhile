@@ -140,6 +140,7 @@ import { CANDIDATE_PUBLICATION_BUDGET_MS, runCandidatePublicationCycle,
 import { indexVault } from "../lib/control-plane/evidence/read-only-vault.ts";
 import {
   MEETINGS_DISCOVERY_NAMESPACE,
+  meetingsDiscoveryObligationId,
   dispatchedAddressSource,
   materializedDiscoveryNeeds,
   meetingsDiscoveryProvider,
@@ -253,7 +254,7 @@ import {
   type ResearchState,
   type RunningScout,
 } from "../lib/control-plane/scheduler/research-policy.ts";
-import { candidateStoreCounts, proposeScoutCandidates, readMethodCandidateStore, METHOD_STORE, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
+import { candidateStoreCounts, proposeScoutCandidates, readMethodCandidateStore, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
 import { emptyFieldManual, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
 import {
   compoundingPair,
@@ -268,7 +269,7 @@ import {
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
 import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
-import { readMethodStore } from "../lib/method/candidate.ts";
+import { readMethodKnowledge } from "../lib/method/manual-bridge.ts";
 import { readConclusionStore } from "../lib/method/conclusions.ts";
 import {
   NO_PIPELINE_RECORDED,
@@ -1390,7 +1391,7 @@ if (!dry && !canary && !scheduledBlackout && !intents.runnerPause.paused) {
   try {
     const retained = await retainRecentRoutineMeetingEvidence({ repos,
       store: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
-      methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version, now: nowIso });
+      methodVersion: (await readMethodKnowledge(repos)).version, now: nowIso });
     console.log(`  permanent meeting captures retained for independent workers: ${retained.length}`);
   } catch (error) {
     runtimeConditions.push(`permanent meeting evidence could not enter independent workers: ${error instanceof Error ? error.message : "ROUTINE_MEETING_INTAKE_FAILED"}`);
@@ -2503,7 +2504,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         let amended = result;
         if (result.refusal === null && result.candidates.length > 0) {
           try {
-            const report = await proposeScoutCandidates({ repos, root: ROOT, result, artifacts, stamp: today() });
+            const report = await proposeScoutCandidates({ repos, result, artifacts, stamp: today() });
             candidateReports.push(report);
             canonicalCandidateCounts = report.counts;
             amended = {
@@ -2978,8 +2979,8 @@ const MEETINGS_DISCOVERY_MAX_WALKS = 12;
  */
 if (!MEETINGS_DISCOVERY_ENABLED) {
   meetingsDiscoveryState = "OFF: WTP_MEETINGS_DISCOVERY=off, the kill switch";
-} else if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
-  meetingsDiscoveryState = "not run: a dry, canary, filtered or blackout cycle walks nothing";
+} else if (dry || canary || scheduledBlackout) {
+  meetingsDiscoveryState = "not run: a dry, canary or blackout cycle walks nothing";
 } else if ("unreadable" in gapLedgerRead) {
   meetingsDiscoveryState = `not run: ${gapLedgerRead.unreadable}`;
 } else if (Date.now() + MEETINGS_DISCOVERY_BUDGET_MS > DISPATCH_DEADLINE_MS) {
@@ -3009,7 +3010,10 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
     const meetingHints = directoryRegistry?.kind === "PROMOTED" ? directoryMeetingHints(directoryItems, directoryRegistry.value, ROUTE_HINTS) : ROUTE_HINTS;
     let costSeq = 0;
     meetingsDiscovery = await runMeetingsDiscovery(repos, {
-      needs: discoveryNeedsToWalk(gapLedgerRead.needs, [...dispatchedNeeds.values()]),
+      needs: discoveryNeedsToWalk(gapLedgerRead.needs, [...dispatchedNeeds.values()], need => {
+        const id = meetingsDiscoveryObligationId(need);
+        return (ONLY === null || id.startsWith(ONLY)) && (IDS === null || IDS.has(id));
+      }),
       cycleIndex: Math.floor(Date.parse(NOW) / 3_600_000),
       maxWalks: MEETINGS_DISCOVERY_MAX_WALKS,
       /* An owner-dispatched meetings-discovery obligation goes first; one with an open occurrence is another executor's. */
@@ -3130,7 +3134,7 @@ if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
         spaceOut: spacer,
         vaultRoot: join(ROOT, ...VAULT_DIR),
         heldVault: vaultIndex,
-        methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version,
+        methodVersion: (await readMethodKnowledge(repos)).version,
       });
       return {
         report,
@@ -3177,7 +3181,7 @@ if (dry || canary || ONLY !== null || IDS !== null || intents.runnerPause.paused
     const pass = await runCandidatePublicationCycle({
       repos, eligibleCandidacyIds: lifetimeHuntSubjects,
       heldVault: vaultRead.value, vaultRoot: join(ROOT, ...VAULT_DIR),
-      methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version,
+      methodVersion: (await readMethodKnowledge(repos)).version,
       clock: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)), spaceOut: spacer,
       openFor: candidacyId => {
         const opened = fleetSafety.guardedOpenBytes("public-web", candidacyId, fetch, { followRedirects: false });
@@ -3324,8 +3328,8 @@ finishPhase("autonomous-workers-and-projection");
 /*
  * RULING 224. Acquisition without promotion is inventory, not product. The tail
  * runs on EVERY cycle with no operator: acquire -> vault -> normalize ->
- * snapshot -> STAGED. Promotion itself is OFF and a session carries the last
- * mile, so nothing below writes outside ignored `.runtime/control-plane/staging/` diagnostics.
+ * snapshot -> STAGED. Promotion is on (§3): staged records publish through the
+ * typed reader doors; this block itself writes only `.runtime/control-plane/staging/` diagnostics.
  */
 const leavePromotionTail = pending.enter("promotion-tail");
 const staged: StagedEntry[] = [];
@@ -3500,7 +3504,7 @@ if (!dry && !canary) {
     researchProgression = await withStoreBudget("research-progression", lateWorkBudgetMs(), async () => readResearchProgression(repos, {
       windowId: researchWindowId, through: finishedAt, gate: readActivationGate(ROOT),
       candidates: (await readMethodCandidateStore(repos)).candidates,
-      knowledge: readMethodStore(join(ROOT,...METHOD_STORE)),
+      knowledge: await readMethodKnowledge(repos),
       conclusions: readConclusionStore(join(ROOT,"data","method","conclusions.json")),
       researchBoundary: {
         since: priorResearchState?.researchProgression?.through ?? priorResearchState?.cycleFinishedAt ?? NOW,
@@ -3600,7 +3604,6 @@ try {
       intakeRuntime: beat?.value.intakeRuntime ?? null,
       /* The parent recorded this release adoption at a separate boundary.
          Carry the original observation unchanged; a cycle is not a recheck. */
-      runtimeRelease: beat?.value.runtimeRelease ?? null,
     };
     await pending.step("heartbeat:write", async () => {
       if (beat === null) await repos.runnerHeartbeat.put(RUNNER_ID, nextHeartbeat, finishedAt);
@@ -3667,7 +3670,6 @@ const researchLines = [
         ` · guard refusals ${r.guardRefusals?.length ?? 0} · overruns ${r.representationOverruns?.length ?? 0} · resumed from ${r.resumedFromRungs ?? 0} rung(s)`,
     ];
   }),
-  "  PROMOTION          OFF. A Scout finding is inventory and a candidate; nothing it produced changed what a reader is told.",
   "",
   ...(metrics === null ? ["RESEARCH METRICS   NOT COMPUTED this cycle (a named runtime condition says why)"] : researchDigestLines(metrics)),
 ];

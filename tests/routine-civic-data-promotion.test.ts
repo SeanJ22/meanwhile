@@ -4,7 +4,6 @@ import test from "node:test";
 import {
   processRegisteredRoutineCandidate,
   processRoutineCandidate,
-  promotionReaderReadbackObservedAt,
   routineCandidateContractIssue,
 } from "../lib/civic-data/promotion.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
@@ -329,44 +328,19 @@ test("registered promotion durably reads back the exact Reader projection instea
   assert.match(receipt?.verifierCodeSha ?? "", /^[0-9a-f]{40}$/);
 });
 
-test("production Reader readback re-observes after promotion and cannot move event chronology backwards", () => {
+test("production event time uses its own write clock and the latest durable scope event", async (t) => {
   const productionStore = Object.create(PostgresRoutineDataStore.prototype) as PostgresRoutineDataStore;
-  const staleImportPlanAt = "2026-09-07T11:00:00.000Z";
-  const promotedAt = "2026-09-07T12:00:00.010Z";
-
-  const clockShiftedBack = promotionReaderReadbackObservedAt(
-    productionStore,
-    staleImportPlanAt,
-    promotedAt,
-    () => "2026-09-07T12:00:00.009Z",
-  );
-  assert.equal(clockShiftedBack, promotedAt, "a backwards wall-clock step must clamp to actual promotion");
-  assert.ok(Date.parse(clockShiftedBack) >= Date.parse(promotedAt));
-
-  const observedAfterPromotion = promotionReaderReadbackObservedAt(
-    productionStore,
-    staleImportPlanAt,
-    promotedAt,
-    () => "2026-09-07T12:00:00.011Z",
-  );
-  assert.equal(observedAfterPromotion, "2026-09-07T12:00:00.011Z");
-  assert.ok(Date.parse(observedAfterPromotion) >= Date.parse(promotedAt));
-
-  let memoryClockCalls = 0;
-  assert.equal(
-    promotionReaderReadbackObservedAt(
-      new MemoryRoutineDataStore(),
-      staleImportPlanAt,
-      promotedAt,
-      () => {
-        memoryClockCalls += 1;
-        return "2026-09-07T12:00:00.011Z";
-      },
-    ),
-    staleImportPlanAt,
-    "Memory keeps its deterministic caller-controlled timeline",
-  );
-  assert.equal(memoryClockCalls, 0);
+  const latest = "2026-09-07T12:00:00.010Z";
+  const query = { from: () => query, innerJoin: () => query, where: async () => [{ at: latest }] };
+  Object.defineProperty(productionStore, "db", { value: { select: (columns: object) => {
+    assert.deepEqual(Object.keys(columns), ["at"], "only one timestamp crosses the wire");
+    return query;
+  } } });
+  let wallClock = Date.parse("2026-09-07T12:00:00.009Z");
+  t.mock.method(Date, "now", () => wallClock);
+  assert.equal(await productionStore.eventObservedAt("REGISTRY_RUNTIME_BINDING", "registry", NOW), latest);
+  wallClock = Date.parse("2026-09-07T12:00:00.011Z");
+  assert.equal(await productionStore.eventObservedAt("REGISTRY_RUNTIME_BINDING", "registry", "2099-01-01T00:00:00.000Z"), "2026-09-07T12:00:00.011Z");
 });
 
 test("registered promotion snapshots one durable candidate before any async store step", async () => {
@@ -782,7 +756,7 @@ test("the identity readback records a failed pointer read as evidence and refuse
     retrieval: { ...first.retrieval, retrievedAt: laterAt },
     readModel: { formatVersion: 1, candidates: [], absences: [] },
   });
-  assert.equal((await processRoutineCandidate(store, second, laterAt)).promoted?.versionId, second.id);
+  assert.equal((await processRoutineCandidate(store, second, laterAt, undefined, null, null, { confirmUnchanged: false })).promoted?.versionId, second.id);
   const staleEvents = await store.events(first.id);
   await assert.rejects(
     recordRoutineReaderProjectionReadback(store, contract, inspected, "2026-09-07T13:00:00.001Z", READER_CODE_SHA_A),
@@ -954,7 +928,7 @@ test("an unregistered redirect that also returns malformed bytes remains SOURCE_
     ...base,
     retrieval: { ...base.retrieval, finalUrl: "https://attacker.example/fec" },
     normalization: { ...base.normalization, succeeded: false, normalizedHash: null, failureDetail: "not JSON" },
-  }), "SOURCE_BLOCKED", "FINAL_HOST_NOT_AUTHORIZED");
+  }), "SOURCE_BLOCKED", "FINAL_ROUTE_NOT_REGISTERED");
 });
 
 test("ambiguous FEC identity is refused", async () => {

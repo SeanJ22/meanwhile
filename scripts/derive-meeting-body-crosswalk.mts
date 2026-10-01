@@ -45,11 +45,11 @@ import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.t
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
-import { autoCrosswalkReviewerId, reviewDiscoveryWalk, type HeldBytes, type RegisteredGovernment } from "../lib/control-plane/discovery/auto-crosswalk.ts";
+import { AUTO_CROSSWALK_VENDORS, autoCrosswalkReviewerId, reviewDiscoveryWalk, type HeldBytes, type RegisteredGovernment } from "../lib/control-plane/discovery/auto-crosswalk.ts";
+import { CURRENT_CALENDAR_READS_SQL } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { reviewedBodyForGovernment } from "../lib/control-plane/discovery/reviewed-body.ts";
 import { indexVault, readHeldBytes, type HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-vault.ts";
-import { assertWriteAllowed } from "../lib/db/write-guard.ts";
-import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import type { MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discovery.ts";
 import { digestValueClosure } from "../lib/ops/generator-digest.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
@@ -63,18 +63,13 @@ if (!process.argv.includes("--promote")) {
   throw new Error("usage: scripts/derive-meeting-body-crosswalk.mts --promote (the standing runner's child; there is no dry mode against production)");
 }
 installNeonRequestDeadline();
-const handle = resolveProductionWriteHandle();
-process.env.DATABASE_URL = handle.connection;
-process.env.WTP_DB_ROLE = "production";
-process.env.WTP_SANCTIONED_WRITE = "routine-civic-data-promotion";
-assertWriteAllowed("a routine civic data candidate/version promotion");
+prepareProductionCivicDataWrite();
 
 const store = new PostgresRoutineDataStore();
 const now = new Date().toISOString();
 /** The reviewer is named by its own code: a change to the review re-keys every row it accepts from then on. */
 const REVIEWER = autoCrosswalkReviewerId(digestValueClosure(process.cwd(), "lib/control-plane/discovery/auto-crosswalk.ts").digest);
 /** The vendors whose finds the reviewer reads; a walk whose finds are all others still has them held by name. */
-const REVIEWED_VENDORS = new Set(["ical", "official-page-events"]);
 
 async function finish(candidate: RoutineCandidate): Promise<void> {
   const outcome = await processRegisteredRoutineCandidate(store, DERIVED_CROSSWALK_CONTRACT_ID, candidate, now);
@@ -102,21 +97,19 @@ async function main(): Promise<void> {
     ? promotedInputRef(DERIVED_CROSSWALK_RECORD_CLASS, DERIVED_CROSSWALK_SCOPE, lkg.metadata.versionId, lkg.value, lkg.metadata.promotedAt)
     : null;
 
-  /* Every government whose newest walk found a route, read only. An older find behind a newer walk is not reviewed: the wiring reads the newest. */
+  /* Each route's newest actual read, with the original walk and saved evidence. */
   const controlPlane = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
   if (!controlPlane) {
     await finish(derivedCrosswalkFailedCandidate(now, "The control plane's attempt log is not configured (WTP_CONTROL_PLANE_DATABASE_URL), so no walk can be read."));
     return;
   }
-  let walks: { attempt: MeetingsDiscoveryAttempt; recordId: string; recordedAt: string }[];
+  let walks: { attempt: MeetingsDiscoveryAttempt; recordId: string; recordedAt: string; routes: string[] }[];
   try {
     const sql = neon(controlPlane);
     const found = await sql.query(
-      "SELECT id, position, value FROM (SELECT DISTINCT ON (log_key) log_key AS id, position, record AS value FROM cp_log_discovery_attempts " +
-        "ORDER BY log_key, record->>'startedAt' DESC, position DESC) latest WHERE value->>'outcome' = 'FOUND'",
-      [],
-    ) as { id: string; position: number | string; value: MeetingsDiscoveryAttempt }[];
-    walks = found.map((row) => ({ attempt: row.value, recordId: String(row.position), recordedAt: row.value.finishedAt }));
+      CURRENT_CALENDAR_READS_SQL, [null],
+    ) as { id: string; position: number | string; value: MeetingsDiscoveryAttempt; routes: string[] }[];
+    walks = found.map((row) => ({ attempt: row.value, recordId: String(row.position), recordedAt: row.value.finishedAt, routes: row.routes }));
   } catch (error) {
     await finish(derivedCrosswalkFailedCandidate(now, `The discovery-attempt log could not be read: ${error instanceof Error ? error.message : String(error)}`));
     return;
@@ -131,7 +124,6 @@ async function main(): Promise<void> {
     readonly input: DerivedInputRef;
     readonly bodies: ReadonlyMap<string, RegisteredGovernment>;
     readonly reference: LoadedReference;
-    readonly reviewedRegistryVersionId: string;
   } | { readonly unread: string }>();
   for (const state of new Set(walks.map((w) => w.attempt.stateCode.toUpperCase()))) {
     try {
@@ -152,7 +144,7 @@ async function main(): Promise<void> {
         if (body.jurisdictionId === null || bodies.has(body.jurisdictionId)) continue;
         bodies.set(body.jurisdictionId, { bodyId: body.id, ocdId: body.ocdId, publishingOrg: labels.get(body.ocdId) ?? body.jurisdictionId, input });
       }
-      registrations.set(state, { input, bodies, reference, reviewedRegistryVersionId: read.value.reviewedRegistryVersionId });
+      registrations.set(state, { input, bodies, reference });
     } catch (error) {
       registrations.set(state, { unread: `${state} registration could not be read: ${error instanceof Error ? error.message : String(error)}` });
     }
@@ -184,7 +176,7 @@ async function main(): Promise<void> {
   };
   const reviews: AutoCrosswalkReview[] = [];
   for (const walk of walks) {
-    if (!walk.attempt.found.some((f) => REVIEWED_VENDORS.has(f.vendor))) continue;
+    if (!walk.attempt.found.some((f) => AUTO_CROSSWALK_VENDORS.has(f.vendor))) continue;
     for (const f of walk.attempt.found) await cite(f.artifactId);
     for (const s of walk.attempt.steps) if (s.status !== null && s.status >= 200 && s.status < 300) await cite(s.artifactId);
     const state = walk.attempt.stateCode.toUpperCase();
@@ -197,9 +189,6 @@ async function main(): Promise<void> {
             if (reviewed.kind !== "PROMOTED" || reviewedInput === null) {
               return { notRegistered: `${state} registration omits the body and the reviewed registry is ${reviewed.kind}` };
             }
-            if (registration.reviewedRegistryVersionId !== reviewed.metadata.versionId) {
-              return { notRegistered: `${state} registration and reviewed registry name different identity versions` };
-            }
             const resolved = reviewedBodyForGovernment(
               registration.reference, walk.attempt.jurisdictionId, reviewed.value.registry.bodies,
             );
@@ -209,6 +198,7 @@ async function main(): Promise<void> {
           })();
     reviews.push(reviewDiscoveryWalk({
       walk,
+      routes: walk.routes,
       registered,
       held: (artifactId) => held.get(artifactId) ?? null,
       handWired: (bodyId) => SOURCE_WIRING.some((wiring) => wiring.bodyId === bodyId),

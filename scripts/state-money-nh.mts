@@ -162,6 +162,7 @@ import { today } from "./doc-dates.mjs";
 import { stateCampaignFinanceCandidate } from "../lib/funding/data-plane.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readNhBallotProjection } from "../lib/civic-data/manual-read-models.ts";
@@ -1161,6 +1162,7 @@ async function main(): Promise<void> {
     candidate,
     candidate.retrieval.retrievedAt,
   );
+  printSourceRunnerReceipt("nh-sos-campaign-finance", candidate, outcome);
   if (!outcome.promoted) throw new Error(`NH campaign-finance promotion refused: ${outcome.candidate.failureCode}`);
   console.log(`promoted ${outcome.promoted.versionId}; no tracked runtime artifact was written`);
 }
@@ -1180,7 +1182,8 @@ if (import.meta.filename === process.argv[1]) {
         failureDetail: error instanceof Error ? error.message : String(error),
         parserVersion: "nh-campaign-finance/2",
       });
-      await processRegisteredManualCandidate(new PostgresRoutineDataStore(), "nh-sos-campaign-finance", failed, attemptedAt);
+      const outcome = await processRegisteredManualCandidate(new PostgresRoutineDataStore(), "nh-sos-campaign-finance", failed, attemptedAt);
+      printSourceRunnerReceipt("nh-sos-campaign-finance", failed, outcome);
     }
     throw error;
   }

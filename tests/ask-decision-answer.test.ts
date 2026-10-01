@@ -301,7 +301,8 @@ globalThis.fetch = (async (input: RequestInfo | URL) => {
   calls.push(url);
   throw new Error(`the decisions answer made an outbound request: ${url}`);
 }) as typeof fetch;
-const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
+const { POST } = await import("../app/api/ask/grounded/route.ts");
+const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
 
 test("ROUTE: \"what did the Pima board decide at its last meeting\" is composed from its recorded actions — no model call, the same validator, nothing of the reader's", { concurrency: false }, async () => {
   resetGroundedState();

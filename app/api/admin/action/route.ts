@@ -53,12 +53,12 @@ import { ADMIN_ORIGIN } from "@/lib/ops/origins.ts";
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
 import { consoleReturnPath } from "@/lib/control-plane/console-paths.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
+import { confirmReceipt } from "@/lib/control-plane/gateway/confirmation.ts";
 import { submit } from "@/lib/control-plane/gateway/gateway.ts";
 import { readPulse } from "@/lib/control-plane/gateway/pulse-read.ts";
+import { wakeHintWriterFromEnv } from "@/lib/control-plane/gateway/wake-hint.ts";
 import { inputDigest } from "@/lib/control-plane/gateway/receipts.ts";
 import type { ActionRequest, CallerAuthority } from "@/lib/control-plane/gateway/contract.ts";
-import { recordReview } from "@/app/(admin)/admin/release-review/write.ts";
-import { readManifest } from "@/app/(admin)/admin/release-review/manifest-source.ts";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -205,19 +205,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // local `next build` has none and the receipt honestly says null rather
     // than carrying a plausible SHA nobody can check.
     codeSha: (process.env.WTP_BUILD_COMMIT ?? "").trim() || null,
-    recordReview: (input) =>
-      recordReview(
-        {
-          reviews: opened.repos.softwareReleaseReviews,
-          readLiveManifest: readManifest,
-          now: () => new Date().toISOString(),
-          actor: `session:${guard.sessionRef}`,
-        },
-        input,
-      ),
+    wake: wakeHintWriterFromEnv(),
   });
 
-  if (wantsJson(request)) return NextResponse.json(outcome, { status: 200 });
+  if (wantsJson(request)) {
+    /*
+     * A saved request is not a done request. The answer also says whether the
+     * runner has picked the action up, read from the runner's own records, so a
+     * replay of an old click comes back already confirmed and a fresh one comes
+     * back waiting. The screen keeps asking the receipt lookup until it is.
+     */
+    const confirmation = outcome.ok ? await confirmReceipt(opened.repos, outcome.receipt) : null;
+    return NextResponse.json({ ...outcome, confirmation }, { status: 200 });
+  }
 
   const destination = consoleReturnPath(body.envelope.returnTo ?? "", "/admin");
   return NextResponse.redirect(

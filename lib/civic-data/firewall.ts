@@ -207,9 +207,6 @@ const FILESYSTEM_MUTATION_METHODS = new Set([
   "writev",
   "writevSync",
 ]);
-const FILESYSTEM_MUTATION_METHOD = [...FILESYSTEM_MUTATION_METHODS]
-  .sort((left, right) => right.length - left.length)
-  .join("|");
 const DISTINCTIVE_FILESYSTEM_MUTATION_CALL = /(?:writeFile(?:Sync)?|appendFile(?:Sync)?|createWriteStream|writeStampStable)\s*\(/;
 const FILESYSTEM_READ_METHODS = new Set(["createReadStream", "read", "readFile", "readFileSync"]);
 const FILESYSTEM_READ_METHOD = [...FILESYSTEM_READ_METHODS]
@@ -511,26 +508,15 @@ function invokesSoftwareCertification(
     || launchCalls.some((call) => SOFTWARE_CERTIFICATION_PAYLOAD.test(call));
 }
 
-/**
- * Detect an executable filesystem mutation without treating arbitrary domain
- * methods named `rename` or `link` as Node filesystem calls. Distinctive
- * writer names remain fail-closed even in a small synthetic adapter; generic
- * names are bound back to node:fs/node:fs/promises imports or requires. The
- * binding walk deliberately understands aliases and `fs.promises`.
- */
-function invokesFilesystemMutation(source: string): boolean {
-  const executable = stripExecutableComments(source);
-  const masked = maskStringLiterals(executable);
-  if (DISTINCTIVE_FILESYSTEM_MUTATION_CALL.test(masked)) return true;
-
+/** Resolve imported Node capabilities, including detached aliases and fs.promises. */
+function nodeMethodBindings(executable: string, modulePattern: string, methods: ReadonlySet<string>, shadowed: ReadonlySet<string> = new Set()) {
   const namespaces = new Set<string>();
   const namedMutators = new Set<string>();
-  const modulePattern = String.raw`(?:node:)?fs(?:/promises)?`;
 
   for (const match of executable.matchAll(new RegExp(String.raw`\b(?:import|export)\s*\{([^}]*)\}\s*from\s*["']${modulePattern}["']`, "g"))) {
     for (const { imported, local } of parseNamedBindings(match[1] ?? "")) {
       if (imported === "promises") namespaces.add(local);
-      if (FILESYSTEM_MUTATION_METHODS.has(imported)) namedMutators.add(local);
+      if (methods.has(imported)) namedMutators.add(local);
     }
   }
   for (const match of executable.matchAll(new RegExp(String.raw`\bimport\s+(?:\*\s+as\s+)?([A-Za-z_$][\w$]*)\s+from\s*["']${modulePattern}["']`, "g"))) {
@@ -539,7 +525,7 @@ function invokesFilesystemMutation(source: string): boolean {
   for (const match of executable.matchAll(new RegExp(String.raw`\b(?:const|let|var)\s*\{([^}]*)\}\s*=\s*(?:await\s*)?(?:require|import)\s*\(\s*["']${modulePattern}["']\s*\)`, "g"))) {
     for (const { imported, local } of parseNamedBindings(match[1] ?? "")) {
       if (imported === "promises") namespaces.add(local);
-      if (FILESYSTEM_MUTATION_METHODS.has(imported)) namedMutators.add(local);
+      if (methods.has(imported)) namedMutators.add(local);
     }
   }
   for (const match of executable.matchAll(new RegExp(String.raw`\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:await\s*)?(?:require|import)\s*\(\s*["']${modulePattern}["']\s*\)(?:\s*\.\s*promises)?`, "g"))) {
@@ -550,19 +536,96 @@ function invokesFilesystemMutation(source: string): boolean {
     executable,
     namespaces,
     namedMutators,
-    FILESYSTEM_MUTATION_METHODS,
+    methods,
     { promisesNamespace: true },
   );
 
-  for (const local of namedMutators) {
-    const call = new RegExp(String.raw`(?<![\w$.])${escapeRegExp(local)}\s*\(`);
-    if (call.test(masked)) return true;
-  }
+  const callees = [...namedMutators].filter(name => !shadowed.has(name)).map(escapeRegExp);
   for (const namespace of namespaces) {
-    const call = new RegExp(
-      String.raw`\b${escapeRegExp(namespace)}\s*(?:\?\.|\.)\s*(?:promises\s*(?:\?\.|\.)\s*)?(?:${FILESYSTEM_MUTATION_METHOD})\s*\(`,
-    );
-    if (call.test(masked)) return true;
+    if (shadowed.has(namespace)) continue;
+    callees.push(String.raw`${escapeRegExp(namespace)}\s*(?:\?\.|\.)\s*(?:promises\s*(?:\?\.|\.)\s*)?(?:${[...methods].map(escapeRegExp).join("|")})`);
+  }
+  return callees.length ? `(?:${callees.join("|")})` : "(?!)";
+}
+
+/** Split expressions at top-level commas, preserving nested calls and literals. */
+function expressionParts(source: string): string[] {
+  const masked = maskStringLiterals(source);
+  const parts: string[] = [];
+  let depth = 0;
+  let start = 0;
+  for (let index = 0; index < masked.length; index += 1) {
+    const char = masked[index]!;
+    if (char === "(" || char === "[" || char === "{") depth += 1;
+    else if (")]}".includes(char)) depth -= 1;
+    else if (char === "," && depth === 0) {
+      parts.push(source.slice(start, index).trim());
+      start = index + 1;
+    }
+  }
+  parts.push(source.slice(start).trim());
+  return parts;
+}
+
+/** Only exempt destinations derived from the OS temp root, never names like 'tmp'. */
+function temporaryPathClassifier(executable: string): (expression: string) => boolean {
+  const masked = maskStringLiterals(executable);
+  const parameters = [
+    ...matchingExecutableCalls(executable, masked, /\b(?:function(?:\s*\*)?(?:\s+[\w$]+)?|catch)\s*\(/g),
+    ...[...masked.matchAll(/\(([^()]*)\)\s*(?::[^=;{}]+)?=>|\b([A-Za-z_$][\w$]*)\s*=>/g)].map(match => match[1] ?? match[2]!),
+  ];
+  // A same-named parameter must not inherit another scope's temporary path.
+  const shadowed = new Set(parameters.flatMap(value => maskStringLiterals(value).match(/[A-Za-z_$][\w$]*/g) ?? []));
+  const tmpdir = nodeMethodBindings(executable, String.raw`(?:node:)?os`, new Set(["tmpdir"]), shadowed);
+  const paths = nodeMethodBindings(executable, String.raw`(?:node:)?path`, new Set(["join", "resolve"]), shadowed);
+  const mkdtemp = nodeMethodBindings(executable, String.raw`(?:node:)?fs(?:/promises)?`, new Set(["mkdtemp", "mkdtempSync"]), shadowed);
+  const constants = new Map<string, string>();
+  const duplicates = new Set<string>();
+  const declarations = new Set<string>();
+  for (const match of executable.matchAll(/\b(const|let|var)\s+([A-Za-z_$][\w$]*)(?:\s*:[^=;\r\n]+)?\s*=\s*([^;\r\n]+)/g)) {
+    if (!/^(?:const|let|var)\s/.test(masked.slice(match.index))) continue;
+    if (declarations.has(match[2]!)) duplicates.add(match[2]!);
+    declarations.add(match[2]!);
+    if (match[1] === "const") constants.set(match[2]!, match[3]!.trim());
+  }
+  const relativeLiteral = (value: string): boolean => {
+    const literal = /^(["'`])([^"'`\\]*)\1$/.exec(value)?.[2];
+    return literal !== undefined && !literal.includes("${") && !literal.includes(":")
+      && !literal.startsWith("/") && !literal.split("/").includes("..");
+  };
+  const isTemporary = (raw: string, seen = new Set<string>()): boolean => {
+    const value = raw.trim().replace(/^await\s+/, "");
+    if (new RegExp(`^${tmpdir}\\s*\\(\\s*\\)$`).test(value)) return true;
+    if (constants.has(value) && !duplicates.has(value) && !shadowed.has(value) && !seen.has(value)) {
+      return isTemporary(constants.get(value)!, new Set([...seen, value]));
+    }
+    const call = new RegExp(`^(?:${paths}|${mkdtemp})\\s*\\(`).exec(value);
+    if (!call) return false;
+    const open = call[0].lastIndexOf("(");
+    const body = balancedCall(value, open);
+    if (open + body.length !== value.length || !body.endsWith(")")) return false;
+    const args = expressionParts(body.slice(1, -1));
+    return args.length > 0 && isTemporary(args[0]!, seen) && args.slice(1).every(relativeLiteral);
+  };
+  return expression => isTemporary(expression);
+}
+
+function invokesFilesystemMutation(source: string): boolean {
+  const executable = stripExecutableComments(source);
+  const masked = maskStringLiterals(executable);
+  const isTemporary = temporaryPathClassifier(executable);
+  const destinationOnly = new Set(["copyFile", "copyFileSync", "cp", "cpSync", "link", "linkSync", "symlink", "symlinkSync"]);
+  const moves = new Set(["rename", "renameSync"]);
+  const firstPath = new Set([...FILESYSTEM_MUTATION_METHODS].filter(method => !destinationOnly.has(method) && !moves.has(method)));
+  // A copy mutates its destination; a move mutates both source and destination.
+  for (const { methods, indexes } of [{ methods: destinationOnly, indexes: [1] }, { methods: moves, indexes: [0, 1] }, { methods: firstPath, indexes: [0] }]) {
+    const callees = nodeMethodBindings(executable, String.raw`(?:node:)?fs(?:/promises)?`, methods);
+    const calls = [...matchingExecutableCalls(executable, masked, new RegExp(`(?<![\\w$.])${callees}\\s*\\(`, "g"))];
+    if (methods === firstPath) calls.push(...matchingExecutableCalls(executable, masked, new RegExp(DISTINCTIVE_FILESYSTEM_MUTATION_CALL.source, "g")));
+    if (calls.some(call => {
+      const args = expressionParts(call.slice(1, -1));
+      return indexes.some(index => args[index] === undefined || !isTemporary(args[index]!));
+    })) return true;
   }
   return false;
 }
@@ -1077,7 +1140,7 @@ const MEETING_PARTITION_AUTHORITY_GATES = [
   },
   {
     path: "lib/sources/composite/wiring.ts",
-    required: [/wiringForMeetingSource/, /capability\.make\(rows\)/],
+    required: [/wiringForMeetingSource/, /capability\.make\(rows(?:, *[\w.]+)?\)/],
   },
   {
     path: "lib/meetings/snapshot.ts",

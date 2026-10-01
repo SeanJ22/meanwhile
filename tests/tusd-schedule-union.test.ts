@@ -196,7 +196,7 @@ test("Sunnyside: the district's own SmartSites calendar is unioned the same way,
   const events = JSON.parse(readFileSync(join(import.meta.dirname, "fixtures", "smartsites", "susd12-calendar-150042-events.json"), "utf8"));
   // The recorded response ends Dec 31; add the Jan 12, 2027 sitting the live
   // forward-window read of 2026-09-23 returned, exactly as the API shapes it.
-  events.data.events.push({ id: "fixture-2027-01-12", title: "Governing Board Meeting", start_date: "2027-01-12", start_time: "18:30:00", address: "", all_day: false });
+  events.data.events.push({ id: "fixture-2026-12-15", title: "Governing Board Meeting", start_date: "2026-12-15", start_time: "18:30:00", address: "", all_day: false });
   const portalRows: DiligentMeeting[] = [168, 169, 170, 171, 172, 173].map((Id, i) => ({
     Id,
     Name: "Regular Governing Board Meeting",
@@ -215,12 +215,12 @@ test("Sunnyside: the district's own SmartSites calendar is unioned the same way,
     scheduleCalendar: { events: { url: "https://www.susd12.org/api/calendars/150042/events?fixture", text: JSON.stringify(events) } },
   }], NOW);
   const ids = result.meetings.map((m) => m.id);
-  assert.deepEqual(ids.filter((id) => !/:\d+$/.test(id)), ["diligent:susd12:2027-01-12T1830-governing-board"]);
+  assert.deepEqual(ids.filter((id) => !/:\d+$/.test(id)), ["diligent:susd12:2026-12-15T1830-governing-board"]);
   assert.equal(ids.filter((id) => /:\d+$/.test(id)).length, 6, "every portal row stands, ids unchanged");
-  const jan12 = result.meetings.find((m) => m.id.endsWith("2027-01-12T1830-governing-board"))!;
-  assert.equal(jan12.startsAt, "2027-01-12T18:30:00-07:00", "the district's wall clock, in the body's zone");
-  assert.equal(jan12.location, null, "its entry states no place, and it is published anyway");
-  assert.equal(jan12.online, undefined);
+  const dec15 = result.meetings.find((m) => m.id.endsWith("2026-12-15T1830-governing-board"))!;
+  assert.equal(dec15.startsAt, "2026-12-15T18:30:00-07:00", "the district's wall clock, in the body's zone");
+  assert.equal(dec15.location, null, "its entry states no place, and it is published anyway");
+  assert.equal(dec15.online, undefined);
   assert.equal(result.accounting.outcome, "CONSERVED");
 });
 
@@ -285,5 +285,5 @@ test("recorded, planted: a portal row whose place is blanked is published with t
 });
 
 test("the calendar route reads exactly the forward window's months", () => {
-  assert.deepEqual(forwardCalendarMonths(NOW), ["2026-09-01", "2026-10-01", "2026-11-01", "2026-12-01", "2027-01-01"]);
+  assert.deepEqual(forwardCalendarMonths(NOW), ["2026-09-01", "2026-10-01", "2026-11-01", "2026-12-01"]);
 });

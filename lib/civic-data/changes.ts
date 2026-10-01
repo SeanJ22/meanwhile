@@ -142,6 +142,26 @@ export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicR
     const { retrievedAt: _retrievedAt, ...facts } = roll;
     return facts;
   }
+  if (recordClass === "VOTING_SITE" && member.key.startsWith("jurisdiction:")) {
+    const row = object(member.record);
+    if (row === null) return member.record;
+    const { collectedAt: _collectedAt, ...facts } = row;
+    return facts;
+  }
+  if (recordClass === "STATE_CAMPAIGN_FINANCE") {
+    const row = object(withoutProvenanceStamps(member.record, ["collectedAt", "verifiedAt"]));
+    if (row === null) return member.record;
+    const { checkedAt: _checkedAt, ...facts } = row;
+    return facts;
+  }
+  if (recordClass === "CURATED_READER_RECORD") {
+    const row = object(member.record);
+    const value = object(row?.value);
+    if (row?.kind === "ELECTION_FIELD" && value) {
+      const { verifiedAt: _verifiedAt, collectedAt: _collectedAt, ...facts } = value;
+      return { ...row, value: facts };
+    }
+  }
   return member.record;
 }
 

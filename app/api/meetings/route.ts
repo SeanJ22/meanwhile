@@ -5,6 +5,7 @@ import { nearestZctaAsync } from "@/lib/geo/zcta-table";
 import { zipDivisionEntry } from "@/lib/geo/zip-division-index";
 import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
 import { snapshotSourceFor } from "@/lib/meetings/registry";
+import type { Meeting } from "@/lib/sources/types";
 import {
   getActiveSnapshotMeta,
   requireMeetingsProjection,
@@ -381,6 +382,7 @@ export async function GET(request: Request) {
   // Whether the meetings came whole from the published edge: the first of the
   // conditions for letting the CDN hold this answer (`CDN_HELD`).
   let meetingsWholeFromEdge = false;
+  let heldMeetings: readonly Meeting[] = [];
   try {
     if (meetingSourceName === "snapshot") {
       // PDC-9: read the runner-published GEOGRAPHIC edge artifacts for this
@@ -403,6 +405,7 @@ export async function GET(request: Request) {
       }));
       meetingsWholeFromEdge = servedWholeFromReaderEdge(read);
       const snapshot = requireMeetingsProjection(read);
+      heldMeetings = snapshot.meetings;
       result = await timing.time("search", () => searchMeetings(
         lat,
         lng,
@@ -453,6 +456,7 @@ export async function GET(request: Request) {
       lng,
       result.meetings.length,
       resolvedDivisions ?? undefined,
+      heldMeetings,
     ));
   } catch (error) {
     console.error("coverage lookup failed", error);

@@ -100,16 +100,6 @@ console.log("");
 
 // --- workstream and method state ------------------------------------------
 if (wantWork) {
-  const methodPath = join(ROOT, "data", "method", "knowledge.json");
-  if (existsSync(methodPath)) {
-    const k = JSON.parse(readFileSync(methodPath, "utf8")) as {
-      version: number;
-      routes: unknown[];
-    };
-    console.log(`METHOD VERSION         ${k.version}`);
-    console.log(`ROUTES KNOWN           ${k.routes.length}   (what the project knows NOW, never what exists)`);
-  }
-
   const wsDir = join(ROOT, "data", "workstate");
   if (existsSync(wsDir)) {
     const files = readdirSync(wsDir).filter((f) => f.endsWith(".json") && f !== "migration-summary.json");

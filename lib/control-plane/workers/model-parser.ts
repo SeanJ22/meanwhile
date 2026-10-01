@@ -46,6 +46,7 @@ import { meteredCostFields, priceMeteredUsage, readMeteredUsage, sumMeteredUsage
 import type { AttemptCost } from "../attempt.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { canonicalJson } from "../repository/types.ts";
+import { canonicalModelId } from "../../models.ts";
 import { assertStepMayEscalate, assertStepMayInvokeModel, MODEL_FOR_CLASS, type ModelClass } from "../scheduler/model-routing.ts";
 import { ceilingPermits, RESEARCH_BOUNDS, researchSpendInWindow } from "../scheduler/research-policy.ts";
 import type { ModelRequest, ModelResponse, ModelTransport } from "../scheduler/scout-executor.ts";
@@ -237,7 +238,8 @@ export interface ModelParseOutcome {
 }
 
 function toolInput(response: ModelResponse, expectedModel: string): unknown {
-  if (response.model !== expectedModel) throw new Error("PARSE_MODEL_IDENTITY_MISMATCH");
+  // The provider answers with the dated alias of a tier's model (claude-haiku-4-5-20251001): the same model.
+  if (canonicalModelId(String(response.model)) !== canonicalModelId(expectedModel)) throw new Error("PARSE_MODEL_IDENTITY_MISMATCH");
   const tools = (Array.isArray(response.content) ? response.content : []).filter((b) => b.type === "tool_use");
   if (tools.length !== 1 || tools[0]!.name !== "record_extraction" || response.stop_reason !== "tool_use") throw new Error(`PARSE_MODEL_NO_TOOL_CALL:${String(response.stop_reason).slice(0, 60)}`);
   return tools[0]!.input;

@@ -18,8 +18,7 @@
  * through `appendDecisionIntent`. The four runner and fleet controls build
  * research intents through `buildResearchIntent` / `appendResearchIntent`, the
  * same quadruple `/api/admin/research` has used since Level 1 activation.
- * `review.decide` calls the release-review writer that already runs end to end
- * against in-memory repositories. Nothing is reimplemented, so nothing can
+ * Nothing is reimplemented, so nothing can
  * drift from the path the rest of the console uses (RULING 103).
  *
  * The admin surface still WRITES AND NOTHING ELSE. Every entry below appends a
@@ -28,10 +27,10 @@
  * were built around, and a gateway that executed rather than recorded would
  * have broken it while looking like a tidy-up.
  *
- * ## Two entries refuse on purpose
+ * ## One entry refuses on purpose
  *
- * `fleet.retryWorkItem` and `prohibited.promotionOn` are declared so that their
- * refusals are TYPED, PROVABLE and visible on the same surface as everything
+ * `fleet.retryWorkItem` is declared so that its
+ * refusal is TYPED, PROVABLE and visible on the same surface as everything
  * else. An action that is simply absent produces "the console does not know
  * this action"; an action that is declared and refuses produces the real
  * sentence, and for the retry it names the exact seam that does not exist yet.
@@ -57,6 +56,7 @@ import {
 } from "../research-view.ts";
 import { RESEARCH_STATE_ID } from "../scheduler/research-policy.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
+import type { WakeHintWriter } from "./wake-hint.ts";
 import {
   ADMIN_CONFIG_ID,
   defaultAdminConfig,
@@ -97,6 +97,9 @@ import {
 import { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET } from "../expansion/dispatch-work-bounds.ts";
 import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
 import { WORK_QUESTION_WORDS, validateWorkQuestions, type WorkQuestion } from "../work-question.ts";
+import { huntPlaceKey } from "../admin-view/v6-hunts-read.ts";
+import { BULK_ACTIONS } from "./bulk-actions.ts";
+import { appendFailureSays, writeFailureSays } from "./write-readback.ts";
 import type { ActionDefinition, ActionRequest, ReceiptOutcome, RefusalCode } from "./contract.ts";
 
 /** How much the runner creates for one Send, in the words every receipt below quotes (MW-028). */
@@ -119,31 +122,9 @@ export interface GatewayDeps {
   readonly currentStateVersion: string | null;
   /** The deploy that is running this, for the receipt. Null when the runtime cannot say. */
   readonly codeSha: string | null;
-  /**
-   * The release-review writer, wired by the route.
-   *
-   * Structurally typed rather than imported, so `lib/` does not depend on a
-   * module under `app/`. The route passes `recordReview` from
-   * `app/(admin)/admin/release-review/write.ts` — the existing path, not a copy
-   * of it. Null when nothing wired it, and the action then refuses by name
-   * instead of pretending the decision was recorded.
-   */
-  readonly recordReview: ReleaseReviewRecorder | null;
+  /** Tells the runner its controls changed, after an action is durably applied. Absent when the host has no Blobs destination. Never part of an action's result. */
+  readonly wake?: WakeHintWriter | null;
 }
-
-export type ReleaseReviewRecorder = (input: {
-  readonly action: string;
-  readonly stagingSha: string;
-  readonly section: string | null;
-  readonly decision: string | null;
-  readonly feedback: string | null;
-  readonly choice: string | null;
-}) => Promise<{
-  readonly ok: boolean;
-  readonly code: string;
-  readonly detail: string;
-  readonly rowIds?: readonly string[];
-}>;
 
 /* --------------------------------------------------------------- results */
 
@@ -210,10 +191,7 @@ const refuse = (refusal: RefusalCode, says: string): ActionRefusal => ({ ok: fal
  * the connection string, and this text reaches a browser.
  */
 function storeRefusal(what: string, error: unknown): ActionRefusal {
-  return refuse(
-    "DOWNSTREAM_REFUSED",
-    `${what} could not be written (${(error as Error)?.name ?? "error"}), so nothing was recorded.`,
-  );
+  return refuse("DOWNSTREAM_REFUSED", writeFailureSays(what, error));
 }
 
 /** The owner-decision intent both decision-shaped actions append. */
@@ -249,7 +227,7 @@ function decisionIntent(input: {
 async function appendIntent(
   deps: GatewayDeps,
   context: ActionContext,
-  action: "PAUSE" | "PAUSE_RUNNER" | "RESUME_RUNNER" | "RUN_CYCLE_NOW" | "DISPATCH" | "CANCEL_DISPATCH",
+  action: "PAUSE" | "RESUME" | "PAUSE_RUNNER" | "RESUME_RUNNER" | "RUN_CYCLE_NOW" | "DISPATCH" | "CANCEL_DISPATCH",
   note: string | null,
   said: { readonly says: string; readonly undo: string | null },
   /** MW-021: a DISPATCH's own rolling 24-hour budget for paid work on what it reaches. */
@@ -258,7 +236,7 @@ async function appendIntent(
   const requestedAt = context.at;
   const intent = buildResearchIntent(action, requestedAt, context.request.actorRef, note, undefined, budgetUsd);
   const wrote = await appendResearchIntent(deps.repos, intent, requestedAt);
-  if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", `Nothing was recorded — ${wrote.detail}.`);
+  if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", appendFailureSays(wrote.detail));
   return {
     ok: true,
     outcome: "QUEUED",
@@ -326,7 +304,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         actorRef: context.request.actorRef,
       });
       const wrote = await appendDecisionIntent(deps.repos, intent, context.at);
-      if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", `Nothing was recorded — ${wrote.detail}.`);
+      if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", appendFailureSays(wrote.detail));
       return {
         ok: true,
         outcome: "QUEUED",
@@ -386,7 +364,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         actorRef: context.request.actorRef,
       });
       const wrote = await appendDecisionIntent(deps.repos, intent, context.at);
-      if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", `Nothing was recorded — ${wrote.detail}.`);
+      if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", appendFailureSays(wrote.detail));
       return {
         ok: true,
         outcome: "DONE",
@@ -419,6 +397,30 @@ const REGISTRY: readonly RegisteredAction[] = [
       return appendIntent(deps, context, "PAUSE", input.note === null ? null : String(input.note), {
         says: "The paid research lane has been asked to pause. New paid work waits when the runner next reads this intent; work already in flight may finish.",
         undo: "A separate paid-research resume intent is required to resume paid work.",
+      });
+    },
+  },
+
+  /* ----------------------------------------------------- research.resume */
+  {
+    definition: {
+      type: "research.resume",
+      label: "Resume paid research",
+      does: "Records that the paid research lane may run again, on the runner's next read.",
+      doesNot: "Does not start a round immediately, raise any spending limit, or resume a runner that is paused as a whole.",
+      authority: "REVERSIBLE_NONPRODUCTION",
+      subjectKind: "the paid research lane",
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const note = validateIntentNote("RESUME", input.note);
+      return note.ok ? { ok: true, value: { note: note.note } } : bad(note.detail);
+    },
+    execute(deps, context, input) {
+      return appendIntent(deps, context, "RESUME", input.note === null ? null : String(input.note), {
+        says: "The paid research lane has been asked to run again. The next round opens the lane, inside every spending limit that still stands.",
+        undo: "Pause paid research again.",
       });
     },
   },
@@ -984,6 +986,11 @@ const REGISTRY: readonly RegisteredAction[] = [
       refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
     },
     validate(input) {
+      // A hunt is named by its scope key, or by the place key a screen shows it under (S11).
+      const placeKey = typeof input.placeKey === "string" ? input.placeKey.trim() : "";
+      if (placeKey !== "") {
+        return /^geo:[a-z]{2}.[a-z_]+.[0-9A-Za-z]{2,12}$/.test(placeKey) ? { ok: true, value: { key: placeKey } } : bad("say which hunt, by its place");
+      }
       const key = validateScopeKey(input.key);
       return key.ok ? { ok: true, value: { key: key.value } } : bad(key.why);
     },
@@ -1004,7 +1011,8 @@ const REGISTRY: readonly RegisteredAction[] = [
             `${held.malformed} stored scope entr${held.malformed === 1 ? "y" : "ies"} on your policy row could not be read, so nothing was changed — rewriting the list would silently drop them.`,
           );
         }
-        const next = withScopeRemoved(held.scopes, key);
+        const named = held.scopes.find((s) => s.key === key || huntPlaceKey(s) === key);
+        const next = withScopeRemoved(held.scopes, named?.key ?? key);
         if (next.removed === null) {
           return { ok: true, outcome: "DONE", subject: key, says: "That geography was not on your expansion list, so nothing changed.", openedWork: [], readBackAt: "/admin/work", undo: null };
         }
@@ -1026,6 +1034,9 @@ const REGISTRY: readonly RegisteredAction[] = [
       };
     },
   },
+
+  /* ------------------------------------ expansion.scope.setMany and .budget */
+  ...BULK_ACTIONS,
 
   /* ---------------------------------------------------- billing.fact.record */
   {
@@ -1149,109 +1160,6 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* ---------------------------------------------------------- review.decide */
-  {
-    definition: {
-      type: "review.decide",
-      label: "Record your review decision",
-      does: "Records what you decided about the exact build you were looking at.",
-      doesNot: "Does not merge, deploy, promote or notify anyone — the record is the end of the line.",
-      authority: "OWNER_DECISION_REQUIRED",
-      subjectKind: "one build of the software",
-      // The build under review moves on its own. The writer re-fetches the live
-      // manifest and refuses a decision aimed at a build that has been replaced,
-      // and quoting the render's version here catches the same thing earlier.
-      requiresStateVersion: true,
-      refusals: ["INVALID_INPUT", "STALE_STATE", "ALREADY_DONE", "DOWNSTREAM_REFUSED"],
-    },
-    validate(input) {
-      const action = text(input.action);
-      if (action === "") return bad("say which kind of review decision this is");
-      const stagingSha = text(input.stagingSha);
-      if (stagingSha === "") return bad("a review decision has to name the exact build it is about");
-      return {
-        ok: true,
-        value: {
-          action,
-          stagingSha,
-          section: text(input.section) || null,
-          decision: text(input.decision) || null,
-          feedback: typeof input.feedback === "string" ? input.feedback : null,
-          choice: text(input.choice) || null,
-        },
-      };
-    },
-    async execute(deps, _context, input) {
-      if (deps.recordReview === null) {
-        return refuse(
-          "DOWNSTREAM_REFUSED",
-          "The review writer is not wired into this console, so nothing was recorded. " +
-            "Nothing has been decided and nothing is pretending otherwise.",
-        );
-      }
-      const outcome = await deps.recordReview({
-        action: String(input.action),
-        stagingSha: String(input.stagingSha),
-        section: input.section === null ? null : String(input.section),
-        decision: input.decision === null ? null : String(input.decision),
-        feedback: input.feedback === null ? null : String(input.feedback),
-        choice: input.choice === null ? null : String(input.choice),
-      });
-      if (!outcome.ok) {
-        /*
-         * The writer's refusals are richer than the gateway's, so they are
-         * MAPPED rather than flattened: a decision aimed at a build that has
-         * been replaced is the gateway's own staleness, and one that is already
-         * recorded is its own idempotency. Everything else is honestly "the
-         * system that would do this refused".
-         */
-        const mapped: RefusalCode =
-          outcome.code === "STALE_SHA"
-            ? "STALE_STATE"
-            : outcome.code === "BAD_REQUEST"
-              ? "INVALID_INPUT"
-              : outcome.code === "ALREADY_RECORDED"
-                ? "ALREADY_DONE"
-                : "DOWNSTREAM_REFUSED";
-        return refuse(mapped, `Nothing was recorded — ${outcome.detail}.`);
-      }
-      return {
-        ok: true,
-        outcome: "DONE",
-        subject: String(input.stagingSha),
-        says: `Recorded against the build you were looking at. ${outcome.detail}.`,
-        openedWork: (outcome.rowIds ?? []).map((id) => ({ kind: "review record", id, title: "your review decision" })),
-        readBackAt: "/admin/release-review",
-        undo: "Record a different decision on the same build; both are kept and the later one is the one that counts.",
-      };
-    },
-  },
-
-  /* ------------------------------------------------- prohibited.promotionOn */
-  {
-    definition: {
-      type: "prohibited.promotionOn",
-      label: "Turn promotion on",
-      does: "Nothing. This is refused every time, by design, and the refusal is recorded.",
-      doesNot: "Does not turn promotion on, ask anyone whether it should, or leave a way to.",
-      authority: "PROHIBITED",
-      subjectKind: "the nightly promotion door",
-      requiresStateVersion: false,
-      refusals: ["PROHIBITED_ACTION"],
-    },
-    validate() {
-      // Declared so the refusal is typed and provable. The gateway refuses a
-      // PROHIBITED class before it ever validates, so this is unreachable — and
-      // it fails closed anyway rather than returning a value nobody checked.
-      return bad("this is never allowed from here");
-    },
-    async execute() {
-      return refuse(
-        "PROHIBITED_ACTION",
-        "Promotion is not something this console can turn on. That is deliberate and there is no version of this button that works.",
-      );
-    },
-  },
 ];
 
 /**

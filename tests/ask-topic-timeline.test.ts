@@ -191,7 +191,8 @@ test("a canceled sitting is not named as an unread agenda, and a sitting beyond 
   );
 });
 
-const { POST, resetGroundedState } = await import("@/app/api/ask/grounded/route");
+const { POST } = await import("@/app/api/ask/grounded/route");
+const { resetGroundedState } = await import("@/lib/ask/grounded-state");
 
 async function ask(question: string, today: string) {
   resetGroundedState();

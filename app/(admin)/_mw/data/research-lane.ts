@@ -29,7 +29,7 @@ export function paidLaneOf(state: ResearchState | null): PaidLane {
   if (raw.startsWith("no delivery path is open")) {
     plain = `closed: no delivery path is open — promotion to readers is off, so paid work would only pile up unread${waitingClause}.`;
   } else if (raw.startsWith("SCHEDULED BLACKOUT")) {
-    plain = "closed for the weekend blackout (Saturday 6 PM to Sunday 6 AM, Phoenix time).";
+    plain = "closed for the weekend blackout (Saturday 6 PM to Sunday 6 AM, Eastern time).";
   } else if (raw.startsWith("paused")) {
     plain = `paused by you${waitingClause}.`;
   } else if (raw.startsWith("the owner paused the runner")) {

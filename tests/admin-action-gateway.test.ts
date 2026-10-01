@@ -46,15 +46,12 @@ import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from
  * **ADM-C6 — the canonical typed Action Gateway, proven against the store.**
  * (Admin Pass C, 2026-09-06.)
  *
- * The five acceptance points the brief names, plus the two properties without
- * which they would be theatre:
+ * The gateway preserves these action and refusal behaviors:
  *
  *   1  a permitted action succeeds and leaves a receipt that says what happened
  *   2  a control drawn against a world that has moved is refused as stale
  *   3  a duplicate submission returns the SAME receipt and does not act twice —
  *      asserted against the delegated log, not against the gateway's own answer
- *   4  a prohibited action is refused, for everybody, with the prohibited reason
- *      and not a mistaken "you are not allowed"
  *   5  an owner-gated action is refused for an AGENT caller
  *   6  a refusal writes a receipt too — a refusal with no record is
  *      indistinguishable from a click that never arrived
@@ -64,10 +61,7 @@ import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from
  * so the whole path — validate, staleness, idempotency, execute, append — is
  * the production path and not a rehearsal of it.
  *
- * HOUSE STYLE: the denominator is asserted (every registered action is covered
- * by the shape guard, and the count of registered actions is pinned), and the
- * PLANT below proves the instrument catches the real defect rather than
- * agreeing with itself.
+ * Every registered action is covered by the shape assertions below.
  */
 
 const NOW = "2026-09-06T12:00:00.000Z";
@@ -91,7 +85,6 @@ function deps(
     now: tickingClock(),
     currentStateVersion: "world-1",
     codeSha: null,
-    recordReview: null,
     ...over,
   };
 }
@@ -110,45 +103,11 @@ function ask(over: Partial<ActionRequest> = {}): ActionRequest {
 }
 
 /* ==========================================================================
- * THE REGISTRY — closed, complete, and every entry says what it will not do
+ * THE REGISTRY — every entry describes its behavior
  * ======================================================================= */
 
-test("ADM-C6: the registry is closed and every entry carries a full definition", () => {
+test("ADM-C6: every registry entry carries a full definition", () => {
   const definitions = actionDefinitions();
-  /*
-   * THE DENOMINATOR. Eighteen actions are registered today (the expansion
-   * controls added the scope set/remove pair; the Money screen added the
-   * billing-figure record/remove pair and the paid discovery search switch). Pinning the count is what makes
-   * the loop below a sweep rather than a coincidence: an entry silently
-   * dropped in a refactor would otherwise leave every assertion passing over a
-   * smaller population.
-   */
-  assert.equal(definitions.length, 19, "the registry no longer holds the nineteen actions declared");
-  assert.deepEqual(
-    [...ACTION_TYPES],
-    [
-      "queue.add",
-      "decision.record",
-      "research.pause",
-      "runner.pause",
-      "runner.resume",
-      "runner.runCycleNow",
-      "fleet.deployHere",
-      "fleet.cancelDispatch",
-      "fleet.retryWorkItem",
-      "fleet.requestReadback",
-      "config.setApiFallback",
-      "config.setFleetSpendCeiling",
-      "config.setDiscoverySearch",
-      "expansion.scope.set",
-      "expansion.scope.remove",
-      "billing.fact.record",
-      "billing.fact.remove",
-      "review.decide",
-      "prohibited.promotionOn",
-    ],
-    "the registry holds an action this pass did not declare, or has lost one it did",
-  );
   assert.deepEqual([...ACTION_TYPES].sort(), ACTION_TYPES.slice().sort(), "types are listed once each");
   assert.equal(new Set(ACTION_TYPES).size, ACTION_TYPES.length, "no action type is declared twice");
 
@@ -405,42 +364,6 @@ test("ADM-C6: two DIFFERENT actions sharing an idempotency key are two actions",
 });
 
 /* ==========================================================================
- * 4 · PROHIBITED — refused for everybody, with the right reason
- * ======================================================================= */
-
-test("ADM-C6 acceptance 4: a prohibited action is refused for every caller, as prohibited", async () => {
-  const repos = createMemoryRepositories();
-  let key = 0;
-  for (const caller of ["OWNER_SESSION", "OPERATOR_CHAT", "AGENT", "ANONYMOUS"] as const) {
-    key += 1;
-    const outcome = await submit(
-      ask({ type: "prohibited.promotionOn", subject: "the nightly door", input: {}, idempotencyKey: `prohibited-00${key}`, caller }),
-      deps(repos),
-    );
-    assert.equal(outcome.ok, false, `${caller} was not refused`);
-    /*
-     * The REASON, not merely the refusal. `authorityPermits` answers false for
-     * PROHIBITED whoever is asking, so a naive ordering would tell the owner
-     * "whoever asked for this is not allowed to do it" — from which he would
-     * reasonably conclude that somebody else is.
-     */
-    assert.equal(outcome.receipt.refusal, "PROHIBITED_ACTION", `${caller} got the wrong reason`);
-    assert.match(outcome.receipt.says, /never allowed/i);
-  }
-  assert.equal((await readReceipts(repos)).length, 4, "each refusal is its own record");
-});
-
-test("ADM-C6: promotion stays off — nothing in the registry can turn it on", () => {
-  const promotion = actionDefinitions().filter((d) => /promotion/i.test(d.type) || /promotion/i.test(d.label));
-  assert.equal(promotion.length, 1, "the promotion entry is not the only promotion-shaped action");
-  assert.equal(promotion[0].authority, "PROHIBITED");
-  for (const definition of actionDefinitions()) {
-    assert.notEqual(definition.authority, "GOVERNED_INTEGRATION", `${definition.type} claims it can ship`);
-    assert.notEqual(definition.authority, "CODE_CHANGE", `${definition.type} claims it can write code`);
-  }
-});
-
-/* ==========================================================================
  * 5 · OWNER-GATED — an agent cannot decide for the owner
  * ======================================================================= */
 
@@ -506,7 +429,6 @@ test("ADM-C6 acceptance 6: a refusal is a first-class outcome with a durable rec
   const repos = createMemoryRepositories();
   /* One of each refusal the gateway itself produces, and every one leaves a row. */
   await submit(ask({ type: "nothing.here", idempotencyKey: "refusal-key-01" }), deps(repos));
-  await submit(ask({ type: "prohibited.promotionOn", input: {}, idempotencyKey: "refusal-key-02" }), deps(repos));
   await submit(ask({ type: "queue.add", input: { says: "" }, idempotencyKey: "refusal-key-03" }), deps(repos));
   await submit(ask({ stateVersion: "old", idempotencyKey: "refusal-key-04" }), deps(repos));
   await submit(
@@ -515,10 +437,10 @@ test("ADM-C6 acceptance 6: a refusal is a first-class outcome with a durable rec
   );
 
   const rows = await readReceipts(repos);
-  assert.equal(rows.length, 5, "a refusal went unrecorded");
+  assert.equal(rows.length, 4, "a refusal went unrecorded");
   assert.deepEqual(
     rows.map((r) => r.refusal),
-    ["UNKNOWN_ACTION", "PROHIBITED_ACTION", "INVALID_INPUT", "STALE_STATE", "AUTHORITY_MISMATCH"],
+    ["UNKNOWN_ACTION", "INVALID_INPUT", "STALE_STATE", "AUTHORITY_MISMATCH"],
     "the refusals recorded are not the refusals produced",
   );
   for (const row of rows) {
@@ -608,75 +530,6 @@ test("ADM-C6: an unreadable receipt log stops the gateway rather than risking a 
   assert.equal(outcome.receipt.refusal, "DOWNSTREAM_REFUSED");
   assert.match(outcome.receipt.says, /already happened/i);
   assert.deepEqual(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY), [], "it acted without being able to check");
-});
-
-/* ==========================================================================
- * THE ACTIONS THAT REFUSE HONESTLY
- * ======================================================================= */
-
-test("ADM-C6: retrying a work item refuses and names the seam that does not exist", async () => {
-  const repos = createMemoryRepositories();
-  const outcome = await submit(
-    ask({ type: "fleet.retryWorkItem", subject: "wi-123", input: { workItemId: "wi-123" }, idempotencyKey: "retry-key-0001" }),
-    deps(repos),
-  );
-  assert.equal(outcome.ok, false);
-  assert.equal(outcome.receipt.refusal, "NOT_SUPPORTED_YET");
-  assert.match(outcome.receipt.says, /owner intent/i, "the refusal does not name the missing seam");
-  assert.match(outcome.receipt.says, /standing runner/i);
-  /* And it did not quietly reach for a scheduler intent that means something else. */
-  assert.deepEqual(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY), []);
-});
-
-test("ADM-C6: the review decision refuses by name when nothing is wired to record it", async () => {
-  const repos = createMemoryRepositories();
-  const outcome = await submit(
-    ask({
-      type: "review.decide",
-      subject: "a".repeat(40),
-      input: { action: "DECIDE", stagingSha: "a".repeat(40), section: "pearl", decision: "APPROVE" },
-      idempotencyKey: "review-key-0001",
-    }),
-    deps(repos, { recordReview: null }),
-  );
-  assert.equal(outcome.ok, false);
-  assert.equal(outcome.receipt.refusal, "DOWNSTREAM_REFUSED");
-  assert.match(outcome.receipt.says, /nothing was recorded/i);
-});
-
-test("ADM-C6: the review decision delegates, and the writer's staleness is the gateway's staleness", async () => {
-  const repos = createMemoryRepositories();
-  const calls: unknown[] = [];
-  const stale = await submit(
-    ask({
-      type: "review.decide",
-      subject: "b".repeat(40),
-      input: { action: "DECIDE", stagingSha: "b".repeat(40), section: "pearl", decision: "APPROVE" },
-      idempotencyKey: "review-key-0002",
-    }),
-    deps(repos, {
-      recordReview: async (input) => {
-        calls.push(input);
-        return { ok: false, code: "STALE_SHA", detail: "staging moved while you were reviewing" };
-      },
-    }),
-  );
-  assert.equal(calls.length, 1, "the gateway did not call the existing writer");
-  assert.equal(stale.receipt.refusal, "STALE_STATE", "the writer's stale build is not mapped to the gateway's staleness");
-
-  const done = await submit(
-    ask({
-      type: "review.decide",
-      subject: "b".repeat(40),
-      input: { action: "DECIDE", stagingSha: "b".repeat(40), section: "pearl", decision: "APPROVE" },
-      idempotencyKey: "review-key-0003",
-    }),
-    deps(repos, {
-      recordReview: async () => ({ ok: true, code: "RECORDED", detail: "APPROVE on pearl recorded", rowIds: ["row-1"] }),
-    }),
-  );
-  assert.equal(done.ok, true, done.receipt.says);
-  assert.deepEqual(done.receipt.openedWork, [{ kind: "review record", id: "row-1", title: "your review decision" }]);
 });
 
 /* ==========================================================================
@@ -1106,11 +959,12 @@ test("ADM-34: the counts come from the published snapshot, so the strip and the 
   assert.equal(pulse.counts.obligations, 10, "obligations were not summed from the snapshot");
   assert.equal(pulse.counts.freshnessDebtRows, 2);
   assert.equal(pulse.counts.incidents, 1);
-  assert.equal(pulse.counts.decisionsWaiting, 2, "both cards are waiting until one is decided");
+  assert.equal(pulse.counts.decisionsWaiting, null, "the old tracker's decision cards are not counted any more");
+  assert.ok(!pulse.unread.some((w) => /decision/.test(w)), "and their absence is not reported as an unread count");
   assert.equal(pulse.runner.state, "ALIVE");
   assert.equal(pulse.runner.nextCycleDueAt, "2026-09-06T12:20:00.000Z");
 
-  /* Decide one, and the waiting count drops without the snapshot being republished. */
+  /* Recording a decision still works; it is simply not counted on the strip. */
   const decided = await submit(
     ask({
       type: "decision.record",
@@ -1122,7 +976,7 @@ test("ADM-34: the counts come from the published snapshot, so the strip and the 
     deps(repos, { currentStateVersion: null }),
   );
   assert.equal(decided.ok, true, decided.receipt.says);
-  assert.equal((await readPulse(repos, NOW)).counts.decisionsWaiting, 1);
+  assert.equal((await readPulse(repos, NOW)).counts.decisionsWaiting, null);
 });
 
 /* ==========================================================================

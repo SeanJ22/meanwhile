@@ -60,6 +60,7 @@ import {
   isAdminHostRequest,
   verifySession,
 } from "@/lib/control-plane/admin-auth.ts";
+import { movedAdminPage } from "@/lib/control-plane/moved-pages.ts";
 
 /**
  * Everything the admin surface owns. All are refused on the public host.
@@ -172,6 +173,12 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     // never anything the owner typed.
     login.searchParams.set("why", verdict.rejection);
     return NextResponse.redirect(login);
+  }
+
+  // A retired page goes to the command-center view that took over its job.
+  const moved = movedAdminPage(pathname, request.nextUrl.searchParams.get("scope"));
+  if (moved !== null) {
+    return NextResponse.redirect(new URL(moved, request.url));
   }
 
   return NextResponse.next();

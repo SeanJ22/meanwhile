@@ -198,8 +198,11 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
   feedback: {
     storeClass: "READER_COLLECTION",
     columns: {
-      ...nonIdentifying("id", "received_at", "surface", "run_class", "suspect_reason"),
+      ...nonIdentifying("id", "received_at", "surface", "site", "run_class", "suspect_reason"),
       message: { space: "PROSE", why: "Scrubbed at the write path (T09)." },
+      about: { space: "PROSE", why: "Reported card label, scrubbed; Sean authorized report context on 2026-09-30." },
+      zip: { space: "NON_IDENTIFYING", why: "The reported card's approximate place, shared by every reader of that card; never a home address." },
+      record_id: { space: "CIVIC_IDENTIFIER", why: "The public record being reported, never a reader identifier." },
       run_id: { space: "OPAQUE_HANDLE" },
       contact_ref: {
         space: "OPAQUE_HANDLE",
@@ -624,6 +627,14 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
           "label and reactions hold sha256('reaction-run:' + id), so without a distinct prefix " +
           "these stores would be equality-joinable on a value nobody would have to look up.",
       },
+    },
+  },
+
+  civic_data_payload_parts: {
+    storeClass: "OPERATIONAL",
+    columns: {
+      hash: { space: "NON_IDENTIFYING", why: "The content hash of an immutable civic payload fragment, never a reader identity." },
+      payload: { space: "CIVIC_IDENTIFIER", why: "Part of the existing civic candidate/read model, containing public officials and geographies." },
     },
   },
 

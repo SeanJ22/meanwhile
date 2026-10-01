@@ -236,9 +236,10 @@ test("PDC: readiness authority coverage accounts for every production contract",
   // + Mesa's council decisions read off its minutes (NH332), + Holbrook's (document listing) and Winslow's
   // (SuiteOne) City Council partitions; + the automatic crosswalk (C16 option A), and a derived family for every
   // registered state (53 more than AZ, NH, NJ). + the verified campaign sites the runner publishes (2026-09-25).
+  // + the state legislators' capitol and district offices, refreshed daily (member-offices, 2026-09-30).
   assert.equal(
     contracts.length,
-    169 + 56 + 1 + (REGISTRATION_TARGETS.length - 3) + 1 + 1 + 1, // official filing facts and separate AZ operational-reference contract
+    169 + 56 + 1 + (REGISTRATION_TARGETS.length - 3) + 1 + 1 + 1 + 1, // official filing facts, separate AZ operational-reference contract, member offices
     "the coverage guard must move when the production contract denominator moves (56: one registration per FIPS state, DC and territory)",
   );
   assert.deepEqual(

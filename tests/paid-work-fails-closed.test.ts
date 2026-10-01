@@ -148,7 +148,7 @@ function checkFreeWorkUntouched(src: string): void {
   assert.ok(walk.length > 0, "the discovery walk anchors moved");
   assert.match(
     walk,
-    /if \(!MEETINGS_DISCOVERY_ENABLED\) \{[\s\S]*?\} else if \(dry \|\| canary \|\| scheduledBlackout \|\| ONLY !== null \|\| IDS !== null\) \{[\s\S]*?\} else if \("unreadable" in gapLedgerRead\) \{[\s\S]*?\} else if \(Date\.now\(\) \+ MEETINGS_DISCOVERY_BUDGET_MS > DISPATCH_DEADLINE_MS\) \{[\s\S]*?\} else \{/,
+    /if \(!MEETINGS_DISCOVERY_ENABLED\) \{[\s\S]*?\} else if \(dry \|\| canary \|\| scheduledBlackout\) \{[\s\S]*?\} else if \("unreadable" in gapLedgerRead\) \{[\s\S]*?\} else if \(Date\.now\(\) \+ MEETINGS_DISCOVERY_BUDGET_MS > DISPATCH_DEADLINE_MS\) \{[\s\S]*?\} else \{/,
     "the free discovery walk is gated differently",
   );
   for (const paidFact of ["modelLaneEnabled", "laneClosure", "laneDisabledReason", "unreadableControls", "configHold", "intentLogUnreadable", "ownerIntentsUnreadableByRunner"]) {
@@ -218,7 +218,7 @@ function checkRunnerFailsClosed(src: string): void {
   assert.ok(hold, "no holdWhilePaused() returning the unreadable fact");
   assert.match(hold[0], /while \(says === "HOLD"\)/, "the pause no longer holds");
   assert.match(hold[0], /return \{ ownerIntentsUnreadable: says === "UNREADABLE" \};/);
-  assert.match(src, /const owner = await holdWhilePaused\(\);[\s\S]*?const wakeReleaseExit = await reconcileRuntimeReleaseAtBoundary\(\);[\s\S]*?if \(wakeReleaseExit !== null\) \{[\s\S]*?break;[\s\S]*?cycle \+= 1;[\s\S]*?const result = await runOneCycle\(owner\);/,
+  assert.match(src, /const owner = await holdWhilePaused\(\);[\s\S]*?const wakeReleaseExit = await reconcileRuntimeReleaseAtBoundary\(\);[\s\S]*?if \(wakeReleaseExit !== null\) \{[\s\S]*?break;[\s\S]*?cycle \+= 1;[\s\S]*?const result = await runOneCycle\(owner\)/,
     "the owner pause is read before release reconciliation and the normal child inherits its unreadable state");
   assert.match(src, /\.\.\.\(owner\.ownerIntentsUnreadable \? \["--owner-intents-unreadable"\] : \[\]\),/, "the child is not told to hold its paid lane");
 }

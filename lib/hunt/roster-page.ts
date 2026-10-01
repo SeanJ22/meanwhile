@@ -123,7 +123,7 @@ export function cellText(html: string): string {
       // their term ran together into one unparsable line, and the extraction
       // returned five rows and no error. Match the TAG, not the tidy form.
       .replace(/<br\b[^>]*>/gi, "\n")
-      .replace(/<\/(?:p|div|li|tr)>/gi, "\n")
+      .replace(/<\/(?:p|div|li|tr|h[1-6]|td|th)>/gi, "\n")
       .replace(/<[^>]+>/g, ""),
   )
     .split("\n")

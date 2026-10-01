@@ -10,12 +10,14 @@ import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { validateOnce } from "./validated-once.ts";
 import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type { CuratedReaderProjection } from "./manual-projections.ts";
+import { electionFieldIssue, type PublishedElectionField } from "./election-fields.ts";
 
 export const CURATED_READER_CONTRACT_IDS = [
   "official-filings",
   "comment-access",
   "ballot-navigation",
   "campaign-sites",
+  "member-offices",
   "venue-resolutions",
   "meeting-body-crosswalk",
 ] as const;
@@ -63,6 +65,14 @@ export async function readCuratedReaderProjection(
   if (result.kind === "PROMOTED") validate(id, result.value, result.metadata.versionId ?? "unknown");
   states.set(id, result);
   return result;
+}
+
+/** The same proven navigation pointer, projected by exact served territory. */
+export async function readElectionFieldsForDivisions(divisions: readonly string[], options: PromotedCivicDataReadOptions = {}) {
+  const read = await readCuratedReaderProjection("ballot-navigation", options);
+  const fields = read.kind === "PROMOTED" ? read.value.records.filter(row => row.kind === "ELECTION_FIELD" && electionFieldIssue(row) === null)
+    .map(row => row as unknown as PublishedElectionField).filter(row => divisions.includes(row.value.divisionId)) : [];
+  return { read, fields };
 }
 
 export async function refreshCuratedReaderProjection(
@@ -125,6 +135,16 @@ export const settleBallotNavigationRead = (): Promise<string> =>
   readPromotedEdgeFirst(BALLOT_NAVIGATION.recordClass, BALLOT_NAVIGATION.scope, refreshBallotNavigationFromPromoted, "The ballot navigation links");
 export const refreshCampaignSitesFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("campaign-sites", options);
+export const refreshMemberOfficesFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
+  refreshCuratedReaderProjection("member-offices", options);
+/**
+ * State legislators' offices, edge first: the reader edge's proven copy of the pointer, else the database.
+ * Answers the read (NOT_RECORDED before the first daily refresh promotes); the synchronous selector then serves it.
+ */
+const MEMBER_OFFICES = requiredManualProductionContract("member-offices");
+export const settleMemberOfficesRead = (): Promise<CivicDataReadResult<CuratedReaderProjection>> =>
+  readPromotedEdgeFirst(MEMBER_OFFICES.recordClass, MEMBER_OFFICES.scope,
+    options => readCuratedReaderProjection("member-offices", options), "The state legislators' offices");
 export const refreshVenueResolutionsFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("venue-resolutions", options);
 

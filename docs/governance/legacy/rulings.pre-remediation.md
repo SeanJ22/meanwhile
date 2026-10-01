@@ -1,3 +1,5 @@
+> Historical archive. This pre-remediation copy is not current policy or a release requirement. Use docs/rulings.md and the root CLAUDE.md for current instructions.
+
 # Rulings — the author's decisions that are not law
 
 **Created 2026-08-20 (Prompt C item 5).** Append-only. Dated. One entry per

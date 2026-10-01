@@ -362,16 +362,20 @@ test("the feedback store holds no continuity key of any kind", () => {
   assert.deepEqual(
     names.sort(),
     [
+      "about", // Sean's 2026-09-30 request: the card being reported, not a reader.
       "contact_ref",
       "id",
       "message",
       "received_at",
+      "record_id", // Public record context, never a continuity key.
       "run_class",
       "run_id",
+      "site", // Sean's approved report origin (S0 on #461, 5918009182); §9: no reader identity.
       "surface",
       "suspect_reason",
+      "zip", // The card's ZIP, explicitly authorized with the report.
     ],
-    "the feedback store holds the message, when, where from, an opaque contact handle, and nothing else",
+    "the feedback store holds the report/context, when, where from, and an opaque contact handle",
   );
 });
 

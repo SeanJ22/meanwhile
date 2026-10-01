@@ -15,7 +15,10 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { ActionDialog, type DialogSend } from "./action-dialog.tsx";
-import { actionDef, type PreviewContext } from "./actions.ts";
+import { ChangesView } from "./changes-view.tsx";
+import { ChatView } from "./chat-view.tsx";
+import { actionDef, isZipPlace, type PreviewContext } from "./actions.ts";
+import { BulkHunts, bulkPickOf, type BulkItem, type BulkPick } from "./bulk-hunts.tsx";
 import type { SectionId } from "./contract.ts";
 import { V6Context, VIEWS, type Detail, type V6, type View } from "./context.tsx";
 import { DetailPanel } from "./details.tsx";
@@ -26,10 +29,13 @@ import { mst, type ActionKind, type ActionRef, type AdminV6Data, type Place, typ
 import { breadcrumbs, COUNTRY_KEY, huntAt, huntsWithin, indexPlaces, pickerMatches, relation } from "./places.ts";
 import { newActionKey, startReceipt } from "./receipts.ts";
 import { ChecklistScreen } from "./screen-checklist.tsx";
+import { FixQueueControls } from "./fix-queue-controls.tsx";
 import { FixScreen } from "./screen-fix.tsx";
 import { LearningScreen } from "./screen-learning.tsx";
 import { MoneyScreen } from "./screen-money.tsx";
 import { NowScreen } from "./screen-now.tsx";
+import { ReaderDemandPanel } from "./reader-demand.tsx";
+import { ReportsView } from "./reports-view.tsx";
 import { WorkScreen } from "./screen-work.tsx";
 import { WorkersScreen } from "./screen-workers.tsx";
 import { cx } from "./ui.tsx";
@@ -48,6 +54,8 @@ export interface CommandCenterProps {
   /** Item-state reason (eligibility rule 5), when the data source knows one. */
   readonly itemState?: (kind: ActionKind, target: string) => string | null;
   readonly initialView?: View;
+  /** The console's own controls, in words, for the Ask view to list. Read on the server. */
+  readonly chatControls?: readonly string[];
   readonly onViewChange?: (view: View) => void;
   /** Live paged sections: forward search, filters and cursors to the data source. */
   readonly onQuery?: (section: SectionId, params: Readonly<Record<string, string>>) => void;
@@ -78,6 +86,8 @@ export function CommandCenter(props: CommandCenterProps) {
   const [dialog, setDialog] = useState<{ readonly ref: ActionRef; readonly key: string } | null>(null);
   const [announce, setAnnounce] = useState("");
   const [instructionDrafts, setInstructionDrafts] = useState<InstructionDrafts>({});
+  /** The many-hunts panel: closed (null), or open with the place it was opened from, if any. */
+  const [bulk, setBulk] = useState<{ readonly pick: BulkPick | null } | null>(null);
   const sendingKeys = useRef(new Set<string>());
   const pickerInput = useRef<HTMLInputElement>(null);
   const pickerButton = useRef<HTMLButtonElement>(null);
@@ -171,6 +181,20 @@ export function CommandCenter(props: CommandCenterProps) {
     void props.executor.send(receipt, { def, target, scopeKey, option: send.option, words: send.words, amount: send.amount, selectedItems: send.selected, payload: ref.payload }, update);
   };
 
+  const doSendBulk = (send: { readonly items: readonly BulkItem[]; readonly priority: number }) => {
+    const def = actionDef("hunt-start-many");
+    const key = newActionKey();
+    if (sendingKeys.current.has(key)) return;
+    sendingKeys.current.add(key);
+    const receipt = startReceipt({
+      key, def, target: "hunts", targetName: `${send.items.length.toLocaleString("en-US")} hunts`, label: def.label,
+      scopeKey, scopeName: place.name, level: "global", at: new Date().toISOString(), simulated: props.mode === "sample",
+    });
+    update(receipt);
+    setBulk(null);
+    void props.executor.send(receipt, { def, target: "hunts", scopeKey, option: null, words: "", amount: "", selectedItems: [], payload: { items: JSON.stringify(send.items), priority: String(send.priority) } }, update);
+  };
+
   const openDetail = (d: Detail) => {
     setStack((st) => [...st, { view, detail }].slice(-20));
     setDetail(d);
@@ -214,7 +238,12 @@ export function CommandCenter(props: CommandCenterProps) {
     open: openDetail,
     setScope,
     whyNot: whyNotRef,
-    act: (ref) => { if (!whyNotRef(ref)) setDialog({ ref, key: newActionKey() }); },
+    act: (ref) => {
+      if (whyNotRef(ref)) return;
+      // A single hunt starts from a ZIP; from a state, county or district the many-hunts panel does it.
+      if (ref.kind === "hunt-start" && !isZipPlace(ref.target)) { setBulk({ pick: bulkPickOf(ref.target, nameOf(ref.target)) }); return; }
+      setDialog({ ref, key: newActionKey() });
+    },
     check: (r) => { const p = props.executor.check(r, actionDef(r.kind), update); if (p) void p; },
     canCheck: () => {
       if (props.connection !== "live") return "Reconnect first.";
@@ -248,6 +277,7 @@ export function CommandCenter(props: CommandCenterProps) {
               ))}
             </nav>
             {props.mode === "sample" ? <span className={s.badge}>SAMPLE DATA</span> : null}
+            <button type="button" className={s.navBtn} onClick={() => setBulk({ pick: null })}>Start many hunts</button>
             <form className={s.search} role="search" onSubmit={(e) => { e.preventDefault(); if (query.trim()) openDetail({ type: "search", query: query.trim() }); }}>
               <input className={s.input} aria-label="Search everything in the selected place" placeholder="Search bodies, people, meetings, requirements, failures" value={query}
                 onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => { if (e.key === "Escape") setQuery(""); }} />
@@ -327,17 +357,29 @@ export function CommandCenter(props: CommandCenterProps) {
           )}
           {detail ? <DetailPanel detail={detail} /> : (
             <>
-              {view === "now" && <NowScreen key={scopeKey} />}
+              {view === "now" && <><NowScreen key={scopeKey} /><ReaderDemandPanel /></>}
               {view === "workers" && <WorkersScreen />}
               {view === "work" && <WorkScreen />}
               {view === "checklist" && <ChecklistScreen />}
               {view === "money" && <MoneyScreen />}
               {view === "learning" && <LearningScreen />}
-              {view === "fix" && <FixScreen />}
+              {view === "fix" && <><FixQueueControls /><FixScreen /></>}
+              {view === "reports" && <ReportsView />}
+              {view === "changes" && <ChangesView />}
+              {view === "chat" && <ChatView controls={props.chatControls ?? []} />}
             </>
           )}
         </main>
         <span className={s.srOnly} role="status" aria-live="polite">{announce}</span>
+
+        {bulk && (
+          <BulkHunts
+            initialPick={bulk.pick}
+            blocked={whyNotRef({ kind: "hunt-start-many", target: "hunts" })}
+            onSend={doSendBulk}
+            onClose={() => setBulk(null)}
+          />
+        )}
 
         {dialog && dialogDef && (
           <ActionDialog

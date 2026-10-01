@@ -512,7 +512,7 @@ function DirectWork() {
         {cards.map((h) => (
           <div key={h.id} className={s.row}>
             <div className={s.spread}><strong>{h.name}</strong><span className={cx(s.small, h.status === "running" ? s.textGood : s.textWarn)}>{({ running: "Running", paused: "Paid work paused", stopped: "Stopped", unreported: "Run state not reported" })[h.status]}{h.status === "running" ? (h.researchWorkers === null ? " · worker count not reported" : ` · ${h.researchWorkers} research workers`) : ""}</span></div>
-            <span className={s.meta}>Started {h.startedAt.includes("T") ? new Date(h.startedAt).toLocaleString("en-US", { timeZone: "America/Phoenix", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) + " MST" : h.startedAt} · {usd(h.limitUsd)} lifetime · {usd(h.spentUsd + h.heldUsd)} spent or set aside</span>
+            <span className={s.meta}>Started {h.startedAt.includes("T") ? mst(h.startedAt) : h.startedAt} · {usd(h.limitUsd)} lifetime · {usd(h.spentUsd + h.heldUsd)} spent or set aside</span>
             <Actions actions={[{ kind: h.status === "paused" ? "hunt-resume" : "hunt-pause", target: h.placeKey }, { kind: "hunt-limit", target: h.placeKey }, { kind: "hunt-stop", target: h.placeKey }]} />
           </div>
         ))}
@@ -527,7 +527,7 @@ function DirectWork() {
         </div>
         <div className={cx(s.row, s.cardGlobal)}>
           <strong className={s.small}>Whole system · affects every state</strong>
-          <Actions actions={[{ kind: "global-paid", target: "system" }, { kind: "global-runner-pause", target: "runner" }, { kind: "global-runner-resume", target: "runner" }]} />
+          <Actions actions={[{ kind: "global-paid", target: "system" }, { kind: "global-paid-resume", target: "system" }, { kind: "global-ceiling", target: "system" }, { kind: "global-search-on", target: "system" }, { kind: "global-search-off", target: "system" }, { kind: "global-runner-pause", target: "runner" }, { kind: "global-runner-resume", target: "runner" }]} />
         </div>
       </div>
     </details>

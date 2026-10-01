@@ -136,9 +136,11 @@ after(() => { globalThis.fetch = realFetch; });
 globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
   if (!url.includes("ask-edge-test.invalid/")) throw new Error(`the Ask request fetched ${url}`);
-  const body = JSON.parse(String(init?.body ?? "{}")) as { params?: unknown[]; queries?: { params?: unknown[] }[] };
+  const body = JSON.parse(String(init?.body ?? "{}")) as { query?: string; params?: unknown[]; queries?: { query?: string; params?: unknown[] }[] };
   const queries = body.queries ?? [body];
   for (const query of queries) {
+    // Sean's daily byte counter (§0/§7) writes an aggregate, not a civic pointer read.
+    if (/^\s*INSERT INTO database_transfer_daily\b/.test(query.query ?? "")) continue;
     const recordClass = (query.params ?? []).find((p): p is string => typeof p === "string" && /^[A-Z][A-Z_]+$/.test(p) && p !== "UNCHANGED_CONFIRMATION_V1");
     const scope = (query.params ?? []).find((p): p is string => typeof p === "string" && p !== recordClass && /[:+-]/.test(p));
     databaseReads.push(`${recordClass ?? "UNKNOWN"}${scope ? `:${scope}` : ""}`);
@@ -153,7 +155,8 @@ const AZ = "ocd-division/country:us/state:az";
 async function askMesa(question = "When does the Mesa City Council meet next?"): Promise<{ trace: { preloads?: Record<string, number>; preloadSources?: Record<string, string>; sourcesLoaded?: string } }> {
   clearPromotedReadModelCache();
   databaseReads.length = 0;
-  const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
+  const { POST } = await import("../app/api/ask/grounded/route.ts");
+  const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
   resetGroundedState();
   const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
     method: "POST",

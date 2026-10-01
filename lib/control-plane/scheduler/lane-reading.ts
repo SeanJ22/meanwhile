@@ -203,15 +203,12 @@ export function coordinatorLane(pass: CoordinatorPass): QueueLaneReading {
 
 const SKIP_WORDS: Readonly<Record<string, string>> = {
   NO_OPEN_OCCURRENCE: "its round could not be opened this cycle",
-  BUDGET: "the cycle's time ran out before it was reached",
   DISPATCH_CEILING: "the cycle's plain-code start limit was reached",
   CEILING: "the rolling spend ceiling was reached, or could not be read",
   CYCLE_MAX: "a diagnostic per-cycle Scout limit was reached",
   LANE_DISABLED: "the paid lane is closed",
   PAUSED: "you paused paid research",
-  SCHEDULED_BLACKOUT: "the weekend blackout",
   FREE_WALK_FIRST: "the free walk reads the site first",
-  WALL_CLOCK_CEILING: "the cycle's wall clock ran out",
   RECOVERED: "an interrupted cycle had already settled it, so it was closed, not re-run",
   COORDINATOR_CYCLE_MAX: "the coordinator's per-cycle limit was reached",
   SCOUT_CYCLE_MAX: "the coordinator's Scout limit was reached",

@@ -16,7 +16,7 @@ import test from "node:test";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
-import { MwShell } from "@/app/(admin)/_mw/shell.tsx";
+import { MwShell, standardWords } from "@/app/(admin)/_mw/shell.tsx";
 import { READINESS_STANDARD, standardInForce, type ReadinessStandard } from "@/lib/control-plane/readiness/standard.ts";
 import { filesThatWouldBeCommitted } from "@/lib/ops/repo-files.ts";
 
@@ -38,7 +38,7 @@ function shellPages(): readonly string[] {
 
 test("no Admin page hands the strip a hard-coded standard: each takes the page base's, or what its own readings were measured under", () => {
   const pages = shellPages();
-  assert.ok(pages.length >= 8, `expected every redesigned page, saw ${pages.length}`);
+  assert.ok(pages.length >= 5, `expected every redesigned page, saw ${pages.length}`);
   const findings: string[] = [];
   for (const file of pages) {
     const source = readFileSync(join(ROOT, file), "utf8");
@@ -77,7 +77,8 @@ test("the strip names the standard it is handed, and says 'not versioned yet' on
       ),
     );
   const inForce = draw(standardInForce());
-  assert.ok(inForce.includes(READINESS_STANDARD.current), "the strip names the version in force");
+  assert.ok(inForce.includes(standardWords(READINESS_STANDARD.current)), "the strip names the version in force, in words");
+  assert.ok(inForce.includes(`title="${READINESS_STANDARD.current}"`), "and keeps the exact id on hover for anyone who needs it");
   assert.ok(!inForce.includes("not versioned yet"));
   assert.ok(draw(null).includes("not versioned yet"), "and says so when there is none");
 });

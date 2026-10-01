@@ -124,9 +124,9 @@ test("SEEDED: an unauthenticated admin API request on the ADMIN host is refused 
   assert.equal(response.headers.get("cache-control"), "private, no-store");
 });
 
-test("the committed /admin/fleet page is guarded like any other admin page", async () => {
-  // The fleet operations console (app/(admin)/admin/fleet/page.tsx) is a PAGE
-  // under /admin, so both rules must reach it through the generic prefix logic:
+test("a path under /admin that has no page of its own is guarded like any other admin page", async () => {
+  // /admin/fleet is a retired page (its old links redirect once signed in), so
+  // both rules must reach it through the generic prefix logic:
   // a bare 404 on the public host, and a redirect to the login (never a 401 —
   // that is only for /api/admin/*) on the admin host without a session.
   assert.equal((await middleware(request(PUBLIC_HOST, "/admin/fleet"))).status, 404);

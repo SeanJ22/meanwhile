@@ -33,6 +33,7 @@ export interface LiveCommandCenterProps {
   readonly initialScopeKey: string;
   readonly access: Access;
   readonly initialView?: View;
+  readonly chatControls?: readonly string[];
 }
 
 function fetchNoStore(url: string, init: { headers: Record<string, string>; signal?: AbortSignal }) {
@@ -55,6 +56,7 @@ export function LiveCommandCenter(props: LiveCommandCenterProps) {
   const snapshot = useSyncExternalStore((fn) => sync.subscribe(fn), () => sync.snapshot(), () => sync.snapshot());
   const conn = usePulseFeed({ onPulse: (pulse) => sync.onPulse(pulse), onReconnected: () => sync.catchUp() });
   const executor = useMemo(() => liveExecutor({ capabilities: () => sync.capabilities(), stateVersion: () => sync.revision() }), [sync]);
+  useEffect(() => () => executor.dispose?.(), [executor]);
   const data = useMemo(() => buildLiveBundle(snapshot, props.reference, workerStatusFromPulse(conn.pulse)), [snapshot, props.reference, conn.pulse]);
 
   const onScopeChange = (key: string) => {
@@ -71,6 +73,15 @@ export function LiveCommandCenter(props: LiveCommandCenterProps) {
     }
   };
 
+  /** The view is in the address (`?view=reports`), so a link or a refresh lands where you were. */
+  const onViewChange = (view: View) => {
+    const params = new URLSearchParams(search?.toString() ?? "");
+    if (view === "now") params.delete("view");
+    else params.set("view", view);
+    const q = params.toString();
+    router.replace(`${pathname}${q ? `?${q}` : ""}`, { scroll: false });
+  };
+
   return (
     <CommandCenter
       data={data}
@@ -85,6 +96,8 @@ export function LiveCommandCenter(props: LiveCommandCenterProps) {
       recovered={conn.recovered}
       access={props.access}
       initialView={props.initialView}
+      chatControls={props.chatControls}
+      onViewChange={onViewChange}
     />
   );
 }

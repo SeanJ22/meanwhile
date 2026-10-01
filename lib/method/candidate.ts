@@ -58,7 +58,6 @@ import { dirname } from "node:path";
 import { fingerprint } from "../control-plane/ids.ts";
 import { validateClaims } from "./claims.ts";
 import {
-  emptyKnowledge,
   validateKnowledge,
   type MethodIssue,
   type MethodKnowledge,
@@ -395,7 +394,7 @@ export function introducedIssues(
   return { introduced: all.filter((i) => !baseline.has(issueKey(i))), preExisting: baseline.size };
 }
 
-/* ------------------------------------------------------- THE GOVERNED WRITE PATH */
+/* ------------------------------------------------------- FILE WRITES */
 
 export class MethodStoreUnreadable extends Error {
   readonly path: string;
@@ -404,45 +403,6 @@ export class MethodStoreUnreadable extends Error {
     super(`METHOD STORE UNREADABLE at ${path}: ${detail}. Nothing was written.`);
     this.name = "MethodStoreUnreadable";
     this.path = path;
-  }
-}
-
-export class MethodStoreVersionConflict extends Error {
-  readonly path: string;
-  readonly expected: number | null;
-  readonly found: number | null;
-
-  constructor(path: string, expected: number | null, found: number | null) {
-    super(
-      `METHOD STORE VERSION CONFLICT at ${path}: this writer read method version ` +
-        `${expected === null ? "(a store that did not exist)" : expected} and the store is now ` +
-        `${found === null ? "absent" : found}. REFUSED rather than overwritten — the work done ` +
-        "between those two versions would be silently destroyed. Re-read the store, re-apply, " +
-        "and write again.",
-    );
-    this.name = "MethodStoreVersionConflict";
-    this.path = path;
-    this.expected = expected;
-    this.found = found;
-  }
-}
-
-export class InvalidMethodStoreRefused extends Error {
-  readonly path: string;
-  readonly issues: readonly MethodIssue[];
-
-  constructor(path: string, issues: readonly MethodIssue[]) {
-    super(
-      `INVALID METHOD STORE REFUSED at ${path}: this write would INTRODUCE ${issues.length} ` +
-        `validator issue(s) the store does not currently have. Nothing was written. ` +
-        issues
-          .slice(0, 10)
-          .map((i) => `\n  ${i.id} ${i.rule}: ${i.detail}`)
-          .join(""),
-    );
-    this.name = "InvalidMethodStoreRefused";
-    this.path = path;
-    this.issues = issues;
   }
 }
 
@@ -465,110 +425,6 @@ export function atomicWriteJson(path: string, value: unknown): number {
   writeFileSync(tmp, body, "utf8");
   renameSync(tmp, path);
   return Buffer.byteLength(body, "utf8");
-}
-
-/** Read the canonical method store, or refuse by name. */
-export function readMethodStore(path: string): MethodKnowledge {
-  if (!existsSync(path)) throw new MethodStoreUnreadable(path, "no file at that path");
-  let raw: string;
-  try {
-    raw = readFileSync(path, "utf8");
-  } catch (error) {
-    throw new MethodStoreUnreadable(path, (error as Error).message);
-  }
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(raw);
-  } catch (error) {
-    throw new MethodStoreUnreadable(path, `not JSON: ${(error as Error).message}`);
-  }
-  const k = parsed as MethodKnowledge;
-  if (typeof k?.version !== "number" || !Array.isArray(k?.routes)) {
-    throw new MethodStoreUnreadable(path, "parsed, but it is not a method store (no version, no routes)");
-  }
-  return k;
-}
-
-export interface MethodWriteOptions {
-  /**
-   * The version this writer READ. `null` means "I am creating a store that does
-   * not exist", and the write is refused if one does — a writer that thought it
-   * was creating and is actually overwriting is the worst case of all.
-   */
-  readonly expectedVersion: number | null;
-  /** ISO date, from `pnpm stamp`. Stamped into `updatedOn`. */
-  readonly stamp: string;
-  /**
-   * Persisted conclusions to validate against. **Defaults to none, and the
-   * admission path deliberately leaves it that way.**
-   *
-   * `validateKnowledge` raises `unreopened-conclusion` when the store has grown
-   * past a still-closed conclusion — which is exactly what admitting a new
-   * applicable route DOES. Passing the conclusion corpus into the admission gate
-   * would therefore make the reopening machinery refuse the very event it exists
-   * to detect: a new route would be rejected for reopening something, and the
-   * only way to land it would be to have already closed the reopening it had not
-   * yet caused. Reopening is handled AFTER admission, in
-   * `lib/method/conclusions.ts`.
-   *
-   * The parameter exists for the callers that are not admitting a route — a
-   * migration, an audit, a check that wants the full picture in one call.
-   */
-  readonly conclusions?: readonly PriorConclusion[];
-}
-
-export interface MethodWriteReceipt {
-  readonly path: string;
-  readonly version: number;
-  readonly bytes: number;
-  /** Issues the store already had. Named, never hidden by a successful write. */
-  readonly preExistingIssues: number;
-}
-
-/**
- * **THE ONLY FUNCTION IN THIS REPOSITORY PERMITTED TO WRITE THE CANONICAL
- * METHOD STORE.**
- *
- * Three refusals, in order, and each one exits without touching a byte:
- *
- *   1. the store cannot be read            -> `MethodStoreUnreadable`
- *   2. the store moved under this writer   -> `MethodStoreVersionConflict`
- *   3. the write would introduce an issue  -> `InvalidMethodStoreRefused`
- *
- * `lib/method/retired-writers.ts` carries the sweep that finds anything writing
- * this store WITHOUT coming through here, and `tests/method-concurrency.test.ts`
- * runs it over `lib/` and `scripts/`. A rule with no detector is a preference.
- */
-export function writeMethodStore(
-  path: string,
-  knowledge: MethodKnowledge,
-  options: MethodWriteOptions,
-): MethodWriteReceipt {
-  const exists = existsSync(path);
-
-  if (options.expectedVersion === null) {
-    if (exists) {
-      throw new MethodStoreVersionConflict(path, null, readMethodStore(path).version);
-    }
-    // A NEW store is validated too, against an empty baseline. "It is the first
-    // write" is not a reason to skip the gate — a store seeded broken is broken
-    // for every session that inherits it.
-    const fresh = introducedIssues(emptyKnowledge(), knowledge, options.conclusions ?? []);
-    if (fresh.introduced.length > 0) throw new InvalidMethodStoreRefused(path, fresh.introduced);
-    const bytes = atomicWriteJson(path, { ...knowledge, updatedOn: options.stamp });
-    return { path, version: knowledge.version, bytes, preExistingIssues: 0 };
-  }
-
-  const current = readMethodStore(path);
-  if (current.version !== options.expectedVersion) {
-    throw new MethodStoreVersionConflict(path, options.expectedVersion, current.version);
-  }
-
-  const { introduced, preExisting } = introducedIssues(current, knowledge, options.conclusions ?? []);
-  if (introduced.length > 0) throw new InvalidMethodStoreRefused(path, introduced);
-
-  const bytes = atomicWriteJson(path, { ...knowledge, updatedOn: options.stamp });
-  return { path, version: knowledge.version, bytes, preExistingIssues: preExisting };
 }
 
 /* ------------------------------------------------------- THE DURABLE CANDIDATE STORE */

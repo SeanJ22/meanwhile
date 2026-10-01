@@ -55,6 +55,7 @@ import { CardSourcesList } from "@/components/officials/card-sources-list";
 import { RecentVotes } from "@/components/map/popup/official-popup";
 import { personCardSources } from "@/lib/officials/card-sources";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
+import { currentMemberOffices } from "@/lib/officials/member-offices-read";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { CandidateCard } from "@/components/ballot/candidate-card";
 import {
@@ -69,6 +70,7 @@ import { MyPicks } from "@/components/ballot/my-picks";
 import { jurisdictionKeyForContestId } from "@/lib/ballot/pick-jurisdiction";
 import { PickControl } from "@/components/ballot/pick-control";
 import { currentRegistrationLinks, registrationLinkFor } from "@/lib/ballot/registration-links";
+import { currentElectionOffices } from "@/lib/ballot/election-offices";
 import { currentPollingPlaceLinks, pollingPlaceLinkFor } from "@/lib/ballot/polling-place-links";
 import { WhereToVote } from "@/components/ballot/where-to-vote";
 import { incumbentHolderFor } from "@/lib/ballot/incumbent-record";
@@ -782,7 +784,7 @@ async function BallotBattlecard({
         offices:
           !authorityAvailability.officeholders ? (
             unavailableHolding("officeholder-directory")
-          ) : recordHolder && memberDirectoryReaches(recordHolder.id) ? (
+          ) : recordHolder && memberDirectoryReaches(recordHolder.id, "offices") ? (
             <MemberOfficesContent holder={recordHolder} />
           ) : null,
         money: federal ? (
@@ -852,7 +854,11 @@ async function BallotBattlecard({
  * surfaces cannot disagree about provenance.
  */
 function CandidateSources({ holder }: { holder: SeatHolder }) {
-  const sources = personCardSources(holder, []);
+  // Read only as the reader edge primed it: this card never adds a database read to a cold ballot.
+  const [office] = currentMemberOffices(holder.id);
+  const sources = personCardSources(holder, office
+    ? [{ what: "Their capitol and district offices", provenance: { sourceUrl: office.sourceUrl, sourceOrg: office.sourceOrg, collectedAt: office.collectedAt, verifiedAt: null } }]
+    : []);
   if (sources.length === 0) return null;
   return <CardSourcesList sources={sources} />;
 }
@@ -1058,10 +1064,12 @@ export default async function BallotPage({
 
   let registrationLinks: ReturnType<typeof currentRegistrationLinks> = [];
   let pollingPlaceLinks: ReturnType<typeof currentPollingPlaceLinks> = [];
+  let electionOffices: ReturnType<typeof currentElectionOffices> = [];
   if (auxiliaryPreloads.has("ballot-navigation") && !auxiliaryFailed.has("ballot-navigation")) {
     try {
       registrationLinks = currentRegistrationLinks();
       pollingPlaceLinks = currentPollingPlaceLinks();
+      electionOffices = currentElectionOffices(askOcdIds);
     } catch {
       auxiliaryFailures.push("ballot-navigation");
       auxiliaryFailed.add("ballot-navigation");
@@ -1519,6 +1527,27 @@ export default async function BallotPage({
       )}
 
       <OfficialFilings rows={filingRows} />
+      {/* Who runs this reader's elections and how to reach them, from their own city's or county's saved page. */}
+      {electionOffices.length > 0 && (
+        <section aria-label="Your election offices" className="my-6 space-y-2 lg:max-w-3xl" data-ballot-election-offices>
+          <h2 className="text-lg font-semibold">Your election offices</h2>
+          {electionOffices.map((office) => (
+            <p key={`${office.divisionId}:${office.phone}`}>
+              {office.text}
+              {office.phone && (
+                <>
+                  {", "}
+                  <a href={`tel:+1${office.phone.replace(/\D/g, "").slice(-10)}`}>{office.phone}</a>
+                </>
+              )}
+              <span className="text-paper-dim">
+                {" · as listed on "}
+                <a href={office.url}>{new URL(office.url).hostname.replace(/^www\./, "")}</a>
+              </span>
+            </p>
+          ))}
+        </section>
+      )}
       {[...new Set(askOcdIds.flatMap(id => /\/state:([a-z]{2})(?:\/|$)/.exec(id)?.[1]?.toUpperCase() ?? []))]
         .filter(state => !(dates && set?.election.state === state)).map(state => {
           const registration = registrationLinkFor(state, registrationLinks);

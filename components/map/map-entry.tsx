@@ -2405,6 +2405,12 @@ function MapEntryInner() {
             viewKey={cardKey ?? "card"}
             kicker={cardKicker}
             kickerTone={cardTone}
+            zip={clusterZip}
+            recordId={cardView.kind === "large"
+              ? cardView.surface.kind === "entity"
+                ? cardView.surface.subject.subjectId
+                : cardView.surface.holder.id
+              : cardView.kind === "venue" ? cardView.venue.key : null}
             zipContext={
               cardView.kind === "list" ||
               cardView.kind === "door" ||
@@ -2749,6 +2755,33 @@ function bodySubject(
                 >
                   {new URL(body.homepageUrl).hostname.replace(/^www\./, "")} →
                 </a>
+              ),
+            },
+          ]
+        : []),
+      // The body's own statement of when it meets, until a dated meeting is
+      // held. Never turned into dates: the page says to check its calendar.
+      ...(body.meetingCadence && meetings.length === 0
+        ? [
+            {
+              label: "Regular meetings",
+              value: (
+                <>
+                  {body.meetingCadence.text}
+                  {body.meetingCadence.sourceUrl ? (
+                    <>
+                      {" "}
+                      <a
+                        href={body.meetingCadence.sourceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+                      >
+                        {new URL(body.meetingCadence.sourceUrl).hostname.replace(/^www\./, "")} →
+                      </a>
+                    </>
+                  ) : null}
+                </>
               ),
             },
           ]

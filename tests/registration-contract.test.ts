@@ -32,7 +32,8 @@ import { loadRegistrationReference } from "../lib/registration/reference.ts";
  * by the runner. These pin that there is one registration contract per state
  * in the FIPS table; that a state's candidate promotes through the ordinary
  * engine and reads back through its typed reader; that an unchanged month
- * promotes UNCHANGED; that no id the reviewed registry writes is ever written
+ * confirms UNCHANGED without a new candidate (§0/§5/§7 and Sean's S6 instruction);
+ * that no id the reviewed registry writes is ever written
  * here; and that anything but the pinned Census bytes is refused by name.
  */
 
@@ -79,12 +80,12 @@ test("one registration contract per state, DC and territory in the FIPS table, e
   const authority = SOURCE_AUTHORITIES["census-governments-registration"];
   assert.deepEqual([...authority.jurisdictions].sort(), REGISTRATION_TARGETS.map((t) => t.jurisdiction).sort(), "every state's jurisdiction is inside the authority");
   assert.equal(authority.routineAutoPromotion, true);
-  assert.deepEqual([...authority.allowedFinalHosts], ["www2.census.gov"]);
+  assert.ok(authority.routePrefixes.every((p) => new URL(p).hostname === "www2.census.gov"));
   const index = JSON.parse(readFileSync(join(ROOT, "data", "derived", "registration", "index.json"), "utf8")) as { states: Record<string, unknown> };
   assert.deepEqual(Object.keys(index.states).sort(), REGISTRATION_TARGETS.map((t) => t.state.toLowerCase()).sort(), "the reference carries exactly the FIPS table's states");
 });
 
-test("a state's registration promotes through the engine, reads back through its typed reader, and an unchanged month promotes UNCHANGED", async () => {
+test("a state's registration promotes through the engine, reads back through its typed reader, and an unchanged month confirms its live version", async () => {
   const target = registrationTarget("NH");
   const reviewed = reviewedFromFirstSeed();
   const reference = loadRegistrationReference(ROOT, "NH");
@@ -103,8 +104,11 @@ test("a state's registration promotes through the engine, reads back through its
   const later = { ...RECEIPT, retrievedAt: new Date(Date.now() - 60 * 60 * 1000).toISOString() };
   const second = registrationCandidate({ target, reference, receipt: later, reviewed });
   const again = await processRegisteredRoutineCandidate(store, target.contractId, second, later.retrievedAt);
-  assert.equal(again.promoted?.versionId, second.id);
-  assert.equal(again.candidate.candidate.changeSet?.outcome, "UNCHANGED", "the same Census bytes, reference and reviewed registry change nothing");
+  // §0/§5/§7: Sean's S6 instruction retires storing unchanged payloads anew.
+  assert.equal(again.promoted?.versionId, first.id);
+  assert.equal(again.confirmed?.recheck.changeSet?.outcome, "UNCHANGED", "the same Census bytes, reference and reviewed registry change nothing");
+  assert.equal(await store.readCandidate(second.id), null, "the recheck is not a new stored candidate");
+  assert.equal((await store.readPromotion("REGISTRATION", target.scope))?.versionId, first.id);
 });
 
 test("reviewed wins: no id the reviewed registry writes is written, and a government it keys on its other division gets no second body", () => {

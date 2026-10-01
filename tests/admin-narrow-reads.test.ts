@@ -151,8 +151,8 @@ test("the pulse from the narrowed rows is the pulse from the whole rows, field f
   assert.equal(narrowed.counts.freshnessDebtRows, 2);
   assert.equal(narrowed.counts.incidents, 1);
   assert.notEqual(narrowed.lanes, null, "the lane gauges ride on the narrowed queue");
-  assert.ok(narrowed.revision.startsWith("2026-09-25T22:00:00.000Z|1|1|1|1|0|0|-|admin-capabilities/1:"));
-  assert.match(ADMIN_V6_CAPABILITY_REVISION, /:workers\/1:/, "Workers has its own v6 capability revision");
+  assert.ok(narrowed.revision.startsWith("2026-09-25T22:00:00.000Z|1|1|-|1|0|0|-|admin-capabilities/1:"), "the decision count is no longer part of the pulse revision");
+  assert.match(ADMIN_V6_CAPABILITY_REVISION, /:reliability\/1$/, "the last section announced has its own v6 capability revision");
   assert.ok(narrowed.revision.includes(`|${ADMIN_V6_CAPABILITY_REVISION}|-`),
     "the pulse revision names the current Admin v6 contracts, including Workers");
 });
@@ -162,6 +162,8 @@ test("a saved owner policy and snapshot announce Money and Hunts on the existing
   const before = await readPulse(repos, NOW);
   assert.equal(before.v6?.sections.hunts, undefined, "an unread owner policy cannot claim a hunt list");
   assert.equal(before.v6?.sections.money, undefined, "an unread owner policy cannot claim the money read");
+  assert.deepEqual(Object.keys(before.v6?.sections ?? {}).sort(), ["agents", "checklist", "fixes", "history", "learning", "reliability", "sameCause", "sends", "spend", "stuck"],
+    "the place score, blockers, agents and spend need only the published snapshot; saved receipts can still claim History, and the weekly learning series needs neither");
   await repos.adminConfig.put("current", any({ expansionScopes: [], fleetSpendCeiling: null }), NOW);
   const after = await readPulse(repos, NOW);
   assert.equal(after.v6?.sections.hunts?.contract, "admin-v6/hunts@1");
@@ -195,7 +197,7 @@ test("the pulse reads the snapshot and the research state only narrowed, and onl
     { which: "the research state", projection: PULSE_RESEARCH_FIELDS },
     { which: "the hunt policy", projection: PULSE_CONFIG_REVISION_FIELDS },
   ]);
-  assert.deepEqual(Object.keys(PULSE_SNAPSHOT_FIELDS).sort(), ["decisionCards", "freshnessDebtRows", "incidents", "obligationsByState"]);
+  assert.deepEqual(Object.keys(PULSE_SNAPSHOT_FIELDS).sort(), ["freshnessDebtRows", "incidents", "obligationsByState"]);
   assert.deepEqual(Object.keys(PULSE_RESEARCH_FIELDS), ["queue"]);
   assert.deepEqual(Object.keys(PULSE_CONFIG_REVISION_FIELDS), [], "the pulse reads no saved hunt policy payload");
 });
@@ -213,7 +215,7 @@ test("Fleet · Now's decision cards are the snapshot's, in the snapshot read's w
   assert.deepEqual(await readDecisionCards(empty), await readSnapshot(empty), "NOT_RECORDED says the same thing either way");
 
   const src = readFileSync("app/(admin)/admin/page.tsx", "utf8");
-  assert.match(src, /readDecisionCards\(repos\)/);
+  assert.doesNotMatch(src, /readDecisionCards\(/, "the home screen no longer reads the old tracker's decision cards");
   assert.doesNotMatch(src, /readSnapshot\(/, "the page never reads the whole snapshot");
 });
 

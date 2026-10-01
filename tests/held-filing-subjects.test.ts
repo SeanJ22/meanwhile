@@ -23,7 +23,8 @@ test("published source-filing profiles retain exact identities outside the mappe
 test("the real Ask route binds published source IDs even when the mapped ballot does not carry them", async () => {
   await Promise.all([installCandidateCorpusFirstSeed(), installNjMorrisFilingFirstSeed(), installRegistryRuntimeFirstSeeds()]);
   delete process.env.ANTHROPIC_API_KEY;
-  const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
+  const { POST } = await import("../app/api/ask/grounded/route.ts");
+  const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
   for (const [id, name, ocdId] of [
     ["az-sos-2026:us-house-2:crane-eli", "Eli Crane", "ocd-division/country:us/state:az/cd:2"],
     ["az-sos-2026:governor:schweikert-david", "David Schweikert", "ocd-division/country:us/state:az"],

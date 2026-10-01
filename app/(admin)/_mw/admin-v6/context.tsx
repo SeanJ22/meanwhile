@@ -15,7 +15,9 @@ import type { InstructionDraft } from "./instruction-draft.ts";
 import type { ActionRef, AdminV6Data, Hunt, Place, UiReceipt } from "./model.ts";
 import type { PlaceIndex } from "./places.ts";
 
-export type View = "now" | "workers" | "work" | "checklist" | "money" | "learning" | "fix";
+import type { View } from "./view-param.ts";
+
+export type { View };
 export const VIEWS: readonly (readonly [View, string])[] = [
   ["now", "Now"],
   ["workers", "Workers"],
@@ -24,6 +26,9 @@ export const VIEWS: readonly (readonly [View, string])[] = [
   ["money", "Money"],
   ["learning", "Is it learning"],
   ["fix", "Fix list"],
+  ["reports", "Reports"],
+  ["changes", "Changes"],
+  ["chat", "Ask the console"],
 ];
 
 export type Detail =

@@ -1,4 +1,3 @@
-import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { DurableEvidenceStore } from "../evidence/durable-store.ts";
 import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
@@ -6,6 +5,7 @@ import { VAULT_DIR } from "../scheduler/vault.ts";
 import type { ModelTransport } from "../scheduler/scout-executor.ts";
 import { modelAuditReasoner } from "./model-audit.ts";
 import { modelParseReasoner } from "./model-parser.ts";
+import { createModelAuditSampler } from "./audit-sampling.ts";
 import { workerVaultResolver } from "./vault.ts";
 import { drainWorkerQueue, enqueueWorkerTask, evidenceProjection, WORKER_MAX_WALL_MS, type FleetRuntime } from "./runtime.ts";
 import type { GeneralizedCivicExtractionContract, LegacyCivicExtractionContract, IndependentAuditContext, OfficialRouteExpectation } from "./types.ts";
@@ -219,7 +219,8 @@ async function generalizedIndependentContext(input: {
   siblingHeldRootFor?: ResearchRuntimeTools["siblingHeldRootFor"];
 }): Promise<IndependentAuditContext> {
   const { contract } = input;
-  if (contract.methodVersion !== input.methodVersion) throw new Error("AUDIT_METHOD_VERSION_MISMATCH");
+  // The method only grows, so a contract planned under an earlier version is still audited, against today's floor; one from a later version is not.
+  if (contract.methodVersion > input.methodVersion) throw new Error("AUDIT_METHOD_VERSION_MISMATCH");
   const artifacts = await input.repos.artifacts.readAll();
   const items = (await input.repos.workItems.list()).map(row => row.value);
   if (!input.workItemId) throw new Error("AUDIT_WORK_ITEM_SCOPE_REQUIRED");
@@ -298,20 +299,21 @@ async function generalizedIndependentContext(input: {
 }
 
 /** `auditCeilingUsd`: the rolling ceiling in force, which the auditor admits against (model-audit.ts). */
-export function standingFleetRuntime(input: { root: string; vaultRoot?: string; repos: ControlPlaneRepositories; transport?: ModelTransport; now?: () => string; auditCeilingUsd?: number;
+export function standingFleetRuntime(input: { root: string; /** The method knowledge, read from the field manual (`readMethodKnowledge`). */ method: MethodKnowledge; vaultRoot?: string; repos: ControlPlaneRepositories; transport?: ModelTransport; now?: () => string; auditCeilingUsd?: number;
   lifetimeHuntSubject?: (subjectId: string) => boolean;
   siblingHeldRootFor?: ResearchRuntimeTools["siblingHeldRootFor"];
   /** MW-021 (2026-09-25): the auditor's transport for the jurisdiction a record is about, held on the area budget covering it. */
   transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport }): FleetRuntime {
   const now = input.now ?? (() => new Date().toISOString());
-  const method = JSON.parse(readFileSync(join(input.root, "data/method/knowledge.json"), "utf8"));
+  const method = input.method;
   const readEvidence = workerVaultResolver(input.repos, new DurableEvidenceStore(input.vaultRoot ?? join(input.root, ...VAULT_DIR)), "freshness");
   return { repos: input.repos, readEvidence, methodVersion: method.version, now, requireModelAudit: true,
     ...(input.lifetimeHuntSubject === undefined ? {} : { lifetimeHuntSubject: input.lifetimeHuntSubject }),
     ...(input.transport ? (() => {
       const modelOptions = { ...(input.auditCeilingUsd === undefined ? {} : { ceilingUsd: input.auditCeilingUsd }), ...(input.transportFor === undefined ? {} : { transportFor: input.transportFor }),
         ...(input.lifetimeHuntSubject === undefined ? {} : { lifetimeHuntSubject: input.lifetimeHuntSubject }) };
-      return { auditReasoner: modelAuditReasoner(input.repos, input.transport, now, modelOptions), parseReasoner: modelParseReasoner(input.repos, input.transport, now, modelOptions) };
+      return { auditReasoner: modelAuditReasoner(input.repos, input.transport, now, modelOptions), parseReasoner: modelParseReasoner(input.repos, input.transport, now, modelOptions),
+        modelAuditSample: createModelAuditSampler(input.repos) };
     })() : {}),
     independentContext: async ({ artifactId, contract, auditScope, methodVersion, workItemId }): Promise<IndependentAuditContext> => {
       if (methodVersion !== method.version) throw new Error("AUDIT_METHOD_VERSION_MISMATCH");

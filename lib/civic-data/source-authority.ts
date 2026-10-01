@@ -51,29 +51,6 @@ export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage 
   return false;
 }
 
-/**
- * OWNER POLICY (Sean, 2026-09-21) — official-government auto-qualification.
- *
- * An official government publisher qualifies BY DEFAULT for automatic ingestion
- * and publication through the authorized routine pipeline: a newly encountered
- * `.gov` (or otherwise approved official) host does not need per-source manual
- * approval. Every normal check is preserved — successful retrieval, correct
- * identity, geographic/date version, parsing, required completeness, and runtime
- * authority — and passing records proceed automatically while a failure records
- * its specific reason. A source that is deliberately research/corroboration only
- * sets `routineAutoPromotion: false` with a stated reason; being outside `.gov`
- * does not by itself disqualify an otherwise approved official source. This is
- * shared logic, never a per-source exception for any one publisher.
- */
-export function isOfficialGovHost(host: string): boolean {
-  return /(^|\.)gov$/i.test(host.trim().replace(/:\d+$/, ""));
-}
-
-/** True when every final host of a source authority is an official `.gov` host. */
-export function officialGovAutoQualifies(source: { readonly allowedFinalHosts: readonly string[] }): boolean {
-  return source.allowedFinalHosts.length > 0 && source.allowedFinalHosts.every(isOfficialGovHost);
-}
-
 export const SOURCE_AUTHORITIES = {
   "federal-legislative-records": {
     id: "federal-legislative-records",
@@ -86,7 +63,6 @@ export const SOURCE_AUTHORITIES = {
       "https://api.congress.gov/v3/",
       "https://www.congress.gov/bill/",
     ],
-    allowedFinalHosts: ["clerk.house.gov", "www.senate.gov", "api.congress.gov", "www.congress.gov"],
     jurisdictions: ["US"],
     recordClasses: ["FEDERAL_ROLL_CALL", "FEDERAL_KEY_VOTE"],
     competentFacts: [
@@ -110,7 +86,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T3_ATTRIBUTED_PRIMARY",
     sourceClass: "INTERMEDIARY",
     routePrefixes: ["https://raw.githubusercontent.com/unitedstates/congress-legislators/"],
-    allowedFinalHosts: ["raw.githubusercontent.com"],
     jurisdictions: ["US"],
     recordClasses: ["FEDERAL_DIRECTORY"],
     competentFacts: ["current federal membership", "term and chamber", "official contact", "district office", "official social account", "committee membership"],
@@ -128,7 +103,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T3_ATTRIBUTED_PRIMARY",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [],
-    allowedFinalHosts: [],
     jurisdictions: ["US", "US-AZ", "US-NH", "US-NJ"],
     recordClasses: ["REGISTRY_RUNTIME_BINDING"],
     competentFacts: ["body-to-division binding", "current body name and contact", "body roster membership and contact", "statewide officeholder and contact", "exact roster identity disposition", "officeholder-to-candidacy binding", "runtime body provenance", "licensed officeholder portrait binding"],
@@ -143,12 +117,11 @@ export const SOURCE_AUTHORITIES = {
   },
   "curated-reader-primary-sources": {
     id: "curated-reader-primary-sources",
-    publisher: "Exact election-authority, candidate-controlled, public-body, and venue-coordinate reference sources named by each reviewed Reader-record receipt",
+    publisher: "Exact election-authority, candidate-controlled, public-body, venue-coordinate and legislator-office reference sources named by each reviewed Reader-record receipt",
     trust: "T2_AUTHORITATIVE_DOCUMENT",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [],
-    allowedFinalHosts: [],
-    jurisdictions: ["US", "US-AZ", "US-NH", "US-NJ"],
+    jurisdictions: ["US", ...REGISTRATION_TARGETS.map((target) => target.jurisdiction)],
     recordClasses: ["CURATED_READER_RECORD"],
     competentFacts: [
       "published public-comment rule",
@@ -156,6 +129,7 @@ export const SOURCE_AUTHORITIES = {
       "official voter-registration lookup route",
       "official polling-place lookup route",
       "verified campaign or personal site binding",
+      "a state legislator's capitol or district office address and phone from the Open States reference file, joined to the official roster and marked unofficial (Sean, 2026-10-01)",
       "reviewed exact-source venue address and coordinate resolution",
       "official everyday service contact route for an exact state/topic cell",
       "explicit owner-reviewed CONTACT_OWED obligation where no supported contact is held",
@@ -189,18 +163,6 @@ export const SOURCE_AUTHORITIES = {
       "https://www.newbury.nh.gov/",
       "https://www.wilmotnh.org/",
     ],
-    allowedFinalHosts: [
-      "www.pima.gov",
-      "cochise.az.gov",
-      "www.cochise.az.gov",
-      "services2.arcgis.com",
-      "www.morriscountynj.gov",
-      "app.sos.nh.gov",
-      "www.sos.nh.gov",
-      "newlondon.nh.gov",
-      "www.newbury.nh.gov",
-      "www.wilmotnh.org",
-    ],
     jurisdictions: ["US-AZ", "US-NH", "US-NJ"],
     recordClasses: ["VOTING_SITE"],
     competentFacts: [
@@ -226,7 +188,6 @@ export const SOURCE_AUTHORITIES = {
       "https://americaspoliticalpulse.com/data/elite/",
       "https://www.americaspoliticalpulse.com/data/elite/",
     ],
-    allowedFinalHosts: ["americaspoliticalpulse.com", "www.americaspoliticalpulse.com"],
     jurisdictions: ["US"],
     recordClasses: ["PRL_PROFILE"],
     competentFacts: [
@@ -249,7 +210,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "FEDERAL_AGENCY",
     routePrefixes: ["https://api.open.fec.gov/v1/"],
-    allowedFinalHosts: ["api.open.fec.gov"],
     jurisdictions: ["US"],
     recordClasses: ["FEC_FUNDING"],
     competentFacts: ["candidate registration", "committee registration", "filed totals", "filed receipts", "report coverage period"],
@@ -267,7 +227,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "OFFICIAL_PLATFORM",
     routePrefixes: ["https://seethemoney.az.gov/Reporting/"],
-    allowedFinalHosts: ["seethemoney.az.gov"],
     jurisdictions: ["US-AZ"],
     recordClasses: ["STATE_CAMPAIGN_FINANCE"],
     competentFacts: ["committee registration", "office and election cycle", "filed receipt and expenditure totals", "reporting period"],
@@ -285,7 +244,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "OFFICIAL_PLATFORM",
     routePrefixes: ["https://cfsapi.sos.nh.gov/api/PublicFilerDetails/"],
-    allowedFinalHosts: ["cfsapi.sos.nh.gov"],
     jurisdictions: ["US-NH"],
     recordClasses: ["STATE_CAMPAIGN_FINANCE"],
     competentFacts: ["filer identity", "office and election cycle", "filed receipts and spending totals", "bounded filer absence"],
@@ -303,7 +261,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "OFFICIAL_PLATFORM",
     routePrefixes: ["https://www.njelecefilesearch.com/"],
-    allowedFinalHosts: ["www.njelecefilesearch.com", "njelecefilesearch.com"],
     jurisdictions: ["US-NJ"],
     recordClasses: ["STATE_CAMPAIGN_FINANCE"],
     competentFacts: ["filing entity", "filing location", "office and election year", "filed report totals", "bounded filing absence"],
@@ -321,7 +278,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "OFFICIAL_PLATFORM",
     routePrefixes: ["https://ecf-api.easyvoteapp.com/"],
-    allowedFinalHosts: ["ecf-api.easyvoteapp.com"],
     jurisdictions: ["US-AZ"],
     recordClasses: ["LOCAL_CAMPAIGN_FINANCE"],
     competentFacts: ["Pima filer identity", "public filing index", "redacted contribution row", "redacted distribution row", "filing authority identity"],
@@ -339,7 +295,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "FEDERAL_AGENCY",
     routePrefixes: ["https://api.census.gov/data/"],
-    allowedFinalHosts: ["api.census.gov"],
     jurisdictions: ["US"],
     recordClasses: ["CENSUS_REFERENCE"],
     competentFacts: ["named Census product values", "product vintage", "Census geography code"],
@@ -357,7 +312,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "FEDERAL_AGENCY",
     routePrefixes: ["https://www2.census.gov/programs-surveys/gus/", "https://www2.census.gov/geo/tiger/"],
-    allowedFinalHosts: ["www2.census.gov"],
     jurisdictions: ["US"],
     recordClasses: ["CENSUS_REFERENCE"],
     competentFacts: ["Census of Governments unit classification", "Census GEOID", "TIGER/Line boundary", "statistical geography classification"],
@@ -375,7 +329,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "FEDERAL_AGENCY",
     routePrefixes: ["https://www2.census.gov/geo/docs/maps-data/data/rel2020/"],
-    allowedFinalHosts: ["www2.census.gov"],
     jurisdictions: ["US"],
     recordClasses: ["CENSUS_GEOGRAPHY"],
     competentFacts: ["ZCTA-to-geography area overlap (2020 tab20 relationship file)", "Census GEOID"],
@@ -393,7 +346,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "FEDERAL_AGENCY",
     routePrefixes: [REGISTRATION_SOURCE_ROUTE_PREFIX],
-    allowedFinalHosts: ["www2.census.gov"],
     // Every state, DC and territory in the FIPS table: registration covers the country, never a chosen list.
     jurisdictions: REGISTRATION_TARGETS.map((t) => t.jurisdiction),
     recordClasses: ["REGISTRATION"],
@@ -421,7 +373,6 @@ export const SOURCE_AUTHORITIES = {
       "https://www2.census.gov/programs-surveys/gus/",
       "https://apps.azsos.gov/cfs/",
     ],
-    allowedFinalHosts: ["www2.census.gov", "apps.azsos.gov"],
     jurisdictions: ["US-AZ", "US-NH", "US-NJ"],
     recordClasses: ["OPERATIONAL_REFERENCE"],
     competentFacts: [
@@ -444,7 +395,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "OFFICIAL_PLATFORM",
     routePrefixes: ["https://www2.census.gov/programs-surveys/gus/", "https://apps.azsos.gov/cfs/"],
-    allowedFinalHosts: ["www2.census.gov", "apps.azsos.gov"],
     jurisdictions: ["US-AZ"],
     recordClasses: ["OPERATIONAL_REFERENCE"],
     competentFacts: [
@@ -527,21 +477,6 @@ export const SOURCE_AUTHORITIES = {
       "https://winslowaz.suiteonemedia.com/robots.txt",
       "https://winslowaz.suiteonemedia.com/?embed=1",
     ],
-    allowedFinalHosts: [
-      "api.thrillshare.com", "bradfordnh.gov", "calendar.google.com", "capaz.api.civicclerk.com",
-      "capaz.portal.civicclerk.com", "govboard.tusd1.org", "clerksboards.tucsonaz.gov", "meetings.boardbook.org",
-      "mesa.legistar.com", "morriscountynj.iqm2.com",
-      "webapi.legistar.com",
-      "newlondon.nh.gov", "www.pima.edu", "events.pima.edu", "www.susd12.org", "pima.legistar.com", "susd-12.community.highbond.com", "tucsonaz.hylandcloud.com",
-      "www.pima.gov",
-      "tusd1-schooldesk.community.diligentoneplatform.com", "vailschooldistrictaz.thrillshare.com", "warnernh.gov",
-      "www.cap-az.com", "www.kearsarge.org", "www.merrimackcounty.net", "www.mesaaz.gov", "www.mhrd.org",
-      "www.newbury.nh.gov", "www.rockawaytownship.org", "www.suttonnh.gov", "www.wilmotnh.org",
-      "www.tusd1.org",
-      "www.chandleraz.gov", "public.destinyhosted.com",
-      "newburynhlibrary.net", "www.newburyenergynh.org",
-      "holbrookaz.gov", "winslowaz.suiteonemedia.com",
-    ],
     jurisdictions: ["US-AZ", "US-NH", "US-NJ", "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
     recordClasses: ["MEETING"],
     competentFacts: ["meeting time", "meeting status", "public body", "location", "agenda link", "agenda document"],
@@ -564,7 +499,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T2_AUTHORITATIVE_DOCUMENT",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [],
-    allowedFinalHosts: [],
     jurisdictions: ["US", ...REGISTRATION_TARGETS.map((t) => t.jurisdiction)],
     recordClasses: ["CURATED_READER_RECORD"],
     competentFacts: [
@@ -591,7 +525,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "OFFICIAL_PLATFORM",
     routePrefixes: [],
-    allowedFinalHosts: [],
     /* Every registered state has a family (2026-09-25): a sitting in Ohio is inside this authority as one in Arizona is. */
     jurisdictions: [...REGISTRATION_TARGETS.map((t) => t.jurisdiction), "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
     recordClasses: ["MEETING"],
@@ -620,7 +553,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T3_ATTRIBUTED_PRIMARY",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [],
-    allowedFinalHosts: [],
     jurisdictions: ["US", "US-AZ", "US-NH", "US-NJ"],
     recordClasses: ["CURATED_READER_RECORD"],
     competentFacts: [
@@ -645,7 +577,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T2_AUTHORITATIVE_DOCUMENT",
     sourceClass: "OFFICIAL_PLATFORM",
     routePrefixes: ["https://www.morriscountyclerk.org/"],
-    allowedFinalHosts: ["www.morriscountyclerk.org", "morriscountyclerk.org"],
     jurisdictions: ["US-NJ"],
     recordClasses: ["BALLOT_FILING"],
     competentFacts: ["filed candidacy", "contest", "party", "slogan", "term", "seat count", "filed contact", "filing removal"],
@@ -667,7 +598,6 @@ export const SOURCE_AUTHORITIES = {
       "https://raw.githubusercontent.com/cisagov/dotgov-data/",
       "https://github.com/cisagov/dotgov-data/",
     ],
-    allowedFinalHosts: ["api.github.com", "raw.githubusercontent.com", "github.com"],
     jurisdictions: ["US"],
     recordClasses: ["DOTGOV_REFERENCE"],
     competentFacts: ["registered .gov domain", "registrant organization", "CISA domain type", "registry source revision"],
@@ -685,7 +615,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T2_AUTHORITATIVE_DOCUMENT",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [],
-    allowedFinalHosts: [],
     jurisdictions: ["US-AZ"],
     recordClasses: ["BALLOT_CANDIDACY"],
     competentFacts: ["filed candidacy", "certified nominee", "contest", "party", "measure", "candidate identity crosswalk"],
@@ -704,7 +633,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T2_AUTHORITATIVE_DOCUMENT",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [],
-    allowedFinalHosts: [],
     jurisdictions: ["US-NH"],
     recordClasses: ["BALLOT_CANDIDACY"],
     competentFacts: ["filed candidacy", "contest", "party", "term", "seat count", "election date"],
@@ -723,7 +651,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T3_ATTRIBUTED_PRIMARY",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [],
-    allowedFinalHosts: [],
     jurisdictions: ["US-AZ", "US-NH", "US-NJ"],
     recordClasses: ["CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION"],
     competentFacts: ["candidate-published biography", "candidate-controlled link", "filed contact", "candidate-authored publication", "official officeholder page"],
@@ -742,7 +669,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T3_ATTRIBUTED_PRIMARY",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [],
-    allowedFinalHosts: [],
     jurisdictions: ["US"],
     recordClasses: ["OFFICEHOLDER_STATEMENT"],
     competentFacts: ["officeholder-published statement", "campaign-controlled statement", "official office biography and publication"],
@@ -761,7 +687,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T2_AUTHORITATIVE_DOCUMENT",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [],
-    allowedFinalHosts: [],
     jurisdictions: ["US-AZ"],
     recordClasses: ["STATE_EXECUTIVE_ACTION"],
     competentFacts: ["executive order", "chaptered enactment", "governor approval", "veto", "official transmittal letter"],
@@ -780,7 +705,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "OFFICIAL_PLATFORM",
     routePrefixes: ["https://webapi.legistar.com/v1/pima/"],
-    allowedFinalHosts: ["webapi.legistar.com"],
     jurisdictions: ["US-AZ"],
     recordClasses: ["MEETING_OUTCOME"],
     competentFacts: ["agenda item", "recorded body action", "recorded disposition", "exact per-person roll call", "publisher document status"],
@@ -804,7 +728,6 @@ export const SOURCE_AUTHORITIES = {
     // a public page); the minutes reader now follows a minutes link there when
     // the portal carries none (lib/outcomes/minutes-ingest.ts).
     routePrefixes: ["https://mesa.legistar.com/", "https://legistar.granicus.com/mesa/"],
-    allowedFinalHosts: ["mesa.legistar.com", "legistar.granicus.com"],
     jurisdictions: ["US-AZ"],
     recordClasses: ["MEETING_OUTCOME"],
     competentFacts: ["recorded council motion", "mover and seconder", "recorded result", "verbatim tabulation of votes", "minutes document standing (action minutes, minutes, approval recorded)", "minutes not yet published"],
@@ -822,7 +745,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T2_AUTHORITATIVE_DOCUMENT",
     sourceClass: "STATE_LEGISLATURE",
     routePrefixes: ["https://www.azleg.gov/", "https://apps.azleg.gov/", "https://www.azsenate.gov/", "https://www.azhouse.gov/"],
-    allowedFinalHosts: ["www.azleg.gov", "azleg.gov", "apps.azleg.gov", "www.azsenate.gov", "azsenate.gov", "www.azhouse.gov", "azhouse.gov"],
     jurisdictions: ["US-AZ"],
     recordClasses: ["STATE_LEGISLATOR", "STATE_ROLL_CALL", "STATE_LEGISLATOR_VOTES"],
     competentFacts: ["legislative membership", "chamber", "district", "session", "official roll call", "bill action stage"],
@@ -840,7 +762,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "STATE_LEGISLATURE",
     routePrefixes: ["https://gc.nh.gov/downloads/", "https://gc.nh.gov/nhgcrollcalls/", "https://gc.nh.gov/"],
-    allowedFinalHosts: ["gc.nh.gov"],
     jurisdictions: ["US-NH"],
     recordClasses: ["STATE_LEGISLATOR", "STATE_ROLL_CALL", "STATE_LEGISLATOR_VOTES"],
     competentFacts: ["legislative membership", "elected status", "chamber", "district", "committee assignment", "official roll call"],
@@ -858,7 +779,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T2_AUTHORITATIVE_DOCUMENT",
     sourceClass: "STATE_LEGISLATURE",
     routePrefixes: ["https://www.njleg.state.nj.us/", "https://pub.njleg.state.nj.us/", "https://pub.njleg.gov/"],
-    allowedFinalHosts: ["www.njleg.state.nj.us", "njleg.state.nj.us", "pub.njleg.state.nj.us", "pub.njleg.gov"],
     jurisdictions: ["US-NJ"],
     recordClasses: ["STATE_LEGISLATOR", "STATE_ROLL_CALL", "STATE_LEGISLATOR_VOTES"],
     competentFacts: ["legislative membership", "chamber", "district", "session", "official voting record", "bill action stage"],
@@ -876,7 +796,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T4_RESEARCH_SECONDARY",
     sourceClass: "INTERMEDIARY",
     routePrefixes: ["https://api.legiscan.com/", "https://legiscan.com/"],
-    allowedFinalHosts: ["api.legiscan.com", "legiscan.com", "www.legiscan.com"],
     jurisdictions: ["US-AZ", "US-NH", "US-NJ"],
     recordClasses: ["STATE_LEGISLATOR", "STATE_ROLL_CALL", "STATE_LEGISLATOR_VOTES"],
     competentFacts: [],
@@ -894,7 +813,6 @@ export const SOURCE_AUTHORITIES = {
     trust: "T4_RESEARCH_SECONDARY",
     sourceClass: "INTERMEDIARY",
     routePrefixes: ["https://open.pluralpolicy.com/", "https://github.com/openstates/"],
-    allowedFinalHosts: ["open.pluralpolicy.com", "github.com", "raw.githubusercontent.com"],
     jurisdictions: ["US-AZ", "US-NH", "US-NJ"],
     recordClasses: ["STATE_LEGISLATOR"],
     competentFacts: [],
@@ -1044,11 +962,8 @@ export function authorityFor(
   try { url = new URL(finalUrl); }
   catch { return { ok: false, code: "FINAL_URL_INVALID", detail: `Final URL is not parseable: ${JSON.stringify(finalUrl)}.` }; }
   if (url.protocol !== "https:") return { ok: false, code: "FINAL_URL_NOT_HTTPS", detail: `${url.href} is not HTTPS.` };
-  if (!contract.allowedFinalHosts.includes(url.hostname.toLowerCase())) {
-    return { ok: false, code: "FINAL_HOST_NOT_AUTHORIZED", detail: `${url.hostname} does not inherit authority from ${sourceId}.` };
-  }
   if (!contract.routePrefixes.some((prefix) => url.href.startsWith(prefix))) {
-    return { ok: false, code: "FINAL_ROUTE_NOT_REGISTERED", detail: `${url.href} is on an inherited host but outside ${sourceId}'s registered publication routes.` };
+    return { ok: false, code: "FINAL_ROUTE_NOT_REGISTERED", detail: `${url.href} is outside ${sourceId}'s registered publication routes.` };
   }
   if (!contract.routineAutoPromotion) {
     return { ok: false, code: "SOURCE_NOT_AUTO_PROMOTABLE", detail: `${sourceId} is ${contract.trust}; it remains research/corroboration only.` };

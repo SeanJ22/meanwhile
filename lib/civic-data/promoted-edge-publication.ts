@@ -22,6 +22,8 @@ import {
   readDerivedCampaignSites,
 } from "./derived-campaign-sites.ts";
 import { readCuratedReaderProjection } from "./curated-reader-read-model.ts";
+import { VOTING_SITES_CONTRACT } from "../ballot/voting-sites-data-plane.ts";
+import { readVotingSitesProjection } from "../ballot/voting-sites-server.ts";
 import { readNhMembers } from "./state-members.ts";
 import { readFundingSnapshot } from "../funding/snapshot.ts";
 import { readStateMoneyProjection } from "../funding/state-snapshot.ts";
@@ -94,7 +96,9 @@ export function promotedEdgePointers(): Readonly<Record<PromotedAuthorityFamily,
     "candidate-publications": [manual("candidate-corpus", readCandidateCorpusProjection),
       { recordClass: DERIVED_CAMPAIGN_SITES_RECORD_CLASS, scope: DERIVED_CAMPAIGN_SITES_SCOPE, reader: readDerivedCampaignSites }],
     "ballot-navigation": [manual("ballot-navigation", (options) => readCuratedReaderProjection("ballot-navigation", options))],
+    "voting-sites": [{ ...VOTING_SITES_CONTRACT, reader: readVotingSitesProjection }],
     "official-filings": [manual("official-filings", (options) => readCuratedReaderProjection("official-filings", options))],
+    "member-offices": [manual("member-offices", (options) => readCuratedReaderProjection("member-offices", options))],
     "nh-members": [{ recordClass: nhMembers.recordClass, scope: nhMembers.scope, reader: readNhMembers }],
     "federal-funding": [{ recordClass: "FEC_FUNDING", scope: requiredRoutineContract("fec-funding").scope, reader: readFundingSnapshot }],
     "state-money": (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map((state) => ({

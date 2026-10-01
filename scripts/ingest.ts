@@ -36,6 +36,7 @@ import {
 } from "../lib/meetings/attribution.ts";
 import { agendaItems } from "../lib/routing/agenda-search.ts";
 import { isAnotherBodysNoticePage, isWiredNoticePage } from "../lib/meetings/notice-pages.ts";
+import { meetingFetchPass } from "../lib/meetings/shared-fetch.ts";
 import {
   readMeetingPartitionProjection,
   snapshotCounts,
@@ -729,7 +730,7 @@ export async function retrieveAgendas(meetings: Meeting[]) {
 }
 
 /** Read one ACTIVE member of a derived family on its own row, through the same composite adapters a partition uses. */
-async function readDerivedFamilyMember(member: DerivedWiringRecord): Promise<FamilyMemberRead> {
+async function readDerivedFamilyMember(member: DerivedWiringRecord, fetchImpl: typeof fetch): Promise<FamilyMemberRead> {
   const sourceName = DERIVED_WIRING_SOURCE_NAMES[member.row.kind];
   try {
     const source = buildCompositeSource({
@@ -737,6 +738,7 @@ async function readDerivedFamilyMember(member: DerivedWiringRecord): Promise<Fam
       captureAcquisitionEvidence: true,
       sourceNames: [sourceName],
       derivedRows: [bodySourceWiringFor(member.row)],
+      fetchImpl,
     });
     const now = Date.now();
     const raw = await source.fetch({
@@ -807,9 +809,10 @@ export async function promoteDerivedMeetingFamily(
   await prepare();
   const previous = await readPreviousMeetingPartition(store, partition);
   const reads: FamilyMemberRead[] = [];
+  const fetchImpl = meetingFetchPass();
   for (const member of members) {
     if (member.status !== "ACTIVE") continue;
-    const read = await readDerivedFamilyMember(member);
+    const read = await readDerivedFamilyMember(member, fetchImpl);
     console.log(`  ${member.id}: ${read.ok ? `${read.freshMeetings.length} sitting(s) read` : `held: ${read.error}`}`);
     reads.push(read);
   }
@@ -832,10 +835,10 @@ export async function promoteDerivedMeetingFamily(
     reads,
     previous,
     generatedAt,
-    reconcile: (read, previousSlice) => {
+    reconcile: (read, previousSlice, windowAnchor) => {
       const reconciled = reconcileSuccessfulMeetingPartition({
         sourceName: DERIVED_WIRING_SOURCE_NAMES[read.member.row.kind],
-        generatedAt,
+        generatedAt: windowAnchor,
         freshMeetings: read.freshMeetings,
         freshAgendaDocuments: read.freshAgendaDocuments,
         previous: previousSlice,
@@ -880,7 +883,7 @@ export async function promoteDerivedMeetingFamily(
     ...(venueReferenceEvidence.length > 0 ? { venueReferenceEvidence } : {}) } };
   const candidate = derivedFamilyCandidate(partition, finalBuild);
   // An unchanged family pass is receipted on the pointed version (R23).
-  const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, generatedAt, undefined, { confirmUnchanged: true });
+  const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, new Date().toISOString(), undefined, { confirmUnchanged: true });
   printMeetingPartitionReceipt(partition, candidate, outcome, outcome.promoted ? null : outcome.candidate.failureDetail);
   console.log(`AUTOMATIC_VENUE_MEETING_RECEIPT=${JSON.stringify({ candidateId: candidate.id,
     placedFromReviewed: fromReviewed.placedCount, placedFromCensus: placed.placedCount,

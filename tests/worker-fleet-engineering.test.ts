@@ -9,9 +9,10 @@ import { contentHash } from "../lib/control-plane/ids.ts";
 import { ENGINEERING_METHOD_ID, runEngineeringWorker } from "../lib/control-plane/workers/engineering.ts";
 import type { EngineeringWorkerInput } from "../lib/control-plane/workers/engineering-types.ts";
 import type { WorkerEvidence } from "../lib/control-plane/workers/types.ts";
+import { METHOD_FIXTURE_PATH } from "./method-store-fixture.ts";
 
 const STAMP = "2026-09-02T12:00:00.000Z";
-const methodText = readFileSync(new URL("../data/method/knowledge.json", import.meta.url), "utf8");
+const methodText = readFileSync(METHOD_FIXTURE_PATH, "utf8");
 
 function evidence(artifactId: string, text: string, canonicalUrl: string): WorkerEvidence {
   return { artifactId, text, contentHash: contentHash(text), canonicalUrl, acquiredByAttemptId: "at-test-capture",
@@ -26,7 +27,7 @@ function request(): EngineeringWorkerInput {
   return {
     attemptId: "at-engineering-control", worker: { role: "ENGINEERING", provider: "deterministic", version: "1.0.0", instance: "engineering-control" },
     grant: { ...defaultGrant({ role: "ENGINEERING", project: "engineering-control", policyVersion: "review-only", grantedAt: STAMP }), capabilities: ["VAULT_READ_SANITIZED"] },
-    methodEvidence: evidence("art-method-control", methodText, "repository://data/method/knowledge.json"), supportingEvidence: [sitemap],
+    methodEvidence: evidence("art-method-control", methodText, "repository://tests/fixtures/method-knowledge.json"), supportingEvidence: [sitemap],
     spec: { schemaVersion: 1, methodRouteId: ENGINEERING_METHOD_ID, methodVersion: JSON.parse(methodText).version,
       methodArtifactId: "art-method-control", validation: { resultId: "wr-method-validation-control", attemptId: "at-method-validator-control", verdict: "PASS", validatedAspect: "SOURCE_EXTRACTION" },
       supportingArtifactIds: [sitemap.artifactId], existingInterface: { id: "streamline-sitemap-inventory", version: 1 },

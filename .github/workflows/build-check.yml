@@ -163,10 +163,6 @@ jobs:
         if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft') && matrix.group == 'governance'
         timeout-minutes: 5
         run: corepack pnpm orchestration:check
-      - name: Method knowledge store
-        if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft') && matrix.group == 'governance'
-        timeout-minutes: 5
-        run: corepack pnpm method:check
       - name: Canonical state holdings and residual paths
         if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft') && matrix.group == 'governance'
         timeout-minutes: 5

@@ -19,6 +19,188 @@ import {
 } from "../lib/sources/plural/index.ts";
 import { coverageAt } from "../lib/registry/server.ts";
 import registry from "../lib/registry/registry.json" with { type: "json" };
+import { collectNationalPlaceSources, electionDirectorySelection } from "../lib/sources/plural/place.ts";
+import { electionPageFields } from "../lib/hunt/election-page.ts";
+import { placeSourceReader, PlaceSourceDeferred } from "../lib/hunt/place-source-reader.ts";
+import { runNationalPlaceTask } from "../lib/hunt/place-source-task.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { createWorkItem } from "../lib/control-plane/work-item.ts";
+import { createRouteTask } from "../lib/control-plane/route-task.ts";
+import { beginAttemptFor, claimRouteTask, registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
+import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.ts";
+import { emptyFieldManual, newFieldManualEntry, projectFieldManual } from "../lib/control-plane/field-manual.ts";
+
+test("a national host bound saves admitted responses and defers all remaining ZIPs without abandoning Attempts", async t => {
+  const repos = createMemoryRepositories();
+  const store = new MemoryEvidenceStore();
+  let requests = 0;
+  const year = new Date().getUTCFullYear();
+  const names = ["2020 Census ZIP Code Tabulation Areas", `${Math.floor((year - 1789) / 2) + 1}th Congressional Districts`,
+    `${Math.floor((year - 1) / 2) * 2} State Legislative Districts - Upper`,
+    `${Math.floor((year - 1) / 2) * 2} State Legislative Districts - Lower`, "States", "Counties", "Incorporated Places",
+    "County Subdivisions", "Unified School Districts", "Elementary School Districts", "Secondary School Districts"];
+  t.mock.method(globalThis, "fetch", async (url: string) => {
+    requests++;
+    // Siblings still in flight when another request is refused must be vaulted.
+    await new Promise(resolve => setTimeout(resolve, 5));
+    return Response.json(url.endsWith("/query")
+      ? { url, features: [{ attributes: {}, geometry: { rings: [[[0, 0], [1, 0], [1, 1], [0, 0]]] } }] }
+      : { url, layers: names.map((name, id) => ({ id, name, type: "Feature Layer" })) });
+  });
+  const tools = { repos, store, now: () => "2026-09-30T00:00:00.000Z", spaceOut: async () => {} };
+  const input = { tools, store: new MemoryRoutineDataStore(), zips: ["03060", "03101", "03301"],
+    publish: async () => { assert.fail("incomplete geography cannot publish"); } };
+  const result = await runNationalPlaceTask(input);
+  assert.deepEqual(result.map(row => row.zip), input.zips);
+  assert.ok(result.every(row => "deferred" in row && row.deferred.includes("next pass")));
+  assert.equal(requests, RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);
+  assert.ok((await repos.attempts.list()).every(row => row.value.outcome === "COMPLETED"));
+  assert.ok((await repos.routeTasks.list()).every(row => row.value.disposition?.disposition === "BLOCKED_CURRENTLY"));
+  assert.ok((await repos.occurrences.list()).every(row => row.value.closedAt && row.value.unresolvedReason?.includes("DEFERRED") && row.value.disposition === null));
+  assert.ok((await repos.obligations.list()).every(row => row.value.lastWorkedAt === null));
+  const saved = await repos.artifacts.readAll();
+  assert.ok(saved.some(row => row.canonicalUrl.includes("Places_CouSub_ConCity_SubMCD")), "parallel responses saved before completion");
+  const before = requests;
+  await runNationalPlaceTask(input);
+  assert.equal(requests - before, RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);
+  const next = await repos.artifacts.readAll();
+  assert.ok(next.some(row => row.canonicalUrl.includes("School")), "the next pass advances using held responses");
+  assert.ok(saved.every(row => next.some(other => other.artifactId === row.artifactId)), "all earlier evidence remains held");
+});
+
+test("a national walk reuses another role's working source route after a directory's dead landing page", async () => {
+  const now = "2026-09-30T00:00:00Z";
+  const entries = [newFieldManualEntry("detective", "working", { role: "DETECTIVE", kind: "ROUTE", title: "Officials",
+    summary: "Replacement landing page", outcome: "YIELDED", states: ["mo"], url: "https://state.example.gov/leaders", payload: { procedure: "open leaders" } })];
+  const store = { ...emptyFieldManual(), entries };
+  const opened: string[] = [];
+  const pages: Record<string, string> = {
+    "https://www.usa.gov/state-governments": '<a id="mo" href="/states/missouri">Missouri</a>',
+    "https://www.usa.gov/states/missouri": '<h1>Missouri</h1><div class="field--name-field-website"><a href="https://state.example.gov/old">State</a></div>',
+    "https://state.example.gov/leaders": '<a href="/governor">Governor Jane Doe</a>',
+  };
+  const result = await collectNationalPlaceSources({ now, knowledge: { store, revision: 1, projection: projectFieldManual(store) },
+    divisions: [{ id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" }],
+    read: async url => { opened.push(url); if (!(url in pages)) throw Error("Source unavailable"); return { url, text: pages[url], collectedAt: now }; } });
+  assert.ok(opened.includes("https://state.example.gov/leaders"));
+  assert.deepEqual(result.officials.map(row => row.name), ["Jane Doe"]);
+  assert.equal(result.officials[0].document.text, pages["https://state.example.gov/leaders"], "the newly saved official page supplies the fact, not the manual");
+});
+import type { ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
+
+test("national collector binds saved CSV to its real Attempt and reuses another job without renewing its age", async () => {
+  const repos = createMemoryRepositories();
+  const store = new MemoryEvidenceStore();
+  const url = "https://legislature.gov/members.csv";
+  const body = "id,name\n1,Ada Smith\n";
+  let fetched = 0;
+  const reader = async (now: string, subject: string) => {
+    const work = createWorkItem({ project: "freshness", subject, obligation: "Read national sources", why: "Capture", now });
+    const task = createRouteTask({ workItemId: work.id, routeId: "national-place-sources", routeLabel: "National sources", target: subject, inherited: false, now });
+    await registerWorkItem(repos, work, now);
+    await registerRouteTask(repos, task, now);
+    const claimed = await claimRouteTask(repos, { routeTaskId: task.id, holder: subject, now, ttlMs: 300_000 });
+    const attempt = await beginAttemptFor(repos, { routeTaskId: task.id, workItemId: work.id,
+      worker: { role: "ACQUIRER", provider: "test", version: "1", instance: subject }, lease: claimed.lease.value,
+      now, methodVersion: 1, policyVersion: "test" });
+    const obligation: ScheduledObligation = { obligation: { id: subject, subjectId: subject, recordClass: "OFFICIAL_ROSTER",
+      routeId: "national-place-sources", active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null },
+      nextDueAt: now, cadenceHours: 24, cadenceSource: "DEFAULT_NO_SIGNAL", basis: "test" };
+    return placeSourceReader({ project: "freshness", context: { obligation, route: null, providerId: null,
+      attemptId: attempt.id, workItemId: work.id, routeTaskId: task.id, holder: subject,
+      now: () => now, bound: RESEARCH_BOUNDS.perDispatch }, tools: {
+      repos, store, now: () => now, spaceOut: async () => {}, openBytes: async request => {
+        const robots = request.url.endsWith("/robots.txt");
+        if (!robots) fetched++;
+        return { status: 200, bytes: Buffer.from(robots ? "User-agent: *\nAllow: /" : request.url === url ? body : request.url),
+          contentType: robots ? "text/plain" : "text/csv", finalUrl: request.url, durationMs: 1, transportError: null };
+      },
+    } });
+  };
+  const first = await reader("2026-09-30T00:00:00.000Z", "job:first");
+  const acquired = await first.read(url);
+  assert.equal(acquired.text, body);
+  assert.equal(acquired.capture?.evidence.acquiredByAttemptId, (await repos.attempts.list())[0].id);
+  assert.equal(fetched, 1);
+  const geographyUrl = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Legislative/MapServer/1/query?where=STATE%3D39";
+  const geography = '{"features":[{"attributes":{"GEOID":"39007"}}]}';
+  await first.captureGeography(geographyUrl, geography);
+  const second = await reader("2026-09-30T01:00:00.000Z", "job:other-place");
+  const reused = await second.read(url);
+  assert.equal(fetched, 1);
+  assert.equal(reused.capture?.evidence.artifactId, acquired.capture?.evidence.artifactId);
+  assert.equal(reused.collectedAt, acquired.collectedAt);
+  assert.equal(second.artifacts.size, 0);
+  assert.equal(await second.readGeography(geographyUrl), geography);
+  assert.equal(second.geographyCaptures[0].observedAt, "2026-09-30T00:00:00.000Z");
+  assert.deepEqual(second.cost, { requestCount: 0, bytesFetched: 0 });
+  const third = await reader("2026-10-02T01:00:00.000Z", "job:refresh");
+  assert.equal(await third.readGeography(geographyUrl), null, "expired Census bytes leave a source refresh owed");
+  const refreshed = await third.read(url);
+  assert.equal(fetched, 2);
+  assert.equal(refreshed.collectedAt, "2026-10-02T01:00:00.000Z");
+  assert.notEqual(refreshed.capture?.evidence.acquiredByAttemptId, acquired.capture?.evidence.acquiredByAttemptId);
+  for (let index = 2; index < RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost; index++) {
+    await third.read(`https://legislature.gov/page-${index}`);
+  }
+  await assert.rejects(third.read("https://legislature.gov/next"), PlaceSourceDeferred);
+  assert.ok(third.deferred?.message.includes("next pass"), "ordinary page hosts defer just like Census");
+  assert.equal(third.cost.requestCount, RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);
+  assert.equal((await third.read(url)).text, body, "the bound never blocks already saved pages");
+});
+
+test("the national election directory follows its published form for any state", () => {
+  const page = { url: "https://www.eac.gov/voters/register-and-vote-in-your-state", collectedAt: "2026-09-30T00:00:00Z",
+    text: '<form action="/voters/state" method="get"><select name="state_id"><option value="12">Missouri</option><option value="13">Utah</option></select></form>' };
+  assert.equal(electionDirectorySelection(page, "Utah"), "https://www.eac.gov/voters/state?state_id=13");
+  assert.equal(electionDirectorySelection(page, "Unknown"), null);
+});
+
+test("official profile headings produce officeholders; news headlines do not", async () => {
+  const stages: string[] = [];
+  const pages: Record<string, string> = {
+    "https://www.usa.gov/state-governments": '<a id="mo" href="/states/missouri">Missouri</a>',
+    "https://www.usa.gov/states/missouri": '<h1>Missouri</h1><a href="https://ag.example.gov/">Office of the Attorney General</a>',
+    "https://ag.example.gov/": '<h1>TRUE TRANSPARENCY</h1><h1>POLICE TRAINING PROVIDED REGIONALLY</h1><h1>True Transparency</h1><a href="/about">Attorney General</a>',
+    "https://ag.example.gov/about": '<h1>Attorney General Jane Doe</h1>',
+  };
+  const result = await collectNationalPlaceSources({ now: "2026-09-30T00:00:00Z",
+    divisions: [{ id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" }],
+    onSources: async sources => { stages.push("ready"); assert.equal(sources.officials[0].name, "Jane Doe"); },
+    read: async url => { if (url.includes("eac.gov")) stages.push("elections"); if (!(url in pages)) throw Error("No page"); return { url, text: pages[url], collectedAt: "2026-09-30T00:00:00Z" }; } });
+  assert.deepEqual(result.officials.map(o => [o.name, o.officeTitle]), [["Jane Doe", "Attorney General"]]);
+  assert.equal(result.officials[0].document.url, "https://ag.example.gov/about");
+  assert.deepEqual(stages, ["ready", "elections"], "a ready officeholder reaches the publisher before unrelated election collection");
+});
+
+test("election dates use explicit source year and official lookup links remain navigation", () => {
+  const page = { url: "https://elections.example.gov/calendar", collectedAt: "2026-09-30T00:00:00Z",
+    text: '<h1>2027 Voting Schedule</h1><p>October 5: Deadline to register to vote.</p><p>October 6: Early in-person voting begins.</p><a href="/poll">Find My Polling Place</a>' };
+  const fields = electionPageFields(page, "ocd-division/country:us/state:mo");
+  assert.deepEqual(fields.find(f => f.kind === "registration_deadline")?.dates, ["2027-10-05"]);
+  assert.match(fields[0].quote, /2027 Voting Schedule/);
+  assert.equal(fields.find(f => f.kind === "polling_lookup")?.value, "https://elections.example.gov/poll");
+  assert.equal(electionPageFields({ ...page, text: "<p>October 5: Deadline to register to vote.</p>" }, "division").length, 0);
+  assert.equal(electionPageFields({ ...page, text: "<p>February 30, 2027: Deadline to register to vote.</p>" }, "division").length, 0);
+  const vendor = { ...page, url: "https://state-election-office.org/calendar" };
+  assert.equal(electionPageFields(vendor, "division").length, 0);
+  const linkingPage = { url: "https://www.eac.gov/state", html: '<a href="https://state-election-office.org">State election office</a>' };
+  const linked = electionPageFields(vendor, "division", linkingPage);
+  assert.equal(linked.length, 3);
+  assert.deepEqual(linked[0].linkingPage, linkingPage, "official ancestry survives to the publisher");
+});
+
+test("redirected election pages keep their saved source identity and resolve links from the final location", () => {
+  const page = { url: "https://elections.example.gov/start", baseUrl: "https://elections.example.gov/voters/current/",
+    text: '<a href="polling">Find my polling place</a>', collectedAt: "2026-09-30T00:00:00Z" };
+  const [field] = electionPageFields(page, "ocd-division/country:us/state:mo");
+  assert.equal(field.sourceUrl, page.url);
+  assert.equal(field.value, "https://elections.example.gov/voters/current/polling");
+  const directory = { ...page, text: '<form method="get" action="states"><select name="state"><option value="MO">Missouri</option></select></form>' };
+  assert.equal(electionDirectorySelection(directory, "Missouri"), "https://elections.example.gov/voters/current/states?state=MO");
+});
 
 /**
  * State legislators, and the reconciliation that makes them attachable.
@@ -62,7 +244,7 @@ test("New Jersey's lower chamber members are Assemblymembers", () => {
   assert.equal(CHAMBER_TITLE.az.lower, "State Representative");
 });
 
-test("a state with no chamber-title entry reports rather than inventing one", () => {
+test("a state beyond the original pilots normalizes without a local registry", () => {
   const set = normalize(
     [person({ id: "ocd-person/x", state: "tx", current_district: "1" })],
     new Map(),
@@ -70,8 +252,9 @@ test("a state with no chamber-title entry reports rather than inventing one", ()
     "48",
   );
 
-  assert.equal(set.officeholders.length, 0);
-  assert.match(set.unmatched[0].reason, /no chamber title/);
+  assert.equal(set.officeholders.length, 1);
+  assert.equal(set.officeholders[0].officeTitle, "State Representative");
+  assert.match(set.unmatched[0].reason, /no lower division/);
 });
 
 test("a district outside the clipped coverage is reported, not dropped silently", () => {
@@ -131,7 +314,7 @@ test("a roster with the wrong header or too few rows is refused, not read as emp
   const header =
     "id,name,current_party,current_district,current_chamber,email,image,capitol_voice,district_voice,links,sources\n";
   // The right header but a handful of rows is a truncated file.
-  assert.match(pluralRosterIssue(header + "ocd-person/a,A,,19,upper,,,,,,\n") ?? "", /below the floor/);
+  assert.match(pluralRosterIssue(header) ?? "", /below the floor/);
 
   // A full roster passes.
   const rows = Array.from(
@@ -254,7 +437,9 @@ function person(overrides: Partial<PluralPerson>): PluralPerson {
     current_chamber: "lower",
     email: "",
     image: "",
+    capitol_address: "",
     capitol_voice: "",
+    district_address: "",
     district_voice: "",
     links: "",
     sources: "",
@@ -262,3 +447,10 @@ function person(overrides: Partial<PluralPerson>): PluralPerson {
     ...overrides,
   };
 }
+
+test("the bulk CSV's capitol and district office addresses are carried, not dropped", () => {
+  const csv = "id,name,current_party,current_district,current_chamber,email,image,links,sources,capitol_address,capitol_voice,district_address,district_voice\n" +
+    'ocd-person/n1,Al Abdelaziz,Democratic,35,lower,,,,,,,"680 Broadway Suite 207, Paterson, NJ 07514",862-264-2540\n';
+  const [row] = rowsToPeople(csv, "nj");
+  assert.deepEqual([row.capitol_address, row.district_address, row.district_voice], ["", "680 Broadway Suite 207, Paterson, NJ 07514", "862-264-2540"]);
+});

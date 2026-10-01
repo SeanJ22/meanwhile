@@ -113,7 +113,8 @@ export interface AdminV6HuntView {
   readonly heldUsd: number;
   /** Anthropic requests charged to this allowance with no price. Unknown, never zero dollars. */
   readonly unpricedEntries: number;
-  readonly status: "unreported";
+  /** "paused" exactly when the hunt's budget is $0 (how a pause is saved, so Resume can offer itself); otherwise the run state is not reported. */
+  readonly status: "unreported" | "paused";
   readonly researchWorkers: null;
   readonly basis: "lifetime";
   /** The limit minus spent and set aside, or null when an unpriced charge makes it unknown. */
@@ -177,7 +178,7 @@ function huntView(decision: ExpansionScopeDecision & { readonly budgetStartedAt:
     spentUsd: spent,
     heldUsd: held,
     unpricedEntries: row.budgetUnpriced,
-    status: "unreported",
+    status: decision.budgetUsd === 0 ? "paused" : "unreported",
     researchWorkers: null,
     basis: "lifetime",
     availableUsd: row.budgetUnpriced > 0 ? null : cents6(Math.max(0, decision.budgetUsd - spent - held)),

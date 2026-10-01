@@ -36,12 +36,10 @@ import { DECISION_LOG_KEY, appendDecisionIntent } from "../lib/control-plane/adm
 import { collapseDecisionLog } from "../lib/control-plane/decision-log.ts";
 import { ANSWERED_IN_OWN_WORDS, held, measured, type OwnerDecisionCard, type OwnerDecisionIntent } from "../lib/control-plane/owner-surface.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
-import { plainWindow, recordClassLabel } from "../lib/control-plane/plain-window.ts";
 import { populationInCompleteZip, type StateAuthorities } from "../lib/control-plane/readiness/extract.ts";
 import { METRIC_GROUP_MEANING, researchDigestRows } from "../lib/control-plane/research-digest.ts";
 import type { ResearchMetrics } from "../lib/control-plane/research-metrics.ts";
 import type { WindowView } from "../lib/control-plane/window-view.ts";
-import { findingPlain, roleLead, verdictPlain, workItemStatePlain } from "../lib/control-plane/workers/plain-roles.ts";
 import type { WorkerRoleView } from "../lib/control-plane/workers/readback.ts";
 import { ACS_STATE_DATASET, ACS_ZCTA_DATASET, refreshPopulationFromPromoted, statePopulation, zipPopulation } from "../lib/reference/acs-population.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -71,7 +69,7 @@ const src = (rel: string): string => readFileSync(join(ROOT, rel), "utf8");
  * the directory rather than hand-listed. `tests/admin-surface.ts` carries the
  * argument in full.
  */
-const surface = (which: "home" | "research" | "readiness"): string => surfaceSource(ROOT, which);
+const surface = (which: "home" | "readiness"): string => surfaceSource(ROOT, which);
 
 /* ================================================================== *
  * ADM-22 — every stamp is Eastern, spelled out
@@ -94,11 +92,6 @@ test("ADM-22: an ISO stamp reads as Eastern time spelled out, with the year only
 
 test("ADM-22: no console page prints a raw ISO stamp where the owner reads; every one is spelled out in Eastern time", () => {
   const BARE = /[^=$]\{(snapshot\.publishedAt|heartbeat\.lastCycleStartedAt|d\.writtenAt|intent\.requestedAt|row\.recordedAt|attempt\.startedAt|base\.nowIso)\}/;
-  // The research page kept its content: its stamps go through <When>.
-  const research = surface("research");
-  assert.match(research, /<When iso=/, "the research surface renders stamps through When");
-  assert.doesNotMatch(research, BARE, "the research surface prints no bare ISO stamp");
-  assert.ok((research.match(/<Said text=/g) ?? []).length >= 5, "the research surface quotes instrument sentences through Said");
   assert.match(src("app/(admin)/console-ui.tsx"), /dateTime=\{iso\} title=\{iso\}/, "the ISO string stays on the element for the machine and the hover");
   assert.match(src("app/(admin)/console-ui.tsx"), /<span className="gap-whose">\{gapLabel\(gap\)\}<\/span> \{easternize\(gap\.says\)\}/, "a published gap sentence is quoted with its stamps in Eastern time");
   // Admin redesign, 2026-09-23: the Fleet and Readiness areas spell their stamps out with formatEastern (the shell's strip keeps the ISO string on the element for the machine and the hover) instead of through <When>.
@@ -137,7 +130,7 @@ test("ADM-22: no console page prints a raw ISO stamp where the owner reads; ever
     "receipt.readBackAt", // the page an action's result can be read back on: a path, not a time
     "readAt", // the audit footer's prop, spelled out at every call site (asserted above)
   ]);
-  const consoleFiles = [...sourceFilesUnder([".tsx"], "app", "(admin)"), ...sourceFilesUnder([".tsx"], "components", "admin")];
+  const consoleFiles = [...sourceFilesUnder([".tsx"], "app", "(admin)")];
   for (const abs of consoleFiles) {
     const rel = relative(ROOT, abs).split(sep).join("/");
     const shown = codeOf(rel).replace(/\b(?:key|id|href)=\{`[^`]*`\}/g, "");
@@ -210,8 +203,6 @@ test("ADM-12: a candidate is named from the record and never re-derived from the
 });
 
 test("ADM-12: every console surface renders keys as display names", () => {
-  const n = (surface("research").match(/<Name raw=/g) ?? []).length;
-  assert.ok(n >= 3, `the research surface renders at least 3 keys through Name (found ${n})`);
   const ui = src("app/(admin)/console-ui.tsx");
   assert.match(ui, /title=\{d\.raw === d\.name \? undefined : d\.raw\}/, "the raw key is the hover title");
   // Admin redesign, 2026-09-23: the Fleet screens name a subject key with displayNameOf where they draw it (the costliest assignments on Money) instead of through <Name>.
@@ -283,27 +274,13 @@ test("ADM-16: a card with a recorded decision leaves 'waiting on you' at once; a
 
 test("ADM-16: the page renders the split and receipt, while tracked tracker synchronization stays outside the immutable runtime", () => {
   const now = codeOf("app/(admin)/admin/page.tsx");
-  assert.match(now, /splitDecided\(snapshot\.decisionCards, collapseDecisionLog\(decisionLog\)\)/, "the page splits the cards against the live decision log");
-  assert.match(now, /const waiting = split \? split\.waiting : \[\];/, "a card with a recorded decision leaves the list");
-  assert.match(now, /const steps = stepsFrom\(waiting\);/, "the count is the WAITING cards, not every card");
-  // Admin redesign, 2026-09-23: the decided cards are listed again under the next steps, each with its three-leg receipt — the gateway's answer promises the card will say when the sync has acted.
-  assert.match(now, /const decided = split \? split\.decided : \[\];/, "what was decided is listed from the same split");
-  assert.match(now, /receiptHeadline\(entry\.steps\)/, "each decided card leads with how far its receipt has got");
-  assert.match(now, /entry\.steps\.map\(/, "and shows every leg of the receipt");
-  // Admin redesign, 2026-09-23: the old queue's client-side count that dropped before the network answered was removed; the card itself changes at once, and the server-drawn count drops on the refresh after the receipt.
-  const steps = codeOf("app/(admin)/_mw/next-steps.tsx");
-  const saving = steps.indexOf('set(card.rowId, { kind: "SAVING", what });');
-  assert.ok(saving > 0 && saving < steps.indexOf("await fetch(props.liveRoute"), "ADM-32: the card shows it is recording before the network answers");
-  // The card itself also says what was recorded, at once, before the page refreshes.
-  assert.match(steps, /RECORDED VERBATIM/, "the receipt says what was recorded");
-  assert.match(steps, /A PERSON APPLIES IT/, "and who carries it into the tracker");
-  assert.match(now, /returnTo=\{base\.here\}/);
-  assert.match(steps, /returnTo: props\.returnTo/);
+  // S11 (Sean, 2026-09-30): the old tracker's decision cards are off the home screen, so the page no longer splits, counts or lists them.
+  assert.doesNotMatch(now, /splitDecided\(|readDecisionCards\(|readDecisions\(|NextSteps|receiptHeadline\(/, "the home screen does not draw the old tracker decisions");
   assert.doesNotMatch(surface("home"), /carried into the tracker at the next sync, where the row closes/, "the old one-sentence promise is gone");
   assert.equal(consoleReturnPath("/readiness/az", "/admin"), "/readiness/az");
   assert.equal(consoleReturnPath("https://evil.example/", "/admin"), "/admin");
   assert.equal(consoleReturnPath("/readiness/AZ", "/admin"), "/admin", "the closed list is exact");
-  assert.equal(isConsolePath("/admin/research"), true);
+  assert.equal(isConsolePath("/admin/sources"), true);
   assert.match(src("app/api/admin/decision/route.ts"), /consoleReturnPath\(/);
   assert.match(src("app/api/admin/research/route.ts"), /consoleReturnPath\(/);
   const canon = src("scripts/canonicalize-owner-decisions.mts");
@@ -489,15 +466,7 @@ test("ADM-20: every gap on the console carries the queue button, and the page ha
     assert.ok(page.startsWith(CONSOLE), `${rel} draws a queue button outside the console`);
     assert.match(src(relative(ROOT, page)), /<QueueForm returnTo=/, `${relative(ROOT, page)} draws a queue button (in ${rel}) and must render the one queue form it names`);
   }
-  assert.match(src("app/(admin)/admin/research/page.tsx"), /<QueueForm returnTo=/, "the research page renders the one queue form");
-  // Admin redesign, 2026-09-23: the home page's fix-queue section moved to the Fix list, which puts an item on the queue through queue.add and sends the queue with Go fix these on the fix-queue row.
-  const fix = codeOf("app/(admin)/_mw/screens/fix.tsx");
-  assert.match(fix, /<GoFix [^>]*subjectId=\{FIX_QUEUE_SUBJECT\} option=\{GO_FIX_OPTION\}/);
-  const controls = codeOf("app/(admin)/_mw/fix-controls.tsx");
-  assert.match(controls, /type: "queue\.add",[\s\S]{0,120}input: \{ fix: props\.fixField\[item\.id\] \}/, "an item goes on the queue through the typed gateway, as the parsed fix field");
-  assert.match(fix, /fixField\[item\.id\] = fixConsequence\(t\.where, t\.says\);/, "the fix field is the same where — says shape parseFixField reads back");
   assert.match(src("lib/control-plane/gateway/registry.ts"), /const parsed = parseFixField\(combined\);/, "and the gateway's queue.add reads it back with parseFixField");
-  assert.match(controls, /type: "decision\.record",[\s\S]{0,160}subjectId: props\.subjectId,\s*chosenOption: props\.option,/, "Go fix these is a decision on the fix-queue row");
 });
 
 /* ================================================================== *
@@ -510,7 +479,7 @@ test("ADM-19: a gap of ours reads 'not measured', never OUR GAP, on every consol
   assert.match(ui, /if \(gap\.whose === "THEIRS"\) return "not published";/);
   // Admin redesign, 2026-09-23: the per-state readiness panel this named was removed; the sweep now covers every console file and the redesign's view models, so a new screen walks into the rule.
   const swept = [...sourceFilesUnder([".ts", ".tsx"], "app", "(admin)"), ...sourceFilesUnder([".ts"], "lib", "control-plane", "admin-view")];
-  assert.ok(swept.some((f) => f.endsWith(join("readiness", "[state]", "page.tsx"))) && swept.some((f) => f.endsWith(join("_mw", "next-steps.tsx"))), "the sweep reaches the redesigned screens");
+  assert.ok(swept.some((f) => f.endsWith(join("readiness", "[state]", "page.tsx"))), "the sweep reaches the redesigned screens");
   for (const abs of swept) {
     const rel = relative(ROOT, abs).split(sep).join("/");
     assert.doesNotMatch(src(rel), /our gap|OUR GAP|function whoseLabel/i, `${rel} carries no 'our gap' wording and no second gap labeller`);
@@ -545,33 +514,6 @@ const attempt = (over: Record<string, unknown>) =>
     ...over,
   }) as unknown as WorkerRoleView["attempts"][number];
 
-test("ADM-10: a role lead says what is happening, says plainly when nothing needs the owner, and names the work item when something does", () => {
-  const auditors: WorkerRoleView = { role: "ADVERSARIAL_AUDITOR", shown: metric(5, 6, "attempts"), pending: metric(0, 5, "tasks"), due: metric(0, 0, "tasks"), attempts: [attempt({}), attempt({ attemptId: "at-2", workItemId: "wi-1" })] } as WorkerRoleView;
-  const lead = roleLead(auditors);
-  assert.equal(lead.title, "Auditors");
-  assert.equal(lead.needsYou, null);
-  assert.match(lead.doing, /None working right now; 0 tasks waiting of 5 registered, 0 due now; 6 attempts on record\./);
-  assert.match(lead.doing, /Of the 2 newest: 2 completed, all on the same work item\./);
-  assert.match(lead.doing, /2 inconclusive \(the audit could not settle it either way, so nothing was certified\)/);
-  assert.deepEqual(lead.glossary.map((g) => g.code), ["AUDIT_MODEL_HYPOTHESIS_REQUIRES_MACHINE_EVIDENCE", "INCONCLUSIVE"]);
-  const parsers: WorkerRoleView = { role: "PARSER", shown: metric(1, 20, "attempts"), pending: metric(2, 12, "tasks"), due: metric(2, 2, "tasks"), attempts: [attempt({ outcome: "ABORTED", verdict: null, resultStatus: "NOT_RECORDED", findings: [], workItemState: "AWAITING_OWNER", worker: { role: "PARSER", provider: "we-the-people", version: "civic-record-workers/2.0.0", instance: "i" } })] } as WorkerRoleView;
-  const p = roleLead(parsers);
-  assert.equal(p.title, "Parsers");
-  assert.match(p.needsYou ?? "", /^Yes — work item wi-1 is waiting on you/);
-  assert.match(p.doing, /1 aborted/);
-  assert.match(p.doing, /recorded no typed result/);
-  const empty = roleLead({ role: "ENGINEERING", shown: metric(0, 0, "attempts"), pending: metric(0, 0, "tasks"), due: metric(0, 0, "tasks"), attempts: [] } as WorkerRoleView);
-  assert.match(empty.doing, /^No engineers have run yet; nothing is queued for them\./);
-  assert.equal(verdictPlain(null), "no typed result was recorded");
-  assert.equal(findingPlain("PERMISSION_DENIED"), "an older attempt stopped at the site's robots.txt, which no longer blocks a public page");
-  assert.equal(findingPlain("SOMETHING_NEW"), "something new");
-  assert.equal(workItemStatePlain("AUTHOR_DECISION_REQUIRED"), "needs your decision");
-  const panel = src("app/(admin)/admin/research/worker-fleet-panel.tsx");
-  assert.match(panel, /roleLead\(role\)/);
-  assert.match(panel, /Needs you\?/);
-  assert.match(panel, /Nothing in any role needs a decision from you right now\./);
-});
-
 /* ================================================================== *
  * ADM-11 — every measure has a meaning, and a picture
  * ================================================================== */
@@ -587,62 +529,9 @@ const METRICS: ResearchMetrics = {
   cacheDefects: { defective: 0, instrumented: 4 },
 };
 
-test("ADM-11: every research metric row carries a plain meaning, every group has one, and the page draws the funnel, the share and the cache", () => {
-  const rows = researchDigestRows(METRICS);
-  for (const group of Object.keys(rows) as (keyof typeof rows)[]) {
-    assert.ok(METRIC_GROUP_MEANING[group].length > 40, `${group} has a group meaning`);
-    for (const row of rows[group]) assert.ok(row.meaning.length > 30, `${group} · ${row.label} has a meaning`);
-  }
-  assert.match(rows.share[1].meaning, /over the last 18 cycle\(s\)/);
-  assert.match(rows.capacity[0].meaning, /\$25 daily ceiling/);
-  const page = src("app/(admin)/admin/research/page.tsx");
-  assert.match(page, /<Funnel/);
-  assert.match(page, /<StackedBar/);
-  assert.match(page, /<Ring/);
-  assert.match(page, /METRIC_GROUP_MEANING\./);
-  assert.match(page, /\{row\.meaning\}/);
-  const charts = src("app/(admin)/charts.tsx");
-  assert.doesNotMatch(charts, /"use client"/, "charts are server-rendered from audited numbers; no client JavaScript");
-});
-
 /* ================================================================== *
  * ADM-13 — the nightly window in one line
  * ================================================================== */
-
-test("ADM-13: the window reads as one sentence, a stage strip and a split; definitions stay behind a disclosure", () => {
-  const m = (v: number, d: number) => measured(v, d, "c", "s");
-  const view: WindowView = {
-    nowIso: "2026-09-05T03:00:00.000Z",
-    verdict: "COMPLETED",
-    reasons: [],
-    time: held({ windowId: "nw-1", localDate: "2026-09-04", zone: "America/New_York", scheduledFor: "2026-09-04T08:00:00.000Z", startedAt: "2026-09-04T08:04:50.476Z", finishedAt: "2026-09-04T08:15:00.553Z", trigger: "RUNNER_CLOCK", mode: "SHADOW", host: "SeanLenovo", testedSha: "a6f7fd4d", caughtUp: [] }),
-    gate: held({ reason: "SHADOW — READER NOT_READY, TRUTH NOT_READY, FRESHNESS NOT_READY; promotion OFF", openRecordClasses: [], readFrom: null }),
-    stages: held([
-      { stage: "PIPELINE_EVALUATION", outcome: "COMPLETED", startedAt: "", finishedAt: "", reason: null },
-      { stage: "DIGEST", outcome: "COMPLETED", startedAt: "", finishedAt: "", reason: null },
-    ] as never),
-    promoted: held(m(0, 43)),
-    wouldPromote: held(m(0, 43)),
-    refused: held(m(43, 43)),
-    deferred: held(m(0, 43)),
-    byRecordClass: held([{ recordClass: "OFFICIAL_MEETING_DOCUMENT_INVENTORY", promoteWould: m(0, 3), refuseWould: m(3, 3), deferred: m(0, 3) }]),
-    verdicts: held({ shown: m(0, 0), rows: [] }),
-    controls: { held: false, gap: { whose: "OURS", says: "no controls" } },
-    incidents: held({ shown: m(0, 0), rows: [] }),
-    proof: held({ windowId: "nw-1", recordPath: null, digestPath: null, leaseId: "ls-1", windowsRecorded: 3 }),
-  };
-  const plain = plainWindow(view);
-  assert.deepEqual(plain.stages.map((s) => [s.label, s.ok]), [["Evaluate", true], ["Digest", true]]);
-  assert.deepEqual(plain.split, { items: 43, promoted: 0, wouldPromote: 0, refused: 43, deferred: 0 });
-  assert.equal(plain.classes[0].label, "official meeting document inventory");
-  assert.equal(recordClassLabel("campaign-finance"), "campaign finance");
-  const never = plainWindow({ ...view, verdict: "NEVER_RUN", time: { held: false, gap: { whose: "OURS", says: "never" } } });
-  assert.match(never.headline, /never run/);
-  const page = src("app/(admin)/admin/research/page.tsx");
-  assert.match(page, /\{windowPlain\.headline\}/);
-  assert.match(page, /className="stage-strip"/);
-  assert.match(page, /Window detail — definitions, the gate, controls, proof<\/summary>/);
-});
 
 /* ================================================================== *
  * ADM-17 — free by design is not a gap; time, requests and bytes are measured
@@ -713,15 +602,6 @@ test("ADM-17: a role whose attempts all ran without a paid model is $0 by design
 /* ================================================================== *
  * ADM-18 — the reader suite says what it is, or one line
  * ================================================================== */
-
-test("ADM-18: the reader-suite reading collapses to one named line when there is no grid", () => {
-  // Admin redesign, 2026-09-23: the home page's reader-check section (its lead sentence and its per-ZIP table) was removed; the same snapshot reading is drawn on /admin/fleet's Panels tab as the coverage-gaps panel.
-  const panels = codeOf("components/admin/fleet-panels-tab.tsx");
-  assert.match(panels, /const zip = c\.value\.zipRows;/, "the panel reads the reader-suite grid from the snapshot");
-  assert.match(panels, /\$\{zip\.gap\.says\}/, "no grid renders as the NAMED gap sentence, never as an empty table");
-  assert.doesNotMatch(panels, /"no grid"/);
-  assert.doesNotMatch(surface("home"), /"no grid"/);
-});
 
 /* ================================================================== *
  * ADM-23 — population on file
@@ -871,21 +751,6 @@ test("ADM-21: the admin stylesheet carries the four Lumen signals, the reader le
 /* ================================================================== *
  * ADM-14 — one round trip per view
  * ================================================================== */
-
-test("ADM-14: the research page issues its reads in one round and the header still acknowledges the choice at once", () => {
-  const page = src("app/(admin)/admin/research/page.tsx");
-  const all = /await Promise\.all\(\[([\s\S]*?)\]\);/.exec(page);
-  assert.ok(all, "one Promise.all");
-  for (const read of ["readHeartbeat(", "readResearchState(", "readResearchIntents(", "readScoutResults(", "readScoutSpend(", "readScoutEvidenceCount(", "readWorkerFleet(", "readLastWindow(", "readSnapshot("]) {
-    assert.ok(all![1].includes(read), `${read} is in the single round`);
-  }
-  assert.doesNotMatch(page, /const fleet = await readWorkerFleet/);
-  assert.doesNotMatch(page, /const lastWindow = await readLastWindow/);
-  // Admin redesign, 2026-09-23: the header's View / State dropdowns were replaced by the shell's scope select, the one header control that waits on the server; it acknowledges the choice inside a transition with a loading status.
-  const nav = codeOf("app/(admin)/_mw/header-controls.tsx");
-  assert.match(nav, /useTransition\(/);
-  assert.match(nav, /\{pending && \([\s\S]*?role="status"/);
-});
 
 /* ================================================================== *
  * The owner's second folder of the day

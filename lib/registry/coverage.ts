@@ -26,6 +26,7 @@ import { WIRED_STATUSES } from "./coverage-client.ts";
 import { indexAudits } from "./audit.ts";
 import { COVERAGE_AUDIT_FILE } from "./coverage-audit.ts";
 import type { PublicBodyAttempt } from "./body-attempt-read.ts";
+import type { Meeting } from "../sources/types.ts";
 
 /** A dated cited source hunt is evidence; a registry status alone is not.
  * New control-plane attempts are not present in this historic audit yet, so
@@ -171,6 +172,8 @@ export interface CoveredBody {
   homepageUrl: string | null;
   /** Where this body's agendas live, when a hunt found them. */
   agendaSourceRef: string | null;
+  /** When the body regularly meets, in its official page's words, with that page. */
+  meetingCadence?: { text: string; sourceUrl: string | null } | null;
   /**
    * Whether a dated, cited hunt for this exact body is in the historical audit.
    * False means no such receipt is held here, not that nobody has searched.
@@ -393,6 +396,7 @@ export function summarizeCoverage(
   territory?: BodyTerritoryFile | null,
   /** Exact per-scope state-roster read dispositions settled by the caller. */
   stateLegislatorAuthorities: StateLegislatorCoverageAuthority[] = [],
+  heldMeetings: readonly Meeting[] = [],
 ): CoverageSummary {
   const { divisions, bodies } = bodiesAt(
     point,
@@ -405,6 +409,7 @@ export function summarizeCoverage(
 
   const covered: CoveredBody[] = bodies.map((body) => {
     const division = body.ocdId ? divisionsById.get(body.ocdId) : undefined;
+    const held = heldMeetings.find(meeting => meeting.bodyId === body.id);
     return {
       bodyId: body.id,
       ocdId: body.ocdId,
@@ -418,10 +423,13 @@ export function summarizeCoverage(
       lsad: division?.lsad ?? null,
       schoolDependency: schoolDependency(body.ocdId),
       bodyClass: body.bodyClass,
-      coverageStatus: body.coverageStatus,
+      coverageStatus: held ? "LIVE" : body.coverageStatus,
       homepageUrl: body.homepageUrl,
-      agendaSourceRef: body.agendaSourceRef,
-      lookedAt: DOCUMENTED_SEARCHES.has(body.id),
+      agendaSourceRef: held?.provenance.sourceUrl ?? body.agendaSourceRef,
+      meetingCadence: body.meetingCadence
+        ? { text: body.meetingCadence, sourceUrl: body.meetingCadenceSource?.sourceUrl ?? body.provenance.sourceUrl ?? null }
+        : null,
+      lookedAt: held !== undefined || DOCUMENTED_SEARCHES.has(body.id),
       tier: division?.tier ?? "local",
     };
   });

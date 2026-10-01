@@ -115,8 +115,6 @@ export interface SourceAuthorityContract {
   readonly trust: SourceTrustClass;
   readonly sourceClass: "FEDERAL_AGENCY" | "FEDERAL_LEGISLATURE" | "STATE_LEGISLATURE" | "OFFICIAL_PLATFORM" | "MULTI_PUBLISHER_PRIMARY" | "INTERMEDIARY";
   readonly routePrefixes: readonly string[];
-  /** Redirect/final hosts. Authority inheritance is explicit, never `.gov`-wide. */
-  readonly allowedFinalHosts: readonly string[];
   readonly jurisdictions: readonly string[];
   readonly recordClasses: readonly RoutineRecordClass[];
   readonly competentFacts: readonly string[];
@@ -325,7 +323,8 @@ export type RoutineRemovalEvidence =
   | ServingWindowRemovalEvidence
   | OccurrenceSupersessionRemovalEvidence
   | PublisherExclusionRemovalEvidence
-  | CensusPlaceholderBodyRemovalEvidence;
+  | CensusPlaceholderBodyRemovalEvidence
+  | RosterDepartureRemovalEvidence;
 
 export interface ServingWindowRemovalEvidence {
   /** Exact `RoutineChangeSet.removed[].key`; evidence is never positional. */
@@ -411,6 +410,20 @@ export interface CensusPlaceholderBodyRemovalEvidence {
   readonly code: "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT";
   /** The removed body's division, which the candidate keeps. */
   readonly divisionOcdId: string;
+}
+
+/**
+ * A departed officeholder's rows (reader disposition, candidacy bridge, photo)
+ * leave with them: the body's complete official roster, read from `sourceUrl`
+ * and carried by this candidate, no longer lists `holderId`.
+ */
+export interface RosterDepartureRemovalEvidence {
+  /** Exact `RoutineChangeSet.removed[].key`, e.g. `official-candidacy:<holder id>`. */
+  readonly key: string;
+  readonly code: "OFFICIAL_ROSTER_NO_LONGER_LISTS";
+  readonly bodyId: string;
+  readonly holderId: string;
+  readonly sourceUrl: string;
 }
 
 /** One immutable tracked input whose exact bytes were used for a PDC-v2 LKG import. */

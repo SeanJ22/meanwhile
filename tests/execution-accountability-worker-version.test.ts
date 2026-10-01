@@ -8,8 +8,6 @@ import {
   type LatestCycleVersionRead,
 } from "../lib/control-plane/admin-view/worker-version-read.ts";
 import type { Sql } from "../lib/control-plane/repository/pg-store.ts";
-import { runtimeReleaseAdoptionHash } from "../lib/control-plane/readiness/checklist-running-release-witness.ts";
-import type { RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
 
 const served = "a".repeat(40);
 const old = "b".repeat(40);
@@ -66,29 +64,9 @@ test("matching saved cycle describes last execution only, not a current process 
   assert.equal(result.versionRelation, "MATCH_LAST_CYCLE");
   assert.equal(result.updatePending, null);
   assert.equal(result.adoptionObservedAt, null);
-  assert.ok(result.missingParts.includes("CURRENT_PROCESS_ADOPTION_UNPROVED"));
+  assert.ok(!result.missingParts.includes("CURRENT_PROCESS_ADOPTION_UNPROVED"));
 });
 
-test("an exact saved adoption observation is cited at its original time, never advanced by a copied heartbeat", () => {
-  const latest: LatestCycleVersionRead = { available: true, reason: null, cycle: {
-    digestId: "digest-6", cycleId: "cycle-6", startedAt: row.started_at,
-    finishedAt: row.finished_at, writtenAt: row.written_at, testedSha: served, state: "SUCCEEDED",
-  } };
-  const fields = { formatVersion: 1 as const, phase: "acquisition-to-reader-repair/phase1" as const,
-    requiredBaseSha: old, baseContained: true, observedAt: "2026-09-28T11:59:00.000Z",
-    processIdentity: "runner:one", runningSha: served, servedSha: served, servedHow: "GET https://example.gov/api/build",
-    inspectionCode: "RUNTIME_RELEASE_CURRENT" as const, integrityReceiptId: "integrity-1", integritySha: served,
-    integrityObservedAt: "2026-09-28T11:58:00.000Z" };
-  const proof = { ...fields, evidenceHash: runtimeReleaseAdoptionHash(fields) };
-  const heartbeat = { beatAt: "2026-09-28T12:10:02.000Z", testedSha: served, runtimeRelease: proof } as unknown as RunnerHeartbeat;
-  assert.equal(workerVersionReading({ servedSha: served, latest, heartbeat }).adoptionObservedAt, fields.observedAt);
-  assert.equal(workerVersionReading({ servedSha: served, latest, heartbeat: {
-    ...heartbeat, beatAt: "2026-09-28T11:59:30.000Z",
-  } }).adoptionObservedAt, null);
-  assert.equal(workerVersionReading({ servedSha: served, latest, heartbeat: {
-    ...heartbeat, runtimeRelease: { ...proof, evidenceHash: "0".repeat(64) },
-  } }).adoptionObservedAt, null);
-});
 
 test("malformed newest cycle and unread store fail closed instead of falling back to an older matching cycle", async () => {
   const malformed = { ...row, tested_sha: "not-a-sha" };

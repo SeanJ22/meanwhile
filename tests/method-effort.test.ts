@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import test from "node:test";
 
 import type { MethodKnowledge, RouteEffort } from "../lib/method/knowledge.ts";
+import { METHOD_FIXTURE_PATH } from "./method-store-fixture.ts";
 
 /**
  * **THE SCALE FORECAST'S MISSING INPUT, CAPTURED RATHER THAN RECONSTRUCTED.**
@@ -21,11 +21,10 @@ import type { MethodKnowledge, RouteEffort } from "../lib/method/knowledge.ts";
  * that an ABSENT effort is a stated unknown rather than a zero.
  */
 
-const ROOT = process.cwd();
 
 function knowledge(): MethodKnowledge {
   return JSON.parse(
-    readFileSync(join(ROOT, "data/method/knowledge.json"), "utf8"),
+    readFileSync(METHOD_FIXTURE_PATH, "utf8"),
   ) as MethodKnowledge;
 }
 

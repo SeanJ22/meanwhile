@@ -1,0 +1,120 @@
+import { getStore, type Store } from "@netlify/blobs";
+import { contentHash } from "../ids.ts";
+import { EvidenceStoreRefusal, objectClassOf, reconcileExistingObject, type EvidenceStore, type ObjectMeta, type StoredObject } from "./store.ts";
+
+const ENVELOPE_FORMAT = "evidence-envelope@1";
+
+/** Large metadata travels atomically with its bytes, outside Blobs' 2 KiB header. */
+function encodeObject(bytes: Uint8Array, metadata: Record<string, unknown>) {
+  const json = JSON.stringify(metadata);
+  if ("netlify-blobs-metadata".length + 4 + Buffer.from(json).toString("base64").length <= 2 * 1024) {
+    return { bytes, metadata };
+  }
+  const header = new TextEncoder().encode(json);
+  const body = new Uint8Array(4 + header.length + bytes.length);
+  new DataView(body.buffer).setUint32(0, header.length);
+  body.set(header, 4);
+  body.set(bytes, 4 + header.length);
+  return { bytes: body, metadata: { format: ENVELOPE_FORMAT } };
+}
+
+function decodeObject(key: string, data: ArrayBuffer, metadata: Record<string, unknown>) {
+  const bytes = new Uint8Array(data);
+  if (metadata.format !== ENVELOPE_FORMAT) return { bytes, metadata };
+  try {
+    if (bytes.length < 4) throw new Error("missing header");
+    const length = new DataView(data).getUint32(0);
+    if (length > bytes.length - 4) throw new Error("truncated header");
+    const header = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes.subarray(4, 4 + length))) as Record<string, unknown>;
+    if (header === null || typeof header !== "object" || Array.isArray(header)) throw new Error("invalid header");
+    return { bytes: bytes.subarray(4 + length), metadata: header };
+  } catch {
+    throw new EvidenceStoreRefusal(`Stored evidence envelope is unreadable at ${key}`);
+  }
+}
+
+/** The same evidence keys and metadata, held outside the runner's host. */
+export class NetlifyEvidenceStore implements EvidenceStore {
+  readonly durable = true;
+  private readonly store: Store;
+  constructor(store: Store) { this.store = store; }
+
+  async put(key: string, bytes: Uint8Array, meta: ObjectMeta): Promise<void> {
+    if (meta.custom?.tier === "RESTRICTED_RAW") throw new EvidenceStoreRefusal("RESTRICTED_RAW requires the existing restricted evidence provider");
+    const bodySha256 = contentHash(bytes);
+    if (bytes.byteLength !== meta.byteLength || objectClassOf(meta) === "IMMUTABLE_BODY" && bodySha256 !== meta.contentHash) {
+      throw new EvidenceStoreRefusal(`Evidence bytes do not match metadata at ${key}`);
+    }
+    // An immutable no-op means these bytes are held, not just their metadata.
+    // Rebuilt indexes keep the metadata-only path so a damaged old index can be replaced.
+    let held: { meta: ObjectMeta; bytes?: Uint8Array } | null;
+    if (objectClassOf(meta) === "IMMUTABLE_BODY") held = await this.get(key);
+    else {
+      const metadata = await this.head(key);
+      held = metadata ? { meta: metadata } : null;
+    }
+    if (reconcileExistingObject(key, bytes, meta, held)) return;
+    const encoded = encodeObject(bytes, { meta, bodySha256 });
+    const result = await this.store.set(key, new Uint8Array(encoded.bytes).buffer, {
+      metadata: encoded.metadata,
+      ...(objectClassOf(meta) === "IMMUTABLE_BODY" ? { onlyIfNew: true } : {}),
+    });
+    if (!result.modified) {
+      const raced = await this.get(key);
+      if (!raced || !reconcileExistingObject(key, bytes, meta, raced)) throw new EvidenceStoreRefusal(`Concurrent evidence write did not settle at ${key}`);
+    }
+  }
+
+  async head(key: string): Promise<ObjectMeta | null> {
+    return (await this.describe(key))?.meta ?? null;
+  }
+
+  async describe(key: string): Promise<{ meta: ObjectMeta; bodySha256: string } | null> {
+    const held = await this.store.getMetadata(key);
+    if (held === null) return null;
+    if (held.metadata.format !== ENVELOPE_FORMAT) return this.metadata(key, held.metadata);
+    const object = await this.store.getWithMetadata(key, { type: "arrayBuffer" });
+    return object === null ? null : this.metadata(key, decodeObject(key, object.data, object.metadata).metadata);
+  }
+
+  async get(key: string): Promise<StoredObject | null> {
+    const held = await this.store.getWithMetadata(key, { type: "arrayBuffer" });
+    if (held === null) return null;
+    const { bytes, metadata } = decodeObject(key, held.data, held.metadata);
+    const { meta, bodySha256 } = this.metadata(key, metadata);
+    if (bytes.byteLength !== meta.byteLength || contentHash(bytes) !== bodySha256) throw new EvidenceStoreRefusal(`Stored evidence is corrupt at ${key}`);
+    return { key, bytes, meta };
+  }
+
+  async list(prefix: string): Promise<string[]> {
+    const keys: string[] = [];
+    for await (const page of this.store.list({ prefix, paginate: true })) keys.push(...page.blobs.map(blob => blob.key));
+    return keys.sort();
+  }
+
+  async directories(prefix: string): Promise<string[]> {
+    const directories = new Set<string>();
+    for await (const page of this.store.list({ prefix, directories: true, paginate: true })) {
+      for (const directory of page.directories) {
+        const key = directory.startsWith(prefix) ? directory : prefix + directory;
+        directories.add(key.replace(/\/$/, ""));
+      }
+    }
+    return [...directories].sort();
+  }
+
+  private metadata(key: string, metadata: Record<string, unknown>): { meta: ObjectMeta; bodySha256: string } {
+    const meta = metadata.meta as ObjectMeta | undefined;
+    if (!meta || typeof meta.contentHash !== "string" || typeof meta.contentType !== "string" || !Number.isSafeInteger(meta.byteLength) || typeof metadata.bodySha256 !== "string") {
+      throw new EvidenceStoreRefusal(`Stored evidence metadata is unreadable at ${key}`);
+    }
+    return { meta, bodySha256: metadata.bodySha256 };
+  }
+}
+
+export function netlifyEvidenceStoreFromEnv(env: NodeJS.ProcessEnv = process.env): NetlifyEvidenceStore | null {
+  if (env.WTP_VAULT_PROVIDER !== "netlify") return null;
+  const siteID = env.WTP_BLOBS_SITE_ID?.trim(), token = env.WTP_BLOBS_TOKEN?.trim();
+  if (!siteID || !token) throw new EvidenceStoreRefusal("Netlify vault requires WTP_BLOBS_SITE_ID and WTP_BLOBS_TOKEN from the host");
+  return new NetlifyEvidenceStore(getStore({ name: env.WTP_VAULT_STORE ?? "meanwhile-evidence", siteID, token, consistency: "strong" }));
+}

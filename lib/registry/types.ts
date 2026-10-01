@@ -272,7 +272,9 @@ export type SourceDataset =
    */
   | "TIGER_CB2023"
   /** Full TIGER/Line 2023, read for its attribute table only: the territories' functional status. */
-  | "TIGER_LINE2023";
+  | "TIGER_LINE2023"
+  /** Census TIGERweb current map services, queried live by place (S9 place-first hunts); the saved query response is the source. */
+  | "TIGERWEB_CURRENT";
 
 /**
  * How well this repo's identifier matches the canonical OCD vocabulary.
@@ -470,7 +472,10 @@ export interface Body {
    * the link ladder renders this field and a slug in an `href` is a dead link.
    */
   agendaSourceRef: string | null;
+  /** When the body regularly meets, in its official page's own words; never computed into dates. */
   meetingCadence: string | null;
+  /** The saved official page that states `meetingCadence`, when it is not the body's own source. */
+  meetingCadenceSource?: { sourceUrl: string; collectedAt: string };
   homepageUrl: string | null;
   /**
    * How many readers said this division applies to them. A bare count, never

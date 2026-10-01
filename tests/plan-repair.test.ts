@@ -136,13 +136,10 @@ test("completed Scout repair retains parent instructions and creates one ordinar
   assert.equal(resolved.primary.workItemId, f.h.item.id, "The immutable capture keeps its original WorkItem attribution.");
   await assert.rejects(resolvedHeldAuditAttribution({ ...attribution, workItemId: f.h.item.id }), /SCOPE_MISMATCH/);
   await assert.rejects(resolvedHeldAuditAttribution({ ...attribution, items: items.map(item => item.id === childId ? { ...item, subject: "wrong-subject" } : item) }), /SUBJECT_MISMATCH/);
-  const runtime = { ...f.h.runtime, independentContext: async (scope: Parameters<typeof f.h.runtime.independentContext>[0]) => ({
-    ...await f.h.runtime.independentContext(scope), authorityEvidence: [f.evidence[1]],
-  }) };
-  const audit = await nextAutonomousOperation(runtime, childId);
-  assert.equal(audit.task?.workerTask?.role, "ADVERSARIAL_AUDITOR");
-  assert.equal((await dispatchWorkerTask(runtime, audit.task!)).outcome, "WORKED");
-  assert.equal((await f.h.repos.workerResults.read(childId)).at(-1)?.result.verdict, "SURVIVED");
+  // A roster is not a judgment call (rulings §3): the Validator's PASS stages it with no Auditor before publication.
+  const staged = await nextAutonomousOperation(f.h.runtime, childId);
+  assert.equal(staged.action, "STAGED", JSON.stringify(staged));
+  assert.equal(staged.task, null);
   assert.equal((await f.h.repos.promotionPipeline.readAll()).length, 0, "Instruction repair grants no publication approval.");
 });
 
@@ -488,6 +485,15 @@ test("a source with real bytes but no honest mapping is admitted as a bound cont
   assert.deepEqual(evaluated.contract.sourceScope.canonicalUrls, [f.evidence[0].canonicalUrl], "bound to the exact captured source");
   assert.deepEqual(evaluated.contract.sourceScope.observationArtifactIds, f.evidence.map((row) => row.artifactId), "the cited captures are the observation");
   assert.deepEqual(evaluated.contract.extraction.fields, {}, "no mapping is invented");
+  // The media type the Scout observed rides into the contract; a pattern that lost its backslash turned every real type into "unobserved".
+  const mediaTypeOf = (mediaType: unknown) => evaluatePlanRepair({ plan: unobserved, evidence: f.evidence, now: f.h.now(), candidate: { ...candidate,
+    contractRepair: { schemaVersion: 1, sourceArtifactId: f.evidence[0].artifactId, extraction: { format: "UNSUPPORTED", mediaType }, authorities: [] } as never } }).contract.extraction;
+  for (const kept of ["text/plain", "application/pdf", "text/html", "application/vnd.ms-excel", "image/svg+xml"]) {
+    assert.equal((mediaTypeOf(kept) as { mediaType?: string }).mediaType, kept, `${kept} is kept`);
+  }
+  for (const dropped of ["", "text plain", "x".repeat(101), 7, null]) {
+    assert.equal((mediaTypeOf(dropped) as { mediaType?: string }).mediaType, "unobserved", `${JSON.stringify(dropped)} is not a media type`);
+  }
   assert.ok(evaluated.unresolved.includes("EXTRACTION_BY_QUOTED_MODEL"));
   assert.deepEqual(evaluated.profileRoutes, []);
 

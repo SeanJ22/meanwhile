@@ -52,7 +52,7 @@ test("v6 keeps the guarded exact receipt read when section sources are unproved"
 
 test("v6 Money and Hunts announcements follow saved policy, snapshot and fleet revisions", () => {
   const absent = adminV6ReadCapabilities({ configRevision: null, snapshotRevision: 7, researchRevision: 9 });
-  assert.deepEqual(Object.keys(absent.sections).sort(), ["agents", "checklist", "reliability", "sameCause", "sends", "spend", "stuck"], "the place score, blockers, agents and spend need only the published snapshot, not the saved policy");
+  assert.deepEqual(Object.keys(absent.sections).sort(), ["agents", "checklist", "learning", "reliability", "sameCause", "sends", "spend", "stuck"], "the weekly learning series, the place score, blockers, agents and spend need only the published snapshot, not the saved policy");
   assert.equal(absent.sections.hunts, undefined);
   assert.deepEqual(adminV6ReadCapabilities({ configRevision: 3, snapshotRevision: null, researchRevision: 9 }).sections.checklist, undefined);
   const ready = adminV6ReadCapabilities({ configRevision: 3, snapshotRevision: 7, researchRevision: 9 });

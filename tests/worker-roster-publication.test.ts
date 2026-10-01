@@ -20,16 +20,11 @@ import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-da
 import { manualPriorAuthorityIssue } from "../lib/civic-data/manual-prior-authority.ts";
 import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
 import { buildAssignments } from "../lib/control-plane/assignment-view.ts";
-import { workerRosterSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
-import type { ResolvedScope } from "../lib/control-plane/expansion/membership.ts";
+import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
 import { rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
-import { modelAuditReasoner } from "../lib/control-plane/workers/model-audit.ts";
-import { MODEL_FOR_CLASS } from "../lib/control-plane/scheduler/model-routing.ts";
-import type { ModelRequest, ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { nextAuditEscalation } from "../lib/control-plane/workers/audit-escalation.ts";
 import { collectWorkerRosterReadback, type PublishedWorkerRead } from "../lib/control-plane/worker-reader-readback.ts";
 
-async function proveRosterPublication(partial = false, auditLadder = false) {
+async function proveRosterPublication(partial = false) {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
   const store = new MemoryRoutineDataStore();
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
@@ -71,38 +66,17 @@ async function proveRosterPublication(partial = false, auditLadder = false) {
   if (plan.contract.schemaVersion !== 2) throw new Error("fixture contract");
   await h.repos.workItems.compareAndSet(current.id, current.revision, { ...current.value, autonomousPlan: { ...plan, ownerInstructions: ["offline-owner-send"], publication: { contractId: "registry-runtime-bindings", bodyId: body.id }, auditScope: "SOURCE_UNIVERSE", contract: { ...plan.contract, requiredFields: ["id", "name", "office"], extraction, verification: { required: true, authorities: [{ id: "register", type: "GOVERNMENT_REGISTER", publisher: "Independent Register", sourceId: "register.example.gov", canonicalUrls: [artifact.canonicalUrl], artifactIds: [artifact.id], authorityEvidenceArtifactIds: [artifact.id], independenceBasis: "DISTINCT_AUTHORITY", independenceExplanation: "Separately published official register retained independently.", extraction, comparison: { kind: "RECORD_VALUES", keyFields: ["id"], fields: ["id", "name", "office"] } }] } } } }, h.now());
   const authorityEvidence = evidenceProjection(await h.runtime.readEvidence(artifact.id));
-  const requests: ModelRequest[] = [];
-  const transport: ModelTransport = async request => {
-    requests.push(request);
-    return { model: request.model, stop_reason: "tool_use", usage: { input_tokens: 10, output_tokens: 5 },
-      content: [{ type: "tool_use", id: "audit", name: "record_audit", input: {
-        verdict: request.model === MODEL_FOR_CLASS.frontier ? "SURVIVED" : "INCONCLUSIVE", challenges: [] } }] };
-  };
-  const runtime = { ...h.runtime, ...(auditLadder ? { auditReasoner: modelAuditReasoner(h.repos, transport, h.now) } : {}),
+  const runtime = { ...h.runtime,
     independentContext: async (scope: Parameters<typeof h.runtime.independentContext>[0]) => ({ ...await h.runtime.independentContext(scope), authorityEvidence: [authorityEvidence] }) };
-  for (const role of ["ACQUIRER", "PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR", ...(auditLadder ? ["ADVERSARIAL_AUDITOR", "ADVERSARIAL_AUDITOR"] : [])]) {
+  // §3: the Validator is the last stage for a roster; no auditor is dispatched.
+  for (const role of ["ACQUIRER", "PARSER", "VALIDATOR"]) {
     const next = await nextAutonomousOperation(runtime, h.item.id);
     assert.equal(next.task?.workerTask?.role, role, JSON.stringify(next));
     const dispatch = await dispatchWorkerTask(runtime, next.task!);
     assert.equal(dispatch.outcome, "WORKED", JSON.stringify(dispatch));
   }
   const results = await h.repos.workerResults.read(h.item.id);
-  assert.deepEqual(results.map(row => row.result.verdict), ["ACQUIRED", "EXTRACTED", "PASS", ...(auditLadder ? ["INCONCLUSIVE", "INCONCLUSIVE"] : []), "SURVIVED"]);
-  if (auditLadder) {
-    assert.deepEqual(requests.map(request => request.model), Object.values(MODEL_FOR_CLASS));
-    const audits = results.filter(row => row.result.role === "ADVERSARIAL_AUDITOR");
-    assert.deepEqual(audits.map(row => row.worker.version), Object.values(MODEL_FOR_CLASS));
-    assert.ok(audits.every(row => row.cost.requestCount === 1 && row.cost.usd! > 0), "every failed and successful request retains its own model-priced receipt");
-    assert.equal(audits[1].modelReview?.escalation?.previousResultId, audits[0].id);
-    assert.equal(audits[2].modelReview?.escalation?.previousResultId, audits[1].id);
-    assert.equal(nextAuditEscalation({ ...audits[1], modelReview: { ...audits[1].modelReview!, model: "claude-sonnet-5" } })?.to, "frontier",
-      "a previously recorded Sonnet 5 inconclusive result retains its next escalation after the active tier changes");
-    assert.equal(nextAuditEscalation({ ...audits[0], modelReview: { ...audits[0].modelReview!, challenges: [{ code: "GROUNDED", detail: "Repair source", artifactId: artifact.id, quote: "records" }] } }), null,
-      "a grounded challenge routes to evidence repair, never another model's approval");
-    await assert.rejects(runtime.auditReasoner!.review(await runtime.independentContext({ ...audits[0].completion.completedTask.workerTask!, methodVersion: runtime.methodVersion }),
-      audits[2].attemptId, { ...audits[1].modelReview!.escalation!, to: "frontier" }), /AUDIT_ESCALATION_EVIDENCE_MISMATCH/);
-    assert.equal(requests.length, 3, "a fabricated escalation cannot send another request");
-  }
+  assert.deepEqual(results.map(row => row.result.verdict), ["ACQUIRED", "EXTRACTED", "PASS"]);
   const input = { repos: h.repos, store, workItemIds: [h.item.id], now: h.now(), readCapture: async (id: string) => {
     const evidence = evidenceProjection(await runtime.readEvidence(id));
     return { evidence, observedAt: evidence.retrievedAt, httpStatus: 200, transport: "REACHABLE", partial: false };
@@ -113,8 +87,7 @@ async function proveRosterPublication(partial = false, auditLadder = false) {
       at: h.now(), workerResultId: results.at(-1)!.id, status: "HELD", code: "ROSTER_READER_IDENTITY_UNRESOLVED",
       detail: "Recorded pre-fix whole-roster identity hold", recovery: "WORKER", candidateId: null, versionId: null,
     } }, h.now());
-    const scope = { kind: "RESOLVED", decision: { sourceWorkVersion: 1, receiptId: "offline-owner-send" } } as ResolvedScope;
-    assert.equal(workerRosterSourceTasks([scope], [(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).length, 1,
+    assert.equal(workerPublicationTasks([(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).length, 1,
       "the normal runner retries an old whole-roster hold instead of leaving it stranded");
   }
   const published = await publishWorkerRosterResults(input);
@@ -125,7 +98,6 @@ async function proveRosterPublication(partial = false, auditLadder = false) {
     [...published[0].outcome.acceptedRecordIds ?? []].sort());
   const deliveredAdmin = buildAssignments(await readAllAssignmentSources(h.repos, { nowIso: h.now(), activation: null, pilotZips: [] }));
   assert.deepEqual(deliveredAdmin.find(row => row.id === h.item.id)?.delivery.records, published[0].outcome.records);
-  if (auditLadder) assert.ok(deliveredAdmin.find(row => row.id === h.item.id)?.verification.checks.some(check => check.says.includes("Escalated")), "Admin shows the reason and exact model transition");
   const deliveredItems = [(await h.repos.workItems.mustRead(h.item.id)).value];
   let observations = 0;
   const collector = { items: deliveredItems, store, now: h.now(), previous: null,
@@ -171,10 +143,9 @@ async function proveRosterPublication(partial = false, auditLadder = false) {
   assert.deepEqual(await publishWorkerRosterResults(input), published, "restart reuses the durable publication receipt");
   if (partial) {
     assert.ok(!delivered.members.some(member => member.name === "Contact us"), "navigation text never becomes a person");
-    assert.match(published[0].outcome.detail, /1 source rows remain identity-unresolved/);
+    assert.match(published[0].outcome.detail, /1 row\(s\) stay open as work/);
     assert.equal(published[0].outcome.recovery, "WORKER");
-    const scope = { kind: "RESOLVED", decision: { sourceWorkVersion: 1, receiptId: "offline-owner-send" } } as ResolvedScope;
-    assert.equal(workerRosterSourceTasks([scope], [(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).length, 0,
+    assert.equal(workerPublicationTasks([(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).length, 0,
       "retained partial results wait for changed worker evidence, not unchanged publication retries");
     const partialAdmin = deliveredAdmin.find(row => row.id === h.item.id)!;
     assert.equal(partialAdmin.state, "WAITING");
@@ -221,4 +192,21 @@ async function proveRosterPublication(partial = false, auditLadder = false) {
 
 test("ordinary independent workers publish a roster through the existing reader door, preserve prior facts, and reuse the receipt", () => proveRosterPublication());
 test("a stranded mixed roster publishes verified members while unresolved identities enter automatic repair", () => proveRosterPublication(true));
-test("normal audit work escalates unresolved Haiku and Sonnet attempts then publishes after independent checks pass", () => proveRosterPublication(false, true));
+
+test("owed roster work with nothing readable yet is held with its reason", async () => {
+  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
+  const store = new MemoryRoutineDataStore();
+  Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
+  const prior = (await readRegistryRuntimePrior(store, "2026-09-08T12:01:00.000Z"))!;
+  const h = await autonomousHarness({ clock: "2026-09-08T12:01:00.000Z", response: { text: "{}" } });
+  const current = await h.repos.workItems.mustRead(h.item.id);
+  const plan = current.value.autonomousPlan!;
+  await h.repos.workItems.compareAndSet(current.id, current.revision, { ...current.value,
+    autonomousPlan: { ...plan, publication: { contractId: "registry-runtime-bindings", bodyId: prior.payload.bodyRosters[0]!.bodyId } } }, h.now());
+  const report = await publishWorkerRosterResults({ repos: h.repos, store, workItemIds: [h.item.id], now: h.now(),
+    readCapture: async () => { throw new Error("no extraction"); }, readHeld: async () => null });
+  assert.deepEqual(report.map(row => [row.workItemId, row.outcome.status, row.outcome.code, row.outcome.recovery]),
+    [[h.item.id, "HELD", "ROSTER_NO_READABLE_SAVED_PAGE", "WORKER"]], "every offered item is reported, never silently skipped");
+  assert.equal((await h.repos.workItems.mustRead(h.item.id)).value.publicationOutcome?.code, "ROSTER_NO_READABLE_SAVED_PAGE", "Admin sees why");
+  assert.equal(workerPublicationTasks([(await h.repos.workItems.mustRead(h.item.id)).value], [], h.now()).length, 0, "re-read hourly, not every pass");
+});

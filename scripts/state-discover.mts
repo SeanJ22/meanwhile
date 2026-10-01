@@ -28,11 +28,10 @@
  *   pnpm state:discover --state az --gate     # only check the RULING 86 gate
  */
 
-import { appendFileSync } from "node:fs";
+import { appendFileSync, existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { SEARCH_POOL } from "../lib/hunt/search-pool.ts";
-import { checkStateRegistry } from "../lib/hunt/state-registry-gate.ts";
 import { STATE_NAMES, queriesFor } from "../lib/hunt/state-recon.ts";
 import { judgeUrl } from "./robots-sweep.mts";
 
@@ -60,19 +59,7 @@ if (!stateName) {
   process.exit(1);
 }
 
-/* ---------------------------------------------------------------- the gate --- */
-
-const gate = checkStateRegistry(code, ROOT);
 console.log(`state:discover · ${stateName} (${code.toUpperCase()})`);
-console.log(`  RULING 86 gate: ${gate.verdict} — ${gate.reason}`);
-if (process.argv.includes("--gate")) process.exit(gate.verdict === "REGISTERED" ? 0 : 1);
-
-if (gate.verdict !== "REGISTERED") {
-  console.log("");
-  console.log("  The registry is missing or empty. That does NOT stop this pass — this pass is how the");
-  console.log("  registry gets built. It stops the HUNT, which is a different thing and is enforced in");
-  console.log("  lib/hunt/state-registry-gate.ts.");
-}
 
 /* --------------------------------------------------------------- the pass --- */
 
@@ -189,7 +176,8 @@ for (const { classId, query } of queries) {
   await new Promise((r) => setTimeout(r, 1200));
 }
 
-const registry = gate.verdict === "REGISTERED" ? (await import("node:fs")).readFileSync(join(ROOT, gate.path), "utf8") : "";
+const registryPath = join(ROOT, "states", code, "sources.md");
+const registry = existsSync(registryPath) ? readFileSync(registryPath, "utf8") : "";
 const allUrls = [...new Set(results.flatMap((r) => r.urls))];
 const fresh: string[] = [];
 for (const u of allUrls) {
@@ -249,7 +237,7 @@ const lines: string[] = [
   `junk that later reads as verified.`,
   "",
   `${asked.length} queries asked · ${answered} returned anything · ${allUrls.length} candidates ·`,
-  `${fresh.length} not already in \`${gate.path}\`.`,
+  `${fresh.length} not already in \`states/${code}/sources.md\`.`,
   "",
 ];
 if (fresh.length > 0) {

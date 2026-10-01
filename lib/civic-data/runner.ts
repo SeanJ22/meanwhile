@@ -1,3 +1,4 @@
+import { WORKER_PUBLICATION_TASK_IDS } from "./worker-reader-contracts.ts";
 import { VALIDATION_CHECKS, type RoutineRecordClass } from "./types.ts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
@@ -78,7 +79,7 @@ export function routineTaskFromContract(contract: RoutineSourceContract): Routin
         const registered = sourceAuthority(contract.sourceId);
         return registered !== null && registered.derivedPromotion !== undefined &&
             (registered.recordClasses as readonly RoutineRecordClass[]).includes(contract.recordClass) &&
-            registered.routePrefixes.length === 0 && registered.allowedFinalHosts.length === 0
+            registered.routePrefixes.length === 0
           ? { ok: true as const, contract: registered }
           : { ok: false as const, code: "DERIVED_AUTHORITY_INVALID" };
       })()
@@ -488,7 +489,7 @@ export type RoutineTaskSelection =
  */
 export function routineTaskSelection(
   args: readonly string[],
-  tasks: readonly Pick<RoutineSourceTask, "id">[] = ROUTINE_SOURCE_TASKS,
+  tasks: readonly Pick<RoutineSourceTask, "id">[] = [...ROUTINE_SOURCE_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id }))],
 ): RoutineTaskSelection {
   const onlyArgs = args.filter((arg) => arg === "--only" || arg.startsWith("--only="));
   if (onlyArgs.length === 0) return { ok: true, only: null };

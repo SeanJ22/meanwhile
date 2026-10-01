@@ -62,7 +62,8 @@ mock.module(moduleUrl("lib/meetings/snapshot.ts"), {
 
 const { installRegistryRuntimeFirstSeeds } = await import(moduleUrl("tests/helpers/registry-runtime-first-seed.ts")) as typeof import("./registry-runtime-first-seed.ts");
 await installRegistryRuntimeFirstSeeds();
-const { POST, resetGroundedState } = await import(moduleUrl("app/api/ask/grounded/route.ts")) as typeof import("../../app/api/ask/grounded/route.ts");
+const { POST } = await import(moduleUrl("app/api/ask/grounded/route.ts")) as typeof import("../../app/api/ask/grounded/route.ts");
+const { resetGroundedState } = await import(moduleUrl("lib/ask/grounded-state.ts")) as typeof import("../../lib/ask/grounded-state.ts");
 
 const results = [];
 for (const request of cases.requests) {

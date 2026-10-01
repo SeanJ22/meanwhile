@@ -45,6 +45,7 @@
  *
  * PURE.
  */
+import { FIX_QUEUE_SUBJECT, GO_FIX_OPTION } from "@/lib/control-plane/fix-queue.ts";
 import type { ActionKind, AdminV6Data } from "./model.ts";
 
 export const V6_CAPABILITY_VERSION = 1;
@@ -175,19 +176,35 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return { scope: "us" };
     case "decide":
       return { decisionId: s.target, option: s.option, words: s.words.trim() || null };
-    case "hunt-start":
-      return { place: s.target, lifetimeLimitUsd: limit() };
+    case "hunt-start": {
+      // A single hunt starts from one ZIP place (`geo:az.zcta.85635`). Anything wider starts from the many-hunts panel.
+      const zip = /^geo:([a-z]{2}).zcta.(d{5})$/.exec(s.target);
+      return { items: zip ? [{ zip: zip[2], stateAbbr: zip[1].toUpperCase(), budgetUsd: limit() }] : [], priority: 1, huntBudget: true };
+    }
+    case "hunt-start-many":
+      return { items: JSON.parse(s.payload?.items ?? "[]") as unknown, priority: Number(s.payload?.priority ?? 1), note: s.payload?.note ?? null, huntBudget: true };
     case "hunt-limit":
-      return { huntPlace: s.target, lifetimeLimitUsd: limit() };
+      return { placeKey: s.target, change: "set", budgetUsd: limit() };
     case "hunt-pause":
+      return { placeKey: s.target, change: "pause" };
     case "hunt-resume":
+      return { placeKey: s.target, change: "resume" };
     case "hunt-stop":
-      return { huntPlace: s.target };
+      return { placeKey: s.target };
     case "global-paid":
+    case "global-paid-resume":
       return {};
     case "global-runner-pause":
     case "global-runner-resume":
       return { note: s.words.trim() || null };
+    case "fix-go":
+      return { subjectId: FIX_QUEUE_SUBJECT, chosenOption: GO_FIX_OPTION, consequenceShown: "The queued gaps were sent for a session to fix", ownerAnswer: null };
+    case "global-ceiling":
+      return { rollingCeilingUsd: s.amount.trim() === "" ? null : Number(s.amount) };
+    case "global-search-on":
+      return { enabled: true, confirmed: true };
+    case "global-search-off":
+      return { enabled: false };
     case "scope-first":
     case "scope-recheck":
     case "reprocess":

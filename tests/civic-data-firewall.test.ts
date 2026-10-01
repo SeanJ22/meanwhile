@@ -942,7 +942,29 @@ test("registered data commands cannot hide any Node filesystem mutation in impor
     "export const acquisition = true;",
   ].join("\n");
   files[manualCommand] =
-    'import "./lib/promotion-writer.ts"; prepareProductionCivicDataWrite(); processRegisteredManualCandidate();';
+    'import "./lib/promotion-writer.ts"; import "../lib/extract/ocr.ts"; import "./lib/temp-files.ts"; import "./lib/mixed-writer.ts"; prepareProductionCivicDataWrite(); processRegisteredManualCandidate();';
+  files["lib/extract/ocr.ts"] = readFileSync(new URL("../lib/extract/ocr.ts", import.meta.url), "utf8");
+  files["scripts/lib/temp-files.ts"] = [
+    'import * as filesystem from "node:fs/promises";',
+    'import { tmpdir as temporaryRoot } from "node:os";',
+    'import * as paths from "node:path";',
+    'const create = filesystem.mkdtemp; const save = filesystem.writeFile;',
+    'const root = temporaryRoot();',
+    'const dir = await create(paths.join(root, "parser-"));',
+    'const input = paths.join(dir, "input.pdf");',
+    'await save(input, bytes);',
+    'await filesystem.copyFile("data/civic/input.pdf", paths.join(dir, "copy.pdf"));',
+    'await filesystem.rename(input, paths.resolve(dir, "output.pdf"));',
+    'await filesystem.rm(dir, { recursive: true });',
+  ].join("\n");
+  files["scripts/lib/mixed-writer.ts"] = [
+    'import { writeFileSync, renameSync } from "node:fs";',
+    'import { tmpdir } from "node:os";',
+    'import { join } from "node:path";',
+    'const temporary = join(tmpdir(), "scratch.txt");',
+    'writeFileSync(temporary, bytes);',
+    'renameSync("data/civic/live.json", temporary);',
+  ].join("\n");
   files["scripts/lib/acquisition-stream.ts"] = [
     'import * as filesystem from "node:fs";',
     'filesystem.createWriteStream("data/civic/arbitrary-runtime-holding.json");',
@@ -985,14 +1007,23 @@ test("registered data commands cannot hide any Node filesystem mutation in impor
       { code: "ROUTINE_PATH_WRITES_REPOSITORY", path: "scripts/lib/acquisition-detached-writer.ts" },
       { code: "ROUTINE_PATH_WRITES_REPOSITORY", path: "scripts/lib/acquisition-stream.ts" },
       { code: "MANUAL_DATA_PATH_WRITES_REPOSITORY", path: "scripts/lib/promotion-writer.ts" },
+      { code: "MANUAL_DATA_PATH_WRITES_REPOSITORY", path: "scripts/lib/mixed-writer.ts" },
     ].sort((a, b) => a.path.localeCompare(b.path)),
   );
   assert.equal(
     findings.some(({ path }) =>
-      path === "tests/fixtures/permitted-writer.ts" || path === "scripts/lib/read-only-filesystem.ts"),
+      path === "tests/fixtures/permitted-writer.ts" || path === "scripts/lib/read-only-filesystem.ts"
+      || path === "lib/extract/ocr.ts" || path === "scripts/lib/temp-files.ts"),
     false,
-    "an unimported test fixture and an imported read-only helper are not production repository writers",
+    "test fixtures, read-only helpers and OS temporary files are not production repository writers",
   );
+  for (const destination of ['paths.join(temporaryRoot(), "..", "repository", "data.json")', 'paths.resolve(root, "/repository/data.json")', '"data/civic/live.json"', 'unknownPath']) {
+    files["scripts/lib/temp-files.ts"] += `\nawait save(${destination}, bytes);`;
+    assert.ok(audit(files).some(({ code, path }) => code === "MANUAL_DATA_PATH_WRITES_REPOSITORY" && path === "scripts/lib/temp-files.ts"));
+    files["scripts/lib/temp-files.ts"] = files["scripts/lib/temp-files.ts"]!.slice(0, files["scripts/lib/temp-files.ts"]!.lastIndexOf("\n"));
+  }
+  files["scripts/lib/temp-files.ts"] += '\nasync function writeElsewhere(dir) { await save(paths.join(dir, "data.json"), bytes); }';
+  assert.ok(audit(files).some(({ code, path }) => code === "MANUAL_DATA_PATH_WRITES_REPOSITORY" && path === "scripts/lib/temp-files.ts"));
 });
 
 test("civic-data firewall refuses every retired Plural/OpenStates production door", () => {

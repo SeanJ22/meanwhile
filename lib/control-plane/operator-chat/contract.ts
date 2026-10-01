@@ -116,14 +116,14 @@ export const TOPIC_DEFINITIONS: readonly TopicDefinition[] = [
   {
     topic: "COMPARE_ENVIRONMENTS",
     asks: "Compare production, main, and staging.",
-    reads: "production's own build identity, the staging release manifest, and the three code identities the runner recorded in its heartbeat",
-    readBackAt: "/admin/release-review",
+    reads: "production's own build identity and the three code identities the runner recorded in its heartbeat",
+    readBackAt: "/admin",
   },
   {
     topic: "INTEGRATION_STATUS",
     asks: "Why is this PR not integrated?",
-    reads: "the staging release manifest, production's build identity, and the code identity the runner recorded",
-    readBackAt: "/admin/release-review",
+    reads: "production's build identity, and the code identity the runner recorded",
+    readBackAt: "/admin",
   },
 ];
 
@@ -155,8 +155,7 @@ export const CHAT_PROHIBITIONS = [
   "ARBITRARY_QUERY",
   /** "Merge 293", "deploy to production", "push this to main". */
   "SHIP_BY_PROSE",
-  /** "Turn promotion on", "open the meeting-times record class". */
-  "PROMOTION_BY_PROSE",
+  // Promotion is not here any more: verified facts publish automatically (rulings section 3, Sean, 2026-09-29), so there is no switch for a sentence to refuse.
 ] as const;
 export type ChatProhibition = (typeof CHAT_PROHIBITIONS)[number];
 
@@ -168,8 +167,6 @@ export const PROHIBITION_WORDS: Readonly<Record<ChatProhibition, string>> = {
     "This console does not run database statements you type. It answers from named read models so that every number it gives you can be traced to the record it came from.",
   SHIP_BY_PROSE:
     "Nothing merges, deploys or ships because it was asked for in a sentence. Shipping goes through the gates and the deploy proof, in the one place that does it.",
-  PROMOTION_BY_PROSE:
-    "Promotion stays off, and no sentence turns it on. Opening a record class is a decision you record yourself; a chat message is not that decision.",
 };
 
 /* ---------------------------------------------------------------- answers */

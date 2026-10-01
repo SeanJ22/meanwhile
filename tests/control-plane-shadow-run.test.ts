@@ -25,14 +25,14 @@ import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-stor
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { OMITTED_ROUTE, runPimaShadow } from "../lib/control-plane/shadow/pima-run.ts";
 import { PIMA_UNION_DENOMINATOR } from "../lib/control-plane/fixtures/pima-meetings.ts";
-import { loadMethodStore } from "../lib/workstate/load.ts";
 import type { ShadowRunResult } from "../lib/control-plane/shadow/pima-run.ts";
+import { methodFixture } from "./method-store-fixture.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 
 const READER_SURFACES = [
   "data/meetings-snapshot.json",
-  "data/method/knowledge.json",
+  "tests/fixtures/method-knowledge.json",
   "data/ops/production-integrity.json",
 ];
 
@@ -48,7 +48,7 @@ let RESULT: ShadowRunResult;
 let ROOT_DIR: string;
 
 test("the shadow run executes end to end against DURABLE stores", async () => {
-  const knowledge = loadMethodStore(ROOT);
+  const knowledge = methodFixture();
   assert.ok(knowledge, "no method store — the floor cannot be computed from a projection");
 
   ROOT_DIR = mkdtempSync(join(tmpdir(), "wtp-shadow-"));
@@ -98,7 +98,7 @@ test("2. the inherited floor is computed from the canonical method projection", 
    * **PINNED TO THE STORE, NOT TO A NUMBER.** (2026-08-29.)
    *
    * This read `assert.equal(floor.methodVersion, 55)`. The run computes its
-   * floor from `loadMethodStore(ROOT)` — the LIVE canonical store — so the
+   * floor from the method fixture, so the
    * literal was asserting that nobody had learned a route since the test was
    * written. Six routes learned from the 85641 sweep took the store to 61 and
    * turned method growth into a red suite, which is the failure RULING 178
@@ -108,7 +108,7 @@ test("2. the inherited floor is computed from the canonical method projection", 
    * computed against instead of carrying a typed one. Comparing it to the store
    * the run actually read proves exactly that, and cannot go stale.
    */
-  const liveVersion = loadMethodStore(ROOT)?.version;
+  const liveVersion = methodFixture().version;
   assert.ok(typeof liveVersion === "number", "the method store must be readable to compare against");
   assert.equal(
     floor.methodVersion,

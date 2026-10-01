@@ -80,6 +80,12 @@ export function resolveProductionWriteHandle(
   env: Record<string, string | undefined> = process.env,
   requestedVariable: string = WRITE_VARIABLE,
 ): WriteHandle {
+  if (env.WTP_RUNTIME_MODE === "staging" && requestedVariable === WRITE_VARIABLE) {
+    if (env.WTP_DB_ROLE !== "local" || !env.DATABASE_URL) throw new WriteHandleRefused("staging requires WTP_DB_ROLE=local and DATABASE_URL");
+    const u = new URL(env.DATABASE_URL);
+    if (isReadonlyUser(env.DATABASE_URL)) throw new WriteHandleRefused("staging DATABASE_URL is read-only");
+    return { connection: env.DATABASE_URL, variable: "DATABASE_URL", role: decodeURIComponent(u.username), host: u.hostname, database: u.pathname.replace(/^\//, "") };
+  }
   if (requestedVariable === REFUSED_VARIABLE) {
     throw new WriteHandleRefused(
       `${REFUSED_VARIABLE} is not a write path. Its name says read, and a write path ` +

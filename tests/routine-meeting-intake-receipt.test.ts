@@ -14,6 +14,7 @@ import { PIMA_LEGISTAR_CONTRACT } from "../lib/control-plane/workers/held-meetin
 import { retainRecentRoutineMeetingEvidence, retainRoutineMeetingForWorkers } from "../lib/control-plane/workers/routine-meeting-intake.ts";
 import type { RetainedMeetingCandidate, RetainedSourceResponse } from "../lib/civic-data/meeting-research-evidence.ts";
 import { meetingPartitionForRow } from "../lib/civic-data/meeting-partitions.ts";
+import { methodFixture } from "./method-store-fixture.ts";
 
 /*
  * Production, 2026-09-25: the Pima Legistar events feed returned the same
@@ -36,7 +37,7 @@ const DAY_TWO = windowUrl("2026-06-27", "2027-01-23");
 const response = (url: string, retrievedAt: string): RetainedSourceResponse => ({
   source: "legistar", requestedUrl: url, finalUrl: url, httpStatus: 200, rawHash, byteCount: bytes.byteLength, bytes, retrievedAt,
 });
-const methodVersion = JSON.parse(readFileSync("data/method/knowledge.json", "utf8")).version as number;
+const methodVersion = methodFixture().version;
 const subjectId = meetingPartitionForRow("legistar", PIMA_LEGISTAR_CONTRACT.subjectId).bodyId;
 
 function harness(t: { after: (fn: () => void) => void }) {

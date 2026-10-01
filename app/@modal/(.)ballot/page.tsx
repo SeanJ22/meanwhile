@@ -15,13 +15,14 @@ export const runtime = "nodejs";
  * still mounted underneath. A direct visit or a reload of /ballot?zip= is the
  * full page, unchanged, so deep links keep working.
  */
-export default function BallotCard({
+export default async function BallotCard({
   searchParams,
 }: {
   searchParams: Promise<{ zip?: string }>;
 }) {
+  const { zip } = await searchParams;
   return (
-    <RouteCard kicker="Ballot">
+    <RouteCard kicker="Ballot" zip={zip}>
       <BallotPage searchParams={searchParams} />
     </RouteCard>
   );

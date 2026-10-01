@@ -156,36 +156,37 @@ if (DEPLOYED) {
    * `/api/build` is the SITE's build-identity endpoint and the admin origin
    * correctly 404s it — the middleware confines that origin to admin paths, and
    * reading the identity from the public host instead would prove which build
-   * the READER is serving and then infer the admin's from it. The shipping page
+   * the READER is serving and then infer the admin's from it. The Changes page
    * renders the code identity the admin host is itself running, which is the
    * thing this leg is supposed to observe rather than deduce.
    */
   try {
-    const shipping = await fetch(`${BASE}/admin/steward`, {
+    const shipping = await fetch(`${BASE}/admin/changes`, {
       headers: { cookie: `${ADMIN_SESSION_COOKIE}=${cookie}`, accept: "text/html", "cache-control": "no-cache" },
       redirect: "manual",
     });
     const html = shipping.status === 200 ? await shipping.text() : "";
     const expected = process.env.WTP_EXPECT_SHA ?? null;
-    const found = [...new Set(html.match(/\b[0-9a-f]{40}\b/g) ?? [])];
-    deployedSha = expected !== null && found.includes(expected) ? expected : (found[0] ?? null);
+    const found = [...new Set([...html.matchAll(/running build ([0-9a-f]{7})\b/g)].map((m) => m[1]))];
+    const matchesExpected = expected !== null && found.some((short) => expected.startsWith(short));
+    deployedSha = matchesExpected ? expected : (found[0] ?? null);
     legs.push({
       leg: "the deployed host names the build it is serving",
-      ok: shipping.status === 200 && (expected === null ? deployedSha !== null : found.includes(expected)),
+      ok: shipping.status === 200 && (expected === null ? deployedSha !== null : matchesExpected),
       says:
         shipping.status !== 200
-          ? `GET ${BASE}/admin/steward returned ${shipping.status}, so the host said nothing about its build.`
+          ? `GET ${BASE}/admin/changes returned ${shipping.status}, so the host said nothing about its build.`
           : expected === null
-            ? `The shipping page on ${BASE} names ${found.length} build identit(ies); the first is ${deployedSha ?? "none"}.`
-            : found.includes(expected)
-              ? `The shipping page on ${BASE} carries ${expected}, which is the build this proof is about.`
-              : `The shipping page on ${BASE} does not carry ${expected}. It names: ${found.join(", ") || "no 40-hex identity at all"}.`,
+            ? `The Changes page on ${BASE} names ${found.length} build identit(ies); the first is ${deployedSha ?? "none"}.`
+            : matchesExpected
+              ? `The Changes page on ${BASE} carries ${expected}, which is the build this proof is about.`
+              : `The Changes page on ${BASE} does not carry ${expected}. It names: ${found.join(", ") || "no build identity at all"}.`,
     });
   } catch (error) {
     legs.push({
       leg: "the deployed host names the build it is serving",
       ok: false,
-      says: `GET ${BASE}/admin/steward could not be read (${(error as Error)?.message ?? "error"}).`,
+      says: `GET ${BASE}/admin/changes could not be read (${(error as Error)?.message ?? "error"}).`,
     });
   }
 
@@ -258,20 +259,6 @@ legs.push({
   leg: "duplicate submission",
   ok: again.outcome?.replayed === true && sameId && noSecondRow,
   says: `replayed=${String(again.outcome?.replayed)}, same receipt=${String(sameId)}, exactly one row=${String(noSecondRow)}`,
-});
-
-/* The prohibited action: refused by name, and the refusal is itself a record. */
-const prohibited = await submit({
-  type: "prohibited.promotionOn",
-  subject: "promotion",
-  input: {},
-  idempotencyKey: `${idempotencyKey}-prohibited`,
-  returnTo: "/admin",
-});
-legs.push({
-  leg: "prohibited action refused",
-  ok: prohibited.outcome?.ok === false && prohibited.outcome.receipt.refusal === "PROHIBITED_ACTION",
-  says: prohibited.outcome?.receipt.says ?? `status ${prohibited.status}: ${prohibited.raw.slice(0, 200)}`,
 });
 
 /* The unknown action: fails closed. */

@@ -9,10 +9,8 @@
  * context whose absent fields mean "this question did not need that record".
  *
  * It deliberately does NOT read the other environments. Production's build
- * identity and staging's release manifest are fetched by the route, in `app/`,
- * because the readers for both live beside the release-review page and nothing
- * under `lib/` imports from `app/` — a rule this module keeps rather than being
- * the first to break.
+ * identity is fetched by the route (`operator-chat/environments.ts`), so this
+ * module stays a read of the control plane and nothing else.
  *
  * ## The state version an action quotes
  *

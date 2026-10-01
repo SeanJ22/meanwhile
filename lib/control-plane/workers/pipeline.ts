@@ -1,5 +1,5 @@
 import { appendTransition, contextFromRepositories, readPipelineStates, scoutedFromScoutResult } from "../promotion/pipeline.ts";
-import { PROMOTION_PIPELINE_FORMAT_VERSION, VERIFICATION_CHECKS, type TransitionRecord } from "../promotion/types.ts";
+import { PROMOTION_PIPELINE_FORMAT_VERSION, VERIFICATION_CHECKS, type TransitionRecord, type VerificationCheckName } from "../promotion/types.ts";
 import { projectFactChains, type FactChainOptions, type FactChainReport } from "../promotion/fact-chain.ts";
 import { meetingFactContract } from "../promotion/meeting-facts.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
@@ -12,14 +12,15 @@ import { isWorkerReaderContract } from "../../civic-data/worker-reader-contracts
 /**
  * PRDY-3 (2026-09-06): a completed extraction under a meeting-fact contract
  * (LEGISTAR_EVENTS, CIVICCLERK_EVENTS) is projected as FACTS through
- * `projectFactChains`, where every check is measured and the audit controls
- * are scored, when the caller can re-read immutable bytes from the vault.
- * Every other result keeps the honest generic offer below: three checks
- * NOT_IMPLEMENTED and controls NOT MEASURED, which refuse.
+ * `projectFactChains`, where every check is measured, when the caller can
+ * re-read immutable bytes from the vault. Every other Validator result is
+ * offered as the §3 check it ran (docs/rulings.md §3): values on a saved
+ * official page from the right place, inside the freshness window. No audit
+ * stage is offered for these; §3 does not have one.
  */
 export type FleetPipelineOptions = Pick<FactChainOptions, "readArtifactText" | "now" | "root" | "registryBodyIds" | "wiring" | "freshness">;
 
-/** Offer exact worker outputs through the existing gated pipeline; missing confirmation remains a durable refusal. */
+/** Offer exact worker outputs through the existing pipeline. */
 export async function projectFleetPipeline(repos: ControlPlaneRepositories, options?: FleetPipelineOptions): Promise<FactChainReport | null> {
   if (options && !options.registryBodyIds) await refreshRegistryRuntimeFromPromoted();
   // Fact normalization consumes the promoted venue authority synchronously.
@@ -40,24 +41,25 @@ export async function projectFleetPipeline(repos: ControlPlaneRepositories, opti
     return id === "registry-runtime-bindings" || (id !== undefined && isWorkerReaderContract(id));
   }).map(row => row.id));
   for (const result of results) {
-    if (result.result.role !== "VALIDATOR" && result.result.role !== "ADVERSARIAL_AUDITOR") continue;
+    if (result.result.role !== "VALIDATOR") continue;
     if (factPath && meetingFactContract(result) !== null) continue;
-    // This class has an existing typed publication door. Its actual source,
-    // identity, negative controls and reader checks are run there; a generic
-    // NOT_IMPLEMENTED offer is neither that door's approval nor its refusal.
-    // Keep historical generic refusals intact.
+    // This class publishes through its typed reader door, which runs §3 itself.
     if (registryWork.has(result.workItemId)) continue;
     const state = states.find(s => s.byStage.SCOUTED?.artifactIds.some(id => result.inputArtifactIds.includes(id)));
     if (!state) continue;
-    const base = { formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION as typeof PROMOTION_PIPELINE_FORMAT_VERSION, recordId: `${result.id}:pipeline:2`, itemId: state.itemId, at: result.endedAt,
+    const base = { formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION as typeof PROMOTION_PIPELINE_FORMAT_VERSION, recordId: `${result.id}:pipeline:3`, itemId: state.itemId, at: result.endedAt,
       actor: { role: result.worker.role, lane: result.executionMode === "MODEL_ASSISTED" ? "BOUNDED_MODEL_WORKER" as const : "DETERMINISTIC" as const, instance: result.worker.instance }, workerResultId: result.id };
-    const offered: TransitionRecord = result.result.role === "VALIDATOR" ? { ...base, stage: "VERIFIED", checks: VERIFICATION_CHECKS.map(name => ({ name,
-      result: ["CLAIM_RESOLVES_TO_SOURCE_SPAN", "CANONICAL_IDENTITY_UNIQUE"].includes(name)
-        ? result.result.verdict === "PASS" ? "PASS" as const : "FAIL" as const : "NOT_IMPLEMENTED" as const,
-      detail: ["CLAIM_RESOLVES_TO_SOURCE_SPAN", "CANONICAL_IDENTITY_UNIQUE"].includes(name) ? `Exact typed Validator result ${result.id}, scoped to its immutable capture.`
-        : "Capture validation does not prove reader rendering, whole-source false-zero safety, or every reader assertion-class burden." })) }
-      : { ...base, stage: "AUDITED", startedFrom: result.result.startedFrom, survived: result.result.verdict === "SURVIVED", controls: null,
-        findings: [...result.result.findings.map(f => `${f.code}: ${f.detail}`), `${result.completion.completedTask.workerTask!.auditScope} audit. Runtime independent known-answer batch controls are NOT MEASURED; deterministic seeded gates are separate.`] };
+    const v = result.result;
+    const pass = v.verdict === "PASS" && v.validatedRecordCount > 0;
+    const detail: Record<VerificationCheckName, string> = {
+      CLAIM_RESOLVES_TO_SOURCE_SPAN: `Validator ${result.id}: ${v.validatedRecordCount} record(s) with their values found on the saved page.`,
+      CANONICAL_IDENTITY_UNIQUE: "Each record keeps its own source identity; one bad row holds only itself.",
+      ASSERTION_CLASS_BURDENS: "§3: the page is official for this place and inside its freshness window.",
+      NEUTRALITY_AND_RENDERING_SYMMETRY: "Not a judgment call under §3; the typed reader door renders it.",
+      FALSE_ZERO: "Only records found on the page are offered; nothing is asserted absent.",
+    };
+    const offered: TransitionRecord = { ...base, stage: "VERIFIED", checks: VERIFICATION_CHECKS.map(name => ({ name, result: pass ? "PASS" as const : "FAIL" as const,
+      detail: pass ? detail[name] : `Validator ${result.id} ${v.verdict}: ${v.findings.filter(f => f.severity !== "INFO").map(f => f.code).join(", ") || "no record met its minimum facts"}` })) };
     await appendTransition(repos, offered, ctx, result.endedAt);
   }
   return factPath ? projectFactChains(repos, options) : null;

@@ -131,21 +131,24 @@ export function confirmQuotedRecords(
   return { records, spans, rejections, warnings, proposed: proposals.length };
 }
 
+/** One field of one record that the document no longer supports. */
+export interface QuoteFailure { readonly recordId: string; readonly field: string; readonly detail: string }
+
 /**
  * Re-prove a quoted extraction against the immutable document: every span's
  * quote is at its recorded range, and every value is inside its quote. This is
  * what the Validator and the post-publication Auditor run; it needs no model.
  */
-export function quotesHoldAgainst(result: Pick<ParserResult, "records" | "spans">, documentText: string): { readonly ok: boolean; readonly failures: readonly string[] } {
-  const failures: string[] = [];
+export function quotesHoldAgainst(result: Pick<ParserResult, "records" | "spans">, documentText: string): { readonly ok: boolean; readonly failures: readonly QuoteFailure[] } {
+  const failures: QuoteFailure[] = [];
   const spanById = new Map(result.spans.map((s) => [s.id, s] as const));
   for (const record of result.records) {
     for (const field of Object.keys(record.fields)) {
       const span = record.evidenceSpanIds.map((id) => spanById.get(id)).find((s) => s?.field === field);
       const value = String(record.fields[field]);
-      if (!span) { failures.push(`${record.id}/${field}: no span`); continue; }
-      if (documentText.slice(span.start, span.end) !== span.quote) failures.push(`${record.id}/${field}: the quote is not at its recorded range`);
-      else if (!span.quote.includes(value) && !collapse(span.quote).includes(collapse(value))) failures.push(`${record.id}/${field}: the value is not inside its quote`);
+      if (!span) { failures.push({ recordId: record.id, field, detail: `${record.id}/${field}: no span` }); continue; }
+      if (documentText.slice(span.start, span.end) !== span.quote) failures.push({ recordId: record.id, field, detail: `${record.id}/${field}: the quote is not at its recorded range` });
+      else if (!span.quote.includes(value) && !collapse(span.quote).includes(collapse(value))) failures.push({ recordId: record.id, field, detail: `${record.id}/${field}: the value is not inside its quote` });
     }
   }
   return { ok: failures.length === 0, failures };
@@ -175,7 +178,7 @@ export function quotedSourceFindings(candidate: ParserResult, contract: Generali
     if (span.artifactId !== evidence.artifactId || span.contentHash !== evidence.contentHash) out.push(blocking("SPAN_ARTIFACT_MISMATCH", `Span ${span.id} cites another artifact.`, span.recordId));
   }
   const proof = quotesHoldAgainst(candidate, evidence.text);
-  for (const failure of proof.failures) out.push(blocking("QUOTE_NOT_IN_DOCUMENT", failure));
+  for (const failure of proof.failures) out.push({ ...blocking("QUOTE_NOT_IN_DOCUMENT", failure.detail, failure.recordId), field: failure.field });
   const required = [...new Set([...contract.requiredFields, ...contract.identity.keyFields])];
   for (const record of candidate.records) {
     for (const field of required) {

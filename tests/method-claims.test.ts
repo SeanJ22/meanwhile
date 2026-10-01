@@ -16,21 +16,16 @@
  *   c. a future consumer reading the store receives the corrected truth and
  *      never the retracted one;
  *   d. provenance is REQUIRED, not optional, for classes C and D — with a
- *      plant proving the refusal actually fires;
- *   e. the real Pima case, end to end, against the committed store and the
- *      amendment that will be applied to it.
+ *      plant proving the refusal actually fires.
  */
 
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import { beginAttempt, claim as claimLease } from "../lib/control-plane/attempt.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
-import { applyClaimAmendment } from "../lib/method/amend.ts";
 import {
   CLAIM_CLASSES,
   CLAIM_CLASS_LETTER,
@@ -39,7 +34,6 @@ import {
   classificationCoverage,
   currentTruthFor,
   findDependencyFlags,
-  isRetracted,
   readCurrentMethod,
   requiresProvenance,
   retractClaim,
@@ -58,10 +52,9 @@ import {
   type MethodKnowledge,
   type MethodRoute,
 } from "../lib/method/knowledge.ts";
-import { PIMA_CLAIM_CLASSES } from "../lib/method/pima-claim-classes.ts";
 import { testRoute } from "./method-fixtures.ts";
+import { METHOD_FIXTURE_PATH } from "./method-store-fixture.ts";
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ON = "2026-08-28";
 
 // The route factory is shared with `tests/method-projection.test.ts` — RULING
@@ -682,216 +675,6 @@ test("a route AMENDED after adoption must declare a claim class", () => {
   assert.deepEqual(validateKnowledge(prose).map((i) => i.rule), []);
 });
 
-/* --------------------------------------------- (e) THE REAL PIMA CASE, END TO END */
-
-test("CONTROL (e): THE REAL PIMA CASE — the false coverage claim is retracted, the route it rested on is intact, and its dependents are flagged", () => {
-  /*
-   * Against the COMMITTED store and the amendment that will be applied to it,
-   * so what is proved is the thing that runs rather than a paraphrase of it.
-   * The store itself is not mutated here — `data/method/knowledge.json` is
-   * canonical, generated and never hand-edited (RULING 92); the integration
-   * owner applies this once.
-   */
-  const store = JSON.parse(
-    readFileSync(join(ROOT, "data", "method", "knowledge.json"), "utf8"),
-  ) as MethodKnowledge;
-
-  const RECONCILE = "reconcile-the-adapter-before-suspecting-it";
-  const SCHEDULE = "body-publishes-its-schedule-separately-from-its-agendas";
-  const UI_VS_API = "vendor-api-and-vendor-web-ui-are-different-records";
-  const NOT_COMPLETE = "reconciled-is-not-complete";
-  for (const id of [RECONCILE, SCHEDULE, UI_VS_API, NOT_COMPLETE]) {
-    assert.ok(store.routes.some((r) => r.id === id), `the committed store holds ${id}`);
-  }
-
-  const r = applyClaimAmendment(store, PIMA_CLAIM_CLASSES);
-  const k = r.knowledge;
-
-  /*
-   * ASSERT THE END STATE, NOT THE DELTA. The amendment has since been applied
-   * to the committed store, so `claimsAdded` is now correctly 0 on a re-run —
-   * the script is idempotent by design and reports "already present". A test
-   * that asserted the delta would pass only before the work landed and fail
-   * forever after, which is a test that measures whether it has run rather
-   * than whether the store is right.
-   */
-  /*
-   * SCOPED TO THE AMENDMENT'S FOUR ROUTES (2026-08-29). `allClaims(k)` reads
-   * the WHOLE store, so this counted every classified assertion anywhere and
-   * broke the first time a later session learned a route carrying claims — six
-   * did, from the 85641 sweep. What this control is about is the Pima case, and
-   * the four routes it names are what it now measures.
-   */
-  const amendedIds = new Set(PIMA_CLAIM_CLASSES.attach.map((a) => a.routeId));
-  const applied = allClaims(k).filter(({ routeId }) => amendedIds.has(routeId));
-  assert.equal(applied.length, 12, "twelve assertions classified across the four routes");
-  assert.equal(
-    applied.filter((c) => isRetracted(c.claim)).length,
-    2,
-    "two withdrawn: one coverage claim and one derived conclusion",
-  );
-  assert.deepEqual(r.unknownRoutes, []);
-  assert.deepEqual(r.unknownClaims, []);
-
-  /*
-   * Idempotence is the stronger property the delta was standing in for — and
-   * it is asserted against the FIRST application rather than against 12
-   * (2026-08-29). The literal was a store-wide total, so it stopped measuring
-   * idempotence the moment any unrelated route was learned with claims, and
-   * six were. Comparing the two applications tests the actual property and
-   * cannot drift.
-   */
-  const twice = applyClaimAmendment(k, PIMA_CLAIM_CLASSES);
-  assert.equal(
-    allClaims(twice.knowledge).length,
-    allClaims(k).length,
-    "re-applying attaches nothing new",
-  );
-  assert.equal(twice.knowledge.version, k.version, "and bumps no version");
-
-  // AN AMENDMENT ADDS NO AVENUE: version and route count are unchanged, so it
-  // cannot mechanically reopen conclusions as though something were discovered.
-  assert.equal(r.versionAfter, r.versionBefore, "an amendment bumps no method version");
-  assert.equal(r.routesAfter, r.routesBefore, "and adds no route");
-
-  // The amended store is CLEAN.
-  assert.deepEqual(validateKnowledge(k).map((i) => `${i.id} ${i.rule}`), []);
-
-  // (a) THE ROUTES SURVIVE. Both of the corrected entries are present, unretired
-  //     and still inherited by Arizona.
-  for (const id of [RECONCILE, SCHEDULE]) {
-    const route = k.routes.find((x) => x.id === id)!;
-    assert.equal(route.retiredOn, undefined, `${id} must not be retired by its conclusion being wrong`);
-    assert.ok(
-      applicableRoutesUnprojected(k, { state: "az", governmentType: "county" }).some((i) => i.route.id === id),
-      `${id} is still offered to Arizona`,
-    );
-  }
-  // And the TRUE measurement under the false claim is untouched.
-  const measured = allClaims(k).find((c) => c.claim.id === `${RECONCILE}#pima-denominators-reconciled`)!;
-  assert.equal(measured.claim.retraction, undefined, "the reconciliation was measured correctly and stands");
-  assert.equal(measured.claim.class, "ROUTE_OUTCOME");
-
-  // (b) THE DEPENDENTS ARE FLAGGED, BY NAME.
-  const flags = findDependencyFlags(k);
-  const fromFalseCoverage = flags.filter((f) => f.upstream === `${RECONCILE}#pima-window-complete`);
-  assert.deepEqual(
-    fromFalseCoverage.map((f) => f.dependent).sort(),
-    [
-      `${NOT_COMPLETE}#reconciliation-answers-loss-not-sufficiency`,
-      `${SCHEDULE}#pima-september-only-as-rule`,
-    ].sort(),
-    "withdrawing the coverage claim names every assertion that rested on it",
-  );
-  assert.equal(staleDependents(k).length, 0, "and both are dispositioned on the record, not by nobody asking");
-  // The two dispositions are the two that exist, and they are different things:
-  // one dependent was itself false, the other is the lesson learned FROM it.
-  const byId = new Map(flags.map((f) => [f.dependent, f]));
-  assert.equal(byId.get(`${SCHEDULE}#pima-september-only-as-rule`)!.status, "DISPOSITIONED");
-  assert.match(byId.get(`${SCHEDULE}#pima-september-only-as-rule`)!.why, /withdrawn/);
-  assert.match(byId.get(`${NOT_COMPLETE}#reconciliation-answers-loss-not-sufficiency`)!.why, /revalidated/);
-
-  // (c) A CONSUMER RECEIVES THE CORRECTED TRUTH.
-  const conclusion = currentTruthFor(k, `${SCHEDULE}#pima-september-only-as-rule`);
-  assert.equal(conclusion.status, "SUPERSEDED");
-  assert.equal(conclusion.claim?.id, `${UI_VS_API}#pima-september-individually-published`);
-  assert.match(conclusion.claim!.statement, /individually published all three/);
-  assert.match(conclusion.superseded!.statement, /exist only as that recurring rule/);
-
-  const coverage = currentTruthFor(k, `${RECONCILE}#pima-window-complete`);
-  assert.equal(coverage.status, "SUPERSEDED");
-  assert.equal(coverage.claim?.id, `${NOT_COMPLETE}#reconciliation-answers-loss-not-sufficiency`);
-  assert.match(coverage.claim!.statement, /never establishes that enough was ASKED FOR/);
-
-  // Neither false statement is ever offered as current, anywhere in the store.
-  const current = readCurrentMethod(k).flatMap((v) => v.current.map((c) => c.id));
-  assert.ok(!current.includes(`${SCHEDULE}#pima-september-only-as-rule`));
-  assert.ok(!current.includes(`${RECONCILE}#pima-window-complete`));
-  // ...and neither is deleted. History explains; history does not override.
-  assert.ok(allClaims(k).some((c) => c.claim.id === `${SCHEDULE}#pima-september-only-as-rule`));
-
-  // (d) Every C and D in this real amendment carries real provenance.
-  // SCOPED TO THE AMENDMENT'S ROUTES (2026-09-23), for the reason the count
-  // above was scoped on 2026-08-29: `allClaims(k)` is the whole store, and the
-  // first later route to carry its own DERIVED_CONCLUSION (the Diligent robots
-  // allowlist, observed 2026-09-23) failed an `observedOn` that belongs to this
-  // amendment alone. Provenance on every C and D store-wide is already the
-  // validator's rule, asserted clean above and planted in control (d).
-  for (const { claim } of applied) {
-    if (claim.class === "COVERAGE_CLAIM" || claim.class === "DERIVED_CONCLUSION") {
-      assert.ok(claim.provenance, `${claim.id} carries provenance`);
-      assert.ok(claim.provenance!.artifact.length > 20, `${claim.id} names a real artifact`);
-      assert.equal(claim.provenance!.observedOn, "2026-08-28");
-      assert.ok(claim.validation, `${claim.id} states its validation`);
-    }
-  }
-
-  // Applying it twice changes nothing further.
-  const again = applyClaimAmendment(k, PIMA_CLAIM_CLASSES);
-  assert.equal(again.claimsAdded.length, 0);
-  assert.equal(again.retracted.length, 0);
-  assert.equal(again.claimsAlready.length, 12);
-  assert.equal(again.retractionsAlready.length, 2);
-});
-
-test("the committed store's classification coverage is reported honestly", () => {
-  const store = JSON.parse(
-    readFileSync(join(ROOT, "data", "method", "knowledge.json"), "utf8"),
-  ) as MethodKnowledge;
-  const after = classificationCoverage(applyClaimAmendment(store, PIMA_CLAIM_CLASSES).knowledge);
-
-  /*
-   * The END STATE, for the reason given on the control above: the amendment is
-   * applied to the committed store now, so a before/after delta would be 0 and
-   * this would be asserting that the work has not landed.
-   */
-  /*
-   * **SCOPED TO THIS AMENDMENT'S OWN ROUTES, and it was not.** (2026-08-29.)
-   *
-   * These were store-wide absolutes — `classified === 4` and a `byClass`
-   * census over every route in the store. That asserted the amendment had
-   * landed, which is right, AND that nobody had ever classified anything else,
-   * which is not: the first later session to learn a route with claims turned
-   * a growing store into a failing suite. Six routes learned from the 85641
-   * sweep did exactly that, and the store's own header already names the rule
-   * they broke — growing coverage must not read as a regression.
-   *
-   * What the amendment guarantees is about ITS four routes, so that is what is
-   * measured. The store-wide numbers stay as FLOORS, which still catch the
-   * failure this test was written for: the amendment silently not applying.
-   */
-  const amended = applyClaimAmendment(store, PIMA_CLAIM_CLASSES).knowledge;
-  const amendedIds = new Set(PIMA_CLAIM_CLASSES.attach.map((a) => a.routeId));
-  const ours = amended.routes.filter((r) => amendedIds.has(r.id));
-  assert.equal(ours.length, 4, "the amendment's four routes are all in the store");
-
-  const oursByClass = { ROUTE_EXISTENCE: 0, ROUTE_OUTCOME: 0, COVERAGE_CLAIM: 0, DERIVED_CONCLUSION: 0 };
-  let oursRetracted = 0;
-  for (const route of ours) {
-    assert.ok((route.claims?.length ?? 0) > 0, `${route.id} carries a declared class`);
-    for (const claim of route.claims ?? []) {
-      oursByClass[claim.class] += 1;
-      if (claim.retraction) oursRetracted += 1;
-    }
-  }
-  // 12 claims across the four, and the two withdrawn ones are still counted
-  // because a retracted claim is KEPT and labelled, never deleted.
-  assert.deepEqual(oursByClass, {
-    ROUTE_EXISTENCE: 4,
-    ROUTE_OUTCOME: 3,
-    COVERAGE_CLAIM: 3,
-    DERIVED_CONCLUSION: 2,
-  });
-  assert.equal(oursRetracted, 2, "both withdrawals survive as labelled claims");
-
-  assert.ok(after.classified >= 4, "at least the amendment's four routes are classified");
-  assert.equal(after.unclassified, after.routes - after.classified);
-  assert.ok(
-    after.unclassified > 0,
-    "and the rest are reported as UNCLASSIFIED rather than quietly counted as class A",
-  );
-});
-
 /* ------------------------------------------------------------------------ (f) */
 
 /**
@@ -1072,7 +855,7 @@ test("attemptId is ADDITIVE — the committed store still validates, and a blank
    * execution that had no Attempt would be inventing exactly the kind of
    * provenance record the provenance requirement exists to prevent.
    */
-  const k = JSON.parse(readFileSync(join(ROOT, "data", "method", "knowledge.json"), "utf8")) as MethodKnowledge;
+  const k = JSON.parse(readFileSync(METHOD_FIXTURE_PATH, "utf8")) as MethodKnowledge;
   assert.deepEqual(validateClaims(k), []);
 
   const coverage = auditCoverage(k, [], []);

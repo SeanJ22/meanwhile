@@ -37,11 +37,11 @@ const STATUS: WorkerStatus = {
 };
 const HUNT = "ZIP 85635 (Census ZCTA) hunt";
 const failing = (tries: number) => ({ kind: "Keeps failing",
-  title: `The voting sites source for the ${HUNT}: ${tries} failed tries since Sep 28, 2:30 PM MST`,
+  title: `The voting sites source for the ${HUNT}: ${tries} failed tries since Sep 28, 5:30 PM ET`,
   why: "The run ended without the one receipt it must save, so nothing from it could be published. (Saved reason code: RECEIPT_COUNT_INVALID.)",
   nextTime: "The workers try it again on their own. The next try time is not saved.", owner: "Engineering (the same failure keeps coming back)" });
 const MISSING = (scope: string) => [
-  "Only the newest 25 source receipts are read (back to Sep 28, 2:30 PM MST). Older changes are not shown here.",
+  "Only the newest 25 source receipts are read (back to Sep 28, 5:30 PM ET). Older changes are not shown here.",
   `No publication or promotion ${scope === "us" ? "" : `for ${scope} `}is in the saved readings this section can read, so the last useful progress is not reported. A check-in only means the workers are switched on.`,
   ...(scope === "us" ? [] : ["Only work sent to a hunt is split by place. Other queued work is counted for the whole system only, in the lane counts."]),
   "DEP-WORKER-ACTIVE-INDEX: the full list of jobs running now is not shown. Paid research jobs are checked one by one and appear under What changed, but plain-code collection jobs run outside that list and the store has no bounded read of every unexpired work claim yet.",
@@ -51,23 +51,23 @@ function section(scope: string, tries = 9) {
   const applies = [scope];
   const waiting = [
     { kind: "Not finished", title: `${HUNT}: 51 of 194 assigned tasks not finished`,
-      why: "40 tasks were stopped by a check, and 11 tasks have no finished, checked result yet. Counted Sep 28, 3:06 PM MST.",
-      nextTime: "The next round (it was due Sep 28, 3:01 PM MST)", owner: "Workers" },
+      why: "40 tasks were stopped by a check, and 11 tasks have no finished, checked result yet. Counted Sep 28, 6:06 PM ET.",
+      nextTime: "The next round (it was due Sep 28, 6:01 PM ET)", owner: "Workers" },
     failing(tries),
     ...(scope === "us" ? [
-      { kind: "In line", title: "1,301 tasks waiting: plain-code reads", why: "Why they wait is counted when the current round ends.", nextTime: "The oldest has been due since Sep 15, 10:58 AM MST", owner: "Workers" },
-      { kind: "In line", title: "1,284 tasks waiting: paid research (scout)", why: "Why they wait is counted when the current round ends.", nextTime: "The oldest has been due since Aug 26, 5:00 PM MST", owner: "Workers" },
+      { kind: "In line", title: "1,301 tasks waiting: plain-code reads", why: "Why they wait is counted when the current round ends.", nextTime: "The oldest has been due since Sep 15, 1:58 PM ET", owner: "Workers" },
+      { kind: "In line", title: "1,284 tasks waiting: paid research (scout)", why: "Why they wait is counted when the current round ends.", nextTime: "The oldest has been due since Aug 26, 8:00 PM ET", owner: "Workers" },
     ] : []),
   ].map((x) => ({ ...x, applies, actions: [] }));
   const events = [
-    { at: "Sep 28, 3:11 PM MST", kind: "Failed", tone: "warn", applies,
-      text: `The voting sites source for the ${HUNT} stopped before publishing ${tries} times since Sep 28, 2:30 PM MST. The run ended without the one receipt it must save, so nothing from it could be published. (Saved reason code: RECEIPT_COUNT_INVALID.)` },
-    ...(scope === "us" ? [{ at: "Sep 28, 11:24 AM MST", kind: "Round results", tone: "info", applies,
-      text: "From Sep 28, 11:09 AM MST to Sep 28, 11:24 AM MST: records promoted were not counted; how many readers can see was not counted." }] : []),
+    { at: "Sep 28, 6:11 PM ET", kind: "Failed", tone: "warn", applies,
+      text: `The voting sites source for the ${HUNT} stopped before publishing ${tries} times since Sep 28, 5:30 PM ET. The run ended without the one receipt it must save, so nothing from it could be published. (Saved reason code: RECEIPT_COUNT_INVALID.)` },
+    ...(scope === "us" ? [{ at: "Sep 28, 2:24 PM ET", kind: "Round results", tone: "info", applies,
+      text: "From Sep 28, 2:09 PM ET to Sep 28, 2:24 PM ET: records promoted were not counted; how many readers can see was not counted." }] : []),
   ];
   return { contract: "admin-v6/workers@1", scope, revision: `workers:${scope}:${tries}`, asOf: READ_AT,
     data: { status: STATUS, jobs: null, waiting, events, update: null,
-      next: [`${HUNT}: finish the other 51 assigned tasks and pass their checks.`, "The next round was due Sep 28, 3:01 PM MST. No newer start is saved yet."] },
+      next: [`${HUNT}: finish the other 51 assigned tasks and pass their checks.`, "The next round was due Sep 28, 6:01 PM ET. No newer start is saved yet."] },
     missingParts: MISSING(scope) };
 }
 
@@ -141,8 +141,8 @@ test("the saved readback explains itself on Workers for the country, Arizona and
       // Last useful progress is unknown, with the section's own reason beside it.
       assert.match(t, /Last useful progress[^.]*Unknown No publication or promotion/, key);
       // The round is late, from saved times.
-      assert.match(t, /The next round is late It was due 3:01 PM MST, about 10 minutes ago, and no newer start is saved/, key);
-      assert.match(t, /Workers last checked in Sep 28, 2:58 PM MST about 10 minutes ago\. A check-in only means they’re switched on, not that they made progress/, key);
+      assert.match(t, /The next round is late It was due 6:01 PM ET, about 10 minutes ago, and no newer start is saved/, key);
+      assert.match(t, /Workers last checked in Sep 28, 5:58 PM ET about 10 minutes ago\. A check-in only means they’re switched on, not that they made progress/, key);
       // Jobs: unknown, not zero; the active-index reason sits in the jobs card.
       assert.match(t, /how many are working [^.]*is unknown, not zero/, key);
       assert.match(t, /The full list of jobs running now is not shown\. Paid research jobs are checked one by one/, key);
@@ -164,7 +164,7 @@ test("the saved readback explains itself on Workers for the country, Arizona and
       assert.doesNotMatch(t, /detailed Workers reading hasn’t arrived/, key);
       assert.doesNotMatch(t, new RegExp(SECTION_DEP.workers.id), key);
       assert.doesNotMatch(t, /Nothing is waiting|No recorded changes|Nothing is running/, key);
-      assert.match(t, /Read Sep 28, 3:12 PM MST/, key);
+      assert.match(t, /Read Sep 28, 6:12 PM ET/, key);
     }
   } finally { mock.timers.reset(); }
 });
@@ -193,11 +193,11 @@ test("ages move in five-minute steps and a round turns late without a new worker
   assert.equal(ageWords(STATUS.lastCheckIn, beat + 3 * 3_600_000), "about 3 hours ago");
   assert.equal(ageWords(null, beat), null);
   const due = Date.parse(STATUS.nextRoundDueAt!);
-  assert.deepEqual(roundReading(STATUS, due - 20 * 60_000), { headline: "Next round due 3:01 PM MST", detail: "That is in about 20 minutes. The last round finished 2:58 PM MST.", overdue: false });
+  assert.deepEqual(roundReading(STATUS, due - 20 * 60_000), { headline: "Next round due 6:01 PM ET", detail: "That is in about 20 minutes. The last round finished 5:58 PM ET.", overdue: false });
   assert.equal(roundReading(STATUS, due + 3 * 60_000).overdue, false, "a few minutes past due is not yet late");
   assert.match(roundReading(STATUS, due + 3 * 60_000).detail, /It was due less than 5 minutes ago\. No start is saved yet/);
   assert.equal(roundReading(STATUS, due + 6 * 60_000).overdue, true);
-  assert.equal(roundReading({ ...STATUS, roundStartedAt: "2026-09-28T22:05:00.000Z" }, due + 20 * 60_000).headline, "Running since 3:05 PM MST");
+  assert.equal(roundReading({ ...STATUS, roundStartedAt: "2026-09-28T22:05:00.000Z" }, due + 20 * 60_000).headline, "Running since 6:05 PM ET");
   assert.equal(roundReading({ ...STATUS, nextRoundDueAt: null, lastRoundFinishedAt: null }, due).headline, "Not reported");
   assert.deepEqual(laneTotals(STATUS.lanes), { running: null, waiting: 2585 });
   assert.deepEqual(laneTotals([{ name: "a", active: 2, waiting: 1, blockedBy: null }]), { running: 2, waiting: 1 });
@@ -217,7 +217,7 @@ test("an open page: unavailable → live → a later revision → an age step wi
     let t = text(page(sync, scope, key, "workers"));
     assert.equal(b.log.length, 0);
     assert.match(t, /The detailed Workers reading hasn’t arrived/);
-    assert.match(t, /Workers last checked in Sep 28, 2:58 PM MST/, "the pulse's check-in still shows");
+    assert.match(t, /Workers last checked in Sep 28, 5:58 PM ET/, "the pulse's check-in still shows");
     assert.match(t, /Whole system, not just ZIP 85635/);
     assert.match(t, /Waiting reasons arrive with the detailed Workers reading\. Unknown doesn’t mean nothing is waiting/);
     assert.doesNotMatch(t, /Nothing is waiting|No recorded changes/);
@@ -257,7 +257,7 @@ test("an open page: unavailable → live → a later revision → an age step wi
     assert.equal(b.log.length, 2, "an unchanged revision reads nothing");
     t = text(page(sync, scope, key, "workers"));
     assert.match(t, /about 15 minutes ago\. A check-in only means/);
-    assert.match(t, /It was due 3:01 PM MST, about 15 minutes ago/);
+    assert.match(t, /It was due 6:01 PM ET, about 15 minutes ago/);
 
     // 5. Disconnected: no pulses, the last good reading stays and says so.
     t = text(page(sync, scope, key, "workers", "reconnecting"));

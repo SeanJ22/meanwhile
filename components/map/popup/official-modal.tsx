@@ -26,6 +26,7 @@ import { identityChipsFor } from "@/lib/officials/identity-chips";
 import { ContactPills } from "@/components/officials/contact-pills";
 import { OfficialTermNote } from "@/components/officials/official-term-note";
 import { MemberDirectory } from "@/components/officials/member-directory";
+import { useMemberDirectory } from "@/hooks/use-member-directory";
 import { PersonIdentity } from "@/components/officials/person-identity";
 import { PositionsSection } from "@/components/officials/positions-section";
 
@@ -81,6 +82,10 @@ export function OfficialModal({
    * PRL keep their per-section citations; a claim surface is a different
    * register from a directory fact.
    */
+  // A state legislator's offices are read from Open States onto the legislature's own row;
+  // the card names that source once, beside the legislature's.
+  const { directory } = useMemberDirectory(holder.id);
+  const officeSource = directory?.officeDetails?.[0];
   const sources = personCardSources(
     holder,
     holder.id.startsWith("congress:") && holder.provenance
@@ -90,7 +95,9 @@ export function OfficialModal({
             provenance: holder.provenance,
           },
         ]
-      : [],
+      : officeSource
+        ? [{ what: "Their capitol and district offices", provenance: { sourceUrl: officeSource.sourceUrl, sourceOrg: officeSource.sourceOrg, collectedAt: officeSource.collectedAt, verifiedAt: null } }]
+        : [],
   );
 
   /*

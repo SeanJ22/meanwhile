@@ -6,7 +6,7 @@ import test from "node:test";
 import { NextRequest } from "next/server";
 
 import { middleware } from "@/middleware.ts";
-import { CHAT_PAGE } from "@/app/(admin)/admin/chat/contract.ts";
+import { CHAT_PAGE } from "@/lib/control-plane/operator-chat/surface.ts";
 import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
 import {
   AUTHORITY_CLASSES,
@@ -325,9 +325,6 @@ test("the four prohibitions refuse an instruction and let the matching QUESTION 
     ["deploy to production", "SHIP_BY_PROSE"],
     ["can you merge this?", "SHIP_BY_PROSE"],
     ["push it to main", "SHIP_BY_PROSE"],
-    ["turn promotion on", "PROMOTION_BY_PROSE"],
-    ["promote the meeting-times class", "PROMOTION_BY_PROSE"],
-    ["activate promotion for agendas", "PROMOTION_BY_PROSE"],
   ];
   for (const [asked, code] of refused) {
     const hit = prohibitionOf(asked);
@@ -749,16 +746,16 @@ test("chat may not bypass action authority: an owner-gated action is refused in 
   assert.equal(outcome.ok, false);
 
   /*
-   * And the prose form of the same thing is refused a step earlier, before any
-   * registry is consulted: "open a record class" is one of the four things chat
-   * may never do, whatever the gateway happens to declare.
+   * And the prose form of the same thing is no longer refused a step earlier:
+   * promotion is automatic under rulings section 3, so "open a record class" is
+   * not one of the things chat may never do.
    */
   const byProse = await respondToOperator({ gateway: bound.gateway, actorRef: "adm_test" }, fullContext(), {
     text: "open a record class for meeting times",
     from: "/admin/chat",
   });
-  assert.equal(byProse.kind, "PROHIBITED");
-  assert.equal(byProse.kind === "PROHIBITED" ? byProse.code : null, "PROMOTION_BY_PROSE");
+  // Rulings section 3 (Sean, 2026-09-29): verified facts publish automatically, so chat has no promotion refusal to give.
+  assert.notEqual(byProse.kind, "PROHIBITED");
 });
 
 test("a PROHIBITED action is refused, and every authority class is decided by the shared ladder", async () => {
@@ -895,9 +892,7 @@ const CHAT_LIB = join(ROOT, "lib", "control-plane", "operator-chat");
 const CHAT_FILES = [
   ...readdirSync(CHAT_LIB).map((f) => join(CHAT_LIB, f)),
   join(ROOT, "app", "api", "admin", "chat", "route.ts"),
-  join(ROOT, "app", "(admin)", "admin", "chat", "page.tsx"),
-  join(ROOT, "app", "(admin)", "admin", "chat", "chat-console.tsx"),
-  join(ROOT, "app", "(admin)", "admin", "chat", "contract.ts"),
+  join(ROOT, "app", "(admin)", "_mw", "admin-v6", "chat-view.tsx"),
 ];
 
 function withoutComments(source: string): string {

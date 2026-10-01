@@ -134,7 +134,7 @@ test("owner-created family work reaches autonomous workers and survives registra
     assert.deepEqual(plan.sources, [], "a registry address is not evidence of a source read");
     if (plan.contract.schemaVersion === 2) {
       assert.equal(plan.contract.extraction.format, "UNSUPPORTED");
-      assert.equal(plan.contract.verification.required, true);
+      assert.equal(plan.contract.verification.required, false, "no second source: these facts are not judgment calls (§3)");
       assert.deepEqual(plan.contract.sourceScope.observationArtifactIds, []);
     }
     await repos.obligations.put(obligation.id, obligation, T0);

@@ -272,7 +272,7 @@ export default async function ReadinessStatePage({
                           <Pill tone={sw.tone}>{sw.pill}</Pill>
                           <span className={`${s.text14} ${s.grow}`}>{b.name}</span>
                           {v ? (
-                            <Link href={withScope(`/admin#body-${encodeURIComponent(v.id)}`, scope, { body: v.id })} className={s.btnLink}>
+                            <Link href={withScope("/admin", scope)} className={s.btnLink}>
                               Watched · {v.status.toLowerCase()}
                             </Link>
                           ) : (

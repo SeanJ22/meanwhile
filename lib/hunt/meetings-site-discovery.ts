@@ -47,6 +47,7 @@ import { verifyOfficialPageEvents } from "../sources/official-page-events/index.
 import { detectTenancy } from "./platform-tenancy.ts";
 import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } from "../meetings/constants.ts";
 import { parseDiligentMeetings } from "../sources/diligent/index.ts";
+import { meetingSourceCadenceHours } from "../control-plane/scheduler/obligation.ts";
 
 /**
  * How a candidate was evidenced. The first three come from the government's
@@ -298,7 +299,7 @@ export interface EndpointVerification {
  * until this is bumped, and anything keyed on it (a saved method, a wiring row)
  * re-keys cleanly.
  */
-export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@d652e51301a7";
+export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@656a081a9082";
 
 /**
  * The zone a state's bodies meet in, for the states that sit in one zone. A
@@ -578,15 +579,6 @@ export type DiscoveryOutcome =
   /** The site could not be read: a transport failure, a server error, or permission rules that could not be read. */
   | "COULD_NOT_READ";
 
-/** Days until a need is walked again, by outcome. A recheck is a schedule, never a verdict. */
-export const RECHECK_DAYS: Readonly<Record<DiscoveryOutcome, number>> = {
-  FOUND: 90,
-  LEAD: 14,
-  NOTHING_DETECTED: 30,
-  BLOCKED: 30,
-  COULD_NOT_READ: 7,
-};
-
 export type StepPermission = "ALLOWED" | "NO_ROBOTS" | "DISALLOWED" | "CANNOT_TELL" | "RECORDED_WALL";
 
 export interface DiscoveryStep {
@@ -754,7 +746,8 @@ export function decideOutcome(input: {
   return "COULD_NOT_READ";
 }
 
-/** The recheck instant for an outcome. */
-export function recheckAfter(outcome: DiscoveryOutcome, finishedAt: string): string {
-  return new Date(Date.parse(finishedAt) + RECHECK_DAYS[outcome] * 86_400_000).toISOString();
+/** Discovery keeps checking for new calendars on the same §4 source cadence. */
+export function recheckAfter(finishedAt: string, meetingStartsAt: readonly string[] = []): string {
+  const at = Date.parse(finishedAt);
+  return new Date(at + meetingSourceCadenceHours(at, meetingStartsAt) * 3_600_000).toISOString();
 }

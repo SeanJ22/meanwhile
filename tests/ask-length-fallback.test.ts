@@ -103,7 +103,8 @@ async function askWithModelAnswer(modelAnswer: { answer: string; citedSources: n
     return new Response(JSON.stringify({ error: { type: "overloaded_error" } }), { status: 529 });
   }) as typeof fetch;
   try {
-    const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
+    const { POST } = await import("../app/api/ask/grounded/route.ts");
+    const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
     resetGroundedState();
     const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
       method: "POST",

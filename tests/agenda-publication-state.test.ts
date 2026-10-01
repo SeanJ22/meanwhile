@@ -58,7 +58,8 @@ delete process.env.ANTHROPIC_API_KEY;
 
 await installRegistryRuntimeFirstSeeds();
 
-const { POST, resetGroundedState } = await import("@/app/api/ask/grounded/route");
+const { POST } = await import("@/app/api/ask/grounded/route");
+const { resetGroundedState } = await import("@/lib/ask/grounded-state");
 
 interface Snapshot {
   meetings: {

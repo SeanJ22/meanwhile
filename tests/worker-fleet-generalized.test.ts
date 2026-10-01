@@ -62,7 +62,7 @@ test("external official comparison is a distinct durable receipt with exact auth
   const audit = auditor(parser); assert.equal(auditExtraction({ ...audit, context: { ...audit.context, authorityEvidence: [held] } }).verdict, "SURVIVED");
 });
 
-test("retained document text uses literal record boundaries and still requires independent official agreement", () => {
+test("retained document text uses literal record boundaries; a contradicting official record holds only the disputed row (§3, §6)", () => {
   const extraction: RecordExtractionShape = { format: "TEXT_BLOCKS", recordStart: "ID:", recordEnd: "End of record", fields: { id: { source: "ID:", type: "STRING" }, name: { source: "Name:", type: "STRING" } } };
   const source = request("[Page 1]\nID: 1 Name: Member A End of record\nID: 2 Name: Member B End of record", extraction);
   const { held, parser: authority } = withAuthority();
@@ -70,7 +70,7 @@ test("retained document text uses literal record boundaries and still requires i
   const parsed = parseCivicRecords(parser);
   assert.equal(parsed.verdict, "EXTRACTED", JSON.stringify(parsed.warnings));
   assert.equal(parsed.actualRowCount, 2);
-  assert.equal(validateExtraction(validator(parser)).verdict, "INCONCLUSIVE");
+  assert.equal(validateExtraction(validator(parser)).verdict, "PASS", "no second source is needed for facts that are not judgment calls");
   assert.equal(validateExtraction({ ...validator(parser), authorityEvidence: [held] }).verdict, "PASS");
   const audit = auditor(parser);
   assert.equal(auditExtraction({ ...audit, context: { ...audit.context, authorityEvidence: [held] } }).verdict, "SURVIVED");
@@ -80,36 +80,41 @@ test("retained document text uses literal record boundaries and still requires i
     assert.notEqual(parseCivicRecords(broken).verdict, "EXTRACTED");
   }
   const conflict = evidence(held.text.replace("Member B", "Wrong person"), held.artifactId, held.sourceId, held.canonicalUrl);
-  assert.equal(validateExtraction({ ...validator(parser), authorityEvidence: [conflict] }).verdict, "FAIL");
+  const disputed = validateExtraction({ ...validator(parser), authorityEvidence: [conflict] });
+  assert.equal(disputed.verdict, "PASS");
+  assert.deepEqual(disputed.validatedRecordIds, [parsed.records[0].id], "only Member B is in dispute");
 });
 
-test("acquired but unverified remains distinct from external disagreement and self-verification", () => {
+test("an unchecked outside source never holds a verified fact; a contradicting one holds only its row", () => {
   const { parser, held } = withAuthority();
-  const missing = validateExtraction(validator(parser)); assert.equal(missing.extractionVerdict, "PASS"); assert.equal(missing.verdict, "INCONCLUSIVE"); assert.equal(missing.externalVerifications![0].verdict, "INCONCLUSIVE");
+  const missing = validateExtraction(validator(parser)); assert.equal(missing.extractionVerdict, "PASS"); assert.equal(missing.verdict, "PASS"); assert.equal(missing.externalVerifications![0].verdict, "INCONCLUSIVE", "the receipt still says what was not checked");
   const changed = evidence(held.text.replace("Member B", "Another name"), held.artifactId, held.sourceId, held.canonicalUrl);
-  const disagreement = validateExtraction({ ...validator(parser), authorityEvidence: [changed] }); assert.equal(disagreement.extractionVerdict, "PASS"); assert.equal(disagreement.verdict, "FAIL"); assert.ok(disagreement.findings.some(f => f.code === "EXTERNAL_FIELD_MISMATCH"));
+  const disagreement = validateExtraction({ ...validator(parser), authorityEvidence: [changed] }); assert.equal(disagreement.extractionVerdict, "PASS"); assert.equal(disagreement.validatedRecordCount, 1); assert.ok(disagreement.findings.some(f => f.code === "EXTERNAL_FIELD_MISMATCH"));
   const ownBytes = { ...held, text: parser.evidence.text, contentHash: parser.evidence.contentHash };
-  const self = validateExtraction({ ...validator(parser), authorityEvidence: [ownBytes] }); assert.equal(self.extractionVerdict, "PASS"); assert.equal(self.verdict, "INCONCLUSIVE"); assert.ok(self.findings.some(f => f.code === "SELF_VERIFICATION_REFUSED"));
+  const self = validateExtraction({ ...validator(parser), authorityEvidence: [ownBytes] }); assert.equal(self.extractionVerdict, "PASS"); assert.equal(self.verdict, "PASS"); assert.ok(self.findings.some(f => f.code === "SELF_VERIFICATION_REFUSED" && f.severity === "INFO"));
   const audit = auditor(parser); const broken = auditExtraction({ ...audit, context: { ...audit.context, authorityEvidence: [changed] } }); assert.equal(broken.verdict, "BROKE"); assert.ok(broken.findings.some(f => f.code === "EXTERNAL_FIELD_MISMATCH"));
 });
 
-test("same-publisher authority requires an explicit independent-record basis and never accepts a duplicate capture", () => {
+test("a same-publisher authority without an independent-record basis is not a check, and never holds the facts", () => {
   const { parser, held } = withAuthority(); const authority = parser.contract.verification.authorities[0]; const sameSource = { ...held, sourceId: parser.evidence.sourceId };
   const contract = { ...parser.contract, verification: { required: true, authorities: [{ ...authority, sourceId: sameSource.sourceId }] } };
-  assert.equal(validateExtraction({ ...validator({ ...parser, contract }), authorityEvidence: [sameSource] }).verdict, "INCONCLUSIVE");
+  const unchecked = validateExtraction({ ...validator({ ...parser, contract }), authorityEvidence: [sameSource] });
+  assert.equal(unchecked.verdict, "PASS"); assert.equal(unchecked.externalVerifications![0].verdict, "INCONCLUSIVE");
   const independent = { ...contract, verification: { required: true, authorities: [{ ...contract.verification.authorities[0], independenceBasis: "INDEPENDENT_OFFICIAL_RECORD" as const }] } };
   assert.equal(validateExtraction({ ...validator({ ...parser, contract: independent }), authorityEvidence: [sameSource] }).verdict, "PASS");
 });
 
-test("cross-row repeated quotations, missing mapped fields, source-scope forgery and duplicate identity fail independently", () => {
+test("a row whose quotation points at another row is held on its own; missing fields, scope forgery and duplicate identity fail", () => {
   const input = request('{"records":[{"id":"1","name":"Repeated"},{"id":"2","name":"Repeated"}]}');
   const original = validator(input); const first = original.candidate.spans.find(s => s.recordId === original.candidate.records[0].id && s.field === "name")!;
   const spans = original.candidate.spans.map(span => span.recordId === original.candidate.records[1].id && span.field === "name" ? { ...span, start: first.start, end: first.end, jsonPointer: first.jsonPointer } : span);
-  const candidate = { ...original.candidate, spans }; assert.equal(validateExtraction({ ...original, candidate }).verdict, "FAIL");
+  const candidate = { ...original.candidate, spans }; const repeated = validateExtraction({ ...original, candidate });
+  assert.deepEqual(repeated.validatedRecordIds, [original.candidate.records[0].id], "the row with a borrowed quotation is held; its neighbour is not");
   const audit = auditor(input); assert.equal(auditExtraction({ ...audit, candidate: { ...audit.candidate, extraction: candidate } }).verdict, "BROKE");
   assert.equal(parseCivicRecords({ ...input, evidence: { ...input.evidence, methodRouteId: "UNOBSERVED_ROUTE" } }).verdict, "FAILED");
   assert.equal(parseCivicRecords(request('{"records":[{"id":"1"}]}')).verdict, "FAILED");
-  const duplicate = request('{"records":[{"id":"1","name":"A"},{"id":"1","name":"B"}]}'); assert.equal(parseCivicRecords(duplicate).verdict, "AMBIGUOUS"); assert.equal(validateExtraction(validator(duplicate)).verdict, "FAIL");
+  const duplicate = request('{"records":[{"id":"1","name":"A"},{"id":"1","name":"B"}]}'); assert.equal(parseCivicRecords(duplicate).verdict, "AMBIGUOUS");
+  const ambiguous = validateExtraction(validator(duplicate)); assert.notEqual(ambiguous.verdict, "PASS"); assert.equal(ambiguous.validatedRecordCount, 0);
 });
 
 test("XML sitemap is record inventory with exact loc spans, never a derived meeting date or universe claim", () => {

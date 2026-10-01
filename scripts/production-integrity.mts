@@ -24,11 +24,12 @@
  * itself. It spawns the gate, reads its exit code, and only then opens the
  * separate control-plane store to append the exact outcome receipt.
  *
- * WHAT IT DOES NOT DO, and will not be extended to do: roll anything back. The
- * owner's decision on 2026-08-28 is that a red reading marks state DEGRADED,
- * alerts, and blocks the next production-changing release — because production's
- * database may already have advanced, and rolling code back underneath an
- * advanced schema manufactures a second incompatibility on top of the first.
+ * WHAT IT DOES NOT DO, and will not be extended to do: roll anything back. A red
+ * reading is recorded as DEGRADED and the run exits non-zero, which is a signal
+ * for a person to act on; nothing else is blocked by it. Rolling back is avoided
+ * because production's database may already have advanced, and rolling code back
+ * underneath an advanced schema manufactures a second incompatibility on top of
+ * the first.
  *
  *   --sha=<commit>   the application-bearing commit the reading is ABOUT.
  *                    Defaults to origin/main's tip.
@@ -269,8 +270,8 @@ async function main(): Promise<void> {
     }
     if (observed === "REFUSED") {
       console.log(
-        "\nPRODUCTION INTEGRITY IS NOW DEGRADED. The next production-changing release is frozen\n" +
-          "until a passing re-check clears it. NOTHING WAS ROLLED BACK, and nothing will be:\n" +
+        "\nPRODUCTION INTEGRITY IS NOW DEGRADED until a passing re-check is recorded.\n" +
+          "NOTHING WAS ROLLED BACK, and nothing will be:\n" +
           "the database may already have advanced past the deployed code.",
       );
     }

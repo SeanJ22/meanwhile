@@ -18,7 +18,7 @@
  * Where the data comes from is `Sources` (`live.ts` binds the real store; tests bind an in-memory one), so a recipe never knows.
  */
 import type { Audience, BuyerSlice, CapturedEvent, CohortRow, PlaceFilter, ResultBody, Slice, TotalsRow } from "./types.ts";
-import { isAudience } from "./types.ts";
+import { audienceWords, isAudience } from "./types.ts";
 import { parseSlice, sliceEvents, type ZipPlaces } from "./slice.ts";
 import { recipeById, RECIPES, type Recipe } from "./recipes.ts";
 import type { PlaceIndex } from "./places.ts";
@@ -128,7 +128,7 @@ export async function readRecipe(request: { readonly recipe: string; readonly sl
   const audience = request.audience;
   const recipe = recipeById(request.recipe, deps.book ?? RECIPES);
   if (recipe === null) return refused("UNKNOWN_RECIPE", "There is no number by that name.");
-  if (!(await deps.switchOn(recipe.id, audience))) return refused("SWITCH_OFF", `“${recipe.label}” is switched off for ${audience === "admin" ? "Admin" : audience === "dashboard" ? "the dashboard" : "this customer"}.`);
+  if (!(await deps.switchOn(recipe.id, audience))) return refused("SWITCH_OFF", `“${recipe.label}” is switched off for ${audienceWords(audience)}.`);
   const parsed = parseSlice(request.slice);
   if (!parsed.ok) return refused("BAD_SLICE", parsed.says);
 

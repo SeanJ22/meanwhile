@@ -2198,11 +2198,6 @@ function MapEntryInner() {
             camera={camera}
             focus={focus}
             selectedVenueKey={ui.selectedVenueKey}
-            overlayOpen={
-              Boolean(cardView && !parked) ||
-              !location ||
-              welcomeRequested
-            }
             frameAllVenues={
               current !== null &&
               current.tier !== "exact" &&

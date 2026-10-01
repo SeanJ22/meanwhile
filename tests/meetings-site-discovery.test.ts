@@ -25,7 +25,6 @@ import { join } from "node:path";
 import test from "node:test";
 
 import {
-  RECHECK_DAYS,
   decideOutcome,
   meetingEndpointCandidates,
   pageLinks,
@@ -197,7 +196,6 @@ test("OUTCOME: found beats lead beats a read homepage; walled everywhere (an acc
   assert.equal(decideOutcome({ found: [], leads: [], steps: [step({ status: 503 })] }), "COULD_NOT_READ");
   assert.equal(decideOutcome({ found: [], leads: [], steps: [step({ status: null, transportError: "ETIMEDOUT" })] }), "COULD_NOT_READ");
   assert.equal(decideOutcome({ found: [], leads: [], steps: [] }), "COULD_NOT_READ");
-  assert.equal(RECHECK_DAYS.LEAD, 14);
-  assert.equal(recheckAfter("LEAD", "2026-09-23T00:00:00.000Z"), "2026-10-07T00:00:00.000Z");
-  assert.equal(recheckAfter("COULD_NOT_READ", "2026-09-23T00:00:00.000Z"), "2026-09-30T00:00:00.000Z");
+  assert.equal(recheckAfter("2026-09-23T00:00:00.000Z"), "2026-09-23T12:00:00.000Z");
+  assert.equal(recheckAfter("2026-09-23T00:00:00.000Z", ["2026-09-22T12:00:00.000Z"]), "2026-09-23T01:00:00.000Z");
 });

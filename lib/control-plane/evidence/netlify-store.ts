@@ -14,8 +14,15 @@ export class NetlifyEvidenceStore implements EvidenceStore {
     if (bytes.byteLength !== meta.byteLength || objectClassOf(meta) === "IMMUTABLE_BODY" && bodySha256 !== meta.contentHash) {
       throw new EvidenceStoreRefusal(`Evidence bytes do not match metadata at ${key}`);
     }
-    const held = await this.head(key);
-    if (reconcileExistingObject(key, bytes, meta, held ? { meta: held } : null)) return;
+    // An immutable no-op means these bytes are held, not just their metadata.
+    // Rebuilt indexes keep the metadata-only path so a damaged old index can be replaced.
+    let held: { meta: ObjectMeta; bytes?: Uint8Array } | null;
+    if (objectClassOf(meta) === "IMMUTABLE_BODY") held = await this.get(key);
+    else {
+      const metadata = await this.head(key);
+      held = metadata ? { meta: metadata } : null;
+    }
+    if (reconcileExistingObject(key, bytes, meta, held)) return;
     const result = await this.store.set(key, new Uint8Array(bytes).buffer, {
       metadata: { meta, bodySha256 },
       ...(objectClassOf(meta) === "IMMUTABLE_BODY" ? { onlyIfNew: true } : {}),

@@ -308,7 +308,8 @@ export function normalizeWithDrops(
   let keptButPlaceless = 0;
 
   for (const { event, slug, collectedAt, items } of raw) {
-    const client = clients.find((candidate) => candidate.slug === slug);
+    const client = clients.find(candidate => candidate.slug === slug &&
+      (candidate.eventBodyId === undefined || candidate.eventBodyId === event.EventBodyId));
     if (!client) {
       drops.notConfigured++;
       continue;
@@ -523,6 +524,7 @@ export function toAgendaItems(items: LegistarEventItem[]): AgendaItem[] {
 
 export function makeLegistarSource(
   clients: readonly LegistarClient[] = LEGISTAR_CLIENTS,
+  fetchImpl?: typeof fetch,
 ): MeetingSource<LegistarEventWithClient> {
   return {
     name: SOURCE_NAME,
@@ -534,29 +536,30 @@ export function makeLegistarSource(
 
     const collected: LegistarEventWithClient[] = [];
 
-    // Serialized across clients as well as within one. This loop is the whole
-    // reason the adapter is polite: nothing here runs concurrently.
-    for (const client of clients) {
+    // Independent tenants have independent connection slots in client.ts.
+    await Promise.all(clients.map(async client => {
       // Skip a client whose reviewed venues all lie outside the query radius
       // before spending a request on it. Venue coordinates are the only
       // geography the adapter has, and they are known locally; a client with
       // none is read (see `venuesWithinRadius`).
-      if (!venuesWithinRadius(client.venues, query)) continue;
+      if (!venuesWithinRadius(client.venues, query)) return;
 
       const events = await fetchEvents<LegistarEvent>(client.slug, { from, to }, {
         signal: query.signal,
+        fetchImpl,
       });
       const collectedAt = new Date().toISOString();
 
       for (const event of events) {
+        if (client.eventBodyId !== undefined && event.EventBodyId !== client.eventBodyId) continue;
         collected.push({
           event,
           slug: client.slug,
           collectedAt,
-          items: await readAgendaItems(client.slug, event.EventId, query.signal),
+          items: await readAgendaItems(client.slug, event.EventId, query.signal, fetchImpl),
         });
       }
-    }
+    }));
 
     return collected;
   },
@@ -596,9 +599,10 @@ async function readAgendaItems(
   slug: string,
   eventId: number,
   signal?: AbortSignal,
+  fetchImpl?: typeof fetch,
 ): Promise<LegistarEventItem[] | null> {
   try {
-    return await fetchEventItems<LegistarEventItem>(slug, eventId, { signal });
+    return await fetchEventItems<LegistarEventItem>(slug, eventId, { signal, fetchImpl });
   } catch (error) {
     console.warn(
       `  legistar: agenda items unavailable for ${slug}/${eventId} — ${error}; ` +

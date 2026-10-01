@@ -32,6 +32,9 @@ import { makeIcalSource, parseIcs } from "../../sources/ical/index.ts";
 import { ZeroRowExtractionError } from "../../sources/normalize-account.ts";
 import { makeOfficialPageEventsSource } from "../../sources/official-page-events/index.ts";
 import { makeDiligentSource } from "../../sources/diligent/index.ts";
+import { normalizeWithDrops as normalizeLegistar } from "../../sources/legistar/index.ts";
+import { legistarClientsFromWiring } from "../../sources/legistar/client-registry.ts";
+import type { LegistarEvent } from "../../sources/legistar/types.ts";
 import type { Meeting } from "../../sources/types.ts";
 import { sameRoute, type WiringVerification } from "./derived-wiring.ts";
 
@@ -107,6 +110,14 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
   let meetings: readonly Meeting[];
   try {
     const wiring = bodySourceWiringFor(row);
+    if (row.kind === "LEGISTAR") {
+      const events = JSON.parse(text) as LegistarEvent[];
+      if (!Array.isArray(events)) return { changed: "The Legistar route no longer returns events" };
+      const clients = legistarClientsFromWiring([wiring]);
+      const ownEvents = events.filter(event => event.EventBodyId === clients[0]?.eventBodyId);
+      meetings = normalizeLegistar(ownEvents.map(event => ({ event, slug: wiring.config.slug,
+        collectedAt: reading.evidence.retrievedAt, items: [] })), new Date(now), clients).meetings;
+    } else {
     const source = row.kind === "ICAL" ? makeIcalSource([wiring], fetchImpl) : row.kind === "DILIGENT" ? makeDiligentSource([wiring], fetchImpl) : makeOfficialPageEventsSource([wiring], fetchImpl);
     const nowMs = Date.parse(now);
     const raw = row.kind === "DILIGENT" ? [{ wiring, meetings: JSON.parse(text), collectedAt: reading.evidence.retrievedAt }] : await source.fetch({
@@ -115,6 +126,7 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
       startsBefore: new Date(nowMs + UPCOMING_HORIZON_DAYS * 86_400_000).toISOString(),
     });
     meetings = source.normalizeWithDrops(raw as never[], new Date(nowMs)).meetings;
+    }
   } catch (error) {
     return adapterThrowVerification(error, row.route);
   }

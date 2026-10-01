@@ -174,13 +174,26 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
   const divisions: Division[] = [], bodies: Body[] = [], used = new Set<string>();
   const officialDivisions = new Set(input.sources.officials.map(o => o.divisionId));
   for (const row of input.divisions) {
-    const division = heldDivisions.get(row.id) ?? divisionRow(row, input.geographyCaptures, input.now);
+    const held = heldDivisions.get(row.id);
+    let division = held ?? divisionRow(row, input.geographyCaptures, input.now);
     if (division === null) continue;
     if (typeof division === "string") { gaps.push({ key: `division:${row.id}`, detail: division }); continue; }
     if (!heldDivisions.has(row.id)) { divisions.push(division); used.add(row.sourceUrl); }
-    const implied = LEGISLATIVE.has(division.divisionType)
+    const impliedBy = (division: Division) => LEGISLATIVE.has(division.divisionType)
       ? officialDivisions.has(division.ocdId) ? [seatBody(division, input.now)] : []
       : bodiesFor(division, input.now);
+    if (held && impliedBy(held).some(body => !heldBodies.has(body.id))) {
+      // Held registry provenance may name an older download, while this hunt
+      // saved a current query. Bind a new body to the bytes checked here;
+      // retaining the division never makes its old URL a current capture.
+      division = divisionRow(row, input.geographyCaptures, input.now);
+      if (division === null) continue;
+      if (typeof division === "string") { gaps.push({ key: `division:${row.id}`, detail: division }); continue; }
+      if (division.divisionType !== held.divisionType || division.geoid !== held.geoid) {
+        gaps.push({ key: `division:${row.id}`, detail: "DIVISION_IDENTITY_CHANGED" }); continue;
+      }
+    }
+    const implied = impliedBy(division);
     for (const body of implied) {
       if (heldBodies.has(body.id)) continue;
       bodies.push({ ...body, provenance: { ...body.provenance, sourceUrl: division.provenance.sourceUrl } });
@@ -188,6 +201,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
     }
   }
   if (divisions.length || bodies.length) {
+    try {
     const captures = input.geographyCaptures.filter(c => used.has(c.evidence.canonicalUrl));
     const sourceReceipt = section3SourceReceipt(captures, input.now, "section3-validator:national-place",
       `${divisions.length} Census division(s) found on their saved Census responses inside the freshness window (§3); ${bodies.length} implied body row(s).`);
@@ -198,6 +212,13 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
         officialCandidacies: { ...prior.payload.officialCandidacies, rows: [] } } }, prior, input.now);
     ({ candidateId } = published); promotedVersionId = published.versionId;
     prior = (await readRegistryRuntimePrior(input.store, input.now))!;
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : String(error);
+      for (const division of divisions) gaps.push({ key: `division:${division.ocdId}`, detail });
+      for (const body of bodies) gaps.push({ key: `body:${body.id}`, detail });
+      divisions.length = 0;
+      bodies.length = 0;
+    }
   }
 
   // 2. Statewide officials (a governor, an attorney general): each on their own saved official page.

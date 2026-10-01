@@ -140,6 +140,7 @@ import { CANDIDATE_PUBLICATION_BUDGET_MS, runCandidatePublicationCycle,
 import { indexVault } from "../lib/control-plane/evidence/read-only-vault.ts";
 import {
   MEETINGS_DISCOVERY_NAMESPACE,
+  meetingsDiscoveryObligationId,
   dispatchedAddressSource,
   materializedDiscoveryNeeds,
   meetingsDiscoveryProvider,
@@ -269,6 +270,7 @@ import { readResearchProgression } from "../lib/control-plane/research-progressi
 import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import { readMethodStore } from "../lib/method/candidate.ts";
+import { readMethodVersion } from "../lib/method/manual-bridge.ts";
 import { readConclusionStore } from "../lib/method/conclusions.ts";
 import {
   NO_PIPELINE_RECORDED,
@@ -1385,7 +1387,7 @@ if (!dry && !canary && !scheduledBlackout && !intents.runnerPause.paused) {
   try {
     const retained = await retainRecentRoutineMeetingEvidence({ repos,
       store: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
-      methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version, now: nowIso });
+      methodVersion: (await readMethodVersion(repos)) ?? readMethodStore(join(ROOT, ...METHOD_STORE)).version, now: nowIso });
     console.log(`  permanent meeting captures retained for independent workers: ${retained.length}`);
   } catch (error) {
     runtimeConditions.push(`permanent meeting evidence could not enter independent workers: ${error instanceof Error ? error.message : "ROUTINE_MEETING_INTAKE_FAILED"}`);
@@ -2973,8 +2975,8 @@ const MEETINGS_DISCOVERY_MAX_WALKS = 12;
  */
 if (!MEETINGS_DISCOVERY_ENABLED) {
   meetingsDiscoveryState = "OFF: WTP_MEETINGS_DISCOVERY=off, the kill switch";
-} else if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
-  meetingsDiscoveryState = "not run: a dry, canary, filtered or blackout cycle walks nothing";
+} else if (dry || canary || scheduledBlackout) {
+  meetingsDiscoveryState = "not run: a dry, canary or blackout cycle walks nothing";
 } else if ("unreadable" in gapLedgerRead) {
   meetingsDiscoveryState = `not run: ${gapLedgerRead.unreadable}`;
 } else if (Date.now() + MEETINGS_DISCOVERY_BUDGET_MS > DISPATCH_DEADLINE_MS) {
@@ -3004,7 +3006,10 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
     const meetingHints = directoryRegistry?.kind === "PROMOTED" ? directoryMeetingHints(directoryItems, directoryRegistry.value, ROUTE_HINTS) : ROUTE_HINTS;
     let costSeq = 0;
     meetingsDiscovery = await runMeetingsDiscovery(repos, {
-      needs: discoveryNeedsToWalk(gapLedgerRead.needs, [...dispatchedNeeds.values()]),
+      needs: discoveryNeedsToWalk(gapLedgerRead.needs, [...dispatchedNeeds.values()], need => {
+        const id = meetingsDiscoveryObligationId(need);
+        return (ONLY === null || id.startsWith(ONLY)) && (IDS === null || IDS.has(id));
+      }),
       cycleIndex: Math.floor(Date.parse(NOW) / 3_600_000),
       maxWalks: MEETINGS_DISCOVERY_MAX_WALKS,
       /* An owner-dispatched meetings-discovery obligation goes first; one with an open occurrence is another executor's. */
@@ -3125,7 +3130,7 @@ if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
         spaceOut: spacer,
         vaultRoot: join(ROOT, ...VAULT_DIR),
         heldVault: vaultIndex,
-        methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version,
+        methodVersion: (await readMethodVersion(repos)) ?? readMethodStore(join(ROOT, ...METHOD_STORE)).version,
       });
       return {
         report,
@@ -3172,7 +3177,7 @@ if (dry || canary || ONLY !== null || IDS !== null || intents.runnerPause.paused
     const pass = await runCandidatePublicationCycle({
       repos, eligibleCandidacyIds: lifetimeHuntSubjects,
       heldVault: vaultRead.value, vaultRoot: join(ROOT, ...VAULT_DIR),
-      methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version,
+      methodVersion: (await readMethodVersion(repos)) ?? readMethodStore(join(ROOT, ...METHOD_STORE)).version,
       clock: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)), spaceOut: spacer,
       openFor: candidacyId => {
         const opened = fleetSafety.guardedOpenBytes("public-web", candidacyId, fetch, { followRedirects: false });

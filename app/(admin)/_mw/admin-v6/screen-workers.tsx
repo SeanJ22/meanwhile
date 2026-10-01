@@ -15,15 +15,16 @@
  * every 45 seconds, so they move on with no new worker message and no timer
  * of their own.
  */
-import { useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore } from "react";
 
 import { useV6 } from "./context.tsx";
 import { SECTION_DEP } from "./dependencies.ts";
-import { count, mst, WORKER_STAGE_WORDS, type AdminV6Data, type Dependency, type WaitingItem, type WorkerStage, type WorkerStatus } from "./model.ts";
+import { count, mst, usd, WORKER_STAGE_WORDS, type AdminV6Data, type AgentRun, type Dependency, type WaitingItem, type WorkerStage, type WorkerStatus } from "./model.ts";
 import { relation } from "./places.ts";
 import { runnerStateWords } from "./pulse-view.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
-import { Actions, Card, cx, Empty, Pill, SourceNote, Technical } from "./ui.tsx";
+import { EvidenceCopyControl } from "../evidence-copy-control.tsx";
+import { Actions, Card, cx, Empty, Pill, SourceNote, Technical, usePager } from "./ui.tsx";
 import s from "./v6.module.css";
 
 const STAGES: readonly WorkerStage[] = ["finding", "collecting", "extracting", "checking", "publishing"];
@@ -156,6 +157,97 @@ function WholeSystem(props: { readonly place: string; readonly isCountry: boolea
   return <Pill tone="slate" title="These counts cover every place the workers serve.">{props.isCountry ? "Whole system" : `Whole system, not just ${props.place}`}</Pill>;
 }
 
+/* ---------------------------------------------------------------- agents */
+
+type AgentFilter = "all" | AgentRun["state"];
+const AGENT_FILTERS: readonly (readonly [AgentFilter, string])[] = [["all", "Every run"], ["running", "Working now"], ["done", "Finished"], ["stopped", "Stopped"], ["did-not-finish", "Did not finish"]];
+const TIER_TONE: Readonly<Record<AgentRun["model"]["tier"], "info" | "good" | "gold" | "slate" | "warn">> = { haiku: "good", sonnet: "info", opus: "gold", "plain-code": "slate", older: "warn" };
+const TIER_WORDS: Readonly<Record<AgentRun["model"]["tier"], string>> = { haiku: "Haiku 4.5", sonnet: "Sonnet 5.5", opus: "Opus 5.5", "plain-code": "Plain code", older: "Older model" };
+
+/**
+ * **WHAT EACH AGENT DID.** One row per agent run, newest first: its role and model tier, what it cost, what it
+ * found, and the saved source page one click away. A run that is still open past the runner's wall says it did not
+ * finish; a cost the ledger never priced says so and is never shown as $0.
+ */
+function Agents() {
+  const v = useV6();
+  const src = v.data.agents;
+  const [filter, setFilter] = useState<AgentFilter>("all");
+  const all = (src.data ?? []).filter((r) => relation(v.index, [r.placeKey], v.scopeKey) !== null);
+  const list = all.filter((r) => filter === "all" || r.state === filter);
+  const { page, pager, reset } = usePager(list, 6);
+  const priced = all.filter((r) => r.costUsd !== null);
+  const total = priced.reduce((n, r) => n + (r.costUsd ?? 0), 0);
+  const byTier = (["haiku", "sonnet", "opus"] as const).map((k) => [k, all.filter((r) => r.model.tier === k).reduce((n, r) => n + (r.costUsd ?? 0), 0)] as const);
+  return (
+    <Card title="What the agents did" aside={<span className={s.meta}>{src.data ? `${count(all.length)} recent runs · ${usd(total)} priced${priced.length < all.length ? ` · ${count(all.length - priced.length)} with no price recorded` : ""}` : "Reading…"}</span>}>
+      <SourceNote source={src} what="Agent runs" />
+      {src.data && (
+        <>
+          <p className={cx(s.p, s.small, s.dim)}>{byTier.map(([k, n]) => `${TIER_WORDS[k]} ${usd(n)}`).join(" · ")}. The cheapest model that can do the job goes first. The most recent runs are listed, not every run ever made. A cost with no price recorded says so; it is never shown as $0.</p>
+          <div className={s.tabs} role="group" aria-label="Filter agent runs">
+            {AGENT_FILTERS.map(([k, label]) => (
+              <button key={k} type="button" className={s.tab} aria-pressed={filter === k} onClick={() => { setFilter(k); reset(); }}>
+                {label}<span className={s.tabCount}>{k === "all" ? all.length : all.filter((r) => r.state === k).length}</span>
+              </button>
+            ))}
+          </div>
+          {!list.length && <Empty>{filter === "all" ? `No recent agent run is recorded for ${v.place.name}.` : "No run in this group."}</Empty>}
+          <div className={s.stack}>
+            {page.map((r) => (
+              <div key={r.id} className={s.row}>
+                <div className={s.spread}>
+                  <strong style={{ fontSize: 13 }}>{r.title}</strong>
+                  <span className={s.inline}><Pill tone={r.state === "running" ? "good" : r.state === "done" ? "neutral" : "warn"}>{r.stateWords}</Pill><Pill tone={TIER_TONE[r.model.tier]} title={r.model.name}>{TIER_WORDS[r.model.tier]}</Pill></span>
+                </div>
+                <span className={s.meta}>{r.role} · {r.model.name} · {r.costWords} · {mst(r.endedAt ?? r.startedAt)}</span>
+                <span className={s.small}>{r.found}</span>
+                {r.source && (
+                  <span className={s.inline}>
+                    {r.source.url && <a className={s.btnLink} href={r.source.url} target="_blank" rel="noreferrer noopener">Open the source page ↗</a>}
+                    <span className={s.meta}>{count(r.source.savedPages)} saved page{r.source.savedPages === 1 ? "" : "s"}</span>
+                    {r.source.copy && <EvidenceCopyControl path={r.source.copy.path} byteLength={r.source.copy.byteLength} />}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+          {pager}
+        </>
+      )}
+    </Card>
+  );
+}
+
+/**
+ * **HOW RELIABLE OUR SOURCES ARE.** Each source's record from the workers' completed reads, with the next retry time the
+ * dispatcher itself will use. A source failing is usually the source's doing: it shows here as reliability, and is not
+ * a separate problem to investigate each time.
+ */
+function Reliability() {
+  const v = useV6();
+  const src = v.data.reliability;
+  const rows = src.data ?? [];
+  const { page, pager } = usePager(rows, 8);
+  const failing = rows.filter((r) => r.state === "failing").length;
+  return (
+    <Card title="How reliable our sources are" aside={<span className={s.meta}>{src.data ? `${count(rows.length)} sources · ${count(failing)} failing now` : "Reading…"}</span>}>
+      <SourceNote source={src} what="Source reliability" />
+      {src.data && !rows.length && <Empty>No source has been read yet.</Empty>}
+      <div className={s.stack}>
+        {page.map((r) => (
+          <div key={r.source} className={s.row}>
+            <div className={s.spread}><strong style={{ fontSize: 13 }}>{r.source.replace(/^https?:\/\//, "")}</strong><Pill tone={r.state === "failing" ? "warn" : r.state === "recovering" ? "gold" : "good"}>{r.state === "failing" ? `${r.consecutiveFailures} failed in a row` : r.state === "recovering" ? "Recovered" : "Healthy"}</Pill></div>
+            <span className={s.meta}>{count(r.successes)} worked · {count(r.failures)} failed · last try {mst(r.lastAttemptAt)}{r.retryAt ? ` · next try ${mst(r.retryAt)}` : ""}</span>
+            {r.state === "failing" && <span className={s.small}>{r.detail ? r.detail : "The reason isn’t known yet."}</span>}
+          </div>
+        ))}
+      </div>
+      {pager}
+    </Card>
+  );
+}
+
 /* ---------------------------------------------------------------- screen */
 
 export function WorkersScreen() {
@@ -235,6 +327,10 @@ export function WorkersScreen() {
         </div>
       </section>
       {!!st?.unread.length && <p className={cx(s.p, s.meta)}>Not read this time: {st.unread.join("; ")}. Other readings continue to update.</p>}
+
+      <Agents />
+
+      <Reliability />
 
       <Card title="Working now, by stage" aside={jobs ? <span className={s.meta}>{jobs.length} jobs working at the same time across {huntsOrAreas} hunts or shared areas</span> : totals ? <WholeSystem place={v.place.name} isCountry={isCountry} /> : undefined}>
         {!jobs && sample && <SourceNote source={src} />}

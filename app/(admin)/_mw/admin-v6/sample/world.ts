@@ -517,6 +517,10 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
       { key: "retry", cause: "Retries repeating the same failure", lane: "auto", count: "319", itemIds: ["i-retry"], action: a("stoprepeats", "i-retry") },
     ], SECTION_DEP.stuck, SAMPLE_AS_OF),
     workRows: sample({ rows: sampleRows(), totals: [{ stage: "waiting", total: 932 }, { stage: "stuck", total: 78 }, { stage: "retrying", total: 731 }, { stage: "done", total: 1069 }, { stage: "retired", total: 591 }] }, SECTION_DEP.work, SAMPLE_AS_OF),
+    agents: sample([], SECTION_DEP.agents, SAMPLE_AS_OF),
+    sends: sample([], SECTION_DEP.sends, SAMPLE_AS_OF),
+    reliability: sample([], SECTION_DEP.reliability, SAMPLE_AS_OF),
+    spend: { state: "not-connected", load: "ready", data: null, asOf: null, dependency: SECTION_DEP.spend },
     history: sample(sampleHistory(), SECTION_DEP.history, SAMPLE_AS_OF),
     workers: sample({
       status: { lastCheckIn: "2026-09-28T06:53:12.000Z", lastUsefulProgress: { at: "2026-09-28T06:50:00.000Z", what: "New congressional vote records were ready to publish" }, roundStartedAt: "2026-09-28T06:39:00.000Z", lastRoundFinishedAt: "2026-09-28T06:38:00.000Z", nextRoundDueAt: null, runnerState: w.runnerPaused ? "PAUSED" : "ALIVE", lanes: null, unread: [] },
@@ -665,6 +669,10 @@ export function sampleOutcome(kind: ActionKind, target: string, input: { readonl
     case "resume-publish": return { final: "unknown", says: "No answer within 30 seconds. It may still have run. Check what happened before trying again." };
     case "eng-task": return { final: "done", statusWords: "Task created", says: "Task created. Waiting for an engineer to accept it. Later stages come only from the tracker.", effect: (w) => ({ ...w, tasks: [...w.tasks, { fixId: target, id: `ET-${20 + w.tasks.length}` }] }) };
     case "job-stop": return { final: "done", says: "Stopped after its current step. The money set aside is returned once its last call settles.", effect: (w) => ({ ...w, jobsStopped: add(w.jobsStopped, target) }) };
+    case "cancel-send":
+      return { final: "done", statusWords: "Requested", says: "Your request to take it back is saved. It stays a request until the runner records it." };
+    case "send-agents":
+      return { final: "done", statusWords: "Sent", says: "The fleet was told where to go. The runner puts it first on its next round." };
     case "focus": {
       if (option === "eng" && ENG_REFUSE[target]) return { final: "refused", says: `Refused: ${ENG_REFUSE[target]} Nothing was changed or spent.` };
       if ((option === "research" || option === "model") && target !== "A-1") return { final: "refused", says: `Refused: ${option === "research" ? "this is waiting on a code change, so more workers wouldn’t make it faster" : "a code fix doesn’t use AI models"}. Nothing was changed or spent.` };

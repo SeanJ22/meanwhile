@@ -52,7 +52,7 @@ export const V6_CAPABILITY_VERSION = 1;
 
 export type SectionId = keyof AdminV6Data;
 export const SECTION_IDS: readonly SectionId[] = [
-  "places", "hunts", "national", "results", "stuck", "sameCause", "workRows", "history", "workers", "checklist", "money", "learning", "fixes", "decided",
+  "places", "hunts", "national", "results", "stuck", "sameCause", "workRows", "history", "workers", "checklist", "agents", "spend", "sends", "reliability", "money", "learning", "fixes", "decided",
 ];
 
 export function sectionContract(id: SectionId): string {
@@ -220,5 +220,10 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return { jobId: s.target };
     case "focus":
       return { fixId: s.target, resource: s.option };
+    case "cancel-send":
+      return { intentId: s.target };
+    case "send-agents":
+      // fleet.deployHere: where the fleet goes next, in words. A typed dollar amount is that Send's own rolling budget.
+      return { note: (s.payload?.words ?? s.words).trim(), ...(s.amount.trim() === "" ? {} : { budgetUsd: Number(s.amount) }) };
   }
 }

@@ -1095,6 +1095,7 @@ export function carriedDispatchTargets(prior: unknown, cancelled: ReadonlySet<st
     .filter(
       (t) =>
         t.kind === "DISPATCH" &&
+        /* The owner took this Send back (CANCEL_DISPATCH): it is no longer carried. */
         !cancelled.has(t.ref) &&
         (t.requirements.deferred > 0 ||
           t.requirements.failed > 0 ||

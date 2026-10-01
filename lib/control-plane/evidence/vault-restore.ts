@@ -109,10 +109,15 @@ function pairOfKey(key: string): string {
 
 const pairOfRecord = (record: HeldRecord) => `${record.workItemId}\u0000${record.contentHash}`;
 
-/** Every committed key under `project/`, with its metadata read once. */
-async function heldIndex(store: DurableEvidenceStore) {
+/** Keep all occupied keys; read bodies only for records included in this restore. */
+async function heldIndex(store: DurableEvidenceStore, records: readonly HeldRecord[]) {
+  const requested = new Set(records.map((record) => JSON.stringify([record.project, pairOfRecord(record)])));
   const entries: { key: string; pair: string; meta: ObjectMeta | null }[] = [];
-  for (const key of await store.list("project/")) entries.push({ key, pair: pairOfKey(key), meta: await store.head(key) });
+  for (const key of await store.list("project/")) {
+    const pair = pairOfKey(key);
+    const scopedPair = JSON.stringify([key.split("/")[1], pair]);
+    entries.push({ key, pair, meta: requested.has(scopedPair) ? await store.head(key) : null });
+  }
   const byPair = new Map<string, typeof entries>();
   for (const entry of entries) byPair.set(entry.pair, [...(byPair.get(entry.pair) ?? []), entry]);
   return {
@@ -144,7 +149,7 @@ export async function planVaultRestore(
   target: DurableEvidenceStore,
   records: readonly HeldRecord[],
 ): Promise<RestorePlan> {
-  const [from, into] = [await heldIndex(source), await heldIndex(target)];
+  const [from, into] = [await heldIndex(source, records), await heldIndex(target, records)];
   const copies = new Map<string, { key: string; meta: ObjectMeta; records: HeldRecord[] }>();
   const heldInTarget: HeldRecord[] = [];
   const heldInNeither: HeldRecord[] = [];

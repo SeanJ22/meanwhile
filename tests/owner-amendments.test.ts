@@ -103,7 +103,8 @@ test("OWN-Q5: a contest is answered as a contest, not as an absence", () => {
 
 test("OWN-Q5 WIRING: real money answers name all regimes with and without applicable records", async () => {
   delete process.env.ANTHROPIC_API_KEY;
-  const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
+  const { POST } = await import("../app/api/ask/grounded/route.ts");
+  const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
   for (const control of [
     { question: "How much campaign money has Katie Hobbs raised?", hasMoney: true },
     { question: "What campaign money is recorded for the Pima County Board of Supervisors?", hasMoney: false },

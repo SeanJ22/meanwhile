@@ -149,7 +149,8 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   });
 }) as typeof fetch;
 
-const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
+const { POST } = await import("../app/api/ask/grounded/route.ts");
+const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
 
 interface Payload {
   mode: string;

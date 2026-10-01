@@ -151,7 +151,8 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   if (url.startsWith("https://api.anthropic.com/")) { modelCalls += 1; throw new Error("no model call is expected here"); }
   return realFetch(input, init);
 }) as typeof fetch;
-const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
+const { POST } = await import("../app/api/ask/grounded/route.ts");
+const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
 
 interface Payload { mode: string; answer: string | null; subject: { id: string } | null; records: EvidenceRecord[]; trace: { interpretation: { why?: string }; synthesis: { why?: string }; composition?: { kind: string; shape: string; passed?: boolean }; validation: { passed?: boolean } } }
 async function ask(question: string, ocdIds: string[], surface = "BALLOT"): Promise<Payload> {

@@ -41,7 +41,8 @@ test("making unmapped people readable never manufactures a geographic membership
 
 test("Ask can answer an explicitly named unmapped official without calling them the reader's representative", async () => {
   delete process.env.ANTHROPIC_API_KEY;
-  const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
+  const { POST } = await import("../app/api/ask/grounded/route.ts");
+  const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
   resetGroundedState();
   const id = "plural:e60aed5e-cbb4-4b27-ab1b-2ce1dd787dac";
   const response = await POST(new Request("https://wtp.test/api/ask/grounded", {

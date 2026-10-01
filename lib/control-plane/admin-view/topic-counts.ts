@@ -1,4 +1,6 @@
 /**
+ * @freshness-reads-here — `observedAt` is the instant this module's own read of the store's totals returned.
+ *
  * **WHAT RESIDENTS ASK ABOUT, AS A SHARE OF USERS — aggregate only.**
  *
  * The shape S6's read returns (asked for on #490, widened to a day or a week on Sean's 2:30 PM MST note): one row per day or week, ZIP or district, and topic, with the number of distinct

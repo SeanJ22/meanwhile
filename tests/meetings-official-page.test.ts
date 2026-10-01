@@ -59,6 +59,8 @@ const SFPS_PAGE = readFileSync(new URL("sfps-board-of-education.html", FIXTURES)
 const OFFICIAL_DIRECTORY = { url: "https://fixture-directory.gov/schools", html: '<a href="https://www.tusd1.org/">Tucson Unified</a><a href="https://www.sfps.info/">Santa Fe Public Schools</a>' };
 /** The instant the recorded pages were read (their .meta.json). */
 const NOW = "2026-09-23T23:25:27.424Z";
+// Synthetic saved government directory: authority is explicit evidence in this fixture.
+const DIRECTORY = { url: "https://directory.example.gov/schools", html: '<a href="https://www.tusd1.org">Tucson Unified</a><a href="https://www.sfps.info">Santa Fe Public Schools</a>' };
 const METHOD = "official-page-events-linked-committee-page";
 const ALLOW = { status: 200, body: "User-agent: *\nAllow: /\n", contentType: "text/plain" } as const;
 
@@ -102,6 +104,7 @@ function fakeOpen(map: Readonly<Record<string, Reply>>): { open: DiscoveryOpen; 
 function runtime(open: DiscoveryOpen, recipes = knownRecipes([]), now = NOW): DiscoveryRuntime {
   return {
     open,
+    readOfficialPages: async () => [{canonicalUrl:DIRECTORY.url,text:DIRECTORY.html}],
     spaceOut: async () => {},
     vault: async () => ({ stored: true, where: "vault", why: "stored" }),
     now: () => now,
@@ -261,6 +264,11 @@ test("SEARCH: a search result on the body's own domain that is itself its events
 });
 
 test("TUSD PROOF: the executor alone, from TUSD's homepage, confirms the reconfiguration page's sessions for Tucson Unified", async () => {
+  const unproven = await walkMeetingsDiscoveryNeed(TUSD, {
+    ...runtime(fakeOpen(TUSD_SITE).open), readOfficialPages: async () => [], officialLinkingPageFor: () => null,
+  });
+  assert.ok(!unproven.found.some(row => row.vendor === "official-page-events"),
+    "a registry hostname and the site's own links cannot replace saved government endorsement");
   const site = fakeOpen(TUSD_SITE);
   const walk = await walkMeetingsDiscoveryNeed(TUSD, runtime(site.open));
   assert.equal(walk.outcome, "FOUND");

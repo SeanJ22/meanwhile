@@ -1,3 +1,6 @@
+import { readSubjectScoutHistory } from "./detective.ts";
+import { adapterWaitReason, reusableScoutCandidates, subjectScoutHistory, scoutFactGrounded } from "./detective.ts";
+import { installedAdapters } from '../scheduler/scout-adapters.ts';
 import { randomUUID } from "node:crypto";
 import type { WorkItem } from "../work-item.ts";
 import { ZERO_COST, type Attempt } from "../attempt.ts";
@@ -123,10 +126,10 @@ async function scoutSources(runtime: FleetRuntime, item: WorkItem, knownScouts?:
   const plan = item.autonomousPlan!;
   const out: ObservedResearchRoute[] = [];
   for (const scout of knownScouts ?? await runtime.repos.scoutResults.readAll()) {
-    if (scout.workItemId !== item.id || scout.refusal !== null) continue;
+    if (scout.subjectId !== item.subject || scout.recordClass !== plan.contract.recordClass || scout.refusal !== null) continue;
     const attempt = (await runtime.repos.attempts.mustRead(scout.attemptId)).value;
     if (attempt.outcome !== "COMPLETED") continue;
-    for (const candidate of scout.candidates) {
+    for (const candidate of reusableScoutCandidates(scout)) {
       for (const id of candidate.evidenceArtifactIds) {
         const evidence = evidenceProjection(await runtime.readEvidence(id));
         const start = evidence.text.indexOf(candidate.url);
@@ -134,7 +137,9 @@ async function scoutSources(runtime: FleetRuntime, item: WorkItem, knownScouts?:
         if (start < 0 && !direct) continue;
         const anchors=[...plan.seedUrls,...plan.sources.map(source=>source.url),...(plan.contract.schemaVersion===2?plan.contract.sourceScope.canonicalUrls:[])];
         const observedOrigin=new URL(evidence.canonicalUrl).origin;
-        if(!anchors.some(anchor=>new URL(anchor).origin===observedOrigin)) continue;
+        const fact = candidate.routeId.startsWith('held-fact:') && direct && scoutFactGrounded(scout,candidate.url,evidence.text);
+        if(candidate.routeId.startsWith('held-fact:') && !fact) continue;
+        if(!fact && !anchors.some(anchor=>new URL(anchor).origin===observedOrigin)) continue;
         const spanStart = start >= 0 ? start : 0;
         const quote = start >= 0 ? candidate.url : evidence.text.slice(0,128);
         if (!quote) continue;
@@ -215,8 +220,9 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     const prior = await repos.routeTasks.read(created.id);
     let task = prior?.value ?? (await registerRouteTask(repos,created,now)).value;
     const {history,debt}=autonomousScoutHistory(task,knownHistory?.routeTasks ?? (await repos.routeTasks.list()).map(row=>row.value),attempts);
-    const scoutHistory=[...(knownHistory?.scouts ?? (await repos.scoutResults.readAll()).filter(result=>result.workItemId===item.id))]
-      .sort((a,b)=>a.recordedAt.localeCompare(b.recordedAt)||a.attemptId.localeCompare(b.attemptId));
+    const scoutHistory=subjectScoutHistory(knownHistory?.scouts ?? await repos.scoutResults.readAll(),item.subject,plan.contract.recordClass);
+    const adapterWait = adapterWaitReason(scoutHistory,await installedAdapters());
+    if (adapterWait) return decision("BLOCKED",adapterWait,task);
     const retained = (item as WorkItem & { readonly planRepair?: { readonly retainedEvidenceIds?: readonly string[]; readonly sourceArtifactId?: string } }).planRepair;
     const handedHeldIds = [...new Set([...scoutHistory.flatMap(result => result.artifactIds),
       ...(retained?.retainedEvidenceIds ?? []), ...(retained?.sourceArtifactId ? [retained.sourceArtifactId] : []),
@@ -299,7 +305,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     }
     // An hourly runner must not spend every pass retrying the same failed URL
     // before the unresolved investigation ever gets a Scout turn.
-    const scoutTriedAfterFailure = attempts.some(a => a.workItemId === item.id && a.worker.role === "SCOUT" && a.endedAt !== null && Date.parse(a.endedAt) >= Date.parse(latest.endedAt));
+    const scoutTriedAfterFailure = attempts.some(a => a.workItemId === item.id && (a.worker.role === "SCOUT" || a.worker.role === "DETECTIVE") && a.endedAt !== null && Date.parse(a.endedAt) >= Date.parse(latest.endedAt));
     if (debt && Date.parse(debt.retryAt) <= Date.parse(now) && scoutTriedAfterFailure) {
       const next = await taskFor({workItemId:item.id,contract:plan.contract,now,role:"ACQUIRER",artifactId:acquisition.route.observation.artifactId,acquisition,replayLabel:`retry-after:${latest.id}`});
       if (next) return next;
@@ -414,7 +420,7 @@ export async function dispatchAutonomousTask(runtime: AutonomousCoordinatorRunti
         const spend=researchSpendInWindow(await runtime.repos.costs.readAll(),now());
         const item=(await runtime.repos.workItems.mustRead(task.workItemId)).value; const plan=item.autonomousPlan!;
         const denial=!runtime.scoutFor?"SCOUT_MODEL_TRANSPORT_UNAVAILABLE":!ceilingPermits(spend.windowUsd,runtime.rollingCeilingUsd ?? 0).permits?"SCOUT_COST_CEILING":null;
-        const history=(await runtime.repos.scoutResults.readAll()).filter(result=>result.workItemId===item.id).sort((a,b)=>a.recordedAt.localeCompare(b.recordedAt)||a.attemptId.localeCompare(b.attemptId));
+        const history=await readSubjectScoutHistory(runtime.repos,[{subjectId:item.subject,recordClass:plan.contract.recordClass}]);
         const executor:DeclaredExecutor=denial?{lane:"BOUNDED_MODEL_WORKER",workerFor:({holder})=>({role:"SCOUT",provider:"unavailable",version:FLEET_POLICY_VERSION,instance:holder}),run:async()=>({kind:"ABORTED",ranAs:"BOUNDED_MODEL_WORKER",failureOutcome:"DENIED_BY_POLICY",endedAt:now(),cost:{...ZERO_COST,requestCount:0,inputTokens:0,outputTokens:0,usd:0},detail:`DENIED_BY_POLICY:${denial}`})}:runtime.scoutFor!(item,task,history);
         // Charge the exact standing obligation that opened this WorkItem. A
         // synthetic Scout obligation without its Send marks would reserve the

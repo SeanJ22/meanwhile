@@ -157,7 +157,8 @@ async function ordinaryWorkerProcesses() {
   const { tmpdir } = await import("node:os");
   const { join, dirname, resolve } = await import("node:path");
   const { createFileRepositories } = await import("../lib/control-plane/repository/file-store.ts");
-  for (const contextFailure of [false, true]) {
+  for (const scenario of ['SCOUT', 'DETECTIVE', 'CONTEXT_FAILURE']) {
+    const contextFailure = scenario === 'CONTEXT_FAILURE';
     const root = await mkdtemp(join(tmpdir(), "s7-ordinary-scout-"));
     try {
       const repos = await createFileRepositories(root);
@@ -165,8 +166,10 @@ async function ordinaryWorkerProcesses() {
       const pids: number[] = [];
       let modelCalls = 0;
       let starts = 0, results = 0;
-      const executor = scoutProcessExecutor({ root: process.cwd(), postgres: false, fileStoreRoot: root,
-        onStarted: pid => pids.push(pid), deps: {
+      const executor = failureResponderExecutor({
+        executorFactory: deps => scoutProcessExecutor({ root: process.cwd(), postgres: false, fileStoreRoot: root,
+          onStarted: pid => pids.push(pid), deps }),
+          toolkitFor: () => { throw new Error('toolkit belongs to the child'); },
           now: () => NOW,
           onStart: async ({ attemptId }) => {
             assert.equal((await repos.attempts.mustRead(attemptId)).value.outcome, null);
@@ -174,6 +177,7 @@ async function ordinaryWorkerProcesses() {
           },
           onResult: async result => {
             assert.equal((await repos.attempts.mustRead(result.attemptId)).value.outcome, null);
+            if (scenario === 'DETECTIVE') assert.equal(result.researchRole, 'DETECTIVE');
             results++;
             return result;
           },
@@ -181,9 +185,9 @@ async function ordinaryWorkerProcesses() {
           contextFor: () => {
             if (contextFailure) throw new Error("fixture context unavailable");
             return { route: null, providerId: "fixture", reason: "ordinary ungraduated route", decision: "BOUNDED_MODEL_WORKER",
-              inherited: { artifactIds: [], summary: "" }, tools: { vault: async () => ({ stored: true, where: "fixture", why: "fixture" }), spaceOut: async () => {} } };
+              inherited: { artifactIds: [], summary: scenario === 'DETECTIVE' ? 'REFUSED: failed parse' : '' }, tools: { vault: async () => ({ stored: true, where: "fixture", why: "fixture" }), spaceOut: async () => {} } };
           },
-        } });
+        });
       const cycle = await runCycle({ repos, obligations: [OBLIGATION], debts: [],
         routeTaskFor: () => task.id, maturity: () => "UNGRADUATED", holder: "ordinary-process-test",
         now: NOW, leaseTtlMs: 60_000, executor: { lane: "DETERMINISTIC", run: async () => { throw new Error("wrong lane"); } },
@@ -194,6 +198,7 @@ async function ordinaryWorkerProcesses() {
       assert.notEqual(pids[0], process.pid);
       const attempts = (await repos.attempts.list()).map(row => row.value);
       assert.equal(attempts.length, 1);
+      assert.equal(attempts[0]!.worker.role, scenario === 'DETECTIVE' ? 'DETECTIVE' : 'SCOUT');
       assert.ok(attempts[0]!.worker.instance.endsWith(`:worker:${pids[0]}`));
       assert.equal(cycle.dispatched.length, 1);
       assert.equal(modelCalls, contextFailure ? 0 : 1);

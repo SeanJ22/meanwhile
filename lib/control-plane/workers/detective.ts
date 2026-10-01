@@ -113,8 +113,9 @@ export function runDetective(input: DetectiveWorkerInput): DetectiveResult {
 }
 
 /** Reuses the research loop and every source tool for failure response. */
-export function detectiveExecutor(deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps) {
-  return scoutExecutor({...deps, role:'DETECTIVE',onResult:async(result,artifacts)=>{
+type ScoutExecutorFactory = (deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps) => import('../scheduler/dispatch.ts').DeclaredExecutor;
+export function detectiveExecutor(deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps, executorFactory: ScoutExecutorFactory = scoutExecutor) {
+  return executorFactory({...deps, role:'DETECTIVE',onResult:async(result,artifacts)=>{
     const recorded={...result,researchRole:'DETECTIVE' as const};
     return deps.onResult ? await deps.onResult(recorded,artifacts) : recorded;
   }, contextFor:row=>{
@@ -127,6 +128,7 @@ export function detectiveExecutor(deps: import('../scheduler/scout-executor.ts')
 /** Both Scout lanes use the same failure responder and keep their existing budgets and tools. */
 export function failureResponderExecutor(deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps & {
   solved?: import('../scheduler/scout-result.ts').ScoutResult | null;
+  executorFactory?: ScoutExecutorFactory;
 }): import('../scheduler/dispatch.ts').DeclaredExecutor {
   const contexts=new Map<string,{value?:ReturnType<typeof deps.contextFor>;error?:unknown}>();
   const contextFor: typeof deps.contextFor = row=>{
@@ -135,7 +137,8 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
     if (!saved.value) throw saved.error;
     return saved.value;
   };
-  const scout=scoutExecutor({...deps,contextFor}), detective=detectiveExecutor({...deps,contextFor});
+  const factory=deps.executorFactory ?? scoutExecutor;
+  const scout=factory({...deps,contextFor}), detective=detectiveExecutor({...deps,contextFor},factory);
   const choose=(row:Parameters<typeof contextFor>[0])=>{
     try {
       const inherited=contextFor(row).inherited;
@@ -148,7 +151,9 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
     } catch { return scout; }
   };
   const held=deps.solved;
-  return {lane:held?'DETERMINISTIC':'BOUNDED_MODEL_WORKER',workerFor:input=>held
+  return {lane:held?'DETERMINISTIC':'BOUNDED_MODEL_WORKER',
+    ...(!held && scout.dispatch && detective.dispatch ? {dispatch: ((input) => choose(input.obligation).dispatch!(input)) as NonNullable<import('../scheduler/dispatch.ts').DeclaredExecutor['dispatch']>} : {}),
+    workerFor:input=>held
     ? {role:'ACQUIRER',provider:'we-the-people',version:'held-subject-route',instance:input.holder}
     : choose(input.obligation).workerFor!(input),run:async input=>{
       if (!held) return choose(input.obligation).run(input);

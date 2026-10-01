@@ -29,11 +29,12 @@ test("the actual Scout request inherits a learned method and the failed Hunter r
   // obligation regardless of its jurisdiction, then assert the walk both READS it
   // in the request and RECORDS it as captured input on the result.
   const doorId=fieldManualEntryId("test-seed","novelty-door");
-  await writeFieldManual(h.repos,[{
+  const seeded = await writeFieldManual(h.repos,[{
     id:doorId,role:"SHARED",kind:"VENDOR_TENANT",title:"Seeded test door",
     summary:"a portable inherited door for the capture assertion",states:[],recordClasses:[],
     platforms:[],outcome:"YIELDED",url:"https://seeded.example/door",source:"test-seed",
     observedAt:"2026-09-19",tier:null,payload:{}}],h.now());
+  assert.equal(seeded.written,1);
   const requests:ModelRequest[]=[];
   const searches: string[] = [];
   const runtime=await autonomousStandingRuntime({root,repos:h.repos,now:h.now,auditCeilingUsd:1,

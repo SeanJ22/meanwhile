@@ -1139,7 +1139,8 @@ export function MapCanvas({
 
   const cameraMapRef = useRef<MapLibreMap | null>(null);
 
-  // Open directly at the first ZIP; later ZIP changes retain a short transition.
+  // The initial ZIP must land immediately. An animated arrival can be stopped
+  // by hydration's layout/padding updates, leaving the camera at its old place.
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !camera) return;

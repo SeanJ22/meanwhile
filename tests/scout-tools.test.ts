@@ -381,6 +381,7 @@ test("search: when no provider answers it is a named transport failure, not a fa
   const res = await kit.call("search", { query: "x", rung: "compliant-alternate-route", why: "y" }, "compliant-alternate-route");
   assert.equal(res.ok, false, "no provider answered -> not a negative about the record");
   assert.ok(res.forModel.includes("HTTP 429") && res.forModel.includes("HTTP 500"), "the provider errors are named");
+  assert.match(res.rung!.observed,/brave: HTTP 429; exa: HTTP 500/,'Detective inherits the exact named failures');
 });
 
 test("search: an empty query is refused before any provider call", async () => {

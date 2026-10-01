@@ -46,25 +46,30 @@ test("boundary counts coalesce by rendered frame and ignore basemap work", () =>
     triggerRepaint() {},
   };
   const map = stub as unknown as MapLibreMap;
-  const emit = (event: string, sourceId?: string) => {
-    for (const listener of [...listeners.get(event) ?? []]) listener({ sourceId, sourceDataType: "content" });
+  const emit = (event: string, sourceId?: string, sourceDataType?: string) => {
+    for (const listener of [...listeners.get(event) ?? []]) listener({ sourceId, sourceDataType });
   };
   const dispose = onSettledDistrictChange(map, () => calls++);
   emit("render"); emit("idle");
   assert.equal(calls, 1, "idle does not query the same frame again");
   emit("sourcedata", "basemap"); emit("render"); emit("idle");
   assert.equal(calls, 1, "basemap tiles do not recount boundaries");
+  // VectorTileSource reports content for its TileJSON, before tiles arrive.
+  emit("sourcedata", NATIONAL_BOUNDARIES_SOURCE, "content");
+  emit("render"); emit("idle");
+  assert.equal(calls, 2);
+  // TileManager._tileLoaded emits sourcedata without sourceDataType.
   emit("sourcedata", NATIONAL_BOUNDARIES_SOURCE); emit("sourcedata", NATIONAL_BOUNDARIES_SOURCE);
   emit("render"); emit("idle");
-  assert.equal(calls, 2, "one query for a batch of boundary tiles");
+  assert.equal(calls, 3, "one query for a batch of completed boundary tiles");
   moving = true; holdMapPresentation(map);
   emit("sourcedata", NATIONAL_BOUNDARIES_SOURCE); emit("render");
   moving = false; emit("moveend"); emit("render");
-  assert.equal(calls, 2, "held software frames must not clear the count");
+  assert.equal(calls, 3, "held software frames must not clear the count");
   releaseMapPresentation(map); emit("idle");
-  assert.equal(calls, 3, "the revealed cached frame is counted once");
+  assert.equal(calls, 4, "the revealed cached frame is counted once");
   dispose(); emit("sourcedata", NATIONAL_BOUNDARIES_SOURCE); emit("render"); emit("idle");
-  assert.equal(calls, 3);
+  assert.equal(calls, 4);
 });
 
 /**

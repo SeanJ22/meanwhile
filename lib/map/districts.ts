@@ -795,8 +795,11 @@ export function onSettledDistrictChange(map: MapLibreMap, run: () => void): () =
     map.once("render", flush);
     map.triggerRepaint();
   };
-  const onSourceData = (event: { sourceId?: string; sourceDataType?: string }) => {
-    if (event.sourceId === NATIONAL_BOUNDARIES_SOURCE && event.sourceDataType === "content") schedule();
+  const onSourceData = (event: { sourceId?: string }) => {
+    // Vector tile completions omit sourceDataType; "content" only describes
+    // the source metadata/update. Count each rendered boundary batch, including
+    // cached tiles becoming visible, while still ignoring all basemap traffic.
+    if (event.sourceId === NATIONAL_BOUNDARIES_SOURCE) schedule();
   };
 
   schedule();

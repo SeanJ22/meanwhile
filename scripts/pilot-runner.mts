@@ -159,7 +159,8 @@ import {
 import {
   applyRuntimeRelease,
   fetchGithubCheckRuns,
-  inspectRuntimeReleaseEvidence,
+  fetchRuntimeProductionDeploys,
+  inspectNewestDeployedRuntimeRelease,
   runtimeGithubRepository,
   runtimeGithubCredential,
   runtimeProductionReadEnvironment,
@@ -1218,7 +1219,13 @@ async function inspectRuntimeRelease(): Promise<RuntimeReleaseInspection> {
   const checkRuns = typeof served.sha === "string" && /^[0-9a-f]{40}$/i.test(served.sha)
     ? await fetchGithubCheckRuns({ repository, sha: served.sha, token: runtimeGithubCredential({ root: ROOT, env: process.env }) })
     : null;
-  return inspectRuntimeReleaseEvidence({ runningSha: RUNNING_CODE_SHA, served, checkRuns });
+  return inspectNewestDeployedRuntimeRelease({ runningSha: RUNNING_CODE_SHA, served, checkRuns,
+    readDeploys: () => fetchRuntimeProductionDeploys({
+      siteId: process.env.NETLIFY_SITE_ID ?? process.env.WTP_BLOBS_SITE_ID,
+      token: process.env.NETLIFY_AUTH_TOKEN ?? process.env.NETLIFY_TOKEN ?? process.env.WTP_BLOBS_TOKEN ?? process.env.NETLIFY_BLOBS_TOKEN,
+    }),
+    readChecks: sha => fetchGithubCheckRuns({ repository, sha, token: runtimeGithubCredential({ root: ROOT, env: process.env }) }),
+  });
 }
 
 async function persistRuntimeBoundaryFailure(

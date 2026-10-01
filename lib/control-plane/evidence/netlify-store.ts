@@ -2,6 +2,37 @@ import { getStore, type Store } from "@netlify/blobs";
 import { contentHash } from "../ids.ts";
 import { EvidenceStoreRefusal, objectClassOf, reconcileExistingObject, type EvidenceStore, type ObjectMeta, type StoredObject } from "./store.ts";
 
+const ENVELOPE_FORMAT = "evidence-envelope@1";
+
+/** Large metadata travels atomically with its bytes, outside Blobs' 2 KiB header. */
+function encodeObject(bytes: Uint8Array, metadata: Record<string, unknown>) {
+  const json = JSON.stringify(metadata);
+  if ("netlify-blobs-metadata".length + 4 + Buffer.from(json).toString("base64").length <= 2 * 1024) {
+    return { bytes, metadata };
+  }
+  const header = new TextEncoder().encode(json);
+  const body = new Uint8Array(4 + header.length + bytes.length);
+  new DataView(body.buffer).setUint32(0, header.length);
+  body.set(header, 4);
+  body.set(bytes, 4 + header.length);
+  return { bytes: body, metadata: { format: ENVELOPE_FORMAT } };
+}
+
+function decodeObject(key: string, data: ArrayBuffer, metadata: Record<string, unknown>) {
+  const bytes = new Uint8Array(data);
+  if (metadata.format !== ENVELOPE_FORMAT) return { bytes, metadata };
+  try {
+    if (bytes.length < 4) throw new Error("missing header");
+    const length = new DataView(data).getUint32(0);
+    if (length > bytes.length - 4) throw new Error("truncated header");
+    const header = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes.subarray(4, 4 + length))) as Record<string, unknown>;
+    if (header === null || typeof header !== "object" || Array.isArray(header)) throw new Error("invalid header");
+    return { bytes: bytes.subarray(4 + length), metadata: header };
+  } catch {
+    throw new EvidenceStoreRefusal(`Stored evidence envelope is unreadable at ${key}`);
+  }
+}
+
 /** The same evidence keys and metadata, held outside the runner's host. */
 export class NetlifyEvidenceStore implements EvidenceStore {
   readonly durable = true;
@@ -23,8 +54,9 @@ export class NetlifyEvidenceStore implements EvidenceStore {
       held = metadata ? { meta: metadata } : null;
     }
     if (reconcileExistingObject(key, bytes, meta, held)) return;
-    const result = await this.store.set(key, new Uint8Array(bytes).buffer, {
-      metadata: { meta, bodySha256 },
+    const encoded = encodeObject(bytes, { meta, bodySha256 });
+    const result = await this.store.set(key, new Uint8Array(encoded.bytes).buffer, {
+      metadata: encoded.metadata,
       ...(objectClassOf(meta) === "IMMUTABLE_BODY" ? { onlyIfNew: true } : {}),
     });
     if (!result.modified) {
@@ -39,14 +71,17 @@ export class NetlifyEvidenceStore implements EvidenceStore {
 
   async describe(key: string): Promise<{ meta: ObjectMeta; bodySha256: string } | null> {
     const held = await this.store.getMetadata(key);
-    return held === null ? null : this.metadata(key, held.metadata);
+    if (held === null) return null;
+    if (held.metadata.format !== ENVELOPE_FORMAT) return this.metadata(key, held.metadata);
+    const object = await this.store.getWithMetadata(key, { type: "arrayBuffer" });
+    return object === null ? null : this.metadata(key, decodeObject(key, object.data, object.metadata).metadata);
   }
 
   async get(key: string): Promise<StoredObject | null> {
     const held = await this.store.getWithMetadata(key, { type: "arrayBuffer" });
     if (held === null) return null;
-    const { meta, bodySha256 } = this.metadata(key, held.metadata);
-    const bytes = new Uint8Array(held.data);
+    const { bytes, metadata } = decodeObject(key, held.data, held.metadata);
+    const { meta, bodySha256 } = this.metadata(key, metadata);
     if (bytes.byteLength !== meta.byteLength || contentHash(bytes) !== bodySha256) throw new EvidenceStoreRefusal(`Stored evidence is corrupt at ${key}`);
     return { key, bytes, meta };
   }

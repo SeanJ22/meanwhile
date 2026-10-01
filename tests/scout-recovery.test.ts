@@ -7,7 +7,7 @@ import {createMemoryRepositories} from '../lib/control-plane/repository/memory.t
 import {MODELS} from '../lib/models.ts';
 import {SendBudgetRefusal} from '../lib/control-plane/expansion/spend-holds.ts';
 import {solvedScoutResult,readSubjectScoutHistory,wakeInstalledAdapterDebts} from '../lib/control-plane/workers/detective.ts';
-import { sourceReliabilityKey } from '../lib/control-plane/scheduler/scout-reliability.ts';
+import { sourceReliabilityKey, reduceSourceReliability } from '../lib/control-plane/scheduler/scout-reliability.ts';
 import { adapterWaitReason, investigationRole, subjectScoutHistory, reusableScoutCandidates, scoutFactGrounded, failureResponderExecutor } from '../lib/control-plane/workers/detective.ts';
 import { installedAdapters, installedAdapterVersion, runInstalledAdapter } from '../lib/control-plane/scheduler/scout-adapters.ts';
 import { readClientSource } from '../lib/control-plane/scheduler/scout-clients.ts';
@@ -36,6 +36,31 @@ test('Engineer refuses publication outside its adapter-only ownership',async()=>
 test('source backoff is per Legistar tenant, not the vendor',()=>{
  assert.notEqual(sourceReliabilityKey('https://webapi.legistar.com/v1/pima/Events'),sourceReliabilityKey('https://webapi.legistar.com/v1/tucson/Events'));
  assert.equal(sourceReliabilityKey('https://webapi.legistar.com/v1/pima/Events'),sourceReliabilityKey('https://webapi.legistar.com/v1/pima/Bodies'));
+});
+
+test('Admin compact acquisitions share chronological source backoff and recovery',()=>{
+ const rows = [
+  {url:'https://webapi.legistar.com/v1/pima/Events',verdict:'FAILED',endedAt:'2026-09-30T02:00:00Z',blockerText:['Timeout','Try alternate route']},
+  {url:'https://webapi.legistar.com/v1/tucson/Events',verdict:'ACQUIRED',endedAt:'2026-09-30T01:30:00Z',blockerText:[]},
+  {url:'https://webapi.legistar.com/v1/pima/Bodies',verdict:'FAILED',endedAt:'2026-09-30T01:00:00Z',blockerText:['HTTP 503']},
+ ];
+ const original = structuredClone(rows);
+ const sources = reduceSourceReliability(rows);
+ const pima = sources.find(row=>row.source.endsWith('/pima'))!;
+ assert.equal(pima.failures,2);assert.equal(pima.successes,0);assert.equal(pima.consecutiveFailures,2);
+ assert.equal(pima.retryAt,'2026-09-30T02:30:00.000Z');assert.equal(pima.detail,'Timeout; Try alternate route');
+ assert.equal(sources.find(row=>row.source.endsWith('/tucson'))!.retryAt,null);
+ assert.deepEqual(rows,original);
+ const recovered = reduceSourceReliability([...rows,{...rows[0],verdict:'ACQUIRED',endedAt:'2026-09-30T03:00:00Z'}])
+  .find(row=>row.source.endsWith('/pima'))!;
+ assert.equal(recovered.failures,2);assert.equal(recovered.successes,1);assert.equal(recovered.consecutiveFailures,0);
+ assert.equal(recovered.retryAt,null);assert.equal(recovered.detail,'Source returned captured data');
+ const capped = reduceSourceReliability(Array.from({length:2058},()=>rows[0]))[0];
+ assert.equal(capped.retryAt,'2026-09-30T08:00:00.000Z');
+ const robots = {...rows[0], blockerCodes:['PERMISSION_DENIED'], blockerText:['Legacy robots refusal']};
+ assert.deepEqual(reduceSourceReliability([robots]),[], 'robots-only history is not a source outage');
+ assert.equal(reduceSourceReliability([{...robots,blockerCodes:['PERMISSION_DENIED','TRANSPORT_FAILED']}])[0].failures,1,
+  'a real retrieval failure still backs off when robots was also observed');
 });
 test('failed roles select Detective and adapter work does not keep retrying',()=>{
  const result={recoveryCapabilityVersion:SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION,refusal:null,outcome:'NEEDS_ADAPTER',narrative:'Parser for platform needed',subjectId:'county',recordClass:'meetings',recordedAt:'2026-09-29',workItemId:'other-job'} as unknown as ScoutResult;

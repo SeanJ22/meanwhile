@@ -163,6 +163,19 @@ test('one failed budget release does not strand the other provider or discard re
   assert.ok(result.errors.some(error=>error.includes('budget slot release failed')));
 });
 
+test('two successful providers release their shared budget row without overlapping writes',async()=>{
+  const occupied=new Set<string>();let writing=false;
+  const {fetchImpl}=fakeFetch([{match:'api.search.brave.com',body:BRAVE_BODY},{match:'api.exa.ai',body:EXA_BODY}]);
+  const result=await makeScoutSearch({braveKey:'b',exaKey:'e',fetchImpl,budget:{
+    take:async host=>{occupied.add(host);return null;},done:async host=>{
+      if(writing)throw Error('shared budget row is locked');
+      writing=true;await new Promise(resolve=>setImmediate(resolve));occupied.delete(host);writing=false;
+    },
+  }})!({query:'q'});
+  assert.deepEqual(result.providersUsed,['brave','exa']);assert.deepEqual(result.errors,[]);
+  assert.equal(occupied.size,0,'neither successful provider strands its slot');
+});
+
 test("the Scout search is admitted under the same hosts as the discovery walk's search, so one per-day cap binds both", () => {
   assert.deepEqual({ ...SCOUT_SEARCH_HOSTS }, { ...SEARCH_HOSTS });
 });

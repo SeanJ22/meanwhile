@@ -74,10 +74,8 @@ import type { Sql } from "@/lib/control-plane/repository/pg-store.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const MODULE_PATH = join(ROOT, "lib", "control-plane", "feedback-inbox.ts");
-const PAGE_PATH = join(ROOT, "app", "(admin)", "admin", "feedback", "page.tsx");
 
 const MODULE_SOURCE = readFileSync(MODULE_PATH, "utf8");
-const PAGE_SOURCE = readFileSync(PAGE_PATH, "utf8");
 
 /**
  * Comments are stripped before every source scan.
@@ -91,7 +89,6 @@ function stripComments(source: string): string {
 }
 
 const MODULE_CODE = stripComments(MODULE_SOURCE);
-const PAGE_CODE = stripComments(PAGE_SOURCE);
 
 /* ------------------------------------------------------------------ *
  * FIXTURES
@@ -629,78 +626,3 @@ test("a console with no store connected states nothing rather than zero readers"
 /* ================================================================== */
 /* 6 — THE PAGE: FOUR LAYERS, EASTERN TIME, NO SECRETS, NO STORAGE     */
 /* ================================================================== */
-
-test("the page is uncached and reads on every request", () => {
-  assert.match(PAGE_CODE, /export const dynamic = "force-dynamic"/);
-  assert.match(PAGE_CODE, /export const revalidate = 0/);
-});
-
-test("the page keeps no credential, no cookie and nothing in the browser", () => {
-  for (const forbidden of [
-    "WTP_",
-    "MANIFEST_COOKIE",
-    "document.cookie",
-    "localStorage",
-    "sessionStorage",
-    "DATABASE_URL",
-    "process.env",
-  ]) {
-    assert.equal(
-      PAGE_CODE.includes(forbidden),
-      false,
-      `the feedback page references ${forbidden}; §12 and the console's safety law forbid a ` +
-        "credential name, a cookie or browser storage on an admin surface",
-    );
-  }
-  assert.ok(PAGE_CODE.length > 4000, "the page source did not load");
-});
-
-test("the page renders the four layers, Eastern time, and writes no CSS", () => {
-  assert.match(PAGE_CODE, /StatusBlock/);
-  assert.match(PAGE_CODE, /NeedsYouLine/);
-  assert.match(PAGE_CODE, /<When iso=/);
-  assert.equal(PAGE_CODE.includes("<style"), false, "all admin CSS lives in the layout");
-  assert.equal(PAGE_CODE.includes("toLocaleString(\"en-GB\")"), false);
-});
-
-test("the page never says our, and never leads with a machine constant", () => {
-  assert.equal(
-    /\bour\b/i.test(PAGE_CODE),
-    false,
-    "the product has one user; a possessive about the operator has no referent",
-  );
-  for (const constant of ["SIDEBAR", "VELOCITY", "LIMITER_UNAVAILABLE", "NOT_ACTIONABLE"]) {
-    const shown = new RegExp(`>\\s*${constant}\\s*<`);
-    assert.equal(shown.test(PAGE_CODE), false, `${constant} is rendered as display text`);
-  }
-});
-
-test("the page records decisions through the console's existing door and defines no new one", () => {
-  assert.match(PAGE_CODE, /action=\{DECISION_ROUTE\}/);
-  assert.match(PAGE_CODE, /name="subjectId"/);
-  assert.match(PAGE_CODE, /name="consequenceShown"/);
-  assert.match(PAGE_CODE, /name="chosenOption"/);
-  assert.match(PAGE_CODE, /name="ownerAnswer"/);
-  assert.equal(
-    /name="message"/.test(PAGE_CODE),
-    false,
-    "the reader's words must never travel to the control plane",
-  );
-  assert.equal(
-    /name="(contactRef|replyTo|address|email)"/.test(PAGE_CODE),
-    false,
-    "no contact value may be posted from this page",
-  );
-});
-
-test("the page names both environments in the owner's words", () => {
-  for (const environment of FEEDBACK_ENVIRONMENTS) {
-    assert.ok(ENVIRONMENT_WORDS[environment].words.length > 0);
-    assert.equal(
-      PAGE_CODE.includes(`>${environment}<`),
-      false,
-      `${environment} is rendered raw rather than through its words`,
-    );
-  }
-  assert.match(PAGE_CODE, /ENVIRONMENT_WORDS\[/);
-});

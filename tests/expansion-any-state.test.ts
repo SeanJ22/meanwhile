@@ -184,7 +184,7 @@ async function send(repos: ControlPlaneRepositories, geography: Record<string, s
     caller: "OWNER_SESSION",
     actorRef: "adm_test-session",
   };
-  const outcome = await submit(request, { repos, now: () => new Date((ms += 1000)).toISOString(), currentStateVersion: "world-1", codeSha: null, recordReview: null });
+  const outcome = await submit(request, { repos, now: () => new Date((ms += 1000)).toISOString(), currentStateVersion: "world-1", codeSha: null });
   assert.equal(outcome.ok, true, outcome.receipt.says);
 }
 

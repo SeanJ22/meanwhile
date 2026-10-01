@@ -12,9 +12,8 @@
  * ## What this route may do, exhaustively
  *
  * 1. Read from the control plane through the console's single seam.
- * 2. Fetch production's build identity and staging's release manifest, through
- *    the readers that already do it for the release-review page — memoised, and
- *    only when the question is about the environments.
+ * 2. Fetch production's build identity (`operator-chat/environments.ts`) —
+ *    memoised, and only when the question is about the environments.
  * 3. Put a confirmed action through `POST /api/admin/action`, the one door
  *    every control goes through, and return what came back, unedited.
  *
@@ -59,14 +58,14 @@ import {
 } from "@/lib/control-plane/admin-auth.ts";
 import { CHAT_MESSAGE_MAX_CHARS, type ChatInput, type ChatResponse } from "@/lib/control-plane/operator-chat/contract.ts";
 import { operatorChatGateway, type ChatActionDoor } from "@/lib/control-plane/operator-chat/gateway-binding.ts";
+import { readEnvironments } from "@/lib/control-plane/operator-chat/environments.ts";
 import { readOperatorContext } from "@/lib/control-plane/operator-chat/read-context.ts";
 import { readsFor, respondToOperator } from "@/lib/control-plane/operator-chat/turn.ts";
 import type { GatewaySubmission } from "@/lib/control-plane/operator-chat/actions.ts";
-import type { ContextRead, EnvironmentIdentities, OperatorContext } from "@/lib/control-plane/operator-chat/context.ts";
+import type { ContextRead, OperatorContext } from "@/lib/control-plane/operator-chat/context.ts";
 import type { ReadOutcome } from "@/lib/control-plane/admin-data.ts";
 import type { ActionOutcome } from "@/lib/control-plane/gateway/contract.ts";
-import { CHAT_PAGE } from "@/app/(admin)/admin/chat/contract.ts";
-import { readManifest, readProductionIdentity } from "@/app/(admin)/admin/release-review/manifest-source.ts";
+import { CHAT_PAGE } from "@/lib/control-plane/operator-chat/surface.ts";
 import { POST as submitThroughTheGateway } from "@/app/api/admin/action/route.ts";
 
 export const dynamic = "force-dynamic";
@@ -116,59 +115,6 @@ function gatewayDoor(request: NextRequest): ChatActionDoor {
       return { ok: false, says: sentence };
     }
     return { ok: true, outcome: body as ActionOutcome };
-  };
-}
-
-/**
- * The two other environments, each as that environment itself reported it.
- *
- * Both readers are the release-review page's, memoised for a few seconds, so a
- * chat turn and a page render share one reading rather than each paying for its
- * own. Neither writes anything: the observation row the release-review GET
- * appends is written by that route, not by these readers.
- */
-async function readEnvironments(): Promise<EnvironmentIdentities> {
-  const [manifest, production] = await Promise.all([readManifest(), readProductionIdentity()]);
-  const staging =
-    manifest.kind === "OBSERVED"
-      ? {
-          name: "staging",
-          sha: manifest.manifest.sha,
-          deployId: manifest.manifest.deployId,
-          branch: manifest.manifest.branch,
-          context: manifest.manifest.context,
-          observedAt: manifest.observedAt,
-          source: "the release manifest staging publishes about its own build",
-          detail: null,
-          reviewState: manifest.manifest.reviewState,
-          reviewStatus: manifest.manifest.prompt3Status,
-        }
-      : {
-          name: "staging",
-          sha: null,
-          deployId: null,
-          branch: null,
-          context: null,
-          observedAt: manifest.observedAt,
-          source: "the release manifest staging publishes about its own build",
-          detail: manifest.reason,
-          reviewState: null,
-          reviewStatus: null,
-        };
-  return {
-    production: {
-      name: "production",
-      sha: production.sha,
-      deployId: production.deployId,
-      branch: production.branch,
-      context: production.context,
-      observedAt: production.observedAt,
-      source: "the build identity production reports about itself",
-      detail: production.detail,
-      reviewState: null,
-      reviewStatus: null,
-    },
-    staging,
   };
 }
 
@@ -231,9 +177,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
      */
     wantsEnvironments
       ? readEnvironments()
-          .then((value): ReadOutcome<EnvironmentIdentities> => ({ kind: "HELD", value }))
+          .then((value): ReadOutcome<Awaited<ReturnType<typeof readEnvironments>>> => ({ kind: "HELD", value }))
           .catch(
-            (): ReadOutcome<EnvironmentIdentities> => ({
+            (): ReadOutcome<Awaited<ReturnType<typeof readEnvironments>>> => ({
               kind: "STORE_UNREACHABLE",
               detail: "Production and staging could not be asked what they are running just now.",
             }),

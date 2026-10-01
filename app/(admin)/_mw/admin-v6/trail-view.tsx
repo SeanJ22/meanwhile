@@ -26,7 +26,7 @@ function useOnDemand<T>(href: string): readonly [Load<T>, () => void] {
       .then(async (response) => {
         const body = await response.json().catch(() => null) as { data?: T; says?: string } | null;
         if (response.ok && body?.data !== undefined) setLoad({ state: "held", data: body.data });
-        else setLoad({ state: "unread", says: body?.says ?? "This could not be read just now, so it is unknown, not empty." });
+        else setLoad({ state: "unread", says: typeof body?.says === "string" ? body.says : "This could not be read just now, so it is unknown, not empty." });
       })
       .catch(() => setLoad({ state: "unread", says: "This could not be read just now, so it is unknown, not empty." }));
   }, [href]);
@@ -41,7 +41,7 @@ export function EvidenceTrail(props: { readonly id: string; readonly label?: str
   const [load, run] = useOnDemand<TrailView>(`/api/admin/v6/trail?scope=us&item=${encodeURIComponent(props.id)}`);
   return (
     <div className={s.stack}>
-      {load.state === "idle" && <div className={s.inline}><button type="button" className={s.btnLink} onClick={run}>{props.label ?? "Show the evidence trail"}</button></div>}
+      {load.state === "idle" && <div className={s.inline}><button type="button" className={s.btnLink} onClick={run}>{props.label ? props.label : "Show the evidence trail"}</button></div>}
       {load.state === "loading" && <span className={s.meta} role="status">Reading what was saved for this work (a few seconds)…</span>}
       {load.state === "unread" && <span className={cx(s.small, s.textWarn)}>{load.says}</span>}
       {load.state === "held" && (

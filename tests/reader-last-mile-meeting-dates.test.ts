@@ -10,7 +10,8 @@ await installRegistryRuntimeFirstSeeds();
 
 test("an explicit held local date retrieves that sitting rather than the next or latest one", async () => {
   delete process.env.ANTHROPIC_API_KEY;
-  const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
+  const { POST } = await import("../app/api/ask/grounded/route.ts");
+  const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
   const snapshot = readSnapshot()!;
   const bodyId = "ocd-division/country:us/state:az/school_district:vail_unified_district#board";
   const rows = snapshot.meetings.filter((meeting) => meeting.bodyId === bodyId).sort((a, b) => a.startsAt.localeCompare(b.startsAt));

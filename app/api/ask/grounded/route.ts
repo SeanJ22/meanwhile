@@ -109,10 +109,11 @@ import { captureAskInteraction } from "@/lib/db/ask-signal";
 import { askCallerKey, cacheCallLine } from "@/lib/ask/prompt-cache";
 import { askModelStartupLine, resolveAskRoleModel } from "@/lib/ask/model";
 import {
-  BoundedTtlCache,
   interpretationCacheKey,
   synthesisCacheKey,
 } from "@/lib/ask/model-result-cache";
+import { allowCall, interpretationCache, synthesisCache } from "@/lib/ask/grounded-state";
+import { settleGroundedSourcePreloads } from "@/lib/ask/grounded-preloads";
 import { ladderIdentity, synthesisLadder, synthesizeWithLadder, type LadderResult } from "@/lib/ask/synthesize";
 import { writerSelection } from "@/lib/ask/writer-selection";
 import { sittingsOnSameLocalDay, selectSitting, type AgendaSelection } from "@/lib/ask/select";
@@ -238,8 +239,6 @@ console.log(askModelStartupLine());
 
 const MAX_BODY_BYTES = 16384;
 const MAX_QUESTION_CHARS = 400;
-/** Bounds spend per instance per day, the same shape the classifier uses. */
-const DAILY_MAX = 400;
 
 let ipLimiter: SlidingWindowLimiter | null = null;
 function getIpLimiter() {
@@ -247,45 +246,10 @@ function getIpLimiter() {
   return ipLimiter;
 }
 
-let spentOn = "";
-let spent = 0;
-function ceiling(): number {
-  const raw = Number(process.env.WTP_ASK_GROUNDED_DAILY_MAX);
-  return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : DAILY_MAX;
-}
-function allowCall(): boolean {
-  const day = new Date().toISOString().slice(0, 10);
-  if (spentOn !== day) {
-    spentOn = day;
-    spent = 0;
-  }
-  if (spent >= ceiling()) return false;
-  spent += 1;
-  return true;
-}
-/* Successful model results, keyed by their exact inputs (lib/ask/model-result-cache.ts). */
-const interpretationCache = new BoundedTtlCache<InterpretReadOutcome>();
-const synthesisCache = new BoundedTtlCache<LadderResult>();
-type InterpretReadOutcome = Extract<Awaited<ReturnType<typeof interpretQuestion>>, { kind: "READ" }>;
 /** An answer path started from the code's own reading while the model reads (lib/ask/speculative-reading.ts). */
 type Speculation =
   | { started: false; why: string; codeIntent?: AskIntent; codeTemporal?: AskTemporal }
   | { started: true; codeIntent: AskIntent; codeTemporal: AskTemporal; outcome: ReadingOutcome; writing: Promise<LadderResult>; controller: AbortController; settled: () => boolean; startedAtMs: number };
-
-/** Test seam — the suite must never inherit another test's counter or cached model result. */
-export function resetGroundedState(): void {
-  spentOn = "";
-  spent = 0;
-  interpretationCache.clear();
-  synthesisCache.clear();
-}
-
-/** Run unrelated canonical Reader preloads as independent failure domains. */
-export async function settleGroundedSourcePreloads(
-  preloads: readonly (() => Promise<unknown>)[],
-): Promise<PromiseSettledResult<unknown>[]> {
-  return Promise.allSettled(preloads.map((preload) => Promise.resolve().then(preload)));
-}
 
 interface MeetingLike {
   id: string;

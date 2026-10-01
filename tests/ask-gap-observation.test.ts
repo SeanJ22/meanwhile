@@ -68,7 +68,8 @@ import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
 await Promise.all([initializeFederalVoteFirstSeed(), installRegistryRuntimeFirstSeeds(), installOutcomeFirstSeed()]);
 delete process.env.ANTHROPIC_API_KEY;
 
-const { POST, resetGroundedState } = await import("@/app/api/ask/grounded/route");
+const { POST } = await import("@/app/api/ask/grounded/route");
+const { resetGroundedState } = await import("@/lib/ask/grounded-state");
 
 const NOW_ISO = "2026-09-24T12:00:00.000Z";
 const NOW = Date.parse(NOW_ISO);

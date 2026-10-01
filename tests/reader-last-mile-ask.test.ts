@@ -31,7 +31,9 @@ import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import type { SourceSnapshot, StatementCorpus } from "../lib/corpus/types.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
-const { POST, resetGroundedState, settleGroundedSourcePreloads } = await import("../app/api/ask/grounded/route.ts");
+const { POST } = await import("../app/api/ask/grounded/route.ts");
+const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
+const { settleGroundedSourcePreloads } = await import("../lib/ask/grounded-preloads.ts");
 const AZ = "ocd-division/country:us/state:az";
 const NJ = "ocd-division/country:us/state:nj";
 const NH = "ocd-division/country:us/state:nh";

@@ -23,7 +23,8 @@ const { AskBodyConfirmation } = await tsImport("../components/ask/body-confirmat
 // Offline actual handler, with no model, database, acquisition or signal writes.
 for (const key of ["ANTHROPIC_API_KEY", "DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]) delete process.env[key];
 await installRegistryRuntimeFirstSeeds();
-const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
+const { POST } = await import("../app/api/ask/grounded/route.ts");
+const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
 const { GET: agendaGET } = await import("../app/api/agenda/route.ts");
 const VAIL = "ocd-division/country:us/state:az/school_district:vail_unified_district#board";
 const nearby = "ocd-division/country:us/state:az/school_district:sunnyside_unified_district";

@@ -12,7 +12,8 @@ test("an incomplete sourced roster keeps four verified people and the same exact
   const gap = rosterGapForBody(bodyId)!;
   const roster = rosterForBody(bodyId)!;
   assert.equal(roster.members.length, 4);
-  const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
+  const { POST } = await import("../app/api/ask/grounded/route.ts");
+  const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
   const subjects = [{ id: bodyId, kind: "BODY", name: roster.bodyName }, ...roster.members.map((member) => ({ id: member.id, kind: "PERSON", name: member.name })), { id: "ocd-division/country:us/state:az/county:pima#governing", kind: "BODY", name: "Pima County Board of Supervisors" }];
   for (const subject of subjects) {
     resetGroundedState();

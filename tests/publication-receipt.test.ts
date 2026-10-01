@@ -53,3 +53,35 @@ test("a pass with nothing new confirms the door's current version and delivers n
   const receipt = JSON.parse(lines.find(line => line.startsWith("RCD_RECEIPT="))!.slice("RCD_RECEIPT=".length));
   assert.deepEqual([receipt.candidateId, receipt.promotedVersion, receipt.confirmedAt, receipt.delivered.records], ["cv-new", "cv-new", undefined, 0], "the runner re-proves the canonical version; only the store records a confirmation");
 });
+
+test("an all-deferred national pass confirms the existing pointer with gaps, never invented delivery", async t => {
+  const lines: string[] = [];
+  t.mock.method(console, "log", (line: string) => { lines.push(line); });
+  const confirming = { ...(store as object), readPromotionIdentity: async () => ({ versionId: "cv-new" }) } as never;
+  const printed = await printWorkerPublicationReceipt(confirming, "registry-runtime-bindings", [], {
+    records: 0, candidateId: null, versionId: null,
+    gaps: ["03060", "03101"].map(zip => ({ key: `zip:${zip}`, detail: "DEFERRED: shared host bound; next pass" })),
+  }, "2026-09-30T21:04:00.000Z");
+  assert.equal(printed, true);
+  const receipt = JSON.parse(lines[0].slice("RCD_RECEIPT=".length));
+  assert.equal(receipt.promotedVersion, "cv-new");
+  assert.deepEqual(receipt.delivered, { records: 0, gaps: 2, gapReasons: { DEFERRED: 2 } });
+});
+
+test("deferral still refuses a missing pointer or unreadable candidate, and an empty pass cannot confirm", async t => {
+  const lines: string[] = [];
+  t.mock.method(console, "log", (line: string) => { lines.push(line); });
+  const exitCode = process.exitCode;
+  try {
+    for (const version of [null, "cv-missing", "cv-new"]) {
+      const confirming = { ...(store as object), readPromotionIdentity: async () => version ? { versionId: version } : null } as never;
+      const printed = await printWorkerPublicationReceipt(confirming, "registry-runtime-bindings", [], {
+        records: 0, candidateId: null, versionId: null,
+        gaps: version === "cv-new" ? [] : [{ key: "zip:03060", detail: "DEFERRED: next pass" }],
+      }, "2026-09-30T21:04:00.000Z");
+      assert.equal(printed, false);
+      assert.equal(process.exitCode, 2);
+    }
+  } finally { process.exitCode = exitCode; }
+  assert.equal(lines.length, 0);
+});

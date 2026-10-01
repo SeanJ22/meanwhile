@@ -3,7 +3,7 @@ import { stateForRosterFile } from "../holdings/runtime-paths.ts";
 import { join } from "node:path";
 
 import { nameParts, splitDisplayName } from "../ballot/incumbency.ts";
-import { COVERED, rosterFile } from "../coverage/artifacts.ts";
+import { HELD_ROSTER_STATES, rosterFile } from "../coverage/artifacts.ts";
 import { mayReadRetiredPluralRoster } from "../officials/roster-authority.ts";
 import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
 import { formatDateLong } from "../text/format-date.ts";
@@ -147,7 +147,7 @@ const ROSTER_SCOPES: Readonly<Record<string, VoteRosterAuthority>> = {
   us: { kind: "FEDERAL_DIRECTORY", state: null },
   ...(mayReadRetiredPluralRoster()
     ? Object.fromEntries(
-        COVERED.map((s) => [s.fips, { kind: "RETIRED_STATE_TEST_FIXTURE" as const, file: rosterFile(s), state: s.usps }]),
+        HELD_ROSTER_STATES.map((s) => [s.fips, { kind: "RETIRED_STATE_TEST_FIXTURE" as const, file: rosterFile(s), state: s.usps }]),
       )
     : {}),
 };

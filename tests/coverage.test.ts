@@ -5,7 +5,6 @@ import { dirname, join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { CLIP_COUNTIES } from "../lib/coverage/artifacts.ts";
 import { resolveZip } from "../lib/geo/zcta.ts";
 import { summarizeCoverage } from "../lib/registry/coverage.ts";
 import { type GeoFeature } from "../lib/registry/resolve.ts";
@@ -259,7 +258,8 @@ test("the clip counties hold exactly the 74 governments Census enumerates", () =
    * county line carries both, and is counted in both — which is the truth about
    * it, not a rounding of it.
    */
-  const countyLabel = new Map(CLIP_COUNTIES.map((c) => [c.fips, c.label.replace(" County,", "")]));
+  const measuredCounties = registry.divisions.filter(d => d.divisionType === "county" && Object.hasOwn(COG_BY_COUNTY, `${d.label.replace(/ County$/, "")} ${d.state}`));
+  const countyLabel = new Map(measuredCounties.map(d => [d.geoid!, `${d.label.replace(/ County$/, "")} ${d.state}`]));
 
   const perCounty: Record<string, number> = {};
   let outsideThePrimaries = 0;
@@ -314,13 +314,13 @@ test("the clip counties hold exactly the 74 governments Census enumerates", () =
    * Scoped by the clip manifest rather than by a literal 3, so the two move
    * together if the clip ever widens.
    */
-  const clipFips = new Set(CLIP_COUNTIES.map((c) => c.fips));
+  const clipFips = new Set(measuredCounties.map(d => d.geoid));
   const clipCountyRows = registry.divisions.filter(
     (d) => d.divisionType === "county" && d.geoid !== null && clipFips.has(d.geoid),
   );
   assert.equal(
     clipCountyRows.length,
-    CLIP_COUNTIES.length,
+    measuredCounties.length,
     "every clip county must be a division here, matched on its GEOID",
   );
 

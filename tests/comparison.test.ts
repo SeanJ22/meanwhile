@@ -9,7 +9,7 @@ import {
   comparablePairs,
   compareStates,
 } from "../lib/area/comparison.ts";
-import { COVERED_SLUGS } from "../lib/coverage/states.ts";
+import { AREA_FACTS } from "../lib/area/facts.ts";
 
 /**
  * D47 — two states side by side.
@@ -36,7 +36,7 @@ const RANKING_KEYS = [
 
 test("D47: every covered pair compares, and none compares with itself", () => {
   const pairs = comparablePairs();
-  const n = COVERED_SLUGS.length;
+  const n = AREA_FACTS.length;
   assert.equal(
     pairs.length,
     n * (n - 1),

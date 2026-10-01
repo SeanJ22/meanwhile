@@ -148,7 +148,7 @@ function checkFreeWorkUntouched(src: string): void {
   assert.ok(walk.length > 0, "the discovery walk anchors moved");
   assert.match(
     walk,
-    /if \(!MEETINGS_DISCOVERY_ENABLED\) \{[\s\S]*?\} else if \(dry \|\| canary \|\| scheduledBlackout \|\| ONLY !== null \|\| IDS !== null\) \{[\s\S]*?\} else if \("unreadable" in gapLedgerRead\) \{[\s\S]*?\} else if \(Date\.now\(\) \+ MEETINGS_DISCOVERY_BUDGET_MS > DISPATCH_DEADLINE_MS\) \{[\s\S]*?\} else \{/,
+    /if \(!MEETINGS_DISCOVERY_ENABLED\) \{[\s\S]*?\} else if \(dry \|\| canary \|\| scheduledBlackout\) \{[\s\S]*?\} else if \("unreadable" in gapLedgerRead\) \{[\s\S]*?\} else if \(Date\.now\(\) \+ MEETINGS_DISCOVERY_BUDGET_MS > DISPATCH_DEADLINE_MS\) \{[\s\S]*?\} else \{/,
     "the free discovery walk is gated differently",
   );
   for (const paidFact of ["modelLaneEnabled", "laneClosure", "laneDisabledReason", "unreadableControls", "configHold", "intentLogUnreadable", "ownerIntentsUnreadableByRunner"]) {

@@ -70,7 +70,7 @@ test("C16: a calendar is never a body's by domain alone: the filter must name th
   assert.match(crosswalkRowIssue(row({ filter: {} }))!, /only through a filter naming it \(nameTerms\)/);
   assert.match(crosswalkRowIssue(row({ kind: "ICAL", id: `${subBodyId(OCD, "Housing Commission")}|ICAL`, filter: { nameTerms: "x" } }))!, /a ICAL filter has no nameTerms/);
   assert.equal(crosswalkRowIssue(row({ kind: "ICAL", id: `${subBodyId(OCD, "Housing Commission")}|ICAL`, filter: { titleMatch: "Housing Commission" } })), null);
-  assert.match(crosswalkRowIssue(row({ kind: "LEGISTAR" as never }))!, /no reviewed filter is defined/);
+  assert.match(crosswalkRowIssue(row({ kind: "LEGISTAR" as never }))!, /a LEGISTAR filter has no nameTerms/);
 });
 
 test("C16: the evidence is the government's own page naming the body, cited by sha256", () => {

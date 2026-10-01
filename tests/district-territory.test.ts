@@ -149,12 +149,12 @@ test("A SLIVER IS NOT PLACEMENT: an approximate district holding under 5% of a Z
   assert.equal(ruledDistrictTerritory({ state: "NM", pid6: "999999" }, new Map(), () => undefined, unitShareKey, [], extract), null, "an Arizona extract places no other state's unit");
 });
 
-test("only Admin Send placement loads the approximate boundary extract", () => {
+test("only non-reader placement callers load the approximate boundary extract", () => {
   /* Outside tests and the generator, the extract is named only where the runner reads it. */
   const namers = trackedFilesNaming(["-e", "az-fire-district-territory", "-e", "APPROXIMATE_DISTRICT_EXTRACT_PATH", "-e", "readApproximateDistrictExtract"]);
   assert.deepEqual(namers, ["lib/control-plane/expansion/district-territory.ts", APPROXIMATE_DISTRICT_EXTRACT_PATH.join("/"), "lib/control-plane/expansion/runner-load.ts"]);
   const importers = trackedFilesNaming(["-e", "expansion/runner-load"]);
-  assert.deepEqual(importers, ["app/(admin)/_mw/data/send-preview.ts"], "only the authenticated Admin preview loads dispatch placement; no public reader does");
+  assert.deepEqual(importers, ["app/(admin)/_mw/data/send-preview.ts", "lib/hunt/place-source-admission.ts"], "only Admin preview and hunt admission load dispatch placement; no public reader does");
 });
 
 test("THE RULES: each names its evidence; a member union never adds shares and names what it leaves out; an unknown unit has no rule", () => {

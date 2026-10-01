@@ -13,7 +13,9 @@ export const CONSOLE_INPUT_SQL = `SELECT md5(jsonb_build_array(
   ${AGGREGATES.map(name => `(SELECT COALESCE(jsonb_agg(jsonb_build_array(id, revision) ORDER BY id), '[]'::jsonb) FROM cp_${name})`).join(",\n  ")},
   ${LOGS.map(name => `(SELECT jsonb_build_array(count(*), max(position)) FROM cp_log_${name})`).join(",\n  ")},
   (SELECT value->'metrics'->'cacheByRole' FROM cp_research_state WHERE id = 'level-1'),
-  (SELECT value->'metrics'->'share' FROM cp_research_state WHERE id = 'level-1'),
+  (SELECT (value->'metrics'->'share' - 'window') || jsonb_build_object('window',
+      (value->'metrics'->'share'->'window') - ARRAY['since','cycles'])
+   FROM cp_research_state WHERE id = 'level-1'),
   (SELECT (record->'runtimeOutcome') - ARRAY['cycleId','startedAt','finishedAt']
    FROM cp_log_owner_digests WHERE log_key = 'owner-digest'
      AND record->'runtimeOutcome'->>'kind' = 'FRESHNESS_CYCLE'

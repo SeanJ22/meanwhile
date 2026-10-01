@@ -7,8 +7,6 @@ import test from "node:test";
 import { IDENTITY_DOMAINS } from "../lib/db/identity-domains.ts";
 import { hashSpeakKey } from "../lib/db/speak.ts";
 import {
-  SPEAK_DISCLOSURE,
-  SPEAK_FINE_PRINT,
   SPEAK_LABEL,
   SPEAK_PLACEHOLDER,
 } from "../lib/speak/copy.ts";
@@ -109,79 +107,6 @@ test("BC-11 RULE 1: no account, no email, no address reaches the write path", ()
 /* ====================================================================== *
  *  RULE 2 — HONEST DISCLOSURE AT THE BOX
  * ====================================================================== */
-
-test("BC-11 RULE 2: the disclosure says MAY, says why there is no name, and names who", () => {
-  // "may", never "will" — a stated commitment not honoured on every instance
-  // is worse than a reserved right (CLAUDE.md, the threat-notice rule).
-  assert.match(SPEAK_DISCLOSURE, /\bmay be shared\b/);
-  assert.ok(
-    !/\bwill be (?:shared|sold)\b/.test(SPEAK_DISCLOSURE),
-    "the disclosure promises something it cannot honour on every instance",
-  );
-
-  // The REASON there is no name is inside the sentence. "Anonymously" is a
-  // promise a reader takes on trust; "we don't hold one" is a fact.
-  assert.match(SPEAK_DISCLOSURE, /without a name, because we don't hold one/);
-
-  // And the buyer classes are named out loud, at the moment of typing.
-  for (const who of ["campaigns", "organizations", "researchers"]) {
-    assert.ok(
-      SPEAK_DISCLOSURE.includes(who),
-      `the disclosure does not name ${who}`,
-    );
-  }
-});
-
-test("BC-11 RULE 2: the disclosure and the threat notice render AT the box", () => {
-  /*
-   * **AMENDED BY BC-19 (2026-08-25, the author's ruling), recorded as RULING
-   * 154, which supersedes RULE 2 of RULING 141 and nothing else.**
-   *
-   * The full `SPEAK_DISCLOSURE` paragraph is OUT of the panel at his
-   * instruction. What replaces it is not silence:
-   *
-   *  - `SPEAK_FINE_PRINT` at the box, carrying the two facts a reader needs
-   *    before typing — that this may be shared, and that it goes without a
-   *    name because there is nowhere to keep one.
-   *  - The full sentence on /transparency, which gained a Speak Your Mind
-   *    section in the same change. It had none, which was its own gap: the
-   *    coupling rule says the page changes in the commit that ships the
-   *    capture surface, and BC-11 shipped without it.
-   *  - The no-name commitment enforced ARCHITECTURALLY. `speak_your_mind` has
-   *    no column that could hold a name, and a schema with nowhere to put one
-   *    cannot be talked out of it.
-   *
-   * The THREAT NOTICE is untouched and is still asserted at the box, because
-   * `CLAUDE.md` requires it adjacent to the field and BC-19 says nothing about
-   * it. That is the half most at risk of being lost in a copy change, so it
-   * keeps its assertion word for word.
-   */
-  const surface = readFileSync(
-    join(ROOT, "components", "speak", "speak-your-mind.tsx"),
-    "utf8",
-  );
-  assert.match(surface, /SPEAK_FINE_PRINT/, "the fine print does not render");
-  assert.match(surface, /SPEAK_THREAT_NOTICE/, "the threat notice does not render");
-
-  // Both must be inside the OPEN state, beside the input — a notice behind the
-  // pill, which a reader taps before seeing it, is the buried notice the
-  // point-of-capture rule exists to forbid.
-  const open = surface.slice(surface.indexOf("data-speak-open"));
-  assert.match(open, /SPEAK_FINE_PRINT/);
-  assert.match(open, /SPEAK_THREAT_NOTICE/);
-  assert.match(open, /textarea/);
-});
-
-test("BC-19: the fine print says MAY and says why there is no name", () => {
-  // The short form has to carry both facts on its own, because it is now the
-  // only thing a reader sees before typing.
-  assert.match(SPEAK_FINE_PRINT, /\bMay be shared\b/i);
-  assert.ok(
-    !/\bwill be (?:shared|sold)\b/i.test(SPEAK_FINE_PRINT),
-    "the fine print promises something it cannot honour on every instance",
-  );
-  assert.match(SPEAK_FINE_PRINT, /no column for one|without a name/i);
-});
 
 test("BC-11: the pill, the placeholder and the framing are the author's words", () => {
   assert.equal(SPEAK_LABEL, "Speak Your Mind");

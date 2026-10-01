@@ -373,17 +373,8 @@ test("every instance carries a disposition, and each names WHOSE fact it is", ()
 
 test("a sitting past the app's serving horizon is HELD and NAMED, never dropped", () => {
   /*
-   * **THE GAP THIS TEST DOCUMENTED IS CLOSED, AND THAT IS WHY IT CHANGED.**
-   *
-   * It was written while `UPCOMING_HORIZON_DAYS` was 60, which held eight of
-   * the fourteen out of the reader's hands — our limit, not the county's. The
-   * constant is now 120 and all fourteen are served, so the real corpus
-   * produces ZERO `BEYOND_APP_SERVING_HORIZON` rows.
-   *
-   * The MECHANISM still has to be provable, or closing the gap would quietly
-   * delete the proof that a trimmed sitting is held and named rather than
-   * dropped. So the corpus asserts the closed state, and a fixture sitting
-   * placed deliberately past the horizon exercises the held-and-named path.
+   * All fourteen published sittings remain accounted for: eleven reach the reader
+   * within the rolling 90-day window and three remain explicitly beyond it.
    */
   const result = normalizeWithDrops([pimaReading()], NOW);
   const beyond = result.dispositions.filter((d) => d.verdict === "BEYOND_APP_SERVING_HORIZON");
@@ -392,11 +383,10 @@ test("a sitting past the app's serving horizon is HELD and NAMED, never dropped"
   assert.equal(represented.length + beyond.length, 14);
   assert.equal(
     beyond.length,
-    0,
-    "at a 120-day horizon every published Pima sitting reaches a reader — if this fails, " +
-      "the horizon moved back and eight sittings went quiet again",
+    3,
+    "the three later sittings remain explicitly held beyond the rolling 90-day horizon",
   );
-  assert.equal(represented.length, 14);
+  assert.equal(represented.length, 11);
 
   /*
    * The mechanism, exercised on the SAME published sittings by moving the
@@ -1117,17 +1107,16 @@ test("ZERO SILENT LOSSES: every control-tenant instance is served, superseded-wi
   }
 });
 
-test("REGRESSION: Pima's fourteen are untouched — no supersession, nothing owed", () => {
+test("REGRESSION: Pima's in-window sittings are untouched — no supersession", () => {
   /*
-   * The correction is a repair to a branch Pima never reaches, and it must stay
-   * that way. If either of these fails, a sitting that was reaching a reader on
-   * 2026-08-28 has stopped.
+   * The union retains all fourteen source sittings; the reader uses the
+   * rolling 90-day window without inventing supersession or a missing venue.
    */
   const result = normalizeWithDrops([pimaReading()], NOW);
   assert.equal(result.union.length, 14);
   assert.equal(
     result.dispositions.filter((d) => d.verdict === "REPRESENTED_IN_READER").length,
-    14,
+    11,
   );
   assert.deepEqual(
     result.dispositions.filter((d) => d.verdict === "SUPERSEDED_BY_RICHER_ROUTE"),

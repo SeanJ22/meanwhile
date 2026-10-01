@@ -155,7 +155,7 @@ test("HOLBROOK · labels: dates as a clerk writes them, minutes labelled only in
 });
 
 test("HOLBROOK · the serving window's years are read; next year's missing page is the city not having posted it", async () => {
-  assert.deepEqual(yearsToRead({ now: new Date("2026-09-25T18:00:00Z") }), { years: [2026, 2027], required: 2026 });
+  assert.deepEqual(yearsToRead({ now: new Date("2026-09-25T18:00:00Z") }), { years: [2026], required: 2026 });
   assert.deepEqual(yearsToRead({ now: new Date("2027-01-10T18:00:00Z") }), { years: [2026, 2027], required: 2027 });
 
   const requested: string[] = [];

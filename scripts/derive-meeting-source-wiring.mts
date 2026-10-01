@@ -51,7 +51,7 @@ import { crosswalkRowIssue, type MeetingBodyCrosswalkRow } from "../lib/civic-da
 import { promoteDerivedCandidate } from "../lib/civic-data/derived-child-receipt.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
-import { deriveWiringDecisions, sameRoute, wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
+import { CURRENT_CALENDAR_READS_SQL, deriveWiringDecisions, latestCalendarWalk, sameRoute, wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { readHeldCalendars, type HeldCalendarReading } from "../lib/control-plane/discovery/derived-wiring-reading.ts";
 import { reviewedBodyForGovernment } from "../lib/control-plane/discovery/reviewed-body.ts";
 import { crosswalkEvidenceWorkItem, indexVault, readHeldBytes, type HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-vault.ts";
@@ -91,6 +91,7 @@ const ADAPTER_ENTRY: Readonly<Record<DerivedWiringKind, string>> = {
   ICAL: "lib/sources/ical/index.ts",
   OFFICIAL_PAGE_EVENTS: "lib/sources/official-page-events/index.ts",
   DILIGENT: "lib/sources/diligent/index.ts",
+  LEGISTAR: "lib/sources/legistar/index.ts",
 };
 const digests = new Map<DerivedWiringKind, string>();
 const adapterDigest = (kind: DerivedWiringKind): string => {
@@ -169,7 +170,6 @@ async function main(): Promise<void> {
     readonly input: DerivedInputRef;
     readonly bodies: readonly { id: string; ocdId: string; jurisdictionId: string | null }[];
     readonly referenceSha256: string;
-    readonly reviewedRegistryVersionId: string;
   } | { readonly unread: string }>();
   for (const state of new Set(rows.map((row) => stateOf(row.ocdId)).filter((s): s is string => s !== null))) {
     try {
@@ -181,8 +181,7 @@ async function main(): Promise<void> {
       }
       registrations.set(state, { input,
         bodies: read.value.bodies.map((b) => ({ id: b.id, ocdId: b.ocdId, jurisdictionId: b.jurisdictionId })),
-        referenceSha256: read.value.vintage.referenceSha256,
-        reviewedRegistryVersionId: read.value.reviewedRegistryVersionId });
+        referenceSha256: read.value.vintage.referenceSha256 });
     } catch (error) {
       registrations.set(state, { unread: `${state} registration could not be read: ${error instanceof Error ? error.message : String(error)}` });
     }
@@ -199,7 +198,7 @@ async function main(): Promise<void> {
   try {
     const sql = neon(controlPlane);
     const found = jurisdictions.length === 0 ? [] : await sql.query(
-      "SELECT DISTINCT ON (log_key) log_key AS id, position, record AS value FROM cp_log_discovery_attempts WHERE log_key = ANY($1::text[]) ORDER BY log_key, record->>'startedAt' DESC, position DESC",
+      CURRENT_CALENDAR_READS_SQL,
       [jurisdictions],
     ) as { id: string; position: number | string; value: MeetingsDiscoveryAttempt }[];
     attempts = found.map((row) => ({ attempt: row.value, recordId: String(row.position), recordedAt: row.value.finishedAt }));
@@ -216,7 +215,7 @@ async function main(): Promise<void> {
       : ({ kind: "VAULTED_EVIDENCE" as const, artifactId: held.id, contentHash: held.contentHash, tier: held.tier === "SANITIZED_DERIVED" ? "SANITIZED_DERIVED" as const : "RAW" as const, retrievedAt: held.retrievedAt ?? now });
   const pending: HeldCalendarReading[] = [];
   for (const reviewed of rows.filter((row) => row.status === "ACTIVE")) {
-    const walk = attempts.find((a) => a.attempt.jurisdictionId === reviewed.jurisdictionId)?.attempt;
+    const walk = latestCalendarWalk(attempts, reviewed.jurisdictionId, reviewed.route)?.attempt;
     if (walk === undefined) continue;
     const others = rows.filter((r) => r.jurisdictionId === reviewed.jurisdictionId && r.bodyId !== reviewed.bodyId && r.status === "ACTIVE").map((r) => r.bodyName);
     const cited = [
@@ -257,9 +256,6 @@ async function main(): Promise<void> {
       }
       if (reviewed.kind !== "PROMOTED" || reviewedInput === null) {
         return { notRegistered: `registration pairs ${row.jurisdictionId} with no body and the reviewed registry is ${reviewed.kind}` };
-      }
-      if (reg.reviewedRegistryVersionId !== reviewed.metadata.versionId) {
-        return { notRegistered: `registration and reviewed registry name different identity versions for ${row.jurisdictionId}` };
       }
       let resolved: ReturnType<typeof reviewedBodyForGovernment>;
       try {

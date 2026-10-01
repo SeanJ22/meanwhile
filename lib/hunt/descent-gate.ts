@@ -1,7 +1,7 @@
 /**
  * A STATE WHOSE DESCENT HAS NEVER RUN CANNOT BEGIN A HUNT.
  * (2026-08-26, the descent session, Item 11. **RULING 169** made enforceable,
- * the way `state-registry-gate.ts` made RULING 86 enforceable.)
+ * historical descent tooling.)
  *
  * RULING 86's gate asks whether a state's SOURCES were enumerated. This asks
  * the question one step further down: whether anyone ever DESCENDED the tiers

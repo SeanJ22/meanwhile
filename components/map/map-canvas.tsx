@@ -6,6 +6,7 @@ import { NEARBY_RADIUS_MILES } from "@/lib/ballot/voting-sites";
 
 // MapLibre 6 dropped its default export; everything is named now.
 import {
+  addProtocol,
   AttributionControl,
   LngLatBounds,
   MapLibreMap,
@@ -15,6 +16,7 @@ import {
   type ErrorEvent as MapErrorEvent,
   type MapMouseEvent,
 } from "maplibre-gl";
+import { Protocol } from "pmtiles";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { ensureStateRelief } from "@/lib/map/state-relief";
@@ -40,7 +42,6 @@ import {
   districtLayerPresent,
   districtsAt,
   drawnDistrictsOn,
-  loadDistricts,
   removeDistrictLayer,
   setNarrowedDistricts,
   setSelectedDistrict,
@@ -448,7 +449,6 @@ export function MapCanvas({
    * disagree for the whole duration of a fetch, and that gap is exactly when
    * the old state's boundaries used to survive into the new state's view.
    */
-  const districtStateRef = useRef<string | null>(null);
   const focusAbbrRef = useRef<string | null>(stateAbbrFromOcdId(focusStateOcdId));
   const focusOcdRef = useRef<string | null>(focusStateOcdId ?? null);
   useEffect(() => {
@@ -460,26 +460,7 @@ export function MapCanvas({
     const map = mapRef.current;
     if (!map || mapPresentationHeld(map) || !map.getStyle()?.layers?.length) return;
 
-    const abbr = focusAbbrRef.current;
-    /*
-     * g4 item 3: NO ACTIVE STATE MEANS NO DISTRICT BOUNDARIES ANYWHERE.
-     *
-     * `wanted` is emptied rather than the loop being skipped, so the removal
-     * pass below runs and the previous state's layers actually come off. A
-     * `return` here would have left them drawn — the same shape as the stale
-     * mask in item 1, one layer down.
-     */
-    const wanted = abbr ? districtTypesRef.current : [];
-
-    // The active state changed under the layers: every one of them is now
-    // holding the wrong state's geometry, so they all go before anything is
-    // added back. Selecting a new state depopulates the old.
-    if (districtStateRef.current !== abbr) {
-      for (const type of DISTRICT_TYPES) {
-        if (districtLayerPresent(map, type)) removeDistrictLayer(map, type);
-      }
-      districtStateRef.current = abbr;
-    }
+    const wanted = districtTypesRef.current;
 
     // Drop what is no longer asked for, before adding what is.
     for (const type of DISTRICT_TYPES) {
@@ -491,21 +472,8 @@ export function MapCanvas({
     for (const type of wanted) {
       if (districtLayerPresent(map, type)) continue;
 
-      loadDistricts(type, abbr)
-        .then((data) => {
-          // Re-check: the fetch is async and the style may have moved on.
-          const live = mapRef.current;
-          if (!live || mapPresentationHeld(live)) return;
-          if (!districtTypesRef.current.includes(type)) return;
-          if (!live.getStyle()?.layers?.length) return;
-          // ...and the ACTIVE STATE may have moved on too. Without this the
-          // reader who types an Arizona zip while New Hampshire's school
-          // districts are still in flight gets New Hampshire's boundaries
-          // painted over Arizona, seconds after the map has flown.
-          if (focusAbbrRef.current !== abbr) return;
-          addDistrictLayer(live, type, data, abbr);
-        })
-        .catch(() => onDistrictErrorRef.current());
+      try { addDistrictLayer(map, type); }
+      catch { onDistrictErrorRef.current(); }
     }
   }, []);
 
@@ -519,6 +487,7 @@ export function MapCanvas({
     // scripts/build-map-worker.mjs bundles a self-contained copy here; see it
     // for the full account. Must precede the first map.
     setWorkerUrl("/maplibre-gl-worker.mjs");
+    addProtocol("pmtiles", new Protocol().tile);
 
     // MapLibre shares one worker pool across all maps and tears it down when
     // the last map is removed. React Strict Mode mounts, cleans up, then mounts
@@ -900,7 +869,7 @@ export function MapCanvas({
           /** Which state is raised — null when none, and then nothing is muted. */
           focusOcdId: focusOcdRef.current,
           /** The state the district layers were actually built for (item 3). */
-          districtState: districtStateRef.current,
+          districtState: "national",
           /** Every district layer currently on the style, by id. */
           districtLayers,
           /**

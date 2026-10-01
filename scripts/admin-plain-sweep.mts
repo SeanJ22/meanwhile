@@ -63,20 +63,9 @@ const ADMIN_HOST = new URL(ADMIN_ORIGIN).host;
 /** The surfaces swept. A new admin page belongs on this list the day it ships. */
 export const SWEPT_PATHS: readonly string[] = [
   "admin",
-  "admin/research",
   "readiness/az",
   "admin/sources",
-  "admin/reader",
-  "admin/feedback",
   "admin/agents",
-  "admin/chat",
-  /*
-   * The release review shipped in ADM-C13 and was never added here, so the
-   * sweep never read the one page whose whole face was manifest codes — the
-   * owner found it instead (9.6.26, ACLOSE-6). The comment above this list says
-   * a new admin page belongs on it the day it ships; this is that debt paid.
-   */
-  "admin/assignments",
 ];
 
 /** One kind of thing that must not reach the face, with how to find it. */

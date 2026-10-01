@@ -7,7 +7,6 @@ import test from "node:test";
 import { FLEET_TABS, READINESS_TABS, withScope } from "../app/(admin)/_mw/scope.ts";
 import { readinessRowOutcome } from "../lib/control-plane/readiness/read.ts";
 import { READINESS_DERIVATION_CONTRACT } from "../lib/control-plane/readiness/model.ts";
-import { findingCodesWithMeaning, findingMeaning, roleLead } from "../lib/control-plane/workers/plain-roles.ts";
 import { plainCount, plainDuration, plainMeaning } from "../lib/control-plane/plain-words.ts";
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import type { WorkerAttemptView, WorkerRoleView } from "../lib/control-plane/workers/readback.ts";
@@ -74,27 +73,11 @@ test("every fragment the console sends the owner to is an id something renders",
   );
 });
 
-test("a fragment link built through the scope helper keeps its fragment where the browser reads it", () => {
-  /*
-   * A URL's fragment runs to its end: a query written after `#` is read as part
-   * of the fragment, which then names no element — and the scope it carried is
-   * lost with it. The redesigned pages build their links with `withScope`.
-   */
-  const built = [...adminSource().matchAll(/withScope\(`([^`]*#[^`]*)`/g)].map((m) => m[1]);
-  assert.ok(built.length > 0, "the sweep found no fragment link built with withScope, so it is not looking at them");
-  for (const raw of built) {
-    const path = raw.replace(/\$\{[^}]*\}/g, "x");
-    const url = new URL(withScope(path, { kind: "state", state: "az" }), "https://admin.invalid");
-    assert.equal(url.hash, `#${path.split("#")[1]}`, `${raw}: the scope is written after the fragment, so the browser reads "${url.hash}" as the id to scroll to — no element has it — and the scope is dropped`);
-    assert.equal(url.searchParams.get("scope"), "az", `${raw}: the scope does not survive the link`);
-  }
-});
-
 test("the route targets the console's own navigation sends the owner to are real pages", () => {
   // Admin redesign, 2026-09-23: the command centre's cards were removed; the console's routes are now its area tabs, its area toggle and its Other pages menu.
   const header = readFileSync(join(ROOT, "app", "(admin)", "_mw", "header-controls.tsx"), "utf8");
   const others = [...header.matchAll(/\{ href: "(\/[^"]+)", label:/g)].map((m) => m[1]);
-  assert.ok(others.length >= 5, `the sweep must read the Other pages menu; saw ${others.length}`);
+  assert.ok(others.length >= 3, `the sweep must read the Other pages menu; saw ${others.length}`);
   const routes = [...new Set([...FLEET_TABS.map((t) => t.path), ...READINESS_TABS.map((t) => t.path), ...others])];
   const tracked = new Set(filesThatWouldBeCommitted({ cwd: ROOT, paths: ["app"] }));
   const missing = routes.filter((route) => !tracked.has(`app/(admin)${route}/page.tsx`));
@@ -119,51 +102,6 @@ test("a fragment target clears the sticky header rather than landing under it", 
 /* -------------------------------------------------------------------------- */
 /* B — the research detail did not explain itself in English                   */
 /* -------------------------------------------------------------------------- */
-
-/**
- * The owner opened Parsers and read, on the face of an attempt row:
- *
- * > *source scope mismatch — The held artifact must bind to the exact observed
- * > publisher, source, route, and URL scope.*
- *
- * A de-underscored constant and the instrument's own engineering sentence. The
- * findings list was the ONE thing on that row that was neither translated nor
- * behind a disclosure.
- */
-test("the two codes the owner actually read now say what happened in ordinary English", () => {
-  for (const code of ["SOURCE_SCOPE_MISMATCH", "SOURCE_SHAPE_UNSUPPORTED"]) {
-    const meaning = findingMeaning(code);
-    assert.ok(meaning, `${code} still has no owner sentence, and it is one of the two he quoted`);
-    assert.doesNotMatch(meaning, /[A-Z][A-Z0-9]*_[A-Z0-9_]+/, `${meaning} carries a machine constant`);
-    assert.doesNotMatch(meaning, /\bartifact\b|\bpublisher binding\b|\bURL scope\b/i, `${meaning} still speaks the instrument's vocabulary`);
-    assert.ok(meaning.trim().endsWith("."), "an explanation is a sentence");
-    assert.ok(meaning.length > 60, `${code}'s sentence is too short to have explained anything`);
-  }
-});
-
-test("an unmapped finding code returns null rather than a plausible-sounding invention", () => {
-  assert.equal(findingMeaning("SOMETHING_NOBODY_HAS_WRITTEN_YET"), null);
-});
-
-test("every owner sentence for a finding is free of machine vocabulary and is a whole sentence", () => {
-  const codes = findingCodesWithMeaning();
-  assert.ok(codes.length >= 40, `only ${codes.length} finding codes carry an owner sentence`);
-  for (const code of codes) {
-    const meaning = findingMeaning(code) ?? "";
-    assert.doesNotMatch(meaning, /[A-Z][A-Z0-9]*_[A-Z0-9_]+/, `${code}: ${meaning}`);
-    assert.doesNotMatch(meaning, /\blib\/[a-z-]+\//, `${code} names a source path`);
-    assert.ok(meaning.trim().endsWith(".") || meaning.trim().endsWith("!"), `${code} does not end a sentence`);
-  }
-});
-
-test("the raw instrument sentence moved off the face and is still on the page", () => {
-  const panel = readFileSync(join(ROOT, "app", "(admin)", "admin", "research", "worker-fleet-panel.tsx"), "utf8");
-  const disclosure = panel.slice(panel.indexOf("the instrument&rsquo;s own words"));
-  assert.match(disclosure, /f\.detail/, "the instrument's own sentence is not in the disclosure — it was deleted rather than demoted");
-  const face = panel.slice(panel.indexOf('<ul className="findings">'), panel.indexOf('<ul className="findings">') + 900);
-  assert.match(face, /findingMeaning/, "the face does not render the owner sentence");
-  assert.doesNotMatch(face, /finding\.detail/, "the raw engineering sentence is still on the face");
-});
 
 test("a count agrees with its noun, and a duration is in seconds", () => {
   // "1 artifacts / 1" was on every attempt row.
@@ -196,27 +134,6 @@ function attempt(over: Partial<WorkerAttemptView> = {}): WorkerAttemptView {
     ...over,
   } as WorkerAttemptView;
 }
-
-test("a verdict is not glossed with the same word it already is", () => {
-  const metric = (value: number) => ({
-    value,
-    denominator: value,
-    contract: "attempts shown",
-    source: "the attempt log",
-    observedAt: "2026-09-06T22:26:02.000Z",
-    unit: "attempts" as const,
-  });
-  const role = {
-    role: "PARSER",
-    shown: metric(2),
-    pending: metric(0),
-    due: metric(0),
-    attempts: [attempt(), attempt({ attemptId: "at-2", verdict: "EXTRACTED" })],
-  } as unknown as WorkerRoleView;
-  const lead = roleLead(role);
-  assert.doesNotMatch(lead.doing, /failed \(failed\)/, "the owner read `2 failed (failed)` — a word glossed by itself");
-  assert.match(lead.doing, /extracted \(records were extracted\)/, "a real translation must survive");
-});
 
 /* -------------------------------------------------------------------------- */
 /* D — state readiness told the owner to run a command                         */

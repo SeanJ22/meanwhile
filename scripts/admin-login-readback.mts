@@ -19,7 +19,7 @@
  * route 302ing to `accounts.google.com` with PKCE and the Lax state cookie,
  * the callback refusing a state it did not issue, and both new routes 404ing
  * on the public host. The one live proof this cannot take — the owner reaching
- * `/admin` and `/admin/research` after a real sign-in — is the owner's own
+ * `/admin` after a real sign-in — is the owner's own
  * step in `docs/admin-sign-in.md`.
  *
  * ## What it never does

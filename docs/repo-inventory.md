@@ -8,25 +8,16 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Routes and pages
 
-87 file(s). Paths retain route groups and dynamic segments as written.
+80 file(s). Paths retain route groups and dynamic segments as written.
 
 - `/(admin)/admin/agents` — `app/(admin)/admin/agents/page.tsx`
-- `/(admin)/admin/assignments` — `app/(admin)/admin/assignments/page.tsx`
 - `/(admin)/admin/auth/callback` — `app/(admin)/admin/auth/callback/route.ts`
 - `/(admin)/admin/auth/google` — `app/(admin)/admin/auth/google/route.ts`
-- `/(admin)/admin/changes` — `app/(admin)/admin/changes/page.tsx`
-- `/(admin)/admin/chat` — `app/(admin)/admin/chat/page.tsx`
-- `/(admin)/admin/command-center` — `app/(admin)/admin/command-center/page.tsx`
-- `/(admin)/admin/expansion` — `app/(admin)/admin/expansion/page.tsx`
-- `/(admin)/admin/feedback` — `app/(admin)/admin/feedback/page.tsx`
 - `/(admin)/admin/fix` — `app/(admin)/admin/fix/page.tsx`
-- `/(admin)/admin/fleet` — `app/(admin)/admin/fleet/page.tsx`
 - `/(admin)/admin/learning` — `app/(admin)/admin/learning/page.tsx`
 - `/(admin)/admin/login` — `app/(admin)/admin/login/page.tsx`
 - `/(admin)/admin/money` — `app/(admin)/admin/money/page.tsx`
 - `/(admin)/admin` — `app/(admin)/admin/page.tsx`
-- `/(admin)/admin/reader` — `app/(admin)/admin/reader/page.tsx`
-- `/(admin)/admin/research` — `app/(admin)/admin/research/page.tsx`
 - `/(admin)/admin/sources` — `app/(admin)/admin/sources/page.tsx`
 - `/(admin)/admin/work` — `app/(admin)/admin/work/page.tsx`
 - `/(admin)/readiness/[state]` — `app/(admin)/readiness/[state]/page.tsx`
@@ -41,6 +32,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `/api/address/resolve` — `app/api/address/resolve/route.ts`
 - `/api/admin/action` — `app/api/admin/action/route.ts`
 - `/api/admin/bulk-hunts` — `app/api/admin/bulk-hunts/route.ts`
+- `/api/admin/changes` — `app/api/admin/changes/route.ts`
 - `/api/admin/chat` — `app/api/admin/chat/route.ts`
 - `/api/admin/checklist-definitions` — `app/api/admin/checklist-definitions/route.ts`
 - `/api/admin/checklist-instances` — `app/api/admin/checklist-instances/route.ts`
@@ -49,10 +41,11 @@ Read each source file for its current exports, configuration, commands and data.
 - `/api/admin/evidence/[workItemId]/[attemptId]/[artifactId]` — `app/api/admin/evidence/[workItemId]/[attemptId]/[artifactId]/route.ts`
 - `/api/admin/evidence/[workItemId]/[attemptId]/[artifactId]/status` — `app/api/admin/evidence/[workItemId]/[attemptId]/[artifactId]/status/route.ts`
 - `/api/admin/fix-history` — `app/api/admin/fix-history/route.ts`
-- `/api/admin/fleet/operations` — `app/api/admin/fleet/operations/route.ts`
 - `/api/admin/geography-preview` — `app/api/admin/geography-preview/route.ts`
 - `/api/admin/live` — `app/api/admin/live/route.ts`
 - `/api/admin/public-reader-observation` — `app/api/admin/public-reader-observation/route.ts`
+- `/api/admin/reader-demand` — `app/api/admin/reader-demand/route.ts`
+- `/api/admin/reports` — `app/api/admin/reports/route.ts`
 - `/api/admin/research` — `app/api/admin/research/route.ts`
 - `/api/admin/runner-progress` — `app/api/admin/runner-progress/route.ts`
 - `/api/admin/session` — `app/api/admin/session/route.ts`
@@ -103,7 +96,6 @@ Read each source file for its current exports, configuration, commands and data.
 114 director(ies), derived from lib/ file paths.
 
 - `lib`
-- `lib/admin`
 - `lib/answerability`
 - `lib/api`
 - `lib/area`
@@ -131,6 +123,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/operator-chat`
 - `lib/control-plane/promotion`
 - `lib/control-plane/readiness`
+- `lib/control-plane/reports`
 - `lib/control-plane/repository`
 - `lib/control-plane/scheduler`
 - `lib/control-plane/scheduler/providers`
@@ -814,7 +807,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-956 file(s).
+949 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -852,6 +845,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-first-open.test.ts`
 - `tests/admin-google-signin.test.ts`
 - `tests/admin-meeting-cadence.test.ts`
+- `tests/admin-moved-pages.test.ts`
 - `tests/admin-narrow-reads.test.ts`
 - `tests/admin-paid-lane.test.ts`
 - `tests/admin-promoted-slices.test.ts`
@@ -1213,21 +1207,14 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/flake-quarantine.test.ts`
 - `tests/fleet-activity-scaling.test.ts`
 - `tests/fleet-coordinator-progression.test.ts`
-- `tests/fleet-operations-consumer.test.ts`
-- `tests/fleet-operations-map.test.ts`
-- `tests/fleet-operations-page.test.ts`
-- `tests/fleet-operations-route.test.ts`
 - `tests/fleet-operations.test.ts`
-- `tests/fleet-panels-tab.test.ts`
 - `tests/fleet-permanent-authority.test.ts`
 - `tests/fleet-receipt-imports.test.ts`
 - `tests/fleet-receipt-snapshot.test.ts`
 - `tests/fleet-receipt-store.test.ts`
 - `tests/fleet-recovery-journey.test.ts`
-- `tests/fleet-role-wording.test.ts`
 - `tests/fleet-safety.test.ts`
 - `tests/fleet-scout-reporting.test.ts`
-- `tests/fleet-tabs-smoke.test.ts`
 - `tests/flyin-normalized.test.ts`
 - `tests/flyin-software-degrade.test.ts`
 - `tests/focus-visible.test.ts`
@@ -1568,7 +1555,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/research-docs-and-method-bridge.test.ts`
 - `tests/research-metrics.test.ts`
 - `tests/research-production-meetings.test.ts`
-- `tests/research-progress-health.test.ts`
 - `tests/research-progression.test.ts`
 - `tests/research-transport.test.ts`
 - `tests/reset-registry.test.ts`
@@ -1775,7 +1761,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7071 file(s).
+7039 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -1793,7 +1779,9 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/_mw/admin-v6/action-dialog.tsx`
 - `app/(admin)/_mw/admin-v6/actions.ts`
 - `app/(admin)/_mw/admin-v6/bulk-hunts.tsx`
+- `app/(admin)/_mw/admin-v6/changes-view.tsx`
 - `app/(admin)/_mw/admin-v6/charts.tsx`
+- `app/(admin)/_mw/admin-v6/chat-view.tsx`
 - `app/(admin)/_mw/admin-v6/command-center.tsx`
 - `app/(admin)/_mw/admin-v6/context.tsx`
 - `app/(admin)/_mw/admin-v6/contract.ts`
@@ -1812,9 +1800,11 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/_mw/admin-v6/national-layout.ts`
 - `app/(admin)/_mw/admin-v6/places.ts`
 - `app/(admin)/_mw/admin-v6/pulse-view.ts`
+- `app/(admin)/_mw/admin-v6/reader-demand.tsx`
 - `app/(admin)/_mw/admin-v6/receipt-view.tsx`
 - `app/(admin)/_mw/admin-v6/receipts.ts`
 - `app/(admin)/_mw/admin-v6/reference.ts`
+- `app/(admin)/_mw/admin-v6/reports-view.tsx`
 - `app/(admin)/_mw/admin-v6/sample/executor.ts`
 - `app/(admin)/_mw/admin-v6/sample/preview-harness.tsx`
 - `app/(admin)/_mw/admin-v6/sample/register-audit.ts`
@@ -1827,11 +1817,11 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/_mw/admin-v6/screen-work.tsx`
 - `app/(admin)/_mw/admin-v6/screen-workers.tsx`
 - `app/(admin)/_mw/admin-v6/ui.tsx`
+- `app/(admin)/_mw/admin-v6/use-reading.ts`
 - `app/(admin)/_mw/admin-v6/v6.module.css`
+- `app/(admin)/_mw/admin-v6/view-param.ts`
 - `app/(admin)/_mw/blocks.tsx`
-- `app/(admin)/_mw/body-list.tsx`
 - `app/(admin)/_mw/composer.tsx`
-- `app/(admin)/_mw/copy-button.tsx`
 - `app/(admin)/_mw/data/body-store.ts`
 - `app/(admin)/_mw/data/bulk-places.ts`
 - `app/(admin)/_mw/data/census-universe.ts`
@@ -1864,7 +1854,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/_mw/maptiler-panel.tsx`
 - `app/(admin)/_mw/money-controls.tsx`
 - `app/(admin)/_mw/mw.module.css`
-- `app/(admin)/_mw/next-steps.tsx`
 - `app/(admin)/_mw/page-base.ts`
 - `app/(admin)/_mw/provider-sync-panel.tsx`
 - `app/(admin)/_mw/runner-card.tsx`
@@ -1879,36 +1868,19 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/_mw/ui.tsx`
 - `app/(admin)/admin/agents/contract.ts`
 - `app/(admin)/admin/agents/page.tsx`
-- `app/(admin)/admin/assignments/page.tsx`
 - `app/(admin)/admin/auth/callback/route.ts`
 - `app/(admin)/admin/auth/google/route.ts`
-- `app/(admin)/admin/changes/page.tsx`
-- `app/(admin)/admin/chat/chat-console.tsx`
-- `app/(admin)/admin/chat/contract.ts`
-- `app/(admin)/admin/chat/page.tsx`
-- `app/(admin)/admin/command-center/page.tsx`
-- `app/(admin)/admin/expansion/page.tsx`
-- `app/(admin)/admin/feedback/page.tsx`
 - `app/(admin)/admin/fix/page.tsx`
-- `app/(admin)/admin/fleet/page.tsx`
 - `app/(admin)/admin/learning/page.tsx`
 - `app/(admin)/admin/login/page.tsx`
 - `app/(admin)/admin/money/page.tsx`
 - `app/(admin)/admin/page.tsx`
-- `app/(admin)/admin/reader/page.tsx`
-- `app/(admin)/admin/reader/panels.tsx`
-- `app/(admin)/admin/research/identity.tsx`
-- `app/(admin)/admin/research/page.tsx`
-- `app/(admin)/admin/research/worker-fleet-panel.tsx`
-- `app/(admin)/admin/sections/field-manual.tsx`
 - `app/(admin)/admin/sources/page.tsx`
 - `app/(admin)/admin/sources/publication-status-panel.tsx`
 - `app/(admin)/admin/sources/routine-data-panel.tsx`
 - `app/(admin)/admin/work/page.tsx`
-- `app/(admin)/charts.tsx`
 - `app/(admin)/console-nav.tsx`
 - `app/(admin)/console-ui.tsx`
-- `app/(admin)/fleet-wording.ts`
 - `app/(admin)/layout.tsx`
 - `app/(admin)/loading.tsx`
 - `app/(admin)/readiness/[state]/page.tsx`
@@ -1926,6 +1898,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/api/address/resolve/route.ts`
 - `app/api/admin/action/route.ts`
 - `app/api/admin/bulk-hunts/route.ts`
+- `app/api/admin/changes/route.ts`
 - `app/api/admin/chat/route.ts`
 - `app/api/admin/checklist-definitions/route.ts`
 - `app/api/admin/checklist-instances/route.ts`
@@ -1934,10 +1907,11 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/api/admin/evidence/[workItemId]/[attemptId]/[artifactId]/route.ts`
 - `app/api/admin/evidence/[workItemId]/[attemptId]/[artifactId]/status/route.ts`
 - `app/api/admin/fix-history/route.ts`
-- `app/api/admin/fleet/operations/route.ts`
 - `app/api/admin/geography-preview/route.ts`
 - `app/api/admin/live/route.ts`
 - `app/api/admin/public-reader-observation/route.ts`
+- `app/api/admin/reader-demand/route.ts`
+- `app/api/admin/reports/route.ts`
 - `app/api/admin/research/route.ts`
 - `app/api/admin/runner-progress/route.ts`
 - `app/api/admin/session/route.ts`
@@ -1997,15 +1971,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `components/address/address-resolution-context.tsx`
 - `components/address/could-govern-notice.tsx`
 - `components/address/jurisdiction-pill.tsx`
-- `components/admin/fleet-blind-spots-tab.tsx`
-- `components/admin/fleet-operations-map.tsx`
-- `components/admin/fleet-operations-panel.tsx`
-- `components/admin/fleet-panels-tab.tsx`
-- `components/admin/fleet-read-clock.tsx`
-- `components/admin/fleet-tab-strip.tsx`
-- `components/admin/fleet-triage-bands.tsx`
-- `components/admin/fleet-triage-tab.tsx`
-- `components/admin/research-progress.tsx`
 - `components/area/shuffled-facts.tsx`
 - `components/ask/answer-contacts.tsx`
 - `components/ask/answer-records.tsx`
@@ -4736,11 +4701,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `hooks/use-state-focus.ts`
 - `hooks/use-stored-theme.ts`
 - `hooks/use-stored-zip.ts`
-- `lib/admin/fleet-blind-spots.ts`
-- `lib/admin/fleet-map-meta.ts`
-- `lib/admin/fleet-operations-view.ts`
-- `lib/admin/fleet-seed.ts`
-- `lib/admin/fleet-triage.ts`
 - `lib/answerability/record-class.ts`
 - `lib/answerability/report.ts`
 - `lib/answerability/stages.ts`
@@ -5117,7 +5077,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/fix-queue.ts`
 - `lib/control-plane/fixtures/pima-meetings.ts`
 - `lib/control-plane/fleet-delivery.ts`
-- `lib/control-plane/fleet-operations-http.ts`
 - `lib/control-plane/fleet-operations.ts`
 - `lib/control-plane/fleet-receipt-publisher.ts`
 - `lib/control-plane/fleet-receipt-snapshot.ts`
@@ -5126,6 +5085,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/fleet-view.ts`
 - `lib/control-plane/freshness-cycle-outcome.ts`
 - `lib/control-plane/gateway/admin-config.ts`
+- `lib/control-plane/gateway/admin-get.ts`
 - `lib/control-plane/gateway/admin-guard.ts`
 - `lib/control-plane/gateway/agent-job.ts`
 - `lib/control-plane/gateway/bulk-actions.ts`
@@ -5147,6 +5107,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/method-candidate-authority.ts`
 - `lib/control-plane/model-batch.ts`
 - `lib/control-plane/model-cost.ts`
+- `lib/control-plane/moved-pages.ts`
 - `lib/control-plane/neon-circuit.ts`
 - `lib/control-plane/operator-chat/actions.ts`
 - `lib/control-plane/operator-chat/context.ts`
@@ -5156,11 +5117,11 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/operator-chat/read-context.ts`
 - `lib/control-plane/operator-chat/read-models.ts`
 - `lib/control-plane/operator-chat/router.ts`
+- `lib/control-plane/operator-chat/surface.ts`
 - `lib/control-plane/operator-chat/turn.ts`
 - `lib/control-plane/owner-surface.ts`
 - `lib/control-plane/pilot-cost-digest.ts`
 - `lib/control-plane/plain-health.ts`
-- `lib/control-plane/plain-window.ts`
 - `lib/control-plane/plain-words.ts`
 - `lib/control-plane/plain-work.ts`
 - `lib/control-plane/preflight.ts`
@@ -5190,6 +5151,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/provider-billing-collector.ts`
 - `lib/control-plane/provider-billing-environment.ts`
 - `lib/control-plane/provider-billing.ts`
+- `lib/control-plane/reader-demand.ts`
 - `lib/control-plane/reader-intel.ts`
 - `lib/control-plane/readiness/catalog.ts`
 - `lib/control-plane/readiness/checklist-census.ts`
@@ -5206,6 +5168,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/readiness/read.ts`
 - `lib/control-plane/readiness/standard.json`
 - `lib/control-plane/readiness/standard.ts`
+- `lib/control-plane/reports/read-reports.ts`
 - `lib/control-plane/repository/action-history-atomic.ts`
 - `lib/control-plane/repository/active-work-claims.ts`
 - `lib/control-plane/repository/connect-retry.ts`
@@ -5221,7 +5184,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/repository/worker-completion.ts`
 - `lib/control-plane/research-digest.ts`
 - `lib/control-plane/research-metrics.ts`
-- `lib/control-plane/research-progress-health.ts`
 - `lib/control-plane/research-progression.ts`
 - `lib/control-plane/research-view.ts`
 - `lib/control-plane/route-task.ts`
@@ -5313,7 +5275,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/workers/model-parser.ts`
 - `lib/control-plane/workers/parser.ts`
 - `lib/control-plane/workers/pipeline.ts`
-- `lib/control-plane/workers/plain-roles.ts`
 - `lib/control-plane/workers/plan-repair.ts`
 - `lib/control-plane/workers/quoted-proof.ts`
 - `lib/control-plane/workers/readback.ts`
@@ -7684,6 +7645,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-first-open.test.ts`
 - `tests/admin-google-signin.test.ts`
 - `tests/admin-meeting-cadence.test.ts`
+- `tests/admin-moved-pages.test.ts`
 - `tests/admin-narrow-reads.test.ts`
 - `tests/admin-paid-lane.test.ts`
 - `tests/admin-promoted-slices.test.ts`
@@ -8263,21 +8225,14 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/flake-quarantine.test.ts`
 - `tests/fleet-activity-scaling.test.ts`
 - `tests/fleet-coordinator-progression.test.ts`
-- `tests/fleet-operations-consumer.test.ts`
-- `tests/fleet-operations-map.test.ts`
-- `tests/fleet-operations-page.test.ts`
-- `tests/fleet-operations-route.test.ts`
 - `tests/fleet-operations.test.ts`
-- `tests/fleet-panels-tab.test.ts`
 - `tests/fleet-permanent-authority.test.ts`
 - `tests/fleet-receipt-imports.test.ts`
 - `tests/fleet-receipt-snapshot.test.ts`
 - `tests/fleet-receipt-store.test.ts`
 - `tests/fleet-recovery-journey.test.ts`
-- `tests/fleet-role-wording.test.ts`
 - `tests/fleet-safety.test.ts`
 - `tests/fleet-scout-reporting.test.ts`
-- `tests/fleet-tabs-smoke.test.ts`
 - `tests/flyin-normalized.test.ts`
 - `tests/flyin-software-degrade.test.ts`
 - `tests/focus-visible.test.ts`
@@ -8641,7 +8596,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/research-docs-and-method-bridge.test.ts`
 - `tests/research-metrics.test.ts`
 - `tests/research-production-meetings.test.ts`
-- `tests/research-progress-health.test.ts`
 - `tests/research-progression.test.ts`
 - `tests/research-transport.test.ts`
 - `tests/reset-registry.test.ts`

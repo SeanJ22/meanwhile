@@ -65,7 +65,7 @@ import type { GatewaySubmission } from "@/lib/control-plane/operator-chat/action
 import type { ContextRead, OperatorContext } from "@/lib/control-plane/operator-chat/context.ts";
 import type { ReadOutcome } from "@/lib/control-plane/admin-data.ts";
 import type { ActionOutcome } from "@/lib/control-plane/gateway/contract.ts";
-import { CHAT_PAGE } from "@/app/(admin)/admin/chat/contract.ts";
+import { CHAT_PAGE } from "@/lib/control-plane/operator-chat/surface.ts";
 import { POST as submitThroughTheGateway } from "@/app/api/admin/action/route.ts";
 
 export const dynamic = "force-dynamic";

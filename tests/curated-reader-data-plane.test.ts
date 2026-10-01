@@ -29,6 +29,7 @@ const URLS = {
     "https://elections.example.gov/registration",
   ],
   "campaign-sites": ["https://candidate.example/campaign"],
+  "member-offices": ["https://data.openstates.org/people/current/az.csv"],
   "venue-resolutions": [
     "https://public.example.gov/meetings/venue",
     "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=100+Main+St&benchmark=Public_AR_Current&format=json",
@@ -127,6 +128,22 @@ function payloadFor(
           value: { state: "AZ", url: URLS[id][1], verifiedAt: at, label: "Check registration" },
         },
       ],
+    };
+  }
+  if (id === "member-offices") {
+    return {
+      kind: id,
+      records: [{
+        id: "member-office:az-legislature:fixture:capitol:0",
+        kind: "MEMBER_OFFICE",
+        officeholderId: "az-legislature:fixture",
+        officeKind: "CAPITOL",
+        office: { address: "1700 W Washington St", city: "Phoenix", state: "AZ", zip: "85007", phone: "602-555-0100", lat: null, lng: null },
+        sourceUrl: URLS[id][0],
+        sourceOrg: "Open States (Plural, CC-0)",
+        official: false,
+        collectedAt: at,
+      }],
     };
   }
   if (id === "campaign-sites") {
@@ -287,7 +304,7 @@ test("store failure does not reopen any curated tracked first seed", async () =>
 test("Admin projects every curated authority including official filings without inventing a clock", () => {
   const ids = new Set<string>(CURATED_READER_CONTRACT_IDS);
   const contracts = MANUAL_PRODUCTION_SOURCE_CONTRACTS.filter((contract) => ids.has(contract.id));
-  assert.deepEqual(contracts.map(row => row.id).sort(), ["official-filings", "comment-access", "ballot-navigation", "campaign-sites", "venue-resolutions", "meeting-body-crosswalk"].sort());
+  assert.deepEqual(contracts.map(row => row.id).sort(), ["official-filings", "comment-access", "ballot-navigation", "campaign-sites", "member-offices", "venue-resolutions", "meeting-body-crosswalk"].sort());
   assert.ok(contracts.every((contract) => contract.execution === "EXPLICIT_OWNER_INVOCATION_ONLY"));
   assert.ok(contracts.every((contract) => !("cadence" in contract) && !("retry" in contract)));
   const view = projectRoutineDataObservability({ candidates: [], events: [], promotions: [] }, T0, contracts);

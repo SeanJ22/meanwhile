@@ -35,6 +35,8 @@ import { recallCamera, rememberCamera } from "@/lib/map/camera-memory";
 import { viewportRadiusKm } from "@/lib/map/viewport-radius";
 import {
   DISTRICT_TYPES,
+  NATIONAL_BOUNDARIES_SOURCE,
+  preserveDistrictStyle,
   addDistrictLayer,
   boundsOfDistrict,
   fullBoundsOfDistrict,
@@ -430,9 +432,14 @@ export function MapCanvas({
     focusOcdRef.current = focusStateOcdId ?? null;
   }, [focusStateOcdId]);
 
+  const attachingDistrictsRef = useRef(false);
   const ensureDistricts = useCallback(() => {
     const map = mapRef.current;
-    if (!map || !map.getStyle()?.layers?.length) return;
+    if (!map || !map.getStyle()?.layers?.length || attachingDistrictsRef.current) return;
+    // addSource/addLayer synchronously emit styledata. Do not re-enter midway
+    // through attaching the shared source and its layers.
+    attachingDistrictsRef.current = true;
+    try {
 
     const wanted = districtTypesRef.current;
 
@@ -449,6 +456,7 @@ export function MapCanvas({
       try { addDistrictLayer(map, type); }
       catch { onDistrictErrorRef.current(); }
     }
+    } finally { attachingDistrictsRef.current = false; }
   }, []);
 
   useEffect(() => {
@@ -493,7 +501,8 @@ export function MapCanvas({
 
     const map = new MapLibreMap({
       container: containerRef.current,
-      style: basemap?.styleUrl ?? FALLBACK_STYLE,
+      // Districts start without any dependency on the basemap provider.
+      style: FALLBACK_STYLE,
       ...(remembered
         ? {
             center: [remembered.lng, remembered.lat] as [number, number],
@@ -537,12 +546,9 @@ export function MapCanvas({
       // is filtered, and only to the categories a reader can act on.
       console.error("[map]", message || event.error || event);
 
-      if (!/style|sprite|glyphs|tile/i.test(message)) return;
-
       onTileError();
-      if (map.getStyle()?.layers?.length !== FALLBACK_STYLE.layers.length) {
-        map.setStyle(FALLBACK_STYLE);
-      }
+      // Keep the usable style and boundary tiles. Resetting on each tile error
+      // discards them and can recursively restart the same failing requests.
     });
 
     /**
@@ -562,7 +568,7 @@ export function MapCanvas({
       // The fallback draws ground colour and nothing else. Recovering INTO it
       // would clear the notice while the reader still has no basemap.
       const layers = map.getStyle()?.layers ?? [];
-      if (layers.length <= FALLBACK_STYLE.layers.length) return;
+      if (!layers.some(layer => layer.type !== "background" && !layer.id.startsWith("district-"))) return;
       onTilesRecovered?.();
     });
 
@@ -590,6 +596,10 @@ export function MapCanvas({
     // load and every theme swap — put the district overlay back if it is wanted
     // and missing. See ensureDistricts for why this is not a one-shot.
     map.on("styledata", ensureDistricts);
+    map.once("style.load", () => {
+      ensureDistricts();
+      if (basemap) map.setStyle(basemap.styleUrl, { transformStyle: preserveDistrictStyle });
+    });
 
     /*
      * Click to select a district.
@@ -678,6 +688,10 @@ export function MapCanvas({
       presentationCallbackRef.current?.(true);
     };
     map.on("idle", onPresentationIdle);
+    const onBoundaryData = (event: { sourceId?: string; isSourceLoaded?: boolean }) => {
+      if (event.sourceId === NATIONAL_BOUNDARIES_SOURCE && event.isSourceLoaded) onPresentationIdle();
+    };
+    map.on("sourcedata", onBoundaryData);
 
     let userMoved = false;
     let settleTimer: number | undefined;
@@ -915,6 +929,7 @@ export function MapCanvas({
     return () => {
       window.clearTimeout(settleTimer);
       map.off("idle", onPresentationIdle);
+      map.off("sourcedata", onBoundaryData);
       map.off("movestart", onMoveStart);
       map.off("moveend", onMoveEnd);
       map.off("click", onClick);
@@ -1276,10 +1291,7 @@ export function MapCanvas({
     if (appliedStyleRef.current === basemap.styleUrl) return;
     appliedStyleRef.current = basemap.styleUrl;
 
-    holdMapPresentation(map);
-    setPresentationReady(false);
-    presentationCallbackRef.current?.(false);
-    map.setStyle(basemap.styleUrl);
+    map.setStyle(basemap.styleUrl, { transformStyle: preserveDistrictStyle });
   }, [theme]);
 
   // National boundaries depend on the chosen kinds, never an active state.

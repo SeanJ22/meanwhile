@@ -1,4 +1,4 @@
-import type { Map as MapLibreMap, MapGeoJSONFeature, FilterSpecification } from "maplibre-gl";
+import type { Map as MapLibreMap, MapGeoJSONFeature, FilterSpecification, StyleSpecification } from "maplibre-gl";
 
 // Relative, extension-bearing imports — the style the rest of lib/ uses —
 // because node --test cannot resolve the `@/` alias and this module is now
@@ -208,6 +208,16 @@ export const DISTRICT_TYPES = Object.keys(DISTRICT_LAYERS) as DistrictType[];
 export const DISTRICT_LINE_OPACITY = 0.82;
 
 export const NATIONAL_BOUNDARIES_SOURCE = "national-boundaries";
+/** Keep already drawing boundaries while a remote basemap arrives or changes. */
+export function preserveDistrictStyle(previous: StyleSpecification | undefined, next: StyleSpecification): StyleSpecification {
+  const source = previous?.sources[NATIONAL_BOUNDARIES_SOURCE];
+  if (!source) return next;
+  const boundaries = previous.layers.filter(layer => layer.id.startsWith("district-"));
+  const layers = next.layers.filter(layer => !layer.id.startsWith("district-"));
+  const labels = layers.findIndex(layer => layer.type === "symbol");
+  layers.splice(labels < 0 ? layers.length : labels, 0, ...boundaries);
+  return { ...next, sources: { ...next.sources, [NATIONAL_BOUNDARIES_SOURCE]: source }, layers };
+}
 const sourceId = (_type: DistrictType) => NATIONAL_BOUNDARIES_SOURCE;
 export const BOUNDARY_ARCHIVE_URL = process.env.NEXT_PUBLIC_BOUNDARY_PMTILES_URL ?? "/api/boundaries/census-2025-b24d0345381f69be.pmtiles";
 export const fillLayerId = (type: DistrictType) => `district-${type}-fill`;

@@ -4,11 +4,15 @@ import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
 import { MEETING_PARTITION_CONTRACTS } from "./meeting-partitions.ts";
 import { readPromotedCivicDataBatch, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "./read-model.ts";
 import { projectHeldPlaceFamilies, readHeldPlaceFamilies, type HeldPlaceFamilies } from "./held-place-families.ts";
+import { ROUTINE_SOURCE_CONTRACTS } from "./contracts.ts";
+import type { OutcomeSnapshot } from "../outcomes/types.ts";
+import { observationFreshUntil, observationIsFresh } from "../ask/agenda-publication.ts";
+import { reconcilePublicationObservations } from "../outcomes/publication.ts";
 
 /** Derived from canonical published records, never filtered by their original job or ZIP. */
 export interface HeldPlaceCapture {
   readonly subjects: readonly { id: string; kind: "body" | "seat" | "calendar" | "contest" | "funding" | "deadline"; divisionIds: readonly string[]; label: string }[];
-  readonly held: readonly { subjectId: string; checklistId: string; state: "published" | "held";
+  readonly held: readonly { subjectId: string; checklistId: string; state: "published" | "held" | "unpublished";
     sourceUrl: string; checkedAt: string; freshUntil: string; value: unknown }[];
 }
 
@@ -23,6 +27,7 @@ export function projectHeldPlaceCapture(
   divisionIds: readonly string[], registryRead: CivicDataReadResult<RegistryRuntimeReadModel>,
   meetingReads: readonly CivicDataReadResult<MeetingsSnapshot>[], now: string,
   families: HeldPlaceFamilies = {},
+  outcomeReads: readonly CivicDataReadResult<OutcomeSnapshot>[] = [],
 ): HeldPlaceCapture {
   const registry = published(registryRead);
   const wanted = new Set(divisionIds);
@@ -90,6 +95,35 @@ export function projectHeldPlaceCapture(
     }
   }
   const extra = projectHeldPlaceFamilies(divisionIds, registry, families);
+  for (const read of outcomeReads) {
+    for (const sitting of published(read)?.sittings ?? []) {
+      const divisions = divisionsFor(sitting.bodyId ?? undefined, sitting.ocdId);
+      if (!divisions.some(id => wanted.has(id))) continue;
+      subjects.set(sitting.meetingId, { id: sitting.meetingId, kind: "calendar", divisionIds: divisions, label: sitting.bodyName });
+      const agenda = reconcilePublicationObservations(sitting.meetingId, sitting.publicationObservations.filter(observation =>
+        observation.provenance === "FIRST_PARTY_PUBLISHER" && observationIsFresh(observation, Date.parse(now))));
+      if (agenda.actionable?.report === "NOT_AVAILABLE" && !sitting.publication.agendaFile &&
+          agenda.actionable.evidenceQuote.trim()) {
+        const observation = agenda.actionable;
+        const freshUntil = observationFreshUntil(observation);
+        if (freshUntil) for (const checklistId of ["DOC-01", "DOC-02", "DOC-03"]) {
+          held.set(`${sitting.meetingId}:${checklistId}:unpublished`, { subjectId: sitting.meetingId, checklistId,
+            state: "unpublished", sourceUrl: observation.observedUrl, checkedAt: observation.observedAt, freshUntil,
+            value: { statement: observation.evidenceQuote } });
+        }
+      }
+      // This is the typed finding made by the official minutes reader, never an empty array or failed extraction.
+      const checked = Date.parse(sitting.publication.observedAt);
+      const hours = Math.abs(Date.parse(sitting.startsAt ?? "") - Date.parse(now)) <= 7 * 24 * 3_600_000 ? 1 : 12;
+      if (sitting.extraction === "NOT_YET_PUBLISHED" && sitting.extractionNote && sitting.sourceUrl &&
+          !sitting.publication.minutesFile && Number.isFinite(checked) && checked <= Date.parse(now) &&
+          checked + hours * 3_600_000 >= Date.parse(now)) {
+        held.set(`${sitting.meetingId}:DOC-06:unpublished`, { subjectId: sitting.meetingId, checklistId: "DOC-06",
+          state: "unpublished", sourceUrl: sitting.sourceUrl, checkedAt: sitting.publication.observedAt,
+          freshUntil: new Date(checked + hours * 3_600_000).toISOString(), value: { statement: sitting.extractionNote } });
+      }
+    }
+  }
   return { subjects: [...subjects.values(), ...extra.subjects], held: [...held.values(), ...extra.held] };
 }
 
@@ -101,9 +135,13 @@ export async function readHeldPlaceCapture(divisionIds: readonly string[], optio
   const partitions = MEETING_PARTITION_CONTRACTS.filter(partition =>
     bodies.has(partition.bodyId) || (partition.ocdId !== null && divisionIds.includes(partition.ocdId)) ||
     (partition.derivedFamily !== null && divisionIds.some(id => id.includes(`/state:${partition.derivedFamily!.slice(3).toLowerCase()}`))));
-  const [meetings, families] = await Promise.all([
+  const outcomeScopes = ROUTINE_SOURCE_CONTRACTS.filter(contract => contract.recordClass === "MEETING_OUTCOME" &&
+    contract.schedule?.follows?.some(partition => bodies.has(partition.bodyId) ||
+      partitions.some(known => known.bodyId === partition.bodyId))).map(contract => contract.scope);
+  const [meetings, families, outcomes] = await Promise.all([
     readPromotedCivicDataBatch<MeetingsSnapshot>("MEETING", partitions.map(partition => partition.scope), options),
     readHeldPlaceFamilies(divisionIds, options),
+    readPromotedCivicDataBatch<OutcomeSnapshot>("MEETING_OUTCOME", outcomeScopes, options),
   ]);
-  return projectHeldPlaceCapture(divisionIds, registry, meetings, options.now ?? new Date().toISOString(), families);
+  return projectHeldPlaceCapture(divisionIds, registry, meetings, options.now ?? new Date().toISOString(), families, outcomes);
 }

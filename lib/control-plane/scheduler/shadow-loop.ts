@@ -186,6 +186,7 @@ export interface CycleInput {
    * (`plainCodeQueueOrder`).
    */
   readonly placeFirst?: ReadonlySet<string>;
+  readonly placeComparator?: () => Promise<(left: ScheduledObligation, right: ScheduledObligation) => number>;
   /**
    * **LEVEL 1 — TWO LANES IN ONE CYCLE.** (Level 1 activation, 2026-09-01.)
    *
@@ -335,12 +336,23 @@ export interface RecoveredOccurrence extends SettledOccurrence {
 /** A bounded pool: at most `limit` items in flight, in input order. */
 export type ScoutAdmission = { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string };
 
-export async function runPool<T>(items: readonly T[], limit: number, fn: (item: T) => Promise<void>): Promise<void> {
-  let next = 0;
+export async function runPool<T>(items: readonly T[], limit: number, fn: (item: T) => Promise<void>,
+  comparator?: () => Promise<(left: T, right: T) => number>): Promise<void> {
+  const pending = [...items];
+  let selection = Promise.resolve();
+  const take = (): Promise<T | undefined> => {
+    let item: T | undefined;
+    const next = selection.then(async () => {
+      if (pending.length && comparator) pending.sort(await comparator());
+      item = pending.shift();
+    });
+    selection = next;
+    return next.then(() => item);
+  };
   const workers = Array.from({ length: Math.max(1, Math.min(limit, items.length || 1)) }, async () => {
-    while (next < items.length) {
-      const item = items[next];
-      next += 1;
+    for (;;) {
+      const item = await take();
+      if (item === undefined) break;
       await fn(item);
     }
   });
@@ -787,7 +799,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         ...(research !== undefined ? { decision: decisions.get(row.obligation.id) } : {}),
       });
       if (research?.onDispatched) await research.onDispatched(result, "DETERMINISTIC");
-    });
+    }, input.placeComparator);
   };
 
   /*
@@ -861,7 +873,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         decision: decisions.get(row.obligation.id),
       });
       if (research.onDispatched) await research.onDispatched(result, "BOUNDED_MODEL_WORKER");
-    });
+    }, input.placeComparator);
   };
 
   await Promise.all([deterministicLane(), modelLane()]);

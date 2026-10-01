@@ -15,10 +15,9 @@ import {
  *
  * PDC composes the promoted meeting partitions once (see prepared-snapshot.ts).
  * This module splits that one national composition into REUSABLE GEOGRAPHIC
- * artifacts — one per state (plus a `us` bucket for meetings with no resolvable
- * state) — so the serving layer scales by geography, not by ZIP or by visitor:
- * every ZIP in Arizona reads the SAME `az` artifact, and a CDN serves it to
- * thousands of readers from the edge without composing anything per request.
+ * artifacts — one per governing division, with agenda text in its own piece.
+ * Every ZIP in a division shares those pieces; the map reads calendar pieces
+ * for its divisions and nearby venues, and Ask and agenda read their area.
  *
  * The artifacts are immutable and content-addressed by the publication sequence;
  * a small manifest names the current sequence and the available scopes. The
@@ -29,7 +28,7 @@ import {
  * (RULING 282); these are serving copies of them (RULING 283).
  *
  * Nothing here is hardcoded to today's pilot ZIPs: the partition key is the
- * meeting's own OCD state, so adding a state is adding promoted data, never
+ * meeting's own OCD division, so adding a state is adding promoted data, never
  * editing this file.
  */
 export const READER_ARTIFACT_FORMAT_VERSION = 1 as const;
@@ -58,6 +57,10 @@ export interface ReaderArtifactCounts {
 export interface ReaderGeoArtifact {
   readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
   readonly scope: string;
+  readonly ocdId?: string;
+  readonly bounds?: ReaderAreaBounds;
+  readonly meetingIds?: readonly string[];
+  readonly agendaOnly?: boolean;
   readonly generatedAt: string;
   readonly counts: ReaderArtifactCounts;
   readonly meetings: Meeting[];
@@ -67,11 +70,54 @@ export interface ReaderGeoArtifact {
 /** The manifest's record of one published scope artifact. */
 export interface ReaderManifestScope {
   readonly scope: string;
+  readonly ocdId?: string;
+  readonly bounds?: ReaderAreaBounds;
+  readonly meetingIds?: readonly string[];
+  readonly agendaOnly?: boolean;
   /** Content-addressed blob key: `reader/v<sequence>/meetings-<scope>.json`. */
   readonly key: string;
   readonly sha256: string;
   readonly meetingCount: number;
   readonly generatedAt: string;
+}
+
+export interface ReaderAreaBounds {
+  readonly south: number;
+  readonly north: number;
+  readonly west: number;
+  readonly east: number;
+}
+
+/** A jurisdiction piece is shared by every ZIP in that division. */
+export function meetingAreaScope(ocdId: string | null | undefined): string {
+  const division = ocdId?.split("#")[0];
+  return division?.startsWith("ocd-division/")
+    ? `area-${stateOfOcdId(division) ?? NATIONAL_SCOPE}-${sha256OfJson(division).slice(0, 24)}`
+    : NATIONAL_SCOPE;
+}
+
+/** Old state artifacts remain readable while the runner publishes area pieces. */
+export function readerScopeApplies(
+  scope: Pick<ReaderManifestScope, "scope" | "ocdId" | "bounds" | "meetingIds" | "agendaOnly">,
+  area: { readonly states?: readonly string[]; readonly ocdIds?: readonly string[];
+    readonly meetingId?: string; readonly includeAgenda?: boolean;
+    readonly nearby?: { readonly lat: number; readonly lng: number; readonly radiusKm: number } },
+): boolean {
+  if (area.includeAgenda === false && scope.agendaOnly) return false;
+  if (area.meetingId) return scope.meetingIds ? scope.meetingIds.includes(area.meetingId) : true;
+  if (scope.scope === NATIONAL_SCOPE || scope.scope === `${NATIONAL_SCOPE}-agenda` || scope.ocdId && stateOfOcdId(scope.ocdId) === null) return true;
+  if (!scope.ocdId) return !area.states || scopesForStates(area.states).includes(scope.scope);
+  if (!area.ocdIds?.length) return !area.states || area.states.some(state => state.toLowerCase() === stateOfOcdId(scope.ocdId));
+  if (area.ocdIds.some(id => id.split("#")[0] === scope.ocdId)) return true;
+  const point = area.nearby;
+  const bounds = scope.bounds;
+  if (!point || !bounds) return false;
+  const latDelta = point.radiusKm / 110;
+  const lngDelta = point.radiusKm / (110 * Math.max(0.01, Math.cos(Math.min(90, Math.abs(point.lat) + latDelta) * Math.PI / 180)));
+  // A generous enclosing box preserves every radius-ladder candidate. Account
+  // for the date line by comparing the equivalent longitudes on either side.
+  return bounds.north >= point.lat - latDelta && bounds.south <= point.lat + latDelta &&
+    [-360, 0, 360].some(shift => bounds.east + shift >= point.lng - lngDelta && bounds.west + shift <= point.lng + lngDelta);
 }
 
 /**
@@ -81,6 +127,8 @@ export interface ReaderManifestScope {
  * can never replace a newer one.
  */
 export interface ReaderManifest {
+  /** Missing on the former state layout; the normal publisher replaces it once. */
+  readonly meetingLayout?: "governing-area";
   readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
   readonly sequence: number;
   readonly generatedAt: string;
@@ -254,10 +302,9 @@ function countsFor(meetings: readonly Meeting[]): ReaderArtifactCounts {
 
 /**
  * Split one composed national snapshot into per-scope artifacts, deterministic
- * and order-stable. A meeting's scope is its OCD state; an agenda document's
- * scope is its own OCD state (falling back to its meeting's scope, then `us`),
- * so a document never lands in a different artifact than the meeting it belongs
- * to. Every scope that has at least one meeting OR document is emitted; counts
+ * and order-stable. A meeting's scope is its governing division; an agenda
+ * stays in its meeting's area, even when its own geography differs. Agenda
+ * text is separate so a calendar read never fetches it. Counts
  * are honest for the subset (the strict cross-source write-boundary invariant
  * does not apply to a serving projection, and the reader never re-checks it).
  */
@@ -274,25 +321,39 @@ export function partitionSnapshotByScope(
   };
 
   for (const meeting of snapshot.meetings) {
-    const scope = scopeOfMeeting(meeting);
+    const scope = meetingAreaScope(meeting.ocdId);
     meetingScope.set(meeting.id, scope);
     bucket(scope).meetings.push(meeting);
   }
   for (const doc of snapshot.agendaDocuments) {
-    const scope = stateOfOcdId(doc.ocdId) ?? meetingScope.get(doc.meetingId) ?? NATIONAL_SCOPE;
+    const scope = meetingScope.get(doc.meetingId) ?? meetingAreaScope(doc.ocdId);
     bucket(scope).agenda.push(doc);
   }
 
-  return [...byScope.keys()].sort().map((scope) => {
+  return [...byScope.keys()].sort().flatMap((scope) => {
     const { meetings, agenda } = byScope.get(scope)!;
-    return {
+    const ocdId = (meetings[0]?.ocdId ?? agenda[0]?.ocdId)?.split("#")[0];
+    const locations = meetings.flatMap(meeting => meeting.location && Number.isFinite(meeting.location.lat) && Number.isFinite(meeting.location.lng) ? [meeting.location] : []);
+    const bounds = locations.reduce<ReaderAreaBounds | undefined>((held, point) => ({
+      south: Math.min(held?.south ?? point.lat, point.lat), north: Math.max(held?.north ?? point.lat, point.lat),
+      west: Math.min(held?.west ?? point.lng, point.lng), east: Math.max(held?.east ?? point.lng, point.lng),
+    }), undefined);
+    const artifact: ReaderGeoArtifact = {
       formatVersion: READER_ARTIFACT_FORMAT_VERSION,
       scope,
+      ...(scope !== NATIONAL_SCOPE && ocdId ? { ocdId } : {}),
+      ...(bounds ? { bounds } : {}),
+      meetingIds: [...new Set([...meetings.map(meeting => meeting.id), ...agenda.map(doc => doc.meetingId)])].sort(),
       generatedAt: snapshot.generatedAt || now,
       counts: countsFor(meetings),
       meetings,
-      agendaDocuments: agenda,
-    } satisfies ReaderGeoArtifact;
+      agendaDocuments: [],
+    };
+    return [
+      ...(meetings.length ? [artifact] : []),
+      ...(agenda.length ? [{ ...artifact, scope: `${scope}-agenda`, agendaOnly: true,
+        meetings: [], counts: countsFor([]), agendaDocuments: agenda }] : []),
+    ];
   });
 }
 

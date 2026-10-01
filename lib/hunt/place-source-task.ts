@@ -2,13 +2,65 @@ import { hostname } from "node:os";
 import { ZERO_COST } from "../control-plane/attempt.ts";
 import { readFieldManual } from "../control-plane/field-manual.ts";
 import { dispatchOne, dischargesObligation } from "../control-plane/scheduler/dispatch.ts";
-import { syncObligations, openOccurrence, resumeOpenOccurrence, closeOccurrence, closeSettledOccurrence } from "../control-plane/scheduler/durable.ts";
+import { syncObligations, openOccurrence, resumeOpenOccurrence, closeOccurrence, closeSettledOccurrence, occurrenceId, type StandingObligation } from "../control-plane/scheduler/durable.ts";
 import { scheduleObligation } from "../control-plane/scheduler/obligation.ts";
 import { RESEARCH_BOUNDS } from "../control-plane/scheduler/research-policy.ts";
 import type { ResearchRuntimeTools } from "../control-plane/workers/research-runtime.ts";
 import type { RoutineDataStore } from "../civic-data/store.ts";
+import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { runPlaceSource, type NationalPlacePublicationInput } from "./place-source.ts";
 import { placeSourceReader, PlaceSourceDeferred } from "./place-source-reader.ts";
+import { nationalPlaceWorkReading } from "../control-plane/expansion/dispatch-work.ts";
+import { readHeldPlaceCapture } from "../civic-data/held-place-capture.ts";
+import { buildPlaceOwedList, type PlaceOwedItem } from "../coverage/place-owed.ts";
+import { canonicalJson } from "../control-plane/repository/types.ts";
+import { ADMIN_CONFIG_ID } from "../control-plane/gateway/admin-config.ts";
+
+/** Compare reader facts, excluding observation times and publication versions. */
+export function placeMadeProgress(before: readonly PlaceOwedItem[], after: readonly PlaceOwedItem[]): boolean {
+  const facts = (items: readonly PlaceOwedItem[]) => new Map(items.filter(item => item.state === "published" || item.state === "unpublished")
+    .map(item => [item.id, canonicalJson({ state: item.state, values: [...new Set(item.held.filter(field => field.state === item.state)
+      .map(field => canonicalJson(field.value)))].sort() })]));
+  const prior = facts(before);
+  return [...facts(after)].some(([id, value]) => prior.get(id) !== value);
+}
+
+/** A target continues until its latest settled hunt explicitly reports no progress. */
+export async function scheduleNationalPlace(repos: ControlPlaneRepositories, row: StandingObligation, now: string, belowTarget: boolean) {
+  const scheduled = scheduleObligation(row, Date.parse(now));
+  if (!("cadenceHours" in scheduled) || !belowTarget) return scheduled;
+  if (row.occurrenceCount) {
+    const occurrence = await repos.occurrences.read(occurrenceId(row.id, row.occurrenceCount));
+    if (occurrence?.value.closedAt) {
+      const task = await repos.routeTasks.read(occurrence.value.routeTaskId);
+      const note = task?.value.disposition?.note ?? "";
+      if (note.includes('"placeProgress":false') || task?.value.disposition?.disposition === "WALKED_NO_YIELD") {
+        return scheduleObligation({ ...row, lastWorkedAt: occurrence.value.closedAt }, Date.parse(now));
+      }
+    }
+  }
+  return { ...scheduled, nextDueAt: now, basis: "The place is below its owner target and its last hunt has not reported no progress." };
+}
+
+/** Read the existing clocks before assigning processes; untouched places lead. */
+export async function dueNationalPlaceZips(repos: ControlPlaneRepositories, zips: readonly string[], now: string): Promise<string[]> {
+  const unique = [...new Set(zips)];
+  if (unique.some(zip => !/^\d{5}$/.test(zip))) throw new Error("A five-digit ZIP is required");
+  const held = new Map((await repos.obligations.listWhere(["routeId"], "national-place-sources")).map(row => [row.id, row.value]));
+  const targets = (await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value as { placeTargets?: unknown[] } | undefined;
+  const belowTarget = targets?.placeTargets?.length ? (await nationalPlaceWorkReading(repos, unique, now)).belowTarget : new Set<string>();
+  const nowMs = Date.parse(now);
+  const due = await Promise.all(unique.map(async zip => {
+    const row = held.get(`national-place:${zip}`);
+    if (!row) return true;
+    const scheduled = await scheduleNationalPlace(repos, row, now, belowTarget.has(zip));
+    return "cadenceHours" in scheduled && Date.parse(scheduled.nextDueAt) <= nowMs;
+  }));
+  return unique.filter((_, index) => due[index]).sort((a, b) => {
+    const age = (zip: string) => Date.parse(held.get(`national-place:${zip}`)?.lastWorkedAt ?? "") || 0;
+    return age(a) - age(b) || a.localeCompare(b);
+  });
+}
 
 /** The registered registry source uses the ordinary acquiring Attempt, vault
  * and occurrence lifecycle. It costs no model tokens; remaining blanks stay
@@ -24,10 +76,8 @@ export async function runNationalPlaceTask(input: {
   let deferred: string | null = null;
   const { tools } = input;
   const holder = `national-place:${hostname()}:${process.pid}`;
-  for (const zip of [...new Set(input.zips)]) {
-    if (!/^\d{5}$/.test(zip)) throw new Error("A five-digit ZIP is required");
+  for (const zip of await dueNationalPlaceZips(tools.repos, input.zips, tools.now())) {
     const now = tools.now();
-    const knowledge = deferred ? undefined : await readFieldManual(tools.repos);
     const definition = { id: `national-place:${zip}`, subjectId: `zip:${zip}`, recordClass: "OFFICIAL_ROSTER" as const,
       routeId: "national-place-sources", active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null };
     const synced = await syncObligations(tools.repos, [definition], now, { exactReads: true });
@@ -36,22 +86,31 @@ export async function runNationalPlaceTask(input: {
       await closeSettledOccurrence(tools.repos, { settled: prior.settled, now });
       prior = null;
     }
-    const opened = prior ?? await openOccurrence(tools.repos, { obligation: synced.all[0], dueAt: now, now });
+    // Settlement can advance the clock, and another worker may have worked it
+    // since admission. Always schedule the durable row, never a fresh null anchor.
+    const durable = (await tools.repos.obligations.mustRead(definition.id)).value;
+    const targets = (await tools.repos.adminConfig.read(ADMIN_CONFIG_ID))?.value as { placeTargets?: unknown[] } | undefined;
+    const belowTarget = targets?.placeTargets?.length ? (await nationalPlaceWorkReading(tools.repos, [zip], now)).belowTarget.has(zip) : false;
+    const scheduled = await scheduleNationalPlace(tools.repos, durable, now, belowTarget);
+    if (!("cadenceHours" in scheduled)) throw new Error(scheduled.reason);
+    if (Date.parse(scheduled.nextDueAt) > Date.parse(now)) continue;
+    const knowledge = deferred ? undefined : await readFieldManual(tools.repos);
+    const opened = prior ?? await openOccurrence(tools.repos, { obligation: durable, dueAt: scheduled.nextDueAt, now });
     if (!opened) throw new Error("National source occurrence could not open");
     const routeTaskId = "routeTaskId" in opened ? opened.routeTaskId : opened.routeTask.id;
     const occurrenceId = "id" in opened ? opened.id : opened.occurrence.id;
-    const scheduled = scheduleObligation(definition, Date.parse(now));
-    if (!("cadenceHours" in scheduled)) throw new Error(scheduled.reason);
     // A renewable ownership lease, independent of how long acquisition takes.
     const ttlMs = 120_000;
     let report: Awaited<ReturnType<typeof runPlaceSource>> | undefined;
+    let before: PlaceOwedItem[] | undefined;
     const result = await dispatchOne(tools.repos, { obligation: scheduled, routeTaskId, holder, now, clock: tools.now,
       leaseTtlMs: ttlMs, maturity: () => "GRADUATED", executor: {
         lane: "DETERMINISTIC", workerFor: () => ({ role: "ACQUIRER", provider: "we-the-people", version: "national-place/1", instance: holder }),
         run: async ({ attemptId, workItemId, assertLeaseHealthy }) => {
           const started = Date.now();
           if (deferred) return { kind: "DISPOSED", ranAs: "DETERMINISTIC", artifacts: [],
-            disposition: { disposition: "BLOCKED_CURRENTLY", permission: "ALLOWED", transport: "OTHER_NAMED_FAILURE", observation: null, note: deferred },
+            disposition: { disposition: "BLOCKED_CURRENTLY", permission: "ALLOWED", transport: "OTHER_NAMED_FAILURE", observation: null,
+              note: deferred + " " + JSON.stringify({ placeProgress: report ? placeMadeProgress(before ?? [], report.items) : false }) },
             cost: ZERO_COST, detail: `ZIP ${zip}: ${deferred}` };
           const saved = await placeSourceReader({ tools, project: "freshness", context: {
             obligation: scheduled, route: null, providerId: null, attemptId, workItemId, routeTaskId, holder, now: tools.now,
@@ -61,6 +120,11 @@ export async function runNationalPlaceTask(input: {
           } });
           try {
             report = await runPlaceSource({ repos: tools.repos, store: input.store, zip, now, clock: tools.now, knowledge,
+              readHeld: async ids => {
+                const capture = await readHeldPlaceCapture(ids, { store: input.store, now: tools.now(), bypassCache: true });
+                before ??= buildPlaceOwedList({ divisions: ids.map(id => ({ id, label: id })), ...capture, now: tools.now() });
+                return capture;
+              },
               readSource: async url => { assertLeaseHealthy?.(); return saved.read(url); },
               geography: { capture: saved.captureGeography, readHeld: saved.readGeography, fetchImpl: saved.fetchGeography },
               geographyCaptures: saved.geographyCaptures,
@@ -75,7 +139,8 @@ export async function runNationalPlaceTask(input: {
           deferred ??= saved.deferred?.message ?? null;
           assertLeaseHealthy?.();
           if (deferred) return { kind: "DISPOSED", ranAs: "DETERMINISTIC", artifacts: [...saved.artifacts.values()],
-            disposition: { disposition: "BLOCKED_CURRENTLY", permission: "ALLOWED", transport: "OTHER_NAMED_FAILURE", observation: null, note: deferred },
+            disposition: { disposition: "BLOCKED_CURRENTLY", permission: "ALLOWED", transport: "OTHER_NAMED_FAILURE", observation: null,
+              note: deferred + " " + JSON.stringify({ placeProgress: report ? placeMadeProgress(before ?? [], report.items) : false }) },
             cost: { ...ZERO_COST, ...saved.cost, durationMs: Date.now() - started }, detail: `ZIP ${zip}: ${deferred}` };
           if (!report) throw new Error("National place source returned no report");
           const artifacts = [...saved.artifacts.values()];
@@ -84,7 +149,7 @@ export async function runNationalPlaceTask(input: {
               observation: { rawCount: artifacts.length, normalizedCount: report.sources?.officials.length ?? 0,
                 routeOnlyCount: null, earliest: null, latest: null },
               note: "Saved national sources acquired; published fields come only from canonical readback; remaining fields stay owed. " +
-                JSON.stringify({ inherited: report.inherited, sourceGaps: report.sources?.gaps ?? [], publications: report.publications,
+                JSON.stringify({ placeProgress: placeMadeProgress(before ?? [], report.items), inherited: report.inherited, sourceGaps: report.sources?.gaps ?? [], publications: report.publications,
                   electionPublications: report.electionPublications }) },
             cost: { ...ZERO_COST, ...saved.cost, durationMs: Date.now() - started },
             detail: `ZIP ${zip}: ${report.items.filter(item => item.state === "published").length} published fields, ${report.work.length} source gaps` };

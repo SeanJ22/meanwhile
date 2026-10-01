@@ -23,7 +23,7 @@ import { ASK_BEAT_POOL, beatStem, drawAskBeat } from "@/lib/routing/ask-beat-poo
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { logEvent } from "@/lib/log/client";
-import { readBrowserKey } from "@/lib/state/browser-key";
+import { getOrCreateBrowserKey } from "@/lib/state/browser-key";
 import { readLocationOriginFor } from "@/lib/state/location-origin";
 import { subjectKindOf, type AskSubjectRef } from "@/lib/ask/subject";
 import {
@@ -536,20 +536,15 @@ export function AskBox({
           priorTurns,
           locationOrigin: readLocationOriginFor(zip),
           /*
-           * **READ, NEVER MINTED.** The Ask store's continuity value counts
-           * distinct readers in a store that is not being written, so this
-           * panel does not put a new identifier on anybody's device for a
-           * capability that is switched off — this box keeps nothing on the
-           * reader's machine, which is what the transparency page tells them.
-           * Absent, the request carries none and the capture path refuses the
-           * row rather than digesting an empty string, which would report one
-           * distinct reader forever. Minting is part of ACTIVATION.
-           *
-           * Its OWN slot, whenever that day comes: sharing one with reactions
-           * or Speak Your Mind would make one browser produce one value across
-           * stores the constitution says share no key.
+           * **THE RETURNING-READER ID** (October 1, 2026): a random value this
+           * browser mints on its first question and keeps, so the Ask store can
+           * count distinct readers. It is anonymous (never tied to a name, an
+           * email or an address) and has its OWN slot: sharing one with
+           * reactions or Speak Your Mind would make one browser produce one
+           * value across stores that share no key. The server stores only a
+           * hash of it.
            */
-          continuityKey: readBrowserKey("wtp.ask_key") ?? "",
+          continuityKey: getOrCreateBrowserKey("wtp.ask_key"),
         }),
       });
       if (!response.ok) return transportFailure();

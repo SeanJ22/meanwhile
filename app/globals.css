@@ -5718,16 +5718,6 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   transition: border-color var(--dur-fast) var(--ease-move), background-color var(--dur-fast) var(--ease-move);
 }
 
-/* BC-19: the fine print under the send row. Quiet, and it is the only place
-   the panel now states the no-name commitment — /transparency carries it in
-   full. */
-.speak-fine-print {
-  margin-top: 8px;
-  font-size: 0.625rem;
-  line-height: 1.5;
-  color: var(--text-dim);
-}
-
 .speak-pill:hover,
 .speak-pill:focus-visible {
   background: var(--speak-navy-hover);
@@ -5774,15 +5764,6 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
 .speak-input:focus-visible {
   border-color: var(--speak-navy-hover);
   outline: none;
-}
-
-/* Level register, both of them: these are claim surfaces — what happens to
-   what somebody writes, and what will be removed. Never cute. */
-.speak-disclosure {
-  margin-top: 6px;
-  font-size: 0.6875rem;
-  line-height: 1.5;
-  color: var(--text-dim);
 }
 
 .speak-actions {

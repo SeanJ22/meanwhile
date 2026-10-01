@@ -466,14 +466,7 @@ test("ADM-20: every gap on the console carries the queue button, and the page ha
     assert.ok(page.startsWith(CONSOLE), `${rel} draws a queue button outside the console`);
     assert.match(src(relative(ROOT, page)), /<QueueForm returnTo=/, `${relative(ROOT, page)} draws a queue button (in ${rel}) and must render the one queue form it names`);
   }
-  // Admin redesign, 2026-09-23: the home page's fix-queue section moved to the Fix list, which puts an item on the queue through queue.add and sends the queue with Go fix these on the fix-queue row.
-  const fix = codeOf("app/(admin)/_mw/screens/fix.tsx");
-  assert.match(fix, /<GoFix [^>]*subjectId=\{FIX_QUEUE_SUBJECT\} option=\{GO_FIX_OPTION\}/);
-  const controls = codeOf("app/(admin)/_mw/fix-controls.tsx");
-  assert.match(controls, /type: "queue\.add",[\s\S]{0,120}input: \{ fix: props\.fixField\[item\.id\] \}/, "an item goes on the queue through the typed gateway, as the parsed fix field");
-  assert.match(fix, /fixField\[item\.id\] = fixConsequence\(t\.where, t\.says\);/, "the fix field is the same where — says shape parseFixField reads back");
   assert.match(src("lib/control-plane/gateway/registry.ts"), /const parsed = parseFixField\(combined\);/, "and the gateway's queue.add reads it back with parseFixField");
-  assert.match(controls, /type: "decision\.record",[\s\S]{0,160}subjectId: props\.subjectId,\s*chosenOption: props\.option,/, "Go fix these is a decision on the fix-queue row");
 });
 
 /* ================================================================== *

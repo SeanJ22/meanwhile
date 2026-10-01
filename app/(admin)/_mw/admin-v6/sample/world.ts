@@ -639,6 +639,7 @@ export function sampleOutcome(kind: ActionKind, target: string, input: { readonl
       const label = option === "other" ? `“${words.trim()}”` : ({ route: "look for another route", absent: "record as not available", clerk: "trust the clerk’s list", roster: "trust the roster", both: "show both dates", third: "look for a third source" } as Record<string, string>)[option ?? ""] ?? "recorded";
       return { final: "done", statusWords: "Decision saved — change pending", says: `Decision saved: ${label}. Carrying it out is a separate step, shown on the item.`, effect: (w) => ({ ...w, decisions: { ...w.decisions, [target]: label } }) };
     }
+    case "fix-go": return { final: "done", statusWords: "Sent for engineering", says: "Sample preview: the queue was sent. Nothing real was sent.", effect: (w) => w };
     case "global-ceiling": return { final: "done", statusWords: "Daily budget saved", says: "Sample preview: the daily budget was set. Nothing real was sent.", effect: (w) => w };
     case "global-search-on":
     case "global-search-off": return { final: "done", statusWords: "Paid search setting saved", says: "Sample preview: the paid search setting was saved. Nothing real was sent.", effect: (w) => w };

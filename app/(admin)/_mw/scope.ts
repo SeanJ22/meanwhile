@@ -22,8 +22,8 @@
 
 export type MwArea = "fleet" | "readiness";
 
-export type MwFleetTab = "now" | "work" | "money" | "fix";
-export type MwReadinessTab = "readiness" | "work" | "cost" | "done" | "fix";
+export type MwFleetTab = "now" | "work" | "money";
+export type MwReadinessTab = "readiness" | "work" | "cost" | "done";
 export type MwTab = MwFleetTab | MwReadinessTab;
 
 /** A Census container type the scope filter can carry. */
@@ -106,7 +106,6 @@ export const FLEET_TABS: readonly { readonly id: MwFleetTab; readonly label: str
   { id: "now", label: "Now", path: "/admin" },
   { id: "work", label: "Work", path: "/admin/work" },
   { id: "money", label: "Money", path: "/admin/money" },
-  { id: "fix", label: "Fix list", path: "/admin/fix" },
 ];
 
 export const READINESS_TABS: readonly { readonly id: MwReadinessTab; readonly label: string; readonly path: string }[] = [
@@ -114,7 +113,6 @@ export const READINESS_TABS: readonly { readonly id: MwReadinessTab; readonly la
   { id: "work", label: "Work and instructions", path: "/readiness/work" },
   { id: "cost", label: "Cost", path: "/readiness/cost" },
   { id: "done", label: "What counts as done", path: "/readiness/done" },
-  { id: "fix", label: "Fix list", path: "/readiness/fix" },
 ];
 
 /**

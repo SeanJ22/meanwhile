@@ -66,6 +66,8 @@ export interface Preview {
 /** A deployed registry action that already carries this control out (inputs: contract.ts `actionInput`). */
 export interface GatewayMapping {
   readonly type: string;
+  /** The registry action quotes the rendered state; the executor sends the latest pulse revision. */
+  readonly requiresStateVersion?: boolean;
 }
 
 export interface ActionDef {
@@ -491,6 +493,22 @@ const defs: ActionDef[] = [
       invalid: ({ words }) => (words.length > 280 ? "Keep the note under 280 characters." : null),
     }),
     gateway: { type: "runner.resume" },
+    dependency: null,
+  },
+  {
+    kind: "fix-go",
+    label: "Go fix these",
+    needs: "owner",
+    doneWords: "Sent. The next decision sync opens one work row for each queued item.",
+    preview: () => ({
+      title: "Send everything on the fix queue for engineering",
+      level: "global",
+      rows: [
+        ["What changes", "Every item waiting on the fix queue is sent. The next decision sync opens one work row for each, and each row appears here as it is opened."],
+        ["Won’t", "Won’t start any work itself, deploy anything, or change items that were already sent."],
+      ],
+    }),
+    gateway: { type: "decision.record", requiresStateVersion: true },
     dependency: null,
   },
   {

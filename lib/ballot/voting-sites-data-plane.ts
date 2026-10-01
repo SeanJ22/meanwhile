@@ -68,33 +68,25 @@ export function retainFailedVotingSiteScopes(
   };
 }
 
-/** A bounded county refresh must carry every other exact promoted jurisdiction
- * forward. It cannot bootstrap a three-state pointer from one county's PDF. */
+/** Refresh one sourced jurisdiction and carry every other holding forward. */
 export function votingSitesScopedSuccessor(
   prior: VotingSitesFile | null,
   current: VotingJurisdiction,
   generatedAt: string,
 ): VotingSitesFile {
-  if (!prior || prior.jurisdictions.length === 0) throw new Error("VOTING_SITES_SCOPED_BASE_UNAVAILABLE");
-  if (current.ocdId !== "ocd-division/country:us/state:az/county:cochise" ||
-      current.state !== "AZ" || current.model !== "VOTE_CENTER" || current.refusal !== null || current.sites.length !== 18) {
-    throw new Error("VOTING_SITES_COCHISE_SCOPE_INVALID");
-  }
-  return { generatedAt, jurisdictions: [...prior.jurisdictions.filter(row => row.ocdId !== current.ocdId), current]
-    .sort((left, right) => left.ocdId.localeCompare(right.ocdId)) };
+  return votingSitesStandardSuccessor({ generatedAt, jurisdictions: [current] }, prior);
 }
 
-/** The standard producer refreshes Pima, Morris, and New Hampshire. Keep a
- * separately sourced county only when it was outside those exact authorities. */
-export function votingSitesStandardSuccessor(current: VotingSitesFile, prior: VotingSitesFile | null): VotingSitesFile {
+/** Acquired scopes replace themselves. An explicitly refreshed scope may remove
+ * an old row; a jurisdiction absent from the acquisition remains held. */
+export function votingSitesStandardSuccessor(
+  current: VotingSitesFile,
+  prior: VotingSitesFile | null,
+  refreshedJurisdictionIds: readonly string[] = current.jurisdictions.map(row => row.ocdId),
+): VotingSitesFile {
   if (!prior) return current;
-  const refreshed = (row: VotingJurisdiction) => row.ocdId === "ocd-division/country:us/state:az/county:pima" ||
-    (row.state === "NJ" && row.sourceUrl.startsWith("https://www.morriscountynj.gov/")) || row.state === "NH";
-  const outside = prior.jurisdictions.filter(row => !refreshed(row));
-  if (current.jurisdictions.some(row => !refreshed(row)) || outside.some(row =>
-    current.jurisdictions.some(next => next.ocdId === row.ocdId))) {
-    throw new Error("VOTING_SITES_STANDARD_SOURCE_SCOPE_MIXED");
-  }
+  const refreshed = new Set([...refreshedJurisdictionIds, ...current.jurisdictions.map(row => row.ocdId)]);
+  const outside = prior.jurisdictions.filter(row => !refreshed.has(row.ocdId));
   return { generatedAt: current.generatedAt, jurisdictions: [...current.jurisdictions, ...outside]
     .sort((left, right) => left.ocdId.localeCompare(right.ocdId)) };
 }

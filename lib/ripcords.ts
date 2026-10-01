@@ -117,38 +117,6 @@ export const RIPCORDS = {
    * without a code change. The pull procedure anyone on call can follow at 2am
    * is docs/ripcords.md. Ships LIVE.
    */
-  /**
-   * **Free-text capture** (P03/T05, 2026-08-18). Ordered by the author in the
-   * same instruction that unblocked free text: "We are in a TESTING window. I
-   * need to be able to test it. So allow free text input." — "then create the
-   * ripcord."
-   *
-   * Pulled, the route DROPS the verbatim and stores the binary. That
-   * asymmetry is the whole design: free text is the part with an open
-   * question (moderation load, threats, a reader typing their own name into
-   * a box), and reaction capture is the revenue path. Taking the second down
-   * to close the first would be a ripcord that costs more than it saves.
-   *
-   * The reader is told, in the same breath, that their answer counted and
-   * their words did not — `FREE_TEXT_CLOSED_LINE`, carried back on the
-   * `x-wtp-free-text: closed` response header. A pull that silently swallowed
-   * what somebody typed would be the quiet lie this codebase keeps hunting.
-   *
-   * Nothing downstream needs filtering, and that is not luck: the aggregation
-   * input type has no field for free text at all, so a verbatim cannot enter
-   * an aggregate or an export whatever position this flag is in. The flag
-   * governs CAPTURE. Ships LIVE, for the testing window.
-   */
-  "ripcord.reactionFreeText": {
-    pulled: false,
-    envVar: "WTP_RIPCORD_REACTION_FREE_TEXT",
-    question:
-      "Operational and policy, not legal: can the moderation path in docs/abuse-policy.md absorb the verbatims this collects, and is the threat-notice posture holding? Open for the testing window the author declared 2026-08-18.",
-    closer: "The author — pulled when moderation cannot keep up, restored when it can",
-    trackerRows: "P03, T05",
-    filters:
-      "The free_text column on new reaction writes: pulled, the verbatim is dropped and the binary is still stored, and the reader is told which. Rows already stored are untouched — pulling a capture switch must never rewrite history.",
-  },
   "ripcord.reactionIntake": {
     pulled: false,
     envVar: "WTP_RIPCORD_REACTION_INTAKE",

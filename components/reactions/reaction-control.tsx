@@ -12,7 +12,6 @@ import {
 } from "@/lib/reactions/client";
 import {
   scaleForTargetType,
-  FREE_TEXT_CLOSED_LINE,
   FREE_TEXT_MAX_CHARS,
   FREE_TEXT_PROMPT,
   FREE_TEXT_THREAT_NOTICE,
@@ -144,7 +143,7 @@ export function ReactionControl({
   const [text, setText] = useState("");
   const [textOpen, setTextOpen] = useState(false);
   const [textOutcome, setTextOutcome] = useState<
-    "SAVING" | "SAVED" | "DROPPED" | "FAILED" | null
+    "SAVING" | "SAVED" | "FAILED" | null
   >(null);
 
   const record = async (value: ReactionValue) => {
@@ -160,7 +159,6 @@ export function ReactionControl({
       text.trim() || null,
     );
     setOutcome(result);
-    if (result === "TEXT_DROPPED") setTextOutcome("DROPPED");
   };
 
   /** Send the verbatim alongside the answer already given. */
@@ -176,7 +174,7 @@ export function ReactionControl({
       text.trim() || null,
     );
     setTextOutcome(
-      result === "COUNTED" ? "SAVED" : result === "TEXT_DROPPED" ? "DROPPED" : "FAILED",
+      result === "COUNTED" ? "SAVED" : "FAILED",
     );
   };
 
@@ -279,7 +277,7 @@ export function ReactionControl({
         commitment we cannot honour every time is worse than a reserved
         right.
       */}
-      {(outcome === "COUNTED" || outcome === "TEXT_DROPPED") && (
+      {outcome === "COUNTED" && (
         <div className="mt-2">
           {!textOpen ? (
             <button
@@ -331,14 +329,6 @@ export function ReactionControl({
                   </span>
                 )}
               </div>
-              {textOutcome === "DROPPED" && (
-                // The free-text ripcord is out. The binary counted and the
-                // words did not, and the reader is told exactly that rather
-                // than shown a success state over nothing.
-                <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
-                  {FREE_TEXT_CLOSED_LINE}
-                </p>
-              )}
             </div>
           )}
         </div>

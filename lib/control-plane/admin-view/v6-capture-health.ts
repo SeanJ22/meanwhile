@@ -1,4 +1,6 @@
 /**
+ * @freshness-reads-here — `observedAt` is the instant this module's own reads of the store returned.
+ *
  * **IS CAPTURE WORKING? — Admin's check, built from the same recipes every other screen uses.** (S12, Sean's 2:30 PM MST note, item 4.)
  *
  * One read of the data business as Admin: events per day by type, the share sorted into topics vs free-form, new vs returning

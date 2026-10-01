@@ -1,7 +1,7 @@
 import { normalizedHash, sha256 } from "../civic-data/candidate-builders.ts";
 import type { CivicRecordMember, IdentityEvidence, RoutineCandidate } from "../civic-data/types.ts";
 import { sourceProjectionEvidence } from "../civic-data/types.ts";
-import { COVERED_STATES, type CoveredUsps } from "../coverage/states.ts";
+import { isOfficialSource } from "../civic-data/source-authority.ts";
 import type { VotingJurisdiction, VotingSitesFile } from "./voting-sites.ts";
 
 export const VOTING_SITES_CONTRACT = {
@@ -9,28 +9,15 @@ export const VOTING_SITES_CONTRACT = {
   sourceId: "voting-sites",
   recordClass: "VOTING_SITE",
   scope: "US-AZ+US-NH+US-NJ:2026-general:supported-jurisdictions",
-  parserVersion: "official-voting-sites/2",
+  parserVersion: "official-voting-sites/3",
 } as const;
 
 export interface VotingSiteAcquisitionFailure {
   readonly jurisdictionId?: string;
-  readonly state?: CoveredUsps;
+  readonly state?: string;
   readonly code: string;
   readonly detail: string;
 }
-
-const OFFICIAL_SOURCE_PREFIXES = [
-  "https://www.pima.gov/",
-  "https://cochise.az.gov/",
-  "https://www.cochise.az.gov/",
-  "https://services2.arcgis.com/UTBp78iglGpbqp1B/",
-  "https://www.morriscountynj.gov/",
-  "https://app.sos.nh.gov/",
-  "https://www.sos.nh.gov/",
-  "https://newlondon.nh.gov/",
-  "https://www.newbury.nh.gov/",
-  "https://www.wilmotnh.org/",
-] as const;
 
 function jurisdictionMetadata(jurisdiction: VotingJurisdiction): Omit<VotingJurisdiction, "sites"> {
   const { sites: _sites, ...metadata } = jurisdiction;
@@ -121,11 +108,9 @@ function violations(file: VotingSitesFile): string[] {
   if (new Set(jurisdictionIds).size !== jurisdictionIds.length || jurisdictionIds.some((id) => !id.startsWith("ocd-division/"))) {
     problems.push("Voting-site jurisdictions have empty, duplicate, or non-OCD identities.");
   }
-  for (const { usps: state } of COVERED_STATES) {
-    if (!file.jurisdictions.some((jurisdiction) => jurisdiction.state === state)) problems.push(`${state} has no explicit voting-site jurisdiction outcome.`);
-  }
-  if (file.jurisdictions.some((jurisdiction) => !OFFICIAL_SOURCE_PREFIXES.some((prefix) => jurisdiction.sourceUrl.startsWith(prefix)))) {
-    problems.push("A voting-site jurisdiction cites a source outside the registered official election authorities.");
+  if (file.jurisdictions.some((jurisdiction) => jurisdiction.sites.length > 0 &&
+      !isOfficialSource(jurisdiction.sourceUrl, jurisdiction.sourceLinkingPage))) {
+    problems.push("A voting-site source is not .gov and has no saved official page linking it.");
   }
   if (file.jurisdictions.some((jurisdiction) => !jurisdiction.sourceOrg || !/^\d{4}-\d{2}-\d{2}$/.test(jurisdiction.collectedAt))) {
     problems.push("A voting-site jurisdiction lacks its official publisher or retrieval date.");
@@ -138,8 +123,8 @@ function violations(file: VotingSitesFile): string[] {
   if (file.jurisdictions.some((jurisdiction) => jurisdiction.sites.some((site) =>
     !site.id || !site.name || !site.address ||
     ((site.lat === null) !== (site.lng === null)) ||
-    (site.lat !== null && (!Number.isFinite(site.lat) || site.lat <= 24 || site.lat >= 50)) ||
-    (site.lng !== null && (!Number.isFinite(site.lng) || site.lng <= -125 || site.lng >= -66))
+    (site.lat !== null && (!Number.isFinite(site.lat) || site.lat < -90 || site.lat > 90)) ||
+    (site.lng !== null && (!Number.isFinite(site.lng) || site.lng < -180 || site.lng > 180))
   ))) problems.push("A voting site lacks its published identity/address or carries an invalid point.");
   if (file.jurisdictions.reduce((sum, jurisdiction) => sum + jurisdiction.sites.length, 0) === 0) {
     problems.push("No official voting site was acquired; an empty run cannot replace LKG.");

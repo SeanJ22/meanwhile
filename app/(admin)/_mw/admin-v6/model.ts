@@ -468,6 +468,25 @@ export interface SourceReliabilityRow {
   readonly detail: string;
 }
 
+/* ------------------------------------------------------------ publication */
+
+/** One routine contract a reader cannot see yet (server: v6-publication-read.ts). */
+export interface PublicationRow {
+  readonly contract: string;
+  readonly verdict: "READER_VISIBLE" | "READBACK_FAILED" | "PUBLISHED_NOT_READ_BACK" | "PUBLISHED_NO_READER_SURFACE" | "NOT_PUBLISHED";
+  readonly words: string;
+  readonly publishedAt: string | null;
+  readonly readback: { readonly status: "PASS" | "FAIL"; readonly at: string } | null;
+  readonly attempt: { readonly state: string; readonly at: string; readonly failureCode: string | null } | null;
+}
+export interface PublicationView {
+  readonly total: number;
+  readonly counts: readonly { readonly verdict: PublicationRow["verdict"]; readonly words: string; readonly count: number }[];
+  readonly latestAttemptFailing: number;
+  readonly notVisible: readonly PublicationRow[];
+  readonly notVisibleHidden: number;
+}
+
 /* ----------------------------------------------------------------- sends */
 
 /** An instruction the owner sent the fleet with "Deploy fleet here", and where it stands (server: v6-sends-read.ts). */
@@ -682,6 +701,7 @@ export interface AdminV6Data {
   readonly spend: Sourced<SpendView>;
   readonly sends: Sourced<readonly SentInstruction[]>;
   readonly reliability: Sourced<readonly SourceReliabilityRow[]>;
+  readonly publication: Sourced<PublicationView>;
   readonly money: Sourced<MoneyView>;
   readonly learning: Sourced<LearningView>;
   readonly fixes: Sourced<FixView>;

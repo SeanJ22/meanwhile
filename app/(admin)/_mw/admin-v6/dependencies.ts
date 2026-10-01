@@ -74,6 +74,11 @@ export const SECTION_DEP = {
     owner: "S12 (admin-view), S8 (reducer)",
     need: "Each source's successes, failures, failures in a row and next retry, from the workers' completed reads.",
   },
+  publication: {
+    id: "DEP-PUBLICATION-STATUS",
+    owner: "S12 (admin-view)",
+    need: "Each routine contract's published version and whether the reader read back exactly that version.",
+  },
   workerVersion: {
     id: "DEP-WORKER-VERSION",
     owner: "Codex (runner adoption)",

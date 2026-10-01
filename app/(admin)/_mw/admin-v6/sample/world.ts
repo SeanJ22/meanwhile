@@ -520,6 +520,7 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
     agents: sample([], SECTION_DEP.agents, SAMPLE_AS_OF),
     sends: sample([], SECTION_DEP.sends, SAMPLE_AS_OF),
     reliability: sample([], SECTION_DEP.reliability, SAMPLE_AS_OF),
+    publication: { state: "not-connected", load: "ready", data: null, asOf: null, dependency: SECTION_DEP.publication },
     spend: { state: "not-connected", load: "ready", data: null, asOf: null, dependency: SECTION_DEP.spend },
     history: sample(sampleHistory(), SECTION_DEP.history, SAMPLE_AS_OF),
     workers: sample({

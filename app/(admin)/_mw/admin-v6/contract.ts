@@ -178,7 +178,7 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return { decisionId: s.target, option: s.option, words: s.words.trim() || null };
     case "hunt-start": {
       // A single hunt starts from one ZIP place (`geo:az.zcta.85635`). Anything wider starts from the many-hunts panel.
-      const zip = /^geo:([a-z]{2}).zcta.(d{5})$/.exec(s.target);
+      const zip = /^geo:([a-z]{2})\.zcta\.(\d{5})$/.exec(s.target);
       return { items: zip ? [{ zip: zip[2], stateAbbr: zip[1].toUpperCase(), budgetUsd: limit() }] : [], priority: 1, huntBudget: true };
     }
     case "hunt-start-many":

@@ -300,3 +300,13 @@ test("the same mounted page shows real data once the section is live — no remo
   const after = renderToStaticMarkup(h(CommandCenter, props(live)));
   assert.match(after, /Real stuck item from the backend/);
 });
+
+test("a hunt starts from a ZIP place: the place key is read as a ZIP, and its input carries the ZIP and state", async () => {
+  const { isZipPlace } = await import("../../app/(admin)/_mw/admin-v6/actions.ts");
+  const { actionInput } = await import("../../app/(admin)/_mw/admin-v6/contract.ts");
+  assert.equal(isZipPlace("geo:az.zcta.85635"), true);
+  assert.equal(isZipPlace("geo:az.county.04019"), false);
+  assert.equal(isZipPlace("geo:az.zcta.8563"), false);
+  const input = actionInput("hunt-start", { target: "geo:az.zcta.85635", scopeKey: "geo:az.zcta.85635", amount: "", words: "", option: "", selected: [], payload: undefined } as never);
+  assert.deepEqual((input as { items: unknown[] }).items, [{ zip: "85635", stateAbbr: "AZ", budgetUsd: null }]);
+});

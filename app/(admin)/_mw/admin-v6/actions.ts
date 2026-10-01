@@ -18,7 +18,7 @@ import { usd } from "./model.ts";
 
 /** A ZIP place key, the only kind of place a single hunt starts from (the rest start from the many-hunts panel). */
 export function isZipPlace(target: string): boolean {
-  return /^geo:[a-z]{2}.zcta.d{5}$/.test(target);
+  return /^geo:[a-z]{2}\.zcta\.\d{5}$/.test(target);
 }
 
 export interface PreviewItem {

@@ -385,7 +385,7 @@ test("unresolved identity permits independent diagnosis but never staging", asyn
       routeLabel: selected.task!.routeLabel, target: selected.task!.target, inherited: false, now: h.now() });
     await registerRouteTask(repos, second, h.now());
     const pids: number[] = [];
-    const results = await runLeaseWorkerProcesses({
+    const results = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
       config: { root: process.cwd(), fileStoreRoot: root, postgres: false, taskIds: [selected.task!.id, second.id],
         modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
       capacity: () => 2, onStarted: pid => pids.push(pid),
@@ -415,7 +415,7 @@ test("ZIP process reports return after parent registry and election publication,
     await mkdir(join(root, "scripts"), { recursive: true });
     await mkdir(join(root, "lib/control-plane/workers"), { recursive: true });
     await writeFile(join(root, "scripts/register-test-loader.mjs"), "export {};\n");
-    await writeFile(join(root, "lib/control-plane/workers/lease-worker.ts"), `
+    await writeFile(join(root, "lib/control-plane/workers/national-worker.ts"), `
       const replies = new Map(); let sequence = 0;
       const call = (kind, body) => new Promise((resolve, reject) => {
         const id = String(++sequence); replies.set(id, { resolve, reject }); process.send({ kind, id, body });

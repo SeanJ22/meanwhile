@@ -34,7 +34,7 @@ import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligat
 import { scheduledFixture } from "./control-plane-fixtures.ts";
 import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { failureResponderExecutor } from "../lib/control-plane/workers/detective.ts";
-import { scoutProcessExecutor } from "../lib/control-plane/workers/process-pool.ts";
+import { scoutProcessExecutor } from "../lib/control-plane/workers/scout-process.ts";
 import {
   cacheTtlOrderProblems,
   withCacheBreakpoints,

@@ -68,25 +68,6 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
     process.disconnect();
     return;
   }
-  if (config.nationalZips) {
-    const [{ runNationalPlaceTask }, { PostgresRoutineDataStore },
-      { DurableEvidenceStore }, { VAULT_DIR }, { hostSpacer }, { serializeHostSpacing }] = await Promise.all([
-      import("../../hunt/place-source-task.ts"), import("../../civic-data/store.ts"),
-      import("../evidence/durable-store.ts"),
-      import("../scheduler/vault.ts"), import("../scheduler/http-executor.ts"), import("./host-spacing.ts")]);
-    const tools = { repos, store: new DurableEvidenceStore(join(config.root, ...VAULT_DIR)),
-      spaceOut: serializeHostSpacing(hostSpacer()), browse: browseWithPlaywright, now: () => new Date().toISOString() };
-    for (const zip of config.taskIds) {
-      taskId = `national-place:${zip}`;
-      const reports = await runNationalPlaceTask({ tools, store: new PostgresRoutineDataStore(), zips: [zip],
-        publish: ({ store: _store, ...input }) => call("national-publication", input),
-        publishElection: (fields, now) => call("election-publication", { fields, now }) });
-      for (const report of reports) await call("national-result", report);
-    }
-    send("finished", "", config.taskIds);
-    process.disconnect();
-    return;
-  }
   const safety = new FleetSafetyController({ now: new Date().toISOString(), costs: [], rollingCeilingUsd: config.ceilingUsd });
   const pending = new Set(config.taskIds);
   // Each process runs one live lease at a time, always pulling current task state.

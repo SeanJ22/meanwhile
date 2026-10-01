@@ -1,7 +1,8 @@
 import { attemptBatchJournal, backgroundBatchTransport, batchEnabledFor, batchRequestHash } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { createHash, randomUUID } from "node:crypto";
-import { runLeaseWorkerProcesses, scoutProcessExecutor } from "../lib/control-plane/workers/process-pool.ts";
+import { runLeaseWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
+import { scoutProcessExecutor } from "../lib/control-plane/workers/scout-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
 import { planHeldWorkerFleet } from "../lib/control-plane/workers/standing.ts";
 import { costEntryWithModel } from "../lib/control-plane/cost.ts";
@@ -2832,7 +2833,7 @@ async function runAutonomousWave() {
   const taskIds = [...new Set([...held.map(task => task.id),
     ...planned.decisions.filter(row => row.task && ["SCOUT", "WORKER"].includes(row.action)).map(row => row.task!.id)])];
   const availableUsd = Math.max(0, effectiveCeilingUsd - (spendWindow.windowUsd ?? effectiveCeilingUsd));
-  const dispatches = await runLeaseWorkerProcesses({
+  const dispatches = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
     config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: modelLaneEnabled,
       searchEnabled: scoutSearch !== null, ceilingUsd: effectiveCeilingUsd, fundedSubjects: [...lifetimeHuntSubjects] },
     capacity: () => modelLaneEnabled ? researchWorkerCapacity({ hunts: taskIds.length, availableUsd,

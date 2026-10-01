@@ -697,6 +697,17 @@ export async function chamberForOfficeholder(
 export async function seatHoldersForDivision(
   ocdId: string,
 ): Promise<SeatHolder[]> {
+  if (/\/sld[lu]:[^/]+$/.test(ocdId)) {
+    // Independently verified district-seat rosters publish through the registry
+    // too. Settle its typed reader (which hydrates storage parts) before using
+    // synchronous selectors; a missing statewide roster must not hide them.
+    await settleRegistryAuthorityReads("REGISTRY");
+    const published = rosterHoldersForBody(`${ocdId}#seat`);
+    if (published.length) return published.map(holder => ({
+      ...holder,
+      officeTitle: /\/sldl:/.test(ocdId) ? "State Representative" : "State Senator",
+    }));
+  }
   const officialStateScope = officialStateLegislatorScopeForDivision(ocdId);
   if (officialStateScope) {
     try {

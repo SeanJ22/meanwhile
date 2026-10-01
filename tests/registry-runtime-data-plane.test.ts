@@ -11,7 +11,12 @@ import { promotionProofIssue } from "../lib/civic-data/read-model.ts";
 import type { CandidateVersionRecord, PromotedProjection, RoutineCandidate } from "../lib/civic-data/types.ts";
 import { projectRoutineDataObservability } from "../lib/civic-data/observability.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { getTableName } from "drizzle-orm";
+import { partitionCivicPayload } from "../lib/civic-data/payload-parts.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { readerOfficeholders } from "../lib/ask/server-sources.ts";
+import { composeReaderOfficials, readerOfficialsQuestion } from "../lib/ask/reader-officials.ts";
 import { sourceProjectionEvidence, type ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
 import {
   FEDERAL_DIRECTORY_SCOPE,
@@ -89,6 +94,73 @@ async function registryPackage(at: string, salt: string): Promise<RegistryRuntim
   const payload = structuredClone(read.value);
   return { contractId: "registry-runtime-bindings", version: at, sourceThrough: at, sourceReceipt: receipt(payload, at, salt), payload };
 }
+
+test("Ask reads both legislative names from a partitioned registry when a statewide roster pointer is absent", async () => {
+  const memory = new MemoryRoutineDataStore();
+  const pkg = await registryPackage(T0, "district-seats");
+  const model = structuredClone(registryRuntimeCandidate(pkg).readModel) as { -readonly [K in keyof RegistryRuntimeReadModel]: RegistryRuntimeReadModel[K] };
+  const districts = ["ocd-division/country:us/state:oh/sldl:1", "ocd-division/country:us/state:oh/sldu:15"];
+  for (const [index, division] of districts.entries()) {
+    const id = `${division}#seat`;
+    model.registry.divisions.push({ ...model.registry.divisions[0]!, ocdId: division });
+    model.registry.bodies.push({ ...model.registry.bodies[0]!, id, ocdId: division, name: `Ohio legislative seat ${index}` });
+    const memberId = `roster:${id}#held`;
+    model.bodyRosters = [...model.bodyRosters, { ...model.bodyRosters[0]!, bodyId: id, bodyName: `Ohio legislative seat ${index}`,
+      sourceUrl: `https://ohio.example.gov/seat/${index}`,
+      members: [{ id: memberId, name: index ? "Hearcel F. Craig" : "Dontavius L. Jarrells",
+        officeTitle: index ? "Senator" : "Representative", email: null, phone: null, termNote: null, websiteUrl: null }] }];
+    model.rosterReaderDispositions = [...model.rosterReaderDispositions, {
+      ...model.rosterReaderDispositions.find(row => row.state === "READER_ELIGIBLE")!,
+      sourceId: memberId, canonicalId: memberId,
+    }];
+    model.officialCandidacies = { ...model.officialCandidacies, rows: [...model.officialCandidacies.rows, {
+      holder: { id: memberId, name: index ? "Hearcel F. Craig" : "Dontavius L. Jarrells",
+        officeTitle: index ? "Senator" : "Representative", divisions: [division], authority: "REGISTRY_BODY_ROSTER",
+        sourceUrl: `https://ohio.example.gov/seat/${index}` },
+      status: "NOT_CHECKED", candidacy: null, reason: "This fixture has no candidacy finding.", unresolvedCandidacyIds: [],
+    }] };
+  }
+  const candidate = registryRuntimeCandidate({ ...pkg, payload: model, sourceReceipt: receipt(model, T0, "district-seats") });
+  const published = await processRegisteredManualCandidate(memory, "registry-runtime-bindings", candidate, T0);
+  assert.equal(published.candidate.state, "PROMOTED", published.candidate.failureDetail ?? undefined);
+  const pointer = published.promoted!;
+  const payload = partitionCivicPayload(pointer.payload);
+  const envelope = partitionCivicPayload(published.candidate.candidate, ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal"]);
+  const parts = [...new Map([...payload.parts, ...envelope.parts].map(row => [row.hash, row])).values()];
+  assert.ok(payload.parts.length > 0, "this must exercise a storage reference, not inline JSON");
+  const originalUrl = process.env.DATABASE_URL;
+  process.env.DATABASE_URL = "postgresql://local:local@ep-test.neon.tech/neondb";
+  try {
+    const postgres = new PostgresRoutineDataStore();
+    const queries: string[] = [];
+    Object.assign(postgres, { db: { select: () => ({ from: (table: Parameters<typeof getTableName>[0]) => ({ where: () => {
+      const name = getTableName(table); queries.push(name);
+      const rows = name === "civic_data_payload_parts" ? parts : name === "civic_data_promotions" ? [{
+        key: pointer.key, sourceId: pointer.sourceId, recordClass: pointer.recordClass, scope: pointer.scope,
+        currentVersionId: pointer.versionId, lastKnownGoodVersionId: pointer.lastKnownGoodVersionId,
+        promotedAt: pointer.promotedAt, validationReceipt: pointer.receipt, payload: payload.value,
+      }] : name === "civic_data_candidates" ? [{
+        id: candidate.id, candidate: envelope.value, state: published.candidate.state, acquisitionSucceeded: true,
+        validationReceipt: published.candidate.receipt, promotedVersionId: candidate.id,
+        lastKnownGoodVersionId: candidate.id, failureCode: null, failureDetail: null,
+      }] : [];
+      return Object.assign(Promise.resolve(rows), { limit: async () => rows });
+    } }) }) } });
+    const read = await readRegistryRuntimeProjection({ store: postgres, bypassCache: true, now: T0 });
+    if (read.kind !== "PROMOTED") throw new Error(JSON.stringify(read));
+    assert.ok(queries.includes("civic_data_payload_parts"));
+    await withReaderAuthorityEdge({ registryRuntime: { value: read.value, versionId: read.metadata.versionId! } }, async () => {
+      const held = await readerOfficeholders(districts);
+      for (const [question, name] of [["Who is my state representative?", "Dontavius L. Jarrells"], ["Who is my state senator?", "Hearcel F. Craig"]]) {
+        const answer = composeReaderOfficials({ ask: readerOfficialsQuestion(question)!, held: held.held, holdingFailed: held.loaderFailures > 0 });
+        assert.ok(answer?.answer.includes(name), answer?.answer);
+      }
+    });
+  } finally {
+    if (originalUrl === undefined) delete process.env.DATABASE_URL;
+    else process.env.DATABASE_URL = originalUrl;
+  }
+});
 
 test("federal roster/directory promotes once and failed acquisition preserves its exact GOOD pointer", async () => {
   const store = new MemoryRoutineDataStore();

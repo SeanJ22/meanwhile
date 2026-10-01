@@ -610,7 +610,7 @@ export class DurableEvidenceStore implements EvidenceStore {
       throw new EvidenceStoreRefusal(
         `Key ${key} records ${byteLength} byte(s) and its ` +
           `body could not be read (${(cause as NodeJS.ErrnoException).code ?? "unknown"}). ` +
-          "A missing body under a committed sidecar is a failed read, never an empty document.",
+          "A missing or unreadable body is a failed read, never an empty document.",
       );
     }
 

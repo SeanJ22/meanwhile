@@ -5,14 +5,10 @@
  *
  * Models handle novelty; code handles learned procedure. The bridge is the
  * EXISTING candidate lifecycle in `lib/method/candidate.ts` —
- * `PROPOSED -> VALIDATED -> ADMITTED | REJECTED` — and this module drives only
- * its first two steps. A Scout PROPOSES; the prospective store is VALIDATED
- * against the canonical validators; the record lands in
- * `cp_method_candidates/live` as VALIDATED or REJECTED with the exact issues
- * in the canonical control-plane aggregate. **Nothing here calls
- * `markAdmitted`.** Admission is graduation: a session's act, which writes the
- * whole route record into the field manual as a `ROUTE` entry. The Scout may
- * never promote its own proposal.
+ * `PROPOSED -> VALIDATED -> ADMITTED | REJECTED`. The first Attempt validates
+ * a route. When another Attempt independently offers it, the whole route is
+ * written to the field manual and both candidates are admitted automatically.
+ * Replaying the same Attempt cannot graduate its own proposal.
  *
  * Only a candidate whose URL the Attempt actually OPENED (an artifact with
  * that canonical URL) is proposed: a route the method store learns carries an
@@ -35,6 +31,7 @@
 import {
   candidateCounts,
   introducedIssues,
+  markAdmitted,
   markRejected,
   markValidated,
   proposeCandidate,
@@ -45,6 +42,7 @@ import {
 import { ConcurrentModification, IdentityCollision, type ControlPlaneRepositories } from "../repository/types.ts";
 import { learnBatch, type LearnedRoute } from "../../method/learn-batch.ts";
 import { readMethodKnowledge } from "../../method/manual-bridge.ts";
+import { newFieldManualEntry, writeFieldManual } from "../field-manual.ts";
 import type { WorkArtifact } from "./dispatch.ts";
 import type { ScoutCandidate, ScoutResult } from "./scout-result.ts";
 
@@ -137,8 +135,8 @@ function modelClaimsOf(c: ScoutCandidate): MethodCandidate["modelClaims"] {
 }
 
 /**
- * Propose and VALIDATE every openable candidate on a result. Writes the
- * candidate store; never the method store. Idempotent by derived candidate id.
+ * Validate openable candidates and admit independently repeated routes into
+ * the manual. Candidate and manual writes are idempotent across retries.
  */
 export async function proposeScoutCandidates(input: {
   readonly repos: ControlPlaneRepositories;
@@ -146,8 +144,8 @@ export async function proposeScoutCandidates(input: {
   readonly artifacts: readonly WorkArtifact[];
   readonly stamp: string;
 }): Promise<ProposalReport> {
-  const knowledge = await readMethodKnowledge(input.repos);
   for (let attempt = 0; attempt < 4; attempt += 1) {
+    const knowledge = await readMethodKnowledge(input.repos);
     const current = await input.repos.methodCandidates.read(METHOD_CANDIDATE_STORE_ID);
     if (current === null) {
       throw new Error("METHOD_CANDIDATE_STORE_NOT_SEEDED: refusing to treat an absent canonical store as an empty candidate population");
@@ -175,6 +173,10 @@ export async function proposeScoutCandidates(input: {
       continue;
     }
     const proposal = learnedRouteFrom(c, input.result, opened);
+    const prior = store.candidates.find((candidate) =>
+      candidate.proposal.id === c.routeId && candidate.attemptId !== input.result.attemptId &&
+      candidate.lifecycle === "VALIDATED",
+    );
     const offered = proposeCandidate(store, {
       attemptId: input.result.attemptId,
       proposal,
@@ -182,7 +184,7 @@ export async function proposeScoutCandidates(input: {
       observedMethodVersion: knowledge.version,
     });
     store = offered.store;
-    if (offered.already) {
+    if (offered.already && !(prior && offered.candidate.lifecycle === "VALIDATED")) {
       proposed.push({ routeId: c.routeId, candidateId: offered.candidate.id, lifecycle: offered.candidate.lifecycle, issues: [], already: true });
       continue;
     }
@@ -202,7 +204,7 @@ export async function proposeScoutCandidates(input: {
       const { introduced, preExisting } = introducedIssues(knowledge, prospective);
       issues = introduced.map((i) => `${i.id} ${i.rule}: ${i.detail}`);
       if (introduced.length === 0) {
-        const v = markValidated(store, offered.candidate.id, {
+        const v = offered.candidate.lifecycle === "VALIDATED" ? { store, candidate: offered.candidate } : markValidated(store, offered.candidate.id, {
           at: input.stamp,
           againstMethodVersion: knowledge.version,
           introduced: [],
@@ -230,6 +232,29 @@ export async function proposeScoutCandidates(input: {
       });
       store = r.store;
       proposed.push({ routeId: c.routeId, candidateId: r.candidate.id, lifecycle: r.candidate.lifecycle, issues: [r.candidate.rejection?.reason ?? "malformed"], already: false });
+    }
+    if (prior && store.candidates.find((candidate) => candidate.id === offered.candidate.id)?.lifecycle === "VALIDATED") {
+      const learned = learnBatch(knowledge, [prior.proposal, proposal], input.stamp);
+      const route = learned.knowledge.routes.find((route) => route.id === c.routeId)!;
+      const written = await writeFieldManual(input.repos, [newFieldManualEntry("scout-candidate", route.id, {
+        role: "SHARED", kind: "ROUTE", title: route.title,
+        summary: `Independently reached by Attempts ${prior.attemptId} and ${input.result.attemptId}. ${c.procedure}`,
+        outcome: "YIELDED", url: c.url, recordClasses: route.fields,
+        observedAt: input.stamp, tier: route.tier, payload: route,
+      })], input.stamp);
+      if (written.error || written.written !== 1) {
+        proposed[proposed.length - 1] = { ...proposed[proposed.length - 1], issues: [written.error ?? "field manual write did not persist the route"] };
+      } else {
+        const admission = {
+          at: input.stamp, admittedAs: route.id,
+          effect: learned.learned > 0 ? "LEARNED" as const : "ALREADY_KNOWN" as const,
+          methodVersionAfter: (await readMethodKnowledge(input.repos)).version,
+        };
+        store = markAdmitted(store, prior.id, admission).store;
+        const admitted = markAdmitted(store, offered.candidate.id, admission);
+        store = admitted.store;
+        proposed[proposed.length - 1] = { ...proposed[proposed.length - 1], lifecycle: admitted.candidate.lifecycle };
+      }
     }
     }
 

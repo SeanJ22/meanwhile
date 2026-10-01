@@ -1,6 +1,6 @@
 "use client";
 
-import type { FeedbackSurface } from "./shape.ts";
+import { feedbackContext, type FeedbackContext, type FeedbackSurface } from "./shape.ts";
 import { getOrCreateBrowserKey } from "../state/browser-key.ts";
 
 /**
@@ -54,6 +54,7 @@ export async function submitFeedback(
    * whether the reader filled the field or left it alone.
    */
   replyTo = "",
+  context: FeedbackContext = {},
 ): Promise<SubmitOutcome> {
   let response: Response;
   try {
@@ -65,6 +66,7 @@ export async function submitFeedback(
         surface,
         replyTo,
         feedbackKey: getOrCreateFeedbackKey(),
+        ...feedbackContext(context),
       }),
     });
   } catch {

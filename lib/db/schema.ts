@@ -672,6 +672,10 @@ export const feedback = pgTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     site: text("site", { enum: ["live", "tester"] }).notNull().default("live"),
+    /** Context deliberately sent with a report; absent on older/general feedback. */
+    about: text("about"),
+    zip: text("zip"),
+    recordId: text("record_id"),
     receivedAt: timestamp("received_at", { withTimezone: true, mode: "string" }).notNull(),
     /** What the reader wrote, scrubbed (T09). Capped at the route. */
     message: text("message").notNull(),

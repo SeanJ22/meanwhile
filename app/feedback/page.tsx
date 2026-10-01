@@ -3,6 +3,7 @@ import Link from "next/link";
 import { FeedbackForm } from "@/components/feedback/feedback-form";
 import { Logo } from "@/components/brand/logo";
 import { titleFor } from "@/lib/brand";
+import { feedbackContext } from "@/lib/feedback/shape";
 
 /**
  * `/feedback` — R40, 2026-08-17, the author's ruling (1A: in-app).
@@ -30,12 +31,12 @@ export const metadata = {
 export default async function FeedbackPage({
   searchParams,
 }: {
-  searchParams: Promise<{ about?: string }>;
+  searchParams: Promise<{ about?: string; zip?: string; recordId?: string }>;
 }) {
-  const { about } = await searchParams;
+  const context = feedbackContext(await searchParams);
   // "Report a problem" on a card names the card, so the reader starts with
   // the part they would otherwise have to remember to say.
-  const topic = about?.trim().slice(0, 80);
+  const topic = context.about;
   return (
     <main className="mw-page min-h-dvh overflow-y-auto bg-[var(--bg)]">
       <div className="mx-auto max-w-2xl px-5 py-10 sm:py-14">
@@ -62,7 +63,13 @@ export default async function FeedbackPage({
         <FeedbackForm
           surface="SIDEBAR"
           initialMessage={topic ? `About "${topic}": ` : ""}
+          context={context}
         />
+        {(topic || context.zip) && (
+          <p className="mt-3 text-sm text-paper-dim">
+            Report context: {topic || "Map"}{context.zip ? ` · ZIP ${context.zip}` : ""}.
+          </p>
+        )}
 
         {/* Every word below is a claim, so every word below is level. */}
         <section className="mt-10 border-t border-[var(--panel-border)] pt-6">
@@ -77,10 +84,10 @@ export default async function FeedbackPage({
               query that could put it there.
             </p>
             <p>
-              We store the message and the time, plus your email address if you
-              choose to leave one. Not your name, not your postal address, not
-              your zip, and nothing that could connect this to anything else
-              you have done on the site.
+              We store the message and the time, the card and ZIP being
+              reported when supplied, plus your email address if you choose
+              to leave one. We do not store your name, your postal address,
+              or a link to anything else you have done on the site.
             </p>
             {/*
               R41 (2026-08-17, the author's ruling A). This paragraph used to

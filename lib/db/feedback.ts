@@ -3,6 +3,8 @@ import {
   REPLY_TO_MAX_CHARS,
   isReplyToShaped,
   type FeedbackSurface,
+  type FeedbackContext,
+  feedbackContext,
 } from "../feedback/shape.ts";
 import { scrubFreeText } from "../log/scrub.ts";
 import { randomUUID } from "node:crypto";
@@ -58,6 +60,7 @@ export async function readFeedback(input: { readonly since: string; readonly sit
   return feedbackDb().select({
     id: feedback.id, receivedAt: feedback.receivedAt, message: feedback.message,
     surface: feedback.surface, site: feedback.site, runClass: feedback.runClass,
+    about: feedback.about, zip: feedback.zip, recordId: feedback.recordId,
     runId: feedback.runId, suspectReason: feedback.suspectReason,
     replyAddress: feedbackContact.address,
   }).from(feedback).leftJoin(feedbackContact, eq(feedback.contactRef, feedbackContact.contactRef))
@@ -77,7 +80,7 @@ export type FeedbackWriteResult =
   /** The insert was attempted and failed. Told plainly, never swallowed. */
   | { kind: "FAILED"; reason: string };
 
-export interface FeedbackSubmission {
+export interface FeedbackSubmission extends FeedbackContext {
   message: string;
   surface: FeedbackSurface;
   /**
@@ -115,6 +118,7 @@ export async function writeFeedback(
    * eat the reply address they meant to leave.
    */
   const message = scrubFreeText(raw);
+  const context = feedbackContext(submission);
   if (!message) {
     // Everything they typed was contact-shaped. Storing an empty row would
     // record that someone wrote and nothing about what — worse than useless,
@@ -195,6 +199,9 @@ export async function writeFeedback(
         message,
         surface: submission.surface,
         site: process.env.WTP_SITE === "tester" ? "tester" : "live",
+        about: context.about ? scrubFreeText(context.about) || null : null,
+        zip: context.zip,
+        recordId: context.recordId ? scrubFreeText(context.recordId) || null : null,
         contactRef,
         runClass: marker.runClass,
         runId: marker.runClass === "ORGANIC" ? null : marker.runId,

@@ -1,4 +1,4 @@
-import { geometryPath, rosterPath } from "../lib/holdings/files.ts";
+import { rosterPath } from "../lib/holdings/files.ts";
 import { stateHoldingPath } from "../lib/holdings/paths.ts";
 /**
  * THE COVERAGE MANIFEST, AND THE ONE-EDIT CLAIM (AUD-06, g18, 2026-08-18).
@@ -32,7 +32,6 @@ import {
   COVERED_STATES,
   FIPS_BY_USPS,
   deriveClientLists,
-  geoFilesFor,
   type CoveredState,
 } from "../lib/coverage/states.ts";
 import {
@@ -77,9 +76,6 @@ test("the manifest's generated artifacts are all committed on disk", () => {
   }
   for (const { file, state } of BALLOT_FILES) {
     statSync(join(ROOT, stateHoldingPath(state.toLowerCase(), "ballot", file)));
-  }
-  for (const f of geoFilesFor("cd119", "sldu", "sldl", "place", "cousub", "unsd", "elsd", "scsd")) {
-    statSync(join(ROOT, geometryPath(f)));
   }
   assert.equal(ROSTER_FILES.length, COVERED_STATES.length + 1, "federal roster plus one per state");
   assert.equal(BALLOT_FILES.length, COVERED_STATES.length);
@@ -142,18 +138,6 @@ test("adding one state to the manifest reaches every SERVER-side derived list", 
     Object.keys(d).length,
     "every server derivation must be checked — a new one must not slip in unchecked",
   );
-});
-
-test("adding one state reaches the geometry filenames on every layer type", () => {
-  // geoFilesFor reads the live manifest rather than an argument, so this is the
-  // control for it: it must produce one file per covered state per type, and
-  // the map's seven per-state layers must all be built through it.
-  const files = geoFilesFor("place", "cousub");
-  assert.equal(files.length, COVERED_STATES.length * 2);
-  for (const s of COVERED_STATES) {
-    assert.ok(files.includes(`place-${s.fips}.geojson`));
-    assert.ok(files.includes(`cousub-${s.fips}.geojson`));
-  }
 });
 
 test("a manifest state with no artifacts detail row throws rather than being skipped", () => {

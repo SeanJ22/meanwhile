@@ -45,6 +45,7 @@
  *
  * PURE.
  */
+import { FIX_QUEUE_SUBJECT, GO_FIX_OPTION } from "@/lib/control-plane/fix-queue.ts";
 import type { ActionKind, AdminV6Data } from "./model.ts";
 
 export const V6_CAPABILITY_VERSION = 1;
@@ -196,6 +197,14 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
     case "global-runner-pause":
     case "global-runner-resume":
       return { note: s.words.trim() || null };
+    case "fix-go":
+      return { subjectId: FIX_QUEUE_SUBJECT, chosenOption: GO_FIX_OPTION, consequenceShown: "The queued gaps were sent for a session to fix", ownerAnswer: null };
+    case "global-ceiling":
+      return { rollingCeilingUsd: s.amount.trim() === "" ? null : Number(s.amount) };
+    case "global-search-on":
+      return { enabled: true, confirmed: true };
+    case "global-search-off":
+      return { enabled: false };
     case "scope-first":
     case "scope-recheck":
     case "reprocess":

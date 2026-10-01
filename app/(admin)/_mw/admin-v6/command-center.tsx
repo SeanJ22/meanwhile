@@ -29,6 +29,7 @@ import { mst, type ActionKind, type ActionRef, type AdminV6Data, type Place, typ
 import { breadcrumbs, COUNTRY_KEY, huntAt, huntsWithin, indexPlaces, pickerMatches, relation } from "./places.ts";
 import { newActionKey, startReceipt } from "./receipts.ts";
 import { ChecklistScreen } from "./screen-checklist.tsx";
+import { FixQueueControls } from "./fix-queue-controls.tsx";
 import { FixScreen } from "./screen-fix.tsx";
 import { LearningScreen } from "./screen-learning.tsx";
 import { MoneyScreen } from "./screen-money.tsx";
@@ -361,7 +362,7 @@ export function CommandCenter(props: CommandCenterProps) {
               {view === "checklist" && <ChecklistScreen />}
               {view === "money" && <MoneyScreen />}
               {view === "learning" && <LearningScreen />}
-              {view === "fix" && <FixScreen />}
+              {view === "fix" && <><FixQueueControls /><FixScreen /></>}
               {view === "reports" && <ReportsView />}
               {view === "changes" && <ChangesView />}
               {view === "chat" && <ChatView controls={props.chatControls ?? []} />}

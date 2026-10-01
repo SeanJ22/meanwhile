@@ -66,6 +66,8 @@ export interface Preview {
 /** A deployed registry action that already carries this control out (inputs: contract.ts `actionInput`). */
 export interface GatewayMapping {
   readonly type: string;
+  /** The registry action quotes the rendered state; the executor sends the latest pulse revision. */
+  readonly requiresStateVersion?: boolean;
 }
 
 export interface ActionDef {
@@ -491,6 +493,79 @@ const defs: ActionDef[] = [
       invalid: ({ words }) => (words.length > 280 ? "Keep the note under 280 characters." : null),
     }),
     gateway: { type: "runner.resume" },
+    dependency: null,
+  },
+  {
+    kind: "fix-go",
+    label: "Go fix these",
+    needs: "owner",
+    doneWords: "Sent. The next decision sync opens one work row for each queued item.",
+    preview: () => ({
+      title: "Send everything on the fix queue for engineering",
+      level: "global",
+      rows: [
+        ["What changes", "Every item waiting on the fix queue is sent. The next decision sync opens one work row for each, and each row appears here as it is opened."],
+        ["Won’t", "Won’t start any work itself, deploy anything, or change items that were already sent."],
+      ],
+    }),
+    gateway: { type: "decision.record", requiresStateVersion: true },
+    dependency: null,
+  },
+  {
+    kind: "global-ceiling",
+    label: "Set the daily budget",
+    needs: "spend",
+    doneWords: "Saved. The runner reads the new ceiling when its next round starts; this page shows when it has.",
+    preview: () => ({
+      title: "Set the most the workers may spend in any rolling 24 hours",
+      level: "global",
+      rows: [
+        ["Scope", "Whole system: every hunt, every state"],
+        ["What changes", "The ceiling the workers run under. Paid work that would take the last 24 hours above it waits until it fits."],
+        ["Won’t", "Won’t start a round, raise a hunt’s own lifetime limit, or spend anything by itself."],
+        ["Undo", "Set it back to the amount it shows as the old one in the receipt."],
+      ],
+      amount: { label: "New daily budget in dollars (rolling 24 hours)", initial: "" },
+      invalid: ({ amount }) => {
+        const n = Number(amount);
+        return amount.trim() === "" || !Number.isFinite(n) || n <= 0 ? "Enter an amount above $0. To stop the workers, pause them instead." : null;
+      },
+    }),
+    gateway: { type: "config.setFleetSpendCeiling" },
+    dependency: null,
+  },
+  {
+    kind: "global-search-on",
+    label: "Turn paid search on",
+    needs: "spend",
+    doneWords: "Saved. The runner confirmed it will use paid search (Brave and Exa) when finding meeting sources.",
+    preview: () => ({
+      title: "Let the workers use paid search to find meeting sources",
+      level: "global",
+      rows: [
+        ["Scope", "Whole system"],
+        ["What changes", "Searching for sources may send paid search requests, inside the daily request caps and the daily budget."],
+        ["Costs", "Each request is charged and shown on Money as discovery search."],
+        ["Won’t", "Won’t raise the request caps, resume paid research, or change the daily budget."],
+      ],
+    }),
+    gateway: { type: "config.setDiscoverySearch" },
+    dependency: null,
+  },
+  {
+    kind: "global-search-off",
+    label: "Turn paid search off",
+    needs: "spend",
+    doneWords: "Saved. The runner confirmed paid search is off. Free site reading continues.",
+    preview: () => ({
+      title: "Stop the workers using paid search",
+      level: "global",
+      rows: [
+        ["Scope", "Whole system"],
+        ["What changes", "No new paid search requests. Free site reading continues, and so does everything already found."],
+      ],
+    }),
+    gateway: { type: "config.setDiscoverySearch" },
     dependency: null,
   },
   {

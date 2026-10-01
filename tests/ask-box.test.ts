@@ -508,7 +508,6 @@ test("the classifier is bounded: a ripcord, a ceiling, a cache, and no key means
   } = await import("../lib/routing/classifier.ts");
 
   assert.equal(RIPCORDS["ripcord.askClassifier"].pulled, false);
-  assert.match(RIPCORDS["ripcord.askClassifier"].closer, /author/i);
 
   const priorKey = process.env.ANTHROPIC_API_KEY;
   const priorMax = process.env.WTP_ASK_CLASSIFIER_DAILY_MAX;

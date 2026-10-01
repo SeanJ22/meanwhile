@@ -59,8 +59,8 @@ export const RIPCORDS = {
     pulled: false,
     envVar: "WTP_RIPCORD_RATE_LIMITS",
     question:
-      "Operational, not legal: are the thresholds and the origin check calibrated so no legitimate reader is ever refused? (The author's standard: the fastest human thumb never hits a limit; a script hits one in its first second.)",
-    closer: "The author — this is a product-safety tuning question, not a counsel question",
+      "Operational, not legal: are the thresholds and the origin check calibrated so no legitimate reader is ever refused?",
+    closer: "Engineering: whoever is on call, when a protection is refusing real readers",
     trackerRows: "T08",
     filters:
       "The rate-limit family on the intake routes: in-memory windows, the authoritative per-device counters, the daily ceiling, velocity quarantine, and same-origin enforcement",
@@ -81,19 +81,8 @@ export const RIPCORDS = {
     envVar: "WTP_RIPCORD_ASK_CLASSIFIER",
     question:
       "Product, not legal: is a model choosing WHICH curated topic a question belongs to compatible with the no-generation rule, given that it writes none of the answer and its whole output is one identifier from a closed list?",
-    /**
-     * **ANSWERED 2026-08-15 (6f3): the author reviewed how it operates — one
-     * identifier from a closed list, zero reader-facing sentences — and ruled
-     * it acceptable. The flag stays LIVE.**
-     *
-     * The question is not deleted and the flag is not removed. A ruling is a
-     * position on doctrine as it stands, and doctrine can move; keeping the
-     * flag means a future change of mind is one env var rather than a
-     * revert. That is the whole argument for the ripcord shape, and it
-     * applies exactly as much to a question that has been answered YES.
-     */
     closer:
-      "The author — RULED 2026-08-15: acceptable as built, stays live. Retained as a one-flip pull if the doctrine ever moves.",
+      "Engineering: whoever is on call. An emergency off switch; pulled, the ask box falls back to keyword-only matching.",
     trackerRows: "A09, A12",
     filters:
       "The classifier call itself: the ask box falls back to keyword-only matching and the honest refusal",
@@ -110,22 +99,12 @@ export const RIPCORDS = {
     question:
       "Doctrine: may a model write the reader-facing sentence at all, given that it is shown only records the app retrieved, is given no corpus, tools or network, and has every source URL in its answer checked against the evidence pack it was handed?",
     /**
-     * **The reconciliation, because this rung needed one.**
-     *
-     * `app/api/ask/agenda/route.ts` carries an earlier session's note that
-     * nothing is summarised. Under RULING 185 that is an implementation
-     * comment at precedence 7. The root constitution at precedence 2 says a
-     * summary "paraphrases a cited source, never fills a gap" — which
-     * contemplates LLM summaries and states their condition — and the author's
-     * current directive at precedence 1 asks for this rung by name.
-     *
-     * So it ships live, and the condition the older note was protecting is
-     * enforced by `lib/ask/validate.ts` rather than by not building the thing.
-     * The flag exists because "enforced mechanically" is a claim that should
-     * be one env var away from being withdrawn.
+     * Ask writes the reader-facing sentence only from records the app
+     * retrieved; `lib/ask/validate.ts` rejects anything the records do not
+     * support (rulings §0: Ask should answer as well as asking Claude directly).
      */
     closer:
-      "The author — the directive of 2026-08-27 asked for grounded synthesis by name. Retained as a one-flip pull: pulled, Ask degrades to the structured sourced answer it already produced.",
+      "Engineering: whoever is on call. An emergency off switch if a generated sentence is found to state something its records do not support; pulled, Ask degrades to the structured sourced answer.",
     trackerRows: "ASK01, ASK02",
     filters:
       "Both model rungs of the grounded pipeline: Ask falls back to deterministic interpretation and the structured evidence answer, with no generated prose",
@@ -135,7 +114,7 @@ export const RIPCORDS = {
    * ENTIRELY — the server refuses every write with a 503 while the app
    * renders normally and a tapping reader sees the honest not-counted line
    * (P11's rendering; no client change involved). For live-attack response
-   * without a code change. The pull procedure the author can follow at 2am
+   * without a code change. The pull procedure anyone on call can follow at 2am
    * is docs/ripcords.md. Ships LIVE.
    */
   /**
@@ -175,7 +154,7 @@ export const RIPCORDS = {
     envVar: "WTP_RIPCORD_REACTION_INTAKE",
     question:
       "Operational, not legal: held open for live-attack response — is the store currently under an attack that per-device limits cannot absorb?",
-    closer: "The author — pulled during an attack, restored when the attack ends",
+    closer: "Engineering: whoever is on call — pulled during an attack, restored when it ends",
     trackerRows: "T08",
     filters:
       "Every write to the reaction store and the search/ask log (both POST routes refuse with 503); read paths and rendering are untouched",

@@ -28,7 +28,8 @@ export const CONSOLE_INPUT_SQL = `SELECT md5(jsonb_build_array(
 export const CONSOLE_READER_INPUT_SQL = `SELECT md5(jsonb_build_array(
   (SELECT COALESCE(jsonb_agg(jsonb_build_array(key, current_version_id, promoted_at) ORDER BY key), '[]'::jsonb) FROM civic_data_promotions),
   (SELECT COALESCE(jsonb_agg(jsonb_build_array(key, sequence, fact_sha256) ORDER BY key), '[]'::jsonb) FROM civic_data_reader_projections),
-  (SELECT count(*) FROM civic_data_candidate_events)
+  (SELECT count(*) FROM civic_data_candidate_events
+   WHERE candidate_id IN (SELECT current_version_id FROM civic_data_promotions))
 )::text) AS signature`;
 
 export function consoleInputReader(controlUrl: string, readerUrl: string, codeSha: string | null,

@@ -55,6 +55,7 @@ import { CalendarLinks } from "@/components/map/popup/calendar-links";
 import { useResolvedLocation } from "@/hooks/use-resolved-location";
 import { tierVars } from "@/components/shell/tier-style";
 import { bodyDisplayName } from "@/lib/text/reader-names";
+import { gapsNotInAnswer } from "@/lib/text/say-once";
 
 /**
  * THE ASK PANEL — one input, two jobs, and ONE Ask engine behind the second.
@@ -1359,7 +1360,7 @@ export function AskBox({
               about us; "they haven't published it" is a fact about them, and
               rendering them as one sentence is the defect the constitution
               names. */}
-          {grounded.gaps?.map((g) => (
+          {gapsNotInAnswer(grounded.answer, grounded.gaps ?? []).map((g) => (
             <p
               key={g.statement}
               data-ask-gap={g.whose}

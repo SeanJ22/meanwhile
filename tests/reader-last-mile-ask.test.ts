@@ -275,7 +275,7 @@ test("an unreadable applicable ballot is a failed holding, never an empty civic 
     assert.deepEqual(ballot.loaderFailures, ["nj"]);
     const body = await ask("Who is running for U.S. House in the 11th District?", "NJ");
     assert.equal(body.denominators.ballotLoaderFailures, 1);
-    assert.ok(body.gaps.some((gap) => gap.whose === "OURS" && /ballot records.*could not be read/.test(gap.statement)));
+    assert.ok(body.gaps.some((gap) => gap.whose === "OURS" && /couldn't load the ballot for your area/.test(gap.statement)));
     const unaffected = await loadBallotForDivisions(divisions.AZ);
     assert.ok(unaffected.set);
     assert.deepEqual(unaffected.loaderFailures, []);

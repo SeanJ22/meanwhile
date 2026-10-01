@@ -110,8 +110,9 @@ test("an office we hold no one for is said as a gap of ours; a failed read is sa
   assert.equal(none?.answer, "We have not recorded who your mayor is yet.");
   assert.deepEqual(none?.gaps, [{ whose: "OURS", statement: "We have not recorded who holds the office of mayor for your area yet." }]);
   const failed = composeReaderOfficials({ ask, holdingFailed: true, held: [] });
-  assert.match(failed?.answer ?? "", /could not read our officeholder records/);
-  assert.match(failed?.gaps[0]?.statement ?? "", /not a finding that no one holds the office/);
+  assert.match(failed?.answer ?? "", /couldn't load the name of your mayor/);
+  assert.match(failed?.gaps[0]?.statement ?? "", /couldn't load our records of who holds this office/);
+  assert.doesNotMatch(failed?.gaps[0]?.statement ?? "", /no one holds|holding|canonical|projection/);
 });
 
 test("the state each division sits in is read, because the U.S. Senators and the statewide executives are held under it", () => {

@@ -18,6 +18,7 @@ import {
   routineFrontierPassBound,
   SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   routineSupervisorCycleId,
+  routineUnreceiptedSupervisorAttemptHistory,
   routineTaskDue,
   routineTaskFromContract,
   routineTaskSelection,
@@ -1370,6 +1371,15 @@ test("same-cycle isolation requires exact task/candidate receipts, never aggrega
   });
   assert.equal(exact.state, "SUCCEEDED", "a contained source failure is not a supervisor failure");
   assert.equal(routineSupervisorCycleIsolationIssue(exact), null);
+  const sharedVersion = { ...exact, attemptedTasks: 2, verifiedSourceSuccesses: 2, verifiedSourceFailures: 0,
+    taskReceipts: ["national-place:85635", "national-place:03060"].map(taskId => ({
+      ...exact.taskReceipts[0], taskId, receipt: { ...successReceipt, source: taskId, confirmedAt: T0 } })) };
+  const registeredJobs = new Set(sharedVersion.taskReceipts.map(row => row.taskId));
+  const sharedHistory = routineUnreceiptedSupervisorAttemptHistory([{ id: "shared", runtimeOutcome: sharedVersion }], registeredJobs);
+  assert.deepEqual(sharedHistory.issues, [], "separate exact jobs can confirm one unchanged canonical version");
+  const duplicateJob = routineUnreceiptedSupervisorAttemptHistory([{ id: "duplicate", runtimeOutcome: {
+    ...sharedVersion, taskReceipts: [sharedVersion.taskReceipts[0], sharedVersion.taskReceipts[0]] } }], registeredJobs);
+  assert.ok(duplicateJob.issues.length > 0, "duplicating the exact job still contradicts history");
 
   const sameSourceOnly = routineCivicDataSupervisorOutcome({
     cycleId: "cycle:same-source-only",

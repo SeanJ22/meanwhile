@@ -130,7 +130,6 @@
     "measures": "tsx scripts/measure-scoreboard.mts",
     "meetings:report": "tsx scripts/coverage-report.ts",
     "method:candidates": "node --env-file=.env.local --experimental-strip-types scripts/method-candidate.mts",
-    "method:check": "tsx scripts/method-check.mts",
     "mine:campaign-sites": "tsx scripts/mine-campaign-sites.mts",
     "mine:wiki-leaders": "tsx scripts/mine-wiki-leaders.mts",
     "mirror:ids": "node scripts/mirror-ids.mjs",

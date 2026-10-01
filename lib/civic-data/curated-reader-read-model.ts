@@ -17,6 +17,7 @@ export const CURATED_READER_CONTRACT_IDS = [
   "comment-access",
   "ballot-navigation",
   "campaign-sites",
+  "member-offices",
   "venue-resolutions",
   "meeting-body-crosswalk",
 ] as const;
@@ -134,6 +135,16 @@ export const settleBallotNavigationRead = (): Promise<string> =>
   readPromotedEdgeFirst(BALLOT_NAVIGATION.recordClass, BALLOT_NAVIGATION.scope, refreshBallotNavigationFromPromoted, "The ballot navigation links");
 export const refreshCampaignSitesFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("campaign-sites", options);
+export const refreshMemberOfficesFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
+  refreshCuratedReaderProjection("member-offices", options);
+/**
+ * State legislators' offices, edge first: the reader edge's proven copy of the pointer, else the database.
+ * Answers the read (NOT_RECORDED before the first daily refresh promotes); the synchronous selector then serves it.
+ */
+const MEMBER_OFFICES = requiredManualProductionContract("member-offices");
+export const settleMemberOfficesRead = (): Promise<CivicDataReadResult<CuratedReaderProjection>> =>
+  readPromotedEdgeFirst(MEMBER_OFFICES.recordClass, MEMBER_OFFICES.scope,
+    options => readCuratedReaderProjection("member-offices", options), "The state legislators' offices");
 export const refreshVenueResolutionsFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("venue-resolutions", options);
 

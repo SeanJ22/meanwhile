@@ -286,12 +286,12 @@ test("PLANTED: a conclusion that names no route it was earned by is refused", ()
   );
 });
 
-test("the SHIPPED corpus is the shape method:check already reads, and it validates", () => {
+test("the SHIPPED corpus is a PriorConclusion[] array, and it validates", () => {
   const path = join(ROOT, "data", "method", "conclusions.json");
   const raw = JSON.parse(readFileSync(path, "utf8")) as unknown;
   assert.ok(
     Array.isArray(raw),
-    "scripts/method-check.mts parses this file as PriorConclusion[]; an envelope would break it",
+    "readConclusionStore parses this file as PriorConclusion[]; an envelope would break it",
   );
 
   const store = readConclusionStore(path);

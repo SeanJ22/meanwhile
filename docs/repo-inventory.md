@@ -497,7 +497,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/meeting-card-check.mts`
 - `scripts/merge-engineer-adapters.mjs`
 - `scripts/method-candidate.mts`
-- `scripts/method-check.mts`
 - `scripts/migrate-hunt-state.mts`
 - `scripts/mine-campaign-sites.mts`
 - `scripts/mine-wiki-leaders.mts`
@@ -592,6 +591,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/prove-map-ask-endpoint.mts`
 - `scripts/prove-subscriber-guards.mts`
 - `scripts/provider-smoke.mts`
+- `scripts/publish-member-offices.mts`
 - `scripts/publish-owner-snapshot.mts`
 - `scripts/purge-synthetic-rows.mts`
 - `scripts/questionnaire-doc.mts`
@@ -796,7 +796,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-955 file(s).
+957 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -1341,6 +1341,8 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/meetings-online-sitting-visibility.test.ts`
 - `tests/meetings-recipes.test.ts`
 - `tests/meetings-site-discovery.test.ts`
+- `tests/member-offices-scope.test.ts`
+- `tests/member-offices.test.ts`
 - `tests/mesa-minutes-outcomes-routine.test.ts`
 - `tests/mesa-minutes-outcomes.test.ts`
 - `tests/method-candidate-authority.test.ts`
@@ -1756,7 +1758,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7054 file(s).
+7059 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -5662,6 +5664,9 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/officials/identity-chips.ts`
 - `lib/officials/lookup.ts`
 - `lib/officials/member-directory-scope.ts`
+- `lib/officials/member-offices-publication.ts`
+- `lib/officials/member-offices-read.ts`
+- `lib/officials/member-offices.ts`
 - `lib/officials/office-blurbs.ts`
 - `lib/officials/office-identity.ts`
 - `lib/officials/party-color.ts`
@@ -7299,7 +7304,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/meeting-card-check.mts`
 - `scripts/merge-engineer-adapters.mjs`
 - `scripts/method-candidate.mts`
-- `scripts/method-check.mts`
 - `scripts/migrate-hunt-state.mts`
 - `scripts/mine-campaign-sites.mts`
 - `scripts/mine-wiki-leaders.mts`
@@ -7394,6 +7398,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/prove-map-ask-endpoint.mts`
 - `scripts/prove-subscriber-guards.mts`
 - `scripts/provider-smoke.mts`
+- `scripts/publish-member-offices.mts`
 - `scripts/publish-owner-snapshot.mts`
 - `scripts/purge-synthetic-rows.mts`
 - `scripts/questionnaire-doc.mts`
@@ -8391,6 +8396,8 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/meetings-online-sitting-visibility.test.ts`
 - `tests/meetings-recipes.test.ts`
 - `tests/meetings-site-discovery.test.ts`
+- `tests/member-offices-scope.test.ts`
+- `tests/member-offices.test.ts`
 - `tests/mesa-minutes-outcomes-routine.test.ts`
 - `tests/mesa-minutes-outcomes.test.ts`
 - `tests/method-candidate-authority.test.ts`

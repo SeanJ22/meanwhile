@@ -233,6 +233,10 @@ export function WelcomeOverlay({
           <p>And when you can&apos;t — say something anyway.</p>
         </div>
 
+        {/* Sean, October 1, 2026: the words that tell a first-time reader which
+            ZIP to give, directly above the entry boxes. */}
+        <p className="welcome-start">Start where you live</p>
+
         <div className="welcome-field">
           <ZipComb
             value={zip}

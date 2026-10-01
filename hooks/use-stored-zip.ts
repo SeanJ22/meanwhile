@@ -12,31 +12,22 @@ import {
 } from "@/lib/state/subscribe-to-storage";
 
 /**
- * The zip the reader is currently looking at.
+ * The zip the reader is currently looking at, REMEMBERED BETWEEN VISITS
+ * (Sean, October 1, 2026).
  *
  * Stored as `approximate_location` — orientation, not identity, and never
- * treated as district truth.
+ * treated as district truth. It lives in `localStorage`, so reopening the site
+ * opens on the reader's own area instead of asking where they are again. This
+ * replaces the August rule that kept it per-tab and asked on every fresh open.
+ * A link's `?zip=` still names the place to open and wins over what is stored,
+ * and the intro's ZIP boxes are one tap away from the ZIP chip for anyone who
+ * wants somewhere else; the recents list (`hooks/use-recent-zips.ts`) keeps
+ * the other places they have looked at.
  *
- * **It is SESSION-scoped as of 2026-08-15 (6f, the author's ruling): "fresh
- * open prompts for zip. Reopening the app does NOT restore the last map
- * position/zip — it asks where you are."** So this lives in `sessionStorage`,
- * which dies with the tab, rather than in `localStorage`, which does not. Two
- * things follow, and both are the point:
- *
- * - A returning reader is ASKED where they are instead of being dropped into
- *   an answer about somewhere they were last week. A stale location is the one
- *   kind of wrong answer this product cannot notice on its own — every number
- *   under it is correct for a place the reader is not.
- * - Less about a reader survives on their device, not more. The only thing
- *   that outlives the tab is the recents list
- *   (`hooks/use-recent-zips.ts`), which exists so the re-ask costs one tap.
- *   Picks and device-local reactions are untouched: they are the reader's own
- *   work and were never location.
- *
- * `sessionStorage` is an external store, so it is read through
- * `useSyncExternalStore`: the server renders `pending`, and the first client
- * pass resolves it. That distinction is what keeps the entry prompt from
- * flashing past a reader mid-session before their zip loads.
+ * It is an external store, so it is read through `useSyncExternalStore`: the
+ * server renders `pending`, and the first client pass resolves it. That
+ * distinction is what keeps the entry prompt from flashing past a returning
+ * reader before their zip loads.
  */
 
 const STORAGE_KEY = "wtp.approximate_location";
@@ -73,7 +64,7 @@ export function readZipChoice(): string | null {
   // A link names the place to open, even in a tab with a previous selection.
   if (linkZip !== null) return JSON.stringify({ zip: linkZip });
   try {
-    return window.sessionStorage.getItem(STORAGE_KEY);
+    return window.localStorage.getItem(STORAGE_KEY);
   } catch {
     // Private mode or storage disabled. A forgotten zip just means the entry
     // notice shows — which is now the default anyway.
@@ -146,10 +137,6 @@ export function resolveStoredZip(table: CentroidTable, raw: string | null): Stor
 }
 
 
-/*
- * `sessionStorage` itself is per-tab, so the cross-tab `storage` event this
- * shares only ever fires for the localStorage half (the recents write).
- */
 const subscribe = (onStoreChange: () => void) => {
   const unsubscribe = subscribeToStorage(listeners, onStoreChange);
   window.addEventListener("popstate", onStoreChange);
@@ -212,7 +199,7 @@ export function useStoredZip() {
     };
 
     commitStorageWrite(
-      () => window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(payload)),
+      () => window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)),
       () => {
         // The one thing that outlives the tab (item 3), so the next open is a
         // tap rather than eleven. Written here so every path that sets a

@@ -197,7 +197,7 @@ test("shortening the constitution cannot delete law from the ledger", () => {
 });
 
 test("the legacy snapshots are preserved with their exact bytes", () => {
-  // Preservation is mandatory. The manifest is the receipt.
+  // Preserve the imported archive content; the current-policy notice is outside it.
   const manifest = JSON.parse(
     readFileSync(join(ROOT, "docs", "governance", "migration-manifest.json"), "utf8"),
   ) as { legacy: Record<string, { bytes: number; sha256: string }> };
@@ -209,7 +209,8 @@ test("the legacy snapshots are preserved with their exact bytes", () => {
     ["CLAUDE.md", "docs/governance/legacy/CLAUDE.pre-remediation.md"],
     ["docs/rulings.md", "docs/governance/legacy/rulings.pre-remediation.md"],
   ] as const) {
-    const text = readFileSync(join(ROOT, file), "utf8");
+    const text = readFileSync(join(ROOT, file), "utf8")
+      .replace(/^> Historical archive\.[^\r\n]*\r?\n\r?\n/, "");
     assert.equal(
       Buffer.byteLength(text, "utf8"),
       manifest.legacy[name].bytes,

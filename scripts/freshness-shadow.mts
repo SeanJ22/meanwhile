@@ -184,7 +184,6 @@ import {
   type OwnerDispatchWork,
 } from "../lib/control-plane/expansion/dispatch-work.ts";
 import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
-import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
 import { factChainLines } from "../lib/control-plane/promotion/fact-chain.ts";
 import { createPermanentMeetingFreshness } from "../lib/control-plane/promotion/meeting-freshness.ts";
 import { preloadAzOperationalReferenceBundle, preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
@@ -240,7 +239,7 @@ import {
   type WorkArtifact,
 } from "../lib/control-plane/scheduler/dispatch.ts";
 import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutJobWorstCaseUsd, scoutPrewarmPlan, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { buildScoutToolkit, scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
 import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { MIN_DISTINCT_RUNGS, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
@@ -973,7 +972,6 @@ const nextDueByObligation = new Map<string, string>();
 let openedDeterministic = 0;
 let openedModel = 0;
 /** Occurrences a previous cycle opened and did not reach, picked back up. */
-let resumedCount = 0;
 /** Obligations whose open/resume threw and were isolated. Never silent. */
 const preOpenSkipped: { obligationId: string; why: string }[] = [];
 const dueThisCycle: { obligation: (typeof sync.all)[number]; nextDueAt: string; cadenceHours: number }[] = [];
@@ -1332,11 +1330,7 @@ const allPlannedWork = canary ? [] : (await recoveryRepos.workItems.list()).filt
   item.value.autonomousPlan && !isRetiredRoutineMeetingAcquisition(item.value.autonomousPlan.contract)
 );
 for (const item of allPlannedWork) if (lifetimeHuntSubjects.has(item.value.subject)) lifetimeHuntWorkIds.add(item.id);
-const plannedWork = allPlannedWork;
-// A held Parser/Validator chain has no autonomous acquisition plan. Its next
-// stage is enqueued by advanceHeldWorkerFleet, so completed producer tasks also
-// reserve downstream time until that pass can inspect their retained evidence.
-const [heldWorkIds, settledTaskIds, neverClaimedTaskIds] = await (async () => {
+const [settledTaskIds, neverClaimedTaskIds] = await (async () => {
   const listing = canary ? [] : await recoveryRepos.routeTasks.list();
   for (const row of listing) if (row.value.workerTask && lifetimeHuntSubjects.has(row.value.workerTask.contract.subjectId)) {
     lifetimeHuntWorkIds.add(row.id);
@@ -1344,18 +1338,12 @@ const [heldWorkIds, settledTaskIds, neverClaimedTaskIds] = await (async () => {
   }
   const eligible = listing;
   return [
-    new Set(eligible
-      .filter(row => row.value.workerTask?.contract.schemaVersion === 1 &&
-        (row.value.state === "PENDING" || row.value.state === "RECLAIMABLE" ||
-          (row.value.state === "RESULT_RECORDED" && row.value.workerTask.role !== "ADVERSARIAL_AUDITOR")))
-      .map(row => row.value.workItemId)),
     /* The same read names the settled RouteTasks the pre-dispatch recovery starts from (2026-09-23). Only ids outlive it. */
     settledRouteTaskIds(eligible),
     /* And the freshness RouteTasks never claimed, which an abandoned occurrence must sit on (2026-09-23). */
     new Set(eligible.filter(row => row.value.state === "PENDING" && !row.value.workerTask).map(row => row.id)),
   ] as const;
 })();
-const downstreamWorkCount = plannedWork.length + heldWorkIds.size;
 finishPhase("schedule-and-intents");
 if (dispatchOrdering !== null) {
   console.log(
@@ -1403,7 +1391,6 @@ const openOccurrenceInStep = async (
     }
     if (resumed !== null) {
       occurrenceByObligation.set(id, { id: resumed.id, routeTaskId: resumed.routeTaskId });
-      resumedCount += 1;
     } else {
       const occ = await openOccurrence(repos, { obligation, dueAt: row.nextDueAt, now: NOW });
       if (occ === null) return false;
@@ -2294,8 +2281,6 @@ await writeResearchState(null);
 /* ----------------------------------------------------------- the executor --- */
 
 const vault = cycleVault(join(ROOT, ...VAULT_DIR));
-const readScoutEvidence = workerVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness");
-const readScoutCapture = researchVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness");
 
 const simulated: RunWork = async ({ executor, routeTaskId }) => ({
   ranAs: "DETERMINISTIC",
@@ -2519,8 +2504,6 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
 
 /* --------------------------------------------------------------- the cycle --- */
 
-// Keep a bounded share of the existing cycle for registered multi-worker work.
-// Otherwise an always-full refresh queue could starve the fleet indefinitely.
 // Registered investigations also need Scout after a known source fails or leaves
 // verification unresolved; initial source discovery is not the only model work.
 finishPhase("worker-context");
@@ -2738,13 +2721,6 @@ const cycle = await runCycle({
     modelExecutor: scoutFor,
     workerCapacity: workerCapacity,
     scoutLeaseTtlMs: 300_000,
-    /*
-     * The Scout lane admits against the HARD dispatch wall, not the reserve-reduced
-     * deadline the deterministic lane runs under (2026-09-18). `fleetReserveMs` caps
-     * the always-full refresh queue so it cannot starve the fleet; passing it as the
-     * Scout deadline too was starving the Scouts instead — two clean cycles deferred
-     * every Scout for BUDGET while the cycle finished at half the hard wall.
-     */
     /* The pre-warm of the static prefix, once per cycle before the first admitted Scout (2026-09-06). Never in a dry cycle. */
     ...(modelLaneEnabled && !dry ? { prewarm: prewarmScoutPrefix } : {}),
     onDispatched: async (result: DispatchResult, lane) => {
@@ -3571,7 +3547,7 @@ const researchLines = [
   `  model              ${SCOUT_MODEL} · ${workerCapacity} workers · Admin spend dial $${effectiveCeilingUsd}/day; each hunt retains its own budget`,
   `  scouts             ${laneCounts.modelDispatched} dispatched of ${dueModel.length} due model-class (${modelClassUnits.length} registered model-class of ${allUnits.length}) · ` +
     `deferred ${cycle.lanes?.model.deferred ?? 0}${deferredByLine ? ` (${deferredByLine})` : ""}` +
-    (dueModel.length - openedModel > 0 ? ` · ${dueModel.length - openedModel} not reached before the wall` : ""),
+    (dueModel.length - openedModel > 0 ? ` · ${dueModel.length - openedModel} not opened` : ""),
   `  spend              rolling ${RESEARCH_BOUNDS.windowHours}h: ${spendWindow.windowUsd === null ? "UNMEASURED" : `$${(spendWindow.windowUsd + spentThisCycle).toFixed(4)}`} of $${effectiveCeilingUsd} ceiling (${rollingCeiling.source.toLowerCase()}) ` +
     `(measured ${spendWindow.measured}, unmeasured ${spendWindow.unmeasured} before this cycle) · this cycle $${spentThisCycle.toFixed(4)}`,
   `  results            ${scoutResultsThisCycle.length} typed result(s)${outcomeCounts.size > 0 ? ` — ${[...outcomeCounts].map(([k, v]) => `${k} ${v}`).join(", ")}` : ""}` +

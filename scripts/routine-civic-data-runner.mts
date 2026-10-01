@@ -139,6 +139,9 @@ let step = "reading its task selection";
 installFatalLine("routine-civic-data-runner", () => step);
 
 const ROOT = process.cwd();
+// Place-task expansion also reads canonical geography. Give those startup
+// reads the same held copies as the later source and Reader children.
+const readCacheHost = await startCivicReadCacheHost();
 const FORCE = process.argv.includes("--force");
 const STANDING_SOURCE_TASKS = await withNationalPlaceTasks([...ROUTINE_SOURCE_TASKS, ...AUTOMATIC_REFRESH_TASKS], process.argv.slice(2));
 const TASK_SELECTION = routineTaskSelection(process.argv.slice(2), [...STANDING_SOURCE_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id }))]);
@@ -395,7 +398,6 @@ async function persistSupervisorOutcome(input: {
 }
 
 if (ROUTINE_DATA_PROCESS_LEASE !== null) {
-const readCacheHost = await startCivicReadCacheHost();
 step = "opening the production store";
 prepareProductionCivicDataWrite();
 const store = new PostgresRoutineDataStore();
@@ -1160,5 +1162,5 @@ step = "saving the daily database byte counter";
 if (!await flushDatabaseTransfer()) console.warn("RCD_TRANSFER daily byte counter could not be saved; data results are unchanged.");
 step = "releasing the host-local singleton";
 await ROUTINE_DATA_PROCESS_LEASE.release();
-await readCacheHost.close();
 }
+await readCacheHost.close();

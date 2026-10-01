@@ -21,11 +21,10 @@
  */
 
 import type { BudgetLedger, HostBudget, VendorBudget } from "../budget.ts";
-import { createLedger, tryAcquire } from "../budget.ts";
+import { createLedger, tryAcquire, release } from "../budget.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
-import { acquireHostBudget, releaseHostBudget } from "../repository/coordinator.ts";
 import type { SearchHit } from "../scheduler/scout-contract.ts";
-import { braveSearch, exaSearch, type FetchLike } from "../scheduler/scout-search.ts";
+import { braveSearch, exaSearch, SEARCH_REQUEST_LIFETIME_MS, type FetchLike } from "../scheduler/scout-search.ts";
 import type { DiscoverySearch, SearchRequestRecord } from "./meetings-discovery-executor.ts";
 
 export const DISCOVERY_SEARCH_VENDOR = "discovery-search";
@@ -69,6 +68,19 @@ export function withSearchBudgets(ledger: BudgetLedger, perDay: number): BudgetL
   };
 }
 
+/** Only expired search occupancy is reclaimed; limits, spend and backoff survive. */
+export function recoverSearchSlots(ledger: BudgetLedger, now: string): BudgetLedger {
+  const hostState = { ...ledger.hostState };
+  for (const host of Object.values(SEARCH_HOSTS)) {
+    const state = hostState[host];
+    if (state?.inFlight > 0 && state.lastRequestAt !== null &&
+      Date.parse(now) - Date.parse(state.lastRequestAt) > SEARCH_REQUEST_LIFETIME_MS) {
+      hostState[host] = { ...state, inFlight: 0 };
+    }
+  }
+  return { ...ledger, hostState };
+}
+
 /** Admits one provider request, or says why not. `done` returns the concurrency slot. */
 export interface SearchBudget {
   take(host: string): Promise<string | null>;
@@ -92,6 +104,8 @@ export function durableSearchBudget(input: {
 }): SearchBudget & { readonly used: () => number; readonly lifetimeHunt: SearchBudget } {
   let used = 0;
   let registered = false;
+  const held = new Map<string, string[]>();
+  const remember = (host: string, at: string) => held.set(host, [...(held.get(host) ?? []), at]);
   async function register(): Promise<void> {
     if (registered) return;
     try {
@@ -103,7 +117,13 @@ export function durableSearchBudget(input: {
     registered = true;
   }
   const done = async (host: string) => {
-    await releaseHostBudget(input.repos as ControlPlaneRepositories, { host, now: input.now() });
+    const at = held.get(host)?.shift();
+    if (at === undefined) return;
+    await input.repos.budget.mutate(ledger => ({
+      // A late release from an expired holder must not consume its replacement's slot.
+      ledger: ledger.hostState[host]?.lastRequestAt === at ? release(ledger, host) : ledger,
+      result: null,
+    }), input.now());
   };
   return {
     used: () => used,
@@ -112,8 +132,13 @@ export function durableSearchBudget(input: {
       const refused = input.admit();
       if (refused !== null) return refused;
       await register();
-      const acquired = await acquireHostBudget(input.repos as ControlPlaneRepositories, { host, now: input.now() });
+      const at = input.now();
+      const { result: acquired } = await input.repos.budget.mutate(ledger => {
+        const acquired = tryAcquire(recoverSearchSlots(ledger, at), host, at);
+        return { ledger: acquired.ledger, result: acquired };
+      }, at);
       if (!acquired.granted) return acquired.reason;
+      remember(host, at);
       used += 1;
       return null;
     },
@@ -127,16 +152,19 @@ export function durableSearchBudget(input: {
         // Ignore only the discretionary combined request count. The shared
         // transaction still applies host spacing, concurrency, backoff and
         // vendor concurrency/backoff to this exact hunt's request.
-        const outcome = await input.repos.budget.mutate((ledger) => {
+        const at = input.now();
+        const outcome = await input.repos.budget.mutate((original) => {
+          const ledger = recoverSearchSlots(original, at);
           const vendor = ledger.vendors[DISCOVERY_SEARCH_VENDOR];
           if (!vendor) return { ledger, result: "search vendor budget is missing" };
           const transient: BudgetLedger = { ...ledger, vendors: { ...ledger.vendors,
             [DISCOVERY_SEARCH_VENDOR]: { ...vendor, dailyRequestCap: null } } };
-          const acquired = tryAcquire(transient, host, input.now());
+          const acquired = tryAcquire(transient, host, at);
           return { ledger: { ...acquired.ledger, vendors: ledger.vendors },
             result: acquired.granted ? null : acquired.reason };
-        }, input.now());
+        }, at);
         if (outcome.result !== null) return outcome.result;
+        remember(host, at);
         used += 1;
         return null;
       },
@@ -173,7 +201,7 @@ export function makeDiscoverySearch(options: {
   const exaKey = options.exaKey?.trim() || null;
   if (braveKey === null && exaKey === null) return null;
   const fetchImpl = options.fetchImpl ?? ((url, init) => fetch(url, init as RequestInit) as unknown as ReturnType<FetchLike>);
-  const timeoutMs = options.timeoutMs ?? 8_000;
+  const timeoutMs = Math.min(options.timeoutMs ?? 8_000, SEARCH_REQUEST_LIFETIME_MS / 2);
   const perProvider = options.perProvider ?? 5;
   const maxHits = options.maxHits ?? 8;
 

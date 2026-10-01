@@ -21,7 +21,6 @@ import { appendTransition, contextFromRepositories, readPipelineStates } from ".
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import { discoveryPointerItemId, type CampaignSiteApprovedRecord } from "../lib/control-plane/promotion/campaign-site-chain.ts";
 import {
-  CAMPAIGN_SITE_BUDGET_MS,
   CAMPAIGN_SITE_MAX_READS,
   campaignSiteCycleLine,
   campaignSiteSubjectsFromHoldings,
@@ -476,7 +475,7 @@ test("a year-less site stays refused however often it is read: judged again from
   assert.ok(!later.report.chain.approved.some((a) => a.campaignSite.candidacyId === KAPNER));
 });
 
-test("per-cycle bounds hold: at most 12 lead reads, second reads counted apart, a budget-cut read deferred, never refused, and the next cycle reads the rest", async (t) => {
+test("read bounds hold without a pass deadline: at most 12 lead reads, second reads counted apart, and the next cycle reads the rest", async (t) => {
   const p = await plane(t);
   /* Twenty more held findings, each naming its own readable page for its own candidacy. */
   const ids = [...committedSubjects().keys()].filter((id) => id !== KAPNER && id !== TANG_WILLIAMS).slice(0, 20);
@@ -514,19 +513,14 @@ test("per-cycle bounds hold: at most 12 lead reads, second reads counted apart, 
   assert.equal(reread.report.chain.readsUsed, 1, "a spent lead bound never starves the audit's second read");
   assert.equal(reread.report.chain.approved.length, 1);
 
-  /*
-   * A pass whose time runs out defers the read it was in (its robots.txt took the whole budget, so the page is never
-   * asked) and every later one: NOT_READ, never TRANSPORT_FAILED or ROBOTS_REFUSED, and none of them counts as a read.
-   */
   const slow = await createSlow(t, pages);
-  assert.ok(slow.report.budgetSpent);
-  assert.equal(slow.report.chain.readsUsed, 0);
-  assert.deepEqual(Object.keys(slow.report.byCode).filter((code) => code !== "NEWS_OUTLET"), ["NOT_READ"], JSON.stringify(slow.report.byCode));
-  assert.equal(slow.report.byCode.NOT_READ, 21, "20 sites and Kapner, every one still owed");
-  assert.equal(slow.requests, 1, "one request, the robots.txt the budget ran out on");
+  assert.equal(slow.report.chain.readsUsed, 12, "slow successful reads continue beyond the former pass deadline");
+  assert.equal(slow.requests, 24, "each admitted lead reads robots.txt and its page");
+  assert.ok(slow.report.elapsedMs > 60_000);
+
 });
 
-/** A fresh plane whose every request takes 61 s of the pass's 60 s. */
+/** Each successful request advances the measured clock beyond the former pass deadline. */
 async function createSlow(t: { after: (fn: () => void) => void }, pages: Record<string, { status: number; body: string }>) {
   const p = await plane(t);
   const ctx = await contextFromRepositories(p.repos);
@@ -545,7 +539,6 @@ async function createSlow(t: { after: (fn: () => void) => void }, pages: Record<
     open: async (request) => { requests += 1; ms += 61_000; return runtime.get(request); },
     vaultRoot: p.vaultRoot, heldVault: vault, methodVersion: 1,
   });
-  assert.equal(CAMPAIGN_SITE_BUDGET_MS, 60_000);
   return { report, requests };
 }
 
@@ -593,14 +586,14 @@ test("the pass reads the leads of candidates with no campaign link first; a link
   }
 });
 
-test("the audit's second read comes before new leads: an item one read from approval is approved even when the backlog spends the pass's whole time budget", async (t) => {
+test("the audit's second read comes before new leads and slow backlog reads continue without a pass deadline", async (t) => {
   const p = await plane(t);
   const pointer = discoveryPointerItemId(TANG_WILLIAMS, LILY);
   await cycle(p, T1);
   assert.equal((await readPipelineStates(p.repos)).find((s) => s.itemId === pointer)?.stage, "VERIFIED", "the Marginalia site waits for a second read an hour later");
   const { pages } = await backlog(p);
 
-  /* Two hours later every request takes 5 s: the 60 s budget holds a dozen requests, far fewer than the backlog's forty. */
+  /* Two hours later every request advances the measured clock by five seconds. */
   let ms = Date.parse(T2);
   const runtime = servedRuntime(pages, T2);
   const vault = await indexVault(p.vaultRoot);
@@ -612,8 +605,7 @@ test("the audit's second read comes before new leads: an item one read from appr
     open: async (request) => { requests.push(request.url); ms += 5_000; return runtime.get(request); },
     vaultRoot: p.vaultRoot, heldVault: vault, methodVersion: 1,
   });
-  assert.equal(CAMPAIGN_SITE_BUDGET_MS, 60_000);
-  assert.ok(report.budgetSpent, "the backlog outlasts the pass's time");
+  assert.ok(report.elapsedMs > 60_000, "the backlog continues past the former pass deadline");
   assert.ok(report.chain.leads.some((l) => l.outcome === "DEFERRED" && l.refusals[0]?.code === "NOT_READ"), "new leads stay owed for the next cycle");
   assert.deepEqual(requests.slice(0, 2), ["https://www.lilytangwilliams.com/robots.txt", LILY], "the second read is the pass's first read");
   assert.equal(report.chain.rereadsUsed, 1);
@@ -621,53 +613,25 @@ test("the audit's second read comes before new leads: an item one read from appr
   assert.ok(report.chain.approved.some((a) => a.campaignSite.candidacyId === TANG_WILLIAMS));
 });
 
-/*
- * 2026-09-25: the pass overran its 60 s budget (93–160 s) and once hung past
- * 4.5 minutes, so the research cycle was killed at its 900 s limit with no
- * record. On the REAL clock, with a fetch that never answers and a store call
- * that never returns, the pass ends at its budget plus the stop grace, and
- * every unread lead stays owed (NOT_READ), never refused.
- */
 const HANG = <T>(): Promise<T> => new Promise<T>(() => undefined);
-const realSleep = (ms: number): Promise<void> => new Promise((done) => setTimeout(done, ms));
 
-test("a fetch that never answers cannot hold the pass: it ends at its wall-time budget and every unread lead stays owed, never refused", async (t) => {
+test("slow loading and store work complete before the pass reports, without a pass deadline", async t => {
   const p = await plane(t);
-  const started = Date.now();
-  const { report } = await cycle(p, T1, { budgetMs: 400, stopGraceMs: 300, clock: () => Date.now(), sleep: realSleep, open: () => HANG() });
-  const elapsed = Date.now() - started;
-  assert.ok(elapsed < 400 + 300 + 1_500, `the pass returned in ${elapsed} ms, not held by the stalled fetch`);
-  assert.ok(report.budgetSpent, "the time budget is what ended the pass");
-  assert.equal(report.chain.readsUsed, 0, "no read completed");
-  assert.ok((report.byCode.NOT_READ ?? 0) > 0, "the leads the stalled fetch never read stay owed");
-  /* Only a lead the verifier refuses before any request (a file, a news host) may be refused; nothing a request would have decided. */
-  const notRead = report.chain.leads.filter((l) => l.refusals[0]?.code === "NOT_READ");
-  for (const lead of notRead) assert.equal(lead.outcome, "DEFERRED", `${lead.lead.url} is deferred, never refused`);
-  for (const code of Object.keys(report.byCode)) assert.doesNotMatch(code, /TRANSPORT|ROBOTS|HTTP|TIMEOUT|STATUS/, "a stalled read is never filed as a refusal a request decided");
-});
-
-test("the budget runs from the pass's start, loading included, and a store call that never returns is abandoned at the hard stop", async (t) => {
-  const p = await plane(t);
-  /* Loading already spent the whole budget: nothing is read, and the pass still returns. */
-  const loaded = await cycle(p, T1, { budgetMs: 400, stopGraceMs: 300, startedAtMs: Date.now() - 400, clock: () => Date.now(), sleep: realSleep });
-  assert.equal(loaded.report.chain.readsUsed, 0, "no read starts once the budget measured from the pass's start is spent");
-  assert.equal(p.requests.length, 0);
-
-  /* The projection's own store read hangs: the pass is abandoned at budget + grace, with a report that says so. */
-  const hung = new Proxy(p.repos.artifacts, {
+  let ms = Date.parse(T1);
+  let reads = 0;
+  const delayed = new Proxy(p.repos.artifacts, {
     get(target, key) {
-      if (key === "readAll") return () => HANG();
+      if (key === "readAll") return async () => { ms += 300_000; reads++; return target.readAll(); };
       const value = (target as unknown as Record<string | symbol, unknown>)[key];
       return typeof value === "function" ? (value as (...a: unknown[]) => unknown).bind(target) : value;
     },
   });
-  const started = Date.now();
-  const { report } = await cycle({ ...p, repos: { ...p.repos, artifacts: hung } }, T1, { budgetMs: 400, stopGraceMs: 300, clock: () => Date.now(), sleep: realSleep });
-  const elapsed = Date.now() - started;
-  assert.ok(elapsed >= 400 && elapsed < 400 + 300 + 1_500, `abandoned at the hard stop after ${elapsed} ms`);
-  assert.equal(report.stoppedAtDeadline, true);
-  assert.equal(report.chain.offers.length, 0, "an abandoned pass vouches for no offer");
-  assert.match(campaignSiteCycleLine(report), /STOPPED at its hard deadline/);
+  const { report } = await cycle({ ...p, repos: { ...p.repos, artifacts: delayed } }, T1,
+    { startedAtMs: ms - 300_000, clock: () => ms });
+  assert.ok(reads > 0);
+  assert.ok(report.elapsedMs >= 600_000, "loading and store time are measured, never used to abandon the pass");
+  assert.ok(report.chain.readsUsed > 0, "HTTP reads still start after slow loading");
+  assert.doesNotMatch(campaignSiteCycleLine(report), /STOPPED|time budget/);
 });
 
 test("withinWallTime ends a promise that never settles and clears its timer when one does", async () => {
@@ -712,15 +676,14 @@ test("the paid lane stays closed under the owner's pause, and the pass is plain 
   /* The runner's pass: after meetings discovery, gated on the cycle kind, the runner pause and the time left, never on the paid lane. */
   const runner = readFileSync(join(ROOT, "scripts", "freshness-shadow.mts"), "utf8");
   const meetingsEnd = runner.indexOf('finishPhase("meetings-discovery");');
-  const start = runner.indexOf("if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {", meetingsEnd);
+  const start = runner.indexOf("if (dry || canary || ONLY !== null || IDS !== null) {", meetingsEnd);
   const end = runner.indexOf('finishPhase("campaign-sites");');
   assert.ok(start > meetingsEnd && end > start, "the executable pass is its own phase, after meetings discovery");
   const block = runner.slice(start, end);
   assert.doesNotMatch(block, /modelLaneEnabled|laneClosure|guardedModelTransport|scoutFor|workerKey/);
   assert.match(block, /intents\.runnerPause\.paused/);
   /* The pass starts only with its whole budget and the cycle's backstop left, and the backstop bounds it in wall time (2026-09-25). */
-  assert.match(block, /CAMPAIGN_SITE_BUDGET_MS \+ 2 \* CAMPAIGN_SITE_STOP_GRACE_MS > DISPATCH_DEADLINE_MS/);
-  assert.match(block, /withinWallTime\(\(async \(\) => \{[\s\S]*startedAtMs: campaignStartedMs[\s\S]*\}\)\(\), campaignHardStopMs - \(Date\.now\(\) - campaignStartedMs\)\)/);
+  assert.doesNotMatch(block, /withinWallTime|DISPATCH_DEADLINE_MS|CAMPAIGN_SITE_BUDGET_MS|scheduledBlackout/, "plain-code work has no clock limit");
   assert.match(block, /guardedOpenBytes\("discovery-web", "campaign-site-chain", fetch, \{ followRedirects: false \}\)/);
   assert.match(block, /spaceOut: spacer/);
   assert.match(runner, /campaignSiteCycleLine\(campaignSites\)/, "the pass reaches the cycle's digest");

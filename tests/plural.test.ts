@@ -35,6 +35,22 @@ import { emptyFieldManual, newFieldManualEntry, projectFieldManual } from "../li
 test("a national host bound saves admitted responses and defers all remaining ZIPs without abandoning Attempts", async t => {
   const repos = createMemoryRepositories();
   const store = new MemoryEvidenceStore();
+  // Cross renewal boundaries during acquisition, with stale reads held long
+  // enough for two competing heartbeat writers to expose their CAS race.
+  const interval = globalThis.setInterval;
+  t.mock.method(globalThis, "setInterval", (callback: () => void, delay?: number) => interval(callback, Math.min(delay ?? 1, 2)));
+  const leaseRead = repos.leases.mustRead.bind(repos.leases);
+  t.mock.method(repos.leases, "mustRead", async (id: string) => {
+    const held = await leaseRead(id);
+    await new Promise(resolve => setTimeout(resolve, 1));
+    return held;
+  });
+  let heartbeatWrites = 0;
+  const leaseWrite = repos.leases.compareAndSet.bind(repos.leases);
+  t.mock.method(repos.leases, "compareAndSet", async (...args: Parameters<typeof leaseWrite>) => {
+    if (!args[2].released && args[1] > 0) heartbeatWrites++;
+    return leaseWrite(...args);
+  });
   let requests = 0;
   const year = new Date().getUTCFullYear();
   const names = ["2020 Census ZIP Code Tabulation Areas", `${Math.floor((year - 1789) / 2) + 1}th Congressional Districts`,
@@ -53,6 +69,7 @@ test("a national host bound saves admitted responses and defers all remaining ZI
   const input = { tools, store: new MemoryRoutineDataStore(), zips: ["03060", "03101", "03301"],
     publish: async () => { assert.fail("incomplete geography cannot publish"); } };
   const result = await runNationalPlaceTask(input);
+  assert.ok(heartbeatWrites > 0, "the national acquisition exercised its canonical lease heartbeat");
   assert.deepEqual(result.map(row => row.zip), input.zips);
   assert.ok(result.every(row => "deferred" in row && row.deferred.includes("next pass")));
   assert.equal(requests, RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);

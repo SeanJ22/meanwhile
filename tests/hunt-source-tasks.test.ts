@@ -119,7 +119,7 @@ test("only the exact original Cochise work binding admits the source-scoped voti
   assert.equal(huntSourceTasks([{ ...original, decision: { ...original.decision, receiptId: "different" } }], now, [work]).some(task => task.id === vote.id), false);
 });
 
-test("scheduled blackout admits only the already-started exact original source Send", () => {
+test("all funded source Sends are admitted regardless of the former blackout", () => {
   const base = scope("AZ");
   const original = { ...base, decision: { ...base.decision,
     key: ORIGINAL_LIFETIME_HUNT.key, receiptId: ORIGINAL_LIFETIME_HUNT.receiptId,
@@ -127,8 +127,9 @@ test("scheduled blackout admits only the already-started exact original source S
     decidedAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt } };
   const other = { ...base, decision: { ...base.decision, receiptId: "another-send" } };
   const blackout = "2026-10-04T02:00:00.000Z";
-  assert.deepEqual(admittedHuntSourceScopes([original, other], blackout), [original]);
-  assert.deepEqual(admittedHuntSourceScopes([{ ...original, decision: { ...original.decision, budgetUsd: 51 } }], blackout), []);
+  assert.deepEqual(admittedHuntSourceScopes([original, other], blackout), [original, other]);
+  const changedBudget = { ...original, decision: { ...original.decision, budgetUsd: 51 } };
+  assert.deepEqual(admittedHuntSourceScopes([changedBudget], blackout), [changedBudget]);
   assert.deepEqual(admittedHuntSourceScopes([original, other], "2026-10-05T12:00:00.000Z"), [original, other]);
 });
 

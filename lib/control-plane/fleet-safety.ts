@@ -7,7 +7,7 @@
  * concurrent model requests until their provider-reported cost is persisted.
  */
 import type { CostEntry } from "./cost.ts";
-import { CACHE_RATE_MULTIPLIERS, rateFor, usdForModelUsage } from "./model-cost.ts";
+import { CACHE_RATE_MULTIPLIERS, rateFor, priceMeteredUsage, readMeteredUsage } from "./model-cost.ts";
 import type { ModelRequest, ModelResponse, ModelTransport, ScoutEscalationAdmission, ScoutEscalationRequest } from "./scheduler/scout-executor.ts";
 import { ModelTransportError } from "./scheduler/scout-executor.ts";
 import type { OpenBytes } from "./scheduler/scout-contract.ts";
@@ -15,54 +15,17 @@ import type { OpenOne } from "./scheduler/route-executor.ts";
 
 export const FLEET_ZONE = "America/Phoenix";
 
-/**
- * Aggregate safety bounds for the standing runner.
- *
- * The per-cycle guardrails — a dispatch count, a per-cycle model-spend ceiling,
- * a provider-request count, a per-cycle payload total — were retired once prompt
- * caching cut an Attempt to about a twelfth of its pre-caching cost and those
- * numbers, set when a cycle's cost was unknown, became the throttle on the work
- * the fleet most needs at speed. What remains is deliberately small:
- *
- *   rolling24HourModelUsd  the ONE spend limit — flat out under it, paused over it
- *   maxDownloadBytes       a per-DOWNLOAD memory cap on the guarded fetch seam,
- *                          NOT a per-cycle total: a single response never reads
- *                          more than this into memory. It clears the largest
- *                          record the seam legitimately pulls (a ~9.2 MiB
- *                          campaign-finance page) with headroom; a bulk file
- *                          cannot reach this seam — bulk ingestion has its own
- *                          full-read, integrity-checked path and never rides here
- *   maxWallMsPerCycle      a cycle still has to finish — about work, not spend
- *
- * The Saturday operational-night blackout is a separate courtesy toward the
- * public sites we depend on and is kept (`scheduledBlackoutAt`).
- */
-/**
- * The aggregate safety bounds, as a widening of {@link FLEET_SAFETY_BOUNDS}:
- * `rolling24HourModelUsd` is a plain `number`, not the literal constant, because
- * the value IN FORCE is the owner's console override read at runtime
- * (`AdminConfig.fleetSpendCeiling`, resolved by {@link resolveRollingCeiling}),
- * and the constant below is only the fallback.
- */
+/** Admin supplies the rolling spending limit. No cycle wall or night schedule limits work. */
 export interface FleetSafetyBounds {
   readonly rolling24HourModelUsd: number;
   readonly maxDownloadBytes: number;
-  readonly maxWallMsPerCycle: number;
+
 }
 
 export const FLEET_SAFETY_BOUNDS = {
-  // The FALLBACK rolling 24-hour model-spend ceiling. The value in force is the
-  // owner's console override (`AdminConfig.fleetSpendCeiling`), read at the start
-  // of every cycle through `resolveRollingCeiling`; this constant governs only
-  // when the row was read and carries no override — "a ceiling that disappears
-  // must not become no ceiling". A row that cannot be read or is malformed does
-  // not reach this fallback: the runner holds paid work instead, because the
-  // owner's dial may be set below it (2026-09-25). Restored to $100 (the pre-2026-09-19
-  // value) now the console dial can move it with no deploy and no restart; the
-  // interim $25 brake is retired into the dial.
-  rolling24HourModelUsd: 100,
+  // Missing Admin authority permits no paid work. The dial supplies the runtime limit.
+  rolling24HourModelUsd: 0,
   maxDownloadBytes: 24 * 1024 * 1024,
-  maxWallMsPerCycle: 15 * 60_000,
 } as const;
 
 /**
@@ -152,73 +115,11 @@ export interface FleetSafetySnapshot {
   readonly lastSuccessfulActivity: string | null;
 }
 
-interface ZonedParts {
-  readonly year: number;
-  readonly month: number;
-  readonly day: number;
-  readonly hour: number;
-  readonly weekday: string;
-}
-
-function zonedParts(iso: string): ZonedParts {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: FLEET_ZONE,
-    hourCycle: "h23",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    weekday: "short",
-  }).formatToParts(new Date(iso));
-  const part = (name: string): string => parts.find((p) => p.type === name)?.value ?? "";
-  return {
-    year: Number(part("year")),
-    month: Number(part("month")),
-    day: Number(part("day")),
-    hour: Number(part("hour")),
-    weekday: part("weekday"),
-  };
-}
-
-function localDate(parts: Pick<ZonedParts, "year" | "month" | "day">): string {
-  return `${parts.year}-${String(parts.month).padStart(2, "0")}-${String(parts.day).padStart(2, "0")}`;
-}
-
-function shiftDate(date: string, days: number): string {
-  return new Date(Date.parse(`${date}T00:00:00.000Z`) + days * 86_400_000).toISOString().slice(0, 10);
-}
-
-/** Phoenix currently has no DST, but derive the offset through Intl instead of assuming it. */
-function phoenixInstant(date: string, hour: number): string {
-  const [year, month, day] = date.split("-").map(Number);
-  const target = Date.UTC(year, month - 1, day, hour, 0, 0);
-  let guess = target;
-  for (let i = 0; i < 3; i += 1) {
-    const parts = zonedParts(new Date(guess).toISOString());
-    const wall = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, 0, 0);
-    guess -= wall - target;
-  }
-  return new Date(guess).toISOString();
-}
-
+/** Historical snapshot shape retained; no operational night schedule remains. */
 export function operationalNightAt(nowIso: string): OperationalNight {
-  const now = zonedParts(nowIso);
-  const today = localDate(now);
-  const startDate = now.hour < 6 ? shiftDate(today, -1) : today;
-  const start = phoenixInstant(startDate, 18);
-  const end = phoenixInstant(shiftDate(startDate, 1), 6);
-  return {
-    active: Date.parse(nowIso) >= Date.parse(start) && Date.parse(nowIso) < Date.parse(end),
-    start,
-    end,
-    startsOnSaturday: zonedParts(start).weekday === "Sat",
-  };
+  return { active: false, start: nowIso, end: new Date(Date.parse(nowIso) + 15 * 60_000).toISOString(), startsOnSaturday: false };
 }
-
-export function scheduledBlackoutAt(nowIso: string): boolean {
-  const night = operationalNightAt(nowIso);
-  return night.active && night.startsOnSaturday;
-}
+export function scheduledBlackoutAt(_nowIso: string): boolean { return false; }
 
 /**
  * Every token-bearing or dollar-bearing entry is model-backed, irrespective
@@ -345,12 +246,7 @@ export function modelRequestWorstCaseUsd(request: ModelRequest): number | null {
 
 /** What a model response cost, from its provider-reported usage; null when the usage is incomplete. */
 export function modelResponseUsd(response: ModelResponse): number | null {
-  return usdForModelUsage(response.model, {
-    inputTokens: response.usage.input_tokens ?? null,
-    outputTokens: response.usage.output_tokens ?? null,
-    cacheReadInputTokens: response.usage.cache_read_input_tokens ?? null,
-    cacheCreationInputTokens: response.usage.cache_creation_input_tokens ?? null,
-  });
+  return priceMeteredUsage(response.model, readMeteredUsage(response.usage, response.batch === true), "5m").usd;
 }
 
 export class FleetSafetyController {
@@ -371,7 +267,6 @@ export class FleetSafetyController {
   private readonly night: OperationalNight;
   private readonly paused: boolean;
   private readonly modelHold: string | null;
-  private readonly lifetimeHuntWork: (work: string) => boolean;
   private readonly clock: () => number;
   private readonly deferrals: FleetNamedDeferral[] = [];
   private readonly stopReasons = new Set<string>();
@@ -420,7 +315,6 @@ export class FleetSafetyController {
     this.night = operationalNightAt(input.now);
     this.paused = input.paused ?? false;
     this.modelHold = input.modelHold ?? null;
-    this.lifetimeHuntWork = input.lifetimeHuntWork ?? (() => false);
     this.clock = input.clock ?? Date.now;
     this.lastSuccessfulActivity = input.lastSuccessfulActivity ?? null;
     const nightSpend = aggregateModelSpend(input.costs, this.night.start, input.now);
@@ -446,21 +340,13 @@ export class FleetSafetyController {
     throw new FleetSafetyRefusal(code, why);
   }
 
-  admitDispatch(work: string, nowMs: number = this.clock()): { readonly admit: true } | { readonly admit: false; readonly code: FleetStopCode; readonly why: string } {
-    const deny = (code: FleetStopCode, why: string) => {
-      this.defer(work, code, why);
-      return { admit: false as const, code, why };
-    };
-    if (scheduledBlackoutAt(new Date(nowMs).toISOString()) && !this.lifetimeHuntWork(work)) return deny("SCHEDULED_BLACKOUT", "Saturday 18:00 through Sunday 06:00 America/Phoenix permits no billable or network research");
-    if (nowMs - this.startedMs >= this.bounds.maxWallMsPerCycle) return deny("WALL_CLOCK_CEILING", `cycle reached ${this.bounds.maxWallMsPerCycle}ms`);
-    // No per-cycle dispatch ceiling: the wall above and the rolling daily spend
-    // ceiling are the limits. `dispatches` is still counted, for the admin panel.
+  admitDispatch(_work: string, _nowMs: number = this.clock()): { readonly admit: true } | { readonly admit: false; readonly code: FleetStopCode; readonly why: string } {
+    // Budget reservations govern paid calls; dispatches are counted for Admin.
     this.dispatches += 1;
     return { admit: true };
   }
 
   admitProviderRequest(provider: string, work: string, outboundPayloadBytes = 0): number {
-    if (scheduledBlackoutAt(new Date(this.clock()).toISOString()) && !this.lifetimeHuntWork(work)) this.refuse(work, "SCHEDULED_BLACKOUT", "network/provider execution is disabled during the Saturday operational-night blackout");
     const circuit = this.circuits.get(provider);
     if (circuit) {
       this.circuits.set(provider, {
@@ -469,7 +355,6 @@ export class FleetSafetyController {
       });
       this.refuse(work, "PROVIDER_CIRCUIT_BROKEN", `${provider} is latched until ${circuit.eligibleAt}: ${circuit.condition}`);
     }
-    if (this.clock() - this.startedMs >= this.bounds.maxWallMsPerCycle) this.refuse(work, "WALL_CLOCK_CEILING", `cycle reached ${this.bounds.maxWallMsPerCycle}ms`);
     // No per-cycle request or payload-total ceiling. The per-DOWNLOAD cap
     // (`maxDownloadBytes`, enforced while streaming in `readBoundedResponse`) is
     // the memory bound; requests and bytes are still counted for the admin panel.
@@ -514,10 +399,8 @@ export class FleetSafetyController {
     // operational-night model-spend cap. A model response's size is bounded by
     // its own `max_tokens`, so it needs no per-cycle payload check.
     const pending = this.cycleUsd + this.reservedUsd + reserve;
-    if (!this.lifetimeHuntWork(work)) {
-      if (this.historicalRollingUsd === null) this.refuse(work, "UNMEASURED_MODEL_SPEND", "rolling-24-hour model spend is unmeasured");
-      if (this.historicalRollingUsd + pending > this.bounds.rolling24HourModelUsd) this.refuse(work, "ROLLING_24_HOUR_MODEL_SPEND_CEILING", `worst-case request would exceed the $${this.bounds.rolling24HourModelUsd.toFixed(2)} rolling-24-hour ceiling`);
-    }
+    if (this.historicalRollingUsd === null) this.refuse(work, "UNMEASURED_MODEL_SPEND", "rolling-24-hour model spend is unmeasured");
+    if (this.historicalRollingUsd + pending > this.bounds.rolling24HourModelUsd) this.refuse(work, "ROLLING_24_HOUR_MODEL_SPEND_CEILING", `worst-case request would exceed the $${this.bounds.rolling24HourModelUsd.toFixed(2)} rolling-24-hour ceiling`);
     this.admitProviderRequest(provider, work, bodyBytes);
     this.reservedUsd += reserve;
     return { usd: reserve, provider, work, released: false };
@@ -533,12 +416,7 @@ export class FleetSafetyController {
     this.releaseReservation(reservation);
     const responseBytes = Buffer.byteLength(JSON.stringify(response));
     this.recordInboundBytes(reservation.work, responseBytes);
-    const usd = usdForModelUsage(response.model, {
-      inputTokens: response.usage.input_tokens ?? null,
-      outputTokens: response.usage.output_tokens ?? null,
-      cacheReadInputTokens: response.usage.cache_read_input_tokens ?? null,
-      cacheCreationInputTokens: response.usage.cache_creation_input_tokens ?? null,
-    });
+    const usd = modelResponseUsd(response);
     if (usd === null) {
       this.cycleModelSpendMeasured = false;
       this.refuse(reservation.work, "UNMEASURED_MODEL_SPEND", `provider did not return complete metered usage for ${response.model}`);
@@ -550,15 +428,15 @@ export class FleetSafetyController {
   failModelRequest(reservation: Reservation, error: unknown, at: string = new Date(this.clock()).toISOString()): void {
     this.releaseReservation(reservation);
     const failure = classifyProviderFailure(error);
-    if (failure.class === "HARD") this.latchProvider(reservation.provider, failure.condition, reservation.work, at);
+    if (failure.class === "HARD" || failure.class === "TRANSIENT") this.latchProvider(reservation.provider, failure.condition, reservation.work, at,
+      error instanceof ModelTransportError ? error.retryAfterMs : null);
   }
 
-  latchProvider(provider: string, condition: string, work: string, at: string): ProviderCircuit {
+  latchProvider(provider: string, condition: string, work: string, at: string, retryAfterMs: number | null = null): ProviderCircuit {
     const existing = this.circuits.get(provider);
-    const night = operationalNightAt(at);
     const circuit: ProviderCircuit = existing
       ? { ...existing, workDeferred: [...new Set([...existing.workDeferred, work])] }
-      : { provider, condition, firstObservedAt: at, workDeferred: [work], eligibleAt: night.end };
+      : { provider, condition, firstObservedAt: at, workDeferred: [work], eligibleAt: new Date(Date.parse(at) + Math.max(15 * 60_000, retryAfterMs ?? 0)).toISOString() };
     this.circuits.set(provider, circuit);
     this.defer(work, "PROVIDER_CIRCUIT_BROKEN", `${provider} hard-refused work: ${condition}; no automated retry before ${circuit.eligibleAt}`);
     return circuit;
@@ -601,10 +479,9 @@ export class FleetSafetyController {
    */
   rollingCeilingReached(
     worstCaseUsd = 0,
-    work = "",
+    _work = "",
   ): { readonly reached: boolean; readonly spentUsd: number | null; readonly capUsd: number } {
     const capUsd = this.bounds.rolling24HourModelUsd;
-    if (this.lifetimeHuntWork(work)) return { reached: false, spentUsd: this.historicalRollingUsd === null ? null : this.historicalRollingUsd + this.cycleUsd, capUsd };
     if (this.historicalRollingUsd === null) return { reached: false, spentUsd: null, capUsd };
     const projected = this.historicalRollingUsd + this.cycleUsd + this.reservedUsd + worstCaseUsd;
     return { reached: projected > capUsd, spentUsd: this.historicalRollingUsd + this.cycleUsd, capUsd };
@@ -657,10 +534,8 @@ export class FleetSafetyController {
 
   /** A fetch seam that hard-caps application payload consumption by streaming. */
   guardedOpenOne(provider: string, work: string, fetchImpl: typeof fetch = fetch): OpenOne {
-    return async ({ url, method, headers, body, timeoutMs }) => {
+    return async ({ url, method, headers, body }) => {
       const started = Date.now();
-      const abort = new AbortController();
-      const timer = setTimeout(() => abort.abort(), timeoutMs);
       try {
         let currentUrl = url;
         let currentMethod = method;
@@ -672,7 +547,6 @@ export class FleetSafetyController {
           try {
             response = await fetchImpl(currentUrl, {
               method: currentMethod,
-              signal: abort.signal,
               redirect: "manual",
               headers: { ...headers, range: `bytes=0-${Math.max(0, reservation.streamCapBytes - 1)}` },
               ...(currentBody === undefined ? {} : { body: currentBody }),
@@ -714,8 +588,6 @@ export class FleetSafetyController {
           durationMs: Date.now() - started,
           transportError: error instanceof Error ? error.message : String(error),
         };
-      } finally {
-        clearTimeout(timer);
       }
     };
   }
@@ -733,10 +605,8 @@ export class FleetSafetyController {
     options: { readonly followRedirects?: boolean } = {},
   ): OpenBytes {
     const follow = options.followRedirects !== false;
-    return async ({ url, headers, timeoutMs }) => {
+    return async ({ url, headers }) => {
       const started = Date.now();
-      const abort = new AbortController();
-      const timer = setTimeout(() => abort.abort(), timeoutMs);
       try {
         let currentUrl = url;
         let response: Response;
@@ -747,7 +617,6 @@ export class FleetSafetyController {
           try {
             response = await fetchImpl(currentUrl, {
               method: "GET",
-              signal: abort.signal,
               redirect: "manual",
               headers: { ...headers, range: `bytes=0-${Math.max(0, reservation.streamCapBytes - 1)}` },
             });
@@ -783,8 +652,6 @@ export class FleetSafetyController {
           durationMs: Date.now() - started,
           transportError: error instanceof Error ? error.message : String(error),
         };
-      } finally {
-        clearTimeout(timer);
       }
     };
   }
@@ -840,11 +707,9 @@ export class FleetSafetyController {
   holdModelBudget(work: string, usd: number): { readonly usd: number; readonly draw: (spentUsd: number) => void; readonly release: () => void } {
     if (!Number.isFinite(usd) || usd < 0) this.refuse(work, "UNMEASURED_MODEL_SPEND", `an escalation hold of ${String(usd)} USD is not a measured amount`);
     if (!this.cycleModelSpendMeasured) this.refuse(work, "UNMEASURED_MODEL_SPEND", "an earlier model response in this cycle omitted complete metered usage");
-    if (!this.lifetimeHuntWork(work)) {
-      if (this.historicalRollingUsd === null) this.refuse(work, "UNMEASURED_MODEL_SPEND", "rolling-24-hour model spend is unmeasured");
-      if (this.historicalRollingUsd + this.cycleUsd + this.reservedUsd + usd > this.bounds.rolling24HourModelUsd) {
-        this.refuse(work, "ROLLING_24_HOUR_MODEL_SPEND_CEILING", `the escalation's worst case ($${usd.toFixed(2)}) would exceed the $${this.bounds.rolling24HourModelUsd.toFixed(2)} rolling-24-hour ceiling`);
-      }
+    if (this.historicalRollingUsd === null) this.refuse(work, "UNMEASURED_MODEL_SPEND", "rolling-24-hour model spend is unmeasured");
+    if (this.historicalRollingUsd + this.cycleUsd + this.reservedUsd + usd > this.bounds.rolling24HourModelUsd) {
+      this.refuse(work, "ROLLING_24_HOUR_MODEL_SPEND_CEILING", `the escalation's worst case ($${usd.toFixed(2)}) would exceed the $${this.bounds.rolling24HourModelUsd.toFixed(2)} rolling-24-hour ceiling`);
     }
     this.reservedUsd += usd;
     let held = usd;

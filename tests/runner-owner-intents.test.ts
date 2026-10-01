@@ -6,6 +6,7 @@ import { join } from "node:path";
 import test from "node:test";
 import { createContext, runInContext } from "node:vm";
 import { CONTROL_WAKE_POLL_MS } from "../scripts/pilot-runtime-control.mts";
+import { consolePublisher } from "../scripts/pilot-runtime-publish.mts";
 
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { buildResearchIntent } from "../lib/control-plane/research-view.ts";
@@ -32,7 +33,7 @@ import { placeFirstRows } from "../lib/control-plane/scheduler/shadow-loop.ts";
  *
  *   ADM-1  nothing scheduled `pnpm owner:publish` / `pnpm readiness:publish`,
  *          so the deployed console went stale whenever a person stopped
- *          running them. The runner now publishes after every digest.
+ *          running them. The runner now checks publication inputs after every digest.
  *   ADM-5  the owner disabled the runner's scheduled task on purpose and the
  *          dashboard could only show a red SILENT. PAUSE_RUNNER / RESUME_RUNNER
  *          are the owner's record; the runner idles on them, acknowledges
@@ -224,7 +225,7 @@ test("placeFirstRows moves the dispatched rows to the front, keeps both groups' 
 
 /* ------------------------------------------------- pilot-runner.mts, as text */
 
-/** ADM-1: the console is published after the digest, by two children, and a failure is printed. */
+/** ADM-1: inputs are checked after the digest; changed inputs run both publishers. */
 function checkRunnerPublishesConsole(src: string): void {
   const list = src.match(/const CONSOLE_PUBLISHERS[^\n]*\n[\s\S]*?\n\];/);
   assert.ok(list, "pilot-runner.mts names no CONSOLE_PUBLISHERS list");
@@ -237,8 +238,12 @@ function checkRunnerPublishesConsole(src: string): void {
 
   const fn = src.match(/async function publishConsole\(\): Promise<void> \{[\s\S]*?\n\}/);
   assert.ok(fn, "pilot-runner.mts has no publishConsole()");
-  const body = fn[0];
-  assert.match(body, /for \(const publisher of CONSOLE_PUBLISHERS\)/, "publishConsole does not run every listed publisher");
+  assert.match(fn[0], /await publishChangedConsole\(\)/, "publishConsole does not check changed inputs");
+  assert.match(src, /publish: publishConsoleChildren/, "changed inputs do not reach the publishers");
+  const children = src.match(/async function publishConsoleChildren\(\): Promise<boolean> \{[\s\S]*?\n\}/);
+  assert.ok(children, "pilot-runner.mts has no console publisher children");
+  const body = children[0];
+  assert.match(body, /for \(const publisher of CONSOLE_PUBLISHERS\)/, "changed inputs do not run every listed publisher");
   assert.match(body, /await runRuntimeChildren\(/, "each publisher is an asynchronous child process");
   assert.match(body, /args: \["--experimental-strip-types", \.\.\.publisher\.args\]/, "a publisher is not run through inherited parent environment");
   assert.doesNotMatch(src, /--env-file=\.env\.local/, "a standing child reopens cwd-relative environment state instead of inheriting the validated parent environment");
@@ -304,8 +309,36 @@ function checkRunnerHonorsOwnerIntents(src: string): void {
   assert.match(sleepLoop[0], /if \(says === "HOLD"\) continue;[\s\S]*windowDecision\(\)/, "the owner's PAUSE_RUNNER does not hold the nightly window between cycles");
 }
 
-test("pilot-runner.mts publishes the console after every digest (ADM-1)", () => {
+test("pilot-runner.mts checks console publication after every digest (ADM-1)", async () => {
   checkRunnerPublishesConsole(source("scripts/pilot-runner.mts"));
+  let signature = "first", readsFail = false, succeeds = true, calls = 0;
+  let duringPublish: (() => void) | null = null;
+  const publish = consolePublisher({
+    readInputs: async () => { if (readsFail) throw new Error("offline"); return signature; },
+    publish: async () => { calls++; duringPublish?.(); return succeeds; },
+  });
+  assert.equal(await publish(), "PUBLISHED");
+  for (let i = 0; i < 100; i++) assert.equal(await publish(), "UNCHANGED");
+  assert.equal(calls, 1);
+  signature = "changed";
+  assert.equal(await publish(), "PUBLISHED", "changed inputs run the publishers");
+  assert.equal(calls, 2);
+  readsFail = true;
+  assert.equal(await publish(), "PUBLISHED", "a failed input check is never unchanged");
+  readsFail = false;
+  assert.equal(await publish(), "PUBLISHED", "a failed input read cannot remember success");
+  signature = "failed";
+  succeeds = false;
+  assert.equal(await publish(), "FAILED");
+  signature = "changed"; // A partial failed write invalidated even the older success.
+  succeeds = true;
+  assert.equal(await publish(), "PUBLISHED");
+  signature = "before";
+  duringPublish = () => { signature = "after"; };
+  assert.equal(await publish(), "PUBLISHED");
+  duringPublish = null;
+  assert.equal(await publish(), "PUBLISHED", "a commit during the children stays eligible");
+  assert.equal(await publish(), "UNCHANGED");
 });
 
 test("pilot-runner.mts honors PAUSE_RUNNER / RESUME_RUNNER and ends the sleep on a pending DISPATCH (ADM-5, ADM-8)", async () => {

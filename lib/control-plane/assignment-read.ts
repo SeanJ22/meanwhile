@@ -30,7 +30,7 @@ import type { AssignmentSources } from "./assignment-view.ts";
 import type { CostEntry } from "./cost.ts";
 import { deriveItemState, isPipelineRecord, methodCandidateItemId, scoutResultItemId } from "./promotion/pipeline.ts";
 import type { ActivationGateReading, PipelineItemState, PromotionPipelineRecord } from "./promotion/types.ts";
-import type { ArtifactRecord, ControlPlaneRepositories, DispositionCommit, Persisted } from "./repository/types.ts";
+import type { ArtifactRecord, ControlPlaneRepositories, DispositionCommit, Persisted, RecordProjection } from "./repository/types.ts";
 import type { RouteTask } from "./route-task.ts";
 import type { FreshnessDebt } from "./scheduler/debt.ts";
 import { occurrenceId, type FreshnessOccurrence, type StandingObligation } from "./scheduler/durable.ts";
@@ -44,6 +44,39 @@ export interface AssignmentReadBase {
   readonly activation: ActivationGateReading | null;
   readonly pilotZips: readonly string[];
 }
+
+/** The published assignment join needs execution facts, not replay grants or task inputs. */
+export const ASSIGNMENT_ATTEMPT_PROJECTION = {
+  id: true, routeTaskId: true, workItemId: true, worker: ["role", "provider", "version"],
+  leaseId: true, startedAt: true, endedAt: true, outcome: true, abortReason: true, artifactIds: true,
+  cost: ["durationMs"],
+} satisfies RecordProjection;
+
+export const ASSIGNMENT_OBLIGATION_PROJECTION = {
+  id: true, recordClass: true, subjectId: true, routeId: true, active: true, readerImpactAt: true,
+  meetingStartsAt: true, observedChangeRateHours: true, declaredCycleHours: true, lastWorkedAt: true,
+  absentUntil: true, assignments: true, nextDueAt: true, occurrenceCount: true, openOccurrenceId: true,
+  retiredAt: true, retirementReason: true,
+} satisfies RecordProjection;
+
+const WORK_ITEM_PROJECTION = {
+  id: true, project: true, subject: true, obligation: true, why: true, question: true, state: true,
+  dependencies: true, routeTaskIds: true, escalations: true, createdAt: true, transitions: true,
+  directoryParent: true, manualSourceGap: true, publicationOutcome: true, planRepair: true,
+  autonomousPlan: ["publication", "contract", "ownerInstructions"],
+} satisfies RecordProjection;
+const ROUTE_TASK_PROJECTION = {
+  id: true, workItemId: true, routeId: true, state: true, disposition: true, attemptIds: true,
+  createdAt: true, policyDenial: true, workerTask: ["contract"],
+} satisfies RecordProjection;
+const OCCURRENCE_PROJECTION = {
+  id: true, obligationId: true, sequence: true, dueAt: true, workItemId: true, routeTaskId: true,
+  openedAt: true, closedAt: true, unresolvedReason: true,
+} satisfies RecordProjection;
+const DEBT_PROJECTION = {
+  obligationId: true, cause: true, consecutiveFailures: true, detail: true, firstFailedAt: true,
+  lastFailedAt: true, retryAt: true,
+} satisfies RecordProjection;
 
 /** At most this many targeted reads are in flight at once, so one drilldown never floods the store. */
 const READ_CONCURRENCY = 16;
@@ -113,12 +146,12 @@ export async function readAllAssignmentSources(
   } = {},
 ): Promise<AssignmentSources> {
   const [obligations, occurrences, workItems, routeTasks, attempts, debts, artifacts, costs, scoutResults, workerResults] = await Promise.all([
-    already.obligations ? Promise.resolve(already.obligations) : repos.obligations.list().then((rows) => rows.map((r) => r.value)),
-    repos.occurrences.list().then((rows) => rows.map((r) => r.value)),
-    repos.workItems.list().then((rows) => rows.map((r) => r.value)),
-    repos.routeTasks.list().then((rows) => rows.map((r) => r.value)),
-    already.attempts ? Promise.resolve(already.attempts) : repos.attempts.list().then((rows) => rows.map((r) => r.value)),
-    repos.debts.list().then((rows) => rows.map((r) => r.value)),
+    already.obligations ? Promise.resolve(already.obligations) : repos.obligations.listNarrowed(ASSIGNMENT_OBLIGATION_PROJECTION).then((rows) => rows.map((r) => r.value as StandingObligation)),
+    repos.occurrences.listNarrowed(OCCURRENCE_PROJECTION).then((rows) => rows.map((r) => r.value as FreshnessOccurrence)),
+    repos.workItems.listNarrowed(WORK_ITEM_PROJECTION).then((rows) => rows.map((r) => r.value as WorkItem)),
+    repos.routeTasks.listNarrowed(ROUTE_TASK_PROJECTION).then((rows) => rows.map((r) => r.value as RouteTask)),
+    already.attempts ? Promise.resolve(already.attempts) : repos.attempts.listNarrowed(ASSIGNMENT_ATTEMPT_PROJECTION).then((rows) => rows.map((r) => r.value as Attempt)),
+    repos.debts.listNarrowed(DEBT_PROJECTION).then((rows) => rows.map((r) => r.value as FreshnessDebt)),
     repos.artifacts.readAll(),
     already.costs ? Promise.resolve(already.costs) : repos.costs.readAll(),
     repos.scoutResults.readAll(),

@@ -5,7 +5,10 @@ import { usdForModelUsage } from "../lib/control-plane/model-cost.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { assertStepMayInvokeModel } from "../lib/control-plane/scheduler/model-routing.ts";
 import { ModelTransportError, type ModelRequest, type ModelResponse, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { AUDIT_CONTEXT_MAX_BYTES, AUDIT_RESPONSE_MAX_BYTES, auditReasoningContext, modelAuditReasoner } from "../lib/control-plane/workers/model-audit.ts";
+import { AUDIT_CONTEXT_MAX_BYTES, AUDIT_RESPONSE_MAX_BYTES, auditReasoningContext, modelAuditReasoner as createAuditReasoner } from "../lib/control-plane/workers/model-audit.ts";
+
+const modelAuditReasoner = (...args: Parameters<typeof createAuditReasoner>) =>
+  createAuditReasoner(args[0], args[1], args[2], { ceilingUsd: 10, ...args[3] });
 import type { IndependentAuditContext, WorkerEvidence } from "../lib/control-plane/workers/types.ts";
 import { standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
@@ -175,10 +178,16 @@ test("provider outage is a named execution failure with no guessed usage or leak
   });
 });
 
-test("an injected transport cannot hang the review and the established bound cannot be enlarged", async () => {
-  const stuck: ModelTransport = async () => new Promise<ModelResponse>(() => {});
-  await assert.rejects(modelAuditReasoner(createMemoryRepositories(), stuck, () => NOW, { timeoutMs: 10 }).review(context(), "attempt"), /AUDIT_PROVIDER_FAILURE:TIMEOUT; usage NOT MEASURED/);
-  assert.throws(() => modelAuditReasoner(createMemoryRepositories(), stuck, () => NOW, { timeoutMs: 60_001 }), /AUDIT_REVIEW_BOUND_INVALID/);
+test("a pending review ends on its provider result, without an attempt timer", async () => {
+  let fail!: (error: Error) => void;
+  let sent!: () => void;
+  const started = new Promise<void>(resolve => { sent = resolve; });
+  const stuck: ModelTransport = async () => new Promise<ModelResponse>((_, reject) => { fail = reject; sent(); });
+  const review = modelAuditReasoner(createMemoryRepositories(), stuck, () => NOW).review(context(), "attempt");
+  const result = assert.rejects(review, /AUDIT_PROVIDER_FAILURE:503; usage NOT MEASURED/);
+  await started;
+  fail(new ModelTransportError("provider unavailable", 503));
+  await result;
 });
 
 test("adaptive budget keeps five complete events and every exploratory route with eight large publisher surfaces", () => {

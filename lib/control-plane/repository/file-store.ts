@@ -462,6 +462,8 @@ export function fileAggregateRepository<T>(
     },
 
     list,
+    listNarrowed: async (projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
+      (await list()).map(row => ({ ...row, value: projectAggregate(row.value, projection) })),
 
     /* `list()` filtered, so the two can never disagree on rows or order. A
        directory has no index to ask, so this reads what `list()` reads. */

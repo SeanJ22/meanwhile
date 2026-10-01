@@ -59,7 +59,7 @@ test("Brave request: correct endpoint, X-Subscription-Token header, count; retur
   assert.ok(out.hits.every((h) => h.provider === "brave"));
 });
 
-test("Exa request: POST, Bearer auth, type fast, numResults, and NO contents / outputSchema / answer", async () => {
+test("Exa request: POST, Bearer auth, type fast, numResults, with source text and no synthesis", async () => {
   const { fetchImpl, calls } = fakeFetch([{ match: "api.exa.ai", body: EXA_BODY }]);
   const out = await exaSearch("q", "exa-key", fetchImpl, 5000, 5, ["*.gov", "*.us"]);
   assert.equal(calls.length, 1);
@@ -70,7 +70,7 @@ test("Exa request: POST, Bearer auth, type fast, numResults, and NO contents / o
   assert.equal(body.type, "fast", "a URL, not reasoning");
   assert.equal(body.numResults, 5);
   assert.deepEqual(body.includeDomains, ["*.gov", "*.us"]);
-  assert.ok(!("contents" in body), "NO contents object — no page excerpts bypass the robots gate");
+  assert.deepEqual(body.contents, {text:{maxCharacters:6000}});
   assert.ok(!("outputSchema" in body), "NO outputSchema — no synthesis");
   assert.ok(!calls[0].url.includes("/answer"), "not the /answer endpoint");
   assert.deepEqual(out.hits.map((h) => h.url), ["https://rogersforcountyattorney.com/", "https://ballotpedia.org/Sarah_Rogers"]);
@@ -149,6 +149,18 @@ test("a budget that cannot be read sends no paid request at all", async () => {
   assert.equal(res.requestCount, 0);
   assert.equal(res.errors.length, 2);
   assert.ok(res.errors.every((e) => e.includes("the paid-search budget could not be read (budget ledger unreadable)")));
+});
+
+test('one failed budget release does not strand the other provider or discard returned source data', async()=>{
+  const released:string[]=[];
+  const {fetchImpl}=fakeFetch([{match:'api.search.brave.com',body:BRAVE_BODY},{match:'api.exa.ai',body:EXA_BODY}]);
+  const result=await makeScoutSearch({braveKey:'b',exaKey:'e',fetchImpl,budget:{take:async()=>null,done:async host=>{
+    released.push(host);if(host===SCOUT_SEARCH_HOSTS.brave)throw Error('temporary persistence failure');
+  }}})!({query:'q'});
+  assert.deepEqual(released,[SCOUT_SEARCH_HOSTS.brave,SCOUT_SEARCH_HOSTS.exa]);
+  assert.equal(result.requestCount,2);
+  assert.ok(result.hits.length>0);
+  assert.ok(result.errors.some(error=>error.includes('budget slot release failed')));
 });
 
 test("the Scout search is admitted under the same hosts as the discovery walk's search, so one per-day cap binds both", () => {

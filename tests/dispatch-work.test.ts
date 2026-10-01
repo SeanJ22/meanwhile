@@ -9,8 +9,6 @@ import {
   operationalReferenceBundle,
 } from "@/lib/civic-data/operational-references.ts";
 import {
-  DISPATCH_WORK_TARGET_CAP,
-  DISPATCH_WORK_WRITE_BUDGET,
   applyDispatchWork,
   assignmentEntry,
   carriedDispatchTargets,
@@ -239,7 +237,7 @@ const CONTEXT: DispatchWorkContext = {
 };
 
 function identity(r: DispatchWorkReading["targets"][number]["requirements"]): number {
-  return r.carried + r.held + r.created + r.deferred + r.failed + r.capped;
+  return r.carried + r.held + r.created + r.deferred + r.failed;
 }
 
 /* ======================================================================= *
@@ -266,7 +264,7 @@ test("sending the fleet to Pima County creates what the registry defines there a
   assert.ok(pima.requirements.carried > 0, "Pima's standing custodian clocks are reordered, never created twice");
   assert.equal(pima.requirements.created, pima.requirements.createdThisCycle, "nothing existed before this Send");
   assert.equal(pima.requirements.created, applied.written.length);
-  assert.ok(pima.requirements.created > 0 && pima.requirements.created <= DISPATCH_WORK_WRITE_BUDGET);
+  assert.ok(pima.requirements.created > 0);
   const familyDiscovery = applied.written.filter(id => id.includes("#coverage-discovery:"));
   assert.ok(familyDiscovery.length > 0, "the new Send finds missing source families as well as meetings");
   assert.equal(pima.requirements.createdMeetingsDiscovery + familyDiscovery.length, pima.requirements.created, "every newly created row is accounted for without redefining missing work as excluded");
@@ -361,49 +359,20 @@ test("sending the same scope twice creates nothing new, and overlapping geograph
  * the budget and the cap
  * ======================================================================= */
 
-test("the per-cycle write budget defers the rest by count, the next cycle continues, and the cap is named", async () => {
+test("all missing requirements are created in one pass without a cycle window", async () => {
   const repos = createMemoryRepositories();
   const pima = scopeWorkTarget(await planned(decision(PIMA)));
-  const c1 = await cycleWorld(repos, T0);
-  const plan1 = planDispatchWork({ targets: [pima], world: c1.world, writeBudget: 5 });
-  const missing = plan1.writes.length;
-  assert.ok(missing > 10, "enough is missing to exercise the budget");
-  const a1 = await applyDispatchWork(repos, plan1, { now: T0 });
-  assert.equal(a1.written.length, 5);
-  assert.equal(a1.deferred.length, missing - 5, "the remainder is deferred and counted, never dropped");
-  assert.equal(a1.stoppedBy, "WRITE_BUDGET");
-  const r1 = dispatchWorkReading(plan1, a1, CONTEXT).targets[0];
-  assert.equal(r1.requirements.deferred, missing - 5);
-  assert.match(r1.says.join(" "), /at most 5 are written per cycle/);
-
-  const c2 = await cycleWorld(repos, T1);
-  const a2 = await applyDispatchWork(repos, planDispatchWork({ targets: [pima], world: c2.world, writeBudget: 5 }), { now: T1 });
-  assert.equal(a2.written.length, 5, "the next cycle writes the next five");
-  assert.equal(new Set([...a1.written, ...a2.written]).size, 10, "and never the first five again");
-
-  /* The cap limits one cycle's window; it does not leave the remainder stranded. */
-  const capped = planDispatchWork({ targets: [pima], world: (await cycleWorld(createMemoryRepositories(), T0)).world, cap: 7 });
-  const rc = dispatchWorkReading(capped, null, { ...CONTEXT, writes: "PLAN_ONLY", planOnlyWhy: "a test" }).targets[0];
-  assert.equal(capped.writes.length, 7);
-  assert.equal(rc.requirements.capped, missing - 7);
-  assert.equal(rc.cap, 7);
-  assert.match(rc.says.join(" "), /beyond this cycle's window of 7/);
-  assert.match(dispatchWorkSentence(rc), /beyond this cycle's window of 7/);
-  const capRepos = createMemoryRepositories();
-  const firstWindow = planDispatchWork({ targets: [pima], world: (await cycleWorld(capRepos, T0)).world, cap: 7 });
-  const firstWritten = await applyDispatchWork(capRepos, firstWindow, { now: T0 });
-  const nextWindow = planDispatchWork({ targets: [pima], world: (await cycleWorld(capRepos, T1)).world, cap: 7 });
-  assert.equal(nextWindow.writes.length, 7, "the next cycle admits the next seven missing requirements");
-  assert.equal(new Set([...firstWritten.written, ...nextWindow.writes.map(w => w.instance.obligation.id)]).size, 14);
-
-  /* The cycle's wall stops creation too, and says so. */
-  const walled = await applyDispatchWork(createMemoryRepositories(), capped, { now: T0, deadlineReached: () => true });
-  assert.equal(walled.written.length, 0);
-  assert.equal(walled.stoppedBy, "DEADLINE");
-  assert.equal(walled.deferred.length, 7);
-
-  assert.equal(DISPATCH_WORK_WRITE_BUDGET, 200);
-  assert.equal(DISPATCH_WORK_TARGET_CAP, 1000);
+  const first = await cycleWorld(repos, T0);
+  const plan = planDispatchWork({ targets: [pima], world: first.world });
+  assert.ok(plan.writes.length > 10);
+  const applied = await applyDispatchWork(repos, plan, { now: T0 });
+  assert.equal(applied.written.length, plan.writes.length);
+  assert.equal(applied.deferred.length, 0);
+  const reading = dispatchWorkReading(plan, applied, CONTEXT).targets[0];
+  assert.equal(reading.requirements.createdThisCycle, plan.writes.length);
+  assert.doesNotMatch(reading.says.join(" "), /per cycle|work window|at most/);
+  const second = await cycleWorld(repos, T1);
+  assert.equal(planDispatchWork({ targets: [pima], world: second.world }).writes.length, 0);
 });
 
 /* ======================================================================= *
@@ -563,7 +532,6 @@ test("creating work opens no paid lane: the owner's PAUSE stands, nothing but ob
 
   /* The lane stays closed on the same facts: the activation gate is a code constant and the PAUSE stands. */
   const closure = modelLaneClosure({
-    scheduledBlackout: false,
     dry: false,
     noModel: false,
     credentialConfigured: true,
@@ -624,24 +592,23 @@ test("a DISPATCH naming a registered state creates there, counts it on the owner
   const { world } = await cycleWorld(repos, T0);
   const pimaAz = dispatchWorkTarget({ intentId: "i-1", note: "Pima Arizona", requestedAt: T0 });
   assert.deepEqual([...(pimaAz as Extract<DispatchWorkTarget, { kind: "DISPATCH" }>).target.states], ["az"]);
-  const plan = planDispatchWork({ targets: [pimaAz], world, writeBudget: 3 });
+  const plan = planDispatchWork({ targets: [pimaAz], world });
   const applied = await applyDispatchWork(repos, plan, { now: T0 });
   const reading = dispatchWorkReading(plan, applied, CONTEXT);
   const [t] = reading.targets;
   assert.ok(t.units.placed > 0, "every AZ government whose id carries 'pima'");
-  assert.equal(t.requirements.createdThisCycle, 3);
-  assert.ok(t.requirements.deferred > 0);
+  assert.equal(t.requirements.createdThisCycle, plan.writes.length);
+  assert.equal(t.requirements.deferred, 0);
   assert.ok(t.reordered.obligations > 0, "the standing work the words match is counted as reordered");
   assert.equal(t.reordered.of, world.corpus.length);
 
   const work = ownerDispatchWorkOf(reading, "i-1");
   assert.equal(work?.key, "dispatch:i-1");
-  assert.equal(work?.created, 3);
+  assert.equal(work?.created, plan.writes.length);
   assert.equal(work?.deferred, t.requirements.deferred);
 
   const carried = carriedDispatchTargets(reading);
-  assert.equal(carried.length, 1, "a DISPATCH with work still owed is carried to the next cycle");
-  assert.equal(carried[0].key, "dispatch:i-1");
+  assert.equal(carried.length, 0, "all creation and assignment marks finished in this cycle");
   assert.equal(
     carriedDispatchTargets({
       ...reading,
@@ -660,7 +627,7 @@ test("a DISPATCH naming a registered state creates there, counts it on the owner
   assert.equal(carriedDispatchTargets({ nonsense: true }).length, 0, "an unreadable prior reading carries nothing, never throws");
   assert.equal(isDispatchWorkReading(reading), true);
 
-  assert.match(dispatchWorkSentence(t), /created 3 of \d+ requirement\(s\) the registry defines here \(3 this cycle, \d+ deferred to the next cycles\); reordered \d+ of \d+ standing obligations; 0 of \d+ governments blocked by missing data\./);
+  assert.match(dispatchWorkSentence(t), /created \d+ of \d+ requirement\(s\) the registry defines here \(\d+ this cycle\); reordered \d+ of \d+ standing obligations; 0 of \d+ governments blocked by missing data\./);
 });
 
 /* ======================================================================= *
@@ -801,16 +768,16 @@ test("Admin reads the creation receipt for the decision it belongs to, with ever
   assert.equal(scopeCreationView(d, null).kind, "NOT_YET");
 });
 
-test("the gateway and the preview say the Send creates what is missing, bounded, and name no machine constant", () => {
+test("the gateway and the preview say the Send creates all missing work, and name no machine constant", () => {
   const set = lookupAction("expansion.scope.set")!.definition;
   const deploy = lookupAction("fleet.deployHere")!.definition;
   assert.match(set.does, /creates the work the registry defines there that no clock carries yet/);
-  assert.match(set.doesNot, /at most 200 written a cycle and 1,000 missing rows considered per instruction each cycle/);
+  assert.match(set.doesNot, /all missing work for the requested geography/);
   assert.match(deploy.does, /creates the work\s+that state's registry defines/);
   assert.match(deploy.doesNot, /Without a state in your words it only reorders/);
 
   const withState = deployPreview({ note: "Arizona", obligations: [], obligationsRead: true, ceilings: { rolling24HourModelUsd: 105 } });
-  assert.match(withState.creates[0].says, /the runner creates the work the promoted registry defines and no clock carries yet — at most 200 written a cycle and 1,000 missing rows considered for this instruction each cycle/);
+  assert.match(withState.creates[0].says, /the runner creates the work the promoted registry defines and no clock carries yet/);
   assert.equal(withState.creates[0].measured, false, "the console holds no registry, so the count is the runner's");
   const noState = deployPreview({ note: "Pima County", obligations: [], obligationsRead: true, ceilings: { rolling24HourModelUsd: 105 } });
   assert.match(noState.creates[0].says, /your words name no state/);

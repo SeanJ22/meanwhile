@@ -44,6 +44,29 @@ export const FEEDBACK_SURFACES = ["SIDEBAR", "TRANSPARENCY", "COVERAGE"] as cons
 
 export type FeedbackSurface = (typeof FEEDBACK_SURFACES)[number];
 
+/** The reported card and place, never a reader or a browsing history. */
+export interface FeedbackContext {
+  about?: string | null;
+  zip?: string | null;
+  recordId?: string | null;
+}
+
+export function feedbackContext(input: FeedbackContext): FeedbackContext {
+  return {
+    about: input.about?.trim().slice(0, 80) || null,
+    zip: input.zip && /^\d{5}$/.test(input.zip) ? input.zip : null,
+    recordId: input.recordId?.trim().slice(0, 200) || null,
+  };
+}
+
+export function feedbackHref(input: FeedbackContext): string {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(feedbackContext(input))) {
+    if (value) params.set(key, value);
+  }
+  return `/feedback${params.size ? `?${params}` : ""}`;
+}
+
 export function isFeedbackSurface(value: unknown): value is FeedbackSurface {
   return (
     typeof value === "string" &&

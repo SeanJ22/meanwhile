@@ -1375,6 +1375,10 @@ test("same-cycle isolation requires exact task/candidate receipts, never aggrega
     taskReceipts: ["national-place:85635", "national-place:03060"].map(taskId => ({
       ...exact.taskReceipts[0], taskId, receipt: { ...successReceipt, source: taskId, confirmedAt: T0 } })) };
   const registeredJobs = new Set(sharedVersion.taskReceipts.map(row => row.taskId));
+  assert.doesNotThrow(() => routineCivicDataSupervisorOutcome(sharedVersion),
+    "the ordinary producer accepts separate jobs confirming a shared version");
+  assert.throws(() => routineCivicDataSupervisorOutcome({ ...sharedVersion,
+    taskReceipts: [sharedVersion.taskReceipts[0], sharedVersion.taskReceipts[0]] }), /TASK_RECEIPT_DUPLICATE/);
   const sharedHistory = routineUnreceiptedSupervisorAttemptHistory([{ id: "shared", runtimeOutcome: sharedVersion }], registeredJobs);
   assert.deepEqual(sharedHistory.issues, [], "separate exact jobs can confirm one unchanged canonical version");
   const duplicateJob = routineUnreceiptedSupervisorAttemptHistory([{ id: "duplicate", runtimeOutcome: {

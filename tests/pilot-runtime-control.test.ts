@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { buildResearchIntent } from "../lib/control-plane/research-view.ts";
-import { runnerControlReader } from "../scripts/pilot-runtime-control.mts";
+import { runnerControlReader, runnerWakeReaderFromEnv } from "../scripts/pilot-runtime-control.mts";
 
 test("runner control reads coalesce polls and retain later-committed lower positions", async () => {
   const repos = createMemoryRepositories();
@@ -68,4 +68,72 @@ test("runner control reads coalesce polls and retain later-committed lower posit
   assert.strictEqual(filled.research[2], low, "the late row belongs between positions 2 and 4");
   await reader.read(true);
   assert.equal(lastPositions, "{[1,10004)}", "only committed adjacent positions collapse");
+});
+
+test("runner wakes on changed etags without minute-by-minute SQL and survives missed hints", async () => {
+  const repos = createMemoryRepositories();
+  let now = 0, calls = 0, hints = 0;
+  let etag: string | null = null;
+  let brokenHint = false, brokenSql = false;
+  let revision = "1";
+  let finishHint: (() => void) | null = null;
+  const reader = runnerControlReader("unused", repos, {
+    now: () => now,
+    readWakeEtag: async () => {
+      hints++;
+      if (brokenHint) throw new Error("hint unavailable");
+      if (finishHint !== null) await new Promise<void>(resolve => { finishHint = resolve; });
+      return etag;
+    },
+    query: async () => {
+      calls++;
+      if (brokenSql) throw new Error("SQL unavailable");
+      return [{ research: [], windows: [], config: revision, state: "unchanged" }];
+    },
+  });
+  const initial = await reader.read();
+  for (now = 1_000; now < 15 * 60_000; now += 1_000) {
+    const held = await reader.read();
+    assert.strictEqual(held.research, initial.research);
+  }
+  assert.equal(calls, 1, "899 hint polls do not wake Postgres");
+  assert.equal(hints, 900);
+  await reader.read();
+  assert.equal(calls, 2, "an absent/missed hint is recovered on the slow clock");
+  now += 1_000;
+  etag = "receipt-a";
+  revision = "2";
+  await Promise.all([reader.read(), reader.read()]);
+  assert.equal(calls, 3, "concurrent wake reads fetch controls only once");
+  now += 1_000;
+  await reader.read();
+  assert.equal(calls, 3, "the same etag does not re-read controls");
+  etag = "receipt-b";
+  brokenSql = true;
+  now += 1_000;
+  await assert.rejects(reader.read(), /SQL unavailable/);
+  brokenSql = false;
+  now += 1_000;
+  await reader.read();
+  assert.equal(calls, 5, "a failed SQL read does not swallow the new etag");
+  brokenHint = true;
+  now += 1_000;
+  await reader.read();
+  assert.equal(calls, 5, "hint failures do not force repeated database wakeups");
+  now += 15 * 60_000;
+  await reader.read();
+  assert.equal(calls, 6, "SQL fallback works even while Blobs is unavailable");
+  await reader.read(true);
+  assert.equal(calls, 7, "cycle boundaries still force their own controls read");
+  brokenHint = false;
+  now += 1_000;
+  finishHint = () => {};
+  const pending = reader.read();
+  const forced = reader.read(true);
+  finishHint!();
+  finishHint = null;
+  await Promise.all([pending, forced]);
+  assert.equal(calls, 8, "a forced boundary coalesces with an in-flight hint read");
+  assert.equal(runnerWakeReaderFromEnv({}), null);
+  assert.equal(runnerWakeReaderFromEnv({ WTP_VAULT_PROVIDER: "netlify", WTP_BLOBS_SITE_ID: "site" }), null);
 });

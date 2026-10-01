@@ -17,7 +17,8 @@ export class CivicReadCache {
 
   private async read<T>(key: string): Promise<Entry<T> | null> {
     try {
-      const saved = JSON.parse(await readFile(this.path(key), "utf8"));
+      // These host-local runner copies never belong in a Reader deployment.
+      const saved = JSON.parse(await readFile(/* turbopackIgnore: true */ this.path(key), "utf8"));
       if (typeof saved.body !== "string" || hash(saved.body) !== saved.digest) return null;
       const entry = JSON.parse(saved.body);
       return typeof entry.etag === "string" && Object.hasOwn(entry, "value") ? entry : null;
@@ -76,7 +77,7 @@ export function runtimeCivicReadCache(): CivicReadCache | null {
   const endpoint = process.env.WTP_CIVIC_READ_CACHE_URL;
   const token = process.env.WTP_CIVIC_READ_CACHE_TOKEN;
   if (!process.env.DATABASE_URL || !endpoint || !token) return null;
-  return new CivicReadCache(join(process.cwd(), ".runtime", "civic-read-cache", hash(process.env.DATABASE_URL)),
+  return new CivicReadCache(join(/* turbopackIgnore: true */ process.cwd(), ".runtime", "civic-read-cache", hash(process.env.DATABASE_URL)),
     async (key, saved) => {
       await fetch(endpoint + "/" + key, { method: "PUT", body: saved,
         headers: { authorization: token }, signal: AbortSignal.timeout(10_000) });

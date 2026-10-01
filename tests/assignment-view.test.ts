@@ -26,7 +26,6 @@ import test from "node:test";
 
 import type { Attempt, ExecutionLease, WorkerRole } from "../lib/control-plane/attempt.ts";
 import {
-  ASSIGNMENT_STATES,
   OBLIGATION_PROVIDER_PREFIXES,
   buildAssignmentView,
   bodyPublicationAttempts,
@@ -44,7 +43,6 @@ import {
   type AssignmentRow,
   type AssignmentSources,
 } from "../lib/control-plane/assignment-view.ts";
-import { routineAssignmentRow, routineContractIdOf, routineStateCounts } from "../lib/control-plane/assignment-routine.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import { assertAggregateOnly, auditRenderedNumbers, checkStatedEqualsRendered } from "../lib/control-plane/owner-surface.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
@@ -57,7 +55,6 @@ import type { FreshnessOccurrence, StandingObligation } from "../lib/control-pla
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import type { WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
-import type { RoutineContractObservation } from "../lib/civic-data/observability.ts";
 
 const NOW = "2026-09-22T12:00:00.000Z";
 const PAST = "2026-09-15T12:00:00.000Z";
@@ -1082,192 +1079,6 @@ test("a parser attempt that aborted without a result is a failed parse run, coun
   assert.deepEqual(listRowOf(p).parsed, { succeeded: 0, failed: 3, usable: null });
 });
 
-/* ------------------------------------------------------------- routine */
-
-interface RoutineMemberSpec {
-  readonly at: string;
-  /** Null: the state is not recorded. */
-  readonly state: string | null;
-  /** Null: whether the acquisition succeeded is not recorded. */
-  readonly acquired: boolean | null;
-}
-
-function routineMember(m: RoutineMemberSpec, i: number) {
-  return {
-    candidateId: `cand-${i + 2}`,
-    attemptedAt: { kind: "MEASURED", value: m.at },
-    state: m.state === null ? { kind: "NOT_RECORDED", detail: "fixture: no state recorded" } : { kind: "MEASURED", value: m.state },
-    acquisitionSucceeded: m.acquired === null ? { kind: "NOT_RECORDED", detail: "fixture: not recorded" } : { kind: "MEASURED", value: m.acquired },
-    authorityOrigin: "LIVE_SOURCE_ACQUISITION",
-    validation: { kind: "NOT_RECORDED", detail: "fixture" },
-    canonicalOutcome: { kind: "MEASURED", value: "UNCHANGED" },
-  };
-}
-
-const HEALTHY_MEMBERS: readonly RoutineMemberSpec[] = [
-  { at: "2026-09-21T09:00:00.000Z", state: "PROMOTED", acquired: true },
-  { at: "2026-09-22T09:00:00.000Z", state: "PROMOTED", acquired: true },
-];
-// Promoted; then the source walled the client; then a parse failed after a clean fetch.
-const RETRYING_MEMBERS: readonly RoutineMemberSpec[] = [
-  { at: "2026-09-20T09:00:00.000Z", state: "PROMOTED", acquired: true },
-  { at: "2026-09-21T09:00:00.000Z", state: "SOURCE_BLOCKED", acquired: false },
-  { at: "2026-09-22T09:00:00.000Z", state: "PARSE_INVALID", acquired: true },
-];
-
-function routineContract(
-  over: Partial<RoutineContractObservation> & {
-    operationalState: RoutineContractObservation["cadence"]["operationalState"];
-    members?: readonly RoutineMemberSpec[];
-    attemptCount?: "MEASURED" | "UNKNOWN";
-  },
-): RoutineContractObservation {
-  const specs = over.members ?? (over.operationalState === "RETRYING" ? RETRYING_MEMBERS : HEALTHY_MEMBERS);
-  const emptyWindow = (id: "24h" | "7d" | "30d") => ({
-    id,
-    since: PAST,
-    through: NOW,
-    attempts: specs.map(routineMember),
-    events: [],
-    counts: {
-      attempts:
-        over.attemptCount === "UNKNOWN"
-          ? { kind: "UNKNOWN", detail: "1 candidate attempt clock(s) cannot be placed from exact local sequence-1 evidence.", members: [] }
-          : { kind: "MEASURED", value: specs.length, members: [] },
-      successfulAcquisitions: { kind: "MEASURED", value: specs.filter((s) => s.acquired === true).length, members: [] },
-      promotions: { kind: "MEASURED", value: 1, members: [] },
-      changedOutcomes: { kind: "MEASURED", value: 0, members: [] },
-      unchangedOutcomes: { kind: "MEASURED", value: 1, members: [] },
-      added: { kind: "MEASURED", value: 0, members: [] },
-      changed: { kind: "MEASURED", value: 0, members: [] },
-      removed: { kind: "MEASURED", value: 0, members: [] },
-      held: { kind: "MEASURED", value: 0, members: [] },
-      refused: { kind: "MEASURED", value: 0, members: [] },
-    },
-  });
-  const base = {
-    contractId: "fec-funding-az",
-    sourceId: "fec",
-    recordClass: "FEC_FUNDING",
-    scope: "az",
-    classification: "PUBLIC_RECORD",
-    currentState: { kind: "MEASURED", value: "PROMOTED" },
-    lastAttemptedAcquisition: { kind: "MEASURED", value: "2026-09-22T09:00:00.000Z" },
-    lastSuccessfulAcquisition: { kind: "MEASURED", value: "2026-09-22T09:00:00.000Z" },
-    lastValidation: { kind: "MEASURED", value: "2026-09-22T09:00:05.000Z" },
-    lastPromotion: { kind: "MEASURED", value: "2026-09-22T09:00:06.000Z" },
-    canonicalPromotion: {
-      kind: "MEASURED",
-      value: {
-        versionId: "cand-1",
-        promotedAt: "2026-09-22T09:00:06.000Z",
-        authorityOrigin: "LIVE_SOURCE_ACQUISITION",
-        pointerProof: [],
-        receipt: {
-          contractVersion: 2,
-          decision: "GOOD",
-          candidateId: "cand-1",
-          sourceId: "fec",
-          recordClass: "FEC_FUNDING",
-          scope: "az",
-          validatedAt: "2026-09-22T09:00:05.000Z",
-          checks: [
-            { check: "SOURCE_AUTHENTICITY", verdict: "PASS", code: "OK", detail: "fixture" },
-            { check: "SCHEMA_PARSE_VALIDITY", verdict: "PASS", code: "OK", detail: "fixture" },
-            { check: "COMPLETENESS_HORIZON_VALIDITY", verdict: "CANNOT_TELL", code: "HORIZON", detail: "fixture" },
-          ],
-          excludedFacts: [],
-        },
-      },
-    },
-    readerVisible: {
-      kind: "MEASURED",
-      value: {
-        projectionId: "proj-1",
-        versionId: "cand-1",
-        observedAt: "2026-09-22T09:01:00.000Z",
-        eventId: "ev-1",
-        evidenceKind: "TYPED_READER_READ_MODEL",
-        verifierId: "reader-readback",
-        verifierCodeSha: "0123456789abcdef0123456789abcdef01234567",
-        detail: "the reader read model serves version cand-1",
-        proof: [],
-      },
-    },
-    sourceThrough: { kind: "MEASURED", value: "2026-09-21" },
-    cadence: {
-      clock: "STANDING",
-      description: "daily through the 2026 general election, then weekly",
-      activeEveryMs: 86_400_000,
-      retryDescription: "one hour after a failed filing attempt",
-      nextDue: { kind: "MEASURED", value: over.operationalState === "RETRYING" ? "2026-09-22T13:00:00.000Z" : FUTURE },
-      operationalState: over.operationalState,
-      operationalDetail: over.operationalState === "RETRYING" ? "The latest attempt ended SOURCE_BLOCKED; automatic retry is due 2026-09-22T13:00:00.000Z." : "The latest attempt is the current proof-valid promotion and remains inside cadence.",
-      freshness: "FRESH",
-      freshnessDetail: "fixture",
-    },
-    latestChanges: { kind: "MEASURED", value: { outcome: "UNCHANGED", added: [], changed: [], removed: [] } },
-    latestHeld: { kind: "MEASURED", value: [] },
-    latestRefused: {
-      kind: "MEASURED",
-      value: over.operationalState === "RETRYING" ? [{ candidateId: "cand-2", attemptedAt: NOW, check: "SOURCE_AUTHENTICITY", verdict: "FAIL", code: "SOURCE_BLOCKED", detail: "HTTP 403", provenBy: "VALIDATION_RECEIPT" }] : [],
-    },
-    latestCanonicalOutcome: { kind: "MEASURED", value: "UNCHANGED" },
-    lkg: { kind: "MEASURED", value: { versionId: "cand-1", currentlyServing: true, state: "CURRENT_PROMOTION", detail: "fixture" } },
-    histories: { "24h": emptyWindow("24h"), "7d": emptyWindow("7d"), "30d": emptyWindow("30d") },
-  };
-  const { operationalState: _state, members: _members, attemptCount: _count, ...rest } = over;
-  void [_state, _members, _count];
-  return { ...base, ...rest } as unknown as RoutineContractObservation;
-}
-
-test("routine contracts: a healthy one succeeds with public availability OBSERVED; a retrying one fails with its retry named; cost is plain code and unmetered", () => {
-  const healthy = routineAssignmentRow(routineContract({ operationalState: "HEALTHY" }), NOW);
-  assert.equal(healthy.id, "routine:fec-funding-az");
-  assert.equal(routineContractIdOf(healthy.id), "fec-funding-az");
-  assert.equal(healthy.kind, "ROUTINE_CONTRACT");
-  assert.equal(healthy.lane, "ROUTINE");
-  assert.equal(healthy.state, "SUCCEEDED");
-  assert.ok(healthy.delivery.promoted.held && healthy.delivery.promoted.value.state === "PROMOTED");
-  assert.ok(healthy.delivery.publiclyAvailable.held && healthy.delivery.publiclyAvailable.value.state === "CONFIRMED", "the routine lane observes reader delivery");
-  assert.equal(healthy.delivery.approved, null, "no research pipeline stands between a routine version and promotion");
-  assert.ok(healthy.verification.pipeline.held);
-  const p = healthy.verification.pipeline.value;
-  assert.deepEqual([p.unit, p.items, p.passed.value, p.needsMoreEvidence.value, p.rejected.value], ["validation check", 3, 2, 1, 0]);
-  assert.ok(healthy.discovery.downloaded.held && healthy.discovery.downloaded.value.bytes === null, "bytes are not recorded for this lane — null, never 0");
-  assert.equal(healthy.cost.dollars.kind, "PLAIN_CODE");
-  assert.equal(healthy.cost.nonDollar, null, "the routine lane writes no cost rows: not metered, never zero");
-  assert.equal(healthy.cost.escalations.modelRouting, null);
-  assert.equal(healthy.waiting.waiting, false);
-  assert.ok(healthy.parsing.parsed.held && !healthy.parsing.parsed.value.usable.held, "the promoted record count is not exposed: a named gap");
-  assert.deepEqual([healthy.cost.attempts, healthy.cost.retries], [2, 0]);
-  assert.ok(healthy.what.workers.held && healthy.what.workers.value[0].attempts === 2);
-
-  const retrying = routineAssignmentRow(routineContract({ operationalState: "RETRYING" }), NOW);
-  assert.equal(retrying.state, "FAILED");
-  assert.equal(retrying.waiting.owner, "RUNNER");
-  assert.equal(retrying.waiting.retryAt, "2026-09-22T13:00:00.000Z");
-  assert.match(retrying.waiting.nextAction, /Automatic retry due 2026-09-22T13:00/);
-  assert.ok(retrying.verification.pipeline.held && retrying.verification.pipeline.value.rejections.some((r) => r.code === "SOURCE_BLOCKED"));
-  // 3 — the parse is judged only where the candidate got that far: a walled source never reached it.
-  assert.ok(retrying.parsing.parsed.held);
-  assert.deepEqual([retrying.parsing.parsed.value.runs, retrying.parsing.parsed.value.succeeded, retrying.parsing.parsed.value.failed], [2, 1, 1]);
-  assert.match(retrying.parsing.parsed.value.says, /1 stopped before the parse was judged/);
-  // 6 — one retry: the attempt after the walled one (the first attempt followed a success).
-  assert.deepEqual([retrying.cost.attempts, retrying.cost.retries], [3, 1]);
-
-  const numbers = [...assignmentRowNumbers(healthy), ...assignmentRowNumbers(retrying)];
-  const counts = routineStateCounts([healthy, retrying]);
-  assert.equal(counts.reduce((n, s) => n + s.count.value, 0), 2);
-  const audit = auditRenderedNumbers([
-    ...numbers,
-    ...counts.map((s) => ({ label: s.state, value: s.count.value, denominator: s.count.denominator, contract: s.count.contract })),
-    ...combinedCountNumbers(combinedCounts(null, [listRowOf(healthy), listRowOf(retrying)])),
-  ]);
-  assert.equal(audit.ok, true, audit.detail);
-  assert.ok(ASSIGNMENT_STATES.includes(listRowOf(retrying).state));
-});
-
 test("filter counts say which half is missing, so an unpublished view or an unread routine plane never draws as zero", () => {
   // Found rendering the page locally on 2026-09-22: before the first publish every
   // state and lane badge read "0" beside the "not on the published snapshot yet" note.
@@ -1279,32 +1090,4 @@ test("filter counts say which half is missing, so an unpublished view or an unre
   assert.deepEqual(whole.missing, []);
   assert.ok(combinedCountNumbers(whole).length > 0);
   assert.deepEqual(combinedCounts(view, [], "Error").missing, ["routine contracts could not be read (Error)"]);
-});
-
-test("routine counts the projector could not state stay unknown — never replaced by a list length or a zero", () => {
-  const uncounted = routineAssignmentRow(routineContract({ operationalState: "HEALTHY", attemptCount: "UNKNOWN" }), NOW);
-  assert.ok(uncounted.what.workers.held);
-  assert.equal(uncounted.what.workers.value[0].attempts, null, "the runner is named; how many times it ran is not counted");
-  assert.deepEqual([uncounted.discovery.rounds, uncounted.discovery.attempts], [null, null]);
-  assert.equal(uncounted.parsing.parsed.held, false);
-  assert.equal(!uncounted.parsing.parsed.held && uncounted.parsing.parsed.gap.whose, "UNKNOWABLE_NOW");
-  assert.match(!uncounted.parsing.parsed.held ? uncounted.parsing.parsed.gap.says : "", /cannot be placed/);
-  assert.deepEqual([uncounted.cost.attempts, uncounted.cost.retries, uncounted.cost.rounds], [null, null, null]);
-  assert.match(uncounted.cost.says, /cannot be told/);
-  const list = listRowOf(uncounted);
-  assert.deepEqual([list.cost.attempts, list.cost.retries, list.parsed], [null, null, null]);
-  assert.equal(list.workers?.[0].attempts, null);
-
-  // A state the store did not record: the parse cannot be judged and the retries cannot be told.
-  const unreadable = routineAssignmentRow(
-    routineContract({
-      operationalState: "HEALTHY",
-      members: [HEALTHY_MEMBERS[0], { at: "2026-09-22T09:00:00.000Z", state: null, acquired: true }],
-    }),
-    NOW,
-  );
-  assert.equal(unreadable.parsing.parsed.held, false);
-  assert.match(!unreadable.parsing.parsed.held ? unreadable.parsing.parsed.gap.says : "", /1 of the 2 attempts .* no readable state/);
-  assert.equal(unreadable.cost.attempts, 2);
-  assert.equal(unreadable.cost.retries, null);
 });

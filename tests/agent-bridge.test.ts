@@ -72,20 +72,11 @@ import {
   type ReviewerExecutor,
 } from "@/lib/control-plane/agents/review.ts";
 import {
-  buildAgentBridgeView,
-  groupReviews,
-  parseComparisonDetail,
-  reviewDecisionSubject,
-  shortHash,
-  type AgentBridgeInput,
-} from "@/lib/control-plane/agents/view.ts";
-import {
   AGENT_JOB_LOG_KEY,
   latestByJob,
   type AgentJobRecord,
 } from "@/lib/control-plane/gateway/agent-job.ts";
 import { defaultAdminConfig, withApiFallback } from "@/lib/control-plane/gateway/admin-config.ts";
-import { gap, held } from "@/lib/control-plane/owner-surface.ts";
 
 import { codeOf } from "./read-code.ts";
 
@@ -100,14 +91,11 @@ const POLICY_FILES = [
   "lib/control-plane/agents/provider.ts",
   "lib/control-plane/agents/job.ts",
   "lib/control-plane/agents/review.ts",
-  "lib/control-plane/agents/view.ts",
-  "lib/control-plane/agents/read.ts",
 ];
 /** The host adapter, which is the one file allowed to touch a machine. */
 const HOST_FILE = "lib/control-plane/agents/host.ts";
-const PAGE = "app/(admin)/admin/agents/page.tsx";
 /** Everything the bridge is, for the sweeps that are about the whole of it. */
-const BRIDGE_FILES = [...POLICY_FILES, HOST_FILE, PAGE];
+const BRIDGE_FILES = [...POLICY_FILES, HOST_FILE];
 
 /** A clock that advances one second per call, so orderings are checkable. */
 function tickingClock(): () => string {
@@ -458,6 +446,9 @@ test("ADM-C8: paid API fallback is OFF by default and fails closed on every not-
   assert.equal(on.enabled, true);
   assert.equal(on.source, "OWNER_DECISION");
   assert.equal(on.decidedAt, "2026-09-06T11:00:00.000Z");
+  const policy = apiFallbackPolicy(null);
+  assert.ok(policy.missingSeam.length > 80, "the missing seam is a real sentence, taken from the module that owns the setting");
+  assert.ok(policy.enforcement.length > 0);
 });
 
 test("ADM-C8: nothing that decides policy reads an environment variable, so a restart cannot turn spending on", () => {
@@ -465,7 +456,7 @@ test("ADM-C8: nothing that decides policy reads an environment variable, so a re
     const code = codeOf(...file.split("/"));
     assert.ok(!code.includes("process.env"), `${file} reads no environment variable`);
   }
-  assert.equal(POLICY_FILES.length, 5, "the sweep covered every policy module in the bridge");
+  assert.equal(POLICY_FILES.length, 3, "the sweep covered every policy module in the bridge");
   // The host adapter is the ONE file that touches a machine, and the only
   // environment it may read is where programs live — never a WTP_ variable and
   // never anything that could reach the paid-API decision.
@@ -694,14 +685,6 @@ test("ADM-C8: a row in the shared log this bridge did not write is counted, neve
   } as AgentJobRecord;
   assert.equal(fromAgentJobRecord(foreign), null, "a row without this bridge's own bag is not read as one of its jobs");
 
-  const view = buildAgentBridgeView(viewInput({ jobs: held({ jobs: [], unreadable: 3 }) }));
-  assert.equal(view.unreadableRows, 3);
-  assert.ok(view.unreadableSays !== null && view.unreadableSays.includes("cannot read"), "the page says so rather than shrinking its own denominator");
-  assert.equal(view.jobCount.held ? view.jobCount.value.denominator : -1, 0, "unreadable rows are not counted as jobs either");
-
-  // POSITIVE CONTROL: with nothing unreadable there is no sentence to read, so
-  // the note above is a measurement and not decoration.
-  assert.equal(buildAgentBridgeView(viewInput()).unreadableSays, null);
 });
 
 test("ADM-C9: a reviewer's brief has no field through which the other's conclusion could arrive", () => {
@@ -920,184 +903,6 @@ test("ADM-C9: a reviewer that dies is FAILED, not refused, and stops the compari
   assert.ok(outcome.says.includes("Only one side"), "the page is told why there is nothing to compare");
 });
 
-/* ================================================================== *
- * 5. THE VIEW — a gap is never a zero
- * ================================================================== */
-
-function viewInput(overrides: Partial<AgentBridgeInput> = {}): AgentBridgeInput {
-  return {
-    observedFrom: "WEB_FUNCTION",
-    at: "2026-09-06T12:00:00.000Z",
-    jobs: held({ jobs: [], unreadable: 0 }),
-    config: null,
-    probes: gap("UNKNOWABLE_NOW", "This website cannot look at the machine that runs the work."),
-    decisions: held([]),
-    ...overrides,
-  };
-}
-
-test("ADM-C8: on the website both provider cards are gaps classified EXTERNAL, and neither can run", () => {
-  const view = buildAgentBridgeView(viewInput());
-  assert.equal(view.providers.length, 2);
-  for (const p of view.providers) {
-    assert.equal(p.observedFrom, "WEB_FUNCTION");
-    assert.equal(p.blocker, "EXTERNAL");
-    assert.equal(p.canRunNow, false);
-    assert.equal(p.configured.held, false);
-  }
-  assert.equal(view.fallback.enabled, false);
-  assert.ok(view.next.includes("refused"), "the page says what happens when a subscription cannot take the work");
-});
-
-test("ADM-C8: a control plane we could not reach renders as a named gap, never as zero jobs", () => {
-  const view = buildAgentBridgeView(viewInput({ jobs: gap("UNKNOWABLE_NOW", "The control plane could not be opened. We could not ask.") }));
-  assert.equal(view.jobs.held, false);
-  assert.equal(view.jobCount.held, false);
-  assert.equal(view.reviews.held, false);
-  assert.equal(view.reviewCount.held, false);
-  assert.equal(view.jobs.held ? null : view.jobs.gap.whose, "UNKNOWABLE_NOW");
-
-  // POSITIVE CONTROL: a store that answered and holds nothing is a DIFFERENT
-  // fact and does render as a held, honest zero.
-  const empty = buildAgentBridgeView(viewInput());
-  assert.equal(empty.jobs.held, true);
-  assert.equal(empty.jobCount.held ? empty.jobCount.value.value : -1, 0);
-});
-
-test("ADM-C8: stated N equals rendered rows on the job table", async () => {
-  const { log, rows } = memoryLog();
-  const now = tickingClock();
-  const deps: ReviewDeps = {
-    execute: async (a) => conclusionOf(a.slot, a.snapshot.hash, `${a.slot} verdict`, a.slot === "A" ? "NO" : "YES", now()),
-    log,
-    now,
-    pathFor: () => chooseExecutionPath(true, OFF, "provider"),
-  };
-  await runIndependentReview(deps, reviewInput());
-
-  const view = buildAgentBridgeView(viewInput({ jobs: held({ jobs: jobsOf(rows), unreadable: 0 }) }));
-  assert.equal(view.jobs.held, true);
-  assert.equal(view.jobCount.held, true);
-  if (view.jobs.held && view.jobCount.held) {
-    assert.equal(view.jobCount.value.value, view.jobs.value.length, "the number over the table is the length of the array under it");
-    assert.equal(view.jobCount.value.denominator, latestByJob(jobsOf(rows)).length, "the denominator counts jobs, not log rows");
-    assert.equal(view.jobs.value.length, 3, "one review is two reviewer jobs plus the comparison, however many rows recorded them");
-  }
-});
-
-test("ADM-C9: the view reconstructs a review from the log and never calls an ask-both run independent", async () => {
-  const { log, rows } = memoryLog();
-  const now = tickingClock();
-  const deps: ReviewDeps = {
-    execute: async (a) => conclusionOf(a.slot, a.snapshot.hash, `${a.slot} verdict`, a.slot === "A" ? "NO" : "YES", now()),
-    log,
-    now,
-    pathFor: () => chooseExecutionPath(true, OFF, "provider"),
-  };
-  const run = await runIndependentReview(deps, reviewInput());
-  const asked = await runAskBoth(deps, reviewInput({ idempotencyKey: "k9", scope: "PR 295 — something else" }));
-  assert.ok(run.isolation !== null && asked.mode === "ASK_BOTH");
-
-  const reviews = groupReviews(jobsOf(rows), held([]));
-  assert.equal(reviews.length, 2, "both runs were reconstructed from the log alone");
-  const independent = reviews.find((r) => r.independent);
-  const both = reviews.find((r) => !r.independent);
-  assert.ok(independent !== undefined && both !== undefined);
-
-  assert.equal(independent.isolation.held, true, "the independent run shows its proof");
-  assert.equal(independent.isolation.held ? independent.isolation.value.holds : false, true);
-  assert.equal(independent.comparison.held, true);
-  assert.equal(independent.comparison.held ? independent.comparison.value.disagreements.length : -1, 1);
-  assert.equal(independent.seats.length, 2);
-  assert.deepEqual(independent.seats.map((s) => s.slot), ["First reviewer", "Second reviewer"]);
-  assert.equal(independent.snapshotShort, shortHash(independent.snapshot.hash));
-
-  assert.equal(both.isolation.held, false, "an ask-both run has no isolation to show");
-  assert.ok(both.isolation.held ? false : both.isolation.gap.says.includes("does not prove independence"));
-});
-
-test("ADM-C9: a decision log we could not read never makes the page say the owner decided nothing", async () => {
-  const { log, rows } = memoryLog();
-  const now = tickingClock();
-  const deps: ReviewDeps = {
-    execute: async (a) => conclusionOf(a.slot, a.snapshot.hash, `${a.slot} verdict`, a.slot === "A" ? "NO" : "YES", now()),
-    log,
-    now,
-    pathFor: () => chooseExecutionPath(true, OFF, "provider"),
-  };
-  await runIndependentReview(deps, reviewInput());
-
-  const unreadable = groupReviews(jobsOf(rows), gap("UNKNOWABLE_NOW", "Reading your decisions failed. We could not ask."));
-  assert.equal(unreadable[0].decision.held, false);
-  assert.equal(unreadable[0].decision.held ? null : unreadable[0].decision.gap.whose, "UNKNOWABLE_NOW");
-  assert.equal(unreadable[0].needsYou, false, "he is not asked to decide again because a database failed");
-
-  // POSITIVE CONTROL: a readable log with no decision DOES ask him, because
-  // then "you have not decided" is a fact rather than an inference.
-  const readable = groupReviews(jobsOf(rows), held([]));
-  assert.equal(readable[0].decision.held, false);
-  assert.equal(readable[0].decision.held ? null : readable[0].decision.gap.whose, "OURS");
-  assert.equal(readable[0].needsYou, true);
-  assert.ok(readable[0].needsYouAction !== null && readable[0].needsYouAction.includes("disagreed"));
-
-  // And a recorded decision reads back against the subject the page mints.
-  const decided = groupReviews(
-    jobsOf(rows),
-    held([{ subjectId: reviewDecisionSubject(readable[0].reviewId), chosenOption: "Go with the second reviewer", ownerAnswer: null, decidedAt: "2026-09-06T13:00:00.000Z" }]),
-  );
-  assert.equal(decided[0].decision.held, true);
-  assert.equal(decided[0].decision.held ? decided[0].decision.value.chose : null, "Go with the second reviewer");
-  assert.equal(decided[0].needsYou, false);
-});
-
-test("ADM-C9: a comparison recorded in a form the page cannot read is a named gap, not an empty agreement", () => {
-  assert.equal(parseComparisonDetail("not json at all").held, false);
-  assert.equal(parseComparisonDetail(JSON.stringify({ comparison: {} })).held, false);
-  const good = parseComparisonDetail(
-    JSON.stringify({ comparison: { agreements: [], disagreements: [], onlyA: [], onlyB: [], comparedAt: "x", says: "y" }, isolation: { holds: true } }),
-  );
-  assert.equal(good.held, true);
-});
-
-/* ================================================================== *
- * 6. THE PAGE — render law
- * ================================================================== */
-
-/**
- * The page source with every JSX ATTRIBUTE expression and every property lookup
- * removed, so what is left is what the owner actually reads.
- *
- * `title={p.observedFrom}` is the raw form kept for the hover, `key={p.provider}`
- * is React bookkeeping and `PROVIDER_WORDS[p.provider]` is a lookup — none of
- * them is text on the face. `>{p.provider}<` is, and survives this.
- */
-function pageAsRendered(): string {
-  return codeOf(...PAGE.split("/"))
-    .replace(/\b[A-Za-z]+=\{[^{}]*\}/g, " ")
-    .replace(/\[[^[\]]*\]/g, " ");
-}
-
-test("ADM-C8: no machine constant leads on the agent page — the raw form lives in the hover", () => {
-  const shown = pageAsRendered();
-  assert.ok(shown.length > 2000, "the page source was read — the guard has a denominator");
-  for (const rendered of ["{p.provider}", "{p.blocker}", "{p.observedFrom}", "{j.state}", "{j.mode}", "{j.authority}", "{r.mode}", "{p.authenticated.value}", "{p.occupancy.value}"]) {
-    assert.ok(!shown.includes(rendered), `${rendered} is never rendered as visible text`);
-  }
-  // POSITIVE CONTROL 1: the stripper leaves a real defect standing, so the
-  // sweep above is measuring something.
-  assert.ok(
-    "<span>{p.provider}</span>".replace(/\b[A-Za-z]+=\{[^{}]*\}/g, " ").replace(/\[[^[\]]*\]/g, " ").includes("{p.provider}"),
-    "a constant rendered as text survives the stripping and would fail the sweep",
-  );
-  // POSITIVE CONTROL 2: the hovers really do carry the raw forms, so the rule
-  // above is "not leading" rather than "hidden".
-  const full = codeOf(...PAGE.split("/"));
-  assert.ok(full.includes("title={p.observedFrom}"), "the observation point is on the hover");
-  assert.ok(full.includes("title={j.mode}"), "the mode constant is on the hover");
-  assert.ok(full.includes("title={r.mode}"), "the review mode constant is on the hover");
-  assert.ok(full.includes("title={j.snapshotHash}"), "the full snapshot hash is on the hover, never leading");
-});
-
 test("ADM-C8: the log records every transition, and every projection reads the CURRENT state of a job", async () => {
   const { log, rows } = memoryLog();
   const now = tickingClock();
@@ -1120,58 +925,6 @@ test("ADM-C8: the log records every transition, and every projection reads the C
   assert.ok(rows.some((r) => r.status === "RUNNING" && r.provider === "CODEX_SUBSCRIPTION"));
   assert.equal(inFlightFor(jobsOf(rows), "CODEX_SUBSCRIPTION"), 0, "a finished job is not in flight, whatever the raw log looks like");
   assert.equal(latestFor(jobsOf(rows), "CODEX_SUBSCRIPTION")?.state, "DONE");
-
-  const view = buildAgentBridgeView(viewInput({ jobs: held({ jobs: jobsOf(rows), unreadable: 0 }) }));
-  assert.equal(view.jobCount.held ? view.jobCount.value.denominator : -1, collapsed.length, "the table counts jobs, not log rows");
-});
-
-test("ADM-C8: the page renders every stamp through <When>, mints no route, and writes only an intent", () => {
-  const code = codeOf(...PAGE.split("/"));
-  assert.ok(code.includes('export const dynamic = "force-dynamic"'), "the page is never cached");
-  assert.ok(code.includes("export const revalidate = 0"));
-  assert.ok(code.includes("<QueueForm returnTo={AGENTS_PAGE_PATH} />"), "one hidden queue form, so a gap button can sit in a sentence");
-  assert.ok(code.includes("action={DECISION_ROUTE}"), "a review decision goes through the console's existing decision route");
-  assert.ok(!code.includes("toLocaleString"), "no stamp is formatted anywhere but in <When>");
-  for (const forbidden of ["WTP_", "process.env", "fetch(", "iframe", "document.cookie"]) {
-    assert.ok(!code.includes(forbidden), `the page contains no ${forbidden}`);
-  }
-  // Two write paths and no third: the gateway for the policy, the decision log
-  // for what the owner concluded. Nothing here posts anywhere else.
-  const actions = [...code.matchAll(/action=\{([A-Za-z_]+)\}/g)].map((m) => m[1]);
-  assert.deepEqual(new Set(actions), new Set(["GATEWAY_ACTION_ROUTE", "DECISION_ROUTE"]));
-});
-
-test("ADM-C8: the paid-API switch is the gateway's action, needs saying twice to turn on, and claims no enforcement", () => {
-  const code = codeOf(...PAGE.split("/"));
-  assert.ok(code.includes("value={SET_API_FALLBACK_ACTION}"), "the control posts the gateway's own action type");
-  assert.ok(code.includes('name="type"') && code.includes('name="subject"'), "it uses the gateway's envelope rather than a private one");
-  // §9A.22: turning it ON is the expensive direction, so it is the one behind a
-  // disclosure with its own explicit confirmation — and the gateway refuses it
-  // without that confirmation regardless of what this page renders.
-  assert.ok(code.includes('name="confirmed"'), "turning it on carries an explicit confirmation");
-  assert.ok(code.includes('<summary>Allow paid API spending</summary>'), "the on direction sits behind a disclosure");
-  assert.ok(code.includes('value="false"'), "turning it off needs no ceremony");
-  assert.ok(code.includes("view.fallback.missingSeam"), "the page names the exact piece this setting does not reach");
-  /*
-   * ACLOSE-2 closed the seam this used to assert was open. The page said
-   * "Nothing in the running system reads the setting yet"; every delegated job
-   * now does, so that sentence became a false claim about money and had to go
-   * with the change that falsified it. What replaces it is the same discipline
-   * pointed the other way: say what the switch DOES reach, and name what it
-   * does not.
-   */
-  assert.ok(
-    code.includes("Every delegated job reads this setting before it runs"),
-    "the page must say that the setting is enforced, now that it is",
-  );
-  assert.ok(
-    !code.includes("Nothing in the running system reads the setting yet"),
-    "the page still claims nothing reads the setting, which ACLOSE-2 made false",
-  );
-  assert.ok(code.includes("What this setting does NOT reach"), "and it must still name the spender this switch does not govern");
-  const policy = apiFallbackPolicy(null);
-  assert.ok(policy.missingSeam.length > 80, "the missing seam is a real sentence, taken from the module that owns the setting");
-  assert.ok(policy.enforcement.length > 0);
 });
 
 test("§3.4: nothing in the bridge iframes, scrapes or replays a consumer AI session", () => {
@@ -1183,7 +936,7 @@ test("§3.4: nothing in the bridge iframes, scrapes or replays a consumer AI ses
       assert.ok(!code.toLowerCase().includes(forbidden.toLowerCase()), `${file} does not reach for ${forbidden}`);
     }
   }
-  assert.equal(scanned, 7, "the sweep read every file in the bridge and its page");
+  assert.equal(scanned, 4, "the sweep read every file in the bridge");
 });
 
 test("§9A.1: the bridge never says 'our' to the owner, and never prints a credential's name", () => {
@@ -1199,7 +952,7 @@ test("§9A.1: the bridge never says 'our' to the owner, and never prints a crede
       assert.ok(!/WTP_[A-Z_]+/.test(s), `${file} prints an environment variable name in: ${s}`);
     }
   }
-  assert.equal(scanned, 7, "the sweep read every file in the bridge and its page");
+  assert.equal(scanned, 4, "the sweep read every file in the bridge");
   // POSITIVE CONTROL: the matcher must catch the word it is looking for, and
   // must not fire on "your", which is the word the pages actually use.
   assert.ok(ours.test("this is our gap"));

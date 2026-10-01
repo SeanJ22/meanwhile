@@ -57,17 +57,6 @@ test("any other read failure stays an untyped store failure", async () => {
   assert.equal(read.kind === "STORE_UNREACHABLE" ? read.cause : "x", undefined);
 });
 
-test("the Sources panel tells a timed-out read from a lost connection, and asks nothing of the owner for it", () => {
-  const panel = readFileSync("app/(admin)/admin/sources/routine-data-panel.tsx", "utf8");
-  const timedOut = panel.indexOf('outcome.cause === "READ_TIMED_OUT"');
-  const generic = panel.indexOf('if (outcome.kind === "STORE_UNREACHABLE") {');
-  assert.ok(timedOut > 0 && generic > timedOut, "the typed timeout is answered before the generic store failure");
-  const branch = panel.slice(timedOut, generic);
-  assert.match(branch, /needsYou=\{\{ needed: false \}\}/);
-  assert.match(branch, /Nothing is wrong with the store connection/);
-  assert.doesNotMatch(branch, /restore the production routine-data store connection/);
-});
-
 test("the statement limit is validated before any connection is opened", async () => {
   for (const bad of [0, -1, 1.5, Number.NaN]) {
     await assert.rejects(

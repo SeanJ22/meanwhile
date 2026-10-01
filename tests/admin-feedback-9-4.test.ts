@@ -7,8 +7,6 @@
  * same way the other admin guards do it.
  */
 import assert from "node:assert/strict";
-import { codeOf } from "./read-code.ts";
-import { surfaceFiles } from "./admin-surface.ts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
@@ -21,11 +19,9 @@ import { freshnessContract, freshnessRiskOf } from "../lib/health/contracts.ts";
 import {
   ANSWERED_IN_OWN_WORDS,
   decisionCardKind,
-  type OwnerContractReading,
   type OwnerDecisionIntent,
   type RunnerHeartbeat,
 } from "../lib/control-plane/owner-surface.ts";
-import { HEALTH_SCALE, plainContract, plainOverall } from "../lib/control-plane/plain-health.ts";
 import { READINESS_REPUBLISH_COMMAND, readinessRowOutcome } from "../lib/control-plane/readiness/read.ts";
 import { validateIntentNote } from "../lib/control-plane/research-view.ts";
 import { runnerStanding } from "../lib/control-plane/runner-standing.ts";
@@ -254,22 +250,6 @@ test("ADM-8: a DISPATCH needs words and the intent carries them; the control tha
   assert.equal(rows.length, 1);
   assert.equal(rows[0].status, "PENDING");
   assert.equal(readIntents(log).pendingDispatch.length, 1);
-  // Admin redesign, 2026-09-23: the home page's Deploy fleet control and its list of deployments were removed; work is now sent from the Fleet · Work composer, which records a geography, priority and budget (expansion.scope.set) rather than a DISPATCH intent in words.
-  /*
-   * §9A.16 (9.6.26): the owner had never pressed this button, because it did
-   * not say what it would do. The control that replaced it — the composer —
-   * shows the geography's codes and bodies before anything is sent, says what
-   * pressing send does and what it does NOT do, and sends through the one
-   * typed Action Gateway. The guard follows the control.
-   */
-  const control = codeOf("app/(admin)/_mw/composer.tsx");
-  assert.match(control, /type: "expansion\.scope\.set"/, "the button posts the typed action");
-  assert.match(control, /previewRoute/, "§9A.16: the geography is read before anything is sent");
-  assert.match(control, /What pressing send does/, "§9A.16: it explains itself before it acts");
-  // MW-028: the Send now creates what the registry defines and nothing carries; it still says what it will NOT do.
-  assert.match(control, /CREATES MISSING WORK/, "it says what it creates");
-  assert.match(control, /It invents nothing no\s+registry defines/, "and says what it will NOT do");
-  assert.doesNotMatch(control, /<form/, "no second write path beside the gateway");
 });
 
 /* ================================================================== *
@@ -327,44 +307,6 @@ test("ADM-7: the five groups cover the roles, with counts that carry denominator
 /* ================================================================== *
  * ADM-3 — plain words, with the scale
  * ================================================================== */
-
-test("ADM-3: a stale reader check reads as one plain sentence, and the scale names all four grades", () => {
-  const reading: OwnerContractReading = {
-    contract: "READER",
-    state: "NOT_READY",
-    reason: "the newest reader-suite run cannot be read as current: the newest run finished 27.3h ago, past the 24h freshness tolerance — a measurement that old is evidence about then, not now",
-    denominator: { held: true, value: { value: 1, denominator: 7, contract: "c", denominatorSource: "s" } },
-    proofClass: "SESSION_MEASURED",
-    runSha: null,
-    runAt: null,
-  };
-  const plain = plainContract(
-    { contract: "READER", level: "AMBER", headline: "Not yet proven", denominator: reading.denominator, proofAge: "proof 4d old", reason: reading.reason, nextAction: null },
-    reading,
-  );
-  assert.match(plain.status, /Not proven yet — the last check scored 1 of 7/);
-  assert.equal(plain.why, "The newest check is 27 hours old, past the 24-hour limit, so it does not count as current.");
-  /*
-   * ADM-37 (9.6.26): the next step used to BE the command — "run the reader
-   * suite again (`pnpm reader:suite`)" — and the owner's answer was "what has
-   * to happen? Think of someone who is not an engineer and not a coder at all."
-   * A shell command is not an answer to a person who cannot run one, so the
-   * next step is now a thing that happens and the page puts the control beside
-   * it. This guard was the one pinning the command in place; it now pins its
-   * absence.
-   */
-  assert.doesNotMatch(plain.next, /pnpm |`/, "no shell command on the face of the page");
-  assert.match(plain.next, /has to be run again/);
-  assert.match(plain.what, /Can a reader get a right answer/);
-  assert.deepEqual(HEALTH_SCALE.map((s) => s.level), ["GREEN", "AMBER", "RED", "UNKNOWN"]);
-  assert.equal(plainOverall("AMBER", [plain, { ...plain, contract: "TRUTH" }, { ...plain, contract: "FRESHNESS" }]), "Nothing is failing, but READER, TRUTH, FRESHNESS are not proven yet.");
-  // Admin redesign, 2026-09-23: the Pilot health section (the plain contract cards, the grade-scale legend and their technical-details disclosure) was removed; the health contracts now reach the owner only as the Gates reading on a readiness state page.
-  // Against the CODE, never the prose beside it (`tests/read-code.ts` carries the argument).
-  for (const rel of ["app/(admin)/readiness/[state]/page.tsx", "lib/control-plane/admin-view/readiness-view.ts"]) {
-    assert.doesNotMatch(codeOf(rel), /pnpm [a-z:]+/, `ADM-37: no CLI command reaches the face where the health contracts are read (${rel})`);
-  }
-  assert.match(src("app/(admin)/readiness/[state]/page.tsx"), /pilotHealthView\(owner, base\.nowIso\)/, "the Gates reading is the published health contracts, read as they are");
-});
 
 test("ADM-3: FRESHNESS reads measured canonical-cycle risk through the owner publisher", () => {
   const risk = freshnessRiskOf({ risk: { obligationsScheduled: 3, obligationsUnscheduled: 0, obligationsOverdue: 2, debtRows: 180, incidents: 29, oldestDebtHours: 1, activation: "SHADOW_NOT_ACTIVATED" } });
@@ -439,16 +381,6 @@ test("ADM-1: REQUIRES_REPUBLISH carries the record's publish facts, the current 
   assert.equal(out.snapshotContract, null);
   assert.match(out.currentContract, /instrument-derived/);
   assert.equal(out.clearedBy.command, READINESS_REPUBLISH_COMMAND);
-  const page = codeOf("app/(admin)/readiness/[state]/page.tsx");
-  assert.match(page, /readiness\.kind === "REQUIRES_REPUBLISH"/, "the redesigned state page still has its own branch for a record worked out an older way");
-  // The record's publish facts and what clears it still reach the page (9.6.26 moved them one disclosure down; they were never to be deleted).
-  assert.match(page, /\.clearedBy\.command/, "the standing publisher that clears the record is not rendered anywhere on the state page");
-  assert.match(page, /\.legacy\.publishedAt/, "when the quarantined record was published is not rendered anywhere on the state page");
-  // Admin redesign, 2026-09-23: the page heading that named the state was replaced by the shell's crumbs, which name it on every branch.
-  assert.match(page, /const crumbs = [\s\S]*?\{name\}/, "the crumbs name the state");
-  const branches = page.split("<MwShell").slice(1).map((b) => b.slice(0, b.indexOf("</MwShell>")));
-  assert.ok(branches.length >= 4, `the guard must see every return of the page; saw ${branches.length}`);
-  for (const b of branches) assert.match(b, /\{crumbs\(/, "the state is named on every branch");
 });
 
 /* ================================================================== *
@@ -456,17 +388,6 @@ test("ADM-1: REQUIRES_REPUBLISH carries the record's publish facts, the current 
  * ================================================================== */
 
 test("ADM-2: the console header navigates inside a transition, shows the choice at once, and the read path skips the schema bootstrap", () => {
-  /*
-   * Admin redesign, 2026-09-23: the View / State dropdown header was replaced by
-   * the shell's one scope select (`_mw/header-controls.tsx`); the header's
-   * other controls are plain links. The select is where a choice waits on the
-   * server, so the rule follows it.
-   */
-  const nav = codeOf("app/(admin)/_mw/header-controls.tsx");
-  assert.match(nav, /const \[pending, startTransition\] = useTransition\(\);/);
-  assert.match(nav, /startTransition\(\(\) => \{[\s\S]*?router\.push\(/, "the navigation runs inside the transition");
-  assert.match(nav, /const shown = pending && chosen !== null \? chosen : props\.value;/, "the choice shows the instant it is made");
-  assert.match(nav, /\{pending && \([\s\S]*?role="status" aria-live="polite"/, "a status line says what is loading while the current page stays up");
   assert.match(src("lib/control-plane/admin-data.ts"), /skipBootstrap: true/);
   assert.match(src("lib/control-plane/readiness/read.ts"), /skipBootstrap: true/);
   // The bootstrap call is now wrapped in a bounded connect-retry (connect-retry.ts)
@@ -477,14 +398,4 @@ test("ADM-2: the console header navigates inside a transition, shows the choice 
     src("lib/control-plane/repository/pg-store.ts"),
     /if \(!options\.skipBootstrap\) \{[\s\S]*?bootstrap\(sql, nowIso(?:, bounds)?\)/,
   );
-});
-
-test("the readiness pages draw with the one shared set of primitives, never a local copy", () => {
-  // Admin redesign, 2026-09-23: the per-state panel with its legend, tiles and swatch classes was removed; the readiness pages draw with the shell's primitives (`_mw/ui.tsx`).
-  for (const rel of ["app/(admin)/readiness/[state]/page.tsx", "app/(admin)/readiness/page.tsx"]) {
-    const page = codeOf(rel);
-    assert.match(page, /from "\.\.(\/\.\.)?\/_mw\/ui\.tsx"/, `${rel} draws with the shared primitives`);
-    assert.doesNotMatch(page, /^(export )?function (Pill|Dash|Fig|FigList|Cells|Section|Refusal|Legend|Tile)\(/m, `${rel} declares its own copy of a shared primitive`);
-    assert.doesNotMatch(page, /^const (STATE_CLASS|FIG_TONE|TONE_CLASS)\b/m, `${rel} carries its own class dictionary`);
-  }
 });

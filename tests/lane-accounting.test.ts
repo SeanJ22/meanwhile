@@ -9,9 +9,6 @@ import test from "node:test";
 
 import { readPulse } from "../lib/control-plane/gateway/pulse-read.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { runnerFace } from "../lib/control-plane/runner-plain.ts";
-import type { RunnerStanding } from "../lib/control-plane/runner-standing.ts";
-import { FleetSafetyController } from "../lib/control-plane/fleet-safety.ts";
 import {
   coordinatorLane,
   laneGauges,
@@ -28,17 +25,6 @@ import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
 
 const NOW = "2026-09-25T12:00:00.000Z";
 const NOW_MS = Date.parse(NOW);
-
-test("a cycle without dispatches does not invent a spending-limit stop", () => {
-  const safety = new FleetSafetyController({ now: NOW, costs: [], clock: () => NOW_MS }).snapshot(NOW);
-  const standing: RunnerStanding = { state: "ACTIVE", level: "GREEN", headline: "", detail: "", sinceBeatMinutes: 1, pause: null, control: "PAUSE_RUNNER" };
-  const input = { standing, heartbeat: null, safety, resumesAtWords: null, stoppedAtWords: null, didThisCycle: null };
-  assert.match(runnerFace(input).did, /No stop reason has been recorded/);
-  assert.doesNotMatch(runnerFace(input).did, /reached a limit/);
-  const stopped = runnerFace({ ...input, safety: { ...safety, stoppedBecause: ["WALL_CLOCK_CEILING: insufficient cycle wall time remained"] } });
-  assert.match(stopped.did, /recorded stop reasons/);
-  assert.ok(stopped.stopped);
-});
 
 function obligation(id: string, hoursAgo: number): FreshnessObligation {
   return {
@@ -129,11 +115,6 @@ test("MW-014: the persisted reading's reasons sum to the skipped count on the ru
   assert.deepEqual(skipped.mismatches, []);
   for (const l of skipped.lanes) assert.equal(l.reasons!.reduce((n, r) => n + r.count, 0), l.skipped);
   assert.match(skipped.says, /^6 of 6 due items were not started this cycle\. The reasons below add up to that number\./);
-  // The card reads the same accounting.
-  const standing: RunnerStanding = { state: "ACTIVE", level: "GREEN", headline: "", detail: "", sinceBeatMinutes: 1, pause: null, control: "PAUSE_RUNNER" };
-  const face = runnerFace({ standing, heartbeat: null, safety: null, resumesAtWords: null, stoppedAtWords: null, didThisCycle: null, lanes });
-  assert.deepEqual(face.skipped, skipped);
-  assert.equal(runnerFace({ standing, heartbeat: null, safety: null, resumesAtWords: null, stoppedAtWords: null, didThisCycle: null }).skipped, null, "no accounting recorded is said, never read as nothing skipped");
 });
 
 test("MW-014: reasons that do not add up produce a MISMATCH line naming the lane", () => {

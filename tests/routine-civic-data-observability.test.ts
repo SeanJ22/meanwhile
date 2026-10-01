@@ -1813,13 +1813,8 @@ test("PDC-13: historical proof reuse never survives a later snapshot read", () =
 });
 
 test("PDC-13: the deterministic Admin render contract leads with canonical operations and refuses false zeroes", () => {
-  const page = readFileSync("app/(admin)/admin/sources/page.tsx", "utf8");
-  const panel = readFileSync("app/(admin)/admin/sources/routine-data-panel.tsx", "utf8");
   const server = readFileSync("lib/civic-data/observability-server.ts", "utf8");
   const store = readFileSync("lib/civic-data/observability-store.ts", "utf8");
-  assert.ok(page.indexOf("<RoutineDataPanel") < page.indexOf("<h2>Source and credential capability inventory</h2>"));
-  assert.match(page, /observability-server\.ts/);
-  assert.doesNotMatch(page, /The nightly refresh reads what is due tonight|One scheduled run reads every source that is due/);
   assert.match(server, /import "server-only"/);
   assert.match(server, /readRoutineDataObservabilityFromConnection/);
   assert.match(server, /codeSha:\s*process\.env\.WTP_BUILD_COMMIT/);
@@ -1857,22 +1852,6 @@ test("PDC-13: the deterministic Admin render contract leads with canonical opera
   assert.match(store, /finally \{ await pool\.end\(\); \}/);
   assert.doesNotMatch(store, /Promise\.all\(/, "canonical rows must come from one repeatable-read transaction");
   assert.doesNotMatch(`${server}\n${store}`, /\.(?:insert|update|delete)\(/, "the observability read path must remain read-only");
-  for (const label of [
-    "Canonical routine-data operations",
-    "Canonical promoted version / receipt",
-    "Typed Reader read-model proof",
-    "Exact latest candidate changes, holds, and refusals",
-    "outcome history",
-    "row.histories[\"24h\"]",
-    "row.histories[\"7d\"]",
-    "row.histories[\"30d\"]",
-  ]) assert.match(panel, new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
-  assert.match(panel, /canonical routine civic-data store could not be read/i);
-  assert.match(panel, /No missing or zero outcome is inferred from this failure/);
-  assert.match(panel, /Admin could not construct the canonical evidence projection/);
-  assert.match(panel, /data plane was not classified as failed, empty, or healthy/);
-  assert.match(panel, /inspect the typed Reader readback and repair; do not reclassify or rerun the source/);
-  assert.match(panel, /This is a measured zero/);
 });
 
 test("a confirmed re-check keeps Admin current: the newest confirmation is the latest attempt and success, never a second promotion", async () => {

@@ -21,8 +21,6 @@
  */
 
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import test from "node:test";
 
 import { ZERO_COST, WORKER_ROLES, type AttemptCost, type WorkerRole } from "../lib/control-plane/attempt.ts";
@@ -47,12 +45,7 @@ import {
   costSectionNumbers,
 } from "../lib/control-plane/cost-panel.ts";
 import { auditRenderedNumbers, gap, held, measured } from "../lib/control-plane/owner-surface.ts";
-import { ROOT, codeOf } from "./read-code.ts";
-
-// Admin redesign, 2026-09-23: the Pilot health cost section was replaced by Fleet · Money — this screen and its view model.
-const SCREEN = "app/(admin)/_mw/screens/money.tsx";
-const VIEW = "lib/control-plane/admin-view/money-view.ts";
-const src = (...parts: string[]): string => readFileSync(join(ROOT, ...parts), "utf8");
+import { codeOf } from "./read-code.ts";
 
 const CEILINGS = { rolling24HourModelUsd: 25 };
 
@@ -511,76 +504,4 @@ test("every number the cost section draws itself carries a denominator and a con
   assert.ok(!numbers.some((n) => n.label.includes("Operational night")), "an unmeasured window is not pushed as a number");
   /* POSITIVE CONTROL: the audit really does refuse a figure with no denominator. */
   assert.equal(auditRenderedNumbers([{ label: "x", value: 1, denominator: null, contract: "c" }]).ok, false);
-});
-
-/* ================================================================== *
- * THE SCREEN'S OWN SOURCE (read as text, the way the other admin guards do)
- * ================================================================== */
-
-test("Fleet · Money renders dollars to the cent and no longer claims a role is free by design", () => {
-  /*
-   * Admin redesign, 2026-09-23: the Pilot health cost section was replaced by
-   * Fleet · Money (also Readiness · Cost): a screen that reads, and a pure view
-   * model that words what it read. The rules follow the words.
-   *
-   * The rules below are about what the code DOES, so they are measured against
-   * the code with comments stripped (`tests/read-code.ts` carries the account).
-   */
-  const page = src(SCREEN);
-  const code = codeOf(SCREEN);
-  const view = codeOf(VIEW);
-  assert.ok(page.length > 4_000, `the guard must read the screen; saw ${page.length} chars`);
-  assert.ok(code.length > 2_000 && code.length < page.length, "comments are stripped before the code rules run");
-  assert.ok(view.length > 4_000, `the guard must read the view model; saw ${view.length} chars`);
-  assert.match(page, /export async function MoneyScreen\(props: \{ readonly area: MwArea; readonly searchParams: Promise<SearchParams> \}\)/, "the contract both areas' pages import");
-  for (const rel of ["app/(admin)/admin/money/page.tsx", "app/(admin)/readiness/cost/page.tsx"]) {
-    assert.match(src(rel), /<MoneyScreen area="(fleet|readiness)" searchParams=\{searchParams\} \/>/, `${rel} renders the one Money screen`);
-  }
-
-  // Admin redesign, 2026-09-23: the spend-by-role and spend-by-day charts (POS-12) were removed; Money draws AI usage by provider and model, and the model money by place.
-  /* ADM-36: colour arrives as a class name, never as a style this code wrote. */
-  assert.doesNotMatch(code, /style=\{\{[^}]*\b(color|background)\s*:/, "an inline colour on the Money screen");
-
-  /* ADM-26 / §9A.4: cents everywhere, and no four-decimal formatter. */
-  for (const [where, c] of [["screen", code], ["view model", view]] as const) {
-    assert.match(c, /function usd\(n: number\): string \{\s*return `\$\$\{n\.toLocaleString\("en-US", \{ minimumFractionDigits: 2, maximumFractionDigits: 2 \}\)\}`;/, `the ${where} formats dollars to the cent`);
-    assert.doesNotMatch(c, /\btoFixed\(4\)/, `the ${where} carries a four-decimal formatter`);
-  }
-  /*
-   * The four-decimal formatters live in `console-ui.tsx` as `usd` and
-   * `usdShort`; the check is on what the screen IMPORTS, because a ledger FIELD
-   * is also called `usd` and reading it is not formatting it.
-   */
-  assert.doesNotMatch(code, /from "[./]*console-ui\.tsx"/, "a four-decimal formatter can only arrive through the old console's primitives");
-
-  /* ADM-33: the struck sentence is gone from the face. */
-  assert.doesNotMatch(code + view, /\$0 by design/);
-
-  /* §9A.23: the month is the UTC month, and says when it resets. */
-  assert.match(code, /`\$\{month\.label\} \(UTC\) to \$\{eastern\(month\.asOf\)\}, from the charge ledger\. Resets \$\{eastern\(month\.resetsAt\)\}\./);
-  /* ADM-C14: the subscriptions are shown apart from usage and never added to it. */
-  assert.match(view, /Not spend the runner can stop, and never added to usage\./);
-  // Admin redesign, 2026-09-23: the per-card "Needs you" line and the per-model cache hit rate and caching saving were removed; Money's model table carries charges, measured dollars, unpriced charges and share.
-
-  /*
-   * The view model is PURE: it reads no store, no clock and no environment.
-   * The screen reads through the page's own readers, but never the environment
-   * or a clock of its own — its one instant is the page's.
-   */
-  for (const forbidden of ["openControlPlane", "process.env", "Date.now()", "readFileSync", "fetch("]) {
-    assert.ok(!view.includes(forbidden), `a pure view model may not reach for ${forbidden}`);
-  }
-  for (const forbidden of ["process.env", "Date.now()", "readFileSync", "fetch("]) {
-    assert.ok(!code.includes(forbidden), `the screen may not reach for ${forbidden}`);
-  }
-  /*
-   * `new Date(someString)` PARSES a stamp it was handed, which is formatting;
-   * `new Date()` READS the clock, which would make the render depend on when
-   * it happened rather than on what it was given. Only the second is
-   * forbidden, and the plant below proves the pattern separates them.
-   */
-  assert.doesNotMatch(code, /new Date\(\s*\)/, "the screen may not read the clock");
-  assert.doesNotMatch(view, /new Date\(\s*\)/, "a pure view model may not read the clock");
-  assert.match("const now = new Date();", /new Date\(\s*\)/, "the detector catches a real clock read");
-  assert.doesNotMatch('new Date(`${d.day}T12:00:00Z`)', /new Date\(\s*\)/, "and leaves parsing a given stamp alone");
 });

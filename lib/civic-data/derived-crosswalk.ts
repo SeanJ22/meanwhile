@@ -37,7 +37,7 @@
  *
  * The wiring derive composes these rows with the manual crosswalk
  * (`composeCrosswalk`): a manually reviewed row wins over an automatic one for
- * the same body and kind (withdrawn or not), and over one claiming its
+ * the same body, kind and route (withdrawn or not), and over one claiming its
  * calendar and filter for another body.
  */
 import { createHash } from "node:crypto";
@@ -420,7 +420,7 @@ export interface ComposedCrosswalk {
 
 /**
  * **MANUAL ROWS WIN.** The rows the wiring derive decides: every well-formed manual row, and every automatic row no
- * manual row shadows. A manual row shadows an automatic one for the same body and kind, whatever its status (a
+ * manual row shadows. A manual row shadows an automatic one for the same body, kind and route, whatever its status (a
  * withdrawal by review is never undone by the reviewer), and an automatic row claiming a manual ACTIVE row's
  * calendar and filter for another body.
  */

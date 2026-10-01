@@ -80,7 +80,7 @@ const SHAPES: readonly Shape[] = [
     words: "Agents searched and found no way to the record yet.",
     next: "The next agent starts from the routes this one named." },
   { key: "needs-adapter", test: /needs an adapter|missing capability of ours/i, lane: "software",
-    words: "We don’t have a reader for this kind of source yet. That is our gap, not the source’s.",
+    words: "We haven’t built a reader for this kind of source yet. The source itself isn’t the problem.",
     next: "Engineering builds the reader. Sending agents won’t fix it." },
   { key: "page-missing", test: /not in vault|ARTIFACT_NOT_IN_VAULT|saved page was missing/i,
     words: "A saved page was missing when an agent needed it.",

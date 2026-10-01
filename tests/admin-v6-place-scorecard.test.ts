@@ -84,7 +84,7 @@ test("a failed read is a named refusal, never an empty place that looks finished
 
 test("the section carries the score on top, the status bars, one window of items and a send-agents action on open work", async () => {
   const rows = [row("1", "GOV-01", "published", "A", "https://a.gov"), row("2", "GOV-02", "missing", "B")];
-  const read = { state: "READ" as const, placeKey: "geo:az.zcta.85635", label: "ZIP 85635", covers: "all", divisions: [{ id: "d", label: "D" }],
+  const read = { state: "READ" as const, placeKey: "geo:az.zcta.85635", label: "ZIP 85635", covers: "all", divisions: [{ id: "ocd-division/country:us/state:az/county:cochise", label: "Cochise County" }],
     rows: rows as never, observedAt: "2026-09-30T18:00:00.000Z", readMs: { geography: 1, held: 1 } };
   const section = v6PlaceSection(read, { group: "GOV", states: null, q: null, offset: 0, limit: 50 });
   assert.equal(section.contract, "admin-v6/checklist@1");
@@ -93,7 +93,7 @@ test("the section carries the score on top, the status bars, one window of items
   assert.equal(section.data.definitionCount, 325);
   assert.equal(section.data.items.length, 2);
   const missing = section.data.items.find((i) => i.key === "2")!;
-  assert.deepEqual(missing.actions, [{ kind: "send-agents", target: "geo:az.zcta.85635", label: "Send agents", payload: { words: "Deploy fleet to Arizona 85635" } }]);
+  assert.deepEqual(missing.actions, [{ kind: "send-agents", target: "geo:az.zcta.85635", label: "Send agents", payload: { words: "Deploy fleet to Arizona Cochise" } }]);
   assert.deepEqual(section.data.items.find((i) => i.key === "1")!.actions, []);
   assert.equal(section.data.items.find((i) => i.key === "1")!.sourceUrl, "https://a.gov");
   const gov = section.data.placeGroups.find((g) => g.group === "GOV")!;
@@ -103,4 +103,13 @@ test("the section carries the score on top, the status bars, one window of items
   assert.equal(none.data.score, null);
   assert.equal(none.data.definitions.length, 325);
   assert.deepEqual([...OWED_STATES].sort(), ["held", "missing", "published", "stale", "unpublished"]);
+});
+
+test("a Send for a ZIP names the county it sits in, never the whole state, and a county or state names itself", async () => {
+  const { placeSendWords } = await import("../lib/control-plane/admin-view/v6-place-section.ts");
+  const divisions = [{ id: "ocd-division/country:us/state:az", label: "Arizona" }, { id: "ocd-division/country:us/state:az/county:cochise", label: "Cochise County" }, { id: "ocd-division/country:us/state:az/place:sierra_vista", label: "Sierra Vista" }];
+  assert.equal(placeSendWords("geo:az.zcta.85635", "ZIP 85635", divisions), "Deploy fleet to Arizona Cochise");
+  assert.equal(placeSendWords("geo:az.zcta.85635", "ZIP 85635", []), null, "a ZIP whose county is unknown is not widened to the whole state");
+  assert.equal(placeSendWords("geo:az.county.04019", "Pima County, AZ"), "Deploy fleet to Arizona Pima");
+  assert.equal(placeSendWords("st:az", "Arizona"), "Deploy fleet to Arizona");
 });

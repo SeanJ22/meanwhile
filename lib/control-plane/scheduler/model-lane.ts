@@ -36,13 +36,14 @@ import type { ResearchIntent, ResearchIntentRequest } from "./research-policy.ts
  * `ActivationGateReading` (whose `promotionEnabled` is the literal `false`), so
  * the rule stays correct, and its open case testable, when promotion opens.
  */
+import { ModelTransportError, type AnthropicRateLimits, type ModelRequest, type ModelTransport } from "./scout-executor.ts";
+
 export interface DeliveryGate {
   readonly promotionEnabled: boolean;
   readonly openRecordClasses: readonly string[];
 }
 
 export interface ModelLaneFacts {
-  readonly scheduledBlackout: boolean;
   readonly dry: boolean;
   readonly noModel: boolean;
   readonly credentialConfigured: boolean;
@@ -63,7 +64,7 @@ export interface ModelLaneFacts {
 }
 
 export interface ModelLaneClosure {
-  readonly code: "SCHEDULED_BLACKOUT" | "LANE_DISABLED" | "PAUSED";
+  readonly code: "LANE_DISABLED" | "PAUSED";
   readonly reason: string;
 }
 
@@ -94,12 +95,6 @@ export function deliveryPathOpen(activation: DeliveryGate): boolean {
 }
 
 export function modelLaneClosure(f: ModelLaneFacts): ModelLaneClosure | null {
-  if (f.scheduledBlackout) {
-    return {
-      code: "SCHEDULED_BLACKOUT",
-      reason: "SCHEDULED BLACKOUT: Saturday 18:00 through Sunday 06:00 America/Phoenix permits no model or network research",
-    };
-  }
   if (f.dry) return { code: "LANE_DISABLED", reason: "--dry: no retrieval of any kind runs, so no Scout runs" };
   if (f.noModel) return { code: "LANE_DISABLED", reason: "--no-model: the Scout lane is held closed for this diagnostic cycle" };
   if (f.paused) return { code: "PAUSED", reason: `paused by owner intent ${f.pauseIntentId ?? "(id unrecorded)"}` };
@@ -127,4 +122,106 @@ export function modelLaneClosure(f: ModelLaneFacts): ModelLaneClosure | null {
     };
   }
   return null;
+}
+
+interface ProviderTurn {
+  at: number;
+  input: number;
+  output: number;
+}
+
+/** One shared broker for the existing workers. Each model has its own provider bucket.
+ * Reservation is synchronous; concurrent workers cannot spend the same minute twice.
+ * Unknown limits permit one discovery request, then follow its returned capacity.
+ * Waiting for capacity never expires a scout or retries a failed request.
+ */
+export class ModelProviderQueue {
+  private readonly tiers = new Map<string, { limits: AnthropicRateLimits | null; turns: ProviderTurn[]; active: number; tail: Promise<void>; retryAt: number; failures: number }>();
+  private readonly options: {
+    now?: () => number;
+    sleep?: (ms: number) => Promise<void>;
+    requestsPerMinute?: number;
+  };
+  constructor(options: ModelProviderQueue["options"] = {}) { this.options = options; }
+
+  private tier(model: string) {
+    let tier = this.tiers.get(model);
+    if (!tier) {
+      tier = { limits: null, turns: [], active: 0, tail: Promise.resolve(), retryAt: 0, failures: 0 };
+      this.tiers.set(model, tier);
+    }
+    return tier;
+  }
+
+  observe(model: string, limits: AnthropicRateLimits): void {
+    const tier = this.tier(model);
+    const prior = tier.limits;
+    tier.limits = { requestsPerMinute: limits.requestsPerMinute ?? prior?.requestsPerMinute ?? null,
+      inputTokensPerMinute: limits.inputTokensPerMinute ?? prior?.inputTokensPerMinute ?? null,
+      outputTokensPerMinute: limits.outputTokensPerMinute ?? prior?.outputTokensPerMinute ?? null,
+      retryAfterMs: limits.retryAfterMs };
+    if (limits.retryAfterMs !== null) tier.retryAt = Math.max(tier.retryAt, this.now() + limits.retryAfterMs);
+    const remaining = limits.remaining;
+    if (remaining) {
+      const now = this.now();
+      for (const [left, reset] of [[remaining.requests, remaining.requestsResetAt],
+        [remaining.inputTokens, remaining.inputResetAt], [remaining.outputTokens, remaining.outputResetAt]]) {
+        if (left === 0) tier.retryAt = Math.max(tier.retryAt, reset ?? now + 60_000);
+      }
+    }
+  }
+
+  limits(model: string): AnthropicRateLimits | null { return this.tier(model).limits; }
+  private now() { return (this.options.now ?? Date.now)(); }
+  private sleep(ms: number) { return (this.options.sleep ?? (ms => new Promise<void>(resolve => setTimeout(resolve, ms))))(ms); }
+
+  transport(transport: ModelTransport): ModelTransport {
+    return async (request: ModelRequest) => {
+      const tier = this.tier(request.model);
+      // UTF-8 bytes reserve conservatively before provider usage refunds unused tokens.
+      const turn: ProviderTurn = { at: 0, input: Buffer.byteLength(JSON.stringify(request)), output: request.max_tokens };
+      const admission = tier.tail.then(async () => {
+        for (;;) {
+          const now = this.now();
+          tier.turns = tier.turns.filter(previous => previous.at + 60_000 > now);
+          const limits = tier.limits;
+          const requests = limits?.requestsPerMinute ?? this.options.requestsPerMinute;
+          const input = limits?.inputTokensPerMinute;
+          const output = limits?.outputTokensPerMinute;
+          if ((input != null && turn.input > input) || (output != null && turn.output > output)) {
+            throw new ModelTransportError("PROVIDER_REQUEST_EXCEEDS_MINUTE_TOKEN_CAPACITY: reduce this request representation or output allowance", 400);
+          }
+          const full = (requests != null && tier.turns.length >= requests) ||
+            (input != null && tier.turns.reduce((sum, t) => sum + t.input, 0) + turn.input > input) ||
+            (output != null && tier.turns.reduce((sum, t) => sum + t.output, 0) + turn.output > output);
+          const unknownBusy = requests == null && tier.active > 0;
+          if (!full && !unknownBusy && tier.retryAt <= now) {
+            turn.at = now;
+            tier.turns.push(turn);
+            tier.active++;
+            return;
+          }
+          const due = Math.max(tier.retryAt, full && tier.turns.length ? tier.turns[0].at + 60_000 : now + 100);
+          await this.sleep(Math.max(1, due - now));
+        }
+      });
+      tier.tail = admission.catch(() => undefined);
+      await admission;
+      try {
+        const response = await transport(request);
+        tier.failures = 0;
+        const usage = response.usage;
+        if (usage.input_tokens !== undefined && usage.cache_creation_input_tokens !== undefined) turn.input = usage.input_tokens + usage.cache_creation_input_tokens;
+        if (usage.output_tokens !== undefined) turn.output = usage.output_tokens;
+        return response;
+      } catch (error) {
+        if (error instanceof ModelTransportError && (error.status === 429 || (error.status ?? 0) >= 500 || error.status === null)) {
+          tier.failures++;
+          const delay = error.retryAfterMs ?? Math.min(6 * 3_600_000, 1000 * 2 ** Math.min(tier.failures, 15));
+          tier.retryAt = Math.max(tier.retryAt, this.now() + delay);
+        }
+        throw error;
+      } finally { tier.active--; }
+    };
+  }
 }

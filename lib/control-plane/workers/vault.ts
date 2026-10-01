@@ -4,7 +4,7 @@ import { readForParser, type EvidenceStore, type ObjectMeta } from "../evidence/
 import type { ParserInput } from "../evidence/parser-boundary.ts";
 
 /** The acquiring roles whose bytes may reach a worker. */
-const WORKER_READABLE_ROLES = ["ACQUIRER", "SCOUT", "ADVERSARIAL_AUDITOR"];
+const WORKER_READABLE_ROLES = ["ACQUIRER", "SCOUT", "DETECTIVE", "ADVERSARIAL_AUDITOR"];
 
 /**
  * Resolves by held identity; cannot acquire and cannot invent an acquisition record.
@@ -50,7 +50,7 @@ export function workerVaultResolver(repos: ControlPlaneRepositories, store: Evid
             m.attemptId !== record.attemptId || m.canonicalUrl !== record.canonicalUrl) continue;
         const artifact: Artifact = {
           id: artifactId, tier: record.tier, contentHash: record.contentHash, byteLength: record.byteLength,
-          contentType: record.contentType, canonicalUrl: record.canonicalUrl, retrievalUrl: record.canonicalUrl,
+          contentType: record.contentType, canonicalUrl: record.canonicalUrl, retrievalUrl: m.retrievalUrl ?? record.canonicalUrl,
           retrievedAt: m.retrievedAt, httpStatus: Number(m.httpStatus), headers: {}, sourceId: m.sourceId,
           methodRouteId: m.methodRouteId, workItemId: m.workItemId, attemptId: m.attemptId,
           permission: m.permission as Artifact["permission"], transport: m.transport as Artifact["transport"],

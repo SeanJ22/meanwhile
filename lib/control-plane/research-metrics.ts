@@ -432,7 +432,7 @@ export function cacheHitRateByRole(input: {
     if (at < since || at > until) continue;
     if (c.routeId === SCOUT_PREWARM_ROUTE_ID) continue;
     /* Only the roles that invoke a model have a cache to measure; a deterministic lane's row is not a missing measurement. */
-    if (ROLE_MODEL[c.role] === undefined) continue;
+    if (c.role !== "ASK" && ROLE_MODEL[c.role] === undefined) continue;
     const acc = byRole.get(c.role) ?? fresh();
     acc.attempts += 1;
     inWindow.add(c.attemptId);

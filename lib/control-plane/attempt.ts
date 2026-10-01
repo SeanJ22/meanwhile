@@ -158,6 +158,8 @@ export const ZERO_COST: AttemptCost = {
 };
 
 export interface Attempt {
+  /** Unattended provider work survives process/lease loss; no prompts are stored here. */
+  readonly providerBatches?: readonly AttemptProviderBatch[];
   /** Granted before a fleet worker executes, including failed and denied runs. */
   readonly capabilityGrant?: CapabilityGrant;
   readonly id: string;
@@ -177,6 +179,14 @@ export interface Attempt {
   readonly methodVersion: number;
   /** The capability-grant version in force. Replay needs it too. */
   readonly policyVersion: string;
+}
+
+export interface AttemptProviderBatch {
+  readonly requestHash: string;
+  readonly customId: string;
+  readonly batchId: string | null;
+  /** Written before submission, so an ambiguous POST is never paid for again. */
+  readonly submittedAt: string;
 }
 
 /** ---------------------------------------------------------------- leases */

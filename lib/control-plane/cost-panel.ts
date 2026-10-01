@@ -522,7 +522,7 @@ export const ROLE_COST_POLICY: Readonly<Record<WorkerRole, RoleCostPolicy>> = {
   ADVERSARIAL_AUDITOR: {
     role: "ADVERSARIAL_AUDITOR",
     access: "ROUTED_TO_A_PAID_MODEL",
-    provenIn: "lib/control-plane/workers/model-audit.ts — the adversarial audit is a MODEL step; lib/control-plane/workers/runtime.ts routes this role, and only this role, to it",
+    provenIn: "lib/control-plane/workers/model-audit.ts — the adversarial audit can use a model after deterministic validation",
   },
   ACQUIRER: {
     role: "ACQUIRER",
@@ -531,23 +531,23 @@ export const ROLE_COST_POLICY: Readonly<Record<WorkerRole, RoleCostPolicy>> = {
   },
   DETECTIVE: {
     role: "DETECTIVE",
-    access: "NO_MODEL_STEP_ROUTED",
-    provenIn: "lib/control-plane/workers/research-runtime.ts — the executor declares the deterministic lane and no model transport reaches it",
+    access: "ROUTED_TO_A_PAID_MODEL",
+    provenIn: "lib/control-plane/workers/detective.ts — failure response can use the shared Scout model and source tools after held evidence",
   },
   ENGINEERING: {
     role: "ENGINEERING",
-    access: "NO_MODEL_STEP_ROUTED",
-    provenIn: "lib/control-plane/workers/research-runtime.ts — the executor declares the deterministic lane and no model transport reaches it",
+    access: "ROUTED_TO_A_PAID_MODEL",
+    provenIn: "lib/control-plane/workers/engineering.ts — adapter repair can escalate to the shared model tiers after plain code",
   },
   PARSER: {
     role: "PARSER",
-    access: "NO_MODEL_STEP_ROUTED",
-    provenIn: "lib/control-plane/workers/runtime.ts — only the adversarial auditor is model-assisted; every other role takes the deterministic worker identity",
+    access: "ROUTED_TO_A_PAID_MODEL",
+    provenIn: "lib/control-plane/workers/runtime.ts — usesModelParse selects quote extraction by model when the held document has no parsing rule",
   },
   VALIDATOR: {
     role: "VALIDATOR",
     access: "NO_MODEL_STEP_ROUTED",
-    provenIn: "lib/control-plane/workers/runtime.ts — only the adversarial auditor is model-assisted; every other role takes the deterministic worker identity",
+    provenIn: "lib/control-plane/workers/runtime.ts — validation runs deterministic checks on the saved source and quoted fields",
   },
   RELEASE_ORCHESTRATOR: {
     role: "RELEASE_ORCHESTRATOR",

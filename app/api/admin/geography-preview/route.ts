@@ -26,7 +26,6 @@ import { scopeWorkPreview } from "@/lib/control-plane/admin-view/scope-work.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
 import type { GeographyType } from "@/lib/census-geography/contract.ts";
 
-import { DISPATCH_WORK_TARGET_CAP } from "@/lib/control-plane/expansion/dispatch-work-bounds.ts";
 import { stateSendPreviewSentence } from "@/lib/control-plane/expansion/send-preview.ts";
 
 import { loadContainer, loadZcta } from "../../../(admin)/_mw/data/geography.ts";
@@ -66,7 +65,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   const sendStates = await Promise.all(
     [...new Set([g.stateAbbr, ...g.memberStates].map((s) => s.toUpperCase()))].sort().map((st) => sendPreviewFor(st, container.value.zctas, query)),
   );
-  const send = { states: sendStates, says: sendStates.map((p) => stateSendPreviewSentence(p, DISPATCH_WORK_TARGET_CAP)) };
+  const send = { states: sendStates, says: sendStates.map((p) => stateSendPreviewSentence(p)) };
   const dispatchIds = sendStates.flatMap(state => state.kind === "REVIEWED_REGISTRY" ? (state.governments ?? []).map(body => body.id) : []);
   const scopeWork = work.kind === "HELD" ? scopeWorkPreview({ codes: container.value.zctas, states: [g.stateAbbr, ...g.memberStates], bodyIds: [...scopeBodies.map(body => body.id), ...dispatchIds], obligations: work.obligations, readAt: work.readAt }) : null;
   if (registry.kind === "UNREAD") {

@@ -115,6 +115,33 @@ const READING: RunWork = async () => ({
   detail: "walked",
 });
 
+test("a live worker renews its lease across the original expiry", async () => {
+  const repos = createMemoryRepositories();
+  const now = () => new Date().toISOString();
+  const at = now();
+  const item = createWorkItem({ project: "freshness", subject: "live-worker", obligation: "renew", why: "renewal", now: at });
+  const task = createRouteTask({ workItemId: item.id, routeId: "live", routeLabel: "live", target: "live", inherited: false, now: at });
+  await registerWorkItem(repos, item, at);
+  await registerRouteTask(repos, task, at);
+  let release!: () => void;
+  let started!: () => void;
+  const running = new Promise<void>(resolve => { started = resolve; });
+  const completion = new Promise<void>(resolve => { release = resolve; });
+  const first = dispatchOne(repos, { obligation: scheduled(), routeTaskId: task.id, holder: "live", now: at,
+    clock: now, leaseTtlMs: 1500, maturity: () => "GRADUATED",
+    executor: { lane: "DETERMINISTIC", run: async input => { started(); await completion; return READING(input); } } });
+  await running;
+  try {
+    await new Promise(resolve => setTimeout(resolve, 1700));
+    const contender = await dispatchOne(repos, { obligation: scheduled(), routeTaskId: task.id, holder: "other", now: now(),
+      clock: now, leaseTtlMs: 1500, maturity: () => "GRADUATED", executor: { lane: "DETERMINISTIC", run: READING } });
+    assert.equal(contender.outcome, "NOT_CLAIMED");
+    assert.ok(Date.parse((await repos.leases.mustRead(task.id)).value.expiresAt) > Date.parse(at) + 1500);
+  } finally { release(); }
+  assert.equal((await first).outcome, "WORKED");
+  assert.equal((await attemptsForRouteTask(repos, task.id)).length, 1);
+});
+
 test("a dispatched run records measured start, executor end, disposition and charge time",async()=>{
   const {repos,task}=await fixture();
   const at=(ms:number)=>new Date(NOW_MS+ms).toISOString();

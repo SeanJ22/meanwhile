@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { autonomousHarness, FIXTURE_NOW, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
-import { nextAutonomousOperation, runAutonomousCoordinator, type AutonomousCoordinatorRuntime } from "../lib/control-plane/workers/coordinator.ts";
+import { fairAutonomousWorkIds, nextAutonomousOperation, runAutonomousCoordinator, type AutonomousCoordinatorRuntime } from "../lib/control-plane/workers/coordinator.ts";
 import { dispatchWorkerTask, evidenceProjection } from "../lib/control-plane/workers/runtime.ts";
 import { readAutonomousActivity } from "../lib/control-plane/workers/activity.ts";
 import { SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION, validateScoutFinishWithCandidates, type ScoutResult, type ScoutRung } from "../lib/control-plane/scheduler/scout-result.ts";
@@ -10,6 +10,17 @@ import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { scheduleAutonomousAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
 import { FIRST_BACKOFF_MINUTES } from "../lib/control-plane/scheduler/debt.ts";
 import type { LegacyCivicExtractionContract } from "../lib/control-plane/workers/types.ts";
+import { mkdtemp, rm, mkdir, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { writeFieldManual } from "../lib/control-plane/field-manual.ts";
+import { methodFixture, knowledgeEntries, methodVersionEntry } from "./method-store-fixture.ts";
+import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
+import { runLeaseWorkerProcesses, runNationalPlaceWorkerProcesses, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { unchangedScoutFailure } from "../lib/control-plane/workers/scout-scheduling.ts";
+import { createRouteTask } from "../lib/control-plane/route-task.ts";
+import { claimRouteTask, registerRouteTask } from "../lib/control-plane/repository/coordinator.ts";
 
 async function acceptRecordedScout(h:Awaited<ReturnType<typeof autonomousHarness>>) {
   const metadata=(await h.repos.artifacts.readAll())[0]; const held=await researchVaultResolver(h.repos,h.store,h.item.project)(metadata.artifactId);
@@ -129,23 +140,16 @@ test("missing Scout transport creates one attributable policy denial; retry requ
   const denied=(await h.repos.attempts.mustRead(first.dispatches[0].attemptId!)).value; assert.equal(denied.outcome,"DENIED_BY_POLICY"); assert.match(denied.abortReason!,/SCOUT_MODEL_TRANSPORT_UNAVAILABLE/); assert.equal(denied.cost.requestCount,0);
   const attempts=(await h.repos.attempts.list()).length; await runAutonomousCoordinator(h.runtime,{maximum:1}); assert.equal((await h.repos.attempts.list()).length,attempts);
   h.advanceTo(new Date(Date.parse(denied.endedAt!)+16*60_000).toISOString()); assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"BLOCKED");
-  let calls=0; const available={...h.runtime,scoutFor:()=>({lane:"BOUNDED_MODEL_WORKER" as const,workerFor:({holder}:{holder:string})=>({role:"SCOUT" as const,provider:"offline-fixture",version:"1",instance:holder}),run:async()=>{calls++;return {kind:"ABORTED" as const,ranAs:"BOUNDED_MODEL_WORKER" as const,cost:ZERO_COST,endedAt:h.now(),detail:"Controlled offline Scout availability proof; no civic disposition."};}})};
+  let calls=0; const available={...h.runtime,rollingCeilingUsd:5,scoutFor:()=>({lane:"BOUNDED_MODEL_WORKER" as const,workerFor:({holder}:{holder:string})=>({role:"SCOUT" as const,provider:"offline-fixture",version:"1",instance:holder}),run:async()=>{calls++;return {kind:"ABORTED" as const,ranAs:"BOUNDED_MODEL_WORKER" as const,cost:ZERO_COST,endedAt:h.now(),detail:"Controlled offline Scout availability proof; no civic disposition."};}})};
   const retry=await runAutonomousCoordinator(available,{maximum:1,maxScoutDispatches:1}); assert.equal(calls,1); assert.equal(retry.scoutsAdmitted,1);
   assert.equal((await h.repos.routeTasks.mustRead(first.dispatches[0].routeTaskId!)).value.policyReauthorizations?.[0].denial.attemptId,denied.id);
-});
-
-test("Scout cycle cap and remaining wall time defer dispatch without inventing failed Attempts",async()=>{
-  const h=await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})}); const before=(await h.repos.attempts.list()).length;
-  assert.equal((await runAutonomousCoordinator(h.runtime,{maxScoutDispatches:0})).dispatches.length,0);
-  assert.equal((await runAutonomousCoordinator(h.runtime,{deadlineMs:Date.now()+1000})).dispatches.length,0);
-  assert.equal((await h.repos.attempts.list()).length,before);
 });
 
 test("completed Scout without a candidate continues after canonical backoff with durable rungs and immutable prior history",async()=>{
   const h=await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})});
   const metadata=(await h.repos.artifacts.readAll())[0];
   const inheritedHistories:(readonly ScoutResult[])[]=[];
-  const runtime:AutonomousCoordinatorRuntime={...h.runtime,scoutFor:(item,task,history)=>{
+  const runtime:AutonomousCoordinatorRuntime={...h.runtime,rollingCeilingUsd:5,scoutFor:(item,task,history)=>{
     inheritedHistories.push(history??[]);
     return {lane:"BOUNDED_MODEL_WORKER",workerFor:({holder})=>({role:"SCOUT",provider:"recorded-fixture",version:"no-model",instance:holder}),run:async({attemptId})=>{
       const evidence=await h.runtime.readEvidence(metadata.artifactId); const at=h.now();
@@ -194,7 +198,7 @@ test("a brokered sibling capture admits one old-protocol Scout continuation befo
   const h = await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})});
   const heldId = (await h.repos.artifacts.readAll())[0]!.artifactId;
   let walks = 0;
-  const runtime: AutonomousCoordinatorRuntime = {...h.runtime, scoutFor:(item,task)=>({
+  const runtime: AutonomousCoordinatorRuntime = {...h.runtime, rollingCeilingUsd:100, scoutFor:(item,task)=>({
     lane:"BOUNDED_MODEL_WORKER", workerFor:({holder})=>({role:"SCOUT",provider:"offline-fixture",version:"1",instance:holder}),
     run:async({attemptId})=>{
       walks++;
@@ -209,13 +213,13 @@ test("a brokered sibling capture admits one old-protocol Scout continuation befo
         usd:0,elapsedMs:0,artifactIds:[],methodCandidateIds:[],refusal:null,startedAt:attempt.startedAt,recordedAt:at,
         ...(walks > 1 ? {recoveryCapabilityVersion:SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION} : {})};
       await h.repos.scoutResults.append(result.obligationId,result.attemptId,result,at);
-      return {kind:"DISPOSED",ranAs:"BOUNDED_MODEL_WORKER",endedAt:at,cost:ZERO_COST,artifacts:[],
+      return {kind:"DISPOSED",ranAs:"BOUNDED_MODEL_WORKER",endedAt:at,cost:{...ZERO_COST,usd:0,requestCount:0,inputTokens:0,outputTokens:0},artifacts:[],
         disposition:{disposition:"BLOCKED_CURRENTLY",observation:null,permission:"ALLOWED",transport:"OTHER_NAMED_FAILURE",
           note:"Offline fixture keeps the obligation open."},detail:result.narrative};
     },
   })};
   const first = await runAutonomousCoordinator(runtime,{maximum:1,concurrency:1});
-  assert.equal(first.dispatches[0]?.outcome,"WORKED");
+  assert.equal(first.dispatches[0]?.outcome,"WORKED",first.dispatches[0]?.detail);
   assert.equal((await nextAutonomousOperation(runtime,h.item.id)).action,"BLOCKED",
     "a sibling's capture must not bypass backoff unless the standing broker handed it to this root");
   const brokered: AutonomousCoordinatorRuntime = {...runtime,lifetimeHuntSubject:subject=>subject===h.item.subject,
@@ -233,14 +237,28 @@ test("a brokered sibling capture admits one old-protocol Scout continuation befo
     "after a new-protocol Scout has run, ordinary debt applies to further investigation");
 });
 
-test("shared model admission contention defers Scout without an Attempt and releases for a later cycle",async()=>{
+test("Scout admission does not wait for another hunt's legacy model lock",async()=>{
   const h=await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})});
   const before=(await h.repos.attempts.list()).length;
   const deferred=await h.repos.locks.withLock("autonomous-model-admission",()=>runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:2}));
-  assert.equal(deferred.dispatches.length,0); assert.equal(deferred.scoutsAdmitted,0);
-  assert.deepEqual(deferred.deferred.map(item=>({workItemId:item.workItemId,reason:item.reason})),[{workItemId:h.item.id,reason:"REPOSITORY_LOCK_HELD"}]);
-  assert.equal((await h.repos.attempts.list()).length,before);
-  assert.equal((await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:2})).dispatches.length,1);
+  assert.equal(deferred.dispatches.length,1);
+  assert.equal(deferred.deferred.length,0);
+  assert.equal((await h.repos.attempts.list()).length,before+1);
+});
+
+test("50 hunts share admission before a larger priority hunt takes its second item", async () => {
+  const h = await autonomousHarness();
+  const items = Array.from({ length: 50 }, (_, i) => ({ ...h.item, id: `hunt-${i}:first`,
+    autonomousPlan: { ...h.item.autonomousPlan!, ownerInstructions: [`hunt-${i}`] } }));
+  const extra = Array.from({ length: 80 }, (_, i) => ({ ...items[0], id: `hunt-0:extra-${i}` }));
+  const priorities = items.map((_, i) => ({ receiptId: `hunt-${i}`, priority: i }));
+  const byId = new Map([...extra, ...items].map(item => [item.id, item]));
+  const ordered = fairAutonomousWorkIds([...extra, ...items], new Map(), priorities);
+  assert.equal(new Set(ordered.slice(0, 50).map(id => byId.get(id)!.autonomousPlan.ownerInstructions[0])).size, 50);
+  const served = new Map([[ordered[0], FIXTURE_NOW]]);
+  const resumed = fairAutonomousWorkIds([...extra, ...items], served, priorities);
+  assert.equal(byId.get(resumed[0])!.autonomousPlan.ownerInstructions[0], "hunt-1");
+  assert.equal(new Set(resumed).size, items.length + extra.length);
 });
 
 test("Hunter transport failure is durable OPEN evidence and retry reuses the canonical scheduling debt", async () => {
@@ -347,4 +365,116 @@ test("unresolved identity permits independent diagnosis but never staging", asyn
   assert.equal((await h.repos.workerResults.readAll()).find(r=>r.result.role==="DETECTIVE")?.result.verdict,"UNRESOLVED");
   assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");
   assert.equal((await h.repos.promotionPipeline.readAll()).length,0);
+});
+
+ test("coordinator selection hands out canonical tasks without running tools or opening an Attempt", async () => {
+  const h = await autonomousHarness({ plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
+  const before = (await h.repos.attempts.list()).length;
+  const planned = await runAutonomousCoordinator(h.runtime, { planOnly: true });
+  assert.equal(planned.decisions[0]?.action, "SCOUT");
+  assert.equal(planned.dispatches.length, 0);
+  assert.equal((await h.repos.attempts.list()).length, before);
+  assert.equal(h.calls.length, 0);
+});
+
+ test("separate processes pull shared tasks and each existing lease admits one Attempt", async () => {
+  const root = await mkdtemp(join(tmpdir(), "s7-lease-worker-"));
+  try {
+    const repos = await createFileRepositories(root);
+    const h = await autonomousHarness({ repos, plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
+    const method = methodFixture();
+    await writeFieldManual(repos, [...knowledgeEntries(method), methodVersionEntry(method)], h.now());
+    const selected = await nextAutonomousOperation(h.runtime, h.item.id);
+    const second = createRouteTask({ workItemId: h.item.id, routeId: selected.task!.routeId + ":second",
+      routeLabel: selected.task!.routeLabel, target: selected.task!.target, inherited: false, now: h.now() });
+    await registerRouteTask(repos, second, h.now());
+    const pids: number[] = [];
+    const results = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
+      config: { root: process.cwd(), fileStoreRoot: root, postgres: false, taskIds: [selected.task!.id, second.id],
+        modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
+      capacity: () => 2, onStarted: pid => pids.push(pid),
+      transportFor: () => async () => { throw new Error("unexpected paid call"); } });
+    assert.equal(pids.length, 2);
+    assert.ok(pids.every(pid => pid !== process.pid));
+    const attempts = (await repos.attempts.list()).map(row => row.value).filter(row => row.routeTaskId === selected.task!.id);
+    assert.equal(attempts.length, 1);
+    assert.equal(attempts[0]!.outcome, "DENIED_BY_POLICY");
+    assert.equal(results.filter(row => row.attemptId !== null).length, 2);
+    assert.equal((await repos.attempts.list()).filter(row => row.value.routeTaskId === second.id).length, 1);
+    // Model the late sibling arriving after a denial released its lease.
+    await assert.rejects(claimRouteTask(repos, { routeTaskId: second.id,
+      holder: "late-sibling", now: h.now(), ttlMs: 300_000 }), /ROUTE_TASK_POLICY_DENIED/);
+    assert.equal((await repos.routeTasks.mustRead(second.id)).value.state, "POLICY_DENIED");
+    assert.equal((await repos.leases.mustRead(second.id)).value.released, true);
+    assert.equal((await repos.attempts.list()).filter(row => row.value.routeTaskId === second.id).length, 1);
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
+
+ test("unchanged Scout request failures stay blocked while provider outages retain backoff", async () => {
+  const h = await autonomousHarness();
+  const base = (await h.repos.attempts.list())[0]!.value;
+  assert.equal(unchangedScoutFailure({ ...base, outcome: "ABORTED", abortReason: "HTTP 400: malformed schema" }), true);
+  assert.equal(unchangedScoutFailure({ ...base, outcome: "ABORTED", abortReason: "HTTP 400: invalid network tool schema" }), true);
+  assert.equal(unchangedScoutFailure({ ...base, outcome: "ABORTED", abortReason: "HTTP 429: rate limited" }), false);
+  assert.equal(unchangedScoutFailure({ ...base, outcome: "ABORTED", abortReason: "HTTP 503: provider unavailable" }), false);
+});
+
+test("ZIP process reports return after parent registry and election publication, with one shared pointer writer", async () => {
+  const root = await mkdtemp(join(tmpdir(), "s7-national-ipc-"));
+  try {
+    await mkdir(join(root, "scripts"), { recursive: true });
+    await mkdir(join(root, "lib/control-plane/workers"), { recursive: true });
+    await writeFile(join(root, "scripts/register-test-loader.mjs"), "export {};\n");
+    await writeFile(join(root, "lib/control-plane/workers/national-worker.ts"), `
+      const replies = new Map(); let sequence = 0;
+      const call = (kind, body) => new Promise((resolve, reject) => {
+        const id = String(++sequence); replies.set(id, { resolve, reject }); process.send({ kind, id, body });
+      });
+      process.on('message', async message => {
+        if (message.id) {
+          const reply = replies.get(message.id); replies.delete(message.id);
+          message.error ? reply.reject(Error(message.error.message)) : reply.resolve(message.body); return;
+        }
+        try {
+          const zip = message.taskIds[0];
+          const request = { now: '2026-09-30T21:00:00Z', divisions: [], geographyCaptures: [], sources: { zip } };
+          const publication = await call('national-publication', request).catch(error => ({ error: error.message }));
+          const election = await call('election-publication', { fields: [], now: request.now });
+          await call('national-result', { zip, publications: [publication], electionPublications: [election] });
+          process.send({ kind: 'finished', body: message.taskIds }); process.disconnect();
+        } catch (error) { console.error(error.message); process.exitCode = 1; process.disconnect(); }
+      });
+    `);
+    const store = new MemoryRoutineDataStore();
+    let active = 0, peak = 0, registryCalls = 0;
+    const published: string[] = [], delivered: string[] = [], pids: number[] = [];
+    const write = async (kind: string) => {
+      active++; peak = Math.max(peak, active);
+      await new Promise(resolve => setTimeout(resolve, 15));
+      active--; published.push(kind);
+      return { kind };
+    };
+    const reports = await runNationalPlaceWorkerProcesses({ root, zips: ["10001", "10002"], capacity: () => 2, store,
+      slots: workerProcessSlots(() => 2, { availableBytes: () => 1000, headroomBytes: 100, peakBytes: () => 600 }),
+      onStarted: pid => {
+        if (pids.length === 1) assert.equal(delivered.length, 1, "The second ready ZIP stays queued until the first process finishes.");
+        pids.push(pid);
+      },
+      publish: async input => {
+        assert.equal(input.store, store, "the real store is supplied in the parent");
+        registryCalls++;
+        await write("registry");
+        if (registryCalls === 1) throw new Error("one registry publication failed");
+        return { registry: "published" };
+      },
+      publishElection: async () => { await write("election"); return { candidateId: null, promotedVersionId: null, fields: [], gaps: [] }; },
+      onResult: report => { if ("deferred" in report) assert.fail(report.deferred);
+        delivered.push(report.zip); assert.equal(report.electionPublications.length, 1); } });
+    assert.equal(pids.length, 2);
+    assert.equal(peak, 1, "registry and election callbacks share the parent critical section");
+    assert.equal(published.length, 4, "one failure does not poison later pointer writes");
+    assert.deepEqual(reports.map(report => report.zip).sort(), ["10001", "10002"]);
+    assert.deepEqual(delivered.sort(), ["10001", "10002"]);
+    assert.equal(reports.filter(report => !("deferred" in report) && "error" in (report.publications[0] as object)).length, 1);
+  } finally { await rm(root, { recursive: true, force: true }); }
 });

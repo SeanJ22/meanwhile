@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { FREE_FORM_TOPIC, NO_TOPIC_COUNTS_YET, TOPIC_ROW_LIMIT, readTopicCounts, topicCountsView, topicLabel, type TopicCountRow } from "../lib/control-plane/admin-view/topic-counts.ts";
 
-const row = (over: Partial<TopicCountRow> = {}): TopicCountRow => ({ week: "2026-09-28", zip: "85635", district: null, topic: "property-tax", users: 12, totalUsers: 98, ...over });
+const row = (over: Partial<TopicCountRow> = {}): TopicCountRow => ({ period: "2026-09-28", grain: "week", zip: "85635", district: null, topic: "property-tax", users: 12, totalUsers: 98, ...over });
 const READ_AT = "2026-10-01T18:00:00.000Z";
 
 test("until S6's read exists, the answer is 'no topic counts yet', never an empty list or a zero", async () => {
@@ -24,12 +24,12 @@ test("each row is a percentage of users with the count beside it, and a small gr
 });
 
 test("a group with no users has no percentage, not 0%, and a row that cannot be true is counted as hidden, never shown as a number", () => {
-  const view = topicCountsView({ kind: "RECORDED", observedAt: READ_AT, rows: [row({ users: 0, totalUsers: 0 }), row({ users: 9, totalUsers: 4 }), row({ users: 1.5 }), row({ week: "last week" }), row({ zip: "8563" })] });
+  const view = topicCountsView({ kind: "RECORDED", observedAt: READ_AT, rows: [row({ users: 0, totalUsers: 0 }), row({ users: 9, totalUsers: 4 }), row({ users: 1.5 }), row({ period: "last week" }), row({ grain: "month" as never }), row({ zip: "8563" })] });
   assert.equal(view.kind, "READ");
   if (view.kind !== "READ") return;
   assert.equal(view.rows.length, 1);
   assert.equal(view.rows[0].percent, null);
-  assert.equal(view.hidden, 4, "more askers than users, a fractional count, a bad week and a bad ZIP are all named, not dropped quietly");
+  assert.equal(view.hidden, 5, "more askers than users, a fractional count, a bad period, a bad grain and a bad ZIP are all named, not dropped quietly");
 });
 
 test("free-form questions stay their own topic, a district names itself, and only the aggregate fields are passed on", () => {
@@ -37,7 +37,7 @@ test("free-form questions stay their own topic, a district names itself, and onl
   const view = topicCountsView({ kind: "RECORDED", observedAt: READ_AT, rows: [dirty] });
   assert.equal(view.kind, "READ");
   if (view.kind !== "READ") return;
-  assert.deepEqual(Object.keys(view.rows[0]).sort(), ["kind", "percent", "place", "topic", "topicLabel", "totalUsers", "users", "week"], "no person field survives");
+  assert.deepEqual(Object.keys(view.rows[0]).sort(), ["grain", "kind", "percent", "period", "place", "topic", "topicLabel", "totalUsers", "users"], "no person field survives");
   assert.equal(view.rows[0].place, "AZ-06");
   assert.equal(view.rows[0].kind, "district");
   assert.equal(view.rows[0].topicLabel, "Free-form question");
@@ -52,5 +52,13 @@ test("the view is bounded: past the row limit the rest are counted, with the wee
   if (view.kind !== "READ") return;
   assert.equal(view.rows.length, TOPIC_ROW_LIMIT);
   assert.equal(view.hidden, 3);
-  assert.deepEqual(view.weeks, ["2026-09-28"]);
+  assert.deepEqual(view.periods, ["week:2026-09-28"]);
+});
+
+test("rows may be by day or by week, and each says which, so capture's daily counts and weekly roll-ups sit in the same view", () => {
+  const view = topicCountsView({ kind: "RECORDED", observedAt: READ_AT, rows: [row({ period: "2026-10-01", grain: "day", users: 3, totalUsers: 12 }), row({ period: "2026-09-28", grain: "week" })] });
+  assert.equal(view.kind, "READ");
+  if (view.kind !== "READ") return;
+  assert.deepEqual(view.periods, ["week:2026-09-28", "day:2026-10-01"].sort().reverse());
+  assert.deepEqual(view.rows.map((r) => [r.grain, r.period]), [["day", "2026-10-01"], ["week", "2026-09-28"]], "newest period first");
 });

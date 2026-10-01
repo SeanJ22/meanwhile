@@ -19,10 +19,10 @@ const percentWords = (p: number | null) => (p === null ? "—" : `${p}%`);
 
 export function TopicCountsPanel() {
   const { reading, reload } = useReading<TopicCountsView>("/api/admin/v6/topic-counts", 5 * 60_000);
-  const [week, setWeek] = useState("all");
+  const [period, setPeriod] = useState("all");
   const [topic, setTopic] = useState("all");
   const data = reading.kind === "ready" && reading.data.kind === "READ" ? reading.data : null;
-  const rows = (data?.rows ?? []).filter((r) => (week === "all" || r.week === week) && (topic === "all" || r.topic === topic));
+  const rows = (data?.rows ?? []).filter((r) => (period === "all" || `${r.grain}:${r.period}` === period) && (topic === "all" || r.topic === topic));
   const { page, pager } = usePager(rows, 15);
   return (
     <Card title="What residents ask about" id="topic-counts">
@@ -33,9 +33,9 @@ export function TopicCountsPanel() {
         <div className={s.stack}>
           <p className={cx(s.p, s.small, s.dim)}>Each row is a share of the users in that week and ZIP or district, with the count beside it. Counts of groups of users, never a person. Small groups are shown the same way as large ones.</p>
           <div className={s.inline}>
-            <select className={s.select} aria-label="Week" value={week} onChange={(e) => setWeek(e.target.value)}>
-              <option value="all">Every week</option>
-              {data.weeks.map((w) => <option key={w} value={w}>Week of {w}</option>)}
+            <select className={s.select} aria-label="Day or week" value={period} onChange={(e) => setPeriod(e.target.value)}>
+              <option value="all">Every day and week</option>
+              {data.periods.map((p) => <option key={p} value={p}>{p.startsWith("day:") ? `Day ${p.slice(4)}` : `Week of ${p.slice(5)}`}</option>)}
             </select>
             <select className={s.select} aria-label="Topic" value={topic} onChange={(e) => setTopic(e.target.value)}>
               <option value="all">Every topic</option>
@@ -46,11 +46,11 @@ export function TopicCountsPanel() {
           {!!rows.length && (
             <div className={s.tableWrap}>
               <table className={s.table}>
-                <thead><tr><th scope="col">Week of</th><th scope="col">Where</th><th scope="col">Topic</th><th scope="col" className={s.num}>Share of users</th><th scope="col" className={s.num}>Users</th></tr></thead>
+                <thead><tr><th scope="col">Day or week</th><th scope="col">Where</th><th scope="col">Topic</th><th scope="col" className={s.num}>Share of users</th><th scope="col" className={s.num}>Users</th></tr></thead>
                 <tbody>
                   {page.map((r) => (
-                    <tr key={`${r.week}|${r.place}|${r.topic}`}>
-                      <th scope="row" style={{ textTransform: "none", fontSize: 13, color: "var(--text)" }}>{r.week}</th>
+                    <tr key={`${r.grain}|${r.period}|${r.place}|${r.topic}`}>
+                      <th scope="row" style={{ textTransform: "none", fontSize: 13, color: "var(--text)" }}>{r.grain === "day" ? r.period : `Week of ${r.period}`}</th>
                       <td>{r.place}</td>
                       <td>{r.topicLabel}</td>
                       <td className={s.num}>{percentWords(r.percent)}</td>

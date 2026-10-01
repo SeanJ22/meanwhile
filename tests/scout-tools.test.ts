@@ -999,6 +999,30 @@ test('collector reads held bytes before HTTP and preserves their observation tim
   assert.deepEqual(await read(url),{url,text:'Clerk Ada',contentType:null,collectedAt:old,artifactId:'held',artifacts:[]});
 });
 
+test('collector reacquires held HTTP pages over HTTPS and reuses the actual redirected capture',async()=>{
+  const url='http://county.gov/calendar',secure='https://county.gov/calendar',finalUrl='https://documents.county.gov/calendar';
+  const body='<html><body>Council meets October 8 at 6 PM.</body></html>';
+  const seen:string[]=[];
+  const vault=recordingVault();
+  const read=savedPageReader(context({vault:vault.put,openOne:fakeTransport({}).open,openBytes:async({url:requested})=>{
+    seen.push(requested);
+    return {status:200,bytes:Buffer.from(requested.endsWith('/robots.txt')?ROBOTS_ALLOW_ALL:body),
+      contentType:requested.endsWith('/robots.txt')?'text/plain':'text/html',
+      finalUrl:requested.endsWith('/robots.txt')?requested:finalUrl,durationMs:1,transportError:null};
+  },inherited:{artifactIds:['old-http'],summary:'',provenance:[{artifactId:'old-http',canonicalUrl:url,
+    retrievedAt:NOW,httpStatus:200,permission:'ALLOWED',methodRouteId:'scout:fetch_public'}]},
+    readHeldArtifact:async()=>{throw Error('Old HTTP bytes cannot be relabeled as HTTPS');}}));
+  const got=await read(url);
+  assert.equal(got.url,finalUrl);
+  assert.equal(got.text,body);
+  assert.ok(got.artifacts.length>0);
+  assert.ok(seen.includes(secure));
+  assert.ok(!seen.includes(url));
+  assert.equal((await read(url)).artifactId,got.artifactId);
+  assert.equal(seen.filter(value=>value===secure).length,1);
+  assert.ok(vault.puts.some(row=>row.artifact.id===got.artifactId && row.artifact.canonicalUrl===finalUrl));
+});
+
 test('collector refreshes stale held CSV and returns complete saved parseable text',async()=>{
   for(const contentType of ['text/csv','application/json','text/plain']) {
     const url='https://county.gov/roster',body=contentType==='application/json'?'[{"name":"Ada"}]':'name\nAda\n';

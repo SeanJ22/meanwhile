@@ -6,6 +6,7 @@ export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:numb
   };
   const parseable=(type:string)=>/^(?:text\/|application\/(?:json|[\w.+-]+\+json|xml|[\w.+-]+\+xml|csv|javascript))(?:[^;]*)(?:;|$)/i.test(type);
   const captured=new Map<string,{artifact:Artifact;text:string}>();
+  const requestedArtifacts=new Map<string,string>();
   const toolkit=buildScoutToolkit({...context,vault:async(artifact,text)=>{
     const saved=await context.vault(artifact,text);
     if(saved.stored && artifact.tier!=='RESTRICTED_RAW' && artifact.retentionPolicy!=='DIAGNOSTIC' &&
@@ -14,12 +15,13 @@ export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:numb
   }});
   return async(url:string):Promise<{url:string;text:string;contentType:string|null;collectedAt:string;artifactId:string;artifacts:readonly WorkArtifact[]}>=>{
     for(const saved of captured.values()) {
-      if((saved.artifact.canonicalUrl===url || saved.artifact.retrievalUrl===url) && saved.artifact.httpStatus===200 &&
+      if((requestedArtifacts.get(url)===saved.artifact.id || saved.artifact.canonicalUrl===url || saved.artifact.retrievalUrl===url) && saved.artifact.httpStatus===200 &&
         parseable(saved.artifact.contentType) && fresh(saved.artifact.retrievedAt))
         return {url:saved.artifact.retrievalUrl,text:saved.text,contentType:saved.artifact.contentType,collectedAt:saved.artifact.retrievedAt,artifactId:saved.artifact.id,artifacts:[]};
     }
     for(const provenance of context.inherited.provenance??[]) {
       if((provenance.canonicalUrl!==url && provenance.retrievalUrl!==url) || provenance.httpStatus!==200 ||
+        (url.startsWith('http:') && (provenance.retrievalUrl??provenance.canonicalUrl).startsWith('http:')) ||
         provenance.methodRouteId.endsWith(':network-observation') ||
         !fresh(provenance.retrievedAt) || (provenance.contentType && !parseable(provenance.contentType)) || !context.readHeldArtifact)continue;
       try {
@@ -36,9 +38,11 @@ export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:numb
       if(result.ok) {
         for(const row of [...result.artifacts].reverse()) {
           const saved=captured.get(row.artifactId);
-          if(saved && saved.artifact.canonicalUrl===url && saved.artifact.httpStatus===200 &&
-            parseable(saved.artifact.contentType))return {url:saved.artifact.retrievalUrl,text:saved.text,contentType:saved.artifact.contentType,
+          if(saved && saved.artifact.httpStatus===200 && parseable(saved.artifact.contentType)) {
+            requestedArtifacts.set(url,saved.artifact.id);
+            return {url:saved.artifact.retrievalUrl,text:saved.text,contentType:saved.artifact.contentType,
               collectedAt:saved.artifact.retrievedAt,artifactId:saved.artifact.id,artifacts};
+          }
         }
       }
       failures.push(result.rung?.observed??result.forModel);

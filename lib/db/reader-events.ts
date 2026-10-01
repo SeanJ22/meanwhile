@@ -5,6 +5,7 @@ import { getStore } from "@netlify/blobs";
 import { neon } from "@neondatabase/serverless";
 import { assertWriteAllowed } from "./write-guard.ts";
 import { redactSelfDisclosure } from "../speak/self-disclosure.ts";
+import { classifyReaderEventTopic, readerTopicInCode } from "./reader-event-topics.ts";
 
 export const READER_EVENT_TYPES = ["ASK", "ZIP_VIEW", "CARD_OPEN", "CARD_VISIBLE", "ACTIVE_SCROLL", "AGENDA_VIEW", "REACTION", "BALLOT_PICK"] as const;
 export type ReaderEventType = typeof READER_EVENT_TYPES[number];
@@ -76,7 +77,7 @@ export function prepareReaderEventBatch(input: ReaderEventBatchInput) {
       cardKind: event.cardKind == null ? null : stableId(event.cardKind, "CARD_KIND"),
       durationMs: event.durationMs ?? null,
       question: text?.text ?? null, selfDisclosureFlags: text?.flags ?? [],
-      topic: event.topic == null ? "free-form" : stableId(event.topic, "TOPIC"),
+      topic: event.topic == null ? readerTopicInCode(text?.text ?? "") ?? "free-form" : stableId(event.topic, "TOPIC"),
       reaction: event.reaction == null ? null : stableId(event.reaction, "REACTION"), ballotPick: pick,
     };
   });
@@ -118,11 +119,27 @@ function netlifyEventArchive(): ReaderEventArchive {
 export async function appendReaderEvents(input: ReaderEventBatchInput, options: {
   readonly archive?: ReaderEventArchive;
   readonly query?: (statement: string, params: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
+  readonly classifyTopic?: (question: string) => Promise<string>;
 } = {}): Promise<{ readonly kind: "RECORDED"; readonly events: number; readonly duplicate: boolean }> {
   assertWriteAllowed("reader events");
   const prepared = prepareReaderEventBatch(input);
   const archive = options.archive ?? netlifyEventArchive();
   await archive.put(prepared.archiveKey, gzipSync(prepared.json), prepared.sha256);
+  // The archive/retry digest remains the exact captured input. Derived model
+  // labels affect totals only, so an unavailable classifier on the first send
+  // cannot make the same captured batch fail its later retry.
+  const questions = new Map<string, Promise<string>>();
+  const classified = await Promise.all(prepared.body.events.map(async event => {
+    if (event.type !== "ASK" || event.topic !== "free-form" || !event.question) return event.topic;
+    let topic = questions.get(event.question);
+    if (!topic) {
+      topic = (options.classifyTopic ?? classifyReaderEventTopic)(event.question).catch(() => "free-form");
+      questions.set(event.question, topic);
+    }
+    return topic;
+  }));
+  const aggregates = prepareReaderEventBatch({ ...input,
+    events: input.events.map((event, index) => ({ ...event, topic: classified[index]! })) }).aggregates;
   const query = options.query ?? ((statement, params) => neon(process.env.DATABASE_URL!).query(statement, [...params]));
   const result = await query(`WITH claimed AS (
     INSERT INTO reader_event_batches (batch_id, archive_key, payload_sha256, event_count)
@@ -147,7 +164,7 @@ export async function appendReaderEvents(input: ReaderEventBatchInput, options: 
     RETURNING 1
   ) SELECT EXISTS (SELECT 1 FROM claimed) AS recorded,
     (SELECT payload_sha256 FROM reader_event_batches WHERE batch_id = $1) AS previous_hash`,
-    [prepared.batchId, prepared.archiveKey, prepared.sha256, prepared.body.events.length, JSON.stringify(prepared.aggregates), prepared.reader]);
+    [prepared.batchId, prepared.archiveKey, prepared.sha256, prepared.body.events.length, JSON.stringify(aggregates), prepared.reader]);
   if (!result[0]?.recorded && result[0]?.previous_hash !== prepared.sha256) {
     // A concurrent insert may commit after this statement took its snapshot.
     const existing = await query("SELECT payload_sha256 FROM reader_event_batches WHERE batch_id = $1", [prepared.batchId]);

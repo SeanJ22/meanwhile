@@ -1,7 +1,7 @@
 import { isDivisionsOwnGovernment } from "../officials/division-government.ts";
 import { COULD_GOVERN_ACTION, COULD_GOVERN_TEXT } from "../ballot/could-govern.ts";
 import { readerGovernmentName } from "../text/reader-names.ts";
-import { governVerbMayAttach } from "../registry/body-class-labels.ts";
+import { BODY_CLASS_LABELS, governVerbMayAttach } from "../registry/body-class-labels.ts";
 import type { BodyClass, DivisionType } from "../registry/types.ts";
 import type { Meeting } from "../sources/types.ts";
 
@@ -77,7 +77,20 @@ export type JurisdictionBadge =
    * area, which is the same unearned certainty pointed the other way. Both
    * collapse to this while the basis is a zip and the division is partial.
    */
-  | "COULD_GOVERN";
+  | "COULD_GOVERN"
+  /**
+   * **The body holds no governing authority, so no governing claim is made
+   * about it** (S2.4, 2026-10-01 — Fort Lowell Historic Zone Advisory Board
+   * read "Governs your area" at 85701).
+   *
+   * Sitting inside the reader's division is membership of an AREA; it says
+   * nothing about the BODY. RULING 118 already keeps the govern verb off an
+   * appointed body's card (`jurisdictionClaim`); the badge on the meeting
+   * card, panel and list row asked only the geometry question and so handed it
+   * back. The badge now asks the same body-class question, in the same module,
+   * and says what the body IS in the class's own words.
+   */
+  | "NOT_GOVERNING";
 
 /**
  * **What the division set was resolved FROM.**
@@ -129,7 +142,26 @@ export const BADGE_COPY: Readonly<Record<JurisdictionBadge, BadgeCopy>> = {
     label: COULD_GOVERN_TEXT,
     detail: `Your zip covers more than one town here, so ${COULD_GOVERN_ACTION}.`,
   },
+  // The class-specific wording comes from `badgeCopyFor`; this is the floor for
+  // a caller that has no class in hand.
+  NOT_GOVERNING: {
+    label: "Not a governing body",
+    detail: "This body advises or administers; it does not govern your area.",
+  },
 };
+
+/**
+ * The copy a badge shows. `NOT_GOVERNING` is worded by the body's class, from
+ * the one labels table, so an advisory board, a commission and a department
+ * each say what they are rather than one generic non-answer.
+ */
+export function badgeCopyFor(badge: JurisdictionBadge, bodyClass?: BodyClass | null): BadgeCopy {
+  if (badge === "NOT_GOVERNING" && bodyClass) {
+    const label = BODY_CLASS_LABELS[bodyClass];
+    return { label: label.long, detail: label.why };
+  }
+  return BADGE_COPY[badge];
+}
 
 /**
  * **JUR-1 — A BODY MAY NOT BOTH GOVERN YOU AND HAVE NO BOUNDARY.**
@@ -335,6 +367,29 @@ export function badgeFor(
    */
   basis: JurisdictionBasis = "ADDRESS",
   partialAtZip: ReadonlySet<string> | null = null,
+  /**
+   * The body's class when the caller knows it (`CoveredBody.bodyClass`). A body
+   * that may not carry the govern verb (RULING 118) never gets the badge that
+   * says it does, whatever the geometry says.
+   */
+  bodyClass: BodyClass | null = null,
+): JurisdictionBadge {
+  const geometric = geometricBadge(meeting, divisionsAtPoint, basis, partialAtZip);
+  if (
+    bodyClass !== null &&
+    (geometric === "GOVERNS" || geometric === "COULD_GOVERN") &&
+    !governVerbMayAttach(bodyClass)
+  ) {
+    return "NOT_GOVERNING";
+  }
+  return geometric;
+}
+
+function geometricBadge(
+  meeting: Pick<Meeting, "ocdId">,
+  divisionsAtPoint: ReadonlySet<string> | null,
+  basis: JurisdictionBasis,
+  partialAtZip: ReadonlySet<string> | null,
 ): JurisdictionBadge {
   if (meeting.ocdId === null) return "NO_BOUNDARY";
   if (divisionsAtPoint === null) return "NO_BOUNDARY";
@@ -407,6 +462,7 @@ export function badgeCensus(
     NEARBY: 0,
     NO_BOUNDARY: 0,
     COULD_GOVERN: 0,
+    NOT_GOVERNING: 0,
   };
   for (const meeting of meetings) {
     census[badgeFor(meeting, divisionsAtPoint, basis, partialAtZip)] += 1;

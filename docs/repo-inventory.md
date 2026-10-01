@@ -1749,7 +1749,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7047 file(s).
+7048 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -4676,6 +4676,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `hooks/use-dismiss-on-outside.ts`
 - `hooks/use-district-layer.ts`
 - `hooks/use-division-representation.ts`
+- `hooks/use-meeting-badge.ts`
 - `hooks/use-member-directory.ts`
 - `hooks/use-narrowing.ts`
 - `hooks/use-reader-layout.ts`

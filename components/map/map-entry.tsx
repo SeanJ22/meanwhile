@@ -564,7 +564,20 @@ function MapEntryInner() {
   if (current && held?.result !== current) {
     setHeld({ result: current, forZip: location?.zip ?? null });
   }
-  const shown = current ?? held?.result ?? null;
+  /*
+   * ONE CARRY RULE FOR EVERY SURFACE (S2.4, 2026-10-01). The card, the stat
+   * tiles, the header chip and the doors used to carry the last answer across a
+   * ZIP change as well, so for the seconds a new ZIP loaded they read the OLD
+   * ZIP's counts under the NEW ZIP's label ("17 Officials, Near 86001" on
+   * 85194). The held answer now carries only while it still describes the zip
+   * on screen — the rule the pins already followed — and a new ZIP shows the
+   * loading state until its own answer arrives.
+   */
+  const shown = carryPins({
+    current,
+    held,
+    locationZip: location?.zip ?? null,
+  });
   const refreshing = current === null && shown !== null;
 
   /*

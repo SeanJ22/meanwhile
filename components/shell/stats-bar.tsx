@@ -56,6 +56,8 @@ export function StatsBar() {
     [stats, ui.showDistricts, searchFailed],
   );
 
+  // No answer for this ZIP yet: a count of 0 would read as "nothing here".
+  const awaitingAnswer = result === null && !searchFailed;
   const accent = tierSetVars(ui.tiers);
   const listingCount = readerMeetingCount(meetings, useMeetingListingIdentity());
 
@@ -72,10 +74,10 @@ export function StatsBar() {
       <Card
         statKey="meetings"
         label={listingCount.heading}
-        value={view.meetings}
+        value={awaitingAnswer ? "—" : view.meetings}
         sub={
           listingCount.countNote ??
-          (searchFailed
+          (searchFailed || awaitingAnswer
             ? null
             : `${venues.length} ${venues.length === 1 ? "venue" : "venues"}`)
         }

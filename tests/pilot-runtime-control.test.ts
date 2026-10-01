@@ -2,7 +2,74 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { buildResearchIntent } from "../lib/control-plane/research-view.ts";
+import { readIntents, type ResearchIntent } from "../lib/control-plane/scheduler/research-policy.ts";
 import { runnerControlReader, runnerWakeReaderFromEnv } from "../scripts/pilot-runtime-control.mts";
+
+test("committed runner acknowledgments are visible during unchanged hint polls", async () => {
+  const repos = createMemoryRepositories();
+  let now = 0, calls = 0;
+  let etag = "pause";
+  let positions = "{}";
+  let finishQuery: (() => void) | null = null;
+  const rows: { id: string; position: string; record: ResearchIntent }[] = [];
+  const contains = (position: string) => [...positions.matchAll(/\[(\d+),(\d+)\)/g)]
+    .some(([, start, end]) => BigInt(position) >= BigInt(start) && BigInt(position) < BigInt(end));
+  const reader = runnerControlReader("unused", repos, {
+    now: () => now,
+    readWakeEtag: async () => etag,
+    query: async (_sql, params) => {
+      calls++;
+      positions = params[4] as string;
+      const research = rows.filter(row => !contains(row.position));
+      if (finishQuery !== null) await new Promise<void>(resolve => { finishQuery = resolve; });
+      return [{ research, windows: [], config: "same", state: "same" }];
+    },
+  });
+  for (const [i, action] of (["PAUSE_RUNNER", "RESUME_RUNNER"] as const).entries()) {
+    const at = `2026-10-01T01:00:0${i}.000Z`;
+    const intent = buildResearchIntent(action, at, "test", null, "test");
+    const request = await repos.researchIntents.append("level-1", intent.intentId, intent, at);
+    rows.push({ id: request.recordId, position: String(request.position), record: request.record });
+    etag = action;
+    now += 1_000;
+    await reader.read();
+    const honored: ResearchIntent = { formatVersion: 1, kind: "HONORED", intentId: `${intent.intentId}:honored`,
+      honors: intent.intentId, action, honoredAt: at, honoredBy: "pilot-runner@test#1", detail: "applied" };
+    const committed = await repos.researchIntents.append("level-1", honored.intentId, honored, at);
+    reader.rememberResearchAppend(committed);
+    rows.push({ id: committed.recordId, position: String(committed.position), record: committed.record });
+    const before = calls;
+    for (let poll = 0; poll < 100; poll++) {
+      now += 1_000;
+      const controls = await reader.read();
+      assert.ok(controls.research.some(row => row.kind === "HONORED" && row.honors === intent.intentId));
+      const pause = readIntents(controls.research).runnerPause;
+      assert.equal(pause.paused, action === "PAUSE_RUNNER");
+      if (pause.paused) assert.equal(pause.honored?.intentId, honored.intentId);
+    }
+    assert.equal(calls, before, "an acknowledgment needs neither a SQL refresh nor another append");
+  }
+  await reader.read(true);
+  assert.equal(positions, "{[0,4)}", "committed local positions are excluded from the next delta read");
+  assert.equal((await repos.researchIntents.read("level-1")).length, 4, "immutable history has one acknowledgment per action");
+
+  const intent = buildResearchIntent("PAUSE_RUNNER", "2026-10-01T01:00:02.000Z", "test", null, "test");
+  const request = await repos.researchIntents.append("level-1", intent.intentId, intent, intent.requestedAt);
+  rows.push({ id: request.recordId, position: String(request.position), record: request.record });
+  finishQuery = () => {};
+  const refresh = reader.read(true);
+  const honored: ResearchIntent = { formatVersion: 1, kind: "HONORED", intentId: `${intent.intentId}:honored`,
+    honors: intent.intentId, action: intent.action, honoredAt: intent.requestedAt, honoredBy: "pilot-runner@test#1", detail: "applied" };
+  const committed = await repos.researchIntents.append("level-1", honored.intentId, honored, intent.requestedAt);
+  reader.rememberResearchAppend(committed);
+  finishQuery!();
+  finishQuery = null;
+  const refreshed = await refresh;
+  assert.equal(readIntents(refreshed.research).runnerPause.honored?.intentId, honored.intentId,
+    "a SQL read started before the local commit must not discard its acknowledgment");
+  await reader.read(true);
+  assert.equal(positions, "{[0,6)}", "both the late lower position and local commit remain known");
+});
 
 test("runner control reads coalesce polls and retain later-committed lower positions", async () => {
   const repos = createMemoryRepositories();

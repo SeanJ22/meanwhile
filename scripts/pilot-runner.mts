@@ -1332,7 +1332,7 @@ async function honorRunnerIntent(
   const id = `${intent.intentId}:honored`;
   const at = new Date().toISOString();
   try {
-    await repos.researchIntents.append(
+    const committed = await repos.researchIntents.append(
       RESEARCH_INTENT_LOG_KEY,
       id,
       {
@@ -1347,6 +1347,7 @@ async function honorRunnerIntent(
       },
       at,
     );
+    controlReader?.rememberResearchAppend(committed);
     return true;
   } catch (error) {
     if (!honorFailurePrinted.has(intent.intentId)) {

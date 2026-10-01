@@ -159,35 +159,6 @@ export const RIPCORDS = {
     filters:
       "Every write to the reaction store and the search/ask log (both POST routes refuse with 503); read paths and rendering are untouched",
   },
-  /**
-   * **ASK-12 (2026-08-25, Sean's ruling) — the unsourced general-answer
-   * fallback.**
-   *
-   * His words: *"try it while it's in testing. Route out-of-scope questions —
-   * the 'Why is it raining?' class — to the Claude API."*
-   *
-   * A ripcord rather than a plain feature flag, because the ripcord doctrine
-   * already requires the three things this needs and a flag would require none
-   * of them: a NAMED CLOSER, a PROVENANCE TAG on every record the feature
-   * produces (`UNSOURCED_GENERAL`) so pulling it is a filter rather than a
-   * hunt, and the transparency page changing in the same commit that ships it.
-   *
-   * The open question is not legal — nothing here is a claim about a
-   * government. It is whether the separation HOLDS in front of a reader, which
-   * is a thing only a reader can answer, and Sean is the one who looks.
-   *
-   * Ships LIVE, for the testing window, which is what he asked for.
-   */
-  "ripcord.unsourcedFallback": {
-    pulled: false,
-    envVar: "WTP_RIPCORD_UNSOURCED_FALLBACK",
-    question:
-      "Product, not legal: does an unsourced general answer stay unmistakable from a sourced civic one in front of a real reader? The whole trust posture of this product is that it does not answer what it cannot source, and an answer a reader mistakes for sourced spends that.",
-    closer: "The author — he is the one who looks at it; pulled the moment the separation reads as thin",
-    trackerRows: "ASK-12",
-    filters:
-      "Every UNSOURCED_GENERAL answer: pulled, the ask surface refuses exactly as it did before and renders the sourced refusal instead. Nothing downstream needs filtering — an unsourced answer is a generated string, never reader signal, and the aggregation input type has no field it could enter.",
-  },
 } as const satisfies Record<string, Ripcord>;
 
 export type RipcordName = keyof typeof RIPCORDS;

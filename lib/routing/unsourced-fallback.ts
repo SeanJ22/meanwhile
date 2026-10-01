@@ -31,38 +31,35 @@
  *    path has already declined. If a question can be answered from sources, it
  *    is.
  *
- * ## The flag
+ * ## October 1, 2026 — Sean: Ask without a source we hold is allowed
  *
- * `ripcord.unsourcedFallback` — ON in testing, off in one place with no code
- * change. It is a ripcord rather than a plain feature flag because the ripcord
- * doctrine already requires the three things this needs: a named closer, a
- * provenance tag on every record so pulling it is a filter rather than a hunt,
- * and the transparency page changing in the same commit.
+ * The switch (`ripcord.unsourcedFallback`) and the rule that a civic question
+ * we have not sourced is never handed to a general model are both gone. When no
+ * held record answers, Ask may answer from the Claude API (the tier named in
+ * `lib/models.ts`, resolved from `lib/ask/model.ts`), on two conditions that
+ * stay structural: every answer STATES THE SOURCE IT USED (`sourceLine`, on the
+ * record so it cannot be rendered without) and is ULTRA SHORT, one or two
+ * sentences. It still never carries a sources field, and it still comes last.
  *
- * ## What it may never do
- *
- * **It never answers a CIVIC question.** The fallback exists for the class
- * Sean named — *why is it raining* — and a question the router declined
- * because our DATA is thin is not out of scope, it is owed. The two are told
- * apart by the router's own verdict, not by this module guessing.
- *
- * **It never enters a sold store.** An unsourced answer is a generated string;
+ *  An unsourced answer is a generated string;
  * it is not reader signal, it is not a position, and it is not aggregated.
  */
-import { ripcordPulled } from "../ripcords.ts";
 import { scrubFreeText } from "../log/scrub.ts";
 import { ASK_MODEL_ROLES, resolveAskRoleModel } from "../ask/model.ts";
-import { modelRequestFields } from "../models.ts";
+import { MODELS, modelRequestFields, modelTierFor } from "../models.ts";
 
 /**
- * The mark, in plain language, rendered ABOVE the answer.
- *
- * LEVEL register — this is a claim surface, and the claim it makes is about
- * us. It says three things a reader needs and nothing else: this did not come
- * from a record, we did not check it, and it is not what this product is for.
+ * The mark, in plain language: this did not come from a record the site holds.
  */
 export const UNSOURCED_MARK =
-  "This answer did not come from any public record, and we have not checked it. It is a general answer from an AI, not something this site sourced — for anything about your government, use the links below.";
+  "This answer did not come from any public record, and we have not checked it. It is a general answer from an AI, not something this site sourced.";
+
+/** The source an unsourced answer states, naming the model that wrote it. */
+export function unsourcedSourceLine(model: string): string {
+  const tier = modelTierFor(model);
+  const name = tier ? MODELS[tier].name : "Claude";
+  return `Source: ${name}, general knowledge — not a public record this site holds.`;
+}
 
 /** What an unsourced answer is. Deliberately not a `RoutingAnswer`. */
 export interface UnsourcedAnswer {
@@ -71,22 +68,20 @@ export interface UnsourcedAnswer {
   readonly text: string;
   /** Always the mark. Present on the record so it cannot be rendered without. */
   readonly mark: typeof UNSOURCED_MARK;
+  /** The source stated with the answer: which model wrote it, and that no record backs it. */
+  readonly sourceLine: string;
   /** RULING doctrine: every record the feature produces carries its tag. */
   readonly provenanceTag: "UNSOURCED_GENERAL";
 }
 
-export function unsourcedAnswer(text: string): UnsourcedAnswer {
+export function unsourcedAnswer(text: string, model: string = MODELS.haiku.model): UnsourcedAnswer {
   return {
     kind: "UNSOURCED",
     text,
     mark: UNSOURCED_MARK,
+    sourceLine: unsourcedSourceLine(model),
     provenanceTag: "UNSOURCED_GENERAL",
   };
-}
-
-/** Is the fallback available at all right now? */
-export function fallbackEnabled(): boolean {
-  return !ripcordPulled("ripcord.unsourcedFallback");
 }
 
 /**
@@ -101,20 +96,9 @@ export function shouldFallBack(input: {
   routerAnswered: boolean;
   /** Did the sourced router explicitly decline — `NO_ROUTE`? */
   routerDeclined: boolean;
-  /** Is the question about a government thing we simply have not sourced yet? */
-  civicButUnsourced: boolean;
 }): boolean {
-  if (!fallbackEnabled()) return false;
   if (input.routerAnswered) return false;
   if (!input.routerDeclined) return false;
-  /*
-   * The clause that keeps this honest. A civic question we cannot answer is
-   * OWED — the transparency mandate says an unfound fact is hunted again on
-   * its cadence, and handing it to a general model would convert a gap in our
-   * research into a plausible sentence nobody can check. That is the
-   * never-generate-a-position rule, with a different generator.
-   */
-  if (input.civicButUnsourced) return false;
   return true;
 }
 
@@ -172,14 +156,13 @@ const askModel = (): string => resolveAskRoleModel("UNSOURCED");
  */
 function fallbackPrompt(): string {
   return [
-    "You are answering a general-knowledge question that a civic-information site could not answer from public records.",
+    "You are answering a question that a civic-information site could not answer from the public records it holds.",
     "",
-    "Answer plainly, in at most three sentences, at a level a fifteen-year-old reads comfortably.",
+    "Answer plainly, in ONE or TWO sentences at most, at a level a fifteen-year-old reads comfortably.",
     "",
     "HARD RULES:",
-    "- If the question is about a specific government, official, election, ballot, meeting, law, or public record, DO NOT ANSWER IT. Reply with exactly: DECLINE",
-    "- Never state a fact about a named person, a named public body, or a named jurisdiction. Reply with exactly: DECLINE",
-    "- Never cite a source, a URL, or a document. You have none, and this answer is labelled as unsourced.",
+    "- If you are not sure, say so in one sentence. Never invent a name, a date, a number, a phone number, an address or a quote.",
+    "- Never cite a source, a URL, or a document. The site states your source itself.",
     "- Never say what the site holds, covers, or has looked for.",
     "- No preamble, no sign-off, no offer to help further.",
   ].join("\n");
@@ -193,7 +176,7 @@ export interface FallbackOptions {
 
 export type FallbackOutcome =
   | { kind: "UNSOURCED"; answer: UnsourcedAnswer }
-  | { kind: "UNAVAILABLE"; why: "off" | "no-key" | "error" | "declined" };
+  | { kind: "UNAVAILABLE"; why: "no-key" | "error" | "declined" };
 
 /**
  * Ask the general model, or say why not.
@@ -208,7 +191,6 @@ export async function askUnsourced(
   question: string,
   options: FallbackOptions = {},
 ): Promise<FallbackOutcome> {
-  if (!fallbackEnabled()) return { kind: "UNAVAILABLE", why: "off" };
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return { kind: "UNAVAILABLE", why: "no-key" };
 
@@ -250,7 +232,7 @@ export async function askUnsourced(
       // the cost of getting it wrong is asymmetric.
       return { kind: "UNAVAILABLE", why: "declined" };
     }
-    return { kind: "UNSOURCED", answer: unsourcedAnswer(text) };
+    return { kind: "UNSOURCED", answer: unsourcedAnswer(text, model) };
   } catch {
     return { kind: "UNAVAILABLE", why: "error" };
   }

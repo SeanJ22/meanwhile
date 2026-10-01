@@ -16,7 +16,7 @@ import { join } from "node:path";
 import { writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { methodFixture, knowledgeEntries, methodVersionEntry } from "./method-store-fixture.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
-import { runLeaseWorkerProcesses, runNationalPlaceWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
+import { runLeaseWorkerProcesses, runNationalPlaceWorkerProcesses, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { unchangedScoutFailure } from "../lib/control-plane/workers/scout-scheduling.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
@@ -455,7 +455,11 @@ test("ZIP process reports return after parent registry and election publication,
       return { kind };
     };
     const reports = await runNationalPlaceWorkerProcesses({ root, zips: ["10001", "10002"], capacity: () => 2, store,
-      onStarted: pid => pids.push(pid),
+      slots: workerProcessSlots(() => 2, { availableBytes: () => 1000, headroomBytes: 100, peakBytes: () => 600 }),
+      onStarted: pid => {
+        if (pids.length === 1) assert.equal(delivered.length, 1, "The second ready ZIP stays queued until the first process finishes.");
+        pids.push(pid);
+      },
       publish: async input => {
         assert.equal(input.store, store, "the real store is supplied in the parent");
         registryCalls++;

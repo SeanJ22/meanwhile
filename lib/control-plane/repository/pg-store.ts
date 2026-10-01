@@ -918,6 +918,18 @@ export async function createPgRepositories(
     });
   }
   const locks = pgLockManager(connectionString);
+  const sharedBudget = budgetRepositoryFrom(
+    pgAggregateRepository<BudgetLedger>(sql, "BudgetLedger", "cp_budget", bounded), locks, "ATOMIC_COMPARE_AND_SET",
+  );
+  // One process need not contend with its own read/modify/write requests on
+  // this large aggregate. Other processes still contend through the same CAS.
+  // This queues accounting writes only; workers and their leases run in parallel.
+  let budgetWrite: Promise<unknown> = Promise.resolve();
+  const budget: ControlPlaneRepositories["budget"] = { ...sharedBudget, mutate: (mutator, now) => {
+    const write = budgetWrite.then(() => sharedBudget.mutate(mutator, now));
+    budgetWrite = write.catch(() => undefined);
+    return write;
+  } };
 
   const receiptLog = pgAppendOnlyRepository<ActionReceipt>(sql, "admin_receipts", bounded);
   const adminReceipts: AppendOnlyRepository<ActionReceipt> = {
@@ -1015,11 +1027,7 @@ export async function createPgRepositories(
     adminConfig: pgAggregateRepository<AdminConfig>(sql, "AdminConfig", "cp_admin_config", bounded),
     /* What readers were told Ask does not hold (schema v13). Ask's route adds through `pgAskGapObservationSink`, one atomic upsert per row. */
     askGapObservations: pgAggregateRepository<AskGapObservation>(sql, "AskGapObservation", "cp_ask_gap_observations", bounded),
-    budget: budgetRepositoryFrom(
-      pgAggregateRepository<BudgetLedger>(sql, "BudgetLedger", "cp_budget", bounded),
-      locks,
-      "ATOMIC_COMPARE_AND_SET",
-    ),
+    budget,
     locks,
     describe: () =>
       `Postgres control-plane repositories (schema v${BOOTSTRAP_VERSION}, connection named by ` +

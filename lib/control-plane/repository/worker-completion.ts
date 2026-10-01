@@ -4,6 +4,7 @@ import type { RouteTask } from "../route-task.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "./types.ts";
 import { recordCost, transitionWorkItem } from "./coordinator.ts";
 import { assertFleetResult, type WorkerResultRecord } from "../workers/types.ts";
+import { costEntryWithModel, type CostEntry } from "../cost.ts";
 
 export type UncommittedWorkerResult = Omit<WorkerResultRecord, "completion">;
 
@@ -34,7 +35,7 @@ export async function completeWorkerTask(repos: ControlPlaneRepositories, result
   return committed;
 }
 
-async function applyWorkerCompletion(repos: ControlPlaneRepositories, record: WorkerResultRecord): Promise<void> {
+async function applyWorkerCompletion(repos: ControlPlaneRepositories, record: WorkerResultRecord, costAlreadyApplied = false): Promise<void> {
   const { completion: c, endedAt: now } = record;
   const attempt = await repos.attempts.mustRead(record.attemptId);
   if (canonicalJson(attempt.value) !== canonicalJson(c.closedAttempt)) {
@@ -50,10 +51,12 @@ async function applyWorkerCompletion(repos: ControlPlaneRepositories, record: Wo
   if (lease && !lease.value.released && lease.value.id === c.closedAttempt.leaseId) {
     await repos.leases.compareAndSet(lease.id, lease.revision, release(lease.value), now);
   }
-  await recordCost(repos, {
+  if (!costAlreadyApplied) await recordCost(repos, {
     attemptId: record.attemptId, workItemId: record.workItemId, routeTaskId: record.routeTaskId,
     routeId: task.value.routeId, source: task.value.target, jurisdiction: task.value.workerTask!.contract.subjectId,
     project: record.grant.project, role: record.worker.role, cost: record.cost, recordedAt: now,
+    model: record.executionMode === "MODEL_ASSISTED" ? (record.modelParse?.model ?? record.modelReview?.model ?? record.worker.version) : null,
+    ...(record.modelParse?.byModel ? { byModel: record.modelParse.byModel } : {}),
   }, now);
   // An explicitly requested replay measures reproducibility. Its Attempt,
   // result and accounting survive, but it cannot rewind the civic workflow.
@@ -95,7 +98,12 @@ export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories
   const tasks = new Map(taskRows.map(row => [row.id, row.value]));
   const leases = new Map(leaseRows.map(row => [row.id, row.value]));
   const items = new Map(itemRows.map(row => [row.id, row.value]));
-  const recordedCosts = new Set(costs.map(cost => canonicalJson(cost)));
+  const costsByAttempt = new Map<string, CostEntry[]>();
+  for (const cost of costs) {
+    const rows = costsByAttempt.get(cost.attemptId) ?? [];
+    rows.push(cost);
+    costsByAttempt.set(cost.attemptId, rows);
+  }
   for (const record of records) {
     const task = tasks.get(record.routeTaskId);
     const lease = leases.get(record.routeTaskId);
@@ -103,11 +111,17 @@ export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories
     const noTransition = record.completion.completedTask.workerTask?.purpose === "DIAGNOSTIC_REPLAY" ||
       result.role === "ACQUIRER" || result.role === "DETECTIVE" || result.role === "ENGINEERING";
     const transitioned = noTransition || items.get(record.workItemId)?.transitions.some(t => t.by === `worker-result:${record.id}`);
-    const costApplied = task?.workerTask && recordedCosts.has(canonicalJson({
+    const expectedCost = task?.workerTask ? costEntryWithModel({
       attemptId: record.attemptId, workItemId: record.workItemId, routeTaskId: record.routeTaskId,
       routeId: task.routeId, source: task.target, jurisdiction: task.workerTask.contract.subjectId,
       project: record.grant.project, role: record.worker.role, cost: record.cost, recordedAt: record.endedAt,
-    }));
+      model: record.executionMode === "MODEL_ASSISTED" ? (record.modelParse?.model ?? record.modelReview?.model ?? record.worker.version) : null,
+      ...(record.modelParse?.byModel ? { byModel: record.modelParse.byModel } : {}),
+    }, record.executionMode === "MODEL_ASSISTED" ? (record.modelParse?.model ?? record.modelReview?.model ?? record.worker.version) : null) : null;
+    // Model/tier annotations were added after these immutable charges. Compare
+    // the same committed cost under today's shape without rewriting history.
+    const costApplied = expectedCost !== null && (costsByAttempt.get(record.attemptId) ?? []).some(cost =>
+      canonicalJson(costEntryWithModel(cost, expectedCost.model ?? null)) === canonicalJson(expectedCost));
     const dependentsApplied = noTransition || result.role !== "ADVERSARIAL_AUDITOR" || result.verdict !== "BROKE" ||
       itemRows.every(row => !row.value.dependencies.some(d => d.upstreamId === record.workItemId) ||
         row.value.transitions.some(t => t.by === `worker-result:${record.id}`));
@@ -115,7 +129,7 @@ export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories
         canonicalJson(attempts.get(record.attemptId) ?? null) === canonicalJson(record.completion.closedAttempt) &&
         (!lease || lease.released || lease.id !== record.completion.closedAttempt.leaseId) &&
         costApplied && transitioned && dependentsApplied) continue;
-    await applyWorkerCompletion(repos, record);
+    await applyWorkerCompletion(repos, record, costApplied);
   }
 }
 

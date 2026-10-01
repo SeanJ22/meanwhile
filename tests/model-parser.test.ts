@@ -5,8 +5,8 @@ import { readFieldManual, writeFieldManual, type FieldManualStore } from "../lib
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { ModelRequest, ModelResponse, ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { MODEL_FOR_CLASS } from "../lib/control-plane/scheduler/model-routing.ts";
+import { documentWindows, modelParseReasoner, ModelParseFailure, parseLearningEntries, routeParse } from "../lib/control-plane/workers/model-parser.ts";
 import { auditLearningEntries } from "../lib/control-plane/workers/audit-sampling.ts";
-import { documentWindows, modelParseReasoner, parseLearningEntries, routeParse } from "../lib/control-plane/workers/model-parser.ts";
 import { confirmQuotedRecords, isQuotedExtraction, quotedSourceFindings, quotesHoldAgainst } from "../lib/control-plane/workers/quoted-proof.ts";
 import { validateGeneralizedExtraction } from "../lib/control-plane/workers/generalized-validator.ts";
 import type { GeneralizedCivicExtractionContract, ParserWorkerInput, WorkerEvidence } from "../lib/control-plane/workers/types.ts";
@@ -147,7 +147,7 @@ test("a parse with no rule: cheapest tier is asked, escalates once when no quote
     if (request.model === MODEL_FOR_CLASS.haiku) return respond(request.model, [good("Regular Meeting", "Tuesday 10/14 at six", [])].map((r) => ({ fields: r.fields.map((f) => ({ ...f, quote: `invented ${f.quote}` })) })));
     return respond(request.model, GOOD_PROPOSAL);
   };
-  const parser = modelParseReasoner(repos, transport, () => NOW);
+  const parser = modelParseReasoner(repos, transport, () => NOW, { ceilingUsd: 100 });
   const first = await parser.parse(input(), input().worker);
   assert.deepEqual(seen, [MODEL_FOR_CLASS.haiku, MODEL_FOR_CLASS.sonnet], "haiku first, one step up when nothing confirmed");
   assert.equal(first.result.verdict, "EXTRACTED");
@@ -156,6 +156,9 @@ test("a parse with no rule: cheapest tier is asked, escalates once when no quote
   assert.equal(first.review.escalation?.to, "sonnet");
   assert.equal(quotesHoldAgainst(first.result, TEXT).ok, true);
   assert.ok(first.usd !== null && first.usd > 0, "both calls are costed");
+  assert.deepEqual(first.review.byModel?.map(s=>s.tier), ["haiku", "sonnet"]);
+  assert.equal(first.review.byModel?.reduce((n,s)=>n+(s.usd??0),0),first.usd);
+  assert.equal(first.review.byModel?.reduce((n,s)=>n+s.requestCount,0),2);
 
   // What that parse learned is in the manual...
   const manual = await readFieldManual(repos, { role: "PARSER", state: "az", recordClass: "PLANNING_MEETING" });
@@ -165,7 +168,7 @@ test("a parse with no rule: cheapest tier is asked, escalates once when no quote
 
   // ...so the next agent to parse this record type routes differently.
   seen.length = 0;
-  const second = await modelParseReasoner(repos, transport, () => NOW).parse({ ...input(), attemptId: "parse-2" }, input().worker);
+  const second = await modelParseReasoner(repos, transport, () => NOW, { ceilingUsd: 100 }).parse({ ...input(), attemptId: "parse-2" }, input().worker);
   assert.deepEqual(seen, [MODEL_FOR_CLASS.sonnet], "the second parse skips the tier that failed here before");
   assert.equal(second.result.verdict, "EXTRACTED");
   assert.match(second.review.route.reason, /haiku failed to confirm quotes on www\.exampletonaz\.gov/);
@@ -176,7 +179,7 @@ test("a parse with no rule: cheapest tier is asked, escalates once when no quote
 test("no proposed field confirming is a failed extraction, never an empty document", async () => {
   const repos = createMemoryRepositories();
   const transport: ModelTransport = async (request) => respond(request.model, []);
-  const out = await modelParseReasoner(repos, transport, () => NOW).parse(input(), input().worker);
+  const out = await modelParseReasoner(repos, transport, () => NOW, { ceilingUsd: 100 }).parse(input(), input().worker);
   assert.equal(out.result.verdict, "FAILED");
   assert.equal(out.result.warnings[0]!.code, "ZERO_ROW_EXTRACTION");
   assert.equal(out.result.warnings[0]!.severity, "BLOCKING");
@@ -186,21 +189,43 @@ test("no proposed field confirming is a failed extraction, never an empty docume
 test("a response without the record_extraction call is refused, not read as prose", async () => {
   const repos = createMemoryRepositories();
   const transport: ModelTransport = async (request) => ({ model: request.model, stop_reason: "end_turn", content: [{ type: "text", text: JSON.stringify({ records: GOOD_PROPOSAL }) }], usage: { input_tokens: 10, output_tokens: 10 } });
-  const out = await modelParseReasoner(repos, transport, () => NOW).parse(input(), input().worker);
+  const out = await modelParseReasoner(repos, transport, () => NOW, { ceilingUsd: 100 }).parse(input(), input().worker);
   assert.equal(out.result.verdict, "FAILED");
   assert.match(out.review.validationError ?? "", /PARSE_MODEL_NO_TOOL_CALL/);
 });
 
 test("the lane refuses a contract that already has a parsing rule", async () => {
   const withRule = { ...contract, extraction: { format: "JSON_RECORDS", rowsPointer: "/rows", fields: {} } } as GeneralizedCivicExtractionContract;
-  await assert.rejects(modelParseReasoner(createMemoryRepositories(), async (r) => respond(r.model, []), () => NOW).parse({ ...input(), contract: withRule }, input().worker), /PARSE_MODEL_LANE_NOT_APPLICABLE/);
+  await assert.rejects(modelParseReasoner(createMemoryRepositories(), async (r) => respond(r.model, []), () => NOW, { ceilingUsd: 100 }).parse({ ...input(), contract: withRule }, input().worker), /PARSE_MODEL_LANE_NOT_APPLICABLE/);
+});
+
+test("a failed window waits for answered windows and preserves their paid tier shares without retrying", async () => {
+  let calls = 0;
+  const longInput = input();
+  const text = TEXT + "\n" + "x".repeat(25_000);
+  const evidence = { ...longInput.evidence, text, contentHash: contentHash(text) };
+  const parser = modelParseReasoner(createMemoryRepositories(), async request => {
+    calls++;
+    if (calls === 1) throw new Error("HTTP 503");
+    await new Promise(resolve => setTimeout(resolve, 10));
+    return respond(request.model, GOOD_PROPOSAL);
+  }, () => NOW, { ceilingUsd: 100 });
+  await assert.rejects(parser.parse({ ...longInput, evidence }, longInput.worker), (error: unknown) => {
+    assert.ok(error instanceof ModelParseFailure);
+    assert.equal(error.accounting.byModel.length, 2);
+    assert.ok(error.accounting.byModel.some(share => share.tier === "haiku" && share.usd !== null && share.usd > 0));
+    assert.ok(error.accounting.byModel.some(share => share.requestCount === 1 && share.usd === null));
+    assert.equal(error.accounting.usd, null, "unanswered usage remains unknown alongside known paid shares");
+    return true;
+  });
+  assert.equal(calls, 2, "the same failed request is never resent or escalated");
 });
 
 test("an audit that breaks a model-parsed publisher sends the next parse one tier up", async () => {
   const repos = createMemoryRepositories();
   const seen: string[] = [];
   const transport: ModelTransport = async (request: ModelRequest) => { seen.push(request.model); return respond(request.model, GOOD_PROPOSAL); };
-  const first = await modelParseReasoner(repos, transport, () => NOW).parse(input(), input().worker);
+  const first = await modelParseReasoner(repos, transport, () => NOW, { ceilingUsd: 100 }).parse(input(), input().worker);
   assert.equal(first.review.tier, "haiku");
   assert.deepEqual(seen, [MODEL_FOR_CLASS.haiku]);
 
@@ -214,7 +239,7 @@ test("an audit that breaks a model-parsed publisher sends the next parse one tie
   await writeFieldManual(repos, learned, NOW);
 
   seen.length = 0;
-  const second = await modelParseReasoner(repos, transport, () => NOW).parse({ ...input(), attemptId: "parse-2" }, input().worker);
+  const second = await modelParseReasoner(repos, transport, () => NOW, { ceilingUsd: 100 }).parse({ ...input(), attemptId: "parse-2" }, input().worker);
   assert.deepEqual(seen, [MODEL_FOR_CLASS.sonnet], "the next Parser reads what the Auditor wrote and starts a tier up");
   assert.match(second.review.route.reason, /haiku failed to confirm quotes on www\.exampletonaz\.gov/);
 });

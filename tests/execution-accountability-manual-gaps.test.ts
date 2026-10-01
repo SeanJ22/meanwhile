@@ -23,17 +23,20 @@ test("missing source capabilities persist as idempotent, non-executable work und
     row.manualSourceGap.assignmentKey === ORIGINAL_LIFETIME_HUNT.key));
   assert.ok(rows.some(row => row.manualSourceGap?.contractId === "jurisdiction-operational-reference"));
   assert.ok(rows.some(row => row.manualSourceGap?.contractId === "voting-sites"));
-  assert.ok(!rows.some(row => row.manualSourceGap?.contractId === "az-pima-local-finance"),
-    "Arizona state membership alone does not prove Pima applicability");
+  assert.ok(rows.some(row => row.manualSourceGap?.contractId === "az-pima-local-finance" &&
+    row.manualSourceGap.mode === "SCOPED_ADAPTER_OWED" && row.manualSourceGap.reason.includes("alone")),
+    "A county adapter gap stays non-executable until its place is bound");
   const second = await applyManualSourceGaps(repos, [scope] as never, { now });
   assert.equal(second.created, 0);
   assert.equal(second.carried, first.created);
 });
 
-test("a different receipt cannot inherit the original hunt's source gaps", async () => {
+test("a different receipt gets its own source gaps without inheriting the original receipt", async () => {
   const repos = createMemoryRepositories();
   const other = { ...scope, decision: { ...scope.decision, receiptId: "later-send" } };
   const result = await applyManualSourceGaps(repos, [other] as never, { now });
-  assert.equal((await repos.workItems.list()).filter(row => row.value.manualSourceGap?.contractId === "jurisdiction-operational-reference").length, 0);
+  const gaps = (await repos.workItems.list()).map(row => row.value.manualSourceGap);
+  assert.ok(gaps.some(gap => gap?.contractId === "jurisdiction-operational-reference"));
+  assert.ok(gaps.every(gap => gap?.instructionReceipt === "later-send"));
   assert.ok(result.created > 0, "ordinary reviewed-input gaps still carry their own receipt");
 });

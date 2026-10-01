@@ -14,11 +14,11 @@ const assignments = (leftUsd: number | null, refused = 0) => ({ costsReadable: t
     unsettledCount: 1, refusedCount: 0, exceptions: [] }, budget: { lifetime: true, since: scope.budgetStartedAt, spentUsd: leftUsd === null ? null : 50 - leftUsd,
     leftUsd, refused, admitted: 0 } }] }) as unknown as AssignmentCycleReading;
 
-test("the exact original hunt continues promptly after progress without lifting its lifetime cap", () => {
+test("every funded hunt continues promptly after progress using its own budget and receipt", () => {
   assert.deepEqual(originalLifetimeHuntContinuation([scope], expansion(20, 4), assignments(12), 3), {
     key: scope.key, label: "ZIP 85635", due: 20, dispatched: 4, delayMs: 60_000, reason: "DUE_AFTER_PROGRESS",
   });
-  assert.equal(originalLifetimeHuntContinuation([{ ...scope, budgetUsd: 51 }], expansion(20, 4), assignments(12), 0), null);
+  assert.ok(originalLifetimeHuntContinuation([{ ...scope, budgetUsd: 51 }], expansion(20, 4), assignments(12), 0));
   assert.equal(originalLifetimeHuntContinuation([{ ...scope, receiptId: "another-send" }], expansion(20, 4), assignments(12), 0), null);
   assert.equal(originalLifetimeHuntContinuation([scope], expansion(20, 4), assignments(0), 0), null);
   assert.equal(originalLifetimeHuntContinuation([scope], expansion(20, 4), assignments(null), 0), null);

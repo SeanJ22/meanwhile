@@ -152,7 +152,7 @@ export function registrationGovernmentsPlaced(
 }
 
 /** One sentence for the composer, per state. */
-export function stateSendPreviewSentence(p: StateSendPreview, cap: number): string {
+export function stateSendPreviewSentence(p: StateSendPreview): string {
   if (p.kind === "REVIEWED_REGISTRY") {
     if (p.governments) return `${p.state}: the runner's territory rules place ${p.governments.length} governments in this scope, using promoted registry ${p.versionId}. ${p.unplaced?.length ?? 0} other registered governments have unresolved territory; their applicability remains unverified. Existing work is reused. This is work placement, not proof of completed coverage.`;
     return `${p.state}: its governments come from the reviewed ${p.state} jurisdiction registry. The runner places them by their Census territory and counts what it creates at its next cycle.`;
@@ -165,6 +165,6 @@ export function stateSendPreviewSentence(p: StateSendPreview, cap: number): stri
     (e > 0 ? `, and up to ${e} more at the edge (the runner places each only if its share of a shared ZIP code is large enough)` : "") +
     `, from registration (the 2022 Census of Governments, promoted version ${p.versionId}) — no reviewed registry exists for ${p.state}. ` +
     "A new Send discovers meetings, officeholders, elections and finance sources where missing, and follows their downstream gaps. Existing shared work is reused; these initial families are not a claim of complete coverage" +
-    (n + e > cap ? `; at most ${cap.toLocaleString("en-US")} missing requirements enter one geography's work window per cycle, and later cycles continue automatically.` : ".")
+    "."
   );
 }

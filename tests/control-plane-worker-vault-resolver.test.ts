@@ -8,6 +8,7 @@ import { recordAcquisition, type Artifact } from "../lib/control-plane/evidence/
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { putArtifact } from "../lib/control-plane/evidence/store.ts";
 import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
+import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 
 /**
@@ -74,6 +75,19 @@ function repos(records: readonly ArtifactRecord[], roles: Readonly<Record<string
 }
 
 const hold = (store: DurableEvidenceStore, artifact: Artifact) => putArtifact(store, PROJECT, artifact, new TextEncoder().encode(BODY));
+
+test('Detective captures remain readable with the original redirect and acquisition date', async t => {
+  const store=await vault(t);
+  const artifact={...capture(1),retrievalUrl:'https://www.example.gov/current-meetings'};
+  await hold(store,artifact);
+  const repository=repos([record(artifact)],{[artifact.attemptId]:'DETECTIVE'});
+  const input=await workerVaultResolver(repository,store,PROJECT)(artifact.id);
+  assert.equal(input.text,BODY);
+  assert.equal(input.attemptId,artifact.attemptId);
+  const saved=await researchVaultResolver(repository,store,PROJECT)(artifact.id);
+  assert.equal(saved.artifact.retrievalUrl,artifact.retrievalUrl);
+  assert.equal(saved.artifact.retrievedAt,artifact.retrievedAt);
+});
 
 test("a later record of the same artifact is read when the first record's bytes were never vaulted", async (t) => {
   const store = await vault(t);

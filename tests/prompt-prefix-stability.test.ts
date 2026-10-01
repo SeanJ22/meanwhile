@@ -95,7 +95,7 @@ test("PC-3 adversarial audit: tools + system are identical across audits and car
     requests.push(request);
     return { model: request.model, stop_reason: "tool_use", content: [{ type: "tool_use", id: "c", name: "record_audit", input: { verdict: "SURVIVED", challenges: [] } }], usage: { input_tokens: 10, output_tokens: 5, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 } };
   };
-  const reasoner = modelAuditReasoner(createMemoryRepositories(), transport, () => NOW);
+  const reasoner = modelAuditReasoner(createMemoryRepositories(), transport, () => NOW, { ceilingUsd: 1 });
   await reasoner.review(auditContext(JSON.stringify({ value: [{ id: 1, eventName: "A" }] })), "attempt-1");
   await reasoner.review(auditContext(JSON.stringify({ value: [{ id: 2, eventName: "B" }] })), "attempt-2");
   assert.equal(requests.length, 2);

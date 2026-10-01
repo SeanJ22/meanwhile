@@ -9,7 +9,7 @@ export function researchVaultResolver(repos: ControlPlaneRepositories, store: Ev
     if (!records.length) throw new Error("RESEARCH_ARTIFACT_METADATA_MISSING");
     for (const record of records) {
       const acquiring = (await repos.attempts.mustRead(record.attemptId)).value;
-      if (!["ACQUIRER", "SCOUT", "ADVERSARIAL_AUDITOR"].includes(acquiring.worker.role)) continue;
+      if (!["ACQUIRER", "SCOUT", "DETECTIVE", "ADVERSARIAL_AUDITOR"].includes(acquiring.worker.role)) continue;
       for (const key of await store.list(`project/${project}/`)) {
         const meta = await store.head(key);
         const m = meta?.custom;

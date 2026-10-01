@@ -57,6 +57,7 @@ import {
   reclaimRouteTask,
   recordArtifactMetadata,
   recordCost,
+  renewLease,
   type ClaimOutcome,
 } from "../repository/coordinator.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
@@ -108,8 +109,8 @@ export type ExecutorKind = (typeof EXECUTOR_KINDS)[number];
 export interface WorkerBound {
   readonly maxAttempts: number;
   readonly maxWallMs: number;
-  /** Tokens, or whatever unit the cost ledger counts. Zero is not "unlimited". */
-  readonly maxCostUnits: number;
+  /** Legacy diagnostic annotation; actual spend is reserved per request. */
+  readonly maxCostUnits?: number;
 }
 
 export const DEFAULT_WORKER_BOUND: WorkerBound = {
@@ -462,6 +463,8 @@ export type RunWork = (input: {
   readonly executor: ExecutorKind;
   readonly bound: WorkerBound;
   readonly holder: string;
+  /** The existing canonical heartbeat owns renewal health for publication callers. */
+  readonly assertLeaseHealthy?: () => void;
 }) => Promise<WorkOutcome>;
 
 /**
@@ -501,6 +504,8 @@ export interface DeclaredExecutor {
   /** The worker identity, when the executor knows its own. */
   readonly workerFor?: WorkerFor;
   readonly run: RunWork;
+  /** A process worker claims and renews the same canonical lease itself. */
+  readonly dispatch?: (input: Omit<Parameters<typeof dispatchOne>[1], "executor">) => Promise<DispatchResult>;
 }
 
 export type WorkerFor = (input: {
@@ -726,6 +731,7 @@ export async function dispatchOne(
         jurisdiction: input.obligation.obligation.subjectId,
         project,
         role: worker.role,
+        model: worker.provider === "anthropic" ? (byModel?.[0]?.model ?? worker.version) : null,
         cost,
         recordedAt: at,
         ...purpose,
@@ -751,6 +757,17 @@ export async function dispatchOne(
   });
 
   let outcome: WorkOutcome;
+  // The TTL detects a dead process; it does not end a live investigation.
+  let renewal: Promise<unknown> | null = null;
+  let renewalFailure: unknown = null;
+  const renew = setInterval(() => {
+    if (renewal !== null || renewalFailure !== null) return;
+    renewal = renewLease(repos, { routeTaskId: input.routeTaskId!, holder: input.holder,
+      now: input.clock?.() ?? new Date().toISOString(), ttlMs: input.leaseTtlMs })
+      .catch(error => { renewalFailure = error; })
+      .finally(() => { renewal = null; });
+  }, Math.max(1, Math.floor(input.leaseTtlMs / 3)));
+  renew.unref();
   try {
     outcome = await input.executor.run({
       obligation: input.obligation,
@@ -760,7 +777,11 @@ export async function dispatchOne(
       executor: lane,
       bound: input.bound ?? DEFAULT_WORKER_BOUND,
       holder: input.holder,
+      assertLeaseHealthy: () => { if (renewalFailure !== null) throw renewalFailure; },
     });
+    clearInterval(renew);
+    await renewal;
+    if (renewalFailure !== null) throw renewalFailure;
   } catch (error) {
     /*
      * A THROWN error is a defect in the worker, not a fact about the route.
@@ -789,6 +810,9 @@ export async function dispatchOne(
       cost: null,
       detail: `${executor.why}; the worker threw and the Attempt was abandoned: ${why}`,
     };
+  } finally {
+    clearInterval(renew);
+    await renewal;
   }
 
   // The executor's measured end is authoritative when it supplies one. A
@@ -1019,6 +1043,7 @@ export async function dispatchOne(
         jurisdiction: input.obligation.obligation.subjectId,
         project,
         role: worker.role,
+        model: worker.provider === "anthropic" ? (outcome.costByModel?.[0]?.model ?? worker.version) : null,
         cost: outcome.cost,
         recordedAt: terminalAt,
         ...purpose,

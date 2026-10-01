@@ -1,3 +1,4 @@
+import { officialLinkingPageFrom } from "../../sources/official-page-events/index.ts";
 /**
  * **THE UNPAID MEETINGS-DISCOVERY EXECUTOR.** (2026-09-23.)
  *
@@ -85,6 +86,7 @@ import { writeFieldManualDiscoveries } from "../scheduler/field-manual-scout.ts"
 import { DEFAULT_ROBOTS_TOKEN, evaluatePermission } from "../scheduler/robots.ts";
 import { DEFAULT_USER_AGENT, type VaultPut } from "../scheduler/route-executor.ts";
 import { categoryBodyOf } from "./auto-crosswalk.ts";
+import type { OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 
 /** One HTTP hop. It never follows a redirect: the executor asks permission of every new host first. */
 export type DiscoveryOpen = (input: {
@@ -102,6 +104,10 @@ export type DiscoveryOpen = (input: {
 }>;
 
 export interface DiscoveryRuntime {
+  /** Previously saved, readable publisher pages; never inferred from a hostname. */
+  readonly readOfficialPages?: () => Promise<readonly { canonicalUrl: string; text: string }[]>;
+  /** Saved official-page links establish authority for government and vendor hosts. */
+  readonly officialLinkingPageFor?: (url: string) => OfficialLinkingPage | null | Promise<OfficialLinkingPage | null>;
   readonly open: DiscoveryOpen;
   /** The runner's shared per-host spacing. */
   readonly spaceOut: (host: string) => Promise<void>;
@@ -299,6 +305,7 @@ export async function walkMeetingsDiscoveryNeed(
   runtime: DiscoveryRuntime,
 ): Promise<MeetingsDiscoveryAttempt> {
   const startedAt = runtime.now();
+  const officialPages = [...await runtime.readOfficialPages?.() ?? []];
   const attemptId = discoveryAttemptId(need.jurisdictionId, startedAt);
   const workId = discoveryWorkId(need.jurisdictionId);
   const maxRequests = runtime.maxRequestsPerWalk ?? DEFAULT_MAX_REQUESTS_PER_WALK;
@@ -334,6 +341,9 @@ export async function walkMeetingsDiscoveryNeed(
     const put = async (artifact: Artifact, bytes: string): Promise<{ readonly id: string | null; readonly why: string | null }> => {
       try {
         const stored = await runtime.vault(artifact, bytes);
+        if (stored.stored && artifact.tier !== "RESTRICTED_RAW" && status >= 200 && status < 300) {
+          officialPages.push({canonicalUrl: artifact.canonicalUrl, text: bytes});
+        }
         return stored.stored ? { id: artifact.id, why: null } : { id: null, why: stored.why };
       } catch (error) {
         return { id: null, why: (error instanceof Error ? error.message : String(error)).slice(0, 300) };
@@ -555,10 +565,11 @@ export async function walkMeetingsDiscoveryNeed(
    * attested: the recorded address, the current official site a route hint records with its evidence, or a host
    * one of those named by its own redirect. Before any homepage is read, the first origin tried.
    */
-  const pageIdentity = (pageLabel: string | null): OfficialPageIdentity => ({
+  const pageIdentity = async (pageLabel: string | null, pageUrl: string): Promise<OfficialPageIdentity> => ({
     bodyId: need.jurisdictionId,
     name: need.name,
     pageLabel,
+    linkingPage: officialLinkingPageFrom(pageUrl, officialPages) ?? await runtime.officialLinkingPageFor?.(pageUrl),
     officialHost: new URL(homeOrigin ?? origins[0] ?? "https://invalid.invalid").host,
     stateCode: need.stateCode,
     now: runtime.now(),
@@ -737,7 +748,7 @@ export async function walkMeetingsDiscoveryNeed(
                   ? "a witness corroborates a sitting and is never one on its own"
                   : `no content check covers a ${hint.kind.toLowerCase()} yet: a lead, not a route`),
             }
-          : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, pageIdentity(label));
+          : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, await pageIdentity(label, got.finalUrl));
       const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail, via };
       if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got?.artifactId ?? null });
       else if (candidate.basis !== "RECIPE") leads.push(base);
@@ -772,7 +783,7 @@ export async function walkMeetingsDiscoveryNeed(
         checked += 1;
         const check = got === null
           ? { verdict: "NOT_CONFIRMED" as const, count: null, detail: "the route could not be read this walk" }
-          : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, pageIdentity(null));
+          : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, await pageIdentity(null, got.finalUrl));
         const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail, via };
         if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got?.artifactId ?? null });
         else leads.push(base);
@@ -840,7 +851,7 @@ export async function walkMeetingsDiscoveryNeed(
           for (const c of [...direct, ...selfPage, ...onPage].slice(0, 3)) {
             const body = c.url === hit.url ? page : (tried.add(c.url), await get(c.url, "endpoint", ACCEPT_PAGE));
             if (body === null) continue;
-            const check = verifyEndpointBody(c, { status: body.status, body: body.body, finalUrl: body.finalUrl }, pageIdentity(null));
+            const check = verifyEndpointBody(c, { status: body.status, body: body.body, finalUrl: body.finalUrl }, await pageIdentity(null, body.finalUrl));
             const via: Via = onPage.includes(c) ? { page: page.finalUrl, artifactId: page.artifactId } : null;
             const base = { vendor: c.vendor, url: c.url, basis: "SEARCH" as const, evidence: `search "${q.query}" found ${hit.url}`, detail: check.detail, via };
             if (check.verdict !== "YIELDED") {

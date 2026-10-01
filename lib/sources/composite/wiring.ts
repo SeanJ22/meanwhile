@@ -15,7 +15,7 @@ import { makeIqm2Source } from "../iqm2/index.ts";
 import { makePimaEduSource } from "../pima-edu/index.ts";
 import { makeRevizeSource } from "../revize/index.ts";
 import { makeSchedulePageSource } from "../schedulepage/index.ts";
-import { makeOfficialPageEventsSource } from "../official-page-events/index.ts";
+import { makeOfficialPageEventsSource, officialLinkingPageFrom } from "../official-page-events/index.ts";
 import { makeDocumentListingSource } from "../document-listing/index.ts";
 import { makeSuiteOneSource } from "../suiteone/index.ts";
 import {
@@ -308,6 +308,8 @@ export function buildCompositeSource(
      * SOURCE_WIRING row, and a SOURCE_WIRING partition never reads a derived one.
      */
     derivedRows?: readonly BodySourceWiring[];
+    /** Already held official pages establish external calendar-host authority. */
+    officialPages?: readonly {canonicalUrl:string;text:string}[];
   } = {},
 ): CompositeSource {
   if (options.derivedRows !== undefined && options.meetingPartitions !== undefined) {
@@ -329,7 +331,9 @@ export function buildCompositeSource(
     // No wired body, no child — including Legistar, whose own client list is
     // only consulted once a wiring row routes a body to it.
     if (rows.length === 0) continue;
-    const child = capability.make(rows, options.fetchImpl);
+    const child = capability.name === 'official-page-events'
+      ? makeOfficialPageEventsSource(rows,options.fetchImpl,url=>officialLinkingPageFrom(url,options.officialPages ?? [])) as ReportingMeetingSource<unknown>
+      : capability.make(rows, options.fetchImpl);
     if (child.name !== capability.name) {
       // The capability name is what maps a snapshot's per-source report back
       // to the bodies it serves; a drift here would misattribute failures.

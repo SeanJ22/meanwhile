@@ -1,25 +1,4 @@
-/**
- * **COMPLIANT SEARCH-INDEX POINTERS FOR THE SCOUT LANE.** (2026-09-19.)
- *
- * Scouts hit NO_PROGRESS not because a candidate has no site but because every
- * general web-search route they could reach was robots-disallowed or
- * captcha-walled (DuckDuckGo, Mojeek, Marginalia, TAPinto). A live test against
- * real scout misses showed Brave and Exa surface the candidate's own campaign
- * site at #1 for races the scouts gave up on (Rogers, Hagaman, Rubino), while
- * still finding nothing for the genuinely siteless (Bradstreet, Fitting) — so
- * this recovers the reachable-but-blocked and leaves the true absences to the
- * durable-absence clock.
- *
- * **The compliance boundary is exact.** These are APIs we hold a key for, so the
- * lookup is authorized access, not a crawl, and does not pass the robots gate.
- * But the lookup returns POINTERS ONLY — a URL and its title. No provider is
- * asked for page content (Exa's `contents` object is omitted; Brave's default
- * pointer response carries none to strip), and neither `outputSchema` nor an
- * `/answer` endpoint is used, because a synthesized claim has no verifiable path
- * back to a source. The model must then open each pointer with fetch_public or
- * browse, and THOSE read and record robots.txt (never a gate) and vault with provenance. Nothing here is
- * vaulted and nothing is evidence.
- */
+/** Search excerpts remain leads until verified against the official source. */
 
 import type { ScoutSearch, SearchHit, SearchProvidersResult } from "./scout-contract.ts";
 
@@ -69,6 +48,8 @@ const EXA_ENDPOINT = "https://api.exa.ai/search";
 /** The budget's host keys; the same hosts the discovery walk's per-day cap is kept under (`SEARCH_HOSTS`). */
 export const SCOUT_SEARCH_HOSTS = { brave: new URL(BRAVE_ENDPOINT).host, exa: new URL(EXA_ENDPOINT).host } as const;
 const DEFAULT_TIMEOUT_MS = 8_000;
+/** Covers the bounded HTTP call and delayed budget release after a crashed process. */
+export const SEARCH_REQUEST_LIFETIME_MS = 120_000;
 const DEFAULT_PER_PROVIDER = 5;
 const DEFAULT_MAX_HITS = 8;
 
@@ -104,6 +85,7 @@ export async function braveSearch(
   const u = new URL(BRAVE_ENDPOINT);
   u.searchParams.set("q", query);
   u.searchParams.set("count", String(count));
+  u.searchParams.set("extra_snippets", "true");
   const res = await withTimeout(timeoutMs, (signal) =>
     fetchImpl(u.toString(), {
       method: "GET",
@@ -112,16 +94,16 @@ export async function braveSearch(
     }),
   );
   const body = await res.text();
-  if (!res.ok) throw new Error(`brave HTTP ${res.status}: ${body.slice(0, 160)}`);
-  const json = JSON.parse(body) as { web?: { results?: { title?: string; url?: string }[] } };
+  if (!res.ok) throw new Error(`brave HTTP ${res.status}: ${body.split(key).join("[REDACTED]").slice(0, 160)}`);
+  const json = JSON.parse(body) as { web?: { results?: { title?: string; url?: string; description?: string; text?: string; extra_snippets?: string[] }[] } };
   const results = json.web?.results ?? [];
   const hits: SearchHit[] = results
-    .filter((r): r is { title?: string; url: string } => typeof r.url === "string" && r.url.length > 0)
-    .map((r) => ({ url: r.url, title: (r.title ?? "").slice(0, 200), provider: "brave" as const }));
+    .filter(r => typeof r.url === "string" && r.url.length > 0)
+    .map((r) => ({ url: r.url!, title: (r.title ?? "").slice(0, 200), provider: "brave" as const, text: [r.description, ...(r.extra_snippets ?? [])].filter(Boolean).join("\n").slice(0, 6000) }));
   return { hits, bytes: body.length };
 }
 
-/** Exa neural/keyword search — URL-only (no `contents`, no synthesis). */
+/** Exa neural/keyword search with source excerpts and no synthesis. */
 export async function exaSearch(
   query: string,
   key: string,
@@ -130,8 +112,8 @@ export async function exaSearch(
   numResults: number,
   includeDomains?: readonly string[],
 ): Promise<{ readonly hits: SearchHit[]; readonly bytes: number }> {
-  // URL-only: NO `contents` object, NO outputSchema, NOT the /answer endpoint. type "fast": a URL, not reasoning.
-  const payload: Record<string, unknown> = { query, type: "fast", numResults };
+  // Source text, never synthesized answers; the existing paid-search budget admits each call.
+  const payload: Record<string, unknown> = { query, type: "fast", numResults, contents: {text: {maxCharacters:6000}} };
   if (includeDomains && includeDomains.length > 0) payload.includeDomains = [...includeDomains];
   const res = await withTimeout(timeoutMs, (signal) =>
     fetchImpl(EXA_ENDPOINT, {
@@ -142,12 +124,12 @@ export async function exaSearch(
     }),
   );
   const body = await res.text();
-  if (!res.ok) throw new Error(`exa HTTP ${res.status}: ${body.slice(0, 160)}`);
-  const json = JSON.parse(body) as { results?: { title?: string; url?: string }[] };
+  if (!res.ok) throw new Error(`exa HTTP ${res.status}: ${body.split(key).join("[REDACTED]").slice(0, 160)}`);
+  const json = JSON.parse(body) as { results?: { title?: string; url?: string; description?: string; text?: string; extra_snippets?: string[] }[] };
   const results = json.results ?? [];
   const hits: SearchHit[] = results
-    .filter((r): r is { title?: string; url: string } => typeof r.url === "string" && r.url.length > 0)
-    .map((r) => ({ url: r.url, title: (r.title ?? "").slice(0, 200), provider: "exa" as const }));
+    .filter(r => typeof r.url === "string" && r.url.length > 0)
+    .map((r) => ({ url: r.url!, title: (r.title ?? "").slice(0, 200), provider: "exa" as const, text: (r.text ?? "").slice(0, 6000) }));
   return { hits, bytes: body.length };
 }
 
@@ -165,7 +147,7 @@ export function makeScoutSearch(options: ScoutSearchOptions): ScoutSearch | null
   const exaKey = options.exaKey?.trim() || null;
   if (!braveKey && !exaKey) return null;
   const fetchImpl = options.fetchImpl ?? ((url, init) => fetch(url, init as RequestInit) as unknown as ReturnType<FetchLike>);
-  const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
+  const timeoutMs = Math.min(options.timeoutMs ?? DEFAULT_TIMEOUT_MS, SEARCH_REQUEST_LIFETIME_MS / 2);
   const perProvider = options.perProvider ?? DEFAULT_PER_PROVIDER;
   const maxHits = options.maxHits ?? DEFAULT_MAX_HITS;
 
@@ -183,7 +165,7 @@ export function makeScoutSearch(options: ScoutSearchOptions): ScoutSearch | null
     // Admission is taken one provider at a time, so two requests cannot both
     // pass the last unit of the per-cycle cap. A budget that throws (its ledger
     // could not be read) is a refusal: nothing is sent.
-    const jobs: typeof candidates = [];
+    const jobs: (typeof candidates[number] & { pending: Promise<PromiseSettledResult<{ hits: SearchHit[]; bytes: number }>> })[] = [];
     for (const candidate of candidates) {
       let refused: string | null;
       try {
@@ -191,15 +173,22 @@ export function makeScoutSearch(options: ScoutSearchOptions): ScoutSearch | null
       } catch (error) {
         refused = `the paid-search budget could not be read (${error instanceof Error ? error.message : String(error)})`;
       }
-      if (refused === null) jobs.push(candidate);
+      if (refused === null) jobs.push({ ...candidate, pending: candidate.run().then(
+        value => ({ status: 'fulfilled' as const, value }), reason => ({ status: 'rejected' as const, reason }),
+      ) });
       else errors.push(`${candidate.name}: not sent, ${refused}`.slice(0, 200));
     }
 
     let settled: PromiseSettledResult<{ hits: SearchHit[]; bytes: number }>[];
     try {
-      settled = await Promise.allSettled(jobs.map((j) => j.run()));
+      settled = await Promise.all(jobs.map(j => j.pending));
     } finally {
-      for (const j of jobs) await options.budget.done(j.host);
+      // Both slots live in one durable budget row. Release serially so our own
+      // writes cannot conflict, and still release the second if the first fails.
+      for(const job of jobs) {
+        try { await options.budget.done(job.host); }
+        catch { errors.push(`${job.name}: budget slot release failed; acquisition ended but shared capacity needs recovery`); }
+      }
     }
     let bytesFetched = 0;
     let requestCount = 0;

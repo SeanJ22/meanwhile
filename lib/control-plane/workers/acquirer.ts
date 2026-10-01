@@ -1,3 +1,4 @@
+import { sourceReliabilityKey, type SourceReliability } from "../scheduler/scout-reliability.ts";
 import { ACCESS_CONTROL_STATUSES, type AccessControlKind } from "../../hunt/access-control.ts";
 import type { WorkerRef } from "../attempt.ts";
 import { requireCapability, type CapabilityGrant } from "../capability.ts";
@@ -15,6 +16,7 @@ export interface VaultedResearchEvidence {
   readonly bytes: Uint8Array;
 }
 export interface AcquirerRuntime {
+  readonly sourceReliability?: readonly SourceReliability[];
   /** Build through buildScoutToolkit: permission, public URL, rate limits, browser and vault stay shared. */
   readonly toolkit: ScoutToolkit;
   readonly readVault: (artifactId: string) => Promise<VaultedResearchEvidence>;
@@ -187,6 +189,12 @@ export async function runAcquirer(input: AcquirerWorkerInput, runtime: AcquirerR
   } catch {
     block("CAPABILITY_DENIED", "The Attempt lacks the network, vault-write, or browser capability needed for this route.", false);
     addStep("permission", "Capability denied before permission/network tools were called.", "NOT_WALKED", [...artifactIds], "NOT_ATTEMPTED");
+    return result("BLOCKED");
+  }
+  const reliability = runtime.sourceReliability?.find(row => row.source === sourceReliabilityKey(route.url));
+  if (reliability?.retryAt && Date.parse(reliability.retryAt) > Date.parse(stamp())) {
+    block("RATE_LIMITED", "Source backoff until " + reliability.retryAt + "; Detective must try a different route. " + reliability.detail, true);
+    addStep("source-backoff", "Known source outage; no repeated request sent.", "NOT_WALKED", [...artifactIds], "NOT_ATTEMPTED");
     return result("BLOCKED");
   }
   for (const tool of ["read_permission", route.retrieval] as const) {

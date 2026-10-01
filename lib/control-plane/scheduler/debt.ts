@@ -147,7 +147,7 @@ export function retryable(
   debts: readonly FreshnessDebt[],
   nowMs: number,
 ): readonly FreshnessDebt[] {
-  return debts.filter((d) => Date.parse(d.retryAt) <= nowMs);
+  return debts.filter((d) => d.cause !== "AWAITING_ADAPTER" && Date.parse(d.retryAt) <= nowMs);
 }
 
 /**

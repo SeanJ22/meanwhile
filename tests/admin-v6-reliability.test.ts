@@ -25,5 +25,13 @@ test("the read is one bounded statement over completed plain-code reads that mad
   assert.match(RELIABILITY_SQL, /cp_log_worker_results/);
   assert.match(RELIABILITY_SQL, /'ACQUIRER'/);
   assert.match(RELIABILITY_SQL, /COMPLETED/);
-  assert.match(RELIABILITY_SQL, /NOT IN \('PERMISSION_DENIED', 'PERMISSION_UNKNOWN'\)/, "an old robots-only refusal is a wall, not an outage, so it is not a failed attempt");
+  assert.match(RELIABILITY_SQL, /blocker_codes/, "the blocker codes are projected so a robots-only refusal can be set aside by the reducer");
+});
+
+test("an old refusal recorded for robots.txt alone is not a failed attempt, but a real failure on the same source is", () => {
+  const withCodes = (url: string, endedAt: string, blockerCodes: string[]) => ({ url, verdict: "BLOCKED", endedAt, blockerText: ["refused"], blockerCodes });
+  const walled = reliabilityView([withCodes("https://walled.gov/a", "2026-09-01T00:00:00.000Z", ["PERMISSION_DENIED"]), withCodes("https://walled.gov/b", "2026-09-01T01:00:00.000Z", ["PERMISSION_UNKNOWN"])]);
+  assert.deepEqual(walled, [], "a source whose only history is robots refusals is not listed as failing");
+  const real = reliabilityView([withCodes("https://down.gov/a", "2026-09-01T00:00:00.000Z", ["PERMISSION_DENIED"]), withCodes("https://down.gov/b", "2026-09-01T01:00:00.000Z", ["TRANSPORT_FAILED"])]);
+  assert.deepEqual(real.map((s) => [s.source, s.consecutiveFailures]), [["https://down.gov", 1]]);
 });

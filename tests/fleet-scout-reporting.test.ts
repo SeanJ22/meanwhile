@@ -6,6 +6,7 @@ import { FIRST_BACKOFF_MINUTES } from "../lib/control-plane/scheduler/debt.ts";
 import { nextAutonomousOperation, runAutonomousCoordinator, type AutonomousCoordinatorRuntime } from "../lib/control-plane/workers/coordinator.ts";
 import { scoutTaskAdmission } from "../lib/control-plane/workers/scout-scheduling.ts";
 import { autonomousHarness } from "./helpers/autonomous-fleet.ts";
+import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 
 test("Admin joins the exact Scout denial backoff without authorizing the missing transport", async () => {
   const h = await autonomousHarness({ plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
@@ -38,14 +39,25 @@ test("Admin joins the exact Scout denial backoff without authorizing the missing
 
 test("Scout continuation reporting uses the coordinator's family backoff and actual continuation identity", async () => {
   const h = await autonomousHarness({ plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
-  const runtime: AutonomousCoordinatorRuntime = { ...h.runtime, scoutFor: () => ({ lane: "BOUNDED_MODEL_WORKER",
+  const runtime: AutonomousCoordinatorRuntime = { ...h.runtime, rollingCeilingUsd: 1, scoutFor: () => ({ lane: "BOUNDED_MODEL_WORKER",
     workerFor: ({ holder }) => ({ role: "SCOUT", provider: "offline-bounded-control", version: "1", instance: holder }),
-    run: async () => ({ kind: "DISPOSED", ranAs: "BOUNDED_MODEL_WORKER", endedAt: h.now(),
+    run: async request => {
+      const result: ScoutResult = { formatVersion: 1, attemptId: request.attemptId, obligationId: request.obligation.obligation.id,
+        routeTaskId: request.routeTaskId, workItemId: h.item.id, subjectId: h.item.subject, routeId: null,
+        recordClass: h.item.autonomousPlan!.contract.recordClass, providerId: null, reason: "Offline continuation fixture",
+        outcome: "BLOCKED", stoppedBy: "MODEL", rungs: [], distinctEvidenceRungs: 0, candidates: [], findings: [],
+        nextRungs: [`Try an alternate official source after ${request.attemptId}`], unverified: [], narrative: "An untried route remains.",
+        worker: { provider: "offline-bounded-control", model: "fixture", modelReported: null },
+        usage: { inputTokens: 0, outputTokens: 0, cacheReadInputTokens: 0, cacheCreationInputTokens: 0, turns: 0, toolCalls: 0 },
+        usd: 0, elapsedMs: 0, artifactIds: [], methodCandidateIds: [], refusal: null, startedAt: h.now(), recordedAt: h.now() };
+      await h.repos.scoutResults.append(h.item.id, request.attemptId, result, result.recordedAt);
+      return { kind: "DISPOSED", ranAs: "BOUNDED_MODEL_WORKER", endedAt: h.now(),
       cost: { ...ZERO_COST, requestCount: 0, inputTokens: 0, outputTokens: 0, usd: 0 }, artifacts: [],
       disposition: { disposition: "BLOCKED_CURRENTLY", observation: null, permission: "ALLOWED", transport: "OTHER_NAMED_FAILURE",
-        note: "Offline bounded search stopped without settling its obligation." }, detail: "Unresolved fixture search; no civic source claim." }) }) };
+        note: "Offline bounded search stopped without settling its obligation." }, detail: "Unresolved fixture search; no civic source claim." };
+    } }) };
   const first = await runAutonomousCoordinator(runtime, { maximum: 1, concurrency: 1 });
-  assert.equal(first.dispatches[0].outcome, "WORKED");
+  assert.equal(first.dispatches[0].outcome, "WORKED", first.dispatches[0].detail);
   const task = (await h.repos.routeTasks.mustRead(first.dispatches[0].routeTaskId!)).value;
   async function reading() {
     return scoutTaskAdmission(task, (await h.repos.routeTasks.list()).map(row => row.value),

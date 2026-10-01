@@ -20,17 +20,43 @@ import {
   batchRequestBody,
   readMessageBatchResults,
   runSingleRequestBatch,
+  backgroundBatchTransport,
 } from "../lib/control-plane/model-batch.ts";
 import { synthesizeForComparison } from "../lib/ask/model-comparison.ts";
 import type { EvidencePack } from "../lib/ask/evidence.ts";
+import { MODELS } from "../lib/models.ts";
+import { modelResponseUsd } from "../lib/control-plane/fleet-safety.ts";
+
+test("unattended reviews coalesce, correlate out-of-order results, cache and charge the batch price", async () => {
+  let submitted: { custom_id: string; params: Record<string, unknown> }[] = [];
+  let posts = 0;
+  const transport = backgroundBatchTransport({ apiKey: "test", fetchImpl: async (url, init) => {
+    if (String(url) === MESSAGE_BATCHES_ENDPOINT) {
+      posts++;
+      submitted = JSON.parse(String(init?.body)).requests;
+      assert.equal((submitted[0].params.cache_control as { type: string }).type, "ephemeral");
+      return jsonResponse(200, { id: "mb", processing_status: "ended", results_url: "https://provider/results" });
+    }
+    return jsonResponse(200, submitted.slice().reverse().map(entry => JSON.stringify({ custom_id: entry.custom_id,
+      result: { type: "succeeded", message: { model: entry.params.model, stop_reason: "end_turn", content: [],
+        usage: { input_tokens: 100, output_tokens: 10, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 } } } })).join("\n"), true);
+  } });
+  const request = { max_tokens: 10, system: [], tools: [], messages: [] };
+  const results = await Promise.all([transport({ ...request, model: MODELS.haiku.model }), transport({ ...request, model: MODELS.sonnet.model })]);
+  assert.equal(posts, 1);
+  assert.equal(submitted.length, 2);
+  assert.deepEqual(results.map(result => result.model), [MODELS.haiku.model, MODELS.sonnet.model]);
+  assert.ok(results.every(result => result.batch));
+  assert.equal(modelResponseUsd(results[0]), modelResponseUsd({ ...results[0], batch: false })! / 2);
+});
 
 const jsonResponse = (status: number, body: unknown, text = false): Response =>
   new Response(text ? String(body) : JSON.stringify(body), { status, headers: { "content-type": text ? "application/x-ndjson" : "application/json" } });
 
-test("PC-8: every registered lane defaults OFF, and only its own flag switches it on", () => {
+test("each unattended lane uses its declared default and its own flag", () => {
   for (const lane of Object.keys(BATCH_LANES) as (keyof typeof BATCH_LANES)[]) {
     assert.equal(BATCH_LANES[lane].readerFacing, false, `${lane} is not reader-facing`);
-    assert.equal(batchEnabledFor(lane, {}), false, `${lane} is off with no environment`);
+    assert.equal(batchEnabledFor(lane, {}), BATCH_LANES[lane].defaultEnabled);
     assert.equal(batchEnabledFor(lane, { [BATCH_LANES[lane].flag]: "0" }), false);
     assert.equal(batchEnabledFor(lane, { [BATCH_LANES[lane].flag]: "yes" }), false, "anything but 1/true/on is off");
     assert.equal(batchEnabledFor(lane, { [BATCH_LANES[lane].flag]: "1" }), true);

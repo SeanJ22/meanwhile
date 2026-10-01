@@ -1,3 +1,5 @@
+import { readSourceReliability } from "../scheduler/scout-reliability.ts";
+import { readFieldManual, writeFieldManual, newFieldManualEntry } from "../field-manual.ts";
 import { performance } from "node:perf_hooks";
 import { ZERO_COST, type WorkerRef } from "../attempt.ts";
 import { defaultGrant, requireCapability } from "../capability.ts";
@@ -17,7 +19,6 @@ import { runAcquirer } from "./acquirer.ts";
 import { runDetective } from "./detective.ts";
 import { runEngineeringWorker } from "./engineering.ts";
 import { researchLearningEntries } from "./field-manual-learnings.ts";
-import { writeFieldManualDiscoveries } from "../scheduler/field-manual-scout.ts";
 import { researchVaultResolver } from "./vault-object.ts";
 import { assertFleetResult, type FleetResult, type WorkerUsage } from "./types.ts";
 import { evidenceProjection, FLEET_POLICY_VERSION, type FleetRuntime } from "./runtime.ts";
@@ -106,7 +107,6 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
   const worker: WorkerRef = {role:spec.role,provider:"we-the-people",version:RESEARCH_WORKER_VERSION,instance:holder};
   return {lane:"DETERMINISTIC",workerFor:()=>worker,run:async ({attemptId,workItemId,routeTaskId,bound}) => {
     const started = performance.now();
-    const deadline = Date.now() + bound.maxWallMs;
     const item = (await tools.repos.workItems.mustRead(workItemId)).value;
     const attempt = await tools.repos.attempts.mustRead(attemptId);
     const baseGrant = defaultGrant({role:spec.role,project:item.project,policyVersion:FLEET_POLICY_VERSION,grantedAt:attempt.value.startedAt});
@@ -118,19 +118,18 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
     let measuredToolkit: ReturnType<typeof buildScoutToolkit> | undefined;
     try {
       requireCapability(grant,"VAULT_READ_SANITIZED");
+      const learned = await readFieldManual(tools.repos, {role:spec.role === "ENGINEERING" ? "ENGINEER" : spec.role as "ACQUIRER" | "DETECTIVE", recordClass:spec.contract.recordClass});
       if (spec.role === "ACQUIRER") {
         if (!spec.acquisition || spec.acquisition.route.subjectId !== item.subject) throw new Error("ACQUIRER_TASK_BINDING_REFUSED");
         const toolkit = buildScoutToolkit({obligation:scheduledWorkerObligation(task),route:null,providerId:null,attemptId,workItemId,routeTaskId,
-          holder,bound:{...RESEARCH_BOUNDS.perDispatch,maxWallMs:Math.min(bound.maxWallMs,RESEARCH_BOUNDS.perDispatch.maxWallMs)},now:tools.now,
-          inherited:{artifactIds:[],summary:"Grounded acquisition through the existing toolkit."},...durableResearchTools(tools,{project:item.project,attemptId,workItemId,routeTaskId}),
+          holder,bound:RESEARCH_BOUNDS.perDispatch,now:tools.now,
+          inherited:{artifactIds:[],summary:learned.projection.lines.join("\n"),manualEntries:learned.store.entries},...durableResearchTools(tools,{project:item.project,attemptId,workItemId,routeTaskId}),
           openBytes: async request => {
-            const remaining = deadline-Date.now();
-            if (remaining <= 0) return {status:null,bytes:new Uint8Array(),contentType:"",finalUrl:null,durationMs:0,transportError:"ACQUIRER_WALL_BOUND_EXCEEDED"};
-            return (tools.openBytesFor?.(item.subject)??tools.openBytes??realOpenBytes)({...request,timeoutMs:Math.min(request.timeoutMs,remaining)});
+            return (tools.openBytesFor?.(item.subject)??tools.openBytes??realOpenBytes)(request);
           }});
         measuredToolkit = toolkit;
         result = await runAcquirer({...spec.acquisition,attemptId,worker,project:item.project,workItemId,grant,now:tools.now},
-          {toolkit,readVault:researchVaultResolver(tools.repos,tools.store,item.project),
+          {toolkit,sourceReliability:await readSourceReliability(tools.repos),readVault:researchVaultResolver(tools.repos,tools.store,item.project),
             authorizeInheritedHeld: inherited => authorizeInheritedHeldArtifact(tools.repos,inherited,tools.siblingHeldRootFor)});
         requestCount = toolkit.requestCount; bytesFetched = toolkit.bytesFetched;
       } else if (spec.role === "DETECTIVE") {
@@ -153,8 +152,13 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
       // the write-with-no-read gap the scouts had, now closed one role up (owner directive 2026-09-19).
       // A write-back never fails a worker whose result already stands.
       try {
-        const learnings = researchLearningEntries(result, tools.now());
-        if (learnings.length > 0) await writeFieldManualDiscoveries(tools.repos, learnings, tools.now());
+        const learnings = [...researchLearningEntries(result, tools.now())];
+        if (result.role === "ACQUIRER") learnings.push(newFieldManualEntry("acquirer",result.source.url,{
+          role:"SHARED",kind:"SOURCE_RELIABILITY",title:result.source.publisher,
+          summary:result.verdict+": "+result.blockers.map(b=>b.description).join("; "),
+          outcome:result.verdict === "ACQUIRED"?"YIELDED":"FAILED",url:result.source.url,
+          observedAt:tools.now(),recordClasses:[result.source.recordClass],payload:{source:result.source,verdict:result.verdict,walk:result.walk}}));
+        if (learnings.length > 0) await writeFieldManual(tools.repos, learnings, tools.now());
       } catch { /* field-manual write-back is best-effort; the worker result is authoritative */ }
       const cost = {...ZERO_COST,durationMs:Math.round(performance.now()-started),requestCount,bytesFetched};
       const ids = result.artifactIds;

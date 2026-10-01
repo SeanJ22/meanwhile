@@ -297,7 +297,7 @@ test("research.pause records one versioned paid-lane intent and idempotent recei
   assert.equal(readIntents(saved).paused, true);
   assert.equal(readIntents(saved).runnerPause.paused, false);
   const applied = readIntents(saved);
-  const lane = modelLaneClosure({ scheduledBlackout: false, dry: false, noModel: false,
+  const lane = modelLaneClosure({ dry: false, noModel: false,
     credentialConfigured: true, credentialVar: "ANTHROPIC_API_KEY",
     activation: { promotionEnabled: true, openRecordClasses: ["OFFICIAL_ROSTER"] },
     paused: applied.paused, pauseIntentId: applied.pauseIntentId,

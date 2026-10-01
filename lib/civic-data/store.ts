@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { and, desc, eq, getTableColumns, inArray, like, sql } from "drizzle-orm";
 
 import { getDb } from "../db/index.ts";
+import { runtimeCivicReadCache } from "../db/civic-read-cache.ts";
 import { civicDataCandidateEvents, civicDataCandidates, civicDataPromotions, civicDataReaderProjections, civicDataPayloadParts } from "../db/schema.ts";
 import { CivicPayloadParts } from "./payload-parts.ts";
 import {
@@ -1709,12 +1710,49 @@ function postgresCandidateEventRowToEvent(row: PostgresCandidateEventRow): Candi
 /** Production store: append-only events plus one atomic canonical projection. */
 export class PostgresRoutineDataStore implements RoutineDataStore {
   private readonly db = getDb();
+  private readonly readCache = runtimeCivicReadCache();
   private readonly payloadParts = new CivicPayloadParts({
     existing: async hashes => (await this.db.select({ hash: civicDataPayloadParts.hash }).from(civicDataPayloadParts)
       .where(inArray(civicDataPayloadParts.hash, [...hashes]))).map(row => row.hash),
     write: async parts => { await this.db.insert(civicDataPayloadParts).values([...parts]).onConflictDoNothing(); },
-    read: async hashes => this.db.select().from(civicDataPayloadParts).where(inArray(civicDataPayloadParts.hash, [...hashes])),
+    read: async hashes => {
+      const values = async (keys: readonly string[]) => this.db.select().from(civicDataPayloadParts)
+        .where(inArray(civicDataPayloadParts.hash, [...keys]));
+      return this.readCache ? this.readCache.rows({ namespace: "payload-part", keys: hashes,
+        // The existing content address is the version of this immutable part.
+        versions: async keys => keys.map(key => ({ key, etag: key })), values, keyOf: row => row.hash,
+      }) : values(hashes);
+    },
   });
+
+  private async candidateRows<T extends { readonly id: string }>(
+    ids: readonly string[], namespace: string, values: (keys: readonly string[]) => Promise<readonly T[]>,
+  ): Promise<readonly T[]> {
+    if (!this.readCache || ids.length === 0) return ids.length ? values(ids) : [];
+    return this.readCache.rows({ namespace, keys: ids, values, keyOf: row => row.id,
+      versions: async keys => this.db.select({ key: civicDataCandidates.id,
+        etag: sql<string>`concat(${civicDataCandidates}.xmin::text, '/', ${civicDataCandidates}.ctid::text)`,
+      }).from(civicDataCandidates).where(inArray(civicDataCandidates.id, [...keys])),
+    });
+  }
+
+  private async promotionRows(recordClass: RoutineRecordClass, scopes: readonly string[]) {
+    const values = async (keys: readonly string[]) => this.db
+      .select({ ...getTableColumns(civicDataPromotions), latestConfirmation: LATEST_CONFIRMATION_DETAIL })
+      .from(civicDataPromotions).where(and(eq(civicDataPromotions.recordClass, recordClass),
+        inArray(civicDataPromotions.scope, keys.map(key => key.slice(recordClass.length + 1)))));
+    const keys = scopes.map(scope => projectionKey(recordClass, scope));
+    if (!this.readCache || keys.length === 0) return keys.length ? values(keys) : [];
+    return this.readCache.rows({ namespace: "promotion", keys, values, keyOf: row => row.key,
+      versions: async selected => this.db.select({ key: civicDataPromotions.key,
+        etag: sql<string>`concat(${civicDataPromotions}.xmin::text, '/', ${civicDataPromotions}.ctid::text)`,
+        latestConfirmation: LATEST_CONFIRMATION_DETAIL,
+      }).from(civicDataPromotions).where(and(eq(civicDataPromotions.recordClass, recordClass),
+        inArray(civicDataPromotions.key, [...selected]))),
+      // Confirmations are append-only events, so they need no pointer UPDATE.
+      freshen: (row, version) => ({ ...row, latestConfirmation: version.latestConfirmation }),
+    });
+  }
   private writeAuthority: RuntimeAuthorityEnvelope | null = null;
 
   async eventObservedAt(recordClass: RoutineRecordClass, scope: string, _requestedAt: string): Promise<string> {
@@ -1882,7 +1920,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   async readCandidate(candidateId: string): Promise<CandidateVersionRecord | null> {
-    const [row] = await this.db.select().from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
+    const [row] = await this.candidateRows([candidateId], "candidate", async ids =>
+      this.db.select().from(civicDataCandidates).where(inArray(civicDataCandidates.id, [...ids])));
     return row ? { ...rowToCandidate(row), candidate: await this.payloadParts.load(row.candidate) as RoutineCandidate } : null;
   }
 
@@ -1892,11 +1931,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
-    const [row] = await this.db
-      .select({ ...getTableColumns(civicDataPromotions), latestConfirmation: LATEST_CONFIRMATION_DETAIL })
-      .from(civicDataPromotions)
-      .where(and(eq(civicDataPromotions.recordClass, recordClass), eq(civicDataPromotions.scope, scope)))
-      .limit(1);
+    const [row] = await this.promotionRows(recordClass, [scope]);
     return row ? { ...postgresPromotionRowToProjection<T>(row), payload: await this.payloadParts.load(row.payload) as T } : null;
   }
 
@@ -1905,13 +1940,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     scopes: readonly string[],
   ): Promise<readonly PromotedProjection<T>[]> {
     if (scopes.length === 0) return [];
-    const rows = await this.db
-      .select({ ...getTableColumns(civicDataPromotions), latestConfirmation: LATEST_CONFIRMATION_DETAIL })
-      .from(civicDataPromotions)
-      .where(and(
-        eq(civicDataPromotions.recordClass, recordClass),
-        inArray(civicDataPromotions.scope, [...scopes]),
-      ));
+    const rows = await this.promotionRows(recordClass, scopes);
     return Promise.all(rows.map(async row => ({ ...postgresPromotionRowToProjection<T>(row), payload: await this.payloadParts.load(row.payload) as T })));
   }
 
@@ -2002,18 +2031,19 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async readCandidates(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {
     if (candidateIds.length === 0) return [];
-    const rows = await this.db.select().from(civicDataCandidates).where(inArray(civicDataCandidates.id, [...candidateIds]));
+    const rows = await this.candidateRows(candidateIds, "candidate", async ids =>
+      this.db.select().from(civicDataCandidates).where(inArray(civicDataCandidates.id, [...ids])));
     return Promise.all(rows.map(async row => ({ candidateId: row.id, record: { ...rowToCandidate(row), candidate: await this.payloadParts.load(row.candidate) as RoutineCandidate } })));
   }
 
   async readCandidateProof(candidateId: string): Promise<CandidateVersionRecord | null> {
-    const [row] = await candidateProofRead(this.db, [candidateId]);
+    const [row] = await this.candidateRows([candidateId], "candidate-proof", async ids => candidateProofRead(this.db, ids));
     return row ? { ...candidateProofRowToRecord(row), candidate: await this.payloadParts.load(row.candidate) as RoutineCandidate } : null;
   }
 
   async readCandidateProofs(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {
     if (candidateIds.length === 0) return [];
-    const rows = await candidateProofRead(this.db, candidateIds);
+    const rows = await this.candidateRows(candidateIds, "candidate-proof", async ids => candidateProofRead(this.db, ids));
     return Promise.all(rows.map(async row => ({ candidateId: row.id, record: { ...candidateProofRowToRecord(row), candidate: await this.payloadParts.load(row.candidate) as RoutineCandidate } })));
   }
 

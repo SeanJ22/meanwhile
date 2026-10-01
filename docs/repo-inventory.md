@@ -8,7 +8,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Routes and pages
 
-79 file(s). Paths retain route groups and dynamic segments as written.
+80 file(s). Paths retain route groups and dynamic segments as written.
 
 - `/(admin)/admin/agents` — `app/(admin)/admin/agents/page.tsx`
 - `/(admin)/admin/auth/callback` — `app/(admin)/admin/auth/callback/route.ts`
@@ -60,6 +60,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `/api/ask/classify` — `app/api/ask/classify/route.ts`
 - `/api/ask/grounded` — `app/api/ask/grounded/route.ts`
 - `/api/ballot/scope` — `app/api/ballot/scope/route.ts`
+- `/api/boundaries/[archive]` — `app/api/boundaries/[archive]/route.ts`
 - `/api/build` — `app/api/build/route.ts`
 - `/api/census-geography/zctas` — `app/api/census-geography/zctas/route.ts`
 - `/api/demand-signal` — `app/api/demand-signal/route.ts`
@@ -252,7 +253,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Scripts
 
-521 file(s).
+524 file(s).
 
 - `scripts/a001-feedback-backup.mts`
 - `scripts/a001-verify-catalog.mts`
@@ -548,6 +549,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/pilot-runtime-control.mts`
 - `scripts/pilot-runtime-launch.mjs`
 - `scripts/pilot-runtime-launch.ps1`
+- `scripts/pilot-runtime-publish.mts`
 - `scripts/pilot-runtime-transfer.mts`
 - `scripts/pilot-task.ps1`
 - `scripts/pima-rollcall-walk.mts`
@@ -581,6 +583,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/prove-map-ask-endpoint.mts`
 - `scripts/prove-subscriber-guards.mts`
 - `scripts/provider-smoke.mts`
+- `scripts/publish-boundaries.mts`
 - `scripts/publish-member-offices.mts`
 - `scripts/publish-owner-snapshot.mts`
 - `scripts/purge-synthetic-rows.mts`
@@ -725,6 +728,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/trap-outbound.mjs`
 - `scripts/try-run.mjs`
 - `scripts/twig-pair.mts`
+- `scripts/upload-map-tiles.ps1`
 - `scripts/url-sweep.mts`
 - `scripts/vault-crosswalk-evidence.mts`
 - `scripts/vault-readback.mts`
@@ -786,7 +790,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-951 file(s).
+956 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -889,6 +893,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/ask-body-agenda.test.ts`
 - `tests/ask-box.test.ts`
 - `tests/ask-code-reading-money.test.ts`
+- `tests/ask-cost.test.ts`
 - `tests/ask-decision-answer.test.ts`
 - `tests/ask-destinations.test.ts`
 - `tests/ask-entity-binding.test.ts`
@@ -937,7 +942,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/auto-crosswalk-expansion.test.ts`
 - `tests/auto-crosswalk.test.ts`
 - `tests/automatic-venue-resolutions.test.ts`
-- `tests/autonomous-cycle-wall.test.ts`
 - `tests/az-finance-corpus.test.ts`
 - `tests/az-identity-projection.test.ts`
 - `tests/az-identity-reconciliation.test.ts`
@@ -1036,6 +1040,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/civic-data-read-model.test.ts`
 - `tests/civic-data-store-integrity.test.ts`
 - `tests/civic-payload-parts.test.ts`
+- `tests/civic-read-cache.test.ts`
 - `tests/civicplus-calendar-feeds.test.ts`
 - `tests/civicplus-category-feed-wiring.test.ts`
 - `tests/class-stamp-sweep.test.ts`
@@ -1093,11 +1098,12 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/curated-divisions.test.ts`
 - `tests/curated-reader-data-plane.test.ts`
 - `tests/curated-reader-edge-selector.test.ts`
-- `tests/cycle-budget.test.ts`
 - `tests/cycle-exit.test.ts`
 - `tests/cycle-finalization.test.ts`
 - `tests/cycle-lease-startup.test.ts`
+- `tests/cycle-selection.test.ts`
 - `tests/cycle-stall-diagnostic.test.ts`
+- `tests/cycle-state-writer.test.ts`
 - `tests/database-transfer.test.ts`
 - `tests/day-precision.test.ts`
 - `tests/db-schema.test.ts`
@@ -1343,6 +1349,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/migration-shipping-invariant.test.ts`
 - `tests/mirror-code.test.ts`
 - `tests/mirror-workbook-guard.test.ts`
+- `tests/model-batch-recovery.test.ts`
 - `tests/model-batch.test.ts`
 - `tests/model-ceiling.test.ts`
 - `tests/model-cost-metered.test.ts`
@@ -1578,6 +1585,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/scheduler-maintenance-scaling.test.ts`
 - `tests/scout-absence.test.ts`
 - `tests/scout-admission-floor.test.ts`
+- `tests/scout-api.test.ts`
 - `tests/scout-candidates.test.ts`
 - `tests/scout-context-bound.test.ts`
 - `tests/scout-lane.test.ts`
@@ -1585,6 +1593,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/scout-preserved-thinking.test.ts`
 - `tests/scout-prewarm.test.ts`
 - `tests/scout-queue-order.test.ts`
+- `tests/scout-recovery.test.ts`
 - `tests/scout-search.test.ts`
 - `tests/scout-tools.test.ts`
 - `tests/search-log-exclusion.test.ts`
@@ -1742,7 +1751,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7020 file(s).
+7048 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -1905,6 +1914,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/api/ask/classify/route.ts`
 - `app/api/ask/grounded/route.ts`
 - `app/api/ballot/scope/route.ts`
+- `app/api/boundaries/[archive]/route.ts`
 - `app/api/build/route.ts`
 - `app/api/census-geography/zctas/route.ts`
 - `app/api/demand-signal/route.ts`
@@ -4699,6 +4709,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/ask/candidate-profile.ts`
 - `lib/ask/contact-render.ts`
 - `lib/ask/contacts.ts`
+- `lib/ask/cost.ts`
 - `lib/ask/evidence.ts`
 - `lib/ask/gap-codes.ts`
 - `lib/ask/gap-observation.ts`
@@ -5035,7 +5046,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/expansion/assignment-budget.ts`
 - `lib/control-plane/expansion/census-scope-observations.ts`
 - `lib/control-plane/expansion/declared-work-scope.ts`
-- `lib/control-plane/expansion/dispatch-work-bounds.ts`
 - `lib/control-plane/expansion/dispatch-work.ts`
 - `lib/control-plane/expansion/district-territory.ts`
 - `lib/control-plane/expansion/membership.ts`
@@ -5175,9 +5185,11 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/scheduler/cycle-exit.ts`
 - `lib/control-plane/scheduler/cycle-finalization.ts`
 - `lib/control-plane/scheduler/cycle-phases.ts`
+- `lib/control-plane/scheduler/cycle-selection.ts`
 - `lib/control-plane/scheduler/cycle-stall-report.ts`
 - `lib/control-plane/scheduler/cycle-stall-worker.ts`
 - `lib/control-plane/scheduler/cycle-stall.ts`
+- `lib/control-plane/scheduler/cycle-state-writer.ts`
 - `lib/control-plane/scheduler/debt.ts`
 - `lib/control-plane/scheduler/dispatch-target.ts`
 - `lib/control-plane/scheduler/dispatch.ts`
@@ -5205,9 +5217,13 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/scheduler/research-policy.ts`
 - `lib/control-plane/scheduler/robots.ts`
 - `lib/control-plane/scheduler/route-executor.ts`
+- `lib/control-plane/scheduler/scout-adapters.ts`
+- `lib/control-plane/scheduler/scout-api.ts`
 - `lib/control-plane/scheduler/scout-candidates.ts`
+- `lib/control-plane/scheduler/scout-clients.ts`
 - `lib/control-plane/scheduler/scout-contract.ts`
 - `lib/control-plane/scheduler/scout-executor.ts`
+- `lib/control-plane/scheduler/scout-reliability.ts`
 - `lib/control-plane/scheduler/scout-result.ts`
 - `lib/control-plane/scheduler/scout-search.ts`
 - `lib/control-plane/scheduler/scout-tools.ts`
@@ -5239,6 +5255,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/workers/autonomous-plan.ts`
 - `lib/control-plane/workers/coordinator.ts`
 - `lib/control-plane/workers/detective.ts`
+- `lib/control-plane/workers/engineering-adapter.ts`
 - `lib/control-plane/workers/engineering-candidate.ts`
 - `lib/control-plane/workers/engineering-types.ts`
 - `lib/control-plane/workers/engineering.ts`
@@ -5250,22 +5267,29 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/workers/held-meeting-contract.ts`
 - `lib/control-plane/workers/host-spacing.ts`
 - `lib/control-plane/workers/isolation.ts`
+- `lib/control-plane/workers/lease-worker.ts`
 - `lib/control-plane/workers/legacy-auditor.ts`
 - `lib/control-plane/workers/model-audit.ts`
 - `lib/control-plane/workers/model-parser.ts`
+- `lib/control-plane/workers/national-worker.ts`
 - `lib/control-plane/workers/parser.ts`
 - `lib/control-plane/workers/pipeline.ts`
 - `lib/control-plane/workers/plan-repair.ts`
+- `lib/control-plane/workers/process-pool.ts`
 - `lib/control-plane/workers/quoted-proof.ts`
 - `lib/control-plane/workers/readback.ts`
 - `lib/control-plane/workers/record-evidence.ts`
 - `lib/control-plane/workers/record-verification.ts`
 - `lib/control-plane/workers/research-runtime.ts`
 - `lib/control-plane/workers/research-types.ts`
+- `lib/control-plane/workers/route-process.ts`
+- `lib/control-plane/workers/route-worker.ts`
 - `lib/control-plane/workers/routine-meeting-intake.ts`
 - `lib/control-plane/workers/runtime.ts`
 - `lib/control-plane/workers/scheduling.ts`
+- `lib/control-plane/workers/scout-process.ts`
 - `lib/control-plane/workers/scout-scheduling.ts`
+- `lib/control-plane/workers/scout-worker.ts`
 - `lib/control-plane/workers/standing-lineage.ts`
 - `lib/control-plane/workers/standing-runtime.ts`
 - `lib/control-plane/workers/standing.ts`
@@ -5273,6 +5297,8 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/workers/validator.ts`
 - `lib/control-plane/workers/vault-object.ts`
 - `lib/control-plane/workers/vault.ts`
+- `lib/control-plane/workers/worker-broker.ts`
+- `lib/control-plane/workers/worker-slots.ts`
 - `lib/control-plane/zip-acquisition-plan.ts`
 - `lib/control-plane/zip-gap-resolution.ts`
 - `lib/control-plane/zip-queue.ts`
@@ -5293,6 +5319,8 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/coverage/zip-tier.ts`
 - `lib/db/applied-migrations.ts`
 - `lib/db/ask-signal.ts`
+- `lib/db/civic-read-cache-host.ts`
+- `lib/db/civic-read-cache.ts`
 - `lib/db/demand-signal.ts`
 - `lib/db/demo-deletion.ts`
 - `lib/db/feedback-carryover.ts`
@@ -5531,6 +5559,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/log/client.ts`
 - `lib/log/scrub.ts`
 - `lib/map/anchor-in-viewport.ts`
+- `lib/map/boundary-archive.ts`
 - `lib/map/camera-memory.ts`
 - `lib/map/carry-pins.ts`
 - `lib/map/cluster-placement.ts`
@@ -7316,6 +7345,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/pilot-runtime-control.mts`
 - `scripts/pilot-runtime-launch.mjs`
 - `scripts/pilot-runtime-launch.ps1`
+- `scripts/pilot-runtime-publish.mts`
 - `scripts/pilot-runtime-transfer.mts`
 - `scripts/pilot-task.ps1`
 - `scripts/pima-rollcall-walk.mts`
@@ -7349,6 +7379,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/prove-map-ask-endpoint.mts`
 - `scripts/prove-subscriber-guards.mts`
 - `scripts/provider-smoke.mts`
+- `scripts/publish-boundaries.mts`
 - `scripts/publish-member-offices.mts`
 - `scripts/publish-owner-snapshot.mts`
 - `scripts/purge-synthetic-rows.mts`
@@ -7493,6 +7524,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/trap-outbound.mjs`
 - `scripts/try-run.mjs`
 - `scripts/twig-pair.mts`
+- `scripts/upload-map-tiles.ps1`
 - `scripts/url-sweep.mts`
 - `scripts/vault-crosswalk-evidence.mts`
 - `scripts/vault-readback.mts`
@@ -7670,6 +7702,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/ask-body-agenda.test.ts`
 - `tests/ask-box.test.ts`
 - `tests/ask-code-reading-money.test.ts`
+- `tests/ask-cost.test.ts`
 - `tests/ask-decision-answer.test.ts`
 - `tests/ask-destinations.test.ts`
 - `tests/ask-entity-binding.test.ts`
@@ -7718,7 +7751,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/auto-crosswalk-expansion.test.ts`
 - `tests/auto-crosswalk.test.ts`
 - `tests/automatic-venue-resolutions.test.ts`
-- `tests/autonomous-cycle-wall.test.ts`
 - `tests/az-finance-corpus.test.ts`
 - `tests/az-identity-projection.test.ts`
 - `tests/az-identity-reconciliation.test.ts`
@@ -7817,6 +7849,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/civic-data-read-model.test.ts`
 - `tests/civic-data-store-integrity.test.ts`
 - `tests/civic-payload-parts.test.ts`
+- `tests/civic-read-cache.test.ts`
 - `tests/civicplus-calendar-feeds.test.ts`
 - `tests/civicplus-category-feed-wiring.test.ts`
 - `tests/class-stamp-sweep.test.ts`
@@ -7875,11 +7908,12 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/curated-divisions.test.ts`
 - `tests/curated-reader-data-plane.test.ts`
 - `tests/curated-reader-edge-selector.test.ts`
-- `tests/cycle-budget.test.ts`
 - `tests/cycle-exit.test.ts`
 - `tests/cycle-finalization.test.ts`
 - `tests/cycle-lease-startup.test.ts`
+- `tests/cycle-selection.test.ts`
 - `tests/cycle-stall-diagnostic.test.ts`
+- `tests/cycle-state-writer.test.ts`
 - `tests/database-transfer.test.ts`
 - `tests/day-precision.test.ts`
 - `tests/db-schema.test.ts`
@@ -8361,6 +8395,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/migration-shipping-invariant.test.ts`
 - `tests/mirror-code.test.ts`
 - `tests/mirror-workbook-guard.test.ts`
+- `tests/model-batch-recovery.test.ts`
 - `tests/model-batch.test.ts`
 - `tests/model-ceiling.test.ts`
 - `tests/model-cost-metered.test.ts`
@@ -8601,6 +8636,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/scheduler-maintenance-scaling.test.ts`
 - `tests/scout-absence.test.ts`
 - `tests/scout-admission-floor.test.ts`
+- `tests/scout-api.test.ts`
 - `tests/scout-candidates.test.ts`
 - `tests/scout-context-bound.test.ts`
 - `tests/scout-lane.test.ts`
@@ -8608,6 +8644,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/scout-preserved-thinking.test.ts`
 - `tests/scout-prewarm.test.ts`
 - `tests/scout-queue-order.test.ts`
+- `tests/scout-recovery.test.ts`
 - `tests/scout-search.test.ts`
 - `tests/scout-tools.test.ts`
 - `tests/search-log-exclusion.test.ts`

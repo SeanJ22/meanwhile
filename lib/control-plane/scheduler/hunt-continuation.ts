@@ -1,7 +1,7 @@
 /** Keep a directed, total-budget hunt moving while its last cycle made
  * progress and left eligible member work behind. A cycle remains bounded; the
  * next one starts promptly rather than waiting for the ordinary hourly tick.
- * No reading, no exact Send receipt, or no scoped dispatch means no fast loop.
+ * No reading, no Send receipt, or no scoped dispatch means no fast loop.
  */
 import type { AssignmentCycleReading } from "../expansion/assignment-budget.ts";
 import type { ExpansionCycleReading } from "../expansion/reading.ts";
@@ -14,12 +14,11 @@ export interface ContinuingHunt {
   readonly dispatched: number;
 }
 
-/** The existing owner's original, immutable $50 Anthropic hunt. */
+/** Historical receipt identity for consumers still being migrated by their owners.
+ * Execution and continuation select current funded scopes, never this constant. */
 export const ORIGINAL_LIFETIME_HUNT = {
-  key: "zcta:2020/85635",
-  receiptId: "expansion.scope.set:scope:85635:1yfuc2c:pgfomast",
-  budgetStartedAt: "2026-09-27T22:17:50.236Z",
-  budgetUsd: 50,
+  key: "zcta:2020/85635", receiptId: "expansion.scope.set:scope:85635:1yfuc2c:pgfomast",
+  budgetStartedAt: "2026-09-27T22:17:50.236Z", budgetUsd: 50,
 } as const;
 
 export interface LifetimeHuntContinuation extends ContinuingHunt {
@@ -27,18 +26,17 @@ export interface LifetimeHuntContinuation extends ContinuingHunt {
   readonly reason: "DUE_AFTER_PROGRESS" | "ELIGIBLE_ZERO_DISPATCH";
 }
 
-/** A bounded next cycle for this exact hunt. A zero-dispatch cycle backs off
+/** A bounded next cycle for each selected hunt. A zero-dispatch cycle backs off
  * to fifteen minutes while it remains eligible; only a measured budget or
  * actual external refusal may hold it. No estimated dollars authorize work. */
-export function originalLifetimeHuntContinuation(
+function lifetimeHuntContinuation(
   scopes: readonly ExpansionScopeDecision[],
   expansion: ExpansionCycleReading | null,
   assignments: AssignmentCycleReading | null,
   stalledCycles: number,
 ): LifetimeHuntContinuation | null {
   if (expansion === null || assignments === null || !Number.isSafeInteger(stalledCycles) || stalledCycles < 0) return null;
-  const scope = scopes.find(row => row.key === ORIGINAL_LIFETIME_HUNT.key && row.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
-    row.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt && row.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd);
+  const scope = scopes.find(row => Boolean(row.budgetStartedAt) && row.budgetUsd > 0);
   if (!scope) return null;
   const read = expansion.scopes.find(row => row.key === scope.key);
   const assignment = assignments.assignments.find(row => row.key === scope.key && row.ref === scope.receiptId);
@@ -62,6 +60,22 @@ export function originalLifetimeHuntContinuation(
   if (budget.refused > 0 && budget.admitted === 0) return null;
   return { key: scope.key, label: scope.geography.label, due, dispatched,
     delayMs: stalledCycles === 0 ? 5 * 60_000 : 15 * 60_000, reason: "ELIGIBLE_ZERO_DISPATCH" };
+}
+
+export function lifetimeHuntContinuations(
+  scopes: readonly ExpansionScopeDecision[], expansion: ExpansionCycleReading | null,
+  assignments: AssignmentCycleReading | null, stalledCycles: number,
+): readonly LifetimeHuntContinuation[] {
+  return scopes.flatMap(scope => {
+    const continuation = lifetimeHuntContinuation([scope], expansion, assignments, stalledCycles);
+    return continuation ? [continuation] : [];
+  });
+}
+export function originalLifetimeHuntContinuation(
+  scopes: readonly ExpansionScopeDecision[], expansion: ExpansionCycleReading | null,
+  assignments: AssignmentCycleReading | null, stalledCycles: number,
+): LifetimeHuntContinuation | null {
+  return lifetimeHuntContinuations(scopes, expansion, assignments, stalledCycles)[0] ?? null;
 }
 
 export function continuingDirectedHunt(

@@ -94,7 +94,6 @@ import {
   withScopeSet,
   type ExpansionScopeGeography,
 } from "../expansion/scopes.ts";
-import { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET } from "../expansion/dispatch-work-bounds.ts";
 import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
 import { WORK_QUESTION_WORDS, validateWorkQuestions, type WorkQuestion } from "../work-question.ts";
 import { huntPlaceKey } from "../admin-view/v6-hunts-read.ts";
@@ -103,7 +102,7 @@ import { appendFailureSays, writeFailureSays } from "./write-readback.ts";
 import type { ActionDefinition, ActionRequest, ReceiptOutcome, RefusalCode } from "./contract.ts";
 
 /** How much the runner creates for one Send, in the words every receipt below quotes (MW-028). */
-const CREATION_BOUNDS = `at most ${DISPATCH_WORK_WRITE_BUDGET} written a cycle and ${DISPATCH_WORK_TARGET_CAP.toLocaleString("en-US")} missing rows considered per instruction each cycle; later cycles continue automatically`;
+const CREATION_SCOPE = "all missing work for the requested geography";
 
 /* ------------------------------------------------------------------ deps */
 
@@ -506,7 +505,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         "Tells the fleet where to go next, in your words. Where your words name a state, the runner also creates the work " +
         "that state's registry defines and no clock carries yet.",
       doesNot:
-        `Does not start paid research, publish anything, or invent work no registry defines, and it creates ${CREATION_BOUNDS}. ` +
+        `Does not start paid research, publish anything, or invent work no registry defines, and it creates ${CREATION_SCOPE}. ` +
         "Without a state in your words it only reorders the work the fleet already has.",
       authority: "REVERSIBLE_NONPRODUCTION",
       subjectKind: "where you want the fleet to work",
@@ -533,7 +532,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         {
           says:
             "The fleet has been told where to go. The next cycle puts what matches first and records what it matched — including nothing, by name, if nothing is registered there. " +
-            `Where your words name a state, it also creates the work that state's registry defines and no clock carries yet (${CREATION_BOUNDS}), ` +
+            `Where your words name a state, it also creates the work that state's registry defines and no clock carries yet (${CREATION_SCOPE}), ` +
             "and its acknowledgement counts what it created, what it reordered and what missing data blocked. Work that needs a model waits for the paid lane." +
             (budgetUsd === null
               ? " It carries no budget of its own, so only the Fleet ceiling bounds paid work on it."
@@ -847,7 +846,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         "Records a geography you chose from the Census lookup, with its priority and selected lifetime or rolling 24-hour budget for paid work there, durably. " +
         "When research is enabled, the standing runner wakes promptly for this Send. At the start of its next cycle it creates the work the registry defines there that no clock carries yet, and puts all work there first.",
       doesNot:
-        `Does not open the paid lane, add a government or a source no registry defines, or raise any spend limit, and it creates ${CREATION_BOUNDS}. ` +
+        `Does not open the paid lane, add a government or a source no registry defines, or raise any spend limit, and it creates ${CREATION_SCOPE}. ` +
         "Its budget can only hold paid work back.",
       authority: "OWNER_DECISION_REQUIRED",
       subjectKind: "a geography you want worked first",
@@ -929,7 +928,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         says:
           `Recorded: ${what} is priority ${priority} with a $${budgetUsd.toFixed(2)} ${lifetime ? "Anthropic token budget for this hunt" : "rolling 24-hour budget"} for paid work there (${was}), and that survives a restart. ` +
           "Recording it makes no model call itself. If research is enabled, the standing runner wakes promptly for this Send; if a cycle is already active, it finishes first. At the start of its next cycle the runner creates the work the registry defines there that no clock carries yet " +
-          `(${CREATION_BOUNDS}) and puts all work there first; the acknowledgement counts what was created, reordered and blocked. ` +
+          `(${CREATION_SCOPE}) and puts all work there first; the acknowledgement counts what was created, reordered and blocked. ` +
           "Work that needs a model waits: the paid lane stays exactly as it is, " +
           (originalLifetime
             ? `and this exact original $${ORIGINAL_LIFETIME_HUNT.budgetUsd.toFixed(2)} lifetime hunt keeps its instruction receipt and allowance; the $${ceilingUsd.toFixed(2)} Fleet rolling ceiling does not bind its exact work. This action has its own saved receipt.`

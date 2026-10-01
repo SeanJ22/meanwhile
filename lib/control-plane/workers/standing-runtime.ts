@@ -10,6 +10,7 @@ import { VAULT_DIR } from "../scheduler/vault.ts";
 import { methodFields, standingFleetRuntime } from "./standing.ts";
 import { computeRouteFloor } from "../preflight.ts";
 import { readMethodStore } from "../../method/candidate.ts";
+import { readMethodVersion } from "../../method/manual-bridge.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { proposeScoutCandidates } from "../scheduler/scout-candidates.ts";
 import { emptyFieldManual, type FieldManualStore } from "../field-manual.ts";
@@ -66,7 +67,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     if (plan?.contract.schemaVersion !== 2 || plan.contract.methodVersion !== 0 ||
       plan.contract.extraction.format !== "UNSUPPORTED" || plan.contract.sourceScope.observationArtifactIds.length) continue;
     await input.repos.workItems.compareAndSet(row.id, row.revision, { ...row.value,
-      autonomousPlan: { ...plan, contract: { ...plan.contract, methodVersion: knowledge.version } } }, now());
+      autonomousPlan: { ...plan, contract: { ...plan.contract, methodVersion: (await readMethodVersion(input.repos)) ?? knowledge.version } } }, now());
   }
   const fmRead = await input.repos.fieldManual.read("live").catch(() => null);
   let fieldManual: FieldManualStore = fmRead?.value ?? emptyFieldManual();

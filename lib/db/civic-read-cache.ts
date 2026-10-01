@@ -1,24 +1,23 @@
 import { createHash } from "node:crypto";
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 
 export interface CivicRowVersion { readonly key: string; readonly etag: string }
 interface Entry<T> { readonly etag: string; readonly value: T }
+interface CacheIO {
+  readonly read: (key: string) => Promise<string | null>;
+  readonly write: (key: string, saved: string) => Promise<void>;
+}
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
 
 /** Disposable runner copies. A fresh database row version decides every use. */
 export class CivicReadCache {
-  private readonly root: string;
-  private readonly persist?: (key: string, saved: string) => Promise<void>;
-  constructor(root: string, persist?: (key: string, saved: string) => Promise<void>) {
-    this.root = root; this.persist = persist;
-  }
-  private path(key: string): string { return join(this.root, hash(key) + ".json"); }
+  private readonly io: CacheIO;
+  constructor(io: CacheIO) { this.io = io; }
 
   private async read<T>(key: string): Promise<Entry<T> | null> {
     try {
-      // These host-local runner copies never belong in a Reader deployment.
-      const saved = JSON.parse(await readFile(/* turbopackIgnore: true */ this.path(key), "utf8"));
+      const raw = await this.io.read(hash(key));
+      if (raw === null) return null;
+      const saved = JSON.parse(raw);
       if (typeof saved.body !== "string" || hash(saved.body) !== saved.digest) return null;
       const entry = JSON.parse(saved.body);
       return typeof entry.etag === "string" && Object.hasOwn(entry, "value") ? entry : null;
@@ -28,7 +27,7 @@ export class CivicReadCache {
   private async save<T>(key: string, entry: Entry<T>): Promise<void> {
     try {
       const body = JSON.stringify(entry);
-      await this.persist?.(hash(key), JSON.stringify({ digest: hash(body), body }));
+      await this.io.write(hash(key), JSON.stringify({ digest: hash(body), body }));
     } catch { /* A failed disposable copy never changes the actual read. */ }
   }
 
@@ -77,9 +76,15 @@ export function runtimeCivicReadCache(): CivicReadCache | null {
   const endpoint = process.env.WTP_CIVIC_READ_CACHE_URL;
   const token = process.env.WTP_CIVIC_READ_CACHE_TOKEN;
   if (!process.env.DATABASE_URL || !endpoint || !token) return null;
-  return new CivicReadCache(join(/* turbopackIgnore: true */ process.cwd(), ".runtime", "civic-read-cache", hash(process.env.DATABASE_URL)),
-    async (key, saved) => {
+  return new CivicReadCache({
+    read: async key => {
+      const response = await fetch(endpoint + "/" + key,
+        { headers: { authorization: token }, signal: AbortSignal.timeout(10_000) });
+      return response.ok ? response.text() : null;
+    },
+    write: async (key, saved) => {
       await fetch(endpoint + "/" + key, { method: "PUT", body: saved,
         headers: { authorization: token }, signal: AbortSignal.timeout(10_000) });
-    });
+    },
+  });
 }

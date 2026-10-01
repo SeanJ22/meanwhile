@@ -1,10 +1,10 @@
 import { createHash, randomUUID } from "node:crypto";
-import { mkdir, rename, unlink, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rename, unlink, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { join } from "node:path";
 
-/** Only the supervisor writes disposable copies; source doors stay read-only
- * on disk, as required by the existing civic-data release firewall. */
+/** Only the supervisor touches disposable files; source doors stay off disk,
+ * as required by the existing civic-data release firewall. */
 export async function saveCivicReadCopy(root: string, key: string, saved: string): Promise<void> {
   const destination = join(root, key + ".json");
   const temporary = destination + "." + randomUUID() + ".tmp";
@@ -24,15 +24,19 @@ export async function startCivicReadCacheHost(): Promise<{ close: () => Promise<
     createHash("sha256").update(database).digest("hex"));
   const token = randomUUID();
   const server = createServer(async (request, response) => {
-    if (request.method !== "PUT" || request.headers.authorization !== token || !/^\/[a-f0-9]{64}$/.test(request.url ?? "")) {
+    if (!["GET", "PUT"].includes(request.method ?? "") || request.headers.authorization !== token || !/^\/[a-f0-9]{64}$/.test(request.url ?? "")) {
       response.writeHead(404).end(); return;
     }
     try {
+      if (request.method === "GET") {
+        const saved = await readFile(join(root, request.url!.slice(1) + ".json"), "utf8");
+        response.writeHead(200, { "content-type": "application/json" }).end(saved); return;
+      }
       const chunks: Buffer[] = [];
       for await (const chunk of request) chunks.push(Buffer.from(chunk));
       await saveCivicReadCopy(root, request.url!.slice(1), Buffer.concat(chunks).toString("utf8"));
       response.writeHead(204).end();
-    } catch { response.writeHead(503).end(); }
+    } catch { response.writeHead(request.method === "GET" ? 404 : 503).end(); }
   });
   await new Promise<void>((resolve, reject) => {
     server.once("error", reject);

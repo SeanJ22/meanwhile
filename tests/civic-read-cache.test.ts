@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -7,7 +7,8 @@ import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { saveCivicReadCopy } from "../lib/db/civic-read-cache-host.ts";
 
 function cache(root: string) {
-  return new CivicReadCache(root, (key, saved) => saveCivicReadCopy(root, key, saved));
+  return new CivicReadCache({ read: key => readFile(join(root, key + ".json"), "utf8"),
+    write: (key, saved) => saveCivicReadCopy(root, key, saved) });
 }
 
 async function scratch(t: { after: (fn: () => Promise<void>) => void }) {

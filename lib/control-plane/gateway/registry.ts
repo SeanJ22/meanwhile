@@ -67,6 +67,9 @@ import {
   withDiscoverySearch,
   withExpansionScopes,
   withFleetSpendCeiling,
+  withPlaceTarget,
+  placeTargetOf,
+  PLACE_TARGET_KEY,
   API_FALLBACK_MISSING_SEAM,
 } from "./admin-config.ts";
 import {
@@ -796,6 +799,59 @@ const REGISTRY: readonly RegisteredAction[] = [
         openedWork: [],
         readBackAt: "/admin",
         undo: `Set it back to $${previousUsd.toFixed(2)}.`,
+      };
+    },
+  },
+
+  /* ------------------------------------------------------ config.setPlaceTarget */
+  {
+    definition: {
+      type: "config.setPlaceTarget",
+      label: "Set a target for a place",
+      does:
+        "Records how much of what a place is owed should be captured, for one ZIP, county, state or the country, durably, with the receipt that set it. The dispatcher reads it first when it orders work. Clearing it removes the target.",
+      doesNot:
+        "Does not start a round, send an agent, raise a spending limit, or hold back publishing: a fact that passes verification goes live whatever the target says.",
+      authority: "OWNER_DECISION_REQUIRED",
+      subjectKind: "which place the target is for",
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const key = typeof input.placeKey === "string" ? input.placeKey.trim() : "";
+      if (!PLACE_TARGET_KEY.test(key)) return bad("say which place the target is for");
+      const raw = input.goalPercent;
+      if (raw === null || raw === undefined || raw === "") return { ok: true, value: { placeKey: key, goalPercent: null } };
+      const parsed = typeof raw === "number" ? raw : typeof raw === "string" ? Number(raw.trim()) : Number.NaN;
+      if (!Number.isFinite(parsed) || parsed < 1 || parsed > 100) return bad("the target is a percentage from 1 to 100");
+      return { ok: true, value: { placeKey: key, goalPercent: Math.round(parsed * 10) / 10 } };
+    },
+    async execute(deps, context, input) {
+      const placeKey = String(input.placeKey);
+      const goalPercent = input.goalPercent === null ? null : Number(input.goalPercent);
+      const at = context.at;
+      let previous: number | null = null;
+      try {
+        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const current = existing !== null && isAdminConfig(existing.value) ? existing.value : defaultAdminConfig(at);
+        previous = placeTargetOf(current, placeKey)?.goalPercent ?? null;
+        const next = withPlaceTarget(current, { key: placeKey, goalPercent, decidedAt: at, decidedBy: context.request.actorRef, receiptId: context.receiptId });
+        if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, next, at);
+        else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, next, at);
+      } catch (error) {
+        return storeRefusal("your place target", error);
+      }
+      const words = (n: number | null) => (n === null ? "no target" : `${n}%`);
+      return {
+        ok: true,
+        outcome: "DONE",
+        subject: placeKey,
+        says: goalPercent === null
+          ? `Recorded: the target for this place is cleared (it was ${words(previous)}). The dispatcher stops putting it first.`
+          : `Recorded: the target for this place is now ${goalPercent}% (it was ${words(previous)}), and that survives a restart. The dispatcher reads it first when it orders work. A target does not start a round or hold back publishing.`,
+        openedWork: [],
+        readBackAt: "/admin?view=checklist",
+        undo: previous === null ? "Clear the target." : `Set it back to ${previous}%.`,
       };
     },
   },

@@ -201,6 +201,10 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return { subjectId: FIX_QUEUE_SUBJECT, chosenOption: GO_FIX_OPTION, consequenceShown: "The queued gaps were sent for a session to fix", ownerAnswer: null };
     case "global-ceiling":
       return { rollingCeilingUsd: s.amount.trim() === "" ? null : Number(s.amount) };
+    case "target-set":
+      return { placeKey: s.target, goalPercent: s.amount.trim() === "" ? null : Number(s.amount) };
+    case "target-clear":
+      return { placeKey: s.target, goalPercent: null };
     case "global-search-on":
       return { enabled: true, confirmed: true };
     case "global-search-off":

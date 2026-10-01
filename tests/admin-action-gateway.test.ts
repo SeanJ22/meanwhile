@@ -992,3 +992,34 @@ test("ADM-C6: every receipt lands under the one declared log key", async () => {
   assert.equal(rows.length, 2);
   for (const row of rows) assert.equal(row.formatVersion, 1);
 });
+
+test("a place target is recorded with its receipt, changed in place, refused when it is not 1 to 100, and cleared; the ceiling stays", async () => {
+  const repos = createMemoryRepositories();
+  const send = (key: string, goalPercent: unknown, placeKey = "geo:az.zcta.85635") =>
+    submit(ask({ type: "config.setPlaceTarget", subject: placeKey, input: { placeKey, goalPercent }, idempotencyKey: key }), deps(repos));
+  await submit(ask({ type: "config.setFleetSpendCeiling", subject: "fleet spend ceiling", input: { rollingCeilingUsd: "250" }, idempotencyKey: "ceiling-key-pt" }), deps(repos));
+
+  const first = await send("target-key-01", "95");
+  assert.equal(first.ok, true, first.receipt.says);
+  const after = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  assert.deepEqual(after?.value.placeTargets?.map((t) => [t.key, t.goalPercent, t.decidedBy, t.receiptId]),
+    [["geo:az.zcta.85635", 95, "adm_test-session", receiptIdFor("config.setPlaceTarget", "target-key-01")]], "the target names who set it and the receipt");
+  assert.equal(after?.value.fleetSpendCeiling?.rollingCeilingUsd, 250, "setting a target keeps the ceiling");
+  assert.match(first.receipt.says, /now 95%/);
+
+  const changed = await send("target-key-02", 90);
+  assert.equal(changed.ok, true);
+  assert.match(changed.receipt.says, /it was 95%/);
+  assert.equal((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value.placeTargets?.length, 1, "one target per place");
+
+  for (const [i, raw] of ["0", "101", "abc", -5].entries()) {
+    const refused = await send(`target-bad-${i}`, raw);
+    assert.equal(refused.ok, false, `${String(raw)} is not a target`);
+  }
+  const badKey = await send("target-bad-key", 90, "geo:az.zcta");
+  assert.equal(badKey.ok, false, "only a real place can carry a target");
+
+  const cleared = await send("target-key-03", null);
+  assert.equal(cleared.ok, true);
+  assert.deepEqual((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value.placeTargets, []);
+});

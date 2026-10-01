@@ -58,7 +58,7 @@ test("a finished receipt no longer blocks a new send of the same action", () => 
 
 test("only the kinds a real registry action carries out are wired, each to its own gateway type", () => {
   assert.deepEqual([...connectedKinds()].sort(), [
-    "cancel-send", "fix-go", "global-ceiling", "global-paid", "global-paid-resume", "global-runner-pause", "global-runner-resume", "global-search-off", "global-search-on", "hunt-limit", "hunt-pause", "hunt-resume", "hunt-start", "hunt-start-many", "hunt-stop", "send-agents",
+    "cancel-send", "fix-go", "global-ceiling", "global-paid", "global-paid-resume", "global-runner-pause", "global-runner-resume", "global-search-off", "global-search-on", "hunt-limit", "hunt-pause", "hunt-resume", "hunt-start", "hunt-start-many", "hunt-stop", "send-agents", "target-clear", "target-set",
   ]);
   assert.equal(actionDef("cancel-send").gateway?.type, "fleet.cancelDispatch");
   assert.equal(actionDef("send-agents").gateway?.type, "fleet.deployHere");
@@ -309,4 +309,9 @@ test("a hunt starts from a ZIP place: the place key is read as a ZIP, and its in
   assert.equal(isZipPlace("geo:az.zcta.8563"), false);
   const input = actionInput("hunt-start", { target: "geo:az.zcta.85635", scopeKey: "geo:az.zcta.85635", amount: "", words: "", option: "", selected: [], payload: undefined } as never);
   assert.deepEqual((input as { items: unknown[] }).items, [{ zip: "85635", stateAbbr: "AZ", budgetUsd: null }]);
+});
+
+test("a place target is wired to its own gateway action, and its input carries the place and the percent (or none to clear)", () => {
+  assert.equal(actionDef("target-set").gateway?.type, "config.setPlaceTarget");
+  assert.equal(actionDef("target-clear").gateway?.type, "config.setPlaceTarget");
 });

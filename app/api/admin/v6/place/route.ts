@@ -4,6 +4,19 @@ import { owedStatesOf } from "@/lib/control-plane/admin-view/place-scorecard.ts"
 import { readPlaceOwed } from "@/lib/control-plane/admin-view/place-owed-read.ts";
 import { PLACE_ITEM_PAGE, v6PlaceNotMeasured, v6PlaceSection } from "@/lib/control-plane/admin-view/v6-place-section.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
+import { ADMIN_CONFIG_ID, isAdminConfig, placeTargetOf } from "@/lib/control-plane/gateway/admin-config.ts";
+import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
+
+/** The target Sean set for this place, from the saved owner config. A config that cannot be read is no target, never a made-up one. */
+async function targetFor(placeKey: string): Promise<{ goalPercent: number; setAt: string } | null> {
+  try {
+    const opened = await openControlPlane();
+    if (!opened.ok) return null;
+    const row = await opened.repos.adminConfig.read(ADMIN_CONFIG_ID);
+    const t = row !== null && isAdminConfig(row.value) ? placeTargetOf(row.value, placeKey) : null;
+    return t ? { goalPercent: t.goalPercent, setAt: t.setAt } : null;
+  } catch { return null; }
+}
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -40,5 +53,5 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (read.code === "NOT_A_PLACE" || read.code === "UNSUPPORTED_PLACE") return NextResponse.json(v6PlaceNotMeasured(params.get("scope")!, read.says, new Date().toISOString()), { headers: NO_STORE });
     return NextResponse.json({ code: read.code, says: read.says }, { status: 503, headers: NO_STORE });
   }
-  return NextResponse.json(v6PlaceSection(read, { group, states: status === null ? null : owedStatesOf(status), q, offset, limit }), { headers: NO_STORE });
+  return NextResponse.json(v6PlaceSection(read, { group, states: status === null ? null : owedStatesOf(status), q, offset, limit }, await targetFor(read.placeKey)), { headers: NO_STORE });
 }

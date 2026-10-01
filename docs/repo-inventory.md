@@ -787,7 +787,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-952 file(s).
+953 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -1427,6 +1427,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/pilot-task-installer.test.ts`
 - `tests/pima-edu-source.test.ts`
 - `tests/pima-legistar-outcomes-routine.test.ts`
+- `tests/place-target.test.ts`
 - `tests/plain-code-queue-order.test.ts`
 - `tests/plain-work.test.ts`
 - `tests/plan-repair.test.ts`
@@ -1744,7 +1745,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-6994 file(s).
+6995 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -8421,6 +8422,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/pima-edu-source.test.ts`
 - `tests/pima-fact-fixtures.ts`
 - `tests/pima-legistar-outcomes-routine.test.ts`
+- `tests/place-target.test.ts`
 - `tests/plain-code-queue-order.test.ts`
 - `tests/plain-work.test.ts`
 - `tests/plan-repair.test.ts`

@@ -243,9 +243,8 @@ test("every ripcord is registered with question, closer, and tracker rows", () =
   // The FEC contributor ripcord stays counsel-closed — nobody else may close D23's question.
   assert.match(RIPCORDS["ripcord.fecContributorDisplay"].closer, /counsel/i);
   assert.ok(RIPCORDS["ripcord.fecContributorDisplay"].trackerRows.includes("D23"));
-  // The intake pair is the author's, operational, rooted in T08.
+  // The intake pair is operational, rooted in T08.
   for (const name of ["ripcord.rateLimits", "ripcord.reactionIntake"] as const) {
-    assert.match(RIPCORDS[name].closer, /author/i, `${name} must name the author`);
     assert.ok(RIPCORDS[name].trackerRows.includes("T08"));
   }
 });

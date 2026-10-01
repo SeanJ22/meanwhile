@@ -624,8 +624,11 @@ test("a DISPATCH naming a registered state creates there, counts it on the owner
     }).length,
     1,
   );
-  assert.equal(carriedDispatchTargets(reading, new Set(["i-1"])).length, 0, "a Send the owner took back (CANCEL_DISPATCH) is no longer carried");
-  assert.equal(carriedDispatchTargets(reading, new Set(["another"])).length, 1, "taking back one Send leaves the others carried");
+  /* A Send with a remainder still to create is carried; taking it back stops that, and taking back a different Send does not. */
+  const withRemainder = { ...reading, targets: reading.targets.map((x) => ({ ...x, requirements: { ...x.requirements, deferred: 2 } })) };
+  assert.equal(carriedDispatchTargets(withRemainder).length, 1, "a Send with a remainder is carried");
+  assert.equal(carriedDispatchTargets(withRemainder, new Set(["i-1"])).length, 0, "a Send the owner took back (CANCEL_DISPATCH) is no longer carried");
+  assert.equal(carriedDispatchTargets(withRemainder, new Set(["another"])).length, 1, "taking back one Send leaves the others carried");
   assert.equal(carriedDispatchTargets({ nonsense: true }).length, 0, "an unreadable prior reading carries nothing, never throws");
   assert.equal(isDispatchWorkReading(reading), true);
 

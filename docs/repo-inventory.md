@@ -14,7 +14,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `/(admin)/admin/auth/callback` — `app/(admin)/admin/auth/callback/route.ts`
 - `/(admin)/admin/auth/google` — `app/(admin)/admin/auth/google/route.ts`
 - `/(admin)/admin/fix` — `app/(admin)/admin/fix/page.tsx`
-- `/(admin)/admin/learning` — `app/(admin)/admin/learning/page.tsx`
 - `/(admin)/admin/login` — `app/(admin)/admin/login/page.tsx`
 - `/(admin)/admin/money` — `app/(admin)/admin/money/page.tsx`
 - `/(admin)/admin` — `app/(admin)/admin/page.tsx`
@@ -52,6 +51,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `/api/admin/v6/checklist` — `app/api/admin/v6/checklist/route.ts`
 - `/api/admin/v6/history` — `app/api/admin/v6/history/route.ts`
 - `/api/admin/v6/hunts` — `app/api/admin/v6/hunts/route.ts`
+- `/api/admin/v6/learning` — `app/api/admin/v6/learning/route.ts`
 - `/api/admin/v6/money` — `app/api/admin/v6/money/route.ts`
 - `/api/admin/v6/receipt` — `app/api/admin/v6/receipt/route.ts`
 - `/api/admin/v6/workers` — `app/api/admin/v6/workers/route.ts`
@@ -807,7 +807,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-950 file(s).
+951 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -868,6 +868,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-v6-checklist-section.test.ts`
 - `tests/admin-v6-hunts-money.test.ts`
 - `tests/admin-v6-instruction-draft.test.ts`
+- `tests/admin-v6-learning.test.ts`
 - `tests/admin-v6-receipt-lookup.test.ts`
 - `tests/admin-v6-ui/live-sync.test.ts`
 - `tests/admin-v6-ui/mounted-live-transition.test.ts`
@@ -1762,7 +1763,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7041 file(s).
+7042 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -1862,7 +1863,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/_mw/scope.ts`
 - `app/(admin)/_mw/screens/done.tsx`
 - `app/(admin)/_mw/screens/fix.tsx`
-- `app/(admin)/_mw/screens/learning.tsx`
 - `app/(admin)/_mw/screens/money.tsx`
 - `app/(admin)/_mw/screens/work.tsx`
 - `app/(admin)/_mw/shell.tsx`
@@ -1872,7 +1872,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/admin/auth/callback/route.ts`
 - `app/(admin)/admin/auth/google/route.ts`
 - `app/(admin)/admin/fix/page.tsx`
-- `app/(admin)/admin/learning/page.tsx`
 - `app/(admin)/admin/login/page.tsx`
 - `app/(admin)/admin/money/page.tsx`
 - `app/(admin)/admin/page.tsx`
@@ -1919,6 +1918,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/api/admin/v6/checklist/route.ts`
 - `app/api/admin/v6/history/route.ts`
 - `app/api/admin/v6/hunts/route.ts`
+- `app/api/admin/v6/learning/route.ts`
 - `app/api/admin/v6/money/route.ts`
 - `app/api/admin/v6/receipt/route.ts`
 - `app/api/admin/v6/workers/route.ts`
@@ -4978,6 +4978,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/admin-view/v6-capabilities.ts`
 - `lib/control-plane/admin-view/v6-checklist-section.ts`
 - `lib/control-plane/admin-view/v6-hunts-read.ts`
+- `lib/control-plane/admin-view/v6-learning-read.ts`
 - `lib/control-plane/admin-view/v6-money-hunts-route.ts`
 - `lib/control-plane/admin-view/v6-money-read.ts`
 - `lib/control-plane/admin-view/v6-workers-read.ts`
@@ -7672,6 +7673,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-v6-checklist-section.test.ts`
 - `tests/admin-v6-hunts-money.test.ts`
 - `tests/admin-v6-instruction-draft.test.ts`
+- `tests/admin-v6-learning.test.ts`
 - `tests/admin-v6-receipt-lookup.test.ts`
 - `tests/admin-v6-ui/live-sync.test.ts`
 - `tests/admin-v6-ui/mounted-live-transition.test.ts`

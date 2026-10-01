@@ -11,7 +11,9 @@ import {
   type MarkerPoolEntry,
 } from "../lib/map/marker-pool.ts";
 import { initialZoomForZip } from "../lib/map/initial-zoom.ts";
-import { withDistricts, NATIONAL_BOUNDARIES_SOURCE, boundarySource, BOUNDARY_ARCHIVE_FALLBACK } from "../lib/map/districts.ts";
+import { withDistricts, NATIONAL_BOUNDARIES_SOURCE, boundarySource, BOUNDARY_ARCHIVE_FALLBACK, onSettledDistrictChange } from "../lib/map/districts.ts";
+import { holdMapPresentation, releaseMapPresentation } from "../lib/map/flight-presentation.ts";
+import type { Map as MapLibreMap } from "maplibre-gl";
 import { CONUS_BOUNDS, FALLBACK_STYLE, METRO_ZOOM, resolveBasemap } from "../lib/map/style.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import type { Venue } from "../lib/meetings/venues.ts";
@@ -24,6 +26,50 @@ test("initial style requests boundary tiles without basemap or glyph readiness",
   ]);
   assert.ok(boundarySource(BOUNDARY_ARCHIVE_FALLBACK).url?.includes("/api/boundaries/"));
   assert.equal(withDistricts(FALLBACK_STYLE, []), FALLBACK_STYLE);
+});
+
+test("boundary counts coalesce by rendered frame and ignore basemap work", () => {
+  type Listener = (event?: { sourceId?: string; sourceDataType?: string }) => void;
+  const listeners = new Map<string, Set<Listener>>();
+  let moving = false, calls = 0;
+  const stub = {
+    on(event: string, listener: Listener) {
+      if (!listeners.has(event)) listeners.set(event, new Set());
+      listeners.get(event)!.add(listener);
+    },
+    off(event: string, listener: Listener) { listeners.get(event)?.delete(listener); },
+    once(event: string, listener: Listener) {
+      const once: Listener = value => { stub.off(event, once); listener(value); };
+      stub.on(event, once);
+    },
+    isMoving: () => moving,
+    triggerRepaint() {},
+  };
+  const map = stub as unknown as MapLibreMap;
+  const emit = (event: string, sourceId?: string, sourceDataType?: string) => {
+    for (const listener of [...listeners.get(event) ?? []]) listener({ sourceId, sourceDataType });
+  };
+  const dispose = onSettledDistrictChange(map, () => calls++);
+  emit("render"); emit("idle");
+  assert.equal(calls, 1, "idle does not query the same frame again");
+  emit("sourcedata", "basemap"); emit("render"); emit("idle");
+  assert.equal(calls, 1, "basemap tiles do not recount boundaries");
+  // VectorTileSource reports content for its TileJSON, before tiles arrive.
+  emit("sourcedata", NATIONAL_BOUNDARIES_SOURCE, "content");
+  emit("render"); emit("idle");
+  assert.equal(calls, 2);
+  // TileManager._tileLoaded emits sourcedata without sourceDataType.
+  emit("sourcedata", NATIONAL_BOUNDARIES_SOURCE); emit("sourcedata", NATIONAL_BOUNDARIES_SOURCE);
+  emit("render"); emit("idle");
+  assert.equal(calls, 3, "one query for a batch of completed boundary tiles");
+  moving = true; holdMapPresentation(map);
+  emit("sourcedata", NATIONAL_BOUNDARIES_SOURCE); emit("render");
+  moving = false; emit("moveend"); emit("render");
+  assert.equal(calls, 3, "held software frames must not clear the count");
+  releaseMapPresentation(map); emit("idle");
+  assert.equal(calls, 4, "the revealed cached frame is counted once");
+  dispose(); emit("sourcedata", NATIONAL_BOUNDARIES_SOURCE); emit("render"); emit("idle");
+  assert.equal(calls, 4);
 });
 
 /**

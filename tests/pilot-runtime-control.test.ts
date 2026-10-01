@@ -4,35 +4,7 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { buildResearchIntent } from "../lib/control-plane/research-view.ts";
 import { readIntents, type ResearchIntent } from "../lib/control-plane/scheduler/research-policy.ts";
 import { runnerControlReader, runnerWakeReaderFromEnv } from "../scripts/pilot-runtime-control.mts";
-import { consoleInputReader, consolePublisher, CONSOLE_INPUT_SQL, CONSOLE_READER_INPUT_SQL } from "../scripts/pilot-runtime-publish.mts";
-
-test("unchanged console inputs skip both publishers, but failed and concurrent changes retry", async () => {
-  let signature = "first", readsFail = false, succeeds = true, calls = 0;
-  let duringPublish: (() => void) | null = null;
-  const publish = consolePublisher({
-    readInputs: async () => { if (readsFail) throw new Error("offline"); return signature; },
-    publish: async () => { calls++; duringPublish?.(); return succeeds; },
-  });
-  assert.equal(await publish(), "PUBLISHED");
-  for (let i = 0; i < 100; i++) assert.equal(await publish(), "UNCHANGED");
-  assert.equal(calls, 1);
-  signature = "changed";
-  succeeds = false;
-  assert.equal(await publish(), "FAILED");
-  signature = "first"; // A partial failed write invalidated even the older success.
-  succeeds = true;
-  assert.equal(await publish(), "PUBLISHED");
-  readsFail = true;
-  assert.equal(await publish(), "PUBLISHED");
-  readsFail = false;
-  assert.equal(await publish(), "PUBLISHED", "a failed input read cannot remember success");
-  signature = "before";
-  duringPublish = () => { signature = "after"; };
-  assert.equal(await publish(), "PUBLISHED");
-  duringPublish = null;
-  assert.equal(await publish(), "PUBLISHED", "a commit during the children stays eligible");
-  assert.equal(await publish(), "UNCHANGED");
-});
+import { consoleInputReader, CONSOLE_INPUT_SQL, CONSOLE_READER_INPUT_SQL } from "../scripts/pilot-runtime-publish.mts";
 
 test("console versions remain on the server and failed metadata reads cannot look unchanged", async () => {
   let control = "control-v1", reader = "reader-v1";

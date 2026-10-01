@@ -6,6 +6,7 @@ import { join } from "node:path";
 import test from "node:test";
 import { createContext, runInContext } from "node:vm";
 import { CONTROL_WAKE_POLL_MS } from "../scripts/pilot-runtime-control.mts";
+import { consolePublisher } from "../scripts/pilot-runtime-publish.mts";
 
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { buildResearchIntent } from "../lib/control-plane/research-view.ts";
@@ -308,8 +309,36 @@ function checkRunnerHonorsOwnerIntents(src: string): void {
   assert.match(sleepLoop[0], /if \(says === "HOLD"\) continue;[\s\S]*windowDecision\(\)/, "the owner's PAUSE_RUNNER does not hold the nightly window between cycles");
 }
 
-test("pilot-runner.mts checks console publication after every digest (ADM-1)", () => {
+test("pilot-runner.mts checks console publication after every digest (ADM-1)", async () => {
   checkRunnerPublishesConsole(source("scripts/pilot-runner.mts"));
+  let signature = "first", readsFail = false, succeeds = true, calls = 0;
+  let duringPublish: (() => void) | null = null;
+  const publish = consolePublisher({
+    readInputs: async () => { if (readsFail) throw new Error("offline"); return signature; },
+    publish: async () => { calls++; duringPublish?.(); return succeeds; },
+  });
+  assert.equal(await publish(), "PUBLISHED");
+  for (let i = 0; i < 100; i++) assert.equal(await publish(), "UNCHANGED");
+  assert.equal(calls, 1);
+  signature = "changed";
+  assert.equal(await publish(), "PUBLISHED", "changed inputs run the publishers");
+  assert.equal(calls, 2);
+  readsFail = true;
+  assert.equal(await publish(), "PUBLISHED", "a failed input check is never unchanged");
+  readsFail = false;
+  assert.equal(await publish(), "PUBLISHED", "a failed input read cannot remember success");
+  signature = "failed";
+  succeeds = false;
+  assert.equal(await publish(), "FAILED");
+  signature = "changed"; // A partial failed write invalidated even the older success.
+  succeeds = true;
+  assert.equal(await publish(), "PUBLISHED");
+  signature = "before";
+  duringPublish = () => { signature = "after"; };
+  assert.equal(await publish(), "PUBLISHED");
+  duringPublish = null;
+  assert.equal(await publish(), "PUBLISHED", "a commit during the children stays eligible");
+  assert.equal(await publish(), "UNCHANGED");
 });
 
 test("pilot-runner.mts honors PAUSE_RUNNER / RESUME_RUNNER and ends the sleep on a pending DISPATCH (ADM-5, ADM-8)", async () => {

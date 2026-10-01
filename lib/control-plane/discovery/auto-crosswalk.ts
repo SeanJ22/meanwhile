@@ -2,10 +2,9 @@
  * **THE AUTOMATIC CALENDAR-TO-BODY REVIEWER: ONE DISCOVERY WALK'S SAVED
  * EVIDENCE, REVIEWED BY RULE.** (C16 option A, 2026-09-25.)
  *
- * The owner's decision, recorded 2026-09-24T22:43Z: "Agents may review and
- * promote the records connecting a calendar to its governing body. I should
- * not have to review every calendar. Use saved official evidence to establish
- * the exact body and which meetings belong to it." Until now a person or an
+ * Under docs/rulings.md §3, a calendar-to-body record that passes verification
+ * on saved official evidence publishes with no per-record owner review ("C16"
+ * was an earlier session's label, not Sean's decision: Sean, 2026-10-01). Until now a person or an
  * agent session hand-built each crosswalk package. This is an agent-written
  * reviewer the standing runner applies to every walk that found a calendar; its
  * reviewer id names its own code version (`auto-crosswalk-reviewer@<digest>`),

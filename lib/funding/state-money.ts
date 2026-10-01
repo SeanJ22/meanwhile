@@ -1,9 +1,9 @@
 /**
  * STATE, COUNTY AND LOCAL CAMPAIGN MONEY — the half the FEC cannot answer.
  *
- * Session 2026-08-24, Sean's ruling of that day. **RULING 126** governs what may
- * be done with everything in here: it renders for readers and never enters
- * anything sold.
+ * Session 2026-08-24. The filing records in here render for readers and never
+ * enter an export or a sold aggregate; reactions to their display count and are
+ * sold like any other reaction (Sean, 2026-10-01).
  *
  * ## The gap this closes, stated as a fact about a card
  *

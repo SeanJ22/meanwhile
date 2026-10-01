@@ -489,9 +489,10 @@ export const SOURCE_AUTHORITIES = {
     routineAutoPromotion: true,
   },
   /*
-   * C16 (the owner's decision recorded 2026-09-24T22:43Z): a reviewed crosswalk row plus a route the discovery walk
-   * validated publishes through the standing runner with no code release. Neither authority below has a route of its
-   * own; each is authentic only as the exact inputs its candidate names (lib/civic-data/derived-door.ts).
+   * Rulings §3 (labelled C16; not an owner decision, Sean 2026-10-01): a reviewed crosswalk row plus a route the
+   * discovery walk validated publishes through the standing runner with no code release. Neither authority below has a
+   * route of its own; each is authentic only as the exact inputs its candidate names (lib/civic-data/derived-door.ts).
+   * The ~authorization~ strings below are stored citation text, kept byte-identical.
    */
   "meeting-source-wiring": {
     id: "meeting-source-wiring",

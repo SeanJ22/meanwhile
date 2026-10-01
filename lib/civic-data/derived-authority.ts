@@ -31,8 +31,8 @@
  *   verdict is recorded evidence and holds nothing by itself (owner decision
  *   2026-09-25); only a walk made before that decision skipped a route for it.
  * - A promoted row is SUSPENDED, never silently kept publishing, when its
- *   evidence says the connection may be wrong (the owner's decision C16,
- *   recorded 2026-09-24T22:43Z): the route answered 404 or 410; its events
+ *   evidence says the connection may be wrong (rulings §3; "C16" was a session
+ *   label, not Sean's decision): the route answered 404 or 410; its events
  *   now name another body; the evidence conflicts; or the calendar changed
  *   (the filter no longer selects, or the feed moved or changed shape). A
  *   suspended row stays in the version, marked, so its previously verified

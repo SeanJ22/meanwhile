@@ -1,11 +1,12 @@
 #!/usr/bin/env tsx
 /**
  * **NJ ELEC — ACQUIRED STATEWIDE, PROJECTED TO A BALLOT.** Item 4 of the
- * 2026-08-24 state-campaign-money session. **RULING 126** governs the output: it
+ * 2026-08-24 state-campaign-money session. The filings are never sold; reactions
+ * to them are (Sean, 2026-10-01). The output
  *
  * @freshness-reads-here — the candidate clock follows the complete official
  * walk; the catch-path clock dates only the durable failed source attempt.
- * renders for readers and never enters anything sold. Split into acquisition
+ * renders for readers. Split into acquisition
  * and projection by Session C3, lane C, 2026-09-01, under **RULING 229**.
  *
  * ```

@@ -518,7 +518,10 @@ export class DurableEvidenceStore implements EvidenceStore {
               "its life; the stored body is the one already cited and it is not replaced.",
           );
         }
-        if (noop) return;
+        if (noop) {
+          await this.readBody(key, existing.bodySha256, existing.bodyBytes);
+          return;
+        }
       }
     }
 
@@ -528,6 +531,7 @@ export class DurableEvidenceStore implements EvidenceStore {
      * is the only thing that makes a concurrent write of one retrieval safe.
      */
     await this.atomicWrite(bodyPath, bytes, (existing) => contentHash(existing) === offeredSha);
+    await this.readBody(key, offeredSha, bytes.byteLength);
 
     /*
      * THE SIDECAR IS THE COMMIT POINT and is written second. A crash between the
@@ -567,8 +571,7 @@ export class DurableEvidenceStore implements EvidenceStore {
       if (fromProvider) return fromProvider;
     }
     if (this.remote) return this.remote.head(key);
-    const sidecar = await this.readSidecar(key);
-    return sidecar ? sidecar.meta : null;
+    return (await this.get(key))?.meta ?? null;
   }
 
   /**
@@ -594,24 +597,29 @@ export class DurableEvidenceStore implements EvidenceStore {
     const sidecar = await this.readSidecar(key);
     if (!sidecar) return null;
 
+    const bytes = await this.readBody(key, sidecar.bodySha256, sidecar.bodyBytes);
+    return { key, bytes: new Uint8Array(bytes), meta: sidecar.meta };
+  }
+
+  private async readBody(key: string, recordedHash: string, byteLength: number): Promise<Buffer> {
     const bodyPath = this.bodyPath(key);
     let bytes: Buffer;
     try {
       bytes = await readFile(bodyPath);
     } catch (cause) {
       throw new EvidenceStoreRefusal(
-        `Key ${key} has committed metadata recording ${sidecar.bodyBytes} byte(s) and its ` +
+        `Key ${key} records ${byteLength} byte(s) and its ` +
           `body could not be read (${(cause as NodeJS.ErrnoException).code ?? "unknown"}). ` +
           "A missing body under a committed sidecar is a failed read, never an empty document.",
       );
     }
 
     const actual = contentHash(bytes);
-    if (actual !== sidecar.bodySha256) {
-      throw new EvidenceCorrupted(key, sidecar.bodySha256, actual, bytes.byteLength);
+    if (actual !== recordedHash) {
+      throw new EvidenceCorrupted(key, recordedHash, actual, bytes.byteLength);
     }
-
-    return { key, bytes: new Uint8Array(bytes), meta: sidecar.meta };
+    if (bytes.byteLength !== byteLength) throw new EvidenceStoreRefusal(`Key ${key} records ${byteLength} byte(s), but holds ${bytes.byteLength}.`);
+    return bytes;
   }
 
   /**

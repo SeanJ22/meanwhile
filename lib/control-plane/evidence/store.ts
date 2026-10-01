@@ -599,10 +599,13 @@ export async function putArtifact(
   }
 
   const meta = artifactMeta(artifact);
-  const existing = await store.head(key);
+  const existing = await store.get(key);
   if (existing) {
-    const conflict = objectIncompatibility(existing, meta);
+    const conflict = objectIncompatibility(existing.meta, meta);
     if (conflict) throw immutabilityRefusal(key, conflict);
+    if (existing.bytes.byteLength !== artifact.byteLength || contentHash(existing.bytes) !== offeredHash) {
+      throw new EvidenceStoreRefusal(`Key ${key} has metadata for artifact ${artifact.id}, but its stored bytes do not match. A failed body is never reused.`);
+    }
     return { key, written: false };
   }
 

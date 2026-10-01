@@ -579,6 +579,29 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
 
   const hostOf = (url: URL): string => url.host.toLowerCase();
 
+  function acquiredUrl(requested: URL, finalUrl: string): string {
+    const final = publicUrl(finalUrl);
+    return requested.protocol === "http:" && final instanceof URL && final.protocol === "https:"
+      ? final.toString() : requested.toString();
+  }
+
+  async function preferHttps<T extends { readonly status: number | null; readonly transportError: string | null }>(
+    url: URL, open: (target: URL) => Promise<T>,
+  ): Promise<T> {
+    if (url.protocol !== "http:") return open(url);
+    const secure = new URL(url);
+    secure.protocol = "https:";
+    let first: T;
+    try {
+      first = await open(secure);
+    } catch (error) {
+      if (overCap(hostOf(url)) !== null) throw error;
+      return open(url);
+    }
+    if (first.transportError === null && first.status !== null && first.status >= 200 && first.status < 300) return first;
+    return overCap(hostOf(url)) === null ? open(url) : first;
+  }
+
   function overCap(host: string): string | null {
     const n = hostCounts.get(host) ?? 0;
     const max = ctx.bound.maxRequestsPerHost;
@@ -641,12 +664,12 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const at = ctx.now();
     const { artifact } = recordAcquisition(
       {
-        canonicalUrl: input.url.toString(),
+        canonicalUrl: acquiredUrl(input.url, input.finalUrl),
         retrievalUrl: input.finalUrl,
         retrievedAt: at,
         httpStatus: input.status,
         contentType: input.contentType,
-        sourceId: hostOf(input.url),
+        sourceId: new URL(acquiredUrl(input.url, input.finalUrl)).host.toLowerCase(),
         methodRouteId: input.methodRouteId,
         workItemId: ctx.workItemId,
         attemptId: ctx.attemptId,
@@ -694,12 +717,12 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       contentHash: hash,
       byteLength: input.bytes.byteLength,
       contentType: input.contentType,
-      canonicalUrl: input.url.toString(),
+      canonicalUrl: acquiredUrl(input.url, input.finalUrl),
       retrievalUrl: input.finalUrl,
       retrievedAt: at,
       httpStatus: input.status,
       headers: {},
-      sourceId: hostOf(input.url),
+      sourceId: new URL(acquiredUrl(input.url, input.finalUrl)).host.toLowerCase(),
       methodRouteId: "scout:fetch_public",
       workItemId: ctx.workItemId,
       attemptId: ctx.attemptId,
@@ -926,7 +949,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       nextHopUrls, returnedCount, applicableBecause: input.why,
     });
 
-    const got = await retrieve(url, ACCEPT_PAGE, acc);
+    const got = await preferHttps(url, target => retrieve(target, ACCEPT_PAGE, acc));
     if (got.transportError !== null) {
       return result(
         false,
@@ -1135,26 +1158,28 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       nextHopUrls: browserNextHopUrls, applicableBecause: input.why,
     });
 
-    /* One navigation counts as one request to the host; the page's own calls are observed, not initiated. */
-    hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
-    await ctx.spaceOut(host);
     let obs: Awaited<ReturnType<typeof browseFn>>;
     try {
-      obs = await browseFn({ url: url.toString(), timeoutMs, holder: ctx.holder });
+      obs = await preferHttps(url, async target => {
+        /* Each navigation counts; the page's own calls are observed, not initiated. */
+        hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
+        await ctx.spaceOut(host);
+        requestCount += 1;
+        acc.requests += 1;
+        const observed = await browseFn({ url: target.toString(), timeoutMs, holder: ctx.holder });
+        const bytes = Buffer.byteLength(observed.html, "utf8");
+        bytesFetched += bytes;
+        acc.bytes += bytes;
+        return observed;
+      });
     } catch (error) {
       const why = error instanceof Error ? error.message : String(error);
       browserTransport = transportOf(null, why);
-      requestCount += 1;
-      acc.requests += 1;
       return result(false, `the browser failed on ${url}: ${why}. A browser failure is a fact about this client, not about the record.`, rung(`browser failure: ${why}`), acc, permission);
     }
     const htmlBytes = Buffer.byteLength(obs.html, "utf8");
     browserTransport = transportOf(obs.status, obs.transportError);
     browserHttpStatus = obs.status;
-    requestCount += 1;
-    bytesFetched += htmlBytes;
-    acc.requests += 1;
-    acc.bytes += htmlBytes;
 
     if (obs.html.trim() === "") {
       return result(

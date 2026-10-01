@@ -22,7 +22,7 @@ test("the store's totals become topic counts for everyone: a topic's readers bes
   assert.equal(read.kind, "RECORDED");
   const view = topicCountsView(read);
   assert.equal(view.kind, "READ");
-  assert.deepEqual((view as { rows: { period: string; grain: string; topic: string; users: number; totalUsers: number; percent: number | null }[] }).rows.map((r) => [r.grain, r.period, r.topic, r.users, r.totalUsers, r.percent]),
+  assert.deepEqual((view.kind === "READ" ? view.rows : []).map((r) => [r.grain, r.period, r.topic, r.users, r.totalUsers, r.percent]),
     [["day", "2026-10-01", "water", 1, 5, 20], ["week", "2026-09-28", "water", 4, 10, 40], ["week", "2026-09-28", "free-form", 2, 10, 20]]);
 });
 

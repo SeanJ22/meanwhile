@@ -314,8 +314,9 @@ test("a bounded linked publication capture reaches the existing derived corpus w
   const web = servedRuntime(pages, PUBLISH);
   const scoped = await runCandidatePublicationCycle({ repos: p.repos, eligibleCandidacyIds: new Set([TANG_WILLIAMS]),
     heldVault: await indexVault(p.vaultRoot), vaultRoot: p.vaultRoot, methodVersion: 1,
-    clock: () => (clock.ms += 5), sleep: async ms => { clock.ms += ms; },
-    openFor: () => web.get, maxReads: 100, budgetMs: 300_000 });
+    clock: () => (clock.ms += 45_000), sleep: async ms => { clock.ms += ms; },
+    openFor: () => web.get, maxReads: 100 });
+  assert.ok(clock.ms - Date.parse(PUBLISH) > 30_000, "slow store and source work continue beyond the former publication pass wall");
   assert.equal(scoped.outcomes.some(row => row.url === articleUrl && row.code === "ACQUIRED"), true, JSON.stringify(scoped.outcomes));
   assert.equal(scoped.outcomes.some(row => row.candidacyId !== TANG_WILLIAMS), false,
     "Only candidacies in the supplied owner receipt may acquire linked pages.");
@@ -365,7 +366,7 @@ test("a bounded linked publication capture reaches the existing derived corpus w
   const revisedRun = await runCandidatePublicationCycle({ repos: p.repos, eligibleCandidacyIds: new Set([TANG_WILLIAMS]),
     heldVault: await indexVault(p.vaultRoot), vaultRoot: p.vaultRoot, methodVersion: 1,
     clock: () => (clock.ms += 5), sleep: async ms => { clock.ms += ms; }, openFor: () => revisedWeb.get,
-    maxReads: 100, budgetMs: 300_000, recheckMs: 30 * 60 * 1000 });
+    maxReads: 100, recheckMs: 30 * 60 * 1000 });
   assert.equal(revisedRun.outcomes.some(row => row.url === articleUrl && row.code === "ACQUIRED"), true, JSON.stringify(revisedRun.outcomes));
   const second = (await p.repos.artifacts.readAll()).find(row => row.canonicalUrl === articleUrl && row.publicationLink && row.artifactId !== capture.artifactId)!;
   assert.ok(second);
@@ -415,7 +416,7 @@ test("a blocked first linked page records a route Attempt and yields the next pa
   const run = async () => runCandidatePublicationCycle({ repos: p.repos, eligibleCandidacyIds: new Set([TANG_WILLIAMS]),
     heldVault: await indexVault(p.vaultRoot), vaultRoot: p.vaultRoot, methodVersion: 1,
     clock: () => (ms += 5), sleep: async wait => { ms += wait; }, openFor: () => web.get,
-    maxReads: 1, budgetMs: 300_000 });
+    maxReads: 1 });
   const first = await run();
   assert.equal(first.outcomes[0]?.code, "UNUSABLE_RESPONSE");
   assert.equal(first.deferred, first.due - 1);

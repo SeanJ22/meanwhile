@@ -150,6 +150,8 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
     },
 
     list,
+    listNarrowed: async (projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
+      (await list()).map(row => ({ ...row, value: projectAggregate(row.value, projection) })),
 
     /* `list()` filtered, so the two can never disagree on rows or order. */
     listWhere: async (jsonPath: readonly string[], value: string): Promise<readonly Persisted<T>[]> =>

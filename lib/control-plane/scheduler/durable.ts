@@ -281,7 +281,13 @@ export async function syncObligations(
       if ((RUNTIME_OWNED as readonly string[]).includes(key)) continue;
       if (key === "scopeDivisions") {
         if (canonicalJson(held.scopeDivisions ?? []) !== canonicalJson(o.scopeDivisions ?? [])) changed.push(key);
-      } else if (held[key] !== o[key]) changed.push(key);
+      } else {
+        // Providers reconstruct arrays/objects each pass. Compare their saved
+        // facts, not their references, so an idle registry does not revise rows.
+        const structured = (held[key] !== null && typeof held[key] === "object") ||
+          (o[key] !== null && typeof o[key] === "object");
+        if (structured ? canonicalJson(held[key]) !== canonicalJson(o[key]) : held[key] !== o[key]) changed.push(key);
+      }
     }
 
     if (changed.length === 0) {

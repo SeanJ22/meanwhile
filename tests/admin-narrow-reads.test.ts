@@ -44,6 +44,7 @@ const any = <T>(value: unknown): T => value as T;
 /* ------------------------------------------------------------------ readNarrowed, every provider */
 
 async function narrowsAlike(repo: AggregateRepository<Record<string, unknown>>) {
+  assert.deepEqual(await repo.listNarrowed({ kept: true }), []);
   const whole = { kept: 1, nested: { x: 1, y: 2 }, dropped: "a large document", list: [1, 2] };
   await repo.put("row", whole, NOW);
   const moved = await repo.compareAndSet("row", 1, { ...whole, kept: 2 }, LATER);
@@ -59,6 +60,16 @@ async function narrowsAlike(repo: AggregateRepository<Record<string, unknown>>) 
   assert.deepEqual(revisionOnly?.value, {}, "an empty projection is the revision alone");
   assert.equal(revisionOnly?.revision, 2);
   assert.equal(await repo.readNarrowed("absent", { kept: true }), null, "absent is null, never an empty row");
+  await repo.put("before", { kept: 3, nested: null, dropped: "unused" }, NOW);
+  const listed = await repo.listNarrowed({ kept: true, nested: ["x"] });
+  assert.deepEqual(listed.map(row => ({ id: row.id, value: row.value })), [
+    { id: "before", value: { kept: 3, nested: null } },
+    { id: "row", value: { kept: 2, nested: { x: 1 } } },
+  ]);
+  assert.equal(listed[1].revision, 2);
+  assert.equal(listed[1].updatedAt, LATER);
+  assert.deepEqual((await repo.listNarrowed({})).map(row => row.value), [{}, {}]);
+  assert.deepEqual((await repo.read("row"))?.value, { ...whole, kept: 2 }, "narrowing never changes held records");
 }
 
 test("readNarrowed narrows alike in the memory provider", async () => {

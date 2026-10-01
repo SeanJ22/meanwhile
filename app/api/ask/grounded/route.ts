@@ -754,7 +754,10 @@ export async function POST(request: Request) {
     // officials, or any other source's answer.
     ? timed("commentAccess", () => refreshCommentAccessFromPromoted().catch(() => undefined))()
     : null;
-  const meetingsRead = readReaderEdgeMeetings({ manifest: edgeManifest });
+  const meetingsRead = readReaderEdgeMeetings({
+    manifest: edgeManifest,
+    ...(ocdIds.length && (topicRoute || areaMeetingsAsk) ? { states: statesOf(ocdIds), ocdIds } : {}),
+  });
   meetingsRead.catch(() => undefined);
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
   if (edgeManifest?.authorityArtifacts) {

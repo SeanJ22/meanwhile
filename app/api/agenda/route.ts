@@ -1,4 +1,6 @@
-import { readMeetingsProjection } from "@/lib/meetings/snapshot";
+import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
+import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
+import { settleAgendaSupportingHoldings } from "@/lib/civic-data/agenda-support";
 import { meetingReaderRecords } from "@/lib/meetings/reader-records";
 import { classifyAgendaPublication, observationFromMeetingRecord, publisherAgendaObservationsFor, readerAgendaDocuments } from "@/lib/ask/agenda-publication";
 import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
@@ -28,47 +30,6 @@ import { refreshRegistryRuntimeFromPromoted } from "@/lib/registry/runtime-read-
 
 export const runtime = "nodejs";
 
-export interface AgendaSupportingReaders<TListing> {
-  readonly outcomes: () => Promise<ReturnType<typeof meetingReaderRecords>>;
-  readonly listingIdentity: () => Promise<TListing>;
-}
-
-/** Supporting outcomes and body identity cannot erase held meeting documents. */
-export async function settleAgendaSupportingHoldings<TListing>(
-  meetingId: string,
-  bodyId: string | null,
-  readers: AgendaSupportingReaders<TListing>,
-): Promise<{
-  records: ReturnType<typeof meetingReaderRecords>;
-  listingIdentity: TListing | null;
-  supportingHoldingStatus: "HELD" | "PARTIAL";
-  unavailableAuthorities: string[];
-}> {
-  const [outcomeResult, listingResult] = await Promise.allSettled([
-    Promise.resolve().then(() => readers.outcomes()),
-    Promise.resolve().then(() => readers.listingIdentity()),
-  ]);
-  const unavailableAuthorities: string[] = [];
-  if (outcomeResult.status === "rejected") unavailableAuthorities.push("MEETING_OUTCOME");
-  if (listingResult.status === "rejected") unavailableAuthorities.push("REGISTRY_RUNTIME_BINDING");
-  return {
-    records: outcomeResult.status === "fulfilled" ? outcomeResult.value : {
-      meetingId,
-      bodyId,
-      status: "HOLDING_UNAVAILABLE",
-      agenda: [],
-      actions: [],
-      rollCalls: [],
-      counts: { agenda: 0, actions: 0, rollCalls: 0, votes: 0 },
-      sourceUrl: null,
-      sourceOrg: null,
-    },
-    listingIdentity: listingResult.status === "fulfilled" ? listingResult.value : null,
-    supportingHoldingStatus: unavailableAuthorities.length ? "PARTIAL" : "HELD",
-    unavailableAuthorities,
-  };
-}
-
 export async function GET(request: Request) {
   const meetingId = new URL(request.url).searchParams.get("meetingId");
   if (!meetingId || meetingId.length > 200) {
@@ -77,7 +38,10 @@ export async function GET(request: Request) {
 
   let read;
   try {
-    read = await readMeetingsProjection();
+    const manifest = await readReaderManifest().catch(() => null);
+    const authority = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["registry-runtime", "meeting-outcomes"]).catch(() => null) : null;
+    if (authority) enterReaderAuthorityEdge(authority);
+    read = await readReaderEdgeMeetings({ meetingId, manifest });
   } catch (error) {
     return Response.json(
       {

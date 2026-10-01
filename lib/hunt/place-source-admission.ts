@@ -58,6 +58,7 @@ export async function withNationalPlaceTasks(tasks: readonly RoutineSourceTask[]
     cadenceMs: Math.min(prior?.cadenceMs ?? Infinity, DEFAULT_CADENCE_HOURS * 3_600_000), retryMs: prior?.retryMs ?? 15 * 60_000,
     contract: prior?.contract ?? { readerProjection: contract.readerProjection,
       cadence: { description: "Refresh the admitted place's national sources on the ordinary roster cadence", defaultEveryMs: DEFAULT_CADENCE_HOURS * 3_600_000 } },
-    ownerInvocation: { ...prior?.ownerInvocation, requestedAt, instructions: [...new Set([...(prior?.ownerInvocation?.instructions ?? []), ...instructions])] } };
+    ownerInvocation: { ...prior?.ownerInvocation, publicationPending: true, requestedAt,
+      instructions: [...new Set([...(prior?.ownerInvocation?.instructions ?? []), ...instructions])] } };
   return [...tasks.filter(existing => existing.id !== task.id), task];
 }

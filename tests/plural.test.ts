@@ -22,6 +22,8 @@ import registry from "../lib/registry/registry.json" with { type: "json" };
 import { collectNationalPlaceSources, electionDirectorySelection } from "../lib/sources/plural/place.ts";
 import { electionPageFields } from "../lib/hunt/election-page.ts";
 import { placeSourceReader } from "../lib/hunt/place-source-reader.ts";
+import { runNationalPlaceTask } from "../lib/hunt/place-source-task.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
@@ -29,6 +31,44 @@ import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { beginAttemptFor, claimRouteTask, registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.ts";
 import { emptyFieldManual, newFieldManualEntry, projectFieldManual } from "../lib/control-plane/field-manual.ts";
+
+test("a national host bound saves admitted responses and defers all remaining ZIPs without abandoning Attempts", async t => {
+  const repos = createMemoryRepositories();
+  const store = new MemoryEvidenceStore();
+  let requests = 0;
+  const year = new Date().getUTCFullYear();
+  const names = ["2020 Census ZIP Code Tabulation Areas", `${Math.floor((year - 1789) / 2) + 1}th Congressional Districts`,
+    `${Math.floor((year - 1) / 2) * 2} State Legislative Districts - Upper`,
+    `${Math.floor((year - 1) / 2) * 2} State Legislative Districts - Lower`, "States", "Counties", "Incorporated Places",
+    "County Subdivisions", "Unified School Districts", "Elementary School Districts", "Secondary School Districts"];
+  t.mock.method(globalThis, "fetch", async (url: string) => {
+    requests++;
+    // Siblings still in flight when another request is refused must be vaulted.
+    await new Promise(resolve => setTimeout(resolve, 5));
+    return Response.json(url.endsWith("/query")
+      ? { url, features: [{ attributes: {}, geometry: { rings: [[[0, 0], [1, 0], [1, 1], [0, 0]]] } }] }
+      : { url, layers: names.map((name, id) => ({ id, name, type: "Feature Layer" })) });
+  });
+  const tools = { repos, store, now: () => "2026-09-30T00:00:00.000Z", spaceOut: async () => {} };
+  const input = { tools, store: new MemoryRoutineDataStore(), zips: ["03060", "03101", "03301"],
+    publish: async () => { assert.fail("incomplete geography cannot publish"); } };
+  const result = await runNationalPlaceTask(input);
+  assert.deepEqual(result.map(row => row.zip), input.zips);
+  assert.ok(result.every(row => "deferred" in row && row.deferred.includes("next pass")));
+  assert.equal(requests, RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);
+  assert.ok((await repos.attempts.list()).every(row => row.value.outcome === "COMPLETED"));
+  assert.ok((await repos.routeTasks.list()).every(row => row.value.disposition?.disposition === "BLOCKED_CURRENTLY"));
+  assert.ok((await repos.occurrences.list()).every(row => row.value.closedAt && row.value.unresolvedReason?.includes("DEFERRED") && row.value.disposition === null));
+  assert.ok((await repos.obligations.list()).every(row => row.value.lastWorkedAt === null));
+  const saved = await repos.artifacts.readAll();
+  assert.ok(saved.some(row => row.canonicalUrl.includes("Places_CouSub_ConCity_SubMCD")), "parallel responses saved before completion");
+  const before = requests;
+  await runNationalPlaceTask(input);
+  assert.equal(requests - before, RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);
+  const next = await repos.artifacts.readAll();
+  assert.ok(next.some(row => row.canonicalUrl.includes("School")), "the next pass advances using held responses");
+  assert.ok(saved.every(row => next.some(other => other.artifactId === row.artifactId)), "all earlier evidence remains held");
+});
 
 test("a national walk reuses another role's working source route after a directory's dead landing page", async () => {
   const now = "2026-09-30T00:00:00Z";

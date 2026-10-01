@@ -1,7 +1,7 @@
 import { hostname } from "node:os";
 import { ZERO_COST } from "../control-plane/attempt.ts";
 import { readFieldManual } from "../control-plane/field-manual.ts";
-import { dispatchOne } from "../control-plane/scheduler/dispatch.ts";
+import { dispatchOne, dischargesObligation } from "../control-plane/scheduler/dispatch.ts";
 import { syncObligations, openOccurrence, resumeOpenOccurrence, closeOccurrence, closeSettledOccurrence } from "../control-plane/scheduler/durable.ts";
 import { scheduleObligation } from "../control-plane/scheduler/obligation.ts";
 import { RESEARCH_BOUNDS } from "../control-plane/scheduler/research-policy.ts";
@@ -9,7 +9,7 @@ import { renewLease } from "../control-plane/repository/coordinator.ts";
 import type { ResearchRuntimeTools } from "../control-plane/workers/research-runtime.ts";
 import type { RoutineDataStore } from "../civic-data/store.ts";
 import { runPlaceSource, type NationalPlacePublicationInput } from "./place-source.ts";
-import { placeSourceReader } from "./place-source-reader.ts";
+import { placeSourceReader, PlaceSourceDeferred } from "./place-source-reader.ts";
 
 /** The registered registry source uses the ordinary acquiring Attempt, vault
  * and occurrence lifecycle. It costs no model tokens; remaining blanks stay
@@ -21,13 +21,14 @@ export async function runNationalPlaceTask(input: {
   publish: (input: NationalPlacePublicationInput) => Promise<unknown>;
   publishElection?: Parameters<typeof runPlaceSource>[0]["publishElection"];
 }) {
-  const reports: Awaited<ReturnType<typeof runPlaceSource>>[] = [];
+  const reports: (Awaited<ReturnType<typeof runPlaceSource>> | { zip: string; deferred: string })[] = [];
+  let deferred: string | null = null;
   const { tools } = input;
   const holder = `national-place:${hostname()}:${process.pid}`;
   for (const zip of [...new Set(input.zips)]) {
     if (!/^\d{5}$/.test(zip)) throw new Error("A five-digit ZIP is required");
     const now = tools.now();
-    const knowledge = await readFieldManual(tools.repos);
+    const knowledge = deferred ? undefined : await readFieldManual(tools.repos);
     const definition = { id: `national-place:${zip}`, subjectId: `zip:${zip}`, recordClass: "OFFICIAL_ROSTER" as const,
       routeId: "national-place-sources", active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null };
     const synced = await syncObligations(tools.repos, [definition], now, { exactReads: true });
@@ -59,27 +60,34 @@ export async function runNationalPlaceTask(input: {
           }, Math.floor(ttlMs / 3));
           timer.unref();
           try {
+            if (deferred) return { kind: "DISPOSED", ranAs: "DETERMINISTIC", artifacts: [],
+              disposition: { disposition: "BLOCKED_CURRENTLY", permission: "ALLOWED", transport: "OTHER_NAMED_FAILURE", observation: null, note: deferred },
+              cost: ZERO_COST, detail: `ZIP ${zip}: ${deferred}` };
             const saved = await placeSourceReader({ tools, project: "freshness", context: {
               obligation: scheduled, route: null, providerId: null, attemptId, workItemId, routeTaskId, holder, now: tools.now,
               // This finite national walk is plain code; it retains the shared
               // ten-request limit for each website.
               bound: RESEARCH_BOUNDS.perDispatch,
             } });
-            const geographyRequests = new Map<string, number>();
-            report = await runPlaceSource({ repos: tools.repos, store: input.store, zip, now, clock: tools.now, knowledge,
-              readSource: async url => { if (leaseError) throw leaseError; return saved.read(url); },
-              geography: { capture: saved.captureGeography, readHeld: saved.readGeography, fetchImpl: async (url, options) => {
-                const host = new URL(url instanceof Request ? url.url : String(url)).hostname.toLowerCase().replace(/^www\./, "");
-                const count = geographyRequests.get(host) ?? 0;
-                if (count >= RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost) throw new Error(`Geography source ${host}: shared website request bound reached; saved responses remain available for the next pass`);
-                geographyRequests.set(host, count + 1);
-                saved.cost.requestCount++;
-                const response = await fetch(url, options);
-                return response;
-              } }, geographyCaptures: saved.geographyCaptures,
-              publish: async value => { if (leaseError) throw leaseError; return input.publish(value); },
-              ...(input.publishElection ? { publishElection: input.publishElection } : {}) });
+            try {
+              report = await runPlaceSource({ repos: tools.repos, store: input.store, zip, now, clock: tools.now, knowledge,
+                readSource: async url => { if (leaseError) throw leaseError; return saved.read(url); },
+                geography: { capture: saved.captureGeography, readHeld: saved.readGeography, fetchImpl: saved.fetchGeography },
+                geographyCaptures: saved.geographyCaptures,
+                publish: async value => { if (leaseError) throw leaseError; return input.publish(value); },
+                ...(input.publishElection ? { publishElection: input.publishElection } : {}) });
+            } catch (error) {
+              if (!(error instanceof PlaceSourceDeferred)) throw error;
+              deferred = error.message;
+            }
+            // Collectors retain ordinary source gaps, so also observe a bound
+            // they caught while publishing already verified fields.
+            deferred ??= saved.deferred?.message ?? null;
             if (leaseError) throw leaseError;
+            if (deferred) return { kind: "DISPOSED", ranAs: "DETERMINISTIC", artifacts: [...saved.artifacts.values()],
+              disposition: { disposition: "BLOCKED_CURRENTLY", permission: "ALLOWED", transport: "OTHER_NAMED_FAILURE", observation: null, note: deferred },
+              cost: { ...ZERO_COST, ...saved.cost, durationMs: Date.now() - started }, detail: `ZIP ${zip}: ${deferred}` };
+            if (!report) throw new Error("National place source returned no report");
             const artifacts = [...saved.artifacts.values()];
             return { kind: "DISPOSED", ranAs: "DETERMINISTIC", artifacts,
               disposition: { disposition: "INGESTED", permission: "ALLOWED", transport: "REACHABLE",
@@ -94,9 +102,14 @@ export async function runNationalPlaceTask(input: {
         },
       } });
     if (!result.claimed) throw new Error(`National place source ${zip}: ${result.detail}`);
-    await closeOccurrence(tools.repos, { occurrenceId, disposition: result.disposition,
-      unresolvedReason: result.outcome === "WORKED" ? null : result.detail, now: tools.now(),
-      ...(result.outcome === "WORKED" ? { workedAt: tools.now() } : {}) });
+    const discharged = dischargesObligation(result);
+    await closeOccurrence(tools.repos, { occurrenceId, disposition: discharged ? result.disposition : null,
+      unresolvedReason: discharged ? null : result.detail, now: tools.now(),
+      ...(discharged ? { workedAt: tools.now() } : {}) });
+    if (result.outcome === "WORKED" && deferred) {
+      reports.push({ zip, deferred });
+      continue;
+    }
     if (result.outcome !== "WORKED" || !report) throw new Error(`National place source ${zip}: ${result.detail}`);
     reports.push(report);
   }

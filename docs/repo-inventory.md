@@ -807,7 +807,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-949 file(s).
+950 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -875,6 +875,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-v6-ui/workers-live-data-failure.test.ts`
 - `tests/admin-v6-ui/workers-screen.test.tsx`
 - `tests/admin-v6-workers.test.ts`
+- `tests/admin-wake-hint.test.ts`
 - `tests/agenda-claim-guard.test.ts`
 - `tests/agenda-documents.test.ts`
 - `tests/agenda-meeting-location.test.ts`
@@ -1761,7 +1762,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7039 file(s).
+7041 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -5095,6 +5096,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/gateway/pulse-read.ts`
 - `lib/control-plane/gateway/receipts.ts`
 - `lib/control-plane/gateway/registry.ts`
+- `lib/control-plane/gateway/wake-hint.ts`
 - `lib/control-plane/gateway/write-readback.ts`
 - `lib/control-plane/ids.ts`
 - `lib/control-plane/incident-groups.ts`
@@ -7677,6 +7679,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-v6-ui/workers-live-data-failure.test.ts`
 - `tests/admin-v6-ui/workers-screen.test.tsx`
 - `tests/admin-v6-workers.test.ts`
+- `tests/admin-wake-hint.test.ts`
 - `tests/agenda-claim-guard.test.ts`
 - `tests/agenda-documents.test.ts`
 - `tests/agenda-meeting-location.test.ts`

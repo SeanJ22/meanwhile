@@ -56,6 +56,7 @@ import {
 } from "../research-view.ts";
 import { RESEARCH_STATE_ID } from "../scheduler/research-policy.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
+import type { WakeHintWriter } from "./wake-hint.ts";
 import {
   ADMIN_CONFIG_ID,
   defaultAdminConfig,
@@ -121,6 +122,8 @@ export interface GatewayDeps {
   readonly currentStateVersion: string | null;
   /** The deploy that is running this, for the receipt. Null when the runtime cannot say. */
   readonly codeSha: string | null;
+  /** Tells the runner its controls changed, after an action is durably applied. Absent when the host has no Blobs destination. Never part of an action's result. */
+  readonly wake?: WakeHintWriter | null;
 }
 
 /* --------------------------------------------------------------- results */

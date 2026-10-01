@@ -18,6 +18,30 @@ import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { captureIntact, heldPageCopies } from "./worker-publication-evidence.ts";
 import { publishElectionFields } from "./election-field-publication.ts";
 import { readManualProjectionPrior } from "./manual-projections.ts";
+import { FIPS_TO_STATE } from "../ocd/fips.ts";
+import { US_STATES } from "../control-plane/readiness/catalog.ts";
+import { inventoryRecordEvidence } from "../control-plane/workers/record-evidence.ts";
+import { electionFieldState } from "./election-fields.ts";
+
+export const NATIONAL_ELECTION_OFFICES_URL = "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/";
+
+/** One saved national directory supplies offices for every jurisdiction it names. */
+export function heldNationalElectionOfficeFields(capture: WorkerPublicationCapture): readonly ElectionFieldInput[] {
+  if (capture.evidence.canonicalUrl !== NATIONAL_ELECTION_OFFICES_URL || !captureIntact(capture)) return [];
+  const inventory = inventoryRecordEvidence(capture.evidence, { format: "HTML_TABLE", tableIndex: 0, headerRows: 1,
+    fields: { jurisdiction: { source: 0, type: "STRING" }, office: { source: 1, type: "STRING" }, phone: { source: 3, type: "STRING" } } });
+  const nameKey = (name: string) => name.toLowerCase().replace(/\s*\([^)]*\)/g, "").replace(/^u\.?s\.?\s+/, "").replace(/[^a-z]/g, "");
+  return inventory.rows.flatMap(row => {
+    const jurisdiction = String(row.jurisdiction.value), office = String(row.office.value);
+    const state = US_STATES.find(state => nameKey(state.name) === nameKey(jurisdiction));
+    const geography = state && Object.values(FIPS_TO_STATE).find(entry => entry.postal.toLowerCase() === state.code);
+    const phone = /\(?\b\d{3}\)?[\s/.-]*\d{3}[\s/.-]\d{4}\b/.exec(String(row.phone.value))?.[0];
+    if (!state || !geography || !office || !phone) return [];
+    return [{ divisionId: `ocd-division/country:us/${geography.prefix}:${state.code}`, kind: "election_office" as const,
+      sourceUrl: capture.evidence.canonicalUrl, value: office, phone, quote: `${jurisdiction}\n${office}`, dates: [],
+      document: { url: capture.evidence.canonicalUrl, text: capture.evidence.text, collectedAt: capture.observedAt, capture } }];
+  });
+}
 
 export interface HeldElectionOffice {
   /** The office as the page names it. */
@@ -71,6 +95,10 @@ export function readHeldElectionOffices(html: string): readonly HeldElectionOffi
  */
 export function heldElectionOfficeFields(input: { readonly divisionId: string; readonly capture: WorkerPublicationCapture }): readonly ElectionFieldInput[] {
   const { capture } = input;
+  if (capture.evidence.canonicalUrl === NATIONAL_ELECTION_OFFICES_URL) {
+    const state = electionFieldState(input.divisionId);
+    return heldNationalElectionOfficeFields(capture).filter(field => electionFieldState(field.divisionId) === state);
+  }
   return readHeldElectionOffices(capture.evidence.text).map(row => ({
     divisionId: input.divisionId, kind: "election_office" as const, sourceUrl: capture.evidence.canonicalUrl,
     value: row.office, phone: row.phone, quote: row.quote, dates: [],
@@ -114,7 +142,8 @@ export async function publishHeldElectionOffices(input: {
         if (readUrls.has(artifact.canonicalUrl)) continue;
         const capture = await input.readHeld(artifact);
         // The right place: the government's own saved page names that government.
-        if (!capture || !captureIntact(capture) || !pageWords(capture.evidence.text).includes(division.label.toLowerCase())) continue;
+        if (!capture || !captureIntact(capture) ||
+          (capture.evidence.canonicalUrl !== NATIONAL_ELECTION_OFFICES_URL && !pageWords(capture.evidence.text).includes(division.label.toLowerCase()))) continue;
         readUrls.add(artifact.canonicalUrl);
         found.push(...heldElectionOfficeFields({ divisionId: division.ocdId, capture }));
       }
@@ -122,7 +151,7 @@ export async function publishHeldElectionOffices(input: {
     })());
     const found = await read.get(key)!;
     fieldsByItem.set(item.id, found.length);
-    if (!fields.some(row => found.includes(row))) fields.push(...found);
+    for (const field of found) if (!fields.includes(field)) fields.push(field);
   }
   let published: Awaited<ReturnType<typeof publishElectionFields>> | null = null, failure: string | null = null, fresh: string[] = [];
   if (fields.length) {

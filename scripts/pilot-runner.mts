@@ -671,8 +671,11 @@ const CONSOLE_PUBLISHERS: readonly { readonly name: string; readonly args: reado
 
 const publishChangedConsole = consolePublisher({
   readInputs: async () => {
-    const controlUrl = controlPlaneUrlFromEnv();
-    const readerUrl = process.env.DATABASE_URL;
+    // Match the publishers' existing reader target, including the installed
+    // runtime's read-only connection. A developer URL is never a substitute.
+    const env = STAGING ? process.env : runtimeProductionReadEnvironment(process.env);
+    const controlUrl = controlPlaneUrlFromEnv(env);
+    const readerUrl = env.DATABASE_URL;
     if (!controlUrl || !readerUrl) throw new Error("CONSOLE_INPUTS_UNCONFIGURED");
     return consoleInputReader(controlUrl, readerUrl, RUNNING_CODE_SHA)();
   },

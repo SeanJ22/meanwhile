@@ -138,6 +138,9 @@ test("M81: the badge derives from the map's own geometry, never a second source"
    *   single authority on whether the verb may attach to a class of body. A
    *   lookup in a hardcoded table.
    * - `../registry/types.ts` — `BodyClass` and `DivisionType`, types only.
+   * - `../text/reader-names.ts` — `readerGovernmentName` (S2.4, 2026-10-01), a pure
+   *   string formatter: the area a claim names is "Pima County", not the Census's
+   *   "Pima". It holds no data and resolves nothing.
    *
    * The last three are the GOV-1 repair and they are the reason it cannot be
    * undone by a forgetful call site: the govern verb was being handed to 248
@@ -158,6 +161,7 @@ test("M81: the badge derives from the map's own geometry, never a second source"
       "../registry/body-class-labels.ts",
       "../registry/types.ts",
       "../sources/types.ts",
+      "../text/reader-names.ts",
     ],
     "the badge module imports something other than the meeting type, the shared wording and " +
       "the two identity predicates — it must take the resolved answer, never resolve its own",

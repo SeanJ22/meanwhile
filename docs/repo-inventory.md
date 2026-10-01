@@ -794,7 +794,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-962 file(s).
+963 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -1512,6 +1512,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/reader-last-mile-registry-failure.test.ts`
 - `tests/reader-last-mile-trace.test.ts`
 - `tests/reader-meeting-listing-count.test.ts`
+- `tests/reader-names.test.ts`
 - `tests/reader-official-actions.test.ts`
 - `tests/reader-polling-fallback.test.ts`
 - `tests/reader-prl-delivery.test.ts`
@@ -1761,7 +1762,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7071 file(s).
+7073 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -5967,6 +5968,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/text/boilerplate.ts`
 - `lib/text/format-date.ts`
 - `lib/text/mojibake.ts`
+- `lib/text/reader-names.ts`
 - `lib/text/refusal-shapes.ts`
 - `lib/time/zoned.ts`
 - `lib/tracker/obligation-handoff.ts`
@@ -8584,6 +8586,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/reader-last-mile-registry-failure.test.ts`
 - `tests/reader-last-mile-trace.test.ts`
 - `tests/reader-meeting-listing-count.test.ts`
+- `tests/reader-names.test.ts`
 - `tests/reader-official-actions.test.ts`
 - `tests/reader-polling-fallback.test.ts`
 - `tests/reader-prl-delivery.test.ts`

@@ -11,9 +11,20 @@ import {
   type MarkerPoolEntry,
 } from "../lib/map/marker-pool.ts";
 import { initialZoomForZip } from "../lib/map/initial-zoom.ts";
+import { withDistricts, NATIONAL_BOUNDARIES_SOURCE, boundarySource, BOUNDARY_ARCHIVE_FALLBACK } from "../lib/map/districts.ts";
 import { CONUS_BOUNDS, FALLBACK_STYLE, METRO_ZOOM, resolveBasemap } from "../lib/map/style.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import type { Venue } from "../lib/meetings/venues.ts";
+
+test("initial style requests boundary tiles without basemap or glyph readiness", () => {
+  const style = withDistricts(FALLBACK_STYLE, ["county", "state-house"]);
+  assert.deepEqual(style.sources[NATIONAL_BOUNDARIES_SOURCE], boundarySource());
+  assert.deepEqual(style.layers.filter(layer => layer.id.startsWith("district-")).map(layer => layer.id), [
+    "district-county-fill", "district-county-line", "district-state-house-fill", "district-state-house-line",
+  ]);
+  assert.ok(boundarySource(BOUNDARY_ARCHIVE_FALLBACK).url?.includes("/api/boundaries/"));
+  assert.equal(withDistricts(FALLBACK_STYLE, []), FALLBACK_STYLE);
+});
 
 /**
  * The map's three untested layers — R05, 2026-08-17.

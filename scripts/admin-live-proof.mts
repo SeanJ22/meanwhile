@@ -196,24 +196,24 @@ if (DEPLOYED) {
    * host's own middleware admitted this session on its own hostname.
    */
   try {
-    const page = await fetch(`${BASE}/admin/agents`, {
+    const page = await fetch(`${BASE}/admin`, {
       headers: { cookie: `${ADMIN_SESSION_COOKIE}=${cookie}`, accept: "text/html", "cache-control": "no-cache" },
       redirect: "manual",
     });
     const html = page.status === 200 ? await page.text() : "";
     legs.push({
       leg: "an authenticated admin page is served by the deployed host",
-      ok: page.status === 200 && html.includes("Agents"),
+      ok: page.status === 200 && /meanwhile/i.test(html),
       says:
         page.status === 200
-          ? `GET ${BASE}/admin/agents returned 200 and ${html.length} bytes of the Agents page to a signed session.`
-          : `GET ${BASE}/admin/agents returned ${page.status}, so no authenticated page was served.`,
+          ? `GET ${BASE}/admin returned 200 and ${html.length} bytes of the command center to a signed session.`
+          : `GET ${BASE}/admin returned ${page.status}, so no authenticated page was served.`,
     });
   } catch (error) {
     legs.push({
       leg: "an authenticated admin page is served by the deployed host",
       ok: false,
-      says: `GET ${BASE}/admin/agents failed (${(error as Error)?.message ?? "error"}).`,
+      says: `GET ${BASE}/admin failed (${(error as Error)?.message ?? "error"}).`,
     });
   }
 }

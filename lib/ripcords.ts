@@ -45,44 +45,6 @@ export const RIPCORDS = {
     filters: "FEC_CONTRIBUTOR rows and the CONTRIBUTOR_REACTION control",
   },
   /**
-   * Excludes funding reactions (FUNDING_TOTAL_REACTION and
-   * CONTRIBUTOR_REACTION rows) from aggregation and every export.
-   *
-   * **Shipped PULLED with D34; flipped LIVE 2026-08-15 on the author's
-   * ruling.** The ruling, verbatim:
-   *
-   * > The author rules the exclusion wrong as product truth: what is
-   * > licensed is reader-attention signal (anonymous reactions), never
-   * > FEC-derived data — a buyer receives opinions about displays, not
-   * > contributor records. This is the author's documented, settled
-   * > position.
-   *
-   * The reasoning is a distinction the original framing collapsed. The
-   * § 30111(a)(4) question is about the CONTRIBUTOR DATA — whose commercial
-   * use is restricted — and it is still open, still governing
-   * `ripcord.fecContributorDisplay`, and still counsel's to close. A
-   * reader's anonymous feeling about a display is not that data and is not
-   * derived from it: it is a fact about a reader, collected by us,
-   * identifier-free, and it carries no contributor's name, amount or filing
-   * into anything.
-   *
-   * **The switch stays, as a belt rather than a blocker.** The provenance
-   * tags, the filter and the pull procedure are unchanged, so if counsel's
-   * read differs the exclusion is one flag away and is still a filter, never
-   * a migration or a hunt.
-   */
-  "ripcord.fundingReactionsInAggregates": {
-    pulled: false,
-    envVar: "WTP_RIPCORD_FUNDING_REACTIONS_IN_AGGREGATES",
-    question:
-      "RULED by the author 2026-08-15: what is licensed is reader-attention signal — anonymous reactions — and never FEC-derived data; a buyer receives opinions about displays, not contributor records. The separate § 30111(a)(4) question over the underlying contributor DATA is untouched by this ruling and still governs ripcord.fecContributorDisplay (D23).",
-    closer:
-      "Author-ruled 2026-08-15; counsel review welcome (the B05 hire) and may re-pull it",
-    trackerRows: "D23, D34, D61",
-    filters:
-      "FUNDING_TOTAL_REACTION and CONTRIBUTOR_REACTION rows out of aggregateReactions and every export",
-  },
-  /**
    * The tunable intake protections (T08): the per-device burst limits, the
    * soft velocity-quarantine threshold, the per-device daily ceiling, the
    * per-IP windows, and same-origin enforcement on /api/reactions and
@@ -97,8 +59,8 @@ export const RIPCORDS = {
     pulled: false,
     envVar: "WTP_RIPCORD_RATE_LIMITS",
     question:
-      "Operational, not legal: are the thresholds and the origin check calibrated so no legitimate reader is ever refused? (The author's standard: the fastest human thumb never hits a limit; a script hits one in its first second.)",
-    closer: "The author — this is a product-safety tuning question, not a counsel question",
+      "Operational, not legal: are the thresholds and the origin check calibrated so no legitimate reader is ever refused?",
+    closer: "Engineering: whoever is on call, when a protection is refusing real readers",
     trackerRows: "T08",
     filters:
       "The rate-limit family on the intake routes: in-memory windows, the authoritative per-device counters, the daily ceiling, velocity quarantine, and same-origin enforcement",
@@ -119,19 +81,8 @@ export const RIPCORDS = {
     envVar: "WTP_RIPCORD_ASK_CLASSIFIER",
     question:
       "Product, not legal: is a model choosing WHICH curated topic a question belongs to compatible with the no-generation rule, given that it writes none of the answer and its whole output is one identifier from a closed list?",
-    /**
-     * **ANSWERED 2026-08-15 (6f3): the author reviewed how it operates — one
-     * identifier from a closed list, zero reader-facing sentences — and ruled
-     * it acceptable. The flag stays LIVE.**
-     *
-     * The question is not deleted and the flag is not removed. A ruling is a
-     * position on doctrine as it stands, and doctrine can move; keeping the
-     * flag means a future change of mind is one env var rather than a
-     * revert. That is the whole argument for the ripcord shape, and it
-     * applies exactly as much to a question that has been answered YES.
-     */
     closer:
-      "The author — RULED 2026-08-15: acceptable as built, stays live. Retained as a one-flip pull if the doctrine ever moves.",
+      "Engineering: whoever is on call. An emergency off switch; pulled, the ask box falls back to keyword-only matching.",
     trackerRows: "A09, A12",
     filters:
       "The classifier call itself: the ask box falls back to keyword-only matching and the honest refusal",
@@ -148,78 +99,22 @@ export const RIPCORDS = {
     question:
       "Doctrine: may a model write the reader-facing sentence at all, given that it is shown only records the app retrieved, is given no corpus, tools or network, and has every source URL in its answer checked against the evidence pack it was handed?",
     /**
-     * **The reconciliation, because this rung needed one.**
-     *
-     * `app/api/ask/agenda/route.ts` carries an earlier session's note that
-     * nothing is summarised. Under RULING 185 that is an implementation
-     * comment at precedence 7. The root constitution at precedence 2 says a
-     * summary "paraphrases a cited source, never fills a gap" — which
-     * contemplates LLM summaries and states their condition — and the author's
-     * current directive at precedence 1 asks for this rung by name.
-     *
-     * So it ships live, and the condition the older note was protecting is
-     * enforced by `lib/ask/validate.ts` rather than by not building the thing.
-     * The flag exists because "enforced mechanically" is a claim that should
-     * be one env var away from being withdrawn.
+     * Ask writes the reader-facing sentence only from records the app
+     * retrieved; `lib/ask/validate.ts` rejects anything the records do not
+     * support (rulings §0: Ask should answer as well as asking Claude directly).
      */
     closer:
-      "The author — the directive of 2026-08-27 asked for grounded synthesis by name. Retained as a one-flip pull: pulled, Ask degrades to the structured sourced answer it already produced.",
+      "Engineering: whoever is on call. An emergency off switch if a generated sentence is found to state something its records do not support; pulled, Ask degrades to the structured sourced answer.",
     trackerRows: "ASK01, ASK02",
     filters:
       "Both model rungs of the grounded pipeline: Ask falls back to deterministic interpretation and the structured evidence answer, with no generated prose",
-  },
-  /**
-   * **Ask signal capture** (ASK03, 2026-08-27; the basis corrected 2026-08-28).
-   * **SHIPS PULLED.**
-   *
-   * ## The gating basis, stated honestly
-   *
-   * This header used to say the DATA-PRIVACY POLICY required the gate. **That
-   * citation was wrong and is withdrawn.** "Honest disclosure at the box" is
-   * RULING 141's clause and RULING 141 governs the Speak Your Mind store's four
-   * rules; the root constitution's friction exceptions name the transparency
-   * disclosure at REACTION capture and consent to collection, neither of which
-   * is an Ask-specific rule. Reading a rule about one store as binding law over
-   * another is how a policy grows clauses nobody adopted.
-   *
-   * The real basis needs no invented law and is higher precedence anyway:
-   * **an operator decision.** The author has instructed that new Ask/privacy
-   * copy does not ship and that NH246 stays P2 / NEEDS SEAN.
-   *
-   * ## What "built" now means, and what it did not
-   *
-   * Until 2026-08-28 `captureAskInteraction` had NO PRODUCTION CALLER — only
-   * its own module and its tests — so raising this flag would have changed
-   * nothing at all. `app/api/ask/grounded/route.ts` now calls it, after the
-   * delivered answer is known, on every outcome including CLARIFY and
-   * UNRESOLVED.
-   *
-   * ## Activation is three things, not one
-   *
-   * The disclosure copy, this flag, AND minting the Ask continuity key — which
-   * the surfaces deliberately READ and never mint while capture is off, so no
-   * identifier is placed on a reader's device for a switched-off capability.
-   * `captureAskInteraction` REFUSES a row with no continuity key rather than
-   * digesting the empty string, which would give every reader the same hash and
-   * report one distinct reader forever. Doing two of the three writes nothing.
-   */
-  "ripcord.askSignalCapture": {
-    pulled: true,
-    envVar: "WTP_RIPCORD_ASK_SIGNAL_CAPTURE",
-    question:
-      "Consent, not product: may the scrubbed question and the answer a reader received be kept as sellable civic-interest signal, and what exact line must a reader see before they type for that to be honest?",
-    closer:
-      "The author — UNANSWERED as of 2026-08-28. An OPERATOR DECISION pending privacy approval, not a clause of current law: no current rule names Ask specifically, and RULING 141 governs Speak Your Mind. Draft copy is on NH246. Activation is the copy, this flag AND minting the continuity key.",
-    trackerRows: "ASK03, NH246",
-    filters:
-      "Every write of the Ask interaction record: Ask logs exactly what it logged before, the topic id and the capped refusal question",
   },
   /**
    * The master ripcord (T08): closes reaction and search/ask intake
    * ENTIRELY — the server refuses every write with a 503 while the app
    * renders normally and a tapping reader sees the honest not-counted line
    * (P11's rendering; no client change involved). For live-attack response
-   * without a code change. The pull procedure the author can follow at 2am
+   * without a code change. The pull procedure anyone on call can follow at 2am
    * is docs/ripcords.md. Ships LIVE.
    */
   /**
@@ -259,7 +154,7 @@ export const RIPCORDS = {
     envVar: "WTP_RIPCORD_REACTION_INTAKE",
     question:
       "Operational, not legal: held open for live-attack response — is the store currently under an attack that per-device limits cannot absorb?",
-    closer: "The author — pulled during an attack, restored when the attack ends",
+    closer: "Engineering: whoever is on call — pulled during an attack, restored when it ends",
     trackerRows: "T08",
     filters:
       "Every write to the reaction store and the search/ask log (both POST routes refuse with 503); read paths and rendering are untouched",

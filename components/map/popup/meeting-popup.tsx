@@ -19,7 +19,8 @@ import { carriedRowClause, relativeAge } from "@/lib/meetings/freshness";
 import { joinLine, onlineAccessFor, placelessWhereLine } from "@/lib/meetings/online";
 import { minutesSummaryForMeeting } from "@/lib/meetings/minutes-summaries";
 import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
-import { badgeFor, type JurisdictionBadge } from "@/lib/meetings/jurisdiction-badge";
+import { useMeetingBadge } from "@/hooks/use-meeting-badge";
+import type { JurisdictionBadge } from "@/lib/meetings/jurisdiction-badge";
 import { useShellData, useMeetingListingIdentity } from "@/lib/state/data";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { MeetingListingNotice } from "../meeting-listing-notice";
@@ -108,9 +109,10 @@ export function MeetingPopup({
    * this body governs" underneath it, to a reader who had given a zip. 07866
    * holds three municipalities; the card picked one.
    */
-  const { governing, zipPartial, basis, location } = useShellData();
+  const { location } = useShellData();
+  const { badgeOf, bodyClassOf } = useMeetingBadge();
   const listingCount = readerMeetingCount([meeting], useMeetingListingIdentity());
-  const jurisdiction: JurisdictionBadge = badgeFor(meeting, governing, basis, zipPartial);
+  const jurisdiction: JurisdictionBadge = badgeOf(meeting);
   // 6a (2026-08-17): a concluded meeting is a record, not an errand —
   // Directions drops (nobody drives to a meeting that already happened),
   // and the card gains what happened + the office phone instead.
@@ -161,7 +163,7 @@ export function MeetingPopup({
           next town's select board is entitled to it; this is so they know
           which one they clicked. */}
       <PopupRow label="Jurisdiction">
-        <JurisdictionPill badge={jurisdiction} zip={location?.zip ?? null} />
+        <JurisdictionPill badge={jurisdiction} bodyClass={bodyClassOf(meeting)} zip={location?.zip ?? null} />
       </PopupRow>
 
       <PopupRow label="Date">

@@ -132,6 +132,7 @@ test("R28: every condition that could change the edge reads the prepared row and
     ["the prepared row has no generation instant", { ...base, prepared: { ...CURRENT_PREPARED, generatedAt: null } }, /generation instant/],
     ["no manifest is served", { ...base, servedManifest: null }, /no served manifest/],
     ["the manifest has another format", { ...base, servedManifest: { ...manifest, formatVersion: 2 as unknown as 1 } }, /format/],
+    ["the manifest still holds state pieces", { ...base, servedManifest: { ...manifest, meetingLayout: undefined } }, /governing-area/],
     ["the manifest came from another composition", { ...base, prepared: { ...CURRENT_PREPARED, composition: "composition-2", generatedAt: "2026-09-25T16:00:00.000Z" } }, /another composition/],
     [
       "a manifest written before compositions were named came from another generation",
@@ -170,6 +171,7 @@ test("R28: shared publication decides the meeting carry before it reads the prep
   const publish = child.indexOf("await publishReaderEdgeArtifacts(");
   assert.ok(manifestRead > 0 && manifestRead < carry, "the served manifest is read before the decision");
   assert.match(child.slice(carry, current), /servedManifest\.composition === prepared\.composition/, "carry compares the serving copy's actual composition");
+  assert.match(child.slice(carry, current), /servedManifest\?\.meetingLayout === "governing-area"/, "old state pieces read the prepared row once to repartition");
   assert.ok(carry < current && current < rowRead && rowRead < publish, "the prepared row is read only past the carry");
   assert.equal(child.match(/readPreparedMeetingsProjection\(/g)?.length, 1, "one prepared-row read, on the publish path");
   assert.match(child, /if \(artifactStore === null\) \{\s*console\.log\(JSON\.stringify\(\{ readerEdge: "SKIPPED_NO_STORE" \}\)\);/);

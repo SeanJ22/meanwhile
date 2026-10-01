@@ -80,8 +80,10 @@ test("a national host bound saves admitted responses and defers all remaining ZI
   const saved = await repos.artifacts.readAll();
   assert.ok(saved.some(row => row.canonicalUrl.includes("Places_CouSub_ConCity_SubMCD")), "parallel responses saved before completion");
   const before = requests;
-  await runNationalPlaceTask(input);
-  assert.equal(requests - before, RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);
+  // The saved geography now completes within the same request bound. This
+  // fixture has no registry runtime, so reaching its next read is the boundary.
+  await assert.rejects(runNationalPlaceTask(input), /HELD_PLACE_READ_FAILED:REGISTRY_RUNTIME_BINDING/);
+  assert.ok(requests - before <= RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);
   const next = await repos.artifacts.readAll();
   assert.ok(next.some(row => row.canonicalUrl.includes("School")), "the next pass advances using held responses");
   assert.ok(saved.every(row => next.some(other => other.artifactId === row.artifactId)), "all earlier evidence remains held");
@@ -150,7 +152,7 @@ test("national collector binds saved CSV to its real Attempt and reuses another 
   assert.equal(reused.capture?.evidence.artifactId, acquired.capture?.evidence.artifactId);
   assert.equal(reused.collectedAt, acquired.collectedAt);
   assert.equal(second.artifacts.size, 0);
-  assert.equal(await second.readGeography(geographyUrl), geography);
+  assert.deepEqual(await Promise.all([second.readGeography(geographyUrl), second.readGeography(geographyUrl)]), [geography, geography]);
   assert.equal(second.geographyCaptures[0].observedAt, "2026-09-30T00:00:00.000Z");
   assert.deepEqual(second.cost, { requestCount: 0, bytesFetched: 0 });
   const third = await reader("2026-10-02T01:00:00.000Z", "job:refresh");
@@ -159,6 +161,11 @@ test("national collector binds saved CSV to its real Attempt and reuses another 
   assert.equal(fetched, 2);
   assert.equal(refreshed.collectedAt, "2026-10-02T01:00:00.000Z");
   assert.notEqual(refreshed.capture?.evidence.acquiredByAttemptId, acquired.capture?.evidence.acquiredByAttemptId);
+  const fourth = await reader("2026-10-02T02:00:00.000Z", "job:after-refresh");
+  const current = await fourth.read(url);
+  assert.equal(fetched, 2, "an old observation of identical bytes must not hide the fresh held acquisition");
+  assert.equal(current.collectedAt, refreshed.collectedAt);
+  assert.equal(current.capture?.evidence.acquiredByAttemptId, refreshed.capture?.evidence.acquiredByAttemptId);
   for (let index = 2; index < RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost; index++) {
     await third.read(`https://legislature.gov/page-${index}`);
   }

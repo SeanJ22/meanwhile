@@ -48,36 +48,6 @@ const KEY_SHAPE = /^[A-Za-z0-9_-]{16,64}$/;
  * strings holding independently random values, and nothing here can make them
  * the same.
  */
-/**
- * **READ a caller's key. Never mint one.**
- * (PR #212 follow-up, 2026-08-28.)
- *
- * Ask needs this and the difference is not a detail. Its continuity key exists
- * to count DISTINCT READERS in a store that is not being written — the capture
- * ripcord ships pulled pending the author's approval of what a reader sees
- * before they type. Minting a new identifier onto somebody's device for a
- * capability that is switched off would be storing something new on a reader's
- * machine for no live purpose, and `tests/ask-box.test.ts` holds the map panel
- * to *"the ask box stores nothing on the device"* — a statement the
- * transparency page makes to readers.
- *
- * So Ask reads. An absent key is `null`, the request carries no continuity
- * value, and `captureAskInteraction` REFUSES to write a row without one rather
- * than digesting the empty string — which would give every reader the same hash
- * and quietly report one distinct reader forever.
- *
- * Minting for Ask is part of ACTIVATION, alongside the disclosure. It is not
- * something to do early and leave lying there.
- */
-export function readBrowserKey(storageKey: string): string | null {
-  try {
-    const existing = window.localStorage.getItem(storageKey);
-    return existing && KEY_SHAPE.test(existing) ? existing : null;
-  } catch {
-    return memoryKeys.get(storageKey) ?? null;
-  }
-}
-
 export function getOrCreateBrowserKey(storageKey: string): string {
   try {
     const existing = window.localStorage.getItem(storageKey);

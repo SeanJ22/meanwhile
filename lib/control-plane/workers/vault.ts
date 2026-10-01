@@ -29,18 +29,21 @@ export function workerVaultResolver(repos: ControlPlaneRepositories, store: Evid
   let snapshotRecords: Promise<readonly ArtifactRecord[]> | undefined;
   let snapshotKeys: Promise<string[]> | undefined;
   const snapshotHeads = new Map<string, Promise<ObjectMeta | null>>();
-  return async (artifactId: string): Promise<ParserInput> => {
+  const resolved = new Map<string, Promise<ParserInput>>();
+  const resolve = async (artifactId: string): Promise<ParserInput> => {
     const all = options.snapshot ? await (snapshotRecords ??= repos.artifacts.readAll()) : await repos.artifacts.readAll();
     const records = all.filter(a => a.artifactId === artifactId && !a.partial);
     if (records.length === 0) throw new Error("WORKER_ARTIFACT_MISSING_OR_PARTIAL");
-    let keys: string[] | null = null;
+    const listed = options.snapshot ? await (snapshotKeys ??= store.list(`project/${project}/`)) : await store.list(`project/${project}/`);
+    const hashes = new Set(records.map(record => record.contentHash));
+    const keys = listed.filter(key => hashes.has(key.slice(key.lastIndexOf("/") + 1).split(".")[0]));
+    if (!keys.length) throw new Error("WORKER_ARTIFACT_NOT_IN_VAULT");
     const heads = options.snapshot ? snapshotHeads : new Map<string, Promise<ObjectMeta | null>>();
     let admitted = false;
     for (const record of records) {
       const acquiringAttempt = (await repos.attempts.mustRead(record.attemptId)).value;
       if (!WORKER_READABLE_ROLES.includes(acquiringAttempt.worker.role)) continue;
       admitted = true;
-      keys ??= options.snapshot ? await (snapshotKeys ??= store.list(`project/${project}/`)) : await store.list(`project/${project}/`);
       for (const key of keys) {
         if (!heads.has(key)) heads.set(key, store.head(key));
         const meta = await heads.get(key);
@@ -61,5 +64,10 @@ export function workerVaultResolver(repos: ControlPlaneRepositories, store: Evid
       }
     }
     throw new Error(admitted ? "WORKER_ARTIFACT_NOT_IN_VAULT" : "WORKER_ARTIFACT_PROVENANCE_REFUSED");
+  };
+  return (artifactId: string) => {
+    if (!options.snapshot) return resolve(artifactId);
+    if (!resolved.has(artifactId)) resolved.set(artifactId, resolve(artifactId));
+    return resolved.get(artifactId)!;
   };
 }

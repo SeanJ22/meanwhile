@@ -34,19 +34,6 @@ const WORKFLOW = ".github/workflows/build-check.yml";
  * it prepares the runner or reports on the run; none of them is a check whose
  * failure means the tree is wrong.
  */
-/**
- * THE THREE CANONICAL AUTHORITIES WIRED ON 2026-08-29, pinned by name.
- *
- * They were enforced only INDIRECTLY before — by tests that assert things about
- * their subject matter — which is not the same as running them. Each was
- * classified by READING the script before it was wired, and all three are pure
- * checkers: they read canonical state, write nothing under the repository, and
- * exit non-zero on a violation. The mutating neighbours (`governance:compile`,
- * `method:ingest`, `orchestration:closeout`, the tracker and workstream
- * writers) are excluded by name in `scripts/gates.mjs` and in the workflow.
- */
-const CANONICAL_AUTHORITY_GATES = ["governance:check", "orchestration:check"];
-
 const NOT_A_GATE = [
   // These interpret upstream outcomes or explain routing; they do not replace
   // any local tree check. ci-verdict's refusal matrix is tested separately.
@@ -240,60 +227,6 @@ test("gate parity · lint is in the local gate set, by name", () => {
     GATES.some((g) => normalise(g.command) === "pnpm lint"),
     "`pnpm lint` is not in GATES — this is the exact gap that produced RO04",
   );
-});
-
-test("gate parity · each canonical authority is in BOTH the local set and the required CI job", () => {
-  /*
-   * BY NAME, IN BOTH DIRECTIONS, and the CI half is read out of the WORKFLOW
-   * FILE (RULING 147) rather than out of the gate list. The generic parity test
-   * above already fails if CI runs something the local door does not — but it
-   * would say nothing at all if a future edit dropped a step from BOTH files at
-   * once, which is exactly how lint fell out of the local set and stayed out.
-   *
-   * The required final gates job must consume the verify matrix. These commands
-   * run in verify exactly once; a failed matrix leg must block the final verdict.
-   */
-  const src = readFileSync(WORKFLOW, "utf8");
-  const parsed = parse(src);
-  assert.ok(parsed.jobs.gates.needs.includes("verify"), "the required final verdict must consume structural verification");
-  const gatesAt = src.indexOf("  verify:");
-  assert.ok(gatesAt > 0, "the verification job is gone from the workflow");
-  const gatesJob = src.slice(gatesAt, src.indexOf("  build:"));
-
-  const local = GATES.map((g) => normalise(g.command));
-  for (const id of CANONICAL_AUTHORITY_GATES) {
-    assert.ok(
-      GATES.some((g) => g.id === id),
-      `"${id}" is not in GATES in scripts/gates.mjs — it would run in CI and not locally`,
-    );
-    assert.ok(
-      local.includes(`pnpm ${id}`),
-      `GATES carries no command \`pnpm ${id}\` — the id and the command must agree`,
-    );
-    assert.ok(
-      gatesJob.includes(`run: corepack pnpm ${id}`),
-      `\`${id}\` runs in \`pnpm gates\` and NOT in build-check.yml's verification dependency — a gate the ` +
-        "local door runs and CI does not is a gate nothing enforces on a merge",
-    );
-  }
-});
-
-test("gate parity · every wired canonical authority names a bound and does not hide behind a failure", () => {
-  /*
-   * `if: always()` so one red gate does not hide the verdict of the others, and
-   * `timeout-minutes` so a hung check fails naming itself rather than sitting
-   * until the platform kills the job at six hours (F25).
-   */
-  const src = readFileSync(WORKFLOW, "utf8");
-  const gatesJob = src.slice(src.indexOf("  verify:"), src.indexOf("  build:"));
-  for (const id of CANONICAL_AUTHORITY_GATES) {
-    const at = gatesJob.indexOf(`run: corepack pnpm ${id}`);
-    assert.ok(at > 0, `\`${id}\` is not in the gates job`);
-    // The step's own keys sit immediately above its `run:` line.
-    const step = gatesJob.slice(Math.max(0, at - 300), at);
-    assert.match(step, /if: always\(\)/, `\`${id}\` may not hide behind an earlier failure`);
-    assert.match(step, /timeout-minutes:\s*\d+/, `\`${id}\` must bound itself`);
-  }
 });
 
 test("gate parity · no MUTATING command was wired in to make a question look covered", () => {

@@ -401,7 +401,10 @@ export async function GET(request: Request) {
         : [];
       const read = await timing.time("meetings", () => readReaderEdgeMeetings({
         manifest: edgeManifest,
+        includeAgenda: false,
         ...(readerStates.length > 0 ? { states: readerStates } : {}),
+        ...(resolvedDivisions?.length ? { ocdIds: resolvedDivisions.map(division => division.ocdId) } : {}),
+        nearby: { lat, lng, radiusKm: Math.max(radiusKm, ...RADIUS_LADDER_KM) },
       }));
       meetingsWholeFromEdge = servedWholeFromReaderEdge(read);
       const snapshot = requireMeetingsProjection(read);

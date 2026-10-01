@@ -36,6 +36,10 @@ import { viewportRadiusKm } from "@/lib/map/viewport-radius";
 import {
   DISTRICT_TYPES,
   NATIONAL_BOUNDARIES_SOURCE,
+  BOUNDARY_ARCHIVE_URL,
+  BOUNDARY_ARCHIVE_FALLBACK,
+  boundarySource,
+  withDistricts,
   preserveDistrictStyle,
   addDistrictLayer,
   boundsOfDistrict,
@@ -273,50 +277,62 @@ function createHereElement(zipLabel: string): HTMLDivElement {
   return element;
 }
 
-/** Coalesce source-driven queries, and defer them through post-motion idle.
+/** Coalesce source-driven queries after the updated tiles have rendered.
  * No continuous move/zoom/render handler drives React or boundary queries. */
 function onSettledSourceChange(map: MapLibreMap, run: () => void): () => void {
-  let frame: number | null = null;
+  let scheduled = false;
   let disposed = false;
 
   const flush = () => {
-    frame = null;
+    scheduled = false;
     if (disposed) return;
     /*
      * Still moving: drop this pass rather than pay it into a frame the reader
      * is watching. Nothing is lost by dropping it — `moveend` schedules
      * another, and every camera move MapLibre makes ends in exactly one.
      */
-    if (map.isMoving() || mapPresentationHeld(map)) return;
+    if (map.isMoving()) return;
     run();
   };
 
   const schedule = () => {
-    if (disposed || frame !== null) return;
-    frame = requestAnimationFrame(flush);
+    if (disposed || scheduled) return;
+    scheduled = true;
+    map.once("render", flush);
+    map.triggerRepaint();
   };
 
-  // A ready map can answer immediately. An arriving map waits for idle.
-  if (!mapPresentationHeld(map)) run();
+  schedule();
   map.on("sourcedata", schedule);
-  map.on("idle", schedule);
+  // Idle can reveal cached layers after software-rendered motion. Read that
+  // settled frame directly; scheduling another repaint here would loop.
+  map.on("idle", flush);
   // A move that consumed no sourcedata still has to report: a camera arriving
   // somewhere new IS a change in which districts are drawn.
   map.on("moveend", schedule);
 
   return () => {
     disposed = true;
-    if (frame !== null) {
-      cancelAnimationFrame(frame);
-      // Cleared, not just cancelled. A non-null handle for a frame that will
-      // never run is the "already scheduled" guard latched on forever — the
-      // exact defect state-focus-overlay.tsx documents in its own cleanup.
-      frame = null;
-    }
+    map.off("render", flush);
+    scheduled = false;
     map.off("sourcedata", schedule);
-    map.off("idle", schedule);
+    map.off("idle", flush);
     map.off("moveend", schedule);
   };
+}
+
+/**
+ * The theme the page is painted in, read from the attribute `app/layout.tsx`
+ * sets before first paint and `useStoredTheme` keeps current.
+ *
+ * The `theme` prop is "dark" for the hydration pass whatever the reader saved,
+ * so a light-theme reader's map was built with the dark style and swapped to the
+ * light one a moment later — two MapTiler styles, sprites and all, on every
+ * load. The document attribute is right from the first paint, so the map is
+ * built with, and only ever swapped to, the style the reader actually sees.
+ */
+function documentTheme(): Theme {
+  return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
 }
 
 export function MapCanvas({
@@ -358,9 +374,7 @@ export function MapCanvas({
   // The style currently applied to the map. Seeded with the one the mount
   // effect builds with, so the restyle effect below never re-applies it — see
   // the note there about Strict Mode.
-  const appliedStyleRef = useRef<string | null>(
-    resolveBasemap(theme)?.styleUrl ?? null,
-  );
+  const appliedStyleRef = useRef<string | null>(null);
   const poolRef = useRef(createMarkerPool());
   const hereRef = useRef<Marker | null>(null);
   /** Voting-site markers, keyed by site id. Their own set, never the pool. */
@@ -451,8 +465,6 @@ export function MapCanvas({
     }
 
     for (const type of wanted) {
-      if (districtLayerPresent(map, type)) continue;
-
       try { addDistrictLayer(map, type); }
       catch { onDistrictErrorRef.current(); }
     }
@@ -481,7 +493,8 @@ export function MapCanvas({
     // No key means nothing to draw. Fall through to the plain ground colour and
     // say so, rather than substituting another provider — a silent swap turns a
     // total rendering failure into something that looks like a styling choice.
-    const basemap = resolveBasemap(theme);
+    const basemap = resolveBasemap(documentTheme());
+    appliedStyleRef.current = basemap?.styleUrl ?? null;
     if (!basemap) onTileError();
 
     /*
@@ -502,7 +515,7 @@ export function MapCanvas({
     const map = new MapLibreMap({
       container: containerRef.current,
       // Districts start without any dependency on the basemap provider.
-      style: FALLBACK_STYLE,
+      style: withDistricts(FALLBACK_STYLE, districtTypesRef.current),
       ...(remembered
         ? {
             center: [remembered.lng, remembered.lat] as [number, number],
@@ -536,6 +549,7 @@ export function MapCanvas({
     // A failed style request would otherwise leave a blank screen with a
     // working UI drawn on nothing. Drop to a plain ground color instead, so
     // pins and panels stay usable, and tell the caller to say what happened.
+    let boundaryFallback = false;
     map.on("error", (event: MapErrorEvent) => {
       const message = event.error?.message ?? "";
 
@@ -545,6 +559,15 @@ export function MapCanvas({
       // sat there looking like a design choice. Only the *display* of a notice
       // is filtered, and only to the categories a reader can act on.
       console.error("[map]", message || event.error || event);
+
+      if ((event as MapErrorEvent & { sourceId?: string }).sourceId === NATIONAL_BOUNDARIES_SOURCE) {
+        const source = map.getSource(NATIONAL_BOUNDARIES_SOURCE) as { setUrl?: (url: string) => void } | undefined;
+        if (!boundaryFallback && BOUNDARY_ARCHIVE_URL !== BOUNDARY_ARCHIVE_FALLBACK && source?.setUrl) {
+          boundaryFallback = true;
+          source.setUrl(boundarySource(BOUNDARY_ARCHIVE_FALLBACK).url!);
+        } else onDistrictErrorRef.current();
+        return;
+      }
 
       onTileError();
       // Keep the usable style and boundary tiles. Resetting on each tile error
@@ -688,8 +711,10 @@ export function MapCanvas({
       presentationCallbackRef.current?.(true);
     };
     map.on("idle", onPresentationIdle);
-    const onBoundaryData = (event: { sourceId?: string; isSourceLoaded?: boolean }) => {
-      if (event.sourceId === NATIONAL_BOUNDARIES_SOURCE && event.isSourceLoaded) onPresentationIdle();
+    const onBoundaryData = (event: { sourceId?: string; sourceDataType?: string }) => {
+      // A first usable boundary tile is enough. Waiting for every tile and
+      // basemap/glyph idle kept both lines and their count hidden for seconds.
+      if (event.sourceId === NATIONAL_BOUNDARIES_SOURCE && event.sourceDataType === "content") onPresentationIdle();
     };
     map.on("sourcedata", onBoundaryData);
 
@@ -1281,7 +1306,7 @@ export function MapCanvas({
     const map = mapRef.current;
     if (!map) return;
 
-    const basemap = resolveBasemap(theme);
+    const basemap = resolveBasemap(documentTheme());
     if (!basemap) return;
 
     // Keyed on the style actually applied, not on a "skip the first run" flag.

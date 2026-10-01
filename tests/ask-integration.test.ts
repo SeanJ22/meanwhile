@@ -21,7 +21,6 @@ import {
   type AskCaptureInput,
   type AskInteractionRow,
 } from "../lib/db/ask-signal.ts";
-import { RIPCORDS } from "../lib/ripcords.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
@@ -819,22 +818,13 @@ test("ASK SIGNAL: the map and the ballot share the call path because they share 
   assert.match(code(BALLOT_ASK), /fetch\("\/api\/ask\/grounded"/);
 });
 
-test("ASK SIGNAL: it ships GATED, and a gated call writes zero rows", async () => {
-  /*
-   * The gating basis is an OPERATOR DECISION pending the author's approval of
-   * reader-facing disclosure copy (NH246), stated as that rather than as a
-   * clause of current law. RULING 141's HONEST DISCLOSURE AT THE BOX governs
-   * the Speak Your Mind store; reading it as binding over Ask would be this
-   * repository growing a clause nobody adopted.
-   */
-  assert.equal(RIPCORDS["ripcord.askSignalCapture"].pulled, true);
-
+test("ASK SIGNAL: a call without a continuity key writes zero rows", async () => {
   const written: AskInteractionRow[] = [];
-  const outcome = await captureAskInteraction(captureInput(), async (row) => {
+  const outcome = await captureAskInteraction(captureInput({ continuityKey: "" }), async (row) => {
     written.push(row);
   });
-  assert.equal(outcome.kind, "GATED");
-  assert.equal(written.length, 0, "a gated capture writes nothing at all");
+  assert.equal(outcome.kind, "FAILED");
+  assert.equal(written.length, 0, "no key, no row");
 });
 
 test("ASK SIGNAL: with the gate lifted, one Ask writes exactly one row of the right shape", async () => {
@@ -881,22 +871,8 @@ test("ASK SIGNAL: enabling the flag without minting a key writes NOTHING, loudly
   assert.equal(written.length, 0);
 });
 
-test("ASK SIGNAL: with the flag LIVE, one Ask writes exactly one row — and one only", async () => {
-  /*
-   * **THE CONTROLLED ACTIVATION TEST.** The gated test above proves nothing
-   * is written; on its own that is also what a broken write path looks like.
-   * This flips the flag through the env var the ripcord already reads,
-   * exercises the REAL `captureAskInteraction`, and puts it back — so the
-   * shipped state is unchanged and the path is proved to work when it is
-   * switched on.
-   *
-   * `live` rather than deleting the variable: `ripcordPulled` falls back to
-   * the declared default when the env is unset, and the declared default is
-   * PULLED. A test that unset it would be re-testing the gate.
-   */
-  const before = process.env.WTP_RIPCORD_ASK_SIGNAL_CAPTURE;
-  process.env.WTP_RIPCORD_ASK_SIGNAL_CAPTURE = "live";
-  try {
+test("ASK SIGNAL: one Ask writes exactly one row — and one only", async () => {
+  {
     const written: AskInteractionRow[] = [];
     const outcome = await captureAskInteraction(captureInput(), async (row) => {
       written.push(row);
@@ -934,27 +910,12 @@ test("ASK SIGNAL: with the flag LIVE, one Ask writes exactly one row — and one
       !JSON.stringify(row).includes("browser-minted-abc123"),
       "the browser-minted key is digested, never stored",
     );
-  } finally {
-    if (before === undefined) delete process.env.WTP_RIPCORD_ASK_SIGNAL_CAPTURE;
-    else process.env.WTP_RIPCORD_ASK_SIGNAL_CAPTURE = before;
   }
-
-  /* PUT BACK: the shipped state is gated, and this test may not leave it live
-     for whatever runs next in this process. */
-  const after: AskInteractionRow[] = [];
-  assert.equal(
-    (await captureAskInteraction(captureInput(), async (r) => { after.push(r); })).kind,
-    "GATED",
-  );
-  assert.equal(after.length, 0);
 });
-test("ASK SIGNAL: the surfaces READ a continuity key and never mint one while capture is off", () => {
+test("ASK SIGNAL: the surfaces mint the returning-reader ID in the Ask store's own slot", () => {
   for (const [name, source] of [["ask-box", ASK_BOX], ["ballot-ask", BALLOT_ASK]] as const) {
-    assert.match(code(source), /readBrowserKey\("wtp\.ask_key"\)/, `${name} must read`);
-    assert.ok(
-      !/getOrCreateBrowserKey/.test(code(source)),
-      `${name} must not mint an identifier for a switched-off capability`,
-    );
+    assert.match(code(source), /getOrCreateBrowserKey\("wtp\.ask_key"\)/, `${name} must mint its own key`);
+    assert.ok(!/readBrowserKey/.test(code(source)), `${name} still reads without minting`);
   }
 });
 

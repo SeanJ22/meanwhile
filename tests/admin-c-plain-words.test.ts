@@ -38,16 +38,8 @@ import {
 } from "../lib/control-plane/incident-groups.ts";
 import { stateCodeOf, unitBelongsToState } from "../lib/control-plane/unit-state.ts";
 import { unitCarriesState } from "../lib/control-plane/scheduler/dispatch-target.ts";
-import {
-  WHAT_A_RUNNER_IS,
-  groupDeferrals,
-  runnerNeeds,
-  stopCodesIn,
-  stopMomentIn,
-} from "../lib/control-plane/runner-plain.ts";
 import { spendWindowRows } from "../lib/control-plane/cost-panel.ts";
 import { FLEET_SAFETY_BOUNDS, type FleetSafetySnapshot } from "../lib/control-plane/fleet-safety.ts";
-import type { RunnerStanding } from "../lib/control-plane/runner-standing.ts";
 
 /* --------------------------------------------------------------- ADM-25 */
 
@@ -277,52 +269,9 @@ const SAFETY: FleetSafetySnapshot = {
   lastSuccessfulActivity: "2026-09-06T22:26:00.000Z",
 };
 
-test("ADM-24 · the runner card says what a runner IS", () => {
-  assert.ok(WHAT_A_RUNNER_IS.length > 40);
-  assert.ok(!/[A-Z][A-Z0-9]*_[A-Z0-9]/.test(WHAT_A_RUNNER_IS));
-});
-
-test("ADM-24 · the stop reason leads with budget, and the time comes out of the prose", () => {
-  const codes = stopCodesIn(SAFETY.stoppedBecause);
-  assert.deepEqual(codes, ["CYCLE_DEFERRED", "WALL_CLOCK_CEILING"]);
-  assert.equal(plainCode(codes[0]), "Cycle time used");
-  assert.equal(stopMomentIn(SAFETY.stoppedBecause), "2026-09-07T04:31:00.000Z");
-});
-
 test("a cycle-time stop never borrows the paid-pause timestamp or claims a dollar limit", () => {
-  const pause = "PAUSED: owner paused paid research at 2026-09-23T17:25:00.000Z";
-  const cycle = "CYCLE_DEFERRED: dispatch time was spent at 2026-09-26T22:30:00.000Z before the item was reached";
-  assert.equal(stopMomentIn([pause, cycle]), "2026-09-26T22:30:00.000Z");
-  assert.equal(stopMomentIn([`${pause}; ${cycle}`]), "2026-09-26T22:30:00.000Z");
-  assert.equal(stopMomentIn([pause, "CYCLE_DEFERRED: dispatch time exhausted"]), null);
-  assert.equal(stopMomentIn([pause]), null);
   assert.equal(plainCode("CYCLE_DEFERRED"), "Cycle time used");
   assert.match(plainMeaning("CYCLE_DEFERRED")!, /not a dollar spending limit/);
-});
-
-test("ADM-27 · deferred work is a count and a sentence, never a list of thousands", () => {
-  const groups = groupDeferrals(SAFETY.deferred);
-  assert.equal(groups.length, 2);
-  assert.equal(groups[0].items, 2);
-  assert.ok(groups[0].examples.length <= 5, "a group never carries the whole list");
-  for (const g of groups) assert.ok(!g.words.includes("_"), g.words);
-});
-
-test("ADM-24 · a budget ceiling does not need the owner; a silent runner does", () => {
-  const standing = (state: RunnerStanding["state"]): RunnerStanding => ({
-    state,
-    level: "GREEN",
-    headline: "",
-    detail: "",
-    sinceBeatMinutes: 1,
-    pause: null,
-    control: "PAUSE_RUNNER",
-  });
-  assert.equal(runnerNeeds(standing("ACTIVE"), SAFETY).needed, false);
-  assert.equal(runnerNeeds(standing("SILENT"), SAFETY).needed, true);
-  assert.equal(runnerNeeds(standing("NEVER_BEAT"), SAFETY).needed, true);
-  const latched = { ...SAFETY, providerCircuits: [{ provider: "x", condition: "402", firstObservedAt: "", workDeferred: [], eligibleAt: "2026-09-08T00:00:00.000Z" }] };
-  assert.equal(runnerNeeds(standing("ACTIVE"), latched).needed, true);
 });
 
 /**

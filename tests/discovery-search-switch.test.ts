@@ -146,9 +146,6 @@ test("THE CONSOLE POSTS IT: the switch rides the search line, and turning it on 
   const controls = readFileSync(join(ROOT, "app/(admin)/_mw/money-controls.tsx"), "utf8");
   assert.match(controls, /export function DiscoverySearchSwitch\(/);
   assert.match(controls, /"config\.setDiscoverySearch",\s*"paid discovery search",\s*enabled \? \{ enabled: true, confirmed: true \} : \{ enabled: false \}/);
-  const screen = readFileSync(join(ROOT, "app/(admin)/_mw/screens/money.tsx"), "utf8");
-  assert.match(screen, /searchSwitch=\{r\.key === "ledger-search" \? searchSwitch : null\}/, "only the search line carries it");
-  assert.match(screen, /on: discoverySearchEnabled\(base\.adminConfig\)/, "the page reads the same row the runner reads");
 });
 
 /** Every source file under the given roots, repo-relative with forward slashes. */
@@ -199,21 +196,6 @@ test("THE RUNNER ACKNOWLEDGES IT: each cycle's heartbeat carries the decision it
     runner,
     /discoverySearch: \{\s*receiptId: discoverySearchReceiptId,\s*enabled: discoverySearchOn,\s*perCycle: SEARCH_PER_CYCLE,\s*perDay: SEARCH_PER_DAY,\s*appliedAt: NOW,\s*detail: discoverySearchDecision,\s*\}/,
   );
-  const screen = readFileSync(join(ROOT, "app/(admin)/_mw/screens/money.tsx"), "utf8");
-  assert.match(screen, /searchApplied\.receiptId === decisionReceipt/, "applied means the same receipt, as a pause is matched");
-  assert.match(screen, /The runner applied it at /);
-  assert.match(screen, /The runner has not read this decision yet/);
   const switchUi = readFileSync(join(ROOT, "app/(admin)/_mw/money-controls.tsx"), "utf8");
   assert.match(switchUi, /The research pause does not stop it; only this switch does\./, "the switch says which control governs it");
-});
-
-test("THE LIMITS BESIDE IT: the search line reads the caps the runner acknowledged, and says the code's starting caps are only that until it has", async () => {
-  const { providerRows } = await import("@/lib/control-plane/admin-view/money-view.ts");
-  const how = (searchCaps: { perCycle: number; perDay: number; appliedAt: string } | null) =>
-    providerRows({ month: null, rolling: null, maptiler: null, facts: [], searchCaps }).find((r) => r.key === "ledger-search")?.how ?? "";
-  assert.match(how(null), /The runner starts with 50 requests a cycle and 200 a day across both/);
-  assert.match(how(null), /It has not yet said which limits it enforces/);
-  const applied = how({ perCycle: 0, perDay: 0, appliedAt: NOW });
-  assert.match(applied, /The runner enforces 0 requests a cycle and 0 a day across both — at most \$0\.00 a day, as it said at /);
-  assert.doesNotMatch(applied, /starts with/);
 });

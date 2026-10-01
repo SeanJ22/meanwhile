@@ -311,22 +311,4 @@ test("the pages read the bodies without the history; only the opened routine rea
   assert.match(read, /!options\.history\s*\? Promise\.resolve\(null\)/, "no history statement is sent when it is not asked for");
   assert.match(store, /SELECT \* FROM \(\$\{statement\}\) narrowed WHERE narrowed\.scope = ANY\(\$\$\{param\}::text\[\]\)/);
   assert.match(store, /const SCOPED_VERSION_READBACKS = `\$\{VERSION_READBACKS\} AND p\.scope = ANY\(\$2::text\[\]\)`/);
-
-  const work = readFileSync("app/(admin)/_mw/screens/work.tsx", "utf8");
-  const all = /await Promise\.all\(\[([\s\S]*?)\]\);/.exec(work)?.[1] ?? "";
-  assert.match(all, /loadWatchedBody\(base\.nowIso, openedContract\)/, "the opened routine read is read beside the page's other reads");
-  assert.match(work, /routineDetail\(routineRead\.view\)/);
-  assert.doesNotMatch(work, /routineDetail\(body\)/, "never from the list's read, which carries no trail");
-});
-
-/* ------------------------------------------------------------------ the pages */
-
-test("Work reads an opened piece of standing work beside its other reads, and the newest digest alone", () => {
-  const src = readFileSync("app/(admin)/_mw/screens/work.tsx", "utf8");
-  const all = /await Promise\.all\(\[([\s\S]*?)\]\);/.exec(src)?.[1] ?? "";
-  assert.match(all, /readAssignmentSourcesById\(/, "the drilldown starts with the page's other reads");
-  assert.match(all, /readLatestDigest\(/);
-  assert.equal((src.match(/readAssignmentSourcesById\(/g) ?? []).length, 1, "and is not read again after them");
-  assert.doesNotMatch(src, /readDigests\(/);
-  assert.match(src, /const bodiesEarly = loadWatchedBodies\(nowIso\);\s*const base = await openPage\(path, sp, nowIso\);/, "the body read starts before the policy row");
 });

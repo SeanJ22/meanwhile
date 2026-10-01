@@ -520,6 +520,7 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
     agents: sample([], SECTION_DEP.agents, SAMPLE_AS_OF),
     sends: sample([], SECTION_DEP.sends, SAMPLE_AS_OF),
     reliability: sample([], SECTION_DEP.reliability, SAMPLE_AS_OF),
+    publication: { state: "not-connected", load: "ready", data: null, asOf: null, dependency: SECTION_DEP.publication },
     spend: { state: "not-connected", load: "ready", data: null, asOf: null, dependency: SECTION_DEP.spend },
     history: sample(sampleHistory(), SECTION_DEP.history, SAMPLE_AS_OF),
     workers: sample({
@@ -547,13 +548,8 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
         { name: "Anthropic account cap", figure: "Not read yet", fraction: null, note: "Needs a read from Anthropic", tone: "neutral" },
         { name: "Neon and GitHub caps", figure: "Not read yet", fraction: null, note: "Typed in by hand until this is automated", tone: "neutral" },
       ],
-      drill: [
-        { work: "Cochise meetings discovery", models: "Plain code", tries: 1, costUsd: 0, movedUpWhy: "Stayed on the same AI", benefit: "Files saved, not delivered", applies: [K.cochiseBos], link: { type: "result", id: "r-cochise-mtg" } },
-        { work: "NH Executive Council agenda", models: "Plain code → Cheapest AI (Haiku 4.5)", tries: 2, costUsd: 0.03, movedUpWhy: "Stayed on the same AI", benefit: "Checked on the public page", applies: [K.nhExec], link: { type: "result", id: "r-nh-exec" } },
-        { work: "Pima Prop 423 finance", models: "Cheapest AI (Haiku 4.5) → Sonnet 4.5 (older mid-level model, as recorded)", tries: 9, costUsd: 1.63, movedUpWhy: "Not recorded yet", benefit: w.stoppedItems.includes("i-pima") ? "Nothing · method stopped" : "Nothing yet", applies: [K.pima], link: { type: "stuck", id: "i-pima" } },
-        { work: "Candidate Erica Davis", models: "Cheapest AI (Haiku 4.5) → Opus 5 (older strongest model, as recorded)", tries: 17, costUsd: 7.25, movedUpWhy: "Not recorded yet", benefit: "Nothing yet", applies: [K.merrimack], link: { type: "stuck", id: "i-davis" } },
-        { work: "Morris term-end dates", models: "Opus 5 (older strongest model, as recorded)", tries: 2, costUsd: 0.44, movedUpWhy: "Not recorded yet", benefit: "Found the conflict", applies: [K.morrisComm], link: { type: "stuck", id: "i-morris" } },
-      ],
+      reconciliation: null,
+      readings: [],
       otherServices: "Search $0.01, estimated from requests. Hosting, database and GitHub are shared platform costs and aren’t assigned to hunts.",
     }, SECTION_DEP.money, SAMPLE_AS_OF),
     learning: sample({

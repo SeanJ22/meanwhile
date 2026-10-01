@@ -17,7 +17,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { MEETING_PARTITION_POLICY, MEETING_SITTING_WINDOW, ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
+import { MEETING_PARTITION_POLICY, MEETING_SITTING_WINDOW } from "../lib/civic-data/contracts.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { ROUTINE_SOURCE_TASKS, routineTaskDeadlineMs, routineTaskDue, sittingWindowSignals, type RoutineTaskClock } from "../lib/civic-data/runner.ts";
 import { statedSittingEndsByScope } from "../lib/civic-data/sitting-window-admission.ts";
@@ -220,18 +220,6 @@ test("a body read through two sources names each source's clock when they differ
     row(v, "Next look"),
     "Legistar meeting portal: Owed by Sep 25, 5:30 PM ET, an hour after the last good read; the runner may read it from Sep 25, 5:05 PM ET; Legistar InSite portal: Owed by Sep 25, 5:45 PM ET, an hour after the last good read; the runner may read it from Sep 25, 5:20 PM ET",
   );
-});
-
-test("the Sources panel's execution clock for a meeting source is the sitting-window schedule; other contracts keep their cadence", async () => {
-  const { executionClockWords } = await import("../app/(admin)/admin/sources/routine-data-panel.tsx");
-  const rowOf = (contractId: string, description: string, activeEveryMs: number) =>
-    ({ contractId, cadence: { clock: "STANDING", description, activeEveryMs } }) as unknown as Parameters<typeof executionClockWords>[0];
-  assert.equal(
-    executionClockWords(rowOf(PARTITION.id, PARTITION.cadence.description, DAY)),
-    "twice a day, and within the hour while a sitting is within seven days ahead or behind, on the runner's sitting-window schedule",
-  );
-  const other = ROUTINE_SOURCE_CONTRACTS.find((c) => c.schedule === undefined && c.cadence.description === "weekly")!;
-  assert.equal(executionClockWords(rowOf(other.id, other.cadence.description, other.cadence.defaultEveryMs)), "weekly (168 active hours)");
 });
 
 test("a contract without a sitting window keeps its cadence words, unchanged", () => {

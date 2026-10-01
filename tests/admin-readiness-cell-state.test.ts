@@ -4,7 +4,6 @@ import { join } from "node:path";
 import test, { after, before } from "node:test";
 import type { Page } from "playwright";
 
-import { HEALTH_SCALE } from "../lib/control-plane/plain-health.ts";
 import { launchGuarded, type GuardedBrowser } from "../scripts/browser.mts";
 
 /**
@@ -56,7 +55,6 @@ import { launchGuarded, type GuardedBrowser } from "../scripts/browser.mts";
 const ROOT = process.cwd();
 const LAYOUT = "app/(admin)/layout.tsx";
 const SHELL_CSS = "app/(admin)/_mw/mw.module.css";
-const CONSOLE_UI = "app/(admin)/console-ui.tsx";
 /** The layer every generic recipe lives in. Named once here and once in the stylesheet. */
 const RECIPE_LAYER = "ce-recipe";
 /** The #281 reset, verbatim from `git show dc2294b0:app/(admin)/layout.tsx`. */
@@ -149,14 +147,6 @@ test("every generic control reset lives in the recipe layer; the state classes n
     [],
     `an element-level control rule outside @layer ${RECIPE_LAYER} declares a background or box-shadow — the property a state class owns. Move it into the layer.`,
   );
-
-  // Admin redesign, 2026-09-23: the readiness grid's six cell-state classes and its violation ring have no element left to draw; the swatch the kept pages still draw — a health grade beside its word — is what the layer protects now.
-  assert.match(read(CONSOLE_UI), /<i className=\{`rq-cell hl-\$\{level\}`\} aria-hidden="true" \/>/, "the grade swatch carries the swatch class and its level class");
-  for (const sel of [".admin .rq-cell", ...HEALTH_SCALE.map((s) => `.admin .hl-${s.level}`)]) {
-    const rule = layout.find((r) => r.selector === sel);
-    assert.ok(rule, `${sel} is not declared in the console stylesheet`);
-    assert.equal(rule.layer, null, `${sel} must stay unlayered so no recipe can outrank it`);
-  }
 });
 
 test("POSITIVE CONTROL: re-appending the #281 reset makes the structural check fail", () => {

@@ -160,8 +160,34 @@ export function ChecklistScreen() {
         </div>
       </Card>
 
+      <WhatCountsAsDone />
       <Register />
     </>
+  );
+}
+
+/**
+ * **WHAT COUNTS AS DONE.** The definition the score is measured against (rulings §0 and §3), in the words a resident's
+ * coverage is judged by. Nothing here is a second gate: it explains the score, and the score never holds back publishing.
+ */
+function WhatCountsAsDone() {
+  const v = useV6();
+  const c = v.data.checklist.data;
+  return (
+    <details className={s.card}>
+      <summary className={s.h2} style={{ cursor: "pointer" }}>What counts as done</summary>
+      <div className={s.stack} style={{ marginTop: 12 }}>
+        <p className={cx(s.p, s.small)}>A place is done when everything a resident there is owed is either published or shown to be unpublished by the government, and nothing is overdue for a refresh. The target is Sean’s checklist {c?.profileVersion ?? ""}: {count(c?.definitionCount ?? 325)} requirements, none dropped.</p>
+        <ul className={s.stack} style={{ listStyle: "none", padding: 0, margin: 0 }}>
+          <li className={s.row}><span className={s.legendItem}><Swatch cls="c-blue" /><strong className={s.small}>Published</strong></span><span className={s.small}>The fact passed verification and readers can see it. Verified means its value appears in a saved source document about the right jurisdiction, captured within that kind of fact’s freshness window, and code confirmed the value is on that page. A fact that passes publishes on its own, without waiting for the rest of the place.</span></li>
+          <li className={s.row}><span className={s.legendItem}><Swatch cls="c-amber" /><strong className={s.small}>Captured, not published yet</strong></span><span className={s.small}>We hold it from a source but it hasn’t passed verification, or hasn’t reached readers yet. It stays standing work.</span></li>
+          <li className={s.row}><span className={s.legendItem}><Swatch cls="c-violet" /><strong className={s.small}>The government doesn’t publish it</strong></span><span className={s.small}>The source shows the government does not make it public. That closes the item. The page tells readers so plainly.</span></li>
+          <li className={s.row}><span className={s.legendItem}><Swatch cls="c-gray" /><strong className={s.small}>Captured earlier, refresh due</strong></span><span className={s.small}>We held it, but its freshness window has passed, so it is owed again.</span></li>
+          <li className={s.row}><span className={s.legendItem}><Swatch cls="c-hatch" /><strong className={s.small}>Not captured yet</strong></span><span className={s.small}>Owed and still blank. It stays open until it is filled or shown to be unpublished.</span></li>
+        </ul>
+        <p className={cx(s.p, s.small, s.dim)}>The score counts capture only. It never holds back publishing: a fact that passes verification goes live whatever the score says. A fact researched once for a county, city or district counts for every ZIP it covers.</p>
+      </div>
+    </details>
   );
 }
 

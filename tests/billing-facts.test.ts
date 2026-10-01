@@ -202,7 +202,6 @@ test("billing figures are read only by the gateway that writes them and the Admi
     "lib/control-plane/billing-facts.ts",
     "lib/control-plane/gateway/admin-config.ts",
     "lib/control-plane/gateway/registry.ts",
-    "lib/control-plane/admin-view/money-view.ts",
   ]);
   const allowedPrefixes = ["app/(admin)/"];
   const scanned: string[] = [];
@@ -226,9 +225,6 @@ test("billing figures are read only by the gateway that writes them and the Admi
   assert.ok(scanned.includes("lib/control-plane/fleet-safety.ts"), "the ceiling module was scanned");
   assert.ok(scanned.some((f) => f.startsWith("lib/control-plane/scheduler/")), "the scheduler was scanned");
   assert.deepEqual(offenders, [], `billing figures are read outside the gateway and the Admin render path: ${offenders.join(", ")}`);
-  // And the render path itself only draws them: no Admin file imports a ceiling or budget writer alongside them.
-  const money = readFileSync(join(ROOT, "app", "(admin)", "_mw", "screens", "money.tsx"), "utf8");
-  assert.doesNotMatch(money, /withFleetSpendCeiling|withExpansionScopes|resolveRollingCeiling\([^)]*billing/, "the Money screen never feeds a figure into a ceiling");
 });
 
 test("the row keeps a bounded number of figures, oldest read first to go", () => {

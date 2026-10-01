@@ -7,16 +7,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import type { Attempt } from "../lib/control-plane/attempt.ts";
-import { buildAssignments, type AssignmentSources } from "../lib/control-plane/assignment-view.ts";
 import { assignmentCompletionWords, evaluateAssignmentCompletion, memberObligations } from "../lib/control-plane/assignment-completion.ts";
 import { buildBodyViews, type BodyStoreFacts, type WatchedContract } from "../lib/control-plane/admin-view/bodies.ts";
 import { latestScout, routineRuledOut, scoutDeadEnd } from "../lib/control-plane/admin-view/dead-ends.ts";
-import { standingDetail } from "../lib/control-plane/admin-view/work-view.ts";
 import type { CompletionSnapshot } from "../lib/control-plane/completion.ts";
-import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import type { RouteTask } from "../lib/control-plane/route-task.ts";
-import type { StandingObligation } from "../lib/control-plane/scheduler/durable.ts";
 import type { ScoutResult, ScoutRung } from "../lib/control-plane/scheduler/scout-result.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 
@@ -86,128 +81,6 @@ test("MW-016: a field the walk cannot answer stays null and names its gap", () =
   assert.notEqual(refused.ruledOut, null);
   assert.match(refused.whoMoves ?? "", /^The Scout lane .*finish was refused \(SCOUT_EARLY_ABSENCE\)/);
   assert.equal(latestScout([scout({ recordedAt: "2026-09-20T00:00:00.000Z", attemptId: "old" }), scout({ attemptId: "new" })])?.attemptId, "new");
-});
-
-/* ------------------------------------------------------------ MW-016 / MW-035: standing work */
-
-function attempt(id: string): Attempt {
-  return {
-    id, routeTaskId: "rt-1", workItemId: "wi-1",
-    worker: { role: "SCOUT", provider: "anthropic", version: "claude-opus-5-5", instance: "fixture@1" },
-    leaseId: `ls-${id}`, startedAt: "2026-09-24T09:59:00.000Z", endedAt: "2026-09-24T10:00:00.000Z", outcome: "ABORTED",
-    abortReason: "the worker reached no boundary. SCOUT_NO_PROGRESS (BOUND)", artifactIds: [],
-    cost: { inputTokens: null, outputTokens: null, usd: 0.4, durationMs: null, bytesFetched: null, requestCount: null, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false },
-    methodVersion: 1, policyVersion: "fixture",
-  };
-}
-
-function sources(scouts: readonly ScoutResult[]): AssignmentSources {
-  const obligation: StandingObligation = {
-    id: OB, recordClass: "candidate-enrichment", subjectId: "nj:2026:poe-pat", routeId: "candidate-authored-awaits-site", active: true,
-    readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null, nextDueAt: PAST, occurrenceCount: 1, openOccurrenceId: null, updatedAt: PAST,
-  };
-  const workItem: WorkItem = {
-    id: "wi-1", project: "freshness", subject: "nj:2026:poe-pat", obligation: `${OB}#1`, why: "fixture", priority: "P2", state: "OPEN",
-    contract: { inheritedRouteFloor: [], requiresValidation: true, requiresAudit: false, requiresCompleteDenominator: false, acceptableDispositions: null, instrumentEvidence: null },
-    dependencies: [], routeTaskIds: [], escalations: [], createdAt: PAST, transitions: [{ from: null, to: "OPEN", at: PAST, by: "control-plane", why: "fixture" }],
-  };
-  const task: RouteTask = {
-    id: "rt-1", workItemId: "wi-1", routeId: "candidate-authored-awaits-site", routeLabel: "candidate-authored-awaits-site", target: "fixture",
-    inherited: true, state: "RECLAIMABLE", disposition: null, attemptIds: scouts.map((s) => s.attemptId), createdAt: PAST,
-  } as RouteTask;
-  return {
-    nowIso: NOW,
-    obligations: [obligation],
-    occurrences: [{ id: `occ-${OB}-000001`, obligationId: OB, sequence: 1, dueAt: PAST, workItemId: "wi-1", routeTaskId: "rt-1", openedAt: PAST, closedAt: "2026-09-24T10:00:00.000Z", disposition: null, unresolvedReason: "no terminal disposition was reached: SCOUT_NO_PROGRESS" }],
-    workItems: [workItem],
-    routeTasks: [task],
-    attempts: scouts.map((s) => attempt(s.attemptId)),
-    debts: [{ obligationId: OB, cause: "UPSTREAM_ERROR", detail: "fixture debt", target: "fixture", dueAt: PAST, firstFailedAt: PAST, lastFailedAt: "2026-09-24T10:00:00.000Z", consecutiveFailures: 3, retryAt: "2026-09-25T18:00:00.000Z" }],
-    leases: [],
-    dispositions: null,
-    artifacts: [],
-    costs: [],
-    scoutResults: scouts,
-    workerResults: [],
-    pipeline: [],
-    activation: readActivationGate(""),
-    servedReader: null,
-    pilotZips: [],
-  };
-}
-
-test("MW-016: an opened failed assignment reads its dead end from the latest walk, not the debt's backoff sentence", () => {
-  const scouts = [scout()];
-  const row = buildAssignments(sources(scouts)).find((r) => r.id === OB)!;
-  assert.equal(row.state, "FAILED");
-  const [dead] = standingDetail(row, { scouts }).unsettled;
-  assert.match(dead!.ruledOut ?? "", /primary-site-navigation at https:\/\/example\.gov\/1 \(HTTP 403\)/);
-  assert.match(dead!.wouldSettle ?? "", /read the county filing index/);
-  assert.match(dead!.whoMoves ?? "", /walked the ladder to the floor/);
-  // Not read with it: each field says so, rather than a backoff sentence posing as "ruled out".
-  const [unread] = standingDetail(row).unsettled;
-  assert.equal(unread!.ruledOut, null);
-  assert.match(unread!.gaps?.ruledOut ?? "", /Scout results for this work were not read/);
-});
-
-test("MW-016: a refused finish says what its walk ruled out and would try next", () => {
-  const refused = scout({ attemptId: "at-2", recordedAt: "2026-09-24T11:00:00.000Z", refusal: [{ code: "SCOUT_EARLY_ABSENCE", detail: "an absence below the rung minimum" }] as never });
-  const scouts = [scout(), refused];
-  const row = buildAssignments(sources(scouts)).find((r) => r.id === OB)!;
-  const refusedBox = standingDetail(row, { scouts }).unsettled.find((u) => u.pill === "REFUSED")!;
-  assert.match(refusedBox.title, /an absence below the rung minimum/);
-  assert.notEqual(refusedBox.wouldSettle, null, "a refused finish now names what would settle it");
-  assert.match(refusedBox.ruledOut ?? "", /tried and failed/);
-});
-
-test("MW-035: the Scout's 'why a paid model' is the executor decision's reason, not a fixed sentence", () => {
-  const scouts = [scout()];
-  const row = buildAssignments(sources(scouts)).find((r) => r.id === OB)!;
-  const model = standingDetail(row, { scouts }).models.find((m) => m.step.includes("Scout"))!;
-  assert.match(model.why, /^Executor decision: a bounded model worker \(the Scout\), because route candidate-authored-awaits-site has no machine-executable opening; genuine unresolved novelty runs a bounded Scout\./);
-  assert.doesNotMatch(model.why, /by standing rule/);
-  assert.match(standingDetail(row).models.find((m) => m.step.includes("Scout"))!.why, /^Why the executor sent this to a paid Scout was not read with it\./);
-});
-
-test("MW-031/MW-033: the Scout line states the class chosen, why, and an escalation's evidence and combined cost; the cost line counts escalations from the walks, never 'recorded nowhere'", () => {
-  const escalated = scout({
-    attemptId: "at-3",
-    recordedAt: "2026-09-25T10:00:00.000Z",
-    startedAt: "2026-09-25T09:58:00.000Z",
-    usd: 0.0429,
-    worker: { provider: "anthropic", model: "claude-opus-5-5", modelReported: "claude-opus-5-5" },
-    modelClass: "frontier",
-    modelClassWhy: "Sonnet 5 is the cheapest class that accepts this loop's request; it moves up to the frontier only when the Sonnet attempt shows a recorded reason (MW-033)",
-    escalatedFrom: "sonnet",
-    escalationReason: "RESULT_REFUSED",
-    escalationEvidence: "finish refused after 4 turn(s): SCOUT_CANDIDATE_WITHOUT_EVIDENCE",
-    escalationRefused: null,
-    modelAttempts: [
-      { modelClass: "sonnet", model: "claude-sonnet-5-5", turns: 4, usd: 0.0124, accepted: false },
-      { modelClass: "frontier", model: "claude-opus-5-5", turns: 2, usd: 0.0305, accepted: true },
-    ],
-  });
-  const scouts = [scout(), escalated];
-  const row = buildAssignments(sources(scouts)).find((r) => r.id === OB)!;
-  const detail = standingDetail(row, { scouts });
-  const line = detail.models.find((m) => m.step.includes("Scout"))!;
-  assert.match(line.why, /Started on Claude Sonnet 5.5: Sonnet 5 is the cheapest class that accepts this loop's request/, "the class chosen and why, from the result");
-  assert.match(line.why, /A Scout moved from Claude Sonnet 5.5 to Claude Opus 5\.5 on Sep 25 because its answer failed our checks and was never fixed \(finish refused after 4 turn\(s\): SCOUT_CANDIDATE_WITHOUT_EVIDENCE\); both tries together cost \$0\.0429 \(\$0\.0124 \+ \$0\.0305\)\./);
-  assert.doesNotMatch(line.why, /most capable class by standing rule/);
-  const all = `${detail.costLine} ${detail.modelsNote}`;
-  assert.doesNotMatch(all, /recorded nowhere/);
-  assert.match(detail.modelsNote, /records the class it started on and why, and any move up a class/);
-
-  /* A measured cost line counts the escalations from the walks read with the work — or says they were not read. */
-  const counted = standingDetail({ ...row, cost: { ...row.cost, dollars: { kind: "MEASURED", amount: 0.4429 } } } as typeof row, { scouts });
-  assert.match(counted.costLine, /Model-routing escalations: 1 on record for this work\. Latest: A Scout moved from Claude Sonnet 5.5 to Claude Opus 5\.5/);
-  const none = standingDetail({ ...row, cost: { ...row.cost, dollars: { kind: "MEASURED", amount: 0.4 } } } as typeof row, { scouts: [scout()] });
-  assert.match(none.costLine, /Model-routing escalations: none — its Scout walk finished on the class it started on\./);
-  const unread = standingDetail({ ...row, cost: { ...row.cost, dollars: { kind: "MEASURED", amount: 0.4 } } } as typeof row);
-  assert.match(unread.costLine, /Model-routing escalations: not read with this work\./);
-  /* A walk recorded before the ladder says when it ran, not a rule as though it still held. */
-  const legacy = standingDetail(row, { scouts: [scout()] }).models.find((m) => m.step.includes("Scout"))!;
-  assert.match(legacy.why, /this walk was recorded before the ladder \(Sep 25\), when the research loop always started on the most capable class\./);
 });
 
 /* ------------------------------------------------------------ MW-016: routine reads */

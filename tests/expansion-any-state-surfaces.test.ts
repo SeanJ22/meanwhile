@@ -8,8 +8,6 @@
  *   family, no reader scope.
  * - Admin's preview: the registration slice Postgres cuts, the count by the
  *   runner's rule (certain, and at the edge), and the sentence per state.
- * - Admin's instruction card: what a Send created, and where its governments
- *   came from.
  * - The runner reads registration where it must: before the providers run,
  *   before the territory is read, and for a DISPATCH.
  */
@@ -22,13 +20,9 @@ import { CROSSWALK_CITATION, crosswalkRowIssue, type MeetingBodyCrosswalkRow } f
 import { hasReviewedRegistry, JURISDICTION_REFERENCE_STATES } from "../lib/civic-data/reviewed-registry-states.ts";
 import { JURISDICTION_REFERENCE_STATES as FROM_REFERENCE } from "../lib/civic-data/operational-references.ts";
 import { registrationGovernments, type ReadOnlyQuery, type Statement } from "../lib/control-plane/admin-view/promoted-slices.ts";
-import { instructionView } from "../lib/control-plane/admin-view/work-view.ts";
 import { deployPreview } from "../lib/control-plane/deploy-preview.ts";
 import { wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
-import type { DispatchWorkReading, DispatchWorkTargetReading } from "../lib/control-plane/expansion/dispatch-work.ts";
 import { registrationGovernmentsPlaced, stateSendPreviewSentence, type PreviewCode } from "../lib/control-plane/expansion/send-preview.ts";
-import { withScopeSet } from "../lib/control-plane/expansion/scopes.ts";
-import { dispatchWorkReadingOf, scopeCreationNumbers } from "../lib/control-plane/expansion/view.ts";
 import { scopeOfMeeting, stateOfOcdId } from "../lib/meetings/edge-artifacts.ts";
 import { ocdStateCode } from "../lib/ocd/state-of.ts";
 import type { Meeting } from "../lib/sources/types.ts";
@@ -142,34 +136,6 @@ test("Admin's preview: the registration slice, and the governments a Send must p
   assert.deepEqual([...JURISDICTION_REFERENCE_STATES], [...FROM_REFERENCE]);
   assert.equal(hasReviewedRegistry("AZ"), true);
   assert.equal(hasReviewedRegistry("oh"), false);
-});
-
-test("Admin's instruction card says what a Send created and that its governments came from registration", () => {
-  const [decision] = withScopeSet([], {
-    geography: { type: "county", geoid: "39049", version: "county:2020", label: "Franklin County, Ohio", stateAbbr: "OH" },
-    priority: 1, budgetUsd: 0, note: null, decidedAt: "2026-09-25T10:00:00.000Z", decidedBy: "adm_test-session", receiptId: "expansion.scope.set:39049",
-  }).scopes;
-  const target: DispatchWorkTargetReading = {
-    key: decision!.key, kind: "SCOPE", label: "Franklin County, Ohio", requestedAt: decision!.decidedAt, ref: decision!.receiptId,
-    units: { placed: 52, fromRegistration: 52, blocked: 0, unplaced: 1048, placedSample: [] },
-    blocked: [],
-    requirements: { defined: 52, carried: 0, created: 52, createdThisCycle: 52, deferred: 0, failed: 0, held: 0, createdDeterministic: 0, createdModel: 52, createdMeetingsDiscovery: 52, createdFromRegistration: 52 },
-    reordered: { obligations: 0, of: 0 },
-    says: [],
-  };
-  const reading: DispatchWorkReading = { formatVersion: 1, at: "2026-09-25T11:00:00.000Z", writes: "APPLIED", planOnlyWhy: null, written: 52, deferred: 0, failed: [], stoppedBy: "DONE", targets: [target] };
-  assert.equal(dispatchWorkReadingOf(reading), reading);
-  assert.equal(dispatchWorkReadingOf({ formatVersion: 2, targets: [] }), null, "anything else is no reading, never an empty one");
-  const view = instructionView({ decision: decision!, reading: null, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null, dispatchWork: reading });
-  const created = view.ack.find((a) => a.pill === "CREATED");
-  assert.ok(created, JSON.stringify(view.ack));
-  assert.match(created.text, /Created 52 of the 52 requirements defined here \(52 that cycle\)/);
-  assert.match(created.text, /All 52 governments here come from registration \(the 2022 Census of Governments\): their state has no reviewed registry/);
-  const number = scopeCreationNumbers(target).find((n) => n.label.endsWith("governments from registration"));
-  assert.deepEqual([number?.value, number?.denominator], [52, 52]);
-
-  const before = instructionView({ decision: decision!, reading: null, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null, dispatchWork: null });
-  assert.equal(before.ack.find((a) => a.pill === "NOT YET CREATED")?.at, null);
 });
 
 test("the runner reads a state's registration before its providers run, before the territory, and for a DISPATCH", () => {

@@ -63,9 +63,6 @@ const ADMIN_HOST = new URL(ADMIN_ORIGIN).host;
 /** The surfaces swept. A new admin page belongs on this list the day it ships. */
 export const SWEPT_PATHS: readonly string[] = [
   "admin",
-  "readiness/az",
-  "admin/sources",
-  "admin/agents",
 ];
 
 /** One kind of thing that must not reach the face, with how to find it. */

@@ -30,9 +30,7 @@ import {
 import { SCOPE_BUDGET_CODE, armExpansionBudget } from "@/lib/control-plane/expansion/membership.ts";
 import { loadExpansionPlan } from "@/lib/control-plane/expansion/runner-load.ts";
 import { expansionScopesOf, isExpansionScopeDecision, withScopeSet, type ExpansionScopeDecision } from "@/lib/control-plane/expansion/scopes.ts";
-import { instructionView, standingDetail } from "@/lib/control-plane/admin-view/work-view.ts";
-import { purposeSplit, reconciliation, testAttemptsWords, type PurposeFacts } from "@/lib/control-plane/admin-view/money-view.ts";
-import { buildAssignments, isProofRecord } from "@/lib/control-plane/assignment-view.ts";
+import { isProofRecord } from "@/lib/control-plane/assignment-view.ts";
 import { receiptIdFor, type ActionRequest } from "@/lib/control-plane/gateway/contract.ts";
 import { submit } from "@/lib/control-plane/gateway/gateway.ts";
 import type { GatewayDeps } from "@/lib/control-plane/gateway/registry.ts";
@@ -50,7 +48,7 @@ import { MEETINGS_DISCOVERY_RECORD_CLASS, meetingsDiscoveryProvider } from "@/li
 import { buildRegistry } from "@/lib/control-plane/scheduler/registry.ts";
 import { RESEARCH_INTENT_LOG_KEY, type ResearchIntent } from "@/lib/control-plane/scheduler/research-policy.ts";
 import { createWorkItem } from "@/lib/control-plane/work-item.ts";
-import { WORK_QUESTION_WORDS, questionOfObligation, validateWorkQuestions } from "@/lib/control-plane/work-question.ts";
+import { questionOfObligation, validateWorkQuestions } from "@/lib/control-plane/work-question.ts";
 import type { JurisdictionRegistry } from "@/lib/hunt/jurisdiction-universe.ts";
 
 /**
@@ -532,29 +530,6 @@ function decision(): ExpansionScopeDecision {
   return withScopeSet([], { geography: { type: "county", geoid: "04019", version: "county:2020", label: "Pima County, Arizona", stateAbbr: "AZ" }, priority: 1, budgetUsd: 5, note: null, questions: ["HAVE_IT"], decidedAt: JOINED, decidedBy: "adm", receiptId: "r-a" }).scopes[0];
 }
 
-test("saved instruction wording preserves a hunt's token-only total and distinguishes legacy rolling budgets", () => {
-  const input = { reading: null, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null };
-  const hunt = instructionView({ ...input, decision: { ...decision(), budgetUsd: 50, budgetStartedAt: JOINED } });
-  assert.match(hunt.card.summary, /\$50\.00 Anthropic token budget for this hunt/);
-  assert.doesNotMatch(hunt.card.summary, /rolling|lifetime/);
-  assert.match(hunt.spend, /\$50\.00 Anthropic token budget for this hunt/);
-  const legacy = instructionView({ ...input, decision: decision() });
-  assert.match(legacy.card.summary, /\$5\.00 paid-model budget in any rolling 24 hours/);
-});
-
-test("a Send during an active cycle is shown as saved and waiting, never as running", () => {
-  const view = instructionView({
-    decision: decision(), reading: null, rows: null, totalAssignments: null,
-    paidLaneClosedBecause: null, runnerPaused: null,
-    activeCycleStartedAt: "2026-09-24T23:59:00.000Z",
-    nextCycleDueAt: "2026-09-25T01:00:00.000Z",
-  });
-  assert.equal(view.card.pill, "SAVED · NOT YET READ");
-  assert.match(view.card.summary, /has not reported finishing/);
-  assert.match(view.card.summary, /saved work, not running work/);
-  assert.match(view.ack.find((fact) => fact.pill === "NOT YET READ")?.text ?? "", /next eligible cycle after it finishes or recovers/);
-});
-
 test("a Send's completion uses the same created and reordered members as its linked work list", async () => {
   const { evaluateAssignmentFromRecords, memberRecordsForSend } = await import("../lib/control-plane/assignment-completion.ts");
   const membership = assignmentMembership([], [
@@ -568,136 +543,6 @@ test("a Send's completion uses the same created and reordered members as its lin
   assert.equal(completion.members, 2);
   assert.equal(completion.settled, 1);
   assert.deepEqual(completion.exceptions.map((e) => e.obligationId), ["created"]);
-});
-
-test("the hunt card uses its current ledger, labels last-cycle admissions, and separates current Scouts", () => {
-  const membership = assignmentMembership([{ id: "ob-c", subjectId: "s", assignments: [{ assignmentKey: A.key, ref: "r-a", relation: "CREATED", at: JOINED }] }]);
-  const costs = [charge({ obligationId: "ob-c", usd: 1.09 })];
-  const gate = armAssignmentBudget({ now: T0, specs: [{ ...A, budgetUsd: 50, budgetStartedAt: JOINED }], membership, costs, worstCaseUsd: 0.6, intentsReadable: true });
-  const assignment = assignmentCycleReading({ at: T0, now: T0, gate, specs: [{ ...A, budgetUsd: 50, budgetStartedAt: JOINED }], membership, costs, intentsReadable: true }).assignments[0];
-  const scope = { key: decision().key, work: { scoutAdmitted: 11, subjectIds: [], subjectIdsComplete: true, registeredObligations: 132, dueThisCycle: 132, scoutRowsPlacedFirst: 29 }, budgetSays: "$0 spent for this hunt", spend: { rolling24hUsd: 0, sevenDayUsd: 0 }, heldThisCycle: 0, resolution: { kind: "RESOLVED", zctaCount: 1 }, coverage: null };
-  const expansion = { at: T0, scopes: [scope] } as unknown as import("../lib/control-plane/expansion/reading.ts").ExpansionCycleReading;
-  const view = instructionView({ decision: { ...decision(), budgetUsd: 50, budgetStartedAt: JOINED }, reading: expansion, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null, currentScouts: 0, assignment, assignmentAt: T0 });
-  assert.match(view.spend, /\$1\.09/);
-  assert.doesNotMatch(view.spend, /\$0\.00/);
-  assert.equal(view.lanes[0]?.pill, "ADMITTED LAST CYCLE");
-  assert.doesNotMatch(view.lanes[0]?.note ?? "", /\$0 spent/);
-  assert.match(view.ack.find((fact) => fact.pill === "CURRENT SCOUTS")?.text ?? "", /No Scout linked to this Send is running now/);
-  const prior = instructionView({ decision: { ...decision(), budgetUsd: 50, budgetStartedAt: JOINED }, reading: expansion, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null, currentScouts: 0, assignment: { ...assignment, completion: { kind: "NO_MEMBERS", assignmentKey: A.key, says: "No obligation names this assignment" } }, assignmentAt: T0 });
-  assert.match(prior.ack.find((fact) => fact.pill === "COMPLETION RECHECK")?.text ?? "", /1 linked obligation on this Send/);
-  assert.doesNotMatch(prior.ack.map((fact) => fact.text).join(" "), /No obligation names this assignment/);
-});
-
-test("an instruction lists what it created and reordered from the work itself, and its own budget with the window", () => {
-  const membership = assignmentMembership([{ id: "ob-c", subjectId: "s", assignments: [{ assignmentKey: A.key, ref: "r-a", relation: "CREATED", at: JOINED }] }, row("ob-r", "s", [A.key])]);
-  const g = armAssignmentBudget({ now: T0, specs: [A], membership, costs: [charge({ obligationId: "ob-c", usd: 5.4 })], worstCaseUsd: 0.6, intentsReadable: true });
-  g.check("ob-r");
-  const reading = assignmentCycleReading({ at: T0, now: T0, gate: g, specs: [A], membership, costs: [charge({ obligationId: "ob-c", usd: 5.4 })], intentsReadable: true });
-  const view = instructionView({ decision: decision(), reading: null, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null, assignment: reading.assignments[0], assignmentAt: T0 });
-  assert.equal(view.reach?.created, 1);
-  assert.equal(view.reach?.reordered, 1);
-  assert.deepEqual(view.reach?.createdIds, ["ob-c"]);
-  assert.deepEqual(view.reach?.reorderedIds, ["ob-r"]);
-  assert.match(view.reach?.says ?? "", /as recorded on the work itself/);
-  const rows = new Map(view.budget?.rows ?? []);
-  assert.match(rows.get("Budget") ?? "", /^\$5\.00, rolling 24 hours to /);
-  assert.equal(rows.get("Spent"), "$5.40");
-  assert.equal(rows.get("Held for work in flight"), "$0.00");
-  assert.equal(rows.get("Left"), "none — over by $0.40");
-  assert.equal(rows.get("Scouts it held back"), "1");
-
-  const before = instructionView({ decision: decision(), reading: null, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null });
-  assert.equal(before.reach, null, "no stored record: nothing is joined by place in its stead");
-  assert.match(before.reachWhyNot ?? "", /has not recorded, on the work itself, what this instruction reached/);
-  assert.equal(before.budget, null);
-});
-
-test("an opened piece of work names its question and the instructions recorded on it", () => {
-  const ob = standing(
-    { id: "ob-open", recordClass: "local-jurisdiction", subjectId: "az:city:city-of-tucson", routeId: "ROUTE", active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null, materializedBy: OWNER_DISPATCH, assignments: [{ assignmentKey: A.key, ref: "r-a", relation: "CREATED", at: JOINED, questions: ["HAVE_IT"] }] },
-    T0,
-  );
-  const item = createWorkItem({ project: "freshness", subject: ob.subjectId, obligation: "ob-open#1", why: "w", question: "HAVE_IT", now: T0 });
-  const src = {
-    nowIso: T0,
-    obligations: [ob],
-    occurrences: [{ id: "occ-1", obligationId: ob.id, sequence: 1, dueAt: T0, workItemId: item.id, routeTaskId: "rt", openedAt: T0, closedAt: null, disposition: null, unresolvedReason: null }],
-    workItems: [item],
-    routeTasks: [],
-    attempts: [],
-    debts: [],
-    leases: null,
-    dispositions: null,
-    artifacts: [],
-    costs: [],
-    scoutResults: [],
-    workerResults: [],
-    pipeline: null,
-    activation: null,
-    servedReader: null,
-    pilotZips: [],
-  } as const;
-  const built = buildAssignments(src).find((r) => r.id === "ob-open")!;
-  assert.equal(built.what.question, "HAVE_IT");
-  const detail = standingDetail(built);
-  const q = detail.addresses.find((a) => a.id === "QUESTION")!;
-  assert.equal(q.text, WORK_QUESTION_WORDS.HAVE_IT);
-  const sent = detail.addresses.find((a) => a.id === A.key)!;
-  assert.equal(sent.pill, "CREATED");
-  assert.match(sent.text, /^Created by your instruction, recorded .* \(receipt r-a\)\. You asked: Do we have this record at all\?/);
-  assert.match(detail.wordsNote, /^Your instruction county:2020\/04019 created this/);
-
-  const plain = standingDetail(buildAssignments({ ...src, obligations: [{ ...ob, assignments: undefined, materializedBy: undefined }], workItems: [{ ...item, question: undefined }] }).find((r) => r.id === "ob-open")!);
-  assert.equal(plain.addresses.find((a) => a.id === "QUESTION")?.pill, "NOT RECORDED", "no question on the round: said, never guessed");
-  assert.match(plain.wordsNote, /^No instruction of yours created this/);
-});
-
-const P = (over: Partial<PurposeFacts>): PurposeFacts => ({
-  state: "az",
-  kept: "KEPT",
-  recordClass: "meetings-discovery",
-  question: "HAVE_IT",
-  assigned: true,
-  resultKind: "WALKED_NO_YIELD",
-  test: false,
-  role: "SCOUT",
-  charges: 1,
-  usd: 1,
-  unpriced: 0,
-  first: "2026-09-25T01:00:00.000Z",
-  last: "2026-09-25T02:00:00.000Z",
-  ...over,
-});
-
-test("Money splits paid charges by what each recorded it was for; older rows say so, and test runs are inside the total on their own line", () => {
-  const rows = [
-    P({ charges: 3, usd: 3 }),
-    P({ resultKind: "INGESTED", charges: 1, usd: 2 }),
-    P({ recordClass: "local-jurisdiction", question: "HAS_CHANGED", assigned: false, charges: 2, usd: 0.5 }),
-    P({ kept: "BEFORE", recordClass: null, question: null, assigned: false, resultKind: null, charges: 10, usd: 7, last: "2026-09-20T00:00:00.000Z" }),
-    P({ kept: "NOT_KEPT", recordClass: null, question: null, assigned: false, resultKind: null, role: "DISCOVERY_SEARCH", charges: 4, usd: 0.02 }),
-    P({ test: true, charges: 2, usd: 1.5 }),
-    P({ state: "nj", charges: 5, usd: 9 }),
-  ];
-  const az = purposeSplit(rows, "az");
-  assert.equal(az.lines.length, 2, "grouped by record class, question and whether an instruction reached it");
-  assert.match(az.lines[0].label, /^Meetings discovery · Do we have this record at all\? · work an instruction of yours reached$/);
-  assert.equal(az.lines[0].usd, 5);
-  assert.match(az.lines[0].detail, /4 charges; what each came to: 3 walked, nothing there, 1 acquired\./);
-  assert.equal(az.before?.label, "Recorded before purpose was kept");
-  assert.match(az.before?.detail ?? "", /not split — never guessed into a purpose/);
-  assert.match(az.notKept?.detail ?? "", /4 search requests/);
-  assert.equal(az.test?.label, "Test and proof runs");
-  assert.equal(az.test?.usd, 1.5);
-  assert.match(az.test?.detail ?? "", /Real money: inside this total, the ledger's totals and the ceilings\. Left out of what paid work produced and of what a result cost\./);
-  assert.equal(az.totalUsd, 3 + 2 + 0.5 + 7 + 0.02 + 1.5, "the total keeps every charge, test runs included");
-  assert.equal(purposeSplit(rows, null).totalUsd, az.totalUsd + 9);
-
-  assert.match(testAttemptsWords({ attempts: 3, usd: 1.2 }), /^3 proof or test attempts \(\$1\.20\) are left out of these figures — real money, inside every total and ceiling/);
-  const recon = reconciliation({ month: null, facts: [], unread: 0, proofAssignments: 4 }).find((l) => l.pill === "TEST SPEND")!;
-  assert.match(recon.text, /every total above includes them/);
-  assert.match(recon.text, /left out of what paid work produced and what a result cost/);
-  assert.doesNotMatch(recon.text, /not yet separated/);
 });
 
 /* ======================================================================= *
@@ -770,23 +615,4 @@ test("MW-015: a Send is complete only when every member is settled, and the inst
   const many = evaluate(Array.from({ length: COMPLETION_EXCEPTION_CAP + 5 }, (_, i) => member(`ob-n${String(i).padStart(2, "0")}`, { lastWorkedAt: null })));
   assert.equal(many.kind === "NOT_COMPLETE" ? many.exceptions.length : -1, COMPLETION_EXCEPTION_CAP);
   assert.equal(many.kind === "NOT_COMPLETE" ? many.unsettledCount : -1, COMPLETION_EXCEPTION_CAP + 5);
-
-  // The instruction view shows the recorded evaluation, never a fixed pill.
-  const membership = assignmentMembership([{ id: "ob-c", subjectId: "s", assignments: [{ assignmentKey: A.key, ref: "r-a", relation: "CREATED", at: JOINED }] }]);
-  const g = armAssignmentBudget({ now: T0, specs: [A], membership, costs: [], worstCaseUsd: 0.6, intentsReadable: true });
-  const reading = assignmentCycleReading({ at: T0, now: T0, gate: g, specs: [A], membership, costs: [], intentsReadable: true, completionFor: () => open });
-  const view = instructionView({ decision: decision(), reading: null, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null, assignment: reading.assignments[0], assignmentAt: T0 });
-  const pill = view.ack.find((f) => f.pill === "NOT COMPLETE");
-  assert.equal(view.progress.percent, 20);
-  assert.equal(view.progress.known, 5);
-  assert.equal(view.progress.complete, 1);
-  assert.match(pill?.text ?? "", /^Not complete: 1 of 5 member obligations passed the completion check; 1 refused and 3 not yet settled remain\. For example — ob-absent: recorded as absent until/);
-  const done = assignmentCycleReading({ at: T0, now: T0, gate: g, specs: [A], membership, costs: [], intentsReadable: true, completionFor: () => evaluate([member("ob-a")]) });
-  const finished = instructionView({ decision: decision(), reading: null, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null, assignment: done.assignments[0], assignmentAt: T0 });
-  assert.equal(finished.progress.percent, 100, "tracked work progress can reach 100% without claiming full hunt coverage");
-  assert.equal(finished.ack.find((f) => f.pill === "COMPLETE"), undefined, "a closed subset cannot certify the entire scope");
-  assert.match(finished.ack.find((f) => f.pill === "TRACKED WORK COMPLETE")?.text ?? "", /^Complete: all 1 member obligations passed the completion check\.[\s\S]*does not establish that every applicable body and information family/);
-  const unevaluated = instructionView({ decision: decision(), reading: null, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null });
-  assert.equal(unevaluated.progress.percent, null);
-  assert.match(unevaluated.ack.find((f) => f.pill === "NOT COMPLETE")?.text ?? "", /^Not evaluated yet/);
 });

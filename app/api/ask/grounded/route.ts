@@ -52,7 +52,7 @@ import { formatDateLong } from "@/lib/text/format-date";
 import { unavailableInterpretation, type AskIntent, type AskInterpretation, type AskTemporal } from "@/lib/ask/intent";
 import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-question";
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
-import { groupMoneyShapeForBoundSubject, lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, personVotesShapeForBoundPerson, shapeForBoundBody } from "@/lib/ask/lexical-reading";
+import { bodyNameFromQuestion, groupMoneyShapeForBoundSubject, lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, personVotesShapeForBoundPerson, shapeForBoundBody, unheldNamedBodyQuestion } from "@/lib/ask/lexical-reading";
 import { composePersonVotes } from "@/lib/ask/person-votes";
 import { composeBodyRoster, composeReaderOfficials, placeNamesOf, readerOfficialsQuestion } from "@/lib/ask/reader-officials";
 import { areaMeetingsQuestion, composeAreaMeetings, type AreaSitting } from "@/lib/ask/area-meetings";
@@ -144,6 +144,7 @@ import {
   clarifyAnswer,
   offAnswer,
   unresolvedAnswer,
+  unheldBodyAnswer,
   type AskAnswerPayload,
 } from "@/lib/ask/answer";
 import { agendaTopicEvidence } from "@/lib/ask/agenda-topic";
@@ -453,7 +454,7 @@ function officeholderActionEvidence(
     /* No store is a STATE and is reported as one, never as "they did nothing". */
     gaps.push({
       whose: "OURS",
-      statement: `Our canonical action records could not be read for this answer about ${personName}. This is a holding failure, not a finding that no actions occurred.`,
+      statement: `We couldn't load our records of what ${personName} has done in office. Please try again in a moment.`,
     });
     denominators.actionRecordsHeld = 0;
     return;
@@ -889,7 +890,6 @@ export async function POST(request: Request) {
   let snapshot: MeetingsSnapshot | null = null;
   let meetingDataState: "PROMOTED" | "BOOTSTRAP" | "STORE_UNREACHABLE" =
     "STORE_UNREACHABLE";
-  let meetingDataDetail = "The meetings projection was not initialized.";
   try {
     /*
      * 2026-09-24: the SAME meetings read the map uses — the runner-published
@@ -900,15 +900,11 @@ export async function POST(request: Request) {
      */
     const read = await meetingsRead;
     meetingDataState = read.kind === "NOT_RECORDED" ? "STORE_UNREACHABLE" : read.kind;
-    meetingDataDetail = read.kind === "PROMOTED"
-      ? `Canonical meetings projection ${read.metadata.versionId ?? "unknown"} was read.`
-      : read.detail;
     if (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") {
       snapshot = read.value;
     }
-  } catch (error) {
-    meetingDataDetail =
-      error instanceof Error ? error.message : "The meetings projection could not be validated.";
+  } catch {
+    // Keep this source unavailable; the reader receives the load-failure gap below.
   }
   lap("meetingsProjection");
   // A failed meeting read must not withhold an unrelated eligible ballot or money record.
@@ -1018,13 +1014,13 @@ export async function POST(request: Request) {
   // A topic question bound lexically to a body is not a ballot question; its
   // ballot is not read (loadBallotForDivisions([]) is the empty holding).
   const ballot = await loadBallotForDivisions(deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk ? [] : ocdIds);
-  const ballotLoadGaps: EvidenceGap[] = ballot.loaderFailures.length ? [{ whose: "OURS", statement: "The canonical ballot records for this area could not be read for this answer. That is a failure of our holding, not a statement that no candidates or ballot items exist." }] : [];
+  const ballotLoadGaps: EvidenceGap[] = ballot.loaderFailures.length ? [{ whose: "OURS", statement: "We couldn't load the ballot for your area. Please try again in a moment." }] : [];
   const meetingLoadGaps: EvidenceGap[] = meetingDataState === "STORE_UNREACHABLE"
-    ? [{ whose: "OURS", statement: `Our canonical meeting records could not be read for this answer. This holding failure does not mean no meetings or agendas exist. ${meetingDataDetail}` }]
+    ? [{ whose: "OURS", statement: `We couldn't load our meeting records. Please try again in a moment.` }]
     : meetingDataState === "BOOTSTRAP"
-      ? [{ whose: "OURS", statement: "No canonical meetings pointer has been recorded yet, so this answer is explicitly using the bundled first-bootstrap projection." }]
+      ? [{ whose: "OURS", statement: "These meeting records came with the site and may be out of date. We have not loaded an updated calendar yet." }]
       : [];
-  const holdingLoadGaps: EvidenceGap[] = [...ballotLoadGaps, ...meetingLoadGaps, ...(officeholders.loaderFailures ? [{ whose: "OURS" as const, statement: "Our canonical officeholder records could not be read for this answer. This is a holding failure, not a finding that there are no officials for this place or person." }] : [])];
+  const holdingLoadGaps: EvidenceGap[] = [...ballotLoadGaps, ...meetingLoadGaps, ...(officeholders.loaderFailures ? [{ whose: "OURS" as const, statement: "We couldn't load our records of who represents you. Please try again in a moment." }] : [])];
   /* A money comparison names two people. Bound on the whole question, the name
      with more words wins ("Joseph M. MURPHY" over "Marilyn ALTHOFF") and the
      other held filing never entered the inventory; each name slot is bound on
@@ -1038,7 +1034,7 @@ export async function POST(request: Request) {
       const represented = new Set([...ballotInventory.subjects.values()].flatMap(row => [row.id, ...(row.kind === "PERSON" && row.candidacyId ? [row.candidacyId] : [])]));
       heldFilings = requestedHeldFilings(azHeldFilingSubjects(), question, preferredOfficialIds, represented);
     } catch {
-      holdingLoadGaps.push({ whose: "OURS", statement: "Our source filing identities could not be read; this is not evidence that a candidate or their profile is absent." });
+      holdingLoadGaps.push({ whose: "OURS", statement: "We couldn't load the candidate filings for this answer. Please try again in a moment." });
     }
   }
 
@@ -1210,7 +1206,8 @@ export async function POST(request: Request) {
       : [],
     activeSubjects: activeSubjects.map((s) => s.name).slice(0, 6),
   };
-  const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk || Boolean(ballotAsk);
+  const unheldBody = !topicRoute && !leanAsk && !ballotAsk ? unheldNamedBodyQuestion(question, namedBodies) : null;
+  const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk || Boolean(ballotAsk) || Boolean(unheldBody);
   /*
    * **THE LEXICAL READING.** (2026-09-25, the Ask latency repair.) A question
    * in one of a few canonical shapes ("when does the Mesa City Council meet
@@ -1258,7 +1255,10 @@ export async function POST(request: Request) {
   const outcome = modelFreeTopicRoute || lexical ? null : cachedInterpretation ?? await modelReading!;
   if (interpretationKey && !cachedInterpretation && outcome?.kind === "READ") interpretationCache.set(interpretationKey, outcome);
 
-  if (outcome === null && (leanAsk || ballotAsk)) {
+  if (outcome === null && unheldBody) {
+    interpretation = interpretWithoutModel(question);
+    trace.interpretation = { ran: false, why: "unheld-body-shape", ms: Date.now() - interpretationStarted, intent: interpretation.intent, temporal: interpretation.temporal, fellBackToDeterministic: true };
+  } else if (outcome === null && (leanAsk || ballotAsk)) {
     /* The reader's own officials, the meetings held for their area, or their ballot: read from the words, answered from what is held. */
     interpretation = { ...unavailableInterpretation(), intent: officialsAsk ? "PERSON_RECORD" : areaMeetingsAsk ? "MEETING_TIME" : "UNKNOWN", temporal: areaMeetingsAsk ? { kind: "NEXT" } : { kind: "NONE" } };
     trace.interpretation = { ran: false, why: officialsAsk ? "reader-officials-shape" : areaMeetingsAsk ? "area-meetings-shape" : "ballot-shape", ms: Date.now() - interpretationStarted, intent: interpretation.intent, temporal: interpretation.temporal, fellBackToDeterministic: true };
@@ -1399,6 +1399,21 @@ export async function POST(request: Request) {
 
     /* An answer that ends here is RETURNED to the caller as a response to send,
        not sent: the speculative reading above never sends or captures one. */
+    if (unheldBody) {
+      return { kind: "RESPONSE" as const, respond: async () => {
+        trace.answerMode = "NO_EVIDENCE";
+        trace.totalMs = Date.now() - started;
+        const information = unheldBody.shape === "BODY_ROSTER" ? "list of members"
+          : unheldBody.shape === "BODY_CIVICS" ? "description of what it does"
+          : unheldBody.shape === "CONTACT" ? "contact details"
+          : unheldBody.shape === "MEETING_OUTCOME" ? "meeting decisions"
+          : unheldBody.shape === "BODY_AGENDA" ? "agendas"
+          : unheldBody.shape === "PUBLIC_COMMENT" ? "public-comment rules" : "calendar";
+        const answer = unheldBodyAnswer(titleCaseName(unheldBody.name), information, trace);
+        await capture("NO_EVIDENCE", [], answer.answer, null, null, [], answer.gaps);
+        return Response.json(answer);
+      } };
+    }
     if (bodyDecision.kind === "CONFIRM" || bodyDecision.kind === "CLARIFY") {
       const decision = bodyDecision;
       return { kind: "RESPONSE" as const, respond: async () => {
@@ -1462,7 +1477,7 @@ export async function POST(request: Request) {
         const answer = unresolvedAnswer(binding.mention, trace);
         if (resolution.unresolvedCanonicalId) {
           answer.denominators.identityUnresolved = 1;
-          answer.gaps.push({ whose: "OURS", statement: `The supplied identity for ${binding.mention} could not be resolved to a current canonical record, so no same-name person's records have been attached.` });
+          answer.gaps.push({ whose: "OURS", statement: `We couldn't match ${binding.mention} to a person in our records. We haven't shown another person's information.` });
         }
         answer.gaps.push(...holdingLoadGaps);
         answer.denominators.ballotLoaderFailures = ballot.loaderFailures.length;
@@ -1605,7 +1620,7 @@ export async function POST(request: Request) {
       }
       if (ballotRecord.kind === "MEASURE" && ballot.analysisLoaderFailed) {
         denominators.measureAnalysisLoaderFailures = 1;
-        gaps.push({ whose: "OURS", statement: "The held official measure analysis could not be read for this answer. This is a holding failure, not a finding that the authority has no analysis." });
+        gaps.push({ whose: "OURS", statement: "We couldn't load the official explanation of this ballot measure. Please try again in a moment." });
       }
 
       if (retrieved.records.length === 0) {
@@ -1704,7 +1719,7 @@ export async function POST(request: Request) {
           gaps.push(...votes.gaps);
           for (const [key, count] of Object.entries(votes.denominators)) denominators[key] = (denominators[key] ?? 0) + count;
         }
-        if (!joined.length) gaps.push({ whose: "OURS", statement: `We have not established a canonical voting-office identity for ${ballotRecord.name}, so no other person's voting record has been attached.` });
+        if (!joined.length) gaps.push({ whose: "OURS", statement: `We haven't confirmed which voting record belongs to ${ballotRecord.name}, so we haven't shown anyone else's votes.` });
       }
     } else if (subject?.kind === "BODY") {
       const identity = canonicalBodyIdentity(subject.id);
@@ -1769,13 +1784,13 @@ export async function POST(request: Request) {
           whose: "OURS",
           statement:
             !snapshot
-              ? `The held meeting records for ${subject.name} could not be read for this answer.`
+              ? `We couldn't load ${subject.name}'s calendar. Please try again in a moment.`
               : requestedMeetingDate
                 ? requestedMeetingDate.date
-                  ? `We have not recorded a meeting for ${subject.name} on ${formatDateLong(requestedMeetingDate.date) ?? requestedMeetingDate.date}. No different date's meeting has been substituted.`
-                  : `The requested meeting date is invalid or names more than one day. Specify one calendar date to retrieve that body's sitting.`
+                  ? `We don't have a meeting for ${subject.name} on ${formatDateLong(requestedMeetingDate.date) ?? requestedMeetingDate.date} in our records.`
+                  : `Please give one date for the meeting you want to ask about.`
               : forBody.length === 0
-              ? `We have not recorded any meetings for ${subject.name} yet.`
+              ? `We don't have ${titleCaseName(bodyNameFromQuestion(question, namedBodies, subject.id) ?? subject.name)}'s calendar yet.`
               : selection === "LAST"
                 ? `We hold meetings for ${subject.name} but none that have already happened.`
                 : `We hold meetings for ${subject.name} but none scheduled in the future.`,

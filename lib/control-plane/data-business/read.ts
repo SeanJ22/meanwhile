@@ -1,4 +1,6 @@
 /**
+ * @freshness-reads-here — `observedAt` on a result is the instant this module's own read of the store returned, set after the data loaded.
+ *
  * **THE ONE READ: any recipe, any slice, one door.** (S12, Sean's 2:30 PM MST note.)
  *
  * `readRecipe({ recipe, slice, audience }, deps)` is the only way a number leaves the data business. In order it:

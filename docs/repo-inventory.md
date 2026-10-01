@@ -790,7 +790,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-958 file(s).
+959 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -1579,6 +1579,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/runtime-authority.test.ts`
 - `tests/runtime-operational-authority.test.ts`
 - `tests/runtime-release-handoff.test.ts`
+- `tests/say-once.test.ts`
 - `tests/schedulepage-chandler.test.ts`
 - `tests/schedulepage-own-routes.test.ts`
 - `tests/schedulepage.test.ts`
@@ -1753,7 +1754,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7024 file(s).
+7026 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -5916,6 +5917,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/text/mojibake.ts`
 - `lib/text/reader-names.ts`
 - `lib/text/refusal-shapes.ts`
+- `lib/text/say-once.ts`
 - `lib/time/zoned.ts`
 - `lib/tracker/obligation-handoff.ts`
 - `lib/tracker/opened-dates.mjs`
@@ -8606,6 +8608,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/runtime-authority.test.ts`
 - `tests/runtime-operational-authority.test.ts`
 - `tests/runtime-release-handoff.test.ts`
+- `tests/say-once.test.ts`
 - `tests/schedulepage-chandler.test.ts`
 - `tests/schedulepage-own-routes.test.ts`
 - `tests/schedulepage.test.ts`

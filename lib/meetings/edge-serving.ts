@@ -346,6 +346,8 @@ export const READER_BALLOT_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "ballot-navigation",
   "voting-sites",
   "official-filings",
+  // A sitting legislator's capitol and district offices.
+  "member-offices",
   "nh-members",
   "federal-funding",
   "state-money",

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import type { DirectoryOffice } from "@/lib/officials/directory";
+import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 
 /**
  * One federal member's district offices and committee seats.
@@ -51,6 +52,12 @@ export interface DirectoryCommitteeSeat {
 export interface MemberDirectory {
   districtOffices: DirectoryOffice[];
   committees: DirectoryCommitteeSeat[];
+  /**
+   * A state legislator's offices, in the same order as `districtOffices`:
+   * which office each is, and the source it was read from. Absent for a
+   * federal member, whose offices are all in the district.
+   */
+  officeDetails?: { officeKind: "CAPITOL" | "DISTRICT"; sourceUrl: string; sourceOrg: string; collectedAt: string; official: boolean }[];
 }
 
 const cache = new Map<string, Promise<MemberDirectory>>();
@@ -94,7 +101,7 @@ export function useMemberDirectory(memberId: string): MemberDirectoryState {
 
   useEffect(() => {
     let live = true;
-    if (!isFederalMember(memberId)) return;
+    if (!memberDirectoryReaches(memberId, "offices")) return;
     /*
      * No synchronous reset before the fetch.
      *

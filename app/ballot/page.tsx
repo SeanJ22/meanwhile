@@ -55,6 +55,7 @@ import { CardSourcesList } from "@/components/officials/card-sources-list";
 import { RecentVotes } from "@/components/map/popup/official-popup";
 import { personCardSources } from "@/lib/officials/card-sources";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
+import { currentMemberOffices } from "@/lib/officials/member-offices-read";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { CandidateCard } from "@/components/ballot/candidate-card";
 import {
@@ -783,7 +784,7 @@ async function BallotBattlecard({
         offices:
           !authorityAvailability.officeholders ? (
             unavailableHolding("officeholder-directory")
-          ) : recordHolder && memberDirectoryReaches(recordHolder.id) ? (
+          ) : recordHolder && memberDirectoryReaches(recordHolder.id, "offices") ? (
             <MemberOfficesContent holder={recordHolder} />
           ) : null,
         money: federal ? (
@@ -853,7 +854,11 @@ async function BallotBattlecard({
  * surfaces cannot disagree about provenance.
  */
 function CandidateSources({ holder }: { holder: SeatHolder }) {
-  const sources = personCardSources(holder, []);
+  // Read only as the reader edge primed it: this card never adds a database read to a cold ballot.
+  const [office] = currentMemberOffices(holder.id);
+  const sources = personCardSources(holder, office
+    ? [{ what: "Their capitol and district offices", provenance: { sourceUrl: office.sourceUrl, sourceOrg: office.sourceOrg, collectedAt: office.collectedAt, verifiedAt: null } }]
+    : []);
   if (sources.length === 0) return null;
   return <CardSourcesList sources={sources} />;
 }

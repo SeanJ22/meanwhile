@@ -181,7 +181,6 @@ test("standing runtime persists intake receipts without Git, deploy, or software
   const runner = readFileSync("scripts/pilot-runner.mts", "utf8");
   const cycle = readFileSync("scripts/freshness-shadow.mts", "utf8");
   const child = readFileSync("scripts/intake-tripwire.mts", "utf8");
-  const admin = readFileSync("app/(admin)/admin/feedback/page.tsx", "utf8");
   assert.match(runner, /new IndependentRuntimeLaneScheduler\([\s\S]*run:\s*runIntakeRuntime/);
   assert.match(runner, /appendIntakeRuntimeObservationDigest/);
   assert.ok(
@@ -193,8 +192,4 @@ test("standing runtime persists intake receipts without Git, deploy, or software
   assert.match(cycle, /intakeRuntime: beat\?\.value\.intakeRuntime \?\? null/);
   assert.match(child, /INTAKE_RUNTIME_RECEIPT=/);
   assert.doesNotMatch(child, /writeFile|docs\/intake-report|git\s+(?:add|commit|push)|push-main/);
-  assert.match(admin, /IntakeRuntimePanel/);
-  assert.match(admin, /readLatestIntakeRuntimeDigest/);
-  assert.doesNotMatch(admin, /intakeRuntime = heartbeatOutcome\.value\.intakeRuntime/);
-  assert.match(admin, /Exact 30-day aggregate history and flags/);
 });

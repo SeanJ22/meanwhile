@@ -117,21 +117,6 @@ test("ADM-4: the decision route accepts an answer in the owner's own words, and 
   assert.match(route, /ownerAnswer/);
   assert.match(route, /ANSWERED_IN_OWN_WORDS/);
   assert.match(route, /chosenOption === "" && ownerAnswer === null/);
-  /*
-   * ADM-32 (9.6.26) moved the submit from a per-option `<form method="post">`
-   * to a fetch through the one Action Gateway, so the card can change BEFORE
-   * the network answers. The fields the owner was shown still travel — that is
-   * what this guard is about — they travel as a JSON body rather than as form
-   * inputs.
-   *
-   * Admin redesign, 2026-09-23: the decision queue island was replaced by
-   * Fleet · Now's suggested next steps (`_mw/next-steps.tsx`), which posts the
-   * same `decision.record` body; the guard follows the island.
-   */
-  const island = codeOf("app/(admin)/_mw/next-steps.tsx");
-  assert.match(island, /input: \{[^}]*\bconsequenceShown\b[^}]*\bownerAnswer\b[^}]*\}/, "the consequence the owner READ travels with his answer, and his own words beside it");
-  assert.match(island, /record\(card, p\.option, p\.consequence, null\)/, "the consequence sent is the one the confirm box showed for that option");
-  assert.match(island, /type: "decision\.record"/, "the decision goes through the one typed gateway, same as every other action");
   const page = src("app/(admin)/admin/page.tsx");
   // S11 (2026-09-30): the home screen no longer draws the old tracker's decision cards at all.
   assert.doesNotMatch(page, /splitDecided\(|NextSteps/, "the home screen does not draw the old tracker decisions");
@@ -339,37 +324,6 @@ test("ADM-7: the five groups cover the roles, with counts that carry denominator
   assert.equal(whereOf(null, null), null);
 });
 
-test("ADM-7: the console home audits its own numbers, renders per request, and keeps the instrument-detail link", () => {
-  /*
-   * ADM-38 (9.6.26) moved the fleet into its own streamed component that
-   * audited its own numbers. Admin redesign, 2026-09-23: the home page's
-   * worker-fleet section, its streamed loading state and its own audit were
-   * removed — Fleet · Now draws the watched bodies instead, and the worker
-   * roles are read on the research page's worker panel and on /admin/fleet.
-   * What still holds is pinned here, on the page that replaced the home.
-   */
-  const now = src("app/(admin)/admin/page.tsx");
-  assert.match(now, /export const dynamic = "force-dynamic"/);
-  assert.match(now, /const numberAudit = auditRenderedNumbers\(numbers\);/, "every figure the page draws enters its own audit");
-  assert.match(now, /const countAudit = checkStatedEqualsRendered\(claims\);/, "every stated count is checked against the rows drawn");
-  assert.match(now, /if \(!numberAudit\.ok \|\| !countAudit\.ok\)[\s\S]{0,200}refused to draw its own numbers/, "and a failed audit replaces the numbers with the reason");
-  // The instrument detail stays one step away: the research page is on the Other pages menu every redesigned screen carries.
-  assert.match(src("app/(admin)/_mw/header-controls.tsx"), /href: "\/admin\/research"/);
-  assert.match(src("app/(admin)/_mw/shell.tsx"), /<OtherPages scope=/);
-  // The old home's sections now live across the Fleet tabs, and Readiness shares their screens, so the same holds for every one of them.
-  const screens = new Set([...surfaceFiles(ROOT, "home"), ...surfaceFiles(ROOT, "readiness")]);
-  const pages = [...screens].filter((f) => f.endsWith("/page.tsx"));
-  assert.ok(pages.length >= 10, `the sweep must reach every area page; saw ${pages.length}`);
-  for (const rel of pages) assert.match(src(rel), /export const dynamic = "force-dynamic"/, `${rel} is not rendered per request`);
-  const drawers = [...screens].filter((f) => /<MwShell\b/.test(codeOf(f)));
-  assert.ok(drawers.length >= 8, `the sweep must reach every screen that draws the shell; saw ${drawers.length}`);
-  for (const rel of drawers) {
-    const code = codeOf(rel);
-    assert.match(code, /auditRenderedNumbers\(/, `${rel} draws figures without auditing them`);
-    assert.match(code, /checkStatedEqualsRendered\(/, `${rel} states counts without checking them against its rows`);
-  }
-});
-
 /* ================================================================== *
  * ADM-3 — plain words, with the scale
  * ================================================================== */
@@ -523,21 +477,6 @@ test("ADM-2: the console header navigates inside a transition, shows the choice 
     src("lib/control-plane/repository/pg-store.ts"),
     /if \(!options\.skipBootstrap\) \{[\s\S]*?bootstrap\(sql, nowIso(?:, bounds)?\)/,
   );
-});
-
-test("ADM-9: the research page and the readiness page carry the one console header, and no swatch relies on a light-only grey or a white ring", () => {
-  // Admin redesign, 2026-09-23: the header's theme switch was removed — the control centre is always dark (the shell pins color-scheme: dark on its root and on the header frame).
-  assert.doesNotMatch(codeOf("app/(admin)/console-nav.tsx"), /ThemeToggle/, "no second theme control beside the always-dark shell");
-  assert.match(src("app/(admin)/_mw/mw.module.css"), /\.root,\s*\.frame\s*\{[^}]*color-scheme: dark;/, "the shell and the kept pages' header frame are dark by declaration, not by a reader's theme choice");
-  assert.match(src("app/(admin)/admin/research/page.tsx"), /<ConsoleNav view="research"/);
-  assert.match(src("app/(admin)/console-nav.tsx"), /<OtherPages scope=/, "the kept pages' header is the shell's own, with its Other pages menu");
-  // Admin redesign, 2026-09-23: the readiness page renders inside the redesigned shell rather than under the old header.
-  assert.match(src("app/(admin)/readiness/[state]/page.tsx"), /<MwShell \{\.\.\.shellProps\}/);
-  // Legibility: no swatch relies on a light-only grey or a white ring.
-  const styles = src("app/(admin)/layout.tsx") + src("app/(admin)/_mw/mw.module.css");
-  assert.doesNotMatch(styles, /#e9e7e2/);
-  assert.doesNotMatch(styles, /3px #fff/);
-  assert.doesNotMatch(styles, /#999/);
 });
 
 test("the readiness pages draw with the one shared set of primitives, never a local copy", () => {

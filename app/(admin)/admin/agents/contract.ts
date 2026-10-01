@@ -1,6 +1,5 @@
 /**
- * Page-level constants for the Agent Bridge surface, kept beside the page the
- * way `admin/release-review/contract.ts` is.
+ * Page-level constants for the Agent Bridge surface, kept beside the page.
  *
  * The paid-API switch is not this page's action: `config.setApiFallback` lives
  * in the console's one Action Gateway, which owns the validation, the authority

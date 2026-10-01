@@ -6,11 +6,6 @@
       "reason": "Names the missing recordClass field in Admin's held pipeline record. It does not assert that a publisher omitted information or that verification succeeded. The subject, blocker, corrective path and outcome remain independently visible; this is a gap in Meanwhile's own metadata, never a claim about a government or source."
     },
     {
-      "file": "components/admin/fleet-operations-map.tsx",
-      "text": "not measured",
-      "reason": "The failing-item card prints lastActivity.at; when the read did not carry it the field is genuinely absent, so the default names the gap as 'not measured' rather than 0. On this page that distinction is the load-bearing invariant (BUILD.md/WIRING.md §6b): 0 would assert the work was owed nothing, the opposite of an unread timestamp. It is a neutral field-gap on an owner-facing console surface, never a claim about a government."
-    },
-    {
       "file": "components/ballot/candidate-card.tsx",
       "text": "official site",
       "reason": "Not an absence. The default fires when a link carries no LABEL, and a link with no label is one on the candidate's own domain — where \"official site\" and \"campaign site\" describe exactly the thing that IS present. The label exists for the two cases where those words would be false: RULING 122's page a party publishes about a candidate, and RULING 145's campaign presence on a platform, both of which name their host instead. So the ?? is choosing between two true descriptions of a link that is there, never standing in front of one that is missing — and when there is no link, neither branch renders at all."
@@ -59,36 +54,6 @@
       "file": "app/(admin)/admin/sources/routine-data-panel.tsx",
       "text": "terminal failure",
       "reason": "Not an inferred source disposition. This renders only for an ExactRefusedRecord whose verdict is null, which the projection emits solely from a candidate terminal state carrying a durable failure code or detail. The same row says that the candidate terminal state, rather than a validation receipt, proves it."
-    },
-    {
-      "file": "app/(admin)/admin/feedback/page.tsx",
-      "text": "The intake-runtime reading is unavailable, and this page did not carry a reason.",
-      "reason": "Names an internal owner-surface gap without claiming that the production store is empty, healthy, or unreachable. It can render only when the observation and its independently derived gap detail are both absent, and deliberately refuses the former default's unsupported claim that no receipt exists."
-    },
-    {
-      "file": "app/(admin)/admin/feedback/page.tsx",
-      "text": "not read",
-      "reason": "Names nullable fields inside a structured intake-runtime observation as unread rather than converting them to zero. The observation's outcome and exact flags remain visible, while missing write-alarm or limiter counts license no numeric or health claim. The same reviewed label appears for both count families."
-    },
-    {
-      "file": "app/(admin)/admin/feedback/page.tsx",
-      "text": "The append-only intake observation could not be read safely.",
-      "reason": "This branch is reached only after the durable row has the expected intake-runtime outcome kind and its contract-level issue check passes, but strict parsing of the embedded observation still returns null. It reports that precise local parse gap and makes no claim about intake health or source activity."
-    },
-    {
-      "file": "app/(admin)/admin/release-review/page.tsx",
-      "text": "not recorded",
-      "reason": "Labels a null field on an existing durable post-deploy integrity receipt, never an absent receipt or an inferred deployment result. It is used for the deployed commit and gate exit independently so neither missing field is filled with success, failure, or a guessed value."
-    },
-    {
-      "file": "app/(admin)/admin/release-review/page.tsx",
-      "text": "no SHA",
-      "reason": "Labels the absent deployedSha field on an existing append-only production-integrity history row. The receipt's recorded outcome, time, detail, and identity still render, but null is not converted into a guessed commit and cannot certify an exact head."
-    },
-    {
-      "file": "app/(admin)/admin/research/page.tsx",
-      "text": "not readable",
-      "reason": "Labels only the aggregateRevision field returned as null by the method-candidate authority projection. The adjacent fail-closed authority state, exact status code, and detail distinguish absence, refusal, and store failure; this text supplies no revision and makes no authority claim."
     },
     {
       "file": "app/(admin)/_mw/delivery-trail.tsx",

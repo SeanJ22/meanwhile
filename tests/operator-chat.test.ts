@@ -6,7 +6,7 @@ import test from "node:test";
 import { NextRequest } from "next/server";
 
 import { middleware } from "@/middleware.ts";
-import { CHAT_PAGE } from "@/app/(admin)/admin/chat/contract.ts";
+import { CHAT_PAGE } from "@/lib/control-plane/operator-chat/surface.ts";
 import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
 import {
   AUTHORITY_CLASSES,
@@ -892,9 +892,7 @@ const CHAT_LIB = join(ROOT, "lib", "control-plane", "operator-chat");
 const CHAT_FILES = [
   ...readdirSync(CHAT_LIB).map((f) => join(CHAT_LIB, f)),
   join(ROOT, "app", "api", "admin", "chat", "route.ts"),
-  join(ROOT, "app", "(admin)", "admin", "chat", "page.tsx"),
-  join(ROOT, "app", "(admin)", "admin", "chat", "chat-console.tsx"),
-  join(ROOT, "app", "(admin)", "admin", "chat", "contract.ts"),
+  join(ROOT, "app", "(admin)", "_mw", "admin-v6", "chat-view.tsx"),
 ];
 
 function withoutComments(source: string): string {

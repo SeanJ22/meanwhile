@@ -15,6 +15,8 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { ActionDialog, type DialogSend } from "./action-dialog.tsx";
+import { ChangesView } from "./changes-view.tsx";
+import { ChatView } from "./chat-view.tsx";
 import { actionDef, isZipPlace, type PreviewContext } from "./actions.ts";
 import { BulkHunts, bulkPickOf, type BulkItem, type BulkPick } from "./bulk-hunts.tsx";
 import type { SectionId } from "./contract.ts";
@@ -31,6 +33,8 @@ import { FixScreen } from "./screen-fix.tsx";
 import { LearningScreen } from "./screen-learning.tsx";
 import { MoneyScreen } from "./screen-money.tsx";
 import { NowScreen } from "./screen-now.tsx";
+import { ReaderDemandPanel } from "./reader-demand.tsx";
+import { ReportsView } from "./reports-view.tsx";
 import { WorkScreen } from "./screen-work.tsx";
 import { WorkersScreen } from "./screen-workers.tsx";
 import { cx } from "./ui.tsx";
@@ -49,6 +53,8 @@ export interface CommandCenterProps {
   /** Item-state reason (eligibility rule 5), when the data source knows one. */
   readonly itemState?: (kind: ActionKind, target: string) => string | null;
   readonly initialView?: View;
+  /** The console's own controls, in words, for the Ask view to list. Read on the server. */
+  readonly chatControls?: readonly string[];
   readonly onViewChange?: (view: View) => void;
   /** Live paged sections: forward search, filters and cursors to the data source. */
   readonly onQuery?: (section: SectionId, params: Readonly<Record<string, string>>) => void;
@@ -349,13 +355,16 @@ export function CommandCenter(props: CommandCenterProps) {
           )}
           {detail ? <DetailPanel detail={detail} /> : (
             <>
-              {view === "now" && <NowScreen key={scopeKey} />}
+              {view === "now" && <><NowScreen key={scopeKey} /><ReaderDemandPanel /></>}
               {view === "workers" && <WorkersScreen />}
               {view === "work" && <WorkScreen />}
               {view === "checklist" && <ChecklistScreen />}
               {view === "money" && <MoneyScreen />}
               {view === "learning" && <LearningScreen />}
               {view === "fix" && <FixScreen />}
+              {view === "reports" && <ReportsView />}
+              {view === "changes" && <ChangesView />}
+              {view === "chat" && <ChatView controls={props.chatControls ?? []} />}
             </>
           )}
         </main>

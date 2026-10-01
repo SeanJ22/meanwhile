@@ -21,6 +21,7 @@ import {
   type TierGroup,
 } from "@/lib/officials/tier-grouping";
 import { formatMeetingDate } from "@/lib/map/format";
+import { bodyDisplayName } from "@/lib/text/reader-names";
 import { isOnlineOnly } from "@/lib/meetings/online";
 import { MeetingStatusPill } from "@/components/map/meeting-status-pill";
 
@@ -211,7 +212,7 @@ function BodiesDoor({
   return (
     <ul className="mt-3 space-y-2">
       {coverage.bodies.map((body) => {
-        const label = body.name ?? body.divisionLabel;
+        const label = bodyDisplayName(body);
         /*
          * PU02's class sweep (NJ Hunt 4 item 3, 2026-08-22). This is the same
          * defect as the autocomplete's: an EXACT string join between the

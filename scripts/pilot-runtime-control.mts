@@ -1,6 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { getStore } from "@netlify/blobs";
-import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+import type { AppendOutcome, ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
 import { RESEARCH_INTENT_LOG_KEY, RESEARCH_STATE_ID } from "../lib/control-plane/scheduler/research-policy.ts";
 
@@ -55,6 +55,11 @@ export function runnerControlReader(url: string, repos: ControlPlaneRepositories
   let state: Awaited<ReturnType<typeof repos.researchState.readNarrowed>> = null;
   let pending: Promise<void> | null = null;
   let forceRequested = false;
+  const merge = <T,>(held: Map<string, Delta<T>>, rows: Delta<T>[], current: readonly T[]): readonly T[] => {
+    if (rows.length === 0) return current;
+    for (const entry of rows) held.set(entry.id, entry);
+    return [...held.values()].sort((a, b) => BigInt(a.position) < BigInt(b.position) ? -1 : BigInt(a.position) > BigInt(b.position) ? 1 : 0).map(entry => entry.record);
+  };
   async function refresh() {
     const [row] = await query(`SELECT
       (SELECT COALESCE(jsonb_agg(jsonb_build_object('id', record_id, 'position', position::text, 'record', record)), '[]'::jsonb)
@@ -75,11 +80,6 @@ export function runnerControlReader(url: string, repos: ControlPlaneRepositories
     ]);
     // Only positions actually returned are excluded. A MAX watermark would
     // hide a concurrent lower-position commit; compressed ranges leave its gap open.
-    const merge = <T,>(held: Map<string, Delta<T>>, rows: Delta<T>[], current: readonly T[]): readonly T[] => {
-      if (rows.length === 0) return current;
-      for (const entry of rows) held.set(entry.id, entry);
-      return [...held.values()].sort((a, b) => BigInt(a.position) < BigInt(b.position) ? -1 : BigInt(a.position) > BigInt(b.position) ? 1 : 0).map(entry => entry.record);
-    };
     research = merge(researchRows, row.research as Delta<typeof research[number]>[], research);
     windows = merge(windowRows, row.windows as Delta<typeof windows[number]>[], windows);
     if (row.research.length) researchPositions = committedPositions(researchRows);
@@ -89,6 +89,11 @@ export function runnerControlReader(url: string, repos: ControlPlaneRepositories
     refreshedAt = now();
   }
   return {
+    /** A committed local acknowledgment is already authoritative; do not wait for a remote hint. */
+    rememberResearchAppend(outcome: AppendOutcome<typeof research[number]>) {
+      research = merge(researchRows, [{ id: outcome.recordId, position: String(outcome.position), record: outcome.record }], research);
+      researchPositions = committedPositions(researchRows);
+    },
     async read(force = false) {
       forceRequested ||= force;
       pending ??= (async () => {

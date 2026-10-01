@@ -138,6 +138,7 @@ import {
   installNeonRequestDeadline,
 } from "../lib/ops/neon-request-deadline.ts";
 import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
+import { consoleInputReader, consolePublisher } from "./pilot-runtime-publish.mts";
 import { runRuntimeChildren } from "./pilot-runtime-child.mts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
@@ -635,7 +636,7 @@ function deliver(body: string, headline: string): { readonly where: string; read
 /* -------------------------------------------------------- console publish --- */
 
 /**
- * **THE ADMIN CONSOLE IS PUBLISHED BY THE MACHINE, EVERY CYCLE.** (ADM-1,
+ * **THE ADMIN CONSOLE IS PUBLISHED BY THE MACHINE WHEN ITS INPUTS CHANGE.** (ADM-1,
  * 9.4.26 admin feedback, 2026-09-04.)
  *
  * The deployed admin pages read a PUBLISHED control-plane record, never this
@@ -644,8 +645,9 @@ function deliver(body: string, headline: string): { readonly where: string; read
  * person stopped: the readiness panel read
  * REQUIRES_REPUBLISH for a day while the runner cycled underneath it, doing
  * work the console could not show. The standing runner is the one process
- * that is always here, so it publishes after every cycle's digest, succeeded
- * or failed — a failed cycle is exactly the reading the console must carry.
+ * that is always here, so it checks after every cycle's digest, succeeded
+ * or failed. Changed execution facts and failures publish; another unchanged
+ * idle reading does not reload the entire assignment history.
  *
  * Each publisher runs as its own child process until it finishes.
  * A failure is PRINTED with its exit and last stderr line, never thrown and
@@ -668,6 +670,20 @@ const CONSOLE_PUBLISHERS: readonly { readonly name: string; readonly args: reado
   { name: "readiness", args: ["scripts/readiness-refresh.mts", "--target=control-plane"] },
 ];
 
+const publishChangedConsole = consolePublisher({
+  readInputs: async () => {
+    // Match the publishers' existing reader target, including the installed
+    // runtime's read-only connection. A developer URL is never a substitute.
+    const env = STAGING ? process.env : runtimeProductionReadEnvironment(process.env);
+    const controlUrl = controlPlaneUrlFromEnv(env);
+    const readerUrl = env.DATABASE_URL;
+    if (!controlUrl || !readerUrl) throw new Error("CONSOLE_INPUTS_UNCONFIGURED");
+    return consoleInputReader(controlUrl, readerUrl, RUNNING_CODE_SHA)();
+  },
+  inputReadFailed: error => console.error(`  console publish: inputs unreadable (${(error as Error)?.name ?? "error"}); publishing without reuse`),
+  publish: publishConsoleChildren,
+});
+
 async function publishConsole(): Promise<void> {
   if (canary && STAGING) {
     console.log("  console publish: staging canary is scoped to research; billing and live-site readbacks are skipped");
@@ -677,6 +693,13 @@ async function publishConsole(): Promise<void> {
     console.log("  console publish: skipped — the file provider is a local proof with no deployed console to publish to");
     return;
   }
+  if (await publishChangedConsole() === "UNCHANGED") {
+    console.log("  console publish: unchanged inputs; owner snapshot and readiness retained");
+  }
+}
+
+async function publishConsoleChildren(): Promise<boolean> {
+  let succeeded = true;
   for (const publisher of CONSOLE_PUBLISHERS) {
     const started = Date.now();
     const [run] = await runRuntimeChildren([{
@@ -694,6 +717,7 @@ async function publishConsole(): Promise<void> {
 
     });
     if (!run) {
+      succeeded = false;
       console.error(`  console publish: ${publisher.name} FAILED — child result missing`);
       continue;
     }
@@ -703,10 +727,12 @@ async function publishConsole(): Promise<void> {
       continue;
     }
     const stderrLines = (run.stderr ?? "").split("\n").map((l) => l.trimEnd()).filter((l) => l.trim() !== "");
+    succeeded = false;
     const last = stderrLines.at(-1) ?? run.errorMessage ?? "(nothing on stderr)";
     const exit = run.status === null ? `signal ${run.signal ?? "none"}` : String(run.status);
     console.error(`  console publish: ${publisher.name} FAILED exit ${exit} — ${last}`);
   }
+  return succeeded;
 }
 
 /** The same standing clock runs the production data plane after each cycle. */
@@ -1333,7 +1359,7 @@ async function honorRunnerIntent(
   const id = `${intent.intentId}:honored`;
   const at = new Date().toISOString();
   try {
-    await repos.researchIntents.append(
+    const committed = await repos.researchIntents.append(
       RESEARCH_INTENT_LOG_KEY,
       id,
       {
@@ -1348,6 +1374,7 @@ async function honorRunnerIntent(
       },
       at,
     );
+    controlReader?.rememberResearchAppend(committed);
     return true;
   } catch (error) {
     if (!honorFailurePrinted.has(intent.intentId)) {

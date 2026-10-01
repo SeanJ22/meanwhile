@@ -332,6 +332,49 @@ export function pgAggregateRepository<T>(
     };
   }
 
+  async function list(): Promise<readonly Persisted<T>[]>;
+  async function list(projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
+  async function list(projection?: RecordProjection): Promise<readonly Persisted<unknown>[]> {
+    const operation = projection === undefined ? "list" : "listNarrowed";
+    const value = projection === undefined ? "value" : Object.keys(projection).length === 0
+      ? "'{}'::jsonb AS value" : `${recordProjectionSql(table, projection, "value")} AS value`;
+    /* Keyset-paged by id so no one response can exceed the driver's 64 MiB
+       cap (see AGGREGATE_LIST_READ_PAGE). `id > $1` on the primary key is an
+       index range scan; the concatenation equals the old single statement. */
+    const out: Persisted<unknown>[] = [];
+    let afterId: string | null = null;
+    for (;;) {
+      const rows = (afterId === null
+        ? await run(
+            operation,
+            "PAGE",
+            `SELECT id, revision, updated_at, ${value} FROM ${table}
+             ORDER BY id ASC
+             LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
+          )
+        : await run(
+            operation,
+            "PAGE",
+            `SELECT id, revision, updated_at, ${value} FROM ${table}
+             WHERE id > $1
+             ORDER BY id ASC
+             LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
+            [afterId],
+          )) as Record<string, unknown>[];
+      for (const row of rows) {
+        out.push({
+          id: String(row.id),
+          revision: Number(row.revision),
+          updatedAt: new Date(row.updated_at as string).toISOString(),
+          value: parseValue<unknown>(row.value, `${where} id ${String(row.id)}`),
+        });
+      }
+      if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
+      afterId = String(rows[rows.length - 1].id);
+    }
+    return out;
+  }
+
   return {
     read,
 
@@ -440,43 +483,8 @@ export function pgAggregateRepository<T>(
       };
     },
 
-    async list() {
-      /* Keyset-paged by id so no one response can exceed the driver's 64 MiB
-         cap (see AGGREGATE_LIST_READ_PAGE). `id > $1` on the primary key is an
-         index range scan; the concatenation equals the old single statement. */
-      const out: Persisted<T>[] = [];
-      let afterId: string | null = null;
-      for (;;) {
-        const rows = (afterId === null
-          ? await run(
-              "list",
-              "PAGE",
-              `SELECT id, revision, updated_at, value FROM ${table}
-               ORDER BY id ASC
-               LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
-            )
-          : await run(
-              "list",
-              "PAGE",
-              `SELECT id, revision, updated_at, value FROM ${table}
-               WHERE id > $1
-               ORDER BY id ASC
-               LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
-              [afterId],
-            )) as Record<string, unknown>[];
-        for (const row of rows) {
-          out.push({
-            id: String(row.id),
-            revision: Number(row.revision),
-            updatedAt: new Date(row.updated_at as string).toISOString(),
-            value: parseValue<T>(row.value, `${where} id ${String(row.id)}`),
-          });
-        }
-        if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
-        afterId = String(rows[rows.length - 1].id);
-      }
-      return out;
-    },
+    list: () => list(),
+    listNarrowed: projection => list(projection),
 
     async listWhere(path, value) {
       /* `list()` filtered IN THE DATABASE: the same ORDER BY id and keyset

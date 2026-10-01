@@ -721,6 +721,7 @@ export async function publishReaderEdgeArtifacts(
   const manifest: ReaderManifest = {
     formatVersion: READER_ARTIFACT_FORMAT_VERSION,
     sequence,
+    ...(snapshot !== null ? { meetingLayout: "governing-area" as const } : current?.manifest.meetingLayout ? { meetingLayout: current.manifest.meetingLayout } : {}),
     generatedAt: snapshot?.generatedAt || (options.checks ? laterCheck(current?.manifest.generatedAt ?? null, metadata.retrievedAt) : null) || current?.manifest.generatedAt || now,
     sourceThrough: snapshot === null ? current?.manifest.sourceThrough ?? null : metadata.sourceThrough,
     retrievedAt: snapshot === null ? laterCheck(current?.manifest.retrievedAt ?? null, options.checks ? metadata.retrievedAt : null) : metadata.retrievedAt,
@@ -756,6 +757,9 @@ export async function publishReaderEdgeArtifacts(
 // a database-fallback or partial answer is not the publication that purge
 // replaces.
 const completeEdgeReads = new WeakSet<object>();
+// Share a published area's merge, as well as its immutable artifacts. Every
+// manifest observation is part of the key, including quiet freshness updates.
+const areaReads = new Map<string, MeetingsProjectionReadResult>();
 
 /**
  * The reader's edge path: manifest → the ZIP's scope artifacts → merged
@@ -804,6 +808,9 @@ export async function readReaderEdgeMeetings(
   if (!manifest || manifest.scopes.length === 0) return fallback();
 
   const needed = manifest.scopes.filter(scope => readerScopeApplies(scope, options));
+  const areaKey = sha256OfJson({ manifest, scopes: needed.map(({ scope, sha256 }) => [scope, sha256]) });
+  const cachedArea = areaReads.get(areaKey);
+  if (cachedArea) return cachedArea;
 
   let artifacts: ReaderGeoArtifact[];
   try {
@@ -837,7 +844,11 @@ export async function readReaderEdgeMeetings(
     partitions: [],
     detail: `Served from the reader edge artifacts (manifest sequence ${manifest.sequence}, ${artifacts.length}/${needed.length} scope(s): ${artifacts.map((a) => a.scope).join(", ")}).`,
   };
-  if (complete) completeEdgeReads.add(read);
+  if (complete) {
+    completeEdgeReads.add(read);
+    if (areaReads.size >= 64) areaReads.delete(areaReads.keys().next().value!);
+    areaReads.set(areaKey, read);
+  }
   return read;
 }
 

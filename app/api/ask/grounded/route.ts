@@ -754,9 +754,12 @@ export async function POST(request: Request) {
     // officials, or any other source's answer.
     ? timed("commentAccess", () => refreshCommentAccessFromPromoted().catch(() => undefined))()
     : null;
+// Area questions share governing pieces with every ZIP in those divisions.
+  // Questions naming a body elsewhere retain their wider subject inventory.
   const meetingsRead = readReaderEdgeMeetings({
     manifest: edgeManifest,
     ...(ocdIds.length && (topicRoute || areaMeetingsAsk) ? { states: statesOf(ocdIds), ocdIds } : {}),
+
   });
   meetingsRead.catch(() => undefined);
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;

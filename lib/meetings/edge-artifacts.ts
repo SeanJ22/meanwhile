@@ -127,6 +127,8 @@ export function readerScopeApplies(
  * can never replace a newer one.
  */
 export interface ReaderManifest {
+  /** Missing on the former state layout; the normal publisher replaces it once. */
+  readonly meetingLayout?: "governing-area";
   readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
   readonly sequence: number;
   readonly generatedAt: string;

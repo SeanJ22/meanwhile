@@ -87,7 +87,7 @@ import { buildDeliveryTrail } from "../lib/control-plane/delivery-trail.ts";
 import { collectPublishedCampaignReadback, collectPublishedWorkerReadback, collectPublishedManualReaderReadback } from "../lib/control-plane/served-reader-production.ts";
 import type { ServedReaderReadback } from "../lib/control-plane/served-reader.ts";
 import { buildAssignmentView, type AssignmentPublication, type AssignmentSources } from "../lib/control-plane/assignment-view.ts";
-import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
+import { ASSIGNMENT_ATTEMPT_PROJECTION, ASSIGNMENT_OBLIGATION_PROJECTION, readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
 import { readPipelineStates, stageCounts } from "../lib/control-plane/promotion/pipeline.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import { PILOT_ZIPS } from "../lib/health/owner-corpus-compile.ts";
@@ -444,8 +444,8 @@ async function readControlPlane(repos: ControlPlaneRepositories): Promise<Contro
   ]);
   const [costs, attempts, obligations, research] = await Promise.all([
     repos.costs.readAll(),
-    repos.attempts.list(),
-    repos.obligations.list(),
+    repos.attempts.listNarrowed(ASSIGNMENT_ATTEMPT_PROJECTION).then(rows => rows.map(row => ({ ...row, value: row.value as AssignmentSources["attempts"][number] }))),
+    repos.obligations.listNarrowed(ASSIGNMENT_OBLIGATION_PROJECTION).then(rows => rows.map(row => ({ ...row, value: row.value as AssignmentSources["obligations"][number] }))),
     repos.researchState.read(RESEARCH_STATE_ID),
   ]);
   let verifiedRecords: number | null = null;

@@ -463,6 +463,8 @@ export type RunWork = (input: {
   readonly executor: ExecutorKind;
   readonly bound: WorkerBound;
   readonly holder: string;
+  /** The existing canonical heartbeat owns renewal health for publication callers. */
+  readonly assertLeaseHealthy?: () => void;
 }) => Promise<WorkOutcome>;
 
 /**
@@ -775,6 +777,7 @@ export async function dispatchOne(
       executor: lane,
       bound: input.bound ?? DEFAULT_WORKER_BOUND,
       holder: input.holder,
+      assertLeaseHealthy: () => { if (renewalFailure !== null) throw renewalFailure; },
     });
     clearInterval(renew);
     await renewal;

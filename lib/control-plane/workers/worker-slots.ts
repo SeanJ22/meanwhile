@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 
 const MIB = 1024 * 1024;
 /** Rounded-up measured RSS peaks of each entry; headroom covers parent, standing work and browsers. */
-export const WORKER_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = { route: 248, scout: 248, lease: 342, national: 1251 };
+export const WORKER_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = { route: 248, scout: 248, lease: 342, national: 1258 };
 export const WORKER_MEMORY_HEADROOM_MIB = 5120;
 
 export function availableWorkerMemoryBytes(): number {

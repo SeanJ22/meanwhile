@@ -5,7 +5,6 @@ import { dispatchOne, dischargesObligation } from "../control-plane/scheduler/di
 import { syncObligations, openOccurrence, resumeOpenOccurrence, closeOccurrence, closeSettledOccurrence } from "../control-plane/scheduler/durable.ts";
 import { scheduleObligation } from "../control-plane/scheduler/obligation.ts";
 import { RESEARCH_BOUNDS } from "../control-plane/scheduler/research-policy.ts";
-import { renewLease } from "../control-plane/repository/coordinator.ts";
 import type { ResearchRuntimeTools } from "../control-plane/workers/research-runtime.ts";
 import type { RoutineDataStore } from "../civic-data/store.ts";
 import { runPlaceSource, type NationalPlacePublicationInput } from "./place-source.ts";
@@ -49,56 +48,46 @@ export async function runNationalPlaceTask(input: {
     const result = await dispatchOne(tools.repos, { obligation: scheduled, routeTaskId, holder, now, clock: tools.now,
       leaseTtlMs: ttlMs, maturity: () => "GRADUATED", executor: {
         lane: "DETERMINISTIC", workerFor: () => ({ role: "ACQUIRER", provider: "we-the-people", version: "national-place/1", instance: holder }),
-        run: async ({ attemptId, workItemId }) => {
+        run: async ({ attemptId, workItemId, assertLeaseHealthy }) => {
           const started = Date.now();
-          let leaseError: unknown;
-          let renewing: Promise<unknown> | undefined;
-          const timer = setInterval(() => {
-            if (renewing) return;
-            renewing = renewLease(tools.repos, { routeTaskId, holder, now: tools.now(), ttlMs })
-              .catch(error => { leaseError = error; }).finally(() => { renewing = undefined; });
-          }, Math.floor(ttlMs / 3));
-          timer.unref();
+          if (deferred) return { kind: "DISPOSED", ranAs: "DETERMINISTIC", artifacts: [],
+            disposition: { disposition: "BLOCKED_CURRENTLY", permission: "ALLOWED", transport: "OTHER_NAMED_FAILURE", observation: null, note: deferred },
+            cost: ZERO_COST, detail: `ZIP ${zip}: ${deferred}` };
+          const saved = await placeSourceReader({ tools, project: "freshness", context: {
+            obligation: scheduled, route: null, providerId: null, attemptId, workItemId, routeTaskId, holder, now: tools.now,
+            // This finite national walk is plain code; it retains the shared
+            // ten-request limit for each website.
+            bound: RESEARCH_BOUNDS.perDispatch,
+          } });
           try {
-            if (deferred) return { kind: "DISPOSED", ranAs: "DETERMINISTIC", artifacts: [],
-              disposition: { disposition: "BLOCKED_CURRENTLY", permission: "ALLOWED", transport: "OTHER_NAMED_FAILURE", observation: null, note: deferred },
-              cost: ZERO_COST, detail: `ZIP ${zip}: ${deferred}` };
-            const saved = await placeSourceReader({ tools, project: "freshness", context: {
-              obligation: scheduled, route: null, providerId: null, attemptId, workItemId, routeTaskId, holder, now: tools.now,
-              // This finite national walk is plain code; it retains the shared
-              // ten-request limit for each website.
-              bound: RESEARCH_BOUNDS.perDispatch,
-            } });
-            try {
-              report = await runPlaceSource({ repos: tools.repos, store: input.store, zip, now, clock: tools.now, knowledge,
-                readSource: async url => { if (leaseError) throw leaseError; return saved.read(url); },
-                geography: { capture: saved.captureGeography, readHeld: saved.readGeography, fetchImpl: saved.fetchGeography },
-                geographyCaptures: saved.geographyCaptures,
-                publish: async value => { if (leaseError) throw leaseError; return input.publish(value); },
-                ...(input.publishElection ? { publishElection: input.publishElection } : {}) });
-            } catch (error) {
-              if (!(error instanceof PlaceSourceDeferred)) throw error;
-              deferred = error.message;
-            }
-            // Collectors retain ordinary source gaps, so also observe a bound
-            // they caught while publishing already verified fields.
-            deferred ??= saved.deferred?.message ?? null;
-            if (leaseError) throw leaseError;
-            if (deferred) return { kind: "DISPOSED", ranAs: "DETERMINISTIC", artifacts: [...saved.artifacts.values()],
-              disposition: { disposition: "BLOCKED_CURRENTLY", permission: "ALLOWED", transport: "OTHER_NAMED_FAILURE", observation: null, note: deferred },
-              cost: { ...ZERO_COST, ...saved.cost, durationMs: Date.now() - started }, detail: `ZIP ${zip}: ${deferred}` };
-            if (!report) throw new Error("National place source returned no report");
-            const artifacts = [...saved.artifacts.values()];
-            return { kind: "DISPOSED", ranAs: "DETERMINISTIC", artifacts,
-              disposition: { disposition: "INGESTED", permission: "ALLOWED", transport: "REACHABLE",
-                observation: { rawCount: artifacts.length, normalizedCount: report.sources?.officials.length ?? 0,
-                  routeOnlyCount: null, earliest: null, latest: null },
-                note: "Saved national sources acquired; published fields come only from canonical readback; remaining fields stay owed. " +
-                  JSON.stringify({ inherited: report.inherited, sourceGaps: report.sources?.gaps ?? [], publications: report.publications,
-                    electionPublications: report.electionPublications }) },
-              cost: { ...ZERO_COST, ...saved.cost, durationMs: Date.now() - started },
-              detail: `ZIP ${zip}: ${report.items.filter(item => item.state === "published").length} published fields, ${report.work.length} source gaps` };
-          } finally { clearInterval(timer); await renewing; }
+            report = await runPlaceSource({ repos: tools.repos, store: input.store, zip, now, clock: tools.now, knowledge,
+              readSource: async url => { assertLeaseHealthy?.(); return saved.read(url); },
+              geography: { capture: saved.captureGeography, readHeld: saved.readGeography, fetchImpl: saved.fetchGeography },
+              geographyCaptures: saved.geographyCaptures,
+              publish: async value => { assertLeaseHealthy?.(); return input.publish(value); },
+              ...(input.publishElection ? { publishElection: input.publishElection } : {}) });
+          } catch (error) {
+            if (!(error instanceof PlaceSourceDeferred)) throw error;
+            deferred = error.message;
+          }
+          // Collectors retain ordinary source gaps, so also observe a bound
+          // they caught while publishing already verified fields.
+          deferred ??= saved.deferred?.message ?? null;
+          assertLeaseHealthy?.();
+          if (deferred) return { kind: "DISPOSED", ranAs: "DETERMINISTIC", artifacts: [...saved.artifacts.values()],
+            disposition: { disposition: "BLOCKED_CURRENTLY", permission: "ALLOWED", transport: "OTHER_NAMED_FAILURE", observation: null, note: deferred },
+            cost: { ...ZERO_COST, ...saved.cost, durationMs: Date.now() - started }, detail: `ZIP ${zip}: ${deferred}` };
+          if (!report) throw new Error("National place source returned no report");
+          const artifacts = [...saved.artifacts.values()];
+          return { kind: "DISPOSED", ranAs: "DETERMINISTIC", artifacts,
+            disposition: { disposition: "INGESTED", permission: "ALLOWED", transport: "REACHABLE",
+              observation: { rawCount: artifacts.length, normalizedCount: report.sources?.officials.length ?? 0,
+                routeOnlyCount: null, earliest: null, latest: null },
+              note: "Saved national sources acquired; published fields come only from canonical readback; remaining fields stay owed. " +
+                JSON.stringify({ inherited: report.inherited, sourceGaps: report.sources?.gaps ?? [], publications: report.publications,
+                  electionPublications: report.electionPublications }) },
+            cost: { ...ZERO_COST, ...saved.cost, durationMs: Date.now() - started },
+            detail: `ZIP ${zip}: ${report.items.filter(item => item.state === "published").length} published fields, ${report.work.length} source gaps` };
         },
       } });
     if (!result.claimed) throw new Error(`National place source ${zip}: ${result.detail}`);

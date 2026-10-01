@@ -670,6 +670,9 @@ export function sampleOutcome(kind: ActionKind, target: string, input: { readonl
     case "target-set":
     case "target-clear":
       return { final: "done", statusWords: "Saved", says: "Sample preview: the target is saved. The runner reads it on its next round." };
+    case "data-switch-on":
+    case "data-switch-off":
+      return { final: "done", statusWords: "Saved", says: "Sample preview: the switch is saved. It takes effect on the next read." };
     case "send-agents":
       return { final: "done", statusWords: "Sent", says: "The fleet was told where to go. The runner puts it first on its next round." };
     case "focus": {

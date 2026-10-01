@@ -61,7 +61,7 @@ test("scopesForStates dedupes, lowercases, validates, and always includes the na
   assert.deepEqual(scopesForStates(["bogus", "z"]), ["us"], "malformed states are dropped, us remains");
 });
 
-test("partitionSnapshotByScope splits meetings by state with a national bucket, deterministic order", () => {
+test("partitionSnapshotByScope splits meetings by governing area with a national bucket, deterministic order", () => {
   const snap = snapshot([
     meeting("az1", "ocd-division/country:us/state:az/place:tucson#governing"),
     meeting("nj1", "ocd-division/country:us/state:nj/county:morris#governing"),
@@ -69,10 +69,11 @@ test("partitionSnapshotByScope splits meetings by state with a national bucket, 
     meeting("none", null),
   ]);
   const artifacts = partitionSnapshotByScope(snap);
-  assert.deepEqual(artifacts.map((a) => a.scope), ["az", "nj", "us"], "sorted scope order");
-  const az = artifacts.find((a) => a.scope === "az")!;
-  assert.equal(az.meetings.length, 2);
-  assert.equal(az.counts.total, 2);
+  assert.deepEqual(artifacts.map((a) => a.scope), artifacts.map((a) => a.scope).sort(), "sorted scope order");
+  assert.equal(artifacts.length, 4, "city and county are separate pieces even inside the same state");
+  const az = artifacts.filter(a => a.ocdId?.includes("state:az"));
+  assert.equal(az.reduce((sum, a) => sum + a.meetings.length, 0), 2);
+  assert.equal(az.reduce((sum, a) => sum + a.counts.total, 0), 2);
   assert.equal(artifacts.find((a) => a.scope === "us")!.meetings.length, 1);
 });
 
@@ -222,7 +223,7 @@ test("mergeScopeArtifacts dedupes by id and takes the national sources accountin
     meeting("us1", null),
   ]);
   const [az, us] = [
-    partitionSnapshotByScope(snap).find((a) => a.scope === "az")!,
+    ...partitionSnapshotByScope(snap).filter((a) => a.ocdId?.includes("state:az")),
     partitionSnapshotByScope(snap).find((a) => a.scope === "us")!,
   ];
   const manifest = { generatedAt: "2026-09-15T12:00:00.000Z", sources: snap.sources };
@@ -271,4 +272,65 @@ test("authority publication works before meeting composition; empty scopes keep 
   let fallback = false;
   await readReaderEdgeMeetings({ store, fallback: async () => { fallback = true; return { kind: "NOT_RECORDED" } as never; } });
   assert.equal(fallback, true);
+});
+
+test("a changed meeting rewrites only its area; unchanged references survive publication", async () => {
+  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-delta-")));
+  const a = meeting("delta-a", "ocd-division/country:us/state:az/county:pima");
+  const b = meeting("delta-b", "ocd-division/country:us/state:az/county:cochise");
+  const c = meeting("delta-c", "ocd-division/country:us/state:nj/county:morris");
+  await publishReaderEdgeArtifacts(snapshot([a, b, c]), META, { store });
+  const before = (await store.readManifest())!.manifest;
+  const writes: string[] = [];
+  const counted = new Proxy(store, { get(target, key) {
+    if (key === "writeArtifact") return (path: string, value: never) => { writes.push(path); return target.writeArtifact(path, value); };
+    const value = Reflect.get(target, key);
+    return typeof value === "function" ? value.bind(target) : value;
+  } });
+  await publishReaderEdgeArtifacts(snapshot([{ ...a, title: "Changed sitting" }, b, c]), META, { store: counted });
+  const after = (await store.readManifest())!.manifest;
+  assert.equal(writes.length, 1);
+  for (const ref of before.scopes.filter(ref => !ref.meetingIds?.includes(a.id))) {
+    assert.deepEqual(after.scopes.find(next => next.scope === ref.scope), ref);
+  }
+});
+
+test("area reads preserve split ZIP divisions, nearby bodies across a state line, and empty held areas", async () => {
+  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-area-")));
+  const county = "ocd-division/country:us/state:az/county:pima";
+  const split = "ocd-division/country:us/state:az/county:cochise";
+  await publishReaderEdgeArtifacts(snapshot([
+    meeting("area-governing", county, { location: null }),
+    meeting("area-split", split, { location: null }),
+    meeting("area-near", "ocd-division/country:us/state:nm/place:near", { location: { lat: 32.2, lng: -110.9 } as never }),
+    meeting("area-far", "ocd-division/country:us/state:az/place:far", { location: { lat: 35, lng: -112 } as never }),
+  ]), META, { store });
+  const read = await readReaderEdgeMeetings({ store, states: ["az"], ocdIds: [county, split], nearby: { lat: 32.2, lng: -110.9, radiusKm: 25 } });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind === "PROMOTED") assert.deepEqual(read.value.meetings.map(row => row.id).sort(), ["area-governing", "area-near", "area-split"]);
+  const empty = await readReaderEdgeMeetings({ store, states: ["az"], ocdIds: ["ocd-division/country:us/state:az/county:unheld"], fallback: async () => { throw new Error("must not read nationally"); } });
+  assert.equal(empty.kind, "PROMOTED");
+  if (empty.kind === "PROMOTED") assert.deepEqual(empty.value.meetings, []);
+});
+
+test("agenda lookup opens only its meeting's area and keeps documents with mismatched document geography", async () => {
+  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-agenda-area-")));
+  const snap = snapshot([
+    meeting("agenda-area", "ocd-division/country:us/state:az/county:pima"),
+    meeting("agenda-elsewhere", "ocd-division/country:us/state:nj/county:morris"),
+  ]);
+  snap.agendaDocuments.push({ id: "held-agenda", meetingId: "agenda-area", ocdId: "ocd-division/country:us/state:nj" } as never);
+  await publishReaderEdgeArtifacts(snap, META, { store });
+  const read = await readReaderEdgeMeetings({ store, meetingId: "agenda-area" });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind === "PROMOTED") {
+    assert.deepEqual(read.value.meetings.map(row => row.id), ["agenda-area"]);
+    assert.deepEqual(read.value.agendaDocuments.map(row => row.id), ["held-agenda"]);
+  }
+  const map = await readReaderEdgeMeetings({ store, states: ["az"], includeAgenda: false });
+  assert.equal(map.kind, "PROMOTED");
+  if (map.kind === "PROMOTED") {
+    assert.deepEqual(map.value.meetings.map(row => row.id), ["agenda-area"]);
+    assert.deepEqual(map.value.agendaDocuments, []);
+  }
 });

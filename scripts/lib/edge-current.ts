@@ -80,6 +80,7 @@ export function readerEdgeCarriesForward(input: {
   if (manifest.formatVersion !== READER_ARTIFACT_FORMAT_VERSION) {
     return { current: false, reason: `served manifest format ${String(manifest.formatVersion)}` };
   }
+  if (manifest.meetingLayout !== "governing-area") return { current: false, reason: "served meeting layout predates governing-area pieces" };
   const sameComposition = manifest.composition !== undefined
     ? manifest.composition === prepared.composition
     : manifest.generatedAt === prepared.generatedAt;

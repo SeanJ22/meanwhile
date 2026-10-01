@@ -384,14 +384,12 @@ export function WelcomeOverlay({
         </p>
 
         <p className="welcome-fineprint">
-          Searches here are logged without any identity attached —{" "}
           <a
             href="/transparency"
             className="underline decoration-dotted underline-offset-2 hover:text-signal"
           >
-            what this site collects
+            What this site collects
           </a>
-          .
         </p>
       </div>
     </div>

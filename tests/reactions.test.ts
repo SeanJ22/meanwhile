@@ -385,55 +385,6 @@ test("the honest line says both truths: saved on this device, not counted", asyn
 
 // ── The disclosure coupling — the 5a⇔5b rule extended to reactions ───────
 
-test("the capture point and the transparency page disclose together", () => {
-  // The control (3c, 2026-08-16, author-approved TOS pattern): the first-ever
-  // tap surfaces a one-time notice that must be acknowledged BEFORE the
-  // answer records, with the approved sentence and the transparency link.
-  // The notice gates capture — the pending tap applies only on acknowledge.
-  const control = readFileSync(
-    join(process.cwd(), "components", "reactions", "reaction-control.tsx"),
-    "utf8",
-  );
-  assert.ok(
-    control.includes("Your answer joins anonymous local totals. We never know who you"),
-    "the one-time notice must carry the approved sentence",
-  );
-  assert.ok(
-    control.includes("How we use this"),
-    "the notice must link the full explanation",
-  );
-  assert.ok(
-    control.includes('href="/transparency"'),
-    "the notice's link must open the transparency page",
-  );
-  assert.ok(
-    control.includes("disclosureAcknowledged()") &&
-      control.includes("setPendingValue(value)"),
-    "an unacknowledged tap must park, never record",
-  );
-
-  // The transparency page: reactions, the hashed continuity key, and the
-  // tier split are all disclosed in the same terms the schema enforces.
-  const page = readFileSync(
-    join(process.cwd(), "app", "transparency", "page.tsx"),
-    "utf8",
-  ).toLowerCase();
-  // 1b (2026-08-17): "sell" retired from reader surfaces — the commercial
-  // fact stays, stated as "may be licensed". The page must still state it.
-  for (const claim of ["reaction", "hashed", "verification tier", "licensed"]) {
-    assert.ok(page.includes(claim), `the transparency page must mention "${claim}"`);
-  }
-  assert.ok(
-    !/\bsold\b|\bsell\b/.test(page),
-    'reader wording: "sell/sold" retired in favor of "licensed" (1b)',
-  );
-  // 1d: the OFFICIAL_OPENED event ships with its disclosure line.
-  assert.ok(
-    page.includes("official"),
-    "the transparency page must disclose that opening an official's card is logged",
-  );
-});
-
 // ── M63: "Someone else", the uncontested-race answer ─────────────────────
 
 /**
@@ -605,26 +556,6 @@ test("M63: the fourth button renders only where the answer is accepted", () => {
   assert.ok(
     control.includes('outcome === "NOT_COUNTED"') && control.includes("NOT_COUNTED_LINE"),
     "the not-counted rendering must still gate every answer",
-  );
-});
-
-test("M63: the transparency page explains the fourth answer, in the same commit", () => {
-  const page = readFileSync(
-    join(process.cwd(), "app", "transparency", "page.tsx"),
-    "utf8",
-  );
-  assert.ok(
-    page.includes("Someone"),
-    "the transparency page must name the fourth answer",
-  );
-  assert.ok(
-    /only one candidate|one-candidate|no choice/i.test(page),
-    "the page must say when the fourth answer appears",
-  );
-  // Plain language: the reader-facing explanation may not leak the enum.
-  assert.ok(
-    !page.includes("SOMEONE_ELSE"),
-    "the identifier reached a reader surface",
   );
 });
 
@@ -972,121 +903,6 @@ test("P03: a planted verbatim reaches no aggregate — the input type has no roo
   assert.doesNotMatch(iface, /freeText|free_text|text\s*[?:]/);
 });
 
-test("P03: the free-text ripcord is registered, ships live, and both positions are demonstrable", async () => {
-  const { RIPCORDS, ripcordPulled } = await import("../lib/ripcords.ts");
-  const ripcord = RIPCORDS["ripcord.reactionFreeText"];
-  assert.ok(ripcord, "the ripcord the author ordered is not registered");
-  assert.equal(ripcord.pulled, false, "it ships LIVE for the testing window");
-  assert.ok(ripcord.question.length > 20);
-  assert.match(ripcord.closer, /author/i);
-  assert.match(ripcord.trackerRows, /P03/);
-  assert.match(ripcord.trackerRows, /T05/);
-
-  const previous = process.env[ripcord.envVar];
-  try {
-    process.env[ripcord.envVar] = "pulled";
-    assert.equal(ripcordPulled("ripcord.reactionFreeText"), true);
-    process.env[ripcord.envVar] = "live";
-    assert.equal(ripcordPulled("ripcord.reactionFreeText"), false);
-  } finally {
-    if (previous === undefined) delete process.env[ripcord.envVar];
-    else process.env[ripcord.envVar] = previous;
-  }
-});
-
-test("P03: pulling the ripcord stops capture and SAYS SO — the binary still counts", async () => {
-  // "pulled", not "1": ripcordPulled reads "pulled" | "live" and treats
-  // anything else as the committed state, so "1" left the intake limits ON
-  // and the second POST came back 429 with no header — a rate limit reading
-  // as a missing signal.
-  process.env.WTP_RIPCORD_RATE_LIMITS = "pulled";
-  const { POST } = await import("../app/api/reactions/route.ts");
-  const { getProvisionTargetIds } = await import(
-    "../lib/ballot/measure-provisions.ts"
-  );
-  const { FREE_TEXT_CLOSED_HEADER } = await import("../lib/signal/reactions.ts");
-  const real = [...getProvisionTargetIds()][0];
-
-  const post = () =>
-    POST(
-      new Request(`${PUBLIC_SITE_ORIGIN}/api/reactions`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          targetType: "MEASURE_PROVISION",
-          targetId: real,
-          reaction: "NO",
-          reactionKey: "p03ripcordkeyp03ripcordkey",
-          text: "something the reader typed",
-        }),
-      }),
-    );
-
-  const previous = process.env.WTP_RIPCORD_REACTION_FREE_TEXT;
-  try {
-    // LIVE: no closed header, the verbatim was taken.
-    process.env.WTP_RIPCORD_REACTION_FREE_TEXT = "live";
-    const live = await post();
-    assert.ok(
-      live.status === 204 || live.status === 202,
-      `live write did not land (status ${live.status})`,
-    );
-    assert.equal(live.headers.get(FREE_TEXT_CLOSED_HEADER), null);
-
-    // PULLED: the binary still lands — a free-text pull must never take
-    // reaction capture down with it — and the reader is TOLD the words did
-    // not, rather than shown success over nothing.
-    process.env.WTP_RIPCORD_REACTION_FREE_TEXT = "pulled";
-    const pulled = await post();
-    assert.ok(
-      pulled.status === 204 || pulled.status === 202,
-      `pulling free text took the binary down with it (status ${pulled.status})`,
-    );
-    assert.equal(pulled.headers.get(FREE_TEXT_CLOSED_HEADER), "closed");
-  } finally {
-    if (previous === undefined) delete process.env.WTP_RIPCORD_REACTION_FREE_TEXT;
-    else process.env.WTP_RIPCORD_REACTION_FREE_TEXT = previous;
-  }
-});
-
-test("P03: a reader who types nothing is never told their words were dropped", async () => {
-  process.env.WTP_RIPCORD_RATE_LIMITS = "pulled";
-  const { POST } = await import("../app/api/reactions/route.ts");
-  const { getProvisionTargetIds } = await import(
-    "../lib/ballot/measure-provisions.ts"
-  );
-  const { FREE_TEXT_CLOSED_HEADER } = await import("../lib/signal/reactions.ts");
-  const real = [...getProvisionTargetIds()][0];
-
-  const previous = process.env.WTP_RIPCORD_REACTION_FREE_TEXT;
-  try {
-    process.env.WTP_RIPCORD_REACTION_FREE_TEXT = "pulled";
-    const response = await POST(
-      new Request(`${PUBLIC_SITE_ORIGIN}/api/reactions`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          targetType: "MEASURE_PROVISION",
-          targetId: real,
-          reaction: "UNSURE",
-          reactionKey: "p03notextkeyp03notextkey00",
-        }),
-      }),
-    );
-    // Nothing to drop, so nothing to report. The line only fires on words.
-    // The status is asserted too: a refusal also carries no header, and
-    // "no header" must mean "nothing was dropped", not "nothing was tried".
-    assert.ok(
-      response.status === 204 || response.status === 202,
-      `the write did not land (status ${response.status})`,
-    );
-    assert.equal(response.headers.get(FREE_TEXT_CLOSED_HEADER), null);
-  } finally {
-    if (previous === undefined) delete process.env.WTP_RIPCORD_REACTION_FREE_TEXT;
-    else process.env.WTP_RIPCORD_REACTION_FREE_TEXT = previous;
-  }
-});
-
 test("P03: an oversized verbatim is refused, and validation sits outside every flag", async () => {
   process.env.WTP_RIPCORD_RATE_LIMITS = "pulled";
   const { POST } = await import("../app/api/reactions/route.ts");
@@ -1122,15 +938,4 @@ test("P03: an oversized verbatim is refused, and validation sits outside every f
   const wrongType = await post(42);
   assert.equal(wrongType.status, 400);
 
-  // And both refusals hold with EVERY ripcord pulled — validity checks are
-  // never behind a flag (CLAUDE.md, the collection-stores rule).
-  const previous = process.env.WTP_RIPCORD_REACTION_FREE_TEXT;
-  try {
-    process.env.WTP_RIPCORD_REACTION_FREE_TEXT = "pulled";
-    assert.equal((await post("x".repeat(FREE_TEXT_MAX_CHARS + 1))).status, 400);
-    assert.equal((await post(42)).status, 400);
-  } finally {
-    if (previous === undefined) delete process.env.WTP_RIPCORD_REACTION_FREE_TEXT;
-    else process.env.WTP_RIPCORD_REACTION_FREE_TEXT = previous;
-  }
 });

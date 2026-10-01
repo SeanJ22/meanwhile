@@ -12,7 +12,6 @@ import {
 } from "@/lib/reactions/client";
 import {
   scaleForTargetType,
-  FREE_TEXT_CLOSED_LINE,
   FREE_TEXT_MAX_CHARS,
   FREE_TEXT_PROMPT,
   FREE_TEXT_THREAT_NOTICE,
@@ -30,17 +29,8 @@ import {
  * The reaction control (P03) — one component, keyed by target type + id, so
  * measures, candidates, and agenda items reuse it; votes wired first.
  *
- * Disclosure is the TOS pattern (3c, 2026-08-16, author-approved; the
- * CLAUDE.md record was updated in the same commit): the FIRST reaction tap
- * this device ever makes surfaces a one-time notice — "Your answer joins
- * anonymous local totals. We never know who you are. How we use this →" —
- * that must be acknowledged before the answer is recorded. The
- * acknowledgment stores device-local (`wtp.reaction_disclosure_ack`) and
- * the notice never repeats; the linked transparency page keeps the full
- * truth, including that totals may be licensed. The gate blocks capture until
- * acknowledged — friction exceptions (1) and (3), disclosure and consent at
- * the capture point. The old always-visible per-button line retired with
- * that decision.
+ * There is no capture notice here: what the site collects is stated once, on
+ * /transparency (Sean, October 1, 2026), so a tap records the answer at once.
  *
  * A tap is instant and changeable: the choice renders selected immediately
  * from the device's own record, and a changed answer overwrites this
@@ -48,24 +38,6 @@ import {
  * reactions are write-only from the reader's side.
  */
 
-const DISCLOSURE_ACK_KEY = "wtp.reaction_disclosure_ack";
-
-function disclosureAcknowledged(): boolean {
-  try {
-    return window.localStorage.getItem(DISCLOSURE_ACK_KEY) === "1";
-  } catch {
-    // No storage means the notice shows every time — the safe direction.
-    return false;
-  }
-}
-
-function acknowledgeDisclosure() {
-  try {
-    window.localStorage.setItem(DISCLOSURE_ACK_KEY, "1");
-  } catch {
-    // Survivable; the notice will show again.
-  }
-}
 
 interface ReactionControlProps {
   targetType: ReactionTargetType;
@@ -146,9 +118,6 @@ export function ReactionControl({
   );
   const [override, setOverride] = useState<ReactionValue | null>(null);
   const selected = override ?? stored;
-  // A tap made before the one-time disclosure is acknowledged parks here
-  // and applies on acknowledgment — the answer is never recorded first.
-  const [pendingValue, setPendingValue] = useState<ReactionValue | null>(null);
   // The server's answer for THIS session's tap. The selected-and-counted
   // rendering is EARNED by the 204 (outcome === "COUNTED"): while the write
   // is in flight the tapped choice renders as saving, and anything short of
@@ -174,7 +143,7 @@ export function ReactionControl({
   const [text, setText] = useState("");
   const [textOpen, setTextOpen] = useState(false);
   const [textOutcome, setTextOutcome] = useState<
-    "SAVING" | "SAVED" | "DROPPED" | "FAILED" | null
+    "SAVING" | "SAVED" | "FAILED" | null
   >(null);
 
   const record = async (value: ReactionValue) => {
@@ -190,7 +159,6 @@ export function ReactionControl({
       text.trim() || null,
     );
     setOutcome(result);
-    if (result === "TEXT_DROPPED") setTextOutcome("DROPPED");
   };
 
   /** Send the verbatim alongside the answer already given. */
@@ -206,15 +174,11 @@ export function ReactionControl({
       text.trim() || null,
     );
     setTextOutcome(
-      result === "COUNTED" ? "SAVED" : result === "TEXT_DROPPED" ? "DROPPED" : "FAILED",
+      result === "COUNTED" ? "SAVED" : "FAILED",
     );
   };
 
   const choose = (value: ReactionValue) => {
-    if (!disclosureAcknowledged()) {
-      setPendingValue(value);
-      return;
-    }
     void record(value);
   };
 
@@ -313,7 +277,7 @@ export function ReactionControl({
         commitment we cannot honour every time is worse than a reserved
         right.
       */}
-      {(outcome === "COUNTED" || outcome === "TEXT_DROPPED") && (
+      {outcome === "COUNTED" && (
         <div className="mt-2">
           {!textOpen ? (
             <button
@@ -365,46 +329,8 @@ export function ReactionControl({
                   </span>
                 )}
               </div>
-              {textOutcome === "DROPPED" && (
-                // The free-text ripcord is out. The binary counted and the
-                // words did not, and the reader is told exactly that rather
-                // than shown a success state over nothing.
-                <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
-                  {FREE_TEXT_CLOSED_LINE}
-                </p>
-              )}
             </div>
           )}
-        </div>
-      )}
-      {pendingValue !== null && (
-        // The one-time notice: shown on this device's first-ever tap, gone
-        // for good once acknowledged. The transparency link carries the
-        // full truth, including that totals may be licensed.
-        <div className="mt-1.5 rounded border border-[var(--signal)]/40 bg-[var(--signal)]/5 p-2">
-          <p className="text-[0.6875rem] leading-relaxed text-paper-dim">
-            Your answer joins anonymous local totals. We never know who you
-            are.{" "}
-            <a
-              href="/transparency"
-              target="_blank"
-              className="underline decoration-dotted hover:text-signal"
-            >
-              How we use this →
-            </a>
-          </p>
-          <button
-            type="button"
-            className="mt-1.5 min-h-8 w-full cursor-pointer rounded border border-[var(--signal)] px-2 text-[0.75rem] font-medium text-signal transition-colors hover:bg-[var(--signal)]/10"
-            onClick={() => {
-              acknowledgeDisclosure();
-              const value = pendingValue;
-              setPendingValue(null);
-              if (value) void record(value);
-            }}
-          >
-            OK — record my answer
-          </button>
         </div>
       )}
     </div>

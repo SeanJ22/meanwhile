@@ -22,6 +22,7 @@
  *                           a round started after the save: the runner reads
  *                           these when a round starts
  *   everything else         finished inside the console; nothing for the runner
+ *                           (config.setDataSwitch is read at each read of a number, so it is in force when saved)
  * ```
  *
  * A round that has not started since the save is "waiting", and a paused runner

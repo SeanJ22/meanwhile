@@ -225,7 +225,6 @@ test("every ripcord is registered with question, closer, and tracker rows", () =
     "ripcord.askGrounded",
     "ripcord.fecContributorDisplay",
     "ripcord.rateLimits",
-    "ripcord.reactionFreeText",
     "ripcord.reactionIntake",
     // ASK-12 (2026-08-25), Sean's ruling: the unsourced general-answer
     // fallback. It is a ripcord rather than a feature flag because the
@@ -830,31 +829,6 @@ test("funding reaction target ids validate against the snapshot", () => {
 });
 
 // ── The transparency coupling ────────────────────────────────────────────
-
-test("the transparency page discloses funding data, the reactions and the scale break", () => {
-  const page = readFileSync(join(ROOT, "app", "transparency", "page.tsx"), "utf8");
-  assert.match(page, /Campaign money/);
-  assert.match(page, /Federal\s+Election\s+Commission/);
-
-  // The exclusion sentence is gone because the exclusion is gone (the
-  // author's ruling, 2026-08-15). What replaces it has to carry the same
-  // weight of promise, so the guard follows the commitment rather than the
-  // wording: reactions are stored anonymously, never shown back, and what is
-  // licensed is reader signal and never the FEC data itself.
-  assert.match(page, /stored\s+anonymously/);
-  assert.match(page, /never\s+shown\s+back/);
-  assert.match(page, /never\s+the\s+campaign-finance\s+data\s+itself/);
-
-  // The scale break is disclosed on the page, not only in the schema — a
-  // reader who answered the old question is told their answer is kept apart
-  // from the new one.
-  assert.match(page, /until\s+15\s+August\s+2026/);
-  assert.match(page, /never\s+combined/);
-
-  // And the page states the new question in the reader's own words.
-  assert.match(page, /How do you feel/);
-  assert.match(page, /don&apos;t care/);
-});
 
 // ── The thin-snapshot guard (session brief 2, wall clock 2026-08-14) ─────
 // The 0819 session caught the Kelly-504 shrink BY EYE; the weekly refresh

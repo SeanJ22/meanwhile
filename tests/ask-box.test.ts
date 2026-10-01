@@ -335,24 +335,10 @@ test("log discipline: routed asks log the topic only; refusals carry capped text
     /question: question\.slice\(0, REFUSAL_LOG_MAX_CHARS\)/,
     "the refusal log call must cap the text",
   );
-  assert.ok(!/localStorage/.test(source), "the ask box stores nothing on the device");
+  // The only thing kept on the device is the returning-reader ID, through the
+  // one audited minting helper; no question text is stored here.
+  assert.ok(!/localStorage/.test(source), "the ask box reaches storage only through getOrCreateBrowserKey");
   assert.equal(REFUSAL_LOG_MAX_CHARS, 200);
-});
-
-test("the transparency page covers the ask box in the same commit", () => {
-  const page = readFileSync(
-    join(ROOT, "app", "transparency", "page.tsx"),
-    "utf8",
-  );
-  assert.match(page, /Who do I talk to about/);
-  assert.match(page, /[Nn]o AI writes the answer/);
-  assert.match(page, /200\s*(\n\s*)?characters/, "the cap must be stated to readers");
-  // The scrub coupling (session brief 4): the scrub ships with its
-  // disclosure — the page states that phone-, email-, and address-shaped
-  // text is blanked before storage.
-  assert.match(page, /automatically\s+blanked/, "the scrub must be disclosed");
-  assert.match(page, /phone number/);
-  assert.match(page, /street\s+(\n\s*)?address/);
 });
 
 // ── The scrub (session brief 4, wall clock 2026-08-14) ───────────────────

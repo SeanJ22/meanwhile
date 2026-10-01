@@ -506,6 +506,7 @@ export type ActionKind =
   | "contain" | "uncontain" | "recheck" | "workfirst" | "fixfirst" | "stopmethod" | "scope-stop" | "stoprepeats"
   | "decide" | "hunt-start" | "hunt-start-many" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop"
   | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume"
+  | "global-ceiling" | "global-search-on" | "global-search-off"
   | "scope-first" | "scope-recheck" | "doc-request" | "use-url" | "reprocess" | "retry-method" | "resume-publish"
   | "eng-task" | "job-stop" | "focus";
 

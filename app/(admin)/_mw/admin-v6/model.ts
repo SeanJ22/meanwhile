@@ -392,6 +392,8 @@ export interface PlaceScoreView {
   readonly covers: string;
   readonly observedAt: string;
   readonly divisionCount: number;
+  /** The words a Send to fill this place's blanks carries, or null when the place cannot be named to the fleet. */
+  readonly sendWords: string | null;
   readonly overall: ScoreGroup;
   readonly groups: readonly ScoreGroup[];
 }

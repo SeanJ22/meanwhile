@@ -11,7 +11,6 @@ import { useState } from "react";
 import { STATUS_COLOR, STATUS_LABEL, StatusBar, StatusLegend, StatusTable, Swatch } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
 import { count, ITEM_STATUS_ORDER, mst, type ItemStatus, type PlaceScoreView, type ScoreGroup } from "./model.ts";
-import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 
 import { Actions, Card, cx, Empty, Loading, SourceNote, useListView, usePager } from "./ui.tsx";
 import s from "./v6.module.css";
@@ -38,18 +37,6 @@ function ScoreBar(props: { readonly g: ScoreGroup; readonly label: string; reado
   );
 }
 
-/**
- * The words a send-agents instruction carries for a place. The runner reads them as a target: the state, plus terms a
- * unit must contain. "Deploy" and "fleet" are filler it drops, so nothing else goes in.
- */
-function placeSendWords(scopeKey: string, placeName: string): string | null {
-  const m = /^(?:geo:|st:)([a-z]{2})(?:.([a-z_]+).([0-9A-Za-z]+))?$/.exec(scopeKey);
-  const state = m ? US_STATES.find((x) => x.code === m[1])?.name : null;
-  if (!m || !state) return null;
-  const term = m[2] === "zcta" ? m[3] : m[2] === "county" ? placeName.replace(/,.*$/, "").replace(/s+County$/i, "").trim() : "";
-  return ["Deploy fleet to", state, term].filter(Boolean).join(" ");
-}
-
 const percentWords = (g: ScoreGroup) => (g.percent === null ? "—" : `${g.percent.toFixed(1)}%`);
 
 /**
@@ -62,7 +49,7 @@ function PlaceScoreCard(props: { readonly score: PlaceScoreView; readonly group:
   const v = useV6();
   const { score } = props;
   const o = score.overall;
-  const words = placeSendWords(v.scopeKey, v.place.name);
+  const words = score.sendWords;
   return (
     <Card title={`Checklist score · ${score.placeLabel}`} aside={<span className={s.meta}>Read {mst(score.observedAt)}</span>}>
       <div className={s.stack}>

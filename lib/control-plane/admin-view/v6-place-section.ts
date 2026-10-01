@@ -34,6 +34,8 @@ export interface AdminV6PlaceScore {
   readonly covers: string;
   readonly observedAt: string;
   readonly divisionCount: number;
+  /** The words a Send to fill this place's blanks carries, or null when the place cannot be named to the fleet. */
+  readonly sendWords: string | null;
   readonly overall: GroupScore;
   readonly groups: readonly GroupScore[];
 }
@@ -63,13 +65,21 @@ export interface AdminV6PlaceChecklistView {
   readonly score: AdminV6PlaceScore;
 }
 
-/** What the runner should read as this place: the state, plus the ZIP or the county's own name as the one term. */
-export function placeSendWords(placeKey: string, label: string): string | null {
+/**
+ * What the runner should read as this place: the state, plus the county's own name as the one term. A ZIP is not a unit the
+ * fleet's registry names (the governments that serve it are), so a ZIP's send names the county it sits in, taken from the
+ * governments the owed list resolved for it. Work for a county serves every ZIP in it. With no county known, a ZIP's send is
+ * refused rather than widened to the whole state.
+ */
+export function placeSendWords(placeKey: string, label: string, divisions: readonly { readonly id: string; readonly label: string }[] = []): string | null {
   const m = /^(?:geo:|st:)([a-z]{2})(?:.([a-z_]+).([0-9A-Za-z]+))?$/.exec(placeKey);
   const state = m ? US_STATES.find((s) => s.code === m[1])?.name ?? null : null;
   if (!m || state === null) return null;
-  const county = m[2] === "county" ? label.replace(/s+County$/i, "").trim() : null;
-  return sendWordsFor({ stateNames: [state], zip: m[2] === "zcta" ? m[3] : county, subject: null, label: null });
+  const countyOf = (name: string) => name.replace(/,.*$/, "").replace(/\s+County$/i, "").trim();
+  const countyDivision = divisions.find((d) => /\/county:[a-z0-9_.~-]+$/.test(d.id));
+  if (m[2] === "zcta" && countyDivision === undefined) return null;
+  const term = m[2] === "zcta" ? countyOf(countyDivision!.label) : m[2] === "county" ? countyOf(label) : null;
+  return sendWordsFor({ stateNames: [state], zip: term, subject: null, label: null });
 }
 
 function itemOf(item: OwedListItem, placeKey: string, words: string | null): AdminV6PlaceItem {
@@ -114,9 +124,9 @@ export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery): {
     asOf: read.observedAt,
     data: {
       profileVersion: CHECKLIST_PROFILE.version, definitionCount: CHECKLIST_PROFILE.definitionCount, definitions: DEFINITIONS,
-      groupNames: GROUP_NAMES, placeGroups, items: windowed.items.map((i) => itemOf(i, read.placeKey, placeSendWords(read.placeKey, read.label))), systemGroups: SYSTEM_GROUPS,
+      groupNames: GROUP_NAMES, placeGroups, items: windowed.items.map((i) => itemOf(i, read.placeKey, placeSendWords(read.placeKey, read.label, read.divisions))), systemGroups: SYSTEM_GROUPS,
       score: { placeKey: read.placeKey, placeLabel: read.label, covers: read.covers, observedAt: read.observedAt,
-        divisionCount: read.divisions.length, overall: score.overall, groups: score.groups },
+        divisionCount: read.divisions.length, sendWords: placeSendWords(read.placeKey, read.label, read.divisions), overall: score.overall, groups: score.groups },
     },
     missingParts: [
       "The owed list is what the checklist says a place is owed for the governments, districts and bodies we know about. Governments we haven’t found yet are listed as “discover every …” items, so a total here can grow as agents find more.",

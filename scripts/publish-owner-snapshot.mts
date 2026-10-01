@@ -922,6 +922,13 @@ async function main(): Promise<void> {
     `published: snapshot; ${canonicalCycle ? `canonical cycle ${canonicalCycle.outcome.cycleId}` : "no canonical cycle recorded"}; the heartbeat is the runner's own; ` +
       `${decisions.length} owner decision intent(s) on record`,
   );
+  // A named gap is still published, but a transient failed input read must not
+  // become the standing runner's reusable successful publication.
+  if (reads && (!reads.assignmentSources.ok || reads.billingScopes === null ||
+      reads.billingHolds === null || reads.verifiedRecords === null)) {
+    log("published with incomplete control-plane inputs; the standing runner will retry");
+    process.exitCode = 1;
+  }
 }
 
 await main();

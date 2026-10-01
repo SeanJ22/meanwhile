@@ -35,6 +35,7 @@ import {
   bodySourceWiringFor,
   derivedWiringCandidate,
   derivedWiringEntries,
+  derivedWiringKey,
   familyMembers,
   readDerivedMeetingWiring,
   type DerivedWiringProjection,
@@ -51,7 +52,7 @@ import {
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { deriveWiringDecisions } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { walkMeetingsDiscoveryNeed, type DiscoveryOpen } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
-import { readMeetingsProjection } from "../lib/meetings/snapshot.ts";
+import { readMeetingsProjection, reconcileCounts } from "../lib/meetings/snapshot.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { reconcileSuccessfulMeetingPartition } from "../scripts/ingest.ts";
@@ -228,6 +229,43 @@ async function promoteFamily(store: MemoryRoutineDataStore, now: string, feed: s
   const validatedAt = reads.map(read => read.retrievedAt).concat(now).sort().at(-1)!;
   return { build, candidate, outcome: await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, validatedAt, undefined, options) };
 }
+
+test("two calendars combine distinct dates and repeated IDs; a failed sibling cannot replace a fresh sitting", async () => {
+  const store = new MemoryRoutineDataStore();
+  const crosswalk = await promoteCrosswalk(store);
+  await deriveWiring(store, crosswalk, FEED, T_WIRING);
+  const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now: T_FAMILY });
+  assert.equal(wiring.kind, "PROMOTED");
+  if (wiring.kind !== "PROMOTED") return;
+  const [one] = familyMembers(wiring.value, "US-AZ");
+  const route = `https://${HOST}/second.ics`;
+  const two = { ...one, id: derivedWiringKey(one.row.kind, one.row.bodyId, route), row: { ...one.row, route } };
+  const events = readFeed(ics([
+    { uid: "oct2", summary: BODY_NAME, start: "20261002T160000" },
+    { uid: "oct14", summary: BODY_NAME, start: "20261014T160000" },
+  ]), T_FAMILY);
+  const reading = (member: typeof one, freshMeetings: Meeting[]): FamilyMemberRead => ({ member, ok: true, error: null,
+    freshMeetings, freshAgendaDocuments: [], retrievedAt: T_FAMILY,
+    acquisitions: [{ requestedUrl: member.row.route, finalUrl: member.row.route, httpStatus: 200, rawHash: sha256(FEED), byteCount: FEED.length }],
+  });
+  const build = (reads: FamilyMemberRead[], previous: ReturnType<typeof buildDerivedFamily>["snapshot"] | null) => buildDerivedFamily({
+    wiringInput: { kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US:meeting-source-wiring",
+      versionId: wiring.metadata.versionId!, readModelSha256: sha256(canonicalCivicDataJson(wiring.value)), promotedAt: wiring.metadata.promotedAt! },
+    members: [one, two], reads, previous, generatedAt: T_FAMILY,
+    reconcile: (read, prior, anchor) => reconcileSuccessfulMeetingPartition({ sourceName: "ical", generatedAt: anchor,
+      freshMeetings: read.freshMeetings, freshAgendaDocuments: read.freshAgendaDocuments, previous: prior }),
+  });
+  const first = build([reading(one, [events[0]]), reading(two, events)], null);
+  assert.deepEqual(first.snapshot.meetings.map(row => row.startsAt.slice(0, 10)).sort(), ["2026-10-02", "2026-10-14"]);
+  assert.deepEqual(first.snapshot.counts, { fresh: 2, carried: 0, total: 2, duplicatesCollapsed: 1 });
+  assert.doesNotThrow(() => reconcileCounts(first.snapshot));
+  const next = build([reading(one, [events[0]])], first.snapshot);
+  assert.equal(next.snapshot.meetings.length, 2);
+  assert.equal(next.snapshot.meetings.find(row => row.id === events[0].id)?.carried, undefined);
+  assert.ok(next.snapshot.meetings.find(row => row.id === events[1].id)?.carried);
+  assert.doesNotThrow(() => reconcileCounts(next.snapshot));
+  assert.equal(derivedFamilyCandidate(requiredMeetingPartitionContract(derivedMeetingFamilyId("US-AZ")), next).semantics.violations.length, 0);
+});
 
 test("a serving-window boundary crossed during collection uses the actual final input anchor", async () => {
   const store = new MemoryRoutineDataStore();

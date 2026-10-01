@@ -40,7 +40,7 @@ import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { planDerivedVersion, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { composeCrosswalk, derivedCrosswalkCandidate, planDerivedCrosswalk, readDerivedMeetingBodyCrosswalk } from "../lib/civic-data/derived-crosswalk.ts";
 import { buildDerivedFamily, derivedFamilyCandidate, type FamilyMemberRead } from "../lib/civic-data/derived-meeting-family.ts";
-import { bodySourceWiringFor, derivedWiringCandidate, familyMembers, readDerivedMeetingWiring } from "../lib/civic-data/derived-meeting-wiring.ts";
+import { bodySourceWiringFor, derivedWiringCandidate, derivedWiringKey, familyMembers, readDerivedMeetingWiring } from "../lib/civic-data/derived-meeting-wiring.ts";
 import { manualProjectionCandidate, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { derivedMeetingFamilyId, requiredMeetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
 import {
@@ -475,7 +475,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
     previous: [],
     now: T_WIRING,
   });
-  assert.deepEqual(decisions.map((d) => [d.key, d.disposition]), [[`ical:${COLUMBUS_BODY}`, "PROMOTE"]]);
+  assert.deepEqual(decisions.map((d) => [d.key, d.disposition]), [[derivedWiringKey("ICAL", COLUMBUS_BODY, COLUMBUS_ROUTE), "PROMOTE"]]);
   const wiringPlan = planDerivedVersion([], decisions);
   const wiringOutcome = await processRegisteredRoutineCandidate(store, "meeting-source-wiring", derivedWiringCandidate(wiringPlan, [automaticInput], T_WIRING), T_WIRING);
   assert.equal(wiringOutcome.candidate.state, "PROMOTED", `${wiringOutcome.candidate.failureCode ?? ""} ${wiringOutcome.candidate.failureDetail ?? ""}`);
@@ -484,7 +484,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.equal(wiring.kind, "PROMOTED");
   if (wiring.kind !== "PROMOTED") return;
   const members = familyMembers(wiring.value, "US-OH");
-  assert.deepEqual(members.map((m) => [m.id, m.status]), [[`ical:${COLUMBUS_BODY}`, "ACTIVE"]]);
+  assert.deepEqual(members.map((m) => [m.id, m.status]), [[derivedWiringKey("ICAL", COLUMBUS_BODY, COLUMBUS_ROUTE), "ACTIVE"]]);
   const reads: FamilyMemberRead[] = members.map((member) => ({
     member,
     acquisitions: [{ requestedUrl: member.row.route, finalUrl: member.row.route, httpStatus: 200, rawHash: vault.get(attempt!.found[0]!.artifactId!)!.sha256, byteCount: COLUMBUS_FEED.length }],

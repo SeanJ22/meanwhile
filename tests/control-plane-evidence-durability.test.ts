@@ -425,7 +425,8 @@ test("DURABLE WRITE: the sidecar is the commit point, so an interrupted write is
   assert.deepEqual(await store.list(""), [key], "an in-flight temp file was listed as an object");
 });
 
-test("a failed body readback leaves no committed sidecar", async (t) => {
+test("a missing or corrupted body readback leaves no committed sidecar", async (t) => {
+  for (const fault of ["missing", "corrupt"]) {
   const root = await makeRoot(t);
   const store = new DurableEvidenceStore(root);
   const { artifact } = recordAcquisition(ACQUISITION, PUBLIC_PAGE);
@@ -435,12 +436,16 @@ test("a failed body readback leaves no committed sidecar", async (t) => {
   const original = writer.atomicWrite.bind(store);
   writer.atomicWrite = async (path, bytes, accept) => {
     await original(path, bytes, accept);
-    if (!path.endsWith(SIDECAR_SUFFIX)) await rm(path);
+    if (!path.endsWith(SIDECAR_SUFFIX)) {
+      if (fault === "missing") await rm(path);
+      else await writeFile(path, PUBLIC_PAGE.replace("Regular Session", "Special Session"));
+    }
   };
   await assert.rejects(() => putArtifact(store, PROJECT, artifact, utf8(PUBLIC_PAGE)), EvidenceStoreRefusal);
   assert.equal(await store.head(key), null);
   assert.equal(await store.get(key), null);
   assert.deepEqual(await store.list("project/"), []);
+  }
 });
 
 /* ========================================= keys, and the traversal refusal */

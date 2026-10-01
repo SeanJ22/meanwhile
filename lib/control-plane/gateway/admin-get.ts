@@ -4,6 +4,8 @@
  * of those reads goes through: the admin host, a signed-in session, no origin
  * check (a GET's response is unreadable cross-site), and `no-store` on the way
  * out. A refused request says why in a sentence and reads nothing.
+ *
+ * @freshness-reads-here — `observedAt` is the instant this request was served, handed to the read it wraps.
  */
 import { NextResponse, type NextRequest } from "next/server";
 

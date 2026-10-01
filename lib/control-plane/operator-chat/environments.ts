@@ -8,6 +8,8 @@
  *
  * Reads only; a bad answer is a reading with a reason, never a throw. Reused for
  * a few seconds so two chat turns do not each pay for the fetch.
+ *
+ * @freshness-reads-here — `observedAt` is the instant of this module's own read of production's build endpoint.
  */
 import { SYNTHETIC_RUN_HEADER } from "@/lib/db/run-marker.ts";
 import { PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";

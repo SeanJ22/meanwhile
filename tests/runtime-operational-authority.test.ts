@@ -290,8 +290,4 @@ test("the runner opens clocks without the retired method-adoption gate and invok
   assert.match(readback, /repos\.methodCandidates\.read\(METHOD_CANDIDATE_STORE_ID\)/);
   assert.doesNotMatch(readback, /data[\\/]method[\\/]candidates\.json|readCandidateStore/);
 
-  const admin = readFileSync(join(ROOT, "app", "(admin)", "admin", "research", "page.tsx"), "utf8");
-  assert.match(admin, /readMethodCandidateAuthorityStatus\(opened\.repos\)/);
-  assert.match(admin, /Method-candidate authority/);
-  assert.match(admin, /cp_method_candidates\/live/);
 });

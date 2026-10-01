@@ -67,7 +67,7 @@ test("THE HISTORY: a batch is read once and kept, the day before the window is r
   const read = historyEvents(store);
   const first = await read({ from: "2026-10-01", to: "2026-10-01" });
   assert.equal(first.kind, "ROWS");
-  assert.deepEqual((first as { rows: { text: string | null }[] }).rows.map((e) => e.text).sort(), ["Next day", "Window day"]);
+  assert.deepEqual((first.kind === "ROWS" ? first.rows : []).map((e) => e.text).sort(), ["Next day", "Window day"]);
   assert.deepEqual(gets.sort(), ["events/2026-09-30/aa.json.gz", "events/2026-10-01/bb.json.gz"], "the 5th is not opened");
   await read({ from: "2026-10-01", to: "2026-10-01" });
   assert.equal(gets.length, 2, "an immutable batch is not read twice");

@@ -7,7 +7,6 @@ import {
   DISTRICT_LAYERS,
   DISTRICT_LINE_OPACITY,
   DISTRICT_TYPES,
-  type DistrictCollection,
 } from "../lib/map/districts.ts";
 import { ALL_DISTRICT_TYPES, INITIAL_STATE } from "../lib/state/defaults.ts";
 
@@ -24,25 +23,16 @@ test("ACC-1: every boundary type has a distinct non-hue signature, including Sta
 
 test("ACC-1: map style uses the key's exact dash and weight specification without modifying geometry", () => {
   for (const type of DISTRICT_TYPES) {
-    const data: DistrictCollection = {
-      type: "FeatureCollection",
-      features: [{
-        type: "Feature",
-        properties: { ocdId: "test-boundary", state: "AZ", district: "test", label: "Test boundary" },
-        geometry: { type: "Polygon", coordinates: [[[-111, 32], [-110, 32.25], [-110.5, 33], [-111, 32]]] },
-      }],
-    };
-    const before = JSON.stringify(data);
     const layers: LayerSpecification[] = [];
     const sourceData: unknown[] = [];
     const map = {
       getSource: () => undefined,
       getLayer: () => undefined,
       getStyle: () => ({ layers: [] }),
-      addSource: (_id: string, source: { data: unknown }) => sourceData.push(source.data),
+      addSource: (_id: string, source: unknown) => sourceData.push(source),
       addLayer: (layer: LayerSpecification) => layers.push(layer),
     } as unknown as MapLibreMap;
-    addDistrictLayer(map, type, data, "AZ");
+    addDistrictLayer(map, type);
     const line = layers.find((layer) => layer.type === "line");
     assert.ok(line?.type === "line");
     assert.deepEqual(line.paint?.["line-dasharray"], DISTRICT_LAYERS[type].dash);
@@ -51,8 +41,9 @@ test("ACC-1: map style uses the key's exact dash and weight specification withou
     const width = line.paint?.["line-width"] as unknown[];
     assert.equal((width[4] as unknown[]).at(-1), 0.9 * DISTRICT_LAYERS[type].weight);
     assert.equal((width[6] as unknown[]).at(-1), 1.65 * DISTRICT_LAYERS[type].weight);
-    assert.equal(sourceData[0], data);
-    assert.equal(JSON.stringify(data), before);
+    assert.equal((sourceData[0] as {type:string}).type, "vector");
+    assert.equal(line["source-layer"], "districts");
+    assert.ok(!JSON.stringify(line.filter).includes("state" + "\""), "the filter never clips to an active state");
   }
 });
 

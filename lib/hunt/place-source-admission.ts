@@ -11,6 +11,20 @@ import { workerPublicationTasks } from "../civic-data/worker-publication-tasks.t
 import { readCompletedWorkerResults } from "../control-plane/repository/worker-completion.ts";
 import { DEFAULT_CADENCE_HOURS } from "../control-plane/scheduler/obligation.ts";
 
+/** One ordinary source command per place; the existing occurrence owns its lease and resume clock. */
+export function nationalPlaceJobs(zips: readonly string[], owner: { requestedAt: string; instructions: readonly string[] }): RoutineSourceTask[] {
+  if (zips.some(zip => !/^\d{5}$/.test(zip))) throw new Error("National place acquisition needs five-digit ZIPs");
+  const contract = requiredManualProductionContract("registry-runtime-bindings");
+  return [...new Set(zips)].map(zip => ({ id: `national-place:${zip}`, registeredContractId: contract.id,
+    sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
+    acquisitionFailureDomain: `national-place:${zip}`, requestedUrl: "", authorityMode: "REGISTERED_SOURCE_ROUTES",
+    parserVersion: contract.parserNormalizerVersion,
+    command: [...contract.command, `--national-zips=${zip}`], cadenceMs: DEFAULT_CADENCE_HOURS * 3_600_000, retryMs: 15 * 60_000,
+    contract: { readerProjection: contract.readerProjection,
+      cadence: { description: "Refresh one admitted place's national sources", defaultEveryMs: DEFAULT_CADENCE_HOURS * 3_600_000 } },
+    ownerInvocation: { publicationPending: true, requestedAt: owner.requestedAt, instructions: [...new Set(owner.instructions)] } }));
+}
+
 /** Add national acquisition to the existing registry source, so its source
  * authority, child runner, publication and readback are shared with rosters. */
 export async function withNationalPlaceTasks(tasks: readonly RoutineSourceTask[], args: readonly string[]): Promise<RoutineSourceTask[]> {

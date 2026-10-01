@@ -22,6 +22,8 @@ import registry from "../lib/registry/registry.json" with { type: "json" };
 import { collectNationalPlaceSources, electionDirectorySelection } from "../lib/sources/plural/place.ts";
 import { electionPageFields } from "../lib/hunt/election-page.ts";
 import { placeSourceReader, PlaceSourceDeferred } from "../lib/hunt/place-source-reader.ts";
+import { nationalPlaceJobs } from "../lib/hunt/place-source-admission.ts";
+import { routineTaskDue } from "../lib/civic-data/runner.ts";
 import { runNationalPlaceTask } from "../lib/hunt/place-source-task.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -31,6 +33,23 @@ import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { beginAttemptFor, claimRouteTask, registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.ts";
 import { emptyFieldManual, newFieldManualEntry, projectFieldManual } from "../lib/control-plane/field-manual.ts";
+
+test("a 20-place Send offers independent jobs instead of one joined ZIP command", () => {
+  const zips = Array.from({ length: 20 }, (_, index) => String(3000 + index).padStart(5, "0"));
+  const requestedAt = "2026-10-01T00:00:00.000Z";
+  const jobs = nationalPlaceJobs([...zips, zips[0]], { requestedAt, instructions: ["send", "send"] });
+  assert.equal(jobs.length, 20);
+  assert.equal(new Set(jobs.map(job => job.acquisitionFailureDomain)).size, 20);
+  for (const [index, job] of jobs.entries()) {
+    assert.equal(job.id, `national-place:${zips[index]}`);
+    assert.equal(job.registeredContractId, "registry-runtime-bindings");
+    assert.deepEqual(job.command.filter(arg => arg.startsWith("--national-zips=")), [`--national-zips=${zips[index]}`]);
+    assert.deepEqual(job.ownerInvocation?.instructions, ["send"]);
+    assert.equal(routineTaskDue(job, { lastAttemptedAt: requestedAt, lastSucceededAt: requestedAt }, Date.parse(requestedAt)), true,
+      "another body's publication cannot suppress the admitted place job");
+  }
+  assert.throws(() => nationalPlaceJobs(["bad"], { requestedAt, instructions: [] }), /five-digit ZIPs/);
+});
 
 test("a national host bound saves admitted responses and defers all remaining ZIPs without abandoning Attempts", async t => {
   const repos = createMemoryRepositories();

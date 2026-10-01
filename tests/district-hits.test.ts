@@ -178,7 +178,7 @@ test("Rockaway 07866 sits in two school districts at once", async () => {
   const drawnTypes = new Set<string>();
   for (const [type, spec] of Object.entries(DISTRICT_LAYERS)) {
     for (const layer of sourceLayers) {
-      if (spec.censusLayers.includes(layer)) drawnTypes.add(type);
+      if (spec.files.some((f) => f.startsWith(`${layer}-`))) drawnTypes.add(type);
     }
   }
   assert.ok(

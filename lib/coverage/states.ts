@@ -90,3 +90,21 @@ export const FIPS_BY_USPS: Readonly<Record<string, string>> = derived.fipsByUsps
 /** Every covered state lower-case postal code. Was BALLOT_COVERED_STATES. */
 export const COVERED_SLUGS: readonly string[] = derived.slugs;
 
+/** `place-04.geojson` — one geometry file, one layer type, one state. */
+export function geoFile(type: string, state: CoveredState): string {
+  return `${type}-${state.fips}.geojson`;
+}
+
+/**
+ * Every covered state's file for each given layer type, in MANIFEST order.
+ *
+ * Manifest order, not the hand-written order these arrays used to carry —
+ * `sldu` read 04/34/33 and `cd119` read 04/33/34, for no reason either file
+ * recorded. Order is not load-bearing here: the files merge into one source
+ * and hold disjoint geometry, one state each, so nothing overlaps and nothing
+ * draws over anything. Stating that rather than preserving an arbitrary order
+ * out of caution, so the next reader does not have to re-derive it.
+ */
+export function geoFilesFor(...types: string[]): string[] {
+  return types.flatMap((t) => COVERED_STATES.map((s) => geoFile(t, s)));
+}

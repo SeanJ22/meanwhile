@@ -1,4 +1,4 @@
-import { geometryPath, geometryFiles, rosterPath } from "../lib/holdings/files.ts";
+import { geometryPath, rosterPath } from "../lib/holdings/files.ts";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -114,9 +114,9 @@ test("the notice always renders on failure rungs, with or without coverage", () 
  * went missing or empty would draw nothing while the toggle renders and the
  * build stays green — the panel-denominator failure in map clothing.
  */
-test("held Census boundary fixtures retain features for each kind", () => {
+test("every district layer's committed files exist and hold features", () => {
   for (const type of DISTRICT_TYPES) {
-    for (const file of geometryFiles(ROOT).filter(file => DISTRICT_LAYERS[type].censusLayers.some(layer => file.split("/").at(-1)!.startsWith(layer)))) {
+    for (const file of DISTRICT_LAYERS[type].files) {
       const parsed = JSON.parse(
         readFileSync(join(ROOT, geometryPath(file)), "utf8"),
       ) as { features?: unknown[] };
@@ -174,7 +174,8 @@ test("every body the who-governs card counts is reachable on the map with defaul
     let ids = featureIds.get(type);
     if (!ids) {
       ids = new Set();
-      for (const file of geometryFiles(ROOT).filter(file => DISTRICT_LAYERS[type as (typeof DISTRICT_TYPES)[number]].censusLayers.some(layer => file.split("/").at(-1)!.startsWith(layer)))) {
+      for (const file of DISTRICT_LAYERS[type as (typeof DISTRICT_TYPES)[number]]
+        .files) {
         const parsed = JSON.parse(
           readFileSync(join(ROOT, geometryPath(file)), "utf8"),
         ) as { features: Array<{ properties: { ocdId?: string } }> };

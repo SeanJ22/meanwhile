@@ -9,7 +9,6 @@ import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 import type { BillingFact } from "@/lib/control-plane/billing-facts.ts";
 import { buildBodyViews, nowFigures, type BodyStoreFacts, type PublicZip, type VersionFacts, type WatchedContract } from "@/lib/control-plane/admin-view/bodies.ts";
 import { lateWords, sharedRead } from "@/app/(admin)/_mw/data/shared-read.ts";
-import { FIX_ITEMS, orderByMarks } from "@/lib/control-plane/admin-view/fix-list.ts";
 import { routineDetail } from "@/lib/control-plane/admin-view/work-view.ts";
 import {
   ceilingCards,
@@ -217,20 +216,6 @@ test("a ledger place key reads as the place, from its own parts", () => {
   assert.equal(placeWords("state-nh-county-merrimack"), "Merrimack County");
   assert.equal(placeWords("state-az-sldl-28"), "State House district 28");
   assert.equal(placeWords("state-az"), "Statewide");
-});
-
-test("the fix list: unique ids, every item says where it stands and what to check first, and marks order without dropping", () => {
-  const ids = FIX_ITEMS.map((i) => i.id);
-  assert.equal(new Set(ids).size, ids.length);
-  for (const i of FIX_ITEMS) {
-    assert.ok(i.standing.length > 20, `${i.id} does not say where it stands`);
-    assert.ok(i.checkFirst.length > 20, `${i.id} does not say what to check first`);
-  }
-  assert.doesNotMatch(FIX_ITEMS.map((i) => `${i.body} ${i.standing} ${i.checkFirst}`).join(" "), /\$25 a day|routeFor\(|dev\/gra-evidence/, "the package's stale facts are not repeated");
-  const ordered = orderByMarks(FIX_ITEMS, { "MW-012": "NOT_NOW", "MW-011": "MUST" });
-  assert.equal(ordered.length, FIX_ITEMS.length);
-  assert.equal(ordered[ordered.length - 1].id, "MW-012", "Not now goes last");
-  assert.ok(ordered.findIndex((i) => i.id === "MW-011") < ordered.findIndex((i) => i.id === "MW-012"));
 });
 
 test("a routine assignment's trail follows the version that changed what readers see, and names the version serving now beside it", () => {

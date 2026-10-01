@@ -37,10 +37,12 @@ export function adminV6ReadCapabilities(input: { readonly configRevision: number
   }
   if (input.historyRevision !== undefined && input.historyRevision !== null) {
     sections.history = { contract: "admin-v6/history@1", href: "/api/admin/v6/history", revision: `history:${input.historyRevision}` };
+    // The fix queue changes when an action is saved (history moves) and when the decision sync opens a row (the worker clock bucket).
+    sections.fixes = { contract: "admin-v6/fixes@1", href: "/api/admin/v6/fixes", revision: `fixes:${input.historyRevision}:${input.workerAgeBucket ?? "clock-unread"}` };
   }
   // Weekly Scout series: the same for every place, so it needs no policy or snapshot; it re-reads on the worker clock bucket.
   sections.learning = { contract: "admin-v6/learning@1", href: "/api/admin/v6/learning", revision: `learning:${input.workerAgeBucket ?? "clock-unread"}` };
   return { ...ADMIN_V6_CAPABILITIES, sections };
 }
 
-export const ADMIN_V6_CAPABILITY_REVISION = "admin-v6/1:receipt/1:history/1:hunts/1:money/1:workers/1:learning/1";
+export const ADMIN_V6_CAPABILITY_REVISION = "admin-v6/1:receipt/1:history/1:hunts/1:money/1:workers/1:learning/1:fixes/1";

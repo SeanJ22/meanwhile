@@ -115,7 +115,7 @@ export function liveExecutor(opts: {
     })();
   };
   const gatewayFor = (def: ActionDef) => {
-    if (def.gateway) return { type: def.gateway.type, requiresStateVersion: false };
+    if (def.gateway) return { type: def.gateway.type, requiresStateVersion: def.gateway.requiresStateVersion === true };
     const a = supportedAction(opts.capabilities(), def.kind);
     return a ? { type: a.type, requiresStateVersion: a.requiresStateVersion } : null;
   };

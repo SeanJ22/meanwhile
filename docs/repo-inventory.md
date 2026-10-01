@@ -8,12 +8,11 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Routes and pages
 
-80 file(s). Paths retain route groups and dynamic segments as written.
+79 file(s). Paths retain route groups and dynamic segments as written.
 
 - `/(admin)/admin/agents` — `app/(admin)/admin/agents/page.tsx`
 - `/(admin)/admin/auth/callback` — `app/(admin)/admin/auth/callback/route.ts`
 - `/(admin)/admin/auth/google` — `app/(admin)/admin/auth/google/route.ts`
-- `/(admin)/admin/fix` — `app/(admin)/admin/fix/page.tsx`
 - `/(admin)/admin/login` — `app/(admin)/admin/login/page.tsx`
 - `/(admin)/admin/money` — `app/(admin)/admin/money/page.tsx`
 - `/(admin)/admin` — `app/(admin)/admin/page.tsx`
@@ -22,7 +21,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `/(admin)/readiness/[state]` — `app/(admin)/readiness/[state]/page.tsx`
 - `/(admin)/readiness/cost` — `app/(admin)/readiness/cost/page.tsx`
 - `/(admin)/readiness/done` — `app/(admin)/readiness/done/page.tsx`
-- `/(admin)/readiness/fix` — `app/(admin)/readiness/fix/page.tsx`
 - `/(admin)/readiness` — `app/(admin)/readiness/page.tsx`
 - `/(admin)/readiness/work` — `app/(admin)/readiness/work/page.tsx`
 - `/@modal/(.)ballot` — `app/@modal/(.)ballot/page.tsx`
@@ -49,6 +47,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `/api/admin/runner-progress` — `app/api/admin/runner-progress/route.ts`
 - `/api/admin/session` — `app/api/admin/session/route.ts`
 - `/api/admin/v6/checklist` — `app/api/admin/v6/checklist/route.ts`
+- `/api/admin/v6/fixes` — `app/api/admin/v6/fixes/route.ts`
 - `/api/admin/v6/history` — `app/api/admin/v6/history/route.ts`
 - `/api/admin/v6/hunts` — `app/api/admin/v6/hunts/route.ts`
 - `/api/admin/v6/learning` — `app/api/admin/v6/learning/route.ts`
@@ -787,7 +786,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-950 file(s).
+951 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -846,6 +845,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-standard-in-force.test.ts`
 - `tests/admin-v6-checklist-all-definitions.test.ts`
 - `tests/admin-v6-checklist-section.test.ts`
+- `tests/admin-v6-fixes.test.ts`
 - `tests/admin-v6-hunts-money.test.ts`
 - `tests/admin-v6-instruction-draft.test.ts`
 - `tests/admin-v6-learning.test.ts`
@@ -1742,7 +1742,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7020 file(s).
+7019 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -1770,6 +1770,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/_mw/admin-v6/details.tsx`
 - `app/(admin)/_mw/admin-v6/eligibility.ts`
 - `app/(admin)/_mw/admin-v6/executor.ts`
+- `app/(admin)/_mw/admin-v6/fix-queue-controls.tsx`
 - `app/(admin)/_mw/admin-v6/groups.ts`
 - `app/(admin)/_mw/admin-v6/instruction-draft.ts`
 - `app/(admin)/_mw/admin-v6/instruction.ts`
@@ -1825,7 +1826,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/_mw/delivery-trail.tsx`
 - `app/(admin)/_mw/evidence-copy-control.tsx`
 - `app/(admin)/_mw/evidence-download.ts`
-- `app/(admin)/_mw/fix-controls.tsx`
 - `app/(admin)/_mw/fnv.ts`
 - `app/(admin)/_mw/header-controls.tsx`
 - `app/(admin)/_mw/intent-control.tsx`
@@ -1841,7 +1841,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/_mw/scope-send-key.ts`
 - `app/(admin)/_mw/scope.ts`
 - `app/(admin)/_mw/screens/done.tsx`
-- `app/(admin)/_mw/screens/fix.tsx`
 - `app/(admin)/_mw/screens/money.tsx`
 - `app/(admin)/_mw/screens/work.tsx`
 - `app/(admin)/_mw/shell.tsx`
@@ -1850,7 +1849,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/admin/agents/page.tsx`
 - `app/(admin)/admin/auth/callback/route.ts`
 - `app/(admin)/admin/auth/google/route.ts`
-- `app/(admin)/admin/fix/page.tsx`
 - `app/(admin)/admin/login/page.tsx`
 - `app/(admin)/admin/money/page.tsx`
 - `app/(admin)/admin/page.tsx`
@@ -1865,7 +1863,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/readiness/[state]/page.tsx`
 - `app/(admin)/readiness/cost/page.tsx`
 - `app/(admin)/readiness/done/page.tsx`
-- `app/(admin)/readiness/fix/page.tsx`
 - `app/(admin)/readiness/page.tsx`
 - `app/(admin)/readiness/work/page.tsx`
 - `app/(admin)/status-ui.tsx`
@@ -1895,6 +1892,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/api/admin/runner-progress/route.ts`
 - `app/api/admin/session/route.ts`
 - `app/api/admin/v6/checklist/route.ts`
+- `app/api/admin/v6/fixes/route.ts`
 - `app/api/admin/v6/history/route.ts`
 - `app/api/admin/v6/hunts/route.ts`
 - `app/api/admin/v6/learning/route.ts`
@@ -4937,7 +4935,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/admin-view/checklist-place-binding.ts`
 - `lib/control-plane/admin-view/coverage.ts`
 - `lib/control-plane/admin-view/dead-ends.ts`
-- `lib/control-plane/admin-view/fix-list.ts`
 - `lib/control-plane/admin-view/fix-prevention-history.ts`
 - `lib/control-plane/admin-view/hunt-activity.ts`
 - `lib/control-plane/admin-view/instruction-membership.ts`
@@ -4955,6 +4952,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/admin-view/scope-work.ts`
 - `lib/control-plane/admin-view/v6-capabilities.ts`
 - `lib/control-plane/admin-view/v6-checklist-section.ts`
+- `lib/control-plane/admin-view/v6-fixes-read.ts`
 - `lib/control-plane/admin-view/v6-hunts-read.ts`
 - `lib/control-plane/admin-view/v6-learning-read.ts`
 - `lib/control-plane/admin-view/v6-money-hunts-route.ts`
@@ -7627,6 +7625,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-surface.ts`
 - `tests/admin-v6-checklist-all-definitions.test.ts`
 - `tests/admin-v6-checklist-section.test.ts`
+- `tests/admin-v6-fixes.test.ts`
 - `tests/admin-v6-hunts-money.test.ts`
 - `tests/admin-v6-instruction-draft.test.ts`
 - `tests/admin-v6-learning.test.ts`

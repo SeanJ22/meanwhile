@@ -210,14 +210,16 @@ test("RULING 14: no file URL is used as a path without fileURLToPath", () => {
   const BANNED = new RegExp(String.raw`new URL\([^)]*\)\.` + "pathname");
 
   /*
-   * These expressions parse acquired HTTPS routes and never supply those
-   * URL components to a filesystem API. Keep each
+   * These expressions parse acquired HTTPS routes, never file URLs. The
+   * downloader takes only the final segment as a cache filename. Keep each
    * exception expression-exact: exempting the file would also hide a later
    * import.meta.url pathname defect in the same acquisition module.
    */
   const URL_COMPONENT_ONLY = new Map<string, string>([
     ["lib/officials/federal-directory-data-plane.ts", ["new URL(row.finalUrl)", "pathname"].join(".")],
     ["lib/civic-data/derived-meeting-wiring.ts", ["new URL(input.route)", "pathname"].join(".")],
+    // The Census downloader takes only the final HTTPS path segment for its cache filename.
+    ["scripts/fetch-districts.ts", ["new URL(url)", "pathname"].join(".")],
   ]);
 
   const offenders: string[] = [];

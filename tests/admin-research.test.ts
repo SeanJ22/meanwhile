@@ -344,7 +344,9 @@ test("POSITIVE CONTROL and SEEDED: a valid action passes validation, and a contr
         // A DISPATCH is the one action that needs the owner's words (ADM-8):
         // "deploy the fleet" to nowhere is refused at validation, so the
         // positive control carries a target.
-        const body = action === "DISPATCH" ? `action=${action}&note=deep+dive+on+Illinois` : `action=${action}`;
+        // A CANCEL_DISPATCH names the sent instruction it takes back.
+        const body = action === "DISPATCH" ? `action=${action}&note=deep+dive+on+Illinois`
+          : action === "CANCEL_DISPATCH" ? `action=${action}&note=DISPATCH:2026-09-30T18:57:07.300Z` : `action=${action}`;
         const response = await POST(post(ADMIN_HOST, body, { origin: ADMIN_ORIGIN, cookie }));
         assert.equal(response.status, 503, `${action} must reach the open and be told NOT RECORDED`);
         const payload = (await response.json()) as { error: string; detail: string };

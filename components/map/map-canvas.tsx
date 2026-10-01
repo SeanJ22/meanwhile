@@ -6,6 +6,7 @@ import { NEARBY_RADIUS_MILES } from "@/lib/ballot/voting-sites";
 
 // MapLibre 6 dropped its default export; everything is named now.
 import {
+  addProtocol,
   AttributionControl,
   LngLatBounds,
   MapLibreMap,
@@ -15,9 +16,9 @@ import {
   type ErrorEvent as MapErrorEvent,
   type MapMouseEvent,
 } from "maplibre-gl";
+import { Protocol } from "pmtiles";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { ensureStateRelief } from "@/lib/map/state-relief";
 import { holdMapPresentation, releaseMapPresentation, mapPresentationHeld, setPresentationVisible } from "@/lib/map/flight-presentation";
 import { detectRaster } from "@/components/map/raster-capability";
 import flightStyles from "./map-flight.module.css";
@@ -34,13 +35,14 @@ import { recallCamera, rememberCamera } from "@/lib/map/camera-memory";
 import { viewportRadiusKm } from "@/lib/map/viewport-radius";
 import {
   DISTRICT_TYPES,
+  NATIONAL_BOUNDARIES_SOURCE,
+  preserveDistrictStyle,
   addDistrictLayer,
   boundsOfDistrict,
   fullBoundsOfDistrict,
   districtLayerPresent,
   districtsAt,
   drawnDistrictsOn,
-  loadDistricts,
   removeDistrictLayer,
   setNarrowedDistricts,
   setSelectedDistrict,
@@ -48,11 +50,7 @@ import {
   type DrawnDistrict,
 } from "@/lib/map/districts";
 import {
-  STATE_OUTLINES_URL,
   filterStateAbbr,
-  outlineFor,
-  stateAbbrFromOcdId,
-  type StateOutlines,
 } from "@/lib/map/state-focus";
 import type { DistrictType } from "@/lib/state/types";
 import type { Theme } from "@/hooks/use-stored-theme";
@@ -133,15 +131,6 @@ interface MapCanvasProps {
    *  the districts door renders it, one denominator for both (3g). */
   onDrawnDistricts: (districts: DrawnDistrict[]) => void;
   selectedVenueKey: string | null;
-  /**
-   * A full-screen overlay is open over the map (g5 item 2).
-   *
-   * The state-focus scrim is suspended while it is, because two stacked
-   * backdrop-filter surfaces over the WebGL canvas cost the overlay its own
-   * paint — measured on production, not inferred. See the note at the render
-   * site.
-   */
-  overlayOpen?: boolean;
   /** District overlays to draw. Empty draws none. */
   districtTypes: DistrictType[];
   /** The district the reader picked, highlighted via feature-state. */
@@ -338,7 +327,6 @@ export function MapCanvas({
   focus,
   selectedVenueKey,
   frameAllVenues,
-  overlayOpen = false,
   districtTypes,
   selectedDistrict,
   narrowedDistricts,
@@ -439,47 +427,21 @@ export function MapCanvas({
    * the stylesheet is parsed", it is idempotent however many times it fires and
    * self-heals after any style change.
    */
-  /**
-   * The state whose districts are currently ON the map (g4 item 3).
-   *
-   * A ref, not state: `ensureDistricts` is a stable callback subscribed to
-   * `styledata`, and it has to know what it built LAST time to know whether
-   * to tear it down. Held separately from `focusStateOcdId` because the two
-   * disagree for the whole duration of a fetch, and that gap is exactly when
-   * the old state's boundaries used to survive into the new state's view.
-   */
-  const districtStateRef = useRef<string | null>(null);
-  const focusAbbrRef = useRef<string | null>(stateAbbrFromOcdId(focusStateOcdId));
   const focusOcdRef = useRef<string | null>(focusStateOcdId ?? null);
   useEffect(() => {
-    focusAbbrRef.current = stateAbbrFromOcdId(focusStateOcdId);
     focusOcdRef.current = focusStateOcdId ?? null;
   }, [focusStateOcdId]);
 
+  const attachingDistrictsRef = useRef(false);
   const ensureDistricts = useCallback(() => {
     const map = mapRef.current;
-    if (!map || mapPresentationHeld(map) || !map.getStyle()?.layers?.length) return;
+    if (!map || !map.getStyle()?.layers?.length || attachingDistrictsRef.current) return;
+    // addSource/addLayer synchronously emit styledata. Do not re-enter midway
+    // through attaching the shared source and its layers.
+    attachingDistrictsRef.current = true;
+    try {
 
-    const abbr = focusAbbrRef.current;
-    /*
-     * g4 item 3: NO ACTIVE STATE MEANS NO DISTRICT BOUNDARIES ANYWHERE.
-     *
-     * `wanted` is emptied rather than the loop being skipped, so the removal
-     * pass below runs and the previous state's layers actually come off. A
-     * `return` here would have left them drawn — the same shape as the stale
-     * mask in item 1, one layer down.
-     */
-    const wanted = abbr ? districtTypesRef.current : [];
-
-    // The active state changed under the layers: every one of them is now
-    // holding the wrong state's geometry, so they all go before anything is
-    // added back. Selecting a new state depopulates the old.
-    if (districtStateRef.current !== abbr) {
-      for (const type of DISTRICT_TYPES) {
-        if (districtLayerPresent(map, type)) removeDistrictLayer(map, type);
-      }
-      districtStateRef.current = abbr;
-    }
+    const wanted = districtTypesRef.current;
 
     // Drop what is no longer asked for, before adding what is.
     for (const type of DISTRICT_TYPES) {
@@ -491,22 +453,10 @@ export function MapCanvas({
     for (const type of wanted) {
       if (districtLayerPresent(map, type)) continue;
 
-      loadDistricts(type, abbr)
-        .then((data) => {
-          // Re-check: the fetch is async and the style may have moved on.
-          const live = mapRef.current;
-          if (!live || mapPresentationHeld(live)) return;
-          if (!districtTypesRef.current.includes(type)) return;
-          if (!live.getStyle()?.layers?.length) return;
-          // ...and the ACTIVE STATE may have moved on too. Without this the
-          // reader who types an Arizona zip while New Hampshire's school
-          // districts are still in flight gets New Hampshire's boundaries
-          // painted over Arizona, seconds after the map has flown.
-          if (focusAbbrRef.current !== abbr) return;
-          addDistrictLayer(live, type, data, abbr);
-        })
-        .catch(() => onDistrictErrorRef.current());
+      try { addDistrictLayer(map, type); }
+      catch { onDistrictErrorRef.current(); }
     }
+    } finally { attachingDistrictsRef.current = false; }
   }, []);
 
   useEffect(() => {
@@ -519,6 +469,7 @@ export function MapCanvas({
     // scripts/build-map-worker.mjs bundles a self-contained copy here; see it
     // for the full account. Must precede the first map.
     setWorkerUrl("/maplibre-gl-worker.mjs");
+    addProtocol("pmtiles", new Protocol().tile);
 
     // MapLibre shares one worker pool across all maps and tears it down when
     // the last map is removed. React Strict Mode mounts, cleans up, then mounts
@@ -550,7 +501,8 @@ export function MapCanvas({
 
     const map = new MapLibreMap({
       container: containerRef.current,
-      style: basemap?.styleUrl ?? FALLBACK_STYLE,
+      // Districts start without any dependency on the basemap provider.
+      style: FALLBACK_STYLE,
       ...(remembered
         ? {
             center: [remembered.lng, remembered.lat] as [number, number],
@@ -594,12 +546,9 @@ export function MapCanvas({
       // is filtered, and only to the categories a reader can act on.
       console.error("[map]", message || event.error || event);
 
-      if (!/style|sprite|glyphs|tile/i.test(message)) return;
-
       onTileError();
-      if (map.getStyle()?.layers?.length !== FALLBACK_STYLE.layers.length) {
-        map.setStyle(FALLBACK_STYLE);
-      }
+      // Keep the usable style and boundary tiles. Resetting on each tile error
+      // discards them and can recursively restart the same failing requests.
     });
 
     /**
@@ -619,7 +568,7 @@ export function MapCanvas({
       // The fallback draws ground colour and nothing else. Recovering INTO it
       // would clear the notice while the reader still has no basemap.
       const layers = map.getStyle()?.layers ?? [];
-      if (layers.length <= FALLBACK_STYLE.layers.length) return;
+      if (!layers.some(layer => layer.type !== "background" && !layer.id.startsWith("district-"))) return;
       onTilesRecovered?.();
     });
 
@@ -647,6 +596,10 @@ export function MapCanvas({
     // load and every theme swap — put the district overlay back if it is wanted
     // and missing. See ensureDistricts for why this is not a one-shot.
     map.on("styledata", ensureDistricts);
+    map.once("style.load", () => {
+      ensureDistricts();
+      if (basemap) map.setStyle(basemap.styleUrl, { transformStyle: preserveDistrictStyle });
+    });
 
     /*
      * Click to select a district.
@@ -735,6 +688,10 @@ export function MapCanvas({
       presentationCallbackRef.current?.(true);
     };
     map.on("idle", onPresentationIdle);
+    const onBoundaryData = (event: { sourceId?: string; isSourceLoaded?: boolean }) => {
+      if (event.sourceId === NATIONAL_BOUNDARIES_SOURCE && event.isSourceLoaded) onPresentationIdle();
+    };
+    map.on("sourcedata", onBoundaryData);
 
     let userMoved = false;
     let settleTimer: number | undefined;
@@ -900,7 +857,7 @@ export function MapCanvas({
           /** Which state is raised — null when none, and then nothing is muted. */
           focusOcdId: focusOcdRef.current,
           /** The state the district layers were actually built for (item 3). */
-          districtState: districtStateRef.current,
+          districtState: "national",
           /** Every district layer currently on the style, by id. */
           districtLayers,
           /**
@@ -972,6 +929,7 @@ export function MapCanvas({
     return () => {
       window.clearTimeout(settleTimer);
       map.off("idle", onPresentationIdle);
+      map.off("sourcedata", onBoundaryData);
       map.off("movestart", onMoveStart);
       map.off("moveend", onMoveEnd);
       map.off("click", onClick);
@@ -1198,7 +1156,7 @@ export function MapCanvas({
     if (cameraMapRef.current !== map || prefersReducedMotion()) {
       map.jumpTo(options);
     } else {
-      map.flyTo({ ...options, duration: 2600, essential: true, curve: 1.5 });
+      map.flyTo({ ...options, duration: 350, essential: true, curve: 1.5 });
     }
     cameraMapRef.current = map;
   }, [camera]);
@@ -1317,30 +1275,6 @@ export function MapCanvas({
     );
   }, [venues, visibleVenueKeys, presentationReady]);
 
-  const [outlines, setOutlines] = useState<StateOutlines | null>(null);
-  const heldOutlines = useRef<StateOutlines | null>(null);
-  useEffect(() => {
-    if (!presentationReady || outlines) return;
-    let live = true;
-    void (async () => {
-      try {
-        const data = heldOutlines.current ?? await fetch(STATE_OUTLINES_URL).then(response => {
-          if (!response.ok) throw new Error("State outline unavailable");
-          return response.json() as Promise<StateOutlines>;
-        });
-        heldOutlines.current = data;
-        if (live && mapRef.current && !mapPresentationHeld(mapRef.current)) setOutlines(data);
-      } catch { /* Ambient relief may fail without hiding any civic information. */ }
-    })();
-    return () => { live = false; };
-  }, [presentationReady, outlines]);
-  const focusOutline = useMemo(() => outlineFor(outlines, focusStateOcdId ?? null), [outlines, focusStateOcdId]);
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map || !presentationReady || mapPresentationHeld(map)) return;
-    ensureStateRelief(map, overlayOpen ? null : focusOutline, theme === "light" ? "light" : "dark");
-  }, [focusOutline, theme, overlayOpen, presentationReady]);
-
   // Swap the basemap when the theme changes. The listener above puts the
   // districts back once the new style lands.
   useEffect(() => {
@@ -1358,42 +1292,13 @@ export function MapCanvas({
     if (appliedStyleRef.current === basemap.styleUrl) return;
     appliedStyleRef.current = basemap.styleUrl;
 
-    holdMapPresentation(map);
-    setPresentationReady(false);
-    presentationCallbackRef.current?.(false);
-    map.setStyle(basemap.styleUrl);
+    map.setStyle(basemap.styleUrl, { transformStyle: preserveDistrictStyle });
   }, [theme]);
 
-  // Reconcile the reader's chosen district types after style changes and idle.
-  // Current styles reach idle; the live V94 instrument verifies this signal.
-  /*
-   * M139 (2026-08-18) — `focusStateOcdId` is in these deps, and leaving it out
-   * was the half-load.
-   *
-   * `ensureDistricts` reads the active state off `focusAbbrRef`, a REF, and a
-   * ref changing re-runs nothing. So when this pass ran before the state had
-   * resolved, `abbr` was null, `wanted` was emptied, every district layer came
-   * off — and nothing ever called it again, because neither `districtTypes`
-   * nor `ensureDistricts` changes when a state activates. The layers stayed
-   * off for the life of the page.
-   *
-   * On a cold arrival it usually recovered by luck: `ensureDistricts` is also
-   * subscribed to `styledata`, which tends to fire after the state has
-   * activated. Coming BACK from the ballot page the style is already parsed,
-   * so that second chance fires early or not at all — which is why the report
-   * on this row was "returning from the ballot page, the sidebar renders
-   * half" and why it was intermittent. Measured at 03255 before the fix
-   * (`pnpm probe:m139`, sampling every 100 ms): the districts tile read 0 for
-   * the whole ten-second window on 1 of 3 returns, recovered after ~2s on
-   * another, and was fine on the third.
-   *
-   * Naming the state here is the fix: the pass re-runs when the state
-   * resolves, and the ref-sync effect above is declared earlier so it has
-   * already landed by the time this runs.
-   */
+  // National boundaries depend on the chosen kinds, never an active state.
   useEffect(() => {
     ensureDistricts();
-  }, [districtTypes, ensureDistricts, focusStateOcdId]);
+  }, [districtTypes, ensureDistricts]);
 
   // Selection is feature-state, never a source mutation.
   useEffect(() => {

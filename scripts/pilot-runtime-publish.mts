@@ -5,13 +5,14 @@ import type { Sql } from "../lib/control-plane/repository/pg-store.ts";
 // These are the inputs of readControlPlane/readAllAssignmentSources. The
 // publisher's owner/readiness snapshots and MapTiler digests are outputs, and
 // the runner's liveness beat is read directly by Admin, not by this join.
-const AGGREGATES = ["work_items", "route_tasks", "attempts", "leases", "budget",
+const AGGREGATES = ["work_items", "route_tasks", "attempts", "leases",
   "obligations", "occurrences", "debts", "admin_config", "ask_gap_observations"];
 const LOGS = ["artifacts", "costs", "scout_results", "worker_results", "promotion_pipeline"];
 
 export const CONSOLE_INPUT_SQL = `SELECT md5(jsonb_build_array(
   ${AGGREGATES.map(name => `(SELECT COALESCE(jsonb_agg(jsonb_build_array(id, revision) ORDER BY id), '[]'::jsonb) FROM cp_${name})`).join(",\n  ")},
   ${LOGS.map(name => `(SELECT jsonb_build_array(count(*), max(position)) FROM cp_log_${name})`).join(",\n  ")},
+  (SELECT COALESCE(value->'spendHolds', '{}'::jsonb) FROM cp_budget WHERE id = 'shared-budget-ledger'),
   (SELECT value->'metrics'->'cacheByRole' FROM cp_research_state WHERE id = 'level-1'),
   (SELECT ((value->'metrics'->'share') - 'window') || jsonb_build_object('window',
       (value->'metrics'->'share'->'window') - ARRAY['since','cycles'])

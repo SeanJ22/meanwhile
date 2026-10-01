@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useSyncExternalStore } from "react";
 
 import { recordRecentZip } from "@/hooks/use-recent-zips";
 import { lookupIn, type CentroidTable } from "@/lib/geo/zcta-core";
@@ -187,6 +187,18 @@ export function useStoredZip() {
     getSnapshot,
     getServerSnapshot,
   );
+
+  /*
+   * A zip opened from a link never passes through `remember` — the link IS the
+   * choice — so it was never recorded, and the recents list skipped every zip a
+   * reader reached from a shared URL. Every route to a zip now records it.
+   */
+  const openedZip = snapshot.location?.zip ?? null;
+  useEffect(() => {
+    if (openedZip === null) return;
+    if (new URLSearchParams(window.location.search).get("zip") !== openedZip) return;
+    recordRecentZip(openedZip);
+  }, [openedZip]);
 
   const remember = useCallback((next: StoredLocation) => {
     const url = new URL(window.location.href);

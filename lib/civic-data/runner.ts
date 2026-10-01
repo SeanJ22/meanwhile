@@ -643,6 +643,21 @@ function sittingTaskPublished(task: RoutineSourceTask, clock: RoutineTaskClock):
   return task.recordClass !== "MEETING" || clock.sittingStarts !== undefined;
 }
 
+/** Use an unreceipted child outcome for retry admission only. Source clocks,
+ * publication timestamps and successful observations remain unchanged. */
+export function routineAdmissionClock(
+  clock: RoutineTaskClock | undefined,
+  supervisorAttemptAt: string | undefined,
+  nowMs: number,
+): RoutineTaskClock | undefined {
+  const attempted = Date.parse(supervisorAttemptAt ?? "");
+  if (!Number.isFinite(attempted) || attempted > nowMs) return clock;
+  const sourceTimes = [clock?.lastAttemptedAt, clock?.lastSucceededAt, clock?.lastSucceededObservedAt]
+    .map(value => Date.parse(value ?? "")).filter(Number.isFinite);
+  if (sourceTimes.some(at => at >= attempted)) return clock;
+  return { ...clock, lastAttemptedAt: supervisorAttemptAt! };
+}
+
 export function routineTaskDue(
   task: RoutineSourceTask,
   clock: RoutineTaskClock | undefined,

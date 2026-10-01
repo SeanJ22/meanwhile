@@ -161,6 +161,9 @@ test("a retained-evidence pass shares its immutable index, while the next pass s
   const repository = repos(records);
   let logReads = 0;
   let listings = 0;
+  let attemptReads = 0;
+  const mustRead = repository.attempts.mustRead.bind(repository.attempts);
+  repository.attempts.mustRead = async id => { attemptReads++; return mustRead(id); };
   const readAll = repository.artifacts.readAll.bind(repository.artifacts);
   repository.artifacts.readAll = async () => { logReads++; return [...await readAll()]; };
   const list = store.list.bind(store);
@@ -170,6 +173,7 @@ test("a retained-evidence pass shares its immutable index, while the next pass s
   assert.ok(held.every(input => input.text === BODY && input.attemptId === first.attemptId));
   assert.equal(logReads, 1, "one log read, not one complete-log query per artifact request");
   assert.equal(listings, 1, "one vault listing shared by concurrent reads");
+  assert.equal(attemptReads, 1, "same content is resolved once, including its acquisition identity");
   const text = BODY + "<p>New notice</p>";
   const newer = recordAcquisition({ ...first, workItemId: "wi-new", attemptId: "at-new" }, text).artifact;
   await putArtifact(store, PROJECT, newer, new TextEncoder().encode(text));
@@ -178,4 +182,43 @@ test("a retained-evidence pass shares its immutable index, while the next pass s
   const next = await workerVaultResolver(repository, store, PROJECT, { snapshot: true })(newer.id);
   assert.equal(next.text, text);
   assert.equal(next.attemptId, "at-new");
+});
+
+test("missing content does not read every historical Attempt, even when other bytes are held", async t => {
+  const store = await vault(t);
+  const missing = capture(1);
+  const unrelatedText = "Another saved source";
+  const unrelated = recordAcquisition({ ...capture(2) }, unrelatedText).artifact;
+  await putArtifact(store, PROJECT, unrelated, new TextEncoder().encode(unrelatedText));
+  const repository = repos(Array.from({ length: 250 }, (_, index) => record(capture(index))));
+  let attemptReads = 0;
+  repository.attempts.mustRead = async () => { attemptReads++; throw new Error("unnecessary Attempt read"); };
+  for (const resolve of [workerVaultResolver(repository, store, PROJECT, { snapshot: true }), researchVaultResolver(repository, store, PROJECT, { snapshot: true })]) {
+    const outcomes = await Promise.allSettled(Array.from({ length: 20 }, () => resolve(missing.id)));
+    assert.ok(outcomes.every(row => row.status === "rejected" && /(?:NOT_IN_VAULT|VAULT_IDENTITY_MISSING)/.test(row.reason.message)));
+  }
+  assert.equal(attemptReads, 0);
+});
+
+test("research snapshots share successful and failed content resolution, and a new pass sees new bytes", async t => {
+  const store = await vault(t);
+  const first = capture(1);
+  const repository = repos([record(first)]);
+  let listings = 0;
+  let attemptReads = 0;
+  const list = store.list.bind(store);
+  store.list = async prefix => { listings++; return list(prefix); };
+  const mustRead = repository.attempts.mustRead.bind(repository.attempts);
+  repository.attempts.mustRead = async id => { attemptReads++; return mustRead(id); };
+  const absent = researchVaultResolver(repository, store, PROJECT, { snapshot: true });
+  await Promise.all(Array.from({ length: 10 }, () => assert.rejects(absent(first.id), /VAULT_IDENTITY_MISSING/)));
+  assert.equal(listings, 1);
+  assert.equal(attemptReads, 0);
+  await hold(store, first);
+  await assert.rejects(absent(first.id), /VAULT_IDENTITY_MISSING/);
+  const fresh = researchVaultResolver(repository, store, PROJECT, { snapshot: true });
+  const held = await Promise.all(Array.from({ length: 10 }, () => fresh(first.id)));
+  assert.ok(held.every(row => row.artifact.attemptId === first.attemptId));
+  assert.equal(listings, 2);
+  assert.equal(attemptReads, 1);
 });

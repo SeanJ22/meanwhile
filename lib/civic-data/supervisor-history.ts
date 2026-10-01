@@ -1,5 +1,5 @@
 /**
- * What the routine runner's provider frontier reads of its own supervisor
+ * What the routine runner's admission and provider frontier read of supervisor
  * history (`routineUnreceiptedSupervisorAttemptHistory` in `./runner.ts`), and
  * how much of it.
  */
@@ -7,8 +7,8 @@
 /**
  * How many of the newest supervisor outcomes the provider frontier reads.
  *
- * A supervisor attempt only orders a task behind its same-provider siblings,
- * never makes it due or not due, and it matters only while it is newer than the
+ * An unreceipted supervisor attempt applies the task's existing retry interval
+ * and orders it behind same-provider siblings, only while newer than the
  * task's own durable attempt. The frontier admits one task per failure domain
  * per pass and writes one outcome per pass, so a task considered at all is
  * considered again within one rotation of its domain, far inside this window
@@ -17,20 +17,6 @@
  * hour of billed transfer on 2026-09-24.
  */
 export const ROUTINE_SUPERVISOR_HISTORY_WINDOW = 288;
-
-/** History can only affect admission when a due provider lane has more work than slots. */
-export function frontierHistoryTasks<T extends {
-  readonly task: { readonly acquisitionFailureDomain: string };
-  readonly deadlineMs?: number;
-}>(tasks: readonly T[], ordinarySlots: number, sittingSlots: number): readonly T["task"][] {
-  const domains = new Map<string, T[]>();
-  for (const task of tasks) {
-    const domain = domains.get(task.task.acquisitionFailureDomain) ?? [];
-    domain.push(task); domains.set(task.task.acquisitionFailureDomain, domain);
-  }
-  return [...domains.values()].flatMap(domain => domain.length >
-    (domain.every(task => task.deadlineMs !== undefined) ? Math.max(ordinarySlots, sittingSlots) : ordinarySlots) ? domain.map(candidate => candidate.task) : []);
-}
 
 /**
  * The only parts of a supervisor outcome that

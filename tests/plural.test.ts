@@ -244,6 +244,11 @@ test("national collector binds saved CSV to its real Attempt and reuses another 
   assert.equal(fetched, 2);
   assert.equal(refreshed.collectedAt, "2026-10-02T01:00:00.000Z");
   assert.notEqual(refreshed.capture?.evidence.acquiredByAttemptId, acquired.capture?.evidence.acquiredByAttemptId);
+  const fourth = await reader("2026-10-02T02:00:00.000Z", "job:after-refresh");
+  const current = await fourth.read(url);
+  assert.equal(fetched, 2, "an old observation of identical bytes must not hide the fresh held acquisition");
+  assert.equal(current.collectedAt, refreshed.collectedAt);
+  assert.equal(current.capture?.evidence.acquiredByAttemptId, refreshed.capture?.evidence.acquiredByAttemptId);
   for (let index = 2; index < RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost; index++) {
     await third.read(`https://legislature.gov/page-${index}`);
   }

@@ -24,7 +24,6 @@ import {
 import {
   ROUTINE_SUPERVISOR_HISTORY_FIELDS,
   ROUTINE_SUPERVISOR_HISTORY_WINDOW,
-  frontierHistoryTasks,
 } from "../lib/civic-data/supervisor-history.ts";
 import {
   ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
@@ -38,6 +37,7 @@ import {
   routinePassLaunchOrder,
   routineTaskDeadlineMs,
   routineTaskDue,
+  routineAdmissionClock,
   routineTaskSelection,
   sittingWindowSignals,
   routineUnreceiptedSupervisorAttemptHistory,
@@ -241,7 +241,7 @@ function safeFailure(value: string): string {
 
 /**
  * A child that died before producing a source receipt has no source clock to
- * rotate it behind its same-provider siblings. Its append-only supervisor
+ * apply retry backoff or rotate behind same-provider siblings. Its existing supervisor
  * fault is the operational attempt clock. Reading that clock from the same
  * owner log Admin consumes prevents one broken partition from monopolizing a
  * shared publisher frontier without fabricating a source attempt.
@@ -259,7 +259,7 @@ async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly Routi
      civic-data pass at its start. The read is idempotent, so retry it — same
      resilience the schema bootstrap gets. See connect-retry.ts. */
   const supervisorOutcomes = await withControlPlaneConnectRetry(
-    /* Only recent supervisor outcomes can order a task, and only the fields the
+    /* Read recent outcomes for retry admission and ordering, only the fields the
        history validates: the newest window, narrowed by the store, oldest first
        again so the rows keep their append order. Never every outcome whole. */
     async () => [...await repos.ownerDigests.readRecentWhere(
@@ -522,6 +522,33 @@ if (!FORCE && selectedTasks.some(task => task.id === CAMPAIGN_PUBLICATION_TASK))
     console.error(`RCD_INPUT_CHANGED ${CAMPAIGN_PUBLICATION_TASK}: ${detail}; normal cadence retained`);
   }
 }
+step = "reading unreceipted supervisor attempts";
+let supervisorAttempts: ReadonlyMap<string, string> = new Map();
+if (selectedTasks.length > 0) try {
+  const history = await latestUnreceiptedSupervisorAttempts(selectedTasks);
+  supervisorAttempts = history.attempts;
+  for (const issue of history.issues) {
+    const detail = safeFailure(`${issue.digestId}: ${issue.detail}`);
+    supervisorFailures.push({
+      taskId: `routine-civic-data-provider-frontier-history:${issue.rowIndex}`,
+      code: issue.code,
+      detail,
+    });
+    console.error(
+      `RCD_TASK routine-civic-data-provider-frontier-history:${issue.rowIndex}: ` +
+        `SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`,
+    );
+  }
+} catch (error) {
+  const detail = safeFailure(sanitizedErrorDiagnostic(error));
+  supervisorFailures.push({
+    taskId: "routine-civic-data-provider-frontier",
+    code: "SUPERVISOR_HISTORY_READ_FAILED",
+    detail,
+  });
+  console.error(`RCD_TASK routine-civic-data-provider-frontier: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
+}
+
 for (const read of clockReads) {
   const { task } = read;
   if (!read.ok) {
@@ -530,7 +557,7 @@ for (const read of clockReads) {
     console.error(`RCD_TASK ${task.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
     continue;
   }
-  const durableClock: RoutineTaskClock | undefined = read.clock;
+  const durableClock = routineAdmissionClock(read.clock, supervisorAttempts.get(task.id), admissionNowMs);
   const sittingHot = sittingSignals.get(task.id);
   const dueRequest = FORCE ? null : routineDueRequestFor(task, durableClock, admissionNowMs, dueRequests);
   const publicationDue = campaignPublicationInputsDue(task.id, campaignPublicationInputs);
@@ -569,38 +596,6 @@ for (const read of clockReads) {
     task,
     },
   });
-}
-
-step = "reading unreceipted supervisor attempts";
-let supervisorAttempts: ReadonlyMap<string, string> = new Map();
-const historyTasks = frontierHistoryTasks(dueCandidates.map(({ pending, clock }) => ({
-  task: pending.task,
-  deadlineMs: routineDueRequestDeadlineMs(routineTaskDeadlineMs(pending.task, clock, sittingSignals.get(pending.task.id)), honouredDueRequests.get(pending.task.id) ?? null),
-})),
-  ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, SITTING_WINDOW_LANE_SLOTS_PER_PASS);
-if (historyTasks.length > 0) try {
-  const history = await latestUnreceiptedSupervisorAttempts(historyTasks);
-  supervisorAttempts = history.attempts;
-  for (const issue of history.issues) {
-    const detail = safeFailure(`${issue.digestId}: ${issue.detail}`);
-    supervisorFailures.push({
-      taskId: `routine-civic-data-provider-frontier-history:${issue.rowIndex}`,
-      code: issue.code,
-      detail,
-    });
-    console.error(
-      `RCD_TASK routine-civic-data-provider-frontier-history:${issue.rowIndex}: ` +
-        `SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`,
-    );
-  }
-} catch (error) {
-  const detail = safeFailure(sanitizedErrorDiagnostic(error));
-  supervisorFailures.push({
-    taskId: "routine-civic-data-provider-frontier",
-    code: "SUPERVISOR_HISTORY_READ_FAILED",
-    detail,
-  });
-  console.error(`RCD_TASK routine-civic-data-provider-frontier: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
 
 // A meeting lane is read earliest deadline first, up to three a pass (C6); a
@@ -975,7 +970,7 @@ function admitHotReads(phase: "SOURCE" | "REPAIR", nowMs: number, slots: number,
       .filter(({ id }) => !launchedTaskIds.has(id))
       .map((task) => ({
         task,
-        clock: hotReadClocks.get(task.id),
+        clock: routineAdmissionClock(hotReadClocks.get(task.id), supervisorAttempts.get(task.id), nowMs),
         lastConsideredAt: newestConsideredAt(hotReadClocks.get(task.id), supervisorAttempts.get(task.id)),
       })),
     clockReads,

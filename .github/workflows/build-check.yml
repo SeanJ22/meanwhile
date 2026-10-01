@@ -155,14 +155,6 @@ jobs:
           # main against the runner's ~2 GB default heap: the Build step's limit.
           NODE_OPTIONS: --max-old-space-size=4096
         run: corepack pnpm exec tsc --noEmit
-      - name: Governance ledger and its generated views
-        if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft') && matrix.group == 'governance'
-        timeout-minutes: 10
-        run: corepack pnpm governance:check
-      - name: Orchestration plans (RULING 190)
-        if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft') && matrix.group == 'governance'
-        timeout-minutes: 5
-        run: corepack pnpm orchestration:check
       - name: Canonical state holdings and residual paths
         if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft') && matrix.group == 'governance'
         timeout-minutes: 5

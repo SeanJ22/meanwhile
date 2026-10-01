@@ -248,6 +248,42 @@ function Reliability() {
   );
 }
 
+/**
+ * **PUBLISHED VERSUS READER-VISIBLE.** One row per routine contract: the version its promotion pointer publishes, and
+ * whether the reader read back exactly that version. It trusts the pointer and the readback as recorded and re-checks
+ * no payload. Only the contracts a reader cannot see yet are listed; the counts cover every contract.
+ */
+function Publication() {
+  const v = useV6();
+  const src = v.data.publication;
+  const p = src.data;
+  const rows = p?.notVisible ?? [];
+  const { page, pager } = usePager(rows, 8);
+  return (
+    <Card title="Published versus reader-visible" aside={<span className={s.meta}>{p ? `${count(p.total)} routine contracts` : "Reading…"}</span>}>
+      <SourceNote source={src} what="Publication status" />
+      {p && (
+        <div className={s.stack}>
+          <ul className={s.stack} style={{ listStyle: "none", padding: 0, margin: 0 }}>
+            {p.counts.map((c) => <li key={c.verdict} className={s.small}><strong>{count(c.count)} of {count(p.total)}</strong> {c.words.charAt(0).toLowerCase() + c.words.slice(1)}</li>)}
+            <li className={s.small}><strong>{count(p.latestAttemptFailing)} of {count(p.total)}</strong> whose latest attempt carries a failure code</li>
+          </ul>
+          {!rows.length && <Empty>Every contract with a published version is visible to readers.</Empty>}
+          {page.map((r) => (
+            <div key={r.contract} className={s.row}>
+              <div className={s.spread}><strong style={{ fontSize: 13 }}>{r.contract}</strong><Pill tone={r.verdict === "READBACK_FAILED" ? "warn" : "gold"}>{r.verdict === "NOT_PUBLISHED" ? "Not published" : r.verdict === "READBACK_FAILED" ? "Readback failed" : "Not read back"}</Pill></div>
+              <span className={s.meta}>{r.words}{r.publishedAt ? ` · published ${mst(r.publishedAt)}` : ""}</span>
+              <span className={s.meta}>{r.attempt ? `Latest attempt ${r.attempt.state.toLowerCase().replaceAll("_", " ")} ${mst(r.attempt.at)}${r.attempt.failureCode ? ` · ${r.attempt.failureCode}` : ""}` : "No attempt recorded"}</span>
+            </div>
+          ))}
+          {pager}
+          {p.notVisibleHidden > 0 && <span className={s.meta}>{count(p.notVisibleHidden)} more not shown. The counts above cover all of them.</span>}
+        </div>
+      )}
+    </Card>
+  );
+}
+
 /* ---------------------------------------------------------------- screen */
 
 export function WorkersScreen() {
@@ -331,6 +367,8 @@ export function WorkersScreen() {
       <Agents />
 
       <Reliability />
+
+      <Publication />
 
       <Card title="Working now, by stage" aside={jobs ? <span className={s.meta}>{jobs.length} jobs working at the same time across {huntsOrAreas} hunts or shared areas</span> : totals ? <WholeSystem place={v.place.name} isCountry={isCountry} /> : undefined}>
         {!jobs && sample && <SourceNote source={src} />}

@@ -12,6 +12,7 @@ import { mst, STAGE_NAMES, type ActionRef, type SavedDoc } from "./model.ts";
 import { relation } from "./places.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
 import { TaskStages } from "./screen-fix.tsx";
+import { EvidenceTrail } from "./trail-view.tsx";
 import { LANE_TONE, LANE_WORDS, StuckRow } from "./screen-now.tsx";
 import { Actions, Card, cx, Empty, Facts, markWords, Pill, SourceNote, Technical } from "./ui.tsx";
 import s from "./v6.module.css";
@@ -110,6 +111,7 @@ export function DetailPanel(props: { readonly detail: Detail }) {
           </div>
           <Technical lines={[`stuck ${i.id}`, ...(i.fixId ? [`fix ${i.fixId}`] : [])]} />
         </Card>
+        <Card title="What was saved for this work"><EvidenceTrail id={i.id} /></Card>
         {!!same.length && <Card title="Same cause"><div className={s.stack}>{same.map((x) => <StuckRow key={x.id} item={x} />)}</div></Card>}
       </Panel>
     );

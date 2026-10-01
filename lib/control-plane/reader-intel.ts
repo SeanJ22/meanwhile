@@ -85,7 +85,6 @@
 import { neon } from "@neondatabase/serverless";
 
 import { SEARCH_LOG_EVENT_TYPES, type SearchLogEventType } from "../db/search-log.ts";
-import { ripcordPulled } from "../ripcords.ts";
 import {
   REACTION_TARGET_TYPES,
   REACTION_VALUES,
@@ -469,11 +468,9 @@ export interface DemandReading {
   readonly topSubjects: TopList;
 }
 
-/** The Ask store, which is built, wired and switched off. */
+/** The Ask store. */
 export interface AskReading {
-  /** Is `ripcord.askSignalCapture` pulled? When it is, an empty table is a fact about the switch. */
-  readonly capturePulled: boolean;
-  /** Rows in the window, every class. Zero with the ripcord pulled is expected, not a finding. */
+  /** Rows in the window, every class. */
   readonly rowsInWindow: number;
 }
 
@@ -966,26 +963,20 @@ export async function readDemand(
 }
 
 /**
- * The Ask store — which exists, is wired, and is switched off.
- *
- * `ripcord.askSignalCapture` ships pulled pending privacy copy approval, so the
- * table holds nothing by design. An empty count here is a fact about a switch
- * and must never render as "no reader asked anything": the questions ARE being
- * asked, and `search_log`'s QUESTION_ASKED rows above are where they are
- * counted. This reading exists so the page can say which of the two it is.
+ * The Ask store: how many Ask interactions were saved in the window. Capture
+ * is on (Sean, 2026-10-01); rows appear once readers carry a continuity key.
  */
 export async function readAsk(
   sql: ReaderStoreQuery,
   window: ReaderWindow,
 ): Promise<ReadOutcome<AskReading>> {
-  const capturePulled = ripcordPulled("ripcord.askSignalCapture");
   try {
     const rows = await sql`
       SELECT COUNT(*) AS n
       FROM ask_interactions
       WHERE occurred_at >= ${window.fromIso}::timestamptz AND occurred_at < ${window.toIso}::timestamptz
     `;
-    return { kind: "HELD", value: { capturePulled, rowsInWindow: numAt(rows[0] ?? {}, "n") } };
+    return { kind: "HELD", value: { rowsInWindow: numAt(rows[0] ?? {}, "n") } };
   } catch (error) {
     return unreachable("the ask store", error);
   }

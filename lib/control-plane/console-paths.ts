@@ -6,7 +6,7 @@
  * page. The destination comes from the form's `returnTo` field, and a
  * redirect target read off a request body is validated against a closed list
  * — never an arbitrary URL. The list is the console itself: the command center,
- * the pages not yet folded into it, and a state's readiness page.
+ * and nothing else: it is the only Admin page.
  *
  * PURE, and shared by both admin routes so they cannot disagree about what
  * the console is.
@@ -14,15 +14,10 @@
 
 export const CONSOLE_VIEWS: readonly string[] = [
   "/admin",
-  "/admin/sources",
-  "/admin/agents",
 ];
 
-/** A state readiness page: `/readiness/az`. */
-const READINESS_PATH = /^\/readiness\/[a-z]{2}$/;
-
 export function isConsolePath(path: string): boolean {
-  return CONSOLE_VIEWS.includes(path) || READINESS_PATH.test(path);
+  return CONSOLE_VIEWS.includes(path);
 }
 
 /** The validated destination, or the fallback when the field names nothing on the console. */

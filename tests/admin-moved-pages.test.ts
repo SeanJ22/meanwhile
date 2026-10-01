@@ -27,7 +27,16 @@ test("a scope on an old link is kept, and a path that never moved is left alone"
   assert.equal(movedAdminPage("/admin/chat", null), "/admin?view=chat");
   assert.equal(movedAdminPage("/admin/chat", "state:az"), "/admin?view=chat&scope=state%3Aaz");
   assert.equal(movedAdminPage("/admin/fleet", "state:az"), "/admin?scope=state%3Aaz");
-  assert.equal(movedAdminPage("/admin/sources", null), null);
+  assert.equal(movedAdminPage("/admin/sources", null), "/admin?view=workers", "publication status moved to Workers");
+  assert.equal(movedAdminPage("/admin/money", "az.zcta.85635"), "/admin?view=money&scope=az.zcta.85635");
+  assert.equal(movedAdminPage("/readiness/cost", null), "/admin?view=money");
+  assert.equal(movedAdminPage("/readiness/work", null), "/admin?view=work");
+  assert.equal(movedAdminPage("/readiness", null), "/admin?view=checklist");
+  assert.equal(movedAdminPage("/readiness/done", null), "/admin?view=checklist");
+  assert.equal(movedAdminPage("/readiness/az", null), "/admin?view=checklist&scope=az", "a state's readiness page is the Checklist at that state");
+  assert.equal(movedAdminPage("/readiness/az", "az.zcta.85635"), "/admin?view=checklist&scope=az.zcta.85635", "a scope the link carried wins");
+  assert.equal(movedAdminPage("/admin/agents", null), "/admin");
+  assert.equal(movedAdminPage("/admin/auth/callback", null), null);
   assert.equal(movedAdminPage("/admin", null), null);
 });
 

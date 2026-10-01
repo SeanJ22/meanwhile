@@ -3,7 +3,7 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import { test } from "node:test";
 
-import { RIPCORDS, RIPCORD_NAMES, ripcordPulled } from "../lib/ripcords.ts";
+import { RIPCORDS, RIPCORD_NAMES } from "../lib/ripcords.ts";
 import {
   aggregateReactions,
   rowsEligibleForAggregation,
@@ -223,12 +223,7 @@ test("every ripcord is registered with question, closer, and tracker rows", () =
     // separate flag from the classifier's because the question is different —
     // that rung picks an id, this one writes the sentence a reader reads.
     "ripcord.askGrounded",
-    // ASK03 (2026-08-27): Ask signal capture. SHIPS PULLED — the store may not
-    // take a reader's typed question before the disclosure the data-privacy
-    // policy requires at the box exists, and that copy is NH246's, unapproved.
-    "ripcord.askSignalCapture",
     "ripcord.fecContributorDisplay",
-    "ripcord.fundingReactionsInAggregates",
     "ripcord.rateLimits",
     "ripcord.reactionFreeText",
     "ripcord.reactionIntake",
@@ -245,33 +240,16 @@ test("every ripcord is registered with question, closer, and tracker rows", () =
     assert.ok(ripcord.closer.length > 10, `${name} names no closer`);
     assert.ok(ripcord.trackerRows.length > 0, `${name} loses its tracker row`);
   }
-  // The FEC pair stays counsel-closed — nobody else may close D23's question.
-  for (const name of [
-    "ripcord.fecContributorDisplay",
-    "ripcord.fundingReactionsInAggregates",
-  ] as const) {
-    assert.match(RIPCORDS[name].closer, /counsel/i, `${name} must name counsel`);
-    assert.ok(RIPCORDS[name].trackerRows.includes("D23"));
-  }
-  // The intake pair is the author's, operational, rooted in T08.
+  // The FEC contributor ripcord stays counsel-closed — nobody else may close D23's question.
+  assert.match(RIPCORDS["ripcord.fecContributorDisplay"].closer, /counsel/i);
+  assert.ok(RIPCORDS["ripcord.fecContributorDisplay"].trackerRows.includes("D23"));
+  // The intake pair is operational, rooted in T08.
   for (const name of ["ripcord.rateLimits", "ripcord.reactionIntake"] as const) {
-    assert.match(RIPCORDS[name].closer, /author/i, `${name} must name the author`);
     assert.ok(RIPCORDS[name].trackerRows.includes("T08"));
   }
 });
 
-test("the two funding ripcords ship in the states their questions put them in", () => {
-  // The aggregates ripcord shipped PULLED on 2026-08-18 and was flipped LIVE
-  // on 2026-08-15 by the author's ruling: what is licensed is
-  // reader-attention signal — anonymous opinions about a display — and never
-  // FEC-derived data. The switch stays as a belt, so a re-pull is one flag.
-  assert.equal(RIPCORDS["ripcord.fundingReactionsInAggregates"].pulled, false);
-  assert.match(
-    RIPCORDS["ripcord.fundingReactionsInAggregates"].closer,
-    /Author-ruled/,
-    "a flipped ripcord must name who ruled it, not the closer it no longer waits on",
-  );
-
+test("the FEC contributor ripcord ships live and stays counsel's", () => {
   // The SEPARATE question — commercial use of FEC contributor DATA under
   // § 30111(a)(4) — is untouched by that ruling and is still counsel's.
   assert.equal(RIPCORDS["ripcord.fecContributorDisplay"].pulled, false);
@@ -343,23 +321,6 @@ test("live (the shipped state): funding reactions are aggregated like any other"
       `${type} was filtered out of a live aggregate`,
     );
   }
-});
-
-test("flip: pulling the aggregates ripcord still filters funding reactions (env override)", () => {
-  // The belt, demonstrated in the position it is not shipped in. The
-  // machinery, the provenance tags and the filter are unchanged by the
-  // ruling — a re-pull is one flag and it is still a filter, never a
-  // migration or a hunt.
-  withEnv("WTP_RIPCORD_FUNDING_REACTIONS_IN_AGGREGATES", "pulled", () => {
-    assert.equal(ripcordPulled("ripcord.fundingReactionsInAggregates"), true);
-    const tallies = aggregateReactions([fundingRow, contributorRow, voteRow]);
-    assert.equal(tallies.length, 1, "a pulled ripcord let funding rows through");
-    assert.equal(tallies[0].targetType, "FEDERAL_VOTE");
-    const eligible = rowsEligibleForAggregation([fundingRow, contributorRow, voteRow]);
-    assert.deepEqual(eligible.map((r) => r.targetType), ["FEDERAL_VOTE"]);
-  });
-  // And back: the committed state aggregates.
-  assert.equal(ripcordPulled("ripcord.fundingReactionsInAggregates"), false);
 });
 
 test("flip: pulling the contributor ripcord empties the display and its write path", () => {

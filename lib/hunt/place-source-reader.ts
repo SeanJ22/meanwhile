@@ -1,6 +1,6 @@
 import { savedPageReader, realOpenBytes } from "../control-plane/scheduler/scout-tools.ts";
 import type { ArtifactProvenance, ScoutToolContext } from "../control-plane/scheduler/scout-contract.ts";
-import { durableResearchTools, type ResearchRuntimeTools } from "../control-plane/workers/research-runtime.ts";
+import { durableResearchTools, type ResearchRuntimeTools } from "../control-plane/workers/durable-research-tools.ts";
 import { workerVaultResolver } from "../control-plane/workers/vault.ts";
 import { researchVaultResolver } from "../control-plane/workers/vault-object.ts";
 import { evidenceProjection } from "../control-plane/workers/evidence-projection.ts";

@@ -74,6 +74,11 @@ test("below-target places continue every pass until a settled hunt makes no prog
   await repos.occurrences.compareAndSet(closed.id, closed.revision, { ...closed.value, unresolvedReason: "DEFERRED: per-website bound" }, now);
   assert.equal((await scheduleNationalPlace(repos, settled, now, true) as { nextDueAt: string }).nextDueAt, now,
     "a bounded partial hunt that published new facts continues");
+  const legacy = await repos.routeTasks.mustRead(task.id);
+  await repos.routeTasks.compareAndSet(legacy.id, legacy.revision, { ...legacy.value,
+    disposition: { ...legacy.value.disposition!, disposition: "BLOCKED_CURRENTLY", note: "DEFERRED: website request bound; saved responses remain" } }, now);
+  assert.equal((await scheduleNationalPlace(repos, settled, now, true) as { nextDueAt: string }).nextDueAt, now,
+    "a legacy partial hunt without a progress marker does not establish no progress");
   assert.equal((await scheduleNationalPlace(repos, settled, now, false) as { nextDueAt: string }).nextDueAt, "2026-10-02T00:00:00.000Z", "reaching the target restores cadence");
   const changed = await repos.routeTasks.mustRead(task.id);
   await repos.routeTasks.compareAndSet(task.id, changed.revision, { ...changed.value,

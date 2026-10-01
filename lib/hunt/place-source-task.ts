@@ -34,8 +34,7 @@ export async function scheduleNationalPlace(repos: ControlPlaneRepositories, row
     if (occurrence?.value.closedAt) {
       const task = await repos.routeTasks.read(occurrence.value.routeTaskId);
       const note = task?.value.disposition?.note ?? "";
-      if (note.includes('"placeProgress":false') || task?.value.disposition?.disposition === "WALKED_NO_YIELD" ||
-        (occurrence.value.unresolvedReason && !note.includes('"placeProgress":true'))) {
+      if (note.includes('"placeProgress":false') || task?.value.disposition?.disposition === "WALKED_NO_YIELD") {
         return scheduleObligation({ ...row, lastWorkedAt: occurrence.value.closedAt }, Date.parse(now));
       }
     }

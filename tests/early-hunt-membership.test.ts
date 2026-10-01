@@ -6,15 +6,12 @@ import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligat
 import { autonomousCycleAllowed, exactInstructionAutonomousWorkIds } from "../lib/control-plane/workers/coordinator.ts";
 
 test("filtered and explicitly paused cycles cannot start either autonomous slice", () => {
-  const active = { dry: false, canary: false, only: null, ids: null, runnerPaused: false,
-    scheduledBlackout: false, hasLifetimeHunt: true };
+  const active = { dry: false, canary: false, only: null, ids: null, runnerPaused: false };
   assert.equal(autonomousCycleAllowed(active), true);
   for (const blocked of [{ only: "roster" }, { ids: new Set(["wi-1"]) }, { runnerPaused: true },
-    { dry: true }, { canary: true }, { scheduledBlackout: true, hasLifetimeHunt: false }]) {
+    { dry: true }, { canary: true }]) {
     assert.equal(autonomousCycleAllowed({ ...active, ...blocked }), false);
   }
-  assert.equal(autonomousCycleAllowed({ ...active, scheduledBlackout: true }), true,
-    "the exact original lifetime hunt retains its authorized blackout continuation");
 });
 
 test("an old original-hunt occurrence remains eligible without new ownerInstructions, while a later same-key Send does not inherit it", () => {

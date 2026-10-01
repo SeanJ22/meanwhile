@@ -610,9 +610,9 @@ export function buildResearchView(input: ResearchViewInput): ResearchView {
     ? count(
         "Scouts running",
         state.running.length,
-        bounds.maxConcurrentScouts,
+        bounds.workerCapacity,
         "Scouts the runner has started and not yet closed, against the concurrency bound",
-        `${boundsSource}: maxConcurrentScouts`,
+        `${boundsSource}: workerCapacity`,
       )
     : stateGap();
 
@@ -676,7 +676,7 @@ export function buildResearchView(input: ResearchViewInput): ResearchView {
           "Scouts dispatched this cycle",
           state.queue.modelClassDispatchedThisCycle,
           state.queue.modelClassDue,
-          "Scout dispatches in the current cycle, of the model-class units due — no per-cycle cap; the cycle wall and the rolling daily ceiling bound it",
+          "Scout dispatches in the current cycle, of the model-class units due — no per-cycle cap; Admin supplies the spend limit",
           queueSource,
         ),
         deferredForCeiling: count(

@@ -29,14 +29,15 @@ test("the actual Scout request inherits a learned method and the failed Hunter r
   // obligation regardless of its jurisdiction, then assert the walk both READS it
   // in the request and RECORDS it as captured input on the result.
   const doorId=fieldManualEntryId("test-seed","novelty-door");
-  await writeFieldManual(h.repos,[{
+  const seeded = await writeFieldManual(h.repos,[{
     id:doorId,role:"SHARED",kind:"VENDOR_TENANT",title:"Seeded test door",
     summary:"a portable inherited door for the capture assertion",states:[],recordClasses:[],
     platforms:[],outcome:"YIELDED",url:"https://seeded.example/door",source:"test-seed",
     observedAt:"2026-09-19",tier:null,payload:{}}],h.now());
+  assert.equal(seeded.written,1);
   const requests:ModelRequest[]=[];
   const searches: string[] = [];
-  const runtime=await autonomousStandingRuntime({root,repos:h.repos,now:h.now,
+  const runtime=await autonomousStandingRuntime({root,repos:h.repos,now:h.now,auditCeilingUsd:1,
     search: async input => { searches.push(input.query); return { hits: [], requestCount: 1, bytesFetched: 0, providersUsed: ["offline-fixture"], errors: [] }; },
     transport:async request=>{
     requests.push(request);
@@ -73,7 +74,7 @@ test("one running worker runtime saves a new observed route and hands it to its 
   await writeFieldManual(h.repos, [methodVersionEntry(empty)], h.now());
   const discovered = "https://fixture-clerk.example.gov/alternate-roster.json";
   const requests: ModelRequest[] = [];
-  const runtime = await autonomousStandingRuntime({ root, repos: h.repos, now: h.now, spaceOut: async () => {},
+  const runtime = await autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, spaceOut: async () => {},
     openBytes: async ({ url }) => ({ status: 200, bytes: Buffer.from(url.endsWith("robots.txt") ? "User-agent: *\nDisallow:\n" : '[{"id":"clerk","name":"Clerk"}]'), contentType: "text/plain", finalUrl: url, durationMs: 1, transportError: null }),
     transport: async request => {
       requests.push(request);

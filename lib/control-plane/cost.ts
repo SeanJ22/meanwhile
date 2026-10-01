@@ -36,6 +36,7 @@
 
 import type { Attempt, AttemptCost, WorkerRole } from "./attempt.ts";
 import type { WorkQuestion } from "./work-question.ts";
+import { canonicalModelId, modelTierFor, MODEL_TIERS, MODELS, type ModelTier } from "../models.ts";
 /* Re-exported so a cost reader keys on the one constant (2026-09-23). */
 export { DISCOVERY_SEARCH_ROLE } from "./attempt.ts";
 
@@ -121,6 +122,9 @@ export function cacheMeteringOf(cost: AttemptCost): CacheMetering {
 }
 
 export interface CostEntry {
+  /** Absent only on older rows. Null is plain code or an unreported model. */
+  readonly model?: string | null;
+  readonly tier?: ModelTier | "none" | null;
   readonly attemptId: string;
   readonly workItemId: string;
   readonly routeTaskId: string | null;
@@ -131,7 +135,7 @@ export interface CostEntry {
   /** OCD id or equivalent. Null when the work spans jurisdictions. */
   readonly jurisdiction: string | null;
   readonly project: string;
-  readonly role: WorkerRole;
+  readonly role: WorkerRole | "ASK";
   readonly cost: AttemptCost;
   /** Caller-supplied ISO stamp. This module never reads a clock. */
   readonly recordedAt: string;
@@ -177,6 +181,7 @@ export interface CostEntry {
 /** One model's part of a charge (`CostEntry.byModel`): the billed quantities of the requests sent to it. */
 export interface CostModelShare {
   readonly model: string;
+  readonly tier?: ModelTier | null;
   /** Model requests (provider turns) sent to this model. */
   readonly requestCount: number;
   readonly usd: number | null;
@@ -188,6 +193,37 @@ export interface CostModelShare {
   readonly cacheCreation5mInputTokens: number | null;
   readonly cacheCreation1hInputTokens: number | null;
   readonly uncachedInputTokens: number | null;
+}
+
+/** Every new charge records its model; historical identities are never rewritten. */
+export function costEntryWithModel(entry: CostEntry, model: string | null): CostEntry {
+  const selected = entry.model ?? (entry.byModel?.length === 1 ? entry.byModel[0].model : model);
+  return { ...entry, model: selected,
+    tier: selected === null ? "none" : modelTierFor(canonicalModelId(selected)),
+    ...(entry.byModel ? { byModel: entry.byModel.map(share => ({ ...share, tier: modelTierFor(canonicalModelId(share.model)) })) } : {}) };
+}
+
+/** Inclusive start, exclusive end. No model is inferred for an older charge. */
+export function spendByTier(entries: readonly CostEntry[], range: { readonly since: string; readonly until: string }) {
+  const since = Date.parse(range.since), until = Date.parse(range.until);
+  if (!Number.isFinite(since) || !Number.isFinite(until) || since >= until) throw new Error("COST_RANGE_INVALID");
+  const totals = new Map<string, { tier: ModelTier | "none" | "unrecorded"; label: string; usd: number | null; rows: number; requests: number }>(
+    [...MODEL_TIERS.map(tier => ({ tier, label: MODELS[tier].name, usd: 0, rows: 0, requests: 0 })),
+      { tier: "none" as const, label: "Plain code", usd: 0, rows: 0, requests: 0 },
+      { tier: "unrecorded" as const, label: "Model not recorded", usd: 0, rows: 0, requests: 0 }].map(row => [row.tier, row]));
+  for (const entry of entries) {
+    const at = Date.parse(entry.recordedAt);
+    if (!(at >= since && at < until)) continue;
+    const shares = entry.byModel && splitMatchesCharge(entry.cost, entry.byModel) ? entry.byModel : null;
+    const parts = shares?.length ? shares.map(share => ({ tier: share.tier, usd: share.usd, requests: share.requestCount }))
+      : [{ tier: entry.tier, usd: entry.cost.usd, requests: entry.cost.requestCount ?? 0 }];
+    for (const part of parts) {
+      const total = totals.get(part.tier ?? "unrecorded") ?? totals.get("unrecorded")!;
+      total.rows++; total.requests += part.requests;
+      total.usd = total.usd === null || part.usd === null ? null : total.usd + part.usd;
+    }
+  }
+  return { ...range, tiers: [...totals.values()] };
 }
 
 /**
@@ -204,7 +240,7 @@ export interface CostModelShare {
  */
 export function costPortionsByModel(entry: CostEntry, attemptModel: string): readonly { readonly model: string; readonly entry: CostEntry }[] {
   const shares = entry.byModel;
-  if (shares === undefined || shares.length === 0 || !splitMatchesCharge(entry.cost, shares)) return [{ model: attemptModel, entry }];
+  if (shares === undefined || shares.length === 0 || !splitMatchesCharge(entry.cost, shares)) return [{ model: entry.model ?? attemptModel, entry }];
   const otherRequests = shares.slice(1).reduce((n, s) => n + s.requestCount, 0);
   return shares.map((s, i) => ({
     model: s.model,

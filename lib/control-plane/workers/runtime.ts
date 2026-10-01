@@ -18,7 +18,7 @@ import { MODEL_FOR_CLASS } from "../scheduler/model-routing.ts";
 import { isRetiredRoutineMeetingAcquisition } from "./autonomous-plan.ts";
 import { bundleProcedure, runIsolatedWorker } from "./isolation.ts";
 import { normalizedParserResult } from "./parser.ts";
-import type { ModelParseOutcome, modelParseReasoner } from "./model-parser.ts";
+import { ModelParseFailure, type ModelParseOutcome, type modelParseReasoner } from "./model-parser.ts";
 import { auditLearningEntries } from "./audit-sampling.ts";
 import { writeFieldManual } from "../field-manual.ts";
 import { assertFleetResult, type AuditCandidate, type AuditorResult, type CivicExtractionContract, type FleetInput,
@@ -26,8 +26,6 @@ import { assertFleetResult, type AuditCandidate, type AuditorResult, type CivicE
 
 export const FLEET_IMPLEMENTATION_VERSION = "civic-record-workers/2.0.0";
 export const FLEET_POLICY_VERSION = "worker-fleet/2; R248 R252 R263 R264 R268";
-/** The existing dispatcher bound, also used to avoid planning work that cannot fit. */
-export const WORKER_MAX_WALL_MS = 120_000;
 const NULL_USAGE: WorkerUsage = { inputTokens: null, outputTokens: null, cacheReadInputTokens: null, cacheCreationInputTokens: null, uncachedInputTokens: null };
 
 /** The whole prompt a worker usage describes: uncached remainder plus cache reads and writes. Null when the base count is unmeasured. */
@@ -68,6 +66,7 @@ export interface FleetRuntime {
   readonly modelAuditSample?: (spec: WorkerTaskSpec) => Promise<boolean>;
   /** Exact subjects whose model calls reserve the selected lifetime hunt budget durably. */
   readonly lifetimeHuntSubject?: (subjectId: string) => boolean;
+  readonly rollingCeilingUsd?: number;
   readonly now?: () => string;
   /** The parser's fallback when no parsing rule exists: a model pulls the fields with exact quotes and code confirms each quote is in the saved document (model-parser.ts). */
   readonly parseReasoner?: ReturnType<typeof modelParseReasoner>;
@@ -185,7 +184,7 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
       modelRequested = true;
       parsed = await runtime.parseReasoner!.parse(input as ParserWorkerInput, worker);
     }
-    let result = parsed ? parsed.result : await runIsolatedWorker(role, input, grant, Math.min(bound.maxWallMs, 30_000));
+    let result = parsed ? parsed.result : await runIsolatedWorker(role, input, grant, 0);
     if (result.role === "ADVERSARIAL_AUDITOR" && model && model.review.verdict !== "SURVIVED" && result.verdict !== "BROKE") {
       result = { ...result, verdict: "INCONCLUSIVE", survivingRecordIds: [], survivingRecordCount: 0, findings: [...result.findings,
         { code: "AUDIT_MODEL_HYPOTHESIS_REQUIRES_MACHINE_EVIDENCE", detail: "The independent model review left an unresolved challenge; its assertions do not certify civic facts.", severity: "BLOCKING" }] } satisfies AuditorResult;
@@ -205,7 +204,7 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
      * provider bills it. The worker usage keeps `inputTokens` as the uncached
      * remainder, which is what its own `uncachedInputTokens` restates.
      */
-    const cost = { ...ZERO_COST, durationMs, inputTokens: wholePrompt(usage), outputTokens: usage.outputTokens, usd: model?.usd ?? parsed?.usd ?? null, requestCount: model || parsed ? 1 : 0, ...(model?.metering ?? parsed?.metering ?? {}) };
+    const cost = { ...ZERO_COST, durationMs, inputTokens: wholePrompt(usage), outputTokens: usage.outputTokens, usd: model?.usd ?? parsed?.usd ?? null, requestCount: parsed?.review.byModel?.reduce((n,s)=>n+s.requestCount,0) ?? (model || parsed ? 1 : 0), ...(model?.metering ?? parsed?.metering ?? {}) };
     const workerResult: UncommittedWorkerResult = { id: `wr-${fingerprint([attemptId])}`, schemaVersion: 1,
       workItemId, routeTaskId, attemptId, worker, grant, methodVersion: attempt.methodVersion, policyVersion: attempt.policyVersion,
       startedAt: attempt.startedAt, endedAt: now(), executionMode: assisted ? "MODEL_ASSISTED" : "DETERMINISTIC", cost, usage,
@@ -221,15 +220,19 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
       ...(model ? { modelReview: model.review } : {}),
       ...(parsed ? { modelParse: parsed.review } : {}),
     };
-    return { kind: "RESULT_RECORDED", ranAs: lane, workerResult, cost, detail: `${role} ${result.verdict}; ${workerResult.id}; promotion authority absent` };
+    return { kind: "RESULT_RECORDED", ranAs: lane, workerResult, cost, ...(parsed?.review.byModel ? { costByModel: parsed.review.byModel } : {}), detail: `${role} ${result.verdict}; ${workerResult.id}; promotion authority absent` };
     } catch (error) {
       const detail = error instanceof Error ? error.message : "WORKER_EXECUTION_FAILED";
       const denied = detail.startsWith("DENIED_BY_POLICY") || (error instanceof Error && error.name === "NetworkAccessDenied");
-      const usage = model?.usage ?? parsed?.usage ?? NULL_USAGE;
+      const partial = error instanceof ModelParseFailure ? error.accounting : null;
+      const usage = partial?.usage ?? model?.usage ?? parsed?.usage ?? NULL_USAGE;
       return { kind: "ABORTED", ranAs: lane, endedAt: now(), detail,
+        ...(partial ? { costByModel: partial.byModel } : {}),
         failureOutcome: denied ? "DENIED_BY_POLICY" : detail.includes("BOUND_EXCEEDED") ? "TIMED_OUT" : detail.includes("PROCESS_CRASHED") ? "CRASHED" : "ABORTED",
         cost: { ...ZERO_COST, durationMs: Math.round(performance.now() - started), inputTokens: wholePrompt(usage), outputTokens: usage.outputTokens,
-          usd: model?.usd ?? parsed?.usd ?? null, requestCount: modelRequested && !denied ? 1 : 0, ...(model?.metering ?? parsed?.metering ?? {}) } };
+          usd: partial ? partial.usd : model?.usd ?? parsed?.usd ?? null,
+          requestCount: partial ? partial.byModel.reduce((sum, share) => sum + share.requestCount, 0) : modelRequested && !denied ? 1 : 0,
+          ...(partial?.metering ?? model?.metering ?? parsed?.metering ?? {}) } };
     }
   } };
 }
@@ -246,12 +249,6 @@ export async function dispatchWorkerTask(runtime: FleetRuntime, task: RouteTask)
   }
   const modelAudit = task.workerTask?.role === "ADVERSARIAL_AUDITOR" && runtime.auditReasoner !== undefined
     ? (runtime.modelAuditSample ? await runtime.modelAuditSample(task.workerTask) : true) : false;
-  // Scout and model-assisted audit share the same durable spend ledger. Hold
-  // admission through completion so concurrent calls cannot spend one allowance.
-  if ((modelAudit || (task.workerTask && usesModelParse(runtime, task.workerTask))) &&
-      task.workerTask && !runtime.lifetimeHuntSubject?.(task.workerTask.contract.subjectId)) {
-    return runtime.repos.locks.withLock("autonomous-model-admission", () => dispatchAdmittedWorkerTask(runtime, task, modelAudit));
-  }
   return dispatchAdmittedWorkerTask(runtime, task, modelAudit);
 }
 
@@ -270,7 +267,7 @@ async function dispatchAdmittedWorkerTask(runtime: FleetRuntime, task: RouteTask
   const proof = proofChargeOf((await runtime.repos.workItems.read(task.workItemId).catch(() => null))?.value.project);
   return dispatchOne(runtime.repos, { obligation, routeTaskId: task.id, holder, now, leaseTtlMs: 300_000,
     clock: runtime.now ?? (()=>new Date().toISOString()),
-    bound: { maxAttempts: 3, maxWallMs: WORKER_MAX_WALL_MS, maxCostUnits: 20_000 }, maturity: () => executor.lane === "DETERMINISTIC" ? "GRADUATED" : "UNGRADUATED",
+    bound: { maxAttempts: 3, maxWallMs: 0, maxCostUnits: 20_000 }, maturity: () => executor.lane === "DETERMINISTIC" ? "GRADUATED" : "UNGRADUATED",
     executor, methodVersion: runtime.methodVersion, policyVersion: FLEET_POLICY_VERSION, ...proof });
 }
 
@@ -285,7 +282,7 @@ export async function reauthorizeWorkerTask(runtime: FleetRuntime, task: RouteTa
   if (denial.reason.includes("AUDIT_ROLLING_COST_CEILING")) {
     const spend = researchSpendInWindow(await runtime.repos.costs.readAll(), now);
     if (runtime.lifetimeHuntSubject?.(task.workerTask.contract.subjectId)) reason = "The selected lifetime hunt uses its durable reservation ledger; current policy will be checked again.";
-    else if (ceilingPermits(spend.windowUsd, RESEARCH_BOUNDS.dailyCeilingUsd).permits) reason = "The existing rolling-cost window now permits admission; no ceiling or grant was changed.";
+    else if (ceilingPermits(spend.windowUsd, (runtime.rollingCeilingUsd ?? 0)).permits) reason = "The existing rolling-cost window now permits admission; no ceiling or grant was changed.";
   }
   if (!reason) return null;
   const { policyDenial: _denial, ...rest } = task;
@@ -295,7 +292,7 @@ export async function reauthorizeWorkerTask(runtime: FleetRuntime, task: RouteTa
 
 export async function drainWorkerQueue(
   runtime: FleetRuntime,
-  maximum = 3,
+  maximum = Infinity,
   accepts: (task: RouteTask) => boolean = () => true,
   admitDispatch: (task: RouteTask) => { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string } = () => ({ admit: true }),
 ): Promise<readonly DispatchResult[]> {

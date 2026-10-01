@@ -4,10 +4,12 @@ import type { BoundedChildCommand, BoundedChildResult } from "../lib/civic-data/
 /** Standing work ends when its child settles, with no cycle wall or serial launch pool. */
 export async function runRuntimeChildren(
   commands: readonly BoundedChildCommand[],
-  options: { readonly cwd: string; readonly env: NodeJS.ProcessEnv; readonly maxBufferBytes: number },
+  options: { readonly cwd: string; readonly env: NodeJS.ProcessEnv; readonly maxBufferBytes: number;
+    readonly onStdout?: (id: string, output: string) => void;
+    readonly onStderr?: (id: string, output: string) => void },
 ): Promise<readonly BoundedChildResult[]> {
   return Promise.all(commands.map(command => new Promise<BoundedChildResult>(resolve => {
-    execFile(command.executable, [...command.args], {
+    const child = execFile(command.executable, [...command.args], {
       cwd: options.cwd,
       env: command.env ?? options.env,
       encoding: "utf8",
@@ -21,5 +23,7 @@ export async function runRuntimeChildren(
           : code === "ERR_CHILD_PROCESS_STDIO_MAXBUFFER" ? "OUTPUT_LIMIT_EXCEEDED" : "SPAWN_FAILED",
         errorMessage: error?.message ?? null });
     });
+    child.stdout?.on("data", output => options.onStdout?.(command.id, String(output)));
+    child.stderr?.on("data", output => options.onStderr?.(command.id, String(output)));
   })));
 }

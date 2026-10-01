@@ -10,9 +10,8 @@
  * against the canonical validators; the record lands in
  * `cp_method_candidates/live` as VALIDATED or REJECTED with the exact issues
  * in the canonical control-plane aggregate. **Nothing here calls
- * `markAdmitted` or `writeMethodStore`.**
- * Admission is graduation, and graduation is a session's act under the
- * existing method:learn path with independent repetition — the Scout may
+ * `markAdmitted`.** Admission is graduation: a session's act, which writes the
+ * whole route record into the field manual as a `ROUTE` entry. The Scout may
  * never promote its own proposal.
  *
  * Only a candidate whose URL the Attempt actually OPENED (an artifact with
@@ -32,7 +31,6 @@
  * pre-ruling shape and is not proposed.
  */
 
-import { join } from "node:path";
 
 import {
   candidateCounts,
@@ -40,19 +38,18 @@ import {
   markRejected,
   markValidated,
   proposeCandidate,
-  readMethodStore,
   type CandidateStore,
   type CandidateLifecycle,
   type MethodCandidate,
 } from "../../method/candidate.ts";
 import { ConcurrentModification, IdentityCollision, type ControlPlaneRepositories } from "../repository/types.ts";
 import { learnBatch, type LearnedRoute } from "../../method/learn-batch.ts";
+import { readMethodKnowledge } from "../../method/manual-bridge.ts";
 import type { WorkArtifact } from "./dispatch.ts";
 import type { ScoutCandidate, ScoutResult } from "./scout-result.ts";
 
 /** One authoritative lifecycle aggregate in the standing production plane. */
 export const METHOD_CANDIDATE_STORE_ID = "live" as const;
-export const METHOD_STORE = ["data", "method", "knowledge.json"] as const;
 
 export interface ProposedCandidate {
   readonly routeId: string;
@@ -145,13 +142,11 @@ function modelClaimsOf(c: ScoutCandidate): MethodCandidate["modelClaims"] {
  */
 export async function proposeScoutCandidates(input: {
   readonly repos: ControlPlaneRepositories;
-  readonly root: string;
   readonly result: ScoutResult;
   readonly artifacts: readonly WorkArtifact[];
   readonly stamp: string;
 }): Promise<ProposalReport> {
-  const methodPath = join(input.root, ...METHOD_STORE);
-  const knowledge = readMethodStore(methodPath);
+  const knowledge = await readMethodKnowledge(input.repos);
   for (let attempt = 0; attempt < 4; attempt += 1) {
     const current = await input.repos.methodCandidates.read(METHOD_CANDIDATE_STORE_ID);
     if (current === null) {

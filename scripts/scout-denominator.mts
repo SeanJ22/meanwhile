@@ -48,7 +48,8 @@ import { OWNER_DISPATCH } from "../lib/control-plane/scheduler/obligation.ts";
 import { scheduleObligation, isScheduled } from "../lib/control-plane/scheduler/obligation.ts";
 import { retryable } from "../lib/control-plane/scheduler/debt.ts";
 import { loadDebts, type StandingObligation } from "../lib/control-plane/scheduler/durable.ts";
-import { knownRouteIds } from "../lib/control-plane/scheduler/maturity.ts";
+import { readFieldManual } from "../lib/control-plane/field-manual.ts";
+import { learnedRouteIds } from "../lib/method/manual-bridge.ts";
 import { EXECUTOR_KINDS, type ExecutorKind } from "../lib/control-plane/scheduler/dispatch.ts";
 import {
   RESEARCH_INTENT_LOG_KEY,
@@ -505,7 +506,7 @@ for (const [id, cell] of Object.entries(byProvider)) {
 
 /* ------------------------------------------------------- routeId × class --- */
 
-const known = knownRouteIds(ROOT);
+const known = learnedRouteIds((await readFieldManual(repos)).store);
 const byRouteId = sortedRecord(
   [...new Set(readings.map((r) => r.routeId))].map((routeId) => {
     const rows = readings.filter((r) => r.routeId === routeId);

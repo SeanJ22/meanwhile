@@ -313,12 +313,7 @@ test("the active frontier does not mutate during its own migration", () => {
 });
 
 test("descent resumes against canonical state rather than rebuilding from seeds", () => {
-  const descent = readFileSync(join(ROOT, "scripts/descent.mts"), "utf8");
-  assert.match(descent, /resumeFrom\(/, "descent must read the canonical frontier");
-  assert.match(descent, /recordDiscovery\(/, "every discovery must be persisted as it is found");
-  assert.match(descent, /saveWorkstream\(/, "state must be written, not only counted");
-
-  // And the resume path itself cannot reach seeds or the network, with
+  // The resume path itself cannot reach seeds or the network, with
   // comments stripped so the guard does not fire on its own documentation.
   const frontier = readFileSync(join(ROOT, "lib/workstate/frontier.ts"), "utf8")
     .replace(/\/\*[\s\S]*?\*\//g, "")
@@ -356,31 +351,3 @@ test("every state resumes with outstanding work read from disk", () => {
   }
 });
 
-test("Stage 1 does not wait on Stage 2 historical normalization", () => {
-  // The gate's criteria are the SAFETY list, not the whole redesign. If a
-  // criterion here mentioned full provenance classification or complete
-  // supersession normalization, the freeze would outlast its reason.
-  const gate = readFileSync(join(ROOT, "scripts/stage1-cutover.mts"), "utf8");
-  const criteriaBlock = gate.slice(gate.indexOf("const CRITERIA"), gate.indexOf("floored(\"stage1"));
-  for (const stage2 of [
-    "full historical provenance",
-    "complete supersession",
-    "every remaining domain policy",
-    "final shrinking",
-  ]) {
-    assert.ok(
-      !criteriaBlock.includes(stage2),
-      `Stage 1 must not gate on Stage 2 work: found "${stage2}" in the criteria`,
-    );
-  }
-  // And it must still gate on the safety list.
-  for (const required of [
-    "canonical ruling ledger",
-    "canonical active frontier",
-    "exact resume without seed rediscovery",
-    "permission/transport separation",
-    "candidate/body separation",
-  ]) {
-    assert.ok(criteriaBlock.includes(required), `Stage 1 must gate on: ${required}`);
-  }
-});

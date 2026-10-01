@@ -9,8 +9,7 @@ import { hostSpacer } from "../scheduler/http-executor.ts";
 import { VAULT_DIR } from "../scheduler/vault.ts";
 import { methodFields, standingFleetRuntime } from "./standing.ts";
 import { computeRouteFloor } from "../preflight.ts";
-import { readMethodStore } from "../../method/candidate.ts";
-import { readMethodVersion } from "../../method/manual-bridge.ts";
+import { readMethodKnowledge } from "../../method/manual-bridge.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { proposeScoutCandidates } from "../scheduler/scout-candidates.ts";
 import { emptyFieldManual, type FieldManualStore } from "../field-manual.ts";
@@ -61,13 +60,13 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const [prior, priorWorkers] = await Promise.all([
     input.repos.scoutResults.readAll(), readCompletedWorkerResults(input.repos),
   ]);
-  const knowledge=readMethodStore(join(input.root,"data","method","knowledge.json"));
+  const knowledge=await readMethodKnowledge(input.repos);
   for (const row of await input.repos.workItems.list()) {
     const plan = row.value.autonomousPlan;
     if (plan?.contract.schemaVersion !== 2 || plan.contract.methodVersion !== 0 ||
       plan.contract.extraction.format !== "UNSUPPORTED" || plan.contract.sourceScope.observationArtifactIds.length) continue;
     await input.repos.workItems.compareAndSet(row.id, row.revision, { ...row.value,
-      autonomousPlan: { ...plan, contract: { ...plan.contract, methodVersion: (await readMethodVersion(input.repos)) ?? knowledge.version } } }, now());
+      autonomousPlan: { ...plan, contract: { ...plan.contract, methodVersion: knowledge.version } } }, now());
   }
   const fmRead = await input.repos.fieldManual.read("live").catch(() => null);
   let fieldManual: FieldManualStore = fmRead?.value ?? emptyFieldManual();
@@ -75,7 +74,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const inheritedFieldManualCounts = new Map<string, number>();
   const inheritedManualStores = new Map<string, FieldManualStore>();
   const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly availableIds: readonly string[]; readonly lines: readonly string[] }>();
-  const heldRuntime = standingFleetRuntime({...input,siblingHeldRootFor: held=>siblingHeldRootFor(held)});
+  const heldRuntime = standingFleetRuntime({...input,method:knowledge,siblingHeldRootFor: held=>siblingHeldRootFor(held)});
   const readRepairCapture = researchVaultResolver(input.repos, tools.store, "freshness");
   const installed = promotedRegistries();
   const registeredPublisherAddressFor = (subjectId:string):string|null => {
@@ -184,7 +183,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
       },onResult:async (result,artifacts)=>{
         let recorded=result;
         try {
-          const proposal=await proposeScoutCandidates({repos:input.repos,root:input.root,result,artifacts,stamp:result.recordedAt.slice(0,10)});
+          const proposal=await proposeScoutCandidates({repos:input.repos,result,artifacts,stamp:result.recordedAt.slice(0,10)});
           recorded={...result,methodCandidateIds:proposal.proposed.map(p=>p.candidateId),
             unverified:[...result.unverified,...proposal.notProposed.map(p=>`Method candidate ${p.routeId} not admitted: ${p.why}`)]};
         } catch(error) {

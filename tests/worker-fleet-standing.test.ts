@@ -22,6 +22,7 @@ import {
   installOperationalReferenceBundle,
   operationalReferenceBundle,
 } from "../lib/civic-data/operational-references.ts";
+import { methodFixture } from "./method-store-fixture.ts";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 installOperationalReferenceBundle(operationalReferenceBundle({
@@ -34,7 +35,7 @@ const START = "2026-09-03T04:00:00.000Z";
 const API = "https://avondaleaz.api.civicclerk.com/v1/Events";
 const WP = "https://avondaleaz.gov/wp-json/wp/v2/pages?search=Meeting%20Agendas%20and%20Minutes";
 const PORTAL = "https://avondaleaz.portal.civicclerk.com/";
-const METHOD = JSON.parse(readFileSync(path.join(ROOT, "data/method/knowledge.json"), "utf8"));
+const METHOD = methodFixture();
 
 function feed(id: number, wrongDate = false) {
   return JSON.stringify({ "@odata.context": "https://avondaleaz.api.civicclerk.com/v1/$metadata#Events", value: [{
@@ -79,7 +80,7 @@ async function harness(t: TestContext) {
         observation: null, permission: "ALLOWED", transport: "REACHABLE", note: "Synthetic bytes captured locally for a deterministic regression control; no live source call." } });
     return record;
   }
-  const runtime = standingFleetRuntime({ root: ROOT, vaultRoot, repos, now });
+  const runtime = standingFleetRuntime({ root: ROOT, method: METHOD, vaultRoot, repos, now });
   const contextFor = async (artifact: ArtifactRecord) => runtime.independentContext({ artifactId: artifact.artifactId,
     contract: heldEventContract(ROOT, artifact)!, auditScope: "CAPTURED_ARTIFACT", methodVersion: runtime.methodVersion });
   return { repos, item, hold, runtime, contextFor, now };

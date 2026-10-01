@@ -263,7 +263,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Scripts
 
-542 file(s).
+520 file(s).
 
 - `scripts/a001-feedback-backup.mts`
 - `scripts/a001-verify-catalog.mts`
@@ -297,15 +297,9 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/audit-nj-slogan-field.mts`
 - `scripts/audit-officials.mts`
 - `scripts/audit-search-rows.mts`
-- `scripts/autonomous-fleet-advance-proof.mts`
 - `scripts/autonomous-fleet-cutover.mts`
-- `scripts/autonomous-fleet-follow-proof.mts`
-- `scripts/autonomous-fleet-identity-proof.mts`
 - `scripts/autonomous-fleet-inspect.mts`
-- `scripts/autonomous-fleet-proof-output.ts`
-- `scripts/autonomous-fleet-proof.mts`
 - `scripts/autonomous-fleet-readback-proof.mts`
-- `scripts/autonomous-fleet-scout-proof.mts`
 - `scripts/autonomy-evidence.mts`
 - `scripts/az-county-levy.mts`
 - `scripts/b14-coverage.mts`
@@ -390,10 +384,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/derive-candidate-campaign-sites.mts`
 - `scripts/derive-meeting-body-crosswalk.mts`
 - `scripts/derive-meeting-source-wiring.mts`
-- `scripts/descent-fingerprint.mts`
-- `scripts/descent-handoff.mts`
 - `scripts/descent-resume-proof.mts`
-- `scripts/descent.mts`
 - `scripts/dev-server.mjs`
 - `scripts/dev.mjs`
 - `scripts/diagnose-failure.mts`
@@ -439,7 +430,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/geocode.mts`
 - `scripts/git-lite.mjs`
 - `scripts/gop-municipal-shape-0825.mts`
-- `scripts/governance-accept.mts`
 - `scripts/governance-check.mts`
 - `scripts/governance-compile.mts`
 - `scripts/governance-import.mts`
@@ -479,7 +469,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/intake-tripwire.mts`
 - `scripts/kelly-scoreboard.mts`
 - `scripts/ladder-fetch.mts`
-- `scripts/ladder-monotonicity.mts`
 - `scripts/lane-c-readback.mts`
 - `scripts/law-votes-resolver.mts`
 - `scripts/legistar-insite-minutes-ingest.mts`
@@ -493,7 +482,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/lib/verifier-attestation.ts`
 - `scripts/load-env-local.mjs`
 - `scripts/main-green.mjs`
-- `scripts/manifest-walk.mts`
 - `scripts/maptiler-usage.mts`
 - `scripts/measure-ballot-scroll.mts`
 - `scripts/measure-battlecards-0823.mts`
@@ -510,11 +498,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/merge-engineer-adapters.mjs`
 - `scripts/method-candidate.mts`
 - `scripts/method-check.mts`
-- `scripts/method-ingest.mts`
-- `scripts/method-promote-portability.mts`
-- `scripts/method-prove.mts`
-- `scripts/method/amend-claim-classes-pima.mts`
-- `scripts/method/type-applicability.mts`
 - `scripts/migrate-hunt-state.mts`
 - `scripts/mine-campaign-sites.mts`
 - `scripts/mine-wiki-leaders.mts`
@@ -579,7 +562,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/pilot-runtime-transfer.mts`
 - `scripts/pilot-task.ps1`
 - `scripts/pima-rollcall-walk.mts`
-- `scripts/pima-shadow-report.mts`
 - `scripts/pipeline-map.mts`
 - `scripts/png.mts`
 - `scripts/popup-states.mts`
@@ -625,7 +607,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/reader-suite.mts`
 - `scripts/reader-trace-check.mts`
 - `scripts/readiness-refresh.mts`
-- `scripts/recover-redirected-directory.mts`
 - `scripts/reference-verify.mts`
 - `scripts/refresh-schedule-probe.mts`
 - `scripts/register-test-loader.mjs`
@@ -664,7 +645,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/session-workspace.mjs`
 - `scripts/settle-gate.mts`
 - `scripts/shading-check.mts`
-- `scripts/shadow-run.mts`
 - `scripts/ship-pr-checks.mjs`
 - `scripts/shipping-amplification.mts`
 - `scripts/shoot-0816.mts`
@@ -697,7 +677,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/sources-freshness.mts`
 - `scripts/split-congressional.mts`
 - `scripts/stage-own03-portraits.mts`
-- `scripts/stage1-cutover.mts`
 - `scripts/staging-isolation-gate.mts`
 - `scripts/staging-observer.mts`
 - `scripts/stale-roster-sweep.mts`
@@ -796,7 +775,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/wiki-municipality.mts`
 - `scripts/window-readback.mts`
 - `scripts/wiring-shots.mts`
-- `scripts/worker-fleet-proof.mts`
 - `scripts/workstream-close.mts`
 - `scripts/workstream-migrate.mts`
 - `scripts/workstream-status.mts`
@@ -818,7 +796,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-959 file(s).
+955 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -1369,13 +1347,9 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/method-candidates.test.ts`
 - `tests/method-claims.test.ts`
 - `tests/method-conclusions.test.ts`
-- `tests/method-concurrency.test.ts`
 - `tests/method-effort.test.ts`
-- `tests/method-ingest-guard.test.ts`
 - `tests/method-knowledge.test.ts`
-- `tests/method-observation.test.ts`
 - `tests/method-projection.test.ts`
-- `tests/method-typed-applicability.test.ts`
 - `tests/migration-catalog-verifier.test.ts`
 - `tests/migration-immutability.test.ts`
 - `tests/migration-shipping-invariant.test.ts`
@@ -1782,7 +1756,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7085 file(s).
+7054 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -3733,7 +3707,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `data/method/README.md`
 - `data/method/candidates.json`
 - `data/method/conclusions.json`
-- `data/method/knowledge.json`
 - `data/ops/admin-login-readback.json`
 - `data/ops/deploy-record-read.json`
 - `data/ops/evidence-locations.json`
@@ -5655,21 +5628,15 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/meetings/venue-cache.ts`
 - `lib/meetings/venue-record-identity.ts`
 - `lib/meetings/venues.ts`
-- `lib/method/amend.ts`
 - `lib/method/candidate.ts`
 - `lib/method/claims.ts`
 - `lib/method/conclusions.ts`
 - `lib/method/knowledge.ts`
 - `lib/method/learn-batch.ts`
 - `lib/method/manual-bridge.ts`
-- `lib/method/observe.ts`
-- `lib/method/pima-claim-classes.ts`
 - `lib/method/portability.ts`
 - `lib/method/projection.ts`
-- `lib/method/promote-portability.ts`
 - `lib/method/research-docs.ts`
-- `lib/method/retired-writers.ts`
-- `lib/method/type-applicability.ts`
 - `lib/models.ts`
 - `lib/ocd/curated.ts`
 - `lib/ocd/district-tiers.ts`
@@ -7132,15 +7099,9 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/audit-nj-slogan-field.mts`
 - `scripts/audit-officials.mts`
 - `scripts/audit-search-rows.mts`
-- `scripts/autonomous-fleet-advance-proof.mts`
 - `scripts/autonomous-fleet-cutover.mts`
-- `scripts/autonomous-fleet-follow-proof.mts`
-- `scripts/autonomous-fleet-identity-proof.mts`
 - `scripts/autonomous-fleet-inspect.mts`
-- `scripts/autonomous-fleet-proof-output.ts`
-- `scripts/autonomous-fleet-proof.mts`
 - `scripts/autonomous-fleet-readback-proof.mts`
-- `scripts/autonomous-fleet-scout-proof.mts`
 - `scripts/autonomy-evidence.mts`
 - `scripts/az-county-levy.mts`
 - `scripts/b14-coverage.mts`
@@ -7225,10 +7186,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/derive-candidate-campaign-sites.mts`
 - `scripts/derive-meeting-body-crosswalk.mts`
 - `scripts/derive-meeting-source-wiring.mts`
-- `scripts/descent-fingerprint.mts`
-- `scripts/descent-handoff.mts`
 - `scripts/descent-resume-proof.mts`
-- `scripts/descent.mts`
 - `scripts/dev-server.mjs`
 - `scripts/dev.mjs`
 - `scripts/diagnose-failure.mts`
@@ -7274,7 +7232,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/geocode.mts`
 - `scripts/git-lite.mjs`
 - `scripts/gop-municipal-shape-0825.mts`
-- `scripts/governance-accept.mts`
 - `scripts/governance-check.mts`
 - `scripts/governance-compile.mts`
 - `scripts/governance-import.mts`
@@ -7314,7 +7271,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/intake-tripwire.mts`
 - `scripts/kelly-scoreboard.mts`
 - `scripts/ladder-fetch.mts`
-- `scripts/ladder-monotonicity.mts`
 - `scripts/lane-c-readback.mts`
 - `scripts/law-votes-resolver.mts`
 - `scripts/legistar-insite-minutes-ingest.mts`
@@ -7328,7 +7284,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/lib/verifier-attestation.ts`
 - `scripts/load-env-local.mjs`
 - `scripts/main-green.mjs`
-- `scripts/manifest-walk.mts`
 - `scripts/maptiler-usage.mts`
 - `scripts/measure-ballot-scroll.mts`
 - `scripts/measure-battlecards-0823.mts`
@@ -7345,11 +7300,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/merge-engineer-adapters.mjs`
 - `scripts/method-candidate.mts`
 - `scripts/method-check.mts`
-- `scripts/method-ingest.mts`
-- `scripts/method-promote-portability.mts`
-- `scripts/method-prove.mts`
-- `scripts/method/amend-claim-classes-pima.mts`
-- `scripts/method/type-applicability.mts`
 - `scripts/migrate-hunt-state.mts`
 - `scripts/mine-campaign-sites.mts`
 - `scripts/mine-wiki-leaders.mts`
@@ -7414,7 +7364,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/pilot-runtime-transfer.mts`
 - `scripts/pilot-task.ps1`
 - `scripts/pima-rollcall-walk.mts`
-- `scripts/pima-shadow-report.mts`
 - `scripts/pipeline-map.mts`
 - `scripts/png.mts`
 - `scripts/popup-states.mts`
@@ -7460,7 +7409,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/reader-suite.mts`
 - `scripts/reader-trace-check.mts`
 - `scripts/readiness-refresh.mts`
-- `scripts/recover-redirected-directory.mts`
 - `scripts/reference-verify.mts`
 - `scripts/refresh-schedule-probe.mts`
 - `scripts/register-test-loader.mjs`
@@ -7499,7 +7447,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/session-workspace.mjs`
 - `scripts/settle-gate.mts`
 - `scripts/shading-check.mts`
-- `scripts/shadow-run.mts`
 - `scripts/ship-pr-checks.mjs`
 - `scripts/shipping-amplification.mts`
 - `scripts/shoot-0816.mts`
@@ -7532,7 +7479,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/sources-freshness.mts`
 - `scripts/split-congressional.mts`
 - `scripts/stage-own03-portraits.mts`
-- `scripts/stage1-cutover.mts`
 - `scripts/staging-isolation-gate.mts`
 - `scripts/staging-observer.mts`
 - `scripts/stale-roster-sweep.mts`
@@ -7631,7 +7577,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/wiki-municipality.mts`
 - `scripts/window-readback.mts`
 - `scripts/wiring-shots.mts`
-- `scripts/worker-fleet-proof.mts`
 - `scripts/workstream-close.mts`
 - `scripts/workstream-migrate.mts`
 - `scripts/workstream-status.mts`
@@ -8190,6 +8135,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/fixtures/legistar/pima-votes-329182.json`
 - `tests/fixtures/maptiler-timeline-api-keys.json`
 - `tests/fixtures/maptiler-timeline-services.json`
+- `tests/fixtures/method-knowledge.json`
 - `tests/fixtures/newbury-selectboard-held-2026-09-24.json` <!-- expected-future: date copied from a file path; no measurement date is claimed -->
 - `tests/fixtures/nh-cfs/filer-search-2026.json`
 - `tests/fixtures/nj-filing/morris-clerk-2026-general-candidates-082126.txt`
@@ -8451,14 +8397,11 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/method-candidates.test.ts`
 - `tests/method-claims.test.ts`
 - `tests/method-conclusions.test.ts`
-- `tests/method-concurrency.test.ts`
 - `tests/method-effort.test.ts`
 - `tests/method-fixtures.ts`
-- `tests/method-ingest-guard.test.ts`
 - `tests/method-knowledge.test.ts`
-- `tests/method-observation.test.ts`
 - `tests/method-projection.test.ts`
-- `tests/method-typed-applicability.test.ts`
+- `tests/method-store-fixture.ts`
 - `tests/migration-catalog-verifier.test.ts`
 - `tests/migration-immutability.test.ts`
 - `tests/migration-shipping-invariant.test.ts`

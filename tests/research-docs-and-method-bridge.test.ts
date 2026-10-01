@@ -4,8 +4,8 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { emptyFieldManual, fieldManualEntryId, upsertEntries } from "../lib/control-plane/field-manual.ts";
-import { readMethodStore } from "../lib/method/candidate.ts";
-import { KNOWLEDGE_SOURCE, knowledgeEntries, learnedRouteIds } from "../lib/method/manual-bridge.ts";
+import { KNOWLEDGE_SOURCE, learnedRouteIds } from "../lib/method/manual-bridge.ts";
+import { knowledgeEntries, methodFixture, methodVersionEntry } from "./method-store-fixture.ts";
 import { reassembleResearchDoc, researchDocEntries, sectionEntryId, splitMarkdownDocument } from "../lib/method/research-docs.ts";
 
 const ROOT = process.cwd();
@@ -63,8 +63,8 @@ test("the document entries that used to be pointers keep their ids, now carrying
   }
 });
 
-test("folding the method store keeps every route, and routing reads the same routes back from the manual", () => {
-  const store = readMethodStore(join(ROOT, "data", "method", "knowledge.json"));
+test("the fixture folds into the manual with every route kept whole, and routing reads the same routes back", () => {
+  const store = methodFixture();
   const entries = knowledgeEntries(store);
   assert.equal(entries.length, store.routes.length);
   assert.ok(entries.every((e) => e.source === KNOWLEDGE_SOURCE && e.id === fieldManualEntryId(KNOWLEDGE_SOURCE, (e.payload as { id: string }).id)));
@@ -73,7 +73,7 @@ test("folding the method store keeps every route, and routing reads the same rou
 });
 
 test("a route an agent writes as a ROUTE entry is learned on the next read, with no human step", () => {
-  const store = readMethodStore(join(ROOT, "data", "method", "knowledge.json"));
+  const store = methodFixture();
   let manual = upsertEntries(emptyFieldManual(), knowledgeEntries(store), "2026-09-29");
   assert.equal(learnedRouteIds(manual).has("agent-found-route"), false);
   manual = upsertEntries(manual, [{
@@ -85,10 +85,10 @@ test("a route an agent writes as a ROUTE entry is learned on the next read, with
 });
 
 test("the method version lives in the manual: the frozen store's number, plus one per route an agent learns, never double counted", async () => {
-  const { methodVersionEntry, methodVersionFromManual, readMethodVersion } = await import("../lib/method/manual-bridge.ts");
+  const { methodVersionFromManual, readMethodVersion } = await import("../lib/method/manual-bridge.ts");
   const { createMemoryRepositories } = await import("../lib/control-plane/repository/memory.ts");
   const { writeFieldManual } = await import("../lib/control-plane/field-manual.ts");
-  const store = readMethodStore(join(ROOT, "data", "method", "knowledge.json"));
+  const store = methodFixture();
   const agentRoute = (id: string, source = "agent") => ({
     id: fieldManualEntryId(source, id), role: "SCOUT" as const, kind: "ROUTE", title: id, summary: "x", states: [], recordClasses: [], platforms: [],
     outcome: "YIELDED" as const, url: null, source, observedAt: "2026-09-30", tier: null, payload: { routeId: id } });
@@ -110,6 +110,30 @@ test("the method version lives in the manual: the frozen store's number, plus on
   assert.equal(await readMethodVersion(repos), store.version + 1, "read back through the live aggregate");
 });
 
+test("the method knowledge the floor reads comes from the manual: every folded route whole, plus whole route records an agent wrote, never a bare pointer", async () => {
+  const { methodKnowledgeFromManual, readMethodKnowledge } = await import("../lib/method/manual-bridge.ts");
+  const { createMemoryRepositories } = await import("../lib/control-plane/repository/memory.ts");
+  const { writeFieldManual } = await import("../lib/control-plane/field-manual.ts");
+  const store = methodFixture();
+  const seeded = [...knowledgeEntries(store), methodVersionEntry(store)];
+  const entry = (id: string, payload: unknown) => ({ id: fieldManualEntryId("agent", id), role: "SCOUT" as const, kind: "ROUTE", title: id, summary: "x", states: [], recordClasses: [],
+    platforms: [], outcome: "YIELDED" as const, url: null, source: "agent", observedAt: "2026-09-30", tier: null, payload });
+  const whole = { ...store.routes[0]!, id: "agent-whole-route", title: "whole" };
+
+  assert.equal(methodKnowledgeFromManual(emptyFieldManual()), null);
+  const manual = upsertEntries(emptyFieldManual(), [...seeded, entry("agent-whole-route", whole), entry("agent-pointer", { routeId: "agent-pointer" })], "2026-09-30");
+  const knowledge = methodKnowledgeFromManual(manual)!;
+  assert.deepEqual(knowledge.routes.slice(0, store.routes.length), store.routes, "the frozen routes come back exactly as they were stored");
+  assert.ok(knowledge.routes.some((r) => r.id === "agent-whole-route"));
+  assert.ok(!knowledge.routes.some((r) => r.id === "agent-pointer"), "a pointer is not a route record");
+  assert.equal(knowledge.version, store.version + 2, "both agent routes count toward the version, only the whole one is a record");
+
+  const repos = createMemoryRepositories();
+  await assert.rejects(readMethodKnowledge(repos), /has not been seeded/);
+  await writeFieldManual(repos, seeded, "2026-09-30");
+  assert.equal((await readMethodKnowledge(repos)).routes.length, store.routes.length);
+});
+
 test("dispatch routes differently after an agent writes a route: UNGRADUATED before, GRADUATED after, no human step", async () => {
   const { methodMaturityFromManual } = await import("../lib/control-plane/scheduler/maturity.ts");
   const { decideExecutor } = await import("../lib/control-plane/scheduler/dispatch.ts");
@@ -117,9 +141,9 @@ test("dispatch routes differently after an agent writes a route: UNGRADUATED bef
   const { newFieldManualEntry, writeFieldManual } = await import("../lib/control-plane/field-manual.ts");
 
   const repos = createMemoryRepositories();
-  await assert.rejects(methodMaturityFromManual(repos), /has not been seeded/);
+  await assert.rejects(methodMaturityFromManual(repos), /holds no learned routes/);
 
-  await writeFieldManual(repos, knowledgeEntries(readMethodStore(join(ROOT, "data", "method", "knowledge.json"))), "2026-09-29");
+  await writeFieldManual(repos, knowledgeEntries(methodFixture()), "2026-09-29");
   const before = await methodMaturityFromManual(repos);
   const descriptor = { executorClass: "BOUNDED_MODEL_WORKER" as const, open: { kind: "HTTP_GET" } };
   assert.equal(decideExecutor({ routeId: "agent-found-route", descriptor, maturity: before }).kind, "BOUNDED_MODEL_WORKER");

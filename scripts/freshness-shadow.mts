@@ -254,7 +254,7 @@ import {
   type ResearchState,
   type RunningScout,
 } from "../lib/control-plane/scheduler/research-policy.ts";
-import { candidateStoreCounts, proposeScoutCandidates, readMethodCandidateStore, METHOD_STORE, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
+import { candidateStoreCounts, proposeScoutCandidates, readMethodCandidateStore, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
 import { emptyFieldManual, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
 import {
   compoundingPair,
@@ -269,8 +269,7 @@ import {
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
 import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
-import { readMethodStore } from "../lib/method/candidate.ts";
-import { readMethodVersion } from "../lib/method/manual-bridge.ts";
+import { readMethodKnowledge } from "../lib/method/manual-bridge.ts";
 import { readConclusionStore } from "../lib/method/conclusions.ts";
 import {
   NO_PIPELINE_RECORDED,
@@ -1387,7 +1386,7 @@ if (!dry && !canary && !scheduledBlackout && !intents.runnerPause.paused) {
   try {
     const retained = await retainRecentRoutineMeetingEvidence({ repos,
       store: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
-      methodVersion: (await readMethodVersion(repos)) ?? readMethodStore(join(ROOT, ...METHOD_STORE)).version, now: nowIso });
+      methodVersion: (await readMethodKnowledge(repos)).version, now: nowIso });
     console.log(`  permanent meeting captures retained for independent workers: ${retained.length}`);
   } catch (error) {
     runtimeConditions.push(`permanent meeting evidence could not enter independent workers: ${error instanceof Error ? error.message : "ROUTINE_MEETING_INTAKE_FAILED"}`);
@@ -2500,7 +2499,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         let amended = result;
         if (result.refusal === null && result.candidates.length > 0) {
           try {
-            const report = await proposeScoutCandidates({ repos, root: ROOT, result, artifacts, stamp: today() });
+            const report = await proposeScoutCandidates({ repos, result, artifacts, stamp: today() });
             candidateReports.push(report);
             canonicalCandidateCounts = report.counts;
             amended = {
@@ -3130,7 +3129,7 @@ if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
         spaceOut: spacer,
         vaultRoot: join(ROOT, ...VAULT_DIR),
         heldVault: vaultIndex,
-        methodVersion: (await readMethodVersion(repos)) ?? readMethodStore(join(ROOT, ...METHOD_STORE)).version,
+        methodVersion: (await readMethodKnowledge(repos)).version,
       });
       return {
         report,
@@ -3177,7 +3176,7 @@ if (dry || canary || ONLY !== null || IDS !== null || intents.runnerPause.paused
     const pass = await runCandidatePublicationCycle({
       repos, eligibleCandidacyIds: lifetimeHuntSubjects,
       heldVault: vaultRead.value, vaultRoot: join(ROOT, ...VAULT_DIR),
-      methodVersion: (await readMethodVersion(repos)) ?? readMethodStore(join(ROOT, ...METHOD_STORE)).version,
+      methodVersion: (await readMethodKnowledge(repos)).version,
       clock: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)), spaceOut: spacer,
       openFor: candidacyId => {
         const opened = fleetSafety.guardedOpenBytes("public-web", candidacyId, fetch, { followRedirects: false });
@@ -3500,7 +3499,7 @@ if (!dry && !canary) {
     researchProgression = await withStoreBudget("research-progression", lateWorkBudgetMs(), async () => readResearchProgression(repos, {
       windowId: researchWindowId, through: finishedAt, gate: readActivationGate(ROOT),
       candidates: (await readMethodCandidateStore(repos)).candidates,
-      knowledge: readMethodStore(join(ROOT,...METHOD_STORE)),
+      knowledge: await readMethodKnowledge(repos),
       conclusions: readConclusionStore(join(ROOT,"data","method","conclusions.json")),
       researchBoundary: {
         since: priorResearchState?.researchProgression?.through ?? priorResearchState?.cycleFinishedAt ?? NOW,

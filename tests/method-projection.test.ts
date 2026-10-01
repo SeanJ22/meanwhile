@@ -23,13 +23,11 @@
  *   d. a CONTRADICTED claim leaves the current projection and stays in history;
  *   e. an UNCLASSIFIED legacy entry is inherited as a ROUTE with a NAMED GAP,
  *      and its prose is never emitted as a substantive assertion;
- *   f. the raw applicability primitive has no consumers outside its own layer;
- *   g. the retired Pima writer cannot re-seed the false conclusion into a fresh
- *      or a legacy-shaped store — proved by running it.
+ *   f. the raw applicability primitive has no consumers outside its own layer.
  */
 
 import assert from "node:assert/strict";
-import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
@@ -49,12 +47,8 @@ import {
   readNonAuthoritativeProse,
   substantiveAssertions,
 } from "../lib/method/projection.ts";
-import { unknownApplicability } from "../lib/method/portability.ts";
-import {
-  SCHEDULE_VS_EVENTS_RETIRED,
-  retiredWriterRefusal,
-} from "../lib/method/retired-writers.ts";
 import { testRoute } from "./method-fixtures.ts";
+import { METHOD_FIXTURE_PATH } from "./method-store-fixture.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ON = "2026-08-28";
@@ -74,7 +68,7 @@ const CURRENT_CONCLUSION = `${UI_VS_API}#pima-september-individually-published`;
 
 function committedStore(): MethodKnowledge {
   return JSON.parse(
-    readFileSync(join(ROOT, "data", "method", "knowledge.json"), "utf8"),
+    readFileSync(METHOD_FIXTURE_PATH, "utf8"),
   ) as MethodKnowledge;
 }
 
@@ -421,50 +415,4 @@ test("the raw applicability primitive has no consumers outside the method layer"
     [],
     "method inheritance is consumed through projectMethodFor(); these read raw routes instead",
   );
-});
-
-/* ------------------------------------------------------------------------ (g) */
-
-/**
- * The three substantive sentences the retired writer used to seed, as patterns.
- * A store that matches any of them has had the corrected conclusion re-created.
- */
-const FALSE_PIMA = [
-  /published as a RULE rather than as events/i,
-  /the gap is THEIRS/i,
-  /complete for the window rather than truncated/i,
-  /only as that recurring rule/i,
-];
-
-test("the retired Pima writer is deleted: it cannot re-seed the false conclusion into a fresh or a legacy-shaped store", () => {
-  // The strongest form of the retirement: the script that seeded the false sentences no longer exists,
-  // and no learn script does. What it taught was folded into the field manual (scripts/field-manual-seed.mts).
-  assert.equal(existsSync(join(ROOT, "scripts", "learn-schedule-vs-events.mts")), false);
-  for (const shape of ["fresh", "legacy"]) {
-    let store = emptyKnowledge();
-    if (shape === "legacy") {
-      // The two route ids present, unclassified, exactly as a pre-claim-classes store held them.
-      for (const id of [SCHEDULE, RECONCILE]) {
-        store = learnRoute(store, { id, title: id, tier: "A0", fields: ["meeting"], applicability: unknownApplicability("a legacy entry that declared no claim class"),
-          outcomes: [], subBranches: [], origin: "a legacy entry that declared no claim class", learnedOn: ON }, ON).knowledge;
-      }
-    }
-    const text = JSON.stringify(store);
-    for (const pattern of FALSE_PIMA) assert.ok(!pattern.test(text), `the ${shape} store must not hold ${pattern}`);
-    const p = projectMethodFor(store, AZ);
-    for (const id of shape === "legacy" ? [SCHEDULE, RECONCILE] : []) {
-      assert.ok(projectionHasRoute(p, id), `${id} survives; the retirement deletes no route knowledge`);
-      assert.equal(p.routes.find((r) => r.identity.id === id)!.namedGap, LEGACY_UNCLASSIFIED_GAP);
-    }
-    assert.deepEqual(substantiveAssertions(p), []);
-  }
-});
-
-test("the retired writer's refusal remains the record of what was false and where the correction lives", () => {
-  const refusal = retiredWriterRefusal(SCHEDULE_VS_EVENTS_RETIRED);
-  assert.match(refusal, /field manual/);
-  assert.match(refusal, /pnpm method:amend-claim-classes-pima/);
-  assert.match(refusal, /lib\/method\/projection\.ts/);
-  assert.ok(SCHEDULE_VS_EVENTS_RETIRED.falseAssertions.length >= 3);
-  assert.ok(SCHEDULE_VS_EVENTS_RETIRED.supersededClaims.includes(`${FALSE_CONCLUSION} (CORRECTED)`));
 });

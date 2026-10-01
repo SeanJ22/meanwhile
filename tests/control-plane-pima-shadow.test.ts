@@ -3,7 +3,6 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-import { loadMethodStore } from "../lib/workstate/load.ts";
 import { FIRST_PARTY_ROUTES } from "../lib/sources/legistar-insite/horizon.ts";
 import {
   PIMA_ADAPTER_ROUTES,
@@ -18,6 +17,7 @@ import { computeRouteFloor, describeFloor, materializeFloor } from "../lib/contr
 import { evaluateCompletion, type CompletionSnapshot } from "../lib/control-plane/completion.ts";
 import { beginAttempt, claim, endAttempt } from "../lib/control-plane/attempt.ts";
 import { disposeRoute, type RouteTask } from "../lib/control-plane/route-task.ts";
+import { methodFixture } from "./method-store-fixture.ts";
 
 /**
  * THE PIMA SHADOW ATTACHMENT.
@@ -41,7 +41,7 @@ const T1 = "2026-08-28T00:10:00.000Z";
 const TTL = 10 * 60 * 1000;
 
 function floorFor() {
-  const knowledge = loadMethodStore(ROOT);
+  const knowledge = methodFixture();
   // A missing store is a FAILED read, never an empty one. Without this the
   // floor would be computed from nothing and every assertion below would pass
   // against a vacuum — the exact shape of a guard that reports clean without

@@ -21,18 +21,12 @@
  * denominator impossible to omit, so this function owns it rather than trusting
  * each caller to remember.
  */
-import { floored, floorLine } from "../ops/denominator-floor.ts";
 import {
-  emptyCandidateStore,
   introducedIssues,
   markAdmitted,
   markRejected,
   markValidated,
   proposeCandidate,
-  readCandidateStore,
-  readMethodStore,
-  writeCandidateStore,
-  writeMethodStore,
   type CandidateStore,
 } from "./candidate.ts";
 import { attachClaims, type MethodClaim } from "./claims.ts";
@@ -330,133 +324,4 @@ export function admitLearnedRoutes(
   }
 
   return { knowledge: batch.knowledge, batch, candidates: cs, admitted: true, introduced: [], refusal: null };
-}
-
-export interface RunLearnBatchOptions {
-  /**
-   * The method version this caller believes the store is at. Defaults to the
-   * version this call itself reads, which is the correct precondition for a
-   * script that reads and writes in one breath.
-   */
-  readonly expectedVersion?: number;
-  /** The Attempt that submitted these routes, when one exists. */
-  readonly attemptId?: string;
-  /** Where to persist the candidate records. Omitted means in-memory only. */
-  readonly candidateStorePath?: string;
-}
-
-export interface RunLearnBatchResult {
-  readonly written: boolean;
-  readonly versionBefore: number;
-  readonly versionAfter: number;
-  readonly learned: number;
-  readonly already: number;
-  readonly offered: number;
-  readonly introduced: readonly MethodIssue[];
-  readonly refusal: string | null;
-  readonly candidates: CandidateStore;
-}
-
-/**
- * The whole of what a `learn-*-routes` script does: read the store, offer the
- * routes, VALIDATE, write it back through the governed path, and report.
- *
- * This exists because the two callers' `main` bodies were byte-identical and
- * extracting only `learnBatch` left them byte-identical again — RULING 103 is
- * satisfied by removing the duplicate, not by shrinking it. A script that
- * conceives routes should now contain nothing but the routes.
- *
- * **It can no longer write an invalid store.** It used to: read, learn,
- * `writeFileSync`, with no gate of any kind, so a route carrying a value off a
- * closed set landed in canonical project knowledge and `pnpm method:check`
- * discovered it afterwards. The refusal is loud, it names every issue, it
- * records a durable REJECTED candidate, and it exits non-zero.
- */
-export function runLearnBatch(
-  storePath: string,
-  routes: readonly LearnedRoute[],
-  stamp: string,
-  options: RunLearnBatchOptions = {},
-): RunLearnBatchResult {
-  const store = readMethodStore(storePath);
-  const candidatesBefore = options.candidateStorePath
-    ? readCandidateStore(options.candidateStorePath)
-    : emptyCandidateStore();
-
-  const a = admitLearnedRoutes(store, candidatesBefore, routes, {
-    stamp,
-    ...(options.attemptId ? { attemptId: options.attemptId } : {}),
-  });
-  const r = a.batch;
-  for (const line of r.log) console.log(line);
-
-  const persistCandidates = (): void => {
-    if (options.candidateStorePath) writeCandidateStore(options.candidateStorePath, a.candidates, stamp);
-  };
-
-  if (!a.admitted) {
-    persistCandidates();
-    console.error(`\n${a.refusal}`);
-    for (const i of a.introduced.slice(0, 20)) console.error(`  ${i.id} ${i.rule}: ${i.detail}`);
-    console.error(
-      `A REJECTED candidate was recorded for each of the ${routes.length} route(s) offered — ` +
-        "a refusal is evidence, not a silence.",
-    );
-    process.exitCode = 1;
-    return {
-      written: false,
-      versionBefore: r.versionBefore,
-      versionAfter: r.versionBefore,
-      learned: 0,
-      already: 0,
-      offered: r.offered,
-      introduced: a.introduced,
-      refusal: a.refusal,
-      candidates: a.candidates,
-    };
-  }
-
-  writeMethodStore(storePath, a.knowledge, {
-    expectedVersion: options.expectedVersion ?? store.version,
-    stamp,
-  });
-  persistCandidates();
-
-  console.log(
-    `\nmethod version ${r.versionBefore} -> ${r.knowledge.version}   ` +
-      `(${r.learned} learned, ${r.already} already known)`,
-  );
-  console.log(
-    `routes known now: ${r.knowledge.routes.length}  — WHAT THE PROJECT KNOWS NOW, never a cap`,
-  );
-  console.log(
-    `  ${floorLine(
-      r.offered > 0
-        ? floored(
-            "routes new to the project",
-            "the routes this session conceived",
-            r.offered,
-            r.learned,
-          )
-        : floored(
-            "routes new to the project",
-            "the routes this session conceived",
-            0,
-            0,
-            "this run offered no routes",
-          ),
-    )}`,
-  );
-
-  return {
-    written: true,
-    versionBefore: r.versionBefore,
-    versionAfter: r.knowledge.version,
-    learned: r.learned,
-    already: r.already,
-    offered: r.offered,
-    introduced: [],
-    refusal: null,
-    candidates: a.candidates,
-  };
 }

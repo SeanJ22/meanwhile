@@ -2,21 +2,16 @@
  * **VALIDATION BEFORE ADMISSION, AND A REFUSAL THAT SURVIVES THE TERMINAL.**
  * (2026-08-29.)
  *
- * `runLearnBatch` was an unconditional canonical writer: read the store, call
- * `learnBatch`, `writeFileSync`. No gate of any kind. A route carrying a value
- * off a closed set reached `data/method/knowledge.json` and the first thing that
- * noticed was `pnpm method:check`, afterwards, if somebody ran it — which is
- * exactly the sequence the `effort` and `outcome` notes in `validateKnowledge`
- * are both written accounts of.
+ * A route carrying a value off a closed set must never be admitted: the
+ * prospective knowledge is validated first, and a refused batch is recorded as
+ * REJECTED candidates with the exact issues. These controls run on the real
+ * route data (the frozen store fixture) in memory, and are written so they can
+ * fail:
  *
- * The controls here are written so they can fail:
- *
- *   a. a BAD candidate cannot change the store — proved against a real copy of
- *      the real canonical store, by BYTES;
- *   b. a VALID candidate can — same copy, same mechanism, bytes change and the
- *      method version increments;
- *   c. the refusal is DURABLE: a REJECTED candidate is persisted with its code
- *      and the exact issues, and survives a reload from disk;
+ *   a. a BAD candidate changes nothing and is refused by name;
+ *   b. a VALID candidate is admitted and the method version increments;
+ *   c. the refusal is DURABLE: a REJECTED candidate keeps its code and the
+ *      exact issues through a serialization round trip;
  *   d. the lifecycle is a lifecycle — a terminal candidate cannot be rewritten;
  *   e. candidate ids are derived, so a replayed submission collides instead of
  *      duplicating;
@@ -24,7 +19,6 @@
  */
 
 import assert from "node:assert/strict";
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
@@ -32,9 +26,9 @@ import test from "node:test";
 import {
   CANDIDATE_LIFECYCLE_STATES,
   CandidateLifecycleRefused,
-  InvalidMethodStoreRefused,
   candidateCounts,
   emptyCandidateStore,
+  introducedIssues,
   markAdmitted,
   markRejected,
   markValidated,
@@ -43,37 +37,14 @@ import {
   proposeCandidate,
   readCandidateStore,
   rejectedCandidates,
-  writeMethodStore,
+  type CandidateStore,
 } from "../lib/method/candidate.ts";
-import {
-  admitLearnedRoutes,
-  runLearnBatch,
-  UNATTRIBUTED_SCRIPT_ATTEMPT,
-  type LearnedRoute,
-} from "../lib/method/learn-batch.ts";
+import { admitLearnedRoutes, UNATTRIBUTED_SCRIPT_ATTEMPT, type LearnedRoute } from "../lib/method/learn-batch.ts";
 import { emptyKnowledge, type MethodKnowledge } from "../lib/method/knowledge.ts";
+import { methodFixture } from "./method-store-fixture.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ON = "2026-08-29";
-const CANONICAL = join(ROOT, "data", "method", "knowledge.json");
-
-/**
- * A copy of the REAL canonical store in a scratch directory.
- *
- * A synthetic three-route store would prove the gate works on a store nobody
- * has. The real one carries 116 routes, four claim classes, two withdrawn
- * assertions and twelve legacy sub-branches with unparseable dates — the shape
- * the gate actually has to hold. The canonical file itself is never written by
- * these tests; only the copy is.
- */
-function copyOfCanonical(name: string): { dir: string; storePath: string; candidatePath: string } {
-  const dir = join(ROOT, ".scratch", `method-candidate-${name}`);
-  rmSync(dir, { recursive: true, force: true });
-  mkdirSync(join(dir, "data", "method"), { recursive: true });
-  const storePath = join(dir, "data", "method", "knowledge.json");
-  writeFileSync(storePath, readFileSync(CANONICAL, "utf8"), "utf8");
-  return { dir, storePath, candidatePath: join(dir, "data", "method", "candidates.json") };
-}
 
 /** A route that VALIDATES: post-v55, so it must declare a claim class, and does. */
 function goodRoute(id: string): LearnedRoute {
@@ -116,139 +87,79 @@ function badRoute(id: string): LearnedRoute {
 
 /* ------------------------------------------------------------------------ (a) */
 
-test("PLANTED: a BAD candidate cannot change data/method/knowledge.json — by bytes", () => {
-  const { dir, storePath, candidatePath } = copyOfCanonical("bad");
-  const before = readFileSync(storePath, "utf8");
-  const beforeStore = JSON.parse(before) as MethodKnowledge;
+test("PLANTED: a BAD candidate changes nothing and is refused by name", () => {
+  const k = methodFixture();
+  const before = JSON.stringify(k);
+  const out = admitLearnedRoutes(k, emptyCandidateStore(), [badRoute("gate-control-bad")], { stamp: ON, attemptId: "at-test-bad" });
 
-  /*
-   * `runLearnBatch` sets `process.exitCode = 1` on a refusal, because its
-   * callers are scripts that ignore the return value and a script that refuses
-   * must exit non-zero. In-process that would make the whole test RUN report
-   * failure, so the exit code is saved and restored around the call — the
-   * refusal itself is asserted on the returned result, not on the exit code.
-   */
-  const exitCodeBefore = process.exitCode;
-  const result = runLearnBatch(storePath, [badRoute("gate-control-bad")], ON, {
-    attemptId: "at-test-bad",
-    candidateStorePath: candidatePath,
-  });
-  assert.equal(process.exitCode, 1, "a refusing script run must exit non-zero");
-  process.exitCode = exitCodeBefore;
-
-  assert.equal(result.written, false, "a batch that would break the store was WRITTEN");
-  assert.ok(result.refusal, "the refusal must say so in words");
-  assert.match(result.refusal, /REFUSED/);
+  assert.equal(out.admitted, false, "a batch that would break the store was ADMITTED");
+  assert.ok(out.refusal);
+  assert.match(out.refusal, /REFUSED/);
   assert.ok(
-    result.introduced.some((i) => i.rule === "outcome-value-off-the-closed-set"),
-    `the exact rule must be named; got ${JSON.stringify(result.introduced)}`,
+    out.introduced.some((i) => i.rule === "outcome-value-off-the-closed-set"),
+    `the exact rule must be named; got ${JSON.stringify(out.introduced)}`,
   );
+  // THE ASSERTION THAT MATTERS. A refusal that still changed the knowledge would be worse than no refusal at all.
+  assert.equal(JSON.stringify(out.knowledge), before, "the knowledge changed during a refusal");
+  assert.ok(!out.knowledge.routes.some((r) => r.id === "gate-control-bad"));
 
-  // THE ASSERTION THAT MATTERS. A refusal that still wrote would be worse than
-  // no refusal at all.
-  assert.equal(readFileSync(storePath, "utf8"), before, "the store changed during a refusal");
-  const after = JSON.parse(readFileSync(storePath, "utf8")) as MethodKnowledge;
-  assert.equal(after.version, beforeStore.version);
-  assert.equal(after.routes.length, beforeStore.routes.length);
-  assert.ok(!after.routes.some((r) => r.id === "gate-control-bad"));
-
-  /* (c) AND THE REFUSAL IS DURABLE — reloaded from disk, not from memory. */
-  const candidates = readCandidateStore(candidatePath);
+  /* (c) AND THE REFUSAL IS DURABLE — through a serialization round trip, not from memory. */
+  const candidates = JSON.parse(JSON.stringify(out.candidates)) as CandidateStore;
   const rejected = rejectedCandidates(candidates);
   assert.equal(rejected.length, 1, "a rejection must be recorded; silence is not a rejection record");
   assert.equal(rejected[0].rejection?.code, "VALIDATION_FAILED");
   assert.equal(rejected[0].attemptId, "at-test-bad");
-  assert.equal(rejected[0].observedMethodVersion, beforeStore.version, "the version OBSERVED is recorded");
+  assert.equal(rejected[0].observedMethodVersion, k.version, "the version OBSERVED is recorded");
   assert.ok(
     rejected[0].rejection?.issues.some((i) => i.rule === "outcome-value-off-the-closed-set"),
     "the rejection retains the exact issues, not a summary of them",
   );
   assert.equal(rejected[0].proposal.id, "gate-control-bad", "the proposal itself is retained");
-
   // The candidate was VALIDATED before it was REJECTED — the validators ran.
   assert.equal(rejected[0].validation?.ok, false);
-  assert.equal(rejected[0].validation?.againstMethodVersion, beforeStore.version);
+  assert.equal(rejected[0].validation?.againstMethodVersion, k.version);
 
-  rmSync(dir, { recursive: true, force: true });
+  // A first batch into an empty store is validated too: being first is not a reason to skip the gate.
+  assert.equal(admitLearnedRoutes(emptyKnowledge(), emptyCandidateStore(), [badRoute("fresh-bad")], { stamp: ON }).admitted, false);
 });
 
 /* ------------------------------------------------------------------------ (b) */
 
-test("a VALID candidate DOES change the store, and the method version increments", () => {
-  const { dir, storePath, candidatePath } = copyOfCanonical("good");
-  const before = readFileSync(storePath, "utf8");
-  const beforeStore = JSON.parse(before) as MethodKnowledge;
+test("a VALID candidate IS admitted, and the method version increments", () => {
+  const k = methodFixture();
+  const out = admitLearnedRoutes(k, emptyCandidateStore(), [goodRoute("gate-control-good")], { stamp: ON, attemptId: "at-test-good" });
 
-  const result = runLearnBatch(storePath, [goodRoute("gate-control-good")], ON, {
-    attemptId: "at-test-good",
-    candidateStorePath: candidatePath,
-  });
+  assert.equal(out.admitted, true, `the valid candidate was refused: ${out.refusal}`);
+  assert.equal(out.batch.learned, 1);
+  assert.equal(out.knowledge.version, k.version + 1, "learning a route increments the method version");
+  assert.equal(out.knowledge.routes.length, k.routes.length + 1);
+  assert.ok(out.knowledge.routes.some((r) => r.id === "gate-control-good"));
+  // The admitted knowledge is VALID — the gate is not a filter that lets its own output through.
+  assert.deepEqual(methodStoreIssues(out.knowledge), methodStoreIssues(k));
 
-  assert.equal(result.written, true, `the valid candidate was refused: ${result.refusal}`);
-  assert.equal(result.learned, 1);
-  assert.notEqual(readFileSync(storePath, "utf8"), before, "the bytes did not change");
-
-  const after = JSON.parse(readFileSync(storePath, "utf8")) as MethodKnowledge;
-  assert.equal(after.version, beforeStore.version + 1, "learning a route increments the method version");
-  assert.equal(after.routes.length, beforeStore.routes.length + 1);
-  assert.ok(after.routes.some((r) => r.id === "gate-control-good"));
-
-  // And the written store is VALID — the gate is not a filter that lets its own
-  // output through.
-  assert.deepEqual(methodStoreIssues(after), methodStoreIssues(beforeStore));
-
-  const candidates = readCandidateStore(candidatePath);
-  assert.equal(candidates.candidates.length, 1);
-  assert.equal(candidates.candidates[0].lifecycle, "ADMITTED");
-  assert.equal(candidates.candidates[0].admission?.effect, "LEARNED");
-  assert.equal(candidates.candidates[0].admission?.methodVersionAfter, after.version);
-  assert.deepEqual(candidateCounts(candidates), {
-    PROPOSED: 0,
-    VALIDATED: 0,
-    ADMITTED: 1,
-    REJECTED: 0,
-  });
-
-  rmSync(dir, { recursive: true, force: true });
+  assert.equal(out.candidates.candidates.length, 1);
+  assert.equal(out.candidates.candidates[0].lifecycle, "ADMITTED");
+  assert.equal(out.candidates.candidates[0].admission?.effect, "LEARNED");
+  assert.equal(out.candidates.candidates[0].admission?.methodVersionAfter, out.knowledge.version);
+  assert.deepEqual(candidateCounts(out.candidates), { PROPOSED: 0, VALIDATED: 0, ADMITTED: 1, REJECTED: 0 });
 });
 
 test("re-offering an admitted route is ALREADY_KNOWN, not a second learning", () => {
-  const { dir, storePath, candidatePath } = copyOfCanonical("rerun");
-  runLearnBatch(storePath, [goodRoute("gate-control-rerun")], ON, {
-    attemptId: "at-run-1",
-    candidateStorePath: candidatePath,
-  });
-  const afterFirst = readFileSync(storePath, "utf8");
-
-  const second = runLearnBatch(storePath, [goodRoute("gate-control-rerun")], ON, {
-    attemptId: "at-run-2",
-    candidateStorePath: candidatePath,
-  });
-  assert.equal(second.written, true);
-  assert.equal(second.learned, 0);
-  assert.equal(second.already, 1);
-
-  const after = JSON.parse(readFileSync(storePath, "utf8")) as MethodKnowledge;
-  const first = JSON.parse(afterFirst) as MethodKnowledge;
-  assert.equal(after.version, first.version, "a re-run must not inflate the method version");
-
-  const candidates = readCandidateStore(candidatePath);
-  assert.equal(candidates.candidates.length, 2, "two Attempts offered it; both are recorded");
-  assert.equal(candidates.candidates[1].admission?.effect, "ALREADY_KNOWN");
-
-  rmSync(dir, { recursive: true, force: true });
+  const first = admitLearnedRoutes(methodFixture(), emptyCandidateStore(), [goodRoute("gate-control-rerun")], { stamp: ON, attemptId: "at-run-1" });
+  const second = admitLearnedRoutes(first.knowledge, first.candidates, [goodRoute("gate-control-rerun")], { stamp: ON, attemptId: "at-run-2" });
+  assert.equal(second.admitted, true);
+  assert.equal(second.batch.learned, 0);
+  assert.equal(second.batch.already, 1);
+  assert.equal(second.knowledge.version, first.knowledge.version, "a re-run must not inflate the method version");
+  assert.equal(second.candidates.candidates.length, 2, "two Attempts offered it; both are recorded");
+  assert.equal(second.candidates.candidates[1].admission?.effect, "ALREADY_KNOWN");
 });
 
 /* ------------------------------------------------------------------- the gate itself */
 
-test("writeMethodStore REFUSES a store that would introduce an issue, and writes nothing", () => {
-  const { dir, storePath } = copyOfCanonical("direct");
-  const before = readFileSync(storePath, "utf8");
-  const k = JSON.parse(before) as MethodKnowledge;
-
-  // Version 56 so the route enters AFTER the claim-class floor: two independent
-  // rules must both fire, because a gate that catches one defect and waves the
-  // next one through is a gate that has been tested against one defect.
+test("a store that would introduce an issue is refused, and two independent rules both fire", () => {
+  const k: MethodKnowledge = methodFixture();
+  // Version +1 so the route enters AFTER the claim-class floor: a gate that catches one defect and waves the next one through has been tested against one defect.
   const broken: MethodKnowledge = {
     ...k,
     version: k.version + 1,
@@ -275,37 +186,9 @@ test("writeMethodStore REFUSES a store that would introduce an issue, and writes
       },
     ],
   };
-
-  assert.throws(
-    () => writeMethodStore(storePath, broken, { expectedVersion: k.version, stamp: ON }),
-    (error: unknown) => {
-      assert.ok(error instanceof InvalidMethodStoreRefused, "the refusal must be a NAMED error class");
-      assert.ok(error.issues.some((i) => i.rule === "over-generalized"));
-      assert.ok(error.issues.some((i) => i.rule === "claim-class-required-for-new-route"));
-      return true;
-    },
-  );
-  assert.equal(readFileSync(storePath, "utf8"), before, "the store changed during a refusal");
-  rmSync(dir, { recursive: true, force: true });
-});
-
-test("a NEW store is validated too — being the first write is not a reason to skip the gate", () => {
-  const dir = join(ROOT, ".scratch", "method-candidate-fresh");
-  rmSync(dir, { recursive: true, force: true });
-  mkdirSync(dir, { recursive: true });
-  const storePath = join(dir, "knowledge.json");
-
-  const seeded = admitLearnedRoutes(emptyKnowledge(), emptyCandidateStore(), [badRoute("fresh-bad")], {
-    stamp: ON,
-  });
-  assert.equal(seeded.admitted, false);
-
-  assert.throws(
-    () => writeMethodStore(storePath, seeded.batch.knowledge, { expectedVersion: null, stamp: ON }),
-    InvalidMethodStoreRefused,
-  );
-  assert.equal(existsSync(storePath), false, "a refused first write must leave no file behind");
-  rmSync(dir, { recursive: true, force: true });
+  const { introduced } = introducedIssues(k, broken);
+  assert.ok(introduced.some((i) => i.rule === "over-generalized"));
+  assert.ok(introduced.some((i) => i.rule === "claim-class-required-for-new-route"));
 });
 
 /* ------------------------------------------------------------------ (d) (e) (f) */

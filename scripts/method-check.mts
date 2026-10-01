@@ -28,12 +28,12 @@ import { projectMethodFor, substantiveAssertions } from "../lib/method/projectio
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 // An explicit path lets the SAME consumer be pointed at a throwaway copy, so a
 // migration can be proved by the instrument a future session will actually read
-// with, rather than by a paraphrase of it. No argument means the canonical store.
-const STORE = process.argv[2] ?? join(ROOT, "data", "method", "knowledge.json");
+// with, rather than by a paraphrase of it. No argument means the frozen store (the live one is the field manual).
+const STORE = process.argv[2] ?? join(ROOT, "tests", "fixtures", "method-knowledge.json");
 const CONCLUSIONS = join(ROOT, "data", "method", "conclusions.json");
 
 if (!existsSync(STORE)) {
-  console.error(`no method store at ${STORE} — run \`pnpm method:ingest\``);
+  console.error(`no method store at ${STORE}`);
   process.exit(1);
 }
 
@@ -52,7 +52,7 @@ for (const r of k.routes) {
 
 // RULING 159 — zero routes is a store that failed to load. The project knows
 // 61 routes; a report of none is an error, not a finding.
-console.log(floorLine(floored("method:check routes", "data/method/knowledge.json", k.routes.length, k.routes.filter((r) => r.applicability).length)));
+console.log(floorLine(floored("method:check routes", "tests/fixtures/method-knowledge.json", k.routes.length, k.routes.filter((r) => r.applicability).length)));
 
 console.log(`method version           ${k.version}`);
 console.log(`routes known now         ${k.routes.length}`);
@@ -97,7 +97,7 @@ console.log("");
 const cov = classificationCoverage(k);
 console.log(
   `  ${floorLine(
-    floored("routes declaring a claim class", "data/method/knowledge.json", cov.routes, cov.classified),
+    floored("routes declaring a claim class", "tests/fixtures/method-knowledge.json", cov.routes, cov.classified),
   )}`,
 );
 console.log(`claims declared          ${cov.claims}`);

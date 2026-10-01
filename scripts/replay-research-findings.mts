@@ -6,7 +6,7 @@
  *     scripts/replay-research-findings.mts --vault=<vault root> --out=<dir outside the repository>
  *     [--manifest=<staging manifest.json>] [--runs=<freshness-shadow run records dir>]
  *     [--scout-results=<json array of ScoutResult rows>] [--prior=<json {versionId,payload,sourceReceipt}>]
- *     [--now=<ISO instant>] [--fetch] [--max-reads=<n>]
+ *     [--now=<ISO instant>] [--fetch] [--max-reads=<n>] [--method-version=<n>]
  *
  * Every input is a FILE it is handed; it opens no database and writes only
  * under `--out`, which must lie outside the repository. The vault is indexed
@@ -41,8 +41,6 @@ import { campaignSiteSubjects, type FilingChannels, type LineupContest } from ".
 import { replayResearchFindings, type HeldRead, type HeldScoutFinding } from "../lib/candidates/research-findings-replay.ts";
 import { deriveCandidateUniverse, type BallotDocument, type EnrichmentStores } from "../lib/hunt/candidate-universe.ts";
 import type { ManualProjectionPrior } from "../lib/civic-data/manual-projections.ts";
-import { METHOD_STORE } from "../lib/control-plane/scheduler/scout-candidates.ts";
-import { readMethodStore } from "../lib/method/candidate.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { assignment, present } from "./cli-args.mts";
 
@@ -188,7 +186,7 @@ const report = await replayResearchFindings({
     ? {
         runtime: { get: nodeResearchGet, memory: memoryInProcess(), now: () => Date.now(), sleep: (ms) => new Promise((done) => setTimeout(done, ms)) },
         vaultRoot: join(outDir, "vault"),
-        methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version,
+        methodVersion: Number(assignment(argv, "method-version") ?? 0),
         maxReads: Number(assignment(argv, "max-reads") ?? 200),
       }
     : null,

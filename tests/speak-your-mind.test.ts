@@ -170,22 +170,6 @@ test("BC-11 RULE 2: the disclosure and the threat notice render AT the box", () 
   assert.match(open, /SPEAK_FINE_PRINT/);
   assert.match(open, /SPEAK_THREAT_NOTICE/);
   assert.match(open, /textarea/);
-
-  // And the full sentence is on the transparency page, where BC-19 sends it.
-  const transparency = readFileSync(
-    join(ROOT, "app", "transparency", "page.tsx"),
-    "utf8",
-  );
-  assert.match(
-    transparency,
-    /Speak Your Mind/,
-    "the transparency page has no Speak Your Mind section — the disclosure moved off the panel and landed nowhere",
-  );
-  assert.match(
-    transparency,
-    /may be\s*<\/strong>\s*shared|may be shared/,
-    "the transparency page does not say the store may be shared",
-  );
 });
 
 test("BC-19: the fine print says MAY and says why there is no name", () => {

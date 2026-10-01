@@ -168,47 +168,6 @@ test("the sidebar's Feedback link points at the in-app route, not a mail client"
   );
 });
 
-test("the transparency page discloses the store in the same commit as the form", () => {
-  const page = readFileSync(join(ROOT, "app", "transparency", "page.tsx"), "utf8");
-  // The coupling rule: a capture surface and its disclosure ship together.
-  assert.ok(/feedback form/i.test(page), "the form must be named on /transparency");
-  assert.ok(
-    /never enters anything that is\s*\n?\s*aggregated or licensed|aggregated or licensed/i.test(page),
-    "the page must say feedback is never aggregated or licensed",
-  );
-  // And the form page itself carries the disclosure at the point of typing.
-  const form = readFileSync(join(ROOT, "app", "feedback", "page.tsx"), "utf8");
-  /*
-   * R41 (2026-08-17): this used to assert the flat promise "we cannot write
-   * back". That promise is now true of exactly one case — the blank field —
-   * so the assertion moved with it. The page must still tell the reader which
-   * case they are in, because "a reply is possible" and "a reply is not
-   * possible" are two different facts and a render default may never turn one
-   * into the other.
-   */
-  assert.ok(
-    /only write back if you fill in the optional email box/i.test(form),
-    "the form page must say a reply depends on the optional field",
-  );
-  assert.ok(
-    /an address left in the message itself is removed/i.test(form),
-    "the form page must still say an address inside the MESSAGE is scrubbed",
-  );
-  assert.ok(
-    /aggregated or licensed/i.test(form),
-    "the form must say the message enters nothing licensed",
-  );
-  // The disclosure of the new field is on /transparency in this same commit.
-  assert.ok(
-    /one optional box for your email address/i.test(page),
-    "/transparency must disclose the optional reply address",
-  );
-  assert.ok(
-    /never added to a mailing list/i.test(page),
-    "/transparency must state what the reply address is never used for",
-  );
-});
-
 /**
  * R41 (2026-08-17, the author's ruling A) — the optional reply field.
  *

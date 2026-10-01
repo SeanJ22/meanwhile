@@ -948,13 +948,10 @@ test("ASK SIGNAL: with the flag LIVE, one Ask writes exactly one row — and one
   );
   assert.equal(after.length, 0);
 });
-test("ASK SIGNAL: the surfaces READ a continuity key and never mint one while capture is off", () => {
+test("ASK SIGNAL: the surfaces mint the returning-reader ID in the Ask store's own slot", () => {
   for (const [name, source] of [["ask-box", ASK_BOX], ["ballot-ask", BALLOT_ASK]] as const) {
-    assert.match(code(source), /readBrowserKey\("wtp\.ask_key"\)/, `${name} must read`);
-    assert.ok(
-      !/getOrCreateBrowserKey/.test(code(source)),
-      `${name} must not mint an identifier for a switched-off capability`,
-    );
+    assert.match(code(source), /getOrCreateBrowserKey\("wtp\.ask_key"\)/, `${name} must mint its own key`);
+    assert.ok(!/readBrowserKey/.test(code(source)), `${name} still reads without minting`);
   }
 });
 

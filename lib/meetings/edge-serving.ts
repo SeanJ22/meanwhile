@@ -746,6 +746,9 @@ export async function publishReaderEdgeArtifacts(
 // a database-fallback or partial answer is not the publication that purge
 // replaces.
 const completeEdgeReads = new WeakSet<object>();
+// Share a published area's merge, as well as its immutable artifacts. Every
+// manifest observation is part of the key, including quiet freshness updates.
+const areaReads = new Map<string, MeetingsProjectionReadResult>();
 
 /**
  * The reader's edge path: manifest → the ZIP's scope artifacts → merged
@@ -794,6 +797,9 @@ export async function readReaderEdgeMeetings(
     : null;
   const chosen = manifest.scopes.filter((s) => wanted === null || wanted.has(s.scope));
   const needed = chosen.length > 0 ? chosen : manifest.scopes; // never serve nothing when the manifest has data
+  const areaKey = sha256OfJson({ manifest, scopes: needed.map(({ scope, sha256 }) => [scope, sha256]) });
+  const cachedArea = areaReads.get(areaKey);
+  if (cachedArea) return cachedArea;
 
   let artifacts: ReaderGeoArtifact[];
   try {
@@ -827,7 +833,11 @@ export async function readReaderEdgeMeetings(
     partitions: [],
     detail: `Served from the reader edge artifacts (manifest sequence ${manifest.sequence}, ${artifacts.length}/${needed.length} scope(s): ${artifacts.map((a) => a.scope).join(", ")}).`,
   };
-  if (complete) completeEdgeReads.add(read);
+  if (complete) {
+    completeEdgeReads.add(read);
+    if (areaReads.size >= 64) areaReads.delete(areaReads.keys().next().value!);
+    areaReads.set(areaKey, read);
+  }
   return read;
 }
 

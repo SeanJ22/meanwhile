@@ -54,6 +54,26 @@ export const SECTION_DEP = {
     owner: "Codex (worker repository)",
     need: "A bounded read of every unexpired work claim, including plain-code collection jobs outside the paid research list. Until it exists, the full list of running jobs and how many are working in a place are unknown.",
   },
+  agents: {
+    id: "DEP-AGENT-RUNS",
+    owner: "S12 (admin-view)",
+    need: "The recent agent runs: role, model tier, cost, what each found, and the saved source page.",
+  },
+  spend: {
+    id: "DEP-SPEND-READ",
+    owner: "S12 (admin-view)",
+    need: "Anthropic spend by model tier and by day from the cost ledger, search spend, and the database's daily transfer.",
+  },
+  sends: {
+    id: "DEP-SENT-INSTRUCTIONS",
+    owner: "S12 (admin-view)",
+    need: "The instructions sent to the fleet, where each stands, and whether the runner has recorded a cancel.",
+  },
+  reliability: {
+    id: "DEP-SOURCE-RELIABILITY",
+    owner: "S12 (admin-view), S8 (reducer)",
+    need: "Each source's successes, failures, failures in a row and next retry, from the workers' completed reads.",
+  },
   workerVersion: {
     id: "DEP-WORKER-VERSION",
     owner: "Codex (runner adoption)",

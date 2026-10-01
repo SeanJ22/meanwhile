@@ -37,6 +37,8 @@ export interface PreviewContext {
   readonly decision?: DecisionSpec;
   readonly fix?: { readonly id: string; readonly title: string; readonly owner: string; readonly resourcesNow: string; readonly helps: string; readonly needsCode: boolean };
   readonly url?: string;
+  /** The words a send-agents instruction carries. */
+  readonly words?: string;
   /** The live count, when the server supplies one. */
   readonly waitingCount?: number | null;
   readonly outreachAuthorized: boolean;
@@ -671,6 +673,44 @@ const defs: ActionDef[] = [
     }),
     gateway: null,
     dependency: DEP.typedPlans,
+  },
+  {
+    kind: "send-agents",
+    label: "Send agents",
+    needs: "owner",
+    doneWords: "Sent. The next runner round puts this first, and its acknowledgement says what it matched and what work it created.",
+    preview: (ctx) => ({
+      title: `Send agents to ${ctx.targetName || ctx.scopeName}`,
+      level: localOrGlobal(ctx),
+      rows: [
+        ["Affects", ctx.words ? `Work whose name matches: “${ctx.words}”` : `Waiting work in ${ctx.scopeName}`],
+        ["What changes", "Tells the fleet where to go next. The runner puts what matches first and records what it matched. Where the words name a state, it also creates the work that state’s registry defines and no clock carries yet, bounded and counted."],
+        ["Won’t", "Won’t publish anything or raise any limit. It can’t fix a missing software reader; that needs engineering."],
+        ["Cost", "Nothing by itself. Work that needs an AI model waits for the paid lane and stays inside each hunt’s existing limit."],
+        ["Undo", "Send it somewhere else. The later instruction is the one the next round reads."],
+      ],
+    }),
+    gateway: { type: "fleet.deployHere" },
+    dependency: null,
+  },
+  {
+    kind: "cancel-send",
+    label: "Take it back",
+    needs: "owner",
+    doneWords: "Saved as a request. It turns to Taken back only when the runner records that it stopped carrying it.",
+    preview: (ctx) => ({
+      title: "Take back a sent instruction",
+      level: "global",
+      rows: [
+        ["Affects", ctx.words ? `The instruction “${ctx.words}”` : ctx.targetName ? ctx.targetName : "The instruction you sent with Deploy fleet here"],
+        ["What changes", "The runner stops carrying it: it creates no more work for it, and puts nothing first because of it."],
+        ["Won’t", "Won’t undo work it already created or reordered, and won’t pause anything else."],
+        ["Cost", "Nothing"],
+        ["Undo", "Send the same words again. That is a new instruction."],
+      ],
+    }),
+    gateway: { type: "fleet.cancelDispatch" },
+    dependency: null,
   },
   {
     kind: "resume-publish",

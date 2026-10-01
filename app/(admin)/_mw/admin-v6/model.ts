@@ -218,7 +218,8 @@ export interface SameCause {
   readonly lane: Lane;
   readonly count: string;
   readonly itemIds: readonly string[];
-  readonly action: ActionRef;
+  /** Absent when the group names no state the fleet could be sent to. */
+  readonly action?: ActionRef;
 }
 
 /* ------------------------------------------------------------------ work */
@@ -312,6 +313,26 @@ export interface WorkerStatus {
   readonly unread: readonly string[];
 }
 
+/* ----------------------------------------------------------------- agents */
+
+/** One agent run (server: v6-agents-read.ts). Newest first; a run still open past the runner's wall is "did-not-finish", never "running". */
+export interface AgentRun {
+  readonly id: string;
+  readonly role: string;
+  readonly state: "running" | "done" | "stopped" | "did-not-finish";
+  readonly stateWords: string;
+  readonly title: string;
+  readonly placeKey: string;
+  readonly startedAt: string | null;
+  readonly endedAt: string | null;
+  readonly model: { readonly tier: "haiku" | "sonnet" | "opus" | "plain-code" | "older"; readonly name: string };
+  /** Dollars for this run, or null when the ledger has no price for it (never $0). */
+  readonly costUsd: number | null;
+  readonly costWords: string;
+  readonly found: string;
+  readonly source: { readonly url: string | null; readonly savedPages: number; readonly copy: { readonly path: string; readonly byteLength: number } | null } | null;
+}
+
 /* ------------------------------------------------------------- checklist */
 
 export type ItemStatus = "checked" | "published" | "collected" | "can-do" | "needs-fix" | "unsure" | "absent";
@@ -345,7 +366,36 @@ export interface ChecklistItem {
   readonly next: string;
   readonly parts: readonly { readonly text: string; readonly status: string; readonly proof: string; readonly tone: "good" | "warn" | "muted" }[];
   readonly resultId?: string;
+  /** The saved official page this fact came from, when we hold one. */
+  readonly sourceUrl?: string | null;
   readonly actions: readonly ActionRef[];
+}
+
+/** One group of Sean’s capture score (server: place-scorecard.ts). */
+export interface ScoreGroup {
+  readonly group: string;
+  readonly name: string;
+  readonly published: number;
+  readonly held: number;
+  readonly unpublished: number;
+  readonly stale: number;
+  readonly missing: number;
+  readonly total: number;
+  readonly captured: number;
+  readonly percent: number | null;
+}
+
+/** Sean’s checklist score for one place, overall and by group. It measures capture and never gates publishing. */
+export interface PlaceScoreView {
+  readonly placeKey: string;
+  readonly placeLabel: string;
+  readonly covers: string;
+  readonly observedAt: string;
+  readonly divisionCount: number;
+  /** The words a Send to fill this place's blanks carries, or null when the place cannot be named to the fleet. */
+  readonly sendWords: string | null;
+  readonly overall: ScoreGroup;
+  readonly groups: readonly ScoreGroup[];
 }
 
 export interface SystemGroup {
@@ -364,6 +414,8 @@ export interface ChecklistView {
   readonly placeGroups: readonly ChecklistGroupCount[] | null;
   readonly items: readonly ChecklistItem[] | null;
   readonly systemGroups: readonly SystemGroup[];
+  /** Present for a ZIP, county or state; null or absent where no owed list is measured. */
+  readonly score?: PlaceScoreView | null;
 }
 
 /* ----------------------------------------------------------------- money */
@@ -402,6 +454,49 @@ export interface MoneyView {
   /** Null when per-work costs are not connected (never "no costs"). */
   readonly drill: readonly CostDrill[] | null;
   readonly otherServices: string;
+}
+
+/* ------------------------------------------------------------ reliability */
+
+/** One source's record from the workers' own results (server: v6-reliability-read.ts, the dispatcher's own reducer). */
+export interface SourceReliabilityRow {
+  readonly source: string;
+  readonly state: "failing" | "recovering" | "healthy";
+  readonly successes: number;
+  readonly failures: number;
+  readonly consecutiveFailures: number;
+  readonly lastAttemptAt: string;
+  readonly retryAt: string | null;
+  readonly detail: string;
+}
+
+/* ----------------------------------------------------------------- sends */
+
+/** An instruction the owner sent the fleet with "Deploy fleet here", and where it stands (server: v6-sends-read.ts). */
+export interface SentInstruction {
+  readonly id: string;
+  readonly words: string;
+  readonly sentAt: string;
+  readonly state: "waiting" | "carried" | "finished" | "cancel-requested" | "cancelled";
+  readonly stateWords: string;
+  /** What the runner recorded when it read it. */
+  readonly ranAs: string | null;
+  readonly canCancel: boolean;
+}
+
+/* ----------------------------------------------------------------- spend */
+
+/** What the agents cost by model tier and day, and what the database sent (server: v6-spend-read.ts). Whole-system. */
+export interface SpendView {
+  readonly windowDays: number;
+  readonly byTier: readonly { readonly key: string; readonly tier: "haiku" | "sonnet" | "opus" | "older" | "unrecorded"; readonly name: string; readonly usd: number; readonly requests: number }[];
+  readonly byDay: readonly { readonly day: string; readonly anthropicUsd: number; readonly searchUsd: number; readonly byModel: readonly { readonly name: string; readonly usd: number }[]; readonly rows: number }[];
+  readonly anthropicUsd: number;
+  readonly searchUsd: number;
+  /** Ledger rows with no price. Counted beside the dollars, never as $0. */
+  readonly unpricedRows: number;
+  readonly neon: { readonly kind: "recorded" | "not-recorded"; readonly detail: string | null;
+    readonly days: readonly { readonly day: string; readonly responseBytes: number; readonly requestBytes: number; readonly requests: number }[] };
 }
 
 /* -------------------------------------------------------------- learning */
@@ -508,7 +603,7 @@ export type ActionKind =
   | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume"
   | "global-ceiling" | "global-search-on" | "global-search-off" | "fix-go"
   | "scope-first" | "scope-recheck" | "doc-request" | "use-url" | "reprocess" | "retry-method" | "resume-publish"
-  | "eng-task" | "job-stop" | "focus";
+  | "eng-task" | "job-stop" | "focus" | "send-agents" | "cancel-send";
 
 export type ReceiptStatus = "queued" | "read" | "running" | "done" | "partial" | "refused" | "failed" | "unknown";
 export const PENDING_STATUSES: readonly ReceiptStatus[] = ["queued", "read", "running", "unknown"];
@@ -585,6 +680,10 @@ export interface AdminV6Data {
   readonly history: Sourced<readonly UiReceipt[]>;
   readonly workers: Sourced<{ readonly status: WorkerStatus; readonly jobs: readonly WorkerJob[] | null; readonly waiting: readonly WaitingItem[] | null; readonly events: readonly WorkerEvent[] | null; readonly update: UpdateCard | null; readonly next: readonly string[] | null }>;
   readonly checklist: Sourced<ChecklistView>;
+  readonly agents: Sourced<readonly AgentRun[]>;
+  readonly spend: Sourced<SpendView>;
+  readonly sends: Sourced<readonly SentInstruction[]>;
+  readonly reliability: Sourced<readonly SourceReliabilityRow[]>;
   readonly money: Sourced<MoneyView>;
   readonly learning: Sourced<LearningView>;
   readonly fixes: Sourced<FixView>;

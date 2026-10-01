@@ -35,14 +35,14 @@ export interface AdminV6ChecklistEnvelope {
     readonly prevCursor: null };
 }
 
-const GROUP_NAMES: Readonly<Record<string, string>> = {
+export const GROUP_NAMES: Readonly<Record<string, string>> = {
   GEO: "Geography", GOV: "Governments", OFF: "Officeholders", MTG: "Meetings", DOC: "Agendas and documents",
   LEG: "Laws and votes", ELE: "Elections", CAN: "Candidates", CAM: "Campaign finance", FIN: "Government money",
   PAR: "Taking part", ASK: "Ask", GATE: "Setup and safety checks", ACQ: "Finding sources", REC: "Recovery",
   PUB: "Publishing", SAFE: "Safety and privacy", REF: "Reference data", EXE: "Running work",
   PRL: "Working in parallel", ENG: "Engineering",
 };
-const PLACE_GROUPS = new Set(["GEO", "GOV", "OFF", "MTG", "DOC", "LEG", "ELE", "CAN", "CAM", "FIN", "PAR", "ASK"]);
+export const PLACE_GROUPS = new Set(["GEO", "GOV", "OFF", "MTG", "DOC", "LEG", "ELE", "CAN", "CAM", "FIN", "PAR", "ASK"]);
 const definitionById = new Map(CHECKLIST_PROFILE.definitions.map(definition => [definition.id, definition]));
 const definitions = CHECKLIST_PROFILE.definitions.map(definition => ({ id: definition.id, group: definition.group,
   requirement: definition.requirement, owner: definition.owner, label: definition.label }));

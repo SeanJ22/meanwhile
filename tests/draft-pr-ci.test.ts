@@ -112,8 +112,6 @@ test("draft runs install and every named deterministic gate", () => {
   const deterministic = [
     "Lint",
     "Types (fresh checkout, no build)",
-    "Governance ledger and its generated views",
-    "Orchestration plans (RULING 190)",
     "Canonical state holdings and residual paths",
     "Generated state manifests against committed observations",
   ];

@@ -52,6 +52,7 @@ import type { RunWork, WorkOutcome } from "./dispatch.ts";
 import {
   DEFAULT_FETCH_TIMEOUT_MS,
   WALL_STATUSES,
+  httpProviderFailure,
   type FetchOutcome,
 } from "./http-executor.ts";
 import type { RouteDescriptor, YieldContract } from "./registry.ts";
@@ -100,6 +101,7 @@ export const realOpen: OpenOne = async ({ url, method, headers, body, timeoutMs 
       body: text,
       durationMs: Date.now() - started,
       transportError: null,
+      contentRange: response.headers.get("content-range"),
     };
   } catch (error) {
     return {
@@ -116,7 +118,7 @@ export const realOpen: OpenOne = async ({ url, method, headers, body, timeoutMs 
 };
 
 function cost(outcome: FetchOutcome): AttemptCost {
-  return { ...ZERO_COST, durationMs: outcome.durationMs, bytesFetched: outcome.bytes, requestCount: 1 };
+  return { ...ZERO_COST, durationMs: outcome.durationMs, bytesFetched: outcome.bytes, requestCount: outcome.requestCount ?? 1 };
 }
 
 /** Walk a dot path through parsed JSON. Returns undefined rather than throwing. */
@@ -377,29 +379,19 @@ export function routeExecutor(input: {
       timeoutMs,
     });
 
-    if (got.transportError !== null) {
+    const providerFailure = httpProviderFailure(url.toString(), got);
+    if (providerFailure !== null) {
       return {
         ranAs: RAN_AS,
         kind: "ABORTED",
         cost: cost(got),
-        detail: `nothing was reached at ${url.host}: ${got.transportError}`,
+        detail: `Provider failure at ${url.host}: ${providerFailure}. The record remains owed; try another source.`,
       };
     }
 
     const status = got.status ?? 0;
 
     if (status >= 200 && status < 300) {
-      if (got.bytes === 0) {
-        return {
-          ranAs: RAN_AS,
-          kind: "ABORTED",
-          cost: cost(got),
-          detail:
-            `${url} answered HTTP ${status} and ZERO BYTES. A zero-row extraction is a failed ` +
-            "extraction, never an empty document — the record is still owed.",
-        };
-      }
-
       if (route.yieldContract !== undefined) {
         const reading = checkYield(route.yieldContract, got.body);
         if (!reading.satisfied) {

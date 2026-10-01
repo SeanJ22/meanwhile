@@ -167,8 +167,12 @@ export const MIRRORED_DOCS = [
    * artifact WITH a repo counterpart, so it is drift-checkable like
    * `coverage-matrix.csv` — which is the point of putting it in the canonical
    * set rather than declaring it an extra.
+   *
+   * **Not committed since 2026-10-01 (Sean):** every merge conflicted on it.
+   * `handoff` writes it with `pnpm repo-map` before the copy, and
+   * `uncommitted` tells the copy there is no git history to check it against.
    */
-  { mirrorName: "repo-inventory.md", repoPath: "docs/repo-inventory.md" },
+  { mirrorName: "repo-inventory.md", repoPath: "docs/repo-inventory.md", uncommitted: true },
 ];
 
 /**

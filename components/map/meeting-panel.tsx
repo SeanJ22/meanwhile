@@ -19,7 +19,7 @@ import {
 import { carriedRowClause, relativeAge } from "@/lib/meetings/freshness";
 import { groupMeetingsForReading } from "@/lib/meetings/ordering";
 import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
-import { badgeFor } from "@/lib/meetings/jurisdiction-badge";
+import { useMeetingBadge } from "@/hooks/use-meeting-badge";
 import { useShellData } from "@/lib/state/data";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { MeetingListingNotice } from "./meeting-listing-notice";
@@ -371,8 +371,9 @@ function MeetingEntry({
   const agendaState = agendaSentenceFor(meeting);
   // The carried row's reason, decided once for both surfaces that state it.
   const carriedClause = carriedRowClause(meeting.carried);
-  const { governing, zipPartial, basis, location } = useShellData();
-  const jurisdiction = badgeFor(meeting, governing, basis, zipPartial);
+  const { location } = useShellData();
+  const { badgeOf, bodyClassOf } = useMeetingBadge();
+  const jurisdiction = badgeOf(meeting);
 
   return (
     <article className="px-5 py-4" data-meeting-id={meeting.id}>
@@ -427,6 +428,7 @@ function MeetingEntry({
       <p className="mt-2 pl-4">
         <JurisdictionPill
           badge={jurisdiction}
+          bodyClass={bodyClassOf(meeting)}
           zip={location?.zip ?? null}
           detail={false}
         />

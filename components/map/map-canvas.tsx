@@ -319,6 +319,20 @@ function onSettledSourceChange(map: MapLibreMap, run: () => void): () => void {
   };
 }
 
+/**
+ * The theme the page is painted in, read from the attribute `app/layout.tsx`
+ * sets before first paint and `useStoredTheme` keeps current.
+ *
+ * The `theme` prop is "dark" for the hydration pass whatever the reader saved,
+ * so a light-theme reader's map was built with the dark style and swapped to the
+ * light one a moment later — two MapTiler styles, sprites and all, on every
+ * load. The document attribute is right from the first paint, so the map is
+ * built with, and only ever swapped to, the style the reader actually sees.
+ */
+function documentTheme(): Theme {
+  return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+}
+
 export function MapCanvas({
   onPresentationReadyChange,
   venues,
@@ -358,9 +372,7 @@ export function MapCanvas({
   // The style currently applied to the map. Seeded with the one the mount
   // effect builds with, so the restyle effect below never re-applies it — see
   // the note there about Strict Mode.
-  const appliedStyleRef = useRef<string | null>(
-    resolveBasemap(theme)?.styleUrl ?? null,
-  );
+  const appliedStyleRef = useRef<string | null>(null);
   const poolRef = useRef(createMarkerPool());
   const hereRef = useRef<Marker | null>(null);
   /** Voting-site markers, keyed by site id. Their own set, never the pool. */
@@ -481,7 +493,8 @@ export function MapCanvas({
     // No key means nothing to draw. Fall through to the plain ground colour and
     // say so, rather than substituting another provider — a silent swap turns a
     // total rendering failure into something that looks like a styling choice.
-    const basemap = resolveBasemap(theme);
+    const basemap = resolveBasemap(documentTheme());
+    appliedStyleRef.current = basemap?.styleUrl ?? null;
     if (!basemap) onTileError();
 
     /*
@@ -1281,7 +1294,7 @@ export function MapCanvas({
     const map = mapRef.current;
     if (!map) return;
 
-    const basemap = resolveBasemap(theme);
+    const basemap = resolveBasemap(documentTheme());
     if (!basemap) return;
 
     // Keyed on the style actually applied, not on a "skip the first run" flag.

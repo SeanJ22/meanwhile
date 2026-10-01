@@ -24,10 +24,8 @@ import {
   meetingSubline,
 } from "@/lib/map/format";
 import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
-import {
-  badgeFor,
-  type JurisdictionBadge,
-} from "@/lib/meetings/jurisdiction-badge";
+import { useMeetingBadge } from "@/hooks/use-meeting-badge";
+import type { JurisdictionBadge } from "@/lib/meetings/jurisdiction-badge";
 import { TIER_LABEL } from "@/lib/ocd/tiers";
 import { tierForMeeting } from "@/lib/state/derive";
 import { useShellData, useMeetingListingIdentity } from "@/lib/state/data";
@@ -105,7 +103,8 @@ export function ListOverlay({
   /** Rendered inside the design card, which owns the frame, Escape and Close. */
   embedded?: boolean;
 }) {
-  const { meetings, location, result, governing, zipPartial, basis } = useShellData();
+  const { meetings, location, result, governing } = useShellData();
+  const { badgeOf, bodyClassOf } = useMeetingBadge();
   const listingIdentity = useMeetingListingIdentity();
   const ui = useUi();
   const dispatch = useUiDispatch();
@@ -245,14 +244,14 @@ export function ListOverlay({
   const sorted = useMemo(() => {
     if (!governing) return ordered;
     const rank = (m: Meeting) => {
-      const badge = badgeFor(m, governing, basis, zipPartial);
+      const badge = badgeOf(m);
       return badge === "GOVERNS" ? 0 : badge === "COULD_GOVERN" ? 1 : 2;
     };
     return ordered
       .map((meeting, index) => ({ meeting, index, rank: rank(meeting) }))
       .sort((a, b) => a.rank - b.rank || a.index - b.index)
       .map((entry) => entry.meeting);
-  }, [ordered, governing, basis, zipPartial]);
+  }, [ordered, governing, badgeOf]);
 
   const groups = useMemo(() => {
     if (ui.listGroupBy === "none") {
@@ -403,11 +402,14 @@ export function ListOverlay({
            */
           const groupBadges = group.key
             ? new Set(
-                group.items.map((m) => badgeFor(m, governing, basis, zipPartial)),
+                group.items.map((m) => badgeOf(m)),
               )
             : new Set<JurisdictionBadge>();
           const groupBadge: JurisdictionBadge | null =
-            groupBadges.size === 1 ? [...groupBadges][0] : null;
+            // NOT_GOVERNING is worded by each body's class, so its rows carry it.
+            groupBadges.size === 1 && !groupBadges.has("NOT_GOVERNING")
+              ? [...groupBadges][0]
+              : null;
 
           return (
             <div key={group.key || "all"}>
@@ -519,7 +521,8 @@ export function ListOverlay({
                         {groupBadge === null && (
                           <span className="al-row-jurisdiction">
                             <JurisdictionPill
-                              badge={badgeFor(meeting, governing, basis, zipPartial)}
+                              badge={badgeOf(meeting)}
+                              bodyClass={bodyClassOf(meeting)}
                               zip={location?.zip ?? null}
                               detail={false}
                             />

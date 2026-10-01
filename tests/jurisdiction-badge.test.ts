@@ -6,6 +6,7 @@ import test from "node:test";
 import {
   BADGE_COPY,
   badgeCensus,
+  badgeCopyFor,
   badgeFor,
   jurisdictionClaim,
 } from "../lib/meetings/jurisdiction-badge.ts";
@@ -69,7 +70,7 @@ test("M81: the census states every number, never one", () => {
     [{ ocdId: HERE }, { ocdId: COUNTY }, { ocdId: ELSEWHERE }, { ocdId: null }],
     AT_POINT,
   );
-  assert.deepEqual(census, { GOVERNS: 2, NEARBY: 1, NO_BOUNDARY: 1, COULD_GOVERN: 0 });
+  assert.deepEqual(census, { GOVERNS: 2, NEARBY: 1, NO_BOUNDARY: 1, COULD_GOVERN: 0, NOT_GOVERNING: 0 });
   const total =
     census.GOVERNS + census.NEARBY + census.NO_BOUNDARY + census.COULD_GOVERN;
   assert.equal(total, 4, "the census lost a row");
@@ -384,7 +385,7 @@ test("JUR-2: the census counts the fourth state", () => {
     "ZIP",
     partial,
   );
-  assert.deepEqual(census, { GOVERNS: 1, NEARBY: 0, NO_BOUNDARY: 1, COULD_GOVERN: 1 });
+  assert.deepEqual(census, { GOVERNS: 1, NEARBY: 0, NO_BOUNDARY: 1, COULD_GOVERN: 1, NOT_GOVERNING: 0 });
 });
 
 test("JUR-2 third era: a centroid MISS on a zip basis does not assert NEARBY", () => {
@@ -427,4 +428,24 @@ test("JUR-2 third era: a caller that resolved NO partial set is unchanged", () =
   // it would be the opposite defect.
   const elsewhere = { ocdId: "ocd-division/country:us/state:nj/place:dover" };
   assert.equal(badgeFor(elsewhere, new Set(["other"]), "ZIP", null), "NEARBY");
+});
+
+test("S2.4: a body that may not carry the govern verb never reads \"Governs your area\"", () => {
+  // Fort Lowell Historic Zone Advisory Board sat in the reader's city and the
+  // card said it governed them. The geometry answer is unchanged; the class
+  // decides whether the verb may attach (RULING 118).
+  assert.equal(badgeFor({ ocdId: HERE }, AT_POINT, "ADDRESS", null, "ADVISORY"), "NOT_GOVERNING");
+  assert.equal(badgeFor({ ocdId: HERE }, AT_POINT, "ADDRESS", null, "COMMISSION"), "NOT_GOVERNING");
+  assert.equal(badgeFor({ ocdId: HERE }, AT_POINT, "ADDRESS", null, "EXECUTIVE_AGENCY"), "NOT_GOVERNING");
+  // Bodies with authority are untouched, and so is an unknown class.
+  assert.equal(badgeFor({ ocdId: HERE }, AT_POINT, "ADDRESS", null, "GOVERNING"), "GOVERNS");
+  assert.equal(badgeFor({ ocdId: HERE }, AT_POINT, "ADDRESS", null, "REGIONAL"), "GOVERNS");
+  assert.equal(badgeFor({ ocdId: HERE }, AT_POINT), "GOVERNS");
+  // A body elsewhere stays "nearby" and a body with no boundary stays named.
+  assert.equal(badgeFor({ ocdId: ELSEWHERE }, AT_POINT, "ADDRESS", null, "ADVISORY"), "NEARBY");
+  assert.equal(badgeFor({ ocdId: null }, AT_POINT, "ADDRESS", null, "ADVISORY"), "NO_BOUNDARY");
+  // The copy says what the body is, from the one labels table.
+  assert.equal(badgeCopyFor("NOT_GOVERNING", "ADVISORY").label, "Advisory body");
+  assert.match(badgeCopyFor("NOT_GOVERNING", "ADVISORY").detail, /does not govern/i);
+  assert.equal(badgeCopyFor("GOVERNS", "ADVISORY").label, "Governs your area");
 });

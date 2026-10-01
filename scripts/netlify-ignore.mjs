@@ -91,7 +91,9 @@ async function main() {
     }
     try {
       const headers = { Accept: "application/vnd.github+json" };
-      const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
+      // The repository is private, so this lookup needs a token. WTP_GITHUB_READ_TOKEN is the
+      // read-only token the site already holds; it must be exposed to the Builds scope.
+      const token = process.env.WTP_GITHUB_READ_TOKEN || process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
       if (token) headers.Authorization = `Bearer ${token}`;
       const response = await fetch(`https://api.github.com/repos/SeanJ22/meanwhile/issues/${pr}/labels`, {
         headers, signal: AbortSignal.timeout(10_000),

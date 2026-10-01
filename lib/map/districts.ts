@@ -1,3 +1,4 @@
+import { mapPresentationHeld } from "./flight-presentation.ts";
 import type { Map as MapLibreMap, MapGeoJSONFeature, FilterSpecification, StyleSpecification, LayerSpecification, VectorSourceSpecification } from "maplibre-gl";
 
 // Relative, extension-bearing imports — the style the rest of lib/ uses —
@@ -765,4 +766,54 @@ export async function fullBoundsOfDistrict(
   const p = feature?.properties;
   if (!p || ![p.west,p.south,p.east,p.north].every(Number.isFinite)) return null;
   return [[p.west,p.south],[p.east,p.north]];
+}
+
+/** Coalesce source-driven queries after the updated tiles have rendered.
+ * No continuous move/zoom/render handler drives React or boundary queries. */
+export function onSettledDistrictChange(map: MapLibreMap, run: () => void): () => void {
+  let scheduled = false;
+  let dirty = true;
+  let disposed = false;
+
+  const flush = () => {
+    scheduled = false;
+    if (disposed || !dirty) return;
+    /*
+     * Still moving: drop this pass rather than pay it into a frame the reader
+     * is watching. Nothing is lost by dropping it — `moveend` schedules
+     * another, and every camera move MapLibre makes ends in exactly one.
+     */
+    if (map.isMoving() || mapPresentationHeld(map)) return;
+    dirty = false;
+    run();
+  };
+
+  const schedule = () => {
+    dirty = true;
+    if (disposed || scheduled) return;
+    scheduled = true;
+    map.once("render", flush);
+    map.triggerRepaint();
+  };
+  const onSourceData = (event: { sourceId?: string; sourceDataType?: string }) => {
+    if (event.sourceId === NATIONAL_BOUNDARIES_SOURCE && event.sourceDataType === "content") schedule();
+  };
+
+  schedule();
+  map.on("sourcedata", onSourceData);
+  // Idle can reveal held layers after software-rendered motion. A boundary
+  // frame already reported above is clean and must not query/update twice.
+  map.on("idle", flush);
+  // A move that consumed no sourcedata still has to report: a camera arriving
+  // somewhere new IS a change in which districts are drawn.
+  map.on("moveend", schedule);
+
+  return () => {
+    disposed = true;
+    map.off("render", flush);
+    scheduled = false;
+    map.off("sourcedata", onSourceData);
+    map.off("idle", flush);
+    map.off("moveend", schedule);
+  };
 }

@@ -39,6 +39,8 @@ export async function applyManualSourceGaps(
   const applicable = scopes.filter(scope => scope.kind === "RESOLVED" && scope.decision.sourceWorkVersion === 1);
   let created = 0, carried = 0;
   const deferred = 0;
+  if (applicable.length === 0) return { created, carried, deferred };
+  const heldIds = new Set((await repos.workItems.list()).map(row => row.id));
   for (const row of manualProducerInvocationMatrix(applicable, input.now)) {
     if (row.mode !== "REVIEWED_INPUT" && row.mode !== "SCOPED_ADAPTER_OWED") continue;
     const receipts = [...row.instructionIds];
@@ -52,11 +54,12 @@ export async function applyManualSourceGaps(
       const work = createWorkItem({ project: "freshness", subject: `manual-source:${scope.decision.key}`,
         obligation: `source capability ${row.id} for instruction ${receipt}`,
         why: row.reason, priority: "P1", now: input.now });
-      if (await repos.workItems.read(work.id)) { carried += 1; continue; }
+      if (heldIds.has(work.id)) { carried += 1; continue; }
       await registerWorkItem(repos, { ...work, manualSourceGap: {
         contractId: row.id, mode: row.mode, reason: row.reason, instructionReceipt: receipt,
         assignmentKey: scope.decision.key,
       } }, input.now);
+      heldIds.add(work.id);
       created += 1;
     }
   }
@@ -635,17 +638,20 @@ export async function applyDispatchWork(
       failed.push({ obligationId: id, why: error instanceof Error ? error.message : String(error) });
     }
   }
+  // Existing Sends share one held read; CAS still arbitrates every actual change.
+  // Keep each successful revision so overlapping hunts update the same row in order.
+  const heldMarks = new Map((plan.marks.length ? await repos.obligations.list() : []).map(row => [row.id, row]));
   for (const mark of plan.marks) {
     const key = { obligationId: mark.obligationId, assignmentKey: mark.target.key };
     const reordered = assignmentEntry(mark.target, "REORDERED", input.now);
     try {
-      const held = await repos.obligations.mustRead(mark.obligationId);
+      const held = heldMarks.get(mark.obligationId) ?? await repos.obligations.mustRead(mark.obligationId);
       const next = withAssignment(held.value.assignments, reordered);
       const autonomousPlan = inheritPublicationConnection(held.value.autonomousPlan, plan.targets.find(target => target.target.key === mark.target.key)?.instances
         .find(instance => instance.instance.obligation.id === mark.obligationId)?.instance.obligation.autonomousPlan);
       if (next !== held.value.assignments || autonomousPlan !== held.value.autonomousPlan) {
-        await repos.obligations.compareAndSet(mark.obligationId, held.revision, { ...held.value, assignments: next,
-          ...(autonomousPlan ? { autonomousPlan } : {}), updatedAt: input.now }, input.now);
+        heldMarks.set(mark.obligationId, await repos.obligations.compareAndSet(mark.obligationId, held.revision, { ...held.value, assignments: next,
+          ...(autonomousPlan ? { autonomousPlan } : {}), updatedAt: input.now }, input.now));
       }
       marked.push(key);
       recorded.push({ obligationId: mark.obligationId, subjectId: held.value.subjectId, entry: reordered });

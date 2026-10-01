@@ -119,6 +119,7 @@ import {
 import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/connect-retry.ts";
 import { assertDurableRepositories } from "../lib/control-plane/repository/types.ts";
 import { getDb } from "../lib/db/index.ts";
+import { startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
 import { withNationalPlaceTasks } from "../lib/hunt/place-source-admission.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
@@ -394,6 +395,7 @@ async function persistSupervisorOutcome(input: {
 }
 
 if (ROUTINE_DATA_PROCESS_LEASE !== null) {
+const readCacheHost = await startCivicReadCacheHost();
 step = "opening the production store";
 prepareProductionCivicDataWrite();
 const store = new PostgresRoutineDataStore();
@@ -1158,4 +1160,5 @@ step = "saving the daily database byte counter";
 if (!await flushDatabaseTransfer()) console.warn("RCD_TRANSFER daily byte counter could not be saved; data results are unchanged.");
 step = "releasing the host-local singleton";
 await ROUTINE_DATA_PROCESS_LEASE.release();
+await readCacheHost.close();
 }

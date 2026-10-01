@@ -1,5 +1,5 @@
-import { createHash, randomUUID } from "node:crypto";
-import { mkdir, readFile, rename, unlink, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
 export interface CivicRowVersion { readonly key: string; readonly etag: string }
@@ -9,7 +9,10 @@ const hash = (value: string) => createHash("sha256").update(value).digest("hex")
 /** Disposable runner copies. A fresh database row version decides every use. */
 export class CivicReadCache {
   private readonly root: string;
-  constructor(root: string) { this.root = root; }
+  private readonly persist?: (key: string, saved: string) => Promise<void>;
+  constructor(root: string, persist?: (key: string, saved: string) => Promise<void>) {
+    this.root = root; this.persist = persist;
+  }
   private path(key: string): string { return join(this.root, hash(key) + ".json"); }
 
   private async read<T>(key: string): Promise<Entry<T> | null> {
@@ -22,13 +25,10 @@ export class CivicReadCache {
   }
 
   private async save<T>(key: string, entry: Entry<T>): Promise<void> {
-    const temporary = this.path(key) + "." + randomUUID() + ".tmp";
     try {
       const body = JSON.stringify(entry);
-      await mkdir(this.root, { recursive: true });
-      await writeFile(temporary, JSON.stringify({ digest: hash(body), body }));
-      await rename(temporary, this.path(key));
-    } catch { await unlink(temporary).catch(() => {}); }
+      await this.persist?.(hash(key), JSON.stringify({ digest: hash(body), body }));
+    } catch { /* A failed disposable copy never changes the actual read. */ }
   }
 
   /** Read only rows whose database etag differs from the held copy. */
@@ -73,7 +73,12 @@ export class CivicReadCache {
 /** Serving processes keep their existing in-memory caches; runner children
  * share disposable copies across passes and commits in their own checkout. */
 export function runtimeCivicReadCache(): CivicReadCache | null {
-  if (!process.env.DATABASE_URL ||
-      !(process.env.WTP_RUNTIME_AUTHORITY_CAPABILITY || process.env.WTP_RUNTIME_MODE === "staging")) return null;
-  return new CivicReadCache(join(process.cwd(), ".runtime", "civic-read-cache", hash(process.env.DATABASE_URL)));
+  const endpoint = process.env.WTP_CIVIC_READ_CACHE_URL;
+  const token = process.env.WTP_CIVIC_READ_CACHE_TOKEN;
+  if (!process.env.DATABASE_URL || !endpoint || !token) return null;
+  return new CivicReadCache(join(process.cwd(), ".runtime", "civic-read-cache", hash(process.env.DATABASE_URL)),
+    async (key, saved) => {
+      await fetch(endpoint + "/" + key, { method: "PUT", body: saved,
+        headers: { authorization: token }, signal: AbortSignal.timeout(10_000) });
+    });
 }

@@ -1,3 +1,4 @@
+/** @freshness-reads-here Aggregate observedAt is stamped after the database read. */
 import { createHash } from "node:crypto";
 import { gzipSync } from "node:zlib";
 import { getStore } from "@netlify/blobs";

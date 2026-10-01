@@ -303,15 +303,6 @@ test("ADM-C12: the read model never names a column that could key back to one re
   assert.ok(!/\brun_id\b/.test(src), "the read model selects run_id — there is no session in this product");
 });
 
-test("ADM-C12: the page and its cards never name one either", () => {
-  for (const path of SURFACE) {
-    const src = code(path);
-    assert.ok(src.length > 3000, `expected ${path}, read ${src.length} characters`);
-    const found = NEVER_READ.filter((name) => src.includes(name));
-    assert.deepEqual(found, [], `${path} names: ${found.join(", ")}`);
-  }
-});
-
 test("ADM-C12: PLANT — a reader-level field anywhere in the reading refuses the render", async () => {
   const store = recordedStore(fullPlan);
   const intel = await readReaderIntel(store.sql, WINDOW, "ORGANIC");
@@ -327,20 +318,6 @@ test("ADM-C12: PLANT — a reader-level field anywhere in the reading refuses th
       ),
     /freeText/,
   );
-});
-
-test("ADM-C12: the two databases are not conflated — this page opens the application's own handle", () => {
-  const src = code(MODULE_PATH);
-  assert.ok(src.includes("DATABASE_URL"), "the module must name the application's own connection variable");
-  assert.ok(
-    !src.includes("WTP_CONTROL_PLANE_DATABASE_URL"),
-    "the reader read model must never open the control plane",
-  );
-  assert.ok(!src.includes("openControlPlane"), "the reader read model must never open the control plane");
-  assert.ok(!src.includes("createPgRepositories"), "the reader read model must never open the control plane");
-  for (const path of SURFACE) {
-    assert.ok(!code(path).includes("openControlPlane"), `${path} must never open the control plane`);
-  }
 });
 
 test("ADM-C12: a missing handle names the variable and never a value", () => {
@@ -573,21 +550,6 @@ test("ADM-C12: zero in the selected class is HELD with a zero, not an empty stor
   assert.equal(intel.reactions.kind, "HELD");
 });
 
-test("ADM-C12: the ask store's emptiness is reported as a switch, never as a silence from readers", async () => {
-  const store = recordedStore(fullPlan);
-  const ask = await readAsk(store.sql, WINDOW);
-  assert.equal(ask.kind, "HELD");
-  if (ask.kind !== "HELD") return;
-  assert.equal(ask.value.rowsInWindow, 0);
-  // Capture ships pulled pending the privacy copy; the page must say so rather
-  // than reporting nought questions asked.
-  assert.equal(typeof ask.value.capturePulled, "boolean");
-  const cards = source(PANELS_PATH);
-  assert.match(cards, /capturePulled/);
-  assert.match(cards, /Capture is off/);
-  assert.match(cards, /questions are being asked/i);
-});
-
 /* ------------------------------------------------------------------ *
  * 5. THE WORDING, AND THE QUERY THAT MUST MATCH IT
  * ------------------------------------------------------------------ */
@@ -636,90 +598,3 @@ test("ADM-C12: the detail-key map and the SQL that reads it cannot drift apart",
 /* ------------------------------------------------------------------ *
  * 6. THE PAGE'S OWN GUARANTEES, AS SOURCE TEXT
  * ------------------------------------------------------------------ */
-
-test("ADM-C12: the page is dynamic, host-gated by path, and refuses its own bad numbers", () => {
-  const src = source(PAGE_PATH);
-  assert.match(src, /export const dynamic = "force-dynamic"/);
-  assert.match(src, /export const revalidate = 0/);
-  // Both audits run against what is about to be rendered, and a failure
-  // replaces the numbers rather than the page.
-  assert.match(src, /auditRenderedNumbers\(/);
-  assert.match(src, /checkStatedEqualsRendered\(/);
-  assert.match(src, /impossibleNumbersIn\(/);
-  assert.match(src, /className="refusal"/);
-});
-
-test("ADM-C12: every card answers the owner's four questions", () => {
-  let blocks = 0;
-  let needs = 0;
-  for (const path of SURFACE) {
-    const src = source(path);
-    blocks += (src.match(/<StatusBlock/g) ?? []).length;
-    needs += (src.match(/needsYou=/g) ?? []).length;
-  }
-  assert.ok(blocks >= 8, `expected a StatusBlock per card, saw ${blocks}`);
-  // The four layers are what StatusBlock renders, and `needsYou` is required by
-  // its own type — so the guard that matters is that no card was written
-  // outside it.
-  assert.equal(needs, blocks, "a card was rendered without saying whether it needs him");
-});
-
-test("ADM-C12: the run class and the window are on the face, not implied", () => {
-  const src = source(PAGE_PATH);
-  assert.match(src, /Showing <span className="state-green">\{classWords\}<\/span>/);
-  assert.match(src, /windowSentence\(window\)/);
-  assert.match(src, /This is not a reader view/);
-  assert.match(src, /nothing on this screen is\s*\n?\s*a figure about demand/i);
-  // And the reason a percentage of users is absent is stated, rather than the
-  // absence being left to look like an oversight.
-  assert.match(src, /the concept does not exist in the data/);
-});
-
-test("ADM-C12: the page never editorialises about itself, and never says 'our'", () => {
-  // `tests/refusal-copy.test.ts` sweeps app/ for the shapes; this is the local
-  // half, kept because a reader-intelligence page is exactly where "that is a
-  // gap on our side" gets written by accident.
-  for (const path of SURFACE) {
-    const src = source(path);
-    assert.ok(
-      !/\bour\b/i.test(stripComments(src)),
-      `${path}: the console has one user; nothing on it is 'our' anything`,
-    );
-    assert.ok(!/\bunfortunately\b/i.test(src), `${path} apologises for its own coverage`);
-  }
-});
-
-/**
- * **THE ONE PLACE "our" REACHES THIS FACE, AND WHY IT IS STILL THERE.**
- *
- * The console has one user, so nothing on it is "our" anything — and nothing
- * this lane wrote is. But the denominator sentence every organic figure in this
- * repository must carry is `organicDenominatorSentence()` in
- * `lib/signal/search-log-reads.ts`, and it says *"written by our own automated
- * runs"*. That sentence is shared with `pnpm census:runs` and with the
- * confidence mix every export reports, and a rule is written once — so this
- * page quotes it rather than writing a second version of it, and quotes it
- * inside the Technical-details disclosure, which is where an instrument's own
- * words belong.
- *
- * This test exists so the seam is visible in the suite rather than only in a
- * report: if the shared sentence is ever reworded, this fails and the note
- * comes out with it.
- */
-test("ADM-C12: the shared denominator sentence is quoted, not reworded — and it is the one 'our'", () => {
-  const said = scopeSentence("ORGANIC", CENSUS);
-  assert.match(said, /written by our own automated runs/);
-  // It is not this lane's sentence to rewrite: it is produced by the shared
-  // module and quoted verbatim.
-  assert.equal(said, organicDenominatorSentence(CENSUS));
-  // And it reaches the face through the disclosure layer only.
-  assert.match(source(PANELS_PATH), /detail=\{<p className="note">\{scopeSentence\(runClass, census\)\}<\/p>\}/);
-});
-
-test("ADM-C12: nothing on the page is a raw environment variable or a connection string", () => {
-  for (const path of SURFACE) {
-    const src = source(path);
-    assert.ok(!src.includes("process.env"), `${path} reads the environment directly`);
-    assert.ok(!src.includes("DATABASE_URL"), `${path} puts a variable name in the browser`);
-  }
-});

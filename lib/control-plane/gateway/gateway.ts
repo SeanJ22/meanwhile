@@ -74,6 +74,7 @@ import {
 } from "./contract.ts";
 import { lookupAction, type ActionContext, type GatewayDeps, type RegisteredAction } from "./registry.ts";
 import { appendReceipt, buildReceipt, findReceipt } from "./receipts.ts";
+import { sendWakeHint, wakeHintOf } from "./wake-hint.ts";
 import { withWriteReadback } from "./write-readback.ts";
 
 /**
@@ -157,6 +158,11 @@ export async function submit(request: ActionRequest, deps: GatewayDeps): Promise
   const receiptId = receiptIdFor(type, idempotencyKey);
   const entry = lookupAction(type);
 
+  /** Tell the runner its controls changed. A notification only: it can fail without touching the action's result. */
+  const wake = async (receipt: ActionReceipt): Promise<void> => {
+    await sendWakeHint(deps.wake, wakeHintOf(receipt, deps.now()));
+  };
+
   /** Build, append and return one refusal. Every refusal in this function goes through here. */
   const refuseWith = async (
     code: RefusalCode,
@@ -232,7 +238,11 @@ export async function submit(request: ActionRequest, deps: GatewayDeps): Promise
         "Doing it anyway could have done it twice.",
     );
   }
-  if (existing !== null) return outcomeOf(existing, true);
+  if (existing !== null) {
+    // A replay of an applied action tells the runner again: this is how a missed hint is made up.
+    if (existing.outcome !== "REFUSED") await wake(existing);
+    return outcomeOf(existing, true);
+  }
 
   /* 8 · EXECUTE. */
   const context: ActionContext = { request: normalised, receiptId, at: deps.now() };
@@ -268,7 +278,10 @@ export async function submit(request: ActionRequest, deps: GatewayDeps): Promise
     codeSha: deps.codeSha,
   });
   const wrote = await appendReceipt(deps.repos, receipt, receipt.completedAt ?? startedAt);
-  if (wrote.ok) return outcomeOf(receipt, false);
+  if (wrote.ok) {
+    await wake(receipt);
+    return outcomeOf(receipt, false);
+  }
 
   /*
    * THE WORK HAPPENED AND THE PROOF DID NOT.
@@ -286,7 +299,10 @@ export async function submit(request: ActionRequest, deps: GatewayDeps): Promise
    * record behind it or a failure that undoes nothing.
    */
   const landed = await findReceipt(deps.repos, receiptId).catch(() => null);
-  if (landed !== null) return outcomeOf(landed, true);
+  if (landed !== null) {
+    if (landed.outcome !== "REFUSED") await wake(landed);
+    return outcomeOf(landed, true);
+  }
   return outcomeOf(
     {
       ...receipt,

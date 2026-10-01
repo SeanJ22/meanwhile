@@ -18,8 +18,7 @@
  * through `appendDecisionIntent`. The four runner and fleet controls build
  * research intents through `buildResearchIntent` / `appendResearchIntent`, the
  * same quadruple `/api/admin/research` has used since Level 1 activation.
- * `review.decide` calls the release-review writer that already runs end to end
- * against in-memory repositories. Nothing is reimplemented, so nothing can
+ * Nothing is reimplemented, so nothing can
  * drift from the path the rest of the console uses (RULING 103).
  *
  * The admin surface still WRITES AND NOTHING ELSE. Every entry below appends a
@@ -57,6 +56,7 @@ import {
 } from "../research-view.ts";
 import { RESEARCH_STATE_ID } from "../scheduler/research-policy.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
+import type { WakeHintWriter } from "./wake-hint.ts";
 import {
   ADMIN_CONFIG_ID,
   defaultAdminConfig,
@@ -122,31 +122,9 @@ export interface GatewayDeps {
   readonly currentStateVersion: string | null;
   /** The deploy that is running this, for the receipt. Null when the runtime cannot say. */
   readonly codeSha: string | null;
-  /**
-   * The release-review writer, wired by the route.
-   *
-   * Structurally typed rather than imported, so `lib/` does not depend on a
-   * module under `app/`. The route passes `recordReview` from
-   * `app/(admin)/admin/release-review/write.ts` — the existing path, not a copy
-   * of it. Null when nothing wired it, and the action then refuses by name
-   * instead of pretending the decision was recorded.
-   */
-  readonly recordReview: ReleaseReviewRecorder | null;
+  /** Tells the runner its controls changed, after an action is durably applied. Absent when the host has no Blobs destination. Never part of an action's result. */
+  readonly wake?: WakeHintWriter | null;
 }
-
-export type ReleaseReviewRecorder = (input: {
-  readonly action: string;
-  readonly stagingSha: string;
-  readonly section: string | null;
-  readonly decision: string | null;
-  readonly feedback: string | null;
-  readonly choice: string | null;
-}) => Promise<{
-  readonly ok: boolean;
-  readonly code: string;
-  readonly detail: string;
-  readonly rowIds?: readonly string[];
-}>;
 
 /* --------------------------------------------------------------- results */
 
@@ -1154,84 +1132,6 @@ const REGISTRY: readonly RegisteredAction[] = [
         openedWork: [],
         readBackAt: "/admin/money",
         undo: `Enter ${factAmountWords(removed)} again, read ${removed.asOf} from ${removed.source}.`,
-      };
-    },
-  },
-
-  /* ---------------------------------------------------------- review.decide */
-  {
-    definition: {
-      type: "review.decide",
-      label: "Record your review decision",
-      does: "Records what you decided about the exact build you were looking at.",
-      doesNot: "Does not merge, deploy, promote or notify anyone — the record is the end of the line.",
-      authority: "OWNER_DECISION_REQUIRED",
-      subjectKind: "one build of the software",
-      // The build under review moves on its own. The writer re-fetches the live
-      // manifest and refuses a decision aimed at a build that has been replaced,
-      // and quoting the render's version here catches the same thing earlier.
-      requiresStateVersion: true,
-      refusals: ["INVALID_INPUT", "STALE_STATE", "ALREADY_DONE", "DOWNSTREAM_REFUSED"],
-    },
-    validate(input) {
-      const action = text(input.action);
-      if (action === "") return bad("say which kind of review decision this is");
-      const stagingSha = text(input.stagingSha);
-      if (stagingSha === "") return bad("a review decision has to name the exact build it is about");
-      return {
-        ok: true,
-        value: {
-          action,
-          stagingSha,
-          section: text(input.section) || null,
-          decision: text(input.decision) || null,
-          feedback: typeof input.feedback === "string" ? input.feedback : null,
-          choice: text(input.choice) || null,
-        },
-      };
-    },
-    async execute(deps, _context, input) {
-      if (deps.recordReview === null) {
-        return refuse(
-          "DOWNSTREAM_REFUSED",
-          "The review writer is not wired into this console, so nothing was recorded. " +
-            "Nothing has been decided and nothing is pretending otherwise.",
-        );
-      }
-      const outcome = await deps.recordReview({
-        action: String(input.action),
-        stagingSha: String(input.stagingSha),
-        section: input.section === null ? null : String(input.section),
-        decision: input.decision === null ? null : String(input.decision),
-        feedback: input.feedback === null ? null : String(input.feedback),
-        choice: input.choice === null ? null : String(input.choice),
-      });
-      if (!outcome.ok) {
-        /*
-         * The writer's refusals are richer than the gateway's, so they are
-         * MAPPED rather than flattened: a decision aimed at a build that has
-         * been replaced is the gateway's own staleness, and one that is already
-         * recorded is its own idempotency. Everything else is honestly "the
-         * system that would do this refused".
-         */
-        const mapped: RefusalCode =
-          outcome.code === "STALE_SHA"
-            ? "STALE_STATE"
-            : outcome.code === "BAD_REQUEST"
-              ? "INVALID_INPUT"
-              : outcome.code === "ALREADY_RECORDED"
-                ? "ALREADY_DONE"
-                : "DOWNSTREAM_REFUSED";
-        return refuse(mapped, `Nothing was recorded — ${outcome.detail}.`);
-      }
-      return {
-        ok: true,
-        outcome: "DONE",
-        subject: String(input.stagingSha),
-        says: `Recorded against the build you were looking at. ${outcome.detail}.`,
-        openedWork: (outcome.rowIds ?? []).map((id) => ({ kind: "review record", id, title: "your review decision" })),
-        readBackAt: "/admin/release-review",
-        undo: "Record a different decision on the same build; both are kept and the later one is the one that counts.",
       };
     },
   },

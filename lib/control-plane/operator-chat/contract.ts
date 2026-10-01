@@ -116,14 +116,14 @@ export const TOPIC_DEFINITIONS: readonly TopicDefinition[] = [
   {
     topic: "COMPARE_ENVIRONMENTS",
     asks: "Compare production, main, and staging.",
-    reads: "production's own build identity, the staging release manifest, and the three code identities the runner recorded in its heartbeat",
-    readBackAt: "/admin/release-review",
+    reads: "production's own build identity and the three code identities the runner recorded in its heartbeat",
+    readBackAt: "/admin",
   },
   {
     topic: "INTEGRATION_STATUS",
     asks: "Why is this PR not integrated?",
-    reads: "the staging release manifest, production's build identity, and the code identity the runner recorded",
-    readBackAt: "/admin/release-review",
+    reads: "production's build identity, and the code identity the runner recorded",
+    readBackAt: "/admin",
   },
 ];
 

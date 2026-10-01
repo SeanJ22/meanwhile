@@ -68,7 +68,10 @@ const listeners = new Set<() => void>();
 let cachedRaw: string | null | undefined;
 let cachedSnapshot: LocationSnapshot = PENDING;
 
-function readRaw(): string | null {
+export function readZipChoice(): string | null {
+  const linkZip = new URLSearchParams(window.location.search).get("zip");
+  // A link names the place to open, even in a tab with a previous selection.
+  if (linkZip !== null) return JSON.stringify({ zip: linkZip });
   try {
     return window.sessionStorage.getItem(STORAGE_KEY);
   } catch {
@@ -129,14 +132,14 @@ function ensureTable(): void {
   });
 }
 
-function parse(raw: string | null): StoredLocation | null {
-  if (!raw || !centroids) return null;
+export function resolveStoredZip(table: CentroidTable, raw: string | null): StoredLocation | null {
+  if (!raw) return null;
 
   try {
     const parsed = JSON.parse(raw) as Partial<StoredPayload>;
     // Re-resolve rather than trusting stored coordinates: a Census vintage
     // update moves centroids, and the zip is the only durable part.
-    return parsed.zip ? lookupIn(centroids, parsed.zip) : null;
+    return typeof parsed.zip === "string" && /^\d{5}$/.test(parsed.zip) ? lookupIn(table, parsed.zip) : null;
   } catch {
     return null;
   }
@@ -147,8 +150,14 @@ function parse(raw: string | null): StoredLocation | null {
  * `sessionStorage` itself is per-tab, so the cross-tab `storage` event this
  * shares only ever fires for the localStorage half (the recents write).
  */
-const subscribe = (onStoreChange: () => void) =>
-  subscribeToStorage(listeners, onStoreChange);
+const subscribe = (onStoreChange: () => void) => {
+  const unsubscribe = subscribeToStorage(listeners, onStoreChange);
+  window.addEventListener("popstate", onStoreChange);
+  return () => {
+    unsubscribe();
+    window.removeEventListener("popstate", onStoreChange);
+  };
+};
 
 function getSnapshot(): LocationSnapshot {
   ensureTable();
@@ -158,11 +167,11 @@ function getSnapshot(): LocationSnapshot {
   // reader has no stored zip, which is a claim rather than a wait.
   if (!centroids) return PENDING;
 
-  const raw = readRaw();
+  const raw = readZipChoice();
 
   if (raw !== cachedRaw || cachedSnapshot === PENDING) {
     cachedRaw = raw;
-    cachedSnapshot = { restored: true, location: parse(raw) };
+    cachedSnapshot = { restored: true, location: resolveStoredZip(centroids, raw) };
   }
 
   return cachedSnapshot;
@@ -180,6 +189,11 @@ export function useStoredZip() {
   );
 
   const remember = useCallback((next: StoredLocation) => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.has("zip")) {
+      url.searchParams.set("zip", next.zip);
+      window.history.replaceState(window.history.state, "", url);
+    }
     const payload: StoredPayload = {
       zip: next.zip,
       savedAt: new Date().toISOString(),

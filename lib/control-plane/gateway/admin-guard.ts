@@ -16,8 +16,8 @@
  *
  * ## The read/write asymmetry is deliberate, not accidental
  *
- * `checkOrigin` is a parameter because the existing read route
- * (`GET /api/admin/release-review`) checks host and session but NOT origin,
+ * `checkOrigin` is a parameter because the read routes
+ * check host and session but NOT origin,
  * while every write route checks all three. That asymmetry is correct — an
  * origin check on a GET buys nothing, because a cross-site read cannot see the
  * response anyway — but an asymmetry nobody wrote down is one somebody later

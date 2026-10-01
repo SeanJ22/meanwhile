@@ -38,7 +38,6 @@ const REDIRECTING_ROUTES: Readonly<Record<string, number>> = {
   "app/api/admin/decision/route.ts": 1,
   "app/api/admin/session/route.ts": 2,
   "app/api/admin/action/route.ts": 1,
-  "app/api/admin/release-review/route.ts": 1,
   "app/(admin)/admin/auth/google/route.ts": 1,
   "app/(admin)/admin/auth/callback/route.ts": 2,
 };

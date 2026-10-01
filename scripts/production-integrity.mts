@@ -256,7 +256,7 @@ async function main(): Promise<void> {
           );
         }
         console.log(`\nrecorded durable receipt: ${receipt.id}`);
-        console.log("read back in Admin: /admin/release-review");
+        console.log("read back in the integrity log (software_release_reviews)");
       }
     } catch (error) {
       console.error(

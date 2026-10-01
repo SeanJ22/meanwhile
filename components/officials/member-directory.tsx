@@ -114,15 +114,17 @@ export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
   const offices = directory?.districtOffices ?? null;
   const committees = directory?.committees ?? null;
 
-  // The source scope is sitting federal members. A state legislator or a
-  // school-board member renders nothing here rather than an empty heading,
-  // which would read as "this person sits on none".
+  // Committees are sourced for sitting federal members only; offices also for
+  // state legislators. Anyone a section's source does not reach renders
+  // nothing here rather than an empty heading, which would read as "this
+  // person sits on none".
   //
   // The predicate is `lib/officials/member-directory-scope.ts` and it is the
   // ONE copy: a caller that does not ask it hands this component a slot that
   // looks filled and renders blank, which is what a reader met on the ballot
   // battlecard (Part C, 2026-08-31).
-  if (!memberDirectoryReaches(holderId)) return null;
+  if (!memberDirectoryReaches(holderId, only)) return null;
+  const details = directory?.officeDetails ?? null;
 
   if (only === "committees") {
     return (
@@ -186,8 +188,9 @@ export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
         ) : (
           <>
             <p className="mb-1.5 text-[0.6875rem] leading-relaxed text-voice">
-              These are the member&apos;s offices in the district, not the one
-              in Washington. They are usually the ones that answer.
+              {details
+                ? <>Where to reach this legislator in person: their office at the capitol and in the district, as Open States lists them.{details.some((d) => !d.official) ? " Not yet checked against the legislature’s own site." : ""}</>
+                : <>These are the member&apos;s offices in the district, not the one in Washington. They are usually the ones that answer.</>}
             </p>
             <ul>
               {offices.map((office, i) => (
@@ -197,6 +200,7 @@ export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
                   className="border-b border-[var(--panel-border)] py-2 last:border-0"
                 >
                   <p className="text-[0.8125rem] font-medium text-paper">
+                    {details?.[i] ? (details[i].officeKind === "CAPITOL" ? "Capitol office" : "District office") + (office.city ? " · " : "") : ""}
                     {office.city}
                     {office.state ? `, ${office.state}` : ""}
                   </p>
@@ -295,6 +299,7 @@ function useDirectoryCounts(holder: SeatHolder): {
 function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
   const counts = useDirectoryCounts(holder);
   const inScope = memberDirectoryReaches(holder.id);
+  const officesInScope = memberDirectoryReaches(holder.id, "offices");
   return (
     <>
       <CardSection
@@ -312,9 +317,9 @@ function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
 
       <CardSection
         title={sectionTitle("offices")}
-        meta={inScope && counts.offices !== null ? String(counts.offices) : null}
+        meta={officesInScope && counts.offices !== null ? String(counts.offices) : null}
       >
-        {inScope ? (
+        {officesInScope ? (
           <DirectoryContent holder={holder} only="offices" />
         ) : (
           <p className="text-[0.75rem] leading-relaxed text-muted">

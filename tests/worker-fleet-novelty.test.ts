@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
+import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, dirname, resolve } from "node:path";
 import { autonomousHarness, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
@@ -12,6 +12,7 @@ import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { registerRouteTask } from "../lib/control-plane/repository/coordinator.ts";
 import { dispatchOne } from "../lib/control-plane/scheduler/dispatch.ts";
 import { fieldManualEntryId, writeFieldManual } from "../lib/control-plane/field-manual.ts";
+import { knowledgeEntries, methodVersionEntry } from "./method-store-fixture.ts";
 
 test("the actual Scout request inherits a learned method and the failed Hunter route before novelty",async t=>{
   const h=await autonomousHarness({response:{transportError:"socket timeout"}});
@@ -23,8 +24,7 @@ test("the actual Scout request inherits a learned method and the failed Hunter r
   const method:MethodKnowledge={version:56,updatedOn:"2026-09-03",routes:[{
     id:"fixture-learned-roster-route",title:"Walk the separately published fixture office register",tier:"A0",fields:["officeholder"],
     applicability:unknownApplicability("Recorded test method; applicability is offered, never assumed"),outcomes:[],subBranches:[],origin:"Recorded test control",learnedAtVersion:55,learnedOn:"2026-09-02"}]};
-  await mkdir(join(root,"data","method"),{recursive:true});
-  await writeFile(join(root,"data","method","knowledge.json"),JSON.stringify(method));
+  await writeFieldManual(h.repos,[...knowledgeEntries(method),methodVersionEntry(method)],h.now());
   // Seed one portable field-manual door so the projection surfaces it for this
   // obligation regardless of its jurisdiction, then assert the walk both READS it
   // in the request and RECORDS it as captured input on the result.
@@ -69,8 +69,8 @@ test("one running worker runtime saves a new observed route and hands it to its 
   await runAutonomousCoordinator(h.runtime, { maximum: 1, concurrency: 1 });
   const root = await mkdtemp(join(tmpdir(), "fleet-new-method-"));
   t.after(() => rm(root, { recursive: true, force: true }));
-  await mkdir(join(root, "data", "method"), { recursive: true });
-  await writeFile(join(root, "data", "method", "knowledge.json"), JSON.stringify({ version: 56, updatedOn: "2026-09-03", routes: [] }));
+  const empty = { version: 56, updatedOn: "2026-09-03", routes: [] };
+  await writeFieldManual(h.repos, [methodVersionEntry(empty)], h.now());
   const discovered = "https://fixture-clerk.example.gov/alternate-roster.json";
   const requests: ModelRequest[] = [];
   const runtime = await autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, spaceOut: async () => {},

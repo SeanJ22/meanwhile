@@ -35,6 +35,7 @@ import { scheduledFixture } from "./control-plane-fixtures.ts";
 import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { failureResponderExecutor } from "../lib/control-plane/workers/detective.ts";
 import { scoutProcessExecutor } from "../lib/control-plane/workers/scout-process.ts";
+import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import {
   cacheTtlOrderProblems,
   withCacheBreakpoints,
@@ -151,10 +152,10 @@ async function registered(repos = createMemoryRepositories(), o: FreshnessObliga
   return { repos, item, task };
 }
 
-async function ordinaryScoutProcessFailures() {
+async function ordinaryWorkerProcesses() {
   const { mkdtemp, rm } = await import("node:fs/promises");
   const { tmpdir } = await import("node:os");
-  const { join } = await import("node:path");
+  const { join, dirname, resolve } = await import("node:path");
   const { createFileRepositories } = await import("../lib/control-plane/repository/file-store.ts");
   for (const contextFailure of [false, true]) {
     const root = await mkdtemp(join(tmpdir(), "s7-ordinary-scout-"));
@@ -202,6 +203,40 @@ async function ordinaryScoutProcessFailures() {
       if (contextFailure) assert.equal(attempts[0]!.cost.usd, 0);
     } finally { await rm(root, { recursive: true, force: true }); }
   }
+  const root = await mkdtemp(join(tmpdir(), "s7-ordinary-route-"));
+  assert.equal(dirname(resolve(root)), resolve(tmpdir()));
+  try {
+    const repos = await createFileRepositories(root);
+    const { task } = await registered(repos);
+    const pids: number[] = [];
+    let opened = 0, vaulted = 0;
+    const body = "<html><p>Observed official fixture record</p></html>";
+    const executor = routeProcessExecutor({ root: process.cwd(), postgres: false, fileStoreRoot: root,
+      route: { routeId: task.routeId, label: "fixture GET", executorClass: "DETERMINISTIC",
+        executorReason: "The request is held plain code", citation: "offline fixture",
+        open: { kind: "HTTP_GET", url: "https://fixture.example.gov/record" } },
+      onStarted: pid => pids.push(pid), spaceOut: async () => {},
+      openOne: async () => { opened++; return { status: 200, bytes: Buffer.byteLength(body),
+        body, contentType: "text/html", durationMs: 1, transportError: null }; },
+      vault: async (_artifact, text) => { assert.equal(text, body); vaulted++;
+        return { stored: true, where: "fixture", why: "offline capture" }; },
+    });
+    const cycle = await runCycle({ repos, obligations: [OBLIGATION], debts: [], routeTaskFor: () => task.id,
+      maturity: () => "GRADUATED", holder: "ordinary-route-process-test", now: NOW, leaseTtlMs: 60_000,
+      executor, workerCapacity: 2,
+      reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
+      truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" } });
+    assert.equal(pids.length, 1);
+    assert.notEqual(pids[0], process.pid);
+    assert.equal(opened, 1);
+    assert.equal(vaulted, 1);
+    assert.equal(cycle.dispatched[0]!.outcome, "WORKED");
+    assert.equal(cycle.dispatched[0]!.cost?.requestCount, 1);
+    const attempts = (await repos.attempts.list()).map(row => row.value);
+    assert.equal(attempts.length, 1);
+    assert.equal(attempts[0]!.outcome, "COMPLETED");
+    assert.ok(attempts[0]!.worker.instance.endsWith(`:worker:${pids[0]}`));
+  } finally { await rm(root, { recursive: true, force: true }); }
 }
 
 /** A toolkit whose fetch_public vaults one artifact per call and returns a rung. */
@@ -384,7 +419,7 @@ test("context assembly failure records a durable zero before any toolkit or prov
   assert.equal(costs.length, 1);
   assert.equal(costs[0].cost.usd, 0);
   assert.equal(costs[0].cost.requestCount, 0);
-  await ordinaryScoutProcessFailures();
+  await ordinaryWorkerProcesses();
 });
 
 test("a later toolkit construction failure remains unpriced and cannot release an unknown hold", async () => {

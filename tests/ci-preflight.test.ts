@@ -110,7 +110,7 @@ test("independent structural checks all report before the browser and full suite
   assert.equal(all.verify.strategy?.["fail-fast"], false);
   assert.ok(all.test.needs?.includes("verify"));
   assert.doesNotMatch(all.test.if ?? "", /always\(\)/);
-  for (const name of ["Lint", "Types", "Governance", "Orchestration", "Method", "Canonical state holdings", "Generated state manifests"]) {
+  for (const name of ["Lint", "Types", "Governance", "Orchestration", "Canonical state holdings", "Generated state manifests"]) {
     const step = all.verify.steps.find((s) => label(s).startsWith(name));
     assert.ok(step, `${name} was lost`);
     assert.match(step.if ?? "", /always\(\)/);

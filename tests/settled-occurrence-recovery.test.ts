@@ -80,6 +80,7 @@ import {
 } from "../lib/civic-data/operational-references.ts";
 import type { ContractReading } from "../lib/health/contracts.ts";
 import { eachStore } from "./control-plane-fixtures.ts";
+import { methodFixture } from "./method-store-fixture.ts";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 /* The held-evidence workers resolve the Avondale feed's subject through the operational registry. */
@@ -573,7 +574,7 @@ test("a recovered INGESTED occurrence keeps its bytes eligible for parsing, veri
     assert.ok(staged.unresolved.some((u) => u.includes(committed.artifactIds[0])), `${label}: citing the held artifact`);
 
     /* PARSING, VALIDATION, AUDIT: the held-evidence workers still enqueue the first stage for it. */
-    const runtime = standingFleetRuntime({ root: ROOT, vaultRoot, repos, now: () => T2 });
+    const runtime = standingFleetRuntime({ root: ROOT, method: methodFixture(), vaultRoot, repos, now: () => T2 });
     await advanceHeldWorkerFleet(ROOT, runtime, 1);
     const parser = (await repos.routeTasks.list()).find(
       (row) => row.value.workerTask?.role === "PARSER" && row.value.workerTask.artifactId === committed.artifactIds[0],

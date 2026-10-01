@@ -200,6 +200,9 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
     columns: {
       ...nonIdentifying("id", "received_at", "surface", "site", "run_class", "suspect_reason"),
       message: { space: "PROSE", why: "Scrubbed at the write path (T09)." },
+      about: { space: "PROSE", why: "Reported card label, scrubbed; Sean authorized report context on 2026-09-30." },
+      zip: { space: "NON_IDENTIFYING", why: "The reported card's approximate place, shared by every reader of that card; never a home address." },
+      record_id: { space: "CIVIC_IDENTIFIER", why: "The public record being reported, never a reader identifier." },
       run_id: { space: "OPAQUE_HANDLE" },
       contact_ref: {
         space: "OPAQUE_HANDLE",

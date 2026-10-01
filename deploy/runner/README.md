@@ -1,15 +1,94 @@
 # Linux runner
 
+## Resume day — Sean's click and paste checklist
+
+Use this when all sessions are finished and you choose to resume. The server
+is **146.190.74.145**, $48/month. The PC-off staging check waits for you to say
+you are ready; the 24-hour observation follows the production start below.
+
+### 1. Change the server's settings privately
+
+In Windows PowerShell, paste:
+
+```powershell
+ssh.exe -t -i "$env:USERPROFILE\.ssh\wtp-deploy" root@146.190.74.145
+```
+
+In that Linux terminal, paste `nano /etc/meanwhile/runner.env`. Edit or add the
+following lines, keeping only one of each name. Copy secret values directly
+into nano; never paste them into chat, GitHub, screenshots or a shell command.
+
+| Line | Production value and where to get it |
+| --- | --- |
+| `WTP_RUNTIME_MODE` | `production` |
+| `WTP_DB_ROLE` | `production` |
+| `NODE_ENV` | `production` |
+| `DATABASE_URL` | Live site's `DATABASE_URL`: Netlify → the live Meanwhile project → Project configuration → Environment variables → production value. |
+| `WTP_CONTROL_PLANE_DATABASE_URL` | Same screen, production value of this exact name. This must match the live Admin database. |
+| `WTP_PRODUCTION_DATABASE_URL_WRITE` | Existing approved production writer credential, under this exact name in the live settings or Sean's saved credentials. If absent, S0 must supply its private location; do not reuse a read-only URL. |
+| `WTP_PRODUCTION_DATABASE_URL_READONLY` | Existing production read-only credential of this name, from the live settings or Sean's saved credentials. |
+| `WTP_VAULT_PROVIDER` | Keep `netlify`; production vault and portraits must have been transferred before switching their destination. |
+| `WTP_BLOBS_SITE_ID` and `NETLIFY_SITE_ID` | Live project → Project configuration → General → Project details → Project ID. Replace the staging ID `acafb24c-9803-4d0d-8f6c-8b9d21d96169` in both lines. |
+| `WTP_BLOBS_TOKEN` and `NETLIFY_BLOBS_TOKEN` | A Netlify personal access token authorized for the live project: User settings → Applications → Personal access tokens. Paste the same authorized token into both lines. |
+
+Keep the Linux paths, provider API keys and service user's GitHub sign-in.
+Keep `WTP_VAULT_STORE` identical on the live Admin host and Linux (default:
+`meanwhile-evidence`). In the live Netlify project's environment settings,
+also set `WTP_VAULT_PROVIDER=netlify`, `WTP_BLOBS_SITE_ID` and
+`WTP_BLOBS_TOKEN` to this same production destination, then redeploy so Admin
+can send wake hints. A transfer to staging alone does not populate production.
+Save nano with **Ctrl+O**, **Enter**, then **Ctrl+X**.
+
+### 2. Start continuous work and confirm it is running
+
+In the same Linux terminal, paste:
+
+```sh
+systemctl enable --now meanwhile-runner.service
+systemctl is-enabled meanwhile-runner.service
+systemctl is-active meanwhile-runner.service
+journalctl -u meanwhile-runner.service -n 60 --no-pager
+journalctl -u meanwhile-runner.service -f
+```
+
+Expect `enabled`, `active`, then `pilot-runner · control plane postgres,`
+with `running until stopped`, and `pilot-runner · cycle 1 started ...`.
+Later cycles must finish successfully and new cycle numbers must appear;
+`active` alone only means the process exists. **Ctrl+C** exits the live log
+without stopping the service. If it repeatedly restarts or reports a refusal,
+paste `systemctl stop meanwhile-runner.service` and give S0 the error lines
+without secrets.
+
+### 3. Make the first sends in Admin's command center
+
+Open the live site's **/admin**, sign in as owner, and use the command center.
+Choose **Now** → open **Direct work** → **Whole system · affects every state**.
+Click **Set the daily budget**, type your dollar limit, review the preview,
+then **Send**. This sets the rolling 24-hour Fleet ceiling. Next click **Turn
+paid search on**, review the preview, then **Send**. These buttons arrive with
+S11's PR #497; the runner confirms the settings when a round starts. Paid
+research's resume button does not enable paid search.
+
+For the first hunt, choose the ZIP in the place picker → **Now** → **Direct work** → **Start a
+hunt here** → enter its **Lifetime limit in dollars** → **Send**. For several
+ZIPs, use **Start many hunts**, review each hunt's allowance, then **Send**.
+If existing paid research is paused, choose **Now** → **Direct work** → **Whole system · affects every state** →
+**Resume paid research** → **Send**; if the runner itself is paused, also
+choose **Let the workers start again** → **Send**. In **Work** → instruction history,
+follow each send from **Queued** through **Read** / **Running** to **Done**.
+Done means that instruction took effect; it does not mean a hunt is finished
+or that every fact has reached readers. A refusal or failure shows its reason.
+
 ## Staging Blobs destination
 
-Use a **separate Netlify project**, proposed name `meanwhile-runner-staging`.
-No staging Project ID is recorded yet. Sean must create or identify this
-project before entering its ID on the host. A `test` branch deploy or a Deploy
+The separate Netlify project is **`meanwhile-runner-staging`**, Project ID
+**`acafb24c-9803-4d0d-8f6c-8b9d21d96169`**. Sean has entered its five Blobs
+settings in `/etc/meanwhile/runner.env`. A `test` branch deploy or a Deploy
 Preview of the live site is insufficient: `getStore` stores are shared across
 all deploys of a project. The live project's `reader-artifacts` serves readers.
 See [Netlify's store scope documentation](https://docs.netlify.com/build/data-and-storage/netlify-blobs/).
 
-To create a storage project without importing live settings:
+To recreate a staging storage destination without importing live settings:
 
 1. In the Netlify team, choose **Add new project → Deploy manually**. Drop a
    folder containing a plain `index.html` identifying it as staging storage.

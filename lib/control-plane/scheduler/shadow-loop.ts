@@ -159,6 +159,9 @@ export interface CycleInput {
   readonly truth: ContractReading;
   /** A ceiling on how many due items one cycle dispatches. Stated, not implied. */
   readonly maxDispatches?: number;
+  readonly workerCapacity?: number;
+  /** Within each hunt preserve service order; serve one row per hunt per round. */
+  readonly huntFor?: (row: ScheduledObligation) => string | null;
   /**
    * Aggregate Fleet admission, shared with the worker lanes that follow this
    * scheduler. A refusal is durably named in `deferred`; it never becomes an
@@ -332,7 +335,7 @@ export interface RecoveredOccurrence extends SettledOccurrence {
 /** A bounded pool: at most `limit` items in flight, in input order. */
 export type ScoutAdmission = { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string };
 
-async function runPool<T>(items: readonly T[], limit: number, fn: (item: T) => Promise<void>): Promise<void> {
+export async function runPool<T>(items: readonly T[], limit: number, fn: (item: T) => Promise<void>): Promise<void> {
   let next = 0;
   const workers = Array.from({ length: Math.max(1, Math.min(limit, items.length || 1)) }, async () => {
     while (next < items.length) {
@@ -670,7 +673,20 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
    */
   const debtAtCycleStart = new Map(input.debts.map((d) => [d.obligationId, d] as const));
   const debtOf = (obligationId: string) => debtAtCycleStart.get(obligationId);
-  const plainCodeQueue = placeFirstRows(plainCodeQueueOrder(deterministicRows, debtOf), input.placeFirst);
+  const fairQueue = (rows: readonly ScheduledObligation[]): readonly ScheduledObligation[] => {
+    if (!input.huntFor) return rows;
+    const groups = new Map<string, ScheduledObligation[]>();
+    for (const row of rows) {
+      const key = input.huntFor(row) ?? "standing";
+      const group = groups.get(key) ?? []; group.push(row); groups.set(key, group);
+    }
+    const ordered: ScheduledObligation[] = [];
+    for (let round = 0; ordered.length < rows.length; round++) {
+      for (const group of groups.values()) if (group[round]) ordered.push(group[round]);
+    }
+    return ordered;
+  };
+  const plainCodeQueue = fairQueue(placeFirstRows(plainCodeQueueOrder(deterministicRows, debtOf), input.placeFirst));
   const deferredBy: Record<string, number> = {};
   let modelDispatched = 0;
   let modelDeferred = 0;
@@ -723,14 +739,14 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     }
   };
 
-  /* THE DETERMINISTIC LANE — the serial queue, longest wait first. */
+  /* Shared worker processes preserve each hunt's longest-wait order. */
   const deterministicLane = async (): Promise<void> => {
     let admitted = 0;
-    for (const row of plainCodeQueue) {
+    await runPool(plainCodeQueue, input.workerCapacity ?? 1, async row => {
       if (input.openOccurrence === undefined && input.requireOpenOccurrence && input.routeTaskFor(row.obligation.id) === null) {
         deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: outside this cycle's reserved lane slots; work remains due." });
         holdDeterministic(row, "NO_OPEN_OCCURRENCE");
-        continue;
+        return;
       }
       if (admitted >= ceiling) {
         deferred.push({
@@ -742,25 +758,28 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
             "whatever the backlog was",
         });
         holdDeterministic(row, "DISPATCH_CEILING");
-        continue;
+        return;
       }
+      admitted += 1;
       const opened = await tryOpen(row);
       if (opened === false) {
+        admitted--;
         deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: the occurrence could not be opened in step with dispatch this cycle; work remains due." });
         holdDeterministic(row, "NO_OPEN_OCCURRENCE");
-        continue;
+        return;
       }
       if (opened !== true) {
+        admitted--;
         recover(row, opened.settled);
         deterministicRecovered += 1;
-        continue;
+        return;
       }
       const refusedBy = aggregateRefusal(row);
       if (refusedBy !== null) {
+        admitted--;
         holdDeterministic(row, refusedBy);
-        continue;
+        return;
       }
-      admitted += 1;
       deterministicDispatched += 1;
       const result = await dispatchRow(row, {
         executor: resolvedDeterministic.get(row.obligation.id) ?? (typeof input.executor === "function" ? input.executor(row) : input.executor),
@@ -768,7 +787,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         ...(research !== undefined ? { decision: decisions.get(row.obligation.id) } : {}),
       });
       if (research?.onDispatched) await research.onDispatched(result, "DETERMINISTIC");
-    }
+    });
   };
 
   /*
@@ -797,7 +816,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
 
   const modelLane = async (): Promise<void> => {
     if (research === undefined) return;
-    await runPool(modelRows, research.workerCapacity, async (row) => {
+    await runPool(fairQueue(modelRows), research.workerCapacity, async (row) => {
       if (input.openOccurrence === undefined && input.requireOpenOccurrence && input.routeTaskFor(row.obligation.id) === null) {
         deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: outside this cycle's reserved lane slots; work remains due." });
         holdModel(row, "NO_OPEN_OCCURRENCE");

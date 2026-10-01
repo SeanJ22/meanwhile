@@ -22,7 +22,8 @@ test("generic contact words cannot masquerade as a named person or government", 
 
 test("focused candidate contact questions retrieve the same held profile and reject a wrong supplied ID", async () => {
   delete process.env.ANTHROPIC_API_KEY;
-  const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
+  const { POST } = await import("../app/api/ask/grounded/route.ts");
+  const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
   const questions = ["How can I contact her?", "What biography, published contact information, and verified campaign and official pages do we hold for this person?"];
   for (const question of questions) for (const id of ["ballot-az-pima:governor|Katie Hobbs", "ballot-az-pima:governor|wrong-id"]) {
     resetGroundedState();
@@ -56,7 +57,8 @@ test("Hourihan's exact card corpus answers while the unresolved party/candidacy 
   const cardKey = "ballot-az-pima:governor|Teri Ann Hourihan";
   assert.equal(lineupRowForCard(cardKey)?.outcome, "PARTY_CONFLICT");
   assert.deepEqual(readerPersonKeys(cardKey).keys, [cardKey]);
-  const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
+  const { POST } = await import("../app/api/ask/grounded/route.ts");
+  const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
   resetGroundedState();
   const response = await POST(new Request("https://wtp.test/api/ask/grounded", { method: "POST", headers: { "content-type": "application/json", origin: "https://wtp.test" }, body: JSON.stringify({ question: "What does Teri Ann Hourihan say about Arizona?", surface: "BALLOT", ocdIds: ["ocd-division/country:us/state:az"], activeSubjects: [{ id: cardKey, name: "Teri Ann Hourihan", kind: "PERSON", focused: true }] }) }));
   const payload = await response.json() as AskAnswerPayload;

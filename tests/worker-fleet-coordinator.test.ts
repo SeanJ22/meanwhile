@@ -13,6 +13,8 @@ import type { LegacyCivicExtractionContract } from "../lib/control-plane/workers
 import { mkdtemp, rm, mkdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { writeFieldManual } from "../lib/control-plane/field-manual.ts";
+import { methodFixture, knowledgeEntries, methodVersionEntry } from "./method-store-fixture.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { runLeaseWorkerProcesses, runNationalPlaceWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -380,6 +382,8 @@ test("unresolved identity permits independent diagnosis but never staging", asyn
   try {
     const repos = await createFileRepositories(root);
     const h = await autonomousHarness({ repos, plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
+    const method = methodFixture();
+    await writeFieldManual(repos, [...knowledgeEntries(method), methodVersionEntry(method)], h.now());
     const selected = await nextAutonomousOperation(h.runtime, h.item.id);
     const second = createRouteTask({ workItemId: h.item.id, routeId: selected.task!.routeId + ":second",
       routeLabel: selected.task!.routeLabel, target: selected.task!.target, inherited: false, now: h.now() });
@@ -460,12 +464,13 @@ test("ZIP process reports return after parent registry and election publication,
         return { registry: "published" };
       },
       publishElection: async () => { await write("election"); return { candidateId: null, promotedVersionId: null, fields: [], gaps: [] }; },
-      onResult: report => { delivered.push(report.zip); assert.equal(report.electionPublications.length, 1); } });
+      onResult: report => { if ("deferred" in report) assert.fail(report.deferred);
+        delivered.push(report.zip); assert.equal(report.electionPublications.length, 1); } });
     assert.equal(pids.length, 2);
     assert.equal(peak, 1, "registry and election callbacks share the parent critical section");
     assert.equal(published.length, 4, "one failure does not poison later pointer writes");
     assert.deepEqual(reports.map(report => report.zip).sort(), ["10001", "10002"]);
     assert.deepEqual(delivered.sort(), ["10001", "10002"]);
-    assert.equal(reports.filter(report => "error" in (report.publications[0] as object)).length, 1);
+    assert.equal(reports.filter(report => !("deferred" in report) && "error" in (report.publications[0] as object)).length, 1);
   } finally { await rm(root, { recursive: true, force: true }); }
 });

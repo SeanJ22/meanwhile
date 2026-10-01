@@ -128,7 +128,7 @@ test("PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts ac
   assert.match(runner, /scoutPrewarmPlan\(\{ toolkitSpecs: scoutToolSpecsFor\(scoutSearch !== null\),/, "the pre-warm warms the list the switch gives the Attempts");
   assert.match(runner, /search: \(lifetimeHuntWork\(scheduled\.obligation\.id\) \? scoutSearchLifetime : scoutSearch\) \?\? undefined/, "funded hunts use their matching search budget");
   assert.match(runner, /const scoutSearchLifetime = searchBudget === null \|\| !hasLifetimeHunt \? null : makeScoutSearch\(/, "the lifetime route preserves the same owner-controlled search switch");
-  const child = readFileSync(new URL("../lib/control-plane/workers/lease-worker.ts", import.meta.url), "utf8");
+  const child = readFileSync(new URL("../lib/control-plane/workers/scout-worker.ts", import.meta.url), "utf8");
   assert.match(child, /buildScoutToolkit\(\{ \.\.\.ctx, \.\.\.tools, sourceApi: \{ env: process\.env \} \}\)/, "the child offers search and every configured source API through the shared toolkit");
   assert.doesNotMatch(runner, /toolkitSpecs: SCOUT_TOOL_SPECS/, "no pre-warm from the list without search");
 });

@@ -18,6 +18,7 @@ import { NetlifyEvidenceStore } from "../lib/control-plane/evidence/netlify-stor
 import type { Store } from "@netlify/blobs";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import { copyVaultObjects } from "../scripts/pilot-runtime-transfer.mts";
+import { contentHash } from "../lib/control-plane/ids.ts";
 
 /**
  * **THE VAULT, READ BY A ROUTINE CHILD THAT MAY NOT WRITE.** (C16, 2026-09-24.)
@@ -53,6 +54,48 @@ test("C16: the read-only vault finds what the durable store committed, by id, co
     rmSync(root, { recursive: true, force: true });
   }
   assert.deepEqual((await indexVault(join(tmpdir(), "wtp-ro-vault-absent-root"))).byId.size, 0, "an absent root is an empty vault");
+});
+
+test("Netlify vault preserves oversized metadata atomically with original bytes", async () => {
+  const bytes = new TextEncoder().encode("held evidence bytes");
+  const meta = { contentType: "text/plain", contentHash: contentHash(bytes), byteLength: bytes.length,
+    objectClass: "IMMUTABLE_BODY" as const, custom: { sourceNote: "government source — ".repeat(800) } };
+  let data: ArrayBuffer | null = null;
+  let metadata: Record<string, unknown> = {};
+  let writes = 0;
+  const remote = new NetlifyEvidenceStore({
+    async getMetadata() { return data === null ? null : { metadata }; },
+    async getWithMetadata() { return data === null ? null : { data, metadata }; },
+    async set(_key: string, body: ArrayBuffer, options: { metadata: Record<string, unknown>; onlyIfNew?: boolean }) {
+      assert.ok("netlify-blobs-metadata".length + 4 + Buffer.from(JSON.stringify(options.metadata)).toString("base64").length <= 2048);
+      if (options.onlyIfNew && data !== null) return { modified: false };
+      data = body;
+      metadata = options.metadata;
+      writes++;
+      return { modified: true };
+    },
+  } as unknown as Store);
+  await remote.put("large-note", bytes, meta);
+  assert.equal(metadata.format, "evidence-envelope@1");
+  assert.deepEqual((await remote.get("large-note"))?.bytes, bytes);
+  assert.deepEqual(await remote.head("large-note"), meta);
+  assert.equal((await remote.describe("large-note"))?.bodySha256, contentHash(bytes));
+  await remote.put("large-note", bytes, meta);
+  assert.equal(writes, 1, "healthy oversized immutable reuse is still a no-op");
+  new Uint8Array(data!)[data!.byteLength - 1] ^= 1;
+  await assert.rejects(remote.get("large-note"), /Stored evidence is corrupt/);
+  await assert.rejects(remote.put("large-note", bytes, meta), /Stored evidence is corrupt/);
+  assert.equal(writes, 1);
+  const indexMeta = { ...meta, objectClass: "MUTABLE_INDEX" as const, contentHash: "manifest:large-note" };
+  data = null;
+  await remote.put("index.json", bytes, indexMeta);
+  new Uint8Array(data!)[data!.byteLength - 1] ^= 1;
+  await remote.put("index.json", bytes, indexMeta);
+  assert.deepEqual((await remote.get("index.json"))?.meta, indexMeta);
+  assert.equal(writes, 3, "a mutable index's damaged body remains rebuildable");
+  new DataView(data!).setUint32(0, data!.byteLength);
+  await assert.rejects(remote.get("large-note"), /envelope is unreadable/);
+  await assert.rejects(remote.describe("large-note"), /envelope is unreadable/);
 });
 
 test("C16: the derived wiring child's closure reaches no filesystem writer", () => {
@@ -148,4 +191,29 @@ test("vault transfer keeps healthy originals moving after a missing body and sto
     async put() { destinationCalls++; throw new Error("DESTINATION_UNAVAILABLE"); },
   }, () => {}), /DESTINATION_UNAVAILABLE/);
   assert.equal(destinationCalls, 1);
+
+  // Direct transfer must not count matching destination metadata as copied
+  // when the retained body is corrupt. Healthy immutable reuse remains a no-op.
+  const meta = { contentType: "text/plain", contentHash: contentHash(bytes), byteLength: bytes.length,
+    objectClass: "IMMUTABLE_BODY" as const };
+  let storedMeta: typeof meta | (Omit<typeof meta, "objectClass"> & { objectClass: "MUTABLE_INDEX" }) = meta;
+  let storedBytes = Uint8Array.from(bytes);
+  let writes = 0;
+  const remote = new NetlifyEvidenceStore({
+    async getMetadata() { return { metadata: { meta: storedMeta, bodySha256: meta.contentHash } }; },
+    async getWithMetadata() { return { data: storedBytes.buffer, metadata: { meta: storedMeta, bodySha256: meta.contentHash } }; },
+    async set() { writes++; return { modified: true }; },
+  } as unknown as Store);
+  const retained = { async list() { return ["held-original"]; },
+    async get(key: string) { return { key, bytes, meta }; } };
+  assert.deepEqual(await copyVaultObjects(retained, remote, () => {}), { transferred: 1, failed: 0 });
+  assert.equal(writes, 0, "healthy immutable reuse does not rewrite the object");
+  storedBytes = Uint8Array.from(bytes);
+  storedBytes[0] ^= 1;
+  await assert.rejects(copyVaultObjects(retained, remote, () => {}), /Stored evidence is corrupt/);
+  assert.equal(writes, 0, "a corrupt held body cannot be counted as copied or silently replaced");
+
+  storedMeta = { ...meta, objectClass: "MUTABLE_INDEX", contentHash: "manifest:held" };
+  await remote.put("manifest.json", bytes, storedMeta);
+  assert.equal(writes, 1, "a damaged mutable index remains rebuildable");
 });

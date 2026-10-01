@@ -5,8 +5,8 @@
  * Every console button is a plain form POST that ends in a 303 back to a
  * page. The destination comes from the form's `returnTo` field, and a
  * redirect target read off a request body is validated against a closed list
- * — never an arbitrary URL. The list is the console itself: the three views
- * and a state's readiness page.
+ * — never an arbitrary URL. The list is the console itself: the command center,
+ * the pages not yet folded into it, and a state's readiness page.
  *
  * PURE, and shared by both admin routes so they cannot disagree about what
  * the console is.
@@ -14,15 +14,8 @@
 
 export const CONSOLE_VIEWS: readonly string[] = [
   "/admin",
-  "/admin/changes",
-  "/admin/research",
-  "/admin/release-review",
-  "/admin/steward",
   "/admin/sources",
-  "/admin/reader",
-  "/admin/feedback",
   "/admin/agents",
-  "/admin/chat",
 ];
 
 /** A state readiness page: `/readiness/az`. */

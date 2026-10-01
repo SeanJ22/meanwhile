@@ -52,22 +52,27 @@ import {
   type ConclusionStore,
 } from "../lib/method/conclusions.ts";
 import { findReopenings, type MethodKnowledge } from "../lib/method/knowledge.ts";
-import { readMethodStore } from "../lib/method/candidate.ts";
-import { runLearnBatch, type LearnedRoute } from "../lib/method/learn-batch.ts";
+import { emptyCandidateStore } from "../lib/method/candidate.ts";
+import { admitLearnedRoutes, type LearnedRoute } from "../lib/method/learn-batch.ts";
+import { methodFixture } from "./method-store-fixture.ts";
 import { projectionHasRoute, projectMethodFor } from "../lib/method/projection.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ON = "2026-08-29";
-const CANONICAL = join(ROOT, "data", "method", "knowledge.json");
 const AZ = { state: "az", governmentType: "county" };
 
-function scratch(name: string): { dir: string; storePath: string; conclusionPath: string } {
+function scratch(name: string): { dir: string; conclusionPath: string } {
   const dir = join(ROOT, ".scratch", `method-conclusions-${name}`);
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(join(dir, "data", "method"), { recursive: true });
-  const storePath = join(dir, "data", "method", "knowledge.json");
-  writeFileSync(storePath, readFileSync(CANONICAL, "utf8"), "utf8");
-  return { dir, storePath, conclusionPath: join(dir, "data", "method", "conclusions.json") };
+  return { dir, conclusionPath: join(dir, "data", "method", "conclusions.json") };
+}
+
+/** Admit one new route through the real gate, in memory, and return the grown knowledge. */
+function admit(k: MethodKnowledge, route: LearnedRoute, attemptId: string): MethodKnowledge {
+  const out = admitLearnedRoutes(k, emptyCandidateStore(), [route], { stamp: ON, attemptId });
+  assert.equal(out.admitted, true, `the avenue was refused: ${out.refusal}`);
+  return out.knowledge;
 }
 
 /** The new avenue. A real `LearnedRoute`, admitted through the real gate. */
@@ -113,10 +118,10 @@ function earn(
 /* ------------------------------------------------------------ (1) (2) (3) (4) */
 
 test("THE LOOP — a conclusion earned at vN is reopened by a route admitted at vN+1", () => {
-  const { dir, storePath, conclusionPath } = scratch("loop");
+  const { dir, conclusionPath } = scratch("loop");
 
   /* (1) EARNED AND PERSISTED, STAMPED WITH THE VERSION IT WAS EARNED UNDER. */
-  const before = readMethodStore(storePath);
+  const before = methodFixture();
   const earned = earn(emptyConclusionStore(), before, [before.routes[0].id]);
   assert.equal(earned.record.earnedAtVersion, before.version);
   assert.equal(earned.record.status, "EARNED");
@@ -132,11 +137,7 @@ test("THE LOOP — a conclusion earned at vN is reopened by a route admitted at 
   assert.deepEqual(findReopenings(before, reloaded), []);
 
   /* (2) A NEW APPLICABLE ROUTE, ADMITTED THROUGH THE REAL PATH. */
-  const admitted = runLearnBatch(storePath, [newAvenue("reopening-loop-avenue")], ON, {
-    attemptId: "at-test-avenue",
-  });
-  assert.equal(admitted.written, true, `the avenue was refused: ${admitted.refusal}`);
-  const after = readMethodStore(storePath);
+  const after = admit(before, newAvenue("reopening-loop-avenue"), "at-test-avenue");
   assert.equal(after.version, before.version + 1);
 
   /* (3) FINDREOPENINGS IDENTIFIES IT. */
@@ -192,8 +193,8 @@ test("THE LOOP — a conclusion earned at vN is reopened by a route admitted at 
 /* ------------------------------------------------------------------------ (5) */
 
 test("a WITHDRAWN conclusion does not delete the route that produced it", () => {
-  const { dir, storePath, conclusionPath } = scratch("withdraw");
-  const k = readMethodStore(storePath);
+  const { dir, conclusionPath } = scratch("withdraw");
+  const k = methodFixture();
   const producedBy = k.routes[0].id;
   const routesBefore = JSON.stringify(k.routes);
 
@@ -209,9 +210,8 @@ test("a WITHDRAWN conclusion does not delete the route that produced it", () => 
   writeConclusionStore(conclusionPath, w.store);
 
   // THE ROUTE IS UNTOUCHED — by bytes, and through the consumer read path.
-  const after = readMethodStore(storePath);
-  assert.equal(JSON.stringify(after.routes), routesBefore, "withdrawing a conclusion changed the routes");
-  assert.ok(projectionHasRoute(projectMethodFor(after, AZ), producedBy));
+  assert.equal(JSON.stringify(k.routes), routesBefore, "withdrawing a conclusion changed the routes");
+  assert.ok(projectionHasRoute(projectMethodFor(k, AZ), producedBy));
 
   // The record is KEPT, carrying why it went. Deleting it would let a later
   // session re-earn the same wrong conclusion having never been told.
@@ -222,9 +222,8 @@ test("a WITHDRAWN conclusion does not delete the route that produced it", () => 
 
   // And it closes nothing any more, so nothing reopens it.
   assert.deepEqual(openConclusions(reloaded), []);
-  const admitted = runLearnBatch(storePath, [newAvenue("withdrawn-avenue")], ON);
-  assert.equal(admitted.written, true);
-  assert.deepEqual(findReopenings(readMethodStore(storePath), reloaded), []);
+  const grown = admit(k, newAvenue("withdrawn-avenue"), "at-test-withdrawn");
+  assert.deepEqual(findReopenings(grown, reloaded), []);
 
   // Re-withdrawing is refused rather than rewriting somebody's reasoning.
   const twice = withdrawConclusion(reloaded, earned.record.id, {
@@ -242,7 +241,7 @@ test("a WITHDRAWN conclusion does not delete the route that produced it", () => 
 /* ------------------------------------------------------------------ the corpus */
 
 test("PLANTED: a FIXTURE conclusion is refused in the canonical corpus, by name", () => {
-  const k = readMethodStore(CANONICAL);
+  const k = methodFixture();
   const fixture = earn(emptyConclusionStore(), k, [k.routes[0].id]);
   const issues = validateConclusions(fixture.store, k);
   assert.ok(
@@ -252,7 +251,7 @@ test("PLANTED: a FIXTURE conclusion is refused in the canonical corpus, by name"
 });
 
 test("PLANTED: a conclusion that names no route it was earned by is refused", () => {
-  const k = readMethodStore(CANONICAL);
+  const k = methodFixture();
   const belief = recordConclusion(
     emptyConclusionStore(),
     k,
@@ -287,16 +286,16 @@ test("PLANTED: a conclusion that names no route it was earned by is refused", ()
   );
 });
 
-test("the SHIPPED corpus is the shape method:check already reads, and it validates", () => {
+test("the SHIPPED corpus is a PriorConclusion[] array, and it validates", () => {
   const path = join(ROOT, "data", "method", "conclusions.json");
   const raw = JSON.parse(readFileSync(path, "utf8")) as unknown;
   assert.ok(
     Array.isArray(raw),
-    "scripts/method-check.mts parses this file as PriorConclusion[]; an envelope would break it",
+    "readConclusionStore parses this file as PriorConclusion[]; an envelope would break it",
   );
 
   const store = readConclusionStore(path);
-  const k = readMethodStore(CANONICAL);
+  const k = methodFixture();
   assert.deepEqual(validateConclusions(store, k), []);
   assert.deepEqual(
     store.filter((c) => c.fixture),

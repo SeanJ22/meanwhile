@@ -85,7 +85,6 @@ function deps(
     now: tickingClock(),
     currentStateVersion: "world-1",
     codeSha: null,
-    recordReview: null,
     ...over,
   };
 }
@@ -513,57 +512,6 @@ test("ADM-C6: an unreadable receipt log stops the gateway rather than risking a 
   assert.equal(outcome.receipt.refusal, "DOWNSTREAM_REFUSED");
   assert.match(outcome.receipt.says, /already happened/i);
   assert.deepEqual(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY), [], "it acted without being able to check");
-});
-
-test("ADM-C6: the review decision refuses by name when nothing is wired to record it", async () => {
-  const repos = createMemoryRepositories();
-  const outcome = await submit(
-    ask({
-      type: "review.decide",
-      subject: "a".repeat(40),
-      input: { action: "DECIDE", stagingSha: "a".repeat(40), section: "pearl", decision: "APPROVE" },
-      idempotencyKey: "review-key-0001",
-    }),
-    deps(repos, { recordReview: null }),
-  );
-  assert.equal(outcome.ok, false);
-  assert.equal(outcome.receipt.refusal, "DOWNSTREAM_REFUSED");
-  assert.match(outcome.receipt.says, /nothing was recorded/i);
-});
-
-test("ADM-C6: the review decision delegates, and the writer's staleness is the gateway's staleness", async () => {
-  const repos = createMemoryRepositories();
-  const calls: unknown[] = [];
-  const stale = await submit(
-    ask({
-      type: "review.decide",
-      subject: "b".repeat(40),
-      input: { action: "DECIDE", stagingSha: "b".repeat(40), section: "pearl", decision: "APPROVE" },
-      idempotencyKey: "review-key-0002",
-    }),
-    deps(repos, {
-      recordReview: async (input) => {
-        calls.push(input);
-        return { ok: false, code: "STALE_SHA", detail: "staging moved while you were reviewing" };
-      },
-    }),
-  );
-  assert.equal(calls.length, 1, "the gateway did not call the existing writer");
-  assert.equal(stale.receipt.refusal, "STALE_STATE", "the writer's stale build is not mapped to the gateway's staleness");
-
-  const done = await submit(
-    ask({
-      type: "review.decide",
-      subject: "b".repeat(40),
-      input: { action: "DECIDE", stagingSha: "b".repeat(40), section: "pearl", decision: "APPROVE" },
-      idempotencyKey: "review-key-0003",
-    }),
-    deps(repos, {
-      recordReview: async () => ({ ok: true, code: "RECORDED", detail: "APPROVE on pearl recorded", rowIds: ["row-1"] }),
-    }),
-  );
-  assert.equal(done.ok, true, done.receipt.says);
-  assert.deepEqual(done.receipt.openedWork, [{ kind: "review record", id: "row-1", title: "your review decision" }]);
 });
 
 /* ==========================================================================

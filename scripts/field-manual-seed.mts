@@ -30,8 +30,6 @@ import {
   type FieldManualOutcome,
   type FieldManualRole,
 } from "../lib/control-plane/field-manual.ts";
-import { readMethodStore } from "../lib/method/candidate.ts";
-import { KNOWLEDGE_SOURCE, knowledgeEntries, methodVersionEntry } from "../lib/method/manual-bridge.ts";
 import { leadLine, researchDocEntries, splitMarkdownDocument } from "../lib/method/research-docs.ts";
 import { MANIFEST_ROUTES } from "../lib/hunt/branch-manifest.ts";
 import { KNOWN_PLATFORMS } from "../lib/hunt/platform-tenancy.ts";
@@ -106,11 +104,6 @@ const perSource = new Map<string, number>();
 function collect(source: string, entries: FieldManualEntry[]): FieldManualEntry[] {
   perSource.set(source, (perSource.get(source) ?? 0) + entries.length);
   return entries;
-}
-
-function fromKnowledge(): FieldManualEntry[] {
-  const store = readMethodStore(join(ROOT, "data", "method", "knowledge.json"));
-  return collect(KNOWLEDGE_SOURCE, [...knowledgeEntries(store), methodVersionEntry(store)]);
 }
 
 function fromManifest(): FieldManualEntry[] {
@@ -511,7 +504,6 @@ async function main(): Promise<void> {
   }
 
   const entries: FieldManualEntry[] = [
-    ...fromKnowledge(),
     ...fromManifest(),
     ...fromPlatforms(),
     ...fromDescentSeeds(),

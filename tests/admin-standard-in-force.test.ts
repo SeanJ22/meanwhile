@@ -38,7 +38,7 @@ function shellPages(): readonly string[] {
 
 test("no Admin page hands the strip a hard-coded standard: each takes the page base's, or what its own readings were measured under", () => {
   const pages = shellPages();
-  assert.ok(pages.length >= 8, `expected every redesigned page, saw ${pages.length}`);
+  assert.ok(pages.length >= 5, `expected every redesigned page, saw ${pages.length}`);
   const findings: string[] = [];
   for (const file of pages) {
     const source = readFileSync(join(ROOT, file), "utf8");

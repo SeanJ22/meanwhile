@@ -326,7 +326,7 @@ test("a round names its question from the obligation's own state, never from the
 const NOW = "2026-09-25T04:00:00.000Z";
 function gatewayDeps(repos: ControlPlaneRepositories): GatewayDeps {
   let ms = Date.parse(NOW);
-  return { repos, now: () => new Date((ms += 1000)).toISOString(), currentStateVersion: "world-1", codeSha: null, recordReview: null };
+  return { repos, now: () => new Date((ms += 1000)).toISOString(), currentStateVersion: "world-1", codeSha: null };
 }
 const PIMA = { type: "county", geoid: "04019", version: "county:2020", label: "Pima County, Arizona", stateAbbr: "AZ" };
 function request(type: string, input: Record<string, unknown>, key: string): ActionRequest {

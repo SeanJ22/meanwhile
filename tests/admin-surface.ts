@@ -24,7 +24,6 @@
  *               sections now live across these tabs
  *   readiness   the Readiness area: one state's page, and every Readiness
  *               tab's page
- *   research    the runner and research detail page, which kept its content
  * ```
  *
  * From each entry page the walk follows every import into `app/(admin)/` and
@@ -42,7 +41,7 @@ import { dirname, join, relative, sep } from "node:path";
 
 import { FLEET_TABS, READINESS_TABS } from "../app/(admin)/_mw/scope.ts";
 
-export type Surface = "home" | "research" | "readiness";
+export type Surface = "home" | "readiness";
 
 /**
  * The shell every redesigned screen renders in, the primitives it and the
@@ -60,7 +59,6 @@ const SHARED: readonly string[] = [
   "app/(admin)/console-ui.tsx",
   "app/(admin)/console-nav.tsx",
   "app/(admin)/status-ui.tsx",
-  "app/(admin)/charts.tsx",
 ];
 const SHARED_DIRS: readonly string[] = ["app/(admin)/_mw/data/"];
 
@@ -78,8 +76,6 @@ function entries(surface: Surface): readonly string[] {
       return FLEET_TABS.map((t) => pageFor(t.path));
     case "readiness":
       return ["app/(admin)/readiness/[state]/page.tsx", ...READINESS_TABS.map((t) => pageFor(t.path))];
-    case "research":
-      return ["app/(admin)/admin/research/page.tsx"];
   }
 }
 

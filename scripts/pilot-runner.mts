@@ -137,7 +137,7 @@ import { startHangWatchdog, hangWatchdogDisabled, type HangWatchdog } from "./ru
 import {
   installNeonRequestDeadline,
 } from "../lib/ops/neon-request-deadline.ts";
-import { runnerControlReader } from "./pilot-runtime-control.mts";
+import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
 import { runRuntimeChildren } from "./pilot-runtime-child.mts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
@@ -1047,6 +1047,7 @@ let intentReadFailed = false;
 let pauseBeatFailed = false;
 let runtimeAdmissionsHeld = false;
 let standingRuntimeTimer: ReturnType<typeof setInterval> | null = null;
+let ownerControlTimer: ReturnType<typeof setInterval> | null = null;
 let adminCopyTimer: ReturnType<typeof setInterval> | null = null;
 let adminCopyWork: Promise<void> | null = null;
 let researchCycleActive = false;
@@ -1142,16 +1143,20 @@ function startStandingRuntimeClock(): void {
   standingRuntimeTimer = setInterval(
     () => {
       runStandingRuntimeTick("independent standing clock");
-      // Long-running research must not postpone the owner's controls until its end.
-      if (researchCycleActive && !canary && activeControlRead === null) {
-        activeControlRead = ownerSays().then(says => {
-          if (says === "START_NOW") ownerWakePending = true;
-        }).catch(error => {
-          console.error(`  active runner controls could not be applied: ${error instanceof Error ? error.message : String(error)}`);
-        }).finally(() => { activeControlRead = null; });
-      }
     },
     POLL_MS,
+  );
+  // Source admissions keep their own clock. Admin hints are read independently.
+  ownerControlTimer = setInterval(() => {
+    if (researchCycleActive && !canary && activeControlRead === null) {
+      activeControlRead = ownerSays().then(says => {
+        if (says === "START_NOW") ownerWakePending = true;
+      }).catch(error => {
+        console.error(`  active runner controls could not be applied: ${error instanceof Error ? error.message : String(error)}`);
+      }).finally(() => { activeControlRead = null; });
+    }
+    },
+    CONTROL_WAKE_POLL_MS,
   );
 }
 
@@ -1162,6 +1167,8 @@ async function holdStandingRuntimeAtQuiescence(): Promise<void> {
     clearInterval(standingRuntimeTimer);
     standingRuntimeTimer = null;
   }
+  if (ownerControlTimer !== null) { clearInterval(ownerControlTimer); ownerControlTimer = null; }
+  await activeControlRead;
   await standingRuntimeScheduler.waitForIdle();
 }
 
@@ -1615,7 +1622,7 @@ async function sleepUnlessRunNow(totalMs: number): Promise<void> {
   if (ownerWakePending) { ownerWakePending = false; return; }
   const until = Date.now() + totalMs;
   while (Date.now() < until) {
-    await sleep(Math.min(POLL_MS, until - Date.now()));
+    await sleep(Math.min(CONTROL_WAKE_POLL_MS, until - Date.now()));
     /* One read: a pause holds, a resume / RUN_CYCLE_NOW / DISPATCH ends the sleep early. */
     const says = await ownerSays();
     if (says === "START_NOW") return;
@@ -1701,7 +1708,7 @@ async function holdWhilePaused(): Promise<{ readonly ownerIntentsUnreadable: boo
   if (canary) return { ownerIntentsUnreadable: false };
   let says = await ownerSays();
   while (says === "HOLD") {
-    await sleep(POLL_MS);
+    await sleep(CONTROL_WAKE_POLL_MS);
     says = await ownerSays();
   }
   return { ownerIntentsUnreadable: says === "UNREADABLE" };
@@ -1900,6 +1907,7 @@ while (cycle < CYCLES) {
 }
 
 if (standingRuntimeTimer !== null) clearInterval(standingRuntimeTimer);
+if (ownerControlTimer !== null) clearInterval(ownerControlTimer);
 await stopAdminCopyClock();
 await activeControlRead;
 if (hangWatchdog !== null) await hangWatchdog.stop();

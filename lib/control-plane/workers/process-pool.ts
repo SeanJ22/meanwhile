@@ -1,6 +1,9 @@
 import { fork } from "node:child_process";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
+import type { RouteDescriptor } from "../scheduler/registry.ts";
+import type { WorkerProcessSlots } from "./worker-slots.ts";
+export { workerProcessSlots, type WorkerProcessSlots } from "./worker-slots.ts";
 import type { DeclaredExecutor, DispatchResult } from "../scheduler/dispatch.ts";
 import type { ModelRequest, ModelTransport, ScoutExecutorDeps } from "../scheduler/scout-executor.ts";
 import type { ScoutToolContext } from "../scheduler/scout-contract.ts";
@@ -29,6 +32,7 @@ export interface LeaseWorkerConfig {
   readonly fundedSubjects: readonly string[];
   /** Plain-code ZIP tasks use S9's ordinary canonical acquisition lease. */
   readonly nationalZips?: readonly string[];
+  readonly routeDispatch?: { readonly input: ScoutProcessDispatch; readonly route: RouteDescriptor | null };
   readonly scoutDispatch?: {
     readonly input: ScoutProcessDispatch;
     readonly context?: Omit<ScoutContext, "tools">;
@@ -73,11 +77,13 @@ export async function runNationalPlaceWorkerProcesses(input: {
 export async function runLeaseWorkerProcesses(input: {
   readonly entry: string;
   readonly config: LeaseWorkerConfig;
+  readonly slots?: WorkerProcessSlots;
   readonly capacity: () => number;
   readonly transportFor: (jurisdiction: AutonomousJurisdiction, taskId: string) => ModelTransport;
   readonly searchFor?: (subjectId: string) => ScoutToolContext["search"];
   readonly reserveEscalation?: ScoutExecutorDeps["reserveEscalation"];
   readonly onStarted?: (pid: number) => void;
+  readonly route?: { readonly tool: (name: string, args: readonly unknown[]) => Promise<unknown> };
   readonly scout?: {
     readonly onStart?: ScoutExecutorDeps["onStart"];
     readonly onResult?: ScoutExecutorDeps["onResult"];
@@ -95,7 +101,9 @@ export async function runLeaseWorkerProcesses(input: {
   const active = new Set<Promise<void>>();
   let launched = 0;
   let failure: unknown = null;
-  const launch = (): Promise<void> => new Promise((resolve, reject) => {
+  const launch = async (): Promise<void> => {
+    const release = await input.slots?.acquire();
+    try { await new Promise<void>((resolve, reject) => {
     const ids = input.config.nationalZips ? [[...pending].find(id => !assigned.has(id))!]
       : input.config.taskIds;
     for (const id of ids) assigned.add(id);
@@ -128,7 +136,11 @@ export async function runLeaseWorkerProcesses(input: {
       }
       try {
         let body: unknown;
-        if (message.kind === "scout-tool") {
+        if (message.kind === "route-tool") {
+          if (!input.route) throw new Error("ROUTE_PROCESS_BROKER_UNAVAILABLE");
+          const request = message.body as { name: string; args: readonly unknown[] };
+          body = await input.route.tool(request.name, request.args);
+        } else if (message.kind === "scout-tool") {
           if (!input.scout) throw new Error("SCOUT_PROCESS_BROKER_UNAVAILABLE");
           const request = message.body as { name: string; args: readonly unknown[] };
           body = await input.scout.tool(request.name, request.args);
@@ -138,7 +150,7 @@ export async function runLeaseWorkerProcesses(input: {
         } else if (message.kind === "scout-result") {
           const request = message.body as { result: Parameters<NonNullable<ScoutExecutorDeps["onResult"]>>[0]; artifacts: Parameters<NonNullable<ScoutExecutorDeps["onResult"]>>[1] };
           body = await input.scout?.onResult?.(request.result, request.artifacts);
-        } else if (message.kind === "scout-dispatch-result") {
+        } else if (message.kind === "scout-dispatch-result" || message.kind === "route-dispatch-result") {
           const result = message.body as DispatchResult;
           results.push(result);
           for (const id of ids) pending.delete(id);
@@ -178,7 +190,8 @@ export async function runLeaseWorkerProcesses(input: {
       for (const reserved of reservations.values()) if (reserved.admit) reserved.release();
       if (code === 0) resolve(); else reject(new Error(`LEASE_WORKER_EXIT:${child.pid}:${code}`));
     });
-  });
+    }); } finally { release?.(); }
+  };
   while (pending.size && (failure === null || input.config.nationalZips)) {
     const capacity = Math.min(pending.size, input.capacity());
     if (!Number.isSafeInteger(capacity) || capacity < 0) throw new Error("LEASE_WORKER_CAPACITY_INVALID");

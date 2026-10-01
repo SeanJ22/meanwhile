@@ -21,7 +21,9 @@ import { coverageAt } from "../lib/registry/server.ts";
 import registry from "../lib/registry/registry.json" with { type: "json" };
 import { collectNationalPlaceSources, electionDirectorySelection } from "../lib/sources/plural/place.ts";
 import { electionPageFields } from "../lib/hunt/election-page.ts";
-import { placeSourceReader } from "../lib/hunt/place-source-reader.ts";
+import { placeSourceReader, PlaceSourceDeferred } from "../lib/hunt/place-source-reader.ts";
+import { runNationalPlaceTask } from "../lib/hunt/place-source-task.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
@@ -29,6 +31,44 @@ import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { beginAttemptFor, claimRouteTask, registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.ts";
 import { emptyFieldManual, newFieldManualEntry, projectFieldManual } from "../lib/control-plane/field-manual.ts";
+
+test("a national host bound saves admitted responses and defers all remaining ZIPs without abandoning Attempts", async t => {
+  const repos = createMemoryRepositories();
+  const store = new MemoryEvidenceStore();
+  let requests = 0;
+  const year = new Date().getUTCFullYear();
+  const names = ["2020 Census ZIP Code Tabulation Areas", `${Math.floor((year - 1789) / 2) + 1}th Congressional Districts`,
+    `${Math.floor((year - 1) / 2) * 2} State Legislative Districts - Upper`,
+    `${Math.floor((year - 1) / 2) * 2} State Legislative Districts - Lower`, "States", "Counties", "Incorporated Places",
+    "County Subdivisions", "Unified School Districts", "Elementary School Districts", "Secondary School Districts"];
+  t.mock.method(globalThis, "fetch", async (url: string) => {
+    requests++;
+    // Siblings still in flight when another request is refused must be vaulted.
+    await new Promise(resolve => setTimeout(resolve, 5));
+    return Response.json(url.endsWith("/query")
+      ? { url, features: [{ attributes: {}, geometry: { rings: [[[0, 0], [1, 0], [1, 1], [0, 0]]] } }] }
+      : { url, layers: names.map((name, id) => ({ id, name, type: "Feature Layer" })) });
+  });
+  const tools = { repos, store, now: () => "2026-09-30T00:00:00.000Z", spaceOut: async () => {} };
+  const input = { tools, store: new MemoryRoutineDataStore(), zips: ["03060", "03101", "03301"],
+    publish: async () => { assert.fail("incomplete geography cannot publish"); } };
+  const result = await runNationalPlaceTask(input);
+  assert.deepEqual(result.map(row => row.zip), input.zips);
+  assert.ok(result.every(row => "deferred" in row && row.deferred.includes("next pass")));
+  assert.equal(requests, RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);
+  assert.ok((await repos.attempts.list()).every(row => row.value.outcome === "COMPLETED"));
+  assert.ok((await repos.routeTasks.list()).every(row => row.value.disposition?.disposition === "BLOCKED_CURRENTLY"));
+  assert.ok((await repos.occurrences.list()).every(row => row.value.closedAt && row.value.unresolvedReason?.includes("DEFERRED") && row.value.disposition === null));
+  assert.ok((await repos.obligations.list()).every(row => row.value.lastWorkedAt === null));
+  const saved = await repos.artifacts.readAll();
+  assert.ok(saved.some(row => row.canonicalUrl.includes("Places_CouSub_ConCity_SubMCD")), "parallel responses saved before completion");
+  const before = requests;
+  await runNationalPlaceTask(input);
+  assert.equal(requests - before, RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);
+  const next = await repos.artifacts.readAll();
+  assert.ok(next.some(row => row.canonicalUrl.includes("School")), "the next pass advances using held responses");
+  assert.ok(saved.every(row => next.some(other => other.artifactId === row.artifactId)), "all earlier evidence remains held");
+});
 
 test("a national walk reuses another role's working source route after a directory's dead landing page", async () => {
   const now = "2026-09-30T00:00:00Z";
@@ -74,7 +114,7 @@ test("national collector binds saved CSV to its real Attempt and reuses another 
       repos, store, now: () => now, spaceOut: async () => {}, openBytes: async request => {
         const robots = request.url.endsWith("/robots.txt");
         if (!robots) fetched++;
-        return { status: 200, bytes: Buffer.from(robots ? "User-agent: *\nAllow: /" : body),
+        return { status: 200, bytes: Buffer.from(robots ? "User-agent: *\nAllow: /" : request.url === url ? body : request.url),
           contentType: robots ? "text/plain" : "text/csv", finalUrl: request.url, durationMs: 1, transportError: null };
       },
     } });
@@ -102,6 +142,13 @@ test("national collector binds saved CSV to its real Attempt and reuses another 
   assert.equal(fetched, 2);
   assert.equal(refreshed.collectedAt, "2026-10-02T01:00:00.000Z");
   assert.notEqual(refreshed.capture?.evidence.acquiredByAttemptId, acquired.capture?.evidence.acquiredByAttemptId);
+  for (let index = 2; index < RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost; index++) {
+    await third.read(`https://legislature.gov/page-${index}`);
+  }
+  await assert.rejects(third.read("https://legislature.gov/next"), PlaceSourceDeferred);
+  assert.ok(third.deferred?.message.includes("next pass"), "ordinary page hosts defer just like Census");
+  assert.equal(third.cost.requestCount, RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);
+  assert.equal((await third.read(url)).text, body, "the bound never blocks already saved pages");
 });
 
 test("the national election directory follows its published form for any state", () => {
@@ -390,7 +437,9 @@ function person(overrides: Partial<PluralPerson>): PluralPerson {
     current_chamber: "lower",
     email: "",
     image: "",
+    capitol_address: "",
     capitol_voice: "",
+    district_address: "",
     district_voice: "",
     links: "",
     sources: "",
@@ -398,3 +447,10 @@ function person(overrides: Partial<PluralPerson>): PluralPerson {
     ...overrides,
   };
 }
+
+test("the bulk CSV's capitol and district office addresses are carried, not dropped", () => {
+  const csv = "id,name,current_party,current_district,current_chamber,email,image,links,sources,capitol_address,capitol_voice,district_address,district_voice\n" +
+    'ocd-person/n1,Al Abdelaziz,Democratic,35,lower,,,,,,,"680 Broadway Suite 207, Paterson, NJ 07514",862-264-2540\n';
+  const [row] = rowsToPeople(csv, "nj");
+  assert.deepEqual([row.capitol_address, row.district_address, row.district_voice], ["", "680 Broadway Suite 207, Paterson, NJ 07514", "862-264-2540"]);
+});

@@ -12,6 +12,7 @@ const modelAuditReasoner = (...args: Parameters<typeof createAuditReasoner>) =>
 import type { IndependentAuditContext, WorkerEvidence } from "../lib/control-plane/workers/types.ts";
 import { standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
+import { methodFixture } from "./method-store-fixture.ts";
 
 const NOW = "2026-09-03T10:00:00.000Z";
 const MODEL = assertStepMayInvokeModel("adversarial-audit").model;
@@ -257,7 +258,7 @@ test("the auditor admits against the owner's ceiling in force, lowered or raised
 test("the standing runtime hands the auditor the ceiling in force", async () => {
   let requests = 0;
   const transport: ModelTransport = async () => { requests += 1; return response({ verdict: "SURVIVED", challenges: [] }); };
-  const runtime = standingFleetRuntime({ root: process.cwd(), repos: await reposWithAuditSpend(60), transport, now: () => NOW, auditCeilingUsd: 50 });
+  const runtime = standingFleetRuntime({ root: process.cwd(), method: methodFixture(), repos: await reposWithAuditSpend(60), transport, now: () => NOW, auditCeilingUsd: 50 });
   await assert.rejects(runtime.auditReasoner!.review(context(), "standing"), /AUDIT_ROLLING_COST_CEILING/);
   assert.equal(requests, 0);
 });

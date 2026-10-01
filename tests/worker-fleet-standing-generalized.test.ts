@@ -24,9 +24,10 @@ import {
   operationalReferenceBundle,
 } from "../lib/civic-data/operational-references.ts";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { methodFixture } from "./method-store-fixture.ts";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
-const METHOD = JSON.parse(readFileSync(path.join(ROOT, "data/method/knowledge.json"), "utf8"));
+const METHOD = methodFixture();
 installOperationalReferenceBundle(operationalReferenceBundle({
   az: JSON.parse(readFileSync(path.join(ROOT, "data/states/az/jurisdictions/az.json"), "utf8")),
   nh: JSON.parse(readFileSync(path.join(ROOT, "data/states/nh/jurisdictions/nh.json"), "utf8")),
@@ -81,7 +82,7 @@ async function harness(t: TestContext) {
     const held = await repos.workItems.mustRead(owner.id);
     return (await repos.workItems.compareAndSet(owner.id, held.revision, { ...held.value, autonomousPlan: plan(value) }, now())).value;
   }
-  const runtime = standingFleetRuntime({ root: ROOT, vaultRoot, repos, now });
+  const runtime = standingFleetRuntime({ root: ROOT, method: METHOD, vaultRoot, repos, now });
   return { repos, item, hold, setPlan, runtime, now };
 }
 
@@ -105,6 +106,12 @@ test("generalized standing independently retains two subject publisher hosts and
   const unrelated = await h.hold("<p>Park reservation</p>", "https://www.coronafire.org/parks");
   const context = await h.runtime.independentContext({ workItemId: h.item.id, artifactId: primary.artifactId, contract: value, auditScope: "CAPTURED_ARTIFACT", methodVersion: METHOD.version });
   assert.deepEqual(context.evidence.map(e => e.artifactId), [primary.artifactId]);
+  // The method only grows (agents add routes), so a plan made under an earlier version is audited against today's floor; one from a later version is not.
+  const planned = (methodVersion: number) => ({ ...value, methodVersion });
+  const auditUnder = (contract: typeof value) => h.setPlan(h.item, contract).then(() => h.runtime.independentContext({ workItemId: h.item.id, artifactId: primary.artifactId, contract, auditScope: "CAPTURED_ARTIFACT", methodVersion: METHOD.version }));
+  assert.deepEqual((await auditUnder(planned(METHOD.version - 1))).evidence.map(e => e.artifactId), [primary.artifactId]);
+  await assert.rejects(auditUnder(planned(METHOD.version + 1)), /AUDIT_METHOD_VERSION_MISMATCH/);
+  await h.setPlan(h.item, value);
   assert.ok(context.surfaceEvidence?.some(e => e.artifactId === alternate.artifactId));
   assert.deepEqual(context.authorityEvidence?.map(e => e.artifactId), [external.artifactId]);
   assert.ok(!context.routes.some(route => route.artifactIds.includes(foreignArtifact.artifactId) || route.artifactIds.includes(unrelated.artifactId)));

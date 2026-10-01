@@ -34,7 +34,7 @@ export function auditGeneralizedExtraction(input: AuditorWorkerInput, contract: 
     if (route.status !== "HELD" || !held || !candidate.coveredRouteIds.includes(route.routeId)) routeFindings.push(finding("AUDIT_ROUTE_REMAINS_OWED", `Official route ${route.routeId} remains ${route.status}; held=${held}. Counted in coverage; it holds back nothing.`, "INFO"));
   }
   const routesChecked = applicableRoutes.filter(route => route.status === "HELD" && route.artifactIds.length > 0 && route.artifactIds.every(id => allArtifacts.some(e => e.artifactId === id)) && candidate.coveredRouteIds.includes(route.routeId)).length;
-  const contextReady = context.publisherSurfaces.length > 0 && applicableRoutes.length > 0 && context.methodVersion === contract.methodVersion && contract.sourceScope.observationArtifactIds.every(id => allArtifacts.some(e => e.artifactId === id));
+  const contextReady = context.publisherSurfaces.length > 0 && applicableRoutes.length > 0 && context.methodVersion >= contract.methodVersion && contract.sourceScope.observationArtifactIds.every(id => allArtifacts.some(e => e.artifactId === id));
   if (!contextReady) routeFindings.push(finding("AUDIT_SOURCE_UNIVERSE_UNESTABLISHED", "Publisher observation evidence, route floor, or current method inventory is missing; the coverage number shows how much is unchecked.", "INFO"));
   add("SOURCE_UNIVERSE", "Count how much of the independently inherited publisher route floor is checked; sources not yet checked lower the coverage number and break nothing.", routeFindings);
 

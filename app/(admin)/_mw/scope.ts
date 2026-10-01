@@ -22,7 +22,7 @@
 
 export type MwArea = "fleet" | "readiness";
 
-export type MwFleetTab = "now" | "work" | "money" | "learning" | "fix";
+export type MwFleetTab = "now" | "work" | "money" | "fix";
 export type MwReadinessTab = "readiness" | "work" | "cost" | "done" | "fix";
 export type MwTab = MwFleetTab | MwReadinessTab;
 
@@ -106,7 +106,6 @@ export const FLEET_TABS: readonly { readonly id: MwFleetTab; readonly label: str
   { id: "now", label: "Now", path: "/admin" },
   { id: "work", label: "Work", path: "/admin/work" },
   { id: "money", label: "Money", path: "/admin/money" },
-  { id: "learning", label: "Is it learning", path: "/admin/learning" },
   { id: "fix", label: "Fix list", path: "/admin/fix" },
 ];
 

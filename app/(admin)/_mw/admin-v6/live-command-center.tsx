@@ -33,6 +33,7 @@ export interface LiveCommandCenterProps {
   readonly initialScopeKey: string;
   readonly access: Access;
   readonly initialView?: View;
+  readonly chatControls?: readonly string[];
 }
 
 function fetchNoStore(url: string, init: { headers: Record<string, string>; signal?: AbortSignal }) {
@@ -72,6 +73,15 @@ export function LiveCommandCenter(props: LiveCommandCenterProps) {
     }
   };
 
+  /** The view is in the address (`?view=reports`), so a link or a refresh lands where you were. */
+  const onViewChange = (view: View) => {
+    const params = new URLSearchParams(search?.toString() ?? "");
+    if (view === "now") params.delete("view");
+    else params.set("view", view);
+    const q = params.toString();
+    router.replace(`${pathname}${q ? `?${q}` : ""}`, { scroll: false });
+  };
+
   return (
     <CommandCenter
       data={data}
@@ -86,6 +96,8 @@ export function LiveCommandCenter(props: LiveCommandCenterProps) {
       recovered={conn.recovered}
       access={props.access}
       initialView={props.initialView}
+      chatControls={props.chatControls}
+      onViewChange={onViewChange}
     />
   );
 }

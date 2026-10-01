@@ -73,6 +73,7 @@ import {
 } from "../lib/control-plane/campaign-finance/coverage.ts";
 import type { CandidateFinanceCoverage } from "../lib/control-plane/campaign-finance/model.ts";
 import { coverageFixture } from "./control-plane-fixtures.ts";
+import { METHOD_FIXTURE_PATH } from "./method-store-fixture.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const AS_OF = "2026-08-28";
@@ -287,7 +288,7 @@ test("the committed registry loads, and every regime carries provenance that exi
 test("every methodRouteId in the registry is a route the method store actually carries", () => {
   const registry = filingRegimeRegistry();
   const knowledge = JSON.parse(
-    readFileSync(join(ROOT, "data", "method", "knowledge.json"), "utf8"),
+    readFileSync(METHOD_FIXTURE_PATH, "utf8"),
   ) as { routes: { identity?: { id?: string }; id?: string }[] };
   const known = new Set(knowledge.routes.map((r) => r.identity?.id ?? r.id));
 
@@ -300,7 +301,7 @@ test("every methodRouteId in the registry is a route the method store actually c
       checked += 1;
       assert.ok(
         known.has(routeId),
-        `${regime.regimeId} names method route "${routeId}", which is not in data/method/knowledge.json`,
+        `${regime.regimeId} names method route "${routeId}", which is not in the method store fixture`,
       );
     }
   }

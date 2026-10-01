@@ -1,4 +1,4 @@
-import { readLatestReaderReadbacks, type RoutineDataStore } from "./store.ts";
+import { readLatestReaderReadbacks, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
 import type { CandidateEvent, PromotedPointerIdentity } from "./types.ts";
@@ -101,6 +101,7 @@ function verifierIdFor(contract: ReaderContract): string {
     case "comment-access":
     case "ballot-navigation":
     case "campaign-sites":
+    case "member-offices":
     case "venue-resolutions":
     case "meeting-body-crosswalk": return "lib/civic-data/curated-reader-read-model.ts#readCuratedReaderProjection";
     case "meeting-source-wiring": return "lib/civic-data/derived-meeting-wiring.ts#readDerivedMeetingWiring";
@@ -295,6 +296,7 @@ export async function verifyRoutineReaderProjection(
     case "comment-access":
       case "ballot-navigation":
       case "campaign-sites":
+      case "member-offices":
       case "venue-resolutions":
       case "meeting-body-crosswalk": {
         const { readCuratedReaderProjection } = await import("./curated-reader-read-model.ts");
@@ -437,6 +439,7 @@ async function appendReaderProjectionReadback(
         `The typed Reader result cannot be certified because its executing code commit was not resolvable. ${readerVerification.detail}`,
       )
     : readerVerification;
+  observedAt = await routineEventObservedAt(store, promoted.recordClass, promoted.scope, observedAt);
   const receipt: ReaderProjectionReadbackReceipt = {
     contractVersion: 2,
     kind: "READER_PROJECTION_READBACK",

@@ -762,69 +762,13 @@ test("SEEDED: the view carries the worker credential's NAME and configured flag,
   assert.match(JSON.stringify(leaky), /SENTINEL/);
 });
 
-test("the page reads no environment and posts both intents to the research route", () => {
-  const source = readFileSync(join(ROOT, "app", "(admin)", "admin", "research", "page.tsx"), "utf8");
-  assert.ok(source.length > 1000, "the page source read collapsed");
-  assert.doesNotMatch(source, /process\.env/);
-  assert.match(source, /export const dynamic = "force-dynamic"/);
-  assert.match(source, /export const revalidate = 0/);
-  assert.match(source, /auditRenderedNumbers\(/);
-  assert.match(source, /checkStatedEqualsRendered\(/);
-  // Both intents post through the one JSON control, to the research route (Admin redesign).
-  assert.match(source, /<IntentButton\s+action=\{view\.pauseAction\}/);
-  assert.match(source, /<IntentButton action="RUN_CYCLE_NOW"/);
-  const control = readFileSync(join(ROOT, "app", "(admin)", "_mw", "intent-control.tsx"), "utf8");
-  assert.match(control, /INTENT_ROUTE = "\/api\/admin\/research"/);
-  assert.match(control, /accept: "application\/json"/, "the control asks for JSON, never the redirect");
-  assert.match(control, /new URLSearchParams\(\{ action: props\.action, returnTo: props\.returnTo \}\)/, "the same fields the form posted");
-  // The control centre links here, from the Other pages menu every screen carries.
-  const header = readFileSync(join(ROOT, "app", "(admin)", "_mw", "header-controls.tsx"), "utf8");
-  assert.match(header, /href: "\/admin\/research"/);
-});
-
 /* ================================================================== *
  * ADM-42 — the heading is the STATE, and the level is explained
  * ================================================================== */
 
-test("ADM-42: the heading reads Research — <state>, the back-link is gone, and the activation levels are explained from governance", () => {
-  const source = readFileSync(join(ROOT, "app", "(admin)", "admin", "research", "page.tsx"), "utf8");
-  // The owner: "Research Level 1 Active: out of how many levels? What does that mean?"
-  assert.doesNotMatch(source, /Research — Level 1/, "the heading no longer prints a level number as the state");
-  assert.match(source, /Research — <span className=\{verdictClass\}>\{plainCode\(progressHealth\.state\)\}<\/span>/, "the heading describes work progress, not activation permission");
-  assert.match(source, /The research lane is enabled within its bounds\./, "activation permission must not assert that workers are advancing");
-  assert.match(source, /<ResearchProgress reading=\{progressHealth\}/, "actual progress is shown beside activation");
-  // "I don't need a back section to go back to Pilot Health. I have the dropdown."
-  assert.doesNotMatch(source, /← Pilot health/, "no back-link duplicating the View dropdown");
-  assert.doesNotMatch(source, /this page is the instrument detail behind the fleet view/);
-  assert.match(source, /<ConsoleNav view="research"/, "the dropdown that replaced it is still there");
-  // The level copy is governance's, and it does not invent levels 2 and 3.
-  assert.match(source, /activation <strong>Level 1<\/strong>/);
-  assert.match(source, /RULING 268/);
-  assert.match(source, /RULING 215/);
-  assert.match(source, /Nothing between Level 1 and Level 4 is defined in current governance/);
-  const decisions = readFileSync(join(ROOT, "docs", "governance", "current-decisions.md"), "utf8");
-  assert.match(decisions, /activation Level 5 is removed from the architecture; Level 4 automatic publishing is deferred/, "the level copy on the page matches the ruling it cites");
-});
-
 /* ================================================================== *
  * ADM-42 item 9 / §3 — the credential name never reaches the browser
  * ================================================================== */
-
-test("ADM-42: the runner block leads with what the runner is, and the worker credential's variable name is never rendered", () => {
-  const source = readFileSync(join(ROOT, "app", "(admin)", "admin", "research", "page.tsx"), "utf8");
-  // "what is a runner? I'm sorry I just don't know what a runner is."
-  assert.match(source, /is the always-on program on the research machine/);
-  assert.match(source, /It runs again <When iso=\{view\.runner\.nextCycleDueAt\}/, "when it runs again is on the face");
-  assert.match(source, /detailLabel="Technical details"/, "host, SHA and model are behind Technical details");
-  // The env var name is not rendered — not on the face, not on hover, not in a disclosure.
-  assert.doesNotMatch(source, /workerCredential\.value\.name/, "the credential's variable name never reaches a rendered expression");
-  assert.doesNotMatch(source, /WTP_WORKERS_ANTHROPIC_API_KEY/);
-  assert.match(source, /Its value and its name stay on the server\./);
-  // The view still carries it, because the view is not the browser.
-  const withState = buildResearchView(healthyInput());
-  assert.ok(withState.workerCredential.held);
-  if (withState.workerCredential.held) assert.equal(withState.workerCredential.value.name, WORKER_CREDENTIAL_VAR);
-});
 
 /* ================================================================== *
  * ADM-48 — the runner's own facts travel to the view

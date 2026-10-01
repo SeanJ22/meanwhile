@@ -2,7 +2,7 @@ import type { DeclaredExecutor } from "../scheduler/dispatch.ts";
 import { scoutExecutor, type ScoutExecutorDeps } from "../scheduler/scout-executor.ts";
 import type { ScoutToolContext } from "../scheduler/scout-contract.ts";
 import { buildScoutToolkit } from "../scheduler/scout-tools.ts";
-import { runLeaseWorkerProcesses } from "./process-pool.ts";
+import { runLeaseWorkerProcesses, type WorkerProcessSlots } from "./process-pool.ts";
 
 type ScoutContext = ReturnType<ScoutExecutorDeps["contextFor"]>;
 
@@ -13,6 +13,7 @@ export function scoutProcessExecutor(input: {
   readonly fileStoreRoot?: string;
   readonly deps: Omit<ScoutExecutorDeps, "toolkitFor">;
   readonly search?: ScoutToolContext["search"];
+  readonly slots?: WorkerProcessSlots;
   readonly onStarted?: (pid: number) => void;
 }): DeclaredExecutor {
   const original = scoutExecutor({ ...input.deps, toolkitFor: buildScoutToolkit });
@@ -32,14 +33,14 @@ export function scoutProcessExecutor(input: {
       if (typeof tool === "function") toolsByName.set(name, tool as (...args: readonly unknown[]) => unknown);
     }
     if (input.search) toolsByName.set("search", input.search as (...args: readonly unknown[]) => unknown);
-    const results = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts", config: {
+    const results = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/scout-worker.ts", config: {
       root: input.root, postgres: input.postgres, fileStoreRoot: input.fileStoreRoot,
       taskIds: [request.routeTaskId ?? request.obligation.obligation.id], modelEnabled: true,
       searchEnabled: Boolean(input.search), ceilingUsd: 0, fundedSubjects: [],
       scoutDispatch: { input: { ...data, liveClock: Boolean(clock), maturity: maturity(request.obligation.obligation.routeId) },
         context, contextError, toolNames: [...toolsByName.keys()], toolTimeoutMs: tools.timeoutMs, options: { model: input.deps.model,
           bound: input.deps.bound, minRungs: input.deps.minRungs, role: input.deps.role } },
-    }, capacity: () => 1, onStarted: input.onStarted, transportFor: () => input.deps.transport,
+    }, slots: input.slots, capacity: () => 1, onStarted: input.onStarted, transportFor: () => input.deps.transport,
     reserveEscalation: input.deps.reserveEscalation,
     scout: { onStart: input.deps.onStart, onResult: input.deps.onResult,
       tool: async (name, args) => {

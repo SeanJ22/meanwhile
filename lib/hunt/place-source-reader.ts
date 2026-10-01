@@ -11,6 +11,12 @@ import { scheduleObligation } from "../control-plane/scheduler/obligation.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import type { HeldSourcePage } from "../sources/plural/place.ts";
 
+export class PlaceSourceDeferred extends Error {
+  constructor(host: string) {
+    super(`DEFERRED: ${host} reached the shared website request bound; saved responses remain available for the next pass`);
+  }
+}
+
 /** Bind the ordinary saved reader to an actual acquiring Attempt. Every job's
  * fresh captures are eligible; missing local bytes fall through to acquisition.
  * No timestamp is advanced by replaying a held document. */
@@ -24,6 +30,19 @@ export async function placeSourceReader(input: {
   const captures = new Map<string, WorkerPublicationCapture>();
   const geographyCaptures: WorkerPublicationCapture[] = [];
   const cost = { requestCount: 0, bytesFetched: 0 };
+  const requests = new Map<string, number>();
+  let deferred: PlaceSourceDeferred | null = null;
+  const takeRequest = (url: string) => {
+    if (deferred) throw deferred;
+    const host = new URL(url).hostname.toLowerCase().replace(/^www\./, "");
+    const count = requests.get(host) ?? 0;
+    if (count >= context.bound.maxRequestsPerHost) {
+      deferred = new PlaceSourceDeferred(host);
+      throw deferred;
+    }
+    requests.set(host, count + 1);
+    cost.requestCount++;
+  };
   const durable = durableResearchTools(tools, { project, attemptId: context.attemptId,
     workItemId: context.workItemId, routeTaskId: context.routeTaskId });
   const vault = async (artifact: Artifact, text: string) => {
@@ -79,13 +98,13 @@ export async function placeSourceReader(input: {
   };
   const read = savedPageReader({ ...context, ...durable, vault,
     openBytes: async request => {
-      cost.requestCount++;
+      takeRequest(request.url);
       const response = await (tools.openBytes ?? realOpenBytes)(request);
       cost.bytesFetched += response.bytes.byteLength;
       return response;
     },
     ...(tools.browse ? { browse: async (request: Parameters<NonNullable<ResearchRuntimeTools["browse"]>>[0]) => {
-      cost.requestCount++;
+      takeRequest(request.url);
       const response = await tools.browse!(request);
       cost.bytesFetched += Buffer.byteLength(response.html);
       return response;
@@ -101,6 +120,11 @@ export async function placeSourceReader(input: {
   return {
     artifacts,
     cost,
+    get deferred() { return deferred; },
+    fetchGeography: (async (url, options) => {
+      takeRequest(url instanceof Request ? url.url : String(url));
+      return fetch(url, options);
+    }) satisfies typeof fetch,
     geographyCaptures,
     readGeography: async (url: string) => {
       const capture = await heldCapture(url);
@@ -110,7 +134,16 @@ export async function placeSourceReader(input: {
     },
     read: async (url: string): Promise<HeldSourcePage> => {
       await heldCapture(url);
-      const page = await read(url);
+      let page: Awaited<ReturnType<typeof read>>;
+      try { page = await read(url); }
+      catch (error) {
+        // The shared toolkit can refuse before calling openBytes (including
+        // its robots request). Preserve that bound as a deferral, too.
+        if (error instanceof Error && error.message.includes("(the per-host bound)")) {
+          deferred ??= new PlaceSourceDeferred(new URL(url).hostname);
+        }
+        throw deferred ?? error;
+      }
       const capture = captures.get(page.artifactId);
       if (!capture) throw new Error("Saved source has no capture metadata");
       return { url: capture.evidence.canonicalUrl, baseUrl: page.url,

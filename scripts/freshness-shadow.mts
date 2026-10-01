@@ -1,7 +1,8 @@
 import { attemptBatchJournal, backgroundBatchTransport, batchEnabledFor, batchRequestHash } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { createHash, randomUUID } from "node:crypto";
-import { runLeaseWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
+import { runLeaseWorkerProcesses, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
+import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import { scoutProcessExecutor } from "../lib/control-plane/workers/scout-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
 import { planHeldWorkerFleet } from "../lib/control-plane/workers/standing.ts";
@@ -114,6 +115,7 @@ import {
   digestLines,
   placeFirstRows,
   runCycle,
+  runPool,
 } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import {
   describeDispatchMatch,
@@ -213,7 +215,6 @@ import {
   openOccurrence,
   resumeOpenOccurrence,
   persistDebts,
-  recordNextDue,
   recordArguedAbsence,
   retireObligationsByPrefix,
   syncObligations,
@@ -222,7 +223,6 @@ import {
   FRESHNESS_PROJECT,
 } from "../lib/control-plane/scheduler/durable.ts";
 import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
-import { routeExecutor } from "../lib/control-plane/scheduler/route-executor.ts";
 import { cycleVault, VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import {
   promotionLines,
@@ -261,7 +261,7 @@ import {
   type ResearchState,
   type RunningScout,
 } from "../lib/control-plane/scheduler/research-policy.ts";
-import { candidateStoreCounts, proposeScoutCandidates, readMethodCandidateStore, METHOD_STORE, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
+import { candidateStoreCounts, proposeScoutCandidates, readMethodCandidateStore, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
 import { emptyFieldManual, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
 import {
   compoundingPair,
@@ -275,8 +275,7 @@ import {
 } from "../lib/control-plane/scheduler/field-manual-scout.ts";
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
-import { readMethodStore } from "../lib/method/candidate.ts";
-import { readMethodVersion } from "../lib/method/manual-bridge.ts";
+import { readMethodKnowledge } from "../lib/method/manual-bridge.ts";
 import { readConclusionStore } from "../lib/method/conclusions.ts";
 import {
   NO_PIPELINE_RECORDED,
@@ -921,7 +920,6 @@ const retirementHolds = retirementHeldBack.reduce<Record<string, number>>(
  * a few cycles and the dispatch lanes keep their time. Residue and superseded
  * rows go first, so the large move never starves them.
  */
-const RETIREMENT_BUDGET_MS = 45_000;
 let retirementApplied: Awaited<ReturnType<typeof settleRetirements>> | null = null;
 let retirementError: string | null = null;
 /** Retired obligations, id → reason: their debt stays out of the cycle and is tombstoned as retired. */
@@ -937,18 +935,17 @@ if (movedPlan !== null && supersededPlan !== null && retirementOutside !== null)
   if (retirementWrites) {
     if (items.length > 0) {
       try {
-        const budgetStartedMs = Date.now();
         retirementApplied = await settleRetirements(repos, {
           items,
           now: NOW,
-          budget: { spent: () => Date.now() - budgetStartedMs >= RETIREMENT_BUDGET_MS },
+          budget: { spent: () => false },
         });
         console.log(
           `  retirement: ${retirementApplied.retired.length} obligation(s) retired, ` +
             `${retirementApplied.occurrencesClosed.length} open occurrence(s) closed unresolved` +
             (retirementApplied.failed.length > 0 ? `, ${retirementApplied.failed.length} did not complete and are planned again` : "") +
             (retirementApplied.deferred.length > 0
-              ? `, ${retirementApplied.deferred.length} deferred untouched to the next cycle (${RETIREMENT_BUDGET_MS / 1000} s budget spent)`
+              ? `, ${retirementApplied.deferred.length} deferred untouched to the next cycle (remaining retirement work)`
               : ""),
         );
       } catch (error) {
@@ -1014,12 +1011,13 @@ if (publicationAnchors.anchored.length) {
   console.log(`  verified standing publications advanced ${publicationAnchors.anchored.length} source clock(s)`);
 }
 
+const nextDueWrites: string[] = [];
 for (const o of sync.all) {
   const row = scheduleObligation(o, nowMs);
   if (!isScheduled(row)) continue;
   /* Do not pay a round trip to write a value that is already there. */
   if (o.nextDueAt !== row.nextDueAt) {
-    await recordNextDue(repos, { obligationId: o.id, nextDueAt: row.nextDueAt, now: NOW });
+    nextDueWrites.push(o.id);
   }
   nextDueByObligation.set(o.id, row.nextDueAt);
   if (backedOff.has(o.id)) continue;
@@ -1323,7 +1321,7 @@ if (!dry && !canary && !intents.runnerPause.paused) {
   try {
     const retained = await retainRecentRoutineMeetingEvidence({ repos,
       store: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
-      methodVersion: (await readMethodVersion(repos)) ?? readMethodStore(join(ROOT, ...METHOD_STORE)).version, now: nowIso });
+      methodVersion: (await readMethodKnowledge(repos)).version, now: nowIso });
     console.log(`  permanent meeting captures retained for independent workers: ${retained.length}`);
   } catch (error) {
     runtimeConditions.push(`permanent meeting evidence could not enter independent workers: ${error instanceof Error ? error.message : "ROUTINE_MEETING_INTAKE_FAILED"}`);
@@ -1871,6 +1869,17 @@ const autonomousTransportFor = (transport: ModelTransport) => (jurisdiction: Aut
     refusedBeforeSending: (error) => error instanceof FleetPreSendRefusal,
   });
 const spacer = serializeHostSpacing(hostSpacer());
+const workerSlots = workerProcessSlots(() => {
+  const limits = providerQueue.limits(MODELS.haiku.model);
+  const spent = fleetSafety.snapshot(nowIso()).rolling24Hours.modelUsd;
+  return Math.max(1, researchWorkerCapacity({ hunts: Math.max(1, fundedHunts.length),
+    availableUsd: spent === null ? 0 : Math.max(0, effectiveCeilingUsd - spent),
+    requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
+    requestsPerMinute: limits?.requestsPerMinute ?? undefined,
+    inputTokensPerMinute: limits?.inputTokensPerMinute ?? undefined,
+    outputTokensPerMinute: limits?.outputTokensPerMinute ?? undefined,
+    inputTokensPerRequest: 8192, outputTokensPerRequest: RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn }));
+});
 // Hand out durable leases before unrelated histories or parent execution.
 const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
   runnerPaused: intents.runnerPause.paused });
@@ -1879,6 +1888,18 @@ const earlyOriginal = autonomousCycleOpen ? runAutonomousProcesses().catch(error
   return null;
 }) : null;
 let earlyAutonomous: Awaited<typeof earlyOriginal> = null;
+// Persist derived scheduling projections alongside workers, using current facts and CAS.
+const nextDuePersistence = runPool(nextDueWrites, Math.max(1, workerCapacity), async id => {
+  try {
+    const held = await repos.obligations.mustRead(id);
+    const derived = scheduleObligation(held.value, Date.now());
+    if (isScheduled(derived) && held.value.nextDueAt !== derived.nextDueAt) {
+      await repos.obligations.compareAndSet(id, held.revision, { ...held.value, nextDueAt: derived.nextDueAt, updatedAt: nowIso() }, nowIso());
+    }
+  } catch (error) {
+    runtimeConditions.push(`derived due time remains owed for ${id}: ${error instanceof Error ? error.message : String(error)}`);
+  }
+});
 
 /* MW-015: visited is not finished. Each Send is evaluated from its members' own records as this cycle
    read them (obligations at sync, debts at load): settled, or named as refused or not yet settled. */
@@ -2285,6 +2306,10 @@ const simulated: RunWork = async ({ executor, routeTaskId }) => ({
 /** The deterministic lane: an HTTP GET or POST from a committed descriptor. Never a model. */
 const executorFor = (obligation: { obligation: { id: string } }): DeclaredExecutor => {
   const route = registry.routeFor(obligation.obligation.id);
+  if (!dry) return routeProcessExecutor({ root: ROOT, postgres: wantsPostgres, fileStoreRoot: CONTROL_PLANE_ROOT,
+    route, slots: workerSlots, spaceOut: spacer, vault: vault.put,
+    openOne: fleetSafety.guardedOpenOne("public-web", obligation.obligation.id),
+    onStarted: pid => console.log(`  route lease worker process: pid ${pid}; ${obligation.obligation.id}`) });
   return {
     lane: "DETERMINISTIC",
     workerFor: ({ holder }) => ({
@@ -2293,14 +2318,7 @@ const executorFor = (obligation: { obligation: { id: string } }): DeclaredExecut
       version: dry ? "shadow-decision/1.0" : `route-executor/1.0 (${route?.routeId ?? "unrouted"})`,
       instance: holder,
     }),
-    run: dry
-      ? simulated
-      : routeExecutor({
-          routeFor: (id) => registry.routeFor(id),
-          spaceOut: spacer,
-          vault: vault.put,
-          openOne: fleetSafety.guardedOpenOne("public-web", obligation.obligation.id),
-        }),
+    run: simulated,
   };
 };
 
@@ -2384,7 +2402,7 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
  */
 const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled
   ? scoutProcessExecutor({ root: ROOT, postgres: wantsPostgres,
-      fileStoreRoot: CONTROL_PLANE_ROOT,
+      fileStoreRoot: CONTROL_PLANE_ROOT, slots: workerSlots,
       search: (lifetimeHuntWork(scheduled.obligation.id) ? scoutSearchLifetime : scoutSearch) ?? undefined,
       onStarted: pid => console.log(`  Scout lease worker process: pid ${pid}; ${scheduled.obligation.id}`),
       deps: {
@@ -2434,7 +2452,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         let amended = result;
         if (result.refusal === null && result.candidates.length > 0) {
           try {
-            const report = await proposeScoutCandidates({ repos, root: ROOT, result, artifacts, stamp: today() });
+            const report = await proposeScoutCandidates({ repos, result, artifacts, stamp: today() });
             candidateReports.push(report);
             canonicalCandidateCounts = report.counts;
             amended = {
@@ -2595,6 +2613,11 @@ const cycle = await runCycle({
   routeTaskFor: (id) => occurrenceByObligation.get(id)?.routeTaskId ?? null,
   maturity,
   executor: executorFor,
+  workerCapacity: Math.max(1, workerCapacity),
+  huntFor: row => {
+    const rank = placementRank(row.obligation.id);
+    return rank === 0 ? "dispatch" : rank === null ? null : expansionPlan?.scopes[rank - 1]?.decision.receiptId ?? null;
+  },
   holder: `freshness-shadow@${process.pid}`,
   now: NOW,
   clock: nowIso,
@@ -2797,6 +2820,7 @@ await pending.step("occurrences:close", () => closeCycleOccurrences(repos, {
   now: NOW,
 }));
 
+await nextDuePersistence;
 const persisted = await pending.step("debts:persist", () => persistDebts(
   repos,
   cycle.debts,
@@ -2835,6 +2859,7 @@ async function runAutonomousWave() {
     ...planned.decisions.filter(row => row.task && ["SCOUT", "WORKER"].includes(row.action)).map(row => row.task!.id)])];
   const availableUsd = Math.max(0, effectiveCeilingUsd - (spendWindow.windowUsd ?? effectiveCeilingUsd));
   const dispatches = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
+    slots: workerSlots,
     config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: modelLaneEnabled,
       searchEnabled: scoutSearch !== null, ceilingUsd: effectiveCeilingUsd, fundedSubjects: [...lifetimeHuntSubjects] },
     capacity: () => modelLaneEnabled ? researchWorkerCapacity({ hunts: taskIds.length, availableUsd,
@@ -3100,7 +3125,7 @@ if (dry || canary || ONLY !== null || IDS !== null) {
         spaceOut: spacer,
         vaultRoot: join(ROOT, ...VAULT_DIR),
         heldVault: vaultIndex,
-        methodVersion: (await readMethodVersion(repos)) ?? readMethodStore(join(ROOT, ...METHOD_STORE)).version,
+        methodVersion: (await readMethodKnowledge(repos)).version,
       });
       return {
         report,
@@ -3139,7 +3164,7 @@ if (dry || canary || ONLY !== null || IDS !== null || intents.runnerPause.paused
     const pass = await runCandidatePublicationCycle({
       repos, eligibleCandidacyIds: lifetimeHuntSubjects,
       heldVault: vaultRead, vaultRoot: join(ROOT, ...VAULT_DIR),
-      methodVersion: (await readMethodVersion(repos)) ?? readMethodStore(join(ROOT, ...METHOD_STORE)).version,
+      methodVersion: (await readMethodKnowledge(repos)).version,
       clock: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)), spaceOut: spacer,
       openFor: candidacyId => {
         const opened = fleetSafety.guardedOpenBytes("public-web", candidacyId, fetch, { followRedirects: false });
@@ -3410,7 +3435,7 @@ if (!dry && !canary) {
     researchProgression = await (async () => readResearchProgression(repos, {
       windowId: researchWindowId, through: finishedAt, gate: readActivationGate(ROOT),
       candidates: (await readMethodCandidateStore(repos)).candidates,
-      knowledge: readMethodStore(join(ROOT,...METHOD_STORE)),
+      knowledge: await readMethodKnowledge(repos),
       conclusions: readConclusionStore(join(ROOT,"data","method","conclusions.json")),
       researchBoundary: {
         since: priorResearchState?.researchProgression?.through ?? priorResearchState?.cycleFinishedAt ?? NOW,

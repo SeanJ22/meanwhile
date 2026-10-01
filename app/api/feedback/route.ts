@@ -79,6 +79,9 @@ export async function POST(request: Request) {
     surface?: unknown;
     replyTo?: unknown;
     feedbackKey?: unknown;
+    about?: unknown;
+    zip?: unknown;
+    recordId?: unknown;
   };
 
   if (typeof submission.message !== "string" || !submission.message.trim()) {
@@ -95,6 +98,13 @@ export async function POST(request: Request) {
   }
   if (!isFeedbackSurface(submission.surface)) {
     return Response.json({ stored: false, error: "Unknown surface." }, { status: 400 });
+  }
+  for (const [key, cap] of [["about", 80], ["zip", 5], ["recordId", 200]] as const) {
+    const value = submission[key];
+    if (value != null && (typeof value !== "string" || value.length > cap ||
+      (key === "zip" && !/^\d{5}$/.test(value)))) {
+      return Response.json({ stored: false, error: "Invalid report context." }, { status: 400 });
+    }
   }
   /*
    * R41 (2026-08-17): the optional reply address. Absent, null and empty are
@@ -190,6 +200,9 @@ export async function POST(request: Request) {
     result = await writeFeedback({
       message: submission.message,
       surface: submission.surface,
+      about: submission.about as string | null | undefined,
+      zip: submission.zip as string | null | undefined,
+      recordId: submission.recordId as string | null | undefined,
       replyTo,
       suspectReason,
       // C05: an automated run declares itself, so a walk's test submission is

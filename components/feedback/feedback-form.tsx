@@ -8,6 +8,7 @@ import {
   REPLY_TO_MAX_CHARS,
   isReplyToShaped,
   type FeedbackSurface,
+  type FeedbackContext,
 } from "@/lib/feedback/shape";
 
 /**
@@ -53,10 +54,12 @@ import {
 export function FeedbackForm({
   surface,
   initialMessage = "",
+  context = {},
 }: {
   surface: FeedbackSurface;
   /** Opened from a card: the message starts by naming it. */
   initialMessage?: string;
+  context?: FeedbackContext;
 }) {
   const [message, setMessage] = useState(initialMessage);
   const [replyTo, setReplyTo] = useState("");
@@ -119,7 +122,7 @@ export function FeedbackForm({
         if (!trimmed || tooLong || replyMalformed || state === "sending") return;
         setState("sending");
         setFailure(null);
-        const outcome = await submitFeedback(trimmed, surface, trimmedReply);
+        const outcome = await submitFeedback(trimmed, surface, trimmedReply, context);
         if (outcome.kind === "STORED") {
           setSentWithReply(trimmedReply.length > 0);
           setState("stored");

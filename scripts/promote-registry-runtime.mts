@@ -45,8 +45,8 @@ async function main(): Promise<void> {
     const vault = new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
     const store = new PostgresRoutineDataStore();
     const nationalPublications: NationalPlacePublication[] = [];
-    const nationalPlaces: { zip: string; officials: number; publishedFields: number; owedFields: number; sourceGaps: unknown;
-      inherited: unknown; electionPublications: unknown }[] = [];
+    const nationalPlaces: ({ zip: string; officials: number; publishedFields: number; owedFields: number; sourceGaps: unknown;
+      inherited: unknown; electionPublications: unknown } | { zip: string; deferred: string })[] = [];
     const failures: string[] = [];
     if (nationalZips) {
       try {
@@ -58,7 +58,7 @@ async function main(): Promise<void> {
             nationalPublications.push(publication);
             return publication;
           } });
-        nationalPlaces.push(...places.map(place => ({ zip: place.zip, officials: place.sources?.officials.length ?? 0,
+        nationalPlaces.push(...places.map(place => "deferred" in place ? place : ({ zip: place.zip, officials: place.sources?.officials.length ?? 0,
           publishedFields: place.items.filter(item => item.state === "published").length,
           owedFields: place.work.length, sourceGaps: place.sources?.gaps ?? [],
           inherited: place.inherited, electionPublications: place.electionPublications })));
@@ -84,7 +84,9 @@ async function main(): Promise<void> {
     console.log(JSON.stringify({ contractId: "registry-runtime-bindings", candidateId: published.at(-1)?.outcome.candidateId ?? nationalVersion ?? null,
       promotedVersionId: published.at(-1)?.outcome.versionId ?? nationalVersion ?? null,
       workerPublications: report, nationalPlaces, nationalPublications, failures }, null, 2));
-    await printWorkerPublicationReceipt(store, "registry-runtime-bindings", report, nationalDelivery(nationalPublications), now);
+    const delivery = nationalDelivery(nationalPublications);
+    delivery.gaps.push(...nationalPlaces.flatMap(place => "deferred" in place ? [{ key: `zip:${place.zip}`, detail: place.deferred }] : []));
+    await printWorkerPublicationReceipt(store, "registry-runtime-bindings", report, delivery, now);
     if (failures.length && !published.length && !nationalVersion) throw new Error(failures.join("; "));
     return;
   }

@@ -21,7 +21,7 @@ import { coverageAt } from "../lib/registry/server.ts";
 import registry from "../lib/registry/registry.json" with { type: "json" };
 import { collectNationalPlaceSources, electionDirectorySelection } from "../lib/sources/plural/place.ts";
 import { electionPageFields } from "../lib/hunt/election-page.ts";
-import { placeSourceReader } from "../lib/hunt/place-source-reader.ts";
+import { placeSourceReader, PlaceSourceDeferred } from "../lib/hunt/place-source-reader.ts";
 import { runNationalPlaceTask } from "../lib/hunt/place-source-task.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -114,7 +114,7 @@ test("national collector binds saved CSV to its real Attempt and reuses another 
       repos, store, now: () => now, spaceOut: async () => {}, openBytes: async request => {
         const robots = request.url.endsWith("/robots.txt");
         if (!robots) fetched++;
-        return { status: 200, bytes: Buffer.from(robots ? "User-agent: *\nAllow: /" : body),
+        return { status: 200, bytes: Buffer.from(robots ? "User-agent: *\nAllow: /" : request.url === url ? body : request.url),
           contentType: robots ? "text/plain" : "text/csv", finalUrl: request.url, durationMs: 1, transportError: null };
       },
     } });
@@ -142,6 +142,13 @@ test("national collector binds saved CSV to its real Attempt and reuses another 
   assert.equal(fetched, 2);
   assert.equal(refreshed.collectedAt, "2026-10-02T01:00:00.000Z");
   assert.notEqual(refreshed.capture?.evidence.acquiredByAttemptId, acquired.capture?.evidence.acquiredByAttemptId);
+  for (let index = 2; index < RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost; index++) {
+    await third.read(`https://legislature.gov/page-${index}`);
+  }
+  await assert.rejects(third.read("https://legislature.gov/next"), PlaceSourceDeferred);
+  assert.ok(third.deferred?.message.includes("next pass"), "ordinary page hosts defer just like Census");
+  assert.equal(third.cost.requestCount, RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);
+  assert.equal((await third.read(url)).text, body, "the bound never blocks already saved pages");
 });
 
 test("the national election directory follows its published form for any state", () => {

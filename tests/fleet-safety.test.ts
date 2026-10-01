@@ -380,7 +380,7 @@ test("public redirects are counted as separate provider requests under one byte 
   assert.equal(controller.snapshot(NIGHT).cycle.payloadBytes, 8);
 });
 
-test("an in-flight public read reserves only a bounded slice, so a concurrent read still proceeds", async () => {
+test("an in-flight public read reserves only a bounded slice, so another source still proceeds", async () => {
   const controller = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
   let release!: () => void;
   const gate = new Promise<void>((resolve) => { release = resolve; });
@@ -400,7 +400,7 @@ test("an in-flight public read reserves only a bounded slice, so a concurrent re
   // While the first read is in flight it holds only its bounded reservation, not
   // the whole remaining budget, so the second read is admitted and runs to 200
   // instead of being refused PAYLOAD_BYTE_CEILING at turn 0.
-  const secondResult = await second({ url: "https://example.test/two", method: "GET", headers: {}, timeoutMs: 1_000 });
+  const secondResult = await second({ url: "https://other.test/two", method: "GET", headers: {}, timeoutMs: 1_000 });
   assert.equal(secondResult.status, 200);
   assert.equal(secondResult.body, "two");
   assert.equal(secondCalls, 1);
@@ -462,25 +462,21 @@ test("the largest recurring record's stream budget clears ~9.2 MiB while a full 
       await gate;
       return new Response("x", { status: 200 });
     });
-    return open({ url: "https://example.test/scout", method: "GET", headers: {}, timeoutMs: 1_000 });
+    return open({ url: `https://${work}.test/scout`, method: "GET", headers: {}, timeoutMs: 1_000 });
   };
   const a = holdOpen("scout-read-a");
   const b = holdOpen("scout-read-b");
   await new Promise<void>((resolve) => setImmediate(resolve));
   // Now the serial deterministic lane opens the largest recurring record. Its
-  // honest per-fetch stream budget (the Range ceiling) must still clear the
+  // honest per-fetch stream budget must still clear the
   // 9,396,218-byte record even with the whole Scout lane holding reservations.
-  let rangeEnd = 0;
   const big = controller.guardedOpenOne("public-web", "nh-cfs-filing-entity-details", async (_input, init) => {
-    const range = (init?.headers as Record<string, string> | undefined)?.range ?? "";
-    rangeEnd = Number(/bytes=0-(\d+)/.exec(range)?.[1] ?? "-1") + 1;
-    return new Response("record", { status: 200 });
+    assert.equal(new Headers(init?.headers).get('range'), null);
+    return new Response(new Uint8Array(9_396_218), { status: 200 });
   });
-  await big({ url: "https://example.test/nh-cfs", method: "GET", headers: {}, timeoutMs: 1_000 });
-  assert.ok(
-    rangeEnd >= 9_396_218,
-    `the stream budget (${rangeEnd} bytes) must clear the 9,396,218-byte recurring record`,
-  );
+  const large = await big({ url: "https://example.test/nh-cfs", method: "GET", headers: {}, timeoutMs: 1_000 });
+  assert.equal(large.bytes, 9_396_218);
+  assert.equal(large.transportError, null);
   for (const releaseGate of gates) releaseGate();
   await Promise.all([a, b]);
 });
@@ -568,4 +564,49 @@ test("Admin standing projection exposes ACTIVE, PAUSED and CIRCUIT BROKEN", () =
   assert.equal(runnerStanding(beat, [], NIGHT, broken.snapshot(NIGHT)).state, "CIRCUIT BROKEN");
   const paused = fundedController({ now: NIGHT, costs: [], paused: true, clock: () => Date.parse(NIGHT) });
   assert.equal(runnerStanding(beat, [], NIGHT, paused.snapshot(NIGHT)).state, "PAUSED");
+});
+
+test('HTTP provider outage backs off concurrent subjects, survives restart and releases on expiry', async () => {
+  let time = Date.parse(NIGHT), calls = 0;
+  const controller = fundedController({now:NIGHT,costs:[],clock:()=>time});
+  const input = (q: string) => ({url:'https://api.marginalia.nu/public/search/'+q,method:'GET' as const,headers:{},timeoutMs:1000});
+  const failed: typeof fetch = async (_url, init) => { calls++; assert.equal(new Headers(init?.headers).get('range'),null);
+    return new Response('gateway timeout',{status:504,headers:{'retry-after':'1200'}}); };
+  const responses = await Promise.all(Array.from({length:20},(_,i)=>controller.guardedOpenOne('public-web','candidate-'+i,failed)(input(String(i)))));
+  assert.equal(calls,1);
+  assert.equal(responses.reduce((n,r)=>n+(r.requestCount??0),0),1);
+  assert.equal(responses[0].status,504);
+  assert.ok(responses.slice(1).every(r=>r.requestCount===0 && /latched/.test(r.transportError??'')));
+  const circuits=controller.snapshot().providerCircuits;
+  assert.equal(circuits.length,1);assert.equal(circuits[0].provider,'https://api.marginalia.nu');
+  const restarted=fundedController({now:NIGHT,costs:[],clock:()=>time,circuits});
+  const blocked=await restarted.guardedOpenOne('public-web','later',failed)(input('later'));
+  assert.equal(blocked.requestCount,0);assert.equal(calls,1);
+  const healthy: typeof fetch=async()=>new Response('{"pages":[{"id":1}]}',{status:200});
+  const other=await restarted.guardedOpenOne('public-web','other',healthy)({...input('other'),url:'https://api.wikimedia.org/core/v1/wikipedia/en/search/page?q=other'});
+  assert.equal(other.status,200);
+  time+=20*60000;
+  const recovered=await restarted.guardedOpenOne('public-web','recovered',async()=>new Response('{"license":"CC","results":[{"url":"https://example.gov"}]}'))(input('recovered'));
+  assert.equal(recovered.status,200);assert.equal(restarted.snapshot().providerCircuits.length,0);
+});
+
+test('partial, malformed and transport failures latch the source without ingesting empty civic facts', async () => {
+  for(const [url,fetcher] of [
+    ['https://api.wikimedia.org/core/v1/wikipedia/en/search/page?q=x',async()=>new Response('{"pages":[]}',{status:206})],
+    ['https://api.marginalia.nu/public/search/x',async()=>new Response('<html>Service unavailable</html>',{status:200})],
+    ['https://api.marginalia.nu/public/search/y',async()=>{throw new Error('connection reset');}],
+  ] as const){
+    const controller=fundedController({now:NIGHT,costs:[],clock:()=>Date.parse(NIGHT)});
+    const first=await controller.guardedOpenOne('public-web','first',fetcher)({url,method:'GET',headers:{},timeoutMs:1000});
+    assert.equal(first.requestCount,1);
+    assert.equal(controller.snapshot().providerCircuits.length,1,JSON.stringify({url,first}));
+    const second=await controller.guardedOpenOne('public-web','second',fetcher)({url,method:'GET',headers:{},timeoutMs:1000});
+    assert.equal(second.requestCount,0);
+  }
+});
+
+test('a complete empty search is a query miss and does not disable the provider for other people', async()=>{
+  const controller=fundedController({now:NIGHT,costs:[],clock:()=>Date.parse(NIGHT)});
+  const result=await controller.guardedOpenOne('public-web','no-match',async()=>new Response('{"pages":[]}'))({url:'https://api.wikimedia.org/core/v1/wikipedia/en/search/page?q=unknown',method:'GET',headers:{},timeoutMs:1000});
+  assert.equal(result.status,200);assert.equal(controller.snapshot().providerCircuits.length,0);
 });

@@ -1742,7 +1742,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7019 file(s).
+7020 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -4702,6 +4702,8 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/ask/evidence.ts`
 - `lib/ask/gap-codes.ts`
 - `lib/ask/gap-observation.ts`
+- `lib/ask/grounded-preloads.ts`
+- `lib/ask/grounded-state.ts`
 - `lib/ask/hedged-fetch.ts`
 - `lib/ask/held-agenda.ts`
 - `lib/ask/held-filing-subjects.ts`
@@ -5056,7 +5058,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/fixtures/pima-meetings.ts`
 - `lib/control-plane/fleet-delivery.ts`
 - `lib/control-plane/fleet-operations.ts`
-- `lib/control-plane/fleet-receipt-publisher.ts`
 - `lib/control-plane/fleet-receipt-snapshot.ts`
 - `lib/control-plane/fleet-receipt-store.ts`
 - `lib/control-plane/fleet-safety.ts`

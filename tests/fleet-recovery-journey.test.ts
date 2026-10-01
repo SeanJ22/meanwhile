@@ -145,7 +145,10 @@ function historicalBlockView(repos: ControlPlaneRepositories, code: ResearchBloc
 
 test("a route an older acquisition blocked for robots.txt alone (PERMISSION_DENIED, never retryable) is acquired again at once, robots first; any other non-retryable block still holds", async () => {
   const response: { transportError: string | null } = { transportError: "socket timeout" };
-  const h = await autonomousHarness({ response });
+  // The executor and planner see the same historical store, including its captured closure.
+  const original = await autonomousHarness({ response });
+  const repos = historicalBlockView(original.repos, "PERMISSION_DENIED", false);
+  const h = await autonomousHarness({ response, repos, store: original.store });
   const first = await nextAutonomousOperation(h.runtime, h.item.id);
   assert.equal(first.task?.workerTask?.role, "ACQUIRER");
   assert.equal((await dispatchWorkerTask(h.runtime, first.task!)).outcome, "WORKED");

@@ -4,7 +4,7 @@ import { gap, type OwnerSnapshot } from "../lib/control-plane/owner-surface.ts";
 import { PULSE_STALE_MS } from "../lib/control-plane/live-pulse.ts";
 import { FLEET_RECEIPT_SNAPSHOT_MAX_BYTES, FLEET_RECEIPT_SNAPSHOT_VERSION, isFleetReceiptSnapshot,
   readFleetReceiptSnapshot, type FleetReceiptSnapshot } from "../lib/control-plane/fleet-receipt-snapshot.ts";
-import type { FleetReceiptLoadReport, FleetReceiptStore } from "../lib/control-plane/fleet-receipt-store.ts";
+import type { FleetReceiptLoadReport } from "../lib/control-plane/fleet-receipt-store.ts";
 import type { PromotionReceipt } from "../lib/control-plane/promotion/historical-receipt.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { SNAPSHOT_ID } from "../lib/control-plane/admin-data.ts";
@@ -73,13 +73,6 @@ function owner(at = NEXT): OwnerSnapshot {
     pilotGreen: null, contracts: [], decisionCards: [], obligationsByState: [], obligationsByProvider: [], freshnessDebtRows: missing,
     incidents: [], costByRole: [], costByModel: [], cacheHitRateByCaller: [], deterministicShare: missing, costPerVerifiedRecord: missing,
     zipRows: missing, intakeFolder: missing, intakeItemsFound: missing, intakeItemsProcessed: missing, intakeUnidentifiable: missing };
-}
-
-function held(value: FleetReceiptSnapshot | null | undefined): FleetReceiptLoadReport {
-  assert.ok(value);
-  assert.equal(value.loading.kind, "HELD");
-  if (value.loading.kind !== "HELD") throw new Error("Expected held fixture report");
-  return value.loading.value;
 }
 
 test("snapshot reads distinguish absent, malformed, wrong-version and future data", () => {

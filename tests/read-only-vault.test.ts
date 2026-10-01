@@ -56,6 +56,48 @@ test("C16: the read-only vault finds what the durable store committed, by id, co
   assert.deepEqual((await indexVault(join(tmpdir(), "wtp-ro-vault-absent-root"))).byId.size, 0, "an absent root is an empty vault");
 });
 
+test("Netlify vault preserves oversized metadata atomically with original bytes", async () => {
+  const bytes = new TextEncoder().encode("held evidence bytes");
+  const meta = { contentType: "text/plain", contentHash: contentHash(bytes), byteLength: bytes.length,
+    objectClass: "IMMUTABLE_BODY" as const, custom: { sourceNote: "government source — ".repeat(800) } };
+  let data: ArrayBuffer | null = null;
+  let metadata: Record<string, unknown> = {};
+  let writes = 0;
+  const remote = new NetlifyEvidenceStore({
+    async getMetadata() { return data === null ? null : { metadata }; },
+    async getWithMetadata() { return data === null ? null : { data, metadata }; },
+    async set(_key: string, body: ArrayBuffer, options: { metadata: Record<string, unknown>; onlyIfNew?: boolean }) {
+      assert.ok("netlify-blobs-metadata".length + 4 + Buffer.from(JSON.stringify(options.metadata)).toString("base64").length <= 2048);
+      if (options.onlyIfNew && data !== null) return { modified: false };
+      data = body;
+      metadata = options.metadata;
+      writes++;
+      return { modified: true };
+    },
+  } as unknown as Store);
+  await remote.put("large-note", bytes, meta);
+  assert.equal(metadata.format, "evidence-envelope@1");
+  assert.deepEqual((await remote.get("large-note"))?.bytes, bytes);
+  assert.deepEqual(await remote.head("large-note"), meta);
+  assert.equal((await remote.describe("large-note"))?.bodySha256, contentHash(bytes));
+  await remote.put("large-note", bytes, meta);
+  assert.equal(writes, 1, "healthy oversized immutable reuse is still a no-op");
+  new Uint8Array(data!)[data!.byteLength - 1] ^= 1;
+  await assert.rejects(remote.get("large-note"), /Stored evidence is corrupt/);
+  await assert.rejects(remote.put("large-note", bytes, meta), /Stored evidence is corrupt/);
+  assert.equal(writes, 1);
+  const indexMeta = { ...meta, objectClass: "MUTABLE_INDEX" as const, contentHash: "manifest:large-note" };
+  data = null;
+  await remote.put("index.json", bytes, indexMeta);
+  new Uint8Array(data!)[data!.byteLength - 1] ^= 1;
+  await remote.put("index.json", bytes, indexMeta);
+  assert.deepEqual((await remote.get("index.json"))?.meta, indexMeta);
+  assert.equal(writes, 3, "a mutable index's damaged body remains rebuildable");
+  new DataView(data!).setUint32(0, data!.byteLength);
+  await assert.rejects(remote.get("large-note"), /envelope is unreadable/);
+  await assert.rejects(remote.describe("large-note"), /envelope is unreadable/);
+});
+
 test("C16: the derived wiring child's closure reaches no filesystem writer", () => {
   const vault = readFileSync("lib/control-plane/evidence/read-only-vault.ts", "utf8");
   assert.doesNotMatch(vault, /\b(writeFile|rename|mkdir|rm|appendFile|unlink)\b\s*\(/);

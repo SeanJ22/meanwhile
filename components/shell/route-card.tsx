@@ -11,7 +11,7 @@ import { ReaderCard } from "./reader-card";
  * scrim, ✕ Close, Escape, focus trap, inert background. Closing is a browser
  * Back, because opening it was a navigation; the map underneath never left.
  */
-export function RouteCard({ kicker, children }: { kicker: string; children: ReactNode }) {
+export function RouteCard({ kicker, zip, children }: { kicker: string; zip?: string; children: ReactNode }) {
   const router = useRouter();
   const close = useCallback(() => router.back(), [router]);
   const openVote = useCallback(() => {
@@ -29,6 +29,7 @@ export function RouteCard({ kicker, children }: { kicker: string; children: Reac
       <ReaderCard
         viewKey={`route:${kicker}`}
         kicker={kicker}
+        zip={zip}
         backLabel={null}
         onBack={close}
         onClose={close}

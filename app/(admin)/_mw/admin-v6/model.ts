@@ -452,6 +452,8 @@ export interface MoneyView {
   /** Our recorded request costs against each provider's own report, for that report's period. Null when the attribution was not read. */
   readonly reconciliation: readonly {
     readonly provider: string; readonly periodStart: string; readonly periodEnd: string;
+    /** False for a shared platform cost (hosting, database, GitHub): no request is priced in our ledger, so nothing is compared. */
+    readonly requestPriced: boolean;
     readonly huntUsd: number | null; readonly huntKnownUsd: number; readonly otherUsd: number | null; readonly otherKnownUsd: number;
     readonly providerUsd: number | null; readonly differenceUsd: number | null; readonly unpriced: number }[] | null;
   readonly readings: readonly {

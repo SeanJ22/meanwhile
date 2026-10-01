@@ -21,6 +21,8 @@ export interface AdminV6MoneyView {
   /** Our recorded request costs against each provider's own report, for that report's period. Null when the attribution was not read. */
   readonly reconciliation: readonly {
     readonly provider: string; readonly periodStart: string; readonly periodEnd: string;
+    /** False for a shared platform cost (hosting, database, GitHub): no request is priced in our ledger, so nothing is compared. */
+    readonly requestPriced: boolean;
     readonly huntUsd: number | null; readonly huntKnownUsd: number; readonly otherUsd: number | null; readonly otherKnownUsd: number;
     readonly providerUsd: number | null; readonly differenceUsd: number | null; readonly unpriced: number }[] | null;
   /** What each provider's last read said, with when it was read. */
@@ -139,7 +141,8 @@ export function v6MoneySection(input: { readonly scopeKey: string; readonly scop
     : sources.attribution.providers.flatMap(p => {
       const reading = spanOf.get(p.provider);
       if (!reading || (period.kind === "month" && periodWithin(reading, period.month) === null)) return [];
-      return [{ provider: PROVIDER_NAMES[p.provider], periodStart: reading.periodStart, periodEnd: reading.periodEnd, huntUsd: p.huntUsd, huntKnownUsd: p.huntKnownUsd,
+      return [{ provider: PROVIDER_NAMES[p.provider], periodStart: reading.periodStart, periodEnd: reading.periodEnd,
+        requestPriced: ["anthropic-api", "exa", "brave"].includes(p.provider), huntUsd: p.huntUsd, huntKnownUsd: p.huntKnownUsd,
         otherUsd: p.otherRecordedUsd, otherKnownUsd: p.otherKnownUsd, providerUsd: p.providerUsd, differenceUsd: p.differenceUsd, unpriced: p.unpriced }];
     });
   const detail = inPeriod.map(r => ({ provider: PROVIDER_NAMES[r.provider], status: r.status, stale: billingStale(r, sources.readAt), syncedAt: r.syncedAt, attemptedAt: r.attemptedAt,

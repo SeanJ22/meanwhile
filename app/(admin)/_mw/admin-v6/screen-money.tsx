@@ -152,10 +152,10 @@ function ReconciliationCard() {
                 <tr key={r.provider}>
                   <th scope="row" style={{ textTransform: "none", fontSize: 13, color: "var(--text)" }}>{r.provider}</th>
                   <td className={s.small}>{billingDay(r.periodStart)} to {billingDay(r.periodEnd)}</td>
-                  <td className={s.num}>{dollars(r.huntUsd, r.huntKnownUsd)}</td>
-                  <td className={s.num}>{dollars(r.otherUsd, r.otherKnownUsd)}</td>
+                  <td className={s.num}>{r.requestPriced ? dollars(r.huntUsd, r.huntKnownUsd) : <span className={s.dim}>Shared platform cost</span>}</td>
+                  <td className={s.num}>{r.requestPriced ? dollars(r.otherUsd, r.otherKnownUsd) : <span className={s.dim}>Shared platform cost</span>}</td>
                   <td className={cx(s.num, r.providerUsd === null && s.textWarn)}>{r.providerUsd === null ? "No report" : usd(r.providerUsd)}</td>
-                  <td className={s.num}>{r.differenceUsd === null ? "Can’t be worked out" : usd(r.differenceUsd)}</td>
+                  <td className={s.num}>{!r.requestPriced ? <span className={s.dim}>Not compared</span> : r.differenceUsd === null ? "Can’t be worked out" : usd(r.differenceUsd)}</td>
                   <td className={s.num}>{count(r.unpriced)}</td>
                 </tr>
               ))}

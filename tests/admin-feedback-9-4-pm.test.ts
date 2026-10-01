@@ -236,10 +236,11 @@ test("ADM-16: the page renders the split and receipt, while tracked tracker sync
   const now = codeOf("app/(admin)/admin/page.tsx");
   // S11 (Sean, 2026-09-30): the old tracker's decision cards are off the home screen, so the page no longer splits, counts or lists them.
   assert.doesNotMatch(now, /splitDecided\(|readDecisionCards\(|readDecisions\(|NextSteps|receiptHeadline\(/, "the home screen does not draw the old tracker decisions");
-  assert.equal(consoleReturnPath("/readiness/az", "/admin"), "/readiness/az");
+  assert.equal(consoleReturnPath("/admin", "/admin"), "/admin");
+  assert.equal(consoleReturnPath("/readiness/az", "/admin"), "/admin", "a retired page is not a destination any more");
   assert.equal(consoleReturnPath("https://evil.example/", "/admin"), "/admin");
   assert.equal(consoleReturnPath("/readiness/AZ", "/admin"), "/admin", "the closed list is exact");
-  assert.equal(isConsolePath("/admin/sources"), true);
+  assert.equal(isConsolePath("/admin/sources"), false, "the Sources page is deleted: publication status is on Workers");
   assert.match(src("app/api/admin/decision/route.ts"), /consoleReturnPath\(/);
   assert.match(src("app/api/admin/research/route.ts"), /consoleReturnPath\(/);
   const canon = src("scripts/canonicalize-owner-decisions.mts");

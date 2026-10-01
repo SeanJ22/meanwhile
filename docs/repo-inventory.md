@@ -8,21 +8,12 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Routes and pages
 
-86 file(s). Paths retain route groups and dynamic segments as written.
+79 file(s). Paths retain route groups and dynamic segments as written.
 
-- `/(admin)/admin/agents` — `app/(admin)/admin/agents/page.tsx`
 - `/(admin)/admin/auth/callback` — `app/(admin)/admin/auth/callback/route.ts`
 - `/(admin)/admin/auth/google` — `app/(admin)/admin/auth/google/route.ts`
 - `/(admin)/admin/login` — `app/(admin)/admin/login/page.tsx`
-- `/(admin)/admin/money` — `app/(admin)/admin/money/page.tsx`
 - `/(admin)/admin` — `app/(admin)/admin/page.tsx`
-- `/(admin)/admin/sources` — `app/(admin)/admin/sources/page.tsx`
-- `/(admin)/admin/work` — `app/(admin)/admin/work/page.tsx`
-- `/(admin)/readiness/[state]` — `app/(admin)/readiness/[state]/page.tsx`
-- `/(admin)/readiness/cost` — `app/(admin)/readiness/cost/page.tsx`
-- `/(admin)/readiness/done` — `app/(admin)/readiness/done/page.tsx`
-- `/(admin)/readiness` — `app/(admin)/readiness/page.tsx`
-- `/(admin)/readiness/work` — `app/(admin)/readiness/work/page.tsx`
 - `/@modal/(.)ballot` — `app/@modal/(.)ballot/page.tsx`
 - `/about-area/compare` — `app/about-area/compare/page.tsx`
 - `/about-area` — `app/about-area/page.tsx`
@@ -54,12 +45,14 @@ Read each source file for its current exports, configuration, commands and data.
 - `/api/admin/v6/learning` — `app/api/admin/v6/learning/route.ts`
 - `/api/admin/v6/money` — `app/api/admin/v6/money/route.ts`
 - `/api/admin/v6/place` — `app/api/admin/v6/place/route.ts`
+- `/api/admin/v6/publication` — `app/api/admin/v6/publication/route.ts`
 - `/api/admin/v6/receipt` — `app/api/admin/v6/receipt/route.ts`
 - `/api/admin/v6/reliability` — `app/api/admin/v6/reliability/route.ts`
 - `/api/admin/v6/same-cause` — `app/api/admin/v6/same-cause/route.ts`
 - `/api/admin/v6/sends` — `app/api/admin/v6/sends/route.ts`
 - `/api/admin/v6/spend` — `app/api/admin/v6/spend/route.ts`
 - `/api/admin/v6/stuck` — `app/api/admin/v6/stuck/route.ts`
+- `/api/admin/v6/trail` — `app/api/admin/v6/trail/route.ts`
 - `/api/admin/v6/workers` — `app/api/admin/v6/workers/route.ts`
 - `/api/admin/work-progress` — `app/api/admin/work-progress/route.ts`
 - `/api/agenda` — `app/api/agenda/route.ts`
@@ -793,7 +786,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-957 file(s).
+952 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -832,7 +825,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-meeting-cadence.test.ts`
 - `tests/admin-moved-pages.test.ts`
 - `tests/admin-narrow-reads.test.ts`
-- `tests/admin-paid-lane.test.ts`
 - `tests/admin-promoted-slices.test.ts`
 - `tests/admin-public-reader-observation.test.ts`
 - `tests/admin-publisher-horizon.test.ts`
@@ -857,11 +849,13 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-v6-instruction-draft.test.ts`
 - `tests/admin-v6-learning.test.ts`
 - `tests/admin-v6-place-scorecard.test.ts`
+- `tests/admin-v6-publication.test.ts`
 - `tests/admin-v6-receipt-lookup.test.ts`
 - `tests/admin-v6-reliability.test.ts`
 - `tests/admin-v6-sends.test.ts`
 - `tests/admin-v6-spend.test.ts`
 - `tests/admin-v6-stuck-causes.test.ts`
+- `tests/admin-v6-trail.test.ts`
 - `tests/admin-v6-ui/live-sync.test.ts`
 - `tests/admin-v6-ui/mounted-live-transition.test.ts`
 - `tests/admin-v6-ui/v6-ui.test.tsx`
@@ -1031,7 +1025,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/census-join-key.test.ts`
 - `tests/challenge-at-200.test.ts`
 - `tests/checklist-census.test.ts`
-- `tests/checklist-connections.test.ts`
 - `tests/checklist-delivery-score.test.ts`
 - `tests/checklist-dispatch-witness.test.ts`
 - `tests/checklist-timings.test.ts`
@@ -1117,8 +1110,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/declared-work-scope.test.ts`
 - `tests/deferred-census.test.ts`
 - `tests/delivery-experience-action-receipt.test.ts`
-- `tests/delivery-experience-admin-controls.test.ts`
-- `tests/delivery-experience-admin-scope.test.ts`
 - `tests/delivery-experience-manual-reader.test.ts`
 - `tests/delivery-experience-roster-provenance.test.ts`
 - `tests/delivery-experience-subset-verification.test.ts`
@@ -1171,7 +1162,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/execution-accountability-fix-history.test.ts`
 - `tests/execution-accountability-held-reuse.test.ts`
 - `tests/execution-accountability-manual-gaps.test.ts`
-- `tests/execution-accountability-priorities.test.ts`
 - `tests/execution-accountability-worker-progress.test.ts`
 - `tests/execution-accountability-worker-version.test.ts`
 - `tests/executor-identity.test.ts`
@@ -1179,7 +1169,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/expansion-any-state.test.ts`
 - `tests/expansion-gateway.test.ts`
 - `tests/expansion-log.test.ts`
-- `tests/expansion-page.test.tsx`
 - `tests/expansion-scopes.test.ts`
 - `tests/extract.test.ts`
 - `tests/extraction-partials.test.ts`
@@ -1268,7 +1257,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/incumbent-record.test.ts`
 - `tests/ingest-agenda-failed-reads.test.ts`
 - `tests/installed-runtime-dispatch.test.ts`
-- `tests/instruction-membership.test.ts`
 - `tests/instrument-hardening.test.ts`
 - `tests/intake-runtime.test.ts`
 - `tests/intake.test.ts`
@@ -1755,7 +1743,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7046 file(s).
+6993 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -1811,73 +1799,38 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/_mw/admin-v6/screen-now.tsx`
 - `app/(admin)/_mw/admin-v6/screen-work.tsx`
 - `app/(admin)/_mw/admin-v6/screen-workers.tsx`
+- `app/(admin)/_mw/admin-v6/trail-view.tsx`
 - `app/(admin)/_mw/admin-v6/ui.tsx`
 - `app/(admin)/_mw/admin-v6/use-reading.ts`
 - `app/(admin)/_mw/admin-v6/v6.module.css`
 - `app/(admin)/_mw/admin-v6/view-param.ts`
-- `app/(admin)/_mw/blocks.tsx`
-- `app/(admin)/_mw/composer.tsx`
 - `app/(admin)/_mw/data/body-store.ts`
 - `app/(admin)/_mw/data/bulk-places.ts`
-- `app/(admin)/_mw/data/census-universe.ts`
 - `app/(admin)/_mw/data/geography.ts`
-- `app/(admin)/_mw/data/hunt-source-progress.ts`
 - `app/(admin)/_mw/data/learning-trends.ts`
-- `app/(admin)/_mw/data/live-pipeline.ts`
 - `app/(admin)/_mw/data/load-bodies.ts`
 - `app/(admin)/_mw/data/reader-query.ts`
-- `app/(admin)/_mw/data/readiness-counties.ts`
-- `app/(admin)/_mw/data/registration.ts`
 - `app/(admin)/_mw/data/registry.ts`
-- `app/(admin)/_mw/data/research-lane.ts`
 - `app/(admin)/_mw/data/scope-work.ts`
 - `app/(admin)/_mw/data/send-preview.ts`
 - `app/(admin)/_mw/data/shared-read.ts`
 - `app/(admin)/_mw/data/spend-store.ts`
-- `app/(admin)/_mw/data/state-census-denominators.json`
 - `app/(admin)/_mw/delivery-pending.tsx`
 - `app/(admin)/_mw/delivery-trail.tsx`
 - `app/(admin)/_mw/evidence-copy-control.tsx`
 - `app/(admin)/_mw/evidence-download.ts`
-- `app/(admin)/_mw/fnv.ts`
-- `app/(admin)/_mw/header-controls.tsx`
-- `app/(admin)/_mw/intent-control.tsx`
-- `app/(admin)/_mw/lane-strip.tsx`
 - `app/(admin)/_mw/live-refresh.tsx`
-- `app/(admin)/_mw/load-shell.ts`
 - `app/(admin)/_mw/maptiler-panel.tsx`
 - `app/(admin)/_mw/money-controls.tsx`
 - `app/(admin)/_mw/mw.module.css`
-- `app/(admin)/_mw/page-base.ts`
-- `app/(admin)/_mw/provider-sync-panel.tsx`
-- `app/(admin)/_mw/runner-card.tsx`
-- `app/(admin)/_mw/scope-send-key.ts`
 - `app/(admin)/_mw/scope.ts`
-- `app/(admin)/_mw/screens/done.tsx`
-- `app/(admin)/_mw/screens/money.tsx`
-- `app/(admin)/_mw/screens/work.tsx`
-- `app/(admin)/_mw/shell.tsx`
 - `app/(admin)/_mw/ui.tsx`
-- `app/(admin)/admin/agents/contract.ts`
-- `app/(admin)/admin/agents/page.tsx`
 - `app/(admin)/admin/auth/callback/route.ts`
 - `app/(admin)/admin/auth/google/route.ts`
 - `app/(admin)/admin/login/page.tsx`
-- `app/(admin)/admin/money/page.tsx`
 - `app/(admin)/admin/page.tsx`
-- `app/(admin)/admin/sources/page.tsx`
-- `app/(admin)/admin/sources/publication-status-panel.tsx`
-- `app/(admin)/admin/sources/routine-data-panel.tsx`
-- `app/(admin)/admin/work/page.tsx`
-- `app/(admin)/console-nav.tsx`
-- `app/(admin)/console-ui.tsx`
 - `app/(admin)/layout.tsx`
 - `app/(admin)/loading.tsx`
-- `app/(admin)/readiness/[state]/page.tsx`
-- `app/(admin)/readiness/cost/page.tsx`
-- `app/(admin)/readiness/done/page.tsx`
-- `app/(admin)/readiness/page.tsx`
-- `app/(admin)/readiness/work/page.tsx`
 - `app/(admin)/status-ui.tsx`
 - `app/@modal/(.)ballot/loading.tsx`
 - `app/@modal/(.)ballot/page.tsx`
@@ -1912,12 +1865,14 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/api/admin/v6/learning/route.ts`
 - `app/api/admin/v6/money/route.ts`
 - `app/api/admin/v6/place/route.ts`
+- `app/api/admin/v6/publication/route.ts`
 - `app/api/admin/v6/receipt/route.ts`
 - `app/api/admin/v6/reliability/route.ts`
 - `app/api/admin/v6/same-cause/route.ts`
 - `app/api/admin/v6/sends/route.ts`
 - `app/api/admin/v6/spend/route.ts`
 - `app/api/admin/v6/stuck/route.ts`
+- `app/api/admin/v6/trail/route.ts`
 - `app/api/admin/v6/workers/route.ts`
 - `app/api/admin/work-progress/route.ts`
 - `app/api/agenda/route.ts`
@@ -4950,7 +4905,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/admin-view/blocker-causes.ts`
 - `lib/control-plane/admin-view/bodies.ts`
 - `lib/control-plane/admin-view/capabilities.ts`
-- `lib/control-plane/admin-view/census-universe.ts`
 - `lib/control-plane/admin-view/checklist-definition-search.ts`
 - `lib/control-plane/admin-view/checklist-index-publisher.ts`
 - `lib/control-plane/admin-view/checklist-instance-index-read.ts`
@@ -4958,20 +4912,14 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/admin-view/coverage.ts`
 - `lib/control-plane/admin-view/dead-ends.ts`
 - `lib/control-plane/admin-view/fix-prevention-history.ts`
-- `lib/control-plane/admin-view/hunt-activity.ts`
-- `lib/control-plane/admin-view/instruction-membership.ts`
 - `lib/control-plane/admin-view/learning-trends.ts`
 - `lib/control-plane/admin-view/model-ladder-view.ts`
-- `lib/control-plane/admin-view/money-view.ts`
 - `lib/control-plane/admin-view/place-owed-read.ts`
 - `lib/control-plane/admin-view/place-scorecard.ts`
 - `lib/control-plane/admin-view/promoted-slices.ts`
 - `lib/control-plane/admin-view/public-reader-observation-read.ts`
-- `lib/control-plane/admin-view/readiness-view.ts`
 - `lib/control-plane/admin-view/receipt-lookup.ts`
-- `lib/control-plane/admin-view/registration-standing.ts`
 - `lib/control-plane/admin-view/runner-progress-read.ts`
-- `lib/control-plane/admin-view/scope-preview-words.ts`
 - `lib/control-plane/admin-view/scope-preview.ts`
 - `lib/control-plane/admin-view/scope-work.ts`
 - `lib/control-plane/admin-view/v6-agents-read.ts`
@@ -4984,6 +4932,8 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/admin-view/v6-money-hunts-route.ts`
 - `lib/control-plane/admin-view/v6-money-read.ts`
 - `lib/control-plane/admin-view/v6-place-section.ts`
+- `lib/control-plane/admin-view/v6-publication-read.ts`
+- `lib/control-plane/admin-view/v6-publication-route.ts`
 - `lib/control-plane/admin-view/v6-reliability-read.ts`
 - `lib/control-plane/admin-view/v6-reliability-route.ts`
 - `lib/control-plane/admin-view/v6-sends-read.ts`
@@ -4992,8 +4942,9 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/admin-view/v6-spend-route.ts`
 - `lib/control-plane/admin-view/v6-stuck-read.ts`
 - `lib/control-plane/admin-view/v6-stuck-route.ts`
+- `lib/control-plane/admin-view/v6-trail-read.ts`
+- `lib/control-plane/admin-view/v6-trail-route.ts`
 - `lib/control-plane/admin-view/v6-workers-read.ts`
-- `lib/control-plane/admin-view/work-view.ts`
 - `lib/control-plane/admin-view/worker-progress.ts`
 - `lib/control-plane/admin-view/worker-version-read.ts`
 - `lib/control-plane/agents/execution.ts`
@@ -5001,15 +4952,12 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/agents/host.ts`
 - `lib/control-plane/agents/job.ts`
 - `lib/control-plane/agents/provider.ts`
-- `lib/control-plane/agents/read.ts`
 - `lib/control-plane/agents/review.ts`
 - `lib/control-plane/agents/run-host.ts`
-- `lib/control-plane/agents/view.ts`
 - `lib/control-plane/ask-gap-id.ts`
 - `lib/control-plane/ask-gap-observations.ts`
 - `lib/control-plane/assignment-completion.ts`
 - `lib/control-plane/assignment-read.ts`
-- `lib/control-plane/assignment-routine.ts`
 - `lib/control-plane/assignment-view.ts`
 - `lib/control-plane/attempt.ts`
 - `lib/control-plane/audit.ts`
@@ -5111,7 +5059,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/gateway/write-readback.ts`
 - `lib/control-plane/ids.ts`
 - `lib/control-plane/incident-groups.ts`
-- `lib/control-plane/live-pipeline-read.ts`
 - `lib/control-plane/live-pulse.ts`
 - `lib/control-plane/maptiler/client.ts`
 - `lib/control-plane/maptiler/collector.ts`
@@ -5134,7 +5081,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/operator-chat/turn.ts`
 - `lib/control-plane/owner-surface.ts`
 - `lib/control-plane/pilot-cost-digest.ts`
-- `lib/control-plane/plain-health.ts`
 - `lib/control-plane/plain-words.ts`
 - `lib/control-plane/plain-work.ts`
 - `lib/control-plane/preflight.ts`
@@ -5168,10 +5114,8 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/reader-intel.ts`
 - `lib/control-plane/readiness/catalog.ts`
 - `lib/control-plane/readiness/checklist-census.ts`
-- `lib/control-plane/readiness/checklist-connections.ts`
 - `lib/control-plane/readiness/checklist-dispatch-witness.ts`
 - `lib/control-plane/readiness/checklist-profile.json`
-- `lib/control-plane/readiness/checklist-read.ts`
 - `lib/control-plane/readiness/checklist-score.ts`
 - `lib/control-plane/readiness/checklist-timings.ts`
 - `lib/control-plane/readiness/compute.ts`
@@ -5201,7 +5145,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/research-view.ts`
 - `lib/control-plane/route-task.ts`
 - `lib/control-plane/runner-liveness.ts`
-- `lib/control-plane/runner-plain.ts`
 - `lib/control-plane/runner-standing.ts`
 - `lib/control-plane/scheduler/absence.ts`
 - `lib/control-plane/scheduler/ask-gap-holdings.ts`
@@ -5256,7 +5199,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/shipping/transaction.ts`
 - `lib/control-plane/shipping/tree-equivalence.ts`
 - `lib/control-plane/software-release-review.ts`
-- `lib/control-plane/source-registry.ts`
 - `lib/control-plane/startup-read-retry.ts`
 - `lib/control-plane/unit-state.ts`
 - `lib/control-plane/window-view.ts`
@@ -5585,7 +5527,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/meetings/carry-forward.ts`
 - `lib/meetings/constants.ts`
 - `lib/meetings/edge-artifacts.ts`
-- `lib/meetings/edge-observability.ts`
 - `lib/meetings/edge-serving.ts`
 - `lib/meetings/edge-store.ts`
 - `lib/meetings/fresh-checks.ts`
@@ -7637,7 +7578,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-meeting-cadence.test.ts`
 - `tests/admin-moved-pages.test.ts`
 - `tests/admin-narrow-reads.test.ts`
-- `tests/admin-paid-lane.test.ts`
 - `tests/admin-promoted-slices.test.ts`
 - `tests/admin-public-reader-observation.test.ts`
 - `tests/admin-publisher-horizon.test.ts`
@@ -7655,7 +7595,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-session.ts`
 - `tests/admin-source-registry.test.ts`
 - `tests/admin-standard-in-force.test.ts`
-- `tests/admin-surface.ts`
 - `tests/admin-v6-agents.test.ts`
 - `tests/admin-v6-checklist-all-definitions.test.ts`
 - `tests/admin-v6-checklist-section.test.ts`
@@ -7664,11 +7603,13 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-v6-instruction-draft.test.ts`
 - `tests/admin-v6-learning.test.ts`
 - `tests/admin-v6-place-scorecard.test.ts`
+- `tests/admin-v6-publication.test.ts`
 - `tests/admin-v6-receipt-lookup.test.ts`
 - `tests/admin-v6-reliability.test.ts`
 - `tests/admin-v6-sends.test.ts`
 - `tests/admin-v6-spend.test.ts`
 - `tests/admin-v6-stuck-causes.test.ts`
+- `tests/admin-v6-trail.test.ts`
 - `tests/admin-v6-ui/live-sync.test.ts`
 - `tests/admin-v6-ui/mounted-live-transition.test.ts`
 - `tests/admin-v6-ui/v6-ui.test.tsx`
@@ -7838,7 +7779,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/census-join-key.test.ts`
 - `tests/challenge-at-200.test.ts`
 - `tests/checklist-census.test.ts`
-- `tests/checklist-connections.test.ts`
 - `tests/checklist-delivery-score.test.ts`
 - `tests/checklist-dispatch-witness.test.ts`
 - `tests/checklist-timings.test.ts`
@@ -7925,8 +7865,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/declared-work-scope.test.ts`
 - `tests/deferred-census.test.ts`
 - `tests/delivery-experience-action-receipt.test.ts`
-- `tests/delivery-experience-admin-controls.test.ts`
-- `tests/delivery-experience-admin-scope.test.ts`
 - `tests/delivery-experience-manual-reader.test.ts`
 - `tests/delivery-experience-roster-provenance.test.ts`
 - `tests/delivery-experience-subset-verification.test.ts`
@@ -7980,7 +7918,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/execution-accountability-fix-history.test.ts`
 - `tests/execution-accountability-held-reuse.test.ts`
 - `tests/execution-accountability-manual-gaps.test.ts`
-- `tests/execution-accountability-priorities.test.ts`
 - `tests/execution-accountability-worker-progress.test.ts`
 - `tests/execution-accountability-worker-version.test.ts`
 - `tests/executor-identity.test.ts`
@@ -7988,7 +7925,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/expansion-any-state.test.ts`
 - `tests/expansion-gateway.test.ts`
 - `tests/expansion-log.test.ts`
-- `tests/expansion-page.test.tsx`
 - `tests/expansion-scopes.test.ts`
 - `tests/extract.test.ts`
 - `tests/extraction-partials.test.ts`
@@ -8310,7 +8246,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/incumbent-record.test.ts`
 - `tests/ingest-agenda-failed-reads.test.ts`
 - `tests/installed-runtime-dispatch.test.ts`
-- `tests/instruction-membership.test.ts`
 - `tests/instrument-hardening.test.ts`
 - `tests/intake-runtime.test.ts`
 - `tests/intake.test.ts`

@@ -116,6 +116,8 @@ export interface CandidateTransitionOptions {
 }
 
 export interface RoutineDataStore {
+  /** Latest durable scope event, bounded by this write's observed time. */
+  readonly eventObservedAt?: (recordClass: RoutineRecordClass, scope: string, requestedAt: string) => Promise<string>;
   readonly create: (record: CandidateVersionRecord, firstEvent: CandidateEvent) => Promise<void>;
   readonly transition: (
     candidateId: string,
@@ -821,12 +823,31 @@ export function promotedPointerIdentity(pointer: PromotedPointerIdentity): Promo
   };
 }
 
+/** Shared by dispositions, unchanged confirmations and typed Reader evidence. */
+export async function routineEventObservedAt(
+  store: RoutineDataStore,
+  recordClass: RoutineRecordClass,
+  scope: string,
+  requestedAt: string,
+): Promise<string> {
+  return store.eventObservedAt ? store.eventObservedAt(recordClass, scope, requestedAt) : requestedAt;
+}
+
 /** Deterministic store used by destructive/failure tests. */
 export class MemoryRoutineDataStore implements RoutineDataStore {
   private readonly candidates = new Map<string, CandidateVersionRecord>();
   private readonly history = new Map<string, CandidateEvent[]>();
   private readonly promotions = new Map<string, PromotedProjection>();
   private readonly preparedProjections = new Map<string, PreparedReaderProjectionRow>();
+
+  async eventObservedAt(recordClass: RoutineRecordClass, scope: string, requestedAt: string): Promise<string> {
+    let latest = Date.parse(requestedAt);
+    for (const [id, record] of this.candidates) {
+      if (record.candidate.recordClass !== recordClass || record.candidate.scope !== scope) continue;
+      for (const event of this.history.get(id) ?? []) latest = Math.max(latest, Date.parse(event.at));
+    }
+    return new Date(latest).toISOString();
+  }
 
   private nextEvent(
     candidateId: string,
@@ -1695,6 +1716,16 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     read: async hashes => this.db.select().from(civicDataPayloadParts).where(inArray(civicDataPayloadParts.hash, [...hashes])),
   });
   private writeAuthority: RuntimeAuthorityEnvelope | null = null;
+
+  async eventObservedAt(recordClass: RoutineRecordClass, scope: string, _requestedAt: string): Promise<string> {
+    // One scalar, never a payload or candidate envelope. Observe our own wall
+    // clock after the read; a runner's pass start is not a write timestamp.
+    const [row] = await this.db.select({ at: sql<string | null>`max(${civicDataCandidateEvents.at})` })
+      .from(civicDataCandidateEvents)
+      .innerJoin(civicDataCandidates, eq(civicDataCandidates.id, civicDataCandidateEvents.candidateId))
+      .where(and(eq(civicDataCandidates.recordClass, recordClass), eq(civicDataCandidates.scope, scope)));
+    return new Date(Math.max(Date.now(), row?.at == null ? 0 : Date.parse(row.at))).toISOString();
+  }
 
   /**
    * The registered promotion wrappers are the normal authority door, but the

@@ -22,7 +22,7 @@ import registry from "../lib/registry/registry.json" with { type: "json" };
 import { collectNationalPlaceSources, electionDirectorySelection } from "../lib/sources/plural/place.ts";
 import { electionPageFields } from "../lib/hunt/election-page.ts";
 import { placeSourceReader, PlaceSourceDeferred } from "../lib/hunt/place-source-reader.ts";
-import { runNationalPlaceTask } from "../lib/hunt/place-source-task.ts";
+import { dueNationalPlaceZips, runNationalPlaceTask } from "../lib/hunt/place-source-task.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
@@ -85,6 +85,18 @@ test("a national host bound saves admitted responses and defers all remaining ZI
   const next = await repos.artifacts.readAll();
   assert.ok(next.some(row => row.canonicalUrl.includes("School")), "the next pass advances using held responses");
   assert.ok(saved.every(row => next.some(other => other.artifactId === row.artifactId)), "all earlier evidence remains held");
+  // A cut-off pass must leave the recently worked head behind the older tail.
+  const worked = ["2026-09-30T00:00:00.000Z", "2026-09-28T00:00:00.000Z", "2026-09-27T00:00:00.000Z"];
+  for (const [index, zip] of input.zips.entries()) {
+    const row = await repos.obligations.mustRead(`national-place:${zip}`);
+    await repos.obligations.compareAndSet(row.id, row.revision, { ...row.value, lastWorkedAt: worked[index] }, tools.now());
+  }
+  assert.deepEqual(await dueNationalPlaceZips(repos, ["03060", "03101", "03301", "03401", "03401"], tools.now()),
+    ["03401", "03301", "03101"]);
+  // Actual acquisition must also recheck cadence after process admission.
+  const beforeFresh = requests;
+  assert.deepEqual(await runNationalPlaceTask({ ...input, zips: ["03060"] }), []);
+  assert.equal(requests, beforeFresh, "a fresh place opens no occurrence and fetches no source");
 });
 
 test("a national walk reuses another role's working source route after a directory's dead landing page", async () => {

@@ -8,7 +8,7 @@ await Promise.all([
   installRegistryRuntimeFirstSeeds(),
 ]);
 
-import { lexicalQuestionShape, lexicalReading } from "../lib/ask/lexical-reading.ts";
+import { bodyNameFromQuestion, lexicalQuestionShape, lexicalReading, unheldNamedBodyQuestion } from "../lib/ask/lexical-reading.ts";
 import {
   composeSittingAnswer,
   plainGapStatement,
@@ -50,6 +50,15 @@ const INVENTORY: BindableEntity[] = [
   { id: MESA, name: "Mesa", nameClass: "body", divisionType: "place", level: "BODY" } as BindableEntity,
   { id: MESA_SCHOOLS, name: "Mesa Unified School District Governing Board", nameClass: "body", divisionType: "school_district", level: "BODY" } as BindableEntity,
 ];
+
+test("a named body missing from our records gets a gap while held ambiguities and pronouns keep their resolution", () => {
+  for (const name of ["Columbus City Council", "Tempe City Council", "Example County Board of Supervisors"]) {
+    assert.deepEqual(unheldNamedBodyQuestion(`When does ${name} meet next?`, INVENTORY), { shape: "MEETING_TIME", name: name.toLowerCase() });
+  }
+  for (const question of ["When does Mesa City Council meet next?", "When do they meet next?", "When does the city council meet next?", "When does the Msea City Council meet next?", "When does Columbus City Council meet next about the budget?"]) {
+    assert.equal(unheldNamedBodyQuestion(question, INVENTORY), null, question);
+  }
+});
 
 /* ── the lexical reading ─────────────────────────────────────────────────── */
 
@@ -101,6 +110,9 @@ test("the lexical reading binds exactly what every binder binds, with the tense 
   assert.equal(reading.interpretation.intent, "MEETING_TIME");
   assert.deepEqual(reading.interpretation.temporal, { kind: "NEXT" });
   assert.deepEqual(reading.interpretation.entityMentions, [], "no model mention: the whole question bound");
+  assert.equal(bodyNameFromQuestion("When does the Mesa City Council meet next?", INVENTORY, MESA), "mesa city council");
+  assert.equal(bodyNameFromQuestion("When does the Mesa City Council meet next?", INVENTORY, MESA_SCHOOLS), null);
+  assert.equal(bodyNameFromQuestion("When do they meet next?", INVENTORY, MESA), null);
 
   // The 2026-09-25 agreement check against the live model: no tense word is NONE, not NEXT.
   assert.deepEqual(lexicalReading({ question: "When does the Mesa City Council meet?", inventory: INVENTORY, namedBodies: INVENTORY })?.interpretation.temporal, { kind: "NONE" });

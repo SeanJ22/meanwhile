@@ -1740,7 +1740,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const values = async (keys: readonly string[]) => this.db
       .select({ ...getTableColumns(civicDataPromotions), latestConfirmation: LATEST_CONFIRMATION_DETAIL })
       .from(civicDataPromotions).where(and(eq(civicDataPromotions.recordClass, recordClass),
-        inArray(civicDataPromotions.key, [...keys])));
+        inArray(civicDataPromotions.scope, keys.map(key => key.slice(recordClass.length + 1)))));
     const keys = scopes.map(scope => projectionKey(recordClass, scope));
     if (!this.readCache || keys.length === 0) return keys.length ? values(keys) : [];
     return this.readCache.rows({ namespace: "promotion", keys, values, keyOf: row => row.key,

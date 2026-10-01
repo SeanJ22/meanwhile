@@ -117,7 +117,7 @@ export const SOURCE_AUTHORITIES = {
   },
   "curated-reader-primary-sources": {
     id: "curated-reader-primary-sources",
-    publisher: "Exact election-authority, candidate-controlled, public-body, and venue-coordinate reference sources named by each reviewed Reader-record receipt",
+    publisher: "Exact election-authority, candidate-controlled, public-body, venue-coordinate and legislator-office reference sources named by each reviewed Reader-record receipt",
     trust: "T2_AUTHORITATIVE_DOCUMENT",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [],
@@ -129,6 +129,7 @@ export const SOURCE_AUTHORITIES = {
       "official voter-registration lookup route",
       "official polling-place lookup route",
       "verified campaign or personal site binding",
+      "a state legislator's capitol or district office address and phone from the Open States reference file, joined to the official roster and marked unofficial (Sean, 2026-10-01)",
       "reviewed exact-source venue address and coordinate resolution",
       "official everyday service contact route for an exact state/topic cell",
       "explicit owner-reviewed CONTACT_OWED obligation where no supported contact is held",

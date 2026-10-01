@@ -12,6 +12,7 @@ import { sourceLinks } from "@/lib/ask/host";
 import { readBrowserKey } from "@/lib/state/browser-key";
 import { readLocationOriginFor } from "@/lib/state/location-origin";
 import type { AskSubjectRef } from "@/lib/ask/subject";
+import { gapsNotInAnswer } from "@/lib/text/say-once";
 
 /**
  * **ASK ON THE BALLOT — the same engine, a different surface.**
@@ -186,7 +187,8 @@ export function BallotAsk({
    * government other than the one that resolved.
    */
   const records = reply?.records ?? [];
-  const gaps = reply?.gaps ?? [];
+  // A gap the answer's own sentence already states is not printed a second time.
+  const gaps = gapsNotInAnswer(reply?.answer, reply?.gaps ?? []);
   const sources = records.filter((r) => r.sourceUrl);
 
   return (

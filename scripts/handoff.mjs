@@ -871,10 +871,16 @@ if (!CHECK_ONLY) {
 {
   const statusGenerators = [
     { label: "status ledger", command: "pnpm run status:ledger", path: "docs/status-ledger.md" },
-    { label: "repo inventory", command: "pnpm run repo-map", path: "docs/repo-inventory.md" },
+    // Not committed (Sean, 2026-10-01): written here so the mirror copy below
+    // is current; there is no committed copy for --check to compare.
+    { label: "repo inventory", command: "pnpm run repo-map", path: "docs/repo-inventory.md", uncommitted: true },
     { label: "state manifests", command: "pnpm run state-manifest", path: "docs/states", required: true },
   ];
   for (const g of statusGenerators) {
+    if (CHECK_ONLY && g.uncommitted) {
+      ok(g.label, `${g.path} is not committed; handoff writes it before the mirror copy`);
+      continue;
+    }
     if (CHECK_ONLY) {
       try {
         execSync(`${g.command} --check`, {
@@ -996,7 +1002,9 @@ if (!existsSync(MIRROR)) {
       ? readFileSync(to, isBinary ? null : "utf8")
       : null;
 
-    if (mirrorBytes !== null) {
+    // A file generated at handoff and never committed has no history to
+    // compare against; the mirror copy is always the fresh one.
+    if (mirrorBytes !== null && entry?.uncommitted !== true) {
       const normalize = (s) => s.replace(/\r\n/g, "\n").trimEnd();
       const target = isBinary ? mirrorBytes : normalize(mirrorBytes);
 
@@ -1508,7 +1516,6 @@ async function ship() {
     "docs/context.md",
     "docs/coverage-matrix.csv",
     "docs/status-ledger.md",
-    "docs/repo-inventory.md",
     "docs/states",
   ].filter((path) => git("status", "--porcelain", "--", path) !== "");
   if (generated.length > 0) {

@@ -254,6 +254,20 @@ export interface FieldManualRead {
   readonly error?: string;
 }
 
+/** Original entries for this source, across every worker role. A dead route
+ * remains knowledge, not a permanent ban on its host or other routes. */
+export function fieldManualForSource(read: FieldManualRead, url: string, state?: string): readonly FieldManualEntry[] {
+  let origin: string;
+  try { origin = new URL(url).origin; } catch { return []; }
+  const projection = projectFieldManual(read.store, { state, limit: read.store.entries.length });
+  const entries = new Map(read.store.entries.map(entry => [entry.id, entry]));
+  return projection.entryIds.flatMap(id => {
+    const entry = entries.get(id)!;
+    try { return entry.url && new URL(entry.url).origin === origin ? [entry] : []; }
+    catch { return []; }
+  });
+}
+
 /**
  * **THE ONE READ.** Every role reads the manual through this call: the current
  * stored manual, cut down to `query` (role, state, record class, platform). A

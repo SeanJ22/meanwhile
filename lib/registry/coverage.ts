@@ -26,6 +26,7 @@ import { WIRED_STATUSES } from "./coverage-client.ts";
 import { indexAudits } from "./audit.ts";
 import { COVERAGE_AUDIT_FILE } from "./coverage-audit.ts";
 import type { PublicBodyAttempt } from "./body-attempt-read.ts";
+import type { Meeting } from "../sources/types.ts";
 
 /** A dated cited source hunt is evidence; a registry status alone is not.
  * New control-plane attempts are not present in this historic audit yet, so
@@ -395,6 +396,7 @@ export function summarizeCoverage(
   territory?: BodyTerritoryFile | null,
   /** Exact per-scope state-roster read dispositions settled by the caller. */
   stateLegislatorAuthorities: StateLegislatorCoverageAuthority[] = [],
+  heldMeetings: readonly Meeting[] = [],
 ): CoverageSummary {
   const { divisions, bodies } = bodiesAt(
     point,
@@ -407,6 +409,7 @@ export function summarizeCoverage(
 
   const covered: CoveredBody[] = bodies.map((body) => {
     const division = body.ocdId ? divisionsById.get(body.ocdId) : undefined;
+    const held = heldMeetings.find(meeting => meeting.bodyId === body.id);
     return {
       bodyId: body.id,
       ocdId: body.ocdId,
@@ -420,13 +423,13 @@ export function summarizeCoverage(
       lsad: division?.lsad ?? null,
       schoolDependency: schoolDependency(body.ocdId),
       bodyClass: body.bodyClass,
-      coverageStatus: body.coverageStatus,
+      coverageStatus: held ? "LIVE" : body.coverageStatus,
       homepageUrl: body.homepageUrl,
-      agendaSourceRef: body.agendaSourceRef,
+      agendaSourceRef: held?.provenance.sourceUrl ?? body.agendaSourceRef,
       meetingCadence: body.meetingCadence
         ? { text: body.meetingCadence, sourceUrl: body.meetingCadenceSource?.sourceUrl ?? body.provenance.sourceUrl ?? null }
         : null,
-      lookedAt: DOCUMENTED_SEARCHES.has(body.id),
+      lookedAt: held !== undefined || DOCUMENTED_SEARCHES.has(body.id),
       tier: division?.tier ?? "local",
     };
   });

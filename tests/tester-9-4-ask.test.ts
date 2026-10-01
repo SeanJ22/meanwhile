@@ -89,14 +89,25 @@ test("ASK-26 tie chooses one stable canonical suggestion without treating an ord
     assert.equal(decideNamedBody(unnamed, bodies).kind, "NONE", "An unnamed question retains the existing context default");
 });
 
-test("ASK-26 unknown named body asks neutrally; another nearby body cannot inherit the question", async () => {
-  for (const question of ["What's on the Fictional Nonexistent school district agenda?", "What's on the Zzznonexistent agenda?"]) {
-  const answer = await ask(question);
-  assert.equal(answer.mode, "CLARIFY");
-  assert.equal(answer.subject, null); assert.equal(answer.confirmation, undefined); assert.equal(answer.candidates, undefined);
-  assert.deepEqual(answer.records, []); assert.match(answer.clarification ?? "", /Which government/);
-  assert.doesNotMatch(answer.clarification ?? "", /no match|nothing recorded|don't have/i);
+test("ASK-26 unknown named body gets a plain gap; another nearby body cannot inherit the question", async () => {
+  for (const [question, gap] of [
+    ["What's on the Fictional Nonexistent school district agenda?", "We don't have Fictional Nonexistent School District's agendas yet."],
+    ["When does the Fictional Nonexistent City Council meet next?", "We don't have Fictional Nonexistent City Council's calendar yet."],
+  ]) {
+    const answer = await ask(question);
+    assert.equal(answer.mode, "NO_EVIDENCE");
+    assert.equal(answer.answer, gap);
+    assert.equal(answer.subject, null); assert.equal(answer.confirmation, undefined); assert.equal(answer.candidates, undefined);
+    assert.deepEqual(answer.records, []); assert.deepEqual(answer.meetings, []);
+    assert.equal(answer.clarification, undefined);
+    assert.doesNotMatch(answer.answer ?? "", /Sunnyside|Vail/i);
   }
+  // A bare unknown name still needs identification; never default to a nearby body.
+  const unnamed = await ask("What's on the Zzznonexistent agenda?");
+  assert.equal(unnamed.mode, "CLARIFY");
+  assert.equal(unnamed.subject, null); assert.equal(unnamed.confirmation, undefined); assert.equal(unnamed.candidates, undefined);
+  assert.deepEqual(unnamed.records, []); assert.deepEqual(unnamed.meetings, []);
+  assert.match(unnamed.clarification ?? "", /Which government/);
 });
 
 test("ASK-27 real Ask and meeting route retain identical document/version IDs and agenda titles across school and county bodies", async () => {

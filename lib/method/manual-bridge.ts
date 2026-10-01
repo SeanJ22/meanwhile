@@ -10,10 +10,11 @@
  * - routing asks the manual which routes are learned, so a route an agent
  *   writes as a `ROUTE` entry graduates without a human step.
  *
- * Pure: no db, fs, clock.
+ * Pure except `readMethodVersion`, which reads the one manual aggregate: no fs, no clock.
  */
 
 import { fieldManualEntryId, type FieldManualEntry, type FieldManualOutcome, type FieldManualStore } from "../control-plane/field-manual.ts";
+import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { MethodKnowledge } from "./knowledge.ts";
 
 /** The source label every folded route carries, so a re-fold refreshes one row per route. */
@@ -80,4 +81,55 @@ export function learnedRouteIds(store: FieldManualStore): ReadonlySet<string> {
     if (id) ids.add(id);
   }
   return ids;
+}
+
+/** The kind of the one manual entry that carries the method version the frozen store ended at. */
+export const METHOD_VERSION_KIND = "METHOD_VERSION";
+
+/** The version the frozen method store ended at, as a manual entry; the seed folds it once and a re-fold refreshes the same row. */
+export function methodVersionEntry(store: Pick<MethodKnowledge, "version" | "updatedOn" | "routes">): FieldManualEntry {
+  return {
+    id: fieldManualEntryId(KNOWLEDGE_SOURCE, "method-version"),
+    role: "SCOUT",
+    kind: METHOD_VERSION_KIND,
+    title: "Method version the frozen store ended at",
+    summary: `Method version ${store.version} at ${store.routes.length} routes; every route an agent learns after this raises it by one.`,
+    states: [], recordClasses: [], platforms: [],
+    outcome: "REFERENCE",
+    url: null,
+    source: KNOWLEDGE_SOURCE,
+    observedAt: store.updatedOn ?? null,
+    tier: null,
+    payload: { version: store.version, updatedOn: store.updatedOn ?? null, routes: store.routes.length },
+  };
+}
+
+/**
+ * The method version, from the manual alone: the version the frozen store ended
+ * at, plus one for every route an agent has learned since (a `ROUTE` entry whose
+ * id the frozen store did not hold). The manual only grows, so the number only
+ * rises, and a conclusion earned under a lower number reopens when a new route
+ * arrives, with no counter for two writers to race on and no human step.
+ * Null when the manual has not been seeded with the base yet.
+ */
+export function methodVersionFromManual(store: FieldManualStore): number | null {
+  const base = store.entries.find((entry) => entry.kind === METHOD_VERSION_KIND && entry.source === KNOWLEDGE_SOURCE);
+  const version = (base?.payload as { version?: unknown } | null | undefined)?.version;
+  if (typeof version !== "number" || !Number.isInteger(version) || version < 0) return null;
+  const frozen = new Set<string>();
+  const learned = new Set<string>();
+  for (const entry of store.entries) {
+    if (entry.kind !== ROUTE_ENTRY_KIND) continue;
+    const payload = entry.payload as { id?: unknown; routeId?: unknown } | null | undefined;
+    const id = typeof payload?.id === "string" ? payload.id : typeof payload?.routeId === "string" ? payload.routeId : null;
+    if (!id) continue;
+    (entry.source === KNOWLEDGE_SOURCE ? frozen : learned).add(id);
+  }
+  return version + [...learned].filter((id) => !frozen.has(id)).length;
+}
+
+/** The current method version, read from the live manual. Null when the manual is unreadable or not seeded: the caller says so rather than guessing. */
+export async function readMethodVersion(repos: Pick<ControlPlaneRepositories, "fieldManual">): Promise<number | null> {
+  const read = await repos.fieldManual.read("live").catch(() => null);
+  return read ? methodVersionFromManual(read.value) : null;
 }

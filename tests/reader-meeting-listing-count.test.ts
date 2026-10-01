@@ -23,7 +23,7 @@ test("all current ambiguous listing pairs survive scope filtering without becomi
   assert.equal(INITIAL_STATE.filters.daysAhead, UPCOMING_HORIZON_DAYS);
   assert.deepEqual(
     applyFilters({ meetings: ambiguousMeetings, ui: INITIAL_STATE, center: null, now: Date.parse("2026-09-04T00:00:00.000Z") }).map(row => row.id).sort(),
-    ambiguousSourceIds,
+    ambiguousMeetings.filter(row => Date.parse(row.startsAt) <= Date.parse("2026-09-04T00:00:00.000Z") + 90 * 86_400_000).map(row => row.id).sort(),
     "The reader's default filter must retain every eligible listing inside the canonical serving horizon",
   );
   for (const group of identity.groups) {

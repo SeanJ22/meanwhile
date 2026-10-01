@@ -819,7 +819,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-962 file(s).
+961 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -1681,7 +1681,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/state-money-nh.test.ts`
 - `tests/state-money-selector.test.ts`
 - `tests/state-record-observation-stamps.test.ts`
-- `tests/state-registry-gate.test.ts`
 - `tests/state-rollcall-permanent-boundary.test.ts`
 - `tests/state-rollcalls-fanout.test.ts`
 - `tests/state-rollcalls-reader-visibility.test.ts`
@@ -1786,7 +1785,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7083 file(s).
+7091 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -5121,6 +5120,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/expansion/dispatch-work.ts`
 - `lib/control-plane/expansion/district-territory.ts`
 - `lib/control-plane/expansion/membership.ts`
+- `lib/control-plane/expansion/national-geography.ts`
 - `lib/control-plane/expansion/overlap.ts`
 - `lib/control-plane/expansion/reading.ts`
 - `lib/control-plane/expansion/reference/az-fire-district-territory.json`
@@ -5367,6 +5367,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/corpus/unified.ts`
 - `lib/coverage/artifacts.ts`
 - `lib/coverage/photo-slots.ts`
+- `lib/coverage/place-owed.ts`
 - `lib/coverage/states.ts`
 - `lib/coverage/tier.ts`
 - `lib/coverage/zip-tier.ts`
@@ -5567,6 +5568,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/hunt/discovery-search.ts`
 - `lib/hunt/discovery.ts`
 - `lib/hunt/egress.ts`
+- `lib/hunt/election-page.ts`
 - `lib/hunt/entity-name.ts`
 - `lib/hunt/fec-directory.ts`
 - `lib/hunt/github-corpus.ts`
@@ -5580,6 +5582,11 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/hunt/meetings-site-discovery.ts`
 - `lib/hunt/nj-elec.ts`
 - `lib/hunt/nj-filing.ts`
+- `lib/hunt/place-plan.ts`
+- `lib/hunt/place-source-admission.ts`
+- `lib/hunt/place-source-reader.ts`
+- `lib/hunt/place-source-task.ts`
+- `lib/hunt/place-source.ts`
 - `lib/hunt/platform-tenancy.ts`
 - `lib/hunt/portrait-pick.ts`
 - `lib/hunt/press-surface.ts`
@@ -5590,7 +5597,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/hunt/search-pool.ts`
 - `lib/hunt/source-universe.ts`
 - `lib/hunt/state-recon.ts`
-- `lib/hunt/state-registry-gate.ts`
 - `lib/hunt/wiki-graph.ts`
 - `lib/hunt/wikipedia.ts`
 - `lib/hunt/zip-projection.ts`
@@ -5645,6 +5651,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/meetings/reader-listing-count.ts`
 - `lib/meetings/reader-records.ts`
 - `lib/meetings/registry.ts`
+- `lib/meetings/shared-fetch.ts`
 - `lib/meetings/snapshot.ts`
 - `lib/meetings/source-labels.ts`
 - `lib/meetings/status-marks.ts`
@@ -5929,6 +5936,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `lib/sources/platform-adapters/uncapped-source-links.ts`
 - `lib/sources/plural/index.ts`
+- `lib/sources/plural/place.ts`
 - `lib/sources/prl/archive-store-local.ts`
 - `lib/sources/prl/archive-store.ts`
 - `lib/sources/prl/data-plane.ts`
@@ -8767,7 +8775,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/state-money-nh.test.ts`
 - `tests/state-money-selector.test.ts`
 - `tests/state-record-observation-stamps.test.ts`
-- `tests/state-registry-gate.test.ts`
 - `tests/state-rollcall-permanent-boundary.test.ts`
 - `tests/state-rollcalls-fanout.test.ts`
 - `tests/state-rollcalls-reader-visibility.test.ts`

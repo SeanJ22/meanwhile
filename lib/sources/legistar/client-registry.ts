@@ -52,6 +52,8 @@ export interface LegistarVenue {
 }
 
 export interface LegistarClient {
+  /** Exact vendor body identity for a runtime-added calendar. */
+  eventBodyId?: number;
   /** The `{client}` path segment at webapi.legistar.com. */
   slug: string;
   /** The division whose government this is. WHERE, not WHO. */
@@ -150,6 +152,7 @@ export function legistarClientsFromWiring(
     const ocdId = row.ocdId;
     return {
       slug,
+      ...(row.config.eventBodyId ? { eventBodyId: Number(row.config.eventBodyId) } : {}),
       ocdId,
       bodyId: row.bodyId,
       jurisdiction: row.jurisdiction,

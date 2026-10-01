@@ -124,6 +124,30 @@ function inputs(attempt: MeetingsDiscoveryAttempt, over: Partial<DerivedWiringIn
 }
 
 const KEY = derivedWiringKey("ICAL", `${OCD}#governing`);
+
+test("a later walk of other categories does not hide this calendar's saved source reading", async () => {
+  const original = await walk(SITE, "example.gov");
+  const later = { ...original, attemptId: "later-category-walk", finishedAt: "2026-09-25T01:00:00.000Z",
+    found: [], steps: original.steps.filter(step => step.url !== ROUTE) };
+  const [decision] = deriveWiringDecisions(inputs(original, { attempts: [
+    { attempt: original, recordId: "original-record", recordedAt: original.finishedAt },
+    { attempt: later, recordId: "later-record", recordedAt: later.finishedAt },
+  ] }));
+  assert.equal(decision.disposition, "PROMOTE");
+  assert.ok(decision.inputs.some(ref => ref.kind === "DISCOVERY_ATTEMPT" && ref.recordId === "original-record"));
+});
+
+test("a newer actual failed calendar read stays visible instead of being replaced by old success", async () => {
+  const original = await walk(SITE, "example.gov");
+  const later = { ...original, attemptId: "later-failed-walk", finishedAt: "2026-09-25T01:00:00.000Z", found: [],
+    steps: original.steps.map(step => step.url === ROUTE ? { ...step, status: 503, artifactId: null, note: "source unavailable" } : step) };
+  const [decision] = deriveWiringDecisions(inputs(original, { attempts: [
+    { attempt: later, recordId: "later-record", recordedAt: later.finishedAt },
+    { attempt: original, recordId: "original-record", recordedAt: original.finishedAt },
+  ] }));
+  assert.equal(decision.disposition, "HOLD");
+  assert.ok(decision.inputs.some(ref => ref.kind === "DISCOVERY_ATTEMPT" && ref.recordId === "later-record"));
+});
 const reasonOf = (d: ReturnType<typeof deriveWiringDecisions>[number] | undefined): string =>
   d === undefined ? "none" : d.disposition === "HOLD" ? d.reason : d.disposition === "SUSPEND" ? `SUSPEND:${d.trigger}` : d.disposition;
 
@@ -139,7 +163,7 @@ test("THE SHAPE: a confirmed route maps to a kind the reviewed filter is defined
   assert.deepEqual(wiringShapeFor({ vendor: "official-page-events", url: "https://t.gov/Calendar.aspx?EID=1" }), { kind: "OFFICIAL_PAGE_EVENTS", endpoint: { pageUrl: "https://t.gov/Calendar.aspx?EID=1", officialHost: "t.gov" } });
   const agenda = wiringShapeFor({ vendor: "civicplus-agendacenter", url: "https://t.gov/AgendaCenter" });
   assert.ok("held" in agenda && agenda.held === "ADAPTER_CONFIG_INCOMPLETE" && /icalUrl/.test(agenda.detail));
-  assert.ok("held" in wiringShapeFor({ vendor: "legistar-api", url: "https://webapi.legistar.com/v1/x/events" }));
+  assert.deepEqual(wiringShapeFor({ vendor: "legistar-api", url: "https://webapi.legistar.com/v1/x/events" }), { kind: "LEGISTAR", endpoint: { slug: "x" } });
 });
 
 test("THE ATTESTATION: the recorded address, each redirect, and the homepage that linked the route, each with its vaulted artifact", async () => {

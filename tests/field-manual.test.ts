@@ -5,6 +5,7 @@ import {
   emptyFieldManual,
   fieldManualEntryId,
   fieldManualLine,
+  fieldManualForSource,
   newFieldManualEntry,
   projectFieldManual,
   readFieldManual,
@@ -32,6 +33,19 @@ function entry(over: Partial<FieldManualEntry> & Pick<FieldManualEntry, "id">): 
     ...over,
   };
 }
+
+test("source knowledge keeps every role's payload and scopes dead ends to their actual source", () => {
+  const entries = [
+    entry({ id: "failed", url: "https://state.gov/old", outcome: "FAILED", states: ["mo"], payload: { nextAction: "read new route" } }),
+    entry({ id: "working", role: "DETECTIVE", url: "https://state.gov/new", states: ["mo"], payload: { learnedProcedure: "follow official directory" } }),
+    entry({ id: "other-state", url: "https://state.gov/elsewhere", states: ["ut"] }),
+    entry({ id: "other-host", url: "https://state.gov.example.org/new" }),
+  ];
+  const store = { ...emptyFieldManual(), entries };
+  const selected = fieldManualForSource({ store, revision: 1, projection: projectFieldManual(store) }, "https://state.gov/", "mo");
+  assert.deepEqual(selected, [entries[1], entries[0]]);
+  assert.equal(selected[0].payload, entries[1].payload);
+});
 
 test("fieldManualEntryId is deterministic per (source,key) and namespaced", () => {
   assert.equal(fieldManualEntryId("knowledge.json", "az:meetings"), fieldManualEntryId("knowledge.json", "az:meetings"));

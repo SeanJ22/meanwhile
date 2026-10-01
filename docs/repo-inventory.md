@@ -252,7 +252,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Scripts
 
-521 file(s).
+522 file(s).
 
 - `scripts/a001-feedback-backup.mts`
 - `scripts/a001-verify-catalog.mts`
@@ -548,6 +548,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/pilot-runtime-control.mts`
 - `scripts/pilot-runtime-launch.mjs`
 - `scripts/pilot-runtime-launch.ps1`
+- `scripts/pilot-runtime-publish.mts`
 - `scripts/pilot-runtime-transfer.mts`
 - `scripts/pilot-task.ps1`
 - `scripts/pima-rollcall-walk.mts`
@@ -1742,7 +1743,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7020 file(s).
+7021 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -7316,6 +7317,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `scripts/pilot-runtime-control.mts`
 - `scripts/pilot-runtime-launch.mjs`
 - `scripts/pilot-runtime-launch.ps1`
+- `scripts/pilot-runtime-publish.mts`
 - `scripts/pilot-runtime-transfer.mts`
 - `scripts/pilot-task.ps1`
 - `scripts/pima-rollcall-walk.mts`

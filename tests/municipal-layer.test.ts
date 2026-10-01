@@ -1,4 +1,4 @@
-import { geometryPath, geometryFiles } from "../lib/holdings/files.ts";
+import { geometryPath } from "../lib/holdings/files.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
@@ -29,7 +29,7 @@ const geo = (name: string): DistrictFeature[] =>
 
 function mergedMunicipal(): DistrictFeature[] {
   const spec = DISTRICT_LAYERS.municipal;
-  return geometryFiles(process.cwd()).filter(f => /\/(?:place|cousub)-\d{2}\.geojson$/.test(f))
+  return spec.files
     .flatMap((f) => geo(f))
     .filter((f) => keepFeature(spec, f));
 }

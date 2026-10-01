@@ -15,7 +15,7 @@ import {
   type ScreenPoint,
   type StateOutlines,
 } from "../lib/map/state-focus.ts";
-import { DISTRICT_TYPES, DISTRICT_LAYERS } from "../lib/map/districts.ts";
+import { DISTRICT_TYPES, filesFor } from "../lib/map/districts.ts";
 
 /**
  * The state extrusion and the per-state map (g4 items 1, 2 and 3).
@@ -104,9 +104,51 @@ test("the state code comes off the OCD-ID, never off a name string", () => {
   assert.equal(stateAbbrFromOcdId(null), null);
 });
 
-test("national district kinds have Census layers without an active-state file list", () => {
-  assert.deepEqual(DISTRICT_LAYERS.municipal.censusLayers, ["place", "cousub"]);
-  for (const type of DISTRICT_TYPES) assert.ok(DISTRICT_LAYERS[type].censusLayers.length > 0);
+test("no active state fetches NOTHING for any district type", () => {
+  for (const type of DISTRICT_TYPES) {
+    assert.deepEqual(
+      filesFor(type, null),
+      [],
+      `${type} tried to fetch with no state active`,
+    );
+  }
+});
+
+test("each state fetches its own files and no other state's", () => {
+  const az = filesFor("congressional", "AZ");
+  assert.deepEqual(az, ["cd119-04.geojson"]);
+
+  /*
+   * M12 (2026-08-17): each of the three school types now fetches its OWN
+   * state file, and each is checked. Asserting one of them and calling it
+   * "school" would have left two thirds of the split unverified — and the
+   * per-type file lists are exactly where a copy-paste split goes wrong.
+   */
+  for (const type of ["school-unified", "school-elementary", "school-secondary"] as const) {
+    const files = filesFor(type, "NH");
+    assert.ok(files.length > 0, `New Hampshire fetches some ${type} geometry`);
+    for (const file of files) {
+      assert.ok(
+        file.includes("-33."),
+        `${file} is not New Hampshire's and must not be fetched for ${type}`,
+      );
+    }
+  }
+
+  // And the three do not fetch each other's files — the check that a
+  // copy-paste split would fail.
+  assert.deepEqual(filesFor("school-unified", "NH"), ["unsd-33.geojson"]);
+  assert.deepEqual(filesFor("school-elementary", "NH"), ["elsd-33.geojson"]);
+  assert.deepEqual(filesFor("school-secondary", "NH"), ["scsd-33.geojson"]);
+});
+
+test("a national file is fetched for every state", () => {
+  // county-us.geojson holds three counties in total; splitting it would cost
+  // more in files than it saves in bytes, so the LAYER FILTER is what keeps
+  // Pima off a New Hampshire map.
+  for (const abbr of ["AZ", "NH", "NJ"]) {
+    assert.deepEqual(filesFor("county", abbr), ["county-us.geojson"]);
+  }
 });
 
 test("the layer filter pins a layer to one state, and reads back", () => {

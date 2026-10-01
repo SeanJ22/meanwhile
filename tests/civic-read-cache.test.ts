@@ -66,7 +66,7 @@ test("confirmations stay current without transferring an unchanged promotion pay
   assert.equal(current[0]!.latestConfirmation, latestConfirmation);
   assert.equal(calls, 1);
   await assert.rejects(() => new CivicReadCache(root).rows({ ...input,
-    versions: async () => { throw new Error("database unavailable"); },
+    versions: async (): Promise<readonly { key: string; etag: string; latestConfirmation: string }[]> => { throw new Error("database unavailable"); },
   }), /database unavailable/, "a failed version read never serves an unconfirmed copy");
 });
 

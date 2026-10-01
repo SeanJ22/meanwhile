@@ -4,8 +4,8 @@ import { settleAgendaSupportingHoldings } from "@/lib/civic-data/agenda-support"
 import { meetingReaderRecords } from "@/lib/meetings/reader-records";
 import { classifyAgendaPublication, observationFromMeetingRecord, publisherAgendaObservationsFor, readerAgendaDocuments } from "@/lib/ask/agenda-publication";
 import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
-import { refreshOutcomeSnapshotFromPromoted } from "@/lib/outcomes/store";
-import { refreshRegistryRuntimeFromPromoted } from "@/lib/registry/runtime-read-model";
+import { settleOutcomeRead } from "@/lib/outcomes/store";
+import { settleRegistryAuthorityReads } from "@/lib/registry/server";
 
 /**
  * GET /api/agenda?meetingId=<source-namespaced id>
@@ -68,11 +68,11 @@ export async function GET(request: Request) {
   const meeting = snapshot.meetings.find((row) => row.id === meetingId);
   const support = await settleAgendaSupportingHoldings(meetingId, meeting?.bodyId ?? null, {
     outcomes: async () => {
-      await refreshOutcomeSnapshotFromPromoted();
+      await settleOutcomeRead();
       return meetingReaderRecords(meetingId, meeting?.bodyId);
     },
     listingIdentity: async () => {
-      await refreshRegistryRuntimeFromPromoted();
+      await settleRegistryAuthorityReads("REGISTRY");
       return meetingListingKnowledgeFor(snapshot.meetings, [meetingId]).readback;
     },
   });

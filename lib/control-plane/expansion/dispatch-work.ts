@@ -43,7 +43,7 @@ export interface PlaceWorkReading {
 }
 
 /** Order the existing place capture rows; this creates no score or policy store. */
-export function orderPlaceWork(config: unknown, places: readonly PlaceWorkReading[]): string[] {
+export function placeWorkReadings(config: unknown, places: readonly PlaceWorkReading[]) {
   const placeKey = (key: string): string => {
     const parsed = parseV6PlaceKey(key);
     return parsed?.kind === "geo" ? `${parsed.state}.${VERSION_PREFIX[parsed.type]}.${parsed.geoid.toLowerCase()}` : key;
@@ -70,16 +70,25 @@ export function orderPlaceWork(config: unknown, places: readonly PlaceWorkReadin
   });
   return readings.sort((a, b) => Number(Boolean(b.target)) - Number(Boolean(a.target)) ||
     (a.target && b.target ? Date.parse(a.target.setAt) - Date.parse(b.target.setAt) : 0) ||
-    a.percent - b.percent || a.key.localeCompare(b.key)).map(place => place.receiptId);
+    a.percent - b.percent || a.key.localeCompare(b.key));
+}
+
+export function orderPlaceWork(config: unknown, places: readonly PlaceWorkReading[]): string[] {
+  return placeWorkReadings(config, places).map(place => place.receiptId);
 }
 
 /** National source workers use the same current capture denominator as the live hunt queue.
  * The published lookup and declared standing divisions place shared facts; ranking never fetches geography. */
 export async function orderNationalPlaceWork(repos: ControlPlaneRepositories, zips: readonly string[], now: string): Promise<string[]> {
+  return (await nationalPlaceWorkReading(repos, zips, now)).ordered;
+}
+
+/** Due admission and process ordering share the owner's target and held facts. */
+export async function nationalPlaceWorkReading(repos: ControlPlaneRepositories, zips: readonly string[], now: string) {
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
   const decisions = expansionScopesOf(row?.value ?? null);
   if (decisions.malformed) throw new Error("The owner's place scopes contain unreadable decisions");
-  if (!decisions.scopes.length) return [...zips];
+  if (!decisions.scopes.length) return { ordered: [...zips], belowTarget: new Set<string>() };
   const lookup = await loadPublishedLookupState();
   const resolved = await resolveScopes(decisions.scopes, lookup, null);
   const work = (await repos.obligations.listWhere(["active"], "true")).map(row => row.value);
@@ -111,14 +120,15 @@ export async function orderNationalPlaceWork(repos: ControlPlaneRepositories, zi
   }
   const divisionIds = [...new Set([...divisionsByReceipt.values()].flatMap(ids => [...ids]))];
   const capture = divisionIds.length ? await readHeldPlaceCapture(divisionIds, { now, bypassCache: true }) : { subjects: [], held: [] };
-  const ordered = orderPlaceWork(row?.value, resolved.scopes.map(scope => ({
+  const readings = placeWorkReadings(row?.value, resolved.scopes.map(scope => ({
     key: `${scope.decision.geography.stateAbbr.toLowerCase()}.${VERSION_PREFIX[scope.decision.geography.type]}.${scope.decision.geography.geoid.toLowerCase()}`,
     receiptId: scope.decision.receiptId,
     items: buildPlaceOwedList({ divisions: [...divisionsByReceipt.get(scope.decision.receiptId)!].map(id => ({ id, label: id })),
       subjects: capture.subjects, held: capture.held, now }),
   })));
-  const rank = (zip: string) => ordered.findIndex(receipt => inScope.get(receipt)?.has(zip));
-  return [...zips].sort((a, b) => (rank(a) < 0 ? Infinity : rank(a)) - (rank(b) < 0 ? Infinity : rank(b)));
+  const rank = (zip: string) => readings.findIndex(place => inScope.get(place.receiptId)?.has(zip));
+  return { ordered: [...zips].sort((a, b) => (rank(a) < 0 ? Infinity : rank(a)) - (rank(b) < 0 ? Infinity : rank(b))),
+    belowTarget: new Set(zips.filter(zip => readings.some(place => place.target && inScope.get(place.receiptId)?.has(zip)))) };
 }
 
 /** A Send creates every missing requirement; shared governments keep one row. */

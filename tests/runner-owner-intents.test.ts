@@ -32,7 +32,7 @@ import { placeFirstRows } from "../lib/control-plane/scheduler/shadow-loop.ts";
  *
  *   ADM-1  nothing scheduled `pnpm owner:publish` / `pnpm readiness:publish`,
  *          so the deployed console went stale whenever a person stopped
- *          running them. The runner now publishes after every digest.
+ *          running them. The runner now checks publication inputs after every digest.
  *   ADM-5  the owner disabled the runner's scheduled task on purpose and the
  *          dashboard could only show a red SILENT. PAUSE_RUNNER / RESUME_RUNNER
  *          are the owner's record; the runner idles on them, acknowledges
@@ -224,7 +224,7 @@ test("placeFirstRows moves the dispatched rows to the front, keeps both groups' 
 
 /* ------------------------------------------------- pilot-runner.mts, as text */
 
-/** ADM-1: the console is published after the digest, by two children, and a failure is printed. */
+/** ADM-1: inputs are checked after the digest; changed inputs run both publishers. */
 function checkRunnerPublishesConsole(src: string): void {
   const list = src.match(/const CONSOLE_PUBLISHERS[^\n]*\n[\s\S]*?\n\];/);
   assert.ok(list, "pilot-runner.mts names no CONSOLE_PUBLISHERS list");
@@ -237,8 +237,12 @@ function checkRunnerPublishesConsole(src: string): void {
 
   const fn = src.match(/async function publishConsole\(\): Promise<void> \{[\s\S]*?\n\}/);
   assert.ok(fn, "pilot-runner.mts has no publishConsole()");
-  const body = fn[0];
-  assert.match(body, /for \(const publisher of CONSOLE_PUBLISHERS\)/, "publishConsole does not run every listed publisher");
+  assert.match(fn[0], /await publishChangedConsole\(\)/, "publishConsole does not check changed inputs");
+  assert.match(src, /publish: publishConsoleChildren/, "changed inputs do not reach the publishers");
+  const children = src.match(/async function publishConsoleChildren\(\): Promise<boolean> \{[\s\S]*?\n\}/);
+  assert.ok(children, "pilot-runner.mts has no console publisher children");
+  const body = children[0];
+  assert.match(body, /for \(const publisher of CONSOLE_PUBLISHERS\)/, "changed inputs do not run every listed publisher");
   assert.match(body, /await runRuntimeChildren\(/, "each publisher is an asynchronous child process");
   assert.match(body, /args: \["--experimental-strip-types", \.\.\.publisher\.args\]/, "a publisher is not run through inherited parent environment");
   assert.doesNotMatch(src, /--env-file=\.env\.local/, "a standing child reopens cwd-relative environment state instead of inheriting the validated parent environment");
@@ -304,7 +308,7 @@ function checkRunnerHonorsOwnerIntents(src: string): void {
   assert.match(sleepLoop[0], /if \(says === "HOLD"\) continue;[\s\S]*windowDecision\(\)/, "the owner's PAUSE_RUNNER does not hold the nightly window between cycles");
 }
 
-test("pilot-runner.mts publishes the console after every digest (ADM-1)", () => {
+test("pilot-runner.mts checks console publication after every digest (ADM-1)", () => {
   checkRunnerPublishesConsole(source("scripts/pilot-runner.mts"));
 });
 

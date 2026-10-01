@@ -76,9 +76,9 @@ const GATES = [
     why: "a fresh-checkout type check, never behind a build",
   },
   /*
-   * THE THREE CANONICAL AUTHORITIES, MADE EXPLICIT IN THE DOOR (2026-08-29).
+   * THE CANONICAL AUTHORITIES, MADE EXPLICIT IN THE DOOR (2026-08-29; `method:check` retired 2026-10-01).
    *
-   * `governance:check`, `orchestration:check` and `method:check` were enforced
+   * `governance:check` and `orchestration:check` were enforced
    * only INDIRECTLY, by tests that assert things about their subject matter.
    * That is not the same as running them, and the difference is the RO04 shape
    * exactly: a session can run every gate it knows about, report all of them
@@ -99,10 +99,6 @@ const GATES = [
    *     child process it can spawn is `git for-each-ref` / `git worktree list`
    *     under `--closeout`. A repository with no plan on disk PASSES, so it
    *     costs a single-workstream session nothing.
-   *
-   *   pnpm method:check        scripts/method-check.mts           PURE CHECKER.
-   *     Reads `data/method/knowledge.json` and `conclusions.json`, validates,
-   *     prints, exits 1 on any issue. It opens no writer at all.
    *
    * AND THE ONES DELIBERATELY NOT WIRED, NAMED SO THE OMISSION IS NOT READ AS
    * AN OVERSIGHT:
@@ -128,7 +124,7 @@ const GATES = [
    * THEY GO HERE — third, fourth and fifth, ahead of the browser assert and the
    * suite — because they are the cheapest high-signal checks in the set.
    * Measured on this machine: governance:check 3.8s cold and 2.1s warm,
-   * orchestration:check 1.1s, method:check 1.1s — against `pnpm test`'s suite
+   * orchestration:check 1.1s — against `pnpm test`'s suite
    * and two ~5-minute builds. Six seconds for all three.
    * A session that has left a generated view stale learns it six seconds in
    * rather than ten minutes in.
@@ -144,12 +140,6 @@ const GATES = [
     ciJob: "gates (test · lint · tsc)",
     command: "pnpm orchestration:check",
     why: "independent executable work serialized with nothing checkable behind it is a process defect (RULING 190)",
-  },
-  {
-    id: "method:check",
-    ciJob: "gates (test · lint · tsc)",
-    command: "pnpm method:check",
-    why: "the cumulative route knowledge is what every later jurisdiction inherits; a broken store reads as a project that knows nothing",
   },
   {
     id: "control-plane:gate",

@@ -1,10 +1,24 @@
 import { neon } from "@neondatabase/serverless";
+import { getStore } from "@netlify/blobs";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
 import { RESEARCH_INTENT_LOG_KEY, RESEARCH_STATE_ID } from "../lib/control-plane/scheduler/research-policy.ts";
 
 type Delta<T> = { id: string; position: string; record: T };
 type Query = (text: string, params: unknown[]) => Promise<Record<string, unknown>[]>;
+
+export const CONTROL_WAKE_POLL_MS = 1_000;
+
+/** S11's optional hint carries no authority: controls still come from Postgres. */
+export function runnerWakeReaderFromEnv(env: Readonly<Record<string, string | undefined>> = process.env): (() => Promise<string | null>) | null {
+  if (env.WTP_VAULT_PROVIDER !== "netlify" || !env.WTP_BLOBS_SITE_ID || !env.WTP_BLOBS_TOKEN) return null;
+  const store = getStore({ name: env.WTP_VAULT_STORE ?? "meanwhile-evidence",
+    siteID: env.WTP_BLOBS_SITE_ID, token: env.WTP_BLOBS_TOKEN, consistency: "strong",
+    fetch: (input, init) => fetch(input, { ...init, signal: AbortSignal.timeout(1_500) }),
+  });
+  // HEAD reads the etag, not the receipt body or the retained vault contents.
+  return async () => (await store.getMetadata("control/wake-hint.json"))?.etag ?? null;
+}
 
 /** Adjacent committed positions share one range; gaps stay eligible for late commits. */
 function committedPositions<T>(rows: Map<string, Delta<T>>): string {
@@ -22,9 +36,14 @@ function committedPositions<T>(rows: Map<string, Delta<T>>): string {
 /** Process-local cache. Only changed controls carry their payload across the wire. */
 export function runnerControlReader(url: string, repos: ControlPlaneRepositories, options: {
   query?: Query; now?: () => number; refreshMs?: number;
+  readWakeEtag?: (() => Promise<string | null>) | null;
 } = {}) {
   const query: Query = options.query ?? ((text, params) => neon(url).query(text, params));
   const now = options.now ?? Date.now;
+  const readWakeEtag = options.readWakeEtag === undefined ? runnerWakeReaderFromEnv() : options.readWakeEtag;
+  const refreshMs = options.refreshMs ?? (readWakeEtag ? 15 * 60_000 : 60_000);
+  let wakeEtag: string | null | undefined;
+  let hintCheckedAt = -Infinity;
   let refreshedAt = -Infinity;
   let signatures: Record<string, string> = {};
   let research: Awaited<ReturnType<typeof repos.researchIntents.read>> = [];
@@ -35,6 +54,7 @@ export function runnerControlReader(url: string, repos: ControlPlaneRepositories
   let config: Awaited<ReturnType<typeof repos.adminConfig.read>> = null;
   let state: Awaited<ReturnType<typeof repos.researchState.readNarrowed>> = null;
   let pending: Promise<void> | null = null;
+  let forceRequested = false;
   async function refresh() {
     const [row] = await query(`SELECT
       (SELECT COALESCE(jsonb_agg(jsonb_build_object('id', record_id, 'position', position::text, 'record', record)), '[]'::jsonb)
@@ -70,9 +90,24 @@ export function runnerControlReader(url: string, repos: ControlPlaneRepositories
   }
   return {
     async read(force = false) {
-      if (force || now() - refreshedAt >= (options.refreshMs ?? 60_000)) {
-        pending ??= refresh().finally(() => { pending = null; });
-      }
+      forceRequested ||= force;
+      pending ??= (async () => {
+        let etag: string | null | undefined;
+        if (readWakeEtag && (forceRequested || now() - hintCheckedAt >= CONTROL_WAKE_POLL_MS)) {
+          hintCheckedAt = now();
+          // Missing or failed hints never refuse an action or disable the slow read.
+          try { etag = await readWakeEtag(); } catch { /* the slow clock remains */ }
+        }
+        const forced = forceRequested;
+        forceRequested = false;
+        if (forced || now() - refreshedAt >= refreshMs || (etag !== undefined && etag !== wakeEtag)) {
+          await refresh();
+          // A failed SQL read must not consume the wake that requested it.
+          if (etag !== undefined) wakeEtag = etag;
+        }
+        // A cycle boundary that arrived during the SQL read still gets its refresh.
+        while (forceRequested) { forceRequested = false; await refresh(); }
+      })().finally(() => { pending = null; });
       await pending;
       return { research, windows, config, state };
     },

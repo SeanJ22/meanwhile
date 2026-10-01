@@ -5,6 +5,15 @@ const TIGER = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb";
 type Polygon = { rings: number[][][]; spatialReference?: { wkid: number } };
 type Feature = { attributes: Record<string, string | number>; geometry?: Polygon; sourceUrl?: string };
 type Layer = { id: number; name: string; type: string };
+
+/** Let admitted requests finish saving their responses before the caller
+ * closes its Attempt, including when another request reaches a host bound. */
+async function savedResponses<T>(requests: Promise<T>[]): Promise<T[]> {
+  const results = await Promise.allSettled(requests);
+  const failed = results.find(result => result.status === "rejected");
+  if (failed?.status === "rejected") throw failed.reason;
+  return results.map(result => (result as PromiseFulfilledResult<T>).value);
+}
 export interface GeographyReadOptions {
   fetchImpl?: typeof fetch;
   signal?: AbortSignal;
@@ -73,7 +82,7 @@ async function legislativeLayers(options: GeographyReadOptions): Promise<{ type:
   const year = new Date().getUTCFullYear();
   const congress = options.congress ?? Math.floor((year - 1789) / 2) + 1;
   const vintage = options.legislativeYear ?? Math.floor((year - 1) / 2) * 2;
-  return Promise.all([
+  return savedResponses([
     { type: "cd", name: new RegExp(`^${congress}(?:th|st|nd|rd) Congressional Districts$`) },
     { type: "sldu", name: new RegExp(`^${vintage} State Legislative Districts - Upper$`) },
     { type: "sldl", name: new RegExp(`^${vintage} State Legislative Districts - Lower$`) },
@@ -107,7 +116,7 @@ export async function loadStateDistrictBoundaries(state: string, options: Geogra
   const fips = stateFips(state);
   if (!fips) throw new Error("Unknown US state or territory");
   const layers = await legislativeLayers(options);
-  return (await Promise.all(layers.map(async l => (await query(l.url, { where: `STATE='${fips}'` }, options))
+  return (await savedResponses(layers.map(async l => (await query(l.url, { where: `STATE='${fips}'` }, options))
     .flatMap(f => division(f, l.type, l.url) ?? [])))).flat();
 }
 
@@ -127,8 +136,8 @@ export async function divisionsForZip(zip: string, options: GeographyReadOptions
     { type: "school", service: "School", name: /^Elementary School Districts$/ },
     { type: "school", service: "School", name: /^Secondary School Districts$/ },
   ];
-  layers.push(...await Promise.all(additional.map(async l => ({ type: l.type, url: await layer(l.service, l.name, options) }))));
-  const readings = await Promise.all(layers.map(async l => ({ ...l, features: await query(l.url, spatial(area.geometry!), options) })));
+  layers.push(...await savedResponses(additional.map(async l => ({ type: l.type, url: await layer(l.service, l.name, options) }))));
+  const readings = await savedResponses(layers.map(async l => ({ ...l, features: await query(l.url, spatial(area.geometry!), options) })));
   const counties = new Map(readings.filter(l => l.type === "county").flatMap(l => l.features.map(f =>
     [String(f.attributes.GEOID), String(f.attributes.NAME ?? f.attributes.BASENAME)] as const)));
   const divisions = readings.flatMap(l => l.features.flatMap(f => division(f, l.type, l.url, counties) ?? []));
@@ -156,7 +165,7 @@ export async function zipsForPlace(place: { type: "congressional_district" | "co
   const areas = await query(source, { where: place.type === "state" ? `STATE='${fips}'` : `GEOID='${place.geoid}' AND STATE='${fips}'` }, options);
   if (!areas.length) throw new Error("Census did not resolve the requested place");
   const zipLayer = await layer("PUMA_TAD_TAZ_UGA_ZCTA", /^2020 Census ZIP Code Tabulation Areas$/, options);
-  const zips = (await Promise.all(areas.map(async area => {
+  const zips = (await savedResponses(areas.map(async area => {
     if (!area.geometry) throw new Error("Census returned a place without its boundary");
     return (await query(zipLayer, { ...spatial(area.geometry), returnGeometry: "false" }, options)).map(f => String(f.attributes.ZCTA5 ?? f.attributes.GEOID));
   }))).flat();

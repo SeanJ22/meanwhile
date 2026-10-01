@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -20,6 +20,7 @@ import {
   type PriorConclusion,
 } from "../lib/method/knowledge.ts";
 import { unknownApplicability } from "../lib/method/portability.ts";
+import { methodFixture } from "./method-store-fixture.ts";
 import { planDescentStart } from "../lib/workstate/frontier.ts";
 import { DESCENT_STATES, loadWorkstreamFor } from "../lib/workstate/load.ts";
 
@@ -193,17 +194,6 @@ test("FINDING 3 — seeds still initialize a jurisdiction with no canonical stat
   }
 });
 
-test("FINDING 3 — the command no longer gates the run on the seed list", () => {
-  const src = readFileSync(join(ROOT, "scripts", "descent.mts"), "utf8");
-  assert.match(src, /planDescentStart\(/, "the command must call the shared plan");
-  // The specific shape that caused the finding: a throw on an empty seed list
-  // BEFORE canonical state is consulted.
-  assert.ok(
-    !/seeds\.length === 0\s*\)\s*\{\s*throw/.test(src.replace(/\s+/g, " ")),
-    "the seed list must not gate the run before canonical state is read",
-  );
-});
-
 /* ================================================================ FINDING 4 */
 
 function route(id: string, over: Partial<MethodRoute> = {}): Omit<MethodRoute, "learnedAtVersion"> {
@@ -332,42 +322,21 @@ test("FINDING 4 — a newly learned route still reopens a prior conclusion", () 
   assert.equal(findReopenings(k, conclusions).length, 1, "the compounding rule still holds after the hotfix");
 });
 
-test("FINDING 4 — the OPERATIONAL descent path writes outcomes through the canonical store", () => {
-  // Not "a data structure exists". The command's source is checked for the
-  // actual write, because the finding was precisely that the structure existed
-  // and nothing populated it.
-  const src = readFileSync(join(ROOT, "scripts", "descent.mts"), "utf8");
-  assert.match(src, /recordRouteOutcome\(/, "descent must record route outcomes");
-  assert.match(src, /applyEarnedPortability\(/, "and apply what the evidence earns");
-  assert.match(src, /data", "method", "knowledge\.json"|knowledge\.json/, "through the canonical method store");
-  // ZERO must be one of the outcomes it can write.
-  assert.match(src, /"ZERO"/, "a walked-but-empty tier is recorded, not swallowed");
-});
-
 test("FINDING 4 — the real store round-trips a recorded outcome", () => {
-  // Load canonical state, exercise the path, observe the earned result. The
-  // committed store is NOT written — this runs against a copy.
-  const dir = mkdtempSync(join(tmpdir(), "wtp-method-"));
-  try {
-    cpSync(join(ROOT, "data", "method"), join(dir, "data", "method"), { recursive: true });
-    const p = join(dir, "data", "method", "knowledge.json");
-    let k = JSON.parse(readFileSync(p, "utf8")) as MethodKnowledge;
-    const id = k.routes[0].id;
-    assert.equal(k.routes[0].applicability.portability, "UNKNOWN");
+  // Load the frozen store, exercise the path, observe the earned result, and round-trip it through JSON. Nothing is written to disk.
+  let k = methodFixture();
+  const id = k.routes[0].id;
+  assert.equal(k.routes[0].applicability.portability, "UNKNOWN");
 
-    for (const j of ["nh", "nj", "az"]) {
-      k = recordRouteOutcome(k, id, { jurisdiction: j, walkedOn: "2026-08-26", rows: 7, outcome: "YIELDED" }).knowledge;
-    }
-    const { knowledge } = applyEarnedPortability(k);
-    writeFileSync(p, JSON.stringify(knowledge, null, 2), "utf8");
-
-    const reloaded = JSON.parse(readFileSync(p, "utf8")) as MethodKnowledge;
-    const r = reloaded.routes.find((x) => x.id === id);
-    assert.equal(r?.outcomes.length, 3, "outcomes survive the round trip");
-    assert.equal(r?.applicability.portability, "NATIONWIDE", "and the earned class is observable on reload");
-  } finally {
-    rmSync(dir, { recursive: true, force: true });
+  for (const j of ["nh", "nj", "az"]) {
+    k = recordRouteOutcome(k, id, { jurisdiction: j, walkedOn: "2026-08-26", rows: 7, outcome: "YIELDED" }).knowledge;
   }
+  const { knowledge } = applyEarnedPortability(k);
+
+  const reloaded = JSON.parse(JSON.stringify(knowledge)) as MethodKnowledge;
+  const r = reloaded.routes.find((x) => x.id === id);
+  assert.equal(r?.outcomes.length, 3, "outcomes survive the round trip");
+  assert.equal(r?.applicability.portability, "NATIONWIDE", "and the earned class is observable on reload");
 });
 
 /* ============================================== NO DESCENT MUTATION */

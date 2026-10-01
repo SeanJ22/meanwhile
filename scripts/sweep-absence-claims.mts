@@ -132,7 +132,7 @@ function isComment(fileWithLine: string): boolean {
  * 90,721 sentences, and after the two narrowings this leaves ZERO hits — so
  * this is not a guard that starts life with a backlog.
  */
-const PROSE_GLOBS = ["*.md", "data/method/knowledge.json"];
+const PROSE_GLOBS = ["*.md"];
 
 function proseSentences(): { file: string; text: string }[] {
   /*

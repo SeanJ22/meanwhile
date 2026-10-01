@@ -31,7 +31,6 @@ import {
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const WS_DIR = join(ROOT, "data", "workstate");
-const METHOD = join(ROOT, "data", "method", "knowledge.json");
 const TODAY = process.env.WTP_TODAY ?? "2026-08-26";
 
 const argv = process.argv.slice(2);
@@ -71,9 +70,8 @@ if (stale.length) {
   process.exit(2);
 }
 
-const methodVersion = existsSync(METHOD)
-  ? (JSON.parse(readFileSync(METHOD, "utf8")) as { version: number }).version
-  : 0;
+// The method version lives in the field manual; this offline close-out has no database, so it records none.
+const methodVersion = 0;
 
 if (!existsSync(WS_DIR)) {
   console.log("no workstreams — nothing to hand off");

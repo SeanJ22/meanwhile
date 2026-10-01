@@ -76,7 +76,7 @@ export async function printWorkerPublicationReceipt(store: Pick<RoutineDataStore
       ...(extra?.versionId ? [{ at: "", candidateId: extra.candidateId, versionId: extra.versionId }] : [])].at(-1);
   // Nothing new this pass (items already published, or held with their reasons): the door confirms its current
   // version, delivering nothing and counting its gaps, so the runner records a finished pass rather than a failure.
-  if (!last && now && report.length > 0 && store.readPromotionIdentity) {
+  if (!last && now && (report.length > 0 || (extra?.gaps.length ?? 0) > 0) && store.readPromotionIdentity) {
     const contract = requiredManualProductionContract(source as Parameters<typeof requiredManualProductionContract>[0]);
     const pointer = await store.readPromotionIdentity(contract.recordClass, contract.scope);
     // Named as the canonical candidate, never as a confirmation: only the store records a confirmation, and the runner re-proves this one.

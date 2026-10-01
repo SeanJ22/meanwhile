@@ -62,8 +62,8 @@ import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import { nextRunRecordPath } from "../lib/health/run-records.ts";
 import { today } from "./doc-dates.mjs";
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
-import { readMethodStore } from "../lib/method/candidate.ts";
-import { METHOD_STORE, readMethodCandidateStore } from "../lib/control-plane/scheduler/scout-candidates.ts";
+import { readMethodKnowledge } from "../lib/method/manual-bridge.ts";
+import { readMethodCandidateStore } from "../lib/control-plane/scheduler/scout-candidates.ts";
 import { readConclusionStore } from "../lib/method/conclusions.ts";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 import { resolvePilotMirror } from "./pilot-runtime-config.mjs";
@@ -222,7 +222,7 @@ try {
         researchProgression = await readResearchProgression(repos, {
           windowId, through: finishedAt, gate,
           candidates: (await readMethodCandidateStore(repos)).candidates,
-          knowledge: readMethodStore(join(ROOT,...METHOD_STORE)),
+          knowledge: await readMethodKnowledge(repos),
           conclusions: readConclusionStore(join(ROOT,"data","method","conclusions.json")),
         });
       } catch (error) {

@@ -16,7 +16,7 @@
  * model review included; without one the audit is the deterministic attack
  * set and says so.
  */
-import { mkdtempSync, readFileSync } from "node:fs";
+import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -31,6 +31,7 @@ import { createRouteTask } from "../route-task.ts";
 import { createWorkItem } from "../work-item.ts";
 import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION, type FleetRuntime } from "../workers/runtime.ts";
 import type { CivicExtractionContract, FleetRole, IndependentAuditContext, OfficialRouteExpectation, WorkerResultRecord, WorkerTaskSpec } from "../workers/types.ts";
+import type { MethodKnowledge } from "../../method/knowledge.ts";
 
 /** The real Pima County Legistar events contract the chain suites and the canary use. */
 import { PIMA_LEGISTAR_CONTRACT } from "../workers/held-meeting-contract.ts";
@@ -39,8 +40,8 @@ export const PIMA_LEGISTAR_FEED_URL = "https://webapi.legistar.com/v1/pima/event
 export const ISOLATED_PLANE_PROJECT = "freshness";
 
 export interface IsolatedPlaneOptions {
-  /** The repository root, for `data/method/knowledge.json`. */
-  readonly root?: string;
+  /** The method knowledge the route floor reads (from the field manual: `readMethodKnowledge`). */
+  readonly knowledge: MethodKnowledge;
   readonly vaultRoot?: string;
   /** The plane's first clock reading; every later reading is one second on. */
   readonly startAt?: string;
@@ -80,9 +81,8 @@ function jurisdictionFor(contract: CivicExtractionContract, feedUrl: string): { 
   return { state, ...(governmentType ? { governmentType } : {}), ...(platform ? { platform } : {}), ...(publisher ? { publisher } : {}) };
 }
 
-export async function isolatedFactPlane(options: IsolatedPlaneOptions = {}): Promise<IsolatedPlane> {
-  const root = options.root ?? process.cwd();
-  const knowledge = JSON.parse(readFileSync(join(root, "data/method/knowledge.json"), "utf8"));
+export async function isolatedFactPlane(options: IsolatedPlaneOptions): Promise<IsolatedPlane> {
+  const knowledge = options.knowledge;
   const methodVersion: number = knowledge.version;
   const contract = options.contract ?? PIMA_LEGISTAR_CONTRACT;
   const feedUrl = options.feedUrl ?? PIMA_LEGISTAR_FEED_URL;

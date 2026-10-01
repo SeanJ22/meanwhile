@@ -199,7 +199,7 @@ const money = (period: Parameters<typeof v6MoneySection>[0]["period"], over: Par
 const billing = { formatVersion: 1 as const, collectedAt: "2026-09-28T19:00:00.000Z",
   readings: [reading("anthropic-api"), reading("neon", { status: "ERROR", syncedAt: null, reportedUsd: null, error: "timeout" })] };
 
-test("account readings keep their provider periods; missing readings are unknown, never zero; per-work costs are not connected", () => {
+test("account readings keep their provider periods; missing readings are unknown, never zero", () => {
   const m = envelope(money({ kind: "native" }, { providerBilling: billing,
     fleetSafety: { rolling24Hours: { modelUsd: 21, asOf: "2026-09-28T19:30:00.000Z" }, bounds: { rolling24HourModelUsd: 25 } },
     adminConfig: { fleetSpendCeiling: { rollingCeilingUsd: 25 } } as never }));
@@ -217,7 +217,9 @@ test("account readings keep their provider periods; missing readings are unknown
   assert.equal(m.data.accountMonth, "Whole account · September 1, 2026 to September 28, 2026", "billing days are UTC dates");
   const mixed = envelope(money({ kind: "native" }, { providerBilling: { ...billing, readings: [...billing.readings, reading("exa", { periodStart: "2026-08-15T00:00:00.000Z" })] } }));
   assert.equal(mixed.data.accountMonth, "Whole account · each provider's own billing period");
-  assert.equal(m.data.drill, null);
+  assert.deepEqual(m.data.reconciliation, [], "an attribution with no provider rows matches nothing");
+  assert.equal(envelope(money({ kind: "native" }, { providerBilling: billing, attribution: undefined })).data.reconciliation, null, "an attribution that was not published is not read as a reconciliation");
+  assert.deepEqual(m.data.readings.map(r => [r.provider, r.status, r.stale]), [["Anthropic (API)", "REPORTED", false], ["Neon", "ERROR", true]], "each provider's last read is carried with its status and age");
   assert.ok(m.missingParts.some(p => /5 of 6 providers have no dollar reading.*unknown, not the sum/.test(p)));
   assert.ok(m.missingParts.some(p => /not split by place or by hunt/.test(p)));
   const fleet = m.data.limits[0];
@@ -322,7 +324,7 @@ test("an open v6 page picks up both sections through LiveSync and renders the or
       "the national view must not mislabel a saved hunt as absent");
     assert.equal(huntsWithin(nationalPlaces, national.hunts.data ?? [], "st:az").length, 1,
       "the saved filing state also locates its hunt");
-    assert.equal(bundle.money.data?.drill, null);
+    assert.deepEqual(bundle.money.data?.reconciliation, []);
     assert.equal(bundle.money.data?.account.length, 6);
   });
 });

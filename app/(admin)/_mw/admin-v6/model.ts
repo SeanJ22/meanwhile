@@ -433,7 +433,8 @@ export interface SpendLimit {
   readonly tone: "hunt" | "warn" | "neutral";
 }
 
-export interface CostDrill {
+/** One piece of work and what its paid tries cost, from the cost ledger (server: v6-spend-read.ts). */
+export interface WorkCost {
   readonly work: string;
   readonly models: string;
   readonly tries: number;
@@ -441,7 +442,6 @@ export interface CostDrill {
   readonly movedUpWhy: string;
   readonly benefit: string;
   readonly applies: readonly string[];
-  readonly link?: { readonly type: "stuck" | "result"; readonly id: string };
 }
 
 export interface MoneyView {
@@ -449,8 +449,16 @@ export interface MoneyView {
   readonly accountMonth: string;
   readonly monthlyPlans: readonly { readonly name: string; readonly note: string }[];
   readonly limits: readonly SpendLimit[];
-  /** Null when per-work costs are not connected (never "no costs"). */
-  readonly drill: readonly CostDrill[] | null;
+  /** Our recorded request costs against each provider's own report, for that report's period. Null when the attribution was not read. */
+  readonly reconciliation: readonly {
+    readonly provider: string; readonly periodStart: string; readonly periodEnd: string;
+    readonly huntUsd: number | null; readonly huntKnownUsd: number; readonly otherUsd: number | null; readonly otherKnownUsd: number;
+    readonly providerUsd: number | null; readonly differenceUsd: number | null; readonly unpriced: number }[] | null;
+  readonly readings: readonly {
+    readonly provider: string; readonly status: string; readonly stale: boolean; readonly syncedAt: string | null; readonly attemptedAt: string;
+    readonly periodStart: string; readonly periodEnd: string; readonly reportedUsd: number | null; readonly estimatedUsd: number | null;
+    readonly error: string | null; readonly detail: string; readonly credits: string | null; readonly accounts: readonly string[]; readonly limits: readonly string[];
+    readonly units: readonly { readonly label: string; readonly value: number; readonly unit: string }[] }[];
   readonly otherServices: string;
 }
 
@@ -508,6 +516,10 @@ export interface SpendView {
   readonly windowDays: number;
   readonly byTier: readonly { readonly key: string; readonly tier: "haiku" | "sonnet" | "opus" | "older" | "unrecorded"; readonly name: string; readonly usd: number; readonly requests: number }[];
   readonly byDay: readonly { readonly day: string; readonly anthropicUsd: number; readonly searchUsd: number; readonly byModel: readonly { readonly name: string; readonly usd: number }[]; readonly rows: number }[];
+  /** Newest first; the first row is the month in progress. Eastern months. */
+  readonly byMonth: readonly { readonly month: string; readonly anthropicUsd: number; readonly searchUsd: number; readonly byTier: readonly { readonly name: string; readonly usd: number }[]; readonly rows: number }[];
+  /** The costliest work over the same days, costliest first. */
+  readonly work: readonly WorkCost[];
   readonly anthropicUsd: number;
   readonly searchUsd: number;
   /** Ledger rows with no price. Counted beside the dollars, never as $0. */

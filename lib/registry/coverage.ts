@@ -409,7 +409,7 @@ export function summarizeCoverage(
 
   const covered: CoveredBody[] = bodies.map((body) => {
     const division = body.ocdId ? divisionsById.get(body.ocdId) : undefined;
-    const held = heldMeetings.find(meeting => meeting.bodyId === body.id && meeting.ocdId === body.ocdId);
+    const held = heldMeetings.find(meeting => meeting.bodyId === body.id);
     return {
       bodyId: body.id,
       ocdId: body.ocdId,

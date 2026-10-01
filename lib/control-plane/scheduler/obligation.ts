@@ -227,6 +227,10 @@ function clamp(hours: number): number {
  * so daily" (a decision, recorded as `DEFAULT_NO_SIGNAL`) and "this row's data
  * is broken" (a defect, which may not be papered over with a cadence).
  */
+export function meetingSourceCadenceHours(nowMs: number, startsAt: readonly (string | null)[] = []): number {
+  return startsAt.some(at => at !== null && Math.abs(Date.parse(at) - nowMs) <= 7 * 86_400_000) ? 1 : 12;
+}
+
 export function scheduleObligation(
   obligation: FreshnessObligation,
   nowMs: number,
@@ -314,11 +318,10 @@ export function scheduleObligation(
   }
 
   const isMeeting = /meeting|calendar|agenda|minutes/i.test(obligation.recordClass);
-  const nearbyMeeting = [obligation.readerImpactAt, ...(obligation.meetingStartsAt ?? [])]
-    .some(at => at !== null && Math.abs(Date.parse(at) - nowMs) <= 7 * 86_400_000);
+  const meetingCadence = meetingSourceCadenceHours(nowMs, [obligation.readerImpactAt, ...(obligation.meetingStartsAt ?? [])]);
   if (isMeeting) {
-    hours = Math.min(hours, nearbyMeeting ? 1 : 12);
-    basis = `Meeting sources are checked ${nearbyMeeting ? "hourly within seven days before or after a sitting" : "twice daily"} (§4). ${basis}`;
+    hours = Math.min(hours, meetingCadence);
+    basis = `Meeting sources are checked ${meetingCadence === 1 ? "hourly within seven days before or after a sitting" : "twice daily"} (§4). ${basis}`;
   }
   const cadenceHours = clamp(hours);
 

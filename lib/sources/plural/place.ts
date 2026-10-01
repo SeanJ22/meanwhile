@@ -4,9 +4,12 @@ import type { PlaceDivision } from "../../control-plane/expansion/national-geogr
 import { isOfficialSource, type OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 import { electionPageFields, type ElectionFieldCandidate } from "../../hunt/election-page.ts";
 import type { WorkerPublicationCapture } from "../../civic-data/worker-roster-publication.ts";
+import { fieldManualForSource, type FieldManualRead } from "../../control-plane/field-manual.ts";
 
 export interface HeldSourcePage {
   readonly url: string;
+  /** Final retrieval location for relative links; url remains the saved source identity. */
+  readonly baseUrl?: string;
   readonly text: string;
   readonly collectedAt: string;
   /** Metadata for these same bytes in the ordinary shared evidence vault. */
@@ -36,7 +39,7 @@ export interface NationalPlaceSources {
 function links(page: HeldSourcePage): { url: string; label: string }[] {
   return [...page.text.matchAll(/<a\b[^>]*href\s*=\s*["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi)].flatMap(match => {
     try {
-      const url = new URL(decodeEntities(match[1]), page.url);
+      const url = new URL(decodeEntities(match[1]), page.baseUrl ?? page.url);
       return url.protocol === "https:" ? [{ url: url.href, label: cellText(match[2]).replace(/\s+/g, " ").trim() }] : [];
     } catch { return []; }
   });
@@ -55,7 +58,8 @@ export function electionDirectorySelection(page: HeldSourcePage, stateName: stri
       if (!name) continue;
       for (const option of select[2].matchAll(/<option\b[^>]*value=["']([^"']+)["'][^>]*>([\s\S]*?)<\/option>/gi)) {
         if (cellText(option[2]).toLowerCase() !== stateName.toLowerCase()) continue;
-        const url = new URL(/\baction=["']([^"']+)["']/i.exec(form[1])?.[1] ?? page.url, page.url);
+        const base = page.baseUrl ?? page.url;
+        const url = new URL(/\baction=["']([^"']+)["']/i.exec(form[1])?.[1] ?? base, base);
         url.searchParams.set(name, decodeEntities(option[1]));
         return url.href;
       }
@@ -71,11 +75,26 @@ export async function collectNationalPlaceSources(input: {
   readonly divisions: readonly PlaceDivision[];
   readonly now: string;
   readonly read: (url: string) => Promise<HeldSourcePage>;
+  readonly knowledge?: FieldManualRead;
   readonly onSources?: (sources: NationalPlaceSources) => Promise<void>;
 }): Promise<NationalPlaceSources> {
   const documents = new Map<string, HeldSourcePage>();
   const inFlight = new Map<string, Promise<HeldSourcePage>>();
   const gaps: { sourceUrl: string; detail: string }[] = [];
+  const sourceKnowledge = new Map<string, ReturnType<typeof fieldManualForSource>>();
+  const learned = (url: string, state: string) => {
+    const key = `${state}|${new URL(url).origin}`;
+    if (!sourceKnowledge.has(key)) sourceKnowledge.set(key, input.knowledge ? fieldManualForSource(input.knowledge, url, state) : []);
+    return sourceKnowledge.get(key)!;
+  };
+  const orderRoutes = (urls: readonly string[], state: string) => [...new Set(urls)].sort((a, b) => {
+    const rank = (url: string) => {
+      const entry = learned(url, state).filter(entry => entry.url === url)
+        .sort((a, b) => (b.observedAt ?? "").localeCompare(a.observedAt ?? ""))[0];
+      return entry?.outcome === "YIELDED" ? 0 : entry?.outcome === "FAILED" || entry?.outcome === "BLOCKED" ? 2 : 1;
+    };
+    return rank(a) - rank(b);
+  });
   const read = (url: string) => {
     const prior = inFlight.get(url);
     if (prior) return prior;
@@ -143,7 +162,7 @@ export async function collectNationalPlaceSources(input: {
       .find(m => new RegExp(`\\bid=["']${state}["']`, "i").test(m[1]));
     const path = anchor && /href=["']([^"']+)["']/i.exec(anchor[1])?.[1];
     if (!path) { gaps.push({ sourceUrl: directory.url, detail: `The national directory has no ${state.toUpperCase()} link` }); return; }
-    const statePage = await attempt(new URL(path, directory.url).href);
+    const statePage = await attempt(new URL(path, directory.baseUrl ?? directory.url).href);
     if (!statePage) return;
     const divisionId = input.divisions.find(d => d.divisionType === "state" && d.id.endsWith(`:${state}`))?.id;
     if (!divisionId) return;
@@ -211,8 +230,12 @@ export async function collectNationalPlaceSources(input: {
       if (!page) {
         // A stale landing path does not establish that the government's site
         // is unavailable. Try its other routes published by the directory.
-        for (const route of stateLinks.filter(l => l.url !== government && new URL(l.url).origin === new URL(government).origin)) {
-          page = await attempt(route.url);
+        const alternatives = orderRoutes([
+          ...learned(government, state).filter(entry => entry.outcome === "YIELDED").flatMap(entry => entry.url ?? []),
+          ...stateLinks.filter(l => l.url !== government && new URL(l.url).origin === new URL(government).origin).map(link => link.url),
+        ], state);
+        for (const route of alternatives) {
+          page = await attempt(route);
           if (page) break;
         }
       }
@@ -254,7 +277,10 @@ export async function collectNationalPlaceSources(input: {
         const office = new RegExp(`^(?:Office of (?:the )?)?(${OFFICE})$`, "i").exec(l.label)?.[1];
         return office ? [followOffice({ url: l.url, office }, provenance)] : [];
       }));
-      const routes = [...new Set(links(page).filter(l => /registration|deadline|early voting|polling|voting location|voting schedule|certified|canvass|election results/i.test(l.label)).map(l => l.url))];
+      const routes = orderRoutes([
+        ...learned(page.url, state).filter(entry => entry.outcome === "YIELDED" && entry.recordClasses.some(kind => /election|ballot|voter/i.test(kind))).flatMap(entry => entry.url ?? []),
+        ...links(page).filter(l => /registration|deadline|early voting|polling|voting location|voting schedule|certified|canvass|election results/i.test(l.label)).map(l => l.url),
+      ], state);
       await Promise.all(routes.map(async route => {
         const document = await attempt(route);
         if (!document) return;

@@ -234,15 +234,15 @@ test("LABELS AND BOUNDS: only a label of two words or more names a body; a link 
 
 test("SEARCH: a search result on the body's own domain that is itself its events page is confirmed from the page already read", async () => {
   const site = fakeOpen({
-    "https://www.tusd1.org/robots.txt": ALLOW,
-    "https://www.tusd1.org/": { status: 200, body: "<html><body>Welcome</body></html>" },
-    "https://www.tusd1.org/Reconfiguration": { status: 200, body: TUSD_PAGE },
+    "https://district.gov/robots.txt": ALLOW,
+    "https://district.gov/": { status: 200, body: "<html><body>Welcome</body></html>" },
+    "https://district.gov/Reconfiguration": { status: 200, body: TUSD_PAGE },
   });
   const costs: unknown[] = [];
-  const walk = await walkMeetingsDiscoveryNeed(TUSD, {
+  const walk = await walkMeetingsDiscoveryNeed({ ...TUSD, ownWebAddress: "https://district.gov/" }, {
     ...runtime(site.open),
     search: async () => ({
-      hits: [{ url: "https://www.tusd1.org/Reconfiguration", title: "Reconfiguration", provider: "brave" as const }],
+      hits: [{ url: "https://district.gov/Reconfiguration", title: "Reconfiguration", provider: "brave" as const }],
       requests: [{ provider: "brave" as const, status: "DELIVERED" as const, error: null, bytes: 100, hitCount: 1 }],
     }),
     recordCost: async (entry) => {
@@ -250,10 +250,10 @@ test("SEARCH: a search result on the body's own domain that is itself its events
     },
   });
   assert.equal(walk.outcome, "FOUND");
-  const find = walk.found.find((f) => f.url === "https://www.tusd1.org/Reconfiguration");
+  const find = walk.found.find((f) => f.url === "https://district.gov/Reconfiguration");
   assert.ok(find);
   assert.deepEqual([find.vendor, find.basis, find.count], ["official-page-events", "SEARCH", 2]);
-  assert.equal(site.seen.filter((u) => u === "https://www.tusd1.org/Reconfiguration").length, 1, "one request for the page");
+  assert.equal(site.seen.filter((u) => u === "https://district.gov/Reconfiguration").length, 1, "one request for the page");
   assert.equal(costs.length, 1, "the one search request sent is charged");
 });
 

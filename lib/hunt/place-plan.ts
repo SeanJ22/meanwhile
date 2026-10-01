@@ -72,5 +72,7 @@ export async function planPlaceHunt(input: {
     held: national.replacesHeld ? national.held : [...held.held, ...national.held] });
   const closed = await closePublishedPlaceWork(input.repos, items, observedAt);
   return { items, work: missingPlaceWork(items), open: openPlaceWork(items), closed, knowledge,
+    inherited: { subjects: held.subjects.length, fields: held.held.length,
+      publishedFields: before.filter(item => item.state === "published").length, knowledgeEntries: knowledge.store.entries.length },
     conditions: knowledge.error ? [`Shared knowledge could not be read: ${knowledge.error}`] : [] };
 }

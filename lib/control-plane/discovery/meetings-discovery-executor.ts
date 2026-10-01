@@ -895,7 +895,7 @@ export async function walkMeetingsDiscoveryNeed(
     recipes: { applied: recipeApplied, skipped: recipeSkips, learned },
     search: queryTrail,
     requestCount: requests,
-    recheckAfter: steps.some(step => step.status === null && /request bound/.test(step.note)) ? finishedAt : recheckAfter(outcome, finishedAt),
+    recheckAfter: steps.some(step => step.status === null && /request bound/.test(step.note)) ? finishedAt : recheckAfter(finishedAt),
     site: { address: need.addressSource ?? null, homepage: homeProvenance },
     note: noteFor(need, outcome, found, leads, origins.length) + siteNote(hintedSite, homeFromHint, hintedSiteRefused) + (searchScope?.hold ? ` ${searchScope.hold}` : ""),
     ...(hints === null
@@ -1049,9 +1049,10 @@ export function walkableByFreeWalk(need: Pick<MeetingsDiscoveryNeed, "basis" | "
 export function discoveryNeedsToWalk(
   ledger: readonly MeetingsDiscoveryNeed[],
   dispatched: readonly MeetingsDiscoveryNeed[],
+  accepts: (need: MeetingsDiscoveryNeed) => boolean = () => true,
 ): readonly MeetingsDiscoveryNeed[] {
   const ids = new Set(dispatched.map((n) => n.jurisdictionId));
-  return [...dispatched, ...ledger.filter((n) => !ids.has(n.jurisdictionId))];
+  return [...dispatched, ...ledger.filter((n) => !ids.has(n.jurisdictionId))].filter(accepts);
 }
 
 /**
@@ -1103,7 +1104,10 @@ export async function runMeetingsDiscovery(
     const hintsChanged = hinted.has(need.jurisdictionId) && latest?.routeHints?.fingerprint !== hinted.get(need.jurisdictionId);
     /* A find recorded before walks carried their provenance cannot be attested for wiring (NH330): walk it again. */
     const findWithoutProvenance = latest?.outcome === "FOUND" && latest.site === undefined;
-    if (latest !== undefined && !hintsChanged && !findWithoutProvenance && Date.parse(latest.recheckAfter) > nowMs) {
+    // Older walks used multi-day holds. They cannot silence a calendar index
+    // beyond the current source cadence, even before a new walk is recorded.
+    const nextCheck = latest === undefined ? 0 : Math.min(Date.parse(latest.recheckAfter), Date.parse(recheckAfter(latest.finishedAt)));
+    if (latest !== undefined && !hintsChanged && !findWithoutProvenance && nextCheck > nowMs) {
       notDue.push(need.jurisdictionId);
       continue;
     }

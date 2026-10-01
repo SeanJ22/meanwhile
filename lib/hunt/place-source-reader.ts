@@ -113,7 +113,8 @@ export async function placeSourceReader(input: {
       const page = await read(url);
       const capture = captures.get(page.artifactId);
       if (!capture) throw new Error("Saved source has no capture metadata");
-      return { url: page.url, text: page.text, collectedAt: page.collectedAt, capture };
+      return { url: capture.evidence.canonicalUrl, baseUrl: page.url,
+        text: capture.evidence.text, collectedAt: capture.observedAt, capture };
     },
     captureGeography: async (url: string, text: string) => {
       cost.bytesFetched += Buffer.byteLength(text);

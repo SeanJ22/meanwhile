@@ -109,17 +109,10 @@ test("normalize windows the year, times it from the page, and cites its source",
     NOW,
   );
 
-  // Of the twelve published sittings, five fall inside the window: June 15,
-  // August 17, September 28, October 26 and November 16. The rest are a
-  // deliberate window clip, not drops — which is why the drop counts are zero.
-  //
-  // Was three, until UPCOMING_HORIZON_DAYS moved 60 -> 120 on 2026-08-28 so
-  // that Pima's fourteen published sittings could reach a reader. The window
-  // is derived from that constant, so widening it reaches further into THIS
-  // fixture too — two more real sittings the district had already published.
+  // Four published sittings fall in the rolling 90-day window; later dates stay out.
   assert.deepEqual(
     meetings.map((m) => m.startsAt.slice(0, 10)),
-    ["2026-06-15", "2026-08-17", "2026-09-28", "2026-10-26", "2026-11-16"],
+    ["2026-06-15", "2026-08-17", "2026-09-28", "2026-10-26"],
   );
   assert.equal(drops.unknownVenue, 0);
   assert.equal(drops.placeless, 0);
@@ -263,15 +256,10 @@ test("Kearsarge normalizes with the page's time, place and documents", () => {
     NOW,
   );
 
-  // 15 of the 39 fall inside [May 17, Oct 14]. The rest are a window clip,
-  // which is why nothing lands in the drop columns except the three rows the
-  // table carries that are not meetings at all.
-  // 19, not 15: UPCOMING_HORIZON_DAYS moved 60 -> 120 on 2026-08-28, and this
-  // window is derived from it, so four more sittings Kearsarge had already
-  // published now fall inside it. The last is 2026-12-10.
-  assert.equal(meetings.length, 19, JSON.stringify(meetings.map((m) => m.startsAt)));
+  // Seventeen sittings fall in the 90-day window. Three other rows are not meetings.
+  assert.equal(meetings.length, 17, JSON.stringify(meetings.map((m) => m.startsAt)));
   assert.equal(meetings[0].startsAt.slice(0, 10), "2026-05-21");
-  assert.equal(meetings[18].startsAt.slice(0, 10), "2026-12-10");
+  assert.equal(meetings[16].startsAt.slice(0, 10), "2026-11-05");
   assert.equal(drops.notConfigured, 3);
   assert.equal(drops.unknownVenue, 0);
   assert.equal(drops.unplaceableInTime, 0);
@@ -363,14 +351,10 @@ test("the Conservation Commission's two shapes union by date", () => {
     NOW,
   );
 
-  // Seven inside the window. October 15 used to be ONE DAY past it, which is
-  // exactly the kind of edge a 60-day horizon hid: the commission had
-  // published it, and a reader looking a fortnight ahead could not see it.
-  // UPCOMING_HORIZON_DAYS moved 60 -> 120 on 2026-08-28 and it now reaches
-  // December 8.
+  // Six sittings fall in the rolling 90-day window, through November 10.
   assert.deepEqual(
     meetings.map((m) => m.startsAt.slice(0, 10)),
-    ["2026-06-09", "2026-07-14", "2026-08-11", "2026-09-10", "2026-10-15", "2026-11-10", "2026-12-08"],
+    ["2026-06-09", "2026-07-14", "2026-08-11", "2026-09-10", "2026-10-15", "2026-11-10"],
   );
   assert.equal(drops.unknownVenue, 0);
 
@@ -610,7 +594,7 @@ test("SEEDED: a one-month calendar is walked BEHIND the current month, to the wi
 test("without a window the walk still reaches the serving window's back edge, and the year boundary holds", () => {
   const pages = monthPagesToWalk({ now: new Date("2027-01-15T12:00:00Z"), monthsAhead: 2 });
   // CONCLUDED_LOOKBACK_DAYS (90) back from 15 January is 17 October;
-  // UPCOMING_HORIZON_DAYS (120) ahead is 15 May.
+  // UPCOMING_HORIZON_DAYS (90) ahead is 15 April.
   assert.deepEqual(pages, [
     { year: 2026, month: 10 },
     { year: 2026, month: 11 },
@@ -618,7 +602,6 @@ test("without a window the walk still reaches the serving window's back edge, an
     { year: 2027, month: 2 },
     { year: 2027, month: 3 },
     { year: 2027, month: 4 },
-    { year: 2027, month: 5 },
   ]);
 });
 

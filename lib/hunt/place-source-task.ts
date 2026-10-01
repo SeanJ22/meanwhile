@@ -19,6 +19,7 @@ export async function runNationalPlaceTask(input: {
   store: RoutineDataStore;
   zips: readonly string[];
   publish: (input: NationalPlacePublicationInput) => Promise<unknown>;
+  publishElection?: Parameters<typeof runPlaceSource>[0]["publishElection"];
 }) {
   const reports: Awaited<ReturnType<typeof runPlaceSource>>[] = [];
   const { tools } = input;
@@ -41,7 +42,8 @@ export async function runNationalPlaceTask(input: {
     const occurrenceId = "id" in opened ? opened.id : opened.occurrence.id;
     const scheduled = scheduleObligation(definition, Date.parse(now));
     if (!("cadenceHours" in scheduled)) throw new Error(scheduled.reason);
-    const ttlMs = RESEARCH_BOUNDS.perDispatch.maxWallMs;
+    // A renewable ownership lease, independent of how long acquisition takes.
+    const ttlMs = 120_000;
     let report: Awaited<ReturnType<typeof runPlaceSource>> | undefined;
     const result = await dispatchOne(tools.repos, { obligation: scheduled, routeTaskId, holder, now, clock: tools.now,
       leaseTtlMs: ttlMs, maturity: () => "GRADUATED", executor: {
@@ -61,7 +63,7 @@ export async function runNationalPlaceTask(input: {
               obligation: scheduled, route: null, providerId: null, attemptId, workItemId, routeTaskId, holder, now: tools.now,
               // This finite national walk is plain code; it retains the shared
               // ten-request limit for each website.
-              bound: { ...RESEARCH_BOUNDS.perDispatch, maxToolCalls: Infinity, maxWallMs: Infinity },
+              bound: RESEARCH_BOUNDS.perDispatch,
             } });
             const geographyRequests = new Map<string, number>();
             report = await runPlaceSource({ repos: tools.repos, store: input.store, zip, now, clock: tools.now, knowledge,
@@ -75,7 +77,8 @@ export async function runNationalPlaceTask(input: {
                 const response = await fetch(url, options);
                 return response;
               } }, geographyCaptures: saved.geographyCaptures,
-              publish: async value => { if (leaseError) throw leaseError; return input.publish(value); } });
+              publish: async value => { if (leaseError) throw leaseError; return input.publish(value); },
+              ...(input.publishElection ? { publishElection: input.publishElection } : {}) });
             if (leaseError) throw leaseError;
             const artifacts = [...saved.artifacts.values()];
             return { kind: "DISPOSED", ranAs: "DETERMINISTIC", artifacts,
@@ -83,7 +86,8 @@ export async function runNationalPlaceTask(input: {
                 observation: { rawCount: artifacts.length, normalizedCount: report.sources?.officials.length ?? 0,
                   routeOnlyCount: null, earliest: null, latest: null },
                 note: "Saved national sources acquired; published fields come only from canonical readback; remaining fields stay owed. " +
-                  JSON.stringify({ sourceGaps: report.sources?.gaps ?? [], publications: report.publications }) },
+                  JSON.stringify({ inherited: report.inherited, sourceGaps: report.sources?.gaps ?? [], publications: report.publications,
+                    electionPublications: report.electionPublications }) },
               cost: { ...ZERO_COST, ...saved.cost, durationMs: Date.now() - started },
               detail: `ZIP ${zip}: ${report.items.filter(item => item.state === "published").length} published fields, ${report.work.length} source gaps` };
           } finally { clearInterval(timer); await renewing; }

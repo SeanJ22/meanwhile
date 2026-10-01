@@ -1783,7 +1783,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7076 file(s).
+7077 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -4280,6 +4280,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `data/workstate/orchestration/2026-09-02-worker-fleet.json` <!-- expected-future: date copied from a file path; no measurement date is claimed -->
 - `data/workstate/orchestration/2026-09-03-autonomous-agent-fleet.json` <!-- expected-future: date copied from a file path; no measurement date is claimed -->
 - `data/workstate/orchestration/2026-09-04-reader-last-mile.json` <!-- expected-future: date copied from a file path; no measurement date is claimed -->
+- `deploy/runner/README.md`
 - `deploy/runner/install.sh`
 - `deploy/runner/meanwhile-runner.service`
 - `deploy/runner/setup.ps1`

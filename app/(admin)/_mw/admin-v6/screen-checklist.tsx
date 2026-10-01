@@ -55,11 +55,13 @@ function PlaceScoreCard(props: { readonly score: PlaceScoreView; readonly group:
       <div className={s.stack}>
         <div className={s.spread} style={{ alignItems: "baseline" }}>
           <span className={s.mono} style={{ fontSize: 34, fontWeight: 600 }} aria-label={`Captured: ${percentWords(o)}`}>{percentWords(o)}</span>
-          <span className={cx(s.p, s.small)}>{count(o.captured)} of {count(o.total)} things this place is owed are captured. {count(o.missing)} aren’t captured yet{o.stale ? `, and ${count(o.stale)} were captured earlier and are due for a refresh` : ""}.</span>
+          <span className={cx(s.p, s.small)}>{count(o.captured)} of {count(o.total)} things this place is owed are captured. {count(o.missing)} aren’t captured yet{o.stale ? `, and ${count(o.stale)} were captured earlier and are due for a refresh` : ""}.{o.unpublished ? ` ${count(o.unpublished)} of the captured are things the government doesn’t publish; they count as resolved.` : ""}</span>
         </div>
         <ScoreBar g={o} label="Everything this place is owed" tall />
         <div className={s.legend}>{SCORE_PARTS.map((p) => <span key={p.key} className={s.legendItem}><Swatch cls={p.cls} />{p.words} · {count(o[p.key])}</span>)}</div>
         <p className={cx(s.p, s.small, s.dim)}>{score.covers} Captured means we hold it from an official source. The score never holds back publishing: a fact that passes verification goes live whatever it says.</p>
+        {score.target && <p className={cx(s.p, s.small)}>Your target for this place: <strong>{score.target.goalPercent}%</strong> · now {percentWords(o)}{o.percent !== null && o.percent >= score.target.goalPercent ? " · reached" : ""} · set {mst(score.target.setAt)}. The dispatcher puts this place’s work first until it is reached; it never holds back publishing.</p>}
+        <Actions actions={[{ kind: "target-set", target: v.scopeKey, label: score.target ? "Change the target" : "Set a target" }, ...(score.target ? [{ kind: "target-clear" as const, target: v.scopeKey, label: "Clear the target" }] : [])]} />
         {words && <Actions actions={[{ kind: "send-agents", target: v.scopeKey, label: "Send agents to fill the blanks", payload: { words } }]} primaryFirst />}
         <div className={s.stack}>
           {score.groups.map((g) => (

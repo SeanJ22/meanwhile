@@ -667,6 +667,9 @@ export function sampleOutcome(kind: ActionKind, target: string, input: { readonl
     case "job-stop": return { final: "done", says: "Stopped after its current step. The money set aside is returned once its last call settles.", effect: (w) => ({ ...w, jobsStopped: add(w.jobsStopped, target) }) };
     case "cancel-send":
       return { final: "done", statusWords: "Requested", says: "Your request to take it back is saved. It stays a request until the runner records it." };
+    case "target-set":
+    case "target-clear":
+      return { final: "done", statusWords: "Saved", says: "Sample preview: the target is saved. The runner reads it on its next round." };
     case "send-agents":
       return { final: "done", statusWords: "Sent", says: "The fleet was told where to go. The runner puts it first on its next round." };
     case "focus": {

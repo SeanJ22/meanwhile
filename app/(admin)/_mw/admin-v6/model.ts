@@ -394,6 +394,8 @@ export interface PlaceScoreView {
   readonly divisionCount: number;
   /** The words a Send to fill this place's blanks carries, or null when the place cannot be named to the fleet. */
   readonly sendWords: string | null;
+  /** The target Sean set for this place, or null. Nothing here gates publishing. */
+  readonly target: { readonly goalPercent: number; readonly setAt: string } | null;
   readonly overall: ScoreGroup;
   readonly groups: readonly ScoreGroup[];
 }
@@ -663,7 +665,7 @@ export type ActionKind =
   | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume"
   | "global-ceiling" | "global-search-on" | "global-search-off" | "fix-go"
   | "scope-first" | "scope-recheck" | "doc-request" | "use-url" | "reprocess" | "retry-method" | "resume-publish"
-  | "eng-task" | "job-stop" | "focus" | "send-agents" | "cancel-send";
+  | "eng-task" | "job-stop" | "focus" | "send-agents" | "cancel-send" | "target-set" | "target-clear";
 
 export type ReceiptStatus = "queued" | "read" | "running" | "done" | "partial" | "refused" | "failed" | "unknown";
 export const PENDING_STATUSES: readonly ReceiptStatus[] = ["queued", "read", "running", "unknown"];

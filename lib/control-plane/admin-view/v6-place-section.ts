@@ -36,6 +36,8 @@ export interface AdminV6PlaceScore {
   readonly divisionCount: number;
   /** The words a Send to fill this place's blanks carries, or null when the place cannot be named to the fleet. */
   readonly sendWords: string | null;
+  /** The target Sean set for this place, or null. */
+  readonly target: { readonly goalPercent: number; readonly setAt: string } | null;
   readonly overall: GroupScore;
   readonly groups: readonly GroupScore[];
 }
@@ -104,7 +106,7 @@ function itemOf(item: OwedListItem, placeKey: string, words: string | null): Adm
 
 export interface PlaceSectionQuery { readonly group: string | null; readonly states: readonly OwedState[] | null; readonly q: string | null; readonly offset: number; readonly limit: number }
 
-export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery): {
+export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, target: { readonly goalPercent: number; readonly setAt: string } | null = null): {
   readonly contract: typeof ADMIN_V6_CHECKLIST_CONTRACT; readonly scope: string; readonly revision: string; readonly asOf: string;
   readonly data: AdminV6PlaceChecklistView; readonly missingParts: readonly string[];
   readonly page: { readonly total: number; readonly nextCursor: string | null; readonly prevCursor: string | null };
@@ -126,7 +128,7 @@ export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery): {
       profileVersion: CHECKLIST_PROFILE.version, definitionCount: CHECKLIST_PROFILE.definitionCount, definitions: DEFINITIONS,
       groupNames: GROUP_NAMES, placeGroups, items: windowed.items.map((i) => itemOf(i, read.placeKey, placeSendWords(read.placeKey, read.label, read.divisions))), systemGroups: SYSTEM_GROUPS,
       score: { placeKey: read.placeKey, placeLabel: read.label, covers: read.covers, observedAt: read.observedAt,
-        divisionCount: read.divisions.length, sendWords: placeSendWords(read.placeKey, read.label, read.divisions), overall: score.overall, groups: score.groups },
+        divisionCount: read.divisions.length, sendWords: placeSendWords(read.placeKey, read.label, read.divisions), target, overall: score.overall, groups: score.groups },
     },
     missingParts: [
       "The owed list is what the checklist says a place is owed for the governments, districts and bodies we know about. Governments we haven’t found yet are listed as “discover every …” items, so a total here can grow as agents find more.",

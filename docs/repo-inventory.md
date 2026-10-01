@@ -1761,7 +1761,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7070 file(s).
+7071 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -5284,6 +5284,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/workers/autonomous-plan.ts`
 - `lib/control-plane/workers/coordinator.ts`
 - `lib/control-plane/workers/detective.ts`
+- `lib/control-plane/workers/durable-research-tools.ts`
 - `lib/control-plane/workers/engineering-adapter.ts`
 - `lib/control-plane/workers/engineering-candidate.ts`
 - `lib/control-plane/workers/engineering-types.ts`

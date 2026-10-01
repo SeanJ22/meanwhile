@@ -1179,7 +1179,10 @@ export function MapCanvas({
     );
   }, [leftInset, insets]);
 
-  // Fly to a new center, at the zip's deliberate first-view altitude (6f).
+  const cameraMapRef = useRef<MapLibreMap | null>(null);
+
+  // The initial ZIP must land immediately. An animated arrival can be stopped
+  // by hydration's layout/padding updates, leaving the camera at its old place.
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !camera) return;
@@ -1192,11 +1195,12 @@ export function MapCanvas({
       zoom: initialZoomForZip(camera.zip),
     };
 
-    if (prefersReducedMotion()) {
+    if (cameraMapRef.current !== map || prefersReducedMotion()) {
       map.jumpTo(options);
     } else {
       map.flyTo({ ...options, duration: 2600, essential: true, curve: 1.5 });
     }
+    cameraMapRef.current = map;
   }, [camera]);
 
   /*

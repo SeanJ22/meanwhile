@@ -171,7 +171,6 @@ test("ICAL-OCC · every sitting of the Conservation Commission series is its own
       // 10 November at 7pm Eastern (standard time) is 00:00Z on the 11th.
       { id: `${CC_SERIES}/20261111T000000Z`, startsAt: "2026-11-18T00:00:00.000Z", status: "SCHEDULED", title: "Conservation Commission" },
       { id: `${CC_SERIES}/20261209T000000Z`, startsAt: "2026-12-16T00:00:00.000Z", status: "SCHEDULED", title: "Conservation Commission" },
-      { id: `${CC_SERIES}/20270106T000000Z`, startsAt: "2027-01-06T00:00:00.000Z", status: "SCHEDULED", title: "Conservation Commission" },
     ],
   );
   // The four sittings the town edited are stated twice, by the rule and by
@@ -188,7 +187,7 @@ test("ICAL-OCC · the same events in any order produce the same meetings", () =>
     "bradford-budget-committee",
   );
   const expected = normalize(wiring, READ_1).meetings;
-  assert.equal(expected.length, 14);
+  assert.equal(expected.length, 12);
   for (const [label, ics] of [
     ["the second recorded read", READ_2],
     ["the first read reversed", reordered(READ_1, (all) => [...all].reverse())],
@@ -231,7 +230,6 @@ test("ICAL-OCC · Warner's Zoning Board: each edited and each unedited sitting o
       { id: `${ZBA_SERIES}/20261014T230000Z`, startsAt: "2026-10-14T23:00:00.000Z", status: "SCHEDULED", title: "Zoning Board Meeting" },
       { id: `${ZBA_SERIES}/20261112T000000Z`, startsAt: "2026-11-12T00:00:00.000Z", status: "SCHEDULED", title: "Zoning Board Meeting" },
       { id: `${ZBA_SERIES}/20261210T000000Z`, startsAt: "2026-12-10T00:00:00.000Z", status: "SCHEDULED", title: "Zoning Board Meeting" },
-      { id: `${ZBA_SERIES}/20270114T000000Z`, startsAt: "2027-01-14T00:00:00.000Z", status: "SCHEDULED", title: "Zoning Board Meeting" },
     ],
     "the held meeting and the two cancelled ones are three records, never one alternating",
   );
@@ -271,7 +269,6 @@ test("ICAL-OCC · an edited sitting belongs to its series' body, and replaces th
     unedited("20261013T220000Z", "2026-10-13T22:00:00.000Z"),
     unedited("20261110T230000Z", "2026-11-10T23:00:00.000Z"),
     unedited("20261208T230000Z", "2026-12-08T23:00:00.000Z"),
-    unedited("20270112T230000Z", "2027-01-12T23:00:00.000Z"),
   ];
   assert.deepEqual(selectBoard(WARNER), expected);
   assert.deepEqual(selectBoard(reordered(WARNER, (all) => [...all].reverse())), expected);
@@ -1041,11 +1038,11 @@ test("ICAL-OCC · a feed that restates the series' rule on every sitting is read
   const governing = partition("newbury-ical-governing");
   const result = normalize([governing.wiring!], NEWBURY_SELECTBOARD, FULL_READ_AT);
   const uids = new Set(parseIcs(NEWBURY_SELECTBOARD).map((event) => event.uid));
-  // 21 events select, and seven sittings are listed twice under two series
-  // with every published field identical: 14 sittings (2026-09-25,
+  // 17 in-window events select, and five sittings are listed twice under two series
+  // with every published field identical: 12 sittings (2026-09-25,
   // `collapsePublisherRelistings`; tests/ical-publisher-relisted.test.ts).
-  assert.equal(result.meetings.length, 14);
-  assert.equal(result.duplicateIdentity?.publisherRelisted, 7);
+  assert.equal(result.meetings.length, 12);
+  assert.equal(result.duplicateIdentity?.publisherRelisted, 5);
   for (const meeting of result.meetings) {
     assert.equal(occurrenceParts(meeting.id), null, `${meeting.id} kept its single-event id`);
     assert.ok(uids.has(meeting.id.slice("ical:newbury-ical-governing:".length)));

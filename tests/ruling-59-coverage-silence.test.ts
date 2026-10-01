@@ -8,6 +8,9 @@ import test from "node:test";
 import { COLLECTION_NOTE } from "../lib/ballot/collection-note.ts";
 
 /**
+ * Rulings §0 supersedes the blanket coverage silence below: derived missing-field
+ * labels are required. The remaining assertions protect against stale prose claims.
+ *
  * **RULING 59 (2026-08-21, the author's ruling) — THE PAGE SAYS ONE THING
  * ABOUT COMPLETENESS AND NOTHING ELSE.**
  *
@@ -177,10 +180,7 @@ const BANNED: ReadonlyArray<{ re: RegExp; why: string }> = [
       "an enumeration of which places the product covers. It is false the " +
       "day a place is added, on a page nobody thought to edit",
   },
-  {
-    re: /\bnot covered yet\b/i,
-    why: "a reader-facing list of what has not been worked out",
-  },
+  // Rulings §0 requires a plain missing-coverage label derived from current holdings.
   {
     re: /we are still (working out|finding|filling)/i,
     why:

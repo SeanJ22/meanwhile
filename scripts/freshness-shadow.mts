@@ -140,6 +140,7 @@ import { CANDIDATE_PUBLICATION_BUDGET_MS, runCandidatePublicationCycle,
 import { indexVault } from "../lib/control-plane/evidence/read-only-vault.ts";
 import {
   MEETINGS_DISCOVERY_NAMESPACE,
+  meetingsDiscoveryObligationId,
   dispatchedAddressSource,
   materializedDiscoveryNeeds,
   meetingsDiscoveryProvider,
@@ -2974,8 +2975,8 @@ const MEETINGS_DISCOVERY_MAX_WALKS = 12;
  */
 if (!MEETINGS_DISCOVERY_ENABLED) {
   meetingsDiscoveryState = "OFF: WTP_MEETINGS_DISCOVERY=off, the kill switch";
-} else if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
-  meetingsDiscoveryState = "not run: a dry, canary, filtered or blackout cycle walks nothing";
+} else if (dry || canary || scheduledBlackout) {
+  meetingsDiscoveryState = "not run: a dry, canary or blackout cycle walks nothing";
 } else if ("unreadable" in gapLedgerRead) {
   meetingsDiscoveryState = `not run: ${gapLedgerRead.unreadable}`;
 } else if (Date.now() + MEETINGS_DISCOVERY_BUDGET_MS > DISPATCH_DEADLINE_MS) {
@@ -3005,7 +3006,10 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
     const meetingHints = directoryRegistry?.kind === "PROMOTED" ? directoryMeetingHints(directoryItems, directoryRegistry.value, ROUTE_HINTS) : ROUTE_HINTS;
     let costSeq = 0;
     meetingsDiscovery = await runMeetingsDiscovery(repos, {
-      needs: discoveryNeedsToWalk(gapLedgerRead.needs, [...dispatchedNeeds.values()]),
+      needs: discoveryNeedsToWalk(gapLedgerRead.needs, [...dispatchedNeeds.values()], need => {
+        const id = meetingsDiscoveryObligationId(need);
+        return (ONLY === null || id.startsWith(ONLY)) && (IDS === null || IDS.has(id));
+      }),
       cycleIndex: Math.floor(Date.parse(NOW) / 3_600_000),
       maxWalks: MEETINGS_DISCOVERY_MAX_WALKS,
       /* An owner-dispatched meetings-discovery obligation goes first; one with an open occurrence is another executor's. */

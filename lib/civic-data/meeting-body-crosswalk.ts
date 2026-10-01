@@ -41,7 +41,7 @@ export const CROSSWALK_CITATION =
   "C16: owner decision recorded 2026-09-24T22:43Z (agents may review and promote the records connecting a calendar to its governing body, on saved official evidence)" as const;
 
 /** The calendar kinds a reviewed filter is defined for. */
-export const CROSSWALK_KINDS = ["ICAL", "OFFICIAL_PAGE_EVENTS", "DILIGENT"] as const;
+export const CROSSWALK_KINDS = ["ICAL", "OFFICIAL_PAGE_EVENTS", "DILIGENT", "LEGISTAR"] as const;
 export type CrosswalkKind = (typeof CROSSWALK_KINDS)[number];
 
 /** The filter keys each kind's reader adapter reads, and the ones that select (one of which is required). */
@@ -50,6 +50,7 @@ const FILTER_KEYS: Readonly<Record<CrosswalkKind, { readonly allowed: readonly s
   ICAL: { allowed: ["titleMatch", "categoryMatch", "titleExclude", "feedScope"], selecting: ["titleMatch", "categoryMatch", "feedScope"] },
   OFFICIAL_PAGE_EVENTS: { allowed: ["nameTerms"], selecting: ["nameTerms"] },
   DILIGENT: { allowed: ["titleMatch", "titleExclude"], selecting: ["titleMatch"] },
+  LEGISTAR: { allowed: ["eventBodyId"], selecting: ["eventBodyId"] },
 };
 
 export interface MeetingBodyCrosswalkRow {
@@ -156,6 +157,7 @@ export function crosswalkRowIssue(value: unknown): string | null {
     return `${who}: a ${kind} calendar is this body's only through a filter naming it (${rule.selecting.join(" or ")})`;
   }
   if (keys.some((key) => typeof filter[key] !== "string")) return `${who}: a filter value is not text`;
+  if (kind === "LEGISTAR" && !/^\d+$/.test(filter.eventBodyId)) return `${who}: no numeric Legistar body id`;
   if ("feedScope" in filter) {
     const issue = categoryFeedIssue(row.route ?? "", filter);
     if (issue !== null) return `${who}: ${issue}`;
@@ -167,7 +169,7 @@ export function crosswalkRowIssue(value: unknown): string | null {
   const calendar = evidence?.calendar;
   if (!page || !calendar || !text(evidence?.readAt) || !Number.isFinite(Date.parse(evidence.readAt))) return `${who} carries no dated evidence`;
   const pageHost = httpsHost(page.url);
-  if (pageHost === null || bareHost(pageHost) !== bareHost(routeHost)) {
+  if (pageHost === null || (bareHost(pageHost) !== bareHost(routeHost) && kind !== "LEGISTAR")) {
     return `${who}: the page naming the body is not on the government's own host ${routeHost}`;
   }
   if (!SHA256.test(page.sha256) || !SHA256.test(calendar.sha256)) return `${who}: evidence is cited by its sha256, bare hex`;

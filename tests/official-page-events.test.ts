@@ -271,12 +271,12 @@ test("verification holds, by name, what cannot be verified — and an empty page
     <div><h3>Joint Committee Meeting March 3, 2027</h3></div>
     <div><h3>Spring Concert April 10, 2027</h3></div>`;
   const result = verifyOfficialPageEvents({ body: TUSD, url: TUSD_URL, html, now: NOW });
-  // Jan 5, 2027 is inside the 120-day horizon; March 3, 2027 is not; 2/30 is no date at all.
+  // January and March are beyond the 90-day horizon; 2/30 is no date at all.
   assert.deepEqual(result.sampleEvents.map((e) => e.startsAt), []);
   assert.equal(result.verdict, "NOT_CONFIRMED");
   assert.match(result.reason ?? "", /DATE_OUT_OF_WINDOW/);
 
-  const dated = `<div><div class="SectionTitle">Joint Committee Meeting Jan. 5, 2027</div><div>Starts 4 - 6:30pm.</div></div>`;
+  const dated = `<div><div class="SectionTitle">Joint Committee Meeting Dec. 5, 2026</div><div>Starts 4 - 6:30pm.</div></div>`;
   const timed = verifyOfficialPageEvents({ body: TUSD, url: TUSD_URL, html: dated, now: NOW });
   assert.equal(timed.verdict, "YIELDED");
   assert.equal(timed.sampleEvents[0].precision, "DAY", "a range whose start has no am/pm is not guessed");

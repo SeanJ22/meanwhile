@@ -154,9 +154,8 @@ test("STRICT: a category naming another body, a generic category, a partial name
     assert.ok(!result.accepted.some((a) => a.row.bodyId === `${OCD}#governing`), `${category}: no governing row`);
     assert.ok(result.held.some((h) => h.reason === "NO_EVENT_NAMES_BODY" && h.route === BOS_FEED), `${category}: held NO_EVENT_NAMES_BODY`);
   }
-  /* The walk itself never proposes such a feed, and never one the index links on another host. */
+  /* Other body categories are discoverable; an off-host feed remains unattested. */
   for (const index of [
-    INDEX.replace(">Board of Supervisors</a>", ">Planning and Zoning Commission</a>"),
     INDEX.replace(`href="${BOS_FEED}"`, `href="https://calendar.example.com/common/modules/iCalendar/iCalendar.aspx?catID=31&feed=calendar"`),
   ]) {
     const other = await walk(SITE(index));

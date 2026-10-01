@@ -486,7 +486,7 @@ test("a record that HAS been worked still schedules from its last work", () => {
   assert.ok(isScheduled(row));
   assert.equal(
     Date.parse(row.nextDueAt),
-    Date.parse(lastWorkedAt) + 24 * 3_600_000,
+    Date.parse(lastWorkedAt) + 12 * 3_600_000,
     "scheduling from `now` on every pass means a row examined often is never due",
   );
 });

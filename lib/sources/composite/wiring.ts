@@ -46,13 +46,13 @@ import { CompositeSource } from "./index.ts";
  * portal a body actually runs, which is precisely the mistake CivicWeb ≠
  * CivicPlus already guards against.
  */
-type ChildFactory = (rows: BodySourceWiring[]) => ReportingMeetingSource<unknown>;
+type ChildFactory = (rows: BodySourceWiring[], fetchImpl?: typeof fetch) => ReportingMeetingSource<unknown>;
 
 /** Add the composite accounting shape without adding a membership registry. */
-function legistarReporting(rows: BodySourceWiring[]): ReportingMeetingSource<LegistarEventWithClient> {
+function legistarReporting(rows: BodySourceWiring[], fetchImpl?: typeof fetch): ReportingMeetingSource<LegistarEventWithClient> {
   const clients = legistarClientsFromWiring(rows);
   return {
-  ...makeLegistarSource(clients),
+  ...makeLegistarSource(clients, fetchImpl),
   /**
    * `@accounting-delegated-to lib/sources/legistar/index.ts`
    *
@@ -111,7 +111,7 @@ export const CAPABILITIES: Array<{
   {
     name: "legistar",
     types: ["LEGISTAR"],
-    make: (rows) => legistarReporting(rows) as ReportingMeetingSource<unknown>,
+    make: (rows, fetchImpl) => legistarReporting(rows, fetchImpl) as ReportingMeetingSource<unknown>,
   },
   {
     /**
@@ -159,7 +159,7 @@ export const CAPABILITIES: Array<{
   {
     name: "diligent",
     types: ["DILIGENT", "CIVICWEB"],
-    make: (rows) => makeDiligentSource(rows) as ReportingMeetingSource<unknown>,
+    make: (rows, fetchImpl) => makeDiligentSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
   },
   {
     name: "civicclerk",
@@ -209,15 +209,15 @@ export const CAPABILITIES: Array<{
     // handed to us, and one parse serves every town that publishes one.
     name: "ical",
     types: ["ICAL"],
-    make: (rows) => makeIcalSource(rows) as ReportingMeetingSource<unknown>,
+    make: (rows, fetchImpl) => makeIcalSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
   },
   {
     // Not a vendor: the body's own official page, read for dated events in
     // every shape it publishes them and verified against the body per event.
     name: "official-page-events",
     types: ["OFFICIAL_PAGE_EVENTS"],
-    make: (rows) =>
-      makeOfficialPageEventsSource(rows) as ReportingMeetingSource<unknown>,
+    make: (rows, fetchImpl) =>
+      makeOfficialPageEventsSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
   },
   {
     // Not a vendor: a body's own agendas-and-minutes page, whose dated
@@ -298,6 +298,8 @@ export function buildCompositeSource(
   options: {
     timeoutMs?: number;
     captureAcquisitionEvidence?: boolean;
+    /** A derived family's shared transport for calendars and companion feeds. */
+    fetchImpl?: typeof fetch;
     sourceNames?: readonly string[];
     meetingPartitions?: readonly MeetingPartitionSelection[];
     /**
@@ -327,7 +329,7 @@ export function buildCompositeSource(
     // No wired body, no child — including Legistar, whose own client list is
     // only consulted once a wiring row routes a body to it.
     if (rows.length === 0) continue;
-    const child = capability.make(rows);
+    const child = capability.make(rows, options.fetchImpl);
     if (child.name !== capability.name) {
       // The capability name is what maps a snapshot's per-source report back
       // to the bodies it serves; a drift here would misattribute failures.

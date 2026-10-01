@@ -17,6 +17,7 @@ import { IdentityChip, IdentityPortrait } from "@/components/officials/person-id
 import { incumbencyLabel, type Incumbency, type IncumbencyGap } from "@/lib/ballot/incumbency";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 import { partyColorVar } from "@/lib/officials/party-color";
+import { readerPartyLabel } from "@/lib/text/reader-names";
 import type { Tier } from "@/lib/ocd/tiers";
 import { PositionsSection } from "@/components/officials/positions-section";
 import { PublicStatementsProfile } from "@/components/officials/public-statements-profile";
@@ -347,7 +348,7 @@ export function CandidateBattlecard({
 
                   <div className="id-chip-row">
                     {partyLabel ? (
-                      <IdentityChip fill={partyColorVar(partyLabel)}>{partyLabel}</IdentityChip>
+                      <IdentityChip fill={partyColorVar(partyLabel)}>{readerPartyLabel(partyLabel)}</IdentityChip>
                     ) : (
                       partyLine && <span className="text-[0.75rem] text-muted">{partyLine}</span>
                     )}

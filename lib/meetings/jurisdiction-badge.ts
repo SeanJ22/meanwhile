@@ -1,5 +1,6 @@
 import { isDivisionsOwnGovernment } from "../officials/division-government.ts";
 import { COULD_GOVERN_ACTION, COULD_GOVERN_TEXT } from "../ballot/could-govern.ts";
+import { readerGovernmentName } from "../text/reader-names.ts";
 import { governVerbMayAttach } from "../registry/body-class-labels.ts";
 import type { BodyClass, DivisionType } from "../registry/types.ts";
 import type { Meeting } from "../sources/types.ts";
@@ -261,8 +262,11 @@ export function jurisdictionClaim(body: {
    * label names a NEIGHBOUR's territory, so every claim built from it is false
    * — including the honest-looking ones.
    */
+  // The area is printed as the government it is ("Pima County"), not as the
+  // Census's short label ("Pima").
+  const area = readerGovernmentName(body.divisionLabel, body.divisionType);
   if (!isDivisionsOwnGovernment(body.bodyId, body.ocdId, body.divisionType)) {
-    return { kind: "LISTED_UNDER", label: "Listed under", value: body.divisionLabel };
+    return { kind: "LISTED_UNDER", label: "Listed under", value: area };
   }
 
   /*
@@ -272,10 +276,10 @@ export function jurisdictionClaim(body: {
    * `door-overlay.tsx` came to call a sovereign nation advisory.
    */
   if (!governVerbMayAttach(body.bodyClass)) {
-    return { kind: "TERRITORY", label: "Territory", value: body.divisionLabel };
+    return { kind: "TERRITORY", label: "Territory", value: area };
   }
 
-  return { kind: "GOVERNS", label: "Governs", value: body.divisionLabel };
+  return { kind: "GOVERNS", label: "Governs", value: area };
 }
 
 /** What we hold on who sits on a body, when we hold nobody. A fact about US. */

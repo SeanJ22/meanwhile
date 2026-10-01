@@ -4,6 +4,7 @@ import { personInitials } from "@/lib/officials/person-name";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
+import { readerPartyLabel } from "@/lib/text/reader-names";
 import { ageFrom, inSeatUntil } from "@/lib/officials/tenure";
 
 /**
@@ -163,7 +164,7 @@ export function PersonIdentity({
           */}
           {holder.partyLabel && (
             <IdentityChip fill={partyColorVar(holder.partyLabel)}>
-              {holder.partyLabel}
+              {readerPartyLabel(holder.partyLabel)}
             </IdentityChip>
           )}
           {outlined.map((chip) => (

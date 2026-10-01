@@ -1,3 +1,4 @@
+import { readerBodyName } from "../text/reader-names.ts";
 import type { Meeting } from "../sources/types.ts";
 
 /**
@@ -21,5 +22,7 @@ export type BodyScopeKey = string & { readonly __bodyScopeKey: never };
 
 /** The one constructor, shared by the dropdown that offers it and the filter that matches it. */
 export function bodyScopeKey(meeting: Pick<Meeting, "ocdId" | "bodyName">): BodyScopeKey {
-  return `${meeting.ocdId}|${meeting.bodyName}` as BodyScopeKey;
+  // The reader's name for the body, so "GOVERNING BOARD AGENDA REGULAR MEETING"
+  // and "Governing Board Meeting 10/20/2026" are one option, not two.
+  return `${meeting.ocdId}|${readerBodyName(meeting.bodyName)}` as BodyScopeKey;
 }

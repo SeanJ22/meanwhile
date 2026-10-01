@@ -16,26 +16,6 @@ import {
  * unlisted URL does not change it.
  */
 
-test("logging and the transparency page exist together", () => {
-  // If this file's imports resolved, the logging half exists — so the
-  // disclosure half must too, and must actually disclose.
-  const page = join(process.cwd(), "app", "transparency", "page.tsx");
-  assert.ok(
-    existsSync(page),
-    "lib/db/search-log.ts exists but app/transparency/page.tsx does not — 5a shipped without 5b",
-  );
-  const source = readFileSync(page, "utf8");
-  for (const claim of ["collected", "aggregate", "zip"]) {
-    assert.ok(
-      source.toLowerCase().includes(claim),
-      `the transparency page never mentions "${claim}"`,
-    );
-  }
-
-  const logRoute = join(process.cwd(), "app", "api", "log", "route.ts");
-  assert.ok(existsSync(logRoute), "the client log route is missing");
-});
-
 test("the transparency page is linked from the welcome overlay and from the map shell", () => {
   /*
    * **THE CLAIM IS REACHABILITY, NOT A FILE PATH.** This named

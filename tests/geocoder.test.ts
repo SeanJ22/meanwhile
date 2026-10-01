@@ -583,10 +583,6 @@ test("M80: the promise changed in the same commit, on both surfaces", () => {
     join(process.cwd(), "components", "address", "address-prompt.tsx"),
     "utf8",
   );
-  const transparency = readFileSync(
-    join(process.cwd(), "app", "transparency", "page.tsx"),
-    "utf8",
-  );
 
   // The old promise is gone from the reader-facing copy. It was unkeepable
   // the moment the feature needed a browser, and a promise quietly retracted
@@ -596,16 +592,10 @@ test("M80: the promise changed in the same commit, on both surfaces", () => {
     !/never send it to us/.test(promptCopy),
     "the narrowing prompt still makes the unkeepable promise",
   );
-  assert.ok(
-    !/it is never sent anywhere, never logged/.test(transparency),
-    "the transparency page still says the street is never sent anywhere",
-  );
 
-  // And the keepable one is on both, in the same words.
-  for (const [name, page] of [
-    ["narrowing prompt", prompt],
-    ["transparency page", transparency],
-  ] as const) {
+  // And the keepable one is on the prompt (what the site collects is stated
+  // once, on /transparency, so the page no longer describes the address).
+  for (const [name, page] of [["narrowing prompt", prompt]] as const) {
     assert.ok(
       /passes through our server/.test(page),
       `${name} does not say the address passes through our server`,

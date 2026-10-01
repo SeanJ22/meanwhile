@@ -143,9 +143,12 @@ test("THE RUNNER OBEYS IT: the switch is read at cycle start, no search step is 
 });
 
 test("THE CONSOLE POSTS IT: the switch rides the search line, and turning it on posts the confirmation", () => {
-  const controls = readFileSync(join(ROOT, "app/(admin)/_mw/money-controls.tsx"), "utf8");
-  assert.match(controls, /export function DiscoverySearchSwitch\(/);
-  assert.match(controls, /"config\.setDiscoverySearch",\s*"paid discovery search",\s*enabled \? \{ enabled: true, confirmed: true \} : \{ enabled: false \}/);
+  const actions = readFileSync(join(ROOT, "app/(admin)/_mw/admin-v6/actions.ts"), "utf8");
+  for (const kind of ["global-search-on", "global-search-off"]) {
+    const start = actions.indexOf(`kind: "${kind}"`);
+    assert.ok(start > 0, `${kind} is a console action`);
+    assert.match(actions.slice(start, start + 1500), /gateway: \{ type: "config\.setDiscoverySearch" \}/, `${kind} posts the switch`);
+  }
 });
 
 /** Every source file under the given roots, repo-relative with forward slashes. */
@@ -196,6 +199,6 @@ test("THE RUNNER ACKNOWLEDGES IT: each cycle's heartbeat carries the decision it
     runner,
     /discoverySearch: \{\s*receiptId: discoverySearchReceiptId,\s*enabled: discoverySearchOn,\s*perCycle: SEARCH_PER_CYCLE,\s*perDay: SEARCH_PER_DAY,\s*appliedAt: NOW,\s*detail: discoverySearchDecision,\s*\}/,
   );
-  const switchUi = readFileSync(join(ROOT, "app/(admin)/_mw/money-controls.tsx"), "utf8");
-  assert.match(switchUi, /The research pause does not stop it; only this switch does\./, "the switch says which control governs it");
+  const actions = readFileSync(join(ROOT, "app/(admin)/_mw/admin-v6/actions.ts"), "utf8");
+  assert.match(actions, /Won’t raise the request caps, resume paid research, or change the daily budget\./, "the switch says what it leaves alone");
 });

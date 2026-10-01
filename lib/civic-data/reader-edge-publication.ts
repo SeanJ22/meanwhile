@@ -324,7 +324,7 @@ export async function publishRoutineReaderEdge(store: RoutineDataStore, observed
 `);
       }
       // Authority-only updates carry geographic references; unchanged meeting payloads never cross the DB.
-      const sameComposition = prepared?.status === "CURRENT" && servedManifest !== null &&
+      const sameComposition = prepared?.status === "CURRENT" && servedManifest?.meetingLayout === "governing-area" &&
         (servedManifest.composition !== undefined ? servedManifest.composition === prepared.composition : servedManifest.generatedAt === prepared.generatedAt);
       const checks = prepared?.status === "CURRENT" || prepared?.status === "PUBLISHED" ? { composition: prepared.composition, freshChecks: prepared.freshChecks } : undefined;
       let meetingRead: Awaited<ReturnType<typeof readPreparedMeetingsProjection>> | null = null;

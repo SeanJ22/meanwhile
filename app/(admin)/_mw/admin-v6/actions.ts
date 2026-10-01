@@ -18,7 +18,7 @@ import { usd } from "./model.ts";
 
 /** A ZIP place key, the only kind of place a single hunt starts from (the rest start from the many-hunts panel). */
 export function isZipPlace(target: string): boolean {
-  return /^geo:[a-z]{2}.zcta.d{5}$/.test(target);
+  return /^geo:[a-z]{2}\.zcta\.\d{5}$/.test(target);
 }
 
 export interface PreviewItem {
@@ -691,6 +691,46 @@ const defs: ActionDef[] = [
       ],
     }),
     gateway: { type: "fleet.deployHere" },
+    dependency: null,
+  },
+  {
+    kind: "target-set",
+    label: "Set the target",
+    needs: "owner",
+    doneWords: "Saved. The runner confirms it when its next round reads the target and orders this place's work by it.",
+    preview: (ctx) => ({
+      title: `Set a target for ${ctx.targetName || ctx.scopeName}`,
+      level: localOrGlobal(ctx),
+      rows: [
+        ["Scope", ctx.targetName || ctx.scopeName],
+        ["What changes", "Records how much of what this place is owed should be captured. The dispatcher puts this place's work first until the score reaches it."],
+        ["Won’t", "Won’t start a round, send an agent, raise a spending limit, or hold back publishing: a fact that passes verification goes live whatever the target says."],
+        ["Undo", "Clear the target, or set another one. The later one is the one the dispatcher reads."],
+      ],
+      amount: { label: "Target: percent of what this place is owed that should be captured (1 to 100)", initial: "" },
+      invalid: ({ amount }) => {
+        const n = Number(amount);
+        return amount.trim() === "" || !Number.isFinite(n) || n < 1 || n > 100 ? "Enter a percentage from 1 to 100." : null;
+      },
+    }),
+    gateway: { type: "config.setPlaceTarget" },
+    dependency: null,
+  },
+  {
+    kind: "target-clear",
+    label: "Clear the target",
+    needs: "owner",
+    doneWords: "Saved. The runner confirms it when its next round reads that the target is gone.",
+    preview: (ctx) => ({
+      title: `Clear the target for ${ctx.targetName || ctx.scopeName}`,
+      level: localOrGlobal(ctx),
+      rows: [
+        ["What changes", "Removes the target. The dispatcher stops putting this place first because of it."],
+        ["Won’t", "Won’t delete any captured fact, stop work already running, or change what readers see."],
+        ["Undo", "Set the target again."],
+      ],
+    }),
+    gateway: { type: "config.setPlaceTarget" },
     dependency: null,
   },
   {

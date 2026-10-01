@@ -10,8 +10,7 @@ export const ADMIN_V6_MONEY_CONTRACT = "admin-v6/money@1" as const;
 
 /**
  * Structurally matches Admin v6 `MoneyView` (model.ts, with the unknown-value
- * amendment) without importing the UI bundle. `drill: null` is "not connected",
- * never "no costs".
+ * amendment) without importing the UI bundle.
  */
 export interface AdminV6MoneyView {
   readonly account: readonly { readonly provider: string; readonly amountUsd: number | null; readonly how: string; readonly old?: boolean }[];
@@ -19,7 +18,19 @@ export interface AdminV6MoneyView {
   readonly monthlyPlans: readonly { readonly name: string; readonly note: string }[];
   readonly limits: readonly { readonly name: string; readonly figure: string; readonly fraction: number | null; readonly note: string;
     readonly tone: "hunt" | "warn" | "neutral" }[];
-  readonly drill: null;
+  /** Our recorded request costs against each provider's own report, for that report's period. Null when the attribution was not read. */
+  readonly reconciliation: readonly {
+    readonly provider: string; readonly periodStart: string; readonly periodEnd: string;
+    /** False for a shared platform cost (hosting, database, GitHub): no request is priced in our ledger, so nothing is compared. */
+    readonly requestPriced: boolean;
+    readonly huntUsd: number | null; readonly huntKnownUsd: number; readonly otherUsd: number | null; readonly otherKnownUsd: number;
+    readonly providerUsd: number | null; readonly differenceUsd: number | null; readonly unpriced: number }[] | null;
+  /** What each provider's last read said, with when it was read. */
+  readonly readings: readonly {
+    readonly provider: string; readonly status: string; readonly stale: boolean; readonly syncedAt: string | null; readonly attemptedAt: string;
+    readonly periodStart: string; readonly periodEnd: string; readonly reportedUsd: number | null; readonly estimatedUsd: number | null;
+    readonly error: string | null; readonly detail: string; readonly credits: string | null; readonly accounts: readonly string[]; readonly limits: readonly string[];
+    readonly units: readonly { readonly label: string; readonly value: number; readonly unit: string }[] }[];
   readonly otherServices: string;
 }
 
@@ -125,12 +136,24 @@ export function v6MoneySection(input: { readonly scopeKey: string; readonly scop
     ...scoped.rolling.map(d => ({ name: `${d.geography.label} · any 24 hours`, figure: `${dollars(d.budgetUsd)} per rolling 24 hours`, fraction: null,
       note: "An older kind of place limit, not a lifetime hunt. Its spend over the last 24 hours is not reported here.", tone: "neutral" as const })),
   ];
-  const data: AdminV6MoneyView = { account, accountMonth: accountPeriodWords(inPeriod, period), monthlyPlans: [], limits, drill: null, otherServices };
+  const spanOf = new Map(readings.map(r => [r.provider, r] as const));
+  const reconciliation = sources.attribution === null || sources.attribution === undefined ? null
+    : sources.attribution.providers.flatMap(p => {
+      const reading = spanOf.get(p.provider);
+      if (!reading || (period.kind === "month" && periodWithin(reading, period.month) === null)) return [];
+      return [{ provider: PROVIDER_NAMES[p.provider], periodStart: reading.periodStart, periodEnd: reading.periodEnd,
+        requestPriced: ["anthropic-api", "exa", "brave"].includes(p.provider), huntUsd: p.huntUsd, huntKnownUsd: p.huntKnownUsd,
+        otherUsd: p.otherRecordedUsd, otherKnownUsd: p.otherKnownUsd, providerUsd: p.providerUsd, differenceUsd: p.differenceUsd, unpriced: p.unpriced }];
+    });
+  const detail = inPeriod.map(r => ({ provider: PROVIDER_NAMES[r.provider], status: r.status, stale: billingStale(r, sources.readAt), syncedAt: r.syncedAt, attemptedAt: r.attemptedAt,
+    periodStart: r.periodStart, periodEnd: r.periodEnd, reportedUsd: r.reportedUsd, estimatedUsd: r.estimatedUsd, error: r.error, detail: r.detail,
+    credits: r.credits ? `${r.credits.kind.replaceAll("_", " ").toLowerCase()}: ${r.credits.amount.toLocaleString("en-US")} ${r.credits.unit}` : null,
+    accounts: r.accountIds, limits: r.existingLimits, units: r.units }));
+  const data: AdminV6MoneyView = { account, accountMonth: accountPeriodWords(inPeriod, period), monthlyPlans: [], limits, reconciliation, readings: detail, otherServices };
   const missing = account.filter(a => a.amountUsd === null).length;
   const missingParts = [
     ...(missing > 0 ? [`${missing} of ${account.length} providers have no dollar reading${period.kind === "month" ? ` for ${monthWords(period.month)}` : ""}. The account total is unknown, not the sum of the others.`] : []),
     "Account readings are for the whole account. They are not split by place or by hunt.",
-    "Per-work AI costs are not connected to this section yet.",
     "Monthly plans and subscriptions are not connected to this section yet.",
     "Map usage is counted in requests, not dollars, and is not listed here.",
     ...(hunts.some(h => h.row === null) ? ["At least one hunt's other-service costs are not published for its exact receipt."] : []),

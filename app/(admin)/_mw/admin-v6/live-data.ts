@@ -88,6 +88,7 @@ export function buildLiveBundle(snapshot: Readonly<Record<SectionId, SectionStat
     spend: src("spend", SECTION_DEP.spend),
     sends: src("sends", SECTION_DEP.sends),
     reliability: src("reliability", SECTION_DEP.reliability),
+    publication: src("publication", SECTION_DEP.publication),
     money: src("money", SECTION_DEP.money),
     learning: src("learning", SECTION_DEP.learning),
     fixes: src("fixes", SECTION_DEP.fixes),

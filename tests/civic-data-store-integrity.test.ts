@@ -7,6 +7,7 @@ import { neonConfig } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 
 import * as schema from "../lib/db/schema.ts";
+import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { processRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import {
   assertRoutineDataStoreMutationAuthority,
@@ -1229,4 +1230,35 @@ test("terminal store exposes no one-time import or aggregate retirement door", (
   const retiredDeclaration = /\b(?:assertPdcV2|retirePdcV2)\w*\s*\(/;
   assert.doesNotMatch(source, retiredDeclaration);
   assert.doesNotMatch(adapter, retiredDeclaration);
+});
+
+
+test("every jurisdiction roll-call candidate uses bounded immutable parts before insertion", async () => {
+  const contract = ROUTINE_SOURCE_CONTRACTS.find(row => row.recordClass === "STATE_ROLL_CALL")!;
+  const base = candidate("bounded-roll-call", "2026-09-08T12:00:00.000Z", contract.sourceId);
+  const evidence = { positions: Array.from({ length: 160 }, (_, index) => ({ id: String(index), text: "published ".repeat(1000) })) };
+  const value: RoutineCandidate = { ...base, recordClass: contract.recordClass, scope: contract.scope,
+    normalizedPayload: evidence, readModel: { rollCalls: evidence.positions },
+    normalization: { ...base.normalization, normalizedHash: normalizedHash({ rollCalls: evidence.positions }), normalizedPayloadHash: normalizedHash(evidence) },
+  };
+  await withCannedNeon(() => ({ columns: [], rows: [] }), async (store, sent) => {
+    Object.assign(store as unknown as Record<string, unknown>, { writeAuthority: {
+      repo: ROOT, sha: "1".repeat(40), capability: "ROUTINE_CONTRACT", contract: contract.id,
+      parentPid: 123, nonce: "2".repeat(64),
+    } satisfies RuntimeAuthorityEnvelope });
+    await store.create({ candidate: value, state: "FETCHED", acquisitionSucceeded: true,
+      receipt: null, promotedVersion: null, lastKnownGoodVersion: null, failureCode: null, failureDetail: null },
+      { candidateId: value.id, sequence: 1, state: "FETCHED", at: value.retrieval.retrievedAt, detail: "Publisher read held" });
+    const partWrites = sent.filter(row => row.query.startsWith('insert into "civic_data_payload_parts"'));
+    assert.ok(partWrites.length > 0);
+    assert.ok(partWrites.every(row => Buffer.byteLength(JSON.stringify(row.params)) < 3 * 1024 * 1024));
+    const candidateWrite = sent.find(row => row.query.startsWith('insert into "civic_data_candidates"'))!;
+    const envelope = candidateWrite.params.filter((row): row is string => typeof row === "string").flatMap(row => {
+      try { const parsed = JSON.parse(row); return parsed?.id === value.id ? [parsed] : []; } catch { return []; }
+    })[0];
+    assert.equal(envelope.id, value.id);
+    assert.ok(Buffer.byteLength(JSON.stringify(envelope)) < 32 * 1024);
+    assert.deepEqual(envelope.retrieval, value.retrieval);
+    assert.deepEqual(envelope.normalization, value.normalization);
+  });
 });

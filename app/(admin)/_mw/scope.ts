@@ -20,12 +20,6 @@
  * say so in words when a panel cannot.
  */
 
-export type MwArea = "fleet" | "readiness";
-
-export type MwFleetTab = "now" | "work" | "money";
-export type MwReadinessTab = "readiness" | "work" | "cost" | "done";
-export type MwTab = MwFleetTab | MwReadinessTab;
-
 /** A Census container type the scope filter can carry. */
 export type MwGeoType = "zcta" | "county" | "congressional_district" | "cbsa" | "state_leg_upper" | "state_leg_lower";
 
@@ -99,30 +93,6 @@ export function withScope(path: string, scope: MwScope, extra?: Readonly<Record<
   }
   const q = params.toString();
   return `${q === "" ? base : `${base}?${q}`}${fragment}`;
-}
-
-/** The tabs each area shows, in the design's order and with its words. */
-export const FLEET_TABS: readonly { readonly id: MwFleetTab; readonly label: string; readonly path: string }[] = [
-  { id: "now", label: "Now", path: "/admin" },
-  { id: "work", label: "Work", path: "/admin/work" },
-  { id: "money", label: "Money", path: "/admin/money" },
-];
-
-export const READINESS_TABS: readonly { readonly id: MwReadinessTab; readonly label: string; readonly path: string }[] = [
-  { id: "readiness", label: "Readiness", path: "/readiness" },
-  { id: "work", label: "Work and instructions", path: "/readiness/work" },
-  { id: "cost", label: "Cost", path: "/readiness/cost" },
-  { id: "done", label: "What counts as done", path: "/readiness/done" },
-];
-
-/**
- * Where each area's toggle lands. Switching areas keeps the scope; Readiness
- * opens on the state the scope sits in, or on all states.
- */
-export function areaHome(area: MwArea, scope: MwScope): string {
-  if (area === "fleet") return withScope("/admin", scope);
-  const st = scopeState(scope);
-  return withScope(st ? `/readiness/${st}` : "/readiness", scope);
 }
 
 export const GEO_TYPE_WORDS: Readonly<Record<MwGeoType, string>> = {

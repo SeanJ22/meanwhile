@@ -58,7 +58,7 @@ test("a finished receipt no longer blocks a new send of the same action", () => 
 
 test("only the kinds a real registry action carries out are wired, each to its own gateway type", () => {
   assert.deepEqual([...connectedKinds()].sort(), [
-    "cancel-send", "fix-go", "global-ceiling", "global-paid", "global-paid-resume", "global-runner-pause", "global-runner-resume", "global-search-off", "global-search-on", "hunt-limit", "hunt-pause", "hunt-resume", "hunt-start", "hunt-start-many", "hunt-stop", "send-agents",
+    "cancel-send", "fix-go", "global-ceiling", "global-paid", "global-paid-resume", "global-runner-pause", "global-runner-resume", "global-search-off", "global-search-on", "hunt-limit", "hunt-pause", "hunt-resume", "hunt-start", "hunt-start-many", "hunt-stop", "send-agents", "target-clear", "target-set",
   ]);
   assert.equal(actionDef("cancel-send").gateway?.type, "fleet.cancelDispatch");
   assert.equal(actionDef("send-agents").gateway?.type, "fleet.deployHere");
@@ -299,4 +299,19 @@ test("the same mounted page shows real data once the section is live — no remo
   const live = { ...waiting, stuck: { phase: "live", data: [stuckItem], asOf: "2026-09-28T19:01:00.000Z", revision: "v1", missingParts: [], attempts: 0 } as SectionState };
   const after = renderToStaticMarkup(h(CommandCenter, props(live)));
   assert.match(after, /Real stuck item from the backend/);
+});
+
+test("a hunt starts from a ZIP place: the place key is read as a ZIP, and its input carries the ZIP and state", async () => {
+  const { isZipPlace } = await import("../../app/(admin)/_mw/admin-v6/actions.ts");
+  const { actionInput } = await import("../../app/(admin)/_mw/admin-v6/contract.ts");
+  assert.equal(isZipPlace("geo:az.zcta.85635"), true);
+  assert.equal(isZipPlace("geo:az.county.04019"), false);
+  assert.equal(isZipPlace("geo:az.zcta.8563"), false);
+  const input = actionInput("hunt-start", { target: "geo:az.zcta.85635", scopeKey: "geo:az.zcta.85635", amount: "", words: "", option: "", selected: [], payload: undefined } as never);
+  assert.deepEqual((input as { items: unknown[] }).items, [{ zip: "85635", stateAbbr: "AZ", budgetUsd: null }]);
+});
+
+test("a place target is wired to its own gateway action, and its input carries the place and the percent (or none to clear)", () => {
+  assert.equal(actionDef("target-set").gateway?.type, "config.setPlaceTarget");
+  assert.equal(actionDef("target-clear").gateway?.type, "config.setPlaceTarget");
 });

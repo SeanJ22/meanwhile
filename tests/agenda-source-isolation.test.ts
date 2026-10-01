@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { settleAgendaSupportingHoldings } from "../app/api/agenda/route.ts";
+import { settleAgendaSupportingHoldings } from "../lib/civic-data/agenda-support.ts";
 import type { MeetingReaderRecords } from "../lib/meetings/reader-records.ts";
 
 const records: MeetingReaderRecords = {

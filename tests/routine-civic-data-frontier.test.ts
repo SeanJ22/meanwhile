@@ -13,6 +13,7 @@ import {
   routinePassLaunchOrder,
   routineTaskDeadlineMs,
   routineTaskDue,
+  routineAdmissionClock,
   routineUnreceiptedSupervisorAttemptHistory,
   SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   type RoutineSourceTask,
@@ -24,7 +25,6 @@ import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { ControlledClock, nextAdmissionMs, recordedPasses, replayPass } from "./helpers/routine-pass-replay.ts";
 import {
   ROUTINE_SUPERVISOR_HISTORY_FIELDS,
-  frontierHistoryTasks,
   ROUTINE_SUPERVISOR_HISTORY_WINDOW,
 } from "../lib/civic-data/supervisor-history.ts";
 import { projectRecord } from "../lib/control-plane/repository/types.ts";
@@ -660,14 +660,45 @@ test("C6: the runner hands the frontier each due task's deadline from the same p
 });
 
 
-test("quiet and uncongested provider lanes need no historical payload; contended lanes keep fairness", () => {
-  const task = (id: string, acquisitionFailureDomain: string) => ({ id, acquisitionFailureDomain });
-  const one = task("one", "provider-a"), two = task("two", "provider-a"), other = task("other", "provider-b");
-  assert.deepEqual(frontierHistoryTasks([], 1, 3), []);
-  assert.deepEqual(frontierHistoryTasks([{ task: one }, { task: other }], 1, 3), []);
-  assert.deepEqual(frontierHistoryTasks([{ task: one }, { task: two }, { task: other }], 1, 3), [one, two]);
-  const meetings = [one, two, task("three", "provider-a")].map(task => ({ task, deadlineMs: 123 }));
-  assert.deepEqual(frontierHistoryTasks(meetings, 1, 3), []);
-  assert.equal(frontierHistoryTasks([...meetings, { task: task("four", "provider-a"), deadlineMs: 124 }], 1, 3).length, 4);
-  assert.equal(frontierHistoryTasks([...meetings, { task: task("plain", "provider-a") }], 1, 3).length, 4);
+test("an unreceipted child in a single-task pass waits its existing retry interval across restarts", () => {
+  const task = ROUTINE_SOURCE_TASKS.find(task => task.contract?.schedule?.kind !== "SITTING_WINDOW")!;
+  const finishedAt = "2026-10-01T20:00:00.000Z";
+  const at = Date.parse(finishedAt);
+  const clock = { lastAttemptedAt: "2026-09-01T12:00:00.000Z", lastSucceededAt: "2026-09-01T12:00:00.000Z" };
+  const history = routineUnreceiptedSupervisorAttemptHistory([
+    supervisorHistoryRow({ finishedAt, failures: [task.id] }),
+  ], new Set([task.id]));
+  assert.equal(routineTaskDue(task, clock, at), true, "unchanged source clock alone would restart immediately");
+  for (const sourceClock of [undefined, clock]) {
+    const admission = routineAdmissionClock(sourceClock, history.attempts.get(task.id), at);
+    assert.equal(routineTaskDue(task, admission, at + task.retryMs - 1), false);
+    assert.equal(routineTaskDue(task, admission, at + task.retryMs), true);
+  }
+  assert.equal(clock.lastAttemptedAt, "2026-09-01T12:00:00.000Z", "no durable source clock is changed");
+  const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  assert.ok(runner.indexOf("latestUnreceiptedSupervisorAttempts(selectedTasks)") < runner.indexOf("for (const read of clockReads)"));
+});
+
+test("source progress supersedes a supervisor failure and invalid future outcomes cannot delay work", () => {
+  const at = Date.parse("2026-10-01T20:00:00.000Z");
+  const failed = new Date(at - 60_000).toISOString();
+  for (const clock of [
+    { lastAttemptedAt: failed },
+    { lastSucceededAt: failed },
+    { lastSucceededObservedAt: failed },
+  ]) assert.equal(routineAdmissionClock(clock, failed, at), clock);
+  const clock = { lastAttemptedAt: "2026-09-01T12:00:00.000Z" };
+  for (const invalid of [undefined, "bad", new Date(at + 1).toISOString()]) {
+    assert.equal(routineAdmissionClock(clock, invalid, at), clock);
+  }
+});
+
+test("unreceipted meeting retries keep the existing sitting cadence", () => {
+  const task = ROUTINE_SOURCE_TASKS.find(task => task.contract?.schedule?.kind === "SITTING_WINDOW")!;
+  const at = Date.parse("2026-10-01T20:00:00.000Z");
+  const failed = new Date(at).toISOString();
+  const clock = { lastAttemptedAt: new Date(at - 3_600_000).toISOString(), lastSucceededObservedAt: new Date(at - 3_600_000).toISOString(), sittingStarts: [failed] };
+  const admission = routineAdmissionClock(clock, failed, at);
+  assert.equal(routineTaskDue(task, admission, at, true), false);
+  assert.equal(routineTaskDue(task, admission, at + 3_600_000, true), true);
 });

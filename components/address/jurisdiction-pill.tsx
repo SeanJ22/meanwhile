@@ -5,9 +5,10 @@ import { useState } from "react";
 import { AddressPrompt } from "@/components/address/address-prompt";
 import { useAddressResolution } from "@/components/address/address-resolution-context";
 import {
-  BADGE_COPY,
+  badgeCopyFor,
   type JurisdictionBadge,
 } from "@/lib/meetings/jurisdiction-badge";
+import type { BodyClass } from "@/lib/registry/types";
 
 /**
  * **`JUR-2` — the meeting badge stops asserting jurisdiction from a zip, and
@@ -56,8 +57,11 @@ export function JurisdictionPill({
   badge,
   zip,
   detail = true,
+  bodyClass = null,
 }: {
   badge: JurisdictionBadge;
+  /** The body's class, which words `NOT_GOVERNING`. */
+  bodyClass?: BodyClass | null;
   /** The zip on screen. Null disables the affordance — nothing to resolve within. */
   zip: string | null;
   /** Whether to render the one-sentence detail beneath. Off in a dense list row. */
@@ -65,7 +69,7 @@ export function JurisdictionPill({
 }) {
   const [open, setOpen] = useState(false);
   const { onPoint, onResolved, onCleared } = useAddressResolution();
-  const copy = BADGE_COPY[badge];
+  const copy = badgeCopyFor(badge, bodyClass);
 
   if (badge !== "COULD_GOVERN" || zip === null) {
     return (

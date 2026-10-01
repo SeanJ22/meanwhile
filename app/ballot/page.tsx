@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { FilingChanges } from "@/components/ballot/filing-changes";
 import { OfficialFilings } from "@/components/ballot/official-filings";
@@ -149,7 +150,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { LevelTag } from "@/components/ui/level-tag";
 import { tierForOcdId } from "@/lib/ocd/tiers";
 import { Logo } from "@/components/brand/logo";
-import { PRODUCT_NAME } from "@/lib/brand";
+import { PRODUCT_NAME, titleFor } from "@/lib/brand";
 import { readerPartyLabel } from "@/lib/text/reader-names";
 import {
   IncumbencyFootnote,
@@ -880,6 +881,12 @@ function unavailableHolding(family: string) {
   );
 }
 
+
+/** The tab names the page: this one inherited the map's "Public meetings near you". */
+export const metadata: Metadata = {
+  title: titleFor("Your ballot"),
+  description: "The contests on your ballot, the candidates in them, and where to vote.",
+};
 
 /**
  * The reader authority edge for this render, fetched and NOT entered: an entry

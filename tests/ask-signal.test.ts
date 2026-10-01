@@ -17,7 +17,6 @@ import {
   LOCATION_CONFIDENCES,
   RESIDENCY_RELATIONS,
 } from "../lib/ask/residency.ts";
-import { RIPCORDS } from "../lib/ripcords.ts";
 
 /**
  * **ASK03 — the Ask interaction store, which is built and NOT RUNNING.**
@@ -67,35 +66,13 @@ function input(over: Partial<AskInteractionInput> = {}): AskInteractionInput {
 
 // ── The gate ────────────────────────────────────────────────────────────
 
-test("ASK03: the capture path is GATED and writes nothing", async () => {
-  /*
-   * **THE GATING BASIS, CORRECTED 2026-08-28.**
-   *
-   * This block used to cite the data-privacy policy's HONEST DISCLOSURE AT THE
-   * BOX as the governing rule. That clause is RULING 141's and RULING 141
-   * governs the Speak Your Mind store — it is not an Ask-specific rule, and
-   * reading it as one would be this repository growing a clause nobody adopted.
-   *
-   * The real basis is an OPERATOR DECISION at precedence 1: the author has
-   * instructed that new Ask/privacy copy does not ship and that NH246 stays
-   * P2 / NEEDS SEAN. That is binding without needing to be dressed as law.
-   */
-  assert.equal(RIPCORDS["ripcord.askSignalCapture"].pulled, true);
-
-  let wrote = false;
+test("ASK03: with a continuity key and a write path, one Ask writes one row", async () => {
+  let wrote = 0;
   const outcome = await captureAskInteraction(input(), async () => {
-    wrote = true;
+    wrote += 1;
   });
-  assert.equal(outcome.kind, "GATED");
-  assert.equal(wrote, false, "a pulled ripcord must not reach the write path");
-});
-
-test("ASK03: the ripcord names its question, its closer and its rows", () => {
-  const r = RIPCORDS["ripcord.askSignalCapture"];
-  assert.match(r.question, /disclosure|consent/i);
-  assert.match(r.closer, /author/i);
-  assert.ok(r.trackerRows.includes("ASK03"));
-  assert.ok(r.trackerRows.includes("NH246"), "it must point at the row holding the draft copy");
+  assert.equal(outcome.kind, "WROTE");
+  assert.equal(wrote, 1);
 });
 
 // ── Free-text safety ────────────────────────────────────────────────────

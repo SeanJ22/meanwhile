@@ -131,7 +131,45 @@ export interface AdminConfig {
    * because a config written before this field existed carries no decision.
    */
   readonly discoverySearch?: DiscoverySearchDecision | null;
+  /**
+   * The owner's target for a place: "take this place to this share of what it is owed". One entry per place, set through the
+   * gateway with the receipt that set it. The dispatcher reads these first when it orders work; nothing here gates publishing.
+   * Optional because a config written before this field existed carries none.
+   */
+  readonly placeTargets?: readonly PlaceTargetDecision[] | null;
   readonly updatedAt: string;
+}
+
+/** One place's target. `key` is a v6 place key (`us`, `st:az`, `geo:az.county.04019`, `geo:az.zcta.85635`). */
+export interface PlaceTargetDecision {
+  readonly key: string;
+  /** The share of what the place is owed that should be captured, 1 to 100. */
+  readonly goalPercent: number;
+  readonly setAt: string;
+  readonly decidedBy: string;
+  readonly receiptId: string;
+}
+
+export const PLACE_TARGET_KEY = /^(?:us|st:[a-z]{2}|geo:[a-z]{2}\.[a-z_]+\.[0-9A-Za-z]{1,16})$/;
+
+/**
+ * The next row after the owner sets, changes or clears a place's target (`goalPercent: null` clears it). Pure, like its
+ * siblings; every other decision on the row is carried through.
+ */
+export function withPlaceTarget(
+  current: AdminConfig,
+  change: { readonly key: string; readonly goalPercent: number | null; readonly decidedAt: string; readonly decidedBy: string; readonly receiptId: string },
+): AdminConfig {
+  const others = (current.placeTargets ?? []).filter((t) => t.key !== change.key);
+  const next = change.goalPercent === null ? others
+    : [...others, { key: change.key, goalPercent: change.goalPercent, setAt: change.decidedAt, decidedBy: change.decidedBy, receiptId: change.receiptId }];
+  return { ...current, formatVersion: ADMIN_CONFIG_FORMAT_VERSION, placeTargets: next.sort((a, b) => a.key.localeCompare(b.key)), updatedAt: change.decidedAt };
+}
+
+/** The target on a place, or null. A malformed entry reads as none, never as a goal. */
+export function placeTargetOf(config: AdminConfig | null, key: string): PlaceTargetDecision | null {
+  const t = (config?.placeTargets ?? []).find((x) => x?.key === key);
+  return t && Number.isFinite(t.goalPercent) && t.goalPercent >= 1 && t.goalPercent <= 100 ? t : null;
 }
 
 /** One owner decision about paid discovery search. */

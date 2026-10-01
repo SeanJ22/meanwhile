@@ -67,7 +67,7 @@ async function main(): Promise<void> {
         });
       } catch (error) { failures.push(error instanceof Error ? error.message : String(error)); }
     }
-    const readObject = researchVaultResolver(repos, vault, "freshness");
+    const readObject = researchVaultResolver(repos, vault, "freshness", { snapshot: true });
     const readEvidence = workerVaultResolver(repos, vault, "freshness", { snapshot: true });
     const report = await publishWorkerRosterResults({ repos, store,
       workItemIds: workerRosters?.split(",").filter(Boolean) ?? [], now: new Date().toISOString(), readCapture: async (id, records) => {

@@ -90,8 +90,6 @@ export const OTHER_PAGES: readonly { readonly href: string; readonly label: stri
   { href: "/admin/changes", label: "Changes", note: "One line per change from any session: building, on test, deploying, live" },
   { href: "/admin/research", label: "Runner and research detail", note: "Pause, resume, start a cycle now, every attempt" },
   { href: "/admin/sources", label: "Sources and APIs", note: "Published versus reader-visible, per routine contract" },
-  { href: "/admin/release-review", label: "Software release review", note: "Staging to production, bound to the exact commit" },
-  { href: "/admin/steward", label: "Shipping and integration", note: "What is merged, deployed and waiting" },
   { href: "/admin/reader", label: "What readers are doing", note: "Aggregate reader activity" },
   { href: "/admin/feedback", label: "Feedback", note: "Your feedback folders and what became of them" },
   { href: "/admin/agents", label: "Delegated work", note: "Work handed to agents and its state" },

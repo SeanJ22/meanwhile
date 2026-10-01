@@ -3,7 +3,6 @@ import test from "node:test";
 import { researchProgressHealth } from "../lib/control-plane/research-progress-health.ts";
 import { RESEARCH_BOUNDS, type ResearchState } from "../lib/control-plane/scheduler/research-policy.ts";
 import { modelShareTrend, type ResearchMetrics } from "../lib/control-plane/research-metrics.ts";
-import { commandCentre, type CommandCentreInput } from "../lib/control-plane/command-centre.ts";
 
 const NOW = "2026-09-15T16:00:00.000Z";
 function state(over: Partial<ResearchState> = {}): ResearchState {
@@ -61,20 +60,4 @@ test("unknown model costs remain unknown and mixed costs are marked partial", ()
   assert.match(unknown, /unknown/);
   assert.doesNotMatch(unknown, /\$0/);
   assert.match(researchProgressHealth(state({ spend: { ...unmeasured, windowUsd: 0, measuredAttempts: 1 } }), NOW).spend, /partial total/);
-});
-
-test("the command centre cannot turn stalled research green because its process is alive", () => {
-  const input: CommandCentreInput = {
-    runner: { state: "Active", level: "GREEN", needsYou: false, action: null },
-    researchProgress: researchProgressHealth(state(), NOW),
-    code: null, production: null, staging: null, steward: null,
-    promotionOn: false, openRecordClasses: 0, decisionsWaiting: 0, stuckIncidents: 0,
-    latestReceipt: null, receiptGap: null,
-  };
-  const answers = commandCentre(input);
-  const fleet = answers.find((answer) => answer.question === "Is the fleet making progress?");
-  assert.equal(fleet?.level, "RED");
-  assert.match(fleet?.says ?? "", /Research stalled; process active/);
-  const publication = answers.find((answer) => answer.question === "Is research publication enabled?");
-  assert.match(publication?.says ?? "", /Routine data has its own production path/);
 });

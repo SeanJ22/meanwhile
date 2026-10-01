@@ -58,8 +58,6 @@ import { submit } from "@/lib/control-plane/gateway/gateway.ts";
 import { readPulse } from "@/lib/control-plane/gateway/pulse-read.ts";
 import { inputDigest } from "@/lib/control-plane/gateway/receipts.ts";
 import type { ActionRequest, CallerAuthority } from "@/lib/control-plane/gateway/contract.ts";
-import { recordReview } from "@/app/(admin)/admin/release-review/write.ts";
-import { readManifest } from "@/app/(admin)/admin/release-review/manifest-source.ts";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -206,16 +204,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // local `next build` has none and the receipt honestly says null rather
     // than carrying a plausible SHA nobody can check.
     codeSha: (process.env.WTP_BUILD_COMMIT ?? "").trim() || null,
-    recordReview: (input) =>
-      recordReview(
-        {
-          reviews: opened.repos.softwareReleaseReviews,
-          readLiveManifest: readManifest,
-          now: () => new Date().toISOString(),
-          actor: `session:${guard.sessionRef}`,
-        },
-        input,
-      ),
   });
 
   if (wantsJson(request)) {

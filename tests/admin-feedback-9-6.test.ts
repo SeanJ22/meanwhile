@@ -219,46 +219,6 @@ test("a verdict is not glossed with the same word it already is", () => {
 });
 
 /* -------------------------------------------------------------------------- */
-/* C — the release review led with machine identity                            */
-/* -------------------------------------------------------------------------- */
-
-test("the release manifest's status words have owner translations", () => {
-  for (const code of ["STAGING_READY_FOR_OWNER_REVIEW", "STAGING_BOUNDARY_STABLE", "MANIFEST_UNAVAILABLE"]) {
-    assert.ok(plainMeaning(code), `${code} was on the face of the release review and still has no owner sentence`);
-  }
-});
-
-test("the release review answers the owner's questions before it shows an identifier", () => {
-  const page = readFileSync(join(ROOT, "app", "(admin)", "admin", "release-review", "page.tsx"), "utf8");
-  const plainAt = page.indexOf('className="rr-plain"');
-  const identityAt = page.indexOf('className="rr-build-identity"');
-  assert.ok(plainAt > 0, "the four plain answers are not on the page");
-  assert.ok(identityAt > 0, "the build identity block is gone rather than demoted");
-  assert.ok(plainAt < identityAt, "the SHAs still come before the plain answers");
-  for (const question of ["Review site", "Live site", "Needs you", "What your decision does"]) {
-    assert.ok(page.includes(`<dt>${question}</dt>`), `the face never answers "${question}"`);
-  }
-  assert.match(page, /does not merge code, it does not deploy anything/, "the page must say what does NOT happen");
-});
-
-test("the build identity is a disclosure, and every identifier is still inside it", () => {
-  const page = readFileSync(join(ROOT, "app", "(admin)", "admin", "release-review", "page.tsx"), "utf8");
-  const from = page.indexOf('className="rr-build-identity"');
-  const block = page.slice(from, page.indexOf("</details>", from));
-  assert.ok(block.length > 0, "the build identity disclosure is not closed, or is not there at all");
-  assert.match(block, /prompt3Status/, "the manifest codes were deleted rather than demoted");
-  assert.match(block, /staging boundary/);
-  assert.match(block, /CopyButton/, "an auditor must still be able to copy the exact identifiers");
-  assert.match(block, /<ProductionCard \/>/);
-});
-
-test("the release review is swept for plain English like every other admin page", () => {
-  const sweep = readFileSync(join(ROOT, "scripts", "admin-plain-sweep.mts"), "utf8");
-  const list = sweep.slice(sweep.indexOf("SWEPT_PATHS"), sweep.indexOf("/** One kind of thing"));
-  assert.match(list, /"admin\/release-review"/, "the one page whose whole face was manifest codes is not swept");
-});
-
-/* -------------------------------------------------------------------------- */
 /* D — state readiness told the owner to run a command                         */
 /* -------------------------------------------------------------------------- */
 

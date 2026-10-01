@@ -27,8 +27,6 @@ import s from "./_mw/mw.module.css";
 export type ConsoleView =
   | "changes"
   | "research"
-  | "release-review"
-  | "steward"
   | "sources"
   | "reader"
   | "feedback"
@@ -39,8 +37,6 @@ export type ConsoleView =
 const VIEW_LABEL: Readonly<Record<ConsoleView, string>> = {
   changes: "Changes",
   research: "Runner and research detail",
-  "release-review": "Software release review",
-  steward: "Shipping and integration",
   sources: "Sources and APIs",
   reader: "What readers are doing",
   feedback: "Feedback",

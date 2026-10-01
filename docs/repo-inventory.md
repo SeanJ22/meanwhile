@@ -8,7 +8,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Routes and pages
 
-91 file(s). Paths retain route groups and dynamic segments as written.
+87 file(s). Paths retain route groups and dynamic segments as written.
 
 - `/(admin)/admin/agents` — `app/(admin)/admin/agents/page.tsx`
 - `/(admin)/admin/assignments` — `app/(admin)/admin/assignments/page.tsx`
@@ -26,11 +26,8 @@ Read each source file for its current exports, configuration, commands and data.
 - `/(admin)/admin/money` — `app/(admin)/admin/money/page.tsx`
 - `/(admin)/admin` — `app/(admin)/admin/page.tsx`
 - `/(admin)/admin/reader` — `app/(admin)/admin/reader/page.tsx`
-- `/(admin)/admin/release-review` — `app/(admin)/admin/release-review/page.tsx`
 - `/(admin)/admin/research` — `app/(admin)/admin/research/page.tsx`
 - `/(admin)/admin/sources` — `app/(admin)/admin/sources/page.tsx`
-- `/(admin)/admin/steward` — `app/(admin)/admin/steward/page.tsx`
-- `/(admin)/admin/system-map` — `app/(admin)/admin/system-map/page.tsx`
 - `/(admin)/admin/work` — `app/(admin)/admin/work/page.tsx`
 - `/(admin)/readiness/[state]` — `app/(admin)/readiness/[state]/page.tsx`
 - `/(admin)/readiness/cost` — `app/(admin)/readiness/cost/page.tsx`
@@ -56,7 +53,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `/api/admin/geography-preview` — `app/api/admin/geography-preview/route.ts`
 - `/api/admin/live` — `app/api/admin/live/route.ts`
 - `/api/admin/public-reader-observation` — `app/api/admin/public-reader-observation/route.ts`
-- `/api/admin/release-review` — `app/api/admin/release-review/route.ts`
 - `/api/admin/research` — `app/api/admin/research/route.ts`
 - `/api/admin/runner-progress` — `app/api/admin/runner-progress/route.ts`
 - `/api/admin/session` — `app/api/admin/session/route.ts`
@@ -818,7 +814,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-959 file(s).
+956 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -866,7 +862,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-redesign-views.test.ts`
 - `tests/admin-redirect-origin.test.ts`
 - `tests/admin-registration-standing.test.ts`
-- `tests/admin-release-review.test.ts`
 - `tests/admin-research.test.ts`
 - `tests/admin-runner-confirmation.test.ts`
 - `tests/admin-runner-progress.test.ts`
@@ -875,7 +870,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-select-contrast.test.ts`
 - `tests/admin-source-registry.test.ts`
 - `tests/admin-standard-in-force.test.ts`
-- `tests/admin-steward.test.ts`
 - `tests/admin-v6-checklist-all-definitions.test.ts`
 - `tests/admin-v6-checklist-section.test.ts`
 - `tests/admin-v6-hunts-money.test.ts`
@@ -1691,7 +1685,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/subdivisions.test.ts`
 - `tests/suiteone-source.test.ts`
 - `tests/superseded-obligation-retirement.test.ts`
-- `tests/system-map.test.ts`
 - `tests/tenant-body-binding.test.ts`
 - `tests/test-alias-loader.test.ts`
 - `tests/tester-9-4-ask.test.ts`
@@ -1782,7 +1775,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7085 file(s).
+7071 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -1838,6 +1831,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/_mw/blocks.tsx`
 - `app/(admin)/_mw/body-list.tsx`
 - `app/(admin)/_mw/composer.tsx`
+- `app/(admin)/_mw/copy-button.tsx`
 - `app/(admin)/_mw/data/body-store.ts`
 - `app/(admin)/_mw/data/bulk-places.ts`
 - `app/(admin)/_mw/data/census-universe.ts`
@@ -1903,13 +1897,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/admin/page.tsx`
 - `app/(admin)/admin/reader/page.tsx`
 - `app/(admin)/admin/reader/panels.tsx`
-- `app/(admin)/admin/release-review/contract.ts`
-- `app/(admin)/admin/release-review/copy-button.tsx`
-- `app/(admin)/admin/release-review/manifest-source.ts`
-- `app/(admin)/admin/release-review/manifest.ts`
-- `app/(admin)/admin/release-review/page.tsx`
-- `app/(admin)/admin/release-review/review-model.ts`
-- `app/(admin)/admin/release-review/write.ts`
 - `app/(admin)/admin/research/identity.tsx`
 - `app/(admin)/admin/research/page.tsx`
 - `app/(admin)/admin/research/worker-fleet-panel.tsx`
@@ -1917,8 +1904,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/admin/sources/page.tsx`
 - `app/(admin)/admin/sources/publication-status-panel.tsx`
 - `app/(admin)/admin/sources/routine-data-panel.tsx`
-- `app/(admin)/admin/steward/page.tsx`
-- `app/(admin)/admin/system-map/page.tsx`
 - `app/(admin)/admin/work/page.tsx`
 - `app/(admin)/charts.tsx`
 - `app/(admin)/console-nav.tsx`
@@ -1953,7 +1938,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/api/admin/geography-preview/route.ts`
 - `app/api/admin/live/route.ts`
 - `app/api/admin/public-reader-observation/route.ts`
-- `app/api/admin/release-review/route.ts`
 - `app/api/admin/research/route.ts`
 - `app/api/admin/runner-progress/route.ts`
 - `app/api/admin/session/route.ts`
@@ -2022,7 +2006,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `components/admin/fleet-triage-bands.tsx`
 - `components/admin/fleet-triage-tab.tsx`
 - `components/admin/research-progress.tsx`
-- `components/admin/system-map.tsx`
 - `components/area/shuffled-facts.tsx`
 - `components/ask/answer-contacts.tsx`
 - `components/ask/answer-records.tsx`
@@ -4715,6 +4698,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `docs/status-ledger.md`
 - `docs/status.md`
 - `docs/synthetic-runs.md`
+- `docs/system-map.md`
 - `docs/tester-pass.md`
 - `docs/tracker-assignments.json`
 - `docs/tracker-deletions.json`
@@ -4757,7 +4741,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/admin/fleet-operations-view.ts`
 - `lib/admin/fleet-seed.ts`
 - `lib/admin/fleet-triage.ts`
-- `lib/admin/system-map-model.ts`
 - `lib/answerability/record-class.ts`
 - `lib/answerability/report.ts`
 - `lib/answerability/stages.ts`
@@ -5075,7 +5058,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/changes/model.ts`
 - `lib/control-plane/changes/source.ts`
 - `lib/control-plane/code-identity.ts`
-- `lib/control-plane/command-centre.ts`
 - `lib/control-plane/completion.ts`
 - `lib/control-plane/console-paths.ts`
 - `lib/control-plane/cost-panel.ts`
@@ -5169,6 +5151,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/operator-chat/actions.ts`
 - `lib/control-plane/operator-chat/context.ts`
 - `lib/control-plane/operator-chat/contract.ts`
+- `lib/control-plane/operator-chat/environments.ts`
 - `lib/control-plane/operator-chat/gateway-binding.ts`
 - `lib/control-plane/operator-chat/read-context.ts`
 - `lib/control-plane/operator-chat/read-models.ts`
@@ -5300,7 +5283,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/software-release-review.ts`
 - `lib/control-plane/source-registry.ts`
 - `lib/control-plane/startup-read-retry.ts`
-- `lib/control-plane/steward.ts`
 - `lib/control-plane/unit-state.ts`
 - `lib/control-plane/window-view.ts`
 - `lib/control-plane/work-item.ts`
@@ -7712,7 +7694,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-redesign-views.test.ts`
 - `tests/admin-redirect-origin.test.ts`
 - `tests/admin-registration-standing.test.ts`
-- `tests/admin-release-review.test.ts`
 - `tests/admin-research.test.ts`
 - `tests/admin-runner-confirmation.test.ts`
 - `tests/admin-runner-progress.test.ts`
@@ -7722,7 +7703,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/admin-session.ts`
 - `tests/admin-source-registry.test.ts`
 - `tests/admin-standard-in-force.test.ts`
-- `tests/admin-steward.test.ts`
 - `tests/admin-surface.ts`
 - `tests/admin-v6-checklist-all-definitions.test.ts`
 - `tests/admin-v6-checklist-section.test.ts`
@@ -8779,7 +8759,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/subdivisions.test.ts`
 - `tests/suiteone-source.test.ts`
 - `tests/superseded-obligation-retirement.test.ts`
-- `tests/system-map.test.ts`
 - `tests/tenant-body-binding.test.ts`
 - `tests/test-alias-loader.test.ts`
 - `tests/tester-9-4-ask.test.ts`

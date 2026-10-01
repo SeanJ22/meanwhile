@@ -35,7 +35,7 @@ import { workerAttemptStory } from "@/lib/control-plane/plain-work.ts";
 import { displayNameOf } from "@/lib/control-plane/display-name.ts";
 import { modelName, plainCode, plainCount, plainDuration, usdCents } from "@/lib/control-plane/plain-words.ts";
 
-import { CopyButton } from "../release-review/copy-button";
+import { CopyButton } from "../../_mw/copy-button";
 import { Identity } from "./identity";
 import { NeedsYouLine } from "../../status-ui.tsx";
 import { Name, When } from "../../console-ui.tsx";

@@ -76,16 +76,6 @@
       "reason": "This branch is reached only after the durable row has the expected intake-runtime outcome kind and its contract-level issue check passes, but strict parsing of the embedded observation still returns null. It reports that precise local parse gap and makes no claim about intake health or source activity."
     },
     {
-      "file": "app/(admin)/admin/release-review/page.tsx",
-      "text": "not recorded",
-      "reason": "Labels a null field on an existing durable post-deploy integrity receipt, never an absent receipt or an inferred deployment result. It is used for the deployed commit and gate exit independently so neither missing field is filled with success, failure, or a guessed value."
-    },
-    {
-      "file": "app/(admin)/admin/release-review/page.tsx",
-      "text": "no SHA",
-      "reason": "Labels the absent deployedSha field on an existing append-only production-integrity history row. The receipt's recorded outcome, time, detail, and identity still render, but null is not converted into a guessed commit and cannot certify an exact head."
-    },
-    {
       "file": "app/(admin)/admin/research/page.tsx",
       "text": "not readable",
       "reason": "Labels only the aggregateRevision field returned as null by the method-candidate authority projection. The adjacent fail-closed authority state, exact status code, and detail distinguish absence, refusal, and store failure; this text supplies no revision and makes no authority claim."

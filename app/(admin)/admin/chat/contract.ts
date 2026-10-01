@@ -1,7 +1,7 @@
 /**
  * **THE CHAT SURFACE'S OWN CONSTANTS.** (ADM-C7.)
  *
- * The convention the release-review page set: a surface's paths and limits live
+ * The convention every console surface follows: a surface's paths and limits live
  * beside it in a `contract.ts` that both the page and its route import, so the
  * two cannot disagree about where a message is posted or what the page is
  * called.

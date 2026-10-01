@@ -16,7 +16,7 @@
  */
 import { displayNameOf } from "@/lib/control-plane/display-name.ts";
 
-import { CopyButton } from "../release-review/copy-button";
+import { CopyButton } from "../../_mw/copy-button";
 import { Name } from "../../console-ui.tsx";
 
 export function Identity({

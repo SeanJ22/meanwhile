@@ -136,6 +136,6 @@ test("ADM-43: the role card prints one name, one sentence, Needs you at the top,
   assert.doesNotMatch(panel, /\$0 by design/, "the console no longer claims a role is inherently free (§9A.4)");
   // ADM-48: a name on the face, the exact id one disclosure and one copy away, and only one copy button in the repo.
   assert.match(panel, /<Identity id=\{attempt\.attemptId\}/);
-  assert.match(src("app/(admin)/admin/research/identity.tsx"), /import \{ CopyButton \} from "\.\.\/release-review\/copy-button"/);
-  assert.equal(existsSync(join(ROOT, "app", "(admin)", "admin", "release-review", "copy-button.tsx")), true);
+  assert.match(src("app/(admin)/admin/research/identity.tsx"), /import \{ CopyButton \} from "\.\.\/\.\.\/_mw\/copy-button"/);
+  assert.equal(existsSync(join(ROOT, "app", "(admin)", "_mw", "copy-button.tsx")), true);
 });

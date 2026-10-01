@@ -65,7 +65,6 @@ export const SWEPT_PATHS: readonly string[] = [
   "admin",
   "admin/research",
   "readiness/az",
-  "admin/steward",
   "admin/sources",
   "admin/reader",
   "admin/feedback",
@@ -77,7 +76,6 @@ export const SWEPT_PATHS: readonly string[] = [
    * owner found it instead (9.6.26, ACLOSE-6). The comment above this list says
    * a new admin page belongs on it the day it ships; this is that debt paid.
    */
-  "admin/release-review",
   "admin/assignments",
 ];
 

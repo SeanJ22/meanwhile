@@ -1,14 +1,11 @@
-import { stateServingUrl } from "../holdings/paths.ts";
-import type { Map as MapLibreMap, MapGeoJSONFeature } from "maplibre-gl";
+import type { Map as MapLibreMap, MapGeoJSONFeature, FilterSpecification } from "maplibre-gl";
 
 // Relative, extension-bearing imports — the style the rest of lib/ uses —
 // because node --test cannot resolve the `@/` alias and this module is now
 // exercised by tests/municipal-layer.test.ts (the §4.2 lesson again).
-import { FIPS_BY_USPS, geoFilesFor } from "../coverage/states.ts";
 import { DISTRICT_TYPE_TIER } from "../ocd/district-tiers.ts";
 import { TIER_ACCENT_VAR, type Tier } from "../ocd/tiers.ts";
 import type { DistrictType } from "../state/types.ts";
-import { stateFilter } from "./state-focus.ts";
 
 /**
  * District overlays.
@@ -18,8 +15,7 @@ import { stateFilter } from "./state-focus.ts";
  * without a source record — so a district here is a shape, an OCD-ID, and a
  * label, and nothing else.
  *
- * Geometry is built by `pnpm districts:fetch`. Everything below Congress is
- * clipped to Pima AZ, Morris NJ and Merrimack NH; congressional stays national.
+ * Geometry is one national PMTiles archive. Only visible tiles are fetched.
  */
 
 /**
@@ -54,8 +50,8 @@ export interface DistrictCollection {
 
 /** Where each overlay's geometry lives, and which tier it belongs to. */
 interface LayerSpec {
-  /** Geometry basenames; state files are served from generated state projections. */
-  files: string[];
+  /** Census layers represented by this boundary kind, independent of state coverage. */
+  censusLayers: readonly string[];
   /**
    * Draw only features whose FUNCSTAT says a government sits there — M14.
    *
@@ -109,31 +105,28 @@ interface LayerSpec {
 
 export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
   congressional: {
-    // Split per state by `pnpm cd:split` (g4 item 3). The national file is
-    // 1.59 MB — larger than every other overlay put together — and a reader
-    // in Tucson has no use for Ohio's boundaries. Arizona's share is 23 KB.
-    files: geoFilesFor("cd119"),
+    censusLayers: ["cd119"],
     label: "Congressional",
     dash: [8, 3],
     weight: 1.3,
     labelMinZoom: 5,
   },
   "state-senate": {
-    files: geoFilesFor("sldu"),
+    censusLayers: ["sldu"],
     label: "State Senate",
     dash: [5, 2],
     weight: 1.1,
     labelMinZoom: 7,
   },
   "state-house": {
-    files: geoFilesFor("sldl"),
+    censusLayers: ["sldl"],
     label: "State House",
     dash: [2, 2],
     weight: 0.9,
     labelMinZoom: 8,
   },
   county: {
-    files: ["county-us.geojson"],
+    censusLayers: ["county"],
     label: "County",
     // The widest Local shape keeps a strong stroke. Its long dash + two dots
     // reads apart from Congress's long dashes even in the monochrome key.
@@ -142,12 +135,12 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
     labelMinZoom: 6,
   },
   municipal: {
+    censusLayers: ["place","cousub"],
     // Both halves of the municipal picture (M14): places, and the county
     // subdivisions that ARE the municipalities in New Jersey and New
     // Hampshire — Rockaway Township and Newbury have no place polygon at
     // all. FUNCSTAT (governingOnly) is what stops the merge double-drawing
     // Concord and friends and keeps Arizona's statistical CCDs off the map.
-    files: geoFilesFor("place", "cousub"),
     label: "Municipal",
     dash: [3, 2],
     weight: 1.0,
@@ -175,7 +168,7 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
    * z8 is the noise the 4.5.2 pass was fixing.
    */
   "school-unified": {
-    files: geoFilesFor("unsd"),
+    censusLayers: ["unsd"],
     label: "School (unified)",
     // ACC-1: paired short dashes distinguish this from State House even when
     // hue is unavailable. Every sample in the boundary key reads this spec.
@@ -184,14 +177,14 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
     labelMinZoom: 10,
   },
   "school-elementary": {
-    files: geoFilesFor("elsd"),
+    censusLayers: ["elsd"],
     label: "School (elementary)",
     dash: [1, 2],
     weight: 0.75,
     labelMinZoom: 10,
   },
   "school-secondary": {
-    files: geoFilesFor("scsd"),
+    censusLayers: ["scsd"],
     label: "School (secondary)",
     dash: [6, 2, 1, 2],
     weight: 0.75,
@@ -214,7 +207,9 @@ export const DISTRICT_TYPES = Object.keys(DISTRICT_LAYERS) as DistrictType[];
 // A modest contrast increase in both themes; keep the existing tier colors.
 export const DISTRICT_LINE_OPACITY = 0.82;
 
-const sourceId = (type: DistrictType) => `district-${type}`;
+export const NATIONAL_BOUNDARIES_SOURCE = "national-boundaries";
+const sourceId = (_type: DistrictType) => NATIONAL_BOUNDARIES_SOURCE;
+export const BOUNDARY_ARCHIVE_URL = process.env.NEXT_PUBLIC_BOUNDARY_PMTILES_URL ?? "/api/boundaries/census-2025-b24d0345381f69be.pmtiles";
 export const fillLayerId = (type: DistrictType) => `district-${type}-fill`;
 export const lineLayerId = (type: DistrictType) => `district-${type}-line`;
 export const labelLayerId = (type: DistrictType) => `district-${type}-label`;
@@ -261,98 +256,6 @@ export function keepFeature(
   return GOVERNING_FUNCSTAT.has(funcstat);
 }
 
-/* --------------------------------------------------- the active state --- */
-
-/**
- * FIPS by USPS code — the one place the two vocabularies meet on the client.
- *
- * The geo files are named by FIPS because Census names them that way; the
- * feature property and the focus state are USPS because that is what a
- * reader-facing label would be. Adding a state adds a line here and a line in
- * `scripts/fetch-state-outlines.mts`.
- */
-// Was an inline three-state literal; derived from the coverage manifest since
-// AUD-06 (g18).
-
-/**
- * Which of a type's files are worth fetching for one state (g4 item 3).
- *
- * A file whose name ends in `-<fips>` belongs to that state; anything else is
- * national and is always included (`county-us.geojson` holds three counties
- * in total, so splitting it would cost more in files than it saves in bytes).
- *
- * **A null state returns NOTHING**, and that is the item's rule rather than a
- * defensive default: with no active state there are no district boundaries
- * anywhere, so there is nothing to fetch. Before this, entering a New
- * Hampshire zip left New Jersey's lines on the map at regional zoom, and at
- * fifty states that is an unreadable mat of boundaries paid for on every
- * load.
- */
-export function filesFor(
-  type: DistrictType,
-  stateAbbr: string | null,
-): string[] {
-  if (!stateAbbr) return [];
-  const fips = FIPS_BY_USPS[stateAbbr];
-  if (!fips) return [];
-  return DISTRICT_LAYERS[type].files.filter((file) => {
-    const match = /-(\d{2})\.geojson$/.exec(file);
-    return !match || match[1] === fips;
-  });
-}
-
-/** Cached per type AND state — the same type holds different data per state. */
-const cache = new Map<string, Promise<DistrictCollection>>();
-
-/**
- * Fetch and merge a type's files.
- *
- * Fetched here rather than handed to MapLibre as a URL so a failure is a
- * rejected promise the caller can act on — showing a notice and disabling the
- * control — instead of a silently empty layer. docs/state.md §4 has the story
- * about why a map that quietly renders nothing is expensive.
- *
- * A single missing file does not fail the type: school coverage differs by
- * state (New Hampshire runs unified districts only), so an absent file is
- * usually the correct answer rather than an error.
- */
-export function loadDistricts(
-  type: DistrictType,
-  stateAbbr: string | null,
-): Promise<DistrictCollection> {
-  const key = `${type}@${stateAbbr ?? "none"}`;
-  const existing = cache.get(key);
-  if (existing) return existing;
-
-  const spec = DISTRICT_LAYERS[type];
-  const files = filesFor(type, stateAbbr);
-
-  const promise = Promise.all(
-    files.map(async (file) => {
-      const url = /-\d{2}\.geojson$/.test(file)
-        ? stateServingUrl(stateAbbr!.toLowerCase(), "geo", file)
-        : `/geo/${file}`;
-      const response = await fetch(url);
-      if (response.status === 404) return [];
-      if (!response.ok) throw new Error(`${url} returned ${response.status}`);
-      const collection = (await response.json()) as DistrictCollection;
-      return collection.features ?? [];
-    }),
-  )
-    .then((groups) => ({
-      type: "FeatureCollection" as const,
-      features: groups.flat().filter((f) => keepFeature(spec, f)),
-    }))
-    .catch((error) => {
-      // Let the next attempt retry rather than caching the failure forever.
-      cache.delete(key);
-      throw error;
-    });
-
-  cache.set(key, promise);
-  return promise;
-}
-
 /* ------------------------------------------------------------ rendering --- */
 
 /**
@@ -389,23 +292,12 @@ export function districtLayersPresent(map: MapLibreMap) {
 export function addDistrictLayer(
   map: MapLibreMap,
   type: DistrictType,
-  data: DistrictCollection,
-  stateAbbr: string | null,
 ): void {
   const spec = DISTRICT_LAYERS[type];
   const source = sourceId(type);
-  /*
-   * g4 item 3, the belt to `filesFor`'s braces.
-   *
-   * Most types are already per-state files, so this filter changes nothing
-   * for them — but `county-us.geojson` is national by design (three counties
-   * in total; splitting it would cost more in files than it saves in bytes),
-   * and without a filter a New Hampshire reader saw Pima County's outline at
-   * regional zoom. It is also what makes the rule ASSERTABLE: a walk reads
-   * the filter back off the map through `__wtpMapProbe` rather than trying to
-   * photograph the absence of a line.
-   */
-  const filter = stateFilter(stateAbbr);
+  const filter: FilterSpecification = spec.governingOnly
+    ? ["all", ["==", ["get", "boundaryType"], type], ["in", ["coalesce", ["get", "funcstat"], "A"], ["literal", [...GOVERNING_FUNCSTAT]]]]
+    : ["==", ["get", "boundaryType"], type];
 
   // Hue says tier; dash pattern and weight distinguish jurisdiction types.
   const accent = token(TIER_ACCENT_VAR[DISTRICT_TYPE_TIER[type]], "#5f7a8a");
@@ -415,7 +307,7 @@ export function addDistrictLayer(
     // `promoteId` is what makes feature-state work: selection is expressed as
     // state on a feature rather than by mutating the source, so selecting a
     // district never re-tiles the geometry.
-    map.addSource(source, { type: "geojson", data, promoteId: "ocdId" });
+    map.addSource(source, { type: "vector", url: `pmtiles://${new URL(BOUNDARY_ARCHIVE_URL, typeof window === "undefined" ? "http://localhost" : window.location.href).href}`, promoteId: "ocdId" });
   }
 
   const before = firstSymbolLayerId(map);
@@ -442,6 +334,7 @@ export function addDistrictLayer(
       id: fillLayerId(type),
       type: "fill",
       source,
+      "source-layer": "districts",
       filter,
       paint: {
         "fill-color": accent,
@@ -465,6 +358,7 @@ export function addDistrictLayer(
       id: lineLayerId(type),
       type: "line",
       source,
+      "source-layer": "districts",
       filter,
       layout: { "line-join": "round", "line-cap": "butt" },
       paint: {
@@ -510,6 +404,7 @@ export function addDistrictLayer(
       id: labelLayerId(type),
       type: "symbol",
       source,
+      "source-layer": "districts",
       filter,
       minzoom: spec.labelMinZoom,
       layout: {
@@ -531,7 +426,7 @@ export function removeDistrictLayer(map: MapLibreMap, type: DistrictType): void 
   for (const id of [labelLayerId(type), lineLayerId(type), fillLayerId(type)]) {
     if (map.getLayer(id)) map.removeLayer(id);
   }
-  if (map.getSource(sourceId(type))) map.removeSource(sourceId(type));
+  if (!districtLayersPresent(map) && map.getSource(NATIONAL_BOUNDARIES_SOURCE)) map.removeSource(NATIONAL_BOUNDARIES_SOURCE);
 }
 
 export function removeDistrictLayers(map: MapLibreMap): void {
@@ -556,7 +451,7 @@ export function setSelectedDistrict(
   if (selected) {
     const source = sourceId(selected.type);
     if (map.getSource(source)) {
-      map.setFeatureState({ source, id: selected.ocdId }, { selected: false });
+      map.setFeatureState({ source, sourceLayer: "districts", id: selected.ocdId }, { selected: false });
     }
     selected = null;
   }
@@ -566,7 +461,7 @@ export function setSelectedDistrict(
   const source = sourceId(type);
   if (!map.getSource(source)) return;
 
-  map.setFeatureState({ source, id: ocdId }, { selected: true });
+  map.setFeatureState({ source, sourceLayer: "districts", id: ocdId }, { selected: true });
   selected = { type, ocdId };
 }
 
@@ -589,7 +484,7 @@ export function setNarrowedDistricts(
   for (const prev of narrowedApplied) {
     const source = sourceId(prev.type);
     if (map.getSource(source)) {
-      map.setFeatureState({ source, id: prev.ocdId }, { narrowed: false });
+      map.setFeatureState({ source, sourceLayer: "districts", id: prev.ocdId }, { narrowed: false });
     }
   }
   narrowedApplied = [];
@@ -597,7 +492,7 @@ export function setNarrowedDistricts(
   for (const entry of entries) {
     const source = sourceId(entry.type);
     if (!map.getSource(source)) continue;
-    map.setFeatureState({ source, id: entry.ocdId }, { narrowed: true });
+    map.setFeatureState({ source, sourceLayer: "districts", id: entry.ocdId }, { narrowed: true });
     narrowedApplied.push(entry);
   }
 }
@@ -862,44 +757,10 @@ export async function fullBoundsOfDistrict(
   type: DistrictType,
   ocdId: string,
 ): Promise<[[number, number], [number, number]] | null> {
-  const source = map.getSource(sourceId(type)) as
-    | { getData?: () => Promise<unknown> }
-    | undefined;
-  if (!source?.getData) return null;
-  let data: unknown;
-  try {
-    data = await source.getData();
-  } catch {
-    return null;
-  }
-  const features = (data as { features?: { properties?: { ocdId?: unknown }; geometry?: { coordinates?: unknown } }[] })?.features;
-  if (!Array.isArray(features)) return null;
-  let west = Infinity;
-  let south = Infinity;
-  let east = -Infinity;
-  let north = -Infinity;
-  const walk = (coords: unknown): void => {
-    if (!Array.isArray(coords)) return;
-    if (typeof coords[0] === "number" && typeof coords[1] === "number") {
-      const [lng, lat] = coords as [number, number];
-      if (!Number.isFinite(lng) || !Number.isFinite(lat)) return;
-      west = Math.min(west, lng);
-      east = Math.max(east, lng);
-      south = Math.min(south, lat);
-      north = Math.max(north, lat);
-      return;
-    }
-    for (const c of coords) walk(c);
-  };
-  let found = 0;
-  for (const feature of features) {
-    if (String(feature.properties?.ocdId ?? "") !== ocdId) continue;
-    found += 1;
-    walk(feature.geometry?.coordinates);
-  }
-  if (found === 0 || !Number.isFinite(west) || !Number.isFinite(north)) return null;
-  return [
-    [west, south],
-    [east, north],
-  ];
+  const layers = [lineLayerId(type), fillLayerId(type)].filter(id => Boolean(map.getLayer(id)));
+  if (!layers.length) return null;
+  const feature = map.queryRenderedFeatures({layers}).find(f => String(f.properties?.ocdId) === ocdId);
+  const p = feature?.properties;
+  if (!p || ![p.west,p.south,p.east,p.north].every(Number.isFinite)) return null;
+  return [[p.west,p.south],[p.east,p.north]];
 }

@@ -9,6 +9,7 @@ import { requiredManualProductionContract } from "../civic-data/manual-contracts
 import type { RoutineSourceTask } from "../civic-data/runner.ts";
 import { DEFAULT_CADENCE_HOURS } from "../control-plane/scheduler/obligation.ts";
 import { dueNationalPlaceZips } from "./place-source-task.ts";
+import { orderNationalPlaceWork } from "../control-plane/expansion/dispatch-work.ts";
 
 /** One ordinary source command per place; the existing occurrence owns its lease and resume clock. */
 export function nationalPlaceJobs(zips: readonly string[], owner: { requestedAt: string; instructions: readonly string[] }): RoutineSourceTask[] {
@@ -56,5 +57,5 @@ export async function withNationalPlaceTasks(tasks: readonly RoutineSourceTask[]
   if (zips.some(zip => !/^\d{5}$/.test(zip))) throw new Error("National place acquisition needs five-digit ZIPs");
   zips = await dueNationalPlaceZips(repos, zips, now);
   if (!zips.length) return [...tasks];
-  return [...tasks, ...nationalPlaceJobs(zips, { requestedAt, instructions })];
+  return [...tasks, ...nationalPlaceJobs(await orderNationalPlaceWork(repos, zips, now), { requestedAt, instructions })];
 }

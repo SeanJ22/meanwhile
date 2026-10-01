@@ -18,7 +18,7 @@ import {
   type PublishAuthority,
 } from "../lib/meetings/edge-serving.ts";
 
-import type { ReaderManifest } from "../lib/meetings/edge-artifacts.ts";
+import { stateOfOcdId, type ReaderManifest } from "../lib/meetings/edge-artifacts.ts";
 
 import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
 
@@ -275,7 +275,9 @@ test("C21 · /api/representation reads the registry from the edge it entered, an
 test("C21 · a warm call resolves one place per published state from the edge, and refuses what the edge does not carry", async () => {
   const withoutLegislators = await publishEdge("c21-warm-partial");
   process.env.WTP_READER_EDGE_DIR = withoutLegislators.dir;
-  const states = withoutLegislators.manifest.scopes.map((scope) => scope.scope).filter((scope) => scope !== "us");
+  const states = [...new Set(withoutLegislators.manifest.scopes.map((scope) =>
+    stateOfOcdId(scope.ocdId) ?? (/^[a-z]{2}$/.test(scope.scope) && scope.scope !== "us" ? scope.scope : null),
+  ).filter((state): state is string => state !== null))];
   assert.ok(states.length >= 3, `the fixture publishes meetings for several states: ${states.join(", ")}`);
   const partial = await primeReaderEdge();
   assert.equal(partial.manifest, true);

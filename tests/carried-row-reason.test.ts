@@ -35,7 +35,7 @@ import test from "node:test";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { carryForward } from "../lib/meetings/carry-forward.ts";
-import { mergeScopeArtifacts, partitionSnapshotByScope } from "../lib/meetings/edge-artifacts.ts";
+import { mergeScopeArtifacts, partitionSnapshotByScope, readerScopeApplies } from "../lib/meetings/edge-artifacts.ts";
 import { CARRIED_ROW_CLAUSE, carriedRowClause, type CarriedReason } from "../lib/meetings/freshness.ts";
 import { searchMeetings } from "../lib/meetings/query.ts";
 import { snapshotSourceFor } from "../lib/meetings/registry.ts";
@@ -331,7 +331,7 @@ test("the reason survives its writer, the Reader composition, the edge artifacts
   // back as the route merges them.
   const published = JSON.parse(JSON.stringify(partitionSnapshotByScope(composed, NO_LONGER_HELD))) as ReturnType<typeof partitionSnapshotByScope>;
   const merged = mergeScopeArtifacts(
-    published.filter((artifact) => artifact.scope === "nj" || artifact.scope === "us"),
+    published.filter((artifact) => readerScopeApplies(artifact, { states: ["nj"], ocdIds: [ROCKAWAY.ocdId!] })),
     { generatedAt: composed.generatedAt, sources: composed.sources },
   );
   assert.deepEqual(merged.meetings.find((row) => row.id === "civicplus:rockaway_township:1824")?.carried, expected);

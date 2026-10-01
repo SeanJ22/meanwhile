@@ -1,0 +1,131 @@
+/**
+ * @freshness-reads-here — `observedAt` is the instant this module's own reads of the store returned.
+ *
+ * **IS CAPTURE WORKING? — Admin's check, built from the same recipes every other screen uses.** (S12, Sean's 2:30 PM MST note, item 4.)
+ *
+ * One read of the data business as Admin: events per day by type, the share sorted into topics vs free-form, new vs returning
+ * readers, usage by district (a Florida district beside a New Jersey one), and anything that failed to record. Each block is a
+ * recipe through `readRecipe` (so a recipe Sean switches off for Admin is shown as off, not as empty), and no block carries an
+ * anonymous ID, an exact time or one person's trail. A store that is not installed says so; a day with nothing is shown as a day
+ * with nothing, never as a day we did not read.
+ *
+ * What it cannot see, it says: batches a device gave up on or the capture route refused are not counted anywhere yet.
+ */
+import { switchOn } from "../data-business/switches.ts";
+import { readRecipe, type ReadDeps, type ReadResult } from "../data-business/read.ts";
+import { daysBefore, periodOf, stateOfDivision, todayUtc } from "../data-business/slice.ts";
+import type { AdminConfig } from "../gateway/admin-config.ts";
+import type { CaptureFailures } from "../data-business/live.ts";
+import type { TotalsEntry } from "../data-business/types.ts";
+
+export const CAPTURE_DAYS = 14;
+
+/** The fourteen UTC days ending today. */
+export const captureWindow = (now: Date = new Date()): { readonly from: string; readonly to: string } => ({ from: daysBefore(todayUtc(now), CAPTURE_DAYS - 1), to: todayUtc(now) });
+
+export interface CaptureHeadline {
+  /** `recording`: events in the last two UTC days. `quiet`: some, but not lately. `none`: nothing recorded in the window. `unknown`: the counts could not be read. */
+  readonly state: "recording" | "quiet" | "none" | "unknown";
+  readonly says: string;
+  readonly latestDay: string | null;
+}
+export interface TypeRow { readonly type: string; readonly perDay: readonly number[]; readonly total: number }
+export interface TopicDay { readonly day: string; readonly inTopic: number; readonly freeForm: number; readonly percentInTopic: number | null }
+export interface ReaderDay { readonly day: string; readonly readers: number; readonly newReaders: number; readonly returning: number }
+export interface DistrictRow { readonly label: string; readonly state: string; readonly events: number; readonly readers: number | null; readonly percent: number | null }
+
+/** One block of the view: its rows, or why it has none. Never an empty list standing in for "unknown". */
+export type Block<T> =
+  | { readonly kind: "READ"; readonly rows: T }
+  | { readonly kind: "OFF" | "UNAVAILABLE"; readonly says: string };
+
+export interface CaptureHealthView {
+  readonly observedAt: string;
+  readonly from: string;
+  readonly to: string;
+  readonly days: readonly string[];
+  readonly headline: CaptureHeadline;
+  readonly byType: Block<readonly TypeRow[]>;
+  readonly topics: Block<readonly TopicDay[]>;
+  readonly readers: Block<readonly ReaderDay[]>;
+  readonly districts: Block<{ readonly week: string; readonly rows: readonly DistrictRow[] }>;
+  readonly failures: FailuresView;
+}
+
+export type FailuresView =
+  | { readonly kind: "MEASURED"; readonly lines: readonly { readonly ok: boolean; readonly says: string }[]; readonly notCounted: string }
+  | { readonly kind: "UNAVAILABLE"; readonly says: string };
+
+export const NOT_COUNTED_YET = "Batches a device gave up on, or that the capture route refused, are not counted anywhere yet, so this cannot say none failed. It only covers what reached the store.";
+
+const unavailable = (r: ReadResult, what: string): { readonly kind: "OFF" | "UNAVAILABLE"; readonly says: string } =>
+  r.kind === "REFUSED" ? { kind: r.why === "SWITCH_OFF" ? "OFF" : "UNAVAILABLE", says: r.says }
+    : r.kind === "NOT_INSTALLED" ? { kind: "UNAVAILABLE", says: r.says }
+      : { kind: "UNAVAILABLE", says: `${what} could not be read.` };
+const totalsOf = (r: ReadResult): readonly TotalsEntry[] | null => (r.kind === "READ" && r.body.shape === "totals" ? r.body.rows : null);
+
+export function failuresView(f: CaptureFailures, from: string, to: string): FailuresView {
+  if (f.kind === "NOT_INSTALLED") return { kind: "UNAVAILABLE", says: f.detail };
+  const lines: { ok: boolean; says: string }[] = [];
+  lines.push(f.eventsRecorded === f.eventsCounted
+    ? { ok: true, says: `Every recorded event is in the counts: ${f.eventsRecorded.toLocaleString("en-US")} events in ${f.batchesRecorded.toLocaleString("en-US")} batches.` }
+    : { ok: false, says: `The batches carry ${f.eventsRecorded.toLocaleString("en-US")} events but the counts hold ${f.eventsCounted.toLocaleString("en-US")}: ${Math.abs(f.eventsRecorded - f.eventsCounted).toLocaleString("en-US")} ${f.eventsRecorded > f.eventsCounted ? "were recorded and not counted" : "are counted that no batch carries"}.` });
+  if (f.archivedNotCounted === null) lines.push({ ok: false, says: f.archiveNote ?? "Batches archived but never counted were not checked." });
+  else lines.push(f.archivedNotCounted === 0
+    ? { ok: true, says: `No batch in the history store (${from} to ${to}) is missing from the counts.` }
+    : { ok: false, says: `${f.archivedNotCounted.toLocaleString("en-US")} batch${f.archivedNotCounted === 1 ? "" : "es"} in the history store (${from} to ${to}) never reached the counts: archived, then the counting failed.` });
+  return { kind: "MEASURED", lines, notCounted: NOT_COUNTED_YET };
+}
+
+export function headlineOf(days: readonly string[], totalsByDay: ReadonlyMap<string, number> | null, today: string): CaptureHeadline {
+  if (totalsByDay === null) return { state: "unknown", says: "The counts could not be read just now, so whether capture is working is unknown, not stopped.", latestDay: null };
+  const latest = [...totalsByDay].filter(([, n]) => n > 0).map(([d]) => d).sort().pop() ?? null;
+  if (latest === null) return { state: "none", says: `No events were recorded from ${days[0]} to ${days[days.length - 1]}. Capture may not be live yet, or it has stopped.`, latestDay: null };
+  const n = totalsByDay.get(latest) ?? 0;
+  if (latest >= daysBefore(today, 1)) return { state: "recording", says: `Capture is recording: ${n.toLocaleString("en-US")} events on ${latest}${latest === today ? " so far today (UTC)" : ""}.`, latestDay: latest };
+  return { state: "quiet", says: `The latest events were on ${latest}, ${Math.round((Date.parse(`${today}T00:00:00Z`) - Date.parse(`${latest}T00:00:00Z`)) / 86_400_000)} days ago. Capture may have stopped.`, latestDay: latest };
+}
+
+/** Admin's capture-health view as of `now`. `failures` is measured by the caller (it needs the store directly), or null when it could not be. */
+export async function readCaptureHealth(deps: ReadDeps, config: AdminConfig | null, failures: CaptureFailures | null, now: Date = new Date()): Promise<CaptureHealthView> {
+  const { from, to } = captureWindow(now);
+  const days = Array.from({ length: CAPTURE_DAYS }, (_, i) => daysBefore(from, -i));
+  const gate: ReadDeps = { ...deps, switchOn: (recipe, audience) => switchOn(config, recipe, audience) };
+  const ask = (recipe: string, grain: "day" | "week") => readRecipe({ recipe, slice: { from, to, grain }, audience: "admin" }, gate);
+  const [types, topics, readers, districts] = await Promise.all([ask("events-by-type", "day"), ask("topic-vs-free-form", "day"), ask("new-vs-returning", "day"), ask("usage-by-district", "week")]);
+
+  const typeRows = totalsOf(types);
+  const perType = new Map<string, Map<string, number>>();
+  const perDay = new Map<string, number>();
+  for (const e of typeRows ?? []) {
+    if (e.period === null) continue;
+    (perType.get(e.label) ?? perType.set(e.label, new Map()).get(e.label)!).set(e.period, e.value);
+    perDay.set(e.period, (perDay.get(e.period) ?? 0) + e.value);
+  }
+  const topicRows = totalsOf(topics);
+  const readerRows = totalsOf(readers);
+  const districtRows = totalsOf(districts);
+  const latestWeek = districtRows === null ? null : [...new Set(districtRows.map((r) => r.period ?? ""))].sort().pop() ?? null;
+
+  return {
+    observedAt: now.toISOString(), from, to, days,
+    headline: headlineOf(days, typeRows === null ? null : perDay, to),
+    byType: typeRows === null ? unavailable(types, "Events by type")
+      : { kind: "READ", rows: [...perType].map(([type, byDay]) => ({ type, perDay: days.map((d) => byDay.get(d) ?? 0), total: [...byDay.values()].reduce((a, b) => a + b, 0) })).sort((a, b) => b.total - a.total || a.type.localeCompare(b.type)) },
+    topics: topicRows === null ? unavailable(topics, "The topic share")
+      : { kind: "READ", rows: days.map((day) => {
+        const inTopic = topicRows.find((r) => r.period === day && r.label === "In a topic")?.value ?? 0;
+        const freeForm = topicRows.find((r) => r.period === day && r.label === "Free-form")?.value ?? 0;
+        return { day, inTopic, freeForm, percentInTopic: inTopic + freeForm === 0 ? null : Math.round((inTopic / (inTopic + freeForm)) * 1000) / 10 };
+      }) },
+    readers: readerRows === null ? unavailable(readers, "New and returning readers")
+      : { kind: "READ", rows: days.map((day) => {
+        const n = readerRows.find((r) => r.period === day && r.label === "New readers")?.value ?? 0;
+        const back = readerRows.find((r) => r.period === day && r.label === "Returning readers")?.value ?? 0;
+        return { day, readers: n + back, newReaders: n, returning: back };
+      }) },
+    districts: districtRows === null || latestWeek === null ? (districtRows === null ? unavailable(districts, "Usage by district") : { kind: "READ", rows: { week: periodOf(to, "week"), rows: [] } })
+      : { kind: "READ", rows: { week: latestWeek, rows: districtRows.filter((r) => r.period === latestWeek).map((r) => ({ label: r.label, state: (stateOfDivision(r.series) ?? "").toUpperCase(), events: r.value, readers: r.readers, percent: r.percent })) } },
+    failures: failures === null ? { kind: "UNAVAILABLE", says: "What failed to record could not be measured just now, so it is unknown, not none." } : failuresView(failures, from, to),
+  };
+}

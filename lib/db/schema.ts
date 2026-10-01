@@ -383,9 +383,10 @@ export const reactions = pgTable(
      */
     targetType: text("target_type", {
       // 2026-08-18 (D34) — the two funding classes join. The type doubles as
-      // the ripcord provenance tag: FUNDING_TOTAL_REACTION and
-      // CONTRIBUTOR_REACTION rows are excluded from aggregation while
-      // ripcord.fundingReactionsInAggregates is pulled (it ships pulled).
+      // the provenance tag for money reactions: FUNDING_TOTAL_REACTION and
+      // CONTRIBUTOR_REACTION rows count in aggregates like every other
+      // reaction (the ripcord that kept them out was removed 2026-10-01; the
+      // filings themselves are never sold, the reactions are).
       // MEASURE_PROVISION joined 2026-08-18 (P03): reactions attach to a
       // contested PROVISION of a measure, never to the measure as a whole,
       // which is what CLAUDE.md's reaction-capture section asks for. The

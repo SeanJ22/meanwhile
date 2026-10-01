@@ -15,10 +15,19 @@
  */
 import type { ActionKind, DecisionSpec, Dependency, Hunt } from "./model.ts";
 import { usd } from "./model.ts";
+import { RECIPES } from "@/lib/control-plane/data-business/recipes.ts";
+import { audienceWords } from "@/lib/control-plane/data-business/types.ts";
+
+/** A data switch's target is `<recipe>@<audience>`: the number's label and who it is for, in words. */
+function switchWords(target: string): { readonly label: string; readonly who: string } {
+  const at = target.indexOf("@");
+  const id = at < 0 ? target : target.slice(0, at);
+  return { label: RECIPES.find((r) => r.id === id)?.label ?? id, who: audienceWords(at < 0 ? "" : target.slice(at + 1)) };
+}
 
 /** A ZIP place key, the only kind of place a single hunt starts from (the rest start from the many-hunts panel). */
 export function isZipPlace(target: string): boolean {
-  return /^geo:[a-z]{2}.zcta.d{5}$/.test(target);
+  return /^geo:[a-z]{2}\.zcta\.\d{5}$/.test(target);
 }
 
 export interface PreviewItem {
@@ -691,6 +700,86 @@ const defs: ActionDef[] = [
       ],
     }),
     gateway: { type: "fleet.deployHere" },
+    dependency: null,
+  },
+  {
+    kind: "target-set",
+    label: "Set the target",
+    needs: "owner",
+    doneWords: "Saved. The runner confirms it when its next round reads the target and orders this place's work by it.",
+    preview: (ctx) => ({
+      title: `Set a target for ${ctx.targetName || ctx.scopeName}`,
+      level: localOrGlobal(ctx),
+      rows: [
+        ["Scope", ctx.targetName || ctx.scopeName],
+        ["What changes", "Records how much of what this place is owed should be captured. The dispatcher puts this place's work first until the score reaches it."],
+        ["Won’t", "Won’t start a round, send an agent, raise a spending limit, or hold back publishing: a fact that passes verification goes live whatever the target says."],
+        ["Undo", "Clear the target, or set another one. The later one is the one the dispatcher reads."],
+      ],
+      amount: { label: "Target: percent of what this place is owed that should be captured (1 to 100)", initial: "" },
+      invalid: ({ amount }) => {
+        const n = Number(amount);
+        return amount.trim() === "" || !Number.isFinite(n) || n < 1 || n > 100 ? "Enter a percentage from 1 to 100." : null;
+      },
+    }),
+    gateway: { type: "config.setPlaceTarget" },
+    dependency: null,
+  },
+  {
+    kind: "target-clear",
+    label: "Clear the target",
+    needs: "owner",
+    doneWords: "Saved. The runner confirms it when its next round reads that the target is gone.",
+    preview: (ctx) => ({
+      title: `Clear the target for ${ctx.targetName || ctx.scopeName}`,
+      level: localOrGlobal(ctx),
+      rows: [
+        ["What changes", "Removes the target. The dispatcher stops putting this place first because of it."],
+        ["Won’t", "Won’t delete any captured fact, stop work already running, or change what readers see."],
+        ["Undo", "Set the target again."],
+      ],
+    }),
+    gateway: { type: "config.setPlaceTarget" },
+    dependency: null,
+  },
+  {
+    kind: "data-switch-on",
+    label: "Switch on",
+    needs: "owner",
+    doneWords: "Saved. The number is on for them from the next read.",
+    preview: (ctx) => {
+      const { label, who } = switchWords(ctx.target);
+      return {
+        title: `Switch “${label}” on for ${who}`,
+        level: "global",
+        rows: [
+          ["What changes", `${who === "Admin" ? "Admin" : `Anything that reads this number for ${who}`} can read “${label}”.`],
+          ["Won’t", "Won’t send anything to anyone, change what is captured, or change what readers see. Nothing leaving carries an anonymous ID, an exact time or one person’s trail."],
+          ["Undo", "Switch it off. It stops at the next read."],
+        ],
+      };
+    },
+    gateway: { type: "config.setDataSwitch" },
+    dependency: null,
+  },
+  {
+    kind: "data-switch-off",
+    label: "Switch off",
+    needs: "owner",
+    doneWords: "Saved. The number is off for them from the next read.",
+    preview: (ctx) => {
+      const { label, who } = switchWords(ctx.target);
+      return {
+        title: `Switch “${label}” off for ${who}`,
+        level: "global",
+        rows: [
+          ["What changes", `${who === "Admin" ? "Admin" : `Anything that reads this number for ${who}`} is refused “${label}” from the next read.`],
+          ["Won’t", "Won’t delete anything that was captured or change what readers see."],
+          ["Undo", "Switch it on again."],
+        ],
+      };
+    },
+    gateway: { type: "config.setDataSwitch" },
     dependency: null,
   },
   {

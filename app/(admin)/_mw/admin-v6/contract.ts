@@ -52,7 +52,7 @@ export const V6_CAPABILITY_VERSION = 1;
 
 export type SectionId = keyof AdminV6Data;
 export const SECTION_IDS: readonly SectionId[] = [
-  "places", "hunts", "national", "results", "stuck", "sameCause", "workRows", "history", "workers", "checklist", "agents", "spend", "sends", "reliability", "money", "learning", "fixes", "decided",
+  "places", "hunts", "national", "results", "stuck", "sameCause", "workRows", "history", "workers", "checklist", "agents", "spend", "sends", "reliability", "publication", "money", "learning", "fixes", "decided",
 ];
 
 export function sectionContract(id: SectionId): string {
@@ -178,7 +178,7 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return { decisionId: s.target, option: s.option, words: s.words.trim() || null };
     case "hunt-start": {
       // A single hunt starts from one ZIP place (`geo:az.zcta.85635`). Anything wider starts from the many-hunts panel.
-      const zip = /^geo:([a-z]{2}).zcta.(d{5})$/.exec(s.target);
+      const zip = /^geo:([a-z]{2})\.zcta\.(\d{5})$/.exec(s.target);
       return { items: zip ? [{ zip: zip[2], stateAbbr: zip[1].toUpperCase(), budgetUsd: limit() }] : [], priority: 1, huntBudget: true };
     }
     case "hunt-start-many":
@@ -201,6 +201,16 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return { subjectId: FIX_QUEUE_SUBJECT, chosenOption: GO_FIX_OPTION, consequenceShown: "The queued gaps were sent for a session to fix", ownerAnswer: null };
     case "global-ceiling":
       return { rollingCeilingUsd: s.amount.trim() === "" ? null : Number(s.amount) };
+    case "target-set":
+      return { placeKey: s.target, goalPercent: s.amount.trim() === "" ? null : Number(s.amount) };
+    case "target-clear":
+      return { placeKey: s.target, goalPercent: null };
+    case "data-switch-on":
+    case "data-switch-off": {
+      // The target is "<recipe>@<audience>": a recipe id has no "@", an audience (admin, dashboard, customer:<id>) has none either.
+      const at = s.target.indexOf("@");
+      return { recipe: at < 0 ? s.target : s.target.slice(0, at), audience: at < 0 ? "" : s.target.slice(at + 1), on: kind === "data-switch-on" };
+    }
     case "global-search-on":
       return { enabled: true, confirmed: true };
     case "global-search-off":

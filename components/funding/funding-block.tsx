@@ -83,9 +83,9 @@ function FundingBlockInner({
     {answer.federal.kind === "funding"
       ? <FundingDisplay data={answer.federal.data} context={reactionContext} bare={bare} />
       : <FundingAbsence data={answer.federal.data} />}
-    <StateMoneySection records={answer.state.records} bare={bare} />
+    <StateMoneySection records={answer.state.records} bare={bare} context={reactionContext} />
   </>;
-  else if (answer.kind === "state") content = <StateMoneySection records={answer.data.records} bare={bare} />;
+  else if (answer.kind === "state") content = <StateMoneySection records={answer.data.records} bare={bare} context={reactionContext} />;
   else if (answer.kind === "identity-unresolved") content = <StateFundingNote note={answer.statement} />;
   else if (answer.kind === "none") content = isFederal ? null : <StateFundingNote note={NONFEDERAL_OFFICIAL_NOTE} />;
   else if (answer.kind === "absence") content = <FundingAbsence data={answer.data} />;

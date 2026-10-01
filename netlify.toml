@@ -30,6 +30,9 @@
   ignore = "node scripts/netlify-ignore.mjs"
 
 [build.environment]
+  # Versioned archive served directly from the edge; the app retains its
+  # Netlify Range route as the fallback when this source fails.
+  NEXT_PUBLIC_BOUNDARY_PMTILES_URL = "https://tiles.meanwhilemaps.com/us-2025.pmtiles"
   # package.json pins packageManager pnpm@10.33.0; corepack honours it.
   # Node 24 is what the repo is developed and tested on (no engines field —
   # see docs/state.md §1).

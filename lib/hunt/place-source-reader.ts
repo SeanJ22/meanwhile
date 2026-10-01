@@ -66,38 +66,43 @@ export async function placeSourceReader(input: {
     Date.parse(row.recordedAt) >= cutoff && Date.parse(row.recordedAt) <= Date.parse(at));
   const provenance: ArtifactProvenance[] = [];
   const inherited = new Map<string, WorkerPublicationCapture>();
-  const resolvedUrls = new Set<string>();
-  const heldCapture = async (url: string) => {
+  const resolvedUrls = new Map<string, Promise<WorkerPublicationCapture | null>>();
+  const resolveHeldCapture = async (url: string) => {
     const current = [...captures.values()].find(capture => capture.evidence.canonicalUrl === url);
     if (current) return current;
-    if (!resolvedUrls.has(url)) {
-      resolvedUrls.add(url);
-      // Keep this URL's fresh observations in newest-first order. A content
-      // ID can have many observations; resolve it only once in this pass.
-      const candidates = records.filter(row => row.canonicalUrl === url).sort((a, b) => b.recordedAt.localeCompare(a.recordedAt));
-      const heldRepos = { ...tools.repos, artifacts: { ...tools.repos.artifacts, readAll: async () => candidates } };
-      const readObject = researchVaultResolver(heldRepos, tools.store, project, { snapshot: true });
-      const tried = new Set<string>();
-      for (const row of candidates) {
-        if (tried.has(row.artifactId)) continue;
-        tried.add(row.artifactId);
-        try {
-          const { artifact } = await readObject(row.artifactId);
-          if (artifact.httpStatus !== 200 || artifact.retentionPolicy === "DIAGNOSTIC" || Date.parse(artifact.retrievedAt) < cutoff) continue;
-          const parsed = await readForParser(tools.store, project, artifact);
-          const capture = { evidence: evidenceProjection(parsed.input), observedAt: artifact.retrievedAt,
-            httpStatus: artifact.httpStatus, transport: artifact.transport, partial: false };
-          inherited.set(row.artifactId, capture);
-          captures.set(row.artifactId, capture);
-          provenance.push({ artifactId: row.artifactId, canonicalUrl: artifact.canonicalUrl,
-            retrievedAt: artifact.retrievedAt, httpStatus: artifact.httpStatus,
-            permission: artifact.permission, methodRouteId: artifact.methodRouteId,
-            contentType: artifact.contentType, retrievalUrl: artifact.retrievalUrl });
-          return capture;
-        } catch { /* Unreadable held bytes leave acquisition owed. */ }
-      }
+    // Keep this URL's fresh observations in newest-first order. A content
+    // ID can have many observations; resolve it only once in this pass.
+    const candidates = records.filter(row => row.canonicalUrl === url).sort((a, b) => b.recordedAt.localeCompare(a.recordedAt));
+    const heldRepos = { ...tools.repos, artifacts: { ...tools.repos.artifacts, readAll: async () => candidates } };
+    const readObject = researchVaultResolver(heldRepos, tools.store, project, { snapshot: true });
+    const tried = new Set<string>();
+    for (const row of candidates) {
+      if (tried.has(row.artifactId)) continue;
+      tried.add(row.artifactId);
+      try {
+        const { artifact } = await readObject(row.artifactId);
+        if (artifact.httpStatus !== 200 || artifact.retentionPolicy === "DIAGNOSTIC" || Date.parse(artifact.retrievedAt) < cutoff) continue;
+        const parsed = await readForParser(tools.store, project, artifact);
+        const capture = { evidence: evidenceProjection(parsed.input), observedAt: artifact.retrievedAt,
+          httpStatus: artifact.httpStatus, transport: artifact.transport, partial: false };
+        inherited.set(row.artifactId, capture);
+        captures.set(row.artifactId, capture);
+        provenance.push({ artifactId: row.artifactId, canonicalUrl: artifact.canonicalUrl,
+          retrievedAt: artifact.retrievedAt, httpStatus: artifact.httpStatus,
+          permission: artifact.permission, methodRouteId: artifact.methodRouteId,
+          contentType: artifact.contentType, retrievalUrl: artifact.retrievalUrl });
+        return capture;
+      } catch { /* Unreadable held bytes leave acquisition owed. */ }
     }
     return null;
+  };
+  const heldCapture = (url: string): Promise<WorkerPublicationCapture | null> => {
+    const current = [...captures.values()].find(capture => capture.evidence.canonicalUrl === url);
+    if (current) return Promise.resolve(current);
+    // Parallel district-layer lookups must await the same held response. A
+    // seen-URL flag let siblings fall through to the network before it resolved.
+    if (!resolvedUrls.has(url)) resolvedUrls.set(url, resolveHeldCapture(url));
+    return resolvedUrls.get(url)!;
   };
   const read = savedPageReader({ ...context, ...durable, vault,
     openBytes: async request => {

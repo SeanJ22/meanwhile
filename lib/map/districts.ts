@@ -1,4 +1,5 @@
-import type { Map as MapLibreMap, MapGeoJSONFeature, FilterSpecification, StyleSpecification } from "maplibre-gl";
+import { mapPresentationHeld } from "./flight-presentation.ts";
+import type { Map as MapLibreMap, MapGeoJSONFeature, FilterSpecification, StyleSpecification, LayerSpecification, VectorSourceSpecification } from "maplibre-gl";
 
 // Relative, extension-bearing imports — the style the rest of lib/ uses —
 // because node --test cannot resolve the `@/` alias and this module is now
@@ -219,7 +220,21 @@ export function preserveDistrictStyle(previous: StyleSpecification | undefined, 
   return { ...next, sources: { ...next.sources, [NATIONAL_BOUNDARIES_SOURCE]: source }, layers };
 }
 const sourceId = (_type: DistrictType) => NATIONAL_BOUNDARIES_SOURCE;
-export const BOUNDARY_ARCHIVE_URL = process.env.NEXT_PUBLIC_BOUNDARY_PMTILES_URL ?? "/api/boundaries/census-2025-b24d0345381f69be.pmtiles";
+export const BOUNDARY_ARCHIVE_FALLBACK = "/api/boundaries/census-2025-b24d0345381f69be.pmtiles";
+export const BOUNDARY_ARCHIVE_URL = process.env.NEXT_PUBLIC_BOUNDARY_PMTILES_URL || BOUNDARY_ARCHIVE_FALLBACK;
+export function boundarySource(archive = BOUNDARY_ARCHIVE_URL): VectorSourceSpecification {
+  return { type: "vector", url: `pmtiles://${new URL(archive, typeof window === "undefined" ? "http://localhost" : window.location.href).href}`, promoteId: "ocdId" };
+}
+
+/** Start fetching visible boundaries as soon as MapLibre constructs its style. */
+export function withDistricts(style: StyleSpecification, types: readonly DistrictType[]): StyleSpecification {
+  if (!types.length) return style;
+  return {
+    ...style,
+    sources: { ...style.sources, [NATIONAL_BOUNDARIES_SOURCE]: boundarySource() },
+    layers: [...style.layers, ...types.flatMap(districtStyleLayers).filter(layer => layer.type !== "symbol" || style.glyphs)],
+  };
+}
 export const fillLayerId = (type: DistrictType) => `district-${type}-fill`;
 export const lineLayerId = (type: DistrictType) => `district-${type}-line`;
 export const labelLayerId = (type: DistrictType) => `district-${type}-label`;
@@ -299,10 +314,7 @@ export function districtLayersPresent(map: MapLibreMap) {
   return DISTRICT_TYPES.some((type) => districtLayerPresent(map, type));
 }
 
-export function addDistrictLayer(
-  map: MapLibreMap,
-  type: DistrictType,
-): void {
+function districtStyleLayers(type: DistrictType): LayerSpecification[] {
   const spec = DISTRICT_LAYERS[type];
   const source = sourceId(type);
   const filter: FilterSpecification = spec.governingOnly
@@ -313,34 +325,9 @@ export function addDistrictLayer(
   const accent = token(TIER_ACCENT_VAR[DISTRICT_TYPE_TIER[type]], "#5f7a8a");
   const halo = token("--bg", "#0f1117");
 
-  if (!map.getSource(source)) {
-    // `promoteId` is what makes feature-state work: selection is expressed as
-    // state on a feature rather than by mutating the source, so selecting a
-    // district never re-tiles the geometry.
-    map.addSource(source, { type: "vector", url: `pmtiles://${new URL(BOUNDARY_ARCHIVE_URL, typeof window === "undefined" ? "http://localhost" : window.location.href).href}`, promoteId: "ocdId" });
-  }
-
-  const before = firstSymbolLayerId(map);
-
-  /*
-   * Each layer is added only if absent, rather than gating all three on one of
-   * them. A single "is it already there" check on the line layer left a real
-   * half-built state reachable: an invalid paint expression made addLayer throw
-   * for the line, the fill stayed, and every later pass tried to add the fill
-   * again and logged "already exists" forever. Per-layer guards make this
-   * idempotent whatever else fails.
-   */
-  const addIfAbsent = (
-    id: string,
-    build: () => Parameters<MapLibreMap["addLayer"]>[0],
-  ) => {
-    if (map.getLayer(id)) return;
-    map.addLayer(build(), before);
-  };
-
   // A transparent fill under the line. A line has almost no hit area, so
   // without this a district is effectively unclickable.
-  addIfAbsent(fillLayerId(type), () => ({
+  return [{
       id: fillLayerId(type),
       type: "fill",
       source,
@@ -362,9 +349,7 @@ export function addDistrictLayer(
           0,
         ],
       },
-    }));
-
-  addIfAbsent(lineLayerId(type), () => ({
+    }, {
       id: lineLayerId(type),
       type: "line",
       source,
@@ -408,9 +393,7 @@ export function addDistrictLayer(
           ],
         ],
       },
-    }));
-
-  addIfAbsent(labelLayerId(type), () => ({
+    }, {
       id: labelLayerId(type),
       type: "symbol",
       source,
@@ -429,7 +412,17 @@ export function addDistrictLayer(
         "text-halo-color": halo,
         "text-halo-width": 1.2,
       },
-    }));
+    }];
+}
+
+export function addDistrictLayer(map: MapLibreMap, type: DistrictType): void {
+  if (!map.getSource(NATIONAL_BOUNDARIES_SOURCE)) map.addSource(NATIONAL_BOUNDARIES_SOURCE, boundarySource());
+  const before = firstSymbolLayerId(map);
+  // Repair partially attached layers without duplicating the surviving ones.
+  for (const layer of districtStyleLayers(type)) {
+    if (layer.type === "symbol" && !map.getStyle()?.glyphs) continue;
+    if (!map.getLayer(layer.id)) map.addLayer(layer, before);
+  }
 }
 
 export function removeDistrictLayer(map: MapLibreMap, type: DistrictType): void {
@@ -773,4 +766,57 @@ export async function fullBoundsOfDistrict(
   const p = feature?.properties;
   if (!p || ![p.west,p.south,p.east,p.north].every(Number.isFinite)) return null;
   return [[p.west,p.south],[p.east,p.north]];
+}
+
+/** Coalesce source-driven queries after the updated tiles have rendered.
+ * No continuous move/zoom/render handler drives React or boundary queries. */
+export function onSettledDistrictChange(map: MapLibreMap, run: () => void): () => void {
+  let scheduled = false;
+  let dirty = true;
+  let disposed = false;
+
+  const flush = () => {
+    scheduled = false;
+    if (disposed || !dirty) return;
+    /*
+     * Still moving: drop this pass rather than pay it into a frame the reader
+     * is watching. Nothing is lost by dropping it — `moveend` schedules
+     * another, and every camera move MapLibre makes ends in exactly one.
+     */
+    if (map.isMoving() || mapPresentationHeld(map)) return;
+    dirty = false;
+    run();
+  };
+
+  const schedule = () => {
+    dirty = true;
+    if (disposed || scheduled) return;
+    scheduled = true;
+    map.once("render", flush);
+    map.triggerRepaint();
+  };
+  const onSourceData = (event: { sourceId?: string }) => {
+    // Vector tile completions omit sourceDataType; "content" only describes
+    // the source metadata/update. Count each rendered boundary batch, including
+    // cached tiles becoming visible, while still ignoring all basemap traffic.
+    if (event.sourceId === NATIONAL_BOUNDARIES_SOURCE) schedule();
+  };
+
+  schedule();
+  map.on("sourcedata", onSourceData);
+  // Idle can reveal held layers after software-rendered motion. A boundary
+  // frame already reported above is clean and must not query/update twice.
+  map.on("idle", flush);
+  // A move that consumed no sourcedata still has to report: a camera arriving
+  // somewhere new IS a change in which districts are drawn.
+  map.on("moveend", schedule);
+
+  return () => {
+    disposed = true;
+    map.off("render", flush);
+    scheduled = false;
+    map.off("sourcedata", onSourceData);
+    map.off("idle", flush);
+    map.off("moveend", schedule);
+  };
 }

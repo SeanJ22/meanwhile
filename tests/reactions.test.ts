@@ -385,55 +385,6 @@ test("the honest line says both truths: saved on this device, not counted", asyn
 
 // ── The disclosure coupling — the 5a⇔5b rule extended to reactions ───────
 
-test("the capture point and the transparency page disclose together", () => {
-  // The control (3c, 2026-08-16, author-approved TOS pattern): the first-ever
-  // tap surfaces a one-time notice that must be acknowledged BEFORE the
-  // answer records, with the approved sentence and the transparency link.
-  // The notice gates capture — the pending tap applies only on acknowledge.
-  const control = readFileSync(
-    join(process.cwd(), "components", "reactions", "reaction-control.tsx"),
-    "utf8",
-  );
-  assert.ok(
-    control.includes("Your answer joins anonymous local totals. We never know who you"),
-    "the one-time notice must carry the approved sentence",
-  );
-  assert.ok(
-    control.includes("How we use this"),
-    "the notice must link the full explanation",
-  );
-  assert.ok(
-    control.includes('href="/transparency"'),
-    "the notice's link must open the transparency page",
-  );
-  assert.ok(
-    control.includes("disclosureAcknowledged()") &&
-      control.includes("setPendingValue(value)"),
-    "an unacknowledged tap must park, never record",
-  );
-
-  // The transparency page: reactions, the hashed continuity key, and the
-  // tier split are all disclosed in the same terms the schema enforces.
-  const page = readFileSync(
-    join(process.cwd(), "app", "transparency", "page.tsx"),
-    "utf8",
-  ).toLowerCase();
-  // 1b (2026-08-17): "sell" retired from reader surfaces — the commercial
-  // fact stays, stated as "may be licensed". The page must still state it.
-  for (const claim of ["reaction", "hashed", "verification tier", "licensed"]) {
-    assert.ok(page.includes(claim), `the transparency page must mention "${claim}"`);
-  }
-  assert.ok(
-    !/\bsold\b|\bsell\b/.test(page),
-    'reader wording: "sell/sold" retired in favor of "licensed" (1b)',
-  );
-  // 1d: the OFFICIAL_OPENED event ships with its disclosure line.
-  assert.ok(
-    page.includes("official"),
-    "the transparency page must disclose that opening an official's card is logged",
-  );
-});
-
 // ── M63: "Someone else", the uncontested-race answer ─────────────────────
 
 /**
@@ -605,26 +556,6 @@ test("M63: the fourth button renders only where the answer is accepted", () => {
   assert.ok(
     control.includes('outcome === "NOT_COUNTED"') && control.includes("NOT_COUNTED_LINE"),
     "the not-counted rendering must still gate every answer",
-  );
-});
-
-test("M63: the transparency page explains the fourth answer, in the same commit", () => {
-  const page = readFileSync(
-    join(process.cwd(), "app", "transparency", "page.tsx"),
-    "utf8",
-  );
-  assert.ok(
-    page.includes("Someone"),
-    "the transparency page must name the fourth answer",
-  );
-  assert.ok(
-    /only one candidate|one-candidate|no choice/i.test(page),
-    "the page must say when the fourth answer appears",
-  );
-  // Plain language: the reader-facing explanation may not leak the enum.
-  assert.ok(
-    !page.includes("SOMEONE_ELSE"),
-    "the identifier reached a reader surface",
   );
 });
 

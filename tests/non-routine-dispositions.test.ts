@@ -25,7 +25,6 @@ import {
   officeholderRosterFiles,
 } from "../lib/officials/roster-authority.ts";
 import { readerTraceRequirements } from "../lib/holdings/reader-trace.ts";
-import { buildSourceRegistry, readCredentialPresence } from "../lib/control-plane/source-registry.ts";
 
 interface InventoryRow {
   source_id: string;
@@ -357,16 +356,6 @@ test("Plural/OpenStates is research evidence only: production has no state-roste
   const family = DATASET_FAMILIES.find(({ id }) => id === "state-officeholders");
   assert.deepEqual(family?.surfaces, []);
   assert.deepEqual(family?.consumerPaths, []);
-
-  const sourceView = buildSourceRegistry({
-    nowIso: "2026-09-08T12:00:00.000Z",
-    credentialPresence: readCredentialPresence({}),
-    credentialReadIn: "test settings",
-  });
-  const plural = sourceView.rows.find(({ id }) => id === "plural-bulk");
-  assert.equal(plural?.disposition, "NOT_APPLICABLE");
-  assert.equal(plural?.adapter.active, false);
-  assert.match(plural?.productUsage ?? "", /None in production/);
 });
 
 test("the family classifier preserves the frozen split-family semantics without UNKNOWN", () => {

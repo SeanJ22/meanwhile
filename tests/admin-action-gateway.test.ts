@@ -992,3 +992,62 @@ test("ADM-C6: every receipt lands under the one declared log key", async () => {
   assert.equal(rows.length, 2);
   for (const row of rows) assert.equal(row.formatVersion, 1);
 });
+
+test("a place target is recorded with its receipt, changed in place, refused when it is not 1 to 100, and cleared; the ceiling stays", async () => {
+  const repos = createMemoryRepositories();
+  const send = (key: string, goalPercent: unknown, placeKey = "geo:az.zcta.85635") =>
+    submit(ask({ type: "config.setPlaceTarget", subject: placeKey, input: { placeKey, goalPercent }, idempotencyKey: key }), deps(repos));
+  await submit(ask({ type: "config.setFleetSpendCeiling", subject: "fleet spend ceiling", input: { rollingCeilingUsd: "250" }, idempotencyKey: "ceiling-key-pt" }), deps(repos));
+
+  const first = await send("target-key-01", "95");
+  assert.equal(first.ok, true, first.receipt.says);
+  const after = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  assert.deepEqual(after?.value.placeTargets?.map((t) => [t.key, t.goalPercent, t.decidedBy, t.receiptId]),
+    [["geo:az.zcta.85635", 95, "adm_test-session", receiptIdFor("config.setPlaceTarget", "target-key-01")]], "the target names who set it and the receipt");
+  assert.equal(after?.value.fleetSpendCeiling?.rollingCeilingUsd, 250, "setting a target keeps the ceiling");
+  assert.match(first.receipt.says, /now 95%/);
+
+  const changed = await send("target-key-02", 90);
+  assert.equal(changed.ok, true);
+  assert.match(changed.receipt.says, /it was 95%/);
+  assert.equal((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value.placeTargets?.length, 1, "one target per place");
+
+  for (const [i, raw] of ["0", "101", "abc", -5].entries()) {
+    const refused = await send(`target-bad-${i}`, raw);
+    assert.equal(refused.ok, false, `${String(raw)} is not a target`);
+  }
+  const badKey = await send("target-bad-key", 90, "geo:az.zcta");
+  assert.equal(badKey.ok, false, "only a real place can carry a target");
+
+  const cleared = await send("target-key-03", null);
+  assert.equal(cleared.ok, true);
+  assert.deepEqual((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value.placeTargets, []);
+});
+
+test("a data switch is recorded with its receipt, changed in place, refused for an unknown number or audience, and keeps every other decision", async () => {
+  const repos = createMemoryRepositories();
+  const send = (key: string, input: Record<string, unknown>) =>
+    submit(ask({ type: "config.setDataSwitch", subject: `${String(input.recipe)}@${String(input.audience)}`, input, idempotencyKey: key }), deps(repos));
+  await submit(ask({ type: "config.setPlaceTarget", subject: "st:az", input: { placeKey: "st:az", goalPercent: 80 }, idempotencyKey: "target-key-ds" }), deps(repos));
+
+  const on = await send("switch-key-001", { recipe: "word-cloud", audience: "customer:acme", on: true });
+  assert.equal(on.ok, true, on.receipt.says);
+  assert.match(on.receipt.says, /now on for customer acme \(it was off\)/);
+  const after = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  assert.deepEqual(after?.value.dataSwitches?.map((d) => [d.recipe, d.audience, d.on, d.decidedBy, d.receiptId]),
+    [["word-cloud", "customer:acme", true, "adm_test-session", receiptIdFor("config.setDataSwitch", "switch-key-001")]], "the switch names who set it and the receipt");
+  assert.equal(after?.value.placeTargets?.[0]?.goalPercent, 80, "a switch keeps the place target");
+
+  const off = await send("switch-key-002", { recipe: "word-cloud", audience: "customer:acme", on: "off" });
+  assert.equal(off.ok, true);
+  assert.match(off.receipt.says, /now off for customer acme \(it was on\)/);
+  assert.equal((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value.dataSwitches?.length, 1, "one entry per number and audience");
+
+  const admin = await send("switch-key-003", { recipe: "topic-share", audience: "admin", on: false });
+  assert.match(admin.receipt.says, /now off for Admin \(it was on\)/, "Admin defaults on, so turning it off says it was on");
+
+  for (const [i, input] of [{ recipe: "nope", audience: "dashboard", on: true }, { recipe: "word-cloud", audience: "everyone", on: true }, { recipe: "word-cloud", audience: "dashboard" },
+    { recipe: "word-cloud", audience: "customer:", on: true }, { recipe: "word-cloud", audience: "dashboard", on: "maybe" }].entries()) {
+    assert.equal((await send(`switch-bad-${i}`, input)).ok, false, JSON.stringify(input));
+  }
+});

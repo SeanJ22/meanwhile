@@ -72,7 +72,7 @@ import { settleStateMoneyReads } from "@/lib/funding/state-snapshot";
 import { zipCertainty } from "@/lib/geo/zip-certainty";
 import { lowestZipByDivision } from "@/lib/geo/zip-division-index";
 import { lookupZctaAsync } from "@/lib/geo/zcta-table";
-import { NATIONAL_SCOPE, type ReaderManifest } from "@/lib/meetings/edge-artifacts";
+import { NATIONAL_SCOPE, stateOfOcdId, type ReaderManifest } from "@/lib/meetings/edge-artifacts";
 import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { settleExecutiveActionsRead } from "@/lib/officials/executive-actions";
 import { settleOutcomeRead } from "@/lib/outcomes/store";
@@ -178,7 +178,9 @@ async function statePlace(state: string) {
 
 /** Resolve one place per published state the way `/api/meetings` does, so its reads are loaded on this instance. */
 async function primeReaderPlaces(manifest: ReaderManifest): Promise<{ places: number; placesRefused: number }> {
-  const states = manifest.scopes.map((scope) => scope.scope).filter((scope) => scope !== NATIONAL_SCOPE);
+  const states = [...new Set(manifest.scopes.map((scope) =>
+    stateOfOcdId(scope.ocdId) ?? (/^[a-z]{2}$/.test(scope.scope) && scope.scope !== NATIONAL_SCOPE ? scope.scope : null),
+  ).filter((state): state is string => state !== null))];
   const counts = { places: 0, placesRefused: 0 };
   const each = states.map(async (state) => {
     try {

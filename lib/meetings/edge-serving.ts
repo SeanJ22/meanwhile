@@ -6,6 +6,7 @@ import {
   mergeScopeArtifacts,
   registrationArtifactKey,
   partitionSnapshotByScope,
+  readerScopeApplies,
   scopesForStates,
   sha256OfJson,
   AUTHORITY_FAMILIES,
@@ -648,10 +649,19 @@ export async function publishReaderEdgeArtifacts(
   let registrationsComplete = options.registrations !== undefined;
   try {
     for (const artifact of artifacts) {
+      const unchanged = current?.manifest.scopes.find(scope => scope.scope === artifact.scope && scope.sha256 === shaByScope.get(artifact.scope));
+      if (unchanged) {
+        manifestScopes.push(unchanged);
+        continue;
+      }
       const key = artifactKey(sequence, artifact.scope);
       await store.writeArtifact(key, artifact);
       manifestScopes.push({
         scope: artifact.scope,
+        ...(artifact.ocdId ? { ocdId: artifact.ocdId } : {}),
+        ...(artifact.bounds ? { bounds: artifact.bounds } : {}),
+        ...(artifact.meetingIds ? { meetingIds: artifact.meetingIds } : {}),
+        ...(artifact.agendaOnly ? { agendaOnly: true } : {}),
         key,
         sha256: shaByScope.get(artifact.scope)!,
         meetingCount: artifact.meetings.length,
@@ -711,6 +721,7 @@ export async function publishReaderEdgeArtifacts(
   const manifest: ReaderManifest = {
     formatVersion: READER_ARTIFACT_FORMAT_VERSION,
     sequence,
+    ...(snapshot !== null ? { meetingLayout: "governing-area" as const } : current?.manifest.meetingLayout ? { meetingLayout: current.manifest.meetingLayout } : {}),
     generatedAt: snapshot?.generatedAt || (options.checks ? laterCheck(current?.manifest.generatedAt ?? null, metadata.retrievedAt) : null) || current?.manifest.generatedAt || now,
     sourceThrough: snapshot === null ? current?.manifest.sourceThrough ?? null : metadata.sourceThrough,
     retrievedAt: snapshot === null ? laterCheck(current?.manifest.retrievedAt ?? null, options.checks ? metadata.retrievedAt : null) : metadata.retrievedAt,
@@ -762,6 +773,10 @@ export async function readReaderEdgeMeetings(
   options: {
     readonly store?: ReaderArtifactStore | null;
     readonly states?: readonly string[];
+    readonly ocdIds?: readonly string[];
+    readonly meetingId?: string;
+    readonly includeAgenda?: boolean;
+    readonly nearby?: { readonly lat: number; readonly lng: number; readonly radiusKm: number };
     readonly now?: string;
     /** A manifest already read this request, so the reader reads the store once. */
     readonly manifest?: ReaderManifest | null;
@@ -792,11 +807,7 @@ export async function readReaderEdgeMeetings(
   }
   if (!manifest || manifest.scopes.length === 0) return fallback();
 
-  const wanted = options.states
-    ? new Set(scopesForStates(options.states))
-    : null;
-  const chosen = manifest.scopes.filter((s) => wanted === null || wanted.has(s.scope));
-  const needed = chosen.length > 0 ? chosen : manifest.scopes; // never serve nothing when the manifest has data
+  const needed = manifest.scopes.filter(scope => readerScopeApplies(scope, options));
   const areaKey = sha256OfJson({ manifest, scopes: needed.map(({ scope, sha256 }) => [scope, sha256]) });
   const cachedArea = areaReads.get(areaKey);
   if (cachedArea) return cachedArea;
@@ -808,7 +819,7 @@ export async function readReaderEdgeMeetings(
   } catch {
     return fallback();
   }
-  if (artifacts.length === 0) return fallback();
+  if (needed.length > 0 && artifacts.length === 0) return fallback();
 
   // A quiet re-check since these artifacts were written restamps its route's
   // fresh rows; "Last checked" is already the manifest's (lib/meetings/fresh-checks.ts).

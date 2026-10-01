@@ -8,6 +8,9 @@ import { ADMIN_V6_SPEND_CONTRACT, SPEND_DAYS, readSpend } from "./v6-spend-read.
 import { validateV6Query } from "./v6-hunts-read.ts";
 
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
+/** Twelve months of the ledger is a real read: one answer serves every open page for this long. */
+const MEMO_MS = 90_000;
+let memo: { at: number; data: Awaited<ReturnType<typeof readSpend>> } | null = null;
 
 /** Read-only. Spend is whole-system: the ledger is not split by place, so every scope reads the same figures and says so. */
 export async function v6SpendGet(request: NextRequest): Promise<NextResponse> {
@@ -20,10 +23,13 @@ export async function v6SpendGet(request: NextRequest): Promise<NextResponse> {
   const url = controlPlaneUrlFromEnv();
   if (!url) return NextResponse.json({ state: "UNREAD", says: "The control-plane database is not configured here, so spend was not read." }, { status: 503, headers: NO_STORE });
   const now = new Date().toISOString();
-  let transfer: DailyDatabaseTransferRead | null = null;
-  try { transfer = await readDailyDatabaseTransfer(SPEND_DAYS); } catch { transfer = null; }
   try {
-    const data = await readSpend(neon(url), transfer);
+    if (!memo || Date.now() - memo.at > MEMO_MS) {
+      let transfer: DailyDatabaseTransferRead | null = null;
+      try { transfer = await readDailyDatabaseTransfer(SPEND_DAYS); } catch { transfer = null; }
+      memo = { at: Date.now(), data: await readSpend(neon(url), transfer) };
+    }
+    const data = memo.data;
     return NextResponse.json({ contract: ADMIN_V6_SPEND_CONTRACT, scope: query.scopeKey, revision: `spend:${now.slice(0, 16)}`, asOf: now, data,
       missingParts: data.neon.kind === "not-recorded" ? [`Neon: ${data.neon.detail ?? "not recorded yet"}`] : [] }, { headers: NO_STORE });
   } catch {

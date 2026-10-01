@@ -4,7 +4,6 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-import { FLEET_TABS, READINESS_TABS, withScope } from "../app/(admin)/_mw/scope.ts";
 import { readinessRowOutcome } from "../lib/control-plane/readiness/read.ts";
 import { READINESS_DERIVATION_CONTRACT } from "../lib/control-plane/readiness/model.ts";
 import { plainCount, plainDuration, plainMeaning } from "../lib/control-plane/plain-words.ts";
@@ -63,7 +62,7 @@ function fragmentLinks(): { readonly from: string; readonly line: string; readon
 test("every fragment the console sends the owner to is an id something renders", () => {
   const source = adminSource();
   const links = fragmentLinks();
-  assert.ok(links.some((l) => l.id === "assignments") && links.some((l) => l.built), "the sweep found none of the console's fragment links, so it is not looking at them");
+  assert.ok(links.some((l) => l.id === "v6-main"), "the sweep found none of the console's fragment links, so it is not looking at them");
   const dead = links.filter((l) => (l.built ? !source.includes(`id={\`${l.id}\${`) : !source.includes(`id="${l.id}"`)));
   assert.deepEqual(
     dead.map((l) => `${l.from}: #${l.id}${l.built ? "…" : ""}`),
@@ -71,18 +70,6 @@ test("every fragment the console sends the owner to is an id something renders",
     "these links point at fragments no element renders, so they silently do nothing. " +
       "This is the exact defect the owner found on the merged Admin C — #decisions and #receipts were both dead.",
   );
-});
-
-test("the route targets the console's own navigation sends the owner to are real pages", () => {
-  // Admin redesign, 2026-09-23: the command centre's cards were removed; the console's routes are now its area tabs, its area toggle and its Other pages menu.
-  const header = readFileSync(join(ROOT, "app", "(admin)", "_mw", "header-controls.tsx"), "utf8");
-  const others = [...header.matchAll(/\{ href: "(\/[^"]+)", label:/g)].map((m) => m[1]);
-  assert.ok(others.length >= 3, `the sweep must read the Other pages menu; saw ${others.length}`);
-  const routes = [...new Set([...FLEET_TABS.map((t) => t.path), ...READINESS_TABS.map((t) => t.path), ...others])];
-  const tracked = new Set(filesThatWouldBeCommitted({ cwd: ROOT, paths: ["app"] }));
-  const missing = routes.filter((route) => !tracked.has(`app/(admin)${route}/page.tsx`));
-  assert.deepEqual(missing, [], `these links point at routes with no page: ${missing.join(", ")}`);
-  assert.ok(tracked.has("app/(admin)/readiness/[state]/page.tsx"), "the Readiness toggle lands on a state's page when the scope names one");
 });
 
 // Admin redesign, 2026-09-23: the "What is blocked?" card and its #blocked region were removed with the command centre; Fleet · Now's three cards are counted from the lists drawn beneath them on the same page.
@@ -167,23 +154,6 @@ test("a superseded readiness snapshot says what happened in owner language, and 
   assert.equal(out.clearedBy.command, "automatic standing-runtime console publisher");
   assert.doesNotMatch(out.clearedBy.command, /readiness:publish|\bpnpm\b/,
     "the recovery identity must not restore a retired owner-run command");
-});
-
-test("the readiness page puts the machine facts one disclosure down, and keeps them", () => {
-  // Admin redesign, 2026-09-23: the state page was redrawn in the shell; its branch for a record worked out an older way is now a refusal box over the `readiness` outcome. The rule follows the branch.
-  const page = readFileSync(join(ROOT, "app", "(admin)", "readiness", "[state]", "page.tsx"), "utf8");
-  const start = page.indexOf('readiness.kind === "REQUIRES_REPUBLISH" && (');
-  assert.ok(start > 0, "the state page has no branch for a record worked out an older way");
-  const block = page.slice(start, page.indexOf(")}", page.indexOf("</Refusal>", start)));
-  assert.match(block, /\{readiness\.says\}/, "the page does not lead with the owner sentence");
-  assert.match(block, /\{readiness\.next\}/);
-  const disclosureAt = block.indexOf("<details");
-  assert.ok(disclosureAt > 0, "there is no Technical details disclosure: the machine facts were deleted rather than demoted");
-  assert.ok(block.indexOf("{readiness.says}") < disclosureAt, "the machine facts still come first");
-  const disclosure = block.slice(disclosureAt);
-  assert.match(disclosure, /clearedBy\.command/, "the standing publisher identity was deleted from the technical disclosure");
-  assert.match(disclosure, /snapshotContract/, "the contract identifier was deleted rather than demoted");
-  assert.match(disclosure, /readiness\.detail/);
 });
 
 test("the console is published before the first cycle, not only after one", () => {

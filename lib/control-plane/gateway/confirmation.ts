@@ -18,10 +18,11 @@
  *                           started after the save has read the new list
  *   config.setDiscoverySearch
  *                           the runner's own heartbeat names this receipt
- *   config.setFleetSpendCeiling / expansion.scope.remove
+ *   config.setFleetSpendCeiling / config.setPlaceTarget / expansion.scope.remove
  *                           a round started after the save: the runner reads
  *                           these when a round starts
  *   everything else         finished inside the console; nothing for the runner
+ *                           (config.setDataSwitch is read at each read of a number, so it is in force when saved)
  * ```
  *
  * A round that has not started since the save is "waiting", and a paused runner
@@ -65,6 +66,7 @@ export const INTENT_ACTIONS: ReadonlySet<string> = new Set([
 /** Actions the runner reads when a round starts. */
 const ROUND_ACTIONS: ReadonlySet<string> = new Set([
   "config.setFleetSpendCeiling",
+  "config.setPlaceTarget",
   "config.setDiscoverySearch",
   "expansion.scope.set",
   "expansion.scope.setMany",
@@ -85,6 +87,7 @@ const APPLIED_WORDS: Readonly<Record<string, string>> = {
   "expansion.scope.budget": "The runner is using the new budget.",
   "expansion.scope.remove": "The runner has read the new list; that place is off it.",
   "config.setFleetSpendCeiling": "The runner is using the new spending ceiling.",
+  "config.setPlaceTarget": "The runner has read the new target and orders this place's work by it.",
   "config.setDiscoverySearch": "The runner is using the new search setting.",
 };
 
@@ -100,6 +103,7 @@ const WAITING_WORDS: Readonly<Record<string, string>> = {
   "expansion.scope.budget": "Saved. The runner uses it when its next round starts.",
   "expansion.scope.remove": "Saved. Waiting for the runner to read the new list.",
   "config.setFleetSpendCeiling": "Saved. The runner uses it when its next round starts.",
+  "config.setPlaceTarget": "Saved. The runner reads the target when its next round starts.",
   "config.setDiscoverySearch": "Saved. The runner uses it when its next round starts.",
 };
 

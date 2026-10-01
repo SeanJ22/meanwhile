@@ -133,6 +133,69 @@ const PAGE = `<!doctype html><html><head><title>Board Agendas &amp; Minutes</tit
 
 const IN = { rung: "primary-site-navigation", why: "find the agenda packet route" };
 
+test("HTTP source requests acquire and retain the actual HTTPS text or binary identity", async () => {
+  for (const binary of [false, true]) {
+    const requested = `http://clerk.example.gov/${binary ? "packet.pdf" : "calendar"}`;
+    const secure = requested.replace("http:", "https:");
+    const final = "https://documents.example.gov/current";
+    const seen: string[] = [];
+    const vault = recordingVault();
+    const binaryPuts: Artifact[] = [];
+    const kit = buildScoutToolkit(context({openOne: fakeTransport({}).open, vault: vault.put,
+      openBytes: async ({url}) => {
+        seen.push(url);
+        const robots = url.endsWith("/robots.txt");
+        return {status: 200, bytes: Buffer.from(robots ? ROBOTS_ALLOW_ALL : binary ? "%PDF-1.4\nfixture" : PAGE),
+          contentType: robots ? "text/plain" : binary ? "application/pdf" : "text/html", finalUrl: robots ? url : final,
+          durationMs: 1, transportError: null};
+      }, vaultBytes: async artifact => {binaryPuts.push(artifact); return {stored:true,where:"mem",why:"saved"};}}));
+    const result = await kit.call("fetch_public", {url: requested, ...IN}, null);
+    assert.ok(seen.includes(secure));
+    assert.ok(!seen.includes(requested), "HTTP bytes were never used for the new capture");
+    const artifact = binary ? binaryPuts[0] : vault.puts.find(row=>row.artifact.methodRouteId === "scout:fetch_public")?.artifact;
+    assert.equal(artifact?.canonicalUrl, final);
+    assert.equal(artifact?.retrievalUrl, final);
+    assert.equal(artifact?.sourceId, "documents.example.gov");
+    assert.ok(result.provenance?.some(row=>row.canonicalUrl === final));
+  }
+});
+
+test("HTTPS unavailable keeps a real HTTP capture as HTTP and counts both requests", async () => {
+  const requested = "http://clerk.example.gov/calendar";
+  const transport = fakeTransport({["http://clerk.example.gov/robots.txt"]:{status:200,body:ROBOTS_ALLOW_ALL},
+    [requested]:{status:200,body:PAGE}});
+  const vault = recordingVault();
+  const result = await buildScoutToolkit(context({openOne:transport.open,vault:vault.put})).call("fetch_public",{url:requested,...IN},null);
+  assert.equal(result.ok,true);
+  assert.deepEqual(transport.seen,["http://clerk.example.gov/robots.txt","https://clerk.example.gov/calendar",requested]);
+  assert.equal(result.requestCount,3);
+  const artifact = vault.puts.find(row=>row.artifact.methodRouteId === "scout:fetch_public")!.artifact;
+  assert.equal(artifact.canonicalUrl,requested);
+  assert.equal(artifact.retrievalUrl,requested);
+});
+
+test("browser HTTP sources save their actual HTTPS render and retain HTTP on fallback", async () => {
+  for (const unavailable of [false,true]) {
+    const requested = "http://clerk.example.gov/calendar";
+    const secure = requested.replace("http:","https:");
+    const seen: string[] = [];
+    const vault = recordingVault();
+    const transport = fakeTransport({["http://clerk.example.gov/robots.txt"]:{status:200,body:ROBOTS_ALLOW_ALL}});
+    const browse: BrowseFn = async ({url}) => {
+      seen.push(url);
+      if(unavailable && url === secure) throw new Error("TLS unavailable");
+      return {html:PAGE, text:MARKER, finalUrl:url, status:200, transportError:null, durationMs:1, requests:[]};
+    };
+    const result = await buildScoutToolkit(context({openOne:transport.open,browse,vault:vault.put})).call("browse",{url:requested,...IN},null);
+    assert.equal(result.ok,true,result.forModel);
+    assert.deepEqual(seen,unavailable?[secure,requested]:[secure]);
+    const artifact = vault.puts.find(row=>row.artifact.methodRouteId === "scout:browse")!.artifact;
+    assert.equal(artifact.canonicalUrl,unavailable?requested:secure);
+    assert.equal(artifact.retrievalUrl,artifact.canonicalUrl);
+    assert.equal(result.requestCount,unavailable?3:2);
+  }
+});
+
 /* ================================================= (h) the evaluator */
 
 test("robots: longest match decides, Allow winning a tie (Wikipedia's exact shape)", () => {
@@ -974,4 +1037,3 @@ test('collector falls back to the existing browser and returns only saved public
   const refused=savedPageReader(context({openOne:fakeTransport({[url]:{status:200,body:html}}).open,vault:recordingVault('refuse').put}));
   await assert.rejects(refused(url),/SOURCE_PAGE_UNREADABLE/);
 });
-

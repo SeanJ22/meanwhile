@@ -223,7 +223,7 @@ test("DURABILITY: RAW and SANITIZED_DERIVED artifacts survive a FRESH store inst
   assert.equal(decode(readBackDerived!.bytes), text);
   assert.equal(readBackDerived!.meta.custom?.tier, "SANITIZED_DERIVED");
 
-  // `head` answers from the sidecar, with no body transferred.
+  // `head` returns metadata only after checking its body.
   const head = (await reader.head(rawPut.key))!;
   assert.equal(head.contentHash, raw.contentHash);
   assert.equal(head.byteLength, raw.byteLength);
@@ -374,6 +374,9 @@ test("DURABLE READ: bytes that no longer hash to what was written are a FAILED R
 
   // And `readArtifact` propagates it rather than reporting the artifact missing.
   await assert.rejects(() => readArtifact(store, PROJECT, artifact, "AUDITOR"), EvidenceCorrupted);
+  await assert.rejects(() => store.head(key), EvidenceCorrupted);
+  await assert.rejects(() => store.put(key, utf8(PUBLIC_PAGE), artifactMeta(artifact)), EvidenceCorrupted);
+  await assert.rejects(() => putArtifact(store, PROJECT, artifact, utf8(PUBLIC_PAGE)), EvidenceCorrupted);
 });
 
 test("DURABLE WRITE: the sidecar is the commit point, so an interrupted write is absent rather than half-declared", async (t) => {
@@ -404,6 +407,9 @@ test("DURABLE WRITE: the sidecar is the commit point, so an interrupted write is
   /* The opposite half: a committed sidecar whose body is gone is a FAILED READ
      and says so, because something did commit and the body is not there. */
   await rm(join(root, ...key.split("/")));
+  await assert.rejects(() => store.head(key), EvidenceStoreRefusal);
+  await assert.rejects(() => store.put(key, utf8(PUBLIC_PAGE), artifactMeta(artifact)), EvidenceStoreRefusal);
+  await assert.rejects(() => putArtifact(store, PROJECT, artifact, utf8(PUBLIC_PAGE)), EvidenceStoreRefusal);
   await assert.rejects(
     () => store.get(key),
     (e: unknown) => {
@@ -417,6 +423,24 @@ test("DURABLE WRITE: the sidecar is the commit point, so an interrupted write is
      listing — a store that listed one would report a partial write as an artifact. */
   await writeFile(join(root, ".wtp-evidence-tmp-deadbeef"), "half a body");
   assert.deepEqual(await store.list(""), [key], "an in-flight temp file was listed as an object");
+});
+
+test("a failed body readback leaves no committed sidecar", async (t) => {
+  const root = await makeRoot(t);
+  const store = new DurableEvidenceStore(root);
+  const { artifact } = recordAcquisition(ACQUISITION, PUBLIC_PAGE);
+  const key = objectKey(PROJECT, artifact);
+  // Delete the renamed body before the commit readback, simulating interrupted storage.
+  const writer = store as unknown as { atomicWrite: (path: string, bytes: Uint8Array, accept: unknown) => Promise<void> };
+  const original = writer.atomicWrite.bind(store);
+  writer.atomicWrite = async (path, bytes, accept) => {
+    await original(path, bytes, accept);
+    if (!path.endsWith(SIDECAR_SUFFIX)) await rm(path);
+  };
+  await assert.rejects(() => putArtifact(store, PROJECT, artifact, utf8(PUBLIC_PAGE)), EvidenceStoreRefusal);
+  assert.equal(await store.head(key), null);
+  assert.equal(await store.get(key), null);
+  assert.deepEqual(await store.list("project/"), []);
 });
 
 /* ========================================= keys, and the traversal refusal */

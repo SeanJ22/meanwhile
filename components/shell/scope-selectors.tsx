@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 
 import { bodyScopeKey, type BodyScopeKey } from "@/lib/state/body-scope";
+import { readerBodyName } from "@/lib/text/reader-names";
 import { tierForMeeting } from "@/lib/state/derive";
 import { useShellData } from "@/lib/state/data";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
@@ -48,29 +49,50 @@ export function ScopeSelectors({
   }, [allMeetings, tiers]);
 
   const bodies = useMemo(() => {
-    const seen = new Map<BodyScopeKey, string>();
+    const seen = new Map<BodyScopeKey, { name: string; jurisdiction: string; bodyId: string | undefined }>();
     for (const meeting of allMeetings) {
       const tier = tierForMeeting(meeting);
       if (tier === null || !tiers.includes(tier)) continue;
       if (jurisdiction && meeting.ocdId !== jurisdiction) continue;
       // The filter's own constructor, so the option offered is the key matched.
       const key = bodyScopeKey(meeting);
-      if (!seen.has(key)) seen.set(key, meeting.bodyName);
+      if (!seen.has(key)) {
+        seen.set(key, {
+          name: readerBodyName(meeting.bodyName),
+          jurisdiction: meeting.jurisdiction,
+          bodyId: meeting.bodyId,
+        });
+      }
     }
     // 6d (2026-08-17): governing bodies before advisory ones — the City
     // Council never sorts below the Board of Adjustment. Class comes from
-    // the coverage summary's curated rows; a name coverage doesn't know
-    // (usually a derived governing body) ranks with the governments.
+    // the coverage summary, joined on the body's id (a portal's name for the
+    // sitting is not a key); a body coverage doesn't know ranks with the
+    // governments.
     const advisory = new Map<string, boolean>();
     for (const covered of result?.coverage?.bodies ?? []) {
-      if (covered.name) {
-        advisory.set(covered.name, covered.bodyClass !== "GOVERNING");
-      }
+      advisory.set(covered.bodyId, covered.bodyClass !== "GOVERNING");
     }
-    const rank = (label: string) => (advisory.get(label) ? 1 : 0);
-    return [...seen.entries()].sort(
-      (a, b) => rank(a[1]) - rank(b[1]) || a[1].localeCompare(b[1]),
-    );
+    const rank = (bodyId: string | undefined) => (bodyId && advisory.get(bodyId) ? 1 : 0);
+    // Several jurisdictions have a "Governing Board", so every option names
+    // its own — unless the name already says it ("Amphitheater Unified School
+    // District Governing Board").
+    const named = [...seen.entries()].map(([key, body]): [BodyScopeKey, string, string | undefined] => {
+      const place = body.jurisdiction.replace(/,\s*[A-Z]{2}$/, "");
+      const name = body.name.toLowerCase();
+      const placeLower = place.toLowerCase();
+      // Named for its government ("Tucson Unified School District Governing
+      // Board", "City of Tucson Deferred Compensation Plan Management Board");
+      // a name that only happens to contain the word ("Park Tucson Commission")
+      // still gets its jurisdiction.
+      const namesItsGovernment =
+        placeLower !== "" && (name.startsWith(placeLower) || name.includes(` of ${placeLower}`));
+      const label = namesItsGovernment ? body.name : `${body.name} — ${body.jurisdiction}`;
+      return [key, label, body.bodyId];
+    });
+    return named
+      .sort((a, b) => rank(a[2]) - rank(b[2]) || a[1].localeCompare(b[1]))
+      .map(([key, label]): [BodyScopeKey, string] => [key, label]);
   }, [allMeetings, tiers, jurisdiction, result]);
 
   // The banner slot Edia uses for #smbOppBanner: one line explaining a filter

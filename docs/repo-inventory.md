@@ -790,7 +790,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-956 file(s).
+957 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -1502,6 +1502,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/reader-last-mile-registry-failure.test.ts`
 - `tests/reader-last-mile-trace.test.ts`
 - `tests/reader-meeting-listing-count.test.ts`
+- `tests/reader-names.test.ts`
 - `tests/reader-official-actions.test.ts`
 - `tests/reader-polling-fallback.test.ts`
 - `tests/reader-prl-delivery.test.ts`
@@ -1751,7 +1752,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7048 file(s).
+7051 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -5255,6 +5256,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/workers/autonomous-plan.ts`
 - `lib/control-plane/workers/coordinator.ts`
 - `lib/control-plane/workers/detective.ts`
+- `lib/control-plane/workers/durable-research-tools.ts`
 - `lib/control-plane/workers/engineering-adapter.ts`
 - `lib/control-plane/workers/engineering-candidate.ts`
 - `lib/control-plane/workers/engineering-types.ts`
@@ -5938,6 +5940,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/text/boilerplate.ts`
 - `lib/text/format-date.ts`
 - `lib/text/mojibake.ts`
+- `lib/text/reader-names.ts`
 - `lib/text/refusal-shapes.ts`
 - `lib/time/zoned.ts`
 - `lib/tracker/obligation-handoff.ts`
@@ -8551,6 +8554,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/reader-last-mile-registry-failure.test.ts`
 - `tests/reader-last-mile-trace.test.ts`
 - `tests/reader-meeting-listing-count.test.ts`
+- `tests/reader-names.test.ts`
 - `tests/reader-official-actions.test.ts`
 - `tests/reader-polling-fallback.test.ts`
 - `tests/reader-prl-delivery.test.ts`

@@ -3,11 +3,11 @@
  * (Level 1 activation, 2026-09-01. RULING 240.)
  *
  * A Scout's route candidate must be able to enter the EXISTING method-candidate
- * lifecycle, be validated by the canonical validators, and — once a session
- * admits it — be selected for DETERMINISTIC replay by the executor decision
+ * lifecycle, be validated by the canonical validators, and — once another
+ * Attempt offers it — be selected for DETERMINISTIC replay by the executor decision
  * rule, so no later worker pays a model to rediscover it.
  *
- *   1  an opened, evidence-backed candidate lands VALIDATED (never ADMITTED here)
+ *   1  an opened, evidence-backed candidate lands VALIDATED on its first Attempt
  *   2  a candidate whose URL the Attempt never opened is NOT proposed
  *   3  a malformed proposal lands REJECTED with the exact issue, durably
  *   4  after admission the decision rule selects deterministic replay
@@ -16,10 +16,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { emptyCandidateStore, markAdmitted } from "../lib/method/candidate.ts";
-import { learnBatch } from "../lib/method/learn-batch.ts";
+import { emptyCandidateStore } from "../lib/method/candidate.ts";
 import { readMethodKnowledge, readMethodVersion } from "../lib/method/manual-bridge.ts";
-import { newFieldManualEntry, writeFieldManual } from "../lib/control-plane/field-manual.ts";
+import { readFieldManual, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { methodMaturityFromManual } from "../lib/control-plane/scheduler/maturity.ts";
 import { decideExecutor } from "../lib/control-plane/scheduler/dispatch.ts";
 import {
@@ -175,7 +174,7 @@ test("3. a malformed proposal is REJECTED durably with its issue", async () => {
   }
 });
 
-test("4. POSITIVE CONTROL: once a session ADMITS the candidate into the manual, the decision rule selects deterministic replay", async () => {
+test("4. a different Attempt admits the candidate into the manual and selects deterministic replay", async () => {
   const repos = await seededRepos();
   await seedFixtureStore(repos);
   const report = await proposeScoutCandidates({ repos, result: result([candidate()]), artifacts: opened, stamp: STAMP });
@@ -186,21 +185,23 @@ test("4. POSITIVE CONTROL: once a session ADMITS the candidate into the manual, 
     "BOUNDED_MODEL_WORKER",
   );
 
-  /* The session's act: the validated proposal becomes a whole route record in the one store, and the candidate is marked admitted. */
-  const current = await repos.methodCandidates.mustRead(METHOD_CANDIDATE_STORE_ID);
-  const store = current.value;
-  const c = store.candidates.find((x) => x.id === report.proposed[0].candidateId)!;
-  const learned = learnBatch(await readMethodKnowledge(repos), [c.proposal], STAMP);
-  const route = learned.knowledge.routes.find((r) => r.id === c.proposal.id)!;
-  await writeFieldManual(repos, [newFieldManualEntry("scout-candidate", route.id, {
-    role: "SCOUT", kind: "ROUTE", title: route.title, summary: "learned from a validated Scout candidate", outcome: "YIELDED", payload: route,
-  })], STAMP);
-  await repos.methodCandidates.compareAndSet(
-    METHOD_CANDIDATE_STORE_ID,
-    current.revision,
-    markAdmitted(store, c.id, { at: STAMP, admittedAs: c.proposal.id, effect: "LEARNED", methodVersionAfter: (await readMethodVersion(repos))! }).store,
-    STAMP,
-  );
+  const input = { repos, result: { ...result([candidate()]), attemptId: "att-test-2" }, artifacts: opened, stamp: STAMP };
+  const second = await proposeScoutCandidates(input);
+  assert.equal(second.proposed[0].lifecycle, "ADMITTED");
+  const candidates = (await readMethodCandidateStore(repos)).candidates;
+  assert.equal(candidates.find((c) => c.id === report.proposed[0].candidateId)?.lifecycle, "ADMITTED");
+  assert.equal(candidates.length, 2);
+  const manual = await readFieldManual(repos, { role: "SCOUT", recordClass: "meetings" });
+  const entry = manual.store.entries.find((entry) => entry.source === "scout-candidate");
+  assert.ok(entry);
+  assert.equal(entry.kind, "ROUTE");
+  assert.equal(entry.url, candidate().url);
+  assert.deepEqual(entry.payload, (await readMethodKnowledge(repos)).routes.find((route) => route.id === candidate().routeId));
+  assert.ok(manual.projection.entryIds.includes(entry.id), "the next Scout inherits the route through the ordinary manual read");
+  assert.ok(manual.projection.lines.some((line) => line.includes("att-test-1 and att-test-2")));
+  const repeated = await proposeScoutCandidates(input);
+  assert.equal(repeated.proposed[0].lifecycle, "ADMITTED");
+  assert.equal(repeated.proposed[0].already, true);
 
   const after = await methodMaturityFromManual(repos);
   assert.equal(after("testville-meetings-ics"), "GRADUATED");
@@ -213,4 +214,30 @@ test("4. POSITIVE CONTROL: once a session ADMITS the candidate into the manual, 
   });
   assert.equal(decision.kind, "DETERMINISTIC", "a learned procedure is replayed by code, never rediscovered by a model");
   assert.match(decision.disagreement ?? "", /GRADUATED_SINCE_DECLARED/);
+});
+
+test("5. replaying one Attempt on another date cannot admit its own route", async () => {
+  const repos = await seededRepos();
+  await seedFixtureStore(repos);
+  for (const stamp of [STAMP, "2026-09-02"]) {
+    const report = await proposeScoutCandidates({ repos, result: result([candidate()]), artifacts: opened, stamp });
+    assert.equal(report.proposed[0].lifecycle, "VALIDATED");
+  }
+  assert.equal((await methodMaturityFromManual(repos))(candidate().routeId), "UNGRADUATED");
+});
+
+test("6. a failed manual write leaves candidates validated and a replay finishes admission", async () => {
+  const repos = await seededRepos();
+  await seedFixtureStore(repos);
+  await proposeScoutCandidates({ repos, result: result([candidate()]), artifacts: opened, stamp: STAMP });
+  const write = repos.fieldManual.compareAndSet.bind(repos.fieldManual);
+  repos.fieldManual.compareAndSet = async () => { throw new Error("manual unavailable"); };
+  const input = { repos, result: { ...result([candidate()]), attemptId: "att-test-2" }, artifacts: opened, stamp: STAMP };
+  const failed = await proposeScoutCandidates(input);
+  assert.equal(failed.proposed[0].lifecycle, "VALIDATED");
+  assert.match(failed.proposed[0].issues.join(), /manual unavailable/);
+  assert.equal((await methodMaturityFromManual(repos))(candidate().routeId), "UNGRADUATED");
+  repos.fieldManual.compareAndSet = write;
+  assert.equal((await proposeScoutCandidates(input)).proposed[0].lifecycle, "ADMITTED");
+  assert.equal((await readMethodVersion(repos)), failed.storeVersionObserved + 1);
 });

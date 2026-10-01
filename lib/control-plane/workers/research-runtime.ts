@@ -1,17 +1,15 @@
+import { durableResearchTools, type ResearchRuntimeTools } from "./durable-research-tools.ts";
+export { durableResearchTools, type ResearchRuntimeTools } from "./durable-research-tools.ts";
 import { readSourceReliability } from "../scheduler/scout-reliability.ts";
 import { readFieldManual, writeFieldManual, newFieldManualEntry } from "../field-manual.ts";
 import { performance } from "node:perf_hooks";
 import { ZERO_COST, type WorkerRef } from "../attempt.ts";
 import { defaultGrant, requireCapability } from "../capability.ts";
 import { contentHash, fingerprint } from "../ids.ts";
-import { putArtifact, type EvidenceStore } from "../evidence/store.ts";
-import type { Artifact } from "../evidence/artifact.ts";
 import type { RouteTask } from "../route-task.ts";
-import { recordArtifactMetadata } from "../repository/coordinator.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "../repository/types.ts";
 import { readCompletedWorkerResult } from "../repository/worker-completion.ts";
 import { buildScoutToolkit, realOpenBytes } from "../scheduler/scout-tools.ts";
-import type { ScoutToolContext } from "../scheduler/scout-contract.ts";
 import type { DeclaredExecutor } from "../scheduler/dispatch.ts";
 import { RESEARCH_BOUNDS } from "../scheduler/research-policy.ts";
 import type { ScheduledObligation } from "../scheduler/obligation.ts";
@@ -63,42 +61,12 @@ export async function authorizeInheritedHeldArtifact(repos: ControlPlaneReposito
   }
   return false;
 }
-export interface ResearchRuntimeTools {
-  readonly repos: ControlPlaneRepositories;
-  readonly store: EvidenceStore;
-  readonly spaceOut: ScoutToolContext["spaceOut"];
-  readonly browse?: ScoutToolContext["browse"];
-  readonly openBytes?: ScoutToolContext["openBytes"];
-  readonly openBytesFor?: (subjectId: string) => ScoutToolContext["openBytes"];
-  /** Selected same-period sibling captures, brokered from canonical source and completed-rung records. */
-  readonly siblingHeldRootFor?: (input:{readonly artifactId:string;readonly originWorkItemId:string;
-    readonly childWorkItemId:string;readonly project:string})=>string|null;
-  readonly now: () => string;
-}
-
 export function scheduledWorkerObligation(task: RouteTask): ScheduledObligation {
   const spec = task.workerTask;
   if (!spec) throw new Error("WORKER_TASK_MISSING");
   return {obligation:{id:task.id,recordClass:spec.contract.recordClass,subjectId:spec.contract.subjectId,routeId:task.routeId,
     active:true,readerImpactAt:null,observedChangeRateHours:null,lastWorkedAt:null},nextDueAt:task.createdAt,cadenceHours:24,
     cadenceSource:"DEFAULT_NO_SIGNAL",basis:"Persisted bounded worker computation remains owed until committed."};
-}
-
-/** Vault AND append attribution on each tool write, before the disposable process can disappear. */
-export function durableResearchTools(input: ResearchRuntimeTools, binding: {
-  project: string; attemptId: string; workItemId: string; routeTaskId: string; subjectId?: string;
-}) {
-  const putBytes = async (artifact: Artifact, bytes: Uint8Array) => {
-    if (artifact.attemptId !== binding.attemptId || artifact.workItemId !== binding.workItemId) throw new Error("RESEARCH_VAULT_ATTEMPT_BINDING_REFUSED");
-    const {key,written} = await putArtifact(input.store, binding.project, artifact, bytes);
-    await recordArtifactMetadata(input.repos, {artifactId:artifact.id,attemptId:artifact.attemptId,workItemId:artifact.workItemId,
-      routeTaskId:binding.routeTaskId,tier:artifact.tier,contentHash:artifact.contentHash,byteLength:artifact.byteLength,
-      contentType:artifact.contentType,canonicalUrl:artifact.canonicalUrl,partial:artifact.httpStatus === 206 || artifact.extraction?.complete === false,recordedAt:artifact.retrievedAt},input.now());
-    return {stored:true,where:key,why:written?"Vaulted and durably attributed before interpretation":"Identical evidence retained; first observation attribution preserved"};
-  };
-  return {vault:async (artifact:Artifact,body:string) => putBytes(artifact,Buffer.from(body,"utf8")),vaultBytes:putBytes,
-    spaceOut:input.spaceOut,...(input.browse?{browse:input.browse}:{}),
-    ...(binding.subjectId && input.openBytesFor ? {openBytes:input.openBytesFor(binding.subjectId)} : input.openBytes ? {openBytes:input.openBytes} : {})};
 }
 
 export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRuntimeTools, task: RouteTask, holder: string): DeclaredExecutor {

@@ -121,11 +121,11 @@ test("Admin's preview: the registration slice, and the governments a Send must p
   assert.equal((await registrationGovernments("OH", [], slicedFrom(null, []))).kind, "NOT_PUBLISHED");
   assert.equal((await registrationGovernments("OH", [], null)).kind, "UNREAD");
   assert.match(
-    stateSendPreviewSentence({ kind: "REGISTRATION", state: "OH", versionId: "cv-oh-1", governments: ["a", "b"], edge: ["c"] }, 1000),
+    stateSendPreviewSentence({ kind: "REGISTRATION", state: "OH", versionId: "cv-oh-1", governments: ["a", "b"], edge: ["c"] }),
     /^OH: a Send creates work for 2 governments here, and up to 1 more at the edge .+, from registration \(the 2022 Census of Governments, promoted version cv-oh-1\) — no reviewed registry exists for OH\. A new Send discovers meetings, officeholders, elections and finance sources where missing/,
   );
-  assert.match(stateSendPreviewSentence({ kind: "REVIEWED_REGISTRY", state: "AZ" }, 1000), /^AZ: its governments come from the reviewed AZ jurisdiction registry/);
-  assert.match(stateSendPreviewSentence({ kind: "NOT_READ", state: "TX", why: "its registration is not promoted in this store yet" }, 1000), /no count is claimed/);
+  assert.match(stateSendPreviewSentence({ kind: "REVIEWED_REGISTRY", state: "AZ" }), /^AZ: its governments come from the reviewed AZ jurisdiction registry/);
+  assert.match(stateSendPreviewSentence({ kind: "NOT_READ", state: "TX", why: "its registration is not promoted in this store yet" }), /no count is claimed/);
 
   /* A DISPATCH ("deep dive on Ohio") says where Ohio's governments come from, and what is blocked is only an unreadable registration. */
   const ohio = deployPreview({ note: "deep dive on Ohio", obligations: [], obligationsRead: true, ceilings: { rolling24HourModelUsd: 105 } }).creates[0]!.says;

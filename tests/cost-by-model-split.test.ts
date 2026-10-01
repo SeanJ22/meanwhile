@@ -14,7 +14,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { ZERO_COST, type AttemptCost } from "../lib/control-plane/attempt.ts";
-import { costPortionsByModel, type CostEntry, type CostModelShare } from "../lib/control-plane/cost.ts";
+import { costEntryWithModel, spendByTier, costPortionsByModel, type CostEntry, type CostModelShare } from "../lib/control-plane/cost.ts";
+import { canonicalModelId, modelTierFor, MODELS } from "../lib/models.ts";
 import { buildCostPanel, buildMonthlySpend } from "../lib/control-plane/cost-panel.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
@@ -24,6 +25,30 @@ import { dispatchOne, type DeclaredExecutor, type RunWork } from "../lib/control
 import { isScheduled, scheduleObligation, type FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
 
 const NOW = "2026-09-25T18:00:00.000Z";
+
+test("Ask charges retain their recorded model without a worker Attempt", () => {
+  const entry: CostEntry = costEntryWithModel({ attemptId: "ask-request", workItemId: "ask", routeTaskId: null,
+    routeId: "ask:interpret", source: "api.anthropic.com", jurisdiction: null, project: "ask", role: "ASK",
+    cost: { ...ZERO_COST, usd: 0.01, requestCount: 1 }, recordedAt: NOW }, MODELS.haiku.model);
+  assert.equal(costPortionsByModel(entry, "unknown")[0].model, MODELS.haiku.model);
+  assert.equal(buildCostPanel({ costs: [entry], attempts: [], cacheByRole: null, share: null, verifiedRecords: null }).costByModel[0].key, MODELS.haiku.model);
+});
+
+test("tier read keeps older charges unrecorded and counts multi-model shares once", () => {
+  const base: CostEntry = { attemptId: "fixture", workItemId: "work", routeTaskId: null, routeId: null,
+    source: null, jurisdiction: null, project: "fixture", role: "SCOUT", recordedAt: NOW,
+    cost: { ...ZERO_COST, usd: 3, requestCount: 2 } };
+  const modelShare = (model: string, usd: number): CostModelShare => ({ model, usd, requestCount: 1,
+    inputTokens: null, outputTokens: null, cacheReadInputTokens: null, cacheCreationInputTokens: null,
+    cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null });
+  const split = costEntryWithModel({ ...base, byModel: [modelShare(MODELS.haiku.model, 1), modelShare(MODELS.opus.model, 2)] }, MODELS.haiku.model);
+  const single = costEntryWithModel({ ...base, cost: { ...ZERO_COST, usd: 4, requestCount: 1 } }, MODELS.sonnet.model);
+  assert.equal(single.tier, "sonnet");
+  const read = spendByTier([base, split, single, costEntryWithModel({ ...base, cost: ZERO_COST }, null)],
+    { since: NOW, until: "2026-09-26T00:00:00Z" });
+  assert.deepEqual(read.tiers.map(row => [row.tier, row.usd]), [["haiku", 1], ["sonnet", 4], ["opus", 2], ["none", null], ["unrecorded", 3]]);
+  assert.equal(read.tiers.find(row => row.tier === "unrecorded")?.label, "Model not recorded");
+});
 const SONNET = "claude-sonnet-5";
 const OPUS = "claude-opus-5-5";
 
@@ -151,6 +176,6 @@ test("the dispatcher writes the worker's per-model split on the one ledger row â
   for (const kind of ["DISPOSED", "ABORTED"] as const) {
     const written = await ledgerRowFor(escalatedScout(kind));
     assert.deepEqual(written.cost, COMBINED, `${kind}: the charge is the combined cost, as before`);
-    assert.deepEqual(written.byModel, SPLIT, `${kind}: and it says which model each part was for`);
+    assert.deepEqual(written.byModel, SPLIT.map(share => ({ ...share, tier: modelTierFor(canonicalModelId(share.model)) })), `${kind}: and it says which model each part was for`);
   }
 });

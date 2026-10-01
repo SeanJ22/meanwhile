@@ -145,19 +145,31 @@ function historicalBlockView(repos: ControlPlaneRepositories, code: ResearchBloc
 
 test("a route an older acquisition blocked for robots.txt alone (PERMISSION_DENIED, never retryable) is acquired again at once, robots first; any other non-retryable block still holds", async () => {
   const response: { transportError: string | null } = { transportError: "socket timeout" };
-  const h = await autonomousHarness({ response });
+  // The executor and planner see the same historical store, including its captured closure.
+  const original = await autonomousHarness({ response });
+  const repos = historicalBlockView(original.repos, "PERMISSION_DENIED", false);
+  const h = await autonomousHarness({ response, repos, store: original.store });
   const first = await nextAutonomousOperation(h.runtime, h.item.id);
   assert.equal(first.task?.workerTask?.role, "ACQUIRER");
   assert.equal((await dispatchWorkerTask(h.runtime, first.task!)).outcome, "WORKED");
   const failed = (await h.repos.workerResults.readAll())[0];
   assert.equal(failed.result.role === "ACQUIRER" && failed.result.verdict, "BLOCKED");
   response.transportError = null;
-  const robotsOnly = await nextAutonomousOperation({ ...h.runtime, repos: historicalBlockView(h.repos, "PERMISSION_DENIED", false) }, h.item.id);
+  const historicalRuntime = { ...h.runtime, repos: historicalBlockView(h.repos, "PERMISSION_DENIED", false) };
+  const robotsOnly = await nextAutonomousOperation(historicalRuntime, h.item.id);
   assert.equal(robotsOnly.action, "WORKER", robotsOnly.reason);
   assert.equal(robotsOnly.task?.workerTask?.role, "ACQUIRER", "robots.txt alone never leaves a public route refused (owner decision 2026-09-25)");
   assert.notEqual(robotsOnly.task?.id, first.task!.id, "a fresh acquisition, not the recorded one");
   const before = h.calls.length;
-  assert.equal((await dispatchWorkerTask(h.runtime, robotsOnly.task!)).outcome, "WORKED");
+  // The executor's injected tools close over the harness repositories. Give
+  // selection and execution the same historical read view for this Attempt.
+  const originalResults = h.repos.workerResults;
+  Object.defineProperty(h.repos, "workerResults", { value: historicalRuntime.repos.workerResults, configurable: true });
+  try {
+    assert.equal((await dispatchWorkerTask(historicalRuntime, robotsOnly.task!)).outcome, "WORKED");
+  } finally {
+    Object.defineProperty(h.repos, "workerResults", { value: originalResults, configurable: true });
+  }
   assert.deepEqual(h.calls.slice(before), ["https://fixture-clerk.example.gov/robots.txt", FIXTURE_URL], "robots.txt is read first, then the page");
   const reacquired = (await h.repos.workerResults.readAll()).find(record => record.routeTaskId === robotsOnly.task!.id)!;
   assert.equal(reacquired.result.verdict, "ACQUIRED");

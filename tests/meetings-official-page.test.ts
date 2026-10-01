@@ -55,8 +55,12 @@ const FIXTURES = new URL("./fixtures/official-page-events/", import.meta.url);
 const TUSD_HOME = readFileSync(new URL("tusd-home.html", FIXTURES), "utf8");
 const TUSD_PAGE = readFileSync(new URL("tusd-reconfiguration.html", FIXTURES), "utf8");
 const SFPS_PAGE = readFileSync(new URL("sfps-board-of-education.html", FIXTURES), "utf8");
+// Offline official directory links, independent of the publisher event pages.
+const OFFICIAL_DIRECTORY = { url: "https://fixture-directory.gov/schools", html: '<a href="https://www.tusd1.org/">Tucson Unified</a><a href="https://www.sfps.info/">Santa Fe Public Schools</a>' };
 /** The instant the recorded pages were read (their .meta.json). */
 const NOW = "2026-09-23T23:25:27.424Z";
+// Synthetic saved government directory: authority is explicit evidence in this fixture.
+const DIRECTORY = { url: "https://directory.example.gov/schools", html: '<a href="https://www.tusd1.org">Tucson Unified</a><a href="https://www.sfps.info">Santa Fe Public Schools</a>' };
 const METHOD = "official-page-events-linked-committee-page";
 const ALLOW = { status: 200, body: "User-agent: *\nAllow: /\n", contentType: "text/plain" } as const;
 
@@ -100,11 +104,13 @@ function fakeOpen(map: Readonly<Record<string, Reply>>): { open: DiscoveryOpen; 
 function runtime(open: DiscoveryOpen, recipes = knownRecipes([]), now = NOW): DiscoveryRuntime {
   return {
     open,
+    readOfficialPages: async () => [{canonicalUrl:DIRECTORY.url,text:DIRECTORY.html}],
     spaceOut: async () => {},
     vault: async () => ({ stored: true, where: "vault", why: "stored" }),
     now: () => now,
     budget: { spent: () => false },
     recipes,
+    officialLinkingPageFor: () => OFFICIAL_DIRECTORY,
   };
 }
 
@@ -136,7 +142,7 @@ test("TERMS AND ZONES: a body's name forms come from its recorded name alone; a 
   const ohio = verifyEndpointBody(
     { vendor: "official-page-events", url: "https://www.sfps.info/page/board-of-education-2" },
     { status: 200, body: SFPS_PAGE, finalUrl: "https://www.sfps.info/page/board-of-education-2" },
-    { bodyId: "oh:school:santa-fe-public-schools", name: "SANTA FE PUBLIC SCHOOLS", pageLabel: "Board of Education", officialHost: "www.sfps.info", stateCode: "OH", now: NOW },
+    { bodyId: "oh:school:santa-fe-public-schools", name: "SANTA FE PUBLIC SCHOOLS", pageLabel: "Board of Education", officialHost: "www.sfps.info", linkingPage: OFFICIAL_DIRECTORY, stateCode: "OH", now: NOW },
   );
   assert.equal(ohio.verdict, "YIELDED", ohio.detail);
   const texas = verifyEndpointBody(
@@ -219,7 +225,7 @@ test("LABELS AND BOUNDS: only a label of two words or more names a body; a link 
   const board = (pageLabel: string | null) => verifyEndpointBody(
     { vendor: "official-page-events", url: "https://www.sfps.info/page/board-of-education-2" },
     { status: 200, body: SFPS_PAGE, finalUrl: "https://www.sfps.info/page/board-of-education-2" },
-    { bodyId: SFPS.jurisdictionId, name: SFPS.name, pageLabel, officialHost: "www.sfps.info", stateCode: "NM", now: NOW },
+    { bodyId: SFPS.jurisdictionId, name: SFPS.name, pageLabel, officialHost: "www.sfps.info", linkingPage: OFFICIAL_DIRECTORY, stateCode: "NM", now: NOW },
   ).verdict;
   assert.equal(board("Board of Education"), "YIELDED");
   assert.equal(board("Board"), "NOT_CONFIRMED", "one word is too general to say whose page this is");
@@ -258,6 +264,11 @@ test("SEARCH: a search result on the body's own domain that is itself its events
 });
 
 test("TUSD PROOF: the executor alone, from TUSD's homepage, confirms the reconfiguration page's sessions for Tucson Unified", async () => {
+  const unproven = await walkMeetingsDiscoveryNeed(TUSD, {
+    ...runtime(fakeOpen(TUSD_SITE).open), readOfficialPages: async () => [], officialLinkingPageFor: () => null,
+  });
+  assert.ok(!unproven.found.some(row => row.vendor === "official-page-events"),
+    "a registry hostname and the site's own links cannot replace saved government endorsement");
   const site = fakeOpen(TUSD_SITE);
   const walk = await walkMeetingsDiscoveryNeed(TUSD, runtime(site.open));
   assert.equal(walk.outcome, "FOUND");

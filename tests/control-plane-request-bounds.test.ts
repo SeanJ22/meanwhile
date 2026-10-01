@@ -14,6 +14,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { neonConfig } from "@neondatabase/serverless";
+import { createLedger } from "../lib/control-plane/budget.ts";
 
 import {
   isTransientControlPlaneConnectError,
@@ -194,6 +195,30 @@ test("an answered call is returned untouched, and every timeout is told to the o
     assert.equal(row?.revision, 3);
     assert.deepEqual(row?.value, { beatAt: "x" });
     assert.deepEqual(seen, []);
+    let inFlight = 0, peak = 0;
+    neonConfig.fetchFunction = (async () => {
+      inFlight++; peak = Math.max(peak, inFlight);
+      await new Promise(resolve => setTimeout(resolve, 5));
+      inFlight--;
+      return answer([{ id: "shared-budget", revision: "3", updated_at: "2026-09-23T00:00:00.000Z",
+        value: JSON.stringify(createLedger({ hosts: [] })) }]);
+    }) as typeof neonConfig.fetchFunction;
+    const writes = await Promise.all(Array.from({ length: 20 }, (_, result) =>
+      answered.budget.mutate(ledger => ({ ledger, result }), "2026-09-23T00:00:00.000Z")));
+    assert.equal(peak, 1, "One repository instance does not contend with itself on the shared budget aggregate.");
+    assert.deepEqual(writes.map(write => write.result), Array.from({ length: 20 }, (_, index) => index));
+    let calls = 0;
+    neonConfig.fetchFunction = (async () => {
+      if (++calls === 1) throw new Error("distinct accounting write failed");
+      return answer([{ id: "shared-budget", revision: "3", updated_at: "2026-09-23T00:00:00.000Z",
+        value: JSON.stringify(createLedger({ hosts: [] })) }]);
+    }) as typeof neonConfig.fetchFunction;
+    const recovered = await Promise.allSettled([
+      answered.budget.mutate(ledger => ({ ledger, result: "failed-job" }), "2026-09-23T00:00:00.000Z"),
+      answered.budget.mutate(ledger => ({ ledger, result: "next-job" }), "2026-09-23T00:00:00.000Z"),
+    ]);
+    assert.equal(recovered[0].status, "rejected");
+    assert.equal(recovered[1].status, "fulfilled", "An earlier failed accounting write does not strand another job.");
   } finally {
     neonConfig.fetchFunction = original;
   }

@@ -19,10 +19,18 @@ function transientDenial(reason: string | null): boolean {
 
 function debtCause(attempt: Attempt): DebtCause {
   if (attempt.outcome === "CRASHED" || attempt.outcome === "LEASE_EXPIRED") return "WORKER_LOST";
-  if (/AUDIT_ROLLING_COST_CEILING|AUDIT_PROVIDER_FAILURE:429/.test(attempt.abortReason ?? "")) return "RATE_LIMITED";
-  if (/AUDIT_PROVIDER_FAILURE:5\d\d/.test(attempt.abortReason ?? "")) return "UPSTREAM_ERROR";
-  if (attempt.outcome === "TIMED_OUT" || /AUDIT_(?:PROVIDER_FAILURE|MODEL_TRANSPORT_UNAVAILABLE)/.test(attempt.abortReason ?? "")) return "TRANSPORT_FAILED";
+  if (/(?:AUDIT|PARSE)_ROLLING_COST_CEILING|(?:AUDIT|PARSE)_PROVIDER_FAILURE:429/.test(attempt.abortReason ?? "")) return "RATE_LIMITED";
+  if (/(?:AUDIT|PARSE)_PROVIDER_FAILURE:5\d\d/.test(attempt.abortReason ?? "")) return "UPSTREAM_ERROR";
+  if (attempt.outcome === "TIMED_OUT" || /(?:AUDIT|PARSE)_(?:PROVIDER_FAILURE|MODEL_TRANSPORT_UNAVAILABLE)/.test(attempt.abortReason ?? "")) return "TRANSPORT_FAILED";
   return "EXTRACTION_FAILED";
+}
+
+/** An explicit permanent HTTP rejection wins over words inside its diagnostic body. */
+export function workerFailureCanRetry(detail: string): boolean {
+  const status = /\b(?:HTTP[\s:]+|(?:AUDIT|PARSE)_PROVIDER_FAILURE:)(\d{3})\b/i.exec(detail);
+  const code = status ? Number(status[1]) : null;
+  if (code !== null && code >= 400 && code < 500 && code !== 408 && code !== 429) return false;
+  return /\bHTTP (?:408|429|5\d\d)\b|provider[^\n]*(?:408|429|5\d\d)|timeout|timed out|network|econnreset|eai_again|fetch failed/i.test(detail);
 }
 
 /** A reading of canonical Attempts, not a second retry store or a lifetime attempt limit. */
@@ -47,6 +55,10 @@ export function workerTaskAdmission(task: RouteTask, attempts: readonly Attempt[
     (!task.policyDenial || task.policyDenial.attemptId === latest.id);
   if (policyDenied && !mayRecheck) {
     return result("POLICY_DENIED", task.policyDenial?.requiredChange ?? latest?.abortReason ?? "The denied capability or policy requires an explicit authorized change.");
+  }
+  if (latest?.endedAt && !mayRecheck && !["CRASHED", "LEASE_EXPIRED"].includes(latest.outcome ?? "") &&
+    !workerFailureCanRetry(latest.abortReason ?? "")) {
+    return result("TERMINAL", "The same task already failed; a changed source, method or input must create its successor before another attempt.");
   }
   let debt: FreshnessDebt | null = null;
   for (const attempt of history) {

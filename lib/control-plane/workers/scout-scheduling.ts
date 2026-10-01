@@ -39,6 +39,12 @@ export function scoutTransientDenial(reason: string | null): "TRANSPORT" | "COST
     : reason?.includes("SCOUT_COST_CEILING") ? "COST" : null;
 }
 
+/** Provider outages may recover; unchanged request/schema failures cannot. */
+export function unchangedScoutFailure(attempt: Attempt | undefined): boolean {
+  if (!attempt?.endedAt || ["COMPLETED", "DENIED_BY_POLICY", "CRASHED", "LEASE_EXPIRED"].includes(attempt.outcome ?? "")) return false;
+  return !workerFailureCanRetry(attempt.abortReason ?? "");
+}
+
 export interface ScoutTaskAdmission {
   readonly kind: "AUTONOMOUS_SCOUT";
   readonly familyRouteId: string;
@@ -72,6 +78,7 @@ export function scoutTaskAdmission(task: RouteTask, tasks: readonly RouteTask[],
   if (task.state === "CLAIMED" || history.some(attempt => attempt.routeTaskId === task.id && attempt.outcome === null)) {
     return reading("IN_FLIGHT", "A canonical Scout Attempt requires lease reconciliation before another admission.");
   }
+  if (unchangedScoutFailure(latest)) return reading("UNKNOWN", "The unchanged Scout request already failed; changed inputs or a repaired method must create its successor.");
   if (task.state === "POLICY_DENIED") {
     const transient = latest?.outcome === "DENIED_BY_POLICY" && task.policyDenial && scoutTransientDenial(latest.abortReason);
     if (!transient) return reading("POLICY_DENIED", task.policyDenial?.requiredChange ?? "The recorded denial has no established automatic reauthorization condition.");
@@ -93,3 +100,4 @@ export function scoutTaskAdmission(task: RouteTask, tasks: readonly RouteTask[],
   }
   return reading("UNKNOWN", "This task state has no automatic Scout continuation established by the joined evidence.");
 }
+import { workerFailureCanRetry } from "./scheduling.ts";

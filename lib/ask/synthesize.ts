@@ -530,6 +530,7 @@ export const SYNTHESIS_MESSAGES_URL = MESSAGES_URL;
 
 export interface SynthesizeOptions {
   fetchImpl?: typeof fetch;
+  recordCost?: AskCostWriter;
   apiKey?: string;
   allowCall?: () => boolean;
   /**
@@ -643,7 +644,7 @@ async function synthesizeOnRung(
    */
   const { model, effort } = rung;
 
-  const impl = options.fetchImpl ?? fetch;
+  const impl = meteredAskFetch(options.fetchImpl ?? fetch, rung.role, options.recordCost);
   try {
     const response = await impl(MESSAGES_URL, {
       method: "POST",
@@ -792,3 +793,4 @@ export async function synthesizeWithLadder(
   }
   return last ?? { outcome: { kind: "UNAVAILABLE", why: "error", ms: 0, detail: "no writer declared" }, verdict: null, attempts, escalation };
 }
+import { meteredAskFetch, type AskCostWriter } from "./cost.ts";

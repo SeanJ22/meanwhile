@@ -188,6 +188,7 @@ function fallbackPrompt(): string {
 export interface FallbackOptions {
   /** Overridden in tests so the suite never touches the network. */
   fetchImpl?: typeof fetch;
+  recordCost?: AskCostWriter;
 }
 
 export type FallbackOutcome =
@@ -211,7 +212,7 @@ export async function askUnsourced(
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return { kind: "UNAVAILABLE", why: "no-key" };
 
-  const impl = options.fetchImpl ?? fetch;
+  const impl = meteredAskFetch(options.fetchImpl ?? fetch, "unsourced-fallback", options.recordCost);
   /* Thinking OFF where the model accepts it; on an always-thinking model (Opus
      5.5, where `{type: "disabled"}` is a 400) it is omitted and `max_tokens`
      leaves room for the thinking (lib/models.ts). */
@@ -254,3 +255,4 @@ export async function askUnsourced(
     return { kind: "UNAVAILABLE", why: "error" };
   }
 }
+import { meteredAskFetch, type AskCostWriter } from "../ask/cost.ts";

@@ -1,3 +1,4 @@
+import { SOURCE_API_SPECS } from "../lib/control-plane/scheduler/scout-api.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -18,6 +19,10 @@ import { SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, buildScoutToolkit, extractPdf, save
 import { cannotRun, extracted } from "../lib/extract/types.ts";
 import type { ScoutSearch } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { carriesCredential } from "../lib/hunt/access-control.ts";
+import { contentHash } from '../lib/control-plane/ids.ts';
+import { validateScoutFinish, scoutSourceDeadEnds, type ScoutResult } from '../lib/control-plane/scheduler/scout-result.ts';
+import { scoutDiscoveryEntries, writeFieldManualDiscoveries, scoutFieldManualProjection } from '../lib/control-plane/scheduler/field-manual-scout.ts';
+import { createMemoryRepositories } from '../lib/control-plane/repository/memory.ts';
 import { MemoryEvidenceStore, objectKey, putArtifact, readForParser } from "../lib/control-plane/evidence/store.ts";
 import { issueParserInput } from "../lib/control-plane/evidence/parser-boundary.ts";
 import { defaultGrant } from "../lib/control-plane/capability.ts";
@@ -41,6 +46,108 @@ import { evidenceProjection } from "../lib/control-plane/workers/evidence-projec
  */
 
 const NOW = "2026-09-01T12:00:00.000Z";
+
+test('the actual Palominas archive capture is a dead end; only the current page can supply a current fact', async()=>{
+  // URL, redirect, capture timestamp and short literal text from the staging failure.
+  const archive='https://web.archive.org/web/20211027002420/http://www.psd49.net/Contact-Us';
+  const finalUrl='https://web.archive.org/web/20210925094251/http://www.psd49.net/Contact-Us';
+  const current='https://www.psd49.net/Contact-Us', quote='Palominas Elementary School District';
+  const captured='2026-09-30T17:30:01.620Z';
+  const kit=buildScoutToolkit(context({openOne:fakeTransport({}).open,now:()=>captured,openBytes:async({url})=>({
+    status:200,bytes:Buffer.from(url.endsWith('robots.txt')?'User-agent: *\nAllow: /':
+      `<html><head><title>${url===current?'Current district':'Archived district'}</title></head><body>${quote}</body></html>`),
+    contentType:url.endsWith('robots.txt')?'text/plain':'text/html',finalUrl:url===archive?finalUrl:url,durationMs:1,transportError:null,
+  })}));
+  const old=await kit.call('fetch_public',{url:archive,...IN},null);
+  const live=await kit.call('fetch_public',{url:current,...IN},null);
+  const oldId=old.artifacts.at(-1)!.artifactId,liveId=live.artifacts.at(-1)!.artifactId;
+  const finding={kind:'RECORD' as const,summary:'District name',field:'body.name',value:quote,exactQuote:quote,sourceUrl:archive,artifactIds:[oldId]};
+  const freshness={now:captured,cadenceHours:obligation().cadenceHours};
+  const check=(fact:typeof finding)=>validateScoutFinish({toolCalls:kit.toolCalls,rungs:[],stoppedBy:'MODEL',
+    vaulted:kit.vaultedArtifactIds,inherited:new Set(),machine:{provenance:new Map(),recordClass:'PUBLIC_COMMENT_RULE',factEvidence:kit.factEvidence,freshness},
+    finish:{outcome:'EVIDENCE_FOUND',candidates:[],findings:[fact],rungsWalked:[],nextRungs:[],unverified:[],narrative:'Captured name'}});
+  assert.ok(check(finding).some(issue=>issue.detail.includes('Archives cannot verify current facts')));
+  assert.deepEqual(check({...finding,sourceUrl:current,artifactIds:[liveId]}),[],'current page wins even when the historical quote is identical');
+  const sourceDeadEnds=scoutSourceDeadEnds(kit.factEvidence!,freshness.now,freshness.cadenceHours);
+  assert.equal(sourceDeadEnds.length,1);
+  assert.ok(!sourceDeadEnds.some(source=>source.url.endsWith('robots.txt')),'permission observations are not civic fact sources');
+  assert.equal(sourceDeadEnds[0].sourceDate,'2021-09-25T09:42:51Z','redirect capture date, never 2026 retrieval time');
+  const repos=createMemoryRepositories();
+  const entries=scoutDiscoveryEntries({subjectId:'az:school:palominas-school-district-49',recordClass:'PUBLIC_COMMENT_RULE',
+    attemptId:'archive-failure',recordedAt:captured,sourceDeadEnds,candidates:[],refusal:[]} as unknown as ScoutResult,['az']);
+  await writeFieldManualDiscoveries(repos,entries,captured);
+  const store=(await repos.fieldManual.read('live'))!.value;
+  assert.equal(store.entries[0].kind,'SOURCE_DEAD_END');
+  assert.equal(store.entries[0].outcome,'FAILED');
+  assert.equal(store.entries[0].url,finalUrl);
+  assert.match(scoutFieldManualProjection(store,{subjectId:'az:school:palominas-school-district-49'}).lines.join('\n'),/2021-09-25.*Archived capture/);
+  const expired=scoutSourceDeadEnds(kit.factEvidence!,new Date(Date.parse(captured)+(freshness.cadenceHours+1)*3_600_000).toISOString(),freshness.cadenceHours);
+  assert.ok(expired.some(source=>source.artifactId===liveId && source.reason.includes('outside')),'held current pages also expire on their own cadence');
+});
+
+test('Scout facts require a literal value and exact quotation from opened source bytes',async()=>{
+  const url='https://county.gov/clerk',text='<p>Clerk <b>Ada</b></p><p>Call 555-0100</p>';
+  const kit=buildScoutToolkit(context({openOne:fakeTransport({[url]:{status:200,body:text}}).open}));
+  const call=await kit.call('fetch_public',{url,why:'Read clerk',rung:'primary-site-navigation'},null);
+  const id=call.artifacts.find(a=>a.canonicalUrl===url)!.artifactId;
+  const base={toolCalls:kit.toolCalls,rungs:[],stoppedBy:'MODEL' as const,vaulted:kit.vaultedArtifactIds,inherited:new Set<string>(),
+    machine:{provenance:new Map((call.provenance??[]).map(p=>[p.artifactId,p])),recordClass:'officials',factEvidence:kit.factEvidence}};
+  const finding={kind:'RECORD' as const,summary:'Clerk name',field:'holder',value:'Ada',exactQuote:'Clerk Ada',sourceUrl:url,artifactIds:[id]};
+  const check=(fact:typeof finding)=>validateScoutFinish({...base,finish:{outcome:'EVIDENCE_FOUND',candidates:[],findings:[fact],rungsWalked:[],nextRungs:[],unverified:[],narrative:'source facts'}});
+  assert.deepEqual(check(finding),[]);
+  for(const fact of [{...finding,value:'Ada Smith'},{...finding,exactQuote:'Clerk Ada ... Call 555-0100'},
+    {...finding,sourceUrl:'https://other.gov/clerk'},{...finding,artifactIds:['unopened']},
+    {...finding,value:'555-0100',exactQuote:'Clerk Ada'}]) {
+    assert.ok(check(fact).some(i=>i.code==='SCOUT_FINDING_WITHOUT_EVIDENCE'));
+  }
+});
+
+test('collector reads held bytes before HTTP and preserves their observation time',async()=>{
+  const url='https://county.gov/clerk',old='2026-08-30T00:00:00Z';
+  const read=savedPageReader(context({openOne:async()=>{throw Error('No network for held bytes');},
+    inherited:{artifactIds:['held'],summary:'',provenance:[{artifactId:'held',canonicalUrl:url,retrievedAt:old,httpStatus:200,permission:'ALLOWED',methodRouteId:'scout:fetch_public'}]},
+    readHeldArtifact:async()=>({artifactId:'held',canonicalUrl:url,text:'Clerk Ada',retrievedAt:old} as never)}));
+  assert.deepEqual(await read(url),{url,text:'Clerk Ada',contentType:null,collectedAt:old,artifactId:'held',artifacts:[]});
+});
+
+test('collector refreshes stale held CSV and returns complete saved parseable text',async()=>{
+  for(const contentType of ['text/csv','application/json','text/plain']) {
+    const url='https://county.gov/roster',body=contentType==='application/json'?'[{"name":"Ada"}]':'name\nAda\n';
+    const http=fakeTransport({[url]:{status:200,body,contentType}}),vault=recordingVault();
+    const read=savedPageReader(context({openOne:http.open,vault:vault.put,
+      inherited:{artifactIds:['old'],summary:'',provenance:[{artifactId:'old',canonicalUrl:url,contentType,retrievedAt:'2026-08-01T00:00:00Z',httpStatus:200,permission:'ALLOWED',methodRouteId:'scout:fetch_public'}]},
+      readHeldArtifact:async()=>{throw Error('Stale bytes must not be read');}}),{maxAgeMs:86400000});
+    const got=await read(url);
+    assert.equal(got.text,body);assert.equal(got.contentType,contentType);assert.equal(got.collectedAt,NOW);
+    assert.ok(vault.puts.some(row=>row.artifact.id===got.artifactId && row.body===body));
+    assert.equal((await read(url)).artifactId,got.artifactId);assert.equal(http.seen.filter(u=>u===url).length,1);
+    const partial=savedPageReader(context({openOne:fakeTransport({[url]:{status:206,body,contentType}}).open}));
+    await assert.rejects(partial(url),/SOURCE_PAGE_UNREADABLE/);
+  }
+});
+
+test('collector preserves redirected source identity when reusing saved text',async()=>{
+ const url='https://county.gov/old-roster',finalUrl='https://county.gov/current-roster';
+ const read=savedPageReader(context({openOne:async()=>{throw Error('Held source must be reused');},
+   inherited:{artifactIds:['held'],summary:'',provenance:[{artifactId:'held',canonicalUrl:url,retrievalUrl:finalUrl,
+     contentType:'text/csv',retrievedAt:NOW,httpStatus:200,permission:'ALLOWED',methodRouteId:'scout:fetch_public'}]},
+   readHeldArtifact:async()=>({artifactId:'held',canonicalUrl:url,text:'name\nAda',retrievedAt:NOW} as never)}),{maxAgeMs:86400000});
+ assert.equal((await read(url)).url,finalUrl);assert.equal((await read(finalUrl)).url,finalUrl);
+});
+
+test('collector falls back to the existing browser and returns only saved public page bytes',async()=>{
+  const url='https://county.gov/clerk',html='<html><body>Clerk Ada</body></html>';
+  const http=fakeTransport({[url]:{status:403,body:'Forbidden'}}),vault=recordingVault();let browsed=0;
+  const read=savedPageReader(context({openOne:http.open,vault:vault.put,browse:async()=>{
+    browsed++;return {finalUrl:url,status:200,html,text:'Clerk Ada',requests:[],transportError:null,durationMs:1};
+  }}));
+  const got=await read(url);
+  assert.equal(got.text,html);assert.equal(got.collectedAt,NOW);assert.equal(browsed,1);
+  assert.ok(vault.puts.some(row=>row.artifact.id===got.artifactId && row.body===html));
+  assert.equal((await read(url)).artifactId,got.artifactId);assert.equal(browsed,1);
+  const refused=savedPageReader(context({openOne:fakeTransport({[url]:{status:200,body:html}}).open,vault:recordingVault('refuse').put}));
+  await assert.rejects(refused(url),/SOURCE_PAGE_UNREADABLE/);
+});
 
 /* --------------------------------------------------------------- fakes */
 
@@ -119,7 +226,7 @@ function context(overrides: Partial<ScoutToolContext> & { readonly openOne: Open
     holder: "scout-test",
     vault: recordingVault().put,
     spaceOut: async () => {},
-    bound: { ...RESEARCH_BOUNDS.perDispatch, maxRequestsPerHost: 3, maxToolCalls: 16 },
+    bound: { ...RESEARCH_BOUNDS.perDispatch, maxRequestsPerHost: 3 },
     now: () => NOW,
     inherited: { artifactIds: [], summary: "" },
     ...overrides,
@@ -132,6 +239,19 @@ const MARKER = "MARKER-7f3b1c2e-BODY-TEXT";
 const PAGE = `<!doctype html><html><head><title>Board Agendas &amp; Minutes</title><script>var secret="not shown";</script><style>.x{}</style></head><body><h1>Agendas</h1><p>${MARKER}</p><a href="/agendas/2026-09.pdf">September packet</a><a href="https://vendor.example.com/portal?x=1#top">Vendor portal</a><a href="/agendas/2026-09.pdf">dupe</a><a href="mailto:clerk@example.gov">mail</a></body></html>`;
 
 const IN = { rung: "primary-site-navigation", why: "find the agenda packet route" };
+
+test('installed adapters use handed bytes and preserve their source provenance without HTTP',async()=>{
+ const text=Array.from({length:95},(_,i)=>'<a href="/record/'+i+'">Record '+i+'</a>').join('');
+ const id='held-source', hash=contentHash(text);
+ const kit=buildScoutToolkit(context({openOne:async()=>{throw Error('Must not fetch');},inherited:{artifactIds:[id],summary:''},readHeldArtifact:async()=>({
+  artifactId:id,contentHash:hash,text,canonicalUrl:HOST,retrievedAt:NOW,acquiredByAttemptId:'held-attempt',sourceId:HOST,methodRouteId:'held-page',provenance:{artifactId:id,canonicalUrl:HOST,retrievedAt:NOW,permission:'ALLOWED',methodRouteId:'held-page',httpStatus:200}
+ })}));
+ const output=await kit.call('run_adapter',{...IN,adapter:'uncapped-source-links',artifactId:id},null);
+ assert.equal(output.ok,true);assert.match(output.forModel,/source https:\/\/clerk.example.gov/);assert.equal(output.requestCount,0);
+ assert.equal(output.knowledgeRead?.contentHash,hash);assert.equal(output.knowledgeRead?.length,text.length);
+ const refused=await kit.call('run_adapter',{...IN,adapter:'uncapped-source-links',artifactId:'other-job'},null);
+ assert.equal(refused.ok,false);assert.match(refused.forModel,/NOT_HANDED/);
+});
 
 /* ================================================= (h) the evaluator */
 
@@ -192,7 +312,7 @@ test("robots: transport shapes — 404 is NO_ROBOTS; 403/429/3xx/5xx/timeout/HTM
 /* ======================================================== the specs */
 
 test("the toolkit exposes exactly the research tools with their required locator and rationale", () => {
-  assert.deepEqual([...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC].map((s) => s.name), [...SCOUT_RESEARCH_TOOLS]);
+  assert.deepEqual([...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, ...SOURCE_API_SPECS].map((s) => s.name), [...SCOUT_RESEARCH_TOOLS]);
   const locatorByTool: Readonly<Record<string, string | null>> = {
     read_permission: "url",
     fetch_public: "url",
@@ -201,6 +321,9 @@ test("the toolkit exposes exactly the research tools with their required locator
     find_manual: "query",
     read_manual: "entryId",
     read_held: "artifactId",
+    run_adapter: null,
+    plural_roster: 'state',
+    legistar_events: 'tenant',
     search: "query",
   };
   for (const spec of [...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC]) {
@@ -258,6 +381,7 @@ test("search: when no provider answers it is a named transport failure, not a fa
   const res = await kit.call("search", { query: "x", rung: "compliant-alternate-route", why: "y" }, "compliant-alternate-route");
   assert.equal(res.ok, false, "no provider answered -> not a negative about the record");
   assert.ok(res.forModel.includes("HTTP 429") && res.forModel.includes("HTTP 500"), "the provider errors are named");
+  assert.match(res.rung!.observed,/brave: HTTP 429; exa: HTTP 500/,'Detective inherits the exact named failures');
 });
 
 test("search: an empty query is refused before any provider call", async () => {
@@ -628,7 +752,7 @@ test("a 403 is a WALL: the challenge page is vaulted DIAGNOSTIC, its body is nev
 
 /* ============================================ quarantine (RESTRICTED_RAW) */
 
-test("a body carrying a confirmed third-party credential is RESTRICTED_RAW and the model sees nothing of it", async () => {
+test("Scout saves a sanitized derivative of credential-bearing pages even when restricted originals cannot be retained", async () => {
   const fakeKey = ["AI", "za"].join("") + "SyD4mQ8vX1nR7pLbT2wCzE0jHfGuY5aKs_-3xNp".slice(0, 35);
   const body = `<html><head><title>Schedule</title></head><body><p>${MARKER}</p><script>window.__B='{"k":"${fakeKey}"}'</script></body></html>`;
   const { open } = fakeTransport({
@@ -636,19 +760,61 @@ test("a body carrying a confirmed third-party credential is RESTRICTED_RAW and t
     [`${HOST}/s`]: { status: 200, body },
   });
   const vault = recordingVault("accept");
-  const kit = buildScoutToolkit(context({ openOne: open, vault: vault.put }));
+  const kit = buildScoutToolkit(context({ openOne: open, vault:async(artifact,text)=>artifact.tier==='RESTRICTED_RAW'
+    ? {stored:false,where:'',why:'No restricted provider'} : vault.put(artifact,text) }));
   const r = await kit.call("fetch_public", { url: `${HOST}/s`, ...IN }, null);
-  assert.ok(!r.forModel.includes(MARKER));
+  assert.equal(r.ok,true);
+  assert.ok(r.forModel.includes(MARKER));
   assert.ok(!r.forModel.includes(fakeKey));
-  assert.ok(!r.forModel.includes("Schedule"), "not even the title");
-  assert.match(r.forModel, /RESTRICTED_RAW/);
+  assert.ok(r.forModel.includes("Schedule"));
+  assert.match(r.forModel, /Restricted original not retained/);
   const page = r.artifacts.find((a) => a.canonicalUrl === `${HOST}/s`);
-  assert.equal(page?.tier, "RESTRICTED_RAW", "the tier is decided by scanning the bytes");
-  assert.ok(r.forModel.includes(page.artifactId), "the quarantined artifact is still citable by id");
-  assert.match(r.rung?.observed ?? "", /RESTRICTED_RAW/);
+  assert.equal(page?.tier, "SANITIZED_DERIVED");
+  const saved=vault.puts.find(p=>p.artifact.id===page!.artifactId)!;
+  assert.ok(saved.artifact.derivation?.rawHash);
+  assert.ok(!saved.body.includes(fakeKey));
+  assert.ok(kit.factEvidence?.get(page!.artifactId)?.text.includes(MARKER));
+  assert.ok(!kit.factEvidence?.get(page!.artifactId)?.text.includes(fakeKey));
+  const denied=buildScoutToolkit(context({openOne:open,vault:recordingVault('refuse').put}));
+  const failed=await denied.call('fetch_public',{url:`${HOST}/s`,...IN},null);
+  assert.equal(failed.ok,false);
+  assert.ok(!failed.forModel.includes(MARKER) && !failed.forModel.includes(fakeKey));
 });
 
 /* ================================================== binary and PDF bodies */
+
+test('browser text and observed network URLs come only from saved sanitized derivatives',async()=>{
+  const key=['AI','za'].join('')+'SyD4mQ8vX1nR7pLbT2wCzE0jHfGuY5aKs_-3xNp'.slice(0,35);
+  const html=`<html><body>Clerk Ada<script>const key="${key}"</script></body></html>`;
+  const vault=recordingVault();
+  const kit=buildScoutToolkit(context({openOne:fakeTransport({}).open,
+    vault:async(artifact,text)=>artifact.tier==='RESTRICTED_RAW'?{stored:false,where:'',why:'restricted originals unavailable'}:vault.put(artifact,text),
+    browse:async({url})=>({finalUrl:url,status:200,html,text:'Clerk Ada',transportError:null,durationMs:1,
+      requests:[{url:`https://county.gov/api?key=${key}`,method:'GET',status:200,resourceType:'xhr',contentType:'application/json'}]}),
+  }));
+  const result=await kit.call('browse',{url:'https://county.gov/clerk',...IN},null);
+  assert.equal(result.ok,true);
+  assert.ok(result.forModel.includes('Clerk Ada'));
+  assert.ok(!result.forModel.includes(key));
+  const saved=vault.puts.filter(p=>p.artifact.methodRouteId.startsWith('scout:browse'));
+  assert.equal(saved.length,2);
+  assert.ok(saved.every(p=>p.artifact.tier==='SANITIZED_DERIVED'&&!p.body.includes(key)));
+});
+
+test('collector reads a sanitized profile after robots404 and preserves its redirect and raw hash',async()=>{
+ const key=['AI','za'].join('')+'SyD4mQ8vX1nR7pLbT2wCzE0jHfGuY5aKs_-3xNp'.slice(0,35);
+ const url='https://ohiohouse.gov/c-allison-russo',finalUrl='https://ohiohouse.gov/members/c-allison-russo';
+ const body=`<html><body><h1>C. Allison Russo</h1><script>const k="${key}"</script></body></html>`;
+ const vault=recordingVault();
+ const read=savedPageReader(context({openOne:fakeTransport({}).open,openBytes:async({url:target})=>({
+   status:target.endsWith('/robots.txt')?404:200,bytes:Buffer.from(target.endsWith('/robots.txt')?'Not found':body),
+   contentType:'text/html;charset=UTF-8',finalUrl:target.endsWith('/robots.txt')?target:finalUrl,durationMs:1,transportError:null}),
+   vault:async(a,text)=>a.tier==='RESTRICTED_RAW'?{stored:false,where:'',why:'restricted provider absent'}:vault.put(a,text)}));
+ const page=await read(url),saved=vault.puts.find(row=>row.artifact.id===page.artifactId)!;
+ assert.equal(page.url,finalUrl);assert.match(page.text,/C\. Allison Russo/);assert.ok(!page.text.includes(key));
+ assert.equal(saved.artifact.tier,'SANITIZED_DERIVED');assert.equal(saved.artifact.derivation?.rawHash,contentHash(body));
+ assert.ok(vault.puts.some(row=>row.artifact.methodRouteId==='scout:read_permission'&&row.artifact.httpStatus===404));
+});
 
 function minimalPdf(text: string, contentStream?: string): Uint8Array {
   const stream = contentStream ?? `BT /F1 18 Tf 10 50 Td (${text}) Tj ET`;
@@ -872,19 +1038,17 @@ test("browse with a refusing vault shows nothing of the page or the request list
 
 /* ================================================= bounds and refusals */
 
-test("the tool-call bound refuses the (N+1)th call and names it; read_inherited counts as a call", async () => {
+test("held reads continue past the retired tool-call cap without network requests", async () => {
   const { open } = fakeTransport({});
-  const kit = buildScoutToolkit(context({ openOne: open, bound: { ...RESEARCH_BOUNDS.perDispatch, maxToolCalls: 2 }, inherited: { artifactIds: ["ar-inherited"], summary: "prior: 4get answered 200 with zero result links" } }));
+  const kit = buildScoutToolkit(context({ openOne: open, inherited: { artifactIds: ["ar-inherited"], summary: "prior: 4get answered 200 with zero result links" } }));
   const a = await kit.call("read_inherited", IN, null);
   assert.equal(a.ok, true);
   assert.equal(a.rung, null);
   assert.match(a.forModel, /ar-inherited/);
   assert.match(a.forModel, /zero result links/);
-  assert.equal((await kit.call("read_inherited", IN, null)).ok, true);
-  const third = await kit.call("read_inherited", IN, null);
-  assert.equal(third.ok, false);
-  assert.match(third.forModel, /tool-call bound \(2\) is reached/);
-  assert.equal(kit.toolCalls, 2, "a refused over-bound call is not a research call");
+  for(let i=1;i<40;i++)assert.equal((await kit.call("read_inherited",IN,null)).ok,true);
+  assert.equal(kit.toolCalls,40);
+  assert.equal(kit.requestCount,0);
 });
 
 test("input refusals: a private host, a missing rung, an unknown rung, an unknown tool — nothing is requested", async () => {

@@ -227,6 +227,7 @@ export function interpretPrompt(context: InterpretContext): string {
 
 export interface InterpretOptions {
   fetchImpl?: typeof fetch;
+  recordCost?: AskCostWriter;
   apiKey?: string;
   /** Bounds spend the same way the classifier's ceiling does. */
   allowCall?: () => boolean;
@@ -246,7 +247,7 @@ export async function interpretQuestion(
     return { kind: "UNAVAILABLE", why: "ceiling", ms: elapsed() };
   }
 
-  const impl = options.fetchImpl ?? fetch;
+  const impl = meteredAskFetch(options.fetchImpl ?? fetch, "interpret", options.recordCost);
   /* Resolved once: the same id is sent and recorded. */
   const model = askModel();
   const fields = modelRequestFields(model, { thinking: ASK_MODEL_ROLES.READER.thinking, effort: ASK_MODEL_ROLES.READER.effort });
@@ -388,3 +389,4 @@ export function interpretWithoutModel(question: string): AskInterpretation {
 
   return base;
 }
+import { meteredAskFetch, type AskCostWriter } from "./cost.ts";

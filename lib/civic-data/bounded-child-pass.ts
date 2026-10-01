@@ -102,7 +102,7 @@ function runOneBoundedChild(
 ): Promise<BoundedChildResult> {
   const timeout = command.timeoutMs ?? options.timeoutMs ?? ROUTINE_CHILD_TIMEOUT_MS;
   const maxBuffer = command.maxBufferBytes ?? options.maxBufferBytes ?? ROUTINE_CHILD_MAX_BUFFER_BYTES;
-  if (!Number.isSafeInteger(timeout) || timeout <= 0) throw new Error(`BOUNDED_CHILD_TIMEOUT_INVALID:${timeout}`);
+  if (!Number.isSafeInteger(timeout) || timeout < 0) throw new Error(`BOUNDED_CHILD_TIMEOUT_INVALID:${timeout}`);
   if (!Number.isSafeInteger(maxBuffer) || maxBuffer <= 0) throw new Error(`BOUNDED_CHILD_OUTPUT_LIMIT_INVALID:${maxBuffer}`);
 
   return new Promise((resolve) => {

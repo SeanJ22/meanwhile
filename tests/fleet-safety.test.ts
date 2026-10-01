@@ -25,6 +25,9 @@ import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
 
+function fundedController(input: ConstructorParameters<typeof FleetSafetyController>[0]) {
+  return new FleetSafetyController({ rollingCeilingUsd: 100, ...input });
+}
 const NIGHT = "2026-09-05T03:00:00.000Z"; // Friday 20:00 Phoenix.
 const REQUEST: ModelRequest = {
   model: "claude-opus-5-5",
@@ -56,7 +59,7 @@ function cost(usd: number | null, recordedAt: string): CostEntry {
 }
 
 test("model admission accumulates cycle spend with no per-cycle cap; only the rolling ceiling stops it", () => {
-  const cycle = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+  const cycle = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
   // Three requests settle with no per-cycle or operational-night refusal — those
   // caps are retired, so cycle spend simply accumulates.
   for (const work of ["one", "two", "three"]) {
@@ -67,21 +70,31 @@ test("model admission accumulates cycle spend with no per-cycle cap; only the ro
   assert.ok(cycleUsd !== null && cycleUsd > 2, `cycle spend ${cycleUsd} accumulates past the retired $2 per-cycle cap`);
 
   // The rolling 24-hour ceiling ($100) is the one spend limit that still fires.
-  const rolling = new FleetSafetyController({ now: NIGHT, costs: [cost(99.5, "2026-09-04T04:00:00.000Z")], clock: () => Date.parse(NIGHT) });
+  const rolling = fundedController({ now: NIGHT, costs: [cost(99.5, "2026-09-04T04:00:00.000Z")], clock: () => Date.parse(NIGHT) });
   assert.throws(() => rolling.reserveModelRequest("anthropic", "day-next", REQUEST), (error: unknown) =>
     error instanceof FleetSafetyRefusal && error.code === "ROLLING_24_HOUR_MODEL_SPEND_CEILING");
 });
 
+test("a funded lifetime hunt still obeys the Admin spend dial for requests and escalations", () => {
+  const safety = fundedController({ now: NIGHT, costs: [cost(99.5, NIGHT)], clock: () => Date.parse(NIGHT),
+    lifetimeHuntWork: () => true });
+  assert.equal(safety.rollingCeilingReached(0.6, "funded-hunt").reached, true);
+  assert.throws(() => safety.reserveModelRequest("anthropic", "funded-hunt", REQUEST),
+    (error: unknown) => error instanceof FleetSafetyRefusal && error.code === "ROLLING_24_HOUR_MODEL_SPEND_CEILING");
+  assert.throws(() => safety.holdModelBudget("funded-hunt", 0.6),
+    (error: unknown) => error instanceof FleetSafetyRefusal && error.code === "ROLLING_24_HOUR_MODEL_SPEND_CEILING");
+});
+
 test("rollingCeilingReached is the PRE-admission read of the ceiling — so the lane pauses instead of busy-looping refusals", () => {
-  const cap = FLEET_SAFETY_BOUNDS.rolling24HourModelUsd;
+  const cap = 100;
   const recent = "2026-09-05T02:00:00.000Z"; // within 24h of NIGHT
 
   // Well under: not reached, even allowing a worst-case scout.
-  const under = new FleetSafetyController({ now: NIGHT, costs: [cost(cap - 10, recent)], clock: () => Date.parse(NIGHT) });
+  const under = fundedController({ now: NIGHT, costs: [cost(cap - 10, recent)], clock: () => Date.parse(NIGHT) });
   assert.deepEqual(under.rollingCeilingReached(0.6), { reached: false, spentUsd: cap - 10, capUsd: cap });
 
   // Over the ceiling — the observed flood ($26 > $25): reached even with no worst-case margin.
-  const over = new FleetSafetyController({ now: NIGHT, costs: [cost(cap + 1, recent)], clock: () => Date.parse(NIGHT) });
+  const over = fundedController({ now: NIGHT, costs: [cost(cap + 1, recent)], clock: () => Date.parse(NIGHT) });
   assert.equal(over.rollingCeilingReached(0).reached, true);
   assert.equal(over.rollingCeilingReached(0).spentUsd, cap + 1);
   // The per-request guard would refuse this same dispatch — the pre-read matches it.
@@ -89,13 +102,13 @@ test("rollingCeilingReached is the PRE-admission read of the ceiling — so the 
     e instanceof FleetSafetyRefusal && e.code === "ROLLING_24_HOUR_MODEL_SPEND_CEILING");
 
   // Boundary: just under, but a worst-case scout would tip over — pause with the margin, fit without it.
-  const boundary = new FleetSafetyController({ now: NIGHT, costs: [cost(cap - 0.2, recent)], clock: () => Date.parse(NIGHT) });
+  const boundary = fundedController({ now: NIGHT, costs: [cost(cap - 0.2, recent)], clock: () => Date.parse(NIGHT) });
   assert.equal(boundary.rollingCeilingReached(0.6).reached, true, "a scout that cannot afford its worst case is not admitted");
   assert.equal(boundary.rollingCeilingReached(0).reached, false, "the spent total itself is still under the ceiling");
 
   // Unmeasured spend: reached=false — the caller's ledger-unreadable check owns that case.
   const nullRow = cost(null, recent);
-  const unmeasured = new FleetSafetyController({
+  const unmeasured = fundedController({
     now: NIGHT,
     costs: [{ ...nullRow, role: "SCOUT", cost: { ...nullRow.cost, inputTokens: null, outputTokens: null, usd: null } }],
     clock: () => Date.parse(NIGHT),
@@ -115,7 +128,7 @@ test("the rolling ceiling is the injected owner override when given, the fallbac
   // An override of $300 governs. $200 already spent is OVER the $100 fallback but
   // UNDER the override — the dial, not the constant, is what admits it, and the
   // pre-admission read and the per-request reservation agree.
-  const raised = new FleetSafetyController({ now: NIGHT, costs: [cost(200, recent)], rollingCeilingUsd: 300, clock: () => Date.parse(NIGHT) });
+  const raised = fundedController({ now: NIGHT, costs: [cost(200, recent)], rollingCeilingUsd: 300, clock: () => Date.parse(NIGHT) });
   assert.equal(raised.bounds.rolling24HourModelUsd, 300);
   assert.equal(raised.rollingCeilingReached(0.6).reached, false, "under the raised ceiling the lane is not paused");
   assert.doesNotThrow(
@@ -124,7 +137,7 @@ test("the rolling ceiling is the injected owner override when given, the fallbac
   );
 
   // Lowering the override below the spend pauses the lane at the dial, not the fallback.
-  const lowered = new FleetSafetyController({ now: NIGHT, costs: [cost(200, recent)], rollingCeilingUsd: 150, clock: () => Date.parse(NIGHT) });
+  const lowered = fundedController({ now: NIGHT, costs: [cost(200, recent)], rollingCeilingUsd: 150, clock: () => Date.parse(NIGHT) });
   assert.equal(lowered.rollingCeilingReached(0).reached, true);
   assert.equal(lowered.rollingCeilingReached(0).capUsd, 150);
   assert.throws(
@@ -134,7 +147,7 @@ test("the rolling ceiling is the injected owner override when given, the fallbac
 
   // A disappeared or malformed ceiling is never NO ceiling: it falls back.
   for (const bad of [0, -10, Number.NaN, Number.POSITIVE_INFINITY]) {
-    const c = new FleetSafetyController({ now: NIGHT, costs: [], rollingCeilingUsd: bad, clock: () => Date.parse(NIGHT) });
+    const c = fundedController({ now: NIGHT, costs: [], rollingCeilingUsd: bad, clock: () => Date.parse(NIGHT) });
     assert.equal(c.bounds.rolling24HourModelUsd, fallback, `an override of ${bad} falls back to the built-in ceiling`);
   }
 });
@@ -145,7 +158,7 @@ test("the rolling ceiling is the injected owner override when given, the fallbac
  * request and leave the free fetch seam admitting.
  */
 test("the owner's runner pause refuses every model request, while free fetches and dispatches are still admitted", () => {
-  const paused = new FleetSafetyController({ now: NIGHT, costs: [], paused: true, clock: () => Date.parse(NIGHT) });
+  const paused = fundedController({ now: NIGHT, costs: [], paused: true, clock: () => Date.parse(NIGHT) });
   assert.throws(() => paused.reserveModelRequest("anthropic", "scout-under-pause", REQUEST), (error: unknown) =>
     error instanceof FleetSafetyRefusal && error.code === "OWNER_PAUSED");
   assert.doesNotThrow(() => paused.admitProviderRequest("discovery-web", "free-walk"), "a free walk's fetch is not paid work");
@@ -155,7 +168,7 @@ test("the owner's runner pause refuses every model request, while free fetches a
 
 test("a closed paid lane's reason refuses every model request by name, and never calls the transport", async () => {
   const why = "held closed as if paused, because an owner spending control could not be read: the owner's research intents could not be read (reset)";
-  const held = new FleetSafetyController({ now: NIGHT, costs: [], modelHold: why, clock: () => Date.parse(NIGHT) });
+  const held = fundedController({ now: NIGHT, costs: [], modelHold: why, clock: () => Date.parse(NIGHT) });
   assert.throws(() => held.reserveModelRequest("anthropic", "prewarm", REQUEST), (error: unknown) =>
     error instanceof FleetSafetyRefusal && error.code === "MODEL_LANE_CLOSED" && error.message.includes("research intents could not be read"));
   let called = 0;
@@ -167,7 +180,7 @@ test("a closed paid lane's reason refuses every model request by name, and never
   assert.equal(snapshot.status, "ACTIVE", "a held lane is not the owner's runner pause, and the card must not say it is");
   assert.ok(snapshot.stoppedBecause.some((line) => line.startsWith("MODEL_LANE_CLOSED: held closed as if paused")));
 
-  const open = new FleetSafetyController({ now: NIGHT, costs: [], modelHold: null, clock: () => Date.parse(NIGHT) });
+  const open = fundedController({ now: NIGHT, costs: [], modelHold: null, clock: () => Date.parse(NIGHT) });
   assert.doesNotThrow(() => open.reserveModelRequest("anthropic", "open-lane", REQUEST), "an open lane reserves as before");
 });
 
@@ -182,13 +195,13 @@ test("an unmetered Scout cost row fails closed instead of disappearing from aggr
     aggregateModelSpend([unmeteredScout], "2026-09-05T01:00:00.000Z", NIGHT),
     { usd: null, measured: 0, unmeasured: 1 },
   );
-  const controller = new FleetSafetyController({ now: NIGHT, costs: [unmeteredScout], clock: () => Date.parse(NIGHT) });
+  const controller = fundedController({ now: NIGHT, costs: [unmeteredScout], clock: () => Date.parse(NIGHT) });
   assert.throws(() => controller.reserveModelRequest("anthropic", "after-unmetered-scout", REQUEST), (error: unknown) =>
     error instanceof FleetSafetyRefusal && error.code === "UNMEASURED_MODEL_SPEND");
 });
 
 test("a provider response with incomplete usage makes cycle spend UNMEASURED and stops later model work", () => {
-  const controller = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+  const controller = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
   const reservation = controller.reserveModelRequest("anthropic", "unmetered-response", REQUEST);
   assert.throws(
     () => controller.settleModelRequest(reservation, { ...RESPONSE, usage: { input_tokens: 100 } }),
@@ -201,33 +214,33 @@ test("a provider response with incomplete usage makes cycle spend UNMEASURED and
   );
 });
 
-test("no per-cycle request or dispatch ceiling remains; the cycle wall still fails closed", () => {
+test("requests and dispatches keep running across days without a cycle wall", () => {
   const nowMs = Date.parse(NIGHT);
-  const requests = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => nowMs });
+  const requests = fundedController({ now: NIGHT, costs: [], clock: () => nowMs });
   // No per-cycle request cap: far more than the retired 24 are all admitted.
   for (let i = 0; i < 100; i += 1) requests.admitProviderRequest("public-web", `request-${i}`);
   assert.equal(requests.snapshot(NIGHT).cycle.requests, 100);
 
   // No per-cycle payload total: recording bytes past the retired 16 MiB never refuses.
-  const bytes = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => nowMs });
+  const bytes = fundedController({ now: NIGHT, costs: [], clock: () => nowMs });
   bytes.recordInboundBytes("large-response", 64 * 1024 * 1024);
   bytes.recordInboundBytes("more", 1);
   assert.equal(bytes.snapshot(NIGHT).cycle.payloadBytes, 64 * 1024 * 1024 + 1);
 
-  const dispatch = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => nowMs });
+  const dispatch = fundedController({ now: NIGHT, costs: [], clock: () => nowMs });
   // No per-cycle dispatch cap: far more than the retired 10 are all admitted.
   for (let i = 0; i < 100; i += 1) assert.equal(dispatch.admitDispatch(`dispatch-${i}`).admit, true);
   assert.equal(dispatch.snapshot(NIGHT).cycle.dispatches, 100);
 
   let clock = nowMs;
-  const wall = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => clock });
-  clock += FLEET_SAFETY_BOUNDS.maxWallMsPerCycle;
-  assert.equal(wall.admitDispatch("wall-deferred").admit, false);
-  assert.equal(wall.snapshot(new Date(clock).toISOString()).deferred[0]?.code, "WALL_CLOCK_CEILING");
+  const wall = fundedController({ now: NIGHT, costs: [], clock: () => clock });
+  clock += 24 * 60 * 60_000;
+  assert.equal(wall.admitDispatch("wall-deferred").admit, true);
+  assert.equal(wall.snapshot(new Date(clock).toISOString()).deferred.length, 0);
 });
 
 test("the guarded fetch fails loud on a truncated 206 rather than handing up a partial document", async () => {
-  const controller = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+  const controller = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
   const cap = FLEET_SAFETY_BOUNDS.maxDownloadBytes;
 
   // A 206 whose Content-Range total exceeds the per-download cap is a truncation:
@@ -256,7 +269,7 @@ test("the guarded fetch fails loud on a truncated 206 rather than handing up a p
 });
 
 test("the guarded byte fetch answers the first hop with its location when asked not to follow, and follows by default", async () => {
-  const controller = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+  const controller = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
   const requested: string[] = [];
   const fetchImpl = (async (url: string | URL | Request) => {
     requested.push(String(url));
@@ -319,7 +332,7 @@ test("scheduler aggregate refusal leaves the exact registered obligation durably
 test("402 and quota refusals hard-latch one provider without probing or substitution", async () => {
   let providerCalls = 0;
   const substituteCalls = 0;
-  const controller = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+  const controller = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
   const guarded = controller.guardedModelTransport("anthropic", "named-model-work", async () => {
     providerCalls += 1;
     throw new ModelTransportError("HTTP 402: payment required", 402);
@@ -338,7 +351,7 @@ test("402 and quota refusals hard-latch one provider without probing or substitu
   assert.equal(classifyProviderFailure(new Error("transfer allowance exhausted")).class, "HARD");
 
   let quotaCalls = 0;
-  const quotaController = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+  const quotaController = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
   const quotaGuard = quotaController.guardedModelTransport("anthropic", "quota-work", async () => {
     quotaCalls += 1;
     throw new Error("account quota exhausted");
@@ -351,7 +364,7 @@ test("402 and quota refusals hard-latch one provider without probing or substitu
 
 test("public redirects are counted as separate provider requests under one byte ceiling", async () => {
   let calls = 0;
-  const controller = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+  const controller = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
   const open = controller.guardedOpenOne("public-web", "redirected-work", async (input, init) => {
     calls += 1;
     assert.equal(init?.redirect, "manual");
@@ -368,7 +381,7 @@ test("public redirects are counted as separate provider requests under one byte 
 });
 
 test("an in-flight public read reserves only a bounded slice, so a concurrent read still proceeds", async () => {
-  const controller = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+  const controller = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
   let release!: () => void;
   const gate = new Promise<void>((resolve) => { release = resolve; });
   let firstCalls = 0;
@@ -398,7 +411,7 @@ test("an in-flight public read reserves only a bounded slice, so a concurrent re
 });
 
 test("a Scout model request is admitted while a public read is in flight (the turn-0 abort, fixed)", async () => {
-  const controller = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+  const controller = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
   let release!: () => void;
   const gate = new Promise<void>((resolve) => { release = resolve; });
   const read = controller.guardedOpenOne("public-web", "deterministic-read", async () => {
@@ -430,7 +443,7 @@ test("a Scout model request is admitted while a public read is in flight (the tu
 });
 
 test("the largest recurring record's stream budget clears ~9.2 MiB while a full Scout lane holds reservations", async () => {
-  const controller = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+  const controller = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
   const scoutRequest: ModelRequest = {
     model: "claude-opus-5-5",
     max_tokens: 8_192,
@@ -495,40 +508,45 @@ test("a hard Neon response is host-latched before any second database probe", as
   }
 });
 
-test("transient 429/5xx/network failures do not spin and do not hard-latch", async () => {
+test("transient 429/5xx/network failures make one call and back off", async () => {
   for (const error of [
     new ModelTransportError("HTTP 429: slow down", 429),
+    new ModelTransportError("HTTP 429: Retry-After exceeds default backoff", 429, 1_200_000),
     new ModelTransportError("HTTP 503: unavailable", 503),
     new Error("network timeout"),
   ]) {
     let calls = 0;
-    const controller = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+    const controller = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
     const guarded = controller.guardedModelTransport("anthropic", "transient-work", async () => {
       calls += 1;
       throw error;
     });
     await assert.rejects(() => guarded(REQUEST));
     assert.equal(calls, 1, "the transport performs no implicit retry");
-    assert.equal(controller.snapshot(NIGHT).providerCircuits.length, 0);
+    assert.equal(controller.snapshot(NIGHT).providerCircuits.length, 1);
+    if (error instanceof ModelTransportError && error.retryAfterMs) {
+      assert.equal(controller.snapshot(NIGHT).providerCircuits[0].eligibleAt,
+        new Date(Date.parse(NIGHT) + error.retryAfterMs).toISOString());
+    }
   }
 });
 
-test("Saturday operational night is an explicit SCHEDULED BLACKOUT", () => {
+test("Saturday nights dispatch normally", () => {
   const before = "2026-09-06T00:59:59.000Z"; // Saturday 17:59:59 Phoenix.
   const during = "2026-09-06T01:00:00.000Z"; // Saturday 18:00 Phoenix.
   const sundayMorning = "2026-09-06T12:59:59.000Z"; // Sunday 05:59:59 Phoenix.
   const after = "2026-09-06T13:00:00.000Z";
   assert.equal(scheduledBlackoutAt(before), false);
-  assert.equal(scheduledBlackoutAt(during), true);
-  assert.equal(scheduledBlackoutAt(sundayMorning), true);
+  assert.equal(scheduledBlackoutAt(during), false);
+  assert.equal(scheduledBlackoutAt(sundayMorning), false);
   assert.equal(scheduledBlackoutAt(after), false);
 
-  const controller = new FleetSafetyController({ now: during, costs: [], clock: () => Date.parse(during) });
-  assert.equal(controller.snapshot(during).status, "SCHEDULED BLACKOUT");
-  assert.equal(controller.admitDispatch("blackout-work").admit, false);
+  const controller = fundedController({ now: during, costs: [], clock: () => Date.parse(during) });
+  assert.equal(controller.snapshot(during).status, "ACTIVE");
+  assert.equal(controller.admitDispatch("blackout-work").admit, true);
 });
 
-test("Admin standing projection exposes ACTIVE, PAUSED, and CIRCUIT BROKEN", () => {
+test("Admin standing projection exposes ACTIVE, PAUSED and CIRCUIT BROKEN", () => {
   const beat = {
     formatVersion: 1 as const,
     beatAt: NIGHT,
@@ -540,11 +558,14 @@ test("Admin standing projection exposes ACTIVE, PAUSED, and CIRCUIT BROKEN", () 
     host: "test",
     pause: null,
   };
-  const active = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+  const active = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
   assert.equal(runnerStanding(beat, [], NIGHT, active.snapshot(NIGHT)).state, "ACTIVE");
-  const broken = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+  const blackoutAt = "2026-09-06T02:00:00.000Z";
+  const blackout = fundedController({ now: blackoutAt, costs: [], clock: () => Date.parse(blackoutAt) });
+  assert.equal(runnerStanding({ ...beat, beatAt: blackoutAt }, [], blackoutAt, blackout.snapshot(blackoutAt)).state, "ACTIVE");
+  const broken = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
   broken.latchProvider("anthropic", "quota exhausted", "owed-work", NIGHT);
   assert.equal(runnerStanding(beat, [], NIGHT, broken.snapshot(NIGHT)).state, "CIRCUIT BROKEN");
-  const paused = new FleetSafetyController({ now: NIGHT, costs: [], paused: true, clock: () => Date.parse(NIGHT) });
+  const paused = fundedController({ now: NIGHT, costs: [], paused: true, clock: () => Date.parse(NIGHT) });
   assert.equal(runnerStanding(beat, [], NIGHT, paused.snapshot(NIGHT)).state, "PAUSED");
 });

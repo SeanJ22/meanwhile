@@ -212,7 +212,7 @@ export function httpExecutor(input: {
     const got = await fetchOne(url.toString(), timeoutMs);
 
     const providerFailure = httpProviderFailure(url.toString(), got);
-    if (providerFailure !== null) return { ranAs: RAN_AS, kind: "ABORTED", cost: cost(got),
+    if (providerFailure !== null && got.status !== 429) return { ranAs: RAN_AS, kind: "ABORTED", cost: cost(got),
       detail: `Provider failure at ${url.host}: ${providerFailure}. The record remains owed; try another source.` };
 
     const status = got.status ?? 0;

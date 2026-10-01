@@ -380,7 +380,7 @@ export function routeExecutor(input: {
     });
 
     const providerFailure = httpProviderFailure(url.toString(), got);
-    if (providerFailure !== null) {
+    if (providerFailure !== null && got.status !== 429) {
       return {
         ranAs: RAN_AS,
         kind: "ABORTED",

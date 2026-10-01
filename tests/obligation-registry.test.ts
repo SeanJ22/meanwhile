@@ -415,6 +415,12 @@ test("a deferred provider request has zero request cost", async () => {
   assert.equal(outcome.cost?.requestCount, 0);
 });
 
+test("rate limits keep the existing blocked-route disposition while the provider backs off", async () => {
+  const outcome = await run(AZ_ROUTE, fakeOpen('rate limited', 429));
+  assert.equal(outcome.kind, 'DISPOSED');
+  assert.equal(outcome.disposition?.disposition, 'BLOCKED_CURRENTLY');
+});
+
 test("a satisfied response is DISPOSED INGESTED with the tier decided by SCANNING", async () => {
   const body = JSON.stringify({ data: [{ EntityID: 1 }], recordsTotal: 1 });
   const outcome = await run(AZ_ROUTE, fakeOpen(body));

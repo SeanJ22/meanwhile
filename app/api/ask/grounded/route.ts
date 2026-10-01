@@ -754,7 +754,13 @@ export async function POST(request: Request) {
     // officials, or any other source's answer.
     ? timed("commentAccess", () => refreshCommentAccessFromPromoted().catch(() => undefined))()
     : null;
-  const meetingsRead = readReaderEdgeMeetings({ manifest: edgeManifest });
+  // Area questions read the same state pieces as the map. Questions naming
+  // a body elsewhere retain their wider subject inventory.
+  const meetingStates = topicRoute || areaMeetingsAsk ? statesOf(ocdIds) : [];
+  const meetingsRead = readReaderEdgeMeetings({
+    manifest: edgeManifest,
+    ...(meetingStates.length > 0 ? { states: meetingStates } : {}),
+  });
   meetingsRead.catch(() => undefined);
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
   if (edgeManifest?.authorityArtifacts) {

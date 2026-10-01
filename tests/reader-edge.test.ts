@@ -197,6 +197,7 @@ test("the reader caches each scope artifact in-process per version and refreshes
   const second = await readReaderEdgeMeetings({ store: counting, states: ["az"] });
   assert.equal(second.kind, "PROMOTED");
   assert.equal(reads, readsAfterFirst, "a second read of the same version hits the cache, not the store");
+  assert.equal(second, first, "readers of one unchanged area also share the composed read");
 
   // A new publication (changed AZ data → new per-scope sha) must refresh, never stale-serve.
   const v2 = snapshot([

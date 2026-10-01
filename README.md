@@ -133,7 +133,7 @@ tests/fixtures/       recorded API responses, no live calls in tests
 | **The rules.** Sean's standing decisions, and the working guide that applies them. Read these before changing anything. | [docs/rulings.md](./docs/rulings.md) · [CLAUDE.md](./CLAUDE.md) |
 | **Capability evidence.** Generated claims and their proving checks; live activity is in the admin console above. | [docs/status-ledger.md](./docs/status-ledger.md) |
 | **Session history.** The append-only session records. The old hand-written "current state" sections (§2, §3, §7) retired into the generated ledger on 2026-08-30. | [docs/state.md](./docs/state.md) |
-| **Repo inventory.** The generated mechanical census — tree, routes, schema, gates, method store, scheduled jobs. Written by `pnpm repo-map`. | [docs/repo-inventory.md](./docs/repo-inventory.md) |
+| **Repo inventory.** The generated mechanical census — tree, routes, schema, gates, method store, scheduled jobs. Written by `pnpm repo-map`. | Run `pnpm repo-map` (writes `docs/repo-inventory.md`, not committed) |
 | **Work queue and completed work.** Follow the current tracker policy for its working and resolved stores. | [Tracker policy](docs/governance/policies/tracker-workflow.md) |
 | **Sources and what each rung of a hunt returned.** | [docs/source-ladder.md](./docs/source-ladder.md) |
 | **How to cover a new zip**, and the source ladder per jurisdiction type. Append-only. | [docs/zip-playbook.md](./docs/zip-playbook.md) |

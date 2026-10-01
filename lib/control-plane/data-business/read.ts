@@ -156,6 +156,7 @@ async function load(recipe: Recipe, slice: Slice, deps: ReadDeps): Promise<Prepa
   if (recipe.source === "events") {
     const loaded = await sources.events({ from: slice.from, to: slice.to });
     if (loaded.kind === "NOT_INSTALLED") return stop({ kind: "NOT_INSTALLED", says: loaded.detail });
+    if (loaded.truncated === true) return stop(refused("TOO_WIDE", "That slice is too wide to read event by event. Narrow the days, or ask for a number counted from the totals."));
     const needsZips = slice.place?.kind === "state" || slice.place?.kind === "county";
     const zipPlaces: ReadonlyMap<string, ZipPlaces> = needsZips ? await sources.places.of([...new Set(loaded.rows.flatMap((e) => (e.zip === null ? [] : [e.zip])))]) : new Map();
     const inSlice = sliceEvents(loaded.rows, slice, zipPlaces);

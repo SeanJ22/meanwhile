@@ -8,7 +8,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Routes and pages
 
-79 file(s). Paths retain route groups and dynamic segments as written.
+80 file(s). Paths retain route groups and dynamic segments as written.
 
 - `/(admin)/admin/auth/callback` — `app/(admin)/admin/auth/callback/route.ts`
 - `/(admin)/admin/auth/google` — `app/(admin)/admin/auth/google/route.ts`
@@ -52,6 +52,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `/api/admin/v6/sends` — `app/api/admin/v6/sends/route.ts`
 - `/api/admin/v6/spend` — `app/api/admin/v6/spend/route.ts`
 - `/api/admin/v6/stuck` — `app/api/admin/v6/stuck/route.ts`
+- `/api/admin/v6/topic-counts` — `app/api/admin/v6/topic-counts/route.ts`
 - `/api/admin/v6/trail` — `app/api/admin/v6/trail/route.ts`
 - `/api/admin/v6/workers` — `app/api/admin/v6/workers/route.ts`
 - `/api/admin/work-progress` — `app/api/admin/work-progress/route.ts`
@@ -787,7 +788,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-953 file(s).
+954 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -1664,6 +1665,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/tier-grouping.test.ts`
 - `tests/tiers.test.ts`
 - `tests/top-offices.test.ts`
+- `tests/topic-counts.test.ts`
 - `tests/tracker-handoff-contract.test.ts`
 - `tests/tracker-integrity.test.ts`
 - `tests/tracker-predicates.test.ts`
@@ -1745,7 +1747,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-6995 file(s).
+6999 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -1801,6 +1803,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/_mw/admin-v6/screen-now.tsx`
 - `app/(admin)/_mw/admin-v6/screen-work.tsx`
 - `app/(admin)/_mw/admin-v6/screen-workers.tsx`
+- `app/(admin)/_mw/admin-v6/topic-counts.tsx`
 - `app/(admin)/_mw/admin-v6/trail-view.tsx`
 - `app/(admin)/_mw/admin-v6/ui.tsx`
 - `app/(admin)/_mw/admin-v6/use-reading.ts`
@@ -1874,6 +1877,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/api/admin/v6/sends/route.ts`
 - `app/api/admin/v6/spend/route.ts`
 - `app/api/admin/v6/stuck/route.ts`
+- `app/api/admin/v6/topic-counts/route.ts`
 - `app/api/admin/v6/trail/route.ts`
 - `app/api/admin/v6/workers/route.ts`
 - `app/api/admin/work-progress/route.ts`
@@ -4924,6 +4928,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/control-plane/admin-view/runner-progress-read.ts`
 - `lib/control-plane/admin-view/scope-preview.ts`
 - `lib/control-plane/admin-view/scope-work.ts`
+- `lib/control-plane/admin-view/topic-counts.ts`
 - `lib/control-plane/admin-view/v6-agents-read.ts`
 - `lib/control-plane/admin-view/v6-agents-route.ts`
 - `lib/control-plane/admin-view/v6-capabilities.ts`
@@ -8662,6 +8667,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/tier-grouping.test.ts`
 - `tests/tiers.test.ts`
 - `tests/top-offices.test.ts`
+- `tests/topic-counts.test.ts`
 - `tests/tracker-handoff-contract.test.ts`
 - `tests/tracker-integrity.test.ts`
 - `tests/tracker-predicates.test.ts`

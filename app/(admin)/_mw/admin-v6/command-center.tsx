@@ -35,6 +35,7 @@ import { LearningScreen } from "./screen-learning.tsx";
 import { MoneyScreen } from "./screen-money.tsx";
 import { NowScreen } from "./screen-now.tsx";
 import { ReaderDemandPanel } from "./reader-demand.tsx";
+import { TopicCountsPanel } from "./topic-counts.tsx";
 import { ReportsView } from "./reports-view.tsx";
 import { WorkScreen } from "./screen-work.tsx";
 import { WorkersScreen } from "./screen-workers.tsx";
@@ -357,7 +358,7 @@ export function CommandCenter(props: CommandCenterProps) {
           )}
           {detail ? <DetailPanel detail={detail} /> : (
             <>
-              {view === "now" && <><NowScreen key={scopeKey} /><ReaderDemandPanel /></>}
+              {view === "now" && <><NowScreen key={scopeKey} /><ReaderDemandPanel /><TopicCountsPanel /></>}
               {view === "workers" && <WorkersScreen />}
               {view === "work" && <WorkScreen />}
               {view === "checklist" && <ChecklistScreen />}

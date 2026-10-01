@@ -779,6 +779,16 @@ test("the real child boundary enforces both timeout and per-stream output limits
       executable: process.execPath,
       args: ["-e", "process.stdout.write('x'.repeat(65536))"],
     },
+    {
+      id: "progressing",
+      executable: process.execPath,
+      args: ["-e", "let n=0; const timer=setInterval(()=>{console.log('RCD_PROGRESS='+JSON.stringify({key:'fact:'+ ++n,records:1})); if(n===5)clearInterval(timer)},200)"],
+    },
+    {
+      id: "unchanged",
+      executable: process.execPath,
+      args: ["-e", "console.log('RCD_PROGRESS='+JSON.stringify({key:'same',records:1}));setInterval(()=>console.log('RCD_PROGRESS='+JSON.stringify({key:'same',records:1})),150)"],
+    },
   ], {
     cwd: process.cwd(),
     env: process.env,
@@ -787,6 +797,10 @@ test("the real child boundary enforces both timeout and per-stream output limits
   });
   assert.equal(results[0]?.termination, "TIMED_OUT");
   assert.equal(results[1]?.termination, "OUTPUT_LIMIT_EXCEEDED");
+  assert.equal(results[2]?.termination, "EXITED", "new facts keep a child working beyond its original idle allowance");
+  assert.equal(results[2]?.status, 0);
+  assert.equal(results[3]?.termination, "TIMED_OUT", "repeating one unchanged result is no progress");
+  assert.match(results[3]!.errorMessage!, /NO_PROGRESS_PAUSED/);
 });
 
 test("per-command child environments override the batch and never leak across siblings", async () => {

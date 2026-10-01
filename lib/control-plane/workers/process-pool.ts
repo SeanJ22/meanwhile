@@ -51,6 +51,7 @@ export async function runNationalPlaceWorkerProcesses(input: {
   readonly capacity: () => number;
   readonly onStarted?: (pid: number) => void;
   readonly slots?: WorkerProcessSlots;
+  readonly orderPending?: (zips: readonly string[]) => Promise<readonly string[]>;
   readonly store: NationalPlacePublicationInput["store"];
   readonly publish: (input: NationalPlacePublicationInput) => Promise<unknown>;
   readonly publishElection: ElectionPublisher;
@@ -67,7 +68,7 @@ export async function runNationalPlaceWorkerProcesses(input: {
     taskIds: [...new Set(input.zips)], nationalZips: [...new Set(input.zips)], modelEnabled: false,
     searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] }, capacity: input.capacity,
     transportFor: () => async () => { throw new Error("NATIONAL_SOURCE_MODEL_CALL_REFUSED"); },
-    onStarted: input.onStarted, slots: input.slots,
+    onStarted: input.onStarted, slots: input.slots, orderPending: input.orderPending,
     national: {
       publish: request => serialize(() => input.publish({ ...request, store: input.store })),
       publishElection: (fields, now) => serialize(() => input.publishElection(fields, now)),
@@ -86,6 +87,9 @@ export async function runLeaseWorkerProcesses(input: {
   readonly searchFor?: (subjectId: string) => ScoutToolContext["search"];
   readonly reserveEscalation?: ScoutExecutorDeps["reserveEscalation"];
   readonly onStarted?: (pid: number) => void;
+  /** Read current place priority before the next existing lease is claimed. */
+  readonly orderPending?: (ids: readonly string[]) => Promise<readonly string[]>;
+  readonly onDispatched?: (result: DispatchResult) => void | Promise<void>;
   readonly route?: { readonly tool: (name: string, args: readonly unknown[]) => Promise<unknown> };
   readonly scout?: {
     readonly onStart?: ScoutExecutorDeps["onStart"];
@@ -106,8 +110,14 @@ export async function runLeaseWorkerProcesses(input: {
   let failure: unknown = null;
   const launch = async (): Promise<void> => {
     const release = await (input.slots ?? (input.config.postgres ? processMemorySlots : undefined))?.acquire(input.entry);
-    try { await new Promise<void>((resolve, reject) => {
-    const ids = input.config.nationalZips ? [[...pending].find(id => !assigned.has(id))!]
+    try {
+    const ready = [...pending].filter(id => !assigned.has(id));
+    const ordered = input.config.nationalZips && input.orderPending ? await input.orderPending(ready) : ready;
+    // Memory admission can queue several launches. Re-check after the asynchronous ranking read.
+    const nextId = ordered.find(id => pending.has(id) && !assigned.has(id));
+    if (input.config.nationalZips && nextId === undefined) return;
+    await new Promise<void>((resolve, reject) => {
+    const ids = input.config.nationalZips ? [nextId!]
       : input.config.taskIds;
     for (const id of ids) assigned.add(id);
     const child = fork(join(input.config.root, input.entry), [], {
@@ -126,6 +136,7 @@ export async function runLeaseWorkerProcesses(input: {
         const result = message.body as DispatchResult;
         results.push(result);
         if (result.routeTaskId) pending.delete(result.routeTaskId);
+        await input.onDispatched?.(result);
         return;
       }
       if (message.kind === "finished") { for (const id of message.body as string[]) pending.delete(id); return; }
@@ -139,7 +150,10 @@ export async function runLeaseWorkerProcesses(input: {
       }
       try {
         let body: unknown;
-        if (message.kind === "route-tool") {
+        if (message.kind === "pending-order") {
+          const requested = (message.body as readonly string[]).filter(id => pending.has(id));
+          body = input.orderPending ? await input.orderPending(requested) : requested;
+        } else if (message.kind === "route-tool") {
           if (!input.route) throw new Error("ROUTE_PROCESS_BROKER_UNAVAILABLE");
           const request = message.body as { name: string; args: readonly unknown[] };
           body = await input.route.tool(request.name, request.args);
@@ -161,10 +175,17 @@ export async function runLeaseWorkerProcesses(input: {
         } else if (message.kind === "national-publication") {
           if (!input.national) throw new Error("NATIONAL_PUBLICATION_BROKER_UNAVAILABLE");
           body = await input.national.publish(message.body as NationalPublication);
+          const publication = body as { promotedVersionId?: string | null; divisions?: readonly unknown[];
+            bodies?: readonly unknown[]; members?: readonly unknown[] } | null;
+          const records = (publication?.divisions?.length ?? 0) + (publication?.bodies?.length ?? 0) + (publication?.members?.length ?? 0);
+          if (publication?.promotedVersionId && records) console.log("RCD_PROGRESS=" + JSON.stringify({ key: publication.promotedVersionId, records }));
         } else if (message.kind === "election-publication") {
           if (!input.national) throw new Error("NATIONAL_PUBLICATION_BROKER_UNAVAILABLE");
           const request = message.body as { fields: Parameters<ElectionPublisher>[0]; now: string };
           body = await input.national.publishElection(request.fields, request.now);
+          const publication = body as Awaited<ReturnType<ElectionPublisher>>;
+          if (publication.promotedVersionId && publication.fields.length) console.log("RCD_PROGRESS=" +
+            JSON.stringify({ key: publication.promotedVersionId, records: publication.fields.length }));
         } else if (message.kind === "national-result") {
           if (!input.national) throw new Error("NATIONAL_PUBLICATION_BROKER_UNAVAILABLE");
           await input.national.onResult(message.body as NationalPlaceReport);

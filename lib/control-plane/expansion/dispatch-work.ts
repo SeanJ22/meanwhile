@@ -26,6 +26,94 @@ import { manualProducerInvocationMatrix } from "../../civic-data/manual-producer
 import { createWorkItem } from "../work-item.ts";
 import { registerWorkItem } from "../repository/coordinator.ts";
 import type { ResolvedScope } from "./membership.ts";
+import { buildPlaceOwedList, type PlaceOwedItem } from "../../coverage/place-owed.ts";
+import { readHeldPlaceCapture } from "../../civic-data/held-place-capture.ts";
+import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
+import { expansionScopesOf, VERSION_PREFIX } from "./scopes.ts";
+import { resolveScopes } from "./runner-load.ts";
+import { loadPublishedLookupState } from "../../census-geography/reader.ts";
+import { declaredWorkMembers } from "./declared-work-scope.ts";
+import { censusWorkDivision } from "../../census-geography/division-id.ts";
+
+export interface PlaceWorkReading {
+  readonly key: string;
+  readonly receiptId: string;
+  readonly items: readonly Pick<PlaceOwedItem, "state">[];
+}
+
+/** Order the existing place capture rows; this creates no score or policy store. */
+export function orderPlaceWork(config: unknown, places: readonly PlaceWorkReading[]): string[] {
+  const value = config as { placeTargets?: unknown } | null;
+  const raw = value?.placeTargets;
+  if (raw !== undefined && !Array.isArray(raw)) throw new Error("PLACE_TARGETS_UNREADABLE");
+  const targets = new Map<string, { goalPercent: number; setAt: string }>();
+  for (const entry of (raw ?? []) as unknown[]) {
+    const target = entry as { key?: unknown; goalPercent?: unknown; setAt?: unknown; receiptId?: unknown } | null;
+    if (!target || typeof target.key !== "string" || !target.key || typeof target.goalPercent !== "number" ||
+      !Number.isFinite(target.goalPercent) || target.goalPercent < 1 || target.goalPercent > 100 ||
+      typeof target.setAt !== "string" || !Number.isFinite(Date.parse(target.setAt)) ||
+      typeof target.receiptId !== "string" || !target.receiptId) throw new Error("PLACE_TARGETS_UNREADABLE");
+    const previous = targets.get(target.key);
+    if (!previous || Date.parse(target.setAt) >= Date.parse(previous.setAt)) targets.set(target.key, target as { goalPercent: number; setAt: string });
+  }
+  const readings = places.map(place => {
+    const resolved = place.items.filter(item => item.state === "published" || item.state === "unpublished").length;
+    const percent = place.items.length ? resolved / place.items.length * 100 : 0;
+    const target = targets.get(place.key);
+    return { ...place, percent, target: target && percent < target.goalPercent ? target : null };
+  });
+  return readings.sort((a, b) => Number(Boolean(b.target)) - Number(Boolean(a.target)) ||
+    (a.target && b.target ? Date.parse(a.target.setAt) - Date.parse(b.target.setAt) : 0) ||
+    a.percent - b.percent || a.key.localeCompare(b.key)).map(place => place.receiptId);
+}
+
+/** National source workers use the same current capture denominator as the live hunt queue.
+ * The published lookup and declared standing divisions place shared facts; ranking never fetches geography. */
+export async function orderNationalPlaceWork(repos: ControlPlaneRepositories, zips: readonly string[], now: string): Promise<string[]> {
+  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const decisions = expansionScopesOf(row?.value ?? null);
+  if (decisions.malformed) throw new Error("The owner's place scopes contain unreadable decisions");
+  if (!decisions.scopes.length) return [...zips];
+  const lookup = await loadPublishedLookupState();
+  const resolved = await resolveScopes(decisions.scopes, lookup, null);
+  const work = (await repos.obligations.listWhere(["active"], "true")).map(row => row.value);
+  const members = await declaredWorkMembers(resolved.scopes, work, lookup.lookup);
+  const bySubject = new Map(work.map(item => [item.subjectId, item]));
+  const divisionsByReceipt = new Map<string, Set<string>>();
+  const inScope = new Map<string, ReadonlySet<string>>();
+  for (const scope of resolved.scopes) {
+    const receiptId = scope.decision.receiptId;
+    const selected = scope.kind === "RESOLVED" ? scope.zctas :
+      scope.decision.geography.type === "zcta" ? new Set([scope.decision.geography.geoid]) : new Set<string>();
+    inScope.set(receiptId, selected);
+    const divisions = new Set<string>();
+    for (const subject of members.get(scope.decision.key) ?? []) {
+      for (const id of bySubject.get(subject)?.scopeDivisions ?? []) if (id.startsWith("ocd-division/")) divisions.add(id);
+      if (subject.startsWith("ocd-division/")) divisions.add(subject.split("#")[0]);
+    }
+    for (const zip of selected) {
+      const grouping = await lookup.lookup.groupingsForZcta(zip);
+      if (grouping.status.kind !== "OK") continue;
+      for (const membership of grouping.memberships) {
+        const division = censusWorkDivision(membership.geography);
+        if (division) divisions.add(division);
+        divisions.add(`ocd-division/country:us/state:${membership.geography.stateAbbr.toLowerCase()}`);
+      }
+    }
+    if (divisions.size) divisions.add("ocd-division/country:us");
+    divisionsByReceipt.set(receiptId, divisions);
+  }
+  const divisionIds = [...new Set([...divisionsByReceipt.values()].flatMap(ids => [...ids]))];
+  const capture = divisionIds.length ? await readHeldPlaceCapture(divisionIds, { now, bypassCache: true }) : { subjects: [], held: [] };
+  const ordered = orderPlaceWork(row?.value, resolved.scopes.map(scope => ({
+    key: `${scope.decision.geography.stateAbbr.toLowerCase()}.${VERSION_PREFIX[scope.decision.geography.type]}.${scope.decision.geography.geoid.toLowerCase()}`,
+    receiptId: scope.decision.receiptId,
+    items: buildPlaceOwedList({ divisions: [...divisionsByReceipt.get(scope.decision.receiptId)!].map(id => ({ id, label: id })),
+      subjects: capture.subjects, held: capture.held, now }),
+  })));
+  const rank = (zip: string) => ordered.findIndex(receipt => inScope.get(receipt)?.has(zip));
+  return [...zips].sort((a, b) => (rank(a) < 0 ? Infinity : rank(a)) - (rank(b) < 0 ? Infinity : rank(b)));
+}
 
 /** A Send creates every missing requirement; shared governments keep one row. */
 export const DISPATCH_WORK_FORMAT_VERSION = 1;

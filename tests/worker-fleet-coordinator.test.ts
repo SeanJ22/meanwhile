@@ -257,7 +257,9 @@ test("50 hunts share admission before a larger priority hunt takes its second it
   assert.equal(new Set(ordered.slice(0, 50).map(id => byId.get(id)!.autonomousPlan.ownerInstructions[0])).size, 50);
   const served = new Map([[ordered[0], FIXTURE_NOW]]);
   const resumed = fairAutonomousWorkIds([...extra, ...items], served, priorities);
-  assert.equal(byId.get(resumed[0])!.autonomousPlan.ownerInstructions[0], "hunt-1");
+  assert.equal(byId.get(resumed[0])!.autonomousPlan.ownerInstructions[0], "hunt-0", "owner place rank precedes earlier service");
+  const equalRanks = priorities.map(row => ({ ...row, priority: 0 }));
+  assert.equal(byId.get(fairAutonomousWorkIds([...extra, ...items], served, equalRanks)[0])!.autonomousPlan.ownerInstructions[0], "hunt-1");
   assert.equal(new Set(resumed).size, items.length + extra.length);
 });
 
@@ -389,12 +391,15 @@ test("unresolved identity permits independent diagnosis but never staging", asyn
       routeLabel: selected.task!.routeLabel, target: selected.task!.target, inherited: false, now: h.now() });
     await registerRouteTask(repos, second, h.now());
     const pids: number[] = [];
+    let pulls = 0;
     const results = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
       config: { root: process.cwd(), fileStoreRoot: root, postgres: false, taskIds: [selected.task!.id, second.id],
         modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
       capacity: () => 2, onStarted: pid => pids.push(pid),
+      orderPending: async ids => { pulls++; return [...ids].reverse(); },
       transportFor: () => async () => { throw new Error("unexpected paid call"); } });
     assert.equal(pids.length, 2);
+    assert.ok(pulls >= 2, "each worker asks the parent for current priority before claiming a lease");
     assert.ok(pids.every(pid => pid !== process.pid));
     const attempts = (await repos.attempts.list()).map(row => row.value).filter(row => row.routeTaskId === selected.task!.id);
     assert.equal(attempts.length, 1);
@@ -455,6 +460,7 @@ test("ZIP process reports return after parent registry and election publication,
       return { kind };
     };
     const reports = await runNationalPlaceWorkerProcesses({ root, zips: ["10001", "10002"], capacity: () => 2, store,
+      orderPending: async ids => [...ids].reverse(),
       slots: workerProcessSlots(() => 2, { availableBytes: () => 1000, headroomBytes: 100, peakBytes: () => 600 }),
       onStarted: pid => {
         if (pids.length === 1) assert.equal(delivered.length, 1, "The second ready ZIP stays queued until the first process finishes.");
@@ -474,6 +480,7 @@ test("ZIP process reports return after parent registry and election publication,
     assert.equal(peak, 1, "registry and election callbacks share the parent critical section");
     assert.equal(published.length, 4, "one failure does not poison later pointer writes");
     assert.deepEqual(reports.map(report => report.zip).sort(), ["10001", "10002"]);
+    assert.equal(delivered[0], "10002", "national workers pull the current owner place priority before launch");
     assert.deepEqual(delivered.sort(), ["10001", "10002"]);
     assert.equal(reports.filter(report => !("deferred" in report) && "error" in (report.publications[0] as object)).length, 1);
   } finally { await rm(root, { recursive: true, force: true }); }

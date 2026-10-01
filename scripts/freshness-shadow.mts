@@ -177,12 +177,15 @@ import {
   ownerDispatchWorkOf,
   scopeWorkTarget,
   planDispatchWork,
+  orderPlaceWork,
   type DispatchWorkApplied,
   type DispatchWorkReading,
   type DispatchWorkTarget,
   type DurableRowFacts,
   type OwnerDispatchWork,
 } from "../lib/control-plane/expansion/dispatch-work.ts";
+import { readHeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
+import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
 import { factChainLines } from "../lib/control-plane/promotion/fact-chain.ts";
 import { createPermanentMeetingFreshness } from "../lib/control-plane/promotion/meeting-freshness.ts";
@@ -1233,18 +1236,49 @@ const lifetimeHuntWorkIds = new Set(sync.all.filter(o => lifetimeHuntSubjects.ha
 const lifetimeHuntWork = (work: string): boolean => lifetimeHuntSubjects.has(work) || lifetimeHuntWorkIds.has(work);
 const hasLifetimeHunt = lifetimeHuntSubjects.size > 0;
 const fundedHunts = (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED" && scope.decision.budgetUsd > 0);
+let placeOrder: readonly string[] = [];
+let placeOrderDirty = true;
+let placeOrderRead: Promise<void> | null = null;
+async function refreshPlaceOrder(): Promise<void> {
+  if (placeOrderRead) return placeOrderRead;
+  if (!placeOrderDirty) return;
+  placeOrderDirty = false;
+  placeOrderRead = (async () => {
+    const scopes = (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED");
+    if (!scopes.length) return;
+    const divisionsByReceipt = new Map(scopes.map(scope => [scope.decision.receiptId,
+      [...new Set([...scope.members].map(subject => subject.split("#")[0]).filter(id => id.startsWith("ocd-division/")))]]));
+    const divisionIds = [...new Set([...divisionsByReceipt.values()].flat())];
+    const [row, capture] = await Promise.all([repos.adminConfig.read(ADMIN_CONFIG_ID),
+      readHeldPlaceCapture(divisionIds, { now: nowIso(), bypassCache: true })]);
+    const shortType: Readonly<Record<string, string>> = { zcta: "zcta", county: "county", congressional_district: "cd",
+      cbsa: "cbsa", state_leg_upper: "sldu", state_leg_lower: "sldl" };
+    placeOrder = orderPlaceWork(row?.value, scopes.map(scope => ({
+      key: `${scope.decision.geography.stateAbbr.toLowerCase()}.${shortType[scope.decision.geography.type]}.${scope.decision.geography.geoid.toLowerCase()}`,
+      receiptId: scope.decision.receiptId,
+      items: buildPlaceOwedList({ divisions: (divisionsByReceipt.get(scope.decision.receiptId) ?? []).map(id => ({ id, label: id })),
+        subjects: capture.subjects, held: capture.held, now: nowIso() }),
+    })));
+  })().catch(error => { placeOrderDirty = true; throw error; }).finally(() => { placeOrderRead = null; });
+  return placeOrderRead;
+}
+await refreshPlaceOrder();
+const placeRankFor = (subject: string): number | null => {
+  const ranks = (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED" && scope.members.has(subject))
+    .map(scope => placeOrder.indexOf(scope.decision.receiptId)).filter(rank => rank >= 0);
+  return ranks.length ? Math.min(...ranks) : null;
+};
 const providerQueue = new ModelProviderQueue({
   ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}) });
 const workerCapacity = researchWorkerCapacity({ hunts: Math.max(1, fundedHunts.length),
   availableUsd: fundedHunts.reduce((sum, scope) => sum + scope.decision.budgetUsd, 0),
   requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
   ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}) });
-/** 0 = the owner's DISPATCH; 1 + n = the n-th selected scope in run order; null = neither. */
+/** Current place order first; an unplaced owner dispatch follows the selected places. */
 const placementRank = (obligationId: string): number | null => {
-  if (dispatchPriority.has(obligationId)) return 0;
   const subject = subjectByObligation.get(obligationId);
-  const at = subject === undefined || expansionPlan === null ? null : expansionPlan.placementOf(subject);
-  return at === null ? null : 1 + at;
+  const at = subject === undefined ? null : placeRankFor(subject);
+  return at ?? (dispatchPriority.has(obligationId) ? placeOrder.length : null);
 };
 /** The dispatcher's first rows when NO DISPATCH is pending: every selected scope's work. Null otherwise, so a DISPATCH keeps both lanes. */
 const scopePlaceFirst: ReadonlySet<string> | null =
@@ -2597,9 +2631,13 @@ const cycle = await runCycle({
   maturity,
   executor: executorFor,
   workerCapacity: Math.max(1, workerCapacity),
+  placeComparator: async () => {
+    await refreshPlaceOrder();
+    return (a, b) => (placementRank(a.obligation.id) ?? Infinity) - (placementRank(b.obligation.id) ?? Infinity);
+  },
   huntFor: row => {
     const rank = placementRank(row.obligation.id);
-    return rank === 0 ? "dispatch" : rank === null ? null : expansionPlan?.scopes[rank - 1]?.decision.receiptId ?? null;
+    return rank === null ? null : placeOrder[rank] ?? "dispatch";
   },
   holder: `freshness-shadow@${process.pid}`,
   now: NOW,
@@ -2724,6 +2762,7 @@ const cycle = await runCycle({
     /* The pre-warm of the static prefix, once per cycle before the first admitted Scout (2026-09-06). Never in a dry cycle. */
     ...(modelLaneEnabled && !dry ? { prewarm: prewarmScoutPrefix } : {}),
     onDispatched: async (result: DispatchResult, lane) => {
+      placeOrderDirty = true;
       startedThisCycle.add(result.obligationId);
       if (result.outcome === "WORKED") fleetSafety.recordSuccessfulActivity(nowIso());
       if (lane === "BOUNDED_MODEL_WORKER") {
@@ -2827,11 +2866,12 @@ async function makeAutonomousFleet() {
     lifetimeHuntSubject: subject => lifetimeHuntSubjects.has(subject) });
 }
 async function runAutonomousWave() {
+  placeOrderDirty = true;
+  await refreshPlaceOrder();
   const fleet = await makeAutonomousFleet();
   const held = await planHeldWorkerFleet(ROOT, fleet, true);
   const planned = await runAutonomousCoordinator(fleet, { planOnly: true,
-    prioritizedInstructions: (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED")
-      .map(scope => ({ receiptId: scope.decision.receiptId, priority: scope.decision.priority })) });
+    prioritizedInstructions: placeOrder.map((receiptId, priority) => ({ receiptId, priority })) });
   const taskIds = [...new Set([...held.map(task => task.id),
     ...planned.decisions.filter(row => row.task && ["SCOUT", "WORKER"].includes(row.action)).map(row => row.task!.id)])];
   const availableUsd = Math.max(0, effectiveCeilingUsd - (spendWindow.windowUsd ?? effectiveCeilingUsd));
@@ -2883,6 +2923,19 @@ async function runAutonomousWave() {
     },
     ...(scoutSearch ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime ?? scoutSearch : scoutSearch } : {}),
     reserveEscalation: scoutEscalationReservation(fleetSafety),
+    orderPending: async ids => {
+      await refreshPlaceOrder();
+      const tasks = await Promise.all(ids.map(id => repos.routeTasks.read(id)));
+      const items = await Promise.all(tasks.map(row => row ? repos.workItems.read(row.value.workItemId) : null));
+      const rank = (index: number) => {
+        const item = items[index]?.value;
+        if (!item) return Infinity;
+        const own = item.autonomousPlan?.ownerInstructions?.map(receipt => placeOrder.indexOf(receipt)).filter(at => at >= 0) ?? [];
+        return Math.min(placeRankFor(item.subject) ?? Infinity, ...own);
+      };
+      return ids.map((id, index) => ({ id, index })).sort((a, b) => rank(a.index) - rank(b.index)).map(row => row.id);
+    },
+    onDispatched: () => { placeOrderDirty = true; },
     onStarted: pid => console.log(`  lease worker process: pid ${pid}; pulls existing RouteTasks`) });
   const scouts = dispatches.filter(row => row.attemptId && row.worker?.role === "SCOUT").length;
   return { ...planned, dispatches, scoutsAdmitted: scouts, scoutsLimitedAdmitted: scouts };

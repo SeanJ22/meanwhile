@@ -105,7 +105,8 @@ export const REFERENCE_ROW_COUNTS: Record<ReferenceDataset, number> = {
   nces_ccd_lea_directory_2025_26: 19_711,
   openstates_legislators: 7_976,
   fec_state_election_offices: 58,
-  fec_combined_federal_state_disclosure_directory: 349,
+  // Re-extracted 2026-10-02: 26 phone continuation cells are not office rows.
+  fec_combined_federal_state_disclosure_directory: 323,
   /*
    * One row per jurisdiction the FEC directory covers — the 50 states, DC, and
    * the five territories. It is a DERIVED file, so this figure is a fact about

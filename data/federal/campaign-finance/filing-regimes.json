@@ -1,0 +1,116 @@
+{
+  "formatVersion": 1,
+  "_note": [
+    "CANONICAL DATA. IT IS WHAT THIS PROJECT KNOWS NOW for this jurisdiction.",
+    "NEVER a complete list of American campaign-finance filing regimes or acquired reports.",
+    "Statutory quotes, source URLs, read dates, effective periods and custodian roles are held source records, never inferred from a portal lead.",
+    "Adding a jurisdiction is a sourced data step through scripts/filing-regimes.mts, without a state code branch."
+  ],
+  "jurisdictions": [
+    {
+      "jurisdiction": "US",
+      "name": "United States — federal offices",
+      "federated": false,
+      "filingJurisdictionCount": 1,
+      "filingJurisdictionBreakdown": "1 federal filing officer",
+      "denominatorSource": "docs/sources.md — OpenFEC",
+      "statutoryBasis": null,
+      "statutorySourceUrl": null,
+      "statutoryReadOn": null,
+      "statutoryOpenQuestion": "Which federal provision names the FEC as the federal filing officer has NOT been read from source in this repository. states/az/sources.md asks that question of every state and answers it for AZ, NH and NJ; the federal answer is owed and is not written down here as a guess."
+    }
+  ],
+  "regimes": [
+    {
+      "regimeId": "us:federal:fec",
+      "jurisdiction": "US",
+      "officeLevels": [
+        "FEDERAL"
+      ],
+      "authorityLevel": "FEDERAL",
+      "custodianRole": "Federal Election Commission",
+      "custodianScope": "JURISDICTION_WIDE",
+      "provenance": {
+        "statutoryBasis": null,
+        "statutoryQuote": null,
+        "statutorySourceUrl": null,
+        "statutoryReadOn": null,
+        "openQuestion": "Which federal provision names the FEC as the federal filing officer has NOT been read from source in this repository. The custodian is established by official administrative record (below); the STATUTE is owed.",
+        "officialRecord": [
+          "data/reference/fec_combined_federal_state_disclosure_directory.csv — the FEC's own Combined Federal/State Disclosure and Election Directory",
+          "docs/sources.md — OpenFEC, WIRED for committee TOTALS only",
+          "lib/funding/snapshot.ts",
+          "data/fec/fec-2026.json"
+        ]
+      },
+      "effective": {
+        "from": null,
+        "through": null,
+        "openQuestion": "The date this regime took effect is not read from source here, because the provision itself is not read from source here. A null `from` is UNBOUNDED-IN-THE-PAST for routing and an OPEN PROVENANCE QUESTION for the record; it is not a claim that the regime is ancient."
+      },
+      "supersedes": null,
+      "supersededBy": null,
+      "methodRouteIds": [
+        "filing-fec"
+      ],
+      "applicableRouteIds": [
+        "FEC_COMMITTEE_TOTALS_SNAPSHOT",
+        "FEC_SCHEDULE_A_SECOND_HOP",
+        "FEC_SCHEDULE_E_INDEPENDENT_EXPENDITURES",
+        "FEC_REPORTING_CALENDAR"
+      ],
+      "custodians": [
+        {
+          "scopeKey": null,
+          "authority": {
+            "id": "us:federal:fec",
+            "name": "Federal Election Commission",
+            "level": "FEDERAL",
+            "jurisdiction": "US",
+            "recordClasses": [
+              "CANDIDATE_COMMITTEE_REPORT",
+              "PAC_REPORT",
+              "PARTY_COMMITTEE_REPORT",
+              "INDEPENDENT_EXPENDITURE_REPORT",
+              "STATEMENT_OF_ORGANIZATION"
+            ],
+            "statutoryBasis": null,
+            "statutoryQuote": null,
+            "statutoryOpenQuestion": "Which federal provision names the FEC as the filing officer has NOT been read from source in this repository. states/az/sources.md asks that question of every state and answers it for AZ, NH and NJ; the federal answer is owed and is not written down here as a guess.",
+            "discoveredVia": [
+              "docs/sources.md — OpenFEC, WIRED for committee TOTALS only",
+              "lib/funding/snapshot.ts",
+              "data/fec/fec-2026.json",
+              "data/reference/fec_combined_federal_state_disclosure_directory.csv"
+            ],
+            "filingsUrl": "https://www.fec.gov/data/",
+            "vendorPlatform": null
+          },
+          "publisher": {
+            "name": "Federal Election Commission",
+            "url": "https://www.fec.gov/data/",
+            "isVendorPlatform": false,
+            "note": "The authority publishes its own records. Custodian and publisher coincide here, which is why the two are separate fields — elsewhere they do not."
+          }
+        }
+      ],
+      "coRegulators": [],
+      "custodianUnresolvedNote": "There is one federal filing officer, so a federal contest has no unresolved-custodian branch. If this note is ever reached the registry has been edited into an inconsistent state.",
+      "custodianUnresolvedRoutes": []
+    }
+  ],
+  "noRegimeRoutes": [
+    {
+      "routeId": "STATUTE_FILING_OFFICER_READ",
+      "label": "Read the jurisdiction's filing-officer statute from the legislature's own site",
+      "target": "the jurisdiction's own legislature",
+      "disposition": "UNWALKED",
+      "note": "The generalising question, asked of every state: which statute defines the filing officer, and what does it route to whom? Answered for AZ (A.R.S. § 16-928), NH (RSA 664:7 and 664:6) and NJ. Unanswered for any jurisdiction absent from this registry. A jurisdiction we have not read is a jurisdiction we have not read — never a jurisdiction with no filing officer.",
+      "citation": "states/az/sources.md",
+      "permission": "CANNOT_TELL",
+      "transport": null,
+      "rung": null,
+      "lastAttemptedOn": null
+    }
+  ]
+}

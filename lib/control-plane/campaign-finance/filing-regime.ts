@@ -17,7 +17,7 @@
  * nobody has read acquires a custodian nobody checked, and then an absence gets
  * asserted about a government that was never asked.
  *
- * So the routing rules live in `data/campaign-finance/filing-regimes.json` and
+ * So routing rules live in each jurisdiction's sourced filing-regimes.json and
  * this file does three things and no fourth:
  *
  *   1. **Loads and VALIDATES** that registry, refusing malformed or AMBIGUOUS
@@ -77,12 +77,24 @@ import {
   type OfficeLevel,
   type PlannedRoute,
 } from "./model.ts";
+import { join } from "node:path";
+import { US_JURISDICTIONS } from "../../coverage/states.ts";
 
 /** The registry format this reader understands. A file claiming another is refused. */
 export const FILING_REGIME_FORMAT_VERSION = 1;
 
-/** Where the committed registry lives, relative to the repository root. */
-export const FILING_REGIME_REGISTRY_PATH = ["data", "campaign-finance", "filing-regimes.json"];
+/** Unresolved routes contain no jurisdiction's filing records. */
+export const FILING_REGIME_ROUTES_PATH = ["data", "campaign-finance", "filing-regime-routes.json"];
+
+/** One jurisdiction's sourced holding, without opening any sibling. */
+export function filingRegimePath(jurisdiction: string, root: string): string {
+  const code = jurisdiction.toUpperCase();
+  const state = US_JURISDICTIONS.find(state => state.usps === code);
+  if (code !== "US" && !state) throw new Error(`Unknown filing-regime jurisdiction: ${jurisdiction}`);
+  return code === "US"
+    ? join(/* turbopackIgnore: true */ root, "data", "federal", "campaign-finance", "filing-regimes.json")
+    : join(/* turbopackIgnore: true */ root, "data", "states", state!.slug, "campaign-finance", "filing-regimes.json");
+}
 
 /* ── The registry shape ───────────────────────────────────────────────────── */
 
@@ -1298,10 +1310,8 @@ export function authoritiesById(registry: FilingRegimeRegistry): ReadonlyMap<str
 /**
  * One authority by id, or a thrown refusal naming what was asked for.
  *
- * Throws rather than returning null because the callers are module-level
- * constants in `authority.ts`: a missing custodian there is a registry that no
- * longer says what the code believes, and discovering that at import time is
- * strictly better than discovering it as an `undefined.id` on a reader surface.
+ * Throws rather than returning an undefined authority when an explicit source
+ * record names an id that its selected registry does not carry.
  */
 export function requireAuthority(registry: FilingRegimeRegistry, id: string): FilingAuthority {
   const found = authoritiesById(registry).get(id);

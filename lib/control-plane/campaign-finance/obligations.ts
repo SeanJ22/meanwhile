@@ -64,8 +64,6 @@ import { createWorkItem, type WorkItem } from "../work-item.ts";
 import { fundingForTarget } from "../../funding/snapshot.ts";
 import type { FundingCandidate } from "../../funding/types.ts";
 import {
-  FEC_AUTHORITY,
-  PIMA_COUNTY_FILING_OFFICER,
   fecAbsenceIsNotClosure,
   resolveFilingAuthority,
   type FecAbsenceVerdict,
@@ -220,6 +218,7 @@ export function federalPerCandidateCoverage(deps?: {
     .at(-1);
 
   return rows.map(({ c, funding }) => {
+    const authority = resolveFilingAuthority({ jurisdiction: "US", officeLevel: "FEDERAL", contestId: c.candidacyId });
     const through = funding?.totals?.coverageEndDate ?? null;
     /**
      * The one legitimate asymmetry in this contest, and it is a property of the
@@ -245,15 +244,15 @@ export function federalPerCandidateCoverage(deps?: {
       candidacyId: c.candidacyId,
       displayName: c.displayName,
       committeeIds: funding?.principalCommitteeId ? [funding.principalCommitteeId] : [],
-      filingAuthorityResolved: true,
-      filingAuthorityIds: [FEC_AUTHORITY.id],
+      filingAuthorityResolved: authority.status === "RESOLVED",
+      filingAuthorityIds: authority.authority ? [authority.authority.id] : [],
       filingsAcquired: funding ? [`${funding.fecCandidateId}:cycle-${funding.cycle}-totals`] : [],
       // NULL, and it is the honest value: the FEC's reporting calendar has not
       // been read, so we do not know how many reports this cycle owes.
       filingPeriodsExpected: null,
       filingPeriodsMissing: [],
       latestThroughDate: through,
-      acquisitionDepth: funding ? "ITEMIZED_TRANSACTIONS" : "AUTHORITY_RESOLVED",
+      acquisitionDepth: funding ? "ITEMIZED_TRANSACTIONS" : authority.status === "RESOLVED" ? "AUTHORITY_RESOLVED" : "NONE",
       openRouteIds: ["FEC_SCHEDULE_E_INDEPENDENT_EXPENDITURES", "FEC_REPORTING_CALENDAR"],
       identityGaps: [],
       amendmentGaps: [],
@@ -288,7 +287,7 @@ export function federalObligation(
     candidateUniverse: US_HOUSE_6_CANDIDACIES.map((c) => c.candidacyId),
     candidateUniverseSource: `${BALLOT_CITATION} — candidacies for ${contestId}`,
     committeeUniverse: [],
-    expectedFilingAuthorityIds: [FEC_AUTHORITY.id],
+    expectedFilingAuthorityIds: resolution.authority ? [resolution.authority.id] : [],
     expectedFilingPeriods: [],
     filingsAcquired: ["data/fec/fec-2026.json"],
     filingsMissing: [],
@@ -531,7 +530,7 @@ export function arizonaLocalObligation(now: string): CampaignFinanceObligation {
     candidateUniverse: [],
     candidateUniverseSource: `${BALLOT_CITATION} — a MEASURE contest, so the owed universe is committees, not candidacies`,
     committeeUniverse: [],
-    expectedFilingAuthorityIds: [PIMA_COUNTY_FILING_OFFICER.id],
+    expectedFilingAuthorityIds: resolution.authority ? [resolution.authority.id] : [],
     expectedFilingPeriods: [],
     filingsAcquired: [],
     filingsMissing: [

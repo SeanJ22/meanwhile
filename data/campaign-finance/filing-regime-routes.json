@@ -1,0 +1,25 @@
+{
+  "formatVersion": 1,
+  "_note": [
+    "CANONICAL DATA. IT IS WHAT THIS PROJECT KNOWS NOW for this jurisdiction.",
+    "NEVER a complete list of American campaign-finance filing regimes or acquired reports.",
+    "Statutory quotes, source URLs, read dates, effective periods and custodian roles are held source records, never inferred from a portal lead.",
+    "Adding a jurisdiction is a sourced data step through scripts/filing-regimes.mts, without a state code branch."
+  ],
+  "jurisdictions": [],
+  "regimes": [],
+  "noRegimeRoutes": [
+    {
+      "routeId": "STATUTE_FILING_OFFICER_READ",
+      "label": "Read the jurisdiction's filing-officer statute from the legislature's own site",
+      "target": "the jurisdiction's own legislature",
+      "disposition": "UNWALKED",
+      "note": "The generalising question, asked of every state: which statute defines the filing officer, and what does it route to whom? Answered for AZ (A.R.S. § 16-928), NH (RSA 664:7 and 664:6) and NJ. Unanswered for any jurisdiction absent from this registry. A jurisdiction we have not read is a jurisdiction we have not read — never a jurisdiction with no filing officer.",
+      "citation": "states/az/sources.md",
+      "permission": "CANNOT_TELL",
+      "transport": null,
+      "rung": null,
+      "lastAttemptedOn": null
+    }
+  ]
+}

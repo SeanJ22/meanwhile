@@ -42,12 +42,10 @@ import { join, resolve } from "node:path";
 import { getTableConfig } from "drizzle-orm/pg-core";
 
 import * as schema from "../lib/db/schema.ts";
+import { parseCsv } from "../lib/reference/index.ts";
+import { jurisdictionFilingRegime, requireAuthority } from "../lib/control-plane/campaign-finance/filing-regime.ts";
 import {
-  ARIZONA_REGIME,
-  AZ_SECRETARY_OF_STATE,
-  FEC_AUTHORITY,
-  PIMA_COUNTY_FILING_OFFICER,
-  TUCSON_CITY_CLERK,
+  filingRegimeRegistry,
   fecAbsenceIsNotClosure,
   resolveFilingAuthority,
 } from "../lib/control-plane/campaign-finance/authority.ts";
@@ -111,6 +109,14 @@ function fixtureCandidate(
 
 /* ══ #12 — a local race with no FEC data stays OPEN ═══════════════════════ */
 
+// Known source fixtures for these domain tests; production has no pilot constants.
+const AZ_REGISTRY = filingRegimeRegistry("AZ");
+const ARIZONA_REGIME = jurisdictionFilingRegime(AZ_REGISTRY, "AZ")!;
+const AZ_SECRETARY_OF_STATE = requireAuthority(AZ_REGISTRY, "az:state:secretary-of-state");
+const PIMA_COUNTY_FILING_OFFICER = requireAuthority(AZ_REGISTRY, "az:county:pima:officer-in-charge-of-elections");
+const TUCSON_CITY_CLERK = requireAuthority(AZ_REGISTRY, "az:municipal:tucson:city-clerk");
+const FEC_AUTHORITY = requireAuthority(filingRegimeRegistry("US"), "us:federal:fec");
+
 test("#12 FEC absence does NOT close a local race, and the statute finds the custodian", () => {
   const verdict = fecAbsenceIsNotClosure({
     contestId: "ballot-az-pima:prop-423",
@@ -146,10 +152,9 @@ test("#12 FEC absence does NOT close a local race, and the statute finds the cus
     join(ROOT, "data", "reference", "fec_combined_federal_state_disclosure_directory.csv"),
     "utf8",
   );
-  const azRows = directory
-    .split(/\r?\n/)
-    .filter((line) => line.startsWith("ARIZONA,"))
-    .map((line) => line.split(",")[1]);
+  const azRows = parseCsv(directory)
+    .filter(([jurisdiction]) => jurisdiction === "ARIZONA")
+    .map(([, office]) => office);
   assert.ok(azRows.includes("SECRETARY OF STATE"), "the AZ rows were not read correctly");
   assert.equal(
     azRows.some((office) => /COUNTY|CLERK|PIMA/i.test(office ?? "")),

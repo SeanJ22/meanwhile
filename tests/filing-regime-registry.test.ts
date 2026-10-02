@@ -44,12 +44,12 @@
 
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { spawnSync } from "node:child_process";
 import { join, resolve } from "node:path";
 
 import {
-  FEC_AUTHORITY,
-  PIMA_COUNTY_FILING_OFFICER,
   fecAbsenceIsNotClosure,
   filingRegimeRegistry,
   levelMismatchNote,
@@ -63,6 +63,8 @@ import {
   loadFilingRegimeRegistry,
   regimeEffectiveOn,
   selectRegime,
+  requireAuthority,
+  filingRegimePath,
   validateFilingRegimeRegistry,
   type RegistryIssueCode,
 } from "../lib/control-plane/campaign-finance/filing-regime.ts";
@@ -228,8 +230,17 @@ function refusalCodes(raw: unknown): RegistryIssueCode[] {
 
 /* ══ The committed registry is real, and its provenance is checkable ══════ */
 
+// These tests compare the two held source editions, rather than load a country registry.
+function heldRegistry() {
+  const registries = [filingRegimeRegistry("US"), filingRegimeRegistry("AZ")];
+  return { ...registries[0], jurisdictions: registries.flatMap(registry => registry.jurisdictions),
+    regimes: registries.flatMap(registry => registry.regimes) };
+}
+const FEC_AUTHORITY = requireAuthority(filingRegimeRegistry("US"), "us:federal:fec");
+const PIMA_COUNTY_FILING_OFFICER = requireAuthority(filingRegimeRegistry("AZ"), "az:county:pima:officer-in-charge-of-elections");
+
 test("the committed registry loads, and every regime carries provenance that exists on disk", () => {
-  const registry = filingRegimeRegistry();
+  const registry = heldRegistry();
 
   // Not vacuous: the file really was read and really has both jurisdictions.
   assert.equal(registry.formatVersion, FILING_REGIME_FORMAT_VERSION);
@@ -286,7 +297,7 @@ test("the committed registry loads, and every regime carries provenance that exi
 });
 
 test("every methodRouteId in the registry is a route the method store actually carries", () => {
-  const registry = filingRegimeRegistry();
+  const registry = heldRegistry();
   const knowledge = JSON.parse(
     readFileSync(METHOD_FIXTURE_PATH, "utf8"),
   ) as { routes: { identity?: { id?: string }; id?: string }[] };
@@ -309,7 +320,7 @@ test("every methodRouteId in the registry is a route the method store actually c
 });
 
 test("the AZ regimes reproduce the § 16-928 routing table, with the level mismatch intact", () => {
-  const registry = filingRegimeRegistry();
+  const registry = heldRegistry();
   const az = registry.regimes.filter((r) => r.jurisdiction === "AZ");
 
   const covered = az.flatMap((r) => r.officeLevels).sort();
@@ -350,7 +361,7 @@ test("A a jurisdiction with no regime resolves NO_REGIME_ON_RECORD — not FEC, 
   // NOT VACUOUS: Wyoming really is absent from the committed registry. If it
   // were ever added, this test would be asserting NO_REGIME_ON_RECORD about a
   // jurisdiction that has one, and would need a different unread jurisdiction.
-  const registry = filingRegimeRegistry();
+  const registry = heldRegistry();
   assert.equal(
     registry.jurisdictions.some((j) => j.jurisdiction === "WY"),
     false,
@@ -501,11 +512,32 @@ test("a NEW jurisdiction routes correctly as a DATA change, with no file under l
 
   // And the fixture never leaked into the canonical data file.
   const committed = readFileSync(
-    join(ROOT, "data", "campaign-finance", "filing-regimes.json"),
+    join(ROOT, "data", "states", "az", "campaign-finance", "filing-regimes.json"),
     "utf8",
   );
   assert.equal(committed.includes("TEST FIXTURE"), false, "a fixture reached the canonical registry");
   assert.equal(committed.includes("NOT A REAL STATUTE"), false);
+});
+
+test("a sourced nonpilot jurisdiction is published as data and reads no sibling registry", () => {
+  const root = mkdtempSync(join(tmpdir(), "filing-regime-state-"));
+  try {
+    const raw = JSON.parse(JSON.stringify(fixtureRegistryRaw()).replaceAll("ZZ", "TN").replaceAll("zz", "tn"));
+    const input = join(root, "sources.jsonl");
+    writeFileSync(input, JSON.stringify(raw) + "\n" + JSON.stringify({ jurisdictions: [{ jurisdiction: "AZ" }], formatVersion: -1 }) + "\n");
+    const result = spawnSync(process.execPath, ["--experimental-strip-types", "scripts/filing-regimes.mts", `--input=${input}`, `--root=${root}`, "--jurisdictions=TN"], { cwd: ROOT, encoding: "utf8" });
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /TN: 1 sourced filing regimes/);
+    const sibling = filingRegimePath("AZ", root);
+    mkdirSync(join(root, "data", "states", "az", "campaign-finance"), { recursive: true });
+    writeFileSync(sibling, "CORRUPT UNRELATED STATE");
+    const registry = filingRegimeRegistry("TN", { root });
+    assert.deepEqual(registry.jurisdictions.map(row => row.jurisdiction), ["TN"]);
+    const answer = resolveFilingAuthority({ jurisdiction: "TN", officeLevel: "SCHOOL_DISTRICT", contestId: "fixture:tn-school", municipality: "fixtureborough" }, { registry });
+    assert.equal(answer.status, "RESOLVED");
+    assert.equal(answer.authority?.id, "fixture:tn:borough:auditor");
+    assert.match(answer.statutoryQuote!, /FIXTURE QUOTE, NOT A REAL STATUTE/);
+  } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
 /* ══ B — an ambiguous registry is refused by name, never resolved ═════════ */
@@ -817,7 +849,7 @@ test("selectRegime never falls through, and refuses an in-memory ambiguity rathe
   assert.match(unrouted.why, /fact about this registry/);
 
   // A federal office files federally wherever it is printed.
-  const federal = selectRegime(filingRegimeRegistry(), {
+  const federal = selectRegime(heldRegistry(), {
     jurisdiction: "AZ",
     officeLevel: "FEDERAL",
   });

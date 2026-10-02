@@ -82,6 +82,12 @@ const nextConfig: NextConfig = {
   // absent: production resolves the canonical store and fails closed when its
   // pointer has not been recorded.
   outputFileTracingIncludes: {
+    // Sourced custody metadata is selected by jurisdiction, independently of money fact snapshots.
+    "/{api/ask/grounded,ballot,api/warm}": [
+      "./data/states/*/campaign-finance/filing-regimes.json",
+      "./data/federal/campaign-finance/filing-regimes.json",
+      "./data/campaign-finance/filing-regime-routes.json",
+    ],
     // Start many hunts checks each ZIP against the ZIP index's shards (`lib/control-plane/bulk-hunts/zip-state.ts`).
     // The shard name is computed, so the tracer cannot see it; untraced, every ZIP would read as "not a ZIP the site
     // knows" on production while passing every local test.

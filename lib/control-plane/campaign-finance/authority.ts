@@ -1,233 +1,40 @@
-/**
- * WHO IS THE FILING AUTHORITY?
- *
- * ## The question this file asks, and the one it refuses to ask
- *
- * The discovery question for campaign finance is **"who is the legally
- * responsible custodian for this contest, this committee and this period?"** It
- * is NOT "which API covers this level". Those two questions give different
- * answers, and the second one is how a whole tier of American campaign money
- * goes missing: a session that reasons from portals finds the state portal,
- * finds no county portal, and writes down an absence about a government.
- *
- * **Arizona is the state that taught this project the difference.**
- * `states/az/sources.md`, reading `https://www.azleg.gov/ars/16/00928.htm` on
- * 2026-08-26 (HTTP 200, 3,387 bytes, titled *16-928 - Filing officer;
- * statements and reports*), quotes the statute directly:
- *
- * > "The secretary of state is the filing officer for statewide and legislative
- * > elections"
- *
- * > "The county officer in charge of elections is the filing officer for county,
- * > school district, community college district and special taxing district
- * > elections"
- *
- * > "The city or town clerk is the filing officer for city and town elections."
- *
- * Three consequences, all encoded rather than remembered:
- *
- *   1. **The authority's level need not match the office's level.** A school
- *      district is not a county, and its money files with the county officer in
- *      charge of elections anyway. Same for community college districts and
- *      special taxing districts. `resolveFilingAuthority` returns an authority
- *      whose `level` is `COUNTY` for an office whose level is `SCHOOL_DISTRICT`,
- *      and `tests/control-plane-campaign-finance.test.ts` asserts exactly that.
- *
- *   2. **It is the county officer IN CHARGE OF ELECTIONS** — a single defined
- *      role, which in Arizona is not always the recorder. `states/az/sources.md`
- *      records that correction against an earlier brief rather than smoothing
- *      it, and the correction is carried in the registry.
- *
- *   3. **Local campaign finance in Arizona is FEDERATED BY STATUTE**, across
- *      **109 filing jurisdictions — 1 State, 15 County, 93 City/Town**, from the
- *      state's own `Jurisdictions.txt` pulled 2026-08-26. A claim of
- *      campaign-finance coverage in Arizona without that denominator is
- *      meaningless, so the denominator travels with the regime.
- *
- * ## WHERE THE ROUTING NOW LIVES, and why it moved
- *
- * Every routing rule above is **DATA**, in
- * `data/campaign-finance/filing-regimes.json`, loaded and validated by
- * `filing-regime.ts`. This file resolves; it does not remember.
- *
- * The reason is national expansion. The same three facts hold in fifty states
- * with fifty different answers, and the shape that cannot carry them is an
- * `if (state === "AZ") … else if (state === "NH") …` tree — not because it is
- * ugly, but because **a state nobody has read falls off the end of it into
- * whatever the last branch says.** A fall-through in a filing-authority
- * resolver hands a jurisdiction a custodian nobody checked, and an absence then
- * gets asserted about a government that was never asked. There is no
- * fall-through here: a jurisdiction absent from the registry resolves to
- * `NO_REGIME_ON_RECORD`, which keeps the contest open and names the statute
- * still owed.
- *
- * Adding a state is therefore a change to the JSON and to nothing under `lib/`.
- * `tests/filing-regime-registry.test.ts` proves that against a fixture
- * jurisdiction rather than asserting it in prose.
- *
- * ## When it cannot resolve
- *
- * It returns `OPEN` (the routing rule is known, the office holding it is not) or
- * `NO_REGIME_ON_RECORD` (we have not read the rule), and names the routes still
- * to walk. It never guesses a custodian. A guessed custodian produces a hunt
- * against the wrong government, and then an absence about the right one.
- *
- * ## Time
- *
- * Nothing here reads a clock. `asOf` is a caller-supplied parameter throughout,
- * and omitting it selects by SUPERSESSION rather than by a guessed today.
- */
-
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
-import type {
-  AcquisitionDepth,
-  AuthorityResolutionStatus,
-  FilingAuthority,
-  FilingRegime,
-  OfficeLevel,
-  PlannedRoute,
-} from "./model.ts";
+/** Resolve filing custody from the selected jurisdiction's sourced data. */
+import { readFileSync, statSync } from "node:fs";
+import { join, relative } from "node:path";
+import type { AcquisitionDepth, AuthorityResolutionStatus, FilingAuthority, FilingRegime, OfficeLevel, PlannedRoute } from "./model.ts";
 import {
-  FILING_REGIME_REGISTRY_PATH,
-  authoritiesById,
-  jurisdictionFilingRegime,
-  loadFilingRegimeRegistry,
-  requireAuthority,
-  selectCustodian,
-  selectRegime,
-  type FilingRegimeRecord,
-  type FilingRegimeRegistry,
-  type RegimeEffectivePeriod,
-  type RegimePublisher,
+  FILING_REGIME_ROUTES_PATH, filingRegimePath, jurisdictionFilingRegime,
+  loadFilingRegimeRegistry, selectCustodian, selectRegime, FilingRegimeRegistryInvalid,
+  type FilingRegimeRecord, type FilingRegimeRegistry, type RegimeEffectivePeriod, type RegimePublisher,
 } from "./filing-regime.ts";
 
-/* ── The registry, loaded once ────────────────────────────────────────────── */
+const REPOSITORY_ROOT = join(import.meta.dirname, "..", "..", "..");
+let registryCache: { path: string; mtime: number; size: number; registry: FilingRegimeRegistry } | null = null;
 
-/**
- * The path is resolved from THIS MODULE rather than from `process.cwd()`.
- *
- * The constants below are module-level and therefore evaluate at import time, so
- * a cwd-relative read would make importing this file depend on which directory a
- * script happened to start in. `lib/funding/snapshot.ts` reads its snapshot
- * lazily inside a function and can afford `process.cwd()`; a module constant
- * cannot.
- */
-const REGISTRY_FILE = join(import.meta.dirname, "..", "..", "..", ...FILING_REGIME_REGISTRY_PATH);
-const REGISTRY_CITATION = FILING_REGIME_REGISTRY_PATH.join("/");
-
-let registryCache: FilingRegimeRegistry | null = null;
-
-/**
- * The committed filing-regime registry, validated.
- *
- * A malformed or ambiguous registry throws `FilingRegimeRegistryInvalid` here,
- * at import, rather than resolving half the jurisdictions and leaving the rest
- * looking unread. Refusal is whole on purpose: a partial routing table sends
- * money questions to the wrong government and reports the answer as a fact.
- */
-export function filingRegimeRegistry(): FilingRegimeRegistry {
-  if (!registryCache) {
-    registryCache = loadFilingRegimeRegistry(
-      JSON.parse(readFileSync(REGISTRY_FILE, "utf8")),
-      REGISTRY_CITATION,
-    );
+/** A request loads its jurisdiction only; an absent holding keeps custody unresolved. */
+export function filingRegimeRegistry(jurisdiction: string, options: { root?: string } = {}): FilingRegimeRegistry {
+  const root = options.root ?? REPOSITORY_ROOT;
+  const code = jurisdiction.toUpperCase();
+  let path = filingRegimePath(code, root);
+  let exists = true;
+  try { statSync(path); }
+  catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    exists = false;
+    path = join(/* turbopackIgnore: true */ root, ...FILING_REGIME_ROUTES_PATH);
   }
-  return registryCache;
-}
-
-/* ── The authorities, READ FROM the registry rather than typed twice ──────── */
-
-const REGISTRY = filingRegimeRegistry();
-
-/**
- * The FEC.
- *
- * `statutoryBasis` is **null on purpose**, and the registry carries that null.
- * This repository has read Arizona's filing-officer statute from `azleg.gov` and
- * quoted it; it has NOT read whichever federal provision names the FEC as the
- * federal filing officer. `states/az/sources.md` poses that as the generalising
- * question asked of every state — answered for AZ (§ 16-928), NH (RSA 664:7 and
- * 664:6) and NJ. The federal answer is not in this repository, so the field
- * stays null and the open question is named. A plausible citation would be a
- * fabrication in the one field whose whole job is being checkable.
- */
-export const FEC_AUTHORITY: FilingAuthority = requireAuthority(REGISTRY, "us:federal:fec");
-
-/** The Arizona Secretary of State, as a custodian rather than as a portal. */
-export const AZ_SECRETARY_OF_STATE: FilingAuthority = requireAuthority(
-  REGISTRY,
-  "az:state:secretary-of-state",
-);
-
-/**
- * The Pima County officer in charge of elections.
- *
- * **Named by ROLE, because the statute names a role.** The individual office
- * holding that role in Pima County is not asserted — `states/az/sources.md`
- * records that the county-level officer is *the county officer in charge of
- * elections*, "a single defined role and in Arizona is not always the recorder",
- * correcting a brief that had said "county recorder, county elections department
- * or board of supervisors". Which office that is in Pima County is an OPEN
- * identification, carried on `statutoryOpenQuestion` in the registry.
- */
-export const PIMA_COUNTY_FILING_OFFICER: FilingAuthority = requireAuthority(
-  REGISTRY,
-  "az:county:pima:officer-in-charge-of-elections",
-);
-
-/** The City of Tucson clerk — the statute's municipal branch, for Pima's largest city. */
-export const TUCSON_CITY_CLERK: FilingAuthority = requireAuthority(
-  REGISTRY,
-  "az:municipal:tucson:city-clerk",
-);
-
-/**
- * The Citizens Clean Elections Commission — a SECOND authority over the same
- * money, not a substitute for the first.
- *
- * Carried in the registry as a `coRegulator` rather than as a custodian, because
- * a model with one custodian slot per contest would silently drop it. The FEC's
- * own combined directory lists it under ARIZONA with "Regulation of Campaign
- * Finance Reports" among its functions, beside the Secretary of State.
- */
-export const AZ_CLEAN_ELECTIONS_COMMISSION: FilingAuthority = requireAuthority(
-  REGISTRY,
-  "az:state:clean-elections-commission",
-);
-
-/** Every authority the registry knows, by id. */
-export const AUTHORITIES_BY_ID: ReadonlyMap<string, FilingAuthority> = authoritiesById(REGISTRY);
-
-/* ── The regimes, as the jurisdiction-level view ──────────────────────────── */
-
-function requireRegime(jurisdiction: string): FilingRegime {
-  const regime = jurisdictionFilingRegime(REGISTRY, jurisdiction);
-  if (!regime) {
-    throw new Error(
-      `No jurisdiction row for "${jurisdiction}" in ${REGISTRY_CITATION}. This constant names a ` +
-        "jurisdiction the registry no longer carries, which would resolve to undefined and report " +
-        "a routing table that does not exist.",
-    );
+  const stat = statSync(path);
+  if (registryCache?.path === path && registryCache.mtime === stat.mtimeMs && registryCache.size === stat.size) return registryCache.registry;
+  const source = relative(root, path).replaceAll("\\", "/");
+  const registry = loadFilingRegimeRegistry(JSON.parse(readFileSync(path, "utf8")), source);
+  if (exists ? registry.jurisdictions.length !== 1 || registry.jurisdictions[0].jurisdiction !== code || registry.regimes.some(regime => regime.jurisdiction !== code)
+    : registry.jurisdictions.length > 0 || registry.regimes.length > 0) {
+    throw new FilingRegimeRegistryInvalid([{ code: "REGIME_FIELD_INVALID", regimeId: null,
+      detail: `Holding for ${code} contains another jurisdiction`, why: "Selected filing custody cannot come from another jurisdiction's holding." }], source);
   }
-  return regime;
+  registryCache = { path, mtime: stat.mtimeMs, size: stat.size, registry };
+  return registry;
 }
-
-export const FEDERAL_REGIME: FilingRegime = requireRegime("US");
-
-/**
- * Arizona's regime, assembled from the three § 16-928 routing rules.
- *
- * Read the `authorityLevel` column against the `officeLevel` column. Four of the
- * seven rows disagree, and that disagreement is the finding.
- */
-export const ARIZONA_REGIME: FilingRegime = requireRegime("AZ");
-
-/** The regimes this repository has read a routing rule for. Never a complete list. */
-export const REGIMES: readonly FilingRegime[] = REGISTRY.jurisdictions
-  .map((j) => jurisdictionFilingRegime(REGISTRY, j.jurisdiction))
-  .filter((r): r is FilingRegime => r !== null);
 
 /* ── Resolution ───────────────────────────────────────────────────────────── */
 
@@ -358,7 +165,7 @@ export function resolveFilingAuthority(
   query: FilingAuthorityQuery,
   options?: ResolveFilingAuthorityOptions,
 ): FilingAuthorityResolution {
-  const registry = options?.registry ?? filingRegimeRegistry();
+  const registry = options?.registry ?? filingRegimeRegistry(query.officeLevel === "FEDERAL" ? "US" : query.jurisdiction);
   const selection = selectRegime(registry, {
     jurisdiction: query.jurisdiction,
     officeLevel: query.officeLevel,
@@ -591,10 +398,9 @@ export function fecAbsenceIsNotClosure(input: {
     },
     disposition: "NOT_APPLICABLE",
     note:
-      "data/reference/fec_combined_federal_state_disclosure_directory.csv lists, for ARIZONA, the " +
-      "Secretary of State, the Corporation Commission and the Citizens Clean Elections Commission " +
-      "— and no county officer and no city or town clerk. The federal directory does not reach " +
-      "this tier, so its silence is a fact about its scope.",
+      "The FEC holds federal filings. State and local custody must be read from the selected " +
+      "jurisdiction's filing rule; the national disclosure directory supplies office leads " +
+      "and does not establish that this contest's state or local reports are absent.",
     citation: "data/reference/fec_combined_federal_state_disclosure_directory.csv",
     permission: "CANNOT_TELL",
     transport: null,

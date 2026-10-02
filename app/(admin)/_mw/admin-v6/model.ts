@@ -586,6 +586,10 @@ export interface SpendView {
   readonly unpricedRows: number;
   readonly neon: { readonly kind: "recorded" | "not-recorded"; readonly detail: string | null;
     readonly days: readonly { readonly day: string; readonly responseBytes: number; readonly requestBytes: number; readonly requests: number }[] };
+  /** Open reservations right now over every hunt; null when not read. */
+  readonly setAsideUsd?: number | null;
+  /** The daily spending limit in force; null when not read. */
+  readonly dailyLimitUsd?: number | null;
 }
 
 /* -------------------------------------------------------------- learning */

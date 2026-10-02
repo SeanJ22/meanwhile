@@ -1,16 +1,16 @@
 "use client";
 
 /**
- * **MONEY.** One summary row, then one table. The summary: spent, set aside, left, today's spend against the daily limit, and spend
- * by model tier for the period in the picker. The table: a row per hunt, sortable, the top ten and a button for the rest. A number
- * the system does not have is a dash.
+ * **MONEY.** One summary row, then one table. Every summary figure is `moneySummary` over the one cost-ledger read for the period in the
+ * picker: Spent (settled paid-AI charges, the tiers add up to it), Search, Set aside (open reservations now), Today (settled today plus
+ * set aside) against the daily limit, Left today (the limit minus Today), and the tiers. A hunt's own limit appears only in the table.
  */
 import { useMemo, useState } from "react";
 
-import { tierSpendForPeriod } from "@/lib/control-plane/admin-view/spend-period.ts";
+import { moneySummary } from "@/lib/control-plane/admin-view/spend-period.ts";
 
 import { useV6 } from "./context.tsx";
-import { huntLeftUsd, usd, type Hunt } from "./model.ts";
+import { usd, type Hunt } from "./model.ts";
 import { huntAt, huntsWithin } from "./places.ts";
 import { Card, cx } from "./ui.tsx";
 import s from "./v6.module.css";
@@ -26,12 +26,6 @@ const COLUMNS: readonly { readonly key: SortKey; readonly label: string; readonl
   { key: "zip", label: "ZIP", num: false }, { key: "place", label: "Place", num: false }, { key: "spent", label: "Spent", num: true },
   { key: "held", label: "Set aside", num: true }, { key: "limit", label: "Limit", num: true }, { key: "status", label: "Status", num: false },
 ];
-
-/** Sum a column over hunts; a dash when no hunt has a figure for it. */
-function total(values: readonly (number | null)[]): number | null {
-  if (values.length === 0 || values.some((n) => n === null)) return null;
-  return Math.round(values.reduce<number>((a, n) => a + (n as number) * 100, 0)) / 100;
-}
 
 export function MoneyScreen() {
   const v = useV6();
@@ -60,10 +54,10 @@ export function MoneyScreen() {
   }, [list, sort, v.index]);
   const shown = all ? rows : rows.slice(0, TOP);
 
-  const daily = v.data.money.data?.limits[0] ?? null;
-  const spend = v.data.spend.data;
-  const tiers = spend ? tierSpendForPeriod(spend, v.period, new Date()) : null;
-  const left = list.length === 0 ? null : total(list.map(huntLeftUsd));
+  const sum = moneySummary({
+    spend: v.data.spend.data, setAsideUsd: v.data.spend.data?.setAsideUsd ?? null,
+    dailyLimitUsd: v.data.spend.data?.dailyLimitUsd ?? null, period: v.period, now: new Date(),
+  });
 
   return (
     <>
@@ -74,16 +68,17 @@ export function MoneyScreen() {
 
       <Card title="Summary">
         <div className={s.gridTiles}>
-          <div className={s.row}><span className={s.eyebrow}>Spent</span><span className={s.big}>{money(total(list.map((h) => h.spentUsd)))}</span></div>
-          <div className={s.row}><span className={s.eyebrow}>Set aside</span><span className={s.big}>{money(total(list.map((h) => h.heldUsd)))}</span></div>
-          <div className={s.row}><span className={s.eyebrow}>Left</span><span className={s.big}>{money(left)}</span></div>
+          <div className={s.row}><span className={s.eyebrow}>Spent</span><span className={s.big}>{money(sum.spentUsd)}</span></div>
+          <div className={s.row}><span className={s.eyebrow}>Search</span><span className={s.big}>{money(sum.searchUsd)}</span></div>
+          <div className={s.row}><span className={s.eyebrow}>Set aside</span><span className={s.big}>{money(sum.setAsideUsd)}</span></div>
           <div className={s.row}>
             <span className={s.eyebrow}>Today against the daily limit</span>
-            <span className={s.big}>{money(daily?.usedUsd ?? null)} <span className={s.dim}>of {money(daily?.limitUsd ?? null)}</span></span>
+            <span className={s.big}>{money(sum.todayUsd)} <span className={s.dim}>of {money(sum.dailyLimitUsd)}</span></span>
           </div>
+          <div className={s.row}><span className={s.eyebrow}>Left today</span><span className={s.big}>{money(sum.leftUsd)}</span></div>
           <div className={s.row}>
             <span className={s.eyebrow}>By model tier</span>
-            {tiers === null ? <span className={s.big}>{DASH}</span> : tiers.map((t) => <span key={t.name} className={s.small}>{t.name} <span className={s.mono}>{usd(t.usd)}</span></span>)}
+            {sum.tiers === null ? <span className={s.big}>{DASH}</span> : sum.tiers.map((t) => <span key={t.name} className={s.small}>{t.name} <span className={s.mono}>{usd(t.usd)}</span></span>)}
           </div>
         </div>
       </Card>

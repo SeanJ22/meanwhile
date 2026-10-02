@@ -49,7 +49,7 @@ export function censusPublisherSize(row: Readonly<Record<string, string>>, sourc
   const state = row.state?.trim().toLowerCase();
   const website = row.web_address?.trim();
   const host = website && publisherHostname(website);
-  const censusId = row.census_id_gidid?.trim() || row.census_id_pid6?.trim();
+  const censusId = row.census_id_pid6?.trim();
   if (!state || !US_JURISDICTIONS.some(j => j.slug === state) || !website || !host || !censusId || row.is_active !== "Y") return null;
   if (!["COUNTY", "MUNICIPAL", "TOWNSHIP", "SPECIAL DISTRICT", "SCHOOL DISTRICT", "DEPENDENT SCHOOL SYSTEM"].includes(row.gov_type)) return null;
   // Dependent systems are operations of the named parent government, not a second government.
@@ -95,7 +95,7 @@ export function heldPublisherSize(state: string, url: string, root = process.cwd
       for (const field of ["population", "students", "populationYear", "studentsYear"] as const) {
         if (found[field] != null && row[field] != null && found[field] !== row[field]) return null;
       }
-      // A parent row supplies population; its dependent-school row supplies enrollment.
+      // Counts can merge only for the same Census publisher identity, never merely a shared host.
       const prior: PublisherSizeSource | undefined = found.sources.find(s => s.dataset === row.source.dataset);
       if (prior && prior.sha256 !== row.source.sha256) return null;
       found = { ...found, population: found.population ?? row.population, students: found.students ?? row.students,

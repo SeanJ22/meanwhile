@@ -8,7 +8,7 @@ import { websiteRequestLimit } from "../lib/control-plane/scheduler/host-supervi
 
 const source: PublisherSizeSource = { url: "https://census.gov/test-fixture", dataset: "TEST FIXTURE", sha256: "a".repeat(64),
   archiveSha256: "b".repeat(64), row: 1, sheet: "TEST FIXTURE" };
-const row = { state: "NY", web_address: "https://town.gov", census_id_gidid: "TEST-TOWN", census_id_pid6: "TEST",
+const row = { state: "NY", web_address: "https://town.gov", census_id_pid6: "000123",
   unit_name: "TEST FIXTURE TOWN", gov_type: "MUNICIPAL", unit_type_raw: "2 - MUNICIPAL", is_active: "Y",
   population: "9,999", population_year: "2021", enrollment: "", enrollment_year: "" };
 function root(t: test.TestContext): string {
@@ -27,11 +27,12 @@ test("held Census counts retain their real years, source and government identity
   const size = censusPublisherSize(row, source)!;
   assert.equal(size.population, 9999); assert.equal(size.populationYear, 2021);
   assert.equal(size.students, null); assert.equal(size.studentsYear, null);
-  assert.equal(size.censusId, "TEST-TOWN"); assert.deepEqual(size.source, source);
+  assert.equal(size.censusId, "000123"); assert.deepEqual(size.source, source);
   assert.equal(websiteRequestLimit(size), 10);
   assert.equal(websiteRequestLimit(censusPublisherSize({ ...row, population: "10000" }, source)), null);
   assert.equal(websiteRequestLimit(censusPublisherSize({ ...row, population: "unknown" }, source)), null);
   assert.equal(censusPublisherSize({ ...row, gov_type: "UNREAD TYPE" }, source), null);
+  assert.equal(censusPublisherSize({ ...row, census_id_pid6: "" }, source), null);
 });
 
 test("independent schools use enrollment; dependent operations retain the parent publisher's kind", () => {
@@ -55,16 +56,20 @@ test("the requested state's exact host alone supplies size; unrelated state byte
   assert.equal(heldPublisherSize("ny", "file:///town.gov", path), null);
 });
 
-test("shared-host ambiguity never caps another government; parent population and school operations retain both sources", t => {
+test("shared-host ambiguity stays unknown; counts merge only for the same PID6 publisher", t => {
   const path = root(t), size = censusPublisherSize(row, source)!;
   holding(path, "ny", [size, { ...size, censusId: "TEST-OTHER", population: 50 }]);
   assert.equal(heldPublisherSize("ny", "https://town.gov", path), null);
-  const dependent = censusPublisherSize({ ...row, gov_type: "DEPENDENT SCHOOL SYSTEM", population: "", population_year: "", enrollment: "3000", enrollment_year: "2020" }, { ...source, dataset: "TEST DEPENDENT", row: 2 })!;
-  holding(path, "ny", [size, dependent]);
+  const supplement = censusPublisherSize({ ...row, population: "", population_year: "", enrollment: "3000", enrollment_year: "2020" }, { ...source, dataset: "TEST SUPPLEMENT", row: 2 })!;
+  holding(path, "ny", [size, supplement]);
   const merged = heldPublisherSize("ny", "https://town.gov", path)!;
   assert.equal(merged.population, 9999); assert.equal(merged.populationYear, 2021);
   assert.equal(merged.students, 3000); assert.equal(merged.studentsYear, 2020);
   assert.equal(merged.sources.length, 2); assert.equal(websiteRequestLimit(merged), 10);
+  const dependent = censusPublisherSize({ ...row, census_id_pid6: "000456", gov_type: "DEPENDENT SCHOOL SYSTEM",
+    population: "", population_year: "", enrollment: "3000", enrollment_year: "2020" }, source)!;
+  holding(path, "ny", [size, dependent]);
+  assert.equal(heldPublisherSize("ny", "https://town.gov", path), null, "a dependent operation's distinct PID6 never aliases its parent");
   holding(path, "ny", [size, { ...size, population: 20000 }]);
   assert.equal(heldPublisherSize("ny", "https://town.gov", path), null);
 });

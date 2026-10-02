@@ -3,7 +3,7 @@ import checklist from "../control-plane/readiness/checklist-profile.json" with {
 /** A derived capture view, never a publication decision or a second store. */
 export type PlaceSubjectKind = "division" | "body" | "seat" | "calendar" | "funding" | "contest" | "deadline";
 /** The canonical reader supplies this from the record's schema, never its label. */
-export type PlaceCaptureKind = "federal-legislator" | "state-legislator" | "executive"
+export type PlaceCaptureKind = "federal-legislator" | "state-legislator" | "executive" | "local-officeholder"
   | "campaign-finance" | "federal-campaign-finance" | "state-campaign-finance" | "public-finance" | "filing-deadline" | "voting-deadline"
   | "voting-sites" | "election-navigation" | "candidate" | "election-result" | "meeting" | "body-calendar";
 export interface PlaceSubject {
@@ -50,6 +50,9 @@ function appliesToRecord(subject: PlaceSubject, definition: { id: string; group:
     case "federal-legislator": return ["OFF", "LEG", "PRL"].includes(group) && id !== "LEG-22";
     case "state-legislator": return ["OFF", "LEG"].includes(group) && !["LEG-20", "LEG-21"].includes(id);
     case "executive": return ["OFF", "EXE"].includes(group);
+    // Local votes belong to the body's meeting actions, not Congress/state
+    // roll calls or federal PRL. A roster can include a mayor, so retain EXE.
+    case "local-officeholder": return ["OFF", "EXE"].includes(group);
     case "campaign-finance": return group === "CAM";
     case "federal-campaign-finance": return group === "CAM" && !["CAM-14", "CAM-15"].includes(id);
     case "state-campaign-finance": return group === "CAM" && !["CAM-13", "CAM-15"].includes(id);

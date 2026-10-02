@@ -13,7 +13,7 @@
  */
 
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, win32 } from "node:path";
 
 import { REQUIRED_CONTEXTS } from "./required-contexts.ts";
@@ -22,6 +22,8 @@ import type { ServedCommit } from "../../scripts/post-deploy-observer.mts";
 const FULL_SHA = /^[0-9a-f]{40}$/i;
 const COMMAND_TIMEOUT_MS = 2 * 60_000;
 const INSTALL_TIMEOUT_MS = 15 * 60_000;
+// Nine bounded Git commands plus the frozen install can block the parent loop.
+export const RUNTIME_RELEASE_MAX_BLOCKING_MS = 9 * COMMAND_TIMEOUT_MS + INSTALL_TIMEOUT_MS;
 export const RUNTIME_RELEASE_HOLD_RELATIVE_PATH = join(".runtime", "ops", "runtime-release-hold.json");
 
 export interface GithubCheckRun {
@@ -357,7 +359,70 @@ function conciseFailure(result: CommandResult): string {
 export function writeRuntimeReleaseHold(root: string, value: object): void {
   const path = join(root, RUNTIME_RELEASE_HOLD_RELATIVE_PATH);
   mkdirSync(dirname(path), { recursive: true });
-  writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`, { encoding: "utf8", mode: 0o600 });
+  const prior = readRuntimeReleaseHold(root);
+  // An Admin failure report must not erase an unfinished checkout installation.
+  const recovery = prior?.switched === true ? { switched: true, targetSha: prior.targetSha } : {};
+  writeFileSync(path, `${JSON.stringify({ ...value, ...recovery }, null, 2)}\n`, { encoding: "utf8", mode: 0o600 });
+}
+
+function readRuntimeReleaseHold(root: string): { readonly switched?: unknown; readonly targetSha?: unknown } | null {
+  const path = join(root, RUNTIME_RELEASE_HOLD_RELATIVE_PATH);
+  if (!existsSync(path)) return null;
+  const value: unknown = JSON.parse(readFileSync(path, "utf8"));
+  return value !== null && typeof value === "object" ? value : null;
+}
+
+/** A switched checkout is not ready until its frozen install finishes, even when CI says CURRENT. */
+export function resumeRuntimeReleaseInstall(input: {
+  readonly root: string;
+  readonly runCommand?: RunCommand;
+}): RuntimeReleaseApplyResult | null {
+  const hold = readRuntimeReleaseHold(input.root);
+  if (hold?.switched !== true) return null;
+  const targetSha = lowerFullSha(hold.targetSha);
+  if (targetSha === null) throw new Error("RUNTIME_INSTALL_TARGET_INVALID");
+  return finishRuntimeReleaseInstall({ ...input, targetSha });
+}
+
+function finishRuntimeReleaseInstall(input: {
+  readonly root: string;
+  readonly targetSha: string;
+  readonly runCommand?: RunCommand;
+  readonly install?: boolean;
+}): RuntimeReleaseApplyResult {
+  const { targetSha } = input;
+  const run = input.runCommand ?? defaultRunCommand;
+  const refuse = (code: string, detail: string): RuntimeReleaseApplyResult => {
+    writeRuntimeReleaseHold(input.root, { formatVersion: 1, state: "HELD", code, detail,
+      targetSha, switched: true, observedAt: new Date().toISOString() });
+    return { state: "REFUSED", code, detail, targetSha, switched: true };
+  };
+  const head = run("git", ["rev-parse", "HEAD"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
+  if (head.status !== 0 || lowerFullSha(head.stdout.trim()) !== targetSha) {
+    return refuse("RUNTIME_CHECKOUT_EXACT_HEAD_FAILED", "checkout did not read back at the exact deployed target");
+  }
+  if (input.install !== false) {
+    const command = runtimePackageManagerCommand();
+    if (command === null) return refuse("COREPACK_ENTRY_UNAVAILABLE", "the running Node installation has no Corepack JavaScript entry; no shell fallback was attempted");
+    const installed = run(command.executable, command.args, {
+      cwd: input.root, timeoutMs: INSTALL_TIMEOUT_MS,
+      env: { ...process.env, CI: "true" },
+    });
+    if (installed.status !== 0) return refuse("FROZEN_INSTALL_FAILED", conciseFailure(installed));
+  }
+  const dirtyAfter = run("git", ["status", "--porcelain=v1", "--untracked-files=all"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
+  if (dirtyAfter.status !== 0 || dirtyAfter.stdout.trim() !== "") {
+    return refuse("RUNTIME_CHECKOUT_DIRTY_AFTER_INSTALL", "frozen installation did not leave the dedicated checkout clean");
+  }
+  const installedHead = run("git", ["rev-parse", "HEAD"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
+  if (installedHead.status !== 0 || lowerFullSha(installedHead.stdout.trim()) !== targetSha) {
+    return refuse("RUNTIME_CHECKOUT_EXACT_HEAD_FAILED", "installation did not retain the exact deployed target");
+  }
+  const hold = join(input.root, RUNTIME_RELEASE_HOLD_RELATIVE_PATH);
+  if (existsSync(hold)) rmSync(hold, { force: true });
+  return { state: "UPDATED", code: "RUNTIME_RELEASE_UPDATED",
+    detail: `dedicated runtime checkout is detached, clean, installed, and exact at ${targetSha}`,
+    targetSha, switched: true };
 }
 
 /**
@@ -409,33 +474,8 @@ export function applyRuntimeRelease(input: {
   const switchedResult = run("git", ["switch", "--detach", targetSha], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
   if (switchedResult.status !== 0) return refuse("RUNTIME_CHECKOUT_SWITCH_FAILED", conciseFailure(switchedResult));
   switched = true;
-
-  if (input.install !== false) {
-    const command = runtimePackageManagerCommand();
-    if (command === null) return refuse("COREPACK_ENTRY_UNAVAILABLE", "the running Node installation has no Corepack JavaScript entry; no shell fallback was attempted");
-    const installed = run(command.executable, command.args, {
-      cwd: input.root, timeoutMs: INSTALL_TIMEOUT_MS,
-      env: { ...process.env, CI: "true" },
-    });
-    if (installed.status !== 0) return refuse("FROZEN_INSTALL_FAILED", conciseFailure(installed));
-  }
-
-  const head = run("git", ["rev-parse", "HEAD"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
-  if (head.status !== 0 || lowerFullSha(head.stdout.trim()) !== targetSha) {
-    return refuse("RUNTIME_CHECKOUT_EXACT_HEAD_FAILED", "checkout did not read back at the exact deployed target");
-  }
-  const dirtyAfter = run("git", ["status", "--porcelain=v1", "--untracked-files=all"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
-  if (dirtyAfter.status !== 0 || dirtyAfter.stdout.trim() !== "") {
-    return refuse("RUNTIME_CHECKOUT_DIRTY_AFTER_INSTALL", "frozen installation did not leave the dedicated checkout clean");
-  }
-
-  const hold = join(input.root, RUNTIME_RELEASE_HOLD_RELATIVE_PATH);
-  if (existsSync(hold)) rmSync(hold, { force: true });
-  return {
-    state: "UPDATED",
-    code: "RUNTIME_RELEASE_UPDATED",
-    detail: `dedicated runtime checkout is detached, clean, installed, and exact at ${targetSha}`,
-    targetSha,
-    switched: true,
-  };
+  // Persist before the blocking install so a watchdog kill retains recovery state.
+  writeRuntimeReleaseHold(input.root, { formatVersion: 1, state: "HELD", code: "FROZEN_INSTALL_PENDING",
+    targetSha, switched, observedAt: new Date().toISOString() });
+  return finishRuntimeReleaseInstall({ ...input, targetSha });
 }

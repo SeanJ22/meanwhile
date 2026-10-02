@@ -108,6 +108,7 @@ import {
   controlPlaneUrlFromEnv,
   createPgRepositories,
   CONTROL_PLANE_URL_VAR,
+  CONTROL_PLANE_QUERY_CONCURRENCY,
 } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import {
@@ -2904,20 +2905,23 @@ for (const row of cycle.deferred) {
 
 /* ------------------------------------------------- close, and persist debt --- */
 
+// Scheduling projections and closure both CAS the standing obligation.
+await nextDuePersistence;
 /* Dispatched and recovered occurrences close by one rule; a recovered one by the disposition it already carries. */
 await pending.step("occurrences:close", () => closeCycleOccurrences(repos, {
   cycle,
   occurrenceFor: (obligationId) => occurrenceByObligation.get(obligationId)?.id ?? null,
   now: NOW,
+  concurrency: CONTROL_PLANE_QUERY_CONCURRENCY,
 }));
 
-await nextDuePersistence;
 const persisted = await pending.step("debts:persist", () => persistDebts(
   repos,
   cycle.debts,
   NOW,
   canary ? corpus.map((obligation) => obligation.id) : null,
   retiredDebtReasons,
+  CONTROL_PLANE_QUERY_CONCURRENCY,
 ));
 finishPhase("occurrence-and-debt-commit");
 console.log(

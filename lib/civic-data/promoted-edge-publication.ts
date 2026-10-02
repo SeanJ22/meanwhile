@@ -83,8 +83,8 @@ const manual = (id: Parameters<typeof requiredManualProductionContract>[0], read
   return { recordClass: contract.recordClass, scope: contract.scope, reader };
 };
 
-/** Every pointer each proven-pointer family carries, with the Reader that must accept it. */
-export function promotedEdgePointers(): Readonly<Record<PromotedAuthorityFamily, readonly PromotedEdgePointer[]>> {
+/** Family pointers; money opens only explicitly requested states' registrations. */
+export function promotedEdgePointers(states: readonly StateCampaignFinanceJurisdiction[] = []): Readonly<Record<PromotedAuthorityFamily, readonly PromotedEdgePointer[]>> {
   const nhMembers = requiredRoutineContract("nh-members");
   return {
     "ballot-az": [manual("az-sos-ballot", readAzBallotProjection)],
@@ -101,7 +101,8 @@ export function promotedEdgePointers(): Readonly<Record<PromotedAuthorityFamily,
     "member-offices": [manual("member-offices", (options) => readCuratedReaderProjection("member-offices", options))],
     "nh-members": [{ recordClass: nhMembers.recordClass, scope: nhMembers.scope, reader: readNhMembers }],
     "federal-funding": [{ recordClass: "FEC_FUNDING", scope: requiredRoutineContract("fec-funding").scope, reader: readFundingSnapshot }],
-    "state-money": (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map((state) => ({
+    "state-money": [...new Set(states.map(state => state.toUpperCase()))]
+      .filter(state => Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, state)).map((state) => ({
       recordClass: "STATE_CAMPAIGN_FINANCE" as const,
       scope: STATE_CAMPAIGN_FINANCE_SOURCES[state].scope,
       reader: (options: PromotedCivicDataReadOptions) => readStateMoneyProjection(state, options),
@@ -149,13 +150,16 @@ export async function readPromotedEdgeFamilies(input: {
   readonly store: CivicDataReadStore & { readonly readPromotionIdentity: NonNullable<CivicDataReadStore["readPromotionIdentity"]> };
   readonly servedManifest: Pick<ReaderManifest, "authorityArtifacts"> | null;
   readonly now: string;
+  /** Exact money jurisdictions when constructing default family pointers. */
+  readonly states?: readonly StateCampaignFinanceJurisdiction[];
   /** The families to read; every proven-pointer family when omitted. */
   readonly families?: Readonly<Partial<Record<PromotedAuthorityFamily, readonly PromotedEdgePointer[]>>>;
 }): Promise<PromotedEdgeFamiliesRead> {
-  const families = input.families ?? promotedEdgePointers();
+  const families = input.families ?? promotedEdgePointers(input.states);
   const authority: Partial<Record<PromotedAuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried>> = {};
   const skipped: string[] = [];
   for (const [family, pointers] of Object.entries(families) as [PromotedAuthorityFamily, readonly PromotedEdgePointer[]][]) {
+    if (pointers.length === 0) continue;
     try {
       const served = servedAuthorityVersion(input.servedManifest, family);
       if (served !== null) {

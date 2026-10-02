@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { after, test } from "node:test";
 
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { publishRoutineReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import {
@@ -47,6 +48,9 @@ const T1 = "2026-09-25T15:00:00.000Z";
 const AZ_URL = "https://seethemoney.az.gov/Reporting/GetNEWTableData/";
 const AZ = STATE_CAMPAIGN_FINANCE_SOURCES.AZ;
 const NH = STATE_CAMPAIGN_FINANCE_SOURCES.NH;
+const AZ_CONTRACT = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(contract => contract.id === AZ.contractId);
+assert.ok(AZ_CONTRACT);
+const AZ_CONTRACT_ID = AZ_CONTRACT.id;
 
 function azCandidate() {
   const source = JSON.parse(readFileSync(join(process.cwd(), "data", "states", "az", "funding", "state-money-az-2026.json"), "utf8")) as StateMoneySnapshot;
@@ -69,7 +73,7 @@ function azCandidate() {
 async function promotedAzStore() {
   const store = new MemoryRoutineDataStore();
   const candidate = azCandidate();
-  const outcome = await processRegisteredManualCandidate(store, AZ.contractId, candidate, T0);
+  const outcome = await processRegisteredManualCandidate(store, AZ_CONTRACT_ID, candidate, T0);
   assert.equal(outcome.candidate.state, "PROMOTED");
   return { store, candidate };
 }
@@ -78,21 +82,21 @@ test("default rechecks keep one candidate and advance freshness; explicit false 
   const { store, candidate } = await promotedAzStore();
   const recheck = { ...candidate, id: `${candidate.id}-recheck`,
     retrieval: { ...candidate.retrieval, retrievedAt: T1, rawHash: "b".repeat(64) } };
-  const outcome = await processRegisteredManualCandidate(store, AZ.contractId, recheck, T1);
+  const outcome = await processRegisteredManualCandidate(store, AZ_CONTRACT_ID, recheck, T1);
   assert.equal(outcome.confirmed?.versionId, candidate.id);
   assert.equal(await store.readCandidate(recheck.id), null, "an unchanged payload is not stored again");
   assert.equal((await store.readPromotion(candidate.recordClass, candidate.scope))?.versionId, candidate.id);
   const read = await readStateMoneyProjection("AZ", { store, now: T1, bypassCache: true });
   assert.equal(read.metadata.retrievedAt, T1);
   const forced = { ...recheck, id: `${candidate.id}-forced` };
-  const distinct = await processRegisteredManualCandidate(store, AZ.contractId, forced, T1, undefined, { confirmUnchanged: false });
+  const distinct = await processRegisteredManualCandidate(store, AZ_CONTRACT_ID, forced, T1, undefined, { confirmUnchanged: false });
   assert.equal(distinct.confirmed, undefined);
   assert.equal(distinct.candidate.state, "PROMOTED");
   assert.equal((await store.readPromotion(candidate.recordClass, candidate.scope))?.versionId, forced.id);
 });
 
-const stateMoneyPointers = (states: readonly ("AZ" | "NH" | "NJ")[]): readonly PromotedEdgePointer[] =>
-  promotedEdgePointers()["state-money"].filter((pointer) => states.some((state) => STATE_CAMPAIGN_FINANCE_SOURCES[state].scope === pointer.scope));
+const stateMoneyPointers = (states: readonly string[]): readonly PromotedEdgePointer[] =>
+  promotedEdgePointers(states)["state-money"];
 
 function entriesOf(read: Awaited<ReturnType<typeof readPromotedEdgeFamilies>>, family: "state-money"): readonly PromotedEdgeEntry[] {
   const published = read.authority[family];

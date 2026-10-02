@@ -7,6 +7,7 @@ import { stateCampaignFinanceRegistration, stateCampaignFinanceSources, type Sta
 import { directFundingTargetPlan } from "../lib/funding/target-authorities.ts";
 import { readStateMoneyProjections, settleStateMoneyReads } from "../lib/funding/state-snapshot.ts";
 import { generateStateMoneyRegistrations, holdsStateCampaignReports } from "../scripts/state-money-registrations.mts";
+import { promotedEdgePointers } from "../lib/civic-data/promoted-edge-publication.ts";
 
 function temporary(t: test.TestContext): string {
   const root = mkdtempSync(join(tmpdir(), "s16-money-registration-"));
@@ -48,6 +49,8 @@ test("one selected nonpilot state pointer is read; a country preload does no imp
   assert.equal((await readStateMoneyProjections([], options)).size, 0);
   assert.equal(await settleStateMoneyReads(), null);
   assert.deepEqual(calls, []);
+  assert.deepEqual(promotedEdgePointers()["state-money"], []);
+  assert.deepEqual(promotedEdgePointers(["TN", "tn"])["state-money"].map(pointer => pointer.scope), ["US-TN:campaign-finance:2026"]);
   for (const state of ["tn", "pa", "tx", "dc", "co"]) {
     assert.equal(directFundingTargetPlan(`ballot-${state}-any-county:school-board:test-person`).state, state.toUpperCase());
   }

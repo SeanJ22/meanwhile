@@ -67,6 +67,7 @@ function verifyExactVersion(
 }
 
 function verifierIdFor(contract: ReaderContract): string {
+  if (contract.recordClass === "STATE_CAMPAIGN_FINANCE") return "lib/funding/state-snapshot.ts#readStateMoneyProjection";
   switch (contract.id) {
     case "fec-funding": return "lib/funding/snapshot.ts#readFundingSnapshot";
     case "nh-members": return "lib/civic-data/state-members.ts#readNhMembers";
@@ -88,9 +89,6 @@ function verifierIdFor(contract: ReaderContract): string {
     case "officeholder-statements": return "lib/corpus/data-plane.ts#readOfficeholderStatementsProjection";
     case "jurisdiction-operational-reference": return "lib/civic-data/operational-references.ts#preloadOperationalReferenceBundle";
     case "jurisdiction-operational-reference-az": return "lib/civic-data/operational-references.ts#preloadAzOperationalReferenceBundle";
-    case "az-sos-campaign-finance":
-    case "nh-sos-campaign-finance":
-    case "nj-elec-campaign-finance": return "lib/funding/state-snapshot.ts#readStateMoneyProjection";
     case "az-pima-local-finance": return "lib/control-plane/campaign-finance/held-records.ts#refreshAzPimaFinanceFromPromoted";
     case "voting-sites": return "lib/ballot/voting-sites-server.ts#readVotingSitesProjection";
     case "prl": return "lib/sources/prl/snapshot.ts#readPrlProjection";
@@ -127,6 +125,17 @@ export async function verifyRoutineReaderProjection(
 ): Promise<RoutineReaderVerification> {
   const verifierId = verifierIdFor(contract);
   try {
+    if (contract.recordClass === "STATE_CAMPAIGN_FINANCE") {
+      const { readStateMoneyProjection } = await import("../funding/state-snapshot.ts");
+      const { STATE_CAMPAIGN_FINANCE_SOURCES } = await import("../funding/data-plane.ts");
+      const scope = options.scope ?? contract.scope;
+      const state = /^US-([A-Z]{2}):campaign-finance:\d+$/.exec(scope)?.[1];
+      const source = state ? STATE_CAMPAIGN_FINANCE_SOURCES[state] : undefined;
+      if (!state || source?.contractId !== contract.id || source.scope !== scope || source.sourceId !== contract.sourceId) {
+        return fail(verifierId, `No state campaign-finance authority owns contract ${contract.id} at ${scope}.`);
+      }
+      return verifyExactVersion(verifierId, await readStateMoneyProjection(state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${state} campaign-finance`);
+    }
     switch (contract.id) {
       case "fec-funding": {
         const { readFundingSnapshot } = await import("../funding/snapshot.ts");
@@ -254,16 +263,6 @@ export async function verifyRoutineReaderProjection(
       case "jurisdiction-operational-reference-az": {
         const { preloadAzOperationalReferenceBundle } = await import("./operational-references.ts");
         return verifyExactVersion(verifierId, await preloadAzOperationalReferenceBundle({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "az-operational-reference");
-      }
-      case "az-sos-campaign-finance":
-      case "nh-sos-campaign-finance":
-      case "nj-elec-campaign-finance": {
-        const { readStateMoneyProjection } = await import("../funding/state-snapshot.ts");
-        const { STATE_CAMPAIGN_FINANCE_SOURCES } = await import("../funding/data-plane.ts");
-        const state = Object.entries(STATE_CAMPAIGN_FINANCE_SOURCES)
-          .find(([, source]) => source.contractId === contract.id)?.[0] as keyof typeof STATE_CAMPAIGN_FINANCE_SOURCES | undefined;
-        if (!state) return fail(verifierId, `No state campaign-finance authority owns contract ${contract.id}.`);
-        return verifyExactVersion(verifierId, await readStateMoneyProjection(state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${state} campaign-finance`);
       }
       case "az-pima-local-finance": {
         const { refreshAzPimaFinanceFromPromoted } = await import("../control-plane/campaign-finance/held-records.ts");

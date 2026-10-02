@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 import { promotedPayloadSha256 } from "../../lib/civic-data/attested-promotion.ts";
 import { requiredManualProductionContract, type ManualProductionContractId } from "../../lib/civic-data/manual-contracts.ts";
 import type { CivicDataReadResult, PromotedEdgeEntry } from "../../lib/civic-data/read-model.ts";
 import type { PromotedFamilyArtifactValue } from "../../lib/meetings/edge-artifacts.ts";
-import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../../lib/funding/data-plane.ts";
+import { STATE_CAMPAIGN_FINANCE_SOURCES } from "../../lib/funding/data-plane.ts";
 import { projectionKey } from "../../lib/civic-data/store.ts";
 import { VALIDATION_CHECKS, type RoutineRecordClass, type ValidationReceipt } from "../../lib/civic-data/types.ts";
 
@@ -85,14 +85,22 @@ export function servedValue<T>(read: CivicDataReadResult<T>): T {
   return read.value as T;
 }
 
-/** Every state's money pointer, proven, carrying that state's tracked test fixture. */
+/** Money pointers for the tracked fixtures actually held by these tests. */
 export function stateMoneyFixtureEntries(versionFor: (state: string) => string): PromotedEdgeEntry[] {
-  return (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map((state) => provenEdgeEntry({
+  const root = join(process.cwd(), "data", "states");
+  const fixtures = readdirSync(root).flatMap(slug => {
+    const funding = join(root, slug, "funding");
+    return existsSync(funding) ? readdirSync(funding).flatMap(file => {
+      const match = /^state-money-([a-z]{2})-(\d+)\.json$/.exec(file);
+      return match?.[1] === slug ? [{ state: slug.toUpperCase(), cycle: Number(match[2]), path: join(funding, file) }] : [];
+    }) : [];
+  }).filter(({ state, cycle }) => STATE_CAMPAIGN_FINANCE_SOURCES[state]?.cycle === cycle);
+  return fixtures.map(({ state, path }) => provenEdgeEntry({
     recordClass: "STATE_CAMPAIGN_FINANCE",
     scope: STATE_CAMPAIGN_FINANCE_SOURCES[state].scope,
     sourceId: STATE_CAMPAIGN_FINANCE_SOURCES[state].sourceId,
     versionId: versionFor(state),
-    value: JSON.parse(readFileSync(join(process.cwd(), "data", "states", state.toLowerCase(), "funding", `state-money-${state.toLowerCase()}-2026.json`), "utf8")) as unknown,
+    value: JSON.parse(readFileSync(path, "utf8")) as unknown,
   }));
 }
 

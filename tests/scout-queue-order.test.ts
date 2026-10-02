@@ -26,8 +26,41 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
 
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+
+test("standing place ranks reuse one order version and rebuild overlapping memberships on refresh", () => {
+  const source = readFileSync(join(process.cwd(), "scripts/freshness-shadow.mts"), "utf8");
+  const start = source.indexOf("const placeRankFor = ");
+  const end = source.indexOf("const providerQueue = ", start);
+  const snippet = transpileModule(source.slice(start, end), {
+    compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None },
+  }).outputText;
+  const make = new Function("expansionPlan", `let placeOrder = ['receipt:a', 'receipt:b']; ${snippet}
+    return { rank: placeRankFor, replace: value => { placeOrder = value; } };`);
+  let scopeReads = 0;
+  const scopes = [
+    { get kind() { scopeReads++; return "RESOLVED"; }, decision: { receiptId: "receipt:a" }, members: new Set(["a", "shared"]) },
+    { get kind() { scopeReads++; return "RESOLVED"; }, decision: { receiptId: "receipt:b" }, members: new Set(["b", "shared"]) },
+    { kind: "UNRESOLVED", decision: { receiptId: "receipt:missing" }, members: new Set(["unresolved"]) },
+  ];
+  const ranks = make({ scopes });
+  for (let query = 0; query < 1000; query++) {
+    assert.equal(ranks.rank("shared"), 0);
+    assert.equal(ranks.rank("b"), 1);
+    assert.equal(ranks.rank("outside"), null);
+    assert.equal(ranks.rank("unresolved"), null);
+  }
+  assert.equal(scopeReads, 2, "four thousand queries read scope memberships only once for this order");
+  ranks.replace(["receipt:b", "receipt:a"]);
+  assert.equal(ranks.rank("shared"), 0);
+  assert.equal(ranks.rank("a"), 1);
+  assert.equal(ranks.rank("b"), 0);
+  assert.equal(scopeReads, 4);
+  ranks.replace([]);
+  assert.equal(ranks.rank("shared"), null);
+});
 import { registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";

@@ -1273,11 +1273,25 @@ async function refreshPlaceOrder(): Promise<void> {
   return placeOrderRead;
 }
 await refreshPlaceOrder();
-const placeRankFor = (subject: string): number | null => {
-  const ranks = (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED" && scope.members.has(subject))
-    .map(scope => placeOrder.indexOf(scope.decision.receiptId)).filter(rank => rank >= 0);
-  return ranks.length ? Math.min(...ranks) : null;
-};
+const placeRankFor = (() => {
+  let rankedOrder: readonly string[] | null = null;
+  const bySubject = new Map<string, number>();
+  return (subject: string): number | null => {
+    if (rankedOrder !== placeOrder) {
+      bySubject.clear();
+      const receipts = new Map<string, number>();
+      placeOrder.forEach((receipt, rank) => { if (!receipts.has(receipt)) receipts.set(receipt, rank); });
+      for (const scope of expansionPlan?.scopes ?? []) {
+        if (scope.kind !== "RESOLVED") continue;
+        const rank = receipts.get(scope.decision.receiptId);
+        if (rank === undefined) continue;
+        for (const member of scope.members) bySubject.set(member, Math.min(bySubject.get(member) ?? Infinity, rank));
+      }
+      rankedOrder = placeOrder;
+    }
+    return bySubject.get(subject) ?? null;
+  };
+})();
 const providerQueue = new ModelProviderQueue({
   ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}) });
 /** Current place order first; an unplaced owner dispatch follows the selected places. */

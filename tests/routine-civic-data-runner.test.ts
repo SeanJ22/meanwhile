@@ -18,6 +18,7 @@ import {
   routineFrontierPassBound,
   SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   routineSupervisorCycleId,
+  routineUnreceiptedSupervisorAttemptHistory,
   routineTaskDue,
   routineTaskFromContract,
   routineTaskSelection,
@@ -1115,7 +1116,7 @@ test("each admitted meeting source/body contract is its own concurrent child bou
   assert.match(runner, /command:\s*task\.command/);
   assert.match(runner, /dueCandidates\.push\(\{[\s\S]*?id:\s*task\.id,[\s\S]*?task,/);
   // Every admitted task, and only those, is launched, owed-soonest first (routinePassLaunchOrder).
-  assert.match(runner, /for \(const \{ task \} of routinePassLaunchOrder\(admitted\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
+  assert.match(runner, /for \(const \{ task \} of placeSourceLaunchOrder\(routinePassLaunchOrder\(admitted\)\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
   assert.match(runner, /parsed\.receipts\.length !== 1/);
   assert.match(runner, /parsed\.receipts\[0\]\?\.source !== pending\.task\.id/);
   assert.doesNotMatch(runner, /--partitions=/);
@@ -1370,6 +1371,19 @@ test("same-cycle isolation requires exact task/candidate receipts, never aggrega
   });
   assert.equal(exact.state, "SUCCEEDED", "a contained source failure is not a supervisor failure");
   assert.equal(routineSupervisorCycleIsolationIssue(exact), null);
+  const sharedVersion = { ...exact, attemptedTasks: 2, verifiedSourceSuccesses: 2, verifiedSourceFailures: 0,
+    taskReceipts: ["national-place:85635", "national-place:03060"].map(taskId => ({
+      ...exact.taskReceipts[0], taskId, receipt: { ...successReceipt, source: taskId, confirmedAt: T0 } })) };
+  const registeredJobs = new Set(sharedVersion.taskReceipts.map(row => row.taskId));
+  assert.doesNotThrow(() => routineCivicDataSupervisorOutcome(sharedVersion),
+    "the ordinary producer accepts separate jobs confirming a shared version");
+  assert.throws(() => routineCivicDataSupervisorOutcome({ ...sharedVersion,
+    taskReceipts: [sharedVersion.taskReceipts[0], sharedVersion.taskReceipts[0]] }), /TASK_RECEIPT_DUPLICATE/);
+  const sharedHistory = routineUnreceiptedSupervisorAttemptHistory([{ id: "shared", runtimeOutcome: sharedVersion }], registeredJobs);
+  assert.deepEqual(sharedHistory.issues, [], "separate exact jobs can confirm one unchanged canonical version");
+  const duplicateJob = routineUnreceiptedSupervisorAttemptHistory([{ id: "duplicate", runtimeOutcome: {
+    ...sharedVersion, taskReceipts: [sharedVersion.taskReceipts[0], sharedVersion.taskReceipts[0]] } }], registeredJobs);
+  assert.ok(duplicateJob.issues.length > 0, "duplicating the exact job still contradicts history");
 
   const sameSourceOnly = routineCivicDataSupervisorOutcome({
     cycleId: "cycle:same-source-only",
@@ -1655,6 +1669,13 @@ test("the durable receipt check proves a Reader-projected pointer by identity an
     structuralReleaseContract: ZERO_RELEASE_EVENTS,
   };
   assert.equal(await durableRoutineRunnerReceiptIssue(success, task, store, "SUCCESS"), null);
+  const placeJob = { ...task, id: "national-place:85635", registeredContractId: task.id };
+  assert.equal(await durableRoutineRunnerReceiptIssue(success, placeJob, store, "SUCCESS"), null,
+    "an independent job keeps its canonical source authority");
+  assert.equal(await durableRoutineRunnerReceiptIssue({ ...success, source: placeJob.id }, placeJob, store, "SUCCESS"), null,
+    "the parent-attributed exact job receipt remains readable");
+  assert.match(await durableRoutineRunnerReceiptIssue({ ...success, source: "national-place:03000" }, placeJob, store, "SUCCESS") ?? "",
+    /does not match registered task/);
   assert.deepEqual(store.whole, [], "success: identity only; the Reader repair reads the new version in full");
 
   // A contract no Reader readback ever proves keeps the full proven read on

@@ -112,12 +112,22 @@ test("method admission, repeated inheritance, candidates and date-only reopening
 test("completed research cycles use their own previous boundary without opening a promotion window",async()=>{
   const h=await autonomousHarness();
   await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
-  const first=await readResearchProgression(h.repos,{...window,researchBoundary:{since:FIXTURE_NOW,previousCompletedWindowId:null}});
+  const scouts=await h.repos.scoutResults.readAll();
+  const listItems=h.repos.workItems.list.bind(h.repos.workItems);
+  let itemExports=0;
+  h.repos.workItems.list=async()=>{itemExports++;return listItems();};
+  h.repos.scoutResults.readAll=async()=>{throw new Error("the final Scout snapshot must not be exported twice");};
+  const first=await readResearchProgression(h.repos,{...window,scouts,researchBoundary:{since:FIXTURE_NOW,previousCompletedWindowId:null}});
+  assert.equal(itemExports,1,"progression reuses the same work-item snapshot in activity");
   assert.equal(first.windowKind,"RESEARCH_CYCLE");
   assert.equal(first.milestones.acquired.newlyReached,1);
   assert.equal((await h.repos.windowRuns.readAll()).length,0,"projection cannot invent a nightly window");
-  const next=await readResearchProgression(h.repos,{...window,windowId:"next-research-window",through:"2026-09-03T20:00:00.000Z",researchBoundary:{since:first.through,previousCompletedWindowId:first.windowId}});
+  const next=await readResearchProgression(h.repos,{...window,scouts,windowId:"next-research-window",through:"2026-09-03T20:00:00.000Z",researchBoundary:{since:first.through,previousCompletedWindowId:first.windowId}});
+  assert.equal(itemExports,2,"each completed read gets one fresh work-item snapshot");
   assert.equal(next.previousCompletedWindowId,first.windowId);
   assert.equal(next.milestones.acquired.newlyReached,0);
   assert.equal(next.milestones.acquired.reachedByWindowEnd,1);
+  h.repos.workItems.list=async()=>{throw new Error("fresh work-item snapshot unavailable");};
+  await assert.rejects(readResearchProgression(h.repos,{...window,scouts}),/fresh work-item snapshot unavailable/,
+    "snapshot failures propagate rather than manufacture zero progress");
 });

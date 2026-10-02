@@ -282,6 +282,7 @@ import {
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import { readMethodKnowledge } from "../lib/method/manual-bridge.ts";
+import { candidateCounts as countMethodCandidates } from "../lib/method/candidate.ts";
 import { readConclusionStore } from "../lib/method/conclusions.ts";
 import {
   NO_PIPELINE_RECORDED,
@@ -3094,16 +3095,17 @@ try {
  * outbound traffic, so it is inert until the owner's go.
  *
  * It spends at most MEETINGS_DISCOVERY_BUDGET_MS, walks at most
- * MEETINGS_DISCOVERY_MAX_WALKS needs, and runs only in a full standing cycle
- * with that much of the admission window left. The budget bounds the walk in
+ * MEETINGS_DISCOVERY_MAX_WALKS needs, and runs only in a full standing cycle.
+ * The phase budget includes its setup and bounds the walk in
  * progress too: each request's timeout is cut to the time left, so a slow site
- * cannot carry the phase into the finalization reserve, and a walk the time
+ * cannot keep sending requests beyond that allowance, and a walk the time
  * runs out on before it confirmed anything is deferred, never recorded. It opens on its own FleetSafety
  * provider key, `discovery-web`, so a latch it trips never stops the routine
  * lanes, and shares the cycle's host spacing and vault.
  */
 /* On unless the kill switch says off (NS28, decided by the owner 2026-09-24: meetings discovery is always on). */
 const MEETINGS_DISCOVERY_MAX_WALKS = 12;
+const MEETINGS_DISCOVERY_BUDGET_MS = 60_000;
 /*
  * The search rung's caps (Brave and Exa combined, pointers only) are
  * SEARCH_PER_CYCLE / SEARCH_PER_DAY, set with the one paid-search budget at
@@ -3118,6 +3120,7 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
 } else if ("unreadable" in gapLedgerRead) {
   meetingsDiscoveryState = `not run: ${gapLedgerRead.unreadable}`;
 } else {
+  const discoveryDeadlineMs = Date.now() + MEETINGS_DISCOVERY_BUDGET_MS;
   const openDiscovery = fleetSafety.guardedOpenBytes("discovery-web", "meetings-discovery", fetch, { followRedirects: false });
   /* Named to the stall diagnostic while it runs: its waits on government sites are not store calls, so nothing else would name them. */
   const leaveDiscovery = pending.enter("meetings-discovery");
@@ -3182,8 +3185,8 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
         readOfficialPages,
         now: nowIso,
         budget: {
-          spent: () => false,
-          remainingMs: () => Number.POSITIVE_INFINITY,
+          spent: () => Date.now() >= discoveryDeadlineMs,
+          remainingMs: () => Math.max(0, discoveryDeadlineMs - Date.now()),
         },
         recipes: knownRecipes(manual?.value.entries ?? []),
         /* Committed route hints: the current official site where the recorded address is stale, and routes found on a government's own publications. */
@@ -3500,23 +3503,32 @@ leavePromotionTail();
  * cycle's own Attempts are in the denominators. A failed re-read is a named
  * runtime condition and the metrics record is withheld, never zeroed.
  */
+// These independent final reads share the existing repository transport limit.
+// Join failures too: neither finalization view retries an unchanged failed read.
+const finalizationReads = canary ? null : Promise.allSettled([
+  repos.scoutResults.readAll(),
+  repos.costs.readSince(new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
+  repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE"),
+  readMethodCandidateStore(repos),
+  dry ? Promise.resolve(null) : readMethodKnowledge(repos),
+] as const);
 async function computeMetrics(): Promise<ResearchMetrics | null> {
-  let results: readonly ScoutResult[];
-  let costsNow: readonly CostEntry[];
-  try {
-    results = await repos.scoutResults.readAll();
-    costsNow = await repos.costs.readSince(new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString());
-  } catch (error) {
+  const [resultsRead, costsRead, historyRead, candidatesRead] = (await finalizationReads)!;
+  if (resultsRead.status === "rejected" || costsRead.status === "rejected") {
+    const error = resultsRead.status === "rejected" ? resultsRead.reason : costsRead.status === "rejected" ? costsRead.reason : null;
     runtimeConditions.push(`research metrics NOT computed: a durable log could not be re-read (${error instanceof Error ? error.message : String(error)})`);
     return null;
   }
+  const results = resultsRead.value;
+  const costsNow = costsRead.value;
   const at = nowIso();
   finalSpendWindow = researchSpendInWindow(costsNow, at, RESEARCH_BOUNDS.windowHours, historicalSpendHolds);
   finalSpendAsOf = at;
   const windowCycles: { startedAt: string; deterministic: number; model: number }[] = [];
   try {
     const since = Date.parse(at) - RESEARCH_BOUNDS.windowHours * 3_600_000;
-    const priorDigests = await repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE");
+    if (historyRead.status === "rejected") throw historyRead.reason;
+    const priorDigests = historyRead.value;
     for (const rec of freshnessCycleOutcomes(priorDigests)) {
       const lanes = rec.research?.lanes;
       if (!lanes || Date.parse(rec.startedAt) < since) continue;
@@ -3531,7 +3543,10 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
       `research share history was unavailable from the canonical owner log (${error instanceof Error ? error.message : String(error)}); the window contains this cycle only`,
     );
   }
-  const counts = await candidateStoreCounts(repos);
+  let counts: ReturnType<typeof countMethodCandidates> | null = null;
+  if (candidatesRead.status === "fulfilled") {
+    try { counts = countMethodCandidates(candidatesRead.value); } catch { /* Unreadable authority remains unknown. */ }
+  }
   const candidateCounts = counts === null ? null : { proposed: counts.PROPOSED, validated: counts.VALIDATED, admitted: counts.ADMITTED, rejected: counts.REJECTED };
   const pipeline = await NO_PIPELINE_RECORDED();
   /*
@@ -3582,16 +3597,22 @@ const finishedAt = nowIso();
 if (!dry && !canary) {
   const leaveProgression = pending.enter("research-progression");
   try {
-    researchProgression = await (async () => readResearchProgression(repos, {
+    const [scoutsRead, , , candidatesRead, knowledgeRead] = (await finalizationReads)!;
+    if (candidatesRead.status === "rejected") throw candidatesRead.reason;
+    if (knowledgeRead.status === "rejected") throw knowledgeRead.reason;
+    if (knowledgeRead.value === null) throw new Error("the final method knowledge snapshot is unavailable");
+    if (scoutsRead.status === "rejected") throw scoutsRead.reason;
+    researchProgression = await readResearchProgression(repos, {
       windowId: researchWindowId, through: finishedAt, gate: readActivationGate(ROOT),
-      candidates: (await readMethodCandidateStore(repos)).candidates,
-      knowledge: await readMethodKnowledge(repos),
+      candidates: candidatesRead.value.candidates,
+      knowledge: knowledgeRead.value,
+      scouts: scoutsRead.value,
       conclusions: readConclusionStore(join(ROOT,"data","method","conclusions.json")),
       researchBoundary: {
         since: priorResearchState?.researchProgression?.through ?? priorResearchState?.cycleFinishedAt ?? NOW,
         previousCompletedWindowId: priorResearchState?.researchProgression?.windowId ?? (priorResearchState?.cycleFinishedAt ? `research:${priorResearchState.host}:${priorResearchState.cycleStartedAt}` : null),
       },
-    }))();
+    });
   } catch (error) {
     researchProgressionFailure = error instanceof Error ? error.message : String(error);
     runtimeConditions.push(`RESEARCH_PROGRESSION_UNAVAILABLE: ${researchProgressionFailure}; no zero-progress claim was produced`);

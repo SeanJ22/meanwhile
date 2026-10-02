@@ -28,9 +28,7 @@ export function availableWorkerMemoryBytes(): number {
 }
 
 export interface WorkerProcessMemory { readonly pid: number; readonly parentPid: number; readonly rss: number }
-let processSample: { at: number; rows: readonly WorkerProcessMemory[] } | undefined;
 function hostProcesses(): readonly WorkerProcessMemory[] {
-  if (processSample && Date.now() - processSample.at < 1000) return processSample.rows;
   const rows: WorkerProcessMemory[] = [];
   try {
     if (platform() === "linux") {
@@ -51,7 +49,6 @@ function hostProcesses(): readonly WorkerProcessMemory[] {
     }
   } catch { /* Unobserved children keep their complete peak reserved. */ }
   if (!rows.some(row => row.pid === process.pid)) rows.push({ pid: process.pid, parentPid: process.ppid, rss: process.memoryUsage.rss() });
-  processSample = { at: Date.now(), rows };
   return rows;
 }
 

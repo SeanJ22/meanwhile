@@ -44,11 +44,11 @@ export function sendViews(input: {
     const read = honored.get(i.intentId);
     const c = carried.get(i.intentId);
     const state: SendState = cancelDone ? "cancelled" : cancel ? "cancel-requested" : c ? "carried" : read ? "finished" : "waiting";
-    const stateWords = state === "cancelled" ? "Taken back. The runner stopped carrying it."
-      : state === "cancel-requested" ? "Taking it back: waiting for the runner to record it."
-      : state === "carried" ? `Still running: ${c!.deferred.toLocaleString("en-US")} requirement${c!.deferred === 1 ? "" : "s"} left to create, ${c!.created.toLocaleString("en-US")} created so far.`
-      : state === "finished" ? "Finished. The runner read it and has nothing left to create for it."
-      : "Waiting for the runner’s next round to read it.";
+    const stateWords = state === "cancelled" ? "Taken back"
+      : state === "cancel-requested" ? "Taking back"
+      : state === "carried" ? `${c!.deferred.toLocaleString("en-US")} left to create · ${c!.created.toLocaleString("en-US")} created`
+      : state === "finished" ? "Finished"
+      : "Waiting";
     return { id: i.intentId, words: i.note ?? "", sentAt: i.requestedAt, state, stateWords, ranAs: read?.detail ?? null, canCancel: state === "waiting" || state === "carried" };
   }).slice(0, SENDS_LIMIT);
 }

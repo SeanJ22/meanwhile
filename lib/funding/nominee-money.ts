@@ -1,6 +1,6 @@
 /**
  * **THE PROJECTION LAYER: A CARD ASKS THE CORPUS ABOUT A CANDIDACY.**
- * (Session C3, 2026-09-01. RULING 229, RULING 224, RULING 126.)
+ * (Session C3, 2026-09-01. RULING 229, RULING 224; filings never sold, Sean 2026-10-01.)
  *
  * ## The measured defect
  *

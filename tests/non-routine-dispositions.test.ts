@@ -19,7 +19,7 @@ import {
 import { DATASET_FAMILIES } from "../lib/holdings/datasets.ts";
 import {
   PRODUCTION_OFFICEHOLDER_ROSTER_FILES,
-  RETIRED_PLURAL_STATE_ROSTER_FILES,
+  retiredPluralStateRosterFiles,
   mayReadRetiredPluralRoster,
   officeholderIdentityMayEnterReader,
   officeholderRosterFiles,
@@ -274,8 +274,8 @@ test("Plural/OpenStates is research evidence only: production has no state-roste
   assert.equal(officeholderIdentityMayEnterReader("plural:recorded-research-id", "child-v8"), true);
   assert.equal(officeholderIdentityMayEnterReader("plural:recorded-research-id", "child-v8", "production"), false);
   assert.deepEqual(officeholderRosterFiles("child-v8", "production"), ["officeholders-us.json"]);
-  assert.ok(RETIRED_PLURAL_STATE_ROSTER_FILES.length > 0);
-  assert.ok(RETIRED_PLURAL_STATE_ROSTER_FILES.every((file) => /^officeholders-\d{2}\.json$/.test(file)));
+  assert.ok(retiredPluralStateRosterFiles().length > 0);
+  assert.ok(retiredPluralStateRosterFiles().every((file) => /^officeholders-\d{2}\.json$/.test(file)));
 
   assert.throws(() => readFileSync(new URL("../scripts/build-officeholders.ts", import.meta.url), "utf8"), /ENOENT/);
 

@@ -29,7 +29,7 @@ import { rosterPath } from "../lib/holdings/files.ts";
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { COVERED, rosterFile } from "../lib/coverage/artifacts.ts";
+import { HELD_ROSTER_STATES, rosterFile } from "../lib/coverage/artifacts.ts";
 import { CAMPAIGN_SITES } from "../lib/officials/campaign-sites.ts";
 import { generatedAtEastern } from "./generated-at.mjs";
 import { today } from "./doc-dates.mjs";
@@ -139,7 +139,7 @@ async function main() {
   // The manifest, not a fourth copy of it (AUD-06, g18).
   const files = [
     { label: "US (federal)", file: "officeholders-us.json" },
-    ...COVERED.map((s) => ({ label: s.usps, file: rosterFile(s) })),
+    ...HELD_ROSTER_STATES.map((s) => ({ label: s.usps, file: rosterFile(s) })),
   ];
 
   const lines: string[] = [

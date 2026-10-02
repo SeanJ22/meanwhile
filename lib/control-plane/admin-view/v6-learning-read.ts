@@ -42,9 +42,9 @@ function trend(trends: LearningTrends, input: {
   const weeks = weeksOf(trends, list, scale);
   const latest = [...trends.weeks.keys()].reverse().find((i) => list[0].points[i]?.value !== null && list[0].points[i]?.value !== undefined);
   const lead = latest === undefined ? null : list[0].points[latest];
-  const big = lead === null || lead === undefined || lead.value === null ? "no record" : input.format === "pct" ? `${pct(lead.value)}%` : `${lead.floor ? "at least " : ""}$${lead.value.toFixed(2)}`;
+  const big = lead === null || lead === undefined || lead.value === null ? "—" : input.format === "pct" ? `${pct(lead.value)}%` : `${lead.floor ? "at least " : ""}$${lead.value.toFixed(2)}`;
   const bigNote = lead === null || lead === undefined || lead.value === null
-    ? list[0].says
+    ? ""
     : `${list[0].label}, week of ${trends.weeks[latest!]}${lead.of !== null ? `, out of ${lead.of.toLocaleString("en-US")}` : ""}`;
   const peak = Math.max(...weeks.flatMap((w) => w.values ?? []), 0);
   return {

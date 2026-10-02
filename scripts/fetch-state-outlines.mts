@@ -40,7 +40,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { COVERED_FIPS, SLUG_BY_FIPS } from "../lib/coverage/artifacts.ts";
+import { HELD_GEOMETRY_FIPS, SLUG_BY_FIPS } from "../lib/coverage/artifacts.ts";
 import { stamp } from "./stamp.mts";
 
 const SOURCE_ORG = "U.S. Census Bureau";
@@ -48,7 +48,7 @@ const SERVICE =
   "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/0/query";
 
 /** FIPS for the states the product covers. Adding a state adds a code here. */
-const STATE_FIPS = COVERED_FIPS;
+const STATE_FIPS = HELD_GEOMETRY_FIPS;
 
 /**
  * **MAP-1 (2026-08-25): 0.005 deg (~500 m) WAS VISIBLE, and the author saw it.**

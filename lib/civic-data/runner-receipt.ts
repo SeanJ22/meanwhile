@@ -283,6 +283,7 @@ export function successfulRoutineRunnerReceiptIssue(receipt: RoutineRunnerReceip
 
 export interface ExpectedRoutineRunnerReceipt {
   readonly id: string;
+  readonly registeredContractId?: string;
   readonly sourceId: string;
   readonly recordClass: RoutineRecordClass;
   readonly scope: string;
@@ -335,7 +336,7 @@ export async function durableRoutineRunnerReceiptIssue(
   expectedOutcome: "SUCCESS" | "HELD",
 ): Promise<string | null> {
   try {
-    if (receipt.source !== expected.id) {
+    if (receipt.source !== expected.id && receipt.source !== expected.registeredContractId) {
       return `receipt source ${receipt.source} does not match registered task ${expected.id}`;
     }
     if (expectedOutcome === "HELD" && (receipt.state === "PROMOTED" || receipt.decision === "GOOD" || receipt.promotedVersion !== null)) {

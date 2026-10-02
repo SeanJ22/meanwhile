@@ -89,7 +89,7 @@ test("AZ, NH, and NJ finance candidates bind exact source/class/scope and promot
   for (const state of Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]) {
     const store = new MemoryRoutineDataStore();
     const candidate = stateCandidate(state);
-    const contract = STATE_CAMPAIGN_FINANCE_SOURCES[state];
+    const contract = STATE_CAMPAIGN_FINANCE_SOURCES[state as StateCampaignFinanceJurisdiction];
     assert.deepEqual(candidate.sourceProjectionEvidence, {
       kind: "SOURCE_PROJECTION_CONTRACT",
       sourceId: contract.sourceId,
@@ -195,7 +195,7 @@ test("documentary state-money proof inventory binds every promoted authority and
   const candidates = (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[])
     .map((state) => stateCandidate(state));
   for (const candidate of candidates) {
-    const contract = STATE_CAMPAIGN_FINANCE_SOURCES[(candidate.readModel as StateMoneySnapshot).records[0]!.jurisdiction];
+    const contract = STATE_CAMPAIGN_FINANCE_SOURCES[(candidate.readModel as StateMoneySnapshot).records[0]!.jurisdiction as StateCampaignFinanceJurisdiction];
     await processRegisteredManualCandidate(store, contract.contractId, candidate, T0);
   }
   await readStateMoneyProjections({ store, bypassCache: true, now: T0 });
@@ -210,7 +210,7 @@ test("documentary state-money proof inventory binds every promoted authority and
     inventory.readbacks.map(({ state, kind, scope, sourceId, versionId }) => ({ state, kind, scope, sourceId, versionId })),
     candidates.map((candidate) => {
       const state = (candidate.readModel as StateMoneySnapshot).records[0]!.jurisdiction;
-      const contract = STATE_CAMPAIGN_FINANCE_SOURCES[state];
+      const contract = STATE_CAMPAIGN_FINANCE_SOURCES[state as StateCampaignFinanceJurisdiction];
       return { state, kind: "PROMOTED", scope: contract.scope, sourceId: contract.sourceId, versionId: candidate.id };
     }).sort((left, right) => left.state.localeCompare(right.state)),
   );

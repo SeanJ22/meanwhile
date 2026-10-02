@@ -37,9 +37,9 @@ test("a retired model is named as older; an unpriced run is unknown, not $0; an 
       run("at-3", "SCOUT", { endedAt: null, outcome: null, startedAt: "2026-09-30T10:00:00.000Z", version: "claude-haiku-4-5" })],
     costs: [{ attemptId: "at-1", usd: null, jurisdiction: null, obligationId: null, byModel: null }], artifacts: [], results: [] });
   assert.equal(out[0].model.tier, "older");
-  assert.match(out[0].model.name, /older model/);
+  assert.equal(out[0].model.name, "claude-opus-5");
   assert.equal(out[0].costUsd, null);
-  assert.equal(out[0].costWords, "Price not recorded");
+  assert.equal(out[0].costWords, "—");
   assert.equal(out[1].state, "running");
   assert.equal(out[2].state, "did-not-finish");
   assert.equal(out[2].model.tier, "haiku");

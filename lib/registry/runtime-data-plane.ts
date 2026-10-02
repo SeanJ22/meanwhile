@@ -652,9 +652,10 @@ function inheritedRegistryMembers(
 }
 
 /**
- * The removals this successor proves (Sean's rule, 2026-09-23): a body the
- * prior held on a Census "no district here" placeholder, gone from this
- * projection while the placeholder division stays. Named only against the
+ * The removals this successor proves: a body the prior held on a Census "no
+ * district here" placeholder, gone from this projection while the placeholder
+ * division stays. A placeholder is not a government, so a body on one is
+ * dropped rather than shown to a reader. Named only against the
  * prior, because the promotion counts removals against the pointer it replaces.
  */
 function placeholderBodyRemovals(payload: RegistryRuntimeReadModel, prior: RegistryRuntimePrior | null): RoutineRemovalEvidence[] {

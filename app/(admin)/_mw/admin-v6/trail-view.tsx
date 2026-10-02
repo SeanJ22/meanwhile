@@ -5,8 +5,7 @@
  * trail: the saved documents (with the private original-copy control for an exact RAW capture), the attempts, the
  * extraction, the checks, the publication and the reader's readback.
  *
- * Both read on a click (`admin-v6/trail@1`) and never on a timer: a trail is dozens of point reads. A saved document is
- * not an accepted fact, and a publication is not a confirmed public result; each step says so.
+ * Both read on a click (`admin-v6/trail@1`) and never on a timer: a trail is dozens of point reads.
  */
 import { useCallback, useState } from "react";
 
@@ -15,20 +14,20 @@ import { mst, type ReachedView, type TrailView } from "./model.ts";
 import { cx, Empty, Pill, Technical } from "./ui.tsx";
 import s from "./v6.module.css";
 
-type Load<T> = { readonly state: "idle" } | { readonly state: "loading" } | { readonly state: "held"; readonly data: T } | { readonly state: "unread"; readonly says: string };
+type Load<T> = { readonly state: "idle" } | { readonly state: "loading" } | { readonly state: "held"; readonly data: T } | { readonly state: "unread" };
 
-/** One click, one read. A refusal keeps its own words; nothing is retried on a timer. */
+/** One click, one read. A refusal shows "—"; nothing is retried on a timer. */
 function useOnDemand<T>(href: string): readonly [Load<T>, () => void] {
   const [load, setLoad] = useState<Load<T>>({ state: "idle" });
   const run = useCallback(() => {
     setLoad({ state: "loading" });
     fetch(href, { credentials: "same-origin", cache: "no-store", headers: { accept: "application/json" } })
       .then(async (response) => {
-        const body = await response.json().catch(() => null) as { data?: T; says?: string } | null;
+        const body = await response.json().catch(() => null) as { data?: T } | null;
         if (response.ok && body?.data !== undefined) setLoad({ state: "held", data: body.data });
-        else setLoad({ state: "unread", says: typeof body?.says === "string" ? body.says : "This could not be read just now, so it is unknown, not empty." });
+        else setLoad({ state: "unread" });
       })
-      .catch(() => setLoad({ state: "unread", says: "This could not be read just now, so it is unknown, not empty." }));
+      .catch(() => setLoad({ state: "unread" }));
   }, [href]);
   return [load, run];
 }
@@ -42,12 +41,12 @@ export function EvidenceTrail(props: { readonly id: string; readonly label?: str
   return (
     <div className={s.stack}>
       {load.state === "idle" && <div className={s.inline}><button type="button" className={s.btnLink} onClick={run}>{props.label ? props.label : "Show the evidence trail"}</button></div>}
-      {load.state === "loading" && <span className={s.meta} role="status">Reading what was saved for this work (a few seconds)…</span>}
-      {load.state === "unread" && <span className={cx(s.small, s.textWarn)}>{load.says}</span>}
+      {load.state === "loading" && <span className={s.meta} role="status">Reading…</span>}
+      {load.state === "unread" && <span className={s.small}>—</span>}
       {load.state === "held" && (
         <>
-          <p className={cx(s.p, s.meta)}>{load.data.events.length + load.data.eventsHidden} recorded steps, newest first. A saved document is not an accepted fact, and a publication is not a confirmed public result.</p>
-          {!load.data.events.length && <Empty>No execution step is linked to this work yet. This isn’t evidence the source is complete.</Empty>}
+          <p className={cx(s.p, s.meta)}>{load.data.events.length + load.data.eventsHidden} steps</p>
+          {!load.data.events.length && <Empty>No steps</Empty>}
           {load.data.events.map((e) => (
             <div key={e.id} className={s.row}>
               <div className={s.spread}><strong style={{ fontSize: 13 }}>{e.title}</strong><Pill tone={e.stage === "READER" || e.stage === "PUBLISHED" ? "good" : "slate"}>{STAGE_WORDS[e.stage]}</Pill></div>
@@ -60,8 +59,7 @@ export function EvidenceTrail(props: { readonly id: string; readonly label?: str
               <Technical lines={e.references.map(([k, v]) => `${k}: ${v}`)} />
             </div>
           ))}
-          {load.data.eventsHidden > 0 && <span className={s.meta}>{load.data.eventsHidden} older steps not shown.</span>}
-          {load.data.gaps.map((g) => <span key={g} className={cx(s.small, s.textWarn)}>{g}</span>)}
+          {load.data.eventsHidden > 0 && <span className={s.meta}>{load.data.eventsHidden} older steps</span>}
         </>
       )}
     </div>
@@ -75,11 +73,11 @@ export function WorkReached(props: { readonly sendId: string }) {
   return (
     <div className={s.stack}>
       {load.state === "idle" && <div className={s.inline}><button type="button" className={s.btnLink} onClick={run}>Show the work it reached</button></div>}
-      {load.state === "loading" && <span className={s.meta} role="status">Reading the work this marked…</span>}
-      {load.state === "unread" && <span className={cx(s.small, s.textWarn)}>{load.says}</span>}
+      {load.state === "loading" && <span className={s.meta} role="status">Reading…</span>}
+      {load.state === "unread" && <span className={s.small}>—</span>}
       {load.state === "held" && (
         <>
-          <p className={cx(s.p, s.meta)}>{load.data.total === 0 ? "No standing work carries a mark from this send yet." : `${load.data.total.toLocaleString("en-US")} pieces of work carry this send’s mark. The ${load.data.rows.length} most recent are listed.`}</p>
+          <p className={cx(s.p, s.meta)}>{load.data.total === 0 ? "No items" : `${load.data.total.toLocaleString("en-US")} items`}</p>
           {load.data.rows.map((r) => (
             <details key={r.id} className={s.row}>
               <summary className={s.small}><strong>{r.label}</strong> · {RELATION_WORDS[r.relation]}{r.at ? ` · ${mst(r.at)}` : ""}</summary>

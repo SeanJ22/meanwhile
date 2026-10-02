@@ -83,13 +83,17 @@ test("national pairs retain both measured entry peaks and the 768 MiB margin", a
 
 test("all publication siblings and routine script families reserve their measured peak", async () => {
   const mib = 1024 * 1024;
-  const slots = routineProcessSlots({ availableBytes: () => (768 + 1042) * mib });
+  const slots = routineProcessSlots({ availableBytes: () => (768 + WORKER_ENTRY_PEAK_MIB.national!) * mib });
   const first = await slots.acquire("worker-publication:ballot-navigation:one/promote-manual-civic-projection.mts");
   await assert.rejects(slots.acquire("worker-publication:ballot-navigation:two/promote-manual-civic-projection.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
   first();
   const census = routineProcessSlots({ availableBytes: () => (768 + 1199) * mib });
   await assert.rejects(census.acquire("census-geography/census-geography-refresh.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
   const ordinary = await census.acquire("reader:meeting/ordinary-source.mts"); ordinary();
+  const small = routineProcessSlots({ availableBytes: () => (768 + 342) * mib });
+  for (const entry of ["meetings:any/ingest.ts", "az-money/state-money-az.mts", "nh-money/state-money-nh.mts", "nj-rollcalls/state-rollcalls.mts"]) {
+    await assert.rejects(small.acquire(entry, Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
+  }
 });
 
 test("legacy registry roster publications reserve their measured RSS and queue until memory is released", async () => {

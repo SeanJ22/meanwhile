@@ -11,11 +11,13 @@ export const WORKER_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = { route: 
 export const RESEARCH_PARENT_PEAK_MIB = 2928;
 /** Promoter peak 1,923 MiB plus the held national-worker peak; both may still grow. */
 export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
-/** Rounded-up entry peaks from the ordinary staging routine pass. */
+/** Bulk data families use the retained data-worker bound, covering their staging entry peaks. */
 const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
-  "census-geography-refresh.mts": 1200,
-  "promote-manual-civic-projection.mts": 1042,
-  "state-rollcalls.mts": 480,
+  "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
+  "promote-manual-civic-projection.mts": WORKER_ENTRY_PEAK_MIB.national!,
+  "ingest.ts": WORKER_ENTRY_PEAK_MIB.national!,
+  "state-rollcalls.mts": WORKER_ENTRY_PEAK_MIB.national!,
+  "legistar-outcomes-ingest.mts": 355,
   "acs-population-promote.mts": 465,
   "fetch-congress-legislators.mts": 384,
   "campaign-finance-az-pima-transactions.mts": 368,
@@ -142,7 +144,8 @@ export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProce
   return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
     peakBytes: memory.peakBytes ?? (entry => entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB :
       entry === "registry-runtime-bindings" || entry.startsWith("registry-runtime-bindings/") || entry.startsWith("worker-publication:registry-runtime-bindings:")
-        ? REGISTRY_ROSTER_PUBLICATION_PEAK_MIB * MIB : (ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB.lease!) * MIB) });
+        ? REGISTRY_ROSTER_PUBLICATION_PEAK_MIB * MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
+          ? WORKER_ENTRY_PEAK_MIB.national! : ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB.lease!) * MIB) });
 }
 
 export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryLimit = {}): WorkerProcessSlots {

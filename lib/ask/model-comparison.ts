@@ -23,29 +23,16 @@ import {
  *
  * ## Why this is a module and not an option on `synthesizeAnswer`
  *
- * The owner's instruction has two halves and the second one is a prohibition:
- *
- * > Do not add per-reader or per-request model switching to the production Ask
- * > route; do not split production cache behavior. Build the smallest
- * > comparison-only seam/harness necessary to call the same synthesis contract
- * > with an explicitly selected model outside the production request path.
- *
- * An `options.model` on `synthesizeAnswer` would have been three lines and it
- * would have been the wrong three lines. `synthesizeAnswer` is what
- * `app/api/ask/grounded/route.ts` calls on every reader request; a model field
- * on its options is, by construction, a per-request model choice — whether or
- * not today's route passes one. **The law is ONE MODEL FOR ALL ASK TRAFFIC,
- * and caches are model-scoped**, so a per-caller choice would also split one
- * warm prefix into two cold ones and forfeit every hit lane H1 exists to earn.
- *
- * So the seam is a SEPARATE ENTRY POINT that no route imports.
- * `tests/ask-model-comparison.test.ts` asserts both halves mechanically: that
- * nothing under `app/` reaches this module, and that the production path emits
- * `ASK_SYNTHESIS_MODEL` even when handed an options object carrying a `model`
- * key. The shared half — the request body, the system prompt, the payload
- * split — is `synthesisRequestBody` in `synthesize.ts`, called by both, so
- * this measures the contract the product actually ships rather than a copy of
- * it that has begun to drift.
+ * Sean, 2026-10-01: the one-model-for-all-Ask-traffic rule is removed; Ask
+ * routes cheapest tier first (`synthesisLadder` in `synthesize.ts`, tiers from
+ * `lib/models.ts`). This seam stays a SEPARATE ENTRY POINT that no route
+ * imports for an engineering reason: it sends no cache marker, so a reader
+ * request routed through it would pay cold prices and its rows would measure
+ * this harness. `tests/ask-model-comparison.test.ts` asserts that nothing
+ * under `app/` reaches this module. The shared half — the request body, the
+ * system prompt, the payload split — is `synthesisRequestBody` in
+ * `synthesize.ts`, called by both, so this measures the contract the product
+ * actually ships rather than a copy of it that has begun to drift.
  *
  * ## The cache is DISABLED here, and that is a measurement decision
  *

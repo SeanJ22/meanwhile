@@ -24,16 +24,9 @@ import type { ReactionValue } from "@/lib/signal/reactions";
  */
 
 /** What the server said about this session's tap, as the control tracks it. */
-/**
- * TEXT_DROPPED (P03, 2026-08-18) settles the pill exactly like COUNTED: the
- * BINARY landed, which is what the pill is about. Only the verbatim was
- * refused, and the control says so in its own line rather than by dressing
- * a counted answer as uncounted.
- */
 export type ReactionRenderOutcome =
   | "COUNTED"
   | "NOT_COUNTED"
-  | "TEXT_DROPPED"
   | "SAVING"
   | null;
 

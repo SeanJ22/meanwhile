@@ -1,4 +1,4 @@
-import { RESEARCH_BOUNDS } from "../control-plane/scheduler/research-policy.ts";
+import { websiteRequestLimit, type WebsiteSizeForUrl } from "../control-plane/scheduler/host-supervision.ts";
 import { recordAcquiredResponse } from "../sources/acquisition-trace.ts";
 import { challengeIn, curlGetText, curlRequestHeaders } from "../sources/http.ts";
 
@@ -7,13 +7,15 @@ import { challengeIn, curlGetText, curlRequestHeaders } from "../sources/http.ts
 export function meetingFetchPass(options: {
   fetchImpl?: typeof fetch;
   curl?: typeof curlGetText;
+  websiteSize?: WebsiteSizeForUrl;
 } = {}): typeof fetch {
   const requests = new Map<string, number>();
   const responses = new Map<string, Promise<Response>>();
   const take = (url: string) => {
     const site = new URL(url).hostname.toLowerCase().replace(/^www\./, "");
     const count = requests.get(site) ?? 0;
-    if (count >= RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost) {
+    const limit = websiteRequestLimit(options.websiteSize?.(url));
+    if (limit !== null && count >= limit) {
       throw new Error(`Meeting source ${site}: shared website request bound reached; held meetings remain available for the next pass`);
     }
     requests.set(site, count + 1);

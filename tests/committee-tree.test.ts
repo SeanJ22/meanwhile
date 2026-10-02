@@ -127,6 +127,5 @@ test("F01 4.2: a row with no jurisdiction renders a NAMED GAP, never silence", (
     "utf8",
   );
   // CLAUDE.md: a null renders as its named gap, and the name says whose.
-  assert.match(surface, /We haven’t sourced what this subcommittee handles yet\./);
-  assert.match(surface, /We haven’t sourced what this committee handles yet\./);
+  assert.match(surface, /We’re working on getting this info./);
 });

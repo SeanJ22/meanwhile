@@ -6,7 +6,7 @@ import type { DailyDatabaseTransferRead } from "../../db/transfer.ts";
 /**
  * **admin-v6/spend@1 — WHAT THE AGENTS COST, BY MODEL TIER, BY DAY AND BY MONTH, AND WHAT THE DATABASE SENT.**
  *
- * One bounded aggregate over the last twelve Eastern months of the cost ledger: per month, and for the last 14 days
+ * One bounded aggregate over the last twelve Eastern months of the cost ledger: per month, and for the last 31 days
  * per Eastern day, per model, priced dollars. A second one ranks the costliest pieces of work. A charge split across
  * models (`byModel`) is counted at each model's own share; a row that names no model falls back to its attempt's
  * recorded model; a row with neither is "model not recorded", never guessed. Search is the ledger's DISCOVERY_SEARCH
@@ -17,7 +17,10 @@ import type { DailyDatabaseTransferRead } from "../../db/transfer.ts";
  * it reads "not recorded yet", never zero.
  */
 export const ADMIN_V6_SPEND_CONTRACT = "admin-v6/spend@1" as const;
-export const SPEND_DAYS = 14;
+/** Eastern days of daily detail: enough for Today, Last 7 days and Last 30 days with a day to spare. */
+export const SPEND_DAYS = 31;
+/** The costliest-work ranking keeps its own, shorter window. */
+export const WORK_DAYS = 14;
 export const SPEND_MONTHS = 12;
 export const WORK_LIMIT = 15;
 
@@ -204,7 +207,7 @@ const strings = (value: unknown): string[] => Array.isArray(value) ? value.filte
 export async function readSpend(sql: Sql, transfer: DailyDatabaseTransferRead | null): Promise<AdminV6SpendView> {
   const [raw, workRaw] = await Promise.all([
     boundedQuery(sql, { operation: "cp_log_costs.spend_by_month_day_and_model", callClass: "PAGE" }, SPEND_SQL, [SPEND_DAYS, SPEND_MONTHS]) as Promise<readonly Record<string, unknown>[]>,
-    boundedQuery(sql, { operation: "cp_log_costs.costliest_work", callClass: "PAGE" }, WORK_SQL, [SPEND_DAYS, WORK_LIMIT]) as Promise<readonly Record<string, unknown>[]>,
+    boundedQuery(sql, { operation: "cp_log_costs.costliest_work", callClass: "PAGE" }, WORK_SQL, [WORK_DAYS, WORK_LIMIT]) as Promise<readonly Record<string, unknown>[]>,
   ]);
   const work = workCosts(workRaw.map((r): WorkRowRaw => ({ work: String(r.work), jurisdiction: typeof r.jur === "string" ? r.jur : null,
     usd: r.usd === null || r.usd === undefined ? null : Number(r.usd), unpriced: r.unpriced === true, tries: Number(r.tries) || 0,

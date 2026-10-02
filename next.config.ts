@@ -86,6 +86,9 @@ const nextConfig: NextConfig = {
     // The shard name is computed, so the tracer cannot see it; untraced, every ZIP would read as "not a ZIP the site
     // knows" on production while passing every local test.
     "/api/admin/bulk-hunts": ["./data/derived/zip-divisions/*.json"],
+    // The country view counts each state's ZIPs and reads the divisions of a district's ZIPs from the same shards, and a
+    // district's place score (the Checklist view of a district) reads them too; the shard names are computed, so the tracer cannot see them.
+    "/api/admin/v6/{national,place}": ["./data/derived/zip-divisions/*.json"],
     "/api/admin/geography-preview": [
       "./data/derived/census-unit-zips.json",
       "./data/derived/zip-governments.json",

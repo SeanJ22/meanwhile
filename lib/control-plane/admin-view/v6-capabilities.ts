@@ -30,12 +30,18 @@ export function adminV6ReadCapabilities(input: { readonly configRevision: number
     sections.hunts = { contract: "admin-v6/hunts@1", href: "/api/admin/v6/hunts", revision: `hunts:${common}` };
     sections.money = { contract: "admin-v6/money@1", href: "/api/admin/v6/money",
       revision: `money:${common}:${input.researchRevision ?? "unread"}` };
+    // The country view joins saved hunts (policy row), the published work index (snapshot) and held data for place scores (research);
+    // scores come from a five-minute memo, so the read repeats on the worker clock bucket and fills in scores that were not ready.
+    sections.national = { contract: "admin-v6/national@1", href: "/api/admin/v6/national",
+      revision: `national:${common}:${input.researchRevision ?? "unread"}:${input.workerAgeBucket ?? "clock-unread"}` };
   }
   if (input.snapshotRevision !== null) {
     // The place score reads held data for the place itself; the published snapshot revision moves when the runner finishes a cycle.
     sections.checklist = { contract: "admin-v6/checklist@1", href: "/api/admin/v6/place", revision: `checklist:${input.snapshotRevision}:${input.researchRevision ?? "unread"}` };
     sections.stuck = { contract: "admin-v6/stuck@1", href: "/api/admin/v6/stuck", revision: `stuck:${input.snapshotRevision}` };
     sections.sameCause = { contract: "admin-v6/sameCause@1", href: "/api/admin/v6/same-cause", revision: `sameCause:${input.snapshotRevision}` };
+    // What readers can see: the published pipeline counts for a country or state, and the place's own owed list for a ZIP or county, so it re-reads with the snapshot and on the worker clock bucket.
+    sections.results = { contract: "admin-v6/results@1", href: "/api/admin/v6/results", revision: `results:${input.snapshotRevision}:${input.workerAgeBucket ?? "clock-unread"}` };
   }
   if (input.snapshotRevision !== null || input.researchRevision !== null) {
     sections.spend = { contract: "admin-v6/spend@1", href: "/api/admin/v6/spend", revision: `spend:${input.snapshotRevision ?? "unread"}:${input.researchRevision ?? "unread"}:${input.workerAgeBucket ?? "clock-unread"}` };
@@ -59,4 +65,4 @@ export function adminV6ReadCapabilities(input: { readonly configRevision: number
   return { ...ADMIN_V6_CAPABILITIES, sections };
 }
 
-export const ADMIN_V6_CAPABILITY_REVISION = "admin-v6/1:receipt/1:history/1:hunts/1:money/1:workers/1:learning/1:fixes/1:checklist/place1:stuck/1:agents/1:spend/1:sends/1:reliability/1:publication/1";
+export const ADMIN_V6_CAPABILITY_REVISION = "admin-v6/1:receipt/1:history/1:hunts/1:money/1:workers/1:learning/1:fixes/1:checklist/place1:stuck/1:agents/1:spend/1:sends/1:reliability/1:publication/1:results/1:national/1";

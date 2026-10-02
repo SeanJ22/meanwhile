@@ -198,3 +198,51 @@ export function liveSources(options: { readonly query?: Query | null; readonly h
   const events = historyEvents(options.history ?? netlifyHistoryStore(), options.history === undefined ? sharedCache : new Map());
   return { totals: liveTotals(query), cohorts: liveCohorts(query), events, places: liveZipPlaceIndex };
 }
+
+/* ------------------------------------------------------------------------------------------ did anything fail to record */
+
+export type CaptureFailures =
+  | {
+      readonly kind: "MEASURED";
+      /** Batches the store holds a row for, and the events they carry. */
+      readonly batchesRecorded: number;
+      readonly eventsRecorded: number;
+      /** Events in the store's all-day counts. Equal to `eventsRecorded` when nothing was archived and left uncounted. */
+      readonly eventsCounted: number;
+      /** Batches in the history store with no row in the database, over the window. Null when the history store could not be listed. */
+      readonly archivedNotCounted: number | null;
+      readonly archiveNote: string | null;
+    }
+  | { readonly kind: "NOT_INSTALLED"; readonly detail: string };
+
+/**
+ * What the server can say about events that did not make it in: batches archived but never counted (the archive is written first,
+ * so a counting failure leaves a batch with no row), and a total that does not match the batches. What it cannot say is how many
+ * batches a device gave up on or the capture route refused: nothing counts those, and this never reports their absence as "none".
+ */
+export async function readCaptureFailures(options: { readonly query?: Query | null; readonly history?: HistoryStore | null; readonly from: string; readonly to: string }): Promise<CaptureFailures> {
+  const query = options.query === undefined ? readerQuery() : options.query;
+  if (query === null) return { kind: "NOT_INSTALLED", detail: NO_DATABASE };
+  try {
+    const [recorded] = await query("SELECT count(*)::text AS batches, coalesce(sum(event_count), 0)::text AS events FROM reader_event_batches", []);
+    const [counted] = await query("SELECT coalesce(sum(events), 0)::text AS events FROM reader_event_totals WHERE period = 'DAY' AND zip = '' AND district = '' AND topic = '*' AND event_type = '*'", []);
+    let archivedNotCounted: number | null = null;
+    let archiveNote: string | null = null;
+    if (options.history === null || options.history === undefined) archiveNote = "The history store is not reachable from here, so batches archived but never counted were not checked.";
+    else {
+      try {
+        const keys: string[] = [];
+        for (let day = options.from; day <= options.to; day = daysBefore(day, -1)) keys.push(...await options.history.list(`events/${day}/`));
+        const rows = await query("SELECT archive_key FROM reader_event_batches WHERE archive_key >= $1 AND archive_key < $2", [`events/${options.from}/`, `events/${daysBefore(options.to, -1)}/`]);
+        const held = new Set(rows.map((r) => String(r.archive_key)));
+        archivedNotCounted = keys.filter((k) => !held.has(k)).length;
+      } catch {
+        archiveNote = "The history store could not be listed just now, so batches archived but never counted were not checked.";
+      }
+    }
+    return { kind: "MEASURED", batchesRecorded: Number(recorded.batches), eventsRecorded: Number(recorded.events), eventsCounted: Number(counted.events), archivedNotCounted, archiveNote };
+  } catch (error) {
+    if (isMissingTable(error)) return { kind: "NOT_INSTALLED", detail: NOT_INSTALLED };
+    throw error;
+  }
+}

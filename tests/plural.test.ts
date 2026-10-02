@@ -22,6 +22,9 @@ import registry from "../lib/registry/registry.json" with { type: "json" };
 import { collectNationalPlaceSources, electionDirectorySelection } from "../lib/sources/plural/place.ts";
 import { electionPageFields } from "../lib/hunt/election-page.ts";
 import { placeSourceReader, PlaceSourceDeferred } from "../lib/hunt/place-source-reader.ts";
+import { nationalPlaceJobs, placeSourceLaunchOrder } from "../lib/hunt/place-source-admission.ts";
+import { runBoundedChildPass } from "../lib/civic-data/bounded-child-pass.ts";
+import { routineTaskDue } from "../lib/civic-data/runner.ts";
 import { dueNationalPlaceZips, runNationalPlaceTask, scheduleNationalPlace, placeMadeProgress } from "../lib/hunt/place-source-task.ts";
 import { standing, openOccurrence, closeOccurrence } from "../lib/control-plane/scheduler/durable.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
@@ -33,6 +36,44 @@ import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { beginAttemptFor, claimRouteTask, registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.ts";
 import { emptyFieldManual, newFieldManualEntry, projectFieldManual } from "../lib/control-plane/field-manual.ts";
+
+test("a 20-place Send offers independent jobs instead of one joined ZIP command", () => {
+  const zips = Array.from({ length: 20 }, (_, index) => String(3000 + index).padStart(5, "0"));
+  const requestedAt = "2026-10-01T00:00:00.000Z";
+  const jobs = nationalPlaceJobs([...zips, zips[0]], { requestedAt, instructions: ["send", "send"] });
+  assert.equal(jobs.length, 20);
+  assert.equal(new Set(jobs.map(job => job.acquisitionFailureDomain)).size, 20);
+  for (const [index, job] of jobs.entries()) {
+    assert.equal(job.id, `national-place:${zips[index]}`);
+    assert.equal(job.registeredContractId, "registry-runtime-bindings");
+    assert.deepEqual(job.command.filter(arg => arg.startsWith("--national-zips=")), [`--national-zips=${zips[index]}`]);
+    assert.deepEqual(job.ownerInvocation?.instructions, ["send"]);
+    assert.equal(routineTaskDue(job, { lastAttemptedAt: requestedAt, lastSucceededAt: requestedAt }, Date.parse(requestedAt)), true,
+      "another body's publication cannot suppress the admitted place job");
+  }
+  assert.throws(() => nationalPlaceJobs(["bad"], { requestedAt, instructions: [] }), /five-digit ZIPs/);
+});
+
+test("a saved Send starts beside a long routine job and reaches every ZIP before the routine backlog", async () => {
+  const routine = Array.from({ length: 191 }, (_, index) => ({ task: { id: `routine:${index}` } }));
+  const places = Array.from({ length: 20 }, (_, index) => ({ task: { id: `national-place:${String(3000 + index).padStart(5, "0")}` } }));
+  const ordered = placeSourceLaunchOrder([...routine, ...places]);
+  const started: string[] = [];
+  let releaseRoutine!: () => void;
+  const routineDone = new Promise<void>(resolve => { releaseRoutine = resolve; });
+  await runBoundedChildPass(ordered.map(({ task }) => ({ id: task.id, executable: "unused", args: [] })),
+    { cwd: ".", env: { NODE_ENV: "test" }, concurrency: 4 }, async command => {
+      started.push(command.id);
+      if (command.id === "routine:0") await routineDone;
+      if (command.id === places.at(-1)!.task.id) releaseRoutine();
+      return { id: command.id, status: 0, signal: null, stdout: "", stderr: "", termination: "EXITED", errorMessage: null };
+    });
+  assert.deepEqual(started.slice(0, 4), [places[0]!.task.id, "routine:0", places[1]!.task.id, places[2]!.task.id]);
+  assert.deepEqual(started.filter(id => id.startsWith("national-place:")), places.map(({ task }) => task.id));
+  assert.ok(started.indexOf(places.at(-1)!.task.id) < started.indexOf("routine:1"));
+  assert.deepEqual(placeSourceLaunchOrder(routine), routine);
+  assert.deepEqual(placeSourceLaunchOrder(places), places);
+});
 
 test("below-target places continue every pass until a settled hunt makes no progress", async () => {
   const repos = createMemoryRepositories();
@@ -64,6 +105,11 @@ test("below-target places continue every pass until a settled hunt makes no prog
   const changed = await repos.routeTasks.mustRead(task.id);
   await repos.routeTasks.compareAndSet(task.id, changed.revision, { ...changed.value,
     disposition: { ...changed.value.disposition!, note: JSON.stringify({ placeProgress: false }) } }, now);
+  assert.equal((await scheduleNationalPlace(repos, settled, now, true) as { nextDueAt: string }).nextDueAt, now,
+    "a capped acquisition with no records has not exhausted the available work");
+  const exhausted = await repos.routeTasks.mustRead(task.id);
+  await repos.routeTasks.compareAndSet(task.id, exhausted.revision, { ...exhausted.value,
+    disposition: { ...exhausted.value.disposition!, disposition: "INGESTED" } }, now);
   assert.equal((await scheduleNationalPlace(repos, settled, now, true) as { nextDueAt: string }).nextDueAt, "2026-10-02T00:00:00.000Z");
   assert.equal((await scheduleNationalPlace(repos, { ...settled, lastWorkedAt: null }, now, true) as { nextDueAt: string }).nextDueAt,
     "2026-10-02T00:00:00.000Z", "an unfinished no-progress hunt also backs off");
@@ -83,9 +129,10 @@ test("hunt progress uses new reader facts and official unpublished findings, ign
   assert.equal(placeMadeProgress(items(), items("United States")), true);
   assert.equal(placeMadeProgress(blank, buildPlaceOwedList({ divisions, subjects: [], held: [{ ...field, state: "unpublished" }], now })), true);
   assert.equal(placeMadeProgress(items(), blank), false);
+
 });
 
-test("a national host bound saves admitted responses and defers all remaining ZIPs without abandoning Attempts", async t => {
+test("a national API completes its geography walk beyond ten requests and reuses saved responses", async t => {
   const repos = createMemoryRepositories();
   const store = new MemoryEvidenceStore();
   // Cross renewal boundaries during acquisition, with stale reads held long
@@ -121,28 +168,27 @@ test("a national host bound saves admitted responses and defers all remaining ZI
   const tools = { repos, store, now: () => "2026-09-30T00:00:00.000Z", spaceOut: async () => {} };
   const input = { tools, store: new MemoryRoutineDataStore(), zips: ["03060", "03101", "03301"],
     publish: async () => { assert.fail("incomplete geography cannot publish"); } };
-  const result = await runNationalPlaceTask(input);
+  await assert.rejects(runNationalPlaceTask(input), /HELD_PLACE_READ_FAILED:REGISTRY_RUNTIME_BINDING/);
   assert.ok(heartbeatWrites > 0, "the national acquisition exercised its canonical lease heartbeat");
-  assert.deepEqual(result.map(row => row.zip), input.zips);
-  assert.ok(result.every(row => "deferred" in row && row.deferred.includes("next pass")));
-  assert.equal(requests, RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);
-  assert.ok((await repos.attempts.list()).every(row => row.value.outcome === "COMPLETED"));
-  assert.ok((await repos.routeTasks.list()).every(row => row.value.disposition?.disposition === "BLOCKED_CURRENTLY"));
-  assert.ok((await repos.occurrences.list()).every(row => row.value.closedAt && row.value.unresolvedReason?.includes("DEFERRED") && row.value.disposition === null));
+  assert.ok(requests > RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost, "Census is a national API, not a small local publisher");
   assert.ok((await repos.obligations.list()).every(row => row.value.lastWorkedAt === null));
   const saved = await repos.artifacts.readAll();
   assert.ok(saved.some(row => row.canonicalUrl.includes("Places_CouSub_ConCity_SubMCD")), "parallel responses saved before completion");
+  assert.ok(saved.some(row => row.canonicalUrl.includes("School")), "the first pass reaches every layer without a ten-request deferral");
   const before = requests;
   // The saved geography now completes within the same request bound. This
   // fixture has no registry runtime, so reaching its next read is the boundary.
   await assert.rejects(runNationalPlaceTask(input), /HELD_PLACE_READ_FAILED:REGISTRY_RUNTIME_BINDING/);
-  assert.ok(requests - before <= RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);
+  assert.equal(requests, before, "the second pass reads saved Census responses without repeating API calls");
   const next = await repos.artifacts.readAll();
   assert.ok(next.some(row => row.canonicalUrl.includes("School")), "the next pass advances using held responses");
   assert.ok(saved.every(row => next.some(other => other.artifactId === row.artifactId)), "all earlier evidence remains held");
   // A cut-off pass must leave the recently worked head behind the older tail.
   const worked = ["2026-09-30T00:00:00.000Z", "2026-09-28T00:00:00.000Z", "2026-09-27T00:00:00.000Z"];
   for (const [index, zip] of input.zips.entries()) {
+    if (!await repos.obligations.read(`national-place:${zip}`)) await repos.obligations.put(`national-place:${zip}`, standing({
+      id: `national-place:${zip}`, subjectId: `zip:${zip}`, recordClass: "OFFICIAL_ROSTER", routeId: "national-place-sources",
+      active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null }, tools.now()), tools.now());
     const row = await repos.obligations.mustRead(`national-place:${zip}`);
     await repos.obligations.compareAndSet(row.id, row.revision, { ...row.value, lastWorkedAt: worked[index] }, tools.now());
   }
@@ -192,7 +238,8 @@ test("national collector binds saved CSV to its real Attempt and reuses another 
     const obligation: ScheduledObligation = { obligation: { id: subject, subjectId: subject, recordClass: "OFFICIAL_ROSTER",
       routeId: "national-place-sources", active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null },
       nextDueAt: now, cadenceHours: 24, cadenceSource: "DEFAULT_NO_SIGNAL", basis: "test" };
-    return placeSourceReader({ project: "freshness", context: { obligation, route: null, providerId: null,
+    return placeSourceReader({ project: "freshness", websiteSize: address => new URL(address).hostname === "legislature.gov"
+      ? { kind: "local-government", population: 9999 } : undefined, context: { obligation, route: null, providerId: null,
       attemptId: attempt.id, workItemId: work.id, routeTaskId: task.id, holder: subject,
       now: () => now, bound: RESEARCH_BOUNDS.perDispatch }, tools: {
       repos, store, now: () => now, spaceOut: async () => {}, openBytes: async request => {
@@ -238,6 +285,8 @@ test("national collector binds saved CSV to its real Attempt and reuses another 
   assert.ok(third.deferred?.message.includes("next pass"), "ordinary page hosts defer just like Census");
   assert.equal(third.cost.requestCount, RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);
   assert.equal((await third.read(url)).text, body, "the bound never blocks already saved pages");
+  assert.equal((await third.read("https://federal.gov/official")).text, "https://federal.gov/official",
+    "a small publisher's bound does not stop another national source");
 });
 
 test("the national election directory follows its published form for any state", () => {
@@ -542,4 +591,12 @@ test("the bulk CSV's capitol and district office addresses are carried, not drop
     'ocd-person/n1,Al Abdelaziz,Democratic,35,lower,,,,,,,"680 Broadway Suite 207, Paterson, NJ 07514",862-264-2540\n';
   const [row] = rowsToPeople(csv, "nj");
   assert.deepEqual([row.capitol_address, row.district_address, row.district_voice], ["", "680 Broadway Suite 207, Paterson, NJ 07514", "862-264-2540"]);
+});
+
+test('Plural keeps its portrait URL as an unverified lead, never as a hotlinked reader photo', () => {
+  const people=rowsToPeople('id,name,current_party,current_district,current_chamber,email,links,image\np1,Jane Doe,Independent,1,lower,,https://legislature.gov/jane,https://images.example/jane.jpg\n','oh');
+  const result=normalize(people,indexDivisions([]),'2026-10-01T00:00:00Z','oh');
+  assert.equal(result.officeholders[0].photo,null);
+  assert.equal(result.officeholders[0].portraitCandidate?.imageUrl,'https://images.example/jane.jpg');
+  assert.equal(result.officeholders[0].portraitCandidate?.sourceUrl,'https://data.openstates.org/people/current/oh.csv');
 });

@@ -120,12 +120,16 @@ import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/co
 import { assertDurableRepositories } from "../lib/control-plane/repository/types.ts";
 import { getDb } from "../lib/db/index.ts";
 import { startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
-import { withNationalPlaceTasks } from "../lib/hunt/place-source-admission.ts";
+import { placeSourceLaunchOrder, withNationalPlaceTasks } from "../lib/hunt/place-source-admission.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
 import { publishRoutineReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
+import { readFieldManual } from "../lib/control-plane/field-manual.ts";
+import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
+import { sharedScoutBrowser } from "./scout-browse.mts";
+import { routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 import { childFatalLine, installFatalLine } from "../lib/ops/fatal-line.ts";
 import {
@@ -193,6 +197,19 @@ const ROUTINE_DATA_PROCESS_LEASE = TASK_SELECTION.ok ? await (async () => {
     return null;
   }
 })() : null;
+
+const sharedBrowser = sharedScoutBrowser();
+const workerToolsHost = ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()
+  ? await startWorkerToolsHost({ knowledge: await readFieldManual(await createPgRepositories(controlPlaneUrlFromEnv()!,
+    RUN_STARTED_AT, { skipBootstrap: true })), browse: sharedBrowser.browse }) : null;
+const routineMemorySlots = routineProcessSlots();
+const childMemoryReleases = new Map<string, () => void>();
+async function acquireChildMemory(command: BoundedChildCommand): Promise<void> {
+  childMemoryReleases.set(command.id, await routineMemorySlots.acquire(command.id));
+}
+function releaseChildMemory(id: string): void {
+  childMemoryReleases.get(id)?.(); childMemoryReleases.delete(id);
+}
 
 interface SupervisorFailure {
   readonly taskId: string;
@@ -467,7 +484,7 @@ try {
 }
 // A standing refresh already covers a Send for its source; don't launch duplicate children for the same pointer.
 const selectedTasks = [...STANDING_SOURCE_TASKS, ...huntTasks.filter(task => !STANDING_SOURCE_TASKS.some(standing => standing.id === task.id))]
-  .filter((task) => !ONLY || ONLY.has(task.id));
+  .filter((task) => !ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId)));
 step = "reading the routine task clocks";
 const clockReads = FORCE
   ? selectedTasks.map((task) => ({ task, ok: true as const, clock: undefined, error: null }))
@@ -616,9 +633,9 @@ for (const candidate of dueCandidates) {
       `(domain=${candidate.pending.task.acquisitionFailureDomain}; per-pass=${ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS}, meeting lanes ${SITTING_WINDOW_LANE_SLOTS_PER_PASS})`,
   );
 }
-// The pool starts the read owed soonest first (routinePassLaunchOrder).
+// A saved Send starts beside the earliest standing read, before its backlog drains.
 const pendingByTaskId = new Map(dueCandidates.map(({ pending }) => [pending.id, pending] as const));
-for (const { task } of routinePassLaunchOrder(admitted)) pendingRuns.push(pendingByTaskId.get(task.id)!);
+for (const { task } of placeSourceLaunchOrder(routinePassLaunchOrder(admitted))) pendingRuns.push(pendingByTaskId.get(task.id)!);
 for (const pending of pendingRuns) await recordHuntSourceProgress(pending.task, "QUEUED", "Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.");
 const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admittedIds.has(taskId)
   ? `Owner due request ${request.id}: ${taskId} admitted by this ordinary pass (due ${request.dueAt}).`
@@ -663,6 +680,7 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
     // One degraded provider may occupy one lane, never the whole standing
     // pool. Distinct sources keep running and settling independently.
     failureDomain: pending.task.acquisitionFailureDomain,
+    ...(/^(national-place:|worker-publication:)/.test(pending.task.id) ? { timeoutMs: 0 } : {}),
     executable: process.execPath,
     args: ["--experimental-strip-types", ...pending.command],
     env: {
@@ -704,7 +722,10 @@ const sourcePass = runBoundedChildPass(
     concurrency: ROUTINE_CHILD_CONCURRENCY,
     // Two reads of one host in this pass start at least a minute apart (C6).
     sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
-    onStarting: async (_command, index) => recordHuntSourceProgress(pendingRuns[index]!.task, "COLLECTING_AND_VERIFYING", "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used."),
+    onStarting: async (command, index) => {
+      await acquireChildMemory(command);
+      await recordHuntSourceProgress(pendingRuns[index]!.task, "COLLECTING_AND_VERIFYING", "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used.");
+    },
     onSettled: async (run, index) => settlePendingRun(pendingRuns[index]!, run),
     // Classification consumes the exact receipt before this worker advances.
     // Retaining only the small result summary bounds memory across the full portfolio.
@@ -713,6 +734,11 @@ const sourcePass = runBoundedChildPass(
 );
 
 async function settlePendingRun(pending: PendingRun, run: BoundedChildResult): Promise<void> {
+  try { await settlePendingRunResult(pending, run); }
+  finally { releaseChildMemory(run.id); }
+}
+
+async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResult): Promise<void> {
   laneLastEndedMs.set(pending.task.acquisitionFailureDomain, Date.now());
   unsettledSourceRuns.delete(pending.id);
   if (run.id !== pending.id) {
@@ -783,7 +809,9 @@ async function settlePendingRun(pending: PendingRun, run: BoundedChildResult): P
     ? await durableRoutineRunnerReceiptIssue(parsedReceipt.receipt, pending.task, store, receiptOutcome)
     : null;
   const child = classifyRoutineChildOutcome({
-    parsed: parsedReceipt,
+    parsed: parsedReceipt.ok && durableIssue === null
+      ? { ...parsedReceipt, receipt: { ...parsedReceipt.receipt, source: pending.task.id } }
+      : parsedReceipt,
     durableIssue,
     exitStatus: run.status,
     childDiagnostic: run.status === 0 ? null : safeFailure(`${run.errorMessage ?? ""}\n${output}`),
@@ -937,11 +965,13 @@ function startReaderRepair(
       timeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,
       maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
       concurrency: ROUTINE_READER_CHILD_CONCURRENCY,
+      onStarting: acquireChildMemory,
       onSettled: (run, index) => {
         const domain = readerLaunch[index]!;
         try {
           settleReaderDomain(domain, run);
         } finally {
+          releaseChildMemory(run.id);
           if (repairDomainRacesHotReads(domain, hotReadTaskIds) && --racingRepairs === 0) openHotReadCatchUp();
         }
       },
@@ -1008,6 +1038,7 @@ async function runHotRead(task: RoutineSourceTask, atMs: number): Promise<void> 
     timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
     maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
     concurrency: 1,
+    onStarting: acquireChildMemory,
     onSettled: async (result) => settlePendingRun(run, result),
     discardOutputAfterSettlement: true,
   }));
@@ -1159,3 +1190,5 @@ step = "releasing the host-local singleton";
 await ROUTINE_DATA_PROCESS_LEASE.release();
 }
 await readCacheHost.close();
+await workerToolsHost?.close();
+await sharedBrowser.close();

@@ -1,4 +1,5 @@
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRATION_TARGETS } from "../registration/publication.ts";
+import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import {
   MANUAL_SOURCE_CLASSES,
   type ManualSourceSetReceipt,
@@ -113,7 +114,7 @@ export const SOURCE_AUTHORITIES = {
     freshnessExpectation: "Explicit owner invocation after a reviewed source package changes; no standing clock.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: false,
-    manualReceiptPromotion: { allowedSourceClasses: ["OFFICIAL_PUBLISHER", "ELECTION_AUTHORITY"] },
+    manualReceiptPromotion: { allowedSourceClasses: ["OFFICIAL_PUBLISHER", "ELECTION_AUTHORITY", "REFERENCE_PUBLISHER"] },
   },
   "curated-reader-primary-sources": {
     id: "curated-reader-primary-sources",
@@ -148,22 +149,14 @@ export const SOURCE_AUTHORITIES = {
   },
   "voting-sites": {
     id: "voting-sites",
-    publisher: "Pima and Cochise County Elections, Morris County Elections, and New Hampshire state and local election authorities",
+    publisher: "The election authority named by each sourced jurisdiction",
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
-    routePrefixes: [
-      "https://www.pima.gov/",
-      "https://cochise.az.gov/",
-      "https://www.cochise.az.gov/",
-      "https://services2.arcgis.com/UTBp78iglGpbqp1B/",
-      "https://www.morriscountynj.gov/",
-      "https://app.sos.nh.gov/",
-      "https://www.sos.nh.gov/",
-      "https://newlondon.nh.gov/",
-      "https://www.newbury.nh.gov/",
-      "https://www.wilmotnh.org/",
-    ],
-    jurisdictions: ["US-AZ", "US-NH", "US-NJ"],
+    // Transport routes are data. The candidate applies §3 to each site's
+    // publisher URL and saves the official linking page for non-.gov sources.
+    routePrefixes: ["https://"],
+    jurisdictions: REGISTRATION_TARGETS.filter(target => FIPS_TO_STATE[target.fips].prefix !== "territory")
+      .map(target => target.jurisdiction),
     recordClasses: ["VOTING_SITE"],
     competentFacts: [
       "official voting-site identity and address",
@@ -174,7 +167,7 @@ export const SOURCE_AUTHORITIES = {
     expectedIdentifierKeys: ["ocd_id", "voting_site_id"],
     expectedTemporalFields: ["election", "collected_at", "source_through"],
     horizonSemantics: "Every supported election authority is an independent acquisition scope. A failed authority retains only that scope's prior GOOD version; a zero-site response is a refusal, never proof that no place exists.",
-    parserVersion: "official-voting-sites/2",
+    parserVersion: "official-voting-sites/3",
     freshnessExpectation: "Explicit owner invocation when an authority publishes or changes its election locations; no standing clock.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
@@ -489,9 +482,10 @@ export const SOURCE_AUTHORITIES = {
     routineAutoPromotion: true,
   },
   /*
-   * C16 (the owner's decision recorded 2026-09-24T22:43Z): a reviewed crosswalk row plus a route the discovery walk
-   * validated publishes through the standing runner with no code release. Neither authority below has a route of its
-   * own; each is authentic only as the exact inputs its candidate names (lib/civic-data/derived-door.ts).
+   * Rulings §3 (labelled C16; not an owner decision, Sean 2026-10-01): a reviewed crosswalk row plus a route the
+   * discovery walk validated publishes through the standing runner with no code release. Neither authority below has a
+   * route of its own; each is authentic only as the exact inputs its candidate names (lib/civic-data/derived-door.ts).
+   * The ~authorization~ strings below are stored citation text, kept byte-identical.
    */
   "meeting-source-wiring": {
     id: "meeting-source-wiring",

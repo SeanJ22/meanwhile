@@ -5,18 +5,70 @@
     "Every canonical state geometry and national geometry file appears on exactly one list."
   ],
   "schemaVersion": 2,
-  "generatedAt": "2026-09-02",
+  "generatedAt": "2026-10-01",
   "coveredStateFips": [
-    "04",
+    "10",
+    "11",
+    "12",
+    "13",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
+    "21",
+    "22",
+    "23",
+    "24",
+    "25",
+    "26",
+    "27",
+    "28",
+    "29",
+    "30",
+    "31",
+    "32",
     "33",
-    "34"
+    "34",
+    "35",
+    "36",
+    "37",
+    "38",
+    "39",
+    "40",
+    "41",
+    "42",
+    "44",
+    "45",
+    "46",
+    "47",
+    "48",
+    "49",
+    "50",
+    "51",
+    "53",
+    "54",
+    "55",
+    "56",
+    "60",
+    "66",
+    "69",
+    "72",
+    "78",
+    "01",
+    "02",
+    "04",
+    "05",
+    "06",
+    "08",
+    "09"
   ],
   "totals": {
-    "features": 1850,
-    "coordinates": 38418
+    "features": 2268,
+    "coordinates": 116378
   },
   "files": [
-    "data/states/az/geo/cd119-04.geojson",
     "data/states/az/geo/cousub-04.geojson",
     "data/states/az/geo/elsd-04.geojson",
     "data/states/az/geo/place-04.geojson",
@@ -24,7 +76,6 @@
     "data/states/az/geo/sldl-04.geojson",
     "data/states/az/geo/sldu-04.geojson",
     "data/states/az/geo/unsd-04.geojson",
-    "data/states/nh/geo/cd119-33.geojson",
     "data/states/nh/geo/cousub-33.geojson",
     "data/states/nh/geo/elsd-33.geojson",
     "data/states/nh/geo/place-33.geojson",
@@ -32,7 +83,6 @@
     "data/states/nh/geo/sldl-33.geojson",
     "data/states/nh/geo/sldu-33.geojson",
     "data/states/nh/geo/unsd-33.geojson",
-    "data/states/nj/geo/cd119-34.geojson",
     "data/states/nj/geo/cousub-34.geojson",
     "data/states/nj/geo/elsd-34.geojson",
     "data/states/nj/geo/place-34.geojson",
@@ -40,14 +90,10 @@
     "data/states/nj/geo/sldl-34.geojson",
     "data/states/nj/geo/sldu-34.geojson",
     "data/states/nj/geo/unsd-34.geojson",
+    "public/geo/cd119.geojson",
     "public/geo/county-us.geojson"
   ],
   "detail": [
-    {
-      "file": "data/states/az/geo/cd119-04.geojson",
-      "features": 9,
-      "coordinates": 1108
-    },
     {
       "file": "data/states/az/geo/cousub-04.geojson",
       "features": 53,
@@ -82,11 +128,6 @@
       "file": "data/states/az/geo/unsd-04.geojson",
       "features": 61,
       "coordinates": 1922
-    },
-    {
-      "file": "data/states/nh/geo/cd119-33.geojson",
-      "features": 2,
-      "coordinates": 341
     },
     {
       "file": "data/states/nh/geo/cousub-33.geojson",
@@ -124,11 +165,6 @@
       "coordinates": 1129
     },
     {
-      "file": "data/states/nj/geo/cd119-34.geojson",
-      "features": 12,
-      "coordinates": 706
-    },
-    {
       "file": "data/states/nj/geo/cousub-34.geojson",
       "features": 220,
       "coordinates": 2777
@@ -164,6 +200,11 @@
       "coordinates": 1488
     },
     {
+      "file": "public/geo/cd119.geojson",
+      "features": 441,
+      "coordinates": 80115
+    },
+    {
       "file": "public/geo/county-us.geojson",
       "features": 22,
       "coordinates": 615
@@ -175,8 +216,16 @@
       "reason": "BODY territories, not DIVISION boundaries (NH233) — recorded plats belonging to governments the Census enumerates no division for, such as the Rocking K South Community Facilities District. It is loaded and point-tested by lib/registry/body-territory.ts on the same sweep, and it is excluded HERE because every feature in this manifest is keyed by ocdId and these features deliberately have none. Including it would make the division resolver answer with a body id, which is the join confusion this session spent its day removing."
     },
     {
-      "file": "public/geo/cd119.geojson",
-      "reason": "superseded by per-state derivatives for every covered state (cd119-04.geojson, cd119-33.geojson, cd119-34.geojson) — the same features, clipped, so loading both tests every polygon twice and the national file's other states not at all"
+      "file": "data/states/az/geo/cd119-04.geojson",
+      "reason": "already represented by the held national file, whose other divisions have no complete state derivatives"
+    },
+    {
+      "file": "data/states/nh/geo/cd119-33.geojson",
+      "reason": "already represented by the held national file, whose other divisions have no complete state derivatives"
+    },
+    {
+      "file": "data/states/nj/geo/cd119-34.geojson",
+      "reason": "already represented by the held national file, whose other divisions have no complete state derivatives"
     },
     {
       "file": "public/geo/state-outlines.geojson",

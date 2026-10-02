@@ -17,7 +17,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { isIncompletePersonName, nameTokens } from "../lib/officials/person-name.ts";
-import { BALLOT_FILES, COVERED, rosterFile } from "../lib/coverage/artifacts.ts";
+import { BALLOT_FILES, HELD_ROSTER_STATES, rosterFile } from "../lib/coverage/artifacts.ts";
 import { ballotPath, rosterPath } from "../lib/holdings/files.ts";
 import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
@@ -46,7 +46,7 @@ const people: Person[] = [];
  */
 const OFFICEHOLDER_FILES: { file: string; kind: string; state: string }[] = [
   { file: "lib/registry/officeholders-us.json", kind: "federal officeholder", state: "US" },
-  ...COVERED.map((state) => ({
+  ...HELD_ROSTER_STATES.map((state) => ({
     file: rosterPath(rosterFile(state)),
     kind: "state officeholder",
     state: state.usps,

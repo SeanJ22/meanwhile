@@ -4,7 +4,8 @@
  * @freshness-reads-here — the candidate clock follows all official reads;
  * the catch-path clock is durable evidence of the failed acquisition attempt.
  * (Session C2, 2026-08-31. Decoupled from the pilot ballot Session C3,
- * 2026-09-01. RULING 126, RULING 205, RULING 207, RULING 224, RULING 229.)
+ * 2026-09-01. RULING 205, RULING 207, RULING 224, RULING 229; filings never sold,
+ * Sean 2026-10-01.)
  *
  * ```
  *   pnpm money:az                        walk, reconcile, write everything

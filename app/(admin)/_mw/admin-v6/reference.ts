@@ -5,6 +5,7 @@
  */
 import { CHECKLIST_PROFILE } from "@/lib/control-plane/readiness/checklist-score.ts";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
+import { districtLabelOf } from "@/lib/control-plane/admin-view/district-label.ts";
 
 import type { MwScope } from "../scope.ts";
 import { GROUP_NAMES } from "./groups.ts";
@@ -19,7 +20,8 @@ export function checklistDefinitions(): readonly Definition[] {
 export function liveReference(input: { readonly scope: MwScope; readonly geoLabel?: string | null; readonly observedAt: string }): LiveReference {
   const scope = input.scope;
   const geo = scope.kind === "geo"
-    ? { key: placeKeyOf(scope), name: input.geoLabel ?? `${scope.type === "zcta" ? "ZIP" : scope.type.replace(/_/g, " ")} ${scope.geoid}`, kind: scope.type === "zcta" ? "ZIP" as const : "County" as const, state: scope.state }
+    ? { key: placeKeyOf(scope), name: input.geoLabel ?? (scope.type === "congressional_district" ? districtLabelOf(scope.state, scope.geoid) : `${scope.type === "zcta" ? "ZIP" : scope.type.replace(/_/g, " ")} ${scope.geoid}`),
+      kind: scope.type === "zcta" ? "ZIP" as const : scope.type === "county" ? "County" as const : "Area" as const, state: scope.state }
     : null;
   return {
     states: US_STATES.map((s) => ({ code: s.code, name: s.name, tracked: s.pilot })),

@@ -14,7 +14,7 @@ import { ReceiptCard } from "./receipt-view.tsx";
 import { TaskStages } from "./screen-fix.tsx";
 import { EvidenceTrail } from "./trail-view.tsx";
 import { LANE_TONE, LANE_WORDS, StuckRow } from "./screen-now.tsx";
-import { Actions, Card, cx, Empty, Facts, markWords, Pill, SourceNote, Technical } from "./ui.tsx";
+import { Actions, Card, cx, Empty, Facts, markWords, Pill, Technical } from "./ui.tsx";
 import s from "./v6.module.css";
 
 function Panel(props: { readonly eyebrow: string; readonly title: string; readonly badge?: ReactNode; readonly summary?: string; readonly actions?: readonly ActionRef[]; readonly targets: readonly string[]; readonly children?: ReactNode }) {
@@ -48,7 +48,6 @@ function Doc(props: { readonly doc: SavedDoc }) {
       <div className={s.spread}><strong className={s.small}>{d.name}</strong><span className={cx(s.small, d.access === "unavailable" || last?.status === "failed" ? s.textWarn : s.dim)}>{state}</span></div>
       <span className={s.meta}>{d.meta}</span>
       <a className={s.small} href={d.sourceUrl} target="_blank" rel="noreferrer noopener">Official source ↗</a>
-      {d.access === "unavailable" && <span className={cx(s.small, s.textWarn)}>{d.unavailableWhy}</span>}
       {d.access === "private" && !ready && <Actions actions={[{ kind: "doc-request", target: d.id, label: last?.status === "failed" ? "Try again" : "Open the saved copy" }]} />}
       {ready && d.preview && <pre className={cx(s.tech)} style={{ whiteSpace: "pre-wrap", padding: 8 }}>{d.preview}</pre>}
     </div>
@@ -65,17 +64,16 @@ export function DetailPanel(props: { readonly detail: Detail }) {
     const stuck = (v.data.stuck.data ?? []).filter((i) => i.resultId === r.id);
     const containRef = stuck.flatMap((i) => i.actions).find((a) => a.kind === "contain" || a.kind === "uncontain");
     return (
-      <Panel eyebrow={`${v.index.get(r.applies[0])?.name} · ${r.kind} · delivery trail`} title={r.title} summary={r.readerSees} badge={<Pill tone={r.kind === "New" ? "good" : r.kind === "Updated" ? "info" : "neutral"}>{r.kind}</Pill>}
+      <Panel eyebrow={`${v.index.get(r.applies[0])?.name}${r.kind === null ? "" : ` · ${r.kind}`} · delivery trail`} title={r.title} summary={r.readerSees} badge={r.kind === null ? undefined : <Pill tone={r.kind === "New" ? "good" : r.kind === "Updated" ? "info" : "neutral"}>{r.kind}</Pill>}
         actions={[{ kind: "recheck", target: r.id }, ...(containRef ? [containRef] : [])]} targets={[r.id, ...stuck.map((i) => i.id), ...r.trail.flatMap((t) => t.docs?.map((x) => x.id) ?? [])]}>
         <Card title="From source to reader">
-          <SourceNote source={v.data.results} />
-          <Facts rows={[["Applies to", r.applies.map((a) => v.index.get(a)?.name ?? a).join(", ")], ["New or reused", ({ New: "New: not in the publication record before this work", Reused: "Reused from shared work. Not new for any hunt, and not charged again.", Updated: "Updated: a newer version of something already published", Retained: "Kept after a failed refresh" })[r.kind]]]} />
+          <Facts rows={[["Applies to", r.applies.map((a) => v.index.get(a)?.name ?? a).join(", ")], ...(r.kind === null ? [] : [["Kind", r.kind] as const])]} />
           <ol className={s.trail}>
             {r.trail.map((st, i) => (
               <li key={i} className={s.trailStep}>
                 <span className={cx(s.dot, s[`mark-${st.mark}`])} style={{ width: 16, height: 16, marginTop: 2 }} aria-hidden="true" />
                 <div className={s.stack} style={{ gap: 6 }}>
-                  <div className={s.spread}><strong style={{ fontSize: 13 }}>{i + 1}. {STAGE_NAMES[i] ?? st.name}</strong><span className={s.meta}>{markWords(st.mark)} · {st.when}</span></div>
+                  <div className={s.spread}><strong style={{ fontSize: 13 }}>{i + 1}. {STAGE_NAMES[i] ?? st.name}</strong><span className={s.meta}>{markWords(st.mark)} · {/^d{4}-dd-ddT/.test(st.when) ? mst(st.when) : st.when}</span></div>
                   <span className={s.small}>{st.what}</span>
                   {st.missing && <span className={cx(s.small, s.textWarn)}>Missing: {st.missing}</span>}
                   {st.next && <span className={s.small}><span className={s.dim}>Next:</span> {st.next}</span>}
@@ -104,7 +102,7 @@ export function DetailPanel(props: { readonly detail: Detail }) {
       <Panel eyebrow={`${v.index.get(i.applies[0])?.name} · stuck item`} title={i.title} summary={i.cause} badge={<Pill tone={LANE_TONE[i.lane]}>{LANE_WORDS[i.lane]}</Pill>}
         actions={[...i.actions, ...(i.lane === "software" && i.fixId ? [{ kind: "eng-task" as const, target: i.fixId }] : [])]} targets={[i.id, i.resultId ?? "", i.fixId ?? "", i.decision?.id ?? "", ...i.actions.map((a) => a.target)]}>
         <Card title="What we know">
-          <Facts rows={[["Reader result", res ? res.title : "No single reader result"], ["Stuck for", i.age], ["What was tried", i.tried], ["Did it help", i.helped], ["Next", i.next], ["Who moves it", i.owner], ...(i.latest ? [["Latest", i.latest] as const] : []), ...(i.readersAffected ? [["Readers", "Affected right now"] as const] : [])]} />
+          <Facts rows={[["Reader result", res ? res.title : "—"], ["Stuck for", i.age], ["What was tried", i.tried], ["Did it help", i.helped], ["Next", i.next], ["Who moves it", i.owner], ...(i.latest ? [["Latest", i.latest] as const] : []), ...(i.readersAffected ? [["Readers", "Affected right now"] as const] : [])]} />
           <div className={s.inline}>
             {res && <button type="button" className={s.btnLink} onClick={() => v.open({ type: "result", id: res.id })}>Delivery trail: {res.title} →</button>}
             {i.fixId && <button type="button" className={s.btnLink} onClick={() => v.open({ type: "fix", id: i.fixId! })}>The fix: {v.nameOf(i.fixId)} →</button>}
@@ -122,10 +120,9 @@ export function DetailPanel(props: { readonly detail: Detail }) {
     if (!it) return <Empty>This checklist item isn’t available.</Empty>;
     const def = v.data.checklist.data?.definitions.find((x) => x.id === it.definitionId);
     return (
-      <Panel eyebrow={`Checklist item · checklist ${v.data.checklist.data?.profileVersion}`} title={`${it.definitionId} ${it.name} · ${it.subject}`} summary="One requirement, for one body, over one time period."
+      <Panel eyebrow={`Checklist item · checklist ${v.data.checklist.data?.profileVersion}`} title={`${it.definitionId} ${it.name} · ${it.subject}`}
         badge={<span className={s.legendItem}><Swatch cls={STATUS_COLOR[it.status]} /><span className={s.small}>{STATUS_LABEL[it.status]}</span></span>} actions={it.actions} targets={[it.key, ...it.actions.map((a) => a.target)]}>
         <Card title="The requirement, part by part">
-          <SourceNote source={v.data.checklist} what="Status and proof" />
           {def && <p className={cx(s.p, s.small)}><span className={s.dim}>Official wording:</span> {def.requirement}</p>}
           <div className={s.tableWrap}>
             <table className={s.table}>
@@ -145,10 +142,8 @@ export function DetailPanel(props: { readonly detail: Detail }) {
     const g = c?.systemGroups.find((x) => x.group === d.group);
     const defs = (c?.definitions ?? []).filter((x) => x.group === d.group);
     return (
-      <Panel eyebrow="Whole-system capability · checked once for the whole system" title={g?.name ?? d.group} summary={`${defs.length} definitions. These are capabilities, not places, so they aren’t counted per place.`} targets={[d.group]}>
-        <Card title="Every definition in this group, with its audit status">
-          {!g?.audit && <SourceNote source={{ state: "not-connected", load: "ready", data: null, asOf: null, dependency: { id: "DEP-SYSTEM-AUDIT", owner: "Codex (readiness)", need: "The audit status of each whole-system definition." } }} />}
-          {g?.audit && v.data.checklist.state === "sample" && <SourceNote source={v.data.checklist} what="Audit statuses" />}
+      <Panel eyebrow="Whole system" title={g?.name ?? d.group} summary={`${defs.length} definitions`} targets={[d.group]}>
+        <Card title="Definitions">
           <ul className={s.stack} style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {defs.map((x) => {
               const note = g?.audit?.[x.id];
@@ -174,7 +169,7 @@ export function DetailPanel(props: { readonly detail: Detail }) {
       <Panel eyebrow={`Fix list · ${f.owner}`} title={f.title} summary={f.problem} badge={<Pill>{({ attention: "Needs attention", fixing: "Being fixed", update: "Waiting for update" })[f.tab]}</Pill>}
         actions={[{ kind: "fixfirst", target: f.id }, { kind: "focus", target: f.id }]} targets={[f.id]}>
         <Card title="Where it stands">
-          <Facts rows={[["What it helps", f.helps], ["Place in line", f.placeInLine], ["Resources now", f.resourcesNow], ["Note", "Moving it up changes the engineering order only. Nothing deploys from here."]]} />
+          <Facts rows={[["What it helps", f.helps], ["Place in line", f.placeInLine], ["Resources now", f.resourcesNow]]} />
           {f.origin === "engineering" && <TaskStages stage={f.taskStage} />}
           {!!f.linkedStuck.length && <div className={s.stack}>{f.linkedStuck.map((id) => { const i = v.data.stuck.data?.find((x) => x.id === id); return i ? <StuckRow key={id} item={i} /> : null; })}</div>}
           <Technical lines={[f.technical]} />
@@ -188,7 +183,7 @@ export function DetailPanel(props: { readonly detail: Detail }) {
     if (!r) return <Empty>This work row isn’t available.</Empty>;
     return (
       <Panel eyebrow={`${v.index.get(r.placeKey)?.name} · work row`} title={r.title} summary={`Stage: ${r.stage} · ${r.age}`} targets={[r.id]}>
-        <Card title="Details"><Facts rows={[["Where", v.index.get(r.placeKey)?.name ?? r.placeKey], ["Attempts, evidence and costs", "Come from the work item’s record once that read is connected."]]} /></Card>
+        <Card title="Details"><Facts rows={[["Where", v.index.get(r.placeKey)?.name ?? r.placeKey], ["Attempts, evidence and costs", "—"]]} /></Card>
       </Panel>
     );
   }
@@ -196,7 +191,7 @@ export function DetailPanel(props: { readonly detail: Detail }) {
   // search
   const q = d.query.toLowerCase();
   const hits: { type: string; title: string; sub: string; go: () => void }[] = [
-    ...(v.data.results.data ?? []).filter((r) => relation(v.index, r.applies, v.scopeKey)).map((r) => ({ type: "Reader result", title: r.title, sub: `${v.index.get(r.applies[0])?.name} · ${r.kind}`, go: () => v.open({ type: "result", id: r.id }) })),
+    ...(v.data.results.data ?? []).filter((r) => relation(v.index, r.applies, v.scopeKey)).map((r) => ({ type: "Reader result", title: r.title, sub: `${v.index.get(r.applies[0])?.name}${r.kind === null ? "" : ` · ${r.kind}`}`, go: () => v.open({ type: "result", id: r.id }) })),
     ...(v.data.stuck.data ?? []).filter((i) => relation(v.index, i.applies, v.scopeKey)).map((i) => ({ type: "Stuck item", title: i.title, sub: `${v.index.get(i.applies[0])?.name} · ${LANE_WORDS[i.lane]}`, go: () => v.open({ type: "stuck", id: i.id }) })),
     ...(v.data.fixes.data?.open ?? []).map((f) => ({ type: "Fix", title: f.title, sub: f.owner, go: () => v.open({ type: "fix", id: f.id }) })),
     ...(v.data.checklist.data?.definitions ?? []).map((x) => ({ type: "Definition", title: `${x.id} ${x.requirement.split(" — ")[0]}`, sub: v.data.checklist.data?.groupNames[x.group] ?? x.group, go: () => v.go("checklist") })),
@@ -207,7 +202,6 @@ export function DetailPanel(props: { readonly detail: Detail }) {
     <>
       <header><p className={s.eyebrow}>Search · {v.place.name}</p><h1 className={s.h1}>“{d.query}”</h1></header>
       <Card title={`${hits.length} ${hits.length === 1 ? "match" : "matches"}`}>
-        <p className={cx(s.p, s.meta)}>Searches what this page holds for {v.place.name}. Searching the full history runs on the server once that read is connected.</p>
         {!hits.length && <Empty>Nothing matches “{d.query}” here.</Empty>}
         <div className={s.stack}>{hits.map((h, i) => <button key={i} type="button" className={cx(s.row, s.rowButton)} onClick={h.go}><span className={s.meta}>{h.type}</span><strong style={{ fontSize: 13 }}>{h.title}</strong><span className={s.meta}>{h.sub}</span></button>)}</div>
       </Card>

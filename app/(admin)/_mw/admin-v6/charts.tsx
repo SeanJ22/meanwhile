@@ -123,22 +123,3 @@ export function WeeklyColumns(props: { readonly trend: Trend }) {
   );
 }
 
-/** Account spending donut. Providers without a reading are listed, never drawn as $0. */
-export function Donut(props: { readonly parts: readonly { readonly name: string; readonly amount: number | null; readonly cls: string }[]; readonly center: string }) {
-  const known = props.parts.filter((p) => (p.amount ?? 0) > 0);
-  const total = known.reduce((a, p) => a + (p.amount ?? 0), 0);
-  // The palette is declared on .root in v6.module.css; each reference also carries the same value as a fallback.
-  const varOf: Readonly<Record<string, string>> = { "c-blue": "var(--v6-blue, oklch(0.64 0.14 255))", "c-teal": "var(--v6-teal, oklch(0.8 0.11 175))", "c-amber": "var(--v6-amber, oklch(0.84 0.14 85))", "c-violet": "var(--v6-violet, oklch(0.68 0.13 305))", "c-coral": "var(--v6-coral, oklch(0.7 0.16 35))", "c-gray": "var(--v6-gray, oklch(0.72 0 0))" };
-  let at = 0;
-  const stops = known.map((p) => {
-    const start = at;
-    at += ((p.amount ?? 0) / total) * 100;
-    const end = Math.max(start, at - 0.8);
-    return `${varOf[p.cls]} ${start}% ${end}%, var(--panel) ${end}% ${at}%`;
-  });
-  return (
-    <div className={s.donut} role="img" aria-label={`Account spending. ${props.parts.map((p) => `${p.name}: ${p.amount === null ? "no reading" : `$${p.amount.toFixed(2)}`}`).join("; ")}`} style={{ background: total ? `conic-gradient(${stops.join(",")})` : "var(--surface)" }}>
-      <span className={s.donutHole}>{props.center}</span>
-    </div>
-  );
-}

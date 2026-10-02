@@ -5,6 +5,7 @@ import { createWorkItem, type WorkItem } from "../control-plane/work-item.ts";
 import { transitionWorkItem } from "../control-plane/repository/coordinator.ts";
 import { readHeldPlaceCapture } from "../civic-data/held-place-capture.ts";
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
+import { readPlaceWorkItems } from "../control-plane/repository/pg-store.ts";
 
 export interface PlaceCapture {
   readonly subjects: readonly PlaceSubject[];
@@ -26,8 +27,7 @@ export async function closePublishedPlaceWork(repos: ControlPlaneRepositories, i
   const closed: string[] = [];
   // Read only these subjects once, rather than querying every checklist blank
   // (or scanning the complete work history) on every hunt.
-  const existing = new Map((await Promise.all([...new Set(items.map(item => item.subject.id))]
-    .map(subject => repos.workItems.listWhere(["subject"], subject)))).flat().map(row => [row.id, row]));
+  const existing = new Map((await readPlaceWorkItems(repos, items.map(item => item.subject.id))).map(row => [row.id, row]));
   for (const item of items) {
     const id = placeFieldWork(item, now).id;
     const current = existing.get(id);

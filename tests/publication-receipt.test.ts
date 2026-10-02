@@ -7,6 +7,18 @@ const store = { readCandidate: async (id: string) => (["cv-old", "cv-new"].inclu
 const outcome = (at: string, versionId: string, extra: Record<string, unknown> = {}) =>
   ({ at, status: "PUBLISHED", code: "VERIFIED_RESULT_PUBLISHED", detail: "", workerResultId: "r", candidateId: versionId, versionId, ...extra });
 
+test("a publication receipt reads candidate summary facts without loading its dataset", async t => {
+  const lines: string[] = [];
+  t.mock.method(console, "log", (line: string) => { lines.push(line); });
+  const metadata = { readCandidate: async () => { throw new Error("whole candidate must not be loaded"); },
+    readCandidateSummary: async (id: string) => record(id) } as never;
+  assert.equal(await printWorkerPublicationReceipt(metadata, "registry-runtime-bindings", [], {
+    records: 2, candidateId: "cv-new", versionId: "cv-new", gaps: [],
+  }, "2026-09-30T21:04:00.000Z"), true);
+  const receipt = JSON.parse(lines[0].slice("RCD_RECEIPT=".length));
+  assert.equal(receipt.candidateId, "cv-new"); assert.equal(receipt.delivered.records, 2);
+});
+
 test("the receipt names this pass's publication and counts only what this pass put live", async () => {
   const lines: string[] = [];
   const log = console.log;

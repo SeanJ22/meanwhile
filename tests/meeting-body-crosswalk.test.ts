@@ -16,8 +16,8 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 /**
  * **C16: A CALENDAR IS A BODY'S ONLY ON THE GOVERNMENT'S OWN SAVED EVIDENCE.** (2026-09-24.)
  *
- * The owner's decision, recorded 2026-09-24T22:43Z: "Use saved official evidence to establish the exact body and
- * which meetings belong to it, then publish through the existing verified publication process." Domain ownership
+ * Rulings §3 ("C16" was a session label, not Sean's decision: Sean, 2026-10-01): saved official evidence establishes
+ * the exact body and which meetings belong to it, then it publishes through the existing verified publication process. Domain ownership
  * alone does not say which board a calendar belongs to, so a row names the body as the government prints it, the
  * filter that selects its meetings, and the sha256 of the pages that establish both.
  */
@@ -80,7 +80,7 @@ test("C16: the evidence is the government's own page naming the body, cited by s
   assert.match(crosswalkRowIssue(row({ evidence: { ...row().evidence, calendar: { ...row().evidence.calendar, selected: 0 } } }))!, /selected no meeting/);
   assert.match(crosswalkRowIssue(row({ route: "http://www.flagstaff.az.gov/Calendar.aspx?EID=2823" }))!, /not an https URL/);
   assert.match(crosswalkRowIssue(row({ reviewedBy: "Sean" }))!, /agent session/);
-  assert.match(crosswalkRowIssue(row({ authorization: "someone said so" as never }))!, /does not cite/);
+  assert.match(crosswalkRowIssue(row({ authorization: "someone said so" as never }))!, /does not carry the crosswalk citation/);
   assert.match(crosswalkRowIssue(row({ reviewedAt: "2026-09-24T00:00:00.000Z" }))!, /reviewed before its evidence/);
 
   const sources = [

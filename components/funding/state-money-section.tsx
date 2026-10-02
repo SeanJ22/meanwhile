@@ -1,7 +1,8 @@
 /**
  * CAMPAIGN MONEY FOR STATE, COUNTY AND LOCAL CANDIDATES.
  *
- * The reader-facing half of RULING 126 (2026-08-24, Sean's ruling). Until this
+ * The reader-facing display of state and local filings (2026-08-24). The
+ * filings are never sold; reactions to them are (Sean, 2026-10-01). Until this
  * shipped, every one of these cards rendered a placeholder explaining that the
  * FEC does not cover their race — true, and useless to a reader who wants to
  * know who is paying for the campaign on their ballot.

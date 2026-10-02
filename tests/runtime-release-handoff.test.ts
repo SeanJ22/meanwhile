@@ -8,14 +8,17 @@ import {
   RUNTIME_RELEASE_HOLD_RELATIVE_PATH,
   applyRuntimeRelease,
   fetchGithubCheckRuns,
+  fetchRuntimeProductionDeploys,
   githubRepositoryFromOrigin,
   inspectRuntimeReleaseEvidence,
+  inspectNewestDeployedRuntimeRelease,
   requiredContextEvidence,
   runtimeGithubCredential,
   runtimeProductionReadEnvironment,
   runtimePackageManagerCommand,
   type CommandResult,
   type GithubCheckRun,
+  type RuntimeProductionDeploy,
 } from "../lib/ops/runtime-release-handoff.ts";
 import { REQUIRED_CONTEXTS } from "../lib/ops/required-contexts.ts";
 
@@ -106,6 +109,79 @@ test("the exact served, CI-passing SHA is current or requires one handoff", () =
   assert.equal(current.state, "CURRENT");
 });
 
+const deploy = (sha: string, day: number): RuntimeProductionDeploy => ({
+  commit_ref: sha, context: "production", branch: "main", state: "ready",
+  published_at: `2026-09-${String(day).padStart(2, "0")}T00:00:00Z`,
+});
+
+test("green served code avoids deployment-history reads", async () => {
+  const result = await inspectNewestDeployedRuntimeRelease({ runningSha: RUNNING,
+    served: { sha: TARGET, how: "fixture", httpStatus: 200 }, checkRuns: checks(),
+    readDeploys: async () => { throw new Error("history was unnecessary"); },
+    readChecks: async () => { throw new Error("CI was already read"); },
+  });
+  assert.equal(result.targetSha, TARGET);
+});
+
+test("pending deployed head retains or adopts the newest published green code", async () => {
+  const middle = "3".repeat(40);
+  for (const runningSha of [RUNNING, "4".repeat(40)]) {
+    const read: string[] = [];
+    const result = await inspectNewestDeployedRuntimeRelease({ runningSha,
+      served: { sha: TARGET, how: "fixture", httpStatus: 200 }, checkRuns: checks(null),
+      readDeploys: async () => [deploy(RUNNING, 1), deploy(TARGET, 3), deploy(middle, 2), deploy(RUNNING, 1)],
+      readChecks: async sha => { read.push(sha); return sha === RUNNING ? checks() : checks("failure"); },
+    });
+    assert.equal(result.targetSha, RUNNING);
+    assert.equal(result.state, runningSha === RUNNING ? "CURRENT" : "UPDATE_REQUIRED");
+    assert.deepEqual(result.reliedOn, REQUIRED_CONTEXTS);
+    assert.deepEqual(read, [middle, RUNNING]);
+  }
+});
+
+test("history never admits previews, unpublished builds, non-main code or code beyond a rollback", async () => {
+  const excluded = "3".repeat(40);
+  const read: string[] = [];
+  const result = await inspectNewestDeployedRuntimeRelease({ runningSha: RUNNING,
+    served: { sha: TARGET, how: "fixture", httpStatus: 200 }, checkRuns: checks(null),
+    readDeploys: async () => [deploy(excluded, 5), deploy(TARGET, 4),
+      { ...deploy(excluded, 3), context: "deploy-preview" },
+      { ...deploy(excluded, 3), published_at: null },
+      { ...deploy(excluded, 3), branch: "test" },
+      { ...deploy(excluded, 3), state: "error" }, deploy(RUNNING, 1)],
+    readChecks: async sha => { read.push(sha); return checks(); },
+  });
+  assert.equal(result.targetSha, RUNNING);
+  assert.deepEqual(read, [RUNNING]);
+});
+
+test("unreadable or unanchored history and no green published candidate preserve the existing hold", async () => {
+  for (const history of [null, [deploy(RUNNING, 1)], [deploy(TARGET, 2), deploy(RUNNING, 1)]]) {
+    const result = await inspectNewestDeployedRuntimeRelease({ runningSha: RUNNING,
+      served: { sha: TARGET, how: "fixture", httpStatus: 200 }, checkRuns: checks(null),
+      readDeploys: async () => history, readChecks: async () => checks("failure"),
+    });
+    assert.equal(result.state, "REFUSED");
+    assert.equal(result.targetSha, TARGET);
+    assert.equal(result.code, "REQUIRED_CONTEXT_NOT_GREEN");
+  }
+});
+
+test("production deploy reader uses the configured project and keeps API failures unreadable", async () => {
+  let url = "";
+  let authorization = "";
+  const rows = await fetchRuntimeProductionDeploys({ siteId: "fixture-site", token: "fixture-secret",
+    fetchImpl: async (input, init) => { url = String(input); authorization = String((init?.headers as Record<string, string>).authorization);
+      return new Response(JSON.stringify([deploy(TARGET, 1)])); },
+  });
+  assert.equal(url, "https://api.netlify.com/api/v1/sites/fixture-site/deploys?per_page=40");
+  assert.equal(authorization, "Bearer fixture-secret");
+  assert.equal(rows?.length, 1);
+  assert.equal(await fetchRuntimeProductionDeploys({ siteId: "fixture-site", token: undefined }), null);
+  assert.equal(await fetchRuntimeProductionDeploys({ siteId: "fixture-site", token: "fixture-secret",
+    fetchImpl: async () => new Response("private error", { status: 403 }) }), null);
+});
+
 test("handoff fails closed on short/unknown served SHA, unreadable or failed CI", () => {
   const base = {
     runningSha: RUNNING,
@@ -185,8 +261,14 @@ test("quiescent apply fetches only origin/main, detaches exact target, frozen-in
   const root = mkdtempSync(join(tmpdir(), "wtp-runtime-release-success-"));
   const calls: string[] = [];
   let statusReads = 0;
-  const run = (executable: string, args: readonly string[]): CommandResult => {
+  const run = (executable: string, args: readonly string[], options: { readonly env?: NodeJS.ProcessEnv }): CommandResult => {
     calls.push(`${executable} ${args.join(" ")}`);
+    if (args.includes("install")) {
+      assert.equal(options.env?.CI, "true");
+      return options.env?.CI === "true" ? { status: 0, stdout: "", stderr: "" }
+        : { status: 1, stdout: "", stderr: "ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY" };
+    }
+    assert.equal(options.env, undefined, "CI override belongs only to the install");
     if (executable === "git" && args[0] === "status") {
       statusReads += 1;
       return { status: 0, stdout: "", stderr: "" };

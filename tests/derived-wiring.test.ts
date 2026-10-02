@@ -10,10 +10,11 @@
  * The decisions are then planned by the interface's own rule
  * (`planDerivedVersion`), which must refuse none of them.
  *
- * The owner's decision, recorded 2026-09-24T22:43Z: "a page returning 'not
- * found' is not the only reason to suspend or correct a connection. Wrong
- * attribution, conflicting evidence, or a changed calendar must also trigger
- * review. Preserve previously verified records through temporary outages."
+ * Rulings §3 ("C16" was a session label, not Sean's decision: Sean,
+ * 2026-10-01): a page returning "not found" is not the only reason to suspend
+ * or correct a connection; wrong attribution, conflicting evidence, or a
+ * changed calendar also trigger review, and previously verified records are
+ * preserved through temporary outages.
  */
 
 import assert from "node:assert/strict";

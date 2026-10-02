@@ -25,12 +25,11 @@
 #   SERVING_EXPECTED   the reading is taken against the served commit through
 #                      the EXISTING gate and appended to the canonical
 #                      software-release outcome log. A red reading marks
-#                      integrity DEGRADED, which freezes the next
-#                      production-changing release in build-check.yml's `gates`
-#                      job. NOTHING IS ROLLED BACK — the owner's decision of
-#                      2026-08-28, because production's database may already
-#                      have advanced and rolling code back underneath an
-#                      advanced schema manufactures a second incompatibility.
+#                      integrity DEGRADED and turns this job red, as a signal;
+#                      it blocks nothing else. NOTHING IS ROLLED BACK, because
+#                      production's database may already have advanced and
+#                      rolling code back underneath an advanced schema
+#                      manufactures a second incompatibility.
 #   PRODUCTION_BEHIND  the bound elapsed and production still serves something
 #                      else. A fact about the BUILD PIPELINE, never about the
 #                      schema. It is annotated as a warning and does NOT fail

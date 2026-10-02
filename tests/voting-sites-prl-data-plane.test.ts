@@ -75,6 +75,67 @@ test("voting sites promote with exact source/class/scope evidence and the Reader
   assert.equal(loadVotingSites().jurisdictions.length, votingFixture().jurisdictions.length);
 });
 
+test("a first voting-site holding publishes without requiring other states", async () => {
+  const file = votingFixture();
+  file.jurisdictions = [file.jurisdictions.find(row => row.state === "AZ" && row.sites.length > 0)!];
+  const store = new MemoryRoutineDataStore();
+  const outcome = await processRegisteredManualCandidate(store, "voting-sites", votingCandidate(file, T0, "one authority's sites"), T0);
+  assert.equal(outcome.candidate.state, "PROMOTED");
+  assert.deepEqual((outcome.promoted!.payload as VotingSitesFile).jurisdictions, file.jurisdictions);
+});
+
+test("voting-site coordinates admit Alaska and Hawaii while rejecting invalid points", () => {
+  const file = votingFixture();
+  const site = file.jurisdictions.find(row => row.sites.length > 0)!.sites[0];
+  for (const [lat, lng] of [[64.8, -147.7], [21.3, -157.8], [52, 179.5]]) {
+    site.lat = lat;
+    site.lng = lng;
+    assert.equal(votingCandidate(file, T0, "published points").normalization.succeeded, true);
+  }
+  for (const [lat, lng] of [[91, -147.7], [21.3, -181], [NaN, -157.8]]) {
+    site.lat = lat;
+    site.lng = lng;
+    assert.equal(votingCandidate(file, T0, "invalid points").normalization.succeeded, false);
+  }
+});
+
+test("any state or DC publishes sourced voting sites without editing an authority list", async () => {
+  for (const state of ["AK", "HI", "DC", "WI"]) {
+    const original = votingFixture().jurisdictions.find(row => row.sites.length > 0)!;
+    const url = `https://elections.${state.toLowerCase()}.gov/locations`;
+    const jurisdiction = { ...original, state, sourceUrl: url, sourceOrg: `${state} election office`,
+      ocdId: `ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}`,
+      model: "ASSIGNED" as const, sites: original.sites.slice(0, 1) };
+    const candidate = votingSitesCandidate({ current: { generatedAt: "2026-09-08", jurisdictions: [jurisdiction] },
+      prior: null, failures: [], rawBodies: ["test official source bytes"], successfulAuthorityReads: 1,
+      requestedUrl: url, finalUrl: url, retrievedAt: T0 });
+    const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "voting-sites", candidate, T0);
+    assert.equal(outcome.candidate.state, "PROMOTED", `${state}: ${outcome.candidate.failureDetail}`);
+  }
+});
+
+test("a vendor voting-site source carries its official linking page; an unlinked source cannot publish", async () => {
+  const original = votingFixture().jurisdictions.find(row => row.sites.length > 0)!;
+  const sourceUrl = "https://voting.vendor.example/locations";
+  const jurisdiction = { ...original, sourceUrl, sites: original.sites.slice(0, 1) };
+  const build = (row: typeof jurisdiction) => votingSitesCandidate({
+    current: { generatedAt: "2026-09-08", jurisdictions: [row] }, prior: null, failures: [],
+    rawBodies: ["test source bytes and linking page"], successfulAuthorityReads: 1,
+    requestedUrl: sourceUrl, finalUrl: sourceUrl, retrievedAt: T0,
+  });
+  const unlinked = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "voting-sites", build(jurisdiction), T0);
+  assert.equal(unlinked.promoted, null);
+  const linked = { ...jurisdiction, sourceLinkingPage: { url: "https://elections.example.gov/",
+    html: `<a href="${sourceUrl}">Voting locations</a>` } };
+  const candidate = build(linked);
+  const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "voting-sites", candidate, T0);
+  assert.equal(outcome.candidate.state, "PROMOTED");
+  assert.deepEqual((outcome.promoted!.payload as VotingSitesFile).jurisdictions[0].sourceLinkingPage, linked.sourceLinkingPage);
+  for (const url of ["https://elections.example.gov.evil.example/locations", "https://unlinked.example/locations"]) {
+    assert.equal(build({ ...linked, sourceUrl: url }).normalization.succeeded, false);
+  }
+});
+
 test("one failed voting authority retains only its prior scope while healthy authorities and exact deltas advance", async () => {
   const store = new MemoryRoutineDataStore();
   const prior = votingFixture();

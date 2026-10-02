@@ -1,5 +1,22 @@
 import type { HostSupervision } from "./research-policy.ts";
 
+/** Held facts about the website being requested, never the hunt's jurisdiction. */
+export interface WebsiteSize {
+  readonly kind: "local-government" | "school-district" | "state" | "federal" | "national";
+  readonly population?: number | null;
+  readonly students?: number | null;
+}
+
+export type WebsiteSizeForUrl = (url: string) => WebsiteSize | null | undefined;
+
+/** Sean, October 1: only known small local publishers have a ten-request cap. */
+export function websiteRequestLimit(size?: WebsiteSize | null): 10 | null {
+  const count = size?.kind === "local-government" ? size.population
+    : size?.kind === "school-district" ? size.students : null;
+  if (typeof count !== "number" || !Number.isFinite(count) || count < 0) return null;
+  return count < (size?.kind === "school-district" ? 5_000 : 10_000) ? 10 : null;
+}
+
 /** Consume the current pilot-task verifier contract; a failed query is not an absent trigger. */
 export function readRelaunchTriggerVerification(input: {
   readonly stdout: string;

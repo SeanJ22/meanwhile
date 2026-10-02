@@ -1,9 +1,9 @@
 /**
  * STATE, COUNTY AND LOCAL CAMPAIGN MONEY — the half the FEC cannot answer.
  *
- * Session 2026-08-24, Sean's ruling of that day. **RULING 126** governs what may
- * be done with everything in here: it renders for readers and never enters
- * anything sold.
+ * Session 2026-08-24. The filing records in here render for readers and never
+ * enter an export or a sold aggregate; reactions to their display count and are
+ * sold like any other reaction (Sean, 2026-10-01).
  *
  * ## The gap this closes, stated as a fact about a card
  *
@@ -58,18 +58,10 @@
  * rather than merely regrettable.
  */
 
-import { COVERED_STATES } from "../coverage/states.ts";
 import type { Provenance } from "../sources/types.ts";
 
-/**
- * Which agency, and therefore which body of law and which terms.
- *
- * DERIVED from `lib/coverage/states.ts` rather than hand-kept. A second list of
- * covered states is a list that silently disagrees with the first the moment a
- * state is added — which is the separator-broken-allowlist class, and
- * `tests/coverage-states.test.ts` refuses it by name.
- */
-export type MoneyJurisdiction = (typeof COVERED_STATES)[number]["usps"];
+/** The jurisdiction is carried by each sourced money record. */
+export type MoneyJurisdiction = string;
 
 /**
  * Whether this candidate's money is filed, absent, or merely suspected.

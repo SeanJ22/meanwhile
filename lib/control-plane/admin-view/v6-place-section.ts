@@ -80,6 +80,8 @@ export function placeSendWords(placeKey: string, label: string, divisions: reado
   const countyOf = (name: string) => name.replace(/,.*$/, "").replace(/\s+County$/i, "").trim();
   const countyDivision = divisions.find((d) => /\/county:[a-z0-9_.~-]+$/.test(d.id));
   if (m[2] === "zcta" && countyDivision === undefined) return null;
+  // The fleet's registry names governments, not districts: a district's send would widen to the whole state, so it is refused instead.
+  if (m[2] === "congressional_district") return null;
   const term = m[2] === "zcta" ? countyOf(countyDivision!.label) : m[2] === "county" ? countyOf(label) : null;
   return sendWordsFor({ stateNames: [state], zip: term, subject: null, label: null });
 }
@@ -90,15 +92,15 @@ function itemOf(item: OwedListItem, placeKey: string, words: string | null): Adm
   return {
     key: item.key, definitionId: item.checklistId, name: item.requirement.split(" — ")[0] ?? item.requirement,
     subject: item.subject, period: "Current", status,
-    missing: item.state === "published" ? "Nothing missing for this item."
-      : item.state === "held" ? "Captured from an official source and waiting to publish."
-      : item.state === "unpublished" ? "The government does not publish this."
-      : item.state === "stale" ? "Captured before, and its freshness window has passed. Agents refresh it from the source we already know."
-      : "No agent has captured this yet. It stays open as standing work.",
-    appliesBecause: `Owed to ${item.subjectKind === "division" ? "the place itself" : `a ${item.subjectKind}`} this place is served by.`,
-    owner: open ? "Agents" : "Nobody — held", next: open ? "Send agents to capture it." : "Nothing to do.",
+    missing: item.state === "published" ? "—"
+      : item.state === "held" ? "Captured, not published yet"
+      : item.state === "unpublished" ? "Not published by the government"
+      : item.state === "stale" ? "Captured earlier, refresh due"
+      : "Not captured yet",
+    appliesBecause: item.subjectKind === "division" ? "The place itself" : `A ${item.subjectKind} this place is served by`,
+    owner: open ? "Agents" : "—", next: open ? "Send agents" : "—",
     parts: [{ text: item.requirement, status: OWED_STATE_WORDS[item.state], tone: open ? "warn" : "good",
-      proof: item.sourceUrl ? `Saved from ${item.sourceUrl}${item.checkedAt ? `, checked ${item.checkedAt}` : ""}.` : "No saved official page yet." }],
+      proof: item.sourceUrl ? `Saved from ${item.sourceUrl}${item.checkedAt ? `, checked ${item.checkedAt}` : ""}.` : "—" }],
     sourceUrl: item.sourceUrl,
     actions: open && words !== null ? [{ kind: "send-agents", target: placeKey, label: "Send agents", payload: { words } }] : [],
   };

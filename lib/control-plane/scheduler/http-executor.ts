@@ -42,6 +42,7 @@ import { assertPublicUrl } from "../../hunt/egress.ts";
 import { ZERO_COST, type AttemptCost } from "../attempt.ts";
 
 import type { RunWork, WorkOutcome } from "./dispatch.ts";
+import { websiteRequestLimit, type WebsiteSizeForUrl } from "./host-supervision.ts";
 
 /** How long one route may take before the attempt is abandoned. */
 export const DEFAULT_FETCH_TIMEOUT_MS = 30_000;
@@ -63,6 +64,31 @@ export interface FetchOutcome {
   readonly body: string;
   readonly durationMs: number;
   readonly transportError: string | null;
+  /** Actual requests, including zero when an existing provider circuit deferred the call. */
+  readonly requestCount?: number;
+  readonly contentRange?: string | null;
+}
+
+/** A failed provider response is not evidence of a missing civic record. */
+export function httpProviderFailure(url: string, got: FetchOutcome): string | null {
+  if (got.transportError !== null) return `transport failed: ${got.transportError}`;
+  if (got.status === 429 || (got.status !== null && got.status >= 500)) return `HTTP ${got.status}`;
+  if (got.status === 206 || got.contentRange) return `partial HTTP ${got.status} response (${got.bytes} bytes)`;
+  if (got.status === null || got.status < 200 || got.status >= 300) return null;
+  if (got.bytes === 0) return 'ZERO BYTES: a zero-row extraction is a failed extraction, never an empty document';
+  const parsed = new URL(url);
+  const rows = parsed.hostname === 'api.wikimedia.org' && parsed.pathname.includes('/search/page') ? 'pages'
+    : parsed.hostname === 'api.marginalia.nu' && parsed.pathname.includes('/search/') ? 'results' : null;
+  if (rows === null) return null;
+  let data: unknown;
+  try { data = JSON.parse(got.body); }
+  catch { return `malformed ${parsed.hostname} JSON (${got.bytes} bytes)`; }
+  if (data === null || typeof data !== 'object' || !Array.isArray((data as Record<string, unknown>)[rows])) {
+    return `${parsed.hostname} response lacks its ${rows} array (${got.bytes} bytes)`;
+  }
+  // A complete, well-formed empty search is a query miss, not a provider outage.
+  // The route's existing yield contract still refuses to ingest it as a record.
+  return null;
 }
 
 /** The seam a test replaces. Nothing else in this module touches the network. */
@@ -96,6 +122,7 @@ export const realFetch: FetchOne = async (url, timeoutMs) => {
       body,
       durationMs: Date.now() - started,
       transportError: null,
+      contentRange: response.headers.get("content-range"),
     };
   } catch (error) {
     return {
@@ -134,7 +161,7 @@ function cost(outcome: FetchOutcome): AttemptCost {
     ...ZERO_COST,
     durationMs: outcome.durationMs,
     bytesFetched: outcome.bytes,
-    requestCount: 1,
+    requestCount: outcome.requestCount ?? 1,
   };
 }
 
@@ -152,6 +179,7 @@ export function httpExecutor(input: {
   readonly timeoutMs?: number;
   /** Injected so tests do not sleep. Returns immediately when omitted. */
   readonly spaceOut?: (hostKey: string) => Promise<void>;
+  readonly websiteSize?: WebsiteSizeForUrl;
 }): RunWork {
   const fetchOne = input.fetchOne ?? realFetch;
   const timeoutMs = input.timeoutMs ?? DEFAULT_FETCH_TIMEOUT_MS;
@@ -182,33 +210,16 @@ export function httpExecutor(input: {
       };
     }
 
-    if (input.spaceOut) await input.spaceOut(url.host);
+    if (input.spaceOut && websiteRequestLimit(input.websiteSize?.(url.toString())) !== null) await input.spaceOut(url.host);
     const got = await fetchOne(url.toString(), timeoutMs);
 
-    if (got.transportError !== null) {
-      return {
-              ranAs: RAN_AS,
-              kind: "ABORTED",
-        cost: cost(got),
-        detail: `nothing was reached at ${url.host}: ${got.transportError}`,
-      };
-    }
+    const providerFailure = httpProviderFailure(url.toString(), got);
+    if (providerFailure !== null && got.status !== 429) return { ranAs: RAN_AS, kind: "ABORTED", cost: cost(got),
+      detail: `Provider failure at ${url.host}: ${providerFailure}. The record remains owed; try another source.` };
 
     const status = got.status ?? 0;
 
     if (status >= 200 && status < 300) {
-      if (got.bytes === 0) {
-        /* A 200 with no body is a FAILED read. It is emphatically not an empty
-           document, and it may not become one by being recorded as a yield. */
-        return {
-                  ranAs: RAN_AS,
-                  kind: "ABORTED",
-          cost: cost(got),
-          detail:
-            `${url} answered HTTP ${status} and ZERO BYTES. A zero-row extraction is a failed ` +
-            "extraction, never an empty document — the record is still owed.",
-        };
-      }
       const contentHash = `sha256-${createHash("sha256").update(got.body).digest("hex")}`;
       return {
               ranAs: RAN_AS,

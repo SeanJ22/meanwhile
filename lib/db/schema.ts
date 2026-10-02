@@ -1,6 +1,9 @@
 import { sql } from "drizzle-orm";
 import {
   boolean,
+  bigint,
+  date,
+  primaryKey,
   check,
   doublePrecision,
   foreignKey,
@@ -472,8 +475,7 @@ export const reactions = pgTable(
     }),
     /**
      * **The optional verbatim** (P03, 2026-08-18; free text unblocked by the
-     * author for the testing window, and shipped behind
-     * `ripcord.reactionFreeText`).
+     * author, and captured without a switch since 2026-10-01).
      *
      * "Binary carries volume; text carries color. Never require the text."
      * — CLAUDE.md. Nullable, and null is the ordinary case.
@@ -1630,3 +1632,24 @@ export const civicDataReaderProjections = pgTable(
     check("civic_data_reader_projections_sequence_positive", sql`${table.sequence} > 0`),
   ],
 );
+
+
+/** Raw click history lives in Blobs; these are retry keys and coarse aggregates. */
+export const readerEventBatches = pgTable("reader_event_batches", {
+  batchId: text("batch_id").primaryKey(),
+  archiveKey: text("archive_key").notNull(),
+  payloadSha256: text("payload_sha256").notNull(),
+  eventCount: integer("event_count").notNull(),
+});
+const readerEventDimensions = () => ({
+  period: text("period").notNull(), periodStart: date("period_start").notNull(),
+  zip: text("zip").notNull(), district: text("district").notNull(),
+  topic: text("topic").notNull(), eventType: text("event_type").notNull(),
+});
+export const readerEventMembers = pgTable("reader_event_members", {
+  ...readerEventDimensions(), readerHash: text("reader_hash").notNull(),
+}, t => [primaryKey({ columns: [t.period, t.periodStart, t.zip, t.district, t.topic, t.eventType, t.readerHash] })]);
+export const readerEventTotals = pgTable("reader_event_totals", {
+  ...readerEventDimensions(), events: bigint("events", { mode: "number" }).notNull(), users: bigint("users", { mode: "number" }).notNull(),
+}, t => [primaryKey({ columns: [t.period, t.periodStart, t.zip, t.district, t.topic, t.eventType] }),
+  index("reader_event_totals_period_idx").on(t.period, t.periodStart)]);

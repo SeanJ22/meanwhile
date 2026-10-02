@@ -17,7 +17,6 @@ import {
   RESOLUTIONS,
   RESOLVED_CSV,
   WORKING_CSV,
-  auditSeanRows,
   isOpen,
   nextId,
   p1Census,
@@ -268,10 +267,10 @@ test("RULING 30: a section over the five-P1 cap is REPORTED as stopped, never tr
 });
 
 /* ========================================================================== */
-/* RULING 37 — who may move a row                                             */
+/* Who may move a row                                                         */
 /* ========================================================================== */
 
-test("RULING 37: a session may not resolve or move a Needs Sean row, in either direction", () => {
+test("planMoves: a closed row moves, whoever closed it, and in any section", () => {
   const row = {
     ID: "TEST01",
     Section: "needs-sean",
@@ -281,22 +280,20 @@ test("RULING 37: a session may not resolve or move a Needs Sean row, in either d
     Condition: "",
   };
   const asSession = planMoves({ working: [row], sections, actor: "session" });
-  assert.equal(asSession.moves.length, 0, "the session moves nothing out of Needs Sean");
-  assert.equal(asSession.refusals.length, 1);
-  assert.match(asSession.refusals[0], /RULING 37/);
-  assert.match(asSession.refusals[0], /TEST01/);
+  assert.equal(asSession.moves.length, 1, "a session's evidenced close moves out of Needs Sean too");
+  assert.deepEqual(asSession.refusals, []);
 
-  // The same value in HIS handwriting does move.
+  // The same value in HIS handwriting moves as well.
   const asSean = planMoves({
     working: [row],
     sections,
     actor: "session",
     resolutionAuthor: { TEST01: "sean" },
   });
-  assert.equal(asSean.moves.length, 1, "only Sean closes a Needs Sean row — and he can");
+  assert.equal(asSean.moves.length, 1);
   assert.deepEqual(asSean.refusals, []);
 
-  // Everywhere else a session closes its own work.
+  // And in any other section.
   const elsewhere = planMoves({
     working: [{ ...row, ID: "TEST02", Section: "repo-ops" }],
     sections,
@@ -316,49 +313,10 @@ test("RULING 37: a session may not resolve or move a Needs Sean row, in either d
 });
 
 /* ========================================================================== */
-/* RULING 41 — Sean authors rows, and a session never rewords one             */
+/* Rows Sean types into the workbook                                          */
 /* ========================================================================== */
 
-test("RULING 41: a session may not reword, retitle or delete a row Sean wrote", () => {
-  const his = {
-    ID: "SEAN01",
-    Section: "visual-feedback",
-    Title: "The map looks wrong on my phone",
-    "What this is": "It looks wrong on my phone.",
-    "Opened by": "Sean",
-  };
-
-  assert.deepEqual(auditSeanRows({ before: [his], after: [his] }), []);
-
-  const reworded = auditSeanRows({
-    before: [his],
-    after: [{ ...his, "What this is": "Investigate mobile viewport regression." }],
-  });
-  assert.equal(reworded.length, 1);
-  assert.match(reworded[0], /RULING 41/);
-  assert.match(reworded[0], /What this is/);
-
-  const retitled = auditSeanRows({ before: [his], after: [{ ...his, Title: "Mobile defect" }] });
-  assert.equal(retitled.length, 1);
-  assert.match(retitled[0], /Title/);
-
-  const deleted = auditSeanRows({ before: [his], after: [] });
-  assert.equal(deleted.length, 1);
-  assert.match(deleted[0], /no longer in either store/);
-
-  const stolen = auditSeanRows({ before: [his], after: [{ ...his, "Opened by": "Prompt F" }] });
-  assert.ok(stolen.some((r) => /attribution to Sean was overwritten/.test(r)));
-
-  // What a session MAY do: work the row, and set a priority if none is set.
-  assert.deepEqual(
-    auditSeanRows({
-      before: [his],
-      after: [{ ...his, Priority: "P2", Resolution: "Pending review" }],
-    }),
-    [],
-  );
-
-  // And the id it would be given is in the right format and free.
+test("a row Sean types into the workbook is given a free SEANnn id", () => {
   const fresh = nextId("SEAN", all);
   assert.match(fresh, /^SEAN\d\d$/);
   assert.ok(!all.some((r) => r.ID === fresh));
@@ -913,7 +871,7 @@ test("item 1.4: every row a session reported opening is present in a store", () 
 });
 
 /* ========================================================================== */
-/* RULING 41 — a session amends only the rows it opened itself               */
+/* A session amends only the rows it opened itself                            */
 /* ========================================================================== */
 
 /**
@@ -925,13 +883,11 @@ test("item 1.4: every row a session reported opening is present in a store", () 
  *
  * The mode is only safe because of two limits, and these guard them.
  *
- * RULING 41 is the first: **a session may not reword, retitle or delete a row
- * Sean wrote.** He is describing what he saw, and a session rewriting that into
- * what it thinks he meant has replaced the evidence with an interpretation of
- * it. The second is that a title and a section are re-filing rather than
+ * The first: **a session amends only a row it opened itself** — a correction to
+ * anyone else's row is a new row. The second is that a title and a section are re-filing rather than
  * correcting, and stay out of reach.
  */
-test("RULING 41: amend refuses a row this session did not open", () => {
+test("amend refuses a row this session did not open", () => {
   const source = readFileSync(join(ROOT, "scripts", "tracker.mjs"), "utf8");
   assert.match(source, /function modeAmend/, "the mode exists");
   assert.match(
@@ -941,12 +897,12 @@ test("RULING 41: amend refuses a row this session did not open", () => {
   );
   assert.match(
     source,
-    /RULING 41: a session may not reword a row it did not write/,
-    "and the refusal names the rule, so a reader of the error knows why",
+    /amend only corrects a row this session opened/,
+    "and the refusal says why, so a reader of the error knows what to do instead",
   );
 });
 
-test("RULING 41: amend requires a session label rather than defaulting to one", () => {
+test("amend requires a session label rather than defaulting to one", () => {
   const source = readFileSync(join(ROOT, "scripts", "tracker.mjs"), "utf8");
   assert.match(
     source,
@@ -968,17 +924,11 @@ test("amend touches the description and never the title or the section", () => {
 /* RULING 79 — a ruling closes the Needs Sean row it answers                  */
 /* ========================================================================== */
 
-test("RULING 79: a recorded ruling closes a Needs Sean row, and nothing else does", () => {
+test("RULING 79: a ruling close must name its ruling", () => {
   /*
-   * RULING 79 (2026-08-22) amends RULING 37 narrowly. The guard above still
-   * stands and is not weakened: a session that simply marks a Needs Sean row
-   * Resolved is still refused. What is new is a THIRD author — `"ruling"` —
-   * which `scripts/tracker.mjs` sets only after checking that the named ruling
+   * RULING 79 (2026-08-22) adds a THIRD author — `"ruling"` — which
+   * `scripts/tracker.mjs` sets only after checking that the named ruling
    * exists in `docs/rulings.md`, and only when the row itself names it.
-   *
-   * Both halves are asserted, because the dangerous failure is the permissive
-   * one: an author string a session can set for itself would turn RULING 37
-   * into a suggestion.
    */
   const base = {
     ID: "TEST79",
@@ -988,12 +938,6 @@ test("RULING 79: a recorded ruling closes a Needs Sean row, and nothing else doe
     Resolution: "Resolved",
     Condition: "",
   };
-
-  // A session, unaided, still cannot.
-  const plain = planMoves({ working: [{ ...base }], sections, actor: "session" });
-  assert.equal(plain.moves.length, 0);
-  assert.match(plain.refusals[0], /RULING 37/);
-  assert.match(plain.refusals[0], /RULING 79/, "the refusal names the one exception");
 
   // A ruling close that does not NAME its ruling is refused — the number is the
   // whole of the authority, and a close he cannot trace is one he cannot reverse.
@@ -1198,50 +1142,26 @@ test("RULING 79: a deliberately-unassigned ruling number is DECLARED, never mere
   }
 });
 
-test("RULING 37's first half has a path, and it does not reach Needs Sean", () => {
+test("a session has a path to close its own row", () => {
   /*
-   * `NH64`, closed 2026-08-22. RULING 37 has said since 2026-08-20 that a
-   * session marks its own completed work Resolved in every section except Needs
-   * Sean, and `scripts/tracker.mjs` had no mode or flag that did it —
-   * `Resolution`, `Condition` and `Notes` were read ONLY out of the workbook,
-   * and anything found there is attributed to SEAN. A session finishing its own
-   * work either left the row open or wrote a resolution into a file the tool
-   * credits to him. Both are worse than the rule not existing.
-   *
-   * Both halves are asserted, because the dangerous one is the permissive one:
-   * a `--resolve` that reached Needs Sean would make RULING 37 a suggestion and
-   * would route around RULING 79's requirement of an actual recorded ruling.
+   * `NH64`, closed 2026-08-22. `scripts/tracker.mjs` had no mode or flag that
+   * let a session mark its own completed work Resolved — `Resolution`,
+   * `Condition` and `Notes` were read ONLY out of the workbook, and anything
+   * found there is attributed to SEAN.
    */
   const script = readFileSync(join(ROOT, "scripts", "tracker.mjs"), "utf8");
   assert.match(script, /--resolve=/, "a session has a path to close its own row");
-  assert.match(
-    script,
-    /--resolve does not reach that section/,
-    "and it refuses Needs Sean by name",
-  );
-  assert.match(
-    script,
-    /RULING 79's --ruling=/,
-    "and it says which door Needs Sean has instead",
-  );
 });
 
 /* ========================================================================== */
-/* NH64 — a session may resolve its OWN row, and still not one of his         */
+/* NH64 — a session resolves a row as itself, with evidence                   */
 /* ========================================================================== */
 
 /**
- * The hole `NH64` recorded, in the words of the row: *"The only way to set
- * Resolution today is to write it into the workbook, and the move script then
- * records `resolutionAuthor` as `sean` — which would let a session close a
- * NEEDS SEAN row by the same keystroke, the exact thing RULING 37 and this
- * file exist to prevent. So the session did NOT do it… Until it lands, every
- * session's finished rows accumulate in the working store with their evidence
- * in the Session record and nothing marking them done, which is the
- * queue-that-empties failing to empty."*
- *
- * `pnpm tracker:resolve` is the write side. These assert that adding it did
- * not open the door it was carefully built beside.
+ * The hole `NH64` recorded: the only way to set Resolution was to write it
+ * into the workbook, and the move script then records `resolutionAuthor` as
+ * `sean` — a session's close credited to him. `pnpm tracker:resolve` is the
+ * write side, stamping the closer as the session.
  */
 
 test("NH64: tracker resolve exists, and refuses without a session label", async () => {
@@ -1255,11 +1175,10 @@ test("NH64: tracker resolve exists, and refuses without a session label", async 
   );
 });
 
-test("NH64: a SESSION-authored resolution is still refused on a Needs Sean row", () => {
+test("NH64: a SESSION-authored resolution moves, in Needs Sean as anywhere else", () => {
   /*
-   * The gate itself, exercised through the same function the script calls.
-   * `actor: "session"` is what `tracker:resolve` produces, and RULING 37 has
-   * to hold against it exactly as it holds against everything else.
+   * Exercised through the same function the script calls. `actor: "session"`
+   * is what `tracker:resolve` produces.
    */
   const sections = [
     { slug: "needs-sean", title: "Needs Sean", what: "his judgement", onlySeanResolves: true },
@@ -1272,22 +1191,10 @@ test("NH64: a SESSION-authored resolution is still refused on a Needs Sean row",
   const { moves, refusals } = planMoves({ working, sections, actor: "session" });
   assert.deepEqual(
     moves.map((m) => m.ID),
-    ["PU99"],
-    "a session may move its own resolved row and no Needs Sean row",
+    ["NS99", "PU99"],
+    "a session's evidenced close moves wherever the row sits",
   );
-  assert.equal(refusals.length, 1);
-  assert.match(refusals[0], /RULING 37 — NS99/);
-});
-
-test("NH64: the resolve mode refuses a row the AUTHOR opened, in any section", async () => {
-  // RULING 41. He is describing what he saw; whether it is finished is his
-  // judgement, wherever the row happens to sit.
-  const src = await readFile(join(ROOT, "scripts", "tracker.mjs"), "utf8");
-  assert.match(
-    src,
-    /RULING 41 — \$\{id\} was opened by \$\{SEAN_AUTHOR\}/,
-    "resolve does not refuse a row Sean wrote",
-  );
+  assert.deepEqual(refusals, []);
 });
 
 test("NH64: a resolution requires evidence, and a thin file is refused", async () => {

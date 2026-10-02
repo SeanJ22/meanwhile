@@ -240,6 +240,69 @@ const PAGE = `<!doctype html><html><head><title>Board Agendas &amp; Minutes</tit
 
 const IN = { rung: "primary-site-navigation", why: "find the agenda packet route" };
 
+test("HTTP source requests acquire and retain the actual HTTPS text or binary identity", async () => {
+  for (const binary of [false, true]) {
+    const requested = `http://clerk.example.gov/${binary ? "packet.pdf" : "calendar"}`;
+    const secure = requested.replace("http:", "https:");
+    const final = "https://documents.example.gov/current";
+    const seen: string[] = [];
+    const vault = recordingVault();
+    const binaryPuts: Artifact[] = [];
+    const kit = buildScoutToolkit(context({openOne: fakeTransport({}).open, vault: vault.put,
+      openBytes: async ({url}) => {
+        seen.push(url);
+        const robots = url.endsWith("/robots.txt");
+        return {status: 200, bytes: Buffer.from(robots ? ROBOTS_ALLOW_ALL : binary ? "%PDF-1.4\nfixture" : PAGE),
+          contentType: robots ? "text/plain" : binary ? "application/pdf" : "text/html", finalUrl: robots ? url : final,
+          durationMs: 1, transportError: null};
+      }, vaultBytes: async artifact => {binaryPuts.push(artifact); return {stored:true,where:"mem",why:"saved"};}}));
+    const result = await kit.call("fetch_public", {url: requested, ...IN}, null);
+    assert.ok(seen.includes(secure));
+    assert.ok(!seen.includes(requested), "HTTP bytes were never used for the new capture");
+    const artifact = binary ? binaryPuts[0] : vault.puts.find(row=>row.artifact.methodRouteId === "scout:fetch_public")?.artifact;
+    assert.equal(artifact?.canonicalUrl, final);
+    assert.equal(artifact?.retrievalUrl, final);
+    assert.equal(artifact?.sourceId, "documents.example.gov");
+    assert.ok(result.provenance?.some(row=>row.canonicalUrl === final));
+  }
+});
+
+test("HTTPS unavailable keeps a real HTTP capture as HTTP and counts both requests", async () => {
+  const requested = "http://clerk.example.gov/calendar";
+  const transport = fakeTransport({["http://clerk.example.gov/robots.txt"]:{status:200,body:ROBOTS_ALLOW_ALL},
+    [requested]:{status:200,body:PAGE}});
+  const vault = recordingVault();
+  const result = await buildScoutToolkit(context({openOne:transport.open,vault:vault.put})).call("fetch_public",{url:requested,...IN},null);
+  assert.equal(result.ok,true);
+  assert.deepEqual(transport.seen,["http://clerk.example.gov/robots.txt","https://clerk.example.gov/calendar",requested]);
+  assert.equal(result.requestCount,3);
+  const artifact = vault.puts.find(row=>row.artifact.methodRouteId === "scout:fetch_public")!.artifact;
+  assert.equal(artifact.canonicalUrl,requested);
+  assert.equal(artifact.retrievalUrl,requested);
+});
+
+test("browser HTTP sources save their actual HTTPS render and retain HTTP on fallback", async () => {
+  for (const unavailable of [false,true]) {
+    const requested = "http://clerk.example.gov/calendar";
+    const secure = requested.replace("http:","https:");
+    const seen: string[] = [];
+    const vault = recordingVault();
+    const transport = fakeTransport({["http://clerk.example.gov/robots.txt"]:{status:200,body:ROBOTS_ALLOW_ALL}});
+    const browse: BrowseFn = async ({url}) => {
+      seen.push(url);
+      if(unavailable && url === secure) throw new Error("TLS unavailable");
+      return {html:PAGE, text:MARKER, finalUrl:url, status:200, transportError:null, durationMs:1, requests:[]};
+    };
+    const result = await buildScoutToolkit(context({openOne:transport.open,browse,vault:vault.put})).call("browse",{url:requested,...IN},null);
+    assert.equal(result.ok,true,result.forModel);
+    assert.deepEqual(seen,unavailable?[secure,requested]:[secure]);
+    const artifact = vault.puts.find(row=>row.artifact.methodRouteId === "scout:browse")!.artifact;
+    assert.equal(artifact.canonicalUrl,unavailable?requested:secure);
+    assert.equal(artifact.retrievalUrl,artifact.canonicalUrl);
+    assert.equal(result.requestCount,unavailable?3:2);
+  }
+});
+
 test('installed adapters use handed bytes and preserve their source provenance without HTTP',async()=>{
  const text=Array.from({length:95},(_,i)=>'<a href="/record/'+i+'">Record '+i+'</a>').join('');
  const id='held-source', hash=contentHash(text);
@@ -637,29 +700,30 @@ test("SEEDED (e): the (N+1)th request to one host is refused, naming the count; 
     [`${other}/robots.txt`]: { status: 200, body: ROBOTS_ALLOW_ALL, contentType: "text/plain" },
     [`${other}/x`]: { status: 200, body: "<html><body>x</body></html>" },
   });
-  const kit = buildScoutToolkit(context({ openOne: open, bound: { ...RESEARCH_BOUNDS.perDispatch, maxRequestsPerHost: 3 } }));
-  assert.equal((await kit.call("fetch_public", { url: `${HOST}/a`, ...IN }, null)).ok, true, "robots + a = 2");
-  assert.equal((await kit.call("fetch_public", { url: `${HOST}/b`, ...IN }, null)).ok, true, "= 3, the cap");
+  const kit = buildScoutToolkit(context({ openOne: open, websiteSize: () => ({ kind: "local-government", population: 9_999 }) }));
+  for (let i = 0; i < 9; i++) assert.equal((await kit.call("fetch_public", { url: `${HOST}/a`, ...IN }, null)).ok, true);
   const refused = await kit.call("fetch_public", { url: `${HOST}/c`, ...IN }, null);
   assert.equal(refused.ok, false);
-  assert.match(refused.forModel, /3 of 3 requests/);
+  assert.match(refused.forModel, /10 of 10 requests/);
   assert.equal(refused.rung, null, "nothing was observed");
-  assert.equal(seen.filter((u) => u.startsWith(HOST)).length, 3, "the transport never saw the fourth request");
+  assert.equal(seen.filter((u) => u.startsWith(HOST)).length, 10, "robots and nine pages consume the small website allowance");
   const elsewhere = await kit.call("fetch_public", { url: `${other}/x`, ...IN }, null);
   assert.equal(elsewhere.ok, true, "the bound is per host");
-  assert.equal(kit.requestCount, 5);
+  assert.equal(kit.requestCount, 12);
 });
 
-test("the permission read counts toward the cap: at cap-1 it consumes the last slot and the GET is refused by name", async () => {
+test("unknown and larger websites can read past ten without small-publisher spacing", async () => {
   const { open, seen } = fakeTransport({
     [`${HOST}/robots.txt`]: { status: 200, body: ROBOTS_ALLOW_ALL, contentType: "text/plain" },
     [`${HOST}/a`]: { status: 200, body: "<html><body>a</body></html>" },
   });
-  const kit = buildScoutToolkit(context({ openOne: open, bound: { ...RESEARCH_BOUNDS.perDispatch, maxRequestsPerHost: 1 } }));
-  const r = await kit.call("fetch_public", { url: `${HOST}/a`, ...IN }, null);
-  assert.equal(r.ok, false);
-  assert.match(r.forModel, /permission read consumed the last slot/);
-  assert.deepEqual(seen, [`${HOST}/robots.txt`]);
+  for (const size of [undefined, { kind: "local-government", population: 10_000 }, { kind: "school-district", students: 5_000 }, { kind: "federal" }, { kind: "state" }, { kind: "national" }] as const) {
+    const kit = buildScoutToolkit(context({ openOne: open, websiteSize: () => size,
+      spaceOut: async () => { throw Error("Uncapped websites must not wait on small-publisher spacing"); } }));
+    for (let i = 0; i < 12; i++) assert.equal((await kit.call("fetch_public", { url: `${HOST}/a`, ...IN }, null)).ok, true);
+    assert.equal(kit.requestCount, 13);
+  }
+  assert.equal(seen.length, 78);
 });
 
 /* ================================== SEEDED (f): hostile content is DATA */
@@ -1100,6 +1164,30 @@ test('collector reads held bytes before HTTP and preserves their observation tim
   assert.deepEqual(await read(url),{url,text:'Clerk Ada',contentType:null,collectedAt:old,artifactId:'held',artifacts:[]});
 });
 
+test('collector reacquires held HTTP pages over HTTPS and reuses the actual redirected capture',async()=>{
+  const url='http://county.gov/calendar',secure='https://county.gov/calendar',finalUrl='https://documents.county.gov/calendar';
+  const body='<html><body>Council meets October 8 at 6 PM.</body></html>';
+  const seen:string[]=[];
+  const vault=recordingVault();
+  const read=savedPageReader(context({vault:vault.put,openOne:fakeTransport({}).open,openBytes:async({url:requested})=>{
+    seen.push(requested);
+    return {status:200,bytes:Buffer.from(requested.endsWith('/robots.txt')?ROBOTS_ALLOW_ALL:body),
+      contentType:requested.endsWith('/robots.txt')?'text/plain':'text/html',
+      finalUrl:requested.endsWith('/robots.txt')?requested:finalUrl,durationMs:1,transportError:null};
+  },inherited:{artifactIds:['old-http'],summary:'',provenance:[{artifactId:'old-http',canonicalUrl:url,
+    retrievedAt:NOW,httpStatus:200,permission:'ALLOWED',methodRouteId:'scout:fetch_public'}]},
+    readHeldArtifact:async()=>{throw Error('Old HTTP bytes cannot be relabeled as HTTPS');}}));
+  const got=await read(url);
+  assert.equal(got.url,finalUrl);
+  assert.equal(got.text,body);
+  assert.ok(got.artifacts.length>0);
+  assert.ok(seen.includes(secure));
+  assert.ok(!seen.includes(url));
+  assert.equal((await read(url)).artifactId,got.artifactId);
+  assert.equal(seen.filter(value=>value===secure).length,1);
+  assert.ok(vault.puts.some(row=>row.artifact.id===got.artifactId && row.artifact.canonicalUrl===finalUrl));
+});
+
 test('collector refreshes stale held CSV and returns complete saved parseable text',async()=>{
   for(const contentType of ['text/csv','application/json','text/plain']) {
     const url='https://county.gov/roster',body=contentType==='application/json'?'[{"name":"Ada"}]':'name\nAda\n';
@@ -1139,3 +1227,12 @@ test('collector falls back to the existing browser and returns only saved public
   await assert.rejects(refused(url),/SOURCE_PAGE_UNREADABLE/);
 });
 
+test('Scout Census API calls are uncapped even when the same hunt also serves a small town', async () => {
+  let requests=0;
+  const kit=buildScoutToolkit(context({openOne:fakeTransport({}).open,
+    websiteSize:url=>new URL(url).hostname==='api.census.gov' ? {kind:'federal'} : {kind:'local-government',population:3000},
+    spaceOut:async()=>{throw Error('Census must not receive the small-town spacing');},
+    sourceApi:{env:{CENSUS_API_KEY:'test-key'},fetchImpl:async()=>{requests++;return new Response('[["NAME"],["County"]]');}}}));
+  for(let i=0;i<12;i++)assert.equal((await kit.call('census_api',{path:'2024/acs/acs5',params:{get:'NAME',for:'state:*'},...IN},null)).ok,true);
+  assert.equal(requests,12);assert.equal(kit.requestCount,12);
+});

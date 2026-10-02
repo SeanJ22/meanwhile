@@ -9,6 +9,7 @@ export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:numb
   };
   const parseable=(type:string)=>/^(?:text\/|application\/(?:json|[\w.+-]+\+json|xml|[\w.+-]+\+xml|csv|javascript))(?:[^;]*)(?:;|$)/i.test(type);
   const captured=new Map<string,{artifact:Artifact;text:string}>();
+  const requestedArtifacts=new Map<string,string>();
   const toolkit=buildScoutToolkit({...context,vault:async(artifact,text)=>{
     const saved=await context.vault(artifact,text);
     if(saved.stored && artifact.tier!=='RESTRICTED_RAW' && artifact.retentionPolicy!=='DIAGNOSTIC' &&
@@ -17,12 +18,13 @@ export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:numb
   }});
   return async(url:string):Promise<{url:string;text:string;contentType:string|null;collectedAt:string;artifactId:string;artifacts:readonly WorkArtifact[]}>=>{
     for(const saved of captured.values()) {
-      if((saved.artifact.canonicalUrl===url || saved.artifact.retrievalUrl===url) && saved.artifact.httpStatus===200 &&
+      if((requestedArtifacts.get(url)===saved.artifact.id || saved.artifact.canonicalUrl===url || saved.artifact.retrievalUrl===url) && saved.artifact.httpStatus===200 &&
         parseable(saved.artifact.contentType) && fresh(saved.artifact.retrievedAt))
         return {url:saved.artifact.retrievalUrl,text:saved.text,contentType:saved.artifact.contentType,collectedAt:saved.artifact.retrievedAt,artifactId:saved.artifact.id,artifacts:[]};
     }
     for(const provenance of context.inherited.provenance??[]) {
       if((provenance.canonicalUrl!==url && provenance.retrievalUrl!==url) || provenance.httpStatus!==200 ||
+        (url.startsWith('http:') && (provenance.retrievalUrl??provenance.canonicalUrl).startsWith('http:')) ||
         provenance.methodRouteId.endsWith(':network-observation') ||
         !fresh(provenance.retrievedAt) || (provenance.contentType && !parseable(provenance.contentType)) || !context.readHeldArtifact)continue;
       try {
@@ -39,9 +41,11 @@ export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:numb
       if(result.ok) {
         for(const row of [...result.artifacts].reverse()) {
           const saved=captured.get(row.artifactId);
-          if(saved && saved.artifact.canonicalUrl===url && saved.artifact.httpStatus===200 &&
-            parseable(saved.artifact.contentType))return {url:saved.artifact.retrievalUrl,text:saved.text,contentType:saved.artifact.contentType,
+          if(saved && saved.artifact.httpStatus===200 && parseable(saved.artifact.contentType)) {
+            requestedArtifacts.set(url,saved.artifact.id);
+            return {url:saved.artifact.retrievalUrl,text:saved.text,contentType:saved.artifact.contentType,
               collectedAt:saved.artifact.retrievedAt,artifactId:saved.artifact.id,artifacts};
+          }
         }
       }
       failures.push(result.rung?.observed??result.forModel);
@@ -92,6 +96,7 @@ import { contentHash } from "../ids.ts";
 
 import type { WorkArtifact } from "./dispatch.ts";
 import { DEFAULT_FETCH_TIMEOUT_MS, WALL_STATUSES } from "./http-executor.ts";
+import { websiteRequestLimit } from "./host-supervision.ts";
 import { evaluatePermission, DEFAULT_ROBOTS_TOKEN, type PermissionReading } from "./robots.ts";
 import { DEFAULT_USER_AGENT, realOpen, type OpenOne } from "./route-executor.ts";
 import {
@@ -579,10 +584,34 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
 
   const hostOf = (url: URL): string => url.host.toLowerCase();
 
-  function overCap(host: string): string | null {
+  function acquiredUrl(requested: URL, finalUrl: string): string {
+    const final = publicUrl(finalUrl);
+    return requested.protocol === "http:" && final instanceof URL && final.protocol === "https:"
+      ? final.toString() : requested.toString();
+  }
+
+  async function preferHttps<T extends { readonly status: number | null; readonly transportError: string | null }>(
+    url: URL, open: (target: URL) => Promise<T>,
+  ): Promise<T> {
+    if (url.protocol !== "http:") return open(url);
+    const secure = new URL(url);
+    secure.protocol = "https:";
+    let first: T;
+    try {
+      first = await open(secure);
+    } catch (error) {
+      if (overCap(url) !== null) throw error;
+      return open(url);
+    }
+    if (first.transportError === null && first.status !== null && first.status >= 200 && first.status < 300) return first;
+    return overCap(url) === null ? open(url) : first;
+  }
+
+  function overCap(url: URL): string | null {
+    const host = hostOf(url);
     const n = hostCounts.get(host) ?? 0;
-    const max = ctx.bound.maxRequestsPerHost;
-    if (n < max) return null;
+    const max = websiteRequestLimit(ctx.websiteSize?.(url.toString()));
+    if (max === null || n < max) return null;
     return (
       `${host} has had ${n} of ${max} requests this Attempt (the per-host bound), so this request is ` +
       "refused. The bound is per host: another host is not bound by this count."
@@ -592,7 +621,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   async function retrieve(url: URL, accept: string, acc: CallAccount): Promise<Retrieved> {
     const host = hostOf(url);
     hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
-    await ctx.spaceOut(host);
+    if (websiteRequestLimit(ctx.websiteSize?.(url.toString())) !== null) await ctx.spaceOut(host);
     const headers = { "user-agent": DEFAULT_USER_AGENT, accept };
     let got: Retrieved;
     if (openBytes !== null) {
@@ -641,12 +670,12 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const at = ctx.now();
     const { artifact } = recordAcquisition(
       {
-        canonicalUrl: input.url.toString(),
+        canonicalUrl: acquiredUrl(input.url, input.finalUrl),
         retrievalUrl: input.finalUrl,
         retrievedAt: at,
         httpStatus: input.status,
         contentType: input.contentType,
-        sourceId: hostOf(input.url),
+        sourceId: new URL(acquiredUrl(input.url, input.finalUrl)).host.toLowerCase(),
         methodRouteId: input.methodRouteId,
         workItemId: ctx.workItemId,
         attemptId: ctx.attemptId,
@@ -694,12 +723,12 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       contentHash: hash,
       byteLength: input.bytes.byteLength,
       contentType: input.contentType,
-      canonicalUrl: input.url.toString(),
+      canonicalUrl: acquiredUrl(input.url, input.finalUrl),
       retrievalUrl: input.finalUrl,
       retrievedAt: at,
       httpStatus: input.status,
       headers: {},
-      sourceId: hostOf(input.url),
+      sourceId: new URL(acquiredUrl(input.url, input.finalUrl)).host.toLowerCase(),
       methodRouteId: "scout:fetch_public",
       workItemId: ctx.workItemId,
       attemptId: ctx.attemptId,
@@ -850,7 +879,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
     const cached = robotsByHost.has(host);
     if (!cached) {
-      const cap = overCap(host);
+      const cap = overCap(url);
       if (cap !== null) return refusal(cap);
     }
     const robots = await readRobots(url, acc);
@@ -881,14 +910,13 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   > {
     const url = publicUrl(input.url ?? "");
     if (typeof url === "string") return { kind: "REFUSED", result: refusal(url) };
-    const host = hostOf(url);
     const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
-    const capBefore = overCap(host);
+    const capBefore = overCap(url);
     if (capBefore !== null) return { kind: "REFUSED", result: refusal(capBefore) };
     /* Read and recorded, never a refusal: ROBOTS_BLOCKS_ACQUISITION is false (owner decision 2026-09-25). */
     const robots = await readRobots(url, acc);
     const reading = evaluate(robots, url);
-    const capAfter = overCap(host);
+    const capAfter = overCap(url);
     if (capAfter !== null) {
       return {
         kind: "REFUSED",
@@ -926,7 +954,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       nextHopUrls, returnedCount, applicableBecause: input.why,
     });
 
-    const got = await retrieve(url, ACCEPT_PAGE, acc);
+    const got = await preferHttps(url, target => retrieve(target, ACCEPT_PAGE, acc));
     if (got.transportError !== null) {
       return result(
         false,
@@ -1135,26 +1163,28 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       nextHopUrls: browserNextHopUrls, applicableBecause: input.why,
     });
 
-    /* One navigation counts as one request to the host; the page's own calls are observed, not initiated. */
-    hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
-    await ctx.spaceOut(host);
     let obs: Awaited<ReturnType<typeof browseFn>>;
     try {
-      obs = await browseFn({ url: url.toString(), timeoutMs, holder: ctx.holder });
+      obs = await preferHttps(url, async target => {
+        /* Each navigation counts; the page's own calls are observed, not initiated. */
+        hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
+        if (websiteRequestLimit(ctx.websiteSize?.(target.toString())) !== null) await ctx.spaceOut(host);
+        requestCount += 1;
+        acc.requests += 1;
+        const observed = await browseFn({ url: target.toString(), timeoutMs, holder: ctx.holder });
+        const bytes = Buffer.byteLength(observed.html, "utf8");
+        bytesFetched += bytes;
+        acc.bytes += bytes;
+        return observed;
+      });
     } catch (error) {
       const why = error instanceof Error ? error.message : String(error);
       browserTransport = transportOf(null, why);
-      requestCount += 1;
-      acc.requests += 1;
       return result(false, `the browser failed on ${url}: ${why}. A browser failure is a fact about this client, not about the record.`, rung(`browser failure: ${why}`), acc, permission);
     }
     const htmlBytes = Buffer.byteLength(obs.html, "utf8");
     browserTransport = transportOf(obs.status, obs.transportError);
     browserHttpStatus = obs.status;
-    requestCount += 1;
-    bytesFetched += htmlBytes;
-    acc.requests += 1;
-    acc.bytes += htmlBytes;
 
     if (obs.html.trim() === "") {
       return result(
@@ -1388,8 +1418,11 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
     try {
       const options = { ...ctx.sourceApi, timeoutMs,
-        spaceOut: async host => { const exceeded = overCap(host); if (exceeded) throw new Error(exceeded);
-          hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1); await ctx.spaceOut(host); } } satisfies import('./scout-api.ts').SourceApiOptions;
+        spaceOut: async host => { const url = new URL(`https://${host}`);
+          const exceeded = overCap(url); if (exceeded) throw new Error(exceeded);
+          hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
+          if (websiteRequestLimit(ctx.websiteSize?.(url.toString())) !== null) await ctx.spaceOut(host);
+        } } satisfies import('./scout-api.ts').SourceApiOptions;
       const response = name === 'plural_roster' || name === 'legistar_events' ? await readClientSource(name,raw as Record<string,unknown>,options) : await readSourceApi(name,raw,options);
       acc.requests = response.requests; acc.bytes = response.bytes;
       requestCount += response.requests; bytesFetched += response.bytes;

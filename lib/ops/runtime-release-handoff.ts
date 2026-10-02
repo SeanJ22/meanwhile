@@ -1,9 +1,10 @@
 /**
  * Exact, fail-closed software handoff for the permanent standing runtime.
  *
- * Routine data never causes this path to run.  The only target is the SHA the
- * already-deployed application reports from `/api/build`, and it is eligible
- * once the existing required CI checks are green for that deployed main commit.  The adapter at the bottom
+ * Routine data never causes this path to run. The target is the newest published
+ * production main deploy with the existing required CI checks green, at or before
+ * the application SHA reported by `/api/build`. Pending newer deploys do not stop
+ * the certified running code. The adapter at the bottom
  * may fetch/switch/install in a dedicated clean checkout; it has no commit,
  * push, merge, deployment, or civic-data write operation.
  *
@@ -57,7 +58,7 @@ export interface CommandResult {
 type RunCommand = (
   executable: string,
   args: readonly string[],
-  options: { readonly cwd: string; readonly timeoutMs: number },
+  options: { readonly cwd: string; readonly timeoutMs: number; readonly env?: NodeJS.ProcessEnv },
 ) => CommandResult;
 
 function lowerFullSha(value: unknown): string | null {
@@ -212,13 +213,74 @@ export async function fetchGithubCheckRuns(input: {
   }
 }
 
+export interface RuntimeProductionDeploy {
+  readonly commit_ref?: unknown;
+  readonly context?: unknown;
+  readonly branch?: unknown;
+  readonly state?: unknown;
+  readonly published_at?: unknown;
+}
+
+/** Reuse the configured production project's deploy history; never publish. */
+export async function fetchRuntimeProductionDeploys(input: {
+  readonly siteId: string | undefined;
+  readonly token: string | undefined;
+  readonly fetchImpl?: typeof fetch;
+}): Promise<readonly RuntimeProductionDeploy[] | null> {
+  if (!input.siteId?.trim() || !input.token?.trim()) return null;
+  try {
+    const response = await (input.fetchImpl ?? fetch)(
+      `https://api.netlify.com/api/v1/sites/${encodeURIComponent(input.siteId)}/deploys?per_page=40`,
+      { headers: { authorization: `Bearer ${input.token}` }, signal: AbortSignal.timeout(15_000) },
+    );
+    if (!response.ok) return null;
+    const rows: unknown = await response.json();
+    return Array.isArray(rows) ? rows.filter((row): row is RuntimeProductionDeploy => row !== null && typeof row === "object") : null;
+  } catch { return null; }
+}
+
+/** Prefer the served SHA; only consult published history when its CI is not green. */
+export async function inspectNewestDeployedRuntimeRelease(input: {
+  readonly runningSha: string | null;
+  readonly served: ServedCommit;
+  readonly checkRuns: readonly GithubCheckRun[] | null;
+  readonly readDeploys: () => Promise<readonly RuntimeProductionDeploy[] | null>;
+  readonly readChecks: (sha: string) => Promise<readonly GithubCheckRun[] | null>;
+}): Promise<RuntimeReleaseInspection> {
+  const head = inspectRuntimeReleaseEvidence(input);
+  if (head.state !== "REFUSED" || lowerFullSha(input.runningSha) === null || lowerFullSha(input.served.sha) === null) return head;
+  const deployments = await input.readDeploys();
+  if (deployments === null) return head;
+  const published = deployments.flatMap(deploy => {
+    const sha = lowerFullSha(deploy.commit_ref);
+    const at = typeof deploy.published_at === "string" ? Date.parse(deploy.published_at) : NaN;
+    return sha !== null && Number.isFinite(at) && deploy.context === "production" && deploy.branch === "main" && deploy.state === "ready"
+      ? [{ sha, at }] : [];
+  }).sort((a, b) => b.at - a.at);
+  // Anchor the history to the observed live release. A ready preview, unpublished
+  // build, or a deploy newer than a rollback is never a runtime target.
+  const anchorIndex = published.findIndex(deploy => deploy.sha === head.targetSha);
+  if (anchorIndex < 0) return head;
+  const seen = new Set([head.targetSha]);
+  for (const deploy of published.slice(anchorIndex + 1)) {
+    if (seen.has(deploy.sha)) continue;
+    seen.add(deploy.sha);
+    const candidate = inspectRuntimeReleaseEvidence({ runningSha: input.runningSha,
+      served: { ...input.served, sha: deploy.sha }, checkRuns: await input.readChecks(deploy.sha) });
+    if (candidate.state !== "REFUSED") return { ...candidate,
+      detail: `${candidate.detail}; newer served ${head.targetSha} is not yet certified (${head.code})` };
+  }
+  return head;
+}
+
 function defaultRunCommand(
   executable: string,
   args: readonly string[],
-  options: { readonly cwd: string; readonly timeoutMs: number },
+  options: Parameters<RunCommand>[2],
 ): CommandResult {
   const result = spawnSync(executable, [...args], {
     cwd: options.cwd,
+    env: options.env,
     encoding: "utf8",
     maxBuffer: 16 * 1024 * 1024,
     stdio: ["ignore", "pipe", "pipe"],
@@ -351,7 +413,10 @@ export function applyRuntimeRelease(input: {
   if (input.install !== false) {
     const command = runtimePackageManagerCommand();
     if (command === null) return refuse("COREPACK_ENTRY_UNAVAILABLE", "the running Node installation has no Corepack JavaScript entry; no shell fallback was attempted");
-    const installed = run(command.executable, command.args, { cwd: input.root, timeoutMs: INSTALL_TIMEOUT_MS });
+    const installed = run(command.executable, command.args, {
+      cwd: input.root, timeoutMs: INSTALL_TIMEOUT_MS,
+      env: { ...process.env, CI: "true" },
+    });
     if (installed.status !== 0) return refuse("FROZEN_INSTALL_FAILED", conciseFailure(installed));
   }
 

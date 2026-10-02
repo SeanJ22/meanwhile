@@ -14,7 +14,7 @@ import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
  *
  *   - Postgres/Neon in this repository is the SERVING substrate for
  *     reader-facing data. Control-plane work state is not reader-facing, and
- *     RULING 126 already keeps a domain out of Postgres where it does not
+ *     campaign-finance filings are already kept out of Postgres where it does not
  *     belong. A Drizzle migration for it would additionally trip `pnpm db:gate`,
  *     which asks PRODUCTION whether the schema is applied — and would freeze a
  *     release for a reason unrelated to truth.
@@ -633,6 +633,9 @@ export function fileAppendOnlyRepository<T>(
 
     readAll: async (): Promise<readonly T[]> =>
       (await readEveryPartition()).map((line) => line.record),
+
+    readSince: async (since: string): Promise<readonly T[]> =>
+      (await readEveryPartition()).filter((line) => Date.parse(line.at) >= Date.parse(since)).map((line) => line.record),
 
     keys: async (): Promise<readonly string[]> => {
       const keys = new Set<string>((await readEveryPartition()).map((line) => line.key));

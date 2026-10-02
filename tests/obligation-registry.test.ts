@@ -391,6 +391,36 @@ test("the two-byte 200 that would have become Arizona's filer index is ABORTED",
   assert.match(outcome.detail, /yield contract/);
 });
 
+test("partial and malformed provider bodies fail before yield or vault ingestion", async () => {
+  for (const [url, body, status] of [
+    ['https://api.wikimedia.org/core/v1/wikipedia/en/search/page?q=first', '{"pages":[]}', 206],
+    ['https://api.wikimedia.org/core/v1/wikipedia/en/search/page?q=second', '{"pages":[', 200],
+    ['https://api.marginalia.nu/public/search/first', '<html>Gateway timeout</html>', 200],
+    ['https://api.marginalia.nu/public/search/second', 'gateway timeout', 504],
+  ] as const) {
+    const route: RouteDescriptor = { ...AZ_ROUTE, open: { kind: 'HTTP_GET', url } };
+    const outcome = await run(route, fakeOpen(body, status));
+    assert.equal(outcome.kind, 'ABORTED');
+    assert.equal(outcome.disposition, undefined);
+    assert.equal(outcome.artifacts, undefined);
+    assert.match(outcome.detail, /Provider failure/);
+    assert.doesNotMatch(outcome.detail, /yield contract/);
+  }
+});
+
+test("a deferred provider request has zero request cost", async () => {
+  const outcome = await run(AZ_ROUTE, async () => ({ status: null, bytes: 0, contentType: '', body: '',
+    durationMs: 0, transportError: 'provider backoff', requestCount: 0 }));
+  assert.equal(outcome.kind, 'ABORTED');
+  assert.equal(outcome.cost?.requestCount, 0);
+});
+
+test("rate limits keep the existing blocked-route disposition while the provider backs off", async () => {
+  const outcome = await run(AZ_ROUTE, fakeOpen('rate limited', 429));
+  assert.equal(outcome.kind, 'DISPOSED');
+  assert.equal(outcome.disposition?.disposition, 'BLOCKED_CURRENTLY');
+});
+
 test("a satisfied response is DISPOSED INGESTED with the tier decided by SCANNING", async () => {
   const body = JSON.stringify({ data: [{ EntityID: 1 }], recordsTotal: 1 });
   const outcome = await run(AZ_ROUTE, fakeOpen(body));

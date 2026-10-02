@@ -14,6 +14,8 @@
  */
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
+import { easternMonth, isPeriod, periodGroups } from "@/lib/control-plane/admin-view/periods.ts";
+
 import { ActionDialog, type DialogSend } from "./action-dialog.tsx";
 import { ChangesView } from "./changes-view.tsx";
 import { ChatView } from "./chat-view.tsx";
@@ -36,6 +38,8 @@ import { MoneyScreen } from "./screen-money.tsx";
 import { NowScreen } from "./screen-now.tsx";
 import { ReaderDemandPanel } from "./reader-demand.tsx";
 import { TopicCountsPanel } from "./topic-counts.tsx";
+import { DataSwitchesPanel } from "./data-switches.tsx";
+import { CaptureHealthPanel } from "./capture-health.tsx";
 import { ReportsView } from "./reports-view.tsx";
 import { WorkScreen } from "./screen-work.tsx";
 import { WorkersScreen } from "./screen-workers.tsx";
@@ -60,8 +64,6 @@ export interface CommandCenterProps {
   readonly onViewChange?: (view: View) => void;
   /** Live paged sections: forward search, filters and cursors to the data source. */
   readonly onQuery?: (section: SectionId, params: Readonly<Record<string, string>>) => void;
-  /** The account-period selector. Hunt limits remain explicitly lifetime. */
-  readonly onPeriodChange?: (period: "hunt" | "day" | "month") => void;
   /** Extra header content for the development preview's review controls. */
   readonly reviewPanel?: ReactNode;
 }
@@ -82,7 +84,7 @@ export function CommandCenter(props: CommandCenterProps) {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [pickerQ, setPickerQ] = useState("");
   const [query, setQuery] = useState("");
-  const [period, setPeriod] = useState("month");
+  const [period, setPeriod] = useState(() => easternMonth(new Date()));
   const [sent, setSent] = useState<readonly UiReceipt[]>([]);
   const [dialog, setDialog] = useState<{ readonly ref: ActionRef; readonly key: string } | null>(null);
   const [announce, setAnnounce] = useState("");
@@ -102,7 +104,9 @@ export function CommandCenter(props: CommandCenterProps) {
   const instructionDraft = instructionDraftFor(instructionDrafts, scopeKey);
   const hunt = huntAt(index, hunts, scopeKey);
   const inHunts = huntsWithin(index, hunts, scopeKey);
-  const effectivePeriod = period === "hunt" && !hunt ? "month" : period;
+  const clock = new Date();
+  const earliestMonth = (data.spend.data?.byMonth ?? []).map((m) => m.month).sort()[0] ?? null;
+  const effectivePeriod = isPeriod(period, clock, earliestMonth) ? period : easternMonth(clock);
 
   const receipts = useMemo(() => {
     const keys = new Set(sent.map((r) => r.key));
@@ -223,8 +227,7 @@ export function CommandCenter(props: CommandCenterProps) {
     setPickerQ("");
     if (detail) setDetail(null);
     props.onScopeChange(key);
-    setPeriod("month");
-    props.onPeriodChange?.("month");
+    setPeriod(easternMonth(new Date()));
   };
 
   useEffect(() => {
@@ -297,15 +300,11 @@ export function CommandCenter(props: CommandCenterProps) {
             <button ref={pickerButton} type="button" className={s.btn} aria-expanded={pickerOpen} aria-controls="v6-picker" onClick={() => setPickerOpen((o) => !o)}>Change place</button>
             <span className={s.dim}>{scopeKind}</span>
             <label className={s.inline} style={{ gap: 6 }}>
-              <span className={s.dim}>Account period</span>
-              <select className={s.select} value={effectivePeriod} onChange={(e) => {
-                const next = e.target.value as "hunt" | "day" | "month";
-                setPeriod(next);
-                props.onPeriodChange?.(next);
-              }}>
-                {hunt && <option value="hunt">Whole hunt · since {mst(hunt.startedAt)}</option>}
-                <option value="day">Last 24 hours</option>
-                <option value="month">September 2026</option>
+              <span className={s.dim}>Period</span>
+              <select className={s.select} value={effectivePeriod} onChange={(e) => setPeriod(e.target.value)}>
+                {periodGroups(clock, earliestMonth).map((g) => g.label === null
+                  ? g.options.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)
+                  : <optgroup key={g.label} label={g.label}>{g.options.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}</optgroup>)}
               </select>
             </label>
             <span role="status" aria-live="polite" className={cx(s.connection, connWarn ? s.connWarn : s.connLive)}>
@@ -344,13 +343,12 @@ export function CommandCenter(props: CommandCenterProps) {
           {connWarn && props.connection !== "connecting" && (
             <div className={cx(s.banner, props.connection === "reconnecting" && s.bannerCalm)} role="status">
               <strong>{props.connection === "stale" ? "These figures are out of date." : props.connection === "reconnecting" ? "Reconnecting." : "Disconnected."}</strong>
-              <span className={s.small}>Showing the last good data{lastGood ? ` from ${lastGood}` : ""}. Your place and open item stay put. Buttons that change things are off until updates come back. Then anything you missed is filled in once, and nothing is counted twice.</span>
+              {lastGood && <span className={s.small}>Last good data from {lastGood}</span>}
             </div>
           )}
           {props.recovered && (
             <div className={cx(s.banner, s.bannerGood)} role="status">
               <strong>Back online.</strong>
-              <span className={s.small}>Caught up with what changed while you were away.</span>
             </div>
           )}
           {detail && stack.length > 0 && (
@@ -358,7 +356,7 @@ export function CommandCenter(props: CommandCenterProps) {
           )}
           {detail ? <DetailPanel detail={detail} /> : (
             <>
-              {view === "now" && <><NowScreen key={scopeKey} /><ReaderDemandPanel /><TopicCountsPanel /></>}
+              {view === "now" && <><NowScreen key={scopeKey} /><ReaderDemandPanel /><CaptureHealthPanel /><TopicCountsPanel /><DataSwitchesPanel /></>}
               {view === "workers" && <WorkersScreen />}
               {view === "work" && <WorkScreen />}
               {view === "checklist" && <ChecklistScreen />}

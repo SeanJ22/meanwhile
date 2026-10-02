@@ -75,6 +75,7 @@ export function StatsBar() {
         statKey="meetings"
         label={listingCount.heading}
         value={awaitingAnswer ? "—" : view.meetings}
+        loading={awaitingAnswer}
         sub={
           listingCount.countNote ??
           (searchFailed || awaitingAnswer
@@ -96,6 +97,7 @@ export function StatsBar() {
       <Card
         label="Bodies here"
         value={view.bodies}
+        loading={awaitingAnswer}
         sub={view.bodiesSecondary}
         open={ui.door === "bodies"}
         onOpen={() => dispatch({ type: "door/open", door: "bodies" })}
@@ -113,6 +115,7 @@ export function StatsBar() {
       <Card
         label="Officials"
         value={view.officials}
+        loading={awaitingAnswer}
         sub={location ? `Near ${location.zip}` : null}
         open={ui.door === "officials"}
         onOpen={() => dispatch({ type: "door/open", door: "officials" })}
@@ -168,6 +171,7 @@ function Card({
   sub = null,
   style,
   open = false,
+  loading = false,
   onOpen,
 }: {
   statKey?: string;
@@ -178,8 +182,19 @@ function Card({
   style?: React.CSSProperties;
   /** This tile's list or door is the one currently on screen. */
   open?: boolean;
+  /** The answer for this ZIP is still on its way, so a missing value is a wait, not a gap. */
+  loading?: boolean;
   onOpen?: () => void;
 }) {
+  /*
+   * A number we do not hold is never a dash on a reader page (Sean, rulings
+   * §10, October 1, 2026). While the answer is on its way the tile waits with
+   * an ellipsis; once it has answered without one, the tile says plainly that
+   * we are working on it. `derive.ts` keeps "—" as its internal "no value"
+   * sentinel, so this is the one place it is turned into words.
+   */
+  const missing = value === "—";
+  const note = missing && !loading ? "We're working on getting this info" : sub;
   return (
     <button
       type="button"
@@ -194,11 +209,11 @@ function Card({
       onClick={onOpen}
       aria-label={`Open the ${label.toLowerCase()} list`}
     >
-      <div className="num">{value}</div>
+      <div className="num">{missing ? "…" : value}</div>
       <div className="label">{label}</div>
-      {sub && (
+      {note && (
         <div className="label" style={{ color: "var(--text-muted)" }}>
-          {sub}
+          {note}
         </div>
       )}
     </button>

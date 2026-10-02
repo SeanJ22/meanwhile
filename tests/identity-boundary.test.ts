@@ -313,6 +313,8 @@ test("A-001 · every digest column is in a different digest space from every oth
       "intake_limiter.digest",
       "questionnaire_tokens.token_digest",
       "reactions.reaction_key_hash",
+      "reader_event_batches.batch_id",
+      "reader_event_members.reader_hash",
       // BC-11 (2026-08-24).
       "speak_your_mind.speak_key_hash",
     ],

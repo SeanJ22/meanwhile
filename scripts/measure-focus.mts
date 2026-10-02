@@ -64,7 +64,7 @@ const RUN_HEADERS = syntheticRunHeaders({
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 
-import { COVERED_FIPS } from "../lib/coverage/artifacts.ts";
+import { HELD_GEOMETRY_FIPS } from "../lib/coverage/artifacts.ts";
 import { resolveZipGeography } from "../lib/geo/zip-geography.ts";
 import { extrusionSpecForZoom } from "../lib/map/state-focus.ts";
 import { decodePng, patchStats, type DecodedPng } from "./png.mts";
@@ -692,7 +692,7 @@ for (const theme of ["dark", "light"] as const) {
       );
     }
     const mine = geo.stateFips;
-    const foreignFips = COVERED_FIPS.filter((f) => f !== mine);
+    const foreignFips = HELD_GEOMETRY_FIPS.filter((f) => f !== mine);
     const foreignFiles = requested.filter((url) =>
       foreignFips.some((fips) => url.includes(`-${fips}.geojson`)),
     );

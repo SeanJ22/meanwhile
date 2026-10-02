@@ -1,9 +1,13 @@
 import { isRenderable } from "../lib/funding/state-money-reader.ts";
 /**
- * **RULING 126 — campaign-finance data renders for readers and never enters
- * anything sold.** (Adopted 2026-08-24, Sean's ruling.)
+ * **Campaign-finance filings render for readers and never enter anything
+ * sold.** Sean, 2026-10-01: "State and local campaign money: reactions to it
+ * are sold; the filings themselves are not." Reactions to a money display are
+ * ordinary reaction rows and count like any other (lib/signal/aggregate.ts);
+ * what these walls keep out of every export and sold aggregate is the filing
+ * records themselves, federal, state and local alike.
  *
- * This is the assertion the ruling names. It is deliberately ARCHITECTURAL
+ * This is the assertion that answer needs. It is deliberately ARCHITECTURAL
  * rather than behavioural: a test that checked one export function's output
  * would pass forever while a second export path was added beside it. What is
  * asserted instead is that **there is no route** — no table, no import, no
@@ -69,7 +73,7 @@ function allTables(): { name: string; export: string; columns: string[] }[] {
   return out;
 }
 
-test("RULING 126 + RCD-4 wall 1: campaign finance is confined to isolated operational civic tables", () => {
+test("RCD-4 wall 1: campaign finance is confined to isolated operational civic tables", () => {
   const MONEY_WORDS =
     /(contribution|contributor|campaign_finance|campaignfinance|receipt|disbursement|committee|donor|fundrais|cash_on_hand)/i;
 
@@ -103,14 +107,14 @@ test("RULING 126 + RCD-4 wall 1: campaign finance is confined to isolated operat
     offenders,
     [],
     "campaign-finance vocabulary entered a table outside the isolated operational civic data plane. " +
-      "RULING 126 still forbids that data from reader collection and sold stores: " +
+      "filings never enter reader collection or sold stores (Sean, 2026-10-01): " +
       offenders.join(", "),
   );
 });
 
 /* ── WALL 2: aggregation and export cannot even see it ────────────────────── */
 
-test("RULING 126 wall 2: the aggregation layer imports no campaign-finance module", () => {
+test("wall 2: the aggregation layer imports no campaign-finance module", () => {
   const signalDir = join(ROOT, "lib", "signal");
   const signalFiles = readdirSync(signalDir).filter((f) => f.endsWith(".ts"));
   assert.ok(signalFiles.length > 0, "no aggregation modules found — this test would pass vacuously");
@@ -136,7 +140,7 @@ test("RULING 126 wall 2: the aggregation layer imports no campaign-finance modul
   );
 });
 
-test("RULING 126 wall 2: the sweep would catch a real import rather than reporting green about nothing", () => {
+test("wall 2: the sweep would catch a real import rather than reporting green about nothing", () => {
   // The instrument shown catching the instance (RULING 110). A planted line in
   // the same shape the sweep looks for must be found.
   const planted = [
@@ -164,7 +168,7 @@ test("RULING 126 wall 2: the sweep would catch a real import rather than reporti
 
 /* ── WALL 3: and if it ever did enter the database, it could not join ─────── */
 
-test("RULING 126 wall 3: a future money table would share no column with a collection store", () => {
+test("wall 3: a future money table would share no column with a collection store", () => {
   const COLLECTION_STORES = ["searchLog", "reactions", "feedback", "intakeLimiter"] as const;
   const storeColumns = new Map<string, Set<string>>();
   for (const name of COLLECTION_STORES) {

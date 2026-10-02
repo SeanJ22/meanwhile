@@ -23,9 +23,10 @@ import type { View } from "./context.tsx";
 import type { Access } from "./eligibility.ts";
 import { liveExecutor } from "./executor.ts";
 import { usePulseFeed } from "./live-connection.ts";
-import { buildLiveBundle, type LiveReference } from "./live-data.ts";
-import { LiveSync } from "./live-sync.ts";
+import { buildLiveBundle, rememberPlaces, type LiveReference } from "./live-data.ts";
+import { LiveSync, type SectionState } from "./live-sync.ts";
 import { scopeOfPlaceKey } from "./places.ts";
+import type { Place, StateRow } from "./model.ts";
 import { workerStatusFromPulse } from "./pulse-view.ts";
 
 export interface LiveCommandCenterProps {
@@ -57,7 +58,13 @@ export function LiveCommandCenter(props: LiveCommandCenterProps) {
   const conn = usePulseFeed({ onPulse: (pulse) => sync.onPulse(pulse), onReconnected: () => sync.catchUp() });
   const executor = useMemo(() => liveExecutor({ capabilities: () => sync.capabilities(), stateVersion: () => sync.revision() }), [sync]);
   useEffect(() => () => executor.dispose?.(), [executor]);
-  const data = useMemo(() => buildLiveBundle(snapshot, props.reference, workerStatusFromPulse(conn.pulse)), [snapshot, props.reference, conn.pulse]);
+  // The districts and ZIPs The country has listed stay places after the list moves on, so opening one keeps its breadcrumbs.
+  const [seen, setSeen] = useState<{ readonly from: SectionState | null; readonly places: readonly Place[] }>({ from: null, places: [] });
+  if (seen.from !== snapshot.national) {
+    setSeen({ from: snapshot.national, places: rememberPlaces(seen.places, snapshot.national.phase === "live" ? snapshot.national.data as readonly StateRow[] : null) });
+  }
+  const seenPlaces = seen.places;
+  const data = useMemo(() => buildLiveBundle(snapshot, props.reference, workerStatusFromPulse(conn.pulse), seenPlaces), [snapshot, props.reference, conn.pulse, seenPlaces]);
 
   const onScopeChange = (key: string) => {
     setScopeKey(key);
@@ -90,7 +97,6 @@ export function LiveCommandCenter(props: LiveCommandCenterProps) {
       scopeKey={scopeKey}
       onScopeChange={onScopeChange}
       onQuery={(section, params) => sync.setParams(section, params)}
-      onPeriodChange={(period) => sync.setParams("money", { period: period === "hunt" ? "whole-hunt" : period === "day" ? "last-24h" : "2026-09" })}
       connection={conn.connection}
       lastGoodAt={conn.lastGoodAt}
       recovered={conn.recovered}

@@ -52,11 +52,9 @@
  *     4  njleg.state.nj.us 151px.
  * ```
  *
- * The five Tucson portraits are a real acquisition. They are not shipped here:
- * **RULING 55 — every photo is reviewed by the author, and a decision is about
- * an IMAGE, not a person.** A 480×720 original is a different image from the
- * 150×150 crop we hold, so it needs its own review, and a session shipping it
- * would be skipping that review.
+ * The five Tucson originals were acquired but not shipped in that pass.
+ * New and replacement image bindings now use the saved second-source check
+ * in docs/rulings.md §3; no separate author approval is required.
  *
  * ## What this test is FOR
  *
@@ -102,11 +100,9 @@ const SMALL_FLOOR = 104;
  *
  * That makes this RULING 206 rather than a resolution shortfall: one
  * representation is not the record, and a better representation of the same
- * record is available. It is NOT shipped here, for the same reason the five
- * Tucson originals above are not — **a decision is about an IMAGE**, and a
- * 3275px original is a different image from the 133px crop the author approved.
- * The four originals are staged for his review instead
- * (`data/photos/staged/`), and the ceiling records the honest interim state:
+ * record is available. The four originals were retained in
+ * `data/photos/staged/`; a replacement now needs its §3 second-source check.
+ * The ceiling records the historical interim state:
  * four readers-see-a-face-today portraits that are softer than the card wants.
  */
 const LARGE_SHORTFALL_CEILING = 148;

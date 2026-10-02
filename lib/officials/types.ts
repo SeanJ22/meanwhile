@@ -39,6 +39,14 @@ export interface OfficeholderPhoto {
   /** Null means unknown, and unknown means do not ship it. */
   license: string | null;
   collectedAt: string;
+  verification?: import("../photos/evidence.ts").PortraitVerification;
+}
+
+/** An upstream image is a lead until identity, licence and stored bytes check out. */
+export interface PortraitCandidate {
+  readonly imageUrl: string;
+  readonly sourceUrl: string;
+  readonly collectedAt: string;
 }
 
 export interface Officeholder {
@@ -89,6 +97,7 @@ export interface Officeholder {
    */
   campaignUrl: string | null;
   photo: OfficeholderPhoto | null;
+  portraitCandidate?: PortraitCandidate;
   /**
    * The member's OFFICIAL accounts (item 7, 2026-08-16), from the
    * congress-legislators directory, joined by bioguide.

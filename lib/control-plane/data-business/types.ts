@@ -94,6 +94,9 @@ export interface Slice {
 /** Who is asking. */
 export type Audience = "admin" | "dashboard" | `customer:${string}`;
 export const AUDIENCE_PATTERN = /^(?:admin|dashboard|customer:[a-z0-9][a-z0-9_-]{0,63})$/;
+/** An audience in words: "Admin", "the dashboard", "customer acme". */
+export const audienceWords = (audience: string): string =>
+  audience === "admin" ? "Admin" : audience === "dashboard" ? "the dashboard" : audience.startsWith("customer:") ? `customer ${audience.slice("customer:".length)}` : audience;
 export const isAudience = (value: unknown): value is Audience => typeof value === "string" && AUDIENCE_PATTERN.test(value);
 
 /** What a buyer account holds: a place, topics and a time window. Never a side, a sentiment or a person. */

@@ -28,11 +28,14 @@ import { processRegisteredManualCandidate } from "./promotion.ts";
 import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { captureProblem, registryEdition, section3SourceReceipt } from "./worker-publication-evidence.ts";
-import { publishRosterReading, type RosterReading, type WorkerPublicationCapture } from "./worker-roster-publication.ts";
+import { acceptedRegistryPrior, publishRosterReading, type RosterReading, type WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import { section3Page, section3Record, valueOnPage } from "../control-plane/promotion/section3.ts";
 import type { StatewideExecutive } from "../officials/statewide-executives.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
 import { createHash } from "node:crypto";
+import { storeVerifiedPortrait, type PortraitRuntime } from "../photos/store.ts";
+import type { PortraitSources } from "../photos/evidence.ts";
+import { isOfficialSource } from "./source-authority.ts";
 
 /** One Census division as the place hunt resolved it. `sourceUrl` is the saved Census response it came from. */
 export interface NationalDivisionInput {
@@ -58,6 +61,7 @@ export interface NationalOfficialInput {
   readonly officialUrl: string;
   readonly document: { readonly url: string; readonly capture?: WorkerPublicationCapture };
   readonly linkingPage?: OfficialLinkingPage | null;
+  readonly portrait?: PortraitSources;
 }
 
 export interface NationalPlacePublicationInput {
@@ -66,6 +70,7 @@ export interface NationalPlacePublicationInput {
   readonly divisions: readonly NationalDivisionInput[];
   readonly geographyCaptures: readonly WorkerPublicationCapture[];
   readonly sources: { readonly officials: readonly NationalOfficialInput[] };
+  readonly portraitRuntime?: PortraitRuntime;
 }
 
 export interface NationalPlacePublication {
@@ -154,7 +159,8 @@ async function promote(store: RoutineDataStore, prepared: Parameters<typeof regi
   const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(store,
     requiredManualProductionContract("registry-runtime-bindings"), published.promoted, now);
   if (readback?.status !== "PASS") throw new Error(`NATIONAL_REGISTRY_READBACK_FAILED:${readback?.detail ?? "missing typed reader receipt"}`);
-  return { candidateId: candidate.id, versionId: published.promoted.versionId, readModel: candidate.readModel as RegistryRuntimeReadModel };
+  return { candidateId: candidate.id, versionId: published.promoted.versionId,
+    readModel: published.candidate.candidate.readModel as RegistryRuntimeReadModel, prior: acceptedRegistryPrior(published) };
 }
 
 /**
@@ -211,9 +217,10 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
         bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
         officialCandidacies: { ...prior.payload.officialCandidacies, rows: [] } } }, prior, input.now);
     ({ candidateId } = published); promotedVersionId = published.versionId;
-    prior = (await readRegistryRuntimePrior(input.store, input.now))!;
+    prior = published.prior;
     } catch (error) {
       const detail = error instanceof Error ? error.message : String(error);
+      if (/PROMOTION_BASE_CHANGED|READBACK_FAILED/.test(detail)) prior = (await readRegistryRuntimePrior(input.store, input.now))!;
       for (const division of divisions) gaps.push({ key: `division:${division.ocdId}`, detail });
       for (const body of bodies) gaps.push({ key: `body:${body.id}`, detail });
       divisions.length = 0;
@@ -252,9 +259,11 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
               authority: "REGISTRY_STATEWIDE_EXECUTIVE" as const, sourceUrl: s.row.sourceUrl }, status: "NOT_CHECKED" as const, candidacy: null, unresolvedCandidacyIds: [],
               reason: "Officeholding verified on the official's own page. Ballot candidacy remains owed; no candidacy or absence is asserted." })) } } }, prior, input.now);
       ({ candidateId } = published); promotedVersionId = published.versionId;
-      prior = (await readRegistryRuntimePrior(input.store, input.now))!;
+      prior = published.prior;
       for (const s of statewide) statewideMembers.push({ bodyId: s.row.stateOcdId, versionId: published.versionId, discoveryIds: [s.official.discoveryId] });
     } catch (error) {
+      if (/PROMOTION_BASE_CHANGED|READBACK_FAILED/.test(error instanceof Error ? error.message : String(error)))
+        prior = (await readRegistryRuntimePrior(input.store, input.now))!;
       for (const s of statewide) gaps.push({ key: `official:${s.official.discoveryId}`, detail: error instanceof Error ? error.message : String(error) });
     }
   }
@@ -282,10 +291,37 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
         method: "Place-first national lead; official profile page read",
         members: [{ recordId: `national:${official.discoveryId}`, fields: { name: official.name, office: official.officeTitle, websiteUrl: official.officialUrl } }] };
       try {
-        const published = await publishRosterReading({ store: input.store, bodyId, reading, now: input.now });
+        const published = await publishRosterReading({ store: input.store, bodyId, reading, now: input.now,
+          prior, onPublished: next => { prior = next; } });
         if (!published.confirmed) promotedVersionId = published.versionId;
         members.push({ bodyId, versionId: published.versionId, discoveryIds: [official.discoveryId] });
+        if (official.portrait) {
+          try {
+            const holder = prior!.payload.bodyRosters.find(row => row.bodyId === bodyId)?.members
+              .find(row => row.name === official.name && row.officeTitle === official.officeTitle);
+            if (!holder) throw Error("PORTRAIT_HOLDER_NOT_PUBLISHED");
+            const existing = prior!.payload.officialPhotos.photos.find(row => row.officeholderId === holder.id);
+            if (existing?.sourceUrl === official.portrait.imageUrl && existing.verification) continue;
+            const photo = await storeVerifiedPortrait(official.name, official.portrait, input.now, input.portraitRuntime);
+            const receipt = section3SourceReceipt(official.portrait.captures,input.now,"section3:portrait",
+              "The same named portrait is supported by two saved sources; its permitted use is attributed and its decoded bytes are stored on our origin.");
+            const saved = await promote(input.store, {contractId:"registry-runtime-bindings",scope:"MEMBERS",
+              version:registryEdition(`portrait:${holder.id}:${photo.verification!.imageHash}`),sourceThrough:input.now,
+              sourceReceipt:{...receipt,sources:[...receipt.sources.map(s=>({...s,sourceClass:isOfficialSource(s.finalUrl) ? "OFFICIAL_PUBLISHER" as const : "REFERENCE_PUBLISHER" as const})),
+                {requestedUrl:photo.sourceUrl,finalUrl:photo.sourceUrl,publisher:new URL(photo.sourceUrl).hostname,
+                  sourceClass:"REFERENCE_PUBLISHER",retrievedAt:input.now,httpStatus:200,rawHash:photo.verification!.sourceImageHash.slice(7),
+                  reviewedEvidence:"Downloaded, checked by the existing image decoder and stored; source identity and permitted use are bound to the saved corroborating pages."}]},
+              payload:{...prior!.payload,registry:{...prior!.payload.registry,divisions:[],bodies:[]},bodyRosters:[],
+                rosterReaderDispositions:[],statewideExecutives:[],officialCandidacies:{...prior!.payload.officialCandidacies,rows:[]},
+                officialPhotos:{photos:[{officeholderId:holder.id,name:official.name,...photo}]},rosterPhotos:{[holder.id]:photo.url}}},prior!,input.now);
+            prior=saved.prior;candidateId=saved.candidateId;promotedVersionId=saved.versionId;
+          } catch (error) {
+            gaps.push({key:`portrait:${official.discoveryId}`,detail:error instanceof Error ? error.message : String(error)});
+          }
+        }
       } catch (error) {
+        if (/PROMOTION_BASE_CHANGED|READBACK_FAILED/.test(error instanceof Error ? error.message : String(error)))
+          prior = (await readRegistryRuntimePrior(input.store, input.now))!;
         gaps.push({ key: `official:${official.discoveryId}`, detail: error instanceof Error ? error.message : String(error) });
       }
     }

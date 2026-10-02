@@ -60,8 +60,8 @@ function ProfileForIdentity({ subjectId }: { subjectId: string }) {
         <CardSection title="Public statements">
           <p className="mw-feed-gap" data-statement-feed="not-held">
             {load.kind === "none"
-              ? "We don’t hold a Polarization Research Lab profile for this member of Congress yet."
-              : "The Polarization Research Lab tracks public statements for members of Congress. We don’t hold tracked statements for this official yet."}
+              ? "We’re working on getting this info."
+              : "We’re working on getting this info."}
           </p>
         </CardSection>
       );

@@ -27,10 +27,10 @@ export interface Access {
 }
 
 export const CONNECTION_REASON: Readonly<Record<Exclude<Connection, "live">, string>> = {
-  connecting: "Connecting to live updates. Buttons that change things turn on once the first update arrives.",
-  stale: "The numbers are out of date, so buttons that change things are off. That way you don’t act on old information.",
-  reconnecting: "Reconnecting. Buttons that change things are off until the connection is back.",
-  offline: "Disconnected. Buttons that change things are off. Nothing you did now would be saved.",
+  connecting: "Connecting.",
+  stale: "Numbers are out of date.",
+  reconnecting: "Reconnecting.",
+  offline: "Disconnected.",
 };
 
 /**
@@ -57,16 +57,16 @@ export function whyNot(input: {
 }): string | null {
   const { connection, access, def } = input;
   if (connection !== "live") return CONNECTION_REASON[connection];
-  if (access.role === "viewer") return "Your account can look but can’t make changes.";
-  if (def.needs === "spend" && !access.canSpend) return "This changes spending, and your account doesn’t have spending permission.";
+  if (access.role === "viewer") return "View only.";
+  if (def.needs === "spend" && !access.canSpend) return "Needs spending permission.";
   const pending = pendingFor(input.receipts, def, input.target);
   if (pending) {
     return pending.status === "unknown"
-      ? "We don’t know if the last try worked. Check its result in History before trying again."
-      : `You already sent this at ${mst(pending.sentAt, false)}. Waiting to hear what happened.`;
+      ? "Last try unconfirmed. Check History."
+      : `Sent at ${mst(pending.sentAt, false)}. Waiting.`;
   }
   if (input.mode === "live" && !input.supported) {
-    return `Not connected yet. This button turns on by itself when the backend supports it. ${def.dependency?.need ?? ""}`.trim();
+    return "Not connected yet.";
   }
   return input.itemState ?? null;
 }

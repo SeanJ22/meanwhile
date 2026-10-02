@@ -17,6 +17,7 @@ import type { BodyRoster, RosterReaderDisposition } from "./body-rosters.ts";
 import { CENSUS_PLACEHOLDER_BODY_ISSUE, CENSUS_PLACEHOLDER_LABELS, isCensusPlaceholderDivision } from "./census-placeholders.ts";
 import type { StatewideExecutive } from "../officials/statewide-executives.ts";
 import { officialStateVoteScopeForOfficeholderId } from "../state-rollcalls/authority.ts";
+import { portraitBindingMatches } from "../photos/evidence.ts";
 
 export const REGISTRY_RUNTIME_SOURCE_ID = "registry-reviewed-bindings" as const;
 export const REGISTRY_RUNTIME_SCOPE = "US:reader-registry-runtime-bindings" as const;
@@ -30,6 +31,7 @@ export interface OfficialPhotoManifestRow {
   readonly license: string | null;
   readonly attribution?: string | null;
   readonly collectedAt?: string | null;
+  readonly verification?: import("../photos/evidence.ts").PortraitVerification;
 }
 
 export interface OfficialCandidacyBridgeRow {
@@ -335,7 +337,7 @@ function registryIsolationUrls(member: SourceScopedMember<RegistryIsolationRecor
   if (record.kind === "ROSTER_DISPOSITION") return record.value.evidenceUrls;
   if (record.kind === "STATEWIDE_EXECUTIVE") return statewideExecutiveUrls(record.value);
   if (record.kind === "OFFICIAL_CANDIDACY") return record.value.evidenceUrls;
-  return httpsUrls([record.value.photo?.sourceUrl]);
+  return httpsUrls([record.value.photo?.sourceUrl, ...(record.value.photo?.verification?.sources.map(s=>s.url) ?? [])]);
 }
 
 function registryIsolationIssue(member: SourceScopedMember<RegistryIsolationRecord>): string | null {
@@ -396,6 +398,7 @@ function registryIsolationIssue(member: SourceScopedMember<RegistryIsolationReco
   }
   const { photo, rosterPhoto } = record.value;
   return !photo || !photo.officeholderId || !photo.name || !photo.url ||
+      (photo.verification !== undefined && !portraitBindingMatches(photo.name, photo)) ||
       registryIsolationUrls(member).length === 0 ||
       (rosterPhoto !== null && (!photo.license || rosterPhoto !== photo.url))
     ? `${member.key} lacks a licensed, sourced, exact portrait binding.`
@@ -453,6 +456,7 @@ function sourceScopedRegistryProjection(
 ): RegistryIsolationResult {
   const currentMembers = registryIsolationMembers(input.payload, input.sourceReceipt);
   const priorRosters = new Map(prior?.payload.bodyRosters.map(roster => [roster.bodyId, roster]) ?? []);
+  const priorPhotos = new Map(prior?.payload.officialPhotos.photos.map(photo => [photo.officeholderId, photo]) ?? []);
   const reconciled = reconcileSourceScopedMembers({
     current: currentMembers,
     currentReceipt: input.sourceReceipt,
@@ -460,7 +464,14 @@ function sourceScopedRegistryProjection(
       members: registryIsolationMembers(prior.payload, prior.sourceReceipt),
       sourceReceipt: prior.sourceReceipt,
     } : null,
-    memberIssue: registryIsolationIssue,
+    memberIssue: member => {
+      const issue = registryIsolationIssue(member);
+      if (issue || member.record.kind !== "OFFICIAL_PHOTO") return issue;
+      const photo = member.record.value.photo!;
+      const published = priorPhotos.get(photo.officeholderId);
+      if (published && canonicalCivicDataJson(published) === canonicalCivicDataJson(photo)) return null;
+      return portraitBindingMatches(photo.name, photo) ? null : `${member.key} needs its §3 second-source portrait check.`;
+    },
     sourceUrls: member => {
       const urls = registryIsolationUrls(member);
       if (member.record.kind !== "BODY_ROSTER") return urls;
@@ -652,9 +663,10 @@ function inheritedRegistryMembers(
 }
 
 /**
- * The removals this successor proves (Sean's rule, 2026-09-23): a body the
- * prior held on a Census "no district here" placeholder, gone from this
- * projection while the placeholder division stays. Named only against the
+ * The removals this successor proves: a body the prior held on a Census "no
+ * district here" placeholder, gone from this projection while the placeholder
+ * division stays. A placeholder is not a government, so a body on one is
+ * dropped rather than shown to a reader. Named only against the
  * prior, because the promotion counts removals against the pointer it replaces.
  */
 function placeholderBodyRemovals(payload: RegistryRuntimeReadModel, prior: RegistryRuntimePrior | null): RoutineRemovalEvidence[] {
@@ -754,6 +766,18 @@ export function registryRuntimeCandidate(
   );
   if (unauthorizedSource) {
     throw new Error(`REGISTRY_RUNTIME_SOURCE_RECEIPT_CLASS_NOT_AUTHORIZED:${unauthorizedSource.sourceClass}`);
+  }
+
+  // The added reference class corroborates verified portraits only; it cannot
+  // authorize a new body, roster, or another fact in the same package.
+  const currentMembers = registryIsolationMembers(input.payload, input.sourceReceipt);
+  for (const source of input.sourceReceipt.sources.filter(source => source.sourceClass === "REFERENCE_PUBLISHER")) {
+    const cited = currentMembers.filter(member => member.record.kind !== "PROJECTION_METADATA" &&
+      registryIsolationUrls(member).some(url => url === source.requestedUrl || url === source.finalUrl));
+    if (!cited.length || cited.some(member => member.record.kind !== "OFFICIAL_PHOTO" || !member.record.value.photo ||
+      !portraitBindingMatches(member.record.value.photo.name, member.record.value.photo))) {
+      throw new Error("REGISTRY_RUNTIME_REFERENCE_SOURCE_NOT_VERIFIED_PORTRAIT");
+    }
   }
 
   const isolated = sourceScopedRegistryProjection(input, options.prior ?? null);

@@ -1,33 +1,30 @@
 "use client";
 
 /**
- * **WORKERS.** The workers that collect, check and publish information
- * (engineers call them the runner): what each is doing, why anything waits,
- * the last useful progress (not just a check-in), costs and the next step.
+ * **WORKERS.** What each worker is doing, what waits, the last useful
+ * progress, costs and the next step. Plain labels and numbers; a figure the
+ * page does not have shows as "—".
  *
- * Reads `admin-v6/workers@1` as it arrives. Each card shows what the section
- * sent and, beside it, the section's own `missingParts` for that card. A
- * partly connected page never hides a working card behind a generic "not
- * connected" note, and an unknown list or count is never shown as none or 0.
- *
- * Ages ("about 15 minutes ago") and a late round are worked out from the
- * clock each time the page draws. The existing pulse redraws the page about
- * every 45 seconds, so they move on with no new worker message and no timer
- * of their own.
+ * Reads `admin-v6/workers@1` as it arrives. Ages and a late round are worked
+ * out from the clock each time the page draws; the existing pulse redraws the
+ * page about every 45 seconds.
  */
 import { useState, useSyncExternalStore } from "react";
 
 import { useV6 } from "./context.tsx";
 import { SECTION_DEP } from "./dependencies.ts";
-import { count, mst, usd, WORKER_STAGE_WORDS, type AdminV6Data, type AgentRun, type Dependency, type WaitingItem, type WorkerStage, type WorkerStatus } from "./model.ts";
+import { count, mst, usd, WORKER_STAGE_WORDS, type AdminV6Data, type AgentRun, type WorkerStage, type WorkerStatus } from "./model.ts";
 import { relation } from "./places.ts";
 import { runnerStateWords } from "./pulse-view.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
 import { EvidenceCopyControl } from "../evidence-copy-control.tsx";
-import { Actions, Card, cx, Empty, Pill, SourceNote, Technical, usePager } from "./ui.tsx";
+import { Actions, Card, cx, Empty, Pill, Technical, usePager } from "./ui.tsx";
 import s from "./v6.module.css";
 
 const STAGES: readonly WorkerStage[] = ["finding", "collecting", "extracting", "checking", "publishing"];
+
+/** A time, or "—" when there is none. */
+const when = (iso: string | null | undefined, withDay = true): string => (iso && Number.isFinite(Date.parse(iso)) ? mst(iso, withDay) : "—");
 
 /* ------------------------------------------------------------ the clock */
 
@@ -71,6 +68,15 @@ export interface RoundReading {
 
 /** The current or next round, including whether it is late, from saved times only. */
 export function roundReading(st: WorkerStatus | null | undefined, now: number): RoundReading {
+  const cycle = st?.cycle;
+  if (cycle?.finishedAt) {
+    const exit = cycle.signal ? `signal ${cycle.signal}` : cycle.exitCode === null ? "exit not recorded" : `exit ${cycle.exitCode}`;
+    return { headline: `Finished ${mst(cycle.finishedAt, false)}`,
+      detail: `Started ${mst(cycle.startedAt)}; finished ${mst(cycle.finishedAt)}; ${exit}.`, overdue: false };
+  }
+  if (cycle && st?.runnerState !== "ALIVE") return {
+    headline: "No finish recorded", detail: `Started ${mst(cycle.startedAt)}. The runner's check-in is ${st?.runnerState ? runnerStateWords(st.runnerState).toLowerCase() : "unread"}.`, overdue: false,
+  };
   const last = st?.lastRoundFinishedAt ? ` The last round finished ${mst(st.lastRoundFinishedAt, false)}.` : "";
   if (st?.roundStartedAt) {
     return { headline: `Running since ${mst(st.roundStartedAt, false)}`, detail: `This round has run for ${spanWords(now - Date.parse(st.roundStartedAt))}.${last}`, overdue: false };
@@ -124,39 +130,6 @@ export function workersSectionArrived(src: AdminV6Data["workers"]): boolean {
   return src.state === "sample" || src.state === "live" && !(src.missingParts ?? []).includes(SECTION_DEP.workers.need);
 }
 
-/** What each kind of waiting item does and doesn't mean. */
-export function waitingMeans(x: WaitingItem): string | null {
-  switch (x.kind) {
-    case "Not finished":
-      return "These are the tasks assigned to this hunt. It isn’t the 325-item checklist, and a finished task isn’t proof readers can see it.";
-    case "Keeps failing":
-      return "One source failing again and again. It’s one problem, not separate results.";
-    case "Held":
-      return "Held work isn’t published, so readers don’t see it.";
-    case "In line":
-      return "Counted for the whole system, not one place.";
-    default:
-      return null;
-  }
-}
-
-/* ---------------------------------------------------------------- pieces */
-
-export function Missing(props: { readonly parts: readonly string[]; readonly dependency?: Dependency }) {
-  if (!props.parts.length) return null;
-  return (
-    <div className={cx(s.notice, s.noticeMissing)} role="status">
-      <strong>Not shown here, and why</strong>
-      {props.parts.map((m) => <span key={m}>{m}</span>)}
-      {props.dependency && <span className={s.meta}>Supplied by {props.dependency.owner} · {props.dependency.id}</span>}
-    </div>
-  );
-}
-
-function WholeSystem(props: { readonly place: string; readonly isCountry: boolean }) {
-  return <Pill tone="slate" title="These counts cover every place the workers serve.">{props.isCountry ? "Whole system" : `Whole system, not just ${props.place}`}</Pill>;
-}
-
 /* ---------------------------------------------------------------- agents */
 
 type AgentFilter = "all" | AgentRun["state"];
@@ -164,11 +137,7 @@ const AGENT_FILTERS: readonly (readonly [AgentFilter, string])[] = [["all", "Eve
 const TIER_TONE: Readonly<Record<AgentRun["model"]["tier"], "info" | "good" | "gold" | "slate" | "warn">> = { haiku: "good", sonnet: "info", opus: "gold", "plain-code": "slate", older: "warn" };
 const TIER_WORDS: Readonly<Record<AgentRun["model"]["tier"], string>> = { haiku: "Haiku 4.5", sonnet: "Sonnet 5.5", opus: "Opus 5.5", "plain-code": "Plain code", older: "Older model" };
 
-/**
- * **WHAT EACH AGENT DID.** One row per agent run, newest first: its role and model tier, what it cost, what it
- * found, and the saved source page one click away. A run that is still open past the runner's wall says it did not
- * finish; a cost the ledger never priced says so and is never shown as $0.
- */
+/** **WHAT EACH AGENT DID.** One row per agent run, newest first: role, model tier, cost, what it found, and its saved source page. */
 function Agents() {
   const v = useV6();
   const src = v.data.agents;
@@ -180,11 +149,10 @@ function Agents() {
   const total = priced.reduce((n, r) => n + (r.costUsd ?? 0), 0);
   const byTier = (["haiku", "sonnet", "opus"] as const).map((k) => [k, all.filter((r) => r.model.tier === k).reduce((n, r) => n + (r.costUsd ?? 0), 0)] as const);
   return (
-    <Card title="What the agents did" aside={<span className={s.meta}>{src.data ? `${count(all.length)} recent runs · ${usd(total)} priced${priced.length < all.length ? ` · ${count(all.length - priced.length)} with no price recorded` : ""}` : "Reading…"}</span>}>
-      <SourceNote source={src} what="Agent runs" />
+    <Card title="What the agents did" aside={<span className={s.meta}>{src.data ? `${count(all.length)} recent runs · ${usd(total)}` : "—"}</span>}>
       {src.data && (
         <>
-          <p className={cx(s.p, s.small, s.dim)}>{byTier.map(([k, n]) => `${TIER_WORDS[k]} ${usd(n)}`).join(" · ")}. The cheapest model that can do the job goes first. The most recent runs are listed, not every run ever made. A cost with no price recorded says so; it is never shown as $0.</p>
+          <p className={cx(s.p, s.small, s.dim)}>{byTier.map(([k, n]) => `${TIER_WORDS[k]} ${usd(n)}`).join(" · ")}</p>
           <div className={s.tabs} role="group" aria-label="Filter agent runs">
             {AGENT_FILTERS.map(([k, label]) => (
               <button key={k} type="button" className={s.tab} aria-pressed={filter === k} onClick={() => { setFilter(k); reset(); }}>
@@ -192,7 +160,7 @@ function Agents() {
               </button>
             ))}
           </div>
-          {!list.length && <Empty>{filter === "all" ? `No recent agent run is recorded for ${v.place.name}.` : "No run in this group."}</Empty>}
+          {!list.length && <Empty>No runs</Empty>}
           <div className={s.stack}>
             {page.map((r) => (
               <div key={r.id} className={s.row}>
@@ -200,7 +168,7 @@ function Agents() {
                   <strong style={{ fontSize: 13 }}>{r.title}</strong>
                   <span className={s.inline}><Pill tone={r.state === "running" ? "good" : r.state === "done" ? "neutral" : "warn"}>{r.stateWords}</Pill><Pill tone={TIER_TONE[r.model.tier]} title={r.model.name}>{TIER_WORDS[r.model.tier]}</Pill></span>
                 </div>
-                <span className={s.meta}>{r.role} · {r.model.name} · {r.costWords} · {mst(r.endedAt ?? r.startedAt)}</span>
+                <span className={s.meta}>{r.role} · {r.model.name} · {r.costWords} · {when(r.endedAt ? r.endedAt : r.startedAt)}</span>
                 <span className={s.small}>{r.found}</span>
                 {r.source && (
                   <span className={s.inline}>
@@ -219,11 +187,7 @@ function Agents() {
   );
 }
 
-/**
- * **HOW RELIABLE OUR SOURCES ARE.** Each source's record from the workers' completed reads, with the next retry time the
- * dispatcher itself will use. A source failing is usually the source's doing: it shows here as reliability, and is not
- * a separate problem to investigate each time.
- */
+/** **HOW RELIABLE OUR SOURCES ARE.** Each source's record from the workers' completed reads, with its next retry time. */
 function Reliability() {
   const v = useV6();
   const src = v.data.reliability;
@@ -231,15 +195,14 @@ function Reliability() {
   const { page, pager } = usePager(rows, 8);
   const failing = rows.filter((r) => r.state === "failing").length;
   return (
-    <Card title="How reliable our sources are" aside={<span className={s.meta}>{src.data ? `${count(rows.length)} sources · ${count(failing)} failing now` : "Reading…"}</span>}>
-      <SourceNote source={src} what="Source reliability" />
-      {src.data && !rows.length && <Empty>No source has been read yet.</Empty>}
+    <Card title="How reliable our sources are" aside={<span className={s.meta}>{src.data ? `${count(rows.length)} sources · ${count(failing)} failing now` : "—"}</span>}>
+      {src.data && !rows.length && <Empty>No sources</Empty>}
       <div className={s.stack}>
         {page.map((r) => (
           <div key={r.source} className={s.row}>
             <div className={s.spread}><strong style={{ fontSize: 13 }}>{r.source.replace(/^https?:\/\//, "")}</strong><Pill tone={r.state === "failing" ? "warn" : r.state === "recovering" ? "gold" : "good"}>{r.state === "failing" ? `${r.consecutiveFailures} failed in a row` : r.state === "recovering" ? "Recovered" : "Healthy"}</Pill></div>
-            <span className={s.meta}>{count(r.successes)} worked · {count(r.failures)} failed · last try {mst(r.lastAttemptAt)}{r.retryAt ? ` · next try ${mst(r.retryAt)}` : ""}</span>
-            {r.state === "failing" && <span className={s.small}>{r.detail ? r.detail : "The reason isn’t known yet."}</span>}
+            <span className={s.meta}>{count(r.successes)} worked · {count(r.failures)} failed · last try {when(r.lastAttemptAt)}{r.retryAt ? ` · next try ${when(r.retryAt)}` : ""}</span>
+            {r.state === "failing" && <span className={s.small}>{r.detail ? r.detail : "—"}</span>}
           </div>
         ))}
       </div>
@@ -248,11 +211,7 @@ function Reliability() {
   );
 }
 
-/**
- * **PUBLISHED VERSUS READER-VISIBLE.** One row per routine contract: the version its promotion pointer publishes, and
- * whether the reader read back exactly that version. It trusts the pointer and the readback as recorded and re-checks
- * no payload. Only the contracts a reader cannot see yet are listed; the counts cover every contract.
- */
+/** **PUBLISHED VERSUS READER-VISIBLE.** Counts for every routine contract; the contracts a reader cannot see yet are listed. */
 function Publication() {
   const v = useV6();
   const src = v.data.publication;
@@ -260,24 +219,23 @@ function Publication() {
   const rows = p?.notVisible ?? [];
   const { page, pager } = usePager(rows, 8);
   return (
-    <Card title="Published versus reader-visible" aside={<span className={s.meta}>{p ? `${count(p.total)} routine contracts` : "Reading…"}</span>}>
-      <SourceNote source={src} what="Publication status" />
+    <Card title="Published versus reader-visible" aside={<span className={s.meta}>{p ? `${count(p.total)} routine contracts` : "—"}</span>}>
       {p && (
         <div className={s.stack}>
           <ul className={s.stack} style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {p.counts.map((c) => <li key={c.verdict} className={s.small}><strong>{count(c.count)} of {count(p.total)}</strong> {c.words.charAt(0).toLowerCase() + c.words.slice(1)}</li>)}
-            <li className={s.small}><strong>{count(p.latestAttemptFailing)} of {count(p.total)}</strong> whose latest attempt carries a failure code</li>
+            <li className={s.small}><strong>{count(p.latestAttemptFailing)} of {count(p.total)}</strong> latest attempt failed</li>
           </ul>
-          {!rows.length && <Empty>Every contract with a published version is visible to readers.</Empty>}
+          {!rows.length && <Empty>None</Empty>}
           {page.map((r) => (
             <div key={r.contract} className={s.row}>
               <div className={s.spread}><strong style={{ fontSize: 13 }}>{r.contract}</strong><Pill tone={r.verdict === "READBACK_FAILED" ? "warn" : "gold"}>{r.verdict === "NOT_PUBLISHED" ? "Not published" : r.verdict === "READBACK_FAILED" ? "Readback failed" : "Not read back"}</Pill></div>
-              <span className={s.meta}>{r.words}{r.publishedAt ? ` · published ${mst(r.publishedAt)}` : ""}</span>
-              <span className={s.meta}>{r.attempt ? `Latest attempt ${r.attempt.state.toLowerCase().replaceAll("_", " ")} ${mst(r.attempt.at)}${r.attempt.failureCode ? ` · ${r.attempt.failureCode}` : ""}` : "No attempt recorded"}</span>
+              <span className={s.meta}>{r.words}{r.publishedAt ? ` · published ${when(r.publishedAt)}` : ""}</span>
+              <span className={s.meta}>{r.attempt ? `Latest attempt ${r.attempt.state.toLowerCase().replaceAll("_", " ")} ${when(r.attempt.at)}${r.attempt.failureCode ? ` · ${r.attempt.failureCode}` : ""}` : "Latest attempt —"}</span>
             </div>
           ))}
           {pager}
-          {p.notVisibleHidden > 0 && <span className={s.meta}>{count(p.notVisibleHidden)} more not shown. The counts above cover all of them.</span>}
+          {p.notVisibleHidden > 0 && <span className={s.meta}>{count(p.notVisibleHidden)} more</span>}
         </div>
       )}
     </Card>
@@ -294,8 +252,6 @@ export function WorkersScreen() {
   const st = w?.status;
   const live = v.connection === "live";
   const arrived = workersSectionArrived(src);
-  const sample = src.state === "sample";
-  const miss = missingByCard(arrived ? src.missingParts?.map((m) => v.scopeKey.includes(":") ? m.replaceAll(v.scopeKey, v.place.name) : m) : undefined);
   const isCountry = v.place.kind === "Country";
   const inScope = (applies: readonly string[]) => relation(v.index, applies, v.scopeKey) !== null;
   const jobs = w?.jobs?.filter((j) => inScope([j.placeKey])) ?? null;
@@ -303,27 +259,18 @@ export function WorkersScreen() {
   const events = w?.events?.filter((e) => inScope(e.applies)) ?? null;
   const totals = laneTotals(st?.lanes ?? null);
   const round = roundReading(st, now);
+  const roundMissing = round.headline === "Not reported";
   const checkIn = ageWords(st?.lastCheckIn ?? null, now);
   const progressAge = ageWords(st?.lastUsefulProgress?.at ?? null, now);
   const connWords = { live: "Live", stale: "Out of date", reconnecting: "Reconnecting", offline: "Disconnected", connecting: "Connecting" }[v.connection];
-  const notArrived = { state: "not-connected" as const, load: "ready" as const, data: null, asOf: null, dependency: SECTION_DEP.workers };
   const huntsOrAreas = jobs ? new Set(jobs.map((j) => j.hunt)).size : 0;
   return (
     <>
       <header>
         <p className={s.eyebrow}>{v.place.name}</p>
         <h1 className={s.h1}>Workers</h1>
-        <p className={cx(s.p, s.small, s.dim)}>The workers collect, check and publish information. Engineers call them the runner.</p>
-        {!isCountry && <p className={cx(s.p, s.small)}>Lists on this page cover work sent to a hunt in {v.place.name}. Counts marked <strong>Whole system</strong> cover every place.</p>}
-        {arrived && src.asOf && <p className={cx(s.p, s.meta)}>Read {mst(src.asOf)}{live ? "" : ". Nothing newer is arriving right now, so this may be out of date"}.</p>}
+        {arrived && src.asOf && <p className={cx(s.p, s.meta)}>Read {mst(src.asOf)}</p>}
       </header>
-
-      {!arrived && !sample && (
-        <div className={cx(s.notice, s.noticeMissing)} role="status">
-          <strong>The detailed Workers reading hasn’t arrived{src.state === "live" ? "" : " yet"}.</strong>
-          <span>The check-in and whole-system counts below come from the live pulse. Waiting reasons and changes appear here by themselves once the reading arrives. You don’t need to reload.</span>
-        </div>
-      )}
 
       {w?.update ? (
         <Card title={w.update.title} tone="warn" aside={<span className={s.meta}>Checked {mst(w.update.checkedAt)}</span>}>
@@ -342,27 +289,24 @@ export function WorkersScreen() {
         </Card>
       ) : (
         <Card title="Are the workers on the latest update?">
-          <p className={cx(s.p, s.small)}>Unknown. Whether the workers run the same version as the website isn’t read yet, so no answer is shown.</p>
-          <SourceNote source={{ state: "not-connected", load: "ready", data: null, asOf: null, dependency: SECTION_DEP.workerVersion }} />
+          <p className={cx(s.p, s.small)}>—</p>
         </Card>
       )}
 
       <section aria-label="Status" className={s.gridTiles}>
-        <div className={cx(s.row, !live && s.cardWarn)}><span className={s.eyebrow}>Live updates</span><strong className={live ? s.textGood : s.textWarn}>{connWords}</strong><span className={s.meta}>{live ? "News from the workers is coming in" : "Nothing new is arriving. What’s shown is the last good reading"}</span></div>
-        <div className={s.row}><span className={s.eyebrow}>Workers last checked in</span><strong>{mst(st?.lastCheckIn ?? null)}</strong><span className={s.meta}>{checkIn ? `${checkIn}. ` : ""}{st?.runnerState && st.runnerState !== "ALIVE" ? `Workers: ${runnerStateWords(st.runnerState)}. ` : ""}A check-in only means they’re switched on, not that they made progress.</span></div>
+        <div className={cx(s.row, !live && s.cardWarn)}><span className={s.eyebrow}>Live updates</span><strong className={live ? s.textGood : s.textWarn}>{connWords}</strong></div>
+        <div className={s.row}><span className={s.eyebrow}>Workers last checked in</span><strong>{when(st?.lastCheckIn)}</strong><span className={s.meta}>{checkIn ? checkIn : ""}{st?.runnerState && st.runnerState !== "ALIVE" ? `${checkIn ? ". " : ""}Workers: ${runnerStateWords(st.runnerState)}` : ""}</span></div>
         <div className={s.row}>
           <span className={s.eyebrow}>Last useful progress{isCountry ? "" : ` in ${v.place.name}`}</span>
-          <strong>{st?.lastUsefulProgress ? mst(st.lastUsefulProgress.at) : "Unknown"}</strong>
-          <span className={s.meta}>{st?.lastUsefulProgress ? `${progressAge ? `${progressAge}. ` : ""}${st.lastUsefulProgress.what}` : miss.progress.length ? miss.progress.join(" ") : "A check-in isn’t progress, so nothing is inferred from it."}</span>
+          <strong>{when(st?.lastUsefulProgress?.at)}</strong>
+          {st?.lastUsefulProgress && <span className={s.meta}>{progressAge ? `${progressAge}. ` : ""}{st.lastUsefulProgress.what}</span>}
         </div>
-        <div className={cx(s.row, round.overdue && s.cardWarn)}><span className={s.eyebrow}>Round of work</span><strong className={round.overdue ? s.textWarn : undefined}>{round.headline}</strong><span className={s.meta}>{round.detail}</span></div>
+        <div className={cx(s.row, round.overdue && s.cardWarn)}><span className={s.eyebrow}>Round of work</span><strong className={round.overdue ? s.textWarn : undefined}>{roundMissing ? "—" : round.headline}</strong>{st?.lastRoundFinishedAt && !round.headline.startsWith("Last finished") && <span className={s.meta}>Last finished {when(st.lastRoundFinishedAt, false)}</span>}{st?.cycle && <><span className={s.meta}>{round.detail}</span>{st.cycle.lastError && <span className={cx(s.meta, s.textWarn)}>Last round error: {st.cycle.lastError}</span>}</>}</div>
         <div className={s.row}>
-          <span className={s.eyebrow}>{jobs ? `Work in ${v.place.name}` : "Whole-system work"}</span>
-          <strong>{jobs ? `${jobs.length} working now · ${waiting?.length ?? "unknown"} waiting` : totals ? `${totals.running === null ? "Unknown number" : count(totals.running)} running · ${count(totals.waiting)} waiting` : "Not reported"}</strong>
-          <span className={s.meta}>{jobs ? (live ? "The lists below add up to these counts" : "Last known, may be out of date") : totals ? (isCountry ? "Across every place" : `Across every place, not just ${v.place.name}. How many are working in ${v.place.name} is unknown`) : "The lane counts weren’t read"}</span>
+          <span className={s.eyebrow}>{jobs ? `Work in ${v.place.name}` : isCountry ? "Work" : "Work, all places"}</span>
+          <strong>{jobs ? `${jobs.length} working now · ${waiting ? waiting.length : "—"} waiting` : totals ? `${totals.running === null ? "—" : count(totals.running)} running · ${count(totals.waiting)} waiting` : "—"}</strong>
         </div>
       </section>
-      {!!st?.unread.length && <p className={cx(s.p, s.meta)}>Not read this time: {st.unread.join("; ")}. Other readings continue to update.</p>}
 
       <Agents />
 
@@ -370,33 +314,27 @@ export function WorkersScreen() {
 
       <Publication />
 
-      <Card title="Working now, by stage" aside={jobs ? <span className={s.meta}>{jobs.length} jobs working at the same time across {huntsOrAreas} hunts or shared areas</span> : totals ? <WholeSystem place={v.place.name} isCountry={isCountry} /> : undefined}>
-        {!jobs && sample && <SourceNote source={src} />}
-        {!jobs && !sample && (
-          <>
-            <p className={cx(s.p, s.small)}>The full list of jobs running now isn’t available, so how many are working {isCountry ? "right now" : `in ${v.place.name}`} is unknown, not zero.</p>
-            <Missing parts={arrived ? miss.jobs : [SECTION_DEP.workerActive.need]} dependency={SECTION_DEP.workerActive} />
-          </>
-        )}
+      <Card title="Working now, by stage" aside={jobs ? <span className={s.meta}>{jobs.length} jobs working at the same time across {huntsOrAreas} hunts or shared areas</span> : undefined}>
+        {!jobs && !st?.lanes && <p className={cx(s.p, s.small)}>—</p>}
         {st?.lanes && !jobs && (
           <div className={s.gridTiles}>
-            {st.lanes.map((l) => <div key={l.name} className={s.row}><strong className={s.small}>{l.name}</strong><span className={s.small}>{l.active === null ? "Running: unknown" : `${count(l.active)} running`} · {count(l.waiting)} waiting</span>{l.blockedBy && <span className={s.meta}>{l.blockedBy}</span>}</div>)}
+            {st.lanes.map((l) => <div key={l.name} className={s.row}><strong className={s.small}>{l.name}</strong><span className={s.small}>{l.active === null ? "— running" : `${count(l.active)} running`} · {count(l.waiting)} waiting</span>{l.blockedBy && <span className={s.meta}>{l.blockedBy}</span>}</div>)}
           </div>
         )}
-        {jobs && !jobs.length && <Empty>Nothing is running in {v.place.name} right now.</Empty>}
+        {jobs && !jobs.length && <Empty>No jobs</Empty>}
         {jobs && STAGES.map((stage) => {
           const list = jobs.filter((j) => j.stage === stage);
           return (
             <div key={stage} className={s.stack}>
               <h3 className={s.h3}>{WORKER_STAGE_WORDS[stage]} <span className={cx(s.mono, s.dim)}>{list.length}</span></h3>
-              {!list.length && <Empty>No job at this stage.</Empty>}
+              {!list.length && <Empty>No jobs</Empty>}
               {list.map((j) => (
                 <div key={j.id} className={s.row}>
                   <div className={s.spread}><strong style={{ fontSize: 13 }}>{j.title}</strong><span className={s.meta}>{j.hunt}</span></div>
-                  <span className={s.meta}>{v.index.get(j.placeKey)?.name} · {j.requirement} · started {mst(j.startedAt, false)} · {live ? j.elapsed : "last known"}</span>
+                  <span className={s.meta}>{v.index.get(j.placeKey)?.name} · {j.requirement} · started {when(j.startedAt, false)}{live ? ` · ${j.elapsed}` : ""}</span>
                   <dl className={s.facts}>
                     <dt>Using</dt><dd>{j.method}</dd>
-                    <dt>AI</dt><dd>{j.model} — {j.modelWhy}</dd>
+                    <dt>AI</dt><dd>{j.model}</dd>
                     <dt>Cost</dt><dd>{j.cost}</dd>
                     <dt>Latest</dt><dd>{j.latest}</dd>
                     <dt>Next</dt><dd>{j.next}</dd>
@@ -410,34 +348,24 @@ export function WorkersScreen() {
       </Card>
 
       <Card title="Waiting, and why" aside={waiting ? <span className={s.meta}>{waiting.length} {waiting.length === 1 ? "reason" : "reasons"}</span> : undefined}>
-        {!waiting && (sample ? <SourceNote source={src} /> : (
-          <p className={cx(s.p, s.small)}>{arrived ? `A complete waiting list for ${v.place.name} isn’t available. Unknown doesn’t mean nothing is waiting.` : "Waiting reasons arrive with the detailed Workers reading. Unknown doesn’t mean nothing is waiting."}</p>
-        ))}
-        {waiting && !waiting.length && <Empty>Nothing is waiting in {v.place.name}.</Empty>}
+        {!waiting && <p className={cx(s.p, s.small)}>—</p>}
+        {waiting && !waiting.length && <Empty>Nothing waiting</Empty>}
         <div className={s.stack}>
-          {waiting?.map((x) => {
-            const means = waitingMeans(x);
-            return (
-              <div key={`${x.kind}:${x.title}`} className={s.row}>
-                <div className={s.spread}><strong style={{ fontSize: 13 }}>{x.title}</strong><span className={cx(s.pill, s["tone-slate"])}>{x.kind === "In line" && !isCountry ? "In line · whole system" : x.kind}</span></div>
-                <span className={s.small}>{x.why}</span>
-                {means && <span className={s.meta}>{means}</span>}
-                <span className={s.meta}>Next: {x.nextTime} · {x.owner}</span>
-                <Actions actions={x.actions} />
-              </div>
-            );
-          })}
+          {waiting?.map((x) => (
+            <div key={`${x.kind}:${x.title}`} className={s.row}>
+              <div className={s.spread}><strong style={{ fontSize: 13 }}>{x.title}</strong><span className={cx(s.pill, s["tone-slate"])}>{x.kind}</span></div>
+              <span className={s.small}>{x.why}</span>
+              <span className={s.meta}>Next: {x.nextTime} · {x.owner}</span>
+              <Actions actions={x.actions} />
+            </div>
+          ))}
         </div>
-        {!arrived && !sample && <SourceNote source={notArrived} />}
-        <Missing parts={miss.waiting} />
       </Card>
 
       <div className={s.grid2}>
         <Card title="What changed">
-          {!events && (sample ? <SourceNote source={src} /> : (
-            <p className={cx(s.p, s.small)}>{arrived ? `No change for ${v.place.name} is in the readings this page can see. That doesn’t mean nothing happened: plain-code jobs don’t record changes this page can read yet.` : "Changes arrive with the detailed Workers reading."}</p>
-          ))}
-          {events && !events.length && <Empty>No recorded changes in {v.place.name}.</Empty>}
+          {!events && <p className={cx(s.p, s.small)}>—</p>}
+          {events && !events.length && <Empty>No changes</Empty>}
           <ul className={s.stack} style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {events?.map((e, i) => (
               <li key={i} className={s.small}>
@@ -446,20 +374,15 @@ export function WorkersScreen() {
               </li>
             ))}
           </ul>
-          {events && events.length > 0 && <p className={cx(s.p, s.meta)}>A run that ended isn’t proof readers can see its result. A run whose work claim ran out isn’t proof it delivered nothing.</p>}
-          <Missing parts={miss.events} />
         </Card>
         <Card title="What happens next">
-          {w?.next ? <ul className={s.stack} style={{ margin: 0, paddingLeft: 18 }}>{w.next.map((n) => <li key={n} className={s.small}>{n}</li>)}</ul> : <Empty>The next steps aren’t reported yet. {st?.nextRoundDueAt ? `The next round ${round.overdue ? "was" : "is"} due ${mst(st.nextRoundDueAt, false)}.` : "No finish time is shown when none is known."}</Empty>}
+          {w?.next ? <ul className={s.stack} style={{ margin: 0, paddingLeft: 18 }}>{w.next.map((n) => <li key={n} className={s.small}>{n}</li>)}</ul> : <p className={cx(s.p, s.small)}>{st?.nextRoundDueAt ? `Next round ${round.overdue ? "was due" : "due"} ${when(st.nextRoundDueAt, false)}` : "—"}</p>}
           <Actions actions={[{ kind: "scope-first", target: v.scopeKey }, { kind: "global-runner-pause", target: "runner" }]} />
         </Card>
       </div>
 
-      {miss.other.length > 0 && <Card title="Also not available"><Missing parts={miss.other} /></Card>}
-
       <Card title="Your instructions, and what the workers did with them" aside={<button type="button" className={s.btnLink} onClick={() => v.go("work")}>All history →</button>}>
-        {v.data.history.state !== "live" && <SourceNote source={v.data.history} what="Saved instructions" />}
-        {!v.receipts.length && <Empty>No instructions yet.</Empty>}
+        {!v.receipts.length && <Empty>No instructions</Empty>}
         <div className={s.stack}>{v.receipts.filter((r) => relation(v.index, [r.scopeKey], v.scopeKey) !== null || r.level === "global").slice(0, 8).map((r) => <ReceiptCard key={r.key} receipt={r} />)}</div>
       </Card>
     </>

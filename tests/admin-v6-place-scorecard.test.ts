@@ -53,11 +53,12 @@ test("the owed list puts the work first, filters by group, status and words, and
   assert.equal(owedStatesOf("needs-fix"), null);
 });
 
-test("only a ZIP, a county or a state is a place", () => {
+test("only a ZIP, a county, a congressional district or a state is a place", () => {
   assert.deepEqual(resolvePlaceKey("geo:az.zcta.85635"), { kind: "zip", zip: "85635", state: "az" });
   assert.deepEqual(resolvePlaceKey("geo:az.county.04019"), { kind: "county", geoid: "04019", state: "az" });
+  assert.deepEqual(resolvePlaceKey("geo:az.congressional_district.0406"), { kind: "district", geoid: "0406", state: "az" });
   assert.deepEqual(resolvePlaceKey("st:az"), { kind: "state", state: "az" });
-  for (const bad of ["us", "geo:az.congressional_district.06", "body:x", "geo:az.zcta.856"]) {
+  for (const bad of ["us", "geo:az.congressional_district.06", "geo:az.cbsa.38060", "body:x", "geo:az.zcta.856"]) {
     const r = resolvePlaceKey(bad);
     assert.ok("says" in r && r.state === "REFUSED", bad);
   }

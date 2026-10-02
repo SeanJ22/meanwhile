@@ -108,6 +108,8 @@ export interface VotingJurisdiction {
   /** The authority itself. The public body, never a vendor. */
   sourceOrg: string;
   sourceUrl: string;
+  /** Saved official page linking a government or vendor site outside .gov (§3). */
+  sourceLinkingPage?: import("../civic-data/source-authority.ts").OfficialLinkingPage;
   /** Exact official source bytes for a source-scoped PDF acquisition, when held. */
   sourceRawSha256?: string;
   /** ISO date the retrieval ran. Never a plausible date; always the clock. */

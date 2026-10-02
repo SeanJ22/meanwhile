@@ -8,7 +8,7 @@ import { autonomousStandingRuntime } from "./standing-runtime.ts";
 import { dispatchAutonomousTask } from "./coordinator.ts";
 import { browseWithPlaywright } from "../../../scripts/scout-browse.mts";
 import { workerBroker } from "./worker-broker.ts";
-import type { LeaseWorkerConfig } from "./process-pool.ts";
+import { workerDispatchFailure, type LeaseWorkerConfig } from "./process-pool.ts";
 import { join } from "node:path";
 
 const broker = workerBroker<LeaseWorkerConfig>(work);
@@ -26,30 +26,38 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
   // The first process to claim wins in the existing repository dispatcher.
   while (pending.size) {
     let ran = false;
-    for (const id of await broker.call<readonly string[]>("pending-order", [...pending])) {
+    let ordered: readonly string[];
+    try { ordered = await broker.call<readonly string[]>("pending-order", [...pending]); }
+    catch (error) {
+      console.warn(`Worker priority read failed; keeping pending order: ${error instanceof Error ? error.message : String(error)}`);
+      ordered = [...pending];
+    }
+    for (const id of ordered) {
       pending.delete(id);
-      const task = (await repos.routeTasks.read(id))?.value;
-      if (!task || !["PENDING", "RECLAIMABLE"].includes(task.state)) continue;
-      const item = (await repos.workItems.mustRead(task.workItemId)).value;
-      websiteSize = websiteSizeForObligation({ id: item.id, subjectId: item.subject, autonomousPlan: item.autonomousPlan }, config.root);
-      broker.assignment(id, { subjectId: item.subject, state: item.autonomousPlan?.jurisdiction ?? null });
-      const runtime = await autonomousStandingRuntime({ root: config.root, repos, environment: process.env,
-        browse: browseWithPlaywright, openBytes: safety.guardedOpenBytes("public-web", item.subject),
-        ...(config.modelEnabled ? { transport: request => broker.call<ModelResponse>("model", request),
-          transportFor: current => { broker.assignment(id, current); return request => broker.call<ModelResponse>("model", request); },
-          reserveScoutEscalation: async request => {
-            const response = await broker.call<(Omit<Extract<ScoutEscalationAdmission, { admit: true }>, "draw" | "release"> & { reservationId: string }) |
-              Extract<ScoutEscalationAdmission, { admit: false }>>("escalation", request);
-            return response.admit ? { ...response, draw: usd => broker.send("draw", response.reservationId, usd), release: () => broker.send("release", response.reservationId, null) } : response;
-          } } : {}),
-        ...(config.searchEnabled ? { search: request => broker.call("search", request) } : {}),
-        auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => config.fundedSubjects.includes(subject) });
       try {
+        const task = (await repos.routeTasks.read(id))?.value;
+        if (!task || !["PENDING", "RECLAIMABLE"].includes(task.state)) continue;
+        const item = (await repos.workItems.mustRead(task.workItemId)).value;
+        websiteSize = websiteSizeForObligation({ id: item.id, subjectId: item.subject, autonomousPlan: item.autonomousPlan }, config.root);
+        broker.assignment(id, { subjectId: item.subject, state: item.autonomousPlan?.jurisdiction ?? null });
+        const runtime = await autonomousStandingRuntime({ root: config.root, repos, environment: process.env,
+          browse: browseWithPlaywright, openBytes: safety.guardedOpenBytes("public-web", item.subject),
+          ...(config.modelEnabled ? { transport: request => broker.call<ModelResponse>("model", request),
+            transportFor: current => { broker.assignment(id, current); return request => broker.call<ModelResponse>("model", request); },
+            reserveScoutEscalation: async request => {
+              const response = await broker.call<(Omit<Extract<ScoutEscalationAdmission, { admit: true }>, "draw" | "release"> & { reservationId: string }) |
+                Extract<ScoutEscalationAdmission, { admit: false }>>("escalation", request);
+              return response.admit ? { ...response, draw: usd => broker.send("draw", response.reservationId, usd), release: () => broker.send("release", response.reservationId, null) } : response;
+            } } : {}),
+          ...(config.searchEnabled ? { search: request => broker.call("search", request) } : {}),
+          auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => config.fundedSubjects.includes(subject) });
         const result = await dispatchAutonomousTask(runtime, task);
         broker.send("result", "", result);
         ran = true;
       } catch (error) {
-        if (!(error instanceof RepositoryLockHeld) && !(error instanceof Error && error.message === "WORKER_TASK_NOT_DISPATCHABLE")) throw error;
+        if (!(error instanceof RepositoryLockHeld) && !(error instanceof Error && error.message === "WORKER_TASK_NOT_DISPATCHABLE")) {
+          broker.send("result", "", workerDispatchFailure(id, error));
+        }
       }
       if (ran) break;
     }

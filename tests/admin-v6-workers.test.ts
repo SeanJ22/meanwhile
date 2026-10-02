@@ -290,9 +290,11 @@ test("reads stay bounded: no list, no whole-log read, no filtered scan", async (
       calls.push(`${name}.${String(prop)}`);
       if (["list", "listWhere", "readAll", "keys", "readWhere"].includes(String(prop))) throw Error(`unbounded ${name}.${String(prop)}`);
       if (prop === "readRecentWhere") {
-        assert.equal(args[0], "owner-digest"); assert.deepEqual(args[1], ["headline"]);
-        assert.equal(args[2], "Production migrations"); assert.equal(args[3], 2);
-        assert.deepEqual(args[4], { writtenAt: true, migration: ["phase", "state", "summary", "targetHost"] });
+        assert.equal(args[0], "owner-digest");
+        if ((args[1] as string[])[0] === "headline") assert.equal(args[2], "Production migrations");
+        else { assert.deepEqual(args[1], ["migration", "phase"]); assert.ok(["expand", "contract"].includes(args[2] as string)); }
+        assert.equal(args[3], 1);
+        assert.deepEqual(args[4], { headline: true, writtenAt: true, migration: ["phase", "state", "summary", "targetHost"] });
       }
       return (v as (...a: unknown[]) => unknown).apply(target, args);
     };
@@ -300,7 +302,7 @@ test("reads stay bounded: no list, no whole-log read, no filtered scan", async (
   const wrapped = Object.fromEntries(Object.entries(repos).map(([k, v]) => [k, v && typeof v === "object" ? guard(k, v) : v])) as unknown as ControlPlaneRepositories;
   ok(await section("us", wrapped));
   assert.ok(calls.filter(c => c.startsWith("attempts.")).length <= 16);
-  assert.deepEqual(calls.filter(c => c.startsWith("ownerDigests.")), ["ownerDigests.readRecent", "ownerDigests.readRecentWhere"]);
+  assert.deepEqual(calls.filter(c => c.startsWith("ownerDigests.")), ["ownerDigests.readRecent", "ownerDigests.readRecentWhere", "ownerDigests.readRecentWhere", "ownerDigests.readRecentWhere"]);
 });
 
 test("automatic migration outcomes use the existing deploy card and do not become source delivery", async () => {
@@ -314,6 +316,25 @@ test("automatic migration outcomes use the existing deploy card and do not becom
   assert.equal(result.data.update?.fixId, null);
   assert.equal(result.data.status.lastUsefulProgress, null);
   assert.match(result.data.update?.what ?? "", /Committed journal mismatch/);
+  for (let i = 0; i < 3; i++) {
+    const writtenAt = new Date(Date.parse(NOW) + (i + 1) * 1000).toISOString();
+    await repos.ownerDigests.append("owner-digest", `contract-${i}`, { formatVersion: 1, digestId: `contract-${i}`,
+      writtenAt, headline: "Production migrations", lines: [], cycleOk: true, testedSha: "b".repeat(40),
+      migration: { phase: "contract", state: "SUCCEEDED", summary: `Contract reading ${i}`,
+        targetHost: "ep-dry-river-axwtolzc" } } as never, writtenAt);
+  }
+  const later = ok(await section("us", repos));
+  assert.equal(later.data.update?.status, "REFUSED", "repeated contract success cannot hide an expand refusal");
+  assert.match(later.data.update?.what ?? "", /Committed journal mismatch/);
+  assert.match(later.data.update?.what ?? "", /Contract reading 2/);
+  assert.doesNotMatch(later.data.update?.what ?? "", /Contract reading [01]/);
+  await repos.ownerDigests.append("owner-digest", "invalid-phase", { formatVersion: 1, digestId: "invalid-phase",
+    writtenAt: new Date(Date.parse(NOW) + 4000).toISOString(), headline: "Production migrations", lines: [], cycleOk: false,
+    testedSha: "c".repeat(40), migration: { phase: "all", state: "REFUSED", summary: "Production needs an explicit phase.",
+      targetHost: "ep-dry-river-axwtolzc" } } as never, new Date(Date.parse(NOW) + 4000).toISOString());
+  const invalid = ok(await section("us", repos));
+  assert.match(invalid.data.update?.what ?? "", /Production needs an explicit phase/);
+  assert.match(invalid.data.update?.what ?? "", /Committed journal mismatch/);
 });
 
 test("the revision follows saved sources, not the clock or a lease renewal", async () => {

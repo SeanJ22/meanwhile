@@ -555,8 +555,8 @@ test("PDC terminal boundary: the schema/intake tripwire is not a GitHub routine 
 
 test("the production migration applier commits each migration and its journal row atomically", () => {
   const source = readFileSync(join(ROOT, "scripts", "apply-migrations.mts"), "utf8");
-  const transactionAt = source.indexOf("await sql.transaction");
   const blockAt = source.indexOf("const apply = `DO ");
+  const transactionAt = source.indexOf("await sql.transaction", blockAt);
   const statementAt = source.indexOf("statements.map(", blockAt);
   // Keep the table token split so the detector above does not mistake this
   // assertion for another executable journal querier.

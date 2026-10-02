@@ -144,9 +144,19 @@ export async function readV6WorkersSources(repos: ControlPlaneRepositories, read
     point<Record<string, unknown>>(() => repos.researchState.readNarrowed(RESEARCH_STATE_ID, WORKERS_RESEARCH_FIELDS)),
     repos.ownerDigests.readRecent(HUNT_SOURCE_PROGRESS_LOG_KEY, WORKERS_SOURCE_EVENT_LIMIT)
       .then(records => ({ state: "READ" as const, records }), () => ({ state: "UNREAD" as const })),
-    repos.ownerDigests.readRecentWhere("owner-digest", ["headline"], PRODUCTION_MIGRATION_HEADLINE, 2,
-      { writtenAt: true, migration: ["phase", "state", "summary", "targetHost"] })
-      .then(rows => rows, () => ({ unread: true })),
+    Promise.all([
+      repos.ownerDigests.readRecentWhere("owner-digest", ["headline"], PRODUCTION_MIGRATION_HEADLINE, 1,
+        { headline: true, writtenAt: true, migration: ["phase", "state", "summary", "targetHost"] }),
+      ...(["expand", "contract"] as const).map(phase =>
+        repos.ownerDigests.readRecentWhere("owner-digest", ["migration", "phase"], phase, 1,
+          { headline: true, writtenAt: true, migration: ["phase", "state", "summary", "targetHost"] })),
+    ])
+      .then(rows => rows.flat().filter((row): row is { headline: string; writtenAt: string; migration: unknown } =>
+        row !== null && typeof row === "object" && "headline" in row && row.headline === PRODUCTION_MIGRATION_HEADLINE &&
+        "writtenAt" in row && clock(row.writtenAt) && "migration" in row && migrationOutcomeOf(row.migration) !== null)
+        .sort((a, b) => Date.parse(b.writtenAt) - Date.parse(a.writtenAt))
+        .filter((row, index, rows) => rows.findIndex(other => other.writtenAt === row.writtenAt &&
+          migrationOutcomeOf(other.migration)?.phase === migrationOutcomeOf(row.migration)?.phase) === index), () => ({ unread: true })),
   ]);
   const running = research.state === "READ" ? runningScoutsOf(research.value) : null;
   const scouts = running === null ? null : await Promise.all(running.map(async (scout): Promise<ScoutEvidence> => {
@@ -468,9 +478,11 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
   if (nextDue) next.push(Date.parse(nextDue) > Date.parse(now) ? `Next round due ${mstWords(nextDue)}.` : `Next round was due ${mstWords(nextDue)}.`);
   missing.push(`${DEP_WORKER_ACTIVE_INDEX}: the full list of jobs running now is not shown. Paid research jobs are checked one by one and appear under What changed, but plain-code collection jobs run outside that list and the store has no bounded read of every unexpired work claim yet.`);
 
-  const migrationRecords = Array.isArray(sources.migration) ? sources.migration.slice(0, 2) : [];
+  const migrationRecords = Array.isArray(sources.migration) ? sources.migration.slice(0, 3) : [];
   const migrationRecord = migrationRecords[0] as { writtenAt?: unknown; migration?: unknown } | undefined;
   const migration = migrationOutcomeOf(migrationRecord?.migration);
+  const migrationFailure = migrationRecords.map(record => migrationOutcomeOf(record?.migration))
+    .find(outcome => outcome && outcome.state !== "SUCCEEDED");
   const migrationAt = clock(migrationRecord?.writtenAt) ? migrationRecord.writtenAt : null;
   if (sources.migration && !Array.isArray(sources.migration)) missing.push("The production migration outcome could not be read.");
   const update: UpdateCard | null = migration && migrationAt ? {
@@ -479,11 +491,11 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
       const outcome = migrationOutcomeOf(record?.migration);
       return outcome ? `${outcome.phase}: ${outcome.state.toLowerCase()}. ${outcome.summary}` : "Unread migration outcome.";
     }).join("\n"),
-    impact: "Database changes are applied in deploy order before workers use the new code.",
-    owner: "Deployment and runner", next: migration.state === "SUCCEEDED"
-      ? "The runner follows the deployed update automatically."
-      : "Engineering repairs the migration failure; the existing release remains held.",
-    youNeedToAct: "No action needed.", fixId: null, status: migration.state,
+    impact: "Expand runs before a deploy; contract runs after the matching code is serving.",
+    owner: "Deployment and runner", next: migrationFailure
+      ? `Engineering repairs the ${migrationFailure.phase} migration ${migrationFailure.state === "FAILED" ? "failure" : "refusal"}; that release step remains held.`
+      : "The recorded migration phases succeeded; the runner follows deployed updates automatically.",
+    youNeedToAct: "No action needed.", fixId: null, status: migrationFailure?.state ?? migration.state,
     technical: [`Approved endpoint: ${migration.targetHost}`],
   } : null;
   const data: AdminV6WorkersView = {

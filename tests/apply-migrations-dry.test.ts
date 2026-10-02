@@ -38,6 +38,7 @@ function run(args: string[], env: Record<string, string> = {}): RunResult {
         ...process.env,
         DATABASE_URL: "postgresql://local_writer:secret@example.invalid/wtp_test",
         WTP_DB_ROLE: "local",
+        NODE_OPTIONS: `--import ${pathToFileURL(REGISTER).href}`,
         ...env,
       },
       maxBuffer: 16 * 1024 * 1024,
@@ -112,15 +113,15 @@ test("db:apply --dry preserves applied/pending planning without issuing DDL", ()
 });
 
 test("non-dry db:apply keeps setup and migration journalling fail-closed", () => {
-  const result = run([], { APPLY_MIGRATIONS_FAKE_TRANSACTION_FAIL: "1" });
+  const result = run([], { APPLY_MIGRATIONS_FAKE_TRANSACTION_FAIL: "1", APPLY_MIGRATIONS_FAKE_JOURNAL_EXISTS: "0" });
 
   assert.equal(result.status, 1, result.output);
   assert.ok(
-    result.statements.some((statement) => /^CREATE\s+SCHEMA\b/i.test(statement)),
+    result.events.some((event) => /^CREATE\s+SCHEMA\b/i.test((event as { statement?: string }).statement ?? "")),
     `non-dry setup did not create the Drizzle schema: ${JSON.stringify(result.statements)}`,
   );
   assert.ok(
-    result.statements.some((statement) => /^CREATE\s+TABLE\b/i.test(statement)),
+    result.events.some((event) => /^CREATE\s+TABLE\b/i.test((event as { statement?: string }).statement ?? "")),
     `non-dry setup did not create the Drizzle journal: ${JSON.stringify(result.statements)}`,
   );
   assert.ok(result.events.length > 0, "the planted failure never reached a migration transaction");
@@ -129,6 +130,16 @@ test("non-dry db:apply keeps setup and migration journalling fail-closed", () =>
   assert.match(result.output, /planted transaction failure/);
   assert.doesNotMatch(result.output, /journalled\s+hash=/);
   assert.doesNotMatch(result.output, /Applied \d+ migration/);
+});
+
+test("an applied journal hash mismatch refuses in both dry and write modes without DDL", () => {
+  for (const args of [["--dry"], []]) {
+    const result = run(args, { APPLY_MIGRATIONS_FAKE_APPLIED_WHEN: String(journal().entries[0].when), APPLY_MIGRATIONS_FAKE_BAD_HASH: "1" });
+    assert.equal(result.status, 1);
+    assert.match(result.output, /REFUSED.*does not match the applied journal hash/);
+    assert.ok(result.statements.every(statement => /^SELECT\b/.test(statement)));
+    assert.deepEqual(result.events, []);
+  }
 });
 
 for (const phase of ["expand", "contract"] as const) {
@@ -196,6 +207,32 @@ test("production apply refuses a writer on the old endpoint before database acce
   assert.doesNotMatch(result.output, /secret|ep-weathered/);
   assert.deepEqual(result.statements, []);
   assert.deepEqual(result.events, []);
+});
+
+test("the legacy production contract command uses the same serving refusal before database access", () => {
+  const result = run(["--target=production", "--phase=contract"], { WTP_RUNTIME_MODE: "production" });
+  assert.equal(result.status, 1);
+  assert.match(result.output, /REFUSED.*exact production commit to be serving and loaded/);
+  assert.deepEqual(result.statements, []);
+  assert.deepEqual(result.events, []);
+});
+
+test("runtime inspection failures are redacted and saved as a contract refusal", async () => {
+  for (const unread of ["head", "served"]) {
+    const records: unknown[] = [];
+    const sha = "a".repeat(40);
+    const status = await runDbApply(["--target=production", "--phase=contract", "--production-runtime", `--runtime-commit=${sha}`],
+      { WTP_RUNTIME_MODE: "production", NODE_ENV: "test" }, {
+        head: () => { if (unread === "head") throw Error("private-git-error"); return sha; },
+        served: async () => { throw Error("private-fetch-error"); },
+        execute: () => { throw Error("must not launch"); },
+        record: async record => { records.push(record); },
+      });
+    assert.equal(status, 1);
+    assert.equal(records.length, 1);
+    assert.match(JSON.stringify(records), /REFUSED/);
+    assert.doesNotMatch(JSON.stringify(records), /private-git-error|private-fetch-error/);
+  }
 });
 
 test("preview, branch and local build hooks skip without reading a database", () => {

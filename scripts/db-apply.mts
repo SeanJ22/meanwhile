@@ -2,10 +2,8 @@
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { pathToFileURL } from "node:url";
-import { neon } from "@neondatabase/serverless";
 import { config as loadEnv } from "dotenv";
 import { OWNER_SURFACE_FORMAT_VERSION, type OwnerDigestRecord } from "../lib/control-plane/owner-surface.ts";
-import { pgAppendOnlyRepository } from "../lib/control-plane/repository/pg-store.ts";
 import { PRODUCTION_MIGRATION_HEADLINE, redactMigrationOutput, type ProductionMigrationOutcome } from "../lib/db/migration-phases.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import { fetchServedCommit } from "./post-deploy-observer.mts";
@@ -30,19 +28,30 @@ export async function runDbApply(args: string[], env = process.env, deps: ApplyD
   loadEnv({ path: ".env.local", processEnv: env, quiet: true });
   const production = args.includes("--target=production");
   const dry = args.includes("--dry");
-  const phase = args.find(a => a.startsWith("--phase="))?.slice(8) ?? "all";
+  const requestedPhase = args.find(a => a.startsWith("--phase="))?.slice(8);
+  const phase = requestedPhase === "expand" || requestedPhase === "contract" ? requestedPhase : "unspecified";
   const head = deps.head ?? (() => spawnSync("git", ["rev-parse", "HEAD"], { encoding: "utf8", windowsHide: true }).stdout?.trim() ?? null);
-  const sha = head();
+  let sha: string | null = null;
+  let inspectionFailed = false;
+  try { sha = head(); } catch { inspectionFailed = true; }
   const testedSha = /^[0-9a-f]{40}$/.test(sha ?? "") ? sha : null;
   let result: { status: number | null; stdout: string; stderr: string };
   const expected = args.find(arg => arg.startsWith("--runtime-commit="))?.slice(17);
-  if (args.includes("--production-runtime") && (!production || phase !== "contract" ||
-      env.WTP_RUNTIME_MODE !== "production" || testedSha === null || expected !== testedSha ||
-      (!dry && await (deps.served ?? (async () => (await fetchServedCommit(PUBLIC_SITE_ORIGIN)).sha))() !== testedSha))) {
+  let served: string | null = null;
+  const contract = production && phase === "contract" && !dry;
+  if (contract && !inspectionFailed && testedSha !== null && expected === testedSha &&
+      args.includes("--production-runtime") && env.WTP_RUNTIME_MODE === "production") {
+    try { served = await (deps.served ?? (async () => (await fetchServedCommit(PUBLIC_SITE_ORIGIN)).sha))(); }
+    catch { inspectionFailed = true; }
+  }
+  if (contract && (inspectionFailed || !args.includes("--production-runtime") ||
+      env.WTP_RUNTIME_MODE !== "production" || testedSha === null || expected !== testedSha || served !== testedSha) ||
+      args.includes("--production-runtime") && (!production || phase !== "contract")) {
     result = { status: 1, stdout: "", stderr: "db:apply: REFUSED — contract migrations require the exact production commit to be serving and loaded\n" };
   } else {
     const execute = deps.execute ?? ((childArgs, childEnv) => {
-      const child = spawnSync(process.execPath, ["--experimental-strip-types", "scripts/apply-migrations.mts", ...childArgs], {
+      const child = spawnSync(process.execPath, ["--experimental-strip-types", "--input-type=module", "-e",
+        "import { applyMigrations } from './scripts/apply-migrations.mts'; await applyMigrations(process.argv.slice(1));", "--", ...childArgs], {
         cwd: process.cwd(), env: childEnv, encoding: "utf8", windowsHide: true, maxBuffer: 16 * 1024 * 1024,
       });
       return { status: child.status, stdout: child.stdout ?? "", stderr: child.stderr ?? child.error?.name ?? "" };
@@ -68,6 +77,9 @@ export async function runDbApply(args: string[], env = process.env, deps: ApplyD
     const save = deps.record ?? (async value => {
       const connection = env.WTP_CONTROL_PLANE_DATABASE_URL;
       if (!connection) throw new Error("CONTROL_PLANE_UNAVAILABLE");
+      const [{ neon }, { pgAppendOnlyRepository }] = await Promise.all([
+        import("@neondatabase/serverless"), import("../lib/control-plane/repository/pg-store.ts"),
+      ]);
       const sql = neon(connection);
       const history = pgAppendOnlyRepository<MigrationRecord>({
         query: (text, params, options) => sql.query(text, [...(params ?? [])], options),

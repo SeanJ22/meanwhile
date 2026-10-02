@@ -304,6 +304,12 @@ test("failed provider sends keep their maximum committed and settlement cannot c
     error instanceof FleetSafetyRefusal && error.code === "ROLLING_24_HOUR_MODEL_SPEND_CEILING");
 });
 
+test("the reserved request maximum covers one-hour cache writes and refuses an unreadable maximum", () => {
+  const request: ModelRequest = { ...REQUEST, max_tokens: 0, cache_control: { type: "ephemeral", ttl: "1h" } };
+  assert.equal(modelRequestWorstCaseUsd(request), Buffer.byteLength(JSON.stringify(request)) * 4 * 2 / 1_000_000);
+  assert.equal(modelRequestWorstCaseUsd({ ...REQUEST, max_tokens: NaN }), null);
+});
+
 test("a paid job waiting for memory releases its slot without launching after the lane closes", async () => {
   let capacity = 20, launches = 0;
   const slots = workerProcessSlots(() => 1, { availableBytes: () => 10_000, headroomBytes: 0, peakBytes: () => 1 });

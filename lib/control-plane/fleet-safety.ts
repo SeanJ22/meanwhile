@@ -318,9 +318,11 @@ export function parseContentRangeTotal(header: string | null): number | null {
  */
 export function modelRequestWorstCaseUsd(request: ModelRequest): number | null {
   const rate = rateFor(request.model);
-  if (rate === null) return null;
-  const bodyBytes = Buffer.byteLength(JSON.stringify(request));
-  const worstInput = (bodyBytes / 1_000_000) * rate.inputUsdPerMillion * CACHE_RATE_MULTIPLIERS.cacheCreation;
+  if (rate === null || !amount(request.max_tokens)) return null;
+  const body = JSON.stringify(request);
+  const bodyBytes = Buffer.byteLength(body);
+  const writeMultiplier = body.includes('"ttl":"1h"') ? CACHE_RATE_MULTIPLIERS.cacheCreation1h : CACHE_RATE_MULTIPLIERS.cacheCreation;
+  const worstInput = (bodyBytes / 1_000_000) * rate.inputUsdPerMillion * writeMultiplier;
   const worstOutput = (request.max_tokens / 1_000_000) * rate.outputUsdPerMillion;
   return worstInput + worstOutput;
 }

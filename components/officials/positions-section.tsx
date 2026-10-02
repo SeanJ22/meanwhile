@@ -267,9 +267,7 @@ export function PositionsSection({
                     {answer.searched.pages === 1 ? "" : "s"} of theirs (
                     {answer.searched.snapshots} snapshot
                     {answer.searched.snapshots === 1 ? "" : "s"}) and none of
-                    them mentions &ldquo;{answer.topic}&rdquo;. That is what
-                    our search found — it is not a statement that{" "}
-                    {subjectName} has no position on it.
+                    them mentions &ldquo;{answer.topic}&rdquo;.
                   </>
                 )}
                 {answer.searched.unreadable > 0 && (

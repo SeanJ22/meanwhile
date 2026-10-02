@@ -347,7 +347,7 @@ export function KeyVoteGroupBlock({
                     legislature; its absence is a fact about us, and they are
                     never allowed to render as the same sentence. */}
                 {row.note ??
-                  "We haven't recorded this chamber's vote on this yet. This is not a statement that no vote happened."}
+                  "We’re working on getting this info."}
               </p>
             )}
           </li>

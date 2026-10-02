@@ -216,10 +216,8 @@ test("D35: the surface renders three different sentences, in the gap's own regis
   // inside a block we won't quote", so it re-indented — and a guard pinned to
   // a wrap depth fails on a reformat while passing on a deletion, which is
   // the wrong way round. What is guarded is the SENTENCE.
-  assert.match(
-    surface,
-    /it is not a statement that(\{" "\}|\s)+\{subjectName\}\s+has no\s+position on it/,
-  );
+  assert.match(surface, /none of\s+them mentions/);
+  assert.doesNotMatch(surface, /\{subjectName\}\s+has no\s+position on it/, "never a claim that the person has no position");
 
   // …and the third sentence that branch produces, which is a claim about OUR
   // passage rules and must never collapse into either of the other two.

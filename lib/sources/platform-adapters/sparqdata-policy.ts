@@ -1,0 +1,30 @@
+/** Decode saved Sparq school-policy responses; no network or model calls. */
+import { extractLinks, visibleText } from '../../control-plane/scheduler/scout-tools.ts';
+
+export function extract(input: { text: string; sourceUrl: string }) {
+  const source = new URL(input.sourceUrl);
+  const route = /^\/sopapi\/document\/getdocument\/([^/]+)\/([^/]+)\/([^/]+)\/([^/]+)\/?$/i.exec(source.pathname);
+  if (!route || !['policies.sparqdata.com', 'policy.azsba.org'].includes(source.hostname) ||
+    !['https:', 'http:'].includes(source.protocol)) throw new Error('SPARQ_POLICY_SOURCE_REQUIRED');
+  let value: unknown = JSON.parse(input.text);
+  // The public API also returns a JSON document encoded inside a JSON string.
+  if (typeof value === 'string') value = JSON.parse(value);
+  if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('SPARQ_POLICY_DOCUMENT_REQUIRED');
+  const document = value as Record<string, unknown>;
+  const [partner, , collection, code] = route.slice(1).map(decodeURIComponent);
+  if (document.partnerCode !== partner || document.collectionCode !== collection || document.documentCode !== code) {
+    throw new Error('SPARQ_POLICY_IDENTITY_MISMATCH');
+  }
+  if (document.isViewable !== true || document.isPartialDoc === true || document.isEmptyDoc === true ||
+    typeof document.html !== 'string' || !document.html.trim() || typeof document.title !== 'string') {
+    throw new Error('SPARQ_POLICY_CONTENT_UNAVAILABLE');
+  }
+  return {
+    sourceUrl: source.href,
+    policyCode: document.documentCode,
+    title: document.title,
+    adoptedAt: typeof document.dtAdopted === 'string' ? document.dtAdopted : null,
+    text: visibleText(document.html),
+    links: extractLinks(document.html, source, Number.MAX_SAFE_INTEGER),
+  };
+}

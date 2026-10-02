@@ -90,12 +90,17 @@ export async function nationalPlaceWorkReading(repos: ControlPlaneRepositories, 
   const decisions = expansionScopesOf(row?.value ?? null);
   if (decisions.malformed) throw new Error("The owner's place scopes contain unreadable decisions");
   if (!decisions.scopes.length) return { ordered: [...zips], belowTarget: new Set<string>() };
-  const lookup = await loadPublishedAreaLookupState(zips);
+  let lookup = await loadPublishedAreaLookupState(zips);
   const resolved = await resolveScopes(decisions.scopes, lookup, null);
   const scopes = resolved.scopes.filter(scope => scope.kind === "RESOLVED" && zips.some(zip => scope.zctas.has(zip)) ||
     scope.kind === "UNRESOLVED" && scope.decision.geography.type === "zcta" && zips.includes(scope.decision.geography.geoid));
+  const selectedZips = new Set(zips);
+  const scopeZips = [...new Set([...zips, ...scopes.flatMap(scope => scope.kind === "RESOLVED" ? [...scope.zctas] : [])])];
+  // A selected ZIP can name a whole district. Keep that district's denominator
+  // and read its actual ZIPs before resolving shared standing work and facts.
+  if (scopeZips.some(zip => !selectedZips.has(zip))) lookup = await loadPublishedAreaLookupState(scopeZips);
   const wanted = new Set<string>(["ocd-division/country:us"]);
-  for (const zip of zips) {
+  for (const zip of scopeZips) {
     const grouping = await lookup.lookup.groupingsForZcta(zip);
     for (const membership of grouping.memberships) {
       const id = censusWorkDivision(membership.geography);

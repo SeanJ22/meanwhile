@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { neonConfig } from "@neondatabase/serverless";
 
 import {
   bulkUrl,
@@ -25,7 +26,12 @@ import { placeSourceReader, PlaceSourceDeferred } from "../lib/hunt/place-source
 import { nationalPlaceJobs, placeSourceLaunchOrder } from "../lib/hunt/place-source-admission.ts";
 import { runBoundedChildPass } from "../lib/civic-data/bounded-child-pass.ts";
 import { routineTaskDue } from "../lib/civic-data/runner.ts";
-import { dueNationalPlaceZips, runNationalPlaceTask, scheduleNationalPlace, placeMadeProgress } from "../lib/hunt/place-source-task.ts";
+import { dueNationalPlaceZips, runNationalPlaceTask, scheduleNationalPlace, placeMadeProgress, nationalPlaceSendRequests } from "../lib/hunt/place-source-task.ts";
+import type { ResolvedScope } from "../lib/control-plane/expansion/membership.ts";
+import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
+import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
+import { nationalPlaceWorkReading } from "../lib/control-plane/expansion/dispatch-work.ts";
 import { standing, openOccurrence, closeOccurrence } from "../lib/control-plane/scheduler/durable.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -115,6 +121,202 @@ test("below-target places continue every pass until a settled hunt makes no prog
     "2026-10-02T00:00:00.000Z", "an unfinished no-progress hunt also backs off");
   assert.equal((await scheduleNationalPlace(repos, settled, "2026-10-02T00:00:00.000Z", true) as { nextDueAt: string }).nextDueAt,
     "2026-10-02T00:00:00.000Z", "cadence eventually makes a no-progress place due again");
+});
+
+function placeSend(zip: string, requestedAt: string, receiptId: string): ExpansionScopeDecision {
+  return { key: `zcta:2020/${zip}`, geography: { type: "zcta", geoid: zip, version: "zcta:2020", label: `ZIP ${zip}`, stateAbbr: "NH" },
+    priority: 1, budgetUsd: 0, sourceWorkVersion: 1, budgetStartedAt: requestedAt, note: null,
+    decidedAt: requestedAt, decidedBy: "test-owner", receiptId, previous: null };
+}
+
+function resolvedPlaceSend(decision: ExpansionScopeDecision, zips = [decision.geography.geoid]): ResolvedScope {
+  return { kind: "RESOLVED", decision, zctas: new Set(zips), whole: new Set(zips), fractions: new Map(), states: ["NH"] };
+}
+
+async function settledPlace(repos: ReturnType<typeof createMemoryRepositories>, zip: string, closedAt: string) {
+  const row = standing({ id: `national-place:${zip}`, subjectId: `zip:${zip}`, recordClass: "OFFICIAL_ROSTER",
+    routeId: "national-place-sources", active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null }, closedAt);
+  await repos.obligations.put(row.id, row, closedAt);
+  const opened = await openOccurrence(repos, { obligation: row, dueAt: closedAt, now: closedAt });
+  assert.ok(opened);
+  const task = await repos.routeTasks.mustRead(opened.routeTask.id);
+  await repos.routeTasks.compareAndSet(task.id, task.revision, { ...task.value, disposition: {
+    disposition: "INGESTED", attemptId: "prior-hunt", at: closedAt, artifactIds: [], observation: null,
+    permission: "ALLOWED", transport: "REACHABLE", note: JSON.stringify({ placeProgress: false }) } }, closedAt);
+  await closeOccurrence(repos, { occurrenceId: opened.occurrence.id, disposition: "INGESTED", unresolvedReason: null, now: closedAt, workedAt: closedAt });
+  return (await repos.obligations.mustRead(row.id)).value;
+}
+
+test("a newer applicable Send wakes a settled no-progress place once without borrowing another place's request", async () => {
+  const repos = createMemoryRepositories();
+  const completedAt = "2026-10-01T01:00:00.000Z", now = "2026-10-01T03:00:00.000Z";
+  const row = await settledPlace(repos, "03060", completedAt);
+  await settledPlace(repos, "03101", completedAt);
+  const older = placeSend("03060", "2026-10-01T00:00:00.000Z", "send:older");
+  const newer = placeSend("03060", "2026-10-01T02:00:00.000Z", "send:new");
+  const future = placeSend("03060", "2026-10-01T04:00:00.000Z", "send:future");
+  const unrelated = placeSend("03301", "2026-10-01T02:30:00.000Z", "send:elsewhere");
+  const unchanged = nationalPlaceSendRequests([resolvedPlaceSend(older)], ["03060", "03101"], now);
+  assert.deepEqual(await dueNationalPlaceZips(repos, ["03060", "03101"], now, unchanged), []);
+  assert.equal((await scheduleNationalPlace(repos, row, now, true, unchanged.get("03060")) as { nextDueAt: string }).nextDueAt,
+    "2026-10-02T01:00:00.000Z", "unchanged Send respects the actual INGESTED no-progress completion");
+  const requests = nationalPlaceSendRequests([resolvedPlaceSend(older), resolvedPlaceSend(newer), resolvedPlaceSend(future), resolvedPlaceSend(unrelated)],
+    ["03060", "03101"], now);
+  assert.deepEqual([...requests], [["03060", { requestedAt: newer.budgetStartedAt, instructions: ["send:older", "send:new"] }]]);
+  assert.deepEqual(await dueNationalPlaceZips(repos, ["03060", "03101", "03060"], now, requests), ["03060"]);
+  const scheduled = await scheduleNationalPlace(repos, row, now, true, requests.get("03060"));
+  assert.equal("nextDueAt" in scheduled && scheduled.nextDueAt, now);
+  const first = await openOccurrence(repos, { obligation: row, dueAt: now, now });
+  assert.ok(first);
+  const active = (await repos.obligations.mustRead(row.id)).value;
+  await assert.rejects(openOccurrence(repos, { obligation: active, dueAt: now, now }), /still holds open occurrence/,
+    "the ordinary open-occurrence rule still prevents duplicates");
+  const task = await repos.routeTasks.mustRead(first.routeTask.id);
+  await repos.routeTasks.compareAndSet(task.id, task.revision, { ...task.value, disposition: {
+    disposition: "INGESTED", attemptId: "fresh-hunt", at: now, artifactIds: [], observation: null,
+    permission: "ALLOWED", transport: "REACHABLE", note: JSON.stringify({ placeProgress: false }) } }, now);
+  await closeOccurrence(repos, { occurrenceId: first.occurrence.id, disposition: "INGESTED", unresolvedReason: null, now, workedAt: now });
+  assert.deepEqual(await dueNationalPlaceZips(repos, ["03060", "03101"], now, requests), [], "completion after the saved request consumes its wake");
+  assert.equal((await repos.obligations.mustRead(row.id)).value.occurrenceCount, 2);
+});
+
+test("Send wake uses the original hunt instant and only valid resolved scope receipts", () => {
+  const now = "2026-10-01T03:00:00.000Z";
+  const continuing = { ...placeSend("03060", "2026-10-01T00:00:00.000Z", "continuing"), decidedAt: "2026-10-01T02:00:00.000Z" };
+  const invalid = { ...placeSend("03060", "bad-date", "invalid") };
+  const legacy = { ...placeSend("03060", "2026-10-01T02:30:00.000Z", "legacy"), sourceWorkVersion: undefined };
+  const blank = placeSend("03060", "2026-10-01T02:45:00.000Z", "");
+  const unresolved: ResolvedScope = { kind: "UNRESOLVED", decision: placeSend("03060", "2026-10-01T02:50:00.000Z", "unresolved"), why: "No geography", states: ["NH"] };
+  const requests = nationalPlaceSendRequests([resolvedPlaceSend(continuing), resolvedPlaceSend(invalid), resolvedPlaceSend(legacy), resolvedPlaceSend(blank), unresolved], ["03060"], now);
+  assert.deepEqual([...requests], [["03060", { requestedAt: continuing.budgetStartedAt, instructions: ["continuing"] }]],
+    "editing priority or budget does not turn the continuing hunt into another Send");
+  assert.equal(nationalPlaceSendRequests([], ["03060"], now).size, 0, "absence never defaults to now");
+});
+
+test("the admitted worker rereads the saved Send and publishes once through its ordinary lease", async t => {
+  const repos = createMemoryRepositories();
+  const completedAt = "2026-10-01T01:00:00.000Z", requestedAt = "2026-10-01T02:00:00.000Z";
+  let now = "2026-10-01T03:00:00.000Z";
+  await settledPlace(repos, "03060", completedAt);
+  await settledPlace(repos, "03101", completedAt);
+  const send = placeSend("03060", requestedAt, "send:03060");
+  await repos.adminConfig.put(ADMIN_CONFIG_ID, { ...defaultAdminConfig(now), expansionScopes: [send] }, now);
+  const dataset: BuiltDataset = { formatVersion: 1, builtAt: completedAt, coverage: "Two fixture ZIPs in New Hampshire", zctaUniverse: ["03060", "03101"],
+    scopes: [{ type: "county", version: "county:2020", fractionBasis: "area", instanceCount: 1, zctaEdgeCount: 2,
+      versionMeta: { key: "county:2020", type: "county", plan: "2020 county", zctaTabulation: "2020", effectiveFor: "fixture",
+        provenance: { sourceUrls: ["https://census.gov/fixture"], sourceDataset: "CENSUS_TAB20_REL2020", sourceFiles: ["fixture"],
+          sourceChecksums: ["fixture"], method: "Fixture overlaps", computedAt: completedAt } },
+      groupings: [{ geoid: "33011", ocdId: "ocd-division/country:us/state:nh/county:hillsborough", label: "Hillsborough County",
+        stateFips: "33", stateAbbr: "NH", memberStates: ["NH"], overlaps: ["03060", "03101"].map(zcta5 => ({ zcta5, whole: true, fraction: 1 })) }] }] };
+  const originalUrl = process.env.DATABASE_URL, originalFetch = neonConfig.fetchFunction;
+  t.after(() => { neonConfig.fetchFunction = originalFetch;
+    if (originalUrl === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = originalUrl; });
+  process.env.DATABASE_URL = "postgresql://fixture:fixture@fixture.invalid/fixture";
+  let lookupReads = 0;
+  neonConfig.fetchFunction = async (_endpoint: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
+    const body = JSON.parse(String(init?.body)) as { queries: { query: string; params: unknown[] }[] };
+    assert.ok(body.queries.every(statement => statement.query.includes("Selected places and in-state touching districts")), "only the existing area lookup is read");
+    lookupReads += body.queries.length;
+    return Response.json({ results: body.queries.map(() => ({ command: "SELECT", rowCount: 1, rowAsArray: true,
+      fields: [{ name: "version_id", dataTypeID: 25 }, { name: "dataset", dataTypeID: 3802 }], rows: [["fixture:published", JSON.stringify(dataset)]] })) });
+  };
+  t.mock.method(globalThis, "fetch", async () => { assert.fail("the injected source worker calls no external provider"); });
+  assert.deepEqual(await dueNationalPlaceZips(repos, ["03060", "03101"], now), ["03060"], "process admission reads the actual saved Send");
+  let acquired = 0, published = 0;
+  const input: Parameters<typeof runNationalPlaceTask>[0] = { tools: { repos, store: new MemoryEvidenceStore(), now: () => now,
+    spaceOut: async () => {}, openBytes: async request => ({ status: 200,
+      bytes: Buffer.from(request.url.endsWith("/robots.txt") ? "User-agent: *\nAllow: /" : "id,name\n1,Fixture Official\n"),
+      contentType: "text/plain", finalUrl: request.url, durationMs: 1, transportError: null }) },
+    store: new MemoryRoutineDataStore(), zips: ["03060", "03101"],
+    publish: async value => { published++; assert.equal(value.now, now); return { published: true }; },
+    acquire: async value => {
+      acquired++;
+      assert.equal(value.zip, "03060");
+      assert.ok(value.knowledge, "the acquiring attempt uses the existing shared field manual");
+      const tasks = await repos.routeTasks.list();
+      assert.equal(tasks.filter(task => task.value.state === "CLAIMED").length, 1);
+      const held = await repos.obligations.mustRead("national-place:03060");
+      assert.equal(held.value.occurrenceCount, 2, "only one new occurrence opened for this Send");
+      const saved = await value.readSource("https://fixture.gov/officials.csv", value.knowledge!);
+      assert.match(saved.text, /Fixture Official/, "ordinary acquisition saves a real replayable source artifact");
+      now = "2026-10-01T03:01:00.000Z";
+      const sources = { officials: [], gaps: [], electionFields: [], electionDocuments: [], documents: [saved] };
+      const publication = await value.publish({ store: value.store, now, divisions: [], geographyCaptures: [], sources });
+      return { zip: value.zip, divisions: [], sources, publication, publications: [publication], electionPublications: [],
+        items: [], work: [], open: [], closed: [], knowledge: value.knowledge!,
+        inherited: { subjects: 0, fields: 0, publishedFields: 0, knowledgeEntries: 0 }, conditions: [] };
+    } };
+  assert.equal((await runNationalPlaceTask(input)).length, 1, "the actual worker's second cadence check preserves the wake");
+  assert.equal(acquired, 1);
+  assert.equal(published, 1);
+  const attempts = await repos.attempts.list();
+  assert.equal(attempts.length, 1);
+  assert.equal(attempts[0].value.outcome, "COMPLETED");
+  assert.equal((await repos.leases.list()).filter(lease => !lease.value.released).length, 0);
+  const newest = (await repos.routeTasks.list()).find(task => task.value.disposition?.attemptId === attempts[0].id)!;
+  assert.equal(newest.value.disposition?.disposition, "INGESTED");
+  assert.match(newest.value.disposition?.note ?? "", /"placeProgress":false/);
+  assert.deepEqual(await dueNationalPlaceZips(repos, ["03060", "03101"], now), []);
+  assert.deepEqual(await runNationalPlaceTask(input), []);
+  assert.equal(acquired, 1, "unchanged saved Send cannot acquire or publish twice");
+  assert.equal((await repos.obligations.mustRead("national-place:03101")).value.occurrenceCount, 1, "another ZIP stays settled");
+  assert.ok(lookupReads >= 3, "outer admission and actual worker both use the scoped published lookup");
+});
+
+test("ranking one ZIP in a district reads its whole saved scope without admitting the other ZIP", async t => {
+  const repos = createMemoryRepositories(), now = "2026-10-01T03:00:00.000Z";
+  const send: ExpansionScopeDecision = { ...placeSend("03060", now, "send:district"), key: "cd:119/3302",
+    geography: { type: "congressional_district", geoid: "3302", version: "cd:119", label: "NH Congressional District 2", stateAbbr: "NH" } };
+  await repos.adminConfig.put(ADMIN_CONFIG_ID, { ...defaultAdminConfig(now), expansionScopes: [send],
+    placeTargets: [{ key: "nh.cd.3302", goalPercent: 75, setAt: now, receiptId: "target:district", decidedBy: "test-owner" }] }, now);
+  const work = standing({ id: "shared:nh", subjectId: "shared:nh", recordClass: "OFFICIAL_ROSTER", routeId: "fixture",
+    active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null, scopeDivisions: ["ocd-division/country:us/state:nh"] }, now);
+  await repos.obligations.put(work.id, work, now);
+  const provenance = { sourceUrls: ["https://census.gov/fixture"], sourceDataset: "CENSUS_TAB20_REL2020", sourceFiles: ["fixture"],
+    sourceChecksums: ["fixture"], method: "Fixture overlaps", computedAt: now };
+  const counties = [
+    { geoid: "33011", ocdId: "ocd-division/country:us/state:nh/county:hillsborough", label: "Hillsborough County", zip: "03060" },
+    { geoid: "33013", ocdId: "ocd-division/country:us/state:nh/county:merrimack", label: "Merrimack County", zip: "03101" },
+  ];
+  const originalUrl = process.env.DATABASE_URL, originalFetch = neonConfig.fetchFunction;
+  t.after(() => { neonConfig.fetchFunction = originalFetch;
+    if (originalUrl === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = originalUrl; });
+  process.env.DATABASE_URL = "postgresql://fixture:fixture@fixture.invalid/fixture";
+  const originalNodeEnv = process.env.NODE_ENV;
+  t.after(() => { if (originalNodeEnv === undefined) Reflect.deleteProperty(process.env, "NODE_ENV"); else Object.assign(process.env, { NODE_ENV: originalNodeEnv }); });
+  Object.assign(process.env, { NODE_ENV: "production" });
+  const lookupSelections: string[][] = [], captureScopes: string[] = [];
+  neonConfig.fetchFunction = async (_endpoint: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
+    const body = JSON.parse(String(init?.body)) as { queries?: { query: string; params: unknown[] }[]; query?: string; params?: unknown[] };
+    const statements = body.queries ?? [{ query: body.query ?? "", params: body.params ?? [] }];
+    const results = statements.map(statement => {
+      if (statement.query.includes("Selected places and in-state touching districts")) {
+        const selected = ["03060", "03101"].filter(zip => String(statement.params[2]).includes(zip));
+        lookupSelections.push(selected);
+        const dataset: BuiltDataset = { formatVersion: 1, builtAt: now, coverage: "Fixture district", zctaUniverse: selected,
+          scopes: [{ type: "congressional_district", version: "cd:119", fractionBasis: "area", instanceCount: 1, zctaEdgeCount: 2,
+            versionMeta: { key: "cd:119", type: "congressional_district", plan: "119th Congress", zctaTabulation: "2020", effectiveFor: "current", provenance },
+            groupings: [{ geoid: "3302", ocdId: "ocd-division/country:us/state:nh/cd:2", label: "NH District 2", stateFips: "33", stateAbbr: "NH", memberStates: ["NH"],
+              overlaps: ["03060", "03101"].map(zcta5 => ({ zcta5, whole: true, fraction: 1 })) }] },
+          { type: "county", version: "county:2020", fractionBasis: "area", instanceCount: selected.length, zctaEdgeCount: selected.length,
+            versionMeta: { key: "county:2020", type: "county", plan: "2020 county", zctaTabulation: "2020", effectiveFor: "current", provenance },
+            groupings: counties.filter(county => selected.includes(county.zip)).map(({ zip, ...county }) => ({ ...county, stateFips: "33", stateAbbr: "NH", memberStates: ["NH"],
+              overlaps: [{ zcta5: zip, whole: true, fraction: 1 }] })) }] };
+        return { command: "SELECT", rowCount: 1, rowAsArray: true,
+          fields: [{ name: "version_id", dataTypeID: 25 }, { name: "dataset", dataTypeID: 3802 }], rows: [["fixture:district", JSON.stringify(dataset)]] };
+      }
+      if (statement.params[0] === "REGISTRY_RUNTIME_BINDING") captureScopes.push(String(statement.params[2]));
+      return { command: "SELECT", rowCount: 0, rowAsArray: true, fields: [], rows: [] };
+    });
+    return Response.json(body.queries ? { results } : results[0]);
+  };
+  t.mock.method(globalThis, "fetch", async () => { assert.fail("scope ranking fetches no external source"); });
+  const reading = await nationalPlaceWorkReading(repos, ["03060"], now);
+  assert.deepEqual(lookupSelections, [["03060"], ["03060", "03101"]], "the saved district's other ZIP is loaded before declared-work membership");
+  assert.deepEqual(reading.ordered, ["03060"], "the scope's full denominator does not widen this pass's selected workers");
+  assert.deepEqual([...reading.belowTarget], ["03060"]);
+  assert.ok(captureScopes.some(ids => counties.every(county => ids.includes(county.ocdId))),
+    "the held capture and its owed-field denominator include both counties in the saved district");
 });
 
 test("hunt progress uses new reader facts and official unpublished findings, ignoring timestamp churn", () => {

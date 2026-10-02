@@ -8,7 +8,7 @@ import { admittedHuntSourceScopes } from "../civic-data/hunt-source-tasks.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
 import type { RoutineSourceTask } from "../civic-data/runner.ts";
 import { DEFAULT_CADENCE_HOURS } from "../control-plane/scheduler/obligation.ts";
-import { dueNationalPlaceZips } from "./place-source-task.ts";
+import { dueNationalPlaceZips, nationalPlaceSendRequests, readNationalPlaceSendRequests, type NationalPlaceSendRequest } from "./place-source-task.ts";
 import { orderNationalPlaceWork } from "../control-plane/expansion/dispatch-work.ts";
 
 /** Start a saved Send alongside standing work, before the standing backlog drains. */
@@ -20,7 +20,7 @@ export function placeSourceLaunchOrder<T extends { readonly task: Pick<RoutineSo
 }
 
 /** One ordinary source command per place; the existing occurrence owns its lease and resume clock. */
-export function nationalPlaceJobs(zips: readonly string[], owner: { requestedAt: string; instructions: readonly string[] }): RoutineSourceTask[] {
+export function nationalPlaceJobs(zips: readonly string[], owner?: NationalPlaceSendRequest): RoutineSourceTask[] {
   if (zips.some(zip => !/^\d{5}$/.test(zip))) throw new Error("National place acquisition needs five-digit ZIPs");
   const contract = requiredManualProductionContract("registry-runtime-bindings");
   return [...new Set(zips)].map(zip => ({ id: `national-place:${zip}`, registeredContractId: contract.id,
@@ -30,7 +30,7 @@ export function nationalPlaceJobs(zips: readonly string[], owner: { requestedAt:
     command: [...contract.command, `--national-zips=${zip}`], cadenceMs: DEFAULT_CADENCE_HOURS * 3_600_000, retryMs: 15 * 60_000,
     contract: { readerProjection: contract.readerProjection,
       cadence: { description: "Refresh one admitted place's national sources", defaultEveryMs: DEFAULT_CADENCE_HOURS * 3_600_000 } },
-    ownerInvocation: { publicationPending: true, requestedAt: owner.requestedAt, instructions: [...new Set(owner.instructions)] } }));
+    ...(owner ? { ownerInvocation: { publicationPending: true as const, requestedAt: owner.requestedAt, instructions: [...new Set(owner.instructions)] } } : {}) }));
 }
 
 /** Each due place uses the registered registry door through its own leased job. */
@@ -40,8 +40,7 @@ export async function withNationalPlaceTasks(tasks: readonly RoutineSourceTask[]
   if (only && !only.includes("registry-runtime-bindings") && !only.some(id => /^national-place:\d{5}$/.test(id))) return [...tasks];
   const now = new Date().toISOString();
   let zips = explicit?.split(",") ?? [];
-  let requestedAt = now;
-  let instructions: string[] = [];
+  let requests: ReadonlyMap<string, NationalPlaceSendRequest>;
   const connection = controlPlaneUrlFromEnv();
   if (!connection) return [...tasks];
   const repos = await createPgRepositories(connection, now, { skipBootstrap: true });
@@ -58,12 +57,12 @@ export async function withNationalPlaceTasks(tasks: readonly RoutineSourceTask[]
     const resolved = await resolveScopes(sends, await loadPublishedLookupState({ bypassCache: true }), null);
     const admitted = admittedHuntSourceScopes(resolved.scopes, now);
     zips = admitted.flatMap(scope => scope.kind === "RESOLVED" ? [...scope.zctas] : []);
-    requestedAt = admitted.map(scope => scope.decision.decidedAt).sort().at(-1) ?? now;
-    instructions = admitted.map(scope => scope.decision.receiptId);
-  }
+    requests = nationalPlaceSendRequests(admitted, zips, now);
+    zips = zips.filter(zip => requests.has(zip));
+  } else requests = await readNationalPlaceSendRequests(repos, zips, now);
   if (!zips.length) return [...tasks];
   if (zips.some(zip => !/^\d{5}$/.test(zip))) throw new Error("National place acquisition needs five-digit ZIPs");
-  zips = await dueNationalPlaceZips(repos, zips, now);
+  zips = await dueNationalPlaceZips(repos, zips, now, requests);
   if (!zips.length) return [...tasks];
-  return [...tasks, ...nationalPlaceJobs(await orderNationalPlaceWork(repos, zips, now), { requestedAt, instructions })];
+  return [...tasks, ...(await orderNationalPlaceWork(repos, zips, now)).flatMap(zip => nationalPlaceJobs([zip], requests.get(zip)))];
 }

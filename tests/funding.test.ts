@@ -226,12 +226,6 @@ test("every ripcord is registered with question, closer, and tracker rows", () =
     "ripcord.fecContributorDisplay",
     "ripcord.rateLimits",
     "ripcord.reactionIntake",
-    // ASK-12 (2026-08-25), Sean's ruling: the unsourced general-answer
-    // fallback. It is a ripcord rather than a feature flag because the
-    // doctrine already requires the three things it needs — a named closer, a
-    // provenance tag so a pull is a filter rather than a hunt, and the
-    // transparency page changing in the same commit.
-    "ripcord.unsourcedFallback",
   ]);
   for (const name of RIPCORD_NAMES) {
     const ripcord = RIPCORDS[name];

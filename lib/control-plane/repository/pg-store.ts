@@ -206,9 +206,29 @@ export interface PgRepositoryBounds {
   readonly rowClass?: Exclude<ControlPlaneCallClass, "PAGE">;
 }
 
+/** Bound transport fan-out across repositories and clients in this process.
+ * Thousands of dispatch rows may be ready together; they share HTTP capacity,
+ * rather than starting thousands of request timers while waiting for sockets.
+ * This does not cap workers or due work. Each admitted query keeps its existing
+ * request bound, and an enclosing store budget still includes queue time. */
+export const CONTROL_PLANE_QUERY_CONCURRENCY = 16;
+let activeQueries = 0;
+const queryWaiters: Array<() => void> = [];
+
 function boundedRunner(sql: Sql, prefix: string, bounds: ControlPlaneRequestBounds) {
-  return (operation: string, callClass: ControlPlaneCallClass, text: string, params?: readonly unknown[]) =>
-    boundedQuery(sql, { operation: `${prefix}.${operation}`, callClass }, text, params, { bounds });
+  return async (operation: string, callClass: ControlPlaneCallClass, text: string, params?: readonly unknown[]) => {
+    await new Promise<void>(resolve => {
+      if (activeQueries < CONTROL_PLANE_QUERY_CONCURRENCY) { activeQueries++; resolve(); }
+      else queryWaiters.push(resolve);
+    });
+    try {
+      return await boundedQuery(sql, { operation: `${prefix}.${operation}`, callClass }, text, params, { bounds });
+    } finally {
+      const next = queryWaiters.shift();
+      if (next) next();
+      else activeQueries--;
+    }
+  };
 }
 
 /**

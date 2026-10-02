@@ -20,7 +20,7 @@ import {
   isTransientControlPlaneConnectError,
   withControlPlaneConnectRetry,
 } from "../lib/control-plane/repository/connect-retry.ts";
-import { createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
+import { CONTROL_PLANE_QUERY_CONCURRENCY, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import {
   CONTROL_PLANE_REQUEST_BOUNDS_MS,
   ControlPlaneRequestTimeout,
@@ -36,6 +36,57 @@ import { STANDING_NEON_REQUEST_DEADLINE_MS } from "../lib/ops/neon-request-deadl
 
 const URL = "postgresql://user:pass@ep-request-bounds-proof.us-east-2.aws.neon.tech/neondb";
 const TINY = { POINT: 60, DOCUMENT: 90, PAGE: 120 } as const;
+
+test("dispatch-sized POINT bursts share transport admission across repository clients", async () => {
+  const original = neonConfig.fetchFunction;
+  let active = 0, peak = 0, calls = 0;
+  const starts: number[] = [];
+  try {
+    neonConfig.fetchFunction = (async (_input: unknown, init?: { body?: string }) => {
+      active++; peak = Math.max(peak, active); calls++;
+      starts.push(Number(JSON.parse(init?.body ?? "{}").params[0]));
+      try {
+        await new Promise(resolve => setTimeout(resolve, 8));
+        return answer([]);
+      } finally { active--; }
+    }) as typeof neonConfig.fetchFunction;
+    const first = await createPgRepositories(URL, undefined, { skipBootstrap: true, requestBounds: TINY });
+    const second = await createPgRepositories(URL, undefined, { skipBootstrap: true, requestBounds: TINY });
+    const result = await Promise.all(Array.from({ length: 3300 }, (_, index) =>
+      (index % 2 ? first.occurrences : second.obligations).read(String(index))));
+    assert.equal(calls, 3300, "every due row is read exactly once");
+    assert.equal(peak, CONTROL_PLANE_QUERY_CONCURRENCY);
+    assert.deepEqual(starts, Array.from({ length: 3300 }, (_, index) => index), "queued rows start in order");
+    assert.ok(result.every(row => row === null));
+  } finally { neonConfig.fetchFunction = original; }
+});
+
+test("queued calls retain enclosing deadlines and release admission after transport errors", async () => {
+  const original = neonConfig.fetchFunction;
+  let calls = 0;
+  const releases: Array<() => void> = [];
+  try {
+    neonConfig.fetchFunction = (() => {
+      calls++;
+      return new Promise<Response>((_resolve, reject) => releases.push(() => reject(new Error("provider rejected"))));
+    }) as typeof neonConfig.fetchFunction;
+    const repos = await createPgRepositories(URL, undefined, { skipBootstrap: true });
+    const occupying = Array.from({ length: CONTROL_PLANE_QUERY_CONCURRENCY }, (_, index) =>
+      repos.occurrences.read(String(index)).catch(error => error));
+    await new Promise(resolve => setImmediate(resolve));
+    const queued = withStoreBudget("dispatch-finalization", 5, () => repos.adminConfig.read("live")).catch(error => error);
+    await new Promise(resolve => setTimeout(resolve, 15));
+    releases.forEach(release => release());
+    await Promise.all(occupying);
+    const error = await queued;
+    assert.ok(isControlPlaneRequestTimeout(error));
+    assert.equal(error.kind, "DEADLINE");
+    assert.equal(error.budget, "dispatch-finalization");
+    assert.equal(calls, CONTROL_PLANE_QUERY_CONCURRENCY, "an expired queued call is never sent");
+    neonConfig.fetchFunction = (async () => answer([])) as typeof neonConfig.fetchFunction;
+    assert.equal(await repos.adminConfig.read("live"), null, "failed calls release capacity");
+  } finally { neonConfig.fetchFunction = original; }
+});
 
 interface HungFetch {
   readonly calls: { readonly signal: AbortSignal | null }[];

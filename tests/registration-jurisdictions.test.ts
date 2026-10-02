@@ -118,7 +118,7 @@ test("Ohio's registration, read as a registry: every government under the review
 test("only the promoted version is read: one built from another reference, none at all, or an outage refuses the state by name", async () => {
   const { versionId, model } = await promotedOhio();
   const reference = loadRegistrationReference(ROOT, "OH");
-  const census = readCensusGovernmentFacts(ROOT);
+  const census = readCensusGovernmentFacts(ROOT, ["OH"]);
   assert.throws(
     () => registrationJurisdictionRegistry({ reference, promoted: { versionId, model: { ...model, vintage: { ...model.vintage, referenceSha256: "0".repeat(64) } } }, census }),
     /REGISTRATION_REFERENCE_MISMATCH:OH/,

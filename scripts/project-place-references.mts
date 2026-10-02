@@ -1,9 +1,13 @@
 import { createHash } from "node:crypto";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { closeSync, mkdirSync, openSync, readFileSync, writeSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
 import { parseCsv } from "../lib/reference/index.ts";
-import type { StateReference } from "../lib/control-plane/expansion/state-references.ts";
+import type { StateReference, StateReferenceIndex } from "../lib/control-plane/expansion/state-references.ts";
+import { withCensusSchoolTerritories, CENSUS_SCHOOL_INTERSECTIONS } from "../lib/control-plane/expansion/census-scope-observations.ts";
+import dependentSchools from "../lib/control-plane/expansion/reference/census-dependent-school-territories.json" with { type: "json" };
+import { unitShareKey } from "../lib/control-plane/expansion/membership.ts";
+import { ruledDistrictTerritory, DISTRICT_TERRITORIES, type ApproximateDistrictExtract } from "../lib/control-plane/expansion/district-territory.ts";
 
 const root = process.cwd();
 const out = join(root, "data", "derived", "place-reference");
@@ -12,14 +16,21 @@ function shardFor(state: string): StateReference {
   const key = state.toUpperCase();
   let shard = shards.get(key);
   if (!shard) {
-    shard = { formatVersion: 1, state: key, units: [], zips: {}, adjacency: {}, facts: {}, censusSource: "" };
+    shard = { formatVersion: 1, state: key, units: [], zips: {}, adjacency: {}, facts: {}, censusSource: "", exactShares: {} };
     shards.set(key, shard);
   }
   return shard;
 }
 for (const state of Object.values(FIPS_TO_STATE)) shardFor(state.postal);
 const units = JSON.parse(readFileSync(join(root, "data", "derived", "census-unit-zips.json"), "utf8")) as { units: StateReference["units"] };
-for (const unit of units.units) if (shards.has(unit.state.toUpperCase())) shardFor(unit.state).units.push(unit);
+const ids = new Set(units.units.map(unit => unit.pid6));
+for (const unit of withCensusSchoolTerritories([...units.units, ...dependentSchools.units.filter(unit => !ids.has(unit.pid6))])) {
+  if (shards.has(unit.state.toUpperCase())) shardFor(unit.state).units.push(unit);
+}
+for (const row of CENSUS_SCHOOL_INTERSECTIONS) {
+  const state = FIPS_TO_STATE[row.geoid.slice(0, 2)]?.postal;
+  if (state) (shardFor(state).exactShares[`${row.layer}:${row.geoid}`] ??= {})[row.zcta] = row.overlapSquareMetres / row.zctaAreaSquareMetres;
+}
 const samples = JSON.parse(readFileSync(join(root, "data", "derived", "zip-governments.json"), "utf8")) as {
   zips: Record<string, StateReference["zips"][string]["edges"]>;
 };
@@ -55,7 +66,52 @@ for (const shard of shards.values()) {
   }
   shard.adjacency = Object.fromEntries([...adjacent].map(([key, neighbors]) => [key, [...neighbors].sort()]));
   shard.censusSource = sources.join(" and ");
-  writeFileSync(join(out, `${shard.state.toLowerCase()}.json`), `${JSON.stringify(shard)}\n`);
+  const fd = openSync(join(out, `${shard.state.toLowerCase()}.jsonl`), "w");
+  let offset = 0;
+  const write = (value: unknown): [number, number] => {
+    const bytes = Buffer.from(`${JSON.stringify(value)}\n`);
+    const span: [number, number] = [offset, bytes.length];
+    let written = 0;
+    while (written < bytes.length) written += writeSync(fd, bytes, written, bytes.length - written);
+    offset += bytes.length;
+    return span;
+  };
+  try {
+    const index: StateReferenceIndex = { formatVersion: 2, state: shard.state, censusSource: shard.censusSource,
+      units: shard.units.map(write), byZip: {}, shares: {}, facts: write(shard.facts), adjacency: write(shard.adjacency) };
+    const byDivision = new Map<string, number[]>();
+    for (const [i, unit] of shard.units.entries()) {
+      const key = unitShareKey(unit);
+      if (key) { const rows = byDivision.get(key) ?? []; rows.push(i); byDivision.set(key, rows); }
+      for (const zip of unit.zips) (index.byZip[zip] ??= []).push(i);
+    }
+    for (const [zip, row] of Object.entries(shard.zips)) {
+      const seeds = row.edges.map(edge => `${edge.layer}:${edge.id}`);
+      const ring = new Set(seeds.flatMap(key => [key, ...(shard.adjacency[key] ?? [])]));
+      index.byZip[zip] = [...new Set([...(index.byZip[zip] ?? []), ...[...ring].flatMap(key => byDivision.get(key) ?? [])])];
+    }
+    const byPid = new Map(shard.units.map(unit => [`${shard.state}:${unit.pid6}`, unit]));
+    const positions = new Map(shard.units.map((unit, i) => [unit.pid6, i]));
+    const approximate = shard.state === "AZ" ? JSON.parse(readFileSync(join(root, "lib/control-plane/expansion/reference/az-fire-district-territory.json"), "utf8")) as ApproximateDistrictExtract : null;
+    for (const [i, unit] of shard.units.entries()) {
+      if (unit.zips.length) continue;
+      const ruled = ruledDistrictTerritory(unit, byPid, () => undefined, unitShareKey, DISTRICT_TERRITORIES, approximate);
+      if (!ruled || "unplaced" in ruled) continue;
+      const rule = DISTRICT_TERRITORIES.find(row => row.state === shard.state && row.pid6 === unit.pid6)?.rule;
+      const dependencies = rule?.kind === "MEMBER_UNION" ? rule.members.flatMap(member => positions.get(member.pid6) ?? [])
+        : rule?.kind === "COUNTY" ? byDivision.get(`county:${rule.countyGeoid}`) ?? [] : [];
+      for (const zip of ruled.zctas) index.byZip[zip] = [...new Set([...(index.byZip[zip] ?? []), i, ...dependencies])];
+    }
+    const divisionRows = new Map<string, { zips: StateReference["zips"]; exact: Record<string, number> }>();
+    for (const [zip, row] of Object.entries(shard.zips)) for (const edge of row.edges) {
+      const key = `${edge.layer}:${edge.id}`;
+      const value = divisionRows.get(key) ?? { zips: {}, exact: shard.exactShares[key] ?? {} };
+      (value.zips[zip] ??= { total: row.total, edges: [] }).edges.push(edge);
+      divisionRows.set(key, value);
+    }
+    for (const [key, exact] of Object.entries(shard.exactShares)) if (!divisionRows.has(key)) divisionRows.set(key, { zips: {}, exact });
+    for (const [key, rows] of divisionRows) index.shares[key] = write(rows);
+    writeFileSync(join(out, `${shard.state.toLowerCase()}.json`), `${JSON.stringify(index)}\n`);
+  } finally { closeSync(fd); }
 }
-writeFileSync(join(out, "index.json"), `${JSON.stringify({ states: [...shards.keys()].sort() })}\n`);
-console.log(`Projected held place references into ${shards.size} state files.`);
+console.log(`Projected held place references into ${shards.size} state indexes and seekable data files.`);

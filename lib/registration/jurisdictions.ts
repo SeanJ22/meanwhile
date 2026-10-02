@@ -58,7 +58,7 @@ import type {
   JurisdictionSource,
 } from "../hunt/jurisdiction-universe.ts";
 import { OWN_SITE_MEETINGS_SOURCE } from "../hunt/meetings-discovery.ts";
-import { readStateReference, stateReferenceNames } from "../control-plane/expansion/state-references.ts";
+import { readStateReference } from "../control-plane/expansion/state-references.ts";
 import type { RegistrationReadModel } from "./candidate.ts";
 import { registrationTarget } from "./publication.ts";
 import { readRegistrationProjection } from "./reader.ts";
@@ -99,14 +99,14 @@ export interface CensusFacts {
 /**
  * Read web addresses and counties from the named states' install-time projections.
  * Their source hashes must match the registration reference's source vintage.
- * Runtime registration always supplies one state; offline callers may request all.
+ * Every caller supplies its states; there is no whole-country fallback.
  */
-export function readCensusGovernmentFacts(root: string, states = stateReferenceNames(root)): CensusFacts {
+export function readCensusGovernmentFacts(root: string, states: readonly string[]): CensusFacts {
   const index = JSON.parse(readFileSync(join(/* turbopackIgnore: true */ root, "data", "derived", "registration", "index.json"), "utf8")) as { readonly source?: string };
   const byPid = new Map<string, CensusGovernmentFacts>();
   let source = "";
   for (const state of states) {
-    const shard = readStateReference(root, state);
+    const shard = readStateReference(root, state, { facts: true });
     if (!shard.censusSource || shard.censusSource.split(" and ").some(part => !index.source?.includes(part.replace(/^data\/reference\//, "")))) {
       throw new Error(`REGISTRATION_CENSUS_FILE_DRIFT:${state}: regenerate the state reference from the registered source vintage`);
     }

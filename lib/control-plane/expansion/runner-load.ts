@@ -9,12 +9,10 @@
  *                                 reused for every scope. Anything but a
  *                                 "published" source resolves nothing: a
  *                                 bootstrap fixture is not live coverage
- *   the Census unit territories   data/derived/census-unit-zips.json — the
- *                                 committed ZCTA territory of every Census of
- *                                 Governments unit, joined to the registries
- *                                 in `membership.ts` — with each unit's share
- *                                 of each ZCTA from the sampled overlap it was
- *                                 built from (data/derived/zip-governments.json)
+ *   the Census unit territories   data/derived/place-reference/ — state indexes
+ *                                 address only the place's unit and share rows.
+ *                                 National held inputs are projected at install,
+ *                                 never read by this runtime.
  * ```
  *
  * The same reads serve the work a scope materializes (MW-028,
@@ -38,6 +36,7 @@ import {
   buildTerritoryIndex,
   planExpansion,
   unitShareKey,
+  registryIdForUnit,
   type CensusUnitTerritory,
   type ExpansionPlan,
   type ResolvedScope,
@@ -46,11 +45,9 @@ import {
 import type { ExpansionCycleReading } from "./reading.ts";
 import { expansionScopesOf, type ExpansionScopeDecision } from "./scopes.ts";
 import { declaredWorkMembers, type ScopedStandingWork } from "./declared-work-scope.ts";
-import { addCensusSchoolShares, withCensusSchoolTerritories } from "./census-scope-observations.ts";
-import dependentSchools from "./reference/census-dependent-school-territories.json" with { type: "json" };
 import { readFieldManual, type FieldManualRead } from "../field-manual.ts";
 import { divisionsForZip, type PlaceDivision } from "./national-geography.ts";
-import { readStateReference, stateReferenceNames } from "./state-references.ts";
+import { readStateReference } from "./state-references.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 
 /**
@@ -63,7 +60,8 @@ export function readZctaShares(root: string, wanted: ReadonlySet<string>, states
   const selected = states ?? [...new Set([...wanted].flatMap(key => FIPS_TO_STATE[key.split(":")[1]?.slice(0, 2)]?.postal ?? []))];
   const out = new Map<string, Map<string, number>>();
   for (const state of selected) {
-    for (const [zcta, { edges, total }] of Object.entries(readStateReference(root, state).zips)) {
+    const shard = readStateReference(root, state, { shares: wanted });
+    for (const [zcta, { edges, total }] of Object.entries(shard.zips)) {
       if (total <= 0) continue;
       for (const edge of edges) {
         const key = `${edge.layer}:${edge.id}`;
@@ -72,6 +70,12 @@ export function readZctaShares(root: string, wanted: ReadonlySet<string>, states
         shares.set(zcta, Math.min(1, edge.samples / total));
         out.set(key, shares);
       }
+    }
+    for (const [key, entries] of Object.entries(shard.exactShares)) {
+      if (!wanted.has(key)) continue;
+      const shares = out.get(key) ?? new Map<string, number>();
+      for (const [zip, share] of Object.entries(entries)) shares.set(zip, share);
+      out.set(key, shares);
     }
   }
   return out;
@@ -86,20 +90,25 @@ export function readZctaShares(root: string, wanted: ReadonlySet<string>, states
  */
 export function readTerritoryIndex(root: string, registries: readonly JurisdictionRegistry[], states = [...new Set(registries.map(registry => registry.stateCode))], zips?: ReadonlySet<string>): TerritoryIndex {
   const selected = new Set(states.map(state => state.toUpperCase()));
-  const scopedRegistries = registries.filter(registry => selected.has(registry.stateCode.toUpperCase()));
   const units = readCensusUnitTerritories(root, states, zips);
   const wanted = new Set<string>();
   for (const unit of units) {
     const key = unitShareKey(unit);
     if (key !== null) wanted.add(key);
   }
+  const unitIds = new Set(units.flatMap(unit => {
+    const id = registryIdForUnit(unit);
+    return id ? [id, `${id}-${unit.pid6}`] : [];
+  }));
+  const scopedRegistries = registries.filter(registry => selected.has(registry.stateCode.toUpperCase())).map(registry => zips ? {
+    ...registry, jurisdictions: registry.jurisdictions.filter(j => j.govClass === "STATE" || unitIds.has(j.id) || Boolean(j.censusDivision && wanted.has(j.censusDivision))),
+  } : registry);
   /* A registry read from registration places each government by the division its body sits on, by that division's own layer and GEOID (2026-09-25). */
   for (const registry of scopedRegistries) {
     if (registry.registration?.kind !== "REGISTRATION") continue;
     for (const j of registry.jurisdictions) if (j.censusDivision) wanted.add(j.censusDivision);
   }
   const shares = readZctaShares(root, wanted, states);
-  addCensusSchoolShares(shares);
   for (const key of shares.keys()) if (!selected.has(FIPS_TO_STATE[key.split(":")[1]?.slice(0, 2)]?.postal ?? "")) shares.delete(key);
   return buildTerritoryIndex(scopedRegistries, units, (key) => shares.get(key), (j) => {
     const own = j.censusDivision ? shares.get(j.censusDivision) : undefined;
@@ -121,17 +130,12 @@ export function readApproximateDistrictExtract(root: string): ApproximateDistric
 }
 
 /** Read the Census unit territories. Throws with the path named; the caller turns that into a named condition. */
-export function readCensusUnitTerritories(root: string, states = stateReferenceNames(root), zips?: ReadonlySet<string>): readonly CensusUnitTerritory[] {
+export function readCensusUnitTerritories(root: string, states: readonly string[], zips?: ReadonlySet<string>): readonly CensusUnitTerritory[] {
   const selected = new Set(states.map(state => state.toUpperCase()));
   const units = [...selected].flatMap(state => {
-    const shard = readStateReference(root, state);
-    if (!zips) return shard.units;
-    const seeds = new Set([...zips].flatMap(zip => shard.zips[zip]?.edges.map(edge => `${edge.layer}:${edge.id}`) ?? []));
-    const ring = new Set([...seeds].flatMap(key => [key, ...(shard.adjacency[key] ?? [])]));
-    return shard.units.filter(unit => !unit.zips.length || unit.zips.some(zip => zips.has(zip)) || ring.has(unitShareKey(unit) ?? ""));
+    return readStateReference(root, state, { units: zips ?? "state" }).units;
   });
-  const ids = new Set(units.map(unit => unit.pid6));
-  return withCensusSchoolTerritories([...units, ...dependentSchools.units.filter(unit => selected.has(unit.state.toUpperCase()) && !ids.has(unit.pid6))]);
+  return units;
 }
 
 /**

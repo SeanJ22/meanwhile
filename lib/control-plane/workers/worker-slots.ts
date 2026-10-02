@@ -82,14 +82,14 @@ function alive(pid: number): boolean {
 interface MemoryReservation { id: string; owner: number; pid: number | null; peak: number; entry: string }
 interface HostState { reservations: MemoryReservation[]; parents: { pid: number; peak: number }[] }
 export interface WorkerMemoryHost {
-  transact(operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void): boolean;
+  transact(operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void, sampleProcesses?: boolean): boolean;
 }
 /** Transient host reservations, shared by independent research/routine parents.
  * No work, receipt, spending or publication state is written here. */
 export function workerMemoryHost(input: { readonly shared?: boolean; readonly processes?: () => readonly WorkerProcessMemory[] } = {}): WorkerMemoryHost {
   let local: HostState = { reservations: [], parents: [] };
   const sample = input.processes ?? hostProcesses;
-  return { transact: operation => {
+  return { transact: (operation, sampleProcesses = true) => {
     const path = join(tmpdir(), "meanwhile-worker-memory.json");
     const lock = join(tmpdir(), "meanwhile-worker-memory.json.lock");
     const temporary = join(tmpdir(), "meanwhile-worker-memory.json.tmp");
@@ -108,7 +108,7 @@ export function workerMemoryHost(input: { readonly shared?: boolean; readonly pr
       // A dead parent cannot retain future growth. A surviving job tree still can.
       local.parents = local.parents.filter(parent => alive(parent.pid));
       local.reservations = local.reservations.filter(row => alive(row.owner) || (row.pid !== null && alive(row.pid)));
-      operation(local, sample());
+      operation(local, sampleProcesses ? sample() : []);
       if (input.shared) {
         writeFileSync(temporary, JSON.stringify(local)); renameSync(temporary, path);
       }
@@ -150,6 +150,7 @@ export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProce
 
 export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
   let active = 0;
+  let drainScheduled = false;
   let wake: ReturnType<typeof setTimeout> | undefined;
   const available = memory.availableBytes ?? availableWorkerMemoryBytes;
   const headroom = memory.headroomBytes ?? WORKER_MEMORY_HEADROOM_MIB * MIB;
@@ -159,17 +160,17 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     return WORKER_ENTRY_PEAK_MIB[kind]! * MIB;
   });
   const waiting: { entry: string; deadline: number; resolve: (release: WorkerMemoryRelease) => void; reject: (error: Error) => void }[] = [];
-  const mutate = (operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void): void => {
+  const mutate = (operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void, sampleProcesses = false): void => {
     try {
-      if (!host.transact(operation)) setTimeout(() => mutate(operation), 50).unref();
-    } catch { setTimeout(() => mutate(operation), 1000).unref(); }
+      if (!host.transact(operation, sampleProcesses)) setTimeout(() => mutate(operation, sampleProcesses), 50).unref();
+    } catch { setTimeout(() => mutate(operation, sampleProcesses), 1000).unref(); }
   };
   if ((memory.parentPeakBytes ?? 0) > 0) mutate((state, rows) => {
     if (state.reservations.some(row => row.owner !== process.pid && row.pid !== null && descendants(row.pid, rows).has(process.pid))) return;
     const parent = state.parents.find(row => row.pid === process.pid);
     if (parent) parent.peak = Math.max(parent.peak, memory.parentPeakBytes!);
     else state.parents.push({ pid: process.pid, peak: memory.parentPeakBytes! });
-  });
+  }, true);
   const drain = (): void => {
     clearTimeout(wake); wake = undefined;
     const now = Date.now();
@@ -221,7 +222,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
             if (released) return;
             released = true; active--;
             if (!inherited) mutate(state => { state.reservations = state.reservations.filter(row => row.id !== id); });
-            drain();
+            requestDrain();
           }, { observe: (pid: number) => {
             if (released || inherited) return;
             mutate(state => { const row = state.reservations.find(row => row.id === id); if (row) row.pid = pid; });
@@ -234,6 +235,11 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     }
     if (waiting.length) wake = setTimeout(drain, Math.max(1, Math.min(1000, ...waiting.map(item => item.deadline - Date.now()))));
   };
+  const requestDrain = (): void => {
+    if (drainScheduled) return;
+    drainScheduled = true;
+    queueMicrotask(() => { drainScheduled = false; drain(); });
+  };
   return { acquire: (entry = "lease-worker.ts", deadlineMs = Date.now() + (memory.waitMs ?? 120_000)) =>
-    new Promise<WorkerMemoryRelease>((resolve, reject) => { waiting.push({ entry, deadline: deadlineMs, resolve, reject }); drain(); }) };
+    new Promise<WorkerMemoryRelease>((resolve, reject) => { waiting.push({ entry, deadline: deadlineMs, resolve, reject }); requestDrain(); }) };
 }

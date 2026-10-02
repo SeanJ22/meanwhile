@@ -7,6 +7,8 @@
  */
 import { useMemo, useState } from "react";
 
+import { periodLabel } from "@/lib/control-plane/admin-view/periods.ts";
+
 import { StatusBar, StatusLegend, StatusTable } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
 import { SECTION_DEP } from "./dependencies.ts";
@@ -48,7 +50,7 @@ export function NowScreen() {
   return (
     <>
       <header>
-        <p className={s.eyebrow}>{v.place.name} · Account period: {v.period === "day" ? "Last 24 hours" : v.period === "hunt" ? "Whole hunt" : "September 2026"}</p>
+        <p className={s.eyebrow}>{v.place.name} · {periodLabel(v.period, new Date())}</p>
         <h1 className={s.h1}>Now</h1>
       </header>
       {/* The control Sean uses most (daily budget, paid search, start a hunt): first under the header, one click to open. */}

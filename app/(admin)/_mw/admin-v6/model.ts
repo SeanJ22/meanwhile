@@ -302,6 +302,8 @@ export interface UpdateCard {
 }
 
 export interface WorkerStatus {
+  readonly cycle?: { readonly startedAt: string; readonly finishedAt: string | null;
+    readonly exitCode: number | null; readonly signal: string | null; readonly lastError: string | null } | null;
   /** Workers last checked in: only means they are switched on. */
   readonly lastCheckIn: string | null;
   /** Last meaningful progress, or null when nothing reports it. */

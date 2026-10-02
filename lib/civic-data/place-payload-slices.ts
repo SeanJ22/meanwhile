@@ -2,7 +2,7 @@ import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.
 import { CivicPayloadParts } from "./payload-parts.ts";
 
 const division = "x->>'ocdId'=ANY($3::text[]) OR x->>'divisionId'=ANY($3::text[])";
-const serves = `(${division}) OR x->'alsoServesOcdIds' ?| $3::text[]`;
+const serves = `(${division}) OR x->'alsoServesOcdIds' ?| $3::text[] OR x->>'id'=ANY($4::text[])`;
 
 /** Field paths select only collections a place capture consumes. The database
  * follows immutable references and filters records before they cross the wire. */
@@ -31,7 +31,7 @@ function collections(recordClass: string): Record<string, string> {
 }
 
 export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: string, scopes: readonly string[],
-  ids: readonly string[], bodies: readonly string[], targets: readonly string[]): Promise<Map<string, unknown>> {
+  ids: readonly string[], bodies: readonly string[], targets: readonly string[], versions: ReadonlyMap<string, string> = new Map()): Promise<Map<string, unknown>> {
   const fields = collections(recordClass);
   const paths = Object.keys(fields);
   const predicate = Object.entries(fields).map(([field, where]) => `(field='${field}' AND (${where}))`).join(" OR ");
@@ -62,9 +62,14 @@ export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: s
   SELECT scope,field,jsonb_agg(x) rows FROM records WHERE ${predicate} GROUP BY scope,field
   UNION ALL
   SELECT scope,'$missing',jsonb_agg(node) FROM walk WHERE node ? '$civicPayloadPart'
-    AND NOT EXISTS (SELECT 1 FROM civic_data_payload_parts p WHERE p.hash=node->>'$civicPayloadPart') GROUP BY scope`,
+    AND NOT EXISTS (SELECT 1 FROM civic_data_payload_parts p WHERE p.hash=node->>'$civicPayloadPart') GROUP BY scope
+  UNION ALL
+  SELECT scope,'$version',to_jsonb(current_version_id) FROM civic_data_promotions WHERE record_class=$1 AND scope=ANY($2::text[])`,
     params: [recordClass, [...scopes], [...ids], [...bodies], [...targets], paths] }]);
   if (rows.some(row => row.field === "$missing")) throw new Error("CIVIC_PAYLOAD_PART_MISSING");
+  for (const scope of scopes) if (versions.has(scope) && rows.find(row => row.scope === scope && row.field === "$version")?.rows !== versions.get(scope)) {
+    throw new Error("CIVIC_POINTER_CHANGED_DURING_READ");
+  }
   // Only selected records can still contain references (for example a long
   // biography). Their existing decoder preserves their exact field values.
   const parts = new CivicPayloadParts({ existing: async () => [], write: async () => { throw new Error("READ_ONLY"); },
@@ -80,6 +85,6 @@ export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: s
     object[keys.at(-1)!] = value;
   };
   for (const scope of scopes) for (const field of paths) set(scope, field, []);
-  for (const row of rows) set(row.scope as string, row.field as string, await parts.load(row.rows));
+  for (const row of rows) if (row.field !== "$version") set(row.scope as string, row.field as string, await parts.load(row.rows));
   return values;
 }

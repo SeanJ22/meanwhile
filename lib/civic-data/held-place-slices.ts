@@ -7,12 +7,12 @@ import { readPlacePayloadParts } from "./place-payload-slices.ts";
 export type PlaceCaptureRead<T> = {
   readonly kind: CivicDataReadResult<T>["kind"];
   readonly value: T | null;
-  readonly metadata: Pick<CivicDataReadMetadata, "recordClass" | "scope">;
+  readonly metadata: Pick<CivicDataReadMetadata, "recordClass" | "scope"> & { readonly versionId?: string | null };
 };
 
 const array = (path: string, where: string) => `(SELECT COALESCE(jsonb_agg(x), '[]'::jsonb) FROM jsonb_array_elements(CASE WHEN jsonb_typeof(${path})='array' THEN ${path} ELSE '[]'::jsonb END) x WHERE ${where})`;
 const division = "x->>'ocdId'=ANY($3::text[]) OR x->>'divisionId'=ANY($3::text[])";
-const serves = `${division} OR x->'alsoServesOcdIds' ?| $3::text[]`;
+const serves = `${division} OR x->'alsoServesOcdIds' ?| $3::text[] OR x->>'id'=ANY($4::text[])`;
 
 /** Only the selected divisions and their bodies cross the wire. All filters
  * run against the existing canonical pointer in the existing read-only store. */
@@ -59,14 +59,16 @@ export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetada
     value = `(payload - 'records') || jsonb_build_object('records', ${array("payload->'records'", `${division} OR x->>'stateOcdId'=ANY($3::text[])`)})`;
   }
   const [rows] = await query([{ text: `WITH selected AS (SELECT $3::text[] ids, $4::text[] bodies, $5::text[] targets)
-    SELECT scope, ${value} AS value, jsonb_path_exists(payload, '$.**."$civicPayloadPart"') AS encoded
+    SELECT scope, current_version_id, ${value} AS value, jsonb_path_exists(payload, '$.**."$civicPayloadPart"') AS encoded
       FROM civic_data_promotions WHERE record_class=$1 AND scope=ANY($2::text[])`,
     params: [recordClass, [...new Set(scopes)], [...ids], [...bodies], [...targets]] }]);
   const byScope = new Map(rows?.map(row => [row.scope, row]));
   const encoded = rows.filter(row => row.encoded).map(row => row.scope as string);
-  const decoded = encoded.length ? await readPlacePayloadParts(query, recordClass, encoded, ids, bodies, targets) : new Map();
+  const decoded = encoded.length ? await readPlacePayloadParts(query, recordClass, encoded, ids, bodies, targets,
+    new Map(rows.map(row => [row.scope as string, row.current_version_id as string]))) : new Map();
   return scopes.map(scope => {
     const row = byScope.get(scope);
-    return { kind: row ? "PROMOTED" : "NOT_RECORDED", value: (decoded.get(scope) ?? row?.value) as T ?? null, metadata: { recordClass, scope } };
+    return { kind: row ? "PROMOTED" : "NOT_RECORDED", value: (decoded.get(scope) ?? row?.value) as T ?? null,
+      metadata: { recordClass, scope, ...(row ? { versionId: row.current_version_id as string } : {}) } };
   });
 }

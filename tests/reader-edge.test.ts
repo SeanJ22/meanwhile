@@ -8,6 +8,7 @@ import {
   NATIONAL_SCOPE,
   mergeScopeArtifacts,
   partitionSnapshotByScope,
+  readerScopeApplies,
   scopeOfMeeting,
   scopesForStates,
   stateOfOcdId,
@@ -20,6 +21,10 @@ import {
 } from "../lib/meetings/edge-serving.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { publishRoutineReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
+import { MEETINGS_PREPARED_SCOPE } from "../lib/meetings/prepared-snapshot.ts";
+import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 
 function meeting(id: string, ocdId: string | null, extra: Partial<Meeting> = {}): Meeting {
   return {
@@ -53,6 +58,87 @@ test("stateOfOcdId / scopeOfMeeting derive the geographic partition key", () => 
   assert.equal(stateOfOcdId(null), null);
   assert.equal(scopeOfMeeting(meeting("x", null)), NATIONAL_SCOPE);
   assert.equal(scopeOfMeeting(meeting("y", "ocd-division/country:us/state:nh/place:newbury")), "nh");
+});
+
+test("every area a canonical body governs receives the same meeting and agenda without duplicate copies", async () => {
+  const primary = "ocd-division/country:us/state:az/county:cochise";
+  const neighbour = "ocd-division/country:us/state:az/county:pima";
+  const row = meeting("shared", primary, { bodyId: "shared-body" });
+  const snap = snapshot([row]);
+  snap.agendaDocuments = [{ id: "agenda", meetingId: row.id, ocdId: primary }] as MeetingsSnapshot["agendaDocuments"];
+  const bodies = [{ id: "shared-body", ocdId: primary, alsoServesOcdIds: [neighbour, primary, neighbour] }];
+  const artifacts = partitionSnapshotByScope(snap, snap.generatedAt, bodies);
+  assert.equal(artifacts.length, 4, "one calendar and one agenda piece in each area");
+  for (const area of [primary, neighbour]) {
+    const matching = artifacts.filter(artifact => artifact.ocdId === area);
+    assert.equal(matching.flatMap(artifact => artifact.meetings).length, 1);
+    assert.equal(matching.flatMap(artifact => artifact.agendaDocuments).length, 1);
+    assert.ok(matching.every(artifact => readerScopeApplies(artifact, { ocdIds: [area] })));
+  }
+  const merged = mergeScopeArtifacts(artifacts, snap);
+  assert.equal(merged.meetings.length, 1);
+  assert.equal(merged.agendaDocuments.length, 1);
+  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-edge-shared-")));
+  const published = await publishReaderEdgeArtifacts(snap, META, { store, meetingBodies: bodies });
+  assert.equal(published.status, "PUBLISHED");
+});
+
+test("ordinary publication repairs old area copies once, carries quiet data, and rebuilds changed territories", async () => {
+  const primary = "ocd-division/country:us/state:az/county:cochise";
+  const secondary = "ocd-division/country:us/state:az/county:pima";
+  const bodyId = `${primary}#governing`;
+  const snap = snapshot([meeting("shared", "raw-area-key", { bodyId })]);
+  const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "runner-area-edge-")));
+  await publishReaderEdgeArtifacts(snap, META, { store: artifacts,
+    authority: { "registry-runtime": { value: {}, versionId: "registry-v1" } } });
+  assert.equal((await artifacts.readManifest())!.manifest.meetingRegistryVersion, undefined);
+  const memory = new MemoryRoutineDataStore();
+  await memory.writePreparedReaderProjection({ recordClass: "MEETING", scope: MEETINGS_PREPARED_SCOPE,
+    payload: snap, composedFrom: [], factSha256: "a".repeat(64), generatedAt: snap.generatedAt,
+    composedAt: snap.generatedAt, ...META }, null);
+  let payloadReads = 0, registryReads = 0, registryVersion = "registry-v1";
+  let otherAreas: string[] = [secondary];
+  const store = new Proxy(memory, { get(target, key) {
+    const value = Reflect.get(target, key);
+    if (key === "readPreparedReaderProjection") return (...args: unknown[]) => { payloadReads++; return value.apply(target, args); };
+    return typeof value === "function" ? value.bind(target) : value;
+  } });
+  const options = { artifactStore: artifacts, readMeetingRegistry: async (divisions: readonly string[], bodies: readonly string[]) => {
+    registryReads++;
+    assert.deepEqual(divisions, ["raw-area-key"]);
+    assert.deepEqual(bodies, [bodyId]);
+    return { kind: "PROMOTED" as const, metadata: { recordClass: "REGISTRY_RUNTIME_BINDING" as const,
+      scope: "US:reader-registry-runtime-bindings", versionId: registryVersion },
+      value: { registry: { bodies: [{ id: bodyId, ocdId: primary, alsoServesOcdIds: otherAreas }] } } as unknown as RegistryRuntimeReadModel };
+  } };
+  const selected = [{ recordClass: "MEETING" as const, scope: "changed-meetings" }];
+  assert.equal(await publishRoutineReaderEdge(store, snap.generatedAt, selected, options), true);
+  let held = (await artifacts.readManifest())!;
+  assert.equal(held.manifest.meetingRegistryVersion, "registry-v1");
+  assert.deepEqual(held.manifest.scopes.map(s => s.ocdId).sort(), [primary, secondary].sort());
+  assert.equal(registryReads, 1);
+  const readCount = payloadReads;
+  assert.equal(await publishRoutineReaderEdge(store, snap.generatedAt, selected, options), true);
+  assert.equal(payloadReads, readCount, "quiet compositions do not read meeting payloads");
+  assert.equal(registryReads, 1, "quiet compositions do not read registry payloads");
+  assert.equal((await artifacts.readManifest())!.manifest.sequence, held.manifest.sequence);
+  const changedAuthority = { ...held.manifest.authorityArtifacts!, "registry-runtime": {
+    ...held.manifest.authorityArtifacts!["registry-runtime"]!, version: "registry-v2" } };
+  await artifacts.writeManifest({ ...held.manifest, authorityArtifacts: changedAuthority }, held.etag ?? null);
+  registryVersion = "registry-v2";
+  otherAreas = [];
+  assert.equal(await publishRoutineReaderEdge(store, snap.generatedAt, selected, options), true);
+  held = (await artifacts.readManifest())!;
+  assert.equal(held.manifest.meetingRegistryVersion, registryVersion);
+  assert.deepEqual(held.manifest.scopes.map(s => s.ocdId), [primary], "removed territories stop serving the body's meetings");
+  assert.equal(registryReads, 2);
+  // A selected read that races the registry pointer must retain the entire LKG manifest.
+  const lastValid = held.manifest;
+  await artifacts.writeManifest({ ...lastValid, meetingRegistryVersion: "old-format" }, held.etag ?? null);
+  const beforeFailure = (await artifacts.readManifest())!.manifest;
+  registryVersion = "raced-pointer";
+  assert.equal(await publishRoutineReaderEdge(store, snap.generatedAt, selected, options), false);
+  assert.deepEqual((await artifacts.readManifest())!.manifest, beforeFailure);
 });
 
 test("scopesForStates dedupes, lowercases, validates, and always includes the national bucket", () => {

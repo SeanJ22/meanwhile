@@ -46,8 +46,8 @@ export async function v6ResultsGet(request: NextRequest): Promise<NextResponse> 
   if (scope !== null && (scope.kind === "country" || scope.kind === "state")) {
     let read: PipelineRead | PipelineUnread | null;
     try { read = await pipeline(now); }
-    catch { return unread("The published snapshot could not be read just now, so results are unknown, not zero."); }
-    if (read === null) return unread("The control-plane database is not configured here, so results were not read.");
+    catch { return unread("The published snapshot could not be read just now."); }
+    if (read === null) return unread("The control-plane database is not configured here.");
     if (read.state === "UNREAD") return unread(read.says);
     const data: readonly AdminV6Result[] = pipelineResults(read, query.scopeKey, scope);
     return NextResponse.json({ ...base, revision: `results:${read.revision ?? "unrevised"}:${query.scopeKey}`, asOf: read.publishedAt ?? now, data, missingParts: [] }, { headers: NO_STORE });
@@ -55,7 +55,7 @@ export async function v6ResultsGet(request: NextRequest): Promise<NextResponse> 
 
   const place = resolvePlaceKey(query.scopeKey);
   if ("says" in place) {
-    return NextResponse.json({ ...base, revision: `results:${query.scopeKey}:not-read`, asOf: now, data: null, missingParts: [place.says] }, { headers: NO_STORE });
+    return NextResponse.json({ ...base, revision: `results:${query.scopeKey}:not-read`, asOf: now, data: null, missingParts: [] }, { headers: NO_STORE });
   }
   const owed: PlaceOwedRead | PlaceOwedRefusal = await readPlaceOwed(query.scopeKey);
   if (owed.state === "REFUSED") return NextResponse.json({ code: owed.code, says: owed.says }, { status: 503, headers: NO_STORE });

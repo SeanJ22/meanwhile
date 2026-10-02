@@ -50,11 +50,8 @@ import { addCensusSchoolShares, withCensusSchoolTerritories } from "./census-sco
 import dependentSchools from "./reference/census-dependent-school-territories.json" with { type: "json" };
 import { readFieldManual, type FieldManualRead } from "../field-manual.ts";
 import { divisionsForZip, type PlaceDivision } from "./national-geography.ts";
-
-/** Where the committed Census unit territories live, relative to the repository root. */
-export const CENSUS_UNIT_TERRITORY_PATH = ["data", "derived", "census-unit-zips.json"] as const;
-/** The sampled ZCTA-to-government overlap those territories were built from. */
-export const ZCTA_GOVERNMENT_SAMPLES_PATH = ["data", "derived", "zip-governments.json"] as const;
+import { readStateReference, stateReferenceNames } from "./state-references.ts";
+import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 
 /**
  * Each wanted government's share of each of its ZCTAs, from the sampled
@@ -62,24 +59,19 @@ export const ZCTA_GOVERNMENT_SAMPLES_PATH = ["data", "derived", "zip-governments
  * samples across the county layer (counties tile the land, so that is every
  * sample in the ZCTA). Only the keys asked for are kept.
  */
-export function readZctaShares(root: string, wanted: ReadonlySet<string>): Map<string, Map<string, number>> {
-  const path = join(root, ...ZCTA_GOVERNMENT_SAMPLES_PATH);
-  const parsed = JSON.parse(readFileSync(path, "utf8")) as {
-    readonly zips?: Readonly<Record<string, readonly { readonly layer: string; readonly id: string; readonly samples: number }[]>>;
-  };
-  if (parsed.zips === undefined || Object.keys(parsed.zips).length === 0) {
-    throw new Error(`${ZCTA_GOVERNMENT_SAMPLES_PATH.join("/")} carries no ZCTAs — a failed read, never a country with no overlap`);
-  }
+export function readZctaShares(root: string, wanted: ReadonlySet<string>, states?: readonly string[]): Map<string, Map<string, number>> {
+  const selected = states ?? [...new Set([...wanted].flatMap(key => FIPS_TO_STATE[key.split(":")[1]?.slice(0, 2)]?.postal ?? []))];
   const out = new Map<string, Map<string, number>>();
-  for (const [zcta, edges] of Object.entries(parsed.zips)) {
-    const total = edges.filter((e) => e.layer === "county").reduce((n, e) => n + e.samples, 0);
-    if (total <= 0) continue;
-    for (const edge of edges) {
-      const key = `${edge.layer}:${edge.id}`;
-      if (!wanted.has(key)) continue;
-      const shares = out.get(key) ?? new Map<string, number>();
-      shares.set(zcta, Math.min(1, edge.samples / total));
-      out.set(key, shares);
+  for (const state of selected) {
+    for (const [zcta, { edges, total }] of Object.entries(readStateReference(root, state).zips)) {
+      if (total <= 0) continue;
+      for (const edge of edges) {
+        const key = `${edge.layer}:${edge.id}`;
+        if (!wanted.has(key)) continue;
+        const shares = out.get(key) ?? new Map<string, number>();
+        shares.set(zcta, Math.min(1, edge.samples / total));
+        out.set(key, shares);
+      }
     }
   }
   return out;
@@ -92,24 +84,27 @@ export function readZctaShares(root: string, wanted: ReadonlySet<string>): Map<s
  * governments it blocks by the same certain-overlap rule as a registered one,
  * rather than by wholly-inside ZCTAs alone.
  */
-export function readTerritoryIndex(root: string, registries: readonly JurisdictionRegistry[]): TerritoryIndex {
-  const units = readCensusUnitTerritories(root);
+export function readTerritoryIndex(root: string, registries: readonly JurisdictionRegistry[], states = [...new Set(registries.map(registry => registry.stateCode))], zips?: ReadonlySet<string>): TerritoryIndex {
+  const selected = new Set(states.map(state => state.toUpperCase()));
+  const scopedRegistries = registries.filter(registry => selected.has(registry.stateCode.toUpperCase()));
+  const units = readCensusUnitTerritories(root, states, zips);
   const wanted = new Set<string>();
   for (const unit of units) {
     const key = unitShareKey(unit);
     if (key !== null) wanted.add(key);
   }
   /* A registry read from registration places each government by the division its body sits on, by that division's own layer and GEOID (2026-09-25). */
-  for (const registry of registries) {
+  for (const registry of scopedRegistries) {
     if (registry.registration?.kind !== "REGISTRATION") continue;
     for (const j of registry.jurisdictions) if (j.censusDivision) wanted.add(j.censusDivision);
   }
-  const shares = readZctaShares(root, wanted);
+  const shares = readZctaShares(root, wanted, states);
   addCensusSchoolShares(shares);
-  return buildTerritoryIndex(registries, units, (key) => shares.get(key), (j) => {
+  for (const key of shares.keys()) if (!selected.has(FIPS_TO_STATE[key.split(":")[1]?.slice(0, 2)]?.postal ?? "")) shares.delete(key);
+  return buildTerritoryIndex(scopedRegistries, units, (key) => shares.get(key), (j) => {
     const own = j.censusDivision ? shares.get(j.censusDivision) : undefined;
     return own === undefined ? undefined : { zctas: new Set(own.keys()), shares: own };
-  }, readApproximateDistrictExtract(root));
+  }, states.some(state => state.toUpperCase() === "AZ") ? readApproximateDistrictExtract(root) : null);
 }
 
 /**
@@ -126,15 +121,17 @@ export function readApproximateDistrictExtract(root: string): ApproximateDistric
 }
 
 /** Read the Census unit territories. Throws with the path named; the caller turns that into a named condition. */
-export function readCensusUnitTerritories(root: string): readonly CensusUnitTerritory[] {
-  const path = join(root, ...CENSUS_UNIT_TERRITORY_PATH);
-  const parsed = JSON.parse(readFileSync(path, "utf8")) as { readonly units?: unknown };
-  if (!Array.isArray(parsed.units) || parsed.units.length === 0) {
-    throw new Error(`${CENSUS_UNIT_TERRITORY_PATH.join("/")} carries no units — a failed read, never a country with no governments`);
-  }
-  const units = parsed.units as readonly CensusUnitTerritory[];
+export function readCensusUnitTerritories(root: string, states = stateReferenceNames(root), zips?: ReadonlySet<string>): readonly CensusUnitTerritory[] {
+  const selected = new Set(states.map(state => state.toUpperCase()));
+  const units = [...selected].flatMap(state => {
+    const shard = readStateReference(root, state);
+    if (!zips) return shard.units;
+    const seeds = new Set([...zips].flatMap(zip => shard.zips[zip]?.edges.map(edge => `${edge.layer}:${edge.id}`) ?? []));
+    const ring = new Set([...seeds].flatMap(key => [key, ...(shard.adjacency[key] ?? [])]));
+    return shard.units.filter(unit => !unit.zips.length || unit.zips.some(zip => zips.has(zip)) || ring.has(unitShareKey(unit) ?? ""));
+  });
   const ids = new Set(units.map(unit => unit.pid6));
-  return withCensusSchoolTerritories([...units, ...dependentSchools.units.filter(unit => !ids.has(unit.pid6))]);
+  return withCensusSchoolTerritories([...units, ...dependentSchools.units.filter(unit => selected.has(unit.state.toUpperCase()) && !ids.has(unit.pid6))]);
 }
 
 /**
@@ -262,7 +259,7 @@ export async function loadExpansionPlan(input: {
   /** Injected in tests; the runner uses the published lookup. */
   readonly loadLookup?: () => Promise<LookupState>;
   /** Injected in tests; the runner reads the committed territories and the preloaded registries. */
-  readonly loadTerritory?: () => TerritoryIndex;
+  readonly loadTerritory?: (states: readonly string[], zips: ReadonlySet<string>) => TerritoryIndex;
   readonly loadNationalZip?: (zip: string) => Promise<readonly PlaceDivision[]>;
   /**
    * Called once the scopes are resolved, with every state they span (a metro's member states included), before
@@ -351,11 +348,13 @@ export async function loadExpansionPlan(input: {
   }
   if (decisions.length > 0) {
     try {
+      const states = [...new Set(scopes.flatMap(scope => scope.states))];
+      const zips = new Set(scopes.flatMap(scope => scope.kind === "RESOLVED" ? [...scope.zctas] : []));
       territory = (input.loadTerritory ?? (() => {
-        const registries = Object.values(installedOperationalReferenceRegistries());
+        const registries = Object.values(installedOperationalReferenceRegistries(states));
         if (registries.length === 0) throw new Error("OPERATIONAL_REFERENCE_READ_NOT_INITIALIZED: no promoted jurisdiction registry was preloaded");
-        return readTerritoryIndex(input.root, registries);
-      }))();
+        return readTerritoryIndex(input.root, registries, states, zips);
+      }))(states, zips);
     } catch (error) {
       territoryDetail = error instanceof Error ? error.message : String(error);
       conditions.push(`the expansion territory index could not be built (${territoryDetail}); no work is placed in a scope this cycle`);

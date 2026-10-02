@@ -11,6 +11,14 @@ import { DEFAULT_CADENCE_HOURS } from "../control-plane/scheduler/obligation.ts"
 import { dueNationalPlaceZips } from "./place-source-task.ts";
 import { orderNationalPlaceWork } from "../control-plane/expansion/dispatch-work.ts";
 
+/** Start a saved Send alongside standing work, before the standing backlog drains. */
+export function placeSourceLaunchOrder<T extends { readonly task: Pick<RoutineSourceTask, "id"> }>(jobs: readonly T[]): T[] {
+  const places = jobs.filter(job => job.task.id.startsWith("national-place:"));
+  if (!places.length) return [...jobs];
+  const standing = jobs.filter(job => !job.task.id.startsWith("national-place:"));
+  return [places[0]!, ...standing.slice(0, 1), ...places.slice(1), ...standing.slice(1)];
+}
+
 /** One ordinary source command per place; the existing occurrence owns its lease and resume clock. */
 export function nationalPlaceJobs(zips: readonly string[], owner: { requestedAt: string; instructions: readonly string[] }): RoutineSourceTask[] {
   if (zips.some(zip => !/^\d{5}$/.test(zip))) throw new Error("National place acquisition needs five-digit ZIPs");

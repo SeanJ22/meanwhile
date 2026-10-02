@@ -22,7 +22,8 @@ import registry from "../lib/registry/registry.json" with { type: "json" };
 import { collectNationalPlaceSources, electionDirectorySelection } from "../lib/sources/plural/place.ts";
 import { electionPageFields } from "../lib/hunt/election-page.ts";
 import { placeSourceReader, PlaceSourceDeferred } from "../lib/hunt/place-source-reader.ts";
-import { nationalPlaceJobs } from "../lib/hunt/place-source-admission.ts";
+import { nationalPlaceJobs, placeSourceLaunchOrder } from "../lib/hunt/place-source-admission.ts";
+import { runBoundedChildPass } from "../lib/civic-data/bounded-child-pass.ts";
 import { routineTaskDue } from "../lib/civic-data/runner.ts";
 import { dueNationalPlaceZips, runNationalPlaceTask, scheduleNationalPlace, placeMadeProgress } from "../lib/hunt/place-source-task.ts";
 import { standing, openOccurrence, closeOccurrence } from "../lib/control-plane/scheduler/durable.ts";
@@ -51,6 +52,27 @@ test("a 20-place Send offers independent jobs instead of one joined ZIP command"
       "another body's publication cannot suppress the admitted place job");
   }
   assert.throws(() => nationalPlaceJobs(["bad"], { requestedAt, instructions: [] }), /five-digit ZIPs/);
+});
+
+test("a saved Send starts beside a long routine job and reaches every ZIP before the routine backlog", async () => {
+  const routine = Array.from({ length: 191 }, (_, index) => ({ task: { id: `routine:${index}` } }));
+  const places = Array.from({ length: 20 }, (_, index) => ({ task: { id: `national-place:${String(3000 + index).padStart(5, "0")}` } }));
+  const ordered = placeSourceLaunchOrder([...routine, ...places]);
+  const started: string[] = [];
+  let releaseRoutine!: () => void;
+  const routineDone = new Promise<void>(resolve => { releaseRoutine = resolve; });
+  await runBoundedChildPass(ordered.map(({ task }) => ({ id: task.id, executable: "unused", args: [] })),
+    { cwd: ".", env: { NODE_ENV: "test" }, concurrency: 4 }, async command => {
+      started.push(command.id);
+      if (command.id === "routine:0") await routineDone;
+      if (command.id === places.at(-1)!.task.id) releaseRoutine();
+      return { id: command.id, status: 0, signal: null, stdout: "", stderr: "", termination: "EXITED", errorMessage: null };
+    });
+  assert.deepEqual(started.slice(0, 4), [places[0]!.task.id, "routine:0", places[1]!.task.id, places[2]!.task.id]);
+  assert.deepEqual(started.filter(id => id.startsWith("national-place:")), places.map(({ task }) => task.id));
+  assert.ok(started.indexOf(places.at(-1)!.task.id) < started.indexOf("routine:1"));
+  assert.deepEqual(placeSourceLaunchOrder(routine), routine);
+  assert.deepEqual(placeSourceLaunchOrder(places), places);
 });
 
 test("below-target places continue every pass until a settled hunt makes no progress", async () => {

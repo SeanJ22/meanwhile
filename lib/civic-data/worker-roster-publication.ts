@@ -295,6 +295,7 @@ export async function publishWorkerRosterResults(input: {
   /** Reads a held page straight from the vault by its artifact record; enables reuse of any job's saved evidence. */
   readonly readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
 }): Promise<readonly { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[]> {
+  if (!input.workItemIds.length) return [];
   const records = await readCompletedWorkerResults(input.repos);
   const readHeld = input.readHeld ?? localHeldCaptureReader();
   const allItems = (await input.repos.workItems.list()).map(row => row.value);

@@ -26,8 +26,59 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
 
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+
+test("standing place ranks reuse one order version and rebuild overlapping memberships on refresh", () => {
+  const source = readFileSync(join(process.cwd(), "scripts/freshness-shadow.mts"), "utf8");
+  const start = source.indexOf("const placeRankFor = ");
+  const end = source.indexOf("const providerQueue = ", start);
+  const snippet = transpileModule(source.slice(start, end), {
+    compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None },
+  }).outputText;
+  const make = new Function("expansionPlan", `let placeOrder = ['receipt:a', 'receipt:b']; ${snippet}
+    return { rank: placeRankFor, replace: value => { placeOrder = value; } };`);
+  let scopeReads = 0;
+  const scopes = [
+    { get kind() { scopeReads++; return "RESOLVED"; }, decision: { receiptId: "receipt:a" }, members: new Set(["a", "shared"]) },
+    { get kind() { scopeReads++; return "RESOLVED"; }, decision: { receiptId: "receipt:b" }, members: new Set(["b", "shared"]) },
+    { kind: "UNRESOLVED", decision: { receiptId: "receipt:missing" }, members: new Set(["unresolved"]) },
+  ];
+  const ranks = make({ scopes });
+  for (let query = 0; query < 1000; query++) {
+    assert.equal(ranks.rank("shared"), 0);
+    assert.equal(ranks.rank("b"), 1);
+    assert.equal(ranks.rank("outside"), null);
+    assert.equal(ranks.rank("unresolved"), null);
+  }
+  assert.equal(scopeReads, 2, "four thousand queries read scope memberships only once for this order");
+  ranks.replace(["receipt:b", "receipt:a"]);
+  assert.equal(ranks.rank("shared"), 0);
+  assert.equal(ranks.rank("a"), 1);
+  assert.equal(ranks.rank("b"), 0);
+  assert.equal(scopeReads, 4);
+  ranks.replace([]);
+  assert.equal(ranks.rank("shared"), null);
+});
+
+test("a failed priority refresh is not re-read until work changes its order version", async () => {
+  const source = readFileSync(join(process.cwd(), "scripts/freshness-shadow.mts"), "utf8");
+  const start = source.indexOf("let placeOrder: ");
+  const end = source.indexOf("await refreshPlaceOrder();", start);
+  const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
+  let reads = 0;
+  const plan = { scopes: [{ kind: "RESOLVED", members: new Set(["ocd-division/example"]), decision: { receiptId: "receipt" } }] };
+  const repos = { adminConfig: { read: async () => { reads++; throw new Error("forced one priority read failure"); } } };
+  const make = new Function("expansionPlan", "repos", "ADMIN_CONFIG_ID", "readHeldPlaceCapture", "nowIso", "runtimeConditions", "console", `${snippet}
+    return { refresh: refreshPlaceOrder, changed: () => { placeOrderDirty = true; } };`);
+  const priority = make(plan, repos, "admin", async () => ({}), () => "2026-10-02T17:00:00Z", [], { warn: () => {} });
+  for (let selection = 0; selection < 20; selection++) await priority.refresh();
+  assert.equal(reads, 1, "one refused refresh keeps the last order without twenty repeated store reads");
+  priority.changed();
+  await priority.refresh();
+  assert.equal(reads, 2, "new work still requests a fresh place order");
+});
 import { registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";

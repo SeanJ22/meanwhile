@@ -7,6 +7,8 @@ import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { HeldPlaceFamilies } from "../lib/civic-data/held-place-families.ts";
 import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
+import { projectHeldGeography, readHeldPlaceGeography, type HeldGeographyRow } from "../lib/civic-data/held-place-geography.ts";
+import type { Division } from "../lib/registry/types.ts";
 
 const county = "ocd-division/country:us/state:az/county:cochise";
 const neighbour = "ocd-division/country:us/state:az/county:pima";
@@ -21,6 +23,52 @@ const meeting = { id: "meeting:one", bodyId: "shared-body", ocdId: county, title
   startsAt: "2026-10-01T02:00:00.000Z", timeZone: "America/Phoenix", startPrecision: "DAY",
   location: null, online: null, status: "SCHEDULED", provenance };
 const meetings = published({ meetings: [meeting] } as unknown as MeetingsSnapshot);
+
+test("held boundary provenance maps source, semantic version and effective use without URL-only credit", () => {
+  const cd = "ocd-division/country:us/state:az/cd:6";
+  const sl = "ocd-division/country:us/state:az/sldu:6";
+  const meta = { type: "congressional_district", version: "cd:119", versionMeta: {
+    key: "cd:119", type: "congressional_district", plan: "119th Congress", effectiveFor: "current representation",
+    zctaTabulation: "2020", provenance: { sourceUrls: ["https://www2.census.gov/held.txt"],
+      sourceDataset: "CENSUS_TAB20_REL2020", computedAt: at, sourceFiles: ["held.txt"], sourceChecksums: ["saved-hash"], method: "published relationship" },
+  } };
+  const row = { meta, grouping: { geoid: "0406", ocdId: null, label: "AZ Congressional District 6" } } as unknown as HeldGeographyRow;
+  const held = projectHeldGeography([cd, sl, county], [], [row]);
+  assert.deepEqual(held.held.map(f => [f.subjectId, f.checklistId]), [[cd, "GEO-03"]]);
+  assert.equal(held.held[0].checkedAt, at, "projection does not advance the saved source clock");
+  assert.deepEqual(held.held[0].value, { divisionId: cd, geoid: "0406", sourceDataset: "CENSUS_TAB20_REL2020",
+    version: "cd:119", plan: "119th Congress", effectiveFor: "current representation" });
+  const items = buildPlaceOwedList({ divisions: [{ id: cd, label: cd }], ...held, now: at });
+  assert.equal(items.find(item => item.checklistId === "GEO-03" && item.subject.id === cd)?.state, "published");
+  for (const field of ["key", "effectiveFor"] as const) {
+    const missing = structuredClone(row);
+    (missing.meta.versionMeta as unknown as Record<string, unknown>)[field] = "";
+    assert.equal(projectHeldGeography([cd], [], [missing]).held.length, 0);
+  }
+  const countyRow = { ...row, meta: { ...row.meta, type: "county" }, grouping: { ...row.grouping, geoid: "04003" } } as HeldGeographyRow;
+  const divisions = [{ ocdId: county, divisionType: "county", geoid: "04003" }] as Division[];
+  assert.equal(projectHeldGeography([county], divisions, [countyRow]).held[0].subjectId, county);
+  assert.equal(projectHeldGeography(["unrelated"], divisions, [countyRow]).held.length, 0);
+});
+
+test("geography quiet reads fetch only the pointer, and a changed or racing version cannot serve the old field", async () => {
+  let version = "held-v1", payloadReads = 0, racing = false;
+  const query = async (statements: readonly { text: string }[]) => {
+    if (statements[0].text.startsWith("SELECT current_version_id")) return [[{ current_version_id: version }]];
+    payloadReads++;
+    return [[{ meta: {}, grouping: { $version: racing ? "raced" : version } }]];
+  };
+  const ids = ["ocd-division/country:us/state:az/cd:6"];
+  await readHeldPlaceGeography(ids, [], query);
+  await readHeldPlaceGeography(ids, [], query);
+  assert.equal(payloadReads, 1);
+  version = "held-v2";
+  await readHeldPlaceGeography(ids, [], query);
+  assert.equal(payloadReads, 2);
+  version = "held-v3";
+  racing = true;
+  await assert.rejects(readHeldPlaceGeography(ids, [], query), /CIVIC_POINTER_CHANGED_DURING_READ/);
+});
 
 test("held fields reach every served division without filling inventory or missing meeting fields", () => {
   const primary = projectHeldPlaceCapture([county], registry, [meetings], at);

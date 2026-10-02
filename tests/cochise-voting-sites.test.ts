@@ -87,7 +87,7 @@ test("normal Cochise successor promotes through the existing pointer and leaves 
   assert.equal((await store.readPromotion(VOTING_SITES_CONTRACT.recordClass, VOTING_SITES_CONTRACT.scope))?.versionId, candidate.id);
   const saved = await store.readCandidate(candidate.id);
   assert.deepEqual((saved?.candidate.normalizedPayload as typeof payload).acquisition, payload.acquisition);
-  assert.throws(() => votingSitesScopedSuccessor(null, cochise, "2026-09-28"), /SCOPED_BASE_UNAVAILABLE/);
+  assert.deepEqual(votingSitesScopedSuccessor(null, cochise, "2026-09-28").jurisdictions, [cochise]);
 });
 
 test("the next standard refresh carries Cochise unchanged while refreshing Pima, Morris and NH", async () => {
@@ -100,8 +100,23 @@ test("the next standard refresh carries Cochise unchanged while refreshing Pima,
   assert.equal(next.jurisdictions.length, withCochise.jurisdictions.length);
   const pimaId = "ocd-division/country:us/state:az/county:pima";
   const disappearedPima = { ...prior, jurisdictions: prior.jurisdictions.filter(row => row.ocdId !== pimaId) };
-  assert.equal(votingSitesStandardSuccessor(disappearedPima, withCochise).jurisdictions.some(row => row.ocdId === pimaId), false);
-  assert.throws(() => votingSitesStandardSuccessor(withCochise, prior), /STANDARD_SOURCE_SCOPE_MIXED/);
+  assert.equal(votingSitesStandardSuccessor(disappearedPima, withCochise).jurisdictions.some(row => row.ocdId === pimaId), true);
+  assert.equal(votingSitesStandardSuccessor(disappearedPima, withCochise, prior.jurisdictions.map(row => row.ocdId))
+    .jurisdictions.some(row => row.ocdId === pimaId), false);
+  assert.deepEqual(votingSitesStandardSuccessor(withCochise, prior), withCochise);
+});
+
+test("scoped refresh accepts any state, county, voting model and sourced site count", () => {
+  const prior = JSON.parse(readFileSync(join(process.cwd(), "data/voting-sites.json"), "utf8")) as VotingSitesFile;
+  const original = prior.jurisdictions.find(row => row.sites.length > 0)!;
+  for (const state of ["AK", "HI", "DC", "WI"]) {
+    const ocdId = `ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}/county:example`;
+    const current = { ...structuredClone(original), state, ocdId, model: "ASSIGNED" as const, sites: original.sites.slice(0, 1) };
+    const next = votingSitesScopedSuccessor(prior, current, "2026-09-28");
+    assert.deepEqual(next.jurisdictions.find(row => row.ocdId === ocdId), current);
+    assert.deepEqual(next.jurisdictions.filter(row => row.ocdId !== ocdId),
+      [...prior.jurisdictions].sort((a, b) => a.ocdId.localeCompare(b.ocdId)));
+  }
 });
 
 test("Pima source failure retains Pima only and a Cochise failure retains Cochise only", async () => {

@@ -5,12 +5,10 @@
  * has got to.** (S11; rulings §0 test 5: Sean can see what is happening.)
  *
  * Building, on test, deploying, live. Each line links to the pull request. The
- * list is read from GitHub on the server (`lib/control-plane/changes/source.ts`),
- * cached for a minute, and fetched when this view opens. When GitHub cannot be
- * read the view says so and says what fixes it; it never shows an empty list as
- * "nothing changed".
+ * list is read from GitHub on the server (`lib/control-plane/changes/source.ts`)
+ * and fetched when this view opens. When GitHub cannot be read the view shows "—".
  */
-import { CHANGE_STATUSES, CHANGE_STATUS_MEANING, CHANGE_STATUS_WORDS, groupChanges, type ChangeRow } from "@/lib/control-plane/changes/model.ts";
+import { CHANGE_STATUSES, CHANGE_STATUS_WORDS, groupChanges, type ChangeRow } from "@/lib/control-plane/changes/model.ts";
 import type { ChangesReading } from "@/lib/control-plane/changes/source.ts";
 
 import { mst } from "./model.ts";
@@ -37,15 +35,13 @@ export function ChangesView() {
       <header>
         <p className={s.eyebrow}>Every session</p>
         <h1 className={s.h1}>Changes</h1>
-        <p className={cx(s.p, s.small, s.dim)}>One line for each change from any session, newest first, with where it has got to.</p>
       </header>
       {reading.kind === "loading" && <Loading what="the changes" />}
       {reading.kind === "failed" && <Failed what="The changes" retry={reload} />}
       {reading.kind === "ready" && reading.data.kind === "UNAVAILABLE" && (
-        <Card title="The changes could not be read">
-          <p className={s.p}>{reading.data.reason}</p>
-          {reading.data.fix && <p className={cx(s.p, s.small, s.dim)}>{reading.data.fix}</p>}
-          <p className={cx(s.p, s.meta)}>Nothing here means nothing changed. It means this view could not look. Checked {mst(reading.data.observedAt)}.</p>
+        <Card title="Changes">
+          <p className={s.p}>—</p>
+          <p className={cx(s.p, s.meta)}>Checked {mst(reading.data.observedAt)}</p>
         </Card>
       )}
       {reading.kind === "ready" && reading.data.kind === "OBSERVED" && (() => {
@@ -53,15 +49,12 @@ export function ChangesView() {
         return (
           <>
             <p className={cx(s.p, s.meta)}>
-              Read from GitHub {mst(reading.data.observedAt)}
-              {reading.data.liveSha ? `; the live site is running build ${reading.data.liveSha.slice(0, 7)}` : "; what the live site is running could not be read"}.
-              {reading.stale ? " The latest attempt to refresh failed, so this is the last good reading." : ""}
+              Read {mst(reading.data.observedAt)} · Live build {reading.data.liveSha ? reading.data.liveSha.slice(0, 7) : "—"}
             </p>
             {CHANGE_STATUSES.map((status) => (
               <Card key={status} id={`changes-${status}`} title={<>{CHANGE_STATUS_WORDS[status]} <span className={s.meta}>({groups[status].length})</span></>}>
-                <p className={cx(s.p, s.small, s.dim)}>{CHANGE_STATUS_MEANING[status]}</p>
                 {groups[status].length === 0 ? (
-                  <Empty>None right now.</Empty>
+                  <Empty>None</Empty>
                 ) : (
                   <ul>{(status === "live" ? groups[status].slice(0, LIVE_SHOWN) : groups[status]).map((row) => <Line key={row.number} row={row} />)}</ul>
                 )}

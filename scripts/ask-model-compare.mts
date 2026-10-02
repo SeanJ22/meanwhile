@@ -5,7 +5,7 @@
  * ## What this settles, and why NOT_MEASURED was not allowed to stand
  *
  * `lib/ask/model-economics.ts` wrote the rule down — *switch only if every
- * question holds; one model for all Ask traffic* — and reported the comparison
+ * question holds* — and reported the comparison
  * itself as `NOT_MEASURED`. That module's own header says what that means:
  *
  * > NOT_MEASURED means the comparison is still owed — the obligation stays

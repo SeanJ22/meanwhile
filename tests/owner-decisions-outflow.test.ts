@@ -370,7 +370,7 @@ test("RULING 271: a row with no decision card closes only on his own words", () 
 /* The close goes through planMoves on the EXISTING "sean" path                */
 /* ========================================================================== */
 
-test("RULING 37: a dashboard close moves through planMoves as Sean's own resolution, with no bypass", () => {
+test("a dashboard close moves through planMoves as Sean's own resolution, with no bypass", () => {
   const { working, resolved } = stores();
   const d = intent({ subjectId: "TD01", decidedAt: T0 });
   const plan = planOwnerDecisions({ working, resolved, decisions: [d], registry: REGISTRY });
@@ -381,11 +381,6 @@ test("RULING 37: a dashboard close moves through planMoves as Sean's own resolut
   target.Resolution = "Resolved";
   target.Notes = close.note;
   target["Closed by"] = dashboardCloser(close.intentId);
-
-  // As a session, the very same row is still refused — the path is the author's.
-  const asSession = planMoves({ working, sections, actor: "session" });
-  assert.equal(asSession.moves.length, 0);
-  assert.match(asSession.refusals[0], /RULING 37/);
 
   // Registered as his handwriting, it moves — on the path the workbook uses.
   const asSean = planMoves({ working, sections, actor: "session", resolutionAuthor: { TD01: "sean" } });

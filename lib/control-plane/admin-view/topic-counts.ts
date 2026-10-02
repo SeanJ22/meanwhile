@@ -57,7 +57,7 @@ export interface TopicShown {
   readonly percent: number | null;
 }
 
-export const NO_TOPIC_COUNTS_YET = "No topic counts yet. They appear here as soon as the counts exist; nothing here is a count of zero.";
+export const NO_TOPIC_COUNTS_YET = "—";
 
 /** "tax-and-fees" → "Tax and fees". A taxonomy id becomes words; free-form keeps its own name. */
 export function topicLabel(topic: string): string {

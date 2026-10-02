@@ -1,49 +1,11 @@
 import { geometryFiles } from "../lib/holdings/files.ts";
-/**
- * `pnpm resolver:manifest` — P-003, the geometry the SERVER resolver may read.
- *
- * ## What was wrong
- *
- * `lib/registry/server.ts` discovered its geometry with `readdir` over
- * `public/geo`, excluding one file by name. That directory is not a resolver
- * input list: it is what the CLIENT downloads, plus the inputs to the scripts
- * that build it. So the resolver loaded **`cd119.geojson`, the 1.63 MB national
- * congressional file** — 441 features and 80,115 coordinates, 68% of every
- * coordinate the resolver holds — alongside `cd119-04`, `cd119-33` and
- * `cd119-34`, its own per-state derivatives, which `pnpm cd:split` writes and
- * which the map has used since g4 item 3.
- *
- * The national file is not wrong data. It is REDUNDANT data: every feature in
- * it that could ever match a covered point is byte-identical to a feature in
- * one of the three per-state files, by construction of the split. The resolver
- * paid for all 435 other districts on every sweep, and it did so because a
- * directory listing cannot tell an input from a product.
- *
- * ## What this writes, and the rule it follows
- *
- * `data/derived/resolver-geometry.json`: the files the resolver reads, the
- * files it does not, and WHY for each. Every canonical state and national `.geojson` is
- * accounted for on one list or the other — a file that is neither would be the
- * silent-skip shape this repo names most often.
- *
- * The rule is stated as SUPERSESSION, not as an allow-list. A national file is
- * excluded exactly when per-state derivatives exist for every covered state; if
- * a state is onboarded and its split has not been generated, the national file
- * stays in and the resolver keeps answering correctly. An allow-list would rot
- * the other way — a new district type silently absent — which is the failure
- * the `readdir` comment in `server.ts` was already worried about.
- *
- * ## The correctness gate is not in this file
- *
- * `pnpm resolver:identity` resolves every supported zip against both the old
- * discovery and this manifest and asserts an IDENTICAL set of division
- * identifiers. A geometry change that speeds up a lookup and alters one answer
- * is a wrong answer that arrived faster.
- */
+/** Build the resolver input from held geometry. National divisions remain available
+ * until sourced derivatives replace every division; duplicate derivatives do not
+ * make a pilot-state list the boundary of the national resolver. */
 import { readFileSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 
-import { COVERED_STATES } from "../lib/coverage/states.ts";
+import { US_JURISDICTIONS, jurisdictionFromOcdId } from "../lib/coverage/states.ts";
 import { today } from "./doc-dates.mjs";
 
 const ROOT = process.cwd();
@@ -79,15 +41,8 @@ function parseName(file: string): { type: string; fips: string | null } {
 
 const files = geometryFiles(ROOT);
 
-const perStateByType = new Map<string, Set<string>>();
-for (const file of files) {
-  const { type, fips } = parseName(file);
-  if (!fips) continue;
-  if (!perStateByType.has(type)) perStateByType.set(type, new Set());
-  perStateByType.get(type)!.add(fips);
-}
-
-const covered = COVERED_STATES.map((s) => s.fips);
+const collections = new Map(files.map(file => [file, JSON.parse(readFileSync(join(ROOT, file), "utf8")) as { features: { properties: { ocdId?: string }; geometry: { type: string; coordinates: unknown } }[] }]));
+const ids = (file: string) => new Set(collections.get(file)!.features.map(feature => feature.properties.ocdId).filter((id): id is string => Boolean(id)));
 
 interface Row {
   file: string;
@@ -106,34 +61,24 @@ for (const file of files) {
   }
 
   const { type, fips } = parseName(file);
-  if (fips === null) {
-    const splits = perStateByType.get(type);
-    const complete = splits !== undefined && covered.every((f) => splits.has(f));
-    if (complete) {
-      excluded.push({
-        file,
-        reason:
-          `superseded by per-state derivatives for every covered state ` +
-          `(${covered.map((f) => `${type}-${f}.geojson`).join(", ")}) — the same features, ` +
-          "clipped, so loading both tests every polygon twice and the national file's " +
-          "other states not at all",
-      });
+  const ownIds = ids(file);
+  const splitFiles = files.filter(other => { const parsed = parseName(other); return parsed.type === type && parsed.fips !== null; });
+  const splitIds = new Set(splitFiles.flatMap(other => [...ids(other)]));
+  if (fips === null && splitFiles.length && ownIds.size > 0 && [...ownIds].every(id => splitIds.has(id))) {
+    excluded.push({ file, reason: "superseded by held per-state derivatives covering every sourced division in the national file" });
+    continue;
+  }
+  const national = files.find(other => { const parsed = parseName(other); return parsed.type === type && parsed.fips === null; });
+  if (fips !== null && national && ownIds.size > 0) {
+    const nationalIds = ids(national);
+    const nationalSuperseded = nationalIds.size > 0 && [...nationalIds].every(id => splitIds.has(id));
+    if (!nationalSuperseded && [...ownIds].every(id => nationalIds.has(id))) {
+      excluded.push({ file, reason: "already represented by the held national file, whose other divisions have no complete state derivatives" });
       continue;
-    }
-    if (splits !== undefined) {
-      const missing = covered.filter((f) => !splits.has(f));
-      excluded.push({
-        file,
-        reason: `KEPT — per-state derivatives are missing for ${missing.join(", ")}`,
-      });
-      // Not actually excluded: fall through and include it.
-      excluded.pop();
     }
   }
 
-  const parsed = JSON.parse(readFileSync(join(ROOT, file), "utf8")) as {
-    features?: { geometry: { type: string; coordinates: unknown } }[];
-  };
+  const parsed = collections.get(file)!;
   let coordinates = 0;
   for (const feature of parsed.features ?? []) {
     const polys =
@@ -144,6 +89,9 @@ for (const file of files) {
   }
   included.push({ file, features: parsed.features?.length ?? 0, coordinates });
 }
+
+const heldFips = new Set(included.flatMap(row => collections.get(row.file)!.features.flatMap(feature => jurisdictionFromOcdId(feature.properties.ocdId ?? null)?.fips ?? [])));
+const covered = US_JURISDICTIONS.filter(state => heldFips.has(state.fips)).map(state => state.fips);
 
 const totals = included.reduce(
   (acc, r) => ({ features: acc.features + r.features, coordinates: acc.coordinates + r.coordinates }),

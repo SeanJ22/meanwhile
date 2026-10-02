@@ -20,9 +20,9 @@ export type AskThinkingMode = ModelThinkingMode;
  * indistinguishable from environment drift.
  *
  * So each ROLE has exactly one default, compiled into the build, and both
- * environments serve it. A model is never chosen per caller or per request:
- * prompt caches are model-scoped, and a per-request model would also make an
- * answer unattributable.
+ * environments serve it. Ask may route by tier, cheapest first (Sean,
+ * 2026-10-01: the one-model-for-all-Ask-traffic rule is removed); the model
+ * that served each call is recorded, so every answer stays attributable.
  *
  * ## The roles (Sean, 2026-09-25 7:50 PM MST: "Changing a model should be easy")
  *

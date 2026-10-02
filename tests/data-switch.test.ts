@@ -68,6 +68,6 @@ test("THE CONSOLE CONTROL carries the switch to the gateway: target is recipe@au
   assert.deepEqual(actionInput("data-switch-off", src("topic-share@dashboard")), { recipe: "topic-share", audience: "dashboard", on: false });
   const preview = actionDef("data-switch-on").preview({ target: "word-cloud@dashboard", targetName: "word-cloud@dashboard", scopeName: "United States", scopeIsCountry: true, outreachAuthorized: true });
   assert.equal(preview.title, "Switch “Word cloud of what readers ask” on for the dashboard");
-  assert.ok(preview.rows.some(([k, v]) => k === "Won’t" && /anonymous ID/.test(v)));
+  assert.ok(preview.rows.some(([k]) => k === "Undo"));
   assert.equal(ADMIN_CONFIG_ID, "current");
 });

@@ -7,16 +7,17 @@
  */
 import { useMemo, useState } from "react";
 
+import { periodLabel } from "@/lib/control-plane/admin-view/periods.ts";
+
 import { StatusBar, StatusLegend, StatusTable } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
-import { SECTION_DEP } from "./dependencies.ts";
 import { INSTRUCTION_EXAMPLES, parseInstruction, type Parsed } from "./instruction.ts";
 import { count, huntLeftUsd, mst, ITEM_STATUS_ORDER, pctDown, usd, type Hunt, type Lane, type ReaderResult, type StateRow, type StuckItem } from "./model.ts";
 import { TILE_LAYOUT } from "./national-layout.ts";
 import { COUNTRY_KEY, huntAt, huntsWithin, isWithin, relation } from "./places.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
-import { ageWords, missingByCard, roundReading, usePageClock, workersSectionArrived } from "./screen-workers.tsx";
-import { ActionButton, Actions, Card, cx, Empty, Failed, Loading, Pill, SourceNote, StageDots } from "./ui.tsx";
+import { ageWords, roundReading, usePageClock } from "./screen-workers.tsx";
+import { ActionButton, Actions, Card, cx, Empty, Loading, Pill, StageDots } from "./ui.tsx";
 import s from "./v6.module.css";
 
 export const LANE_WORDS: Readonly<Record<Lane, string>> = {
@@ -48,7 +49,7 @@ export function NowScreen() {
   return (
     <>
       <header>
-        <p className={s.eyebrow}>{v.place.name} · Account period: {v.period === "day" ? "Last 24 hours" : v.period === "hunt" ? "Whole hunt" : "September 2026"}</p>
+        <p className={s.eyebrow}>{v.place.name} · {periodLabel(v.period, new Date())}</p>
         <h1 className={s.h1}>Now</h1>
       </header>
       {/* The control Sean uses most (daily budget, paid search, start a hunt): first under the header, one click to open. */}
@@ -81,16 +82,13 @@ function National() {
   const [sort, setSort] = useState<NatSort>("stuck");
   const [all, setAll] = useState(false);
   const rows = v.data.national.data ?? [];
-  const known = v.data.national.state === "live" || v.data.national.state === "sample";
   const byCode = new Map(rows.map((r) => [r.code, r]));
   const sorted = [...rows].sort((a, b) => compareRows(sort, a, b));
   const shown = all ? sorted : sorted.filter((r) => r.tracked || (r.hunts ?? 0) > 0);
-  const hunts = rows.reduce((a, r) => a + (r.hunts ?? 0), 0);
   const tracked = rows.filter((r) => r.tracked).length;
   const huntCount = v.data.hunts.state === "not-connected" ? null : v.hunts.filter((h) => h.status !== "stopped").length;
   return (
-    <Card id="v6-national" title="The country" aside={<span className={s.meta}>{rows.length} states and territories{huntCount !== null ? ` · ${huntCount} hunts running at the same time, each with its own limit` : ""} · {tracked} tracked</span>}>
-      <SourceNote source={v.data.national} what="State figures" />
+    <Card id="v6-national" title="The country" aside={<span className={s.meta}>{rows.length} states and territories{huntCount !== null ? ` · ${huntCount} hunts running` : ""} · {tracked} tracked</span>}>
       <div className={s.nation}>
         <div className={s.stack}>
           <div className={s.map} role="group" aria-label="Map of states and territories. Choose one to open it.">
@@ -113,7 +111,7 @@ function National() {
           <div className={s.legend}>
             <span className={s.legendItem}><span className={cx(s.swatch)} style={{ background: "var(--pill-cyan-bg)", boxShadow: "inset 0 0 0 1px var(--pill-cyan-text)" }} />Has a hunt</span>
             <span className={s.legendItem}><span className={s.swatch} style={{ background: "var(--surface)", boxShadow: "inset 0 0 0 1px var(--lumen-rim-strong)" }} />Tracked, no hunt</span>
-            <span className={s.legendItem}><span className={s.swatch} style={{ border: "1px dashed var(--panel-border)" }} />No hunt; coverage unknown</span>
+            <span className={s.legendItem}><span className={s.swatch} style={{ border: "1px dashed var(--panel-border)" }} />No hunt</span>
             <span className={s.legendItem}><span className={s.swatch} style={{ background: "var(--pill-amber-text)", borderRadius: "50%", width: 8, height: 8 }} />Has stuck items</span>
           </div>
         </div>
@@ -134,17 +132,16 @@ function National() {
                     <td><button type="button" className={s.btnLink} onClick={() => v.setScope(r.placeKey)}>{r.name}</button></td>
                     <td className={s.num}>{r.hunts ?? "—"}</td>
                     <td className={cx(s.num, (r.stuck ?? 0) > 0 && s.textWarn)}>{r.stuck ?? "—"}</td>
-                    <td className={r.checklistItems === null ? s.dim : undefined}>{r.checklistItems === null ? (known && r.hunts === 0 ? "No hunt · coverage unknown" : "Not reported yet") : `${count(r.checklistItems)} checklist items`}</td>
+                    <td className={r.checklistItems === null ? s.dim : undefined}>{r.checklistItems === null ? "—" : `${count(r.checklistItems)} checklist items`}</td>
                   </tr>
                 ))}
-                {!shown.length && <tr><td colSpan={4} className={s.dim}>No tracked states or hunts yet. Show all 56 to browse every state and territory.</td></tr>}
+                {!shown.length && <tr><td colSpan={4} className={s.dim}>No tracked states or hunts</td></tr>}
               </tbody>
             </table>
           </div>
           <div className={s.inline}>
-            <button type="button" className={s.btn} aria-pressed={all} onClick={() => setAll(!all)}>{all ? "Show only tracked states and hunts" : `Show all ${rows.length}, including those with unknown coverage`}</button>
+            <button type="button" className={s.btn} aria-pressed={all} onClick={() => setAll(!all)}>{all ? "Show only tracked states and hunts" : `Show all ${rows.length}`}</button>
           </div>
-          <p className={cx(s.p, s.meta)}>Unknown coverage isn’t zero, and having no hunt isn’t the same as never being searched. {hunts ? "Each hunt keeps its own limit; they are never added into one national budget." : ""}</p>
         </div>
       </div>
     </Card>
@@ -166,7 +163,6 @@ function Instruction() {
   const acts = (parsed?.actions ?? []).map((a) => ({ a, def: v.defOf({ kind: a.kind, target: a.target }), why: v.whyNot({ kind: a.kind, target: a.target, payload: a.payload }) }));
   return (
     <Card id="v6-instruct" title="Tell it what to do">
-      <p className={cx(s.p, s.small, s.dim)}>Say what you want in plain words. It reads your words back as specific actions for {v.place.name} before anything is sent. Nothing is sent until you confirm, and each action still opens its own preview.</p>
       <label className={s.srOnly} htmlFor="v6-instruct-input">Your instruction</label>
       <textarea id="v6-instruct-input" className={s.textarea} value={text} placeholder="For example: Reprocess the files we already saved" onChange={(e) => { setText(e.target.value); setParsed(null); }} />
       <div className={s.inline}>
@@ -177,7 +173,7 @@ function Instruction() {
       {parsed && (
         <div className={s.stack} role="region" aria-label="Read-back" aria-live="polite">
           <p className={cx(s.p, s.small)}>Read back from: “{parsed.text}”</p>
-          {parsed.unsupported && <p className={s.why}>None of this matches an action the system can take, so nothing will be sent. Try one of the examples, or use the buttons on the item itself.</p>}
+          {parsed.unsupported && <p className={s.why}>No matching action.</p>}
           {parsed.clarify && (
             <div className={s.row}>
               <strong className={s.small}>{parsed.clarify.question}</strong>
@@ -186,7 +182,7 @@ function Instruction() {
                   <option value="">Choose one</option>
                   {parsed.clarify.options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                 </select>
-              ) : <span className={s.meta}>No matching item in {v.place.name}. Change the place first.</span>}
+              ) : <span className={s.meta}>No matching item in {v.place.name}.</span>}
             </div>
           )}
           {acts.map(({ a, def, why }) => {
@@ -217,9 +213,8 @@ function NextSteps() {
     .slice(0, 4);
   const decided = v.data.decided.data ?? [];
   return (
-    <Card id="v6-steps" title="Suggested next steps" aside={<span className={s.meta}>Ranked by readers affected, needs you, work it unlocks, and how long it’s waited</span>}>
-      <SourceNote source={v.data.stuck} what="Next steps" />
-      {v.data.stuck.state !== "not-connected" && !ranked.length && <Empty>Nothing here needs you right now.</Empty>}
+    <Card id="v6-steps" title="Suggested next steps">
+      {v.data.stuck.state === "not-connected" ? <Empty>—</Empty> : !ranked.length && <Empty>Nothing here needs you right now.</Empty>}
       <ol className={s.stack} style={{ listStyle: "none", padding: 0, margin: 0 }}>
         {ranked.map(({ item }, n) => {
           const last = v.receipts.find((r) => [item.id, item.resultId, item.fixId, item.decision?.id].includes(r.target));
@@ -240,7 +235,6 @@ function NextSteps() {
       {(decided.length > 0 || v.data.decided.state !== "not-connected") && (
         <div className={s.stack}>
           <h3 className={s.h3}>Already decided, waiting on implementation</h3>
-          <SourceNote source={v.data.decided} />
           {decided.map((d) => <div key={d.title} className={s.row}><strong className={s.small}>{d.title}</strong><span className={s.meta}>{d.state}</span></div>)}
         </div>
       )}
@@ -272,20 +266,20 @@ function SixAnswers() {
   const inside = huntsWithin(v.index, v.hunts, v.scopeKey);
   const multi = !hunt && inside.length > 1;
   const hf: Hunt | null = hunt ?? (inside.length === 1 ? inside[0] : null);
-  const left = (h: Hunt) => { const n = huntLeftUsd(h); return n === null ? "Unknown" : usd(n); };
+  const left = (h: Hunt) => { const n = huntLeftUsd(h); return n === null ? "—" : usd(n); };
   /** Research workers on a hunt, or null when its run state isn't reported. */
   const workers = (h: Hunt) => (h.status === "running" ? h.researchWorkers : h.status === "unreported" ? null : 0);
   const insideWorkers = inside.map(workers);
-  const resultsKnown = v.data.results.state !== "not-connected";
+  const resultsKnown = v.data.results.state !== "not-connected" && v.data.results.data !== null;
   const stuckKnown = v.data.stuck.state !== "not-connected";
   const huntsKnown = v.data.hunts.state !== "not-connected";
   const answers: { q: string; big: string; small: string; href: string; warn?: boolean }[] = [
-    { q: "Readers received", big: resultsKnown ? `${ver} checked on the page` : "Not reported", small: resultsKnown ? `${pub} published, not checked on the page · ${shared.length} shared results also cover it` : "Needs reader proof from the backend", href: "#v6-readers" },
-    { q: "Still missing", big: N !== null && totals ? count(N - totals[0]) : "—", small: N !== null ? `of ${count(N)} checklist items not yet checked on the public page` : "No checklist items reported for this place yet", href: "#v6-missing" },
-    { q: "Happening now", big: multi ? (insideWorkers.includes(null) ? "—" : String(insideWorkers.reduce<number>((a, n) => a + (n ?? 0), 0))) : hf ? (workers(hf) === null ? "—" : String(workers(hf))) : "—", small: multi ? (insideWorkers.includes(null) ? `${inside.length} hunts · whether paid work is running isn’t reported yet` : `research workers across ${inside.length} hunts, at the same time`) : hf ? (hf.status === "unreported" ? `${hf.name} · whether paid work is running isn’t reported yet` : hf.status === "running" ? (hf.researchWorkers === null ? `${hf.name} is running · worker count not reported` : `research workers on the ${hf.name}`) : `${hf.name} is ${hf.status}`) : huntsKnown ? "No hunt here · shared work isn’t split by place" : "Hunts not reported yet", href: "#v6-happening" },
-    { q: "Stuck", big: stuckKnown ? String(stuck.length) : "Not reported", small: stuckKnown ? `${harm} affecting readers · ${stuck.filter((x) => x.rel === "shared").length} through shared work` : "Needs stuck items from the backend", href: "#v6-stuck", warn: harm > 0 },
-    { q: "Your decisions", big: stuckKnown ? String(dec) : "—", small: dec ? "See Suggested next steps" : stuckKnown ? "Nothing needs you here" : "Not reported yet", href: "#v6-steps", warn: dec > 0 },
-    { q: "Hunt money", big: multi ? `${inside.length} hunts` : hf ? left(hf) : "—", small: multi ? `Each has its own limit. There’s no national budget. ${inside.map((h) => `${h.name}: ${left(h)} left of ${usd(h.limitUsd)}`).join(" · ")}` : hf ? `${hf.name}${hf.placeKey !== v.scopeKey ? " (inside)" : ""} · left of ${usd(hf.limitUsd)} · ${usd(hf.spentUsd)} spent · ${usd(hf.heldUsd)} set aside` : huntsKnown ? "No hunt here · account totals under Money" : "Hunts not reported yet", href: "#v6-cost" },
+    { q: "Readers received", big: resultsKnown ? `${ver} checked on the page` : "—", small: resultsKnown ? `${pub} published, not checked on the page · ${shared.length} shared results` : "", href: "#v6-readers" },
+    { q: "Still missing", big: N !== null && totals ? count(N - totals[0]) : "—", small: N !== null ? `of ${count(N)} checklist items` : "", href: "#v6-missing" },
+    { q: "Happening now", big: multi ? (insideWorkers.includes(null) ? "—" : String(insideWorkers.reduce<number>((a, n) => a + (n ?? 0), 0))) : hf ? (workers(hf) === null ? "—" : String(workers(hf))) : "—", small: multi ? `research workers across ${inside.length} hunts` : hf ? (hf.status === "running" && hf.researchWorkers !== null ? `research workers on the ${hf.name}` : hf.status === "unreported" ? hf.name : `${hf.name} is ${hf.status}`) : huntsKnown ? "No hunt here" : "", href: "#v6-happening" },
+    { q: "Stuck", big: stuckKnown ? String(stuck.length) : "—", small: stuckKnown ? `${harm} affecting readers · ${stuck.filter((x) => x.rel === "shared").length} through shared work` : "", href: "#v6-stuck", warn: harm > 0 },
+    { q: "Your decisions", big: stuckKnown ? String(dec) : "—", small: dec ? "See Suggested next steps" : stuckKnown ? "Nothing needs you here" : "", href: "#v6-steps", warn: dec > 0 },
+    { q: "Hunt money", big: multi ? `${inside.length} hunts` : hf ? left(hf) : "—", small: multi ? `${inside.map((h) => `${h.name}: ${left(h)} left of ${usd(h.limitUsd)}`).join(" · ")}` : hf ? `${hf.name}${hf.placeKey !== v.scopeKey ? " (inside)" : ""} · left of ${usd(hf.limitUsd)} · ${usd(hf.spentUsd)} spent · ${usd(hf.heldUsd)} set aside` : huntsKnown ? "No hunt here" : "", href: "#v6-cost" },
   ];
   return (
     <section aria-label="Six answers" className={s.answers}>
@@ -308,7 +302,7 @@ export function ResultRow(props: { readonly r: ReaderResult; readonly shared?: b
   const tone = r.kind === "New" ? "good" : r.kind === "Updated" ? "info" : r.kind === "Retained" ? "gold" : "neutral";
   return (
     <button type="button" className={cx(s.row, s.rowButton, props.shared && s.rowShared)} onClick={() => v.open({ type: "result", id: r.id })}>
-      <span className={s.spread}><strong style={{ fontSize: 13 }}>{r.title}</strong><Pill tone={tone}>{r.kind}</Pill></span>
+      <span className={s.spread}><strong style={{ fontSize: 13 }}>{r.title}</strong>{r.kind !== null && <Pill tone={tone}>{r.kind}</Pill>}</span>
       <span className={s.inline}><StageDots stages={r.stages} /><span className={s.meta}>{v.index.get(r.applies[0])?.name}{props.shared ? " · shared work" : ""}</span></span>
       <span className={cx(s.small, r.problem ? s.textWarn : s.dim)}>{r.readerSees}</span>
     </button>
@@ -322,13 +316,11 @@ function Readers() {
   const shared = results.filter((x) => x.rel === "shared");
   return (
     <Card id="v6-readers" title="What readers can see" aside={<span className={s.meta}>Found · Saved · Facts pulled out · Facts checked against sources · Published · Checked on the public page</span>}>
-      <SourceNote source={v.data.results} what="Reader results" />
-      {v.data.results.load === "failed" && !v.data.results.data && <Failed what="Reader results" />}
-      {v.data.results.state !== "not-connected" && !local.length && <Empty>No results for {v.place.name} itself yet.</Empty>}
+      {v.data.results.state === "not-connected" || v.data.results.data === null ? <Empty>—</Empty> : !local.length && <Empty>No results for {v.place.name}.</Empty>}
       <div className={s.stack}>{local.map((x) => <ResultRow key={x.r.id} r={x.r} />)}</div>
       {!!shared.length && (
         <div className={s.stack}>
-          <h3 className={s.h3}>Shared work that also covers {v.place.name} · counted where it belongs, not here</h3>
+          <h3 className={s.h3}>Shared work that also covers {v.place.name}</h3>
           {shared.map((x) => <ResultRow key={x.r.id} r={x.r} shared />)}
         </div>
       )}
@@ -366,8 +358,7 @@ function Stuck() {
   const lanes: (Lane | "all")[] = ["all", "decision", "auto", "publisher", "software"];
   return (
     <Card id="v6-stuck" title="What’s stuck" aside={<button type="button" className={s.btnLink} onClick={() => v.go("work")}>See all work →</button>}>
-      <SourceNote source={v.data.stuck} what="Stuck items" />
-      {v.data.stuck.load === "failed" && !v.data.stuck.data && <Failed what="Stuck items" />}
+      {v.data.stuck.load === "failed" && !v.data.stuck.data && <Empty>—</Empty>}
       {v.data.stuck.load === "loading" && <Loading what="stuck items" />}
       {v.data.stuck.state !== "not-connected" && (
         <div className={s.tabs} role="group" aria-label="Filter by who moves it">
@@ -378,9 +369,9 @@ function Stuck() {
           ))}
         </div>
       )}
-      {v.data.stuck.state !== "not-connected" && !shown.length && <Empty>{lane === "auto" ? "No automatic repair is recorded here. That doesn’t mean nothing is failing." : `Nothing ${lane === "all" ? "is stuck" : "in this group"} in ${v.place.name}.`}</Empty>}
+      {v.data.stuck.state !== "not-connected" && !shown.length && <Empty>{`Nothing ${lane === "all" ? "is stuck" : "in this group"} in ${v.place.name}.`}</Empty>}
       <div className={s.stack}>{shown.slice(0, STUCK_SHOWN_ON_NOW).map((x) => <StuckRow key={x.item.id} item={x.item} shared={x.rel === "shared"} withActions />)}</div>
-      {shown.length > STUCK_SHOWN_ON_NOW && <p className={cx(s.p, s.meta)}>The {STUCK_SHOWN_ON_NOW} most urgent of {count(shown.length)} listed here. <button type="button" className={s.btnLink} onClick={() => v.go("work")}>See them grouped by cause →</button></p>}
+      {shown.length > STUCK_SHOWN_ON_NOW && <p className={cx(s.p, s.meta)}>Showing {STUCK_SHOWN_ON_NOW} of {count(shown.length)}. <button type="button" className={s.btnLink} onClick={() => v.go("work")}>See them grouped by cause →</button></p>}
     </Card>
   );
 }
@@ -392,20 +383,18 @@ function Missing() {
   const groups = v.data.checklist.data?.placeGroups ?? null;
   const totals = checklistTotals(groups?.map((g) => g.counts) ?? null);
   const N = totals ? totals.reduce((a, b) => a + b, 0) : 0;
-  const defs = v.data.checklist.data?.definitionCount ?? 0;
   return (
     <Card id="v6-missing" title="What’s still missing" aside={<button type="button" className={s.btnLink} onClick={() => v.go("checklist")}>Open the checklist →</button>}>
-      <SourceNote source={{ ...v.data.checklist, state: groups ? v.data.checklist.state : v.data.checklist.state === "sample" ? "sample" : "not-connected" }} what="Checklist counts" />
       {totals && N > 0 ? (
         <>
           <p className={cx(s.p, s.small)}>
-            {count(N)} checklist items apply to {v.place.name} from the {defs} definitions. Checked on a public page: {count(totals[0])} ({pctDown(totals[0], N)}). Published but not checked on the page: {count(totals[1])}. Collected but not published yet: {count(totals[2])}. We know it applies for {count(N - totals[5])}; not sure for {count(totals[5])}. A checklist item isn’t one record: one item can cover many meetings or filings.
+            {count(N)} checklist items · Checked on a public page: {count(totals[0])} ({pctDown(totals[0], N)}) · Published, not checked on the page: {count(totals[1])} · Collected, not published: {count(totals[2])} · Applies: {count(N - totals[5])} · Not sure: {count(totals[5])}
           </p>
           <StatusBar counts={totals} label={`All checklist items in ${v.place.name}`} tall />
           <StatusLegend />
           <StatusTable rows={[{ name: `All groups in ${v.place.name}`, counts: totals }]} />
         </>
-      ) : groups ? <Empty>No checklist items are set up for {v.place.name} yet. They’re created when work is assigned here. Shared national records still cover its residents and are counted under the United States.</Empty> : null}
+      ) : groups ? <Empty>No checklist items for {v.place.name}.</Empty> : <Empty>—</Empty>}
     </Card>
   );
 }
@@ -415,10 +404,7 @@ function Missing() {
 function Happening() {
   const v = useV6();
   const now = usePageClock();
-  const src = v.data.workers;
-  const w = src.data;
-  const arrived = workersSectionArrived(src);
-  const miss = missingByCard(arrived ? src.missingParts?.map((m) => v.scopeKey.includes(":") ? m.replaceAll(v.scopeKey, v.place.name) : m) : undefined);
+  const w = v.data.workers.data;
   const isCountry = v.place.kind === "Country";
   const jobs = w?.jobs ? w.jobs.filter((j) => relation(v.index, [j.placeKey], v.scopeKey) !== null) : null;
   const waiting = w?.waiting ? w.waiting.filter((x) => relation(v.index, x.applies, v.scopeKey) !== null) : null;
@@ -429,36 +415,32 @@ function Happening() {
     <Card id="v6-happening" title="What’s happening now" aside={<button type="button" className={s.btnLink} onClick={() => v.go("workers")}>Open Workers →</button>}>
       <div className={s.gridTiles}>
         <div className={s.row}>
-          <span className={s.big}>{jobs ? jobs.length : "Unknown"}</span>
-          <span className={s.meta}>{jobs ? `jobs working now in ${v.place.name}` : `jobs working now${isCountry ? "" : ` in ${v.place.name}`}. The full list of running jobs isn’t available yet, so this isn’t zero`}</span>
+          <span className={s.big}>{jobs ? jobs.length : "—"}</span>
+          <span className={s.meta}>{jobs ? `jobs working now in ${v.place.name}` : `jobs working now${isCountry ? "" : ` in ${v.place.name}`}`}</span>
         </div>
         <div className={s.row}>
-          <span className={s.big}>{waiting ? waiting.length : "Unknown"}</span>
-          <span className={s.meta}>{waiting ? `waiting${isCountry ? "" : ` in ${v.place.name}`}, each with a reason${waiting.length ? `: ${waiting.slice(0, 2).map((x) => x.title).join(" · ")}${waiting.length > 2 ? ` · and ${waiting.length - 2} more` : ""}` : ""}` : arrived ? `A complete waiting list for ${v.place.name} isn’t available` : "Waiting reasons haven’t arrived yet"}</span>
+          <span className={s.big}>{waiting ? waiting.length : "—"}</span>
+          <span className={s.meta}>{waiting ? `waiting${isCountry ? "" : ` in ${v.place.name}`}${waiting.length ? `: ${waiting.slice(0, 2).map((x) => x.title).join(" · ")}${waiting.length > 2 ? ` · and ${waiting.length - 2} more` : ""}` : ""}` : `waiting${isCountry ? "" : ` in ${v.place.name}`}`}</span>
         </div>
         <div className={s.row}>
-          <span className={s.big}>{progress ? mst(progress.at, false) : "Unknown"}</span>
-          <span className={s.meta}>{progress ? `last useful progress (${ageWords(progress.at, now) ?? ""}): ${progress.what}` : `last useful progress. ${miss.progress.length ? miss.progress.join(" ") : "A check-in isn’t progress, so nothing is inferred from it."}`}</span>
+          <span className={s.big}>{progress ? mst(progress.at, false) : "—"}</span>
+          <span className={s.meta}>{progress ? `last useful progress (${ageWords(progress.at, now) ?? ""}): ${progress.what}` : "last useful progress"}</span>
         </div>
         <div className={cx(s.row, round.overdue && s.cardWarn)}>
           <span className={cx(s.big, round.overdue && s.textWarn)}>{round.overdue ? "Late" : round.headline}</span>
-          <span className={s.meta}>{round.overdue ? `${round.headline}. ${round.detail}` : round.detail}</span>
+          <span className={s.meta}>{round.overdue ? round.headline : "Round of work"}</span>
         </div>
       </div>
       {!jobs && lanes && (
-        <div className={s.stack}>
-          <p className={cx(s.p, s.meta)}>{isCountry ? "Whole system:" : `Whole system, every place, not just ${v.place.name}:`}</p>
-          <div className={s.gridTiles}>
-            {lanes.map((l) => (
-              <div key={l.name} className={s.row}>
-                <span className={s.big}>{l.active ?? "Unknown"}<span className={s.meta}> running · {count(l.waiting)} waiting</span></span>
-                <span className={s.meta}>{l.name}, whole system{l.blockedBy ? ` · ${l.blockedBy}` : ""}</span>
-              </div>
-            ))}
-          </div>
+        <div className={s.gridTiles}>
+          {lanes.map((l) => (
+            <div key={l.name} className={s.row}>
+              <span className={s.big}>{l.active ?? "—"}<span className={s.meta}> running · {count(l.waiting)} waiting</span></span>
+              <span className={s.meta}>{l.name}{l.blockedBy ? ` · ${l.blockedBy}` : ""}</span>
+            </div>
+          ))}
         </div>
       )}
-      {!arrived && <SourceNote source={{ state: "not-connected", load: "ready", data: null, asOf: null, dependency: SECTION_DEP.workers }} />}
     </Card>
   );
 }
@@ -472,12 +454,10 @@ function Cost() {
   const list = hunt ? [hunt] : inside;
   return (
     <Card id="v6-cost" title="What it has cost" aside={<button type="button" className={s.btnLink} onClick={() => v.go("money")}>Open Money →</button>}>
-      <SourceNote source={v.data.hunts} what="Hunt money" />
-      {v.data.hunts.state !== "not-connected" && !list.length && <Empty>No hunt here, so there’s no hunt limit. Costs for shared work that covers {v.place.name} aren’t split by place yet.</Empty>}
+      {v.data.hunts.state === "not-connected" ? <Empty>—</Empty> : !list.length && <Empty>No hunt here</Empty>}
       <div className={s.grid2}>
         {list.map((h) => <HuntMeter key={h.id} hunt={h} inside={h.placeKey !== v.scopeKey} />)}
       </div>
-      {list.length > 1 && <p className={cx(s.p, s.meta)}>{list.length} hunts run inside {v.place.name}, each with its own lifetime limit. They are never added into one budget.</p>}
     </Card>
   );
 }
@@ -492,8 +472,8 @@ export function HuntMeter(props: { readonly hunt: Hunt; readonly inside?: boolea
         <span className={s.meterFill} style={{ width: `${Math.min(100, (h.spentUsd / h.limitUsd) * 100)}%`, background: "var(--pill-cyan-text)" }} />
         <span className={s.meterHeld} style={{ width: `${Math.min(100, (h.heldUsd / h.limitUsd) * 100)}%` }} />
       </div>
-      <span className={s.small}>{usd(h.spentUsd)} spent · {usd(h.heldUsd)} set aside for work in progress · {left === null ? <span className={s.textWarn}>amount left unknown</span> : <span className={s.textGood}>{usd(left)} left</span>} of {usd(h.limitUsd)}</span>
-      {h.unpricedEntries > 0 && <span className={cx(s.small, s.textWarn)}>{count(h.unpricedEntries)} charges were saved without a price. The real cost may be higher than shown.</span>}
+      <span className={s.small}>{usd(h.spentUsd)} spent · {usd(h.heldUsd)} set aside for work in progress · {left === null ? <span className={s.textWarn}>—</span> : <span className={s.textGood}>{usd(left)}</span>} left of {usd(h.limitUsd)}</span>
+      {h.unpricedEntries > 0 && <span className={cx(s.small, s.textWarn)}>{count(h.unpricedEntries)} charges without a price</span>}
     </div>
   );
 }
@@ -512,7 +492,7 @@ function DirectWork() {
     <>
       {cards.map((h) => (
         <div key={h.id} className={s.row}>
-          <div className={s.spread}><strong>{h.name}</strong><span className={cx(s.small, h.status === "running" ? s.textGood : s.textWarn)}>{({ running: "Running", paused: "Paid work paused", stopped: "Stopped", unreported: "Run state not reported" })[h.status]}{h.status === "running" ? (h.researchWorkers === null ? " · worker count not reported" : ` · ${h.researchWorkers} research workers`) : ""}</span></div>
+          <div className={s.spread}><strong>{h.name}</strong><span className={cx(s.small, h.status === "running" ? s.textGood : s.textWarn)}>{({ running: "Running", paused: "Paid work paused", stopped: "Stopped", unreported: "—" })[h.status]}{h.status === "running" ? ` · ${h.researchWorkers ?? "—"} research workers` : ""}</span></div>
           <span className={s.meta}>Started {h.startedAt.includes("T") ? mst(h.startedAt) : h.startedAt} · {usd(h.limitUsd)} lifetime · {usd(h.spentUsd + h.heldUsd)} spent or set aside</span>
           <Actions actions={[{ kind: h.status === "paused" ? "hunt-resume" : "hunt-pause", target: h.placeKey }, { kind: "hunt-limit", target: h.placeKey }, { kind: "hunt-stop", target: h.placeKey }]} />
         </div>
@@ -526,7 +506,6 @@ function DirectWork() {
         {!!hunt && huntCards}
         <div className={s.row}>
           <strong className={s.small}>Start a hunt</strong>
-          <span className={s.meta}>{v.place.kind === "Country" ? "Choose a state, county, ZIP or body first." : inside.length && !cards.some((h) => h.placeKey === v.scopeKey) ? `A hunt already runs inside ${v.place.name}. A new one here reuses its work and keeps its own limit.` : "Creates checklist work from the registry. Money is set aside before each call."}</span>
           <Actions actions={[{ kind: "hunt-start", target: v.scopeKey }]} primaryFirst />
         </div>
         <div className={s.row}>
@@ -534,7 +513,7 @@ function DirectWork() {
           <Actions actions={[{ kind: "scope-first", target: v.scopeKey }, { kind: "scope-recheck", target: v.scopeKey }, { kind: "scope-stop", target: v.scopeKey }]} />
         </div>
         <div className={cx(s.row, s.cardGlobal)}>
-          <strong className={s.small}>Whole system · affects every state</strong>
+          <strong className={s.small}>Whole system</strong>
           <Actions actions={[{ kind: "global-paid", target: "system" }, { kind: "global-paid-resume", target: "system" }, { kind: "global-ceiling", target: "system" }, { kind: "global-search-on", target: "system" }, { kind: "global-search-off", target: "system" }, { kind: "global-runner-pause", target: "runner" }, { kind: "global-runner-resume", target: "runner" }]} />
         </div>
         {!hunt && huntCards}
@@ -552,7 +531,6 @@ function Recent() {
   return (
     <Card title={`Your recent instructions · ${all || v.scopeKey === COUNTRY_KEY ? "all places" : `${v.place.name} and shared`}`}
       aside={<span className={s.inline}>{v.scopeKey !== COUNTRY_KEY && <button type="button" className={s.btn} aria-pressed={all} onClick={() => setAll(!all)}>{all ? `Only ${v.place.name}` : "Show all places"}</button>}<button type="button" className={s.btnLink} onClick={() => v.go("work")}>Full history →</button></span>}>
-      {v.data.history.state !== "live" && <SourceNote source={v.data.history} what="Saved instructions" />}
       {!list.length && <Empty>No instructions {all || v.scopeKey === COUNTRY_KEY ? "yet" : `for ${v.place.name} yet`}.</Empty>}
       <div className={s.stack}>{list.map((r) => <ReceiptCard key={r.key} receipt={r} compact />)}</div>
     </Card>

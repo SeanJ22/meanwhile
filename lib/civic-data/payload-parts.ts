@@ -235,6 +235,19 @@ export class CivicPayloadParts {
     return plan.value;
   }
 
+  private async readParts(hashes: readonly string[]): Promise<readonly Part[]> {
+    const missing = [...new Set(hashes)].filter(hash => !this.cache.has(hash));
+    const parts: Part[] = [];
+    for (let offset = 0; offset < missing.length; offset += 8) {
+      const batch = missing.slice(offset, offset + 8);
+      const found = await this.io.read(batch);
+      for (const part of found) this.cache.set(part.hash, part.payload);
+      if (batch.some(hash => !this.cache.has(hash))) throw new Error("CIVIC_PAYLOAD_PART_MISSING");
+      parts.push(...found);
+    }
+    return parts;
+  }
+
   async load(input: unknown, registrySelection?: readonly string[]): Promise<unknown> {
     const needed = new Set<string>();
     const collect = (value: unknown): void => {
@@ -248,9 +261,7 @@ export class CivicPayloadParts {
     while (needed.size) {
       const hashes = [...needed].slice(0, 8);
       hashes.forEach(hash => needed.delete(hash));
-      const found = await this.io.read(hashes);
-      for (const part of found) { this.cache.set(part.hash, part.payload); collect(part.payload); }
-      if (hashes.some(hash => !this.cache.has(hash))) throw new Error("CIVIC_PAYLOAD_PART_MISSING");
+      for (const part of await this.readParts(hashes)) collect(part.payload);
     }
     const decode = (value: unknown): unknown => {
       if (value && typeof value === "object" && AREA in value) return value;
@@ -293,10 +304,11 @@ export class CivicPayloadParts {
   private async loadRegistryAreas(manifest: RegistryAreaManifest, requested?: readonly string[]): Promise<RegistryViewPayload> {
     const indexes: Record<string, AreaIndex> = {};
     const states = requested ? new Set(requested.map(stateOfArea)) : new Set(Object.keys(manifest.states));
+    // Indexes contain unselected area references: fetch them raw, without decoding their children.
+    await this.readParts([...states].flatMap(state => manifest.states[state] ? [manifest.states[state][REF]] : []));
     for (const state of states) {
       const pointer = manifest.states[state];
       if (!pointer) { indexes[state] = {}; continue; }
-      if (!this.cache.has(pointer[REF])) { const [part] = await this.io.read([pointer[REF]]); if (!part) throw new Error("CIVIC_PAYLOAD_PART_MISSING"); this.cache.set(part.hash, part.payload); }
       const index = this.cache.get(pointer[REF]) as AreaIndex;
       if (digest(ordered(index)) !== pointer[REF]) throw new Error("REGISTRY_AREA_INDEX_CHANGED");
       indexes[state] = index;
@@ -306,10 +318,13 @@ export class CivicPayloadParts {
     const payload: RegistryRuntimeReadModel = { ...rows, formatVersion: manifest.header.formatVersion,
       registry: { ...registry, generatedAt: manifest.header.generatedAt },
       officialCandidacies: { formatVersion: manifest.header.candidacyFormatVersion, rule: manifest.header.candidacyRule, rows: [] } };
-    for (const area of selection) {
+    const entries = selection.flatMap(area => {
       const entry = indexes[stateOfArea(area)]?.[area];
-      if (!entry) continue;
-      const rows = await this.load(entry.part) as AreaRows;
+      return entry ? [entry] : [];
+    });
+    const selectedRows = await this.load(entries.map(entry => entry.part)) as AreaRows[];
+    for (const [index, entry] of entries.entries()) {
+      const rows = selectedRows[index];
       if (digest(ordered(rows)) !== entry.sha256) throw new Error("REGISTRY_AREA_VIEW_CHANGED");
       payload.registry.divisions.push(...rows.registry.divisions); payload.registry.bodies.push(...rows.registry.bodies);
       (payload.bodyRosters as typeof rows.bodyRosters[number][]).push(...rows.bodyRosters);

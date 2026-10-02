@@ -81,7 +81,8 @@ export function acceptedRegistryPrior(published: PromotionOutcome): RegistryRunt
   if (!published.promoted) throw new Error("REGISTRY_PUBLICATION_NOT_ACCEPTED");
   const candidate = published.candidate.candidate;
   return { versionId: published.promoted.versionId, payload: candidate.readModel as RegistryRuntimeReadModel,
-    sourceReceipt: registryBaseSourceReceipt(candidate), readModelSha256: digest(canonicalCivicDataJson(candidate.readModel)) };
+    sourceReceipt: registryBaseSourceReceipt(candidate), readModelSha256: digest(canonicalCivicDataJson(candidate.readModel)),
+    sourceThrough: candidate.temporal.sourceThrough };
 }
 const words = (text: string) => text.replace(/<[^>]*>/g, " ").replace(/&(?:amp|nbsp);/g, " ").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const titleOf = (html: string) => words([/<title\b[^>]*>([\s\S]*?)<\/title>/i.exec(html)?.[1] ?? "", ...[...html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi)].map(m => m[1])].join(" "));

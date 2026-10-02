@@ -109,6 +109,56 @@ test("an area composition reads only selected place/ring parts and retains every
     payload.registry.divisions.filter(row => row.ocdId !== selected).sort((a, b) => a.ocdId.localeCompare(b.ocdId)));
 });
 
+test("selected registry areas and country reads share bounded part batches without reading unselected facts", async () => {
+  const memory = memoryParts();
+  const payload = composeRegistryAreaView(areaPayload());
+  const stored = await new CivicPayloadParts(memory.io).store(payload);
+  const manifest = registryAreaViewOf(payload)!;
+  const selected = payload.registry.divisions.filter((_, index) => index % 4 === 0).map(division => division.ocdId).reverse();
+  const view = await new CivicPayloadParts(memory.io).load(stored, selected) as RegistryRuntimeReadModel;
+  assert.deepEqual(view.registry.divisions.map(division => division.ocdId), selected, "batch completion preserves requested area order");
+  assert.equal(canonicalCivicDataJson(view), canonicalCivicDataJson(payload));
+  const indexes = Object.values(manifest.indexes);
+  const allowed = new Set([...Object.values(manifest.manifest.states).map(pointer => pointer.$civicPayloadPart),
+    ...selected.map(area => indexes.find(index => area in index)![area].part.$civicPayloadPart)]);
+  assert.ok(memory.reads.flat().every(hash => allowed.has(hash)), "only selected area facts and their state indexes are read");
+  assert.equal(memory.reads[0].length, 2, "both required state indexes use one existing bounded batch");
+  assert.ok(memory.reads.slice(1).some(hashes => hashes.length === 8), "selected area roots are batched rather than read one by one");
+  assert.ok(memory.reads.every(hashes => hashes.length <= 8));
+
+  memory.reads.length = 0;
+  const country = await new CivicPayloadParts(memory.io).load(stored) as RegistryRuntimeReadModel;
+  const countryOrder = Object.values(manifest.manifest.states).flatMap(pointer => Object.keys(memory.saved.get(pointer.$civicPayloadPart) as object));
+  assert.deepEqual(country.registry.divisions.map(division => division.ocdId), countryOrder, "country composition keeps original state/index order");
+  assert.equal(canonicalCivicDataJson(country), canonicalCivicDataJson(payload));
+  assert.equal(memory.reads.length, 1 + Math.ceil(countryOrder.length / 8), "country reads use the same part batches");
+  assert.ok(memory.reads.every(hashes => hashes.length <= 8));
+});
+
+test("batched registry reads reject missing parts and changed index or area facts", async () => {
+  const memory = memoryParts();
+  const payload = composeRegistryAreaView(areaPayload());
+  const stored = await new CivicPayloadParts(memory.io).store(payload);
+  const view = registryAreaViewOf(payload)!;
+  const selected = payload.registry.divisions.slice(0, 12).map(division => division.ocdId);
+  const indexHash = view.manifest.states.AZ.$civicPayloadPart;
+  const areaHash = view.indexes.AZ[selected[0]].part.$civicPayloadPart;
+  const originalIndex = memory.saved.get(indexHash);
+  const originalArea = memory.saved.get(areaHash);
+  memory.saved.delete(areaHash);
+  await assert.rejects(() => new CivicPayloadParts(memory.io).load(stored, selected), /CIVIC_PAYLOAD_PART_MISSING/);
+  memory.saved.set(areaHash, originalArea);
+  memory.saved.delete(indexHash);
+  await assert.rejects(() => new CivicPayloadParts(memory.io).load(stored, selected), /CIVIC_PAYLOAD_PART_MISSING/);
+  memory.saved.set(indexHash, { ...(originalIndex as object), changed: true });
+  await assert.rejects(() => new CivicPayloadParts(memory.io).load(stored, selected), /REGISTRY_AREA_INDEX_CHANGED/);
+  memory.saved.set(indexHash, originalIndex);
+  const changedArea = structuredClone(originalArea) as { registry: { divisions: { label: string }[] } };
+  changedArea.registry.divisions[0].label = "Changed stored fact";
+  memory.saved.set(areaHash, changedArea);
+  await assert.rejects(() => new CivicPayloadParts(memory.io).load(stored, selected), /REGISTRY_AREA_VIEW_CHANGED/);
+});
+
 test("materialized fact corruption and a changed unselected reference cannot inherit GOOD authority", async () => {
   const memory = memoryParts();
   const stored = await new CivicPayloadParts(memory.io).store(composeRegistryAreaView(areaPayload()));

@@ -309,7 +309,8 @@ export interface UpdateCard {
   readonly owner: string;
   readonly next: string;
   readonly youNeedToAct: string;
-  readonly fixId: string;
+  readonly fixId: string | null;
+  readonly status?: "SUCCEEDED" | "REFUSED" | "FAILED";
   readonly technical: readonly string[];
 }
 

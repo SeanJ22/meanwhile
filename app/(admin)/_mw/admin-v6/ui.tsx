@@ -163,6 +163,7 @@ const MARK_WORDS: Readonly<Record<StageMark, string>> = {
   wrong: "wrong",
   partial: "partly",
   reported: "reported, not checked on the page",
+  unreported: "not reported",
 };
 
 export function StageDots(props: { readonly stages: readonly StageMark[] }) {

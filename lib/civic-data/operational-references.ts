@@ -191,8 +191,10 @@ export function installAzOperationalReferenceBundle(bundle: AzOperationalReferen
 
 /** Exact installed state set, with a promoted AZ-only pointer preferred over
  * the older multi-state version. Missing states stay missing. */
-export function installedOperationalReferenceRegistries(): Readonly<Partial<Record<JurisdictionReferenceState, JurisdictionRegistry>>> {
-  return structuredClone({ ...installedBundle?.registries, ...installedAzBundle?.registries });
+export function installedOperationalReferenceRegistries(states?: Iterable<string>): Readonly<Partial<Record<JurisdictionReferenceState, JurisdictionRegistry>>> {
+  const held = { ...installedBundle?.registries, ...installedAzBundle?.registries };
+  const wanted = states ? new Set([...states].map(state => state.toLowerCase())) : null;
+  return structuredClone(Object.fromEntries(Object.entries(held).filter(([state]) => !wanted || wanted.has(state))));
 }
 
 export function requiredOperationalReferenceBundle(): OperationalReferenceBundle {
@@ -209,7 +211,7 @@ export function requiredOperationalJurisdictionRegistry(state: string): Jurisdic
   if (!JURISDICTION_REFERENCE_STATES.includes(key)) {
     throw new Error(`OPERATIONAL_REFERENCE_STATE_NOT_REGISTERED:${state}`);
   }
-  const registry = installedOperationalReferenceRegistries()[key];
+  const registry = installedOperationalReferenceRegistries([key])[key];
   if (!registry) throw new Error(`OPERATIONAL_REFERENCE_STATE_NOT_PROMOTED:${state}`);
   return registry;
 }

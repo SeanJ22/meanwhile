@@ -20,7 +20,7 @@ test("A STORED BATCH BECOMES EVENTS WITH A DAY AND NO TIME: the exact time is re
 test("TESTER AND NON-ORGANIC EVENTS ARE LABELLED, AND NEVER REACH A RECIPE: before the cutoff, a tester flag, and any run class but ORGANIC", async () => {
   const mixed = batch([
     stored({ id: "old", occurredAt: "2026-10-01T06:59:59.000Z", question: "before the cutoff" }),
-    stored({ id: "new", occurredAt: "2026-10-01T07:00:00.000Z", question: "organic" }),
+    stored({ id: "new", occurredAt: "2026-10-01T07:00:00.000Z", runClass: "ORGANIC", question: "organic" }),
     stored({ id: "t", occurredAt: "2026-10-02T09:00:00Z", runClass: "TESTER", question: "tester" }),
     stored({ id: "a", occurredAt: "2026-10-02T09:00:00Z", runClass: "AUTHOR", question: "author" }),
     stored({ id: "m", occurredAt: "2026-10-02T09:00:00Z", runClass: "ORGANIC", question: "organic in a mixed batch" }),
@@ -28,7 +28,11 @@ test("TESTER AND NON-ORGANIC EVENTS ARE LABELLED, AND NEVER REACH A RECIPE: befo
   ], { runClass: "UNKNOWN" });
   const events = eventsOfBatch(mixed);
   assert.deepEqual(events.map((e) => [e.text, e.tester]), [["before the cutoff", true], ["organic", false], ["tester", true], ["author", true], ["organic in a mixed batch", false], ["flagged", true]]);
+  assert.deepEqual(eventsOfBatch(batch([stored({ occurredAt: "2026-10-01T06:59:59.000Z" }), stored({ occurredAt: "2026-10-01T07:00:00.000Z" })])).map((e) => e.tester), [true, false], "an unlabelled event is organic from the cutoff on");
   assert.equal(eventsOfBatch(batch([stored({ occurredAt: "2026-10-02T09:00:00Z" })], { runClass: "TESTER" }))[0].tester, true, "a batch label applies to events without their own");
+  assert.equal(eventsOfBatch(batch([stored({ occurredAt: "2026-10-02T09:00:00Z" })], { runClass: "UNKNOWN" }))[0].tester, true, "a batch labelled UNKNOWN is not an established reader");
+  assert.equal(eventsOfBatch(batch([stored({ occurredAt: "2026-10-02T09:00:00Z", runClass: "UNKNOWN" })]))[0].tester, true, "an event labelled UNKNOWN is not an established reader");
+  assert.equal(eventsOfBatch(batch([stored({ occurredAt: "2026-10-02T09:00:00Z" })]))[0].tester, false, "no label at all, after the cutoff, is organic");
   const { store } = memoryStore({ "events/2026-10-01/aa.json.gz": mixed, "events/2026-10-02/bb.json.gz": mixed });
   const read = await historyEvents(store)({ from: "2026-10-01", to: "2026-10-02" });
   assert.deepEqual((read.kind === "ROWS" ? read.rows : []).map((e) => e.text), ["organic", "organic in a mixed batch", "organic", "organic in a mixed batch"], "only ORGANIC events after the cutoff come back");

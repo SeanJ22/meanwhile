@@ -131,8 +131,8 @@ interface StoredEvent {
 const str = (v: unknown): string | null => (typeof v === "string" && v !== "" ? v : null);
 const RESIDENCY: readonly Residency[] = ["HOME", "BROWSING", "MOVING", "UNKNOWN"];
 
-/** A label other than ORGANIC (a mixed batch is UNKNOWN; its events carry their own label, which wins). */
-const notOrganic = (label: unknown) => typeof label === "string" && label !== "ORGANIC" && label !== "UNKNOWN";
+/** Any label present other than ORGANIC, UNKNOWN included. An event's own label wins over its batch's; no label at all (an older batch) is organic after the cutoff. */
+const notOrganic = (label: unknown) => typeof label === "string" && label !== "ORGANIC";
 
 /** One stored batch into events: the exact time is reduced to its UTC day here, and nothing later can see it. */
 export function eventsOfBatch(json: string): CapturedEvent[] {

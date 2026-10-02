@@ -15,6 +15,7 @@ import { readClientSource } from '../lib/control-plane/scheduler/scout-clients.t
 import { retryable } from '../lib/control-plane/scheduler/debt.ts';
 import { sourceFailureRecovery } from '../lib/control-plane/workers/detective.ts';
 import type { FreshnessDebt } from '../lib/control-plane/scheduler/debt.ts';
+import type { RouteDescriptor } from '../lib/control-plane/scheduler/registry.ts';
 
 test('source failures reach Detective with the failed route while non-source debts retain their lane',()=>{
  const decision={kind:'DETERMINISTIC' as const,why:'Known HTTP_GET shape',disagreement:null};
@@ -46,6 +47,56 @@ test('a source failure after discovery reopens Detective; a later solved route r
  const recovered=make('2026-10-01T02:00:00Z');
  assert.equal(recovered.lane,'DETERMINISTIC');assert.equal(recovered.workerFor!(input).role,'ACQUIRER');
  assert.equal((await recovered.run(input as Parameters<typeof recovered.run>[0])).cost?.requestCount,0);
+});
+
+test('failed search sources preserve held alternatives before paid admission and omit failed sources from the handoff',async()=>{
+ const debt={obligationId:'owed',cause:'UPSTREAM_ERROR',target:'search-index',detail:'HTTP 504',
+   lastFailedAt:'2026-10-01T01:00:00Z',consecutiveFailures:2} as FreshnessDebt;
+ const input={obligation:{obligation:{id:'owed'}},holder:'worker'} as Parameters<NonNullable<ReturnType<typeof failureResponderExecutor>['workerFor']>>[0];
+ const candidate=(url:string)=>({url,evidenceArtifactIds:['captured'],routeId:url});
+ const solved={attemptId:'solved',recordedAt:'2026-10-01T00:00:00Z',refusal:null,
+   candidates:[candidate('https://search.example.org/results?q=candidate'),candidate('https://campaign.example.org/about')],findings:[]} as unknown as ScoutResult;
+ const sourceRoute={open:{kind:'HTTP_GET',url:'https://search.example.org/results?q=candidate'}} as RouteDescriptor;
+ const make=(value:ScoutResult,route:RouteDescriptor|null=sourceRoute)=>failureResponderExecutor({solved:value,sourceFailure:debt,sourceRoute:route,
+  transport:async()=>{throw Error('Held source must not buy a model request');},toolkitFor:()=>{throw Error('No research tools expected');},
+  contextFor:()=>({route,providerId:null,reason:'failed source',decision:'BOUNDED_MODEL_WORKER',inherited:{artifactIds:[],summary:''},
+   tools:{vault:async()=>({stored:true,where:'test',why:'saved'}),spaceOut:async()=>{}}})});
+ const executor=make(solved);
+ assert.equal(executor.lane,'DETERMINISTIC');assert.equal(executor.workerFor!(input).role,'ACQUIRER');
+ const outcome=await executor.run(input as Parameters<typeof executor.run>[0]);
+ assert.equal(outcome.kind,'DISPOSED');
+ if(outcome.kind==='DISPOSED') {
+  assert.ok(outcome.disposition);
+  assert.equal(outcome.disposition.disposition,'DISCOVERED');
+  assert.match(outcome.disposition.note,/https:\/\/campaign.example.org\/about/);
+  assert.doesNotMatch(outcome.disposition.note,/search.example.org/);
+ }
+ assert.equal(outcome.cost?.requestCount,0);assert.equal(outcome.cost?.usd,0);
+ assert.equal(solved.candidates.length,2,'do not rewrite held source history');
+ const sameSource=make({...solved,candidates:[solved.candidates[0]]});
+ assert.equal(sameSource.lane,'BOUNDED_MODEL_WORKER');assert.equal(sameSource.workerFor!(input).role,'DETECTIVE');
+ assert.equal(make(solved,null).lane,'BOUNDED_MODEL_WORKER','an unidentified failed source cannot exempt older routes');
+});
+
+test('source recovery preserves captured facts and separates Legistar tenants',async()=>{
+ const debt={obligationId:'owed',cause:'UPSTREAM_ERROR',target:'https://webapi.legistar.com/v1/pima/Events',detail:'HTTP 503',
+   lastFailedAt:'2026-10-01T01:00:00Z',consecutiveFailures:2} as FreshnessDebt;
+ const solved={attemptId:'solved',recordedAt:'2026-10-01T00:00:00Z',refusal:null,candidates:[],findings:[
+  {kind:'RECORD',field:'name',value:'Meeting',exactQuote:'Meeting',sourceUrl:'https://webapi.legistar.com/v1/tucson/Events',artifactIds:['tucson']},
+  {kind:'RECORD',field:'name',value:'Meeting',exactQuote:'Meeting',sourceUrl:'https://webapi.legistar.com/v1/pima/Events',artifactIds:['pima']},
+ ]} as unknown as ScoutResult;
+ const executor=failureResponderExecutor({solved,sourceFailure:debt,
+  transport:async()=>{throw Error('No model');},toolkitFor:()=>{throw Error('No tools');},
+  contextFor:()=>({route:null,providerId:null,reason:'failed source',decision:'BOUNDED_MODEL_WORKER',inherited:{artifactIds:[],summary:''},
+   tools:{vault:async()=>({stored:true,where:'test',why:'saved'}),spaceOut:async()=>{}}})});
+ assert.equal(executor.lane,'DETERMINISTIC');
+ const outcome=await executor.run({} as Parameters<typeof executor.run>[0]);
+ assert.equal(outcome.kind,'DISPOSED');
+ if(outcome.kind==='DISPOSED') {
+  assert.ok(outcome.disposition);
+  assert.match(outcome.disposition.note,/\/v1\/tucson\/Events/);assert.doesNotMatch(outcome.disposition.note,/\/v1\/pima\/Events/);
+ }
+ assert.equal(solved.findings.length,2);
 });
 
 test('adapter PR publication creates only adapter files and applies the merge label',async()=>{

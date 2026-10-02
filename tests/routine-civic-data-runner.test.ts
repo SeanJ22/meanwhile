@@ -34,6 +34,7 @@ import {
   classifyRoutineChildOutcome,
   durableRoutineRunnerReceiptIssue,
   parseRoutineRunnerReceipt,
+  printSourceRunnerReceipt,
   routineSupervisorOuterEvidence,
   successfulRoutineRunnerReceiptIssue,
   type DurableReceiptStore,
@@ -331,7 +332,10 @@ test("routine release output labels the seven-zero constant as structural, never
     "scripts/routine-civic-data-runner.mts",
   ]) {
     const source = readFileSync(path, "utf8");
-    assert.match(source, /structuralReleaseContract:\s*ZERO_RELEASE_EVENTS/, `${path} must label the constant as structural`);
+    if (source.includes('import { printSourceRunnerReceipt }')) {
+      assert.match(readFileSync("lib/civic-data/runner-receipt.ts", "utf8"), /structuralReleaseContract:\s*ZERO_RELEASE_EVENTS/);
+      assert.match(source, /printSourceRunnerReceipt\([^;]+\);/, `${path} must emit the shared structural receipt`);
+    } else assert.match(source, /structuralReleaseContract:\s*ZERO_RELEASE_EVENTS/, `${path} must label the constant as structural`);
     assert.doesNotMatch(source, /\breleaseEvents:\s*ZERO_RELEASE_EVENTS/, `${path} must not report a constant as observed release events`);
   }
 
@@ -1301,6 +1305,29 @@ test("runner receipts are exact JSON, exact-count, and seven-zero structural evi
   if (held.ok) assert.match(successfulRoutineRunnerReceiptIssue(held.receipt) ?? "", /PROMOTED/);
 });
 
+test("the shared source printer reports the pointed candidate and observation for an unchanged recheck", async (t) => {
+  const store = new MemoryRoutineDataStore();
+  const original = sourceGoodCandidate();
+  const seeded = await processRegisteredRoutineCandidate(store, "fec-funding", original, T0);
+  assert.ok(seeded.promoted);
+  const at = "2026-09-08T12:01:00.000Z";
+  const recheck = { ...original, id: `cv-${"f".repeat(32)}`,
+    retrieval: { ...original.retrieval, retrievedAt: at } };
+  const outcome = await processRegisteredRoutineCandidate(store, "fec-funding", recheck, at);
+  assert.ok(outcome.confirmed, "the real promotion door must take its unchanged-confirmation path");
+  const printed: string[] = [];
+  t.mock.method(console, "log", (line: string) => { printed.push(line); });
+  printSourceRunnerReceipt("fec-funding", recheck, outcome);
+  const parsed = parseRoutineRunnerReceipt(printed.join("\n"));
+  assert.ok(parsed.ok);
+  assert.equal(parsed.receipt.candidateId, original.id);
+  assert.equal(parsed.receipt.confirmedAt, at);
+  assert.equal(successfulRoutineRunnerReceiptIssue(parsed.receipt), null);
+  assert.equal(await durableRoutineRunnerReceiptIssue(parsed.receipt,
+    ROUTINE_SOURCE_TASKS.find(task => task.id === "fec-funding")!, store, "SUCCESS"), null);
+  assert.equal(await store.readCandidateSummary(recheck.id), null, "an unchanged check never creates a candidate");
+});
+
 test("every standing source child emits its exact contract id and the supervisor persists admitted code identity", () => {
   const fixedChildren = [
     ["scripts/fetch-fec.mts", "fec-funding"],
@@ -1315,7 +1342,7 @@ test("every standing source child emits its exact contract id and the supervisor
     const source = readFileSync(path, "utf8");
     assert.match(
       source,
-      new RegExp(`RCD_RECEIPT=[\\s\\S]{0,500}?source:\\s*[\"']${contractId}[\"']`),
+      new RegExp(`(?:RCD_RECEIPT=[\\s\\S]{0,500}?source:\\s*|printSourceRunnerReceipt\\()[\"']${contractId}[\"']`),
       `${path} must name ${contractId} in its successful protocol receipt`,
     );
   }

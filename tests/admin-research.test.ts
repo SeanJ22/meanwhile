@@ -903,7 +903,9 @@ test("readScoutSpend sums MEASURED Scout usd in the window only, and counts the 
   const spend = await readScoutSpend(repos, NOW);
   assert.equal(spend.kind, "HELD");
   if (spend.kind === "HELD") {
-    assert.equal(spend.value.windowUsd, 0.5);
+    assert.equal(spend.value.windowUsd, null, "an unknown Scout bill cannot be an enforceable admission subtotal");
+    assert.ok("knownUsd" in spend.value);
+    assert.equal(spend.value.knownUsd, 0.5, "the measured Scout dollars are retained beside the unknown bill");
     assert.equal(spend.value.measured, 1);
     assert.equal(spend.value.unmeasured, 1);
     assert.equal(spend.value.windowHours, RESEARCH_BOUNDS.windowHours);

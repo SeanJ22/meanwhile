@@ -5,7 +5,7 @@ import { censusAcsCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
-import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import {
   isSourceAcquisitionFailure,
   recordRegisteredSourceAcquisitionFailure,
@@ -61,7 +61,7 @@ async function main(): Promise<void> {
     return;
   }
   const outcome = await processRegisteredRoutineCandidate(store, "census-acs-population", candidate, candidate.retrieval.retrievedAt);
-  console.log("RCD_RECEIPT=" + JSON.stringify({ source: "census-acs-population", candidateId: candidate.id, acquisitionSucceeded: outcome.candidate.acquisitionSucceeded, state: outcome.candidate.state, decision: outcome.candidate.receipt?.decision ?? null, promotedVersion: outcome.promoted?.versionId ?? null, lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+  printSourceRunnerReceipt("census-acs-population", candidate, outcome);
   if (!outcome.promoted) process.exitCode = 2;
 }
 

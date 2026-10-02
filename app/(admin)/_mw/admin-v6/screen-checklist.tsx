@@ -62,6 +62,7 @@ function PlaceScoreCard(props: { readonly score: PlaceScoreView; readonly group:
         {score.target && <p className={cx(s.p, s.small)}>Target: <strong>{score.target.goalPercent}%</strong> · now {percentWords(o)}{o.percent !== null && o.percent >= score.target.goalPercent ? " · reached" : ""} · set {mst(score.target.setAt)}</p>}
         <Actions actions={[{ kind: "target-set", target: v.scopeKey, label: score.target ? "Change the target" : "Set a target" }, ...(score.target ? [{ kind: "target-clear" as const, target: v.scopeKey, label: "Clear the target" }] : [])]} />
         {words && <Actions actions={[{ kind: "send-agents", target: v.scopeKey, label: "Send agents to fill the blanks", payload: { words } }]} primaryFirst />}
+        {!words && /^geo:[a-z]{2}\.(congressional_district|county)\./.test(v.scopeKey) && <Actions actions={[{ kind: "hunt-start", target: v.scopeKey, label: "Start hunts for the ZIPs here" }]} primaryFirst />}
         <div className={s.stack}>
           {score.groups.map((g) => (
             <button key={g.group} type="button" className={cx(s.row, s.rowButton)} aria-pressed={props.group === g.group} style={props.group === g.group ? { boxShadow: "inset 0 0 0 1px var(--ring)" } : undefined} onClick={() => props.onGroup(g.group)}>

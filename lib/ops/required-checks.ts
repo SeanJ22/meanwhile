@@ -62,8 +62,11 @@ type JobSpec = {
  * another expression form, a nested include — is REFUSED rather than guessed
  * at, because a parser that quietly dropped a leg would under-report the
  * produced set and make a rename look like agreement.
+ *
+ * Names can depend on the triggering event (see EVENT_PREFIX); the default
+ * answers for a pull request or a push, the events branch protection judges.
  */
-export function contextsProducedByWorkflow(source: string): string[] {
+export function contextsProducedByWorkflow(source: string, eventName = "pull_request"): string[] {
   const doc = parse(source) as { jobs?: Record<string, JobSpec> } | null;
   const jobs = doc?.jobs;
   if (!jobs || typeof jobs !== "object") {
@@ -78,7 +81,7 @@ export function contextsProducedByWorkflow(source: string): string[] {
     const template = typeof job?.name === "string" ? job.name : key;
     const matrix = matrixOf(job);
     for (const leg of expandMatrix(matrix)) {
-      produced.push(substitute(template, leg, key));
+      produced.push(substitute(template, leg, key, eventName));
     }
   }
   return produced.sort();
@@ -92,16 +95,38 @@ function matrixOf(job: JobSpec): Record<string, unknown> {
   return matrix as Record<string, unknown>;
 }
 
+/**
+ * Matrices admission computes at run time, with EVERY leg each can produce.
+ * The test matrix is `["affected"]` for a pull request's affected tests and
+ * the four shards otherwise (`TEST_LEGS` in scripts/ci-affected-tests.mjs;
+ * tests/ci-affected-tests.test.ts holds the two lists equal). An expression
+ * not listed here is refused, never skipped.
+ */
+export const DYNAMIC_MATRIX_LEGS: Readonly<Record<string, readonly string[]>> = {
+  "${{ fromJSON(needs.admission.outputs.test_legs) }}": ["affected", "1/4", "2/4", "3/4", "4/4"],
+};
+
 /** One entry per matrix leg; a job with no matrix has exactly one leg. */
 function expandMatrix(matrix: Record<string, unknown>): Array<Record<string, string>> {
   let legs: Array<Record<string, string>> = [{}];
-  for (const [key, raw] of Object.entries(matrix)) {
+  for (const [key, declared] of Object.entries(matrix)) {
     /* `include`/`exclude` are not used here; refuse rather than mis-expand. */
     if (key === "include" || key === "exclude") {
       throw new Error(
         `${REQUIRED_CHECKS_WORKFLOW}: matrix \`${key}\` is not supported by this ` +
           `reader. Expand it here before using it, or the produced set is wrong.`,
       );
+    }
+    let raw = declared;
+    if (typeof raw === "string") {
+      const known = DYNAMIC_MATRIX_LEGS[raw.trim()];
+      if (!known) {
+        throw new Error(
+          `${REQUIRED_CHECKS_WORKFLOW}: matrix \`${key}\` is the expression \`${raw}\`, ` +
+            `whose legs this reader does not know. List them in DYNAMIC_MATRIX_LEGS.`,
+        );
+      }
+      raw = known;
     }
     if (!Array.isArray(raw)) continue;
     const next: Array<Record<string, string>> = [];
@@ -115,8 +140,17 @@ function expandMatrix(matrix: Record<string, unknown>): Array<Record<string, str
 
 const MATRIX_EXPRESSION = /\$\{\{\s*matrix\.([A-Za-z0-9_-]+)\s*\}\}/g;
 
-function substitute(template: string, leg: Record<string, string>, jobKey: string): string {
-  const filled = template.replace(MATRIX_EXPRESSION, (_whole, key: string) => {
+/**
+ * The one event expression a name may carry: a prefix chosen by the event,
+ * `${{ github.event_name == 'schedule' && 'scheduled ' || '' }}`. The hourly
+ * scheduled run renames its required-named jobs this way so its results never
+ * land on main's tip under a required context.
+ */
+const EVENT_PREFIX = /\$\{\{\s*github\.event_name\s*==\s*'([A-Za-z_]+)'\s*&&\s*'([^']*)'\s*\|\|\s*''\s*\}\}/g;
+
+function substitute(template: string, leg: Record<string, string>, jobKey: string, eventName: string): string {
+  const prefixed = template.replace(EVENT_PREFIX, (_whole, event: string, text: string) => (event === eventName ? text : ""));
+  const filled = prefixed.replace(MATRIX_EXPRESSION, (_whole, key: string) => {
     const value = leg[key];
     if (value === undefined) {
       throw new Error(

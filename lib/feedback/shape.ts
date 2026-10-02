@@ -13,7 +13,7 @@
 export const FEEDBACK_MAX_CHARS = 2000;
 
 /**
- * The optional reply address (R41, 2026-08-17, the author's ruling A).
+ * The optional reply address (R41, 2026-08-17, option A).
  *
  * Capped well under any real address so the field cannot be used as a second
  * message body — a 2000-character "address" would be free text sneaking past

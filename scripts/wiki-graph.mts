@@ -1,6 +1,6 @@
 /**
  * **CRAWL THE GOVERNMENT GRAPH — Tier A, exploratory, not a list.**
- * (NJ Hunt 5 item 10, 2026-08-22, the author's instruction mid-session.)
+ * (NJ Hunt 5 item 10, 2026-08-22.)
  *
  * ```
  * pnpm wiki:graph --zip 07866 --state "New Jersey" --budget 300

@@ -292,6 +292,20 @@ for (const provider of providers) {
     );
   });
 
+  test(`${provider.name}: readSince includes the boundary across keys and retries never renew an old charge`, async () => {
+    const repos = await provider.open();
+    const old = { id: `old-${RUN_NAMESPACE}` };
+    const boundary = { id: `boundary-${RUN_NAMESPACE}` };
+    const recent = { id: `recent-${RUN_NAMESPACE}` };
+    const a = `since-a-${RUN_NAMESPACE}`, b = `since-b-${RUN_NAMESPACE}`;
+    await repos.costs.append(b, old.id, old as never, "2026-08-29T11:59:59.999Z");
+    await repos.costs.append(b, old.id, old as never, LATER);
+    await repos.costs.append(a, boundary.id, boundary as never, "2026-08-29T12:00:00.000Z");
+    await repos.costs.append(b, recent.id, recent as never, NOW);
+    const read = await repos.costs.readSince("2026-08-29T12:00:00.000Z");
+    assert.deepEqual(read.filter((row) => [old.id, boundary.id, recent.id].includes((row as unknown as { id: string }).id)), [boundary, recent]);
+  });
+
   test(`${provider.name}: readLatest answers each key's newest record, cut to the named fields, and nothing for a key with none`, async () => {
     const repos = await provider.open();
     /* Namespaced: these rows persist in the isolated Postgres test database. */

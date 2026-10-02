@@ -74,7 +74,7 @@ export function FundingDisplay({
           {sentence}
         </p>
       ))}
-      {/* The author's question, 2026-08-15. The old wording — "Would you
+      {/* The question, 2026-08-15. The old wording — "Would you
           vote for someone whose campaign is funded this way?" — asked the
           reader to convert a feeling about money into a voting intention,
           which is two questions in one button row. This asks the one the
@@ -118,7 +118,7 @@ export function FundingDisplay({
             />
           </div>
           {/*
-            ITEM 5 (2026-08-16, the author): ONE ASK PER OBJECT.
+            ITEM 5 (2026-08-16): ONE ASK PER OBJECT.
             This prompt was word-for-word the first one, so a reader who had
             just answered "How do you feel about how this campaign is funded?"
             after the totals met the identical sentence again under the
@@ -145,10 +145,10 @@ export function FundingDisplay({
       {/*
         **BAL-16 (2026-08-25) — COLLAPSED BY DEFAULT, SAME RULE AS BAL-8.**
 
-        Sean red-boxed both of these headings on `17-41-20`: they were
-        expanded by default in the large battlecard. His ruling is the one
-        BAL-8 already made about the provisions list — *the content is good,
-        the user opens it by choice.*
+        Screenshot `17-41-20` shows both of these headings expanded by
+        default in the large battlecard. The rule is the one BAL-8 already
+        applies to the provisions list — *the content is good, the user opens
+        it by choice.*
 
         Nothing here is removed, reworded or shortened. Every sentence still
         carries its own denominator and its own LEVEL register, and the
@@ -202,10 +202,10 @@ export function FundingDisplay({
       {/*
         **BAL-16 (2026-08-25) — COLLAPSED BY DEFAULT, SAME RULE AS BAL-8.**
 
-        Sean red-boxed both of these headings on `17-41-20`: they were
-        expanded by default in the large battlecard. His ruling is the one
-        BAL-8 already made about the provisions list — *the content is good,
-        the user opens it by choice.*
+        Screenshot `17-41-20` shows both of these headings expanded by
+        default in the large battlecard. The rule is the one BAL-8 already
+        applies to the provisions list — *the content is good, the user opens
+        it by choice.*
 
         Nothing here is removed, reworded or shortened. Every sentence still
         carries its own denominator and its own LEVEL register, and the
@@ -227,8 +227,8 @@ export function FundingDisplay({
             What kind of money it was
           </summary>
           {/*
-            D06's third feature (2026-08-19, g20), on the author's ruling
-            "Accept": concentration on the FEC's OWN axis, because an
+            D06's third feature (2026-08-19, g20): concentration on the
+            FEC's OWN axis, because an
             industry axis would need a taxonomy no government body
             publishes — see lib/funding/type-concentration.ts.
 
@@ -689,10 +689,10 @@ function ContributorRow({
 }
 
 /**
- * The second hop (item 3, 2026-08-15, the author's design).
+ * The second hop (item 3, 2026-08-15).
  *
- * The BUTTON is playful — it is an interaction surface, and "Give me the
- * tea" is the author's exact label. Everything inside it is a CLAIM
+ * The BUTTON is playful — it is an interaction surface, and its label is
+ * "Give me the tea". Everything inside it is a CLAIM
  * surface and reads level: a committee's own filed receipts, its own name
  * over them, the allocation caveat where the filing says it applies, and
  * the committee's FEC page. The fund's donors are never relabelled as this

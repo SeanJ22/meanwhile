@@ -1563,7 +1563,7 @@ const honoredLaneIntents: string[] = [];
 let costLedger: CostEntry[] = [];
 let ledgerUnreadable: string | null = null;
 try {
-  costLedger = [...(await repos.costs.readAll())];
+  costLedger = [...(await repos.costs.readSince(new Date(Date.parse(NOW) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()))];
 } catch (error) {
   ledgerUnreadable = error instanceof Error ? error.message : String(error);
   runtimeConditions.push(`the cost ledger could not be read (${ledgerUnreadable}); the rolling ceiling cannot be enforced, so Scout work is deferred`);
@@ -1892,6 +1892,13 @@ const autonomousTransportFor = (transport: ModelTransport) => (jurisdiction: Aut
     refusedBeforeSending: (error) => error instanceof FleetPreSendRefusal,
   });
 const spacer = serializeHostSpacing(hostSpacer());
+let releaseDrainRequested = false;
+process.on("message", message => {
+  if (message !== null && typeof message === "object" && "kind" in message && message.kind === "RUNTIME_RELEASE_DRAIN") {
+    releaseDrainRequested = true;
+    console.log("  runtime release requested: new worker admissions closed; active workers finish and queued work remains owed");
+  }
+});
 const workerSlots = workerProcessSlots(() => {
   const limits = providerQueue.limits(MODELS.haiku.model);
   const spent = fleetSafety.snapshot(nowIso()).rolling24Hours.modelUsd;
@@ -1902,7 +1909,7 @@ const workerSlots = workerProcessSlots(() => {
     inputTokensPerMinute: limits?.inputTokensPerMinute ?? undefined,
     outputTokensPerMinute: limits?.outputTokensPerMinute ?? undefined,
     inputTokensPerRequest: 8192, outputTokensPerRequest: RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn }));
-});
+}, { admissionsOpen: () => !releaseDrainRequested });
 // Hand out durable leases before unrelated histories or parent execution.
 const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
   runnerPaused: intents.runnerPause.paused });
@@ -2955,7 +2962,7 @@ async function runAutonomousWave() {
 }
 async function runAutonomousProcesses() {
   let report = await runAutonomousWave();
-  while (report.dispatches.some(row => row.outcome === "WORKED")) {
+  while (!releaseDrainRequested && report.dispatches.some(row => row.outcome === "WORKED")) {
     const next = await runAutonomousWave();
     report = { ...next, dispatches: [...report.dispatches, ...next.dispatches],
       scoutsAdmitted: report.scoutsAdmitted + next.scoutsAdmitted,
@@ -3394,7 +3401,7 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
   let costsNow: readonly CostEntry[];
   try {
     results = await repos.scoutResults.readAll();
-    costsNow = await repos.costs.readAll();
+    costsNow = await repos.costs.readSince(new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString());
   } catch (error) {
     runtimeConditions.push(`research metrics NOT computed: a durable log could not be re-read (${error instanceof Error ? error.message : String(error)})`);
     return null;

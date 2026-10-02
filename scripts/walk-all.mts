@@ -114,9 +114,9 @@ import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 /**
  * THE TARGET IS LOCAL, AND PRODUCTION IS REFUSED — RULING 125 (2026-08-24).
  *
- * Sean's ruling: *everything is confirmed visually and by code from the local
+ * The rule: everything is confirmed visually and by code from the local
  * production build — never from Netlify. Production is the delivery truck, not
- * the test bench.*
+ * the test bench.
  *
  * This used to default to the live site — the Netlify default subdomain
  * then, the custom domain since ITEM F — and the cost was not
@@ -1070,7 +1070,7 @@ for (const { zip } of FOUR) {
      * tell a correct render from a stale note about that render, and this
      * check was green throughout.
      *
-     * The author retired the claim — the page says one thing about
+     * The claim was retired — the page says one thing about
      * completeness, COLLECTION_NOTE, and nothing else. The walk rule says a
      * check leaves this suite only when the author retires the claim behind
      * it, and that has now happened; so rather than deleting the check and
@@ -1135,7 +1135,7 @@ for (const { zip } of FOUR) {
      * withholds its cards: everything the product holds about a candidate
      * renders, and collection state never governs display. A check leaves this
      * suite only when the author retires the claim behind it, and that is what
-     * happened here — the author's ruling, recorded in `docs/rulings.md`. Its
+     * happened here, recorded in `docs/rulings.md`. Its
      * replacement is `tests/no-suppression.test.ts`, which fails the BUILD if
      * a suppression path is reintroduced, rather than catching it in
      * production after a reader has already met a blank contest.
@@ -1143,16 +1143,12 @@ for (const { zip } of FOUR) {
     /*
      * **F01 11.2 (2026-08-19) RETIRED 0814c's claim and this check with it.**
      *
-     * 0814c required the ballot page to carry the device-only sentence. The
-     * author read the shipped result and removed it: *"'Your pick boxes are
-     * saved to this device only. We never see them. The yes/no reaction
-     * buttons are different, those answers join anonymous local totals.' That
-     * is completely counterintuitive to its own statement... I would remove
-     * that statement entirely. You can just put 'How we handle data' at the
-     * bottom."*
+     * 0814c required the ballot page to carry the device-only sentence. In the
+     * shipped result it read as contradicting itself, so it was removed and a
+     * "How we handle data" link at the bottom carries the explanation instead.
      *
      * The identity changes with the claim, deliberately: a check whose subject
-     * the author retired must not keep answering under the old name, and the
+     * was retired must not keep answering under the old name, and the
      * suite's own diff will report `0814c … device-only sentence` as GONE with
      * this one added, which is the honest record of what happened.
      *
@@ -1531,8 +1527,8 @@ for (const { zip } of FOUR) {
    * Kearsarge Regional, Newbury's no-mayor fact. All of them worked because
    * arriving at a zip auto-expanded the card.
    *
-   * The author's rule is now that exactly one of the rail and the card is up,
-   * and his `08-53-15` specifies that arrival gets the rail with Who Governs
+   * The rule is now that exactly one of the rail and the card is up,
+   * and `08-53-15` specifies that arrival gets the rail with Who Governs
    * Here beneath it as a pill. So the card has to be REACHED, and the walk
    * reaches it the way a reader does: by clicking the pill.
    *
@@ -1843,9 +1839,9 @@ for (const { zip } of FOUR) {
   /*
    * g3 item 10 (M91) — the state rises out of the map, at every zoom.
    *
-   * Measured at the LAST zoom step, which is the far end of the author's own
-   * test: "zooming ALL THE WAY OUT, Arizona still reads raised and everything
-   * else still reads muted and slightly blurred." A check that only looked at
+   * Measured at the LAST zoom step, which is the far end of the test: zoomed
+   * ALL THE WAY OUT, Arizona still reads raised and everything else still
+   * reads muted and slightly blurred. A check that only looked at
    * neighbourhood scale would pass on a treatment that vanishes when the
    * state's border comes into view, which is the case that matters.
    */
@@ -2268,7 +2264,7 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
     /*
      * RETIRED, not regressed: g4 item 4's "the current zip is shaded".
      *
-     * The author removed zip shading from the product in g5 — the zip chooses
+     * Zip shading left the product in g5 — the zip chooses
      * the active state and centres the camera, and draws nothing. The claim
      * behind the check is gone, so the check goes with it, which is the only
      * ground on which this suite ever loses a check. Its replacement asserts
@@ -2289,7 +2285,7 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
   /*
    * g4 item 5 — the map stops dragging the reader back.
    *
-   * The author's report was that free panning glides back to the STARTING
+   * The defect: free panning glided back to the STARTING
    * POINT, which is a reframe rather than inertia: the 2.8 s auto-frame flew
    * the camera to a box built around the zip's own centroid. Pan by hand,
    * wait past the timer, and the camera must not have moved.
@@ -2510,8 +2506,7 @@ section("F. The reader's map and the folded panels (g4 items 1-5, 9, 11, 14, 15)
   /*
    * g4 item 11 — the meetings panel opens fully collapsed.
    *
-   * The author's comparison screenshots: grouped-and-collapsed is right,
-   * auto-expanded is wrong.
+   * The design: grouped-and-collapsed is right, auto-expanded is wrong.
    */
   const page = await openWideAt(browser, "85701");
   const listButton = page.locator('button:has-text("meetings")').first();
@@ -2977,7 +2972,7 @@ section("H. The frozen denominator (h item 1)");
 //
 // This REPLACES `[0818] 07866: the mayor line renders`, which asserted /Mayor/
 // on the who-governs card. That check leaves the suite the only way a check
-// ever may: **the author retired the claim behind it.** Keeping it would now
+// ever may: **the claim behind it was retired.** Keeping it would now
 // assert a defect. What was worth guarding was never the row — it was that a
 // reader at 07866 can still reach their mayor.
 //
@@ -2995,7 +2990,7 @@ section("H. The frozen denominator (h item 1)");
 //
 // The distance is also recorded, because it is item 6's real cost: the mayor
 // moved from zero clicks (a row on who-governs) to two (row → card →
-// Representation). The author ruled the placement out; the price is stated
+// Representation). The old placement is gone; the price is stated
 // rather than implied.
 // ═══════════════════════════════════════════════════════════════════════════
 section("I. The mayor after item 6 (g6)");
@@ -3571,7 +3566,7 @@ section("L. Contact surfaces (g9: R39 the phone pill, R40 the address)");
         `${/only write back if you fill in the optional email box/i.test(form.text)}`,
     );
     /*
-     * R41 (g11, 2026-08-17, the author's ruling A). The READ half of the row's
+     * R41 (g11, 2026-08-17, option A). The READ half of the row's
      * walk checks — the write half writes real feedback rows and lives in
      * scripts/walk-r41.mts, named in EXCLUDED below.
      *
@@ -4058,8 +4053,8 @@ for (const { zip } of FOUR) {
        *
        * **THE CARD NO LONGER SHOWS ITSELF (WGH-8, 2026-08-25).** This comment
        * used to read "the card shows itself once per resolved area", and that
-       * was true: arriving at a zip auto-expanded it. The author's rule is now
-       * that exactly ONE of the rail and the card is up, and his annotated
+       * was true: arriving at a zip auto-expanded it. The rule is now
+       * that exactly ONE of the rail and the card is up, and the annotated
        * `08-53-15` specifies which one arrival gets — the rail, full height,
        * with Who Governs Here sitting beneath it as its pill.
        *
@@ -4094,8 +4089,8 @@ for (const { zip } of FOUR) {
         wgh.ballotDoors === 1,
         `${wgh.ballotDoors} doors`,
       );
-      // F01 8.3 (2026-08-19) retired "pothole" as the pill’s lead example on
-      // the author’s ruling. The CHECK is G07’s and is unchanged: the pill must
+      // F01 8.3 (2026-08-19) retired "pothole" as the pill’s lead example.
+      // The CHECK is G07’s and is unchanged: the pill must
       // still name a concrete example rather than a bare verb. The examples it
       // reads come from ASK_PILL_EXAMPLES so the walk and the label cannot
       // drift apart the way a hard-coded /pothole/ just did.
@@ -4916,9 +4911,8 @@ section("F01. The walkthrough fixes hold (F01, 2026-08-19)");
 
 {
   /*
-   * The author on this session: "We are NOT moving forward until these are
-   * resolved... I won't even open the site again until all these are fixed."
-   * A fix he cannot see is not a fix, so the ones visible in the DOM are
+   * These walkthrough fixes block further work until they are resolved, and
+   * a fix nobody can see is not a fix, so the ones visible in the DOM are
    * asserted against the deploy rather than trusted from a green unit test.
    *
    * Its own page, per the standing rule: a page a dozen earlier checks have
@@ -4958,9 +4952,9 @@ section("F01. The walkthrough fixes hold (F01, 2026-08-19)");
 
 {
   /*
-   * 9.6 — THE ONE TO PRESERVE. The author: "when I select AZ-6 it's shaded on
-   * the map, and when I close the small battlecard on the right it is
-   * de-selected. That behavior is excellent and should be preserved as is."
+   * 9.6 — THE ONE TO PRESERVE. Selecting AZ-6 shades it on the map, and
+   * closing the small battlecard on the right de-selects it. That behavior
+   * stays as is.
    *
    * The map work in 9.1 through 9.5 is exactly what could have broken it, so
    * it gets a check of its own rather than an assumption. The gesture is real:
@@ -5105,7 +5099,7 @@ section("F01. The walkthrough fixes hold (F01, 2026-08-19)");
             "no group header rendered — this body may hold no meetings at all, so the ordering was not exercised",
           );
         } else {
-          // Whatever groups exist must appear in the author's order, and the
+          // Whatever groups exist must appear in the specified order, and the
           // concluded block must never be the first thing on the list.
           const ascending = present.every((v, i) => i === 0 || present[i - 1] < v);
           const closedIsNotFirst = read.closedAt < 0 || present[0] !== read.closedAt;
@@ -5148,7 +5142,7 @@ section("F01. The walkthrough fixes hold (F01, 2026-08-19)");
 {
   /*
    * 1e — the struck never-store/never-log promise is off the live build too.
-   * The author ordered it verbatim, and it is the one item where leaving the
+   * It is the one item where leaving the
    * old sentence up is a promise the business does not intend to keep.
    */
   const response = await fetch(`${BASE}/transparency`, { headers: RUN_HEADERS });
@@ -5669,7 +5663,7 @@ for (const zip of ["07866", "85701"]) {
       where > 0,
       `${where} in-app pill(s)`,
     );
-    // F22 (2026-08-20): the author's F21 ruling — the pointer is required
+    // F22 (2026-08-20), following F21: the pointer is required
     // ONCE PER PAGE, in the dates header. F01C2 shipped the check above
     // asserting only that the affordance stays in the app, and reported "2
     // in-app pill(s)" as evidence without holding the count to anything. The
@@ -6109,8 +6103,8 @@ for (const zip of ["85629", "07866"]) {
 
 /**
  * **THE GAPS BETWEEN CONSECUTIVE CARDS IN ONE COLUMN, MEASURED.**
- * (Session B, 2026-08-31. The owner: *two-column desktop layout has gaps and
- * misaligned boxes.*)
+ * (Session B, 2026-08-31. The defect: the two-column desktop layout had gaps
+ * and misaligned boxes.)
  *
  * ## Why this is DOM geometry and not an image evaluation
  *
@@ -6281,7 +6275,7 @@ for (const zip of ["85701", "07866"]) {
  *
  * The first check is the reader's own question — *I live at this address; who
  * is my state house representative?* — asked of the PANEL rather than of the
- * Ask box, because the second half of the owner's requirement is a statement
+ * Ask box, because the second half of the requirement is a statement
  * about what the panel LISTS. It is deliberately NOT added to
  * `data/health/reader-questions.json`: that corpus is generated from the
  * owner's workbook under stated criteria, and a session writing its own
@@ -6498,8 +6492,8 @@ for (const target of SCOPE_ADDRESSES) {
     );
 
     /*
-     * **THE STATE TRANSITION.** The owner's sentence: *if it stays stagnant
-     * when we put in an address, people are not going to put in addresses.*
+     * **THE STATE TRANSITION.** If the panel stays stagnant when an address
+     * goes in, people will stop putting in addresses.
      *
      * The transition is asserted on the PANEL'S OWN STATE, not only on its
      * labels. At a ZIP whose centroid already sits inside the reader's
@@ -6685,7 +6679,7 @@ for (const target of SCOPE_ADDRESSES) {
     const afterState = after.rows.map((r) => `${r.label}:${r.standing}`).sort().join("|");
 
     /*
-     * **THE DEFECT ITSELF.** The owner's screen: the control saying District 17
+     * **THE DEFECT ITSELF.** The screen: the control saying District 17
      * above a panel still listing District 19. The panel MOVED is the whole
      * claim — a panel that reads identically after the reader answered is the
      * bug, whatever the banner above it says.
@@ -7145,7 +7139,7 @@ section(
    *    to raw `sourcedata` puts it back into the hundreds no matter what else
    *    the machine is doing.
    * 2. **The host-normalized frame rate**, at the foot of this block, added by
-   *    the author's amendment of 2026-08-31. It replaced an ABSOLUTE 55 fps
+   *    the amendment of 2026-08-31. It replaced an ABSOLUTE 55 fps
    *    target that was never assertable here: on the machine this was written
    *    on — seven agents building in parallel — the same build measured 29.5,
    *    31.6, 33.7, 36.1 and 38.2 fps p95-sustained across five consecutive
@@ -7428,7 +7422,7 @@ section(
      * **ONE DISPOSITION, READ BY BOTH CHECKS.**
      *
      * This block now carries TWO assertions — the load-invariant call count and
-     * the author's host-normalized frame-rate criterion — and every condition
+     * the host-normalized frame-rate criterion — and every condition
      * below invalidates both of them for the same reason: the page under
      * measurement is not the page a reader gets, or the camera never flew, or
      * the sample was cut short. Deriving the reason ONCE and having both checks
@@ -7452,7 +7446,7 @@ section(
      * the request.
      *
      * The two are never averaged and never share a floor. Hardware answers to
-     * the author's 90%; software answers to `SOFTWARE_NORMALIZED_FLOOR` AND to
+     * the 90% floor; software answers to `SOFTWARE_NORMALIZED_FLOOR` AND to
      * `SOFTWARE_JANK_CEILING`, because a build measured at 89% of bare with a
      * quarter of its frames past 33.4 ms is what proved the median alone is not
      * enough here.
@@ -7525,7 +7519,7 @@ section(
       );
 
       /* ═══════════════════════════════════════════════════════════════════
-         THE HOST-NORMALIZED CRITERION — the author's amendment, 2026-08-31
+         THE HOST-NORMALIZED CRITERION — amended 2026-08-31
          ═══════════════════════════════════════════════════════════════════
 
          ## What was here before, and why it could not stay
@@ -7538,16 +7532,14 @@ section(
          removed reached only 41.3 fps p95-sustained. A `>= 55` assertion was
          unreachable there by a map with nothing on it.
 
-         The author replaced the absolute rather than lowering it:
-
-           "Replace the absolute 55 FPS criterion with the host-normalized
-            criterion. Run the identical fly-in repeatedly on (a) bare MapLibre
-            with application layers/overlays removed and (b) the actual
-            application. Report median FPS and frame-time/jank for both. Pass:
-            application median FPS >= 90% of bare-map median FPS on that host.
-            If the bare map itself cannot reach smooth motion, report that host
-            limit numerically; it does not waive the relative requirement.
-            Preserve as the permanent performance check."
+         The amendment replaced the absolute rather than lowering it. The
+         criterion: run the identical fly-in repeatedly on (a) bare MapLibre
+         with application layers/overlays removed and (b) the actual
+         application, and report median FPS and frame-time/jank for both. It
+         passes when application median FPS >= 90% of bare-map median FPS on
+         that host. If the bare map itself cannot reach smooth motion, that
+         host limit is reported numerically and does not waive the relative
+         requirement. This is the permanent performance check.
 
          The bare map IS this host's ceiling, measured on the day rather than
          chosen in advance. It carries the rasteriser, the GPU, the refresh rate
@@ -7584,8 +7576,8 @@ section(
 
          The median is robust to exactly the single-frame hiccup that made the
          p95 statistic swing between 27.5 and 45.2 fps across five consecutive
-         runs of one unchanged build. That robustness is why the author chose
-         it — and it is also why it is BLIND to concentrated jank: the pre-fix
+         runs of one unchanged build. That robustness is why it was chosen —
+         and it is also why it is BLIND to concentrated jank: the pre-fix
          build running 170 full-viewport queries through one animation had a
          median of 59.5 fps, a perfect median over a visibly broken flight,
          because its damage was 15 long frames out of 127. The median criterion
@@ -7616,7 +7608,7 @@ section(
        * acceleration — a real population (old machines, VMs, remote desktop,
        * blocklisted drivers, hardware acceleration switched off) — and it is
        * recorded here rather than smoothed away. It is a separate question from
-       * the one the author posed, which is what the fly-in costs against a bare
+       * the one this check asks, which is what the fly-in costs against a bare
        * map, and the answer to THAT is measured where a reader lives.
        *
        * A run that does not get the real adapter DECLINES rather than asserting
@@ -7991,7 +7983,7 @@ section(
         "THE ABSOLUTE RATE IS A FACT ABOUT THIS HOST; ONLY THE RATIO IS ASSERTED.";
 
       /* ─────────────────────────────────────────────────────────────────────
-         POPULATION 1 — A READER WITH A GPU. The author's 90% criterion.
+         POPULATION 1 — A READER WITH A GPU. The 90% criterion.
          ───────────────────────────────────────────────────────────────────── */
       const hw = await measureArms("gpu", GPU_ARGS);
       const hwBlocked = armsBlocked(hw);

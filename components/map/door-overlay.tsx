@@ -75,7 +75,7 @@ export function DoorOverlay({
   ) => void;
   onOpenMeeting: (meeting: Meeting) => void;
   /**
-   * A BODY ROW OPENS ITS CARD (g4 item 9, the author's ruling).
+   * A BODY ROW OPENS ITS CARD (g4 item 9).
    *
    * The sidebar's Bodies door was the last list surface still throwing the
    * reader out of the product: the row was an `<a target="_blank">` straight
@@ -379,8 +379,7 @@ function DistrictsDoor({
    * nothing to count.
    *
    * The stats tile was repaired for exactly this on 2026-08-19 and this door
-   * was not, which is the owner's standing instruction failing inside one
-   * file. `districtsAreVisible` is now the single rule and both call it.
+   * was not, which is the same defect surviving inside one file. `districtsAreVisible` is now the single rule and both call it.
    */
   const drawnRows =
     drawnDistricts.length > 0

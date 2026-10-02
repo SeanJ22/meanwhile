@@ -63,7 +63,7 @@ export function workerPublicationTasks(items: readonly WorkItem[], results: read
  * with nothing delivered and its gaps counted; only a pass with no items or
  * no readable door prints none and exits non-zero.
  */
-export async function printWorkerPublicationReceipt(store: Pick<RoutineDataStore, "readCandidate"> & Partial<Pick<RoutineDataStore, "readPromotionIdentity">>, source: string,
+export async function printWorkerPublicationReceipt(store: Pick<RoutineDataStore, "readCandidate"> & Partial<Pick<RoutineDataStore, "readPromotionIdentity" | "readCandidateSummary">>, source: string,
   report: readonly { readonly workItemId: string; readonly outcome: NonNullable<WorkItem["publicationOutcome"]> }[],
   /** Anything else this pass published outside work items (the national place publisher), with its gaps. */
   extra: { readonly records: number; readonly versionId: string | null; readonly candidateId: string | null; readonly gaps: readonly { readonly key: string; readonly detail: string }[] } | null = null,
@@ -83,8 +83,9 @@ export async function printWorkerPublicationReceipt(store: Pick<RoutineDataStore
     // Named as the canonical candidate, never as a confirmation: only the store records a confirmation, and the runner re-proves this one.
     if (pointer) last = { at: now, candidateId: pointer.versionId, versionId: pointer.versionId };
   }
-  const created = last?.candidateId ? await store.readCandidate(last.candidateId) : null;
-  const record = created ?? (last?.versionId ? await store.readCandidate(last.versionId) : null);
+  const read = store.readCandidateSummary?.bind(store) ?? store.readCandidate.bind(store);
+  const created = last?.candidateId ? await read(last.candidateId) : null;
+  const record = created ?? (last?.versionId ? await read(last.versionId) : null);
   if (!last || !record) { process.exitCode = 2; return false; }
   console.log("RCD_RECEIPT=" + JSON.stringify({ source, candidateId: record.candidate.id, acquisitionSucceeded: record.acquisitionSucceeded,
     state: record.state, decision: record.receipt?.decision ?? null, promotedVersion: last.versionId, lastKnownGoodVersion: record.lastKnownGoodVersion,

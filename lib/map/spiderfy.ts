@@ -1,6 +1,5 @@
 /**
- * **Overlapping pins fan out** — M19, 2026-08-17, the author's ruling (A:
- * spiderfy).
+ * **Overlapping pins fan out** — M19, 2026-08-17 (option A: spiderfy).
  *
  * ## The defect
  *
@@ -17,7 +16,7 @@
  *
  * ## Why fan-out rather than clustering
  *
- * The author's ruling, and it is the right one for this product. Clustering
+ * This is the right behavior for this product. Clustering
  * replaces pins with a number, which means the reader has to open something
  * before they can see what is there — a click the map used to not need, and
  * reader friction is a defect with the standing of a wrong number. Raising

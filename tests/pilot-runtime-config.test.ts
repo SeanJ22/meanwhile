@@ -5,7 +5,53 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
-import { resolvePilotMirror, validateRuntimeConfig } from "../scripts/pilot-runtime-config.mjs";
+import { assertProductionDatabaseTarget, resolvePilotMirror, validateRuntimeConfig } from "../scripts/pilot-runtime-config.mjs";
+
+const productionTarget = {
+  WTP_RUNTIME_MODE: "production",
+  DATABASE_URL: "postgres://owner:private@ep-live-pooler.us-east-2.aws.neon.tech/civic?sslmode=require",
+  WTP_PRODUCTION_DATABASE_URL_WRITE: "postgres://writer:private@ep-live.us-east-2.aws.neon.tech/civic",
+  WTP_PRODUCTION_DATABASE_URL_READONLY: "postgresql://readonly:private@ep-live.us-east-2.aws.neon.tech/civic",
+};
+
+test("production startup accepts the approved database through pooled and direct roles", () => {
+  assert.doesNotThrow(() => assertProductionDatabaseTarget(productionTarget));
+});
+
+test("production startup refuses a different default endpoint, database, or writer destination", () => {
+  for (const change of [
+    { DATABASE_URL: "postgres://owner:private@ep-local.us-east-2.aws.neon.tech/civic" },
+    { DATABASE_URL: "postgres://owner:private@ep-live.us-east-2.aws.neon.tech/other" },
+    { WTP_PRODUCTION_DATABASE_URL_WRITE: "postgres://owner:private@ep-local.us-east-2.aws.neon.tech/civic" },
+  ]) assert.throws(() => assertProductionDatabaseTarget({ ...productionTarget, ...change }), /PRODUCTION_DATABASE_TARGET_REFUSED/);
+});
+
+test("production startup refuses missing and malformed settings without disclosing their values", () => {
+  for (const key of ["DATABASE_URL", "WTP_PRODUCTION_DATABASE_URL_WRITE", "WTP_PRODUCTION_DATABASE_URL_READONLY"]) {
+    for (const value of [undefined, "", "not-a-connection-password-private", "https://private@ep-live.us-east-2.aws.neon.tech/civic"]) {
+      assert.throws(() => assertProductionDatabaseTarget({ ...productionTarget, [key]: value }), error => {
+        assert.ok(error instanceof Error);
+        assert.match(error.message, /PRODUCTION_DATABASE_TARGET_REFUSED/);
+        assert.doesNotMatch(error.message, /private|ep-live|https:/);
+        return true;
+      });
+    }
+  }
+});
+
+test("staging startup keeps its own local destination", () => {
+  assert.doesNotThrow(() => assertProductionDatabaseTarget({ WTP_RUNTIME_MODE: "staging", DATABASE_URL: "local" }));
+});
+
+test("the production runner refuses a wrong target before opening its runtime authority or stores", () => {
+  const refused = spawnSync(process.execPath, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "scripts/pilot-runner.mts", "--release-handoff"], {
+    cwd: process.cwd(), encoding: "utf8", timeout: 30_000, windowsHide: true,
+    env: { ...process.env, ...productionTarget, WTP_DB_ROLE: "production", DATABASE_URL: "postgres://owner:private@ep-local.us-east-2.aws.neon.tech/civic" },
+  });
+  assert.notEqual(refused.status, 0);
+  assert.match(refused.stderr, /PRODUCTION_DATABASE_TARGET_REFUSED/);
+  assert.doesNotMatch(refused.stderr, /private|PERMANENT_RUNTIME_AUTHORITY_REFUSED/);
+});
 
 test("staging has no shared mirror and accepts only a mirror inside its worktree", () => {
   const dir = mkdtempSync(join(tmpdir(), "wtp-staging-mirror-"));

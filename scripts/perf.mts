@@ -5,7 +5,7 @@
  *   pnpm perf --headless         # the CI-shaped run, for comparison only
  *   SHOOT_BASE_URL=… pnpm perf   # against anything else
  *
- * ## Why this exists (item 8b, 2026-08-17, the author's ruling)
+ * ## Why this exists (item 8b, 2026-08-17)
  *
  * `pnpm measure:fly` asserts a **32 ms frame budget**. That number was set as
  * an absolute because no baseline existed. It was missed before g5's fix and
@@ -13,8 +13,8 @@
  * runner whose numbers are not a reader's**. A budget nothing can pass is not
  * a budget; it is a permanently red light everyone has learned to walk past.
  *
- * The author's ruling: retire the absolute number and set a real one from his
- * own hardware. **This command asserts nothing.** It measures, prints, and
+ * The design: retire the absolute number and set a real one from the
+ * author's own hardware. **This command asserts nothing.** It measures, prints, and
  * writes a file. The author reads it and rules; the number he picks becomes
  * the budget, and until he picks one there is no budget — a check asserting
  * against a made-up threshold is worse than no check.

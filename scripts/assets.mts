@@ -40,7 +40,7 @@
  *
  * So the mechanism is built, the store is populated, the hashes are committed,
  * and the guard refuses NEW binaries from here. Emptying the repo of the
- * existing ones waits on one decision that is the author's: WHERE the store
+ * existing ones waits on one decision: WHERE the store
  * lives such that a Netlify build can restore from it. `R57` carries that.
  *
  * ## The store's location
@@ -72,7 +72,7 @@ const DRY = process.argv.includes("--dry");
 /**
  * `--no-remote` keeps a restore purely local. The default is remote-enabled,
  * because a restore path that has to be asked for is a restore path a Netlify
- * build will not take (`R57`, Sean's decision of 2026-08-24).
+ * build will not take (`R57`, 2026-08-24).
  */
 const NO_REMOTE = process.argv.includes("--no-remote");
 

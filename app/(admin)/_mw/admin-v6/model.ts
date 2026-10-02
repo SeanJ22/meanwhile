@@ -108,6 +108,10 @@ export function huntLeftUsd(h: Hunt): number | null {
 
 /* ------------------------------------------------------------- national */
 
+/**
+ * One row of The country: a state at country scope, a congressional district at a
+ * state, a ZIP at a district. Every figure is null when it is not known (never zero).
+ */
 export interface StateRow {
   readonly placeKey: string;
   readonly code: string;
@@ -117,6 +121,14 @@ export interface StateRow {
   /** Checklist items counted here, or null when coverage is unknown (never zero). */
   readonly checklistItems: number | null;
   readonly tracked: boolean;
+  /** What the row is. A state when absent. */
+  readonly kind?: "State" | "District" | "ZIP";
+  /** The place the row sits directly inside: the scope the list belongs to. */
+  readonly parentKey?: string;
+  readonly zipsWorked?: number | null;
+  readonly zipsTotal?: number | null;
+  /** The place score as a percentage, floored to one decimal. */
+  readonly score?: number | null;
 }
 
 /* ------------------------------------------------------ reader results */
@@ -302,6 +314,8 @@ export interface UpdateCard {
 }
 
 export interface WorkerStatus {
+  readonly cycle?: { readonly startedAt: string; readonly finishedAt: string | null;
+    readonly exitCode: number | null; readonly signal: string | null; readonly lastError: string | null } | null;
   /** Workers last checked in: only means they are switched on. */
   readonly lastCheckIn: string | null;
   /** Last meaningful progress, or null when nothing reports it. */

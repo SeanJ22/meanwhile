@@ -1,9 +1,9 @@
 /**
  * **HAS ANYTHING CHANGED SINCE THE PAGE RENDERED?** (Admin Pass C, ADM-34 / §9A.5.)
  *
- * The owner's question, in his words: *"do I have to manually refresh the site
- * to get more information? Is it going to auto-update if I just simply leave it
- * open?"* The console must answer that visibly — and must not answer it by
+ * The question: does the console need a manual refresh to show new
+ * information, or does it update if simply left open? The console must
+ * answer that visibly — and must not answer it by
  * re-reading the whole control plane every thirty seconds, which §16 names as
  * the scaling concern this pass may not make worse.
  *

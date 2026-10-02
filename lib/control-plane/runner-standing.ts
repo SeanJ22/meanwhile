@@ -26,6 +26,51 @@ import { livenessOf, type HealthLevel, type RunnerHeartbeat, type RunnerLiveness
 import { readIntents, type ResearchIntent } from "./scheduler/research-policy.ts";
 import { type FleetSafetySnapshot } from "./fleet-safety.ts";
 
+export interface RunnerCycle {
+  readonly startedAt: string;
+  readonly finishedAt: string | null;
+  readonly exitCode: number | null;
+  readonly signal: string | null;
+  readonly lastError: string | null;
+}
+
+export type CycleHeartbeat = RunnerHeartbeat & { readonly cycle: RunnerCycle };
+
+/** Old runners have no cycle metadata; malformed readings never imply a live child. */
+export function runnerCycleOf(value: unknown): RunnerCycle | null {
+  if (!value || typeof value !== "object") return null;
+  const cycle = value as Partial<RunnerCycle>;
+  const clock = (at: unknown): at is string => typeof at === "string" && Number.isFinite(Date.parse(at));
+  if (!clock(cycle.startedAt) || (cycle.finishedAt !== null && !clock(cycle.finishedAt)) ||
+      (cycle.finishedAt !== null && Date.parse(cycle.finishedAt) < Date.parse(cycle.startedAt)) ||
+      (cycle.exitCode !== null && (!Number.isSafeInteger(cycle.exitCode) || cycle.exitCode! < 0)) ||
+      (cycle.signal !== null && (typeof cycle.signal !== "string" || !/^SIG[A-Z0-9]{1,20}$/.test(cycle.signal))) ||
+      (cycle.lastError !== null && (typeof cycle.lastError !== "string" || cycle.lastError.length > 2000)) ||
+      (cycle.finishedAt === null && (cycle.exitCode !== null || cycle.signal !== null))) return null;
+  return { startedAt: cycle.startedAt, finishedAt: cycle.finishedAt,
+    exitCode: cycle.exitCode as number | null, signal: cycle.signal,
+    lastError: cycle.lastError?.replace(/(?:postgres(?:ql)?|https?):\/\/[^\s]+/gi, "[redacted URL]") ?? null };
+}
+
+/** A live process beat does not invent a finished round or any source delivery. */
+export function liveCycleHeartbeat(previous: RunnerHeartbeat | null, input: {
+  readonly at: string; readonly startedAt: string; readonly testedSha: string | null; readonly host: string;
+  readonly finishedAt?: string; readonly exitCode?: number | null; readonly signal?: string | null;
+  readonly lastError?: string | null;
+}): CycleHeartbeat {
+  return {
+    ...previous,
+    formatVersion: previous?.formatVersion ?? 1,
+    beatAt: input.at, lastCycleStartedAt: input.startedAt,
+    lastCycleFinishedAt: input.finishedAt ?? previous?.lastCycleFinishedAt ?? null,
+    lastCycleOk: input.finishedAt ? input.exitCode === 0 : previous?.lastCycleOk ?? null,
+    nextCycleDueAt: input.finishedAt ? previous?.nextCycleDueAt ?? null : null,
+    testedSha: input.testedSha, host: input.host, pause: null,
+    cycle: { startedAt: input.startedAt, finishedAt: input.finishedAt ?? null,
+      exitCode: input.exitCode ?? null, signal: input.signal ?? null, lastError: input.lastError ?? null },
+  };
+}
+
 export type RunnerStandingState = RunnerLiveness | "ACTIVE" | "PAUSED" | "CIRCUIT BROKEN";
 
 export interface RunnerStanding {

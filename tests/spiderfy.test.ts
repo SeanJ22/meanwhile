@@ -11,8 +11,7 @@ import {
 } from "../lib/map/spiderfy.ts";
 
 /**
- * **M19 — overlapping pins fan out.** 2026-08-17, the author's ruling: A,
- * spiderfy.
+ * **M19 — overlapping pins fan out.** 2026-08-17, option A: spiderfy.
  *
  * The defect, found 2026-08-12: two venues a block apart collide on screen at
  * metro zoom and the top one intercepts the clicks meant for the other. The
@@ -175,10 +174,9 @@ test("a fanned pin says it moved, and not in a colour that already means somethi
 });
 
 /**
- * F01 9.3 (2026-08-19, the author) — the fan has to READ as a spider.
+ * F01 9.3 (2026-08-19) — the fan has to READ as a spider.
  *
- * *"When those are spidered it looks like it just simply is moving. It's not
- * like a spider effect."* The halo the test above guards says a pin moved; it
+ * Without legs, a spidered pin just looks like it is moving. The halo the test above guards says a pin moved; it
  * cannot say where from, and without a visible origin the fan is
  * indistinguishable from two pins drifting apart.
  */

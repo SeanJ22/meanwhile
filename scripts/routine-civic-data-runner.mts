@@ -126,6 +126,10 @@ import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
 import { publishRoutineReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
+import { readFieldManual } from "../lib/control-plane/field-manual.ts";
+import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
+import { sharedScoutBrowser } from "./scout-browse.mts";
+import { routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 import { childFatalLine, installFatalLine } from "../lib/ops/fatal-line.ts";
 import {
@@ -193,6 +197,19 @@ const ROUTINE_DATA_PROCESS_LEASE = TASK_SELECTION.ok ? await (async () => {
     return null;
   }
 })() : null;
+
+const sharedBrowser = sharedScoutBrowser();
+const workerToolsHost = ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()
+  ? await startWorkerToolsHost({ knowledge: await readFieldManual(await createPgRepositories(controlPlaneUrlFromEnv()!,
+    RUN_STARTED_AT, { skipBootstrap: true })), browse: sharedBrowser.browse }) : null;
+const routineMemorySlots = routineProcessSlots();
+const childMemoryReleases = new Map<string, () => void>();
+async function acquireChildMemory(command: BoundedChildCommand): Promise<void> {
+  childMemoryReleases.set(command.id, await routineMemorySlots.acquire(command.id));
+}
+function releaseChildMemory(id: string): void {
+  childMemoryReleases.get(id)?.(); childMemoryReleases.delete(id);
+}
 
 interface SupervisorFailure {
   readonly taskId: string;
@@ -705,7 +722,10 @@ const sourcePass = runBoundedChildPass(
     concurrency: ROUTINE_CHILD_CONCURRENCY,
     // Two reads of one host in this pass start at least a minute apart (C6).
     sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
-    onStarting: async (_command, index) => recordHuntSourceProgress(pendingRuns[index]!.task, "COLLECTING_AND_VERIFYING", "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used."),
+    onStarting: async (command, index) => {
+      await acquireChildMemory(command);
+      await recordHuntSourceProgress(pendingRuns[index]!.task, "COLLECTING_AND_VERIFYING", "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used.");
+    },
     onSettled: async (run, index) => settlePendingRun(pendingRuns[index]!, run),
     // Classification consumes the exact receipt before this worker advances.
     // Retaining only the small result summary bounds memory across the full portfolio.
@@ -714,6 +734,11 @@ const sourcePass = runBoundedChildPass(
 );
 
 async function settlePendingRun(pending: PendingRun, run: BoundedChildResult): Promise<void> {
+  try { await settlePendingRunResult(pending, run); }
+  finally { releaseChildMemory(run.id); }
+}
+
+async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResult): Promise<void> {
   laneLastEndedMs.set(pending.task.acquisitionFailureDomain, Date.now());
   unsettledSourceRuns.delete(pending.id);
   if (run.id !== pending.id) {
@@ -940,11 +965,13 @@ function startReaderRepair(
       timeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,
       maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
       concurrency: ROUTINE_READER_CHILD_CONCURRENCY,
+      onStarting: acquireChildMemory,
       onSettled: (run, index) => {
         const domain = readerLaunch[index]!;
         try {
           settleReaderDomain(domain, run);
         } finally {
+          releaseChildMemory(run.id);
           if (repairDomainRacesHotReads(domain, hotReadTaskIds) && --racingRepairs === 0) openHotReadCatchUp();
         }
       },
@@ -1011,6 +1038,7 @@ async function runHotRead(task: RoutineSourceTask, atMs: number): Promise<void> 
     timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
     maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
     concurrency: 1,
+    onStarting: acquireChildMemory,
     onSettled: async (result) => settlePendingRun(run, result),
     discardOutputAfterSettlement: true,
   }));
@@ -1162,3 +1190,5 @@ step = "releasing the host-local singleton";
 await ROUTINE_DATA_PROCESS_LEASE.release();
 }
 await readCacheHost.close();
+await workerToolsHost?.close();
+await sharedBrowser.close();

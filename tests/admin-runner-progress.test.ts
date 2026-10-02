@@ -11,10 +11,28 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { RESEARCH_STATE_ID, type ResearchState } from "../lib/control-plane/scheduler/research-policy.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
 import { ADMIN_HOST, adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
 
 const NOW = "2026-09-28T17:00:00.000Z";
 const AT = "2026-09-28T16:59:00.000Z";
+
+test("bounded cycle reading preserves actual exit, withholds malformed metadata and hides credential URLs", async () => {
+  const repos = createMemoryRepositories();
+  const beat = liveCycleHeartbeat(null, { at: AT, startedAt: "2026-09-28T16:30:00.000Z",
+    finishedAt: AT, exitCode: 2, signal: null, lastError: "failure at postgresql://private:pass@host/db",
+    testedSha: "a".repeat(40), host: "runner" });
+  await repos.runnerHeartbeat.put(RUNNER_ID, beat, AT);
+  const read = await readAdminRunnerProgress(repos, NOW);
+  assert.equal(read.heartbeat.cycle?.exitCode, 2);
+  assert.equal(read.heartbeat.cycle?.finishedAt, AT);
+  assert.equal(read.heartbeat.cycle?.lastError, "failure at [redacted URL]");
+  assert.doesNotMatch(JSON.stringify(read), /private|pass@/);
+  const held = await repos.runnerHeartbeat.mustRead(RUNNER_ID);
+  const malformed = { ...beat, cycle: { ...beat.cycle, finishedAt: null } };
+  await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, held.revision, malformed, AT);
+  assert.equal((await readAdminRunnerProgress(repos, NOW)).heartbeat.cycle, null);
+});
 
 test("runner progress keeps unpublished and unread distinct, with no false zero-progress assertion", async () => {
   const repos = createMemoryRepositories();

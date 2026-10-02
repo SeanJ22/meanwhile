@@ -12,7 +12,7 @@ import { SOURCE_WIRING } from "./source-wiring.ts";
  *    College's district. Census enumerates no boundary for community college
  *    districts, and minting an OCD-ID is a national-scale convention decision
  *    (tracker D31) that must not happen ad hoc. The nullable `Body.ocdId` is
- *    the wiring path the author decided for these; the body's `id` is minted
+ *    the wiring path chosen for these; the body's `id` is minted
  *    under the documented `curated:` scheme below instead, and carries no
  *    claim of being a division.
  *
@@ -489,9 +489,9 @@ function newburyBoardRows(): Body[] {
       // address block reads `937 Route 103, Newbury, NH 03255` behind a
       // Google-map link, under the town's own label "Newbury Offices". The
       // page TEXT never says it, which is why three reads of the agendas
-      // missed it — the address lives in the map link, not in the prose. The
-      // author found it in his own browser and ruled it the meeting address
-      // for this board and the Planning Board alike; the Planning Board's own
+      // missed it — the address lives in the map link, not in the prose. A
+      // browser read confirmed it, and it is the meeting address for this
+      // board and the Planning Board alike; the Planning Board's own
       // agendas say "Newbury Town Office" independently, which agrees.
       slug: "zoning-board-of-adjustment",
       name: "Zoning Board of Adjustment",

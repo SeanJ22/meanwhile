@@ -122,3 +122,11 @@ export function pickerMatches(places: readonly Place[], hunts: readonly Hunt[], 
     .sort((a, b) => KIND_ORDER.indexOf(a.kind) - KIND_ORDER.indexOf(b.kind) || a.name.localeCompare(b.name))
     .slice(0, limit);
 }
+
+/** What The country lists at a scope: states at the country, congressional districts at a state, ZIPs at a district; nothing elsewhere. */
+export type NationalDepth = "states" | "districts" | "zips";
+export function nationalDepth(key: string): NationalDepth | null {
+  if (key === COUNTRY_KEY) return "states";
+  if (/^st:[a-z]{2}$/.test(key)) return "districts";
+  return /^geo:[a-z]{2}\.congressional_district\.\d{4}$/.test(key) ? "zips" : null;
+}

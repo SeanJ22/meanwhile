@@ -24,8 +24,7 @@ import {
 
 /**
  * **R40 — the personal email leaves the product; Feedback becomes the in-app
- * form.** 2026-08-17, the author's ruling (1A: in-app; the Google Form is
- * unused).
+ * form.** 2026-08-17 (1A: in-app; the Google Form is unused).
  *
  * Two halves of one subject, and these guards hold both:
  *
@@ -59,7 +58,7 @@ const ADDRESS = ["seanj22", "gmail.com"].join("@");
  * contact address, and this is a server route: it is never in the client
  * bundle and no reader can see it. R40's own row scoped it out explicitly.
  * Changing it needs a contact address that still reaches the author, which is
- * the author's call and not this row's.
+ * outside this row's scope.
  */
 /*
  * ONE file, not a growing list. The address used to be written into each
@@ -169,7 +168,7 @@ test("the sidebar's Feedback link points at the in-app route, not a mail client"
 });
 
 /**
- * R41 (2026-08-17, the author's ruling A) — the optional reply field.
+ * R41 (2026-08-17, option A) — the optional reply field.
  *
  * The row's whole risk is that an OPTIONAL field stops being optional in
  * practice, or that the one deliberate exception to T09 quietly widens to the

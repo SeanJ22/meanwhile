@@ -1,10 +1,10 @@
 /**
  * **RULING 119 — A SOVEREIGN TRIBAL NATION IS ITS OWN CATEGORY OF
- * GOVERNMENT.** (Sean's decision of 2026-08-24, closing `NS08`.)
+ * GOVERNMENT.** (2026-08-24, closing `NS08`.)
  *
- * His words: tribal nations are their own specific category of government,
- * **without a doubt** — and **nationally**, not an Arizona special case. He
- * named New Mexico, Oklahoma and Texas as coming.
+ * Tribal nations are their own specific category of government — and
+ * **nationally**, not an Arizona special case. New Mexico, Oklahoma and Texas
+ * are coming.
  *
  * ## How this got found, which is the part worth keeping
  *

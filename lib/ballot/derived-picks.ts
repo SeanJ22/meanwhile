@@ -115,7 +115,7 @@ export function resolvePick(
  * other control by what the reader actually did there.
  */
 export const DERIVED_PICK_LINE =
-  "You said you'd vote for them, so we've marked this as your pick. Change it any time — it stays on this phone.";
+  "You said you'd vote for them, so we've marked this as your pick. Change it any time.";
 
 /** The conflict line. It states the disagreement and asks; it never resolves
  *  one on the reader's behalf, and it never says which is more likely. */

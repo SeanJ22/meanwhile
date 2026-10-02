@@ -4,8 +4,8 @@
  *
  * `pnpm handoff` refuses to overwrite a Drive-mirrored file whose content
  * matches no committed version — a protection against clobbering the author's
- * hand edits, and RULING 41 is why it exists: he adds tracker rows by hand and
- * a session may never reword or delete one.
+ * hand edits: he adds tracker rows to the mirrored workbook by hand, and a
+ * clobbered mirror would lose them.
  *
  * A `.xlsx` is a ZIP, and this repo rebuilds one on every `pnpm tracker:views`.
  * Two rebuilds of identical data differ in bytes, so the byte comparison could

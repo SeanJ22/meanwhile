@@ -1,9 +1,9 @@
 /**
  * WHICH COMMITS ARE ALLOWED TO COST A DEPLOY.
  *
- * Sean's instruction of 2026-08-24, escalated twice the same day: deploys are
- * burning credits, cut them to the floor. Adopted as **RULING 124** in
- * `CLAUDE.md` and `docs/rulings.md`.
+ * Every production deploy costs build credits, and a commit no reader can see
+ * (docs, records, tests) gains nothing from one. So only commits that change
+ * what a reader is served are allowed to cost a deploy.
  *
  * ## What was actually being spent
  *

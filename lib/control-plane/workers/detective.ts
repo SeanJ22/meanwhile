@@ -2,6 +2,7 @@ import { SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION, archiveCapture } from "../schedul
 import { scoutExecutor } from "../scheduler/scout-executor.ts";
 import { ZERO_COST } from "../attempt.ts";
 import {installedAdapters,installedAdapterVersion} from '../scheduler/scout-adapters.ts';
+import {readFieldManual, type FieldManualEntry} from '../field-manual.ts';
 import { requireCapability } from "../capability.ts";
 import { contentHash } from "../ids.ts";
 import { indexJson } from "./parser.ts";
@@ -209,16 +210,34 @@ export async function readSubjectScoutHistory(repos:import('../repository/types.
 export function investigationRole(results: readonly import('../scheduler/scout-result.ts').ScoutResult[], failedWorkers:boolean): 'SCOUT'|'DETECTIVE' {
   return failedWorkers || results.some(result=>result.refusal !== null || ['BLOCKED','NO_PROGRESS','NEEDS_ADAPTER'].includes(result.outcome)) ? 'DETECTIVE':'SCOUT';
 }
-function hasUntriedAdapter(latest:import('../scheduler/scout-result.ts').ScoutResult|undefined,installed:readonly string[]) {
+function hasUntriedAdapter(latest:import('../scheduler/scout-result.ts').ScoutResult|undefined,installed:readonly string[],knowledge:readonly FieldManualEntry[]=[]) {
   const description = latest ? [latest.narrative,...(latest.nextRungs ?? []),...(latest.candidates ?? []).map(c=>c.routeId)].join(' ').toLowerCase() : '';
-  return installed.some(name=>(description.includes(name) || (name==='uncapped-source-links' && /uncapped.link|raw.html extraction|verified webpages/.test(description)) || (name==='dated-sitemap' && /streamline|dated.sitemap/.test(description))) &&
+  const learned=new Set(knowledge.flatMap(entry=>{
+    const payload=entry.payload as {sourceAttemptId?:string;files?:unknown}|null;
+    if(entry.kind!=='ENGINEER_ADAPTER_PR' || !latest?.attemptId || payload?.sourceAttemptId!==latest.attemptId || !Array.isArray(payload.files))return [];
+    return payload.files.flatMap(path=>{
+      const name=typeof path==='string'?/^lib\/sources\/platform-adapters\/([a-z0-9-]+)\.(?:ts|mjs)$/.exec(path)?.[1]:undefined;
+      return name?[name]:[];
+    });
+  }));
+  return installed.some(name=>(learned.has(name) || description.includes(name) || (name==='uncapped-source-links' && /uncapped.link|raw.html extraction|verified webpages/.test(description)) || (name==='dated-sitemap' && /streamline|dated.sitemap/.test(description))) &&
     !(latest?.rungs??[]).some(r=>r.tool==='run_adapter' && r.observed.includes(name+'@'+installedAdapterVersion(name))));
 }
-export function adapterWaitReason(results: readonly import('../scheduler/scout-result.ts').ScoutResult[], installed: readonly string[] = []): string|null {
+export function adapterWaitReason(results: readonly import('../scheduler/scout-result.ts').ScoutResult[], installed: readonly string[] = [], knowledge:readonly FieldManualEntry[]=[]): string|null {
   const latest=results.at(-1);
-  if(hasUntriedAdapter(latest,installed))return null;
+  if(hasUntriedAdapter(latest,installed,knowledge))return null;
   return latest?.refusal === null && latest.outcome === 'NEEDS_ADAPTER' && latest.recoveryCapabilityVersion === SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION
     ? 'AWAITING_ADAPTER: '+latest.narrative+'; Engineer owns this work. Resume when its adapter is available.' : null;
+}
+
+/** Engineer saves the generated filenames against the failed attempt, before their names appear in Scout history. */
+export async function adapterWaitReasonFromKnowledge(repos:import('../repository/types.ts').ControlPlaneRepositories,
+  results:readonly import('../scheduler/scout-result.ts').ScoutResult[]):Promise<string|null> {
+  const installed=await installedAdapters();
+  const wait=adapterWaitReason(results,installed);
+  if(!wait)return null;
+  const manual=await readFieldManual(repos,{role:'DETECTIVE'});
+  return adapterWaitReason(results,installed,manual.store.entries);
 }
 
 /** Reopen adapter waits only when a matching installed implementation has not already been tried. */
@@ -227,12 +246,13 @@ export async function wakeInstalledAdapterDebts(repos:import('../repository/type
   const waiting=debts.filter(debt=>debt.cause==='AWAITING_ADAPTER');
   if(!waiting.length)return debts;
   const adapters=await installedAdapters();
+  const manual=await readFieldManual(repos,{role:'DETECTIVE'});
   const latest=await repos.scoutResults.readLatest(waiting.map(debt=>debt.obligationId),{
-    refusal:true,outcome:true,recoveryCapabilityVersion:true,narrative:true,nextRungs:true,candidates:true,rungs:true});
+    attemptId:true,refusal:true,outcome:true,recoveryCapabilityVersion:true,narrative:true,nextRungs:true,candidates:true,rungs:true});
   return debts.map(debt=>{
     const result=latest.get(debt.obligationId) as import('../scheduler/scout-result.ts').ScoutResult|undefined;
     if(debt.cause!=='AWAITING_ADAPTER' || !result || result.outcome!=='NEEDS_ADAPTER' || result.refusal!==null ||
-      !hasUntriedAdapter(result,adapters))return debt;
+      !hasUntriedAdapter(result,adapters,manual.store.entries))return debt;
     return {...debt,cause:'EXTRACTION_FAILED' as const,retryAt:now,detail:debt.detail+'; installed adapter changed: Detective can try the saved bytes.'};
   });
 }

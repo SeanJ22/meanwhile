@@ -6,7 +6,8 @@ import { publishAdapterPullRequest, plainAdapterFor, workAdapterQueue } from '..
 import {createMemoryRepositories} from '../lib/control-plane/repository/memory.ts';
 import {MODELS} from '../lib/models.ts';
 import {SendBudgetRefusal} from '../lib/control-plane/expansion/spend-holds.ts';
-import {solvedScoutResult,readSubjectScoutHistory,wakeInstalledAdapterDebts} from '../lib/control-plane/workers/detective.ts';
+import {solvedScoutResult,readSubjectScoutHistory,wakeInstalledAdapterDebts,adapterWaitReasonFromKnowledge} from '../lib/control-plane/workers/detective.ts';
+import {newFieldManualEntry,writeFieldManual} from '../lib/control-plane/field-manual.ts';
 import { sourceReliabilityKey, reduceSourceReliability } from '../lib/control-plane/scheduler/scout-reliability.ts';
 import { adapterWaitReason, investigationRole, subjectScoutHistory, reusableScoutCandidates, scoutFactGrounded, failureResponderExecutor } from '../lib/control-plane/workers/detective.ts';
 import { installedAdapters, installedAdapterVersion, runInstalledAdapter } from '../lib/control-plane/scheduler/scout-adapters.ts';
@@ -114,6 +115,32 @@ test('legacy adapter debts wake for installed code and stay held after that same
  assert.equal(reopened.cause,'EXTRACTION_FAILED');assert.equal(reopened.retryAt,now);assert.equal(reopened.consecutiveFailures,2058);
  await repos.scoutResults.append('pending','tried',{...pending,rungs:[{tool:'run_adapter',observed:'Installed adapter '+name+'@'+installedAdapterVersion(name)} as never]},now);
  assert.equal((await wakeInstalledAdapterDebts(repos,[debt],now))[0].cause,'AWAITING_ADAPTER');
+});
+
+test('Engineer knowledge resumes a failure whose narrative predates the generated adapter name',async()=>{
+ const repos=createMemoryRepositories(),name='uncapped-source-links',now='2026-10-02T00:00:00Z';
+ const pending={attemptId:'failed-attempt',refusal:null,outcome:'NEEDS_ADAPTER',recoveryCapabilityVersion:SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION,
+  narrative:'The source template needs code to extract its document routes',nextRungs:[],candidates:[],rungs:[]} as unknown as ScoutResult;
+ const debt={obligationId:'pending',cause:'AWAITING_ADAPTER',retryAt:'2026-10-03',consecutiveFailures:7} as Parameters<typeof wakeInstalledAdapterDebts>[1][number];
+ await repos.scoutResults.append('pending','old',pending,now);
+ const entry=(sourceAttemptId:string,files:unknown)=>newFieldManualEntry('engineer-adapter','platform',{
+  role:'SHARED',kind:'ENGINEER_ADAPTER_PR',title:'generated-platform',summary:'Generated reusable adapter',outcome:'REFERENCE',
+  payload:{sourceAttemptId,files}});
+ for(const knowledge of [entry('another-attempt',['lib/sources/platform-adapters/'+name+'.ts']),
+   entry(pending.attemptId,['lib/sources/platform-adapters/'+name+'.test.ts']),
+   entry(pending.attemptId,['lib/sources/platform-adapters/not-installed.ts']),entry(pending.attemptId,null)]) {
+  assert.match(adapterWaitReason([pending],[name],[knowledge])!,/AWAITING_ADAPTER/);
+ }
+ assert.match((await adapterWaitReasonFromKnowledge(repos,[pending]))!,/AWAITING_ADAPTER/);
+ await writeFieldManual(repos,[entry(pending.attemptId,['lib/sources/platform-adapters/'+name+'.ts'])],now);
+ assert.equal(await adapterWaitReasonFromKnowledge(repos,[pending]),null);
+ const reopened=(await wakeInstalledAdapterDebts(repos,[debt],now))[0];
+ assert.equal(reopened.cause,'EXTRACTION_FAILED');assert.equal(reopened.retryAt,now);assert.equal(reopened.consecutiveFailures,7);
+ const tried={...pending,rungs:[{tool:'run_adapter',observed:'Installed adapter '+name+'@'+installedAdapterVersion(name)} as never]};
+ await repos.scoutResults.append('pending','tried',tried,now);
+ assert.match((await adapterWaitReasonFromKnowledge(repos,[tried]))!,/AWAITING_ADAPTER/);
+ assert.equal((await wakeInstalledAdapterDebts(repos,[debt],now))[0].cause,'AWAITING_ADAPTER');
+ assert.equal(await adapterWaitReasonFromKnowledge(repos,[{...tried,rungs:[{tool:'run_adapter',observed:'Installed adapter '+name+'@old-version'} as never]}]),null);
 });
 
 test('shared client tools preserve source bytes and date-window paging',async()=>{

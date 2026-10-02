@@ -88,10 +88,9 @@ export function readZctaShares(root: string, wanted: ReadonlySet<string>, states
  * governments it blocks by the same certain-overlap rule as a registered one,
  * rather than by wholly-inside ZCTAs alone.
  */
-export function readTerritoryIndex(root: string, registries: readonly JurisdictionRegistry[], states = [...new Set(registries.map(registry => registry.stateCode))], zips?: ReadonlySet<string>, wholeStates: ReadonlySet<string> = new Set()): TerritoryIndex {
+export function readTerritoryIndex(root: string, registries: readonly JurisdictionRegistry[], states = [...new Set(registries.map(registry => registry.stateCode))], zips?: ReadonlySet<string>): TerritoryIndex {
   const selected = new Set(states.map(state => state.toUpperCase()));
-  const whole = new Set([...wholeStates].map(state => state.toUpperCase()));
-  const units = [...selected].flatMap(state => readCensusUnitTerritories(root, [state], whole.has(state) ? undefined : zips));
+  const units = readCensusUnitTerritories(root, states, zips);
   const wanted = new Set<string>();
   for (const unit of units) {
     const key = unitShareKey(unit);
@@ -101,7 +100,7 @@ export function readTerritoryIndex(root: string, registries: readonly Jurisdicti
     const id = registryIdForUnit(unit);
     return id ? [id, `${id}-${unit.pid6}`] : [];
   }));
-  const scopedRegistries = registries.filter(registry => selected.has(registry.stateCode.toUpperCase())).map(registry => zips && !whole.has(registry.stateCode.toUpperCase()) ? {
+  const scopedRegistries = registries.filter(registry => selected.has(registry.stateCode.toUpperCase())).map(registry => zips ? {
     ...registry, jurisdictions: registry.jurisdictions.filter(j => j.govClass === "STATE" || unitIds.has(j.id) || Boolean(j.censusDivision && wanted.has(j.censusDivision))),
   } : registry);
   /* A registry read from registration places each government by the division its body sits on, by that division's own layer and GEOID (2026-09-25). */
@@ -264,7 +263,7 @@ export async function loadExpansionPlan(input: {
   /** Injected in tests; the runner uses the published lookup. */
   readonly loadLookup?: () => Promise<LookupState>;
   /** Injected in tests; the runner reads the committed territories and the preloaded registries. */
-  readonly loadTerritory?: (states: readonly string[], zips: ReadonlySet<string>, wholeStates: ReadonlySet<string>) => TerritoryIndex;
+  readonly loadTerritory?: (states: readonly string[], zips: ReadonlySet<string>) => TerritoryIndex;
   readonly loadNationalZip?: (zip: string) => Promise<readonly PlaceDivision[]>;
   /**
    * Called once the scopes are resolved, with every state they span (a metro's member states included), before
@@ -355,14 +354,11 @@ export async function loadExpansionPlan(input: {
     try {
       const states = [...new Set(scopes.flatMap(scope => scope.states))];
       const zips = new Set(scopes.flatMap(scope => scope.kind === "RESOLVED" ? [...scope.zctas] : []));
-      // A whole-state job also owes governments with no mapped territory.
-      // Preserve those without widening the other states' place jobs.
-      const wholeStates = new Set(scopes.filter(scope => scope.decision.geography.type === "state").flatMap(scope => scope.states));
       territory = (input.loadTerritory ?? (() => {
         const registries = Object.values(installedOperationalReferenceRegistries(states));
         if (registries.length === 0) throw new Error("OPERATIONAL_REFERENCE_READ_NOT_INITIALIZED: no promoted jurisdiction registry was preloaded");
-        return readTerritoryIndex(input.root, registries, states, zips, wholeStates);
-      }))(states, zips, wholeStates);
+        return readTerritoryIndex(input.root, registries, states, zips);
+      }))(states, zips);
     } catch (error) {
       territoryDetail = error instanceof Error ? error.message : String(error);
       conditions.push(`the expansion territory index could not be built (${territoryDetail}); no work is placed in a scope this cycle`);

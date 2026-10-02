@@ -361,10 +361,6 @@ test("on the committed data, Pima County holds Pima and Tucson and none of its n
   const scoped = readCensusUnitTerritories(root, ["AZ"], new Set(["85635"]));
   assert.ok(scoped.length > 0 && scoped.every(unit => unit.state === "AZ"));
   assert.ok(scoped.length < readCensusUnitTerritories(root, ["AZ"]).length, "a ZIP retains its ring rather than every unit in the state");
-  const stateJob = readTerritoryIndex(root, registries, ["AZ"], new Set(["85635"]), new Set(["AZ"]));
-  const fullState = readTerritoryIndex(root, registries, ["AZ"]);
-  assert.deepEqual([...stateJob.unplaced.keys()].sort(), [...fullState.unplaced.keys()].sort(), "a whole-state job still owes every unmapped government");
-  assert.equal(stateJob.bySubject.size, fullState.bySubject.size);
   const national = JSON.parse(readFileSync(join(root, "data/derived/zip-governments.json"), "utf8")) as {
     zips: Record<string, { layer: string; id: string; samples: number }[]>;
   };

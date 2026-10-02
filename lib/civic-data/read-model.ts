@@ -54,8 +54,10 @@ function durableProjectionHash(value: unknown): string | null {
     const encoded = JSON.stringify(value);
     if (encoded === undefined) return null;
     const durable = JSON.parse(encoded) as unknown;
-    if (canonicalCivicDataJson(value) !== canonicalCivicDataJson(durable)) return null;
-    return createHash("sha256").update(canonicalCivicDataJson(durable)).digest("hex");
+    const currentCanonical = canonicalCivicDataJson(value);
+    const durableCanonical = canonicalCivicDataJson(durable);
+    if (currentCanonical !== durableCanonical) return null;
+    return createHash("sha256").update(durableCanonical).digest("hex");
   } catch {
     return null;
   }

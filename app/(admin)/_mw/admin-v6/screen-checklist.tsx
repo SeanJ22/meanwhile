@@ -45,11 +45,14 @@ const percentWords = (g: ScoreGroup) => (g.percent === null ? "—" : `${g.perce
  * back publishing, and a fact that passes verification is published whatever
  * this says.
  */
+const FOUND_WORDS: Readonly<Record<string, string>> = { "local-jurisdiction": "Local governments", "candidate-enrichment": "Candidates", "meetings-discovery": "Meetings" };
+
 function PlaceScoreCard(props: { readonly score: PlaceScoreView; readonly group: string; readonly onGroup: (g: string) => void }) {
   const v = useV6();
   const { score } = props;
   const o = score.overall;
   const words = score.sendWords;
+  const found = v.data.spend.data?.scoutOutcomes ?? null;
   return (
     <Card title={`Checklist score · ${score.placeLabel}`} aside={<span className={s.meta}>Read {mst(score.observedAt)}</span>}>
       <div className={s.stack}>
@@ -59,6 +62,7 @@ function PlaceScoreCard(props: { readonly score: PlaceScoreView; readonly group:
         </div>
         <ScoreBar g={o} label="Everything this place is owed" tall />
         <div className={s.legend}>{SCORE_PARTS.map((p) => <span key={p.key} className={s.legendItem}><Swatch cls={p.cls} />{p.words} · {count(o[p.key])}</span>)}</div>
+        {found && found.length > 0 && <p className={cx(s.p, s.small)}>Agents found in the last 24 hours, across all places: {found.map((f) => `${FOUND_WORDS[f.recordClass] ?? f.recordClass.replace(/-/g, " ")} ${count(f.found)} evidence, ${count(f.route)} routes`).join(" · ")}</p>}
         {score.target && <p className={cx(s.p, s.small)}>Target: <strong>{score.target.goalPercent}%</strong> · now {percentWords(o)}{o.percent !== null && o.percent >= score.target.goalPercent ? " · reached" : ""} · set {mst(score.target.setAt)}</p>}
         <Actions actions={[{ kind: "target-set", target: v.scopeKey, label: score.target ? "Change the target" : "Set a target" }, ...(score.target ? [{ kind: "target-clear" as const, target: v.scopeKey, label: "Clear the target" }] : [])]} />
         {words && <Actions actions={[{ kind: "send-agents", target: v.scopeKey, label: "Send agents to fill the blanks", payload: { words } }]} primaryFirst />}

@@ -61,6 +61,8 @@ export interface ModelLaneFacts {
    * as a sentence. Empty when every control read cleanly.
    */
   readonly unreadableControls: readonly string[];
+  /** Existing shared spend accounting could not safely admit a model request. */
+  readonly spendHold?: string | null;
 }
 
 export interface ModelLaneClosure {
@@ -120,6 +122,9 @@ export function modelLaneClosure(f: ModelLaneFacts): ModelLaneClosure | null {
         `${f.activation.openRecordClasses.length} record class(es) open, so paid model work would only accumulate unread. ` +
         "Scouts, the pre-warm and the auditor wait for the gate; plain-code work and routine publication continue",
     };
+  }
+  if (f.spendHold != null) {
+    return { code: "LANE_DISABLED", reason: `${f.spendHold}; paid model work waits while held and plain-code work continue` };
   }
   return null;
 }

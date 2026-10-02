@@ -1561,9 +1561,9 @@ const laneClosure = modelLaneClosure({
   pauseIntentId: intents.pauseIntentId ?? null,
   runnerPaused: intents.runnerPause.paused,
   runnerPauseIntentId: intents.runnerPause.intent?.intentId ?? null,
+  spendHold: paidSpendHold,
   unreadableControls,
-}) ?? (paidSpendHold === null ? null : { code: "LANE_DISABLED" as const,
-  reason: `${paidSpendHold}; paid model work waits while held and plain-code work continue` });
+});
 const laneDisabledCode = laneClosure?.code ?? null;
 const laneDisabledReason = laneClosure?.reason ?? null;
 const modelLaneEnabled = laneClosure === null;
@@ -2924,14 +2924,14 @@ console.log(
 // Worker processes pull the existing ledger. Their results are joined before
 // finalization, alongside the independent discovery/publication passes.
 async function makeAutonomousFleet() {
-  const fleetTransport = paidWorkerCapacity() > 0 ? workerMessages : null;
+  const fleetTransport = modelLaneEnabled ? workerMessages : null;
   return autonomousStandingRuntime({ root: ROOT, repos, now: nowIso, environment: process.env,
     ...(scoutSearch ? { search: scoutSearch } : {}),
     ...(scoutSearchLifetime ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime : scoutSearch ?? undefined } : {}),
     spaceOut: spacer, browse: browseWithPlaywright,
     openBytes: fleetSafety.guardedOpenBytes("public-web", "registered autonomous Fleet acquisition"),
     openBytesFor: subject => fleetSafety.guardedOpenBytes("public-web", subject),
-    ...(fleetTransport !== null ? { transport: fleetTransport,
+    ...(fleetTransport !== null && paidWorkerCapacity() > 0 ? { transport: fleetTransport,
       transportFor: autonomousTransportFor(fleetTransport), reserveScoutEscalation: scoutEscalationReservation(fleetSafety) } : {}),
     auditCeilingUsd: effectiveCeilingUsd,
     lifetimeHuntSubject: subject => lifetimeHuntSubjects.has(subject) });

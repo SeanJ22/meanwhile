@@ -65,9 +65,17 @@ export function projectHeldPlaceCapture(
   for (const roster of registry?.bodyRosters ?? []) {
     const divisions = divisionsFor(roster.bodyId, null);
     if (!divisions.some(id => wanted.has(id))) continue;
+    // Classify the represented office from its canonical body territory, not
+    // titles such as "Senator" or "President", which also occur locally.
+    const territory = bodies.get(roster.bodyId)?.ocdId ?? "";
+    const captureKind: PlaceCaptureKind | undefined = /^ocd-division\/country:us\/(?:state|district|territory):[^/]+\/sld[ul]:[^/]+$/.test(territory)
+      ? "state-legislator"
+      : /^ocd-division\/country:us\/(?:state|district|territory):[^/]+\/(?:county|place|cousub|school_district|special_district):[^/]+(?:\/[^/]+)*$/.test(territory)
+        ? "local-officeholder" : undefined;
     for (const member of roster.members) {
       if (!member.name || !member.officeTitle) continue;
-      subjects.set(member.id, { id: member.id, kind: "seat", divisionIds: divisions, label: member.officeTitle });
+      subjects.set(member.id, { id: member.id, kind: "seat", divisionIds: divisions, label: member.officeTitle,
+        ...(captureKind ? { captureKind } : {}) });
       const source = member.membershipSource ?? roster;
       add(member.id, "OFF-04", { name: member.name, office: member.officeTitle }, source.sourceUrl, source.collectedAt, 30 * 24);
       add(member.id, "OFF-08", { name: member.name, office: member.officeTitle }, source.sourceUrl, source.collectedAt, 30 * 24);

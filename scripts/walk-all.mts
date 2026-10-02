@@ -7093,7 +7093,7 @@ for (const target of SCOPE_ADDRESSES) {
         "SC0831",
         MONEY[1][1],
         /No reports on file/i.test(absent) &&
-          /not a statement that no money was raised/i.test(absent) &&
+          !/not a statement/i.test(absent) &&
           !/\$\s?0\b/.test(absent),
         `the money pane reads: ${absent.replace(/\s+/g, " ").slice(0, 220)}`,
       );

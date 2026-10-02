@@ -149,6 +149,7 @@ import {
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LevelTag } from "@/components/ui/level-tag";
 import type { ReactionViewContext } from "@/lib/reactions/client";
+import { BallotCapture } from "@/components/ballot/ballot-capture";
 import { tierForOcdId } from "@/lib/ocd/tiers";
 import { Logo } from "@/components/brand/logo";
 import { PRODUCT_NAME, titleFor } from "@/lib/brand";
@@ -1394,6 +1395,7 @@ export default async function BallotPage({
       the trap has nothing to bite: the columns divide CARDS, not FIELDS.
     */
     <main className="mx-auto max-w-2xl px-4 py-8 text-paper lg:max-w-[68rem] lg:px-8 lg:py-10 xl:max-w-[76rem]">
+      <BallotCapture zip={zip} />
       {/*
         **DARK-3 (2026-08-25) — THE TOGGLE IS ON THIS PAGE TOO.**
 

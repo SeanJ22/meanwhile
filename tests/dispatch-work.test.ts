@@ -382,7 +382,7 @@ test("all missing requirements are created in one pass without a cycle window", 
 
 test("a geography in a state with no promoted registry is blocked by name, and nothing is invented for it", async () => {
   /* Arizona unregistered: the same Census units, and no registry to say what they owe. */
-  const withoutAz = readTerritoryIndex(ROOT, [REGISTRIES.nh, REGISTRIES.nj]);
+  const withoutAz = readTerritoryIndex(ROOT, [REGISTRIES.nh, REGISTRIES.nj], ["AZ", "NH", "NJ"]);
   const repos = createMemoryRepositories();
   const { world } = await cycleWorld(repos, T0);
   const plan = planDispatchWork({
@@ -443,7 +443,7 @@ test("a promoted registry the runtime's reader refuses is named as that, never u
   const readable = new Map([["nh", REGISTRIES.nh], ["nj", REGISTRIES.nj]]);
   const plan = planDispatchWork({
     targets: [scopeWorkTarget(await planned(decision(PIMA))), dispatchWorkTarget({ intentId: "i-az", note: "Arizona", requestedAt: T0 })],
-    world: { ...world, territory: readTerritoryIndex(ROOT, [REGISTRIES.nh, REGISTRIES.nj]), registries: readable, refusedRegistries: refused },
+    world: { ...world, territory: readTerritoryIndex(ROOT, [REGISTRIES.nh, REGISTRIES.nj], ["AZ", "NH", "NJ"]), registries: readable, refusedRegistries: refused },
   });
   const [dispatch, scope] = dispatchWorkReading(plan, null, CONTEXT).targets;
   for (const t of [scope, dispatch]) {

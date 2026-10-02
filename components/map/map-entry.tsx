@@ -25,6 +25,9 @@ import { applyFilters, noticeShouldExpand } from "@/lib/state/derive";
 import { deriveActiveDistrictTypes } from "@/lib/state/district-intent";
 import { RADIUS_LADDER_KM } from "@/lib/meetings/constants";
 import { carryPins } from "@/lib/map/carry-pins";
+import { captureEvent } from "@/lib/events/client";
+import { useActiveScroll } from "@/hooks/use-active-scroll";
+import { readLocationOriginFor } from "@/lib/state/location-origin";
 import { bodyDisplayName, readerGovernmentName, withReaderNames } from "@/lib/text/reader-names";
 import { requestRadiusKm, shouldRequery } from "@/lib/map/viewport-radius";
 import { useStateFocus } from "@/hooks/use-state-focus";
@@ -508,6 +511,15 @@ function MapEntryInner() {
    * running this on every location change costs nothing.
    */
   const { activateAt } = focusState;
+  // A ZIP the reader is looking at, once per ZIP, with HOW they reached it
+  // (typed, demo chip, link...) — the server stamps home vs browsing from that.
+  const viewedZip = location?.zip ?? null;
+  useEffect(() => {
+    if (viewedZip) {
+      captureEvent({ type: "ZIP_VIEW", zip: viewedZip, locationOrigin: readLocationOriginFor(viewedZip) });
+    }
+  }, [viewedZip]);
+  useActiveScroll("MAP");
   useEffect(() => {
     // Depends on `activateAt` alone, never on the whole `focusState` object
     // (g4 item 1). The object used to be rebuilt every render, so this effect
@@ -728,6 +740,11 @@ function MapEntryInner() {
   /** The one-at-a-time rule: any large surface replaces every other. */
   const openLarge = useCallback(
     (next: LargeSurface) => {
+      captureEvent(
+        next.kind === "official"
+          ? { type: "CARD_OPEN", cardId: `OFFICIAL:${next.holder.id}`, cardKind: "OFFICIAL" }
+          : { type: "CARD_OPEN", cardId: `${next.subject.subjectKind}:${next.subject.subjectId}`, cardKind: next.subject.subjectKind },
+      );
       setLarge(next);
       // 4c: the sidebar and the who-governs card are surfaces too, and they
       // yield to a battlecard exactly as a battlecard yields to them.
@@ -2971,7 +2988,7 @@ function placeSubject(
            A reader needs to know this absence is OURS and that it is not a
            finding about the place — neither of which requires the app to grade
            its own coverage in the middle of the sentence. */
-        "We haven't recorded any governing body in this place yet — which is not a statement that it has none.",
+        "We’re working on getting this info.",
     },
     // A place has no roster of its own — the people are on the bodies' cards,
     // one level down, and saying so is better than an empty tab.

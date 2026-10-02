@@ -7,6 +7,7 @@ import type { OwnerSnapshot } from "../owner-surface.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { AdminV6SectionEnvelope, V6MoneySources, V6Period, V6PlaceScope, V6Refusal } from "./v6-hunts-read.ts";
 import { validateV6Query } from "./v6-hunts-read.ts";
+import { readAreaZips } from "./v6-national-geography.ts";
 
 const NO_STORE = { "cache-control": "private, no-store, no-cache, must-revalidate" };
 
@@ -21,16 +22,18 @@ export interface V6ReadSources extends V6MoneySources {
 }
 
 /** Three bounded reads: the owner policy row, four named snapshot fields, and (Money) the one fleet-safety row. */
-export async function readV6Sources(repos: ControlPlaneRepositories, readAt: string, withSafety: boolean): Promise<V6ReadSources> {
-  const [config, snapshot, safety] = await Promise.all([
+export async function readV6Sources(repos: ControlPlaneRepositories, readAt: string, withSafety: boolean, scope: V6PlaceScope | null = null): Promise<V6ReadSources> {
+  const [config, snapshot, safety, scopeZips] = await Promise.all([
     readAdminConfig(repos),
     repos.ownerSnapshots.readNarrowed("current", { publishedAt: true, billingAttribution: true, providerBilling: true })
       .then(row => ({ ok: true as const, value: (row?.value ?? null) as V6MoneySnapshotFields | null }), () => ({ ok: false as const, value: null })),
     withSafety ? readFleetSafety(repos) : Promise.resolve(null),
+    readAreaZips(scope),
   ]);
   const parsed = config.kind === "STORE_UNREACHABLE" ? null : expansionScopesOf(config.kind === "HELD" ? config.value : null);
   const fleet = safety?.kind === "HELD" ? safety.value.fleetSafety ?? null : null;
   return {
+    scopeZips,
     scopes: parsed?.scopes ?? null,
     malformedScopes: parsed?.malformed ?? 0,
     configGap: config.kind === "STORE_UNREACHABLE" ? config.detail : null,
@@ -69,7 +72,7 @@ export async function v6MoneyHuntsGet(request: NextRequest, options: {
   if (!opened.ok) return NextResponse.json({ state: "UNREAD", code: "CONTROL_PLANE_UNREAD", says: opened.detail },
     { status: 503, headers: NO_STORE });
   const readAt = new Date().toISOString();
-  const sources = await readV6Sources(opened.repos, readAt, options.withSafety);
+  const sources = await readV6Sources(opened.repos, readAt, options.withSafety, query.scope);
   const out = options.project({ scopeKey: query.scopeKey, scope: query.scope, period: query.period, sources });
   if ("kind" in out) return NextResponse.json({ code: out.code, says: out.says, ...(out.dependency ? { dependency: out.dependency } : {}) },
     { status: out.status, headers: NO_STORE });

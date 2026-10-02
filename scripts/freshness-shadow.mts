@@ -19,7 +19,7 @@ import { planRepairBrief } from "../lib/control-plane/workers/plan-repair.ts";
 import { observeCyclePhases } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { cycleStateWriter } from "../lib/control-plane/scheduler/cycle-state-writer.ts";
 import { selectedCycleRepositories } from "../lib/control-plane/scheduler/cycle-selection.ts";
-import { readRelaunchTriggerVerification } from "../lib/control-plane/scheduler/host-supervision.ts";
+import { readRelaunchTriggerVerification, websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { runAdminEvidenceMirror } from "../lib/control-plane/evidence/admin-bridge-runner.ts";
 import { retainRecentRoutineMeetingEvidence } from "../lib/control-plane/workers/routine-meeting-intake.ts";
@@ -1226,7 +1226,7 @@ const expansionLoad = await loadExpansionPlan({
       ([state, why]) => `the ${state.toUpperCase()} registration could not be read as a jurisdiction registry (${why}); nothing in it is placed or created`,
     );
   },
-  ...("registries" in promoted ? { loadTerritory: () => readTerritoryIndex(ROOT, [...registriesNow(promoted.registries).values()]) } : {}),
+  ...("registries" in promoted ? { loadTerritory: (states: readonly string[], zips: ReadonlySet<string>) => readTerritoryIndex(ROOT, [...registriesNow(promoted.registries).values()], [...states], zips) } : {}),
 });
 runtimeConditions.push(...expansionLoad.conditions);
 const expansionPlan = expansionLoad.plan;
@@ -1237,7 +1237,6 @@ const lifetimeHuntSubjects = new Set((expansionPlan?.scopes ?? [])
 const lifetimeHuntWorkIds = new Set(sync.all.filter(o => lifetimeHuntSubjects.has(o.subjectId)).map(o => o.id));
 const lifetimeHuntWork = (work: string): boolean => lifetimeHuntSubjects.has(work) || lifetimeHuntWorkIds.has(work);
 const hasLifetimeHunt = lifetimeHuntSubjects.size > 0;
-const fundedHunts = (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED" && scope.decision.budgetUsd > 0);
 let placeOrder: readonly string[] = [];
 let placeOrderDirty = true;
 let placeOrderRead: Promise<void> | null = null;
@@ -1271,10 +1270,6 @@ const placeRankFor = (subject: string): number | null => {
   return ranks.length ? Math.min(...ranks) : null;
 };
 const providerQueue = new ModelProviderQueue({
-  ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}) });
-const workerCapacity = researchWorkerCapacity({ hunts: Math.max(1, fundedHunts.length),
-  availableUsd: fundedHunts.reduce((sum, scope) => sum + scope.decision.budgetUsd, 0),
-  requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
   ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}) });
 /** Current place order first; an unplaced owner dispatch follows the selected places. */
 const placementRank = (obligationId: string): number | null => {
@@ -1569,6 +1564,10 @@ try {
   runtimeConditions.push(`the cost ledger could not be read (${ledgerUnreadable}); the rolling ceiling cannot be enforced, so Scout work is deferred`);
 }
 const spendWindow = researchSpendInWindow(costLedger, NOW);
+const workerCapacity = researchWorkerCapacity({ readyWork: dueThisCycle.length,
+  availableUsd: ledgerUnreadable !== null || spendWindow.windowUsd === null ? 0 : Math.max(0, effectiveCeilingUsd - spendWindow.windowUsd),
+  requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
+  ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}) });
 let finalSpendWindow: ReturnType<typeof researchSpendInWindow> | null = null;
 let finalSpendAsOf: string | null = null;
 let spentThisCycle = 0;
@@ -1587,7 +1586,9 @@ try {
 }
 /* The ceiling in force and the paid-search switch were read above the lane closure. */
 
+const websiteSize = websiteSizeFromHoldings(trackedStateCodes, ROOT);
 const fleetSafety = new FleetSafetyController({
+  websiteSize,
   now: NOW,
   costs: costLedger,
   costLedgerReadable: ledgerUnreadable === null,
@@ -1736,7 +1737,8 @@ if (dispatchTargets.length > 0) {
     if (dispatchTargets.some((t) => t.kind === "DISPATCH" && t.target.states.some((s) => !registries.has(s)))) {
       try {
         censusUnitsByState = new Map<string, number>();
-        for (const unit of readCensusUnitTerritories(ROOT)) {
+        const states = [...new Set(dispatchTargets.flatMap(target => target.kind === "DISPATCH" ? target.target.states : []))];
+        for (const unit of readCensusUnitTerritories(ROOT, states)) {
           const state = unit.state.toUpperCase();
           censusUnitsByState.set(state, (censusUnitsByState.get(state) ?? 0) + 1);
         }
@@ -1896,20 +1898,20 @@ let releaseDrainRequested = false;
 process.on("message", message => {
   if (message !== null && typeof message === "object" && "kind" in message && message.kind === "RUNTIME_RELEASE_DRAIN") {
     releaseDrainRequested = true;
-    console.log("  runtime release requested: new worker admissions closed; active workers finish and queued work remains owed");
+    console.log("  runtime release requested: current wave finishes normally; no new autonomous wave will start");
   }
 });
 const workerSlots = workerProcessSlots(() => {
   const limits = providerQueue.limits(MODELS.haiku.model);
   const spent = fleetSafety.snapshot(nowIso()).rolling24Hours.modelUsd;
-  return Math.max(1, researchWorkerCapacity({ hunts: Math.max(1, fundedHunts.length),
+  return Math.max(1, researchWorkerCapacity({
     availableUsd: spent === null ? 0 : Math.max(0, effectiveCeilingUsd - spent),
     requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
-    requestsPerMinute: limits?.requestsPerMinute ?? undefined,
+    requestsPerMinute: limits?.requestsPerMinute ?? (process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) : undefined),
     inputTokensPerMinute: limits?.inputTokensPerMinute ?? undefined,
     outputTokensPerMinute: limits?.outputTokensPerMinute ?? undefined,
     inputTokensPerRequest: 8192, outputTokensPerRequest: RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn }));
-}, { admissionsOpen: () => !releaseDrainRequested });
+});
 // Hand out durable leases before unrelated histories or parent execution.
 const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
   runnerPaused: intents.runnerPause.paused });
@@ -2899,9 +2901,9 @@ async function runAutonomousWave() {
     slots: workerSlots,
     config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: modelLaneEnabled,
       searchEnabled: scoutSearch !== null, ceilingUsd: effectiveCeilingUsd, fundedSubjects: [...lifetimeHuntSubjects] },
-    capacity: () => modelLaneEnabled ? researchWorkerCapacity({ hunts: taskIds.length, availableUsd,
+    capacity: () => modelLaneEnabled ? researchWorkerCapacity({ readyWork: taskIds.length, availableUsd,
       requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
-      requestsPerMinute: providerQueue.limits(MODELS.haiku.model)?.requestsPerMinute ?? undefined,
+      requestsPerMinute: providerQueue.limits(MODELS.haiku.model)?.requestsPerMinute ?? (process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) : undefined),
       inputTokensPerMinute: providerQueue.limits(MODELS.haiku.model)?.inputTokensPerMinute ?? undefined,
       outputTokensPerMinute: providerQueue.limits(MODELS.haiku.model)?.outputTokensPerMinute ?? undefined,
       inputTokensPerRequest: 8192, outputTokensPerRequest: RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn }) : taskIds.length,
@@ -3062,6 +3064,7 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
         sync.all.filter((o) => o.id.startsWith("freshness:meetings-discovery:") && o.openOccurrenceId !== null).map((o) => o.subjectId),
       ),
       runtime: {
+        websiteSize,
         open: async ({ url, headers, timeoutMs }) => {
           const got = await openDiscovery({ url, headers, timeoutMs });
           return {

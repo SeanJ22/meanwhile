@@ -91,11 +91,11 @@ async function main(): Promise<void> {
       workerPublications: report, nationalPlaces, nationalPublications, failures }, null, 2));
     const delivery = nationalDelivery(nationalPublications);
     delivery.gaps.push(...nationalPlaces.flatMap(place => "deferred" in place ? [{ key: `zip:${place.zip}`, detail: place.deferred }] : []));
-    // An actual completed acquisition can find everything already held. Name
-    // the canonical door with zero delivery; no-item and failed passes still
-    // have no receipt, and this does not fabricate a store confirmation.
+    // The worker also completes when its lease's due check finds that another
+    // pass already worked the place. Name the current door with zero delivery;
+    // otherwise this ordinary queue race exits without a receipt forever.
     if (!delivery.versionId && delivery.records === 0 && delivery.gaps.length === 0 && failures.length === 0 &&
-      nationalPlaces.some(place => !("deferred" in place))) {
+      (nationalPlaces.some(place => !("deferred" in place)) || Boolean(nationalZips?.split(",").some(Boolean)))) {
       const pointer = await store.readPromotionIdentity("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE);
       delivery.versionId = pointer?.versionId ?? null;
       delivery.candidateId = pointer?.versionId ?? null;

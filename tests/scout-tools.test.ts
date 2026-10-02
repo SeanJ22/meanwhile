@@ -1,6 +1,9 @@
 import { SOURCE_API_SPECS } from "../lib/control-plane/scheduler/scout-api.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
 
 import type { Artifact } from "../lib/control-plane/evidence/artifact.ts";
 import { scheduleObligation, isScheduled } from "../lib/control-plane/scheduler/obligation.ts";
@@ -314,6 +317,37 @@ test('installed adapters use handed bytes and preserve their source provenance w
  assert.equal(output.knowledgeRead?.contentHash,hash);assert.equal(output.knowledgeRead?.length,text.length);
  const refused=await kit.call('run_adapter',{...IN,adapter:'uncapped-source-links',artifactId:'other-job'},null);
  assert.equal(refused.ok,false);assert.match(refused.forModel,/NOT_HANDED/);
+});
+
+test('freshly vaulted pages can be read and parsed by installed adapters in the same Scout walk',async()=>{
+ const url=HOST+'/directory';
+ const html='<html><body><a href="/policy/BEDH">Public participation policy</a></body></html>';
+ const http=fakeTransport({[HOST+'/robots.txt']:{status:200,body:ROBOTS_ALLOW_ALL},[url]:{status:200,body:html}});
+ const kit=buildScoutToolkit(context({openOne:http.open}));
+ const fetched=await kit.call('fetch_public',{...IN,url},null);
+ assert.equal(fetched.ok,true);
+ const id=fetched.artifacts.at(-1)!.artifactId,requests=http.seen.length;
+ const read=await kit.call('read_held',{...IN,artifactId:id,offset:0},null);
+ assert.equal(read.ok,true,read.forModel);assert.match(read.forModel,/Public participation policy/);
+ const parsed=await kit.call('run_adapter',{...IN,adapter:'uncapped-source-links',artifactId:id},null);
+ assert.equal(parsed.ok,true,parsed.forModel);assert.match(parsed.forModel,/policy\/BEDH/);
+ assert.equal(parsed.knowledgeRead?.contentHash,contentHash(html));
+ assert.equal(parsed.provenance?.[0].canonicalUrl,url);assert.equal(parsed.requestCount,0);
+ assert.equal(http.seen.length,requests,'reading and parsing reuse the already saved bytes');
+ const other=buildScoutToolkit(context({openOne:async()=>{throw Error('Must not fetch');}}));
+ assert.equal((await other.call('run_adapter',{...IN,adapter:'uncapped-source-links',artifactId:id},null)).ok,false);
+});
+
+test('an unpersisted or diagnostic page never becomes current adapter input',async()=>{
+ for(const status of [200,403]) {
+  const url=HOST+'/policy',vault=recordingVault();
+  const kit=buildScoutToolkit(context({openOne:fakeTransport({[url]:{status,body:PAGE}}).open,
+    vault:status===200?async()=>({stored:false,where:'none',why:'storage unavailable'}):vault.put}));
+  const fetched=await kit.call('fetch_public',{...IN,url},null);
+  const id=fetched.artifacts.at(-1)?.artifactId??'unpersisted';
+  const parsed=await kit.call('run_adapter',{...IN,adapter:'uncapped-source-links',artifactId:id},null);
+  assert.equal(parsed.ok,false);assert.match(parsed.forModel,/NOT_HANDED/);
+ }
 });
 
 /* ================================================= (h) the evaluator */
@@ -689,6 +723,35 @@ test("SEEDED (d): robots.txt 404 is NO_ROBOTS and the GET proceeds; the artifact
 });
 
 /* ============================================= SEEDED (e): per-host cap */
+
+test("shared Scout tools read held publisher sizes without a supplied callback", async t => {
+  const root = mkdtempSync(join(tmpdir(), "s8-publisher-tools-"));
+  t.after(() => { assert.equal(dirname(resolve(root)), resolve(tmpdir())); rmSync(root, { recursive: true, force: true }); });
+  const path = join(root, "data/states/az/reference/publisher-sizes.jsonl");
+  mkdirSync(dirname(path), { recursive: true });
+  writeFileSync(path, [
+    { host: "small.example.gov", censusId: "000001", kind: "local-government", population: 9999 },
+    { host: "school.example.gov", censusId: "000002", kind: "school-district", students: 4999 },
+    { host: "large.example.gov", censusId: "000003", kind: "local-government", population: 10000 },
+    { host: "state.example.gov", censusId: "000004", kind: "state", population: 100 },
+  ].map(size => JSON.stringify({ ...size, state: "az", source: { url: "https://census.gov/test-fixture", dataset: "TEST FIXTURE" } })).join("\n"));
+  for (const host of ["small", "school", "large", "state", "unknown"]) {
+    const base = `https://${host}.example.gov`;
+    const { open, seen } = fakeTransport({
+      [`${base}/robots.txt`]: { status: 200, body: ROBOTS_ALLOW_ALL, contentType: "text/plain" },
+      [`${base}/a`]: { status: 200, body: PAGE },
+    });
+    let spaced = 0;
+    const kit = buildScoutToolkit(context({ root, openOne: open, spaceOut: async () => { spaced++; } }));
+    const small = host === "small" || host === "school";
+    for (let i = 0; i < 11; i++) {
+      const result = await kit.call("fetch_public", { url: `${base}/a`, ...IN }, null);
+      assert.equal(result.ok, !small || i < 9, `${host} request ${i}`);
+    }
+    assert.equal(seen.length, small ? 10 : 12, `${host}: counts include robots`);
+    assert.equal(spaced, small ? 10 : 0, `${host}: only a held small publisher is spaced`);
+  }
+});
 
 test("SEEDED (e): the (N+1)th request to one host is refused, naming the count; another host is unaffected", async () => {
   const other = "https://county.example.gov";

@@ -25,7 +25,8 @@ import {
   type ScopeZctas,
 } from "@/lib/control-plane/expansion/membership.ts";
 import { isExpansionCycleReading, MEMBERSHIP_METHOD } from "@/lib/control-plane/expansion/reading.ts";
-import { loadExpansionPlan, readTerritoryIndex, resolveScopes } from "@/lib/control-plane/expansion/runner-load.ts";
+import { loadExpansionPlan, readCensusUnitTerritories, readZctaShares, readTerritoryIndex, resolveScopes } from "@/lib/control-plane/expansion/runner-load.ts";
+import { readStateReference } from "../lib/control-plane/expansion/state-references.ts";
 import {
   expansionScopesOf,
   orderScopes,
@@ -355,6 +356,22 @@ test("on the committed data, Pima County holds Pima and Tucson and none of its n
   for (const inside of ["az:county:county-of-pima", "az:county:county-of-cochise"]) assert.ok(cd6.includes(inside), `${inside} lies partly in CD 6`);
   assert.ok(!cd6.includes("az:county:county-of-maricopa"), "Maricopa is not in CD 6");
   assert.ok(index.bySubject.get("az:county:county-of-pima")!.shares.size > 0, "a registered county carries its sampled ZCTA shares");
+  const az = readStateReference(root, "AZ");
+  assert.ok(az.units.every(unit => unit.state === "AZ"), "the state reference carries only its own governments");
+  const scoped = readCensusUnitTerritories(root, ["AZ"], new Set(["85635"]));
+  assert.ok(scoped.length > 0 && scoped.every(unit => unit.state === "AZ"));
+  assert.ok(scoped.length < readCensusUnitTerritories(root, ["AZ"]).length, "a ZIP retains its ring rather than every unit in the state");
+  const national = JSON.parse(readFileSync(join(root, "data/derived/zip-governments.json"), "utf8")) as {
+    zips: Record<string, { layer: string; id: string; samples: number }[]>;
+  };
+  const border = Object.entries(national.zips).find(([, edges]) => edges.some(edge => edge.layer === "county" && edge.id.startsWith("04")) && edges.some(edge => edge.layer === "county" && !edge.id.startsWith("04")));
+  assert.ok(border, "the held data includes an Arizona border ZIP");
+  const [zip, edges] = border;
+  const county = edges.find(edge => edge.layer === "county" && edge.id.startsWith("04"))!;
+  const key = `county:${county.id}`;
+  const total = edges.filter(edge => edge.layer === "county").reduce((sum, edge) => sum + edge.samples, 0);
+  assert.equal(readZctaShares(root, new Set([key]), ["AZ"]).get(key)?.get(zip), county.samples / total, "state partitioning preserves the entire border ZIP denominator");
+  assert.ok(az.zips[zip].edges.every(edge => edge.id.startsWith("04")), "the shard carries no other state's government");
 });
 
 test("the order puts DISPATCH first, then scopes by priority, and is exactly the old order with no scope", () => {

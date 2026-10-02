@@ -1,8 +1,17 @@
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import type { OfficialLinkingPage } from "./source-authority.ts";
+import { FIPS_TO_STATE } from "../ocd/fips.ts";
 
 export const ELECTION_FIELD_KINDS = ["registration_deadline", "early_voting", "polling_lookup", "registration_lookup", "ballot_lookup", "certified_outcome", "election_office"] as const;
 export type ElectionFieldKind = typeof ELECTION_FIELD_KINDS[number];
+
+/** Resolve the jurisdiction class from national geography data, including DC. */
+export function electionFieldState(divisionId: string): string | null {
+  const match = /^ocd-division\/country:us\/(state|district|territory):([a-z]{2})(?:\/|$)/.exec(divisionId);
+  if (!match) return null;
+  return Object.values(FIPS_TO_STATE).find(entry => entry.prefix === match[1] &&
+    entry.postal.toLowerCase() === match[2])?.postal ?? null;
+}
 
 export function sourcedElectionDate(value: string): boolean {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
@@ -49,7 +58,7 @@ export function electionFieldIssue(input: unknown): string | null {
   const row = input as PublishedElectionField | null;
   if (!row || row.kind !== "ELECTION_FIELD" || !row.id || !row.value) return "Election field identity is missing.";
   const value = row.value;
-  const state = /\/state:([^/]+)/.exec(value.divisionId)?.[1].toUpperCase();
+  const state = electionFieldState(value.divisionId);
   if (!state || value.state !== state || !ELECTION_FIELD_KINDS.includes(value.fieldKind) || !value.text?.trim() || !value.quote?.trim() ||
       !/^https:\/\//.test(value.url) || !Number.isFinite(Date.parse(value.verifiedAt)) || !Number.isFinite(Date.parse(value.collectedAt)) ||
       !Array.isArray(value.dates) || value.dates.some(date => !sourcedElectionDate(date))) return "Election field territory, value, source or source date is invalid.";

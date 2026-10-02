@@ -145,6 +145,22 @@ test("a charge shared by two hunts counts against each limit but is allocated on
   assert.match(money.data.otherServices, /ZIP 85635 \(Census ZCTA\) hunt: \$0\.00 known .* \$1\.00 is known\./);
 });
 
+test("a district or county binds the ZIP hunts the Census lookup puts inside it, and no other", () => {
+  const second = { ...SECOND, budgetStartedAt: SECOND.budgetStartedAt };
+  const attribution = attributionOf([ORIGINAL_ROW, { ...ORIGINAL_ROW, key: second.key, receiptId: second.receiptId, label: second.geography.label, startedAt: second.budgetStartedAt!, budgetUsd: 20 }]);
+  const inDistrict = (zips: readonly string[] | null) => hunts("geo:az.congressional_district.0406", { scopes: [ORIGINAL, second], attribution, scopeZips: zips === null ? null : new Set(zips) });
+  assert.deepEqual(envelope(inDistrict(["85635", "85122"])).data.map(h => h.placeKey), ["geo:az.zcta.85635"], "only the hunt whose ZIP is in the district");
+  assert.deepEqual(envelope(inDistrict(["85635", "85602"])).data.map(h => h.placeKey).sort(), ["geo:az.zcta.85602", "geo:az.zcta.85635"]);
+  assert.deepEqual(envelope(inDistrict(["85122"])).data, [], "a district none of the hunts' ZIPs are in has no hunt, which is a valid empty list");
+  assert.equal(refusal(inDistrict(null)).code, "SCOPE_BINDING_NOT_CONNECTED", "without the lookup the binding stays unsettled");
+  const county = hunts("geo:az.county.04019", { scopeZips: new Set(["85635"]) });
+  assert.equal(envelope(county).data.length, 1, "a county binds the same way");
+  assert.equal(refusal(hunts("geo:az.congressional_district.0406", { scopes: [ROLLING], scopeZips: new Set(["85635"]) })).code, "SCOPE_BINDING_NOT_CONNECTED", "a county hunt in a district stays unsettled");
+  const money = envelope(v6MoneySection({ scopeKey: "geo:az.congressional_district.0406", scope: { kind: "geo", state: "az", type: "congressional_district", geoid: "0406" },
+    period: { kind: "native" }, sources: sources({ scopeZips: new Set(["85635"]) }) }));
+  assert.equal(money.data.limits.length >= 1, true, "Money answers at a district once its hunts are bound");
+});
+
 test("scope: country and state include the hunt, other places exclude it, unsettled overlaps and bodies refuse", () => {
   assert.equal(envelope(hunts("us")).data.length, 1);
   const az = envelope(hunts("st:az"));

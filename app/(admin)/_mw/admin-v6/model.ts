@@ -283,6 +283,13 @@ export interface WorkerJob {
   readonly next: string;
 }
 
+/** Workers running now: in the place in view, in the whole system, and whether the read stopped at its row limit (both counts are then lower bounds). */
+export interface WorkersRunning {
+  readonly count: number;
+  readonly system: number;
+  readonly lowerBound: boolean;
+}
+
 export interface WaitingItem {
   readonly kind: string;
   readonly title: string;
@@ -309,7 +316,8 @@ export interface UpdateCard {
   readonly owner: string;
   readonly next: string;
   readonly youNeedToAct: string;
-  readonly fixId: string;
+  readonly fixId: string | null;
+  readonly status?: "SUCCEEDED" | "REFUSED" | "FAILED";
   readonly technical: readonly string[];
 }
 
@@ -578,6 +586,10 @@ export interface SpendView {
   readonly unpricedRows: number;
   readonly neon: { readonly kind: "recorded" | "not-recorded"; readonly detail: string | null;
     readonly days: readonly { readonly day: string; readonly responseBytes: number; readonly requestBytes: number; readonly requests: number }[] };
+  /** Open reservations right now over every hunt; null when not read. */
+  readonly setAsideUsd?: number | null;
+  /** The daily spending limit in force; null when not read. */
+  readonly dailyLimitUsd?: number | null;
 }
 
 /* -------------------------------------------------------------- learning */
@@ -760,7 +772,7 @@ export interface AdminV6Data {
   readonly sameCause: Sourced<readonly SameCause[]>;
   readonly workRows: Sourced<{ readonly rows: readonly WorkRow[]; readonly totals: readonly WorkStageTotal[] }>;
   readonly history: Sourced<readonly UiReceipt[]>;
-  readonly workers: Sourced<{ readonly status: WorkerStatus; readonly jobs: readonly WorkerJob[] | null; readonly waiting: readonly WaitingItem[] | null; readonly events: readonly WorkerEvent[] | null; readonly update: UpdateCard | null; readonly next: readonly string[] | null }>;
+  readonly workers: Sourced<{ readonly status: WorkerStatus; readonly jobs: readonly WorkerJob[] | null; readonly running?: WorkersRunning | null; readonly waiting: readonly WaitingItem[] | null; readonly events: readonly WorkerEvent[] | null; readonly update: UpdateCard | null; readonly next: readonly string[] | null }>;
   readonly checklist: Sourced<ChecklistView>;
   readonly agents: Sourced<readonly AgentRun[]>;
   readonly spend: Sourced<SpendView>;

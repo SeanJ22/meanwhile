@@ -34,7 +34,7 @@ const MESSAGES = {
   malformed: "A zip code is five digits.",
   unknown: "No such zip code. Check the digits.",
   uncovered:
-    "That zip isn't in our copy of the Census zip list yet. Try a nearby one.",
+    "We’re working on getting this info for that zip. Try a nearby one.",
 } as const;
 
 /**
@@ -232,6 +232,10 @@ export function WelcomeOverlay({
           </p>
           <p>And when you can&apos;t — say something anyway.</p>
         </div>
+
+        {/* Sean, October 1, 2026: the words that tell a first-time reader which
+            ZIP to give, directly above the entry boxes. */}
+        <p className="welcome-start">Start where you live</p>
 
         <div className="welcome-field">
           <ZipComb

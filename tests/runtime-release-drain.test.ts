@@ -4,7 +4,7 @@ import type { ChildProcess } from "node:child_process";
 import { runRuntimeChildren } from "../scripts/pilot-runtime-child.mts";
 import { workerProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 
-test("release drain cancels queued admissions after the active worker finishes", async () => {
+test("optional slot admission closure cancels queued work after the active worker finishes", async () => {
   let open = true;
   const slots = workerProcessSlots(() => 1, { admissionsOpen: () => open,
     availableBytes: () => 1024 ** 3, headroomBytes: 0, peakBytes: () => 1 });
@@ -45,18 +45,19 @@ test("the launcher retains its output bound with IPC enabled", async () => {
   assert.equal(result.stdout.length, 128);
 });
 
-test("a real research child drains its waiting slot, finishes active work and exits for handoff", async () => {
+test("a real research child finishes its queued current wave and starts no new wave after drain", async () => {
   let child: ChildProcess | null = null;
   const source = `
     import { workerProcessSlots } from ${JSON.stringify(new URL("../lib/control-plane/workers/worker-slots.ts", import.meta.url).href)};
-    let open = true;
-    process.on('message', m => { if (m.kind === 'RUNTIME_RELEASE_DRAIN') { open = false; release(); } });
-    const slots = workerProcessSlots(() => 1, { admissionsOpen: () => open, availableBytes: () => 1024, headroomBytes: 0, peakBytes: () => 1 });
+    let drainRequested = false;
+    process.on('message', m => { if (m.kind === 'RUNTIME_RELEASE_DRAIN') { drainRequested = true; release(); } });
+    const slots = workerProcessSlots(() => 1, { availableBytes: () => 1024, headroomBytes: 0, peakBytes: () => 1 });
     const release = await slots.acquire();
-    const queued = slots.acquire().then(() => console.log('UNEXPECTED_ADMISSION'), e => console.log(e.message));
+    const queued = slots.acquire().then(done => { console.log('queued-worker-finished'); done(); });
     console.log('queued');
     await queued;
     console.log('active-finished');
+    if (!drainRequested) console.log('UNEXPECTED_NEXT_WAVE');
     process.disconnect();
   `;
   const [result] = await runRuntimeChildren([{ id: "research", executable: process.execPath,
@@ -67,9 +68,9 @@ test("a real research child drains its waiting slot, finishes active work and ex
   });
   assert.ok(result);
   assert.equal(result.status, 0);
-  assert.match(result.stdout, /RUNTIME_RELEASE_DRAINED/);
+  assert.match(result.stdout, /queued-worker-finished/);
   assert.match(result.stdout, /active-finished/);
-  assert.doesNotMatch(result.stdout, /UNEXPECTED_ADMISSION/);
+  assert.doesNotMatch(result.stdout, /UNEXPECTED_NEXT_WAVE|RUNTIME_RELEASE_DRAINED/);
 });
 
 test("the launcher keeps the existing output limit separate for stdout and stderr", async () => {

@@ -38,6 +38,7 @@ import {
   routineTaskDeadlineMs,
   routineTaskDue,
   routineAdmissionClock,
+  unchangedRoutineProtocolFailure,
   routineTaskSelection,
   sittingWindowSignals,
   routineUnreceiptedSupervisorAttemptHistory,
@@ -55,7 +56,6 @@ import { ATTESTED_PROMOTIONS_ENV, serializeAttestedPromotions } from "../lib/civ
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import { REGISTRY_RUNTIME_SCOPE } from "../lib/registry/runtime-data-plane.ts";
 import {
-  ROUTINE_CHILD_CONCURRENCY,
   ROUTINE_CHILD_MAX_BUFFER_BYTES,
   ROUTINE_CHILD_TIMEOUT_MS,
   ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
@@ -263,7 +263,7 @@ function safeFailure(value: string): string {
  * owner log Admin consumes prevents one broken partition from monopolizing a
  * shared publisher frontier without fabricating a source attempt.
  */
-async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly RoutineSourceTask[]): Promise<RoutineSupervisorAttemptHistory> {
+async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly RoutineSourceTask[]): Promise<RoutineSupervisorAttemptHistory & { readonly protocolFailures: readonly unknown[] }> {
   const connection = controlPlaneUrlFromEnv();
   if (connection === null) {
     throw new Error(`${CONTROL_PLANE_URL_VAR} is not configured; provider-frontier fairness cannot be proved.`);
@@ -294,7 +294,13 @@ async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly Routi
         ),
     },
   );
-  return routineUnreceiptedSupervisorAttemptHistory(supervisorOutcomes, taskIds);
+  // This job's failure is saved as soon as it ends, while unrelated children
+  // can keep the round open. Waiting for the round digest repeated the defect.
+  const protocolFailures = await withControlPlaneConnectRetry(() => repos.ownerDigests.readRecentWhere(
+    HUNT_SOURCE_PROGRESS_LOG_KEY, ["huntSourceProgress", "stage"], "FAILED",
+    ROUTINE_SUPERVISOR_HISTORY_WINDOW, { testedSha: true, huntSourceProgress: true },
+  ));
+  return { ...routineUnreceiptedSupervisorAttemptHistory(supervisorOutcomes, taskIds), protocolFailures };
 }
 
 /**
@@ -541,9 +547,11 @@ if (!FORCE && selectedTasks.some(task => task.id === CAMPAIGN_PUBLICATION_TASK))
 }
 step = "reading unreceipted supervisor attempts";
 let supervisorAttempts: ReadonlyMap<string, string> = new Map();
+let protocolFailures: readonly unknown[] = [];
 if (selectedTasks.length > 0) try {
   const history = await latestUnreceiptedSupervisorAttempts(selectedTasks);
   supervisorAttempts = history.attempts;
+  protocolFailures = history.protocolFailures;
   for (const issue of history.issues) {
     const detail = safeFailure(`${issue.digestId}: ${issue.detail}`);
     supervisorFailures.push({
@@ -575,6 +583,10 @@ for (const read of clockReads) {
     continue;
   }
   const durableClock = routineAdmissionClock(read.clock, supervisorAttempts.get(task.id), admissionNowMs);
+  if (!FORCE && unchangedRoutineProtocolFailure(task, read.clock, protocolFailures, RUNNING_CODE_SHA, admissionNowMs)) {
+    console.log(`RCD_SKIP ${task.id}: unchanged receipt failure; awaiting changed code, Send or source evidence`);
+    continue;
+  }
   const sittingHot = sittingSignals.get(task.id);
   const dueRequest = FORCE ? null : routineDueRequestFor(task, durableClock, admissionNowMs, dueRequests);
   const publicationDue = campaignPublicationInputsDue(task.id, campaignPublicationInputs);
@@ -674,9 +686,10 @@ if (meetingPartitionRuns >= 2) {
   }
 }
 
+const sourceConcurrency = Math.max(1, pendingRuns.length);
 console.log(
   `RCD_PASS launching ${pendingRuns.length} isolated command(s) through a bounded pool; ` +
-    `concurrency=${ROUTINE_CHILD_CONCURRENCY}; ` +
+    `concurrency=${sourceConcurrency}; ` +
     `provider-frontier=${ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS} (meeting lanes ${SITTING_WINDOW_LANE_SLOTS_PER_PASS}); ` +
     `per-child timeout=${ROUTINE_CHILD_TIMEOUT_MS}ms; per-stream output=${ROUTINE_CHILD_MAX_BUFFER_BYTES} bytes`,
 );
@@ -726,7 +739,7 @@ const sourcePass = runBoundedChildPass(
     env: process.env,
     timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
     maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
-    concurrency: ROUTINE_CHILD_CONCURRENCY,
+    concurrency: sourceConcurrency,
     // Two reads of one host in this pass start at least a minute apart (C6).
     sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
     onStarting: async (command, index) => {
@@ -1164,8 +1177,8 @@ try {
 
 const attemptedCount = floored(
   "attempted routine source tasks",
-  "the configured routine source/body partition registry",
-  STANDING_SOURCE_TASKS.length,
+  "the selected routine source/body partitions and owed hunt publications",
+  selectedTasks.length,
   attempted,
 );
 console.log("RCD_RUN=" + JSON.stringify({

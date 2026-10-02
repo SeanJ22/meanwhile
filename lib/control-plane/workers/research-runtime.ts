@@ -69,7 +69,7 @@ export function scheduledWorkerObligation(task: RouteTask): ScheduledObligation 
     cadenceSource:"DEFAULT_NO_SIGNAL",basis:"Persisted bounded worker computation remains owed until committed."};
 }
 
-export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRuntimeTools, task: RouteTask, holder: string): DeclaredExecutor {
+export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRuntimeTools, task: RouteTask, holder: string, root = process.cwd()): DeclaredExecutor {
   const spec = task.workerTask;
   if (!spec || !["ACQUIRER","DETECTIVE","ENGINEERING"].includes(spec.role)) throw new Error("RESEARCH_ROLE_SPEC_MISSING");
   const worker: WorkerRef = {role:spec.role,provider:"we-the-people",version:RESEARCH_WORKER_VERSION,instance:holder};
@@ -89,7 +89,8 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
       const learned = await readFieldManual(tools.repos, {role:spec.role === "ENGINEERING" ? "ENGINEER" : spec.role as "ACQUIRER" | "DETECTIVE", recordClass:spec.contract.recordClass});
       if (spec.role === "ACQUIRER") {
         if (!spec.acquisition || spec.acquisition.route.subjectId !== item.subject) throw new Error("ACQUIRER_TASK_BINDING_REFUSED");
-        const toolkit = buildScoutToolkit({obligation:scheduledWorkerObligation(task),route:null,providerId:null,attemptId,workItemId,routeTaskId,
+        const scheduled = scheduledWorkerObligation(task);
+        const toolkit = buildScoutToolkit({root,obligation:{...scheduled,obligation:{...scheduled.obligation,autonomousPlan:item.autonomousPlan}},route:null,providerId:null,attemptId,workItemId,routeTaskId,
           holder,bound:RESEARCH_BOUNDS.perDispatch,now:tools.now,
           inherited:{artifactIds:[],summary:learned.projection.lines.join("\n"),manualEntries:learned.store.entries},...durableResearchTools(tools,{project:item.project,attemptId,workItemId,routeTaskId}),
           openBytes: async request => {

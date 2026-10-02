@@ -3461,6 +3461,14 @@ a.ballot-pill-main:focus {
   margin-bottom: 16px;
 }
 
+/* "Start where you live" — the prompt directly above the ZIP boxes. */
+.welcome-start {
+  margin: var(--space-3) 0 var(--space-2);
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--text);
+}
+
 .welcome-error {
   min-height: 18px;
   margin-top: 8px;

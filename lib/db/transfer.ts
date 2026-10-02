@@ -87,10 +87,10 @@ function accumulate(row: DatabaseTransfer): void {
 export function installDatabaseTransferCounter(): void {
   if (installed) return;
   installed = true;
-  neonConfig.fetchFunction = databaseTransferFetch((neonConfig.fetchFunction ?? fetch) as FetchLike, async (row) => {
+  neonConfig.fetchFunction = databaseTransferFetch((neonConfig.fetchFunction ?? fetch) as FetchLike, (row) => {
     accumulate(row);
-    // Await the first flush and at most one per minute, including on serverless instances.
-    if (Date.now() - lastFlush >= 60_000) await flushDatabaseTransfer();
+    // An answered query must not wait on the accounting write to the reader database.
+    if (Date.now() - lastFlush >= 60_000) void flushDatabaseTransfer();
   });
   // Long-running processes flush once a minute. The supervisor also awaits a flush before it exits.
   const timer = setInterval(() => { if (Date.now() - lastFlush >= 60_000) void flushDatabaseTransfer(); }, 60_000);

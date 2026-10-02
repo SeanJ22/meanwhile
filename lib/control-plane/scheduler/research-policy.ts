@@ -638,21 +638,26 @@ export function deriveLevel1(input: {
  */
 export const SCOUT_MODEL = MODEL_FOR_CLASS[SCOUT_STEPS["scout-research-loop"].modelClass];
 
-/** Available processes, derived from funded hunts and the provider's request capacity. */
+/** Available processes, derived from funded requests and the provider's capacity.
+ * A funded geography can have many ready jobs. Only a pool's ready work limits
+ * its worker count; the shared slots leave it unset because pools own demand.
+ */
 export function researchWorkerCapacity(input: {
-  readonly hunts: number; readonly availableUsd: number;
+  readonly readyWork?: number; readonly availableUsd: number;
   readonly requestUsd: number; readonly requestsPerMinute?: number;
   readonly inputTokensPerMinute?: number; readonly outputTokensPerMinute?: number;
   readonly inputTokensPerRequest?: number; readonly outputTokensPerRequest?: number;
 }): number {
-  if (![input.hunts, input.availableUsd, input.requestUsd, ...[input.requestsPerMinute,
+  if (![input.availableUsd, input.requestUsd, ...[input.readyWork, input.requestsPerMinute,
     input.inputTokensPerMinute, input.outputTokensPerMinute, input.inputTokensPerRequest,
     input.outputTokensPerRequest].filter(value => value !== undefined)].every(value => Number.isFinite(value) && value! >= 0)) return 0;
-  if (input.hunts <= 0 || input.availableUsd <= 0 || input.requestUsd <= 0) return 0;
-  const provider = input.requestsPerMinute === undefined ? input.hunts : Math.floor(input.requestsPerMinute);
-  const inputCapacity = input.inputTokensPerMinute === undefined ? input.hunts
+  if (input.readyWork === 0 || input.availableUsd <= 0 || input.requestUsd <= 0) return 0;
+  const budgetCapacity = Math.floor(input.availableUsd / input.requestUsd);
+  const readyWork = Math.floor(input.readyWork ?? budgetCapacity);
+  const provider = input.requestsPerMinute === undefined ? budgetCapacity : Math.floor(input.requestsPerMinute);
+  const inputCapacity = input.inputTokensPerMinute === undefined ? budgetCapacity
     : Math.floor(input.inputTokensPerMinute / Math.max(1, input.inputTokensPerRequest ?? 1));
-  const outputCapacity = input.outputTokensPerMinute === undefined ? input.hunts
+  const outputCapacity = input.outputTokensPerMinute === undefined ? budgetCapacity
     : Math.floor(input.outputTokensPerMinute / Math.max(1, input.outputTokensPerRequest ?? 1));
-  return Math.max(0, Math.min(input.hunts, Math.floor(input.availableUsd / input.requestUsd), provider, inputCapacity, outputCapacity));
+  return Math.max(0, Math.min(readyWork, budgetCapacity, provider, inputCapacity, outputCapacity));
 }

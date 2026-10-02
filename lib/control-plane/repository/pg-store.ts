@@ -738,6 +738,27 @@ export function pgAppendOnlyRepository<T>(
       return rows.map((r) => parseValue<unknown>(r.record, `${table} ${key}`));
     },
 
+    async readSince(since) {
+      const out: T[] = [];
+      let cursor: { readonly key: string; readonly position: number } | null = null;
+      for (;;) {
+        const rows = (await run(
+          "readSince",
+          "PAGE",
+          `SELECT log_key, position, record FROM ${table}
+           WHERE recorded_at >= $1::timestamptz${cursor === null ? "" : " AND (log_key, position) > ($2, $3)"}
+           ORDER BY log_key ASC, position ASC
+           LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
+          cursor === null ? [since] : [since, cursor.key, cursor.position],
+        )) as Record<string, unknown>[];
+        for (const row of rows) out.push(parseValue<T>(row.record, `${table} ${String(row.log_key)}`));
+        if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
+        const last = rows[rows.length - 1];
+        cursor = { key: String(last.log_key), position: Number(last.position) };
+      }
+      return out;
+    },
+
     async readAll() {
       /* Keyset-paged over the whole table in the same (log_key, position) order
          the single statement used, for the same 64 MiB reason as `read`. */

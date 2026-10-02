@@ -634,6 +634,9 @@ export function fileAppendOnlyRepository<T>(
     readAll: async (): Promise<readonly T[]> =>
       (await readEveryPartition()).map((line) => line.record),
 
+    readSince: async (since: string): Promise<readonly T[]> =>
+      (await readEveryPartition()).filter((line) => Date.parse(line.at) >= Date.parse(since)).map((line) => line.record),
+
     keys: async (): Promise<readonly string[]> => {
       const keys = new Set<string>((await readEveryPartition()).map((line) => line.key));
       return [...keys].sort();

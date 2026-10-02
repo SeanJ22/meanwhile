@@ -69,8 +69,8 @@
  *
  * ## IT NEVER ROLLS ANYTHING BACK, and will not be extended to.
  *
- * The owner's decision of 2026-08-28: a red reading marks integrity DEGRADED,
- * alerts, and blocks the next production-changing release. Production's database
+ * A red reading is recorded as integrity DEGRADED and the job goes red, as a
+ * signal for a person to act on. Nothing is rolled back: production's database
  * may already have advanced, and rolling code back underneath an advanced schema
  * manufactures a second incompatibility on top of the first. There is no rollback
  * call anywhere in this file and `tests/production-integrity.test.ts` sweeps for
@@ -362,7 +362,7 @@ async function main(): Promise<void> {
     `  bound          at most ${POLL_BOUND.maxAttempts} probes, ${POLL_BOUND.intervalSeconds}s apart, ` +
       `${POLL_BOUND.maxTotalWaitSeconds}s total`,
   );
-  console.log("  rollback       NONE. This never rolls production back, by the owner's decision.");
+  console.log("  rollback       NONE. This never rolls production back; the database may have advanced.");
   console.log("");
 
   if (expected === null) {

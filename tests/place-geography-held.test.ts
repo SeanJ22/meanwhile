@@ -10,6 +10,7 @@ test("a place reuses all held serving districts and county before acquiring miss
     ...["cd", "sldu", "sldl"].map(type => ({ id: `ocd-division/country:us/state:az/${type}:6`, label: `District 6`, divisionType: type, geoid: "04006", sourceUrl: "https://www2.census.gov/held" })),
   ];
   const requests: string[] = [];
+  for (const row of held) row.completeForZip = "85635";
   const found = await divisionsForZip("85635", { readPublished: async () => held,
     fetchImpl: async (url, options) => {
       const address = String(url); requests.push(address);
@@ -38,6 +39,46 @@ test("an unavailable promoted place has typed absence rather than a bootstrap or
   assert.notEqual((await state.lookup.groupingsForZcta("85635")).status.kind, "OK");
 });
 
+test("partial held districts cannot suppress split ZIP intersections or another school layer", async () => {
+  const zip = "12345", base = "ocd-division/country:us/state:mo";
+  const held: PlaceDivision[] = [
+    { id: base, label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov/held", completeForZip: zip },
+    { id: `${base}/county:test`, label: "Test County", divisionType: "county", geoid: "29001", sourceUrl: "https://census.gov/held", completeForZip: zip },
+    { id: `${base}/sldl:1`, label: "District 1", divisionType: "sldl", geoid: "29001", sourceUrl: "https://census.gov/held" },
+    { id: `${base}/school_district:held`, label: "Held school", divisionType: "school", geoid: "2900001", sourceUrl: "https://census.gov/held", completeForZip: zip },
+  ];
+  const names = ["2020 Census ZIP Code Tabulation Areas", "119th Congressional Districts", "2024 State Legislative Districts - Upper",
+    "2024 State Legislative Districts - Lower", "Incorporated Places", "County Subdivisions", "Unified School Districts",
+    "Elementary School Districts", "Secondary School Districts"];
+  const captures = new Map<string, string>();
+  const schoolLayers = new Set<string>();
+  const fetchImpl: typeof fetch = async (url, init) => {
+    const address = String(url);
+    if (address.endsWith("?f=json")) return Response.json({ layers: names.map((name, id) => ({ id, name, type: "Feature Layer" })) });
+    const params = new URLSearchParams(String(init?.body));
+    if (address.includes("ZCTA")) return Response.json({ features: [{ attributes: {}, geometry: { rings: [[[0, 0], [1, 0], [1, 1], [0, 0]]] } }] });
+    assert.equal(params.get("where"), "STATE IN ('29')");
+    assert.equal(params.get("spatialRel"), "esriSpatialRelIntersects");
+    if (address.includes("/3/query")) {
+      const secondPage = params.get("resultOffset") !== "0";
+      return Response.json({ features: [{ attributes: { STATE: "29", GEOID: secondPage ? "29002" : "29001", SLDL: secondPage ? "2" : "1", NAME: secondPage ? "District 2" : "District 1" } }], exceededTransferLimit: !secondPage });
+    }
+    if (address.includes("School")) {
+      const layer = address.split("/").at(-2)!; schoolLayers.add(layer);
+      return Response.json({ features: [{ attributes: { STATE: "29", GEOID: `290000${layer}`, NAME: `School ${layer}` } }] });
+    }
+    return Response.json({ features: [] });
+  };
+  const found = await divisionsForZip(zip, { congress: 119, legislativeYear: 2024, readPublished: async () => held, fetchImpl,
+    capture: async (url, text) => { captures.set(url, text); } });
+  assert.ok(found.some(row => row.id === `${base}/sldl:2`), "a second intersecting district survives partial held data and paging");
+  assert.deepEqual([...schoolLayers].sort(), ["6", "7", "8"]);
+  assert.deepEqual(found.filter(row => row.censusLayer && row.divisionType === "school").map(row => row.censusLayer).sort(), ["elsd", "scsd", "unsd"]);
+  const replayed = await divisionsForZip(zip, { congress: 119, legislativeYear: 2024, readPublished: async () => held,
+    readHeld: async url => captures.get(url) ?? null, fetchImpl: async () => { throw Error("saved geometry must be reused"); } });
+  assert.deepEqual(replayed, found);
+});
+
 test("a current subdivision's unheld parent county is read without refetching held counties", async () => {
   const base = "ocd-division/country:us/state:nj";
   const held: PlaceDivision[] = [
@@ -46,6 +87,7 @@ test("a current subdivision's unheld parent county is read without refetching he
     ...["cd", "sldu", "sldl"].map(type => ({ id: `${base}/${type}:1`, label: "District 1", divisionType: type, geoid: "34001", sourceUrl: "https://www2.census.gov/held" })),
   ];
   let countyReads = 0;
+  for (const row of held) row.completeForZip = "07040";
   const found = await divisionsForZip("07040", { readPublished: async () => held, fetchImpl: async (url, options) => {
     const address = String(url), parameters = new URLSearchParams(String(options?.body));
     if (!address.endsWith("/query")) return Response.json({ layers: ["2020 Census ZIP Code Tabulation Areas", "Incorporated Places", "County Subdivisions",

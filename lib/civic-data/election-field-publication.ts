@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { ELECTION_FIELD_KINDS, sourcedElectionDate, type ElectionFieldInput, type PublishedElectionField } from "./election-fields.ts";
+import { ELECTION_FIELD_KINDS, electionFieldState, sourcedElectionDate, type ElectionFieldInput, type PublishedElectionField } from "./election-fields.ts";
 import { prepareManualProjectionSuccessor } from "./manual-successor.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
 import type { RoutineDataStore } from "./store.ts";
@@ -48,7 +48,7 @@ export async function publishElectionFields(input: {
   const gaps: { divisionId: string; kind: string; detail: string }[] = [];
   for (const field of input.fields) {
     const capture = field.document.capture;
-    const state = /\/state:([^/]+)/.exec(field.divisionId)?.[1].toUpperCase();
+    const state = electionFieldState(field.divisionId);
     const gap = (detail: string) => gaps.push({ divisionId: field.divisionId, kind: field.kind, detail });
     if (!state || !ELECTION_FIELD_KINDS.includes(field.kind) || field.sourceUrl !== field.document.url || !capture ||
         capture.evidence.canonicalUrl !== field.document.url || capture.partial || capture.transport !== "REACHABLE" ||

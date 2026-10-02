@@ -6,7 +6,8 @@ import { publishAdapterPullRequest, plainAdapterFor, workAdapterQueue } from '..
 import {createMemoryRepositories} from '../lib/control-plane/repository/memory.ts';
 import {MODELS} from '../lib/models.ts';
 import {SendBudgetRefusal} from '../lib/control-plane/expansion/spend-holds.ts';
-import {solvedScoutResult,readSubjectScoutHistory,wakeInstalledAdapterDebts} from '../lib/control-plane/workers/detective.ts';
+import {solvedScoutResult,readSubjectScoutHistory,wakeInstalledAdapterDebts,adapterWaitReasonFromKnowledge} from '../lib/control-plane/workers/detective.ts';
+import {newFieldManualEntry,writeFieldManual,readFieldManual} from '../lib/control-plane/field-manual.ts';
 import { sourceReliabilityKey, reduceSourceReliability } from '../lib/control-plane/scheduler/scout-reliability.ts';
 import { adapterWaitReason, investigationRole, subjectScoutHistory, reusableScoutCandidates, scoutFactGrounded, failureResponderExecutor } from '../lib/control-plane/workers/detective.ts';
 import { installedAdapters, installedAdapterVersion, runInstalledAdapter } from '../lib/control-plane/scheduler/scout-adapters.ts';
@@ -114,6 +115,72 @@ test('legacy adapter debts wake for installed code and stay held after that same
  assert.equal(reopened.cause,'EXTRACTION_FAILED');assert.equal(reopened.retryAt,now);assert.equal(reopened.consecutiveFailures,2058);
  await repos.scoutResults.append('pending','tried',{...pending,rungs:[{tool:'run_adapter',observed:'Installed adapter '+name+'@'+installedAdapterVersion(name)} as never]},now);
  assert.equal((await wakeInstalledAdapterDebts(repos,[debt],now))[0].cause,'AWAITING_ADAPTER');
+});
+
+test('Engineer knowledge resumes a failure whose narrative predates the generated adapter name',async()=>{
+ const repos=createMemoryRepositories(),name='uncapped-source-links',now='2026-10-02T00:00:00Z';
+ const pending={attemptId:'failed-attempt',refusal:null,outcome:'NEEDS_ADAPTER',recoveryCapabilityVersion:SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION,
+  narrative:'The source template needs code to extract its document routes',nextRungs:[],candidates:[],rungs:[]} as unknown as ScoutResult;
+ const debt={obligationId:'pending',cause:'AWAITING_ADAPTER',retryAt:'2026-10-03',consecutiveFailures:7} as Parameters<typeof wakeInstalledAdapterDebts>[1][number];
+ await repos.scoutResults.append('pending','old',pending,now);
+ const entry=(sourceAttemptId:string,files:unknown)=>newFieldManualEntry('engineer-adapter','platform',{
+  role:'SHARED',kind:'ENGINEER_ADAPTER_PR',title:'generated-platform',summary:'Generated reusable adapter',outcome:'REFERENCE',
+  payload:{sourceAttemptId,files}});
+ for(const knowledge of [entry('another-attempt',['lib/sources/platform-adapters/'+name+'.ts']),
+   entry(pending.attemptId,['lib/sources/platform-adapters/'+name+'.test.ts']),
+   entry(pending.attemptId,['lib/sources/platform-adapters/not-installed.ts']),entry(pending.attemptId,null)]) {
+  assert.match(adapterWaitReason([pending],[name],[knowledge])!,/AWAITING_ADAPTER/);
+ }
+ assert.match((await adapterWaitReasonFromKnowledge(repos,[pending]))!,/AWAITING_ADAPTER/);
+ await writeFieldManual(repos,[entry(pending.attemptId,['lib/sources/platform-adapters/'+name+'.ts'])],now);
+ assert.equal(await adapterWaitReasonFromKnowledge(repos,[pending]),null);
+ const reopened=(await wakeInstalledAdapterDebts(repos,[debt],now))[0];
+ assert.equal(reopened.cause,'EXTRACTION_FAILED');assert.equal(reopened.retryAt,now);assert.equal(reopened.consecutiveFailures,7);
+ const tried={...pending,rungs:[{tool:'run_adapter',observed:'Installed adapter '+name+'@'+installedAdapterVersion(name)} as never]};
+ await repos.scoutResults.append('pending','tried',tried,now);
+ assert.match((await adapterWaitReasonFromKnowledge(repos,[tried]))!,/AWAITING_ADAPTER/);
+ assert.equal((await wakeInstalledAdapterDebts(repos,[debt],now))[0].cause,'AWAITING_ADAPTER');
+ assert.equal(await adapterWaitReasonFromKnowledge(repos,[{...tried,rungs:[{tool:'run_adapter',observed:'Installed adapter '+name+'@old-version'} as never]}]),null);
+});
+
+test('learned adapter source classes resume other tenants without reopening unrelated or already tried work',async()=>{
+ const repos=createMemoryRepositories(),name='uncapped-source-links',now='2026-10-02T00:00:00Z';
+ const entry=newFieldManualEntry('engineer-adapter','portable',{
+  role:'SHARED',kind:'ENGINEER_ADAPTER_PR',title:'portable',summary:'Shared source parser',outcome:'REFERENCE',recordClasses:['meetings'],
+  payload:{sourceAttemptId:'first-tenant-attempt',files:['lib/sources/platform-adapters/'+name+'.ts'],sourceUrls:['https://platform.example/first-tenant/calendar']},
+ });
+ await writeFieldManual(repos,[entry],now);
+ const pending={attemptId:'second-tenant-attempt',recordClass:'meetings',refusal:null,outcome:'NEEDS_ADAPTER',recoveryCapabilityVersion:SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION,
+  narrative:'The source needs a parser',nextRungs:[],candidates:[],rungs:[{tool:'fetch_public',target:'https://platform.example/second-tenant/calendar',observed:'Saved source'}]} as unknown as ScoutResult;
+ assert.equal(await adapterWaitReasonFromKnowledge(repos,[pending]),null);
+ for(const other of [{...pending,recordClass:'officials'},
+  {...pending,rungs:[{tool:'fetch_public',target:'https://another.example/calendar',observed:'Saved source'} as never]},
+  {...pending,rungs:[{tool:'search',target:'https://platform.example/second-tenant/calendar policy',observed:'No pointers'} as never]},
+  {...pending,rungs:[...pending.rungs,{tool:'run_adapter',observed:name+'@'+installedAdapterVersion(name)} as never]}]) {
+  assert.match((await adapterWaitReasonFromKnowledge(repos,[other]))!,/AWAITING_ADAPTER/);
+ }
+ const debt={obligationId:'other-tenant',cause:'AWAITING_ADAPTER',retryAt:'2026-10-03',consecutiveFailures:3} as Parameters<typeof wakeInstalledAdapterDebts>[1][number];
+ await repos.scoutResults.append(debt.obligationId,pending.attemptId,pending,now);
+ assert.equal((await wakeInstalledAdapterDebts(repos,[debt],now))[0].cause,'EXTRACTION_FAILED');
+});
+
+test('Engineer saves captured source URLs with its reusable adapter knowledge',async()=>{
+ const repos=createMemoryRepositories(),now='2026-10-02T00:00:00Z';
+ const source={refusal:null,outcome:'NEEDS_ADAPTER',subjectId:'first-tenant',recordClass:'meetings',attemptId:'failed',recordedAt:now,
+  narrative:'A new calendar format needs a parser',artifactIds:['held'],nextRungs:[],findings:[],
+  candidates:[{routeId:'test-uninstalled-source-parser',url:'https://platform.example/first-tenant/calendar',evidenceArtifactIds:['held']}],
+  rungs:[{ok:true,target:'https://platform.example/sitemap.xml',artifactIds:['held']},
+    {ok:false,target:'https://other.example/failed',artifactIds:[]},
+    {ok:true,target:'https://other.example/uncaptured',artifactIds:[]}]} as unknown as ScoutResult;
+ const files=[{path:'lib/sources/platform-adapters/test-uninstalled-source-parser.ts',content:'export const parser=true;'},
+  {path:'lib/sources/platform-adapters/test-uninstalled-source-parser.test.ts',content:'export const test=true;'}];
+ await workAdapterQueue({repos,results:[source],now,readEvidence:async()=>({text:'Saved calendar source',canonicalUrl:'https://platform.example/sitemap.xml',artifactId:'held'} as never),
+  transportFor:()=>async()=>({model:MODELS.haiku.model,stop_reason:'end_turn',content:[{type:'text',text:JSON.stringify({files})}],
+    usage:{input_tokens:100,output_tokens:10,cache_read_input_tokens:0,cache_creation_input_tokens:0}}),request:async(method,path)=>path.includes('/pulls?')
+  ?[{html_url:'https://github.com/SeanJ22/meanwhile/pull/999',number:999}]:{}});
+ const entry=(await readFieldManual(repos,{role:'DETECTIVE'})).store.entries.find(e=>e.kind==='ENGINEER_ADAPTER_PR')!;
+ assert.deepEqual(entry.recordClasses,['meetings']);
+ assert.deepEqual((entry.payload as {sourceUrls:string[]}).sourceUrls,['https://platform.example/first-tenant/calendar','https://platform.example/sitemap.xml']);
 });
 
 test('shared client tools preserve source bytes and date-window paging',async()=>{

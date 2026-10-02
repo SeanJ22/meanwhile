@@ -13,7 +13,7 @@ import type { LegacyCivicExtractionContract } from "../lib/control-plane/workers
 import { mkdtemp, rm, mkdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { writeFieldManual } from "../lib/control-plane/field-manual.ts";
+import { writeFieldManual, newFieldManualEntry } from "../lib/control-plane/field-manual.ts";
 import { methodFixture, knowledgeEntries, methodVersionEntry } from "./method-store-fixture.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { runLeaseWorkerProcesses, runNationalPlaceWorkerProcesses, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
@@ -79,6 +79,25 @@ test("unknown source routes to existing Scout and restart deduplicates the durab
   assert.equal((await h.repos.workItems.mustRead(h.item.id)).value.state,"OPEN");
   assert.deepEqual(await h.repos.dispositions.readAll(),priorDispositions);
   assert.equal(h.calls.length,0);
+});
+
+test("coordinator resumes an installed adapter learned after the failed Scout narrative",async()=>{
+  const h=await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})});
+  const attempt=(await h.repos.attempts.list())[0].value;
+  const result={attemptId:attempt.id,obligationId:'adapter-wait',subjectId:h.item.subject,
+    recordClass:h.item.autonomousPlan!.contract.recordClass,workItemId:h.item.id,recordedAt:h.now(),
+    refusal:null,outcome:'NEEDS_ADAPTER',recoveryCapabilityVersion:SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION,
+    narrative:'Saved source template needs extraction code',nextRungs:[],candidates:[],findings:[],rungs:[],artifactIds:[]} as unknown as ScoutResult;
+  await h.repos.scoutResults.append(result.obligationId,result.attemptId,result,h.now());
+  const waiting=await nextAutonomousOperation(h.runtime,h.item.id);
+  assert.equal(waiting.action,'BLOCKED');assert.match(waiting.reason,/AWAITING_ADAPTER/);
+  await writeFieldManual(h.repos,[newFieldManualEntry('engineer-adapter','generated-platform',{
+    role:'SHARED',kind:'ENGINEER_ADAPTER_PR',title:'generated-platform',summary:'Adapter extracted from the saved source',outcome:'REFERENCE',
+    payload:{sourceAttemptId:result.attemptId,files:['lib/sources/platform-adapters/uncapped-source-links.ts']},
+  })],h.now());
+  const ready=await nextAutonomousOperation(h.runtime,h.item.id);
+  assert.equal(ready.action,'SCOUT');assert.equal(ready.task?.id,waiting.task?.id);
+  assert.deepEqual(h.calls,[],'resuming saved work makes no source or model request during selection');
 });
 
 test("cycle selection uses its already joined item and history instead of reopening every full store", async () => {

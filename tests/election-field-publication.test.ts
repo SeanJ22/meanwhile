@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
 import { publishElectionFields, type ElectionFieldVerifier } from "../lib/civic-data/election-field-publication.ts";
-import type { ElectionFieldInput } from "../lib/civic-data/election-fields.ts";
+import { electionFieldState, type ElectionFieldInput } from "../lib/civic-data/election-fields.ts";
 import { readElectionFieldsForDivisions } from "../lib/civic-data/curated-reader-read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { section3Record } from "../lib/control-plane/promotion/section3.ts";
@@ -19,6 +19,21 @@ const make = (text: string, kind: ElectionFieldInput["kind"] = "registration_dea
 });
 
 const verify: ElectionFieldVerifier = section3Record;
+
+test("the same election-field publication and Reader path accepts every national jurisdiction class", async () => {
+  for (const [prefix, state] of [["state", "WI"], ["district", "DC"], ["territory", "PR"], ["territory", "GU"]]) {
+    const divisionId = `ocd-division/country:us/${prefix}:${state.toLowerCase()}`;
+    const store = new MemoryRoutineDataStore();
+    const field = { ...make("Registration deadline October 5, 2026"), divisionId };
+    const result = await publishElectionFields({ store, now, fields: [field], verify });
+    assert.ok(result.promotedVersionId, `${state}: ${JSON.stringify(result.gaps)}`);
+    const read = await readElectionFieldsForDivisions([divisionId], { store, now, bypassCache: true });
+    assert.equal(read.fields.length, 1);
+    assert.equal(read.fields[0].value.state, state);
+  }
+  for (const id of ["ocd-division/country:us/state:dc", "ocd-division/country:us/district:wi",
+    "ocd-division/country:us/state:xx", "ocd-division/country:ca/state:wi"]) assert.equal(electionFieldState(id), null);
+});
 
 test("one verified election field publishes while an unrelated unconfirmed field stays open", async () => {
   const store = new MemoryRoutineDataStore();

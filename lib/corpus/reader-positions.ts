@@ -2,6 +2,7 @@ import { positionsFor, type PositionAnswer, type PositionPassage } from "./posit
 import { unifiedCorpus } from "./unified.ts";
 import type { StatementCorpus } from "./types.ts";
 import { verifiedReaderPersonKeys } from "../identity/reader-person.ts";
+import { sourceCaptureFingerprint } from "../candidates/corpus.ts";
 
 export interface ReaderPositionAnswer extends PositionAnswer {
   canonicalSubjectKeys: string[];
@@ -16,8 +17,19 @@ export function readerPositionsForKeys(
   keys: readonly string[],
 ): ReaderPositionAnswer {
   const canonicalKeys = [...new Set(keys.length ? keys : [subjectId])].sort();
-  const selected = corpus.snapshots.filter((snapshot) => canonicalKeys.includes(snapshot.subjectId));
-  const answers = canonicalKeys.map((key) => ({ key, answer: positionsFor(key, topic, corpus) }));
+  const captures = new Map<string, string>();
+  const selected = corpus.snapshots.filter((snapshot) => {
+    if (!canonicalKeys.includes(snapshot.subjectId)) return false;
+    const capture = sourceCaptureFingerprint(snapshot.sourceRevision, snapshot.contentHash,
+      snapshot.url, snapshot.retrievedAt);
+    if (capture === null) return true;
+    const priorKey = captures.get(capture);
+    if (priorKey !== undefined && priorKey !== snapshot.subjectId) return false;
+    captures.set(capture, snapshot.subjectId);
+    return true;
+  });
+  const selectedCorpus = { snapshots: selected };
+  const answers = canonicalKeys.map((key) => ({ key, answer: positionsFor(key, topic, selectedCorpus) }));
   const seen = new Set<string>();
   const passages = answers.flatMap(({ key, answer }) => answer.passages.flatMap((passage) => {
     const identity = `${passage.snapshotId}#${passage.quote}`;

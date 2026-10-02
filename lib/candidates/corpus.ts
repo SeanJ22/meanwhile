@@ -86,6 +86,20 @@ export interface CandidateSourceRevision {
   readonly supersedesRevisionId: string | null;
 }
 
+/** Exact captured bytes and their transcription, independent of person alias IDs. */
+export function sourceCaptureFingerprint(
+  revision: CandidateSourceRevision | undefined,
+  contentHash: string,
+  url: string,
+  retrievedAt: string,
+): string | null {
+  if (!revision || !revision.artifactId || !revision.rawContentHash || !revision.canonicalUrl ||
+      !revision.capturedAt || !contentHash || !Number.isInteger(revision.extractionVersion) ||
+      revision.extractionVersion < 1 || revision.canonicalUrl !== url || revision.capturedAt !== retrievedAt) return null;
+  return JSON.stringify([revision.artifactId, revision.rawContentHash, revision.canonicalUrl,
+    revision.capturedAt, revision.extractionVersion, contentHash]);
+}
+
 /** One retrieved version of one page. Append-only. */
 export interface CandidateDocument {
   /** `<candidateKey>@<contentHash>` — one row per distinct version. */

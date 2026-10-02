@@ -48,8 +48,10 @@ import { requiredManualProductionContract } from "../lib/civic-data/manual-contr
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
-import { findHeldCapture, readHeldBytes } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { indexVault, type VaultIndex } from "../lib/control-plane/evidence/read-only-vault.ts";
 import { heldArtifactCaptures } from "../lib/civic-data/held-artifact-captures.ts";
+import { candidatePublicationLinks, candidatePublicationCaptureUrls,
+  heldCandidatePublicationRead } from "../lib/control-plane/promotion/campaign-publication-links.ts";
 import { ACTIVATION_GATE, classFieldOpen } from "../lib/control-plane/promotion/activation-policy.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
@@ -87,18 +89,26 @@ async function readApprovals(): Promise<PublishableCampaignSiteApproval[] | { re
 
 /** Distinct completed publication acquisitions. The child never infers
  * article authority from a URL in prose or from uncommitted vault bytes. */
-async function linkedPublicationReads(vaultRoot: string, approvals: readonly PublishableCampaignSiteApproval[]): Promise<readonly HeldLinkedPublicationRead[] | { readonly unreadable: string }> {
+async function linkedPublicationReads(vault: VaultIndex, approvals: readonly PublishableCampaignSiteApproval[],
+  held: ReadonlyMap<string, HeldVerifyingRead>): Promise<readonly HeldLinkedPublicationRead[] | { readonly unreadable: string }> {
   const controlPlane = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
   if (!controlPlane) return { unreadable: "the control plane's publication attempts are not configured" };
-  const candidacies = [...new Set(approvals.map(row => row.campaignSite.candidacyId))];
-  if (!candidacies.length) return [];
+  const links = approvals.flatMap(approval => {
+    const page = held.get(approval.recordId), site = approval.campaignSite;
+    return page ? candidatePublicationLinks({ html: page.body, sourceUrl: site.evidence.finalUrl,
+      sourceArtifactId: site.evidence.artifactId, sourceContentHash: `sha256-${site.evidence.sha256}`,
+      approvalRecordId: approval.recordId, candidacyId: site.candidacyId }) : [];
+  });
+  const urls = candidatePublicationCaptureUrls(links, vault);
+  if (!urls.length) return [];
   try {
     const rows = await neon(controlPlane).query(
-      `SELECT a.record, t.value AS attempt, w.value AS work_item FROM cp_log_artifacts a
+      `SELECT a.record, t.value AS attempt, w.value AS work_item
+       FROM unnest($1::text[]) AS sources(url)
+       JOIN cp_log_artifacts a ON md5(a.record->>'canonicalUrl') = md5(sources.url) AND a.record->>'canonicalUrl' = sources.url
        JOIN cp_attempts t ON t.id = a.record->>'attemptId'
        JOIN cp_work_items w ON w.id = a.record->>'workItemId'
-       WHERE a.record ? 'publicationLink' AND a.record->'publicationLink'->>'candidacyId' = ANY($1::text[])
-       ORDER BY a.log_key, a.position`, [candidacies],
+       ORDER BY a.record->>'canonicalUrl', a.record->>'recordedAt', a.record->>'artifactId'`, [urls],
     ) as { record: unknown; attempt: unknown; work_item: unknown }[];
     const out: HeldLinkedPublicationRead[] = [];
     for (const row of rows) {
@@ -107,24 +117,15 @@ async function linkedPublicationReads(vaultRoot: string, approvals: readonly Pub
       const workItem = (typeof row.work_item === "string" ? JSON.parse(row.work_item) : row.work_item) as { subject?: unknown };
       // One unreadable capture holds only its own publication (it stays unverified, owed work);
       // it never blocks every other approved campaign link from reaching readers (§3).
-      console.log(`RCD_PROGRESS linked-publication ${record.artifactId}`);
-      const artifact = await findHeldCapture(vaultRoot, record);
-      if (!artifact || artifact.tier === "RESTRICTED_RAW") {
-        process.stderr.write(`LINKED_PUBLICATION_CAPTURE_UNREADABLE ${record.artifactId}: missing or restricted in this vault\n`);
-        continue;
-      }
-      let body: string;
-      try { body = new TextDecoder("utf-8", { fatal: true }).decode(await readHeldBytes(artifact)); }
+      let capture;
+      try { capture = await heldCandidatePublicationRead(record, attempt, vault,
+        typeof workItem.subject === "string" ? workItem.subject : ""); }
       catch {
         process.stderr.write(`LINKED_PUBLICATION_CAPTURE_UNREADABLE ${record.artifactId}: failed exact vault read\n`);
         continue;
       }
-      out.push({ record, attempt, workItemSubject: typeof workItem.subject === "string" ? workItem.subject : "",
-        body, vaultSha256: artifact.contentHash.replace(/^sha256-/, ""),
-        vaultCanonicalUrl: artifact.canonicalUrl, vaultRetrievalUrl: artifact.retrievalUrl,
-        vaultWorkItemId: artifact.workItemId, vaultAttemptId: artifact.attemptId,
-        vaultHttpStatus: artifact.httpStatus, vaultContentType: artifact.contentType,
-        vaultMethodRouteId: artifact.methodRouteId, vaultPermission: artifact.permission });
+      if (capture) out.push(capture);
+      else process.stderr.write(`LINKED_PUBLICATION_CAPTURE_UNREADABLE ${record.artifactId}: missing or restricted in this vault\n`);
     }
     return out;
   } catch (error) { return { unreadable: error instanceof Error ? error.message : String(error) }; }
@@ -158,7 +159,7 @@ async function main(): Promise<void> {
         ...(row.campaignSite.evidence.cycleSource ? [row.campaignSite.evidence.cycleSource.artifactId] : [])]);
       const capture = await heldArtifactCaptures(vaultRoot, artifactIds, process.env.WTP_CONTROL_PLANE_DATABASE_URL!);
       held = await heldCampaignSiteReads(capture, approvals);
-      const linked = await linkedPublicationReads(vaultRoot, approvals);
+      const linked = await linkedPublicationReads(await indexVault(vaultRoot), approvals, held);
       if ("unreadable" in linked) {
         await finish(derivedCampaignSitesFailedCandidate(now, `The linked candidate-publication record could not be read: ${linked.unreadable}`));
         return;

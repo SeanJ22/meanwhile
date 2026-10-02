@@ -178,7 +178,7 @@ test('Engineer saves captured source URLs with its reusable adapter knowledge',a
   transportFor:()=>async()=>({model:MODELS.haiku.model,stop_reason:'end_turn',content:[{type:'text',text:JSON.stringify({files})}],
     usage:{input_tokens:100,output_tokens:10,cache_read_input_tokens:0,cache_creation_input_tokens:0}}),request:async(method,path)=>path.includes('/pulls?')
   ?[{html_url:'https://github.com/SeanJ22/meanwhile/pull/999',number:999}]:{}});
- const entry=(await readFieldManual(repos,{role:'DETECTIVE'})).store.entries.find(e=>e.kind==='ENGINEER_ADAPTER_PR')!;
+ const entry=(await readFieldManual(repos,{role:'DETECTIVE'})).store.entries.find(e=>e.kind==='ENGINEER_ADAPTER_PR' && (e.payload as {sourceAttemptId?:string}).sourceAttemptId===source.attemptId)!;
  assert.deepEqual(entry.recordClasses,['meetings']);
  assert.deepEqual((entry.payload as {sourceUrls:string[]}).sourceUrls,['https://platform.example/first-tenant/calendar','https://platform.example/sitemap.xml']);
 });

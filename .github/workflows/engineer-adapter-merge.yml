@@ -14,7 +14,13 @@ concurrency:
   cancel-in-progress: false
 jobs:
   merge:
-    if: github.event_name == 'workflow_run' || github.event.label.name == 'engineer-adapter'
+    # A Build check finishes for every PR and main push; only an Engineer adapter
+    # branch's green run can merge anything, so every other run is skipped unbilled.
+    if: >-
+      (github.event_name == 'workflow_run'
+        && github.event.workflow_run.conclusion == 'success'
+        && startsWith(github.event.workflow_run.head_branch, 'engineer-adapter/'))
+      || github.event.label.name == 'engineer-adapter'
     runs-on: ubuntu-latest
     steps:
       # Default-branch code only; a candidate PR cannot execute in this job.

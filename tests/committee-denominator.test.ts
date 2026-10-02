@@ -181,7 +181,7 @@ test("F02: every parent seat with jurisdiction can render it, and every one with
   );
   assert.match(
     src,
-    /We haven.{1,3}t sourced what this committee handles yet/,
+    /We.{1,3}re working on getting this info/,
     "a parent seat with no jurisdiction renders OUR gap, in our own register",
   );
   assert.match(

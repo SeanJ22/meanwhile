@@ -294,13 +294,14 @@ export interface EndpointVerification {
  * The exact parser an official page is verified with: the
  * `lib/sources/official-page-events` adapter, named by the first 12 hex of the
  * digest of its value-import closure (`digestValueClosure`,
- * lib/ops/generator-digest.ts: every file its runtime reaches, name and bytes;
+ * lib/ops/generator-digest.ts: every file its runtime reaches, name and code;
+ * comments, formatting and erased types are ignored;
  * an import that carries only types cannot change behaviour and is left out). A
  * test recomputes it, so a change anywhere the parser's runtime reaches fails
  * until this is bumped, and anything keyed on it (a saved method, a wiring row)
  * re-keys cleanly.
  */
-export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@9779a56e5b57";
+export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@b40e297b8ab8";
 
 /**
  * The zone a state's bodies meet in, for the states that sit in one zone. A

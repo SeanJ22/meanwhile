@@ -91,7 +91,7 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } fr
 import { hostname } from "node:os";
 import { reserveRoutineRefresh, finishRoutineRefresh } from "../lib/civic-data/owner-refresh.ts";
 import { join } from "node:path";
-import { resolvePilotMirror } from "./pilot-runtime-config.mjs";
+import { assertProductionDatabaseTarget, resolvePilotMirror } from "./pilot-runtime-config.mjs";
 
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
@@ -201,6 +201,7 @@ const argv = process.argv.slice(2);
 const STAGING = argv.includes("--staging") || process.env.WTP_RUNTIME_MODE === "staging";
 if (STAGING && process.env.WTP_DB_ROLE !== "local") throw new Error("Staging runner requires WTP_DB_ROLE=local");
 if (STAGING) process.env.WTP_RUNTIME_MODE = "staging";
+assertProductionDatabaseTarget(process.env);
 const AUTO_RELEASE_HANDOFF = !STAGING && argv.includes("--release-handoff");
 const provider = argv.includes("--provider=file") ? "file" : "postgres";
 if (provider === "postgres") {

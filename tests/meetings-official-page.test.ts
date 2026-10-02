@@ -200,6 +200,25 @@ test("VALUE CLOSURE: an import or re-export that carries only types is left out;
     assert.equal(value.includes("m/all-type-names.ts"), false);
     assert.equal(value.includes("m/reexported-types.ts"), false);
     assert.equal(sourceClosure(root, join(root, "m/entry.ts")).length, Object.keys(files).length, "the full closure still follows every edge");
+    const digest = () => digestValueClosure(root, join(root, "m/entry.ts")).digest;
+    const original = digest();
+    writeFileSync(join(root, "m/entry.ts"), `/*\nimport "./all-type-names.ts";\n*/\n${files["m/entry.ts"].replaceAll(";", ";\r\n\r\n")}`);
+    writeFileSync(join(root, "m/mixed.ts"), "// a comment\r\nexport type B = 2;\r\nexport const c /* note */ =\r\n  1 ;\r\n");
+    assert.deepEqual(valueClosure(root, join(root, "m/entry.ts")), value, "commented imports do not expand the closure");
+    assert.equal(digest(), original, "comments, whitespace, line endings and erased types do not re-key runtime code");
+    writeFileSync(join(root, "m/mixed.ts"), "export const c = 2;");
+    assert.notEqual(digest(), original, "a dependency's runtime change still re-keys the entry");
+    for (const [before, after] of [
+      ['export const c = "a b//c";', 'export const c = "ab//c";'],
+      ['export const c = /a b/;', 'export const c = /ab/;'],
+      ['export const c = `a ${1} b`;', 'export const c = `a ${1}b`;'],
+      ['export function c() { return 1; }', 'export function c() { return\n1; }'],
+    ]) {
+      writeFileSync(join(root, "m/mixed.ts"), before);
+      const previous = digest();
+      writeFileSync(join(root, "m/mixed.ts"), after);
+      assert.notEqual(digest(), previous, "literal text and significant line breaks still affect runtime identity");
+    }
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

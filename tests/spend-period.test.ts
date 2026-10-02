@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { moneySummary, tierSpendForPeriod } from "../lib/control-plane/admin-view/spend-period.ts";
+import { dailyRows, moneySummary, tierSpendForPeriod } from "../lib/control-plane/admin-view/spend-period.ts";
 
 const spend = {
   byDay: [
@@ -74,4 +74,20 @@ test("a figure the system does not have is null, never zero", () => {
   assert.equal(summarize("today", null).todayUsd, null, "hunts not read: Today and Left are unknown");
   assert.equal(summarize("today", null).leftUsd, null);
   assert.equal(summarize("2026-08").spentUsd, null);
+});
+
+test("the database's daily bytes join the summary and the day rows from the same period", () => {
+  const withNeon = { ...ledger, neon: { kind: "recorded" as const, days: [{ day: "2026-10-01", responseBytes: 2_000_000_000, requestBytes: 500_000_000 }, { day: "2026-09-30", responseBytes: 1_000_000_000, requestBytes: 0 }] } };
+  const m = moneySummary({ spend: withNeon, setAsideUsd: 0, dailyLimitUsd: 100, period: "2026-10", now });
+  assert.equal(m.neonBytes, 2_500_000_000, "October holds only the 1st");
+  assert.equal(moneySummary({ spend: withNeon, setAsideUsd: 0, dailyLimitUsd: 100, period: "last-7d", now }).neonBytes, 3_500_000_000);
+  assert.equal(moneySummary({ spend: withNeon, setAsideUsd: 0, dailyLimitUsd: 100, period: "2026-08", now }).neonBytes, null, "no day in the period is a dash, not zero");
+  assert.equal(moneySummary({ spend: { ...ledger, neon: { kind: "not-recorded" as const, days: [] } }, setAsideUsd: 0, dailyLimitUsd: 100, period: "today", now }).neonBytes, null);
+  assert.deepEqual(dailyRows(withNeon, "last-7d", now), [
+    { day: "2026-10-01", spentUsd: 1.5, searchUsd: 0.25, neonBytes: 2_500_000_000 },
+    { day: "2026-09-30", spentUsd: 5, searchUsd: 0.5, neonBytes: 1_000_000_000 },
+  ]);
+  assert.equal(dailyRows(withNeon, "today", now).length, 1, "Today is one row");
+  const days = dailyRows(withNeon, "last-30d", now);
+  assert.equal(Math.round(days.reduce((a, d) => a + (d.spentUsd ?? 0), 0) * 100) / 100, moneySummary({ spend: withNeon, setAsideUsd: 0, dailyLimitUsd: 100, period: "last-30d", now }).spentUsd, "the day rows add up to Spent");
 });

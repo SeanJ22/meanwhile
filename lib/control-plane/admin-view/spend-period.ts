@@ -7,6 +7,8 @@ import { easternDay, periodDays } from "./periods.ts";
 
 export interface SpendByDay { readonly day: string; readonly searchUsd?: number; readonly byModel: readonly { readonly name: string; readonly usd: number }[] }
 export interface SpendByMonth { readonly month: string; readonly searchUsd?: number; readonly byTier: readonly { readonly name: string; readonly usd: number }[] }
+/** The database's own daily counter (S6): bytes sent and received per Eastern day. */
+export interface NeonDays { readonly kind: "recorded" | "not-recorded"; readonly days: readonly { readonly day: string; readonly responseBytes: number; readonly requestBytes: number }[] }
 export interface TierLine { readonly name: string; readonly usd: number }
 
 const MONTH = /^20\d\d-(0[1-9]|1[0-2])$/;
@@ -47,6 +49,8 @@ export interface MoneySummary {
   readonly tiers: readonly TierLine[] | null;
   /** Open reservations right now, over every hunt. */
   readonly setAsideUsd: number | null;
+  /** Bytes the database sent and received in the period (the daily counter), or null when it recorded none in it. */
+  readonly neonBytes: number | null;
   /** Today's settled paid-AI charges. Never more than `spentUsd` when the period includes today. */
   readonly todaySettledUsd: number | null;
   /** Today's settled charges plus what is set aside, against the daily limit. */
@@ -59,7 +63,7 @@ export interface MoneySummary {
 const cents = (n: number) => Math.round(n * 100) / 100;
 
 export function moneySummary(input: {
-  readonly spend: { readonly byDay: readonly SpendByDay[]; readonly byMonth: readonly SpendByMonth[] } | null;
+  readonly spend: { readonly byDay: readonly SpendByDay[]; readonly byMonth: readonly SpendByMonth[]; readonly neon?: NeonDays } | null;
   /** Open reservations right now over every hunt, or null when not read. */
   readonly setAsideUsd: number | null;
   readonly dailyLimitUsd: number | null;
@@ -77,7 +81,31 @@ export function moneySummary(input: {
   return {
     spentUsd: tiers === null || tiers.length === 0 ? null : cents(tiers.reduce((a, t) => a + t.usd, 0)),
     searchUsd: spend === null ? null : searchSpendForPeriod(spend, input.period, now),
-    tiers: tiers !== null && tiers.length > 0 ? tiers : null, setAsideUsd, todaySettledUsd, todayUsd, dailyLimitUsd: input.dailyLimitUsd,
+    tiers: tiers !== null && tiers.length > 0 ? tiers : null, setAsideUsd, neonBytes: spend === null ? null : neonBytesForPeriod(spend.neon, input.period, now), todaySettledUsd, todayUsd, dailyLimitUsd: input.dailyLimitUsd,
     leftUsd: todayUsd === null || input.dailyLimitUsd === null ? null : cents(Math.max(0, input.dailyLimitUsd - todayUsd)),
   };
+}
+
+const inDays = (day: string, id: string, now: Date) => { const d = periodDays(id, now); return d !== null && day >= d.from && day <= d.to; };
+
+/** Bytes the database moved in the period, or null when its counter is not recorded or holds no day in the period. */
+export function neonBytesForPeriod(neon: NeonDays | undefined, id: string, now: Date): number | null {
+  if (neon === undefined || neon.kind !== "recorded") return null;
+  const days = neon.days.filter((d) => inDays(d.day, id, now));
+  return days.length === 0 ? null : days.reduce((a, d) => a + d.responseBytes + d.requestBytes, 0);
+}
+
+export interface DayRow { readonly day: string; readonly spentUsd: number | null; readonly searchUsd: number | null; readonly neonBytes: number | null }
+
+/** One row per Eastern day in the period, newest first: paid AI, search and database bytes from the same ledger and counter. */
+export function dailyRows(spend: { readonly byDay: readonly SpendByDay[]; readonly neon?: NeonDays }, id: string, now: Date): readonly DayRow[] {
+  const days = new Set<string>();
+  for (const d of spend.byDay) if (inDays(d.day, id, now)) days.add(d.day);
+  for (const d of spend.neon?.kind === "recorded" ? spend.neon.days : []) if (inDays(d.day, id, now)) days.add(d.day);
+  return [...days].sort().reverse().map((day) => {
+    const l = spend.byDay.find((d) => d.day === day);
+    const n = spend.neon?.kind === "recorded" ? spend.neon.days.find((d) => d.day === day) : undefined;
+    return { day, spentUsd: l === undefined ? null : cents(l.byModel.reduce((a, m) => a + cents(m.usd), 0)), searchUsd: l?.searchUsd === undefined || l.searchUsd <= 0 ? null : cents(l.searchUsd),
+      neonBytes: n === undefined ? null : n.responseBytes + n.requestBytes };
+  });
 }

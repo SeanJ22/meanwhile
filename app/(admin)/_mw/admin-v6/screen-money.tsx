@@ -7,7 +7,7 @@
  */
 import { useMemo, useState } from "react";
 
-import { moneySummary } from "@/lib/control-plane/admin-view/spend-period.ts";
+import { dailyRows, moneySummary } from "@/lib/control-plane/admin-view/spend-period.ts";
 
 import { useV6 } from "./context.tsx";
 import { usd, type Hunt } from "./model.ts";
@@ -20,6 +20,8 @@ const money = (n: number | null) => (n === null ? DASH : usd(n));
 const STATUS: Readonly<Record<Hunt["status"], string>> = { running: "Running", paused: "Paused", stopped: "Stopped", unreported: DASH };
 const zipOf = (placeKey: string) => /\.zcta\.(\d{5})$/.exec(placeKey)?.[1] ?? DASH;
 const TOP = 10;
+const gigabytes = (bytes: number | null) => (bytes === null ? DASH : `${(bytes / 1e9).toFixed(2)} GB`);
+const dayWords = (day: string) => new Date(`${day}T12:00:00Z`).toLocaleDateString("en-US", { timeZone: "UTC", month: "short", day: "numeric" });
 
 type SortKey = "zip" | "place" | "spent" | "held" | "limit" | "status";
 const COLUMNS: readonly { readonly key: SortKey; readonly label: string; readonly num: boolean }[] = [
@@ -33,6 +35,7 @@ export function MoneyScreen() {
   const list = useMemo(() => (hunt ? [hunt] : huntsWithin(v.index, v.hunts, v.scopeKey)), [hunt, v.index, v.hunts, v.scopeKey]);
   const [sort, setSort] = useState<{ readonly key: SortKey; readonly down: boolean }>({ key: "spent", down: true });
   const [all, setAll] = useState(false);
+  const [by, setBy] = useState<"hunt" | "day">("hunt");
 
   const rows = useMemo(() => {
     const placeOf = (h: Hunt) => v.index.get(h.placeKey)?.name ?? h.name;
@@ -59,6 +62,18 @@ export function MoneyScreen() {
     dailyLimitUsd: v.data.spend.data?.dailyLimitUsd ?? null, period: v.period, now: new Date(),
   });
 
+  const days = v.data.spend.data ? dailyRows(v.data.spend.data, v.period, new Date()) : [];
+  const shownDays = all ? days : days.slice(0, TOP);
+  /** Hosting is billed by the month: the provider's own reading for the month in the picker, or a dash. */
+  const hosting = /^20dd-dd$/.test(v.period) ? v.data.money.data?.account.find((a) => a.provider === "Netlify")?.amountUsd ?? null : null;
+  const switcher = (
+    <span className={s.inline}>
+      {(["hunt", "day"] as const).map((k) => (
+        <button key={k} type="button" className={cx(s.btn, by === k && s.btnPrimary)} aria-pressed={by === k} onClick={() => { setBy(k); setAll(false); }}>{k === "hunt" ? "By hunt" : "By day"}</button>
+      ))}
+    </span>
+  );
+
   return (
     <>
       <header>
@@ -70,6 +85,8 @@ export function MoneyScreen() {
         <div className={s.gridTiles}>
           <div className={s.row}><span className={s.eyebrow}>Spent</span><span className={s.big}>{money(sum.spentUsd)}</span></div>
           <div className={s.row}><span className={s.eyebrow}>Search</span><span className={s.big}>{money(sum.searchUsd)}</span></div>
+          <div className={s.row}><span className={s.eyebrow}>Database sent</span><span className={s.big}>{gigabytes(sum.neonBytes)}</span></div>
+          <div className={s.row}><span className={s.eyebrow}>Hosting</span><span className={s.big}>{money(hosting)}</span></div>
           <div className={s.row}><span className={s.eyebrow}>Set aside</span><span className={s.big}>{money(sum.setAsideUsd)}</span></div>
           <div className={s.row}>
             <span className={s.eyebrow}>Today against the daily limit</span>
@@ -83,8 +100,27 @@ export function MoneyScreen() {
         </div>
       </Card>
 
-      <Card title="Hunts">
-        {rows.length === 0 ? <p className={cx(s.p, s.small)}>{DASH}</p> : (
+      <Card title={by === "hunt" ? "Hunts" : "Days"} aside={switcher}>
+        {by === "day" ? (days.length === 0 ? <p className={cx(s.p, s.small)}>{DASH}</p> : (
+          <>
+            <div className={s.tableWrap}>
+              <table className={s.table}>
+                <thead><tr><th scope="col">Day</th><th scope="col" className={s.num}>Spent</th><th scope="col" className={s.num}>Search</th><th scope="col" className={s.num}>Database sent</th></tr></thead>
+                <tbody>
+                  {shownDays.map((d) => (
+                    <tr key={d.day}>
+                      <th scope="row" style={{ textTransform: "none", fontSize: 13, color: "var(--text)" }}>{dayWords(d.day)}</th>
+                      <td className={s.num}>{money(d.spentUsd)}</td><td className={s.num}>{money(d.searchUsd)}</td><td className={s.num}>{gigabytes(d.neonBytes)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {days.length > TOP && (
+              <button type="button" className={s.btn} aria-expanded={all} onClick={() => setAll(!all)}>{all ? `Show the latest ${TOP}` : `Show all ${days.length}`}</button>
+            )}
+          </>
+        )) : rows.length === 0 ? <p className={cx(s.p, s.small)}>{DASH}</p> : (
           <>
             <div className={s.tableWrap}>
               <table className={s.table}>

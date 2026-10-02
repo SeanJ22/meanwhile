@@ -6,7 +6,7 @@ const HOSTS=['policies.sparqdata.com','policy.azsba.org'];
 export const guide:PlatformAdapterGuide={
   summary:'Sparq policy route: /sopapi/document/getdocument/{partner}/{tenant}/{collection}/{code}. Observe the codes in public portal requests; run sparqdata-policy on the saved API artifact, reusing captured bytes.',
   procedure:'For a Sparq /{partner}/browse/{tenant} portal, inspect its public requests for /sopapi/document/getdocument/{partner}/{tenant}/{collection}/{code}. Use observed collection and document codes, then run sparqdata-policy on the saved API artifact. It decodes JSON objects and double-encoded JSON strings, returning policy text, adoption date and source links. Match exact quotes to the captured source.',
-  recordClasses:['local-jurisdiction'],sourceUrls:HOSTS.map(host=>'https://'+host),
+  recordClasses:['local-jurisdiction','PUBLIC_COMMENT_RULE'],sourceUrls:HOSTS.map(host=>'https://'+host),
 };
 
 export function extract(input: { text: string; sourceUrl: string }) {

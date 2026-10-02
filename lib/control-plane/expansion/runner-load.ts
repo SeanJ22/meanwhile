@@ -88,10 +88,22 @@ export function readZctaShares(root: string, wanted: ReadonlySet<string>, states
  * governments it blocks by the same certain-overlap rule as a registered one,
  * rather than by wholly-inside ZCTAs alone.
  */
-export function readTerritoryIndex(root: string, registries: readonly JurisdictionRegistry[], states = [...new Set(registries.map(registry => registry.stateCode))], zips?: ReadonlySet<string>): TerritoryIndex {
+export function readTerritoryIndex(root: string, registries: readonly JurisdictionRegistry[], states = [...new Set(registries.map(registry => registry.stateCode))], zips?: ReadonlySet<string>, places: ReadonlyMap<string, readonly PlaceDivision[]> = new Map()): TerritoryIndex {
   const selected = new Set(states.map(state => state.toUpperCase()));
-  const units = readCensusUnitTerritories(root, states, zips);
-  const wanted = new Set<string>();
+  const exact = new Map<string, Set<string>>();
+  for (const [zip, divisions] of places) for (const division of divisions) {
+    const layer = division.censusLayer ?? division.divisionType;
+    if (zips && !zips.has(zip) || !["county", "place", "cousub", "unsd", "elsd", "scsd"].includes(layer) ||
+      !selected.has(FIPS_TO_STATE[division.geoid.slice(0, 2)]?.postal ?? "")) continue;
+    const key = `${layer}:${division.geoid}`;
+    const touched = exact.get(key) ?? new Set<string>();
+    touched.add(zip); exact.set(key, touched);
+  }
+  const units = readCensusUnitTerritories(root, states, zips, new Set(exact.keys())).map(unit => {
+    const touched = exact.get(unitShareKey(unit) ?? "");
+    return touched ? { ...unit, zips: [...new Set([...unit.zips, ...touched])] } : unit;
+  });
+  const wanted = new Set<string>(exact.keys());
   for (const unit of units) {
     const key = unitShareKey(unit);
     if (key !== null) wanted.add(key);
@@ -112,7 +124,8 @@ export function readTerritoryIndex(root: string, registries: readonly Jurisdicti
   for (const key of shares.keys()) if (!selected.has(FIPS_TO_STATE[key.split(":")[1]?.slice(0, 2)]?.postal ?? "")) shares.delete(key);
   return buildTerritoryIndex(scopedRegistries, units, (key) => shares.get(key), (j) => {
     const own = j.censusDivision ? shares.get(j.censusDivision) : undefined;
-    return own === undefined ? undefined : { zctas: new Set(own.keys()), shares: own };
+    const touched = j.censusDivision ? exact.get(j.censusDivision) : undefined;
+    return own === undefined && !touched ? undefined : { zctas: new Set([...(own?.keys() ?? []), ...(touched ?? [])]), shares: own ?? new Map() };
   }, states.some(state => state.toUpperCase() === "AZ") ? readApproximateDistrictExtract(root) : null);
 }
 
@@ -130,10 +143,10 @@ export function readApproximateDistrictExtract(root: string): ApproximateDistric
 }
 
 /** Read the Census unit territories. Throws with the path named; the caller turns that into a named condition. */
-export function readCensusUnitTerritories(root: string, states: readonly string[], zips?: ReadonlySet<string>): readonly CensusUnitTerritory[] {
+export function readCensusUnitTerritories(root: string, states: readonly string[], zips?: ReadonlySet<string>, divisions?: ReadonlySet<string>): readonly CensusUnitTerritory[] {
   const selected = new Set(states.map(state => state.toUpperCase()));
   const units = [...selected].flatMap(state => {
-    return readStateReference(root, state, { units: zips ?? "state" }).units;
+    return readStateReference(root, state, { units: zips ?? "state", divisions }).units;
   });
   return units;
 }
@@ -263,7 +276,7 @@ export async function loadExpansionPlan(input: {
   /** Injected in tests; the runner uses the published lookup. */
   readonly loadLookup?: () => Promise<LookupState>;
   /** Injected in tests; the runner reads the committed territories and the preloaded registries. */
-  readonly loadTerritory?: (states: readonly string[], zips: ReadonlySet<string>) => TerritoryIndex;
+  readonly loadTerritory?: (states: readonly string[], zips: ReadonlySet<string>, places: ReadonlyMap<string, readonly PlaceDivision[]>) => TerritoryIndex;
   readonly loadNationalZip?: (zip: string) => Promise<readonly PlaceDivision[]>;
   /**
    * Called once the scopes are resolved, with every state they span (a metro's member states included), before
@@ -357,8 +370,8 @@ export async function loadExpansionPlan(input: {
       territory = (input.loadTerritory ?? (() => {
         const registries = Object.values(installedOperationalReferenceRegistries(states));
         if (registries.length === 0) throw new Error("OPERATIONAL_REFERENCE_READ_NOT_INITIALIZED: no promoted jurisdiction registry was preloaded");
-        return readTerritoryIndex(input.root, registries, states, zips);
-      }))(states, zips);
+        return readTerritoryIndex(input.root, registries, states, zips, nationalPlaces);
+      }))(states, zips, nationalPlaces);
     } catch (error) {
       territoryDetail = error instanceof Error ? error.message : String(error);
       conditions.push(`the expansion territory index could not be built (${territoryDetail}); no work is placed in a scope this cycle`);

@@ -178,18 +178,18 @@ const SOURCE_STAGE: Readonly<Record<HuntSourceProgress["stage"], { kind: string;
   QUEUED: { kind: "Queued", says: "was put in line to run", tone: "info" },
   COLLECTING_AND_VERIFYING: { kind: "Collecting", says: "started collecting and checking", tone: "info" },
   PUBLISHED: { kind: "Published", says: "was checked and published", tone: "good" },
-  REUSED: { kind: "Reused", says: "was already current, so the saved published copy was kept", tone: "good" },
-  HELD: { kind: "Held", says: "was held back and not published", tone: "warn" },
+  REUSED: { kind: "Reused", says: "was already current", tone: "good" },
+  HELD: { kind: "Held", says: "was held back", tone: "warn" },
   FAILED: { kind: "Failed", says: "stopped before publishing", tone: "warn" },
 };
 
 const FAILURE_WORDS: Readonly<Record<string, string>> = {
-  RECEIPT_COUNT_INVALID: "The run ended without the one receipt it must save, so nothing from it could be published.",
+  RECEIPT_COUNT_INVALID: "No receipt was saved.",
 };
 function failureWords(detail: unknown): string {
   const code = typeof detail === "string" ? /^([A-Z][A-Z0-9_]{2,63})\b/.exec(detail)?.[1] ?? null : null;
-  if (code === null) return "The run stopped before publishing. No reason code was saved.";
-  return `${FAILURE_WORDS[code] ?? "The run stopped before publishing."} (Saved reason code: ${code}.)`;
+  if (code === null) return "Stopped before publishing.";
+  return `${FAILURE_WORDS[code] ?? "Stopped before publishing."} Code: ${code}.`;
 }
 
 const sourceName = (sourceId: string) => `The ${sourceId.replaceAll(/[-_]/g, " ")} source`;
@@ -355,7 +355,7 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
     promoted: count(progression.promoted?.count) ? progression.promoted!.count as number : null,
     visible: count(progression.readerVisible?.count) ? progression.readerVisible!.count as number : null } : null;
   if (binding.all && window && window.promoted !== null && window.promoted > 0) useful.push({ at: window.through,
-    what: `${plural(window.promoted, "record")} ${window.promoted === 1 ? "was" : "were"} promoted in the round window ending ${mstWords(window.through)}.` });
+    what: `${plural(window.promoted, "record")} promoted in the round window ending ${mstWords(window.through)}.` });
   useful.sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
   if (useful.length === 0) missing.push(`No publication or promotion ${binding.all ? "" : `for ${scopeKey} `}is in the saved readings this section can read, so the last useful progress is not reported. A check-in only means the workers are switched on.`);
 
@@ -377,9 +377,8 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
   const memberSends = (sends ?? []).filter(r => r.kind !== "DISPATCH" && text(r.ref) && sendRelation(binding, r.key as string, r.ref as string) === "member");
   const waiting: V6WaitingItem[] = [];
   const next: string[] = [];
-  const nextTime = !nextDue ? "Not reported" : Date.parse(nextDue) > Date.parse(now) ? `The next round, due ${mstWords(nextDue)}`
-    : `The next round (it was due ${mstWords(nextDue)})`;
-  if (research?.pausedByOwner === true) next.push("Paid research is paused by you. Plain-code work keeps going.");
+  const nextTime = !nextDue ? "—" : mstWords(nextDue);
+  if (research?.pausedByOwner === true) next.push("Paid research is paused.");
   for (const r of memberSends) {
     const d = binding.saved.find(s => s.key === r.key && s.receiptId === r.ref);
     const name = d ? huntName(d) : typeof r.label === "string" ? `${r.label} hunt` : `The hunt sent as ${r.key as string}`;
@@ -390,20 +389,20 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
       const unsettled = count(c.unsettledCount) ? c.unsettledCount : exceptions.filter(e => e.kind === "UNSETTLED").length;
       const open = c.members - c.settled;
       waiting.push({ kind: "Not finished", title: `${name}: ${open.toLocaleString("en-US")} of ${plural(c.members, "assigned task")} not finished`,
-        why: `${plural(refused, "task")} ${refused === 1 ? "was" : "were"} stopped by a check, and ${plural(unsettled, "task")} ${unsettled === 1 ? "has" : "have"} no finished, checked result yet. Counted ${mstWords(reading!.at as string)}.`,
+        why: `${plural(refused, "task")} stopped by a check · ${plural(unsettled, "task")} unfinished`,
         nextTime, owner: "Workers", applies, actions: [] });
-      next.push(`${name}: finish the other ${plural(open, "assigned task")} and pass ${open === 1 ? "its" : "their"} checks.`);
+      next.push(`${name}: ${plural(open, "assigned task")} to finish.`);
     } else if (c?.kind === "NO_MEMBERS") {
       waiting.push({ kind: "Not started", title: `${name}: no tasks are assigned yet`,
-        why: "No task has been linked to this hunt, so nothing can be finished for it yet.", nextTime, owner: "Workers", applies, actions: [] });
+        why: "No tasks assigned", nextTime, owner: "Workers", applies, actions: [] });
     } else if (c?.kind === "COMPLETE" && count(c.members)) {
       next.push(`${name}: all ${plural(c.members, "assigned task")} passed their checks.`);
     } else missing.push(`Whether the ${name}'s tasks are finished was not counted in the latest saved reading.`);
     const b = r.budget as { refused?: unknown; leftUsd?: unknown; heldUsd?: unknown; budgetUsd?: unknown } | null | undefined;
     if (b && count(b.refused) && b.refused > 0) waiting.push({ kind: "Money limit",
-      title: `${name}: paid research was turned away ${plural(b.refused, "time")} by the hunt's money limit`,
-      why: `${typeof b.leftUsd === "number" ? `$${b.leftUsd.toFixed(2)} is left` : "The amount left is unknown"} of the $${typeof b.budgetUsd === "number" ? b.budgetUsd.toFixed(2) : "?"} limit${typeof b.heldUsd === "number" && b.heldUsd > 0 ? `, with $${b.heldUsd.toFixed(2)} set aside for work already started` : ""}. Counted ${mstWords(reading!.at as string)}.`,
-      nextTime: "When money is freed up or you change the limit", owner: "You", applies, actions: [] });
+      title: `${name}: paid research turned away ${plural(b.refused, "time")} by the money limit`,
+      why: `${typeof b.leftUsd === "number" ? `$${b.leftUsd.toFixed(2)}` : "—"} left of the ${typeof b.budgetUsd === "number" ? `$${b.budgetUsd.toFixed(2)}` : "—"} limit${typeof b.heldUsd === "number" && b.heldUsd > 0 ? ` · $${b.heldUsd.toFixed(2)} held` : ""}`,
+      nextTime: "—", owner: "You", applies, actions: [] });
   }
   /* a source whose newest receipt here is a failure or a hold is waiting on that failure */
   const byTask = new Map<string, typeof inScope>();
@@ -415,14 +414,14 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
     const since = failures[failures.length - 1].row.at;
     waiting.push({ kind: latest.row.p.stage === "FAILED" ? "Keeps failing" : "Held",
       title: `${sourceName(latest.row.p.sourceId)} for ${namesOf(binding, latest.sends)}: ${failures.length === 1 ? (latest.row.p.stage === "FAILED" ? "failed" : "held") : `${failures.length} ${latest.row.p.stage === "FAILED" ? "failed tries" : "holds"} since ${mstWords(since)}`}`,
-      why: latest.row.p.stage === "FAILED" ? failureWords(latest.row.p.detail) : "The run was held back, so nothing from it was published.",
-      nextTime: "The workers try it again on their own. The next try time is not saved.",
+      why: latest.row.p.stage === "FAILED" ? failureWords(latest.row.p.detail) : "Held back",
+      nextTime: "—",
       owner: failures.length > 1 ? "Engineering (the same failure keeps coming back)" : "Workers", applies, actions: [] });
   }
   if (binding.all && gauges) for (const g of gauges) if (g.waiting > 0) waiting.push({ kind: "In line",
     title: `${plural(g.waiting, "task")} waiting: ${g.name.toLowerCase()}`,
-    why: g.blockedBy ?? "Why they wait is counted when the current round ends.",
-    nextTime: g.oldestWaitingDueAt ? `The oldest has been due since ${mstWords(g.oldestWaitingDueAt)}` : nextTime, owner: "Workers", applies, actions: [] });
+    why: g.blockedBy ? g.blockedBy : "—",
+    nextTime: g.oldestWaitingDueAt ? `Oldest due ${mstWords(g.oldestWaitingDueAt)}` : nextTime, owner: "Workers", applies, actions: [] });
   // "Nothing is waiting" is provable only for the whole country, from the queue counts. In a place,
   // work not sent to a hunt cannot be placed, so an empty list there would be a guess.
   const waitingComplete = binding.all && gauges !== null && sources.sourceEvents.state === "READ";
@@ -444,20 +443,19 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
     const what = `Paid research on a ${r.evidence.obligation.state === "READ" ? recordClassWords(r.evidence.obligation.value.recordClass as string) : "public record"} task for ${namesOf(binding, r.sends ?? [])}`;
     const lease = r.evidence.lease.state === "READ" ? r.evidence.lease.value : null;
     if (r.state === "RUNNING") events.push({ iso: r.evidence.scout.startedAt, at: mstWords(r.evidence.scout.startedAt), kind: "Paid research started", tone: "info", applies,
-      text: `${what} is running now with ${modelWords(a.worker?.version)}. Its work claim holds until ${mstWords(lease!.expiresAt!)}. No result is saved yet, and its cost is measured when it ends.` });
+      text: `${what} is running now with ${modelWords(a.worker?.version)}. Work claim holds until ${mstWords(lease!.expiresAt!)}.` });
     else if (r.state === "EXPIRED") events.push({ iso: r.evidence.scout.startedAt, at: mstWords(r.evidence.scout.startedAt), kind: "No live work claim", tone: "warn", applies,
-      text: `${what} started ${mstWords(r.evidence.scout.startedAt)}, but its work claim ${lease && clock(lease.expiresAt) ? `ran out ${mstWords(lease.expiresAt)}` : "is gone"}. It is not proven running now. No finish is saved for this attempt; delivery must be checked separately.` });
+      text: `${what} started ${mstWords(r.evidence.scout.startedAt)}; its work claim ${lease && clock(lease.expiresAt) ? `ran out ${mstWords(lease.expiresAt)}` : "is gone"}.` });
     else if (clock(a.endedAt)) events.push({ iso: a.endedAt, at: mstWords(a.endedAt), kind: "Paid research ended", tone: a.outcome === "COMPLETED" ? "info" : "warn", applies,
-      text: `${what} ended (${String(a.outcome).toLowerCase().replaceAll("_", " ")}). Ending is not the same as a checked, published result.` });
+      text: `${what} ended (${String(a.outcome).toLowerCase().replaceAll("_", " ")}).` });
   }
   if (binding.all && window) events.push({ iso: window.through, at: mstWords(window.through), kind: "Round results", applies,
     tone: window.promoted !== null && window.promoted > 0 ? "good" : "info",
-    text: `From ${mstWords(window.since)} to ${mstWords(window.through)}: ${window.promoted === null ? "records promoted were not counted" : `${plural(window.promoted, "record")} promoted`}; ${window.visible === null ? "how many readers can see was not counted" : `${plural(window.visible, "record")} visible to readers`}.` });
+    text: `From ${mstWords(window.since)} to ${mstWords(window.through)}: ${window.promoted === null ? "— records promoted" : `${plural(window.promoted, "record")} promoted`}; ${window.visible === null ? "— records visible to readers" : `${plural(window.visible, "record")} visible to readers`}.` });
   events.sort((a, b) => Date.parse(b.iso) - Date.parse(a.iso) || a.text.localeCompare(b.text));
   // Plain-code jobs record no change this section can read, so no scope can claim "no recorded changes".
 
-  if (nextDue) next.push(Date.parse(nextDue) > Date.parse(now) ? `The next round of work is due ${mstWords(nextDue)}.`
-    : `The next round was due ${mstWords(nextDue)}. No newer start is saved yet.`);
+  if (nextDue) next.push(Date.parse(nextDue) > Date.parse(now) ? `Next round due ${mstWords(nextDue)}.` : `Next round was due ${mstWords(nextDue)}.`);
   missing.push(`${DEP_WORKER_ACTIVE_INDEX}: the full list of jobs running now is not shown. Paid research jobs are checked one by one and appear under What changed, but plain-code collection jobs run outside that list and the store has no bounded read of every unexpired work claim yet.`);
 
   const data: AdminV6WorkersView = {

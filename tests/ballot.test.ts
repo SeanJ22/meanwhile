@@ -195,7 +195,7 @@ test("the NJ date strip is complete and cited", () => {
  * same joins, denominators stated.
  */
 import { BALLOT_SOURCES } from "../lib/ballot/registry.ts";
-import { BALLOT_COVERED_STATES } from "../lib/ballot/covered-states.ts";
+import { stateFromOcdIds } from "../lib/ballot/covered-states.ts";
 
 async function registryBallotAt(zip: string) {
   const r = resolveZip(zip);
@@ -212,12 +212,11 @@ async function registryBallotAt(zip: string) {
   throw new Error(`${zip}: no ballot source matched`);
 }
 
-test("the client's covered-state list agrees with the registry", () => {
-  assert.deepEqual(
-    [...BALLOT_COVERED_STATES].sort(),
-    BALLOT_SOURCES.map((s) => s.state).sort(),
-    "covered-states.ts and ballot registry drifted apart",
-  );
+test("ballot geography recognizes state, DC and territory IDs without declaring coverage", () => {
+  assert.equal(stateFromOcdIds(["ocd-division/country:us/district:dc/ward:1"]), "dc");
+  assert.equal(stateFromOcdIds(["ocd-division/country:us/territory:pr"]), "pr");
+  assert.equal(stateFromOcdIds(["ocd-division/country:us/state:wi/county:dane"]), "wi");
+  assert.equal(stateFromOcdIds(["ocd-division/country:us/state:xx"]), null);
 });
 
 test("a Tucson voter (85701) sees the statewide slate, CD-7, LD-20 and the measures", async () => {

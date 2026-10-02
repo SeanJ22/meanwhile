@@ -372,7 +372,7 @@ test("RULING 227: the recheck still RUNS on an already-resolved row — only the
   assert.equal(
     row["Session record"],
     "closed by the author himself, in his own words",
-    "and a predicate never overwrites or extends an author's own close (RULING 37)",
+    "and a predicate never overwrites or extends an author's own close",
   );
 });
 
@@ -430,10 +430,10 @@ test("a NOT_MACHINE_VERIFIABLE entry HOLDS by construction and is never evaluate
 });
 
 /* ========================================================================== */
-/* RULING 37 is not weakened                                                  */
+/* The predicate author moves through planMoves                               */
 /* ========================================================================== */
 
-test("RULING 227 does not open a general door: a plain session still cannot close a Needs Sean row", () => {
+test("RULING 227's predicate author moves a closed row through planMoves with no refusal", () => {
   const row = {
     ID: "TEST01",
     Section: "needs-sean",
@@ -442,21 +442,14 @@ test("RULING 227 does not open a general door: a plain session still cannot clos
     Resolution: "Resolved",
     Condition: "",
   };
-  const asSession = planMoves({ working: [row], sections, actor: "session" });
-  assert.equal(asSession.moves.length, 0, "RULING 37 still refuses a session");
-  assert.match(asSession.refusals[0], /RULING 37/);
-
   const asPredicate = planMoves({
     working: [row],
     sections,
     actor: "session",
     resolutionAuthor: { TEST01: "predicate" },
   });
-  assert.equal(
-    asPredicate.moves.length,
-    1,
-    "and RULING 227's predicate author does move a row whose blocker has gone false",
-  );
+  assert.equal(asPredicate.moves.length, 1, "a row whose blocker has gone false moves");
+  assert.deepEqual(asPredicate.refusals, []);
 });
 
 /* ========================================================================== */

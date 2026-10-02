@@ -122,7 +122,8 @@ export interface StateRow {
 /* ------------------------------------------------------ reader results */
 
 /** Six stages from source to reader. */
-export type StageMark = "done" | "not-yet" | "wrong" | "partial" | "reported" | "waiting";
+/** `unreported`: nothing records this stage for this result, which is not the same as not done. */
+export type StageMark = "done" | "not-yet" | "wrong" | "partial" | "reported" | "waiting" | "unreported";
 export const STAGE_NAMES = ["Found", "Saved", "Facts pulled out", "Facts checked against sources", "Published", "Checked on the public page"] as const;
 
 export type ResultKind = "New" | "Reused" | "Updated" | "Retained";
@@ -155,7 +156,8 @@ export interface ReaderResult {
   readonly id: string;
   readonly title: string;
   readonly applies: readonly string[];
-  readonly kind: ResultKind;
+  /** Null when nothing records whether the result is new, reused, updated or retained. */
+  readonly kind: ResultKind | null;
   readonly stages: readonly StageMark[];
   readonly readerSees: string;
   readonly problem: boolean;

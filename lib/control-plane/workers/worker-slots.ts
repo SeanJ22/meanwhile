@@ -2,9 +2,10 @@ import { freemem, platform } from "node:os";
 import { readFileSync } from "node:fs";
 
 const MIB = 1024 * 1024;
-/** Rounded-up measured RSS peaks of each entry; headroom covers parent, standing work and browsers. */
+/** Rounded-up measured RSS peaks of each entry; free memory already excludes running work. */
 export const WORKER_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = { route: 248, scout: 248, lease: 342, national: 1258 };
-export const WORKER_MEMORY_HEADROOM_MIB = 4864;
+/** Sean's 0.75 GiB margin on the 8 GiB host (7,424 MiB maximum total use). */
+export const WORKER_MEMORY_HEADROOM_MIB = 768;
 
 export function availableWorkerMemoryBytes(): number {
   let available = freemem();

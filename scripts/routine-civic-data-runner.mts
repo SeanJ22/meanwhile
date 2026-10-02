@@ -120,7 +120,7 @@ import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/co
 import { assertDurableRepositories } from "../lib/control-plane/repository/types.ts";
 import { getDb } from "../lib/db/index.ts";
 import { startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
-import { withNationalPlaceTasks } from "../lib/hunt/place-source-admission.ts";
+import { placeSourceLaunchOrder, withNationalPlaceTasks } from "../lib/hunt/place-source-admission.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
 import { publishRoutineReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
@@ -467,7 +467,7 @@ try {
 }
 // A standing refresh already covers a Send for its source; don't launch duplicate children for the same pointer.
 const selectedTasks = [...STANDING_SOURCE_TASKS, ...huntTasks.filter(task => !STANDING_SOURCE_TASKS.some(standing => standing.id === task.id))]
-  .filter((task) => !ONLY || ONLY.has(task.id));
+  .filter((task) => !ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId)));
 step = "reading the routine task clocks";
 const clockReads = FORCE
   ? selectedTasks.map((task) => ({ task, ok: true as const, clock: undefined, error: null }))
@@ -616,9 +616,9 @@ for (const candidate of dueCandidates) {
       `(domain=${candidate.pending.task.acquisitionFailureDomain}; per-pass=${ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS}, meeting lanes ${SITTING_WINDOW_LANE_SLOTS_PER_PASS})`,
   );
 }
-// The pool starts the read owed soonest first (routinePassLaunchOrder).
+// A saved Send starts beside the earliest standing read, before its backlog drains.
 const pendingByTaskId = new Map(dueCandidates.map(({ pending }) => [pending.id, pending] as const));
-for (const { task } of routinePassLaunchOrder(admitted)) pendingRuns.push(pendingByTaskId.get(task.id)!);
+for (const { task } of placeSourceLaunchOrder(routinePassLaunchOrder(admitted))) pendingRuns.push(pendingByTaskId.get(task.id)!);
 for (const pending of pendingRuns) await recordHuntSourceProgress(pending.task, "QUEUED", "Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.");
 const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admittedIds.has(taskId)
   ? `Owner due request ${request.id}: ${taskId} admitted by this ordinary pass (due ${request.dueAt}).`
@@ -663,6 +663,7 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
     // One degraded provider may occupy one lane, never the whole standing
     // pool. Distinct sources keep running and settling independently.
     failureDomain: pending.task.acquisitionFailureDomain,
+    ...(/^(national-place:|worker-publication:)/.test(pending.task.id) ? { timeoutMs: 0 } : {}),
     executable: process.execPath,
     args: ["--experimental-strip-types", ...pending.command],
     env: {
@@ -783,7 +784,9 @@ async function settlePendingRun(pending: PendingRun, run: BoundedChildResult): P
     ? await durableRoutineRunnerReceiptIssue(parsedReceipt.receipt, pending.task, store, receiptOutcome)
     : null;
   const child = classifyRoutineChildOutcome({
-    parsed: parsedReceipt,
+    parsed: parsedReceipt.ok && durableIssue === null
+      ? { ...parsedReceipt, receipt: { ...parsedReceipt.receipt, source: pending.task.id } }
+      : parsedReceipt,
     durableIssue,
     exitStatus: run.status,
     childDiagnostic: run.status === 0 ? null : safeFailure(`${run.errorMessage ?? ""}\n${output}`),

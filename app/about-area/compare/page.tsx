@@ -6,7 +6,8 @@ import {
   compareStates,
   type ComparisonCell,
 } from "@/lib/area/comparison";
-import { COVERED } from "@/lib/coverage/artifacts";
+import { AREA_FACTS } from "@/lib/area/facts";
+const FACT_STATES = AREA_FACTS.map(row => ({ usps: row.state, name: row.stateName, slug: row.state.toLowerCase() }));
 import { Logo } from "@/components/brand/logo";
 import { titleFor } from "@/lib/brand";
 
@@ -101,12 +102,12 @@ function StatePills({
     if (zip) params.set("zip", zip);
     return `/about-area/compare?${params.toString()}`;
   };
-  const unchosen = COVERED.filter((s) => !chosen.includes(s.usps));
+  const unchosen = FACT_STATES.filter((s) => !chosen.includes(s.usps));
 
   return (
     <div className="mt-3 flex flex-wrap items-center gap-2">
       {chosen.map((usps) => {
-        const state = COVERED.find((s) => s.usps === usps);
+        const state = FACT_STATES.find((s) => s.usps === usps);
         return (
           <Link
             key={usps}
@@ -198,7 +199,7 @@ export default async function CompareStatesPage({
 
         Playful register — this is an interaction surface, not a claim
         surface. Nothing here orders the states by anything but the manifest's
-        own onboarding order (`COVERED`), because an ordering derived from the
+        own onboarding order (`FACT_STATES`), because an ordering derived from the
         content would be a ranking wearing an ordering.
       */}
       <StatePills a={a} b={b} zip={zip} />
@@ -215,8 +216,8 @@ export default async function CompareStatesPage({
               the content — "most different first" would be a ranking wearing
               an ordering. */}
           <ul className="mt-3 space-y-2">
-            {COVERED.flatMap((left) =>
-              COVERED.filter((right) => right.usps !== left.usps).map((right) => (
+            {FACT_STATES.flatMap((left) =>
+              FACT_STATES.filter((right) => right.usps !== left.usps).map((right) => (
                 <li key={`${left.usps}-${right.usps}`}>
                   <Link
                     href={`/about-area/compare?a=${left.usps}&b=${right.usps}`}

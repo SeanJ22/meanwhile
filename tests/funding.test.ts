@@ -225,7 +225,6 @@ test("every ripcord is registered with question, closer, and tracker rows", () =
     "ripcord.askGrounded",
     "ripcord.fecContributorDisplay",
     "ripcord.rateLimits",
-    "ripcord.reactionFreeText",
     "ripcord.reactionIntake",
     // ASK-12 (2026-08-25), Sean's ruling: the unsourced general-answer
     // fallback. It is a ripcord rather than a feature flag because the

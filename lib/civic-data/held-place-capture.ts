@@ -2,12 +2,15 @@ import { readRegistryRuntimeProjection } from "../registry/runtime-read-model.ts
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
 import { MEETING_PARTITION_CONTRACTS } from "./meeting-partitions.ts";
-import { readPromotedCivicDataBatch, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "./read-model.ts";
+import { readPromotedCivicDataBatch, type PromotedCivicDataReadOptions } from "./read-model.ts";
 import { projectHeldPlaceFamilies, readHeldPlaceFamilies, type HeldPlaceFamilies } from "./held-place-families.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "./contracts.ts";
 import type { OutcomeSnapshot } from "../outcomes/types.ts";
 import { observationFreshUntil, observationIsFresh } from "../ask/agenda-publication.ts";
 import { reconcilePublicationObservations } from "../outcomes/publication.ts";
+import { readPlacePointerSlice, type PlaceCaptureRead } from "./held-place-slices.ts";
+import { REGISTRY_RUNTIME_SCOPE } from "../registry/runtime-data-plane.ts";
+import { PostgresRoutineDataStore } from "./store.ts";
 
 /** Derived from canonical published records, never filtered by their original job or ZIP. */
 export interface HeldPlaceCapture {
@@ -16,7 +19,7 @@ export interface HeldPlaceCapture {
     sourceUrl: string; checkedAt: string; freshUntil: string; value: unknown }[];
 }
 
-function published<T>(read: CivicDataReadResult<T>): T | null {
+function published<T>(read: PlaceCaptureRead<T>): T | null {
   if (read.kind === "PROMOTED") return read.value;
   if (read.kind === "NOT_RECORDED") return null;
   throw new Error(`HELD_PLACE_READ_FAILED:${read.metadata.recordClass}:${read.metadata.scope}:${read.kind}`);
@@ -24,10 +27,10 @@ function published<T>(read: CivicDataReadResult<T>): T | null {
 
 /** Only the individual supported fields count; inventories and unrelated fields remain open. */
 export function projectHeldPlaceCapture(
-  divisionIds: readonly string[], registryRead: CivicDataReadResult<RegistryRuntimeReadModel>,
-  meetingReads: readonly CivicDataReadResult<MeetingsSnapshot>[], now: string,
+  divisionIds: readonly string[], registryRead: PlaceCaptureRead<RegistryRuntimeReadModel>,
+  meetingReads: readonly PlaceCaptureRead<MeetingsSnapshot>[], now: string,
   families: HeldPlaceFamilies = {},
-  outcomeReads: readonly CivicDataReadResult<OutcomeSnapshot>[] = [],
+  outcomeReads: readonly PlaceCaptureRead<OutcomeSnapshot>[] = [],
 ): HeldPlaceCapture {
   const registry = published(registryRead);
   const wanted = new Set(divisionIds);
@@ -128,7 +131,10 @@ export function projectHeldPlaceCapture(
 }
 
 export async function readHeldPlaceCapture(divisionIds: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<HeldPlaceCapture> {
-  const registry = await readRegistryRuntimeProjection(options);
+  const sliced = !options.store || options.store instanceof PostgresRoutineDataStore;
+  const registry = sliced
+    ? await readPlacePointerSlice<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, divisionIds)
+    : await readRegistryRuntimeProjection(options);
   const value = published(registry);
   const bodies = new Set((value?.registry.bodies ?? []).filter(body =>
     [body.ocdId, ...(body.alsoServesOcdIds ?? [])].some(id => id !== null && divisionIds.includes(id))).map(body => body.id));
@@ -139,9 +145,11 @@ export async function readHeldPlaceCapture(divisionIds: readonly string[], optio
     contract.schedule?.follows?.some(partition => bodies.has(partition.bodyId) ||
       partitions.some(known => known.bodyId === partition.bodyId))).map(contract => contract.scope);
   const [meetings, families, outcomes] = await Promise.all([
-    readPromotedCivicDataBatch<MeetingsSnapshot>("MEETING", partitions.map(partition => partition.scope), options),
-    readHeldPlaceFamilies(divisionIds, options),
-    readPromotedCivicDataBatch<OutcomeSnapshot>("MEETING_OUTCOME", outcomeScopes, options),
+    sliced ? Promise.all(partitions.map(partition => readPlacePointerSlice<MeetingsSnapshot>("MEETING", partition.scope, divisionIds, [...bodies]))) :
+      readPromotedCivicDataBatch<MeetingsSnapshot>("MEETING", partitions.map(partition => partition.scope), options),
+    readHeldPlaceFamilies(divisionIds, options, sliced ? value : undefined),
+    sliced ? Promise.all(outcomeScopes.map(scope => readPlacePointerSlice<OutcomeSnapshot>("MEETING_OUTCOME", scope, divisionIds, [...bodies]))) :
+      readPromotedCivicDataBatch<OutcomeSnapshot>("MEETING_OUTCOME", outcomeScopes, options),
   ]);
   return projectHeldPlaceCapture(divisionIds, registry, meetings, options.now ?? new Date().toISOString(), families, outcomes);
 }

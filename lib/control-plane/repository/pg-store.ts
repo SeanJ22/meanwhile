@@ -868,6 +868,33 @@ export async function bootstrap(
  * below is the one place the variable is read, and it refuses rather than
  * defaulting.
  */
+const placeReadConnections = new WeakMap<ControlPlaneRepositories, Sql>();
+
+/** Exact source observations from any job; unrelated vault metadata stays in
+ * Postgres instead of being copied into every place worker. */
+export async function readPlaceArtifacts(repos: ControlPlaneRepositories, url: string, cutoff: string, now: string): Promise<readonly ArtifactRecord[]> {
+  const sql = placeReadConnections.get(repos);
+  if (!sql) return (await repos.artifacts.readAll()).filter(row => row.canonicalUrl === url && !row.partial &&
+    row.tier !== "RESTRICTED_RAW" && row.recordedAt >= cutoff && row.recordedAt <= now);
+  const run = boundedRunner(sql, "cp_log_artifacts", CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  const rows = await run("placeSource", "PAGE", `SELECT record FROM cp_log_artifacts
+    WHERE record->>'canonicalUrl'=$1 AND record->>'partial'='false' AND record->>'tier'<>'RESTRICTED_RAW'
+      AND record->>'recordedAt'>=$2 AND record->>'recordedAt'<=$3 ORDER BY record->>'recordedAt' DESC`, [url, cutoff, now]) as Record<string, unknown>[];
+  return rows.map(row => parseValue<ArtifactRecord>(row.record, "place source artifact"));
+}
+
+/** Declared work for the place/ring's exact divisions, including the portable
+ * national and relevant state sources. No country-wide work objects are read. */
+export async function readPlaceStandingWork(repos: ControlPlaneRepositories, divisionIds: readonly string[]) {
+  const sql = placeReadConnections.get(repos);
+  if (!sql) return (await repos.obligations.listWhere(["active"], "true")).map(row => row.value)
+    .filter(row => row.scopeDivisions?.some(id => divisionIds.includes(id)));
+  const run = boundedRunner(sql, "cp_obligations", CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  const rows = await run("placeWork", "PAGE", `SELECT id, value->>'subjectId' AS subject_id, value->'scopeDivisions' AS divisions
+    FROM cp_obligations WHERE value->>'active'='true' AND value->'scopeDivisions' ?| $1::text[] ORDER BY id`, [[...divisionIds]]) as Record<string, unknown>[];
+  return rows.map(row => ({ id: String(row.id), subjectId: String(row.subject_id), scopeDivisions: row.divisions as string[] }));
+}
+
 export async function createPgRepositories(
   connectionString: string,
   nowIso: string = new Date().toISOString(),
@@ -957,7 +984,7 @@ export async function createPgRepositories(
     },
   };
 
-  return {
+  const repositories: ControlPlaneRepositories = {
     workItems: pgAggregateRepository<WorkItem>(sql, "WorkItem", "cp_work_items", bounded),
     routeTasks: pgAggregateRepository<RouteTask>(sql, "RouteTask", "cp_route_tasks", bounded),
     attempts: pgAggregateRepository<Attempt>(sql, "Attempt", "cp_attempts", bounded),
@@ -1042,6 +1069,8 @@ export async function createPgRepositories(
       `${CONTROL_PLANE_URL_VAR})`,
     durable: true,
   };
+  placeReadConnections.set(repositories, sql);
+  return repositories;
 }
 
 /**

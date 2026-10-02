@@ -96,7 +96,7 @@ import { contentHash } from "../ids.ts";
 
 import type { WorkArtifact } from "./dispatch.ts";
 import { DEFAULT_FETCH_TIMEOUT_MS, WALL_STATUSES } from "./http-executor.ts";
-import { websiteRequestLimit } from "./host-supervision.ts";
+import { websiteRequestLimit, websiteSizeForObligation } from "./host-supervision.ts";
 import { evaluatePermission, DEFAULT_ROBOTS_TOKEN, type PermissionReading } from "./robots.ts";
 import { DEFAULT_USER_AGENT, realOpen, type OpenOne } from "./route-executor.ts";
 import {
@@ -567,6 +567,7 @@ function permissionState(verdict: PermissionReading["verdict"]): PermissionState
 }
 
 export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
+  const websiteSize = ctx.websiteSize ?? websiteSizeForObligation(ctx.obligation.obligation, ctx.root);
   const openOne: OpenOne = ctx.openOne ?? realOpen;
   /* An injected string opener never falls through to the real network. */
   const openBytes: OpenBytes | null =
@@ -610,7 +611,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   function overCap(url: URL): string | null {
     const host = hostOf(url);
     const n = hostCounts.get(host) ?? 0;
-    const max = websiteRequestLimit(ctx.websiteSize?.(url.toString()));
+    const max = websiteRequestLimit(websiteSize(url.toString()));
     if (max === null || n < max) return null;
     return (
       `${host} has had ${n} of ${max} requests this Attempt (the per-host bound), so this request is ` +
@@ -621,7 +622,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   async function retrieve(url: URL, accept: string, acc: CallAccount): Promise<Retrieved> {
     const host = hostOf(url);
     hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
-    if (websiteRequestLimit(ctx.websiteSize?.(url.toString())) !== null) await ctx.spaceOut(host);
+    if (websiteRequestLimit(websiteSize(url.toString())) !== null) await ctx.spaceOut(host);
     const headers = { "user-agent": DEFAULT_USER_AGENT, accept };
     let got: Retrieved;
     if (openBytes !== null) {
@@ -1168,7 +1169,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       obs = await preferHttps(url, async target => {
         /* Each navigation counts; the page's own calls are observed, not initiated. */
         hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
-        if (websiteRequestLimit(ctx.websiteSize?.(target.toString())) !== null) await ctx.spaceOut(host);
+        if (websiteRequestLimit(websiteSize(target.toString())) !== null) await ctx.spaceOut(host);
         requestCount += 1;
         acc.requests += 1;
         const observed = await browseFn({ url: target.toString(), timeoutMs, holder: ctx.holder });
@@ -1421,7 +1422,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         spaceOut: async host => { const url = new URL(`https://${host}`);
           const exceeded = overCap(url); if (exceeded) throw new Error(exceeded);
           hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
-          if (websiteRequestLimit(ctx.websiteSize?.(url.toString())) !== null) await ctx.spaceOut(host);
+          if (websiteRequestLimit(websiteSize(url.toString())) !== null) await ctx.spaceOut(host);
         } } satisfies import('./scout-api.ts').SourceApiOptions;
       const response = name === 'plural_roster' || name === 'legistar_events' ? await readClientSource(name,raw as Record<string,unknown>,options) : await readSourceApi(name,raw,options);
       acc.requests = response.requests; acc.bytes = response.bytes;

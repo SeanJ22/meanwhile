@@ -1,6 +1,9 @@
 import { SOURCE_API_SPECS } from "../lib/control-plane/scheduler/scout-api.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
 
 import type { Artifact } from "../lib/control-plane/evidence/artifact.ts";
 import { scheduleObligation, isScheduled } from "../lib/control-plane/scheduler/obligation.ts";
@@ -689,6 +692,35 @@ test("SEEDED (d): robots.txt 404 is NO_ROBOTS and the GET proceeds; the artifact
 });
 
 /* ============================================= SEEDED (e): per-host cap */
+
+test("shared Scout tools read held publisher sizes without a supplied callback", async t => {
+  const root = mkdtempSync(join(tmpdir(), "s8-publisher-tools-"));
+  t.after(() => { assert.equal(dirname(resolve(root)), resolve(tmpdir())); rmSync(root, { recursive: true, force: true }); });
+  const path = join(root, "data/states/az/reference/publisher-sizes.jsonl");
+  mkdirSync(dirname(path), { recursive: true });
+  writeFileSync(path, [
+    { host: "small.example.gov", censusId: "000001", kind: "local-government", population: 9999 },
+    { host: "school.example.gov", censusId: "000002", kind: "school-district", students: 4999 },
+    { host: "large.example.gov", censusId: "000003", kind: "local-government", population: 10000 },
+    { host: "state.example.gov", censusId: "000004", kind: "state", population: 100 },
+  ].map(size => JSON.stringify({ ...size, state: "az", source: { url: "https://census.gov/test-fixture", dataset: "TEST FIXTURE" } })).join("\n"));
+  for (const host of ["small", "school", "large", "state", "unknown"]) {
+    const base = `https://${host}.example.gov`;
+    const { open, seen } = fakeTransport({
+      [`${base}/robots.txt`]: { status: 200, body: ROBOTS_ALLOW_ALL, contentType: "text/plain" },
+      [`${base}/a`]: { status: 200, body: PAGE },
+    });
+    let spaced = 0;
+    const kit = buildScoutToolkit(context({ root, openOne: open, spaceOut: async () => { spaced++; } }));
+    const small = host === "small" || host === "school";
+    for (let i = 0; i < 11; i++) {
+      const result = await kit.call("fetch_public", { url: `${base}/a`, ...IN }, null);
+      assert.equal(result.ok, !small || i < 9, `${host} request ${i}`);
+    }
+    assert.equal(seen.length, small ? 10 : 12, `${host}: counts include robots`);
+    assert.equal(spaced, small ? 10 : 0, `${host}: only a held small publisher is spaced`);
+  }
+});
 
 test("SEEDED (e): the (N+1)th request to one host is refused, naming the count; another host is unaffected", async () => {
   const other = "https://county.example.gov";

@@ -74,7 +74,7 @@ import { allCandidateLinks, campaignLinkIsDerived, linksForCandidacy } from "../
 import { candidateProfileEvidenceFor } from "../lib/ask/candidate-profile.ts";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 import { preloadCandidateEnrichmentAuthorities, candidateEnrichmentHoldings } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
-import { KAPNER, MAYES, TANG_WILLIAMS, committedSubjects, fixture, servedRuntime, sha256, subject } from "./helpers/campaign-sites.ts";
+import { DUARTE, KAPNER, MAYES, TANG_WILLIAMS, committedSubjects, fixture, servedRuntime, sha256, subject } from "./helpers/campaign-sites.ts";
 
 await installRegistryRuntimeFirstSeeds();
 
@@ -814,8 +814,8 @@ test("the paid lane stays closed under the owner's pause, and the pass is plain 
 
 /* ------------------------------------------------------------- the door */
 
-function approvalFor(url: string, body: string, readAt: string): CampaignSiteApprovedRecord {
-  const s = subject(TANG_WILLIAMS);
+function approvalFor(url: string, body: string, readAt: string, candidacyId = TANG_WILLIAMS): CampaignSiteApprovedRecord {
+  const s = subject(candidacyId);
   const read = { ...heldPageRead({ requestedUrl: url, httpStatus: 200, contentType: "text/html; charset=utf-8", body, retrievedAt: readAt }),
     permissions: [{ origin: new URL(url).origin, verdict: "ALLOWED" as const, detail: "test" }] };
   const verdict = verifyCampaignSitePage(s, { url, origin: "RECORDED_SITE", ref: "test" }, read);
@@ -826,7 +826,7 @@ function approvalFor(url: string, body: string, readAt: string): CampaignSiteApp
     actor: { role: "RELEASE_ORCHESTRATOR", lane: "DETERMINISTIC", instance: "campaign-site-approver/1@test" }, stage: "APPROVED_FOR_PROMOTION",
     chain: { scouted: "s", confirmed: "c", verified: "v", audited: "a" }, recordClass: "candidate-enrichment", field: "campaignSite",
     campaignSite: {
-      field: "campaignSite", candidacyId: s.candidacyId, candidateName: "Lily Tang Williams",
+      field: "campaignSite", candidacyId: s.candidacyId, candidateName: `${s.givenName} ${s.familyName}`,
       identity: { candidacyId: s.candidacyId, givenName: s.givenName, familyName: s.familyName, officeTitle: s.officeTitle, ocdId: s.ocdId, stateCode: s.stateCode, cycle: s.cycle },
       readerKeys: s.readerKeys, url, host: new URL(url).hostname.replace(/^www\./, ""),
       verification: verdict.verdict === "VERIFIED" ? verdict.verification : "",
@@ -901,6 +901,103 @@ test("newer fully verified campaign evidence refreshes the same reader URL autom
   const older = approvalFor(LILY, body, "2026-09-23T21:00:05.000Z");
   const latest = planDerivedCampaignSites({ approvals: [older, approval], held: () => heldBytes, profiles: null });
   assert.ok(latest.records.every(record => record.campaign.evidence.approvalRecordId === approval.recordId), "same-URL evidence chooses the newest verified read, not the first approval id");
+});
+
+test("new campaign facts publish without dropping prior GOOD links or quoted history whose raw captures are unavailable", async () => {
+  const store = new MemoryRoutineDataStore();
+  const oldBody = fixture("lilytangwilliams-endorsements.live.html");
+  const oldApproval = approvalFor(LILY, oldBody, T1);
+  const held = (body: string): HeldVerifyingRead => ({ body, sha256: sha256(body), tier: "RAW", permission: "ALLOWED" });
+  const initial = derivedCampaignSitesPass({ approvals: [oldApproval], held: () => held(oldBody), profiles: null, gateOpen: true, now: T1 });
+  const first = await processRegisteredRoutineCandidate(store, "candidate-campaign-sites-derived", initial.candidate, T1);
+  assert.equal(first.candidate.state, "PROMOTED", first.candidate.failureDetail ?? undefined);
+  const priorAt = async (now: string) => {
+    const reader = await readDerivedCampaignSites({ store, bypassCache: true, now });
+    assert.equal(reader.kind, "PROMOTED");
+    if (reader.kind !== "PROMOTED") throw new Error("No promoted campaign prior");
+    const reference = promotedInputRef("CURATED_READER_RECORD", "US:candidate-campaign-sites-derived",
+      reader.metadata.versionId, reader.value, reader.metadata.promotedAt);
+    assert.ok(reference?.kind === "PROMOTED_VERSION");
+    return { input: reference, projection: reader.value };
+  };
+  const prior = await priorAt(T2);
+  const oldRecord = prior.projection.records[0]!;
+  const newBody = fixture("duarte4mendham-meet-amalia.live.html");
+  const newApproval = approvalFor("https://www.duarte4mendham.com/meet-amalia", newBody, T2, DUARTE);
+  const pass = derivedCampaignSitesPass({ approvals: [oldApproval, newApproval],
+    held: row => row.recordId === newApproval.recordId ? held(newBody) : null, profiles: null, prior, gateOpen: true, now: PUBLISH });
+  assert.ok(pass.plan?.held.some(row => row.code === "EVIDENCE_NOT_HELD"));
+  assert.deepEqual(pass.candidate.semantics.violations, []);
+  assert.deepEqual(pass.plan!.records.find(row => row.id === oldRecord.id), oldRecord,
+    "previously GOOD evidence retains its source dates, hashes, full quotes and publication metadata exactly");
+  const successor = await processRegisteredRoutineCandidate(store, "candidate-campaign-sites-derived", pass.candidate, PUBLISH);
+  assert.equal(successor.candidate.state, "PROMOTED", successor.candidate.failureDetail ?? undefined);
+  assert.equal(successor.candidate.candidate.changeSet?.removed.length, 0);
+  const refreshed = await priorAt(PUBLISH);
+  assert.deepEqual(refreshed.projection.records.find(row => row.id === oldRecord.id), oldRecord);
+  assert.ok(refreshed.projection.records.some(row => row.candidacyId === DUARTE));
+
+  const repeatAt = "2026-09-24T23:10:00.000Z";
+  const repeat = derivedCampaignSitesPass({ approvals: [oldApproval, newApproval],
+    held: row => row.recordId === newApproval.recordId ? held(newBody) : null,
+    profiles: null, prior: refreshed, gateOpen: true, now: repeatAt });
+  const unchanged = await processRegisteredRoutineCandidate(store, "candidate-campaign-sites-derived", repeat.candidate,
+    repeatAt, undefined, { confirmUnchanged: true });
+  assert.equal(unchanged.confirmed?.versionId, refreshed.input.versionId,
+    "citing the prior GOOD version confirms unchanged facts without manufacturing a newer source or version");
+  const afterRepeat = await priorAt(repeatAt);
+  assert.equal(afterRepeat.input.versionId, refreshed.input.versionId);
+  assert.deepEqual(afterRepeat.projection, refreshed.projection);
+
+  const newerBody = oldBody.replace(/<\/main>/i, "<p>Additional independently captured campaign statement.</p></main>");
+  const newerAt = "2026-09-25T21:00:00.000Z";
+  const newer = approvalFor(LILY, newerBody, newerAt);
+  const withHistory = planDerivedCampaignSites({ approvals: [newer], held: () => held(newerBody), profiles: null, prior: refreshed });
+  const updated = withHistory.records.find(row => row.id === oldRecord.id)!;
+  assert.deepEqual(updated.publications!.find(row => row.document.id === oldRecord.publications![0]!.document.id), oldRecord.publications![0]);
+  assert.ok(updated.publications!.some(row => row.document.text!.includes("Additional independently captured campaign statement.")));
+  assert.equal(updated.campaign.evidence.readAt, newerAt);
+  assert.deepEqual(derivedCampaignSitesCandidate(withHistory, newerAt).semantics.violations, []);
+
+  const tampered = { ...pass.plan!, records: pass.plan!.records.map(row => row.id === oldRecord.id
+    ? { ...row, campaign: { ...row.campaign, evidence: { ...row.campaign.evidence, readAt: T0 } } } : row) };
+  assert.ok(derivedCampaignSitesCandidate(tampered, PUBLISH).semantics.violations.some(detail => /does not name as an input/.test(detail)));
+  const tamperedPublication = { ...pass.plan!, records: pass.plan!.records.map(row => row.id === oldRecord.id
+    ? { ...row, publications: row.publications!.map(publication => ({ ...publication,
+      evidence: { ...publication.evidence, readAt: T0 } })) } : row) };
+  assert.ok(derivedCampaignSitesCandidate(tamperedPublication, PUBLISH).semantics.violations.some(detail => /lack their exact approved capture input/.test(detail)));
+  const forgedPrior = { ...pass.plan!, prior: { ...prior, input: { ...prior.input, readModelSha256: "a".repeat(64) } } };
+  assert.ok(derivedCampaignSitesCandidate(forgedPrior, PUBLISH).semantics.violations.some(detail => /referenced promoted version/.test(detail)));
+
+  const conflicting = approvalFor("https://lilytangwilliamsforcongress.example/", newerBody, newerAt);
+  const conflict = planDerivedCampaignSites({ approvals: [conflicting], held: () => held(newerBody), profiles: null, prior });
+  assert.deepEqual(conflict.records.find(row => row.id === oldRecord.id), oldRecord);
+  assert.ok(conflict.held.some(row => row.code === "PRIOR_CAMPAIGN_LINK_HELD"));
+  const failed = planDerivedCampaignSites({ approvals: [newer], held: () => ({ ...held(newerBody), sha256: "c".repeat(64) }), profiles: null, prior });
+  assert.deepEqual(failed.records.find(row => row.id === oldRecord.id), oldRecord);
+  assert.ok(failed.held.some(row => row.code === "REVERIFICATION_FAILED"));
+
+  const sameDayAt = "2026-09-24T21:05:00.000Z";
+  const sameDay = approvalFor(LILY, newerBody, sameDayAt);
+  const sameDayPlan = planDerivedCampaignSites({ approvals: [sameDay], held: () => held(newerBody), profiles: null, prior });
+  const sameDayRecord = sameDayPlan.records.find(row => row.id === oldRecord.id)!;
+  assert.deepEqual(sameDayRecord.campaign, oldRecord.campaign, "day-only evidence does not establish a newer working link");
+  assert.ok(sameDayRecord.publications!.some(row => row.document.text!.includes("Additional independently captured campaign statement.")),
+    "independent captured revisions attach even when a campaign link cannot refresh on the same day");
+  assert.deepEqual(derivedCampaignSitesCandidate(sameDayPlan, PUBLISH).semantics.violations, []);
+
+  const reviewedLinks = { [oldRecord.id]: { official: null, campaign: oldRecord.campaign } };
+  const besideReviewed = planDerivedCampaignSites({ approvals: [sameDay], held: () => held(newerBody),
+    profiles: { input: { kind: "PROMOTED_VERSION", recordClass: "CANDIDATE_PROFILE", scope: "s", versionId: "v",
+      readModelSha256: "b".repeat(64), promotedAt: T1 }, links: reviewedLinks } });
+  assert.ok(besideReviewed.records.find(row => row.id === oldRecord.id)?.publications?.some(row =>
+    row.document.text!.includes("Additional independently captured campaign statement.")),
+  "an equally recent reviewed profile link does not suppress independently verified documents");
+  assert.deepEqual(composeCampaignLinks(reviewedLinks, besideReviewed.records).links[oldRecord.id]?.campaign, oldRecord.campaign);
+  assert.deepEqual(derivedCampaignSitesCandidate(besideReviewed, PUBLISH).semantics.violations, []);
+  assert.equal(derivedCampaignSitesPass({ approvals: [newApproval], held: () => held(newBody), profiles: null,
+    prior: { unreadable: "source projection could not be read" }, gateOpen: true, now: PUBLISH }).plan, null,
+  "an unreadable prior cannot be treated as an empty full-replacement version");
 });
 
 test("the Reader composes: a derived link fills an empty campaign slot beside the reviewed official link; any reviewed campaign link of that person wins on every key", () => {

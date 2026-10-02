@@ -14,8 +14,10 @@
  *   pipeline log (read only; the research cycle's campaign-site pass made them);
  * - the vault, read only (`lib/control-plane/evidence/read-only-vault.ts`): the
  *   bytes of each approval's verifying read, proved against their sidecar;
- * - the promoted `candidate-profiles` version, so a candidate who already
- *   carries a reviewed campaign link is held, never doubled.
+ * - the promoted `candidate-profiles` version, so a working reviewed campaign
+ *   link is preserved when independently verified documents attach;
+ * - this contract's prior GOOD version, preserving facts and quoted history
+ *   exactly when unrelated older source captures are unavailable locally.
  *
  * `derivedCampaignSitesPass` (lib/civic-data/derived-campaign-site-writer.ts)
  * verifies each approval's vaulted bytes again for its own canonical identity
@@ -30,7 +32,8 @@ import { join } from "node:path";
 import { neon } from "@neondatabase/serverless";
 
 import { promotedInputRef } from "../lib/civic-data/derived-authority.ts";
-import { DERIVED_CAMPAIGN_SITES_CONTRACT_ID, type CandidateLinksShape } from "../lib/civic-data/derived-campaign-sites.ts";
+import { DERIVED_CAMPAIGN_SITES_CONTRACT_ID, DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE,
+  readDerivedCampaignSites, type CandidateLinksShape } from "../lib/civic-data/derived-campaign-sites.ts";
 import {
   derivedCampaignSitesFailedCandidate,
   derivedCampaignSitesPass,
@@ -127,6 +130,12 @@ async function linkedPublicationReads(vault: VaultIndex, approvals: readonly Pub
 
 async function main(): Promise<void> {
   const approvals = await readApprovals();
+  const priorRead = await readDerivedCampaignSites({ store, bypassCache: true, now });
+  const priorInput = priorRead.kind === "PROMOTED" ? promotedInputRef(DERIVED_CAMPAIGN_SITES_RECORD_CLASS,
+    DERIVED_CAMPAIGN_SITES_SCOPE, priorRead.metadata.versionId, priorRead.value, priorRead.metadata.promotedAt) : null;
+  const prior = priorRead.kind === "PROMOTED" && priorInput?.kind === "PROMOTED_VERSION"
+    ? { input: priorInput, projection: priorRead.value } : priorRead.kind === "NOT_RECORDED" ? null
+      : { unreadable: `${priorRead.kind}${"detail" in priorRead ? `: ${priorRead.detail}` : ": no exact promoted version reference"}` };
   const profilesRead = await readPromotedCivicData<{ readonly links?: { readonly links?: Readonly<Record<string, CandidateLinksShape>> } }>(
     PROFILES.recordClass, PROFILES.scope, { store, bypassCache: true, now },
   );
@@ -157,6 +166,7 @@ async function main(): Promise<void> {
   }
   const pass = derivedCampaignSitesPass({
     approvals,
+    prior,
     held: (record) => held.get(record.recordId) ?? null,
     linkedPublications,
     profiles,

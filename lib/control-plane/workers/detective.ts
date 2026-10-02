@@ -210,7 +210,7 @@ export async function readSubjectScoutHistory(repos:import('../repository/types.
 export function investigationRole(results: readonly import('../scheduler/scout-result.ts').ScoutResult[], failedWorkers:boolean): 'SCOUT'|'DETECTIVE' {
   return failedWorkers || results.some(result=>result.refusal !== null || ['BLOCKED','NO_PROGRESS','NEEDS_ADAPTER'].includes(result.outcome)) ? 'DETECTIVE':'SCOUT';
 }
-function hasUntriedAdapter(latest:import('../scheduler/scout-result.ts').ScoutResult|undefined,installed:readonly string[],knowledge:readonly FieldManualEntry[]=[]) {
+export function hasUntriedAdapter(latest:import('../scheduler/scout-result.ts').ScoutResult|undefined,installed:readonly string[],knowledge:readonly FieldManualEntry[]=[]) {
   const description = latest ? [latest.narrative,...(latest.nextRungs ?? []),...(latest.candidates ?? []).map(c=>c.routeId)].join(' ').toLowerCase() : '';
   const sourceOrigin=(value:unknown)=>{
     if(typeof value!=='string' || archiveCapture(value))return null;

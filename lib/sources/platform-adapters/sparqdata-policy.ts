@@ -1,10 +1,18 @@
 /** Decode saved Sparq school-policy responses; no network or model calls. */
 import { extractLinks, visibleText } from '../../control-plane/scheduler/scout-tools.ts';
+import type {PlatformAdapterGuide} from '../../control-plane/scheduler/scout-adapters.ts';
+
+const HOSTS=['policies.sparqdata.com','policy.azsba.org'];
+export const guide:PlatformAdapterGuide={
+  summary:'Sparq policy route: /sopapi/document/getdocument/{partner}/{tenant}/{collection}/{code}. Observe the codes in public portal requests; run sparqdata-policy on the saved API artifact, reusing captured bytes.',
+  procedure:'For a Sparq /{partner}/browse/{tenant} portal, inspect its public requests for /sopapi/document/getdocument/{partner}/{tenant}/{collection}/{code}. Use observed collection and document codes, then run sparqdata-policy on the saved API artifact. It decodes JSON objects and double-encoded JSON strings, returning policy text, adoption date and source links. Match exact quotes to the captured source.',
+  recordClasses:['local-jurisdiction'],sourceUrls:HOSTS.map(host=>'https://'+host),
+};
 
 export function extract(input: { text: string; sourceUrl: string }) {
   const source = new URL(input.sourceUrl);
   const route = /^\/sopapi\/document\/getdocument\/([^/]+)\/([^/]+)\/([^/]+)\/([^/]+)\/?$/i.exec(source.pathname);
-  if (!route || !['policies.sparqdata.com', 'policy.azsba.org'].includes(source.hostname) ||
+  if (!route || !HOSTS.includes(source.hostname) ||
     !['https:', 'http:'].includes(source.protocol)) throw new Error('SPARQ_POLICY_SOURCE_REQUIRED');
   let value: unknown = JSON.parse(input.text);
   // The public API also returns a JSON document encoded inside a JSON string.

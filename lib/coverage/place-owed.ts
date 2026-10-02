@@ -94,11 +94,13 @@ export function buildPlaceOwedList(input: {
       divisionIds: [...new Set([...(prior?.divisionIds ?? []), ...subject.divisionIds])] });
   }
   // The source route, enumeration and recurring schedule belong to one body's
-  // calendar, not to every sitting. Keep that standing work even when all known
-  // meeting fields are captured, and share it across every served division.
+  // calendar, not to every sitting. Start that work as soon as the body is
+  // known, including bodies with no captured meeting; share it across places.
   for (const subject of [...subjects.values()]) {
-    if (subject.captureKind !== "meeting" || !subject.calendarBodyId) continue;
-    const id = `${subject.calendarBodyId}#calendar`, prior = subjects.get(id);
+    const bodyId = subject.kind === "body" ? subject.id
+      : subject.captureKind === "meeting" ? subject.calendarBodyId : undefined;
+    if (!bodyId || subject.id.includes("#inventory:")) continue;
+    const id = `${bodyId}#calendar`, prior = subjects.get(id);
     subjects.set(id, { id, kind: "calendar", captureKind: "body-calendar",
       label: prior?.label ?? `${subject.label}: calendar`,
       divisionIds: [...new Set([...(prior?.divisionIds ?? []), ...subject.divisionIds])] });

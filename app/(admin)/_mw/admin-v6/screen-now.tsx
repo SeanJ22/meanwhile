@@ -16,7 +16,7 @@ import { count, huntLeftUsd, mst, ITEM_STATUS_ORDER, pctDown, usd, type Hunt, ty
 import { TILE_LAYOUT } from "./national-layout.ts";
 import { COUNTRY_KEY, huntAt, huntsWithin, isWithin, relation } from "./places.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
-import { ageWords, roundReading, usePageClock } from "./screen-workers.tsx";
+import { ageWords, roundReading, runningCount, systemRunningCount, usePageClock } from "./screen-workers.tsx";
 import { ActionButton, Actions, Card, cx, Empty, Loading, Pill, StageDots } from "./ui.tsx";
 import s from "./v6.module.css";
 
@@ -411,12 +411,13 @@ function Happening() {
   const lanes = w?.status.lanes;
   const round = roundReading(w?.status, now);
   const progress = w?.status.lastUsefulProgress ?? null;
+  const running = w?.running ?? null;
   return (
     <Card id="v6-happening" title="What’s happening now" aside={<button type="button" className={s.btnLink} onClick={() => v.go("workers")}>Open Workers →</button>}>
       <div className={s.gridTiles}>
         <div className={s.row}>
-          <span className={s.big}>{jobs ? jobs.length : "—"}</span>
-          <span className={s.meta}>{jobs ? `jobs working now in ${v.place.name}` : `jobs working now${isCountry ? "" : ` in ${v.place.name}`}`}</span>
+          <span className={s.big}>{runningCount(running, jobs)}</span>
+          <span className={s.meta}>{jobs ? `jobs working now in ${v.place.name}` : `jobs working now${isCountry ? "" : ` in ${v.place.name}`}`}{jobs && running && !isCountry ? ` · ${systemRunningCount(running)} in the whole system` : ""}</span>
         </div>
         <div className={s.row}>
           <span className={s.big}>{waiting ? waiting.length : "—"}</span>
@@ -431,6 +432,12 @@ function Happening() {
           <span className={s.meta}>{round.overdue ? round.headline : "Round of work"}</span>
         </div>
       </div>
+      {jobs && jobs.length > 0 && (
+        <ul className={s.stack} style={{ listStyle: "none", padding: 0, margin: 0 }}>
+          {jobs.slice(0, 5).map((j) => <li key={j.id} className={s.small}>{j.title} · {j.hunt} · {j.elapsed}</li>)}
+          {jobs.length > 5 && <li className={s.meta}>and {count(jobs.length - 5)} more</li>}
+        </ul>
+      )}
       {!jobs && lanes && (
         <div className={s.gridTiles}>
           {lanes.map((l) => (

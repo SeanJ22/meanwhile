@@ -52,7 +52,7 @@ export const SECTION_DEP = {
   workerActive: {
     id: "DEP-WORKER-ACTIVE-INDEX",
     owner: "Codex (worker repository)",
-    need: "A bounded read of every unexpired work claim, including plain-code collection jobs outside the paid research list. Until it exists, the full list of running jobs and how many are working in a place are unknown.",
+    need: "The work claims running now could not be read.",
   },
   agents: {
     id: "DEP-AGENT-RUNS",

@@ -9,11 +9,11 @@
  * out from the clock each time the page draws; the existing pulse redraws the
  * page about every 45 seconds.
  */
-import { useState, useSyncExternalStore } from "react";
+import { Fragment, useState, useSyncExternalStore } from "react";
 
 import { useV6 } from "./context.tsx";
 import { SECTION_DEP } from "./dependencies.ts";
-import { count, mst, usd, WORKER_STAGE_WORDS, type AdminV6Data, type AgentRun, type WorkerStage, type WorkerStatus } from "./model.ts";
+import { count, mst, usd, WORKER_STAGE_WORDS, type AdminV6Data, type AgentRun, type WorkerJob, type WorkerStage, type WorkersRunning, type WorkerStatus } from "./model.ts";
 import { relation } from "./places.ts";
 import { runnerStateWords } from "./pulse-view.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
@@ -79,6 +79,19 @@ export function roundReading(st: WorkerStatus | null | undefined, now: number): 
   if (due > now) return { headline: `Next round due ${mst(st!.nextRoundDueAt, false)}`, detail: `That is in ${spanWords(due - now)}.${last}`, overdue: false };
   if (now - due < ROUND_LATE_AFTER_MS) return { headline: `Next round due ${mst(st!.nextRoundDueAt, false)}`, detail: `It was due ${spanWords(now - due)} ago. No start is saved yet.${last}`, overdue: false };
   return { headline: "The next round is late", detail: `It was due ${mst(st!.nextRoundDueAt, false)}, ${spanWords(now - due)} ago, and no newer start is saved.${last}`, overdue: true };
+}
+
+/* ------------------------------------------------- workers running now */
+
+/** Workers running now, as a number. A read that stopped at its row limit shows "500+", never a short exact figure; no figure is "—". */
+export function runningCount(running: WorkersRunning | null | undefined, jobs: readonly WorkerJob[] | null | undefined): string {
+  if (running) return `${count(running.count)}${running.lowerBound ? "+" : ""}`;
+  return jobs ? count(jobs.length) : "—";
+}
+
+/** The same figure for the whole system, shown beside a place's own. */
+export function systemRunningCount(running: WorkersRunning | null | undefined): string {
+  return running ? `${count(running.system)}${running.lowerBound ? "+" : ""}` : "—";
 }
 
 /* ---------------------------------------------------- whole-system lanes */
@@ -233,6 +246,31 @@ function Publication() {
   );
 }
 
+/** One stage's running jobs, paged. A live job carries only what its lease and attempt record; "—" lines are left out. */
+function StageJobs(props: { readonly stage: WorkerStage; readonly list: readonly WorkerJob[]; readonly live: boolean; readonly sample: boolean }) {
+  const v = useV6();
+  const { page, pager } = usePager(props.list, 10);
+  return (
+    <div className={s.stack}>
+      <h3 className={s.h3}>{WORKER_STAGE_WORDS[props.stage]} <span className={cx(s.mono, s.dim)}>{props.list.length}</span></h3>
+      {!props.list.length && <Empty>No jobs</Empty>}
+      {page.map((j) => (
+        <div key={j.id} className={s.row}>
+          <div className={s.spread}><strong style={{ fontSize: 13 }}>{j.title}</strong><span className={s.meta}>{j.hunt}</span></div>
+          <span className={s.meta}>{v.index.get(j.placeKey)?.name} · {j.requirement} · started {when(j.startedAt, false)}{props.live ? ` · ${j.elapsed}` : ""}</span>
+          <dl className={s.facts}>
+            <dt>Using</dt><dd>{j.method}</dd>
+            <dt>AI</dt><dd>{j.model}</dd>
+            {([["Cost", j.cost], ["Latest", j.latest], ["Next", j.next]] as const).map(([label, value]) => (props.sample || value !== "—") && <Fragment key={label}><dt>{label}</dt><dd>{value}</dd></Fragment>)}
+          </dl>
+          {props.sample && <Actions actions={[{ kind: "job-stop", target: j.id }]} />}
+        </div>
+      ))}
+      {pager}
+    </div>
+  );
+}
+
 /* ---------------------------------------------------------------- screen */
 
 export function WorkersScreen() {
@@ -254,7 +292,8 @@ export function WorkersScreen() {
   const checkIn = ageWords(st?.lastCheckIn ?? null, now);
   const progressAge = ageWords(st?.lastUsefulProgress?.at ?? null, now);
   const connWords = { live: "Live", stale: "Out of date", reconnecting: "Reconnecting", offline: "Disconnected", connecting: "Connecting" }[v.connection];
-  const huntsOrAreas = jobs ? new Set(jobs.map((j) => j.hunt)).size : 0;
+  const running = w?.running ?? null;
+  const nowWorking = runningCount(running, jobs);
   return (
     <>
       <header>
@@ -295,7 +334,8 @@ export function WorkersScreen() {
         <div className={cx(s.row, round.overdue && s.cardWarn)}><span className={s.eyebrow}>Round of work</span><strong className={round.overdue ? s.textWarn : undefined}>{roundMissing ? "—" : round.headline}</strong>{st?.lastRoundFinishedAt && !round.headline.startsWith("Last finished") && <span className={s.meta}>Last finished {when(st.lastRoundFinishedAt, false)}</span>}</div>
         <div className={s.row}>
           <span className={s.eyebrow}>{jobs ? `Work in ${v.place.name}` : isCountry ? "Work" : "Work, all places"}</span>
-          <strong>{jobs ? `${jobs.length} working now · ${waiting ? waiting.length : "—"} waiting` : totals ? `${totals.running === null ? "—" : count(totals.running)} running · ${count(totals.waiting)} waiting` : "—"}</strong>
+          <strong>{jobs ? `${nowWorking} working now · ${waiting ? waiting.length : "—"} waiting` : totals ? `${totals.running === null ? "—" : count(totals.running)} running · ${count(totals.waiting)} waiting` : "—"}</strong>
+          {jobs && running && !isCountry && <span className={s.meta}>{systemRunningCount(running)} in the whole system</span>}
         </div>
       </section>
 
@@ -305,7 +345,7 @@ export function WorkersScreen() {
 
       <Publication />
 
-      <Card title="Working now, by stage" aside={jobs ? <span className={s.meta}>{jobs.length} jobs working at the same time across {huntsOrAreas} hunts or shared areas</span> : undefined}>
+      <Card title="Working now, by stage" aside={jobs ? <span className={s.meta}>{nowWorking} working now</span> : undefined}>
         {!jobs && !st?.lanes && <p className={cx(s.p, s.small)}>—</p>}
         {st?.lanes && !jobs && (
           <div className={s.gridTiles}>
@@ -313,29 +353,7 @@ export function WorkersScreen() {
           </div>
         )}
         {jobs && !jobs.length && <Empty>No jobs</Empty>}
-        {jobs && STAGES.map((stage) => {
-          const list = jobs.filter((j) => j.stage === stage);
-          return (
-            <div key={stage} className={s.stack}>
-              <h3 className={s.h3}>{WORKER_STAGE_WORDS[stage]} <span className={cx(s.mono, s.dim)}>{list.length}</span></h3>
-              {!list.length && <Empty>No jobs</Empty>}
-              {list.map((j) => (
-                <div key={j.id} className={s.row}>
-                  <div className={s.spread}><strong style={{ fontSize: 13 }}>{j.title}</strong><span className={s.meta}>{j.hunt}</span></div>
-                  <span className={s.meta}>{v.index.get(j.placeKey)?.name} · {j.requirement} · started {when(j.startedAt, false)}{live ? ` · ${j.elapsed}` : ""}</span>
-                  <dl className={s.facts}>
-                    <dt>Using</dt><dd>{j.method}</dd>
-                    <dt>AI</dt><dd>{j.model}</dd>
-                    <dt>Cost</dt><dd>{j.cost}</dd>
-                    <dt>Latest</dt><dd>{j.latest}</dd>
-                    <dt>Next</dt><dd>{j.next}</dd>
-                  </dl>
-                  <Actions actions={[{ kind: "job-stop", target: j.id }]} />
-                </div>
-              ))}
-            </div>
-          );
-        })}
+        {jobs && STAGES.map((stage) => <StageJobs key={stage} stage={stage} list={jobs.filter((j) => j.stage === stage)} live={live} sample={src.state === "sample"} />)}
       </Card>
 
       <Card title="Waiting, and why" aside={waiting ? <span className={s.meta}>{waiting.length} {waiting.length === 1 ? "reason" : "reasons"}</span> : undefined}>

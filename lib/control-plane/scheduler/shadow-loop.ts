@@ -357,16 +357,22 @@ export async function runPool<T>(items: readonly T[], limit: number, fn: (item: 
   const pending = [...items];
   const compareRound = huntFor ? huntRoundComparator(items, huntFor) : () => 0;
   let selection = Promise.resolve();
+  let compare: (left: T, right: T) => number = () => 0;
   const take = (): Promise<T | undefined> => {
     let item: T | undefined;
     const next = selection.then(async () => {
       if (pending.length && (comparator || huntFor)) {
-        const compare = comparator ? await comparator() : () => 0;
+        if (comparator) {
+          try { compare = await comparator(); }
+          catch (error) {
+            console.warn(`Place priority read failed; keeping last order: ${error instanceof Error ? error.message : String(error)}`);
+          }
+        }
         pending.sort((left, right) => compareRound(left, right) || compare(left, right));
       }
       item = pending.shift();
     });
-    selection = next;
+    selection = next.catch(() => undefined);
     return next.then(() => item);
   };
   const workers = Array.from({ length: Math.max(1, Math.min(limit, items.length || 1)) }, async () => {

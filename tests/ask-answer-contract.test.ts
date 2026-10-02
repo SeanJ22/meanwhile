@@ -138,7 +138,7 @@ test("OFF is a real member and carries a SENTENCE, not an empty panel", () => {
   assert.equal(off.why, "ripcord", "the reason is OPERATOR diagnostics");
   assert.equal(off.gaps.length, 1);
   assert.equal(off.gaps[0].whose, "OURS", "a switched-off capability is a fact about US");
-  assert.match(off.gaps[0].statement, /switched off right now/);
+  assert.match(off.gaps[0].statement, /working on getting this info/);
   /* RULING 139: the attribution is required, the verdict on ourselves is
      struck. No "we failed", no "sorry", no apology for our own state. */
   assert.doesNotMatch(off.gaps[0].statement, /sorry|we failed|error|unavailable/i);

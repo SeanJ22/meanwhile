@@ -257,7 +257,7 @@ export function offAnswer(why: string): AskAnswerPayload {
     {
       whose: "OURS",
       statement:
-        "Answering from our records is switched off right now, so we have nothing to show for that question yet.",
+        "We’re working on getting this info.",
     },
   ];
   return out;

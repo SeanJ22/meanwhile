@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { primeCuratedReaderProjection, settleBallotNavigationRead } from "../lib/civic-data/curated-reader-read-model.ts";
+import { primeCuratedReaderProjection, readCuratedReaderProjection, settleBallotNavigationRead } from "../lib/civic-data/curated-reader-read-model.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import type { CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
 import { currentPollingPlaceLinks } from "../lib/ballot/polling-place-links.ts";
@@ -11,6 +11,7 @@ import { currentCommentAccess } from "../lib/registry/comment-access.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 import type { PublishedElectionField } from "../lib/civic-data/election-fields.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 
 /**
  * **AN EDGE-SERVED CURATED PROJECTION ANSWERS ITS SELECTOR IN PRODUCTION.**
@@ -102,4 +103,14 @@ test("sourced nonpilot tools supersede legacy state links without promoting a co
     assert.deepEqual(currentRegistrationLinks().map(link => [link.state, link.url]), [["HI", "https://elections.example.gov/HI/registration_lookup/2026-10-01"]]);
     assert.equal(currentPollingPlaceLinks()[0].note, "The saved official page names this tool.");
   });
+});
+
+test("a missing navigation pointer never supplies a software lookup in production or tests", async () => {
+  await asProduction(async () => {
+    await readCuratedReaderProjection("ballot-navigation", { store: new MemoryRoutineDataStore(), bypassCache: true });
+    assert.throws(() => currentPollingPlaceLinks(), /NOT_RECORDED/);
+    assert.throws(() => currentRegistrationLinks(), /NOT_RECORDED/);
+  });
+  assert.deepEqual(currentPollingPlaceLinks(), []);
+  assert.deepEqual(currentRegistrationLinks(), []);
 });

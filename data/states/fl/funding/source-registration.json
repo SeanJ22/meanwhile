@@ -1,0 +1,23 @@
+{
+  "jurisdiction": "FL",
+  "cycle": 2026,
+  "contractId": "fl-campaign-finance",
+  "sourceId": "fl-campaign-finance",
+  "parserVersion": "state-money/1",
+  "scope": "US-FL:campaign-finance:2026",
+  "agencies": [
+    {
+      "name": "SECRETARY OF STATE",
+      "url": "https://dos.fl.gov/",
+      "recordsHeld": "Candidates and Issues on Ballot Division of Elections; Election Results and Statistics 500 South Bronough Street; Federal Campaign Finance Reports R.A. Gray Building, Room 316; State Campaign Finance Reports for Candidates URL https://dos.fl.gov/elections/; State Initiatives/Referendums 850/245-6200 FAX 850/245-6217; Third-Party Voter Registration Organizations 1-866/308-6739 (Voter Assistance Hotline); Voting Accessibility Amber Marconnet, Assistant Director; Electronic Filing Database Ikay Reeve, Bureau Chief of Election Records; Electronic Filings Gina McLeod, Bureau Chief of Voting Registration Services; Petition Circular Registration Program Linda Hastings-Ard, Bureau Chief of Voting Systems; List Maintenance Activities; Business Entity Filing/Registration Information Division of Corporations; Document Images Available for Download URL https://dos.fl.gov/sunbiz/",
+      "page": 42,
+      "row": 82
+    }
+  ],
+  "source": {
+    "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
+    "dataset": "fec_combined_federal_state_disclosure_directory",
+    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
+  }
+}

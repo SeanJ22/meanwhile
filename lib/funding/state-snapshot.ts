@@ -33,19 +33,10 @@ export type StateCampaignFinanceRead = CivicDataReadResult<StateMoneySnapshot> |
 type StateRead = StateCampaignFinanceRead;
 
 let cache = new Map<StateCampaignFinanceJurisdiction, StateMoneySnapshot>();
-let readStates = new Map<StateCampaignFinanceJurisdiction, StateRead>(
-  (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map((state) => [
-    state,
-    civicDataReadNotInitialized(
-      "STATE_CAMPAIGN_FINANCE",
-      STATE_CAMPAIGN_FINANCE_SOURCES[state].scope,
-      `The ${state} campaign-finance canonical pointer has not been read for this process.`,
-    ),
-  ]),
-);
+let readStates = new Map<StateCampaignFinanceJurisdiction, StateRead>();
 
 function validateSnapshot(value: StateMoneySnapshot, state: StateCampaignFinanceJurisdiction, version: string): void {
-  if (value.formatVersion !== 1 || value.cycle !== 2026 || !Array.isArray(value.records)) {
+  if (value.formatVersion !== 1 || value.cycle !== STATE_CAMPAIGN_FINANCE_SOURCES[state].cycle || !Array.isArray(value.records)) {
     throw new Error(`${state} campaign-finance projection ${version} does not satisfy StateMoneySnapshot.`);
   }
   if (value.records.some((record) => record.jurisdiction !== state)) {
@@ -55,7 +46,7 @@ function validateSnapshot(value: StateMoneySnapshot, state: StateCampaignFinance
 
 function testFixture(state: StateCampaignFinanceJurisdiction): StateMoneySnapshot {
   if (!mayUseTestFixture()) throw new Error("Bundled state-money fixtures are available only to deterministic tests.");
-  const path = join(process.cwd(), "data", "states", state.toLowerCase(), "funding", `state-money-${state.toLowerCase()}-2026.json`);
+  const path = join(/* turbopackIgnore: true */ process.cwd(), "data", "states", state.toLowerCase(), "funding", `state-money-${state.toLowerCase()}-${STATE_CAMPAIGN_FINANCE_SOURCES[state].cycle}.json`);
   const value = JSON.parse(readFileSync(path, "utf8")) as StateMoneySnapshot;
   validateSnapshot(value, state, "bundled test fixture");
   return value;
@@ -116,7 +107,7 @@ export async function refreshStateMoneyProjectionFromPromoted(
     result.kind === "NOT_RECORDED" ||
     (result.kind === "STORE_UNREACHABLE" && result.code === "STORE_NOT_CONFIGURED")
   )) {
-    nextCache.set(state, testFixture(state));
+    try { nextCache.set(state, testFixture(state)); } catch { /* an absent test fixture supplies no holding */ }
   }
   cache = nextCache;
   readStates = nextStates;
@@ -138,12 +129,10 @@ export function settleStateMoneyRead(state: StateCampaignFinanceJurisdiction): P
 }
 
 /**
- * Every state's money, edge first, each state its own read and failure domain
- * (Ask's preload). Settles like `refreshStateMoneyFromPromoted`: the promoted
- * versions, joined, or null.
+ * Requested states' money, edge first, each state its own read and failure
+ * domain. Returns their promoted versions, joined, or null.
  */
-export async function settleStateMoneyReads(): Promise<string | null> {
-  const states = Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[];
+export async function settleStateMoneyReads(states: readonly StateCampaignFinanceJurisdiction[] = []): Promise<string | null> {
   const reads = await Promise.allSettled(states.map((state) => settleStateMoneyRead(state)));
   const versions = reads
     .flatMap((read) => read.status === "fulfilled" && read.value.kind === "PROMOTED" ? [read.value.metadata.versionId] : [])
@@ -151,44 +140,47 @@ export async function settleStateMoneyReads(): Promise<string | null> {
   return versions.length ? versions.join(",") : null;
 }
 
-/** Read all independent state pointers; one unavailable state cannot erase another. */
+/** Read only selected state pointers; no country refresh or unrelated cache replacement. */
 export async function readStateMoneyProjections(
+  states: readonly StateCampaignFinanceJurisdiction[],
   options: PromotedCivicDataReadOptions = {},
 ): Promise<ReadonlyMap<StateCampaignFinanceJurisdiction, StateRead>> {
   const entries = await Promise.all(
-    (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map(async (state) => [
+    [...new Set(states)].map(async (state) => [
       state,
       await readStateMoneyProjection(state, options),
     ] as const),
   );
 
-  const nextCache = new Map<StateCampaignFinanceJurisdiction, StateMoneySnapshot>();
-  const nextStates = new Map<StateCampaignFinanceJurisdiction, StateRead>();
+  const nextCache = new Map(cache);
+  const nextStates = new Map(readStates);
   for (const [state, result] of entries) {
     nextStates.set(state, result);
+    nextCache.delete(state);
     if (result.kind === "PROMOTED") nextCache.set(state, result.value);
     else if (mayUseTestFixture() && (
       result.kind === "NOT_RECORDED" ||
       (result.kind === "STORE_UNREACHABLE" && result.code === "STORE_NOT_CONFIGURED")
     )) {
-      nextCache.set(state, testFixture(state));
+      try { nextCache.set(state, testFixture(state)); } catch { /* an absent test fixture supplies no holding */ }
     }
   }
   cache = nextCache;
   readStates = nextStates;
-  return new Map(nextStates);
+  return new Map(entries);
 }
 
 /**
  * Request preload for the independent state projections. Failures stay in the
- * exact state's read state, so an NH publisher or projection defect cannot
- * take an AZ Reader down (and vice versa). The affected state's synchronous
+ * exact state's read state, so one publisher or projection defect cannot
+ * take another state's Reader down. The affected state's synchronous
  * selector still fails closed instead of manufacturing an empty answer.
  */
 export async function refreshStateMoneyFromPromoted(
+  selected: readonly StateCampaignFinanceJurisdiction[],
   options: PromotedCivicDataReadOptions = {},
 ): Promise<string | null> {
-  const states = await readStateMoneyProjections(options);
+  const states = await readStateMoneyProjections(selected, options);
   const versions = [...states.values()]
     .filter((state): state is Extract<StateRead, { kind: "PROMOTED" }> => state.kind === "PROMOTED")
     .map((state) => state.metadata.versionId)
@@ -196,90 +188,33 @@ export async function refreshStateMoneyFromPromoted(
   return versions.length ? versions.join(",") : null;
 }
 
-function ensureTestFixtures(): void {
-  if (!mayUseTestFixture()) return;
-  for (const state of Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]) {
-    if (cache.has(state)) continue;
-    const outcome = readStates.get(state);
-    const maySeed = outcome?.kind === "NOT_RECORDED" || (
-      outcome?.kind === "STORE_UNREACHABLE" &&
-      (outcome.code === "STORE_NOT_CONFIGURED" || outcome.code === "READ_NOT_INITIALIZED")
-    );
-    if (!maySeed) continue;
-    try { cache.set(state, testFixture(state)); } catch { /* an absent fixture stays unavailable */ }
-  }
+function ensureTestFixtures(state: StateCampaignFinanceJurisdiction): void {
+  if (!mayUseTestFixture() || cache.has(state)) return;
+  const outcome = stateMoneyReadState(state);
+  const maySeed = outcome.kind === "NOT_RECORDED" || (
+    outcome.kind === "STORE_UNREACHABLE" &&
+    (outcome.code === "STORE_NOT_CONFIGURED" || outcome.code === "READ_NOT_INITIALIZED")
+  );
+  if (!maySeed) return;
+  try { cache.set(state, testFixture(state)); } catch { /* an absent fixture stays unavailable */ }
 }
 
 export function stateMoneyReadState(state: StateCampaignFinanceJurisdiction): StateRead {
-  return readStates.get(state)!;
+  return readStates.get(state) ?? civicDataReadNotInitialized("STATE_CAMPAIGN_FINANCE", STATE_CAMPAIGN_FINANCE_SOURCES[state].scope,
+    `The ${state} campaign-finance canonical pointer has not been read for this process.`);
 }
 
 /** Compatibility inventory: canonical scopes in production, fixture names in tests. */
 export function stateMoneySources(): string[] {
-  ensureTestFixtures();
   return [...cache.keys()].sort().map((state) =>
-    mayUseTestFixture() ? `state-money-${state.toLowerCase()}-2026.json` : STATE_CAMPAIGN_FINANCE_SOURCES[state].scope,
+    mayUseTestFixture() ? `state-money-${state.toLowerCase()}-${STATE_CAMPAIGN_FINANCE_SOURCES[state].cycle}.json` : STATE_CAMPAIGN_FINANCE_SOURCES[state].scope,
   );
 }
 
-export interface StateMoneyProofInventory {
-  readonly targetKeys: readonly string[];
-  readonly readbacks: readonly {
-    readonly state: StateCampaignFinanceJurisdiction;
-    readonly kind: "PROMOTED";
-    readonly recordClass: "STATE_CAMPAIGN_FINANCE";
-    readonly scope: string;
-    readonly sourceId: string;
-    readonly versionId: string;
-  }[];
-}
-
-/**
- * Documentary proof inventory from the exact promoted state authorities.
- * Unlike `stateMoneySources`, this never exposes or seeds tracked fixtures.
- */
-export function stateMoneyProofInventory(): StateMoneyProofInventory {
-  const targetKeys: string[] = [];
-  const readbacks: StateMoneyProofInventory["readbacks"][number][] = [];
-  const states = (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).sort();
-  for (const state of states) {
-    const contract = STATE_CAMPAIGN_FINANCE_SOURCES[state];
-    const result = readStates.get(state);
-    if (result?.kind !== "PROMOTED") {
-      throw new Error(
-        `${state} state campaign-finance Reader proof authority is ${result?.kind ?? "READ_NOT_INITIALIZED"}; ` +
-        "call refreshStateMoneyFromPromoted before building proof inventory.",
-      );
-    }
-    if (
-      result.metadata.recordClass !== "STATE_CAMPAIGN_FINANCE" ||
-      result.metadata.scope !== contract.scope ||
-      result.metadata.sourceId !== contract.sourceId
-    ) {
-      throw new Error(`${state} state campaign-finance Reader proof authority identity does not match its registered contract.`);
-    }
-    const versionId = result.metadata.versionId;
-    if (!versionId) throw new Error(`${state} state campaign-finance Reader proof authority has no promoted version.`);
-    const snapshot = cache.get(state);
-    if (!snapshot) throw new Error(`${state} state campaign-finance promoted Reader proof cache is unavailable.`);
-    validateSnapshot(snapshot, state, versionId);
-    targetKeys.push(...snapshot.records.flatMap((record) => record.targetKeys));
-    readbacks.push({
-      state,
-      kind: "PROMOTED",
-      recordClass: "STATE_CAMPAIGN_FINANCE",
-      scope: contract.scope,
-      sourceId: contract.sourceId,
-      versionId,
-    });
-  }
-  return { targetKeys: [...new Set(targetKeys)].sort(), readbacks };
-}
-
 function snapshotForTarget(targetKey: string): StateMoneySnapshot | null {
-  ensureTestFixtures();
   const state = /^ballot-([a-z]{2})-/.exec(targetKey)?.[1]?.toUpperCase() as StateCampaignFinanceJurisdiction | undefined;
   if (!state || !Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, state)) return null;
+  ensureTestFixtures(state);
   const snapshot = cache.get(state);
   if (snapshot) return snapshot;
   const read = readStates.get(state);
@@ -307,7 +242,6 @@ export function stateMoneySplit(): {
   leadsWithheld: number;
   routesUnread: number;
 } {
-  ensureTestFixtures();
   const all = [...cache.values()].flatMap((snapshot) => snapshot.records);
   const filed = new Set<string>();
   const registered = new Set<string>();
@@ -332,14 +266,5 @@ export function stateMoneySplit(): {
 /** Test seam. Never called by a render path. */
 export function resetStateMoneyCache(): void {
   cache = new Map();
-  readStates = new Map(
-    (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map((state) => [
-      state,
-      civicDataReadNotInitialized(
-        "STATE_CAMPAIGN_FINANCE",
-        STATE_CAMPAIGN_FINANCE_SOURCES[state].scope,
-        `The ${state} campaign-finance canonical pointer has not been read for this process.`,
-      ),
-    ]),
-  );
+  readStates = new Map();
 }

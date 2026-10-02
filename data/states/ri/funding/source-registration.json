@@ -1,0 +1,23 @@
+{
+  "jurisdiction": "RI",
+  "cycle": 2026,
+  "contractId": "ri-campaign-finance",
+  "sourceId": "ri-campaign-finance",
+  "parserVersion": "state-money/1",
+  "scope": "US-RI:campaign-finance:2026",
+  "agencies": [
+    {
+      "name": "STATE BOARD OF ELECTIONS",
+      "url": "https://elections.ri.gov",
+      "recordsHeld": "Election Results Rhode Island Board of Elections; Voting Accessibility 2000 Plainfield Pike; Conduct of Elections and Voter Registration Cranston, Rhode Island 02921; Election Audits URL https://elections.ri.gov; State Campaign Finance Reports E-Mail: boe.elections@elections.ri.gov (Elections) and; Training Campaign.finance@elections.ri.gov (Campaign Finance); Information Technology 401/222-2345 FAX 401/222-3135; Polling Places TDD 401/222-2239; Voting Equipment; Electronic Pollpads Miguel J. Nuñez, Executive Director",
+      "page": 109,
+      "row": 276
+    }
+  ],
+  "source": {
+    "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
+    "dataset": "fec_combined_federal_state_disclosure_directory",
+    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "jurisdiction": "NC",
+  "cycle": 2026,
+  "contractId": "nc-campaign-finance",
+  "sourceId": "nc-campaign-finance",
+  "parserVersion": "state-money/1",
+  "scope": "US-NC:campaign-finance:2026",
+  "agencies": [
+    {
+      "name": "SECRETARY OF STATE",
+      "url": "https://www.sosnc.gov",
+      "recordsHeld": "Corporate Registration Corporations Division; State Lobby Reports Lobbying Compliance Division; Enforcement of Lobbying Laws URL https://www.sosnc.gov/lobbyists; Regulation of Lobbying, Registration and E-Mail: lobbyist@sosnc.gov; Directory of Registrations STATE BOARD OF ELECTIONS; Candidates on Ballot State Board of Elections; Election Results 430 North Salisbury Street, Third Floor; Voting Accessibility Raleigh, North Carolina 27603-5918; Federal Campaign Finance Reports URL https://www.ncsbe.gov; State Campaign Finance Reports E-Mail: elections.sboe@ncsbe.gov; State Initiative/Referendum Spending Reports 919/814-0700 FAX 919/715-0135; Electronic Filings 866/522-4723; Campaign Finance Education Mailing Address:; Training for Campaign Treasurers P.O. Box 27255",
+      "page": 93,
+      "row": 229
+    }
+  ],
+  "source": {
+    "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
+    "dataset": "fec_combined_federal_state_disclosure_directory",
+    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
+  }
+}

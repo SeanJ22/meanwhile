@@ -1,0 +1,23 @@
+{
+  "jurisdiction": "OR",
+  "cycle": 2026,
+  "contractId": "or-campaign-finance",
+  "sourceId": "or-campaign-finance",
+  "parserVersion": "state-money/1",
+  "scope": "US-OR:campaign-finance:2026",
+  "agencies": [
+    {
+      "name": "SECRETARY OF STATE",
+      "url": "https://sos.oregon.gov",
+      "recordsHeld": "Candidates on Ballot Secretary of State; Election Results Oregon State Capitol; Federal Campaign Finance Reports 900 Court Street, NE; State Campaign Finance Reports Salem, Oregon 97310-0722; State Initiative/Referendum Spending Reports URL https://sos.oregon.gov; Election Law Complaint Case Files E-Mail: oregon.sos@oregon.gov; Voting Accessibility 503/986-1523 FAX 503/986-1616; Oregon Centralized Voter Registration (OCVR); Electronic Filings Cheryl Myers, Deputy Secretary of State",
+      "page": 103,
+      "row": 256
+    }
+  ],
+  "source": {
+    "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
+    "dataset": "fec_combined_federal_state_disclosure_directory",
+    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
+  }
+}

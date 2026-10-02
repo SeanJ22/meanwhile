@@ -1,4 +1,5 @@
-import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "./data-plane.ts";
+import type { StateCampaignFinanceJurisdiction } from "./data-plane.ts";
+import { US_JURISDICTIONS } from "../coverage/states.ts";
 
 export interface FundingTargetPlan {
   readonly contestId: string | null;
@@ -19,7 +20,7 @@ function contestIdFromBallotTarget(target: string): string | null {
 export function stateFromContest(contestId: string | null): StateCampaignFinanceJurisdiction | null {
   if (!contestId || FEDERAL_CONTEST.test(contestId)) return null;
   const code = /^ballot-([a-z]{2})-/.exec(contestId)?.[1]?.toUpperCase() as StateCampaignFinanceJurisdiction | undefined;
-  return code && Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, code) ? code : null;
+  return code && US_JURISDICTIONS.some(state => state.usps === code) ? code : null;
 }
 
 /** Exact source-namespaced targets select their authority without another store. */

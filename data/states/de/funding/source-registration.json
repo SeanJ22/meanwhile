@@ -1,0 +1,23 @@
+{
+  "jurisdiction": "DE",
+  "cycle": 2026,
+  "contractId": "de-campaign-finance",
+  "sourceId": "de-campaign-finance",
+  "parserVersion": "state-money/1",
+  "scope": "US-DE:campaign-finance:2026",
+  "agencies": [
+    {
+      "name": "STATE ELECTION COMMISSIONER",
+      "url": "https://elections.delaware.gov",
+      "recordsHeld": "Candidates on Ballot State Election Commissioner; Election Results 905 South Governors Avenue, Suite 170; State Campaign Finance Reports Dover, Delaware 19904; Voting Accessibility URL https://elections.delaware.gov",
+      "page": 38,
+      "row": 70
+    }
+  ],
+  "source": {
+    "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
+    "dataset": "fec_combined_federal_state_disclosure_directory",
+    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
+  }
+}

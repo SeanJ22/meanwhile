@@ -1,0 +1,23 @@
+{
+  "jurisdiction": "TN",
+  "cycle": 2026,
+  "contractId": "tn-campaign-finance",
+  "sourceId": "tn-campaign-finance",
+  "parserVersion": "state-money/1",
+  "scope": "US-TN:campaign-finance:2026",
+  "agencies": [
+    {
+      "name": "BUREAU OF ETHICS AND CAMPAIGN FINANCE",
+      "url": "https://www.tn.gov/tref",
+      "recordsHeld": "Federal Campaign Finance Reports URL https://www.tn.gov/tref; State Campaign Finance Reports 615/741-7959 FAX 615/532-8905; State Personal Financial Reports URL https://www.tn.gov/tec; State Lobby Reports E-Mail: ethics.counsel@tn.gov",
+      "page": 114,
+      "row": 292
+    }
+  ],
+  "source": {
+    "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
+    "dataset": "fec_combined_federal_state_disclosure_directory",
+    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
+  }
+}

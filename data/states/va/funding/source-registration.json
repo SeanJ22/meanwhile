@@ -1,0 +1,23 @@
+{
+  "jurisdiction": "VA",
+  "cycle": 2026,
+  "contractId": "va-campaign-finance",
+  "sourceId": "va-campaign-finance",
+  "parserVersion": "state-money/1",
+  "scope": "US-VA:campaign-finance:2026",
+  "agencies": [
+    {
+      "name": "SECRETARY OF THE COMMONWEALTH",
+      "url": "https://www.commonwealth.virginia.gov",
+      "recordsHeld": "Statements of Economic Interest Secretary of the Commonwealth; Report of the Secretary of the Commonwealth URL https://www.commonwealth.virginia.gov; State Lobbyist Registration and Reports (Online) E-Mail: socmail@governor.virginia.gov; Gubernatorial Board and Commission 804/786-2441 FAX 804/371-0017; Service of Process P.O. Box 2454; Authentication Richmond, Virginia 23218-2454; Clemency, Extraditions; Notary DEPARTMENT OF ELECTIONS; Candidates on Ballot Virginia Department of Elections; Election Results Washington Building; Federal Campaign Finance Reports 1100 Bank Street, First Floor; State Campaign Finance Reports URL https://www.elections.virginia.gov; Voting Accessibility E-Mail (General Questions): info@elections.virginia.gov; Electronic Filings E-Mail: (Campaign Finance): cfda@elections.virginia.gov",
+      "page": 122,
+      "row": 311
+    }
+  ],
+  "source": {
+    "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
+    "dataset": "fec_combined_federal_state_disclosure_directory",
+    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
+  }
+}

@@ -20,7 +20,7 @@ test("Ask retains exact state finance records when only the unrelated FEC reader
   const store = new MemoryRoutineDataStore();
   await installRegistryRuntimeFirstSeeds();
   await readAzBallotProjection({ store, bypassCache: true });
-  await readStateMoneyProjections({ store, bypassCache: true });
+  await readStateMoneyProjections(["AZ", "NH", "NJ"], { store, bypassCache: true });
   await readFundingSnapshot({ store, bypassCache: true });
   const cases = [
     ["NH", "ballot-nh-merrimack:governor:ayotte-kelly", "Kelly Ayotte"],
@@ -93,7 +93,7 @@ test("foreign contest and card keys do not initialize the AZ identity bridge", a
 
 test("an unavailable NH finance holding remains explicit while NJ finance still renders", async () => {
   const store = new MemoryRoutineDataStore();
-  await readStateMoneyProjections({ store, bypassCache: true });
+  await readStateMoneyProjections(["AZ", "NH", "NJ"], { store, bypassCache: true });
   await refreshStateMoneyProjectionFromPromoted("NH", { store: failedStore, bypassCache: true });
   const missing = campaignMoneyEvidenceFor({ kind: "PERSON", id: "ballot-nh-merrimack:governor:ayotte-kelly", name: "Kelly Ayotte" }, "ballot-nh-merrimack:governor:ayotte-kelly");
   assert.equal(missing.records.length, 0);
@@ -107,7 +107,7 @@ test("state officeholder finance also survives an unrelated FEC failure through 
   const store = new MemoryRoutineDataStore();
   await installRegistryRuntimeFirstSeeds();
   await readAzBallotProjection({ store, bypassCache: true });
-  await readStateMoneyProjections({ store, bypassCache: true });
+  await readStateMoneyProjections(["AZ", "NH", "NJ"], { store, bypassCache: true });
   await readFundingSnapshot({ store, bypassCache: true });
   const subjects = [
     { kind: "PERSON", id: "statewide:nh/governor", name: "Kelly Ayotte" },

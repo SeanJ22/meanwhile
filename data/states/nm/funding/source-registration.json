@@ -1,0 +1,23 @@
+{
+  "jurisdiction": "NM",
+  "cycle": 2026,
+  "contractId": "nm-campaign-finance",
+  "sourceId": "nm-campaign-finance",
+  "parserVersion": "state-money/1",
+  "scope": "US-NM:campaign-finance:2026",
+  "agencies": [
+    {
+      "name": "SECRETARY OF STATE",
+      "url": "https://www.sos.state.nm.gov",
+      "recordsHeld": "Candidates on Ballot Secretary of State; Election Results 325 Don Gaspar, Suite 300; Federal Campaign Finance Reports Santa Fe, New Mexico 87501; State Campaign Finance Reports E-Mail: secretary.state@state.nm.gov; State Personal Financial Disclosure Reports 1-800/477-3632 (Toll Free); Lobbyist Reports; Voter Action Act; Voting Accessibility; Corporate Registration Business Services Division; Partnership, UCC, Notary Filings E-Mail: corporations@state.nm.gov; Trademarks 505/827-3600 (option 1) FAX 505/827-4387",
+      "page": 88,
+      "row": 216
+    }
+  ],
+  "source": {
+    "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
+    "dataset": "fec_combined_federal_state_disclosure_directory",
+    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
+  }
+}

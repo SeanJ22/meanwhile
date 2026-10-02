@@ -1,0 +1,23 @@
+{
+  "jurisdiction": "KS",
+  "cycle": 2026,
+  "contractId": "ks-campaign-finance",
+  "sourceId": "ks-campaign-finance",
+  "parserVersion": "state-money/1",
+  "scope": "US-KS:campaign-finance:2026",
+  "agencies": [
+    {
+      "name": "SECRETARY OF STATE",
+      "url": "https://sos.kansas.gov",
+      "recordsHeld": "Candidates on Ballot for Elections/Legislative Matters; Election Results E-Mail: bryan.caskey@sos.ks.gov; Federal Campaign Finance Reports 785/296-4561 FAX 785/291-3051; State Campaign Finance Reports Katie Koupal, Public Affairs Director; State Personal Financial Reports Jameson Beckner, HAVA Coordinator; State Lobby Reports; Voting Accessibility; Corporate Registration E-Mail: jennifer.cook@sos.ks.gov; Reviews Disclosure Reports for Compliance with Governmental Ethics Commission; Administers and Enforces the State’s Campaign Topeka, Kansas 66612-1287",
+      "page": 59,
+      "row": 138
+    }
+  ],
+  "source": {
+    "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
+    "dataset": "fec_combined_federal_state_disclosure_directory",
+    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
+  }
+}

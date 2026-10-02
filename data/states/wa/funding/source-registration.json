@@ -1,0 +1,30 @@
+{
+  "jurisdiction": "WA",
+  "cycle": 2026,
+  "contractId": "wa-campaign-finance",
+  "sourceId": "wa-campaign-finance",
+  "parserVersion": "state-money/1",
+  "scope": "US-WA:campaign-finance:2026",
+  "agencies": [
+    {
+      "name": "PUBLIC DISCLOSURE COMMISSION",
+      "url": "https://www.pdc.wa.gov",
+      "recordsHeld": "Federal Campaign Finance Reports Public Disclosure Commission; State Campaign Finance Reports (Online) P.O. Box 40908; State Personal Financial Reports Olympia, Washington 98504-0908; State Lobby Reports (Online) URL https://www.pdc.wa.gov; State Initiative/Referendum Spending Reports E-Mail: pdc@pdc.wa.gov; Political Advertising/Sponsor Identification 1-877/601-2828 (Toll Free); Electronic Filings",
+      "page": 126,
+      "row": 322
+    },
+    {
+      "name": "SEATTLE ETHICS AND ELECTIONS COMMISSION",
+      "url": "https://www.seattle.gov/ethics",
+      "recordsHeld": "City Campaign Finance Reports (Online) Seattle Ethics and Elections Commission; Enforcement of Ethics Code and Contribution 700 Fifth Avenue, Suite 4010; Investigation of Whistleblower Complaints Seattle, Washington 98124-4729; Ethics, Campaign and Committee Training URL https://www.seattle.gov/ethics; Advisory Opinions on Ethics and Elections Laws E-Mail: wayne.barnett@seattle.gov; Voter Guides 206/684-8500 FAX 206/684-8590; Electronic Filings LEGISLATIVE REFERENCE",
+      "page": 127,
+      "row": 325
+    }
+  ],
+  "source": {
+    "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
+    "dataset": "fec_combined_federal_state_disclosure_directory",
+    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
+  }
+}

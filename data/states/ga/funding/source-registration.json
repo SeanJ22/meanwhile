@@ -1,0 +1,30 @@
+{
+  "jurisdiction": "GA",
+  "cycle": 2026,
+  "contractId": "ga-campaign-finance",
+  "sourceId": "ga-campaign-finance",
+  "parserVersion": "state-money/1",
+  "scope": "US-GA:campaign-finance:2026",
+  "agencies": [
+    {
+      "name": "SECRETARY OF STATE",
+      "url": "https://sos.ga.gov/",
+      "recordsHeld": "Candidates on Ballot Elections Division; Election Results Suite 802, West Tower; Voting Accessibility 2 Martin Luther King, Jr. Drive, S.E.; State Campaign Finance Reports Filed Prior to Atlanta, Georgia 30334-1505",
+      "page": 44,
+      "row": 87
+    },
+    {
+      "name": "GOVERNMENT TRANSPARENCY AND CAMPAIGN FINANCE COMMISSION",
+      "url": "https://efile.ethics.ga.gov",
+      "recordsHeld": "Federal Campaign Finance Reports Georgia Government Transparency and Campaign Finance Commission; State Campaign Finance Reports Suite 1416, West Tower; State Personal Financial Reports Atlanta, Georgia 30334; State Campaign Finance Disclosure Enforcement URL https://efile.ethics.ga.gov; State Personal Financial Disclosure Enforcement E-Mail: gaethics@ethics.ga.gov; State Lobbyist Reports 404/463-1980 FAX 404/463-1988; State Lobbyist Registration; City/County Lobbyist Reports; Vendor Gift Disclosure Reports and Enforcement; Vendor Lobbyist Disclosure; Electronic Filings",
+      "page": 44,
+      "row": 89
+    }
+  ],
+  "source": {
+    "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
+    "dataset": "fec_combined_federal_state_disclosure_directory",
+    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
+  }
+}

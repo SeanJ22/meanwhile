@@ -1,0 +1,23 @@
+{
+  "jurisdiction": "ND",
+  "cycle": 2026,
+  "contractId": "nd-campaign-finance",
+  "sourceId": "nd-campaign-finance",
+  "parserVersion": "state-money/1",
+  "scope": "US-ND:campaign-finance:2026",
+  "agencies": [
+    {
+      "name": "SECRETARY OF STATE",
+      "url": "https://www.sos.nd.gov",
+      "recordsHeld": "Candidates on Ballot Secretary of State; Election Results State Capitol; Federal Campaign Finance Reports 600 East Boulevard Avenue, Dept. 108; State Campaign Finance Reports URL https://www.sos.nd.gov; State Personal Financial Reports E-Mail: sos@nd.gov; State Lobby Reports 701/328-2900 FAX 701/328-3413; State Initiative/Referendum Spending Reports 1-800/352-0867 (Toll Free); Voting Accessibility; Business Registration E-Mail: sosbir@nd.gov",
+      "page": 95,
+      "row": 235
+    }
+  ],
+  "source": {
+    "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
+    "dataset": "fec_combined_federal_state_disclosure_directory",
+    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "jurisdiction": "ID",
+  "cycle": 2026,
+  "contractId": "id-campaign-finance",
+  "sourceId": "id-campaign-finance",
+  "parserVersion": "state-money/1",
+  "scope": "US-ID:campaign-finance:2026",
+  "agencies": [
+    {
+      "name": "SECRETARY OF STATE",
+      "url": "https://sos.idaho.gov",
+      "recordsHeld": "Candidates on Ballot Secretary of State; Election Results 700 West Jefferson, Room E-205; Federal Campaign Finance Reports P.O. Box 83720; State Campaign Finance Reports URL https://sos.idaho.gov; State Lobby Reports 208/334-2300 FAX 208/334-2080; State Initiative/Referendum Spending Reports; Distribution of Public Financing Funds Guillermo Velasco, Elections Division Manager; Voting Accessibility Elections Division; Corporate Registration E-Mail: elections@sos.idaho.gov",
+      "page": 50,
+      "row": 106
+    }
+  ],
+  "source": {
+    "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
+    "dataset": "fec_combined_federal_state_disclosure_directory",
+    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
+  }
+}

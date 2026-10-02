@@ -1,0 +1,23 @@
+{
+  "jurisdiction": "KY",
+  "cycle": 2026,
+  "contractId": "ky-campaign-finance",
+  "sourceId": "ky-campaign-finance",
+  "parserVersion": "state-money/1",
+  "scope": "US-KY:campaign-finance:2026",
+  "agencies": [
+    {
+      "name": "REGISTRY OF ELECTION FINANCE",
+      "url": "https://kref.ky.gov",
+      "recordsHeld": "Federal Campaign Finance Reports Kentucky Registry of Election Finance; State Campaign Finance Reports Frankfort, Kentucky 40601-3240; State Financial Disclosure Reports URL https://kref.ky.gov; Ballot Issues Spending Reports 502/573-2226 FAX 502/573-5622; Advisory Opinions; Electronic Filings Leslie M. Saunders, General Counsel",
+      "page": 61,
+      "row": 143
+    }
+  ],
+  "source": {
+    "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
+    "dataset": "fec_combined_federal_state_disclosure_directory",
+    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
+  }
+}

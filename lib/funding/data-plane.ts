@@ -1,3 +1,6 @@
+import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
+import { US_JURISDICTIONS } from "../coverage/states.ts";
 import type {
   CivicRecordMember,
   IdentityEvidence,
@@ -11,28 +14,52 @@ import type {
   AzPimaTransactions,
 } from "../control-plane/campaign-finance/held-records.ts";
 
-export const STATE_CAMPAIGN_FINANCE_SOURCES = {
-  AZ: {
-    contractId: "az-sos-campaign-finance",
-    sourceId: "az-sos-campaign-finance",
-    scope: "US-AZ:campaign-finance:2026",
-    parserVersion: "az-campaign-finance/2",
-  },
-  NH: {
-    contractId: "nh-sos-campaign-finance",
-    sourceId: "nh-sos-campaign-finance",
-    scope: "US-NH:campaign-finance:2026",
-    parserVersion: "nh-campaign-finance/2",
-  },
-  NJ: {
-    contractId: "nj-elec-campaign-finance",
-    sourceId: "nj-elec-campaign-finance",
-    scope: "US-NJ:campaign-finance:2026",
-    parserVersion: "nj-campaign-finance/2",
-  },
-} as const;
+export type StateCampaignFinanceJurisdiction = string;
 
-export type StateCampaignFinanceJurisdiction = keyof typeof STATE_CAMPAIGN_FINANCE_SOURCES;
+export interface StateCampaignFinanceRegistration {
+  readonly jurisdiction: string;
+  readonly cycle: number;
+  readonly contractId: string;
+  readonly sourceId: string;
+  readonly scope: string;
+  readonly parserVersion: string;
+  /** The directory names records held; this does not settle statutory custody. */
+  readonly agencies: readonly { readonly name: string; readonly url: string; readonly recordsHeld: string; readonly page: number; readonly row: number }[];
+  readonly source: { readonly url: string; readonly dataset: string; readonly sha256: string; readonly archiveSha256: string };
+}
+
+function registrationPath(state: string, root: string): string | null {
+  const identity = US_JURISDICTIONS.find(j => j.usps === state.toUpperCase());
+  return identity ? join(/* turbopackIgnore: true */ root, "data", "states", identity.slug, "funding", "source-registration.json") : null;
+}
+
+/** One state's sourced source registration; no sibling holding is opened. */
+export function stateCampaignFinanceRegistration(state: string, root = process.cwd()): StateCampaignFinanceRegistration {
+  const path = registrationPath(state, root), code = state.toUpperCase();
+  if (!path) throw new Error(`STATE_MONEY_REGISTRATION_UNRECORDED:${code}`);
+  const value = JSON.parse(readFileSync(path, "utf8")) as StateCampaignFinanceRegistration;
+  if (value.jurisdiction !== code || !Number.isSafeInteger(value.cycle) || value.cycle < 2000 ||
+      value.scope !== `US-${code}:campaign-finance:${value.cycle}` || !value.contractId || !value.sourceId || !value.parserVersion ||
+      !value.source?.url || !value.source.dataset || !/^[a-f0-9]{64}$/.test(value.source.sha256) || !/^[a-f0-9]{64}$/.test(value.source.archiveSha256) ||
+      !Array.isArray(value.agencies) || !value.agencies.length || value.agencies.some(agency => !agency.name || !agency.url || !agency.recordsHeld)) {
+    throw new Error(`STATE_MONEY_REGISTRATION_INVALID:${code}`);
+  }
+  return value;
+}
+
+/** Compatibility keys are filenames only. Values open just the selected state's data. */
+export function stateCampaignFinanceSources(root = process.cwd()): Readonly<Record<string, StateCampaignFinanceRegistration>> {
+  const has = (state: string) => { const path = registrationPath(state, root); return path !== null && existsSync(path); };
+  return new Proxy(Object.create(null) as Record<string, StateCampaignFinanceRegistration>, {
+    has: (_target, key) => typeof key === "string" && has(key),
+    get: (_target, key) => typeof key === "string" && has(key) ? stateCampaignFinanceRegistration(key, root) : undefined,
+    ownKeys: () => readdirSync(join(/* turbopackIgnore: true */ root, "data", "states"))
+      .map(state => state.toUpperCase()).filter(has).sort(),
+    getOwnPropertyDescriptor: (_target, key) => typeof key === "string" && has(key) ? { enumerable: true, configurable: true } : undefined,
+  });
+}
+
+export const STATE_CAMPAIGN_FINANCE_SOURCES = stateCampaignFinanceSources();
 
 export const PIMA_LOCAL_FINANCE_CONTRACT = {
   contractId: "az-pima-local-finance",
@@ -84,7 +111,8 @@ function stateIdentities(snapshot: StateMoneySnapshot): readonly IdentityEvidenc
 function stateViolations(snapshot: StateMoneySnapshot, jurisdiction: StateCampaignFinanceJurisdiction): string[] {
   const violations: string[] = [];
   if (snapshot.formatVersion !== 1) violations.push("State campaign-finance projection has the wrong format version.");
-  if (snapshot.cycle !== 2026) violations.push(`State campaign-finance projection carries cycle ${snapshot.cycle}, not 2026.`);
+  const cycle = STATE_CAMPAIGN_FINANCE_SOURCES[jurisdiction].cycle;
+  if (snapshot.cycle !== cycle) violations.push(`State campaign-finance projection carries cycle ${snapshot.cycle}, not ${cycle}.`);
   if (snapshot.records.length === 0) violations.push("State campaign-finance projection contains no normalized records.");
   if (snapshot.records.some((record) => record.jurisdiction !== jurisdiction)) {
     violations.push(`A state campaign-finance row crosses the ${jurisdiction} authority scope.`);
@@ -153,7 +181,7 @@ export function stateCampaignFinanceCandidate(input: {
     identities: stateIdentities(input.snapshot),
     temporal: {
       version: String(input.snapshot.cycle),
-      expectedVersion: "2026",
+      expectedVersion: String(contract.cycle),
       sourceThrough: input.snapshot.collectedAt,
       staleAtRetrieval: false,
     },
@@ -171,7 +199,7 @@ export function stateCampaignFinanceCandidate(input: {
       ? {
           claimsAbsence: true,
           basis: "BOUNDED_AUTHORITATIVE_QUERY",
-          exactSubject: `${input.jurisdiction} 2026 candidacies named in the projection`,
+          exactSubject: `${input.jurisdiction} ${contract.cycle} candidacies named in the projection`,
           exactHorizon: input.query,
         }
       : { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },

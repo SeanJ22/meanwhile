@@ -1,0 +1,23 @@
+{
+  "jurisdiction": "OK",
+  "cycle": 2026,
+  "contractId": "ok-campaign-finance",
+  "sourceId": "ok-campaign-finance",
+  "parserVersion": "state-money/1",
+  "scope": "US-OK:campaign-finance:2026",
+  "agencies": [
+    {
+      "name": "ETHICS COMMISSION",
+      "url": "https://oklahoma.gov/ethics",
+      "recordsHeld": "Federal Campaign Finance Reports Ethics Commission; State Campaign Finance Reports Oklahoma City, Oklahoma 73105-4812; State Personal Financial Reports URL https://oklahoma.gov/ethics; State Lobby Reports E-Mail: leeanne.bruceboone@ethics.ok.gov; Spending on State Initiatives and Referenda 405/521-3451 FAX 405/521-4905; Electronic Filings",
+      "page": 101,
+      "row": 253
+    }
+  ],
+  "source": {
+    "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
+    "dataset": "fec_combined_federal_state_disclosure_directory",
+    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
+  }
+}

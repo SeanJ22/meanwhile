@@ -697,6 +697,8 @@ export interface ControlPlaneRepositories {
   readonly escalations: AppendOnlyRepository<Escalation>;
   readonly dispositions: AppendOnlyRepository<DispositionCommit>;
   readonly artifacts: AppendOnlyRepository<ArtifactRecord>;
+  /** Exact source-owned captures across jobs, newest acquisition first; no general log scan in Postgres. */
+  readonly artifactsByCanonicalUrl?: (url: string, limit: number) => Promise<readonly ArtifactRecord[]>;
   /** Exact Admin original-byte copy requests, CAS-leased by the permanent runner. */
   readonly adminEvidenceCopyRequests: AggregateRepository<AdminEvidenceCopyRequest>;
   readonly costs: AppendOnlyRepository<CostEntry>;

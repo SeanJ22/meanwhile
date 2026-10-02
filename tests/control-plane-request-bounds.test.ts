@@ -301,15 +301,21 @@ test("connect-retry: the real bootstrap survives a hung first connect, because t
   const warn = console.warn;
   try {
     console.warn = (line: string) => warnings.push(line);
-    neonConfig.fetchFunction = ((_input: unknown, init?: { signal?: AbortSignal }) => {
+    neonConfig.fetchFunction = ((_input: unknown, init?: { signal?: AbortSignal; body?: string }) => {
       fetches += 1;
       if (fetches === 1) {
         return new Promise<Response>((_resolve, reject) => {
           init?.signal?.addEventListener("abort", () => reject(init.signal?.reason), { once: true });
         });
       }
+      const query = JSON.parse(init?.body ?? "{}").query as string | undefined;
+      // This mocked database already has the valid index; online creation has
+      // separate coverage and must not open a real socket in a retry test.
+      const result = query?.includes("FROM pg_index i")
+        ? { command: "SELECT", fields: [{ name: "valid", dataTypeID: 16 }, { name: "building", dataTypeID: 16 }], rows: [["t", "f"]], rowCount: 1, rowAsArray: false }
+        : { command: "CREATE", fields: [], rows: [], rowCount: 0, rowAsArray: false };
       return Promise.resolve(
-        new Response(JSON.stringify({ command: "CREATE", fields: [], rows: [], rowCount: 0, rowAsArray: false }), {
+        new Response(JSON.stringify(result), {
           status: 200,
           headers: { "content-type": "application/json" },
         }),

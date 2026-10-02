@@ -31,8 +31,15 @@ function collections(recordClass: string): Record<string, string> {
 }
 
 export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: string, scopes: readonly string[],
-  ids: readonly string[], bodies: readonly string[], targets: readonly string[]): Promise<Map<string, unknown>> {
-  const fields = collections(recordClass);
+  ids: readonly string[], bodies: readonly string[], targets: readonly string[],
+  selection?: { readonly divisionNames: { readonly root: string; readonly names: readonly string[] } }): Promise<Map<string, unknown>> {
+  const names = selection?.divisionNames;
+  // Directory coverage statements can name a territory absent from the
+  // current place slice. Select exact labels inside its canonical state root
+  // in the database; retain all matches so ambiguity remains unresolved.
+  const fields: Record<string, string> = names ? { "registry.divisions":
+    "(x->>'ocdId'=$7 OR starts_with(x->>'ocdId',$7 || '/')) AND trim(regexp_replace(lower(x->>'label'),'[^[:alnum:]]+',' ','g'))=ANY($8::text[])" }
+    : collections(recordClass);
   const paths = Object.keys(fields);
   const predicate = Object.entries(fields).map(([field, where]) => `(field='${field}' AND (${where}))`).join(" OR ");
   const [rows] = await query([{ text: `WITH RECURSIVE selected AS (SELECT $3::text[] ids,$4::text[] bodies,$5::text[] targets),
@@ -63,7 +70,8 @@ export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: s
   UNION ALL
   SELECT scope,'$missing',jsonb_agg(node) FROM walk WHERE node ? '$civicPayloadPart'
     AND NOT EXISTS (SELECT 1 FROM civic_data_payload_parts p WHERE p.hash=node->>'$civicPayloadPart') GROUP BY scope`,
-    params: [recordClass, [...scopes], [...ids], [...bodies], [...targets], paths] }]);
+    params: [recordClass, [...scopes], [...ids], [...bodies], [...targets], paths,
+      ...(names ? [names.root, [...names.names]] : [])] }]);
   if (rows.some(row => row.field === "$missing")) throw new Error("CIVIC_PAYLOAD_PART_MISSING");
   // Only selected records can still contain references (for example a long
   // biography). Their existing decoder preserves their exact field values.

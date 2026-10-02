@@ -14,6 +14,7 @@ import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { registryAreaViewOf } from "../lib/civic-data/payload-parts.ts";
 import {
   readRegistryRuntimePrior,
+  heldRegistryAreaPackage,
   REGISTRY_RUNTIME_SCOPE,
   registryRuntimeCandidate,
   type RegistryRuntimePackage,
@@ -105,12 +106,21 @@ async function main(): Promise<void> {
     return;
   }
   const packagePath = assignment(process.argv, "package");
-  if (!packagePath) throw new Error("Pass --package=<reviewed-registry-runtime-package.json>.");
-  const input = JSON.parse(readFileSync(resolve(packagePath), "utf8")) as RegistryRuntimePackage;
-  if (input.contractId !== "registry-runtime-bindings") throw new Error(`Wrong registry contract: ${String(input.contractId)}.`);
+  const convertHeld = process.argv.includes("--convert-held-registry");
+  if (!packagePath && !convertHeld) throw new Error("Pass --package=<reviewed-registry-runtime-package.json> or --convert-held-registry.");
+  let input = packagePath && !convertHeld ? JSON.parse(readFileSync(resolve(packagePath), "utf8")) as RegistryRuntimePackage : null;
   prepareProductionCivicDataWrite();
   const store = new PostgresRoutineDataStore();
-  const prior = await readRegistryRuntimePrior(store, input.sourceReceipt.reviewedAt);
+  const prior = await readRegistryRuntimePrior(store, input?.sourceReceipt.reviewedAt ?? new Date().toISOString());
+  if (convertHeld) {
+    if (!prior) throw new Error("REGISTRY_RUNTIME_BASE_UNAVAILABLE:NOT_RECORDED");
+    input = heldRegistryAreaPackage(prior);
+    if (!input) {
+      console.log(JSON.stringify({ contractId: "registry-runtime-bindings", promotedVersionId: prior.versionId, converted: false }, null, 2));
+      return;
+    }
+  }
+  if (!input || input.contractId !== "registry-runtime-bindings") throw new Error(`Wrong registry contract: ${String(input?.contractId)}.`);
   const candidate = registryRuntimeCandidate(input, { prior, areaStored: true });
   const outcome = await processRegisteredManualCandidate(
     store,

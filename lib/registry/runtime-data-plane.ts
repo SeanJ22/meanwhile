@@ -114,6 +114,8 @@ export interface RegistryRuntimePrior {
   readonly sourceReceipt: ManualSourceSetReceipt;
   /** The exact GOOD base's read model, bound so inherited members name the version they came from. */
   readonly readModelSha256: string;
+  /** The held candidate's source horizon, distinct from its review instant. */
+  readonly sourceThrough?: string;
 }
 
 export interface RegistryRuntimeCandidateOptions {
@@ -726,7 +728,17 @@ export async function readRegistryRuntimePrior(
   if (readModelSha256 !== sha256(canonicalCivicDataJson(read.value))) {
     throw new Error("REGISTRY_RUNTIME_BASE_PROOF_INVALID:POINTER_AND_CANDIDATE_DIFFER");
   }
-  return { versionId: read.projection.versionId, payload: read.value, sourceReceipt: registryBaseSourceReceipt(candidate.candidate), readModelSha256 };
+  return { versionId: read.projection.versionId, payload: read.value, sourceReceipt: registryBaseSourceReceipt(candidate.candidate), readModelSha256,
+    sourceThrough: candidate.candidate.temporal.sourceThrough };
+}
+
+/** Storage-only conversion of the held GOOD edition; no source is re-observed. */
+export function heldRegistryAreaPackage(prior: RegistryRuntimePrior): RegistryRuntimePackage | null {
+  if (registryAreaViewOf(prior.payload)) return null;
+  return { contractId: "registry-runtime-bindings", scope: "MEMBERS",
+    version: `worker-roster:wr-${sha256(`registry-area-storage:${prior.versionId}`).slice(0, 24)}`,
+    sourceThrough: prior.sourceThrough ?? prior.sourceReceipt.reviewedAt,
+    sourceReceipt: prior.sourceReceipt, payload: prior.payload };
 }
 
 /**

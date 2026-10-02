@@ -14,7 +14,7 @@ import { projectRoutineDataObservability } from "../lib/civic-data/observability
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { getTableName } from "drizzle-orm";
-import { CivicPayloadParts, partitionCivicPayload } from "../lib/civic-data/payload-parts.ts";
+import { CivicPayloadParts, partitionCivicPayload, registryAreaViewOf } from "../lib/civic-data/payload-parts.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { readerOfficeholders } from "../lib/ask/server-sources.ts";
 import { composeReaderOfficials, readerOfficialsQuestion } from "../lib/ask/reader-officials.ts";
@@ -33,6 +33,7 @@ import {
   readRegistryRuntimePrior,
   registryBaseSourceReceipt,
   registryRuntimeCandidate,
+  heldRegistryAreaPackage,
   registryRuntimeProjectionIssues,
   type RegistryRuntimePackage,
   type RegistryRuntimeReadModel,
@@ -95,6 +96,33 @@ async function registryPackage(at: string, salt: string): Promise<RegistryRuntim
   const payload = structuredClone(read.value);
   return { contractId: "registry-runtime-bindings", version: at, sourceThrough: at, sourceReceipt: receipt(payload, at, salt), payload };
 }
+
+test("explicit held registry conversion preserves facts, reviews and source clocks and is unchanged when already native", async () => {
+  const pkg = { ...await registryPackage(T0, "held-conversion"), sourceThrough: "2026-09-07T12:00:00.000Z" };
+  const legacy = registryRuntimeCandidate(pkg);
+  const store = new MemoryRoutineDataStore();
+  const seeded = await processRegisteredManualCandidate(store, "registry-runtime-bindings", legacy, T0);
+  assert.ok(seeded.promoted, seeded.candidate.failureDetail ?? undefined);
+  const prior = (await readRegistryRuntimePrior(store, T0))!;
+  assert.equal(prior.sourceThrough, pkg.sourceThrough);
+  const input = heldRegistryAreaPackage(prior)!;
+  assert.equal(input.version, `worker-roster:wr-${hash(`registry-area-storage:${prior.versionId}`).slice(0, 24)}`);
+  assert.equal(input.sourceThrough, prior.sourceThrough);
+  assert.deepEqual(input.sourceReceipt, prior.sourceReceipt);
+  assert.equal(input.sourceReceipt.reviewedAt, T0);
+  const converted = registryRuntimeCandidate(input, { prior, areaStored: true });
+  assert.deepEqual(registryBaseSourceReceipt(converted), prior.sourceReceipt);
+  assert.equal(converted.temporal.sourceThrough, prior.sourceThrough);
+  assert.equal(converted.retrieval.retrievedAt, legacy.retrieval.retrievedAt);
+  assert.ok(registryAreaViewOf(converted.readModel));
+  assert.deepEqual(civicRecordsFor("REGISTRY_RUNTIME_BINDING", converted.readModel),
+    civicRecordsFor("REGISTRY_RUNTIME_BINDING", legacy.readModel), "storage conversion preserves every held fact");
+  const published = await processRegisteredManualCandidate(store, "registry-runtime-bindings", converted,
+    input.sourceReceipt.reviewedAt, prior.versionId, { confirmUnchanged: false });
+  assert.ok(published.promoted, published.candidate.failureDetail ?? undefined);
+  assert.equal(heldRegistryAreaPackage({ ...prior, payload: converted.readModel as RegistryRuntimeReadModel }), null,
+    "the explicit CLI reuses an already-native GOOD edition without a source mutation");
+});
 
 test("the canonical door converts a legacy edition then publishes one area without changing the other state", async () => {
   const saved = new Map<string, unknown>();

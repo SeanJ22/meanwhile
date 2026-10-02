@@ -212,9 +212,18 @@ export function investigationRole(results: readonly import('../scheduler/scout-r
 }
 function hasUntriedAdapter(latest:import('../scheduler/scout-result.ts').ScoutResult|undefined,installed:readonly string[],knowledge:readonly FieldManualEntry[]=[]) {
   const description = latest ? [latest.narrative,...(latest.nextRungs ?? []),...(latest.candidates ?? []).map(c=>c.routeId)].join(' ').toLowerCase() : '';
+  const sourceOrigin=(value:unknown)=>{
+    if(typeof value!=='string' || archiveCapture(value))return null;
+    try {const url=new URL(value);return ['https:','http:'].includes(url.protocol)?url.origin:null;}catch{return null;}
+  };
+  const origins=new Set([...(latest?.candidates??[]).map(c=>c.url),...(latest?.rungs??[]).filter(r=>r.tool!=='search').map(r=>r.target)].map(sourceOrigin).filter(Boolean));
   const learned=new Set(knowledge.flatMap(entry=>{
-    const payload=entry.payload as {sourceAttemptId?:string;files?:unknown}|null;
-    if(entry.kind!=='ENGINEER_ADAPTER_PR' || !latest?.attemptId || payload?.sourceAttemptId!==latest.attemptId || !Array.isArray(payload.files))return [];
+    const payload=entry.payload as {sourceAttemptId?:string;files?:unknown;sourceUrls?:unknown}|null;
+    if(entry.kind!=='ENGINEER_ADAPTER_PR' || !latest || !Array.isArray(payload?.files))return [];
+    const sameAttempt=Boolean(latest.attemptId && payload.sourceAttemptId===latest.attemptId);
+    const sameSourceClass=entry.recordClasses.includes(latest.recordClass?.toLowerCase()) && Array.isArray(payload.sourceUrls) &&
+      payload.sourceUrls.some(value=>{const origin=sourceOrigin(value);return origin!==null && origins.has(origin);});
+    if(!sameAttempt && !sameSourceClass)return [];
     return payload.files.flatMap(path=>{
       const name=typeof path==='string'?/^lib\/sources\/platform-adapters\/([a-z0-9-]+)\.(?:ts|mjs)$/.exec(path)?.[1]:undefined;
       return name?[name]:[];
@@ -230,7 +239,7 @@ export function adapterWaitReason(results: readonly import('../scheduler/scout-r
     ? 'AWAITING_ADAPTER: '+latest.narrative+'; Engineer owns this work. Resume when its adapter is available.' : null;
 }
 
-/** Engineer saves the generated filenames against the failed attempt, before their names appear in Scout history. */
+/** Reuse the Engineer's failed-attempt and source-class links before generated filenames appear in Scout history. */
 export async function adapterWaitReasonFromKnowledge(repos:import('../repository/types.ts').ControlPlaneRepositories,
   results:readonly import('../scheduler/scout-result.ts').ScoutResult[]):Promise<string|null> {
   const installed=await installedAdapters();
@@ -248,7 +257,7 @@ export async function wakeInstalledAdapterDebts(repos:import('../repository/type
   const adapters=await installedAdapters();
   const manual=await readFieldManual(repos,{role:'DETECTIVE'});
   const latest=await repos.scoutResults.readLatest(waiting.map(debt=>debt.obligationId),{
-    attemptId:true,refusal:true,outcome:true,recoveryCapabilityVersion:true,narrative:true,nextRungs:true,candidates:true,rungs:true});
+    attemptId:true,recordClass:true,refusal:true,outcome:true,recoveryCapabilityVersion:true,narrative:true,nextRungs:true,candidates:true,rungs:true});
   return debts.map(debt=>{
     const result=latest.get(debt.obligationId) as import('../scheduler/scout-result.ts').ScoutResult|undefined;
     if(debt.cause!=='AWAITING_ADAPTER' || !result || result.outcome!=='NEEDS_ADAPTER' || result.refusal!==null ||

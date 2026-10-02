@@ -161,7 +161,9 @@ export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;res
     opened.push(pr);done.add(platform);
     await writeFieldManual(input.repos,[newFieldManualEntry('engineer-adapter',platform,{role:'SHARED',kind:'ENGINEER_ADAPTER_PR',title:platform,
       summary:'Adapter implementation in '+pr.url,outcome:'REFERENCE',observedAt:input.now,recordClasses:[result.recordClass],url:pr.url,
-      payload:{platform,pr,subjectId:result.subjectId,sourceAttemptId:result.attemptId,files:candidate.files.map(file=>file.path)}})],input.now);
+      payload:{platform,pr,subjectId:result.subjectId,sourceAttemptId:result.attemptId,files:candidate.files.map(file=>file.path),
+        sourceUrls:[...new Set([...result.candidates.filter(c=>c.evidenceArtifactIds.length>0).map(c=>c.url),
+          ...result.rungs.filter(r=>r.ok && r.artifactIds.length>0).map(r=>r.target)])]}})],input.now);
     } catch(error) {
       await writeFieldManual(input.repos,[newFieldManualEntry('engineer-adapter-blocker',platform,{role:'ENGINEER',kind:'ENGINEER_BLOCKER',title:platform,
         summary:error instanceof Error?error.message:String(error),outcome:'BLOCKED',observedAt:input.now,payload:{sourceAttemptId:result.attemptId,nextAction:'Continue the existing adapter branch/PR after the recorded publication failure is repaired.'}})],input.now);

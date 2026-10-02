@@ -1241,22 +1241,158 @@ export interface OfficialPageRaw {
   error?: string;
 }
 
-/** Rebuild official linking chains from saved pages; no host list or invented endorsement. */
-export function officialLinkingPageFrom(url: string, pages: readonly {canonicalUrl:string;text:string}[]): OfficialLinkingPage | null {
-  if (isOfficialSource(url)) return null;
-  const chains = new Map<string,OfficialLinkingPage>();
-  for (const page of pages) if (isOfficialSource(page.canonicalUrl)) chains.set(page.canonicalUrl,{url:page.canonicalUrl,html:page.text});
-  for (let pass=0;pass<pages.length;pass++) {
-    for (const parent of chains.values()) if (isOfficialSource(url,parent)) return parent;
-    let added=false;
-    for (const page of pages) {
-      if (chains.has(page.canonicalUrl)) continue;
-      const parent=[...chains.values()].find(chain=>isOfficialSource(page.canonicalUrl,chain));
-      if (parent) { chains.set(page.canonicalUrl,{url:page.canonicalUrl,html:page.text,linkingPage:parent}); added=true; }
-    }
-    if (!added) break;
+type SavedOfficialPage = { readonly canonicalUrl: string; readonly text: string };
+type LinkingNode = {
+  readonly page: SavedOfficialPage;
+  readonly position: number;
+  readonly host: string | null;
+  readonly links: ReadonlySet<string>;
+  pass: number;
+  chain: { url: string; html: string; linkingPage?: OfficialLinkingPage };
+};
+
+/** The source-authority host rules, including relative links and www aliases. */
+function linkingHost(url: string, base?: string): string | null {
+  const absolute = /^(https?):\/\/([^/?#\s]+)/i.exec(url.trim());
+  if (absolute) {
+    const host = absolute[2].replace(/^[^@]*@/, "").replace(/:\d*$/, "").toLowerCase();
+    return /^[a-z0-9.-]+$/.test(host) ? host.replace(/^www\./, "") : null;
   }
-  return [...chains.values()].find(chain=>isOfficialSource(url,chain)) ?? null;
+  if (/^[a-z][a-z0-9+.-]*:/i.test(url.trim())) return null;
+  if (url.trim().startsWith("//")) return linkingHost(`https:${url.trim()}`);
+  return base === undefined ? null : linkingHost(base);
+}
+
+function linkingBefore(a: LinkingNode, b: LinkingNode): boolean {
+  return a.pass < b.pass || (a.pass === b.pass && a.position < b.position);
+}
+
+/** Saved links are parsed once; the queue follows the old pass/page insertion order. */
+class OfficialLinkingIndex {
+  private readonly nodes: LinkingNode[] = [];
+  private readonly urls = new Set<string>();
+  private readonly parents = new Map<string, LinkingNode>();
+  private readonly waiting = new Map<string, LinkingNode[]>();
+  private readonly chosen = new Map<string, LinkingNode>();
+  private readonly queue: { node: LinkingNode; pass: number }[] = [];
+  private hasRepeatedUrls = false;
+
+  private enqueue(node: LinkingNode): void {
+    if (node.host === null || node.pass === -1) return;
+    const parent = this.parents.get(node.host);
+    if (!parent) return;
+    const pass = parent.pass === -1 ? 0 : parent.pass + Number(node.position <= parent.position);
+    if (pass > node.pass) return;
+    node.chain.linkingPage = parent.chain;
+    if (pass === node.pass) return;
+    node.pass = pass;
+    const entry = { node, pass };
+    let i = this.queue.length;
+    this.queue.push(entry);
+    while (i > 0) {
+      const p = (i - 1) >> 1;
+      const previous = this.queue[p];
+      if (previous.pass < pass || (previous.pass === pass && previous.node.position <= node.position)) break;
+      this.queue[i] = previous;
+      i = p;
+    }
+    this.queue[i] = entry;
+  }
+
+  private endorse(node: LinkingNode): void {
+    for (const host of node.links) {
+      const previous = this.parents.get(host);
+      if (previous && previous !== node && !linkingBefore(node, previous)) continue;
+      this.parents.set(host, node);
+      for (const child of this.waiting.get(host) ?? []) this.enqueue(child);
+    }
+  }
+
+  private drain(): void {
+    while (this.queue.length) {
+      const first = this.queue[0];
+      const last = this.queue.pop()!;
+      if (this.queue.length) {
+        let i = 0;
+        while (2 * i + 1 < this.queue.length) {
+          let child = 2 * i + 1;
+          const right = child + 1;
+          const earlier = (a: typeof last, b: typeof last) => a.pass < b.pass || (a.pass === b.pass && a.node.position < b.node.position);
+          if (right < this.queue.length && earlier(this.queue[right], this.queue[child])) child = right;
+          if (!earlier(this.queue[child], last)) break;
+          this.queue[i] = this.queue[child];
+          i = child;
+        }
+        this.queue[i] = last;
+      }
+      const { node, pass } = first;
+      if (pass !== node.pass) continue;
+      const previous = this.chosen.get(node.page.canonicalUrl);
+      if (previous && previous !== node) continue;
+      this.chosen.set(node.page.canonicalUrl, node);
+      this.endorse(node);
+    }
+  }
+
+  extend(pages: readonly SavedOfficialPage[]): void {
+    const appended: LinkingNode[] = [];
+    for (let i = this.nodes.length; i < pages.length; i++) {
+      const page = pages[i];
+      const links = new Set<string>();
+      for (const match of page.text.matchAll(/\b(?:href|src)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi)) {
+        const host = linkingHost((match[1] ?? match[2] ?? match[3]).replace(/&amp;/g, "&"), page.canonicalUrl);
+        if (host !== null) links.add(host);
+      }
+      this.hasRepeatedUrls ||= this.urls.has(page.canonicalUrl);
+      this.urls.add(page.canonicalUrl);
+      const node: LinkingNode = { page, position: i, host: linkingHost(page.canonicalUrl), links,
+        pass: Infinity, chain: { url: page.canonicalUrl, html: page.text } };
+      this.nodes.push(node);
+      appended.push(node);
+    }
+    if (!appended.length) return;
+    const duplicate = this.hasRepeatedUrls;
+    // A repeated URL can replace a root's saved HTML. Replay cached edges in
+    // that case, preserving Map's first position / last root value semantics.
+    if (duplicate) {
+      this.parents.clear(); this.waiting.clear(); this.chosen.clear(); this.queue.length = 0;
+      for (const node of this.nodes) { node.pass = Infinity; node.chain = { url: node.page.canonicalUrl, html: node.page.text }; }
+    }
+    const added = duplicate ? this.nodes : appended;
+    for (const node of added) {
+      if (node.host !== null) {
+        const waiting = this.waiting.get(node.host) ?? [];
+        waiting.push(node); this.waiting.set(node.host, waiting);
+      }
+    }
+    const roots = new Map<string, LinkingNode>();
+    for (const node of added) if (node.host !== null && /(^|\.)gov$/.test(node.host)) {
+      const previous = roots.get(node.page.canonicalUrl);
+      // The old root Map overwrites the HTML but keeps the original position.
+      if (previous) { previous.chain.html = node.page.text; (previous as { links: ReadonlySet<string> }).links = node.links; }
+      else roots.set(node.page.canonicalUrl, node);
+    }
+    for (const root of roots.values()) { root.pass = -1; this.chosen.set(root.page.canonicalUrl, root); }
+    for (const root of roots.values()) this.endorse(root);
+    for (const node of added) this.enqueue(node);
+    this.drain();
+  }
+
+  linkingPageFor(url: string): OfficialLinkingPage | null {
+    const host = linkingHost(url);
+    return host === null || /(^|\.)gov$/.test(host) ? null : this.parents.get(host)?.chain ?? null;
+  }
+}
+
+const officialLinkingIndexes = new WeakMap<readonly SavedOfficialPage[], OfficialLinkingIndex>();
+
+/** One index per append-only saved page set, shared by every caller. */
+export function officialLinkingPageFrom(url: string, pages: readonly SavedOfficialPage[]): OfficialLinkingPage | null {
+  if (isOfficialSource(url)) return null;
+  let index = officialLinkingIndexes.get(pages);
+  if (!index) { index = new OfficialLinkingIndex(); officialLinkingIndexes.set(pages, index); }
+  index.extend(pages);
+  return index.linkingPageFor(url);
 }
 
 

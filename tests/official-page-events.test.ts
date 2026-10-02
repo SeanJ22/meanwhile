@@ -7,7 +7,7 @@ import {
   meetingPartitionForRow,
   meetingPartitionId,
 } from "../lib/civic-data/meeting-partitions.ts";
-import { SOURCE_AUTHORITIES, isOfficialSource } from "../lib/civic-data/source-authority.ts";
+import { SOURCE_AUTHORITIES, isOfficialSource, type OfficialLinkingPage } from "../lib/civic-data/source-authority.ts";
 import { isOnlineOnly } from "../lib/meetings/online.ts";
 import { wiringForMeetingSource } from "../lib/registry/source-wiring.ts";
 import {
@@ -30,6 +30,68 @@ test('saved official chains reach external calendars without trusting an unlinke
   assert.equal(officialLinkingPageFrom('https://unlinked.example.org',pages),null);
   assert.equal(officialLinkingPageFrom('https://calendar.example.edu/events',pages.slice(1)),null);
  }
+});
+
+/** Historical resolver retained only as the equivalence oracle. */
+function previousLinkingPageFrom(url: string, pages: readonly { canonicalUrl: string; text: string }[]): OfficialLinkingPage | null {
+  if (isOfficialSource(url)) return null;
+  const chains = new Map<string, OfficialLinkingPage>();
+  for (const page of pages) if (isOfficialSource(page.canonicalUrl)) chains.set(page.canonicalUrl, { url: page.canonicalUrl, html: page.text });
+  for (let pass = 0; pass < pages.length; pass++) {
+    for (const parent of chains.values()) if (isOfficialSource(url, parent)) return parent;
+    let added = false;
+    for (const page of pages) {
+      if (chains.has(page.canonicalUrl)) continue;
+      const parent = [...chains.values()].find(chain => isOfficialSource(page.canonicalUrl, chain));
+      if (parent) { chains.set(page.canonicalUrl, { url: page.canonicalUrl, html: page.text, linkingPage: parent }); added = true; }
+    }
+    if (!added) break;
+  }
+  return [...chains.values()].find(chain => isOfficialSource(url, chain)) ?? null;
+}
+
+test("official linking index matches the previous resolver, including append order, aliases and repeated URLs", () => {
+  let seed = 643;
+  const random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 2 ** 32; };
+  for (let trial = 0; trial < 200; trial++) {
+    const urls = ["https://first.gov/root", "http://www.second.gov/root", ...Array.from({ length: 8 }, (_, i) => `https://host${i}.example.org/page`)];
+    if (trial >= 100) for (let i = urls.length - 1; i > 0; i--) {
+      const other = Math.floor(random() * (i + 1));
+      [urls[i], urls[other]] = [urls[other], urls[i]];
+    }
+    const pages: { canonicalUrl: string; text: string }[] = [];
+    for (let i = 0; i < (trial < 100 ? 14 : urls.length); i++) {
+      const canonicalUrl = trial < 100 ? urls[Math.floor(random() * urls.length)] : urls[i];
+      const text = Array.from({ length: 3 }, () => {
+        const target = urls[Math.floor(random() * urls.length)];
+        const href = random() < 0.3 ? target.replace("https:", "") : target;
+        return `<a href='${href}?x=1&amp;y=2'>link</a>`;
+      }).join("") + '<img src="/relative"><a href=mailto:someone@example.org>mail</a><a href="https://gov.example.com/">unofficial</a>';
+      pages.push({ canonicalUrl, text });
+      for (const url of [...urls, "https://www.host2.example.org:443/other", "https://unlinked.example.org", "invalid"]) {
+        assert.deepEqual(officialLinkingPageFrom(url, pages), previousLinkingPageFrom(url, pages), `trial ${trial}, prefix ${pages.length}, ${url}`);
+      }
+    }
+  }
+});
+
+test("official linking index answers 500 lookups over 3,000 pages with three-deep chains in under two seconds", () => {
+  const pages: { canonicalUrl: string; text: string }[] = [];
+  for (let i = 0; i < 750; i++) {
+    pages.push({ canonicalUrl: `https://root${i}.gov/`, text: `<a href="https://a${i}.example.org/">first</a>` });
+    pages.push({ canonicalUrl: `https://c${i}.example.org/`, text: `<a href="https://calendar${i}.example.org/">calendar</a>` });
+    pages.push({ canonicalUrl: `https://b${i}.example.org/`, text: `<a href="https://c${i}.example.org/">third</a>` });
+    pages.push({ canonicalUrl: `https://a${i}.example.org/`, text: `<a href="https://b${i}.example.org/">second</a>` });
+  }
+  const start = performance.now();
+  for (let i = 0; i < 500; i++) {
+    const chain = officialLinkingPageFrom(`https://calendar${i}.example.org/events`, pages);
+    assert.equal(chain?.url, `https://c${i}.example.org/`);
+    assert.equal(chain?.linkingPage?.linkingPage?.linkingPage?.url, `https://root${i}.gov/`);
+  }
+  const elapsed = performance.now() - start;
+  console.log(`official-linking-index: pages=3000 lookups=500 elapsedMs=${elapsed.toFixed(2)}`);
+  assert.ok(elapsed < 2000, `${elapsed.toFixed(2)} ms`);
 });
 
 /**

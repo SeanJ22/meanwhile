@@ -310,6 +310,26 @@ test("the reserved request maximum covers one-hour cache writes and refuses an u
   assert.equal(modelRequestWorstCaseUsd({ ...REQUEST, max_tokens: NaN }), null);
 });
 
+test("paid capacity observes a provider backoff expiry during the same cycle", async () => {
+  let time = Date.parse(NIGHT), calls = 0;
+  const safety = fundedController({ now: NIGHT, costs: [], clock: () => time });
+  const transport = safety.guardedModelTransport("anthropic", "held-obligation", async () => {
+    calls++;
+    if (calls === 1) throw new ModelTransportError("rate limited", 429, 20 * 60_000);
+    return RESPONSE;
+  });
+  await assert.rejects(transport(REQUEST), ModelTransportError);
+  time += 20 * 60_000 - 1;
+  assert.equal(safety.snapshot().providerCircuits.length, 1);
+  await assert.rejects(transport(REQUEST), error => error instanceof FleetSafetyRefusal && error.code === "PROVIDER_CIRCUIT_BROKEN");
+  assert.equal(calls, 1);
+  time++;
+  assert.equal(safety.snapshot().providerCircuits.length, 0, "the capacity reader sees the existing cooldown expire");
+  await transport(REQUEST);
+  assert.equal(calls, 2);
+  assert.ok(safety.admissionSpendUsd() >= modelRequestWorstCaseUsd(REQUEST)!, "the first send's conservative charge survives recovery");
+});
+
 test("a paid job waiting for memory releases its slot without launching after the lane closes", async () => {
   let capacity = 20, launches = 0;
   const slots = workerProcessSlots(() => 1, { availableBytes: () => 10_000, headroomBytes: 0, peakBytes: () => 1 });

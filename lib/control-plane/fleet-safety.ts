@@ -436,7 +436,14 @@ export class FleetSafetyController {
     return { admit: true };
   }
 
+  private expireProviderCircuits(nowMs: number = this.clock()): void {
+    for (const [provider, circuit] of this.circuits) {
+      if (Date.parse(circuit.eligibleAt) <= nowMs) this.circuits.delete(provider);
+    }
+  }
+
   admitProviderRequest(provider: string, work: string, outboundPayloadBytes = 0): number {
+    this.expireProviderCircuits();
     const circuit = this.circuits.get(provider);
     if (circuit) {
       this.circuits.set(provider, {
@@ -669,8 +676,7 @@ export class FleetSafetyController {
         let merged: Uint8Array;
         while (true) {
           provider = sourceReliabilityKey(currentUrl);
-          const circuit = this.circuits.get(provider);
-          if (circuit && Date.parse(circuit.eligibleAt) <= this.clock()) this.circuits.delete(provider);
+          this.expireProviderCircuits();
           if (!this.circuits.has(provider)) this.admitWebsiteRequest(currentUrl, work);
           const reservation = this.reservePayloadRequest(provider, work, currentBody === undefined ? 0 : Buffer.byteLength(currentBody));
           try {
@@ -803,6 +809,7 @@ export class FleetSafetyController {
   }
 
   snapshot(now: string = new Date(this.clock()).toISOString()): FleetSafetySnapshot {
+    this.expireProviderCircuits(Date.parse(now));
     const blackout = scheduledBlackoutAt(now);
     const status: FleetSafetyStatus = blackout
       ? "SCHEDULED BLACKOUT"

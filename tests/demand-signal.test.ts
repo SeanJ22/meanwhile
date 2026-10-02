@@ -45,7 +45,7 @@ test("the signal enum has exactly one member, and the subject types exactly two"
 
 test("NO FREE TEXT anywhere on the path", () => {
   /*
-   * No free text, asserted at the three places text could enter: the
+   * The owner's instruction, asserted at the three places text could enter: the
    * table, the route's accepted body, and the control the reader touches.
    */
   const table = SCHEMA.slice(SCHEMA.indexOf('pgTable(\n  "demand_signals"'));
@@ -149,7 +149,7 @@ test("the confirmation reports the ASK and never a total", () => {
 
 test("SYMMETRY: the pill is on the candidate card and the body card, same component", () => {
   /*
-   * This guard is not decoration: a pill that appeared only
+   * The owner's guard, and it is not decoration: a pill that appeared only
    * where coverage is good would itself be a coverage claim, which is the
    * class `CLAUDE.md` forbids under show-everything.
    */

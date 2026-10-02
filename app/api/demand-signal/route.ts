@@ -16,7 +16,7 @@ import { knownBodySubjectIds } from "@/lib/registry/server";
 
 /**
  * `POST /api/demand-signal` — the reader asking us to go get a record sooner.
- * (OWN-Q6, the amendment on Q6/Q7, 2026-08-31.)
+ * (OWN-Q6, the owner's amendment on Q6/Q7, authorized 2026-08-31.)
  *
  * ## What it accepts, and everything else is a 400
  *
@@ -28,7 +28,7 @@ import { knownBodySubjectIds } from "@/lib/registry/server";
  * ```
  *
  * **There is no text field and no key field, so there is nothing to validate
- * about either.** No free text on any path, and no
+ * about either.** No free text on any path (the owner's instruction), and no
  * continuity key at all — `reactions` carries one so a reader can change their
  * mind, and it is the nearest thing to an identifier this product holds. A
  * reader who taps twice writes two rows and nothing relates them.

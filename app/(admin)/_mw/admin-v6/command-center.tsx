@@ -96,7 +96,16 @@ export function CommandCenter(props: CommandCenterProps) {
   const pickerButton = useRef<HTMLButtonElement>(null);
   const mainRef = useRef<HTMLElement>(null);
 
-  const places = useMemo(() => data.places.data ?? [], [data.places.data]);
+  /** ZIPs the owner typed into Change place that no hunt or visit had listed: the state comes from the national ZIP index. */
+  const [typedZips, setTypedZips] = useState<readonly Place[]>([]);
+  const places = useMemo(() => {
+    const base = data.places.data ?? [];
+    const have = new Set(base.map((p) => p.key));
+    const extra = typedZips.filter((p) => !have.has(p.key));
+    return extra.length === 0 ? base : [...base, ...extra];
+  }, [data.places.data, typedZips]);
+  const typedZip = /^[0-9]{5}$/.test(pickerQ.trim()) ? pickerQ.trim() : null;
+  const typedZipListed = typedZip !== null && places.some((p) => p.key.endsWith(`.zcta.${typedZip}`));
   const index = useMemo(() => indexPlaces(places), [places]);
   const hunts = useMemo(() => data.hunts.data ?? [], [data.hunts.data]);
   const place: Place = index.get(props.scopeKey) ?? index.get(COUNTRY_KEY) ?? { key: COUNTRY_KEY, name: "United States", kind: "Country", navParent: null, within: [] };
@@ -233,6 +242,20 @@ export function CommandCenter(props: CommandCenterProps) {
   useEffect(() => {
     if (pickerOpen) pickerInput.current?.focus();
   }, [pickerOpen]);
+  useEffect(() => {
+    if (typedZip === null || typedZipListed) return;
+    const ctl = new AbortController();
+    void fetch(`/api/admin/v6/zip?zip=${typedZip}`, { signal: ctl.signal, headers: { accept: "application/json" } })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((body: { zip?: string; state?: string } | null) => {
+        if (!body || body.zip !== typedZip || !/^[a-z]{2}$/.test(body.state ?? "")) return;
+        const state = body.state as string;
+        setTypedZips((held) => (held.some((p) => p.key.endsWith(`.zcta.${typedZip}`)) ? held
+          : [...held, { key: `geo:${state}.zcta.${typedZip}`, name: `ZIP ${typedZip}`, kind: "ZIP", navParent: `st:${state}`, within: [`st:${state}`] }]));
+      })
+      .catch(() => undefined);
+    return () => ctl.abort();
+  }, [typedZip, typedZipListed]);
 
   const v6: V6 = {
     data, mode: props.mode, scopeKey, place, places, index, hunts, connection: props.connection, access: props.access, receipts, period: effectivePeriod,

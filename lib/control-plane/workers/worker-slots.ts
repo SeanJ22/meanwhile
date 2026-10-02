@@ -1,16 +1,26 @@
 import { freemem, platform, tmpdir } from "node:os";
-import { existsSync, mkdirSync, openSync, closeSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
+import { existsSync, openSync, closeSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { randomUUID } from "node:crypto";
-import { dirname, join } from "node:path";
+import { join } from "node:path";
 
 const MIB = 1024 * 1024;
 /** Rounded-up measured RSS peaks; a reservation pays only for growth not yet in OS usage. */
 export const WORKER_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = { route: 285, scout: 248, lease: 342, national: 1258 };
 /** Rounded up from the ordinary staging research parent's 3,069,235,200-byte peak. */
 export const RESEARCH_PARENT_PEAK_MIB = 2928;
-/** Measured combined promoter and national child peak over a 150-second place job. */
-export const NATIONAL_PLACE_PEAK_MIB = 999;
+/** Promoter peak 1,923 MiB plus the held national-worker peak; both may still grow. */
+export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
+/** Rounded-up entry peaks from the ordinary staging routine pass. */
+const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
+  "census-geography-refresh.mts": 1200,
+  "promote-manual-civic-projection.mts": 1042,
+  "state-rollcalls.mts": 480,
+  "acs-population-promote.mts": 465,
+  "fetch-congress-legislators.mts": 384,
+  "campaign-finance-az-pima-transactions.mts": 368,
+  "build-nj-morris-ballot.mts": 345,
+};
 export const REGISTRY_ROSTER_PUBLICATION_PEAK_MIB = 4012;
 export const WORKER_MEMORY_HEADROOM_MIB = 768;
 
@@ -28,9 +38,7 @@ export function availableWorkerMemoryBytes(): number {
 }
 
 export interface WorkerProcessMemory { readonly pid: number; readonly parentPid: number; readonly rss: number }
-let processSample: { at: number; rows: readonly WorkerProcessMemory[] } | undefined;
 function hostProcesses(): readonly WorkerProcessMemory[] {
-  if (processSample && Date.now() - processSample.at < 1000) return processSample.rows;
   const rows: WorkerProcessMemory[] = [];
   try {
     if (platform() === "linux") {
@@ -51,7 +59,6 @@ function hostProcesses(): readonly WorkerProcessMemory[] {
     }
   } catch { /* Unobserved children keep their complete peak reserved. */ }
   if (!rows.some(row => row.pid === process.pid)) rows.push({ pid: process.pid, parentPid: process.ppid, rss: process.memoryUsage.rss() });
-  processSample = { at: Date.now(), rows };
   return rows;
 }
 
@@ -77,16 +84,16 @@ export interface WorkerMemoryHost {
 }
 /** Transient host reservations, shared by independent research/routine parents.
  * No work, receipt, spending or publication state is written here. */
-export function workerMemoryHost(input: { readonly path?: string; readonly processes?: () => readonly WorkerProcessMemory[] } = {}): WorkerMemoryHost {
+export function workerMemoryHost(input: { readonly shared?: boolean; readonly processes?: () => readonly WorkerProcessMemory[] } = {}): WorkerMemoryHost {
   let local: HostState = { reservations: [], parents: [] };
   const sample = input.processes ?? hostProcesses;
   return { transact: operation => {
-    const path = input.path;
-    const lock = path ? `${path}.lock` : null;
+    const path = join(tmpdir(), "meanwhile-worker-memory.json");
+    const lock = join(tmpdir(), "meanwhile-worker-memory.json.lock");
+    const temporary = join(tmpdir(), "meanwhile-worker-memory.json.tmp");
     let descriptor: number | undefined;
-    if (lock) {
-      mkdirSync(dirname(lock), { recursive: true });
-      try { descriptor = openSync(lock, "wx"); writeFileSync(descriptor, String(process.pid)); }
+    if (input.shared) {
+      try { descriptor = openSync(lock, "wx"); writeFileSync(lock, String(process.pid)); }
       catch (error) {
         if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
         try { const owner = Number(readFileSync(lock, "utf8")); if (owner > 0 && !alive(owner)) unlinkSync(lock); }
@@ -95,23 +102,22 @@ export function workerMemoryHost(input: { readonly path?: string; readonly proce
       }
     }
     try {
-      if (path && existsSync(path)) local = JSON.parse(readFileSync(path, "utf8")) as HostState;
+      if (input.shared && existsSync(path)) local = JSON.parse(readFileSync(path, "utf8")) as HostState;
       // A dead parent cannot retain future growth. A surviving job tree still can.
       local.parents = local.parents.filter(parent => alive(parent.pid));
       local.reservations = local.reservations.filter(row => alive(row.owner) || (row.pid !== null && alive(row.pid)));
       operation(local, sample());
-      if (path) {
-        const temporary = `${path}.${process.pid}.tmp`;
+      if (input.shared) {
         writeFileSync(temporary, JSON.stringify(local)); renameSync(temporary, path);
       }
       return true;
     } finally {
       if (descriptor !== undefined) closeSync(descriptor);
-      if (lock) unlinkSync(lock);
+      if (input.shared) unlinkSync(lock);
     }
   } };
 }
-const sharedHost = workerMemoryHost({ path: join(tmpdir(), "meanwhile-worker-memory.json") });
+const sharedHost = workerMemoryHost({ shared: true });
 
 export interface WorkerMemoryLimit {
   readonly admissionsOpen?: () => boolean;
@@ -135,8 +141,8 @@ export interface WorkerProcessSlots {
 export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
   return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
     peakBytes: memory.peakBytes ?? (entry => entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB :
-      entry === "registry-runtime-bindings" || entry.startsWith("worker-publication:registry-runtime-bindings:")
-        ? REGISTRY_ROSTER_PUBLICATION_PEAK_MIB * MIB : WORKER_ENTRY_PEAK_MIB.lease! * MIB) });
+      entry === "registry-runtime-bindings" || entry.startsWith("registry-runtime-bindings/") || entry.startsWith("worker-publication:registry-runtime-bindings:")
+        ? REGISTRY_ROSTER_PUBLICATION_PEAK_MIB * MIB : (ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB.lease!) * MIB) });
 }
 
 export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
@@ -150,11 +156,17 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     return WORKER_ENTRY_PEAK_MIB[kind]! * MIB;
   });
   const waiting: { entry: string; deadline: number; resolve: (release: WorkerMemoryRelease) => void; reject: (error: Error) => void }[] = [];
-  const mutate = (operation: (state: HostState) => void): void => {
+  const mutate = (operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void): void => {
     try {
       if (!host.transact(operation)) setTimeout(() => mutate(operation), 50).unref();
     } catch { setTimeout(() => mutate(operation), 1000).unref(); }
   };
+  if ((memory.parentPeakBytes ?? 0) > 0) mutate((state, rows) => {
+    if (state.reservations.some(row => row.owner !== process.pid && row.pid !== null && descendants(row.pid, rows).has(process.pid))) return;
+    const parent = state.parents.find(row => row.pid === process.pid);
+    if (parent) parent.peak = Math.max(parent.peak, memory.parentPeakBytes!);
+    else state.parents.push({ pid: process.pid, peak: memory.parentPeakBytes! });
+  });
   const drain = (): void => {
     clearTimeout(wake); wake = undefined;
     const now = Date.now();

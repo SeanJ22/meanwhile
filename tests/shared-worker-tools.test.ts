@@ -65,8 +65,8 @@ test("routine sources, reader repairs and catch-up share reservations including 
   national(); reader(); release();
 });
 
-test("the measured national place pair admits four jobs while retaining the 768 MiB margin", async () => {
-  for (const [availableMiB, expected] of [[4700, 3], [4764, 4]] as const) {
+test("national pairs retain both measured entry peaks and the 768 MiB margin", async () => {
+  for (const [availableMiB, expected] of [[2 * NATIONAL_PLACE_PEAK_MIB + 767, 1], [2 * NATIONAL_PLACE_PEAK_MIB + 768, 2]] as const) {
     const slots = routineProcessSlots({ availableBytes: () => availableMiB * 1024 * 1024 });
     const active = await Promise.all(Array.from({ length: expected }, (_, i) => slots.acquire(`national-place:zip-${i}`)));
     let admitted = false;
@@ -79,6 +79,17 @@ test("the measured national place pair admits four jobs while retaining the 768 
     for (const done of active) done();
     release();
   }
+});
+
+test("all publication siblings and routine script families reserve their measured peak", async () => {
+  const mib = 1024 * 1024;
+  const slots = routineProcessSlots({ availableBytes: () => (768 + 1042) * mib });
+  const first = await slots.acquire("worker-publication:ballot-navigation:one/promote-manual-civic-projection.mts");
+  await assert.rejects(slots.acquire("worker-publication:ballot-navigation:two/promote-manual-civic-projection.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
+  first();
+  const census = routineProcessSlots({ availableBytes: () => (768 + 1199) * mib });
+  await assert.rejects(census.acquire("census-geography/census-geography-refresh.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
+  const ordinary = await census.acquire("reader:meeting/ordinary-source.mts"); ordinary();
 });
 
 test("legacy registry roster publications reserve their measured RSS and queue until memory is released", async () => {
@@ -150,6 +161,16 @@ test("research and routine pools use one host budget, and memory waits expire wi
   next();
 });
 
+test("research parent growth is reserved before its first worker asks for admission", async () => {
+  const host = workerMemoryHost({ processes: () => [] });
+  const memory = { host, availableBytes: () => 1000, headroomBytes: 100, peakBytes: () => 600 };
+  workerProcessSlots(() => 10, { ...memory, parentPeakBytes: 400 });
+  const routine = routineProcessSlots(memory);
+  const result = await routine.acquire("routine", Date.now() + 25).then(release => { release(); return "admitted"; },
+    error => { assert.match(error.message, /WORKER_MEMORY_DEADLINE/); return "deferred"; });
+  assert.equal(result, "deferred", "routine must pay for the research parent's future growth while research is still preparing its queue");
+});
+
 test("children already at their peaks do not reserve their current RSS a second time", async () => {
   const rows = [{ pid: 100001, parentPid: process.pid, rss: 300 }, { pid: 100002, parentPid: process.pid, rss: 300 }];
   let free = 1000;
@@ -163,16 +184,20 @@ test("children already at their peaks do not reserve their current RSS a second 
 
 test("independent parent host handles serialize reservations through the same transient file", async () => {
   const root = await mkdtemp(join(tmpdir(), "s18-host-memory-"));
+  const prior = { TEMP: process.env.TEMP, TMP: process.env.TMP, TMPDIR: process.env.TMPDIR };
   try {
-    const path = join(root, "host.json");
+    Object.assign(process.env, { TEMP: root, TMP: root, TMPDIR: root });
     const memory = { availableBytes: () => 1000, headroomBytes: 100, peakBytes: () => 600 };
-    const research = workerProcessSlots(() => 10, { ...memory, host: workerMemoryHost({ path, processes: () => [] }) });
-    const routine = routineProcessSlots({ ...memory, host: workerMemoryHost({ path, processes: () => [] }) });
+    const research = workerProcessSlots(() => 10, { ...memory, host: workerMemoryHost({ shared: true, processes: () => [] }) });
+    const routine = routineProcessSlots({ ...memory, host: workerMemoryHost({ shared: true, processes: () => [] }) });
     const active = await research.acquire();
     await assert.rejects(routine.acquire("routine", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
     active();
     const next = await routine.acquire("routine", Date.now() + 100); next();
-  } finally { await rm(root, { recursive: true, force: true }); }
+  } finally {
+    for (const [name, value] of Object.entries(prior)) { if (value === undefined) delete process.env[name]; else process.env[name] = value; }
+    await rm(root, { recursive: true, force: true });
+  }
 });
 
 test("separate research and routine parent processes cannot over-admit the shared host", async () => {
@@ -186,23 +211,23 @@ test("separate research and routine parent processes cannot over-admit the share
       process.on('message', async message => {
         if (message.kind === 'release') { release?.(); process.send({ kind: 'released' }); return; }
         const memory = { availableBytes: () => 1000, headroomBytes: 100, peakBytes: () => 600,
-          host: workerMemoryHost({ path: message.path, processes: () => [] }) };
+          host: workerMemoryHost({ shared: true, processes: () => [] }) };
         const slots = message.routine ? routineProcessSlots(memory) : workerProcessSlots(() => 10, memory);
         try { release = await slots.acquire('child', Date.now() + message.waitMs); process.send({ kind: 'admitted' }); }
         catch (error) { process.send({ kind: 'deferred', detail: error.message }); }
       });`);
-    const start = () => { const child = fork(script, [], { execArgv: ["--experimental-strip-types"], stdio: ["ignore", "ignore", "inherit", "ipc"] }); children.push(child); return child; };
+    const start = () => { const child = fork(script, [], { env: { ...process.env, TEMP: root, TMP: root, TMPDIR: root },
+      execArgv: ["--experimental-strip-types"], stdio: ["ignore", "ignore", "inherit", "ipc"] }); children.push(child); return child; };
     const offer = async (child: ChildProcess, message: Record<string, string | number | boolean>) => {
       const reply = once(child, "message"); child.send(message);
       return (await reply)[0] as { kind: string; detail?: string };
     };
     const research = start(), routine = start();
-    const path = join(root, "host.json");
-    assert.equal((await offer(research, { path, waitMs: 1000 })).kind, "admitted");
-    const blocked = await offer(routine, { path, waitMs: 100, routine: true });
+    assert.equal((await offer(research, { waitMs: 1000 })).kind, "admitted");
+    const blocked = await offer(routine, { waitMs: 100, routine: true });
     assert.equal(blocked.kind, "deferred"); assert.match(blocked.detail!, /WORKER_MEMORY_DEADLINE/);
     assert.equal((await offer(research, { kind: "release" })).kind, "released");
-    assert.equal((await offer(routine, { path, waitMs: 1000, routine: true })).kind, "admitted");
+    assert.equal((await offer(routine, { waitMs: 1000, routine: true })).kind, "admitted");
     await offer(routine, { kind: "release" });
   } finally {
     await Promise.all(children.map(async child => {

@@ -13,6 +13,8 @@ export type PlaceCaptureRead<T> = {
 const array = (path: string, where: string) => `(SELECT COALESCE(jsonb_agg(x), '[]'::jsonb) FROM jsonb_array_elements(CASE WHEN jsonb_typeof(${path})='array' THEN ${path} ELSE '[]'::jsonb END) x WHERE ${where})`;
 const division = "x->>'ocdId'=ANY($3::text[]) OR x->>'divisionId'=ANY($3::text[])";
 const serves = `${division} OR x->'alsoServesOcdIds' ?| $3::text[] OR x->>'id'=ANY($4::text[])`;
+const objectMap = (path: string) => `(SELECT COALESCE(jsonb_object_agg(k,v), '{}'::jsonb) FROM jsonb_each(
+  CASE WHEN jsonb_typeof(${path})='object' THEN ${path} ELSE '{}'::jsonb END) e(k,v) WHERE k=ANY($5::text[]))`;
 
 /** Only the selected divisions and their bodies cross the wire. All filters
  * run against the existing canonical pointer in the existing read-only store. */
@@ -44,11 +46,19 @@ export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetada
       'divisions', ${members}, 'unmatched', '[]'::jsonb,
       'officeholders', ${array("payload->'roster'->'officeholders'", `x->>'id' IN (SELECT m->>'officeholderId' FROM jsonb_array_elements(${members}) m)`)}))`;
   } else if (recordClass === "BALLOT_CANDIDACY" || recordClass === "BALLOT_FILING") {
-    const contests = array("payload->'ballot'->'contests'", "x->>'divisionId'=ANY($3::text[])");
+    const contests = array("payload->'ballot'->'contests'", division);
     const inContest = `x->>'contestId' IN (SELECT c->>'id' FROM jsonb_array_elements(${contests}) c)`;
     value = `jsonb_build_object('ballot', ((payload->'ballot') - 'contests' - 'candidacies' - 'measures') || jsonb_build_object(
       'contests', ${contests}, 'candidacies', ${array("payload->'ballot'->'candidacies'", inContest)},
-      'measures', ${array("payload->'ballot'->'measures'", inContest)}))`;
+      'measures', ${array("payload->'ballot'->'measures'", inContest)}),
+      'generalLineup', jsonb_build_object('contests', ${array("payload->'generalLineup'->'contests'", `x->>'contestId' IN (SELECT c->>'id' FROM jsonb_array_elements(${contests}) c)`)}))`;
+  } else if (recordClass === "CANDIDATE_PROFILE") {
+    value = `jsonb_build_object('cards', jsonb_build_object('cards', ${objectMap("payload->'cards'->'cards'")}),
+      'links', jsonb_build_object('links', ${objectMap("payload->'links'->'links'")}))`;
+  } else if (recordClass === "CANDIDATE_PUBLICATION") {
+    value = `jsonb_build_object('documents', ${array("payload->'documents'", "x->>'candidateKey'=ANY($5::text[])")})`;
+  } else if (recordClass === "CURATED_READER_RECORD" && scopes.every(scope => scope === "US:candidate-campaign-sites-derived")) {
+    value = `(payload - 'records') || jsonb_build_object('records', ${array("payload->'records'", "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])")})`;
   } else if (recordClass === "FEC_FUNDING") {
     value = `(payload - 'candidates') || jsonb_build_object('candidates', ${array("payload->'candidates'", "x->'targetKeys' ?| $5::text[]")})`;
   } else if (recordClass === "STATE_CAMPAIGN_FINANCE") {

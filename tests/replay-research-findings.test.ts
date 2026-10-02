@@ -39,6 +39,16 @@ const held: HeldRead[] = [
   heldPage("ar-held-duarte", "at-scout-duarte", MEET, "duarte4mendham-meet-amalia.held.html", "2026-09-21T02:23:01.279Z"),
   heldPage("ar-held-chipperson", "at-scout-chipperson", CHIP, "chippersonforharding-root.held.html", "2026-09-20T18:53:43.604Z"),
 ];
+// Synthetic independent profiles exercise the source agreement; the campaign
+// pages above remain the separately captured fixture bytes being verified.
+const profiles = [[DUARTE, MEET], [CHIPPERSON, CHIP]].map(([id, url]): HeldRead => {
+  const subject = committedSubjects().get(id!)!;
+  const artifactId = `ar-profile-${subject.familyName.toLowerCase()}`;
+  const body = `<title>${subject.givenName} ${subject.familyName} | Candidate profile</title><h1>${subject.givenName} ${subject.familyName}</h1>
+    <p>Candidate for ${subject.officeTitle} in the 2026 General Election.</p><a href="${url}">Website</a>`;
+  return { ...held[0]!, artifactId, attemptId: `at-${artifactId}`, canonicalUrl: `https://independent.example/${artifactId}`,
+    body, sha256: sha256(body), retrievedAt: "2026-09-24T10:00:00.000Z" };
+});
 const finding = (attemptId: string, subjectId: string, artifactIds: string[], canonicalUrl: string | null, at: string): HeldScoutFinding => ({
   attemptId, obligationId: `freshness:candidate-enrichment:${subjectId}#candidate-authored-awaits-site`, subjectId,
   outcome: canonicalUrl === null ? "EVIDENCE_FOUND" : "ROUTE_CANDIDATE", routeId: canonicalUrl === null ? null : "campaign-site",
@@ -69,7 +79,7 @@ test("OFFLINE: held findings are judged on held bytes; unread leads stay owed; t
   assert.ok(lily.candidateBrandedLeads.includes(LILY));
 });
 
-test("LIVE: the complete chain approves what verifies twice, and its package enters the door as a validated successor", async (t) => {
+test("LIVE: independent profiles and verified campaign bytes reach the door as a validated successor", async (t) => {
   const vaultRoot = mkdtempSync(join(tmpdir(), "wtp-replay-live-"));
   t.after(() => rmSync(vaultRoot, { recursive: true, force: true, maxRetries: 3 }));
   const store = new MemoryRoutineDataStore();
@@ -95,11 +105,11 @@ test("LIVE: the complete chain approves what verifies twice, and its package ent
     "https://www.lilytangwilliams.com/robots.txt": { status: 200, body: fixture("lilytangwilliams.robots.txt") },
     [LILY]: { status: 200, body: fixture("lilytangwilliams-endorsements.live.html") },
   }, "2026-09-24T11:00:00.000Z");
-  const report = await replayResearchFindings({ subjects: committedSubjects(), findings, held, marginalia, prior, gate: readActivationGate("."), now,
+  const report = await replayResearchFindings({ subjects: committedSubjects(), findings, held: [...held, ...profiles], marginalia, prior, gate: readActivationGate("."), now,
     live: { runtime, vaultRoot, methodVersion: 1 } });
   assert.equal(report.mode, "LIVE");
   assert.deepEqual(report.chain!.approved.map((a) => a.campaignSite.candidacyId).sort(), [CHIPPERSON, DUARTE].sort());
-  assert.equal(report.chain!.byStage.VERIFIED, 1, "the Marginalia pointer waits at VERIFIED for a second read");
+  assert.equal(report.chain!.byStage.VERIFIED, 1, "the Marginalia pointer waits at VERIFIED for an independent source");
   assert.ok(report.leads.some((l) => l.url === KAPNER_ROOT && l.codes.includes("CYCLE_NOT_EVIDENCED")));
   assert.ok(runtime.requests.every((url, i) => !url.endsWith("robots.txt") || runtime.requests.indexOf(url) === i), "each origin's robots.txt is read once");
   assert.deepEqual(report.wouldPublish.map((w) => w.key).sort(), [CHIPPERSON_KEY, DUARTE_KEY].sort());
@@ -132,7 +142,7 @@ test("ROBOTS IS RECORDED, NOT BLOCKING: held reads recorded under a disallowing 
     "https://www.chippersonforharding.com/robots.txt": { status: 200, body: "User-agent: *\nDisallow: /\n" },
     [CHIP]: { status: 200, body: fixture("chippersonforharding-root.live.html") },
   }, "2026-09-24T11:00:00.000Z");
-  const live = await replayResearchFindings({ subjects: committedSubjects(), findings, held: disallowed, marginalia: [], prior: null, gate: readActivationGate("."), now: "2026-09-24T12:00:00.000Z",
+  const live = await replayResearchFindings({ subjects: committedSubjects(), findings, held: [...disallowed, ...profiles], marginalia: [], prior: null, gate: readActivationGate("."), now: "2026-09-24T12:00:00.000Z",
     live: { runtime, vaultRoot, methodVersion: 1 } });
   assert.ok(runtime.requests.includes(MEET) && runtime.requests.includes(CHIP), "the public pages are read over the robots.txt");
   assert.deepEqual(live.chain!.approved.map((a) => a.campaignSite.candidacyId).sort(), [CHIPPERSON, DUARTE].sort());

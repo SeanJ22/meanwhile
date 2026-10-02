@@ -20,6 +20,13 @@ import type { HeldPlaceCapture } from "./held-place-capture.ts";
 import { electionFieldIssue, type PublishedElectionField } from "./election-fields.ts";
 import { readPlacePointerSlice, type PlaceCaptureRead } from "./held-place-slices.ts";
 import type { PlaceCaptureKind } from "../coverage/place-owed.ts";
+import type { CandidateProfilesProjection } from "./manual-projections.ts";
+import { currentExtraction, type CandidateDocument, type CandidateCorpus } from "../candidates/corpus.ts";
+import { candidateDescriptionQualityIssue } from "../candidates/blurbs.ts";
+import { deriveCandidateUniverse } from "../hunt/candidate-universe.ts";
+import { campaignSiteSubjects, type LineupContest } from "../candidates/campaign-site-subjects.ts";
+import { composeCampaignLinks, derivedCampaignSitesProjectionIssue, DERIVED_CAMPAIGN_SITES_SCOPE,
+  type DerivedCampaignSitesProjection, type DerivedCampaignSiteRecord } from "./derived-campaign-sites.ts";
 
 /** Canonical published families, plus the existing explicitly adopted election calendars. */
 export interface HeldPlaceFamilies {
@@ -31,6 +38,25 @@ export interface HeldPlaceFamilies {
   readonly filings?: readonly OfficialFiling[];
   readonly electionDates?: readonly ElectionDates[];
   readonly electionFields?: readonly PublishedElectionField[];
+  readonly candidateProfiles?: CandidateProfilesProjection | null;
+  readonly candidatePublications?: readonly CandidateDocument[];
+  readonly candidateLineups?: readonly LineupContest[];
+  readonly derivedCampaignSites?: readonly DerivedCampaignSiteRecord[];
+}
+
+/** The same exact ballot-to-Reader plan the campaign publisher uses. */
+function candidatePlan(divisionIds: readonly string[], ballots: readonly BallotSet[], lineups: readonly LineupContest[]) {
+  const groups = new Map<string, BallotSet[]>();
+  for (const ballot of ballots) {
+    const key = `${ballot.election.state}:${ballot.election.date.slice(0, 4)}`;
+    groups.set(key, [...(groups.get(key) ?? []), ballot]);
+  }
+  const universes = [...groups.values()].map(rows => deriveCandidateUniverse({ stateCode: rows[0].election.state,
+    cycle: Number(rows[0].election.date.slice(0, 4)), generatedBy: "published place ballot", generatedOn: rows[0].election.date,
+    documents: rows.map(ballot => ({ path: ballot.election.id,
+      contests: ballot.contests.filter(row => divisionIds.includes(row.ocdId)), candidacies: ballot.candidacies })),
+    stores: { huntState: {}, cards: {}, links: {}, linkHunts: [] } }));
+  return campaignSiteSubjects({ universes, lineups });
 }
 
 function value<T>(read: PlaceCaptureRead<T>): T | null {
@@ -64,7 +90,7 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
   const rosters = [value(federal)?.roster, ...legislators.map(read => value(read)?.roster)].filter((row): row is OfficeholderSet => row !== undefined);
   targets.push(...rosters.flatMap(roster => roster.divisions.filter(row => divisionIds.includes(row.ocdId)).map(row => row.officeholderId)));
   const [ballots, njBallot, votingSites, funding, money, filingRead, navigationRead] = await Promise.all([
-    Promise.all(manualBallots.map(contract => read<{ ballot: BallotSet }>("BALLOT_CANDIDACY", contract.scope))),
+    Promise.all(manualBallots.map(contract => read<{ ballot: BallotSet; generalLineup?: { contests: readonly LineupContest[] } }>("BALLOT_CANDIDACY", contract.scope))),
     states.has("NJ") ? read<{ ballot: BallotSet }>(nj.recordClass, nj.scope) : null,
     read<VotingSitesFile>(VOTING_SITES_CONTRACT.recordClass, VOTING_SITES_CONTRACT.scope),
     read<FundingSnapshot>(fec.recordClass, fec.scope),
@@ -72,9 +98,27 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
     read<CuratedReaderProjection>(filings.recordClass, filings.scope),
     read<CuratedReaderProjection>(navigation.recordClass, navigation.scope),
   ]);
+  const heldBallots = [...ballots, ...(njBallot ? [njBallot] : [])].flatMap(read => value(read)?.ballot ?? []);
+  const candidateLineups = ballots.flatMap(read => value(read)?.generalLineup?.contests ?? []);
+  const plan = candidatePlan(divisionIds, heldBallots, candidateLineups);
+  const readerKeys = [...new Set([...plan.values()].flatMap(row => [row.candidacyId, ...row.readerKeys]))];
+  const profiles = requiredManualProductionContract("candidate-profiles"), corpus = requiredManualProductionContract("candidate-corpus");
+  const candidateRead = <T>(recordClass: Parameters<typeof readPlacePointerSlice>[0], scope: string) => sliced
+    ? readPlacePointerSlice<T>(recordClass, scope, divisionIds, [], readerKeys)
+    : readPromotedCivicData<T>(recordClass, scope, options);
+  const [profileRead, corpusRead, derivedRead] = readerKeys.length ? await Promise.all([
+    candidateRead<CandidateProfilesProjection>("CANDIDATE_PROFILE", profiles.scope),
+    candidateRead<CandidateCorpus>("CANDIDATE_PUBLICATION", corpus.scope),
+    candidateRead<DerivedCampaignSitesProjection>("CURATED_READER_RECORD", DERIVED_CAMPAIGN_SITES_SCOPE),
+  ]) : [null, null, null];
+  const derived = derivedRead ? value(derivedRead) : null;
+  if (derived && derivedCampaignSitesProjectionIssue(derived) !== null) throw new Error("HELD_PLACE_READ_FAILED:DERIVED_CAMPAIGN_SITES:INVALID");
   return {
     rosters,
-    ballots: [...ballots, ...(njBallot ? [njBallot] : [])].flatMap(read => value(read)?.ballot ?? []),
+    ballots: heldBallots, candidateLineups,
+    candidateProfiles: profileRead ? value(profileRead) : null,
+    candidatePublications: corpusRead ? value(corpusRead)?.documents ?? [] : [],
+    derivedCampaignSites: derived?.records ?? [],
     votingSites: value(votingSites), funding: value(funding), stateMoney: money.flatMap(read => value(read) ?? []),
     filings: (value(filingRead)?.records ?? []).filter(row => officialFilingIssue(row) === null) as unknown as OfficialFiling[],
     electionDates: ELECTION_DATES.filter(row => states.has(row.state)),
@@ -157,6 +201,73 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
         field(contest.id, "ELE-11", { question: measure.questionText, divisionId: contest.ocdId }, measure.provenance.sourceUrl, measure.provenance.collectedAt, 24);
       }
     }
+  }
+  const plan = candidatePlan(divisionIds, families.ballots ?? [], families.candidateLineups ?? []);
+  const keySubjects = new Map<string, string[]>();
+  for (const row of plan.values()) {
+    const ballotIds = row.readerKeys.filter(key => subjects.get(key)?.captureKind === "candidate");
+    for (const key of [row.candidacyId, ...row.readerKeys]) keySubjects.set(key,
+      [...new Set([...(keySubjects.get(key) ?? []), ...ballotIds])]);
+  }
+  const profiles = families.candidateProfiles;
+  const derived = (families.derivedCampaignSites ?? []).filter(record => {
+    const row = plan.get(record.candidacyId);
+    return row?.readerKeys.includes(record.id);
+  });
+  const composed = composeCampaignLinks(profiles?.links?.links ?? {}, derived);
+  const date = (text: string | null | undefined) => text?.match(/\b\d{4}-\d{2}-\d{2}\b/)?.[0] ?? "";
+  const onCandidate = (key: string, id: string, item: unknown, url: string | null, checkedAt: string) => {
+    for (const subjectId of keySubjects.get(key) ?? []) field(subjectId, id, item, url, checkedAt, 7 * 24);
+  };
+  for (const [key, card] of Object.entries(profiles?.cards?.cards ?? {})) {
+    if (!keySubjects.has(key)) continue;
+    if (card.bio?.trim() && card.bioSourceLabel?.trim()) onCandidate(key, "CAN-16",
+      { quote: card.bio, attribution: card.bioSourceLabel, readerKey: key }, card.bioSourceUrl, date(card.bioSourceLabel));
+    for (const contact of ["phone", "email"] as const) {
+      const contactValue = card[contact];
+      if (!contactValue?.trim()) continue;
+      const campaign = composed.links[key]?.campaign;
+      const normalized = (text: string) => text.toLowerCase().replace(/[^a-z0-9@]/g, "");
+      const verified = campaign?.verification && normalized(campaign.verification).includes(normalized(contactValue));
+      const note = contact === "phone" ? card.phoneSource : null;
+      const noteUrl = note?.match(/https?:\/\/[^\s)]+/)?.[0];
+      // A biography page, an office switchboard or a curated date cannot certify a campaign contact.
+      if (verified && campaign) onCandidate(key, "CAN-06", { [contact]: contactValue, kind: "campaign", verification: campaign.verification }, campaign.url, campaign.attemptedAt);
+      else if (campaign && noteUrl === campaign.url && date(note) && !card.phoneLabel) onCandidate(key, "CAN-06",
+        { [contact]: contactValue, kind: "campaign", sourceNote: note }, noteUrl, date(note));
+    }
+  }
+  for (const [key, links] of Object.entries(composed.links)) {
+    if (!keySubjects.has(key)) continue;
+    for (const kind of ["official", "campaign"] as const) {
+      const link = links[kind];
+      if (!link?.verification?.trim() || !date(link.attemptedAt)) continue;
+      const evidence = kind === "campaign" && composed.derivedKeys.has(key) ? derived.find(row => row.id === key)?.campaign.evidence : undefined;
+      const checkedAt = evidence?.readAt ?? link.attemptedAt;
+      const fact = { kind, ...link, ...(evidence ? { evidence } : {}) };
+      onCandidate(key, "CAN-18", fact, link.url, checkedAt);
+      if (kind === "campaign") for (const id of ["CAN-04", "CAN-05"]) onCandidate(key, id, fact, link.url, checkedAt);
+    }
+  }
+  const documents = currentExtraction([...(families.candidatePublications ?? []),
+    ...derived.flatMap(record => composed.derivedKeys.has(record.id) ? (record.publications ?? []).map(row => row.document) : [])]);
+  const latest = new Map<string, CandidateDocument>();
+  for (const document of documents) {
+    const key = `${document.candidateKey}|${document.documentUrl}`;
+    const previous = latest.get(key);
+    if (!previous || Date.parse(document.retrievedAt) > Date.parse(previous.retrievedAt)) latest.set(key, document);
+  }
+  for (const document of latest.values()) {
+    if (document.extraction !== "html" || !document.text?.trim() ||
+        !["CAMPAIGN_SITE", "OFFICIAL_SITE"].includes(document.sourceClass)) continue;
+    const evidence = derived.flatMap(record => record.publications ?? []).find(row => row.document.id === document.id)?.evidence;
+    const fact = { documentId: document.id, contentHash: document.contentHash, sourceClass: document.sourceClass,
+      basis: document.basis, extractorVersion: document.extractorVersion ?? 1, ...(evidence ? { evidence } : {}) };
+    onCandidate(document.candidateKey, "CAN-12", fact, document.documentUrl, document.retrievedAt);
+    if (document.metaDescription?.trim() && candidateDescriptionQualityIssue(document) === null) onCandidate(document.candidateKey, "CAN-16",
+      { ...fact, quote: document.metaDescription, attribution: document.documentUrl }, document.documentUrl, document.retrievedAt);
+    if (document.sourceRevision) onCandidate(document.candidateKey, "CAN-21",
+      { ...fact, sourceRevision: document.sourceRevision, publicationDate: document.publicationDate ?? null }, document.documentUrl, document.retrievedAt);
   }
   for (const jurisdiction of families.votingSites?.jurisdictions ?? []) {
     if (jurisdiction.refusal || !jurisdiction.sites.length || !subject(`voting-sites:${jurisdiction.ocdId}`, "deadline", [jurisdiction.ocdId], jurisdiction.name, "voting-sites")) continue;

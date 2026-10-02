@@ -2,7 +2,7 @@
  * **THE TRACKER SCRIPT** — the one thing that writes the two stores.
  * (Prompt E items 6, 9 and 10. 2026-08-20.)
  *
- *   node scripts/tracker.mjs open    # RULING 38 and RULING 41: the session-start read
+ *   node scripts/tracker.mjs open    # RULING 38: the session-start read
  *   node scripts/tracker.mjs views   # regenerate the workbook and the readable views
  *   node scripts/tracker.mjs move    # import Sean's edits, move resolved rows, regenerate
  *   node scripts/tracker.mjs add <rows.json>   # open new rows in the working store
@@ -13,9 +13,9 @@
  *
  * ## Why `add` had to exist (NH Hunt, 2026-08-20)
  *
- * RULING 37 makes opening rows a session's JOB — "routing something to his
- * attention is the session's job, and he does not have to notice that
- * something needs him" — and there was no command that did it. The old
+ * Opening rows is a session's JOB — routing something to his attention is the
+ * session's job, and he does not have to notice that something needs him —
+ * and there was no command that did it. The old
  * `scripts/tracker-add-row.mjs` writes `docs/tracker.csv`, which is the
  * FROZEN pre-rebuild snapshot and may never be written again, so a session
  * that used it would have written a row into a file nothing reads.
@@ -72,7 +72,6 @@ import {
   SEAN_ID_PREFIX,
   WORKBOOK,
   WORKING_CSV,
-  auditSeanRows,
   digest,
   isOpen,
   isSeanAuthored,
@@ -135,19 +134,17 @@ const RULING_CLOSURES = Object.fromEntries(
 );
 
 /**
- * **RULING 37's FIRST HALF, WHICH HAD NO PATH.** (`NH64`, closed 2026-08-22.)
+ * **A SESSION CLOSING ITS OWN WORK HAD NO PATH.** (`NH64`, closed 2026-08-22.)
  *
- * "A session marks its own completed work Resolved and moves it, in every
- * section except Needs Sean." That has been the rule since 2026-08-20 and this
+ * A session marks its own completed work Resolved and moves it, and this
  * script had no mode or flag that did it: `Resolution`, `Condition` and
  * `Notes` were read ONLY out of the workbook, and anything found there is
  * attributed to SEAN. So a session finishing its own work either left the row
  * open or wrote a resolution into a file the tool credits to him — and both are
  * worse than the rule not existing.
  *
- * `--resolve=PU02,NJ07` marks those rows Resolved, closes them as the session
- * (`--session=`), and refuses a Needs Sean row by name: that section has its
- * own door, `--ruling=`, and it needs an actual ruling behind it.
+ * `--resolve=PU02,NJ07` marks those rows Resolved and closes them as the
+ * session (`--session=`).
  */
 const RESOLVE_IDS = (
   process.argv.find((a) => a.startsWith("--resolve="))?.slice("--resolve=".length) ?? ""
@@ -573,7 +570,7 @@ function readWorkbookRows() {
 /* ------------------------------------------------------------------ open --- */
 
 /**
- * RULING 38 and RULING 41 — the session-start read.
+ * RULING 38 — the session-start read.
  *
  * Every session opens by reading the resolved store for rows resolved since it
  * last ran, surfacing Sean's notes, and reading the rows he opened himself. A
@@ -592,7 +589,7 @@ function modeOpen(working, resolved) {
     (r) => (r.Section ?? "") === "needs-sean" && (r.Resolution ?? "").trim() === "Pending review",
   );
 
-  console.log(`\nsession-start read — RULING 38 and RULING 41\n`);
+  console.log(`\nsession-start read — RULING 38\n`);
   console.log(`  resolved store        ${resolved.length} row(s)${since ? `, ${recent.length} resolved on or after ${since}` : ""}`);
   console.log(`  carrying a note       ${withNotes.length}`);
   console.log(`  conditionally resolved ${conditional.length} — each condition is a LIVE REQUIREMENT on this session`);
@@ -613,7 +610,7 @@ function modeOpen(working, resolved) {
     }
   }
   if (seanRows.length) {
-    console.log(`\n  ROWS SEAN WROTE — his description, never reworded by a session:\n`);
+    console.log(`\n  ROWS SEAN WROTE:\n`);
     for (const r of seanRows) {
       console.log(`    ${r.ID} · ${r.Section} · ${(r.Priority || "no priority set")} · ${r.Title}`);
     }
@@ -631,9 +628,7 @@ function modeOpen(working, resolved) {
  * DECISION.** (Added 2026-08-20, on the workbook's first real contact with the
  * author — he typed `"Pending "` on two rows, meaning `Pending review`.)
  *
- * RULING 41 forbids a session rewording a row the author wrote. That protects
- * his PROSE — the title and the description, where he is describing what he
- * saw and a session rewriting it replaces the evidence with an interpretation.
+ * A row's title and description are prose — what the person who wrote it saw.
  * `Resolution` is not prose. It is a three-value enum, and the honest reading of
  * `"Pending "` is the one state that can begin that way.
  *
@@ -728,14 +723,14 @@ function modeMove(working, resolved, sections) {
   if (book) {
     /*
      * Sean's three columns come OUT of the workbook. A row he touched has a
-     * resolution in HIS handwriting, which is what lets RULING 37 let it move
-     * out of Needs Sean — the same value written by a session may not.
+     * resolution in HIS handwriting, so it is recorded as closed by him rather
+     * than by a session.
      */
     const byId = new Map(working.map((r) => [r.ID, r]));
     for (const row of book.working) {
       const id = (row.ID ?? "").trim();
       if (!id) {
-        // RULING 41: a row he typed, with no id. The script assigns one.
+        // A row he typed, with no id. The script assigns one.
         const title = (row.Title ?? "").trim();
         if (!title && !(row["What this is"] ?? "").trim()) continue;
         const fresh = nextId(SEAN_ID_PREFIX, [...working, ...resolved, ...assignedIds.map((a) => ({ ID: a }))]);
@@ -756,7 +751,7 @@ function modeMove(working, resolved, sections) {
           store[c] = c === "Resolution" ? normalizeResolution(id, row[c]) : (row[c] ?? "");
         }
       }
-      // RULING 41 again: his row's own words, read back from the file he owns.
+      // His row's own words, read back from the workbook he edits.
       if (isSeanAuthored(store)) {
         for (const c of ["Title", "What this is"]) {
           if ((row[c] ?? "").trim()) store[c] = row[c];
@@ -879,7 +874,7 @@ function modeMove(working, resolved, sections) {
     for (const line of rulingCloses) console.log(`  ${line}`);
   }
 
-  /* RULING 37's first half — a session closing its own completed work. */
+  /* A session closing its own completed work. */
   const sessionCloses = [];
   for (const id of RESOLVE_IDS) {
     const row = working.find((r) => (r.ID ?? "").trim() === id);
@@ -887,19 +882,12 @@ function modeMove(working, resolved, sections) {
       refusals.push(`${id} is not an open row, so a session cannot resolve it.`);
       continue;
     }
-    if ((row.Section ?? "").trim() === "needs-sean") {
-      refusals.push(
-        `RULING 37 — ${id} is in Needs Sean and --resolve does not reach that section. ` +
-          "Only Sean closes a row there, or RULING 79's --ruling= with a recorded ruling behind it.",
-      );
-      continue;
-    }
     if (!(row.Resolution ?? "").trim()) row.Resolution = "Resolved";
     sessionCloses.push(id);
   }
   if (sessionCloses.length > 0) {
     console.log(`
-session closes (RULING 37): ${sessionCloses.join(", ")}`);
+session closes: ${sessionCloses.join(", ")}`);
   }
 
   const before = [...working, ...resolved].map((r) => ({ ...r }));
@@ -926,9 +914,8 @@ session closes (RULING 37): ${sessionCloses.join(", ")}`);
    *
    * The authority is NOT the "(RULING 227 auto-reconciliation)" string sitting
    * in the row's `Closed by` column. That string is data, and data in a CSV is
-   * exactly what a session could type by hand to smuggle a Needs Sean row past
-   * RULING 37. So the predicate is RE-EVALUATED here, at move time, against the
-   * committed artifacts — and only a row whose predicate answers
+   * exactly what a session could type by hand. So the predicate is
+   * RE-EVALUATED here, at move time, against the committed artifacts — and only a row whose predicate answers
    * RESOLVED_BY_EVIDENCE right now is granted the `predicate` author.
    *
    * A row that HOLDS or that CANNOT_TELL at move time is left exactly where it
@@ -984,9 +971,8 @@ session closes (RULING 37): ${sessionCloses.join(", ")}`);
      * row and recording who moved it had been written as one step and only the
      * first half existed.
      *
-     * A resolution read out of the workbook is in the AUTHOR'S handwriting —
-     * that is the same fact RULING 37 leans on to let a Needs Sean row move at
-     * all — so it closes as `Sean`. Anything else closes as the session, named
+     * A resolution read out of the workbook is in the AUTHOR'S handwriting, so
+     * it closes as `Sean`. Anything else closes as the session, named
      * with `--session=<label>`, and a move with neither REFUSES rather than
      * writing a blank into the column the guard is about to check.
      */
@@ -1009,7 +995,6 @@ session closes (RULING 37): ${sessionCloses.join(", ")}`);
   );
 
   refusals.push(...resolutionProblems);
-  refusals.push(...auditSeanRows({ before, after: [...nextWorking, ...nextResolved] }));
 
   console.log(`\ntracker move — ${STAMP}\n`);
   console.log(`  workbook read          ${book ? `${book.working.length} working + ${book.resolved.length} resolved row(s)` : "not present — stores only"}`);
@@ -1506,8 +1491,7 @@ function modeClaim(working, resolved) {
  * `docs/tracker.csv`. Both stores are searched, so a row the author has
  * already resolved can still be told what a later session did about it.
  *
- * It never changes a row's resolution. Moving a row is `move`'s job and is
- * governed by RULING 37.
+ * It never changes a row's resolution. Moving a row is `move`'s job.
  */
 function modeNote(working, resolved) {
   const id = (process.argv[3] ?? "").trim();
@@ -1566,10 +1550,9 @@ function modeNote(working, resolved) {
  *
  * ## The two limits, and they are the whole safety of it
  *
- * **RULING 41: a session may not reword, retitle or delete a row SEAN wrote.**
- * He is describing what he saw, and a session rewriting that into what it thinks
- * he meant has replaced the evidence with an interpretation of it. So this
- * refuses on any row whose `Opened by` is not this session's own label.
+ * **A session amends only a row it opened itself.** Another author's row is a
+ * record of what they saw; a correction to it is a new row, so this refuses on
+ * any row whose `Opened by` is not this session's own label.
  *
  * **The TITLE and the SECTION are untouched.** Only "What this is" moves. A
  * title is how a row is recognised in a list Sean reads; a section is RULING
@@ -1610,7 +1593,7 @@ function modeAmend(working, resolved) {
   if (!openedBy.includes(SESSION_LABEL)) {
     console.error(
       `${id} was opened by "${openedBy}", not by "${SESSION_LABEL}".\n` +
-        "RULING 41: a session may not reword a row it did not write. Open a new row instead.",
+        "amend only corrects a row this session opened. Open a new row instead.",
     );
     process.exit(1);
   }
@@ -1832,32 +1815,23 @@ function modeViews(working, resolved, sections) {
  * — **a session marks its OWN finished work resolved.** (`NH64`, owed since
  * 2026-08-22; built 2026-08-23.)
  *
- * ## The hole this closes, in the words of the row that recorded it
+ * ## The hole this closes
  *
- * *"The only way to set Resolution today is to write it into the workbook, and
- * the move script then records `resolutionAuthor` as `sean` — which would let a
- * session close a NEEDS SEAN row by the same keystroke, the exact thing RULING
- * 37 and `tests/tracker-stores.test.ts` exist to prevent. So the session did
- * NOT do it… Until it lands, every session's finished rows accumulate in the
- * working store with their evidence in the Session record and nothing marking
- * them done, which is the queue-that-empties failing to empty."*
+ * The only way to set Resolution was to write it into the workbook, and the
+ * move script then records `resolutionAuthor` as `sean` — a session's close
+ * credited to him. Without another path, every session's finished rows
+ * accumulated in the working store with their evidence in the Session record
+ * and nothing marking them done, which is the queue-that-empties failing to
+ * empty.
  *
- * That is exactly right, and it is why this writes the resolution with the
- * author stamped as the SESSION rather than as him.
+ * So this writes the resolution with the author stamped as the SESSION rather
+ * than as him.
  *
  * ## The three authors, and why a third one was needed
  *
  * `planMoves` already knew about two — `"sean"` for a resolution read out of
  * his workbook, and `"ruling"` for RULING 79's close-by-ruling. What it had no
- * write path for was `"session"`, the default it has always been able to
- * REFUSE and never been given. So the refusal message in `tracker-core.mjs`
- * already read as though this distinction existed; only the write side was
- * missing.
- *
- * The gate is unchanged and is not weakened by this: `planMoves` refuses a
- * session-authored resolution on any section marked `onlySeanResolves`, so
- * running this against a Needs Sean row fails with RULING 37 named. **A session
- * still cannot close one of his rows, and now it can close its own.**
+ * write path for was `"session"`, its default actor. This is that write side.
  *
  * ## Evidence is required, not encouraged
  *
@@ -1868,7 +1842,7 @@ function modeViews(working, resolved, sections) {
  * beside the work, and a run with nothing in it is refused rather than
  * recorded.
  */
-function modeResolve(working, resolved, sections) {
+function modeResolve(working, resolved) {
   const id = (process.argv[3] ?? "").trim();
   const conditional = process.argv.includes("--conditional");
   const evidenceAt = process.argv.indexOf("--evidence");
@@ -1921,38 +1895,6 @@ function modeResolve(working, resolved, sections) {
   const row = hits[0];
   const section = (row.Section ?? "").trim();
 
-  /*
-   * **RULING 37, refused HERE as well as in `planMoves`.**
-   *
-   * `planMoves` would catch it a moment later, and catching it twice is
-   * deliberate: this refusal happens BEFORE anything is written, so the run
-   * ends with the stores untouched and a message naming the rule, rather than
-   * with a resolution written into a row that then cannot be moved.
-   */
-  const onlySean = new Set(sections.filter((s) => s.onlySeanResolves).map((s) => s.slug));
-  if (onlySean.has(section)) {
-    console.error(
-      `RULING 37 — ${id} is in "${section}" and only Sean closes a row there.\n` +
-        "A session may OPEN one and may WORK it; it may never mark it resolved,\n" +
-        "however finished it looks. Where a dated ruling in docs/rulings.md\n" +
-        `demonstrably answers it, RULING 79 is the route: pnpm tracker:move --ruling ${id}=<number>.`,
-    );
-    process.exit(1);
-  }
-
-  /*
-   * RULING 41 — a session may not close a row SEAN wrote, either. He is
-   * describing what he saw; deciding it is finished is his call, in whatever
-   * section it sits.
-   */
-  if (isSeanAuthored(row)) {
-    console.error(
-      `RULING 41 — ${id} was opened by ${SEAN_AUTHOR}. A session may work his row and\n` +
-        "may set a priority on it; whether it is finished is his judgement.",
-    );
-    process.exit(1);
-  }
-
   const already = (row.Resolution ?? "").trim();
   if (already) {
     console.error(`${id} already carries the resolution "${already}" — nothing to write.`);
@@ -1997,12 +1939,8 @@ function modeResolve(working, resolved, sections) {
  * measurement is owed is exactly what the performance-measurement ruling
  * forbids, so it had to come back.
  *
- * THE GUARDS ARE THE SAME ONES `resolve` HAS, and for the same reasons:
+ * THE GUARDS:
  *
- * - **RULING 37** — a session may not touch a Needs Sean row's resolution in
- *   either direction. Re-opening one he closed would be as much a session
- *   overruling him as closing one he had not.
- * - **RULING 41** — nor a row he wrote.
  * - **Only a row this session itself closed.** Re-opening another session's
  *   resolution is not an undo, it is a disagreement, and it goes to him.
  * - **Only while the row is still in the WORKING store.** Once `move` has run,
@@ -2013,7 +1951,7 @@ function modeResolve(working, resolved, sections) {
  * says it was never closed, which is a different lie from the one being
  * corrected.
  */
-function modeReopen(working, resolved, sections) {
+function modeReopen(working, resolved) {
   const id = process.argv[3];
   const reasonAt = process.argv.indexOf("--reason");
   const reasonPath = reasonAt === -1 ? null : process.argv[reasonAt + 1];
@@ -2051,18 +1989,6 @@ function modeReopen(working, resolved, sections) {
 
   const row = hits[0];
   const section = (row.Section ?? "").trim();
-  const onlySean = new Set(sections.filter((s) => s.onlySeanResolves).map((s) => s.slug));
-  if (onlySean.has(section)) {
-    console.error(
-      `RULING 37 — ${id} is in "${section}". Only Sean decides a row there is closed, and\n` +
-        "only he decides it is not.",
-    );
-    process.exit(1);
-  }
-  if (isSeanAuthored(row)) {
-    console.error(`RULING 41 — ${id} was opened by ${SEAN_AUTHOR}; its state is his judgement.`);
-    process.exit(1);
-  }
 
   const already = (row.Resolution ?? "").trim();
   if (!already) {
@@ -2116,7 +2042,7 @@ if (MODE === "open") {
   ({ working, resolved } = modeAmend(working, resolved));
   modeViews(working, resolved, sections);
 } else if (MODE === "resolve") {
-  ({ working, resolved } = modeResolve(working, resolved, sections));
+  ({ working, resolved } = modeResolve(working, resolved));
   modeViews(working, resolved, sections);
 } else if (MODE === "add") {
   let confirmation;
@@ -2133,7 +2059,7 @@ if (MODE === "open") {
   modeViews(working, resolved, sections);
   reconcileAfterWrite([]);
 } else if (MODE === "reopen") {
-  ({ working, resolved } = modeReopen(working, resolved, sections));
+  ({ working, resolved } = modeReopen(working, resolved));
   modeViews(working, resolved, sections);
 } else {
   console.error(

@@ -13,9 +13,8 @@ import { US_STATES } from "../readiness/catalog.ts";
  * Parser's records, a Validator's verdict). Every statement is bounded to the
  * recent attempts it names; nothing scans a log to count it.
  *
- * Honest by construction: a run that is still open after the runner's wall is
- * "did not finish", never "running"; a cost the ledger has no price for is
- * unknown, never $0; a model the catalog no longer knows is named as older.
+ * A run still open after the runner's wall is "did not finish"; a cost the ledger
+ * has no price for is null.
  */
 export const ADMIN_V6_AGENTS_CONTRACT = "admin-v6/agents@1" as const;
 export const AGENT_RUN_LIMIT = 40;
@@ -68,14 +67,14 @@ export interface AdminV6AgentRun {
 const stateName = (code: string | null) => (code ? US_STATES.find((s) => s.code === code)?.name ?? null : null);
 
 function modelOf(run: AgentRunRaw, cost: AgentCostRaw | undefined): AdminV6AgentRun["model"] {
-  if (run.role === "ACQUIRER") return { tier: "plain-code", name: "Plain code — no AI model" };
+  if (run.role === "ACQUIRER") return { tier: "plain-code", name: "Plain code" };
   const shares = (cost?.byModel ?? []).filter((s) => typeof s.model === "string");
   // The model that took the most of the charge is the one named; a run that moved up a tier says so in its cost words.
   const top = [...shares].sort((a, b) => (Number(b.usd) || 0) - (Number(a.usd) || 0))[0];
   const id = typeof top?.model === "string" ? top.model : run.version;
-  if (typeof id !== "string" || !/claude/i.test(id)) return { tier: "plain-code", name: "No AI model recorded" };
+  if (typeof id !== "string" || !/claude/i.test(id)) return { tier: "plain-code", name: "—" };
   const tier = modelTierFor(canonicalModelId(id));
-  return tier ? { tier, name: MODELS[tier].name } : { tier: "older", name: `${id} (an older model, no longer used)` };
+  return tier ? { tier, name: MODELS[tier].name } : { tier: "older", name: id };
 }
 
 function humanSubject(jurisdiction: string | null, obligationId: string | null): string {
@@ -88,7 +87,7 @@ function humanSubject(jurisdiction: string | null, obligationId: string | null):
   return `${name || "unnamed work"}${kind}${what ? ` — ${what}` : ""}`;
 }
 
-const usdWords = (n: number | null) => (n === null ? "Price not recorded" : n === 0 ? "$0.00" : n < 0.01 ? "under $0.01" : `$${n.toFixed(2)}`);
+const usdWords = (n: number | null) => (n === null ? "—" : n === 0 ? "$0.00" : n < 0.01 ? "under $0.01" : `$${n.toFixed(2)}`);
 
 export function agentRuns(input: {
   readonly runs: readonly AgentRunRaw[]; readonly costs: readonly AgentCostRaw[]; readonly artifacts: readonly AgentArtifactRaw[];
@@ -112,9 +111,9 @@ export function agentRuns(input: {
     const found = result?.kind === "scout" && result.verdict
       ? `${SCOUT_OUTCOME_WORDS[result.verdict] ?? `Ended: ${result.verdict.toLowerCase().replace(/_/g, " ")}.`}${result.narrative ? ` ${result.narrative}` : ""}`
       : result?.kind === "worker" ? `${run.role === "PARSER" ? `Pulled out ${result.records ?? 0} record${result.records === 1 ? "" : "s"}.` : `Verdict: ${(result.verdict ?? "none recorded").toLowerCase().replace(/_/g, " ")}.`}`
-      : state === "running" ? "Still working. Nothing recorded yet."
+      : state === "running" ? "Still working."
       : run.role === "ACQUIRER" ? `${run.outcome === "COMPLETED" ? "Finished" : "Stopped"}; kept ${run.artifactCount} saved page${run.artifactCount === 1 ? "" : "s"}.`
-      : "Nothing recorded about what it found.";
+      : "—";
     const eligible = art !== undefined && art.tier === "RAW" && !art.partial && art.byteLength > 0 && art.byteLength <= 32 * 1024 * 1024 && run.project === "freshness" &&
       [art.workItemId, art.attemptId, art.artifactId].every((id) => /^[a-z][a-z0-9-]{1,120}$/.test(id)) && art.artifactId.startsWith("ar-");
     const code = stateCodeOf(cost?.jurisdiction ?? cost?.obligationId ?? "", "");

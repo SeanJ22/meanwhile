@@ -11,7 +11,7 @@ import { useState } from "react";
 import type { TopicCountsView } from "@/lib/control-plane/admin-view/topic-counts.ts";
 
 import { mst } from "./model.ts";
-import { Card, cx, Empty, Failed, Loading, usePager } from "./ui.tsx";
+import { Card, cx, Empty, Loading, usePager } from "./ui.tsx";
 import { useReading } from "./use-reading.ts";
 import s from "./v6.module.css";
 
@@ -27,11 +27,10 @@ export function TopicCountsPanel() {
   return (
     <Card title="What residents ask about" id="topic-counts">
       {reading.kind === "loading" && <Loading what="the topic counts" />}
-      {reading.kind === "failed" && <Failed what="The topic counts" retry={reload} />}
-      {reading.kind === "ready" && reading.data.kind === "NOT_INSTALLED" && <Empty>{reading.data.says}</Empty>}
+      {reading.kind === "failed" && <p className={s.p}>— <button type="button" className={s.btn} onClick={reload}>Try again</button></p>}
+      {reading.kind === "ready" && reading.data.kind === "NOT_INSTALLED" && <Empty>—</Empty>}
       {data && (
         <div className={s.stack}>
-          <p className={cx(s.p, s.small, s.dim)}>Each row is a share of the users in that week and ZIP or district, with the count beside it. Counts of groups of users, never a person. Small groups are shown the same way as large ones.</p>
           <div className={s.inline}>
             <select className={s.select} aria-label="Day or week" value={period} onChange={(e) => setPeriod(e.target.value)}>
               <option value="all">Every day and week</option>
@@ -62,8 +61,8 @@ export function TopicCountsPanel() {
             </div>
           )}
           {pager}
-          {data.hidden > 0 && <p className={cx(s.p, s.meta)}>{data.hidden.toLocaleString("en-US")} rows were not shown because they were malformed or past the first 500. They are counted here, not dropped quietly.</p>}
-          <p className={cx(s.p, s.meta)}>Read {mst(data.observedAt)}.{reading.kind === "ready" && reading.stale ? " The latest refresh failed, so this is the last good reading." : ""}</p>
+          {data.hidden > 0 && <p className={cx(s.p, s.meta)}>{data.hidden.toLocaleString("en-US")} rows not shown</p>}
+          <p className={cx(s.p, s.meta)}>Read {mst(data.observedAt)}</p>
         </div>
       )}
     </Card>

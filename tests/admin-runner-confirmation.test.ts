@@ -77,7 +77,7 @@ test("a pause is waiting until the runner honors it, then done, on the same rece
   const after = await confirmReceipt(repos, out.receipt);
   assert.equal(after.state, "applied");
   assert.equal(after.at, "2026-09-30T18:00:30.000Z");
-  assert.match(after.words, /Paused\. The runner confirmed/);
+  assert.match(after.words, /^Paused\./);
 });
 
 test("a record that honors a DIFFERENT intent does not confirm this one (the plant)", async () => {
@@ -302,6 +302,6 @@ test("paid research can be paused and resumed, and each is Done only when the ru
   await runnerHonors(repos, resumed.receipt.subject, "PAUSE", "2026-09-30T18:05:00.000Z");
   const done = await confirmReceipt(repos, resumed.receipt);
   assert.equal(done.state, "applied");
-  assert.match(done.words, /Paid research may run again/);
+  assert.match(done.words, /Paid research resumed/);
   assert.equal((await confirmReceipt(repos, paused.receipt)).state, "waiting", "the pause is a different intent and is still waiting");
 });

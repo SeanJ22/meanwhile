@@ -12,7 +12,7 @@ import { useState } from "react";
 import { Swatch } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
 import { LEARNING_STATUSES, mstDay, TASK_STAGES, type ClosedFix, type FixTab, type LearningStatus, type OpenFix } from "./model.ts";
-import { Actions, cx, Empty, Facts, Pill, SourceNote, Tabs, Technical, useListView } from "./ui.tsx";
+import { Actions, cx, Empty, Facts, Pill, Tabs, Technical, useListView } from "./ui.tsx";
 import s from "./v6.module.css";
 
 export const LEARNING_CLASS: Readonly<Record<LearningStatus, string>> = {
@@ -22,14 +22,6 @@ export const LEARNING_CLASS: Readonly<Record<LearningStatus, string>> = {
   "Reused successfully on another job": "c-teal",
   "Problem returned": "c-coral",
   "Not checked yet": "c-dark",
-};
-const HOW_WE_KNOW: Readonly<Record<LearningStatus, string>> = {
-  "Fixed once": "Only this one fix is proven. Nothing was shown to prevent it happening again.",
-  "Prevention saved": "Something was saved to prevent it, but no later job has used it yet.",
-  "Prevention tested": "A test or later comparable checks show the prevention works. That still isn’t a promise it can never happen again.",
-  "Reused successfully on another job": "A later job used what was saved and succeeded.",
-  "Problem returned": "Later attempts failed the same way.",
-  "Not checked yet": "Nobody has checked the result since the fix.",
 };
 
 export function FixScreen() {
@@ -42,9 +34,7 @@ export function FixScreen() {
       <header>
         <p className={s.eyebrow}>Whole system</p>
         <h1 className={s.h1}>Fix list</h1>
-        <p className={cx(s.p, s.small, s.dim)}>Problems being fixed by engineers or by automatic repair, and what happened after each fix.</p>
       </header>
-      <SourceNote source={v.data.fixes} what="Fixes" />
       <Tabs label="Fix list" value={tab} onChange={setTab} tabs={[
         { id: "attention", label: "Needs attention", count: f ? f.open.filter((o) => o.tab === "attention").length : "—" },
         { id: "fixing", label: "Being fixed", count: f ? f.open.filter((o) => o.tab === "fixing").length : "—" },
@@ -64,7 +54,7 @@ export function FixScreen() {
 }
 
 export function TaskStages(props: { readonly stage: number | null }) {
-  if (props.stage === null) return <span className={s.meta}>No engineering task is linked. Task stages come only from the tracker.</span>;
+  if (props.stage === null) return <span className={s.meta}>—</span>;
   return (
     <div className={s.stepper} aria-label={`Task progress: ${TASK_STAGES[props.stage]}`}>
       {TASK_STAGES.map((label, n) => <span key={label} className={cx(s.stepChip, n <= props.stage! && s.stepChipOn)}>{label}</span>)}
@@ -82,7 +72,7 @@ function OpenFixCard(props: { readonly fix: OpenFix }) {
         <Pill tone={o.tab === "attention" ? "warn" : "neutral"}>{({ attention: "Needs attention", fixing: "Being fixed", update: "Waiting for update" })[o.tab]}</Pill>
       </div>
       <p className={cx(s.p, s.small)}>{o.problem}</p>
-      <Facts rows={[["Who handles it", o.owner], ["What it helps", o.helps], ["Place in line", o.placeInLine], ["Resources now", o.resourcesNow], ["Where it came from", o.origin === "automatic" ? "Automatic repair (no code change)" : "Engineering"]]} />
+      <Facts rows={[["Who handles it", o.owner], ["What it helps", o.helps], ["Place in line", o.placeInLine], ["Resources now", o.resourcesNow], ["Where it came from", o.origin === "automatic" ? "Automatic repair" : "Engineering"]]} />
       {o.origin === "engineering" && <TaskStages stage={o.taskStage} />}
       {!!o.linkedStuck.length && (
         <div className={s.inline}>
@@ -90,10 +80,7 @@ function OpenFixCard(props: { readonly fix: OpenFix }) {
           {o.linkedStuck.map((id) => <button key={id} type="button" className={s.btnLink} onClick={() => v.open({ type: "stuck", id })}>{v.nameOf(id)}</button>)}
         </div>
       )}
-      <div className={s.stack} style={{ gap: 4 }}>
-        <span className={s.meta}>Changing its order and asking for more resources are different requests.</span>
-        <Actions actions={[{ kind: "fixfirst", target: o.id }, { kind: "focus", target: o.id }, ...(o.origin === "engineering" && o.taskId === null ? [{ kind: "eng-task" as const, target: o.id }] : [])]} />
-      </div>
+      <Actions actions={[{ kind: "fixfirst", target: o.id }, { kind: "focus", target: o.id }, ...(o.origin === "engineering" && o.taskId === null ? [{ kind: "eng-task" as const, target: o.id }] : [])]} />
       <Technical lines={[o.technical]} />
     </article>
   );
@@ -137,14 +124,12 @@ function History(props: { readonly list: readonly ClosedFix[]; readonly returned
                 ...(x.returnedDetail ? [["When it came back", x.returnedDetail] as const] : []),
                 ["Saved to prevent it", x.saved],
                 ["Used by", x.usedBy],
-                ["How we know", HOW_WE_KNOW[x.learning]],
               ]} />
               <Technical lines={[x.technical]} />
             </div>
           </details>
         ))}
         {pager}
-        <span className={s.meta}>A closed task or a sent instruction isn’t counted as a fix. The full history pages from the server once it is connected.</span>
       </div>
     </details>
   );

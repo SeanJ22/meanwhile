@@ -60,12 +60,11 @@ function itemOf(instance: ChecklistInstance, definitionId: string, projectionId:
   return { key: `${projectionId}:${definitionId}:${encodeURIComponent(instance.obligationKey)}:${ordinal}`, definitionId,
     name: definition.requirement.split(" — ")[0], subject: instance.objectId, period: instance.period,
     status: "unsure" as const,
-    missing: unresolved ? "Applicability or effective period is unresolved; full proof has not been read here."
-      : instance.blocker ?? "Clause-level proof has not been read by this section.",
+    missing: unresolved ? "Unresolved" : instance.blocker === null ? "—" : instance.blocker,
     appliesBecause: `${instance.applicability.state}: ${instance.applicability.reason}`,
     owner: instance.owner, next: instance.nextAction,
     parts: instance.predicate.requiredClauses.map(clause => ({ text: partText(clause),
-      status: "Not checked in this section", proof: "Qualifying verification witness not read by this indexed section.",
+      status: "Not checked", proof: "—",
       tone: "muted" as const })), actions: [] as const };
 }
 

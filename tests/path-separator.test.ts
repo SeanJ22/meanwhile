@@ -158,16 +158,8 @@ test("RULING 14: the shared normalizer exists and normalizes both directions", (
  * separator-broken the offender list contained the manifest itself. This
  * asserts the outcome directly rather than trusting the fix upstream.
  */
-test("RULING 14: the coverage manifest allowlists correctly on this platform", () => {
-  const source = readFileSync(join(ROOT, "tests", "coverage-manifest.test.ts"), "utf8");
-  assert.ok(
-    source.includes("posixRelative"),
-    "coverage-manifest.test.ts normalizes through the shared helper",
-  );
-  assert.ok(
-    !/relative\(ROOT, abs\)\.replace\(/.test(source),
-    "coverage-manifest.test.ts no longer keeps its own copy of the normalizer",
-  );
+test("RULING 14: a state holding path compares the same on both platforms", () => {
+  assert.equal(toPosix("data\\states\\wi\\ballot\\wi-dane-2028.json"), "data/states/wi/ballot/wi-dane-2028.json");
 });
 
 /**

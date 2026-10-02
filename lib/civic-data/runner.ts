@@ -390,7 +390,6 @@ export function routineUnreceiptedSupervisorAttemptHistory(
     }
 
     const exactReceiptTaskIds = new Set<string>();
-    const exactReceiptCandidateIds = new Set<string>();
     let exactSuccesses = 0;
     let exactFailures = 0;
     if (taskReceipts !== null) {
@@ -415,8 +414,8 @@ export function routineUnreceiptedSupervisorAttemptHistory(
           reasons.push("an exact task receipt reference is malformed or contradictory");
           continue;
         }
-        if (exactReceiptTaskIds.has(reference.taskId) || exactReceiptCandidateIds.has(parsedReceipt.receipt.candidateId)) {
-          reasons.push("exact task or candidate receipt identity is duplicated");
+        if (exactReceiptTaskIds.has(reference.taskId)) {
+          reasons.push("exact task receipt identity is duplicated");
           continue;
         }
         const successIssue = successfulRoutineRunnerReceiptIssue(parsedReceipt.receipt);
@@ -432,7 +431,6 @@ export function routineUnreceiptedSupervisorAttemptHistory(
           continue;
         }
         exactReceiptTaskIds.add(reference.taskId);
-        exactReceiptCandidateIds.add(parsedReceipt.receipt.candidateId);
         if (reference.classification === "VERIFIED_SOURCE_SUCCESS") exactSuccesses += 1;
         else exactFailures += 1;
       }

@@ -11,7 +11,6 @@
  * effect (a job appears after a resource request, a hidden association can be
  * undone). The checklist uses the REAL 325 definitions passed in by the page.
  */
-import { COVERED_STATES } from "@/lib/coverage/states.ts";
 import { PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 
@@ -83,7 +82,6 @@ export const SAMPLE_AS_OF = "2026-09-28T06:53:00.000Z";
 /* ----------------------------------------------------------------- places */
 
 const STATE_NAMES: Readonly<Record<string, string>> = Object.fromEntries(US_STATES.map((st) => [st.code.toUpperCase(), st.name]));
-const TRACKED: ReadonlySet<string> = new Set(COVERED_STATES.map((st) => st.usps));
 
 export const K = {
   us: "us",
@@ -105,7 +103,7 @@ export const K = {
 function samplePlaces(): readonly Place[] {
   const out: Place[] = [{ key: K.us, name: "United States", kind: "Country", navParent: null, within: [] }];
   for (const [code, name] of Object.entries(STATE_NAMES)) {
-    out.push({ key: `st:${code.toLowerCase()}`, name, kind: "State", navParent: K.us, within: [K.us], code, tracked: TRACKED.has(code) });
+    out.push({ key: `st:${code.toLowerCase()}`, name, kind: "State", navParent: K.us, within: [K.us], code, tracked: Object.values(K).includes(`st:${code.toLowerCase()}` as typeof K[keyof typeof K]) });
   }
   const add = (key: string, name: string, kind: Place["kind"], navParent: string, within: readonly string[]) => out.push({ key, name, kind, navParent, within });
   add(K.cochise, "Cochise County, AZ", "County", K.az, [K.az]);

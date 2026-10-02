@@ -1,10 +1,8 @@
 "use client";
 
 /**
- * One instruction and what happened to it. The seven lifecycle facts are kept
- * apart on purpose: "Instruction saved" is not "Workers received it", and
- * neither is "Checked on the public page". A fact nothing has reported shows
- * as "not reported", never as done.
+ * One instruction and what happened to it. The lifecycle facts are kept apart;
+ * a fact nothing has reported shows as "—".
  */
 import type { ReactElement } from "react";
 
@@ -21,7 +19,7 @@ export function ReceiptCard(props: { readonly receipt: UiReceipt; readonly compa
   const follow: ReactElement[] = [];
   if (r.status === "unknown") {
     follow.push(
-      <button key="check" type="button" className={s.btn} aria-disabled={checkWhy ? "true" : undefined} title={checkWhy ? checkWhy : "Asks what happened. Doesn’t do it again."}
+      <button key="check" type="button" className={s.btn} aria-disabled={checkWhy ? "true" : undefined} title={checkWhy ? checkWhy : undefined}
         onClick={() => { if (!checkWhy) v.check(r); }}>Check what happened</button>,
     );
   }
@@ -29,7 +27,6 @@ export function ReceiptCard(props: { readonly receipt: UiReceipt; readonly compa
   if (r.kind === "decide" && r.status === "refused") follow.push(<ActionButton key="other" action={{ kind: "decide", target: r.target }} label="Choose another option" />);
   if (r.kind === "contain" && r.status === "done") follow.push(<ActionButton key="undo" action={{ kind: "uncontain", target: r.target }} label="Undo" />);
   const readBack = r.readBackAt; // a console path, not a time
-  const reached = LIFECYCLE_WORDS.filter(([k]) => r.lifecycle[k] !== null);
   return (
     <article className={s.row} aria-label={`${r.label}: ${r.statusWords}`}>
       <div className={s.spread}>
@@ -55,20 +52,17 @@ export function ReceiptCard(props: { readonly receipt: UiReceipt; readonly compa
           </div>
           <div className={s.stepper} aria-label="What has actually happened">
             {LIFECYCLE_WORDS.map(([k, label]) => (
-              <span key={k} className={cx(s.stepChip, r.lifecycle[k] && s.stepChipOn)} title={r.lifecycle[k] ? `${label}: ${mst(r.lifecycle[k])}` : `${label}: not reported`}>
-                {label}{r.lifecycle[k] ? "" : " · not reported"}
+              <span key={k} className={cx(s.stepChip, r.lifecycle[k] && s.stepChipOn)} title={r.lifecycle[k] ? `${label}: ${mst(r.lifecycle[k])}` : `${label}: —`}>
+                {label}{r.lifecycle[k] ? "" : " —"}
               </span>
             ))}
           </div>
-          {reached.length < LIFECYCLE_WORDS.length && r.status === "done" && (
-            <p className={cx(s.p, s.meta)}>Done means this instruction took effect as described above. It doesn’t mean the goal is finished or that readers can see anything yet.</p>
-          )}
         </>
       )}
       {!!follow.length && <div className={s.inline}>{follow}</div>}
       {checkWhy && <p className={s.why}>{checkWhy}</p>}
       {!props.compact && (
-        <Technical lines={[`action key ${r.key}`, `kind ${r.kind} · target ${r.target}`, ...(r.gatewayReceiptId ? [`gateway receipt ${r.gatewayReceiptId}`] : []), ...(readBack ? [`saved result can be read on the console page ${readBack}`] : []), ...(r.replayed ? ["repeat submission: the gateway returned the earlier receipt"] : [])]} />
+        <Technical lines={[`action key ${r.key}`, `kind ${r.kind} · target ${r.target}`, ...(r.gatewayReceiptId ? [`gateway receipt ${r.gatewayReceiptId}`] : []), ...(readBack ? [`read back ${readBack}`] : []), ...(r.replayed ? ["repeat submission"] : [])]} />
       )}
     </article>
   );

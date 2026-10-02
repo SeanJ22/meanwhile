@@ -13,7 +13,7 @@ test("a sent instruction shows where it stands, and can be taken back only while
     carried: [{ ref: "DISPATCH:2026-09-30T09:00:00.000Z", deferred: 677, created: 12 }],
   });
   assert.deepEqual(out.map((s) => [s.words, s.state, s.canCancel]), [["waiting one", "waiting", true], ["carried one", "carried", true], ["finished one", "finished", false]]);
-  assert.match(out[1].stateWords, /677 requirements left to create, 12 created so far/);
+  assert.match(out[1].stateWords, /677 left to create · 12 created/);
   assert.equal(out[1].ranAs, "matched 10");
 });
 

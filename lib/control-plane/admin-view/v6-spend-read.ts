@@ -57,6 +57,10 @@ export interface AdminV6SpendView {
   readonly searchUsd: number;
   readonly unpricedRows: number;
   readonly neon: NeonTransfer;
+  /** Open reservations right now, over every hunt (the owner snapshot's attribution); null when it was not read. Filled by the route. */
+  readonly setAsideUsd?: number | null;
+  /** The daily spending limit (the rolling 24-hour ceiling in force); null when the policy row was not read. Filled by the route. */
+  readonly dailyLimitUsd?: number | null;
 }
 
 /** `day` is null for a row older than the day window: it counts toward its month and nothing else. */

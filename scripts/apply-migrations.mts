@@ -96,8 +96,19 @@ export async function applyMigrations(args: string[], options: { beforeContract?
 
   let connection: string;
   let which: string;
+  // A build with no DDL to apply can inspect the journal without a writer.
+  // This connection never reaches schema setup or migration transactions.
+  const INSPECT_ONLY = PRODUCTION_BUILD && !process.env.WTP_PRODUCTION_DATABASE_URL_WRITE;
 
-  if (PRODUCTION) {
+  if (INSPECT_ONLY) {
+    which = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY ? "WTP_PRODUCTION_DATABASE_URL_READONLY" : "DATABASE_URL";
+    connection = process.env[which] ?? "";
+    let host = "";
+    try { host = new URL(connection).hostname; } catch { /* Refuse without printing credentials. */ }
+    if (host.replace(/-pooler(?=\.)/, "").split(".")[0] !== "ep-dry-river-axwtolzc" || !host.endsWith(".neon.tech")) {
+      throw new Error("db:apply: REFUSED — journal inspection requires the approved ep-dry-river endpoint");
+    }
+  } else if (PRODUCTION) {
     try {
       const handle = resolveProductionWriteHandle();
       if (handle.host.replace(/-pooler(?=\.)/, "").split(".")[0] !== "ep-dry-river-axwtolzc" || !handle.host.endsWith(".neon.tech")) {
@@ -180,15 +191,15 @@ export async function applyMigrations(args: string[], options: { beforeContract?
   type AppliedMigration = { hash: string; created_at: string | number };
 
   // A dry first run stays SELECT-only; concurrent first applies share the DDL lock.
-  const journalState = (await sql`
-    SELECT to_regclass('drizzle.__drizzle_migrations') IS NOT NULL AS exists
-  `) as { exists: boolean }[];
+  const journalState = (INSPECT_ONLY
+    ? (await sql.transaction(tx => [tx`SELECT to_regclass('drizzle.__drizzle_migrations') IS NOT NULL AS exists`], { readOnly: true }))[0]
+    : await sql`SELECT to_regclass('drizzle.__drizzle_migrations') IS NOT NULL AS exists`) as { exists: boolean }[];
   let applied: AppliedMigration[] = [];
   if (journalState[0]?.exists) {
-    applied = (await sql`
-      SELECT hash, created_at FROM drizzle.__drizzle_migrations ORDER BY created_at
-    `) as AppliedMigration[];
-  } else if (!DRY) {
+    applied = (INSPECT_ONLY
+      ? (await sql.transaction(tx => [tx`SELECT hash, created_at FROM drizzle.__drizzle_migrations ORDER BY created_at`], { readOnly: true }))[0]
+      : await sql`SELECT hash, created_at FROM drizzle.__drizzle_migrations ORDER BY created_at`) as AppliedMigration[];
+  } else if (!DRY && !INSPECT_ONLY) {
     // An absent journal means contracts are pending; verify before any bootstrap DDL.
     await beforeContract();
     const setup = await sql.transaction((transaction) => [
@@ -249,8 +260,12 @@ export async function applyMigrations(args: string[], options: { beforeContract?
   // correctly reporting failure to every caller that checks one. Letting the
   // event loop drain on its own gives the true code.
   const nothingPending = pending.length === 0;
+  if (INSPECT_ONLY && !nothingPending) {
+    throw new Error("db:apply: REFUSED — pending expand migrations require WTP_PRODUCTION_DATABASE_URL_WRITE; inspection writes=0");
+  }
   if (nothingPending) {
     console.log(`\nNo pending ${PHASE ?? "selected"} migrations within this plan.`);
+    if (INSPECT_ONLY) console.log("Production journal inspection complete; writes=0; no writer required.");
   } else if (DRY) {
     console.log("\nDRY RUN — nothing applied.");
   }

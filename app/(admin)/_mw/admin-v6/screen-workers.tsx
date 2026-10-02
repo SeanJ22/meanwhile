@@ -273,7 +273,7 @@ export function WorkersScreen() {
       </header>
 
       {w?.update ? (
-        <Card title={w.update.title} tone="warn" aside={<span className={s.meta}>Checked {mst(w.update.checkedAt)}</span>}>
+        <Card title={w.update.title} tone={w.update.status === "SUCCEEDED" ? undefined : "warn"} aside={<span className={s.meta}>Checked {mst(w.update.checkedAt)}</span>}>
           <p className={s.p}>{w.update.what}</p>
           <dl className={s.facts}>
             <dt>Why it matters</dt><dd>{w.update.impact}</dd>
@@ -281,10 +281,10 @@ export function WorkersScreen() {
             <dt>What happens next</dt><dd>{w.update.next}</dd>
             <dt>Do you need to act?</dt><dd>{w.update.youNeedToAct}</dd>
           </dl>
-          <div className={s.inline}>
-            <button type="button" className={cx(s.btn, s.btnPrimary)} onClick={() => v.open({ type: "fix", id: w.update!.fixId })}>See the update and what’s blocking it</button>
+          {w.update.fixId && <div className={s.inline}>
+            <button type="button" className={cx(s.btn, s.btnPrimary)} onClick={() => v.open({ type: "fix", id: w.update!.fixId! })}>See the update and what’s blocking it</button>
             <Actions actions={[{ kind: "focus", target: w.update.fixId }]} />
-          </div>
+          </div>}
           <Technical lines={w.update.technical} />
         </Card>
       ) : (

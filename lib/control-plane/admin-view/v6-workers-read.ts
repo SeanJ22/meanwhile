@@ -36,6 +36,8 @@ import { laneGauges, queueLanesOf } from "../scheduler/lane-reading.ts";
 import type { ObligationAssignment } from "../scheduler/obligation.ts";
 import { RESEARCH_STATE_ID, type RunningScout } from "../scheduler/research-policy.ts";
 import { RUNNER_PROGRESS_HEARTBEAT_FIELDS } from "./runner-progress-read.ts";
+import { migrationOutcomeOf, PRODUCTION_MIGRATION_HEADLINE } from "../../db/migration-phases.ts";
+import type { UpdateCard } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import { runnerCycleOf, type CycleHeartbeat, type RunnerCycle } from "../runner-standing.ts";
 import { huntName, scopedHunts, sectionRevision, validateV6Query, type AdminV6SectionEnvelope, type V6PlaceScope, type V6Refusal } from "./v6-hunts-read.ts";
 
@@ -85,7 +87,7 @@ export interface AdminV6WorkersView {
   readonly jobs: null;
   readonly waiting: readonly V6WaitingItem[] | null;
   readonly events: readonly V6WorkerEvent[] | null;
-  readonly update: null;
+  readonly update: UpdateCard | null;
   readonly next: readonly string[] | null;
 }
 
@@ -110,6 +112,7 @@ export interface V6WorkersSources {
   readonly sourceEvents: { readonly state: "READ"; readonly records: readonly unknown[] } | { readonly state: "UNREAD" };
   /** Null when the research state was not read or its running list is not a valid bounded list. */
   readonly scouts: readonly ScoutEvidence[] | null;
+  readonly migration?: unknown;
 }
 
 const clock = (value: unknown): value is string => typeof value === "string" && Number.isFinite(Date.parse(value));
@@ -135,12 +138,25 @@ export function runningScoutsOf(research: unknown): readonly RunningScout[] | nu
 
 /** Every read this section makes, each bounded. Nothing here writes. */
 export async function readV6WorkersSources(repos: ControlPlaneRepositories, readAt: string): Promise<V6WorkersSources> {
-  const [config, heartbeat, research, sourceEvents] = await Promise.all([
+  const [config, heartbeat, research, sourceEvents, migration] = await Promise.all([
     readAdminConfig(repos),
     point<Partial<CycleHeartbeat>>(() => repos.runnerHeartbeat.readNarrowed(RUNNER_ID, RUNNER_PROGRESS_HEARTBEAT_FIELDS)),
     point<Record<string, unknown>>(() => repos.researchState.readNarrowed(RESEARCH_STATE_ID, WORKERS_RESEARCH_FIELDS)),
     repos.ownerDigests.readRecent(HUNT_SOURCE_PROGRESS_LOG_KEY, WORKERS_SOURCE_EVENT_LIMIT)
       .then(records => ({ state: "READ" as const, records }), () => ({ state: "UNREAD" as const })),
+    Promise.all([
+      repos.ownerDigests.readRecentWhere("owner-digest", ["headline"], PRODUCTION_MIGRATION_HEADLINE, 1,
+        { headline: true, writtenAt: true, migration: ["phase", "state", "summary", "targetHost"] }),
+      ...(["expand", "contract"] as const).map(phase =>
+        repos.ownerDigests.readRecentWhere("owner-digest", ["migration", "phase"], phase, 1,
+          { headline: true, writtenAt: true, migration: ["phase", "state", "summary", "targetHost"] })),
+    ])
+      .then(rows => rows.flat().filter((row): row is { headline: string; writtenAt: string; migration: unknown } =>
+        row !== null && typeof row === "object" && "headline" in row && row.headline === PRODUCTION_MIGRATION_HEADLINE &&
+        "writtenAt" in row && clock(row.writtenAt) && "migration" in row && migrationOutcomeOf(row.migration) !== null)
+        .sort((a, b) => Date.parse(b.writtenAt) - Date.parse(a.writtenAt))
+        .filter((row, index, rows) => rows.findIndex(other => other.writtenAt === row.writtenAt &&
+          migrationOutcomeOf(other.migration)?.phase === migrationOutcomeOf(row.migration)?.phase) === index), () => ({ unread: true })),
   ]);
   const running = research.state === "READ" ? runningScoutsOf(research.value) : null;
   const scouts = running === null ? null : await Promise.all(running.map(async (scout): Promise<ScoutEvidence> => {
@@ -158,7 +174,7 @@ export async function readV6WorkersSources(repos: ControlPlaneRepositories, read
     readAt,
     config: config.kind === "STORE_UNREACHABLE" ? { state: "UNREAD", detail: config.detail }
       : { state: "READ", scopes: parsed?.scopes ?? [], malformed: parsed?.malformed ?? 0 },
-    heartbeat, research, sourceEvents, scouts,
+    heartbeat, research, sourceEvents, scouts, migration,
   };
 }
 
@@ -462,16 +478,37 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
   if (nextDue) next.push(Date.parse(nextDue) > Date.parse(now) ? `Next round due ${mstWords(nextDue)}.` : `Next round was due ${mstWords(nextDue)}.`);
   missing.push(`${DEP_WORKER_ACTIVE_INDEX}: the full list of jobs running now is not shown. Paid research jobs are checked one by one and appear under What changed, but plain-code collection jobs run outside that list and the store has no bounded read of every unexpired work claim yet.`);
 
+  const migrationRecords = Array.isArray(sources.migration) ? sources.migration.slice(0, 3) : [];
+  const migrationRecord = migrationRecords[0] as { writtenAt?: unknown; migration?: unknown } | undefined;
+  const migration = migrationOutcomeOf(migrationRecord?.migration);
+  const migrationFailure = migrationRecords.map(record => migrationOutcomeOf(record?.migration))
+    .find(outcome => outcome && outcome.state !== "SUCCEEDED");
+  const migrationAt = clock(migrationRecord?.writtenAt) ? migrationRecord.writtenAt : null;
+  if (sources.migration && !Array.isArray(sources.migration)) missing.push("The production migration outcome could not be read.");
+  const update: UpdateCard | null = migration && migrationAt ? {
+    title: "Production migrations", checkedAt: migrationAt,
+    what: migrationRecords.map(record => {
+      const outcome = migrationOutcomeOf(record?.migration);
+      return outcome ? `${outcome.phase}: ${outcome.state.toLowerCase()}. ${outcome.summary}` : "Unread migration outcome.";
+    }).join("\n"),
+    impact: "Expand runs before a deploy; contract runs after the matching code is serving.",
+    owner: "Deployment and runner", next: migrationFailure
+      ? `Engineering repairs the ${migrationFailure.phase} migration ${migrationFailure.state === "FAILED" ? "failure" : "refusal"}; that release step remains held.`
+      : "The recorded migration phases succeeded; the runner follows deployed updates automatically.",
+    youNeedToAct: "No action needed.", fixId: null, status: migrationFailure?.state ?? migration.state,
+    technical: [`Approved endpoint: ${migration.targetHost}`],
+  } : null;
   const data: AdminV6WorkersView = {
     status, jobs: null,
     waiting: waiting.length > 0 || waitingComplete ? waiting : null,
     events: events.length > 0 ? events.slice(0, WORKERS_EVENT_LIMIT).map(({ iso: _iso, ...e }) => e) : null,
-    update: null,
+    update,
     next: next.length > 0 ? next : null,
   };
   if (events.length > WORKERS_EVENT_LIMIT) missing.push(`Showing the newest ${WORKERS_EVENT_LIMIT} of ${events.length} changes read.`);
   const revision = sectionRevision("workers", {
     scopeKey, config: sources.config.state === "READ" ? sources.config.scopes.map(d => [d.key, d.receiptId]) : null,
+    migration: sources.migration ?? null,
     heartbeat: sources.heartbeat.state === "READ" ? sources.heartbeat.revision : sources.heartbeat.state,
     research: sources.research.state === "READ" ? sources.research.revision : sources.research.state,
     sources: read?.rows.map(r => [r.p.taskId, r.p.stage, r.at]) ?? null,

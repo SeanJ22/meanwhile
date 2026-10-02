@@ -3,6 +3,8 @@
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { captureEvent } from "@/lib/events/client";
+
 import { COLLECTION_NOTE } from "@/lib/ballot/collection-note";
 import {
   BATTLECARD_SECTIONS,
@@ -254,7 +256,10 @@ export function CandidateBattlecard({
       <button
         type="button"
         data-battlecard-pill
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          captureEvent({ type: "CARD_OPEN", cardId: `BATTLECARD:${subjectId}`, cardKind: "BATTLECARD" });
+          setOpen(true);
+        }}
         aria-haspopup="dialog"
         aria-expanded={open}
         /*

@@ -9,8 +9,18 @@ const MIB = 1024 * 1024;
 export const WORKER_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = { route: 285, scout: 248, lease: 342, national: 1258 };
 /** Rounded up from the ordinary staging research parent's 3,069,235,200-byte peak. */
 export const RESEARCH_PARENT_PEAK_MIB = 2928;
-/** Measured combined promoter and national child peak over a 150-second place job. */
-export const NATIONAL_PLACE_PEAK_MIB = 999;
+/** Promoter peak 1,923 MiB plus the held national-worker peak; both may still grow. */
+export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
+/** Rounded-up entry peaks from the ordinary staging routine pass. */
+const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
+  "census-geography-refresh.mts": 1200,
+  "promote-manual-civic-projection.mts": 1042,
+  "state-rollcalls.mts": 480,
+  "acs-population-promote.mts": 465,
+  "fetch-congress-legislators.mts": 384,
+  "campaign-finance-az-pima-transactions.mts": 368,
+  "build-nj-morris-ballot.mts": 345,
+};
 export const REGISTRY_ROSTER_PUBLICATION_PEAK_MIB = 4012;
 export const WORKER_MEMORY_HEADROOM_MIB = 768;
 
@@ -131,8 +141,8 @@ export interface WorkerProcessSlots {
 export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
   return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
     peakBytes: memory.peakBytes ?? (entry => entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB :
-      entry === "registry-runtime-bindings" || entry.startsWith("worker-publication:registry-runtime-bindings:")
-        ? REGISTRY_ROSTER_PUBLICATION_PEAK_MIB * MIB : WORKER_ENTRY_PEAK_MIB.lease! * MIB) });
+      entry === "registry-runtime-bindings" || entry.startsWith("registry-runtime-bindings/") || entry.startsWith("worker-publication:registry-runtime-bindings:")
+        ? REGISTRY_ROSTER_PUBLICATION_PEAK_MIB * MIB : (ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB.lease!) * MIB) });
 }
 
 export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
@@ -146,11 +156,17 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     return WORKER_ENTRY_PEAK_MIB[kind]! * MIB;
   });
   const waiting: { entry: string; deadline: number; resolve: (release: WorkerMemoryRelease) => void; reject: (error: Error) => void }[] = [];
-  const mutate = (operation: (state: HostState) => void): void => {
+  const mutate = (operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void): void => {
     try {
       if (!host.transact(operation)) setTimeout(() => mutate(operation), 50).unref();
     } catch { setTimeout(() => mutate(operation), 1000).unref(); }
   };
+  if ((memory.parentPeakBytes ?? 0) > 0) mutate((state, rows) => {
+    if (state.reservations.some(row => row.owner !== process.pid && row.pid !== null && descendants(row.pid, rows).has(process.pid))) return;
+    const parent = state.parents.find(row => row.pid === process.pid);
+    if (parent) parent.peak = Math.max(parent.peak, memory.parentPeakBytes!);
+    else state.parents.push({ pid: process.pid, peak: memory.parentPeakBytes! });
+  });
   const drain = (): void => {
     clearTimeout(wake); wake = undefined;
     const now = Date.now();

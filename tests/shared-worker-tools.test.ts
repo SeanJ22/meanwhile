@@ -65,8 +65,8 @@ test("routine sources, reader repairs and catch-up share reservations including 
   national(); reader(); release();
 });
 
-test("the measured national place pair admits four jobs while retaining the 768 MiB margin", async () => {
-  for (const [availableMiB, expected] of [[4700, 3], [4764, 4]] as const) {
+test("national pairs retain both measured entry peaks and the 768 MiB margin", async () => {
+  for (const [availableMiB, expected] of [[2 * NATIONAL_PLACE_PEAK_MIB + 767, 1], [2 * NATIONAL_PLACE_PEAK_MIB + 768, 2]] as const) {
     const slots = routineProcessSlots({ availableBytes: () => availableMiB * 1024 * 1024 });
     const active = await Promise.all(Array.from({ length: expected }, (_, i) => slots.acquire(`national-place:zip-${i}`)));
     let admitted = false;
@@ -79,6 +79,17 @@ test("the measured national place pair admits four jobs while retaining the 768 
     for (const done of active) done();
     release();
   }
+});
+
+test("all publication siblings and routine script families reserve their measured peak", async () => {
+  const mib = 1024 * 1024;
+  const slots = routineProcessSlots({ availableBytes: () => (768 + 1042) * mib });
+  const first = await slots.acquire("worker-publication:ballot-navigation:one/promote-manual-civic-projection.mts");
+  await assert.rejects(slots.acquire("worker-publication:ballot-navigation:two/promote-manual-civic-projection.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
+  first();
+  const census = routineProcessSlots({ availableBytes: () => (768 + 1199) * mib });
+  await assert.rejects(census.acquire("census-geography/census-geography-refresh.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
+  const ordinary = await census.acquire("reader:meeting/ordinary-source.mts"); ordinary();
 });
 
 test("legacy registry roster publications reserve their measured RSS and queue until memory is released", async () => {
@@ -148,6 +159,16 @@ test("research and routine pools use one host budget, and memory waits expire wi
   active();
   const next = await routine.acquire("routine", Date.now() + 100);
   next();
+});
+
+test("research parent growth is reserved before its first worker asks for admission", async () => {
+  const host = workerMemoryHost({ processes: () => [] });
+  const memory = { host, availableBytes: () => 1000, headroomBytes: 100, peakBytes: () => 600 };
+  workerProcessSlots(() => 10, { ...memory, parentPeakBytes: 400 });
+  const routine = routineProcessSlots(memory);
+  const result = await routine.acquire("routine", Date.now() + 25).then(release => { release(); return "admitted"; },
+    error => { assert.match(error.message, /WORKER_MEMORY_DEADLINE/); return "deferred"; });
+  assert.equal(result, "deferred", "routine must pay for the research parent's future growth while research is still preparing its queue");
 });
 
 test("children already at their peaks do not reserve their current RSS a second time", async () => {

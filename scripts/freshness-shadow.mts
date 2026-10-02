@@ -388,6 +388,9 @@ import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 
+const workerSlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
+  { parentPeakBytes: RESEARCH_PARENT_PEAK_MIB * 1024 * 1024, admissionsOpen: () => !releaseDrainRequested });
+
 const ROOT = process.cwd();
 const CONTROL_PLANE_ROOT = join(ROOT, ".runtime", "control-plane", "freshness-shadow");
 const RUNS_DIR = join(ROOT, ".runtime", "freshness-shadow-runs");
@@ -1958,8 +1961,6 @@ const paidWorkerCapacity = (readyWork?: number) => {
 };
 // Paid admission happens before handing out a Scout. Held evidence and ordinary
 // code can still use the existing memory slots while the paid lane is closed.
-const workerSlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
-  { parentPeakBytes: RESEARCH_PARENT_PEAK_MIB * 1024 * 1024, admissionsOpen: () => !releaseDrainRequested });
 const paidScoutSlots = paidWorkerSlots(workerSlots, paidWorkerCapacity);
 // Hand out durable leases before unrelated histories or parent execution.
 const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,

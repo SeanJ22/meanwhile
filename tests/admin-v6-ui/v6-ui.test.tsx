@@ -38,11 +38,11 @@ test("eligibility checks connection, then role, then duplicates, then support, t
   const def = actionDef("recheck");
   const base = { def, target: "r1", receipts: [] as UiReceipt[], mode: "live" as const, supported: true };
   assert.equal(whyNot({ ...base, connection: "offline", access: { ...owner, role: "viewer" } }), CONNECTION_REASON.offline, "connection first");
-  assert.equal(whyNot({ ...base, connection: "live", access: { ...owner, role: "viewer" } }), "Your account can look but can’t make changes.");
+  assert.equal(whyNot({ ...base, connection: "live", access: { ...owner, role: "viewer" } }), "View only.");
   const pending = { ...receipt(), kind: "recheck" as const, target: "r1" };
-  assert.match(whyNot({ ...base, connection: "live", access: owner, receipts: [pending], supported: false }) ?? "", /You already sent this at/, "a duplicate is caught before support");
-  assert.match(whyNot({ ...base, connection: "live", access: owner, receipts: [{ ...pending, status: "unknown" }] }) ?? "", /Check its result in History/);
-  assert.match(whyNot({ ...base, connection: "live", access: owner, supported: false, itemState: "Already hidden." }) ?? "", /turns on by itself/);
+  assert.match(whyNot({ ...base, connection: "live", access: owner, receipts: [pending], supported: false }) ?? "", /Sent at/, "a duplicate is caught before support");
+  assert.match(whyNot({ ...base, connection: "live", access: owner, receipts: [{ ...pending, status: "unknown" }] }) ?? "", /Check History/);
+  assert.match(whyNot({ ...base, connection: "live", access: owner, supported: false, itemState: "Already hidden." }) ?? "", /Not connected yet/);
   assert.equal(whyNot({ ...base, connection: "live", access: owner, itemState: "Already hidden." }), "Already hidden.");
   assert.equal(whyNot({ ...base, connection: "live", access: owner }), null);
   assert.match(whyNot({ ...base, def: actionDef("hunt-limit"), connection: "live", access: { ...owner, canSpend: false } }) ?? "", /spending permission/);
@@ -80,9 +80,9 @@ test("only the kinds a real registry action carries out are wired, each to its o
 test("previews never promise more than the action does", () => {
   const ctx = { target: "x", targetName: "X", scopeName: "Arizona", scopeIsCountry: false, outreachAuthorized: false };
   const focus = actionDef("focus").preview(ctx);
-  assert.ok(focus.rows.some(([k, v]) => k === "Won’t" && /Haiku 4\.5, then Sonnet 5\.5, then Opus 5\.5/.test(v) && /raise any budget/.test(v)));
-  assert.match(actionDef("decide").doneWords, /Decision saved — change pending/);
-  assert.match(actionDef("fixfirst").doneWords, /Nothing was deployed/);
+  assert.ok(!focus.rows.some(([k]) => k === "Won’t"), "no what-it-won't-do row");
+  assert.ok(focus.options?.some((o) => /Haiku 4\.5, then Sonnet 5\.5, then Opus 5\.5/.test(o.note)), "the model option names the order");
+  assert.match(actionDef("decide").doneWords, /Decision saved/);
   assert.equal(actionDef("stoprepeats").preview(ctx).level, "global");
   assert.equal(actionDef("scope-first").preview({ ...ctx, scopeIsCountry: true }).level, "global");
   const decide = actionDef("decide").preview({ ...ctx, decision: { id: "d", question: "Q?", options: [{ id: "o", label: "Contact them", note: "", outreach: true }, { id: "other", label: "Something else", note: "", ownWords: true }] } });

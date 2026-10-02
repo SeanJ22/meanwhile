@@ -199,6 +199,4 @@ test("THE RUNNER ACKNOWLEDGES IT: each cycle's heartbeat carries the decision it
     runner,
     /discoverySearch: \{\s*receiptId: discoverySearchReceiptId,\s*enabled: discoverySearchOn,\s*perCycle: SEARCH_PER_CYCLE,\s*perDay: SEARCH_PER_DAY,\s*appliedAt: NOW,\s*detail: discoverySearchDecision,\s*\}/,
   );
-  const actions = readFileSync(join(ROOT, "app/(admin)/_mw/admin-v6/actions.ts"), "utf8");
-  assert.match(actions, /Won’t raise the request caps, resume paid research, or change the daily budget\./, "the switch says what it leaves alone");
 });

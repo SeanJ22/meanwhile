@@ -60,8 +60,16 @@ test("cross-obligation source evidence retains original artifact/Attempt ownersh
   const sourceItem=createWorkItem({project:h.item.project,subject:"fixture:source-discovery",obligation:"Previously observed publisher source",why:"Cross-obligation source provenance fixture",now:seedAttempt.startedAt});
   const snapshot={...original.facts,workItems:[...original.facts.workItems,sourceItem],artifacts:original.facts.artifacts.map(artifact=>artifact.artifactId===observation.artifactId?{...artifact,workItemId:sourceItem.id}:artifact),
     attempts:original.facts.attempts.map(attempt=>attempt.id===seedAttempt.id?{...attempt,workItemId:sourceItem.id}:attempt),routeTasks:original.facts.routeTasks.map(task=>task.id===seedAttempt.routeTaskId?{...task,workItemId:sourceItem.id}:task)};
+  // Repeat a held record around another owner's evidence: indexes may neither
+  // collapse it nor reorder references by the order in a worker's input list.
+  snapshot.artifacts.push(snapshot.artifacts.find(artifact=>artifact.artifactId===observation.artifactId)!);
+  snapshot.attempts.push(snapshot.attempts.find(attempt=>attempt.id===seedAttempt.id)!);
   const projected=projectAutonomousActivity(snapshot,{observedAt:h.now()}).find(item=>item.workItem.id===h.item.id)!;
   assert.equal(projected.referencedArtifacts[0].workItemId,sourceItem.id); assert.equal(projected.referencedAttempts[0].workItemId,sourceItem.id);
+  assert.deepEqual(projected.referencedArtifacts,snapshot.artifacts.filter(artifact=>artifact.workItemId===sourceItem.id),
+    "cross-owner repeated artifacts keep their original row order");
+  assert.deepEqual(projected.referencedAttempts,snapshot.attempts.filter(attempt=>attempt.workItemId===sourceItem.id),
+    "cross-owner repeated Attempts keep their original row order");
   assert.ok(!projected.accounting.attemptIds.includes(seedAttempt.id)); assert.ok(!projected.timeline.some(event=>event.kind==="ATTEMPT_STARTED"&&event.attemptId===seedAttempt.id));
   assert.ok(!projected.evidenceGaps.some(gap=>gap.startsWith("WORKER_WALK_ATTRIBUTION_UNPROVEN:")));
 });

@@ -48,7 +48,8 @@ import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { AUTO_CROSSWALK_VENDORS, autoCrosswalkReviewerId, reviewDiscoveryWalk, type HeldBytes, type RegisteredGovernment } from "../lib/control-plane/discovery/auto-crosswalk.ts";
 import { CURRENT_CALENDAR_READS_SQL } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { reviewedBodyForGovernment } from "../lib/control-plane/discovery/reviewed-body.ts";
-import { indexVault, readHeldBytes, type HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { readHeldBytes, type HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { heldArtifactCaptures } from "../lib/civic-data/held-artifact-captures.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import type { MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discovery.ts";
 import { digestValueClosure } from "../lib/ops/generator-digest.ts";
@@ -117,6 +118,7 @@ async function main(): Promise<void> {
     readonly reference: LoadedReference;
   } | { readonly unread: string }>();
   for (const state of new Set(walks.map((w) => w.attempt.stateCode.toUpperCase()))) {
+    console.log(`RCD_PROGRESS meeting-body-crosswalk registration ${state}`);
     try {
       const read = await readRegistrationProjection(state, { store, bypassCache: true, now });
       const input = read.kind === "PROMOTED" ? promotedInputRef("REGISTRATION", read.metadata.scope, read.metadata.versionId, read.value, read.metadata.promotedAt) : null;
@@ -142,12 +144,15 @@ async function main(): Promise<void> {
   }
 
   /* The vault, read only: every body the reviewed walks saved, read once. */
-  const vault = await indexVault(join(process.cwd(), "data", "control-plane", "vault"));
+  const capture = await heldArtifactCaptures(join(process.cwd(), "data", "control-plane", "vault"),
+    walks.filter(({ attempt }) => attempt.found.some(row => AUTO_CROSSWALK_VENDORS.has(row.vendor)))
+      .flatMap(({ attempt }) => [...attempt.found, ...attempt.steps].flatMap(row => row.artifactId ? [row.artifactId] : [])), controlPlane);
   const held = new Map<string, HeldBytes>();
   const cite = async (artifactId: string | null): Promise<void> => {
     if (artifactId === null || held.has(artifactId)) return;
-    const artifact: HeldVaultArtifact | undefined = vault.byId.get(artifactId);
-    if (artifact === undefined || artifact.tier === "RESTRICTED_RAW") return;
+    const artifact: HeldVaultArtifact | null = await capture(artifactId);
+    console.log(`RCD_PROGRESS meeting-body-crosswalk capture ${artifactId}`);
+    if (artifact === null || artifact.tier === "RESTRICTED_RAW") return;
     try {
       const text = new TextDecoder().decode(await readHeldBytes(artifact));
       held.set(artifactId, {
@@ -167,6 +172,7 @@ async function main(): Promise<void> {
   };
   const reviews: AutoCrosswalkReview[] = [];
   for (const walk of walks) {
+    console.log(`RCD_PROGRESS meeting-body-crosswalk ${walk.attempt.jurisdictionId}`);
     if (!walk.attempt.found.some((f) => AUTO_CROSSWALK_VENDORS.has(f.vendor))) continue;
     for (const f of walk.attempt.found) await cite(f.artifactId);
     for (const s of walk.attempt.steps) if (s.status !== null && s.status >= 200 && s.status < 300) await cite(s.artifactId);

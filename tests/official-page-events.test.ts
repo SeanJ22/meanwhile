@@ -7,18 +7,20 @@ import {
   meetingPartitionForRow,
   meetingPartitionId,
 } from "../lib/civic-data/meeting-partitions.ts";
-import { SOURCE_AUTHORITIES, isOfficialSource } from "../lib/civic-data/source-authority.ts";
+import { SOURCE_AUTHORITIES, isOfficialSource, type OfficialLinkingPage } from "../lib/civic-data/source-authority.ts";
 import { isOnlineOnly } from "../lib/meetings/online.ts";
 import { wiringForMeetingSource } from "../lib/registry/source-wiring.ts";
 import {
   extractOfficialPageEvents,
   makeOfficialPageEventsSource,
   officialLinkingPageFrom,
+  officialLinkingPageFromAsync,
   statedTime,
   verifyExtractedEvents,
   verifyOfficialPageEvents,
   type OfficialPageBody,
   type OfficialPageRaw,
+  type LazyOfficialPage,
 } from "../lib/sources/official-page-events/index.ts";
 
 test('saved official chains reach external calendars without trusting an unlinked host',()=>{
@@ -30,6 +32,159 @@ test('saved official chains reach external calendars without trusting an unlinke
   assert.equal(officialLinkingPageFrom('https://unlinked.example.org',pages),null);
   assert.equal(officialLinkingPageFrom('https://calendar.example.edu/events',pages.slice(1)),null);
  }
+});
+
+/** Historical resolver retained only as the equivalence oracle. */
+function previousLinkingPageFrom(url: string, pages: readonly { canonicalUrl: string; text: string }[]): OfficialLinkingPage | null {
+  if (isOfficialSource(url)) return null;
+  const chains = new Map<string, OfficialLinkingPage>();
+  for (const page of pages) if (isOfficialSource(page.canonicalUrl)) chains.set(page.canonicalUrl, { url: page.canonicalUrl, html: page.text });
+  for (let pass = 0; pass < pages.length; pass++) {
+    for (const parent of chains.values()) if (isOfficialSource(url, parent)) return parent;
+    let added = false;
+    for (const page of pages) {
+      if (chains.has(page.canonicalUrl)) continue;
+      const parent = [...chains.values()].find(chain => isOfficialSource(page.canonicalUrl, chain));
+      if (parent) { chains.set(page.canonicalUrl, { url: page.canonicalUrl, html: page.text, linkingPage: parent }); added = true; }
+    }
+    if (!added) break;
+  }
+  return [...chains.values()].find(chain => isOfficialSource(url, chain)) ?? null;
+}
+
+test("official linking index matches the previous resolver, including append order, aliases and repeated URLs", () => {
+  let seed = 643;
+  const random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 2 ** 32; };
+  for (let trial = 0; trial < 200; trial++) {
+    const urls = ["https://first.gov/root", "http://www.second.gov/root", ...Array.from({ length: 8 }, (_, i) => `https://host${i}.example.org/page`)];
+    if (trial >= 100) for (let i = urls.length - 1; i > 0; i--) {
+      const other = Math.floor(random() * (i + 1));
+      [urls[i], urls[other]] = [urls[other], urls[i]];
+    }
+    const pages: { canonicalUrl: string; text: string }[] = [];
+    for (let i = 0; i < (trial < 100 ? 14 : urls.length); i++) {
+      const canonicalUrl = trial < 100 ? urls[Math.floor(random() * urls.length)] : urls[i];
+      const text = Array.from({ length: 3 }, () => {
+        const target = urls[Math.floor(random() * urls.length)];
+        const href = random() < 0.3 ? target.replace("https:", "") : target;
+        return `<a href='${href}?x=1&amp;y=2'>link</a>`;
+      }).join("") + '<img src="/relative"><a href=mailto:someone@example.org>mail</a><a href="https://gov.example.com/">unofficial</a>';
+      pages.push({ canonicalUrl, text });
+      for (const url of [...urls, "https://www.host2.example.org:443/other", "https://unlinked.example.org", "invalid"]) {
+        assert.deepEqual(officialLinkingPageFrom(url, pages), previousLinkingPageFrom(url, pages), `trial ${trial}, prefix ${pages.length}, ${url}`);
+      }
+    }
+  }
+});
+
+test("official linking index answers 500 lookups over 3,000 pages with three-deep chains in under two seconds", () => {
+  const pages: { canonicalUrl: string; text: string }[] = [];
+  for (let i = 0; i < 750; i++) {
+    pages.push({ canonicalUrl: `https://root${i}.gov/`, text: `<a href="https://a${i}.example.org/">first</a>` });
+    pages.push({ canonicalUrl: `https://c${i}.example.org/`, text: `<a href="https://calendar${i}.example.org/">calendar</a>` });
+    pages.push({ canonicalUrl: `https://b${i}.example.org/`, text: `<a href="https://c${i}.example.org/">third</a>` });
+    pages.push({ canonicalUrl: `https://a${i}.example.org/`, text: `<a href="https://b${i}.example.org/">second</a>` });
+  }
+  const start = performance.now();
+  for (let i = 0; i < 500; i++) {
+    const chain = officialLinkingPageFrom(`https://calendar${i}.example.org/events`, pages);
+    assert.equal(chain?.url, `https://c${i}.example.org/`);
+    assert.equal(chain?.linkingPage?.linkingPage?.linkingPage?.url, `https://root${i}.gov/`);
+  }
+  const elapsed = performance.now() - start;
+  console.log(`official-linking-index: pages=3000 lookups=500 elapsedMs=${elapsed.toFixed(2)}`);
+  assert.ok(elapsed < 2000, `${elapsed.toFixed(2)} ms`);
+});
+
+test("lazy linking preserves original capture HTML, duplicate editions and late roots after every append", async () => {
+  const pages: { canonicalUrl: string; text: string }[] = [];
+  const lazy: LazyOfficialPage[] = [];
+  const captures = [
+    { canonicalUrl: "https://school.example.org/", text: '<p>first school capture</p><a href="//calendar.example.org/events">calendar</a>' },
+    { canonicalUrl: "https://school.example.org/", text: '<p>later school capture</p><a href="https://other.example.org">other</a>' },
+    { canonicalUrl: "https://unrelated.example.org/", text: '<p>unrelated</p>' },
+    { canonicalUrl: "https://county.gov/directory", text: '<p>first directory</p><a href="https://www.school.example.org:443/">school</a>' },
+    { canonicalUrl: "https://county.gov/directory", text: '<p>latest directory</p><img src="https://school.example.org/">' },
+    { canonicalUrl: "https://first.gov/", text: '<a href="https://other.example.org/">earlier root order</a>' },
+  ];
+  for (const capture of captures) {
+    pages.push(capture);
+    lazy.push({ canonicalUrl: capture.canonicalUrl, readText: async () => capture.text });
+    for (const url of ["https://calendar.example.org/events", "https://school.example.org/", "https://other.example.org/", "https://unlinked.example.org", "https://county.gov/", "invalid"]) {
+      assert.deepEqual(await officialLinkingPageFromAsync(url, lazy), previousLinkingPageFrom(url, pages));
+    }
+  }
+});
+
+test("lazy linking shares ingestion and reloads only selected chain captures, including appended pages", async () => {
+  const reads = [0, 0, 0, 0];
+  const captures = [
+    { canonicalUrl: "https://county.gov/", text: '<p>original root</p><a href="https://school.example.org/">school</a>' },
+    { canonicalUrl: "https://school.example.org/", text: '<p>original school</p><a href="https://calendar.example.org/">calendar</a>' },
+    { canonicalUrl: "https://unrelated.gov/", text: '<p>unrelated capture</p>' },
+    { canonicalUrl: "https://calendar.example.org/", text: '<p>original calendar</p><a href="https://events.example.org/">events</a>' },
+  ];
+  const descriptor = (i: number): LazyOfficialPage => ({ canonicalUrl: captures[i].canonicalUrl, readText: async () => { reads[i]++; return captures[i].text; } });
+  const lazy = [descriptor(0), descriptor(1), descriptor(2)];
+  const results = await Promise.all([officialLinkingPageFromAsync("https://calendar.example.org/", lazy), officialLinkingPageFromAsync("https://calendar.example.org/", lazy)]);
+  for (const result of results) assert.deepEqual(result, previousLinkingPageFrom("https://calendar.example.org/", captures.slice(0, 3)));
+  assert.deepEqual(reads, [3, 3, 1, 0], "one ingestion per capture; each lookup reloads only its selected two pages");
+  assert.equal(await officialLinkingPageFromAsync("https://unlinked.example.org/", lazy), null);
+  assert.deepEqual(reads, [3, 3, 1, 0], "unlinked lookup reads no bodies after ingestion");
+  lazy.push(descriptor(3));
+  assert.deepEqual(await officialLinkingPageFromAsync("https://events.example.org/", lazy), previousLinkingPageFrom("https://events.example.org/", captures));
+  assert.deepEqual(reads, [4, 4, 1, 2], "only the new capture is ingested and the chosen three-page chain reloaded");
+  console.log(`lazy-official-linking: captures=4 concurrentLookups=2 reads=${reads.join(",")} unrelatedCaptureReads=${reads[2]}`);
+});
+
+test("lazy linking propagates a source read failure and retries without re-ingesting earlier captures", async () => {
+  const reads = [0, 0];
+  const pages: LazyOfficialPage[] = [
+    { canonicalUrl: "https://county.gov/", readText: async () => { reads[0]++; return '<a href="https://school.example.org/">school</a>'; } },
+    { canonicalUrl: "https://school.example.org/", readText: async () => { if (++reads[1] === 1) throw new Error("capture unavailable"); return '<a href="https://calendar.example.org/">calendar</a>'; } },
+  ];
+  await assert.rejects(officialLinkingPageFromAsync("https://calendar.example.org/", pages), /capture unavailable/);
+  assert.ok(isOfficialSource("https://calendar.example.org/", await officialLinkingPageFromAsync("https://calendar.example.org/", pages)));
+  assert.deepEqual(reads, [2, 3]);
+});
+
+test("lazy ingestion runs sixteen reads at once while preserving source order despite out-of-order completion", async () => {
+  let active = 0;
+  let peak = 0;
+  const readOrder: number[] = [];
+  const captures = Array.from({ length: 40 }, (_, i) => ({ canonicalUrl: `https://root${i}.gov/`, text: `<p>capture ${i}</p><a href="https://calendar.example.org/">calendar</a>` }));
+  const pages = captures.map((page, i): LazyOfficialPage => ({ canonicalUrl: page.canonicalUrl, readText: async () => {
+    peak = Math.max(peak, ++active);
+    await new Promise(resolve => setTimeout(resolve, i % 16 === 0 ? 15 : 1));
+    active--;
+    readOrder.push(i);
+    return page.text;
+  } }));
+  const chain = await officialLinkingPageFromAsync("https://calendar.example.org/", pages);
+  assert.deepEqual(chain, previousLinkingPageFrom("https://calendar.example.org/", captures));
+  assert.equal(peak, 16);
+  assert.equal(active, 0);
+  assert.notEqual(readOrder[0], 0, "completion order differs from source order");
+  console.log(`lazy-official-linking-pool: captures=40 peak=${peak} firstCompleted=${readOrder[0]} selected=${chain?.url}`);
+});
+
+test("lazy pool drains failed batches and reuses successful decodes beyond the failed capture", async () => {
+  let active = 0;
+  const reads = Array(20).fill(0) as number[];
+  const pages = reads.map((_, i): LazyOfficialPage => ({ canonicalUrl: `https://root${i}.gov/`, readText: async () => {
+    active++;
+    reads[i]++;
+    try {
+      await new Promise(resolve => setTimeout(resolve, i === 0 ? 1 : 5));
+      if (i === 0 && reads[i] === 1) throw new Error("first capture unavailable");
+      return `<a href="https://calendar.example.org/">capture ${i}</a>`;
+    } finally { active--; }
+  } }));
+  await assert.rejects(officialLinkingPageFromAsync("https://calendar.example.org/", pages), /first capture unavailable/);
+  assert.equal(active, 0, "all in-flight readers drained before rejection");
+  assert.deepEqual(reads, [...Array(16).fill(1), ...Array(4).fill(0)], "no later batch starts after a failure");
+  assert.equal((await officialLinkingPageFromAsync("https://calendar.example.org/", pages))?.url, "https://root0.gov/");
+  assert.deepEqual(reads, [3, ...Array(19).fill(1)], "only the failed capture retries, then the selected root hydrates");
 });
 
 /**

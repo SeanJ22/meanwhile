@@ -66,7 +66,7 @@ import { candidatePublicationLinkMatches } from "../control-plane/promotion/camp
 import type { ArtifactRecord } from "../control-plane/repository/types.ts";
 import type { Attempt } from "../control-plane/attempt.ts";
 import type { CandidateDocument, CandidatePublicationDate } from "../candidates/corpus.ts";
-import { readHeldBytes, type VaultIndex } from "../control-plane/evidence/read-only-vault.ts";
+import { readHeldBytes, type HeldVaultArtifact, type VaultIndex } from "../control-plane/evidence/read-only-vault.ts";
 
 /** The door an approval names when this writer may publish it (the chain's `CAMPAIGN_SITE_PUBLICATION_DOOR`). */
 export const DERIVED_CAMPAIGN_SITE_DOOR = "CANDIDATE_CAMPAIGN_SITES_DERIVED_CONTRACT" as const;
@@ -194,14 +194,15 @@ export interface HeldVerifyingRead {
 }
 
 /** Read each approval's own primary and supporting captures from their saved sidecars. */
-export async function heldCampaignSiteReads(vault: VaultIndex, approvals: readonly PublishableCampaignSiteApproval[]): Promise<Map<string, HeldVerifyingRead>> {
+export async function heldCampaignSiteReads(vault: VaultIndex | ((artifactId: string) => Promise<HeldVaultArtifact | null>), approvals: readonly PublishableCampaignSiteApproval[]): Promise<Map<string, HeldVerifyingRead>> {
+  const capture = typeof vault === "function" ? vault : async (artifactId: string) => vault.byId.get(artifactId) ?? null;
   const held = new Map<string, HeldVerifyingRead>();
   for (const approval of approvals) {
-    const artifact = vault.byId.get(approval.campaignSite.evidence.artifactId);
-    if (artifact === undefined || artifact.tier === "RESTRICTED_RAW" || held.has(approval.recordId)) continue;
+    const artifact = await capture(approval.campaignSite.evidence.artifactId);
+    if (artifact === null || artifact.tier === "RESTRICTED_RAW" || held.has(approval.recordId)) continue;
     try {
       const sourceRef = approval.campaignSite.evidence.cycleSource;
-      const supporting = sourceRef ? vault.byId.get(sourceRef.artifactId) : undefined;
+      const supporting = sourceRef ? await capture(sourceRef.artifactId) : undefined;
       const cycleSource = supporting && supporting.tier !== "RESTRICTED_RAW" && supporting.canonicalUrl && supporting.retrievedAt
         ? { source: { artifactId: supporting.id, sha256: supporting.contentHash.slice("sha256-".length),
             requestedUrl: supporting.canonicalUrl, finalUrl: supporting.retrievalUrl ?? supporting.canonicalUrl,

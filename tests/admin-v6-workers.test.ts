@@ -595,3 +595,21 @@ const _workersFit = (w: AdminV6WorkersView): NonNullable<AdminV6Data["workers"][
 void _workersFit;
 const _sources = (s: V6WorkersSources) => s;
 void _sources;
+
+test("an open round with nothing started or reported for ten minutes is stuck since its last sign of life; a source receipt or a running job is life", async () => {
+  const stuck = ok(await section("us", await world({ scouts: [], jobs: [], sources: [] }))).data.status;
+  assert.equal(stuck.noProgressSince, "2026-09-28T21:46:34.342Z", "no phase, worker or receipt since the round started 13 minutes ago");
+  const lastReceipt = votingSitesLoop(1, Date.parse("2026-09-28T21:49:00.000Z"));
+  assert.equal(ok(await section("us", await world({ scouts: [], jobs: [], sources: lastReceipt }))).data.status.noProgressSince, "2026-09-28T21:49:00.000Z", "since the newest receipt after the round started");
+  assert.equal(ok(await section("us", await world({ scouts: [], jobs: [], sources: votingSitesLoop(1, Date.parse("2026-09-28T21:57:00.000Z")) }))).data.status.noProgressSince, null, "a receipt three minutes ago is progress");
+  assert.equal(ok(await section("us", await world())).data.status.noProgressSince, null, "a Scout running now is not a stuck round");
+  const idle = ok(await section("us", await world({ scouts: [], jobs: [], sources: [], heartbeat: { lastCycleFinishedAt: "2026-09-28T21:55:00.000Z" } }))).data.status;
+  assert.equal(idle.noProgressSince, null, "a finished round is not stuck");
+});
+
+test("only paid jobs the safety checks refused are counted (other deferrals are not), with the reason in plain words", async () => {
+  const some = ok(await section("us", await world({ research: { fleetSafety: { deferred: [
+    { work: "a", code: "UNMEASURED_MODEL_SPEND", why: "rolling-24-hour model spend is unmeasured" }, { work: "b", code: "UNMEASURED_MODEL_SPEND", why: "x" }, { work: "c", code: "OWNER_PAUSED", why: "y" }, { work: "d", code: "awaiting adapter", why: "z" }, { work: "e", code: "lane disabled", why: "z" }] } } }))).data.status;
+  assert.deepEqual(some.refused, { count: 3, why: "the spending total is unknown; paid research is paused" });
+  assert.equal(ok(await section("us", await world())).data.status.refused, null, "nothing deferred is no line at all");
+});

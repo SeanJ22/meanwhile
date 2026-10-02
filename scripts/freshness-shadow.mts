@@ -1,7 +1,7 @@
 import { attemptBatchJournal, backgroundBatchTransport, batchEnabledFor, batchRequestHash } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { createHash, randomUUID } from "node:crypto";
-import { runLeaseWorkerProcesses, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
+import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import { scoutProcessExecutor } from "../lib/control-plane/workers/scout-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
@@ -108,6 +108,7 @@ import {
   controlPlaneUrlFromEnv,
   createPgRepositories,
   CONTROL_PLANE_URL_VAR,
+  CONTROL_PLANE_QUERY_CONCURRENCY,
 } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import {
@@ -281,6 +282,7 @@ import {
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import { readMethodKnowledge } from "../lib/method/manual-bridge.ts";
+import { candidateCounts as countMethodCandidates } from "../lib/method/candidate.ts";
 import { readConclusionStore } from "../lib/method/conclusions.ts";
 import {
   NO_PIPELINE_RECORDED,
@@ -1263,7 +1265,12 @@ async function refreshPlaceOrder(): Promise<void> {
       items: buildPlaceOwedList({ divisions: (divisionsByReceipt.get(scope.decision.receiptId) ?? []).map(id => ({ id, label: id })),
         subjects: capture.subjects, held: capture.held, now: nowIso() }),
     })));
-  })().catch(error => { placeOrderDirty = true; throw error; }).finally(() => { placeOrderRead = null; });
+  })().catch(error => {
+    placeOrderDirty = true;
+    const detail = `place priority refresh failed; keeping last order: ${error instanceof Error ? error.message : String(error)}`;
+    runtimeConditions.push(detail);
+    console.warn(`  ${detail}`);
+  }).finally(() => { placeOrderRead = null; });
   return placeOrderRead;
 }
 await refreshPlaceOrder();
@@ -2903,20 +2910,23 @@ for (const row of cycle.deferred) {
 
 /* ------------------------------------------------- close, and persist debt --- */
 
+// Scheduling projections and closure both CAS the standing obligation.
+await nextDuePersistence;
 /* Dispatched and recovered occurrences close by one rule; a recovered one by the disposition it already carries. */
 await pending.step("occurrences:close", () => closeCycleOccurrences(repos, {
   cycle,
   occurrenceFor: (obligationId) => occurrenceByObligation.get(obligationId)?.id ?? null,
   now: NOW,
+  concurrency: CONTROL_PLANE_QUERY_CONCURRENCY,
 }));
 
-await nextDuePersistence;
 const persisted = await pending.step("debts:persist", () => persistDebts(
   repos,
   cycle.debts,
   NOW,
   canary ? corpus.map((obligation) => obligation.id) : null,
   retiredDebtReasons,
+  CONTROL_PLANE_QUERY_CONCURRENCY,
 ));
 finishPhase("occurrence-and-debt-commit");
 console.log(
@@ -2949,11 +2959,27 @@ async function runAutonomousWave() {
   const taskIds = [...new Set([...held.map(task => task.id),
     ...planned.decisions.filter(row => row.task && (row.action === "WORKER" ||
       (row.action === "SCOUT" && paidWorkerCapacity() > 0))).map(row => row.task!.id)])];
+  const plainTaskIds = new Set([...held.filter(task => !["SCOUT", "DETECTIVE"].includes(task.workerTask?.role ?? "")).map(task => task.id),
+    ...planned.decisions.filter(row => row.task && row.action === "WORKER" &&
+      !["SCOUT", "DETECTIVE"].includes(row.task.workerTask?.role ?? "")).map(row => row.task!.id)]);
+  const failedTaskIds = new Set<string>();
+  const queueFailures: DispatchResult[] = [];
+  const failedQueueRead = (id: string, error: unknown) => {
+    if (failedTaskIds.has(id)) return;
+    failedTaskIds.add(id);
+    const result = workerDispatchFailure(id, error);
+    queueFailures.push(result);
+    runtimeConditions.push(`${id}: ${result.detail}`);
+  };
   // Every child pulls from the same full wave. Capture hunt rounds once;
   // completed/leased tasks disappearing must not reset a hunt to round zero.
   const readTaskQueue = async () => {
-    const tasks = await Promise.all(taskIds.map(id => repos.routeTasks.read(id)));
-    const items = await Promise.all(tasks.map(row => row ? repos.workItems.read(row.value.workItemId) : null));
+    const items = await Promise.all(taskIds.map(async id => {
+      try {
+        const row = await repos.routeTasks.read(id);
+        return row ? await repos.workItems.read(row.value.workItemId) : null;
+      } catch (error) { failedQueueRead(id, error); return null; }
+    }));
     const metadata = new Map(taskIds.map((id, index) => [id, items[index]?.value]));
     const rank = (id: string): number => {
       const item = metadata.get(id);
@@ -2968,12 +2994,11 @@ async function runAutonomousWave() {
     return { rank, compareRound };
   };
   let taskQueue: ReturnType<typeof readTaskQueue> | null = null;
-  const dispatches = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
+  const workerDispatches = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
     slots: workerSlots,
     config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidWorkerCapacity() > 0,
       searchEnabled: scoutSearch !== null, ceilingUsd: effectiveCeilingUsd, fundedSubjects: [...lifetimeHuntSubjects] },
-    capacity: () => paidWorkerCapacity(taskIds.length) > 0
-      ? Math.min(taskIds.length, held.length + paidWorkerCapacity(taskIds.length)) : taskIds.length,
+    capacity: () => Math.min(taskIds.length, plainTaskIds.size + paidWorkerCapacity(taskIds.length)),
     transportFor: (jurisdiction, taskId) => async request => {
       const task = (await repos.routeTasks.mustRead(taskId)).value;
       const batching = task.workerTask?.role === "ADVERSARIAL_AUDITOR" ? batchEnabledFor("background-worker-audit")
@@ -3014,12 +3039,17 @@ async function runAutonomousWave() {
     reserveEscalation: scoutEscalationReservation(fleetSafety),
     orderPending: async ids => {
       await refreshPlaceOrder();
-      const queue = await (taskQueue ??= readTaskQueue());
+      const queue = await (taskQueue ??= readTaskQueue().catch(error => { taskQueue = null; throw error; }));
       const paidOpen = paidWorkerCapacity() > 0;
       // Only ordering is a wave snapshot. A changed task role must still read
       // the current paid admission; the child re-reads its task before claiming.
-      const tasks = paidOpen ? [] : await Promise.all(ids.map(id => repos.routeTasks.read(id)));
-      return ids.filter((_, index) => paidOpen || !["SCOUT", "DETECTIVE"].includes(tasks[index]?.value.workerTask?.role ?? ""))
+      const tasks = paidOpen ? [] : await Promise.all(ids.map(async id => {
+        if (failedTaskIds.has(id)) return null;
+        try { return await repos.routeTasks.read(id); }
+        catch (error) { failedQueueRead(id, error); return null; }
+      }));
+      return ids.filter((id, index) => !failedTaskIds.has(id) &&
+        (paidOpen || !["SCOUT", "DETECTIVE"].includes(tasks[index]?.value.workerTask?.role ?? "")))
         .sort((a, b) => queue.compareRound(a, b) || queue.rank(a) - queue.rank(b));
     },
     onDispatched: result => {
@@ -3030,6 +3060,7 @@ async function runAutonomousWave() {
       console.log(`  Scout done: ${result.obligationId}; ${outcome}; code ${result.disposition ?? result.outcome ?? "NOT_RUN"}; usd ${result.cost?.usd === null || result.cost?.usd === undefined ? "unmeasured" : result.cost.usd.toFixed(6)}`);
     },
     onStarted: pid => console.log(`  lease worker process: pid ${pid}; pulls existing RouteTasks`) });
+  const dispatches = [...queueFailures, ...workerDispatches];
   const scouts = dispatches.filter(row => row.attemptId && row.worker?.role === "SCOUT").length;
   return { ...planned, dispatches, scoutsAdmitted: scouts, scoutsLimitedAdmitted: scouts };
 }
@@ -3064,16 +3095,17 @@ try {
  * outbound traffic, so it is inert until the owner's go.
  *
  * It spends at most MEETINGS_DISCOVERY_BUDGET_MS, walks at most
- * MEETINGS_DISCOVERY_MAX_WALKS needs, and runs only in a full standing cycle
- * with that much of the admission window left. The budget bounds the walk in
+ * MEETINGS_DISCOVERY_MAX_WALKS needs, and runs only in a full standing cycle.
+ * The phase budget includes its setup and bounds the walk in
  * progress too: each request's timeout is cut to the time left, so a slow site
- * cannot carry the phase into the finalization reserve, and a walk the time
+ * cannot keep sending requests beyond that allowance, and a walk the time
  * runs out on before it confirmed anything is deferred, never recorded. It opens on its own FleetSafety
  * provider key, `discovery-web`, so a latch it trips never stops the routine
  * lanes, and shares the cycle's host spacing and vault.
  */
 /* On unless the kill switch says off (NS28, decided by the owner 2026-09-24: meetings discovery is always on). */
 const MEETINGS_DISCOVERY_MAX_WALKS = 12;
+const MEETINGS_DISCOVERY_BUDGET_MS = 60_000;
 /*
  * The search rung's caps (Brave and Exa combined, pointers only) are
  * SEARCH_PER_CYCLE / SEARCH_PER_DAY, set with the one paid-search budget at
@@ -3088,6 +3120,7 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
 } else if ("unreadable" in gapLedgerRead) {
   meetingsDiscoveryState = `not run: ${gapLedgerRead.unreadable}`;
 } else {
+  const discoveryDeadlineMs = Date.now() + MEETINGS_DISCOVERY_BUDGET_MS;
   const openDiscovery = fleetSafety.guardedOpenBytes("discovery-web", "meetings-discovery", fetch, { followRedirects: false });
   /* Named to the stall diagnostic while it runs: its waits on government sites are not store calls, so nothing else would name them. */
   const leaveDiscovery = pending.enter("meetings-discovery");
@@ -3152,8 +3185,8 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
         readOfficialPages,
         now: nowIso,
         budget: {
-          spent: () => false,
-          remainingMs: () => Number.POSITIVE_INFINITY,
+          spent: () => Date.now() >= discoveryDeadlineMs,
+          remainingMs: () => Math.max(0, discoveryDeadlineMs - Date.now()),
         },
         recipes: knownRecipes(manual?.value.entries ?? []),
         /* Committed route hints: the current official site where the recorded address is stale, and routes found on a government's own publications. */
@@ -3469,23 +3502,32 @@ leavePromotionTail();
  * cycle's own Attempts are in the denominators. A failed re-read is a named
  * runtime condition and the metrics record is withheld, never zeroed.
  */
+// These independent final reads share the existing repository transport limit.
+// Join failures too: neither finalization view retries an unchanged failed read.
+const finalizationReads = canary ? null : Promise.allSettled([
+  repos.scoutResults.readAll(),
+  repos.costs.readSince(new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
+  repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE"),
+  readMethodCandidateStore(repos),
+  dry ? Promise.resolve(null) : readMethodKnowledge(repos),
+] as const);
 async function computeMetrics(): Promise<ResearchMetrics | null> {
-  let results: readonly ScoutResult[];
-  let costsNow: readonly CostEntry[];
-  try {
-    results = await repos.scoutResults.readAll();
-    costsNow = await repos.costs.readSince(new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString());
-  } catch (error) {
+  const [resultsRead, costsRead, historyRead, candidatesRead] = (await finalizationReads)!;
+  if (resultsRead.status === "rejected" || costsRead.status === "rejected") {
+    const error = resultsRead.status === "rejected" ? resultsRead.reason : costsRead.status === "rejected" ? costsRead.reason : null;
     runtimeConditions.push(`research metrics NOT computed: a durable log could not be re-read (${error instanceof Error ? error.message : String(error)})`);
     return null;
   }
+  const results = resultsRead.value;
+  const costsNow = costsRead.value;
   const at = nowIso();
   finalSpendWindow = researchSpendInWindow(costsNow, at, RESEARCH_BOUNDS.windowHours, historicalSpendHolds);
   finalSpendAsOf = at;
   const windowCycles: { startedAt: string; deterministic: number; model: number }[] = [];
   try {
     const since = Date.parse(at) - RESEARCH_BOUNDS.windowHours * 3_600_000;
-    const priorDigests = await repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE");
+    if (historyRead.status === "rejected") throw historyRead.reason;
+    const priorDigests = historyRead.value;
     for (const rec of freshnessCycleOutcomes(priorDigests)) {
       const lanes = rec.research?.lanes;
       if (!lanes || Date.parse(rec.startedAt) < since) continue;
@@ -3500,7 +3542,10 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
       `research share history was unavailable from the canonical owner log (${error instanceof Error ? error.message : String(error)}); the window contains this cycle only`,
     );
   }
-  const counts = await candidateStoreCounts(repos);
+  let counts: ReturnType<typeof countMethodCandidates> | null = null;
+  if (candidatesRead.status === "fulfilled") {
+    try { counts = countMethodCandidates(candidatesRead.value); } catch { /* Unreadable authority remains unknown. */ }
+  }
   const candidateCounts = counts === null ? null : { proposed: counts.PROPOSED, validated: counts.VALIDATED, admitted: counts.ADMITTED, rejected: counts.REJECTED };
   const pipeline = await NO_PIPELINE_RECORDED();
   /*
@@ -3551,16 +3596,22 @@ const finishedAt = nowIso();
 if (!dry && !canary) {
   const leaveProgression = pending.enter("research-progression");
   try {
-    researchProgression = await (async () => readResearchProgression(repos, {
+    const [scoutsRead, , , candidatesRead, knowledgeRead] = (await finalizationReads)!;
+    if (candidatesRead.status === "rejected") throw candidatesRead.reason;
+    if (knowledgeRead.status === "rejected") throw knowledgeRead.reason;
+    if (knowledgeRead.value === null) throw new Error("the final method knowledge snapshot is unavailable");
+    if (scoutsRead.status === "rejected") throw scoutsRead.reason;
+    researchProgression = await readResearchProgression(repos, {
       windowId: researchWindowId, through: finishedAt, gate: readActivationGate(ROOT),
-      candidates: (await readMethodCandidateStore(repos)).candidates,
-      knowledge: await readMethodKnowledge(repos),
+      candidates: candidatesRead.value.candidates,
+      knowledge: knowledgeRead.value,
+      scouts: scoutsRead.value,
       conclusions: readConclusionStore(join(ROOT,"data","method","conclusions.json")),
       researchBoundary: {
         since: priorResearchState?.researchProgression?.through ?? priorResearchState?.cycleFinishedAt ?? NOW,
         previousCompletedWindowId: priorResearchState?.researchProgression?.windowId ?? (priorResearchState?.cycleFinishedAt ? `research:${priorResearchState.host}:${priorResearchState.cycleStartedAt}` : null),
       },
-    }))();
+    });
   } catch (error) {
     researchProgressionFailure = error instanceof Error ? error.message : String(error);
     runtimeConditions.push(`RESEARCH_PROGRESSION_UNAVAILABLE: ${researchProgressionFailure}; no zero-progress claim was produced`);

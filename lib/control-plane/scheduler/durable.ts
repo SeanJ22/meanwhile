@@ -54,6 +54,7 @@ import { canonicalJson, type ControlPlaneRepositories } from "../repository/type
 import type { FreshnessDebt } from "./debt.ts";
 import { DISCHARGING_DISPOSITIONS } from "./dispatch.ts";
 import type { FreshnessObligation } from "./obligation.ts";
+import { runPool } from "./shadow-loop.ts";
 
 /** The project every freshness WorkItem is filed under. One string, one place. */
 export const FRESHNESS_PROJECT = "freshness";
@@ -1316,6 +1317,8 @@ export async function persistDebts(
    * discharge.
    */
   retired: ReadonlyMap<string, string> = new Map(),
+  /** Independent stored debt IDs can share the caller's repository concurrency. */
+  concurrency = 1,
 ): Promise<{
   readonly written: number;
   readonly cleared: readonly string[];
@@ -1325,16 +1328,20 @@ export async function persistDebts(
   const existing = scope === null
     ? await repos.debts.list()
     : (await Promise.all(scope.map((id) => repos.debts.read(id)))).filter((row) => row !== null);
-  const cleared: string[] = [];
-  const clearedAsRetired: string[] = [];
   const existingById = new Map(existing.map(row => [row.id, row]));
+  const operations: {
+    id: string;
+    obligationId: string;
+    kind: "WRITTEN" | "CLEARED" | "RETIRED";
+    run: () => Promise<unknown>;
+  }[] = [];
 
   for (const row of existing) {
     if (byId.has(row.value.obligationId)) continue;
     const retiredFor = retired.get(row.value.obligationId);
     if (retiredFor !== undefined) {
       if (row.value.consecutiveFailures === 0) continue;
-      await repos.debts.compareAndSet(
+      operations.push({ id: row.id, obligationId: row.value.obligationId, kind: "RETIRED", run: () => repos.debts.compareAndSet(
         row.id,
         row.revision,
         {
@@ -1343,8 +1350,7 @@ export async function persistDebts(
           detail: `cleared at ${now}: the obligation was retired (${retiredFor}). Not a reading: nothing was refreshed`,
         },
         now,
-      );
-      clearedAsRetired.push(row.value.obligationId);
+      ) });
       continue;
     }
     /*
@@ -1356,27 +1362,49 @@ export async function persistDebts(
      * `retryable` ignores it because a zero-failure row has no retry due.
      */
     if (row.value.consecutiveFailures === 0) continue;
-    await repos.debts.compareAndSet(
+    operations.push({ id: row.id, obligationId: row.value.obligationId, kind: "CLEARED", run: () => repos.debts.compareAndSet(
       row.id,
       row.revision,
       { ...row.value, consecutiveFailures: 0, detail: `cleared at ${now}: the obligation was discharged` },
       now,
-    );
-    cleared.push(row.value.obligationId);
+    ) });
   }
 
-  let written = 0;
   for (const debt of next) {
     const row = existingById.get(debt.obligationId) ?? null;
     if (row === null) {
-      await repos.debts.put(debt.obligationId, debt, now);
+      operations.push({ id: debt.obligationId, obligationId: debt.obligationId, kind: "WRITTEN",
+        run: () => repos.debts.put(debt.obligationId, debt, now) });
     } else {
       if (canonicalJson(row.value) === canonicalJson(debt)) continue;
-      await repos.debts.compareAndSet(row.id, row.revision, debt, now);
+      operations.push({ id: row.id, obligationId: debt.obligationId, kind: "WRITTEN",
+        run: () => repos.debts.compareAndSet(row.id, row.revision, debt, now) });
     }
-    written += 1;
   }
-  return { written, cleared, clearedAsRetired };
+  const groups = new Map<string, { index: number; run: () => Promise<unknown> }[]>();
+  operations.forEach((operation, index) => {
+    const group = groups.get(operation.id) ?? [];
+    group.push({ index, run: operation.run });
+    groups.set(operation.id, group);
+  });
+  const failures: { index: number; error: unknown }[] = [];
+  await runPool([...groups.values()], concurrency, async group => {
+    for (const operation of group) {
+      try {
+        await operation.run();
+      } catch (error) {
+        // A failed write is not retried by a later operation on the same row.
+        failures.push({ index: operation.index, error });
+        break;
+      }
+    }
+  });
+  if (failures.length > 0) throw failures.sort((a, b) => a.index - b.index)[0].error;
+  return {
+    written: operations.filter(operation => operation.kind === "WRITTEN").length,
+    cleared: operations.filter(operation => operation.kind === "CLEARED").map(operation => operation.obligationId),
+    clearedAsRetired: operations.filter(operation => operation.kind === "RETIRED").map(operation => operation.obligationId),
+  };
 }
 
 /**

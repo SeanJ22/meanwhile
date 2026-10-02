@@ -57,3 +57,45 @@ test("held bytes cross only a linked same-subject repair ancestry with a complet
   await registerWorkItem(h.repos, cyclic, h.now());
   assert.equal(await authorizeInheritedHeldArtifact(h.repos, { ...request, childWorkItemId: cyclic.id }), false);
 });
+
+test("inherited byte authorization reads only the authorized origin log and checks every exact capture", async t => {
+  const h = await autonomousHarness(), origin = h.item;
+  const capture = (await h.repos.artifacts.read(origin.id))[0];
+  assert.ok(capture);
+  const attempt = (await h.repos.attempts.mustRead(capture.attemptId)).value;
+  const child = { ...createWorkItem({ project: origin.project, subject: origin.subject,
+    obligation: "Reuse the authorized origin", why: "Fixture repair", now: h.now() }),
+    planRepair: { parentWorkItemId: origin.id, rootWorkItemId: origin.id, depth: 1,
+      proposalHash: "test-proposal", scoutAttemptId: attempt.id, sourceArtifactId: capture.artifactId,
+      retainedEvidenceIds: [capture.artifactId], admittedAt: h.now(), authority: "WORK_INSTRUCTIONS_ONLY" as const, unresolved: [] } };
+  await registerWorkItem(h.repos, child, h.now());
+  const unrelated = createWorkItem({ project: origin.project, subject: origin.subject,
+    obligation: "Independent origin", why: "No repair ancestry", now: h.now() });
+  await registerWorkItem(h.repos, unrelated, h.now());
+  await h.repos.artifacts.append(unrelated.id, "unrelated-log", { ...capture, workItemId: unrelated.id }, h.now());
+  await h.repos.artifacts.append(origin.id, "wrong-owner", { ...capture, artifactId: "wrong-owner", workItemId: unrelated.id }, h.now());
+  await h.repos.artifacts.append(origin.id, "partial", { ...capture, artifactId: "partial", partial: true }, h.now());
+  const aborted = { ...attempt, id: "aborted-origin-capture", outcome: "ABORTED" as const };
+  await h.repos.attempts.put(aborted.id, aborted, h.now());
+  await h.repos.artifacts.append(origin.id, "aborted", { ...capture, artifactId: "aborted", attemptId: aborted.id }, h.now());
+  await h.repos.artifacts.append(origin.id, "alternate-aborted", { ...capture, artifactId: "alternate", attemptId: aborted.id }, h.now());
+  await h.repos.artifacts.append(origin.id, "alternate-completed", { ...capture, artifactId: "alternate" }, h.now());
+  const read = h.repos.artifacts.read.bind(h.repos.artifacts), keys: string[] = [];
+  t.mock.method(h.repos.artifacts, "readAll", async () => { assert.fail("an inherited artifact must never scan unrelated logs"); });
+  t.mock.method(h.repos.artifacts, "read", async (key: string) => {
+    assert.equal(key, origin.id, "only the already-authorized origin crosses the read boundary");
+    keys.push(key);
+    return read(key);
+  });
+  const request = { artifactId: capture.artifactId, originWorkItemId: origin.id,
+    childWorkItemId: child.id, project: origin.project };
+  assert.equal(await authorizeInheritedHeldArtifact(h.repos, request), true);
+  for (const artifactId of ["wrong-owner", "partial", "aborted", "missing"]) {
+    assert.equal(await authorizeInheritedHeldArtifact(h.repos, { ...request, artifactId }), false, artifactId);
+  }
+  assert.equal(await authorizeInheritedHeldArtifact(h.repos, { ...request, artifactId: "alternate" }), true,
+    "a completed exact capture in this origin survives an earlier aborted capture");
+  assert.equal(await authorizeInheritedHeldArtifact(h.repos, { ...request, originWorkItemId: unrelated.id }), false,
+    "same project and subject do not authorize an unrelated owner");
+  assert.deepEqual(keys, Array(6).fill(origin.id), "invalid ancestry is refused before any artifact log read");
+});

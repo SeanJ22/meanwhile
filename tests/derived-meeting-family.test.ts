@@ -53,6 +53,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { deriveWiringDecisions } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { walkMeetingsDiscoveryNeed, type DiscoveryOpen } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import { readMeetingsProjection, reconcileCounts } from "../lib/meetings/snapshot.ts";
+import { preparePublishedMeetingSnapshot } from "../lib/meetings/prepared-snapshot.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { reconcileSuccessfulMeetingPartition } from "../scripts/ingest.ts";
@@ -265,6 +266,25 @@ test("two calendars combine distinct dates and repeated IDs; a failed sibling ca
   assert.ok(next.snapshot.meetings.find(row => row.id === events[1].id)?.carried);
   assert.doesNotThrow(() => reconcileCounts(next.snapshot));
   assert.equal(derivedFamilyCandidate(requiredMeetingPartitionContract(derivedMeetingFamilyId("US-AZ")), next).semantics.violations.length, 0);
+});
+
+test("a promoted family's internal fresh duplicates reconcile in composition and publish the prepared snapshot", async () => {
+  const store = new MemoryRoutineDataStore();
+  const crosswalk = await promoteCrosswalk(store);
+  await deriveWiring(store, crosswalk, FEED, T_WIRING);
+  const family = await promoteFamily(store, T_FAMILY, FEED, HOST, {}, read => ({
+    ...read, freshMeetings: Array.from({ length: 4 }, () => read.freshMeetings[0]),
+  }));
+  assert.ok(family.outcome.promoted, family.outcome.candidate.failureDetail ?? "");
+  assert.equal(family.build.snapshot.counts.duplicatesCollapsed, 3);
+  const read = await readMeetingsProjection({ store, bypassCache: true, now: T_FAMILY, allowUnconfiguredBootstrap: false });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") return;
+  assert.deepEqual(read.value.counts, { fresh: 1, carried: 0, total: 1, duplicatesCollapsed: 3 });
+  assert.equal(read.value.sources.reduce((sum, source) => sum + source.normalized, 0), 4);
+  assert.deepEqual(read.value.meetings, family.build.snapshot.meetings);
+  assert.doesNotThrow(() => reconcileCounts(read.value));
+  assert.equal((await preparePublishedMeetingSnapshot(store, T_FAMILY)).status, "PUBLISHED");
 });
 
 test("a serving-window boundary crossed during collection uses the actual final input anchor", async () => {

@@ -171,7 +171,8 @@ test("a persisted facts-only Scout with no parser reaches the existing campaign-
     sha256: later.contentHash.slice(7), readAt: laterAt };
   const revised = { ...approval, recordId: `${approval.recordId}:source-revision`, campaignSite: { ...approval.campaignSite,
     evidence: { ...approval.campaignSite.evidence, cycleSource: sourceRef } } };
-  const paired = await heldCampaignSiteReads(await indexVault(p.vaultRoot), [approval, revised]);
+  const vault = await indexVault(p.vaultRoot);
+  const paired = await heldCampaignSiteReads(async artifactId => vault.byId.get(artifactId) ?? null, [approval, revised]);
   assert.equal(paired.size, 2);
   assert.equal(paired.get(approval.recordId)!.cycleSource!.source.artifactId, artifact.id);
   assert.equal(paired.get(revised.recordId)!.cycleSource!.source.artifactId, later.id);

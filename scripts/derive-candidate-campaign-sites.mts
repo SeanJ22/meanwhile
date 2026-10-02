@@ -48,7 +48,8 @@ import { requiredManualProductionContract } from "../lib/civic-data/manual-contr
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
-import { indexVault, readHeldBytes, type VaultIndex } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { findHeldCapture, readHeldBytes } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { heldArtifactCaptures } from "../lib/civic-data/held-artifact-captures.ts";
 import { ACTIVATION_GATE, classFieldOpen } from "../lib/control-plane/promotion/activation-policy.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
@@ -86,7 +87,7 @@ async function readApprovals(): Promise<PublishableCampaignSiteApproval[] | { re
 
 /** Distinct completed publication acquisitions. The child never infers
  * article authority from a URL in prose or from uncommitted vault bytes. */
-async function linkedPublicationReads(vault: VaultIndex, approvals: readonly PublishableCampaignSiteApproval[]): Promise<readonly HeldLinkedPublicationRead[] | { readonly unreadable: string }> {
+async function linkedPublicationReads(vaultRoot: string, approvals: readonly PublishableCampaignSiteApproval[]): Promise<readonly HeldLinkedPublicationRead[] | { readonly unreadable: string }> {
   const controlPlane = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
   if (!controlPlane) return { unreadable: "the control plane's publication attempts are not configured" };
   const candidacies = [...new Set(approvals.map(row => row.campaignSite.candidacyId))];
@@ -106,7 +107,8 @@ async function linkedPublicationReads(vault: VaultIndex, approvals: readonly Pub
       const workItem = (typeof row.work_item === "string" ? JSON.parse(row.work_item) : row.work_item) as { subject?: unknown };
       // One unreadable capture holds only its own publication (it stays unverified, owed work);
       // it never blocks every other approved campaign link from reaching readers (§3).
-      const artifact = vault.byId.get(record.artifactId);
+      console.log(`RCD_PROGRESS linked-publication ${record.artifactId}`);
+      const artifact = await findHeldCapture(vaultRoot, record);
       if (!artifact || artifact.tier === "RESTRICTED_RAW") {
         process.stderr.write(`LINKED_PUBLICATION_CAPTURE_UNREADABLE ${record.artifactId}: missing or restricted in this vault\n`);
         continue;
@@ -151,9 +153,12 @@ async function main(): Promise<void> {
   let linkedPublications: readonly HeldLinkedPublicationRead[] = [];
   if (!("unreadable" in approvals) && approvals.length > 0) {
     try {
-      const vault = await indexVault(join(process.cwd(), "data", "control-plane", "vault"));
-      held = await heldCampaignSiteReads(vault, approvals);
-      const linked = await linkedPublicationReads(vault, approvals);
+      const vaultRoot = join(process.cwd(), "data", "control-plane", "vault");
+      const artifactIds = approvals.flatMap(row => [row.campaignSite.evidence.artifactId,
+        ...(row.campaignSite.evidence.cycleSource ? [row.campaignSite.evidence.cycleSource.artifactId] : [])]);
+      const capture = await heldArtifactCaptures(vaultRoot, artifactIds, process.env.WTP_CONTROL_PLANE_DATABASE_URL!);
+      held = await heldCampaignSiteReads(capture, approvals);
+      const linked = await linkedPublicationReads(vaultRoot, approvals);
       if ("unreadable" in linked) {
         await finish(derivedCampaignSitesFailedCandidate(now, `The linked candidate-publication record could not be read: ${linked.unreadable}`));
         return;

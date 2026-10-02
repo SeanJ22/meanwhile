@@ -3,6 +3,9 @@ import { readFileSync } from "node:fs";
 import * as nodeModule from "node:module";
 import { test } from "node:test";
 import { createContext, runInContext } from "node:vm";
+import { spawnSync } from "node:child_process";
+import { DEFAULT_HANG_KILL_MS } from "../scripts/runner-hang-watchdog.mts";
+import { RUNTIME_RELEASE_MAX_BLOCKING_MS } from "../lib/ops/runtime-release-handoff.ts";
 
 const source = readFileSync(new URL("../scripts/pilot-runner.mts", import.meta.url), "utf8");
 const { stripTypeScriptTypes } = nodeModule as typeof nodeModule & {
@@ -72,5 +75,67 @@ test("both release and shutdown bound coordination and idle waits, and never awa
   assert.match(hold, /waitForRuntimeQuiescence\(async \(\) => \{\s*await stopAdminCopyClock\(\);\s*await activeControlRead;\s*await standingRuntimeScheduler.waitForIdle\(\);/);
   const shutdown = source.slice(source.lastIndexOf("if (standingRuntimeTimer !== null) clearInterval"));
   assert.match(shutdown, /if \(!standingDrainFailed\) \{[\s\S]*waitForRuntimeQuiescence\(async \(\) => \{\s*await stopAdminCopyClock\(\);\s*await activeControlRead;\s*await standingRuntimeScheduler.waitForIdle\(\);/);
-  assert.match(shutdown, /if \(standingDrainFailed\) process.exit\(handoffExitCode \?\? 2\)/);
+  assert.match(shutdown, /if \(handoffExitCode !== null\) process.exit\(handoffExitCode\)/);
+});
+
+test("every completed handoff exits despite a retained timer or socket", () => {
+  const tail = source.slice(source.lastIndexOf("if (handoffExitCode === null) {"));
+  for (const code of [0, 2]) {
+    const child = spawnSync(process.execPath, ["--input-type=module", "-e",
+      `import net from 'node:net';let handoffExitCode=${code};setInterval(()=>{},1000);net.createServer().listen(0);${tail}`],
+    { timeout: 3000, encoding: "utf8" });
+    assert.equal(child.error, undefined);
+    assert.equal(child.status, code);
+    console.log(`handoff ${code}: open timer/socket exited ${child.status}`);
+  }
+});
+
+test("CURRENT reopens held admissions and both clocks only after contracts succeed", async () => {
+  const fn = source.match(/async function reconcileRuntimeReleaseAtBoundary\([\s\S]*?\n\}/)?.[0];
+  assert.ok(fn);
+  for (const contractsOk of [false, true]) {
+    const calls: string[] = [];
+    const context = createContext({ AUTO_RELEASE_HANDOFF: true, ROOT: ".", RUNNING_CODE_SHA: "a".repeat(40),
+      runtimeAdmissionsHeld: true, resumeRuntimeReleaseInstall: () => { calls.push("install recovery"); return null; },
+      inspectRuntimeRelease: async () => { calls.push("inspect"); return { state: "CURRENT" }; },
+      applyRuntimeContracts: async () => { calls.push("contracts"); return contractsOk; },
+      startStandingRuntimeClock: () => calls.push("routine clock"), startAdminCopyClock: () => calls.push("Admin copy clock"),
+    });
+    const result = await runInContext(stripTypeScriptTypes(fn) + "\nreconcileRuntimeReleaseAtBoundary()", context);
+    assert.equal(result, contractsOk ? null : 2);
+    assert.equal(context.runtimeAdmissionsHeld, !contractsOk);
+    assert.deepEqual(calls, contractsOk ? ["install recovery", "inspect", "contracts", "routine clock", "Admin copy clock"]
+      : ["install recovery", "inspect", "contracts"]);
+    console.log(`CURRENT contracts=${contractsOk}: admissionsHeld=${context.runtimeAdmissionsHeld}; ${calls.join(" -> ")}`);
+  }
+});
+
+test("recovered install exits for freshly loaded dependencies before inspecting or opening clocks", async () => {
+  const fn = source.match(/async function reconcileRuntimeReleaseAtBoundary\([\s\S]*?\n\}/)?.[0];
+  assert.ok(fn);
+  const context = createContext({ AUTO_RELEASE_HANDOFF: true, ROOT: ".", console: { log: () => {} },
+    resumeRuntimeReleaseInstall: () => ({ state: "UPDATED", detail: "installed" }),
+    inspectRuntimeRelease: () => { throw new Error("must reload dependencies before inspecting"); },
+  });
+  assert.equal(await runInContext(stripTypeScriptTypes(fn) + "\nreconcileRuntimeReleaseAtBoundary()", context), 0);
+  assert.ok(DEFAULT_HANG_KILL_MS > RUNTIME_RELEASE_MAX_BLOCKING_MS);
+});
+
+test("console and nightly children use the research idle guard", async () => {
+  for (const name of ["publishConsoleChildren", "runNightlyWindow"]) {
+    const fn = source.match(new RegExp(`async function ${name}\\([\\s\\S]*?\\n\\}`))?.[0];
+    assert.ok(fn);
+    let observed: number | undefined;
+    const context = createContext({ CONSOLE_PUBLISHERS: [{ name: "fixture", args: [] }], ROOT: ".", process,
+      RUNTIME_NO_PROGRESS_MS: 600_000, standingChildEnvironment: () => process.env,
+      recoverExitedWindowHolder: async () => {}, console: { log: () => {}, error: () => {} },
+      runRuntimeChildren: async (_children: unknown, options: { noProgressMs?: number }) => {
+        observed = options.noProgressMs;
+        return [{ status: 0, stdout: "", stderr: "" }];
+      },
+    });
+    await runInContext(stripTypeScriptTypes(fn) + `\n${name}('fixture')`, context);
+    assert.equal(observed, 600_000);
+    console.log(`${name}: noProgressMs=${observed}`);
+  }
 });

@@ -59,7 +59,7 @@ const ASSIGNMENT_READING_MAX = 64;
 
 export const WORKERS_RESEARCH_FIELDS = {
   beatAt: true, cycleStartedAt: true, cycleFinishedAt: true, pausedByOwner: true,
-  queue: ["lanes"], running: true, researchProgression: ["windowId", "since", "through", "promoted", "readerVisible"],
+  queue: ["lanes"], running: true, fleetSafety: ["deferred"], researchProgression: ["windowId", "since", "through", "promoted", "readerVisible"],
   assignments: true,
 } as const satisfies RecordProjection;
 const ATTEMPT_FIELDS = { id: true, routeTaskId: true, workItemId: true, worker: true, leaseId: true, startedAt: true,
@@ -67,6 +67,21 @@ const ATTEMPT_FIELDS = { id: true, routeTaskId: true, workItemId: true, worker: 
 const OBLIGATION_FIELDS = { id: true, recordClass: true, assignments: true } as const satisfies RecordProjection;
 
 export const DEP_WORKER_ACTIVE_INDEX = "DEP-WORKER-ACTIVE-INDEX";
+/** The quiet after which an open round with nothing new is called stuck: the runner's own no-progress wait (scripts/pilot-runtime-child.mts). */
+export const NO_PROGRESS_MS = 10 * 60_000;
+/** Why the fleet's safety checks refused paid work, in the words Sean reads (lib/control-plane/fleet-safety.ts codes). */
+const REFUSAL_WORDS: Readonly<Record<string, string>> = {
+  UNMEASURED_MODEL_SPEND: "the spending total is unknown",
+  CEILING: "the spending limit is reached",
+  DISPATCH_CEILING: "the limit on jobs per round is reached",
+  WALL_CLOCK_CEILING: "the round ran out of time",
+  PROVIDER_REQUEST_CEILING: "the request limit is reached",
+  PAYLOAD_BYTE_CEILING: "the data limit is reached",
+  WEBSITE_REQUEST_CAP: "the limit on requests to one website is reached",
+  OWNER_PAUSED: "paid research is paused",
+  MODEL_LANE_CLOSED: "that model is turned off",
+  PROVIDER_CIRCUIT_BROKEN: "the provider is failing",
+};
 
 /* ------------------------------------------------ the UI shape (model.ts) */
 
@@ -75,6 +90,8 @@ export interface V6WorkerStatus {
   readonly lastCheckIn: string | null;
   readonly lastUsefulProgress: { readonly at: string; readonly what: string } | null;
   readonly roundStartedAt: string | null;
+  readonly noProgressSince?: string | null;
+  readonly refused?: { readonly count: number; readonly why: string } | null;
   readonly lastRoundFinishedAt: string | null;
   readonly nextRoundDueAt: string | null;
   readonly runnerState: string | null;
@@ -509,10 +526,23 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
   if (sources.stateProgress.state === "UNREAD") unread.push("the latest verified result in this state");
   useful.sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
 
+  /* a round that is open with nothing started or reported since, for ten minutes: the same quiet the runner's own guard waits out */
+  const roundOpen = started !== null && (finished === null || Date.parse(finished) < Date.parse(started));
+  const nothingRunning = sources.jobs.state === "READ" && sources.jobs.rows.length === 0 && (sources.scouts ?? []).length === 0;
+  const activity = roundOpen && nothingRunning
+    ? [started!, ...(read?.rows ?? []).map(r => r.at)]
+      .filter(at => Date.parse(at) >= Date.parse(started!)).sort((a, b) => Date.parse(b) - Date.parse(a))[0] : null;
+  const noProgressSince = activity !== null && Date.parse(now) - Date.parse(activity) >= NO_PROGRESS_MS ? activity : null;
+  const deferred = (research?.fleetSafety as { deferred?: unknown } | null | undefined)?.deferred;
+  const refusedBy = Array.isArray(deferred) ? deferred.filter((d): d is { code: string } => d !== null && typeof d === "object" && typeof (d as { code?: unknown }).code === "string" && d.code in REFUSAL_WORDS) : [];
+  const refused = refusedBy.length === 0 ? null : { count: refusedBy.length, why: [...new Set(refusedBy.map(d => REFUSAL_WORDS[d.code] ?? d.code.toLowerCase().replace(/_/g, " ")))].join("; ") };
+
   const status: V6WorkerStatus = {
     lastCheckIn: hb?.beatAt ?? null,
     lastUsefulProgress: useful[0] ?? null,
-    roundStartedAt: started !== null && (finished === null || Date.parse(finished) < Date.parse(started)) ? started : null,
+    roundStartedAt: roundOpen ? started : null,
+    noProgressSince,
+    refused,
     lastRoundFinishedAt: finished,
     nextRoundDueAt: nextDue,
     runnerState: hb ? livenessOf(hb, now).state : sources.heartbeat.state === "MISSING" ? "NEVER_BEAT" : null,

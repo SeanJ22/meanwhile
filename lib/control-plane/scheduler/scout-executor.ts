@@ -522,7 +522,7 @@ export function scoutSystemPrompt(bound: ScoutBound, minRungs: number): string {
     "10. Provenance is the machine's. In finish, a candidate's observedOn is the `retrieved` date on the cited artifact's envelope, its permission is the `permission` verdict on that envelope, and its recordClass is the obligation's. State them as shown; the executor derives the values from the vault record and refuses a finish whose claims disagree with it.",
     "",
     "BOUNDS",
-    `Continue until the work is done or the owner's budget reservation refuses another request. There is no fixed turn, tool-call or cumulative-token limit. Keep ${bound.maxRequestsPerHost} requests per host and each provider's request limits. When told to finish, return the evidence-supported outcome and the remaining nextRungs.`,
+    `Continue until the work is done or the owner's budget reservation refuses another request. There is no fixed turn, tool-call or cumulative-token limit. Only local government websites known to serve fewer than 10,000 people and school district websites known to serve fewer than 5,000 students have a ten-request cap. Other websites and APIs have no request-count cap. Honor Retry-After and back off on 429/5xx. When told to finish, return the evidence-supported outcome and the remaining nextRungs.`,
     "",
     "OUTCOMES: ROUTE_CANDIDATE (an evidence-backed route to the record), EVIDENCE_FOUND (the record or a pointer to it was acquired and vaulted), NEEDS_ADAPTER (a specific adapter is all that remains), BLOCKED (every walked rung hit an access control; robots.txt is never one), NO_PROGRESS (the ladder was walked and nothing advanced), HUMAN_REQUIRED (only a human or offline act remains).",
     "Be terse. Prose outside tool calls is wasted budget.",

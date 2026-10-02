@@ -2,7 +2,7 @@ import type { ContributionRow } from "./types.ts";
 
 /**
  * **Where the money came from, and how concentrated it is** — tracker D06,
- * built 2026-08-18 (g19) on the author's disposition ("Unblock").
+ * built 2026-08-18 (g19).
  *
  * D06 asks for three things. Two of them ship here. The third does not, and
  * the reason is written down rather than left as a silent omission.
@@ -25,7 +25,7 @@ import type { ContributionRow } from "./types.ts";
  *
  * ## 2. Concentration ships by the FEC's OWN codes, not by industry
  *
- * **Shipped 2026-08-19 (g20) on the author's ruling — "Accept." The band
+ * **Shipped 2026-08-19 (g20). The band
  * computation itself lives in `./type-concentration.ts`; the reasoning below
  * is why it takes the shape it does, and it has not changed.**
  *

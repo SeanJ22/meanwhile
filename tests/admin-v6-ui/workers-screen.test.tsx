@@ -24,6 +24,10 @@ import { workerStatusFromPulse } from "../../app/(admin)/_mw/admin-v6/pulse-view
 import { liveReference } from "../../app/(admin)/_mw/admin-v6/reference.ts";
 import { ageWords, laneTotals, missingByCard, roundReading } from "../../app/(admin)/_mw/admin-v6/screen-workers.tsx";
 import type { MwScope } from "../../app/(admin)/_mw/scope.ts";
+import { RUNNER_ID } from "../../lib/control-plane/admin-data.ts";
+import { readV6WorkersSources, v6WorkersSection } from "../../lib/control-plane/admin-view/v6-workers-read.ts";
+import { createMemoryRepositories } from "../../lib/control-plane/repository/memory.ts";
+import { liveCycleHeartbeat } from "../../lib/control-plane/runner-standing.ts";
 
 /* -------------------------------------------------- the saved readback */
 
@@ -122,6 +126,44 @@ async function livePage(scopeKey: string) {
 }
 
 /* ---------------------------------------------------------------- tests */
+
+test("parent cycle metadata reaches the existing Workers round through bounded reads and live sync", async () => {
+  mock.timers.enable({ apis: ["Date"], now: Date.parse(PULSE_AT) });
+  try {
+    const repos = createMemoryRepositories();
+    const b = backend();
+    const sync = new LiveSync({ scope: "us", fetch: b.fetch, schedule: () => () => {} });
+    for (const ended of [false, true]) {
+      const beat = liveCycleHeartbeat(null, {
+        at: READ_AT, startedAt: "2026-09-28T22:05:00.000Z", testedSha: "a".repeat(40), host: "runner",
+        ...(ended ? { finishedAt: READ_AT, exitCode: null, signal: "SIGTERM", lastError: "SOURCE_READ_FAILED" } : {}),
+      });
+      const held = await repos.runnerHeartbeat.read(RUNNER_ID);
+      if (held) await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, held.revision, beat, READ_AT);
+      else await repos.runnerHeartbeat.put(RUNNER_ID, beat, READ_AT);
+      const sources = await readV6WorkersSources(repos, READ_AT);
+      const reading = v6WorkersSection({ scopeKey: "us", scope: { kind: "country" }, sources });
+      assert.ok("data" in reading);
+      assert.equal(reading.data.status.lastUsefulProgress, null, "a beat does not invent useful progress");
+      b.set(() => ({ status: 200, body: reading }));
+      sync.onPulse(pulse(ended ? "cycle-finished" : "cycle-live"));
+      await settle(sync);
+      const rendered = text(page(sync, { kind: "all" }, "us", "workers"));
+      if (!ended) {
+        assert.match(rendered, /Running since 6:05 PM ET/);
+        assert.doesNotMatch(rendered, /signal SIGTERM|Last round error/);
+      } else {
+        assert.match(rendered, /Started Sep 28, 6:05 PM ET; finished Sep 28, 6:12 PM ET; signal SIGTERM/);
+        assert.match(rendered, /Last round error: SOURCE_READ_FAILED/);
+        assert.doesNotMatch(rendered, /Running since/);
+      }
+    }
+    const stale = roundReading({ ...STATUS, runnerState: "SILENT", cycle: {
+      startedAt: READ_AT, finishedAt: null, exitCode: null, signal: null, lastError: null,
+    } }, Date.parse(PULSE_AT));
+    assert.equal(stale.headline, "No finish recorded");
+  } finally { mock.timers.reset(); }
+});
 
 test("the saved readback shows on Workers for the country, Arizona and ZIP 85635 with plain labels and numbers", async () => {
   mock.timers.enable({ apis: ["Date"], now: Date.parse(PULSE_AT) });

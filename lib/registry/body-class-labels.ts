@@ -3,7 +3,7 @@ import type { BodyClass } from "./types.ts";
 /**
  * **RULING 118 — AN APPOINTED BODY NEVER CARRIES THE GOVERN VERB.**
  * **RULING 119 — A SOVEREIGN TRIBAL NATION IS ITS OWN CATEGORY OF GOVERNMENT.**
- * (Both Sean's decisions of 2026-08-24, closing `NS07` and `NS08`.)
+ * (Both 2026-08-24, closing `NS07` and `NS08`.)
  *
  * ## Why one module and not three maps
  *
@@ -18,7 +18,7 @@ import type { BodyClass } from "./types.ts";
  * no shared path, and a grep for the symptom finds none of them because they
  * do not share a single string. So the labels live here once.
  *
- * ## `NS07` — the govern verb, and what Sean actually ruled
+ * ## `NS07` — the govern verb, and what the rule actually covers
  *
  * The who-governs card's verb is GOVERN, and that is a stronger claim than
  * *is responsible for this area*. New Jersey's executive departments are
@@ -26,10 +26,10 @@ import type { BodyClass } from "./types.ts";
  * exactly the there-is-a-hearing-Tuesday surface this product exists for — so
  * their MEETINGS were never in question.
  *
- * What was in question was the person. Sean ruled on 2026-08-24: **appointed
+ * What was in question was the person. The rule (2026-08-24): **appointed
  * people never carry the govern verb, and neither does any role description.**
- * His words for what to say instead: *"runs the department," "chair,"
- * "president of the committee."*
+ * What to say instead: *"runs the department," "chair," "president of the
+ * committee."*
  *
  * A Commissioner of Banking and Insurance is not somebody a reader elected and
  * cannot be voted out by them. Saying they *govern you* would tell a reader
@@ -38,9 +38,9 @@ import type { BodyClass } from "./types.ts";
  *
  * ## `NS08` — tribal nations, and why a new class rather than a flag
  *
- * Sean ruled: tribal nations are their own specific category of government,
- * **without a doubt** — and nationally, not an Arizona special case. He named
- * New Mexico, Oklahoma and Texas as coming.
+ * The design: tribal nations are their own specific category of government —
+ * and nationally, not an Arizona special case. New Mexico, Oklahoma and Texas
+ * are coming.
  *
  * A sovereign nation is neither federal nor state nor local, and the existing
  * classes could only lie about it: `GOVERNING` inside a state hierarchy makes

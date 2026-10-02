@@ -13,6 +13,7 @@ import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-wr
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import {
   readRegistryRuntimePrior,
+  REGISTRY_RUNTIME_SCOPE,
   registryRuntimeCandidate,
   type RegistryRuntimePackage,
 } from "../lib/registry/runtime-data-plane.ts";
@@ -89,6 +90,15 @@ async function main(): Promise<void> {
       workerPublications: report, nationalPlaces, nationalPublications, failures }, null, 2));
     const delivery = nationalDelivery(nationalPublications);
     delivery.gaps.push(...nationalPlaces.flatMap(place => "deferred" in place ? [{ key: `zip:${place.zip}`, detail: place.deferred }] : []));
+    // An actual completed acquisition can find everything already held. Name
+    // the canonical door with zero delivery; no-item and failed passes still
+    // have no receipt, and this does not fabricate a store confirmation.
+    if (!delivery.versionId && delivery.records === 0 && delivery.gaps.length === 0 && failures.length === 0 &&
+      nationalPlaces.some(place => !("deferred" in place))) {
+      const pointer = await store.readPromotionIdentity("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE);
+      delivery.versionId = pointer?.versionId ?? null;
+      delivery.candidateId = pointer?.versionId ?? null;
+    }
     await printWorkerPublicationReceipt(store, "registry-runtime-bindings", report, delivery, now);
     if (failures.length && !published.length && !nationalVersion) throw new Error(failures.join("; "));
     return;

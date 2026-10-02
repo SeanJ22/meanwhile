@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { cycleLivenessBeat, hangShouldTerminate } from "../lib/control-plane/runner-liveness.ts";
+import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
 
 const prev: RunnerHeartbeat = {
@@ -15,6 +16,37 @@ const prev: RunnerHeartbeat = {
   host: "SeanLenovo",
   intakeRuntime: { observedAt: "2026-09-18T19:15:00.000Z", outcome: "ATTENTION", detail: "1 flag" } as RunnerHeartbeat["intakeRuntime"],
 };
+
+test("a live long-running cycle beats without inventing a finish or new work", () => {
+  const beat = liveCycleHeartbeat(prev, { at: "2026-10-02T01:42:00.000Z", startedAt: "2026-10-02T01:02:00.000Z",
+    testedSha: "a".repeat(40), host: "meanwhile-runner" });
+  assert.equal(beat.beatAt, "2026-10-02T01:42:00.000Z");
+  assert.equal(beat.lastCycleStartedAt, "2026-10-02T01:02:00.000Z");
+  assert.equal(beat.lastCycleFinishedAt, prev.lastCycleFinishedAt);
+  assert.equal(beat.lastCycleOk, prev.lastCycleOk);
+  assert.equal(beat.cycle.finishedAt, null);
+  assert.equal(beat.cycle.exitCode, null);
+  assert.equal(beat.nextCycleDueAt, null);
+  assert.equal(beat.intakeRuntime, prev.intakeRuntime);
+});
+
+test("a child exit records its actual code, signal and error independently of prior success", () => {
+  const beat = liveCycleHeartbeat(prev, { at: "2026-10-02T01:42:00.000Z", startedAt: "2026-10-02T01:02:00.000Z",
+    finishedAt: "2026-10-02T01:42:00.000Z", exitCode: null, signal: "SIGTERM", lastError: "child stopped",
+    testedSha: "a".repeat(40), host: "meanwhile-runner" });
+  assert.equal(beat.lastCycleOk, false);
+  assert.equal(beat.lastCycleFinishedAt, beat.cycle.finishedAt);
+  assert.equal(beat.cycle.exitCode, null);
+  assert.equal(beat.cycle.signal, "SIGTERM");
+  assert.equal(beat.cycle.lastError, "child stopped");
+});
+
+test("the first cycle can beat before any finished history exists", () => {
+  const beat = liveCycleHeartbeat(null, { at: "2026-10-02T01:02:00.000Z", startedAt: "2026-10-02T01:02:00.000Z",
+    testedSha: "a".repeat(40), host: "meanwhile-runner" });
+  assert.equal(beat.lastCycleFinishedAt, null);
+  assert.equal(beat.lastCycleOk, null);
+});
 
 test("a failed cycle advances beatAt and records lastCycleOk=false without erasing the intake receipt", () => {
   const next = cycleLivenessBeat(prev, {

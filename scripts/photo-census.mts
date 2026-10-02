@@ -10,7 +10,7 @@
  * `pnpm exec tsx scripts/photo-census.mts`
  *
  * COUNT ONLY. This script fetches nothing, changes no image, and hunts no
- * rung — the author's call: photos get a dedicated session; this session
+ * rung — photos get a dedicated session; this session
  * produces that session's brief input.
  */
 import { readFileSync, writeFileSync } from "node:fs";

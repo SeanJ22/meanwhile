@@ -193,7 +193,7 @@ for (const vp of VIEWPORTS) {
   {
     const { context, page } = await open(vp, "07866");
     /*
-     * Who Governs Here open — the panel the author's ALIGN-1 spec is of.
+     * Who Governs Here open — the panel the ALIGN-1 spec is about.
      *
      * **The selector is `.notice-fab`, and the first version of this script
      * guessed three others and hit none.** It then measured zero person rows
@@ -397,7 +397,7 @@ if (clippedTotal > 0) {
 /*
  * **LAY-11's floor.** The same reasoning as ALIGN-1's above: a run that
  * measured no viewports would report an empty list and read as success
- * (RULING 159). Sean ruled the rail ends where its content ends, so the
+ * (RULING 159). The rail ends where its content ends, so the
  * trailing empty panel is zero within a pixel or two of subpixel layout.
  */
 if (lay11.length !== VIEWPORTS.length) {

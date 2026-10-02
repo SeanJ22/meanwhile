@@ -7,7 +7,7 @@
  * 2026-08-23 by reading each stamp site against the retrieval it sits in.
  */
 /**
- * Door 2 of the photo rule (2026-08-14, the author's decision): fetch the
+ * Door 2 of the photo rule (2026-08-14): fetch the
  * portrait a government body publishes to identify its OWN member.
  *
  * This is the tier the licence-only rule blocked whole. A chamber's member

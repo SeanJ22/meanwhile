@@ -12,7 +12,7 @@
 
 import { DEFAULT_USER_AGENT } from "../lib/control-plane/scheduler/route-executor.ts";
 import type { BrowseFn, BrowseObservation } from "../lib/control-plane/scheduler/scout-contract.ts";
-import { launchGuarded } from "./browser.mts";
+import { launchGuarded, type GuardedBrowser } from "./browser.mts";
 
 type Observed = {
   url: string;
@@ -25,12 +25,11 @@ type Observed = {
 /** How long after `load` to wait for the network to go quiet before giving up on it. */
 const NETWORK_IDLE_CAP_MS = 10_000;
 
-export const browseWithPlaywright: BrowseFn = async ({ url, timeoutMs }) => {
+async function observe(browser: GuardedBrowser, { url, timeoutMs }: Parameters<BrowseFn>[0]): Promise<BrowseObservation> {
   const started = Date.now();
   const requests: Observed[] = [];
-  const browser = await launchGuarded({ label: "scout-browse", headless: true });
+  const page = await browser.page({ userAgent: DEFAULT_USER_AGENT });
   try {
-    const page = await browser.page({ userAgent: DEFAULT_USER_AGENT });
     page.on("request", (request) => {
       requests.push({
         url: request.url(),
@@ -88,6 +87,31 @@ export const browseWithPlaywright: BrowseFn = async ({ url, timeoutMs }) => {
     };
     return observation;
   } finally {
-    await browser.close();
+    await page.context().close();
   }
+}
+/** One lazy browser for the fleet; every observation closes its own guarded context. */
+export function sharedScoutBrowser(launch: () => Promise<GuardedBrowser> = () => launchGuarded({ label: "scout-browse", headless: true })) {
+  let browser: Promise<GuardedBrowser> | null = null;
+  return {
+    browse: (async input => {
+      browser ??= launch().catch(error => { browser = null; throw error; });
+      return observe(await browser, input);
+    }) satisfies BrowseFn,
+    close: async () => { if (browser) await (await browser).close(); browser = null; },
+  };
+}
+
+export const browseWithPlaywright: BrowseFn = async input => {
+  const url = process.env.WTP_WORKER_TOOLS_URL;
+  if (url) {
+    const response = await fetch(url, { method: "POST", headers: { "content-type": "application/json",
+      authorization: process.env.WTP_WORKER_TOOLS_TOKEN ?? "" }, body: JSON.stringify({ kind: "browse", body: input }),
+      signal: AbortSignal.timeout(input.timeoutMs + 5_000) });
+    if (!response.ok) throw new Error(`SHARED_BROWSER_FAILED:${response.status}`);
+    return await response.json() as BrowseObservation;
+  }
+  const browser = sharedScoutBrowser();
+  try { return await browser.browse(input); }
+  finally { await browser.close(); }
 };

@@ -13,8 +13,8 @@ import {
 import { PRODUCT_NAME } from "@/lib/brand";
 
 /**
- * The picks card (session item 5, wall clock 2026-08-14 second session,
- * author-approved): the reader's OWN ballot, screenshottable. The
+ * The picks card (session item 5, wall clock 2026-08-14 second session):
+ * the reader's OWN ballot, screenshottable. The
  * tester's use case verbatim — build picks on the couch, screenshot one
  * card, carry it into the booth.
  *
@@ -36,16 +36,16 @@ const SCALE = 3; // crisp on a phone screen
 const PAD = 24;
 
 /**
- * **THE CARD FOLLOWS THE THEME** — F01 12.2, 2026-08-19, the author.
+ * **THE CARD FOLLOWS THE THEME** — F01 12.2, 2026-08-19.
  *
- * *"I'm in the light version and it's shown as dark, and it needs to follow
- * whatever I've selected, whether I've selected light or dark."*
+ * In light mode the card rendered dark; it follows whichever theme the reader
+ * selected, light or dark.
  *
  * The old single palette was a DELIBERATE choice with a stated reason — "the
- * card leaves the app, so it must stand alone" — and the author has overruled
- * it. He is right about the thing that matters: a reader in light mode presses
- * a button and gets a dark rectangle, which reads as a bug long before anyone
- * reasons about where the image will end up.
+ * card leaves the app, so it must stand alone" — and it is now replaced, for
+ * the thing that matters: a reader in light mode presses a button and gets a
+ * dark rectangle, which reads as a bug long before anyone reasons about where
+ * the image will end up.
  *
  * The old reason is not thrown away, it is answered: BOTH palettes stand alone.
  * The card is drawn on a `<canvas>`, so it cannot inherit a CSS variable and
@@ -237,7 +237,7 @@ export function PicksCardControls({
      * **BC-12 (2026-08-24): the THIRD date-format implementation, consolidated.**
      *
      * It spelled the month out already and stopped there — "August 24, 2026"
-     * against the author's "August 24th, 2026" — so it was close enough to look
+     * against the house "August 24th, 2026" — so it was close enough to look
      * right and different enough to be a separate convention. That is the
      * duplicate-implementation shape RULING 103 names: a sweep for the numeric
      * form would never have found it.
@@ -287,7 +287,7 @@ export function PicksCardControls({
               onClick={() => setConfirmingClear(false)}
             />
             {/*
-              Item 6 (2026-08-15) — the author's order, and it is SUBTRACTION.
+              Item 6 (2026-08-15) — and it is SUBTRACTION.
 
               The second sentence used to read "your picks were never sent
               anywhere, so there is nothing to clear elsewhere." Half of that
@@ -350,11 +350,9 @@ export function PicksCardControls({
         )}
 
       {/*
-        F01 12.1 (2026-08-19, the author): *"The 'Create my card' thing is ugly.
-        What I would like it to do is pop up as if it's its own phone kind of
-        screenshot, rounded at the edges, so that I can still see the
-        background. It should be like I'm taking a screenshot of what's going on
-        right now."*
+        F01 12.1 (2026-08-19): "Create my card" should pop up as its own
+        phone-style screenshot, rounded at the edges, with the background
+        still visible — like taking a screenshot of what is on screen now.
 
         It used to render inline, in the page flow, as a bare rectangle under
         two links — the thing itself, unframed, with no sense that it was a

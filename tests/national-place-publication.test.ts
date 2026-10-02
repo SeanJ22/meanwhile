@@ -166,3 +166,44 @@ test("a statewide office's holder: the same one is confirmed without losing thei
   const bridge = after.payload.officialCandidacies.rows.find(row => row.holder.id === live.holder.id)!;
   assert.deepEqual([bridge.holder.name, bridge.status, bridge.candidacy], ["Jordan Reyes", "NOT_CHECKED", null], "the last holder's candidacy is never carried to the new one");
 });
+
+test('state portrait publishes through the existing blob path and registry binding after two saved sources confirm its identity and permitted use', async () => {
+  const s=await store();
+  const imageUrl='https://images.example.org/allison-russo.jpg';
+  const officialUrl='https://ohiohouse.gov/members/allison-russo';
+  const page=capture(`<h1>Representative Allison Russo</h1><p>District 7</p><img alt="Allison Russo" src="${imageUrl}">`,officialUrl);
+  const csv=capture(`name,image\nAllison Russo,${imageUrl}\n`,'https://data.openstates.org/people/current/oh.csv');
+  // Existing decoder's structural JPEG fixture: 200x240, with a frame marker.
+  const image=Buffer.from([0xff,0xd8,0xff,0xc0,0,17,8,0,240,0,200,3,1,0x11,0,2,0x11,0,3,0x11,0,0xff,0xd9]);
+  const writes=new Map<string,Uint8Array>();let reads=0;
+  const result=await publishNationalPlaceSources({store:s,now:NOW,divisions,geographyCaptures:geography,
+    sources:{officials:[{discoveryId:'russo',divisionId:`${OH}/sldl:7`,name:'Allison Russo',officeTitle:'Representative',officialUrl,
+      document:{url:officialUrl,capture:page},portrait:{imageUrl,captures:[csv,page]}}]},
+    portraitRuntime:{read:async()=>{reads++;return image;},put:async(key,bytes)=>{writes.set(key,bytes);}}});
+  assert.deepEqual(result.gaps,[]);
+  const after=(await readRegistryRuntimePrior(s,NOW))!;
+  const holder=after.payload.bodyRosters.find(r=>r.bodyId===`${OH}/sldl:7#seat`)!.members[0];
+  const photo=after.payload.officialPhotos.photos.find(p=>p.officeholderId===holder.id)!;
+  assert.ok(photo);assert.match(photo.url,/^\/api\/portraits\/officials\/[a-f0-9]{64}\.jpg$/);
+  assert.equal(photo.verification?.sources.length,2);assert.match(photo.license ?? '',/official government portrait/);
+  assert.equal(after.payload.rosterPhotos[holder.id],photo.url);assert.equal(reads,1);assert.equal(writes.size,1);
+  assert.deepEqual(writes.values().next().value,image);
+  const changed = registryRuntimeCandidate({contractId:'registry-runtime-bindings',scope:'MEMBERS',version:'unverified-photo-replacement',sourceThrough:NOW,
+    sourceReceipt:{...after.sourceReceipt,sources:after.sourceReceipt.sources.map(source=>({...source,sourceClass:'OFFICIAL_PUBLISHER' as const}))},
+    payload:{...after.payload,registry:{...after.payload.registry,divisions:[],bodies:[]},bodyRosters:[],rosterReaderDispositions:[],statewideExecutives:[],
+      officialCandidacies:{...after.payload.officialCandidacies,rows:[]},officialPhotos:{photos:[{...photo,url:'/api/portraits/officials/replaced.jpg',verification:undefined}]},
+      rosterPhotos:{[holder.id]:'/api/portraits/officials/replaced.jpg'}}},{prior:after});
+  assert.equal((changed.readModel as typeof after.payload).rosterPhotos[holder.id],photo.url,'an uncorroborated replacement retains the published portrait');
+  assert.ok(changed.excludedFacts?.some(f=>f.key===`official-photo:${holder.id}` && /second-source/.test(f.detail ?? '')));
+});
+
+test('a portrait without corroboration stays a gap while its official still publishes', async () => {
+    const s=await store(),imageUrl='https://images.example.org/allison-russo.jpg',officialUrl='https://ohiohouse.gov/members/allison-russo';
+    const page=capture(`<h1>Representative Allison Russo</h1><p>District 7</p><img alt="Allison Russo" src="${imageUrl}">`,officialUrl);
+    const result=await publishNationalPlaceSources({store:s,now:NOW,divisions,geographyCaptures:geography,
+      sources:{officials:[{discoveryId:'russo',divisionId:`${OH}/sldl:7`,name:'Allison Russo',officeTitle:'Representative',officialUrl,
+        document:{url:officialUrl,capture:page},portrait:{imageUrl,captures:[page]}}]},
+      portraitRuntime:{read:async()=>{throw Error('An unverified photo must not be downloaded');},put:async()=>{throw Error('must not store');}}});
+    assert.ok(result.members.some(m=>m.discoveryIds.includes('russo')));
+    assert.ok(result.gaps.some(g=>g.key==='portrait:russo' && g.detail==='PORTRAIT_SECOND_SOURCE_MISSING'),JSON.stringify(result.gaps));
+});

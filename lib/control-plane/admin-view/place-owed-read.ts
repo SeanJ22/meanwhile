@@ -18,6 +18,7 @@ import { buildPlaceOwedList, type PlaceOwedItem } from "../../coverage/place-owe
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import { countyIdentity, stateBase } from "../../ocd/divisions.ts";
 import { parseV6PlaceKey } from "./v6-hunts-read.ts";
+import { districtDivisions, readStateDistricts } from "./v6-national-geography.ts";
 
 export interface PlaceOwedRead {
   readonly state: "READ";
@@ -49,16 +50,18 @@ export interface PlaceDivisionLike {
 export type ResolvedPlace =
   | { readonly kind: "zip"; readonly zip: string; readonly state: string }
   | { readonly kind: "county"; readonly geoid: string; readonly state: string }
+  | { readonly kind: "district"; readonly geoid: string; readonly state: string }
   | { readonly kind: "state"; readonly state: string };
 
-/** The owed list is defined for a ZIP, a county or a state. Other geographies and the country are not a place view. */
+/** The owed list is defined for a ZIP, a county, a congressional district or a state. Other geographies and the country are not a place view. */
 export function resolvePlaceKey(key: string): ResolvedPlace | PlaceOwedRefusal {
   const scope = parseV6PlaceKey(key);
-  if (scope === null || scope.kind === "country") return { state: "REFUSED", code: "NOT_A_PLACE", says: "Choose a ZIP, a county or a state to see what it is owed. The whole country is a list of states, not one place." };
+  if (scope === null || scope.kind === "country") return { state: "REFUSED", code: "NOT_A_PLACE", says: "Choose a ZIP, a county, a congressional district or a state to see what it is owed. The whole country is a list of states, not one place." };
   if (scope.kind === "state") return { kind: "state", state: scope.state };
   if (scope.type === "zcta" && /^\d{5}$/.test(scope.geoid)) return { kind: "zip", zip: scope.geoid, state: scope.state };
   if (scope.type === "county" && /^\d{5}$/.test(scope.geoid)) return { kind: "county", geoid: scope.geoid, state: scope.state };
-  return { state: "REFUSED", code: "UNSUPPORTED_PLACE", says: "This geography type has no owed list yet. A ZIP, a county or a state does." };
+  if (scope.type === "congressional_district" && /^\d{4}$/.test(scope.geoid)) return { kind: "district", geoid: scope.geoid, state: scope.state };
+  return { state: "REFUSED", code: "UNSUPPORTED_PLACE", says: "This geography type has no owed list yet. A ZIP, a county, a congressional district or a state does." };
 }
 
 const TIGER = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer";
@@ -93,6 +96,14 @@ export const defaultPlaceOwedDeps: PlaceOwedDeps = {
     if (place.kind === "zip") {
       const divisions = await divisionsForZip(place.zip);
       return { label: `ZIP ${place.zip}`, covers: "Every government, district and body whose boundary touches this ZIP, plus the state and the country.", divisions };
+    }
+    if (place.kind === "district") {
+      // One owed list for the whole district: the divisions of every ZIP in it, read from held data once. No network: the ZIPs come from the published lookup and the divisions from the committed ZIP index.
+      const read = await readStateDistricts(place.state);
+      if (!read.ok) throw new Error(read.says);
+      const district = read.districts.find((d) => d.geoid === place.geoid);
+      if (district === undefined) throw new Error("The published lookup has no such congressional district in that state");
+      return { label: district.label, covers: "Every government, district and body whose boundary touches a ZIP in this district, plus the district itself, the state and the country.", divisions: await districtDivisions(district) };
     }
     if (place.kind === "county") {
       const county = await countyDivision(place.geoid, place.state);

@@ -1,8 +1,8 @@
 /**
  * THE CENSUS, SPLIT INTO TWO TABS — `pnpm deferred:xlsx`
  *
- * The author's ruling of 2026-08-17: non-code decisions were confusing mixed in
- * with build work. `docs/deferred.csv` becomes `docs/deferred.xlsx` with two
+ * Since 2026-08-17: non-code decisions were confusing mixed in with build
+ * work, so `docs/deferred.csv` becomes `docs/deferred.xlsx` with two
  * sheets — **Build** and **Non-code decisions** — and which rows go where is
  * read from `docs/deferred-noncode.json`, so correcting a mis-sort is one line
  * in a list rather than an argument with a script.

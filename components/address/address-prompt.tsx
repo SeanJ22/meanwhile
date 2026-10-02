@@ -16,7 +16,7 @@ import {
 
 /**
  * **THE ADDRESS PROMPT — one component, every surface.**
- * (WGH-5, 2026-08-22, the author's 8/22 walkthrough, item 9.)
+ * (WGH-5, 2026-08-22, the 8/22 walkthrough, item 9.)
  *
  * Who Governs Here, the "Narrow to this area" chip, the ballot's bottom box and
  * the JUR-2 meeting pill all call this. There were two separate implementations
@@ -60,8 +60,8 @@ import {
  * That second reason was added in Session C (2026-08-31) because it was
  * already TRUE and unsaid. The resolver probes a fixed ladder of sample house
  * numbers when none is given, and a street whose range excludes them all came
- * back FAILED — so the product told the owner it could not place his own road
- * and offered him no field to correct it with. The promise now names both
+ * back FAILED — so the product told a reader it could not place their own road
+ * and offered no field to correct it with. The promise now names both
  * reasons a number is wanted, and the form asks in both cases.
  */
 
@@ -102,8 +102,8 @@ export interface AddressPromptProps {
    * on?* was squeezed to its minimum-content width and wrapped one word per
    * line, the promise paragraph overflowed to the right, and the whole thing
    * sat inside a 40px pill it could never fit — inside a `display: flex`
-   * container it was also sharing with the *Moving here?* pill. The author's
-   * `17-44-49` is that, and his words are *very ugly, convoluted, a disaster.*
+   * container it was also sharing with the *Moving here?* pill. Screenshot
+   * `17-44-49` shows exactly that.
    *
    * A collapsed control and an expanded form are different shapes and always
    * were; the prop that placed them was not. `triggerClassName` places the
@@ -210,7 +210,7 @@ export function AddressPrompt({
          * ── BAL-38 ── **AN ADDRESS THAT RESOLVES SOMEWHERE ELSE IS NOT AN
          * ADDRESS WE COULD NOT PLACE.** (2026-08-31.)
          *
-         * The owner: out-of-zip addresses were rejected rather than redirected.
+         * The problem: out-of-zip addresses were rejected rather than redirected.
          * The geocoder constrains its query to the ZIP on screen, so an address
          * one ZIP over failed exactly like a bad one — and the reader was told
          * we could not place it, which was true, about us, and concealed that
@@ -230,8 +230,8 @@ export function AddressPrompt({
          * numbers — 1, 50, 200, 800 — against the Census range for the street.
          * A street whose range excludes all four returns zero points and comes
          * back FAILED. That is a fact about OUR four guesses, not about the
-         * street: the owner's own road is numbered 10701-10899, so every probe
-         * missed and the product told him it could not place a road the Census
+         * street: a road numbered 10701-10899 missed on every probe, and the
+         * product said it could not place a road the Census
          * places on the first try with a real number.
          *
          * Telling a reader their street could not be placed is asserting an

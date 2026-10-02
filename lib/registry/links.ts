@@ -69,8 +69,8 @@ export interface LinkableBody {
 /**
  * Google Maps directions, at the coordinates we already hold.
  *
- * The author's direction (2026-08-14, friction pass): directions default to
- * Google Maps on every venue link. The earlier OpenStreetMap choice read
+ * 2026-08-14, friction pass: directions default to Google Maps on every
+ * venue link. The earlier OpenStreetMap choice read
  * `CLAUDE.md`'s "Not Google Maps" too broadly — that rule is about the
  * basemap, not about where a reader gets driving directions. The
  * `maps/dir/?api=1` form is Google's documented universal link: it opens the
@@ -89,10 +89,9 @@ function directionsUrl(lat: number, lng: number): string {
 /**
  * **A district office's address, handed to Google Maps** — F01 4.3, 2026-08-19.
  *
- * The author: *"When I look at 'Offices near you' the address for these I would
- * like to be hyperlinked out to Google Maps. If I click on 2201 East Camelback
- * Road, it should take that address and put it into Google Maps and pop up 'hey,
- * you want to go here?'"*
+ * Each address under "Offices near you" links out to Google Maps: a click on
+ * 2201 East Camelback Road opens that address in Google Maps, ready to ask
+ * whether the reader wants to go there.
  *
  * ## A DECLARED EXCEPTION to nothing-leaves-the-app
  *

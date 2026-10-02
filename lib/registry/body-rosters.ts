@@ -116,7 +116,7 @@ const COLLECTED = "2026-08-13";
 /**
  * M62 — the certified-results rung, walked 2026-08-15.
  *
- * The rule the author set: a local office is partisan or nonpartisan by law or
+ * The rule: a local office is partisan or nonpartisan by law or
  * charter FIRST, and only a partisan office gets a party, read from the
  * certified result of the election that put the person in the seat. Never from
  * an endorsement, a news report, or a party's own site. Where no certification
@@ -190,7 +190,7 @@ const NH_SOS = "New Hampshire Secretary of State (official general election resu
 /** Raw held rows are retained for audit, including unresolved extraction identities. */
 export const HELD_BODY_ROSTERS: BodyRoster[] = [
   {
-    // The author's named example (5a): the members are front-and-center at
+    // The named example for item 5a: the members are front-and-center at
     // govboard.tusd1.org — five seats, roles and term expirations stated.
     bodyId:
       "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
@@ -257,8 +257,8 @@ export const HELD_BODY_ROSTERS: BodyRoster[] = [
       },
       {
         /*
-         * F01 1.2 / 0b (2026-08-19, the author): *"the superintendent also
-         * should be listed at the top."*
+         * F01 1.2 / 0b (2026-08-19): the superintendent is also listed at the
+         * top.
          *
          * **This person is NOT ELECTED and does not sit on the board.** He is
          * hired by it, and that distinction is the whole reason the schema has
@@ -572,8 +572,8 @@ export const HELD_BODY_ROSTERS: BodyRoster[] = [
          * (F01-continued item 10b, 2026-08-19).
          *
          * F01 reached this person at rung 6 and got "Superintendent Carruth" —
-         * a surname alone — and correctly refused to ship it. The author ruled
-         * the full name: John Carruth, `/page/superintendent`.
+         * a surname alone — and correctly refused to ship it. The full name is
+         * John Carruth, `/page/superintendent`.
          *
          * THE ROOT CAUSE, measured rather than guessed, and it is none of the
          * three the brief proposed as likely:

@@ -1,4 +1,5 @@
 import { RUNNER_ID } from "../admin-data.ts";
+import { runnerCycleOf, type CycleHeartbeat, type RunnerCycle } from "../runner-standing.ts";
 import { HUNT_SOURCE_PROGRESS_LOG_KEY, livenessOf, type RunnerHeartbeat } from "../owner-surface.ts";
 import { RESEARCH_STATE_ID, type ResearchState, type RunningScout } from "../scheduler/research-policy.ts";
 import { pulseLanesOf } from "../scheduler/lane-reading.ts";
@@ -8,6 +9,7 @@ import type { ControlPlaneRepositories, RecordProjection } from "../repository/t
 export const RUNNER_PROGRESS_HEARTBEAT_FIELDS = {
   beatAt: true, lastCycleStartedAt: true, lastCycleFinishedAt: true,
   lastCycleOk: true, nextCycleDueAt: true, testedSha: true,
+  cycle: ["startedAt", "finishedAt", "exitCode", "signal", "lastError"],
 } as const satisfies RecordProjection;
 export const RUNNER_PROGRESS_RESEARCH_FIELDS = {
   beatAt: true, cycleStartedAt: true, cycleFinishedAt: true, testedSha: true,
@@ -34,6 +36,7 @@ export interface RunnerProgressRead {
     readonly lastCycleOk: boolean | null;
     readonly nextCycleDueAt: string | null;
     readonly testedSha: string | null;
+    readonly cycle: RunnerCycle | null;
     readonly says: string;
   };
   readonly research: {
@@ -75,7 +78,7 @@ export interface RunnerProgressRead {
 
 const missingHeartbeat = (state: "NOT_RECORDED" | "UNREAD", says: string): RunnerProgressRead["heartbeat"] => ({
   state, liveness: null, beatAt: null, cycleStartedAt: null, cycleFinishedAt: null,
-  lastCycleOk: null, nextCycleDueAt: null, testedSha: null, says,
+  lastCycleOk: null, nextCycleDueAt: null, testedSha: null, cycle: null, says,
 });
 const missingResearch = (state: "NOT_RECORDED" | "UNREAD", says: string): RunnerProgressRead["research"] => ({
   state, observedAt: null, cycleStartedAt: null, cycleFinishedAt: null, testedSha: null,
@@ -99,7 +102,7 @@ export async function readAdminRunnerProgress(repos: ControlPlaneRepositories, o
   let heartbeat: RunnerProgressRead["heartbeat"] = missingHeartbeat("NOT_RECORDED", "No runner heartbeat has been recorded yet.");
   if (beatRead.status === "rejected") heartbeat = missingHeartbeat("UNREAD", "The runner heartbeat could not be read just now.");
   else if (beatRead.value !== null) {
-    const beat = beatRead.value.value as Partial<RunnerHeartbeat>;
+    const beat = beatRead.value.value as Partial<CycleHeartbeat>;
     if (!clock(beat.beatAt)) heartbeat = missingHeartbeat("UNREAD", "The recorded heartbeat clock is invalid; liveness is unknown.");
     else {
       const live = livenessOf(beat as RunnerHeartbeat, observedAt);
@@ -109,6 +112,7 @@ export async function readAdminRunnerProgress(repos: ControlPlaneRepositories, o
         lastCycleOk: typeof beat.lastCycleOk === "boolean" ? beat.lastCycleOk : null,
         nextCycleDueAt: clock(beat.nextCycleDueAt) ? beat.nextCycleDueAt : null,
         testedSha: typeof beat.testedSha === "string" ? beat.testedSha : null,
+        cycle: runnerCycleOf(beat.cycle),
         says: `The runner's last heartbeat is ${live.state.toLowerCase()}; a heartbeat does not prove that civic work advanced.` };
     }
   }

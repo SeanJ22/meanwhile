@@ -58,7 +58,7 @@ export interface CommandResult {
 type RunCommand = (
   executable: string,
   args: readonly string[],
-  options: { readonly cwd: string; readonly timeoutMs: number },
+  options: { readonly cwd: string; readonly timeoutMs: number; readonly env?: NodeJS.ProcessEnv },
 ) => CommandResult;
 
 function lowerFullSha(value: unknown): string | null {
@@ -276,10 +276,11 @@ export async function inspectNewestDeployedRuntimeRelease(input: {
 function defaultRunCommand(
   executable: string,
   args: readonly string[],
-  options: { readonly cwd: string; readonly timeoutMs: number },
+  options: Parameters<RunCommand>[2],
 ): CommandResult {
   const result = spawnSync(executable, [...args], {
     cwd: options.cwd,
+    env: options.env,
     encoding: "utf8",
     maxBuffer: 16 * 1024 * 1024,
     stdio: ["ignore", "pipe", "pipe"],
@@ -412,7 +413,10 @@ export function applyRuntimeRelease(input: {
   if (input.install !== false) {
     const command = runtimePackageManagerCommand();
     if (command === null) return refuse("COREPACK_ENTRY_UNAVAILABLE", "the running Node installation has no Corepack JavaScript entry; no shell fallback was attempted");
-    const installed = run(command.executable, command.args, { cwd: input.root, timeoutMs: INSTALL_TIMEOUT_MS });
+    const installed = run(command.executable, command.args, {
+      cwd: input.root, timeoutMs: INSTALL_TIMEOUT_MS,
+      env: { ...process.env, CI: "true" },
+    });
     if (installed.status !== 0) return refuse("FROZEN_INSTALL_FAILED", conciseFailure(installed));
   }
 

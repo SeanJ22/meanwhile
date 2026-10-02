@@ -1,5 +1,8 @@
 import { fork } from "node:child_process";
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
+import { createServer } from "node:http";
+import { narrowFieldManual, type FieldManualQuery, type FieldManualRead } from "../field-manual.ts";
+import type { BrowseFn } from "../scheduler/scout-contract.ts";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import type { RouteDescriptor } from "../scheduler/registry.ts";
@@ -7,6 +10,35 @@ import type { WorkerProcessSlots } from "./worker-slots.ts";
 import { workerProcessSlots } from "./worker-slots.ts";
 export { workerProcessSlots, type WorkerProcessSlots } from "./worker-slots.ts";
 const processMemorySlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER);
+
+/** Transient tools on this host; leases, costs and publications keep their existing stores. */
+export async function startWorkerToolsHost(input: { knowledge: FieldManualRead; browse: BrowseFn }) {
+  const token = randomUUID();
+  const server = createServer(async (request, response) => {
+    if (request.method !== "POST" || request.url !== "/" || request.headers.authorization !== token) {
+      response.writeHead(404).end(); return;
+    }
+    try {
+      const chunks: Buffer[] = [];
+      for await (const chunk of request) chunks.push(Buffer.from(chunk));
+      const message = JSON.parse(Buffer.concat(chunks).toString("utf8")) as { kind: string; body: unknown };
+      const result = message.kind === "manual" ? narrowFieldManual(input.knowledge, message.body as FieldManualQuery)
+        : message.kind === "browse" ? await input.browse(message.body as Parameters<BrowseFn>[0]) : null;
+      if (result === null) { response.writeHead(404).end(); return; }
+      response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify(result));
+    } catch { response.writeHead(503).end(); }
+  });
+  await new Promise<void>((resolve, reject) => { server.once("error", reject); server.listen(0, "127.0.0.1", resolve); });
+  server.unref();
+  const address = server.address();
+  if (!address || typeof address === "string") throw new Error("WORKER_TOOLS_ADDRESS_UNAVAILABLE");
+  process.env.WTP_WORKER_TOOLS_URL = `http://127.0.0.1:${address.port}/`;
+  process.env.WTP_WORKER_TOOLS_TOKEN = token;
+  return { close: async () => {
+    delete process.env.WTP_WORKER_TOOLS_URL; delete process.env.WTP_WORKER_TOOLS_TOKEN;
+    await new Promise<void>(resolve => server.close(() => resolve()));
+  } };
+}
 import type { DeclaredExecutor, DispatchResult } from "../scheduler/dispatch.ts";
 import type { ModelRequest, ModelTransport, ScoutExecutorDeps } from "../scheduler/scout-executor.ts";
 import type { ScoutToolContext } from "../scheduler/scout-contract.ts";

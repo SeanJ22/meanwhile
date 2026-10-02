@@ -9,7 +9,7 @@ export { OWN_MONEY_BAND_ID, UNFILED_BAND_ID };
 
 /**
  * **Concentration, on the FEC's own axis** — D06's third named feature,
- * shipped 2026-08-19 (g20) on the author's ruling: *"Accept."*
+ * shipped 2026-08-19 (g20).
  *
  * ## Why this is not "industry concentration", and why that is the honest form
  *
@@ -21,8 +21,8 @@ export { OWN_MONEY_BAND_ID, UNFILED_BAND_ID };
  * thing an organization is. "Organizations render as filed, never
  * characterized" forbids that outright.
  *
- * The author's ruling was to ship concentration **by the FEC's own entity
- * typing** instead. That is what this file computes. Every band below is a
+ * The design ships concentration **by the FEC's own entity typing**
+ * instead. That is what this file computes. Every band below is a
  * category the contributing committee itself filed — `committee_type`,
  * `organization_type`, `designation` — mapped through the single
  * author-reviewable table in `./committee-types.ts` and nowhere else. A

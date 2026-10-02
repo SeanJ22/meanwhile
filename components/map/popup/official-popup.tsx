@@ -109,13 +109,13 @@ export type MemberRollCall = RollCallVote & {
 /**
  * How many recent roll calls the "Recent" column shows.
  *
- * **Count-based, not a time window** (item 6b, the author's design): a
+ * **Count-based, not a time window** (item 6b): a
  * congress votes in bursts, and "the last 30 days" is forty roll calls in one
  * week and none in the next. Twenty self-adjusts to the chamber's own rhythm
  * and always fills the column.
  *
- * **Nothing is filtered out of it, and nothing is footnoted as lesser.** The
- * author's order: procedural votes — tabling, cloture, rules — are exactly
+ * **Nothing is filtered out of it, and nothing is footnoted as lesser.**
+ * Procedural votes — tabling, cloture, rules — are exactly
  * where a member's real position often lives, because voting to table a bill
  * is voting to kill it without going on record against it. This column shows
  * every roll call the member cast, in the chamber's own words, with the plain
@@ -338,7 +338,7 @@ function RecentVotesInner({
   }
 
   /*
-   * Item 4 (2026-08-16) — the author's pass, replacing 6b's two columns.
+   * Item 4 (2026-08-16) — replacing 6b's two columns.
    *
    * What was wrong: "Recent" and "When it mattered" floated as two headers
    * with no parent, so the first question a reader asks is "recent WHAT?" —
@@ -717,7 +717,7 @@ export function OfficialIdentity({
         </p>
         {holder.partyLabel && (
           // Display only. Nothing infers anything from it. Colored per the
-          // author's palette (3a) — the color states the label, never a view.
+          // party palette (3a) — the color states the label, never a view.
           <p
             className="mt-0.5 text-[0.75rem]"
             style={{ color: partyColorVar(holder.partyLabel) }}
@@ -820,10 +820,9 @@ export function OfficeBlurb({
 }
 
 /**
- * The compact glance card — ITEM 4, 2026-08-16, the author's ruling.
+ * The compact glance card — ITEM 4, 2026-08-16.
  *
- * The author on the previous form: "ugly and scattered, too much info." It
- * carried the name, a party pill, a row of outlined chips (state, chamber,
+ * The previous form was scattered, with too much info. It carried the name, a party pill, a row of outlined chips (state, chamber,
  * incumbent), the office title, an in-seat date, and a wrapped grid of up to
  * ten contact pills, all inside 300px.
  *
@@ -867,7 +866,7 @@ export function OfficialPopup({
       titleInBody
     >
       <PersonIdentity holder={holder} seatLabel={seatLabel} identityOnly />
-      {/* Item 2, the author's ruling: the pill row REPLACES the REACH THEM
+      {/* Item 2: the pill row REPLACES the REACH THEM
           label/value ledger — the ledger is what broke, and a pill carries
           its own label so nothing competes for the popup's fixed width.
           Item 4: one column, primary channels only. */}

@@ -26,7 +26,7 @@ Byte-current means current against committed inputs. External observations keep 
 
 ### Canonical datasets and feeds
 
-24 of 24 current repository dataset files tagged to this state; every table row is rendered below.
+25 of 25 current repository dataset files tagged to this state; every table row is rendered below.
 
 | Dataset | Domain | Rows held / file denominator | Recorded observation | Reader surfaces | Provenance / limits |
 | --- | --- | --- | --- | --- | --- |
@@ -53,6 +53,7 @@ Byte-current means current against committed inputs. External observations keep 
 | [data/reference/nces_ccd_lea_directory_2025_26.csv](../../data/reference/nces_ccd_lea_directory_2025_26.csv) | reference | 1246 of 19711 records | not recorded | Acquisition inventory — no direct reader surface | Authoritative reference/enumeration input for acquisition and registry construction; a tenant/domain lead is not a verified government. The registration reference is the runner's input; readers read only each state's promoted registration. Provenance is in the linked holding; no acquisition date or authority is inferred. |
 | [data/reference/openstates_legislators.csv](../../data/reference/openstates_legislators.csv) | reference | 179 of 7976 records | not recorded | Acquisition inventory — no direct reader surface | Authoritative reference/enumeration input for acquisition and registry construction; a tenant/domain lead is not a verified government. The registration reference is the runner's input; readers read only each state's promoted registration. Provenance is in the linked holding; no acquisition date or authority is inferred. |
 | [data/reference/state-cf-agencies.csv](../../data/reference/state-cf-agencies.csv) | reference | 1 of 56 records | not recorded | Acquisition inventory — no direct reader surface | Authoritative reference/enumeration input for acquisition and registry construction; a tenant/domain lead is not a verified government. The registration reference is the runner's input; readers read only each state's promoted registration. Provenance is in the linked holding; no acquisition date or authority is inferred. |
+| [data/states/tx/reference/publisher-sizes.jsonl](../../data/states/tx/reference/publisher-sizes.jsonl) | reference | 1 of 1 dataset objects | not recorded | Acquisition inventory — no direct reader surface | Authoritative reference/enumeration input for acquisition and registry construction; a tenant/domain lead is not a verified government. The registration reference is the runner's input; readers read only each state's promoted registration. Provenance is in the linked holding; no acquisition date or authority is inferred. |
 | [public/geo/cd119.geojson](../../public/geo/cd119.geojson) | geography | 38 of 441 features | 2026-08-22T23:22:27.886Z | [Map and government cards](../../components/map/map-entry.tsx); [Ballot and candidate cards](../../app/ballot/page.tsx); [Government representation](../../app/api/representation/[...division]/route.ts); [Nearby meetings](../../app/api/meetings/route.ts) | Jurisdiction geometry and reader-location projections; geometry never proves bodies or records have been acquired. Provenance is in the linked holding; no acquisition date or authority is inferred. | <!-- expected-future: recorded observations and source dates are copied from the linked canonical holdings, never stamped by generation -->
 
 ### Immutable tracked first-seed/test evidence tagged to this state
@@ -184,7 +185,7 @@ No rows are held in these committed inputs; this is not evidence that the public
 
 ### Coverage by domain (R-C9)
 
-24 of 24 current repository dataset coverage statements; every table row is rendered below.
+25 of 25 current repository dataset coverage statements; every table row is rendered below.
 
 | Domain | Dataset | Population label | Denominator / basis |
 | --- | --- | --- | --- |
@@ -211,6 +212,7 @@ No rows are held in these committed inputs; this is not evidence that the public
 | reference | [data/reference/nces_ccd_lea_directory_2025_26.csv](../../data/reference/nces_ccd_lea_directory_2025_26.csv) | COVERAGE_NOT_ESTABLISHED | Held reference/registry/acquisition rows only. No source-universe completeness or reader coverage tier is inferred from state-shaped keys. |
 | reference | [data/reference/openstates_legislators.csv](../../data/reference/openstates_legislators.csv) | COVERAGE_NOT_ESTABLISHED | Held reference/registry/acquisition rows only. No source-universe completeness or reader coverage tier is inferred from state-shaped keys. |
 | reference | [data/reference/state-cf-agencies.csv](../../data/reference/state-cf-agencies.csv) | COVERAGE_NOT_ESTABLISHED | Held reference/registry/acquisition rows only. No source-universe completeness or reader coverage tier is inferred from state-shaped keys. |
+| reference | [data/states/tx/reference/publisher-sizes.jsonl](../../data/states/tx/reference/publisher-sizes.jsonl) | COVERAGE_NOT_ESTABLISHED | Held reference/registry/acquisition rows only. No source-universe completeness or reader coverage tier is inferred from state-shaped keys. |
 | geography | [public/geo/cd119.geojson](../../public/geo/cd119.geojson) | COVERAGE_NOT_ESTABLISHED | Held reference/registry/acquisition rows only. No source-universe completeness or reader coverage tier is inferred from state-shaped keys. |
 
 ### Jurisdiction inventory

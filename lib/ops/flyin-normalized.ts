@@ -1,8 +1,8 @@
 /**
  * THE HOST-NORMALIZED FLY-IN CRITERION — the statistics, in one place.
- * (The author's amendment to W6 H3, 2026-08-31.)
+ * (The amendment to W6 H3, 2026-08-31.)
  *
- * ## What the author replaced, and why the replacement is not a smaller number
+ * ## What was replaced, and why the replacement is not a smaller number
  *
  * W6 H3 shipped with an ABSOLUTE target — 55 fps — and the absolute was wrong
  * in the way `scripts/measure-fly.mts` already had a ruling about: *"a check
@@ -14,15 +14,16 @@
  * so it cannot be a statement about this product. It is a statement about the
  * machine, dressed as a statement about the build.
  *
- * The amendment, in the author's words:
+ * The amendment replaces the absolute 55 FPS criterion with a host-normalized
+ * one:
  *
- * > Replace the absolute 55 FPS criterion with the host-normalized criterion.
- * > Run the identical fly-in repeatedly on (a) bare MapLibre with application
- * > layers/overlays removed and (b) the actual application. Report median FPS
- * > and frame-time/jank for both. Pass: application median FPS >= 90% of bare
- * > map median FPS on that host. If the bare map itself cannot reach smooth
- * > motion, report that host limit numerically; it does not waive the relative
- * > requirement. Preserve as the permanent performance check.
+ * - Run the identical fly-in repeatedly on (a) bare MapLibre with application
+ *   layers/overlays removed and (b) the actual application.
+ * - Report median FPS and frame-time/jank for both.
+ * - Pass: application median FPS >= 90% of bare-map median FPS on that host.
+ * - If the bare map itself cannot reach smooth motion, report that host limit
+ *   numerically; it does not waive the relative requirement.
+ * - This is the permanent performance check.
  *
  * **The bare map is the host's own ceiling, measured rather than assumed.** It
  * carries the rasteriser, the GPU, the display's refresh rate and whatever else
@@ -167,7 +168,7 @@ export function isSoftwareRenderer(renderer: string): boolean {
  */
 export const LONG_FRAME_MS = 33.4;
 
-/** The author's floor: the application must hold this share of the bare map. */
+/** The floor: the application must hold this share of the bare map. */
 export const NORMALIZED_FLOOR = 0.9;
 
 /**
@@ -179,8 +180,8 @@ export const NORMALIZED_FLOOR = 0.9;
  * different machines, and one number covering both would be a number neither of
  * them has.
  *
- * The hardware floor above stays at 90% — that is the author's criterion and it
- * is unchanged. This is the minimum the CPU-rasterised path must clear, and it
+ * The hardware floor above stays at 90% — that is the criterion and it is
+ * unchanged. This is the minimum the CPU-rasterised path must clear, and it
  * is lower for a stated reason rather than a convenient one: the degradation
  * that gets it there deliberately stands treatments down mid-flight, so the
  * software arm is not being asked to match a bare map as closely as the
@@ -210,9 +211,8 @@ export const SOFTWARE_JANK_CEILING = 0.2;
 /**
  * The rate below which the BARE map is reported as not reaching smooth motion.
  *
- * **THIS IS A REPORTING TRIGGER AND IT IS NEVER A PASS CONDITION.** The author
- * was explicit that a host limit "does not waive the relative requirement", so
- * this number changes what gets SAID and never what gets DECIDED: the verdict
+ * **THIS IS A REPORTING TRIGGER AND IT IS NEVER A PASS CONDITION.** A host
+ * limit does not waive the relative requirement, so this number changes what gets SAID and never what gets DECIDED: the verdict
  * below is computed from the ratio alone, whether or not this fires.
  */
 export const SMOOTH_MOTION_FPS = 55;
@@ -341,7 +341,7 @@ export interface NormalizedVerdict {
   readonly bare: ArmSummary;
   /** application median fps / bare-map median fps, on this host, today. */
   readonly ratio: number;
-  /** The author's criterion, and the only thing here that decides anything. */
+  /** The criterion, and the only thing here that decides anything. */
   readonly pass: boolean;
   /**
    * The bare map's own median fps: this host's ceiling for this animation.
@@ -431,7 +431,7 @@ export function judgeSoftware(app: ArmSummary, bare: ArmSummary): SoftwareVerdic
 /**
  * The one-line host condition, so a future session can read a red result.
  *
- * **This is the half the author asked for by name**: a permanent check
+ * **This is the host-limit half of the criterion**: a permanent check
  * re-running on an unknown machine under unknown load has to be able to tell a
  * regression from a busy box, and it cannot do that from a ratio alone. So
  * every report states what the host was doing — its measured ceiling for this

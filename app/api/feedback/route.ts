@@ -14,7 +14,7 @@ import {
 import { intakeWindows } from "@/lib/db/intake-windows";
 
 /**
- * POST /api/feedback — R40, 2026-08-17, the author's ruling (1A: in-app).
+ * POST /api/feedback — R40, 2026-08-17 (1A: in-app).
  *
  * The address that used to sit on three surfaces is gone; this is where a
  * reader reaches the author now, and nothing leaves the app to get there.

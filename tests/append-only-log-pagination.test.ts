@@ -25,6 +25,27 @@ import {
   pgAppendOnlyRepository,
 } from "../lib/control-plane/repository/pg-store.ts";
 import { projectRecord } from "../lib/control-plane/repository/types.ts";
+import { aggregateModelSpend } from "../lib/control-plane/fleet-safety.ts";
+import type { CostEntry } from "../lib/control-plane/cost.ts";
+
+test("rolling cost reads exclude old rows before transfer, page every recent charge, and keep unknown spend unknown", async () => {
+  const since = "2026-10-01T01:00:00.000Z";
+  const rows = Array.from({ length: APPEND_ONLY_LOG_READ_PAGE + 1 }, (_, position) => ({
+    log_key: "costs", position, record: { role: "SCOUT", recordedAt: since, cost: { usd: position === APPEND_ONLY_LOG_READ_PAGE ? null : 0.01 } },
+  }));
+  let pages = 0;
+  const sql = { async query(text: string, params: readonly unknown[]) {
+    assert.match(text, /WHERE recorded_at >= \$1::timestamptz/);
+    assert.match(text, new RegExp(`LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`));
+    assert.equal(params[0], since);
+    pages++;
+    return rows.filter((row) => params.length === 1 || row.position > Number(params[2])).slice(0, APPEND_ONLY_LOG_READ_PAGE);
+  } };
+  const read = await pgAppendOnlyRepository<CostEntry>(sql as never, "costs").readSince(since);
+  assert.equal(pages, 2);
+  assert.equal(read.length, rows.length, "no recent charge is dropped at a page boundary");
+  assert.equal(aggregateModelSpend(read, since, "2026-10-02T01:00:00.000Z").usd, null, "an unmeasured recent charge still refuses admission");
+});
 
 interface Row {
   readonly log_key: string;

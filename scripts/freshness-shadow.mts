@@ -1563,7 +1563,7 @@ const honoredLaneIntents: string[] = [];
 let costLedger: CostEntry[] = [];
 let ledgerUnreadable: string | null = null;
 try {
-  costLedger = [...(await repos.costs.readAll())];
+  costLedger = [...(await repos.costs.readSince(new Date(Date.parse(NOW) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()))];
 } catch (error) {
   ledgerUnreadable = error instanceof Error ? error.message : String(error);
   runtimeConditions.push(`the cost ledger could not be read (${ledgerUnreadable}); the rolling ceiling cannot be enforced, so Scout work is deferred`);
@@ -3394,7 +3394,7 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
   let costsNow: readonly CostEntry[];
   try {
     results = await repos.scoutResults.readAll();
-    costsNow = await repos.costs.readAll();
+    costsNow = await repos.costs.readSince(new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString());
   } catch (error) {
     runtimeConditions.push(`research metrics NOT computed: a durable log could not be re-read (${error instanceof Error ? error.message : String(error)})`);
     return null;

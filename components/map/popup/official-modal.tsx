@@ -317,7 +317,7 @@ export function OfficialModal({
           <CardSection title="Sources" meta={sourceCountLabel(sources)}>
             {sources.length === 0 ? (
               <p className="text-[0.75rem] leading-relaxed text-muted">
-                Nothing on this card came from an external record.
+                We’re working on getting this info.
               </p>
             ) : (
               <CardSourcesList sources={sources} />

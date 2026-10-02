@@ -809,10 +809,10 @@ test("item 4: the live Nicholson card renders the raw sentence, and Booker keeps
  */
 test("the state-systems note is a stated gap, never silence pretending coverage", () => {
   assert.match(STATE_FUNDING_NOTE, /state campaign-finance systems/);
-  assert.match(
+  assert.doesNotMatch(
     STATE_FUNDING_NOTE,
-    /not a statement that no money was raised/i,
-    "the refusal to assert absence is the load-bearing half and may not be lost",
+    /not a statement/i,
+    "rulings §10: no disclaimer line on a reader surface",
   );
   assert.doesNotMatch(STATE_FUNDING_NOTE, /gap in our (data|research)/i);
   assert.doesNotMatch(

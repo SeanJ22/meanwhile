@@ -34,7 +34,7 @@ const MESSAGES = {
   malformed: "A zip code is five digits.",
   unknown: "No such zip code. Check the digits.",
   uncovered:
-    "That zip isn't in our copy of the Census zip list yet. Try a nearby one.",
+    "We’re working on getting this info for that zip. Try a nearby one.",
 } as const;
 
 /**

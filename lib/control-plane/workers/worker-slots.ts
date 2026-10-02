@@ -21,6 +21,8 @@ export function availableWorkerMemoryBytes(): number {
 }
 
 export interface WorkerMemoryLimit {
+  /** Existing release reconciliation closes only new admissions; running workers finish. */
+  readonly admissionsOpen?: () => boolean;
   readonly availableBytes?: () => number;
   readonly headroomBytes?: number;
   readonly peakBytes?: (entry: string) => number;
@@ -41,9 +43,13 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     const kind = /(?:^|\/|\\)(route|scout|lease|national)-worker[.]ts$/.exec(entry)?.[1] ?? "lease";
     return WORKER_ENTRY_PEAK_MIB[kind]! * MIB;
   });
-  const waiting: Array<{ entry: string; resolve: (release: () => void) => void; queuedAt?: number }> = [];
+  const waiting: Array<{ entry: string; resolve: (release: () => void) => void; reject: (error: Error) => void; queuedAt?: number }> = [];
   const drain = (): void => {
     clearTimeout(wake); wake = undefined;
+    if (memory.admissionsOpen?.() === false) {
+      for (const item of waiting.splice(0)) item.reject(new Error("RUNTIME_RELEASE_DRAINED: queued work remains owed for the next runtime"));
+      return;
+    }
     const maximum = capacity();
     if (!Number.isSafeInteger(maximum) || maximum <= 0) throw new Error("LEASE_WORKER_CAPACITY_INVALID");
     while (active < maximum && waiting.length) {
@@ -73,5 +79,5 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
       });
     }
   };
-  return { acquire: (entry = "lease-worker.ts") => new Promise<() => void>(resolve => { waiting.push({ entry, resolve }); drain(); }) };
+  return { acquire: (entry = "lease-worker.ts") => new Promise<() => void>((resolve, reject) => { waiting.push({ entry, resolve, reject }); drain(); }) };
 }

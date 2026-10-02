@@ -14,6 +14,7 @@ import type { OpenBytes } from "./scheduler/scout-contract.ts";
 import type { OpenOne } from "./scheduler/route-executor.ts";
 import { httpProviderFailure, type FetchOutcome } from "./scheduler/http-executor.ts";
 import { sourceReliabilityKey } from "./scheduler/scout-reliability.ts";
+import { websiteRequestLimit, type WebsiteSizeForUrl } from "./scheduler/host-supervision.ts";
 
 export const FLEET_ZONE = "America/Phoenix";
 
@@ -66,6 +67,7 @@ export type FleetStopCode =
   | "ROLLING_24_HOUR_MODEL_SPEND_CEILING"
   | "PROVIDER_REQUEST_CEILING"
   | "PAYLOAD_BYTE_CEILING"
+  | "WEBSITE_REQUEST_CAP"
   | "DISPATCH_CEILING"
   | "WALL_CLOCK_CEILING"
   | "UNMEASURED_MODEL_SPEND"
@@ -274,6 +276,8 @@ export class FleetSafetyController {
   private readonly stopReasons = new Set<string>();
   private readonly circuits = new Map<string, ProviderCircuit>();
   private readonly httpPending = new Map<string, Promise<void>>();
+  private readonly websiteRequests = new Map<string, Map<string, number>>();
+  private readonly websiteSize?: WebsiteSizeForUrl;
   private cycleUsd = 0;
   private cycleModelSpendMeasured = true;
   private reservedUsd = 0;
@@ -307,6 +311,7 @@ export class FleetSafetyController {
     /** Exact work covered by a separately reserved lifetime hunt allowance. */
     readonly lifetimeHuntWork?: (work: string) => boolean;
     readonly clock?: () => number;
+    readonly websiteSize?: WebsiteSizeForUrl;
   }) {
     const ceiling = resolveRollingCeiling(input.rollingCeilingUsd);
     this.bounds =
@@ -319,6 +324,7 @@ export class FleetSafetyController {
     this.paused = input.paused ?? false;
     this.modelHold = input.modelHold ?? null;
     this.clock = input.clock ?? Date.now;
+    this.websiteSize = input.websiteSize;
     this.lastSuccessfulActivity = input.lastSuccessfulActivity ?? null;
     const nightSpend = aggregateModelSpend(input.costs, this.night.start, input.now);
     const rollingSpend = aggregateModelSpend(
@@ -535,6 +541,18 @@ export class FleetSafetyController {
     return merged;
   }
 
+  private admitWebsiteRequest(url: string, work: string): void {
+    const limit = websiteRequestLimit(this.websiteSize?.(url));
+    if (limit === null) return;
+    // One work item shares its allowance across text/bytes readers and redirects.
+    const host = new URL(url).host.toLowerCase();
+    const counts = this.websiteRequests.get(work) ?? new Map<string, number>();
+    const count = counts.get(host) ?? 0;
+    if (count >= limit) this.refuse(work, "WEBSITE_REQUEST_CAP", `${host} has had ${count} of ${limit} requests for this work; small-publisher allowance exhausted`);
+    counts.set(host, count + 1);
+    this.websiteRequests.set(work, counts);
+  }
+
   /** A fetch seam that hard-caps application payload consumption by streaming. */
   guardedOpenOne(_provider: string, work: string, fetchImpl: typeof fetch = fetch): OpenOne {
     return async ({ url, method, headers, body, timeoutMs }) => {
@@ -559,6 +577,7 @@ export class FleetSafetyController {
           provider = sourceReliabilityKey(currentUrl);
           const circuit = this.circuits.get(provider);
           if (circuit && Date.parse(circuit.eligibleAt) <= this.clock()) this.circuits.delete(provider);
+          if (!this.circuits.has(provider)) this.admitWebsiteRequest(currentUrl, work);
           const reservation = this.reservePayloadRequest(provider, work, currentBody === undefined ? 0 : Buffer.byteLength(currentBody));
           try {
             requests++;
@@ -645,6 +664,7 @@ export class FleetSafetyController {
         let merged: Uint8Array;
         let location: string | null = null;
         while (true) {
+          this.admitWebsiteRequest(currentUrl, work);
           const reservation = this.reservePayloadRequest(provider, work);
           try {
             response = await fetchImpl(currentUrl, {

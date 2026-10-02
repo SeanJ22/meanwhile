@@ -365,6 +365,7 @@ test("TIME: each request's timeout is cut to the time left; a walk the time runs
   };
   await assert.rejects(
     walkMeetingsDiscoveryNeed(need("az:t:cut", "cut.gov"), runtime(spendOnFirst, {
+      websiteSize: () => ({ kind: "local-government", population: 9_999 }),
       spaceOut: async () => {
         cutSpacings += 1;
       },
@@ -382,6 +383,7 @@ test("TIME: each request's timeout is cut to the time left; a walk the time runs
   const spaced = fakeOpen({ "https://spaced.gov/robots.txt": ALLOW, "https://spaced.gov/": { status: 200, body: "<p>home</p>" } });
   await assert.rejects(
     walkMeetingsDiscoveryNeed(need("az:t:spaced", "spaced.gov"), runtime(spaced.open, {
+      websiteSize: () => ({ kind: "school-district", students: 4_999 }),
       spaceOut: async () => {
         spacings += 1;
         if (spacings === 2) spacedLeft = 0;
@@ -861,5 +863,19 @@ test("A FIND RECORDED WITHOUT PROVENANCE IS WALKED AGAIN, so no route waits out 
       runtime: runtime(open, { now: () => "2026-09-24T14:00:00.000Z" }), cycleIndex: 0, maxWalks: 1 });
     assert.deepEqual(next.walked.map(attempt => attempt.jurisdictionId), [latest.jurisdictionId],
       `${label}: an old ninety-day hold cannot hide new calendars beyond the twice-daily cadence`);
+  }
+});
+
+test('discovery caps only known small publishers, leaving larger and unknown websites uncapped', async () => {
+  const home='https://many.gov';
+  for(const size of [undefined,{kind:'local-government',population:10000},{kind:'school-district',students:5000},
+    {kind:'local-government',population:9999},{kind:'school-district',students:4999}] as const){
+    const {open,seen}=fakeOpen({[home+'/robots.txt']:ALLOW,
+      [home+'/']:{status:200,body:Array.from({length:15},(_,i)=>`<a href="/meeting-${i}.ics">Calendar ${i}</a>`).join('')}});
+    let spacings=0;
+    const got=await walkMeetingsDiscoveryNeed(need('az:town:many','many.gov'),runtime(open,{websiteSize:()=>size,spaceOut:async()=>{spacings++;}}));
+    const small=size!==undefined && ((size.kind==='local-government' && size.population<10000) || (size.kind==='school-district' && size.students<5000));
+    if(small){assert.equal(seen.length,10);assert.ok(got.steps.some(s=>/website reached its 10-request/.test(s.note)));assert.equal(spacings,10);}
+    else {assert.ok(seen.length>10,JSON.stringify({size,count:seen.length}));assert.equal(spacings,0);}
   }
 });

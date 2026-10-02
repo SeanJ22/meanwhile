@@ -2,10 +2,10 @@
  * **A REVIEWED CALENDAR PUBLISHES THROUGH THE RUNNER'S DOORS WITH NO CODE
  * RELEASE, AND KEEPS ITS VERIFIED SITTINGS THROUGH A REVIEW.** (C16, 2026-09-24.)
  *
- * The owner's decision, recorded 2026-09-24T22:43Z: "Agents may review and
- * promote the records connecting a calendar to its governing body ... then
- * publish through the existing verified publication process", and "Preserve
- * previously verified records through temporary outages."
+ * Rulings §3 ("C16" was a session label, not Sean's decision: Sean,
+ * 2026-10-01): records connecting a calendar to its governing body publish
+ * through the existing verified publication process, and previously verified
+ * records are preserved through temporary outages.
  *
  * Every step here is the production door, on the in-memory store:
  *

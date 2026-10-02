@@ -24,7 +24,7 @@ import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts
  *
  *   - Postgres/Neon in this repository is the SERVING substrate for
  *     reader-facing data. Control-plane work state is not reader-facing.
- *     RULING 126 already keeps a domain out of Postgres where it does not
+ *     campaign-finance filings are already kept out of Postgres where it does not
  *     belong, and adding a migration for it would additionally trip
  *     `pnpm db:gate` — which asks PRODUCTION whether a schema is applied — and
  *     freeze a release for a reason with nothing to do with truth.

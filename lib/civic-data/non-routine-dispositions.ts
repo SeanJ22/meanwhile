@@ -270,7 +270,7 @@ export function boundContractSourceId(binding: RoutineInventoryBinding, contract
  */
 export const ROUTINE_INVENTORY_BINDINGS = [
   { inventorySourceId: "meetings-composite", contractIds: MEETING_PARTITION_CONTRACTS.filter(({ derivedFamily }) => derivedFamily === null).map(({ id }) => id), contractSourceId: "meetings-public-bodies" },
-  // C16 (owner decision recorded 2026-09-24T22:43Z): the derived wiring store and the per-state derived meeting families.
+  // C16 (a session label; the authority is rulings §3): the derived wiring store and the per-state derived meeting families.
   // + the automatic crosswalk (C16 option A, 2026-09-25), the same authority's second derived store.
   { inventorySourceId: "meeting-source-wiring", contractIds: ["meeting-body-crosswalk-derived", "meeting-source-wiring"], contractSourceId: "meeting-source-wiring" },
   { inventorySourceId: "meetings-derived-families", contractIds: MEETING_PARTITION_CONTRACTS.filter(({ derivedFamily }) => derivedFamily !== null).map(({ id }) => id), contractSourceId: "meetings-derived-routes" },
@@ -308,7 +308,7 @@ export interface ManualProductionInventoryBinding {
 export const MANUAL_PRODUCTION_INVENTORY_BINDINGS: readonly ManualProductionInventoryBinding[] = [
   {
     inventorySourceId: "meeting-body-crosswalk", contractId: "meeting-body-crosswalk", contractSourceId: "curated-reader-primary-sources",
-    reason: "Reviewed records connecting a government's calendar to its exact body, each on the government's own saved pages cited by sha256 and promoted through the verified manual door by the owner or a reviewing agent session (owner decision C16); the derived meeting-source wiring reads only the promoted version.",
+    reason: "Reviewed records connecting a government's calendar to its exact body, each on the government's own saved pages cited by sha256 and promoted through the verified manual door by the owner or a reviewing agent session (rulings §3); the derived meeting-source wiring reads only the promoted version.",
   },
   {
     inventorySourceId: "congress-bulk-roster", contractId: "congress-bulk-roster", contractSourceId: "congress-directory-project",

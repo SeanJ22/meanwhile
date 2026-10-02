@@ -23,7 +23,7 @@ import { StateMoneySection } from "./state-money-section";
  */
 
 const NONFEDERAL_OFFICIAL_NOTE =
-  "We have not connected campaign-finance records for this office yet. State or local filing offices may hold them; this is not a statement that no money was raised.";
+  "We’re working on getting this info.";
 
 export function FundingBlock(props: {
   holder: SeatHolder;

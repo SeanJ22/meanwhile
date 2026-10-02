@@ -270,7 +270,7 @@ function SixAnswers() {
   /** Research workers on a hunt, or null when its run state isn't reported. */
   const workers = (h: Hunt) => (h.status === "running" ? h.researchWorkers : h.status === "unreported" ? null : 0);
   const insideWorkers = inside.map(workers);
-  const resultsKnown = v.data.results.state !== "not-connected";
+  const resultsKnown = v.data.results.state !== "not-connected" && v.data.results.data !== null;
   const stuckKnown = v.data.stuck.state !== "not-connected";
   const huntsKnown = v.data.hunts.state !== "not-connected";
   const answers: { q: string; big: string; small: string; href: string; warn?: boolean }[] = [
@@ -302,7 +302,7 @@ export function ResultRow(props: { readonly r: ReaderResult; readonly shared?: b
   const tone = r.kind === "New" ? "good" : r.kind === "Updated" ? "info" : r.kind === "Retained" ? "gold" : "neutral";
   return (
     <button type="button" className={cx(s.row, s.rowButton, props.shared && s.rowShared)} onClick={() => v.open({ type: "result", id: r.id })}>
-      <span className={s.spread}><strong style={{ fontSize: 13 }}>{r.title}</strong><Pill tone={tone}>{r.kind}</Pill></span>
+      <span className={s.spread}><strong style={{ fontSize: 13 }}>{r.title}</strong>{r.kind !== null && <Pill tone={tone}>{r.kind}</Pill>}</span>
       <span className={s.inline}><StageDots stages={r.stages} /><span className={s.meta}>{v.index.get(r.applies[0])?.name}{props.shared ? " · shared work" : ""}</span></span>
       <span className={cx(s.small, r.problem ? s.textWarn : s.dim)}>{r.readerSees}</span>
     </button>
@@ -316,7 +316,7 @@ function Readers() {
   const shared = results.filter((x) => x.rel === "shared");
   return (
     <Card id="v6-readers" title="What readers can see" aside={<span className={s.meta}>Found · Saved · Facts pulled out · Facts checked against sources · Published · Checked on the public page</span>}>
-      {v.data.results.state === "not-connected" || (v.data.results.load === "failed" && !v.data.results.data) ? <Empty>—</Empty> : !local.length && <Empty>No results for {v.place.name}.</Empty>}
+      {v.data.results.state === "not-connected" || v.data.results.data === null ? <Empty>—</Empty> : !local.length && <Empty>No results for {v.place.name}.</Empty>}
       <div className={s.stack}>{local.map((x) => <ResultRow key={x.r.id} r={x.r} />)}</div>
       {!!shared.length && (
         <div className={s.stack}>

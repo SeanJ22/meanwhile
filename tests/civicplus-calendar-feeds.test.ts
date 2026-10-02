@@ -93,7 +93,7 @@ const HOME = `<html><head><title>Cochise County, AZ | Official Website</title><s
 const AGENDA_CENTER = `<html><body><h2>Board of Supervisors</h2><a href="/AgendaCenter/ViewFile/Agenda/_09292026-2981">Agenda</a></body></html>`;
 const ROBOTS: RecordedReply = { status: 200, body: "User-agent: *\nDisallow: /admin\nDisallow: /Search\n", contentType: "text/plain" };
 
-test("THE WALK: a CivicPlus site's index is read robots-first, and every category feed is requested, with event attribution kept separate", async () => {
+for (const smallPublisher of [false, true]) test(`THE WALK: a CivicPlus site's category feeds retain attribution with ${smallPublisher ? "a known small publisher's ten-request cap" : "an unknown publisher's uncapped requests"}`, async () => {
   const seen: string[] = [];
   const feeds = civicPlusCategoryFeeds(INDEX, INDEX_URL);
   const department = feeds.find(f => f.name === "Development Services")!;
@@ -113,12 +113,18 @@ test("THE WALK: a CivicPlus site's index is read robots-first, and every categor
     addressSource: { source: "GAP_LEDGER", versionId: "b".repeat(64) },
   };
   const attempts: Awaited<ReturnType<typeof walkMeetingsDiscoveryNeed>>[] = [];
-  for (let pass = 0; pass < 4; pass++) attempts.push(await walkMeetingsDiscoveryNeed(need, { ...rt, priorAttempts: [...attempts] }));
+  for (let pass = 0; pass < 4; pass++) attempts.push(await walkMeetingsDiscoveryNeed(need, {
+    ...rt,
+    // Synthetic size metadata exercises both policies against the same recorded routes.
+    websiteSize: smallPublisher ? () => ({ kind: "local-government", population: 9999 }) : undefined,
+    priorAttempts: [...attempts],
+  }));
   const attempt = attempts[0];
-  assert.ok(attempts.every(a => a.requestCount <= 10), "each walk retains the shared ten-request website limit");
+  if (smallPublisher) assert.ok(attempts.every(a => a.requestCount <= 10), "known small publishers retain the ten-request limit");
+  else assert.ok(attempt.requestCount > 10, "unknown publishers can read beyond ten requests in one walk");
   assert.deepEqual(seen.slice(0, 3), ["https://www.cochise.az.gov/robots.txt", "https://www.cochise.az.gov/", INDEX_URL]);
   assert.ok(feeds.every(f => seen.includes(f.url)), "later walks read every category, including those beyond the original cutoffs");
-  assert.equal(attempt.recheckAfter, attempt.finishedAt, "unread source routes remain due instead of waiting for the successful feed's recheck");
+  if (smallPublisher) assert.equal(attempt.recheckAfter, attempt.finishedAt, "unread source routes remain due instead of waiting for the successful feed's recheck");
   const departmentFind = attempts.flatMap(a => a.found).find(f => f.url === department.url);
   assert.ok(departmentFind, "a department calendar's named commission meeting remains discoverable");
   assert.match(departmentFind.evidence, /category is not a body attribution/);

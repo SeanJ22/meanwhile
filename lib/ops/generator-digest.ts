@@ -46,6 +46,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
+import ts from "typescript";
 
 /** Repo-relative, forward-slashed, so a digest is identical on Windows and Linux. */
 export function repoPath(root: string, absolute: string): string {
@@ -159,13 +160,14 @@ export function digestGenerator(root: string, entry: string): GeneratorDigest {
   return digestFiles(root, entry, sourceClosure(root, entry));
 }
 
-function digestFiles(root: string, entry: string, files: readonly string[]): GeneratorDigest {
+function digestFiles(root: string, entry: string, files: readonly string[], codeOnly = false): GeneratorDigest {
   const h = createHash("sha256");
   for (const file of files) {
     h.update(file);
     h.update("\0");
     try {
-      h.update(readFileSync(join(root, file)));
+      const source = readFileSync(join(root, file));
+      h.update(codeOnly ? runtimeCode(file, source.toString("utf8")) : source);
     } catch {
       h.update("<unreadable>");
     }
@@ -174,26 +176,39 @@ function digestFiles(root: string, entry: string, files: readonly string[]): Gen
   return { digest: h.digest("hex"), files: files.length, entry: repoPath(root, entry) };
 }
 
-const STATEMENT = /(?:^|\n)\s*(import|export)\s+([\s\S]{0,400}?)\s*from\s*["']([^"']+)["']/g;
-
 /**
- * Whether an import or export statement carries a runtime value across. `import
- * type …`, `export type … from`, and a braces list whose every name is `type`
- * carry only types and cannot change behaviour. A default import, a namespace,
- * `export *`, and any list naming one value do.
+ * Emit before tokenizing so significant line breaks (automatic semicolon
+ * insertion) survive. Parse the emitted code so regexes and template text keep
+ * their literal whitespace and comment-like text. Trivia and erased types do
+ * not contribute to runtime identity.
  */
-function carriesValue(keyword: string, clause: string): boolean {
-  const c = clause.trim();
-  if (/^type\b/.test(c)) return false;
-  const braces = /^\{([\s\S]*)\}$/.exec(c);
-  if (braces === null) return true;
-  const names = braces[1].split(",").map((s) => s.trim()).filter((s) => s !== "");
-  return names.length === 0 ? keyword === "import" : names.some((s) => !/^type\b/.test(s));
+function runtimeCode(file: string, source: string): string {
+  if (file.endsWith(".json")) return JSON.stringify(JSON.parse(source));
+  const emitted = ts.transpileModule(source, {
+    fileName: file,
+    compilerOptions: {
+      target: ts.ScriptTarget.ESNext,
+      module: ts.ModuleKind.ESNext,
+      jsx: ts.JsxEmit.Preserve,
+      verbatimModuleSyntax: true,
+      removeComments: true,
+      newLine: ts.NewLineKind.LineFeed,
+    },
+  }).outputText;
+  const parsed = ts.createSourceFile(file, emitted, ts.ScriptTarget.Latest, true);
+  const tokens: [number, string][] = [];
+  function visit(node: ts.Node): void {
+    const children = node.getChildren(parsed);
+    if (children.length === 0) tokens.push([node.kind, node.getText(parsed)]);
+    else children.forEach(visit);
+  }
+  visit(parsed);
+  return JSON.stringify(tokens);
 }
 
 /**
  * Every repo file an entry's RUNTIME reaches, entry first, sorted. It is
- * `sourceClosure` without the edges that carry only types (`carriesValue`). A
+ * `sourceClosure` without the edges that carry only types. A
  * file imported only for its types is left out. The same file still lands when
  * any value import reaches it. Side-effect and dynamic imports are values.
  */
@@ -213,14 +228,29 @@ export function valueClosure(root: string, entry: string): string[] {
     }
     if (file.endsWith(".json")) continue;
     const specs: string[] = [];
-    STATEMENT.lastIndex = 0;
-    for (let m = STATEMENT.exec(src); m !== null; m = STATEMENT.exec(src)) {
-      if (carriesValue(m[1], m[2])) specs.push(m[3]);
+    const parsed = ts.createSourceFile(file, src, ts.ScriptTarget.Latest, true);
+    function visit(node: ts.Node): void {
+      if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) {
+        const clause = node.importClause;
+        const bindings = clause?.namedBindings;
+        if (!clause || (!clause.isTypeOnly && (clause.name || !bindings ||
+          ts.isNamespaceImport(bindings) || bindings.elements.length === 0 ||
+          bindings.elements.some((element) => !element.isTypeOnly)))) {
+          specs.push(node.moduleSpecifier.text);
+        }
+      } else if (ts.isExportDeclaration(node) && !node.isTypeOnly &&
+        node.moduleSpecifier && ts.isStringLiteral(node.moduleSpecifier)) {
+        const clause = node.exportClause;
+        if (!clause || ts.isNamespaceExport(clause) || clause.elements.some((element) => !element.isTypeOnly)) {
+          specs.push(node.moduleSpecifier.text);
+        }
+      } else if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword &&
+        node.arguments[0] && ts.isStringLiteral(node.arguments[0])) {
+        specs.push(node.arguments[0].text);
+      }
+      ts.forEachChild(node, visit);
     }
-    for (const re of [BARE_IMPORT, DYNAMIC]) {
-      re.lastIndex = 0;
-      for (let m = re.exec(src); m !== null; m = re.exec(src)) specs.push(m[1]);
-    }
+    visit(parsed);
     for (const spec of specs) {
       const next = resolveLocal(file, spec, root);
       if (next !== null) queue.push(next);
@@ -230,12 +260,12 @@ export function valueClosure(root: string, entry: string): string[] {
 }
 
 /**
- * Digest what an entry does at runtime: `digestGenerator` over `valueClosure`.
- * A change to a file the entry only reads types from does not move it; a change
- * anywhere its runtime reaches does. Names and bytes, as `digestGenerator`.
+ * Digest runtime code in the value closure, including file names. Comments,
+ * formatting and erased types do not re-key saved methods; executable changes
+ * and literal contents do. Byte-based generator digests remain unchanged.
  */
 export function digestValueClosure(root: string, entry: string): GeneratorDigest {
-  return digestFiles(root, entry, valueClosure(root, entry));
+  return digestFiles(root, entry, valueClosure(root, entry), true);
 }
 
 export type StaleVerdict =

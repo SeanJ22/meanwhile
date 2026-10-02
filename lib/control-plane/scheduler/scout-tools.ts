@@ -96,6 +96,7 @@ import { contentHash } from "../ids.ts";
 
 import type { WorkArtifact } from "./dispatch.ts";
 import { DEFAULT_FETCH_TIMEOUT_MS, WALL_STATUSES } from "./http-executor.ts";
+import { websiteRequestLimit } from "./host-supervision.ts";
 import { evaluatePermission, DEFAULT_ROBOTS_TOKEN, type PermissionReading } from "./robots.ts";
 import { DEFAULT_USER_AGENT, realOpen, type OpenOne } from "./route-executor.ts";
 import {
@@ -599,17 +600,18 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     try {
       first = await open(secure);
     } catch (error) {
-      if (overCap(hostOf(url)) !== null) throw error;
+      if (overCap(url) !== null) throw error;
       return open(url);
     }
     if (first.transportError === null && first.status !== null && first.status >= 200 && first.status < 300) return first;
-    return overCap(hostOf(url)) === null ? open(url) : first;
+    return overCap(url) === null ? open(url) : first;
   }
 
-  function overCap(host: string): string | null {
+  function overCap(url: URL): string | null {
+    const host = hostOf(url);
     const n = hostCounts.get(host) ?? 0;
-    const max = ctx.bound.maxRequestsPerHost;
-    if (n < max) return null;
+    const max = websiteRequestLimit(ctx.websiteSize?.(url.toString()));
+    if (max === null || n < max) return null;
     return (
       `${host} has had ${n} of ${max} requests this Attempt (the per-host bound), so this request is ` +
       "refused. The bound is per host: another host is not bound by this count."
@@ -619,7 +621,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   async function retrieve(url: URL, accept: string, acc: CallAccount): Promise<Retrieved> {
     const host = hostOf(url);
     hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
-    await ctx.spaceOut(host);
+    if (websiteRequestLimit(ctx.websiteSize?.(url.toString())) !== null) await ctx.spaceOut(host);
     const headers = { "user-agent": DEFAULT_USER_AGENT, accept };
     let got: Retrieved;
     if (openBytes !== null) {
@@ -877,7 +879,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
     const cached = robotsByHost.has(host);
     if (!cached) {
-      const cap = overCap(host);
+      const cap = overCap(url);
       if (cap !== null) return refusal(cap);
     }
     const robots = await readRobots(url, acc);
@@ -908,14 +910,13 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   > {
     const url = publicUrl(input.url ?? "");
     if (typeof url === "string") return { kind: "REFUSED", result: refusal(url) };
-    const host = hostOf(url);
     const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
-    const capBefore = overCap(host);
+    const capBefore = overCap(url);
     if (capBefore !== null) return { kind: "REFUSED", result: refusal(capBefore) };
     /* Read and recorded, never a refusal: ROBOTS_BLOCKS_ACQUISITION is false (owner decision 2026-09-25). */
     const robots = await readRobots(url, acc);
     const reading = evaluate(robots, url);
-    const capAfter = overCap(host);
+    const capAfter = overCap(url);
     if (capAfter !== null) {
       return {
         kind: "REFUSED",
@@ -1167,7 +1168,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       obs = await preferHttps(url, async target => {
         /* Each navigation counts; the page's own calls are observed, not initiated. */
         hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
-        await ctx.spaceOut(host);
+        if (websiteRequestLimit(ctx.websiteSize?.(target.toString())) !== null) await ctx.spaceOut(host);
         requestCount += 1;
         acc.requests += 1;
         const observed = await browseFn({ url: target.toString(), timeoutMs, holder: ctx.holder });
@@ -1417,8 +1418,11 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
     try {
       const options = { ...ctx.sourceApi, timeoutMs,
-        spaceOut: async host => { const exceeded = overCap(host); if (exceeded) throw new Error(exceeded);
-          hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1); await ctx.spaceOut(host); } } satisfies import('./scout-api.ts').SourceApiOptions;
+        spaceOut: async host => { const url = new URL(`https://${host}`);
+          const exceeded = overCap(url); if (exceeded) throw new Error(exceeded);
+          hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
+          if (websiteRequestLimit(ctx.websiteSize?.(url.toString())) !== null) await ctx.spaceOut(host);
+        } } satisfies import('./scout-api.ts').SourceApiOptions;
       const response = name === 'plural_roster' || name === 'legistar_events' ? await readClientSource(name,raw as Record<string,unknown>,options) : await readSourceApi(name,raw,options);
       acc.requests = response.requests; acc.bytes = response.bytes;
       requestCount += response.requests; bytesFetched += response.bytes;

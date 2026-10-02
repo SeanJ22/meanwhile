@@ -17,7 +17,7 @@ import { ZipComb } from "./zip-comb";
 const MESSAGES = {
   malformed: "Five digits.",
   unknown: "No such zip code.",
-  uncovered: "Not in our zip list yet.",
+  uncovered: "We’re working on getting this info.",
 } as const;
 
 interface LocationBarProps {

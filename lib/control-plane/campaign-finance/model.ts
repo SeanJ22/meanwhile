@@ -3,7 +3,8 @@
  *
  * ## What this file is, and what it deliberately is not
  *
- * **RULING 126 keeps campaign-finance data out of Postgres entirely.**
+ * **Campaign-finance filing data stays out of Postgres entirely.** Filings are
+ * never sold; reactions to them are (Sean, 2026-10-01).
  * `tests/campaign-finance-firewall.test.ts` enumerates every `pgTable` in
  * `lib/db/schema.ts` and fails on any table or column matching the money words.
  * The reason is a join: the sold stores are database tables, and a join needs

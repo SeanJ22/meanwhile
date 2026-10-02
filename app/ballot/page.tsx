@@ -638,7 +638,7 @@ async function BallotBattlecard({
     }
   }
   /*
-   * RULING 126 (2026-08-24). Until this line existed, `money` was `null` for
+   * State and local money (2026-08-24). Until this line existed, `money` was `null` for
    * every non-federal candidate — so a Morris County commissioner candidate,
    * who files with the New Jersey Election Law Enforcement Commission rather
    * than with the FEC, had a Campaign money section that STRUCTURALLY could
@@ -1925,7 +1925,7 @@ export default async function BallotPage({
 
       {attempted && !matched && ballotLoaderFailures.length === 0 && !divisionHoldingUnavailable && (
         <p className="mt-6 text-[0.8125rem] leading-relaxed text-muted lg:max-w-2xl">
-          We haven&apos;t built the ballot for this area yet. Ballot coverage
+          We&apos;re working on getting this info. Ballot coverage
           currently reaches Pima County AZ, Morris County NJ, and Merrimack
           County NH. This is not a statement that nothing is on your ballot.
         </p>
@@ -3024,7 +3024,7 @@ export default async function BallotPage({
         >
           <h2 className="t-structure text-paper-dim">County, city and school-board races</h2>
           <p className="mt-2 text-[0.8125rem] leading-relaxed text-voice">
-            No local races are on this ballot yet. The state and federal races above are read from the official filings; the county, city, town and school-district contests that share this ballot appear here once their election office publishes them and we have read them. Your county election office has the complete ballot for your address.
+            We&apos;re working on getting this info. The state and federal races above are read from the official filings; the county, city, town and school-district contests that share this ballot appear here once their election office publishes them and we have read them. Your county election office has the complete ballot for your address.
           </p>
         </section>
       )}

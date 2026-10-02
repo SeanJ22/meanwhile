@@ -23,11 +23,10 @@
  * FUNDING_TOTAL_REACTION and CONTRIBUTOR_REACTION (D34, 2026-08-18) are the
  * funding classes — reactions to the committee-totals display and the
  * contributor display, keyed by FEC candidate id so a reader's answer on
- * the ballot card and the official popup lands on the same committee. The
- * type IS the provenance tag the ripcord doctrine requires: while
- * `ripcord.fundingReactionsInAggregates` is pulled (it ships pulled), rows
- * of these two types are stored but excluded from aggregation and every
- * export — see lib/signal/aggregate.ts.
+ * the ballot card and the official popup lands on the same committee. Rows
+ * of these two types count in aggregates and exports like every other
+ * reaction; the filing records they react to never do (Sean, 2026-10-01 —
+ * see lib/signal/aggregate.ts).
  */
 /**
  * MEASURE_PROVISION (P03, 2026-08-18) is the class CLAUDE.md's reaction

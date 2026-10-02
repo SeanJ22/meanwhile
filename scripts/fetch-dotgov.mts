@@ -66,7 +66,7 @@
 import { stamp } from "./stamp.mts";
 import { dotGovCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
-import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import {
   isSourceAcquisitionFailure,
   readPublisherBody,
@@ -342,7 +342,7 @@ async function main() {
     .filter(([type]) => /election/i.test(type))
     .sort((a, b) => b[1] - a[1]);
   for (const [type, n] of types) console.log(`  ${String(n).padStart(5)}  ${type}`);
-  console.log("RCD_RECEIPT=" + JSON.stringify({ source: "dotgov", candidateId: candidate.id, acquisitionSucceeded: outcome.candidate.acquisitionSucceeded, state: outcome.candidate.state, decision: outcome.candidate.receipt?.decision ?? null, outcome: outcome.candidate.candidate.changeSet?.outcome ?? null, promotedVersion: outcome.promoted?.versionId ?? null, lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+  printSourceRunnerReceipt("dotgov", candidate, outcome);
   console.log(`dotgov: ${BOUNDARY}`);
   if (!outcome.promoted) process.exitCode = 2;
 }

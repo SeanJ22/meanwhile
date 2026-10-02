@@ -38,7 +38,6 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { parseCsv } from "../lib/reference/index.ts";
 
 import { getTableConfig } from "drizzle-orm/pg-core";
 

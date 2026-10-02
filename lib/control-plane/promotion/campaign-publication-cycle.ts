@@ -94,16 +94,21 @@ export async function runCandidatePublicationCycle(input: {
     }
   }
   const now = input.clock();
-  const due = [...inventory.values()].filter(link => !artifacts.some(row => {
+  const capturedLinks = new Set<string>();
+  const captureKey = (candidacyId: string, approvalRecordId: string, sourceArtifactId: string, url: string) =>
+    JSON.stringify([candidacyId, approvalRecordId, sourceArtifactId, url]);
+  for (const row of artifacts) {
+    const link = row.publicationLink;
+    if (!link || row.partial || !(Date.parse(row.recordedAt) > now - recheckMs)) continue;
     const held = input.heldVault.byId.get(row.artifactId), attempt = attempts.get(row.attemptId);
-    return row.publicationLink?.candidacyId === link.source.candidacyId &&
-      row.publicationLink.approvalRecordId === link.source.approvalRecordId &&
-      row.publicationLink.sourceArtifactId === link.source.sourceArtifactId &&
-      row.canonicalUrl === link.url && !row.partial &&
-      held !== undefined && held.contentHash === row.contentHash && held.workItemId === row.workItemId &&
-      attempt?.outcome === "COMPLETED" && attempt.artifactIds.includes(row.artifactId) &&
-      Date.parse(row.recordedAt) > now - recheckMs;
-  })).sort((a, b) => {
+    if (held !== undefined && held.contentHash === row.contentHash && held.workItemId === row.workItemId &&
+        attempt?.outcome === "COMPLETED" && attempt.artifactIds.includes(row.artifactId)) {
+      capturedLinks.add(captureKey(link.candidacyId, link.approvalRecordId, link.sourceArtifactId, row.canonicalUrl));
+    }
+  }
+  const due = [...inventory.values()].filter(link => !capturedLinks.has(
+    captureKey(link.source.candidacyId, link.source.approvalRecordId, link.source.sourceArtifactId, link.url),
+  )).sort((a, b) => {
     const aKey = `${a.source.candidacyId}\u0000${a.url}`, bKey = `${b.source.candidacyId}\u0000${b.url}`;
     return (lastAttemptByLink.get(aKey) ?? -Infinity) - (lastAttemptByLink.get(bKey) ?? -Infinity) || aKey.localeCompare(bKey);
   });

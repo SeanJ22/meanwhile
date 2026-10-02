@@ -429,6 +429,30 @@ test("a blocked first linked page records a route Attempt and yields the next pa
   assert.notEqual(attempted.url, first.outcomes[0]?.url, "an earlier failing URL cannot starve the next due link");
 });
 
+test("linked-publication inventory does not scan thousands of artifacts for every candidate link", async t => {
+  const p = await plane(t);
+  await cycle(p, T1);
+  await cycle(p, T2);
+  const artifacts = await p.repos.artifacts.readAll();
+  const source = artifacts[0]!;
+  for (let i = 0; i < 2400; i++) {
+    await p.repos.artifacts.append(`unrelated-${i}`, `unrelated-artifact-${i}`,
+      { ...source, artifactId: `unrelated-artifact-${i}`, publicationLink: undefined }, PUBLISH);
+  }
+  const heldVault = await indexVault(p.vaultRoot);
+  const get = heldVault.byId.get.bind(heldVault.byId);
+  let lookups = 0;
+  t.mock.method(heldVault.byId, "get", (id: string) => { lookups++; return get(id); });
+  const run = await runCandidatePublicationCycle({ repos: p.repos, eligibleCandidacyIds: new Set([TANG_WILLIAMS]),
+    heldVault, vaultRoot: p.vaultRoot, methodVersion: 1, clock: () => Date.parse(PUBLISH),
+    sleep: async () => {}, openFor: () => { throw new Error("no read requested"); }, maxReads: 0 });
+  console.log(`PUBLICATION_INDEX artifacts=${artifacts.length + 2400} links=${run.inventoried} vaultLookups=${lookups} due=${run.due}`);
+  assert.ok(run.inventoried > 1);
+  assert.equal(run.due, run.inventoried);
+  assert.equal(run.deferred, run.due);
+  assert.ok(lookups <= artifacts.length + 2400 + run.inventoried, "one artifact pass suffices for every link");
+});
+
 test("a refused lead publishes nothing and keeps its typed reason where Admin reads it", async (t) => {
   const p = await plane(t);
   const { report } = await cycle(p, T1, {}, { ...served(), [LILY]: { status: 404, body: "<html><title>Not found</title></html>" } });

@@ -29,8 +29,9 @@
  *
  * Output (GITHUB_OUTPUT and stdout): plan=affected|full|none, legs (the test
  * matrix as JSON), files (newline-separated, for CI_TEST_FILES) and
- * needs_browser. A push to main always answers full: main re-runs the whole
- * suite as the integration check, so a miss here is caught there.
+ * needs_browser. The hourly scheduled run (and a manual dispatch) always
+ * answers full: it re-runs the whole suite on main as the integration check,
+ * so a miss here is caught there. A push to main runs no tests.
  *
  * Dependency-free on purpose: it runs before `pnpm install`.
  */
@@ -441,12 +442,12 @@ export function changedFiles(root, base, head = "HEAD") {
 }
 
 /**
- * The plan for this event: main and non-pull-request certifications always run everything.
+ * The plan for this event: the scheduled and dispatched certifications run
+ * everything; a push to main and the cheap tiers run no tests.
  * @param {{ root: string, tier?: string, eventName?: string, base?: string }} input
  * @returns {TestPlan}
  */
 export function decide({ root, tier, eventName, base }) {
-  if (tier === "main") return fullPlan("a push to main runs the whole suite as the integration check");
   if (tier !== "yes") return { plan: "none", files: [], needsBrowser: false, reasons: [`tier ${tier || "(none)"} runs no tests`] };
   if (eventName !== "pull_request") return fullPlan(`a ${eventName || "non-pull-request"} certification runs the whole suite`);
   try {

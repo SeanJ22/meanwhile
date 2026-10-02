@@ -87,7 +87,7 @@ The follow-up's [run 35690749374](https://github.com/SeanJ22/meanwhile/actions/r
 - Markdown under `docs/` selects only tests that name the document; usually none, and the test job is skipped.
 - Anything else — data, fixtures, CSS, `package.json`, the lockfile, configuration, workflows, the test runner and its loader, unknown files — and any doubt (missing base, more than 400 files, an unresolvable import in any test's closure) selects the whole suite in its four shards.
 - The selection runs as one `test (affected)` job with `CI_TEST_FILES`; `scripts/ci-tests.mjs` keeps its flags, reporters, identity hashes and timing validation, and only the partition does not apply. Playwright is installed only when a selected test's imports reach it.
-- **Every push to main runs the whole suite again** as the integration check; concurrent pushes to main share one group, so a burst certifies its newest commit once.
+- A push to main keeps the cheap shape (preflight, standalone build, schema gate) and its own per-commit concurrency group. **An hourly scheduled run (`17 * * * *`) certifies main's tip in full** — verify, the standalone build, all four test shards and the schema gate — as the integration check behind affected-only pull-request tests. It has its own group and supersedes only its own earlier run.
 
 Measured against merged PRs #639–#649, a change inside the control-plane/civic-data import cycle reaches about 525 of 984 test files (about 72% of the hinted file time), and a leaf change about 120 (about 6%); about 114 sweep tests run on every code change.
 

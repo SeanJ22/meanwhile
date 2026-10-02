@@ -62,17 +62,26 @@ test("draft explicitly defers tests and builds while requiring structural verifi
   assert.equal(evaluate(input).ok, false);
 });
 
-test("a push to main needs the build and the whole suite; the merged pull request already ran verify", () => {
+test("a push to main needs only the build; the merged pull request already ran verify and its tests", () => {
   const input = needs("main");
+  input.test.result = "skipped";
   input.verify.result = "skipped";
   const verdict = evaluate(input);
   assert.equal(verdict.ok, true);
-  assert.deepEqual(verdict.checks.filter((check) => !check.required).map((check) => check.job), ["verify"]);
-  for (const job of ["test", "build"] as const) {
-    const missing = needs("main");
-    missing.verify.result = "skipped";
-    missing[job].result = "skipped";
-    assert.equal(evaluate(missing).ok, false, `main with ${job} skipped must not certify`);
+  assert.deepEqual(verdict.checks.filter((check) => !check.required).map((check) => check.job), ["verify", "test"]);
+  input.build.result = "skipped";
+  assert.equal(evaluate(input).ok, false);
+});
+
+test("the hourly scheduled run is the full tier: verify, build and all tests are required", () => {
+  const input = needs("yes");
+  (input.admission.outputs as Record<string, string>).test_plan = "full";
+  assert.equal(evaluate(input).ok, true);
+  for (const job of ["verify", "test", "build"] as const) {
+    const skipped = needs("yes");
+    (skipped.admission.outputs as Record<string, string>).test_plan = "full";
+    skipped[job].result = "skipped";
+    assert.equal(evaluate(skipped).ok, false, `scheduled ${job} skipped must not certify`);
   }
 });
 

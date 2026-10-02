@@ -12,6 +12,10 @@ on:
       - ready_for_review
       - labeled
       - auto_merge_enabled
+  # The integration safety net for affected-only pull-request tests: the whole
+  # suite on main's tip, hourly. A software certification, not a data clock.
+  schedule:
+    - cron: '17 * * * *'
   workflow_dispatch:
     inputs:
       schema_smoke:
@@ -29,12 +33,11 @@ permissions:
   contents: read
   checks: read
   pull-requests: read
-# Pushes to main share one group, so a burst of merges certifies its newest
-# commit once; the runtime adopts only a main commit whose required contexts
-# are green, so a superseded commit is simply never adopted. Each pull request
-# supersedes its own older run. A manual dispatch never cancels or is cancelled.
+# Every push to main keeps its own group, so a later (even docs-only) push never
+# cancels a code commit's run and leaves it unjudged. Each pull request
+# supersedes its own older run; the hourly scheduled run supersedes its own.
 concurrency:
-  group: build-check-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  group: build-check-${{ github.event_name == 'schedule' && 'scheduled' || github.ref }}${{ github.event_name == 'push' && format('-{0}', github.sha) || '' }}
   cancel-in-progress: true
 jobs:
   admission:
@@ -102,10 +105,11 @@ jobs:
           COMMIT_REF: ${{ github.sha }}
         run: node scripts/netlify-ignore.mjs --ci
       # A pull request runs the tests its change can reach (or all four shards
-      # when the change is not code the import graph follows); main runs all four.
+      # when the change is not code the import graph follows); the hourly
+      # scheduled run and a manual dispatch run all four. Main runs none.
       - name: Select the tests this change can reach
         id: tests
-        if: always() && (steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'main')
+        if: always() && steps.tier.outputs.expensive == 'yes'
         env:
           CI_TIER: ${{ steps.tier.outputs.expensive }}
           CI_EVENT_NAME: ${{ github.event_name }}
@@ -114,6 +118,7 @@ jobs:
       - name: Explain selected verification
         if: always()
         env:
+          CI_EVENT_NAME: ${{ github.event_name }}
           CI_TIER: ${{ steps.tier.outputs.expensive }}
           CI_TEST_PLAN: ${{ steps.tests.outputs.plan }}
         run: node scripts/ci-selection-summary.mjs
@@ -257,9 +262,9 @@ jobs:
         run: |
           echo "Draft preflight passed. This required build context still reports, while"
           echo "the two production builds wait for the ready_for_review certification run."
-      - name: Push to main — the full suite runs again on the merged commit
+      - name: Push to main — the merged pull request already ran its tests
         if: needs.admission.outputs.tier == 'main'
-        run: echo "Main runs the standalone build, all four test shards and the schema gate; lint, types, governance and the default build ran on the pull request."
+        run: echo "Main runs the standalone build and the schema gate; lint, types, governance, the affected tests and the default build ran on the pull request, and the hourly scheduled run re-runs the whole suite."
       - name: Ready pull request — waiting for auto-merge
         if: needs.admission.outputs.tier == 'waiting'
         run: echo "Lint and types ran. The standalone build and the tests run when auto-merge is turned on (or the run-full-ci label is added)."
@@ -272,13 +277,15 @@ jobs:
   test:
     # One leg named `affected` for the tests a pull request's change can reach,
     # or the four shards (1/4 … 4/4) for the whole suite; see
-    # scripts/ci-affected-tests.mjs. No leg runs when the change reaches no test.
+    # scripts/ci-affected-tests.mjs. No leg runs when the change reaches no test,
+    # and main runs none (the hourly scheduled run covers it).
     name: test (${{ matrix.shard }})
     needs:
       - admission
       - verify
-    # A pull request's tests wait for its structural checks; main has none to wait for.
-    if: "!cancelled() && needs.admission.result == 'success' && (needs.admission.outputs.test_plan == 'affected' || needs.admission.outputs.test_plan == 'full') && ((needs.admission.outputs.tier == 'yes' && needs.verify.result == 'success') || needs.admission.outputs.tier == 'main')"
+    # Tests wait for the structural checks. The plan and the legs are both
+    # checked so an empty matrix can never be expanded.
+    if: needs.admission.outputs.tier == 'yes' && needs.verify.result == 'success' && (needs.admission.outputs.test_plan == 'affected' || needs.admission.outputs.test_plan == 'full') && needs.admission.outputs.test_legs != '' && needs.admission.outputs.test_legs != '[]'
     runs-on: ubuntu-latest
     timeout-minutes: 75
     strategy:
@@ -295,24 +302,24 @@ jobs:
           node-version: 24
           package-manager-cache: false
       - name: Enable corepack (pnpm pinned by packageManager)
-        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'main'
+        if: needs.admission.outputs.tier == 'yes'
         run: corepack enable
       - name: Where is the pnpm store
         id: pnpm-store
-        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'main'
+        if: needs.admission.outputs.tier == 'yes'
         run: echo "path=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
       - uses: actions/cache@v4
-        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'main'
+        if: needs.admission.outputs.tier == 'yes'
         with:
           path: ${{ steps.pnpm-store.outputs.path }}
           key: pnpm-${{ runner.os }}-${{ runner.arch }}-node24-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
             pnpm-${{ runner.os }}-${{ runner.arch }}-node24-
       - name: Install
-        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'main'
+        if: needs.admission.outputs.tier == 'yes'
         run: corepack pnpm install --frozen-lockfile
       - name: Frozen holdings base for extraction proofs
-        if: success() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'main')
+        if: success() && needs.admission.outputs.tier == 'yes'
         shell: bash
         run: |
           holdings_base=$(node --input-type=module -e "import{readFileSync}from'node:fs';console.log(JSON.parse(readFileSync('data/state-holdings/move-plan.json','utf8')).baseSha)")
@@ -329,29 +336,29 @@ jobs:
       # The browser is bought only when a selected test's imports reach Playwright
       # (always for the whole suite).
       - uses: actions/cache@v4
-        if: (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'main') && needs.admission.outputs.needs_browser == 'true'
+        if: needs.admission.outputs.tier == 'yes' && needs.admission.outputs.needs_browser == 'true'
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}
       # Chromium's cache excludes the OS/font packages installed by --with-deps.
       - uses: actions/cache@v4
-        if: (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'main') && needs.admission.outputs.needs_browser == 'true'
+        if: needs.admission.outputs.tier == 'yes' && needs.admission.outputs.needs_browser == 'true'
         with:
           path: ${{ runner.temp }}/playwright-apt/*.deb
           key: playwright-apt-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('node_modules/.pnpm/playwright-core@*/node_modules/playwright-core/browsers.json') }}
       - name: Install the browser the suite needs
-        if: success() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'main') && needs.admission.outputs.needs_browser == 'true'
+        if: success() && needs.admission.outputs.tier == 'yes' && needs.admission.outputs.needs_browser == 'true'
         timeout-minutes: 15
         run: |
           mkdir -p "$RUNNER_TEMP/playwright-apt"
           printf 'Dir::Cache::archives "%s";\nBinary::apt-get::APT::Keep-Downloaded-Packages "true";\n' "$RUNNER_TEMP/playwright-apt" | sudo tee /etc/apt/apt.conf.d/99-playwright-cache > /dev/null
           corepack pnpm exec playwright install --with-deps chromium
       - name: Prove the browser is actually there
-        if: success() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'main') && needs.admission.outputs.needs_browser == 'true'
+        if: success() && needs.admission.outputs.tier == 'yes' && needs.admission.outputs.needs_browser == 'true'
         timeout-minutes: 5
         run: corepack pnpm run assert:browser
       - name: Test
-        if: success() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'main')
+        if: success() && needs.admission.outputs.tier == 'yes'
         timeout-minutes: 60
         env:
           NODE_OPTIONS: --max-old-space-size=4096

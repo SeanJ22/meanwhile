@@ -343,22 +343,24 @@ test("a cancelled check beside a passing one still refuses GREEN", () => {
   assert.equal(v.verdict, "unknown", "one unjudged required context is enough to refuse green");
 });
 
-test("build-check lets a newer push to main supersede an older one, and never a manual dispatch", () => {
-  /*
-   * Changed 2026-10-02 (owner's CI cost order). Main now re-runs the whole
-   * suite, so each push to main keys ONE group and a burst of merges certifies
-   * its newest commit once. The superseded commit reads CANNOT TELL above —
-   * never green — and that is safe: main-green judges the tip, and the runtime
-   * adopts only a main commit whose required contexts are green on that commit
-   * (lib/ops/runtime-release-handoff.ts reads `filter=latest`), so the newest
-   * commit, which completes, is the one adopted.
-   */
+test("build-check gives every push to main its own concurrency group", () => {
+  // The fix for the shape above lives in the workflow, so the guard reads the
+  // workflow. Asserting it in main-green.mjs would prove that the code the fix
+  // introduced does what the code does (RULING 153).
   const yml = readFileSync(join(import.meta.dirname, "..", ".github/workflows/build-check.yml"), "utf8");
   const group = /group:\s*(.+)/.exec(yml)?.[1] ?? "";
-  assert.doesNotMatch(group, /github\.sha/, "a per-commit group runs every merge of a burst in full");
-  assert.match(group, /github\.ref/, "pull requests and main each supersede only their own ref's runs");
-  assert.match(group, /github\.event_name == 'workflow_dispatch' && github\.run_id/, "a manual dispatch must not cancel or be cancelled by main");
+  assert.match(
+    group,
+    /github\.sha/,
+    "a push to main must key its concurrency group on the COMMIT, or the next push cancels this " +
+      "commit's check and leaves it unjudged on main forever",
+  );
+  assert.match(group, /github\.event_name == 'push'/, "and pull requests keep the old superseding behaviour");
+});
+
+test("the hourly scheduled run supersedes only its own earlier run", () => {
+  const yml = readFileSync(join(import.meta.dirname, "..", ".github/workflows/build-check.yml"), "utf8");
+  const group = /group:\s*(.+)/.exec(yml)?.[1] ?? "";
+  assert.match(group, /github\.event_name == 'schedule' && 'scheduled'/, "the scheduled run keeps one group of its own");
   assert.match(yml, /^\s*cancel-in-progress:\s*true\s*$/m);
-  const handoff = readFileSync(join(import.meta.dirname, "..", "lib/ops/runtime-release-handoff.ts"), "utf8");
-  assert.match(handoff, /check-runs\?filter=latest/, "the runtime must judge the latest run per context on the adopted commit");
 });

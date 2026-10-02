@@ -88,10 +88,10 @@ const NOT_A_GATE = [
   'elif [ "${{ steps.pr_tier.outputs.tier }}" = "waiting" ]; then',
   'echo "expensive=waiting" >> "$GITHUB_OUTPUT"',
   'echo "Lint and types ran. The standalone build and the tests run when auto-merge is turned on (or the run-full-ci label is added)."',
-  // A push to main selects the main tier: the standalone build and the whole suite again.
+  // A push to main selects the main tier: the merged PR already ran its tests.
   'elif [ "${{ github.event_name }}" = "push" ]; then',
   'echo "expensive=main" >> "$GITHUB_OUTPUT"',
-  'echo "Main runs the standalone build, all four test shards and the schema gate; lint, types, governance and the default build ran on the pull request."',
+  'echo "Main runs the standalone build and the schema gate; lint, types, governance, the affected tests and the default build ran on the pull request, and the hourly scheduled run re-runs the whole suite."',
   'elif [ "${{ steps.pr_tier.outputs.tier }}" = "full" ]; then',
   "else",
   'echo "expensive=yes" >> "$GITHUB_OUTPUT"',

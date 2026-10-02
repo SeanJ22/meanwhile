@@ -130,9 +130,17 @@ test("the rate is a pair, never a bare percentage", () => {
 
 test("PDC terminal boundary: no job watcher is dispatchable and GitHub owns zero routine clocks", () => {
   const dir = join(ROOT, ".github", "workflows");
+  // Build Check's hourly run is a software certification of main (the whole
+  // suite behind affected-only PR tests), not an operations clock; exempt by
+  // exact name and cron only. tests/admin-source-registry.test.ts says why.
+  const softwareCertification = (file: string, text: string) =>
+    file === "build-check.yml" && /^\s{2}schedule:\s*\n\s{4}- cron: '17 \* \* \* \*'\s*$/m.test(text);
   const scheduled = readdirSync(dir)
     .filter((file) => /\.ya?ml$/.test(file))
-    .filter((file) => /^\s*schedule:/m.test(readFileSync(join(dir, file), "utf8")));
+    .filter((file) => {
+      const text = readFileSync(join(dir, file), "utf8");
+      return /^\s*schedule:/m.test(text) && !softwareCertification(file, text);
+    });
   assert.deepEqual(scheduled, [], `GITHUB_ROUTINE_OPS_CRONS=${scheduled.length}: ${scheduled.join(", ")}`);
   assert.equal(existsSync(join(dir, "job-watch.yml")), false, "job-watch.yml is still dispatchable");
   assert.equal(existsSync(join(ROOT, "scripts", "watch-workflows.mts")), false, "the job-watch CLI still exists");

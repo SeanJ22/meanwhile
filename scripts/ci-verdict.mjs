@@ -16,9 +16,9 @@ const record = (value) => value !== null && typeof value === "object" && !Array.
  * - draft / waiting: tests and builds are deferred; waiting never certifies.
  * - yes: structural checks, builds and tests are required. A skipped test job
  *   is accepted only when admission's plan says the change reaches no test.
- * - main: the builds and the whole suite (the integration check, since pull
- *   requests run only their affected tests); lint, types and governance ran
- *   on the pull request.
+ *   The hourly scheduled run on main is this tier with the whole suite.
+ * - main: the builds; lint, types, governance and the pull request's tests
+ *   ran on the pull request, and the hourly scheduled run re-runs the suite.
  *
  * @param {unknown} needs
  */
@@ -40,7 +40,7 @@ export function evaluate(needs) {
     const result = typeof value.result === "string" ? value.result : "missing";
     const unneeded = admitted && (
       ((tier === "draft" || tier === "waiting") && (job === "test" || job === "build"))
-      || (tier === "main" && job === "verify")
+      || (tier === "main" && (job === "test" || job === "verify"))
       || (tier === "yes" && plan === "none" && job === "test")
     );
     const accepted = result === "success" || (unneeded && result === "skipped");

@@ -114,7 +114,12 @@ test("independent structural checks all report, from one install, before the bro
   assert.ok(all.test.needs?.includes("verify"));
   assert.doesNotMatch(all.test.if ?? "", /always\(\)/);
   assert.match(all.test.if ?? "", /needs\.admission\.outputs\.tier == 'yes' && needs\.verify\.result == 'success'/,
-    "a pull request's tests must wait for its structural checks");
+    "tests must wait for the structural checks");
+  // An empty dynamic matrix must never be expanded: the job is skipped first.
+  assert.match(all.test.if ?? "", /needs\.admission\.outputs\.test_legs != ''/);
+  assert.match(all.test.if ?? "", /needs\.admission\.outputs\.test_legs != '\[\]'/);
+  assert.match(all.test.if ?? "", /test_plan == 'affected' \|\| needs\.admission\.outputs\.test_plan == 'full'/);
+  assert.doesNotMatch(all.test.if ?? "", /'main'/, "a push to main runs no tests; the hourly scheduled run does");
   for (const name of ["Lint", "Types", "Canonical state holdings", "Generated state manifests"]) {
     const step = all.verify.steps.find((s) => label(s).startsWith(name));
     assert.ok(step, `${name} was lost`);

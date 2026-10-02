@@ -169,7 +169,9 @@ export function parseFecDirectory(
         !bare.startsWith("-") &&
         bare === bare.toUpperCase() &&
         /[A-Z]{3}/.test(bare) &&
-        !/^\d/.test(bare);
+        !/^\d/.test(bare) &&
+        // Labelled phone continuations are contact cells, even in capitals.
+        !PHONE_RE.test(bare);
       if (isHeading) {
         const withoutState = JURISDICTIONS.reduce(
           (acc, j) => (acc.startsWith(j) ? acc.slice(j.length).trim() : acc),

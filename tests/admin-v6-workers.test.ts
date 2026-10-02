@@ -124,14 +124,14 @@ test("only an open attempt with its own live lease is running; an expired lease 
   const events = s.data.events ?? [];
   const started = events.filter(e => e.kind === "Paid research started");
   assert.equal(started.length, 1, "the live Scout alone is running");
-  assert.match(started[0].text, /running now with Cheapest AI \(claude-haiku-4-5-20251001\)\..*No result is saved yet/);
+  assert.match(started[0].text, /running now with Cheapest AI \(claude-haiku-4-5-20251001\)\. Work claim holds until/);
   const stopped = events.filter(e => e.kind === "No live work claim");
   assert.equal(stopped.length, 1);
-  assert.match(stopped[0].text, /not proven running now.*delivery must be checked separately/);
+  assert.match(stopped[0].text, /its work claim (ran out|is gone)/);
   assert.equal(stopped[0].tone, "warn");
   const ended = events.filter(e => e.kind === "Paid research ended");
   assert.equal(ended.length, 1);
-  assert.match(ended[0].text, /not the same as a checked, published result/);
+  assert.match(ended[0].text, /ended \(/);
   assert.equal(s.data.jobs, null, "the running universe is not complete, so no job list is claimed");
   assert.ok(s.missingParts.some(m => m.startsWith(DEP_WORKER_ACTIVE_INDEX)));
 });
@@ -167,8 +167,8 @@ test("the saved retry loop is one feed line, and a past-due round is not present
   const voting = (s.data.events ?? []).filter(e => /voting sites/.test(e.text));
   assert.equal(voting.length, 1, "QUEUED → COLLECTING → FAILED repeats are one line about the newest state");
   assert.match(voting[0].text, /stopped before publishing 9 times since/);
-  assert.ok(s.data.next?.includes("The next round was due Sep 28, 5:55 PM ET. No newer start is saved yet."));
-  assert.ok(!(s.data.next ?? []).some(n => /is due/.test(n)));
+  assert.ok(s.data.next?.includes("Next round was due Sep 28, 5:55 PM ET."));
+  assert.ok(!(s.data.next ?? []).some(n => /Next round due/.test(n)));
 });
 
 /* ------------------------------------------------------- place binding */
@@ -212,15 +212,15 @@ test("waiting explains the hunt's unfinished tasks, its money limit and the fail
   const w = s.data.waiting ?? [];
   const unfinished = w.find(x => x.kind === "Not finished");
   assert.equal(unfinished?.title, "ZIP 85635 (Census ZCTA) hunt: 174 of 194 assigned tasks not finished");
-  assert.match(unfinished!.why, /30 tasks were stopped by a check, and 144 tasks have no finished, checked result yet/);
-  assert.match(w.find(x => x.kind === "Money limit")?.why ?? "", /\$3\.35 is left of the \$50\.00 limit, with \$8\.16 set aside/);
+  assert.match(unfinished!.why, /30 tasks stopped by a check · 144 tasks unfinished/);
+  assert.match(w.find(x => x.kind === "Money limit")?.why ?? "", /\$3\.35 left of the \$50\.00 limit · \$8\.16 held/);
   const failing = w.find(x => x.kind === "Keeps failing");
   assert.match(failing?.title ?? "", /voting sites source .*: 2 failed tries since/);
-  assert.match(failing!.why, /without the one receipt it must save/);
+  assert.match(failing!.why, /No receipt was saved/);
   assert.ok(!w.some(x => x.kind === "In line"), "whole-system queue counts are not presented as this ZIP's waiting work");
   assert.ok(s.missingParts.some(m => /Only work sent to a hunt is split by place/.test(m)));
-  assert.ok(s.data.next?.some(n => /finish the other 174 assigned tasks/.test(n)));
-  assert.ok(s.data.next?.some(n => /next round of work is due Sep 28, 6:30 PM ET/.test(n)));
+  assert.ok(s.data.next?.some(n => /174 assigned tasks to finish/.test(n)));
+  assert.ok(s.data.next?.some(n => /Next round due Sep 28, 6:30 PM ET/.test(n)));
 });
 
 test("the whole country lists queue lanes as waiting, with the oldest due time", async () => {

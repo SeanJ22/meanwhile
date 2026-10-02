@@ -9,7 +9,6 @@ import { useEffect, useState, type ReactNode } from "react";
 
 import type { SectionId } from "./contract.ts";
 
-import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import { useV6 } from "./context.tsx";
 import { STAGE_NAMES, type ActionRef, type Sourced, type StageMark, type UiReceipt } from "./model.ts";
 import { STATUS_TONE } from "./receipts.ts";
@@ -43,58 +42,15 @@ export function ReceiptChip(props: { readonly receipt: UiReceipt }) {
   return <Pill tone={STATUS_TONE[r.status]}>{r.statusWords}{r.simulated ? " (sample)" : ""}</Pill>;
 }
 
-/** Where a section's data comes from, said once at the top of the section. */
-export function SourceNote(props: { readonly source: Sourced<unknown>; readonly what?: string }) {
-  const src = props.source;
-  const partial = src.load === "partial" && src.missingParts?.length ? (
-    <div className={cx(s.notice, s.noticeMissing)} role="status">
-      <strong>Some of this didn’t arrive.</strong>
-      {src.missingParts.map((m) => <span key={m}>{m}</span>)}
-    </div>
-  ) : null;
-  const stale = src.state === "live" && src.load === "failed" && src.data !== null ? (
-    <div className={cx(s.notice, s.noticeMissing)} role="status">
-      <strong>The latest read failed. These are the last good figures{src.asOf ? ` from ${formatEastern(src.asOf)}` : ""}.</strong>
-      <span>It tries again by itself. Nothing is shown as zero.</span>
-    </div>
-  ) : null;
-  if (src.state === "live") return partial ?? stale;
-  const dep = src.dependency;
-  if (src.state === "sample") {
-    if (partial) return partial;
-    return (
-      <details className={cx(s.notice, s.noticeSample)}>
-        <summary style={{ cursor: "pointer" }}><strong>Sample data</strong> · {props.what ? `${props.what}: examples` : "Examples"} from the design, not real figures.</summary>
-        {dep && <span>The real version needs: {dep.need}</span>}
-        {dep && <span className={s.meta}>Supplied by {dep.owner} · {dep.id}</span>}
-      </details>
-    );
-  }
-  const head = dep?.id === "DEP-PERIOD" ? "This period is not available yet."
-    : src.problem === "denied" ? "You don't have access to this part."
-    : src.problem === "incompatible" ? "The backend sent a version this page can’t read yet."
-    : src.problem === "failed" ? "This couldn’t be read just now. It will try again by itself."
-    : "Not connected yet. This part turns on by itself as soon as the backend offers it.";
-  return (
-    <details className={cx(s.notice, s.noticeMissing)} role="status">
-      <summary style={{ cursor: "pointer" }}><strong>{head}</strong>{src.problem === "waiting" || src.problem === undefined ? " You don’t need to reload." : ""}</summary>
-      <span>{dep ? dep.need : "This reading isn’t available."}</span>
-      {dep && <span className={s.meta}>Supplied by {dep.owner} · {dep.id}</span>}
-    </details>
-  );
-}
-
 export function Loading(props: { readonly what: string }) {
   return <p className={cx(s.p, s.dim)} role="status">Loading {props.what}…</p>;
 }
 
 export function Failed(props: { readonly what: string; readonly retry?: () => void }) {
   return (
-    <div className={cx(s.notice, s.noticeMissing)} role="alert">
-      <strong>{props.what} couldn’t be read.</strong>
-      <span>Nothing is shown as zero. The last good figures, if any, stay on screen.</span>
-      {props.retry && <span><button type="button" className={s.btn} onClick={props.retry}>Try again</button></span>}
-    </div>
+    <p className={cx(s.p, s.dim)} role="alert" aria-label={`${props.what} couldn’t be read`}>
+      —{props.retry && <> <button type="button" className={s.btn} onClick={props.retry}>Try again</button></>}
+    </p>
   );
 }
 

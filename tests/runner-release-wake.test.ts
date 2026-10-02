@@ -60,8 +60,17 @@ test("a wake reconciles the deployed release before admitting another research c
   const breakOnRelease = loop.indexOf("break;", releaseExit);
   const incremented = loop.indexOf("cycle += 1;", held);
   const child = loop.indexOf("const result = await runOneCycle(owner)", incremented);
-  const slept = loop.indexOf("await sleepUnlessRunNow(await nextCycleWaitMs(result.ok));", child);
+  const slept = loop.indexOf("await sleepUnlessRunNow(result.failedAtMs", child);
   assert.ok(held >= 0 && held < reconciled);
   assert.ok(reconciled < releaseExit && releaseExit < breakOnRelease && breakOnRelease < incremented);
   assert.ok(incremented < child && child < slept);
+});
+
+test("both release and shutdown bound coordination and idle waits, and never await a timed-out drain again", () => {
+  const hold = source.match(/async function holdStandingRuntimeAtQuiescence\(\): Promise<void> \{[\s\S]*?\n\}/)?.[0];
+  assert.ok(hold);
+  assert.match(hold, /waitForRuntimeQuiescence\(async \(\) => \{\s*await stopAdminCopyClock\(\);\s*await activeControlRead;\s*await standingRuntimeScheduler.waitForIdle\(\);/);
+  const shutdown = source.slice(source.lastIndexOf("if (standingRuntimeTimer !== null) clearInterval"));
+  assert.match(shutdown, /if \(!standingDrainFailed\) \{[\s\S]*waitForRuntimeQuiescence\(async \(\) => \{\s*await stopAdminCopyClock\(\);\s*await activeControlRead;\s*await standingRuntimeScheduler.waitForIdle\(\);/);
+  assert.match(shutdown, /if \(standingDrainFailed\) process.exit\(handoffExitCode \?\? 2\)/);
 });

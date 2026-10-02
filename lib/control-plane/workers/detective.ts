@@ -219,7 +219,7 @@ export function hasUntriedAdapter(latest:import('../scheduler/scout-result.ts').
   const origins=new Set([...(latest?.candidates??[]).map(c=>c.url),...(latest?.rungs??[]).filter(r=>r.tool!=='search').map(r=>r.target)].map(sourceOrigin).filter(Boolean));
   const learned=new Set(knowledge.flatMap(entry=>{
     const payload=entry.payload as {sourceAttemptId?:string;files?:unknown;sourceUrls?:unknown}|null;
-    if(entry.kind!=='ENGINEER_ADAPTER_PR' || !latest || !Array.isArray(payload?.files))return [];
+    if(!['ENGINEER_ADAPTER_PR','PLATFORM_ADAPTER'].includes(entry.kind) || !latest || !Array.isArray(payload?.files))return [];
     const sameAttempt=Boolean(latest.attemptId && payload.sourceAttemptId===latest.attemptId);
     const sameSourceClass=entry.recordClasses.includes(latest.recordClass?.toLowerCase()) && Array.isArray(payload.sourceUrls) &&
       payload.sourceUrls.some(value=>{const origin=sourceOrigin(value);return origin!==null && origins.has(origin);});

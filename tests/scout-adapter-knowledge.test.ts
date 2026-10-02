@@ -15,6 +15,7 @@ test('installed code teaches a new bank once per implementation version through 
  await learnInstalledAdapters(repos,now);
  const first=await readFieldManual(repos,{role:'SCOUT'});
  const entry=first.store.entries.find(row=>row.source==='installed-adapter' && row.title==='sparqdata-policy')!;
+ assert.equal(entry.kind,'PLATFORM_ADAPTER','installed code is a capability entry, not an invented PR record');
  assert.ok(first.projection.lines.some(line=>line.includes('/sopapi/document/getdocument/')));
  assert.equal((entry.payload as {implementationVersion:string}).implementationVersion,installedAdapterVersion('sparqdata-policy'));
  await learnInstalledAdapters(repos,'2026-10-02T00:01:00Z');

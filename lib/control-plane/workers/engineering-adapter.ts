@@ -92,10 +92,10 @@ test('dated sitemap preserves exact publisher locators and rejects unrelated hos
 export async function learnInstalledAdapters(repos:ControlPlaneRepositories,now:string) {
   const manual=await readFieldManual(repos,{role:'ENGINEER'});
   const learned=(await installedAdapterGuides()).map(({name,version,file,guide})=>newFieldManualEntry('installed-adapter',name,{
-    role:'SHARED',kind:'ENGINEER_ADAPTER_PR',title:name,summary:guide.summary,
+    role:'SHARED',kind:'PLATFORM_ADAPTER',title:name,summary:guide.summary,
     outcome:'REFERENCE',recordClasses:guide.recordClasses,platforms:[name],url:guide.sourceUrls[0]??null,observedAt:now,
     payload:{platform:name,installed:true,implementationVersion:version,files:[file],sourceUrls:guide.sourceUrls,procedure:guide.procedure},
-  })).filter(entry=>!manual.store.entries.some(prior=>prior.id===entry.id &&
+  })).filter(entry=>!manual.store.entries.some(prior=>prior.id===entry.id && prior.kind===entry.kind &&
     (prior.payload as {implementationVersion?:string|null}|null)?.implementationVersion===(entry.payload as {implementationVersion:string|null}).implementationVersion));
   if(!learned.length)return {store:manual.store,projection:manual.projection,error:manual.error};
   const saved=await writeFieldManual(repos,learned,now);

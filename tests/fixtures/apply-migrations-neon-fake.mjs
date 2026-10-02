@@ -42,11 +42,13 @@ export function neon() {
     return [];
   };
 
-  sql.transaction = async (build) => {
+  sql.transaction = async (build, options) => {
     let migration = false;
     const transaction = async (strings) => {
       const statement = textOf(strings);
       record(EVENT_PREFIX, { kind: "transaction-tag", statement });
+      if (options?.readOnly && !/^SELECT\b/i.test(statement)) throw Error("read-only fixture received a write");
+      if (/\bto_regclass\s*\(/i.test(statement)) return [{ exists: process.env.APPLY_MIGRATIONS_FAKE_JOURNAL_EXISTS !== "0" }];
       if (/^SELECT\s+hash,\s*created_at\b/i.test(statement)) return appliedRows();
       if (/AS applied$/i.test(statement)) return [{ applied: process.env.APPLY_MIGRATIONS_FAKE_CONCURRENT === "1" ? false : true }];
       return [];
@@ -58,7 +60,7 @@ export function neon() {
     };
 
     const requests = build(transaction);
-    record(EVENT_PREFIX, { kind: "transaction", requests: requests.length });
+    record(EVENT_PREFIX, { kind: "transaction", requests: requests.length, ...(options?.readOnly ? { readOnly: true } : {}) });
     if (migration && process.env.APPLY_MIGRATIONS_FAKE_TRANSACTION_FAIL === "1") {
       throw new Error("planted transaction failure");
     }

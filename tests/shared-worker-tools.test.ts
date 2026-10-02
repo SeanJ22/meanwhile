@@ -4,7 +4,7 @@ import { sharedScoutBrowser, browseWithPlaywright } from "../scripts/scout-brows
 import type { GuardedBrowser } from "../scripts/browser.mts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
 import { emptyFieldManual, newFieldManualEntry, readFieldManual } from "../lib/control-plane/field-manual.ts";
-import { availableWorkerMemoryBytes, routineProcessSlots, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
+import { availableWorkerMemoryBytes, routineProcessSlots, NATIONAL_PLACE_PEAK_MIB, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
 
 test("concurrent workers share a browser and close only their own contexts", async () => {
   let launches = 0, pages = 0, contextsClosed = 0, browsersClosed = 0;
@@ -47,14 +47,31 @@ test("hosted workers receive state manual pieces and browser observations withou
 
 test("routine sources, reader repairs and catch-up share reservations including the national child", async () => {
   const peak = Math.max(...Object.values(WORKER_ENTRY_PEAK_MIB)) * 1024 * 1024;
-  const slots = routineProcessSlots({ availableBytes: () => peak * 3 + 100, headroomBytes: 100 });
+  const nationalPeak = NATIONAL_PLACE_PEAK_MIB * 1024 * 1024;
+  const slots = routineProcessSlots({ availableBytes: () => nationalPeak + peak + 100, headroomBytes: 100 });
   const national = await slots.acquire("national-place:85635");
   const reader = await slots.acquire("reader:meetings");
   let started = false;
   const catchUp = slots.acquire("meetings:catch-up").then(release => { started = true; return release; });
   await Promise.resolve(); assert.equal(started, false);
-  national(); const release = await catchUp; assert.equal(started, true);
+  reader(); const release = await catchUp; assert.equal(started, true);
   national(); reader(); release();
+});
+
+test("the measured national place pair admits four jobs while retaining the 768 MiB margin", async () => {
+  for (const [availableMiB, expected] of [[4700, 3], [4764, 4]] as const) {
+    const slots = routineProcessSlots({ availableBytes: () => availableMiB * 1024 * 1024 });
+    const active = await Promise.all(Array.from({ length: expected }, (_, i) => slots.acquire(`national-place:zip-${i}`)));
+    let admitted = false;
+    const queued = slots.acquire("national-place:next").then(release => { admitted = true; return release; });
+    await Promise.resolve();
+    assert.equal(admitted, false, `${availableMiB} MiB permits ${expected} jobs with the margin`);
+    active[0]!();
+    const release = await queued;
+    assert.equal(admitted, true);
+    for (const done of active) done();
+    release();
+  }
 });
 
 test("the staging host size accounts for its already-running parent", () => {

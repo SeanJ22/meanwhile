@@ -1899,7 +1899,7 @@ let releaseDrainRequested = false;
 process.on("message", message => {
   if (message !== null && typeof message === "object" && "kind" in message && message.kind === "RUNTIME_RELEASE_DRAIN") {
     releaseDrainRequested = true;
-    console.log("  runtime release requested: new worker admissions closed; active workers finish and queued work remains owed");
+    console.log("  runtime release requested: current wave finishes normally; no new autonomous wave will start");
   }
 });
 const workerSlots = workerProcessSlots(() => {
@@ -1912,7 +1912,7 @@ const workerSlots = workerProcessSlots(() => {
     inputTokensPerMinute: limits?.inputTokensPerMinute ?? undefined,
     outputTokensPerMinute: limits?.outputTokensPerMinute ?? undefined,
     inputTokensPerRequest: 8192, outputTokensPerRequest: RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn }));
-}, { admissionsOpen: () => !releaseDrainRequested });
+});
 // Hand out durable leases before unrelated histories or parent execution.
 const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
   runnerPaused: intents.runnerPause.paused });

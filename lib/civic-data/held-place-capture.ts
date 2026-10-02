@@ -58,7 +58,8 @@ export function projectHeldPlaceCapture(
   for (const body of bodies.values()) {
     const divisions = divisionsFor(body.id, body.ocdId);
     if (!divisions.some(id => wanted.has(id))) continue;
-    subjects.set(body.id, { id: body.id, kind: "body", divisionIds: divisions, label: body.name ?? body.id });
+    subjects.set(body.id, { id: body.id, kind: "body", captureKind: "registry-body",
+      divisionIds: divisions, label: body.name ?? body.id });
     if (body.name && body.bodyClass && body.ocdId) add(body.id, "GOV-01",
       { id: body.id, name: body.name, type: body.bodyClass, divisionIds: divisions },
       body.provenance.sourceUrl, body.provenance.collectedAt, 30 * 24);

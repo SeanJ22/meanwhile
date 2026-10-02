@@ -82,6 +82,29 @@ test("held fields reach every served division without filling inventory or missi
   assert.equal(projectHeldPlaceCapture(["unrelated-division"], registry, [meetings], at).held.length, 0);
 });
 
+test("registry bodies owe civic facts without duplicating product feature work, and retain held observations", () => {
+  const capture = projectHeldPlaceCapture([county, neighbour], registry, [], at);
+  const existing = { subjectId: "shared-body", checklistId: "ENG-07", state: "held" as const,
+    sourceUrl: provenance.sourceUrl, checkedAt: at, freshUntil: "2026-10-01T06:00:00.000Z", value: "Existing observation" };
+  const input = { divisions: [county, neighbour].map(id => ({ id, label: id })), ...capture, now: at };
+  const rows = buildPlaceOwedList(input);
+  const bodyRows = rows.filter(row => row.subject.id === "shared-body");
+  assert.equal(capture.subjects.find(subject => subject.id === "shared-body")?.captureKind, "registry-body");
+  assert.equal(bodyRows.length, 22, "all 14 government and 8 participation requirements stay open or captured");
+  assert.ok(!bodyRows.some(row => row.checklistId.startsWith("ENG-")));
+  assert.ok(bodyRows.some(row => row.checklistId === "GOV-08" && row.state === "missing"));
+  assert.ok(bodyRows.some(row => row.checklistId === "PAR-02" && row.state === "missing"));
+  assert.deepEqual(bodyRows.find(row => row.checklistId === "GOV-01")?.held,
+    capture.held.filter(field => field.subjectId === "shared-body"));
+  assert.deepEqual(bodyRows[0].subject.divisionIds, [county, neighbour]);
+  const retained = buildPlaceOwedList({ ...input, held: [...capture.held, existing] });
+  assert.deepEqual(retained.find(row => row.subject.id === "shared-body" && row.checklistId === "ENG-07")?.held, [existing]);
+  const unresolved = buildPlaceOwedList({ ...input,
+    subjects: [{ id: "unknown-body", kind: "body", divisionIds: [county], label: "Unknown body" }] });
+  assert.equal(unresolved.filter(row => row.subject.id === "unknown-body" && row.checklistId.startsWith("ENG-")).length, 7);
+  assert.equal(rows.filter(row => row.subject.id.includes("#inventory:")).length, 12);
+});
+
 test("sittings share calendar discovery work by body while every meeting keeps its own dates and documents", () => {
   const capture = projectHeldPlaceCapture([county, neighbour], registry, [published({ meetings: [
     meeting, { ...meeting, id: "meeting:two" }, { ...meeting, id: "meeting:other", bodyId: "another-body" },

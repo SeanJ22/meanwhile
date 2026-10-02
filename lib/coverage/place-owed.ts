@@ -5,7 +5,7 @@ export type PlaceSubjectKind = "division" | "body" | "seat" | "calendar" | "fund
 /** The canonical reader supplies this from the record's schema, never its label. */
 export type PlaceCaptureKind = "federal-legislator" | "state-legislator" | "executive" | "local-officeholder"
   | "campaign-finance" | "federal-campaign-finance" | "state-campaign-finance" | "public-finance" | "filing-deadline" | "voting-deadline"
-  | "voting-sites" | "election-navigation" | "candidate" | "election-result" | "meeting" | "body-calendar";
+  | "voting-sites" | "election-navigation" | "candidate" | "election-result" | "meeting" | "body-calendar" | "registry-body";
 export interface PlaceSubject {
   readonly id: string;
   readonly kind: PlaceSubjectKind;
@@ -47,6 +47,9 @@ const CALENDAR_ITEMS = new Set(["MTG-01", "MTG-02", "MTG-03", "MTG-04", "MTG-13"
 function appliesToRecord(subject: PlaceSubject, definition: { id: string; group: string }): boolean {
   const { id, group } = definition;
   switch (subject.captureKind) {
+    // ENG measures the app's reactions, privacy, feedback and alert delivery.
+    // It remains in the product checklist, not an acquisition task per body.
+    case "registry-body": return group === "GOV" || group === "PAR";
     case "federal-legislator": return ["OFF", "LEG", "PRL"].includes(group) && id !== "LEG-22";
     case "state-legislator": return ["OFF", "LEG"].includes(group) && !["LEG-20", "LEG-21"].includes(id);
     case "executive": return ["OFF", "EXE"].includes(group);

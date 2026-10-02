@@ -54,7 +54,13 @@ test("v6 Money and Hunts announcements follow saved policy, snapshot and fleet r
   const absent = adminV6ReadCapabilities({ configRevision: null, snapshotRevision: 7, researchRevision: 9 });
   assert.deepEqual(Object.keys(absent.sections).sort(), ["agents", "checklist", "learning", "publication", "reliability", "results", "sameCause", "sends", "spend", "stuck"], "the weekly learning series, the place score, blockers, results, agents and spend need only the published snapshot, not the saved policy");
   assert.equal(absent.sections.hunts, undefined);
+  assert.equal(absent.sections.national, undefined, "The country joins the saved hunts to the published work index, so it needs both");
   assert.deepEqual(adminV6ReadCapabilities({ configRevision: 3, snapshotRevision: null, researchRevision: 9 }).sections.checklist, undefined);
+  assert.deepEqual(adminV6ReadCapabilities({ configRevision: 3, snapshotRevision: 7, researchRevision: 9, workerAgeBucket: 5 }).sections.national,
+    { contract: "admin-v6/national@1", href: "/api/admin/v6/national", revision: "national:3:7:9:5" });
+  assert.notEqual(adminV6ReadCapabilities({ configRevision: 3, snapshotRevision: 7, researchRevision: 9, workerAgeBucket: 6 }).sections.national.revision,
+    adminV6ReadCapabilities({ configRevision: 3, snapshotRevision: 7, researchRevision: 9, workerAgeBucket: 5 }).sections.national.revision,
+    "the read repeats every five minutes so place scores that were not ready fill in");
   const ready = adminV6ReadCapabilities({ configRevision: 3, snapshotRevision: 7, researchRevision: 9 });
   assert.deepEqual(ready.sections.checklist, { contract: "admin-v6/checklist@1", href: "/api/admin/v6/place", revision: "checklist:7:9" });
   assert.deepEqual(ready.sections.stuck, { contract: "admin-v6/stuck@1", href: "/api/admin/v6/stuck", revision: "stuck:7" });

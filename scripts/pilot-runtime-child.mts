@@ -10,7 +10,8 @@ export async function runRuntimeChildren(
     readonly onStarted?: (id: string, child: ChildProcess) => void },
 ): Promise<readonly BoundedChildResult[]> {
   return Promise.all(commands.map(command => new Promise<BoundedChildResult>(resolve => {
-    let stdout = "", stderr = "", bytes = 0;
+    let stdout = "", stderr = "";
+    const bytes = { stdout: 0, stderr: 0 };
     let errorMessage: string | null = null;
     let overflow = false;
     const child = spawn(command.executable, [...command.args], {
@@ -20,10 +21,12 @@ export async function runRuntimeChildren(
       stdio: command.executable === process.execPath ? ["ignore", "pipe", "pipe", "ipc"] : ["ignore", "pipe", "pipe"],
     });
     const output = (stream: "stdout" | "stderr", chunk: string): void => {
-      bytes += Buffer.byteLength(chunk);
-      if (bytes > options.maxBufferBytes) { overflow = true; child.kill(); return; }
-      if (stream === "stdout") { stdout += chunk; options.onStdout?.(command.id, chunk); }
-      else { stderr += chunk; options.onStderr?.(command.id, chunk); }
+      const remaining = Math.max(0, options.maxBufferBytes - bytes[stream]);
+      bytes[stream] += Buffer.byteLength(chunk);
+      const saved = bytes[stream] > options.maxBufferBytes ? Buffer.from(chunk).subarray(0, remaining).toString("utf8") : chunk;
+      if (stream === "stdout") { stdout += saved; options.onStdout?.(command.id, chunk); }
+      else { stderr += saved; options.onStderr?.(command.id, chunk); }
+      if (bytes[stream] > options.maxBufferBytes) { overflow = true; child.kill(); }
     };
     child.stdout?.setEncoding("utf8").on("data", chunk => output("stdout", String(chunk)));
     child.stderr?.setEncoding("utf8").on("data", chunk => output("stderr", String(chunk)));

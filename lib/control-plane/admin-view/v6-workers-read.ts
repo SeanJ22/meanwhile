@@ -29,13 +29,14 @@ import { EASTERN_ZONE } from "../eastern-time.ts";
 import type { Attempt, ExecutionLease } from "../attempt.ts";
 import { expansionScopesOf, type ExpansionScopeDecision } from "../expansion/scopes.ts";
 import { guardAdminRequest } from "../gateway/admin-guard.ts";
-import { HUNT_SOURCE_PROGRESS_LOG_KEY, livenessOf, type HuntSourceProgress, type RunnerHeartbeat } from "../owner-surface.ts";
+import { HUNT_SOURCE_PROGRESS_LOG_KEY, livenessOf, type HuntSourceProgress } from "../owner-surface.ts";
 import { recordClassWords } from "../plain-work.ts";
 import type { ControlPlaneRepositories, RecordProjection } from "../repository/types.ts";
 import { laneGauges, queueLanesOf } from "../scheduler/lane-reading.ts";
 import type { ObligationAssignment } from "../scheduler/obligation.ts";
 import { RESEARCH_STATE_ID, type RunningScout } from "../scheduler/research-policy.ts";
 import { RUNNER_PROGRESS_HEARTBEAT_FIELDS } from "./runner-progress-read.ts";
+import { runnerCycleOf, type CycleHeartbeat, type RunnerCycle } from "../runner-standing.ts";
 import { huntName, scopedHunts, sectionRevision, validateV6Query, type AdminV6SectionEnvelope, type V6PlaceScope, type V6Refusal } from "./v6-hunts-read.ts";
 
 export const ADMIN_V6_WORKERS_CONTRACT = "admin-v6/workers@1" as const;
@@ -66,6 +67,7 @@ export interface V6WorkerStatus {
   readonly lastRoundFinishedAt: string | null;
   readonly nextRoundDueAt: string | null;
   readonly runnerState: string | null;
+  readonly cycle?: RunnerCycle | null;
   readonly lanes: readonly { readonly name: string; readonly active: number | null; readonly waiting: number; readonly blockedBy: string | null }[] | null;
   readonly unread: readonly string[];
 }
@@ -102,7 +104,7 @@ export interface V6WorkersSources {
   readonly readAt: string;
   readonly config: { readonly state: "READ"; readonly scopes: readonly ExpansionScopeDecision[]; readonly malformed: number }
     | { readonly state: "UNREAD"; readonly detail: string };
-  readonly heartbeat: Read<Partial<RunnerHeartbeat>>;
+  readonly heartbeat: Read<Partial<CycleHeartbeat>>;
   readonly research: Read<Record<string, unknown>>;
   /** Newest first. */
   readonly sourceEvents: { readonly state: "READ"; readonly records: readonly unknown[] } | { readonly state: "UNREAD" };
@@ -135,7 +137,7 @@ export function runningScoutsOf(research: unknown): readonly RunningScout[] | nu
 export async function readV6WorkersSources(repos: ControlPlaneRepositories, readAt: string): Promise<V6WorkersSources> {
   const [config, heartbeat, research, sourceEvents] = await Promise.all([
     readAdminConfig(repos),
-    point<Partial<RunnerHeartbeat>>(() => repos.runnerHeartbeat.readNarrowed(RUNNER_ID, RUNNER_PROGRESS_HEARTBEAT_FIELDS)),
+    point<Partial<CycleHeartbeat>>(() => repos.runnerHeartbeat.readNarrowed(RUNNER_ID, RUNNER_PROGRESS_HEARTBEAT_FIELDS)),
     point<Record<string, unknown>>(() => repos.researchState.readNarrowed(RESEARCH_STATE_ID, WORKERS_RESEARCH_FIELDS)),
     repos.ownerDigests.readRecent(HUNT_SOURCE_PROGRESS_LOG_KEY, WORKERS_SOURCE_EVENT_LIMIT)
       .then(records => ({ state: "READ" as const, records }), () => ({ state: "UNREAD" as const })),
@@ -310,7 +312,8 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
   const unread: string[] = [];
 
   /* status: the heartbeat says "switched on", never "made progress" */
-  const hb = sources.heartbeat.state === "READ" && clock(sources.heartbeat.value.beatAt) ? sources.heartbeat.value as RunnerHeartbeat : null;
+  const hb = sources.heartbeat.state === "READ" && clock(sources.heartbeat.value.beatAt) ? sources.heartbeat.value as CycleHeartbeat : null;
+  const cycle = runnerCycleOf(hb?.cycle);
   if (sources.heartbeat.state === "UNREAD" || (sources.heartbeat.state === "READ" && hb === null)) unread.push("the workers' last check-in");
   const research = sources.research.state === "READ" ? sources.research.value : null;
   const lanes = research === null ? null : queueLanesOf(research);
@@ -366,6 +369,7 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
     lastRoundFinishedAt: finished,
     nextRoundDueAt: nextDue,
     runnerState: hb ? livenessOf(hb, now).state : sources.heartbeat.state === "MISSING" ? "NEVER_BEAT" : null,
+    cycle,
     lanes: gauges?.map(g => ({ name: g.name, active: g.active, waiting: g.waiting, blockedBy: g.blockedBy })) ?? null,
     unread,
   };

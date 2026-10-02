@@ -36,6 +36,22 @@ export interface RunnerCycle {
 
 export type CycleHeartbeat = RunnerHeartbeat & { readonly cycle: RunnerCycle };
 
+/** Old runners have no cycle metadata; malformed readings never imply a live child. */
+export function runnerCycleOf(value: unknown): RunnerCycle | null {
+  if (!value || typeof value !== "object") return null;
+  const cycle = value as Partial<RunnerCycle>;
+  const clock = (at: unknown): at is string => typeof at === "string" && Number.isFinite(Date.parse(at));
+  if (!clock(cycle.startedAt) || (cycle.finishedAt !== null && !clock(cycle.finishedAt)) ||
+      (cycle.finishedAt !== null && Date.parse(cycle.finishedAt) < Date.parse(cycle.startedAt)) ||
+      (cycle.exitCode !== null && (!Number.isSafeInteger(cycle.exitCode) || cycle.exitCode! < 0)) ||
+      (cycle.signal !== null && (typeof cycle.signal !== "string" || !/^SIG[A-Z0-9]{1,20}$/.test(cycle.signal))) ||
+      (cycle.lastError !== null && (typeof cycle.lastError !== "string" || cycle.lastError.length > 2000)) ||
+      (cycle.finishedAt === null && (cycle.exitCode !== null || cycle.signal !== null))) return null;
+  return { startedAt: cycle.startedAt, finishedAt: cycle.finishedAt,
+    exitCode: cycle.exitCode as number | null, signal: cycle.signal,
+    lastError: cycle.lastError?.replace(/(?:postgres(?:ql)?|https?):\/\/[^\s]+/gi, "[redacted URL]") ?? null };
+}
+
 /** A live process beat does not invent a finished round or any source delivery. */
 export function liveCycleHeartbeat(previous: RunnerHeartbeat | null, input: {
   readonly at: string; readonly startedAt: string; readonly testedSha: string | null; readonly host: string;

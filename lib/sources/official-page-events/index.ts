@@ -1402,7 +1402,10 @@ class OfficialLinkingIndex {
 
 type LinkingState = { index: OfficialLinkingIndex; pages: IndexedOfficialPage[] };
 const officialLinkingIndexes = new WeakMap<readonly SavedOfficialPage[], LinkingState>();
-const lazyOfficialLinkingIndexes = new WeakMap<readonly LazyOfficialPage[], LinkingState & { pending: Promise<void> }>();
+const lazyOfficialLinkingIndexes = new WeakMap<readonly LazyOfficialPage[], LinkingState & {
+  pending: Promise<void>;
+  ingested: Map<number, IndexedOfficialPage>;
+}>();
 
 function chainFromSources(sources: readonly IndexedOfficialPage[], texts: readonly string[]): OfficialLinkingPage | null {
   let chain: OfficialLinkingPage | null = null;
@@ -1426,21 +1429,37 @@ export function officialLinkingPageFrom(url: string, pages: readonly SavedOffici
 /**
  * Read each capture once to index its links, without retaining decoded HTML.
  * Reload only the selected chain's original capture text for verification.
- * Concurrent callers share ingestion; failed reads propagate and may be retried.
+ * Ingestion uses an ordered 16-wide pool; concurrent callers share it.
+ * Failed reads propagate after the pool drains and may be retried.
  */
 export async function officialLinkingPageFromAsync(url: string, pages: readonly LazyOfficialPage[]): Promise<OfficialLinkingPage | null> {
   if (isOfficialSource(url)) return null;
   let state = lazyOfficialLinkingIndexes.get(pages);
   if (!state) {
-    state = { index: new OfficialLinkingIndex(), pages: [], pending: Promise.resolve() };
+    state = { index: new OfficialLinkingIndex(), pages: [], pending: Promise.resolve(), ingested: new Map() };
     lazyOfficialLinkingIndexes.set(pages, state);
   }
   const saved = state;
   const pending = saved.pending.catch(() => {}).then(async () => {
     while (saved.pages.length < pages.length) {
-      const page = pages[saved.pages.length];
-      const text = await page.readText();
-      saved.pages.push({ canonicalUrl: page.canonicalUrl, readText: page.readText, links: savedLinkHosts({ canonicalUrl: page.canonicalUrl, text }) });
+      const start = saved.pages.length;
+      const end = Math.min(start + 16, pages.length);
+      const results = await Promise.allSettled(Array.from({ length: end - start }, async (_, offset) => {
+        const i = start + offset;
+        if (saved.ingested.has(i)) return;
+        const page = pages[i];
+        const text = await page.readText();
+        saved.ingested.set(i, { canonicalUrl: page.canonicalUrl, readText: page.readText, links: savedLinkHosts({ canonicalUrl: page.canonicalUrl, text }) });
+      }));
+      // Keep successful decodes even when a neighboring read failed, without
+      // changing the source order or retaining the decoded bodies.
+      while (saved.ingested.has(saved.pages.length)) {
+        const i = saved.pages.length;
+        saved.pages.push(saved.ingested.get(i)!);
+        saved.ingested.delete(i);
+      }
+      const failed = results.find(result => result.status === "rejected");
+      if (failed?.status === "rejected") throw failed.reason;
     }
     saved.index.extend(saved.pages);
   });

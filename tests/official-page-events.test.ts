@@ -148,6 +148,45 @@ test("lazy linking propagates a source read failure and retries without re-inges
   assert.deepEqual(reads, [2, 3]);
 });
 
+test("lazy ingestion runs sixteen reads at once while preserving source order despite out-of-order completion", async () => {
+  let active = 0;
+  let peak = 0;
+  const readOrder: number[] = [];
+  const captures = Array.from({ length: 40 }, (_, i) => ({ canonicalUrl: `https://root${i}.gov/`, text: `<p>capture ${i}</p><a href="https://calendar.example.org/">calendar</a>` }));
+  const pages = captures.map((page, i): LazyOfficialPage => ({ canonicalUrl: page.canonicalUrl, readText: async () => {
+    peak = Math.max(peak, ++active);
+    await new Promise(resolve => setTimeout(resolve, i % 16 === 0 ? 15 : 1));
+    active--;
+    readOrder.push(i);
+    return page.text;
+  } }));
+  const chain = await officialLinkingPageFromAsync("https://calendar.example.org/", pages);
+  assert.deepEqual(chain, previousLinkingPageFrom("https://calendar.example.org/", captures));
+  assert.equal(peak, 16);
+  assert.equal(active, 0);
+  assert.notEqual(readOrder[0], 0, "completion order differs from source order");
+  console.log(`lazy-official-linking-pool: captures=40 peak=${peak} firstCompleted=${readOrder[0]} selected=${chain?.url}`);
+});
+
+test("lazy pool drains failed batches and reuses successful decodes beyond the failed capture", async () => {
+  let active = 0;
+  const reads = Array(20).fill(0) as number[];
+  const pages = reads.map((_, i): LazyOfficialPage => ({ canonicalUrl: `https://root${i}.gov/`, readText: async () => {
+    active++;
+    reads[i]++;
+    try {
+      await new Promise(resolve => setTimeout(resolve, i === 0 ? 1 : 5));
+      if (i === 0 && reads[i] === 1) throw new Error("first capture unavailable");
+      return `<a href="https://calendar.example.org/">capture ${i}</a>`;
+    } finally { active--; }
+  } }));
+  await assert.rejects(officialLinkingPageFromAsync("https://calendar.example.org/", pages), /first capture unavailable/);
+  assert.equal(active, 0, "all in-flight readers drained before rejection");
+  assert.deepEqual(reads, [...Array(16).fill(1), ...Array(4).fill(0)], "no later batch starts after a failure");
+  assert.equal((await officialLinkingPageFromAsync("https://calendar.example.org/", pages))?.url, "https://root0.gov/");
+  assert.deepEqual(reads, [3, ...Array(19).fill(1)], "only the failed capture retries, then the selected root hydrates");
+});
+
 /**
  * Official-page events (2026-09-23) — against pages recorded with one
  * robots-checked GET each through `politeGetText`. No live calls.

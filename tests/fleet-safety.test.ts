@@ -11,6 +11,9 @@ import type { CostEntry } from "../lib/control-plane/cost.ts";
 import type { SpendHold } from "../lib/control-plane/budget.ts";
 import { paidWorkerSlots, researchPaidWorkerCapacity, researchSpendInWindow } from "../lib/control-plane/scheduler/research-policy.ts";
 import { workerProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
+import { runLeaseWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
+import { DurableSpendHolds } from "../lib/control-plane/expansion/spend-holds.ts";
+import { createLedger } from "../lib/control-plane/budget.ts";
 import {
   FLEET_SAFETY_BOUNDS,
   FleetSafetyController,
@@ -345,7 +348,9 @@ test("an exact standing job hold covers tokenless rows once without charging mea
   assert.equal(fleet.knownUsd, 2);
   assert.equal(researchSpendInWindow(rows, NIGHT, 24, [hold]).windowUsd, 5);
   assert.equal(aggregateModelSpend(rows, NIGHT, NIGHT, [{ ...hold, jobId: "same-obligation-other-attempt" }]).usd, null);
-  assert.equal(aggregateModelSpend(rows, NIGHT, NIGHT, [{ ...hold, settled: { usd: 0, costRecordedAt: NIGHT } }]).usd, null);
+  assert.equal(aggregateModelSpend(rows, NIGHT, NIGHT, [{ ...hold, settled: { usd: 0, costRecordedAt: NIGHT } }]).usd, 5);
+  assert.equal(aggregateModelSpend([{ ...cost(2, NIGHT), attemptId: "job" }], NIGHT, NIGHT,
+    [{ ...hold, settled: { usd: 2, costRecordedAt: NIGHT } }]).usd, 2, "a priced job uses its actual spend after settlement");
   assert.equal(aggregateModelSpend(rows, NIGHT, NIGHT, [{ ...hold, heldAt: "2026-09-04T00:00:00Z" }]).usd, null);
   assert.equal(aggregateModelSpend(rows, NIGHT, NIGHT, [{ ...hold, usd: 1 }]).usd, null, "a hold smaller than known job spend cannot cover another unknown bill");
   assert.equal(aggregateModelSpend([cost(2, NIGHT)], NIGHT, NIGHT, [hold]).usd, 2, "an unrelated hold has no recorded model identity");
@@ -402,6 +407,34 @@ test("a paid job waiting for memory releases its slot without launching after th
   const releaseNextPlain = await slots.acquire("held-bytes");
   releaseNextPlain();
   await assert.rejects(paid.acquire("another-scout"), /MODEL_LANE_CLOSED/);
+});
+
+test("a pool admission refused after its memory wait settles the unsent job at zero", async () => {
+  const repos = createMemoryRepositories();
+  const hold: SpendHold = { holdId: "unsent#0", jobId: "unsent", obligationId: "owed", keys: [], usd: 5,
+    heldAt: NIGHT, what: "admitted Scout maximum", settled: null };
+  await repos.budget.install({ ...createLedger({ hosts: [] }), spendHolds: { [hold.holdId]: hold } }, NIGHT);
+  const holds = new DurableSpendHolds({ budget: repos.budget, now: () => NIGHT });
+  let capacity = 20, forks = 0;
+  const slots = workerProcessSlots(() => 1, { availableBytes: () => 10_000, headroomBytes: 0, peakBytes: () => 1 });
+  const releasePlain = await slots.acquire("plain");
+  const pending = runLeaseWorkerProcesses({ entry: "scout-worker.ts", config: { root: process.cwd(), postgres: false,
+    taskIds: ["owed"], modelEnabled: true, searchEnabled: false, ceilingUsd: 5, fundedSubjects: [] },
+    capacity: () => 1, slots: paidWorkerSlots(slots, () => capacity), onStarted: () => { forks++; },
+    transportFor: () => async () => { throw new Error("unsent job must not call a provider"); },
+    onDispatched: result => holds.settle("unsent", result.cost?.usd ?? null, NIGHT).then(() => undefined) });
+  capacity = 0;
+  releasePlain();
+  const results = await pending;
+  assert.equal(forks, 0);
+  assert.equal(results[0]!.outcome, "NOT_CLAIMED");
+  assert.equal(results[0]!.claimed, false);
+  assert.equal(results[0]!.attemptId, null);
+  assert.equal(results[0]!.cost?.usd, 0);
+  assert.match(results[0]!.detail, /MODEL_LANE_CLOSED/);
+  assert.equal((await repos.budget.read()).value.spendHolds![hold.holdId]!.settled?.usd, 0);
+  const releaseNext = await slots.acquire("held-bytes");
+  releaseNext();
 });
 
 test("requests and dispatches keep running across days without a cycle wall", () => {

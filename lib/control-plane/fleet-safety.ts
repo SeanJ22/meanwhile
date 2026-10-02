@@ -226,16 +226,18 @@ export function aggregateModelSpend(
     jobs.set(jobId, job);
   }
   const held = new Map<string, number>();
+  const worstCase = new Map<string, number>();
   const seen = new Set<string>();
   for (const hold of spendHolds) {
     const at = Date.parse(hold.heldAt);
-    if (seen.has(hold.holdId) || hold.settled !== null || !(at >= start && at <= end) || !amount(hold.usd)) continue;
+    if (seen.has(hold.holdId) || !(at >= start && at <= end) || !amount(hold.usd)) continue;
     seen.add(hold.holdId);
-    held.set(hold.jobId, (held.get(hold.jobId) ?? 0) + hold.usd);
+    worstCase.set(hold.jobId, (worstCase.get(hold.jobId) ?? 0) + hold.usd);
+    if (hold.settled === null) held.set(hold.jobId, (held.get(hold.jobId) ?? 0) + hold.usd);
   }
   let unbounded = false;
   for (const [id, job] of jobs) {
-    const bound = held.get(id);
+    const bound = job.unknown ? worstCase.get(id) : held.get(id);
     // Only an exact job identity can cover an unknown charge. Obligation-only
     // attribution can reuse one hold for several failed attempts.
     if (job.unknown && (bound === undefined || bound < job.usd)) unbounded = true;

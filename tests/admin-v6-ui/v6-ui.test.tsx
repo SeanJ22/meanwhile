@@ -293,7 +293,7 @@ test("the same mounted page shows real data once the section is live — no remo
     access: owner,
   });
   const before = renderToStaticMarkup(h(CommandCenter, props(waiting)));
-  assert.match(before, /Not connected yet\. This part turns on by itself/);
+  assert.match(before, /<span class="big">—<\/span>/, "an unreached section shows a dash where its number would be");
   assert.doesNotMatch(before, /Real stuck item from the backend/);
   assert.doesNotMatch(before, /SAMPLE DATA/, "a production page never carries the sample badge");
   const live = { ...waiting, stuck: { phase: "live", data: [stuckItem], asOf: "2026-09-28T19:01:00.000Z", revision: "v1", missingParts: [], attempts: 0 } as SectionState };

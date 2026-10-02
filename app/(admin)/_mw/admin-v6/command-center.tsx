@@ -343,13 +343,12 @@ export function CommandCenter(props: CommandCenterProps) {
           {connWarn && props.connection !== "connecting" && (
             <div className={cx(s.banner, props.connection === "reconnecting" && s.bannerCalm)} role="status">
               <strong>{props.connection === "stale" ? "These figures are out of date." : props.connection === "reconnecting" ? "Reconnecting." : "Disconnected."}</strong>
-              <span className={s.small}>Showing the last good data{lastGood ? ` from ${lastGood}` : ""}. Your place and open item stay put. Buttons that change things are off until updates come back. Then anything you missed is filled in once, and nothing is counted twice.</span>
+              {lastGood && <span className={s.small}>Last good data from {lastGood}</span>}
             </div>
           )}
           {props.recovered && (
             <div className={cx(s.banner, s.bannerGood)} role="status">
               <strong>Back online.</strong>
-              <span className={s.small}>Caught up with what changed while you were away.</span>
             </div>
           )}
           {detail && stack.length > 0 && (

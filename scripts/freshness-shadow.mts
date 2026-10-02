@@ -113,6 +113,7 @@ import type { ControlPlaneRepositories } from "../lib/control-plane/repository/t
 import {
   closeCycleOccurrences,
   digestLines,
+  huntRoundComparator,
   placeFirstRows,
   runCycle,
   runPool,
@@ -2948,6 +2949,25 @@ async function runAutonomousWave() {
   const taskIds = [...new Set([...held.map(task => task.id),
     ...planned.decisions.filter(row => row.task && (row.action === "WORKER" ||
       (row.action === "SCOUT" && paidWorkerCapacity() > 0))).map(row => row.task!.id)])];
+  // Every child pulls from the same full wave. Capture hunt rounds once;
+  // completed/leased tasks disappearing must not reset a hunt to round zero.
+  const readTaskQueue = async () => {
+    const tasks = await Promise.all(taskIds.map(id => repos.routeTasks.read(id)));
+    const items = await Promise.all(tasks.map(row => row ? repos.workItems.read(row.value.workItemId) : null));
+    const metadata = new Map(taskIds.map((id, index) => [id, items[index]?.value]));
+    const rank = (id: string): number => {
+      const item = metadata.get(id);
+      if (!item) return Infinity;
+      const own = item.autonomousPlan?.ownerInstructions?.map(receipt => placeOrder.indexOf(receipt)).filter(at => at >= 0) ?? [];
+      return Math.min(placeRankFor(item.subject) ?? Infinity, ...own);
+    };
+    const compareRound = huntRoundComparator(taskIds, id => {
+      const at = rank(id);
+      return placeOrder[at] ?? metadata.get(id)?.autonomousPlan?.ownerInstructions?.[0] ?? null;
+    });
+    return { rank, compareRound };
+  };
+  let taskQueue: ReturnType<typeof readTaskQueue> | null = null;
   const dispatches = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
     slots: workerSlots,
     config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidWorkerCapacity() > 0,
@@ -2994,18 +3014,13 @@ async function runAutonomousWave() {
     reserveEscalation: scoutEscalationReservation(fleetSafety),
     orderPending: async ids => {
       await refreshPlaceOrder();
-      const tasks = await Promise.all(ids.map(id => repos.routeTasks.read(id)));
-      const items = await Promise.all(tasks.map(row => row ? repos.workItems.read(row.value.workItemId) : null));
-      const rank = (index: number) => {
-        const item = items[index]?.value;
-        if (!item) return Infinity;
-        const own = item.autonomousPlan?.ownerInstructions?.map(receipt => placeOrder.indexOf(receipt)).filter(at => at >= 0) ?? [];
-        return Math.min(placeRankFor(item.subject) ?? Infinity, ...own);
-      };
+      const queue = await (taskQueue ??= readTaskQueue());
       const paidOpen = paidWorkerCapacity() > 0;
-      return ids.map((id, index) => ({ id, index }))
-        .filter(row => paidOpen || !["SCOUT", "DETECTIVE"].includes(tasks[row.index]?.value.workerTask?.role ?? ""))
-        .sort((a, b) => rank(a.index) - rank(b.index)).map(row => row.id);
+      // Only ordering is a wave snapshot. A changed task role must still read
+      // the current paid admission; the child re-reads its task before claiming.
+      const tasks = paidOpen ? [] : await Promise.all(ids.map(id => repos.routeTasks.read(id)));
+      return ids.filter((_, index) => paidOpen || !["SCOUT", "DETECTIVE"].includes(tasks[index]?.value.workerTask?.role ?? ""))
+        .sort((a, b) => queue.compareRound(a, b) || queue.rank(a) - queue.rank(b));
     },
     onDispatched: result => {
       placeOrderDirty = true;

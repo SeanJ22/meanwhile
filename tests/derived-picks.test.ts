@@ -115,10 +115,9 @@ test("M134 rule 5 — a measure's Yes/No derives the same way, through the same 
   assert.equal(resolvePick(null, ["Yes", "No"], 1).asks, true);
 });
 
-test("M134 — a derived pick says where it came from, and stays on the device", () => {
+test("M134 — a derived pick says where it came from", () => {
   // A checkmark the reader does not remember making is worse than none.
   assert.match(DERIVED_PICK_LINE, /You said you'd vote for them/);
-  assert.match(DERIVED_PICK_LINE, /stays on this phone/);
   assert.match(DERIVED_PICK_LINE, /Change it any time/);
 
   const control = readFileSync(

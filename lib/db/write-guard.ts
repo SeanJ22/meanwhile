@@ -13,12 +13,13 @@ import { assertSanctionedRuntimeAuthority } from "../civic-data/runtime-authorit
  * `tests/browser-construction.test.ts` guards every live browser SCRIPT, and
  * structurally cannot see a human opening a browser.
  *
- * The author's ruling was a separate local database, so local never touches
- * production, plus this: "the production write path additionally refuses any
- * request whose environment is not production — belt and braces, because one
- * hand-edited env file must not be able to recreate this."
+ * The fix is two independent protections. The first is a separate local
+ * database, so local never touches production. The second is that the
+ * production write path additionally refuses any request whose environment is
+ * not production, because one hand-edited env file must not be able to
+ * recreate this.
  *
- * This module is the braces. The belt is `.env.local` pointing somewhere else,
+ * This module is the second protection, the braces. The belt is `.env.local` pointing somewhere else,
  * and the two are deliberately independent: the belt is one line in an
  * untracked file that any session or any hand can change, and a protection
  * that a hand-edit defeats is not a protection. Recreating the defect now

@@ -18,7 +18,7 @@
  *
  * The photo rule's **door 2** is the portrait a government body publishes to
  * identify its own member, with attribution to the publishing body and
- * remove-on-request. The author's ruling of 2026-08-24 pre-approves that class
+ * remove-on-request. As of 2026-08-24 that class is pre-approved
  * for sitting officials, so a candidate who currently HOLDS the office they are
  * standing for has a door already open — and nobody had walked it for them.
  *

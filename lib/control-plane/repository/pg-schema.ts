@@ -117,7 +117,8 @@
  * latest-cycle indexes. Historical receipts remain readable without backfill.
  * Version 17 preserves writes from older receipt providers while invalidating
  * partial history instead of demanding a companion from those providers. */
-export const BOOTSTRAP_VERSION = 17;
+// Version 18 adds the exact source-URL artifact index, online while captures continue.
+export const BOOTSTRAP_VERSION = 18;
 
 /**
  * The tables, and the shape each one carries.
@@ -459,6 +460,9 @@ function appendOnlyTable(name: string): readonly string[] {
  * call, and because a failure then names the statement that failed rather than
  * "the bootstrap".
  */
+export const ARTIFACT_SOURCE_INDEX_DDL = `CREATE INDEX CONCURRENTLY IF NOT EXISTS cp_log_artifacts_source_url
+     ON cp_log_artifacts (md5(record->>'canonicalUrl'), (record->>'recordedAt') DESC NULLS LAST, (record->>'artifactId') ASC);`;
+
 export const BOOTSTRAP_DDL: readonly string[] = [
   `CREATE TABLE IF NOT EXISTS cp_schema_version (
      singleton   boolean PRIMARY KEY DEFAULT true CHECK (singleton),
@@ -666,6 +670,10 @@ AFTER INSERT ON cp_log_admin_receipts DEFERRABLE INITIALLY DEFERRED
 FOR EACH ROW EXECUTE FUNCTION cp_admin_action_history_invalidate_readiness();
   END IF;
 END $$;`,
+  // Bootstrap executes one standalone statement per query, outside a transaction.
+  // CONCURRENTLY lets the standing runner keep appending while this index is built.
+  // URLs can exceed the btree row limit; the query also checks exact equality.
+  ARTIFACT_SOURCE_INDEX_DDL,
   `CREATE INDEX IF NOT EXISTS cp_attempts_lease_id ON cp_attempts ((value->>'leaseId'));`,
   `CREATE INDEX IF NOT EXISTS cp_log_owner_digests_cycle_kind_position
      ON cp_log_owner_digests (log_key, (record #>> '{runtimeOutcome,kind}'), position DESC);`,

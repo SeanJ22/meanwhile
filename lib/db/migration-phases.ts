@@ -46,6 +46,34 @@
 /** Which side of its deploy a migration is safe on. */
 export type MigrationPhase = "expand" | "contract";
 
+/** An outcome in the existing owner history, shared by the deploy and stuck views. */
+export const PRODUCTION_MIGRATION_HEADLINE = "Production migrations";
+export interface ProductionMigrationOutcome {
+  readonly phase: string;
+  readonly state: "SUCCEEDED" | "REFUSED" | "FAILED";
+  readonly summary: string;
+  readonly targetHost: string;
+}
+
+export function migrationOutcomeOf(value: unknown): ProductionMigrationOutcome | null {
+  if (!value || typeof value !== "object") return null;
+  const row = value as Partial<ProductionMigrationOutcome>;
+  if (typeof row.phase !== "string" || row.phase.length > 24 ||
+      !["SUCCEEDED", "REFUSED", "FAILED"].includes(row.state ?? "") ||
+      typeof row.summary !== "string" || row.summary.length > 2000 ||
+      row.targetHost !== "ep-dry-river-axwtolzc") return null;
+  return { phase: row.phase, state: row.state as ProductionMigrationOutcome["state"],
+    summary: row.summary, targetHost: row.targetHost };
+}
+
+/** Error output is displayed and stored only after private environment values and URLs are removed. */
+export function redactMigrationOutput(output: string, env: Record<string, string | undefined>): string {
+  for (const [name, value] of Object.entries(env)) {
+    if (value && value.length >= 5 && /TOKEN|SECRET|PASSWORD|KEY|DATABASE_URL/.test(name)) output = output.split(value).join("[private]");
+  }
+  return output.replace(/(?:postgres(?:ql)?|https?):\/\/[^\s"'<>]+/gi, "[private URL]");
+}
+
 /** One narrowing statement, with the rule that recognised it. */
 export interface ContractSignal {
   /** The rule id — stable, so a failure message can be grepped for. */
@@ -416,6 +444,7 @@ export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
     phase: "expand",
     why: "Adds feedback.site with a live default, so existing feedback inserts that omit it still work.",
   },
+  "0034_reader_events": { phase: "expand", why: "New aggregate and anonymous membership tables; existing capture stores are unaffected." },
   "0033_feedback_context": {
     phase: "expand",
     why: "Adds nullable report context columns. Older feedback writers keep working and existing reports retain unknown context.",

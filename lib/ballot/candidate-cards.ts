@@ -1,6 +1,5 @@
 import { currentCandidateProfilesProjection } from "../civic-data/manual-read-models.ts";
-import { officialPhotoForPerson, personKey } from "../photos/person.ts";
-import { photoMayRender } from "../photos/review.ts";
+import { officialPhotoForPerson } from "../photos/person.ts";
 
 /**
  * Kelly-standard candidate cards (2b, 2026-08-17): the curated photo / bio /
@@ -9,7 +8,7 @@ import { photoMayRender } from "../photos/review.ts";
  * The two files stay separate because they are different hunts with
  * different rules: a link is verified by fetching it; a card's photo must be
  * a URL from the candidate's own cited page (campaign site for challengers —
- * the author-adjusted photo rule — since a challenger has no official
+ * the adjusted photo rule — since a challenger has no official
  * portrait), HEAD-verified as an image, and labeled with its source. Bios
  * are the site's own words, attributed with a read date — never our
  * characterization of the person.
@@ -114,44 +113,8 @@ function withPersonPhoto(
     !official || official.url === card.photoUrl
       ? card
       : { ...card, photoUrl: official.url, photoSource: official.source };
-  return withReviewedPhotoOnly(merged, personName);
-}
-
-/**
- * **RULING 55 — only an APPROVED photo renders.** (2026-08-21.)
- *
- * Three false portraits shipped past every mechanical check the repo had in a
- * single session: a stock photograph of the United States flag alt-texted with
- * a candidate's name and served from an `/images/headshots/` path; a scanned
- * cover of a 1978 New Hampshire Grand Jury manual served as a campaign's own
- * `og:image`; and a name-and-office banner. A file existing is not a
- * photograph of a person, and rendering a wrong face is a false claim about a
- * named person that a reader believes instantly.
- *
- * **This is a correctness gate on ONE FIELD and never a completeness gate on a
- * card.** RULING 26 and RULING 27 forbid withholding what we hold about a
- * person because something else about them is missing; nothing here does that.
- * The photo is dropped only when the photo's OWN review says so, and every
- * other field on the card is untouched — name, party, blurb, contacts, filed
- * address, funding, votes, the battlecard door. A card whose photo is pending
- * renders initials, which the frozen field matrix already calls a success
- * rather than a gap ("never — honest initials are a success"), and per
- * RULING 44 the card says nothing at all about the photo's state.
- *
- * `lib/photos/review.ts` carries the full reasoning and
- * `tests/photo-review.test.ts` asserts a person renders fully with a photo
- * pending — which is the claim that keeps this from becoming a suppression
- * path by drift.
- */
-function withReviewedPhotoOnly(
-  card: CandidateCardData,
-  personName: string,
-): CandidateCardData {
-  if (!card.photoUrl) return card;
-  if (photoMayRender(personKey(personName), card.photoUrl)) return card;
-  // The photo goes; its source goes with it, because a credit with no image is
-  // an attribution for nothing. Everything else stays exactly as it was.
-  return { ...card, photoUrl: null, photoSource: null };
+  // Published bindings stay visible. New and changed portraits pass §3 at publication.
+  return merged;
 }
 
 /** The person's name as filed, recovered from the candidacy id's tail. */

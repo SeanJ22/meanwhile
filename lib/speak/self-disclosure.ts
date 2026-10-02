@@ -2,13 +2,13 @@ import { SCRUB_MARK, scrubFreeText } from "../log/scrub.ts";
 
 /**
  * **BC-11 RULE 3 — PII SELF-DISCLOSURE, REDACTED AND FLAGGED.**
- * (The author's ruling, 2026-08-24.)
+ * (2026-08-24.)
  *
- * His words: *People type their own names, emails, phones, and street
- * addresses into boxes like this. Before any row can ever reach an export
- * path: a redaction pass flags self-identifying content, and a flagged row
- * never exports verbatim. Build the pass and the flag now, even though no
- * export path exists yet — the store is born safe, not retrofitted.*
+ * People type their own names, emails, phones, and street addresses into
+ * boxes like this. Before any row can ever reach an export path, a redaction
+ * pass flags self-identifying content, and a flagged row never exports
+ * verbatim. The pass and the flag are built now, even though no export path
+ * exists yet — the store is born safe, not retrofitted.
  *
  * ## Why a FLAG and not just the existing scrub
  *
@@ -18,7 +18,7 @@ import { SCRUB_MARK, scrubFreeText } from "../log/scrub.ts";
  *
  * What the scrub cannot do is TELL YOU IT FIRED. It returns a string, so a row
  * that arrived clean and a row that arrived carrying somebody's phone number
- * are indistinguishable afterwards. The author's rule is about the second
+ * are indistinguishable afterwards. The rule is about the second
  * kind: **a flagged row never exports verbatim**, and that is a decision an
  * export path has to be able to make. So the pass reports what it found, the
  * flag rides on the row, and the export question is answered by reading a

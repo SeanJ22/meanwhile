@@ -27,6 +27,7 @@ export interface NationalOfficialCandidate {
   /** Exact source words, never a claim that the publisher has verified them. */
   readonly quote: string;
   readonly linkingPage?: OfficialLinkingPage;
+  readonly portrait?: import("../../photos/evidence.ts").PortraitSources;
 }
 export interface NationalPlaceSources {
   readonly officials: readonly NationalOfficialCandidate[];
@@ -152,6 +153,8 @@ export async function collectNationalPlaceSources(input: {
           if (!office) { gaps.push({ sourceUrl: document.url, detail: `The official profile needs source seat words for ${name}` }); return; }
           officials.push({ discoveryId: person.id, divisionId, name,
             officeTitle: office, seatLabel: person.officeTitle, officialUrl: person.websiteUrl, document,
+            ...(person.portraitCandidate ? {portrait: {imageUrl:person.portraitCandidate.imageUrl,
+              captures:[csv.capture,document.capture].filter((c): c is WorkerPublicationCapture => c !== undefined)}} : {}),
             quote: text.slice(Math.max(0, at - 100), at + name.length + 160) });
           await flush();
         }));

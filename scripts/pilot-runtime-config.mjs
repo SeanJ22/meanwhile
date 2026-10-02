@@ -18,6 +18,26 @@ import { fileURLToPath } from "node:url";
 
 const FULL_SHA = /^[0-9a-f]{40}$/i;
 
+/**
+ * Check the runner's startup reads against its explicitly configured production destination.
+ * @param {Record<string, string | undefined>} env
+ */
+export function assertProductionDatabaseTarget(env = process.env) {
+  if (env.WTP_RUNTIME_MODE !== "production") return;
+  const refuse = () => { throw new Error("PRODUCTION_DATABASE_TARGET_REFUSED: DATABASE_URL must match the approved production reader and writer endpoint and database"); };
+  const target = (connection) => {
+    try {
+      const url = new URL(connection);
+      if (!["postgres:", "postgresql:"].includes(url.protocol) || !url.hostname || url.pathname.length < 2) return refuse();
+      // Neon pooled and direct connections reach the same endpoint; roles and passwords do not identify the database.
+      const host = url.hostname.endsWith(".neon.tech") ? url.hostname.replace(/-pooler(?=\.)/, "") : url.hostname;
+      return `${host}${url.pathname}`;
+    } catch { return refuse(); }
+  };
+  const reader = target(env.WTP_PRODUCTION_DATABASE_URL_READONLY);
+  if (target(env.DATABASE_URL) !== reader || target(env.WTP_PRODUCTION_DATABASE_URL_WRITE) !== reader) refuse();
+}
+
 /** Staging digests stay in their worktree; the shared production mirror is never a fallback. */
 export function resolvePilotMirror(root, configured, staging) {
   if (!staging) return configured ?? "G:/My Drive/we-the-people";

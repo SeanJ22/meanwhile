@@ -172,7 +172,7 @@ function bodiesFor(
  * **ASK-5 (2026-08-24) — ASK AND REPRESENTATION WERE READING DIFFERENT
  * STORES, AND ONLY ONE OF THEM HELD THE ANSWER.**
  *
- * The author's captures put the two side by side. `12-04-06` is Ask on
+ * Two captures put the two side by side. `12-04-06` is Ask on
  * "when does school start", saying *We haven't sourced who sits on this body
  * yet* about Tucson Unified. `12-05-31` is the same district's battlecard,
  * Representation tab, rendering Dr. Ravi Shah, Natalie Luna Rose, Jennifer
@@ -219,7 +219,7 @@ function peopleFor(
    * ASK-5 put the body's whole roster here and the reasoning was right as far
    * as it went: a school board's clerk IS a better answer than a state
    * representative who votes on the funding formula. What it produced is what
-   * the author boxed in red on `08-58-52` — six people under one sentence at
+   * the capture `08-58-52` boxes in red — six people under one sentence at
    * Tucson, and, worse, on `09-22-18` at 07866: FOUR school districts named
    * correctly, and then ONE of their rosters printed underneath as though it
    * answered for all four. Every one of those seven addresses is `@rocktwp.net`.
@@ -232,8 +232,8 @@ function peopleFor(
    * dropped from the data or from the battlecard, and the equal-effort rule is
    * untouched because it governs the hunt rather than the render.
    *
-   * **The one exception is the person who RUNS the body**, and the author
-   * asked for it by name: the superintendent, described as running the
+   * **The one exception is the person who RUNS the body**, named by role:
+   * the superintendent, described as running the
    * district's operations day to day. One person, one role, and it is the
    * answer to "who do I call" in a way a seven-name list is not.
    *
@@ -255,7 +255,7 @@ function peopleFor(
    * seven names to one; a single wrong attribution is not an improvement on
    * seven, it is a harder one to notice.
    *
-   * The author's instruction is literal: no names until the reader selects a
+   * The rule is literal: no names until the reader selects a
    * district. With more than one body the step names the bodies, each of them
    * a click target, and the names live on the card that can say whose they
    * are.

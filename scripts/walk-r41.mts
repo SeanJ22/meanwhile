@@ -1,5 +1,5 @@
 /**
- * R41 — the optional reply field (2026-08-17, the author's ruling A).
+ * R41 — the optional reply field (2026-08-17, option A).
  *
  * The row's own walk checks, in its own script because two of the three
  * WRITE a real feedback row. The standing suite excludes write-path checks by

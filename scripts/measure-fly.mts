@@ -19,8 +19,8 @@
  *   judgement.
  *
  * **The frame budget is unset** (item 8b, 2026-08-17). The 32 ms absolute was
- * invented rather than measured and is retired; the author sets a real one
- * from his own hardware via `pnpm perf`. The paint budget stands. Everything
+ * invented rather than measured and is retired; a real one is set from a
+ * measured baseline via `pnpm perf`. The paint budget stands. Everything
  * is printed either way, and a missed target is reported with its
  * measurement, never smoothed into a pass.
  */
@@ -50,15 +50,15 @@ const ZIP = process.env.FLY_ZIP ?? "85701";
 const RUNS = Number(process.env.FLY_RUNS ?? 3);
 
 /**
- * THE FRAME BUDGET IS UNSET (item 8b, 2026-08-17, the author's ruling).
+ * THE FRAME BUDGET IS UNSET (item 8b, 2026-08-17).
  *
  * This was `const FRAME_BUDGET_MS = 32`, and it was invented rather than
  * measured — set as an absolute because no baseline existed. It was missed
  * before g5's fix and missed after it, with no cause ever named, on a
  * software-rasterized CI runner whose numbers are not a reader's.
  *
- * The author's ruling: retire the absolute and set a real one from his own
- * hardware, via `pnpm perf`. **It is deliberately replaced with nothing.** A
+ * The design: retire the absolute and set a real one from a measured
+ * baseline, via `pnpm perf`. **It is deliberately replaced with nothing.** A
  * check asserting against a made-up threshold is worse than no check — it
  * teaches everyone that red means nothing.
  *
@@ -274,6 +274,6 @@ console.log(`  first contentful paint   ${fcp.toFixed(0)} ms   (budget ${PAINT_B
 console.log(`  largest contentful paint ${lcp.toFixed(0)} ms`);
 console.log(`  map ready (interactive)  ${ready.toFixed(0)} ms`);
 // Item 8b: MEASURED and PRINTED, deliberately not judged. The budget is unset
-// until the author rules on `pnpm perf`'s baseline from his own hardware.
+// until `pnpm perf` sets a baseline from measured hardware.
 console.log(`  worst fly-in frame       ${worst.toFixed(1)} ms  (no budget set — see pnpm perf)`);
 console.log(`  frames over budget       ${over} (worst run)`);

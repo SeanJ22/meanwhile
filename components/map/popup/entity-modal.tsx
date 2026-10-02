@@ -3,7 +3,9 @@
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { X } from "lucide-react";
-import { Fragment, useEffect, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
+
+import { useCardVisibility } from "@/hooks/use-card-visibility";
 
 import { formatMeetingDate, formatMeetingTime } from "@/lib/map/format";
 import { sourceCreditFor } from "@/lib/meetings/list-attribution";
@@ -82,7 +84,7 @@ const TABS: { id: ModalTab; label: string }[] = [
  *
  * `content` is null when the product holds nothing for this section, and the
  * section STILL RENDERS: header visible, collapsed closed, the honest absence
- * line inside — the author's ruling of 2026-08-17 on M93's empty sections.
+ * line inside — the 2026-08-17 decision on M93's empty sections.
  *
  * Hiding an empty section would make a well-covered body's card taller than a
  * thin one's, which is the same layout asymmetry the equal-effort rule catches
@@ -183,10 +185,10 @@ export interface BodyCardData {
 }
 
 /**
- * A PLACE CARD (g18, 2026-08-18, the author's ruling A on M135's last row).
+ * A PLACE CARD (g18, 2026-08-18, option A on M135's last row).
  *
  * M135's rule is that every row opens a card. Two rows did not, and this is
- * the one the author kept for himself: a PLACE row — "Pima County, AZ" in the
+ * the one left open as a design question: a PLACE row — "Pima County, AZ" in the
  * ask panel's autocomplete — flew the camera and opened nothing, because a
  * place is not a body and this product had no card for one.
  *
@@ -294,7 +296,7 @@ export interface ModalSubject {
   /** How to actually speak at it (D25), when the subject is a meeting. */
   commentAccess?: { ocdId: string | null; bodyName: string; bodyId?: string | null } | null;
   /**
-   * 6f2 (2026-08-15, the author): a district battlecard's overview rendered
+   * 6f2 (2026-08-15): a district battlecard's overview rendered
    * type/tier/state and nothing else — three identifiers where a stranger
    * needs a sentence. This is the office title of whoever REPRESENTS the
    * district, so the card can render that office's shipped explainer.
@@ -568,8 +570,7 @@ function BodySections({
       title: listingCount.heading,
       meta: meetings.length > 0 ? `${upcoming} upcoming${listingCount.unresolved ? " listings" : ""}` : undefined,
       content: meetings.length > 0 ? <Meetings meetings={meetings} /> : null,
-      absence:
-        "No meetings on file for this body. That is our coverage, not a statement that nothing is scheduled.",
+      absence: "We’re working on getting this info.",
     },
     {
       id: "contact",
@@ -595,7 +596,7 @@ function BodySections({
             ))}
           </>
         ) : null,
-      absence: "We haven't found a published way to contact this body yet.",
+      absence: "We’re working on getting this info.",
     },
     {
       id: "jurisdiction",
@@ -610,7 +611,7 @@ function BodySections({
             ))}
           </>
         ) : null,
-      absence: "We haven't recorded the area this body covers yet.",
+      absence: "We’re working on getting this info.",
     },
     {
       id: "sources",
@@ -618,7 +619,7 @@ function BodySections({
       meta: sourceCountLabel(subject.sources) ?? undefined,
       content:
         subject.sources.length > 0 ? <Sources sources={subject.sources} /> : null,
-      absence: "Nothing on this card came from an external record.",
+      absence: "We’re working on getting this info.",
     },
   ];
 
@@ -633,7 +634,7 @@ function BodySections({
         </PopupRow>
       ))}
 
-      {/* F01 4.1 (2026-08-19), applied as a CLASS: the author named the person
+      {/* F01 4.1 (2026-08-19), applied as a CLASS: the item named the person
           card, and a body battlecard is the same stack of pills with the same
           failure available to it. One group, one open pill. */}
       <CardSectionGroup>
@@ -643,7 +644,7 @@ function BodySections({
               **BC-11 (2026-08-24) — ABOVE SOURCES, which on THIS card shape is
               a position rather than a neighbour.**
 
-              The author's placement is "above Sources, below Voting record".
+              The placement is "above Sources, below Voting record".
               The tabbed card has no Sources SECTION — it has a Sources tab — so
               the pill sits below the whole panel there. This card does have
               one, and it is the last section, so "below the card" and "above
@@ -651,8 +652,8 @@ function BodySections({
               difference: the pill rendered underneath the citations.
 
               Keyed off the section id rather than an index, so inserting or
-              reordering a section cannot silently move the pill somewhere the
-              author did not put it.
+              reordering a section cannot silently move the pill somewhere it
+              was not placed.
             */}
             {/*
               **BC-29 (2026-08-25): the body card's in-section pill is GONE**,
@@ -682,6 +683,8 @@ export function EntityModal({
   onShowOnMap,
   onOpenVenue,
 }: EntityModalProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  useCardVisibility(cardRef, `${subject.subjectKind}:${subject.subjectId}`, subject.subjectKind);
   const [tab, setTab] = useState<ModalTab>(initialTab);
   const listingCount = readerMeetingCount(subject.meetings, useMeetingListingIdentity());
   const sourceCount = sourceCountLabel(subject.sources);
@@ -728,8 +731,8 @@ export function EntityModal({
                           **BC-17 (2026-08-25) — THE HEADING BRANCHES ON WHETHER
                           THE DIVISION IS A GOVERNMENT OR A CONSTITUENCY.**
   
-                          The author read "What the person who represents this
-                          district does" off Tucson Unified District on
+                          Tucson Unified District rendered "What the person who
+                          represents this district does" on
                           `09-04-04`. The sentence is not wrong in general, and
                           the note on `representedByOfficeTitle` above explains
                           why it was chosen: a CONGRESSIONAL district is not a
@@ -776,7 +779,7 @@ export function EntityModal({
                   })()}
   
                 {/*
-                  MTG-3 (2026-08-23, the author's 8/22 walkthrough). Add to
+                  MTG-3 (2026-08-23, the 8/22 walkthrough). Add to
                   Calendar lived on the Meetings tab and nowhere else, and
                   Directions lived on the venue panel and nowhere else — so the
                   large battlecard, which is the surface a reader lands on when
@@ -845,6 +848,7 @@ export function EntityModal({
 
   return (
     <div
+      ref={cardRef}
       className={embedded ? "account-modal-overlay mw-embedded" : "account-modal-overlay"}
       role={embedded ? undefined : "dialog"}
       aria-modal={embedded ? undefined : "true"}
@@ -1007,8 +1011,8 @@ export function EntityModal({
           **BC-11 (2026-08-24) — SPEAK YOUR MIND, ON EVERY SHAPE THIS CARD
           TAKES, and it took reading a capture to find that it was not.**
 
-          The author asked for the pill on every battlecard and every large
-          meeting battlecard. This component renders THREE different cards from
+          The pill belongs on every battlecard and every large meeting
+          battlecard. This component renders THREE different cards from
           one function — a seven-section BODY card, a PLACE card, and the tabbed
           division/meeting card — and the first version put the pill inside the
           tabbed branch only.
@@ -1042,11 +1046,10 @@ export function EntityModal({
         {/*
           **BC-29 (2026-08-25) — IT IS A PINNED FOOT NOW, ON EVERY CARD SHAPE.**
 
-          Sean, on the Kearsarge card: *"the Speak Your Mind pill sits in a
-          small scroll region of its own. It becomes a floating pill fixed at
-          the bottom. Only the board member list scrolls. Speak Your Mind stays
-          put and is never covered by anything. Applies to every large
-          battlecard with a scrolling list."*
+          On the Kearsarge card the Speak Your Mind pill sat in a small scroll
+          region of its own. It is now fixed at the bottom: only the board
+          member list scrolls, and the pill stays put, never covered by
+          anything — on every large battlecard with a scrolling list.
 
           The container was a SECOND `account-modal-body` — `flex: 1` with its
           own `overflow-y: auto` — so two siblings both claimed the remaining
@@ -1060,7 +1063,7 @@ export function EntityModal({
           two placements, one of which is now the wrong one. Pinned at the foot
           is below everything on every shape, which still satisfies BC-20's
           actual requirement — reachable from anywhere on the card — and now
-          satisfies Sean's stronger one, that it is never scrolled away from.
+          satisfies the stronger one, that it is never scrolled away from.
 
           Exactly ONE pill still renders per card, which is what the earlier
           two-pill defect was measured on: the body card's in-section render
@@ -1072,7 +1075,7 @@ export function EntityModal({
               **BC-20 (2026-08-25) — A TAB SWITCH COLLAPSES IT TO ITS PILL.**
 
               The panel sits BELOW the tab strip and stays mounted across every
-              tab, which is deliberate — the author's placement is that it is
+              tab, which is deliberate — the placement is meant to be
               reachable from anywhere on the card. What it must not do is stay
               OPEN across a tab change: a reader who moves to Sources has
               stopped writing, and half-typed text left under a heading they
@@ -1091,7 +1094,7 @@ export function EntityModal({
             {/*
               **OWN-Q6 (2026-08-31) — the reader asking us to go get it.**
 
-              On the BODY card only, and that is the owner's scope rather than
+              On the BODY card only, and that is the item's scope rather than
               a hedge: the row asks for the pill on every body and candidate
               card. An OFFICIAL card is a person and a MEETING card is an
               event; neither is a record class this pill's sentence is true
@@ -1125,7 +1128,7 @@ export function Representation({
    * F01 2.2 (2026-08-19): lead with WHO RUNS IT.
    *
    * Default ON, so a surface that forgets to ask for it still gets it — the
-   * author’s rule is that every Representation list carries its top offices,
+   * rule is that every Representation list carries its top offices,
    * and a default-off flag is how half of them would end up without one. Set
    * false only where the list is ALREADY the top offices (a single-seat
    * division), which would otherwise print the same person twice.
@@ -1195,13 +1198,11 @@ export function Representation({
       {ordered.map((holder) => (
         <div key={holder.id} data-roster-holder={holder.id} className="account-modal-person flex items-start gap-3">
           {/*
-            F01 2.3 (2026-08-19, the author): *"On AZ-6, when I look at
-            Representation, we should have the picture of that person — we
-            already have it — so we should just simply put it on the left,
-            essentially left of both his name and his party affiliation, the
-            same size as the battlecard when I click into Ciscomani."*
+            F01 2.3 (2026-08-19): on AZ-6's Representation list, each person's
+            picture belongs on the left of their name and party, at the
+            battlecard's size.
 
-            He is right that we already have it: `holder.photoUrl` has ridden
+            We already had it: `holder.photoUrl` has ridden
             on the seat holder all along and this list was the one place that
             rendered a person WITHOUT the circle every other surface gives them.
             902 portraits were collected and this list showed none of them.
@@ -1211,8 +1212,7 @@ export function Representation({
             it renders honest INITIALS where no portrait exists — so a person
             we hold no picture of gets the same circle at the same size rather
             than a ragged row, which is the equal-effort rule applied to
-            layout. `--sm` is the small battlecard's size, which is the size he
-            asked for by name.
+            layout. `--sm` is the small battlecard's size.
           */}
           <IdentityPortrait name={holder.name} photoUrl={holder.photoUrl} />
 
@@ -1341,8 +1341,8 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
                   MTG-3 (2026-08-23): and Directions beside them. The two
                   belong together — a reader who has just added a meeting to
                   their calendar is the reader who next wants to know how to
-                  get to it — and the author found Meetings carrying one of
-                  them while Overview carried neither. */}
+                  get to it — and Meetings carried one of them while Overview
+                  carried neither. */}
               {meeting.status === "SCHEDULED" && (
                 <CalendarLinks meeting={meeting} />
               )}
@@ -1388,7 +1388,7 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
  */
 function Sources({ sources }: { sources: CardSource[] }) {
   if (sources.length === 0) {
-    return <Empty>Nothing on this card came from an external record.</Empty>;
+    return <Empty>We’re working on getting this info.</Empty>;
   }
   return <CardSourcesList sources={sources} />;
 }

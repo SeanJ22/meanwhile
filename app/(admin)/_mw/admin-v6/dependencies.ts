@@ -17,7 +17,7 @@ export const SECTION_DEP = {
   national: {
     id: "DEP-NATIONAL",
     owner: "Codex (admin-view)",
-    need: "Per-state totals (hunts, stuck, checklist items by status, checked on the public page) with cursor paging, counting shared work once.",
+    need: "Per-state rows (hunts, ZIPs worked, place score, stuck), a state's congressional districts, and a district's ZIPs, each counting shared work once.",
   },
   hunts: {
     id: "DEP-HUNTS",

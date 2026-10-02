@@ -1,6 +1,6 @@
 /**
  * **WHERE A READER SAYS THEY LIVE, AND HOW WELL WE KNOW IT.**
- * (ASK03, 2026-08-27. The author's product rule of the same date.)
+ * (ASK03, 2026-08-27.)
  *
  * ## Two questions, deliberately not one enum
  *
@@ -17,7 +17,7 @@
  * Collapsing them forces a buyer-facing sentence to imply one from the other,
  * which is exactly the false inference this model exists to prevent.
  *
- * ## The author's rule, and its limit
+ * ## The rule, and its limit
  *
  * > The initial ZIP a reader voluntarily enters is treated as their
  * > self-declared home ZIP unless the reader later gives the product reason to
@@ -81,7 +81,7 @@ export type LocationConfidence =
  * typed this ZIP"*; it does not get to say what that proves.
  */
 export type LocationOrigin =
-  /** They typed a ZIP into the location entry. The author's rule case. */
+  /** They typed a ZIP into the location entry. The rule's case. */
   | "TYPED_ZIP"
   /** They tapped one of the four demonstration ZIPs on the welcome card. */
   | "DEMO_ZIP"
@@ -126,7 +126,7 @@ export function readLocationOrigin(raw: unknown): LocationOrigin {
  *   it is not a ZIP the reader declared. So the relation is `UNKNOWN` and the
  *   confidence is `UNVERIFIED` — we hold a place and no claim about it.
  *
- * `TYPED_ZIP` is the author's rule, applied exactly as he stated it: a
+ * `TYPED_ZIP` is the rule, applied exactly: a
  * voluntarily entered ZIP is a self-declared home ZIP unless the reader later
  * gives us reason to classify it otherwise.
  */

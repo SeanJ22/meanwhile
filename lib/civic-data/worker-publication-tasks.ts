@@ -42,16 +42,17 @@ export function workerPublicationTasks(items: readonly WorkItem[], results: read
     if (outcome && nowMs - Date.parse(outcome.at) < HOUR) return [];
     return [{ item, requestedAt: hour }];
   });
-  return [...new Set(owed.map(row => row.item.autonomousPlan!.publication!.contractId))].map(id => {
-    const group = owed.filter(row => row.item.autonomousPlan!.publication!.contractId === id);
+  return owed.map(({ item, requestedAt }) => {
+    const id = item.autonomousPlan!.publication!.contractId;
     const contract = requiredManualProductionContract(id);
-    return { id: contract.id, sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
-      acquisitionFailureDomain: `routine-source:${contract.sourceId}`, requestedUrl: "", authorityMode: "REGISTERED_SOURCE_ROUTES",
+    const taskId = `worker-publication:${contract.id}:${item.id}`;
+    return { id: taskId, registeredContractId: contract.id, sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
+      acquisitionFailureDomain: taskId, requestedUrl: "", authorityMode: "REGISTERED_SOURCE_ROUTES",
       parserVersion: contract.parserNormalizerVersion,
-      command: [...contract.command, `--${id === "registry-runtime-bindings" ? "worker-rosters" : "worker-results"}=${group.map(row => row.item.id).sort().join(",")}`],
+      command: [...contract.command, `--${id === "registry-runtime-bindings" ? "worker-rosters" : "worker-results"}=${item.id}`],
       cadenceMs: Number.POSITIVE_INFINITY, retryMs: 15 * 60_000,
       contract: { readerProjection: contract.readerProjection, cadence: { description: "Publish owed work that now meets §3", defaultEveryMs: Number.POSITIVE_INFINITY } },
-      ownerInvocation: { publicationPending: true, requestedAt: group.map(row => row.requestedAt).sort().at(-1)!, instructions: ["section3-publication"] } };
+      ownerInvocation: { publicationPending: true, requestedAt, instructions: ["section3-publication"] } };
   });
 }
 
@@ -62,7 +63,7 @@ export function workerPublicationTasks(items: readonly WorkItem[], results: read
  * with nothing delivered and its gaps counted; only a pass with no items or
  * no readable door prints none and exits non-zero.
  */
-export async function printWorkerPublicationReceipt(store: Pick<RoutineDataStore, "readCandidate"> & Partial<Pick<RoutineDataStore, "readPromotionIdentity">>, source: string,
+export async function printWorkerPublicationReceipt(store: Pick<RoutineDataStore, "readCandidate"> & Partial<Pick<RoutineDataStore, "readPromotionIdentity" | "readCandidateSummary">>, source: string,
   report: readonly { readonly workItemId: string; readonly outcome: NonNullable<WorkItem["publicationOutcome"]> }[],
   /** Anything else this pass published outside work items (the national place publisher), with its gaps. */
   extra: { readonly records: number; readonly versionId: string | null; readonly candidateId: string | null; readonly gaps: readonly { readonly key: string; readonly detail: string }[] } | null = null,
@@ -82,8 +83,9 @@ export async function printWorkerPublicationReceipt(store: Pick<RoutineDataStore
     // Named as the canonical candidate, never as a confirmation: only the store records a confirmation, and the runner re-proves this one.
     if (pointer) last = { at: now, candidateId: pointer.versionId, versionId: pointer.versionId };
   }
-  const created = last?.candidateId ? await store.readCandidate(last.candidateId) : null;
-  const record = created ?? (last?.versionId ? await store.readCandidate(last.versionId) : null);
+  const read = store.readCandidateSummary?.bind(store) ?? store.readCandidate.bind(store);
+  const created = last?.candidateId ? await read(last.candidateId) : null;
+  const record = created ?? (last?.versionId ? await read(last.versionId) : null);
   if (!last || !record) { process.exitCode = 2; return false; }
   console.log("RCD_RECEIPT=" + JSON.stringify({ source, candidateId: record.candidate.id, acquisitionSucceeded: record.acquisitionSucceeded,
     state: record.state, decision: record.receipt?.decision ?? null, promotedVersion: last.versionId, lastKnownGoodVersion: record.lastKnownGoodVersion,

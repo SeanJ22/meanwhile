@@ -213,6 +213,9 @@ export interface ScoutToolContext {
   readonly vaultBytes?: VaultBytes;
   /** Shared in-process host spacing. Politeness that does not multiply. */
   readonly spaceOut: (hostKey: string) => Promise<void>;
+  readonly websiteSize?: import("./host-supervision.ts").WebsiteSizeForUrl;
+  /** Checkout containing the held publisher-size data; child workers run in this root. */
+  readonly root?: string;
   readonly bound: ScoutBound;
   readonly now: () => string;
   readonly inherited: InheritedEvidence;

@@ -22,7 +22,7 @@ const ROOT = process.cwd();
  * Those two are one careless edit apart. A session told to "remove the source
  * annotations" can satisfy every visual check by deleting the fields, and
  * nothing else in this repo would go red — the cards would look exactly as
- * the author asked, and the product would have quietly stopped being able to
+ * intended, and the product would have quietly stopped being able to
  * say where anything came from.
  *
  * So this asserts the pair directly: the populated provenance of a meeting set

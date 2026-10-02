@@ -160,6 +160,7 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
 }
 
 interface LoggedRecord<T> {
+  readonly at: string;
   readonly recordId: string;
   readonly record: T;
 }
@@ -173,7 +174,7 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
       key: string,
       recordId: string,
       record: T,
-      _now: string,
+      now: string,
     ): Promise<AppendOutcome<T>> => {
       const partition = partitions.get(key) ?? [];
       const existing = partition.find((entry) => entry.recordId === recordId);
@@ -188,7 +189,7 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
           position: partition.indexOf(existing),
         };
       }
-      partition.push({ recordId, record: jsonCopy(record) });
+      partition.push({ recordId, record: jsonCopy(record), at: now });
       partitions.set(key, partition);
       return {
         appended: true,
@@ -245,6 +246,10 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
       return out;
     },
 
+    readSince: async (since: string): Promise<readonly T[]> =>
+      [...partitions.keys()].sort().flatMap((key) => (partitions.get(key) ?? [])
+        .filter((entry) => Date.parse(entry.at) >= Date.parse(since)).map((entry) => jsonCopy(entry.record))),
+
     readAll: async (): Promise<readonly T[]> =>
       [...partitions.entries()]
         .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
@@ -282,6 +287,7 @@ export function memoryLockManager(): LockManager {
 export function createMemoryRepositories(): ControlPlaneRepositories {
   const locks = memoryLockManager();
   const budgetAggregate = memoryAggregateRepository<BudgetLedger>("BudgetLedger");
+  const artifacts = memoryAppendOnlyRepository<ArtifactRecord>("artifacts");
 
   return {
     workItems: memoryAggregateRepository<WorkItem>("WorkItem"),
@@ -295,7 +301,11 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     transitions: memoryAppendOnlyRepository<RecordedTransition>("transitions"),
     escalations: memoryAppendOnlyRepository<Escalation>("escalations"),
     dispositions: memoryAppendOnlyRepository<DispositionCommit>("dispositions"),
-    artifacts: memoryAppendOnlyRepository<ArtifactRecord>("artifacts"),
+    artifacts,
+    artifactsByCanonicalUrl: async (url, limit) =>
+      (await artifacts.readAll()).filter(record => record.canonicalUrl === url)
+        .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt) || a.artifactId.localeCompare(b.artifactId))
+        .slice(0, Math.max(0, Math.trunc(limit))),
     adminEvidenceCopyRequests: memoryAggregateRepository<AdminEvidenceCopyRequest>("AdminEvidenceCopyRequest"),
     costs: memoryAppendOnlyRepository<CostEntry>("costs"),
     /* The owner control centre's data plane (ITEM H). */

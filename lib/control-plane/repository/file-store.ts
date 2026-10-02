@@ -14,7 +14,7 @@ import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
  *
  *   - Postgres/Neon in this repository is the SERVING substrate for
  *     reader-facing data. Control-plane work state is not reader-facing, and
- *     RULING 126 already keeps a domain out of Postgres where it does not
+ *     campaign-finance filings are already kept out of Postgres where it does not
  *     belong. A Drizzle migration for it would additionally trip `pnpm db:gate`,
  *     which asks PRODUCTION whether the schema is applied — and would freeze a
  *     release for a reason unrelated to truth.
@@ -634,6 +634,9 @@ export function fileAppendOnlyRepository<T>(
     readAll: async (): Promise<readonly T[]> =>
       (await readEveryPartition()).map((line) => line.record),
 
+    readSince: async (since: string): Promise<readonly T[]> =>
+      (await readEveryPartition()).filter((line) => Date.parse(line.at) >= Date.parse(since)).map((line) => line.record),
+
     keys: async (): Promise<readonly string[]> => {
       const keys = new Set<string>((await readEveryPartition()).map((line) => line.key));
       return [...keys].sort();
@@ -729,6 +732,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
   const resolved = path.resolve(root);
   await mkdir(resolved, { recursive: true });
   const locks = fileLockManager(resolved);
+  const artifacts = fileAppendOnlyRepository<ArtifactRecord>(resolved, "artifacts");
 
   return {
     workItems: fileAggregateRepository<WorkItem>(resolved, "WorkItem", "work-items"),
@@ -750,7 +754,11 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     transitions: fileAppendOnlyRepository<RecordedTransition>(resolved, "transitions"),
     escalations: fileAppendOnlyRepository<Escalation>(resolved, "escalations"),
     dispositions: fileAppendOnlyRepository<DispositionCommit>(resolved, "dispositions"),
-    artifacts: fileAppendOnlyRepository<ArtifactRecord>(resolved, "artifacts"),
+    artifacts,
+    artifactsByCanonicalUrl: async (url, limit) =>
+      (await artifacts.readAll()).filter(record => record.canonicalUrl === url)
+        .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt) || a.artifactId.localeCompare(b.artifactId))
+        .slice(0, Math.max(0, Math.trunc(limit))),
     adminEvidenceCopyRequests: fileAggregateRepository<AdminEvidenceCopyRequest>(resolved, "AdminEvidenceCopyRequest", "admin-evidence-copy-requests"),
     costs: fileAppendOnlyRepository<CostEntry>(resolved, "costs"),
     /* The owner control centre's data plane (ITEM H). */

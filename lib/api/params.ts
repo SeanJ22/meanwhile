@@ -1,7 +1,7 @@
 /**
  * Query-parameter reading that refuses instead of defaulting.
  *
- * ITEM 1b (2026-08-17, the author's ruling). The h session's probe list
+ * ITEM 1b (2026-08-17). The h session's probe list
  * disclosed one nonsense read at **latitude 0, longitude 0** — a populated,
  * plausible-looking answer in the Gulf of Guinea, produced by a probe that
  * passed `?zip=85701` to a route that locates by `lat`/`lng`.

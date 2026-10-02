@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join, resolve } from "node:path";
+import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import test from "node:test";
 
 import { neonConfig } from "@neondatabase/serverless";
@@ -609,4 +610,60 @@ test('a complete empty search is a query miss and does not disable the provider 
   const controller=fundedController({now:NIGHT,costs:[],clock:()=>Date.parse(NIGHT)});
   const result=await controller.guardedOpenOne('public-web','no-match',async()=>new Response('{"pages":[]}'))({url:'https://api.wikimedia.org/core/v1/wikipedia/en/search/page?q=unknown',method:'GET',headers:{},timeoutMs:1000});
   assert.equal(result.status,200);assert.equal(controller.snapshot().providerCircuits.length,0);
+});
+
+test('website size thresholds apply to the requested publisher, including unknown and invalid sizes', async () => {
+  const { websiteRequestLimit } = await import('../lib/control-plane/scheduler/host-supervision.ts');
+  assert.equal(websiteRequestLimit({kind:'local-government',population:9999}),10);
+  assert.equal(websiteRequestLimit({kind:'school-district',students:4999}),10);
+  for (const count of [10000, NaN, Infinity, -1, undefined, null])
+    assert.equal(websiteRequestLimit({kind:'local-government',population:count}),null);
+  for (const count of [5000, NaN, Infinity, -1, undefined, null])
+    assert.equal(websiteRequestLimit({kind:'school-district',students:count}),null);
+  for (const kind of ['state','federal','national'] as const)
+    assert.equal(websiteRequestLimit({kind,population:1,students:1}),null);
+  assert.equal(websiteRequestLimit(),null);
+});
+
+test('parent HTTP shares ten held small-publisher requests across text and byte tools; other websites keep going', async t => {
+  const small='https://small.example.gov', census='https://tigerweb.geo.census.gov';
+  const root=mkdtempSync(join(tmpdir(),'s8-parent-publisher-'));
+  t.after(()=>{assert.equal(dirname(resolve(root)),resolve(tmpdir()));rmSync(root,{recursive:true,force:true});});
+  const path=join(root,'data/states/az/reference/publisher-sizes.jsonl');
+  mkdirSync(dirname(path),{recursive:true});
+  writeFileSync(path,JSON.stringify({state:'az',host:'small.example.gov',censusId:'000001',kind:'school-district',students:4999,
+    source:{url:'https://census.gov/test-fixture',dataset:'TEST FIXTURE'}}));
+  const websiteSize=websiteSizeFromHoldings(['AZ','az','nm'],root);
+  const controller=fundedController({now:NIGHT,costs:[],websiteSize});
+  let calls=0;
+  const fetcher:typeof fetch=async()=>{calls++;return new Response('complete');};
+  const text=controller.guardedOpenOne('public-web','same-work',fetcher);
+  const bytes=controller.guardedOpenBytes('public-web','same-work',fetcher);
+  for(let i=0;i<5;i++)assert.equal((await bytes({url:small,headers:{},timeoutMs:1000})).status,200);
+  const results=await Promise.all(Array.from({length:10},()=>text({url:small,method:'GET',headers:{},timeoutMs:1000})));
+  assert.equal(results.filter(r=>r.status===200).length,5);
+  assert.equal(results.filter(r=>r.requestCount===0 && /small-publisher/.test(r.transportError??'')).length,5);
+  assert.equal(calls,10);
+  assert.equal(controller.snapshot().providerCircuits.length,0,'a cap is not a provider failure');
+  for(let i=0;i<20;i++)assert.equal((await text({url:census,method:'GET',headers:{},timeoutMs:1000})).status,200);
+  assert.equal(calls,30);
+  assert.equal((await controller.guardedOpenOne('public-web','different-work',fetcher)({url:small,method:'GET',headers:{},timeoutMs:1000})).status,200);
+});
+
+test('redirects apply the destination website size and uncapped HTTP still honors 429 Retry-After', async () => {
+  let now=Date.parse(NIGHT),calls=0;
+  const controller=fundedController({now:NIGHT,costs:[],clock:()=>now,websiteSize:url=>new URL(url).hostname==='small.example.gov'
+    ? {kind:'local-government',population:9000} : {kind:'federal'}});
+  const open=controller.guardedOpenOne('public-web','redirect-work',async url=>{
+    calls++;
+    return String(url).includes('small.example.gov') ? new Response('go',{status:302,headers:{location:'https://api.census.gov/data'}})
+      : new Response('slow down',{status:429,headers:{'retry-after':new Date(now+30*60000).toUTCString()}});
+  });
+  const input={url:'https://small.example.gov/start',method:'GET' as const,headers:{},timeoutMs:1000};
+  assert.equal((await open(input)).status,429);assert.equal(calls,2);
+  const direct={...input,url:'https://api.census.gov/data'};
+  assert.equal((await open(direct)).requestCount,0);assert.equal(calls,2);
+  now+=30*60000-1;assert.equal((await open(direct)).requestCount,0);
+  now+=1;
+  assert.equal((await controller.guardedOpenOne('public-web','redirect-work',async()=>new Response('ok'))(direct)).status,200);
 });

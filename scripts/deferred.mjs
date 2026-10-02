@@ -16,8 +16,8 @@
  * ## Run once
  *
  * Deliberately NOT wired into `pnpm handoff` or any recurring path. Whether
- * this should regenerate is a decision the author makes after reading the first
- * one; building the wiring before that is building something nobody asked for.
+ * this should regenerate is decided after reading the first one; building the
+ * wiring before that is building something nobody asked for.
  *
  * ## The two outputs serve two different acts
  *

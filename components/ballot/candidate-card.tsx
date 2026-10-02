@@ -1,4 +1,5 @@
 import { hostOf } from "@/lib/officials/verification";
+import { VisibleCard } from "@/components/ballot/visible-card";
 import { personInitials } from "@/lib/officials/person-name";
 import { type CandidateCardData } from "@/lib/ballot/candidate-cards";
 import type { CandidateLinks } from "@/lib/ballot/candidate-sites";
@@ -130,7 +131,7 @@ export function CandidateCard({
      * the geometry fix does not satisfy the author's eye, ordering is HIS
      * decision to revisit, not a tidy-up.
      */
-    <div className="candidate-row">
+    <VisibleCard className="candidate-row" cardId={`CANDIDATE:${name}`} cardKind="CANDIDATE">
       <span className="candidate-avatar" aria-hidden={card?.photoUrl ? undefined : true}>
         {card?.photoUrl ? (
           // External campaign-site photo; next/image would require
@@ -317,6 +318,6 @@ export function CandidateCard({
             RULING 42; the door did not move.) */}
         {battlecardSlot}
       </div>
-    </div>
+    </VisibleCard>
   );
 }

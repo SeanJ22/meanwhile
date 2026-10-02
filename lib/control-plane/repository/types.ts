@@ -24,7 +24,7 @@ import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts
  *
  *   - Postgres/Neon in this repository is the SERVING substrate for
  *     reader-facing data. Control-plane work state is not reader-facing.
- *     RULING 126 already keeps a domain out of Postgres where it does not
+ *     campaign-finance filings are already kept out of Postgres where it does not
  *     belong, and adding a migration for it would additionally trip
  *     `pnpm db:gate` — which asks PRODUCTION whether a schema is applied — and
  *     freeze a release for a reason with nothing to do with truth.
@@ -439,6 +439,8 @@ export interface AppendOnlyRepository<T> {
   ): Promise<readonly unknown[]>;
   /** Every record, in key order then append order. */
   readAll(): Promise<readonly T[]>;
+  /** Records appended at or after `since`, in key then append order; filtered before transfer. */
+  readSince(since: string): Promise<readonly T[]>;
   /** The newest `limit` records under one key, newest first. `limit` bounds the response. */
   readRecent(key: string, limit: number): Promise<readonly T[]>;
   /**
@@ -695,6 +697,8 @@ export interface ControlPlaneRepositories {
   readonly escalations: AppendOnlyRepository<Escalation>;
   readonly dispositions: AppendOnlyRepository<DispositionCommit>;
   readonly artifacts: AppendOnlyRepository<ArtifactRecord>;
+  /** Exact source-owned captures across jobs, newest acquisition first; no general log scan in Postgres. */
+  readonly artifactsByCanonicalUrl?: (url: string, limit: number) => Promise<readonly ArtifactRecord[]>;
   /** Exact Admin original-byte copy requests, CAS-leased by the permanent runner. */
   readonly adminEvidenceCopyRequests: AggregateRepository<AdminEvidenceCopyRequest>;
   readonly costs: AppendOnlyRepository<CostEntry>;

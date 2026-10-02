@@ -6,7 +6,7 @@ import test from "node:test";
 import { isOfficialHost, verificationOf } from "../lib/officials/verification.ts";
 
 /**
- * The sources vocabulary — g3 item 5, the author's ruling (2026-08-16).
+ * The sources vocabulary — g3 item 5 (2026-08-16).
  *
  * Katie Hobbs' Sources tab said "Read from azgovernor.gov · Collected
  * 2026-08-14 · **Verified: not yet**". The third row contradicted the first

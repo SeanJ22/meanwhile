@@ -19,7 +19,7 @@ import { planRepairBrief } from "../lib/control-plane/workers/plan-repair.ts";
 import { observeCyclePhases } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { cycleStateWriter } from "../lib/control-plane/scheduler/cycle-state-writer.ts";
 import { selectedCycleRepositories } from "../lib/control-plane/scheduler/cycle-selection.ts";
-import { readRelaunchTriggerVerification } from "../lib/control-plane/scheduler/host-supervision.ts";
+import { readRelaunchTriggerVerification, websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { runAdminEvidenceMirror } from "../lib/control-plane/evidence/admin-bridge-runner.ts";
 import { retainRecentRoutineMeetingEvidence } from "../lib/control-plane/workers/routine-meeting-intake.ts";
@@ -1226,7 +1226,7 @@ const expansionLoad = await loadExpansionPlan({
       ([state, why]) => `the ${state.toUpperCase()} registration could not be read as a jurisdiction registry (${why}); nothing in it is placed or created`,
     );
   },
-  ...("registries" in promoted ? { loadTerritory: () => readTerritoryIndex(ROOT, [...registriesNow(promoted.registries).values()]) } : {}),
+  ...("registries" in promoted ? { loadTerritory: (states: readonly string[], zips: ReadonlySet<string>) => readTerritoryIndex(ROOT, [...registriesNow(promoted.registries).values()], [...states], zips) } : {}),
 });
 runtimeConditions.push(...expansionLoad.conditions);
 const expansionPlan = expansionLoad.plan;
@@ -1563,7 +1563,7 @@ const honoredLaneIntents: string[] = [];
 let costLedger: CostEntry[] = [];
 let ledgerUnreadable: string | null = null;
 try {
-  costLedger = [...(await repos.costs.readAll())];
+  costLedger = [...(await repos.costs.readSince(new Date(Date.parse(NOW) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()))];
 } catch (error) {
   ledgerUnreadable = error instanceof Error ? error.message : String(error);
   runtimeConditions.push(`the cost ledger could not be read (${ledgerUnreadable}); the rolling ceiling cannot be enforced, so Scout work is deferred`);
@@ -1587,7 +1587,9 @@ try {
 }
 /* The ceiling in force and the paid-search switch were read above the lane closure. */
 
+const websiteSize = websiteSizeFromHoldings(trackedStateCodes, ROOT);
 const fleetSafety = new FleetSafetyController({
+  websiteSize,
   now: NOW,
   costs: costLedger,
   costLedgerReadable: ledgerUnreadable === null,
@@ -1736,7 +1738,8 @@ if (dispatchTargets.length > 0) {
     if (dispatchTargets.some((t) => t.kind === "DISPATCH" && t.target.states.some((s) => !registries.has(s)))) {
       try {
         censusUnitsByState = new Map<string, number>();
-        for (const unit of readCensusUnitTerritories(ROOT)) {
+        const states = [...new Set(dispatchTargets.flatMap(target => target.kind === "DISPATCH" ? target.target.states : []))];
+        for (const unit of readCensusUnitTerritories(ROOT, states)) {
           const state = unit.state.toUpperCase();
           censusUnitsByState.set(state, (censusUnitsByState.get(state) ?? 0) + 1);
         }
@@ -1892,6 +1895,13 @@ const autonomousTransportFor = (transport: ModelTransport) => (jurisdiction: Aut
     refusedBeforeSending: (error) => error instanceof FleetPreSendRefusal,
   });
 const spacer = serializeHostSpacing(hostSpacer());
+let releaseDrainRequested = false;
+process.on("message", message => {
+  if (message !== null && typeof message === "object" && "kind" in message && message.kind === "RUNTIME_RELEASE_DRAIN") {
+    releaseDrainRequested = true;
+    console.log("  runtime release requested: new worker admissions closed; active workers finish and queued work remains owed");
+  }
+});
 const workerSlots = workerProcessSlots(() => {
   const limits = providerQueue.limits(MODELS.haiku.model);
   const spent = fleetSafety.snapshot(nowIso()).rolling24Hours.modelUsd;
@@ -1902,7 +1912,7 @@ const workerSlots = workerProcessSlots(() => {
     inputTokensPerMinute: limits?.inputTokensPerMinute ?? undefined,
     outputTokensPerMinute: limits?.outputTokensPerMinute ?? undefined,
     inputTokensPerRequest: 8192, outputTokensPerRequest: RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn }));
-});
+}, { admissionsOpen: () => !releaseDrainRequested });
 // Hand out durable leases before unrelated histories or parent execution.
 const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
   runnerPaused: intents.runnerPause.paused });
@@ -2955,7 +2965,7 @@ async function runAutonomousWave() {
 }
 async function runAutonomousProcesses() {
   let report = await runAutonomousWave();
-  while (report.dispatches.some(row => row.outcome === "WORKED")) {
+  while (!releaseDrainRequested && report.dispatches.some(row => row.outcome === "WORKED")) {
     const next = await runAutonomousWave();
     report = { ...next, dispatches: [...report.dispatches, ...next.dispatches],
       scoutsAdmitted: report.scoutsAdmitted + next.scoutsAdmitted,
@@ -3055,6 +3065,7 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
         sync.all.filter((o) => o.id.startsWith("freshness:meetings-discovery:") && o.openOccurrenceId !== null).map((o) => o.subjectId),
       ),
       runtime: {
+        websiteSize,
         open: async ({ url, headers, timeoutMs }) => {
           const got = await openDiscovery({ url, headers, timeoutMs });
           return {
@@ -3394,7 +3405,7 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
   let costsNow: readonly CostEntry[];
   try {
     results = await repos.scoutResults.readAll();
-    costsNow = await repos.costs.readAll();
+    costsNow = await repos.costs.readSince(new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString());
   } catch (error) {
     runtimeConditions.push(`research metrics NOT computed: a durable log could not be re-read (${error instanceof Error ? error.message : String(error)})`);
     return null;

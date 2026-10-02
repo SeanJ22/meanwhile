@@ -291,9 +291,7 @@ export function routineCivicDataSupervisorOutcome(
     !Number.isSafeInteger(input.campaignPublicationApprovalsAttempted) || input.campaignPublicationApprovalsAttempted < 0 ||
     !taskReceipts.some(row => row.taskId === "candidate-campaign-sites-derived")
   )) throw new Error("CAMPAIGN_PUBLICATION_INPUT_ACK_WITHOUT_RECEIPT");
-  const candidateIds = taskReceipts.map(({ receipt }) => receipt.candidateId);
   if (new Set(taskIds).size !== taskIds.length) throw new Error("ROUTINE_SUPERVISOR_TASK_RECEIPT_DUPLICATE");
-  if (new Set(candidateIds).size !== candidateIds.length) throw new Error("ROUTINE_SUPERVISOR_CANDIDATE_RECEIPT_DUPLICATE");
   if (taskReceipts.some((row) => row.taskId !== row.receipt.source)) {
     throw new Error("ROUTINE_SUPERVISOR_TASK_RECEIPT_ID_MISMATCH");
   }

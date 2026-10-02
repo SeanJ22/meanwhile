@@ -99,12 +99,12 @@ test("every officeholder carries provenance naming where it was read", () => {
    * the confirmation. A guard that only holds while nothing has been verified
    * stops holding exactly when the verification work starts.
    *
-   * The author's ruling of 2026-08-16 is what it collided with: **a read from
+   * The rule of 2026-08-16 is what it collided with: **a read from
    * the subject's own official source IS the verification**, by that source, on
    * the read date. Five officials had their specific verified page repaired
    * this session by fetching and reading each replacement — Keshel and Gabaldón
    * on `azleg.gov`, McKeon and Space on `njleg.state.nj.us`, Gallagher on
-   * `house.gov` — and stamping `verifiedAt` is what that ruling asks for.
+   * `house.gov` — and stamping `verifiedAt` is what that rule asks for.
    *
    * So the rule replacing the fact is STRONGER, not weaker: `verifiedAt` may be
    * null, or a stamped ISO date — and a row that claims verification must have

@@ -6,7 +6,7 @@ import test from "node:test";
 
 /**
  * **RULING 72 — a walled host is never evidence a body is unreachable.**
- * (Adopted 2026-08-22, the author's ruling, NJ Hunt 3 item 4.)
+ * (Adopted 2026-08-22, NJ Hunt 3 item 4.)
  *
  * Discovery is a tree. A host refusing is ONE BRANCH returning empty on ONE
  * DATE; the body is still reachable by a federal directory, a phone number, a

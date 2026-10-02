@@ -2,13 +2,13 @@ import type { SeatHolder } from "./lookup.ts";
 
 /**
  * **WHO RUNS THIS BODY — the top two, whatever those offices are called here.**
- * F01 1.2 and 2.2, 2026-08-19, the author.
+ * F01 1.2 and 2.2, 2026-08-19.
  *
- * *"As a reminder, the superintendent also should be listed at the top. There
- * should be a little bit of representation on the small card."* And, as the
- * class: *"Every small battlecard carries its top two office holders, whatever
- * those offices are for that body type — county, municipality, school district,
- * commission. A small card with no representation on it isn't doing its job."*
+ * The superintendent belongs at the top, and the small card needs some
+ * representation on it. As a class: every small battlecard carries its top two
+ * office holders, whatever those offices are for that body type — county,
+ * municipality, school district, commission. A small card with no
+ * representation on it is not doing its job.
  *
  * ## Why a precedence table rather than "the first two"
  *
@@ -78,15 +78,15 @@ interface OfficePattern {
  *
  * OFF-4 shipped this precedence on 2026-08-24 and it did not regress: Vail
  * Unified still resolves John Carruth, *Superintendent*, into the day-to-day
- * slot, which is the card the author names as the reference. **The predicate is
+ * slot, which is the reference card. **The predicate is
  * what was wrong, and it was wrong by conflating two different words.**
  *
  * At Kearsarge the roster holds **Michael Bessette, Interim Superintendent of
  * Schools**. `interim` was in this pattern, so he was refused; the next
  * `EXECUTIVE` pattern is `administrator`, which matched **Lawrence LeBoeuf,
  * Business Administrator** — and the card put the business administrator at the
- * top of a school district and under the words *runs it day to day*. The
- * author's `17-53-26` shows the data holding Bessette in eleventh place while
+ * top of a school district and under the words *runs it day to day*. Capture
+ * `17-53-26` shows the data holding Bessette in eleventh place while
  * LeBoeuf leads. **The data was there the whole time. This is a selection bug,
  * not a sourcing gap**, exactly as the feedback says.
  *
@@ -223,7 +223,7 @@ export function topOfficesFor(holders: readonly SeatHolder[]): TopOffice[] {
 
 /**
  * **LBL-1 — DOES ANYBODY RUN THIS?**
- * (2026-08-22, the author's 8/22 walkthrough, item 15.)
+ * (2026-08-22, the 8/22 walkthrough, item 15.)
  *
  * The small battlecards for NJ-7 and NJ-11 showed *"Who runs it: [the
  * representative]"*. **Nobody runs a congressional district, and nobody runs a
@@ -273,10 +273,10 @@ export function runsSomething(divisionType: string | null | undefined): boolean 
 }
 
 /**
- * **OFF-4 (2026-08-24, the author's walkthrough) — THE SUPERINTENDENT RENDERS
+ * **OFF-4 (2026-08-24, walkthrough) — THE SUPERINTENDENT RENDERS
  * AT THE TOP, BOARD MEMBERS BENEATH. ALL DISTRICTS.**
  *
- * His capture `12-05-31` is the Tucson Unified battlecard, Representation tab:
+ * Capture `12-05-31` is the Tucson Unified battlecard, Representation tab:
  * five board members, and then Dr. Gabriel Trujillo, Superintendent, LAST.
  *
  * The order was the body's own published roster order, which is the correct
@@ -288,7 +288,7 @@ export function runsSomething(divisionType: string | null | undefined): boolean 
  *
  * **It reuses the EXECUTIVE table above rather than matching /superintendent/
  * here.** A second pattern list would drift from the first the moment a state
- * publishes a title neither of them expected — and the author's rule is about
+ * publishes a title neither of them expected — and the rule is about
  * the ROLE, not the word: a county administrator and a town manager are the
  * same fact about a different body, and both should lead their list for the
  * same reason.
@@ -303,7 +303,7 @@ export function runsSomething(divisionType: string | null | undefined): boolean 
  * It shares the predicate, so it shared the bug: `interim` was refused, and at
  * Kearsarge the executive group therefore held **Lawrence LeBoeuf, Business
  * Administrator** and not **Michael Bessette, Interim Superintendent of
- * Schools**. The author's `17-53-26` is that list — LeBoeuf first, Bessette
+ * Schools**. Capture `17-53-26` is that list — LeBoeuf first, Bessette
  * eleventh, behind nine board members.
  *
  * And the partition was FLAT. Every `EXECUTIVE` match landed in one group in

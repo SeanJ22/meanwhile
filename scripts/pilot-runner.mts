@@ -91,7 +91,7 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } fr
 import { hostname } from "node:os";
 import { reserveRoutineRefresh, finishRoutineRefresh } from "../lib/civic-data/owner-refresh.ts";
 import { join } from "node:path";
-import { resolvePilotMirror } from "./pilot-runtime-config.mjs";
+import { assertProductionDatabaseTarget, resolvePilotMirror } from "./pilot-runtime-config.mjs";
 
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
@@ -133,6 +133,8 @@ import {
 } from "../lib/control-plane/fleet-safety.ts";
 import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { cycleLivenessBeat } from "../lib/control-plane/runner-liveness.ts";
+import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
+import type { ChildProcess } from "node:child_process";
 import { startHangWatchdog, hangWatchdogDisabled, type HangWatchdog } from "./runner-hang-watchdog.mts";
 import {
   installNeonRequestDeadline,
@@ -201,6 +203,7 @@ const argv = process.argv.slice(2);
 const STAGING = argv.includes("--staging") || process.env.WTP_RUNTIME_MODE === "staging";
 if (STAGING && process.env.WTP_DB_ROLE !== "local") throw new Error("Staging runner requires WTP_DB_ROLE=local");
 if (STAGING) process.env.WTP_RUNTIME_MODE = "staging";
+assertProductionDatabaseTarget(process.env);
 const AUTO_RELEASE_HANDOFF = !STAGING && argv.includes("--release-handoff");
 const provider = argv.includes("--provider=file") ? "file" : "postgres";
 if (provider === "postgres") {
@@ -378,12 +381,13 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
   /** The last lines the child wrote to stderr. The diagnosis of a failed cycle. */
   readonly stderrTail: string;
   readonly signal: string | null;
+  readonly exitCode: number | null;
   readonly circuit: ProviderCircuit | null;
 }> {
   const before = new Date().toISOString();
   const latched = provider === "postgres" ? readNeonCircuit(ROOT, before) : null;
   if (latched) {
-    return { ok: false, recordPath: null, stdout: "", stderrTail: `${latched.provider}: ${latched.condition}; no automated retry before ${latched.eligibleAt}`, signal: null, circuit: latched };
+    return { ok: false, recordPath: null, stdout: "", stderrTail: `${latched.provider}: ${latched.condition}; no automated retry before ${latched.eligibleAt}`, signal: null, exitCode: null, circuit: latched };
   }
   const args = [
     "--experimental-strip-types",
@@ -410,7 +414,8 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     env: process.env,
     maxBufferBytes: 64 * 1024 * 1024,
     onStdout: (_id, output) => { process.stdout.write(output); },
-    onStderr: (_id, output) => { process.stderr.write(output); },
+    onStderr: (_id, output) => { process.stderr.write(output); currentCycleErrors = `${currentCycleErrors}${output}`.slice(-8000); },
+    onStarted: (_id, child) => { researchCycleChild = child; },
   });
   if (!run) throw new Error("RESEARCH_CYCLE_CHILD_RESULT_MISSING");
   const stdout = `${run.stdout ?? ""}${run.stderr ?? ""}`;
@@ -430,6 +435,7 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
        22:55Z cycle on c61dbc2d kept only frames 6–13 (2026-09-22). */
     stderrTail: stderrLines.slice(-STDERR_TAIL_LINES).join("\n"),
     signal: run.signal ?? null,
+    exitCode: run.status,
     circuit,
   };
 }
@@ -999,7 +1005,7 @@ async function writeFailedCycleBeat(cycleStartedAt: string): Promise<void> {
       /* a beat that cannot read git still says the cycle ran; keep codeIdentity null */
     }
     const current = await repos.runnerHeartbeat.read(RUNNER_ID);
-    const next = cycleLivenessBeat(current?.value ?? null, {
+    const next = { ...current?.value, ...cycleLivenessBeat(current?.value ?? null, {
       cycleStartedAt,
       finishedAt,
       ok: false,
@@ -1007,13 +1013,54 @@ async function writeFailedCycleBeat(cycleStartedAt: string): Promise<void> {
       host: hostname(),
       intervalMin: INTERVAL_MIN,
       codeIdentity,
-    });
+    }) };
     if (current === null) await repos.runnerHeartbeat.put(RUNNER_ID, next, finishedAt);
     else await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, current.revision, next, finishedAt);
   } catch (error) {
     console.error(
       `  the failed-cycle liveness beat could not be written (${error instanceof Error ? error.message : String(error)}); the cycle outcome above stands`,
     );
+  }
+}
+
+let currentCycleErrors = "";
+let researchCycleChild: ChildProcess | null = null;
+async function requestQueuedReleaseDrain(): Promise<void> {
+  if (!AUTO_RELEASE_HANDOFF || !researchCycleActive || !researchCycleChild?.connected) return;
+  const release = await inspectRuntimeRelease();
+  if (release.state !== "UPDATE_REQUIRED") return;
+  // Reconciliation still applies only after both the research child and source lanes settle.
+  runtimeAdmissionsHeld = true;
+  researchCycleChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
+    if (error) console.error("  runtime release drain message could not be delivered; existing cycle continues");
+  });
+}
+async function writeLiveCycleBeat(startedAt: string, exit?: { code: number | null; signal: string | null }): Promise<void> {
+  if (provider !== "postgres") return;
+  let lastError = currentCycleErrors.split("\n").filter(Boolean).slice(-8).join("\n").slice(-2000) || null;
+  if (lastError) {
+    for (const [name, value] of Object.entries(process.env)) {
+      if (value && value.length >= 5 && /TOKEN|SECRET|PASSWORD|KEY|DATABASE_URL/.test(name)) lastError = lastError.split(value).join("[private]");
+    }
+    lastError = lastError.replace(/postgres(?:ql)?:\/\/[^\s"'<>]+/gi, "[private connection]");
+  }
+  try {
+    const repos = await ownerRepositories();
+    if (!repos) return;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const at = new Date().toISOString();
+      const current = await repos.runnerHeartbeat.read(RUNNER_ID);
+      const next = liveCycleHeartbeat(current?.value ?? null, { at, startedAt,
+        testedSha: RUNNING_CODE_SHA, host: hostname(), lastError,
+        ...(exit ? { finishedAt: at, exitCode: exit.code, signal: exit.signal } : {}) });
+      try {
+        if (current) await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, current.revision, next, at);
+        else await repos.runnerHeartbeat.put(RUNNER_ID, next, at);
+        return;
+      } catch (error) { if (attempt === 2) throw error; }
+    }
+  } catch (error) {
+    console.error(`  live cycle heartbeat could not be saved (${error instanceof Error ? error.name : "error"}); work continues`);
   }
 }
 
@@ -1294,7 +1341,7 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
   const startedAt = new Date().toISOString();
   const first = await inspectRuntimeRelease();
   if (first.state === "CURRENT") {
-    return null;
+    return await applyRuntimeContracts(RUNNING_CODE_SHA) ? null : 2;
   }
 
   // At process startup no clock has passed the method-authority gate yet. A
@@ -1339,8 +1386,25 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
     await persistRuntimeBoundaryFailure(applied, startedAt);
     return 2;
   }
+  if (!await applyRuntimeContracts(final.targetSha)) return 2;
   console.log(`  ${applied.detail}; exiting for the stable Scheduled Task launcher to relaunch this exact code`);
   return 0;
+}
+
+const runtimeContractsApplied = new Set<string>();
+async function applyRuntimeContracts(sha: string | null): Promise<boolean> {
+  if (sha === null || runtimeContractsApplied.has(sha)) return sha !== null;
+  const [result] = await runRuntimeChildren([{ id: "production-contract-migrations", executable: process.execPath,
+    args: ["--experimental-strip-types", "scripts/db-apply.mts", "--target=production", "--phase=contract",
+      "--production-runtime", `--runtime-commit=${sha}`] }], {
+    cwd: ROOT, env: process.env, maxBufferBytes: 16 * 1024 * 1024,
+    onStdout: (_id, output) => process.stdout.write(output),
+    onStderr: (_id, output) => process.stderr.write(output),
+  });
+  if (result?.status === 0) { runtimeContractsApplied.add(sha); return true; }
+  await persistRuntimeBoundaryFailure(releaseInspectionRefusal("PRODUCTION_CONTRACT_MIGRATION_FAILED",
+    "production contract migrations did not succeed; admissions remain held; see Admin's existing migration outcome", sha), new Date().toISOString());
+  return false;
 }
 
 /** The latest RESUME_RUNNER with no HONORED record beside it, or null. */
@@ -1811,7 +1875,28 @@ while (cycle < CYCLES) {
 
   const leaseRecovered = await recoverExitedWindowHolder("research cycle");
   researchCycleActive = true;
-  const result = await runOneCycle(owner).finally(() => { researchCycleActive = false; });
+  currentCycleErrors = "";
+  await writeLiveCycleBeat(startedAt);
+  let cycleBeat = Promise.resolve();
+  const cycleBeatTimer = setInterval(() => {
+    cycleBeat = cycleBeat.then(async () => {
+      if (!researchCycleActive) return;
+      await writeLiveCycleBeat(startedAt);
+      try { await requestQueuedReleaseDrain(); }
+      catch (error) { console.error(`  runtime release inspection during work failed (${error instanceof Error ? error.name : "error"}); active work continues`); }
+    });
+  }, 60_000);
+  const result = await runOneCycle(owner).finally(async () => {
+    researchCycleActive = false;
+    researchCycleChild = null;
+    clearInterval(cycleBeatTimer);
+    await cycleBeat;
+  }).catch(async error => {
+    currentCycleErrors = error instanceof Error ? error.message : "research child launch failed";
+    await writeLiveCycleBeat(startedAt, { code: null, signal: null });
+    throw error;
+  });
+  await writeLiveCycleBeat(startedAt, { code: result.exitCode, signal: result.signal });
   await activeControlRead;
   if (result.circuit) {
     const c = result.circuit;

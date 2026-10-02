@@ -22,7 +22,7 @@ import {
 } from "./channel-marks";
 
 /**
- * **The contact pill row** — items 2 and 8, 2026-08-16, the author's ruling.
+ * **The contact pill row** — items 2 and 8, 2026-08-16.
  *
  * ## What it replaces, and why
  *
@@ -30,8 +30,7 @@ import {
  * with a `white-space: nowrap` key column, and inside a 300px popup a long
  * key ate the whole row: the value collapsed to a few pixels and
  * `word-break: break-word` broke it one character per line. **That is the
- * production defect the author reported — Pima's supervisors reading
- * vertically.** A row that puts a label and a value in competition for a
+ * production defect reported — Pima's supervisors reading vertically.** A row that puts a label and a value in competition for a
  * fixed width will always eventually lose, and a pill carries its own label
  * so there is nothing to compete with.
  *
@@ -114,8 +113,8 @@ export function ContactPills({
   /** The small popup scales the row down; the large card runs it full size. */
   compact = false,
   /**
-   * `"column"` stacks the pills one per line (item 4, 2026-08-16, the
-   * author's ruling) — the small popup's form. A wrapped row left ragged
+   * `"column"` stacks the pills one per line (item 4, 2026-08-16) — the
+   * small popup's form. A wrapped row left ragged
    * half-lines across the card; a column reads as a list of ways to reach one
    * person.
    */
@@ -123,8 +122,8 @@ export function ContactPills({
   /**
    * `"primary"` is the small popup's set: phone, email, contact form,
    * official page, campaign site, and X. **The rest of the social row —
-   * Facebook, YouTube, Instagram, Mastodon — is large-card only**, by the
-   * author's ruling: a glance card answers "how do I reach them", and five
+   * Facebook, YouTube, Instagram, Mastodon — is large-card only**, because
+   * a glance card answers "how do I reach them", and five
    * more accounts is the scatter it was sent back for. Nothing is padded
    * either way; an absent channel is still an absent pill.
    */
@@ -158,7 +157,7 @@ export function ContactPills({
   const { directory } = useMemberDirectory(holder.id);
 
   /*
-   * **ONE PHONE PILL** — R39, 2026-08-17, the author's production feedback.
+   * **ONE PHONE PILL** — R39, 2026-08-17, from production feedback.
    *
    * ## What was here, and what it did
    *

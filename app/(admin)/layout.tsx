@@ -9,9 +9,9 @@
  *
  * ## Lumen Edge, with our colours on top
  *
- * The owner licensed the Lumen Edge system (uiverse, Uiverse Design System
+ * The project licensed the Lumen Edge system (uiverse, Uiverse Design System
  * License v1 — the extracted tokens may live in this private repository; the
- * ZIP may not be redistributed) and asked for its flow on the admin dashboard
+ * ZIP may not be redistributed) and uses its flow on the admin dashboard
  * ONLY — the consumer app's design overhaul is tabled and stays out of this
  * file. Four signals carry the whole look, each mapped to a token below:
  *
@@ -24,11 +24,10 @@
  *   4  elevation and motion   a tight contact shadow plus a long blurred drop,
  *                             and one signature 1s curve
  *
- * And the one departure the owner asked for: COLOUR WHEREVER A JURISDICTION
- * LEVEL IS EXPRESSED. Lumen Edge is chromaless by design; his words were
- * "keeping color is super important to me", and the compromise the system
- * survives is that HUE rides on the horizon line and the pill, never on the
- * surfaces or the body text. The four hues are the reader map legend's own
+ * And the one departure: COLOUR WHEREVER A JURISDICTION LEVEL IS EXPRESSED.
+ * Lumen Edge is chromaless by design, but the level colours carry meaning, and
+ * the compromise the system survives is that HUE rides on the horizon line and
+ * the pill, never on the surfaces or the body text. The four hues are the reader map legend's own
  * tokens (`app/globals.css` `--accent-local/state/school/national`), copied
  * here verbatim for dark and for light so the two surfaces agree.
  *

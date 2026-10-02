@@ -35,12 +35,12 @@
  *   attached to nothing. It stays in the verbatim text on the page, where the
  *   reader can see exactly as much as the state published.
  *
- * ## FIVE kinds — the author's ruling 7C, 2026-08-18
+ * ## FIVE kinds — 7C, 2026-08-18
  *
  * P01 shipped with the four CLAUDE.md names and SUNSET widened to mean THE
  * MEASURE'S WHOLE CLOCK — start, end and renewal — because a strict reading
- * left provisions with no kind at all. That widening is now reversed on the
- * author's ruling, and the reason is not tidiness. **Kinds are the reaction
+ * left provisions with no kind at all. That widening is now reversed, and the
+ * reason is not tidiness. **Kinds are the reaction
  * bucketing.** A bucket meaning both "does this expire" and "when does this
  * start" collects answers to two different questions and reports them as one
  * number, which is unreadable to a buyer; and a provision with no kind

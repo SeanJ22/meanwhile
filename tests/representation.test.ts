@@ -143,7 +143,7 @@ test("every body the who-governs card counts is reachable on the map with defaul
   const { DEFAULT_DISTRICT_TYPES, ALL_DISTRICT_TYPES } = await import(
     "../lib/state/defaults.ts"
   );
-  // The author's order: all district types default on. If a type is ever
+  // All district types default on. If a type is ever
   // removed from the default set again, the per-body check below is what
   // says which claimed body just became unreachable.
   assert.deepEqual(
@@ -450,7 +450,7 @@ test("3h: free scrolling never re-expands the who-governs card; a typed zip does
   // Same zip re-entered: the handler resets collapse itself; the rule
   // alone does not re-fire.
   assert.equal(noticeShouldExpand("zip", "85701", "85701"), false);
-  // The author's complaint: a settled pan crossing into a new ZCTA must
+  // The defect: a settled pan crossing into a new ZCTA must
   // NOT pop the card - data refreshes silently under the bubble.
   assert.equal(noticeShouldExpand("settled", "85641", "85701"), false);
   assert.equal(noticeShouldExpand("settled", "85641", null), false);
@@ -606,8 +606,8 @@ for (const [zip, [lat, lng]] of Object.entries(ZIPS)) {
 }
 
 /**
- * The overlay-off state (M57, the author's second report: "the DISTRICTS
- * counter renders blank"). A dash is this product's word for "we could not
+ * The overlay-off state (M57, second report: the DISTRICTS counter rendered
+ * blank). A dash is this product's word for "we could not
  * check". Spending it on a switch the reader flipped made the one number
  * that was never broken read as the broken one.
  */
@@ -621,8 +621,7 @@ test("M57: districts off says Off, not the couldn't-check dash", async () => {
   /*
    * **F01 9.2 (2026-08-19) REVERSES the second half of this test.** It used to
    * assert "even with a drawn list in hand, the master switch decides", and
-   * the author caught exactly what that produces: "districts in view is listed
-   * as off... obviously that's not the case", reproduced at 85701 with
+   * that produced districts in view listed as off, reproduced at 85701 with
    * boundaries plainly on screen.
    *
    * The switch is a MIRROR of `use-district-layer`'s persisted preference, and

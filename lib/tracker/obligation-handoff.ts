@@ -17,7 +17,7 @@
  *
  * It does not decide which tracker rows convert — that is the triage's
  * judgement, recorded by the converting lane, and inventing it here would be a
- * session taking the author's decision. It does not manufacture routes: a row
+ * session taking a decision that is not its own. It does not manufacture routes: a row
  * with no executable representation emits `routes: []`, which the contract
  * defines as *converted, not yet executable*, and the consumer defers it.
  *

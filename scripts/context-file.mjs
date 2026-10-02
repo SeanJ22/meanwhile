@@ -69,7 +69,7 @@ export const CAP_BYTES = Infinity;
  * How much of a tracker Note survives into a one-line cell.
  *
  * **Restored to its full length and no longer clipped by the cascade** (RULING
- * 106). This is the length the author set; the shrink path used to walk it
+ * 106). This is the original length; the shrink path used to walk it
  * down to 90 and, at 20 KB, to 110.
  */
 const NOTE_CHARS = 130;
@@ -334,7 +334,7 @@ export async function readRipcords() {
 /**
  * Assemble the file, then shrink it until it fits.
  *
- * The cap is the author's, and the order of sacrifice is the author's too:
+ * The cap and the order of sacrifice are both deliberate:
  * the tracker-change section goes first, because it is the only section that
  * degrades gracefully — nine recent changes is nine recent changes. Everything
  * that is cut says so in the file, in the section it was cut from. A silent
@@ -393,8 +393,8 @@ function readRulings() {
 }
 
 /**
- * THE PINNED DISCOVERY-CONDUCT BLOCK (2026-08-22, the author's Discovery
- * Conduct brief, item 8).
+ * THE PINNED DISCOVERY-CONDUCT BLOCK (2026-08-22, the Discovery Conduct
+ * brief, item 8).
  *
  * `CLAUDE.md`'s **Discovery conduct** section is read out VERBATIM and is
  * **never trimmed**. If the cap bites, the shrink cascade below trims elsewhere
@@ -532,7 +532,7 @@ export async function buildContext({
       /*
        * **TWO CLOCKS, ONE OF THEM AHEAD — and the file has to say so.**
        *
-       * The run stamp is EASTERN by R18 (2026-08-17, the author's ruling) and
+       * The run stamp is EASTERN by R18 (2026-08-17) and
        * the session day is AMERICA/PHOENIX by the date doctrine. Between about
        * 21:00 and midnight Phoenix, Eastern is already TOMORROW, so this header
        * prints a date one day ahead of the session day directly above it.

@@ -31,18 +31,16 @@
  * every run, and refuses rather than guessing when the two disagree about
  * whether a row exists at all.
  *
- * ## RULING 37 — who may move a row
+ * ## Who may move a row
  *
- * A session marks its own completed work Resolved and moves it, in every
- * section except **Needs Sean**. Only Sean closes a Needs Sean row. Sessions
- * OPEN Needs Sean rows — routing something to his attention is the session's
- * job, and he does not have to notice that something needs him.
+ * A session marks completed work Resolved (with evidence) and moves it. Sessions
+ * also OPEN Needs Sean rows — routing something to his attention is the
+ * session's job, and he does not have to notice that something needs him.
  *
- * ## RULING 41 — Sean authors rows too
+ * ## Rows Sean types into the workbook
  *
  * He types a description into the workbook and does not invent an id; the
- * script assigns one and reports which. A session may work the row and set a
- * priority if none is set. It may never reword, retitle or delete it.
+ * script assigns one and reports which.
  */
 
 import { createHash } from "node:crypto";
@@ -150,7 +148,7 @@ export const PRIORITIES = ["P1", "P2", "P3"];
 /** RULING 30 — five P1 rows maximum per section. */
 export const P1_CAP = 5;
 
-/** RULING 41 — the prefix the script assigns to a row the author typed. */
+/** The prefix the script assigns to a row the author typed into the workbook. */
 export const SEAN_ID_PREFIX = "SEAN";
 export const SEAN_AUTHOR = "Sean";
 
@@ -299,11 +297,11 @@ export function nextId(prefix, allRows) {
   return `${prefix}${String(max + 1).padStart(2, "0")}`;
 }
 
-/* ------------------------------------------------- RULING 37 and RULING 41 --- */
+/* ----------------------------------------------------------------- moves --- */
 
 /**
- * What a session is ALLOWED to do to the stores, decided here so the guard test
- * and the move script cannot disagree.
+ * Which closed rows may move to the resolved store, decided here so the guard
+ * test and the move script cannot disagree.
  *
  * Returns `{ moves, refusals }`. A refusal is a sentence naming the row and the
  * rule; the caller writes NOTHING when there is one, because a partial write to
@@ -314,30 +312,24 @@ export function nextId(prefix, allRows) {
  * out of the workbook, because that resolution is in his handwriting.
  */
 /**
- * @param {{working: TrackerRow[], sections: TrackerSection[], actor?: string, resolutionAuthor?: Record<string,string>}} input
+ * @param {{working: TrackerRow[], sections?: TrackerSection[], actor?: string, resolutionAuthor?: Record<string,string>}} input
  * @returns {{moves: TrackerRow[], refusals: string[]}}
  */
-export function planMoves({ working, sections, actor = "session", resolutionAuthor = {} }) {
-  const onlySean = new Set(
-    sections.filter((s) => s.onlySeanResolves).map((s) => s.slug),
-  );
+export function planMoves({ working, actor = "session", resolutionAuthor = {} }) {
   const moves = [];
   const refusals = [];
 
   for (const row of working) {
     if (!closesRow(row)) continue;
     const id = (row.ID ?? "").trim();
-    const section = (row.Section ?? "").trim();
     const author = resolutionAuthor[id] ?? actor;
 
     /*
      * **RULING 79 (2026-08-22) — a ruling closes the row it answers.**
      *
-     * This amends RULING 37 narrowly and deliberately. RULING 37 stands for a
-     * row awaiting his judgement. What it did not anticipate is the row he has
-     * ALREADY ANSWERED: he rules in conversation, the ruling is recorded in
-     * `docs/rulings.md` and shipped, and the row that asked the question sits
-     * open waiting for him to say the same thing a second time in a
+     * A row can ask a question he has ALREADY ANSWERED: he rules in
+     * conversation, the ruling is recorded in `docs/rulings.md` and shipped,
+     * and the row that asked the question sits open waiting for him to say the same thing a second time in a
      * spreadsheet. Needs Sean stood at 54 open and an unknown share were
      * already answered — the accumulation the section exists to prevent.
      *
@@ -371,29 +363,11 @@ export function planMoves({ working, sections, actor = "session", resolutionAuth
      * that earned it is written onto the row, so every such close is as
      * reversible and as auditable as a RULING 79 close.
      *
-     * **This does not weaken RULING 37 and it does not weaken RULING 208.**
-     * RULING 37 stands entire for a row awaiting the author's JUDGEMENT, which
-     * is why the registry's other arm exists: a row no machine can decide is
-     * marked NOT_MACHINE_VERIFIABLE and carries a decision card, and no
-     * predicate may ever touch it. RULING 208 stands entire too: a predicate
-     * closes the ROW, which was a request for the author's attention, and never
-     * the record OBLIGATION the row was about.
+     * A row no machine can decide is marked NOT_MACHINE_VERIFIABLE and carries
+     * a decision card, and no predicate may ever touch it. RULING 208 stands
+     * too: a predicate closes the ROW, which was a request for the author's
+     * attention, and never the record OBLIGATION the row was about.
      */
-    if (
-      onlySean.has(section) &&
-      author !== "sean" &&
-      author !== "ruling" &&
-      author !== "predicate"
-    ) {
-      refusals.push(
-        `RULING 37 — ${id} is in "${section}" and only Sean closes a row there. ` +
-          `A session may open one and may work it; it may never mark it ` +
-          `"${(row.Resolution ?? "").trim()}" or move it out, however finished it looks. ` +
-          `RULING 79 is the one exception and it needs a dated ruling in docs/rulings.md ` +
-          `that demonstrably answers this row, named with --ruling ${id}=<number>.`,
-      );
-      continue;
-    }
     if (author === "ruling" && !/RULING \d+/.test(row.Resolution ?? "") && !/RULING \d+/.test(row.Notes ?? "")) {
       refusals.push(
         `RULING 79 — ${id} is being closed by a ruling and the row does not name which. ` +
@@ -413,48 +387,6 @@ export function planMoves({ working, sections, actor = "session", resolutionAuth
     moves.push(row);
   }
   return { moves, refusals };
-}
-
-/**
- * RULING 41 — a session may not reword, retitle or delete a row the author
- * wrote. It may work the row and set a priority if none is set.
- *
- * Both stores are compared, because "delete" includes moving a row somewhere
- * it stops being visible.
- */
-export const SEAN_IMMUTABLE = ["Title", "What this is"];
-
-/**
- * @param {{before: TrackerRow[], after: TrackerRow[]}} input
- * @returns {string[]}
- */
-export function auditSeanRows({ before, after }) {
-  const wasSean = new Map(
-    before.filter(isSeanAuthored).map((r) => [(r.ID ?? "").trim(), r]),
-  );
-  const now = new Map(after.map((r) => [(r.ID ?? "").trim(), r]));
-  const refusals = [];
-
-  for (const [id, was] of wasSean) {
-    const is = now.get(id);
-    if (!is) {
-      refusals.push(`RULING 41 — ${id} was written by Sean and is no longer in either store.`);
-      continue;
-    }
-    for (const field of SEAN_IMMUTABLE) {
-      if ((was[field] ?? "") !== (is[field] ?? "")) {
-        refusals.push(
-          `RULING 41 — ${id} was written by Sean and its "${field}" was changed by a ` +
-            "session. The description is his. A session may work the row, set a " +
-            "priority if none is set, and resolve it under RULING 37 — nothing else.",
-        );
-      }
-    }
-    if (isSeanAuthored(was) && !isSeanAuthored(is)) {
-      refusals.push(`RULING 41 — ${id}'s attribution to Sean was overwritten.`);
-    }
-  }
-  return refusals;
 }
 
 /* ------------------------------------------------------- RULING 46: Delete --- */

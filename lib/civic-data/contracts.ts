@@ -186,7 +186,7 @@ export const MEETING_PARTITION_POLICY = {
 } as const;
 
 /**
- * **THE DERIVED MEETING FAMILIES** (C16, the owner's decision recorded 2026-09-24T22:43Z).
+ * **THE DERIVED MEETING FAMILIES** (labelled C16; the authority is rulings §3, not an owner decision).
  *
  * One partition per registered state whose members are the promoted
  * meeting-source wiring's ACTIVE rows for that state, read at runtime. A

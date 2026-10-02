@@ -39,7 +39,7 @@ import { officialLinkingPageFrom } from "../../sources/official-page-events/inde
  */
 
 import { createHash } from "node:crypto";
-import { RESEARCH_BOUNDS } from "../scheduler/research-policy.ts";
+import { websiteRequestLimit, type WebsiteSizeForUrl } from "../scheduler/host-supervision.ts";
 
 import { accessControlIn } from "../../hunt/access-control.ts";
 import { assertPublicUrl } from "../../hunt/egress.ts";
@@ -111,6 +111,7 @@ export interface DiscoveryRuntime {
   readonly open: DiscoveryOpen;
   /** The runner's shared per-host spacing. */
   readonly spaceOut: (host: string) => Promise<void>;
+  readonly websiteSize?: WebsiteSizeForUrl;
   readonly vault: VaultPut;
   readonly now: () => string;
   /**
@@ -316,7 +317,11 @@ export async function walkMeetingsDiscoveryNeed(
   let requests = 0;
   const requestsByHost = new Map<string, number>();
   const hostKey = (url: URL) => url.hostname.toLowerCase().replace(/^www\./, "");
-  const hostSpent = (url: URL) => (requestsByHost.get(hostKey(url)) ?? 0) >= RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost;
+  const hostLimit = (url: URL) => websiteRequestLimit(runtime.websiteSize?.(url.toString()));
+  const hostSpent = (url: URL) => {
+    const limit = hostLimit(url);
+    return limit !== null && (requestsByHost.get(hostKey(url)) ?? 0) >= limit;
+  };
 
   const skipped = (purpose: DiscoveryStep["purpose"], url: string, permission: StepPermission, note: string): void => {
     steps.push({ purpose, url, permission, status: null, transportError: null, bytes: 0, artifactId: null, rung: null, note });
@@ -394,7 +399,7 @@ export async function walkMeetingsDiscoveryNeed(
   /* The time is asked before the host's spacing and again after it, and the request's timeout never outlasts it. */
   async function hop(url: URL, accept: string) {
     if (timeLeftMs() < MIN_REQUEST_MS) throw new OutOfTime();
-    await runtime.spaceOut(url.host.toLowerCase());
+    if (hostLimit(url) !== null) await runtime.spaceOut(url.host.toLowerCase());
     const left = timeLeftMs();
     if (left < MIN_REQUEST_MS) throw new OutOfTime();
     if (hostSpent(url)) return { status: null, body: "", bytes: 0, contentType: "", location: null, transportError: "shared per-website request bound reached" };
@@ -490,7 +495,7 @@ export async function walkMeetingsDiscoveryNeed(
       }
       if (requests >= maxRequests || hostSpent(url)) {
         skipped(purpose, url.toString(), permission.verdict, hostSpent(url)
-          ? `not requested: the website reached its ${RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost}-request bound; source remains owed`
+          ? `not requested: the website reached its ${hostLimit(url)}-request bound; source remains owed`
           : `not requested: the walk reached its ${maxRequests}-request bound`);
         return null;
       }

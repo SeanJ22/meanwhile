@@ -96,6 +96,7 @@ import { contentHash } from "../ids.ts";
 
 import type { WorkArtifact } from "./dispatch.ts";
 import { DEFAULT_FETCH_TIMEOUT_MS, WALL_STATUSES } from "./http-executor.ts";
+import { websiteRequestLimit, websiteSizeForObligation } from "./host-supervision.ts";
 import { evaluatePermission, DEFAULT_ROBOTS_TOKEN, type PermissionReading } from "./robots.ts";
 import { DEFAULT_USER_AGENT, realOpen, type OpenOne } from "./route-executor.ts";
 import {
@@ -137,7 +138,7 @@ export const SCOUT_TOOL_SPECS: readonly ScoutToolSpec[] = [
   {name:'plural_roster',description:'Read a whole state legislature with the Plural bulk client and parser. Returns people, official links and exact raw CSV with its source URL. No API key needed; prefer this to per-person requests.',input_schema:{type:'object',properties:{state:{type:'string'},rung:RUNG_SCHEMA,why:WHY_SCHEMA},required:['state','rung','why']}},
   {name:'legistar_events',description:'Read a Legistar tenant calendar through the shared paged client within a date window of up to 97 days. Returns event data and raw source responses with links.',input_schema:{type:'object',properties:{tenant:{type:'string'},from:{type:'string'},to:{type:'string'},rung:RUNG_SCHEMA,why:WHY_SCHEMA},required:['tenant','from','to','rung','why']}},
   {
-    name: 'run_adapter', description: 'Run installed platform adapters over inherited sanitized bytes with no network. Omit adapter to list installed names; supply adapter and artifactId to extract source-attributed data. offset pages long results.',
+    name: 'run_adapter', description: 'Run installed platform adapters over saved sanitized bytes from this walk or inherited evidence, with no network. Omit adapter to list installed names; supply adapter and artifactId to extract source-attributed data. offset pages long results.',
     input_schema: {type:'object', properties:{adapter:{type:'string'},artifactId:{type:'string'},offset:{type:'integer'},rung:RUNG_SCHEMA,why:WHY_SCHEMA},required:['rung','why']},
   },
   {
@@ -209,7 +210,7 @@ export const SCOUT_TOOL_SPECS: readonly ScoutToolSpec[] = [
   },
   {
     name: "read_held",
-    description: "Open a bounded passage of an inherited sanitized artifact by exact id and offset, or locate a literal phrase anywhere in those saved bytes with query. This reuses saved bytes with no network or paid source call; only handed ids are allowed.",
+    description: "Open a bounded passage of a saved sanitized artifact by exact id and offset, or locate a literal phrase with query. Reuses bytes from this walk or inherited evidence with no network or paid source call; other walks' unhanded ids are refused.",
     input_schema: { type: "object", properties: {
       artifactId: { type: "string" }, offset: { type: "integer" }, query: { type: "string" }, rung: RUNG_SCHEMA, why: WHY_SCHEMA,
     }, required: ["artifactId", "rung", "why"] },
@@ -566,6 +567,7 @@ function permissionState(verdict: PermissionReading["verdict"]): PermissionState
 }
 
 export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
+  const websiteSize = ctx.websiteSize ?? websiteSizeForObligation(ctx.obligation.obligation, ctx.root);
   const openOne: OpenOne = ctx.openOne ?? realOpen;
   /* An injected string opener never falls through to the real network. */
   const openBytes: OpenBytes | null =
@@ -577,6 +579,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   const hostCounts = new Map<string, number>();
   const vaulted = new Set<string>();
   const factEvidence = new Map<string, import('./scout-contract.ts').ScoutFactEvidence>();
+  const currentEvidence = new Map<string, Awaited<ReturnType<NonNullable<ScoutToolContext["readHeldArtifact"]>>>>();
   let requestCount = 0;
   let bytesFetched = 0;
   let toolCalls = 0;
@@ -599,17 +602,18 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     try {
       first = await open(secure);
     } catch (error) {
-      if (overCap(hostOf(url)) !== null) throw error;
+      if (overCap(url) !== null) throw error;
       return open(url);
     }
     if (first.transportError === null && first.status !== null && first.status >= 200 && first.status < 300) return first;
-    return overCap(hostOf(url)) === null ? open(url) : first;
+    return overCap(url) === null ? open(url) : first;
   }
 
-  function overCap(host: string): string | null {
+  function overCap(url: URL): string | null {
+    const host = hostOf(url);
     const n = hostCounts.get(host) ?? 0;
-    const max = ctx.bound.maxRequestsPerHost;
-    if (n < max) return null;
+    const max = websiteRequestLimit(websiteSize(url.toString()));
+    if (max === null || n < max) return null;
     return (
       `${host} has had ${n} of ${max} requests this Attempt (the per-host bound), so this request is ` +
       "refused. The bound is per host: another host is not bound by this count."
@@ -619,7 +623,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   async function retrieve(url: URL, accept: string, acc: CallAccount): Promise<Retrieved> {
     const host = hostOf(url);
     hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
-    await ctx.spaceOut(host);
+    if (websiteRequestLimit(websiteSize(url.toString())) !== null) await ctx.spaceOut(host);
     const headers = { "user-agent": DEFAULT_USER_AGENT, accept };
     let got: Retrieved;
     if (openBytes !== null) {
@@ -696,9 +700,13 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     }
     const held=saved.artifact;
     if(saved.stored && held.tier!=='RESTRICTED_RAW' && held.retentionPolicy!=='DIAGNOSTIC' &&
-      held.methodRouteId!=='scout:read_permission' && !held.methodRouteId.endsWith(':network-observation'))factEvidence.set(held.id,{
-      sourceUrl:held.canonicalUrl,retrievalUrl:held.retrievalUrl,retrievedAt:held.retrievedAt,text,
-      visibleText:held.contentType.includes('html')?visibleText(text):text});
+      held.methodRouteId!=='scout:read_permission' && !held.methodRouteId.endsWith(':network-observation')) {
+      factEvidence.set(held.id,{sourceUrl:held.canonicalUrl,retrievalUrl:held.retrievalUrl,retrievedAt:held.retrievedAt,text,
+        visibleText:held.contentType.includes('html')?visibleText(text):text});
+      currentEvidence.set(held.id,{artifactId:held.id,contentHash:held.contentHash,text,canonicalUrl:held.canonicalUrl,
+        retrievedAt:held.retrievedAt,acquiredByAttemptId:held.attemptId,sourceId:held.sourceId,methodRouteId:held.methodRouteId,
+        provenance:acc.provenance.find(p=>p.artifactId===held.id)});
+    }
     return {...saved,text:saved.stored && held.tier!=='RESTRICTED_RAW'?text:''};
   }
 
@@ -877,7 +885,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
     const cached = robotsByHost.has(host);
     if (!cached) {
-      const cap = overCap(host);
+      const cap = overCap(url);
       if (cap !== null) return refusal(cap);
     }
     const robots = await readRobots(url, acc);
@@ -908,14 +916,13 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   > {
     const url = publicUrl(input.url ?? "");
     if (typeof url === "string") return { kind: "REFUSED", result: refusal(url) };
-    const host = hostOf(url);
     const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
-    const capBefore = overCap(host);
+    const capBefore = overCap(url);
     if (capBefore !== null) return { kind: "REFUSED", result: refusal(capBefore) };
     /* Read and recorded, never a refusal: ROBOTS_BLOCKS_ACQUISITION is false (owner decision 2026-09-25). */
     const robots = await readRobots(url, acc);
     const reading = evaluate(robots, url);
-    const capAfter = overCap(host);
+    const capAfter = overCap(url);
     if (capAfter !== null) {
       return {
         kind: "REFUSED",
@@ -1167,7 +1174,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       obs = await preferHttps(url, async target => {
         /* Each navigation counts; the page's own calls are observed, not initiated. */
         hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
-        await ctx.spaceOut(host);
+        if (websiteRequestLimit(websiteSize(target.toString())) !== null) await ctx.spaceOut(host);
         requestCount += 1;
         acc.requests += 1;
         const observed = await browseFn({ url: target.toString(), timeoutMs, holder: ctx.holder });
@@ -1342,10 +1349,11 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       (query !== null && (query.length < 2 || query.length > 160 || /[\r\n]/.test(query)))) {
       return refusal("READ_HELD_INPUT_INVALID: artifactId and either nonnegative integer offset or bounded literal query are required.");
     }
-    if (!ctx.inherited.artifactIds.includes(raw.artifactId)) return refusal("READ_HELD_NOT_HANDED: this artifact is outside the inherited evidence for this walk.");
-    if (!ctx.readHeldArtifact) return refusal("READ_HELD_UNAVAILABLE: no sanitized vault reader is configured.");
+    const current = currentEvidence.get(raw.artifactId);
+    if (!current && !ctx.inherited.artifactIds.includes(raw.artifactId)) return refusal("READ_HELD_NOT_HANDED: this artifact was neither saved nor inherited by this walk.");
+    if (!current && !ctx.readHeldArtifact) return refusal("READ_HELD_UNAVAILABLE: no sanitized vault reader is configured.");
     try {
-      const evidence = await ctx.readHeldArtifact(raw.artifactId);
+      const evidence = current ?? await ctx.readHeldArtifact!(raw.artifactId);
       if (evidence.artifactId !== raw.artifactId || contentHash(evidence.text) !== evidence.contentHash) return refusal("READ_HELD_HASH_MISMATCH: the vault read did not verify.");
       const provenance = evidence.provenance;
       if (provenance && (provenance.artifactId !== evidence.artifactId || provenance.canonicalUrl !== evidence.canonicalUrl ||
@@ -1417,8 +1425,11 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
     try {
       const options = { ...ctx.sourceApi, timeoutMs,
-        spaceOut: async host => { const exceeded = overCap(host); if (exceeded) throw new Error(exceeded);
-          hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1); await ctx.spaceOut(host); } } satisfies import('./scout-api.ts').SourceApiOptions;
+        spaceOut: async host => { const url = new URL(`https://${host}`);
+          const exceeded = overCap(url); if (exceeded) throw new Error(exceeded);
+          hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1);
+          if (websiteRequestLimit(websiteSize(url.toString())) !== null) await ctx.spaceOut(host);
+        } } satisfies import('./scout-api.ts').SourceApiOptions;
       const response = name === 'plural_roster' || name === 'legistar_events' ? await readClientSource(name,raw as Record<string,unknown>,options) : await readSourceApi(name,raw,options);
       acc.requests = response.requests; acc.bytes = response.bytes;
       requestCount += response.requests; bytesFetched += response.bytes;
@@ -1465,10 +1476,12 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       case "run_adapter": {
         const raw = input as Record<string, unknown>;
         if (typeof raw.adapter !== 'string') return {ok:true,forModel:JSON.stringify(await installedAdapters()),artifacts:[],provenance:[],rung:null,requestCount:0,bytesFetched:0};
-        if (typeof raw.artifactId !== 'string' || !ctx.inherited.artifactIds.includes(raw.artifactId) || !ctx.readHeldArtifact) return refusal('ADAPTER_ARTIFACT_NOT_HANDED');
+        if (typeof raw.artifactId !== 'string') return refusal('ADAPTER_ARTIFACT_NOT_HANDED');
+        const current = currentEvidence.get(raw.artifactId);
+        if (!current && (!ctx.inherited.artifactIds.includes(raw.artifactId) || !ctx.readHeldArtifact)) return refusal('ADAPTER_ARTIFACT_NOT_HANDED');
         const adapterIdentity=raw.adapter+'@'+installedAdapterVersion(raw.adapter);
         try {
-          const held = await ctx.readHeldArtifact(raw.artifactId);
+          const held = current ?? await ctx.readHeldArtifact!(raw.artifactId);
           if (held.artifactId !== raw.artifactId || held.contentHash !== contentHash(held.text) || !held.provenance) return refusal('ADAPTER_ARTIFACT_IDENTITY_MISMATCH');
           const data = await runInstalledAdapter(raw.adapter, held.text, held.canonicalUrl);
           const serialized=JSON.stringify({sourceUrl:held.canonicalUrl,data}), offset=readOffset(input) ?? 0;

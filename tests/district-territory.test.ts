@@ -113,7 +113,7 @@ test("A SEND IN 85635 OR COCHISE COUNTY PLACES THE COLLEGE DISTRICT AND THE TECH
   assert.ok(!certainlyOverlaps(college, await countyScope("04019")), "nor in Pima County");
   assert.ok(jted.zctas.has("85624"), "Patagonia's secondary district supplies its actual Census boundary in Santa Cruz County");
   assert.ok(certainlyOverlaps(jted, santaCruz));
-  const patagonia = readCensusUnitTerritories(ROOT).find(u => u.pid6 === "177987")!;
+  const patagonia = readCensusUnitTerritories(ROOT, ["AZ"]).find(u => u.pid6 === "177987")!;
   assert.match(patagonia.method ?? "", /scsd GEOID 0406030/);
   assert.ok(patagonia.zips.includes("85624"));
 });
@@ -133,6 +133,11 @@ test("THE FIRE DISTRICTS ARE PLACED FOR SENDS BY THEIR APPROXIMATE BOUNDARY: FRY
   assert.match(extract.provenance.url, /Arizona_Fire_Districts_Spatial_Join\/FeatureServer\/0$/);
   assert.match(extract.provenance.sha256, /^[0-9a-f]{64}$/);
   assert.equal(APPROXIMATE_MIN_SHARE, 0.05);
+  const scoped = readTerritoryIndex(ROOT, [JSON.parse(readFileSync(join(ROOT, "data/states/az/jurisdictions/az.json"), "utf8"))], ["AZ"], ZIP_85635.zctas);
+  const inZip = (territory: ReturnType<typeof readTerritoryIndex>) => [...territory.bySubject.values()]
+    .filter(row => certainlyOverlaps(row, ZIP_85635)).map(row => row.subjectId).sort();
+  assert.deepEqual(inZip(scoped), inZip(idx), "place reads preserve every placed government, including legal-member and approximate district territories");
+  assert.ok(scoped.bySubject.size < idx.bySubject.size, "other places' registries and shares do not enter the place index");
 });
 
 test("A SLIVER IS NOT PLACEMENT: an approximate district holding under 5% of a ZCTA is not placed by it", () => {
@@ -176,7 +181,7 @@ test("THE RULES: each names its evidence; a member union never adds shares and n
   assert.equal(union.shares.get("00002"), 0.7, "overlapping members: the larger share, never the sum");
   assert.match(union.method, /union of 2 member district\(s\).*D \(unresolved\); C \(no territory in the committed data\)/);
   assert.equal(ruledDistrictTerritory({ state: "ZZ", pid6: "8" }, units, () => undefined, unitShareKey, []), null);
-  const committed = readCensusUnitTerritories(ROOT).filter((u) => DISTRICT_TERRITORIES.some((r) => r.pid6 === u.pid6 && r.state === u.state));
+  const committed = readCensusUnitTerritories(ROOT, DISTRICT_TERRITORIES.map(rule => rule.state)).filter((u) => DISTRICT_TERRITORIES.some((r) => r.pid6 === u.pid6 && r.state === u.state));
   assert.deepEqual(committed.map((u) => u.zips.length), committed.map(() => 0), "every rule names a unit the committed data holds no territory for");
   assert.deepEqual(committed.map((u) => u.name).sort(), DISTRICT_TERRITORIES.map((r) => r.name).sort(), "each rule's pid6 is the unit it names");
 });

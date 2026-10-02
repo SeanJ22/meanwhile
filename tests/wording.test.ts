@@ -192,7 +192,7 @@ test("F01 6.1: no reader surface calls an absence a gap in our research or data"
  * says nothing about whose absence it is would satisfy the ban above and
  * violate the render-default rule, so both halves are guarded together.
  */
-test("F01 6.2: the struck clause leaves the whose-gap attribution standing", async () => {
+test("F01 6.2: an absence reads as the working-on-it sentence", async () => {
   const { readFileSync: read } = await import("node:fs");
   const { join: j } = await import("node:path");
   const surface = read(
@@ -200,10 +200,9 @@ test("F01 6.2: the struck clause leaves the whose-gap attribution standing", asy
     "utf8",
   );
   assert.ok(
-    /We haven[’']t recorded this chamber[’']s vote on this yet\. This is not a statement that no vote happened\./.test(
-      surface,
-    ),
-    "the key-votes absence line lost its whose-gap attribution",
+    /We[’']re working on getting this info\./.test(surface) &&
+      !/not a statement that no vote happened/.test(surface),
+    "the key-votes absence line is the working-on-it sentence (rulings §10), with no disclaimer",
   );
 });
 

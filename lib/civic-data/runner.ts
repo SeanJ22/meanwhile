@@ -390,7 +390,6 @@ export function routineUnreceiptedSupervisorAttemptHistory(
     }
 
     const exactReceiptTaskIds = new Set<string>();
-    const exactReceiptCandidateIds = new Set<string>();
     let exactSuccesses = 0;
     let exactFailures = 0;
     if (taskReceipts !== null) {
@@ -415,8 +414,8 @@ export function routineUnreceiptedSupervisorAttemptHistory(
           reasons.push("an exact task receipt reference is malformed or contradictory");
           continue;
         }
-        if (exactReceiptTaskIds.has(reference.taskId) || exactReceiptCandidateIds.has(parsedReceipt.receipt.candidateId)) {
-          reasons.push("exact task or candidate receipt identity is duplicated");
+        if (exactReceiptTaskIds.has(reference.taskId)) {
+          reasons.push("exact task receipt identity is duplicated");
           continue;
         }
         const successIssue = successfulRoutineRunnerReceiptIssue(parsedReceipt.receipt);
@@ -432,7 +431,6 @@ export function routineUnreceiptedSupervisorAttemptHistory(
           continue;
         }
         exactReceiptTaskIds.add(reference.taskId);
-        exactReceiptCandidateIds.add(parsedReceipt.receipt.candidateId);
         if (reference.classification === "VERIFIED_SOURCE_SUCCESS") exactSuccesses += 1;
         else exactFailures += 1;
       }
@@ -658,6 +656,35 @@ export function routineAdmissionClock(
     .map(value => Date.parse(value ?? "")).filter(Number.isFinite);
   if (sourceTimes.some(at => at >= attempted)) return clock;
   return { ...clock, lastAttemptedAt: supervisorAttemptAt! };
+}
+
+/** A missing receipt is a protocol defect. The existing per-job failure log
+ * survives an unfinished round; retry only after code, Send or source progress
+ * changes, rather than repeatedly launching the same child. */
+export function unchangedRoutineProtocolFailure(
+  task: RoutineSourceTask,
+  clock: RoutineTaskClock | undefined,
+  rows: readonly unknown[],
+  codeSha: string | null,
+  nowMs: number,
+): boolean {
+  if (!task.ownerInvocation || !codeSha) return false;
+  const failures = rows.flatMap(value => {
+    const row = historyObject(value), progress = historyObject(row?.huntSourceProgress);
+    const at = canonicalHistoryTime(progress?.at);
+    if (!progress || progress.taskId !== task.id || progress.stage !== "FAILED" || row?.testedSha !== codeSha ||
+        !at || Date.parse(at) > nowMs || typeof progress.detail !== "string" ||
+        !/RECEIPT_(?:COUNT|JSON|SCHEMA)_INVALID/.test(progress.detail) ||
+        /HTTP(?: status)? (?:429|5\d\d)|NeonDbError|fetch failed|ECONNRESET|provider.*(?:rate.?limit|overload)/i.test(progress.detail) ||
+        !Array.isArray(progress.instructionIds) ||
+        JSON.stringify([...progress.instructionIds].sort()) !== JSON.stringify([...task.ownerInvocation!.instructions].sort())) return [];
+    return [Date.parse(at)];
+  });
+  if (!failures.length) return false;
+  const failedAt = Math.max(...failures);
+  if (Date.parse(task.ownerInvocation.requestedAt) > failedAt) return false;
+  return ![clock?.lastAttemptedAt, clock?.lastSucceededAt, clock?.lastSucceededObservedAt]
+    .some(at => Number.isFinite(Date.parse(at ?? "")) && Date.parse(at!) > failedAt && Date.parse(at!) <= nowMs);
 }
 
 export function routineTaskDue(

@@ -1,8 +1,8 @@
 import { haversineKm } from "./distance.ts";
 
 /**
- * The U.S. Census Bureau's address geocoder — D53, the author's approved
- * external source (2026-08-15).
+ * The U.S. Census Bureau's address geocoder — D53, an approved external
+ * source (2026-08-15).
  *
  * What it closes: the street the reader types in the narrowing chip resolved
  * to a SET of divisions and nothing else, because the street index carries no
@@ -326,8 +326,7 @@ export function coherentMidpoint(
 }
 
 /**
- * What a street lookup can honestly conclude (the author's ruling,
- * 2026-08-15).
+ * What a street lookup can honestly conclude (2026-08-15).
  *
  * The previous shape was `StreetPoint | null`, and it collapsed two very
  * different answers into the same null: "this street is nowhere we can find"
@@ -477,8 +476,7 @@ function spreadOf(points: readonly { lat: number; lng: number }[]): number {
  * `locateStreetInZip` above stays exactly as it was — a point or nothing —
  * because plenty of callers only want the point. This one distinguishes the
  * street we cannot find from the street that crosses district lines, so the
- * input can ask the one question that resolves the second (the author's
- * ruling, 2026-08-15).
+ * input can ask the one question that resolves the second (2026-08-15).
  */
 export async function lookupStreetInZip(
   street: string,
@@ -566,7 +564,7 @@ export async function locateAddressInZip(
 /**
  * **WHERE DOES THIS ADDRESS ACTUALLY RESOLVE?** (BAL-38, 2026-08-31.)
  *
- * The owner: *"Out-of-zip address is rejected instead of redirected."* A reader
+ * The defect: an out-of-zip address was rejected instead of redirected. A reader
  * on the 85701 ballot who types an address in 85641 was told *"We couldn't
  * place that in 85701"* — true, unhelpful, and about us — when the honest and
  * useful answer is that we placed it perfectly well somewhere else.

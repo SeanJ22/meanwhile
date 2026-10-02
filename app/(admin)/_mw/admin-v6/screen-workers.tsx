@@ -68,6 +68,15 @@ export interface RoundReading {
 
 /** The current or next round, including whether it is late, from saved times only. */
 export function roundReading(st: WorkerStatus | null | undefined, now: number): RoundReading {
+  const cycle = st?.cycle;
+  if (cycle?.finishedAt) {
+    const exit = cycle.signal ? `signal ${cycle.signal}` : cycle.exitCode === null ? "exit not recorded" : `exit ${cycle.exitCode}`;
+    return { headline: `Finished ${mst(cycle.finishedAt, false)}`,
+      detail: `Started ${mst(cycle.startedAt)}; finished ${mst(cycle.finishedAt)}; ${exit}.`, overdue: false };
+  }
+  if (cycle && st?.runnerState !== "ALIVE") return {
+    headline: "No finish recorded", detail: `Started ${mst(cycle.startedAt)}. The runner's check-in is ${st?.runnerState ? runnerStateWords(st.runnerState).toLowerCase() : "unread"}.`, overdue: false,
+  };
   const last = st?.lastRoundFinishedAt ? ` The last round finished ${mst(st.lastRoundFinishedAt, false)}.` : "";
   if (st?.roundStartedAt) {
     return { headline: `Running since ${mst(st.roundStartedAt, false)}`, detail: `This round has run for ${spanWords(now - Date.parse(st.roundStartedAt))}.${last}`, overdue: false };
@@ -303,7 +312,7 @@ export function WorkersScreen() {
       </header>
 
       {w?.update ? (
-        <Card title={w.update.title} tone="warn" aside={<span className={s.meta}>Checked {mst(w.update.checkedAt)}</span>}>
+        <Card title={w.update.title} tone={w.update.status === "SUCCEEDED" ? undefined : "warn"} aside={<span className={s.meta}>Checked {mst(w.update.checkedAt)}</span>}>
           <p className={s.p}>{w.update.what}</p>
           <dl className={s.facts}>
             <dt>Why it matters</dt><dd>{w.update.impact}</dd>
@@ -311,10 +320,10 @@ export function WorkersScreen() {
             <dt>What happens next</dt><dd>{w.update.next}</dd>
             <dt>Do you need to act?</dt><dd>{w.update.youNeedToAct}</dd>
           </dl>
-          <div className={s.inline}>
-            <button type="button" className={cx(s.btn, s.btnPrimary)} onClick={() => v.open({ type: "fix", id: w.update!.fixId })}>See the update and what’s blocking it</button>
+          {w.update.fixId && <div className={s.inline}>
+            <button type="button" className={cx(s.btn, s.btnPrimary)} onClick={() => v.open({ type: "fix", id: w.update!.fixId! })}>See the update and what’s blocking it</button>
             <Actions actions={[{ kind: "focus", target: w.update.fixId }]} />
-          </div>
+          </div>}
           <Technical lines={w.update.technical} />
         </Card>
       ) : (
@@ -331,7 +340,7 @@ export function WorkersScreen() {
           <strong>{when(st?.lastUsefulProgress?.at)}</strong>
           {st?.lastUsefulProgress && <span className={s.meta}>{progressAge ? `${progressAge}. ` : ""}{st.lastUsefulProgress.what}</span>}
         </div>
-        <div className={cx(s.row, round.overdue && s.cardWarn)}><span className={s.eyebrow}>Round of work</span><strong className={round.overdue ? s.textWarn : undefined}>{roundMissing ? "—" : round.headline}</strong>{st?.lastRoundFinishedAt && !round.headline.startsWith("Last finished") && <span className={s.meta}>Last finished {when(st.lastRoundFinishedAt, false)}</span>}</div>
+        <div className={cx(s.row, round.overdue && s.cardWarn)}><span className={s.eyebrow}>Round of work</span><strong className={round.overdue ? s.textWarn : undefined}>{roundMissing ? "—" : round.headline}</strong>{st?.lastRoundFinishedAt && !round.headline.startsWith("Last finished") && <span className={s.meta}>Last finished {when(st.lastRoundFinishedAt, false)}</span>}{st?.cycle && <><span className={s.meta}>{round.detail}</span>{st.cycle.lastError && <span className={cx(s.meta, s.textWarn)}>Last round error: {st.cycle.lastError}</span>}</>}</div>
         <div className={s.row}>
           <span className={s.eyebrow}>{jobs ? `Work in ${v.place.name}` : isCountry ? "Work" : "Work, all places"}</span>
           <strong>{jobs ? `${nowWorking} working now · ${waiting ? waiting.length : "—"} waiting` : totals ? `${totals.running === null ? "—" : count(totals.running)} running · ${count(totals.waiting)} waiting` : "—"}</strong>

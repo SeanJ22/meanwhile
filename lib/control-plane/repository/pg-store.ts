@@ -98,6 +98,7 @@ import type { WorkItem } from "../work-item.ts";
 
 import { budgetRepositoryFrom } from "./shared.ts";
 import {
+  ARTIFACT_SOURCE_INDEX_DDL,
   BOOTSTRAP_DDL,
   BOOTSTRAP_VERSION,
   recordVersionStatement,
@@ -166,6 +167,8 @@ export const CONTROL_PLANE_TEST_URL_VAR = "WTP_CONTROL_PLANE_TEST_DATABASE_URL";
  */
 export interface Sql {
   query(text: string, params?: readonly unknown[], options?: BoundableQueryOptions): Promise<unknown>;
+  /** Online DDL and session locks need one connection; normal reads keep HTTP. */
+  withPinnedConnection?<T>(operation: (sql: Sql) => Promise<T>): Promise<T>;
 }
 
 /**
@@ -738,6 +741,27 @@ export function pgAppendOnlyRepository<T>(
       return rows.map((r) => parseValue<unknown>(r.record, `${table} ${key}`));
     },
 
+    async readSince(since) {
+      const out: T[] = [];
+      let cursor: { readonly key: string; readonly position: number } | null = null;
+      for (;;) {
+        const rows = (await run(
+          "readSince",
+          "PAGE",
+          `SELECT log_key, position, record FROM ${table}
+           WHERE recorded_at >= $1::timestamptz${cursor === null ? "" : " AND (log_key, position) > ($2, $3)"}
+           ORDER BY log_key ASC, position ASC
+           LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
+          cursor === null ? [since] : [since, cursor.key, cursor.position],
+        )) as Record<string, unknown>[];
+        for (const row of rows) out.push(parseValue<T>(row.record, `${table} ${String(row.log_key)}`));
+        if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
+        const last = rows[rows.length - 1];
+        cursor = { key: String(last.log_key), position: Number(last.position) };
+      }
+      return out;
+    },
+
     async readAll() {
       /* Keyset-paged over the whole table in the same (log_key, position) order
          the single statement used, for the same 64 MiB reason as `read`. */
@@ -815,6 +839,16 @@ export function pgAppendOnlyRepository<T>(
   };
 }
 
+/** Bounded source lookup; the canonical URL and newest-capture order use the artifact index. */
+export async function pgArtifactsByCanonicalUrl(sql: Sql, url: string, limit: number, options: PgRepositoryBounds = {}): Promise<readonly ArtifactRecord[]> {
+  const run = boundedRunner(sql, "cp_log_artifacts", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  const rows = await run("artifactsByCanonicalUrl", "PAGE",
+    `SELECT record FROM cp_log_artifacts WHERE md5(record->>'canonicalUrl') = md5($1) AND record->>'canonicalUrl' = $1
+     ORDER BY record->>'recordedAt' DESC NULLS LAST, record->>'artifactId' ASC LIMIT $2`,
+    [url, Math.max(0, Math.trunc(limit))]) as Record<string, unknown>[];
+  return rows.map(row => parseValue<ArtifactRecord>(row.record, "cp_log_artifacts source capture"));
+}
+
 /** Locks use one pinned WebSocket transaction. HTTP queries have no shared session. */
 function pgLockManager(connectionString: string): LockManager {
   return {
@@ -845,10 +879,54 @@ function pgLockManager(connectionString: string): LockManager {
   };
 }
 
+// Online index builds scan inside Postgres, not into the runner. Give this DDL
+// its own bounded build time rather than cancelling it at the small-row bound.
+const SOURCE_INDEX_BUILD_MS = 15 * 60_000;
+const SOURCE_INDEX_STATUS_SQL = `SELECT i.indisvalid AS valid,
+  EXISTS (SELECT 1 FROM pg_stat_progress_create_index p WHERE p.index_relid = i.indexrelid) AS building
+  FROM pg_index i WHERE i.indexrelid = to_regclass('cp_log_artifacts_source_url')`;
+
+/** A pinned autocommit session is required; neither DDL runs in a transaction. */
+export async function pgEnsureArtifactSourceIndex(
+  sql: Sql,
+  bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS,
+): Promise<void> {
+  const run = boundedRunner(sql, "cp_schema.artifactSourceIndex", bounds);
+  // Existing valid indexes need no socket or session lock. If DDL is owed,
+  // switch to a pinned connection and re-read after acquiring its session lock.
+  const current = await run("status", "POINT", SOURCE_INDEX_STATUS_SQL) as { valid: boolean }[];
+  if (current[0]?.valid === true) return;
+  if (sql.withPinnedConnection) return sql.withPinnedConnection(pinned => pgEnsureArtifactSourceIndex(pinned, bounds));
+  const key = advisoryLockKey("cp_schema.cp_log_artifacts_source_url").toString();
+  const locks = await run("lock", "POINT", "SELECT pg_try_advisory_lock($1::bigint) AS locked", [key]) as { locked: boolean }[];
+  if (locks[0]?.locked !== true) {
+    throw new Error("CONTROL_PLANE_SOURCE_INDEX_BUILD_IN_PROGRESS: another bootstrap owns cp_log_artifacts_source_url; retry on the next runner cycle");
+  }
+  try {
+    const status = await run("statusLocked", "POINT", SOURCE_INDEX_STATUS_SQL) as { valid: boolean; building: boolean }[];
+    if (status[0]?.valid === true) return;
+    // An in-progress concurrent build is temporarily INVALID too. Do not drop it.
+    if (status[0]?.building === true) {
+      throw new Error("CONTROL_PLANE_SOURCE_INDEX_BUILD_IN_PROGRESS: cp_log_artifacts_source_url has an active builder; retry on the next runner cycle");
+    }
+    const ddlRun = boundedRunner(sql, "cp_schema.artifactSourceIndex", { ...bounds, POINT: SOURCE_INDEX_BUILD_MS });
+    await run("buildTimeout", "POINT", `SET statement_timeout = ${SOURCE_INDEX_BUILD_MS}`);
+    if (status[0]?.valid === false) {
+      await ddlRun("dropInvalid", "POINT", "DROP INDEX CONCURRENTLY IF EXISTS cp_log_artifacts_source_url");
+    }
+    await ddlRun("create", "POINT", ARTIFACT_SOURCE_INDEX_DDL);
+  } finally {
+    // A failed build retains its original error. The caller destroys the pinned
+    // session as well, releasing the session lock even after a transport failure.
+    await run("unlock", "POINT", "SELECT pg_advisory_unlock($1::bigint)", [key]).catch(() => {});
+    await run("restoreTimeout", "POINT", `SET statement_timeout = ${bounds.POINT}`).catch(() => {});
+  }
+}
+
 /**
- * Bring the schema up. Idempotent, and it records the version it reached. Each
- * statement is a POINT call: a hung statement times out by name and the
- * connect-retry around the bootstrap tries again.
+ * Keep ordinary bootstrap on bounded HTTP and record the version only after
+ * every statement succeeds. Online index creation/recovery alone needs a pinned
+ * autocommit connection and a session lock, never a transaction.
  */
 export async function bootstrap(
   sql: Sql,
@@ -856,7 +934,10 @@ export async function bootstrap(
   bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS,
 ): Promise<void> {
   const run = boundedRunner(sql, "cp_schema", bounds);
-  for (const statement of BOOTSTRAP_DDL) await run("bootstrap", "POINT", statement);
+  for (const statement of BOOTSTRAP_DDL) {
+    if (statement === ARTIFACT_SOURCE_INDEX_DDL) await pgEnsureArtifactSourceIndex(sql, bounds);
+    else await run("bootstrap", "POINT", statement);
+  }
   await run("recordVersion", "POINT", recordVersionStatement(BOOTSTRAP_VERSION, nowIso));
 }
 
@@ -868,6 +949,51 @@ export async function bootstrap(
  * below is the one place the variable is read, and it refuses rather than
  * defaulting.
  */
+const placeReadConnections = new WeakMap<ControlPlaneRepositories, Sql>();
+
+/** Reconcile all subjects in one place against one indexed query, rather
+ * than opening a serverless connection for every field's subject. */
+export async function readPlaceWorkItems(repos: ControlPlaneRepositories, subjects: readonly string[]): Promise<Persisted<WorkItem>[]> {
+  if (!subjects.length) return [];
+  const ids = [...new Set(subjects)];
+  const sql = placeReadConnections.get(repos);
+  if (!sql) {
+    const rows: Persisted<WorkItem>[] = [];
+    for (const subject of ids) rows.push(...await repos.workItems.listWhere(["subject"], subject));
+    return rows.sort((a, b) => a.id.localeCompare(b.id));
+  }
+  const run = boundedRunner(sql, "cp_work_items", CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  const rows = await run("placeSubjects", "PAGE", `SELECT id, revision, updated_at, value
+    FROM cp_work_items WHERE value->>'subject'=ANY($1::text[]) ORDER BY id`, [ids]) as Record<string, unknown>[];
+  return rows.map(row => ({ id: String(row.id), revision: Number(row.revision),
+    updatedAt: new Date(row.updated_at as string).toISOString(), value: parseValue<WorkItem>(row.value, `place work item ${String(row.id)}`) }));
+}
+
+/** Exact source observations from any job; unrelated vault metadata stays in
+ * Postgres instead of being copied into every place worker. */
+export async function readPlaceArtifacts(repos: ControlPlaneRepositories, url: string, cutoff: string, now: string): Promise<readonly ArtifactRecord[]> {
+  const sql = placeReadConnections.get(repos);
+  if (!sql) return (await repos.artifacts.readAll()).filter(row => row.canonicalUrl === url && !row.partial &&
+    row.tier !== "RESTRICTED_RAW" && row.recordedAt >= cutoff && row.recordedAt <= now);
+  const run = boundedRunner(sql, "cp_log_artifacts", CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  const rows = await run("placeSource", "PAGE", `SELECT record FROM cp_log_artifacts
+    WHERE record->>'canonicalUrl'=$1 AND record->>'partial'='false' AND record->>'tier'<>'RESTRICTED_RAW'
+      AND record->>'recordedAt'>=$2 AND record->>'recordedAt'<=$3 ORDER BY record->>'recordedAt' DESC`, [url, cutoff, now]) as Record<string, unknown>[];
+  return rows.map(row => parseValue<ArtifactRecord>(row.record, "place source artifact"));
+}
+
+/** Declared work for the place/ring's exact divisions, including the portable
+ * national and relevant state sources. No country-wide work objects are read. */
+export async function readPlaceStandingWork(repos: ControlPlaneRepositories, divisionIds: readonly string[]) {
+  const sql = placeReadConnections.get(repos);
+  if (!sql) return (await repos.obligations.listWhere(["active"], "true")).map(row => row.value)
+    .filter(row => row.scopeDivisions?.some(id => divisionIds.includes(id)));
+  const run = boundedRunner(sql, "cp_obligations", CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  const rows = await run("placeWork", "PAGE", `SELECT id, value->>'subjectId' AS subject_id, value->'scopeDivisions' AS divisions
+    FROM cp_obligations WHERE value->>'active'='true' AND value->'scopeDivisions' ?| $1::text[] ORDER BY id`, [[...divisionIds]]) as Record<string, unknown>[];
+  return rows.map(row => ({ id: String(row.id), subjectId: String(row.subject_id), scopeDivisions: row.divisions as string[] }));
+}
+
 export async function createPgRepositories(
   connectionString: string,
   nowIso: string = new Date().toISOString(),
@@ -899,13 +1025,28 @@ export async function createPgRepositories(
     );
   }
   installDatabaseTransferCounter();
-  const sql = neon(connectionString);
   const bounds: ControlPlaneRequestBounds = { ...CONTROL_PLANE_REQUEST_BOUNDS_MS, ...options.requestBounds };
   for (const [callClass, ms] of Object.entries(bounds)) {
     if (!Number.isSafeInteger(ms) || ms <= 0) {
       throw new Error(`CONTROL_PLANE_REQUEST_BOUND_INVALID: ${callClass}=${String(ms)}; every class needs a positive bound`);
     }
   }
+  const sql = Object.assign(neon(connectionString), {
+    async withPinnedConnection<T>(operation: (pinned: Sql) => Promise<T>): Promise<T> {
+      if (!neonConfig.webSocketConstructor) neonConfig.webSocketConstructor = globalThis.WebSocket;
+      const direct = new URL(connectionString);
+      direct.hostname = direct.hostname.replace("-pooler.", ".");
+      const pool = new Pool({
+        connectionString: direct.toString(), connectionTimeoutMillis: bounds.POINT,
+        statement_timeout: bounds.POINT, query_timeout: SOURCE_INDEX_BUILD_MS + 1_000,
+      });
+      try {
+        const client = await pool.connect();
+        try { return await operation({ query: async (text, params = []) => (await client.query(text, [...params])).rows }); }
+        finally { client.release(true); }
+      } finally { await pool.end(); }
+    },
+  });
   const bounded: PgRepositoryBounds = { bounds };
   if (!options.skipBootstrap) {
     /* The schema bootstrap is this process's first Neon I/O, so its first query
@@ -957,7 +1098,7 @@ export async function createPgRepositories(
     },
   };
 
-  return {
+  const repositories: ControlPlaneRepositories = {
     workItems: pgAggregateRepository<WorkItem>(sql, "WorkItem", "cp_work_items", bounded),
     routeTasks: pgAggregateRepository<RouteTask>(sql, "RouteTask", "cp_route_tasks", bounded),
     attempts: pgAggregateRepository<Attempt>(sql, "Attempt", "cp_attempts", bounded),
@@ -980,6 +1121,7 @@ export async function createPgRepositories(
     escalations: pgAppendOnlyRepository<Escalation>(sql, "escalations", bounded),
     dispositions: pgAppendOnlyRepository<DispositionCommit>(sql, "dispositions", bounded),
     artifacts: pgAppendOnlyRepository<ArtifactRecord>(sql, "artifacts", bounded),
+    artifactsByCanonicalUrl: (url, limit) => pgArtifactsByCanonicalUrl(sql, url, limit, bounded),
     adminEvidenceCopyRequests: pgAggregateRepository<AdminEvidenceCopyRequest>(sql, "AdminEvidenceCopyRequest", "cp_admin_evidence_copy_requests", bounded),
     costs: pgAppendOnlyRepository<CostEntry>(sql, "costs", bounded),
     /* The owner control centre's data plane (ITEM H, schema v3). */
@@ -1042,6 +1184,8 @@ export async function createPgRepositories(
       `${CONTROL_PLANE_URL_VAR})`,
     durable: true,
   };
+  placeReadConnections.set(repositories, sql);
+  return repositories;
 }
 
 /**

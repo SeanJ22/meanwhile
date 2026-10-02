@@ -58,8 +58,8 @@ export function ageFrom(birthDate: string | null, now: Date): number | null {
 export function inSeatUntil(termEnd: string | null): string | null {
   if (!termEnd) return null;
   /*
-   * **BC-12 (2026-08-24) — the author's literal instance.** His words: *"in
-   * seat until January 3rd, 2029," never "01-03-2029."* This built the
+   * **BC-12 (2026-08-24) — the literal instance.** The copy reads *in seat
+   * until January 3rd, 2029*, never *01-03-2029*. This built the
    * numeric form by hand off its own regex, so it was a SECOND date-format
    * implementation that `formatDateMDY` could be fixed without touching —
    * the duplicate shape RULING 103 exists for. Both call one formatter now.

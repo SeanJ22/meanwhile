@@ -1,16 +1,15 @@
 /**
  * MTG-11 — ONE THING UP AT A TIME, AND IT REACHES BEYOND CARDS.
- * (2026-08-25, the author's `17-22-03` and `17-23-22`. Second pass on BC-16.)
+ * (2026-08-25, captures `17-22-03` and `17-23-22`. Second pass on BC-16.)
  *
  * **The reconciliation.** BC-16 (8/25 morning) made two SMALL CARDS exclude
  * each other, in `lib/state/reducer.ts`, and **it did not regress** — opening
  * either still closes the other, asserted below. The verdict is **(b): the
  * predicate is too narrow.** BC-16's exclusion covers card-versus-card and
- * nothing else, and the author's captures show the overlap one layer out: he
+ * nothing else, and the captures show the overlap one layer out: a reader
  * opens *Where can I vote?* and the eight-meeting Vail card is still sitting on
- * the right, still there in the next capture while he reads a polling address.
- * His arrow marks the meetings card and his words are *clicking anywhere else
- * means the meetings card goes back to not being viewed.*
+ * the right, still there in the next capture while they read a polling
+ * address. Clicking anywhere else should put the meetings card away.
  *
  * So three controls that take the foreground — **Where can I vote?, Ask, and
  * Change Zip** — dismiss whichever small card is open.
@@ -18,9 +17,7 @@
  * ## The MAP-3 exception, which is what makes this delicate
  *
  * Who Governs Here and an area's battlecard appearing TOGETHER on an area
- * click is deliberate. The author says so in as many words — *Sean likes this.
- * It's very clear. Keep it* — and calls out that it is not the overlap defect.
- * Regressing it is a session failure, so it is asserted here rather than
+ * click is deliberate, and it is not the overlap defect. Regressing it is a session failure, so it is asserted here rather than
  * assumed.
  *
  * It survives BY CONSTRUCTION: `takeForeground` closes the venue and district
@@ -144,7 +141,7 @@ test("MTG-11: a popup closes the card BEFORE it opens", () => {
 
 test("MAP-3: an area click still leaves Who Governs Here open", () => {
   /*
-   * The author's protected behaviour. Selecting a district is the whole of an
+   * Protected behaviour. Selecting a district is the whole of an
    * area click in this state, and it must not touch anything Who Governs Here
    * reads — the panel has its own open state and this reducer holds no field
    * for it. Asserted by NAME so that adding one and clearing it here would be
@@ -242,7 +239,7 @@ test("MAP-3: takeForeground does not run on an area click", () => {
       `takeForeground is being called from what looks like an area click: ${line.trim()}`,
     );
   }
-  /* And the three controls the author named are still here, as the popups. */
+  /* And the three foreground controls are still here, as the popups. */
   const src2 = src.replace(/\r/g, "");
   assert.ok(src2.includes(`{pop === "vote" && (`), "the voting control is still here");
   assert.ok(src2.includes(`{pop === "zip" && (`), "the change-zip control is still here");

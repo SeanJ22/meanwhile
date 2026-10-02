@@ -1,7 +1,9 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+
+import { useCardVisibility } from "@/hooks/use-card-visibility";
 
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
@@ -65,6 +67,8 @@ export function OfficialModal({
   onClose,
   embedded = false,
 }: OfficialModalProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  useCardVisibility(cardRef, `OFFICIAL:${holder.id}`, "OFFICIAL");
   useEffect(() => {
     if (embedded) return;
     const onKey = (event: KeyboardEvent) => {
@@ -117,6 +121,7 @@ export function OfficialModal({
 
   return (
     <div
+      ref={cardRef}
       className={embedded ? "account-modal-overlay mw-embedded" : "account-modal-overlay"}
       role={embedded ? undefined : "dialog"}
       aria-modal={embedded ? undefined : "true"}
@@ -132,7 +137,7 @@ export function OfficialModal({
 
           It used to repeat the name as an h2 and the seat as a subtitle,
           four pixels above an identity block that says both again at the
-          size the author's ruling asked for. Three renderings of "Mayor" and
+          size it was designed at. Three renderings of "Mayor" and
           two of the person's name on one card is friction with no exception
           claiming it — the reader is trying to find out who this is, and
           saying it twice does not help them do that faster. The identity
@@ -173,9 +178,9 @@ export function OfficialModal({
             1. What this office does — the stranger test. A reader who does
                not know what a ward council member IS cannot use a phone
                number or a donor list. It sits directly under identity for
-               that reason, ahead of the author's four.
+               that reason, ahead of the other three.
             2. How to reach them   ┐
-            3. Campaign money      ├ the author's stated order:
+            3. Campaign money      ├ the stated order:
             4. Their votes         ┘ identity → contact → funding → votes.
 
           THE SECTION SET IS IDENTICAL PER OFFICE CLASS. A thin challenger
@@ -193,7 +198,7 @@ export function OfficialModal({
         <CardSectionGroup independent={embedded}>
         <div className="account-modal-body">
           {/*
-            Item 3 (2026-08-16), the author's ruling. Circle portrait with a
+            Item 3 (2026-08-16). Circle portrait with a
             NEUTRAL ring, name as the dominant type, one chip row where party
             FILLS and state / chamber / incumbent are outlined neutrals.
             Fill-versus-outline carries the emphasis; every chip is one
@@ -271,8 +276,8 @@ export function OfficialModal({
           />
 
           {/*
-            **BC-11 (2026-08-24) — SPEAK YOUR MIND, where the author put it:
-            above Sources, below Voting record.**
+            **BC-11 (2026-08-24) — SPEAK YOUR MIND, above Sources, below
+            Voting record.**
 
             The placement is the argument. A reader arrives at this card, reads
             what the person has actually DONE — their money, then their votes —
@@ -282,7 +287,7 @@ export function OfficialModal({
 
             `subject` is the person's own name, so the framing asks what you
             would say if THEY were standing in front of you rather than "this
-            person" — his words are the instrument and a placeholder in the
+            person" — the words are the instrument and a placeholder in the
             middle of them would blunt it.
           */}
           <SpeakYourMind
@@ -317,7 +322,7 @@ export function OfficialModal({
           <CardSection title="Sources" meta={sourceCountLabel(sources)}>
             {sources.length === 0 ? (
               <p className="text-[0.75rem] leading-relaxed text-muted">
-                Nothing on this card came from an external record.
+                We’re working on getting this info.
               </p>
             ) : (
               <CardSourcesList sources={sources} />

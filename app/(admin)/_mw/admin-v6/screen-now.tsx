@@ -14,7 +14,7 @@ import { useV6 } from "./context.tsx";
 import { INSTRUCTION_EXAMPLES, parseInstruction, type Parsed } from "./instruction.ts";
 import { count, huntLeftUsd, mst, ITEM_STATUS_ORDER, pctDown, usd, type Hunt, type Lane, type ReaderResult, type StateRow, type StuckItem } from "./model.ts";
 import { TILE_LAYOUT } from "./national-layout.ts";
-import { COUNTRY_KEY, huntAt, huntsWithin, isWithin, relation } from "./places.ts";
+import { COUNTRY_KEY, huntAt, huntsWithin, isWithin, nationalDepth, relation } from "./places.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
 import { ageWords, roundReading, runningCount, systemRunningCount, usePageClock } from "./screen-workers.tsx";
 import { ActionButton, Actions, Card, cx, Empty, Loading, Pill, StageDots } from "./ui.tsx";
@@ -54,7 +54,7 @@ export function NowScreen() {
       </header>
       {/* The control Sean uses most (daily budget, paid search, start a hunt): first under the header, one click to open. */}
       <DirectWork />
-      {v.scopeKey === COUNTRY_KEY && <National />}
+      {nationalDepth(v.scopeKey) !== null && <National />}
       <Instruction />
       <NextSteps />
       {loading ? <Loading what="this place" /> : <SixAnswers />}
@@ -70,80 +70,119 @@ export function NowScreen() {
 
 /* ---------------------------------------------------------------- national */
 
-type NatSort = "stuck" | "hunts" | "items" | "name";
+type NatKey = "name" | "hunts" | "zips" | "score" | "stuck";
+interface NatSort { readonly key: NatKey; readonly down: boolean }
 
-function compareRows(sort: NatSort, a: StateRow, b: StateRow): number {
-  const by = sort === "stuck" ? (b.stuck ?? -1) - (a.stuck ?? -1) : sort === "hunts" ? (b.hunts ?? -1) - (a.hunts ?? -1) : sort === "items" ? (b.checklistItems ?? -1) - (a.checklistItems ?? -1) : 0;
-  return by || a.name.localeCompare(b.name);
+const NAT_COLUMNS: readonly { readonly key: NatKey; readonly label: string; readonly num: boolean }[] = [
+  { key: "name", label: "Place", num: false },
+  { key: "hunts", label: "Hunts", num: true },
+  { key: "zips", label: "ZIPs worked / total", num: true },
+  { key: "score", label: "Place score", num: true },
+  { key: "stuck", label: "Stuck", num: true },
+];
+/** Rows shown before "Show all": a state list opens on the tracked states and hunts, a district or ZIP list on its first rows. */
+const NAT_TOP = 12;
+
+function natNumber(r: StateRow, key: Exclude<NatKey, "name">): number | null {
+  return (key === "hunts" ? r.hunts : key === "zips" ? r.zipsWorked : key === "score" ? r.score : r.stuck) ?? null;
 }
+
+/** A row with no figure for the sorted column goes last, whichever way it sorts. */
+function compareRows(sort: NatSort, a: StateRow, b: StateRow): number {
+  const byName = a.name.localeCompare(b.name, "en", { numeric: true });
+  if (sort.key === "name") return sort.down ? -byName : byName;
+  const x = natNumber(a, sort.key), y = natNumber(b, sort.key);
+  if (x === null || y === null) return x === y ? byName : x === null ? 1 : -1;
+  return (sort.down ? y - x : x - y) || byName;
+}
+
+const dash = (n: number | null | undefined, format: (v: number) => string = count) => (n === null || n === undefined ? "—" : format(n));
 
 function National() {
   const v = useV6();
-  const [sort, setSort] = useState<NatSort>("stuck");
+  const depth = nationalDepth(v.scopeKey) ?? "states";
+  const [sort, setSort] = useState<NatSort>(depth === "states" ? { key: "stuck", down: true } : { key: "name", down: false });
   const [all, setAll] = useState(false);
-  const rows = v.data.national.data ?? [];
+  // Only the rows that belong to this scope: the pre-load state list is never shown under a state or a district.
+  const rows = (v.data.national.data ?? []).filter((r) => (r.parentKey ?? COUNTRY_KEY) === v.scopeKey);
   const byCode = new Map(rows.map((r) => [r.code, r]));
   const sorted = [...rows].sort((a, b) => compareRows(sort, a, b));
-  const shown = all ? sorted : sorted.filter((r) => r.tracked || (r.hunts ?? 0) > 0);
+  const shown = all ? sorted : depth === "states" ? sorted.filter((r) => r.tracked || (r.hunts ?? 0) > 0) : sorted.slice(0, NAT_TOP);
   const tracked = rows.filter((r) => r.tracked).length;
   const huntCount = v.data.hunts.state === "not-connected" ? null : v.hunts.filter((h) => h.status !== "stopped").length;
-  return (
-    <Card id="v6-national" title="The country" aside={<span className={s.meta}>{rows.length} states and territories{huntCount !== null ? ` · ${huntCount} hunts running` : ""} · {tracked} tracked</span>}>
-      <div className={s.nation}>
-        <div className={s.stack}>
-          <div className={s.map} role="group" aria-label="Map of states and territories. Choose one to open it.">
-            {TILE_LAYOUT.map(([code, r, c]) => {
-              const row = byCode.get(code);
-              const key = `st:${code.toLowerCase()}`;
-              const hasHunt = (row?.hunts ?? 0) > 0 || huntsWithin(v.index, v.hunts, key).length > 0;
-              const selected = isWithin(v.index, v.scopeKey, key);
-              const name = row?.name ?? code;
-              const stuck = (row?.stuck ?? 0) > 0;
-              const words = `${name}${hasHunt ? ", has a hunt" : row?.tracked ? ", tracked, no hunt" : ", no hunt yet"}${row?.stuck === null ? "" : stuck ? `, ${row?.stuck} stuck` : ""}`;
-              return (
-                <button key={code} type="button" className={cx(s.tile, hasHunt ? s.tileHunt : row?.tracked && s.tileTracked, selected && s.tileSelected)} style={{ gridRow: r + 1, gridColumn: c + 1 }}
-                  aria-label={words} title={words} onClick={() => v.setScope(key)}>
-                  {code}{stuck && <span className={s.stuckDot} aria-hidden="true" />}
-                </button>
-              );
-            })}
-          </div>
-          <div className={s.legend}>
-            <span className={s.legendItem}><span className={cx(s.swatch)} style={{ background: "var(--pill-cyan-bg)", boxShadow: "inset 0 0 0 1px var(--pill-cyan-text)" }} />Has a hunt</span>
-            <span className={s.legendItem}><span className={s.swatch} style={{ background: "var(--surface)", boxShadow: "inset 0 0 0 1px var(--lumen-rim-strong)" }} />Tracked, no hunt</span>
-            <span className={s.legendItem}><span className={s.swatch} style={{ border: "1px dashed var(--panel-border)" }} />No hunt</span>
-            <span className={s.legendItem}><span className={s.swatch} style={{ background: "var(--pill-amber-text)", borderRadius: "50%", width: 8, height: 8 }} />Has stuck items</span>
-          </div>
-        </div>
-        <div className={s.stack}>
-          <div className={s.inline}>
-            <span className={s.meta}>Sort by</span>
-            {(["stuck", "hunts", "items", "name"] as const).map((k) => (
-              <button key={k} type="button" className={s.tab} aria-pressed={sort === k} onClick={() => setSort(k)}>{({ stuck: "Most stuck", hunts: "Hunts", items: "Checklist items", name: "Name" })[k]}</button>
+  const noun = depth === "states" ? "states and territories" : depth === "districts" ? "districts" : "ZIPs";
+  const collapsible = depth === "states" || rows.length > NAT_TOP;
+  const table = (
+    <div className={s.stack}>
+      <div className={s.tableWrap} style={{ maxHeight: 360, overflowY: "auto" }}>
+        <table className={s.table}>
+          <caption className={s.srOnly}>{depth === "states" ? "States and territories" : depth === "districts" ? `Congressional districts of ${v.place.name}` : `ZIPs in ${v.place.name}`}</caption>
+          <thead>
+            <tr>
+              {NAT_COLUMNS.map((c) => (
+                <th key={c.key} scope="col" className={c.num ? s.num : undefined} aria-sort={sort.key === c.key ? (sort.down ? "descending" : "ascending") : "none"}>
+                  <button type="button" className={s.btnLink} onClick={() => setSort((p) => ({ key: c.key, down: p.key === c.key ? !p.down : c.num }))}>
+                    {c.label}{sort.key === c.key ? (sort.down ? " ↓" : " ↑") : ""}
+                  </button>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {shown.map((r) => (
+              <tr key={r.placeKey}>
+                <td><button type="button" className={s.btnLink} onClick={() => v.setScope(r.placeKey)}>{r.name}</button></td>
+                <td className={s.num}>{dash(r.hunts)}</td>
+                <td className={s.num}>{r.zipsWorked == null && r.zipsTotal == null ? "—" : `${dash(r.zipsWorked)} / ${dash(r.zipsTotal)}`}</td>
+                <td className={cx(s.num, r.score == null && s.dim)}>{dash(r.score, (n) => `${n.toFixed(1)}%`)}</td>
+                <td className={cx(s.num, (r.stuck ?? 0) > 0 && s.textWarn)}>{dash(r.stuck)}</td>
+              </tr>
             ))}
-          </div>
-          <div className={s.tableWrap} style={{ maxHeight: 360, overflowY: "auto" }}>
-            <table className={s.table}>
-              <caption className={s.srOnly}>States and territories, sorted by {sort}</caption>
-              <thead><tr><th scope="col">Place</th><th scope="col" className={s.num}>Hunts</th><th scope="col" className={s.num}>Stuck</th><th scope="col">Checklist items</th></tr></thead>
-              <tbody>
-                {shown.map((r) => (
-                  <tr key={r.code}>
-                    <td><button type="button" className={s.btnLink} onClick={() => v.setScope(r.placeKey)}>{r.name}</button></td>
-                    <td className={s.num}>{r.hunts ?? "—"}</td>
-                    <td className={cx(s.num, (r.stuck ?? 0) > 0 && s.textWarn)}>{r.stuck ?? "—"}</td>
-                    <td className={r.checklistItems === null ? s.dim : undefined}>{r.checklistItems === null ? "—" : `${count(r.checklistItems)} checklist items`}</td>
-                  </tr>
-                ))}
-                {!shown.length && <tr><td colSpan={4} className={s.dim}>No tracked states or hunts</td></tr>}
-              </tbody>
-            </table>
-          </div>
-          <div className={s.inline}>
-            <button type="button" className={s.btn} aria-pressed={all} onClick={() => setAll(!all)}>{all ? "Show only tracked states and hunts" : `Show all ${rows.length}`}</button>
-          </div>
-        </div>
+            {!shown.length && <tr><td colSpan={NAT_COLUMNS.length} className={s.dim}>—</td></tr>}
+          </tbody>
+        </table>
       </div>
+      {collapsible && rows.length > 0 && (
+        <div className={s.inline}>
+          <button type="button" className={s.btn} aria-pressed={all} onClick={() => setAll(!all)}>
+            {all ? (depth === "states" ? "Show only tracked states and hunts" : `Show the top ${NAT_TOP}`) : `Show all ${rows.length}`}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+  return (
+    <Card id="v6-national" title="The country" aside={<span className={s.meta}>{rows.length} {noun}{depth === "states" && huntCount !== null ? ` · ${huntCount} hunts running` : ""}{depth === "states" ? ` · ${tracked} tracked` : ""}</span>}>
+      {rows.length === 0 && v.data.national.load === "loading" ? <Loading what={noun} /> : depth !== "states" ? table : (
+        <div className={s.nation}>
+          <div className={s.stack}>
+            <div className={s.map} role="group" aria-label="Map of states and territories. Choose one to open it.">
+              {TILE_LAYOUT.map(([code, r, c]) => {
+                const row = byCode.get(code);
+                const key = `st:${code.toLowerCase()}`;
+                const hasHunt = (row?.hunts ?? 0) > 0 || huntsWithin(v.index, v.hunts, key).length > 0;
+                const selected = isWithin(v.index, v.scopeKey, key);
+                const name = row?.name ?? code;
+                const stuck = (row?.stuck ?? 0) > 0;
+                const words = `${name}${hasHunt ? ", has a hunt" : row?.tracked ? ", tracked, no hunt" : ", no hunt yet"}${row?.stuck == null ? "" : stuck ? `, ${row?.stuck} stuck` : ""}`;
+                return (
+                  <button key={code} type="button" className={cx(s.tile, hasHunt ? s.tileHunt : row?.tracked && s.tileTracked, selected && s.tileSelected)} style={{ gridRow: r + 1, gridColumn: c + 1 }}
+                    aria-label={words} title={words} onClick={() => v.setScope(key)}>
+                    {code}{stuck && <span className={s.stuckDot} aria-hidden="true" />}
+                  </button>
+                );
+              })}
+            </div>
+            <div className={s.legend}>
+              <span className={s.legendItem}><span className={cx(s.swatch)} style={{ background: "var(--pill-cyan-bg)", boxShadow: "inset 0 0 0 1px var(--pill-cyan-text)" }} />Has a hunt</span>
+              <span className={s.legendItem}><span className={s.swatch} style={{ background: "var(--surface)", boxShadow: "inset 0 0 0 1px var(--lumen-rim-strong)" }} />Tracked, no hunt</span>
+              <span className={s.legendItem}><span className={s.swatch} style={{ border: "1px dashed var(--panel-border)" }} />No hunt</span>
+              <span className={s.legendItem}><span className={s.swatch} style={{ background: "var(--pill-amber-text)", borderRadius: "50%", width: 8, height: 8 }} />Has stuck items</span>
+            </div>
+          </div>
+          {table}
+        </div>
+      )}
     </Card>
   );
 }
@@ -270,7 +309,7 @@ function SixAnswers() {
   /** Research workers on a hunt, or null when its run state isn't reported. */
   const workers = (h: Hunt) => (h.status === "running" ? h.researchWorkers : h.status === "unreported" ? null : 0);
   const insideWorkers = inside.map(workers);
-  const resultsKnown = v.data.results.state !== "not-connected";
+  const resultsKnown = v.data.results.state !== "not-connected" && v.data.results.data !== null;
   const stuckKnown = v.data.stuck.state !== "not-connected";
   const huntsKnown = v.data.hunts.state !== "not-connected";
   const answers: { q: string; big: string; small: string; href: string; warn?: boolean }[] = [
@@ -302,7 +341,7 @@ export function ResultRow(props: { readonly r: ReaderResult; readonly shared?: b
   const tone = r.kind === "New" ? "good" : r.kind === "Updated" ? "info" : r.kind === "Retained" ? "gold" : "neutral";
   return (
     <button type="button" className={cx(s.row, s.rowButton, props.shared && s.rowShared)} onClick={() => v.open({ type: "result", id: r.id })}>
-      <span className={s.spread}><strong style={{ fontSize: 13 }}>{r.title}</strong><Pill tone={tone}>{r.kind}</Pill></span>
+      <span className={s.spread}><strong style={{ fontSize: 13 }}>{r.title}</strong>{r.kind !== null && <Pill tone={tone}>{r.kind}</Pill>}</span>
       <span className={s.inline}><StageDots stages={r.stages} /><span className={s.meta}>{v.index.get(r.applies[0])?.name}{props.shared ? " · shared work" : ""}</span></span>
       <span className={cx(s.small, r.problem ? s.textWarn : s.dim)}>{r.readerSees}</span>
     </button>
@@ -316,7 +355,7 @@ function Readers() {
   const shared = results.filter((x) => x.rel === "shared");
   return (
     <Card id="v6-readers" title="What readers can see" aside={<span className={s.meta}>Found · Saved · Facts pulled out · Facts checked against sources · Published · Checked on the public page</span>}>
-      {v.data.results.state === "not-connected" || (v.data.results.load === "failed" && !v.data.results.data) ? <Empty>—</Empty> : !local.length && <Empty>No results for {v.place.name}.</Empty>}
+      {v.data.results.state === "not-connected" || v.data.results.data === null ? <Empty>—</Empty> : !local.length && <Empty>No results for {v.place.name}.</Empty>}
       <div className={s.stack}>{local.map((x) => <ResultRow key={x.r.id} r={x.r} />)}</div>
       {!!shared.length && (
         <div className={s.stack}>

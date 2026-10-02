@@ -3,6 +3,8 @@
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { captureEvent } from "@/lib/events/client";
+
 import { COLLECTION_NOTE } from "@/lib/ballot/collection-note";
 import {
   BATTLECARD_SECTIONS,
@@ -35,10 +37,9 @@ import {
  *
  * ## The complaint
  *
- * The author, on device: *"the ballot is a forever scroll because every long
- * section — 'in their own words', campaign funding, and the rest — renders
- * inline on the ballot itself. The large battlecard already has slots for
- * these sections and they are not being used."*
+ * On device, the ballot was a forever scroll: every long section — "in their
+ * own words", campaign funding, and the rest — rendered inline on the ballot
+ * itself, while the large battlecard already had unused slots for them.
  *
  * Measured before touching anything, at 430×932: **07866 was 20,510 px — 22
  * phone screens — and 85701 was 41,558 px, 44.6 screens.** A ballot is a
@@ -102,7 +103,7 @@ export function CandidateBattlecard({
    * page so a challenger's own words and funding are never deleted to tidy an
    * incumbent's card.
    *
-   * This is narrower and is the thing the owner asked for: the CONTACT ROUTES,
+   * This is narrower: the CONTACT ROUTES,
    * from the same `SeatHolder` the map battlecard renders, so one record
    * answers on both surfaces. Null for a candidate with no officeholder
    * record, and the row then renders nothing rather than an empty state.
@@ -119,8 +120,8 @@ export function CandidateBattlecard({
   /**
    * **BAL-18 (2026-08-25) — the party is a COLOURED PILL, matching the map.**
    *
-   * Sean: *"party affiliation renders as gray text. Make it a colored pill —
-   * the party's color — matching the map card."* The map card has always done
+   * Party affiliation rendered as gray text; it is now a pill in the party's
+   * colour, matching the map card. The map card has always done
    * this, through `IdentityChip fill={partyColorVar(...)}`; the ballot card
    * rendered `text-muted` prose. Same person, same card, two renderings.
    *
@@ -141,7 +142,7 @@ export function CandidateBattlecard({
   /**
    * **BAL-20 (2026-08-25) — incumbency, stated, and stated HERE.**
    *
-   * Sean: *"the ballot card is exactly where incumbency belongs."* It renders
+   * The ballot card is exactly where incumbency belongs. It renders
    * as an outlined chip beside the party pill — the same `chips` slot the map
    * card uses for it — so the two surfaces say it the same way.
    *
@@ -255,17 +256,19 @@ export function CandidateBattlecard({
       <button
         type="button"
         data-battlecard-pill
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          captureEvent({ type: "CARD_OPEN", cardId: `BATTLECARD:${subjectId}`, cardKind: "BATTLECARD" });
+          setOpen(true);
+        }}
         aria-haspopup="dialog"
         aria-expanded={open}
         /*
           **BAL-13 (2026-08-25) — THE NAVY TREATMENT.**
 
-          The author red-boxed this control on `09-10-09`: a plain outline
+          Screenshot `09-10-09` shows this control as a plain outline
           button in link blue, sitting directly above the filled
-          "Would you vote for them?" panel that gives it its width. His note is
-          the argument — *it is the thing the product most wants opened and
-          nothing says so.*
+          "Would you vote for them?" panel that gives it its width. It is the
+          thing the product most wants opened, and nothing said so.
 
           Deep navy, white, bolded. The same `--speak-navy` the Speak Your Mind
           pill uses, and for the same reason it uses it: a FILLED control among
@@ -279,12 +282,12 @@ export function CandidateBattlecard({
         */
 
         /*
-          **BAL-14 (2026-08-25) — SEAN SETTLED THIS, AND IT SUPERSEDES BAL-13.**
+          **BAL-14 (2026-08-25) — THIS SUPERSEDES BAL-13.**
 
           BAL-13, on 2026-08-25 that morning, made this control navy for a good
           reason: a FILLED control among outline controls reads as the action.
-          The mechanism stays and only the hue moves. His words, and the reason
-          is his: GREEN, because it is the only option that does not compete
+          The mechanism stays and only the hue moves, to GREEN, because it is
+          the only option that does not compete
           with the red and blue of party affiliation — which now sit on this
           very card as a coloured pill under BAL-18, directly above this button.
 
@@ -293,7 +296,7 @@ export function CandidateBattlecard({
           control with the same defect on the same day would be the fix and the
           bug in one commit.
 
-          `w-full` is untouched, which is the other half of what he asked for:
+          `w-full` is untouched, which is the other half of the change:
           the width matches the "Would you vote for them?" panel below because
           they are siblings in one column, so it is shared by construction
           rather than by a number typed twice.
@@ -317,10 +320,10 @@ export function CandidateBattlecard({
             <header className="account-modal-header">
               {/*
                 **BAL-17, BAL-18 and BAL-20 — the ballot card's header is the
-                MAP card's header.** (2026-08-25, Sean's walkthrough.)
+                MAP card's header.** (2026-08-25 walkthrough.)
 
-                His frame for all three: *same person, same card, same
-                rendering; the map version is the reference.* So the pieces are
+                The frame for all three: same person, same card, same
+                rendering; the map version is the reference. So the pieces are
                 the map's own components rather than a second implementation
                 that looks like them — `IdentityPortrait` for the circle and
                 `IdentityChip` for the pills. RULING 103 is why: three separate
@@ -390,12 +393,11 @@ export function CandidateBattlecard({
                 **BAL-33 / BAL-35 (2026-08-30) — THE WAYS TO REACH THIS PERSON,
                 FROM THE SAME RECORD THE MAP READS.**
 
-                The owner opened Katie Hobbs on the ballot and on the map,
-                side by side. The map card carried a phone number, Email,
-                Contact form and Official page. The ballot card carried no
-                contact route at all and, expanded, said we hold no office
-                location for her. His words: *it says we have no way to
-                contact her, but obviously we do.*
+                Katie Hobbs, opened on the ballot and on the map side by
+                side: the map card carried a phone number, Email, Contact form
+                and Official page. The ballot card carried no contact route at
+                all and, expanded, said we hold no office location for her —
+                claiming no way to contact her when we plainly had several.
 
                 This is `ContactPills` — the identical component the map
                 battlecard renders, taking the identical `SeatHolder`. Not a
@@ -423,12 +425,12 @@ export function CandidateBattlecard({
               )}
               {/*
                 **BC-1 — THE SAME SEVEN DROP-DOWNS, ON EVERY CARD, ALWAYS.**
-                (2026-08-22, the author's 8/22 walkthrough, item 14.)
+                (2026-08-22, the 8/22 walkthrough, item 14.)
 
                 What was here before: whatever the ballot page happened to pass
                 as `children`. For Cory Booker that was a funding block and a
                 link, so clicking "Battlecard" opened what read as a campaign
-                finance page — the author's BC-3 — and the actual record was one
+                finance page — BC-3 — and the actual record was one
                 more click away behind "See their voting record". For Veronica
                 Fernandez, an independent with no voting history and no federal
                 filing, it was very nearly nothing at all.
@@ -503,8 +505,7 @@ export function CandidateBattlecard({
               */}
               {/*
                 **BAL-19 (2026-08-25) — Speak Your Mind is on the ballot card
-                too.** Sean: *"the Speak Your Mind pill is absent from the
-                ballot section. Add it."*
+                too.** It was absent from the ballot section.
 
                 It sits BELOW the seven sections and ABOVE the collection note,
                 which is the same place it occupies on the map's person card:

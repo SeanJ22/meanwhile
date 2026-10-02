@@ -188,7 +188,6 @@
     "perf": "tsx scripts/perf.mts",
     "photo:reconcile": "tsx scripts/photo-reconcile.mts",
     "photo:review": "tsx scripts/photo-review.mts",
-    "photo:sheet": "tsx scripts/photo-review-sheet.mts",
     "photos:verify": "tsx scripts/verify-staged-portraits.mts",
     "pills": "tsx scripts/pill-census.mts",
     "pilot:disable": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action disable",

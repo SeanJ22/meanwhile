@@ -439,6 +439,8 @@ export interface AppendOnlyRepository<T> {
   ): Promise<readonly unknown[]>;
   /** Every record, in key order then append order. */
   readAll(): Promise<readonly T[]>;
+  /** Records appended at or after `since`, in key then append order; filtered before transfer. */
+  readSince(since: string): Promise<readonly T[]>;
   /** The newest `limit` records under one key, newest first. `limit` bounds the response. */
   readRecent(key: string, limit: number): Promise<readonly T[]>;
   /**

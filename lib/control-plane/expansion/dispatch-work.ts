@@ -31,10 +31,11 @@ import { readHeldPlaceCapture } from "../../civic-data/held-place-capture.ts";
 import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
 import { expansionScopesOf, VERSION_PREFIX } from "./scopes.ts";
 import { resolveScopes } from "./runner-load.ts";
-import { loadPublishedLookupState } from "../../census-geography/reader.ts";
+import { loadPublishedAreaLookupState } from "../../census-geography/area-lookup.ts";
 import { declaredWorkMembers } from "./declared-work-scope.ts";
 import { censusWorkDivision } from "../../census-geography/division-id.ts";
 import { parseV6PlaceKey } from "../admin-view/v6-hunts-read.ts";
+import { readPlaceStandingWork } from "../repository/pg-store.ts";
 
 export interface PlaceWorkReading {
   readonly key: string;
@@ -89,14 +90,25 @@ export async function nationalPlaceWorkReading(repos: ControlPlaneRepositories, 
   const decisions = expansionScopesOf(row?.value ?? null);
   if (decisions.malformed) throw new Error("The owner's place scopes contain unreadable decisions");
   if (!decisions.scopes.length) return { ordered: [...zips], belowTarget: new Set<string>() };
-  const lookup = await loadPublishedLookupState();
+  const lookup = await loadPublishedAreaLookupState(zips);
   const resolved = await resolveScopes(decisions.scopes, lookup, null);
-  const work = (await repos.obligations.listWhere(["active"], "true")).map(row => row.value);
-  const members = await declaredWorkMembers(resolved.scopes, work, lookup.lookup);
+  const scopes = resolved.scopes.filter(scope => scope.kind === "RESOLVED" && zips.some(zip => scope.zctas.has(zip)) ||
+    scope.kind === "UNRESOLVED" && scope.decision.geography.type === "zcta" && zips.includes(scope.decision.geography.geoid));
+  const wanted = new Set<string>(["ocd-division/country:us"]);
+  for (const zip of zips) {
+    const grouping = await lookup.lookup.groupingsForZcta(zip);
+    for (const membership of grouping.memberships) {
+      const id = censusWorkDivision(membership.geography);
+      if (id) wanted.add(id);
+      wanted.add(`ocd-division/country:us/state:${membership.geography.stateAbbr.toLowerCase()}`);
+    }
+  }
+  const work = await readPlaceStandingWork(repos, [...wanted]);
+  const members = await declaredWorkMembers(scopes, work, lookup.lookup);
   const bySubject = new Map(work.map(item => [item.subjectId, item]));
   const divisionsByReceipt = new Map<string, Set<string>>();
   const inScope = new Map<string, ReadonlySet<string>>();
-  for (const scope of resolved.scopes) {
+  for (const scope of scopes) {
     const receiptId = scope.decision.receiptId;
     const selected = scope.kind === "RESOLVED" ? scope.zctas :
       scope.decision.geography.type === "zcta" ? new Set([scope.decision.geography.geoid]) : new Set<string>();
@@ -120,7 +132,7 @@ export async function nationalPlaceWorkReading(repos: ControlPlaneRepositories, 
   }
   const divisionIds = [...new Set([...divisionsByReceipt.values()].flatMap(ids => [...ids]))];
   const capture = divisionIds.length ? await readHeldPlaceCapture(divisionIds, { now, bypassCache: true }) : { subjects: [], held: [] };
-  const readings = placeWorkReadings(row?.value, resolved.scopes.map(scope => ({
+  const readings = placeWorkReadings(row?.value, scopes.map(scope => ({
     key: `${scope.decision.geography.stateAbbr.toLowerCase()}.${VERSION_PREFIX[scope.decision.geography.type]}.${scope.decision.geography.geoid.toLowerCase()}`,
     receiptId: scope.decision.receiptId,
     items: buildPlaceOwedList({ divisions: [...divisionsByReceipt.get(scope.decision.receiptId)!].map(id => ({ id, label: id })),

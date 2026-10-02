@@ -301,7 +301,7 @@ export interface EndpointVerification {
  * until this is bumped, and anything keyed on it (a saved method, a wiring row)
  * re-keys cleanly.
  */
-export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@c6b1d5534dcb";
+export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@25320f9c46dc";
 
 /**
  * The zone a state's bodies meet in, for the states that sit in one zone. A

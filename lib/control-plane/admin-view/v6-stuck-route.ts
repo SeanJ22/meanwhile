@@ -10,8 +10,8 @@ const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
 const MEMO_MS = 60_000;
 let memo: { at: number; population: StuckPopulation } | null = null;
 
-/** One unpack of the published index serves both sections for a minute. */
-async function population(): Promise<StuckPopulation | null> {
+/** One unpack of the published index serves both sections, and the national read, for a minute. */
+export async function population(): Promise<StuckPopulation | null> {
   if (memo && Date.now() - memo.at < MEMO_MS) return memo.population;
   const url = controlPlaneUrlFromEnv();
   if (!url) return null;

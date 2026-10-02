@@ -74,8 +74,10 @@ test("queued calls retain enclosing deadlines and release admission after transp
     const occupying = Array.from({ length: CONTROL_PLANE_QUERY_CONCURRENCY }, (_, index) =>
       repos.occurrences.read(String(index)).catch(error => error));
     await new Promise(resolve => setImmediate(resolve));
-    const queued = withStoreBudget("dispatch-finalization", 5, () => repos.adminConfig.read("live")).catch(error => error);
+    let expired = false;
+    const queued = withStoreBudget("dispatch-finalization", 5, () => repos.adminConfig.read("live")).catch(error => { expired = true; return error; });
     await new Promise(resolve => setTimeout(resolve, 15));
+    assert.equal(expired, true, "a queued deadline settles while every transport slot is still occupied");
     releases.forEach(release => release());
     await Promise.all(occupying);
     const error = await queued;

@@ -110,6 +110,7 @@ import {
 import {
   CONTROL_PLANE_REQUEST_BOUNDS_MS,
   boundedQuery,
+  currentStoreBudget,
   type BoundableQueryOptions,
   type ControlPlaneCallClass,
   type ControlPlaneRequestBounds,
@@ -217,9 +218,22 @@ const queryWaiters: Array<() => void> = [];
 
 function boundedRunner(sql: Sql, prefix: string, bounds: ControlPlaneRequestBounds) {
   return async (operation: string, callClass: ControlPlaneCallClass, text: string, params?: readonly unknown[]) => {
-    await new Promise<void>(resolve => {
+    await new Promise<void>((resolve, reject) => {
       if (activeQueries < CONTROL_PLANE_QUERY_CONCURRENCY) { activeQueries++; resolve(); }
-      else queryWaiters.push(resolve);
+      else {
+        let timer: ReturnType<typeof setTimeout> | undefined;
+        const admit = () => { if (timer) clearTimeout(timer); resolve(); };
+        queryWaiters.push(admit);
+        const budget = currentStoreBudget();
+        if (budget) timer = setTimeout(() => {
+          const index = queryWaiters.indexOf(admit);
+          if (index < 0) return;
+          queryWaiters.splice(index, 1);
+          // Use the existing named DEADLINE path without sending a query.
+          void boundedQuery(sql, { operation: `${prefix}.${operation}`, callClass }, text, params,
+            { bounds, now: () => budget.deadlineMs }).catch(reject);
+        }, Math.max(0, budget.deadlineMs - Date.now()));
+      }
     });
     try {
       return await boundedQuery(sql, { operation: `${prefix}.${operation}`, callClass }, text, params, { bounds });

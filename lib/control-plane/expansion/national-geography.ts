@@ -47,8 +47,14 @@ export async function heldDivisionsForZip(zip: string, published?: PublishedLook
     const expected = type === "cd" ? `cd:${Math.floor((year - 1789) / 2) + 1}` :
       type === "sldu" || type === "sldl" ? `${type}:${Math.floor((year - 1) / 2) * 2}` : null;
     if (expected && membership.geography.version !== expected) continue;
+    const base = stateBase(membership.geography.stateFips);
+    // The held Census builder prepends the postal abbreviation for display.
+    // It is not part of the source county name or the division's identity.
+    const countyLabel = membership.geography.label.split(",")[0];
+    const countyName = base && countyLabel.startsWith(`${base.postal} `)
+      ? countyLabel.slice(base.postal.length + 1) : countyLabel;
     const id = censusWorkDivision(membership.geography) ?? (type === "county"
-      ? countyIdentity(membership.geography.stateFips, membership.geography.label.split(",")[0].replace(/\s+(County|Parish|Borough|Census Area)$/i, ""))?.ocdId : null);
+      ? countyIdentity(membership.geography.stateFips, countyName.replace(/\s+(County|Parish|Borough|Census Area)$/i, ""))?.ocdId : null);
     if (!type || !id) continue;
     const version = versions.find(v => v.key === membership.geography.version);
     // Local memberships locate work; current source rows still supply their
@@ -56,7 +62,6 @@ export async function heldDivisionsForZip(zip: string, published?: PublishedLook
     out.push({ id, label: membership.geography.label, divisionType: type, geoid: membership.geography.geoid,
       ...(["place", "cousub"].includes(type) ? {} : { completeForZip: zip }),
       sourceUrl: version?.provenance.sourceUrls[0] ?? "https://www2.census.gov/geo/docs/maps-data/data/rel2020/" });
-    const base = stateBase(membership.geography.stateFips);
     if (base) out.push({ id: base.base, label: US_STATES.find(s => s.code === base.postal.toLowerCase())?.name ?? base.postal, divisionType: "state", geoid: membership.geography.stateFips, completeForZip: zip,
       sourceUrl: out.at(-1)!.sourceUrl });
   }

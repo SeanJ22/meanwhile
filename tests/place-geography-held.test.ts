@@ -1,7 +1,33 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { divisionsForZip, type PlaceDivision } from "../lib/control-plane/expansion/national-geography.ts";
+import { divisionsForZip, heldDivisionsForZip, type PlaceDivision } from "../lib/control-plane/expansion/national-geography.ts";
 import { loadPublishedAreaLookupState } from "../lib/census-geography/area-lookup.ts";
+import type { PublishedLookupState } from "../lib/census-geography/reader.ts";
+
+test("held county display prefixes do not become division identities or lose split memberships", async () => {
+  const counties = [
+    { stateFips: "29", label: "MO Boone County", geoid: "29019", expected: "state:mo/county:boone" },
+    { stateFips: "22", label: "LA St. James Parish", geoid: "22093", expected: "state:la/county:st_james" },
+    { stateFips: "02", label: "AK North Slope Borough", geoid: "02185", expected: "state:ak/county:north_slope" },
+    { stateFips: "29", label: "Boone County, Missouri", geoid: "29019", expected: "state:mo/county:boone" },
+    { stateFips: "29", label: "MO Display County", geoid: "29001", ocdId: "ocd-division/country:us/state:mo/county:source_id", expected: "state:mo/county:source_id" },
+  ];
+  const published = { source: "published", lookup: {
+    groupingsForZcta: async () => ({ status: { kind: "OK" }, memberships: counties.map(county => ({
+      geography: { type: "county", version: "county:2020", ocdId: null, ...county },
+    })) }), listVersions: async () => [],
+  } } as unknown as PublishedLookupState;
+  const result = await heldDivisionsForZip("12345", published);
+  const held = result.filter(row => row.divisionType === "county");
+  assert.equal(held.length, 4, "display variants share identity while distinct counties remain");
+  for (const county of counties) {
+    const row = held.find(row => row.id === `ocd-division/country:us/${county.expected}`);
+    assert.ok(row);
+    assert.equal(row.geoid, county.geoid);
+    assert.equal(row.completeForZip, "12345");
+  }
+  assert.equal(held.find(row => row.geoid === "22093")?.label, "LA St. James Parish", "display label is unchanged");
+});
 
 test("a place reuses all held serving districts and county before acquiring missing local layers", async () => {
   const held: PlaceDivision[] = [

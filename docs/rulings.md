@@ -107,6 +107,8 @@ Keep a brief execution plan with each remaining task, one accountable owner, and
 
 Run independent work in parallel without conflicting edits or interfering tests. Prepare downstream work as soon as its inputs exist. Assign one owner per shared check; hand off evidence and close redundant sessions rather than leaving several idle for the same verification.
 
+**A worker carries only what its job needs.** A job for one place loads that place's data, never the whole country; national reference data is loaded once and handed out in pieces; shared tools (browser, field manual) are shared, not copied per worker. Any change to the fleet reports how many workers the production server runs at once at the 0.75 GiB memory margin. (Sean, October 1, 2026.)
+
 Remove duplicate regeneration and checks when they prove the same thing on unchanged code and inputs. Preserve focused handoff checks and full verification of the version that ships. Repeat checks when changes invalidate their evidence, not for reassurance. Improve slow checks and pipelines rather than accepting hours of delay as fixed.
 
 Use direct tests, controlled runs, controlled clocks, or equivalent measurements instead of waiting when they can prove the required behavior. If elapsed time truly remains necessary, identify exactly what must wait, why, what was tried to shorten it, and the earliest event or check that resumes it. Continue independent work and resume promptly. Do not stop just to report progress while useful work remains.

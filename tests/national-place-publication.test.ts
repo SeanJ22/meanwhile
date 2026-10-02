@@ -9,6 +9,7 @@ import { readRegistryRuntimePrior, registryRuntimeCandidate } from "../lib/regis
 import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { nationalDelivery, publishNationalPlaceSources, type NationalDivisionInput } from "../lib/civic-data/worker-national-publication.ts";
+import { printWorkerPublicationReceipt } from "../lib/civic-data/worker-publication-tasks.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 
 const NOW = "2026-09-29T20:00:00.000Z";
@@ -146,7 +147,7 @@ test("missing current geography leaves a body owed without blocking an independe
   assert.ok(result.gaps.some(g => g.key === `division:${OH}/sldl:7` && g.detail.startsWith("DIVISION_SOURCE_NOT_SAVED:")));
 });
 
-test("a statewide office's holder: the same one is confirmed without losing their live facts; a new one owes the candidacy check again", async () => {
+test("a statewide office's holder: the same one is confirmed without losing their live facts; a new one owes the candidacy check again", async t => {
   const s = await store();
   const AZ = "ocd-division/country:us/state:az";
   const agUrl = "https://www.azag.gov/office/about-ag";
@@ -158,6 +159,14 @@ test("a statewide office's holder: the same one is confirmed without losing thei
   const same = await publishNationalPlaceSources({ store: s, now: NOW, divisions: azDivision, geographyCaptures: [], sources: { officials: [official("Kris Mayes")] } });
   assert.deepEqual([same.candidateId, same.gaps, same.members.map(m => m.discoveryIds)], [null, [], [["ag-Kris Mayes"]]], "confirmed, not replaced");
   assert.deepEqual((await readRegistryRuntimePrior(s, NOW))!.payload.statewideExecutives.find(row => row.holder.id === live.holder.id), live);
+  const delivery = nationalDelivery([same]);
+  assert.deepEqual([delivery.records, delivery.versionId, delivery.candidateId], [0, before.versionId, before.versionId]);
+  const lines: string[] = [];
+  t.mock.method(console, "log", (line: string) => { lines.push(line); });
+  assert.equal(await printWorkerPublicationReceipt(s, "registry-runtime-bindings", [], delivery, NOW), true,
+    "an unchanged official-only pass emits its existing durable version instead of missing its receipt");
+  const receipt = JSON.parse(lines[0].slice("RCD_RECEIPT=".length));
+  assert.deepEqual([receipt.candidateId, receipt.delivered.records, receipt.delivered.gaps], [before.versionId, 0, 0]);
 
   const changed = await publishNationalPlaceSources({ store: s, now: NOW, divisions: azDivision, geographyCaptures: [], sources: { officials: [official("Jordan Reyes")] } });
   assert.deepEqual(changed.gaps, [], "a new holder of the office is not refused as a holder/candidacy mismatch");
@@ -165,6 +174,13 @@ test("a statewide office's holder: the same one is confirmed without losing thei
   assert.equal(after.payload.statewideExecutives.find(row => row.holder.id === live.holder.id)?.holder.name, "Jordan Reyes");
   const bridge = after.payload.officialCandidacies.rows.find(row => row.holder.id === live.holder.id)!;
   assert.deepEqual([bridge.holder.name, bridge.status, bridge.candidacy], ["Jordan Reyes", "NOT_CHECKED", null], "the last holder's candidacy is never carried to the new one");
+  assert.equal(nationalDelivery([same, changed]).records, 1, "reused holders do not inflate delivery in a mixed pass");
+});
+
+test("national delivery names the final roster candidate after earlier geography publications", () => {
+  const delivered = nationalDelivery([{ candidateId: "cv-geography", promotedVersionId: "cv-roster",
+    divisions: [], bodies: [], members: [{ bodyId: `${OH}/sldl:7#seat`, versionId: "cv-roster", discoveryIds: ["russo"] }], gaps: [] }]);
+  assert.deepEqual([delivered.candidateId, delivered.versionId, delivered.records], ["cv-roster", "cv-roster", 1]);
 });
 
 test('state portrait publishes through the existing blob path and registry binding after two saved sources confirm its identity and permitted use', async () => {

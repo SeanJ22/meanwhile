@@ -12,7 +12,7 @@ import type { Division, Registry } from "../lib/registry/types.ts";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { planPlaceHunt, placeFieldWork } from "../lib/hunt/place-plan.ts";
-import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
+import { buildPlaceOwedList, missingPlaceWork, type PlaceSubject } from "../lib/coverage/place-owed.ts";
 import { runPlaceSource } from "../lib/hunt/place-source.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { loadStateDistrictBoundaries } from "../lib/control-plane/expansion/national-geography.ts";
@@ -47,6 +47,37 @@ test("Census statistical and duplicate subdivisions stay geography without inven
   assert.ok(items.some(item => item.subject.id === "active-town#inventory:body"));
   assert.ok(items.some(item => item.subject.id === "duplicate-town"));
   assert.ok(!items.some(item => /^(?:duplicate-town|statistical-area)#inventory:/.test(item.subject.id)));
+});
+
+test("known record classes owe their own facts while place inventories and unknown classes stay open", () => {
+  const division = { id: "ocd-division/country:us/state:mo", label: "Missouri" };
+  const now = "2026-10-02T00:00:00Z";
+  const records: PlaceSubject[] = [
+    { id: "state-seat", kind: "seat", captureKind: "state-legislator", label: "Any member", divisionIds: [division.id] },
+    { id: "federal-seat", kind: "seat", captureKind: "federal-legislator", label: "Any member", divisionIds: [division.id] },
+    { id: "executive", kind: "seat", captureKind: "executive", label: "Any executive", divisionIds: [division.id] },
+    { id: "committee", kind: "funding", captureKind: "campaign-finance", label: "Any committee", divisionIds: [division.id] },
+    { id: "budget", kind: "funding", captureKind: "public-finance", label: "Any budget", divisionIds: [division.id] },
+    { id: "date", kind: "deadline", captureKind: "voting-deadline", label: "Any date", divisionIds: [division.id] },
+    { id: "unknown", kind: "seat", label: "Unknown role", divisionIds: [division.id] },
+  ];
+  const items = buildPlaceOwedList({ divisions: [division], subjects: records, held: [], now });
+  const ids = (subject: string) => items.filter(i => i.subject.id === subject).map(i => i.checklistId);
+  assert.ok(ids("state-seat").includes("LEG-22"));
+  assert.ok(!ids("state-seat").some(id => /^(EXE|PRL)-/.test(id) || ["LEG-20", "LEG-21"].includes(id)));
+  assert.ok(ids("federal-seat").includes("PRL-01") && ids("federal-seat").includes("LEG-21"));
+  assert.ok(!ids("federal-seat").includes("LEG-22"));
+  assert.ok(ids("executive").includes("EXE-01") && !ids("executive").includes("LEG-01"));
+  assert.ok(ids("committee").every(id => id.startsWith("CAM-")));
+  assert.ok(ids("budget").every(id => id.startsWith("FIN-")));
+  assert.deepEqual(ids("date"), ["ELE-08"]);
+  assert.ok(ids("unknown").includes("EXE-01") && ids("unknown").includes("PRL-01"));
+  assert.equal(items.filter(i => i.subject.id.includes("#inventory:")).length, 6);
+  const field = { subjectId: "date", checklistId: "ELE-08", state: "published" as const,
+    sourceUrl: "https://elections.example.gov/dates", checkedAt: now, freshUntil: "2026-10-03T00:00:00Z" };
+  const filled = buildPlaceOwedList({ divisions: [division], subjects: records, held: [field], now });
+  assert.ok(!missingPlaceWork(filled).some(i => i.subject.id === "date"));
+  assert.ok(missingPlaceWork(filled).some(i => i.subject.id === `${division.id}#inventory:deadline`));
 });
 
 test("the place source reads shared holdings, publishes source data, then uses the actual published projection", async () => {

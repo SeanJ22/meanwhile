@@ -205,7 +205,9 @@ const workerToolsHost = ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()
 const routineMemorySlots = routineProcessSlots();
 const childMemoryReleases = new Map<string, () => void>();
 async function acquireChildMemory(command: BoundedChildCommand): Promise<void> {
-  childMemoryReleases.set(command.id, await routineMemorySlots.acquire(command.id));
+  const release = await routineMemorySlots.acquire(command.id, Date.now() + ROUTINE_CHILD_TIMEOUT_MS);
+  childMemoryReleases.set(command.id, release);
+  (command as { onStarted?: (pid: number) => void }).onStarted = pid => release.observe?.(pid);
 }
 function releaseChildMemory(id: string): void {
   childMemoryReleases.get(id)?.(); childMemoryReleases.delete(id);

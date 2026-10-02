@@ -2,6 +2,7 @@ import { attemptBatchJournal, backgroundBatchTransport, batchEnabledFor, batchRe
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { createHash, randomUUID } from "node:crypto";
 import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
+import { RESEARCH_PARENT_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import { scoutProcessExecutor } from "../lib/control-plane/workers/scout-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
@@ -1957,7 +1958,8 @@ const paidWorkerCapacity = (readyWork?: number) => {
 };
 // Paid admission happens before handing out a Scout. Held evidence and ordinary
 // code can still use the existing memory slots while the paid lane is closed.
-const workerSlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER);
+const workerSlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
+  { parentPeakBytes: RESEARCH_PARENT_PEAK_MIB * 1024 * 1024, admissionsOpen: () => !releaseDrainRequested });
 const paidScoutSlots = paidWorkerSlots(workerSlots, paidWorkerCapacity);
 // Hand out durable leases before unrelated histories or parent execution.
 const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,

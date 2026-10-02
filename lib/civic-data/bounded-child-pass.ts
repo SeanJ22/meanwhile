@@ -48,6 +48,8 @@ export type BoundedChildTermination =
 
 export interface BoundedChildCommand {
   readonly id: string;
+  /** Associate the live child tree with its already-acquired host memory slot. */
+  readonly onStarted?: (pid: number) => void;
   /**
    * Commands in one upstream/provider failure domain never run concurrently.
    * Omitting this field keeps the command independent by using its unique id.
@@ -155,6 +157,7 @@ function runOneBoundedChild(
         });
       },
     );
+    child.once("spawn", () => command.onStarted?.(child.pid!));
     child.stdout?.on("data", chunk => {
       lines += String(chunk);
       const complete = lines.split(/\r?\n/);

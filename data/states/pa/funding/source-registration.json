@@ -11,13 +11,13 @@
       "url": "https://www.pa.gov/agencies/dos",
       "recordsHeld": "Candidates on Ballot Bureau of Elections; Election Results 210 North Office Building, 401 North Street; Federal Campaign Finance Reports Harrisburg, Pennsylvania 17120-0029; State Campaign Finance Reports 717/787-5280 FAX 717/705-0721; State Lobbying Disclosure Reports; State Initiative/Referendum Spending Bureau of Campaign Finance and Lobbying Disclosure; Electronic Filings 210 North Office Building, 401 North Street; Voter Registration Harrisburg, Pennsylvania 17120-0029; Notary Appointments E-Mail: RA-stcampaignfinance@pa.gov , RA-LobbyDisclosure@pa.gov; Polling Place Accessibility 717/787-5280 FAX 717/705-0721; Corporate Registration 206 North Office Building, 401 North Street",
       "page": 105,
-      "row": 261
+      "row": 237
     }
   ],
   "source": {
     "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
     "dataset": "fec_combined_federal_state_disclosure_directory",
-    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "sha256": "f50d31fe2ac0bfa4d78b6edd3cba7f33c5813f6bac237917c433e2c0c16c14f6",
     "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
   }
 }

@@ -9,7 +9,7 @@
 /**
  * The congress-legislators snapshot — item 7, 2026-08-16.
  *
- * ## The source ruling (the author's, recorded)
+ * ## The source ruling, recorded
  *
  * `unitedstates/congress-legislators` is the SOURCE OF RECORD for everything
  * it covers: roster, id crosswalk, birthdays, term dates, party, DC contact,
@@ -359,7 +359,7 @@ async function main() {
       licence: "CC0 1.0 Universal (public domain dedication)",
       licenceUrl: "https://creativecommons.org/publicdomain/zero/1.0/",
       /*
-       * The provenance tag names the PROJECT, per the author's ruling. It is a
+       * The provenance tag names the PROJECT. It is a
        * community-maintained aggregation of official sources — accurate, and
        * not itself an official record. Calling it one would be the first step
        * toward citing it for something a directory cannot answer.

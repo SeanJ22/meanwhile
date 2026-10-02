@@ -25,6 +25,9 @@ import { applyFilters, noticeShouldExpand } from "@/lib/state/derive";
 import { deriveActiveDistrictTypes } from "@/lib/state/district-intent";
 import { RADIUS_LADDER_KM } from "@/lib/meetings/constants";
 import { carryPins } from "@/lib/map/carry-pins";
+import { captureEvent } from "@/lib/events/client";
+import { useActiveScroll } from "@/hooks/use-active-scroll";
+import { readLocationOriginFor } from "@/lib/state/location-origin";
 import { bodyDisplayName, readerGovernmentName, withReaderNames } from "@/lib/text/reader-names";
 import { requestRadiusKm, shouldRequery } from "@/lib/map/viewport-radius";
 import { useStateFocus } from "@/hooks/use-state-focus";
@@ -101,8 +104,8 @@ import type { ModalSubject } from "./popup/entity-modal";
  * already renders nothing on the server. The three popups and the two modals
  * are gated on click state; `ListOverlay` returns null unless the reader has
  * opened it; `WelcomeOverlay` and `TutorialOverlay` are gated on `restored`,
- * which only becomes true in a client effect. The map is NOT here — the
- * author's instruction is explicit and MapLibre is the landing product.
+ * which only becomes true in a client effect. The map is NOT here —
+ * MapLibre is the landing product.
  */
 const OfficialModal = dynamic(
   () => import("./popup/official-modal").then((m) => m.OfficialModal),
@@ -182,20 +185,18 @@ function MapEntryInner() {
 
   /**
    * **MTG-11 (2026-08-25) — ONE THING UP AT A TIME, AND IT NOW REACHES BEYOND
-   * CARDS.** BC-16 made two SMALL CARDS exclude each other. The author's
-   * `17-22-03` and `17-23-22` show the same overlap one layer out: he opens
-   * *Where can I vote?*, and the eight-meeting Vail card is still sitting on
-   * the right — in `17-23-22` it is still there while he reads a polling
-   * address. His arrow marks the meetings card. *Clicking anywhere else means
-   * the meetings card goes back to not being viewed.*
+   * CARDS.** BC-16 made two SMALL CARDS exclude each other. Screenshots
+   * `17-22-03` and `17-23-22` show the same overlap one layer out: *Where can
+   * I vote?* opens, and the eight-meeting Vail card is still sitting on the
+   * right — in `17-23-22` it is still there beside a polling address.
+   * Clicking anywhere else should take the meetings card out of view.
    *
    * So the three controls that take the foreground — **Where can I vote?, Ask,
    * and Change Zip** — dismiss whichever small card is open.
    *
    * **THE MAP-3 EXCEPTION SURVIVES BY CONSTRUCTION, and that is why this is a
    * dispatch rather than an effect.** Who Governs Here and an area's
-   * battlecard appearing together on an AREA CLICK is deliberate and the
-   * author says so outright. This closes the venue and district selections and
+   * battlecard appearing together on an AREA CLICK is deliberate. This closes the venue and district selections and
    * touches neither the Who Governs Here panel nor anything an area click
    * does; nothing here runs on an area click at all. `tests/one-at-a-time.test.ts`
    * asserts both halves.
@@ -272,7 +273,7 @@ function MapEntryInner() {
   /*
    * WGH-8 (2026-08-25): the card starts COLLAPSED, so the default paint is the
    * rail up and Who Governs Here sitting as its pill beneath it — which is the
-   * state the author annotated as correct in `08-53-15`. It began `false`,
+   * state annotated as correct in `08-53-15`. It began `false`,
    * which is why the first paint carried both surfaces at once.
    */
   const [noticeCollapsed, setNoticeCollapsed] = useState(true);
@@ -291,13 +292,12 @@ function MapEntryInner() {
    */
   const [popupMeeting, setPopupMeeting] = useState<Meeting | null>(null);
   /*
-   * **F01 2.4 (2026-08-19, the author) — THE LARGE SURFACE IS A STACK.**
+   * **F01 2.4 (2026-08-19) — THE LARGE SURFACE IS A STACK.**
    *
-   * *"If I go to More to open a large battle card, open Representation, and
-   * select Dr. Ravi Shah, his card pops up, which is right. However, if I
-   * close out Dr. Ravi Shah, it brings me back to the map. It doesn't bring
-   * me back to Tucson Unified."* His rule: **navigation unwinds one level at
-   * a time, everywhere.**
+   * Opening a large battlecard from More, then Representation, then Dr. Ravi
+   * Shah correctly opened his card — but closing it went back to the map, not
+   * to Tucson Unified. The rule: **navigation unwinds one level at a time,
+   * everywhere.**
    *
    * This was ONE SLOT. A person's card opened from inside a body's card
    * REPLACED it, so closing had nowhere to go but the map, and the reader lost
@@ -511,6 +511,15 @@ function MapEntryInner() {
    * running this on every location change costs nothing.
    */
   const { activateAt } = focusState;
+  // A ZIP the reader is looking at, once per ZIP, with HOW they reached it
+  // (typed, demo chip, link...) — the server stamps home vs browsing from that.
+  const viewedZip = location?.zip ?? null;
+  useEffect(() => {
+    if (viewedZip) {
+      captureEvent({ type: "ZIP_VIEW", zip: viewedZip, locationOrigin: readLocationOriginFor(viewedZip) });
+    }
+  }, [viewedZip]);
+  useActiveScroll("MAP");
   useEffect(() => {
     // Depends on `activateAt` alone, never on the whole `focusState` object
     // (g4 item 1). The object used to be rebuilt every render, so this effect
@@ -701,9 +710,9 @@ function MapEntryInner() {
    * rather than `dismissSidebar()`, because the desktop rail is a surface too
    * and "dismiss" only ever returned the phone drawer to its default.
    *
-   * Ask is deliberately NOT one of the three (rule 4a, the author's words):
-   * *"Ask's expansion is NOT a surface for 4c and never closes the sidebar,
-   * WGH or a battlecard."* It is left untouched here on purpose.
+   * Ask is deliberately NOT one of the three (rule 4a): Ask's expansion is
+   * NOT a surface for 4c and never closes the sidebar, WGH or a battlecard.
+   * It is left untouched here on purpose.
    */
   const openSurface = useCallback(
     (surface: "sidebar" | "wgh" | "large") => {
@@ -731,6 +740,11 @@ function MapEntryInner() {
   /** The one-at-a-time rule: any large surface replaces every other. */
   const openLarge = useCallback(
     (next: LargeSurface) => {
+      captureEvent(
+        next.kind === "official"
+          ? { type: "CARD_OPEN", cardId: `OFFICIAL:${next.holder.id}`, cardKind: "OFFICIAL" }
+          : { type: "CARD_OPEN", cardId: `${next.subject.subjectKind}:${next.subject.subjectId}`, cardKind: next.subject.subjectKind },
+      );
       setLarge(next);
       // 4c: the sidebar and the who-governs card are surfaces too, and they
       // yield to a battlecard exactly as a battlecard yields to them.
@@ -757,7 +771,7 @@ function MapEntryInner() {
       // separate surface; the card carries everything it showed (identity,
       // contacts, office, voting record) plus the rest of the record.
       openLarge({ kind: "official", holder, seatLabel, tier });
-      // Author-approved (1d), disclosed on /transparency in the same change.
+      // Item 1d, disclosed on /transparency in the same change.
       // The holder id names the official opened, never the reader.
       logEvent("OFFICIAL_OPENED", ocdId ? [ocdId] : [], {
         officialId: holder.id,
@@ -940,12 +954,12 @@ function MapEntryInner() {
        *
        * 3h let a typed-zip view re-expand the who-governs card, launch
        * included, and that was right while the rail and the card could share
-       * the column. They can no longer: the author's rule is that exactly one
+       * the column. They can no longer: the rule is that exactly one
        * of the two is up, so auto-expanding on arrival does not add a card —
        * it CLOSES THE RAIL, on every launch, before the reader has asked for
        * anything.
        *
-       * His annotated capture `08-53-15` is the state being specified, and it
+       * The annotated capture `08-53-15` is the state being specified, and it
        * is unambiguous: the rail up and running the full height of the column,
        * with Who Governs Here sitting beneath it as a pill. So arrival is the
        * rail, and the card is one click away.
@@ -966,7 +980,7 @@ function MapEntryInner() {
    * **BC-16 (2026-08-25) — ONE SMALL CARD AT A TIME, ENFORCED WHERE NO OPENER
    * CAN FORGET IT.**
    *
-   * The author's `09-20-11` has the Rockaway Township venue card and the
+   * Screenshot `09-20-11` has the Rockaway Township venue card and the
    * Morris County card open at once, overlapping, each scrolling inside itself.
    *
    * The venue/district half lives in the reducer, because both are transitions
@@ -1203,7 +1217,7 @@ function MapEntryInner() {
    *   they did not ask.
    *
    * - A BODY row opens that body's large battlecard, which is this item's
-   *   ruling in its own words ("Selecting a body ANYWHERE opens that body's
+   *   requirement in its own words ("Selecting a body ANYWHERE opens that body's
    *   large battlecard"), built by the same `bodySubject` the who-governs list
    *   and the sidebar's Bodies door both use. Two doors onto one card, never
    *   two cards. It still flies where it can, because the reader who picked a
@@ -1223,7 +1237,7 @@ function MapEntryInner() {
    * this product has no committed card for a place subject, and picking one of
    * N bodies to stand for it would be an invented answer. Place rows fly (and
    * after the `represents` fix they always can); the card they should open is
-   * the author's to rule on.
+   * still an open design question.
    */
   const onSearchPick = useCallback((item: SearchItem) => {
     if (item.venueKey) dispatch({ type: "select/venue", key: item.venueKey });
@@ -1279,7 +1293,7 @@ function MapEntryInner() {
           });
         }
       } else if (item.kind === "place" && item.ocdId !== null) {
-        // g18, ruling A: the place card. It elects nobody to stand for the
+        // g18, option A: the place card. It elects nobody to stand for the
         // place — it lists every body we hold in it and lets the reader
         // choose, which is the only honest resolution of a one-to-many.
         openLarge({
@@ -1334,16 +1348,13 @@ function MapEntryInner() {
   );
 
   /*
-   * RESET = "PUT ME BACK WHERE I STARTED" — F01 9.5, 2026-08-19, the author.
+   * RESET = "PUT ME BACK WHERE I STARTED" — F01 9.5, 2026-08-19.
    *
-   * *"The reset view should not be a pop-up of the zip again like 'hey, what
-   * zip do you want to go back to?' The reset view should be the last zip that
-   * I selected, so it'll zoom back. If the last zip I selected was 85701,
-   * hitting reset should act as if I just simply put in 85701 again. If I want
-   * to change it then I can click Change. The reset view option is doing more
-   * work than it needs to."*
+   * Reset should not re-ask for a zip. It should return to the last zip the
+   * reader selected, exactly as if they had typed it again; changing it is
+   * what Change is for. Reset was doing more work than it needed to.
    *
-   * It was: it cleared the filters AND reopened the welcome overlay, which
+   * It cleared the filters AND reopened the welcome overlay, which
    * asks a question the reader has already answered. Two jobs where one was
    * wanted, and the second one undid the reader's own answer.
    *
@@ -2525,8 +2536,8 @@ function unwindCardHistory(depth: { current: number }): void {
  * string.**
  *
  * The venue panel behind a pin has had a Directions link since 2026-08-16 and
- * the large battlecard never did: the author opened the Township Council card,
- * found the address inert, and could not get from *where is this* to *how do I
+ * the large battlecard never did: on the Township Council card the address
+ * was inert, and a reader could not get from *where is this* to *how do I
  * get there* without leaving the product. Same helper as the venue panel, and
  * the same derived-not-cited framing — it is built from coordinates we hold
  * rather than a page anyone opened, so it is offered as a convenience and
@@ -2573,10 +2584,10 @@ function meetingSubject(
     // qualified body and sitting are the headline ("Vail Unified School
     // District — Governing Board Meeting"); when, then where ONCE — some
     // sources publish the address as the venue name, and rendering the same
-    // string as Location and again as Address was the author's Vail defect.
+    // string as Location and again as Address was the Vail defect.
     /* MTG-8 (2026-08-24): the body alone. The jurisdiction is the SUBTITLE on
        the very next line, so the em-dash prefix was printing it twice — which
-       is the "Tucson, AZ — " the author struck through in `12-01-44`. */
+       is the "Tucson, AZ — " struck through in screenshot `12-01-44`. */
     // BC-11: what this card is ABOUT, keyed rather than titled.
     subjectId: meeting.id,
     subjectKind: "MEETING" as const,
@@ -2658,8 +2669,7 @@ function meetingSubject(
 }
 
 /**
- * A GOVERNING BODY'S LARGE BATTLECARD (item 3, 2026-08-16, the author's
- * ruling).
+ * A GOVERNING BODY'S LARGE BATTLECARD (item 3, 2026-08-16).
  *
  * The who-governs list used to send a reader straight out to the body's own
  * website from the row — Pima and Tucson both — which threw them out of the
@@ -2885,7 +2895,7 @@ function bodyContactRows(
 }
 
 /**
- * A PLACE'S CARD (g18, 2026-08-18, the author's ruling A).
+ * A PLACE'S CARD (g18, 2026-08-18, option A).
  *
  * M135's last unconverted row. A place row — "Pima County, AZ" in the ask
  * panel's autocomplete — flew the camera and opened nothing, because a place
@@ -2978,7 +2988,7 @@ function placeSubject(
            A reader needs to know this absence is OURS and that it is not a
            finding about the place — neither of which requires the app to grade
            its own coverage in the middle of the sentence. */
-        "We haven't recorded any governing body in this place yet — which is not a statement that it has none.",
+        "We’re working on getting this info.",
     },
     // A place has no roster of its own — the people are on the bodies' cards,
     // one level down, and saying so is better than an empty tab.
@@ -3077,9 +3087,8 @@ function districtSubject(
       { label: "Tier", value: TIER_LABEL[district.tier] },
       { label: "State", value: district.state, mono: true },
       /*
-       * F01 2.1 (2026-08-19, the author): *"When looking at the large
-       * battlecard in Overview, the district's website should be present in
-       * Overview."* His instance was Tucson Unified District, whose Overview
+       * F01 2.1 (2026-08-19): a large battlecard's Overview should carry the
+       * district's website. The instance was Tucson Unified District, whose Overview
        * was three identifiers — Type, Tier, State — and no door to the
        * district itself.
        *
@@ -3154,7 +3163,7 @@ function bodyHomepageFacts(
    * **BC-24 (2026-08-25) — DEDUPE ON WHAT THE READER SEES, NOT ON THE STORED
    * STRING.**
    *
-   * The author's `09-18-31`: Rockaway township's Overview renders
+   * Screenshot `09-18-31`: Rockaway township's Overview renders
    * `OFFICIAL SITE  rockawaytownship.org →` **five times**.
    *
    * The dedupe was here and it was working exactly as written — it just

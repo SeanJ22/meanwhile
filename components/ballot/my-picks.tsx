@@ -130,7 +130,7 @@ export function MyPicks({
   return (
     <section className="mt-6 rounded-[10px] border border-dashed border-[var(--panel-border)] p-4">
       <h2 className="t-structure text-paper-dim">
-        My picks — this device only
+        My picks
       </h2>
       {/*
         The count. `data-pick-tally` carries both numbers so `walk:all` can

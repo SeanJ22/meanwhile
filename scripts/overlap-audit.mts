@@ -4,8 +4,8 @@
  *   pnpm overlaps            # every state below
  *   pnpm overlaps --zip 03255
  *
- * Item 5, 2026-08-15 — the author's order was "audit all of them", not "fix
- * the one I saw", and the reason is in the finding itself: the reported
+ * Item 5, 2026-08-15 — this audits all of them rather than fixing the one
+ * that was seen, and the reason is in the finding itself: the reported
  * collision was "the sidebar footer under the map legend", but the footer is
  * not special. The legend is `position: fixed` above the drawer, so it lands
  * on whatever the reader has scrolled to. One screenshot names one victim; a

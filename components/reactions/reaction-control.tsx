@@ -18,6 +18,7 @@ import {
   type ReactionTargetType,
   type ReactionValue,
 } from "@/lib/signal/reactions";
+import { captureEvent } from "@/lib/events/client";
 import {
   REACTION_LABELS,
   REACTION_MARK,
@@ -179,6 +180,7 @@ export function ReactionControl({
   };
 
   const choose = (value: ReactionValue) => {
+    captureEvent({ type: "REACTION", cardId: `${targetType}:${targetId}`, cardKind: targetType, reaction: value });
     void record(value);
   };
 

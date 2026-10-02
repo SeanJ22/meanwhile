@@ -11,20 +11,20 @@
       "url": "https://azsos.gov",
       "recordsHeld": "Candidates on Ballot Secretary of State; Election Results State Capitol, Executive Tower, 7th Floor; Federal Campaign Finance Reports 1700 West Washington Street; State Campaign Finance Reports URL https://azsos.gov; State Personal Financial Reports E-Mail: sosadmin@azsos.gov; State Lobby Reports 602/542-4285 FAX 602/542-1575; State Initiative/Referendum Spending Reports 1-877/843-8683; Voting Accessibility",
       "page": 26,
-      "row": 40
+      "row": 35
     },
     {
       "name": "CITIZENS CLEAN ELECTIONS COMMISSION",
       "url": "https://www.azcleanelections.gov",
       "recordsHeld": "Full Public Funding to Statewide and Legislative Citizens Clean Elections Commission; Candidate Statement Pamphlet Phoenix, Arizona 85007; Voter Education URL https://www.azcleanelections.gov; Sponsorship of Candidate Debates 602/364-3477 FAX 602/364-3487; Regulation of Campaign Finance Reports 1-877/631-8891 (Toll Free)",
       "page": 27,
-      "row": 42
+      "row": 37
     }
   ],
   "source": {
     "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
     "dataset": "fec_combined_federal_state_disclosure_directory",
-    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "sha256": "f50d31fe2ac0bfa4d78b6edd3cba7f33c5813f6bac237917c433e2c0c16c14f6",
     "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
   }
 }

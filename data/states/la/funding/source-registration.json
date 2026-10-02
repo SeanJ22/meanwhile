@@ -11,13 +11,13 @@
       "url": "https://ethics.la.gov",
       "recordsHeld": "State Campaign Finance Reports (Filed at State, Board of Ethics; State Personal Financial Reports (Filed at State, LaSalle Building, Suite 10-36; State Lobby Registration URL https://ethics.la.gov; Lobbyists Expenditure Disclosure Reports E-Mail: David.bordelon@la.gov; Electronic Filings Phone: 225/219-5600 FAX 225/381-7271; Local Lobby Registration 1-800/842-6630 (Toll Free)",
       "page": 64,
-      "row": 152
+      "row": 137
     }
   ],
   "source": {
     "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
     "dataset": "fec_combined_federal_state_disclosure_directory",
-    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "sha256": "f50d31fe2ac0bfa4d78b6edd3cba7f33c5813f6bac237917c433e2c0c16c14f6",
     "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
   }
 }

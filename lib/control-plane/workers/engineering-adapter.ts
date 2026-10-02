@@ -2,7 +2,9 @@
 import { execFile } from 'node:child_process';
 import type { ScoutResult } from '../scheduler/scout-result.ts';
 import { STREAMLINE_INVENTORY_SOURCE } from './engineering-candidate.ts';
-import { installedAdapters } from '../scheduler/scout-adapters.ts';
+import { installedAdapters,installedAdapterGuides } from '../scheduler/scout-adapters.ts';
+import {hasUntriedAdapter} from './detective.ts';
+import {readFieldManual,writeFieldManual,newFieldManualEntry,upsertEntries,projectFieldManual} from '../field-manual.ts';
 import { MODELS, MODEL_TIERS } from '../../models.ts';
 import { recordCost } from '../repository/coordinator.ts';
 import { meteredCostFields, priceMeteredUsage, readMeteredUsage } from '../model-cost.ts';
@@ -86,13 +88,27 @@ test('dated sitemap preserves exact publisher locators and rejects unrelated hos
 });\n`} ]};
 }
 
+/** Reviewed code teaches its portable instructions after deployment; unchanged versions need no write. */
+export async function learnInstalledAdapters(repos:ControlPlaneRepositories,now:string) {
+  const manual=await readFieldManual(repos,{role:'ENGINEER'});
+  const learned=(await installedAdapterGuides()).map(({name,version,file,guide})=>newFieldManualEntry('installed-adapter',name,{
+    role:'SHARED',kind:'PLATFORM_ADAPTER',title:name,summary:guide.summary,
+    outcome:'REFERENCE',recordClasses:guide.recordClasses,platforms:[name],url:guide.sourceUrls[0]??null,observedAt:now,
+    payload:{platform:name,installed:true,implementationVersion:version,files:[file],sourceUrls:guide.sourceUrls,procedure:guide.procedure},
+  })).filter(entry=>!manual.store.entries.some(prior=>prior.id===entry.id && prior.kind===entry.kind &&
+    (prior.payload as {implementationVersion?:string|null}|null)?.implementationVersion===(entry.payload as {implementationVersion:string|null}).implementationVersion));
+  if(!learned.length)return {store:manual.store,projection:manual.projection,error:manual.error};
+  const saved=await writeFieldManual(repos,learned,now);
+  const store=upsertEntries(manual.store,learned,now);
+  return {store,projection:projectFieldManual(store,{role:'ENGINEER'}),error:saved.error};
+}
+
 /** Consume needs-an-adapter work from the existing Scout results, saving the route to its PR in the bank. */
 export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;results:readonly ScoutResult[];
   /** Caller supplies the ordinary Fleet/area budget guard, never a raw model transport. */
   transportFor?:(result:ScoutResult)=>ModelTransport; readEvidence?:(id:string)=>Promise<WorkerEvidence>;
   now:string;request?:GitHubRequest}):Promise<AdapterPullRequest[]> {
-  const {readFieldManual,writeFieldManual,newFieldManualEntry}=await import('../field-manual.ts');
-  const manual=await readFieldManual(input.repos,{role:'ENGINEER'});
+  const manual=await learnInstalledAdapters(input.repos,input.now);
   const opened:AdapterPullRequest[]=[];
   const done=new Set(manual.store.entries.filter(e=>e.kind==='ENGINEER_ADAPTER_PR').map(e=>e.title));
   const installed=new Set(await installedAdapters());
@@ -102,7 +118,7 @@ export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;res
   for(const result of pending) {
     const plain=plainAdapterFor(result);
     const platform=adapterBranchKey(plain?.platform ?? result.candidates[0]?.routeId ?? result.recordClass);
-    if(done.has(platform) || installed.has(platform))continue;
+    if(done.has(platform) || installed.has(platform) || hasUntriedAdapter(result,[...installed],manual.store.entries))continue;
     try {
     let candidate=plain;
     if(!candidate && input.transportFor && input.readEvidence) {
@@ -161,7 +177,9 @@ export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;res
     opened.push(pr);done.add(platform);
     await writeFieldManual(input.repos,[newFieldManualEntry('engineer-adapter',platform,{role:'SHARED',kind:'ENGINEER_ADAPTER_PR',title:platform,
       summary:'Adapter implementation in '+pr.url,outcome:'REFERENCE',observedAt:input.now,recordClasses:[result.recordClass],url:pr.url,
-      payload:{platform,pr,subjectId:result.subjectId,sourceAttemptId:result.attemptId,files:candidate.files.map(file=>file.path)}})],input.now);
+      payload:{platform,pr,subjectId:result.subjectId,sourceAttemptId:result.attemptId,files:candidate.files.map(file=>file.path),
+        sourceUrls:[...new Set([...result.candidates.filter(c=>c.evidenceArtifactIds.length>0).map(c=>c.url),
+          ...result.rungs.filter(r=>r.ok && r.artifactIds.length>0).map(r=>r.target)])]}})],input.now);
     } catch(error) {
       await writeFieldManual(input.repos,[newFieldManualEntry('engineer-adapter-blocker',platform,{role:'ENGINEER',kind:'ENGINEER_BLOCKER',title:platform,
         summary:error instanceof Error?error.message:String(error),outcome:'BLOCKED',observedAt:input.now,payload:{sourceAttemptId:result.attemptId,nextAction:'Continue the existing adapter branch/PR after the recorded publication failure is repaired.'}})],input.now);

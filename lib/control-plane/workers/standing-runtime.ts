@@ -72,9 +72,6 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     await input.repos.workItems.compareAndSet(row.id, row.revision, { ...row.value,
       autonomousPlan: { ...plan, contract: { ...plan.contract, methodVersion: knowledge.version } } }, now());
   }
-  const fmRead = await readFieldManual(input.repos,{role:"SCOUT"});
-  let fieldManual: FieldManualStore = fmRead.store;
-  let fieldManualRevision = fmRead.revision ?? 0;
   const inheritedFieldManualCounts = new Map<string, number>();
   const inheritedManualStores = new Map<string, FieldManualStore>();
   const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly availableIds: readonly string[]; readonly lines: readonly string[] }>();
@@ -82,6 +79,9 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   // Held data and plain adapters first; generated adapters use the same guarded area transport as research.
   await workAdapterQueue({repos:input.repos,results:prior,now:now(),readEvidence:async id=>evidenceProjection(await heldRuntime.readEvidence(id)),
     ...(input.transportFor?{transportFor:result=>input.transportFor!({subjectId:result.subjectId,state:scoutStateHint(result.subjectId,result.obligationId)[0]??null})}:{})});
+  const fmRead = await readFieldManual(input.repos,{role:"SCOUT"});
+  let fieldManual: FieldManualStore = fmRead.store;
+  let fieldManualRevision = fmRead.revision ?? 0;
   const readRepairCapture = researchVaultResolver(input.repos, tools.store, "freshness");
   const installed = promotedRegistries();
   const registeredPublisherAddressFor = (subjectId:string):string|null => {
@@ -126,10 +126,12 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     } });
   const runtime:AutonomousCoordinatorRuntime={...heldRuntime,rollingCeilingUsd:input.auditCeilingUsd??0,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",
     authorizedSiblingHeldArtifactIdsFor:item=>sharedHeldByRoot.get(item.id)??[],
-    roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder),
+    roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder,input.root),
     ...(input.transport?{scoutFor:(item,task,currentHistory)=>(investigationRole(subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass),task.routeLabel.includes('UNRESOLVED_INVESTIGATION') || priorWorkers.some(w=>w.workItemId===item.id && (!["ACQUIRED","EXTRACTED","PASS","SUPPORTED","SURVIVED","CANDIDATE_PROVED"].includes(w.result.verdict) || ("warnings" in w.result ? w.result.warnings : w.result.findings).some(f=>f.severity==="BLOCKING")))) === "DETECTIVE" ? detectiveExecutor : scoutExecutor)({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,
       ...(input.reserveScoutEscalation?{reserveEscalation:input.reserveScoutEscalation}:{}),
-      toolkitFor:ctx=>buildScoutToolkit({...ctx,...(input.environment?{sourceApi:{env:input.environment}}:{}),...durableResearchTools(tools,{project:item.project,attemptId:ctx.attemptId,workItemId:item.id,routeTaskId:task.id,subjectId:item.subject}),
+      toolkitFor:ctx=>buildScoutToolkit({...ctx,root:input.root,
+        obligation:{...ctx.obligation,obligation:{...ctx.obligation.obligation,autonomousPlan:item.autonomousPlan}},
+        ...(input.environment?{sourceApi:{env:input.environment}}:{}),...durableResearchTools(tools,{project:item.project,attemptId:ctx.attemptId,workItemId:item.id,routeTaskId:task.id,subjectId:item.subject}),
         readHeldArtifact: async id => {
           const [{ artifact }, evidence] = await Promise.all([readRepairCapture(id), heldRuntime.readEvidence(id)]);
           return { ...evidenceProjection(evidence), provenance: {

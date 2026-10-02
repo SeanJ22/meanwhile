@@ -11,34 +11,34 @@
       "url": "https://www.ftb.ca.gov",
       "recordsHeld": "Random Audits of Campaign Finance Reports and California Franchise Tax Board",
       "page": 32,
-      "row": 52
+      "row": 47
     },
     {
       "name": "SACRAMENTO COUNTY VOTER REGISTRATION AND ELECTIONS",
       "url": "https://elections.saccounty.net",
       "recordsHeld": "County Campaign Finance Reports County of Sacramento Voter Registration and Elections; Election Results 7000 65th Street, Suite A; Voter Education and Outreach Sacramento, California 95823-2315; Voter Registration URL https://elections.saccounty.net; Vote by Mail E-Mail: voterinfo@saccounty.net; Precinct Operations 916/875-6451 FAX 916/875-6516",
       "page": 33,
-      "row": 55
+      "row": 50
     },
     {
       "name": "SAN FRANCISCO DEPARTMENT OF ELECTIONS",
       "url": "https://www.sf.gov/departments-department-elections",
       "recordsHeld": "Candidates and Measures on Ballot Department of Elections; Election Results City and County of San Francisco; Statewide Campaign Finance Reports 1 Dr. Carlton B. Goodlett Place, Room 48; Voter Information and Services San Francisco, California 94102; Voter Education and Outreach URL https://www.sf.gov/departments-department-elections; Voter Registration E-Mail: sfvote@sfgov.org; Usability of Voting Systems 415/554-4375 FAX 415/554-7344",
       "page": 33,
-      "row": 56
+      "row": 51
     },
     {
       "name": "SAN FRANCISCO ETHICS COMMISSION",
       "url": "https://sfethics.org",
       "recordsHeld": "City and County Campaign Finance Reports San Francisco Ethics Commission; City and County Lobbyist Reports 25 Van Ness Avenue, Suite 220; Campaign Consultant Reports San Francisco, California 94102-6053; Statements of Economic Interests for City Officials URL https://sfethics.org; Audit Reports of Candidate Committees and Local 415/252-3100 FAX 415/252-3112; Advice Letters on Government Ethics-Related; Enforcement Responsibility for Lobbying,; Public Financing Reports; Electronic Filings ATTORNEY GENERAL; Proposed Initiative Measure Titles and Summaries Attorney General of California; Other Court Actions 1300 I Street, Suite 1740",
       "page": 33,
-      "row": 58
+      "row": 52
     }
   ],
   "source": {
     "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
     "dataset": "fec_combined_federal_state_disclosure_directory",
-    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "sha256": "f50d31fe2ac0bfa4d78b6edd3cba7f33c5813f6bac237917c433e2c0c16c14f6",
     "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
   }
 }

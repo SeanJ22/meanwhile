@@ -11,13 +11,13 @@
       "url": "https://www.elections.il.gov",
       "recordsHeld": "Candidates on Ballot Illinois State Board of Elections; Election Results 2329 South MacArthur Boulevard; Federal Campaign Finance Reports Springfield, Illinois 62704-4503; State Campaign Finance Reports E-Mail: bmatthews@elections.il.gov; State Initiative/Referendum Spending Reports 217/782-4141 FAX 217/782-5959; Voting Accessibility; Electronic Filings Jeremy Kirk, Assistant Executive Director",
       "page": 51,
-      "row": 111
+      "row": 102
     }
   ],
   "source": {
     "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
     "dataset": "fec_combined_federal_state_disclosure_directory",
-    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "sha256": "f50d31fe2ac0bfa4d78b6edd3cba7f33c5813f6bac237917c433e2c0c16c14f6",
     "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
   }
 }

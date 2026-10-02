@@ -1,6 +1,6 @@
 /**
  * **THE HOST-NORMALIZED FLY-IN CRITERION, TESTED WHERE IT CAN BE TESTED.**
- * (The author's amendment to W6 H3, 2026-08-31.)
+ * (Amendment to W6 H3, 2026-08-31.)
  *
  * The measurement itself needs a GPU, a production build and a quiet-ish
  * machine, and it produces a different number every time it runs. None of that
@@ -153,9 +153,9 @@ describe("judgeNormalized", () => {
 
   it("A SLOW HOST DOES NOT WAIVE THE REQUIREMENT — it is reported beside it", () => {
     /*
-     * The author's words: "If the bare map itself cannot reach smooth motion,
-     * report that host limit numerically; it does not waive the relative
-     * requirement." So a bare map at 25 fps still yields a real verdict, and
+     * If the bare map itself cannot reach smooth motion, that host limit is
+     * reported numerically; it does not waive the relative requirement.
+     * So a bare map at 25 fps still yields a real verdict, and
      * the host limit changes the SENTENCE rather than the decision.
      */
     const bare = summariseArm("bare", [run(100, 40)]);

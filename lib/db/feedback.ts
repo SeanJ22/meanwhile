@@ -84,7 +84,7 @@ export interface FeedbackSubmission extends FeedbackContext {
   message: string;
   surface: FeedbackSurface;
   /**
-   * The OPTIONAL reply address (R41, 2026-08-17, the author's ruling A).
+   * The OPTIONAL reply address (R41, 2026-08-17, option A).
    *
    * Absent or blank is the ordinary case and stores NULL. When present it is
    * stored exactly as the reader typed it — see the scrub note below for why

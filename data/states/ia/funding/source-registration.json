@@ -11,13 +11,13 @@
       "url": "https://ethics.iowa.gov",
       "recordsHeld": "Federal Campaign Finance Reports Ethics and Campaign Disclosure Board; State Campaign Finance Reports Des Moines, Iowa 50319; County and Local Campaign Finance Reports URL https://ethics.iowa.gov; Executive Branch Personal Finance Reports E-Mail: zachary.goodrich@iowa.gov; Executive Branch Ethics/Conflicts of Interest 515/281-4028 FAX 515/281-4073; State Party Building Fund Reports; Agency Gifts and Bequests Reports Tim Annee, County/Local Candidate and PAC Auditor",
       "page": 56,
-      "row": 132
+      "row": 118
     }
   ],
   "source": {
     "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
     "dataset": "fec_combined_federal_state_disclosure_directory",
-    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "sha256": "f50d31fe2ac0bfa4d78b6edd3cba7f33c5813f6bac237917c433e2c0c16c14f6",
     "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
   }
 }

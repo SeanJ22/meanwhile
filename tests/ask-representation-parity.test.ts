@@ -33,7 +33,7 @@ const TUCSON: [number, number] = [32.21696, -110.971];
 test("ASK-5: every body a routed step names carries the roster the battlecard renders", async () => {
   const coverage = await coverageAt(...TUCSON, 1);
 
-  // The school-operations route is the one the author asked. Its own step
+  // The school-operations route is the one the capture asked. Its own step
   // targets the school district's governing board.
   const answer = resolveRouting("schools-operations", coverage);
   assert.equal(answer.kind, "ROUTED");
@@ -65,10 +65,10 @@ test("ASK-5: every body a routed step names carries the roster the battlecard re
    * **AMENDED 2026-08-25 BY ASK-9 / ASK-10, and the amendment is narrow.**
    *
    * This asserted that Ask names EVERY member of the roster the battlecard
-   * renders. That was the right claim while Ask printed rosters, and the
-   * author has since ruled it does not: *"Ask names bodies, not people"*, with
-   * the person who RUNS the body as the one exception he asked for by name.
-   * Six names under one sentence at Tucson is what he boxed in red.
+   * renders. That was the right claim while Ask printed rosters, and it no
+   * longer does: Ask names bodies, not people, with the person who RUNS the
+   * body as the one named exception. Six names under one sentence at Tucson
+   * was the defect.
    *
    * So the parity claim moves from PEOPLE to the BODY, which is where the
    * defect ASK-5 was opened over actually lived: Ask was reading
@@ -107,8 +107,8 @@ test("ASK-5: every body a routed step names carries the roster the battlecard re
 test("ASK-5: no step claims the roster is unsourced while a roster exists for its body", async () => {
   const coverage = await coverageAt(...TUCSON, 1);
 
-  // Every topic, not only the one photographed — the author's standing frame
-  // is that a named instance is an example of the class.
+  // Every topic, not only the one photographed — a named instance is an
+  // example of the class.
   const topics = [
     "schools-operations",
     "schools-policy",

@@ -82,6 +82,7 @@ const nextConfig: NextConfig = {
   // absent: production resolves the canonical store and fails closed when its
   // pointer has not been recorded.
   outputFileTracingIncludes: {
+    "/{api/ask/grounded,ballot,api/warm}": ["./data/states/*/funding/source-registration.json"],
     // Start many hunts checks each ZIP against the ZIP index's shards (`lib/control-plane/bulk-hunts/zip-state.ts`).
     // The shard name is computed, so the tracer cannot see it; untraced, every ZIP would read as "not a ZIP the site
     // knows" on production while passing every local test.
@@ -90,8 +91,7 @@ const nextConfig: NextConfig = {
     // district's place score (the Checklist view of a district) reads them too; the shard names are computed, so the tracer cannot see them.
     "/api/admin/v6/{national,place}": ["./data/derived/zip-divisions/*.json"],
     "/api/admin/geography-preview": [
-      "./data/derived/census-unit-zips.json",
-      "./data/derived/zip-governments.json",
+      "./data/derived/place-reference/**",
       "./lib/control-plane/expansion/reference/az-fire-district-territory.json",
     ],
     // `/api/warm` resolves one place per published state on each instance it

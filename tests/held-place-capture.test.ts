@@ -6,6 +6,7 @@ import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plan
 import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { HeldPlaceFamilies } from "../lib/civic-data/held-place-families.ts";
 import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
+import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 
 const county = "ocd-division/country:us/state:az/county:cochise";
 const neighbour = "ocd-division/country:us/state:az/county:pima";
@@ -31,6 +32,24 @@ test("held fields reach every served division without filling inventory or missi
   assert.ok(!ids.includes("MTG-03") && !ids.includes("MTG-16") && !ids.includes("MTG-07") && !ids.includes("MTG-08"));
   assert.equal(primary.held.find(field => field.checklistId === "MTG-06")?.freshUntil, "2026-09-30T07:00:00.000Z");
   assert.equal(projectHeldPlaceCapture(["unrelated-division"], registry, [meetings], at).held.length, 0);
+});
+
+test("sittings share calendar discovery work by body while every meeting keeps its own dates and documents", () => {
+  const capture = projectHeldPlaceCapture([county, neighbour], registry, [published({ meetings: [
+    meeting, { ...meeting, id: "meeting:two" }, { ...meeting, id: "meeting:other", bodyId: "another-body" },
+    { ...meeting, id: "meeting:unresolved", bodyId: null },
+  ] } as unknown as MeetingsSnapshot)], at);
+  const owed = buildPlaceOwedList({ divisions: [county, neighbour].map(id => ({ id, label: id })), ...capture, now: at });
+  for (const id of ["meeting:one", "meeting:two", "meeting:other"]) {
+    assert.ok(!owed.some(row => row.subject.id === id && row.checklistId === "MTG-03"));
+    assert.equal(owed.find(row => row.subject.id === id && row.checklistId === "MTG-06")?.state, "published");
+    assert.equal(owed.find(row => row.subject.id === id && row.checklistId === "DOC-01")?.state, "missing");
+  }
+  const routes = owed.filter(row => row.checklistId === "MTG-03" && row.subject.captureKind === "body-calendar");
+  assert.deepEqual(routes.map(row => row.subject.id).sort(), ["another-body#calendar", "shared-body#calendar"]);
+  assert.deepEqual(routes.find(row => row.subject.id === "shared-body#calendar")?.subject.divisionIds, [county, neighbour]);
+  assert.ok(routes.every(row => row.state === "missing"), "having a meeting never certifies calendar completeness");
+  assert.ok(owed.some(row => row.subject.id === "meeting:unresolved" && row.checklistId === "MTG-03"), "an unknown body keeps its route work");
 });
 
 test("only published present fields count, and failed reads cannot look like empty holdings", () => {
@@ -99,6 +118,10 @@ test("national seats and campaign totals reuse exact division and target joins a
   assert.ok(primary.held.some(field => field.subjectId === "official:1" && field.checklistId === "OFF-06"));
   const totals = primary.held.find(field => field.checklistId === "CAM-05");
   assert.equal((totals?.value as { amount: number }).amount, 0, "published zero remains a zero");
+  assert.equal(primary.subjects.find(subject => subject.id.startsWith("fec:"))?.captureKind, "federal-campaign-finance");
+  const owed = buildPlaceOwedList({ divisions: [{ id: county, label: "County" }], ...primary, now: at });
+  assert.ok(!owed.some(row => row.subject.id.startsWith("fec:") && ["CAM-14", "CAM-15"].includes(row.checklistId)));
+  assert.ok(owed.some(row => row.subject.id.startsWith("fec:") && row.checklistId === "CAM-13"));
   assert.ok(!primary.subjects.some(subject => subject.id.includes("H000002")), "same name cannot bind another committee");
   assert.equal(projectHeldPlaceCapture(["other-county"], registry, [], at, families).held.length, 0);
 });
@@ -127,8 +150,32 @@ test("ballot candidacies, filings and voting sites retain their exact place and 
   assert.equal(deadline?.state, "held");
   assert.equal(deadline?.checkedAt, "2026-08-01");
   assert.ok(Date.parse(deadline!.freshUntil) < Date.parse(at), "adopted calendar is not newly checked by reading it");
+  const owed = buildPlaceOwedList({ divisions: [{ id: county, label: "County" }, { id: state, label: "State" }], ...result, now: at });
+  assert.deepEqual(owed.filter(row => row.subject.id === deadline!.subjectId).map(row => row.checklistId), ["ELE-08"]);
+  assert.ok(owed.filter(row => row.subject.id === "candidate-1").every(row => row.checklistId.startsWith("CAN-")));
+  assert.ok(owed.some(row => row.subject.id === `voting-sites:${county}` && row.checklistId === "ELE-22"), "actual site hours remain owed");
   const elsewhere = projectHeldPlaceCapture([neighbour], registry, [], at, families);
   assert.ok(!elsewhere.subjects.some(subject => subject.kind === "contest" || subject.kind === "deadline"));
+});
+
+test("canonical legislative roles reach the owed list without guessing from a person's title", () => {
+  const state = "ocd-division/country:us/state:mo", district = `${state}/sldl:1`;
+  const families = { rosters: [{ officeholders: [
+    { id: "congress:test", name: "Federal Member", officeTitle: "Member", level: "FEDERAL", provenance },
+    { id: "state:test", name: "State Member", officeTitle: "Member", level: "STATE", provenance },
+    { id: "other:test", name: "Unknown Member", officeTitle: "State Senator", level: "LOCAL", provenance },
+  ], divisions: [
+    { officeholderId: "congress:test", ocdId: state },
+    { officeholderId: "state:test", ocdId: district },
+    { officeholderId: "other:test", ocdId: county },
+  ] }] } as unknown as HeldPlaceFamilies;
+  const capture = projectHeldPlaceCapture([state, district, county], registry, [], at, families);
+  assert.equal(capture.subjects.find(s => s.id === "congress:test")?.captureKind, "federal-legislator");
+  assert.equal(capture.subjects.find(s => s.id === "state:test")?.captureKind, "state-legislator");
+  assert.equal(capture.subjects.find(s => s.id === "other:test")?.captureKind, undefined);
+  const owed = buildPlaceOwedList({ divisions: [state, district, county].map(id => ({ id, label: id })), ...capture, now: at });
+  assert.ok(!owed.some(row => row.subject.id === "state:test" && row.checklistId.startsWith("PRL-")));
+  assert.ok(owed.some(row => row.subject.id === "congress:test" && row.checklistId === "PRL-01"));
 });
 
 test("unmatched state finance and unreported totals cannot fill published-money fields", () => {
@@ -144,4 +191,7 @@ test("unmatched state finance and unreported totals cannot fill published-money 
   assert.equal(result.held.filter(field => field.checklistId === "CAM-05").length, 1);
   assert.equal((result.held.find(field => field.checklistId === "CAM-05")?.value as { amount: number }).amount, 0);
   assert.ok(!result.held.some(field => field.checklistId === "CAM-06" || field.checklistId === "CAM-07"));
+  const owed = buildPlaceOwedList({ divisions: [{ id: county, label: "County" }], ...result, now: at });
+  assert.ok(owed.some(row => row.subject.id.startsWith("state-money:") && row.checklistId === "CAM-14"));
+  assert.ok(!owed.some(row => row.subject.id.startsWith("state-money:") && ["CAM-13", "CAM-15"].includes(row.checklistId)));
 });

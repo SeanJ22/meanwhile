@@ -11,7 +11,7 @@ import {
 } from "../lib/api/params.ts";
 
 /**
- * ITEM 1b (2026-08-17, the author's ruling): a route answered a question it
+ * ITEM 1b (2026-08-17): a route answered a question it
  * should have refused, at 0,0.
  *
  * The h session's report disclosed, inside its probe-row list, one nonsense

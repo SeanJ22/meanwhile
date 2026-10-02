@@ -62,12 +62,12 @@ export const REFUSAL_SHAPES: readonly RefusalShape[] = [
   },
 
   /* ======================================================================
-   * BAL-7 (2026-08-24, the author's ruling, made product-wide) —
+   * BAL-7 (2026-08-24, made product-wide) —
    * THE PRODUCT NEVER ANNOUNCES ITS OWN FAILURE.
    *
-   * His words: *stop announcing that the site is failing. "That is a gap on
-   * our side" and every variant comes out everywhere. State what's known,
-   * offer the narrowing, move on.*
+   * The site never announces that it is failing. "That is a gap on our
+   * side" and every variant comes out everywhere. State what's known, offer
+   * the narrowing, move on.
    *
    * ## This is a DIFFERENT family from the three above, and the line matters
    *

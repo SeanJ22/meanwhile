@@ -2,7 +2,7 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 const JOBS = ["admission", "verify", "test", "build"];
-const TIERS = ["yes", "draft"];
+const TIERS = ["yes", "draft", "main"];
 
 /** @param {unknown} value @returns {value is Record<string, unknown>} */
 const record = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
@@ -29,10 +29,11 @@ export function evaluate(needs) {
     const result = typeof value.result === "string" ? value.result : "missing";
     const unneeded = admission.result === "success" && (
       (tier === "draft" && (job === "test" || job === "build"))
+      || (tier === "main" && (job === "test" || job === "verify"))
     );
     const accepted = result === "success" || (unneeded && result === "skipped");
     const explanation = unneeded
-      ? "draft tier defers full builds and tests"
+      ? tier === "main" ? "the merged pull request already ran it" : "draft tier defers full builds and tests"
       : "required for this admission";
     if (!accepted) reasons.push(`${job}: ${result}; ${explanation}.`);
     return { job, result, required: !unneeded, accepted, explanation };

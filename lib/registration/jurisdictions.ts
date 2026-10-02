@@ -42,7 +42,6 @@
  * SERVER-ONLY (node:fs). Only the standing runner and tests read it; a request
  * path never does.
  */
-import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -59,7 +58,7 @@ import type {
   JurisdictionSource,
 } from "../hunt/jurisdiction-universe.ts";
 import { OWN_SITE_MEETINGS_SOURCE } from "../hunt/meetings-discovery.ts";
-import { dataPath, parseCsv } from "../reference/index.ts";
+import { readStateReference } from "../control-plane/expansion/state-references.ts";
 import type { RegistrationReadModel } from "./candidate.ts";
 import { registrationTarget } from "./publication.ts";
 import { readRegistrationProjection } from "./reader.ts";
@@ -97,47 +96,24 @@ export interface CensusFacts {
   readonly source: string;
 }
 
-const CENSUS_FILES = [
-  { dataset: "census_govt_units_2022", file: "census_govt_units_2022.csv" },
-  { dataset: "census_govt_units_2022_dependent_school_systems", file: "census_govt_units_2022_dependent_school_systems.csv" },
-] as const;
-
-let censusFactsRead: CensusFacts | null = null;
-
 /**
- * The web address and county of every Census of Governments unit, from the committed Census files, read once per
- * process through the reference loader. Each file must hash to the sha256 the registration reference's index
- * records it was built from (`data/derived/registration/index.json`): an address from another vintage than the
- * governments it is attached to is refused by name.
+ * Read web addresses and counties from the named states' install-time projections.
+ * Their source hashes must match the registration reference's source vintage.
+ * Every caller supplies its states; there is no whole-country fallback.
  */
-export function readCensusGovernmentFacts(root: string): CensusFacts {
-  if (censusFactsRead !== null) return censusFactsRead;
+export function readCensusGovernmentFacts(root: string, states: readonly string[]): CensusFacts {
   const index = JSON.parse(readFileSync(join(/* turbopackIgnore: true */ root, "data", "derived", "registration", "index.json"), "utf8")) as { readonly source?: string };
   const byPid = new Map<string, CensusGovernmentFacts>();
-  const read: string[] = [];
-  for (const { dataset, file } of CENSUS_FILES) {
-    const text = readFileSync(dataPath(dataset), "utf8");
-    const sha256 = createHash("sha256").update(text).digest("hex");
-    const recorded = new RegExp(`${file.replace(/\./g, "\\.")} \\(sha256 ([a-f0-9]{64})\\)`).exec(index.source ?? "")?.[1] ?? null;
-    if (recorded !== sha256) {
-      throw new Error(
-        `REGISTRATION_CENSUS_FILE_DRIFT: data/reference/${file} hashes to ${sha256}, and the registration reference records ` +
-          `${recorded ?? "no sha256"} for it; a web address is never read from another vintage than its government`,
-      );
+  let source = "";
+  for (const state of states) {
+    const shard = readStateReference(root, state, { facts: true });
+    if (!shard.censusSource || shard.censusSource.split(" and ").some(part => !index.source?.includes(part.replace(/^data\/reference\//, "")))) {
+      throw new Error(`REGISTRATION_CENSUS_FILE_DRIFT:${state}: regenerate the state reference from the registered source vintage`);
     }
-    const [header = [], ...rows] = parseCsv(text);
-    const pid = header.indexOf("census_id_pid6");
-    const web = header.indexOf("web_address");
-    const county = header.indexOf("county_area_name");
-    if (pid < 0 || web < 0 || county < 0) throw new Error(`REGISTRATION_CENSUS_FILE_SHAPE: data/reference/${file} lacks census_id_pid6, web_address or county_area_name`);
-    for (const row of rows) {
-      const id = row[pid] ?? "";
-      if (id !== "") byPid.set(id, { web: (row[web] ?? "").trim(), county: (row[county] ?? "").trim() });
-    }
-    read.push(`data/reference/${file} (sha256 ${sha256})`);
+    for (const [id, fact] of Object.entries(shard.facts)) byPid.set(id, fact);
+    source = shard.censusSource;
   }
-  censusFactsRead = { byPid, source: read.join(" and ") };
-  return censusFactsRead;
+  return { byPid, source };
 }
 
 /** The reviewed generator's rule for an address the Census recorded without a scheme (scripts/enumerate-jurisdictions.mts). */
@@ -301,7 +277,6 @@ export async function loadRegistrationJurisdictions(input: {
   const registries = new Map<string, JurisdictionRegistry>();
   const refused = new Map<string, string>();
   const states = [...new Set([...input.states].map((s) => s.trim().toLowerCase()).filter((s) => /^[a-z]{2}$/.test(s)))].sort();
-  let census: CensusFacts | null = null;
   for (const state of states) {
     try {
       registrationTarget(state);
@@ -315,7 +290,7 @@ export async function loadRegistrationJurisdictions(input: {
         );
       }
       if (read.metadata.versionId === null) throw new Error(`REGISTRATION_VERSION_UNNAMED:${state.toUpperCase()}: the promoted pointer names no version`);
-      census ??= readCensusGovernmentFacts(input.root);
+      const census = readCensusGovernmentFacts(input.root, [state]);
       registries.set(state, registrationJurisdictionRegistry({ reference, promoted: { versionId: read.metadata.versionId, model: read.value }, census }));
     } catch (error) {
       refused.set(state, error instanceof Error ? error.message : String(error));

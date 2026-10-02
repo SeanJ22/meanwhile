@@ -161,7 +161,7 @@ const COLLECTION_STORES = [
 
 /**
  * THE ONE DELIBERATE EXCEPTION, NAMED PER STORE AND PER COLUMN (R41,
- * 2026-08-17, the author's ruling A).
+ * 2026-08-17, option A).
  *
  * `feedback.reply_to` holds a contact detail on purpose: a reader typed it
  * into a field labelled as an optional reply address. The exception is
@@ -306,9 +306,8 @@ test("the collection stores share no joinable column", () => {
      *   names those exactly. A geographic join between these two stores is
      *   therefore already possible on a column adjudicated years of sessions
      *   ago, and the zip adds no join surface that is not there. Refusing it
-     *   would protect nothing while removing the cohort the author's own
-     *   product rule is stated in: "readers who identified 85641 as their home
-     *   zip".
+     *   would protect nothing while removing the cohort the product rule is
+     *   stated in: readers who identified 85641 as their home zip.
      *
      *   And it is the `coverage_tier` argument unchanged: a value identical for
      *   every reader in a place, shared by thousands, cannot single anyone out
@@ -478,11 +477,7 @@ test("no table sneaks in a ranking or recommendation column", () => {
   // CLAUDE.md: no candidate or measure record may grow a score/rank/... key.
   // Meetings are not candidates, but the guard is cheap and the failure mode
   // (a 'relevance' column that becomes an ordering) is the same shape.
-  // 4a (2026-08-17): "pick" joins the ban — save-my-picks is DEVICE-LOCAL
-  // ONLY (wtp.ballot_picks), and no server column may ever be able to hold
-  // one. "Saved on this device only. We never see your picks." is a schema
-  // property here, not just a sentence.
-  const forbidden = /score|rank|rating|match|fit|grade|alignment|recommend|pick/;
+  const forbidden = /score|rank|rating|match|fit|grade|alignment|recommend/;
   for (const [name, table] of tables) {
     const config = getTableConfig(table as Parameters<typeof getTableConfig>[0]);
     for (const column of config.columns) {

@@ -34,7 +34,7 @@ import { tierForOcdId } from "../ocd/tiers.ts";
  * than this file: `countyFips` is singular per state in the coverage manifest,
  * it names the ballot files as well as the geometry, and re-fetching TIGER for
  * two more counties changes every served polygon on the map. That is a
- * structural change the author should make deliberately, and it is a tracker
+ * structural change to make deliberately, and it is a tracker
  * row rather than a side effect of a hunt.
  *
  * What this file does instead is narrower and true: **a registry division
@@ -203,12 +203,12 @@ const RETIRED_2026_08_22: CuratedDivisionRow[] = [
 ];
 
 /**
- * **EVERY ROW ABOVE IS RETIRED, AND THE AUTHOR'S DECISION IS WHY.** (RULING 80,
+ * **EVERY ROW ABOVE IS RETIRED, AND THIS IS WHY.** (RULING 80,
  * NJ Hunt 4 item 4, 2026-08-22 — the ruling that answered `NH44`.)
  *
  * This file's own header said the other honest answer was to widen the clip, and
- * that it was "a structural change the author should make deliberately, and a
- * tracker row rather than a side effect of a hunt". The row was `NH44`. He ruled:
+ * that it was "a structural change to make deliberately, and a tracker row
+ * rather than a side effect of a hunt". The row was `NH44`. The resolution:
  * the clip widens to every county ADJACENT to each primary county, measured from
  * the Census county file by shared boundary vertex rather than from a
  * written-down list.

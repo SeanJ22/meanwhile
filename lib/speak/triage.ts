@@ -1,10 +1,10 @@
 /**
  * **BC-11 RULE 4 — ABUSE TRIAGE, NOT FORWARDING.**
- * (The author's ruling, 2026-08-24.)
+ * (2026-08-24.)
  *
- * His words: *A "say it to their face" box will collect threats. Nothing typed
- * here is ever auto-forwarded to anyone. Flagged-severe rows go to a held
- * queue for Sean's review.*
+ * A "say it to their face" box will collect threats. Nothing typed here is
+ * ever auto-forwarded to anyone. Flagged-severe rows go to a held queue for
+ * the owner's review.
  *
  * ## The tiers are `docs/abuse-policy.md`'s, not new ones
  *

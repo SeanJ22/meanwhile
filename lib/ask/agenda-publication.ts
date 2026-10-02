@@ -192,9 +192,9 @@ export function structuralBasisFor(sourceOrg: string): string {
  * unreachable outside the Legistar lane: nothing else populates observations,
  * so every other body's answer falls to the OURS branch and tells a reader *we
  * have not yet acquired the agenda... we are still looking for it* about a
- * meeting whose body had simply not posted one. The owner checked at 8:30 that
- * morning, confirmed nothing was posted for either Pima sitting, and reported
- * the answer as the product blaming itself for someone else's timing.
+ * meeting whose body had simply not posted one. A check at 8:30 that morning
+ * confirmed nothing was posted for either Pima sitting, so the answer read as
+ * the product blaming itself for someone else's timing.
  *
  * ## THE NARROWING THIS FUNCTION EXISTS TO ENFORCE, AND IT IS THE WHOLE POINT
  *
@@ -845,9 +845,9 @@ function gapFor(args: {
      *
      * The clauses are unchanged and their ORDER is not. It read *"As of
      * <date>, <org> had not posted an agenda..."*, which buries the subject
-     * behind a date and reads like hedging. The owner's instruction: *"we
-     * should very clearly say that this agenda is not posted"*, and separately
-     * that the map card's NO AGENDA POSTED YET is the right register.
+     * behind a date and reads like hedging. The answer should say very
+     * clearly that this agenda is not posted, and the map card's NO AGENDA
+     * POSTED YET is the right register.
      *
      * So the publisher and the fact come first and the date follows as the
      * scope it is. Nothing is added: this still says only what a named

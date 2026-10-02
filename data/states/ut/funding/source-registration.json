@@ -11,13 +11,13 @@
       "url": "https://www.utah.gov/ltgovernor/",
       "recordsHeld": "Candidates on Ballot Lieutenant Governor; Election Results Office of the Lieutenant Governor; Federal Campaign Finance Reports State Capitol; State Campaign Finance Reports 350 North State Street, Suite 220; State and Local Lobbyist Registration and Financial Salt Lake City, Utah 84114-2325; State Political Party Financial Reports 801/538-1041 FAX 801/538-1133; State Political Action and Political Issue; Statewide Initiative and Referenda Process E-Mail: elections@utah.gov; State Corporation Financial Reports 801/538-1041 FAX 801/538-1133; Voting Accessibility 1-800/995-8683 (Toll Free in State); Electronic Filings DEPARTMENT OF COMMERCE; Corporate and Business Registration Department of Commerce; Central Filing Office for Financing 160 East 300 South, 2nd Floor",
       "page": 118,
-      "row": 301
+      "row": 277
     }
   ],
   "source": {
     "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
     "dataset": "fec_combined_federal_state_disclosure_directory",
-    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "sha256": "f50d31fe2ac0bfa4d78b6edd3cba7f33c5813f6bac237917c433e2c0c16c14f6",
     "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
   }
 }

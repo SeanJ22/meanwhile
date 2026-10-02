@@ -640,7 +640,7 @@ test("ASK04: no reply mode may render silence on the ballot", () => {
     join(process.cwd(), "components/ask/ballot-ask.tsx"),
     "utf8",
   );
-  assert.match(source, /data-ask-state="NOTHING_HELD"/, "the empty branch is gone");
+  assert.match(source, /"data-ask-state": "NOTHING_HELD"/, "the empty branch is gone");
   /* And it must be guarded on all three emptinesses, or it would swallow a
      reply that DID have records. */
   for (const guard of [

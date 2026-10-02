@@ -108,6 +108,7 @@ import { readLocationOrigin, stampResidency } from "@/lib/ask/residency";
 import { captureAskInteraction } from "@/lib/db/ask-signal";
 import { askCallerKey, cacheCallLine } from "@/lib/ask/prompt-cache";
 import { askModelStartupLine, resolveAskRoleModel } from "@/lib/ask/model";
+import { askUnsourced, shouldFallBack } from "@/lib/routing/unsourced-fallback";
 import {
   interpretationCacheKey,
   synthesisCacheKey,
@@ -3016,6 +3017,31 @@ export async function POST(request: Request) {
    * `captureAskInteraction` builds the row only when the request carries the
    * returning-reader ID; without one it writes nothing.
    */
+  /*
+   * **NOTHING WE HOLD ANSWERS THIS, SO ASK MAY ANSWER FROM THE CLAUDE API.**
+   * (October 1, 2026, Sean: Ask without a source we hold is allowed.)
+   *
+   * Only when no held record stood behind the answer and no composed or
+   * synthesised answer exists, so a sourced answer is never replaced and this
+   * runs last. The answer is one or two sentences and states its source in the
+   * same breath ("Source: Claude Haiku 4.5, general knowledge — not a public
+   * record this site holds"); the mode stays NO_EVIDENCE and the gaps below
+   * still say what we do not hold. A failure of any kind leaves the answer
+   * exactly as it was, and the row saved records what the reader received.
+   */
+  if (
+    mode === "NO_EVIDENCE" &&
+    answer === null &&
+    packRecords.length === 0 &&
+    shouldFallBack({ routerAnswered: false, routerDeclined: true })
+  ) {
+    const general = await askUnsourced(question);
+    if (general.kind === "UNSOURCED") {
+      answer = `${general.answer.text} ${general.answer.sourceLine}`;
+      answerModel = resolveAskRoleModel("UNSOURCED");
+    }
+  }
+
   await capture(mode, subject ? [subject.id] : [], answer, answerModel, validationPassed, packRecords, packGaps);
 
   /*

@@ -35,6 +35,7 @@ test("Next deployment tracing includes static geography and excludes every migra
     "./data/derived/zip-coverage-tiers-runtime.json",
     "./data/derived/zip-divisions/*.json",
     "./lib/db/migrations/meta/_journal.json",
+    "./data/states/*/funding/source-registration.json",
   ]) {
     assert.ok(includes.includes(required), `static production input is no longer traced: ${required}`);
   }

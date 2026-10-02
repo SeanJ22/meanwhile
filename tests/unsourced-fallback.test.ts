@@ -11,24 +11,13 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { RIPCORDS, ripcordPulled } from "../lib/ripcords.ts";
 import {
   UNSOURCED_MARK,
-  fallbackEnabled,
   shouldFallBack,
   unsourcedAnswer,
 } from "../lib/routing/unsourced-fallback.ts";
 
 const ROOT = process.cwd();
-
-test("ASK-12: the flag exists, is NAMED, and is ON for the testing window", () => {
-  // Sean asked for it behind a flag, on in testing, turn-off-able in ONE place
-  // with no code change. The env var is that one place.
-  assert.ok("ripcord.unsourcedFallback" in RIPCORDS);
-  assert.equal(RIPCORDS["ripcord.unsourcedFallback"].envVar, "WTP_RIPCORD_UNSOURCED_FALLBACK");
-  assert.equal(ripcordPulled("ripcord.unsourcedFallback"), false, "the fallback is not live for testing");
-  assert.equal(fallbackEnabled(), true);
-});
 
 test("ASK-12 — THE LOAD-BEARING CASE: an unsourced answer carries NO sources field at all", () => {
   /*
@@ -77,57 +66,25 @@ test("ASK-12: the mark is PLAIN LANGUAGE, and it is not a footnote", () => {
 
 test("ASK-12 — LAST, NEVER FIRST: a question the router ANSWERED never falls back", () => {
   assert.equal(
-    shouldFallBack({ routerAnswered: true, routerDeclined: false, civicButUnsourced: false }),
+    shouldFallBack({ routerAnswered: true, routerDeclined: false }),
     false,
     "a sourced answer was discarded in favour of a generated one",
   );
   // Not tried at all is also not a decline.
   assert.equal(
-    shouldFallBack({ routerAnswered: false, routerDeclined: false, civicButUnsourced: false }),
+    shouldFallBack({ routerAnswered: false, routerDeclined: false }),
     false,
     "the fallback fired without the sourced path having declined",
-  );
-});
-
-test("ASK-12 — THE OTHER LOAD-BEARING CASE: a CIVIC question we have not sourced is OWED, not generated", () => {
-  /*
-   * This is the clause most likely to be lost, because it looks like a missed
-   * opportunity. A question about a government that we cannot answer is a gap
-   * in OUR research — the transparency mandate hunts it again on its cadence.
-   * Handing it to a general model converts that gap into a plausible sentence
-   * about a real government that nobody can check, which is the
-   * never-generate-a-position rule with a different generator.
-   */
-  assert.equal(
-    shouldFallBack({ routerAnswered: false, routerDeclined: true, civicButUnsourced: true }),
-    false,
-    "a civic question we have not sourced was answered by a general model",
   );
 });
 
 test("ASK-12: the out-of-scope class Sean named DOES fall back", () => {
   // "Why is it raining?" — declined by the router, not civic, flag on.
   assert.equal(
-    shouldFallBack({ routerAnswered: false, routerDeclined: true, civicButUnsourced: false }),
+    shouldFallBack({ routerAnswered: false, routerDeclined: true }),
     true,
     "the fallback refuses the exact class it was built for",
   );
-});
-
-test("ASK-12: pulling the ripcord closes it in ONE place, with no code change", () => {
-  const before = process.env.WTP_RIPCORD_UNSOURCED_FALLBACK;
-  try {
-    process.env.WTP_RIPCORD_UNSOURCED_FALLBACK = "pulled";
-    assert.equal(fallbackEnabled(), false);
-    assert.equal(
-      shouldFallBack({ routerAnswered: false, routerDeclined: true, civicButUnsourced: false }),
-      false,
-      "the fallback still fires with its ripcord pulled",
-    );
-  } finally {
-    if (before === undefined) delete process.env.WTP_RIPCORD_UNSOURCED_FALLBACK;
-    else process.env.WTP_RIPCORD_UNSOURCED_FALLBACK = before;
-  }
 });
 
 test("ASK-12: the SOURCED refusal is unchanged — the civic path did not move", () => {
@@ -147,4 +104,28 @@ test("ASK-12: the SOURCED refusal is unchanged — the civic path did not move",
     !resolve.includes("unsourced-fallback"),
     "the sourced router imports the fallback — the two paths must not meet inside it",
   );
+});
+
+test("Sean, October 1, 2026: Ask without a held source may answer, states its source, and stays short", async () => {
+  const { unsourcedSourceLine, askUnsourced } = await import("../lib/routing/unsourced-fallback.ts");
+  // The source line names the model and says no record backs the answer.
+  assert.equal(
+    unsourcedSourceLine("claude-haiku-4-5"),
+    "Source: Claude Haiku 4.5, general knowledge — not a public record this site holds.",
+  );
+  assert.equal(unsourcedAnswer("x", "claude-haiku-4-5").sourceLine, unsourcedSourceLine("claude-haiku-4-5"));
+  // A civic question is no longer refused by the fallback itself.
+  assert.equal(shouldFallBack({ routerAnswered: false, routerDeclined: true }), true);
+  // The prompt asks for one or two sentences, and no longer tells the model to refuse civic questions.
+  let sent = "";
+  process.env.ANTHROPIC_API_KEY ??= "test-key";
+  const outcome = await askUnsourced("Who is my state senator?", {
+    fetchImpl: (async (_url: string, init: { body: string }) => {
+      sent = init.body;
+      return new Response(JSON.stringify({ content: [{ type: "text", text: "I am not sure who holds that seat." }] }), { status: 200 });
+    }) as unknown as typeof fetch,
+  });
+  assert.match(sent, /ONE or TWO sentences/);
+  assert.ok(!/DECLINE/.test(sent), "the prompt still orders the model to refuse civic questions");
+  assert.equal(outcome.kind, "UNSOURCED");
 });

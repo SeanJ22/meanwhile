@@ -74,11 +74,11 @@ test("a delta of zero passes", () => {
   assert.equal(verdict.delta.inSync, true);
 });
 
-test("a delta of two FAILS and names both migrations — the incident, exactly", () => {
+test("pending expands reach the production build, but still fail after deployment", () => {
   /*
    * The shape of run 33211710028: 23 committed, 21 applied, the two Ask
-   * migrations missing. Both are expand-phase, so both were owed BEFORE the
-   * deploy that carried the code naming `ask_interactions`.
+   * migrations missing. The production build now applies both before serving
+   * the code naming `ask_interactions`; neither may remain missing afterward.
    */
   const journal = journalOf(
     "0019_next_scarlet_witch",
@@ -95,20 +95,27 @@ test("a delta of two FAILS and names both migrations — the incident, exactly",
     moment: "pre-deploy",
   });
 
-  assert.equal(verdict.verdict, "fail");
+  assert.equal(verdict.verdict, "pass");
+  assert.equal(verdict.delta.appliedCount, 2, "pending expands must not be reported as applied");
+  assert.equal(verdict.delta.inSync, false);
   assert.deepEqual(
     verdict.expandNotApplied,
     ["0021_mixed_red_ghost", "0022_adorable_hemingway"],
     "the two Ask migrations must be named individually, never counted",
   );
-  const said = verdict.failures.join("\n");
+  assert.deepEqual(verdict.failures, []);
+  assert.match(verdict.summary, /pending for the production build/);
+  const after = evaluateShippingInvariant({
+    journal, appliedWhen: applied,
+    introduced: ["0021_mixed_red_ghost", "0022_adorable_hemingway"],
+    moment: "post-deploy",
+  });
+  assert.equal(after.verdict, "fail");
+  const said = after.failures.join("\n");
   for (const tag of ["0021_mixed_red_ghost", "0022_adorable_hemingway"]) {
+    assert.ok(verdict.summary.includes(tag), `the build plan does not name ${tag}`);
     assert.ok(said.includes(tag), `the refusal does not name ${tag}`);
   }
-  assert.ok(
-    said.includes("db:apply --target=production"),
-    "the refusal must state the remedy, not just the refusal",
-  );
 });
 
 test("a number is never the answer: the verdict carries every migration by name", () => {
@@ -555,15 +562,19 @@ test("PDC terminal boundary: the schema/intake tripwire is not a GitHub routine 
 
 test("the production migration applier commits each migration and its journal row atomically", () => {
   const source = readFileSync(join(ROOT, "scripts", "apply-migrations.mts"), "utf8");
-  const transactionAt = source.indexOf("await sql.transaction");
-  const statementAt = source.indexOf("transaction.query(statement)", transactionAt);
+  const blockAt = source.indexOf("const apply = `DO ");
+  const transactionAt = source.indexOf("await sql.transaction", blockAt);
+  const statementAt = source.indexOf("statements.map(", blockAt);
   // Keep the table token split so the detector above does not mistake this
   // assertion for another executable journal querier.
-  const journalAt = source.indexOf("INSERT INTO drizzle." + "__drizzle_migrations", transactionAt);
+  const journalAt = source.indexOf("INSERT INTO drizzle." + "__drizzle_migrations", blockAt);
   const transactionEnd = source.indexOf("]);", transactionAt);
 
   assert.ok(transactionAt >= 0, "the migration applier has no atomic transaction boundary");
-  assert.ok(statementAt > transactionAt, "DDL statements are not inside the migration transaction");
+  assert.ok(blockAt >= 0 && statementAt > blockAt && transactionAt > journalAt,
+    "the guarded DDL/journal block is not prepared before the atomic transaction");
+  assert.match(source.slice(transactionAt, transactionEnd), /pg_advisory_xact_lock/);
+  assert.match(source.slice(transactionAt, transactionEnd), /transaction\.query\(apply\)/);
   assert.ok(journalAt > statementAt, "the journal row is not ordered after the migration statements");
   assert.ok(
     transactionEnd > journalAt,
@@ -576,18 +587,10 @@ test("the production migration applier commits each migration and its journal ro
   );
 });
 
-test("NOTHING applies a migration automatically, and no gate may heal what it finds", () => {
-  /*
-   * THE LIFECYCLE FINDING, PINNED. `git log -S` over `.github/` and
-   * `netlify.toml` across this repository's whole history returns no commit
-   * that ever ran `db:apply`, `drizzle-kit migrate` or `apply-migrations` in
-   * CI or in the deploy: applying has only ever been a person at a terminal.
-   *
-   * The repair is a GATE, not an auto-apply. A gate that could fix what it
-   * finds would apply unreviewed SQL against production; a pull-request check
-   * doing so would be worse because the SQL would be unreviewed by definition.
-   * This therefore asserts the absence deliberately.
-   */
+test("production expand applies in the deploy; pull-request checks do not apply migrations", () => {
+  // Sean replaced manual production application in rulings section 5 on October 1.
+  const deploy = readFileSync(join(ROOT, "netlify.toml"), "utf8");
+  assert.match(deploy, /pnpm db:apply --target=production --phase=expand --production-build && corepack pnpm run build/);
   const offenders: string[] = [];
   const files = readdirSync(WORKFLOWS).filter((f) => f.endsWith(".yml"));
   assert.equal(files.length, 3, `expected CI, release observer and authorized adapter merger workflows, found ${files.length}`);
@@ -603,10 +606,7 @@ test("NOTHING applies a migration automatically, and no gate may heal what it fi
   assert.deepEqual(
     offenders,
     [],
-    "a workflow now applies migrations automatically:\n  " +
-      `${offenders.join("\n  ")}\n\n` +
-      "That may be the right answer one day, and it is a decision — take this guard out in the " +
-      "same diff, and say who reviews the SQL before it reaches production.",
+    "a pull-request workflow applies migrations:\n  " + offenders.join("\n  "),
   );
 });
 

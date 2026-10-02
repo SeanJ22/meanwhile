@@ -1,6 +1,6 @@
 /**
  * **RULING 92 — fix the generator, never the artifact.**
- * (Adopted 2026-08-22, the author's ruling, NJ Hunt 6.)
+ * (Adopted 2026-08-22, NJ Hunt 6.)
  *
  * A generated artifact is never hand-corrected. The generator is fixed and the
  * artifact is regenerated. Hand-editing an output produces a file that **looks

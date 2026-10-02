@@ -22,10 +22,10 @@ export interface CommitteeSeat {
  *
  * ## Item 0a, answered from the authoritative source
  *
- * The author asked, before this could be built: *"I'm looking at Senate
- * Committee on Armed Services and then under that: ranking member Senate
- * Committee on Armed Services / Senate Committee on Armed Services Emerging
- * Threats and Capabilities. I assume these are subcommittees."*
+ * The open question before this could be built: under Senate Committee on
+ * Armed Services, the card listed *ranking member Senate Committee on Armed
+ * Services* and *Senate Committee on Armed Services Emerging Threats and
+ * Capabilities*. Are these subcommittees?
  *
  * They are — all of them. Read off `data/congress-legislators/directory.json`
  * (unitedstates/congress-legislators, SHA `44582443`, collected 2026-08-16) and
@@ -42,7 +42,7 @@ export interface CommitteeSeat {
  * So the middle row is **not** a role notation on the parent, which is what it
  * looked like on screen: it is a SUBCOMMITTEE (Airland) that he is ranking
  * member OF, and the card truncated the distinguishing half. Two different
- * things needing two different treatments, as the author suspected — but the
+ * things needing two different treatments, as suspected — but the
  * split is not where the render implied. `title` is a role notation that can
  * ride on EITHER a parent row or a child row; the `— Subcommittee` suffix is
  * what makes a row a child.

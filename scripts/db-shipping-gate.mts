@@ -37,6 +37,7 @@
  *      must not be gated on a database round trip.
  *   2. **It knows about EXPAND and CONTRACT.** `db:check` fails on any missing
  *      migration, which is right for a daily sweep and wrong for a merge gate:
+ *      expands may be pending for the production build to apply before serving;
  *      a contract migration is SUPPOSED to be missing until its code is live.
  *      See `lib/db/migration-phases.ts`.
  *   3. **It reads the change**, so it can tell a migration this change
@@ -82,9 +83,9 @@
  *
  * A pre-merge reading is true about the moment it was taken. It does not stay
  * true: a merge is not a deploy in this repository — `netlify.toml` filters
- * deploys by path, previews and branch deploys never build, and the applier has
- * always been a person at a terminal — so the schema can move between the gate
- * passing and the code serving.
+ * deploys by path, previews and branch deploys never build, and the production
+ * main build applies pending expands before building. The schema can move
+ * between the gate passing and the code serving.
  *
  * `--moment=post-deploy` (or `WTP_SCHEMA_GATE_MOMENT=post-deploy`) is that
  * second reading, and it is the one that fails on an unapplied CONTRACT
@@ -160,8 +161,8 @@ const arg = (name: string): string | null => {
  * today.** A pre-deploy reading is true about the moment it was taken; it does
  * not stay true after the deploy, and `post-deploy` is where BOTH phases are
  * owed — the contract half of a two-sided change being the half that is easy to
- * forget. Until a deploy-triggered runner exists (see the header), this is
- * dispatchable by hand against the exact commit that shipped.
+ * forget. The production runner applies contracts only when the exact commit
+ * is serving and loaded; this reading still reports any pending migration.
  */
 const MOMENT: ShipMoment =
   arg("moment") === "post-deploy" || process.env.WTP_SCHEMA_GATE_MOMENT === "post-deploy"

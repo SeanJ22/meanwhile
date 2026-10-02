@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join, resolve } from "node:path";
+import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import test from "node:test";
 
 import { neonConfig } from "@neondatabase/serverless";
@@ -624,10 +625,16 @@ test('website size thresholds apply to the requested publisher, including unknow
   assert.equal(websiteRequestLimit(),null);
 });
 
-test('parent HTTP shares ten small-publisher requests across text and byte tools; other websites keep going', async () => {
+test('parent HTTP shares ten held small-publisher requests across text and byte tools; other websites keep going', async t => {
   const small='https://small.example.gov', census='https://tigerweb.geo.census.gov';
-  const controller=fundedController({now:NIGHT,costs:[],websiteSize:url=>new URL(url).host==='small.example.gov'
-    ? {kind:'school-district',students:4999} : {kind:'federal'}});
+  const root=mkdtempSync(join(tmpdir(),'s8-parent-publisher-'));
+  t.after(()=>{assert.equal(dirname(resolve(root)),resolve(tmpdir()));rmSync(root,{recursive:true,force:true});});
+  const path=join(root,'data/states/az/reference/publisher-sizes.jsonl');
+  mkdirSync(dirname(path),{recursive:true});
+  writeFileSync(path,JSON.stringify({state:'az',host:'small.example.gov',censusId:'000001',kind:'school-district',students:4999,
+    source:{url:'https://census.gov/test-fixture',dataset:'TEST FIXTURE'}}));
+  const websiteSize=websiteSizeFromHoldings(['AZ','az','nm'],root);
+  const controller=fundedController({now:NIGHT,costs:[],websiteSize});
   let calls=0;
   const fetcher:typeof fetch=async()=>{calls++;return new Response('complete');};
   const text=controller.guardedOpenOne('public-web','same-work',fetcher);

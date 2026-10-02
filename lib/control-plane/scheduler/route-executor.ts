@@ -57,6 +57,7 @@ import {
 } from "./http-executor.ts";
 import type { RouteDescriptor, YieldContract } from "./registry.ts";
 import { DEFAULT_USER_AGENT } from "./user-agent.ts";
+import { websiteRequestLimit, websiteSizeForObligation, type WebsiteSizeForUrl } from "./host-supervision.ts";
 
 const RAN_AS = "DETERMINISTIC" as const;
 
@@ -260,6 +261,8 @@ export function routeExecutor(input: {
   readonly timeoutMs?: number;
   /** Injected so tests do not sleep. Returns immediately when omitted. */
   readonly spaceOut?: (hostKey: string) => Promise<void>;
+  readonly websiteSize?: WebsiteSizeForUrl;
+  readonly root?: string;
   /** Where retrieved bytes are persisted. Omitted means metadata only, SAID. */
   readonly vault?: VaultPut;
   readonly now?: () => string;
@@ -370,7 +373,8 @@ export function routeExecutor(input: {
       ...(route.open.headers ?? {}),
     };
 
-    if (input.spaceOut) await input.spaceOut(url.host);
+    const websiteSize = input.websiteSize ?? websiteSizeForObligation(obligation.obligation, input.root);
+    if (input.spaceOut && websiteRequestLimit(websiteSize(url.toString())) !== null) await input.spaceOut(url.host);
     const got = await openOne({
       url: url.toString(),
       method: route.open.kind === "HTTP_POST" ? "POST" : "GET",

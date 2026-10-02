@@ -9,6 +9,8 @@ import type { V6Refusal } from "../lib/control-plane/admin-view/v6-hunts-read.ts
 import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
 import { HUNT_SOURCE_PROGRESS_LOG_KEY, type HuntSourceProgress } from "../lib/control-plane/owner-surface.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import type { RunningJobRow } from "../lib/control-plane/repository/running-jobs.ts";
+import type { StateProgress } from "../lib/control-plane/repository/state-progress.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { RESEARCH_STATE_ID } from "../lib/control-plane/scheduler/research-policy.ts";
@@ -76,9 +78,38 @@ const SENDS = { formatVersion: 1, at: "2026-09-28T21:52:41.202Z", costsReadable:
     budgetWhyNot: null,
     completion: { kind: "NOT_COMPLETE", assignmentKey: ORIGINAL.key, members: 194, settled: 20, exceptions: [], refusedCount: 30, unsettledCount: 144 } }] };
 
+/** One live-lease row as the bounded read returns it; `jobs` and `progress` on `world` stand in for the store's two indexed reads. */
+interface JobFixture { id: string; startedAt?: string; expiresAt?: string; released?: boolean; attempt?: "open" | "ended" | "none" | "other-lease"; role?: string;
+  obligation?: null | { recordClass?: string; subjectId?: string; marks?: { assignmentKey: string; ref: string; at: string }[]; divisions?: string[] } }
+const jobMark = (d: ExpansionScopeDecision, at = "2026-09-27T23:10:31.451Z") => ({ assignmentKey: d.key, ref: d.receiptId, at });
+function jobRow(f: JobFixture): RunningJobRow {
+  const startedAt = f.startedAt ?? "2026-09-28T21:50:00.000Z";
+  const leaseId = `ls-${f.id}`;
+  const kind = f.attempt ?? "open";
+  const o = f.obligation === undefined ? { marks: [jobMark(ORIGINAL)] } : f.obligation;
+  return { leaseId, routeTaskId: `rt-${f.id}`, holder: "runner@test", expiresAt: f.expiresAt ?? "2026-09-28T22:10:00.000Z", released: f.released ?? false,
+    attempt: kind === "none" ? null : { id: f.id, leaseId: kind === "other-lease" ? "ls-someone-else" : leaseId, startedAt,
+      endedAt: kind === "ended" ? "2026-09-28T21:55:00.000Z" : null, outcome: kind === "ended" ? "COMPLETED" : null,
+      role: f.role ?? "ACQUIRER", version: f.role === "SCOUT" ? "claude-haiku-4-5-20251001" : "route-executor/1.0", workItemId: `wi-${f.id}` },
+    obligation: o === null ? null : { id: `ob-${f.id}`, recordClass: o.recordClass ?? "meetings", subjectId: o.subjectId ?? "body-x", scopeDivisions: o.divisions ?? [], assignments: o.marks ?? [] } };
+}
+
 async function world(opts: { scouts?: ScoutFixture[]; sources?: { id: string; p: HuntSourceProgress }[]; scopes?: ExpansionScopeDecision[];
-  research?: Record<string, unknown> | null; heartbeat?: Record<string, unknown> | null } = {}): Promise<ControlPlaneRepositories> {
+  research?: Record<string, unknown> | null; heartbeat?: Record<string, unknown> | null;
+  jobs?: JobFixture[] | { rows: JobFixture[]; truncated: boolean }; progress?: StateProgress | null | "UNAVAILABLE"; progressAsked?: string[] } = {}): Promise<ControlPlaneRepositories> {
   const repos = createMemoryRepositories();
+  if (opts.jobs !== undefined) {
+    const read = Array.isArray(opts.jobs) ? { rows: opts.jobs, truncated: false } : opts.jobs;
+    (repos as { activeWorkClaims: unknown }).activeWorkClaims = { ...repos.activeWorkClaims,
+      readRunningJobs: async ({ nowIso }: { nowIso: string }) => ({ available: true, reason: null, asOf: nowIso, limit: 500, truncated: read.truncated, rows: read.rows.map(jobRow) }) };
+  }
+  if (opts.progress !== undefined) {
+    (repos as { activeWorkClaims: unknown }).activeWorkClaims = { ...repos.activeWorkClaims,
+      readLatestStateProgress: async ({ state }: { state: string }) => {
+        opts.progressAsked?.push(state);
+        return opts.progress === "UNAVAILABLE" ? { available: false, reason: "STATE_PROGRESS_UNAVAILABLE", progress: null } : { available: true, reason: null, progress: opts.progress };
+      } };
+  }
   await repos.adminConfig.put("current", { expansionScopes: opts.scopes ?? [ORIGINAL] } as never, NOW);
   if (opts.heartbeat !== null) await repos.runnerHeartbeat.put(RUNNER_ID, { beatAt: "2026-09-28T21:59:30.000Z", lastCycleStartedAt: "2026-09-28T21:46:34.342Z",
     lastCycleFinishedAt: "2026-09-28T21:30:00.000Z", lastCycleOk: true, nextCycleDueAt: "2026-09-28T22:30:00.000Z", testedSha: "a".repeat(40),
@@ -106,7 +137,7 @@ async function world(opts: { scouts?: ScoutFixture[]; sources?: { id: string; p:
 async function section(scopeKey: string, repos: ControlPlaneRepositories) {
   const q = validateWorkersQuery(new URLSearchParams({ scope: scopeKey }));
   assert.ok(q.ok);
-  return v6WorkersSection({ scopeKey, scope: q.scope, sources: await readV6WorkersSources(repos, NOW) });
+  return v6WorkersSection({ scopeKey, scope: q.scope, sources: await readV6WorkersSources(repos, NOW, q.scope) });
 }
 function ok(out: unknown): { data: AdminV6WorkersView; missingParts: readonly string[]; revision: string; asOf: string; scope: string; contract: string } {
   assert.ok(out && typeof out === "object" && !("kind" in out), `expected a section, got ${JSON.stringify(out)}`);
@@ -132,8 +163,9 @@ test("only an open attempt with its own live lease is running; an expired lease 
   const ended = events.filter(e => e.kind === "Paid research ended");
   assert.equal(ended.length, 1);
   assert.match(ended[0].text, /ended \(/);
-  assert.equal(s.data.jobs, null, "the running universe is not complete, so no job list is claimed");
-  assert.ok(s.missingParts.some(m => m.startsWith(DEP_WORKER_ACTIVE_INDEX)));
+  assert.equal(s.data.jobs, null, "a store with no live-lease read claims no job list, never an empty one");
+  assert.equal(s.data.running, null);
+  assert.ok(s.missingParts.includes(`${DEP_WORKER_ACTIVE_INDEX}: —`), "the failed read is a dash");
 });
 
 test("a released lease, a lease held under another id, and a missing lease never count as running", async () => {
@@ -150,7 +182,7 @@ test("a heartbeat is not progress: a live check-in with only failures leaves las
   assert.equal(s.data.status.lastCheckIn, "2026-09-28T21:59:30.000Z");
   assert.equal(s.data.status.runnerState, "ALIVE");
   assert.equal(s.data.status.lastUsefulProgress, null);
-  assert.ok(s.missingParts.some(m => /A check-in only means the workers are switched on/.test(m)));
+  assert.ok(!s.missingParts.some(m => /last useful progress|check-in only/i.test(m)), "no progress is a dash on the page, with no sentence beside it");
   assert.equal(s.data.status.roundStartedAt, "2026-09-28T21:46:34.342Z", "a round started after the last finish is in progress");
 });
 
@@ -288,14 +320,53 @@ test("reads stay bounded: no list, no whole-log read, no filtered scan", async (
     if (typeof v !== "function") return v;
     return (...args: unknown[]) => {
       calls.push(`${name}.${String(prop)}`);
-      if (["list", "listWhere", "readAll", "keys", "readWhere", "readRecentWhere"].includes(String(prop))) throw Error(`unbounded ${name}.${String(prop)}`);
+      if (["list", "listWhere", "readAll", "keys", "readWhere"].includes(String(prop))) throw Error(`unbounded ${name}.${String(prop)}`);
+      if (prop === "readRecentWhere") {
+        assert.equal(args[0], "owner-digest");
+        if ((args[1] as string[])[0] === "headline") assert.equal(args[2], "Production migrations");
+        else { assert.deepEqual(args[1], ["migration", "phase"]); assert.ok(["expand", "contract"].includes(args[2] as string)); }
+        assert.equal(args[3], 1);
+        assert.deepEqual(args[4], { headline: true, writtenAt: true, migration: ["phase", "state", "summary", "targetHost"] });
+      }
       return (v as (...a: unknown[]) => unknown).apply(target, args);
     };
   } });
   const wrapped = Object.fromEntries(Object.entries(repos).map(([k, v]) => [k, v && typeof v === "object" ? guard(k, v) : v])) as unknown as ControlPlaneRepositories;
   ok(await section("us", wrapped));
   assert.ok(calls.filter(c => c.startsWith("attempts.")).length <= 16);
-  assert.deepEqual(calls.filter(c => c.startsWith("ownerDigests.")), ["ownerDigests.readRecent"]);
+  assert.deepEqual(calls.filter(c => c.startsWith("ownerDigests.")), ["ownerDigests.readRecent", "ownerDigests.readRecentWhere", "ownerDigests.readRecentWhere", "ownerDigests.readRecentWhere"]);
+});
+
+test("automatic migration outcomes use the existing deploy card and do not become source delivery", async () => {
+  const repos = await world({ sources: [] });
+  await repos.ownerDigests.append("owner-digest", "migration-1", { formatVersion: 1, digestId: "migration-1",
+    writtenAt: NOW, headline: "Production migrations", lines: [], cycleOk: false, testedSha: "a".repeat(40),
+    migration: { phase: "expand", state: "REFUSED", summary: "Committed journal mismatch; old deploy remains serving.",
+      targetHost: "ep-dry-river-axwtolzc" } } as never, NOW);
+  const result = ok(await section("us", repos));
+  assert.equal(result.data.update?.status, "REFUSED");
+  assert.equal(result.data.update?.fixId, null);
+  assert.equal(result.data.status.lastUsefulProgress, null);
+  assert.match(result.data.update?.what ?? "", /Committed journal mismatch/);
+  for (let i = 0; i < 3; i++) {
+    const writtenAt = new Date(Date.parse(NOW) + (i + 1) * 1000).toISOString();
+    await repos.ownerDigests.append("owner-digest", `contract-${i}`, { formatVersion: 1, digestId: `contract-${i}`,
+      writtenAt, headline: "Production migrations", lines: [], cycleOk: true, testedSha: "b".repeat(40),
+      migration: { phase: "contract", state: "SUCCEEDED", summary: `Contract reading ${i}`,
+        targetHost: "ep-dry-river-axwtolzc" } } as never, writtenAt);
+  }
+  const later = ok(await section("us", repos));
+  assert.equal(later.data.update?.status, "REFUSED", "repeated contract success cannot hide an expand refusal");
+  assert.match(later.data.update?.what ?? "", /Committed journal mismatch/);
+  assert.match(later.data.update?.what ?? "", /Contract reading 2/);
+  assert.doesNotMatch(later.data.update?.what ?? "", /Contract reading [01]/);
+  await repos.ownerDigests.append("owner-digest", "invalid-phase", { formatVersion: 1, digestId: "invalid-phase",
+    writtenAt: new Date(Date.parse(NOW) + 4000).toISOString(), headline: "Production migrations", lines: [], cycleOk: false,
+    testedSha: "c".repeat(40), migration: { phase: "all", state: "REFUSED", summary: "Production needs an explicit phase.",
+      targetHost: "ep-dry-river-axwtolzc" } } as never, new Date(Date.parse(NOW) + 4000).toISOString());
+  const invalid = ok(await section("us", repos));
+  assert.match(invalid.data.update?.what ?? "", /Production needs an explicit phase/);
+  assert.match(invalid.data.update?.what ?? "", /Committed journal mismatch/);
 });
 
 test("the revision follows saved sources, not the clock or a lease renewal", async () => {
@@ -306,6 +377,146 @@ test("the revision follows saved sources, not the clock or a lease renewal", asy
   assert.equal(renewed.revision, a.revision, "a renewed claim is a heartbeat, not a change");
   const expiredNow = ok(await section("us", await world({ scouts: [{ ...LIVE, lease: { expiresAt: "2026-09-28T21:59:00.000Z" } }, EXPIRED, ENDED] })));
   assert.notEqual(expiredNow.revision, a.revision, "running → stopped is a change");
+});
+
+/* ------------------------------------------------------- jobs running now */
+
+const ids = (out: unknown) => ok(out).data.jobs?.map(j => j.id) ?? null;
+
+test("a job is running only with an open attempt on its own unreleased, unexpired lease", async () => {
+  const repos = await world({ scouts: [], jobs: [
+    { id: "at-run" },
+    { id: "at-lease-expired", expiresAt: "2026-09-28T21:59:59.000Z" },
+    { id: "at-lease-released", released: true },
+    { id: "at-attempt-closed", attempt: "ended" },
+    { id: "at-no-attempt", attempt: "none" },
+    { id: "at-other-lease", attempt: "other-lease" },
+  ] });
+  const out = ok(await section("us", repos));
+  assert.deepEqual(out.data.jobs?.map(j => j.id), ["at-run"]);
+  assert.deepEqual(out.data.running, { count: 1, system: 1, lowerBound: false });
+  const job = out.data.jobs![0];
+  assert.equal(job.stage, "collecting");
+  assert.equal(job.title, "Plain-code reader · body-x");
+  assert.equal(job.model, "No AI (plain code)");
+  assert.equal(job.hunt, "ZIP 85635 (Census ZCTA) hunt");
+  assert.equal(job.requirement, "meeting list");
+  assert.equal(job.elapsed, "10 min so far");
+  assert.equal(job.startedAt, "2026-09-28T21:50:00.000Z");
+  assert.ok(!out.missingParts.some(m => m.startsWith(DEP_WORKER_ACTIVE_INDEX)), "a read that worked leaves no missing part");
+  assert.ok(!JSON.stringify(out.missingParts).includes("plain-code collection jobs run outside"));
+});
+
+test("a Scout is a running job too, with its model named", async () => {
+  const out = ok(await section("us", await world({ scouts: [], jobs: [{ id: "at-scout", role: "SCOUT" }] })));
+  assert.equal(out.data.jobs?.[0].stage, "finding");
+  assert.equal(out.data.jobs?.[0].model, "Cheapest AI (claude-haiku-4-5-20251001)");
+  assert.equal(out.data.jobs?.[0].title, "Scout · body-x");
+});
+
+test("a job is placed on a place only by the exact Send (key and original receipt) its obligation carries", async () => {
+  const repos = await world({ scouts: [], scopes: [ORIGINAL, NH], jobs: [
+    { id: "at-az", obligation: { marks: [jobMark(ORIGINAL)] } },
+    { id: "at-nh", obligation: { marks: [jobMark(NH, "2026-09-28T02:00:00.000Z")] } },
+    { id: "at-late-mark", obligation: { marks: [jobMark(ORIGINAL, "2026-09-28T21:55:00.000Z")] } },
+    { id: "at-other-receipt", obligation: { marks: [{ ...jobMark(ORIGINAL), ref: "expansion.scope.set:scope:85635:someone-else" }] } },
+    { id: "at-no-marks", obligation: { marks: [] } },
+    { id: "at-no-obligation", obligation: null },
+  ] });
+  const zip = ok(await section(Z85635, repos));
+  assert.deepEqual(zip.data.jobs?.map(j => j.id), ["at-az"], "only the job whose obligation carries the 85635 Send");
+  assert.deepEqual(zip.data.running, { count: 1, system: 6, lowerBound: false }, "unplaced jobs are in the system count, not the ZIP's");
+  assert.equal(zip.data.jobs?.[0].placeKey, Z85635);
+  assert.deepEqual(ids(await section("st:az", repos)), ["at-az"]);
+  assert.deepEqual(ids(await section("st:nh", repos)), ["at-nh"], "a job in another hunt shows only in its own state");
+  const whole = ok(await section("us", repos));
+  assert.equal(whole.data.jobs?.length, 6, "the whole system lists every running job, placed or not");
+  assert.deepEqual(whole.data.running, { count: 6, system: 6, lowerBound: false });
+  const unplaced = whole.data.jobs!.filter(j => ["at-late-mark", "at-other-receipt", "at-no-marks", "at-no-obligation"].includes(j.id));
+  assert.equal(unplaced.length, 4);
+  assert.ok(unplaced.every(j => j.hunt === "—" && j.requirement === (j.id === "at-no-obligation" ? "—" : "meeting list")), "an unplaced job names no hunt");
+});
+
+test("a job the Send marks cannot place is counted for the whole system only", async () => {
+  const repos = await world({ scouts: [], jobs: [{ id: "at-stray", obligation: { marks: [] } }, { id: "at-none", obligation: null }, { id: "at-az" }] });
+  for (const scope of [Z85635, "st:az"]) {
+    const out = ok(await section(scope, repos));
+    assert.deepEqual(out.data.running, { count: 1, system: 3, lowerBound: false }, scope);
+    assert.ok(!out.data.jobs?.some(j => j.id === "at-stray" || j.id === "at-none"), scope);
+  }
+  assert.equal(ok(await section("us", repos)).data.running?.count, 3);
+});
+
+test("declared scope divisions place shared work: the country everywhere, a state in its own state and its ZIPs, a part of a state in the state only", async () => {
+  const repos = await world({ scouts: [], jobs: [
+    { id: "at-national", obligation: { marks: [], divisions: ["ocd-division/country:us"] } },
+    { id: "at-az-wide", obligation: { marks: [], divisions: ["ocd-division/country:us/state:az"] } },
+    { id: "at-az-county", obligation: { marks: [], divisions: ["ocd-division/country:us/state:az/county:cochise"] } },
+    { id: "at-nh-wide", obligation: { marks: [], divisions: ["ocd-division/country:us/state:nh"] } },
+  ] });
+  assert.deepEqual(ids(await section("st:az", repos))?.sort(), ["at-az-county", "at-az-wide", "at-national"]);
+  assert.deepEqual(ids(await section(Z85635, repos))?.sort(), ["at-az-wide", "at-national"], "a part of a state cannot be placed in a ZIP");
+  assert.deepEqual(ids(await section("st:nh", repos))?.sort(), ["at-national", "at-nh-wide"]);
+  assert.equal(ok(await section("us", repos)).data.jobs?.length, 4);
+  const az = ok(await section("st:az", repos)).data.jobs!;
+  assert.equal(az.find(j => j.id === "at-national")?.hunt, "Shared national");
+  assert.equal(az.find(j => j.id === "at-az-wide")?.hunt, "Shared statewide");
+});
+
+test("a read that reached its row limit says every count is a lower bound; a failed read is a dash, never an empty list", async () => {
+  const cut = ok(await section("us", await world({ scouts: [], jobs: { rows: [{ id: "at-1" }, { id: "at-2" }], truncated: true } })));
+  assert.deepEqual(cut.data.running, { count: 2, system: 2, lowerBound: true });
+  assert.equal(cut.data.jobs?.length, 2);
+  const repos = await world({ scouts: [] });
+  const broken = { ...repos, activeWorkClaims: { ...repos.activeWorkClaims, readRunningJobs: async () => { throw Error("postgresql://private"); } } } as unknown as ControlPlaneRepositories;
+  const out = ok(await section("us", broken));
+  assert.equal(out.data.jobs, null);
+  assert.equal(out.data.running, null);
+  assert.ok(out.missingParts.includes(`${DEP_WORKER_ACTIVE_INDEX}: —`));
+  assert.doesNotMatch(JSON.stringify(out), /postgresql|private/);
+  const empty = ok(await section("us", await world({ scouts: [], jobs: [] })));
+  assert.deepEqual(empty.data.jobs, [], "a read that worked and found nothing running is an empty list");
+  assert.deepEqual(empty.data.running, { count: 0, system: 0, lowerBound: false });
+});
+
+test("at a state, last useful progress is the latest verified result in that state, else nothing", async () => {
+  const progress: StateProgress = { at: "2026-09-27T12:00:00.000Z", kind: "PROMOTION", subject: "az:2026:state-az:governor:hobbs-katie", detail: "candidate-enrichment" };
+  const asked: string[] = [];
+  const st = ok(await section("st:az", await world({ scouts: [], progress, progressAsked: asked })));
+  assert.deepEqual(st.data.status.lastUsefulProgress, { at: progress.at, what: "Approved for promotion · candidate record · az:2026:state-az:governor:hobbs-katie" });
+  assert.deepEqual(asked, ["az"]);
+  assert.ok(!st.missingParts.some(m => /publication or promotion|last useful progress/i.test(m)), "no sentence beside the figure");
+  for (const scope of ["us", Z85635]) {
+    const out = ok(await section(scope, await world({ scouts: [], progress, progressAsked: asked })));
+    assert.equal(out.data.status.lastUsefulProgress, null, `${scope}: only a state reads state progress`);
+  }
+  assert.deepEqual(asked, ["az"], "the state read is asked for a state and nowhere else");
+  const validated: StateProgress = { at: "2026-09-28T01:00:00.000Z", kind: "WORKER_RESULT", subject: "az:city:phoenix", detail: "VALIDATOR" };
+  assert.equal(ok(await section("st:az", await world({ scouts: [], progress: validated }))).data.status.lastUsefulProgress?.what, "Validator passed · az:city:phoenix");
+  const none = ok(await section("st:az", await world({ scouts: [], progress: null })));
+  assert.equal(none.data.status.lastUsefulProgress, null);
+  assert.deepEqual(none.data.status.unread, []);
+  const down = ok(await section("st:az", await world({ scouts: [], progress: "UNAVAILABLE" })));
+  assert.equal(down.data.status.lastUsefulProgress, null);
+  assert.ok(down.data.status.unread.includes("the latest verified result in this state"));
+});
+
+test("a newer saved publication beats an older verified result, and the other way round", async () => {
+  const published = { id: "c9:voting-sites:PUBLISHED", p: { ...votingSitesLoop(1)[0].p, stage: "PUBLISHED" as const, at: "2026-09-28T21:58:00.000Z", detail: "" } };
+  const older: StateProgress = { at: "2026-09-28T10:00:00.000Z", kind: "PROMOTION", subject: "az:2026:x", detail: "candidate-enrichment" };
+  const newer: StateProgress = { ...older, at: "2026-09-28T21:59:00.000Z" };
+  const a = ok(await section("st:az", await world({ scouts: [], sources: [published], progress: older })));
+  assert.equal(a.data.status.lastUsefulProgress?.at, "2026-09-28T21:58:00.000Z");
+  const b = ok(await section("st:az", await world({ scouts: [], sources: [published], progress: newer })));
+  assert.equal(b.data.status.lastUsefulProgress?.at, "2026-09-28T21:59:00.000Z");
+});
+
+test("the revision follows which jobs run, not a lease renewal", async () => {
+  const a = ok(await section("us", await world({ scouts: [], jobs: [{ id: "at-1" }] })));
+  const renewed = ok(await section("us", await world({ scouts: [], jobs: [{ id: "at-1", expiresAt: "2026-09-28T22:50:00.000Z" }] })));
+  assert.equal(renewed.revision, a.revision);
+  const more = ok(await section("us", await world({ scouts: [], jobs: [{ id: "at-1" }, { id: "at-2" }] })));
+  assert.notEqual(more.revision, a.revision);
 });
 
 /* --------------------------------------------------------------- the route */
@@ -341,14 +552,15 @@ test("route: public 404, unauthenticated 401, strict query 400, unbound 409, unr
     assert.equal(json.contract, "admin-v6/workers@1");
     assert.equal(json.scope, Z85635);
     assert.equal(json.asOf, NOW);
-    assert.deepEqual(Object.keys(json.data).sort(), ["events", "jobs", "next", "status", "update", "waiting"]);
+    assert.deepEqual(Object.keys(json.data).sort(), ["events", "jobs", "next", "running", "status", "update", "waiting"]);
   });
 });
 
 /* ------------------------------------------------ the page reads this section */
 
 test("an open v6 page picks up the Workers section through LiveSync and shows every row for its place", async () => {
-  const repos = await world({ scouts: [LIVE, EXPIRED, NH_SCOUT], scopes: [ORIGINAL, NH] });
+  const repos = await world({ scouts: [LIVE, EXPIRED, NH_SCOUT], scopes: [ORIGINAL, NH],
+    jobs: [{ id: "at-live-job", obligation: { marks: [jobMark(ORIGINAL)] } }, { id: "at-other-job", obligation: null }] });
   const open = async () => ({ ok: true as const, repos });
   await withAdminSessionKey(async () => {
     const cookie = await adminSessionCookie();
@@ -369,8 +581,11 @@ test("an open v6 page picks up the Workers section through LiveSync and shows ev
       // The Workers screen filters by `relation(index, applies, scopeKey)`; nothing proven here may vanish.
       assert.equal(w.events?.filter(e => relation(index, e.applies, scope) !== null).length, w.events?.length, scope);
       assert.equal(w.waiting?.filter(x => relation(index, x.applies, scope) !== null).length, w.waiting?.length, scope);
-      assert.equal(w.jobs, null);
-      assert.ok(bundle.workers.missingParts?.some(m => m.startsWith(DEP_WORKER_ACTIVE_INDEX)), scope);
+      const expected = scope === "us" ? 2 : 1;
+      assert.equal(w.jobs?.length, expected, scope);
+      assert.equal(w.jobs?.filter(j => relation(index, [j.placeKey], scope) !== null).length, w.jobs?.length, scope);
+      assert.deepEqual(w.running, { count: expected, system: 2, lowerBound: false }, scope);
+      assert.ok(!bundle.workers.missingParts?.some(m => m.startsWith(DEP_WORKER_ACTIVE_INDEX)), scope);
     }
   });
 });

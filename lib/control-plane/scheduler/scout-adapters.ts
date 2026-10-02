@@ -15,13 +15,31 @@ export async function installedAdapters(): Promise<string[]> {
   try { return (await readdir(directory)).filter(name => /\.(ts|mjs)$/.test(name) && !name.includes('.test.')).map(name => name.replace(/\.(ts|mjs)$/, '')).sort(); }
   catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return []; throw error; }
 }
-export async function runInstalledAdapter(name: string, text: string, sourceUrl: string): Promise<unknown> {
+export interface PlatformAdapterGuide {
+  readonly summary:string;
+  readonly procedure:string;
+  readonly recordClasses:readonly string[];
+  readonly sourceUrls:readonly string[];
+}
+async function loadInstalledAdapter(name:string):Promise<{module:Record<string,unknown>;file:string}> {
   if (!(await installedAdapters()).includes(name)) throw new Error('ADAPTER_NOT_INSTALLED');
-  let adapterModule: Record<string, unknown> = {};
   for (const extension of ['ts', 'mjs']) {
-    try { adapterModule = await import(pathToFileURL(fileURLToPath(new URL(name + '.' + extension, directory))).href); break; }
+    try { return {module:await import(pathToFileURL(fileURLToPath(new URL(name + '.' + extension, directory))).href),file:`lib/sources/platform-adapters/${name}.${extension}`}; }
     catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ERR_MODULE_NOT_FOUND') throw error; }
   }
+  throw new Error('ADAPTER_NOT_INSTALLED');
+}
+/** Optional instructions shipped with the implementation, for every role's existing knowledge bank. */
+export async function installedAdapterGuides():Promise<{name:string;version:string|null;file:string;guide:PlatformAdapterGuide}[]> {
+  const guides:{name:string;version:string|null;file:string;guide:PlatformAdapterGuide}[]=[];
+  for(const name of await installedAdapters()) {
+    const adapter=await loadInstalledAdapter(name);
+    if(adapter.module.guide)guides.push({name,version:installedAdapterVersion(name),file:adapter.file,guide:adapter.module.guide as PlatformAdapterGuide});
+  }
+  return guides;
+}
+export async function runInstalledAdapter(name: string, text: string, sourceUrl: string): Promise<unknown> {
+  const {module:adapterModule}=await loadInstalledAdapter(name);
   if (typeof adapterModule.extract === 'function') return adapterModule.extract({text, sourceUrl});
   if (name === 'uncapped-source-links' && typeof adapterModule.uncappedSourceLinks === 'function') return adapterModule.uncappedSourceLinks(text, sourceUrl);
   if (name === 'dated-sitemap' && typeof adapterModule.inventoryStreamlineSitemap === 'function') return adapterModule.inventoryStreamlineSitemap({xml:text, publisherOrigin:new URL(sourceUrl).origin, subjectId:sourceUrl});

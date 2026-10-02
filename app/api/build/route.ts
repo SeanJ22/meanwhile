@@ -7,7 +7,7 @@
  * polling an API route until its behaviour changed, which works only when the
  * change alters observable behaviour — for a doc-only or internal change there
  * is nothing to poll, and "the deploy went green" is not the same claim as
- * "the deploy is serving my commit". The author ruled: an endpoint returning
+ * "the deploy is serving my commit". The design: an endpoint returning
  * the commit SHA the deploy was built from, so a deploy is verifiable even
  * when it has no visible output.
  *

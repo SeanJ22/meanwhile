@@ -3,6 +3,7 @@ import { createPgRepositories, controlPlaneUrlFromEnv } from "../repository/pg-s
 import { RepositoryLockHeld } from "../repository/types.ts";
 import type { ModelResponse, ScoutEscalationAdmission } from "../scheduler/scout-executor.ts";
 import { FleetSafetyController } from "../fleet-safety.ts";
+import { websiteSizeForObligation, type WebsiteSizeForUrl } from "../scheduler/host-supervision.ts";
 import { autonomousStandingRuntime } from "./standing-runtime.ts";
 import { dispatchAutonomousTask } from "./coordinator.ts";
 import { browseWithPlaywright } from "../../../scripts/scout-browse.mts";
@@ -17,7 +18,9 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
   if (config.postgres && !url) throw new Error("CONTROL_PLANE_DATABASE_UNCONFIGURED");
   const repos = url ? await createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true })
     : await createFileRepositories(config.fileStoreRoot ?? join(config.root, ".runtime/control-plane/freshness-shadow"));
-  const safety = new FleetSafetyController({ now: new Date().toISOString(), costs: [], rollingCeilingUsd: config.ceilingUsd });
+  let websiteSize: WebsiteSizeForUrl = () => null;
+  const safety = new FleetSafetyController({ now: new Date().toISOString(), costs: [], rollingCeilingUsd: config.ceilingUsd,
+    websiteSize: url => websiteSize(url) });
   const pending = new Set(config.taskIds);
   // Each process runs one live lease at a time, always pulling current task state.
   // The first process to claim wins in the existing repository dispatcher.
@@ -28,6 +31,7 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
       const task = (await repos.routeTasks.read(id))?.value;
       if (!task || !["PENDING", "RECLAIMABLE"].includes(task.state)) continue;
       const item = (await repos.workItems.mustRead(task.workItemId)).value;
+      websiteSize = websiteSizeForObligation({ id: item.id, subjectId: item.subject, autonomousPlan: item.autonomousPlan }, config.root);
       broker.assignment(id, { subjectId: item.subject, state: item.autonomousPlan?.jurisdiction ?? null });
       const runtime = await autonomousStandingRuntime({ root: config.root, repos, environment: process.env,
         browse: browseWithPlaywright, openBytes: safety.guardedOpenBytes("public-web", item.subject),

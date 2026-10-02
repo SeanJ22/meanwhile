@@ -57,12 +57,12 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
 }
 
 /**
- * The Verified row — g3 item 5, the author's ruling (2026-08-16).
+ * The Verified row — g3 item 5 (2026-08-16).
  *
  * This row used to say "not yet" for everything a human had not personally
  * re-checked, which on production meant a fact read off the Governor of
  * Arizona's own website sat under the words "Verified: not yet" with the link
- * to that website two rows above it. The ruling: **a read from the subject's
+ * to that website two rows above it. The rule: **a read from the subject's
  * own official source IS the verification**, by that source, on the date we
  * read it.
  *

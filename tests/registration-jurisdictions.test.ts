@@ -75,7 +75,11 @@ const promotedOhio = () => promoted("OH");
 test("Ohio's registration, read as a registry: every government under the reviewed ids, its body, and only the Census's own web address", async () => {
   const { versionId, model } = await promotedOhio();
   const reference = loadRegistrationReference(ROOT, "OH");
-  const oh = registrationJurisdictionRegistry({ reference, promoted: { versionId, model }, census: readCensusGovernmentFacts(ROOT) });
+  const census = readCensusGovernmentFacts(ROOT, ["OH"]);
+  assert.ok(census.byPid.size > 0);
+  const azCensus = readCensusGovernmentFacts(ROOT, ["AZ"]);
+  assert.ok([...census.byPid.keys()].every(id => !azCensus.byPid.has(id)), "state facts never carry another state's governments");
+  const oh = registrationJurisdictionRegistry({ reference, promoted: { versionId, model }, census });
   assert.equal(registrySourceOf(oh), "REGISTRATION");
   assert.deepEqual(oh.registration, { kind: "REGISTRATION", versionId, referenceSha256: reference.sha256, webAddresses: oh.registration!.webAddresses });
   assert.equal(oh.jurisdictions.length, reference.reference.governments.length, "every government the reference names, the state itself included");
@@ -114,7 +118,7 @@ test("Ohio's registration, read as a registry: every government under the review
 test("only the promoted version is read: one built from another reference, none at all, or an outage refuses the state by name", async () => {
   const { versionId, model } = await promotedOhio();
   const reference = loadRegistrationReference(ROOT, "OH");
-  const census = readCensusGovernmentFacts(ROOT);
+  const census = readCensusGovernmentFacts(ROOT, ["OH"]);
   assert.throws(
     () => registrationJurisdictionRegistry({ reference, promoted: { versionId, model: { ...model, vintage: { ...model.vintage, referenceSha256: "0".repeat(64) } } }, census }),
     /REGISTRATION_REFERENCE_MISMATCH:OH/,

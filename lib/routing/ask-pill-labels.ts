@@ -1,13 +1,13 @@
 /**
  * G07 — THE ASK PILL'S LABEL CARRIES THE TEACHING (2026-08-17).
  *
- * The author's ruling on 4a's cost, in his own framing: hiding the box behind
+ * The cost of 4a: hiding the box behind
  * a pill is cleaner but gets used less, and typed questions are the highest-
  * intent signal this product collects. So the pill's label does the work the
  * open box used to do — **the reader learns what can be asked without the box
  * being open** — and a bare "Ask" is not allowed anywhere.
  *
- * The rule the ruling sets, and the reason this file exists rather than three
+ * The rule this sets, and the reason this file exists rather than three
  * string literals in three components: *"Where the pill's width forbids the
  * full example string, use the shortest form that still names at least one
  * concrete example."* A label that degrades to "Ask" under pressure has lost
@@ -23,7 +23,7 @@
  *   `map-top-row` with the ballot pill and the row clears MapLibre's zoom
  *   column (`pr-14`), so at 390px the two pills split roughly 330px between
  *   them. The full example string does not fit and this is the placement the
- *   ruling's "shortest form" clause was written for.
+ *   rule's "shortest form" clause was written for.
  * * **sidebar top** has the rail's full 340px less its padding, and the pill
  *   is the only thing on its row.
  * * **WGH top** has the card's width, which is the same rail width at phone

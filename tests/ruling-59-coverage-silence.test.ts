@@ -14,7 +14,7 @@ import { COLLECTION_NOTE } from "../lib/ballot/collection-note.ts";
  * **RULING 59 (2026-08-21, the author's ruling) — THE PAGE SAYS ONE THING
  * ABOUT COMPLETENESS AND NOTHING ELSE.**
  *
- * The only reader-facing statement about what the product holds is his line:
+ * The only reader-facing statement about what the product holds is one line:
  * *"What we have found, we are displaying here."* — once in the ballot
  * section and once on the battlecard, per RULING 51. No other sentence
  * anywhere describes coverage, counts what is missing, or characterises what

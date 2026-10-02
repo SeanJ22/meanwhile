@@ -11,13 +11,13 @@
       "url": "https://www.elec.nj.gov/",
       "recordsHeld": "State and Local Campaign Finance Reports New Jersey Election Law Enforcement Commission; State Personal Financial Reports 25 South Stockton Street, 5th Floor; State Lobby Reports URL https://www.elec.nj.gov/; State Public Financing Documentation 609/292-8700 FAX 609/777-1457; Public Question and Financial Reporting Mailing Address:; Pay-to-Play Disclosure P.O. Box 185",
       "page": 86,
-      "row": 211
+      "row": 192
     }
   ],
   "source": {
     "url": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
     "dataset": "fec_combined_federal_state_disclosure_directory",
-    "sha256": "02fbe4190eb3658972eeef89c36faa70f068f00d5f099673f525adb14961486d",
+    "sha256": "f50d31fe2ac0bfa4d78b6edd3cba7f33c5813f6bac237917c433e2c0c16c14f6",
     "archiveSha256": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c"
   }
 }

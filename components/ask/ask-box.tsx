@@ -18,6 +18,7 @@ import {
 } from "@/lib/routing/ask";
 import { buildDigest, type Digest } from "@/lib/routing/digest";
 import { ROUTABLE_CATEGORIES } from "@/lib/routing/destinations";
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import type { NameableEntity } from "@/lib/routing/exact-name";
 import { ASK_BEAT_POOL, beatStem, drawAskBeat } from "@/lib/routing/ask-beat-pool";
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
@@ -121,7 +122,7 @@ import { gapsNotInAnswer } from "@/lib/text/say-once";
  * The panel never writes a civic fact of its own.
  *
  * M119 (2026-08-17) merges the sidebar's two inputs into this one. The
- * author's ruling was one input, keyword-first: text matching a known meeting,
+ * design is one input, keyword-first: text matching a known meeting,
  * body, district or person filters and navigates exactly as the search did,
  * and anything else routes as an ask. Both halves now live on one control, and
  * **the two logs do not blur** — a keystroke lands in exactly one of them:
@@ -132,7 +133,7 @@ import { gapsNotInAnswer } from "@/lib/text/say-once";
  * * Anything submitted that is not a name is an ASK. It logs its topic when it
  *   routed, or the capped question text when it did not.
  *
- * ## The author's matcher ruling (2026-08-17), as it lands here
+ * ## The matcher rule (2026-08-17), as it lands here
  *
  * The keyword layer routes only on a STRONG match — two or more distinct
  * keyword hits, or an exact name. Anything weaker falls through to the Level 1
@@ -309,10 +310,10 @@ export function AskBox({
   const [text, setText] = useState("");
   const [asked, setAsked] = useState<AskAnswer | null>(null);
   const [digest, setDigest] = useState<Digest | null>(null);
-  // The visible-work beat (the author's presentation call, session brief
-  // 3). PRESENTATION ONLY — the routing below runs instantly and
-  // deterministically on-device before the timer starts, and nothing new
-  // is logged. The words come from the author's FIXED pool
+  // The visible-work beat (session brief 3). PRESENTATION ONLY — the
+  // routing below runs instantly and deterministically on-device before
+  // the timer starts, and nothing new is logged. The words come from a
+  // FIXED pool
   // (lib/routing/ask-beat-pool.ts, CLAUDE.md's register rule): playful,
   // acknowledgment register, and never a deliberation label — nothing a
   // reader sees here is generated, and a deliberation word would claim
@@ -880,8 +881,8 @@ export function AskBox({
         its concrete examples, which is what actually teaches the box.
       */}
       <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-voice">
-        {/* F01 8.3 (2026-08-19, the author): "a pothole is close to the worst
-            possible example to lead with." It reads as "report a pothole", and
+        {/* F01 8.3 (2026-08-19): a pothole is a poor example to lead
+            with. It reads as "report a pothole", and
             this box does not file service requests — it NAMES the office that
             owns the thing, which is a different and smaller promise. The
             routing itself is unchanged and a pothole still routes; it simply
@@ -998,7 +999,7 @@ export function AskBox({
         // The beat — presentation only, and an acknowledgment rather than a
         // claim of deliberation. The static sentence is what a screen
         // reader announces; the cycling dots are visual, which is why the
-        // author's trailing ellipsis is stripped from the stem.
+        // pool's trailing ellipsis is stripped from the stem.
         <p
           className="mt-2.5 text-[0.8125rem] italic leading-relaxed text-voice"
           aria-live="polite"
@@ -1076,8 +1077,7 @@ export function AskBox({
                      * This was `dispatch({ type: "list/open", open: true })` —
                      * a generic open carrying nothing. The reader had just been
                      * answered about ONE body and the pill handed them every
-                     * meeting in the ZIP, which is the hunting the owner
-                     * reported.
+                     * meeting in the ZIP, which left them hunting.
                      *
                      * The subject comes from the GROUNDED answer's bound
                      * subject, which is the engine's own decision about what the
@@ -1131,9 +1131,7 @@ export function AskBox({
             **ASK-17 (2026-08-30) — THE ANSWER SCROLLS.**
 
             The TUSD answer ran past the bottom of the panel and stopped, cut
-            mid-roster, with no way to reach the rest. The owner: *"the
-            information just scrolls. It gets cut off at the end and there's no
-            way for me to scroll down and see other information."*
+            mid-roster, with no way to reach the rest.
 
             An answer a reader cannot finish reading is an answer they did not
             get, which makes this the reader contract and not a layout
@@ -1151,9 +1149,7 @@ export function AskBox({
             **ASK-16 (2026-08-30) — A WAY OUT.**
 
             Once a question was asked the answer had no close, no minimise and
-            no back. The owner: *"There's no way for me to minimize or back out
-            of this area once I asked that question. There's no way for me to
-            do anything."*
+            no back.
 
             Reader friction is a defect with the same standing as a wrong
             number, and being unable to leave a surface is the most basic form
@@ -1234,13 +1230,7 @@ export function AskBox({
             A fact about us, attributed, with no verdict on ourselves in it.
           */}
           {grounded.mode === "OFF" && (
-            <p
-              data-ask-grounded-state="OFF"
-              className="text-[0.8125rem] leading-relaxed text-voice"
-            >
-              Answering from our records is switched off right now, so we have
-              nothing to show for that question yet.
-            </p>
+            <WorkingOnIt attrs={{ "data-ask-grounded-state": "OFF" }} />
           )}
 
           {/*
@@ -1273,9 +1263,9 @@ export function AskBox({
 
           {/*
             ── OWN-Q9 ── **THE GOVERNMENTS AN ANSWER NAMED, EACH OPENING ITS
-            OWN CARD.** (The owner's amendment on Q9, 2026-08-31.)
+            OWN CARD.** (The amendment on Q9, 2026-08-31.)
 
-            *"the special districts in the answer must be clickable."* The
+            The special districts in the answer must be clickable. The
             disclosure rows on the who-governs card have opened their cards
             since WGH-18; the governments named inside an ASK answer were the
             one place in the product where reading about a district was a
@@ -1305,7 +1295,7 @@ export function AskBox({
             ── ASK-20 / ASK-24 ── **THE SAME CONTROL THE MEETING CARD OFFERS.**
             (Session B closure, 2026-08-31.)
 
-            The owner: an Ask answer that names a meeting date carried no Add to
+            The gap: an Ask answer that names a meeting date carried no Add to
             calendar, while the map card beside it carried one for the same
             sitting. The reason was upstream — the answer payload shipped the
             meeting as PROSE and an id, which is everything a reader needs to
@@ -1378,12 +1368,8 @@ export function AskBox({
 
             This rendered every member expanded inside every answer: name,
             role, body, ward email and the date we read it, five to eight rows
-            deep. The owner met it three times in one session and it is what
-            pushed the TUSD answer off the bottom of the panel (ASK-17). His
-            instruction, verbatim: *"This area should be collapsed by default.
-            We could change even the title to say 'Who this is' or whatever.
-            You could just simply say 'Members of this council' and have it
-            automatically collapse. There's too much information."*
+            deep — too much information, and it is what pushed the TUSD answer
+            off the bottom of the panel (ASK-17).
 
             The same collapse-by-default rule as MTG-5, BAL-8 and BAL-16 — this
             is the surface it had not reached. **Nothing is removed** (RULING
@@ -1391,9 +1377,8 @@ export function AskBox({
             still one click away, and the COUNT is on the summary so a reader
             knows what is behind it before they open it.
 
-            The title keeps the owner's own words. He offered two and the first
-            is the one already on the surface, so the label a reader has
-            learned does not move under them.
+            The title stays the one already on the surface, so the label a
+            reader has learned does not move under them.
           */}
           <AskAnswerContacts contacts={grounded.contacts ?? []} />
 
@@ -1442,14 +1427,11 @@ export function AskBox({
                records that neither state got far enough to check. */
             grounded.mode !== "OFF" &&
             grounded.mode !== "TRANSPORT_FAILED" && (
-              <p
-                data-ask-grounded-state="NOTHING_HELD"
-                className="text-[0.8125rem] leading-relaxed text-voice"
-              >
-                {grounded.subject
-                  ? `We hold ${grounded.subject.name}, but nothing recorded that answers that.`
-                  : "We haven't recorded anything that answers that yet. Naming a government — a school district, a county board, someone on your ballot — is what this can answer from."}
-              </p>
+              <WorkingOnIt
+                attrs={{ "data-ask-grounded-state": "NOTHING_HELD" }}
+                about={grounded.subject?.name}
+                subject={grounded.subject?.kind === "BODY" ? { type: "BODY", id: grounded.subject.id } : null}
+              />
             )}
 
           {/* The sources, always, and a null publisher renders as the HOST
@@ -1543,13 +1525,7 @@ export function AskBox({
             what the reader is told.
           */}
           {asked.binding.kind === "UNRESOLVED" && !grounded?.subject && (
-            <p
-              data-ask-entity-state="UNRESOLVED"
-              className="text-[0.8125rem] leading-relaxed text-voice"
-            >
-              We haven&apos;t matched &ldquo;{asked.binding.mention}&rdquo; to a
-              government near you.
-            </p>
+            <WorkingOnIt attrs={{ "data-ask-entity-state": "UNRESOLVED" }} about={`“${asked.binding.mention}”`} />
           )}
           {asked.binding.kind === "AMBIGUOUS" && !grounded?.subject && (
             <p
@@ -1570,7 +1546,7 @@ export function AskBox({
             {asked.answer.statement}
           </p>
           {/*
-            The author's ruling: where the classifier is pulled or unavailable,
+            The rule: where the classifier is pulled or unavailable,
             a weak match gets the honest refusal WITH THE DESTINATIONS OFFERED
             — never a low-confidence route. The offer is the four curated
             surfaces, named, so a refusal still leaves the reader somewhere to

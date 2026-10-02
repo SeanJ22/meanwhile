@@ -17,7 +17,7 @@ import { isPlausibleTargetId, isValidReactionKey } from "@/lib/signal/reactions"
  *
  * ## It reuses the reactions route's protections rather than inventing any
  *
- * The author's rule 4 says *the intake limiter's attestation applies to
+ * Rule 4 says *the intake limiter's attestation applies to
  * submissions*, and this is what that means concretely: same-origin, the same
  * in-memory sliding windows, the same authoritative cross-instance counters,
  * the same quarantine-never-trust-through disposition. A second intake surface

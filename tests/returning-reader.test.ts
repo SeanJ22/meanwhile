@@ -12,9 +12,9 @@ import test from "node:test";
  *   2. the reader CONFIRMS it or RE-ENTERS it on return,
  *   3. a district is NEVER assumed from it.
  *
- * Clause 1 is settled by the 6f ruling (2026-08-15): the current location is
- * SESSION-scoped, so reopening the app does not restore where you were — it
- * asks. The only thing that outlives the tab is the device-local recents list.
+ * Clause 1: the current location is remembered between visits (Sean, October
+ * 1, 2026, replacing the August per-tab rule), so reopening the site opens on
+ * the reader's own area; the recents list keeps their other places.
  *
  * Clause 2 was the gap this session closed. The re-ask landed on a card
  * offering four zips belonging to somebody else, while the reader's own recent
@@ -65,24 +65,26 @@ test("the returning reader is offered their own recent places, not only ours", (
   );
 });
 
-test("offering a tap is still asking — nothing restores the location silently", () => {
+test("the zip is remembered between visits, and a link still wins", () => {
   const stored = readFileSync(STORED_ZIP, "utf8");
 
-  // The 6f ruling, mechanically: the live location lives in sessionStorage,
-  // which dies with the tab. A move to localStorage would restore a reader into
-  // an answer about somewhere they were last week, and every number under it
-  // would be correct for a place they are not.
-  // Asserted on the CALL, never on the word: both files discuss the other
-  // store in prose, and a guard that reads comments is a guard that passes or
-  // fails on someone's paragraph rather than on the code.
+  // Sean, October 1, 2026: reopening the site opens on the reader's own area.
+  // This replaces the 6f rule (per-tab, asks on every fresh open). Asserted on
+  // the CALL, never on the word: a guard that reads comments passes or fails on
+  // someone's paragraph rather than on the code.
   assert.match(
     stored,
-    /window\.sessionStorage\.(get|set)Item/,
-    "the current location is session-scoped (6f)",
+    /window\.localStorage\.(get|set)Item\(STORAGE_KEY/,
+    "the current location is kept on the device between visits",
   );
   assert.ok(
-    !/window\.localStorage/.test(stored),
-    "the current location never moves to localStorage — that would restore, not ask",
+    !/window\.sessionStorage/.test(stored),
+    "the current location is no longer per-tab",
+  );
+  assert.match(
+    stored,
+    /linkZip !== null\) return JSON\.stringify\(\{ zip: linkZip \}\)/,
+    "a link's ?zip= still names the place to open",
   );
 
   const recents = readFileSync(RECENTS, "utf8");

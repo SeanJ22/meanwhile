@@ -5,8 +5,8 @@ import type { SeatHolder } from "./lookup.ts";
 
 /**
  * The three-tier grouping every officials surface renders (session item
- * 2c, wall clock 2026-08-14 second session — the author's call from
- * production screenshots): flat mixed lists of officials get messy as
+ * 2c, wall clock 2026-08-14 second session — from production
+ * screenshots): flat mixed lists of officials get messy as
  * coverage grows, so every surface that lists officials groups under
  * three headers, ALWAYS closest-first:
  *

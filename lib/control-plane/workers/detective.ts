@@ -2,12 +2,29 @@ import { SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION, archiveCapture } from "../schedul
 import { scoutExecutor } from "../scheduler/scout-executor.ts";
 import { ZERO_COST } from "../attempt.ts";
 import {installedAdapters,installedAdapterVersion} from '../scheduler/scout-adapters.ts';
+import {readFieldManual, type FieldManualEntry} from '../field-manual.ts';
 import { requireCapability } from "../capability.ts";
 import { contentHash } from "../ids.ts";
 import { indexJson } from "./parser.ts";
 import { assertResearchResult, assertResearchWalk, type DetectiveResult, type DetectiveWorkerInput, type ResearchBlocker,
   type ResearchSpan } from "./research-types.ts";
 import type { WorkerEvidence } from "./types.ts";
+import type { FreshnessDebt } from "../scheduler/debt.ts";
+import type { ExecutorDecision } from "../scheduler/dispatch.ts";
+
+/** A broken known route needs a new route, not another replay of the same HTTP shape. */
+export function sourceFailureRecovery(decision: ExecutorDecision, debt: FreshnessDebt | null | undefined): ExecutorDecision {
+  if (!needsSourceInvestigation(debt)) return decision;
+  return {kind:'BOUNDED_MODEL_WORKER', disagreement:decision.disagreement,
+    why:`DETECTIVE FAILURE RESPONSE: ${debt.target} failed at ${debt.lastFailedAt} (${debt.cause}, ${debt.consecutiveFailures} consecutive failure(s)). ${debt.detail}\n`+
+      'Read held facts and the knowledge bank first, then available APIs. Find another working source or a documented dead end; do not replay the failed route.'};
+}
+
+function needsSourceInvestigation(debt: FreshnessDebt | null | undefined): debt is FreshnessDebt {
+  return !!debt && debt.consecutiveFailures > 0 && [
+    'REFUSED_BY_HOST', 'RATE_LIMITED', 'UPSTREAM_ERROR', 'TRANSPORT_FAILED', 'EXTRACTION_FAILED',
+  ].includes(debt.cause);
+}
 
 /** JSON grammar, duplicate-key checks and exact pointer offsets reuse the Parser's lexical index. */
 function valueAt(evidence: WorkerEvidence, pointer: string): { value: unknown; span: ResearchSpan } | null {
@@ -128,6 +145,7 @@ export function detectiveExecutor(deps: import('../scheduler/scout-executor.ts')
 /** Both Scout lanes use the same failure responder and keep their existing budgets and tools. */
 export function failureResponderExecutor(deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps & {
   solved?: import('../scheduler/scout-result.ts').ScoutResult | null;
+  sourceFailure?: FreshnessDebt | null;
   executorFactory?: ScoutExecutorFactory;
 }): import('../scheduler/dispatch.ts').DeclaredExecutor {
   const contexts=new Map<string,{value?:ReturnType<typeof deps.contextFor>;error?:unknown}>();
@@ -141,6 +159,7 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
   const scout=factory({...deps,contextFor}), detective=detectiveExecutor({...deps,contextFor},factory);
   const choose=(row:Parameters<typeof contextFor>[0])=>{
     try {
+      if (needsSourceInvestigation(deps.sourceFailure)) return detective;
       const inherited=contextFor(row).inherited;
       // Shared manual failures are knowledge, not failures of this job. Its
       // projected entries/instructions are indented; keep actual prior-result
@@ -150,7 +169,8 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
         /\b(?:REFUSED|BLOCKED|NO_PROGRESS|NEEDS_ADAPTER|REQUIRED_FIELD_MISSING)\b|failed parse|blocked route|retry loop|DEBT: [1-9]\d* consecutive failure/i.test(ownHistory) ? detective : scout;
     } catch { return scout; }
   };
-  const held=deps.solved;
+  const held=deps.solved && !(needsSourceInvestigation(deps.sourceFailure) &&
+    Date.parse(deps.sourceFailure.lastFailedAt)>=Date.parse(deps.solved.recordedAt)) ? deps.solved : null;
   return {lane:held?'DETERMINISTIC':'BOUNDED_MODEL_WORKER',
     ...(!held && scout.dispatch && detective.dispatch ? {dispatch: ((input) => choose(input.obligation).dispatch!(input)) as NonNullable<import('../scheduler/dispatch.ts').DeclaredExecutor['dispatch']>} : {}),
     workerFor:input=>held
@@ -209,16 +229,43 @@ export async function readSubjectScoutHistory(repos:import('../repository/types.
 export function investigationRole(results: readonly import('../scheduler/scout-result.ts').ScoutResult[], failedWorkers:boolean): 'SCOUT'|'DETECTIVE' {
   return failedWorkers || results.some(result=>result.refusal !== null || ['BLOCKED','NO_PROGRESS','NEEDS_ADAPTER'].includes(result.outcome)) ? 'DETECTIVE':'SCOUT';
 }
-function hasUntriedAdapter(latest:import('../scheduler/scout-result.ts').ScoutResult|undefined,installed:readonly string[]) {
+export function hasUntriedAdapter(latest:import('../scheduler/scout-result.ts').ScoutResult|undefined,installed:readonly string[],knowledge:readonly FieldManualEntry[]=[]) {
   const description = latest ? [latest.narrative,...(latest.nextRungs ?? []),...(latest.candidates ?? []).map(c=>c.routeId)].join(' ').toLowerCase() : '';
-  return installed.some(name=>(description.includes(name) || (name==='uncapped-source-links' && /uncapped.link|raw.html extraction|verified webpages/.test(description)) || (name==='dated-sitemap' && /streamline|dated.sitemap/.test(description))) &&
+  const sourceOrigin=(value:unknown)=>{
+    if(typeof value!=='string' || archiveCapture(value))return null;
+    try {const url=new URL(value);return ['https:','http:'].includes(url.protocol)?url.origin:null;}catch{return null;}
+  };
+  const origins=new Set([...(latest?.candidates??[]).map(c=>c.url),...(latest?.rungs??[]).filter(r=>r.tool!=='search').map(r=>r.target)].map(sourceOrigin).filter(Boolean));
+  const learned=new Set(knowledge.flatMap(entry=>{
+    const payload=entry.payload as {sourceAttemptId?:string;files?:unknown;sourceUrls?:unknown}|null;
+    if(!['ENGINEER_ADAPTER_PR','PLATFORM_ADAPTER'].includes(entry.kind) || !latest || !Array.isArray(payload?.files))return [];
+    const sameAttempt=Boolean(latest.attemptId && payload.sourceAttemptId===latest.attemptId);
+    const sameSourceClass=entry.recordClasses.includes(latest.recordClass?.toLowerCase()) && Array.isArray(payload.sourceUrls) &&
+      payload.sourceUrls.some(value=>{const origin=sourceOrigin(value);return origin!==null && origins.has(origin);});
+    if(!sameAttempt && !sameSourceClass)return [];
+    return payload.files.flatMap(path=>{
+      const name=typeof path==='string'?/^lib\/sources\/platform-adapters\/([a-z0-9-]+)\.(?:ts|mjs)$/.exec(path)?.[1]:undefined;
+      return name?[name]:[];
+    });
+  }));
+  return installed.some(name=>(learned.has(name) || description.includes(name) || (name==='uncapped-source-links' && /uncapped.link|raw.html extraction|verified webpages/.test(description)) || (name==='dated-sitemap' && /streamline|dated.sitemap/.test(description))) &&
     !(latest?.rungs??[]).some(r=>r.tool==='run_adapter' && r.observed.includes(name+'@'+installedAdapterVersion(name))));
 }
-export function adapterWaitReason(results: readonly import('../scheduler/scout-result.ts').ScoutResult[], installed: readonly string[] = []): string|null {
+export function adapterWaitReason(results: readonly import('../scheduler/scout-result.ts').ScoutResult[], installed: readonly string[] = [], knowledge:readonly FieldManualEntry[]=[]): string|null {
   const latest=results.at(-1);
-  if(hasUntriedAdapter(latest,installed))return null;
+  if(hasUntriedAdapter(latest,installed,knowledge))return null;
   return latest?.refusal === null && latest.outcome === 'NEEDS_ADAPTER' && latest.recoveryCapabilityVersion === SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION
     ? 'AWAITING_ADAPTER: '+latest.narrative+'; Engineer owns this work. Resume when its adapter is available.' : null;
+}
+
+/** Reuse the Engineer's failed-attempt and source-class links before generated filenames appear in Scout history. */
+export async function adapterWaitReasonFromKnowledge(repos:import('../repository/types.ts').ControlPlaneRepositories,
+  results:readonly import('../scheduler/scout-result.ts').ScoutResult[]):Promise<string|null> {
+  const installed=await installedAdapters();
+  const wait=adapterWaitReason(results,installed);
+  if(!wait)return null;
+  const manual=await readFieldManual(repos,{role:'DETECTIVE'});
+  return adapterWaitReason(results,installed,manual.store.entries);
 }
 
 /** Reopen adapter waits only when a matching installed implementation has not already been tried. */
@@ -227,12 +274,13 @@ export async function wakeInstalledAdapterDebts(repos:import('../repository/type
   const waiting=debts.filter(debt=>debt.cause==='AWAITING_ADAPTER');
   if(!waiting.length)return debts;
   const adapters=await installedAdapters();
+  const manual=await readFieldManual(repos,{role:'DETECTIVE'});
   const latest=await repos.scoutResults.readLatest(waiting.map(debt=>debt.obligationId),{
-    refusal:true,outcome:true,recoveryCapabilityVersion:true,narrative:true,nextRungs:true,candidates:true,rungs:true});
+    attemptId:true,recordClass:true,refusal:true,outcome:true,recoveryCapabilityVersion:true,narrative:true,nextRungs:true,candidates:true,rungs:true});
   return debts.map(debt=>{
     const result=latest.get(debt.obligationId) as import('../scheduler/scout-result.ts').ScoutResult|undefined;
     if(debt.cause!=='AWAITING_ADAPTER' || !result || result.outcome!=='NEEDS_ADAPTER' || result.refusal!==null ||
-      !hasUntriedAdapter(result,adapters))return debt;
+      !hasUntriedAdapter(result,adapters,manual.store.entries))return debt;
     return {...debt,cause:'EXTRACTION_FAILED' as const,retryAt:now,detail:debt.detail+'; installed adapter changed: Detective can try the saved bytes.'};
   });
 }

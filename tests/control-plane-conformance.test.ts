@@ -431,6 +431,18 @@ for (const provider of providers) {
     );
     assert.deepEqual(await repos.ownerDigests.readRecentWhere(key, ["runtimeOutcome", "kind"], "ABSENT", 5, projection), []);
     assert.deepEqual(await repos.ownerDigests.readRecentWhere(key, ["runtimeOutcome", "kind"], "WANTED", 0, projection), []);
+    const windowKey = `${key}-window`;
+    for (const [index, at] of [NOW, LATER, NOW, LATER].entries()) {
+      await repos.ownerDigests.append(windowKey, `window-${index}`, {
+        digestId: `window-${index}`, runtimeOutcome: { kind: "WANTED", startedAt: index === 3 ? NOW : at },
+      } as never, at);
+    }
+    assert.deepEqual(await repos.ownerDigests.readRecentWhere(windowKey, ["runtimeOutcome", "kind"], "WANTED",
+      50, { digestId: true, runtimeOutcome: ["kind", "startedAt"] }, LATER), [3, 1].map(index => ({
+      digestId: `window-${index}`, runtimeOutcome: { kind: "WANTED", startedAt: index === 3 ? NOW : LATER },
+    })), "filter the saved append time, including its boundary and late-finished old cycles, before limiting");
+    assert.deepEqual(await repos.ownerDigests.readRecentWhere(windowKey, ["runtimeOutcome", "kind"], "WANTED",
+      1, { digestId: true }, LATER), [{ digestId: "window-3" }]);
   });
 
   test(`${provider.name}: the nightly door's four logs exist and keep history (schema v5)`, async () => {

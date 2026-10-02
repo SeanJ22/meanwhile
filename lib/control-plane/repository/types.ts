@@ -429,6 +429,8 @@ export interface AppendOnlyRepository<T> {
    * that needs a few fields of recent records reads them here rather than every
    * whole record the log has ever held. The records are narrowed, so they are
    * `unknown`: a caller validates what it reads, as it would a whole record.
+   * Optional `recordedAtSince` filters the saved append clock inclusively
+   * before limiting, so a time window need not transfer archived records.
    */
   readRecentWhere(
     key: string,
@@ -436,6 +438,7 @@ export interface AppendOnlyRepository<T> {
     value: string,
     limit: number,
     projection: RecordProjection,
+    recordedAtSince?: string,
   ): Promise<readonly unknown[]>;
   /** Every record, in key order then append order. */
   readAll(): Promise<readonly T[]>;

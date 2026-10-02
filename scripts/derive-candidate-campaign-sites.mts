@@ -14,8 +14,10 @@
  *   pipeline log (read only; the research cycle's campaign-site pass made them);
  * - the vault, read only (`lib/control-plane/evidence/read-only-vault.ts`): the
  *   bytes of each approval's verifying read, proved against their sidecar;
- * - the promoted `candidate-profiles` version, so a candidate who already
- *   carries a reviewed campaign link is held, never doubled.
+ * - the promoted `candidate-profiles` version, so a working reviewed campaign
+ *   link is preserved when independently verified documents attach;
+ * - this contract's prior GOOD version, preserving facts and quoted history
+ *   exactly when unrelated older source captures are unavailable locally.
  *
  * `derivedCampaignSitesPass` (lib/civic-data/derived-campaign-site-writer.ts)
  * verifies each approval's vaulted bytes again for its own canonical identity
@@ -30,11 +32,13 @@ import { join } from "node:path";
 import { neon } from "@neondatabase/serverless";
 
 import { promotedInputRef } from "../lib/civic-data/derived-authority.ts";
-import { DERIVED_CAMPAIGN_SITES_CONTRACT_ID, type CandidateLinksShape } from "../lib/civic-data/derived-campaign-sites.ts";
+import { DERIVED_CAMPAIGN_SITES_CONTRACT_ID, DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE,
+  readDerivedCampaignSites, type CandidateLinksShape } from "../lib/civic-data/derived-campaign-sites.ts";
 import {
   derivedCampaignSitesFailedCandidate,
   derivedCampaignSitesPass,
   isPublishableCampaignSiteApproval,
+  heldCampaignSiteReads,
   type HeldVerifyingRead,
   type HeldLinkedPublicationRead,
   type PublishableCampaignSiteApproval,
@@ -79,27 +83,6 @@ async function readApprovals(): Promise<PublishableCampaignSiteApproval[] | { re
   } catch (error) {
     return { unreadable: error instanceof Error ? error.message : String(error) };
   }
-}
-
-/** Each approval's verifying read, read back from the vault and proved against its sidecar; a body it cannot produce is not held. */
-async function heldReads(capture: Awaited<ReturnType<typeof heldArtifactCaptures>>, approvals: readonly PublishableCampaignSiteApproval[]): Promise<Map<string, HeldVerifyingRead>> {
-  const held = new Map<string, HeldVerifyingRead>();
-  for (const approval of approvals) {
-    console.log(`RCD_PROGRESS campaign-site approval ${approval.campaignSite.evidence.artifactId}`);
-    const artifact = await capture(approval.campaignSite.evidence.artifactId);
-    if (artifact === null || artifact.tier === "RESTRICTED_RAW" || held.has(artifact.id)) continue;
-    try {
-      held.set(artifact.id, {
-        body: new TextDecoder().decode(await readHeldBytes(artifact)),
-        sha256: artifact.contentHash.slice("sha256-".length),
-        tier: artifact.tier === "SANITIZED_DERIVED" ? "SANITIZED_DERIVED" : "RAW",
-        permission: artifact.permission,
-      });
-    } catch {
-      /* A body that does not hash to its commitment is not held: the writer holds its site as not vaulted. */
-    }
-  }
-  return held;
 }
 
 /** Distinct completed publication acquisitions. The child never infers
@@ -149,6 +132,12 @@ async function linkedPublicationReads(vaultRoot: string, approvals: readonly Pub
 
 async function main(): Promise<void> {
   const approvals = await readApprovals();
+  const priorRead = await readDerivedCampaignSites({ store, bypassCache: true, now });
+  const priorInput = priorRead.kind === "PROMOTED" ? promotedInputRef(DERIVED_CAMPAIGN_SITES_RECORD_CLASS,
+    DERIVED_CAMPAIGN_SITES_SCOPE, priorRead.metadata.versionId, priorRead.value, priorRead.metadata.promotedAt) : null;
+  const prior = priorRead.kind === "PROMOTED" && priorInput?.kind === "PROMOTED_VERSION"
+    ? { input: priorInput, projection: priorRead.value } : priorRead.kind === "NOT_RECORDED" ? null
+      : { unreadable: `${priorRead.kind}${"detail" in priorRead ? `: ${priorRead.detail}` : ": no exact promoted version reference"}` };
   const profilesRead = await readPromotedCivicData<{ readonly links?: { readonly links?: Readonly<Record<string, CandidateLinksShape>> } }>(
     PROFILES.recordClass, PROFILES.scope, { store, bypassCache: true, now },
   );
@@ -165,8 +154,10 @@ async function main(): Promise<void> {
   if (!("unreadable" in approvals) && approvals.length > 0) {
     try {
       const vaultRoot = join(process.cwd(), "data", "control-plane", "vault");
-      const capture = await heldArtifactCaptures(vaultRoot, approvals.map(row => row.campaignSite.evidence.artifactId), process.env.WTP_CONTROL_PLANE_DATABASE_URL!);
-      held = await heldReads(capture, approvals);
+      const artifactIds = approvals.flatMap(row => [row.campaignSite.evidence.artifactId,
+        ...(row.campaignSite.evidence.cycleSource ? [row.campaignSite.evidence.cycleSource.artifactId] : [])]);
+      const capture = await heldArtifactCaptures(vaultRoot, artifactIds, process.env.WTP_CONTROL_PLANE_DATABASE_URL!);
+      held = await heldCampaignSiteReads(capture, approvals);
       const linked = await linkedPublicationReads(vaultRoot, approvals);
       if ("unreadable" in linked) {
         await finish(derivedCampaignSitesFailedCandidate(now, `The linked candidate-publication record could not be read: ${linked.unreadable}`));
@@ -180,7 +171,8 @@ async function main(): Promise<void> {
   }
   const pass = derivedCampaignSitesPass({
     approvals,
-    held: (record) => held.get(record.campaignSite.evidence.artifactId) ?? null,
+    prior,
+    held: (record) => held.get(record.recordId) ?? null,
     linkedPublications,
     profiles,
     gateOpen: classFieldOpen(ACTIVATION_GATE, "candidate-enrichment", "campaignSite"),

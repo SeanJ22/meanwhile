@@ -19,7 +19,8 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { appendTransition, contextFromRepositories, readPipelineStates } from "../lib/control-plane/promotion/pipeline.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
-import { discoveryPointerItemId, type CampaignSiteApprovedRecord } from "../lib/control-plane/promotion/campaign-site-chain.ts";
+import { discoveryPointerItemId, profileCampaignSiteLeads, type CampaignSiteApprovedRecord } from "../lib/control-plane/promotion/campaign-site-chain.ts";
+import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import {
   CAMPAIGN_SITE_MAX_READS,
   campaignSiteCycleLine,
@@ -62,6 +63,8 @@ import {
   derivedCampaignSitesCandidate,
   derivedCampaignSitesPass,
   isPublishableCampaignSiteApproval,
+  reverifyApprovedSite,
+  heldCampaignSiteReads,
   planDerivedCampaignSites,
   type HeldVerifyingRead,
   type HeldLinkedPublicationRead,
@@ -71,7 +74,7 @@ import { allCandidateLinks, campaignLinkIsDerived, linksForCandidacy } from "../
 import { candidateProfileEvidenceFor } from "../lib/ask/candidate-profile.ts";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 import { preloadCandidateEnrichmentAuthorities, candidateEnrichmentHoldings } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
-import { KAPNER, MAYES, TANG_WILLIAMS, committedSubjects, fixture, servedRuntime, sha256, subject } from "./helpers/campaign-sites.ts";
+import { DUARTE, KAPNER, MAYES, TANG_WILLIAMS, committedSubjects, fixture, servedRuntime, sha256, subject } from "./helpers/campaign-sites.ts";
 
 await installRegistryRuntimeFirstSeeds();
 
@@ -87,6 +90,127 @@ const LILY_PRESS = "https://www.lilytangwilliams.com/congress/press-releases/";
 const KAPNER_ROOT = "https://www.kapner4mendhamtwp.com/";
 const MARGINALIA_URL = "https://api.marginalia.nu/public/search/Lily%20Tang%20Williams";
 const MAYES_KEY = "ballot-az-pima:attorney-general:mayes-kris";
+
+const PROFILE = "https://www.ballotready.org/people/lily-tang-williams";
+const PROFILE_HTML = `<title>Lily Tang Williams | Candidate profile</title><h1>Lily Tang Williams</h1>
+  <p>Candidate for Representative in Congress - District 2 in the 2026 General Election. New Hampshire.</p>
+  <a href="https://www.ballotready.org/about">About us</a><a href="https://unrelated.example/">Donate</a>
+  <a href="${LILY}"><svg aria-hidden="true"></svg><span>Website</span></a>
+  <a href="${LILY_PRESS}">Learn more</a><a href="${LILY_PRESS}">Learn more</a>
+  <a href="https://unrelated.example/issues">Learn more</a><a href="https://facebook.com/lily">Facebook</a>`;
+
+test("captured candidate profiles supply only observed campaign links tied to their candidate and office", () => {
+  const page = heldPageRead({ requestedUrl: PROFILE, finalUrl: PROFILE, httpStatus: 200,
+    contentType: "text/html", body: PROFILE_HTML, sha256: sha256(PROFILE_HTML), retrievedAt: T1 });
+  assert.deepEqual(profileCampaignSiteLeads(page, subject(TANG_WILLIAMS), "profile").map(lead => lead.url), [LILY, LILY_PRESS]);
+  for (const body of [PROFILE_HTML.replaceAll("Lily Tang Williams", "Someone Else"),
+    PROFILE_HTML.replace("Representative in Congress - District 2", "Governor"),
+    PROFILE_HTML.replace("<span>Website</span>", "<span>Support BallotReady</span>")]) {
+    assert.deepEqual(profileCampaignSiteLeads({ ...page, body }, subject(TANG_WILLIAMS), "profile"), []);
+  }
+  assert.deepEqual(profileCampaignSiteLeads({ ...page, body: PROFILE_HTML.replace("2026", "2022") }, subject(TANG_WILLIAMS), "profile")
+    .map(lead => lead.url), [LILY, LILY_PRESS], "discovery does not certify a cycle; the primary campaign verifier checks it");
+});
+
+test("a persisted facts-only Scout with no parser reaches the existing campaign-site publication door through saved profile hrefs", async t => {
+  const p = await plane(t);
+  const artifact = await captureProfile(p);
+  const scout: ScoutResult = { formatVersion: 1, attemptId: "at-profile", obligationId: "ob-profile", routeTaskId: "rt-profile",
+    workItemId: "wi-profile", subjectId: TANG_WILLIAMS, routeId: "candidate-wikipedia-api", recordClass: "candidate-enrichment",
+    providerId: "candidate-enrichment", reason: "novelty", outcome: "EVIDENCE_FOUND", stoppedBy: "MODEL", rungs: [],
+    distinctEvidenceRungs: 1, candidates: [], findings: [{ kind: "RECORD", field: "candidate.office",
+      value: "Representative in Congress - District 2", exactQuote: "Candidate for Representative in Congress - District 2 in the 2026 General Election.",
+      sourceUrl: PROFILE, artifactIds: [artifact.id], summary: "Office sought" }], nextRungs: [], unverified: [], narrative: "Saved profile",
+    worker: { provider: "anthropic", model: "fixture", modelReported: null }, usage: { inputTokens: null, outputTokens: null,
+      cacheReadInputTokens: null, cacheCreationInputTokens: null, turns: 1, toolCalls: 1 }, usd: null, elapsedMs: 1,
+    artifactIds: [artifact.id], methodCandidateIds: [], refusal: null, startedAt: T1, recordedAt: T1 };
+  await p.repos.scoutResults.append(scout.obligationId, scout.attemptId, scout, T1);
+  assert.equal((await p.repos.workerResults.readAll()).length, 0);
+  const first = await cycle(p, T1, { marginalia: [] }, { ...served(), [LILY]: { status: 200,
+    body: "<title>Lily Tang Williams for Congress</title><h1>Lily Tang Williams</h1><p>I am running for Congress in New Hampshire District 2.</p><p>Paid for by Lily Tang Williams.</p>" } });
+  assert.ok(p.requests.includes(LILY));
+  assert.ok(!p.requests.includes(PROFILE), "the profile's captured bytes are reused without a new request");
+  assert.equal(first.report.chain.approved.length, 1, "independent saved profile and primary campaign page publish in the same pass");
+  const approval = first.report.chain.approved[0]!;
+  assert.match(approval.campaignSite.audit.secondSignal, /^INDEPENDENT_PROFILE:/);
+  assert.ok(approval.campaignSite.audit.secondSignal.includes(artifact.contentHash));
+  assert.deepEqual(approval.campaignSite.audit.startedFrom, ["EVIDENCE_VAULT", "CANONICAL_SUBJECT_IDENTITY"]);
+  assert.equal(first.report.chain.rereadsUsed, 0);
+  assert.equal(approval.campaignSite.evidence.cycleSource?.artifactId, artifact.id);
+  assert.match(approval.campaignSite.verification, /; https:\/\/www.ballotready.org\/people\/lily-tang-williams identifies the 2026 election/);
+  const { store, profiles } = await profilesStore();
+  const inputs = await doorInputs(p);
+  assert.equal(inputs.approvals.length, 1);
+  const bytes = inputs.held(inputs.approvals[0]!)!;
+  assert.equal(reverifyApprovedSite(inputs.approvals[0]!, bytes).ok, true);
+  assert.equal(reverifyApprovedSite(inputs.approvals[0]!, { ...bytes, cycleSource: undefined }).ok, false);
+  const supporting = bytes.cycleSource!;
+  assert.equal(reverifyApprovedSite(inputs.approvals[0]!, { ...bytes, cycleSource: { ...supporting,
+    page: { ...supporting.page, body: supporting.page.body.replace("2026", "2022") } } }).ok, false,
+    "the writer verifies raw supporting bytes rather than trusting the approved audit string");
+  assert.equal(reverifyApprovedSite(inputs.approvals[0]!, { ...bytes, cycleSource: { ...supporting,
+    source: { ...supporting.source, artifactId: "ar-other-profile" } } }).ok, false);
+  const publishNow = "2026-09-24T21:05:00.000Z";
+  const pass = derivedCampaignSitesPass({ approvals: inputs.approvals, held: inputs.held, profiles, gateOpen: true, now: publishNow });
+  const published = await processRegisteredRoutineCandidate(store, "candidate-campaign-sites-derived", pass.candidate, publishNow);
+  assert.equal(published.candidate.state, "PROMOTED", published.candidate.failureDetail ?? undefined);
+  assert.equal(published.readerReadback?.status, "PASS");
+  const reader = await readDerivedCampaignSites({ store, bypassCache: true, now: publishNow });
+  assert.equal(reader.kind, "PROMOTED");
+  if (reader.kind === "PROMOTED") {
+    assert.deepEqual(reader.value.records[0]!.campaign.evidence.cycleSource, approval.campaignSite.evidence.cycleSource,
+      "published Reader evidence retains the actual supporting source ID, hash, URL and capture date");
+  }
+  await refreshCandidateProfilesFromPromoted({ store, bypassCache: true, now: publishNow });
+  assert.equal(linksForCandidacy(subject(TANG_WILLIAMS).readerKeys[0]!)?.campaign?.url, LILY);
+  // Identical primary bytes can be approved against different saved source
+  // revisions. The actual routine reader must keep each correlation intact.
+  const laterAt = "2026-09-24T21:01:00.000Z";
+  const later = await captureProfile(p, `${PROFILE_HTML}<p>Updated campaign profile.</p>`, laterAt);
+  const sourceRef = { ...approval.campaignSite.evidence.cycleSource!, artifactId: later.id,
+    sha256: later.contentHash.slice(7), readAt: laterAt };
+  const revised = { ...approval, recordId: `${approval.recordId}:source-revision`, campaignSite: { ...approval.campaignSite,
+    evidence: { ...approval.campaignSite.evidence, cycleSource: sourceRef } } };
+  const vault = await indexVault(p.vaultRoot);
+  const paired = await heldCampaignSiteReads(async artifactId => vault.byId.get(artifactId) ?? null, [approval, revised]);
+  assert.equal(paired.size, 2);
+  assert.equal(paired.get(approval.recordId)!.cycleSource!.source.artifactId, artifact.id);
+  assert.equal(paired.get(revised.recordId)!.cycleSource!.source.artifactId, later.id);
+  assert.equal(reverifyApprovedSite(approval, paired.get(approval.recordId)!).ok, true);
+  assert.equal(reverifyApprovedSite(revised, paired.get(revised.recordId)!).ok, true);
+});
+
+async function captureProfile(p: Plane, body = PROFILE_HTML, now = T1, sourceUrl = PROFILE) {
+  const { artifact } = recordAcquisition({ canonicalUrl: sourceUrl, retrievedAt: now, httpStatus: 200,
+    contentType: "text/html", sourceId: "ballotready.org", methodRouteId: "scout:profile",
+    workItemId: "wi-profile", attemptId: "at-profile", permission: "ALLOWED", transport: "REACHABLE" }, body);
+  await putArtifact(new DurableEvidenceStore(p.vaultRoot), "freshness", artifact, Buffer.from(body));
+  await p.repos.artifacts.append("wi-profile", artifact.id, { artifactId: artifact.id, workItemId: "wi-profile",
+    routeTaskId: "rt-profile", attemptId: "at-profile", tier: artifact.tier, contentHash: artifact.contentHash,
+    byteLength: artifact.byteLength, contentType: artifact.contentType, canonicalUrl: sourceUrl, partial: false, recordedAt: now }, now);
+  return artifact;
+}
+
+test("saved profiles cannot certify a different person, office, cycle, campaign URL or publisher", async t => {
+  for (const { body, sourceUrl = PROFILE, at = T1 } of [
+    { body: PROFILE_HTML.replaceAll("Lily Tang Williams", "Someone Else") },
+    { body: PROFILE_HTML.replace("Representative in Congress - District 2", "Governor") },
+    { body: PROFILE_HTML.replaceAll("District 2", "District 20") },
+    { body: PROFILE_HTML.replace("New Hampshire", "Arizona") },
+    { body: PROFILE_HTML.replace("2026", "2022") },
+    { body: PROFILE_HTML.replaceAll("https://www.lilytangwilliams.com", "https://othercandidate.example") },
+    { body: PROFILE_HTML, sourceUrl: "https://profile.lilytangwilliams.com/" },
+    { body: PROFILE_HTML, at: "2026-08-01T12:00:00.000Z" },
+  ]) {
+    const p = await plane(t);
+    await captureProfile(p, body, at, sourceUrl);
+    const report = await cycle(p, T1);
+    const state = (await readPipelineStates(p.repos)).find(s => s.itemId === discoveryPointerItemId(TANG_WILLIAMS, LILY))!;
+    assert.equal(state.stage, "VERIFIED", `the primary can verify, but conflicting or stale profile bytes cannot certify identity: ${body}`);
+    assert.match(state.refused!.reasons[0]!.detail, /NO_INDEPENDENT_SECOND_SIGNAL/);
+    assert.equal(report.report.chain.approved.length, 0);
+  }
+});
 
 function served() {
   return {
@@ -163,13 +287,8 @@ async function doorInputs(p: Plane) {
     .flatMap((s) => (s.stage === "APPROVED_FOR_PROMOTION" ? [s.byStage.APPROVED_FOR_PROMOTION as unknown] : []))
     .filter(isPublishableCampaignSiteApproval);
   const vault = await indexVault(p.vaultRoot);
-  const held = new Map<string, HeldVerifyingRead>();
-  for (const a of approvals) {
-    const artifact = vault.byId.get(a.campaignSite.evidence.artifactId);
-    if (artifact === undefined || (artifact.tier !== "RAW" && artifact.tier !== "SANITIZED_DERIVED")) continue;
-    held.set(artifact.id, { body: new TextDecoder().decode(await readHeldBytes(artifact)), sha256: artifact.contentHash.slice(7), tier: artifact.tier, permission: artifact.permission });
-  }
-  return { approvals, held: (r: PublishableCampaignSiteApproval) => held.get(r.campaignSite.evidence.artifactId) ?? null };
+  const held = await heldCampaignSiteReads(vault, approvals);
+  return { approvals, held: (r: PublishableCampaignSiteApproval) => held.get(r.recordId) ?? null };
 }
 
 /** The owner's reviewed profiles, promoted through the manual door: Mayes carries a reviewed campaign link; Tang Williams carries none. */
@@ -204,22 +323,22 @@ async function profilesStore() {
 
 test("a runner cycle over held results publishes a verified site through the derived door with no owner step, and /ballot and Ask show it", async (t) => {
   const p = await plane(t);
+  await captureProfile(p);
 
-  /* Cycle 1: the Marginalia pointer is read robots-first and verified; it waits for an independent second read. */
+  /* The saved profile supplies an independent source in the first pass. */
   const first = await cycle(p, T1);
   assert.equal(first.held.responses.length, 1, "the held answer is found through the manifest and read back from the vault");
   const pointer = discoveryPointerItemId(TANG_WILLIAMS, LILY);
   let state = (await readPipelineStates(p.repos)).find((s) => s.itemId === pointer)!;
-  assert.equal(state.stage, "VERIFIED");
-  assert.equal(first.report.chain.approved.length, 0);
+  assert.equal(state.stage, "APPROVED_FOR_PROMOTION");
+  assert.equal(first.report.chain.approved.length, 1);
   assert.ok(p.requests.includes("https://www.lilytangwilliams.com/robots.txt") &&
     p.requests.indexOf("https://www.lilytangwilliams.com/robots.txt") < p.requests.indexOf(LILY), "robots.txt is read before the page");
 
-  /* Cycle 2, two hours later: the audit's second read, then the approval. */
-  const second = await cycle(p, T2);
+  const second = first;
   state = (await readPipelineStates(p.repos)).find((s) => s.itemId === pointer)!;
   assert.equal(state.stage, "APPROVED_FOR_PROMOTION", JSON.stringify(second.report.chain.offers.filter((o) => o.itemId === pointer)));
-  assert.equal(second.report.chain.rereadsUsed, 1);
+  assert.equal(second.report.chain.rereadsUsed, 0);
   assert.match(campaignSiteCycleLine(second.report), /1 approved for the derived door/);
 
   // The last ordinary pass was only ten minutes ago. This actual completed
@@ -303,6 +422,7 @@ test("a runner cycle over held results publishes a verified site through the der
 
 test("a bounded linked publication capture reaches the existing derived corpus with distinct approval, href and child Attempt", async (t) => {
   const p = await plane(t);
+  await captureProfile(p);
   await cycle(p, T1);
   await cycle(p, T2);
   const articleUrl = "https://www.lilytangwilliams.com/congress/issues/";
@@ -404,6 +524,7 @@ test("a bounded linked publication capture reaches the existing derived corpus w
 
 test("a blocked first linked page records a route Attempt and yields the next page on the next bounded pass", async (t) => {
   const p = await plane(t);
+  await captureProfile(p);
   await cycle(p, T1);
   await cycle(p, T2);
   const links = candidatePublicationLinks({ html: fixture("lilytangwilliams-endorsements.live.html"), sourceUrl: LILY,
@@ -476,7 +597,7 @@ test("a year-less site stays refused however often it is read: judged again from
   assert.ok(!later.report.chain.approved.some((a) => a.campaignSite.candidacyId === KAPNER));
 });
 
-test("read bounds hold without a pass deadline: at most 12 lead reads, second reads counted apart, and the next cycle reads the rest", async (t) => {
+test("read bounds hold without a pass deadline; held independent sources publish without extra reads", async (t) => {
   const p = await plane(t);
   /* Twenty more held findings, each naming its own readable page for its own candidacy. */
   const ids = [...committedSubjects().keys()].filter((id) => id !== KAPNER && id !== TANG_WILLIAMS).slice(0, 20);
@@ -506,12 +627,13 @@ test("read bounds hold without a pass deadline: at most 12 lead reads, second re
   /* Every lead read before is judged from its vaulted bytes (the verified one has moved past SCOUTED). */
   assert.ok(next.report.chain.judgedFromVault >= 11);
 
-  /* Second reads are bounded apart: none allowed, none made; one allowed, the waiting item is read again and approved. */
-  const held = await cycle(p, T2, { maxReads: 0, maxRereads: 0 }, pages);
+  /* A clock change does not turn the same site into an independent source. */
+  const held = await cycle(p, T2, { maxReads: 0 }, pages);
   assert.equal(held.report.chain.rereadsUsed, 0);
   assert.equal(held.report.chain.approved.length, 0);
-  const reread = await cycle(p, "2026-09-24T23:30:00.000Z", { maxReads: 0, maxRereads: 1 }, pages);
-  assert.equal(reread.report.chain.readsUsed, 1, "a spent lead bound never starves the audit's second read");
+  await captureProfile(p, PROFILE_HTML, T2);
+  const reread = await cycle(p, "2026-09-24T23:30:00.000Z", { maxReads: 0 }, pages);
+  assert.equal(reread.report.chain.readsUsed, 0, "held independent evidence does not need a new request");
   assert.equal(reread.report.chain.approved.length, 1);
 
   const slow = await createSlow(t, pages);
@@ -587,11 +709,12 @@ test("the pass reads the leads of candidates with no campaign link first; a link
   }
 });
 
-test("the audit's second read comes before new leads and slow backlog reads continue without a pass deadline", async (t) => {
+test("held independent evidence advances before new leads and slow backlog reads continue without a pass deadline", async (t) => {
   const p = await plane(t);
   const pointer = discoveryPointerItemId(TANG_WILLIAMS, LILY);
   await cycle(p, T1);
-  assert.equal((await readPipelineStates(p.repos)).find((s) => s.itemId === pointer)?.stage, "VERIFIED", "the Marginalia site waits for a second read an hour later");
+  assert.equal((await readPipelineStates(p.repos)).find((s) => s.itemId === pointer)?.stage, "VERIFIED", "a real independent source remains owed");
+  await captureProfile(p, PROFILE_HTML, T2);
   const { pages } = await backlog(p);
 
   /* Two hours later every request advances the measured clock by five seconds. */
@@ -608,8 +731,8 @@ test("the audit's second read comes before new leads and slow backlog reads cont
   });
   assert.ok(report.elapsedMs > 60_000, "the backlog continues past the former pass deadline");
   assert.ok(report.chain.leads.some((l) => l.outcome === "DEFERRED" && l.refusals[0]?.code === "NOT_READ"), "new leads stay owed for the next cycle");
-  assert.deepEqual(requests.slice(0, 2), ["https://www.lilytangwilliams.com/robots.txt", LILY], "the second read is the pass's first read");
-  assert.equal(report.chain.rereadsUsed, 1);
+  assert.ok(!requests.includes(LILY), "the independent held source advances the item without re-reading its campaign page");
+  assert.equal(report.chain.rereadsUsed, 0);
   assert.equal((await readPipelineStates(p.repos)).find((s) => s.itemId === pointer)?.stage, "APPROVED_FOR_PROMOTION");
   assert.ok(report.chain.approved.some((a) => a.campaignSite.candidacyId === TANG_WILLIAMS));
 });
@@ -692,8 +815,8 @@ test("the paid lane stays closed under the owner's pause, and the pass is plain 
 
 /* ------------------------------------------------------------- the door */
 
-function approvalFor(url: string, body: string, readAt: string): CampaignSiteApprovedRecord {
-  const s = subject(TANG_WILLIAMS);
+function approvalFor(url: string, body: string, readAt: string, candidacyId = TANG_WILLIAMS): CampaignSiteApprovedRecord {
+  const s = subject(candidacyId);
   const read = { ...heldPageRead({ requestedUrl: url, httpStatus: 200, contentType: "text/html; charset=utf-8", body, retrievedAt: readAt }),
     permissions: [{ origin: new URL(url).origin, verdict: "ALLOWED" as const, detail: "test" }] };
   const verdict = verifyCampaignSitePage(s, { url, origin: "RECORDED_SITE", ref: "test" }, read);
@@ -704,13 +827,13 @@ function approvalFor(url: string, body: string, readAt: string): CampaignSiteApp
     actor: { role: "RELEASE_ORCHESTRATOR", lane: "DETERMINISTIC", instance: "campaign-site-approver/1@test" }, stage: "APPROVED_FOR_PROMOTION",
     chain: { scouted: "s", confirmed: "c", verified: "v", audited: "a" }, recordClass: "candidate-enrichment", field: "campaignSite",
     campaignSite: {
-      field: "campaignSite", candidacyId: s.candidacyId, candidateName: "Lily Tang Williams",
+      field: "campaignSite", candidacyId: s.candidacyId, candidateName: `${s.givenName} ${s.familyName}`,
       identity: { candidacyId: s.candidacyId, givenName: s.givenName, familyName: s.familyName, officeTitle: s.officeTitle, ocdId: s.ocdId, stateCode: s.stateCode, cycle: s.cycle },
       readerKeys: s.readerKeys, url, host: new URL(url).hostname.replace(/^www\./, ""),
       verification: verdict.verdict === "VERIFIED" ? verdict.verification : "",
       evidence: { verifierId: "campaign-site-verifier/1", artifactId: `ar-${sha.slice(0, 8)}`, attemptId: "at-reader", sha256: sha, requestedUrl: url, finalUrl: url,
         httpStatus: 200, contentType: "text/html; charset=utf-8", readAt },
-      audit: { startedFrom: ["EVIDENCE_VAULT", "CANONICAL_SUBJECT_IDENTITY", "INDEPENDENT_FIRST_PARTY_ACQUISITION"], secondSignal: "SECOND_READ: test" },
+      audit: { startedFrom: ["EVIDENCE_VAULT", "CANONICAL_SUBJECT_IDENTITY"], secondSignal: "INDEPENDENT_PROFILE: test" },
       publicationDoor: "CANDIDATE_CAMPAIGN_SITES_DERIVED_CONTRACT",
     },
   };
@@ -779,6 +902,103 @@ test("newer fully verified campaign evidence refreshes the same reader URL autom
   const older = approvalFor(LILY, body, "2026-09-23T21:00:05.000Z");
   const latest = planDerivedCampaignSites({ approvals: [older, approval], held: () => heldBytes, profiles: null });
   assert.ok(latest.records.every(record => record.campaign.evidence.approvalRecordId === approval.recordId), "same-URL evidence chooses the newest verified read, not the first approval id");
+});
+
+test("new campaign facts publish without dropping prior GOOD links or quoted history whose raw captures are unavailable", async () => {
+  const store = new MemoryRoutineDataStore();
+  const oldBody = fixture("lilytangwilliams-endorsements.live.html");
+  const oldApproval = approvalFor(LILY, oldBody, T1);
+  const held = (body: string): HeldVerifyingRead => ({ body, sha256: sha256(body), tier: "RAW", permission: "ALLOWED" });
+  const initial = derivedCampaignSitesPass({ approvals: [oldApproval], held: () => held(oldBody), profiles: null, gateOpen: true, now: T1 });
+  const first = await processRegisteredRoutineCandidate(store, "candidate-campaign-sites-derived", initial.candidate, T1);
+  assert.equal(first.candidate.state, "PROMOTED", first.candidate.failureDetail ?? undefined);
+  const priorAt = async (now: string) => {
+    const reader = await readDerivedCampaignSites({ store, bypassCache: true, now });
+    assert.equal(reader.kind, "PROMOTED");
+    if (reader.kind !== "PROMOTED") throw new Error("No promoted campaign prior");
+    const reference = promotedInputRef("CURATED_READER_RECORD", "US:candidate-campaign-sites-derived",
+      reader.metadata.versionId, reader.value, reader.metadata.promotedAt);
+    assert.ok(reference?.kind === "PROMOTED_VERSION");
+    return { input: reference, projection: reader.value };
+  };
+  const prior = await priorAt(T2);
+  const oldRecord = prior.projection.records[0]!;
+  const newBody = fixture("duarte4mendham-meet-amalia.live.html");
+  const newApproval = approvalFor("https://www.duarte4mendham.com/meet-amalia", newBody, T2, DUARTE);
+  const pass = derivedCampaignSitesPass({ approvals: [oldApproval, newApproval],
+    held: row => row.recordId === newApproval.recordId ? held(newBody) : null, profiles: null, prior, gateOpen: true, now: PUBLISH });
+  assert.ok(pass.plan?.held.some(row => row.code === "EVIDENCE_NOT_HELD"));
+  assert.deepEqual(pass.candidate.semantics.violations, []);
+  assert.deepEqual(pass.plan!.records.find(row => row.id === oldRecord.id), oldRecord,
+    "previously GOOD evidence retains its source dates, hashes, full quotes and publication metadata exactly");
+  const successor = await processRegisteredRoutineCandidate(store, "candidate-campaign-sites-derived", pass.candidate, PUBLISH);
+  assert.equal(successor.candidate.state, "PROMOTED", successor.candidate.failureDetail ?? undefined);
+  assert.equal(successor.candidate.candidate.changeSet?.removed.length, 0);
+  const refreshed = await priorAt(PUBLISH);
+  assert.deepEqual(refreshed.projection.records.find(row => row.id === oldRecord.id), oldRecord);
+  assert.ok(refreshed.projection.records.some(row => row.candidacyId === DUARTE));
+
+  const repeatAt = "2026-09-24T23:10:00.000Z";
+  const repeat = derivedCampaignSitesPass({ approvals: [oldApproval, newApproval],
+    held: row => row.recordId === newApproval.recordId ? held(newBody) : null,
+    profiles: null, prior: refreshed, gateOpen: true, now: repeatAt });
+  const unchanged = await processRegisteredRoutineCandidate(store, "candidate-campaign-sites-derived", repeat.candidate,
+    repeatAt, undefined, { confirmUnchanged: true });
+  assert.equal(unchanged.confirmed?.versionId, refreshed.input.versionId,
+    "citing the prior GOOD version confirms unchanged facts without manufacturing a newer source or version");
+  const afterRepeat = await priorAt(repeatAt);
+  assert.equal(afterRepeat.input.versionId, refreshed.input.versionId);
+  assert.deepEqual(afterRepeat.projection, refreshed.projection);
+
+  const newerBody = oldBody.replace(/<\/main>/i, "<p>Additional independently captured campaign statement.</p></main>");
+  const newerAt = "2026-09-25T21:00:00.000Z";
+  const newer = approvalFor(LILY, newerBody, newerAt);
+  const withHistory = planDerivedCampaignSites({ approvals: [newer], held: () => held(newerBody), profiles: null, prior: refreshed });
+  const updated = withHistory.records.find(row => row.id === oldRecord.id)!;
+  assert.deepEqual(updated.publications!.find(row => row.document.id === oldRecord.publications![0]!.document.id), oldRecord.publications![0]);
+  assert.ok(updated.publications!.some(row => row.document.text!.includes("Additional independently captured campaign statement.")));
+  assert.equal(updated.campaign.evidence.readAt, newerAt);
+  assert.deepEqual(derivedCampaignSitesCandidate(withHistory, newerAt).semantics.violations, []);
+
+  const tampered = { ...pass.plan!, records: pass.plan!.records.map(row => row.id === oldRecord.id
+    ? { ...row, campaign: { ...row.campaign, evidence: { ...row.campaign.evidence, readAt: T0 } } } : row) };
+  assert.ok(derivedCampaignSitesCandidate(tampered, PUBLISH).semantics.violations.some(detail => /does not name as an input/.test(detail)));
+  const tamperedPublication = { ...pass.plan!, records: pass.plan!.records.map(row => row.id === oldRecord.id
+    ? { ...row, publications: row.publications!.map(publication => ({ ...publication,
+      evidence: { ...publication.evidence, readAt: T0 } })) } : row) };
+  assert.ok(derivedCampaignSitesCandidate(tamperedPublication, PUBLISH).semantics.violations.some(detail => /lack their exact approved capture input/.test(detail)));
+  const forgedPrior = { ...pass.plan!, prior: { ...prior, input: { ...prior.input, readModelSha256: "a".repeat(64) } } };
+  assert.ok(derivedCampaignSitesCandidate(forgedPrior, PUBLISH).semantics.violations.some(detail => /referenced promoted version/.test(detail)));
+
+  const conflicting = approvalFor("https://lilytangwilliamsforcongress.example/", newerBody, newerAt);
+  const conflict = planDerivedCampaignSites({ approvals: [conflicting], held: () => held(newerBody), profiles: null, prior });
+  assert.deepEqual(conflict.records.find(row => row.id === oldRecord.id), oldRecord);
+  assert.ok(conflict.held.some(row => row.code === "PRIOR_CAMPAIGN_LINK_HELD"));
+  const failed = planDerivedCampaignSites({ approvals: [newer], held: () => ({ ...held(newerBody), sha256: "c".repeat(64) }), profiles: null, prior });
+  assert.deepEqual(failed.records.find(row => row.id === oldRecord.id), oldRecord);
+  assert.ok(failed.held.some(row => row.code === "REVERIFICATION_FAILED"));
+
+  const sameDayAt = "2026-09-24T21:05:00.000Z";
+  const sameDay = approvalFor(LILY, newerBody, sameDayAt);
+  const sameDayPlan = planDerivedCampaignSites({ approvals: [sameDay], held: () => held(newerBody), profiles: null, prior });
+  const sameDayRecord = sameDayPlan.records.find(row => row.id === oldRecord.id)!;
+  assert.deepEqual(sameDayRecord.campaign, oldRecord.campaign, "day-only evidence does not establish a newer working link");
+  assert.ok(sameDayRecord.publications!.some(row => row.document.text!.includes("Additional independently captured campaign statement.")),
+    "independent captured revisions attach even when a campaign link cannot refresh on the same day");
+  assert.deepEqual(derivedCampaignSitesCandidate(sameDayPlan, PUBLISH).semantics.violations, []);
+
+  const reviewedLinks = { [oldRecord.id]: { official: null, campaign: oldRecord.campaign } };
+  const besideReviewed = planDerivedCampaignSites({ approvals: [sameDay], held: () => held(newerBody),
+    profiles: { input: { kind: "PROMOTED_VERSION", recordClass: "CANDIDATE_PROFILE", scope: "s", versionId: "v",
+      readModelSha256: "b".repeat(64), promotedAt: T1 }, links: reviewedLinks } });
+  assert.ok(besideReviewed.records.find(row => row.id === oldRecord.id)?.publications?.some(row =>
+    row.document.text!.includes("Additional independently captured campaign statement.")),
+  "an equally recent reviewed profile link does not suppress independently verified documents");
+  assert.deepEqual(composeCampaignLinks(reviewedLinks, besideReviewed.records).links[oldRecord.id]?.campaign, oldRecord.campaign);
+  assert.deepEqual(derivedCampaignSitesCandidate(besideReviewed, PUBLISH).semantics.violations, []);
+  assert.equal(derivedCampaignSitesPass({ approvals: [newApproval], held: () => held(newBody), profiles: null,
+    prior: { unreadable: "source projection could not be read" }, gateOpen: true, now: PUBLISH }).plan, null,
+  "an unreadable prior cannot be treated as an empty full-replacement version");
 });
 
 test("the Reader composes: a derived link fills an empty campaign slot beside the reviewed official link; any reviewed campaign link of that person wins on every key", () => {

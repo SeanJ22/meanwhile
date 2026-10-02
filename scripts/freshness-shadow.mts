@@ -3229,14 +3229,13 @@ finishPhase("meetings-discovery");
  * lib/control-plane/promotion/campaign-site-cycle.ts.)
  *
  * The held Scout findings and Marginalia answers go through the complete
- * campaign-site chain: robots-first reads through this cycle's guarded seam
- * and host spacer, at most 12 lead reads and 6 audit second reads in 60 s. It
- * calls no model and no paid search, so it runs while the owner's pause keeps
- * the paid lane closed; it is not gated on that lane. Its offers are pipeline
- * records (Admin's delivery trail); its approvals publish through the derived
- * routine contract `candidate-campaign-sites-derived` on the routine runner's
- * own clock, with no owner step. Only a full standing cycle with the budget
- * left runs it.
+ * campaign-site chain: observed profile links lead to robots-first primary
+ * reads through this cycle's guarded seam and host spacer. Identity matching
+ * uses independently captured sources already held; no extra audit request or
+ * clock wait. It calls no model and no paid search, so it runs while the paid
+ * lane is closed. Its offers are pipeline records (Admin's delivery trail);
+ * its approvals publish through the derived routine contract
+ * `candidate-campaign-sites-derived`, with no owner step.
  */
 if (dry || canary || ONLY !== null || IDS !== null) {
   campaignSitesState = "not run: a dry, canary, filtered cycle reads nothing";

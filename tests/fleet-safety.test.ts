@@ -430,32 +430,59 @@ test("requests and dispatches keep running across days without a cycle wall", ()
 });
 
 test("the guarded fetch fails loud on a truncated 206 rather than handing up a partial document", async () => {
-  const controller = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
   const cap = FLEET_SAFETY_BOUNDS.maxDownloadBytes;
+  for (const kind of ["text", "bytes"] as const) {
+    const controller = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+    const open = async (work: string, fetcher: typeof fetch) => {
+      const input = { url: `https://${work}.test/document`, headers: { accept: "text/html", "user-agent": "Meanwhile" }, timeoutMs: 1_000 };
+      if (kind === "text") return controller.guardedOpenOne("public-web", work, fetcher)({ ...input, method: "GET" });
+      const result = await controller.guardedOpenBytes("public-web", work, fetcher)(input);
+      return { ...result, bytes: result.bytes.byteLength };
+    };
+    const ordinary = await open("ordinary", async (_url, init) => {
+      const headers = new Headers(init?.headers);
+      assert.deepEqual([...headers.entries()], [["accept", "text/html"], ["user-agent", "Meanwhile"]],
+        `${kind}: the shared transport preserves the caller's exact headers`);
+      // Some publishers answer an unsolicited range with an unusable 206.
+      return headers.has("range") ? new Response("part", { status: 206 }) : new Response("whole", { status: 200 });
+    });
+    assert.equal(ordinary.status, 200, `${kind}: the ordinary request receives the complete document`);
+    assert.equal(ordinary.bytes, 5);
 
-  // A 206 whose Content-Range total exceeds the per-download cap is a truncation:
-  // refuse it (PAYLOAD_BYTE_CEILING), never return the partial body.
-  const truncated = controller.guardedOpenBytes("public-web", "bulk-csv", async () =>
-    new Response(new Uint8Array(1024), {
-      status: 206,
-      headers: { "content-range": `bytes 0-1023/${cap * 4}`, "content-length": "1024" },
-    }),
-  );
-  const truncatedResult = await truncated({ url: "https://example.test/huge.csv", headers: {}, timeoutMs: 1_000 });
-  assert.equal(truncatedResult.status, null, "a truncating 206 must not be returned as a successful read");
-  assert.equal(truncatedResult.bytes.byteLength, 0);
-  assert.equal(controller.snapshot(NIGHT).deferred.at(-1)?.code, "PAYLOAD_BYTE_CEILING");
+    for (const total of [null, cap * 4]) {
+      const truncated = await open(`truncated-${total}`, async () => new Response(new Uint8Array(1024), {
+        status: 206,
+        headers: { ...(total === null ? {} : { "content-range": `bytes 0-1023/${total}` }), "content-length": "1024" },
+      }));
+      assert.equal(truncated.status, null, `${kind}: an unsolicited incomplete 206 remains refused`);
+      assert.equal(truncated.bytes, 0);
+      assert.equal(controller.snapshot(NIGHT).deferred.at(-1)?.code, "PAYLOAD_BYTE_CEILING");
+    }
+    const complete = await open("complete", async () => new Response(new Uint8Array([1, 2, 3]), {
+      status: 206, headers: { "content-range": "bytes 0-2/3", "content-length": "3" },
+    }));
+    assert.equal(complete.status, 206);
+    assert.equal(complete.bytes, 3);
 
-  // A 206 that delivered the whole (small) resource within the cap is accepted.
-  const complete = controller.guardedOpenBytes("public-web", "small-page", async () =>
-    new Response(new Uint8Array([1, 2, 3]), {
-      status: 206,
-      headers: { "content-range": "bytes 0-2/3", "content-length": "3" },
-    }),
-  );
-  const completeResult = await complete({ url: "https://example.test/small", headers: {}, timeoutMs: 1_000 });
-  assert.equal(completeResult.status, 206);
-  assert.equal(completeResult.bytes.byteLength, 3);
+    let declaredCancelled = false;
+    const declared = await open("declared-overflow", async () => new Response(new ReadableStream<Uint8Array>({
+      cancel() { declaredCancelled = true; },
+    }), { headers: { "content-length": String(cap + 1) } }));
+    assert.equal(declared.status, null);
+    assert.equal(declared.bytes, 0);
+    assert.equal(declaredCancelled, true, `${kind}: oversized declared bodies are cancelled before reading`);
+
+    let streamedCancelled = false;
+    let chunks = 0;
+    const streamed = await open("stream-overflow", async () => new Response(new ReadableStream<Uint8Array>({
+      pull(stream) { stream.enqueue(new Uint8Array(chunks++ === 0 ? cap : 1)); },
+      cancel() { streamedCancelled = true; },
+    })));
+    assert.equal(streamed.status, null);
+    assert.equal(streamed.bytes, 0);
+    assert.match(streamed.transportError ?? "", /streamed response exceeded/);
+    assert.equal(streamedCancelled, true, `${kind}: the streaming cap still cancels and discards an overflow without Content-Length`);
+  }
 });
 
 test("the guarded byte fetch answers the first hop with its location when asked not to follow, and follows by default", async () => {

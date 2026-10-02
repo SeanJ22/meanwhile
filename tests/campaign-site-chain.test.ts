@@ -3,9 +3,9 @@
  * held and freshly read pages: a held paid-research finding reaches
  * APPROVED_FOR_PROMOTION with all five checks MEASURED (the generic worker
  * offer left three NOT_IMPLEMENTED), the audit's controls measured and an
- * independent second read; a refused page holds its item with the typed
- * reason; a Marginalia pointer waits at VERIFIED until a second read an hour
- * later; and with the gate closed nothing is approved.
+ * independent saved profile; a refused page holds its item with the typed
+ * reason; a Marginalia pointer stays VERIFIED without an independent source;
+ * and with the gate closed nothing is approved.
  */
 import assert from "node:assert/strict";
 import { mkdtempSync, rmSync } from "node:fs";
@@ -28,7 +28,7 @@ import {
 import { indexVault } from "../lib/control-plane/evidence/read-only-vault.ts";
 import { campaignSiteReadRecorder } from "../lib/control-plane/promotion/campaign-site-reads.ts";
 import { heldArtifactRecord, scoutedFromHeldFinding, type HeldRead } from "../lib/candidates/research-findings-replay.ts";
-import { heldPageRead, readCampaignSiteLead, verifyCampaignSitePage } from "../lib/candidates/campaign-site-verifier.ts";
+import { districtForms, heldPageRead, readCampaignSiteLead, verifyCampaignSitePage } from "../lib/candidates/campaign-site-verifier.ts";
 import { DUARTE, KAPNER, TANG_WILLIAMS, committedSubjects, fixture, servedRuntime, sha256 } from "./helpers/campaign-sites.ts";
 
 const MEET = "https://www.duarte4mendham.com/meet-amalia";
@@ -42,6 +42,16 @@ const heldScoutPage: HeldRead = {
   httpStatus: 200, retrievedAt: "2026-09-21T02:23:01.279Z", body: fixture("duarte4mendham-meet-amalia.held.html"),
   sha256: sha256(fixture("duarte4mendham-meet-amalia.held.html")), methodRouteId: "scout:fetch_public", permission: "ALLOWED",
 };
+
+function profilePage(subjectId: string, campaignUrl: string, artifactId: string): HeldRead {
+  const subject = committedSubjects().get(subjectId)!;
+  const body = `<title>${subject.givenName} ${subject.familyName} | Candidate profile</title><h1>${subject.givenName} ${subject.familyName}</h1>
+    <p>Candidate for ${subject.officeTitle} in the 2026 General Election. ${subject.stateCode} ${districtForms(subject).join(" ")}</p><a href="${campaignUrl}">Website</a>`;
+  return { ...heldScoutPage, artifactId, attemptId: `at-${artifactId}`, canonicalUrl: `https://independent.example/${artifactId}`,
+    body, sha256: sha256(body), retrievedAt: "2026-09-25T20:30:00.000Z" };
+}
+const duarteProfile = profilePage(DUARTE, MEET, "ar-profile-duarte");
+const lilyProfile = profilePage(TANG_WILLIAMS, LILY, "ar-profile-lily");
 
 const lily: HeldMarginaliaResponse = {
   subjectId: TANG_WILLIAMS, artifactId: "ar-held-marginalia-tang-williams", attemptId: "at-marginalia-tang-williams",
@@ -64,6 +74,7 @@ async function plane(t: { after: (fn: () => void) => void }) {
   const vaultRoot = mkdtempSync(join(tmpdir(), "wtp-campaign-site-chain-"));
   t.after(() => rmSync(vaultRoot, { recursive: true, force: true, maxRetries: 3 }));
   await repos.artifacts.append(`held:${SCOUT_ATTEMPT}`, heldScoutPage.artifactId, heldArtifactRecord(heldScoutPage), heldScoutPage.retrievedAt);
+  await repos.artifacts.append(`held:${duarteProfile.attemptId}`, duarteProfile.artifactId, heldArtifactRecord(duarteProfile), duarteProfile.retrievedAt);
   const ctx = await contextFromRepositories(repos);
   /* Two held paid-research findings: an EVIDENCE_FOUND that named no URL (only pages), and a ROUTE_CANDIDATE that named one. */
   const duarte = scoutedFromHeldFinding({ attemptId: SCOUT_ATTEMPT, obligationId: `freshness:candidate-enrichment:${DUARTE}#candidate-authored-awaits-site`, subjectId: DUARTE,
@@ -88,15 +99,18 @@ async function options(repos: ReturnType<typeof createMemoryRepositories>, vault
         return out.ok ? { ok: true as const, read: out.read } : { ok: false as const, refusal: out.refusal };
       },
       recordRead: recorder.recordRead,
-      heldPage: async (artifact: ArtifactRecord) => artifact.artifactId === heldScoutPage.artifactId
-        ? { ...heldPageRead({ requestedUrl: MEET, httpStatus: 200, contentType: heldScoutPage.contentType, body: heldScoutPage.body, retrievedAt: heldScoutPage.retrievedAt, sha256: heldScoutPage.sha256 }),
-            permissions: [{ origin: "https://www.duarte4mendham.com", verdict: "ALLOWED" as const, detail: "held sidecar" }] }
-        : recorder.heldPage(artifact),
+      heldPage: async (artifact: ArtifactRecord) => {
+        const held = [heldScoutPage, duarteProfile, lilyProfile].find(page => page.artifactId === artifact.artifactId);
+        return held ? { ...heldPageRead({ requestedUrl: held.canonicalUrl, httpStatus: 200, contentType: held.contentType,
+          body: held.body, retrievedAt: held.retrievedAt, sha256: held.sha256 }),
+          permissions: [{ origin: new URL(held.canonicalUrl).origin, verdict: "ALLOWED" as const, detail: "held sidecar" }] }
+          : recorder.heldPage(artifact);
+      },
     },
   };
 }
 
-test("a held paid-research finding reaches APPROVED with every check measured, controls clean and an independent second read", async (t) => {
+test("a held paid-research finding reaches APPROVED with measured checks, clean controls and an independent saved profile", async (t) => {
   const { repos, vaultRoot, duarte, kapner } = await plane(t);
   const run = await options(repos, vaultRoot, "2026-09-25T21:00:00.000Z");
   const report = await projectCampaignSiteChains(repos, run.options);
@@ -110,7 +124,7 @@ test("a held paid-research finding reaches APPROVED with every check measured, c
   assert.ok(d.byStage.VERIFIED!.checks.every((c) => c.result === "PASS"), JSON.stringify(d.byStage.VERIFIED!.checks));
   const audited = d.byStage.AUDITED!;
   assert.ok(audited.survived && audited.startedFrom.includes("EVIDENCE_VAULT"));
-  assert.ok(audited.findings.some((f) => f.startsWith("SECOND_READ: a verifying read ar-held-duarte-meet-amalia")), audited.findings.join(" | "));
+  assert.ok(audited.findings.some((f) => f.startsWith("INDEPENDENT_PROFILE: ar-profile-duarte")), audited.findings.join(" | "));
   assert.ok(audited.controls !== null && audited.controls.recall === 1 && audited.controls.falsePresences === 0 && audited.controls.knownAbsenceCount === 2);
   const approved = d.byStage.APPROVED_FOR_PROMOTION!;
   assert.equal(approved.field, CAMPAIGN_SITE_FIELD);
@@ -136,17 +150,46 @@ test("a held paid-research finding reaches APPROVED with every check measured, c
   assert.match(pointer.refused!.reasons[0]!.detail, /NO_INDEPENDENT_SECOND_SIGNAL/);
   assert.ok(report.leads.some((l) => l.lead.origin === "MARGINALIA_POINTER" && l.outcome === "REFUSED" && l.refusals[0]?.code === "AGGREGATOR"));
 
-  /* Two hours later a second read of the same page by another Attempt agrees, and the pointer is approved. */
+  /* More clocks on the same page do not add an independent source. */
   const later = await options(repos, vaultRoot, "2026-09-25T23:00:00.000Z");
+  const noSource = await projectCampaignSiteChains(repos, later.options);
+  assert.equal((await readPipelineStates(repos)).find(s => s.itemId === pointer.itemId)!.stage, "VERIFIED");
+  assert.equal(noSource.rereadsUsed, 0);
+  await repos.artifacts.append(`held:${lilyProfile.attemptId}`, lilyProfile.artifactId, heldArtifactRecord(lilyProfile), lilyProfile.retrievedAt);
   const second = await projectCampaignSiteChains(repos, later.options);
   const after = (await readPipelineStates(repos)).find((s) => s.itemId === pointer.itemId)!;
   assert.equal(after.stage, "APPROVED_FOR_PROMOTION", JSON.stringify(second.offers.filter((o) => o.itemId === pointer.itemId)));
-  assert.ok(after.byStage.AUDITED!.startedFrom.includes("INDEPENDENT_FIRST_PARTY_ACQUISITION"));
-  assert.ok(after.byStage.AUDITED!.findings.some((f) => /^SECOND_READ: byte-identical re-observation/.test(f)));
+  assert.ok(after.byStage.AUDITED!.startedFrom.includes("EVIDENCE_VAULT"));
+  assert.ok(after.byStage.AUDITED!.findings.some((f) => /^INDEPENDENT_PROFILE: ar-profile-lily/.test(f)));
   assert.equal(second.approved.length, 2);
   /* Re-running offers nothing new for an approved item. */
   const third = await projectCampaignSiteChains(repos, (await options(repos, vaultRoot, "2026-09-25T23:30:00.000Z")).options);
   assert.ok(third.offers.filter((o) => o.itemId === duarte.itemId).length === 0);
+});
+
+test("an unchanged digest label cannot certify profile bytes that do not match the saved artifact", async t => {
+  const { repos, vaultRoot, duarte } = await plane(t);
+  const run = await options(repos, vaultRoot, "2026-09-25T21:00:00.000Z");
+  const report = await projectCampaignSiteChains(repos, { ...run.options, heldPage: async artifact => {
+    const page = await run.options.heldPage(artifact);
+    return artifact.artifactId === duarteProfile.artifactId && page
+      ? { ...page, body: `${page.body}<p>Altered bytes.</p>` } : page;
+  } });
+  assert.equal((await readPipelineStates(repos)).find(s => s.itemId === duarte.itemId)!.stage, "VERIFIED");
+  assert.equal(report.approved.length, 0);
+});
+
+test("omitting a middle given name never resolves a collision between full canonical names", async t => {
+  const { repos, vaultRoot, duarte } = await plane(t);
+  const run = await options(repos, vaultRoot, "2026-09-25T21:00:00.000Z");
+  const subjects = new Map(run.options.subjects);
+  const original = subjects.get(DUARTE)!;
+  const other = { ...original, candidacyId: "nj:2026:mendham:duarte-amalia-marie", givenName: "Amalia Marie" };
+  subjects.set(other.candidacyId, other);
+  await projectCampaignSiteChains(repos, { ...run.options, subjects });
+  const state = (await readPipelineStates(repos)).find(row => row.itemId === duarte.itemId)!;
+  assert.equal(state.stage, "CONFIRMED");
+  assert.match(state.refused!.reasons[0]!.detail, /CANONICAL_IDENTITY_UNIQUE/);
 });
 
 test("with the gate closed (the state before this change) nothing is approved: the class burden refuses", async (t) => {

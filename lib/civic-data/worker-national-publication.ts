@@ -332,6 +332,11 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
 /** What national publications put live, for the pass's runner receipt (`printWorkerPublicationReceipt`'s `extra`). */
 export function nationalDelivery(publications: readonly NationalPlacePublication[]) {
   const last = publications.filter(p => p.promotedVersionId).at(-1) ?? null;
-  return { records: publications.reduce((sum, p) => sum + p.members.reduce((n, m) => n + m.discoveryIds.length, 0), 0),
-    versionId: last?.promotedVersionId ?? null, candidateId: last?.candidateId ?? null, gaps: publications.flatMap(p => p.gaps) };
+  // An unchanged official names the version already held, with no new delivery.
+  // The final promoted version is its own durable candidate; an earlier geography
+  // candidate may precede several roster publications in this same call.
+  const versionId = last?.promotedVersionId ?? publications.flatMap(p => p.members).at(-1)?.versionId ?? null;
+  return { records: publications.reduce((sum, p) => sum + (p.promotedVersionId
+    ? p.members.reduce((n, m) => n + m.discoveryIds.length, 0) : 0), 0),
+    versionId, candidateId: versionId, gaps: publications.flatMap(p => p.gaps) };
 }

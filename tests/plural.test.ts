@@ -592,3 +592,11 @@ test("the bulk CSV's capitol and district office addresses are carried, not drop
   const [row] = rowsToPeople(csv, "nj");
   assert.deepEqual([row.capitol_address, row.district_address, row.district_voice], ["", "680 Broadway Suite 207, Paterson, NJ 07514", "862-264-2540"]);
 });
+
+test('Plural keeps its portrait URL as an unverified lead, never as a hotlinked reader photo', () => {
+  const people=rowsToPeople('id,name,current_party,current_district,current_chamber,email,links,image\np1,Jane Doe,Independent,1,lower,,https://legislature.gov/jane,https://images.example/jane.jpg\n','oh');
+  const result=normalize(people,indexDivisions([]),'2026-10-01T00:00:00Z','oh');
+  assert.equal(result.officeholders[0].photo,null);
+  assert.equal(result.officeholders[0].portraitCandidate?.imageUrl,'https://images.example/jane.jpg');
+  assert.equal(result.officeholders[0].portraitCandidate?.sourceUrl,'https://data.openstates.org/people/current/oh.csv');
+});

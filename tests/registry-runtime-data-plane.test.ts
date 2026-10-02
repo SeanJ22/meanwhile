@@ -9,7 +9,7 @@ import { recordRoutineReaderProjectionReadback } from "../lib/civic-data/reader-
 import { candidateChangeSet, canonicalCivicDataJson, civicRecordsFor } from "../lib/civic-data/changes.ts";
 import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
 import { promotionProofIssue } from "../lib/civic-data/read-model.ts";
-import type { CandidateVersionRecord, PromotedProjection, RoutineCandidate } from "../lib/civic-data/types.ts";
+import type { CandidateVersionRecord, PromotedProjection, RoutineCandidate, RoutineRecordClass } from "../lib/civic-data/types.ts";
 import { projectRoutineDataObservability } from "../lib/civic-data/observability.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -350,6 +350,8 @@ test("one blocked registry publisher holds only its dependent members while an u
   };
   const prior = await readRegistryRuntimePrior(store, T1);
   assert.equal(prior?.versionId, first.id);
+  assert.equal(prior?.readModelSha256, first.normalization.normalizedHash);
+  assert.deepEqual(prior?.sourceReceipt, first.retrieval.manualSourceReceipt);
   const next = registryRuntimeCandidate({
     ...nextPackage,
     payload: changedPayload,
@@ -538,12 +540,40 @@ function placeholderCorrection(base: RegistryRuntimeReadModel, placeholderIds: R
 }
 
 test("the owner door builds on the transfer-time import: untouched members keep its authority, the placeholder boards leave, and the plane re-proves both", async () => {
-  const store = new MemoryRoutineDataStore();
+  class BoundStore extends MemoryRoutineDataStore {
+    #reads = { promotion: 0, proof: 0, candidate: 0 };
+    get reads() { return { ...this.#reads }; }
+    resetReads() { this.#reads = { promotion: 0, proof: 0, candidate: 0 }; }
+    override async readPromotion<T>(recordClass: RoutineRecordClass, scope: string) {
+      this.#reads.promotion++;
+      return super.readPromotion<T>(recordClass, scope);
+    }
+    override async readCandidateProof(candidateId: string) {
+      this.#reads.proof++;
+      return super.readCandidateProof(candidateId);
+    }
+    override async readCandidate(candidateId: string) {
+      this.#reads.candidate++;
+      return super.readCandidate(candidateId);
+    }
+  }
+  const store = new BoundStore();
   const { imported, base, placeholders } = await transferImportedRegistry(store, T0);
+  store.resetReads();
   const prior = await readRegistryRuntimePrior(store, T1);
   assert.ok(prior);
   assert.equal(prior.versionId, imported.id);
+  assert.deepEqual(store.reads, { promotion: 1, proof: 1, candidate: 0 }, "only the current proof row is read, using the original private-field store");
+  assert.equal(prior.readModelSha256, imported.normalization.normalizedHash);
   assert.deepEqual(prior.sourceReceipt.sources, [], "the import has no source receipt to carry");
+  assert.equal(prior.sourceReceipt.reviewedAt, imported.retrieval.retrievedAt);
+  store.resetReads();
+  const fallback = {
+    readPromotion: store.readPromotion.bind(store),
+    readCandidate: store.readCandidate.bind(store),
+  };
+  assert.deepEqual(await readRegistryRuntimePrior(fallback, T1), prior, "a store without a proof door returns the same verified metadata");
+  assert.deepEqual(store.reads, { promotion: 1, proof: 0, candidate: 1 }, "the whole-read fallback is not repeated");
 
   const next = registryRuntimeCandidate(placeholderCorrection(base, placeholders.ids, T1), { prior });
   assert.deepEqual(next.semantics.violations, []);

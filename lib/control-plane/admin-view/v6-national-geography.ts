@@ -19,6 +19,7 @@ import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import { stateBase } from "../../ocd/divisions.ts";
 import { districtLabelOf } from "./district-label.ts";
 import { stateContainers, type ReadOnlyQuery } from "./promoted-slices.ts";
+import type { V6PlaceScope } from "./v6-hunts-read.ts";
 
 export interface DistrictInfo {
   readonly state: string;
@@ -45,6 +46,31 @@ const COUNTRY = "ocd-division/country:us";
 export function stateDivisionId(state: string): string | null {
   const fips = Object.entries(FIPS_TO_STATE).find(([, e]) => e.postal === state.toUpperCase())?.[0];
   return fips === undefined ? null : stateBase(fips)?.base ?? null;
+}
+
+/**
+ * The ZIPs the published Census lookup puts wholly or partly in the congressional district or county a place scope names: what lets
+ * Admin bind a ZIP's hunt, workers and money to the district or county that holds it. Null for any other scope (a ZIP, a metro, a
+ * state, the country) and when the lookup could not be read, so a binding that cannot be settled stays unsettled.
+ */
+export async function readAreaZips(scope: V6PlaceScope | null, query: ReadOnlyQuery | null = readerQuery()): Promise<ReadonlySet<string> | null> {
+  if (scope === null || scope.kind !== "geo") return null;
+  try {
+    if (scope.type === "congressional_district") {
+      const read = await readStateDistricts(scope.state, query);
+      const district = read.ok ? read.districts.find((d) => d.geoid === scope.geoid) : undefined;
+      return district === undefined ? null : new Set(district.zips);
+    }
+    if (scope.type === "county") {
+      const slice = await stateContainers(scope.state, ["county"], true, query);
+      if (slice.kind !== "HELD") return null;
+      const zips = new Set<string>();
+      let found = false;
+      for (const c of slice.value.containers) if (c.ref.type === "county" && c.ref.geoid === scope.geoid) { found = true; for (const o of c.overlaps ?? []) zips.add(o.zcta5); }
+      return found ? zips : null;
+    }
+  } catch { return null; }
+  return null;
 }
 
 const MEMO_MS = 5 * 60_000;

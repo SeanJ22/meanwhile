@@ -47,6 +47,7 @@ import { ROLE_WORDS } from "./v6-agents-read.ts";
 import { migrationOutcomeOf, PRODUCTION_MIGRATION_HEADLINE } from "../../db/migration-phases.ts";
 import type { UpdateCard } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import { runnerCycleOf, type CycleHeartbeat, type RunnerCycle } from "../runner-standing.ts";
+import { readAreaZips } from "./v6-national-geography.ts";
 import { huntName, scopedHunts, sectionRevision, validateV6Query, type AdminV6SectionEnvelope, type V6PlaceScope, type V6Refusal } from "./v6-hunts-read.ts";
 
 export const ADMIN_V6_WORKERS_CONTRACT = "admin-v6/workers@1" as const;
@@ -151,6 +152,8 @@ export interface V6WorkersSources {
   /** The latest verified result in the state in view; "NOT_ASKED" outside a state. */
   readonly stateProgress: { readonly state: "READ"; readonly value: StateProgress | null } | { readonly state: "UNREAD" } | { readonly state: "NOT_ASKED" };
   readonly migration?: unknown;
+  /** The ZIPs the Census lookup puts in the district or county in view; null for any other place. */
+  readonly scopeZips?: ReadonlySet<string> | null;
 }
 
 const clock = (value: unknown): value is string => typeof value === "string" && Number.isFinite(Date.parse(value));
@@ -176,7 +179,7 @@ export function runningScoutsOf(research: unknown): readonly RunningScout[] | nu
 
 /** Every read this section makes, each bounded. Nothing here writes. */
 export async function readV6WorkersSources(repos: ControlPlaneRepositories, readAt: string, scope: V6PlaceScope | null = null): Promise<V6WorkersSources> {
-  const [config, heartbeat, research, sourceEvents, jobs, stateProgress, migration] = await Promise.all([
+  const [config, heartbeat, research, sourceEvents, jobs, stateProgress, migration, scopeZips] = await Promise.all([
     readAdminConfig(repos),
     point<Partial<CycleHeartbeat>>(() => repos.runnerHeartbeat.readNarrowed(RUNNER_ID, RUNNER_PROGRESS_HEARTBEAT_FIELDS)),
     point<Record<string, unknown>>(() => repos.researchState.readNarrowed(RESEARCH_STATE_ID, WORKERS_RESEARCH_FIELDS)),
@@ -202,6 +205,7 @@ export async function readV6WorkersSources(repos: ControlPlaneRepositories, read
         .sort((a, b) => Date.parse(b.writtenAt) - Date.parse(a.writtenAt))
         .filter((row, index, rows) => rows.findIndex(other => other.writtenAt === row.writtenAt &&
           migrationOutcomeOf(other.migration)?.phase === migrationOutcomeOf(row.migration)?.phase) === index), () => ({ unread: true })),
+    readAreaZips(scope),
   ]);
   const running = research.state === "READ" ? runningScoutsOf(research.value) : null;
   const scouts = running === null ? null : await Promise.all(running.map(async (scout): Promise<ScoutEvidence> => {
@@ -219,7 +223,7 @@ export async function readV6WorkersSources(repos: ControlPlaneRepositories, read
     readAt,
     config: config.kind === "STORE_UNREACHABLE" ? { state: "UNREAD", detail: config.detail }
       : { state: "READ", scopes: parsed?.scopes ?? [], malformed: parsed?.malformed ?? 0 },
-    heartbeat, research, sourceEvents, scouts, jobs, stateProgress, migration,
+    heartbeat, research, sourceEvents, scouts, jobs, stateProgress, migration, scopeZips,
   };
 }
 
@@ -444,7 +448,8 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
   else {
     const scoped = scopedHunts(scope, scopeKey, { scopes: sources.config.state === "READ" ? sources.config.scopes : null,
       malformedScopes: sources.config.state === "READ" ? sources.config.malformed : 0,
-      configGap: sources.config.state === "UNREAD" ? sources.config.detail : null, attribution: undefined, snapshotGap: null, readAt: now });
+      configGap: sources.config.state === "UNREAD" ? sources.config.detail : null, attribution: undefined, snapshotGap: null, readAt: now,
+      scopeZips: sources.scopeZips ?? null });
     if ("kind" in scoped) return scoped;
     binding = { all: false, members: [...scoped.lifetime, ...scoped.rolling], saved };
   }

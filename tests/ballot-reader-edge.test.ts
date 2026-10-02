@@ -29,8 +29,8 @@ import { stateMoneyReadState } from "../lib/funding/state-snapshot.ts";
 import { readNhMembers } from "../lib/civic-data/state-members.ts";
 import { readOfficialStateLegislatorsProjection } from "../lib/state-rollcalls/legislators.ts";
 import { nhSeatHolderReadState } from "../lib/ballot/seat-holders.ts";
-import { currentPollingPlaceLinks } from "../lib/ballot/polling-place-links.ts";
-import { currentRegistrationLinks } from "../lib/ballot/registration-links.ts";
+import { POLLING_LINKS, REGISTRATION_LINKS } from "./helpers/ballot-navigation.ts";
+
 import { registryRuntimeFirstSeed, registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
 import { federalDirectoryFirstSeed, federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";
 import { authorityVersionKey } from "../lib/registry/server.ts";
@@ -90,8 +90,8 @@ const nhLegislators = servedValue(await readOfficialStateLegislatorsProjection("
 const navigation = {
   kind: "ballot-navigation",
   records: [
-    ...currentRegistrationLinks().map((value) => ({ id: `registration:${value.state}`, kind: "REGISTRATION_LINK", value })),
-    ...currentPollingPlaceLinks().map((value) => ({ id: `polling-place:${value.state}`, kind: "POLLING_PLACE_LINK", value })),
+    ...REGISTRATION_LINKS.map((value) => ({ id: `registration:${value.state}`, kind: "REGISTRATION_LINK", value })),
+    ...POLLING_LINKS.map((value) => ({ id: `polling-place:${value.state}`, kind: "POLLING_PLACE_LINK", value })),
   ],
 };
 

@@ -6,6 +6,8 @@ import type { ElectionFieldInput } from "../lib/civic-data/election-fields.ts";
 import { readElectionFieldsForDivisions } from "../lib/civic-data/curated-reader-read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { section3Record } from "../lib/control-plane/promotion/section3.ts";
+import { currentPollingPlaceLinks, pollingPlaceLinkFor } from "../lib/ballot/polling-place-links.ts";
+import { currentRegistrationLinks, registrationLinkFor } from "../lib/ballot/registration-links.ts";
 
 const now = "2026-09-30T12:00:00.000Z";
 const division = "ocd-division/country:us/state:oh";
@@ -45,6 +47,24 @@ test("saved-page lookup evidence publishes navigation without an assigned voting
   assert.equal(read.fields[0].value.navigationUrl, target);
   assert.equal(read.fields[0].value.url, source);
   assert.ok(!("sites" in read.fields[0].value) && !("assignedPollingPlace" in read.fields[0].value));
+  assert.equal(pollingPlaceLinkFor("OH")?.url, target);
+  assert.equal(pollingPlaceLinkFor("OH")?.verification, "Find your polling place");
+  assert.equal(currentPollingPlaceLinks().length, 1);
+  assert.deepEqual(currentRegistrationLinks(), []);
+  assert.equal(pollingPlaceLinkFor("AZ"), null, "no software seed supplies a missing state");
+});
+
+test("a saved registration lookup reaches the state selector through the same canonical publication", async () => {
+  const store = new MemoryRoutineDataStore();
+  const target = "https://voter.example.gov/registration";
+  const page = `Check your registration ${target}`;
+  const result = await publishElectionFields({ store, now, fields: [make(page, "registration_lookup", target, "Check your registration")], verify });
+  assert.ok(result.promotedVersionId);
+  await readElectionFieldsForDivisions([division], { store, now, bypassCache: true });
+  assert.equal(registrationLinkFor("OH")?.url, target);
+  assert.equal(registrationLinkFor("OH")?.verification, "Check your registration");
+  assert.equal(currentRegistrationLinks().length, 1);
+  assert.deepEqual(currentPollingPlaceLinks(), []);
 });
 
 test("missing/corrupt captures and invented calendar dates never replace the current fields", async () => {

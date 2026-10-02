@@ -10,6 +10,7 @@ import { campaignSiteFor } from "../lib/officials/campaign-sites.ts";
 import { currentCommentAccess } from "../lib/registry/comment-access.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
+import type { PublishedElectionField } from "../lib/civic-data/election-fields.ts";
 
 /**
  * **AN EDGE-SERVED CURATED PROJECTION ANSWERS ITS SELECTOR IN PRODUCTION.**
@@ -76,5 +77,29 @@ test("/ballot's navigation links read from the reader edge in production, with n
     await withReaderAuthorityEdge({ promoted: new Map([[entry.projection.key, entry]]) }, () => settleBallotNavigationRead());
     assert.deepEqual(currentRegistrationLinks().map((link) => link.url), ["https://edge.example.test/register"]);
     assert.deepEqual(currentPollingPlaceLinks().map((link) => link.url), ["https://edge.example.test/polls"]);
+  });
+});
+
+test("sourced nonpilot tools supersede legacy state links without promoting a county tool to statewide", async () => {
+  const field = (state: string, kind: "polling_lookup" | "registration_lookup", suffix = "", date = "2026-10-01"): PublishedElectionField => ({
+    id: `${state}:${kind}:${suffix}:${date}`, kind: "ELECTION_FIELD", value: {
+      state, divisionId: `ocd-division/country:us/state:${state.toLowerCase()}${suffix}`, fieldKind: kind,
+      text: `https://elections.example.gov/${state}/${kind}`, quote: "The saved official page names this tool.", dates: [],
+      url: "https://elections.example.gov/voters", navigationUrl: `https://elections.example.gov/${state}/${kind}/${date}`,
+      verifiedAt: date, collectedAt: date, sourceOrg: "Saved election authority",
+    },
+  });
+  await asProduction(() => {
+    primeCuratedReaderProjection("ballot-navigation", {
+      kind: "ballot-navigation", records: [
+        { id: "legacy:AK", kind: "POLLING_PLACE_LINK", value: { state: "AK", url: "https://legacy.example.gov/polls" } },
+        field("AK", "polling_lookup", "", "2026-09-30"), field("AK", "polling_lookup"),
+        field("HI", "registration_lookup"), field("HI", "polling_lookup", "/county:hawaii"),
+        { ...field("PA", "polling_lookup"), value: { ...field("PA", "polling_lookup").value, navigationUrl: null } },
+      ],
+    } as unknown as CuratedReaderProjection, "edge-test:national-navigation");
+    assert.deepEqual(currentPollingPlaceLinks().map(link => [link.state, link.url]), [["AK", "https://elections.example.gov/AK/polling_lookup/2026-10-01"]]);
+    assert.deepEqual(currentRegistrationLinks().map(link => [link.state, link.url]), [["HI", "https://elections.example.gov/HI/registration_lookup/2026-10-01"]]);
+    assert.equal(currentPollingPlaceLinks()[0].note, "The saved official page names this tool.");
   });
 });

@@ -1,15 +1,10 @@
-/**
- * Official voter-registration-status checkers, per covered state (2c).
- *
- * Every entry is the state election authority's own tool, and every URL was
- * verified this session — either fetched directly, or (where the tool's host
- * challenges plain clients) confirmed as the destination the authority's own
- * fetched page links to. The verification sentence records which.
- */
+/** Official registration tools from sourced, held ballot-navigation records. */
 import {
   currentCuratedReaderRecords,
   type BallotNavigationProjectionRecord,
 } from "../civic-data/curated-reader-read-model.ts";
+
+import { electionFieldIssue, type PublishedElectionField } from "../civic-data/election-fields.ts";
 
 export interface RegistrationLink {
   state: string;
@@ -21,48 +16,26 @@ export interface RegistrationLink {
   verifiedAt: string;
 }
 
-/** Initial adoption/node:test evidence; production reads `ballot-navigation`. */
-export const REGISTRATION_LINKS: RegistrationLink[] = [
-  {
-    state: "AZ",
-    label: "Check whether you're registered to vote",
-    url: "https://my.arizona.vote/WhereToVote.aspx?s=individual",
-    sourceOrg: "Arizona Secretary of State",
-    verification:
-      "azsos.gov/elections/voters (fetched 2026-08-13) links this as the Arizona Voter Information Portal; the portal host itself challenges non-browser clients.",
-    verifiedAt: "2026-08-13",
-  },
-  {
-    state: "NJ",
-    label: "Check whether you're registered to vote",
-    url: "https://voter.svrs.nj.gov/registration-check",
-    sourceOrg: "New Jersey Division of Elections",
-    verification:
-      "nj.gov/state/elections/voter-registration.shtml (fetched 2026-08-13) links this checker on the state's own voter-system host; the checker serves 200.",
-    verifiedAt: "2026-08-13",
-  },
-  {
-    state: "NH",
-    label: "Look up your voter registration",
-    url: "https://app.sos.nh.gov/voterinformation",
-    sourceOrg: "New Hampshire Secretary of State",
-    verification:
-      'Fetched 2026-08-13 (browser-UA rung): page titled "Voter Information Lookup | New Hampshire".',
-    verifiedAt: "2026-08-13",
-  },
-];
-
+/** Read official state tools from the settled navigation pointer, never code seeds. */
 export function currentRegistrationLinks(): readonly RegistrationLink[] {
-  const seed: BallotNavigationProjectionRecord[] = REGISTRATION_LINKS.map((value) => ({
-    id: `registration:${value.state}`,
-    kind: "REGISTRATION_LINK",
-    value: value as unknown as Readonly<Record<string, unknown>>,
-  }));
-  return currentCuratedReaderRecords("ballot-navigation", seed)
-    .filter((record): record is BallotNavigationProjectionRecord => record.kind === "REGISTRATION_LINK")
-    .map((record) => record.value as unknown as RegistrationLink);
+  const records = currentCuratedReaderRecords<{ readonly kind: string }>("ballot-navigation", []);
+  const sourced = records
+    .filter(row => row.kind === "ELECTION_FIELD" && electionFieldIssue(row) === null)
+    .map(row => (row as unknown as PublishedElectionField).value)
+    // This selector serves state tools. A county's tool cannot speak for its state.
+    .filter(value => value.fieldKind === "registration_lookup" && value.divisionId === `ocd-division/country:us/state:${value.state.toLowerCase()}`)
+    .sort((a, b) => b.verifiedAt.localeCompare(a.verifiedAt))
+    .map(value => ({ state: value.state, label: "Check whether you're registered to vote", url: value.navigationUrl!, sourceOrg: value.sourceOrg,
+      verification: value.quote, verifiedAt: value.verifiedAt }));
+  const held = records.filter(row => row.kind === "REGISTRATION_LINK")
+    .map(row => (row as unknown as BallotNavigationProjectionRecord).value as unknown as RegistrationLink);
+  const states = new Set<string>();
+  return [...sourced, ...held].filter(link => {
+    if (states.has(link.state)) return false;
+    states.add(link.state);
+    return true;
+  });
 }
-
 export function registrationLinkFor(state: string, projection?: readonly RegistrationLink[]): RegistrationLink | null {
   return (projection ?? currentRegistrationLinks()).find((l) => l.state === state) ?? null;
 }

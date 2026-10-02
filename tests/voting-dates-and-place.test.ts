@@ -13,7 +13,7 @@ import { googleCalendarUrl, icsDataHref } from "../lib/calendar/event-links.ts";
 import { ELECTION_DATES } from "../lib/ballot/election-dates.ts";
 import { PLACEHOLDER_ADDRESS } from "../lib/ballot/placeholder-address.ts";
 import { pollingLookupFallbacks } from "../lib/ballot/polling-lookup-fallback.ts";
-import { POLLING_PLACE_LINKS } from "../lib/ballot/polling-place-links.ts";
+import { POLLING_LINKS } from "./helpers/ballot-navigation.ts";
 
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 
@@ -271,9 +271,9 @@ test("BAL-2: the state's tool is reached through the pill, not offered beside it
       point: null,
       outsideCoverage: true,
       jurisdictions: [],
-      pollingPlaceLinks: POLLING_PLACE_LINKS,
+      pollingPlaceLinks: POLLING_LINKS,
     }),
-    [...POLLING_PLACE_LINKS],
+    [...POLLING_LINKS],
     "the API-returned canonical projection still supplies the held authority routes",
   );
   assert.deepEqual(pollingLookupFallbacks("idle"), []);

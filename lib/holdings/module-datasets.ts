@@ -11,8 +11,6 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { AREA_FACTS } from "../area/facts.ts";
 import { ELECTION_DATES } from "../ballot/election-dates.ts";
-import { POLLING_PLACE_LINKS } from "../ballot/polling-place-links.ts";
-import { REGISTRATION_LINKS } from "../ballot/registration-links.ts";
 import { MINUTES_SUMMARIES } from "../meetings/minutes-summaries.ts";
 import { VENUE_CACHE } from "../meetings/venue-cache.ts";
 import { CLASS_DEFINITIONS, BODY_KIND_DEFINITIONS, BODY_KINDS, DEPENDENT_SCHOOL_DEFINITION, UNCLASSIFIED_SCHOOL_DEFINITION } from "../officials/body-definitions.ts";
@@ -41,8 +39,6 @@ const definitions = (value: readonly object[], exportName: string): Row[] => row
 export const MODULE_DATASETS: readonly ModuleDataset[] = [
   { path: "lib/area/facts.ts", exports: ["AREA_FACTS"], dependencies: [], unit: "sourced area facts", records: AREA_FACTS.flatMap((set) => set.facts.map((fact) => ({ ...fact, state: set.state, id: `${set.state}:${fact.topic}` }))) },
   { path: "lib/ballot/election-dates.ts", exports: ["ELECTION_DATES"], dependencies: [], unit: "state election calendars", records: rows(ELECTION_DATES) },
-  { path: "lib/ballot/polling-place-links.ts", exports: ["POLLING_PLACE_LINKS"], dependencies: [], unit: "polling-place lookup records", records: rows(POLLING_PLACE_LINKS) },
-  { path: "lib/ballot/registration-links.ts", exports: ["REGISTRATION_LINKS"], dependencies: [], unit: "registration lookup records", records: rows(REGISTRATION_LINKS) },
   { path: "lib/meetings/minutes-summaries.ts", exports: ["MINUTES_SUMMARIES"], dependencies: [], unit: "sourced minutes summaries", records: rows(MINUTES_SUMMARIES) },
   { path: "lib/meetings/venue-cache.ts", exports: ["VENUE_CACHE"], dependencies: ["lib/ocd/curated.ts"], unit: "sourced venue match records", records: rows(VENUE_CACHE) },
   { path: "lib/officials/body-definitions.ts", exports: ["CLASS_DEFINITIONS", "BODY_KIND_DEFINITIONS", "BODY_KINDS", "DEPENDENT_SCHOOL_DEFINITION", "UNCLASSIFIED_SCHOOL_DEFINITION"], dependencies: ["lib/officials/body-description.ts", "data/states/az/reference/body-blurbs.json", "lib/officials/body-form.ts", "lib/officials/form-definitions.ts", "lib/officials/division-government.ts"], unit: "body definitions and explicit body-kind bindings", records: [...definitions(CLASS_DEFINITIONS, "CLASS_DEFINITIONS"), ...definitions(BODY_KIND_DEFINITIONS, "BODY_KIND_DEFINITIONS"), ...BODY_KINDS.map((row) => ({ ...row, recordExport: "BODY_KINDS" })), { ...DEPENDENT_SCHOOL_DEFINITION, recordExport: "DEPENDENT_SCHOOL_DEFINITION" }, { ...UNCLASSIFIED_SCHOOL_DEFINITION, recordExport: "UNCLASSIFIED_SCHOOL_DEFINITION" }] },

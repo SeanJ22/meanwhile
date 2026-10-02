@@ -262,6 +262,28 @@ test("published, fetched and entered: a reader request reads the family from the
 });
 
 
+test("scoped money publication reads only the selected nonpilot state's pointer", async () => {
+  const store = new MemoryRoutineDataStore();
+  const selected = { recordClass: "STATE_CAMPAIGN_FINANCE" as const, scope: STATE_CAMPAIGN_FINANCE_SOURCES.TN.scope };
+  const reads: string[] = [];
+  const scoped = new Proxy(store, { get(target, key) {
+    if (key === "readPromotionIdentities") return async (recordClass: string, scopes: readonly string[]) => {
+      assert.equal(recordClass, selected.recordClass);
+      assert.deepEqual(scopes, [selected.scope]);
+      reads.push(...scopes);
+      return target.readPromotionIdentities(recordClass as never, scopes);
+    };
+    const value = Reflect.get(target, key);
+    return typeof value === "function" ? value.bind(target) : value;
+  } });
+  const dir = mkdtempSync(join(tmpdir(), "runner-money-edge-"));
+  after(() => rmSync(dir, { recursive: true, force: true }));
+  const artifacts = new LocalFileArtifactStore(dir);
+  assert.equal(await publishRoutineReaderEdge(scoped, T1, [selected], { artifactStore: artifacts }), true);
+  assert.ok(reads.length > 0, "the selected pointer was not read");
+  assert.ok((await artifacts.readManifest())!.manifest.authorityArtifacts?.["state-money"]);
+});
+
 test("direct scoped runner publication skips unrelated contracts and every unchanged payload", async () => {
   const store = new MemoryRoutineDataStore();
   const current = JSON.parse(readFileSync(join(process.cwd(), "data", "voting-sites.json"), "utf8")) as VotingSitesFile;

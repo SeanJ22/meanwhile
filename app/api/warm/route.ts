@@ -107,7 +107,7 @@ export const PRIME_ASK_BUDGET_MS = 4000;
  * refused, never read from the database. The state roll calls are left out:
  * the Ask reads them from the database, per state, only for that state.
  */
-export const ASK_SOURCE_PRELOADS: Readonly<Record<string, () => Promise<unknown>>> = {
+export const ASK_SOURCE_PRELOADS: Readonly<Record<string, (states?: readonly string[]) => Promise<unknown>>> = {
   registry: () => settleRegistryAuthorityReads("REGISTRY"),
   federalDirectory: settleFederalDirectoryRead,
   outcomes: settleOutcomeRead,
@@ -210,14 +210,14 @@ async function primeReaderPlaces(manifest: ReaderManifest): Promise<{ places: nu
  * its module-level code only (one startup log line); its handler is never
  * called, so no question is read, resolved, logged or sent to a model.
  */
-async function primeAsk(): Promise<AskPrimed> {
+async function primeAsk(states: readonly string[]): Promise<AskPrimed> {
   const primed: { -readonly [K in keyof AskPrimed]: AskPrimed[K] } = { graphMs: null, sources: 0, sourcesRefused: 0, sourcesFailed: 0, sourcesMs: null };
   const work = (async () => {
     const graphStarted = Date.now();
     await import("@/app/api/ask/grounded/route").then(() => { primed.graphMs = Date.now() - graphStarted; }, () => undefined);
     const sourcesStarted = Date.now();
     await Promise.all(Object.values(ASK_SOURCE_PRELOADS).map((preload) =>
-      Promise.resolve().then(preload).then(
+      Promise.resolve().then(() => preload(states)).then(
         () => { primed.sources += 1; },
         (error: unknown) => {
           if (error instanceof ReaderEdgeOnlyRefusal) primed.sourcesRefused += 1;
@@ -247,7 +247,9 @@ export async function primeReaderEdge(): Promise<ReaderEdgePrimed> {
   // Both started here, after the edge-only context was entered, so every read they make is inside it.
   const [places, ask] = await Promise.all([
     bundle?.registryRuntime ? primeReaderPlaces(manifest) : Promise.resolve({ places: 0, placesRefused: 0 }),
-    primeAsk(),
+    primeAsk([...new Set(manifest.scopes.map(scope => stateOfOcdId(scope.ocdId) ??
+      (/^[a-z]{2}$/.test(scope.scope) && scope.scope !== NATIONAL_SCOPE ? scope.scope : null))
+      .filter((state): state is string => state !== null))]),
   ]);
   return { manifest: true, authorityFamilies: bundle ? Object.keys(bundle).length : 0, meetings, ...places, ask };
 }

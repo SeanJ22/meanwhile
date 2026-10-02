@@ -838,7 +838,7 @@ export async function POST(request: Request) {
   const deferrablePreloads = [
     () => { deferrableSourcesLoaded = true; return Promise.resolve(); },
     timed("funding", settleFundingRead),
-    timed("stateMoney", settleStateMoneyReads),
+    timed("stateMoney", () => settleStateMoneyReads(statesOf(ocdIds))),
     timed("azBallot", async () => promotedVersionOrThrow(await settleAzBallotRead())),
     timed("candidateProfiles", settleCandidateProfilesRead),
     timed("candidateCorpus", settleCandidateCorpusRead),

@@ -62,7 +62,9 @@ export async function publishRoutineReaderEdge(store: RoutineDataStore, observed
     "comment-access": [manual("comment-access")],
   };
   const refreshes = (family: keyof typeof specialPointers) => specialPointers[family].some(pointer => owns(pointer.recordClass, pointer.scope));
-  const pointerFamilies = Object.fromEntries(Object.entries(promotedEdgePointers()).filter(([, pointers]) => pointers.some(pointer => owns(pointer.recordClass, pointer.scope)))) as ReturnType<typeof promotedEdgePointers>;
+  const moneyStates = selected?.flatMap(pointer => pointer.recordClass === "STATE_CAMPAIGN_FINANCE"
+    ? /^US-([A-Z]{2}):campaign-finance:\d{4}$/.exec(pointer.scope)?.[1] ?? [] : []) ?? [];
+  const pointerFamilies = Object.fromEntries(Object.entries(promotedEdgePointers(moneyStates)).filter(([, pointers]) => pointers.some(pointer => owns(pointer.recordClass, pointer.scope)))) as ReturnType<typeof promotedEdgePointers>;
 
   // PDC-9: publish the composed snapshot as GEOGRAPHIC edge artifacts so the
   // reader serves ready-to-display data from the CDN edge — no database wake,

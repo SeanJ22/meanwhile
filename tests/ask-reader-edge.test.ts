@@ -197,8 +197,6 @@ test("with the C20 edge, a cold Mesa question reads the complete identity invent
     "CURATED_READER_RECORD:US:candidate-campaign-sites-derived",
     "FEC_FUNDING:federal-supported",
     "STATE_CAMPAIGN_FINANCE:US-AZ:campaign-finance:2026",
-    "STATE_CAMPAIGN_FINANCE:US-NH:campaign-finance:2026",
-    "STATE_CAMPAIGN_FINANCE:US-NJ:campaign-finance:2026",
   ]);
   // No STATE_ROLL_CALL: a body question never waits for a state legislature's roll calls (2026-09-25; route.ts personStateVotes).
   for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], UNRELATED_TRACE.has(source) ? undefined : "DATABASE", `the trace misnames ${source}`);

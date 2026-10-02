@@ -1265,7 +1265,6 @@ async function refreshPlaceOrder(): Promise<void> {
         subjects: capture.subjects, held: capture.held, now: nowIso() }),
     })));
   })().catch(error => {
-    placeOrderDirty = true;
     const detail = `place priority refresh failed; keeping last order: ${error instanceof Error ? error.message : String(error)}`;
     runtimeConditions.push(detail);
     console.warn(`  ${detail}`);

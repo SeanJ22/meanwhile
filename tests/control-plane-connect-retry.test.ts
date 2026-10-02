@@ -248,8 +248,8 @@ test("the default attempt budget is a small, bounded number", () => {
  * fault injected at the driver's own fetch seam (`neonConfig.fetchFunction`, the
  * same seam installNeonRequestDeadline/installNeonCircuitBreaker compose on):
  * the first two connect fetches throw the driver's exact transport error, and
- * every fetch after answers with an empty, valid result so the idempotent
- * bootstrap completes. Before this fix that first throw aborted the whole cycle;
+ * every fetch after answers with a valid result (including the already-valid
+ * source index) so bootstrap completes. Before this fix that first throw aborted the whole cycle;
  * here createPgRepositories returns a live repository set instead.
  *
  * The global hook is saved and restored so it cannot leak into another test in
@@ -260,7 +260,7 @@ test("createPgRepositories survives a transient connect fault at the real bootst
   let fetchCalls = 0;
   let transientThrows = 0;
   try {
-    neonConfig.fetchFunction = (async (_input: unknown, _init: unknown) => {
+    neonConfig.fetchFunction = (async (_input: unknown, init?: { body?: string }) => {
       fetchCalls += 1;
       if (fetchCalls <= 2) {
         transientThrows += 1;
@@ -270,10 +270,14 @@ test("createPgRepositories survives a transient connect fault at the real bootst
         (err as { sourceError?: Error }).sourceError = new TypeError("fetch failed");
         throw err;
       }
-      // A non-returning statement (every bootstrap DDL + the version upsert): an
-      // empty result the driver accepts, so the retried bootstrap can complete.
+      const query = JSON.parse(init?.body ?? "{}").query as string | undefined;
+      // The mocked database has a valid source index; only ordinary DDL and
+      // version writes return no rows. A retry test never opens a real socket.
+      const result = query?.includes("FROM pg_index i")
+        ? { command: "SELECT", fields: [{ name: "valid", dataTypeID: 16 }, { name: "building", dataTypeID: 16 }], rows: [["t", "f"]], rowCount: 1, rowAsArray: false }
+        : { command: "CREATE", fields: [], rows: [], rowCount: 0, rowAsArray: false };
       return new Response(
-        JSON.stringify({ command: "CREATE", fields: [], rows: [], rowCount: 0, rowAsArray: false }),
+        JSON.stringify(result),
         { status: 200, headers: { "content-type": "application/json" } },
       );
     }) as typeof neonConfig.fetchFunction;

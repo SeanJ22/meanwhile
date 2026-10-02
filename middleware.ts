@@ -121,7 +121,21 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
    * misconfiguration into an open control centre.
    * ---------------------------------------------------------------- */
   if (!onAdminHost) {
-    return isAdminPath(pathname) ? notFound() : NextResponse.next();
+    if (isAdminPath(pathname)) return notFound();
+    // The root already has no server data. Serve its build's prerender from
+    // Netlify's static CDN without booting the Next server on first access.
+    // App Router navigation and actions still need their framework response.
+    const documentRequest = (request.method === "GET" || request.method === "HEAD") &&
+      !request.headers.has("rsc") && !request.headers.has("x-nextjs-data") &&
+      !request.headers.has("next-router-prefetch") && !request.headers.has("next-action") &&
+      !request.headers.get("accept")?.includes("text/x-component") &&
+      !request.nextUrl.searchParams.has("_rsc");
+    if (process.env.WTP_BUILD_ON_NETLIFY === "true" && pathname === "/" && documentRequest) {
+      const target = request.nextUrl.clone();
+      target.pathname = "/_reader-shell/index.html";
+      return NextResponse.rewrite(target);
+    }
+    return NextResponse.next();
   }
 
   /* ---------------------------------------------------------------- *

@@ -40,7 +40,7 @@ test("an affected failing test remains selected and blocks the full PR verdict",
 });
 
 test("a missing job or result fails even when its work is deliberately unneeded", () => {
-  for (const tier of ["yes", "draft"]) {
+  for (const tier of ["yes", "draft", "main"]) {
     for (const job of ["admission", "verify", "test", "build"] as const) {
       const input: Record<string, unknown> = needs(tier);
       delete input[job];
@@ -62,8 +62,19 @@ test("draft explicitly defers tests and builds while requiring structural verifi
   assert.equal(evaluate(input).ok, false);
 });
 
+test("a push to main needs only the build; the merged pull request already ran verify and the tests", () => {
+  const input = needs("main");
+  input.test.result = "skipped";
+  input.verify.result = "skipped";
+  const verdict = evaluate(input);
+  assert.equal(verdict.ok, true);
+  assert.deepEqual(verdict.checks.filter((check) => !check.required).map((check) => check.job), ["verify", "test"]);
+  input.build.result = "skipped";
+  assert.equal(evaluate(input).ok, false);
+});
+
 test("unneeded work that failed or was cancelled is never described as a safe omission", () => {
-  for (const tier of ["draft"]) {
+  for (const tier of ["draft", "main"]) {
     for (const job of ["verify", "test", "build"] as const) {
       for (const result of ["failure", "cancelled"]) {
         const input = needs(tier);

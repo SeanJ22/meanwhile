@@ -9,6 +9,8 @@ import type { WorkArtifact } from "../control-plane/scheduler/dispatch.ts";
 import { scheduleObligation } from "../control-plane/scheduler/obligation.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import type { HeldSourcePage } from "../sources/plural/place.ts";
+import { readPlaceArtifacts } from "../control-plane/repository/pg-store.ts";
+import { websiteRequestLimit, type WebsiteSizeForUrl } from "../control-plane/scheduler/host-supervision.ts";
 
 export class PlaceSourceDeferred extends Error {
   constructor(host: string) {
@@ -23,6 +25,7 @@ export async function placeSourceReader(input: {
   tools: ResearchRuntimeTools;
   context: Omit<ScoutToolContext, "vault" | "spaceOut" | "inherited">;
   project: string;
+  websiteSize?: WebsiteSizeForUrl;
 }) {
   const { tools, context, project } = input;
   const artifacts = new Map<string, WorkArtifact>();
@@ -32,12 +35,13 @@ export async function placeSourceReader(input: {
   const requests = new Map<string, number>();
   let deferred: PlaceSourceDeferred | null = null;
   const takeRequest = (url: string) => {
-    if (deferred) throw deferred;
     const host = new URL(url).hostname.toLowerCase().replace(/^www\./, "");
+    const limit = websiteRequestLimit(input.websiteSize?.(url));
     const count = requests.get(host) ?? 0;
-    if (count >= context.bound.maxRequestsPerHost) {
-      deferred = new PlaceSourceDeferred(host);
-      throw deferred;
+    if (limit !== null && count >= limit) {
+      const stopped = new PlaceSourceDeferred(host);
+      deferred ??= stopped;
+      throw stopped;
     }
     requests.set(host, count + 1);
     cost.requestCount++;
@@ -61,10 +65,8 @@ export async function placeSourceReader(input: {
     subjectId: context.obligation.obligation.subjectId, routeId: null, active: true,
     readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: at }, Date.parse(at));
   const cutoff = Date.parse(at) - ("cadenceHours" in cadence ? cadence.cadenceHours : 24) * 3_600_000;
-  const allRecords = await tools.repos.artifacts.readAll();
-  const records = allRecords.filter(row => !row.partial && row.tier !== "RESTRICTED_RAW" &&
-    Date.parse(row.recordedAt) >= cutoff && Date.parse(row.recordedAt) <= Date.parse(at));
   const provenance: ArtifactProvenance[] = [];
+  const inheritedIds: string[] = [];
   const inherited = new Map<string, WorkerPublicationCapture>();
   const resolvedUrls = new Map<string, Promise<WorkerPublicationCapture | null>>();
   const resolveHeldCapture = async (url: string) => {
@@ -72,7 +74,8 @@ export async function placeSourceReader(input: {
     if (current) return current;
     // Keep this URL's fresh observations in newest-first order. A content
     // ID can have many observations; resolve it only once in this pass.
-    const candidates = records.filter(row => row.canonicalUrl === url).sort((a, b) => b.recordedAt.localeCompare(a.recordedAt));
+    const candidates = [...await readPlaceArtifacts(tools.repos, url, new Date(cutoff).toISOString(), at)]
+      .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt));
     const heldRepos = { ...tools.repos, artifacts: { ...tools.repos.artifacts, readAll: async () => candidates } };
     const readObject = researchVaultResolver(heldRepos, tools.store, project, { snapshot: true });
     const tried = new Set<string>();
@@ -86,6 +89,7 @@ export async function placeSourceReader(input: {
         const capture = { evidence: evidenceProjection(parsed.input), observedAt: artifact.retrievedAt,
           httpStatus: artifact.httpStatus, transport: artifact.transport, partial: false };
         inherited.set(row.artifactId, capture);
+        inheritedIds.push(row.artifactId);
         captures.set(row.artifactId, capture);
         provenance.push({ artifactId: row.artifactId, canonicalUrl: artifact.canonicalUrl,
           retrievedAt: artifact.retrievedAt, httpStatus: artifact.httpStatus,
@@ -105,6 +109,9 @@ export async function placeSourceReader(input: {
     return resolvedUrls.get(url)!;
   };
   const read = savedPageReader({ ...context, ...durable, vault,
+    // The size-qualified counter below owns this limit. Unknown, larger,
+    // state, federal and national sources have no website-walk count.
+    bound: { ...context.bound, maxRequestsPerHost: Number.MAX_SAFE_INTEGER },
     openBytes: async request => {
       takeRequest(request.url);
       const response = await (tools.openBytes ?? realOpenBytes)(request);
@@ -117,7 +124,7 @@ export async function placeSourceReader(input: {
       cost.bytesFetched += Buffer.byteLength(response.html);
       return response;
     } } : {}),
-    inherited: { artifactIds: records.map(row => row.artifactId), summary: "Fresh saved sources from every job, before network acquisition.",
+    inherited: { artifactIds: inheritedIds, summary: "Fresh saved sources from every job, before network acquisition.",
       provenance },
     readHeldArtifact: async id => {
       const held = inherited.get(id);
@@ -130,7 +137,9 @@ export async function placeSourceReader(input: {
     cost,
     get deferred() { return deferred; },
     fetchGeography: (async (url, options) => {
-      takeRequest(url instanceof Request ? url.url : String(url));
+      const address = url instanceof Request ? url.url : String(url);
+      takeRequest(address);
+      await tools.spaceOut(new URL(address).hostname);
       return fetch(url, options);
     }) satisfies typeof fetch,
     geographyCaptures,
@@ -148,9 +157,11 @@ export async function placeSourceReader(input: {
         // The shared toolkit can refuse before calling openBytes (including
         // its robots request). Preserve that bound as a deferral, too.
         if (error instanceof Error && error.message.includes("(the per-host bound)")) {
-          deferred ??= new PlaceSourceDeferred(new URL(url).hostname);
+          const stopped = new PlaceSourceDeferred(new URL(url).hostname);
+          deferred ??= stopped;
+          throw stopped;
         }
-        throw deferred ?? error;
+        throw error;
       }
       const capture = captures.get(page.artifactId);
       if (!capture) throw new Error("Saved source has no capture metadata");

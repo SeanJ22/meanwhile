@@ -15,6 +15,7 @@ import { readHeldPlaceCapture } from "../civic-data/held-place-capture.ts";
 import { buildPlaceOwedList, type PlaceOwedItem } from "../coverage/place-owed.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
 import { ADMIN_CONFIG_ID } from "../control-plane/gateway/admin-config.ts";
+import { heldDivisionsForZip } from "../control-plane/expansion/national-geography.ts";
 
 /** Compare reader facts, excluding observation times and publication versions. */
 export function placeMadeProgress(before: readonly PlaceOwedItem[], after: readonly PlaceOwedItem[]): boolean {
@@ -34,7 +35,8 @@ export async function scheduleNationalPlace(repos: ControlPlaneRepositories, row
     if (occurrence?.value.closedAt) {
       const task = await repos.routeTasks.read(occurrence.value.routeTaskId);
       const note = task?.value.disposition?.note ?? "";
-      if (note.includes('"placeProgress":false') || task?.value.disposition?.disposition === "WALKED_NO_YIELD") {
+      const outcome = task?.value.disposition?.disposition;
+      if (outcome === "WALKED_NO_YIELD" || outcome === "INGESTED" && note.includes('"placeProgress":false')) {
         return scheduleObligation({ ...row, lastWorkedAt: occurrence.value.closedAt }, Date.parse(now));
       }
     }
@@ -94,7 +96,9 @@ export async function runNationalPlaceTask(input: {
     const scheduled = await scheduleNationalPlace(tools.repos, durable, now, belowTarget);
     if (!("cadenceHours" in scheduled)) throw new Error(scheduled.reason);
     if (Date.parse(scheduled.nextDueAt) > Date.parse(now)) continue;
-    const knowledge = deferred ? undefined : await readFieldManual(tools.repos);
+    const publishedGeography = deferred ? [] : await heldDivisionsForZip(zip);
+    const state = publishedGeography.find(division => division.divisionType === "state")?.id.split("/state:")[1];
+    const knowledge = deferred ? undefined : await readFieldManual(tools.repos, { state });
     const opened = prior ?? await openOccurrence(tools.repos, { obligation: durable, dueAt: scheduled.nextDueAt, now });
     if (!opened) throw new Error("National source occurrence could not open");
     const routeTaskId = "routeTaskId" in opened ? opened.routeTaskId : opened.routeTask.id;
@@ -114,8 +118,8 @@ export async function runNationalPlaceTask(input: {
             cost: ZERO_COST, detail: `ZIP ${zip}: ${deferred}` };
           const saved = await placeSourceReader({ tools, project: "freshness", context: {
             obligation: scheduled, route: null, providerId: null, attemptId, workItemId, routeTaskId, holder, now: tools.now,
-            // This finite national walk is plain code; it retains the shared
-            // ten-request limit for each website.
+            // Plain-code national APIs finish their walk; qualified small
+            // sites keep the shared size-based request limit.
             bound: RESEARCH_BOUNDS.perDispatch,
           } });
           try {
@@ -126,7 +130,8 @@ export async function runNationalPlaceTask(input: {
                 return capture;
               },
               readSource: async url => { assertLeaseHealthy?.(); return saved.read(url); },
-              geography: { capture: saved.captureGeography, readHeld: saved.readGeography, fetchImpl: saved.fetchGeography },
+              geography: { capture: saved.captureGeography, readHeld: saved.readGeography, fetchImpl: saved.fetchGeography,
+                readPublished: async () => publishedGeography },
               geographyCaptures: saved.geographyCaptures,
               publish: async value => { assertLeaseHealthy?.(); return input.publish(value); },
               ...(input.publishElection ? { publishElection: input.publishElection } : {}) });

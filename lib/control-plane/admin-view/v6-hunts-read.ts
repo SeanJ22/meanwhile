@@ -84,12 +84,14 @@ export type HuntRelation = "member" | "outside" | "unresolved";
  * geography. A relation the saved geography cannot settle is `unresolved`,
  * never guessed from breadcrumbs or a state prefix.
  */
-export function huntRelation(scope: V6PlaceScope, decision: ExpansionScopeDecision): HuntRelation {
+export function huntRelation(scope: V6PlaceScope, decision: ExpansionScopeDecision, areaZips: ReadonlySet<string> | null = null): HuntRelation {
   const g = decision.geography;
   if (scope.kind === "country") return "member";
   if (scope.kind === "state") return g.stateAbbr.toLowerCase() === scope.state ? "member" : "outside";
   if (g.type === scope.type && g.geoid === scope.geoid && g.stateAbbr.toLowerCase() === scope.state) return "member";
   if (g.type === scope.type && g.geoid !== scope.geoid && SINGLE_VERSION_PARTITION.has(g.type)) return "outside";
+  // A ZIP hunt in a district or county: the published Census lookup lists the area's ZIPs (the same list the country view counts), so a ZIP in it is inside and any other is not.
+  if (g.type === "zcta" && scope.type !== "zcta" && areaZips !== null) return areaZips.has(g.geoid) ? "member" : "outside";
   if (g.stateAbbr.toLowerCase() !== scope.state && WITHIN_ONE_STATE.has(g.type) && WITHIN_ONE_STATE.has(scope.type)) return "outside";
   return "unresolved";
 }
@@ -131,6 +133,8 @@ export interface AdminV6SectionEnvelope<T> {
 }
 
 export interface V6MoneySources {
+  /** The ZIPs the Census lookup puts wholly or partly in the district or county in view; null for any other place or when it was not read. */
+  readonly scopeZips?: ReadonlySet<string> | null;
   /** Saved scopes from `AdminConfig.expansionScopes`; null when the policy row could not be read. */
   readonly scopes: readonly ExpansionScopeDecision[] | null;
   readonly malformedScopes: number;
@@ -203,11 +207,11 @@ export function scopedHunts(scope: V6PlaceScope | null, scopeKey: string, source
     says: sources.configGap ?? "The saved hunt list could not be read, so hunts here are unknown." };
   if (sources.malformedScopes > 0) return { kind: "refused", status: 503, code: "HUNT_LIST_INCOMPLETE",
     says: `${sources.malformedScopes} saved scope entr${sources.malformedScopes === 1 ? "y" : "ies"} could not be read, so the hunt list is incomplete. Paid work stays refused until it is repaired.` };
-  const unresolved = sources.scopes.filter(decision => huntRelation(scope, decision) === "unresolved");
+  const unresolved = sources.scopes.filter(decision => huntRelation(scope, decision, sources.scopeZips ?? null) === "unresolved");
   if (unresolved.length > 0) return { kind: "refused", status: 409, code: "SCOPE_BINDING_NOT_CONNECTED",
     says: `Whether ${unresolved.map(huntName).join(", ")} reaches ${scopeKey} is not settled by saved geography. The published Census ZCTA overlap lookup is not joined to hunts yet.`,
     dependency: "DEP-SCOPE-IDENTITIES" };
-  const members = sources.scopes.filter(decision => huntRelation(scope, decision) === "member");
+  const members = sources.scopes.filter(decision => huntRelation(scope, decision, sources.scopeZips ?? null) === "member");
   return {
     lifetime: members.filter((d): d is ExpansionScopeDecision & { readonly budgetStartedAt: string } => typeof d.budgetStartedAt === "string"),
     rolling: members.filter(d => typeof d.budgetStartedAt !== "string"),

@@ -9,6 +9,8 @@ import { WINDOW_LEASE_ID } from "../promotion/window.ts";
 import type { RouteTask } from "../route-task.ts";
 import { boundedQuery } from "./request-bounds.ts";
 import type { Sql } from "./pg-store.ts";
+import { pgRunningJobReader, unavailableRunningJobs, type RunningJobReader } from "./running-jobs.ts";
+import { pgStateProgressReader, unavailableStateProgress, type StateProgressReader } from "./state-progress.ts";
 
 export const ACTIVE_CLAIM_PAGE_MAX = 50;
 export type ActiveClaimCursor = { readonly expiresAt: string; readonly leaseKey: string };
@@ -36,13 +38,13 @@ export interface ActiveWorkClaimPage {
   /** Only Attempt-backed running rows on a complete first page; never all civic-source jobs. */
   readonly runningAttemptCount: number | null;
 }
-export interface ActiveWorkClaimReader {
+export interface ActiveWorkClaimReader extends RunningJobReader, StateProgressReader {
   readPage(input: { readonly nowIso: string; readonly limit?: number; readonly cursor?: ActiveClaimCursor | null }): Promise<ActiveWorkClaimPage>;
 }
 
 /** Not a fake empty list: file/memory providers have no indexed, complete active universe. */
 export function unavailableActiveWorkClaims(reason = "ACTIVE_CLAIM_INDEX_UNAVAILABLE"): ActiveWorkClaimReader {
-  return { async readPage(input) {
+  return { ...unavailableRunningJobs(reason), ...unavailableStateProgress(reason), async readPage(input) {
     return { available: false, reason, asOf: input.nowIso, totalActiveClaims: null,
       rows: [], hasMore: null, nextCursor: null, runningAttemptCount: null };
   } };
@@ -139,7 +141,7 @@ export function mapActiveClaim(raw: unknown, nowIso: string): ActiveWorkClaim {
 
 /** Fails unavailable before an unindexed Attempt join; no `.list()` fallback. */
 export function pgActiveWorkClaimReader(sql: Sql): ActiveWorkClaimReader {
-  return { async readPage(input) {
+  return { ...pgRunningJobReader(sql), ...pgStateProgressReader(sql), async readPage(input) {
     if (!canonicalInstant(input.nowIso)) throw new Error("INVALID_ACTIVE_CLAIM_TIME");
     const limit = input.limit ?? ACTIVE_CLAIM_PAGE_MAX;
     if (!Number.isInteger(limit) || limit < 1 || limit > ACTIVE_CLAIM_PAGE_MAX ||

@@ -47,12 +47,18 @@ const failing = (tries: number) => ({ kind: "Keeps failing",
   nextTime: "The workers try it again on their own. The next try time is not saved.", owner: "Engineering (the same failure keeps coming back)" });
 const MISSING = (scope: string) => [
   "Only the newest 25 source receipts are read (back to Sep 28, 5:30 PM ET). Older changes are not shown here.",
-  `No publication or promotion ${scope === "us" ? "" : `for ${scope} `}is in the saved readings this section can read, so the last useful progress is not reported. A check-in only means the workers are switched on.`,
   ...(scope === "us" ? [] : ["Only work sent to a hunt is split by place. Other queued work is counted for the whole system only, in the lane counts."]),
-  "DEP-WORKER-ACTIVE-INDEX: the full list of jobs running now is not shown. Paid research jobs are checked one by one and appear under What changed, but plain-code collection jobs run outside that list and the store has no bounded read of every unexpired work claim yet.",
 ];
 
-function section(scope: string, tries = 9) {
+/** Two jobs running now, as the Workers read returns them for a place: both already placed in `scope`. */
+const JOBS = (scope: string) => [
+  { id: "at-plain", stage: "collecting", title: "Plain-code reader · az:city:hereford", placeKey: scope, hunt: HUNT, requirement: "meeting list",
+    startedAt: "2026-09-28T22:02:00.000Z", elapsed: "10 min so far", method: "Plain-code reader", model: "No AI (plain code)", modelWhy: "—", cost: "—", latest: "—", next: "—" },
+  { id: "at-scout", stage: "finding", title: "Scout · az:school:palominas", placeKey: scope, hunt: "Shared statewide", requirement: "meeting list",
+    startedAt: "2026-09-28T22:08:00.000Z", elapsed: "4 min so far", method: "Scout", model: "Cheapest AI (claude-haiku-4-5-20251001)", modelWhy: "—", cost: "—", latest: "—", next: "—" },
+];
+
+function section(scope: string, tries = 9, withJobs: { count: number; system: number; lowerBound: boolean } | null = null) {
   const applies = [scope];
   const waiting = [
     { kind: "Not finished", title: `${HUNT}: 51 of 194 assigned tasks not finished`,
@@ -71,7 +77,7 @@ function section(scope: string, tries = 9) {
       text: "From Sep 28, 2:09 PM ET to Sep 28, 2:24 PM ET: records promoted were not counted; how many readers can see was not counted." }] : []),
   ];
   return { contract: "admin-v6/workers@1", scope, revision: `workers:${scope}:${tries}`, asOf: READ_AT,
-    data: { status: STATUS, jobs: null, waiting, events, update: null,
+    data: { status: STATUS, jobs: withJobs ? JOBS(scope) : null, running: withJobs, waiting, events, update: null,
       next: [`${HUNT}: finish the other 51 assigned tasks and pass their checks.`, "The next round was due Sep 28, 6:01 PM ET. No newer start is saved yet."] },
     missingParts: MISSING(scope) };
 }
@@ -237,14 +243,55 @@ test("every missing part lands beside a card and none is dropped", () => {
     const m = missingByCard(parts);
     assert.equal(m.progress.length + m.jobs.length + m.waiting.length + m.events.length + m.other.length, parts.length, key);
     assert.equal(m.other.length, 0, `${key}: every saved line has a card`);
-    assert.equal(m.progress.length, 1);
-    assert.equal(m.jobs.length, 1);
-    assert.ok(!m.jobs[0].startsWith("DEP-"), "the id is shown as the supplier, not in the sentence");
+    assert.equal(m.progress.length, 0, "no progress is a dash on the page, with no sentence");
+    assert.equal(m.jobs.length, 0, "a read that worked leaves no missing part");
     assert.equal(m.events.length, 1);
     assert.equal(m.waiting.length, key === "us" ? 0 : 1);
   }
+  assert.deepEqual(missingByCard(["DEP-WORKER-ACTIVE-INDEX: —"]).jobs, ["—"], "a failed jobs read is a dash beside the jobs card");
   assert.deepEqual(missingByCard(["Something new the backend says."]).other, ["Something new the backend says."]);
   assert.deepEqual(missingByCard([SECTION_DEP.workers.need]).other, [], "the stand-in's own note is shown by the page, once");
+});
+
+test("running jobs show as a count and a list on Workers and Now, with no explanation text", async () => {
+  mock.timers.enable({ apis: ["Date"], now: Date.parse(PULSE_AT) });
+  try {
+    for (const [key, scope] of SCOPES) {
+      const b = backend();
+      const running = { count: 2, system: key === "us" ? 2 : 41, lowerBound: false };
+      b.set((sc) => ({ status: 200, body: section(sc, 9, running) }));
+      const sync = new LiveSync({ scope: key, fetch: b.fetch, schedule: () => () => {} });
+      sync.onPulse(pulse("w1"));
+      await settle(sync);
+      const w = text(page(sync, scope, key, "workers"));
+      assert.match(w, key === "us" ? /2 working now · 4 waiting/ : /2 working now · 2 waiting/, key);
+      assert.match(w, /Plain-code reader · az:city:hereford/, key);
+      assert.match(w, /Scout · az:school:palominas/, key);
+      assert.ok(w.includes("Using Plain-code reader AI No AI (plain code)"), key);
+      assert.match(w, /Collecting 1/, key);
+      assert.match(w, /Finding sources 1/, key);
+      assert.doesNotMatch(w, /Stop this job|Cost —|Latest —|Next —/, `${key}: a live job shows only what its lease and attempt record`);
+      if (key === "us") assert.doesNotMatch(w, /in the whole system/, key);
+      else assert.match(w, /41 in the whole system/, key);
+      const n = text(page(sync, scope, key, "now"));
+      assert.match(n, /2 jobs working now in /, key);
+      assert.ok(n.includes(`Plain-code reader · az:city:hereford · ${HUNT} · 10 min so far`), key);
+      assert.doesNotMatch(n, /— jobs working now/, key);
+    }
+  } finally { mock.timers.reset(); }
+});
+
+test("a read that stopped at its row limit shows the count as a lower bound", async () => {
+  mock.timers.enable({ apis: ["Date"], now: Date.parse(PULSE_AT) });
+  try {
+    const b = backend();
+    b.set((sc) => ({ status: 200, body: section(sc, 9, { count: 2, system: 2, lowerBound: true }) }));
+    const sync = new LiveSync({ scope: "us", fetch: b.fetch, schedule: () => () => {} });
+    sync.onPulse(pulse("w1"));
+    await settle(sync);
+    assert.match(text(page(sync, { kind: "all" }, "us", "workers")), /2\+ working now/);
+    assert.match(text(page(sync, { kind: "all" }, "us", "now")), /2\+ jobs working now in /);
+  } finally { mock.timers.reset(); }
 });
 
 test("ages move in five-minute steps and a round turns late without a new worker message", () => {

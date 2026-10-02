@@ -700,29 +700,30 @@ test("SEEDED (e): the (N+1)th request to one host is refused, naming the count; 
     [`${other}/robots.txt`]: { status: 200, body: ROBOTS_ALLOW_ALL, contentType: "text/plain" },
     [`${other}/x`]: { status: 200, body: "<html><body>x</body></html>" },
   });
-  const kit = buildScoutToolkit(context({ openOne: open, bound: { ...RESEARCH_BOUNDS.perDispatch, maxRequestsPerHost: 3 } }));
-  assert.equal((await kit.call("fetch_public", { url: `${HOST}/a`, ...IN }, null)).ok, true, "robots + a = 2");
-  assert.equal((await kit.call("fetch_public", { url: `${HOST}/b`, ...IN }, null)).ok, true, "= 3, the cap");
+  const kit = buildScoutToolkit(context({ openOne: open, websiteSize: () => ({ kind: "local-government", population: 9_999 }) }));
+  for (let i = 0; i < 9; i++) assert.equal((await kit.call("fetch_public", { url: `${HOST}/a`, ...IN }, null)).ok, true);
   const refused = await kit.call("fetch_public", { url: `${HOST}/c`, ...IN }, null);
   assert.equal(refused.ok, false);
-  assert.match(refused.forModel, /3 of 3 requests/);
+  assert.match(refused.forModel, /10 of 10 requests/);
   assert.equal(refused.rung, null, "nothing was observed");
-  assert.equal(seen.filter((u) => u.startsWith(HOST)).length, 3, "the transport never saw the fourth request");
+  assert.equal(seen.filter((u) => u.startsWith(HOST)).length, 10, "robots and nine pages consume the small website allowance");
   const elsewhere = await kit.call("fetch_public", { url: `${other}/x`, ...IN }, null);
   assert.equal(elsewhere.ok, true, "the bound is per host");
-  assert.equal(kit.requestCount, 5);
+  assert.equal(kit.requestCount, 12);
 });
 
-test("the permission read counts toward the cap: at cap-1 it consumes the last slot and the GET is refused by name", async () => {
+test("unknown and larger websites can read past ten without small-publisher spacing", async () => {
   const { open, seen } = fakeTransport({
     [`${HOST}/robots.txt`]: { status: 200, body: ROBOTS_ALLOW_ALL, contentType: "text/plain" },
     [`${HOST}/a`]: { status: 200, body: "<html><body>a</body></html>" },
   });
-  const kit = buildScoutToolkit(context({ openOne: open, bound: { ...RESEARCH_BOUNDS.perDispatch, maxRequestsPerHost: 1 } }));
-  const r = await kit.call("fetch_public", { url: `${HOST}/a`, ...IN }, null);
-  assert.equal(r.ok, false);
-  assert.match(r.forModel, /permission read consumed the last slot/);
-  assert.deepEqual(seen, [`${HOST}/robots.txt`]);
+  for (const size of [undefined, { kind: "local-government", population: 10_000 }, { kind: "school-district", students: 5_000 }, { kind: "federal" }, { kind: "state" }, { kind: "national" }] as const) {
+    const kit = buildScoutToolkit(context({ openOne: open, websiteSize: () => size,
+      spaceOut: async () => { throw Error("Uncapped websites must not wait on small-publisher spacing"); } }));
+    for (let i = 0; i < 12; i++) assert.equal((await kit.call("fetch_public", { url: `${HOST}/a`, ...IN }, null)).ok, true);
+    assert.equal(kit.requestCount, 13);
+  }
+  assert.equal(seen.length, 78);
 });
 
 /* ================================== SEEDED (f): hostile content is DATA */
@@ -1224,4 +1225,14 @@ test('collector falls back to the existing browser and returns only saved public
   assert.equal((await read(url)).artifactId,got.artifactId);assert.equal(browsed,1);
   const refused=savedPageReader(context({openOne:fakeTransport({[url]:{status:200,body:html}}).open,vault:recordingVault('refuse').put}));
   await assert.rejects(refused(url),/SOURCE_PAGE_UNREADABLE/);
+});
+
+test('Scout Census API calls are uncapped even when the same hunt also serves a small town', async () => {
+  let requests=0;
+  const kit=buildScoutToolkit(context({openOne:fakeTransport({}).open,
+    websiteSize:url=>new URL(url).hostname==='api.census.gov' ? {kind:'federal'} : {kind:'local-government',population:3000},
+    spaceOut:async()=>{throw Error('Census must not receive the small-town spacing');},
+    sourceApi:{env:{CENSUS_API_KEY:'test-key'},fetchImpl:async()=>{requests++;return new Response('[["NAME"],["County"]]');}}}));
+  for(let i=0;i<12;i++)assert.equal((await kit.call('census_api',{path:'2024/acs/acs5',params:{get:'NAME',for:'state:*'},...IN},null)).ok,true);
+  assert.equal(requests,12);assert.equal(kit.requestCount,12);
 });

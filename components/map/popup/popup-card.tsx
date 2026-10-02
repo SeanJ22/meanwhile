@@ -3,6 +3,8 @@
 import { Maximize2, Minus, X } from "lucide-react";
 import { useRef, type ReactNode } from "react";
 
+import { useCardVisibility } from "@/hooks/use-card-visibility";
+
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import type { Tier } from "@/lib/ocd/tiers";
 import { LevelTag } from "@/components/ui/level-tag";
@@ -95,6 +97,7 @@ export function PopupCard({
   children,
 }: PopupCardProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
+  useCardVisibility(rootRef, `POPUP:${type}:${title}`, "POPUP");
   useDismissOnOutside(rootRef, onMinimize ?? onClose ?? (() => {}), Boolean(onMinimize ?? onClose));
 
   return (

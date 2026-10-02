@@ -3,7 +3,9 @@
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { X } from "lucide-react";
-import { Fragment, useEffect, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
+
+import { useCardVisibility } from "@/hooks/use-card-visibility";
 
 import { formatMeetingDate, formatMeetingTime } from "@/lib/map/format";
 import { sourceCreditFor } from "@/lib/meetings/list-attribution";
@@ -682,6 +684,8 @@ export function EntityModal({
   onShowOnMap,
   onOpenVenue,
 }: EntityModalProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  useCardVisibility(cardRef, `${subject.subjectKind}:${subject.subjectId}`, subject.subjectKind);
   const [tab, setTab] = useState<ModalTab>(initialTab);
   const listingCount = readerMeetingCount(subject.meetings, useMeetingListingIdentity());
   const sourceCount = sourceCountLabel(subject.sources);
@@ -845,6 +849,7 @@ export function EntityModal({
 
   return (
     <div
+      ref={cardRef}
       className={embedded ? "account-modal-overlay mw-embedded" : "account-modal-overlay"}
       role={embedded ? undefined : "dialog"}
       aria-modal={embedded ? undefined : "true"}

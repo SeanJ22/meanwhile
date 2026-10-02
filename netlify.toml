@@ -12,7 +12,7 @@
 # actually ran — never inferring it from a green build.
 
 [build]
-  command = "corepack enable && corepack pnpm run build"
+  command = "corepack enable && corepack pnpm db:apply --target=production --phase=expand --production-build && corepack pnpm run build"
   publish = ".next"
   # THE DEPLOY FILTER — RULING 124 (2026-08-24, Sean's instruction, item 1.2).
   #

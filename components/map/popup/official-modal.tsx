@@ -1,7 +1,9 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+
+import { useCardVisibility } from "@/hooks/use-card-visibility";
 
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
@@ -65,6 +67,8 @@ export function OfficialModal({
   onClose,
   embedded = false,
 }: OfficialModalProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  useCardVisibility(cardRef, `OFFICIAL:${holder.id}`, "OFFICIAL");
   useEffect(() => {
     if (embedded) return;
     const onKey = (event: KeyboardEvent) => {
@@ -117,6 +121,7 @@ export function OfficialModal({
 
   return (
     <div
+      ref={cardRef}
       className={embedded ? "account-modal-overlay mw-embedded" : "account-modal-overlay"}
       role={embedded ? undefined : "dialog"}
       aria-modal={embedded ? undefined : "true"}

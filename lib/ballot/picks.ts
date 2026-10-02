@@ -1,5 +1,7 @@
 "use client";
 
+import { captureEvent } from "@/lib/events/client";
+import { storeSafeId } from "@/lib/events/wire";
 import {
   commitStorageWrite,
   publishStorageEvent,
@@ -7,15 +9,13 @@ import {
 } from "@/lib/state/subscribe-to-storage";
 
 /**
- * Save-my-picks (4a, 2026-08-17) — DEVICE-LOCAL ONLY.
- *
- * A pick is the reader's private election-day note to themselves. It is
- * saved under `wtp.ballot_picks` in localStorage and NOWHERE else: never
- * transmitted, never logged, never aggregated, no server column could hold
- * it (`tests/db-schema.test.ts` bans pick-shaped column names schema-wide).
- * This is a DIFFERENT thing from the reaction buttons — reactions join
- * anonymous local totals (disclosed at the capture point); picks never
- * leave the device — and every pick surface says so in words.
+ * Save-my-picks (4a, 2026-08-17). Kept on the device so the reader's ballot
+ * card survives a visit, AND (October 1, 2026, Sean) recorded server-side from
+ * that day on, anonymously, per contest: who the reader says they are voting
+ * for, with "not sure" and "blank" as valid answers. Each change sends one
+ * `BALLOT_PICK` event through the batcher (`lib/events/client.ts`) to the
+ * event store; picks saved before that stay on their device only. What the site
+ * collects is stated once, on /transparency.
  *
  * The stored shape carries display labels so the "My picks" view can render
  * without re-deriving contest data. Clearing browser storage clears picks;
@@ -54,6 +54,8 @@ interface PicksFile {
    * answer, not the one that was cleared.
    */
   suppressedDerived: Record<string, string[]>;
+  /** Contests the reader marked "not sure". A pick in the same contest replaces it. */
+  unsure?: Record<string, true>;
 }
 
 const EMPTY: PicksFile = { version: 2, picks: {}, suppressedDerived: {} };
@@ -85,6 +87,7 @@ function read(): PicksFile {
         typeof parsed.suppressedDerived === "object" && parsed.suppressedDerived !== null
           ? parsed.suppressedDerived
           : {},
+      ...(typeof parsed.unsure === "object" && parsed.unsure !== null ? { unsure: parsed.unsure } : {}),
     };
   } catch {
     return EMPTY;
@@ -117,6 +120,12 @@ export function getPick(contestId: string): StoredPick | null {
 export function getAllPicks(): StoredPick[] {
   if (typeof window === "undefined") return [];
   return Object.values(read().picks);
+}
+
+/** The contests the reader marked "not sure". */
+export function getUnsure(): Record<string, true> {
+  if (typeof window === "undefined") return {};
+  return read().unsure ?? {};
 }
 
 /** What a clear cleared, per contest. See `PicksFile.suppressedDerived`. */
@@ -162,13 +171,28 @@ export function togglePick(
   // here: the reader is answering the question again, and a stale suppression
   // would sit waiting to silence a derived pick they went on to earn.
   delete file.suppressedDerived[contestId];
+  if (file.unsure) delete file.unsure[contestId];
   write(file);
+  captureEvent({
+    type: "BALLOT_PICK",
+    ballotPick: { contestId: storeSafeId(contestId), candidateIds: next.map(storeSafeId), choice: next.length === 0 ? "BLANK" : "PICKED" },
+  });
 }
 
 export function clearPick(contestId: string) {
   const file = read();
   delete file.picks[contestId];
   write(file);
+  captureEvent({ type: "BALLOT_PICK", ballotPick: { contestId: storeSafeId(contestId), candidateIds: [], choice: "BLANK" } });
+}
+
+/** "Not sure yet" is an answer too: it replaces any pick here and is recorded as one. */
+export function markUnsure(contestId: string) {
+  const file = read();
+  delete file.picks[contestId];
+  file.unsure = { ...(file.unsure ?? {}), [contestId]: true };
+  write(file);
+  captureEvent({ type: "BALLOT_PICK", ballotPick: { contestId: storeSafeId(contestId), candidateIds: [], choice: "UNSURE" } });
 }
 
 /**
@@ -190,7 +214,11 @@ export function clearPick(contestId: string) {
  * it is to record that the reader said so.
  */
 export function clearAllPicks(derivedNow: Record<string, string[]> = {}) {
+  const before = read();
   write({ version: 2, picks: {}, suppressedDerived: derivedNow });
+  for (const contestId of Object.keys(before.picks)) {
+    captureEvent({ type: "BALLOT_PICK", ballotPick: { contestId: storeSafeId(contestId), candidateIds: [], choice: "BLANK" } });
+  }
 }
 
 /**

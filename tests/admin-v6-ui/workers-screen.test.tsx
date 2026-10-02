@@ -28,6 +28,7 @@ import { RUNNER_ID } from "../../lib/control-plane/admin-data.ts";
 import { readV6WorkersSources, v6WorkersSection } from "../../lib/control-plane/admin-view/v6-workers-read.ts";
 import { createMemoryRepositories } from "../../lib/control-plane/repository/memory.ts";
 import { liveCycleHeartbeat } from "../../lib/control-plane/runner-standing.ts";
+import { runDbApply } from "../../scripts/db-apply.mts";
 
 /* -------------------------------------------------- the saved readback */
 
@@ -163,6 +164,30 @@ test("parent cycle metadata reaches the existing Workers round through bounded r
     } }, Date.parse(PULSE_AT));
     assert.equal(stale.headline, "No finish recorded");
   } finally { mock.timers.reset(); }
+});
+
+test("a migration failure reaches the existing Workers card through saved history and LiveSync with secrets removed", async () => {
+  const repos = createMemoryRepositories();
+  const at = PULSE_AT;
+  await repos.researchState.put("research-state", { running: [], paused: false, lanes: {} } as never, at);
+  const status = await runDbApply(["--target=production", "--phase=expand"], { PRIVATE_TOKEN: "s13-private-token", NODE_ENV: "test" }, {
+    head: () => "a".repeat(40), execute: () => ({ status: 1, stdout: "", stderr: "FAIL s13-private-token postgresql://user:password@invalid/db\n" }),
+    record: async record => { await repos.ownerDigests.append("owner-digest", record.digestId, record, record.writtenAt); },
+  });
+  assert.equal(status, 1);
+  const reading = v6WorkersSection({ scopeKey: "us", scope: { kind: "country" }, sources: await readV6WorkersSources(repos, at) });
+  assert.ok("data" in reading);
+  assert.equal(reading.data.status.lastUsefulProgress, null);
+  const b = backend(); b.set(() => ({ status: 200, body: reading }));
+  const sync = new LiveSync({ scope: "us", fetch: b.fetch, schedule: () => () => {} });
+  sync.onPulse(pulse("migration-failed")); await settle(sync);
+  const rendered = text(page(sync, { kind: "all" }, "us", "workers"));
+  assert.match(rendered, /Production migrations/);
+  assert.match(rendered, /expand: failed/);
+  assert.match(rendered, /Engineering repairs the expand migration failure/);
+  assert.match(rendered, /\[private\]/);
+  assert.doesNotMatch(rendered, /s13-private-token|password|postgresql:\/\//);
+  assert.doesNotMatch(rendered, /Fix this/);
 });
 
 test("the saved readback shows on Workers for the country, Arizona and ZIP 85635 with plain labels and numbers", async () => {

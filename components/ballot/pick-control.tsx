@@ -6,6 +6,8 @@ import {
   clearPick,
   getPick,
   getSuppressedDerived,
+  getUnsure,
+  markUnsure,
   subscribePicks,
   togglePick,
 } from "@/lib/ballot/picks";
@@ -51,12 +53,13 @@ export function PickControl({
           // F01-continued item 9: what a clear cleared here, so a derived
           // pick the reader deleted does not walk back in on the next render.
           cleared: getSuppressedDerived()[contestId] ?? [],
+          unsure: getUnsure()[contestId] === true,
         }),
       [contestId],
     ),
-    () => JSON.stringify({ pick: null, cleared: [] }),
+    () => JSON.stringify({ pick: null, cleared: [], unsure: false }),
   );
-  const { pick: parsed, cleared } = JSON.parse(pick) as {
+  const { pick: parsed, cleared, unsure: unsureHere } = JSON.parse(pick) as {
     pick: {
       contestId: string;
       contestTitle: string;
@@ -64,6 +67,7 @@ export function PickControl({
       labels: Record<string, string>;
     } | null;
     cleared: string[];
+    unsure: boolean;
   };
 
   /*
@@ -184,11 +188,6 @@ export function PickControl({
           )}
         </p>
       )}
-      {/* Playful register, on an interaction surface — and load-bearing: it
-          is the one line that tells the reader this box goes nowhere. */}
-      <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-muted">
-        Building your own ballot. Stays on this phone.
-      </p>
       <div className="reaction-box-choices">
         {options.map((option) => {
           const on = selected.has(option.id);
@@ -241,6 +240,14 @@ export function PickControl({
           choice is the change affordance, and it writes an explicit pick that
           then outranks the derived one.
         */}
+        <button
+          type="button"
+          aria-pressed={unsureHere}
+          onClick={() => markUnsure(contestId)}
+          className="min-h-8 cursor-pointer px-1.5 text-[0.6875rem] text-muted underline decoration-dotted"
+        >
+          {unsureHere ? "not sure yet ✓" : "not sure"}
+        </button>
         {resolution.basis === "EXPLICIT" && (
           <button
             type="button"

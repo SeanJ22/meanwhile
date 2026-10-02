@@ -80,6 +80,8 @@ export function placeSendWords(placeKey: string, label: string, divisions: reado
   const countyOf = (name: string) => name.replace(/,.*$/, "").replace(/\s+County$/i, "").trim();
   const countyDivision = divisions.find((d) => /\/county:[a-z0-9_.~-]+$/.test(d.id));
   if (m[2] === "zcta" && countyDivision === undefined) return null;
+  // The fleet's registry names governments, not districts: a district's send would widen to the whole state, so it is refused instead.
+  if (m[2] === "congressional_district") return null;
   const term = m[2] === "zcta" ? countyOf(countyDivision!.label) : m[2] === "county" ? countyOf(label) : null;
   return sendWordsFor({ stateNames: [state], zip: term, subject: null, label: null });
 }

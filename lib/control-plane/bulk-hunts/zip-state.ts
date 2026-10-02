@@ -50,3 +50,47 @@ export async function stateOfZip(zip: string): Promise<string | null> {
   }
   return null;
 }
+
+/** The ids of every division whose territory reaches this ZIP in the national ZIP index; null when the index has no such ZIP or its shard could not be read. */
+export async function divisionIdsOfZip(zip: string): Promise<readonly string[] | null> {
+  if (!/^\d{5}$/.test(zip)) return null;
+  const shard = await shardFor(zip.slice(0, 2));
+  const refs = shard?.zips[zip];
+  if (shard === null || refs === undefined) return null;
+  return refs.map((i) => shard.divisions[i]).filter((id): id is string => typeof id === "string");
+}
+
+const JURISDICTION_IN_ID = /(?:^|\/)(?:state|district|territory):([a-z]{2})(?:\/|$)/;
+let countsByState: Promise<ReadonlyMap<string, number> | null> | null = null;
+
+/**
+ * How many ZIPs the national ZIP index carries for each state or territory (lower-case code). Reads the shards once per
+ * process and keeps only the counts, never the shards; null when the index or a shard could not be read (our gap, not kept).
+ */
+export function zipCountsByState(): Promise<ReadonlyMap<string, number> | null> {
+  if (countsByState !== null) return countsByState;
+  const read = readFile(join(process.cwd(), "data", "derived", "zip-divisions", "index.json"), "utf8")
+    .then(async (text) => {
+      const names = Object.keys((JSON.parse(text) as { shards: Record<string, unknown> }).shards).sort();
+      const out = new Map<string, number>();
+      for (const name of names) {
+        const shard = JSON.parse(await readFile(join(process.cwd(), "data", "derived", "zip-divisions", `${name}.json`), "utf8")) as Shard;
+        for (const refs of Object.values(shard.zips)) {
+          for (const i of refs) {
+            const hit = JURISDICTION_IN_ID.exec(shard.divisions[i] ?? "");
+            if (hit) {
+              out.set(hit[1], (out.get(hit[1]) ?? 0) + 1);
+              break;
+            }
+          }
+        }
+      }
+      return out as ReadonlyMap<string, number>;
+    })
+    .catch(() => {
+      countsByState = null;
+      return null;
+    });
+  countsByState = read;
+  return read;
+}

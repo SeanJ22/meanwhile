@@ -163,7 +163,7 @@ test("the pulse from the narrowed rows is the pulse from the whole rows, field f
   assert.equal(narrowed.counts.incidents, 1);
   assert.notEqual(narrowed.lanes, null, "the lane gauges ride on the narrowed queue");
   assert.ok(narrowed.revision.startsWith("2026-09-25T22:00:00.000Z|1|1|-|1|0|0|-|admin-capabilities/1:"), "the decision count is no longer part of the pulse revision");
-  assert.match(ADMIN_V6_CAPABILITY_REVISION, /:publication\/1$/, "the last section announced has its own v6 capability revision");
+  assert.match(ADMIN_V6_CAPABILITY_REVISION, /:national\/1$/, "the last section announced has its own v6 capability revision");
   assert.ok(narrowed.revision.includes(`|${ADMIN_V6_CAPABILITY_REVISION}|-`),
     "the pulse revision names the current Admin v6 contracts, including Workers");
 });

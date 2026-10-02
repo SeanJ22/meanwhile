@@ -73,6 +73,15 @@ test("a push to main needs only the build; the merged pull request already ran v
   assert.equal(evaluate(input).ok, false);
 });
 
+test("a ready PR without auto-merge never certifies: its verdict stays red until the full run", () => {
+  const input = needs("waiting");
+  input.test.result = "skipped";
+  input.build.result = "success";
+  const verdict = evaluate(input);
+  assert.equal(verdict.ok, false);
+  assert.ok(verdict.reasons.some((reason) => reason.startsWith("waiting:")));
+});
+
 test("unneeded work that failed or was cancelled is never described as a safe omission", () => {
   for (const tier of ["draft", "main"]) {
     for (const job of ["verify", "test", "build"] as const) {

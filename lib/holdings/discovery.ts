@@ -1,9 +1,10 @@
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { US_JURISDICTIONS } from "../coverage/states.ts";
 
 /** Sorted repository-relative files; holdings discovery does not use reader coverage. */
 export function stateDomainFiles(root: string, domain: string, base: "data" | "public" = "data"): string[] {
-  const dir = base === "data" ? join(root, "data", "states") : join(root, "public", "states");
+  const dir = base === "data" ? join(/* turbopackIgnore: true */ root, "data", "states") : join(/* turbopackIgnore: true */ root, "public", "states");
   if (!existsSync(dir)) return [];
   const files: string[] = [];
   const walk = (relative: string) => {
@@ -21,9 +22,22 @@ export function stateDomainFiles(root: string, domain: string, base: "data" | "p
 }
 
 export function geometryFiles(root: string): string[] {
-  const national = join(root, "public", "geo");
+  const national = join(/* turbopackIgnore: true */ root, "public", "geo");
   return [
     ...(existsSync(national) ? readdirSync(national).filter((file) => file.endsWith(".geojson")).map((file) => `public/geo/${file}`) : []),
     ...stateDomainFiles(root, "geo").filter((file) => file.endsWith(".geojson")),
   ].sort();
+}
+
+/** Recorded roster fixtures, discovered once by national identity and held path. */
+export function heldRosterStates(root: string) {
+  const files = new Set(stateDomainFiles(root, "officials"));
+  return US_JURISDICTIONS.filter(state => files.has(
+    "data/states/" + state.slug + "/officials/officeholders-" + state.fips + ".json"));
+}
+export function heldRosterFiles(root: string): string[] {
+  return [
+    ...(existsSync(join(root, "lib", "registry", "officeholders-us.json")) ? ["officeholders-us.json"] : []),
+    ...heldRosterStates(root).map(state => "officeholders-" + state.fips + ".json"),
+  ];
 }

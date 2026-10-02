@@ -3,7 +3,7 @@ import { stateForRosterFile } from "../holdings/runtime-paths.ts";
 import { join } from "node:path";
 
 import { nameParts, splitDisplayName } from "../ballot/incumbency.ts";
-import { HELD_ROSTER_STATES, rosterFile } from "../coverage/artifacts.ts";
+import { heldRosterStates } from "../holdings/discovery.ts";
 import { mayReadRetiredPluralRoster } from "../officials/roster-authority.ts";
 import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
 import { formatDateLong } from "../text/format-date.ts";
@@ -130,9 +130,8 @@ import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
  * and for the reason AUD-06 exists: fourteen hand-kept state lists across
  * thirteen files was not an annoyance at three states, it was the omission a
  * session makes at fifty while believing the state is fully onboarded.
- * Onboarding a state must be one edit in `lib/coverage/states.ts`, and a
- * fourth state's legislators reach Ask because of this line rather than
- * because somebody remembered this file.
+ * A recorded state roster is discovered from held data; adding one needs
+ * no state-specific code branch.
  *
  * The federal roster is the promoted FEDERAL_DIRECTORY authority because it
  * is not a covered STATE — it is national, keyed on `congress:` ids, and its
@@ -147,7 +146,7 @@ const ROSTER_SCOPES: Readonly<Record<string, VoteRosterAuthority>> = {
   us: { kind: "FEDERAL_DIRECTORY", state: null },
   ...(mayReadRetiredPluralRoster()
     ? Object.fromEntries(
-        HELD_ROSTER_STATES.map((s) => [s.fips, { kind: "RETIRED_STATE_TEST_FIXTURE" as const, file: rosterFile(s), state: s.usps }]),
+        heldRosterStates(process.cwd()).map((s) => [s.fips, { kind: "RETIRED_STATE_TEST_FIXTURE" as const, file: `officeholders-${s.fips}.json`, state: s.usps }]),
       )
     : {}),
 };

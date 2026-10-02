@@ -167,6 +167,8 @@ Automatic publishing under §3 is on. Any earlier setting or current-state note 
 
 Use short, transparent, high-school-level English. Lead with the result, problem, or exact decision needed. Separate facts from inferences. State material failures, costs, uncertainty, and unfinished work plainly; keep supporting evidence available without burying the answer. Admin shows times in Eastern time. (Sean, September 29, 2026.) Report schedules to Sean in Arizona MST unless he requests otherwise.
 
+**Admin and reader copy: plain labels and numbers.** No hedging, no "it's X, not Y" lines, no disclaimer boxes, no "what it will never do" lists, and no paragraphs about how something is enforced or what is not published. A number we do not have shows as "—". (Sean, October 1, 2026.)
+
 **Celebrate verified wins clearly and give them their own space.** Say what succeeded and why it matters. Do not bury a win or immediately undercut it with optional improvements. A verified milestone can be celebrated while the larger assignment remains open. No agent points or scoring system is needed.
 
 Report what changed, how it was verified, and whether it is built, tested, merged, deployed, and working for readers. Say which section 0 test it moves. State remaining work separately, with its owner and next action. A task recorded for later is not completed work.

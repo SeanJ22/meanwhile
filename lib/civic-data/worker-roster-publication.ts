@@ -6,7 +6,7 @@ import { projectReaderRoster, type BodyRoster } from "../registry/body-rosters.t
 import type { OfficialCandidacyBridgeRow, RegistryRuntimePackage, RegistryRuntimePrior, RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { readCompletedWorkerResults } from "../control-plane/repository/worker-completion.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
-import { readRegistryRuntimePrior, registryRuntimeCandidate, registryBaseSourceReceipt } from "../registry/runtime-data-plane.ts";
+import { readRegistryRuntimePrior, registryRuntimeCandidate, registryBaseSourceReceipt, heldRegistryAreaPackage } from "../registry/runtime-data-plane.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
 import type { PromotionOutcome } from "./promotion.ts";
 import { PostgresRoutineDataStore, type RoutineDataStore } from "./store.ts";
@@ -558,4 +558,18 @@ export async function publishRosterReading(input: {
   if (readback?.status !== "PASS") throw new Error(`ROSTER_READER_READBACK_FAILED:${readback?.detail ?? "missing typed reader receipt"}`);
   input.onPublished?.(acceptedRegistryPrior(published));
   return { versionId: published.promoted.versionId, confirmed: Boolean(published.confirmed), departed: roster.departed, unresolved: roster.unresolved };
+}
+/** Convert the held GOOD edition before admitting native area workers. */
+export async function convertHeldRegistryStorage(store: RoutineDataStore, now: string): Promise<{
+  readonly converted: boolean; readonly promotedVersionId: string | null;
+}> {
+  const prior = await readRegistryRuntimePrior(store, now);
+  if (!prior) return { converted: false, promotedVersionId: null };
+  const input = heldRegistryAreaPackage(prior);
+  if (!input) return { converted: false, promotedVersionId: prior.versionId };
+  const candidate = registryRuntimeCandidate(input, { prior, areaStored: true });
+  const outcome = await processRegisteredManualCandidate(store, "registry-runtime-bindings", candidate,
+    input.sourceReceipt.reviewedAt, prior.versionId, { confirmUnchanged: false });
+  if (!outcome.promoted) throw new Error(`REGISTRY_AREA_STORAGE_CONVERSION_FAILED:${outcome.candidate.failureCode ?? outcome.candidate.state}`);
+  return { converted: true, promotedVersionId: outcome.promoted.versionId };
 }

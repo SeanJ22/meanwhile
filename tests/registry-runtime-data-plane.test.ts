@@ -40,6 +40,7 @@ import {
 } from "../lib/registry/runtime-data-plane.ts";
 import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, readRegistryRuntimeProjection, registryRuntimeFirstSeed } from "../lib/registry/runtime-read-model.ts";
 import { CENSUS_PLACEHOLDER_BODY_ISSUE, isCensusPlaceholderDivision, withoutPlaceholderBodies } from "../lib/registry/census-placeholders.ts";
+import { convertHeldRegistryStorage } from "../lib/civic-data/worker-roster-publication.ts";
 import { slotsFor } from "../lib/registry/derive.ts";
 import type { Registry } from "../lib/registry/types.ts";
 
@@ -117,11 +118,22 @@ test("explicit held registry conversion preserves facts, reviews and source cloc
   assert.ok(registryAreaViewOf(converted.readModel));
   assert.deepEqual(civicRecordsFor("REGISTRY_RUNTIME_BINDING", converted.readModel),
     civicRecordsFor("REGISTRY_RUNTIME_BINDING", legacy.readModel), "storage conversion preserves every held fact");
-  const published = await processRegisteredManualCandidate(store, "registry-runtime-bindings", converted,
-    input.sourceReceipt.reviewedAt, prior.versionId, { confirmUnchanged: false });
-  assert.ok(published.promoted, published.candidate.failureDetail ?? undefined);
+  const published = await convertHeldRegistryStorage(store, T1);
+  assert.equal(published.converted, true);
+  assert.equal(published.promotedVersionId, converted.id);
+  const accepted = (await readRegistryRuntimePrior(store, T1))!;
+  assert.equal(accepted.sourceThrough, prior.sourceThrough);
+  assert.deepEqual(accepted.sourceReceipt, prior.sourceReceipt);
+  assert.deepEqual(civicRecordsFor("REGISTRY_RUNTIME_BINDING", accepted.payload),
+    civicRecordsFor("REGISTRY_RUNTIME_BINDING", legacy.readModel));
+  assert.deepEqual(await convertHeldRegistryStorage(store, T1), { converted: false, promotedVersionId: converted.id });
   assert.equal(heldRegistryAreaPackage({ ...prior, payload: converted.readModel as RegistryRuntimeReadModel }), null,
     "the explicit CLI reuses an already-native GOOD edition without a source mutation");
+});
+
+test("automatic registry conversion leaves an unrecorded database empty", async () => {
+  assert.deepEqual(await convertHeldRegistryStorage(new MemoryRoutineDataStore(), T0),
+    { converted: false, promotedVersionId: null });
 });
 
 test("the canonical door converts a legacy edition then publishes one area without changing the other state", async () => {

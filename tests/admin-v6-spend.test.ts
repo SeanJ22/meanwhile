@@ -83,3 +83,18 @@ test("work is named by its place and kind of record, and its tiers, moves and re
   assert.equal(unknown.costUsd, null, "a piece of work with an unpriced charge is unknown, never a partial total");
   assert.equal(unknown.models, "Model not recorded");
 });
+
+test("the rolling 24 hours is read from the ledger as model money (search apart), and Scout results become one line per kind of work", async () => {
+  const { ROLLING_SQL, OUTCOMES_SQL, scoutOutcomeLines } = await import("../lib/control-plane/admin-view/v6-spend-read.ts");
+  assert.match(ROLLING_SQL, /interval '24 hours'/);
+  assert.match(ROLLING_SQL, /role <> 'DISCOVERY_SEARCH'/);
+  assert.match(OUTCOMES_SQL, /GROUP BY 1, 2/);
+  assert.deepEqual(scoutOutcomeLines([
+    { recordClass: "local-jurisdiction", outcome: "NO_PROGRESS", n: 87 }, { recordClass: "local-jurisdiction", outcome: "EVIDENCE_FOUND", n: 12 }, { recordClass: "local-jurisdiction", outcome: "ROUTE_CANDIDATE", n: 12 },
+    { recordClass: "meetings-discovery", outcome: "EVIDENCE_FOUND", n: 3 }, { recordClass: null, outcome: "BLOCKED", n: 1 },
+  ]), [
+    { recordClass: "local-jurisdiction", found: 12, route: 12, total: 111 },
+    { recordClass: "meetings-discovery", found: 3, route: 0, total: 3 },
+    { recordClass: "unrecorded", found: 0, route: 0, total: 1 },
+  ]);
+});

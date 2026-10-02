@@ -5,7 +5,7 @@ export type PlaceSubjectKind = "division" | "body" | "seat" | "calendar" | "fund
 /** The canonical reader supplies this from the record's schema, never its label. */
 export type PlaceCaptureKind = "federal-legislator" | "state-legislator" | "executive" | "local-officeholder"
   | "campaign-finance" | "federal-campaign-finance" | "state-campaign-finance" | "public-finance" | "filing-deadline" | "voting-deadline"
-  | "voting-sites" | "election-navigation" | "candidate" | "election-result" | "meeting" | "body-calendar";
+  | "voting-sites" | "election-navigation" | "candidate" | "election-result" | "meeting" | "body-calendar" | "registry-body";
 export interface PlaceSubject {
   readonly id: string;
   readonly kind: PlaceSubjectKind;
@@ -13,6 +13,8 @@ export interface PlaceSubject {
   readonly label: string;
   readonly captureKind?: PlaceCaptureKind;
   readonly calendarBodyId?: string;
+  /** Census functional status from the held division, not its name or shape. */
+  readonly funcstat?: string;
 }
 export interface HeldPlaceField {
   readonly subjectId: string;
@@ -47,6 +49,9 @@ const CALENDAR_ITEMS = new Set(["MTG-01", "MTG-02", "MTG-03", "MTG-04", "MTG-13"
 function appliesToRecord(subject: PlaceSubject, definition: { id: string; group: string }): boolean {
   const { id, group } = definition;
   switch (subject.captureKind) {
+    // ENG measures the app's reactions, privacy, feedback and alert delivery.
+    // It remains in the product checklist, not an acquisition task per body.
+    case "registry-body": return group === "GOV" || group === "PAR";
     case "federal-legislator": return ["OFF", "LEG", "PRL"].includes(group) && id !== "LEG-22";
     case "state-legislator": return ["OFF", "LEG"].includes(group) && !["LEG-20", "LEG-21"].includes(id);
     case "executive": return ["OFF", "EXE"].includes(group);
@@ -85,23 +90,29 @@ export function buildPlaceOwedList(input: {
   for (const subject of input.subjects) {
     if (!subject.divisionIds.some(id => divisionIds.has(id))) continue;
     const prior = subjects.get(subject.id);
-    subjects.set(subject.id, { ...subject, divisionIds: [...new Set([...(prior?.divisionIds ?? []), ...subject.divisionIds])] });
+    subjects.set(subject.id, { ...prior, ...subject,
+      divisionIds: [...new Set([...(prior?.divisionIds ?? []), ...subject.divisionIds])] });
   }
   // The source route, enumeration and recurring schedule belong to one body's
-  // calendar, not to every sitting. Keep that standing work even when all known
-  // meeting fields are captured, and share it across every served division.
+  // calendar, not to every sitting. Start that work as soon as the body is
+  // known, including bodies with no captured meeting; share it across places.
   for (const subject of [...subjects.values()]) {
-    if (subject.captureKind !== "meeting" || !subject.calendarBodyId) continue;
-    const id = `${subject.calendarBodyId}#calendar`, prior = subjects.get(id);
+    const bodyId = subject.kind === "body" ? subject.id
+      : subject.captureKind === "meeting" ? subject.calendarBodyId : undefined;
+    if (!bodyId || subject.id.includes("#inventory:")) continue;
+    const id = `${bodyId}#calendar`, prior = subjects.get(id);
     subjects.set(id, { id, kind: "calendar", captureKind: "body-calendar",
       label: prior?.label ?? `${subject.label}: calendar`,
       divisionIds: [...new Set([...(prior?.divisionIds ?? []), ...subject.divisionIds])] });
   }
   for (const division of input.divisions) {
-    subjects.set(division.id, { id: division.id, label: division.label, kind: "division", divisionIds: [division.id] });
+    const prior = subjects.get(division.id);
+    const funcstat = division.funcstat ?? (prior?.kind === "division" ? prior.funcstat : undefined);
+    subjects.set(division.id, { id: division.id, label: division.label, kind: "division", divisionIds: [division.id],
+      ...(funcstat ? { funcstat } : {}) });
     // Retain Census geography, but its explicit statistical, inactive and
     // fictitious duplicate rows do not imply another government to discover.
-    if (["F", "N", "S", "I"].includes(division.funcstat ?? "")) continue;
+    if (["F", "N", "S", "I"].includes(funcstat ?? "")) continue;
     // Discovery is owed even after the first member of a family is found.
     for (const kind of Object.keys(GROUPS).filter(k => k !== "division") as PlaceSubjectKind[]) {
       const id = `${division.id}#inventory:${kind}`;

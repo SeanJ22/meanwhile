@@ -222,8 +222,8 @@ export function searchCostEntry(input: {
 export { RECORDED_WALLS } from "../../hunt/recorded-walls.ts";
 import { RECORDED_WALLS } from "../../hunt/recorded-walls.ts";
 
-// Plain-code walks read the finite source inventory; the caller still owns its actual time/resource allowance.
-export const DEFAULT_MAX_REQUESTS_PER_WALK = Infinity;
+// A busy source cannot consume the whole pass; unfinished routes remain due.
+export const DEFAULT_MAX_REQUESTS_PER_WALK = 24;
 const DEFAULT_TIMEOUT_MS = 20_000;
 /** Less time than this left, and a request is not sent: it could not come back inside the budget. */
 const MIN_REQUEST_MS = 2_000;
@@ -1111,9 +1111,13 @@ export async function runMeetingsDiscovery(
   const appendFailures: { jurisdictionId: string; why: string }[] = [];
   const walkFailures: { jurisdictionId: string; why: string }[] = [];
   const nowMs = Date.parse(input.runtime.now());
+  let walksStarted = 0;
 
   for (const need of window) {
-    if (walked.length >= input.maxWalks) break;
+    if (walksStarted >= input.maxWalks || input.runtime.budget.spent()) {
+      deferred.push(need.jurisdictionId);
+      continue;
+    }
     const priorAttempts = await repos.discoveryAttempts.read(need.jurisdictionId);
     const latest = priorAttempts.at(-1);
     /* A walk made without the government's current hints set its recheck without them: the need is due again now. */
@@ -1127,11 +1131,12 @@ export async function runMeetingsDiscovery(
       notDue.push(need.jurisdictionId);
       continue;
     }
-    if (input.runtime.budget.spent()) {
+    if ((input.runtime.budget.remainingMs?.() ?? Infinity) <= 0) {
       deferred.push(need.jurisdictionId);
       continue;
     }
     let attempt: MeetingsDiscoveryAttempt;
+    walksStarted++;
     try {
       attempt = await walkMeetingsDiscoveryNeed(need, { ...input.runtime, priorAttempts });
     } catch (error) {

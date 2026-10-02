@@ -7,6 +7,8 @@ import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { HeldPlaceFamilies } from "../lib/civic-data/held-place-families.ts";
 import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
+import { readPlacePointerSlices } from "../lib/civic-data/held-place-slices.ts";
+import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
 import { projectHeldGeography, readHeldPlaceGeography, type HeldGeographyRow } from "../lib/civic-data/held-place-geography.ts";
 import type { Division } from "../lib/registry/types.ts";
 import { createHash } from "node:crypto";
@@ -186,6 +188,56 @@ test("encoded candidate object maps decode only selected facts and refuse a raci
   await assert.rejects(readPlacePayloadParts(query, "CANDIDATE_PROFILE", [scope], [county], [], [key], new Map([[scope, "other-version"]])), /CIVIC_POINTER_CHANGED_DURING_READ/);
 });
 
+test("held slices carry only exact unchanged versions, isolate selectors, and remove missing pointers", async () => {
+  let version = "v1", exists = true, payloadReads = 0;
+  const query: ReadOnlyQuery = async statements => {
+    const statement = statements[0];
+    if (!exists) return [[]];
+    const carried = JSON.parse(statement.params[5] as string).held === version;
+    if (!carried) payloadReads++;
+    return [[{ scope: "held", current_version_id: version, encoded: false,
+      value: carried ? null : { meetings: [{ id: version, ocdId: (statement.params[2] as string[])[0] }] } }]];
+  };
+  const read = (division: string) => readPlacePointerSlices<{ meetings: { id: string; ocdId: string }[] }>("MEETING", ["held"], [division], [], [], query);
+  const first = await read(county);
+  assert.deepEqual(await read(county), first);
+  assert.equal(payloadReads, 1);
+  assert.equal((await read(neighbour))[0].value!.meetings[0].ocdId, neighbour);
+  assert.equal(payloadReads, 2, "another area's selector cannot carry this area's payload");
+  version = "v2";
+  assert.equal((await read(county))[0].value!.meetings[0].id, version);
+  assert.equal(payloadReads, 3);
+  exists = false;
+  assert.equal((await read(county))[0].kind, "NOT_RECORDED");
+  exists = true;
+  assert.equal((await read(county))[0].value!.meetings[0].id, version);
+  assert.equal(payloadReads, 4, "a restored pointer is read again");
+});
+
+test("concurrent held reads retain the exact values carried by their own pointer query", async () => {
+  let version = "v1", blockNext = false;
+  let release: (() => void) | undefined;
+  const query: ReadOnlyQuery = async statements => {
+    const observed = version;
+    const carried = JSON.parse(statements[0].params[5] as string).held === observed;
+    if (blockNext) {
+      blockNext = false;
+      await new Promise<void>(resolve => { release = resolve; });
+    }
+    return [[{ scope: "held", current_version_id: observed, encoded: false,
+      value: carried ? null : { meetings: [{ id: observed }] } }]];
+  };
+  const read = () => readPlacePointerSlices<{ meetings: { id: string }[] }>("MEETING", ["held"], [county], [], [], query);
+  await read();
+  blockNext = true;
+  const older = read();
+  version = "v2";
+  assert.equal((await read())[0].value!.meetings[0].id, "v2");
+  assert.ok(release);
+  release();
+  assert.equal((await older)[0].value!.meetings[0].id, "v1", "another read must not turn a carried value into a null or the wrong version");
+});
+
 test("held boundary provenance maps source, semantic version and effective use without URL-only credit", () => {
   const cd = "ocd-division/country:us/state:az/cd:6";
   const sl = "ocd-division/country:us/state:az/sldu:6";
@@ -232,6 +284,36 @@ test("geography quiet reads fetch only the pointer, and a changed or racing vers
   await assert.rejects(readHeldPlaceGeography(ids, [], query), /CIVIC_POINTER_CHANGED_DURING_READ/);
 });
 
+test("held Census status survives complementary projections without inventing governments for statistical areas", () => {
+  const statuses = ["S", "F", "N", "I", "A", "E", null];
+  const divisions = statuses.map((funcstat, i) => ({ ocdId: `${county}/place:area_${i}`,
+    label: "Same label", divisionType: "place", funcstat }));
+  assert.ok(registry.value);
+  const model = { ...registry.value, registry: { ...registry.value.registry, divisions,
+    bodies: [{ ...registry.value.registry.bodies[0], ocdId: divisions[0].ocdId, alsoServesOcdIds: [] }] } } as unknown as RegistryRuntimeReadModel;
+  const capture = projectHeldPlaceCapture(divisions.map(d => d.ocdId), published(model), [], at);
+  // A second projection contributes a field for the same division without
+  // repeating its optional Census metadata (as the geography reader does).
+  const geography = { id: divisions[0].ocdId, kind: "division" as const,
+    divisionIds: [divisions[0].ocdId], label: "Boundary" };
+  const input = { divisions: divisions.map(d => ({ id: d.ocdId, label: d.label })),
+    subjects: [...capture.subjects, geography], held: capture.held, now: at };
+  const rows = buildPlaceOwedList(input);
+  for (const [i, status] of statuses.entries()) {
+    const inventories = rows.filter(row => row.subject.id.startsWith(`${divisions[i].ocdId}#inventory:`));
+    assert.equal(inventories.length, i < 4 ? 0 : 6, `status ${status} uses only the held classification`);
+    assert.equal(rows.filter(row => row.subject.id === divisions[i].ocdId).length, 14, "geography remains owed");
+  }
+  assert.deepEqual(rows.find(row => row.subject.id === "shared-body" && row.checklistId === "GOV-01")?.held,
+    capture.held.filter(field => field.subjectId === "shared-body"), "actual records remain even within statistical geography");
+  assert.equal(capture.subjects.find(subject => subject.id === divisions[0].ocdId)?.funcstat, "S");
+  const explicit = buildPlaceOwedList({ ...input,
+    divisions: [{ id: divisions[0].ocdId, label: "Current input", funcstat: "A" }] });
+  assert.equal(explicit.filter(row => row.subject.id.includes("#inventory:")).length, 6, "explicit input status takes precedence");
+  const reversed = buildPlaceOwedList({ ...input, subjects: [geography, ...capture.subjects] });
+  assert.deepEqual(reversed.map(row => [row.id, row.state, row.held]), rows.map(row => [row.id, row.state, row.held]));
+});
+
 test("held fields reach every served division without filling inventory or missing meeting fields", () => {
   const primary = projectHeldPlaceCapture([county], registry, [meetings], at);
   const secondary = projectHeldPlaceCapture([neighbour], registry, [meetings], at);
@@ -242,6 +324,29 @@ test("held fields reach every served division without filling inventory or missi
   assert.ok(!ids.includes("MTG-03") && !ids.includes("MTG-16") && !ids.includes("MTG-07") && !ids.includes("MTG-08"));
   assert.equal(primary.held.find(field => field.checklistId === "MTG-06")?.freshUntil, "2026-09-30T07:00:00.000Z");
   assert.equal(projectHeldPlaceCapture(["unrelated-division"], registry, [meetings], at).held.length, 0);
+});
+
+test("registry bodies owe civic facts without duplicating product feature work, and retain held observations", () => {
+  const capture = projectHeldPlaceCapture([county, neighbour], registry, [], at);
+  const existing = { subjectId: "shared-body", checklistId: "ENG-07", state: "held" as const,
+    sourceUrl: provenance.sourceUrl, checkedAt: at, freshUntil: "2026-10-01T06:00:00.000Z", value: "Existing observation" };
+  const input = { divisions: [county, neighbour].map(id => ({ id, label: id })), ...capture, now: at };
+  const rows = buildPlaceOwedList(input);
+  const bodyRows = rows.filter(row => row.subject.id === "shared-body");
+  assert.equal(capture.subjects.find(subject => subject.id === "shared-body")?.captureKind, "registry-body");
+  assert.equal(bodyRows.length, 22, "all 14 government and 8 participation requirements stay open or captured");
+  assert.ok(!bodyRows.some(row => row.checklistId.startsWith("ENG-")));
+  assert.ok(bodyRows.some(row => row.checklistId === "GOV-08" && row.state === "missing"));
+  assert.ok(bodyRows.some(row => row.checklistId === "PAR-02" && row.state === "missing"));
+  assert.deepEqual(bodyRows.find(row => row.checklistId === "GOV-01")?.held,
+    capture.held.filter(field => field.subjectId === "shared-body"));
+  assert.deepEqual(bodyRows[0].subject.divisionIds, [county, neighbour]);
+  const retained = buildPlaceOwedList({ ...input, held: [...capture.held, existing] });
+  assert.deepEqual(retained.find(row => row.subject.id === "shared-body" && row.checklistId === "ENG-07")?.held, [existing]);
+  const unresolved = buildPlaceOwedList({ ...input,
+    subjects: [{ id: "unknown-body", kind: "body", divisionIds: [county], label: "Unknown body" }] });
+  assert.equal(unresolved.filter(row => row.subject.id === "unknown-body" && row.checklistId.startsWith("ENG-")).length, 7);
+  assert.equal(rows.filter(row => row.subject.id.includes("#inventory:")).length, 12);
 });
 
 test("sittings share calendar discovery work by body while every meeting keeps its own dates and documents", () => {
@@ -260,6 +365,26 @@ test("sittings share calendar discovery work by body while every meeting keeps i
   assert.deepEqual(routes.find(row => row.subject.id === "shared-body#calendar")?.subject.divisionIds, [county, neighbour]);
   assert.ok(routes.every(row => row.state === "missing"), "having a meeting never certifies calendar completeness");
   assert.ok(owed.some(row => row.subject.id === "meeting:unresolved" && row.checklistId === "MTG-03"), "an unknown body keeps its route work");
+});
+
+test("a known body starts calendar discovery before its first meeting is captured", () => {
+  const capture = projectHeldPlaceCapture([county, neighbour], registry, [], at);
+  const divisions = [county, neighbour].map(id => ({ id, label: id }));
+  const rows = buildPlaceOwedList({ divisions, ...capture, now: at });
+  const calendar = rows.filter(row => row.subject.id === "shared-body#calendar");
+  assert.equal(calendar.length, 9);
+  assert.ok(calendar.every(row => row.state === "missing" && row.held.length === 0));
+  assert.deepEqual(calendar[0].subject.divisionIds, [county, neighbour]);
+  assert.ok(!calendar.some(row => row.checklistId === "MTG-06" || row.checklistId.startsWith("DOC-")), "no invented sitting");
+  const later = projectHeldPlaceCapture([county, neighbour], registry, [meetings], at);
+  const after = buildPlaceOwedList({ divisions, ...later, now: at });
+  assert.deepEqual(after.filter(row => row.subject.id === "shared-body#calendar"), calendar, "a first sitting does not complete calendar discovery");
+  assert.equal(after.find(row => row.subject.id === meeting.id && row.checklistId === "MTG-06")?.state, "published");
+  const secondPlace = buildPlaceOwedList({ divisions: [{ id: neighbour, label: neighbour }], ...capture, now: at });
+  assert.deepEqual(secondPlace.filter(row => row.subject.id === "shared-body#calendar"), calendar);
+  const empty = buildPlaceOwedList({ divisions, subjects: [], held: [], now: at });
+  assert.ok(empty.some(row => row.subject.id === `${county}#inventory:calendar`));
+  assert.ok(!empty.some(row => row.subject.captureKind === "body-calendar"), "unknown bodies stay inventory work");
 });
 
 test("body rosters retain canonical legislative and local scope without borrowing meaning from titles", () => {
@@ -323,6 +448,37 @@ test("only published present fields count, and failed reads cannot look like emp
   ] }] } as unknown as OutcomeSnapshot);
   assert.equal(projectHeldPlaceCapture([county], registry, [meetings], at, {}, [available]).held.filter(field => field.state === "unpublished").length, 0,
     "conflicting official surfaces stay open");
+});
+
+test("published outcomes retain document status and every linked action and roll without renewing source dates", () => {
+  const source = { endpoint: "https://webapi.legistar.com/v1/example/events/7/eventitems", readOn: "2026-08-29", sourceOrg: "Clerk" };
+  const actions = [71, 72].map(eventItemId => ({ recordClass: "ACTION_SUMMARY", eventId: 7, eventItemId,
+    action: "approve", disposition: "PASSED", tallyText: "Approved", provenance: source }));
+  const rolls = [71, 72, 99].map(eventItemId => ({ recordClass: "ROLL_CALL", eventItemId,
+    votes: [{ personId: 3, personName: "Member", value: "Abstain", sort: 1 }],
+    provenance: { ...source, endpoint: `https://webapi.legistar.com/v1/example/eventitems/${eventItemId}/votes` } }));
+  const sitting = { meetingId: meeting.id, eventId: 7, bodyId: meeting.bodyId, ocdId: county, bodyName: "Shared district board",
+    startsAt: meeting.startsAt, sourceUrl: provenance.sourceUrl, extraction: "RETRIEVED", publicationObservations: [],
+    publication: { observedAt: at, inSiteUrl: provenance.sourceUrl, agendaFile: "https://example.gov/agenda.pdf",
+      minutesFile: "https://example.gov/minutes.pdf", minutesStatusName: "Draft", minutesStatusId: 9 },
+    agenda: [], outcomes: [...actions, { ...actions[0], eventId: 8, eventItemId: 80 }], rollCalls: rolls };
+  const capture = projectHeldPlaceCapture([county], registry, [], at, {},
+    [published({ sittings: [sitting] } as unknown as OutcomeSnapshot)]);
+  const fields = (id: string) => capture.held.filter(field => field.checklistId === id);
+  assert.equal(fields("DOC-08").length, 2, "same-shaped records for distinct items both survive");
+  assert.equal(fields("DOC-09").length, 2, "unlinked rolls cannot count as captured meeting votes");
+  assert.deepEqual(fields("DOC-08").map(field => field.value), actions.map(action => ({ meetingId: meeting.id, ...action })));
+  assert.deepEqual(fields("DOC-09").map(field => field.value), rolls.slice(0, 2).map(roll => ({ meetingId: meeting.id, ...roll })));
+  assert.ok([...fields("DOC-08"), ...fields("DOC-09")].every(field => field.checkedAt === source.readOn));
+  assert.deepEqual(fields("DOC-06")[0].value, { url: sitting.publication.minutesFile, publisherStatus: "Draft", publisherStatusId: 9 });
+  assert.equal(fields("DOC-06")[0].checkedAt, at);
+  const owed = buildPlaceOwedList({ divisions: [{ id: county, label: "County" }], ...capture, now: at });
+  for (const id of ["DOC-08", "DOC-09"]) assert.equal(owed.find(row => row.subject.id === meeting.id && row.checklistId === id)?.state, "stale");
+  for (const id of ["DOC-02", "DOC-03"]) assert.equal(owed.find(row => row.subject.id === meeting.id && row.checklistId === id)?.state, "missing", "pointers are not readable documents");
+  const empty = { ...sitting, publication: { ...sitting.publication, minutesStatusName: null }, outcomes: [], rollCalls: [] };
+  const unknown = projectHeldPlaceCapture([county], registry, [], at, {},
+    [published({ sittings: [empty] } as unknown as OutcomeSnapshot)]);
+  assert.ok(!unknown.held.some(field => ["DOC-06", "DOC-08", "DOC-09"].includes(field.checklistId)), "an unclassified pointer or empty extraction cannot fill these facts");
 });
 
 test("retained roster contacts keep separate values and their earlier source dates", () => {

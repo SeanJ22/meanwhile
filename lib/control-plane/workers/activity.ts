@@ -51,25 +51,57 @@ export interface AutonomousObligationActivity {
 /** Deterministic view only. This function has no repository write or readiness-state input. */
 export function projectAutonomousActivity(snapshot: AutonomousActivitySnapshot, options: { readonly observedAt?: string } = {}): readonly AutonomousObligationActivity[] {
   if(options.observedAt!==undefined && !Number.isFinite(Date.parse(options.observedAt))) throw new Error("AUTONOMOUS_ACTIVITY_CLOCK_INVALID");
+  // Index once for the whole Fleet; preserve each original row and its order,
+  // including repeated log records and evidence owned by another obligation.
+  const indexBy = <T,>(rows: readonly T[], key: (row: T) => string) => {
+    const index = new Map<string, { row: T; at: number }[]>();
+    rows.forEach((row, at) => {
+      const id = key(row), group = index.get(id) ?? [];
+      group.push({ row, at }); index.set(id, group);
+    });
+    return index;
+  };
+  const rowsFor = <T,>(index: ReadonlyMap<string, readonly { row: T; at: number }[]>, id: string): T[] =>
+    (index.get(id) ?? []).map(entry => entry.row);
+  const orderedFor = <T,>(index: ReadonlyMap<string, readonly { row: T; at: number }[]>, ids: ReadonlySet<string>): T[] =>
+    [...ids].flatMap(id => index.get(id) ?? []).sort((a, b) => a.at - b.at).map(entry => entry.row);
+  const tasksByWork = indexBy(snapshot.routeTasks, row => row.workItemId);
+  const attemptsByWork = indexBy(snapshot.attempts, row => row.workItemId);
+  const attemptsById = indexBy(snapshot.attempts, row => row.id);
+  const leasesByTask = indexBy(snapshot.leases, row => row.routeTaskId);
+  const transitionsByWork = indexBy(snapshot.transitions, row => row.workItemId);
+  const dispositionsByWork = indexBy(snapshot.dispositions, row => row.workItemId);
+  const artifactsByWork = indexBy(snapshot.artifacts, row => row.workItemId);
+  const artifactsById = indexBy(snapshot.artifacts, row => row.artifactId);
+  const costsByWork = indexBy(snapshot.costs, row => row.workItemId);
+  const scoutsByWork = indexBy(snapshot.scouts, row => row.workItemId);
+  const workersByWork = indexBy(snapshot.workers, row => row.workItemId);
+  const promotionByItem = indexBy(snapshot.promotion, row => row.itemId);
+  const promotionByWork = new Map<string, PromotionPipelineRecord[]>();
+  for (const record of snapshot.promotion) {
+    if (record.stage !== "SCOUTED") continue;
+    const owners = new Set(rowsFor(attemptsById, record.source.attemptId).map(attempt => attempt.workItemId));
+    for (const owner of owners) {
+      const group = promotionByWork.get(owner) ?? [];
+      group.push(record); promotionByWork.set(owner, group);
+    }
+  }
   return snapshot.workItems.map((workItem): AutonomousObligationActivity => {
     const workItemId = workItem.id;
-    const routeTasks = snapshot.routeTasks.filter(task => task.workItemId === workItemId);
-    // Fleet reads every obligation. Searching all tasks again for each lease
-    // makes that read cubic and can time out the served admin page. Index the
-    // owned task IDs once, retaining the original lease order and records.
+    const routeTasks = rowsFor(tasksByWork, workItemId);
     const routeTaskIds = new Set(routeTasks.map(task => task.id));
     const facts: AutonomousActivitySnapshot = {
       workItems: [workItem], routeTasks,
-      attempts: snapshot.attempts.filter(x => x.workItemId === workItemId),
-      leases: snapshot.leases.filter(lease => routeTaskIds.has(lease.routeTaskId)),
-      transitions: snapshot.transitions.filter(x => x.workItemId === workItemId),
-      dispositions: snapshot.dispositions.filter(x => x.workItemId === workItemId),
-      artifacts: snapshot.artifacts.filter(x => x.workItemId === workItemId), costs: snapshot.costs.filter(x => x.workItemId === workItemId),
-      scouts: snapshot.scouts.filter(x => x.workItemId === workItemId), workers: snapshot.workers.filter(x => x.workItemId === workItemId),
-      promotion: snapshot.promotion.filter(x => x.stage === "SCOUTED" && factsForSource(x.source.attemptId, snapshot.attempts, workItemId)),
+      attempts: rowsFor(attemptsByWork, workItemId),
+      leases: orderedFor(leasesByTask, routeTaskIds),
+      transitions: rowsFor(transitionsByWork, workItemId),
+      dispositions: rowsFor(dispositionsByWork, workItemId),
+      artifacts: rowsFor(artifactsByWork, workItemId), costs: rowsFor(costsByWork, workItemId),
+      scouts: rowsFor(scoutsByWork, workItemId), workers: rowsFor(workersByWork, workItemId),
+      promotion: promotionByWork.get(workItemId) ?? [],
     };
     const itemPipelineIds = new Set(facts.promotion.map(p => p.itemId));
-    const fullFacts = { ...facts, promotion: snapshot.promotion.filter(p => itemPipelineIds.has(p.itemId)) };
+    const fullFacts = { ...facts, promotion: orderedFor(promotionByItem, itemPipelineIds) };
     const references=new Set(facts.workers.flatMap(record=>record.inputArtifactIds));
     for(const task of facts.routeTasks) {
       const spec=task.workerTask;
@@ -78,8 +110,9 @@ export function projectAutonomousActivity(snapshot: AutonomousActivitySnapshot, 
       if(spec.acquisition) {references.add(spec.acquisition.route.observation.artifactId); for(const span of spec.acquisition.route.publisherSubjectEvidence)references.add(span.artifactId);}
       if(spec.contract.schemaVersion===2) for(const id of [...spec.contract.sourceScope.observationArtifactIds,...spec.contract.verification.authorities.flatMap(authority=>[...authority.artifactIds,...authority.authorityEvidenceArtifactIds])]) references.add(id);
     }
-    const referencedArtifacts=snapshot.artifacts.filter(artifact=>references.has(artifact.artifactId)&&artifact.workItemId!==workItemId);
-    const referencedAttempts=snapshot.attempts.filter(attempt=>attempt.workItemId!==workItemId&&referencedArtifacts.some(artifact=>artifact.attemptId===attempt.id));
+    const referencedArtifacts=orderedFor(artifactsById,references).filter(artifact=>artifact.workItemId!==workItemId);
+    const referencedAttempts=orderedFor(attemptsById,new Set(referencedArtifacts.map(artifact=>artifact.attemptId)))
+      .filter(attempt=>attempt.workItemId!==workItemId);
     const heldArtifacts=[...facts.artifacts,...referencedArtifacts]; const attributableAttempts=[...facts.attempts,...referencedAttempts];
     const timeline: AutonomousActivityEvent[] = [{ at: workItem.createdAt, kind: "WORK_ITEM_CREATED", id: workItemId, workItemId,
       attemptId: null, routeTaskId: null, artifactIds: [] }];
@@ -157,17 +190,20 @@ export function projectAutonomousActivity(snapshot: AutonomousActivitySnapshot, 
   }).sort((a,b) => a.workItem.id.localeCompare(b.workItem.id));
 }
 
-function factsForSource(attemptId: string, attempts: readonly Attempt[], workItemId: string): boolean {
-  return attempts.some(a => a.id === attemptId && a.workItemId === workItemId);
-}
-
-export async function readAutonomousActivity(repos: ControlPlaneRepositories, workItemIds?: readonly string[], options: { readonly observedAt?: string } = {}) {
+export async function readAutonomousActivity(repos: ControlPlaneRepositories, workItemIds?: readonly string[], options: {
+  readonly observedAt?: string;
+  /** Fresh caller snapshots can serve multiple finalization views without another export. */
+  readonly workItems?: readonly WorkItem[];
+  readonly scouts?: readonly ScoutResult[];
+} = {}) {
   const [items,tasks,attempts,leases,transitions,dispositions,artifacts,costs,scouts,workers,promotion] = await Promise.all([
-    repos.workItems.list(),repos.routeTasks.list(),repos.attempts.list(),repos.leases.list(),repos.transitions.readAll(),repos.dispositions.readAll(),
-    repos.artifacts.readAll(),repos.costs.readAll(),repos.scoutResults.readAll(),repos.workerResults.readAll(),repos.promotionPipeline.readAll(),
+    options.workItems ?? repos.workItems.list().then(rows => rows.map(row => row.value)),
+    repos.routeTasks.list(),repos.attempts.list(),repos.leases.list(),repos.transitions.readAll(),repos.dispositions.readAll(),
+    repos.artifacts.readAll(),repos.costs.readAll(),options.scouts ?? repos.scoutResults.readAll(),repos.workerResults.readAll(),repos.promotionPipeline.readAll(),
   ]);
   // A completed control-plane read supplies the expiry-evaluation clock; source dates stay in the facts.
   const snapshotReadAt = options.observedAt ?? new Date().toISOString();
-  return projectAutonomousActivity({workItems:items.map(x => x.value).filter(x => !workItemIds || workItemIds.includes(x.id)),
+  const selected = workItemIds === undefined ? null : new Set(workItemIds);
+  return projectAutonomousActivity({workItems:items.filter(item => selected === null || selected.has(item.id)),
     routeTasks:tasks.map(x => x.value), attempts:attempts.map(x => x.value), leases:leases.map(x => x.value), transitions,dispositions,artifacts,costs,scouts,workers,promotion},{observedAt:snapshotReadAt});
 }

@@ -17,12 +17,13 @@
  * whole process, and the 5-minute relaunch trigger brings a fresh instance back
  * within minutes instead of hours.
  *
- * Tunable/disable via env: `WTP_RUNNER_HANG_KILL_MS` (default 15 min; <= 0
+ * Tunable/disable via env: `WTP_RUNNER_HANG_KILL_MS` (default 34 min; <= 0
  * disables) and `WTP_RUNNER_HANG_PING_MS` (default 30 s).
  */
 import { Worker } from "node:worker_threads";
+import { RUNTIME_RELEASE_MAX_BLOCKING_MS } from "../lib/ops/runtime-release-handoff.ts";
 
-export const DEFAULT_HANG_KILL_MS = 15 * 60_000;
+export const DEFAULT_HANG_KILL_MS = RUNTIME_RELEASE_MAX_BLOCKING_MS + 60_000;
 export const DEFAULT_HANG_PING_MS = 30_000;
 
 export interface HangWatchdog {

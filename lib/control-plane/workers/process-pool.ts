@@ -78,6 +78,14 @@ export interface LeaseWorkerConfig {
   };
 }
 
+/** A read or process failure leaves the existing task owed; it is never a claimed success. */
+export function workerDispatchFailure(taskId: string, error: unknown, obligationId = taskId): DispatchResult {
+  return { obligationId, routeTaskId: taskId, executor: null, executorChosen: null,
+    decisionDisagreement: null, executorMismatch: false, claimed: false, outcome: "FAILED",
+    attemptId: null, dispositionCommitted: false, disposition: null, artifactIds: [], cost: null, worker: null,
+    detail: `Worker task deferred: ${error instanceof Error ? error.message : String(error)}; work remains owed` };
+}
+
 export async function runNationalPlaceWorkerProcesses(input: {
   readonly root: string;
   readonly zips: readonly string[];
@@ -140,18 +148,20 @@ export async function runLeaseWorkerProcesses(input: {
   const assigned = new Set<string>();
   const active = new Set<Promise<void>>();
   let launched = 0;
-  let failure: unknown = null;
+  const failures: { ids: readonly string[]; error: unknown }[] = [];
   const launch = async (): Promise<void> => {
     const release = await (input.slots ?? (input.config.postgres ? processMemorySlots : undefined))?.acquire(input.entry);
     try {
+    // Acquiring host memory can wait until a sibling has drained this wave.
+    if (!pending.size) return;
     const ready = [...pending].filter(id => !assigned.has(id));
     const ordered = input.config.nationalZips && input.orderPending ? await input.orderPending(ready) : ready;
     // Memory admission can queue several launches. Re-check after the asynchronous ranking read.
     const nextId = ordered.find(id => pending.has(id) && !assigned.has(id));
-    if (input.config.nationalZips && nextId === undefined) return;
+    if (!pending.size || (input.config.nationalZips && nextId === undefined)) return;
     await new Promise<void>((resolve, reject) => {
     const ids = input.config.nationalZips ? [nextId!]
-      : input.config.taskIds;
+      : [...pending];
     for (const id of ids) assigned.add(id);
     const child = fork(join(input.config.root, input.entry), [], {
       cwd: input.config.root, env: { ...process.env },
@@ -266,7 +276,7 @@ export async function runLeaseWorkerProcesses(input: {
     });
     }); } finally { release?.(); }
   };
-  while (pending.size && (failure === null || input.config.nationalZips)) {
+  while (pending.size) {
     const capacity = Math.min(pending.size, input.capacity());
     if (!Number.isSafeInteger(capacity) || capacity < 0) throw new Error("LEASE_WORKER_CAPACITY_INVALID");
     // Every child drains the shared task list. A finished child needs no replacement;
@@ -275,7 +285,8 @@ export async function runLeaseWorkerProcesses(input: {
       ? active.size < capacity && [...pending].some(id => !assigned.has(id))
       : launched < capacity) {
       launched++;
-      const worker = launch().catch(error => { failure ??= error; }).finally(() => { active.delete(worker); });
+      const ids = [...pending];
+      const worker = launch().catch(error => { failures.push({ ids, error }); }).finally(() => { active.delete(worker); });
       active.add(worker);
     }
     if (!active.size) break;
@@ -284,6 +295,13 @@ export async function runLeaseWorkerProcesses(input: {
     clearTimeout(timer);
   }
   await Promise.all(active);
-  if (failure !== null) throw failure;
+  for (const { ids, error } of failures) {
+    for (const id of ids) {
+      if (!pending.delete(id)) continue;
+      const result = workerDispatchFailure(id, error);
+      results.push(result);
+      await input.onDispatched?.(result);
+    }
+  }
   return results;
 }

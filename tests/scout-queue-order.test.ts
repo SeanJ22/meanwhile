@@ -34,7 +34,22 @@ import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { compareReaderImpact, orderableDueRow, orderByReaderImpact, TIE_BREAK, type OrderingInputs } from "../lib/control-plane/research-metrics.ts";
 import { recordFailure, retryable, type FreshnessDebt } from "../lib/control-plane/scheduler/debt.ts";
 import { dueNow, scheduleAll, type FreshnessObligation, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
-import { runCycle, type CycleResult } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { runCycle, runPool, type CycleResult } from "../lib/control-plane/scheduler/shadow-loop.ts";
+
+test("place-order read failure keeps the last priority and does not poison sibling selection", async () => {
+  const ran: string[] = [];
+  let reads = 0;
+  await runPool(["d", "c", "b", "a"], 1, async id => { ran.push(id); }, async () => {
+    if (++reads === 2) throw new Error("forced place-order read failure");
+    return (left, right) => left.localeCompare(right);
+  });
+  assert.deepEqual(ran, ["a", "b", "c", "d"]);
+  const siblings: number[] = [];
+  await runPool([1, 2, 3], 3, async id => { siblings.push(id); }, async () => {
+    throw new Error("place-order read unavailable before first priority");
+  });
+  assert.deepEqual(siblings.sort(), [1, 2, 3]);
+});
 
 const START_MS = Date.parse("2026-09-25T00:00:00.000Z");
 const HOUR_MS = 3_600_000;

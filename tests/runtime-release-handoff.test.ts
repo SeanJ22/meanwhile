@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -7,6 +7,8 @@ import test from "node:test";
 import {
   RUNTIME_RELEASE_HOLD_RELATIVE_PATH,
   applyRuntimeRelease,
+  resumeRuntimeReleaseInstall,
+  writeRuntimeReleaseHold,
   fetchGithubCheckRuns,
   fetchRuntimeProductionDeploys,
   githubRepositoryFromOrigin,
@@ -306,4 +308,56 @@ test("a dirty runtime refuses before fetch/switch and leaves ignored host eviden
   const hold = JSON.parse(readFileSync(join(root, RUNTIME_RELEASE_HOLD_RELATIVE_PATH), "utf8")) as { code: string; targetSha: string };
   assert.equal(hold.code, "RUNTIME_CHECKOUT_DIRTY");
   assert.equal(hold.targetSha, TARGET);
+});
+
+test("failed or interrupted frozen installs resume on the switched checkout before admitting work", () => {
+  for (const interrupted of [false, true]) {
+    const root = mkdtempSync(join(tmpdir(), "wtp-runtime-install-recovery-"));
+    const run = (_executable: string, args: readonly string[]): CommandResult => {
+      if (args.includes("install")) {
+        const hold = JSON.parse(readFileSync(join(root, RUNTIME_RELEASE_HOLD_RELATIVE_PATH), "utf8"));
+        assert.equal(hold.switched, true, "recovery marker must exist before a watchdog kill");
+        if (interrupted) throw new Error("fixture watchdog interruption");
+        return { status: 1, stdout: "", stderr: "fixture install failed" };
+      }
+      return { status: args[0] === "symbolic-ref" ? 1 : 0,
+        stdout: args[0] === "rev-parse" ? TARGET : "", stderr: "" };
+    };
+    if (interrupted) assert.throws(() => applyRuntimeRelease({ root, targetSha: TARGET, runCommand: run }), /fixture watchdog/);
+    else assert.equal(applyRuntimeRelease({ root, targetSha: TARGET, runCommand: run }).code, "FROZEN_INSTALL_FAILED");
+    writeRuntimeReleaseHold(root, { state: "HELD", code: "ADMIN_REPORT", targetSha: null });
+    const calls: string[] = [];
+    const recovered = resumeRuntimeReleaseInstall({ root, runCommand: (executable, args, options) => {
+      calls.push(`${executable} ${args.join(" ")}`);
+      if (args.includes("install")) assert.equal(options.env?.CI, "true");
+      return { status: 0, stdout: args[0] === "rev-parse" ? TARGET : "", stderr: "" };
+    } });
+    assert.equal(recovered?.state, "UPDATED");
+    assert.equal(calls.filter(line => line.includes("install --frozen-lockfile")).length, 1);
+    assert.equal(calls.some(line => /git (fetch|switch)/.test(line)), false);
+    assert.equal(existsSync(join(root, RUNTIME_RELEASE_HOLD_RELATIVE_PATH)), false);
+    assert.equal(resumeRuntimeReleaseInstall({ root, runCommand: () => { throw new Error("must not reinstall twice"); } }), null);
+  }
+});
+
+test("install recovery retains its marker on another failure and never installs a different checkout", () => {
+  const root = mkdtempSync(join(tmpdir(), "wtp-runtime-install-held-"));
+  writeRuntimeReleaseHold(root, { switched: true, targetSha: TARGET });
+  let installs = 0;
+  const run = (_exe: string, args: readonly string[]): CommandResult => {
+    if (args.includes("install")) installs++;
+    return { status: 1, stdout: "", stderr: "fixture" };
+  };
+  assert.equal(resumeRuntimeReleaseInstall({ root, runCommand: run })?.code, "RUNTIME_CHECKOUT_EXACT_HEAD_FAILED");
+  assert.equal(installs, 0);
+  assert.equal(JSON.parse(readFileSync(join(root, RUNTIME_RELEASE_HOLD_RELATIVE_PATH), "utf8")).switched, true);
+});
+
+test("the server launcher recovers installation before importing runner dependencies", () => {
+  const launch = readFileSync(new URL("../scripts/pilot-runtime-launch.mjs", import.meta.url), "utf8");
+  const recover = launch.indexOf("const recoveredInstall = resumeRuntimeReleaseInstall({ root });");
+  const refuse = launch.indexOf('process.exit(2);', recover);
+  const spawn = launch.indexOf("const child = spawn(");
+  assert.ok(recover >= 0 && recover < refuse && refuse < spawn);
+  assert.equal(launch.slice(0, recover).includes("pilot-runner.mts"), false);
 });

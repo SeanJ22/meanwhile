@@ -53,7 +53,7 @@ export async function authorizeInheritedHeldArtifact(repos: ControlPlaneReposito
   }
   const origin = (await repos.workItems.read(input.originWorkItemId))?.value;
   if (!origin || origin.project !== child.project || origin.subject !== child.subject) return false;
-  const records = (await repos.artifacts.readAll()).filter(record => record.artifactId === input.artifactId &&
+  const records = (await repos.artifacts.read(input.originWorkItemId)).filter(record => record.artifactId === input.artifactId &&
     record.workItemId === input.originWorkItemId && !record.partial);
   for (const record of records) {
     const attempt = (await repos.attempts.read(record.attemptId))?.value;

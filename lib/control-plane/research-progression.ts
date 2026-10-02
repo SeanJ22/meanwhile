@@ -7,6 +7,7 @@ import { deriveItemState, isPipelineRecord, validateTransition } from "./promoti
 import { isWindowRunRecord } from "./promotion/window.ts";
 import { readAutonomousActivity, type AutonomousObligationActivity } from "./workers/activity.ts";
 import type { WorkerResultRecord } from "./workers/types.ts";
+import type { ScoutResult } from "./scheduler/scout-result.ts";
 
 export const RESEARCH_MILESTONES = ["discovered", "acquired", "extracted", "canonicallyLinked", "verified", "audited", "promotionReady"] as const;
 export type ResearchMilestone = (typeof RESEARCH_MILESTONES)[number];
@@ -216,12 +217,15 @@ export async function readResearchProgression(repos: ControlPlaneRepositories, i
   readonly knowledge: MethodKnowledge; readonly conclusions: readonly ConclusionRecord[];
   /** A completed research cycle supplies its own canonical boundary; it is not a promotion window. */
   readonly researchBoundary?: { readonly since: string; readonly previousCompletedWindowId: string | null };
+  /** The same completed finalization read used by research metrics. */
+  readonly scouts?: readonly ScoutResult[];
 }): Promise<ResearchWindowProgression> {
   const [items,windows] = await Promise.all([repos.workItems.list(),input.researchBoundary?Promise.resolve([]):repos.windowRuns.readAll()]);
   const completed = windows.filter(isWindowRunRecord).filter(w => w.windowId !== input.windowId && Number.isFinite(Date.parse(w.finishedAt)) && instant(w.finishedAt) < instant(input.through)).sort((a,b) => a.finishedAt.localeCompare(b.finishedAt));
   const previous = completed.at(-1);
   const ids = items.filter(w => w.value.autonomousPlan).map(w => w.id);
-  const activities = await readAutonomousActivity(repos,ids,{observedAt:input.through});
+  const activities = await readAutonomousActivity(repos,ids,{observedAt:input.through,
+    workItems:items.map(row => row.value), ...(input.scouts === undefined ? {} : { scouts: input.scouts })});
   const oldest = items.map(w => w.value.createdAt).sort()[0];
   const since = input.researchBoundary?.since ?? previous?.finishedAt ?? (oldest ? new Date(instant(oldest)-1).toISOString() : input.through);
   return projectResearchProgression({...input,activities,since,windowKind:input.researchBoundary?"RESEARCH_CYCLE":"NIGHTLY_PROMOTION",previousCompletedWindowId:input.researchBoundary?.previousCompletedWindowId ?? previous?.windowId ?? null,excludedUnclassifiedWorkItems:items.length-ids.length});

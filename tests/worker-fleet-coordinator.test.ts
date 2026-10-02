@@ -16,7 +16,7 @@ import { join } from "node:path";
 import { writeFieldManual, newFieldManualEntry } from "../lib/control-plane/field-manual.ts";
 import { methodFixture, knowledgeEntries, methodVersionEntry } from "./method-store-fixture.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
-import { runLeaseWorkerProcesses, runNationalPlaceWorkerProcesses, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
+import { runLeaseWorkerProcesses, runNationalPlaceWorkerProcesses, workerDispatchFailure, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { unchangedScoutFailure } from "../lib/control-plane/workers/scout-scheduling.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
@@ -431,6 +431,75 @@ test("unresolved identity permits independent diagnosis but never staging", asyn
     assert.equal((await repos.routeTasks.mustRead(second.id)).value.state, "POLICY_DENIED");
     assert.equal((await repos.leases.mustRead(second.id)).value.released, true);
     assert.equal((await repos.attempts.list()).filter(row => row.value.routeTaskId === second.id).length, 1);
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
+
+test("memory wait rechecks the emptied wave before forking queued lease workers", async () => {
+  const root = await mkdtemp(join(tmpdir(), "s18-process-queue-"));
+  try {
+    await mkdir(join(root, "scripts"));
+    await writeFile(join(root, "scripts/register-test-loader.mjs"), "");
+    await writeFile(join(root, "worker.mjs"), `process.on('message', config => {
+      process.send({ kind: 'finished', body: config.taskIds }); process.disconnect();
+    });`);
+    let forks = 0;
+    await runLeaseWorkerProcesses({ entry: "worker.mjs", config: { root, postgres: false,
+      taskIds: Array.from({ length: 40 }, (_, i) => `task:${i}`), modelEnabled: false, searchEnabled: false,
+      ceilingUsd: 0, fundedSubjects: [] }, capacity: () => 40,
+      slots: workerProcessSlots(() => 1, { availableBytes: () => 1000, headroomBytes: 0, peakBytes: () => 1 }),
+      onStarted: () => { forks++; }, transportFor: () => async () => { throw new Error("no model in this fixture"); } });
+    assert.equal(forks, 1, "queued admissions release without spawning after the first child drains all tasks");
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
+
+test("pool returns a completed dispatch and records unfinished work when a child exits unsuccessfully", async () => {
+  const root = await mkdtemp(join(tmpdir(), "s18-process-failure-"));
+  try {
+    await mkdir(join(root, "scripts"));
+    await writeFile(join(root, "scripts/register-test-loader.mjs"), "");
+    const completed = { ...workerDispatchFailure("one", "fixture"), outcome: "WORKED",
+      claimed: true, dispositionCommitted: true, disposition: "INGESTED", attemptId: "attempt:one" };
+    await writeFile(join(root, "worker.mjs"), `process.on('message', () => {
+      process.send({ kind: 'result', body: ${JSON.stringify(completed)} });
+      process.exitCode = 1; process.disconnect();
+    });`);
+    const results = await runLeaseWorkerProcesses({ entry: "worker.mjs", config: { root, postgres: false,
+      taskIds: ["one", "two"], modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
+      capacity: () => 1, transportFor: () => async () => { throw new Error("no model in this fixture"); } });
+    assert.deepEqual(results.map(row => [row.routeTaskId, row.outcome]), [["one", "WORKED"], ["two", "FAILED"]]);
+    assert.match(results[1]!.detail, /LEASE_WORKER_EXIT/);
+    assert.equal(results[1]!.claimed, false);
+    assert.equal(results[1]!.dispositionCommitted, false);
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
+
+test("one work-item read failure costs one task and the same lease child reaches the next task", async () => {
+  const root = await mkdtemp(join(tmpdir(), "s18-lease-read-"));
+  try {
+    const repos = await createFileRepositories(root);
+    const h = await autonomousHarness({ repos, plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
+    const method = methodFixture();
+    await writeFieldManual(repos, [...knowledgeEntries(method), methodVersionEntry(method)], h.now());
+    const selected = await nextAutonomousOperation(h.runtime, h.item.id);
+    const unreadable = createRouteTask({ workItemId: "missing:forced-read", routeId: "forced-read",
+      routeLabel: "Unreadable work item", target: "https://example.gov/", inherited: false, now: h.now() });
+    await repos.routeTasks.put(unreadable.id, unreadable, h.now());
+    let forks = 0;
+    const results = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
+      config: { root: process.cwd(), fileStoreRoot: root, postgres: false, taskIds: [unreadable.id, selected.task!.id],
+        modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
+      capacity: () => 1, onStarted: () => { forks++; }, orderPending: async ids => ids,
+      transportFor: () => async () => { throw new Error("unexpected paid call"); } });
+    const failedRead = results.find(row => row.routeTaskId === unreadable.id)!;
+    assert.equal(failedRead.outcome, "FAILED");
+    assert.equal(failedRead.attemptId, null);
+    assert.equal(failedRead.claimed, false);
+    assert.match(failedRead.detail, /missing:forced-read/);
+    const next = results.find(row => row.routeTaskId === selected.task!.id)!;
+    assert.ok(next.attemptId, "the next task still reaches its normal admission and durable Attempt");
+    assert.equal((await repos.attempts.list()).filter(row => row.value.routeTaskId === selected.task!.id).length, 1);
+    assert.equal((await repos.routeTasks.mustRead(unreadable.id)).value.state, "PENDING");
+    assert.equal(forks, 1);
   } finally { await rm(root, { recursive: true, force: true }); }
 });
 

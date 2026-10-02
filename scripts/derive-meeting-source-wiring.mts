@@ -54,7 +54,9 @@ import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { CURRENT_CALENDAR_READS_SQL, deriveWiringDecisions, latestCalendarWalk, sameRoute, wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { readHeldCalendars, type HeldCalendarReading } from "../lib/control-plane/discovery/derived-wiring-reading.ts";
 import { reviewedBodyForGovernment } from "../lib/control-plane/discovery/reviewed-body.ts";
-import { crosswalkEvidenceWorkItem, indexVault, readHeldBytes, type HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { readHeldBytes, type HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { artifactId } from "../lib/control-plane/evidence/artifact.ts";
+import { heldArtifactCaptures, heldManualCrosswalkCapture } from "../lib/civic-data/held-artifact-captures.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import type { MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discovery.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
@@ -172,6 +174,7 @@ async function main(): Promise<void> {
     readonly referenceSha256: string;
   } | { readonly unread: string }>();
   for (const state of new Set(rows.map((row) => stateOf(row.ocdId)).filter((s): s is string => s !== null))) {
+    console.log(`RCD_PROGRESS meeting-source-wiring registration ${state}`);
     try {
       const read = await readRegistrationProjection(state, { store, bypassCache: true, now });
       const input = read.kind === "PROMOTED" ? promotedInputRef("REGISTRATION", read.metadata.scope, read.metadata.versionId, read.value, read.metadata.promotedAt) : null;
@@ -208,13 +211,34 @@ async function main(): Promise<void> {
   }
 
   /* The vault, read only, and the adapter's reading of every held route byte the walks cite. */
-  const vault = await indexVault(join(process.cwd(), "data", "control-plane", "vault"));
-  const refOf = (held: HeldVaultArtifact | undefined) =>
-    held === undefined || held.tier === "RESTRICTED_RAW"
+  const vaultRoot = join(process.cwd(), "data", "control-plane", "vault");
+  const citedIds = [...new Set([
+    ...attempts.flatMap(({ attempt }) => [...attempt.found, ...attempt.steps].flatMap(row => row.artifactId ? [row.artifactId] : [])),
+    ...rows.filter(row => row.status === "ACTIVE").map(row => artifactId("RAW", `sha256-${row.evidence.bodyPage.sha256}`)),
+  ])];
+  const capture = await heldArtifactCaptures(vaultRoot, citedIds, controlPlane);
+  const byId = new Map<string, HeldVaultArtifact>();
+  const byHash = new Map<string, HeldVaultArtifact>();
+  for (const id of citedIds) {
+    const held = await capture(id);
+    if (held) { byId.set(id, held); byHash.set(held.contentHash.slice("sha256-".length), held); }
+    console.log(`RCD_PROGRESS meeting-source-wiring cited capture ${id}`);
+  }
+  for (const row of rows.filter(row => row.status === "ACTIVE")) {
+    const hash = row.evidence.bodyPage.sha256;
+    if (!byHash.has(hash) || byHash.get(hash)?.tier === "RESTRICTED_RAW") {
+      const held = await heldManualCrosswalkCapture(vaultRoot, hash, row.evidence.readAt);
+      if (held) byHash.set(hash, held);
+      console.log(`RCD_PROGRESS meeting-source-wiring body-page ${row.id}`);
+    }
+  }
+  const refOf = (held: HeldVaultArtifact | null) =>
+    held === null || held.tier === "RESTRICTED_RAW"
       ? null
       : ({ kind: "VAULTED_EVIDENCE" as const, artifactId: held.id, contentHash: held.contentHash, tier: held.tier === "SANITIZED_DERIVED" ? "SANITIZED_DERIVED" as const : "RAW" as const, retrievedAt: held.retrievedAt ?? now });
   const pending: HeldCalendarReading[] = [];
   for (const reviewed of rows.filter((row) => row.status === "ACTIVE")) {
+    console.log(`RCD_PROGRESS meeting-source-wiring ${reviewed.id}`);
     const walk = latestCalendarWalk(attempts, reviewed.jurisdictionId, reviewed.route)?.attempt;
     if (walk === undefined) continue;
     const others = rows.filter((r) => r.jurisdictionId === reviewed.jurisdictionId && r.bodyId !== reviewed.bodyId && r.status === "ACTIVE").map((r) => r.bodyName);
@@ -223,9 +247,10 @@ async function main(): Promise<void> {
       ...walk.steps.filter((s) => sameRoute(s.url, reviewed.route)).map((s) => s.artifactId),
     ].filter((id): id is string => id !== null);
     for (const artifactId of new Set(cited)) {
-      const held = vault.byId.get(artifactId);
+      const held = await capture(artifactId);
+      console.log(`RCD_PROGRESS meeting-source-wiring capture ${artifactId}`);
       const evidence = refOf(held);
-      if (held === undefined || evidence === null) continue;
+      if (held === null || evidence === null) continue;
       pending.push({ key: `${reviewed.id}\u0000${artifactId}`, row: wiringRowFor(reviewed), held: await heldText(held), evidence, others });
     }
   }
@@ -274,10 +299,9 @@ async function main(): Promise<void> {
     },
     attempts,
     handWired: (bodyId) => SOURCE_WIRING.some((wiring) => wiring.bodyId === bodyId),
-    vaulted: (artifactId) => refOf(vault.byId.get(artifactId)),
+    vaulted: (artifactId) => refOf(byId.get(artifactId) ?? null),
     /* A credential-bearing page is held as its sanitized derivative, filed under the raw page's sha256 (vault-crosswalk-evidence). */
-    vaultedBytes: (hex) => refOf(vault.byHash.get(hex)) ??
-      refOf(vault.byWorkItem.get(crosswalkEvidenceWorkItem(hex))?.find((held) => held.tier === "SANITIZED_DERIVED")),
+    vaultedBytes: (hex) => refOf(byHash.get(hex) ?? null),
     verify: (row, _binding, evidence) =>
       readings.get(`${row.crosswalkRowId}\u0000${evidence.artifactId}`) ?? { refused: `no adapter reading of ${evidence.artifactId} was made this pass` },
     adapterDigest,

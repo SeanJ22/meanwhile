@@ -49,6 +49,7 @@ import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { indexVault, type VaultIndex } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { heldArtifactCaptures } from "../lib/civic-data/held-artifact-captures.ts";
 import { candidatePublicationLinks, candidatePublicationCaptureUrls,
   heldCandidatePublicationRead } from "../lib/control-plane/promotion/campaign-publication-links.ts";
 import { ACTIVATION_GATE, classFieldOpen } from "../lib/control-plane/promotion/activation-policy.ts";
@@ -153,9 +154,12 @@ async function main(): Promise<void> {
   let linkedPublications: readonly HeldLinkedPublicationRead[] = [];
   if (!("unreadable" in approvals) && approvals.length > 0) {
     try {
-      const vault = await indexVault(join(process.cwd(), "data", "control-plane", "vault"));
-      held = await heldCampaignSiteReads(vault, approvals);
-      const linked = await linkedPublicationReads(vault, approvals, held);
+      const vaultRoot = join(process.cwd(), "data", "control-plane", "vault");
+      const artifactIds = approvals.flatMap(row => [row.campaignSite.evidence.artifactId,
+        ...(row.campaignSite.evidence.cycleSource ? [row.campaignSite.evidence.cycleSource.artifactId] : [])]);
+      const capture = await heldArtifactCaptures(vaultRoot, artifactIds, process.env.WTP_CONTROL_PLANE_DATABASE_URL!);
+      held = await heldCampaignSiteReads(capture, approvals);
+      const linked = await linkedPublicationReads(await indexVault(vaultRoot), approvals, held);
       if ("unreadable" in linked) {
         await finish(derivedCampaignSitesFailedCandidate(now, `The linked candidate-publication record could not be read: ${linked.unreadable}`));
         return;

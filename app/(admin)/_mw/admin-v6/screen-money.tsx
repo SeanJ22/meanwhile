@@ -10,7 +10,7 @@ import { useMemo, useState } from "react";
 import { dailyRows, moneySummary } from "@/lib/control-plane/admin-view/spend-period.ts";
 
 import { useV6 } from "./context.tsx";
-import { usd, type Hunt } from "./model.ts";
+import { mst, usd, type Hunt } from "./model.ts";
 import { huntAt, huntsWithin } from "./places.ts";
 import { Card, cx } from "./ui.tsx";
 import s from "./v6.module.css";
@@ -81,9 +81,10 @@ export function MoneyScreen() {
         <h1 className={s.h1}>Money</h1>
       </header>
 
-      <Card title="Summary">
+      <Card title="Summary" aside={<span className={s.meta}>{v.data.spend.data?.readAt ? `Read ${mst(v.data.spend.data.readAt)}` : DASH}</span>}>
         <div className={s.gridTiles}>
           <div className={s.row}><span className={s.eyebrow}>Spent</span><span className={s.big}>{money(sum.spentUsd)}</span></div>
+          <div className={s.row}><span className={s.eyebrow}>Last 24 hours</span><span className={s.big}>{money(v.data.spend.data?.last24h?.modelUsd ?? null)}</span></div>
           <div className={s.row}><span className={s.eyebrow}>Search</span><span className={s.big}>{money(sum.searchUsd)}</span></div>
           <div className={s.row}><span className={s.eyebrow}>Database sent</span><span className={s.big}>{gigabytes(sum.neonBytes)}</span></div>
           <div className={s.row}><span className={s.eyebrow}>Hosting</span><span className={s.big}>{money(hosting)}</span></div>

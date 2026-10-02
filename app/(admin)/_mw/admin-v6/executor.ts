@@ -128,13 +128,13 @@ export function liveExecutor(opts: {
       const gw = gatewayFor(request.def);
       if (!gw) {
         update({ ...receipt, status: "refused", statusWords: "Not sent", steps: [...receipt.steps, { label: "Not sent", at: now() }],
-          says: `Not sent. Nothing in the system can carry this out yet. ${request.def.dependency?.need ?? ""}`.trim() });
+          says: "Not sent." });
         return;
       }
       const stateVersion = gw.requiresStateVersion ? opts.stateVersion?.() ?? null : null;
       if (gw.requiresStateVersion && stateVersion === null) {
         update({ ...receipt, status: "refused", statusWords: "Not sent", steps: [...receipt.steps, { label: "Not sent", at: now() }],
-          says: "Not sent. This action needs the current state of the page, and no live update has arrived yet. Wait for “Live”, then try again." });
+          says: "Not sent. Waiting for Live." });
         return;
       }
       const input = actionInput(request.def.kind, { target: request.target, scopeKey: request.scopeKey, option: request.option, words: request.words, amount: request.amount, selected: request.selectedItems, payload: request.payload });

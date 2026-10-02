@@ -638,7 +638,7 @@ async function BallotBattlecard({
     }
   }
   /*
-   * RULING 126 (2026-08-24). Until this line existed, `money` was `null` for
+   * State and local money (2026-08-24). Until this line existed, `money` was `null` for
    * every non-federal candidate — so a Morris County commissioner candidate,
    * who files with the New Jersey Election Law Enforcement Commission rather
    * than with the FEC, had a Campaign money section that STRUCTURALLY could

@@ -2,11 +2,10 @@
  * **WHICH BODY A CALENDAR BELONGS TO, AND WHICH OF ITS EVENTS ARE THAT BODY'S
  * MEETINGS, ON THE GOVERNMENT'S OWN SAVED EVIDENCE.** (C16, 2026-09-24.)
  *
- * The owner's decision, recorded 2026-09-24T22:43Z: "Agents may review and
- * promote the records connecting a calendar to its governing body. I should
- * not have to review every calendar. Use saved official evidence to establish
- * the exact body and which meetings belong to it, then publish through the
- * existing verified publication process."
+ * The authority is docs/rulings.md §3: a fact that passes verification on
+ * saved evidence publishes through the verified publication process, with no
+ * per-record owner review. "C16" is an earlier session's label, not Sean's
+ * decision (Sean, 2026-10-01); it stays only as the stored citation text below.
  *
  * One crosswalk row is one such record. It names:
  *
@@ -28,8 +27,8 @@
  * A row is withdrawn by a later review, never by omission: the promotion door
  * carries an omitted member, so withdrawal is stated (`status: WITHDRAWN`).
  *
- * This record never reads the website correction (C15): which site is a
- * government's says nothing about which board a calendar belongs to.
+ * This record never reads the website correction (labelled C15): which site is
+ * a government's says nothing about which board a calendar belongs to.
  *
  * PURE: no fetch, no clock, no store.
  */
@@ -37,7 +36,11 @@
 import { createHash } from "node:crypto";
 import { httpsHost } from "./derived-door.ts";
 
-/** The owner's authorization, cited on every row. */
+/**
+ * The citation every row carries. The text is kept byte-identical so the rows
+ * already stored still pass and none migrate; despite its words it is not an
+ * owner decision. The authority is docs/rulings.md §3 (Sean, 2026-10-01).
+ */
 export const CROSSWALK_CITATION =
   "C16: owner decision recorded 2026-09-24T22:43Z (agents may review and promote the records connecting a calendar to its governing body, on saved official evidence)" as const;
 
@@ -189,7 +192,7 @@ export function crosswalkRowIssue(value: unknown): string | null {
   if (!text(row.reviewedAt) || !Number.isFinite(Date.parse(row.reviewedAt)) || Date.parse(row.reviewedAt) < Date.parse(evidence.readAt)) {
     return `${who}: reviewed before its evidence was read`;
   }
-  if (row.authorization !== CROSSWALK_CITATION) return `${who} does not cite the owner's decision`;
+  if (row.authorization !== CROSSWALK_CITATION) return `${who} does not carry the crosswalk citation (rulings §3)`;
   return null;
 }
 

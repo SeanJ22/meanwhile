@@ -2,7 +2,8 @@
  * **THE DERIVED WIRING ROW WRITER: EACH REVIEWED CALENDAR, DECIDED AGAINST
  * WHAT DISCOVERY LAST SAW OF IT.** (NH330 Stage 2 / C16, 2026-09-24.)
  *
- * The owner's decision, recorded 2026-09-24T22:43Z: agents review and promote
+ * Under docs/rulings.md §3 ("C16" was a session label, not Sean's decision:
+ * Sean, 2026-10-01): agents review and promote
  * the records connecting a calendar to its body (the crosswalk,
  * `lib/civic-data/meeting-body-crosswalk.ts`); a promoted crosswalk row plus a
  * route the discovery walk validated publishes through the standing runner

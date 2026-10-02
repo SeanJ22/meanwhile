@@ -1,6 +1,6 @@
 /**
  * **ARIZONA STATE CAMPAIGN MONEY — the Secretary of State's own portal.**
- * (Session C2, 2026-08-31. RULING 126, RULING 205, RULING 206, RULING 207.)
+ * (Session C2, 2026-08-31. RULING 205, RULING 206, RULING 207; filings never sold, Sean 2026-10-01.)
  *
  * The route portfolio for `seethemoney.az.gov` and `ftp://ftp.azsos.gov/`,
  * which together are the Arizona Secretary of State's published campaign

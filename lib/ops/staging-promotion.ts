@@ -1,9 +1,5 @@
 /**
  * PROMOTION OUT OF STAGING — THE HALF THAT DECIDES, AND DECIDES NOTHING ELSE.
- * (Session C final, LANE 5. The promotion half of RULING 233, the staging-first
- * ruling — drafted against a brief that called it `R-0232`/`R-C10`, neither of
- * which is a legal id under `lib/governance/schema.ts`. RULING 233 is the
- * adopted number and the only one cited here.)
  *
  * ## What this is for
  *

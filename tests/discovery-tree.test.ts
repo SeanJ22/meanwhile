@@ -15,7 +15,6 @@ import {
   verdictOf,
 } from "../lib/hunt/discovery.ts";
 import { isEvidencedAbsence } from "../lib/ballot/hunt-state.ts";
-import { currentLawText } from "../lib/governance/current-law.ts";
 
 /**
  * **RULING 52 — discovery is a tree, not a ladder.**
@@ -202,25 +201,6 @@ test("day arithmetic does not drift across a month or a DST boundary", () => {
   assert.equal(daysBetween("2026-08-21", "2026-08-21"), 0);
 });
 
-/* ─────────────────────────── the law itself ────────────────────────────── */
-
-test("RULING 52 and RULING 53 are law in CLAUDE.md, with their rationale", () => {
-  /*
-   * A stripped rule reads as guidance. `CLAUDE.md` says so about its own
-   * rulings repeatedly, so the rationale is asserted rather than assumed —
-   * including the locked-building passage, which is the part that makes the
-   * difference between "try harder" and "a ladder has one direction".
-   */
-  // The consolidation moved RULING 52/53 into RULING 250 and their RATIONALE
-  // into history (RULING 172). The RULE stays current law, undiluted.
-  const law = currentLawText(ROOT);
-  assert.match(law, /RULING 250/, "the tree/absence rule is current law");
-  assert.match(law, /tree, not a ladder/i, "discovery is a tree, not a ladder");
-  assert.match(law, /Blocked is a real state/i, "blocked is a real state, not an absence");
-  assert.match(law, /argued, never asserted/i, "absence is argued, never asserted");
-  assert.match(law, /Persistence is never intrusion/i, "the two prohibitions survive");
-});
-
 test("the staleness instrument reads every dated wiring row, and states what it cannot", () => {
   /*
    * Stated N equals rendered rows, applied to the instrument itself. `pnpm
@@ -246,56 +226,4 @@ test("the staleness instrument reads every dated wiring row, and states what it 
   const reporter = readFileSync(join(ROOT, "scripts", "stale.mts"), "utf8");
   assert.match(reporter, /NOT_COVERED/, "the reporter enumerates its own blind spots");
   assert.match(reporter, /so the number above is a floor/, "and says the total is a floor");
-});
-
-test("no wall in CLAUDE.md is stated as a standing property", () => {
-  /*
-   * RULING 52: a source recorded as walled is recorded with the date it was
-   * last tested, never as a standing property. `gc.nh.gov` was in this file as
-   * refusing every client this project has — a permanent-sounding sentence
-   * about a host that answers a plain fetch at 200.
-   *
-   * The check is narrow on purpose: it looks for the specific host strings this
-   * session corrected, and fails if any of them reappears without a date near
-   * it. A broader "no wall language anywhere" rule would fire on the ladder's
-   * own description of what a wall IS.
-   */
-  const law = currentLawText(ROOT);
-  const HOSTS = ["gc.nh.gov", "sos.nh.gov", "kearsarge.org"];
-  const undated: string[] = [];
-  /*
-   * By PARAGRAPH, not by line. The first version of this check read one line at
-   * a time and failed against correct prose: `CLAUDE.md` is hard-wrapped, so a
-   * host and the date it was last tested routinely sit on adjacent lines. A
-   * guard whose granularity is finer than the unit of meaning reports the right
-   * rule against the wrong text, and the fix is the granularity rather than the
-   * paragraph.
-   */
-  /*
-   * By RECORD, not by paragraph — the same reasoning one level up, applied
-   * again after the 2026-08-26 governance migration.
-   *
-   * Current law is now generated per record, and each record opens with a
-   * metadata line carrying its adopted date. RULING 166 writes its measurements
-   * as "on the day it was adopted" and names `gc.nh.gov` three paragraphs
-   * later, so a paragraph-granular check reports a standing-property violation
-   * against text that is dated — by its own record, one paragraph up.
-   *
-   * The rule is unchanged and still binding: a wall is recorded with the date
-   * it was last tested, never as a standing property. What moved is the unit
-   * the date attaches to.
-   */
-  for (const record of law.split(/\n(?=## )/)) {
-    for (const host of HOSTS) {
-      if (!record.includes(host)) continue;
-      if (!/\d{4}-\d{2}-\d{2}/.test(record)) {
-        undated.push(`${host}: ${record.replace(/\s+/g, " ").trim().slice(0, 90)}`);
-      }
-    }
-  }
-  assert.deepEqual(
-    undated,
-    [],
-    `these name a host without the date it was last tested: ${undated.join(" | ")}`,
-  );
 });

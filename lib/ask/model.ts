@@ -68,11 +68,7 @@ export type AskEffort = (typeof ASK_EFFORT_LEVELS)[number];
  * Sean, 7:25 PM MST: Opus 5 must not be used any more, not as a test subject,
  * default or fallback; where Opus is used, it is Opus 5.5. This is the default
  * of every role that uses the frontier model (see `ASK_MODEL_ROLES`). The
- * history of the earlier `claude-opus-5` / `claude-sonnet-5` switch and revert
- * (RULINGs 234 and 236, the election-day weather question) is kept in
- * `lib/governance/adoptions.ts`; the weather question was re-measured on
- * 2026-09-25 on all three current models (Sonnet 5 still routes it to
- * elections; Haiku 4.5 and Opus 5.5 refuse it).
+ * current model IDs and capabilities come from `lib/models.ts`.
  */
 export const ASK_SYNTHESIS_MODEL: string = MODELS.opus.model;
 

@@ -6,8 +6,6 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-import { loadIndex } from "../lib/governance/ledger.ts";
-import { CURRENT_STATUSES } from "../lib/governance/schema.ts";
 import {
   applyEarnedPortability,
   earnedPortability,
@@ -25,126 +23,6 @@ import { planDescentStart } from "../lib/workstate/frontier.ts";
 import { DESCENT_STATES, loadWorkstreamFor } from "../lib/workstate/load.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-
-/**
- * THE POST-REMEDIATION AUDIT HOTFIX.
- *
- * Four defects an independent audit found in the landed implementation. Each
- * one had passed the acceptance suite, which is the interesting part: every
- * gate was green while the compatibility view carried 24 headings that resolve
- * to nothing, an ACTIVE rule commanded a retired process, the resume proof
- * proved a helper the command did not use, and the method store had no writer.
- *
- * These guards test the thing itself rather than the thing's freshness.
- */
-
-/* ================================================================ FINDING 1 */
-
-test("FINDING 1 — the compatibility view contains no RULING undefined", () => {
-  const text = readFileSync(join(ROOT, "docs", "governance", "rulings-index.md"), "utf8");
-  assert.equal(
-    (text.match(/RULING undefined/g) ?? []).length,
-    0,
-    "docs/governance/rulings-index.md renders a heading that resolves to no record",
-  );
-});
-
-test("FINDING 1 — every RULING n row names a real numeric record, and none is omitted", () => {
-  const index = loadIndex();
-  const text = readFileSync(join(ROOT, "docs", "governance", "rulings-index.md"), "utf8");
-
-  // The view is a one-line-per-ruling index now, so a ruling is a table ROW
-  // (`| RULING n | ...`) rather than an `## RULING n` heading. The property is
-  // the same: every numbered ruling appears exactly once and resolves.
-  const rows = [...text.matchAll(/^\| RULING (.+?) \|/gm)].map((m) => m[1].trim());
-  assert.ok(rows.length > 150, `read ${rows.length} rows — the guard has lost its subject`);
-
-  const numericIds = new Set(
-    index.records
-      .filter((r) => /^R-0*\d+$/.test(r.id))
-      .map((r) => String(Number(/^R-0*(\d+)$/.exec(r.id)?.[1]))),
-  );
-
-  for (const h of rows) {
-    assert.match(h, /^\d+$/, `"| RULING ${h} |" is not a ruling number`);
-    assert.ok(numericIds.has(String(Number(h))), `"| RULING ${h} |" resolves to no canonical record`);
-  }
-  // Every numbered ruling must be represented, or a legacy reference breaks.
-  const seen = new Set(rows.map((h) => String(Number(h))));
-  const missing = [...numericIds].filter((id) => !seen.has(id));
-  assert.deepEqual(missing, [], `numbered rulings absent from the compatibility view: ${missing.join(", ")}`);
-  assert.equal(rows.length, numericIds.size);
-});
-
-test("FINDING 1 — un-numbered records keep their namespace and are not dropped", () => {
-  const index = loadIndex();
-  const text = readFileSync(join(ROOT, "docs", "governance", "rulings-index.md"), "utf8");
-  const unnumbered = index.records.filter((r) => !/^R-0*\d+$/.test(r.id));
-  assert.ok(unnumbered.length > 20, "the un-numbered namespaces are populated");
-
-  for (const r of unnumbered) {
-    assert.ok(text.includes(`\`${r.id}\``), `${r.id} is absent from the compatibility view`);
-    // And it is NOT given a ruling number.
-    assert.ok(
-      !new RegExp(`^## RULING .* — ${r.title.slice(0, 20).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "m").test(text),
-      `${r.id} was minted a ruling number`,
-    );
-  }
-  assert.ok(/^R-C-/.test(unnumbered.find((r) => r.id.startsWith("R-C-"))?.id ?? ""));
-  assert.ok(/^R-X-/.test(unnumbered.find((r) => r.id.startsWith("R-X-"))?.id ?? ""));
-});
-
-/* ================================================================ FINDING 2 */
-
-test("FINDING 2 — RULING 99's dual-write clause is no longer current, and R99 is preserved", () => {
-  const index = loadIndex();
-  const r99 = index.resolve("RULING 99");
-  const r176 = index.resolve("RULING 176");
-  assert.ok(r99 && r176);
-
-  // The historical wording is UNTOUCHED — the clause is still readable.
-  assert.match(r99.body, /mapping line in BOTH/, "RULING 99's original text must be preserved verbatim");
-
-  // ...and its status says its dual-write clause is retired — amended by RULING
-  // 176, then absorbed (SUPERSEDED) by the 2026-09-03 consolidation into 272.
-  assert.ok(
-    ["AMENDED", "SUPERSEDED"].includes(r99.status),
-    `RULING 99 must be non-current (amended or superseded), is ${r99.status}`,
-  );
-
-  // The amendment is STRUCTURED, naming both halves.
-  const rel = r176.relations.find((x) => x.target === r99.id);
-  assert.ok(rel, "RULING 176 must carry the structured amendment to RULING 99");
-  assert.equal(rel.kind, "amends");
-  assert.match(rel.changed ?? "", /dual write|mapping line/i);
-  assert.match(rel.survives ?? "", /names the number it/i);
-  assert.match(rel.survives ?? "", /never edited in place|immutable/i);
-});
-
-test("FINDING 2 — there is exactly ONE current amendment procedure", () => {
-  const index = loadIndex();
-  const holders = index.records
-    .filter((r) => CURRENT_STATUSES.includes(r.status))
-    .filter((r) => r.claims.some((c) => c.key === "governance.amendment_procedure"));
-
-  assert.equal(holders.length, 1, "exactly one ACTIVE record answers how law is amended");
-  assert.equal(
-    holders[0].claims.find((c) => c.key === "governance.amendment_procedure")?.value,
-    "canonical-ledger-and-generated-views",
-  );
-
-  // The retired procedure may exist as HISTORY, never as a current answer.
-  const current = index.records.filter((r) => CURRENT_STATUSES.includes(r.status));
-  for (const r of current) {
-    for (const c of r.claims) {
-      assert.notEqual(
-        c.value,
-        "dual-write-claude-and-rulings",
-        `${r.id} still commands the retired dual write`,
-      );
-    }
-  }
-});
 
 /* ================================================================ FINDING 3 */
 

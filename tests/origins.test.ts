@@ -104,16 +104,6 @@ const LITERAL_ALLOWED = new Map<string, string>([
     "the enrolled owner address (RULING 245) — an identity, never a call site",
   ],
   [
-    "lib/governance/adoptions.ts",
-    // RULING 233's body states the shipping law in the author's own words, and
-    // those words name both hosts: "main is production and deploys to
-    // meanwhileusa.com. staging is the integration branch and deploys to
-    // test.meanwhileusa.com." That is QUOTED LAW, not a call site — nothing in
-    // this file is fetched, rendered or compared against, and a ruling body
-    // rewritten to satisfy a lint is a different ruling. The file is data.
-    "governance record bodies quote the law verbatim; a ruling is not a call site",
-  ],
-  [
     "lib/tracker/registry.mjs",
     // NH304's decision card asks the author to choose between two hosts, so it
     // has to name both of them. Same shape as the ruling above: prose the
@@ -205,14 +195,6 @@ test("the legacy host survives only as the site id and the redirect", () => {
     "scripts/deploy-live.mjs",
     "scripts/handoff.mjs",
     "tests/origins.test.ts",
-    // Both of these QUOTE the legacy host inside recorded evidence, and the
-    // evidence is worth more than the tidiness. RULING 235's body reproduces
-    // the exact 422 that proves a managed DNS record cannot point at a branch
-    // deploy — `value: staging--sparkwtp.netlify.app` — and NS12's predicate
-    // reproduces the `pnpm deploy:live` reading that closed it, which names
-    // the SITE. Rewriting either to satisfy a sweep would delete the thing
-    // that makes it evidence.
-    "lib/governance/adoptions.ts",
     "lib/tracker/registry.mjs",
   ]);
   const offenders = gitGrepFiles("sparkwtp", [

@@ -12,7 +12,6 @@ import {
   type StopAccounting,
 } from "../lib/workstate/types.ts";
 import { proveResume } from "../lib/workstate/frontier.ts";
-import { currentLawText } from "../lib/governance/current-law.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -254,48 +253,6 @@ test("every declared non-reason carries a name and a stated why", () => {
   }
   assert.equal(disqualifyingNonReason("the work is genuinely finished"), null);
   assert.equal(disqualifyingNonReason("the author said stop"), null);
-});
-
-test("the rule is written where a session reads it, not only in a brief", () => {
-  // A rule against self-measurement cannot be fully enforced by a type. What
-  // CAN be enforced is that it is stated in current law and in the code a
-  // session touches at close.
-  const types = readFileSync(join(ROOT, "lib/workstate/types.ts"), "utf8");
-  assert.match(types, /A session does not measure itself|cannot measure its own/i);
-  assert.match(types, /Persisted resumability is not permission to stop/i);
-
-  // Since 2026-09-25 the rule a session reads first is Sean's adopted wording
-  // in docs/rulings.md; the full vocabulary (the five statuses, merge cadence)
-  // is still in the ledger's meta-governance and shipping policy views.
-  const rulings = readFileSync(join(ROOT, "docs/rulings.md"), "utf8").replace(/\s+/g, " ");
-  assert.match(rulings, /Do not stop just to report progress while useful work remains/);
-  const law = currentLawText(ROOT).replace(/\s+/g, " ");
-  assert.match(law, /EARLY_HANDOFF/);
-  assert.match(law, /Merge cadence is not session cadence/i);
-});
-
-/* ===================================================================== */
-/* THE SHORT-FREEZE CUTOVER TEST                                          */
-/* ===================================================================== */
-
-/**
- * A design that freezes the descent until all historical governance work is
- * finished FAILS this test unless a named Stage 1 safety requirement genuinely
- * remains unresolved.
- */
-
-test("the frontier was migrated ONCE, and does not need remigrating for Stage 2", () => {
-  // The migration reads the legacy artifacts and writes canonical state. Stage
-  // 2 work — provenance classification, supersession normalization, remaining
-  // policy decomposition — touches the GOVERNANCE ledger and never the
-  // workstream store, so no second frontier migration can be required.
-  const migrate = readFileSync(join(ROOT, "scripts/workstream-migrate.mts"), "utf8");
-  const compile = readFileSync(join(ROOT, "scripts/governance-compile.mts"), "utf8");
-  assert.ok(
-    !compile.includes("data/workstate") && !compile.includes("workstream"),
-    "the governance compiler must not touch the frontier — otherwise Stage 2 would remigrate it",
-  );
-  assert.match(migrate, /states\//, "the migration reads the legacy artifacts");
 });
 
 test("the active frontier does not mutate during its own migration", () => {

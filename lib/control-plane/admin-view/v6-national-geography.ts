@@ -18,7 +18,7 @@ import { divisionIdsOfZip } from "../bulk-hunts/zip-state.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import { stateBase } from "../../ocd/divisions.ts";
 import { districtLabelOf } from "./district-label.ts";
-import { stateContainers, type ReadOnlyQuery } from "./promoted-slices.ts";
+import { oneContainer, stateContainers, type ReadOnlyQuery } from "./promoted-slices.ts";
 import type { V6PlaceScope } from "./v6-hunts-read.ts";
 
 export interface DistrictInfo {
@@ -62,18 +62,26 @@ export async function readAreaZips(scope: V6PlaceScope | null, query: ReadOnlyQu
       return district === undefined ? null : new Set(district.zips);
     }
     if (scope.type === "county") {
-      const slice = await stateContainers(scope.state, ["county"], true, query);
+      // One county, not the state's whole list, and remembered: the hunts, money and workers reads each ask on every refresh.
+      const key = `${scope.state}.${scope.geoid}`;
+      const held = countyZips.get(key);
+      if (held && Date.now() - held.at < MEMO_MS) return held.zips;
+      const slice = await oneContainer("county", scope.geoid, query);
       if (slice.kind !== "HELD") return null;
       const zips = new Set<string>();
       let found = false;
       for (const c of slice.value.containers) if (c.ref.type === "county" && c.ref.geoid === scope.geoid) { found = true; for (const o of c.overlaps ?? []) zips.add(o.zcta5); }
-      return found ? zips : null;
+      if (!found) return null;
+      countyZips.set(key, { at: Date.now(), zips });
+      while (countyZips.size > 64) countyZips.delete(countyZips.keys().next().value as string);
+      return zips;
     }
   } catch { return null; }
   return null;
 }
 
 const MEMO_MS = 5 * 60_000;
+const countyZips = new Map<string, { at: number; zips: ReadonlySet<string> }>();
 const MEMO_STATES = 8;
 const memo = new Map<string, { at: number; read: DistrictsRead }>();
 

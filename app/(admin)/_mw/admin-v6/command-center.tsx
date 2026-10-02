@@ -99,11 +99,15 @@ export function CommandCenter(props: CommandCenterProps) {
   /** ZIPs the owner typed into Change place that no hunt or visit had listed: the state comes from the national ZIP index. */
   const [typedZips, setTypedZips] = useState<readonly Place[]>([]);
   const places = useMemo(() => {
-    const base = data.places.data ?? [];
+    const listed = data.places.data ?? [];
+    // The hunts read answers only for hunts the server bound to a district or county (their ZIPs are in it), so each is inside the place in view.
+    const proven = /^geo:[a-z]{2}\.(congressional_district|county)\./.test(props.scopeKey) ? new Set((data.hunts.data ?? []).map((h) => h.placeKey)) : null;
+    const base = proven === null || proven.size === 0 ? listed
+      : listed.map((p) => (proven.has(p.key) && !p.within.includes(props.scopeKey) ? { ...p, within: [...p.within, props.scopeKey] } : p));
     const have = new Set(base.map((p) => p.key));
     const extra = typedZips.filter((p) => !have.has(p.key));
     return extra.length === 0 ? base : [...base, ...extra];
-  }, [data.places.data, typedZips]);
+  }, [data.places.data, data.hunts.data, props.scopeKey, typedZips]);
   const typedZip = /^[0-9]{5}$/.test(pickerQ.trim()) ? pickerQ.trim() : null;
   const typedZipListed = typedZip !== null && places.some((p) => p.key.endsWith(`.zcta.${typedZip}`));
   const index = useMemo(() => indexPlaces(places), [places]);

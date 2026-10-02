@@ -72,9 +72,6 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     await input.repos.workItems.compareAndSet(row.id, row.revision, { ...row.value,
       autonomousPlan: { ...plan, contract: { ...plan.contract, methodVersion: knowledge.version } } }, now());
   }
-  const fmRead = await readFieldManual(input.repos,{role:"SCOUT"});
-  let fieldManual: FieldManualStore = fmRead.store;
-  let fieldManualRevision = fmRead.revision ?? 0;
   const inheritedFieldManualCounts = new Map<string, number>();
   const inheritedManualStores = new Map<string, FieldManualStore>();
   const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly availableIds: readonly string[]; readonly lines: readonly string[] }>();
@@ -82,6 +79,9 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   // Held data and plain adapters first; generated adapters use the same guarded area transport as research.
   await workAdapterQueue({repos:input.repos,results:prior,now:now(),readEvidence:async id=>evidenceProjection(await heldRuntime.readEvidence(id)),
     ...(input.transportFor?{transportFor:result=>input.transportFor!({subjectId:result.subjectId,state:scoutStateHint(result.subjectId,result.obligationId)[0]??null})}:{})});
+  const fmRead = await readFieldManual(input.repos,{role:"SCOUT"});
+  let fieldManual: FieldManualStore = fmRead.store;
+  let fieldManualRevision = fmRead.revision ?? 0;
   const readRepairCapture = researchVaultResolver(input.repos, tools.store, "freshness");
   const installed = promotedRegistries();
   const registeredPublisherAddressFor = (subjectId:string):string|null => {

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
+import { runInNewContext } from "node:vm";
 import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
 
 import { failedAcquisitionCandidate, fecFundingCandidate } from "../lib/civic-data/candidate-builders.ts";
@@ -23,6 +24,7 @@ import {
   routineTaskDue,
   routineTaskFromContract,
   routineTaskSelection,
+  routinePreSpawnMemoryDeferral,
 } from "../lib/civic-data/runner.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
@@ -47,6 +49,53 @@ import {
 } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
+
+test("a pre-spawn memory deadline leaves source work queued without a missing-receipt failure", async t => {
+  const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  const start = source.indexOf("async function settlePendingRunResult(");
+  const end = source.indexOf("\n// Reader delivery", start);
+  const failures: unknown[] = [];
+  const lines: string[] = [];
+  const progress: string[] = [];
+  const context = {
+    laneLastEndedMs: new Map(), unsettledSourceRuns: new Set(["deferred"]),
+    startedSourceChildren: new Set(), attempted: 1,
+    supervisorFailures: failures,
+    console: { log: (line: string) => lines.push(line), error: (line: string) => lines.push(line) },
+    safeFailure: (message: string) => message,
+    boundedExecutionFailure: () => ({ taskId: "deferred", code: "CHILD_SPAWN_FAILED", detail: "WORKER_MEMORY_DEADLINE: work remains owed" }),
+    parseRoutineRunnerReceipt, classifyRoutineChildOutcome, routinePreSpawnMemoryDeferral,
+    recordHuntSourceProgress: async (_task: unknown, stage: string) => { progress.push(stage); },
+  };
+  const settle = runInNewContext(transpileModule(source.slice(start, end), {
+    compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
+  }).outputText + "\nsettlePendingRunResult;", context) as (pending: unknown, run: unknown) => Promise<void>;
+  for (const kind of ["SINGLE", "MEETING_PARTITION"]) {
+    context.attempted = 1; progress.length = 0; lines.length = 0;
+    await settle({ id: "deferred", kind, task: { id: "deferred", acquisitionFailureDomain: "held-source" } }, {
+      id: "deferred", termination: "SPAWN_FAILED", status: null, signal: null,
+      stdout: "", stderr: "", errorMessage: "WORKER_MEMORY_DEADLINE: memory wait deferred; work remains owed",
+    });
+    t.diagnostic(JSON.stringify({ supervisorFailures: failures.length, progress, lines, attempted: context.attempted }));
+    assert.equal(failures.length, 0);
+    assert.deepEqual(progress, ["QUEUED"]);
+    assert.equal(context.attempted, 0);
+    assert.equal(lines.some(line => line.includes("RECEIPT_COUNT_INVALID")), false);
+  }
+});
+
+test("only an unstarted empty-output memory deadline is an unsent deferral", () => {
+  const run = { id: "held", termination: "SPAWN_FAILED" as const, status: null, signal: null,
+    stdout: "", stderr: "", errorMessage: "WORKER_MEMORY_DEADLINE: work remains owed" };
+  assert.equal(routinePreSpawnMemoryDeferral(run, false), run.errorMessage);
+  assert.equal(routinePreSpawnMemoryDeferral(run, true), null, "a child that started retains process/receipt failure semantics");
+  for (const changed of [
+    { ...run, termination: "EXITED" as const }, { ...run, termination: "TIMED_OUT" as const },
+    { ...run, stdout: "RCD_RECEIPT={}" }, { ...run, stderr: "child emitted output" },
+    { ...run, status: 0 }, { ...run, signal: "SIGTERM" as const },
+    { ...run, errorMessage: "HTTP status 429" }, { ...run, errorMessage: "child mentioned WORKER_MEMORY_DEADLINE: later" },
+  ]) assert.equal(routinePreSpawnMemoryDeferral(changed, false), null);
+});
 
 test("source refreshes are admitted daily without a Send and retry failed sources hourly", () => {
   const now = Date.parse("2026-09-30T12:00:00Z");

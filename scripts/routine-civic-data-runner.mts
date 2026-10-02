@@ -40,6 +40,7 @@ import {
   routineAdmissionClock,
   unchangedRoutineProtocolFailure,
   routineTaskSelection,
+  routinePreSpawnMemoryDeferral,
   sittingWindowSignals,
   routineUnreceiptedSupervisorAttemptHistory,
   type RoutineSupervisorAttemptHistory,
@@ -204,14 +205,19 @@ const workerToolsHost = ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()
     RUN_STARTED_AT, { skipBootstrap: true })), browse: sharedBrowser.browse }) : null;
 const routineMemorySlots = routineProcessSlots();
 const childMemoryReleases = new Map<string, () => void>();
+const startedSourceChildren = new Set<string>();
 async function acquireChildMemory(command: BoundedChildCommand): Promise<void> {
   const script = command.args.find(arg => /[.](?:mts|ts)$/.test(arg))?.split(/[\\/]/).at(-1) ?? "";
   const release = await routineMemorySlots.acquire(`${command.id}/${script}`, Date.now() + ROUTINE_CHILD_TIMEOUT_MS);
   childMemoryReleases.set(command.id, release);
-  (command as { onStarted?: (pid: number) => void }).onStarted = pid => release.observe?.(pid);
+  (command as { onStarted?: (pid: number) => void }).onStarted = pid => {
+    startedSourceChildren.add(command.id);
+    release.observe?.(pid);
+  };
 }
 function releaseChildMemory(id: string): void {
   childMemoryReleases.get(id)?.(); childMemoryReleases.delete(id);
+  startedSourceChildren.delete(id);
 }
 
 interface SupervisorFailure {
@@ -760,6 +766,14 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     const detail = `expected result ${pending.id}; observed ${run.id}`;
     supervisorFailures.push({ taskId: pending.id, code: "BOUNDED_CHILD_RESULT_ORDER_MISMATCH", detail });
     console.error(`RCD_TASK ${pending.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
+    return;
+  }
+  const memoryDeferral = routinePreSpawnMemoryDeferral(run, startedSourceChildren.has(run.id));
+  if (memoryDeferral !== null) {
+    attempted -= 1;
+    const detail = safeFailure(memoryDeferral);
+    await recordHuntSourceProgress(pending.task, "QUEUED", detail);
+    console.log(`RCD_DEFER ${pending.task.id}: ${detail}; no child spawned; source work remains owed`);
     return;
   }
   const output = `${run.stdout}\n${run.stderr}`;

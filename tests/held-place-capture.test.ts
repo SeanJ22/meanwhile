@@ -100,6 +100,26 @@ test("sittings share calendar discovery work by body while every meeting keeps i
   assert.ok(owed.some(row => row.subject.id === "meeting:unresolved" && row.checklistId === "MTG-03"), "an unknown body keeps its route work");
 });
 
+test("a known body starts calendar discovery before its first meeting is captured", () => {
+  const capture = projectHeldPlaceCapture([county, neighbour], registry, [], at);
+  const divisions = [county, neighbour].map(id => ({ id, label: id }));
+  const rows = buildPlaceOwedList({ divisions, ...capture, now: at });
+  const calendar = rows.filter(row => row.subject.id === "shared-body#calendar");
+  assert.equal(calendar.length, 9);
+  assert.ok(calendar.every(row => row.state === "missing" && row.held.length === 0));
+  assert.deepEqual(calendar[0].subject.divisionIds, [county, neighbour]);
+  assert.ok(!calendar.some(row => row.checklistId === "MTG-06" || row.checklistId.startsWith("DOC-")), "no invented sitting");
+  const later = projectHeldPlaceCapture([county, neighbour], registry, [meetings], at);
+  const after = buildPlaceOwedList({ divisions, ...later, now: at });
+  assert.deepEqual(after.filter(row => row.subject.id === "shared-body#calendar"), calendar, "a first sitting does not complete calendar discovery");
+  assert.equal(after.find(row => row.subject.id === meeting.id && row.checklistId === "MTG-06")?.state, "published");
+  const secondPlace = buildPlaceOwedList({ divisions: [{ id: neighbour, label: neighbour }], ...capture, now: at });
+  assert.deepEqual(secondPlace.filter(row => row.subject.id === "shared-body#calendar"), calendar);
+  const empty = buildPlaceOwedList({ divisions, subjects: [], held: [], now: at });
+  assert.ok(empty.some(row => row.subject.id === `${county}#inventory:calendar`));
+  assert.ok(!empty.some(row => row.subject.captureKind === "body-calendar"), "unknown bodies stay inventory work");
+});
+
 test("body rosters retain canonical legislative and local scope without borrowing meaning from titles", () => {
   const state = "ocd-division/country:us/state:oh";
   const territories = [

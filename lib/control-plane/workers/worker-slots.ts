@@ -1,8 +1,8 @@
 import { freemem, platform, tmpdir } from "node:os";
-import { existsSync, mkdirSync, openSync, closeSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
+import { existsSync, openSync, closeSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { randomUUID } from "node:crypto";
-import { dirname, join } from "node:path";
+import { join } from "node:path";
 
 const MIB = 1024 * 1024;
 /** Rounded-up measured RSS peaks; a reservation pays only for growth not yet in OS usage. */
@@ -74,16 +74,16 @@ export interface WorkerMemoryHost {
 }
 /** Transient host reservations, shared by independent research/routine parents.
  * No work, receipt, spending or publication state is written here. */
-export function workerMemoryHost(input: { readonly path?: string; readonly processes?: () => readonly WorkerProcessMemory[] } = {}): WorkerMemoryHost {
+export function workerMemoryHost(input: { readonly shared?: boolean; readonly processes?: () => readonly WorkerProcessMemory[] } = {}): WorkerMemoryHost {
   let local: HostState = { reservations: [], parents: [] };
   const sample = input.processes ?? hostProcesses;
   return { transact: operation => {
-    const path = input.path;
-    const lock = path ? `${path}.lock` : null;
+    const path = join(tmpdir(), "meanwhile-worker-memory.json");
+    const lock = join(tmpdir(), "meanwhile-worker-memory.json.lock");
+    const temporary = join(tmpdir(), "meanwhile-worker-memory.json.tmp");
     let descriptor: number | undefined;
-    if (lock) {
-      mkdirSync(dirname(lock), { recursive: true });
-      try { descriptor = openSync(lock, "wx"); writeFileSync(descriptor, String(process.pid)); }
+    if (input.shared) {
+      try { descriptor = openSync(lock, "wx"); writeFileSync(lock, String(process.pid)); }
       catch (error) {
         if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
         try { const owner = Number(readFileSync(lock, "utf8")); if (owner > 0 && !alive(owner)) unlinkSync(lock); }
@@ -92,23 +92,22 @@ export function workerMemoryHost(input: { readonly path?: string; readonly proce
       }
     }
     try {
-      if (path && existsSync(path)) local = JSON.parse(readFileSync(path, "utf8")) as HostState;
+      if (input.shared && existsSync(path)) local = JSON.parse(readFileSync(path, "utf8")) as HostState;
       // A dead parent cannot retain future growth. A surviving job tree still can.
       local.parents = local.parents.filter(parent => alive(parent.pid));
       local.reservations = local.reservations.filter(row => alive(row.owner) || (row.pid !== null && alive(row.pid)));
       operation(local, sample());
-      if (path) {
-        const temporary = `${path}.${process.pid}.tmp`;
+      if (input.shared) {
         writeFileSync(temporary, JSON.stringify(local)); renameSync(temporary, path);
       }
       return true;
     } finally {
       if (descriptor !== undefined) closeSync(descriptor);
-      if (lock) unlinkSync(lock);
+      if (input.shared) unlinkSync(lock);
     }
   } };
 }
-const sharedHost = workerMemoryHost({ path: join(tmpdir(), "meanwhile-worker-memory.json") });
+const sharedHost = workerMemoryHost({ shared: true });
 
 export interface WorkerMemoryLimit {
   readonly admissionsOpen?: () => boolean;

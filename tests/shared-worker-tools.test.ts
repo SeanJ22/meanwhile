@@ -163,16 +163,20 @@ test("children already at their peaks do not reserve their current RSS a second 
 
 test("independent parent host handles serialize reservations through the same transient file", async () => {
   const root = await mkdtemp(join(tmpdir(), "s18-host-memory-"));
+  const prior = { TEMP: process.env.TEMP, TMP: process.env.TMP, TMPDIR: process.env.TMPDIR };
   try {
-    const path = join(root, "host.json");
+    Object.assign(process.env, { TEMP: root, TMP: root, TMPDIR: root });
     const memory = { availableBytes: () => 1000, headroomBytes: 100, peakBytes: () => 600 };
-    const research = workerProcessSlots(() => 10, { ...memory, host: workerMemoryHost({ path, processes: () => [] }) });
-    const routine = routineProcessSlots({ ...memory, host: workerMemoryHost({ path, processes: () => [] }) });
+    const research = workerProcessSlots(() => 10, { ...memory, host: workerMemoryHost({ shared: true, processes: () => [] }) });
+    const routine = routineProcessSlots({ ...memory, host: workerMemoryHost({ shared: true, processes: () => [] }) });
     const active = await research.acquire();
     await assert.rejects(routine.acquire("routine", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
     active();
     const next = await routine.acquire("routine", Date.now() + 100); next();
-  } finally { await rm(root, { recursive: true, force: true }); }
+  } finally {
+    for (const [name, value] of Object.entries(prior)) { if (value === undefined) delete process.env[name]; else process.env[name] = value; }
+    await rm(root, { recursive: true, force: true });
+  }
 });
 
 test("separate research and routine parent processes cannot over-admit the shared host", async () => {
@@ -186,23 +190,23 @@ test("separate research and routine parent processes cannot over-admit the share
       process.on('message', async message => {
         if (message.kind === 'release') { release?.(); process.send({ kind: 'released' }); return; }
         const memory = { availableBytes: () => 1000, headroomBytes: 100, peakBytes: () => 600,
-          host: workerMemoryHost({ path: message.path, processes: () => [] }) };
+          host: workerMemoryHost({ shared: true, processes: () => [] }) };
         const slots = message.routine ? routineProcessSlots(memory) : workerProcessSlots(() => 10, memory);
         try { release = await slots.acquire('child', Date.now() + message.waitMs); process.send({ kind: 'admitted' }); }
         catch (error) { process.send({ kind: 'deferred', detail: error.message }); }
       });`);
-    const start = () => { const child = fork(script, [], { execArgv: ["--experimental-strip-types"], stdio: ["ignore", "ignore", "inherit", "ipc"] }); children.push(child); return child; };
+    const start = () => { const child = fork(script, [], { env: { ...process.env, TEMP: root, TMP: root, TMPDIR: root },
+      execArgv: ["--experimental-strip-types"], stdio: ["ignore", "ignore", "inherit", "ipc"] }); children.push(child); return child; };
     const offer = async (child: ChildProcess, message: Record<string, string | number | boolean>) => {
       const reply = once(child, "message"); child.send(message);
       return (await reply)[0] as { kind: string; detail?: string };
     };
     const research = start(), routine = start();
-    const path = join(root, "host.json");
-    assert.equal((await offer(research, { path, waitMs: 1000 })).kind, "admitted");
-    const blocked = await offer(routine, { path, waitMs: 100, routine: true });
+    assert.equal((await offer(research, { waitMs: 1000 })).kind, "admitted");
+    const blocked = await offer(routine, { waitMs: 100, routine: true });
     assert.equal(blocked.kind, "deferred"); assert.match(blocked.detail!, /WORKER_MEMORY_DEADLINE/);
     assert.equal((await offer(research, { kind: "release" })).kind, "released");
-    assert.equal((await offer(routine, { path, waitMs: 1000, routine: true })).kind, "admitted");
+    assert.equal((await offer(routine, { waitMs: 1000, routine: true })).kind, "admitted");
     await offer(routine, { kind: "release" });
   } finally {
     await Promise.all(children.map(async child => {

@@ -54,6 +54,8 @@ import {
   sitePathLength,
   verifyCampaignSitePage,
   type CampaignSiteIdentity,
+  type CampaignSiteSourceReference,
+  type CampaignSiteSupportingRead,
 } from "../candidates/campaign-site-verifier.ts";
 import { verdictOfRecordedPermission } from "../control-plane/scheduler/robots.ts";
 import { campaignLinkRefreshIssue } from "./campaign-link-refresh.ts";
@@ -64,6 +66,7 @@ import { candidatePublicationLinkMatches } from "../control-plane/promotion/camp
 import type { ArtifactRecord } from "../control-plane/repository/types.ts";
 import type { Attempt } from "../control-plane/attempt.ts";
 import type { CandidateDocument, CandidatePublicationDate } from "../candidates/corpus.ts";
+import { readHeldBytes, type VaultIndex } from "../control-plane/evidence/read-only-vault.ts";
 
 /** The door an approval names when this writer may publish it (the chain's `CAMPAIGN_SITE_PUBLICATION_DOOR`). */
 export const DERIVED_CAMPAIGN_SITE_DOOR = "CANDIDATE_CAMPAIGN_SITES_DERIVED_CONTRACT" as const;
@@ -96,6 +99,7 @@ export interface PublishableCampaignSiteApproval {
       readonly httpStatus: number;
       readonly contentType: string;
       readonly readAt: string;
+      readonly cycleSource?: CampaignSiteSourceReference;
     };
     readonly audit: { readonly secondSignal: string };
     readonly publicationDoor: string;
@@ -185,6 +189,36 @@ export interface HeldVerifyingRead {
   readonly tier: "RAW" | "SANITIZED_DERIVED";
   /** The robots verdict the read ran under, as its sidecar recorded it: evidence carried with the read, never a refusal. */
   readonly permission: string | null;
+  /** Separately captured bytes for a current-candidacy source cited by the approval. */
+  readonly cycleSource?: CampaignSiteSupportingRead & { readonly tier: "RAW" | "SANITIZED_DERIVED" };
+}
+
+/** Read each approval's own primary and supporting captures from their saved sidecars. */
+export async function heldCampaignSiteReads(vault: VaultIndex, approvals: readonly PublishableCampaignSiteApproval[]): Promise<Map<string, HeldVerifyingRead>> {
+  const held = new Map<string, HeldVerifyingRead>();
+  for (const approval of approvals) {
+    const artifact = vault.byId.get(approval.campaignSite.evidence.artifactId);
+    if (artifact === undefined || artifact.tier === "RESTRICTED_RAW" || held.has(approval.recordId)) continue;
+    try {
+      const sourceRef = approval.campaignSite.evidence.cycleSource;
+      const supporting = sourceRef ? vault.byId.get(sourceRef.artifactId) : undefined;
+      const cycleSource = supporting && supporting.tier !== "RESTRICTED_RAW" && supporting.canonicalUrl && supporting.retrievedAt
+        ? { source: { artifactId: supporting.id, sha256: supporting.contentHash.slice("sha256-".length),
+            requestedUrl: supporting.canonicalUrl, finalUrl: supporting.retrievalUrl ?? supporting.canonicalUrl,
+            httpStatus: supporting.httpStatus ?? 0, contentType: supporting.contentType, readAt: supporting.retrievedAt },
+          page: heldPageRead({ requestedUrl: supporting.canonicalUrl, finalUrl: supporting.retrievalUrl ?? supporting.canonicalUrl,
+            httpStatus: supporting.httpStatus ?? 0, contentType: supporting.contentType, retrievedAt: supporting.retrievedAt,
+            sha256: supporting.contentHash.slice("sha256-".length), body: new TextDecoder().decode(await readHeldBytes(supporting)) }),
+          tier: supporting.tier === "SANITIZED_DERIVED" ? "SANITIZED_DERIVED" as const : "RAW" as const } : undefined;
+      held.set(approval.recordId, { body: new TextDecoder().decode(await readHeldBytes(artifact)),
+        sha256: artifact.contentHash.slice("sha256-".length),
+        tier: artifact.tier === "SANITIZED_DERIVED" ? "SANITIZED_DERIVED" : "RAW", permission: artifact.permission,
+        ...(cycleSource ? { cycleSource } : {}) });
+    } catch {
+      /* A body that does not hash to its commitment remains owed. */
+    }
+  }
+  return held;
 }
 
 export interface HeldLinkedPublicationRead {
@@ -245,7 +279,12 @@ export function reverifyApprovedSite(record: PublishableCampaignSiteApproval, he
       ? []
       : [{ origin, verdict: recorded, detail: `${held.permission} recorded on the vaulted sidecar of ${site.evidence.artifactId}` }],
   };
-  const verdict = verifyCampaignSitePage(site.identity, { url: site.evidence.requestedUrl, origin: "RECORDED_SITE", ref: record.recordId }, read);
+  if (site.evidence.cycleSource && (!held.cycleSource ||
+    canonicalCivicDataJson(site.evidence.cycleSource) !== canonicalCivicDataJson(held.cycleSource.source))) {
+    return { ok: false, detail: "the independently captured current-candidacy source is missing or differs from the approved source" };
+  }
+  const verdict = verifyCampaignSitePage(site.identity, { url: site.evidence.requestedUrl, origin: "RECORDED_SITE", ref: record.recordId }, read,
+    site.evidence.cycleSource ? held.cycleSource : undefined);
   return verdict.verdict === "VERIFIED"
     ? { ok: true, verification: verdict.verification }
     : { ok: false, detail: verdict.refusals.map((r) => `${r.code}: ${r.detail}`).join("; ") };
@@ -316,6 +355,11 @@ export function planDerivedCampaignSites(input: {
       continue;
     }
     add({ kind: "VAULTED_EVIDENCE", artifactId: site.evidence.artifactId, contentHash: `sha256-${site.evidence.sha256}`, tier: chosen.held.tier, retrievedAt: site.evidence.readAt });
+    if (site.evidence.cycleSource && chosen.held.cycleSource) {
+      const source = site.evidence.cycleSource;
+      add({ kind: "VAULTED_EVIDENCE", artifactId: source.artifactId, contentHash: `sha256-${source.sha256}`,
+        tier: chosen.held.cycleSource.tier, retrievedAt: source.readAt });
+    }
     for (const key of site.readerKeys) {
       const publications: NonNullable<DerivedCampaignSiteRecord["publications"]>[number][] = [];
       // Every independently verified captured revision survives. No new fetch,
@@ -427,6 +471,7 @@ export function planDerivedCampaignSites(input: {
             finalUrl: site.evidence.finalUrl,
             httpStatus: site.evidence.httpStatus,
             readAt: site.evidence.readAt,
+            ...(site.evidence.cycleSource ? { cycleSource: site.evidence.cycleSource } : {}),
             approvalItemId: chosen.record.itemId,
             approvalRecordId: chosen.record.recordId,
             approvedAt: chosen.record.at,

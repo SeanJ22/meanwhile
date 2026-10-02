@@ -14,6 +14,7 @@ import test from "node:test";
 
 import { replayResearchFindings, type HeldRead, type HeldScoutFinding } from "../lib/candidates/research-findings-replay.ts";
 import type { HeldMarginaliaResponse } from "../lib/control-plane/promotion/campaign-site-chain.ts";
+import { districtForms } from "../lib/candidates/campaign-site-verifier.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { manualProjectionCandidate, readManualProjectionPrior, type CandidateProfilesProjection } from "../lib/civic-data/manual-projections.ts";
@@ -45,7 +46,7 @@ const profiles = [[DUARTE, MEET], [CHIPPERSON, CHIP]].map(([id, url]): HeldRead 
   const subject = committedSubjects().get(id!)!;
   const artifactId = `ar-profile-${subject.familyName.toLowerCase()}`;
   const body = `<title>${subject.givenName} ${subject.familyName} | Candidate profile</title><h1>${subject.givenName} ${subject.familyName}</h1>
-    <p>Candidate for ${subject.officeTitle} in the 2026 General Election.</p><a href="${url}">Website</a>`;
+    <p>Candidate for ${subject.officeTitle} in the 2026 General Election. ${districtForms(subject).join(" ")}</p><a href="${url}">Website</a>`;
   return { ...held[0]!, artifactId, attemptId: `at-${artifactId}`, canonicalUrl: `https://independent.example/${artifactId}`,
     body, sha256: sha256(body), retrievedAt: "2026-09-24T10:00:00.000Z" };
 });

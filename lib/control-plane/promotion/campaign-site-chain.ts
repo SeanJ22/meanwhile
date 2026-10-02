@@ -80,9 +80,9 @@ import {
   comparisonText,
   pageVisibleText,
   pageHeadings,
-  officeForms,
-  districtForms,
   cycleEvidence,
+  profileCampaignSiteLeads,
+  profileSupportsCampaign,
   registrableDomain,
   siteHost,
   sitePathLength,
@@ -93,7 +93,10 @@ import {
   type CampaignSitePageRead,
   type CampaignSiteRefusal,
   type CampaignSiteVerdict,
+  type CampaignSiteSourceReference,
+  type CampaignSiteSupportingRead,
 } from "../../candidates/campaign-site-verifier.ts";
+export { profileCampaignSiteLeads } from "../../candidates/campaign-site-verifier.ts";
 import { normalizeMarginaliaSearch } from "../scheduler/promotion-tail.ts";
 
 export const CAMPAIGN_SITE_CHAIN_VERSION = "campaign-site-chain/1";
@@ -189,6 +192,7 @@ export interface CampaignSiteApproval {
     readonly httpStatus: number;
     readonly contentType: string;
     readonly readAt: string;
+    readonly cycleSource?: CampaignSiteSourceReference;
   };
   readonly audit: { readonly startedFrom: readonly AuditEvidenceBase[]; readonly secondSignal: string };
   readonly publicationDoor: typeof CAMPAIGN_SITE_PUBLICATION_DOOR;
@@ -266,34 +270,9 @@ async function scoutLeads(state: PipelineItemState, ctx: PipelineContext, subjec
   return leads;
 }
 
-/** Observed campaign links on one candidate's captured profile, never guessed hosts. */
-export function profileCampaignSiteLeads(page: CampaignSitePageRead, subject: CampaignSiteSubject, ref: string): CampaignSiteLead[] {
-  const headings = pageHeadings(page.body).headings;
-  const forms = campaignNameForms(subject).map(form => form.form);
-  const words = comparisonText(pageVisibleText(page.body));
-  const contains = (form: string) => ` ${words} `.includes(` ${comparisonText(form)} `);
-  if (!headings.some(heading => titleBrandsCandidate(heading, forms) !== null) ||
-    ![...officeForms(subject.officeTitle), ...districtForms(subject)].some(contains)) return [];
-  const links: { url: string; label: string }[] = [];
-  const html = page.body.replace(/<(script|style|template)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, " ");
-  for (const match of html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a\s*>/gi)) {
-    const href = /\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i.exec(match[1]!);
-    if (!href) continue;
-    let url: URL;
-    try { url = new URL((href[1] ?? href[2] ?? href[3]!).replace(/&amp;/g, "&"), page.finalUrl); } catch { continue; }
-    if (url.protocol !== "https:" || url.username || url.password || siteHost(url.href) === siteHost(page.finalUrl) || campaignSiteHostRefusal(url.href)) continue;
-    const accessible = /\b(?:aria-label|title)\s*=\s*(?:"([^"]*)"|'([^']*)')/i.exec(match[1]!);
-    links.push({ url: url.href, label: comparisonText(pageVisibleText(match[2]!) + " " + (accessible?.[1] ?? accessible?.[2] ?? "")) });
-  }
-  const websites = links.filter(link => /^(?:(?:official|candidate|campaign|personal) )*(?:website|web site|campaign site|campaign page)$/.test(link.label));
-  const hosts = new Set(websites.map(link => siteHost(link.url)));
-  return [...new Set([...websites, ...links.filter(link => hosts.has(siteHost(link.url)) && /^(?:learn more|read more|source|platform|issues)$/.test(link.label))].map(link => link.url))]
-    .map(url => ({ url, origin: "SCOUT_FINDING", ref }));
-}
-
 /** A different captured publisher that names this candidacy and cites the campaign we independently read. */
 async function independentProfileSignal(subject: CampaignSiteSubject, primary: ArtifactRecord, artifacts: readonly ArtifactRecord[],
-  options: CampaignSiteChainOptions): Promise<ArtifactRecord | null> {
+  options: CampaignSiteChainOptions, primaryPage: CampaignSitePageRead): Promise<{ artifact: ArtifactRecord; supporting: CampaignSiteSupportingRead } | null> {
   for (const artifact of artifacts) {
     if (artifact.partial || !/html/i.test(artifact.contentType) ||
       registrableDomain(siteHost(artifact.canonicalUrl) ?? "") === registrableDomain(siteHost(primary.canonicalUrl) ?? "")) continue;
@@ -303,7 +282,10 @@ async function independentProfileSignal(subject: CampaignSiteSubject, primary: A
     const age = Date.parse(options.now) - Date.parse(page.retrievedAt);
     if (!Number.isFinite(age) || age < 0 || age > MAX_READ_AGE_MS) continue;
     if (cycleEvidence(comparisonText(pageVisibleText(page.body)), pageHeadings(page.body).headings, subject.cycle).state !== "CURRENT") continue;
-    if (profileCampaignSiteLeads(page, subject, artifact.artifactId).some(lead => siteHost(lead.url) === siteHost(primary.canonicalUrl))) return artifact;
+    const supporting: CampaignSiteSupportingRead = { source: { artifactId: artifact.artifactId, sha256: page.sha256,
+      requestedUrl: page.requestedUrl, finalUrl: page.finalUrl, httpStatus: page.httpStatus,
+      contentType: page.contentType, readAt: page.retrievedAt }, page };
+    if (profileSupportsCampaign(subject, primaryPage, supporting)) return { artifact, supporting };
   }
   return null;
 }
@@ -360,7 +342,7 @@ export function campaignSiteChecks(input: {
   const checks: VerificationCheck[] = [];
   const span = (label: string, s: { form: string; index: number } | null) => (s === null ? `${label}: none` : `${label} "${s.form}" at ${s.index}`);
   checks.push(verdict.verdict === "VERIFIED" && m !== null && m.name !== null && (m.office !== null || m.district !== null) && m.cycle.span !== null
-    ? { name: "CLAIM_RESOLVES_TO_SOURCE_SPAN", result: "PASS", detail: `in ${artifact.artifactId} (${artifact.contentHash}): ${span("name", m.name)}; ${span("office", m.office)}; ${span("district", m.district)}; cycle ${m.cycle.span.year} beside "${m.cycle.span.phrase}" (${m.cycle.span.where})` }
+    ? { name: "CLAIM_RESOLVES_TO_SOURCE_SPAN", result: "PASS", detail: `in ${artifact.artifactId} (${artifact.contentHash}): ${span("name", m.name)}; ${span("office", m.office)}; ${span("district", m.district)}; cycle ${m.cycle.span.year} beside "${m.cycle.span.phrase}" (${m.cycle.span.where}${m.cycle.source ? ` ${m.cycle.source.artifactId}, sha256-${m.cycle.source.sha256}, ${m.cycle.source.finalUrl}` : ""})` }
     : { name: "CLAIM_RESOLVES_TO_SOURCE_SPAN", result: "FAIL", detail: verdict.verdict === "REFUSED" ? verdict.refusals.map((r) => `${r.code}: ${r.detail}`).join("; ") : "a span is missing" });
 
   /*
@@ -404,7 +386,7 @@ export function campaignSiteChecks(input: {
 
   /* Rendering symmetry: the link renders through the one campaign slot every candidate's link uses, from one sentence template, with no label and nothing about party. */
   const sentence = verdict.verdict === "VERIFIED" ? verdict.verification : "";
-  const template = /^Fetched \d{4}-\d{2}-\d{2} \(campaign-site-verifier\/1\): '.+' — names .+, the (office|district) \(".+"\), and the \d{4} election\.$/;
+  const template = /^Fetched \d{4}-\d{2}-\d{2} \(campaign-site-verifier\/1\): '.+' — names .+, the (office|district) \(".+"\)(?:, and|; https:\/\/\S+ identifies) the \d{4} election\.$/;
   checks.push(template.test(sentence)
     ? { name: "NEUTRALITY_AND_RENDERING_SYMMETRY", result: "PASS", detail: "renders as links[key].campaign {url, verification, attemptedAt, evidence} — the slot and sentence template every verified campaign link uses; no label, no party read, identical rules for every candidate" }
     : { name: "NEUTRALITY_AND_RENDERING_SYMMETRY", result: "FAIL", detail: `the verification sentence does not follow the one template: ${JSON.stringify(sentence)}` });
@@ -429,15 +411,16 @@ function decoy(seed: string, n: number): string {
  * candidate's surname under a fabricated given name are known-absent, each
  * verified absent by an exact search of the page before it is planted.
  */
-export function measureCampaignSiteControls(subject: CampaignSiteSubject, read: CampaignSitePageRead, artifact: ArtifactRecord, at: string): { readonly score: ControlScore; readonly instrument: string } {
+export function measureCampaignSiteControls(subject: CampaignSiteSubject, read: CampaignSitePageRead, artifact: ArtifactRecord, at: string,
+  supporting?: CampaignSiteSupportingRead): { readonly score: ControlScore; readonly instrument: string } {
   const text = comparisonText(pageVisibleText(read.body));
   const verified = { verification_source: `vaulted artifact ${artifact.artifactId} (${artifact.contentHash}), re-read by content address`, verified_by: `${CAMPAIGN_SITE_AUDITOR_ID} exact search`, verified_date: at.slice(0, 10) };
   const lead: CampaignSiteLead = { url: artifact.canonicalUrl, origin: "RECORDED_SITE", ref: `control:${artifact.artifactId}` };
-  const m = verifyCampaignSitePage(subject, lead, read).measurement;
+  const m = verifyCampaignSitePage(subject, lead, read, supporting).measurement;
   const facts: ControlFact[] = [];
   const observations: ControlObservation[] = [];
-  const present = (statement: string, stated: boolean) => {
-    facts.push({ statement, fact_class: "known_present", expected_truth: { kind: "proposition", proposition: statement }, ...verified });
+  const present = (statement: string, stated: boolean, verificationSource = verified.verification_source) => {
+    facts.push({ statement, fact_class: "known_present", expected_truth: { kind: "proposition", proposition: statement }, ...verified, verification_source: verificationSource });
     observations.push({ statement, observed: stated ? "FACT_STATED" : "ABSENCE_ASSERTED" });
   };
   const absent = (statement: string, form: string, identity: CampaignSiteIdentity) => {
@@ -450,7 +433,10 @@ export function measureCampaignSiteControls(subject: CampaignSiteSubject, read: 
   };
   present(`${artifact.contentHash} names ${displayName(subject)}`, m !== null && m.name !== null);
   present(`${artifact.contentHash} names the office or district of ${subject.officeTitle}`, m !== null && (m.office !== null || m.district !== null));
-  present(`${artifact.contentHash} evidences the ${subject.cycle} election`, m !== null && m.cycle.state === "CURRENT");
+  const cycleSource = m?.cycle.source;
+  present(`${cycleSource ? `sha256-${cycleSource.sha256}` : artifact.contentHash} evidences the ${subject.cycle} election`,
+    m !== null && m.cycle.state === "CURRENT", cycleSource
+      ? `vaulted artifact ${cycleSource.artifactId} (sha256-${cycleSource.sha256}), re-read by content address at ${cycleSource.finalUrl}` : verified.verification_source);
   for (let n = 0, planted = 0; n < 8 && planted < 1; n++) {
     const given = decoy(`${subject.candidacyId}|given`, n);
     const family = decoy(`${subject.candidacyId}|family`, n);
@@ -594,7 +580,8 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
     const read = await options.heldPage(artifact);
     if (read === null) return;
     /* The verdict every later stage rests on is re-made from the vaulted bytes, never carried from the read. */
-    const verdict = verifyCampaignSitePage(subject, { url: artifact.canonicalUrl, origin: "RECORDED_SITE", ref: confirmed.recordId }, read);
+    const independent = await independentProfileSignal(subject, artifact, allArtifacts, options, read);
+    const verdict = verifyCampaignSitePage(subject, { url: artifact.canonicalUrl, origin: "RECORDED_SITE", ref: confirmed.recordId }, read, independent?.supporting);
 
     if (state.stage === "CONFIRMED") {
       const verifiedRecord: VerifiedRecord = {
@@ -612,7 +599,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
       let controls: ControlScore | null = null;
       let controlLine: string;
       try {
-        const measured = measureCampaignSiteControls(subject, read, artifact, options.now);
+        const measured = measureCampaignSiteControls(subject, read, artifact, options.now, independent?.supporting);
         controls = measured.score;
         controlLine = `${measured.instrument}; ${controlsClean(measured.score).detail}`;
       } catch (error) {
@@ -620,7 +607,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
       }
       // Identity matching needs two publishers, not two clocks on one page.
       const filing = subject.filingDomains.includes(registrableDomain(host));
-      const second = await independentProfileSignal(subject, artifact, allArtifacts, options);
+      const second = independent?.artifact ?? null;
       const startedFrom: AuditEvidenceBase[] = ["EVIDENCE_VAULT", "CANONICAL_SUBJECT_IDENTITY"];
       if (filing) startedFrom.push("PUBLISHER_SOURCE_UNIVERSE");
       const signal = second !== null
@@ -656,7 +643,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
       const newer = allArtifacts.filter((a) => a.canonicalUrl === artifact.canonicalUrl && a.recordedAt > artifact.recordedAt && a.attemptId !== artifact.attemptId && ctx.attemptRoleById(a.attemptId) === "ACQUIRER")
         .sort((a, b) => (a.recordedAt < b.recordedAt ? 1 : -1))[0];
       const newerPage = newer === undefined ? null : await options.heldPage(newer);
-      const newerVerdict = newer === undefined || newerPage === null ? null : verifyCampaignSitePage(subject, { url: newer.canonicalUrl, origin: "RECORDED_SITE", ref: newer.artifactId }, newerPage);
+      const newerVerdict = newer === undefined || newerPage === null ? null : verifyCampaignSitePage(subject, { url: newer.canonicalUrl, origin: "RECORDED_SITE", ref: newer.artifactId }, newerPage, independent?.supporting);
       const age = Date.parse(options.now) - Date.parse(verdict.measurement.retrievedAt);
       const burdens: ApprovalBurden[] = [
         { name: "CHAIN_CHECKS_PASS", result: failedChecks.length === 0 ? "PASS" : "FAIL", detail: failedChecks.length === 0 ? `all ${verifiedRecord.checks.length} checks PASS on ${verifiedRecord.recordId}` : `${failedChecks.join(", ")} not PASS on ${verifiedRecord.recordId}` },
@@ -696,6 +683,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
             httpStatus: verdict.measurement.httpStatus,
             contentType: verdict.measurement.contentType,
             readAt: verdict.measurement.retrievedAt,
+            ...(verdict.measurement.cycle.source ? { cycleSource: verdict.measurement.cycle.source } : {}),
           },
           audit: { startedFrom: audited.startedFrom, secondSignal: signal },
           publicationDoor: CAMPAIGN_SITE_PUBLICATION_DOOR,
@@ -766,7 +754,8 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
         leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: refusal.code === "NOT_READ" ? "DEFERRED" : "REFUSED", refusals: [refusal], historical: null, via: refusal.code === "NOT_READ" ? "NONE" : "READ" });
         continue;
       }
-      const verdict = verifyCampaignSitePage(subject, lead, cached.result.read);
+      const independent = await independentProfileSignal(subject, cached.artifact, allArtifacts, options, cached.result.read);
+      const verdict = verifyCampaignSitePage(subject, lead, cached.result.read, independent?.supporting);
       verdicts.push({ lead, verdict, artifact: cached.artifact });
       leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: verdict.verdict,
         refusals: verdict.verdict === "REFUSED" ? verdict.refusals : [], historical: verdict.verdict === "REFUSED" ? verdict.historical?.years ?? null : null, via: cached.via });

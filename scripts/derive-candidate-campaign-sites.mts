@@ -35,6 +35,7 @@ import {
   derivedCampaignSitesFailedCandidate,
   derivedCampaignSitesPass,
   isPublishableCampaignSiteApproval,
+  heldCampaignSiteReads,
   type HeldVerifyingRead,
   type HeldLinkedPublicationRead,
   type PublishableCampaignSiteApproval,
@@ -78,26 +79,6 @@ async function readApprovals(): Promise<PublishableCampaignSiteApproval[] | { re
   } catch (error) {
     return { unreadable: error instanceof Error ? error.message : String(error) };
   }
-}
-
-/** Each approval's verifying read, read back from the vault and proved against its sidecar; a body it cannot produce is not held. */
-async function heldReads(vault: VaultIndex, approvals: readonly PublishableCampaignSiteApproval[]): Promise<Map<string, HeldVerifyingRead>> {
-  const held = new Map<string, HeldVerifyingRead>();
-  for (const approval of approvals) {
-    const artifact = vault.byId.get(approval.campaignSite.evidence.artifactId);
-    if (artifact === undefined || artifact.tier === "RESTRICTED_RAW" || held.has(artifact.id)) continue;
-    try {
-      held.set(artifact.id, {
-        body: new TextDecoder().decode(await readHeldBytes(artifact)),
-        sha256: artifact.contentHash.slice("sha256-".length),
-        tier: artifact.tier === "SANITIZED_DERIVED" ? "SANITIZED_DERIVED" : "RAW",
-        permission: artifact.permission,
-      });
-    } catch {
-      /* A body that does not hash to its commitment is not held: the writer holds its site as not vaulted. */
-    }
-  }
-  return held;
 }
 
 /** Distinct completed publication acquisitions. The child never infers
@@ -162,7 +143,7 @@ async function main(): Promise<void> {
   if (!("unreadable" in approvals) && approvals.length > 0) {
     try {
       const vault = await indexVault(join(process.cwd(), "data", "control-plane", "vault"));
-      held = await heldReads(vault, approvals);
+      held = await heldCampaignSiteReads(vault, approvals);
       const linked = await linkedPublicationReads(vault, approvals);
       if ("unreadable" in linked) {
         await finish(derivedCampaignSitesFailedCandidate(now, `The linked candidate-publication record could not be read: ${linked.unreadable}`));
@@ -176,7 +157,7 @@ async function main(): Promise<void> {
   }
   const pass = derivedCampaignSitesPass({
     approvals,
-    held: (record) => held.get(record.campaignSite.evidence.artifactId) ?? null,
+    held: (record) => held.get(record.recordId) ?? null,
     linkedPublications,
     profiles,
     gateOpen: classFieldOpen(ACTIVATION_GATE, "candidate-enrichment", "campaignSite"),

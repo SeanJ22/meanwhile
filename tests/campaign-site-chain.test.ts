@@ -28,7 +28,7 @@ import {
 import { indexVault } from "../lib/control-plane/evidence/read-only-vault.ts";
 import { campaignSiteReadRecorder } from "../lib/control-plane/promotion/campaign-site-reads.ts";
 import { heldArtifactRecord, scoutedFromHeldFinding, type HeldRead } from "../lib/candidates/research-findings-replay.ts";
-import { heldPageRead, readCampaignSiteLead, verifyCampaignSitePage } from "../lib/candidates/campaign-site-verifier.ts";
+import { districtForms, heldPageRead, readCampaignSiteLead, verifyCampaignSitePage } from "../lib/candidates/campaign-site-verifier.ts";
 import { DUARTE, KAPNER, TANG_WILLIAMS, committedSubjects, fixture, servedRuntime, sha256 } from "./helpers/campaign-sites.ts";
 
 const MEET = "https://www.duarte4mendham.com/meet-amalia";
@@ -46,7 +46,7 @@ const heldScoutPage: HeldRead = {
 function profilePage(subjectId: string, campaignUrl: string, artifactId: string): HeldRead {
   const subject = committedSubjects().get(subjectId)!;
   const body = `<title>${subject.givenName} ${subject.familyName} | Candidate profile</title><h1>${subject.givenName} ${subject.familyName}</h1>
-    <p>Candidate for ${subject.officeTitle} in the 2026 General Election.</p><a href="${campaignUrl}">Website</a>`;
+    <p>Candidate for ${subject.officeTitle} in the 2026 General Election. ${subject.stateCode} ${districtForms(subject).join(" ")}</p><a href="${campaignUrl}">Website</a>`;
   return { ...heldScoutPage, artifactId, attemptId: `at-${artifactId}`, canonicalUrl: `https://independent.example/${artifactId}`,
     body, sha256: sha256(body), retrievedAt: "2026-09-25T20:30:00.000Z" };
 }
@@ -177,6 +177,19 @@ test("an unchanged digest label cannot certify profile bytes that do not match t
   } });
   assert.equal((await readPipelineStates(repos)).find(s => s.itemId === duarte.itemId)!.stage, "VERIFIED");
   assert.equal(report.approved.length, 0);
+});
+
+test("omitting a middle given name never resolves a collision between full canonical names", async t => {
+  const { repos, vaultRoot, duarte } = await plane(t);
+  const run = await options(repos, vaultRoot, "2026-09-25T21:00:00.000Z");
+  const subjects = new Map(run.options.subjects);
+  const original = subjects.get(DUARTE)!;
+  const other = { ...original, candidacyId: "nj:2026:mendham:duarte-amalia-marie", givenName: "Amalia Marie" };
+  subjects.set(other.candidacyId, other);
+  await projectCampaignSiteChains(repos, { ...run.options, subjects });
+  const state = (await readPipelineStates(repos)).find(row => row.itemId === duarte.itemId)!;
+  assert.equal(state.stage, "CONFIRMED");
+  assert.match(state.refused!.reasons[0]!.detail, /CANONICAL_IDENTITY_UNIQUE/);
 });
 
 test("with the gate closed (the state before this change) nothing is approved: the class burden refuses", async (t) => {

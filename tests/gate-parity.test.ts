@@ -84,6 +84,10 @@ const NOT_A_GATE = [
   'echo "expensive=no-preflight" >> "$GITHUB_OUTPUT"',
   'elif [ "${{ steps.pr_tier.outputs.tier }}" = "draft" ]; then',
   'echo "expensive=draft" >> "$GITHUB_OUTPUT"',
+  // A ready PR without auto-merge waits on lint and types.
+  'elif [ "${{ steps.pr_tier.outputs.tier }}" = "waiting" ]; then',
+  'echo "expensive=waiting" >> "$GITHUB_OUTPUT"',
+  'echo "Lint and types ran. The standalone build and the four test shards run when auto-merge is turned on (or the run-full-ci label is added)."',
   // A push to main selects the main tier: the merged PR already ran the suite.
   'elif [ "${{ github.event_name }}" = "push" ]; then',
   'echo "expensive=main" >> "$GITHUB_OUTPUT"',

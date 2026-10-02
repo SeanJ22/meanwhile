@@ -11,6 +11,8 @@ import { assertResearchResult, assertResearchWalk, type DetectiveResult, type De
 import type { WorkerEvidence } from "./types.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { ExecutorDecision } from "../scheduler/dispatch.ts";
+import type { RouteDescriptor } from "../scheduler/registry.ts";
+import { sourceReliabilityKey } from "../scheduler/scout-reliability.ts";
 
 /** A broken known route needs a new route, not another replay of the same HTTP shape. */
 export function sourceFailureRecovery(decision: ExecutorDecision, debt: FreshnessDebt | null | undefined): ExecutorDecision {
@@ -24,6 +26,27 @@ function needsSourceInvestigation(debt: FreshnessDebt | null | undefined): debt 
   return !!debt && debt.consecutiveFailures > 0 && [
     'REFUSED_BY_HOST', 'RATE_LIMITED', 'UPSTREAM_ERROR', 'TRANSPORT_FAILED', 'EXTRACTION_FAILED',
   ].includes(debt.cause);
+}
+
+/** A failed discovery provider does not invalidate another source already found for the subject. */
+function heldAfterSourceFailure(solved: import('../scheduler/scout-result.ts').ScoutResult | null | undefined,
+  debt: FreshnessDebt | null | undefined, route: RouteDescriptor | null | undefined) {
+  if (!solved) return null;
+  if (!needsSourceInvestigation(debt) || Date.parse(debt.lastFailedAt) < Date.parse(solved.recordedAt)) return solved;
+  const open = route?.open;
+  const failedUrl = open?.kind === 'HTTP_GET' || open?.kind === 'HTTP_POST' ? open.url : debt.target;
+  const sourceKey = (url: string) => {
+    try { return /^https?:\/\//i.test(url) ? sourceReliabilityKey(url) : null; } catch { return null; }
+  };
+  const failedSource = sourceKey(failedUrl);
+  if (!failedSource) return null;
+  const candidates = reusableScoutCandidates(solved).filter(candidate => {
+    const source = sourceKey(candidate.url);
+    return source !== null && source !== failedSource;
+  });
+  // Facts-only results are already represented as captured-source candidates above.
+  // Keep the stored result intact; only this acquisition handoff drops failed sources.
+  return candidates.length ? { ...solved, candidates, findings: [] } : null;
 }
 
 /** JSON grammar, duplicate-key checks and exact pointer offsets reuse the Parser's lexical index. */
@@ -146,6 +169,7 @@ export function detectiveExecutor(deps: import('../scheduler/scout-executor.ts')
 export function failureResponderExecutor(deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps & {
   solved?: import('../scheduler/scout-result.ts').ScoutResult | null;
   sourceFailure?: FreshnessDebt | null;
+  sourceRoute?: RouteDescriptor | null;
   executorFactory?: ScoutExecutorFactory;
 }): import('../scheduler/dispatch.ts').DeclaredExecutor {
   const contexts=new Map<string,{value?:ReturnType<typeof deps.contextFor>;error?:unknown}>();
@@ -169,8 +193,7 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
         /\b(?:REFUSED|BLOCKED|NO_PROGRESS|NEEDS_ADAPTER|REQUIRED_FIELD_MISSING)\b|failed parse|blocked route|retry loop|DEBT: [1-9]\d* consecutive failure/i.test(ownHistory) ? detective : scout;
     } catch { return scout; }
   };
-  const held=deps.solved && !(needsSourceInvestigation(deps.sourceFailure) &&
-    Date.parse(deps.sourceFailure.lastFailedAt)>=Date.parse(deps.solved.recordedAt)) ? deps.solved : null;
+  const held=heldAfterSourceFailure(deps.solved,deps.sourceFailure,deps.sourceRoute);
   return {lane:held?'DETERMINISTIC':'BOUNDED_MODEL_WORKER',
     ...(!held && scout.dispatch && detective.dispatch ? {dispatch: ((input) => choose(input.obligation).dispatch!(input)) as NonNullable<import('../scheduler/dispatch.ts').DeclaredExecutor['dispatch']>} : {}),
     workerFor:input=>held

@@ -110,6 +110,7 @@ import {
 import {
   CONTROL_PLANE_REQUEST_BOUNDS_MS,
   boundedQuery,
+  currentStoreBudget,
   type BoundableQueryOptions,
   type ControlPlaneCallClass,
   type ControlPlaneRequestBounds,
@@ -206,9 +207,42 @@ export interface PgRepositoryBounds {
   readonly rowClass?: Exclude<ControlPlaneCallClass, "PAGE">;
 }
 
+/** Bound transport fan-out across repositories and clients in this process.
+ * Thousands of dispatch rows may be ready together; they share HTTP capacity,
+ * rather than starting thousands of request timers while waiting for sockets.
+ * This does not cap workers or due work. Each admitted query keeps its existing
+ * request bound, and an enclosing store budget still includes queue time. */
+export const CONTROL_PLANE_QUERY_CONCURRENCY = 16;
+let activeQueries = 0;
+const queryWaiters: Array<() => void> = [];
+
 function boundedRunner(sql: Sql, prefix: string, bounds: ControlPlaneRequestBounds) {
-  return (operation: string, callClass: ControlPlaneCallClass, text: string, params?: readonly unknown[]) =>
-    boundedQuery(sql, { operation: `${prefix}.${operation}`, callClass }, text, params, { bounds });
+  return async (operation: string, callClass: ControlPlaneCallClass, text: string, params?: readonly unknown[]) => {
+    await new Promise<void>((resolve, reject) => {
+      if (activeQueries < CONTROL_PLANE_QUERY_CONCURRENCY) { activeQueries++; resolve(); }
+      else {
+        let timer: ReturnType<typeof setTimeout> | undefined;
+        const admit = () => { if (timer) clearTimeout(timer); resolve(); };
+        queryWaiters.push(admit);
+        const budget = currentStoreBudget();
+        if (budget) timer = setTimeout(() => {
+          const index = queryWaiters.indexOf(admit);
+          if (index < 0) return;
+          queryWaiters.splice(index, 1);
+          // Use the existing named DEADLINE path without sending a query.
+          void boundedQuery(sql, { operation: `${prefix}.${operation}`, callClass }, text, params,
+            { bounds, now: () => budget.deadlineMs }).catch(reject);
+        }, Math.max(0, budget.deadlineMs - Date.now()));
+      }
+    });
+    try {
+      return await boundedQuery(sql, { operation: `${prefix}.${operation}`, callClass }, text, params, { bounds });
+    } finally {
+      const next = queryWaiters.shift();
+      if (next) next();
+      else activeQueries--;
+    }
+  };
 }
 
 /**

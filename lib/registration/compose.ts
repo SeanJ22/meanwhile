@@ -52,7 +52,7 @@ export function composeRegistration(
     versionId,
     divisions: model.divisions.filter((d) => !divisionIds.has(d.ocdId)),
     bodies: model.bodies.filter(
-      (b) => !bodyIds.has(b.id) && !keyedDivisions.has(b.ocdId) && !(b.censusId !== undefined && censusIds.has(b.censusId)),
+      (b) => !bodyIds.has(b.id) && !keyedDivisions.has(b.ocdId) && !(b.alsoServesOcdIds ?? []).some(id => keyedDivisions.has(id)) && !(b.censusId !== undefined && censusIds.has(b.censusId)),
     ),
   };
 }

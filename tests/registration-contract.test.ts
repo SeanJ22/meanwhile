@@ -33,8 +33,8 @@ import { loadRegistrationReference } from "../lib/registration/reference.ts";
  * in the FIPS table; that a state's candidate promotes through the ordinary
  * engine and reads back through its typed reader; that an unchanged month
  * confirms UNCHANGED without a new candidate (§0/§5/§7 and Sean's S6 instruction);
- * that no id the reviewed registry writes is ever written
- * here; and that anything but the pinned Census bytes is refused by name.
+ * that source holdings survive reviewed-registry changes while reviewed
+ * records win in composition; and that changed Census bytes are refused.
  */
 
 const ROOT = join(import.meta.dirname, "..");
@@ -111,26 +111,31 @@ test("a state's registration promotes through the engine, reads back through its
   assert.equal((await store.readPromotion("REGISTRATION", target.scope))?.versionId, first.id);
 });
 
-test("reviewed wins: no id the reviewed registry writes is written, and a government it keys on its other division gets no second body", () => {
+test("sourced registration survives reviewed changes, and composition still prefers the current reviewed body", () => {
   const reviewed = reviewedFromFirstSeed();
-  for (const state of ["NH", "NJ", "AZ"]) {
-    const candidate = registrationCandidate({ target: registrationTarget(state), reference: loadRegistrationReference(ROOT, state), receipt: RECEIPT, reviewed });
-    const model = candidate.readModel as RegistrationReadModel;
-    assert.ok(model.bodies.every((b) => !reviewed.bodyIds.has(b.id)), `${state}: no reviewed body id`);
-    assert.ok(model.divisions.every((d) => !reviewed.divisionIds.has(d.ocdId)), `${state}: no reviewed division id`);
-    assert.ok(model.bodies.every((b) => !reviewed.bodyDivisionIds.has(b.ocdId)), `${state}: no second body on a division the reviewed registry already keys`);
-    assert.equal(model.reviewedRegistryVersionId, "cv-reviewed-first-seed");
+  for (const state of ["NH", "NJ", "AZ", "TN"]) {
+    const input = { target: registrationTarget(state), reference: loadRegistrationReference(ROOT, state), receipt: RECEIPT };
+    const model = registrationCandidate({ ...input, reviewed }).readModel as RegistrationReadModel;
+    const empty = registrationCandidate(input).readModel as RegistrationReadModel;
+    assert.deepEqual(model, empty, state + ": sourced holdings do not depend on reviewed ownership or version");
+    assert.equal(model.reviewedRegistryVersionId, null);
+    const claimed = { versionId: "fixture:reviewed-new-edition", divisionIds: new Set(model.divisions.map(d => d.ocdId)),
+      bodyIds: new Set(model.bodies.map(b => b.id)), bodyDivisionIds: new Set(model.bodies.map(b => b.ocdId)) };
+    assert.deepEqual(registrationCandidate({ ...input, reviewed: claimed }).readModel, model,
+      state + ": a reviewed edition owning every id cannot erase the source registration");
+    const body = model.bodies.find(b => b.jurisdictionId !== null)!;
+    assert.ok(body, state + ": a source-backed government has a body");
+    assert.equal(composeRegistration({ divisions: [], bodies: [body] }, model, "fixture:registration").bodies.some(b => b.id === body.id), false);
+    assert.equal(composeRegistration({ divisions: [], bodies: [] }, model, "fixture:registration").bodies.some(b => b.id === body.id), true,
+      state + ": if the reviewed edition no longer holds it, the same registration still supplies it");
   }
-  // Concord's council is reviewed on its place; its county subdivision gets no second council.
-  const nh = registrationCandidate({ target: registrationTarget("NH"), reference: loadRegistrationReference(ROOT, "NH"), receipt: RECEIPT, reviewed }).readModel as RegistrationReadModel;
-  assert.equal(nh.bodies.some((b) => b.id === "ocd-division/country:us/state:nh/county:merrimack/place:concord_city#governing"), false);
-  // Outside the reviewed states, the Census government gets its body with its Census and jurisdiction ids.
-  const oh = registrationCandidate({ target: registrationTarget("OH"), reference: loadRegistrationReference(ROOT, "OH"), receipt: RECEIPT, reviewed }).readModel as RegistrationReadModel;
-  const columbus = oh.bodies.find((b) => b.id === "ocd-division/country:us/state:oh/place:columbus#governing");
-  assert.equal(columbus?.censusId, "209050");
-  assert.equal(columbus?.jurisdictionId, "oh:city:city-of-columbus");
-  assert.equal(oh.bodies.find((b) => b.id === "ocd-division/country:us/state:oh/school_district:columbus_city_school_district#board")?.censusUnitType, "SCHOOL DISTRICT");
-  assert.ok(oh.bodies.every((b) => b.provenance.collectedAt === oh.bodies[0].provenance.collectedAt), "records carry the reference's build date, never the run's clock");
+  const nh = registrationCandidate({ target: registrationTarget("NH"), reference: loadRegistrationReference(ROOT, "NH"), receipt: RECEIPT }).readModel as RegistrationReadModel;
+  const alternate = nh.bodies.find(b => b.alsoServesOcdIds?.length)!;
+  assert.ok(alternate, "the sourced primary/alternate government pairing is retained");
+  const other = alternate.alsoServesOcdIds![0];
+  const reviewedAlternate = { id: other + "#governing", ocdId: other };
+  assert.equal(composeRegistration({ divisions: [], bodies: [reviewedAlternate] }, nh, "fixture:registration").bodies.some(b => b.id === alternate.id), false,
+    "a reviewed body on the exact alternate still takes precedence");
 });
 
 test("the largest state stays well inside the response bound, and a state with no government is a named violation", () => {

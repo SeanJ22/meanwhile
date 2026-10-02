@@ -104,6 +104,38 @@ test("sittings share calendar discovery work by body while every meeting keeps i
   assert.ok(owed.some(row => row.subject.id === "meeting:unresolved" && row.checklistId === "MTG-03"), "an unknown body keeps its route work");
 });
 
+test("body rosters retain canonical legislative and local scope without borrowing meaning from titles", () => {
+  const state = "ocd-division/country:us/state:oh";
+  const territories = [
+    `${state}/sldu:7`, `${state}/sldl:7`, `${state}/county:franklin`,
+    `${state}/school_district:columbus`, "ocd-division/country:us/district:dc/place:ward_1",
+    "ocd-division/country:us/territory:pr/place:ponce", state,
+  ];
+  const model = { registry: { bodies: territories.map((ocdId, i) => ({ id: `body:${i}`, ocdId,
+    name: "Government body", bodyClass: "GOVERNING", provenance })) },
+    bodyRosters: territories.map((_, i) => ({ bodyId: `body:${i}`, ...provenance,
+      members: [{ id: `member:${i}`, name: "Published member", officeTitle: "President" }] })) } as unknown as RegistryRuntimeReadModel;
+  const capture = projectHeldPlaceCapture(territories, published(model), [], at);
+  const extra = { subjectId: "member:2", checklistId: "LEG-09", state: "published" as const,
+    sourceUrl: provenance.sourceUrl, checkedAt: at, freshUntil: "2026-10-01T06:00:00.000Z", value: "Existing supported field" };
+  const owed = buildPlaceOwedList({ divisions: territories.map(id => ({ id, label: id })), ...capture,
+    held: [...capture.held, extra], now: at });
+  const rows = (i: number) => owed.filter(row => row.subject.id === `member:${i}`);
+  for (const i of [0, 1]) {
+    assert.ok(rows(i).some(row => row.checklistId === "LEG-22"));
+    assert.ok(!rows(i).some(row => /^(?:EXE|PRL)-/.test(row.checklistId)));
+  }
+  for (const i of [2, 3, 4, 5]) {
+    assert.ok(rows(i).some(row => row.checklistId === "OFF-04" && row.state === "published"));
+    assert.ok(rows(i).some(row => row.checklistId === "EXE-01"), "local executives remain possible");
+    assert.ok(!rows(i).some(row => /^(?:LEG|PRL)-/.test(row.checklistId) && row.state === "missing"));
+  }
+  assert.equal(rows(2).find(row => row.checklistId === "LEG-09")?.state, "published", "retain actual held evidence");
+  assert.ok(rows(6).some(row => row.checklistId === "PRL-01"), "an unresolved statewide role keeps its work");
+  assert.equal(owed.filter(row => row.subject.id.includes("#inventory:")).length, territories.length * 6);
+  assert.ok(capture.held.every(field => field.checkedAt === at), "classification does not refresh source clocks");
+});
+
 test("only published present fields count, and failed reads cannot look like empty holdings", () => {
   const timed = published({ meetings: [{ ...meeting, startPrecision: "MINUTE", online: { url: "https://cochise.az.gov/meeting" } }] } as unknown as MeetingsSnapshot);
   const result = projectHeldPlaceCapture([county], registry, [timed], at);

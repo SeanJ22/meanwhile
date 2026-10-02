@@ -50,16 +50,21 @@ function named(job: Job, name: string): Step {
   return step;
 }
 
-test("draft/full classifier is fail-closed for the complete pull-request event matrix", () => {
+test("draft/waiting/full classifier is fail-closed for the complete pull-request event matrix", () => {
   const rows = [
     { what: "draft opened", eventName: "pull_request", action: "opened", draft: true, tier: "draft" },
     { what: "draft synchronize", eventName: "pull_request", action: "synchronize", draft: true, tier: "draft" },
     { what: "draft reopened", eventName: "pull_request", action: "reopened", draft: true, tier: "draft" },
-    { what: "ready opened", eventName: "pull_request", action: "opened", draft: false, tier: "full" },
-    { what: "ready synchronize", eventName: "pull_request", action: "synchronize", draft: false, tier: "full" },
-    { what: "ready reopened", eventName: "pull_request", action: "reopened", draft: false, tier: "full" },
-    { what: "ready_for_review", eventName: "pull_request", action: "ready_for_review", draft: false, tier: "full" },
-    { what: "ready_for_review with stale draft bit", eventName: "pull_request", action: "ready_for_review", draft: true, tier: "full" },
+    { what: "draft labeled", eventName: "pull_request", action: "labeled", draft: true, labels: ["run-full-ci"], tier: "draft" },
+    { what: "ready opened, auto-merge off", eventName: "pull_request", action: "opened", draft: false, tier: "waiting" },
+    { what: "ready synchronize, auto-merge off", eventName: "pull_request", action: "synchronize", draft: false, autoMerge: false, tier: "waiting" },
+    { what: "ready_for_review, auto-merge off", eventName: "pull_request", action: "ready_for_review", draft: false, tier: "waiting" },
+    { what: "ready_for_review with stale draft bit", eventName: "pull_request", action: "ready_for_review", draft: true, tier: "waiting" },
+    { what: "auto-merge turned on", eventName: "pull_request", action: "auto_merge_enabled", draft: false, autoMerge: true, tier: "full" },
+    { what: "push to a PR with auto-merge on", eventName: "pull_request", action: "synchronize", draft: false, autoMerge: true, tier: "full" },
+    { what: "run-full-ci label", eventName: "pull_request", action: "labeled", draft: false, labels: ["run-full-ci"], tier: "full" },
+    { what: "engineer adapter", eventName: "pull_request", action: "synchronize", draft: false, labels: ["engineer-adapter"], tier: "full" },
+    { what: "other label only", eventName: "pull_request", action: "labeled", draft: false, labels: ["docs"], tier: "waiting" },
     { what: "unknown PR action", eventName: "pull_request", action: "edited", draft: true, tier: "full" },
     { what: "missing PR state", eventName: "pull_request", action: "synchronize", draft: null, tier: "full" },
     { what: "push to main", eventName: "push", action: null, draft: null, tier: "full" },
@@ -73,14 +78,14 @@ test("draft/full classifier is fail-closed for the complete pull-request event m
 
 test("ready_for_review is an explicit trigger and the existing shipping triggers remain", () => {
   const buildCheck = workflow();
-  assert.deepEqual(buildCheck.on.pull_request.types, ["opened", "synchronize", "reopened", "ready_for_review"]);
+  assert.deepEqual(buildCheck.on.pull_request.types, ["opened", "synchronize", "reopened", "ready_for_review", "labeled", "auto_merge_enabled"]);
   assert.deepEqual(buildCheck.on.push.branches, ["main"]);
   assert.ok(buildCheck.on.workflow_dispatch !== undefined, "manual shipping certification disappeared");
 });
 
 test("admission alone classifies draft/full before preflight", () => {
   for (const [jobId, job] of Object.entries(workflow().jobs).filter(([id]) => id === "admission")) {
-    assert.equal(job.if, undefined, `${jobId} is job-gated, so a required context can disappear`);
+    assert.equal(job.if, "(github.event_name != 'pull_request' || github.event.pull_request.draft == false)", `${jobId} must skip drafts and run on every other event`);
     const classifier = job.steps.find((step) => step.id === "pr_tier");
     const preflight = job.steps.find((step) => step.id === "preflight");
     const tier = job.steps.find((step) => step.id === "tier");
@@ -92,6 +97,8 @@ test("admission alone classifies draft/full before preflight", () => {
       WTP_EVENT_NAME: "${{ github.event_name }}",
       WTP_EVENT_ACTION: "${{ github.event.action }}",
       WTP_PR_DRAFT: "${{ github.event.pull_request.draft }}",
+      WTP_PR_AUTO_MERGE: "${{ github.event.pull_request.auto_merge != null }}",
+      WTP_PR_LABELS: "${{ toJSON(github.event.pull_request.labels.*.name) }}",
     });
     assert.equal(preflight.if, undefined, `${jobId} suppresses deterministic preflight`);
     assert.match(tier.run ?? "", /steps\.pr_tier\.outputs\.tier/);
@@ -105,7 +112,7 @@ test("admission alone classifies draft/full before preflight", () => {
 test("draft runs install, lint and types; governance waits for ready", () => {
   const gates = workflow().jobs.verify;
   const install = named(gates, "Install");
-  assert.match(install.if ?? "", /tier == 'draft' && matrix.group != 'governance'/, "the gates install no longer admits draft lint and types");
+  assert.match(install.if ?? "", /(needs.admission.outputs.tier == 'draft' || needs.admission.outputs.tier == 'waiting') && matrix.group != 'governance'/, "the gates install no longer admits draft and waiting lint and types");
   assert.match(install.if ?? "", /tier == 'yes'/, "the gates install no longer admits the full tier");
   assert.doesNotMatch(install.if ?? "", /no-preflight/, "a refused preflight still buys the dependency install");
 
@@ -166,7 +173,9 @@ test("required contexts, read-only permissions, and ready-for-review tests stay 
     action: "ready_for_review",
     draft: false,
   });
-  assert.equal(ready.tier, "full", "the exact unchanged head could reuse draft certification after becoming ready");
+  assert.notEqual(ready.tier, "draft", "the exact unchanged head could reuse draft certification after becoming ready");
+  const merging = classifyPullRequestCiTier({ eventName: "pull_request", action: "auto_merge_enabled", draft: false, autoMerge: true });
+  assert.equal(merging.tier, "full", "turning auto-merge on must buy the full certification");
 
   for (const [jobId, job] of Object.entries(buildCheck.jobs).filter(([id]) => id === "admission")) {
     const decision = named(job, "Decide whether the expensive tier runs").run ?? "";

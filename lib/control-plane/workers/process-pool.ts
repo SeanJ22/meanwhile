@@ -8,6 +8,7 @@ import { pathToFileURL } from "node:url";
 import type { RouteDescriptor } from "../scheduler/registry.ts";
 import type { WorkerProcessSlots } from "./worker-slots.ts";
 import { workerProcessSlots } from "./worker-slots.ts";
+import { ZERO_COST } from "../attempt.ts";
 export { workerProcessSlots, type WorkerProcessSlots } from "./worker-slots.ts";
 const processMemorySlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER);
 
@@ -79,11 +80,17 @@ export interface LeaseWorkerConfig {
 }
 
 /** A read or process failure leaves the existing task owed; it is never a claimed success. */
-export function workerDispatchFailure(taskId: string, error: unknown, obligationId = taskId): DispatchResult {
+export function workerDispatchFailure(taskId: string, error: unknown, obligationId = taskId, beforeClaim = false): DispatchResult {
   return { obligationId, routeTaskId: taskId, executor: null, executorChosen: null,
-    decisionDisagreement: null, executorMismatch: false, claimed: false, outcome: "FAILED",
-    attemptId: null, dispositionCommitted: false, disposition: null, artifactIds: [], cost: null, worker: null,
+    decisionDisagreement: null, executorMismatch: false, claimed: false, outcome: beforeClaim ? "NOT_CLAIMED" : "FAILED",
+    attemptId: null, dispositionCommitted: false, disposition: null, artifactIds: [],
+    cost: beforeClaim ? { ...ZERO_COST, usd: 0, requestCount: 0, durationMs: 0 } : null, worker: null,
     detail: `Worker task deferred: ${error instanceof Error ? error.message : String(error)}; work remains owed` };
+}
+
+/** Only memory admission happens before a child can claim a lease or send a request. */
+class WorkerAdmissionRefusal extends Error {
+  constructor(cause: unknown) { super(cause instanceof Error ? cause.message : String(cause), { cause }); }
 }
 
 export async function runNationalPlaceWorkerProcesses(input: {
@@ -148,9 +155,11 @@ export async function runLeaseWorkerProcesses(input: {
   const assigned = new Set<string>();
   const active = new Set<Promise<void>>();
   let launched = 0;
+  let admissionClosed = false;
   const failures: { ids: readonly string[]; error: unknown }[] = [];
   const launch = async (): Promise<void> => {
-    const release = await (input.slots ?? (input.config.postgres ? processMemorySlots : undefined))?.acquire(input.entry);
+    const release = await (input.slots ?? (input.config.postgres ? processMemorySlots : undefined))?.acquire(input.entry)
+      .catch(error => { throw new WorkerAdmissionRefusal(error); });
     try {
     // Acquiring host memory can wait until a sibling has drained this wave.
     if (!pending.size) return;
@@ -281,12 +290,15 @@ export async function runLeaseWorkerProcesses(input: {
     if (!Number.isSafeInteger(capacity) || capacity < 0) throw new Error("LEASE_WORKER_CAPACITY_INVALID");
     // Every child drains the shared task list. A finished child needs no replacement;
     // siblings may still own the remaining leases when their result is in transit.
-    while (input.config.nationalZips
+    while (!admissionClosed && (input.config.nationalZips
       ? active.size < capacity && [...pending].some(id => !assigned.has(id))
-      : launched < capacity) {
+      : launched < capacity)) {
       launched++;
       const ids = [...pending];
-      const worker = launch().catch(error => { failures.push({ ids, error }); }).finally(() => { active.delete(worker); });
+      const worker = launch().catch(error => {
+        if (error instanceof WorkerAdmissionRefusal) admissionClosed = true;
+        failures.push({ ids, error });
+      }).finally(() => { active.delete(worker); });
       active.add(worker);
     }
     if (!active.size) break;
@@ -298,7 +310,9 @@ export async function runLeaseWorkerProcesses(input: {
   for (const { ids, error } of failures) {
     for (const id of ids) {
       if (!pending.delete(id)) continue;
-      const result = workerDispatchFailure(id, error);
+      const obligationId = input.config.scoutDispatch?.input.obligation.obligation.id ??
+        input.config.routeDispatch?.input.obligation.obligation.id ?? id;
+      const result = workerDispatchFailure(id, error, obligationId, error instanceof WorkerAdmissionRefusal);
       results.push(result);
       await input.onDispatched?.(result);
     }

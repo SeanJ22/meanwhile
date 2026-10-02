@@ -664,9 +664,9 @@ export function researchPaidWorkerCapacity(input: Omit<Parameters<typeof researc
 /** A paid job rechecks its admission after waiting for the shared host's
  * memory. Closing paid work leaves the memory slot available for plain work. */
 export function paidWorkerSlots(slots: WorkerProcessSlots, capacity: () => number): WorkerProcessSlots {
-  return { acquire: async (entry) => {
+  return { acquire: async (entry, ...deadline) => {
     if (capacity() <= 0) throw new Error("MODEL_LANE_CLOSED: no paid Scout capacity");
-    const release = await slots.acquire(entry);
+    const release = await slots.acquire(entry, ...deadline);
     if (capacity() <= 0) {
       release();
       throw new Error("MODEL_LANE_CLOSED: no paid Scout capacity");

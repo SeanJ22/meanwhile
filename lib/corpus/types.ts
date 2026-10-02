@@ -30,6 +30,8 @@
  * false claim about a person.
  */
 
+import type { CandidateSourceRevision } from "../candidates/corpus.ts";
+
 export type SnapshotKind = "CAMPAIGN_SITE" | "OFFICIAL_PAGE";
 
 export interface SourceSnapshot {
@@ -43,6 +45,8 @@ export interface SourceSnapshot {
   url: string;
   /** SHA-256 of the extracted text (or of the raw body when extraction failed). */
   contentHash: string;
+  /** Original captured-source identity when held; older snapshots may lack it. */
+  sourceRevision?: CandidateSourceRevision;
   retrievedAt: string;
   httpStatus: number;
   extraction: "ok" | "failed";

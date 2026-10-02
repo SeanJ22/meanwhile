@@ -96,6 +96,22 @@ test("Ohio's registration, read as a registry: every government under the review
   );
   assert.equal(columbus.bodyId, model.bodies.find((b) => b.jurisdictionId === columbus.id)?.id, "the body is the promoted version's own");
 
+  const columbusBody = model.bodies.find(b => b.jurisdictionId === columbus.id)!;
+  const readBodies = (bodies: RegistrationReadModel["bodies"]) => registrationJurisdictionRegistry({
+    reference, promoted: { versionId, model: { ...model, bodies } }, census: readCensusGovernmentFacts(ROOT, ["OH"]),
+  }).jurisdictions.find(j => j.id === columbus.id)!;
+  assert.equal(readBodies(model.bodies.filter(b => b.id !== columbusBody.id)).bodyId, null,
+    "an exact reference pairing alone never invents a body absent from the promoted holding");
+  assert.equal(readBodies(model.bodies.map(b => b.id === columbusBody.id ? { ...b, jurisdictionId: null } : b)).bodyId, columbusBody.id,
+    "the exact sourced division joins a held body even when another government claimed its jurisdiction key");
+  const government = reference.reference.governments.find(row => row[1] === columbus.id)!;
+  const alternateDivision = reference.reference.divisions[government[6]][0];
+  const alternateBody = { ...columbusBody, id: alternateDivision + "#governing", ocdId: alternateDivision, jurisdictionId: null };
+  assert.equal(readBodies([...model.bodies.filter(b => b.id !== columbusBody.id), alternateBody]).bodyId, alternateBody.id,
+    "the reference's exact alternate resolves the promoted body's own identity");
+  assert.equal(readBodies([...model.bodies, alternateBody]).bodyId, null,
+    "two distinct promoted primary/alternate bodies remain ambiguous");
+
   /* What each government owes: its meetings, and nothing invented. */
   assert.deepEqual(jurisdictionRequirements(oh, columbus), [], "no statute routing is read for Ohio, so no campaign-finance, ballot or roster route exists");
   assert.equal(meetingsDiscoveryNeedFor(oh, columbus.id)?.basis, "SOURCE_DISCOVERY_OWED");

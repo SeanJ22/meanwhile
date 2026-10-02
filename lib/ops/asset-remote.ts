@@ -8,7 +8,7 @@
  * `RULING 20` moved portrait and PDF bytes out of git and into a
  * content-addressed store, and it worked: 956 rows, every one carrying its
  * hash, its size and the provenance the photo rule requires. What it could not
- * do was finish, because the store was **a local path on the author's own
+ * do was finish, because the store was **a local path on one development
  * machine** and Netlify cannot reach a local path. So the committed portraits
  * were deliberately NOT deleted — removing them would have blanked every
  * candidate and official card in production — and the repo carried both the
@@ -19,7 +19,7 @@
  * Universal, GPO works, door 1) and byte-verified, and **could not ship**,
  * because there was nowhere to put them that a build could read.
  *
- * Sean ruled: a dedicated **public** GitHub repository, created automatically.
+ * The design: a dedicated **public** GitHub repository, created automatically.
  * It is <https://github.com/SeanJ22/wtp-assets>.
  *
  * ## Public is the correct posture, not a convenience

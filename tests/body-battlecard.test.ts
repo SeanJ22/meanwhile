@@ -101,9 +101,9 @@ test("M136: the card renders the same SET of sections for every body", () => {
   /*
     The equal-effort shape, enforced where it is decided. A section is never
     hidden for lack of content: an empty section collapses closed with its
-    honest line inside and its header visible (the author's ruling of
-    2026-08-17 on M93). Hiding empties would make a well-covered body's card
-    taller than a thin one's, which is a layout asymmetry.
+    honest line inside and its header visible (M93, 2026-08-17). Hiding
+    empties would make a well-covered body's card taller than a thin one's,
+    which is a layout asymmetry.
   */
   const source = readFileSync(
     join(ROOT, "components/map/popup/entity-modal.tsx"),

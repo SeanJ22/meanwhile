@@ -239,6 +239,13 @@
       "when": 1790805600000,
       "tag": "0033_feedback_context",
       "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1790889600000,
+      "tag": "0034_reader_events",
+      "breakpoints": true
     }
   ]
 }

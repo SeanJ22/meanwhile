@@ -30,7 +30,7 @@ await installRegistryRuntimeFirstSeeds();
 /**
  * The congress-legislators adoption — item 7, 2026-08-16.
  *
- * The author's ruling has two boundaries and both are guarded here:
+ * The adoption has two boundaries and both are guarded here:
  *
  * 1. **The provenance tag names the PROJECT, never "official records."** It
  *    is a community-maintained aggregation of the official sources. A tag

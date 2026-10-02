@@ -160,6 +160,7 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
 }
 
 interface LoggedRecord<T> {
+  readonly at: string;
   readonly recordId: string;
   readonly record: T;
 }
@@ -173,7 +174,7 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
       key: string,
       recordId: string,
       record: T,
-      _now: string,
+      now: string,
     ): Promise<AppendOutcome<T>> => {
       const partition = partitions.get(key) ?? [];
       const existing = partition.find((entry) => entry.recordId === recordId);
@@ -188,7 +189,7 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
           position: partition.indexOf(existing),
         };
       }
-      partition.push({ recordId, record: jsonCopy(record) });
+      partition.push({ recordId, record: jsonCopy(record), at: now });
       partitions.set(key, partition);
       return {
         appended: true,
@@ -244,6 +245,10 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
       }
       return out;
     },
+
+    readSince: async (since: string): Promise<readonly T[]> =>
+      [...partitions.keys()].sort().flatMap((key) => (partitions.get(key) ?? [])
+        .filter((entry) => Date.parse(entry.at) >= Date.parse(since)).map((entry) => jsonCopy(entry.record))),
 
     readAll: async (): Promise<readonly T[]> =>
       [...partitions.entries()]

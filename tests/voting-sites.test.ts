@@ -288,7 +288,7 @@ test("B19: the panel says what happens to the address, where the reader types it
     join(process.cwd(), "components", "map", "voting-sites-panel.tsx"),
     "utf8",
   );
-  // F01 1e (2026-08-19, the author's order): the never-store/never-log
+  // F01 1e (2026-08-19): the never-store/never-log
   // promise is struck. What the panel must still do is DESCRIBE THE MECHANISM
   // where the reader types the address, and make no forward commitment in
   // either direction — so this guard flipped from pinning the promise to

@@ -166,7 +166,7 @@ test("the rise scales with zoom and never reaches zero", () => {
   assert.ok(near.blurPx > far.blurPx);
 
   /*
-   * The author's ruling, as an assertion: the effect NEVER releases. e's 6b2
+   * The rule, as an assertion: the effect NEVER releases. e's 6b2
    * surrendered focus on zoom-out and g4 retired that rule, so a spec that
    * interpolated to zero would be the release arriving through the back door
    * — invisible in review, because the code would still say it draws.
@@ -183,7 +183,7 @@ test("the offset stays comparable to the blur at every zoom", () => {
   /*
    * The rejected build's actual arithmetic: two opposed strokes 4 px apart
    * and 7 px wide overlapped over most of their width and composited to the
-   * grey band the author rejected. The same thing happens to two silhouettes
+   * grey band that was rejected. The same thing happens to two silhouettes
    * whose offset is small against their blur, so the ratio is pinned here
    * rather than left to whoever next retunes the look.
    */

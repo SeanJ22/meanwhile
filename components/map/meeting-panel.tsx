@@ -163,10 +163,9 @@ export function MeetingPanel({
         <div className="min-w-0">
           {/* **MTG-9 (2026-08-25): THE ENTITY IS THE FIRST THING ON THE CARD.**
 
-              His spec capture `17-20-07` numbers the header outright — the
-              entity, then the count, then the address — and the reason is in
-              his own words: *the user has to understand what they are looking
-              at.* The count led, so the first line a reader met was a number
+              Spec capture `17-20-07` numbers the header outright — the
+              entity, then the count, then the address — because the reader
+              has to understand what they are looking at. The count led, so the first line a reader met was a number
               about a body nobody had named yet.
 
               MTG-6/MTG-8 unchanged in substance: the BODY is the title and the
@@ -187,7 +186,7 @@ export function MeetingPanel({
             {split}
           </p>
           {/* MTG-6: venue name and address, in gray, beneath — the Parks and
-              Recreation pattern the author named as the reference. Where the
+              Recreation pattern, used as the reference. Where the
               building IS the title there is nothing left to repeat under it,
               so the address stands alone rather than printing twice. */}
           <p className="mt-1 text-[0.8125rem] leading-snug text-muted">
@@ -273,8 +272,8 @@ export function MeetingPanel({
             </p>
             {/* **MTG-10 (2026-08-25): the rules between sittings are gone.**
 
-                His `17-20-07` boxes the empty strip each divider sits in and
-                the note is *extra lines that serve no apparent purpose.* They
+                Capture `17-20-07` boxes the empty strip each divider sits in:
+                the lines looked like they served no purpose. They
                 had one — separating the entries — and the vertical rhythm
                 already does it, which is the identical decision this
                 stylesheet records for `.person-row`: *the rules are gone; the
@@ -498,14 +497,14 @@ function MeetingEntry({
 
             SRC-1 (2026-08-24): those two strings live in ONE credit line at
             the foot of the card, and the footnote marker that used to point
-            at them is gone from the row — the author put a red arrow on a bare
-            asterisk floating between two meetings. What stays on the row is
+            at them is gone from the row — it was a bare asterisk floating
+            between two meetings. What stays on the row is
             the provenance that is genuinely PER ROW — second-hand sourcing and
             the carry-forward stamp — which varies from meeting to meeting and
             would be a lie if collapsed. */}
         <p className="font-mono text-[0.6875rem] leading-relaxed text-muted">
           {/*
-            6f2 (2026-08-15, the author's ruling): "Not independently
+            6f2 (2026-08-15): "Not independently
             verified" is RETIRED where the source is the body's own site or
             feed — which is nearly everything here.
 
@@ -672,7 +671,7 @@ export function HowToBeHeard({
   ].filter((l): l is string => Boolean(l));
 
   /*
-   * **MTG-5 (2026-08-23, the author's 8/22 walkthrough) — collapsed, and the
+   * **MTG-5 (2026-08-23, the 8/22 walkthrough) — collapsed, and the
    * content is kept word for word.**
    *
    * The Tucson Unified and Morris County captures both show this block fully
@@ -680,8 +679,7 @@ export function HowToBeHeard({
    * to reach the next meeting on the card. Tucson's runs to 180 words about
    * Requests to Address the Board.
    *
-   * The prose is good and none of it is cut — the author said so explicitly.
-   * What changes is that it waits to be asked for. This is not the honesty
+   * The prose is good and none of it is cut. What changes is that it waits to be asked for. This is not the honesty
    * exception the friction rule protects: those three are the disclosure at
    * reaction capture, the optionality of the narrowing prompt, and consent to
    * collection. A body's standing comment rules are a reference the reader

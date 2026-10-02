@@ -57,7 +57,7 @@ const ONLY = hostArg ? hostArg.slice("--host=".length) : null;
  */
 /**
  * **RULING 72 — A WALL MAY NEVER BE RECORDED WITHOUT NAMING THE BRANCHES
- * TRIED.** (Adopted 2026-08-22, the author's ruling, NJ Hunt 3 item 4.)
+ * TRIED.** (Adopted 2026-08-22, NJ Hunt 3 item 4.)
  *
  * *A walled host is never evidence a body is unreachable.* Discovery is a tree:
  * a host refusing is ONE BRANCH returning empty on ONE DATE. The body is still

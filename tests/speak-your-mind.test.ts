@@ -20,11 +20,11 @@ const ROOT = process.cwd();
 
 /**
  * **BC-11 — SPEAK YOUR MIND, and its four constitutional rules.**
- * (The author's ruling, 2026-08-24.)
+ * (2026-08-24.)
  *
  * The brief states them as rules with the word "constitutional" attached, and
  * asks that each ship with its enforcing test NAMED. This file is that, one
- * section per rule, in his order.
+ * section per rule, in the brief's order.
  */
 
 /* ====================================================================== *
@@ -48,7 +48,7 @@ test("BC-11 RULE 1: the store holds a district and no way to reach a person", ()
   }
 
   // The district IS there — a store with no district would be sentiment about
-  // nowhere, which is the one thing the author said it must not be.
+  // nowhere, which is the one thing it must not be.
   assert.equal(domain.columns.ocd_ids.space, "CIVIC_IDENTIFIER");
   assert.equal(domain.columns.division_vintage.space, "NON_IDENTIFYING");
 });
@@ -273,7 +273,7 @@ test("BC-11: nothing a reader writes here is rendered back to any reader", () =>
    * `CLAUDE.md`'s no-user-to-user rule: reactions are write-only from the
    * reader's perspective, because showing aggregates anchors later respondents
    * and corrupts the data being sold. The same reasoning governs this, and the
-   * author recorded the default as REVERSIBLE — his call, later.
+   * default is recorded as REVERSIBLE.
    *
    * Enforced by absence of a read: there is no select, and the component holds
    * no list of anybody's submissions.

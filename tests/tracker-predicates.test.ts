@@ -129,15 +129,6 @@ test("RULING 227: every predicate still reads its evidence and answers RESOLVED_
    * or emptied, this goes red rather than the closes quietly becoming
    * unfounded.
    *
-   * **OWN03 joined them on 2026-09-01 and it is a different KIND of predicate**,
-   * which is why the count moved rather than the test being left at three. The
-   * other three read an operational artifact — a deploy observation, a proof
-   * record. This one reads the AUTHOR'S OWN DECISION out of
-   * `data/photos/review.json`. It cannot decide for him and does not try; it
-   * observes that he decided, which is the fact the row was blocked on. If any
-   * of the nine ever stops carrying his approval against that exact image, this
-   * goes red and the row goes back in front of him.
-   *
    * **NS12 joined on 2026-09-01, and it joined by being CAUGHT.** It was
    * carded — `NOT_MACHINE_VERIFIABLE`, which HOLDS by construction because the
    * machine never asks again — while its blocker was "no Netlify credential
@@ -161,9 +152,9 @@ test("RULING 227: every predicate still reads its evidence and answers RESOLVED_
    * field, HOLDS while it names the missing variables, RESOLVED when the
    * deployed host reports the client configured.
    */
-  // WF01 now reads the owner's explicit, scoped approval receipt, like OWN03.
-  assert.equal(PREDICATES.length, 6);
-  for (const retired of ["NH272", "NH281", "NH305"]) {
+  // WF01 reads the owner's explicit, scoped workflow approval receipt.
+  assert.equal(PREDICATES.length, 5);
+  for (const retired of ["NH272", "NH281", "NH305", "OWN03"]) {
     assert.equal(
       PREDICATES.filter((p) => p.rowId === retired).length,
       0,
@@ -201,61 +192,6 @@ test("RULING 227: every predicate still reads its evidence and answers RESOLVED_
   }
 });
 
-/*
- * **THE SECOND COPY OF A RULE, PAID FOR.**
- *
- * OWN03's predicate inlines the person-key normalisation from
- * `lib/photos/person.ts` because `lib/tracker/registry.mjs` is loaded by
- * `node scripts/tracker.mjs` with no build step and must not depend on type
- * stripping to reach a `.ts`. RULING 103 says once and only once, so a second
- * copy needs a reason AND a guard, and this is the guard.
- *
- * It is not theoretical. The first version of that inline copy lost its regex
- * escapes in transit — `\\s+` became `s+`, which collapses no whitespace at
- * all — and `Dale G. Caldwell` keyed to a double-spaced string that matched
- * nothing. The predicate then reported six of nine portraits unapproved on the
- * day the author approved all nine: a false blocker, put back in front of him
- * by the very mechanism written to take blockers away.
- */
-test("OWN03: the inlined person key agrees with lib/photos/person.ts on every queued subject", async () => {
-  const { personKey } = await import("../lib/photos/person.ts");
-
-  /* The same normalisation the predicate performs, read out of the module it
-     actually runs, so this cannot pass against a copy of the copy. */
-  const source = readFileSync(join(ROOT, "lib/tracker/registry.mjs"), "utf8");
-  const inlined = source.slice(
-    source.indexOf("    const key = (name) =>"),
-    source.indexOf("    const entityDecoded = (url) =>"),
-  );
-  assert.ok(inlined.includes("const key"), "the inlined key was not found in registry.mjs");
-  assert.ok(
-    !inlined.includes("\u0008"),
-    "the inlined key contains a literal backspace — a regex escape was lost in transit",
-  );
-
-  /* eslint-disable-next-line no-new-func -- the point is to run REGISTRY's own text */
-  const keyFn = new Function(`return ${inlined.slice(inlined.indexOf("(name) =>")).replace(/;\s*$/, "")}`)() as (
-    n: string,
-  ) => string;
-
-  const recordPath = join(ROOT, "data/photos/door2-statewide-executives-2026-08-28.json");
-  const record = JSON.parse(readFileSync(recordPath, "utf8")) as {
-    rows: { subject?: string }[];
-  };
-  const subjects = record.rows.map((r) => (r.subject ?? "").trim()).filter(Boolean);
-  assert.ok(subjects.length > 0, "no subjects to compare the two normalisations over");
-
-  const drift = subjects
-    .map((s) => ({ s, mine: keyFn(s), theirs: personKey(s) }))
-    .filter((d) => d.mine !== d.theirs)
-    .map((d) => `${d.s}: registry says "${d.mine}", person.ts says "${d.theirs}"`);
-
-  assert.deepEqual(
-    drift,
-    [],
-    "the tracker registry and the photo index disagree about who a person is, so an approval he made would read as an approval he did not make",
-  );
-});
 test("RULING 227: the three rows are closed, and each carries its evidence in the resolved store", () => {
   for (const id of ["NH272", "NH281", "NH300"]) {
     const row = resolved.find((r) => (r.ID ?? "").trim() === id);
@@ -542,85 +478,6 @@ test("the owner view lists no row that is already resolved", () => {
   const closedIds = new Set(resolved.map((r) => (r.ID ?? "").trim()));
   const wrong = [...listed].filter((id) => closedIds.has(id));
   assert.deepEqual(wrong, [], "a resolved row presented as a decision is the exact defect this view was built to end");
-});
-
-test("a decision card naming subjects for approval names ONLY subjects the record actually queued", () => {
-  /*
-   * **THE OWN03 DEFECT, GUARDED.**
-   *
-   * OWN03 asked the author to approve nine statewide portraits and named three
-   * of them: "Mayes, Fontes and Horne among them". The COUNT was right — nine
-   * were queued — and that is exactly what hid the error, because there is
-   * nothing wrong with the arithmetic. Tom Horne was not among them. His decode
-   * reads `ok: false, reason: NOT_AN_IMAGE`: the fetch returned a Cloudflare
-   * challenge page, 5,796 bytes beginning `<!DOCTYPE html>`, so his image was
-   * never read and approving it was never a thing anybody could do.
-   *
-   * A row that names a person the machine never obtained is a row that asks for
-   * a decision that does not exist. This asserts the card against the
-   * acquisition record itself rather than against the sentence, which is the
-   * only direction in which the check means anything.
-   */
-  const recordPath = join(ROOT, "data/photos/door2-statewide-executives-2026-08-28.json");
-  if (!existsSync(recordPath)) return; // the record is the subject; without it there is nothing to check
-
-  const record = JSON.parse(readFileSync(recordPath, "utf8"));
-  const rows: { subject?: string; portrait?: unknown; decode?: { ok?: boolean } }[] = record.rows ?? [];
-  /*
-   * QUEUED is not a field — it is a conjunction, and getting it wrong is how
-   * the original error survived. A row carries `portrait` when a name-matched
-   * image was FOUND on the page, and a top-level `decode` when those bytes were
-   * READ. Ten rows carry a portrait; nine of them decoded. Horne is the row
-   * where "we found an image for this person" and "we obtained an image of this
-   * person" come apart, and only the second one is a thing anybody can approve.
-   */
-  const isQueued = (r: (typeof rows)[number]) => r.portrait != null && r.decode?.ok === true;
-  const queued = rows.filter(isQueued).map((r) => (r.subject ?? "").trim());
-  const notQueued = rows.filter((r) => !isQueued(r)).map((r) => (r.subject ?? "").trim());
-
-  assert.equal(
-    queued.length,
-    record.totals.portraitsQueued,
-    "the queued rows equal the stated queued total",
-  );
-
-  const own03 = REG.find((e) => e.rowId === "OWN03");
-  assert.ok(own03, "OWN03 carries a card");
-  const cardText = `${own03.whatIsNeeded ?? ""}`;
-
-  /*
-   * Any name the record explicitly did NOT queue must not appear as one of the
-   * subjects the card asks him to approve. Surnames are used because that is
-   * how the row referred to them.
-   */
-  const wronglyOffered = notQueued
-    .map((full) => full.split(/\s+/).at(-1) ?? "")
-    .filter((surname) => surname.length > 2)
-    .filter((surname) => new RegExp(`\\b${surname}\\b`).test(cardText));
-
-  assert.deepEqual(
-    wronglyOffered,
-    [],
-    `OWN03's card offers for approval a subject the acquisition record did not queue: ` +
-      `${wronglyOffered.join(", ")}. Approving an image the system never read is not a ` +
-      "decision. Correct the card; do not close the row.",
-  );
-
-  /*
-   * The completeness half — every queued subject NAMED — applies to a CARD,
-   * where the author is being asked to decide about specific people and an
-   * omitted name is somebody he never got to rule on. A PREDICATE names a
-   * population and derives its members from the acquisition record, so there is
-   * no list to be incomplete; requiring one would force a second copy of the
-   * population into the row's text, which is exactly how "Mayes, Fontes and
-   * Horne among them" came to be wrong in the first place.
-   */
-  if (own03.kind === NOT_MACHINE_VERIFIABLE) {
-    const missing = queued
-      .map((full) => full.split(/\s+/).at(-1) ?? "")
-      .filter((surname) => !new RegExp(`\\b${surname}\\b`).test(cardText));
-    assert.deepEqual(missing, [], `OWN03's card omits queued subject(s): ${missing.join(", ")}`);
-  }
 });
 
 test("the reconciliation record is written and reconciles with the registry", () => {

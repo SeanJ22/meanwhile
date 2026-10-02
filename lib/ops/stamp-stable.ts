@@ -1,10 +1,9 @@
 /**
- * **RL-1 — A NO-OP REFRESH IS STAMP-STABLE.** (NH326/NH327, the author's
- * decision of 2026-09-05, in his words: "A repeated observation with
- * unchanged normalized civic facts must not rewrite canonical reader-source
- * bytes; record the new observation in operational refresh history. Preserve
- * exact-byte Reader Last-Mile proof; factual changes must still invalidate
- * it.")
+ * **RL-1 — A NO-OP REFRESH IS STAMP-STABLE.** (NH326/NH327, 2026-09-05.)
+ * A repeated observation with unchanged normalized civic facts must not
+ * rewrite canonical reader-source bytes; the new observation goes into
+ * operational refresh history instead. Exact-byte Reader Last-Mile proof is
+ * preserved, and factual changes still invalidate it.
  *
  * ## The defect this answers
  *

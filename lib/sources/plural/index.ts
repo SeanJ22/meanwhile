@@ -400,9 +400,10 @@ export function normalize(
       email: person.email || null,
       // Curated separately with per-entry verification (3e).
       campaignUrl: null,
-      // Plural publishes an image URL. It is NOT shipped: it would be a
-      // hotlink, and its licence is unknown. D20 handles both.
+      // Keep the upstream lead for the shared portrait source check. It is
+      // not a reader image or a claim that Open States licenses the photo.
       photo: null,
+      ...(person.image ? { portraitCandidate: { imageUrl: person.image, sourceUrl: bulkUrl(person.state), collectedAt } } : {}),
       provenance: {
         sourceUrl: bulkUrl(person.state),
         sourceOrg: SOURCE_ORG,

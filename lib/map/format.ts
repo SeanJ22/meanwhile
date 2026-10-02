@@ -64,7 +64,7 @@ export function meetingRowTitle(
 
 /**
  * **The second line, carrying only what the headline does NOT already say.**
- * (`MTG-2`, 2026-08-23, the author's 8/22 walkthrough.)
+ * (`MTG-2`, 2026-08-23, the 8/22 walkthrough.)
  *
  * ## What the capture showed
  *
@@ -161,13 +161,13 @@ export function locationLine(
 }
 
 /**
- * **MTG-6 / MTG-8 (2026-08-24, the author's captures 11-59-24 and 12-01-44) —
+ * **MTG-6 / MTG-8 (2026-08-24, captures 11-59-24 and 12-01-44) —
  * A MEETING CARD IS TITLED BY THE BODY, NEVER BY THE BUILDING.**
  *
- * His finding, in the captures: the Duffy Community Center card headlined
+ * The finding, in the captures: the Duffy Community Center card headlined
  * *Duffy Community Center, Multipurpose Room* over ten sittings of the Tucson
  * Unified School District — so the card read as though the MEETING WERE ABOUT
- * THE BUILDING. The Parks and Recreation card is his named reference pattern:
+ * THE BUILDING. The Parks and Recreation card is the reference pattern:
  * body as the title, venue and address in gray beneath. Its one flaw, struck
  * through in red in `12-01-44`, is the jurisdiction prefix — *Tucson, AZ —*
  * comes off, and the title is the body name alone.
@@ -275,7 +275,7 @@ export function bodyFromJurisdiction(jurisdiction: string): string {
 }
 
 /**
- * **MTG-7 (2026-08-24, confirmed by the author) — the row carries the SITTING,
+ * **MTG-7 (2026-08-24) — the row carries the SITTING,
  * because the card above it already carries the body.**
  *
  * "Meetings in the next 30 days" stays as the header; the entry beneath is the
@@ -301,7 +301,7 @@ export function meetingEntryTitle(
  * **BC-12 (2026-08-24): every plain date SPELLS OUT.** ISO dates in,
  * "August 16th, 2026" out.
  *
- * It rendered `mm/dd/yyyy` from 3h until the author's 8/24 walkthrough. The
+ * It rendered `mm/dd/yyyy` from 3h until the 8/24 walkthrough. The
  * NAME is deliberately kept rather than renamed across twenty-odd call sites:
  * what changed is a convention, not a contract, and a rename would have put
  * the convention change inside a diff of import churn. The work happens in
@@ -321,11 +321,11 @@ export function formatDateMDY(iso: string): string {
 export function formatMeetingDate(
   // Widened to the two fields it reads (A02, 2026-08-17) so the digest's own
   // row type can be formatted by the SAME function the map uses rather than by
-  // a second date formatter that would drift from the author's convention.
+  // a second date formatter that would drift from the convention.
   meeting: Pick<Meeting, "startsAt" | "timeZone">,
 ): string {
   /*
-   * **BC-12 (2026-08-24): the date SPELLS OUT here too.** The author's rule is
+   * **BC-12 (2026-08-24): the date SPELLS OUT here too.** The rule is
    * product-wide, and a meetings list is where a reader meets the most dates —
    * exempting the densest surface would leave the convention true everywhere
    * it did not matter.

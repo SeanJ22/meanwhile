@@ -1,66 +1,11 @@
-/**
- * **THE STAGED PORTRAIT QUEUE — an AUTHORING concern, and never the app's.**
- * (`NJ22`, closed 2026-08-25.)
- *
- * ## Why this is its own module rather than part of `review.ts`
- *
- * It was written inside `lib/photos/review.ts` first, and that file is imported
- * by `lib/ballot/candidate-cards.ts`, which is imported by `app/ballot/page.tsx`
- * — a Server Component. The build refused it, correctly and in as many words:
- *
- * > *Static analysis determined that this filesystem access causes the whole
- * > project to be traced and included in the output.*
- *
- * A `readFileSync` whose path comes from a variable cannot be statically scoped,
- * so the bundler has to assume any file might be read and traces everything —
- * the public folder included. That is a real deployment cost and the warning is
- * right to be a failure.
- *
- * **And the separation it forced is the correct one anyway.** The app decides
- * what a reader sees, and it answers that from `review.json`'s recorded
- * decisions. A queue of portraits somebody FOUND and has not shipped is a
- * question for the author, asked by a script, and the application has no
- * business being able to read it at all.
- *
- * Nothing here is approval and nothing here renders. `photoMayRender` lives in
- * `review.ts` and still answers only from a recorded `APPROVED` decision; this
- * is a way IN to the review, never a way around it.
- */
+/** Held portrait candidates from earlier acquisition; publication verifies sources under §3. */
 import { readFileSync } from "node:fs";
 import type { PortraitDecodeRecord } from "./decode.ts";
 import { join } from "node:path";
 
 import { personKey } from "./person.ts";
-import { reviewFor } from "./review.ts";
 
-/**
- * **A STAGED PORTRAIT HAD NO CHANNEL TO THE AUTHOR; ONLY A SHIPPED ONE DID.**
- * (Tracker `NJ22`.)
- *
- * The review sheet read `candidate-cards-2026.json` and asked which of the
- * portraits ON A CARD were still unapproved. That is the right question for a
- * portrait that has already been written onto a card — and it means a portrait
- * a hunt FOUND and correctly refused to ship was invisible to the author,
- * because the only way onto the sheet was to do the thing the rule forbids.
- *
- * The live case: `pnpm door2` walked the nineteen sitting officials on the
- * 07866 ballot and found six name-matched portraits on their own municipal
- * `.gov` pages, four of them new. It shipped none, which is correct, and the
- * sheet then showed three pending — none of them his.
- *
- * So a staged queue is a first-class input to the sheet. A row here is a
- * portrait somebody FOUND and did not ship, and it reaches the author exactly
- * the way a card's does.
- *
- * **It is still not approval and it is still not rendering.** Nothing reads this
- * to decide what a reader sees; `photoMayRender` is unchanged and still answers
- * only from a recorded APPROVED decision. This is a way IN to the review, never
- * a way around it.
- */
-/**
- * The widest a staged image may be relative to its height and still be
- * offered as a portrait. See the refusal in `stagedPortraits`.
- */
+/** Maximum aspect ratio of an existing staged portrait candidate. */
 export const MAX_PORTRAIT_ASPECT = 1.5;
 
 export interface StagedPortrait {
@@ -285,9 +230,4 @@ export function stagedPortraits(): StagedPortrait[] {
     }
   }
   return out;
-}
-
-/** Staged portraits with no decision recorded — what the author has not seen. */
-export function stagedAwaitingReview(): StagedPortrait[] {
-  return stagedPortraits().filter((p) => reviewFor(p.personKey, p.url).state === "PENDING");
 }

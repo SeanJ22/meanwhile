@@ -22,7 +22,8 @@ const QUERY: MeetingQuery = { lat: 32.2, lng: -110.9, radiusKm: 150 };
 
 test("family members share a calendar response while each keeps its acquisition, and companion feeds share the site allowance", async () => {
   let calls = 0;
-  const fetchImpl = meetingFetchPass({ fetchImpl: async () => { calls++; return new Response("saved calendar"); } });
+  const fetchImpl = meetingFetchPass({ websiteSize: () => ({kind: "local-government", population: 9_999}),
+    fetchImpl: async () => { calls++; return new Response("saved calendar"); } });
   const url = "https://county.example.gov/calendar.ics";
   const captured = await captureSourceAcquisitions(async run => {
     for (const source of ["ical", "official-page-events"]) await run(source, async () => {
@@ -42,7 +43,8 @@ test("family members share a calendar response while each keeps its acquisition,
 
 test("shared meeting reads retain the identified curl fallback, its destination and both request costs", async () => {
   let fetched = 0, curled = 0;
-  const fetchImpl = meetingFetchPass({ fetchImpl: async () => { fetched++; return new Response("refused", { status: 403 }); },
+  const fetchImpl = meetingFetchPass({ websiteSize: () => ({kind: "school-district", students: 4_999}),
+    fetchImpl: async () => { fetched++; return new Response("refused", { status: 403 }); },
     curl: async url => { curled++; return { status: 200, contentType: "text/calendar", text: "calendar",
       bytes: new TextEncoder().encode("calendar"), finalUrl: `${url}?final=1` }; } });
   const url = "https://county.example.gov/calendar.ics";
@@ -55,6 +57,16 @@ test("shared meeting reads retain the identified curl fallback, its destination 
   for (let i = 0; i < 4; i++) await fetchImpl(`https://county.example.gov/companion-${i}.ics`);
   await assert.rejects(fetchImpl("https://county.example.gov/next.ics"), /shared website request bound/);
   assert.deepEqual([fetched, curled], [5, 5]);
+});
+
+test("shared meeting reads do not cap unknown, large, state, federal or national publishers", async () => {
+  for (const size of [undefined, {kind: "local-government", population: 10_000}, {kind: "school-district", students: 5_000},
+    {kind: "state"}, {kind: "federal"}, {kind: "national"}] as const) {
+    let calls = 0;
+    const read = meetingFetchPass({websiteSize: () => size, fetchImpl: async () => { calls++; return new Response("calendar"); }});
+    for (let i = 0; i < 12; i++) await read(`https://example.gov/calendar-${i}.ics`);
+    assert.equal(calls, 12);
+  }
 });
 
 const ZERO: NormalizeDropCounts = {

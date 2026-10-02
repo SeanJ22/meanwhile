@@ -4,9 +4,9 @@ import { join } from "node:path";
 import test from "node:test";
 
 /**
- * THE SMALL POPUP (item 4, 2026-08-16, the author's ruling).
+ * THE SMALL POPUP (item 4, 2026-08-16).
  *
- * The author on the previous form: "ugly and scattered, too much info." It
+ * The previous form was scattered and carried too much information. It
  * carried a name, a party pill, outlined chips (state, chamber, incumbent),
  * an office line, an in-seat date and a wrapped grid of up to ten contact
  * pills, inside 300px.
@@ -119,8 +119,8 @@ test("More is the way down, and it is full width like the column", () => {
   );
 
   /*
-   * F01 1.3 (2026-08-19, the author): *"More locked at the bottom... if I want
-   * to just simply click More, that should never be hidden."*
+   * F01 1.3 (2026-08-19): More stays locked at the bottom; a reader who just
+   * wants to click More should never find it hidden.
    *
    * Full width was necessary and not sufficient: everything scrolled together
    * inside a `max-height: 55vh` card, so a district with five board members

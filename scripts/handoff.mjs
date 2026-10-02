@@ -6,7 +6,7 @@
  *   pnpm handoff --ship     the above, then push, open a PR, merge it, and
  *                           fast-forward local main
  *
- * `--ship` exists because the author asked for a one-command close: everything
+ * `--ship` exists to give a one-command close: everything
  * that is not current becomes current, the PR is created *and* merged, and the
  * next session starts clean. It is standing authorization, recorded here so the
  * behaviour is not a surprise.
@@ -38,7 +38,7 @@
  *                            `context.md` (R15), neither compared for drift,
  *                            both skipped by `--check` and rewritten after a
  *                            successful ship. Those ten are THE CANONICAL SET
- *                            (the author's ruling, 2026-08-17), and they live
+ *                            (2026-08-17), and they live
  *                            in `scripts/mirror-set.mjs` so the copier, the
  *                            code mirror and the report cannot disagree about
  *                            what the folder holds. The folder's actual
@@ -1150,9 +1150,9 @@ if (!existsSync(MIRROR)) {
  * failure line about a directory that existed by the time the run ended. A
  * check that reads the folder must read it after everything that writes to it.
  *
- * The author's ruling of 2026-08-17: the folder defines the set, and a
- * difference between it and the list "is a loud failure, not a silent
- * reconciliation — name what is extra and what is missing." Nothing here
+ * Since 2026-08-17 the folder defines the set, and a difference between it
+ * and the list is a loud failure, not a silent reconciliation: what is extra
+ * and what is missing are both named. Nothing here
  * repairs anything. Deleting what the mirror did not expect would make this
  * script capable of destroying the author's own files, and quietly adopting an
  * unexpected file into the set is how the list drifted in the first place.
@@ -1692,7 +1692,7 @@ function fastForwardMain() {
 }
 
 /**
- * Did the deploy actually LAND? (2026-08-17, the author's ruling.)
+ * Did the deploy actually LAND? (2026-08-17.)
  *
  * The R22 gate proves the tree BUILDS — it runs the same command Netlify runs,
  * before shipping. It cannot prove that what Netlify then served is this

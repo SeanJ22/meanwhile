@@ -18,16 +18,16 @@ import {
 import { SPEAK_MAX_CHARS } from "@/lib/speak/limits";
 
 /**
- * **BC-11 — SPEAK YOUR MIND.** (The author's ruling, 2026-08-24.)
+ * **BC-11 — SPEAK YOUR MIND.** (2026-08-24.)
  *
- * *This is the collection point for verbatim constituent sentiment — product
- * infrastructure, not a comment box.* His reference surface is Mark Kelly's
+ * This is the collection point for verbatim constituent sentiment — product
+ * infrastructure, not a comment box. The reference surface is Mark Kelly's
  * battlecard, and it goes on every battlecard and every large meeting
  * battlecard in the product: above Sources, below Voting record.
  *
  * ## Why the pill is deep navy and everything else here is grey
  *
- * The author asked for it by sight, and the reason holds: every other pill on
+ * Every other pill on
  * a battlecard is a label or a disclosure, and this is the one thing a reader
  * is being INVITED to do. A filled control among outline controls reads as the
  * action without a word of instruction — the same grammar the ballot pill and
@@ -47,7 +47,7 @@ import { SPEAK_MAX_CHARS } from "@/lib/speak/limits";
  * `CLAUDE.md`'s no-user-to-user rule: reactions are write-only from the
  * reader's perspective, because showing aggregates anchors later respondents
  * and corrupts the data. Nothing a reader writes here is shown to anybody.
- * **The author recorded that default as REVERSIBLE** — his call, later.
+ * **That default is REVERSIBLE.**
  *
  * ## What this surface says
 
@@ -88,13 +88,12 @@ export function SpeakYourMind({
   /*
    * **BC-22 (2026-08-25) — IT MUST CLOSE. Today nothing dismisses it.**
    *
-   * The author found the panel with no way out: the pill is replaced by the
-   * panel on open, so there is nothing left to re-click, and the panel has no
-   * control of its own. A surface a reader cannot dismiss is worse than one
-   * they cannot open.
+   * The panel had no way out: the pill is replaced by the panel on open, so
+   * there is nothing left to re-click, and the panel has no control of its
+   * own. A surface a reader cannot dismiss is worse than one they cannot open.
    *
-   * Three exits, which is what he asked for, and they are three because each
-   * covers a reader the others miss:
+   * Three exits, and they are three because each covers a reader the others
+   * miss:
    *
    *  - **The pill stays and TOGGLES.** It is rendered above the panel now
    *    rather than replaced by it, so "collapses to its pill" is literally

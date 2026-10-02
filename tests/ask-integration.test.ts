@@ -430,7 +430,7 @@ test("BLOCKER 3: more than one plausible person on screen CLARIFIES rather than 
 
 test("BLOCKER 3: an explicit name overrides an active card", () => {
   /*
-   * The author's own example. A reader looking at one candidate's card who
+   * The motivating example. A reader looking at one candidate's card who
    * types another candidate's NAME is asking about the person they typed.
    */
   const result = resolveInterpretation(

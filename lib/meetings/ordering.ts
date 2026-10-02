@@ -1,7 +1,7 @@
 import type { Meeting } from "../sources/types.ts";
 
 /**
- * **Upcoming first, then past** — g4 item 11, the author.
+ * **Upcoming first, then past** — g4 item 11.
  *
  * ## The rule, and why it is not just "sort by date"
  *
@@ -73,7 +73,7 @@ export function hasConcluded<T extends Pick<Meeting, "startsAt">>(
 
 /* ------------------------------------------- F01 3.1, the three groups --- */
 
-/** The window that separates "soon" from "later". The author's number. */
+/** The window that separates "soon" from "later". */
 export const SOON_DAYS = 30;
 const SOON_MS = SOON_DAYS * 24 * 60 * 60 * 1000;
 
@@ -93,10 +93,9 @@ const GROUP_LABEL: Record<MeetingGroupId, string> = {
 };
 
 /**
- * **The three blocks, in the author's order** — F01 3.1, 2026-08-19.
- *
- * *"it should be meetings within the next 30 days and then upcoming meetings
- * after that and then canceled or concluded meetings."*
+ * **The three blocks, in order** — F01 3.1, 2026-08-19: meetings within the
+ * next 30 days, then upcoming meetings after that, then canceled or concluded
+ * meetings.
  *
  * ## What was actually broken
  *

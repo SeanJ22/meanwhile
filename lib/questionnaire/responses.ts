@@ -32,8 +32,7 @@
  * wonder what was taken back — and a candidate who withdraws would be rendered
  * worse than one who never answered at all, which would make answering risky
  * and answering-then-thinking-better-of-it punished. **Neutrality wins over
- * completeness here**, and it is the author's call recorded as such. The
- * withdrawal itself is retained internally with its date so the act is not
+ * completeness here.** The withdrawal itself is retained internally with its date so the act is not
  * erased from our own record; it never reaches a reader, and the card renders
  * exactly the invited-awaiting-answer state every other silent candidate gets.
  */

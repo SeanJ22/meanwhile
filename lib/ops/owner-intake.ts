@@ -1,6 +1,6 @@
 /**
  * **OWNER INTAKE — two inputs, and `defects.md` is no longer one of them.**
- * (A.1 WI8, 2026-08-30, the author's decision.)
+ * (A.1 WI8, 2026-08-30.)
  *
  * ## What changed and why
  *

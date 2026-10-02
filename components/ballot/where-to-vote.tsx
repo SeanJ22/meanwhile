@@ -11,9 +11,8 @@ import { useRouteCard } from "@/components/shell/route-card";
  *
  * ## The defect
  *
- * The author, on device: *"'Find your polling place' leaves the app. The
- * 'where to vote' pill on the map does not. The map pill's behaviour is the
- * standard."*
+ * On device, "Find your polling place" left the app while the map's "where to
+ * vote" pill did not. The map pill's behaviour is the standard.
  *
  * Two affordances answering the same question behaved differently on two
  * surfaces of one product, and the one that left was on the BALLOT — the page
@@ -85,11 +84,11 @@ export function WhereToVote() {
       )}
 
       {/*
-        **BAL-2 (2026-08-24, the author's ruling) — the sentence is DELETED,
-        because the pill above it already IS that.**
+        **BAL-2 (2026-08-24) — the sentence is DELETED, because the pill
+        above it already IS that.**
 
-        His words: *delete "or search Arizona Secretary of State's own tool" —
-        the pill below it is that.* The line offered the state's lookup as a
+        The deleted line was *or search Arizona Secretary of State's own
+        tool*, and the pill is that search. The line offered the state's lookup as a
         second route; the pill opens the same authority's answer in-app, from
         the same retrieved and sourced data, and a second control pointing at
         the same destination is the duplicate-entry friction `CLAUDE.md` counts

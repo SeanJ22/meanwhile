@@ -239,7 +239,7 @@ function investigate(entry: Stamp): Finding {
 /* ----------------------------------------------------------------- run --- */
 
 /**
- * Disagreements the author has ruled are EXPECTED BEHAVIOUR, not defects.
+ * Disagreements allowlisted here are EXPECTED BEHAVIOUR, not defects.
  *
  * The audit recovers when a rule's text entered `CLAUDE.md`. That is a good
  * proxy for when the rule became law, and it is exactly right for the usual
@@ -249,8 +249,8 @@ function investigate(entry: Stamp): Finding {
  * 2026-08-14, and commit `f5de914` rewrote the whole photo rule into its
  * four-door shape on 2026-08-15, carrying both earlier stamps with it.
  *
- * The stamps are RIGHT and the method cannot see it. The author ruled on
- * 2026-08-17 to allowlist both so the report stops presenting expected
+ * The stamps are RIGHT and the method cannot see it. Both were allowlisted
+ * on 2026-08-17 so the report stops presenting expected
  * behaviour as disagreement — a report whose known-good rows are permanently
  * flagged is one nobody reads to the end, which is how a real one would be
  * missed.

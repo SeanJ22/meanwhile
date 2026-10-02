@@ -1,5 +1,9 @@
 import { FIPS_TO_STATE, districtIdentity } from "../../ocd/fips.ts";
 import { countyIdentity, legislativeIdentity, placeIdentity, schoolIdentity, stateBase, subdivisionIdentity } from "../../ocd/divisions.ts";
+import { loadPublishedAreaLookupState } from "../../census-geography/area-lookup.ts";
+import { censusWorkDivision } from "../../census-geography/division-id.ts";
+import { US_STATES } from "../readiness/catalog.ts";
+import { politeGetText } from "../../sources/http.ts";
 
 const TIGER = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb";
 type Polygon = { rings: number[][][]; spatialReference?: { wkid: number } };
@@ -23,6 +27,37 @@ export interface GeographyReadOptions {
   readHeld?: (sourceUrl: string) => Promise<string | null>;
   congress?: number;
   legislativeYear?: number;
+  /** Promoted geography is read before any national API request. */
+  readPublished?: (zip: string) => Promise<readonly PlaceDivision[]>;
+}
+
+export async function heldDivisionsForZip(zip: string): Promise<PlaceDivision[]> {
+  if (!process.env.DATABASE_URL) return [];
+  const state = await loadPublishedAreaLookupState([zip]);
+  if (state.source !== "published") return [];
+  const result = await state.lookup.groupingsForZcta(zip);
+  if (result.status.kind !== "OK") return [];
+  const out: PlaceDivision[] = [];
+  const types: Record<string, string> = { congressional_district: "cd", state_leg_upper: "sldu", state_leg_lower: "sldl", county: "county" };
+  for (const membership of result.memberships) {
+    const type = types[membership.geography.type];
+    const year = new Date().getUTCFullYear();
+    const expected = type === "cd" ? `cd:${Math.floor((year - 1789) / 2) + 1}` :
+      type === "sldu" || type === "sldl" ? `${type}:${Math.floor((year - 1) / 2) * 2}` : null;
+    if (expected && membership.geography.version !== expected) continue;
+    const id = censusWorkDivision(membership.geography) ?? (type === "county"
+      ? countyIdentity(membership.geography.stateFips, membership.geography.label.split(",")[0].replace(/\s+(County|Parish|Borough|Census Area)$/i, ""))?.ocdId : null);
+    if (!type || !id) continue;
+    const versions = await state.lookup.listVersions();
+    const version = versions.find(v => v.key === membership.geography.version);
+    out.push({ id, label: membership.geography.label, divisionType: type, geoid: membership.geography.geoid,
+      sourceUrl: version?.provenance.sourceUrls[0] ?? "https://www2.census.gov/geo/docs/maps-data/data/rel2020/" });
+    const base = stateBase(membership.geography.stateFips);
+    if (base) out.push({ id: base.base, label: US_STATES.find(s => s.code === base.postal.toLowerCase())?.name ?? base.postal, divisionType: "state", geoid: membership.geography.stateFips,
+      sourceUrl: out.at(-1)!.sourceUrl });
+  }
+  if (out.length) out.push({ id: "ocd-division/country:us", label: "United States", divisionType: "country", geoid: "US", sourceUrl: out[0].sourceUrl });
+  return [...new Map(out.map(d => [d.id, d])).values()];
 }
 export interface PlaceDivision {
   id: string;
@@ -40,13 +75,9 @@ export interface PlaceDivision {
 async function readJson<T>(url: string, options: GeographyReadOptions, body?: URLSearchParams, captureUrl = url): Promise<T> {
   const held = await options.readHeld?.(captureUrl);
   if (held !== null && held !== undefined) return JSON.parse(held) as T;
-  const response = await (options.fetchImpl ?? fetch)(url, {
-    ...(body ? { method: "POST", body } : {}),
-    signal: options.signal ?? AbortSignal.timeout(60_000),
-    headers: { accept: "application/json" },
-  });
-  if (!response.ok) throw new Error(`Geography source returned HTTP ${response.status}`);
-  const text = await response.text();
+  const response = await politeGetText(url, { accept: "application/json", signal: options.signal ?? AbortSignal.timeout(60_000),
+    fetchImpl: (address, init) => (options.fetchImpl ?? fetch)(address, { ...init, ...(body ? { method: "POST", body } : {}) }) });
+  const text = response.text;
   const value = JSON.parse(text);
   if (value.error) throw new Error(`Geography source: ${value.error.message ?? value.error.code}`);
   await options.capture?.(captureUrl, text);
@@ -123,10 +154,13 @@ export async function loadStateDistrictBoundaries(state: string, options: Geogra
 /** Every polygon intersecting a ZCTA, never a centroid's one district. */
 export async function divisionsForZip(zip: string, options: GeographyReadOptions = {}): Promise<PlaceDivision[]> {
   if (!/^\d{5}$/.test(zip)) throw new Error("A five-digit ZIP is required");
+  const held = await (options.readPublished ?? heldDivisionsForZip)(zip);
+  const heldTypes = new Set(held.map(d => d.divisionType));
   const zipLayer = await layer("PUMA_TAD_TAZ_UGA_ZCTA", /^2020 Census ZIP Code Tabulation Areas$/, options);
   const [area] = await query(zipLayer, { where: `ZCTA5='${zip}'` }, options);
   if (!area?.geometry) throw new Error("This ZIP has no Census ZCTA boundary; an address is needed");
-  const layers = await legislativeLayers(options);
+  const layers = heldTypes.has("cd") && heldTypes.has("sldu") && heldTypes.has("sldl") ? [] :
+    (await legislativeLayers(options)).filter(l => !heldTypes.has(l.type));
   const additional = [
     { type: "state", service: "State_County", name: /^States$/ },
     { type: "county", service: "State_County", name: /^Counties$/ },
@@ -136,14 +170,32 @@ export async function divisionsForZip(zip: string, options: GeographyReadOptions
     { type: "school", service: "School", name: /^Elementary School Districts$/ },
     { type: "school", service: "School", name: /^Secondary School Districts$/ },
   ];
-  layers.push(...await savedResponses(additional.map(async l => ({ type: l.type, url: await layer(l.service, l.name, options) }))));
-  const readings = await savedResponses(layers.map(async l => ({ ...l, features: await query(l.url, spatial(area.geometry!), options) })));
-  const counties = new Map(readings.filter(l => l.type === "county").flatMap(l => l.features.map(f =>
-    [String(f.attributes.GEOID), String(f.attributes.NAME ?? f.attributes.BASENAME)] as const)));
+  layers.push(...await savedResponses(additional.filter(l => !heldTypes.has(l.type)).map(async l => ({ type: l.type, url: await layer(l.service, l.name, options) }))));
+  const states = [...new Set(held.filter(d => d.divisionType === "state").map(d => d.geoid).filter(id => /^\d{2}$/.test(id)))];
+  const withinState: Record<string, string> = states.length ? { where: `STATE IN (${states.map(id => `'${id}'`).join(",")})` } : {};
+  const readings = await savedResponses(layers.map(async l => ({ ...l, features: (await query(l.url,
+    { ...spatial(area.geometry!), ...withinState }, options)).filter(feature => !states.length ||
+      states.includes(String(feature.attributes.STATE ?? feature.attributes.STATEFP))) })));
+  const counties = new Map([...held.filter(d => d.divisionType === "county").map(d => [d.geoid, d.label] as const),
+    ...readings.filter(l => l.type === "county").flatMap(l => l.features.map(f =>
+    [String(f.attributes.GEOID), String(f.attributes.NAME ?? f.attributes.BASENAME)] as const))]);
+  // Current subdivision boundaries can touch a county absent from the older
+  // held ZIP relationship. Ask only for those missing parent identities.
+  const missingCounties = [...new Set(readings.filter(l => l.type === "cousub").flatMap(l => l.features.map(f =>
+    `${f.attributes.STATE ?? f.attributes.STATEFP}${f.attributes.COUNTY ?? f.attributes.COUNTYFP}`)))].filter(id => /^\d{5}$/.test(id) && !counties.has(id));
+  if (missingCounties.length) {
+    const endpoint = await layer("State_County", /^Counties$/, options);
+    const features = await query(endpoint, { where: `GEOID IN (${missingCounties.map(id => `'${id}'`).join(",")})`, returnGeometry: "false" }, options);
+    for (const feature of features) {
+      counties.set(String(feature.attributes.GEOID), String(feature.attributes.NAME ?? feature.attributes.BASENAME));
+      const row = division(feature, "county", endpoint);
+      if (row) readings.push({ type: "county", url: endpoint, features: [feature] });
+    }
+  }
   const divisions = readings.flatMap(l => l.features.flatMap(f => division(f, l.type, l.url, counties) ?? []));
   return [...new Map([
     { id: "ocd-division/country:us", label: "United States", divisionType: "country", geoid: "US", sourceUrl: zipLayer },
-    ...divisions,
+    ...held, ...divisions,
   ].map(d => [d.id, d])).values()];
 }
 

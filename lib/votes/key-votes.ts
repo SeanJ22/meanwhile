@@ -1,5 +1,5 @@
 /**
- * The key votes list — tracker **B15**, the author's locked list (2026-08-15).
+ * The key votes list — tracker **B15**, a locked list (2026-08-15).
  *
  * ## What this is, and the three things it is not
  *
@@ -12,10 +12,10 @@
  * no-composite-score rule and this file is the place it would be easiest to
  * break. It is **not** a selection made after looking at the votes: the
  * criteria sentence below is published ON the surface, and the entries were
- * fixed before any roll call was fetched. And it is **not** ours: the list
- * is the author's, approved in conversation; code never adds an entry.
+ * fixed before any roll call was fetched. And it is **not** generated: the
+ * list is fixed and reviewed; code never adds an entry.
  *
- * ## The chamber rule (structural, the author's order)
+ * ## The chamber rule (structural)
  *
  * **An entry is a QUESTION. Each chamber answered it with its own roll
  * calls, and a member's card shows only their own chamber's votes.** So
@@ -34,14 +34,14 @@
  * Senate voted the four as one package, so a senator's card shows one row
  * and says so.
  *
- * ## The last-passage rule — AUTHOR-APPROVED 2026-08-15 (6f3)
+ * ## The last-passage rule — 2026-08-15 (6f3)
  *
  * Where a chamber voted twice on the same bill (passage, then concurrence in
  * the other chamber's amendment), the entry names WHICH roll call is its
  * vote — final passage or concurrence — per entry, in `whichVote`.
  *
- * **The standing rule, in the author's ruling: the card shows the LAST
- * passage or concurrence vote.** The sixteen entries that took this as their
+ * **The standing rule: the card shows the LAST passage or concurrence
+ * vote.** The sixteen entries that took this as their
  * default when B17 resolved them stand as approved rather than as
  * unreviewed defaults.
  *
@@ -53,7 +53,7 @@
  * member who voted differently on the two would have been shown answering a
  * question nobody asked.
  *
- * Any future per-entry override is an explicit author decision, written into
+ * Any future per-entry override is an explicit reviewed decision, written into
  * that entry's `whichVote`. Code never changes which vote an entry means.
  *
  * ## Roll call ids are fetched, never assumed
@@ -200,12 +200,12 @@ function nomination(
 }
 
 /**
- * VOTES ON PEOPLE — sixteen Senate confirmations, the author's list.
+ * VOTES ON PEOPLE — sixteen Senate confirmations, a fixed list.
  *
- * The tally on each is the author's, recorded as the thing the fetch must
- * AGREE WITH: a resolved roll call whose tally does not match is treated as
- * the wrong roll call and refused, rather than quietly overwriting the
- * author's list with whatever the search returned.
+ * The tally on each is recorded as the thing the fetch must AGREE WITH: a
+ * resolved roll call whose tally does not match is treated as the wrong roll
+ * call and refused, rather than quietly overwriting the reviewed list with
+ * whatever the search returned.
  */
 export const KEY_VOTES_PEOPLE: KeyVoteEntry[] = [
   nomination(
@@ -327,7 +327,7 @@ function law(
 }
 
 /**
- * VOTES ON LAWS — twenty entries, the author's list, including the April
+ * VOTES ON LAWS — twenty entries, a fixed list, including the April
  * 2024 package as FOUR siblings and one additional selected proposal.
  *
  * The count read "seventeen" until 2026-08-18 (g19), when it was checked
@@ -335,9 +335,8 @@ function law(
  * in a docblock is a small thing; a stale count that a report quotes as a
  * denominator is not.
  *
- * Every explainer is drafted in the register the author approved on the
- * three samples he wrote himself (BSCA, Social Security Fairness, Ukraine
- * aid): what the law actually DOES to people, in one sentence, with the
+ * Every explainer is drafted in the register set by the first three samples
+ * (BSCA, Social Security Fairness, Ukraine aid): what the law actually DOES to people, in one sentence, with the
  * status stated where the status is part of the answer. No entry lets its
  * title do the explaining, and the bundles name their biggest real-world
  * effects rather than their branding.
@@ -433,9 +432,9 @@ export const KEY_VOTES_LAWS: KeyVoteEntry[] = [
   law(
     "genius-act",
     "The GENIUS Act (2025)",
-    // The author's one edit in his review of all 36 explainer lines
-    // (2026-08-15). Every other line is approved as shipped and is not to be
-    // reworded, tightened, or improved.
+    // The one edit from the review of all 36 explainer lines (2026-08-15).
+    // Every other line is approved as shipped and is not to be reworded,
+    // tightened, or improved.
     "The first federal rulebook for stablecoins (cryptocurrency) — digital tokens meant to hold a fixed dollar value — requiring issuers to hold real dollar reserves and submit to federal or state supervision.",
   ),
   law(
@@ -444,10 +443,10 @@ export const KEY_VOTES_LAWS: KeyVoteEntry[] = [
     "Reopened the federal government after the longest shutdown on record and funded it for the rest of the year, restoring back pay to federal workers and resuming paused federal payments.",
     {
       /*
-       * UNPARKED 2026-08-19 (F01 5.6, the author, superseding his own g20
-       * ruling): "there are votes recorded for that, there is no doubt of it."
+       * UNPARKED 2026-08-19 (F01 5.6, superseding the g20 park): there are
+       * votes recorded for this episode.
        *
-       * He was right, and the two notes that used to sit here are gone rather
+       * That was right, and the two notes that used to sit here are gone rather
        * than reworded, because what they said is no longer true. They said we
        * had not tied the entry to a single vote and that Congress passed more
        * than one appropriations law that year. The roll-call record — the House
@@ -538,7 +537,7 @@ const SENATE_SEARCH: Readonly<Record<string, string>> = {
  * The popular name of each law, for the congress.gov resolution (B17).
  *
  * Every phrase here is a name in ordinary public use — the name the entry's
- * own title already carries, which the author wrote. Nothing is a bill
+ * own title already carries. Nothing is a bill
  * number and nothing is a roll call: the fetch searches the official titles
  * for the phrase and refuses on zero or ambiguous matches.
  */
@@ -593,13 +592,13 @@ for (const entry of KEY_VOTES_LAWS) {
 
 
 /**
- * **Entries the AUTHOR has parked — not a gap in effort, and not something a
+ * **Entries deliberately parked — not a gap in effort, and not something a
  * later run may quietly close.** (2026-08-19, g20, B15 item 1c.)
  *
  * Distinct from a `miss`, and the distinction is the point. A miss is what a
  * resolver could not find; it invites another attempt with a better rung. A
- * PARK is a decision that no attempt should be made, because the answer is
- * the author's to give and guessing it would put named members of Congress
+ * PARK is a decision that no attempt should be made, because the answer
+ * needs human review and guessing it would put named members of Congress
  * against a vote on a bill they may never have voted on.
  *
  * Why this is a list in code rather than a sentence in the tracker: the
@@ -614,9 +613,9 @@ export const PARKED_KEY_VOTES: Readonly<Record<string, string>> = {
   /*
    * EMPTY, AND DELIBERATELY KEPT.
    *
-   * `funding-fight` was the only entry here. The author UNPARKED it in F01 5.6
-   * (2026-08-19): *"This is a data gap to close, not a display issue... there
-   * are votes recorded for that, there is no doubt of it."*
+   * `funding-fight` was the only entry here. It was UNPARKED in F01 5.6
+   * (2026-08-19) as a data gap to close, not a display issue: there are votes
+   * recorded for that episode.
    *
    * **The park's premise turned out to be wrong, and the roll-call record is
    * what showed it.** The park said this entry names two things at once and
@@ -637,14 +636,14 @@ export const PARKED_KEY_VOTES: Readonly<Record<string, string>> = {
    * guess a popular name no longer decides this row.
    *
    * The map stays because the MECHANISM is still right: an entry whose answer
-   * cannot be resolved without the author's judgement must block every run
+   * cannot be resolved without human judgement must block every run
    * rather than let a resolver write a guess in. The reviewed selection gate
    * skips whatever is here; `tests/key-votes.test.ts` holds both halves
    * whether the map is empty or not.
    */
 };
 
-/** The whole list, in the author's order: laws first, then people. */
+/** The whole list, in its fixed order: laws first, then people. */
 export const KEY_VOTES: KeyVoteEntry[] = [...KEY_VOTES_LAWS, ...KEY_VOTES_PEOPLE];
 
 /**

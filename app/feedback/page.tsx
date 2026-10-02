@@ -6,7 +6,7 @@ import { titleFor } from "@/lib/brand";
 import { feedbackContext } from "@/lib/feedback/shape";
 
 /**
- * `/feedback` — R40, 2026-08-17, the author's ruling (1A: in-app).
+ * `/feedback` — R40, 2026-08-17 (1A: in-app).
  *
  * The two halves of R40 are one subject and shipped together: the personal
  * address left the product in the same commit this page arrived, because
@@ -90,7 +90,7 @@ export default async function FeedbackPage({
               or a link to anything else you have done on the site.
             </p>
             {/*
-              R41 (2026-08-17, the author's ruling A). This paragraph used to
+              R41 (2026-08-17, option A). This paragraph used to
               promise flatly that we could not write back. That sentence is now
               true of exactly one case — the blank field — so it says which,
               rather than continuing to make a claim the product has outgrown.

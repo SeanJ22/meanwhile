@@ -10,8 +10,12 @@ import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntim
 import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { readHeldRoster } from "../lib/civic-data/worker-held-roster.ts";
-import { heldRosterReading, pageIsAboutBody, publishRosterReading, workerRosterPublication, type WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
+import { heldRosterReading, pageIsAboutBody, publishRosterReading, publishWorkerRosterResults, workerRosterPublication, type WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { createWorkItem } from "../lib/control-plane/work-item.ts";
+import { jurisdictionDiscoveryPlan } from "../lib/control-plane/workers/autonomous-plan.ts";
+import type { Jurisdiction } from "../lib/hunt/jurisdiction-universe.ts";
 
 const NOW = "2026-09-29T20:00:00.000Z";
 const BODY = "ocd-division/country:us/state:az/place:benson#governing";
@@ -76,6 +80,31 @@ test("the wrong page, a stale page and an unlinked non-government page never pub
   assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Boards"))), prior: base, now: NOW }), /ROSTER_PAGE_NOT_THIS_BODY/);
   assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Contact the Mayor & Council"), URL_, "2026-07-01T00:00:00.000Z")), prior: base, now: NOW }), /OUTSIDE_FRESHNESS_WINDOW/);
   assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Contact the Mayor & Council"), "https://benson-az.example.com/council")), prior: base, now: NOW }), /NOT_OFFICIAL_SOURCE/);
+});
+
+test("a roster reads another job's saved page and falls back when its newest identical vault key is missing", async () => {
+  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
+  const store = new MemoryRoutineDataStore();
+  Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
+  const held = capture(page("Contact the Mayor & Council"));
+  const plan = jurisdictionDiscoveryPlan({ id: "az:city:city-of-benson", name: "City of Benson", ownWebAddress: URL_, bodyId: BODY } as Jurisdiction,
+    { recordClass: "OFFICEHOLDERS", authority: "City of Benson", authorityBasis: "Recorded fixture", scope: "THIS_JURISDICTION", url: URL_, state: "DISCOVERY_OWED",
+      routeId: "roster", owed: "Current council", citation: "Recorded official page" }, "roster", BODY)!;
+  const item = { ...createWorkItem({ project: "fixture", subject: "Benson", obligation: "Current council", why: "Cross-job source reuse", now: NOW }), autonomousPlan: plan };
+  const repos = createMemoryRepositories();
+  await repos.workItems.put(item.id, item, NOW);
+  const shared = ["wi-newest-missing-key", "wi-other-job"].map((workItemId, i) => ({ artifactId: held.evidence.artifactId, workItemId,
+    routeTaskId: null, attemptId: "at-scout", tier: "RAW", contentHash: held.evidence.contentHash, byteLength: held.evidence.text.length,
+    contentType: "text/html", canonicalUrl: URL_, partial: false, recordedAt: i ? held.observedAt : NOW }) as ArtifactRecord);
+  const queried: string[] = [], opened: string[] = [];
+  Object.assign(repos, { artifactsByCanonicalUrl: async (url: string) => { queried.push(url); return url === URL_ ? shared : []; } });
+  const outcome = await publishWorkerRosterResults({ repos, store, now: NOW, workItemIds: [item.id],
+    readCapture: async () => { throw new Error("No new parser capture is needed"); },
+    readHeld: async artifact => { opened.push(artifact.workItemId); return artifact.workItemId === "wi-other-job" ? held : null; } });
+  assert.deepEqual(opened.slice(0, 2), ["wi-newest-missing-key", "wi-other-job"]);
+  assert.equal(queried.filter(url => url === URL_).length, 1, "roster and schedule reuse the same exact-URL metadata read");
+  assert.notEqual(outcome[0].outcome.code, "ROSTER_NO_READABLE_SAVED_PAGE", "held facts reach the normal source validator and publication door");
+  assert.ok(outcome[0].outcome.workerResultId?.startsWith("held:"));
 });
 
 test("the roster publisher reuses only its native area and reads recorded shared territory through the scoped store", async () => {

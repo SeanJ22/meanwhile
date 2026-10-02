@@ -123,3 +123,52 @@ test("materialized fact corruption and a changed unselected reference cannot inh
   const successor = composeRegistryAreaView(foreign, foreign);
   assert.equal(registryAreaInheritanceIssue(view, successor), "An unselected area's registry reference changed.");
 });
+
+test("native district and territory roots retain separate jurisdiction parts and scoped inheritance", async () => {
+  const memory = memoryParts();
+  const roots = ["district:dc", "territory:as", "territory:gu", "territory:mp", "territory:pr", "territory:vi"];
+  const base = areaPayload();
+  const divisions = roots.map(root => ({ ...base.registry.divisions[0]!,
+    id: `ocd-division/country:us/${root}/cd:at-large`, ocdId: `ocd-division/country:us/${root}/cd:at-large`,
+    label: `${root} congressional district`, state: root.split(":")[1]!.toUpperCase() }));
+  const payload = composeRegistryAreaView({ ...base, registry: { ...base.registry,
+    divisions: [...base.registry.divisions, ...divisions] } });
+  const manifest = registryAreaViewOf(payload)!.manifest;
+  assert.deepEqual(Object.keys(manifest.states).sort(), ["AS", "AZ", "DC", "GU", "MP", "NH", "PR", "VI"]);
+  assert.equal("shared" in manifest.states, false);
+  const stored = await new CivicPayloadParts(memory.io).store(payload);
+  const selected = divisions[0]!.ocdId;
+  const view = await new CivicPayloadParts(memory.io).load(stored, [selected]) as RegistryRuntimeReadModel;
+  assert.deepEqual(view.registry.divisions.map(row => row.ocdId), [selected]);
+  assert.deepEqual(Object.keys(registryAreaViewOf(view)!.indexes), ["DC"]);
+  assert.equal(canonicalCivicDataJson(view), canonicalCivicDataJson(payload));
+  const successor = composeRegistryAreaView({ ...view, registry: { ...view.registry,
+    divisions: view.registry.divisions.map(row => ({ ...row, label: "Updated district name" })) } }, view);
+  assert.equal(registryAreaInheritanceIssue(view, successor), null);
+  for (const jurisdiction of ["AS", "AZ", "GU", "MP", "NH", "PR", "VI"]) {
+    assert.deepEqual(registryAreaViewOf(successor)!.manifest.states[jurisdiction], manifest.states[jurisdiction]);
+  }
+  const firstWrites = memory.writes.length;
+  const next = await new CivicPayloadParts(memory.io).store(successor);
+  assert.ok(!JSON.stringify(memory.writes.slice(firstWrites)).includes("territory:pr"));
+  const prView = await new CivicPayloadParts(memory.io).load(next, [divisions[4]!.ocdId]) as RegistryRuntimeReadModel;
+  assert.deepEqual(prView.registry.divisions.map(row => row.ocdId), [divisions[4]!.ocdId]);
+  assert.equal(canonicalCivicDataJson(prView), canonicalCivicDataJson(successor));
+});
+
+test("large district and territory arrays reuse unselected jurisdiction chunks losslessly", async () => {
+  const memory = memoryParts();
+  const parts = new CivicPayloadParts(memory.io);
+  const district = Array.from({ length: 20 }, (_, index) => ({
+    ...row("dc", index), id: `ocd-division/country:us/district:dc/cd:at-large#body:${index}` }));
+  const territory = Array.from({ length: 20 }, (_, index) => ({
+    ...row("pr", index), id: `ocd-division/country:us/territory:pr/cd:at-large#body:${index}` }));
+  const original = [...district, ...territory];
+  await parts.store(original);
+  const firstWrites = memory.writes.length;
+  const changed = [...district.map((value, index) => index === 0 ? { ...value, name: "Updated official body" } : value), ...territory];
+  const stored = await parts.store(changed);
+  assert.ok(!JSON.stringify(memory.writes.slice(firstWrites)).includes("pr official content"),
+    "a DC update does not rewrite Puerto Rico into a shared chunk");
+  assert.deepEqual(await new CivicPayloadParts(memory.io).load(stored), changed);
+});

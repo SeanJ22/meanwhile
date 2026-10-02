@@ -5,7 +5,8 @@ import { and, desc, eq, getTableColumns, inArray, like, sql } from "drizzle-orm"
 import { getDb } from "../db/index.ts";
 import { runtimeCivicReadCache } from "../db/civic-read-cache.ts";
 import { civicDataCandidateEvents, civicDataCandidates, civicDataPromotions, civicDataReaderProjections, civicDataPayloadParts } from "../db/schema.ts";
-import { CivicPayloadParts, hasRegistryAreaEncoding } from "./payload-parts.ts";
+import { CivicPayloadParts, hasRegistryAreaEncoding, registryAreaViewOf } from "./payload-parts.ts";
+import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import {
   type CandidateEvent,
   type CandidateState,
@@ -1724,11 +1725,52 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   readonly registryAreaScope?: readonly string[];
   constructor(divisionIds?: readonly string[]) {
     if (!divisionIds) return;
-    const states = new Set(divisionIds.map(id => /^ocd-division\/country:us\/state:([a-z]{2})(?:\/|$)/.exec(id)?.[1]));
+    const states = new Set(divisionIds.map(id => /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}(?=\/|$)/.exec(id)?.[0]));
     if (states.size !== 1 || states.has(undefined)) throw new Error("REGISTRY_AREA_STATE_BOUNDARY");
-    this.registryAreaScope = [...new Set([...divisionIds, `ocd-division/country:us/state:${[...states][0]}`])];
+    this.registryAreaScope = [...new Set([...divisionIds, [...states][0]!])];
   }
   forRegistryArea(divisionIds: readonly string[]): PostgresRoutineDataStore { return new PostgresRoutineDataStore(divisionIds); }
+
+  /** Name lookup is a lead: the widened typed prior still verifies the matching areas. */
+  async readRegistryDivisionIdsNamed(payload: RegistryRuntimeReadModel, names: readonly string[]): Promise<readonly string[]> {
+    const view = registryAreaViewOf(payload);
+    const root = this.registryAreaScope?.[0]?.match(/^(ocd-division\/country:us\/(?:state|district|territory):([a-z]{2}))(?:\/|$)/);
+    const state = root?.[2];
+    if (!view || !state || Object.keys(view.indexes).some(key => key !== state.toUpperCase())) throw new Error("REGISTRY_AREA_STATE_BOUNDARY");
+    const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+    const wanted = new Set(names.map(words).filter(Boolean));
+    if (!wanted.size) return [];
+    const prefix = root![1];
+    const queue = Object.entries(view.indexes[state.toUpperCase()] ?? {}).filter(([area]) => area === prefix || area.startsWith(`${prefix}/`))
+      .map(([, entry]) => ({ hash: entry.part.$civicPayloadPart, registry: false }));
+    const seen = new Set<string>(), descriptors: unknown[] = [];
+    while (queue.length) {
+      const first = queue.shift()!;
+      const batch = [first];
+      for (let i = queue.length - 1; i >= 0 && batch.length < 512; i--) if (queue[i].registry === first.registry) batch.push(...queue.splice(i, 1));
+      const hashes = [...new Set(batch.map(row => row.hash).filter(hash => !seen.has(`${first.registry}:${hash}`)))];
+      hashes.forEach(hash => seen.add(`${first.registry}:${hash}`));
+      if (!hashes.length) continue;
+      // Only references and division descriptors cross the wire, never area rosters or bodies.
+      const root = sql`case when ${civicDataPayloadParts.payload}->>'kind' = 'object' then ${civicDataPayloadParts.payload}->'value' else ${civicDataPayloadParts.payload} end`;
+      const registry = first.registry ? root : sql`(${root})->'registry'`;
+      const rows = await this.db.select({ hash: civicDataPayloadParts.hash,
+        rootRef: sql<string | null>`(${root})->>'$civicPayloadPart'`,
+        registryRef: first.registry ? sql<string | null>`null` : sql<string | null>`(${registry})->>'$civicPayloadPart'`,
+        divisions: sql<unknown>`(${registry})->'divisions'`,
+      }).from(civicDataPayloadParts).where(inArray(civicDataPayloadParts.hash, hashes));
+      if (rows.length !== hashes.length) throw new Error("CIVIC_PAYLOAD_PART_MISSING");
+      for (const row of rows) {
+        if (row.rootRef) queue.push({ hash: row.rootRef, registry: first.registry });
+        else if (row.registryRef) queue.push({ hash: row.registryRef, registry: true });
+        else if (row.divisions !== null && row.divisions !== undefined) descriptors.push(row.divisions);
+        else throw new Error("CIVIC_PAYLOAD_PART_MISSING");
+      }
+    }
+    const divisions = await this.payloadParts.load(descriptors) as readonly (readonly { ocdId: string; label: string; state: string }[])[];
+    return [...new Set(divisions.flat().filter(row => row.state === state.toUpperCase() &&
+      (row.ocdId === prefix || row.ocdId.startsWith(`${prefix}/`)) && wanted.has(words(row.label))).map(row => row.ocdId))];
+  }
   private readonly db = getDb();
   private readonly readCache = runtimeCivicReadCache();
   private readonly payloadParts = new CivicPayloadParts({

@@ -30,7 +30,7 @@ interface RegistryAreaView {
 type RegistryViewPayload = RegistryRuntimeReadModel & { readonly $civicRegistryView: RegistryAreaView };
 const ordered = (value: unknown): unknown => Array.isArray(value) ? value.map(ordered) : value && typeof value === "object"
   ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b)).map(([key, child]) => [key, ordered(child)])) : value;
-const stateOfArea = (area: string) => /\/state:([a-z]{2})(?:\/|$)/i.exec(area)?.[1]?.toUpperCase() ?? "shared";
+const stateOfArea = (area: string) => /\/(?:state|district|territory):([a-z]{2})(?:\b|\/)/i.exec(area)?.[1]?.toUpperCase() ?? "shared";
 export const hasRegistryAreaEncoding = (value: unknown): boolean => Boolean(value && typeof value === "object" && AREA in value);
 export function registryAreaViewOf(value: unknown): RegistryAreaView | null {
   return value && typeof value === "object" && VIEW in value ? (value as RegistryViewPayload)[VIEW] : null;
@@ -137,7 +137,9 @@ function territory(value: unknown): string {
   for (const key of ["id", "key", "divisionId", "ocdId", "jurisdiction", "state", "subjectId"]) {
     const text = row[key];
     if (typeof text !== "string") continue;
-    const state = /(?:\/state:|\bUS-)([a-z]{2})(?:\b|\/)/i.exec(text)?.[1];
+    const areaState = stateOfArea(text);
+    if (areaState !== "shared") return areaState;
+    const state = /\bUS-([a-z]{2})(?:\b|\/)/i.exec(text)?.[1];
     if (state) return state.toUpperCase();
     if (key === "state" && /^[a-z]{2}$/i.test(text)) return text.toUpperCase();
   }

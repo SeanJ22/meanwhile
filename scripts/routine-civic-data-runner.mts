@@ -667,9 +667,10 @@ if (meetingPartitionRuns >= 2) {
       .map(pending => MEETING_PARTITION_CONTRACTS.find(contract => contract.id === pending.id))
       .map(contract => contract?.ocdId ?? (() => {
         const state = /^US-([A-Z]{2})$/.exec(contract?.derivedFamily ?? "")?.[1];
-        return state ? `ocd-division/country:us/state:${state.toLowerCase()}` : null;
+        return state ? MEETING_PARTITION_CONTRACTS.find(row => row.ocdId &&
+          /^ocd-division\/country:us\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(row.ocdId)?.[1].toUpperCase() === state)?.ocdId : null;
       })())
-      .find((id): id is string => typeof id === "string" && /^ocd-division\/country:us\/state:[a-z]{2}(?:\/|$)/.test(id));
+      .find((id): id is string => typeof id === "string" && /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}(?:\/|$)/.test(id));
     if (!registryArea) throw new Error("MEETING_REGISTRY_AREA_SCOPE_MISSING");
     const registryStore = store.forRegistryArea([registryArea]);
     const registry = await readRegistryRuntimeProjection({ store: registryStore });

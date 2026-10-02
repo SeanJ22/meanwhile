@@ -55,7 +55,7 @@ const digest = (text: string) => createHash("sha256").update(text).digest("hex")
 async function registryPublicationPrior(store: RoutineDataStore, bodyId: string, now: string,
   divisions: readonly string[] = [], carried?: RegistryRuntimePrior | null): Promise<{ store: RoutineDataStore; prior: RegistryRuntimePrior | null }> {
   if (!(store instanceof PostgresRoutineDataStore)) return { store, prior: carried ?? await readRegistryRuntimePrior(store, now) };
-  const areaId = (id: string) => /^ocd-division\/country:us\/state:[a-z]{2}(?:\/|$)/.test(id);
+  const areaId = (id: string) => /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}(?:\/|$)/.test(id);
   const selected = [...new Set([...store.registryAreaScope ?? [], bodyId.split("#")[0], ...divisions].filter(areaId))];
   if (!selected.length) throw new Error("ROSTER_REGISTRY_AREA_SCOPE_MISSING");
   let scoped = store.forRegistryArea(selected);
@@ -323,7 +323,19 @@ export async function publishWorkerRosterResults(input: {
 }): Promise<readonly { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[]> {
   if (!input.workItemIds.length) return [];
   const records = await readCompletedWorkerResults(input.repos);
-  const readHeld = input.readHeld ?? localHeldCaptureReader();
+  const rawReadHeld = input.readHeld ?? localHeldCaptureReader();
+  const ownersOfCapture = new Map<string, ArtifactRecord[]>();
+  const readHeld = async (record: ArtifactRecord): Promise<WorkerPublicationCapture | null> => {
+    // Identical bytes can have several job-owned vault keys; a missing newest
+    // key must not hide the same capture saved by another job.
+    for (const owner of [record, ...ownersOfCapture.get(record.artifactId) ?? []].filter((row, index, rows) =>
+      row.contentHash === record.contentHash && row.canonicalUrl === record.canonicalUrl && row.partial === record.partial && row.tier === record.tier &&
+      rows.findIndex(other => other.workItemId === row.workItemId) === index)) {
+      const capture = await rawReadHeld(owner);
+      if (capture) return capture;
+    }
+    return null;
+  };
   const allItems = (await input.repos.workItems.list()).map(row => row.value);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   // Carry accepted snapshots through the pass; reload only after an external base change.
@@ -334,6 +346,30 @@ export async function publishWorkerRosterResults(input: {
   const heldByBody = new Map<string, Promise<RosterReading | null>>();
   const heldDirectories = new Map<string, Promise<DirectoryReading | null>>();
   const schedules = new Map<string, Promise<HeldBodySchedule | null>>();
+  const heldAtUrl = new Map<string, Promise<readonly ArtifactRecord[]>>();
+  const heldArtifacts = async (items: readonly WorkItem[], bodyUrls: readonly (string | null | undefined)[] = []): Promise<readonly ArtifactRecord[]> => {
+    const owned = (await Promise.all(items.map(other => input.repos.artifacts.read(other.id)))).flat();
+    const urls = [...new Set([...bodyUrls, ...owned.map(row => row.canonicalUrl), ...items.flatMap(other => {
+      const plan = other.autonomousPlan;
+      return plan ? [...plan.seedUrls, ...plan.sources.map(source => source.url), ...plan.acquisition.map(task => task.route.url),
+        ...plan.contract.schemaVersion === 2 ? plan.contract.sourceScope.canonicalUrls : []] : [];
+    })].filter((url): url is string => {
+      if (!url) return false;
+      try { const parsed = new URL(url); return ["http:", "https:"].includes(parsed.protocol) && !parsed.username && !parsed.password; } catch { return false; }
+    }))];
+    const shared = input.repos.artifactsByCanonicalUrl ? (await Promise.all(urls.map(url => {
+      if (!heldAtUrl.has(url)) heldAtUrl.set(url, input.repos.artifactsByCanonicalUrl!(url, 40));
+      return heldAtUrl.get(url)!;
+    }))).flat() : [];
+    const newest = new Map<string, ArtifactRecord>();
+    for (const row of [...owned, ...shared]) {
+      const owners = ownersOfCapture.get(row.artifactId) ?? [];
+      if (!owners.some(owner => owner.workItemId === row.workItemId)) owners.push(row);
+      ownersOfCapture.set(row.artifactId, owners);
+      if (!newest.has(row.artifactId) || row.recordedAt > newest.get(row.artifactId)!.recordedAt) newest.set(row.artifactId, row);
+    }
+    return [...newest.values()];
+  };
   const publishedByBody = new Map<string, NonNullable<WorkItem["publicationOutcome"]>>();
   // The Validator reads what earlier passes learned before it checks anything, and writes back once at the end.
   const manual = await readValidatorManual(input.repos);
@@ -351,17 +387,17 @@ export async function publishWorkerRosterResults(input: {
       const scope = [plan.directorySubject?.divisionId, plan.directorySubject?.jurisdiction.ocdId,
         plan.contract.jurisdiction.canonicalId, ...areasByBody.get(bodyId) ?? []].filter((id): id is string => typeof id === "string");
       if (input.store instanceof PostgresRoutineDataStore) {
-        const state = /^ocd-division\/country:us\/state:[a-z]{2}(?:\/|$)/.exec(bodyId.split("#")[0])?.[0].replace(/\/$/, "")
-          ?? `ocd-division/country:us/state:${plan.contract.jurisdiction.state.toLowerCase()}`;
+        const state = [bodyId.split("#")[0], ...scope].map(id => /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}(?=\/|$)/.exec(id)?.[0]).find(Boolean);
         const obligations = await input.repos.obligations.listWhere(["subjectId"], plan.contract.subjectId);
-        scope.push(...obligations.flatMap(row => row.value.scopeDivisions ?? []).filter(id => id === state || id.startsWith(`${state}/`)));
+        scope.push(...obligations.flatMap(row => row.value.scopeDivisions ?? []).filter(id => state && (id === state || id.startsWith(`${state}/`))));
       }
       const area = await registryPublicationPrior(input.store, bodyId, input.now, scope, registry);
-      const publicationStore = area.store;
+      let publicationStore = area.store;
       registry = area.prior;
       if (publicationStore.registryAreaScope) areasByBody.set(bodyId, publicationStore.registryAreaScope);
-      const prior = registry;
-      if (!prior) throw new Error("ROSTER_PRIOR_READER_AUTHORITY_MISSING");
+      let selectedPrior = registry;
+      if (!selectedPrior) throw new Error("ROSTER_PRIOR_READER_AUTHORITY_MISSING");
+      const initialPrior = selectedPrior;
       const parser = latestParserResult(records, id);
       parserId = parser?.id ?? null;
       const directory = plan.contract.recordClass === "OFFICIAL_BOARD_DIRECTORY";
@@ -371,12 +407,25 @@ export async function publishWorkerRosterResults(input: {
         const government = plan.directorySubject?.jurisdiction.id ?? id;
         if (!heldDirectories.has(government)) heldDirectories.set(government, (async () => {
           const siblings = allItems.filter(other => (other.autonomousPlan?.directorySubject?.jurisdiction.id ?? other.id) === government);
-          const artifacts = (await Promise.all(siblings.map(other => input.repos.artifacts.read(other.id)))).flat();
-          return heldDirectoryReading({ plan, prior, now: input.now, artifacts, readHeld });
+          const artifacts = await heldArtifacts(siblings, [plan.directorySubject?.jurisdiction.ownWebAddress]);
+          return heldDirectoryReading({ plan, prior: initialPrior, now: input.now, artifacts, readHeld });
         })());
         heldDirectory = await heldDirectories.get(government)!;
         if (!heldDirectory) throw new Error("DIRECTORY_NO_READABLE_SAVED_PAGE:No saved official page for this government lists a board or commission that passes §3 yet");
       }
+      if (directory && publicationStore instanceof PostgresRoutineDataStore) {
+        const rows = parser?.result.role === "PARSER" ? parser.result.records : heldDirectory?.checked.extraction.records ?? [];
+        const names = rows.flatMap(row => typeof row.fields.territoryNames === "string" ? row.fields.territoryNames.split(";").map(name => name.trim()).filter(Boolean) : []);
+        if (names.length) {
+          const named = await publicationStore.readRegistryDivisionIdsNamed(selectedPrior.payload, names);
+          const widened = await registryPublicationPrior(publicationStore, bodyId, input.now, named, selectedPrior);
+          publicationStore = widened.store;
+          selectedPrior = registry = widened.prior;
+          if (!selectedPrior) throw new Error("ROSTER_PRIOR_READER_AUTHORITY_MISSING");
+          if (publicationStore.registryAreaScope) areasByBody.set(bodyId, publicationStore.registryAreaScope);
+        }
+      }
+      const prior = selectedPrior;
       if (!directory) {
         const pull = parser ? auditPull(records, parser) : null;
         reading = parser && !pull?.all ? parserReading(parser, plan.contract, captures) : null;
@@ -384,7 +433,8 @@ export async function publishWorkerRosterResults(input: {
         if (!reading) {
           if (!heldByBody.has(bodyId)) heldByBody.set(bodyId, (async () => {
             const siblings = allItems.filter(other => other.autonomousPlan?.publication?.bodyId === bodyId);
-            const artifacts = (await Promise.all(siblings.map(other => input.repos.artifacts.read(other.id)))).flat();
+            const body = prior.payload.registry.bodies.find(row => row.id === bodyId);
+            const artifacts = await heldArtifacts(siblings, [body?.homepageUrl, body?.agendaSourceRef]);
             return heldRosterReading({ bodyId, prior, now: input.now, artifacts, readHeld });
           })());
           reading = await heldByBody.get(bodyId)!;
@@ -395,7 +445,7 @@ export async function publishWorkerRosterResults(input: {
           const body = prior.payload.registry.bodies.find(row => row.id === bodyId);
           if (!body) return null;
           const place = allItems.filter(other => other.autonomousPlan?.publication?.bodyId === bodyId || other.autonomousPlan?.contract.subjectId === plan.contract.subjectId);
-          const artifacts = (await Promise.all(place.map(other => input.repos.artifacts.read(other.id)))).flat();
+          const artifacts = await heldArtifacts(place, [body.homepageUrl, body.agendaSourceRef]);
           return heldBodySchedule({ body: { id: bodyId, name: body.name ?? prior.payload.bodyRosters.find(r => r.bodyId === bodyId)?.bodyName ?? null },
             divisionLabel: governmentOf(prior.payload.registry.divisions, body)?.label ?? null, artifacts, readHeld, now: input.now });
         })());

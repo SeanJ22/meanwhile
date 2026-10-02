@@ -5,6 +5,8 @@ import test from "node:test";
 
 import { neonConfig } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
+import { CivicPayloadParts, composeRegistryAreaView } from "../lib/civic-data/payload-parts.ts";
+import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 
 import * as schema from "../lib/db/schema.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
@@ -885,6 +887,54 @@ async function withCannedNeon<T>(
     else process.env.DATABASE_URL = originalUrl;
   }
 }
+
+test("native directory name lookup keeps same-state ambiguity and returns no body or roster payloads", async () => {
+  const ids = ["ocd-division/country:us/state:az/place:benson", "ocd-division/country:us/state:az/county:benson", "ocd-division/country:us/state:nh/place:benson"];
+  const saved = new Map<string, unknown>();
+  const parts = new CivicPayloadParts({ existing: async () => [],
+    write: async rows => { for (const row of rows) saved.set(row.hash, row.payload); },
+    read: async hashes => hashes.map(hash => ({ hash, payload: saved.get(hash) })), });
+  const payload = composeRegistryAreaView({ formatVersion: 1, registry: { generatedAt: "2026-10-02T00:00:00.000Z",
+    divisions: ids.map(ocdId => ({ ocdId, state: ocdId.includes("state:az") ? "AZ" : "NH", label: "Benson" })),
+    bodies: ids.map(ocdId => ({ id: `${ocdId}#regional`, ocdId, unrelatedBodyText: "BODY_SECRET".repeat(10_000) })) },
+    bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
+    officialCandidacies: { formatVersion: 1, rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE", rows: [] },
+  } as unknown as RegistryRuntimeReadModel);
+  const stored = await parts.store(payload);
+  const view = await parts.load(stored, [ids[0]]) as RegistryRuntimeReadModel;
+  const replies: unknown[] = [];
+  await withCannedNeon(statement => {
+    assert.match(statement.query, /from "civic_data_payload_parts"/);
+    const hashes = statement.params as readonly string[];
+    const descriptorRead = statement.query.includes("->'divisions'");
+    const rows = hashes.map(hash => {
+      const part = saved.get(hash) as Record<string, unknown>;
+      assert.ok(part, `requested existing part ${hash}`);
+      if (!descriptorRead) return [hash, part];
+      const root = part.kind === "object" ? part.value as Record<string, unknown> : part;
+      const registry = statement.query.includes("->'registry'") ? root.registry as Record<string, unknown> | undefined : root;
+      return [hash, root.$civicPayloadPart ?? null, registry?.$civicPayloadPart ?? null, registry?.divisions ?? null];
+    });
+    replies.push(rows);
+    return { columns: descriptorRead ? [["hash", "text"], ["rootRef", "text"], ["registryRef", "text"], ["divisions", "jsonb"]]
+      : [["hash", "text"], ["payload", "jsonb"]], rows };
+  }, async (store, sent) => {
+    for (const root of ["district:dc", "territory:as", "territory:gu", "territory:mp", "territory:pr", "territory:vi"]) {
+      const area = `ocd-division/country:us/${root}/place:held`;
+      assert.deepEqual(store.forRegistryArea([area]).registryAreaScope, [area, `ocd-division/country:us/${root}`]);
+    }
+    assert.throws(() => store.forRegistryArea(["ocd-division/country:us/district:dc", "ocd-division/country:us/state:dc"]), /REGISTRY_AREA_STATE_BOUNDARY/);
+    assert.throws(() => store.forRegistryArea([ids[0], ids[2]]), /REGISTRY_AREA_STATE_BOUNDARY/);
+    const scoped = store.forRegistryArea([ids[0]]);
+    assert.deepEqual([...(await scoped.readRegistryDivisionIdsNamed(view, ["BENSON!"]))].sort(), ids.slice(0, 2).sort(),
+      "every same-state match reaches the directory validator, including ambiguity");
+    assert.deepEqual(await scoped.readRegistryDivisionIdsNamed(view, ["unmatched"]), []);
+    assert.ok(sent.every(statement => !statement.query.includes("'bodies'") && !statement.query.includes("'bodyRosters'")));
+    assert.ok(!JSON.stringify(replies).includes("BODY_SECRET"), "only division descriptors and facts crossed the driver seam");
+    const foreignHashes = Object.values(payload.$civicRegistryView.indexes.NH).map(row => row.part.$civicPayloadPart);
+    assert.ok(sent.every(statement => foreignHashes.every(hash => !statement.params.includes(hash))), "another state's area is never requested");
+  });
+});
 
 /** The RETURNING list of a statement, or null when it has none. */
 function returningList(query: string): string | null {

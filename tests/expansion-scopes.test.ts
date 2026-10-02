@@ -654,6 +654,20 @@ test("a ZIP hunt resolves only that published Census ZCTA, with no neighboring Z
     assert.deepEqual([...scope.zctas], [zip]);
     assert.deepEqual([...scope.whole], [zip]);
     assert.deepEqual(scope.states, ["AZ"]);
+    const repos = createMemoryRepositories();
+    await repos.adminConfig.put(ADMIN_CONFIG_ID, withExpansionScopes(defaultAdminConfig(), { scopes: [d], decidedAt: NOW }), NOW);
+    let selectedHeld = false;
+    await loadExpansionPlan({ repos, root: ".", now: NOW, obligations: [],
+      loadLookup: async () => ({ lookup, source: "published", versionId: "fixture-published" }),
+      loadNationalZip: async () => { throw Error("published memberships require no new acquisition"); },
+      loadTerritory: (states, zips, places) => {
+        assert.deepEqual(states, ["AZ"]);
+        assert.deepEqual([...zips], [zip]);
+        assert.ok(places.get(zip)?.some(d => d.divisionType === "county"), "already held intersections also reach territory selection");
+        selectedHeld = true;
+        return { bySubject: new Map(), byDivision: new Map(), unplaced: new Map(), statewide: new Set(), unregisteredUnitsByState: new Map(), unjoinedUnitsByState: new Map(), unitShares: () => undefined };
+      } });
+    assert.equal(selectedHeld, true);
     const absent = await resolveScopes([{ ...d, geography: { ...d.geography, version: "zcta:2099" } }], { lookup, source: "published", versionId: "v" }, null);
     assert.equal(absent.scopes[0].kind, "UNRESOLVED");
     const fixture = await resolveScopes([d], { lookup, source: "bootstrap", versionId: "v" }, null);

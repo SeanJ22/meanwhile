@@ -1,6 +1,7 @@
 import { FIPS_TO_STATE, districtIdentity } from "../../ocd/fips.ts";
 import { countyIdentity, legislativeIdentity, placeIdentity, schoolIdentity, stateBase, subdivisionIdentity } from "../../ocd/divisions.ts";
 import { loadPublishedAreaLookupState } from "../../census-geography/area-lookup.ts";
+import type { PublishedLookupState } from "../../census-geography/reader.ts";
 import { censusWorkDivision } from "../../census-geography/division-id.ts";
 import { US_STATES } from "../readiness/catalog.ts";
 import { politeGetText } from "../../sources/http.ts";
@@ -31,14 +32,15 @@ export interface GeographyReadOptions {
   readPublished?: (zip: string) => Promise<readonly PlaceDivision[]>;
 }
 
-export async function heldDivisionsForZip(zip: string): Promise<PlaceDivision[]> {
-  if (!process.env.DATABASE_URL) return [];
-  const state = await loadPublishedAreaLookupState([zip]);
+export async function heldDivisionsForZip(zip: string, published?: PublishedLookupState): Promise<PlaceDivision[]> {
+  if (!published && !process.env.DATABASE_URL) return [];
+  const state = published ?? await loadPublishedAreaLookupState([zip]);
   if (state.source !== "published") return [];
   const result = await state.lookup.groupingsForZcta(zip);
   if (result.status.kind !== "OK") return [];
   const out: PlaceDivision[] = [];
-  const types: Record<string, string> = { congressional_district: "cd", state_leg_upper: "sldu", state_leg_lower: "sldl", county: "county" };
+  const types: Record<string, string> = { congressional_district: "cd", state_leg_upper: "sldu", state_leg_lower: "sldl", county: "county", place: "place", county_subdivision: "cousub" };
+  const versions = await state.lookup.listVersions();
   for (const membership of result.memberships) {
     const type = types[membership.geography.type];
     const year = new Date().getUTCFullYear();
@@ -48,9 +50,11 @@ export async function heldDivisionsForZip(zip: string): Promise<PlaceDivision[]>
     const id = censusWorkDivision(membership.geography) ?? (type === "county"
       ? countyIdentity(membership.geography.stateFips, membership.geography.label.split(",")[0].replace(/\s+(County|Parish|Borough|Census Area)$/i, ""))?.ocdId : null);
     if (!type || !id) continue;
-    const versions = await state.lookup.listVersions();
     const version = versions.find(v => v.key === membership.geography.version);
-    out.push({ id, label: membership.geography.label, divisionType: type, geoid: membership.geography.geoid, completeForZip: zip,
+    // Local memberships locate work; current source rows still supply their
+    // governing functional status before the place hunt publishes bodies.
+    out.push({ id, label: membership.geography.label, divisionType: type, geoid: membership.geography.geoid,
+      ...(["place", "cousub"].includes(type) ? {} : { completeForZip: zip }),
       sourceUrl: version?.provenance.sourceUrls[0] ?? "https://www2.census.gov/geo/docs/maps-data/data/rel2020/" });
     const base = stateBase(membership.geography.stateFips);
     if (base) out.push({ id: base.base, label: US_STATES.find(s => s.code === base.postal.toLowerCase())?.name ?? base.postal, divisionType: "state", geoid: membership.geography.stateFips, completeForZip: zip,

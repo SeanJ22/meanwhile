@@ -46,7 +46,7 @@ import type { ExpansionCycleReading } from "./reading.ts";
 import { expansionScopesOf, type ExpansionScopeDecision } from "./scopes.ts";
 import { declaredWorkMembers, type ScopedStandingWork } from "./declared-work-scope.ts";
 import { readFieldManual, type FieldManualRead } from "../field-manual.ts";
-import { divisionsForZip, type PlaceDivision } from "./national-geography.ts";
+import { divisionsForZip, heldDivisionsForZip, type PlaceDivision } from "./national-geography.ts";
 import { readStateReference } from "./state-references.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 
@@ -244,8 +244,8 @@ export async function resolveScopes(
 type LookupState = { readonly lookup: CensusGeographyLookup; readonly source: PublishedLookupSource; readonly versionId: string };
 
 export interface ExpansionLoad {
-  /** Fresh Census divisions for ZIPs not yet in the shared published lookup.
-   * Acquisition inputs for held-first hunts, not invented registry bodies. */
+  /** Held Census memberships plus acquired intersections for unheld ZIPs.
+   * Work placement inputs, not invented registry bodies. */
   readonly nationalPlaces?: ReadonlyMap<string, readonly PlaceDivision[]>;
   /** Inherited sources, methods and dead ends, read before geography or dispatch. */
   readonly knowledge?: FieldManualRead;
@@ -352,6 +352,14 @@ export async function loadExpansionPlan(input: {
       return scope;
     }
   }));
+  if (state?.source === "published") {
+    const heldState = state;
+    const zips = [...new Set(scopes.flatMap(scope => scope.kind === "RESOLVED" ? [...scope.zctas] : []))];
+    await Promise.all(zips.filter(zip => !nationalPlaces.has(zip)).map(async zip => {
+      try { nationalPlaces.set(zip, await heldDivisionsForZip(zip, heldState)); }
+      catch (error) { conditions.push(`Held Census divisions for ${zip} could not be read: ${error instanceof Error ? error.message : String(error)}`); }
+    }));
+  }
 
   let territory: TerritoryIndex | null = null;
   let territoryDetail: string | null = null;

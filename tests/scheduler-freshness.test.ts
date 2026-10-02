@@ -610,6 +610,19 @@ test("W3.5: work beyond the cycle's stated ceiling is DEFERRED with a reason", a
   assert.equal(cycle.dispatched.length, 1);
   assert.equal(cycle.deferred.length, 2);
   assert.match(cycle.deferred[0].why, /stated ceiling/);
+  const { runPool } = await import("../lib/control-plane/scheduler/shadow-loop.ts");
+  const pulled: string[] = [];
+  let order = ["a", "b", "c"];
+  await runPool(["a", "b", "c"], 1, async id => {
+    pulled.push(id);
+    // Publishing a field changes completion before the next worker pull.
+    if (id === "a") order = ["c", "b", "a"];
+  }, async () => (a, b) => order.indexOf(a) - order.indexOf(b));
+  assert.deepEqual(pulled, ["a", "c", "b"]);
+  const concurrent: string[] = [];
+  await runPool(["a", "b", "c"], 3, async id => { concurrent.push(id); },
+    async () => (a, b) => order.indexOf(a) - order.indexOf(b));
+  assert.deepEqual([...concurrent].sort(), ["a", "b", "c"], "concurrent ranking cannot hand out a row twice");
 });
 
 test("NH328: canonical reader-impact priority reaches the Scout pool before an older band-2 row", async () => {

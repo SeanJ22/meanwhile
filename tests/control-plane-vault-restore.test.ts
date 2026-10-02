@@ -216,6 +216,7 @@ test("a corrupted source body, or a record the object does not satisfy, is refus
   assert.ok(outcomes.some((o) => o.status === "REFUSED" && /not held identity for record/.test(o.reason)));
   assert.ok(outcomes.some((o) => o.status === "REFUSED" && /bytes on disk are not the bytes that were written/.test(o.reason)));
   assert.deepEqual(await runtime.list("project/"), []);
+  await assert.rejects(planVaultRestore(main, runtime, [heldRecord(bad.artifact)]), /bytes on disk are not the bytes that were written/);
 
   /* A record naming another URL is not held identity at all, so it is never planned. */
   const elsewhere = await planVaultRestore(main, runtime, [heldRecord(good.artifact, { canonicalUrl: "https://www.example.gov/other" })]);

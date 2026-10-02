@@ -2,6 +2,7 @@ import { readerQuery } from "./promoted-reader-query.ts";
 import type { CivicDataReadResult, CivicDataReadMetadata } from "./read-model.ts";
 import { PostgresRoutineDataStore } from "./store.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
+import { readPlacePayloadParts } from "./place-payload-slices.ts";
 
 /** A view of an already promoted pointer, like Admin's promoted slices. It
  * carries pointer metadata; it is not a newly validated candidate or receipt. */
@@ -11,7 +12,7 @@ export type PlaceCaptureRead<T> = {
   readonly metadata: Pick<CivicDataReadMetadata, "recordClass" | "scope">;
 };
 
-const array = (path: string, where: string) => `(SELECT COALESCE(jsonb_agg(x), '[]'::jsonb) FROM jsonb_array_elements(COALESCE(${path}, '[]'::jsonb)) x WHERE ${where})`;
+const array = (path: string, where: string) => `(SELECT COALESCE(jsonb_agg(x), '[]'::jsonb) FROM jsonb_array_elements(CASE WHEN jsonb_typeof(${path})='array' THEN ${path} ELSE '[]'::jsonb END) x WHERE ${where})`;
 const division = "x->>'ocdId'=ANY($3::text[]) OR x->>'divisionId'=ANY($3::text[])";
 const serves = `${division} OR x->'alsoServesOcdIds' ?| $3::text[]`;
 
@@ -35,7 +36,7 @@ export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetada
     if (formats?.some(row => row.area_stored === true)) {
       const stateAreas = new Map<string, string[]>();
       for (const id of ids) {
-        const state = /^ocd-division\/country:us\/state:([a-z]{2})(?:\/|$)/.exec(id)?.[1];
+        const state = /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}(?=\/|$)/.exec(id)?.[0];
         if (state) stateAreas.set(state, [...(stateAreas.get(state) ?? []), id]);
       }
       const results: PlaceCaptureRead<T>[] = [];
@@ -66,9 +67,9 @@ export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetada
       'statewideExecutives', ${array("payload->'statewideExecutives'", "x->>'stateOcdId'=ANY($3::text[])")},
       'officialCandidacies', jsonb_build_object('rows', ${array("payload->'officialCandidacies'->'rows'", "x->'holder'->'divisions' ?| $3::text[]")}))`;
   } else if (recordClass === "MEETING") {
-    value = `(payload - 'meetings') || jsonb_build_object('meetings', ${array("payload->'meetings'", `${division} OR x->>'bodyId'=ANY($4::text[])`)})`;
+    value = `jsonb_build_object('meetings', ${array("payload->'meetings'", `${division} OR x->>'bodyId'=ANY($4::text[])`)})`;
   } else if (recordClass === "MEETING_OUTCOME") {
-    value = `(payload - 'sittings') || jsonb_build_object('sittings', ${array("payload->'sittings'", `${division} OR x->>'bodyId'=ANY($4::text[])`)})`;
+    value = `jsonb_build_object('sittings', ${array("payload->'sittings'", `${division} OR x->>'bodyId'=ANY($4::text[])`)})`;
   } else if (recordClass === "FEDERAL_DIRECTORY" || recordClass === "STATE_LEGISLATOR") {
     const members = array("payload->'roster'->'divisions'", division);
     value = `jsonb_build_object('roster', ((payload->'roster') - 'divisions' - 'officeholders' - 'unmatched') || jsonb_build_object(
@@ -90,11 +91,14 @@ export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetada
     value = `(payload - 'records') || jsonb_build_object('records', ${array("payload->'records'", `${division} OR x->>'stateOcdId'=ANY($3::text[])`)})`;
   }
   const [rows] = await query([{ text: `WITH selected AS (SELECT $3::text[] ids, $4::text[] bodies, $5::text[] targets)
-    SELECT scope, ${value} AS value FROM civic_data_promotions WHERE record_class=$1 AND scope=ANY($2::text[])`,
+    SELECT scope, ${value} AS value, jsonb_path_exists(payload, '$.**."$civicPayloadPart"') AS encoded
+      FROM civic_data_promotions WHERE record_class=$1 AND scope=ANY($2::text[])`,
     params: [recordClass, [...new Set(scopes)], [...ids], [...bodies], [...targets]] }]);
   const byScope = new Map(rows?.map(row => [row.scope, row]));
+  const encoded = rows.filter(row => row.encoded).map(row => row.scope as string);
+  const decoded = encoded.length ? await readPlacePayloadParts(query, recordClass, encoded, ids, bodies, targets) : new Map();
   return scopes.map(scope => {
     const row = byScope.get(scope);
-    return { kind: row ? "PROMOTED" : "NOT_RECORDED", value: row?.value as T ?? null, metadata: { recordClass, scope } };
+    return { kind: row ? "PROMOTED" : "NOT_RECORDED", value: (decoded.get(scope) ?? row?.value) as T ?? null, metadata: { recordClass, scope } };
   });
 }

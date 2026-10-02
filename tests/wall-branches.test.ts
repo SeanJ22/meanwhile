@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
+import { parseCsv } from "../lib/reference/index.ts";
 
 /**
  * **RULING 72 — a walled host is never evidence a body is unreachable.**
@@ -112,10 +113,10 @@ test("RULING 72: the FEC directory this repo cross-checks against is really here
     join(ROOT, "data", "reference", "fec_combined_federal_state_disclosure_directory.csv"),
     "utf8",
   );
-  const rows = csv.split(/\r?\n/).filter(Boolean);
+  const rows = parseCsv(csv);
   assert.ok(rows.length > 300, `the FEC directory holds ${rows.length - 1} offices, which is too few to be the real file`);
-  assert.match(rows[0] ?? "", /jurisdiction,office/, "the header is the directory's own");
-  const elecRow = rows.find((r) => /^NEW JERSEY,ELECTION LAW ENFORCEMENT COMMISSION/.test(r));
+  assert.deepEqual(rows[0]?.slice(0, 2), ["jurisdiction", "office"], "the header is the directory's own");
+  const elecRow = rows.find(([jurisdiction, office]) => jurisdiction === "NEW JERSEY" && office === "ELECTION LAW ENFORCEMENT COMMISSION");
   assert.ok(elecRow, "ELEC's own row is in the directory");
-  assert.match(elecRow, /609\/\d{3}-?\d{4}|\d{3}\/\d{3}-\d{4}/, "with a phone number on it");
+  assert.match(elecRow.join(","), /609\/\d{3}-?\d{4}|\d{3}\/\d{3}-\d{4}/, "with a phone number on it");
 });

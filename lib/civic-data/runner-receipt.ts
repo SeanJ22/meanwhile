@@ -395,15 +395,17 @@ export async function durableRoutineRunnerReceiptIssue(
         ) return `canonical ${expected.recordClass}:${expected.scope} does not prove the reported GOOD candidate`;
         return null;
       }
+      // This completed promotion keeps its durable outcome when another child
+      // publishes a newer version before settlement. Reader repair checks the
+      // version now serving; this branch checks its canonical identity/LKG.
       const pointer = await store.readPromotionIdentity(expected.recordClass, expected.scope);
       if (
         pointer === null ||
         pointer.recordClass !== expected.recordClass ||
         pointer.scope !== expected.scope ||
-        pointer.versionId !== receipt.candidateId ||
-        pointer.lastKnownGoodVersionId !== receipt.candidateId ||
+        pointer.lastKnownGoodVersionId !== pointer.versionId ||
         pointer.sourceId !== expected.sourceId
-      ) return `canonical ${expected.recordClass}:${expected.scope} does not prove the reported GOOD candidate`;
+      ) return `canonical ${expected.recordClass}:${expected.scope} does not carry a valid current LKG identity`;
       return null;
     }
 

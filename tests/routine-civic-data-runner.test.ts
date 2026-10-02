@@ -159,7 +159,7 @@ test("the standing parent durably accounts for a routine child killed outside so
   assert.match(pilot, /appendRoutineCivicDataSupervisorDigest/);
 });
 
-function sourceGoodCandidate() {
+function sourceGoodCandidate(receipts = 10) {
   return fecFundingCandidate({
     snapshot: {
       formatVersion: 1,
@@ -178,10 +178,10 @@ function sourceGoodCandidate() {
         principalCommitteeId: "C00999999",
         cycle: 2026,
         totals: {
-          receipts: 10,
+          receipts,
           disbursements: 1,
-          cashOnHand: 9,
-          individualItemized: 10,
+          cashOnHand: receipts - 1,
+          individualItemized: receipts,
           individualUnitemized: 0,
           smallDonorShare: 0,
           coverageEndDate: "2026-06-30",
@@ -196,7 +196,7 @@ function sourceGoodCandidate() {
       }],
       absences: [],
     },
-    rawBodies: ["official FEC response bytes"],
+    rawBodies: [`official FEC response bytes: receipts=${receipts}`],
     finalUrl: "https://api.open.fec.gov/v1/candidates/search/",
     retrievedAt: T0,
     excludedFacts: [],
@@ -1770,7 +1770,7 @@ test("the durable receipt check proves a Reader-projected pointer by identity an
   assert.match(await durableRoutineRunnerReceiptIssue(success, unprojected, tampered, "SUCCESS") ?? "", /does not prove the reported GOOD candidate/);
 });
 
-test("the durable receipt check's identity proof refuses every pointer that does not name the reported version", async () => {
+test("the durable receipt check refuses invalid current identities and keeps exact LKG equality for holds", async () => {
   const task = ROUTINE_SOURCE_TASKS[0];
   const store = new MemoryRoutineDataStore();
   const good = sourceGoodCandidate();
@@ -1817,14 +1817,14 @@ test("the durable receipt check's identity proof refuses every pointer that does
   assert.equal(await durableRoutineRunnerReceiptIssue(heldReceipt, task, pointing(real), "HELD"), null);
   for (const [label, identity] of [
     ["absent", null],
-    ["another version", { ...real, versionId: "cv-other", lastKnownGoodVersionId: "cv-other" }],
     ["an LKG that is not the current version", { ...real, lastKnownGoodVersionId: "cv-older" }],
     ["another source", { ...real, sourceId: "another-source" }],
+    ["another class", { ...real, recordClass: "DOTGOV_REFERENCE" }],
     ["another scope", { ...real, scope: "US:another-scope" }],
   ] as const) {
     assert.match(
       await durableRoutineRunnerReceiptIssue(success, task, pointing(identity), "SUCCESS") ?? "",
-      /does not prove the reported GOOD candidate/,
+      /does not carry a valid current LKG identity/,
       `success refuses a pointer with ${label}`,
     );
     assert.match(
@@ -1833,6 +1833,48 @@ test("the durable receipt check's identity proof refuses every pointer that does
       `held refuses a pointer with ${label}`,
     );
   }
+  const advanced = { ...real, versionId: "cv-newer", lastKnownGoodVersionId: "cv-newer" };
+  assert.equal(await durableRoutineRunnerReceiptIssue(success, task, pointing(advanced), "SUCCESS"), null,
+    "a completed promotion need not remain the serving version");
+  assert.match(await durableRoutineRunnerReceiptIssue(heldReceipt, task, pointing(advanced), "HELD") ?? "",
+    /unchanged, proof-valid canonical LKG pointer/, "held outcomes still prove the exact unchanged LKG");
+});
+
+test("two successful publications settle independently after the canonical pointer advances", async () => {
+  const task = ROUTINE_SOURCE_TASKS[0];
+  const store = new MemoryRoutineDataStore();
+  const first = sourceGoodCandidate();
+  const second = sourceGoodCandidate(20);
+  const firstOutcome = await processRegisteredRoutineCandidate(store, task.id, first, T0);
+  const secondOutcome = await processRegisteredRoutineCandidate(store, task.id, second, T0);
+  assert.equal(firstOutcome.candidate.state, "PROMOTED");
+  assert.equal(secondOutcome.candidate.state, "PROMOTED");
+  assert.notEqual(first.id, second.id);
+  assert.equal((await store.readPromotionIdentity(task.recordClass, task.scope))?.versionId, second.id);
+  const receipt = {
+    source: task.id, candidateId: first.id, acquisitionSucceeded: true,
+    state: firstOutcome.candidate.state, decision: firstOutcome.candidate.receipt?.decision ?? null,
+    promotedVersion: firstOutcome.candidate.promotedVersion,
+    lastKnownGoodVersion: firstOutcome.candidate.lastKnownGoodVersion,
+    structuralReleaseContract: ZERO_RELEASE_EVENTS,
+  };
+  const durableIssue = await durableRoutineRunnerReceiptIssue(receipt, task, store, "SUCCESS");
+  assert.equal(durableIssue, null);
+  const parsed = parseRoutineRunnerReceipt(`RCD_RECEIPT=${JSON.stringify(receipt)}`);
+  assert.equal(classifyRoutineChildOutcome({ parsed, durableIssue,
+    exitStatus: 0, childDiagnostic: null }).kind, "VERIFIED_SOURCE_SUCCESS");
+  assert.equal(await durableRoutineRunnerReceiptIssue({ ...receipt, candidateId: second.id,
+    promotedVersion: second.id, lastKnownGoodVersion: second.id }, task, store, "SUCCESS"), null);
+  assert.match(await durableRoutineRunnerReceiptIssue({ ...receipt, source: "another-task" }, task, store, "SUCCESS") ?? "",
+    /does not match registered task/);
+  assert.match(await durableRoutineRunnerReceiptIssue({ ...receipt, candidateId: second.id }, task, store, "SUCCESS") ?? "",
+    /differs from the durable candidate/);
+  assert.match(await durableRoutineRunnerReceiptIssue({ ...receipt, candidateId: "cv-not-written" }, task, store, "SUCCESS") ?? "",
+    /not durable/);
+  assert.match(await durableRoutineRunnerReceiptIssue({ ...receipt, decision: "FAIL" }, task, store, "SUCCESS") ?? "",
+    /not backed by the candidate's durable/);
+  assert.match(await durableRoutineRunnerReceiptIssue(receipt, { ...task, sourceId: "another-source" }, store, "SUCCESS") ?? "",
+    /does not match the registered task identity/);
 });
 
 test("the supervisor proves the registry once for two or more meeting children and hands only them the attestation", () => {

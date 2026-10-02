@@ -38,6 +38,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { parseCsv } from "../lib/reference/index.ts";
 
 import { getTableConfig } from "drizzle-orm/pg-core";
 
@@ -146,10 +147,9 @@ test("#12 FEC absence does NOT close a local race, and the statute finds the cus
     join(ROOT, "data", "reference", "fec_combined_federal_state_disclosure_directory.csv"),
     "utf8",
   );
-  const azRows = directory
-    .split(/\r?\n/)
-    .filter((line) => line.startsWith("ARIZONA,"))
-    .map((line) => line.split(",")[1]);
+  const azRows = parseCsv(directory)
+    .filter(([jurisdiction]) => jurisdiction === "ARIZONA")
+    .map(([, office]) => office);
   assert.ok(azRows.includes("SECRETARY OF STATE"), "the AZ rows were not read correctly");
   assert.equal(
     azRows.some((office) => /COUNTY|CLERK|PIMA/i.test(office ?? "")),

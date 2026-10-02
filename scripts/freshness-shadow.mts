@@ -389,7 +389,7 @@ import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 
-const workerSlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
+const hostWorkerSlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
   { parentPeakBytes: RESEARCH_PARENT_PEAK_MIB * 1024 * 1024, admissionsOpen: () => !releaseDrainRequested });
 
 const ROOT = process.cwd();
@@ -1975,6 +1975,9 @@ const paidWorkerCapacity = (readyWork?: number) => {
 };
 // Paid admission happens before handing out a Scout. Held evidence and ordinary
 // code can still use the existing memory slots while the paid lane is closed.
+const dispatchDeadlineMs = Date.now() + 15 * 60_000;
+const workerSlots = { acquire: (entry?: string, deadlineMs = dispatchDeadlineMs) =>
+  hostWorkerSlots.acquire(entry, Math.min(deadlineMs, dispatchDeadlineMs)) };
 const paidScoutSlots = paidWorkerSlots(workerSlots, paidWorkerCapacity);
 // Hand out durable leases before unrelated histories or parent execution.
 const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
@@ -3011,6 +3014,7 @@ async function runAutonomousWave() {
   };
   let taskQueue: ReturnType<typeof readTaskQueue> | null = null;
   const workerDispatches = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
+    deadlineMs: dispatchDeadlineMs,
     slots: workerSlots,
     config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidWorkerCapacity() > 0,
       searchEnabled: scoutSearch !== null, ceilingUsd: effectiveCeilingUsd, fundedSubjects: [...lifetimeHuntSubjects] },
@@ -3082,7 +3086,7 @@ async function runAutonomousWave() {
 }
 async function runAutonomousProcesses() {
   let report = await runAutonomousWave();
-  while (!releaseDrainRequested && report.dispatches.some(row => row.outcome === "WORKED")) {
+  while (!releaseDrainRequested && Date.now() < dispatchDeadlineMs && report.dispatches.some(row => row.outcome === "WORKED")) {
     const next = await runAutonomousWave();
     report = { ...next, dispatches: [...report.dispatches, ...next.dispatches],
       scoutsAdmitted: report.scoutsAdmitted + next.scoutsAdmitted,

@@ -696,7 +696,6 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
     // One degraded provider may occupy one lane, never the whole standing
     // pool. Distinct sources keep running and settling independently.
     failureDomain: pending.task.acquisitionFailureDomain,
-    ...(/^(national-place:|worker-publication:)/.test(pending.task.id) ? { timeoutMs: 0 } : {}),
     executable: process.execPath,
     args: ["--experimental-strip-types", ...pending.command],
     env: {

@@ -10,7 +10,7 @@ import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { scheduleAutonomousAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
 import { FIRST_BACKOFF_MINUTES } from "../lib/control-plane/scheduler/debt.ts";
 import type { LegacyCivicExtractionContract } from "../lib/control-plane/workers/types.ts";
-import { mkdtemp, rm, mkdir, writeFile } from "node:fs/promises";
+import { mkdtemp, rm, mkdir, writeFile, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { writeFieldManual, newFieldManualEntry } from "../lib/control-plane/field-manual.ts";
@@ -21,6 +21,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { unchangedScoutFailure } from "../lib/control-plane/workers/scout-scheduling.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { claimRouteTask, registerRouteTask } from "../lib/control-plane/repository/coordinator.ts";
+import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
 
 async function acceptRecordedScout(h:Awaited<ReturnType<typeof autonomousHarness>>) {
   const metadata=(await h.repos.artifacts.readAll())[0]; const held=await researchVaultResolver(h.repos,h.store,h.item.project)(metadata.artifactId);
@@ -450,6 +451,46 @@ test("memory wait rechecks the emptied wave before forking queued lease workers"
       onStarted: () => { forks++; }, transportFor: () => async () => { throw new Error("no model in this fixture"); } });
     assert.equal(forks, 1, "queued admissions release without spawning after the first child drains all tasks");
   } finally { await rm(root, { recursive: true, force: true }); }
+});
+
+test("a worker kill timer defers unfinished work and ends only its owned process tree", async () => {
+  const root = await mkdtemp(join(tmpdir(), "s18-worker-timeout-"));
+  try {
+    await mkdir(join(root, "scripts"));
+    await writeFile(join(root, "scripts/register-test-loader.mjs"), "");
+    await writeFile(join(root, "worker.mjs"), `import { spawn } from 'node:child_process';
+      import { writeFileSync } from 'node:fs';
+      process.once('message', config => {
+        const grandchild = spawn(process.execPath, ['-e', 'setInterval(()=>{},1000)'], { stdio: 'ignore' });
+        writeFileSync('descendant.pid', String(grandchild.pid));
+        setTimeout(()=>{grandchild.kill();process.send({kind:'finished',body:config.taskIds});process.disconnect();},2500);
+      });`);
+    const input = { entry: "worker.mjs", childTimeoutMs: 1000, config: { root, postgres: false,
+      taskIds: ["owed"], modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
+      capacity: () => 1, transportFor: () => async () => { throw new Error("no model in this fixture"); } };
+    const results = await runLeaseWorkerProcesses(input);
+    assert.equal(results.length, 1);
+    assert.equal(results[0]!.outcome, "FAILED");
+    assert.match(results[0]!.detail, /WORKER_CHILD_TIMEOUT/);
+    assert.equal(results[0]!.dispositionCommitted, false);
+    const descendant = Number(await readFile(join(root, "descendant.pid"), "utf8"));
+    if (process.platform === "win32") assert.throws(() => process.kill(descendant, 0));
+    assert.doesNotThrow(() => process.kill(process.pid, 0), "the parent and unrelated trees remain alive");
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
+
+test("the autonomous wave loop stops at its dispatch slice even while waves keep working", async () => {
+  const source = await readFile(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
+  const start = source.indexOf("async function runAutonomousProcesses()");
+  const end = source.indexOf("let meetingsDiscovery:", start);
+  const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
+  let calls = 0, now = 0;
+  const wave = async () => { calls++; now += 20; return { dispatches: [{ outcome: calls <= 3 ? "WORKED" : "FAILED" }],
+    scoutsAdmitted: 0, scoutsLimitedAdmitted: 0 }; };
+  const run = new Function("runAutonomousWave", "releaseDrainRequested", "dispatchDeadlineMs", "Date", `${snippet} return runAutonomousProcesses;`)(wave, false, 30, { now: () => now });
+  const report = await run();
+  assert.equal(calls, 2);
+  assert.equal(report.dispatches.length, 2, "completed work is retained when the slice defers later waves");
 });
 
 test("pool returns a completed dispatch and records unfinished work when a child exits unsuccessfully", async () => {

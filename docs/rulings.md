@@ -107,7 +107,7 @@ Keep a brief execution plan with each remaining task, one accountable owner, and
 
 Run independent work in parallel without conflicting edits or interfering tests. Prepare downstream work as soon as its inputs exist. Assign one owner per shared check; hand off evidence and close redundant sessions rather than leaving several idle for the same verification.
 
-**A worker carries only what its job needs.** A job for one place loads that place's data, never the whole country; national reference data is loaded once and handed out in pieces; shared tools (browser, field manual) are shared, not copied per worker. Any change to the fleet reports how many workers the production server runs at once at the 0.75 GiB memory margin. (Sean, October 1, 2026.)
+**A worker carries only what its job needs.** Nothing loads the whole country: a job for a place loads that place plus every district touching it, from data stored by area, and nothing else is in memory. Shared tools (browser, field manual) are shared, not copied per worker. Any change to the fleet reports how many workers the production server runs at once at the 0.75 GiB memory margin. (Sean, October 1, 2026.)
 
 Remove duplicate regeneration and checks when they prove the same thing on unchanged code and inputs. Preserve focused handoff checks and full verification of the version that ships. Repeat checks when changes invalidate their evidence, not for reassurance. Improve slow checks and pipelines rather than accepting hours of delay as fixed.
 

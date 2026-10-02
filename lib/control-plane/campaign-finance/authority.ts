@@ -30,7 +30,7 @@ export function filingRegimeRegistry(jurisdiction: string, options: { root?: str
   if (exists ? registry.jurisdictions.length !== 1 || registry.jurisdictions[0].jurisdiction !== code || registry.regimes.some(regime => regime.jurisdiction !== code)
     : registry.jurisdictions.length > 0 || registry.regimes.length > 0) {
     throw new FilingRegimeRegistryInvalid([{ code: "REGIME_FIELD_INVALID", regimeId: null,
-      detail: `Holding for ${code} contains another jurisdiction; selected filing custody must come from its own holding.` }], source);
+      detail: `Holding for ${code} contains another jurisdiction`, whatItPrevents: "Filing custody being read from another jurisdiction's holding." }], source);
   }
   registryCache = { path, mtime: stat.mtimeMs, size: stat.size, registry };
   return registry;

@@ -13,24 +13,30 @@ export const MODELS = {
     model: "claude-haiku-4-5", name: "Claude Haiku 4.5",
     inputUsdPerMillion: 1, outputUsdPerMillion: 5,
     minimumCacheablePrefixTokens: 4096, cacheReadMultiplier: 0.1,
+    contextWindowTokens: 200_000, maxOutputTokens: 64_000,
     capabilities: { adaptiveThinking: false, effort: false, thinkingDisabled: true, betweenToolsThinking: false, jsonSchemaOutput: true, prefill: true, alwaysThinks: false },
   },
   sonnet: {
     model: "claude-sonnet-5-5", name: "Claude Sonnet 5.5",
     inputUsdPerMillion: 2, outputUsdPerMillion: 10,
     minimumCacheablePrefixTokens: 512, cacheReadMultiplier: 0.1,
+    contextWindowTokens: 1_000_000, maxOutputTokens: 128_000,
     capabilities: { adaptiveThinking: true, effort: true, thinkingDisabled: false, betweenToolsThinking: true, jsonSchemaOutput: true, prefill: false, alwaysThinks: true },
   },
   opus: {
     model: "claude-opus-5-5", name: "Claude Opus 5.5",
     inputUsdPerMillion: 4, outputUsdPerMillion: 20,
     minimumCacheablePrefixTokens: 512, cacheReadMultiplier: 0.05,
+    contextWindowTokens: 1_000_000, maxOutputTokens: 128_000,
     capabilities: { adaptiveThinking: true, effort: true, thinkingDisabled: false, betweenToolsThinking: false, jsonSchemaOutput: true, prefill: false, alwaysThinks: true },
   },
 } as const;
 
 export type ModelTier = keyof typeof MODELS;
 export const MODEL_TIERS = ["haiku", "sonnet", "opus"] as const;
+/** Provider protocol maxima used to bound historical unmetered sends, not new
+ * application caps. Verified 2026-10-02 from the first-party model overview. */
+export const MODEL_LIMIT_SOURCE = "https://platform.claude.com/docs/en/models/overview";
 export const MODEL_PRICE_SOURCE = "https://platform.claude.com/docs/en/about-claude/pricing";
 export const MODEL_PRICES_STATED_ON = "2026-09-29";
 

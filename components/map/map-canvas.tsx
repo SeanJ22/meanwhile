@@ -16,7 +16,7 @@ import {
   type ErrorEvent as MapErrorEvent,
   type MapMouseEvent,
 } from "maplibre-gl";
-import { Protocol } from "pmtiles";
+import { PMTiles, Protocol } from "pmtiles";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { holdMapPresentation, releaseMapPresentation, mapPresentationHeld, setPresentationVisible } from "@/lib/map/flight-presentation";
@@ -72,6 +72,23 @@ import {
 import { fanOffsets, findCollisionGroups } from "@/lib/map/spiderfy";
 
 import "maplibre-gl/dist/maplibre-gl.css";
+
+// Start downloads when the client module loads, alongside hydration and ZIP
+// preferences. The map later uses this same archive and its pending header.
+if (typeof window !== "undefined") {
+  setWorkerUrl("/maplibre-gl-worker.mjs");
+  // Keep the shared worker pool alive across Strict Mode's mount cleanup.
+  prewarm();
+  const protocol = new Protocol();
+  const archive = new PMTiles(BOUNDARY_ARCHIVE_URL);
+  protocol.add(archive);
+  addProtocol("pmtiles", protocol.tile);
+  void archive.getHeader().catch(() => {
+    // A failed speculative read must not cache a rejection for the real map.
+    // Its ordinary source error still drives the existing archive fallback.
+    protocol.add(new PMTiles(BOUNDARY_ARCHIVE_URL));
+  });
+}
 
 /**
  * The map.
@@ -431,22 +448,6 @@ export function MapCanvas({
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
-
-    // MapLibre 6 locates its tile-parsing worker at runtime, by resolving
-    // "./maplibre-gl-worker.mjs" against its own import.meta.url. That is a
-    // dynamic template, so no bundler emits the worker as an addressable
-    // asset and the computed URL 404s under both Turbopack and webpack.
-    // scripts/build-map-worker.mjs bundles a self-contained copy here; see it
-    // for the full account. Must precede the first map.
-    setWorkerUrl("/maplibre-gl-worker.mjs");
-    addProtocol("pmtiles", new Protocol().tile);
-
-    // MapLibre shares one worker pool across all maps and tears it down when
-    // the last map is removed. React Strict Mode mounts, cleans up, then mounts
-    // again, so the second map would inherit a disposed pool. prewarm() takes a
-    // reference so map.remove() cannot dispose it. Must follow setWorkerUrl and
-    // precede the first map.
-    prewarm();
 
     // No key means nothing to draw. Fall through to the plain ground colour and
     // say so, rather than substituting another provider — a silent swap turns a

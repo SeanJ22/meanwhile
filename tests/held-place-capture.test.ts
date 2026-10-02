@@ -7,6 +7,8 @@ import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { HeldPlaceFamilies } from "../lib/civic-data/held-place-families.ts";
 import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
+import { readPlacePointerSlices } from "../lib/civic-data/held-place-slices.ts";
+import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
 import { projectHeldGeography, readHeldPlaceGeography, type HeldGeographyRow } from "../lib/civic-data/held-place-geography.ts";
 import type { Division } from "../lib/registry/types.ts";
 
@@ -23,6 +25,56 @@ const meeting = { id: "meeting:one", bodyId: "shared-body", ocdId: county, title
   startsAt: "2026-10-01T02:00:00.000Z", timeZone: "America/Phoenix", startPrecision: "DAY",
   location: null, online: null, status: "SCHEDULED", provenance };
 const meetings = published({ meetings: [meeting] } as unknown as MeetingsSnapshot);
+
+test("held slices carry only exact unchanged versions, isolate selectors, and remove missing pointers", async () => {
+  let version = "v1", exists = true, payloadReads = 0;
+  const query: ReadOnlyQuery = async statements => {
+    const statement = statements[0];
+    if (!exists) return [[]];
+    const carried = JSON.parse(statement.params[5] as string).held === version;
+    if (!carried) payloadReads++;
+    return [[{ scope: "held", current_version_id: version, encoded: false,
+      value: carried ? null : { meetings: [{ id: version, ocdId: (statement.params[2] as string[])[0] }] } }]];
+  };
+  const read = (division: string) => readPlacePointerSlices<{ meetings: { id: string; ocdId: string }[] }>("MEETING", ["held"], [division], [], [], query);
+  const first = await read(county);
+  assert.deepEqual(await read(county), first);
+  assert.equal(payloadReads, 1);
+  assert.equal((await read(neighbour))[0].value!.meetings[0].ocdId, neighbour);
+  assert.equal(payloadReads, 2, "another area's selector cannot carry this area's payload");
+  version = "v2";
+  assert.equal((await read(county))[0].value!.meetings[0].id, version);
+  assert.equal(payloadReads, 3);
+  exists = false;
+  assert.equal((await read(county))[0].kind, "NOT_RECORDED");
+  exists = true;
+  assert.equal((await read(county))[0].value!.meetings[0].id, version);
+  assert.equal(payloadReads, 4, "a restored pointer is read again");
+});
+
+test("concurrent held reads retain the exact values carried by their own pointer query", async () => {
+  let version = "v1", blockNext = false;
+  let release: (() => void) | undefined;
+  const query: ReadOnlyQuery = async statements => {
+    const observed = version;
+    const carried = JSON.parse(statements[0].params[5] as string).held === observed;
+    if (blockNext) {
+      blockNext = false;
+      await new Promise<void>(resolve => { release = resolve; });
+    }
+    return [[{ scope: "held", current_version_id: observed, encoded: false,
+      value: carried ? null : { meetings: [{ id: observed }] } }]];
+  };
+  const read = () => readPlacePointerSlices<{ meetings: { id: string }[] }>("MEETING", ["held"], [county], [], [], query);
+  await read();
+  blockNext = true;
+  const older = read();
+  version = "v2";
+  assert.equal((await read())[0].value!.meetings[0].id, "v2");
+  assert.ok(release);
+  release();
+  assert.equal((await older)[0].value!.meetings[0].id, "v1", "another read must not turn a carried value into a null or the wrong version");
+});
 
 test("held boundary provenance maps source, semantic version and effective use without URL-only credit", () => {
   const cd = "ocd-division/country:us/state:az/cd:6";

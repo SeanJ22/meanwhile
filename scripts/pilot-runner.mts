@@ -161,6 +161,7 @@ import {
 } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import {
   applyRuntimeRelease,
+  resumeRuntimeReleaseInstall,
   fetchGithubCheckRuns,
   fetchRuntimeProductionDeploys,
   inspectNewestDeployedRuntimeRelease,
@@ -744,7 +745,7 @@ async function publishConsoleChildren(): Promise<boolean> {
       env: process.env,
 
       maxBufferBytes: 16 * 1024 * 1024,
-
+      noProgressMs: RUNTIME_NO_PROGRESS_MS,
     });
     if (!run) {
       succeeded = false;
@@ -1370,9 +1371,22 @@ async function persistRuntimeBoundaryFailure(
 async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
   if (!AUTO_RELEASE_HANDOFF) return null;
   const startedAt = new Date().toISOString();
+  const recovered = resumeRuntimeReleaseInstall({ root: ROOT });
+  if (recovered?.state === "REFUSED") {
+    await persistRuntimeBoundaryFailure(recovered, startedAt);
+    return 2;
+  }
+  if (recovered?.state === "UPDATED") {
+    console.log(`  ${recovered.detail}; restarting after recovered install to load the installed dependencies`);
+    return 0;
+  }
   const first = await inspectRuntimeRelease();
   if (first.state === "CURRENT") {
-    return await applyRuntimeContracts(RUNNING_CODE_SHA) ? null : 2;
+    if (!await applyRuntimeContracts(RUNNING_CODE_SHA)) return 2;
+    runtimeAdmissionsHeld = false;
+    startStandingRuntimeClock();
+    startAdminCopyClock();
+    return null;
   }
 
   // At process startup no clock has passed the method-authority gate yet. A
@@ -1743,7 +1757,7 @@ async function runNightlyWindow(trigger: string): Promise<void> {
     env: process.env,
 
     maxBufferBytes: 64 * 1024 * 1024,
-
+    noProgressMs: RUNTIME_NO_PROGRESS_MS,
   });
   if (!run) throw new Error("NIGHTLY_WINDOW_CHILD_RESULT_MISSING");
   const lines = `${run.stdout ?? ""}${run.stderr ?? ""}`.split("\n").filter((l) => l.trim() !== "");
@@ -2090,6 +2104,6 @@ if (handoffExitCode === null) {
 } else {
   process.exitCode = handoffExitCode;
 }
-// Timed-out coordination promises can retain sockets after their child is gone.
+// Open sockets or timers must never keep old code alive after a finished handoff.
 // Restart=always resumes the startup release reconciliation without human help.
-if (standingDrainFailed) process.exit(handoffExitCode ?? 2);
+if (handoffExitCode !== null) process.exit(handoffExitCode);

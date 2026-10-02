@@ -36,6 +36,7 @@ import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { failureResponderExecutor } from "../lib/control-plane/workers/detective.ts";
 import { scoutProcessExecutor } from "../lib/control-plane/workers/scout-process.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
+import { workerProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import {
   cacheTtlOrderProblems,
   withCacheBreakpoints,
@@ -50,6 +51,7 @@ import type { ArtifactProvenance, InheritedEvidence, ScoutToolkit, ScoutToolCont
 import { MIN_DISTINCT_RUNGS, classifyPriorRung, validateScoutFinish, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import {
   RESEARCH_BOUNDS,
+  researchWorkerCapacity,
   ceilingPermits,
   deriveLevel1,
   scoutSpendInWindow,
@@ -66,6 +68,22 @@ import {
 
 const NOW = "2026-09-01T12:00:00.000Z";
 const NOW_MS = Date.parse(NOW);
+
+test("one funded geography can staff every ready job; shared slots follow budget and provider limits", () => {
+  const funded = { availableUsd: 100, requestUsd: 0.04096 };
+  assert.equal(researchWorkerCapacity({ ...funded, readyWork: 158 }), 158);
+  assert.equal(researchWorkerCapacity({ ...funded, requestsPerMinute: 100 }), 100,
+    "shared slots do not apply the geography count as a process cap");
+  assert.equal(researchWorkerCapacity({ ...funded, readyWork: 158, requestsPerMinute: 20 }), 20);
+  assert.equal(researchWorkerCapacity({ ...funded, readyWork: 158, inputTokensPerMinute: 65536,
+    inputTokensPerRequest: 8192 }), 8);
+  assert.equal(researchWorkerCapacity({ ...funded, readyWork: 158, outputTokensPerMinute: 32768,
+    outputTokensPerRequest: 8192 }), 4);
+  assert.equal(researchWorkerCapacity({ ...funded, readyWork: 158, availableUsd: 0.1 }), 2);
+  assert.equal(researchWorkerCapacity({ ...funded, readyWork: 0 }), 0);
+  assert.equal(researchWorkerCapacity({ ...funded, readyWork: 158, availableUsd: 0 }), 0);
+  assert.equal(researchWorkerCapacity({ ...funded, readyWork: Number.NaN }), 0);
+});
 
 test('a solved held route bypasses paid admission and prewarming and counts as deterministic',async()=>{
   const {repos,task}=await registered();let requests=0,admissions=0,warms=0;
@@ -151,6 +169,40 @@ async function registered(repos = createMemoryRepositories(), o: FreshnessObliga
   await registerRouteTask(repos, task, NOW);
   return { repos, item, task };
 }
+
+test("twenty ready Scouts for one place enter shared worker slots together", { timeout: 10_000 }, async () => {
+  const repos = createMemoryRepositories();
+  const obligations = Array.from({ length: 20 }, (_, index) => ({ ...OBLIGATION,
+    id: `${OBLIGATION.id}-${index}`, routeId: `novel-route-${index}` }));
+  const tasks = new Map<string, string>();
+  for (const obligation of obligations) tasks.set(obligation.id, (await registered(repos, obligation)).task.id);
+  const funded = { availableUsd: 100, requestUsd: 0.04096, requestsPerMinute: 20 };
+  const slots = workerProcessSlots(() => researchWorkerCapacity(funded), {
+    availableBytes: () => 8192 * 1024 * 1024, peakBytes: () => 248 * 1024 * 1024,
+  });
+  let starts = 0;
+  let finish!: () => void;
+  const everyoneStarted = new Promise<void>(resolve => { finish = resolve; });
+  const cycle = await runCycle({ repos, obligations, debts: [], routeTaskFor: id => tasks.get(id) ?? null,
+    maturity: () => "UNGRADUATED", holder: "one-place-parallel", now: NOW, leaseTtlMs: 60_000,
+    executor: { lane: "DETERMINISTIC", run: async () => { throw new Error("model job reached plain-code lane"); } },
+    reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
+    truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
+    research: { decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "ready work in one place", disagreement: null }),
+      admitScout: () => ({ admit: true }), workerCapacity: researchWorkerCapacity({ ...funded, readyWork: obligations.length }),
+      scoutLeaseTtlMs: 420_000, modelExecutor: { lane: "BOUNDED_MODEL_WORKER", run: async () => {
+        const release = await slots.acquire("scout-worker.ts");
+        try {
+          if (++starts === obligations.length) finish();
+          await everyoneStarted;
+          return { ranAs: "BOUNDED_MODEL_WORKER", kind: "ABORTED", detail: "recorded offline fixture" };
+        } finally { release(); }
+      } },
+    },
+  });
+  assert.equal(starts, 20);
+  assert.equal(cycle.lanes?.model.dispatched, 20);
+});
 
 async function ordinaryWorkerProcesses() {
   const { mkdtemp, rm } = await import("node:fs/promises");

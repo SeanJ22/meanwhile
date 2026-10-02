@@ -209,13 +209,21 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
     }};
 }
 
+/** A refused request that never researched a source cannot overturn accepted source evidence. */
+function refusedWithoutResearch(result: import('../scheduler/scout-result.ts').ScoutResult): boolean {
+  return !!result.refusal?.length && result.refusal.every(refusal =>
+    refusal.code === 'SCOUT_POLICY_DENIED' || refusal.code === 'SCOUT_TRANSPORT_FAILED') &&
+    result.rungs?.length === 0 && result.artifactIds?.length === 0 &&
+    result.candidates.length === 0 && result.findings.length === 0 && !result.sourceDeadEnds?.length;
+}
+
 /** A later real failure reopens investigation; an accepted source route is never scouted again. */
 export function solvedScoutResult(results: readonly import('../scheduler/scout-result.ts').ScoutResult[],subjectId:string,recordClass:string,routeId?:string|null) {
   // Legacy providers group several distinct blanks under local-jurisdiction.
   // Share their evidence, but a roster result cannot solve public-comment rules.
   const field=routeId?.startsWith('coverage-discovery:') ? routeId : null;
-  const latest=subjectScoutHistory(results,subjectId,recordClass).filter(result=>!field ||
-    (result.routeId ?? result.obligationId?.split('#').at(-1))===field).at(-1);
+  const latest=subjectScoutHistory(results,subjectId,recordClass).filter(result=>(!field ||
+    (result.routeId ?? result.obligationId?.split('#').at(-1))===field) && !refusedWithoutResearch(result)).at(-1);
   return latest?.refusal===null && ['ROUTE_CANDIDATE','EVIDENCE_FOUND'].includes(latest.outcome) &&
     reusableScoutCandidates(latest).length>0 ? latest : null;
 }
@@ -235,7 +243,7 @@ export async function readSubjectScoutHistory(repos:import('../repository/types.
   const results:import('../scheduler/scout-result.ts').ScoutResult[]=[];
   const projection=Object.fromEntries(['formatVersion','attemptId','obligationId','routeTaskId','workItemId','subjectId','routeId',
     'recordClass','providerId','reason','outcome','stoppedBy','rungs','distinctEvidenceRungs','candidates','findings','nextRungs',
-    'unverified','narrative','worker','usage','usd','elapsedMs','artifactIds','recoveryCapabilityVersion','methodCandidateIds',
+    'unverified','narrative','worker','usage','usd','elapsedMs','artifactIds','sourceDeadEnds','recoveryCapabilityVersion','methodCandidateIds',
     'refusal','startedAt','recordedAt','researchRole'].map(key=>[key,true as const]));
   for(const [key,value] of identities) {
     const identity=value as {subjectId?:string;recordClass?:string};

@@ -311,12 +311,37 @@ test('legacy jobs reuse solved subjects without refreshing old facts or calling 
  assert.equal(output.cost?.requestCount,0);assert.equal(output.cost?.usd,0);assert.deepEqual(output.artifacts,[]);
 });
 
+test('requests refused without research do not erase a solved source, while source failures still reopen it',async()=>{
+ const solved={refusal:null,outcome:'EVIDENCE_FOUND',subjectId:'county',recordClass:'officials',attemptId:'solved',recordedAt:'2026-09-29',
+  candidates:[],findings:[{kind:'RECORD',field:'holder',value:'Ada',exactQuote:'Clerk Ada',sourceUrl:'https://county.gov/clerk',artifactIds:['held']}]} as unknown as ScoutResult;
+ const denied={...solved,attemptId:'not-sent',recordedAt:'2026-10-01',outcome:'NO_PROGRESS',
+  refusal:[{code:'SCOUT_POLICY_DENIED',detail:'ASSIGNMENT_BUDGET'}],rungs:[],artifactIds:[],candidates:[],findings:[],sourceDeadEnds:[]} as ScoutResult;
+ for(const code of ['SCOUT_POLICY_DENIED','SCOUT_TRANSPORT_FAILED'] as const) {
+  const latest={...denied,refusal:[{code,detail:'request could not be sent'}]};
+  assert.equal(solvedScoutResult([solved,latest],'county','officials'),solved);
+  assert.equal(solvedScoutResult([latest],'county','officials'),null,'no accepted source is invented');
+  const recovered=failureResponderExecutor({solved:solvedScoutResult([solved,latest],'county','officials'),
+   transport:async()=>{throw Error('No model request');},toolkitFor:()=>{throw Error('No research');},contextFor:()=>{throw Error('No new brief');}});
+  assert.equal(recovered.lane,'DETERMINISTIC');
+  const outcome=await recovered.run({} as Parameters<typeof recovered.run>[0]);
+  assert.equal(outcome.cost?.usd,0);assert.equal(outcome.cost?.requestCount,0);
+  assert.match(outcome.detail!,/original observation 2026-09-29/);
+ }
+ const failed={...denied,recordedAt:'2026-09-30',rungs:[{tool:'fetch_public',ok:false}]} as unknown as ScoutResult;
+ assert.equal(solvedScoutResult([solved,failed,denied],'county','officials'),null,'do not skip an earlier source failure');
+ assert.equal(solvedScoutResult([solved,{...denied,artifactIds:['new-evidence']}],'county','officials'),null);
+ assert.equal(solvedScoutResult([solved,{...denied,sourceDeadEnds:[{artifactId:'held',url:'https://county.gov/clerk',sourceDate:null,reason:'Source no longer supports the record'}]}],'county','officials'),null);
+ assert.equal(solvedScoutResult([solved,{...denied,rungs:undefined} as unknown as ScoutResult],'county','officials'),null,'unknown history is not zero research');
+ assert.equal(solvedScoutResult([solved,{...denied,refusal:[{code:'SCOUT_RESULT_REFUSED',detail:'invalid finish'}]} as unknown as ScoutResult],'county','officials'),null);
+});
+
 test('batch history finds the same subject under other job keys without downloading the full log',async()=>{
  const repos=createMemoryRepositories();
- const base={refusal:null,outcome:'EVIDENCE_FOUND',recordClass:'officials',rungs:[],findings:[],candidates:[],recordedAt:'2026-09-29'} as unknown as ScoutResult;
+ const base={refusal:null,outcome:'EVIDENCE_FOUND',recordClass:'officials',rungs:[],findings:[],candidates:[],sourceDeadEnds:[{artifactId:'failed-source',url:'https://county.gov/clerk',sourceDate:null,reason:'Source no longer supports the record'}],recordedAt:'2026-09-29'} as unknown as ScoutResult;
  for(const [key,subjectId] of [['old-job','county'],['other-job','city']])await repos.scoutResults.append(key,key,{...base,subjectId,obligationId:key},'2026-09-29');
  const rows=await readSubjectScoutHistory(repos,[{subjectId:'county',recordClass:'officials'}]);
  assert.deepEqual(rows.map(r=>r.obligationId),['old-job']);
+ assert.deepEqual(rows[0].sourceDeadEnds,base.sourceDeadEnds);
 });
 
 test('legacy discovery reuses the solved field across jobs without closing other blanks',()=>{

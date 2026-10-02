@@ -69,7 +69,7 @@ test("bootstrap preserves a valid source index without dropping or rebuilding it
   const { sql, calls } = indexSql([{ valid: true, building: false }]);
   await pgEnsureArtifactSourceIndex(sql);
   assert.equal(calls.filter(text => /CREATE INDEX|DROP INDEX/.test(text)).length, 0);
-  assert.ok(calls.some(text => text.includes("pg_advisory_unlock")));
+  assert.ok(!calls.some(text => text.includes("pg_try_advisory_lock")), "an already valid index needs no pinned connection");
 });
 
 test("bootstrap creates a missing source index with standalone concurrent DDL", async () => {
@@ -99,7 +99,37 @@ test("bootstrap leaves another active concurrent builder intact", async () => {
 test("overlapping bootstraps cannot use a stale INVALID observation to drop a valid replacement", async () => {
   const { sql, calls } = indexSql([{ valid: false, building: false }], undefined, false);
   await assert.rejects(pgEnsureArtifactSourceIndex(sql), /CONTROL_PLANE_SOURCE_INDEX_BUILD_IN_PROGRESS/);
-  assert.equal(calls.length, 1, "the losing bootstrap never reads status or runs DDL");
+  assert.equal(calls.length, 2, "after preflight, the losing bootstrap never runs DDL or reads an unlocked replacement status");
+});
+
+test("HTTP bootstrap opens a pinned connection only when index DDL is owed", async () => {
+  const pinned = indexSql([]), http = indexSql([]);
+  let opened = 0;
+  http.sql.withPinnedConnection = async operation => { opened++; return operation(pinned.sql); };
+  await pgEnsureArtifactSourceIndex(http.sql);
+  assert.equal(opened, 1);
+  assert.equal(http.calls.length, 1, "HTTP reads catalog status and never holds a session lock or runs concurrent DDL");
+  assert.ok(pinned.calls.some(text => text.startsWith("CREATE INDEX CONCURRENTLY")));
+  const ready = indexSql([{ valid: true, building: false }]);
+  ready.sql.withPinnedConnection = async () => { throw new Error("valid index unexpectedly opened a socket"); };
+  await pgEnsureArtifactSourceIndex(ready.sql);
+});
+
+test("a replacement that became valid before the session lock is never dropped", async () => {
+  const mock = indexSql([]);
+  let statusReads = 0;
+  const original = mock.sql.query;
+  mock.sql.query = async (text, params, options) => {
+    if (text.includes("FROM pg_index i")) {
+      statusReads++;
+      mock.calls.push(text);
+      return [{ valid: statusReads > 1, building: false }];
+    }
+    return original(text, params, options);
+  };
+  await pgEnsureArtifactSourceIndex(mock.sql);
+  assert.equal(statusReads, 2);
+  assert.ok(!mock.calls.some(text => /CREATE INDEX|DROP INDEX/.test(text)));
 });
 
 test("an interrupted source index build fails bootstrap before its version is recorded", async () => {

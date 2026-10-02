@@ -10,6 +10,7 @@ import type { RoutineSourceTask } from "../civic-data/runner.ts";
 import { workerPublicationTasks } from "../civic-data/worker-publication-tasks.ts";
 import { readCompletedWorkerResults } from "../control-plane/repository/worker-completion.ts";
 import { DEFAULT_CADENCE_HOURS } from "../control-plane/scheduler/obligation.ts";
+import { dueNationalPlaceZips } from "./place-source-task.ts";
 
 /** Add national acquisition to the existing registry source, so its source
  * authority, child runner, publication and readback are shared with rosters. */
@@ -42,6 +43,8 @@ export async function withNationalPlaceTasks(tasks: readonly RoutineSourceTask[]
   }
   if (!zips.length) return [...tasks];
   if (zips.some(zip => !/^\d{5}$/.test(zip))) throw new Error("National place acquisition needs five-digit ZIPs");
+  zips = await dueNationalPlaceZips(repos, zips, now);
+  if (!zips.length) return [...tasks];
   const contract = requiredManualProductionContract("registry-runtime-bindings");
   const items = (await repos.workItems.list()).map(row => row.value)
     .filter(item => item.autonomousPlan?.publication?.contractId === contract.id);
@@ -51,10 +54,11 @@ export async function withNationalPlaceTasks(tasks: readonly RoutineSourceTask[]
   const task: RoutineSourceTask = { ...prior, id: contract.id, sourceId: contract.sourceId, recordClass: contract.recordClass,
     scope: contract.scope, acquisitionFailureDomain: `routine-source:${contract.sourceId}`, requestedUrl: "",
     authorityMode: "REGISTERED_SOURCE_ROUTES", parserVersion: contract.parserNormalizerVersion,
-    command: [...(prior?.command ?? contract.command), `--national-zips=${[...new Set(zips)].sort().join(",")}`],
+    command: [...(prior?.command ?? contract.command).filter(arg => !arg.startsWith("--national-zips=")), `--national-zips=${zips.join(",")}`],
     cadenceMs: Math.min(prior?.cadenceMs ?? Infinity, DEFAULT_CADENCE_HOURS * 3_600_000), retryMs: prior?.retryMs ?? 15 * 60_000,
     contract: prior?.contract ?? { readerProjection: contract.readerProjection,
       cadence: { description: "Refresh the admitted place's national sources on the ordinary roster cadence", defaultEveryMs: DEFAULT_CADENCE_HOURS * 3_600_000 } },
-    ownerInvocation: { ...prior?.ownerInvocation, requestedAt, instructions: [...new Set([...(prior?.ownerInvocation?.instructions ?? []), ...instructions])] } };
+    ownerInvocation: { ...prior?.ownerInvocation, publicationPending: true, requestedAt,
+      instructions: [...new Set([...(prior?.ownerInvocation?.instructions ?? []), ...instructions])] } };
   return [...tasks.filter(existing => existing.id !== task.id), task];
 }

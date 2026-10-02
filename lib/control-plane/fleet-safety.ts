@@ -12,6 +12,8 @@ import type { ModelRequest, ModelResponse, ModelTransport, ScoutEscalationAdmiss
 import { ModelTransportError } from "./scheduler/scout-executor.ts";
 import type { OpenBytes } from "./scheduler/scout-contract.ts";
 import type { OpenOne } from "./scheduler/route-executor.ts";
+import { httpProviderFailure, type FetchOutcome } from "./scheduler/http-executor.ts";
+import { sourceReliabilityKey } from "./scheduler/scout-reliability.ts";
 
 export const FLEET_ZONE = "America/Phoenix";
 
@@ -271,6 +273,7 @@ export class FleetSafetyController {
   private readonly deferrals: FleetNamedDeferral[] = [];
   private readonly stopReasons = new Set<string>();
   private readonly circuits = new Map<string, ProviderCircuit>();
+  private readonly httpPending = new Map<string, Promise<void>>();
   private cycleUsd = 0;
   private cycleModelSpendMeasured = true;
   private reservedUsd = 0;
@@ -533,24 +536,49 @@ export class FleetSafetyController {
   }
 
   /** A fetch seam that hard-caps application payload consumption by streaming. */
-  guardedOpenOne(provider: string, work: string, fetchImpl: typeof fetch = fetch): OpenOne {
-    return async ({ url, method, headers, body }) => {
+  guardedOpenOne(_provider: string, work: string, fetchImpl: typeof fetch = fetch): OpenOne {
+    return async ({ url, method, headers, body, timeoutMs }) => {
+      // Worker processes broker requests through this shared parent. Serialize
+      // one source so queued subjects see the first failure before sending.
+      const source = sourceReliabilityKey(url);
+      const preceding = this.httpPending.get(source);
+      let release!: () => void;
+      const pending = new Promise<void>(resolve => { release = resolve; });
+      this.httpPending.set(source, pending);
+      await preceding;
       const started = Date.now();
+      let requests = 0;
+      let currentUrl = url;
+      let provider = source;
       try {
-        let currentUrl = url;
         let currentMethod = method;
         let currentBody = body;
         let response: Response;
         let merged: Uint8Array;
         while (true) {
+          provider = sourceReliabilityKey(currentUrl);
+          const circuit = this.circuits.get(provider);
+          if (circuit && Date.parse(circuit.eligibleAt) <= this.clock()) this.circuits.delete(provider);
           const reservation = this.reservePayloadRequest(provider, work, currentBody === undefined ? 0 : Buffer.byteLength(currentBody));
           try {
+            requests++;
             response = await fetchImpl(currentUrl, {
               method: currentMethod,
               redirect: "manual",
-              headers: { ...headers, range: `bytes=0-${Math.max(0, reservation.streamCapBytes - 1)}` },
+              // Do not ask JSON APIs for a byte range. The streaming reader
+              // enforces the download limit without altering response semantics.
+              headers,
+              signal: AbortSignal.timeout(timeoutMs),
               ...(currentBody === undefined ? {} : { body: currentBody }),
             });
+            // The bounded reader can reject a partial body before decoding it.
+            // Persist that source failure before its download-limit exception.
+            if (response.status === 206 || response.headers.has("content-range")) {
+              const partial = httpProviderFailure(currentUrl, { status: response.status, bytes: 0,
+                body: "", contentType: "", durationMs: 0, transportError: null,
+                contentRange: response.headers.get("content-range") });
+              if (partial) this.latchProvider(provider, partial, work, new Date(this.clock()).toISOString());
+            }
             merged = await this.readBoundedResponse(response, reservation.streamCapBytes, work);
             this.settlePayloadReservation(reservation, merged.byteLength);
           } catch (error) {
@@ -565,29 +593,33 @@ export class FleetSafetyController {
             currentBody = undefined;
           }
         }
-        const decoded = new TextDecoder().decode(merged);
-        const failure = classifyProviderFailure(new ModelTransportError(`HTTP ${response.status}: ${decoded.slice(0, 300)}`, response.status));
-        if (failure.class === "HARD") this.latchProvider(provider, failure.condition, work, new Date(this.clock()).toISOString());
-        return {
-          status: response.status,
-          bytes: merged.byteLength,
+        const outcome: FetchOutcome = {
+          status: response.status, bytes: merged.byteLength,
           contentType: response.headers.get("content-type") ?? "application/octet-stream",
-          body: decoded,
-          durationMs: Date.now() - started,
-          transportError: null,
+          body: new TextDecoder().decode(merged), durationMs: Date.now() - started,
+          transportError: null, requestCount: requests, contentRange: response.headers.get("content-range"),
         };
-      } catch (error) {
-        if (error instanceof FleetSafetyRefusal) {
-          this.defer(work, error.code, error.message);
+        const failure = httpProviderFailure(currentUrl, outcome);
+        const hard = classifyProviderFailure(new ModelTransportError(
+          `HTTP ${response.status}: ${outcome.body.slice(0, 300)}`, response.status));
+        if (failure !== null || hard.class === "HARD") {
+          const retry = response.headers.get("retry-after");
+          const seconds = retry === null ? NaN : Number(retry);
+          const retryMs = Number.isFinite(seconds) ? Math.max(0, seconds * 1000)
+            : retry === null ? 0 : Math.max(0, Date.parse(retry) - this.clock());
+          this.latchProvider(provider, failure ?? hard.condition, work, new Date(this.clock()).toISOString(),
+            Number.isFinite(retryMs) ? retryMs : null);
         }
-        return {
-          status: error instanceof FleetSafetyRefusal ? null : null,
-          bytes: 0,
-          contentType: "",
-          body: "",
-          durationMs: Date.now() - started,
-          transportError: error instanceof Error ? error.message : String(error),
-        };
+        return outcome;
+      } catch (error) {
+        if (error instanceof FleetSafetyRefusal) this.defer(work, error.code, error.message);
+        else if (requests > 0) this.latchProvider(provider,
+          `transport failed: ${error instanceof Error ? error.message : String(error)}`, work, new Date(this.clock()).toISOString());
+        return { status: null, bytes: 0, contentType: "", body: "", durationMs: Date.now() - started,
+          transportError: error instanceof Error ? error.message : String(error), requestCount: requests };
+      } finally {
+        release();
+        if (this.httpPending.get(source) === pending) this.httpPending.delete(source);
       }
     };
   }

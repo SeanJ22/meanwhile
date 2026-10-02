@@ -2,7 +2,7 @@ import { execFile } from "node:child_process";
 
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
-/** One source gets a full acquisition window without serially taxing siblings. */
+/** Maximum quiet interval; each new source publication renews it. Never a child wall. */
 export const ROUTINE_CHILD_TIMEOUT_MS = 30 * 60_000;
 /** `execFile` applies this cap independently to stdout and stderr. */
 export const ROUTINE_CHILD_MAX_BUFFER_BYTES = 16 * 1024 * 1024;
@@ -57,7 +57,7 @@ export interface BoundedChildCommand {
   readonly args: readonly string[];
   /** Narrow per-command authority/environment; never leak one sibling's envelope to another. */
   readonly env?: NodeJS.ProcessEnv;
-  /** Optional command-specific ceiling for mixed failure-domain passes. */
+  /** Optional command-specific maximum interval without new facts. */
   readonly timeoutMs?: number;
   /** Optional command-specific output ceiling. */
   readonly maxBufferBytes?: number;
@@ -106,32 +106,42 @@ function runOneBoundedChild(
   if (!Number.isSafeInteger(maxBuffer) || maxBuffer <= 0) throw new Error(`BOUNDED_CHILD_OUTPUT_LIMIT_INVALID:${maxBuffer}`);
 
   return new Promise((resolve) => {
-    execFile(
+    let idle: ReturnType<typeof setTimeout> | undefined;
+    let paused = false;
+    let lines = "";
+    const observed = new Set<string>();
+    const renew = () => {
+      clearTimeout(idle);
+      if (timeout > 0) idle = setTimeout(() => {
+        paused = true;
+        // Stop this no-progress pass cooperatively; retained work remains due.
+        child.kill("SIGTERM");
+      }, timeout);
+    };
+    const child = execFile(
       command.executable,
       [...command.args],
       {
         cwd: options.cwd,
         env: command.env ?? options.env,
         encoding: "utf8",
-        timeout,
         maxBuffer,
         windowsHide: true,
       },
       (error, stdout, stderr) => {
+        clearTimeout(idle);
         const code = error && "code" in error ? error.code : null;
         const signal = error && "signal" in error && error.signal
           ? error.signal as NodeJS.Signals
           : null;
         const killed = Boolean(error && "killed" in error && error.killed);
         const outputLimited = code === "ERR_CHILD_PROCESS_STDIO_MAXBUFFER";
-        const timedOut = !outputLimited && killed;
-        const termination: BoundedChildTermination = error === null
-          ? "EXITED"
-          : outputLimited
+        const timedOut = !outputLimited && (paused || killed);
+        const termination: BoundedChildTermination = outputLimited
             ? "OUTPUT_LIMIT_EXCEEDED"
             : timedOut
               ? "TIMED_OUT"
-              : typeof code === "number"
+              : error === null || typeof code === "number"
                 ? "EXITED"
                 : "SPAWN_FAILED";
         resolve({
@@ -141,10 +151,26 @@ function runOneBoundedChild(
           stdout,
           stderr,
           termination,
-          errorMessage: error?.message ?? null,
+          errorMessage: paused ? `NO_PROGRESS_PAUSED: no new publication for ${timeout}ms. ${error?.message ?? ""}` : error?.message ?? null,
         });
       },
     );
+    child.stdout?.on("data", chunk => {
+      lines += String(chunk);
+      const complete = lines.split(/\r?\n/);
+      lines = complete.pop() ?? "";
+      for (const line of complete) {
+        if (!line.startsWith("RCD_PROGRESS=")) continue;
+        try {
+          const progress = JSON.parse(line.slice("RCD_PROGRESS=".length)) as { key?: unknown; records?: unknown };
+          if (typeof progress.key === "string" && progress.key && typeof progress.records === "number" &&
+            Number.isSafeInteger(progress.records) && progress.records > 0 && !observed.has(progress.key)) {
+            observed.add(progress.key); renew();
+          }
+        } catch { /* Ordinary output never renews the progress clock. */ }
+      }
+    });
+    renew();
   });
 }
 

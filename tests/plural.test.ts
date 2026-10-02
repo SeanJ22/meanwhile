@@ -22,7 +22,9 @@ import registry from "../lib/registry/registry.json" with { type: "json" };
 import { collectNationalPlaceSources, electionDirectorySelection } from "../lib/sources/plural/place.ts";
 import { electionPageFields } from "../lib/hunt/election-page.ts";
 import { placeSourceReader, PlaceSourceDeferred } from "../lib/hunt/place-source-reader.ts";
-import { runNationalPlaceTask } from "../lib/hunt/place-source-task.ts";
+import { dueNationalPlaceZips, runNationalPlaceTask, scheduleNationalPlace, placeMadeProgress } from "../lib/hunt/place-source-task.ts";
+import { standing, openOccurrence, closeOccurrence } from "../lib/control-plane/scheduler/durable.ts";
+import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
@@ -31,6 +33,57 @@ import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { beginAttemptFor, claimRouteTask, registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.ts";
 import { emptyFieldManual, newFieldManualEntry, projectFieldManual } from "../lib/control-plane/field-manual.ts";
+
+test("below-target places continue every pass until a settled hunt makes no progress", async () => {
+  const repos = createMemoryRepositories();
+  const now = "2026-10-01T00:00:00.000Z";
+  const row = standing({ id: "national-place:03060", subjectId: "zip:03060", recordClass: "OFFICIAL_ROSTER",
+    routeId: "national-place-sources", active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: now }, now);
+  await repos.obligations.put(row.id, row, now);
+  const due = await scheduleNationalPlace(repos, row, now, true);
+  assert.equal("nextDueAt" in due && due.nextDueAt, now, "a legacy hunt has no explicit no-progress result");
+  const occurrence = await openOccurrence(repos, { obligation: row, dueAt: now, now });
+  assert.ok(occurrence);
+  const task = await repos.routeTasks.mustRead(occurrence.routeTask.id);
+  await repos.routeTasks.compareAndSet(task.id, task.revision, { ...task.value, disposition: {
+    disposition: "INGESTED", attemptId: "test", at: now, artifactIds: [], observation: null,
+    permission: "ALLOWED", transport: "REACHABLE", note: JSON.stringify({ placeProgress: true }) } }, now);
+  await closeOccurrence(repos, { occurrenceId: occurrence.occurrence.id, disposition: "INGESTED", unresolvedReason: null, now, workedAt: now });
+  const settled = (await repos.obligations.mustRead(row.id)).value;
+  assert.equal((await scheduleNationalPlace(repos, settled, now, true) as { nextDueAt: string }).nextDueAt, now);
+  const closed = await repos.occurrences.mustRead(occurrence.occurrence.id);
+  await repos.occurrences.compareAndSet(closed.id, closed.revision, { ...closed.value, unresolvedReason: "DEFERRED: per-website bound" }, now);
+  assert.equal((await scheduleNationalPlace(repos, settled, now, true) as { nextDueAt: string }).nextDueAt, now,
+    "a bounded partial hunt that published new facts continues");
+  const legacy = await repos.routeTasks.mustRead(task.id);
+  await repos.routeTasks.compareAndSet(legacy.id, legacy.revision, { ...legacy.value,
+    disposition: { ...legacy.value.disposition!, disposition: "BLOCKED_CURRENTLY", note: "DEFERRED: website request bound; saved responses remain" } }, now);
+  assert.equal((await scheduleNationalPlace(repos, settled, now, true) as { nextDueAt: string }).nextDueAt, now,
+    "a legacy partial hunt without a progress marker does not establish no progress");
+  assert.equal((await scheduleNationalPlace(repos, settled, now, false) as { nextDueAt: string }).nextDueAt, "2026-10-02T00:00:00.000Z", "reaching the target restores cadence");
+  const changed = await repos.routeTasks.mustRead(task.id);
+  await repos.routeTasks.compareAndSet(task.id, changed.revision, { ...changed.value,
+    disposition: { ...changed.value.disposition!, note: JSON.stringify({ placeProgress: false }) } }, now);
+  assert.equal((await scheduleNationalPlace(repos, settled, now, true) as { nextDueAt: string }).nextDueAt, "2026-10-02T00:00:00.000Z");
+  assert.equal((await scheduleNationalPlace(repos, { ...settled, lastWorkedAt: null }, now, true) as { nextDueAt: string }).nextDueAt,
+    "2026-10-02T00:00:00.000Z", "an unfinished no-progress hunt also backs off");
+  assert.equal((await scheduleNationalPlace(repos, settled, "2026-10-02T00:00:00.000Z", true) as { nextDueAt: string }).nextDueAt,
+    "2026-10-02T00:00:00.000Z", "cadence eventually makes a no-progress place due again");
+});
+
+test("hunt progress uses new reader facts and official unpublished findings, ignoring timestamp churn", () => {
+  const now = "2026-10-01T00:00:00.000Z";
+  const divisions = [{ id: "ocd-division/country:us", label: "US" }];
+  const blank = buildPlaceOwedList({ divisions, subjects: [], held: [], now });
+  const field = { subjectId: blank[0].subject.id, checklistId: blank[0].checklistId, state: "published" as const,
+    sourceUrl: "https://census.gov", checkedAt: now, freshUntil: "2026-10-03T00:00:00.000Z", value: "US" };
+  const items = (value = "US", checkedAt = now) => buildPlaceOwedList({ divisions, subjects: [], held: [{ ...field, value, checkedAt }], now });
+  assert.equal(placeMadeProgress(blank, items()), true);
+  assert.equal(placeMadeProgress(items(), items("US", "2026-09-30T23:59:00.000Z")), false);
+  assert.equal(placeMadeProgress(items(), items("United States")), true);
+  assert.equal(placeMadeProgress(blank, buildPlaceOwedList({ divisions, subjects: [], held: [{ ...field, state: "unpublished" }], now })), true);
+  assert.equal(placeMadeProgress(items(), blank), false);
+});
 
 test("a national host bound saves admitted responses and defers all remaining ZIPs without abandoning Attempts", async t => {
   const repos = createMemoryRepositories();
@@ -87,6 +140,18 @@ test("a national host bound saves admitted responses and defers all remaining ZI
   const next = await repos.artifacts.readAll();
   assert.ok(next.some(row => row.canonicalUrl.includes("School")), "the next pass advances using held responses");
   assert.ok(saved.every(row => next.some(other => other.artifactId === row.artifactId)), "all earlier evidence remains held");
+  // A cut-off pass must leave the recently worked head behind the older tail.
+  const worked = ["2026-09-30T00:00:00.000Z", "2026-09-28T00:00:00.000Z", "2026-09-27T00:00:00.000Z"];
+  for (const [index, zip] of input.zips.entries()) {
+    const row = await repos.obligations.mustRead(`national-place:${zip}`);
+    await repos.obligations.compareAndSet(row.id, row.revision, { ...row.value, lastWorkedAt: worked[index] }, tools.now());
+  }
+  assert.deepEqual(await dueNationalPlaceZips(repos, ["03060", "03101", "03301", "03401", "03401"], tools.now()),
+    ["03401", "03301", "03101"]);
+  // Actual acquisition must also recheck cadence after process admission.
+  const beforeFresh = requests;
+  assert.deepEqual(await runNationalPlaceTask({ ...input, zips: ["03060"] }), []);
+  assert.equal(requests, beforeFresh, "a fresh place opens no occurrence and fetches no source");
 });
 
 test("a national walk reuses another role's working source route after a directory's dead landing page", async () => {

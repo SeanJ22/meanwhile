@@ -11,7 +11,6 @@ import {
 import { intakeWindows } from "@/lib/db/intake-windows";
 import {
   CONTEXT_RESTRICTED_VALUES,
-  FREE_TEXT_CLOSED_HEADER,
   isPlausibleTargetId,
   isValidFreeText,
   isValidReactionKey,
@@ -30,6 +29,9 @@ import {
   refreshFundingFromPromoted,
 } from "@/lib/funding/snapshot";
 import { getVoteIds, refreshFederalVotesFromPromoted } from "@/lib/votes/snapshot";
+import type { StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
+import { settleStateMoneyRead, stateMoneyForTarget } from "@/lib/funding/state-snapshot";
+import { FEDERAL_CONTEST, directFundingTargetPlan } from "@/lib/funding/target-authorities";
 
 /**
  * POST /api/reactions — the reaction write path (P03), hardened (T08).
@@ -77,6 +79,8 @@ interface ReactionAuthorityReaders {
   readonly provisionTargets: () => Set<string>;
   readonly refreshFunding: () => Promise<unknown>;
   readonly fundingTargets: () => Set<string>;
+  readonly refreshStateMoney: (state: StateCampaignFinanceJurisdiction) => Promise<unknown>;
+  readonly stateMoneyTargets: (targetId: string) => Set<string>;
   readonly contributorTargets: () => Set<string>;
   readonly refreshVotes: () => Promise<unknown>;
   readonly voteTargets: () => Set<string>;
@@ -87,6 +91,13 @@ const reactionAuthorityReaders: ReactionAuthorityReaders = {
   provisionTargets: getProvisionTargetIds,
   refreshFunding: refreshFundingFromPromoted,
   fundingTargets: getFundingTargetIds,
+  refreshStateMoney: (state) => settleStateMoneyRead(state),
+  stateMoneyTargets: (targetId) =>
+    stateMoneyForTarget(targetId).some(
+      (r) => r.filingState === "FILED" || r.filingState === "REGISTERED_NO_ACTIVITY_REPORTED",
+    )
+      ? new Set([targetId])
+      : new Set(),
   contributorTargets: getContributorReactionTargetIds,
   refreshVotes: refreshFederalVotesFromPromoted,
   voteTargets: getVoteIds,
@@ -107,9 +118,18 @@ export async function validReactionTargetsFor(
       return readers.candidateTargets(targetId);
     case "MEASURE_PROVISION":
       return readers.provisionTargets();
-    case "FUNDING_TOTAL_REACTION":
+    case "FUNDING_TOTAL_REACTION": {
+      // A state or local candidacy key (`ballot-xx-...`) is valid when that
+      // state's promoted money holds a committee for it; anything else is an
+      // FEC candidate id, as before.
+      const state = directFundingTargetPlan(targetId).state;
+      if (state !== null && !FEDERAL_CONTEST.test(targetId)) {
+        await readers.refreshStateMoney(state);
+        return readers.stateMoneyTargets(targetId);
+      }
       await readers.refreshFunding();
       return readers.fundingTargets();
+    }
     case "CONTRIBUTOR_REACTION":
       await readers.refreshFunding();
       return readers.contributorTargets();
@@ -313,24 +333,9 @@ export async function POST(request: Request) {
     }
   }
 
-  /*
-   * THE FREE-TEXT RIPCORD (P03/T05, 2026-08-18).
-   *
-   * Pulled, the verbatim is DROPPED and the binary is still stored. The
-   * asymmetry is deliberate: free text is the part with the open question,
-   * reaction capture is the revenue path, and taking the second down to
-   * close the first would cost more than it saves.
-   *
-   * The reader is TOLD. A 204 with no signal would let the control render
-   * "saved" over words that went nowhere, which is exactly the quiet lie
-   * this codebase keeps catching. The header rides back on the same 204 and
-   * the client turns it into FREE_TEXT_CLOSED_LINE.
-   */
-  const freeTextClosed = ripcordPulled("ripcord.reactionFreeText");
-  const submitted = normalizeFreeText(submission.text);
-  const freeText = freeTextClosed ? null : submitted;
-  // Only say text was dropped when there was text to drop.
-  const droppedText = freeTextClosed && submitted !== null;
+  // Everything a reader types is captured (Sean, October 1, 2026); the verbatim
+  // is still validated and scrubbed by `normalizeFreeText`.
+  const freeText = normalizeFreeText(submission.text);
 
   try {
     const stored = await writeReaction({
@@ -348,10 +353,7 @@ export async function POST(request: Request) {
       // sitting in a column definition where nobody looks.
       marker: markerFromRequest(request),
     });
-    return new Response(null, {
-      status: stored ? 204 : 202,
-      headers: droppedText ? { [FREE_TEXT_CLOSED_HEADER]: "closed" } : undefined,
-    });
+    return new Response(null, { status: stored ? 204 : 202 });
   } catch (error) {
     /*
      * **RULING 25 — UNCHANGED FOR THE READER** (Prompt D item 6, D73). The

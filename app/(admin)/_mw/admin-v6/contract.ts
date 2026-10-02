@@ -205,6 +205,12 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return { placeKey: s.target, goalPercent: s.amount.trim() === "" ? null : Number(s.amount) };
     case "target-clear":
       return { placeKey: s.target, goalPercent: null };
+    case "data-switch-on":
+    case "data-switch-off": {
+      // The target is "<recipe>@<audience>": a recipe id has no "@", an audience (admin, dashboard, customer:<id>) has none either.
+      const at = s.target.indexOf("@");
+      return { recipe: at < 0 ? s.target : s.target.slice(0, at), audience: at < 0 ? "" : s.target.slice(at + 1), on: kind === "data-switch-on" };
+    }
     case "global-search-on":
       return { enabled: true, confirmed: true };
     case "global-search-off":

@@ -44,7 +44,8 @@ import { requiredManualProductionContract } from "../lib/civic-data/manual-contr
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
-import { indexVault, readHeldBytes, type VaultIndex } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { findHeldCapture, readHeldBytes } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { heldArtifactCaptures } from "../lib/civic-data/held-artifact-captures.ts";
 import { ACTIVATION_GATE, classFieldOpen } from "../lib/control-plane/promotion/activation-policy.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
@@ -81,11 +82,12 @@ async function readApprovals(): Promise<PublishableCampaignSiteApproval[] | { re
 }
 
 /** Each approval's verifying read, read back from the vault and proved against its sidecar; a body it cannot produce is not held. */
-async function heldReads(vault: VaultIndex, approvals: readonly PublishableCampaignSiteApproval[]): Promise<Map<string, HeldVerifyingRead>> {
+async function heldReads(capture: Awaited<ReturnType<typeof heldArtifactCaptures>>, approvals: readonly PublishableCampaignSiteApproval[]): Promise<Map<string, HeldVerifyingRead>> {
   const held = new Map<string, HeldVerifyingRead>();
   for (const approval of approvals) {
-    const artifact = vault.byId.get(approval.campaignSite.evidence.artifactId);
-    if (artifact === undefined || artifact.tier === "RESTRICTED_RAW" || held.has(artifact.id)) continue;
+    console.log(`RCD_PROGRESS campaign-site approval ${approval.campaignSite.evidence.artifactId}`);
+    const artifact = await capture(approval.campaignSite.evidence.artifactId);
+    if (artifact === null || artifact.tier === "RESTRICTED_RAW" || held.has(artifact.id)) continue;
     try {
       held.set(artifact.id, {
         body: new TextDecoder().decode(await readHeldBytes(artifact)),
@@ -102,7 +104,7 @@ async function heldReads(vault: VaultIndex, approvals: readonly PublishableCampa
 
 /** Distinct completed publication acquisitions. The child never infers
  * article authority from a URL in prose or from uncommitted vault bytes. */
-async function linkedPublicationReads(vault: VaultIndex, approvals: readonly PublishableCampaignSiteApproval[]): Promise<readonly HeldLinkedPublicationRead[] | { readonly unreadable: string }> {
+async function linkedPublicationReads(vaultRoot: string, approvals: readonly PublishableCampaignSiteApproval[]): Promise<readonly HeldLinkedPublicationRead[] | { readonly unreadable: string }> {
   const controlPlane = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
   if (!controlPlane) return { unreadable: "the control plane's publication attempts are not configured" };
   const candidacies = [...new Set(approvals.map(row => row.campaignSite.candidacyId))];
@@ -122,7 +124,8 @@ async function linkedPublicationReads(vault: VaultIndex, approvals: readonly Pub
       const workItem = (typeof row.work_item === "string" ? JSON.parse(row.work_item) : row.work_item) as { subject?: unknown };
       // One unreadable capture holds only its own publication (it stays unverified, owed work);
       // it never blocks every other approved campaign link from reaching readers (§3).
-      const artifact = vault.byId.get(record.artifactId);
+      console.log(`RCD_PROGRESS linked-publication ${record.artifactId}`);
+      const artifact = await findHeldCapture(vaultRoot, record);
       if (!artifact || artifact.tier === "RESTRICTED_RAW") {
         process.stderr.write(`LINKED_PUBLICATION_CAPTURE_UNREADABLE ${record.artifactId}: missing or restricted in this vault\n`);
         continue;
@@ -161,9 +164,10 @@ async function main(): Promise<void> {
   let linkedPublications: readonly HeldLinkedPublicationRead[] = [];
   if (!("unreadable" in approvals) && approvals.length > 0) {
     try {
-      const vault = await indexVault(join(process.cwd(), "data", "control-plane", "vault"));
-      held = await heldReads(vault, approvals);
-      const linked = await linkedPublicationReads(vault, approvals);
+      const vaultRoot = join(process.cwd(), "data", "control-plane", "vault");
+      const capture = await heldArtifactCaptures(vaultRoot, approvals.map(row => row.campaignSite.evidence.artifactId), process.env.WTP_CONTROL_PLANE_DATABASE_URL!);
+      held = await heldReads(capture, approvals);
+      const linked = await linkedPublicationReads(vaultRoot, approvals);
       if ("unreadable" in linked) {
         await finish(derivedCampaignSitesFailedCandidate(now, `The linked candidate-publication record could not be read: ${linked.unreadable}`));
         return;

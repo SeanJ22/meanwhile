@@ -13,6 +13,93 @@ import { pathToFileURL } from "node:url";
 import { once } from "node:events";
 import { setImmediate as yieldToEventLoop } from "node:timers/promises";
 import { writeFile } from "node:fs/promises";
+import { existsSync, readFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import { runInNewContext } from "node:vm";
+import ts from "typescript";
+
+test("Windows and Linux process probes leave timers and the host lock available", async context => {
+  const nativeRequire = createRequire(import.meta.url);
+  const nativeFS = nativeRequire("node:fs") as typeof import("node:fs");
+  const source = ts.transpileModule(readFileSync(new URL("../lib/control-plane/workers/worker-slots.ts", import.meta.url), "utf8"), {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+  }).outputText;
+  for (const operatingSystem of ["win32", "linux"] as const) await context.test(operatingSystem, async () => {
+    const root = await mkdtemp(join(tmpdir(), "s18-process-probe-"));
+    let probing = false, metadataDuringProbe = false, samples = 0;
+    const locksAtProbe: boolean[] = [];
+    const rows = JSON.stringify([{ ProcessId: process.pid, ParentProcessId: process.ppid, WorkingSetSize: 200 * 1024 }]);
+    const status = `PPid:\t${process.ppid}\nVmRSS:\t200 kB\n`;
+    const beginProbe = () => { samples++; probing = true; locksAtProbe.push(existsSync(join(root, "meanwhile-worker-memory.json.lock"))); };
+    const finishProbe = () => { probing = false; };
+    const waitForProbe = async () => { beginProbe(); await new Promise(resolve => setTimeout(resolve, 75)); finishProbe(); };
+    const syncProbe = () => { beginProbe(); Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 75); finishProbe(); };
+    const loaded: Record<string, unknown> = {};
+    runInNewContext(source, { exports: loaded, require: (name: string) => {
+      if (name === "node:os") return { ...nativeRequire(name), platform: () => operatingSystem, tmpdir: () => root };
+      if (name === "node:child_process") return { ...nativeRequire(name),
+        execFileSync: () => { syncProbe(); return rows; },
+        execFile: (_file: string, _args: string[], options: { windowsHide: boolean; timeout: number }, callback: (error: null, stdout: string) => void) => {
+          assert.equal(options.windowsHide, true); assert.equal(options.timeout, 5000);
+          void waitForProbe().then(() => callback(null, rows));
+        } };
+      if (name === "node:fs") return { ...nativeFS,
+        readdirSync: (path: string) => { if (path === "/proc") { syncProbe(); return [String(process.pid)]; } return nativeFS.readdirSync(path); },
+        readFileSync: (path: string, options: "utf8") => path.startsWith("/proc/") ? status : nativeFS.readFileSync(path, options) };
+      if (name === "node:fs/promises") return { ...nativeRequire(name),
+        readdir: async (path: string) => { assert.equal(path, "/proc"); await waitForProbe(); return [String(process.pid)]; },
+        readFile: async (path: string) => { assert.equal(path, `/proc/${process.pid}/status`); return status; } };
+      return nativeRequire(name);
+    }, process, console, Buffer, setTimeout, clearTimeout, queueMicrotask });
+    const loadedSlots = loaded as { workerMemoryHost: typeof workerMemoryHost; workerProcessSlots: typeof workerProcessSlots };
+    const host = loadedSlots.workerMemoryHost({ shared: true });
+    const slots = loadedSlots.workerProcessSlots(() => 20, { host, availableBytes: () => 1000 * 1024,
+      parentPeakBytes: 300 * 1024, headroomBytes: 100 * 1024, peakBytes: () => 30 * 1024 });
+    let parentReserved = false;
+    host.transact(state => { parentReserved = state.parents.some(parent => parent.pid === process.pid && parent.peak === 300 * 1024); }, false);
+    assert.equal(parentReserved, true, "parent growth is registered before any asynchronous sample");
+    const heartbeat = new Promise<void>(resolve => setTimeout(() => {
+      host.transact(() => { metadataDuringProbe = probing; }, false); resolve();
+    }, 10));
+    try {
+      const releases = await Promise.all(Array.from({ length: 20 }, () => slots.acquire("scout-worker.ts", Date.now() + 2000)));
+      releases.forEach(release => release());
+      await heartbeat;
+      assert.equal(metadataDuringProbe, true, "unrelated timers and metadata updates run before the OS probe returns");
+      assert.deepEqual(locksAtProbe, [false], "one fresh sample serves the burst and holds no shared lock");
+      assert.equal(samples, 1);
+    } finally { await yieldToEventLoop(); await rm(root, { recursive: true, force: true }); }
+  });
+});
+
+test("memory deadlines settle while an asynchronous host sample is still pending", async () => {
+  let finishSample!: (rows: readonly { pid: number; parentPid: number; rss: number }[]) => void;
+  let sampled = false;
+  const host = workerMemoryHost({ processes: () => new Promise(resolve => { finishSample = rows => { sampled = true; resolve(rows); }; }) });
+  const slots = workerProcessSlots(() => 20, { host, availableBytes: () => 1000, headroomBytes: 100, peakBytes: () => 300 });
+  const fallback = setTimeout(() => finishSample([]), 200);
+  try {
+    await assert.rejects(slots.acquire("scout-worker.ts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
+    assert.equal(sampled, false, "the queued deadline does not wait for the OS read");
+  } finally { clearTimeout(fallback); finishSample([]); await yieldToEventLoop(); }
+});
+
+test("capacity closed during an asynchronous host read cannot admit queued children", async () => {
+  let capacity = 20;
+  const host = workerMemoryHost({ processes: async () => { await yieldToEventLoop(); capacity = 0; return []; } });
+  const slots = workerProcessSlots(() => capacity, { host, availableBytes: () => 1000, headroomBytes: 100, peakBytes: () => 300 });
+  await assert.rejects(slots.acquire(), /LEASE_WORKER_CAPACITY_INVALID/);
+  host.transact(state => { assert.equal(state.reservations.length, 0); }, false);
+});
+
+test("a nested research parent keeps only its inherited reservation after the fresh sample", async () => {
+  const host = workerMemoryHost({ processes: () => [{ pid: process.pid, parentPid: process.ppid, rss: 200 }] });
+  host.transact(state => { state.reservations.push({ id: "ancestor", owner: process.ppid, pid: process.pid, peak: 600, entry: "ancestor" }); }, false);
+  const slots = workerProcessSlots(() => 20, { host, parentPeakBytes: 400, availableBytes: () => 0, headroomBytes: 100, peakBytes: () => 600 });
+  const release = await slots.acquire();
+  host.transact(state => { assert.equal(state.parents.some(parent => parent.pid === process.pid), false); assert.equal(state.reservations.length, 1); }, false);
+  release();
+});
 
 test("concurrent workers share a browser and close only their own contexts", async () => {
   let launches = 0, pages = 0, contextsClosed = 0, browsersClosed = 0;

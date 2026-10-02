@@ -16,7 +16,7 @@ function shardFor(state: string): StateReference {
   const key = state.toUpperCase();
   let shard = shards.get(key);
   if (!shard) {
-    shard = { formatVersion: 1, state: key, units: [], zips: {}, adjacency: {}, facts: {}, censusSource: "", exactShares: {} };
+    shard = { formatVersion: 1, state: key, units: [], zips: {}, facts: {}, censusSource: "", exactShares: {} };
     shards.set(key, shard);
   }
   return shard;
@@ -64,7 +64,6 @@ for (const shard of shards.values()) {
       adjacent.set(key, neighbors);
     }
   }
-  shard.adjacency = Object.fromEntries([...adjacent].map(([key, neighbors]) => [key, [...neighbors].sort()]));
   shard.censusSource = sources.join(" and ");
   const fd = openSync(join(out, `${shard.state.toLowerCase()}.jsonl`), "w");
   let offset = 0;
@@ -78,7 +77,7 @@ for (const shard of shards.values()) {
   };
   try {
     const index: StateReferenceIndex = { formatVersion: 2, state: shard.state, censusSource: shard.censusSource,
-      units: shard.units.map(write), byZip: {}, shares: {}, facts: write(shard.facts), adjacency: write(shard.adjacency) };
+      units: shard.units.map(write), byZip: {}, shares: {}, facts: write(shard.facts) };
     const byDivision = new Map<string, number[]>();
     for (const [i, unit] of shard.units.entries()) {
       const key = unitShareKey(unit);
@@ -87,7 +86,7 @@ for (const shard of shards.values()) {
     }
     for (const [zip, row] of Object.entries(shard.zips)) {
       const seeds = row.edges.map(edge => `${edge.layer}:${edge.id}`);
-      const ring = new Set(seeds.flatMap(key => [key, ...(shard.adjacency[key] ?? [])]));
+      const ring = new Set(seeds.flatMap(key => [key, ...(adjacent.get(key) ?? [])]));
       index.byZip[zip] = [...new Set([...(index.byZip[zip] ?? []), ...[...ring].flatMap(key => byDivision.get(key) ?? [])])];
     }
     const byPid = new Map(shard.units.map(unit => [`${shard.state}:${unit.pid6}`, unit]));

@@ -357,7 +357,7 @@ test("on the committed data, Pima County holds Pima and Tucson and none of its n
   assert.ok(!cd6.includes("az:county:county-of-maricopa"), "Maricopa is not in CD 6");
   assert.ok(index.bySubject.get("az:county:county-of-pima")!.shares.size > 0, "a registered county carries its sampled ZCTA shares");
   const az = readStateReference(root, "AZ");
-  assert.ok(Object.values(az.adjacency).flat().every(key => key.split(":")[1].startsWith("04")), "adjacent candidates stay inside the state");
+  assert.ok(az.units.every(unit => unit.state === "AZ"), "the state reference carries only its own governments");
   const scoped = readCensusUnitTerritories(root, ["AZ"], new Set(["85635"]));
   assert.ok(scoped.length > 0 && scoped.every(unit => unit.state === "AZ"));
   assert.ok(scoped.length < readCensusUnitTerritories(root, ["AZ"]).length, "a ZIP retains its ring rather than every unit in the state");

@@ -7,8 +7,6 @@ export interface StateReference {
   state: string;
   units: CensusUnitTerritory[];
   zips: Record<string, { total: number; edges: { layer: string; id: string; samples: number }[] }>;
-  /** Shared-ZIP candidates inside this state; membership still checks overlap. */
-  adjacency: Record<string, string[]>;
   facts: Record<string, { web: string; county: string }>;
   censusSource: string;
   exactShares: Record<string, Record<string, number>>;
@@ -24,7 +22,6 @@ export interface StateReferenceIndex {
   byZip: Record<string, number[]>;
   shares: Record<string, Span>;
   facts: Span;
-  adjacency: Span;
 }
 
 export interface StateReferenceSelection {
@@ -56,7 +53,7 @@ export function readStateReference(root: string, state: string, selection?: Stat
     const selectedUnits = selection === undefined || selection.units === "state" ? index.units.keys()
       : new Set([...(selection.units ?? [])].flatMap(zip => index.byZip[zip] ?? []));
     const shard: StateReference = { formatVersion: 1, state: key, units: [...selectedUnits].map(i => read<CensusUnitTerritory>(index.units[i])),
-      zips: {}, adjacency: selection === undefined ? read(index.adjacency) : {}, facts: selection === undefined || selection.facts ? read(index.facts) : {},
+      zips: {}, facts: selection === undefined || selection.facts ? read(index.facts) : {},
       censusSource: index.censusSource, exactShares: {} };
     for (const division of selection === undefined ? Object.keys(index.shares) : selection.shares ?? []) {
       const span = index.shares[division];

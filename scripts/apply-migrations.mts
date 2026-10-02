@@ -50,7 +50,7 @@ import { neon } from "@neondatabase/serverless";
 import { resolveProductionWriteHandle, WriteHandleRefused } from "../lib/db/write-handle.ts";
 import { declaredPhase, phaseFromSql } from "../lib/db/migration-phases.ts";
 
-export async function applyMigrations(args: string[]): Promise<void> {
+export async function applyMigrations(args: string[], options: { beforeContract?: () => Promise<void> } = {}): Promise<void> {
   const PRODUCTION_BUILD = args.includes("--production-build");
   if (PRODUCTION_BUILD && (process.env.CONTEXT !== "production" || process.env.BRANCH !== "main" || process.env.NETLIFY !== "true")) {
     console.log("db:apply: production expand skipped outside the Netlify production main build; writes=0");
@@ -74,6 +74,24 @@ export async function applyMigrations(args: string[]): Promise<void> {
   if (PRODUCTION && PHASE === undefined) {
     console.error("db:apply: REFUSED — production requires an explicit expand or contract phase");
     process.exit(1);
+  }
+  let contractChecked = false;
+  async function beforeContract(): Promise<void> {
+    if (!PRODUCTION || PHASE !== "contract" || DRY || contractChecked) return;
+    if (options.beforeContract) await options.beforeContract();
+    else {
+      const sha = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
+      const expected = args.find(arg => arg.startsWith("--runtime-commit="))?.slice(17);
+      if (process.env.WTP_RUNTIME_MODE !== "production" || !args.includes("--production-runtime") || expected !== sha) {
+        throw new Error("db:apply: REFUSED — pending contracts require the production runtime commit to be loaded");
+      }
+      const { fetchServedCommit } = await import("./post-deploy-observer.mts");
+      const { PUBLIC_SITE_ORIGIN } = await import("../lib/ops/origins.ts");
+      if ((await fetchServedCommit(PUBLIC_SITE_ORIGIN)).sha !== sha) {
+        throw new Error("db:apply: REFUSED — pending contracts require the exact runtime commit to be serving");
+      }
+    }
+    contractChecked = true;
   }
 
   let connection: string;
@@ -171,6 +189,8 @@ export async function applyMigrations(args: string[]): Promise<void> {
       SELECT hash, created_at FROM drizzle.__drizzle_migrations ORDER BY created_at
     `) as AppliedMigration[];
   } else if (!DRY) {
+    // An absent journal means contracts are pending; verify before any bootstrap DDL.
+    await beforeContract();
     const setup = await sql.transaction((transaction) => [
       transaction`SELECT pg_advisory_xact_lock(1835360622, 1)`,
       transaction`CREATE SCHEMA IF NOT EXISTS drizzle`,
@@ -204,20 +224,13 @@ export async function applyMigrations(args: string[]): Promise<void> {
    * silently means "all of it" is how this flag would cause the failure it
    * exists to prevent.
    */
-  const allPending = journal.entries.filter((e) => !appliedWhen.has(e.when));
-  const uptoIndex = UPTO ? allPending.findIndex((e) => e.tag === UPTO) : -1;
-  if (UPTO && uptoIndex < 0) {
-    console.log(`--upto=${UPTO} is already applied here; nothing before it is pending.`);
-  }
-  const boundedPending = UPTO
-    ? uptoIndex >= 0
-      ? allPending.slice(0, uptoIndex + 1)
-      : []
-    : allPending;
+  const uptoIndex = UPTO ? journal.entries.findIndex((e) => e.tag === UPTO) : -1;
+  const boundedPending = (UPTO ? journal.entries.slice(0, uptoIndex + 1) : journal.entries)
+    .filter(entry => !appliedWhen.has(entry.when));
   const pending = PHASE ? boundedPending.filter(e => declaredPhase(e.tag)?.phase === PHASE) : boundedPending;
   if (PHASE) console.log(`phase: ${PHASE}; deferred other phase: ${boundedPending.length - pending.length}`);
   if (UPTO) {
-    const held = allPending.slice(uptoIndex + 1);
+    const held = journal.entries.slice(uptoIndex + 1).filter(entry => !appliedWhen.has(entry.when));
     if (held.length > 0) {
       console.log(
         `  HELD BACK by --upto=${UPTO}: ${held.map((e) => e.tag).join(", ")}`,
@@ -237,12 +250,13 @@ export async function applyMigrations(args: string[]): Promise<void> {
   // event loop drain on its own gives the true code.
   const nothingPending = pending.length === 0;
   if (nothingPending) {
-    console.log("\nNothing to apply. The database is current with the journal.");
+    console.log(`\nNo pending ${PHASE ?? "selected"} migrations within this plan.`);
   } else if (DRY) {
     console.log("\nDRY RUN — nothing applied.");
   }
 
   if (!nothingPending && !DRY) {
+    await beforeContract();
     let statementsRun = 0;
     let migrationsApplied = 0;
     for (const entry of pending) {

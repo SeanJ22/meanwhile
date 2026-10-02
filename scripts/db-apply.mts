@@ -5,14 +5,11 @@ import { pathToFileURL } from "node:url";
 import { config as loadEnv } from "dotenv";
 import { OWNER_SURFACE_FORMAT_VERSION, type OwnerDigestRecord } from "../lib/control-plane/owner-surface.ts";
 import { PRODUCTION_MIGRATION_HEADLINE, redactMigrationOutput, type ProductionMigrationOutcome } from "../lib/db/migration-phases.ts";
-import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
-import { fetchServedCommit } from "./post-deploy-observer.mts";
 
 type MigrationRecord = OwnerDigestRecord & { readonly migration: ProductionMigrationOutcome };
 interface ApplyDeps {
   readonly execute?: (args: readonly string[], env: NodeJS.ProcessEnv) => { status: number | null; stdout: string; stderr: string };
   readonly head?: () => string | null;
-  readonly served?: () => Promise<string | null>;
   readonly record?: (record: MigrationRecord) => Promise<void>;
 }
 
@@ -37,15 +34,9 @@ export async function runDbApply(args: string[], env = process.env, deps: ApplyD
   const testedSha = /^[0-9a-f]{40}$/.test(sha ?? "") ? sha : null;
   let result: { status: number | null; stdout: string; stderr: string };
   const expected = args.find(arg => arg.startsWith("--runtime-commit="))?.slice(17);
-  let served: string | null = null;
   const contract = production && phase === "contract" && !dry;
-  if (contract && !inspectionFailed && testedSha !== null && expected === testedSha &&
-      args.includes("--production-runtime") && env.WTP_RUNTIME_MODE === "production") {
-    try { served = await (deps.served ?? (async () => (await fetchServedCommit(PUBLIC_SITE_ORIGIN)).sha))(); }
-    catch { inspectionFailed = true; }
-  }
   if (contract && (inspectionFailed || !args.includes("--production-runtime") ||
-      env.WTP_RUNTIME_MODE !== "production" || testedSha === null || expected !== testedSha || served !== testedSha) ||
+      env.WTP_RUNTIME_MODE !== "production" || testedSha === null || expected !== testedSha) ||
       args.includes("--production-runtime") && (!production || phase !== "contract")) {
     result = { status: 1, stdout: "", stderr: "db:apply: REFUSED — contract migrations require the exact production commit to be serving and loaded\n" };
   } else {

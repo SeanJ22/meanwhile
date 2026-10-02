@@ -20,7 +20,7 @@ interface RunResult {
   events: unknown[];
 }
 
-function run(args: string[], env: Record<string, string> = {}): RunResult {
+function run(args: string[], env: Record<string, string> = {}, beforeContract?: string): RunResult {
   const child = spawnSync(
     process.execPath,
     [
@@ -28,8 +28,8 @@ function run(args: string[], env: Record<string, string> = {}): RunResult {
       "--experimental-strip-types",
       "--import",
       pathToFileURL(REGISTER).href,
-      SCRIPT,
-      ...args,
+      ...(beforeContract === undefined ? [SCRIPT, ...args] : ["--input-type=module", "-e",
+        `import { applyMigrations } from ${JSON.stringify(pathToFileURL(SCRIPT).href)}; await applyMigrations(${JSON.stringify(args)}, { beforeContract: async () => { ${beforeContract} } });`]),
     ],
     {
       cwd: ROOT,
@@ -112,6 +112,35 @@ test("db:apply --dry preserves applied/pending planning without issuing DDL", ()
   assert.match(result.output, new RegExp(`pending: ${committed[2].tag}(?:\\r?\\n|$)`));
 });
 
+test("an already applied upper bound still includes older pending migrations", () => {
+  const committed = journal().entries;
+  const result = run(["--dry", `--upto=${committed[2].tag}`], { APPLY_MIGRATIONS_FAKE_APPLIED_WHEN: String(committed[2].when) });
+  assert.equal(result.status, 0, result.output);
+  const pending = result.output.split(/\r?\n/).filter(line => line.startsWith("  pending: ")).map(line => line.slice(11));
+  assert.deepEqual(pending, committed.slice(0, 2).map(entry => entry.tag));
+  assert.ok(result.statements.every(statement => /^SELECT\b/.test(statement)));
+  assert.deepEqual(result.events, []);
+});
+
+test("a serving mismatch cannot write pending contracts, but cannot hold a current contract journal", () => {
+  const args = ["--target=production", "--phase=contract"];
+  const env = { WTP_RUNTIME_MODE: "production",
+    WTP_PRODUCTION_DATABASE_URL_WRITE: "postgresql://writer:secret@ep-dry-river-axwtolzc.c-4.us-east-2.aws.neon.tech/neondb" };
+  for (const exists of ["0", "1"]) {
+    const result = run(args, { ...env, APPLY_MIGRATIONS_FAKE_JOURNAL_EXISTS: exists }, "throw new Error('REFUSED pending contracts: serving mismatch');");
+    assert.equal(result.status, 1);
+    assert.match(result.output, /REFUSED pending contracts/);
+    assert.ok(result.statements.every(statement => /^SELECT\b/.test(statement)));
+    assert.deepEqual(result.events, [], "a serving refusal wrote schema or a migration");
+  }
+  const current = run(args, { ...env, APPLY_MIGRATIONS_FAKE_APPLIED_WHEN: journal().entries.map(entry => entry.when).join(",") },
+    "throw new Error('serving check must not block a zero-write current journal');");
+  assert.equal(current.status, 0, current.output);
+  assert.match(current.output, /No pending contract migrations/);
+  assert.ok(current.statements.every(statement => /^SELECT\b/.test(statement)));
+  assert.deepEqual(current.events, []);
+});
+
 test("non-dry db:apply keeps setup and migration journalling fail-closed", () => {
   const result = run([], { APPLY_MIGRATIONS_FAKE_TRANSACTION_FAIL: "1", APPLY_MIGRATIONS_FAKE_JOURNAL_EXISTS: "0" });
 
@@ -177,20 +206,20 @@ test("concurrent migration reuse reports no statements applied and keeps the loc
   assert.match(events.find(event => event.kind === "transaction-query")?.statement ?? "", /IF NOT EXISTS[\s\S]*EXECUTE[\s\S]*INSERT INTO/);
 });
 
-test("the runtime refuses a contract before the exact commit is serving, records the refusal and redacts failure output", async () => {
+test("the runtime refuses a contract before the exact commit is loaded, records the refusal and redacts failure output", async () => {
   const sha = "a".repeat(40);
   const env: NodeJS.ProcessEnv = { NODE_ENV: "test", WTP_RUNTIME_MODE: "production", WTP_DB_ROLE: "production", PRIVATE_TOKEN: "private-token-value" };
   const records: unknown[] = [];
   let executed = false;
   const args = ["--target=production", "--phase=contract", "--production-runtime", `--runtime-commit=${sha}`];
-  const status = await runDbApply(args, env, { head: () => sha, served: async () => "b".repeat(40),
+  const status = await runDbApply(args, env, { head: () => "b".repeat(40),
     execute: () => { executed = true; return { status: 0, stdout: "", stderr: "" }; },
     record: async record => { records.push(record); } });
   assert.equal(status, 1);
   assert.equal(executed, false);
   assert.match(JSON.stringify(records), /REFUSED/);
   records.length = 0;
-  assert.equal(await runDbApply(args, env, { head: () => sha, served: async () => sha,
+  assert.equal(await runDbApply(args, env, { head: () => sha,
     execute: () => ({ status: 1, stdout: "", stderr: "FAIL private-token-value postgresql://private:password@host/db" }),
     record: async record => { records.push(record); } }), 1);
   assert.doesNotMatch(JSON.stringify(records), /private-token-value|password|private:/);
@@ -217,14 +246,12 @@ test("the legacy production contract command uses the same serving refusal befor
   assert.deepEqual(result.events, []);
 });
 
-test("runtime inspection failures are redacted and saved as a contract refusal", async () => {
-  for (const unread of ["head", "served"]) {
+test("an unreadable runtime commit is redacted and saved as a contract refusal", async () => {
     const records: unknown[] = [];
     const sha = "a".repeat(40);
     const status = await runDbApply(["--target=production", "--phase=contract", "--production-runtime", `--runtime-commit=${sha}`],
       { WTP_RUNTIME_MODE: "production", NODE_ENV: "test" }, {
-        head: () => { if (unread === "head") throw Error("private-git-error"); return sha; },
-        served: async () => { throw Error("private-fetch-error"); },
+        head: () => { throw Error("private-git-error"); },
         execute: () => { throw Error("must not launch"); },
         record: async record => { records.push(record); },
       });
@@ -232,7 +259,6 @@ test("runtime inspection failures are redacted and saved as a contract refusal",
     assert.equal(records.length, 1);
     assert.match(JSON.stringify(records), /REFUSED/);
     assert.doesNotMatch(JSON.stringify(records), /private-git-error|private-fetch-error/);
-  }
 });
 
 test("preview, branch and local build hooks skip without reading a database", () => {

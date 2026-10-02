@@ -432,6 +432,9 @@ export interface AccountReading {
 export interface SpendLimit {
   readonly name: string;
   readonly figure: string;
+  /** The dollars in that figure: spent so far (null when not reported) and the limit (null when none stands). */
+  readonly usedUsd: number | null;
+  readonly limitUsd: number | null;
   readonly fraction: number | null;
   readonly note: string;
   readonly tone: "hunt" | "warn" | "neutral";

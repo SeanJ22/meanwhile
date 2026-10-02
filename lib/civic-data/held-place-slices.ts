@@ -1,5 +1,7 @@
 import { readerQuery } from "./promoted-reader-query.ts";
 import type { CivicDataReadResult, CivicDataReadMetadata } from "./read-model.ts";
+import { PostgresRoutineDataStore } from "./store.ts";
+import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 
 /** A view of an already promoted pointer, like Admin's promoted slices. It
  * carries pointer metadata; it is not a newly validated candidate or receipt. */
@@ -28,6 +30,36 @@ export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetada
   if (!query) throw new Error(`HELD_PLACE_READ_FAILED:${recordClass}:${scopes.join(",")}:STORE_UNCONFIGURED`);
   let value: string;
   if (recordClass === "REGISTRY_RUNTIME_BINDING") {
+    const [formats] = await query([{ text: "SELECT scope, payload ? '$civicRegistryAreas' AS area_stored FROM civic_data_promotions WHERE record_class=$1 AND scope=ANY($2::text[])",
+      params: [recordClass, [...new Set(scopes)]] }]);
+    if (formats?.some(row => row.area_stored === true)) {
+      const stateAreas = new Map<string, string[]>();
+      for (const id of ids) {
+        const state = /^ocd-division\/country:us\/state:([a-z]{2})(?:\/|$)/.exec(id)?.[1];
+        if (state) stateAreas.set(state, [...(stateAreas.get(state) ?? []), id]);
+      }
+      const results: PlaceCaptureRead<T>[] = [];
+      for (const scope of scopes) {
+        let model: RegistryRuntimeReadModel | null = null;
+        for (const areas of stateAreas.values()) {
+          const projection = await new PostgresRoutineDataStore(areas).readPromotion<RegistryRuntimeReadModel>(recordClass, scope);
+          if (!projection) continue;
+          const held = projection.payload;
+          if (!model) model = { formatVersion: held.formatVersion, registry: { generatedAt: held.registry.generatedAt, divisions: [], bodies: [] },
+            bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialCandidacies: { ...held.officialCandidacies, rows: [] },
+            officialPhotos: { photos: [] }, rosterPhotos: {} };
+          model.registry.divisions.push(...held.registry.divisions); model.registry.bodies.push(...held.registry.bodies);
+          (model.bodyRosters as typeof held.bodyRosters[number][]).push(...held.bodyRosters);
+          (model.rosterReaderDispositions as typeof held.rosterReaderDispositions[number][]).push(...held.rosterReaderDispositions);
+          (model.statewideExecutives as typeof held.statewideExecutives[number][]).push(...held.statewideExecutives);
+          (model.officialCandidacies.rows as typeof held.officialCandidacies.rows[number][]).push(...held.officialCandidacies.rows);
+          (model.officialPhotos.photos as typeof held.officialPhotos.photos[number][]).push(...held.officialPhotos.photos);
+          Object.assign(model.rosterPhotos, held.rosterPhotos);
+        }
+        results.push({ kind: model ? "PROMOTED" : "NOT_RECORDED", value: model as T | null, metadata: { recordClass, scope } });
+      }
+      return results;
+    }
     value = `jsonb_build_object('registry', jsonb_build_object('divisions', ${array("payload->'registry'->'divisions'", division)},
       'bodies', ${array("payload->'registry'->'bodies'", serves)}),
       'bodyRosters', ${array("payload->'bodyRosters'", "x->>'bodyId' IN (SELECT b->>'id' FROM jsonb_array_elements(payload->'registry'->'bodies') b WHERE b->>'ocdId'=ANY($3::text[]) OR b->'alsoServesOcdIds' ?| $3::text[])")},

@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { registryAreaEncoding } from "./payload-parts.ts";
 
 import { agendaContentGroups, type AgendaContentRow } from "../meetings/agenda-content.ts";
 import type {
@@ -513,6 +514,8 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
 /** Stable JSON identity used by both persisted deltas and their owner view. */
 export function canonicalCivicDataJson(value: unknown): string {
   if (value === null || typeof value !== "object") return JSON.stringify(value);
+  const storedArea = registryAreaEncoding(value);
+  if (storedArea) return canonicalCivicDataJson(storedArea);
   if (Array.isArray(value)) return `[${value.map(canonicalCivicDataJson).join(",")}]`;
   return `{${Object.entries(value as Record<string, unknown>)
     .sort(([a], [b]) => a.localeCompare(b))

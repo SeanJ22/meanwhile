@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { CivicPayloadParts, partitionCivicPayload, type CivicPayloadPartIO } from "../lib/civic-data/payload-parts.ts";
+import { CivicPayloadParts, composeRegistryAreaView, partitionCivicPayload, registryAreaInheritanceIssue, registryAreaViewOf, type CivicPayloadPartIO } from "../lib/civic-data/payload-parts.ts";
+import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
+import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 
 const inline = ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal"];
 const row = (state: string, index: number) => ({ id: `ocd-division/country:us/state:${state}/place:${index}`,
@@ -74,4 +76,50 @@ test("missing storage parts report failure and old inline candidates remain read
   const stored = await parts.store({ text: "x".repeat(100_000) });
   memory.saved.clear();
   await assert.rejects(() => new CivicPayloadParts(memory.io).load(stored), /CIVIC_PAYLOAD_PART_MISSING/);
+});
+
+const areaPayload = (): RegistryRuntimeReadModel => ({ formatVersion: 1,
+  registry: { generatedAt: "2026-10-02T00:00:00.000Z", divisions: ["az", "nh"].flatMap(state => Array.from({ length: 25 }, (_, index) =>
+    ({ ...row(state, index), ocdId: row(state, index).id, state: state.toUpperCase(), label: `${state} place ${index}` }))), bodies: [] },
+  bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
+  officialCandidacies: { formatVersion: 1, rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE", rows: [] } } as unknown as RegistryRuntimeReadModel);
+
+test("an area composition reads only selected place/ring parts and retains every other area on publication", async () => {
+  const memory = memoryParts();
+  const payload = composeRegistryAreaView(areaPayload());
+  const stored = await new CivicPayloadParts(memory.io).store(payload);
+  const selected = payload.registry.divisions[0]!.ocdId;
+  const view = await new CivicPayloadParts(memory.io).load(stored, [selected]) as RegistryRuntimeReadModel;
+  assert.deepEqual(view.registry.divisions.map(row => row.ocdId), [selected]);
+  const readParts = memory.reads.flatMap(hashes => hashes.map(hash => memory.saved.get(hash)));
+  assert.ok(!JSON.stringify(readParts).includes("nh official content"), "foreign-state facts never cross the wire");
+  assert.ok(!JSON.stringify(readParts).includes("az official content 1 "), "another district in the same state is not loaded");
+  assert.equal(canonicalCivicDataJson(view), canonicalCivicDataJson(payload), "a selected view binds the same canonical composition");
+  const changed = composeRegistryAreaView({ ...view, registry: { ...view.registry,
+    divisions: view.registry.divisions.map(row => ({ ...row, label: "New official place name" })) } }, view);
+  assert.equal(registryAreaInheritanceIssue(view, changed), null);
+  const firstWrites = memory.writes.length;
+  const successor = await new CivicPayloadParts(memory.io).store(changed);
+  const additions = memory.writes.slice(firstWrites).flat();
+  assert.ok(!JSON.stringify(additions).includes("nh official content"));
+  const complete = await new CivicPayloadParts(memory.io).load(successor) as RegistryRuntimeReadModel;
+  assert.equal(complete.registry.divisions.length, 50);
+  assert.equal(complete.registry.divisions.find(row => row.ocdId === selected)?.label, "New official place name");
+  assert.deepEqual(complete.registry.divisions.filter(row => row.ocdId !== selected).sort((a, b) => a.ocdId.localeCompare(b.ocdId)),
+    payload.registry.divisions.filter(row => row.ocdId !== selected).sort((a, b) => a.ocdId.localeCompare(b.ocdId)));
+});
+
+test("materialized fact corruption and a changed unselected reference cannot inherit GOOD authority", async () => {
+  const memory = memoryParts();
+  const stored = await new CivicPayloadParts(memory.io).store(composeRegistryAreaView(areaPayload()));
+  const selected = row("az", 0).id;
+  const view = await new CivicPayloadParts(memory.io).load(stored, [selected]) as RegistryRuntimeReadModel;
+  const corrupt = structuredClone(view);
+  corrupt.registry.divisions[0]!.label = "Invented name";
+  assert.throws(() => canonicalCivicDataJson(corrupt), /REGISTRY_AREA_VIEW_CHANGED/);
+  const foreign = structuredClone(view);
+  const index = registryAreaViewOf(foreign)!.indexes.AZ as Record<string, unknown>;
+  index[row("az", 1).id] = index[selected];
+  const successor = composeRegistryAreaView(foreign, foreign);
+  assert.equal(registryAreaInheritanceIssue(view, successor), "An unselected area's registry reference changed.");
 });

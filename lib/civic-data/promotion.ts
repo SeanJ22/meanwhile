@@ -457,7 +457,9 @@ export async function processRoutineCandidate(
   const current = await store.readPromotion(inputCandidate.recordClass, inputCandidate.scope);
   const observedBaseVersionId = current?.versionId ?? null;
   const preloadedBaseChanged = expectedBaseVersionId !== undefined && expectedBaseVersionId !== observedBaseVersionId;
-  const lkg = current ? await store.readCandidate(current.lastKnownGoodVersionId) : null;
+  const readBase = (versionId: string) => store.registryAreaScope && store.readCandidateProof
+    ? store.readCandidateProof(versionId) : store.readCandidate(versionId);
+  const lkg = current ? await readBase(current.lastKnownGoodVersionId) : null;
   const lkgPredecessorVersionId = lkg === null
     ? null
     : trustedLkgPredecessorVersionId(lkg.candidate);
@@ -465,7 +467,7 @@ export async function processRoutineCandidate(
     ? null
     : await store.readCandidate(lkgPredecessorVersionId);
   const declaredBase = preloadedBaseChanged && expectedBaseVersionId !== null && expectedBaseVersionId !== undefined
-    ? await store.readCandidate(expectedBaseVersionId)
+    ? await readBase(expectedBaseVersionId)
     : null;
   const exactDeclaredBase = declaredBase &&
       declaredBase.candidate.id === expectedBaseVersionId &&
@@ -637,7 +639,7 @@ export async function processRoutineCandidate(
   const validatedRecord = await store.transition(candidate.id, "VALIDATED", transitionAt, "Every applicable GOOD check passed.", validated.receipt, undefined, held);
   let promoted: PromotedProjection;
   try {
-    promoted = await store.promote(candidate.id, validated.receipt, transitionAt);
+    promoted = await store.promote(candidate.id, validated.receipt, transitionAt, { candidate: validatedRecord.candidate });
   } catch (error) {
     if (!(error instanceof PromotionBaseChangedError)) throw error;
     const code = "PROMOTION_BASE_CHANGED";

@@ -13,6 +13,7 @@ import {
   assertRoutineDataStoreMutationAuthority,
   canonicalPostgresRoutineTimestamp,
   candidateSummaryRead,
+  candidatePromotionRead,
   preparedProjectionCouplingRead,
   MemoryRoutineDataStore,
   PostgresRoutineDataStore,
@@ -931,10 +932,14 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
   });
   const none: NeonAnswer = { columns: [], rows: [] };
 
+  for (const held of [undefined, value]) {
+  const selected = ["id", "source_id", "record_class", "scope", "state", "acquisition_succeeded", "validation_receipt",
+    "promoted_version_id", "last_known_good_version_id", "failure_code", "failure_detail", "retrieved_at", "raw_hash", "normalized_hash"];
+  const heldRow = selected.map(name => candidateRow.find(([[column]]) => column === name)!);
   const promoted = await withCannedNeon((statement) => {
     const text = statement.query;
     if (/^select pg_advisory_xact_lock/.test(text.trim())) return { columns: [["pg_advisory_xact_lock", "void"]], rows: [[""]] };
-    if (text.startsWith("select") && text.includes(`from "civic_data_candidates"`)) return answer(candidateRow);
+    if (text.startsWith("select") && text.includes(`from "civic_data_candidates"`)) return answer(held ? heldRow : candidateRow);
     if (text.startsWith("select") && text.includes(`from "civic_data_promotions"`)) return none;
     if (text.startsWith(`insert into "civic_data_promotions"`)) return answer(pointerRow);
     if (text.startsWith(`insert into "civic_data_candidate_events"`)) return none;
@@ -943,8 +948,15 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
   }, async (store, sent) => {
     // Judge the statements sent before the answer is mapped, so a whole-row
     // RETURNING fails on what it asked for, not on the canned reply's shape.
-    const settled = await store.promote(value.id, structuredClone(persisted), promotedAt)
+    const settled = await store.promote(value.id, structuredClone(persisted), promotedAt, held ? { candidate: held } : {})
       .then((result) => ({ result }), (error: unknown) => ({ error }));
+
+    if (held) {
+      const reads = sent.filter(({ query }) => query.startsWith("select") && query.includes(`from "civic_data_candidates"`));
+      assert.equal(reads.length, 1);
+      assert.doesNotMatch(selectList({ toSQL: () => ({ sql: reads[0]!.query }) }), /"candidate"|"identity"/,
+        "the validated envelope in hand is not rehydrated at the pointer move");
+    }
 
     const priorRead = sent.find(({ query }) => query.startsWith("select") && query.includes(`from "civic_data_promotions"`));
     assert.match(priorRead?.query ?? "", /^select "current_version_id" from "civic_data_promotions"/, "the prior pointer is read for its version id alone");
@@ -970,6 +982,32 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
     payload: value.readModel,
     receipt: persisted,
   });
+  }
+});
+
+test("a pointer move refuses a foreign held envelope before any mutation", async () => {
+  const value = candidate("held-promotion-mismatch");
+  const persisted = receiptFor(value);
+  const columns: NeonColumn[] = [["id", "text"], ["source_id", "text"], ["record_class", "text"], ["scope", "text"],
+    ["state", "text"], ["acquisition_succeeded", "bool"], ["validation_receipt", "jsonb"], ["promoted_version_id", "text"],
+    ["last_known_good_version_id", "text"], ["failure_code", "text"], ["failure_detail", "text"], ["retrieved_at", "timestamptz"],
+    ["raw_hash", "text"], ["normalized_hash", "text"]];
+  for (const foreign of [
+    { ...value, id: "foreign" },
+    { ...value, normalization: { ...value.normalization, normalizedHash: "b".repeat(64) } },
+    { ...value, retrieval: { ...value.retrieval, rawHash: "b".repeat(64) } },
+    { ...value, scope: "another-scope" },
+  ]) {
+    await withCannedNeon(() => ({ columns, rows: [[value.id, value.sourceId, value.recordClass, value.scope, "VALIDATED", true,
+      persisted, null, null, null, null, value.retrieval.retrievedAt, value.retrieval.rawHash, value.normalization.normalizedHash]] }),
+    async (store, sent) => {
+      await assert.rejects(store.promote(value.id, persisted, "2026-09-08T12:01:00.000Z", { candidate: foreign }),
+        /CANDIDATE_TRANSITION_ENVELOPE_MISMATCH/);
+      assert.equal(sent.length, 1, "no pointer, event or disposition is written for a foreign envelope");
+    });
+  }
+  const select = selectList(candidatePromotionRead(drizzle.mock({ schema }), value.id));
+  assert.doesNotMatch(select, /"candidate"|"identity"/);
 });
 
 test("the prepared projection's coupling read carries no composed payload", () => {

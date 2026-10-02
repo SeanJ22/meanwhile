@@ -5,7 +5,7 @@ import { and, desc, eq, getTableColumns, inArray, like, sql } from "drizzle-orm"
 import { getDb } from "../db/index.ts";
 import { runtimeCivicReadCache } from "../db/civic-read-cache.ts";
 import { civicDataCandidateEvents, civicDataCandidates, civicDataPromotions, civicDataReaderProjections, civicDataPayloadParts } from "../db/schema.ts";
-import { CivicPayloadParts } from "./payload-parts.ts";
+import { CivicPayloadParts, hasRegistryAreaEncoding } from "./payload-parts.ts";
 import {
   type CandidateEvent,
   type CandidateState,
@@ -117,6 +117,8 @@ export interface CandidateTransitionOptions {
 }
 
 export interface RoutineDataStore {
+  /** The canonical registry's materialized place/ring; other areas remain immutable references. */
+  readonly registryAreaScope?: readonly string[];
   /** Latest durable scope event, bounded by this write's observed time. */
   readonly eventObservedAt?: (recordClass: RoutineRecordClass, scope: string, requestedAt: string) => Promise<string>;
   readonly create: (record: CandidateVersionRecord, firstEvent: CandidateEvent) => Promise<void>;
@@ -185,7 +187,7 @@ export interface RoutineDataStore {
    * payload is that candidate's own read model, already in hand: a store
    * never ships the promoted dataset back over the wire to report the move.
    */
-  readonly promote: (candidateId: string, receipt: ValidationReceipt, at: string) => Promise<PromotedProjection>;
+  readonly promote: (candidateId: string, receipt: ValidationReceipt, at: string, options?: CandidateTransitionOptions) => Promise<PromotedProjection>;
   /** Append non-disposition evidence without changing the candidate's state. */
   readonly appendEvidence: (candidateId: string, state: CandidateState, at: string, detail: string) => Promise<CandidateEvent>;
   readonly events: (candidateId: string) => Promise<readonly CandidateEvent[]>;
@@ -1519,6 +1521,16 @@ export function candidateSummaryRead(db: RoutineClockDb, candidateId: string) {
   return db.select(CANDIDATE_SUMMARY_COLUMNS).from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
 }
 
+/** The same held-envelope identity used by transitions, with the persisted promotion disposition. */
+export function candidatePromotionRead(db: RoutineClockDb, candidateId: string) {
+  return db.select({
+    ...CANDIDATE_SUMMARY_COLUMNS,
+    retrievedAt: civicDataCandidates.retrievedAt,
+    rawHash: civicDataCandidates.rawHash,
+    normalizedHash: civicDataCandidates.normalizedHash,
+  }).from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
+}
+
 type PostgresCandidateSummaryRow = Pick<typeof civicDataCandidates.$inferSelect, keyof typeof CANDIDATE_SUMMARY_COLUMNS>;
 
 function postgresCandidateSummary(row: PostgresCandidateSummaryRow): CandidateVersionSummary {
@@ -1709,6 +1721,14 @@ function postgresCandidateEventRowToEvent(row: PostgresCandidateEventRow): Candi
 
 /** Production store: append-only events plus one atomic canonical projection. */
 export class PostgresRoutineDataStore implements RoutineDataStore {
+  readonly registryAreaScope?: readonly string[];
+  constructor(divisionIds?: readonly string[]) {
+    if (!divisionIds) return;
+    const states = new Set(divisionIds.map(id => /^ocd-division\/country:us\/state:([a-z]{2})(?:\/|$)/.exec(id)?.[1]));
+    if (states.size !== 1 || states.has(undefined)) throw new Error("REGISTRY_AREA_STATE_BOUNDARY");
+    this.registryAreaScope = [...new Set([...divisionIds, `ocd-division/country:us/state:${[...states][0]}`])];
+  }
+  forRegistryArea(divisionIds: readonly string[]): PostgresRoutineDataStore { return new PostgresRoutineDataStore(divisionIds); }
   private readonly db = getDb();
   private readonly readCache = runtimeCivicReadCache();
   private readonly payloadParts = new CivicPayloadParts({
@@ -1724,6 +1744,14 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       }) : values(hashes);
     },
   });
+
+  private async loadPayload(value: unknown, registryPayload = false): Promise<unknown> {
+    const candidate = value as Partial<RoutineCandidate> | null;
+    if (this.registryAreaScope && (registryPayload || candidate?.recordClass === "REGISTRY_RUNTIME_BINDING")) {
+      if (!hasRegistryAreaEncoding(registryPayload ? value : candidate?.readModel)) throw new Error("REGISTRY_AREA_STORAGE_REQUIRED");
+    }
+    return this.payloadParts.load(value, this.registryAreaScope);
+  }
 
   private async candidateRows<T extends { readonly id: string }>(
     ids: readonly string[], namespace: string, values: (keys: readonly string[]) => Promise<readonly T[]>,
@@ -1916,13 +1944,13 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       .where(eq(civicDataCandidates.id, candidateId))
       .limit(1);
     if (!row) throw new Error(`CANDIDATE_NOT_FOUND:${candidateId}`);
-    return await this.payloadParts.load(row.candidate) as RoutineCandidate;
+    return await this.loadPayload(row.candidate) as RoutineCandidate;
   }
 
   async readCandidate(candidateId: string): Promise<CandidateVersionRecord | null> {
     const [row] = await this.candidateRows([candidateId], "candidate", async ids =>
       this.db.select().from(civicDataCandidates).where(inArray(civicDataCandidates.id, [...ids])));
-    return row ? { ...rowToCandidate(row), candidate: await this.payloadParts.load(row.candidate) as RoutineCandidate } : null;
+    return row ? { ...rowToCandidate(row), candidate: await this.loadPayload(row.candidate) as RoutineCandidate } : null;
   }
 
   async readCandidateSummary(candidateId: string): Promise<CandidateVersionSummary | null> {
@@ -1932,7 +1960,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
     const [row] = await this.promotionRows(recordClass, [scope]);
-    return row ? { ...postgresPromotionRowToProjection<T>(row), payload: await this.payloadParts.load(row.payload) as T } : null;
+    return row ? { ...postgresPromotionRowToProjection<T>(row), payload: await this.loadPayload(row.payload, recordClass === "REGISTRY_RUNTIME_BINDING") as T } : null;
   }
 
   async readPromotions<T = unknown>(
@@ -1941,7 +1969,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   ): Promise<readonly PromotedProjection<T>[]> {
     if (scopes.length === 0) return [];
     const rows = await this.promotionRows(recordClass, scopes);
-    return Promise.all(rows.map(async row => ({ ...postgresPromotionRowToProjection<T>(row), payload: await this.payloadParts.load(row.payload) as T })));
+    return Promise.all(rows.map(async row => ({ ...postgresPromotionRowToProjection<T>(row), payload: await this.loadPayload(row.payload, recordClass === "REGISTRY_RUNTIME_BINDING") as T })));
   }
 
   async readPromotionIdentity(recordClass: RoutineRecordClass, scope: string): Promise<PromotedPointerIdentity | null> {
@@ -2033,18 +2061,18 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (candidateIds.length === 0) return [];
     const rows = await this.candidateRows(candidateIds, "candidate", async ids =>
       this.db.select().from(civicDataCandidates).where(inArray(civicDataCandidates.id, [...ids])));
-    return Promise.all(rows.map(async row => ({ candidateId: row.id, record: { ...rowToCandidate(row), candidate: await this.payloadParts.load(row.candidate) as RoutineCandidate } })));
+    return Promise.all(rows.map(async row => ({ candidateId: row.id, record: { ...rowToCandidate(row), candidate: await this.loadPayload(row.candidate) as RoutineCandidate } })));
   }
 
   async readCandidateProof(candidateId: string): Promise<CandidateVersionRecord | null> {
     const [row] = await this.candidateRows([candidateId], "candidate-proof", async ids => candidateProofRead(this.db, ids));
-    return row ? { ...candidateProofRowToRecord(row), candidate: await this.payloadParts.load(row.candidate) as RoutineCandidate } : null;
+    return row ? { ...candidateProofRowToRecord(row), candidate: await this.loadPayload(row.candidate) as RoutineCandidate } : null;
   }
 
   async readCandidateProofs(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {
     if (candidateIds.length === 0) return [];
     const rows = await this.candidateRows(candidateIds, "candidate-proof", async ids => candidateProofRead(this.db, ids));
-    return Promise.all(rows.map(async row => ({ candidateId: row.id, record: { ...candidateProofRowToRecord(row), candidate: await this.payloadParts.load(row.candidate) as RoutineCandidate } })));
+    return Promise.all(rows.map(async row => ({ candidateId: row.id, record: { ...candidateProofRowToRecord(row), candidate: await this.loadPayload(row.candidate) as RoutineCandidate } })));
   }
 
   async appendEvidence(candidateId: string, state: CandidateState, at: string, detail: string): Promise<CandidateEvent> {
@@ -2179,12 +2207,21 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     throw new Error(`CANDIDATE_EVENT_TIME_INVALID:${id}:PROMOTED`);
   }
 
-  async promote(candidateId: string, receipt: ValidationReceipt, at: string): Promise<PromotedProjection> {
+  async promote(candidateId: string, receipt: ValidationReceipt, at: string, options: CandidateTransitionOptions = {}): Promise<PromotedProjection> {
     this.assertMutationAuthority();
-    // Whole row: its read model is the payload the insert below copies and the
-    // payload of the projection returned, so the batch never ships it back.
-    const [row] = await this.db.select().from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
-    const record = row ? { ...rowToCandidate(row), candidate: await this.payloadParts.load(row.candidate) as RoutineCandidate } : null;
+    // The registered door already holds the immutable envelope returned by
+    // VALIDATED. Use the transition's existing identity boundary instead of
+    // rehydrating its entire dataset solely to report the atomic pointer move.
+    let record: CandidateVersionRecord | null;
+    if (options.candidate) {
+      const [row] = await candidatePromotionRead(this.db, candidateId);
+      if (row && !heldEnvelopeMatches(row, options.candidate)) {
+        throw new Error(`CANDIDATE_TRANSITION_ENVELOPE_MISMATCH:${candidateId}`);
+      }
+      record = row ? { ...postgresCandidateSummary(row), candidate: options.candidate } : null;
+    } else {
+      record = await this.readCandidate(candidateId);
+    }
     const persistedReceipt = persistedPromotionReceipt(record, receipt);
     if (!record || !persistedReceipt) throw new Error(`CANDIDATE_NOT_PROMOTABLE:${candidateId}`);
     assertPromotionTime(record, persistedReceipt, at);

@@ -14,7 +14,7 @@ import { projectRoutineDataObservability } from "../lib/civic-data/observability
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { getTableName } from "drizzle-orm";
-import { partitionCivicPayload } from "../lib/civic-data/payload-parts.ts";
+import { CivicPayloadParts, partitionCivicPayload } from "../lib/civic-data/payload-parts.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { readerOfficeholders } from "../lib/ask/server-sources.ts";
 import { composeReaderOfficials, readerOfficialsQuestion } from "../lib/ask/reader-officials.ts";
@@ -95,6 +95,73 @@ async function registryPackage(at: string, salt: string): Promise<RegistryRuntim
   const payload = structuredClone(read.value);
   return { contractId: "registry-runtime-bindings", version: at, sourceThrough: at, sourceReceipt: receipt(payload, at, salt), payload };
 }
+
+test("the canonical door converts a legacy edition then publishes one area without changing the other state", async () => {
+  const saved = new Map<string, unknown>();
+  const io = { existing: async (hashes: readonly string[]) => hashes.filter(hash => saved.has(hash)),
+    write: async (parts: readonly { hash: string; payload: unknown }[]) => { for (const part of parts) saved.set(part.hash, part.payload); },
+    read: async (hashes: readonly string[]) => hashes.flatMap(hash => saved.has(hash) ? [{ hash, payload: saved.get(hash) }] : []) };
+  class AreaStore extends MemoryRoutineDataStore {
+    registryAreaScope?: readonly string[];
+    private readonly models = new Map<string, unknown>();
+    async create(...args: Parameters<MemoryRoutineDataStore["create"]>) {
+      await super.create(...args);
+      this.models.set(args[0].candidate.id, await new CivicPayloadParts(io).store(args[0].candidate.readModel));
+    }
+    async readCandidateProof(id: string) {
+      const record = await super.readCandidateProof(id);
+      return record ? { ...record, candidate: { ...record.candidate,
+        readModel: await new CivicPayloadParts(io).load(this.models.get(id), this.registryAreaScope) } } : null;
+    }
+    async readPromotion<T = unknown>(...args: Parameters<MemoryRoutineDataStore["readPromotion"]>): Promise<PromotedProjection<T> | null> {
+      const projection = await super.readPromotion(...args);
+      return projection ? { ...projection, payload: await new CivicPayloadParts(io).load(this.models.get(projection.versionId), this.registryAreaScope) as T } : null;
+    }
+  }
+  const store = new AreaStore();
+  const pkg = await registryPackage(T0, "area-seed");
+  const rosters = ["az", "nh"].map(state => pkg.payload.bodyRosters.find(roster =>
+    pkg.payload.registry.bodies.some(body => body.id === roster.bodyId && body.ocdId?.startsWith(`ocd-division/country:us/state:${state}/`)))!);
+  assert.ok(rosters.every(Boolean));
+  const bodyIds = new Set(rosters.map(row => row.bodyId));
+  const bodies = pkg.payload.registry.bodies.filter(row => bodyIds.has(row.id));
+  const divisionIds = new Set(bodies.map(row => row.ocdId));
+  const executives = pkg.payload.statewideExecutives.filter(row => ["ocd-division/country:us/state:az", "ocd-division/country:us/state:nh"].includes(row.stateOcdId));
+  const holders = new Set([...rosters.flatMap(row => row.members.map(member => member.id)), ...executives.map(row => row.holder.id)]);
+  const tiny: RegistryRuntimeReadModel = { ...pkg.payload,
+    registry: { ...pkg.payload.registry, bodies, divisions: pkg.payload.registry.divisions.filter(row => divisionIds.has(row.ocdId)) },
+    bodyRosters: rosters, statewideExecutives: executives,
+    rosterReaderDispositions: pkg.payload.rosterReaderDispositions.filter(row => holders.has(row.canonicalId ?? row.sourceId)),
+    officialCandidacies: { ...pkg.payload.officialCandidacies, rows: pkg.payload.officialCandidacies.rows.filter(row => holders.has(row.holder.id)) },
+    officialPhotos: { photos: pkg.payload.officialPhotos.photos.filter(row => holders.has(row.officeholderId)) },
+    rosterPhotos: Object.fromEntries(Object.entries(pkg.payload.rosterPhotos).filter(([id]) => holders.has(id))) };
+  const initial = registryRuntimeCandidate({ ...pkg, payload: tiny, sourceReceipt: receipt(tiny, T0, "tiny") });
+  const seeded = await processRegisteredManualCandidate(store, "registry-runtime-bindings", initial, T0);
+  assert.ok(seeded.promoted, seeded.candidate.failureDetail ?? undefined);
+  const legacy = (await readRegistryRuntimePrior(store, T0))!;
+  const converted = registryRuntimeCandidate({ ...pkg, version: T1, sourceThrough: T1, payload: tiny,
+    sourceReceipt: receipt(tiny, T1, "conversion") }, { prior: legacy, areaStored: true });
+  const conversion = await processRegisteredManualCandidate(store, "registry-runtime-bindings", converted, T1, legacy.versionId, { confirmUnchanged: false });
+  assert.ok(conversion.promoted, conversion.candidate.failureDetail ?? undefined);
+  assert.equal(conversion.readerReadback?.status, "PASS", conversion.readerReadback?.detail);
+  const area = bodies.find(body => body.id === rosters[0]!.bodyId)!.ocdId!;
+  store.registryAreaScope = [area];
+  const prior = (await readRegistryRuntimePrior(store, T1))!;
+  assert.deepEqual(prior.payload.bodyRosters.map(row => row.bodyId), [rosters[0]!.bodyId]);
+  const at = "2026-09-08T12:02:00.000Z";
+  const nextModel: RegistryRuntimeReadModel = { ...prior.payload, registry: { ...prior.payload.registry, generatedAt: at },
+    bodyRosters: prior.payload.bodyRosters.map(roster => ({ ...roster, members: roster.members.map((member, index) =>
+      index === 0 ? { ...member, phone: "602-555-0123" } : member) })) };
+  const successor = registryRuntimeCandidate({ ...pkg, scope: "MEMBERS", version: at, sourceThrough: at,
+    payload: nextModel, sourceReceipt: receipt(nextModel, at, "area-change") }, { prior });
+  const published = await processRegisteredManualCandidate(store, "registry-runtime-bindings", successor, at, prior.versionId);
+  assert.ok(published.promoted, published.candidate.failureDetail ?? undefined);
+  assert.equal(published.readerReadback?.status, "PASS", published.readerReadback?.detail);
+  store.registryAreaScope = undefined;
+  const complete = (await readRegistryRuntimePrior(store, at))!;
+  assert.equal(complete.payload.bodyRosters.find(row => row.bodyId === rosters[0]!.bodyId)?.members[0]?.phone, "602-555-0123");
+  assert.deepEqual(complete.payload.bodyRosters.find(row => row.bodyId === rosters[1]!.bodyId), rosters[1], "the other state's exact members survive");
+});
 
 test("Ask reads both legislative names from a partitioned registry when a statewide roster pointer is absent", async () => {
   const memory = new MemoryRoutineDataStore();

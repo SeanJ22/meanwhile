@@ -11,6 +11,7 @@ import { resolve, join } from "node:path";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { registryAreaViewOf } from "../lib/civic-data/payload-parts.ts";
 import {
   readRegistryRuntimePrior,
   REGISTRY_RUNTIME_SCOPE,
@@ -55,7 +56,7 @@ async function main(): Promise<void> {
         await runNationalPlaceWorkerProcesses({ root: process.cwd(), store, zips,
           orderPending: ready => orderNationalPlaceWork(repos, ready, new Date().toISOString()),
           capacity: () => zips.length, publish: async input => {
-            const publication = await publishNationalPlaceSources({ ...input,
+            const publication = await publishNationalPlaceSources({ ...input, areaDivisionIds: input.divisions.map(row => row.id),
               divisions: input.divisions.filter(row => row.sourceDataset).map(row => ({ ...row, sourceDataset: row.sourceDataset! })) });
             nationalPublications.push(publication);
             return publication;
@@ -110,13 +111,14 @@ async function main(): Promise<void> {
   prepareProductionCivicDataWrite();
   const store = new PostgresRoutineDataStore();
   const prior = await readRegistryRuntimePrior(store, input.sourceReceipt.reviewedAt);
-  const candidate = registryRuntimeCandidate(input, { prior });
+  const candidate = registryRuntimeCandidate(input, { prior, areaStored: true });
   const outcome = await processRegisteredManualCandidate(
     store,
     "registry-runtime-bindings",
     candidate,
     input.sourceReceipt.reviewedAt,
     prior?.versionId ?? null,
+    { confirmUnchanged: registryAreaViewOf(prior?.payload) !== null },
   );
   if (!outcome.promoted) {
     throw new Error(`Registry runtime candidate ${candidate.id} was held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);

@@ -6,6 +6,7 @@ import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { parseValidationReceipt } from "./receipt.ts";
 import { registryMemberCitedUrls, inheritedRosterSourceFacts } from "../registry/cited-urls.ts";
 import type { CandidateVersionRecord, RoutineCandidate } from "./types.ts";
+import { registryAreaHasInheritedParts, registryAreaInheritanceIssue, registryAreaViewOf } from "./payload-parts.ts";
 
 const hash = (value: unknown) => createHash("sha256").update(canonicalCivicDataJson(value)).digest("hex");
 
@@ -43,11 +44,12 @@ export const manualPriorAuthorityOf = (candidate: RoutineCandidate): ManualPrior
 /** Current source reviews authorize new facts; the exact GOOD base authorizes unchanged inherited facts. */
 export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: CandidateVersionRecord | null): string | null {
   const prior = manualPriorAuthorityOf(candidate);
-  if (!prior) return null;
+  if (!prior) return registryAreaHasInheritedParts(candidate.readModel)
+    ? "Unmaterialized registry areas require the exact GOOD prior authority." : null;
   if (prior.kind !== "VALIDATED_PRIOR_PROJECTION" || !INHERITING_CLASSES.has(candidate.recordClass) ||
       candidate.bootstrapImport || !candidate.retrieval.manualSourceReceipt ||
       !Array.isArray(prior.retainedMembers) || (prior.retainedRosterSources !== undefined && !Array.isArray(prior.retainedRosterSources)) ||
-      (prior.retainedMembers.length === 0 && !prior.retainedRosterSources?.length)) {
+      (prior.retainedMembers.length === 0 && !prior.retainedRosterSources?.length && !registryAreaViewOf(candidate.readModel))) {
     return "Inherited authority is valid only for unchanged members of a source-reviewed curated Reader or registry successor.";
   }
   const receipt = base ? parseValidationReceipt(base.receipt) : null;
@@ -68,6 +70,8 @@ export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: Can
     base.candidate.retrieval.manualSourceReceipt, base.candidate.retrieval.finalUrl).ok) {
     return "The ordinary manual base has no valid source authority; it cannot become inherited authority.";
   }
+  const areaIssue = registryAreaInheritanceIssue(base.candidate.readModel, candidate.readModel);
+  if (areaIssue) return areaIssue;
   // A curated member is the payload's exact id; civicRecordsFor adds a
   // record-class prefix for change accounting, which is a different key. A
   // registry member has no one id field, so its change-accounting key is it.

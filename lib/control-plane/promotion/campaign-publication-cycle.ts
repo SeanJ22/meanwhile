@@ -5,7 +5,8 @@ import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { VaultIndex } from "../evidence/read-only-vault.ts";
 import { readPipelineStates } from "./pipeline.ts";
 import { CANDIDATE_PUBLICATION_READ_ROUTE, campaignSiteReadRecorder } from "./campaign-site-reads.ts";
-import { candidatePublicationLinks } from "./campaign-publication-links.ts";
+import { candidatePublicationLinks, candidatePublicationCaptureUrls, candidatePublicationCaptureIssue,
+  heldCandidatePublicationRead } from "./campaign-publication-links.ts";
 import { withinWallTime } from "./campaign-site-cycle.ts";
 import type { CampaignSiteApprovedRecord } from "./campaign-site-chain.ts";
 import { memoryInProcess, researchFetch, type ResearchGet, type ResearchRuntime } from "../../hunt/robots-first-fetch.ts";
@@ -45,9 +46,17 @@ export async function runCandidatePublicationCycle(input: {
   if (!Number.isFinite(recheckMs) || recheckMs < 0) throw new Error("CANDIDATE_PUBLICATION_RECHECK_INVALID");
   const recorder = campaignSiteReadRecorder({ repos: input.repos, vaultRoot: input.vaultRoot,
     methodVersion: input.methodVersion, now: () => new Date(input.clock()).toISOString(), heldVault: input.heldVault });
-  const [states, artifacts, attemptRows, routeRows, workRows] = await Promise.all([readPipelineStates(input.repos),
-    input.repos.artifacts.readAll(), input.repos.attempts.list(), input.repos.routeTasks.list(), input.repos.workItems.list()]);
-  const byId = new Map(artifacts.map(row => [row.artifactId, row]));
+  const [states, attemptRows, routeRows, workRows] = await Promise.all([readPipelineStates(input.repos),
+    input.repos.attempts.list(), input.repos.routeTasks.list(), input.repos.workItems.list()]);
+  const sourceReads = new Map<string, Awaited<ReturnType<NonNullable<ControlPlaneRepositories["artifactsByCanonicalUrl"]>>>>();
+  const sourceRecords = async (url: string) => {
+    const cached = sourceReads.get(url);
+    if (cached) return cached;
+    if (!input.repos.artifactsByCanonicalUrl) throw new Error("The repository cannot read captures by their exact source URL");
+    const rows = await input.repos.artifactsByCanonicalUrl(url, Number.MAX_SAFE_INTEGER);
+    sourceReads.set(url, rows);
+    return rows;
+  };
   const attempts = new Map(attemptRows.map(row => [row.id, row.value]));
   const workSubjects = new Map(workRows.map(row => [row.id, row.value.subject]));
   const lastAttemptByLink = new Map<string, number>();
@@ -74,11 +83,12 @@ export async function runCandidatePublicationCycle(input: {
     found.add(site.host); hosts.set(site.candidacyId, found);
   }
   const inventory = new Map<string, ReturnType<typeof candidatePublicationLinks>[number]>();
+  const parentHtml = new Map<string, string>();
   const outcomes: CandidatePublicationCycleReport["outcomes"][number][] = [];
   for (const approval of approvals) {
     const site = approval.campaignSite;
     if ((hosts.get(site.candidacyId)?.size ?? 0) !== 1) continue;
-    const source = byId.get(site.evidence.artifactId);
+    const source = (await sourceRecords(site.evidence.requestedUrl)).find(row => row.artifactId === site.evidence.artifactId);
     if (!source || source.partial || source.contentHash !== `sha256-${site.evidence.sha256}` ||
       source.attemptId !== site.evidence.attemptId || source.canonicalUrl !== site.evidence.requestedUrl) continue;
     let page;
@@ -86,6 +96,7 @@ export async function runCandidatePublicationCycle(input: {
     catch { page = null; }
     if (!page || page.sha256 !== site.evidence.sha256 || page.finalUrl !== site.evidence.finalUrl ||
       page.httpStatus !== site.evidence.httpStatus) continue;
+    parentHtml.set(source.artifactId, page.body);
     for (const link of candidatePublicationLinks({ html: page.body, sourceUrl: page.finalUrl,
       sourceArtifactId: source.artifactId, sourceContentHash: source.contentHash,
       approvalRecordId: approval.recordId, candidacyId: site.candidacyId })) {
@@ -94,21 +105,35 @@ export async function runCandidatePublicationCycle(input: {
     }
   }
   const now = input.clock();
-  const capturedLinks = new Set<string>();
-  const captureKey = (candidacyId: string, approvalRecordId: string, sourceArtifactId: string, url: string) =>
-    JSON.stringify([candidacyId, approvalRecordId, sourceArtifactId, url]);
-  for (const row of artifacts) {
-    const link = row.publicationLink;
-    if (!link || row.partial || !(Date.parse(row.recordedAt) > now - recheckMs)) continue;
-    const held = input.heldVault.byId.get(row.artifactId), attempt = attempts.get(row.attemptId);
-    if (held !== undefined && held.contentHash === row.contentHash && held.workItemId === row.workItemId &&
-        attempt?.outcome === "COMPLETED" && attempt.artifactIds.includes(row.artifactId)) {
-      capturedLinks.add(captureKey(link.candidacyId, link.approvalRecordId, link.sourceArtifactId, row.canonicalUrl));
+  const captures: Awaited<ReturnType<typeof sourceRecords>>[number][] = [];
+  for (const url of candidatePublicationCaptureUrls([...inventory.values()], input.heldVault)) captures.push(...await sourceRecords(url));
+  const due = [] as ReturnType<typeof candidatePublicationLinks>;
+  for (const link of inventory.values()) {
+    let reused = false;
+    for (const row of captures) {
+      const saved = input.heldVault.byId.get(row.artifactId);
+      if (row.canonicalUrl !== link.url && saved?.retrievalUrl !== link.url) continue;
+      const attempt = attempts.get(row.attemptId);
+      if (!attempt) continue;
+      try {
+        const capture = await heldCandidatePublicationRead(row, attempt, input.heldVault, workSubjects.get(row.workItemId));
+        const issue = capture ? candidatePublicationCaptureIssue(link, parentHtml.get(link.source.sourceArtifactId) ?? "", capture)
+          : "the original complete HTML bytes are not held";
+        if (issue !== null) {
+          outcomes.push({ candidacyId: link.source.candidacyId, url: link.url, code: `LINKED_PUBLICATION_UNVERIFIED:${issue}`, artifactId: row.artifactId });
+        } else if (Date.parse(capture!.vaultRetrievedAt!) > now - recheckMs) {
+          reused = true;
+          outcomes.push({ candidacyId: link.source.candidacyId, url: link.url, code: "HELD_REUSED", artifactId: row.artifactId });
+          break;
+        }
+      } catch (error) {
+        outcomes.push({ candidacyId: link.source.candidacyId, url: link.url,
+          code: `LINKED_PUBLICATION_UNVERIFIED:${error instanceof Error ? error.message : String(error)}`, artifactId: row.artifactId });
+      }
     }
+    if (!reused) due.push(link);
   }
-  const due = [...inventory.values()].filter(link => !capturedLinks.has(
-    captureKey(link.source.candidacyId, link.source.approvalRecordId, link.source.sourceArtifactId, link.url),
-  )).sort((a, b) => {
+  due.sort((a, b) => {
     const aKey = `${a.source.candidacyId}\u0000${a.url}`, bKey = `${b.source.candidacyId}\u0000${b.url}`;
     return (lastAttemptByLink.get(aKey) ?? -Infinity) - (lastAttemptByLink.get(bKey) ?? -Infinity) || aKey.localeCompare(bKey);
   });

@@ -1013,7 +1013,8 @@ export async function readMeetingsProjection(
     const value: MeetingsSnapshot = {
       formatVersion: 1,
       generatedAt,
-      counts: snapshotCounts(collapsed.rows, accounted.freshCollapsed),
+      counts: snapshotCounts(collapsed.rows, accounted.freshCollapsed +
+        promoted.reduce((sum, { value }) => sum + (value.counts.duplicatesCollapsed ?? 0), 0)),
       sources,
       meetings: collapsed.rows,
       agendaDocuments: retainedDocuments,

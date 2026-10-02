@@ -23,11 +23,25 @@ test("publication admission reads one committed snapshot and refuses malformed a
   assert.deepEqual(await readCampaignPublicationInputs(async query => { sql = query; return [{ approvals: "4", attempted: "3" }]; }), { approvals: 4, attemptedApprovals: 3 });
   assert.match(sql, /APPROVED_FOR_PROMOTION/);
   assert.match(sql, /cp_log_owner_digests/);
+  assert.match(sql, /testedSha/);
   assert.doesNotMatch(sql, /recorded_at|record->>'at'/);
   for (const rows of [[], [{ approvals: "invalid", attempted: "0" }], [{ approvals: "1", attempted: "2" }]]) {
     await assert.rejects(readCampaignPublicationInputs(async () => rows), /INPUTS_INVALID/);
   }
   await assert.rejects(readCampaignPublicationInputs(async () => { throw new Error("read unavailable"); }), /read unavailable/);
+  const code = "a".repeat(40);
+  let captured: unknown[] = [];
+  const changedCode = await readCampaignPublicationInputs(async (_sql, params) => {
+    captured = params;
+    return [{ approvals: "4", attempted: params[0] === code ? "0" : "4" }];
+  }, code);
+  assert.deepEqual(captured, [code], "the existing durable attempt acknowledgement belongs to the exact code that attempted it");
+  assert.equal(campaignPublicationInputsDue(CAMPAIGN_PUBLICATION_TASK, changedCode), true,
+    "changed publication code may reconsider previously held approvals without resetting clocks or creating new approvals");
+  const sameCode = await readCampaignPublicationInputs(async () => [{ approvals: "4", attempted: "4" }], code);
+  assert.equal(campaignPublicationInputsDue(CAMPAIGN_PUBLICATION_TASK, sameCode), false,
+    "an exact child receipt on the same code still suppresses the unchanged failure");
+  await assert.rejects(readCampaignPublicationInputs(async () => [], "invalid"), /CODE_INVALID/);
 });
 
 test("only an exact publication child receipt acknowledges the captured input count", () => {

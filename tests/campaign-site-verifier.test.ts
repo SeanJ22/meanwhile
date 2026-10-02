@@ -19,6 +19,7 @@ import {
   verifyCampaignSitePage,
   type CampaignSiteLead,
   type CampaignSitePageRead,
+  type CampaignSiteSupportingRead,
 } from "../lib/candidates/campaign-site-verifier.ts";
 import { CHIPPERSON, DUARTE, FRENCH, KAPNER, RYZUK, TANG_WILLIAMS, fixture, servedRuntime, subject } from "./helpers/campaign-sites.ts";
 
@@ -58,6 +59,47 @@ test("a campaign site with no year is CYCLE_NOT_EVIDENCED: it cannot be told fro
   const v = verifyCampaignSitePage(subject(KAPNER), lead(url), read(url, "kapner4mendhamtwp-root.live.html"));
   assert.deepEqual(codes(v), ["CYCLE_NOT_EVIDENCED"]);
   assert.equal(v.measurement!.name!.form, "gary kapner");
+});
+
+test("middle given names may be omitted while every family-name token remains exact", () => {
+  const forms = campaignNameForms({ givenName: "Elaine Marie", familyName: "Van Buren" });
+  assert.ok(forms.some(form => form.form === "elaine van buren" && form.rules.includes("MIDDLE_NAME_OMITTED")));
+  assert.ok(!forms.some(form => form.form === "elaine buren" || form.form === "van buren"));
+});
+
+test("a current independent profile supplies its own election span without inventing one on a yearless campaign page", () => {
+  const identity = { ...subject(KAPNER), candidacyId: "mo:2026:sldl-19:cooper-elaine-marie", givenName: "Elaine Marie",
+    familyName: "Cooper", stateCode: "MO", officeTitle: "State Representative, District 19", ocdId: "ocd-division/country:us/state:mo/sldl:19" };
+  const url = "https://elainecooper.example/";
+  const primary = heldPageRead({ requestedUrl: url, httpStatus: 200, contentType: "text/html", retrievedAt: AT,
+    body: "<title>Elaine Cooper for Missouri</title><h1>Elaine Cooper</h1><p>As a State Representative, I will work for rural communities.</p><p>Paid for by Elaine Cooper.</p>" });
+  const profileBody = `<title>Elaine Marie Cooper | Candidate profile</title><h1>Elaine Marie Cooper</h1>
+    <p>Missouri State Representative, District 19. Candidate in the 2026 General Election.</p><a href="${url}">Website</a>`;
+  const support = (body = profileBody, sourceUrl = "https://profile.example/elaine"): CampaignSiteSupportingRead => {
+    const page = heldPageRead({ requestedUrl: sourceUrl, httpStatus: 200, contentType: "text/html", retrievedAt: AT, body });
+    return { source: { artifactId: "ar-profile", sha256: page.sha256, requestedUrl: page.requestedUrl, finalUrl: page.finalUrl,
+      readAt: page.retrievedAt, contentType: page.contentType, httpStatus: page.httpStatus }, page };
+  };
+  assert.deepEqual(codes(verifyCampaignSitePage(identity, lead(url), primary)), ["CYCLE_NOT_EVIDENCED"]);
+  const verified = verifyCampaignSitePage(identity, lead(url), primary, support());
+  assert.equal(verified.verdict, "VERIFIED", JSON.stringify(codes(verified)));
+  assert.equal(verified.measurement!.name!.form, "elaine cooper");
+  assert.equal(verified.measurement!.cycle.span!.where, "INDEPENDENT_PROFILE");
+  assert.equal(verified.measurement!.cycle.source!.artifactId, "ar-profile");
+  assert.match(verified.verdict === "VERIFIED" ? verified.verification : "", /; https:\/\/profile.example\/elaine identifies the 2026 election/);
+  for (const supporting of [support(profileBody.replaceAll("Elaine Marie Cooper", "Another Person")),
+    support(profileBody.replace("District 19", "District 20")), support(profileBody.replace("Missouri", "Arizona")),
+    support(`${profileBody}<p>Candidate for District 20 in the 2026 election.</p>`),
+    support(profileBody.replace("State Representative", "State Senator")), support(profileBody.replace("2026", "2022")),
+    support(profileBody.replace(url, "https://anothercampaign.example/")), support(profileBody, "https://profile.elainecooper.example/")]) {
+    assert.ok(codes(verifyCampaignSitePage(identity, lead(url), primary, supporting)).includes("CYCLE_NOT_EVIDENCED"));
+  }
+  const forged = support();
+  assert.ok(codes(verifyCampaignSitePage(identity, lead(url), primary,
+    { ...forged, page: { ...forged.page, body: `${forged.page.body}<p>Altered.</p>` } })).includes("CYCLE_NOT_EVIDENCED"));
+  const historicalBody = `${primary.body}<p>Vote in the 2022 election.</p>`;
+  const historical = heldPageRead({ ...primary, body: historicalBody, sha256: undefined });
+  assert.ok(codes(verifyCampaignSitePage(identity, lead(url), historical, support())).includes("HISTORICAL_CYCLE"));
 });
 
 test("a past-cycle campaign site is refused HISTORICAL_CYCLE and labelled historical", () => {

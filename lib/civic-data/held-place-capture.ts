@@ -16,7 +16,7 @@ import type { PlaceCaptureKind } from "../coverage/place-owed.ts";
 
 /** Derived from canonical published records, never filtered by their original job or ZIP. */
 export interface HeldPlaceCapture {
-  readonly subjects: readonly { id: string; kind: "division" | "body" | "seat" | "calendar" | "contest" | "funding" | "deadline"; divisionIds: readonly string[]; label: string; captureKind?: PlaceCaptureKind; calendarBodyId?: string }[];
+  readonly subjects: readonly { id: string; kind: "division" | "body" | "seat" | "calendar" | "contest" | "funding" | "deadline"; divisionIds: readonly string[]; label: string; captureKind?: PlaceCaptureKind; calendarBodyId?: string; funcstat?: string }[];
   readonly held: readonly { subjectId: string; checklistId: string; state: "published" | "held" | "unpublished";
     sourceUrl: string; checkedAt: string; freshUntil: string; value: unknown }[];
 }
@@ -38,6 +38,13 @@ export function projectHeldPlaceCapture(
   const wanted = new Set(divisionIds);
   const subjects = new Map<string, HeldPlaceCapture["subjects"][number]>();
   const held = new Map<string, HeldPlaceCapture["held"][number]>();
+  // Preserve the held Census classification even for callers that only know
+  // a division ID. Statistical geography is not another government inventory.
+  for (const division of registry?.registry.divisions ?? []) {
+    if (!wanted.has(division.ocdId)) continue;
+    subjects.set(division.ocdId, { id: division.ocdId, kind: "division", divisionIds: [division.ocdId],
+      label: division.label, ...(division.funcstat ? { funcstat: division.funcstat } : {}) });
+  }
   const bodies = new Map((registry?.registry.bodies ?? []).map(body => [body.id, body]));
   const divisionsFor = (id: string | undefined, division: string | null) => {
     const body = id === undefined ? undefined : bodies.get(id);
@@ -45,11 +52,11 @@ export function projectHeldPlaceCapture(
       .filter((value): value is string => value !== null && value !== undefined))];
   };
   const add = (subjectId: string, checklistId: string, value: unknown, sourceUrl: string | null,
-    checkedAt: string, hours: number) => {
+    checkedAt: string, hours: number, recordId?: number) => {
     const checked = Date.parse(checkedAt);
     if (!sourceUrl || !Number.isFinite(checked)) return;
     const fieldKeys = value !== null && typeof value === "object" ? Object.keys(value).sort().join(",") : "";
-    const key = `${subjectId}:${checklistId}:${fieldKeys}`;
+    const key = `${subjectId}:${checklistId}:${fieldKeys}${recordId === undefined ? "" : `:${recordId}`}`;
     const prior = held.get(key);
     if (prior && Date.parse(prior.checkedAt) >= checked) return;
     held.set(key, { subjectId, checklistId, state: "published", sourceUrl, checkedAt,
@@ -58,7 +65,8 @@ export function projectHeldPlaceCapture(
   for (const body of bodies.values()) {
     const divisions = divisionsFor(body.id, body.ocdId);
     if (!divisions.some(id => wanted.has(id))) continue;
-    subjects.set(body.id, { id: body.id, kind: "body", divisionIds: divisions, label: body.name ?? body.id });
+    subjects.set(body.id, { id: body.id, kind: "body", captureKind: "registry-body",
+      divisionIds: divisions, label: body.name ?? body.id });
     if (body.name && body.bodyClass && body.ocdId) add(body.id, "GOV-01",
       { id: body.id, name: body.name, type: body.bodyClass, divisionIds: divisions },
       body.provenance.sourceUrl, body.provenance.collectedAt, 30 * 24);
@@ -132,6 +140,28 @@ export function projectHeldPlaceCapture(
       // This is the typed finding made by the official minutes reader, never an empty array or failed extraction.
       const checked = Date.parse(sitting.publication.observedAt);
       const hours = Math.abs(Date.parse(sitting.startsAt ?? "") - Date.parse(now)) <= 7 * 24 * 3_600_000 ? 1 : 12;
+      const sourceUrl = sitting.publication.inSiteUrl ?? sitting.sourceUrl;
+      if (sitting.publication.agendaFile) add(sitting.meetingId, "DOC-01", { url: sitting.publication.agendaFile },
+        sourceUrl, sitting.publication.observedAt, hours);
+      // This captures the publisher's link and status, never document retrieval
+      // or readable text. Preserve "Draft" verbatim rather than calling it approved.
+      if (sitting.publication.minutesFile && sitting.publication.minutesStatusName?.trim()) {
+        add(sitting.meetingId, "DOC-06", { url: sitting.publication.minutesFile,
+          publisherStatus: sitting.publication.minutesStatusName, publisherStatusId: sitting.publication.minutesStatusId },
+        sourceUrl, sitting.publication.observedAt, hours);
+      }
+      const itemIds = new Set((sitting.agenda ?? []).filter(item => item.eventId === sitting.eventId).map(item => item.eventItemId));
+      for (const action of sitting.outcomes ?? []) {
+        if (action.recordClass !== "ACTION_SUMMARY" || action.eventId !== sitting.eventId) continue;
+        itemIds.add(action.eventItemId);
+        add(sitting.meetingId, "DOC-08", { meetingId: sitting.meetingId, ...action },
+          action.provenance.endpoint, action.provenance.readOn, hours, action.eventItemId);
+      }
+      for (const roll of sitting.rollCalls ?? []) {
+        if (roll.recordClass !== "ROLL_CALL" || !roll.votes.length || !itemIds.has(roll.eventItemId)) continue;
+        add(sitting.meetingId, "DOC-09", { meetingId: sitting.meetingId, ...roll },
+          roll.provenance.endpoint, roll.provenance.readOn, hours, roll.eventItemId);
+      }
       if (sitting.extraction === "NOT_YET_PUBLISHED" && sitting.extractionNote && sitting.sourceUrl &&
           !sitting.publication.minutesFile && Number.isFinite(checked) && checked <= Date.parse(now) &&
           checked + hours * 3_600_000 >= Date.parse(now)) {

@@ -329,6 +329,10 @@ export interface WorkerStatus {
   /** Last meaningful progress, or null when nothing reports it. */
   readonly lastUsefulProgress: { readonly at: string; readonly what: string } | null;
   readonly roundStartedAt: string | null;
+  /** Set when a round is open and nothing has started or reported since this time, for ten minutes or more. */
+  readonly noProgressSince?: string | null;
+  /** Paid jobs the safety checks refused before they reached the AI, and why in plain words; null when none. */
+  readonly refused?: { readonly count: number; readonly why: string } | null;
   readonly lastRoundFinishedAt: string | null;
   readonly nextRoundDueAt: string | null;
   readonly runnerState: string | null;
@@ -586,6 +590,12 @@ export interface SpendView {
   readonly unpricedRows: number;
   readonly neon: { readonly kind: "recorded" | "not-recorded"; readonly detail: string | null;
     readonly days: readonly { readonly day: string; readonly responseBytes: number; readonly requestBytes: number; readonly requests: number }[] };
+  /** Paid model money settled in the last 24 hours, from the cost ledger; null when that read failed. */
+  readonly last24h?: { readonly modelUsd: number; readonly unpricedRows: number } | null;
+  /** When the ledger was read. */
+  readonly readAt?: string;
+  /** What Scouts reported in the last 24 hours, by kind of work; null when that read failed. */
+  readonly scoutOutcomes?: readonly { readonly recordClass: string; readonly found: number; readonly route: number; readonly total: number }[] | null;
   /** Open reservations right now over every hunt; null when not read. */
   readonly setAsideUsd?: number | null;
   /** The daily spending limit in force; null when not read. */

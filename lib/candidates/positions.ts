@@ -1,6 +1,7 @@
 import {
   answerFor,
   answerSentence,
+  sourceCaptureFingerprint,
   type CandidateAnswer,
   type CandidateCorpus,
   type CandidateDocument,
@@ -29,11 +30,21 @@ export function getCandidateCorpus(): CandidateCorpus {
   return currentCandidateCorpusProjection();
 }
 
-export function documentsFor(candidateKey: string): CandidateDocument[] {
+export function documentsFor(candidateKey: string, corpus?: CandidateCorpus): CandidateDocument[] {
   const keys = verifiedReaderPersonKeys(candidateKey);
-  return getCandidateCorpus().documents.filter(
-    (d) => keys.includes(d.candidateKey),
-  );
+  const seen = new Map<string, string>();
+  return (corpus ?? getCandidateCorpus()).documents.filter((document) => {
+    if (!keys.includes(document.candidateKey)) return false;
+    const capture = sourceCaptureFingerprint(document.sourceRevision, document.contentHash,
+      document.documentUrl, document.retrievedAt);
+    // Older rows without exact capture provenance remain separate. This joins
+    // only copies carried by already verified aliases of the requested person.
+    if (capture === null) return true;
+    const priorKey = seen.get(capture);
+    if (priorKey !== undefined && priorKey !== document.candidateKey) return false;
+    seen.set(capture, document.candidateKey);
+    return true;
+  });
 }
 
 /**

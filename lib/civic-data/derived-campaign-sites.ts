@@ -40,6 +40,7 @@ import {
 } from "./read-model.ts";
 import { campaignLinkRefreshIssue } from "./campaign-link-refresh.ts";
 import { createHash } from "node:crypto";
+import type { CampaignSiteSourceReference } from "../candidates/campaign-site-verifier.ts";
 import type { CandidateDocument } from "../candidates/corpus.ts";
 
 /**
@@ -74,6 +75,7 @@ export interface DerivedCampaignSiteEvidence {
   readonly finalUrl: string;
   readonly httpStatus: number;
   readonly readAt: string;
+  readonly cycleSource?: CampaignSiteSourceReference;
   readonly approvalItemId: string;
   readonly approvalRecordId: string;
   readonly approvedAt: string;
@@ -126,7 +128,7 @@ export interface DerivedCampaignSitesProjection {
 }
 
 /** The one sentence template every verified campaign link carries (the chain's rendering-symmetry check). */
-export const CAMPAIGN_SITE_VERIFICATION_TEMPLATE = /^Fetched \d{4}-\d{2}-\d{2} \(campaign-site-verifier\/1\): '.+' — names .+, the (office|district) \(".+"\), and the \d{4} election\.$/;
+export const CAMPAIGN_SITE_VERIFICATION_TEMPLATE = /^Fetched \d{4}-\d{2}-\d{2} \(campaign-site-verifier\/1\): '.+' — names .+, the (office|district) \(".+"\)(?:, and|; https:\/\/\S+ identifies) the \d{4} election\.$/;
 
 const SHA256 = /^[a-f0-9]{64}$/;
 const DAY = /^\d{4}-\d{2}-\d{2}$/;

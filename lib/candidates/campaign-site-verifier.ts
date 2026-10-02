@@ -8,7 +8,7 @@
  * Marginalia search results behind "NORMALIZER MISSING". Most of what they
  * point at is a lead toward the largest held class: a candidate's campaign
  * website (CAN-04/CAN-05). A lead is not a hit. This module decides, from the
- * page itself and nothing else, whether a lead is the named candidate's
+ * saved source pages, whether a lead is the named candidate's
  * CURRENT campaign site.
  *
  * ```
@@ -17,7 +17,7 @@
  *             └─ refused by name ◄───────────────────────────────── └─ refused by name
  * ```
  *
- * A lead passes only when ALL of these hold on the fetched page:
+ * A lead passes only when these hold on the fetched page:
  *
  * - it is an HTTPS HTML page answered 2xx with no access control in front of
  *   it (a login, a 403, a bot challenge: `lib/hunt/access-control.ts`), and
@@ -28,13 +28,15 @@
  *   news outlet, a government or institutional site, a party or organization
  *   site, a web archive or proxy, or a search engine (closed lists below);
  * - the page names the candidate: an exact name form of the filed name
- *   (`lib/identity/name-forms.ts`, plus this file's two named rules), never a
+ *   (`lib/identity/name-forms.ts`, plus this file's named rules), never a
  *   surname alone, never a similarity score, never a diminutive;
  * - the page names the office (or contest) OR the district;
  * - the site is the candidate's own: its host or its title names them;
  * - the page evidences the CURRENT cycle: the cycle year inside an election
  *   phrase ("elect", "vote", "campaign", "paid for by"…), or in its title.
- *   A page whose election phrases carry only earlier years is the candidate's
+ *   A yearless page may instead use a separately saved current candidacy
+ *   profile that cites this campaign, with its exact spans and bytes carried
+ *   through publication. A page whose election phrases carry only earlier years is the candidate's
  *   PAST-CYCLE site, refused and labelled historical.
  *
  * Every refusal is typed. A refusal is never an absence: "this lead is not the
@@ -43,6 +45,7 @@
 import { createHash } from "node:crypto";
 
 import { nameForms } from "../identity/name-forms.ts";
+import { US_STATES } from "../control-plane/readiness/catalog.ts";
 import { accessControlIn } from "../hunt/access-control.ts";
 import { researchFetch, type ResearchFetchResult, type ResearchRuntime } from "../hunt/robots-first-fetch.ts";
 import type { PermissionVerdict } from "../control-plane/scheduler/robots.ts";
@@ -348,7 +351,7 @@ function excerpt(text: string, index: number, length: number): string {
 
 /* ------------------------------------------------------------- the name */
 
-export type CampaignNameRule = "AS_PUBLISHED" | "NICKNAME_REMOVED" | "NICKNAME_AS_GIVEN" | "NICKNAME_AS_FAMILY" | "SUFFIX_REMOVED" | "MIDDLE_INITIAL_OMITTED" | "PARENTHESIZED_NICKNAME";
+export type CampaignNameRule = "AS_PUBLISHED" | "NICKNAME_REMOVED" | "NICKNAME_AS_GIVEN" | "NICKNAME_AS_FAMILY" | "SUFFIX_REMOVED" | "MIDDLE_INITIAL_OMITTED" | "MIDDLE_NAME_OMITTED" | "PARENTHESIZED_NICKNAME";
 
 export interface CampaignNameForm {
   readonly form: string;
@@ -387,6 +390,12 @@ export function campaignNameForms(identity: Pick<CampaignSiteIdentity, "givenNam
       const kept = tokens.filter((token, index) => index === 0 || index === tokens.length - 1 || token.length > 1);
       if (kept.length !== tokens.length) add(kept.join(" "), [...rules, "MIDDLE_INITIAL_OMITTED"]);
     }
+  }
+  const givenTokens = comparisonText(identity.givenName).split(" ");
+  if (givenTokens.length > 1 && givenTokens.slice(1).some(token => token.length > 1) && !/["()]/.test(identity.givenName)) {
+    // Only given-name middle tokens may be omitted. A multiword family name
+    // stays whole, and the chain still requires a unique canonical identity.
+    add(`${givenTokens[0]} ${family}`, ["AS_PUBLISHED", "MIDDLE_NAME_OMITTED"]);
   }
   return [...out.values()].sort((a, b) => a.rules.length - b.rules.length || a.form.localeCompare(b.form));
 }
@@ -464,7 +473,7 @@ export function candidateDisplayName(identity: Pick<CampaignSiteIdentity, "given
   return `${identity.givenName} ${identity.familyName}`.split(/\s+/).map((word) => word.split("-").map(cap).join("-")).join(" ").trim();
 }
 
-const STATE_NAMES: Readonly<Record<string, string>> = { az: "arizona", nh: "new hampshire", nj: "new jersey" };
+const STATE_NAMES: Readonly<Record<string, string>> = Object.fromEntries(US_STATES.map(state => [state.code, comparisonText(state.name)]));
 
 /** The district as a page would write it, from the OCD id and the title's own district words. */
 export function districtForms(identity: Pick<CampaignSiteIdentity, "ocdId" | "officeTitle" | "stateCode">): string[] {
@@ -519,7 +528,9 @@ const ELECTION_PHRASE = /\b(elect|elected|electing|election|elections|re ?elect|
 export interface CycleEvidence {
   readonly state: "CURRENT" | "HISTORICAL" | "NOT_EVIDENCED";
   /** The current-cycle span, when found. */
-  readonly span: { readonly year: number; readonly phrase: string; readonly index: number; readonly excerpt: string; readonly where: "TITLE" | "PAGE" } | null;
+  readonly span: { readonly year: number; readonly phrase: string; readonly index: number; readonly excerpt: string; readonly where: "TITLE" | "PAGE" | "INDEPENDENT_PROFILE" } | null;
+  /** Present only when the election span comes from these separately saved bytes. */
+  readonly source?: CampaignSiteSourceReference;
   /** Earlier election years found beside an election phrase. */
   readonly earlierYears: readonly number[];
 }
@@ -564,6 +575,74 @@ export interface CampaignSitePageRead {
   /** Every origin's robots verdict along the redirect chain. */
   readonly permissions: readonly { readonly origin: string; readonly verdict: PermissionVerdict; readonly detail: string }[];
   readonly redirects: readonly { readonly from: string; readonly status: number; readonly to: string }[];
+}
+
+/** A saved supporting source, carried through publication for byte-for-byte rechecking. */
+export interface CampaignSiteSourceReference {
+  readonly artifactId: string;
+  readonly sha256: string;
+  readonly requestedUrl: string;
+  readonly finalUrl: string;
+  readonly httpStatus: number;
+  readonly contentType: string;
+  readonly readAt: string;
+}
+
+export interface CampaignSiteSupportingRead {
+  readonly source: CampaignSiteSourceReference;
+  readonly page: CampaignSitePageRead;
+}
+
+/** Observed campaign links on one candidate's captured profile, never guessed hosts. */
+export function profileCampaignSiteLeads(page: CampaignSitePageRead, subject: CampaignSiteIdentity, ref: string): CampaignSiteLead[] {
+  const headings = pageHeadings(page.body).headings;
+  const forms = campaignNameForms(subject).map(form => form.form);
+  const words = comparisonText(pageVisibleText(page.body));
+  const contains = (form: string) => ` ${words} `.includes(` ${comparisonText(form)} `);
+  if (!headings.some(heading => titleBrandsCandidate(heading, forms) !== null) ||
+    ![...officeForms(subject.officeTitle), ...districtForms(subject)].some(contains)) return [];
+  const links: { url: string; label: string }[] = [];
+  const html = page.body.replace(/<(script|style|template)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, " ");
+  for (const match of html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a\s*>/gi)) {
+    const href = /\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i.exec(match[1]!);
+    if (!href) continue;
+    let url: URL;
+    try { url = new URL((href[1] ?? href[2] ?? href[3]!).replace(/&amp;/g, "&"), page.finalUrl); } catch { continue; }
+    if (url.protocol !== "https:" || url.username || url.password || siteHost(url.href) === siteHost(page.finalUrl) || campaignSiteHostRefusal(url.href)) continue;
+    const accessible = /\b(?:aria-label|title)\s*=\s*(?:"([^"]*)"|'([^']*)')/i.exec(match[1]!);
+    links.push({ url: url.href, label: comparisonText(pageVisibleText(match[2]!) + " " + (accessible?.[1] ?? accessible?.[2] ?? "")) });
+  }
+  const websites = links.filter(link => /^(?:(?:official|candidate|campaign|personal) )*(?:website|web site|campaign site|campaign page)$/.test(link.label));
+  const hosts = new Set(websites.map(link => siteHost(link.url)));
+  return [...new Set([...websites, ...links.filter(link => hosts.has(siteHost(link.url)) && /^(?:learn more|read more|source|platform|issues)$/.test(link.label))].map(link => link.url))]
+    .map(url => ({ url, origin: "SCOUT_FINDING", ref }));
+}
+
+/** The two saved pages agree on this current candidacy and the observed campaign link. */
+export function profileSupportsCampaign(identity: CampaignSiteIdentity, primary: CampaignSitePageRead, supporting: CampaignSiteSupportingRead): boolean {
+  const { page, source } = supporting;
+  const age = Math.abs(Date.parse(primary.retrievedAt) - Date.parse(page.retrievedAt));
+  const words = comparisonText(pageVisibleText(page.body));
+  const districts = districtForms(identity);
+  const state = STATE_NAMES[identity.stateCode.toLowerCase()] ?? identity.stateCode.toLowerCase();
+  const districtNumber = /\/(?:cd|sldl|sldu):(\d+)(?:\/|$)/.exec(identity.ocdId)?.[1];
+  const conflictingDistrict = districtNumber !== undefined &&
+    [...words.matchAll(/\b(?:(?:congressional|legislative) )?(?:district|ld|cd)\s*(\d+)\b/g)]
+      .some(match => Number(match[1]) !== Number(districtNumber));
+  // A general office title must not certify the same name in a different
+  // district. Numbered districts also need their state, not just "District 2".
+  const jurisdiction = firstSpan(words, officeForms(identity.officeTitle)) !== null &&
+    (districts.length === 0 || firstSpan(words, districts) !== null) &&
+    (!/\/(?:cd|sldl|sldu):/.test(identity.ocdId) || firstSpan(words, [state, comparisonText(identity.stateCode)]) !== null);
+  return Number.isFinite(age) && age <= 14 * 24 * 60 * 60 * 1000 &&
+    jurisdiction && !conflictingDistrict &&
+    source.sha256 === page.sha256 && createHash("sha256").update(page.body, "utf8").digest("hex") === source.sha256 &&
+    source.requestedUrl === page.requestedUrl && source.finalUrl === page.finalUrl && source.readAt === page.retrievedAt &&
+    source.httpStatus === page.httpStatus && source.contentType === page.contentType &&
+    page.httpStatus >= 200 && page.httpStatus < 300 && /html/i.test(page.contentType) &&
+    registrableDomain(siteHost(page.finalUrl) ?? "") !== registrableDomain(siteHost(primary.finalUrl) ?? "") &&
+    cycleEvidence(comparisonText(pageVisibleText(page.body)), pageHeadings(page.body).headings, identity.cycle).state === "CURRENT" &&
+    profileCampaignSiteLeads(page, identity, source.artifactId).some(lead => siteHost(lead.url) === siteHost(primary.finalUrl));
 }
 
 export interface CampaignSiteSpan {
@@ -631,7 +710,8 @@ function firstSpan(text: string, forms: readonly string[]): CampaignSiteSpan | n
  * **THE PAGE CHECKS.** Pure: one read in, one verdict out. The caller made the
  * read robots-first and vaulted its bytes; this decides only what they show.
  */
-export function verifyCampaignSitePage(identity: CampaignSiteIdentity, lead: CampaignSiteLead, read: CampaignSitePageRead): CampaignSiteVerdict {
+export function verifyCampaignSitePage(identity: CampaignSiteIdentity, lead: CampaignSiteLead, read: CampaignSitePageRead,
+  supporting?: CampaignSiteSupportingRead): CampaignSiteVerdict {
   const hostRefused = campaignSiteHostRefusal(read.finalUrl);
   const text = comparisonText(pageVisibleText(read.body));
   const { title, headings } = pageHeadings(read.body);
@@ -663,7 +743,11 @@ export function verifyCampaignSitePage(identity: CampaignSiteIdentity, lead: Cam
     : titleForm !== null && disclaimer
       ? { by: "TITLE", evidence: `the page calls itself the candidate's ("${titleForm}") and carries a campaign disclaimer` }
       : null;
-  const cycle = cycleEvidence(text, headings, identity.cycle);
+  let cycle = cycleEvidence(text, headings, identity.cycle);
+  if (cycle.state === "NOT_EVIDENCED" && supporting && profileSupportsCampaign(identity, read, supporting)) {
+    const supported = cycleEvidence(comparisonText(pageVisibleText(supporting.page.body)), pageHeadings(supporting.page.body).headings, identity.cycle);
+    cycle = { ...supported, span: { ...supported.span!, where: "INDEPENDENT_PROFILE" }, source: supporting.source };
+  }
   const measurement: CampaignSiteMeasurement = {
     verifierId: CAMPAIGN_SITE_VERIFIER_ID,
     candidacyId: identity.candidacyId,
@@ -721,7 +805,8 @@ export function verifyCampaignSitePage(identity: CampaignSiteIdentity, lead: Cam
   return {
     verdict: "VERIFIED",
     measurement,
-    verification: `Fetched ${read.retrievedAt.slice(0, 10)} (${CAMPAIGN_SITE_VERIFIER_ID}): '${title ?? host}' — names ${candidateDisplayName(identity)}, ${where}, and the ${identity.cycle} election.`
+    verification: `Fetched ${read.retrievedAt.slice(0, 10)} (${CAMPAIGN_SITE_VERIFIER_ID}): '${title ?? host}' — names ${candidateDisplayName(identity)}, ${where}${cycle.source
+      ? `; ${cycle.source.finalUrl} identifies the ${identity.cycle} election` : `, and the ${identity.cycle} election`}.`
       .replace(/\s+/g, " "),
   };
 }

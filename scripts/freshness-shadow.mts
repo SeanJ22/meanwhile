@@ -1,7 +1,7 @@
 import { attemptBatchJournal, backgroundBatchTransport, batchEnabledFor, batchRequestHash } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { createHash, randomUUID } from "node:crypto";
-import { runLeaseWorkerProcesses, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
+import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import { scoutProcessExecutor } from "../lib/control-plane/workers/scout-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
@@ -1265,7 +1265,12 @@ async function refreshPlaceOrder(): Promise<void> {
       items: buildPlaceOwedList({ divisions: (divisionsByReceipt.get(scope.decision.receiptId) ?? []).map(id => ({ id, label: id })),
         subjects: capture.subjects, held: capture.held, now: nowIso() }),
     })));
-  })().catch(error => { placeOrderDirty = true; throw error; }).finally(() => { placeOrderRead = null; });
+  })().catch(error => {
+    placeOrderDirty = true;
+    const detail = `place priority refresh failed; keeping last order: ${error instanceof Error ? error.message : String(error)}`;
+    runtimeConditions.push(detail);
+    console.warn(`  ${detail}`);
+  }).finally(() => { placeOrderRead = null; });
   return placeOrderRead;
 }
 await refreshPlaceOrder();
@@ -2954,11 +2959,27 @@ async function runAutonomousWave() {
   const taskIds = [...new Set([...held.map(task => task.id),
     ...planned.decisions.filter(row => row.task && (row.action === "WORKER" ||
       (row.action === "SCOUT" && paidWorkerCapacity() > 0))).map(row => row.task!.id)])];
+  const plainTaskIds = new Set([...held.filter(task => !["SCOUT", "DETECTIVE"].includes(task.workerTask?.role ?? "")).map(task => task.id),
+    ...planned.decisions.filter(row => row.task && row.action === "WORKER" &&
+      !["SCOUT", "DETECTIVE"].includes(row.task.workerTask?.role ?? "")).map(row => row.task!.id)]);
+  const failedTaskIds = new Set<string>();
+  const queueFailures: DispatchResult[] = [];
+  const failedQueueRead = (id: string, error: unknown) => {
+    if (failedTaskIds.has(id)) return;
+    failedTaskIds.add(id);
+    const result = workerDispatchFailure(id, error);
+    queueFailures.push(result);
+    runtimeConditions.push(`${id}: ${result.detail}`);
+  };
   // Every child pulls from the same full wave. Capture hunt rounds once;
   // completed/leased tasks disappearing must not reset a hunt to round zero.
   const readTaskQueue = async () => {
-    const tasks = await Promise.all(taskIds.map(id => repos.routeTasks.read(id)));
-    const items = await Promise.all(tasks.map(row => row ? repos.workItems.read(row.value.workItemId) : null));
+    const items = await Promise.all(taskIds.map(async id => {
+      try {
+        const row = await repos.routeTasks.read(id);
+        return row ? await repos.workItems.read(row.value.workItemId) : null;
+      } catch (error) { failedQueueRead(id, error); return null; }
+    }));
     const metadata = new Map(taskIds.map((id, index) => [id, items[index]?.value]));
     const rank = (id: string): number => {
       const item = metadata.get(id);
@@ -2973,12 +2994,11 @@ async function runAutonomousWave() {
     return { rank, compareRound };
   };
   let taskQueue: ReturnType<typeof readTaskQueue> | null = null;
-  const dispatches = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
+  const workerDispatches = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
     slots: workerSlots,
     config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidWorkerCapacity() > 0,
       searchEnabled: scoutSearch !== null, ceilingUsd: effectiveCeilingUsd, fundedSubjects: [...lifetimeHuntSubjects] },
-    capacity: () => paidWorkerCapacity(taskIds.length) > 0
-      ? Math.min(taskIds.length, held.length + paidWorkerCapacity(taskIds.length)) : taskIds.length,
+    capacity: () => Math.min(taskIds.length, plainTaskIds.size + paidWorkerCapacity(taskIds.length)),
     transportFor: (jurisdiction, taskId) => async request => {
       const task = (await repos.routeTasks.mustRead(taskId)).value;
       const batching = task.workerTask?.role === "ADVERSARIAL_AUDITOR" ? batchEnabledFor("background-worker-audit")
@@ -3019,12 +3039,17 @@ async function runAutonomousWave() {
     reserveEscalation: scoutEscalationReservation(fleetSafety),
     orderPending: async ids => {
       await refreshPlaceOrder();
-      const queue = await (taskQueue ??= readTaskQueue());
+      const queue = await (taskQueue ??= readTaskQueue().catch(error => { taskQueue = null; throw error; }));
       const paidOpen = paidWorkerCapacity() > 0;
       // Only ordering is a wave snapshot. A changed task role must still read
       // the current paid admission; the child re-reads its task before claiming.
-      const tasks = paidOpen ? [] : await Promise.all(ids.map(id => repos.routeTasks.read(id)));
-      return ids.filter((_, index) => paidOpen || !["SCOUT", "DETECTIVE"].includes(tasks[index]?.value.workerTask?.role ?? ""))
+      const tasks = paidOpen ? [] : await Promise.all(ids.map(async id => {
+        if (failedTaskIds.has(id)) return null;
+        try { return await repos.routeTasks.read(id); }
+        catch (error) { failedQueueRead(id, error); return null; }
+      }));
+      return ids.filter((id, index) => !failedTaskIds.has(id) &&
+        (paidOpen || !["SCOUT", "DETECTIVE"].includes(tasks[index]?.value.workerTask?.role ?? "")))
         .sort((a, b) => queue.compareRound(a, b) || queue.rank(a) - queue.rank(b));
     },
     onDispatched: result => {
@@ -3035,6 +3060,7 @@ async function runAutonomousWave() {
       console.log(`  Scout done: ${result.obligationId}; ${outcome}; code ${result.disposition ?? result.outcome ?? "NOT_RUN"}; usd ${result.cost?.usd === null || result.cost?.usd === undefined ? "unmeasured" : result.cost.usd.toFixed(6)}`);
     },
     onStarted: pid => console.log(`  lease worker process: pid ${pid}; pulls existing RouteTasks`) });
+  const dispatches = [...queueFailures, ...workerDispatches];
   const scouts = dispatches.filter(row => row.attemptId && row.worker?.role === "SCOUT").length;
   return { ...planned, dispatches, scoutsAdmitted: scouts, scoutsLimitedAdmitted: scouts };
 }
@@ -3203,14 +3229,13 @@ finishPhase("meetings-discovery");
  * lib/control-plane/promotion/campaign-site-cycle.ts.)
  *
  * The held Scout findings and Marginalia answers go through the complete
- * campaign-site chain: robots-first reads through this cycle's guarded seam
- * and host spacer, at most 12 lead reads and 6 audit second reads in 60 s. It
- * calls no model and no paid search, so it runs while the owner's pause keeps
- * the paid lane closed; it is not gated on that lane. Its offers are pipeline
- * records (Admin's delivery trail); its approvals publish through the derived
- * routine contract `candidate-campaign-sites-derived` on the routine runner's
- * own clock, with no owner step. Only a full standing cycle with the budget
- * left runs it.
+ * campaign-site chain: observed profile links lead to robots-first primary
+ * reads through this cycle's guarded seam and host spacer. Identity matching
+ * uses independently captured sources already held; no extra audit request or
+ * clock wait. It calls no model and no paid search, so it runs while the paid
+ * lane is closed. Its offers are pipeline records (Admin's delivery trail);
+ * its approvals publish through the derived routine contract
+ * `candidate-campaign-sites-derived`, with no owner step.
  */
 if (dry || canary || ONLY !== null || IDS !== null) {
   campaignSitesState = "not run: a dry, canary, filtered cycle reads nothing";

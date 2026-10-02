@@ -538,7 +538,7 @@ if (!FORCE && selectedTasks.some(task => task.id === CAMPAIGN_PUBLICATION_TASK))
     const connection = controlPlaneUrlFromEnv();
     if (!connection) throw new Error("control-plane reporting connection is unavailable");
     const sql = neon(connection);
-    campaignPublicationInputs = await readCampaignPublicationInputs((query, params) => sql.query(query, params));
+    campaignPublicationInputs = await readCampaignPublicationInputs((query, params) => sql.query(query, params), RUNNING_CODE_SHA);
   } catch (error) {
     const detail = safeFailure(sanitizedErrorDiagnostic(error));
     supervisorFailures.push({ taskId: CAMPAIGN_PUBLICATION_TASK, code: "PUBLICATION_INPUT_CLOCK_UNREAD", detail });
@@ -603,7 +603,7 @@ for (const read of clockReads) {
     continue;
   }
   if (publicationDue) {
-    const detail = `${task.id}: ${campaignPublicationInputs!.approvals - campaignPublicationInputs!.attemptedApprovals} newly committed approval(s); offered to the normal publication frontier without waiting for hourly cadence.`;
+    const detail = `${task.id}: ${campaignPublicationInputs!.approvals - campaignPublicationInputs!.attemptedApprovals} committed approval(s) not attempted by this code; offered to the normal publication frontier without waiting for hourly cadence.`;
     publicationInputLines.push(detail);
     console.log(`RCD_INPUT_CHANGED ${detail}`);
   }

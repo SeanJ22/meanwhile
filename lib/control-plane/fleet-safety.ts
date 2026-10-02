@@ -297,7 +297,7 @@ interface Reservation {
 }
 
 interface PayloadReservation {
-  /** The per-download read cap: the `Range` ceiling and the streamed-byte limit. */
+  /** The per-download streamed-byte limit. */
   readonly streamCapBytes: number;
   readonly work: string;
   released: boolean;
@@ -306,8 +306,7 @@ interface PayloadReservation {
 /**
  * The total size of the resource a `Content-Range` header describes, or null
  * when it is absent, unknown (`*`), or malformed. Used to tell a 206 that
- * delivered a whole small resource from one that truncated a large one to the
- * byte range we asked for.
+ * delivered a whole small resource from one that returned only part of it.
  */
 export function parseContentRangeTotal(header: string | null): number | null {
   if (header === null) return null;
@@ -608,8 +607,8 @@ export class FleetSafetyController {
 
   private async readBoundedResponse(response: Response, cap: number, work: string): Promise<Uint8Array> {
     // FAIL LOUD ON TRUNCATION — never hand up a partial document, because a
-    // truncated CSV still parses. We send `Range: bytes=0-(cap-1)`, so a
-    // range-honoring server answers 206: accept it only when `Content-Range`
+    // truncated CSV still parses. A server can answer 206 even without a
+    // requested range: accept it only when `Content-Range`
     // proves the WHOLE resource fit within the cap. A larger resource, or a
     // total the server would not state, is a truncation and throws.
     if (response.status === 206) {
@@ -779,7 +778,7 @@ export class FleetSafetyController {
             response = await fetchImpl(currentUrl, {
               method: "GET",
               redirect: "manual",
-              headers: { ...headers, range: `bytes=0-${Math.max(0, reservation.streamCapBytes - 1)}` },
+              headers,
             });
             merged = await this.readBoundedResponse(response, reservation.streamCapBytes, work);
             this.settlePayloadReservation(reservation, merged.byteLength);

@@ -89,6 +89,7 @@ export function snapshotFromCandidateDocument(doc: CandidateDocument): SourceSna
     kind: doc.sourceClass === "CAMPAIGN_SITE" ? "CAMPAIGN_SITE" : "OFFICIAL_PAGE",
     url: doc.documentUrl,
     contentHash: doc.contentHash,
+    ...(doc.sourceRevision ? { sourceRevision: doc.sourceRevision } : {}),
     retrievedAt: doc.retrievedAt,
     // The candidate corpus records extraction rather than status; a document
     // that is here at all was retrieved. 200 is the honest reading and it is

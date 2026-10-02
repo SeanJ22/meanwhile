@@ -24,7 +24,6 @@ import { readCampaignSiteLead } from "../../candidates/campaign-site-verifier.ts
 import { memoryInProcess, type ResearchGet, type ResearchRuntime } from "../../hunt/robots-first-fetch.ts";
 
 export const CAMPAIGN_SITE_MAX_READS = 12;
-export const CAMPAIGN_SITE_MAX_REREADS = 6;
 export const CAMPAIGN_SITE_RECHECK_MS = 7 * 24 * 60 * 60 * 1000;
 /** Each HTTP request retains its transport timeout, independently of the pass. */
 export const CAMPAIGN_SITE_REQUEST_TIMEOUT_MS = 10_000;
@@ -71,7 +70,6 @@ export interface CampaignSiteCycleInput {
   readonly heldVault: VaultIndex | null;
   readonly methodVersion: number;
   readonly maxReads?: number;
-  readonly maxRereads?: number;
   readonly recheckAfterMs?: number;
   /** When loading started, for elapsed-time reporting. */
   readonly startedAtMs?: number;
@@ -133,7 +131,6 @@ export async function runCampaignSiteCycle(input: CampaignSiteCycleInput): Promi
       gate: input.gate,
       now: input.now,
       maxReads: input.maxReads ?? CAMPAIGN_SITE_MAX_READS,
-      maxRereads: input.maxRereads ?? CAMPAIGN_SITE_MAX_REREADS,
       recheckAfterMs: input.recheckAfterMs ?? CAMPAIGN_SITE_RECHECK_MS,
       /* The hour: one rotation per hourly cycle, the same order within it. */
       rotation: input.now.slice(0, 13),
@@ -159,7 +156,7 @@ export async function runCampaignSiteCycle(input: CampaignSiteCycleInput): Promi
 export function campaignSiteCycleLine(report: CampaignSiteCycleReport): string {
   const { chain, verdicts } = report;
   const codes = Object.entries(report.byCode).sort(([a], [b]) => a.localeCompare(b)).map(([code, n]) => `${code} ${n}`).join(", ");
-  return `  campaign sites     ${chain.readsUsed} read(s) (${chain.rereadsUsed} audit second read(s)), ${verdicts.vault} judged from vaulted reads, ` +
+  return `  campaign sites     ${chain.readsUsed} read(s), ${verdicts.vault} judged from vaulted reads, ` +
     `${verdicts.verified} lead(s) verified · items ${Object.entries(chain.byStage).map(([stage, n]) => `${stage} ${n}`).join(", ")} · ` +
     `${chain.approved.length} approved for the derived door · ${verdicts.deferred} deferred` +
     (chain.unjoined.length > 0 ? ` · ${chain.unjoined.length} held finding(s) join no canonical candidacy` : "") +

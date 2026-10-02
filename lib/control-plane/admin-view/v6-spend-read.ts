@@ -39,6 +39,8 @@ export interface WorkCost {
   /** The place keys this work serves, so a place view shows the work that covers it. */
   readonly applies: readonly string[];
 }
+/** One kind of work and how its Scouts ended in the last 24 hours. `found` is evidence found, `route` a route found, `total` every result. */
+export interface ScoutOutcomeLine { readonly recordClass: string; readonly found: number; readonly route: number; readonly total: number }
 export interface NeonTransfer {
   readonly kind: "recorded" | "not-recorded";
   readonly detail: string | null;
@@ -57,6 +59,12 @@ export interface AdminV6SpendView {
   readonly searchUsd: number;
   readonly unpricedRows: number;
   readonly neon: NeonTransfer;
+  /** Paid model money settled in the last 24 hours, straight from the cost ledger; null when that read failed. */
+  readonly last24h?: { readonly modelUsd: number; readonly unpricedRows: number } | null;
+  /** When this view was read from the ledger. */
+  readonly readAt?: string;
+  /** What Scouts reported in the last 24 hours, by kind of work; null when that read failed. */
+  readonly scoutOutcomes?: readonly ScoutOutcomeLine[] | null;
   /** Open reservations right now, over every hunt (the owner snapshot's attribution); null when it was not read. Filled by the route. */
   readonly setAsideUsd?: number | null;
   /** The daily spending limit (the rolling 24-hour ceiling in force); null when the policy row was not read. Filled by the route. */
@@ -146,6 +154,29 @@ export const SPEND_SQL = `WITH rows AS (
   LEFT JOIN cp_attempts a ON a.id = r.attempt_id
 ) x WHERE x.role <> 'ACQUIRER' OR x.usd IS NOT NULL GROUP BY 1, 2, 3, 4`;
 
+/** The paid model money settled in the last 24 hours, and how many model charges had no price. Search is not model money. */
+export const ROLLING_SQL = `SELECT coalesce(sum(usd) FILTER (WHERE role <> 'DISCOVERY_SEARCH'), 0)::float8 AS model_usd,
+  count(*) FILTER (WHERE usd IS NULL AND role NOT IN ('DISCOVERY_SEARCH', 'ACQUIRER'))::int AS unpriced
+FROM (SELECT c.record->>'role' AS role, (c.record->'cost'->>'usd')::float8 AS usd FROM cp_log_costs c WHERE c.recorded_at > now() - interval '24 hours') x`;
+
+/** What Scouts reported in the last 24 hours, by the kind of work (the obligation's record class) and how they ended. */
+export const OUTCOMES_SQL = `SELECT s.record->>'recordClass' AS record_class, s.record->>'outcome' AS outcome, count(*)::int AS n
+FROM cp_log_scout_results s WHERE s.recorded_at > now() - interval '24 hours' GROUP BY 1, 2`;
+
+/** Scout results into one line per kind of work, most results first. */
+export function scoutOutcomeLines(rows: readonly { readonly recordClass: string | null; readonly outcome: string | null; readonly n: number }[]): readonly ScoutOutcomeLine[] {
+  const by = new Map<string, { found: number; route: number; total: number }>();
+  for (const r of rows) {
+    const key = r.recordClass ?? "unrecorded";
+    const line = by.get(key) ?? { found: 0, route: 0, total: 0 };
+    line.total += r.n;
+    if (r.outcome === "EVIDENCE_FOUND") line.found += r.n;
+    else if (r.outcome === "ROUTE_CANDIDATE") line.route += r.n;
+    by.set(key, line);
+  }
+  return [...by].map(([recordClass, l]) => ({ recordClass, ...l })).sort((a, b) => b.total - a.total || a.recordClass.localeCompare(b.recordClass));
+}
+
 /** The costliest pieces of work in the day window: paid model charges grouped by the obligation they served, with what their results said. */
 export const WORK_SQL = `WITH rows AS (
   SELECT COALESCE(c.record->>'obligationId', c.record->>'workItemId', c.record->>'routeId') AS work, c.record->>'jurisdiction' AS jur,
@@ -209,13 +240,20 @@ export function workCosts(rows: readonly WorkRowRaw[]): readonly WorkCost[] {
 const strings = (value: unknown): string[] => Array.isArray(value) ? value.filter((x): x is string => typeof x === "string") : [];
 
 export async function readSpend(sql: Sql, transfer: DailyDatabaseTransferRead | null): Promise<AdminV6SpendView> {
-  const [raw, workRaw] = await Promise.all([
+  const [raw, workRaw, rolling, outcomes] = await Promise.all([
     boundedQuery(sql, { operation: "cp_log_costs.spend_by_month_day_and_model", callClass: "PAGE" }, SPEND_SQL, [SPEND_DAYS, SPEND_MONTHS]) as Promise<readonly Record<string, unknown>[]>,
     boundedQuery(sql, { operation: "cp_log_costs.costliest_work", callClass: "PAGE" }, WORK_SQL, [WORK_DAYS, WORK_LIMIT]) as Promise<readonly Record<string, unknown>[]>,
+    // The two extras answer "is money moving, and are agents finding anything"; one failing leaves the rest of the view standing.
+    (boundedQuery(sql, { operation: "cp_log_costs.rolling_24h_model_spend", callClass: "PAGE" }, ROLLING_SQL, []) as Promise<readonly Record<string, unknown>[]>).catch(() => null),
+    (boundedQuery(sql, { operation: "cp_log_scout_results.outcomes_24h", callClass: "PAGE" }, OUTCOMES_SQL, []) as Promise<readonly Record<string, unknown>[]>).catch(() => null),
   ]);
   const work = workCosts(workRaw.map((r): WorkRowRaw => ({ work: String(r.work), jurisdiction: typeof r.jur === "string" ? r.jur : null,
     usd: r.usd === null || r.usd === undefined ? null : Number(r.usd), unpriced: r.unpriced === true, tries: Number(r.tries) || 0,
     models: strings(r.models), outcomes: strings(r.outcomes), refused: Number(r.refused) || 0 })));
-  return spendView(raw.map((r) => ({ month: String(r.month), day: typeof r.day === "string" ? r.day : null, role: String(r.role ?? ""), model: typeof r.model === "string" ? r.model : null,
+  const view = spendView(raw.map((r) => ({ month: String(r.month), day: typeof r.day === "string" ? r.day : null, role: String(r.role ?? ""), model: typeof r.model === "string" ? r.model : null,
     usd: r.usd === null || r.usd === undefined ? null : Number(r.usd), n: Number(r.n) || 0 })), neonTransferOf(transfer), work);
+  const last = rolling?.[0];
+  return { ...view, readAt: new Date().toISOString(),
+    last24h: last === undefined ? null : { modelUsd: Math.round(Number(last.model_usd) * 10_000) / 10_000, unpricedRows: Number(last.unpriced) || 0 },
+    scoutOutcomes: outcomes === null ? null : scoutOutcomeLines(outcomes.map((r) => ({ recordClass: typeof r.record_class === "string" ? r.record_class : null, outcome: typeof r.outcome === "string" ? r.outcome : null, n: Number(r.n) || 0 }))) };
 }

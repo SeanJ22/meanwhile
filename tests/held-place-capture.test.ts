@@ -7,8 +7,22 @@ import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { HeldPlaceFamilies } from "../lib/civic-data/held-place-families.ts";
 import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
+import { readPlacePointerSlices } from "../lib/civic-data/held-place-slices.ts";
+import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
 import { projectHeldGeography, readHeldPlaceGeography, type HeldGeographyRow } from "../lib/civic-data/held-place-geography.ts";
 import type { Division } from "../lib/registry/types.ts";
+import { createHash } from "node:crypto";
+import { projectHeldPlaceFamilies } from "../lib/civic-data/held-place-families.ts";
+import { canonicalContestId, canonicalCandidacyId } from "../lib/hunt/candidate-universe.ts";
+import { derivedCampaignSitesProjectionIssue, derivedCandidateRevisionId, derivedCandidateDocumentId,
+  type DerivedCampaignSiteRecord } from "../lib/civic-data/derived-campaign-sites.ts";
+import { partitionCivicPayload } from "../lib/civic-data/payload-parts.ts";
+import { readPlacePayloadParts } from "../lib/civic-data/place-payload-slices.ts";
+import { readPlacePointerSlice } from "../lib/civic-data/held-place-slices.ts";
+import { neonConfig } from "@neondatabase/serverless";
+import { readFileSync } from "node:fs";
+import { candidateDescriptionQualityIssue } from "../lib/candidates/blurbs.ts";
+import type { CandidateCorpus } from "../lib/candidates/corpus.ts";
 
 const county = "ocd-division/country:us/state:az/county:cochise";
 const neighbour = "ocd-division/country:us/state:az/county:pima";
@@ -23,6 +37,206 @@ const meeting = { id: "meeting:one", bodyId: "shared-body", ocdId: county, title
   startsAt: "2026-10-01T02:00:00.000Z", timeZone: "America/Phoenix", startPrecision: "DAY",
   location: null, online: null, status: "SCHEDULED", provenance };
 const meetings = published({ meetings: [meeting] } as unknown as MeetingsSnapshot);
+
+function candidateFamilies(): HeldPlaceFamilies {
+  const contestId = "ballot-az-pima:supervisor", key = `${contestId}:one-candidate`;
+  return { ballots: [{ election: { id: "az-general", state: "AZ", date: "2026-11-03", name: "General" },
+    contests: [{ id: contestId, title: "Supervisor", ocdId: county, provenance },
+      { id: "ballot-az-pima:other", title: "Supervisor", ocdId: neighbour, provenance }],
+    candidacies: [{ id: key, contestId, givenName: "Candidate", familyName: "One", incumbent: null, provenance },
+      { id: "same-name-outside", contestId: "ballot-az-pima:other", givenName: "Candidate", familyName: "One", provenance }], measures: [] }],
+    candidateLineups: [{ contestId, nominees: [{ name: "Candidate One" }, { name: "Candidate Ones" }] }],
+    candidateProfiles: { cards: { curatedAt: "2026-09-30", cards: {
+      [`${contestId}|Candidate One`]: { bio: "The campaign's biography.", bioSourceUrl: "https://campaign.example/about",
+        bioSourceLabel: "Campaign words, read 2026-09-29", phone: "520-555-0100", phoneLabel: null,
+        phoneSource: "Campaign page https://campaign.example/ read 2026-09-29" },
+      [`${contestId}|Candidate Ones`]: { bio: "Wrong person", bioSourceUrl: "https://other.example", bioSourceLabel: "read 2026-09-30" },
+      "same-name-outside": { bio: "Another district", bioSourceUrl: "https://outside.example", bioSourceLabel: "read 2026-09-30" },
+    } }, links: { curatedAt: "2026-09-30", links: { [`${contestId}|Candidate One`]: {
+      official: { url: "https://county.az.gov/member", verification: "Fetched official office page.", attemptedAt: "2026-09-29" },
+      campaign: { url: "https://campaign.example/", verification: "Fetched candidate, Supervisor, 2026 election; phone 520-555-0100.", attemptedAt: "2026-09-29" },
+    } } } } } as unknown as HeldPlaceFamilies;
+}
+
+test("Admin candidate capture uses the canonical ballot plan and each field's actual source date", () => {
+  const families = candidateFamilies(), id = "ballot-az-pima:supervisor:one-candidate";
+  const capture = projectHeldPlaceFamilies([county], null, families);
+  const added = capture.held.filter(row => ["CAN-04", "CAN-05", "CAN-06", "CAN-16", "CAN-18"].includes(row.checklistId));
+  assert.ok(added.length > 0);
+  assert.ok(added.every(row => row.subjectId === id && row.checkedAt === "2026-09-29"));
+  assert.equal(added.find(row => row.checklistId === "CAN-16")?.sourceUrl, "https://campaign.example/about");
+  assert.ok(!capture.held.some(row => row.checklistId === "CAN-17" || row.checklistId === "CAN-07"));
+  const owed = buildPlaceOwedList({ divisions: [{ id: county, label: "County" }], ...capture, now: at });
+  assert.equal(owed.find(row => row.subject.id === id && row.checklistId === "CAN-16")?.state, "published");
+  const stale = structuredClone(families) as unknown as { candidateProfiles: { cards: { cards: Record<string, { bioSourceLabel: string; phoneSource: string }> }; links: { links: Record<string, { official: { attemptedAt: string }; campaign: { attemptedAt: string } }> } } };
+  stale.candidateProfiles.cards.cards["ballot-az-pima:supervisor|Candidate One"].bioSourceLabel = "Campaign words, read 2026-08-01";
+  const staleCapture = projectHeldPlaceFamilies([county], null, stale as unknown as HeldPlaceFamilies);
+  const staleOwed = buildPlaceOwedList({ divisions: [{ id: county, label: "County" }], ...staleCapture, now: at });
+  assert.equal(staleOwed.find(row => row.subject.id === id && row.checklistId === "CAN-16")?.state, "stale");
+  assert.equal(staleCapture.held.find(row => row.checklistId === "CAN-16")?.checkedAt, "2026-08-01", "curatedAt never refreshes a biography");
+  const missing = structuredClone(families) as unknown as typeof stale;
+  missing.candidateProfiles.cards.cards["ballot-az-pima:supervisor|Candidate One"].bioSourceLabel = "Campaign words, no recorded read date";
+  assert.ok(!projectHeldPlaceFamilies([county], null, missing as unknown as HeldPlaceFamilies).held.some(row => row.checklistId === "CAN-16"));
+  const elsewhere = projectHeldPlaceFamilies([neighbour], null, families);
+  assert.ok(!elsewhere.held.some(row => row.subjectId === id), "shared person names do not carry district facts across ZIPs");
+});
+
+test("current verified publications fill biography and readable corpus without asserting a position or a portrait", () => {
+  const families = candidateFamilies(), id = "ballot-az-pima:supervisor:one-candidate";
+  const candidacyId = canonicalCandidacyId(canonicalContestId("AZ", 2026, { ocdId: county, title: "Supervisor" }), "One", "Candidate");
+  const text = "The candidate's own published words.", contentHash = createHash("sha256").update(text).digest("hex");
+  const campaignUrl = "https://campaign.example/";
+  const evidence = { verifierId: "campaign-site-verifier/1", artifactId: "saved-source", attemptId: "saved-attempt", sha256: "d".repeat(64),
+    requestedUrl: campaignUrl, finalUrl: campaignUrl, httpStatus: 200, readAt: at, approvalItemId: "approved-item",
+    approvalRecordId: "approved-record", approvedAt: at, secondSignal: "Official filing campaign domain" };
+  const revisionId = derivedCandidateRevisionId({ candidateKey: id, documentUrl: campaignUrl,
+    rawContentHash: evidence.sha256, contentHash, extractorVersion: 1 });
+  const document = { id: derivedCandidateDocumentId(id, contentHash, revisionId), candidateKey: id, sourceClass: "CAMPAIGN_SITE" as const, basis: "HUNTED_AND_VERIFIED" as const,
+    metaDescription: "The campaign's own description.", documentUrl: campaignUrl, contentHash, sourceContentHash: evidence.sha256,
+    retrievedAt: at, contentType: "text/html", text, extraction: "html" as const, extractionNote: null, extractorVersion: 1,
+    sourceRevision: { revisionId, artifactId: evidence.artifactId, canonicalUrl: campaignUrl, rawContentHash: evidence.sha256,
+      capturedAt: at, extractionVersion: 1, supersedesRevisionId: null } };
+  const record: DerivedCampaignSiteRecord = { id, candidacyId, candidateName: "Candidate One",
+    campaign: { url: campaignUrl, attemptedAt: at.slice(0, 10),
+      verification: `Fetched ${at.slice(0, 10)} (campaign-site-verifier/1): 'Campaign' — names Candidate One, the office ("Supervisor"), and the 2026 election.`, evidence },
+    publications: [{ document, evidence }] };
+  assert.equal(derivedCampaignSitesProjectionIssue({ kind: "candidate-campaign-sites-derived", formatVersion: 1, records: [record] }), null);
+  const olderText = "Earlier campaign words.", olderHash = createHash("sha256").update(olderText).digest("hex");
+  const capture = projectHeldPlaceFamilies([county], null, { ...families, candidateProfiles: null, derivedCampaignSites: [record],
+    candidatePublications: [{ ...document, id: `${id}@${olderHash}`, contentHash: olderHash, text: olderText,
+      sourceRevision: undefined, metaDescription: "Superseded description.", retrievedAt: "2026-08-01" }] });
+  assert.equal(capture.held.find(row => row.checklistId === "CAN-16")?.checkedAt, at);
+  assert.equal((capture.held.find(row => row.checklistId === "CAN-16")?.value as { quote: string }).quote, document.metaDescription);
+  assert.ok(capture.held.some(row => row.checklistId === "CAN-12" && row.checkedAt === at));
+  assert.deepEqual((capture.held.find(row => row.checklistId === "CAN-21")?.value as { sourceRevision: unknown }).sourceRevision, document.sourceRevision);
+  assert.deepEqual((capture.held.find(row => row.checklistId === "CAN-05")?.value as { evidence: unknown }).evidence, evidence);
+  assert.ok(!capture.held.some(row => row.checklistId === "CAN-07" || row.checklistId === "CAN-17"));
+  const heldCorpus = JSON.parse(readFileSync("data/candidates/corpus-2026.json", "utf8")) as CandidateCorpus;
+  const unusable = heldCorpus.documents.find(row => row.metaDescription && candidateDescriptionQualityIssue(row));
+  assert.ok(unusable, "reuse a real retained source description rejected by the Reader");
+  const rejected = projectHeldPlaceFamilies([county], null, { ...families, candidateProfiles: null,
+    candidatePublications: [{ ...unusable, candidateKey: id, id: `${id}@${unusable.contentHash}`, retrievedAt: at }] });
+  assert.ok(!rejected.held.some(row => row.checklistId === "CAN-16"), "a Reader-rejected description cannot inflate Admin biography capture");
+  assert.ok(rejected.held.some(row => row.checklistId === "CAN-12"), "the source text remains readable");
+  assert.ok(!projectHeldPlaceFamilies([county], null, { ...families, candidateProfiles: null,
+    derivedCampaignSites: [{ ...record, candidacyId: "different-candidacy" }] }).held.some(row => row.checklistId === "CAN-16"));
+  const conflict = structuredClone(families) as unknown as { candidateProfiles: { links: { links: Record<string, { campaign: { url: string } }> } } };
+  conflict.candidateProfiles.links.links["ballot-az-pima:supervisor|Candidate One"].campaign.url = "https://reviewed-other.example/";
+  assert.ok(!projectHeldPlaceFamilies([county], null, { ...conflict as unknown as HeldPlaceFamilies, candidateProfiles: (conflict as unknown as HeldPlaceFamilies).candidateProfiles,
+    derivedCampaignSites: [record, { ...record, id: "ballot-az-pima:supervisor|Candidate One", publications: [] }] }).held.some(row => row.checkedAt === at && row.checklistId === "CAN-16"), "conflicting derived site cannot bypass the Reader composition");
+});
+
+test("legacy candidate pointer slices select only exact Reader map keys and preserve typed links", async t => {
+  const originalUrl = process.env.DATABASE_URL, originalFetch = neonConfig.fetchFunction;
+  t.after(() => { neonConfig.fetchFunction = originalFetch;
+    if (originalUrl === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = originalUrl; });
+  process.env.DATABASE_URL = "postgresql://fixture:fixture@fixture.invalid/fixture";
+  const profiles = candidateFamilies().candidateProfiles!, key = "ballot-az-pima:supervisor|Candidate One";
+  neonConfig.fetchFunction = async (_endpoint: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
+    const body = JSON.parse(String(init?.body)) as { queries: { query: string; params: unknown[] }[] };
+    return Response.json({ results: body.queries.map(statement => {
+      assert.ok(statement.query.includes("jsonb_each") && statement.query.includes("k=ANY($5::text[])"));
+      assert.equal(statement.params[4], `{"${key}"}`);
+      const value = { cards: { cards: { [key]: profiles.cards.cards[key] } }, links: { links: { [key]: profiles.links.links[key] } } };
+      return { command: "SELECT", rowCount: 1, rowAsArray: true,
+        fields: [{ name: "scope", dataTypeID: 25 }, { name: "current_version_id", dataTypeID: 25 },
+          { name: "value", dataTypeID: 3802 }, { name: "encoded", dataTypeID: 16 }],
+        rows: [["profiles-test", "good-v1", JSON.stringify(value), false]] };
+    }) });
+  };
+  const result = await readPlacePointerSlice<NonNullable<HeldPlaceFamilies["candidateProfiles"]>>("CANDIDATE_PROFILE", "profiles-test", [county], [], [key]);
+  assert.equal(result.kind, "PROMOTED");
+  assert.deepEqual(Object.keys(result.value!.cards.cards), [key]);
+  assert.deepEqual(result.value!.links.links[key], profiles.links.links[key]);
+});
+
+test("encoded candidate object maps decode only selected facts and refuse a racing pointer", async () => {
+  const key = "candidate-exact", other = "unrelated-exact", scope = "profiles-test";
+  const profile = { cards: { cards: { [key]: { bio: "selected biography ".repeat(7000), bioSourceLabel: "read 2026-09-29" },
+    [other]: { bio: "unselected biography ".repeat(7000) } } }, links: { links: {
+    [key]: { campaign: { url: "https://campaign.example/", attemptedAt: "2026-09-29", verification: "Verified candidate." }, official: null },
+    [other]: { campaign: { url: "https://outside.example/" }, official: null },
+  } } };
+  const plan = partitionCivicPayload(profile), saved = new Map(plan.parts.map(part => [part.hash, part.payload]));
+  const raw = (node: unknown): unknown => {
+    const ref = (node as { $civicPayloadPart?: string })?.$civicPayloadPart;
+    if (!ref) return node;
+    const part = saved.get(ref) as { kind?: string; value?: unknown };
+    return part.kind === "object" ? part.value : part;
+  };
+  const root = raw(plan.value) as { cards: unknown; links: unknown };
+  const cards = raw((raw(root.cards) as { cards: unknown }).cards) as Record<string, unknown>;
+  const links = raw((raw(root.links) as { links: unknown }).links) as Record<string, unknown>;
+  const fetched: string[] = [];
+  const query: Parameters<typeof readPlacePayloadParts>[0] = async statements => statements.map(statement => {
+    if (statement.text.startsWith("SELECT hash,payload")) {
+      const hashes = statement.params[0] as string[];
+      assert.ok(hashes.length <= 8);
+      fetched.push(...hashes);
+      return hashes.map(hash => ({ hash, payload: saved.get(hash) }));
+    }
+    assert.deepEqual(statement.params[4], [key]);
+    assert.deepEqual(statement.params[6], ["cards.cards", "links.links"]);
+    assert.ok(statement.text.includes("e.key=ANY($5::text[])") && statement.text.includes("member_key=ANY($5::text[])"), "filter object map keys before decoding selected records");
+    return [{ scope, field: "cards.cards", rows: [{ key, value: cards[key] }] },
+      { scope, field: "links.links", rows: [{ key, value: links[key] }] }, { scope, field: "$version", rows: "good-v1" }];
+  });
+  const result = (await readPlacePayloadParts(query, "CANDIDATE_PROFILE", [scope], [county], [], [key], new Map([[scope, "good-v1"]]))).get(scope);
+  assert.deepEqual(result, { cards: { cards: { [key]: profile.cards.cards[key] } }, links: { links: { [key]: profile.links.links[key] } } });
+  assert.ok(fetched.length > 0, "selected long biography was decoded through actual immutable parts");
+  assert.ok(!fetched.includes((cards[other] as { $civicPayloadPart: string }).$civicPayloadPart), "unselected biography never crosses the read boundary");
+  await assert.rejects(readPlacePayloadParts(query, "CANDIDATE_PROFILE", [scope], [county], [], [key], new Map([[scope, "other-version"]])), /CIVIC_POINTER_CHANGED_DURING_READ/);
+});
+
+test("held slices carry only exact unchanged versions, isolate selectors, and remove missing pointers", async () => {
+  let version = "v1", exists = true, payloadReads = 0;
+  const query: ReadOnlyQuery = async statements => {
+    const statement = statements[0];
+    if (!exists) return [[]];
+    const carried = JSON.parse(statement.params[5] as string).held === version;
+    if (!carried) payloadReads++;
+    return [[{ scope: "held", current_version_id: version, encoded: false,
+      value: carried ? null : { meetings: [{ id: version, ocdId: (statement.params[2] as string[])[0] }] } }]];
+  };
+  const read = (division: string) => readPlacePointerSlices<{ meetings: { id: string; ocdId: string }[] }>("MEETING", ["held"], [division], [], [], query);
+  const first = await read(county);
+  assert.deepEqual(await read(county), first);
+  assert.equal(payloadReads, 1);
+  assert.equal((await read(neighbour))[0].value!.meetings[0].ocdId, neighbour);
+  assert.equal(payloadReads, 2, "another area's selector cannot carry this area's payload");
+  version = "v2";
+  assert.equal((await read(county))[0].value!.meetings[0].id, version);
+  assert.equal(payloadReads, 3);
+  exists = false;
+  assert.equal((await read(county))[0].kind, "NOT_RECORDED");
+  exists = true;
+  assert.equal((await read(county))[0].value!.meetings[0].id, version);
+  assert.equal(payloadReads, 4, "a restored pointer is read again");
+});
+
+test("concurrent held reads retain the exact values carried by their own pointer query", async () => {
+  let version = "v1", blockNext = false;
+  let release: (() => void) | undefined;
+  const query: ReadOnlyQuery = async statements => {
+    const observed = version;
+    const carried = JSON.parse(statements[0].params[5] as string).held === observed;
+    if (blockNext) {
+      blockNext = false;
+      await new Promise<void>(resolve => { release = resolve; });
+    }
+    return [[{ scope: "held", current_version_id: observed, encoded: false,
+      value: carried ? null : { meetings: [{ id: observed }] } }]];
+  };
+  const read = () => readPlacePointerSlices<{ meetings: { id: string }[] }>("MEETING", ["held"], [county], [], [], query);
+  await read();
+  blockNext = true;
+  const older = read();
+  version = "v2";
+  assert.equal((await read())[0].value!.meetings[0].id, "v2");
+  assert.ok(release);
+  release();
+  assert.equal((await older)[0].value!.meetings[0].id, "v1", "another read must not turn a carried value into a null or the wrong version");
+});
 
 test("held boundary provenance maps source, semantic version and effective use without URL-only credit", () => {
   const cd = "ocd-division/country:us/state:az/cd:6";
@@ -70,6 +284,36 @@ test("geography quiet reads fetch only the pointer, and a changed or racing vers
   await assert.rejects(readHeldPlaceGeography(ids, [], query), /CIVIC_POINTER_CHANGED_DURING_READ/);
 });
 
+test("held Census status survives complementary projections without inventing governments for statistical areas", () => {
+  const statuses = ["S", "F", "N", "I", "A", "E", null];
+  const divisions = statuses.map((funcstat, i) => ({ ocdId: `${county}/place:area_${i}`,
+    label: "Same label", divisionType: "place", funcstat }));
+  assert.ok(registry.value);
+  const model = { ...registry.value, registry: { ...registry.value.registry, divisions,
+    bodies: [{ ...registry.value.registry.bodies[0], ocdId: divisions[0].ocdId, alsoServesOcdIds: [] }] } } as unknown as RegistryRuntimeReadModel;
+  const capture = projectHeldPlaceCapture(divisions.map(d => d.ocdId), published(model), [], at);
+  // A second projection contributes a field for the same division without
+  // repeating its optional Census metadata (as the geography reader does).
+  const geography = { id: divisions[0].ocdId, kind: "division" as const,
+    divisionIds: [divisions[0].ocdId], label: "Boundary" };
+  const input = { divisions: divisions.map(d => ({ id: d.ocdId, label: d.label })),
+    subjects: [...capture.subjects, geography], held: capture.held, now: at };
+  const rows = buildPlaceOwedList(input);
+  for (const [i, status] of statuses.entries()) {
+    const inventories = rows.filter(row => row.subject.id.startsWith(`${divisions[i].ocdId}#inventory:`));
+    assert.equal(inventories.length, i < 4 ? 0 : 6, `status ${status} uses only the held classification`);
+    assert.equal(rows.filter(row => row.subject.id === divisions[i].ocdId).length, 14, "geography remains owed");
+  }
+  assert.deepEqual(rows.find(row => row.subject.id === "shared-body" && row.checklistId === "GOV-01")?.held,
+    capture.held.filter(field => field.subjectId === "shared-body"), "actual records remain even within statistical geography");
+  assert.equal(capture.subjects.find(subject => subject.id === divisions[0].ocdId)?.funcstat, "S");
+  const explicit = buildPlaceOwedList({ ...input,
+    divisions: [{ id: divisions[0].ocdId, label: "Current input", funcstat: "A" }] });
+  assert.equal(explicit.filter(row => row.subject.id.includes("#inventory:")).length, 6, "explicit input status takes precedence");
+  const reversed = buildPlaceOwedList({ ...input, subjects: [geography, ...capture.subjects] });
+  assert.deepEqual(reversed.map(row => [row.id, row.state, row.held]), rows.map(row => [row.id, row.state, row.held]));
+});
+
 test("held fields reach every served division without filling inventory or missing meeting fields", () => {
   const primary = projectHeldPlaceCapture([county], registry, [meetings], at);
   const secondary = projectHeldPlaceCapture([neighbour], registry, [meetings], at);
@@ -80,6 +324,29 @@ test("held fields reach every served division without filling inventory or missi
   assert.ok(!ids.includes("MTG-03") && !ids.includes("MTG-16") && !ids.includes("MTG-07") && !ids.includes("MTG-08"));
   assert.equal(primary.held.find(field => field.checklistId === "MTG-06")?.freshUntil, "2026-09-30T07:00:00.000Z");
   assert.equal(projectHeldPlaceCapture(["unrelated-division"], registry, [meetings], at).held.length, 0);
+});
+
+test("registry bodies owe civic facts without duplicating product feature work, and retain held observations", () => {
+  const capture = projectHeldPlaceCapture([county, neighbour], registry, [], at);
+  const existing = { subjectId: "shared-body", checklistId: "ENG-07", state: "held" as const,
+    sourceUrl: provenance.sourceUrl, checkedAt: at, freshUntil: "2026-10-01T06:00:00.000Z", value: "Existing observation" };
+  const input = { divisions: [county, neighbour].map(id => ({ id, label: id })), ...capture, now: at };
+  const rows = buildPlaceOwedList(input);
+  const bodyRows = rows.filter(row => row.subject.id === "shared-body");
+  assert.equal(capture.subjects.find(subject => subject.id === "shared-body")?.captureKind, "registry-body");
+  assert.equal(bodyRows.length, 22, "all 14 government and 8 participation requirements stay open or captured");
+  assert.ok(!bodyRows.some(row => row.checklistId.startsWith("ENG-")));
+  assert.ok(bodyRows.some(row => row.checklistId === "GOV-08" && row.state === "missing"));
+  assert.ok(bodyRows.some(row => row.checklistId === "PAR-02" && row.state === "missing"));
+  assert.deepEqual(bodyRows.find(row => row.checklistId === "GOV-01")?.held,
+    capture.held.filter(field => field.subjectId === "shared-body"));
+  assert.deepEqual(bodyRows[0].subject.divisionIds, [county, neighbour]);
+  const retained = buildPlaceOwedList({ ...input, held: [...capture.held, existing] });
+  assert.deepEqual(retained.find(row => row.subject.id === "shared-body" && row.checklistId === "ENG-07")?.held, [existing]);
+  const unresolved = buildPlaceOwedList({ ...input,
+    subjects: [{ id: "unknown-body", kind: "body", divisionIds: [county], label: "Unknown body" }] });
+  assert.equal(unresolved.filter(row => row.subject.id === "unknown-body" && row.checklistId.startsWith("ENG-")).length, 7);
+  assert.equal(rows.filter(row => row.subject.id.includes("#inventory:")).length, 12);
 });
 
 test("sittings share calendar discovery work by body while every meeting keeps its own dates and documents", () => {
@@ -98,6 +365,26 @@ test("sittings share calendar discovery work by body while every meeting keeps i
   assert.deepEqual(routes.find(row => row.subject.id === "shared-body#calendar")?.subject.divisionIds, [county, neighbour]);
   assert.ok(routes.every(row => row.state === "missing"), "having a meeting never certifies calendar completeness");
   assert.ok(owed.some(row => row.subject.id === "meeting:unresolved" && row.checklistId === "MTG-03"), "an unknown body keeps its route work");
+});
+
+test("a known body starts calendar discovery before its first meeting is captured", () => {
+  const capture = projectHeldPlaceCapture([county, neighbour], registry, [], at);
+  const divisions = [county, neighbour].map(id => ({ id, label: id }));
+  const rows = buildPlaceOwedList({ divisions, ...capture, now: at });
+  const calendar = rows.filter(row => row.subject.id === "shared-body#calendar");
+  assert.equal(calendar.length, 9);
+  assert.ok(calendar.every(row => row.state === "missing" && row.held.length === 0));
+  assert.deepEqual(calendar[0].subject.divisionIds, [county, neighbour]);
+  assert.ok(!calendar.some(row => row.checklistId === "MTG-06" || row.checklistId.startsWith("DOC-")), "no invented sitting");
+  const later = projectHeldPlaceCapture([county, neighbour], registry, [meetings], at);
+  const after = buildPlaceOwedList({ divisions, ...later, now: at });
+  assert.deepEqual(after.filter(row => row.subject.id === "shared-body#calendar"), calendar, "a first sitting does not complete calendar discovery");
+  assert.equal(after.find(row => row.subject.id === meeting.id && row.checklistId === "MTG-06")?.state, "published");
+  const secondPlace = buildPlaceOwedList({ divisions: [{ id: neighbour, label: neighbour }], ...capture, now: at });
+  assert.deepEqual(secondPlace.filter(row => row.subject.id === "shared-body#calendar"), calendar);
+  const empty = buildPlaceOwedList({ divisions, subjects: [], held: [], now: at });
+  assert.ok(empty.some(row => row.subject.id === `${county}#inventory:calendar`));
+  assert.ok(!empty.some(row => row.subject.captureKind === "body-calendar"), "unknown bodies stay inventory work");
 });
 
 test("body rosters retain canonical legislative and local scope without borrowing meaning from titles", () => {
@@ -161,6 +448,37 @@ test("only published present fields count, and failed reads cannot look like emp
   ] }] } as unknown as OutcomeSnapshot);
   assert.equal(projectHeldPlaceCapture([county], registry, [meetings], at, {}, [available]).held.filter(field => field.state === "unpublished").length, 0,
     "conflicting official surfaces stay open");
+});
+
+test("published outcomes retain document status and every linked action and roll without renewing source dates", () => {
+  const source = { endpoint: "https://webapi.legistar.com/v1/example/events/7/eventitems", readOn: "2026-08-29", sourceOrg: "Clerk" };
+  const actions = [71, 72].map(eventItemId => ({ recordClass: "ACTION_SUMMARY", eventId: 7, eventItemId,
+    action: "approve", disposition: "PASSED", tallyText: "Approved", provenance: source }));
+  const rolls = [71, 72, 99].map(eventItemId => ({ recordClass: "ROLL_CALL", eventItemId,
+    votes: [{ personId: 3, personName: "Member", value: "Abstain", sort: 1 }],
+    provenance: { ...source, endpoint: `https://webapi.legistar.com/v1/example/eventitems/${eventItemId}/votes` } }));
+  const sitting = { meetingId: meeting.id, eventId: 7, bodyId: meeting.bodyId, ocdId: county, bodyName: "Shared district board",
+    startsAt: meeting.startsAt, sourceUrl: provenance.sourceUrl, extraction: "RETRIEVED", publicationObservations: [],
+    publication: { observedAt: at, inSiteUrl: provenance.sourceUrl, agendaFile: "https://example.gov/agenda.pdf",
+      minutesFile: "https://example.gov/minutes.pdf", minutesStatusName: "Draft", minutesStatusId: 9 },
+    agenda: [], outcomes: [...actions, { ...actions[0], eventId: 8, eventItemId: 80 }], rollCalls: rolls };
+  const capture = projectHeldPlaceCapture([county], registry, [], at, {},
+    [published({ sittings: [sitting] } as unknown as OutcomeSnapshot)]);
+  const fields = (id: string) => capture.held.filter(field => field.checklistId === id);
+  assert.equal(fields("DOC-08").length, 2, "same-shaped records for distinct items both survive");
+  assert.equal(fields("DOC-09").length, 2, "unlinked rolls cannot count as captured meeting votes");
+  assert.deepEqual(fields("DOC-08").map(field => field.value), actions.map(action => ({ meetingId: meeting.id, ...action })));
+  assert.deepEqual(fields("DOC-09").map(field => field.value), rolls.slice(0, 2).map(roll => ({ meetingId: meeting.id, ...roll })));
+  assert.ok([...fields("DOC-08"), ...fields("DOC-09")].every(field => field.checkedAt === source.readOn));
+  assert.deepEqual(fields("DOC-06")[0].value, { url: sitting.publication.minutesFile, publisherStatus: "Draft", publisherStatusId: 9 });
+  assert.equal(fields("DOC-06")[0].checkedAt, at);
+  const owed = buildPlaceOwedList({ divisions: [{ id: county, label: "County" }], ...capture, now: at });
+  for (const id of ["DOC-08", "DOC-09"]) assert.equal(owed.find(row => row.subject.id === meeting.id && row.checklistId === id)?.state, "stale");
+  for (const id of ["DOC-02", "DOC-03"]) assert.equal(owed.find(row => row.subject.id === meeting.id && row.checklistId === id)?.state, "missing", "pointers are not readable documents");
+  const empty = { ...sitting, publication: { ...sitting.publication, minutesStatusName: null }, outcomes: [], rollCalls: [] };
+  const unknown = projectHeldPlaceCapture([county], registry, [], at, {},
+    [published({ sittings: [empty] } as unknown as OutcomeSnapshot)]);
+  assert.ok(!unknown.held.some(field => ["DOC-06", "DOC-08", "DOC-09"].includes(field.checklistId)), "an unclassified pointer or empty extraction cannot fill these facts");
 });
 
 test("retained roster contacts keep separate values and their earlier source dates", () => {

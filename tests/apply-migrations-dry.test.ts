@@ -6,6 +6,7 @@ import test from "node:test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { declaredPhase } from "../lib/db/migration-phases.ts";
 import { runDbApply } from "../scripts/db-apply.mts";
+import { RUNTIME_AUTHORITY_ENV } from "../lib/civic-data/runtime-authority.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const REGISTER = join(ROOT, "tests", "fixtures", "apply-migrations-neon-register.mjs");
@@ -263,17 +264,28 @@ test("an unreadable runtime commit is redacted and saved as a contract refusal",
 
 test("exact runtime adoption converts held registry storage after SQL, including when no contract SQL is pending", async () => {
   const sha = "a".repeat(40);
+  const parentSha = "b".repeat(40);
   const order: string[] = [];
   const records: unknown[] = [];
   const args = ["--target=production", "--phase=contract", "--production-runtime", `--runtime-commit=${sha}`];
   for (const converted of [true, false]) {
-    assert.equal(await runDbApply(args, { NODE_ENV: "test", WTP_RUNTIME_MODE: "production" }, {
+    const env: NodeJS.ProcessEnv = { NODE_ENV: "test", WTP_RUNTIME_MODE: "production", [RUNTIME_AUTHORITY_ENV.sha]: parentSha };
+    assert.equal(await runDbApply(args, env, {
       head: () => sha,
-      execute: () => { order.push("sql"); return { status: 0, stdout: "No pending contract migrations.\n", stderr: "" }; },
-      convertRegistryStorage: () => { order.push("registry"); return { status: 0,
+      execute: (_args, sqlEnv) => {
+        assert.equal(sqlEnv, env);
+        assert.equal(sqlEnv[RUNTIME_AUTHORITY_ENV.sha], parentSha);
+        order.push("sql"); return { status: 0, stdout: "No pending contract migrations.\n", stderr: "" };
+      },
+      convertRegistryStorage: childEnv => {
+        assert.notEqual(childEnv, env);
+        assert.equal(childEnv[RUNTIME_AUTHORITY_ENV.sha], sha);
+        assert.equal(env[RUNTIME_AUTHORITY_ENV.sha], parentSha);
+        order.push("registry"); return { status: 0,
         stdout: JSON.stringify({ converted, promotedVersionId: "held-native-version" }) + "\n", stderr: "" }; },
       record: async record => { order.push("record"); records.push(record); },
     }), 0);
+    assert.equal(env[RUNTIME_AUTHORITY_ENV.sha], parentSha);
   }
   assert.deepEqual(order, ["sql", "registry", "record", "sql", "registry", "record"]);
   assert.match(JSON.stringify(records), /SUCCEEDED/);

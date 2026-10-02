@@ -3,7 +3,7 @@ import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { pathToFileURL } from "node:url";
 import { config as loadEnv } from "dotenv";
-import { admittedRuntimeChildEnvironment } from "../lib/civic-data/runtime-authority.ts";
+import { admittedRuntimeChildEnvironment, RUNTIME_AUTHORITY_ENV } from "../lib/civic-data/runtime-authority.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, type OwnerDigestRecord } from "../lib/control-plane/owner-surface.ts";
 import { PRODUCTION_MIGRATION_HEADLINE, redactMigrationOutput, type ProductionMigrationOutcome } from "../lib/db/migration-phases.ts";
 
@@ -67,7 +67,7 @@ export async function runDbApply(args: string[], env = process.env, deps: ApplyD
       // clocks; an already-native edition needs no promotion.
       const convert = deps.convertRegistryStorage ?? convertRegistryStorageAtApply;
       try {
-        const converted = convert(env);
+        const converted = convert({ ...env, [RUNTIME_AUTHORITY_ENV.sha]: testedSha! });
         result = { status: converted.status, stdout: `${result.stdout}${converted.stdout}`, stderr: `${result.stderr}${converted.stderr}` };
       } catch {
         result = { status: 1, stdout: result.stdout, stderr: `${result.stderr}db:apply: held-registry storage conversion failed to launch\n` };

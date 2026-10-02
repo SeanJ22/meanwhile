@@ -293,8 +293,8 @@ test("OB8: the workflow is bounded, exact-head, read-only in Git, and appends ca
   );
   assert.match(w, /^\s*contents: read\s*$/m, "software-release integrity needs only Git read access");
   assert.doesNotMatch(w, /^\s*contents: write\s*$/m, "it may not mutate the repository");
-  assert.match(w, /concurrency:/, "two deploys are two observations, and neither may cancel the other");
-  assert.match(w, /cancel-in-progress: false/);
+  assert.match(w, /concurrency:/, "only one observation polls at a time");
+  assert.match(w, /cancel-in-progress: true/, "a newer push to main replaces the older observation; Netlify serves the newest commit");
   assert.match(w, /^ {4}timeout-minutes:\s*\d+/m, "the job bounds itself well under the platform's six hours");
   assert.doesNotMatch(w, /push-main\.mjs|git\s+(?:add|commit|push)/, "the retired Git feedback hop cannot return");
   assert.match(w, /--expect=\$\{\{ inputs\.sha \|\| github\.sha \}\}/, "the observer remains exact-head bound");

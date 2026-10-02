@@ -49,6 +49,7 @@ const OUT = process.env.ADMIN_WALK_OUT ?? join(".scratch", "admin-walk");
 const PAGES = (process.env.ADMIN_WALK_PAGES ?? "admin,readiness/az").split(",").map((p) => p.trim()).filter(Boolean);
 const THEMES = (process.env.ADMIN_WALK_THEMES ?? "dark").split(",").map((t) => t.trim()).filter(Boolean);
 const WIDTH = Number(process.env.ADMIN_WALK_WIDTH ?? 1440);
+const SETTLE_MS = Number(process.env.ADMIN_WALK_SETTLE_MS ?? 0);
 /** A full-page capture of a console page hits tens of thousands of pixels; clamp it. */
 const MAX_CAPTURE_HEIGHT = 7000;
 
@@ -96,8 +97,10 @@ for (const theme of THEMES) {
     } catch {
       /* a page that never idles is still read; the timing says so */
     }
+    // The console's sections load after the shell (live sync); ADMIN_WALK_SETTLE_MS waits for them before the page is read.
+    if (SETTLE_MS > 0) await page.waitForTimeout(SETTLE_MS);
     const readyMs = Date.now() - startedAt;
-    const name = `${path.replace(/\//g, "_")}.${theme}`;
+    const name = `${path.replace(/[/?&=:]/g, "_")}.${theme}`;
     const height = await page.evaluate(() => document.documentElement.scrollHeight);
     try {
       await page.screenshot({ path: join(OUT, `${name}.png`), clip: { x: 0, y: 0, width: WIDTH, height: Math.min(height, MAX_CAPTURE_HEIGHT) } });

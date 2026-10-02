@@ -78,12 +78,11 @@ permissions:
   # is widened.
   actions: read
 
-# NOT `cancel-in-progress`. Two pushes to main in the same window are two
-# different deploys to observe, and cancelling the first would silently drop a
-# reading — the failure this whole workflow exists to end.
+# A newer push to main cancels the older observation: Netlify serves the newest
+# commit anyway, so only its reading is worth the polling minutes.
 concurrency:
   group: post-deploy-integrity
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   observe:

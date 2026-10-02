@@ -84,6 +84,10 @@ const NOT_A_GATE = [
   'echo "expensive=no-preflight" >> "$GITHUB_OUTPUT"',
   'elif [ "${{ steps.pr_tier.outputs.tier }}" = "draft" ]; then',
   'echo "expensive=draft" >> "$GITHUB_OUTPUT"',
+  // A push to main selects the main tier: the merged PR already ran the suite.
+  'elif [ "${{ github.event_name }}" = "push" ]; then',
+  'echo "expensive=main" >> "$GITHUB_OUTPUT"',
+  'echo "Main runs the standalone build and the schema gate; lint, types, governance, tests and the default build ran on the pull request."',
   'elif [ "${{ steps.pr_tier.outputs.tier }}" = "full" ]; then',
   "else",
   'echo "expensive=yes" >> "$GITHUB_OUTPUT"',

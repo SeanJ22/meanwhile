@@ -6,7 +6,7 @@ import test from "node:test";
 
 import { parse } from "yaml";
 
-import { REQUIRED_CONTEXTS } from "../lib/ops/required-checks.ts";
+import { REQUIRED_CONTEXTS, contextsProducedByWorkflow } from "../lib/ops/required-checks.ts";
 import { GATES, PRECONDITIONS } from "../scripts/gates.mjs";
 import {
   PREFLIGHT_CHECKS,
@@ -100,21 +100,34 @@ test("a refused admission makes required build and final contexts fail loudly", 
 
 test("the existing required contexts remain and auxiliary jobs feed the final verdict", () => {
   const all = jobs();
-  const produced = [all.gates.name, ...["standalone", "default"].map((mode) => all.build.name?.replace("${{ matrix.mode }}", mode))];
-  assert.deepEqual(produced.sort(), [...REQUIRED_CONTEXTS].sort());
+  const source = readFileSync(WORKFLOW, "utf8");
+  for (const event of ["pull_request", "push", "workflow_dispatch"]) {
+    const produced = contextsProducedByWorkflow(source, event).filter((name) => /^(?:build|gates) \(/.test(name));
+    assert.deepEqual(produced.sort(), [...REQUIRED_CONTEXTS].sort(), event);
+  }
   for (const id of Object.keys(all).filter((id) => id !== "gates")) assert.ok(all.gates.needs?.includes(id));
 });
 
-test("independent structural checks all report before the browser and full suite are bought", () => {
+test("independent structural checks all report, from one install, before the browser and tests are bought", () => {
   const all = jobs();
-  assert.deepEqual(all.verify.strategy?.matrix?.group, ["lint", "types", "governance"]);
-  assert.equal(all.verify.strategy?.["fail-fast"], false);
+  // One job, one install: each check still reports when an earlier one fails.
+  assert.equal(all.verify.name, "verify (lint · types · governance)");
+  assert.equal(all.verify.strategy, undefined, "verify is one job; a matrix buys one install per check");
+  assert.equal(all.verify.steps.filter((s) => s.run === "corepack pnpm install --frozen-lockfile").length, 1);
   assert.ok(all.test.needs?.includes("verify"));
   assert.doesNotMatch(all.test.if ?? "", /always\(\)/);
+  assert.match(all.test.if ?? "", /needs\.admission\.outputs\.tier == 'yes' && needs\.verify\.result == 'success'/,
+    "tests must wait for the structural checks");
+  // An empty dynamic matrix must never be expanded: the job is skipped first.
+  assert.match(all.test.if ?? "", /needs\.admission\.outputs\.test_legs != ''/);
+  assert.match(all.test.if ?? "", /needs\.admission\.outputs\.test_legs != '\[\]'/);
+  assert.match(all.test.if ?? "", /test_plan == 'affected' \|\| needs\.admission\.outputs\.test_plan == 'full'/);
+  assert.doesNotMatch(all.test.if ?? "", /'main'/, "a push to main runs no tests; the scheduled run does");
   for (const name of ["Lint", "Types", "Canonical state holdings", "Generated state manifests"]) {
     const step = all.verify.steps.find((s) => label(s).startsWith(name));
     assert.ok(step, `${name} was lost`);
     assert.match(step.if ?? "", /always\(\)/);
+    assert.match(step.if ?? "", /steps\.install\.outcome == 'success'/);
   }
   for (const name of ["Install the browser the suite needs", "Prove the browser is actually there", "Test"]) {
     const step = all.test.steps.find((s) => label(s) === name);
@@ -122,6 +135,19 @@ test("independent structural checks all report before the browser and full suite
     assert.match(step.if ?? "", /success\(\)/);
     assert.match(step.if ?? "", /needs\.admission\.outputs\.tier == 'yes'/);
   }
+});
+
+test("admission installs nothing: every admission step runs on bare Node", () => {
+  const steps = jobs().admission.steps;
+  assert.deepEqual(steps.filter((s) => /corepack|pnpm/.test(s.run ?? "") || /actions\/cache/.test(s.uses ?? "")).map(label), []);
+  const scripts = steps.flatMap((s) => [...(s.run ?? "").matchAll(/node (scripts\/[\w.-]+\.mjs)/g)].map((m) => m[1]));
+  assert.deepEqual(scripts.sort(), [
+    "scripts/ci-affected-tests.mjs",
+    "scripts/ci-selection-summary.mjs",
+    "scripts/netlify-ignore.mjs",
+    "scripts/pr-ci-tier.mjs",
+    "scripts/preflight.mjs",
+  ], "a new admission script runs before any install: add its import closure to BEFORE_INSTALL below");
 });
 
 /* -------------------------------------------------------------------------- */
@@ -229,6 +255,14 @@ const BEFORE_INSTALL: ReadonlyArray<{ script: string; why: string }> = [
   {
     script: "scripts/pr-ci-tier.mjs",
     why: "the draft/full event classifier — it must answer before a draft installs anything",
+  },
+  {
+    script: "scripts/ci-affected-tests.mjs",
+    why: "the affected-test selector — admission installs nothing, so it plans the tests on bare Node",
+  },
+  {
+    script: "scripts/netlify-ignore.mjs",
+    why: "the build-impact classifier — admission installs nothing",
   },
 ];
 

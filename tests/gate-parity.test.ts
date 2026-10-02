@@ -87,11 +87,11 @@ const NOT_A_GATE = [
   // A ready PR without auto-merge waits on lint and types.
   'elif [ "${{ steps.pr_tier.outputs.tier }}" = "waiting" ]; then',
   'echo "expensive=waiting" >> "$GITHUB_OUTPUT"',
-  'echo "Lint and types ran. The standalone build and the four test shards run when auto-merge is turned on (or the run-full-ci label is added)."',
-  // A push to main selects the main tier: the merged PR already ran the suite.
+  'echo "Lint and types ran. The standalone build and the tests run when auto-merge is turned on (or the run-full-ci label is added)."',
+  // A push to main selects the main tier: the merged PR already ran its tests.
   'elif [ "${{ github.event_name }}" = "push" ]; then',
   'echo "expensive=main" >> "$GITHUB_OUTPUT"',
-  'echo "Main runs the standalone build and the schema gate; lint, types, governance, tests and the default build ran on the pull request."',
+  'echo "Main runs the standalone build and the schema gate; lint, types, governance, the affected tests and the default build ran on the pull request, and the scheduled run re-runs the whole suite every three hours."',
   'elif [ "${{ steps.pr_tier.outputs.tier }}" = "full" ]; then',
   "else",
   'echo "expensive=yes" >> "$GITHUB_OUTPUT"',
@@ -107,6 +107,13 @@ const NOT_A_GATE = [
    * covered by tests/draft-pr-ci.test.ts and every unreadable input answers full.
    */
   "node scripts/pr-ci-tier.mjs",
+  /*
+   * Affected-test selection is routing too: it chooses which files of
+   * `pnpm test` a pull request runs (the full suite whenever it is in doubt),
+   * and the tests it selects run under `node scripts/ci-tests.mjs`, the same
+   * gate. Its decisions are covered by tests/ci-affected-tests.test.ts.
+   */
+  "node scripts/ci-affected-tests.mjs",
   'echo "Draft preflight passed. This required build context still reports, while"',
   'echo "the two production builds wait for the ready_for_review certification run."',
   'echo "Draft certification completed preflight, install, lint, types, governance,"',
@@ -288,10 +295,15 @@ test("PDC hosted setup fetches the exact frozen bridge before the unchanged full
   assert.ok(fixture.run.includes('git fetch --no-tags --depth=1 origin "$pdc_frozen_base"'));
   assert.ok(fixture.run.trim().endsWith('git cat-file -e "${pdc_frozen_base}:lib/funding/official-candidacies.json"'));
   assert.equal(full.run, "node scripts/ci-tests.mjs");
-  assert.deepEqual(gates.strategy.matrix.shard, [1, 2, 3, 4]);
+  // Admission's plan: one `affected` leg, or the four shards of the whole suite.
+  assert.equal(gates.strategy.matrix.shard, "${{ fromJSON(needs.admission.outputs.test_legs) }}");
   assert.equal(gates.strategy["fail-fast"], false);
   assert.equal(full["timeout-minutes"], 60);
-  assert.deepEqual(full.env, { NODE_OPTIONS: "--max-old-space-size=4096", CI_TEST_SHARD: "${{ matrix.shard }}/4" });
+  assert.deepEqual(full.env, {
+    NODE_OPTIONS: "--max-old-space-size=4096",
+    CI_TEST_SHARD: "${{ matrix.shard != 'affected' && matrix.shard || '' }}",
+    CI_TEST_FILES: "${{ matrix.shard == 'affected' && needs.admission.outputs.test_files || '' }}",
+  });
   assert.equal(gates["timeout-minutes"], 75);
 });
 

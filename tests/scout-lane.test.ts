@@ -21,7 +21,7 @@ import test from "node:test";
 
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { DurableSpendHolds, JobSpend, SendBudgetRefusal, budgetGuardedTransport } from "../lib/control-plane/expansion/spend-holds.ts";
-import { FleetSafetyController, FleetPreSendRefusal } from "../lib/control-plane/fleet-safety.ts";
+import { aggregateModelSpend, FleetSafetyController, FleetPreSendRefusal } from "../lib/control-plane/fleet-safety.ts";
 import {
   attemptsForRouteTask,
   registerRouteTask,
@@ -215,6 +215,10 @@ async function ordinaryWorkerProcesses() {
     try {
       const repos = await createFileRepositories(root);
       const { task } = await registered(repos);
+      const job = new JobSpend(new DurableSpendHolds({ budget: repos.budget, now: () => NOW }),
+        `ordinary-held:${scenario}`, OBLIGATION.id, { sends: [], areas: [{ key: "area:ordinary", label: "ordinary budget",
+          budgetUsd: 20, historicalUsd: 0, historyReadAt: NOW }] });
+      assert.equal((await job.admit(2, "ordinary Scout maximum")).admit, true);
       const pids: number[] = [];
       let modelCalls = 0;
       let starts = 0, results = 0;
@@ -231,7 +235,7 @@ async function ordinaryWorkerProcesses() {
             assert.equal((await repos.attempts.mustRead(result.attemptId)).value.outcome, null);
             if (scenario === 'DETECTIVE') assert.equal(result.researchRole, 'DETECTIVE');
             results++;
-            return result;
+            return { ...result, spendHoldJobId: job.jobId };
           },
           transport: async () => { modelCalls++; throw new ModelTransportError("HTTP 400: fixture unchanged request", 400); },
           contextFor: () => {
@@ -257,6 +261,10 @@ async function ordinaryWorkerProcesses() {
       assert.equal(starts, contextFailure ? 0 : 1);
       assert.equal(results, contextFailure ? 0 : 1);
       assert.notEqual(attempts[0]!.outcome, null);
+      const costs = await repos.costs.readAll();
+      assert.equal(costs.length, 1);
+      assert.equal(costs[0].spendHoldJobId, contextFailure ? undefined : job.jobId,
+        "the actual child cost writer retains the parent callback's exact hold identity");
       if (contextFailure) assert.equal(attempts[0]!.cost.usd, 0);
     } finally { await rm(root, { recursive: true, force: true }); }
   }
@@ -415,7 +423,7 @@ function executorWith(
   transport: ModelTransport,
   toolkit: ScoutToolkit,
   opts: {
-    onResult?: (r: ScoutResult) => Promise<void>;
+    onResult?: (r: ScoutResult) => Promise<ScoutResult | void>;
     bound?: Partial<typeof RESEARCH_BOUNDS.perDispatch>;
     inherited?: InheritedEvidence;
     decision?: "DETERMINISTIC" | "BOUNDED_MODEL_WORKER";
@@ -441,13 +449,56 @@ function executorWith(
     bound: { ...RESEARCH_BOUNDS.perDispatch, ...(opts.bound ?? {}) },
     onResult: async (r) => {
       results.push(r);
-      if (opts.onResult) await opts.onResult(r);
+      if (opts.onResult) return opts.onResult(r);
     },
   });
   return { exec, results };
 }
 
 /* ---------------------------------------------------------------------- 1 */
+
+test("the runner's exact Scout hold reaches disposed and aborted cost rows without changing unknown dollars", async () => {
+  for (const mode of ["disposed", "aborted", "unmetered", "no-hold"] as const) {
+    const { repos, task } = await registered();
+    const holds = new DurableSpendHolds({ budget: repos.budget, now: () => NOW });
+    const job = new JobSpend(holds, `actual-scout-job:${mode}`, OBLIGATION.id, { sends: [], areas: [{
+      key: "area:existing", label: "existing budget", budgetUsd: 20, historicalUsd: 0, historyReadAt: NOW,
+    }] });
+    if (mode !== "no-hold") assert.equal((await job.admit(2, "Scout maximum")).admit, true);
+    const scripted = scriptedTransport([
+      [toolUse("fetch", "fetch_public", { url: "https://a.gov/meetings", rung: "primary-site-navigation", why: "source" })],
+      [finish("finish", "EVIDENCE_FOUND", { spendHoldJobId: "model-invented-job",
+        rungsWalked: [{ index: 0, note: "saved record" }],
+        findings: [{ summary: "published meeting", artifactIds: ["art-1"], kind: "RECORD" }] })],
+    ]);
+    const transport: ModelTransport = mode === "unmetered"
+      ? async () => { throw new Error("HTTP 529: response lost"); }
+      : mode === "aborted" ? scriptedTransport([[finish("refused", "NO_PROGRESS")]]) : scripted;
+    const { exec } = executorWith(transport, fakeToolkit(), { onResult: async result => {
+      assert.equal(result.spendHoldJobId, undefined, "the model's finish cannot supply a budget identity");
+      const amended = mode === "no-hold" ? result : { ...result, spendHoldJobId: job.jobId };
+      await repos.scoutResults.append(result.obligationId, result.attemptId, amended, NOW);
+      return amended;
+    } });
+    const result = await dispatchOne(repos, { obligation: scheduledFixture(OBLIGATION, NOW_MS),
+      routeTaskId: task.id, holder: `held-${mode}`, now: NOW, leaseTtlMs: 60_000,
+      maturity: () => "UNGRADUATED", executor: exec });
+    assert.equal(result.outcome, mode === "disposed" || mode === "no-hold" ? "WORKED" : "FAILED", result.detail);
+    const costs = await repos.costs.readAll();
+    const saved = await repos.scoutResults.readAll();
+    assert.equal(costs.length, 1, "the ordinary dispatch still writes exactly one cost row");
+    assert.equal(saved.length, 1);
+    assert.equal(costs[0].spendHoldJobId, mode === "no-hold" ? undefined : job.jobId);
+    assert.equal(saved[0].spendHoldJobId, costs[0].spendHoldJobId);
+    assert.notEqual(costs[0].attemptId, job.jobId, "the persisted link joins two distinct real identities");
+    if (mode === "unmetered") {
+      assert.equal(result.cost?.usd, null);
+      assert.equal(costs[0].cost.usd, null, "the hold never becomes an invented measured charge");
+      const persistedBudget = await repos.budget.read();
+      assert.equal(aggregateModelSpend(costs, NOW, NOW, Object.values(persistedBudget.value.spendHolds ?? {})).usd, 2);
+    }
+  }
+});
 
 test("context assembly failure records a durable zero before any toolkit or provider request", async () => {
   const { repos, task } = await registered();

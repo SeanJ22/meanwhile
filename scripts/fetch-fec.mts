@@ -59,7 +59,7 @@ import { fecFundingCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
-import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import type { NjMorrisReadModel } from "../lib/sources/ballot-nj-morris/index.ts";
 import {
   isSourceAcquisitionFailure,
@@ -936,6 +936,6 @@ if (PROMOTE) {
   const outcome = await processRegisteredRoutineCandidate(store, "fec-funding", candidate, snapshot.fetchedAt);
   console.log("");
   console.log("=== routine production-data result ===");
-  console.log("RCD_RECEIPT=" + JSON.stringify({ source: "fec-funding", candidateId: candidate.id, acquisitionSucceeded: outcome.candidate.acquisitionSucceeded, state: outcome.candidate.state, decision: outcome.candidate.receipt?.decision ?? null, promotedVersion: outcome.promoted?.versionId ?? null, lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+  printSourceRunnerReceipt("fec-funding", candidate, outcome);
   if (!outcome.promoted) process.exitCode = 2;
 }

@@ -29,14 +29,22 @@ export function readerQuery(env: NodeJS.ProcessEnv = process.env): Query | null 
   return (text, params) => sql.query(text, [...params]);
 }
 
-const isMissingTable = (error: unknown) => (error as { code?: string } | null)?.code === "42P01";
+/** 42P01 = no such table (migration 0034 not applied); 42703 = no such column (migration 0036's run_class not applied). */
+const isMissingTable = (error: unknown) => ["42P01", "42703"].includes((error as { code?: string } | null)?.code ?? "");
+
+/**
+ * Sean, October 1, 2026: tester history is kept and is never counted in anything sold or shown as readers. Everything the store
+ * holds is labelled by `run_class` (migration 0036); only ORGANIC rows are read. An event before this moment (midnight October 1,
+ * Arizona time) is a tester event whatever its archive says: the older batches carry no label.
+ */
+export const ORGANIC_SINCE = "2026-10-01T07:00:00.000Z";
 const grainName = (g: "day" | "week") => (g === "week" ? "WEEK" : "DAY");
 const firstPeriod = (grain: "day" | "week", from: string) => (grain === "week" ? weekOf(from) : from);
 
 /** The SQL for a totals read: one family of the store's rows, cut to the window, and the places and topics asked for. */
 export function totalsSql(q: TotalsQuery, limit: number): { readonly text: string; readonly params: readonly unknown[] } {
   const params: unknown[] = [grainName(q.grain), firstPeriod(q.grain, q.from), q.to];
-  const where = ["period = $1", "period_start BETWEEN $2::date AND $3::date"];
+  const where = ["period = $1", "period_start BETWEEN $2::date AND $3::date", "run_class = 'ORGANIC'"];
   const add = (value: unknown) => { params.push(value); return `$${params.length}`; };
   if (q.family === "all") where.push("zip = ''", "district = ''");
   else if (q.family === "zip") {
@@ -79,10 +87,10 @@ export function cohortsSql(q: CohortQuery): { readonly text: string; readonly pa
   return {
     text: `SELECT m.period_start::text AS period, count(*)::text AS readers,
         count(*) FILTER (WHERE NOT EXISTS (
-          SELECT 1 FROM reader_event_members p WHERE p.period = m.period AND p.zip = m.zip AND p.district = m.district
+          SELECT 1 FROM reader_event_members p WHERE p.run_class = 'ORGANIC' AND p.period = m.period AND p.zip = m.zip AND p.district = m.district
             AND p.topic = '*' AND p.event_type = '*' AND p.reader_hash = m.reader_hash AND p.period_start < m.period_start))::text AS "newReaders"
       FROM reader_event_members m
-      WHERE m.period = $1 AND m.period_start BETWEEN $2::date AND $3::date AND m.zip = $4 AND m.district = $5 AND m.topic = '*' AND m.event_type = '*'
+      WHERE m.run_class = 'ORGANIC' AND m.period = $1 AND m.period_start BETWEEN $2::date AND $3::date AND m.zip = $4 AND m.district = $5 AND m.topic = '*' AND m.event_type = '*'
       GROUP BY m.period_start ORDER BY m.period_start`,
     params: [grainName(q.grain), firstPeriod(q.grain, q.from), q.to, zip, district],
   };
@@ -118,14 +126,17 @@ const PARALLEL = 16;
 interface StoredEvent {
   readonly type?: unknown; readonly occurredAt?: unknown; readonly zip?: unknown; readonly district?: unknown; readonly residencyRelation?: unknown;
   readonly cardId?: unknown; readonly cardKind?: unknown; readonly durationMs?: unknown; readonly question?: unknown; readonly topic?: unknown;
-  readonly reaction?: unknown; readonly ballotPick?: unknown; readonly tester?: unknown;
+  readonly reaction?: unknown; readonly ballotPick?: unknown; readonly tester?: unknown; readonly runClass?: unknown;
 }
 const str = (v: unknown): string | null => (typeof v === "string" && v !== "" ? v : null);
 const RESIDENCY: readonly Residency[] = ["HOME", "BROWSING", "MOVING", "UNKNOWN"];
 
+/** A label other than ORGANIC (a mixed batch is UNKNOWN; its events carry their own label, which wins). */
+const notOrganic = (label: unknown) => typeof label === "string" && label !== "ORGANIC" && label !== "UNKNOWN";
+
 /** One stored batch into events: the exact time is reduced to its UTC day here, and nothing later can see it. */
 export function eventsOfBatch(json: string): CapturedEvent[] {
-  const body = JSON.parse(json) as { reader?: unknown; tester?: unknown; events?: readonly StoredEvent[] };
+  const body = JSON.parse(json) as { reader?: unknown; tester?: unknown; runClass?: unknown; events?: readonly StoredEvent[] };
   const reader = str(body.reader);
   if (reader === null || !Array.isArray(body.events)) return [];
   const out: CapturedEvent[] = [];
@@ -138,7 +149,7 @@ export function eventsOfBatch(json: string): CapturedEvent[] {
       type, day: new Date(at).toISOString().slice(0, 10), reader, zip: str(e.zip), district: str(e.district),
       residency: (RESIDENCY as readonly unknown[]).includes(e.residencyRelation) ? (e.residencyRelation as Residency) : "UNKNOWN",
       cardId: str(e.cardId), cardKind: str(e.cardKind), durationMs: typeof e.durationMs === "number" ? e.durationMs : null, text: str(e.question),
-      topic: str(e.topic) ?? "free-form", reaction: str(e.reaction), ballotPick: pick ?? null, tester: e.tester === true || body.tester === true,
+      topic: str(e.topic) ?? "free-form", reaction: str(e.reaction), ballotPick: pick ?? null, tester: e.tester === true || body.tester === true || Date.parse(at) < Date.parse(ORGANIC_SINCE) || notOrganic(e.runClass ?? body.runClass),
     });
   }
   return out;
@@ -163,7 +174,7 @@ export function historyEvents(store: HistoryStore, cache: Map<string, CapturedEv
         cache.set(key, events);
         return events;
       }));
-      for (const part of parts) for (const e of part) if (e.day >= window.from && e.day <= window.to) rows.push(e);
+      for (const part of parts) for (const e of part) if (!e.tester && e.day >= window.from && e.day <= window.to) rows.push(e);
     }
     return { kind: "ROWS", rows };
   };

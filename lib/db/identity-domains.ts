@@ -633,14 +633,14 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
   reader_event_batches: {
     storeClass: "OPERATIONAL",
     columns: {
-      ...nonIdentifying("archive_key", "payload_sha256", "event_count"),
+      ...nonIdentifying("archive_key", "payload_sha256", "event_count", "run_class"),
       batch_id: { space: "DIGEST", digestSpace: "reader-event-batch:", why: "Internal retry key for an immutable event batch; never exported." },
     },
   },
   reader_event_members: {
     storeClass: "OPERATIONAL",
     columns: {
-      ...nonIdentifying("period", "period_start", "zip", "topic", "event_type"),
+      ...nonIdentifying("period", "period_start", "zip", "topic", "event_type", "run_class"),
       district: { space: "CIVIC_IDENTIFIER" },
       reader_hash: { space: "DIGEST", digestSpace: "reader-event:", why: "Internal anonymous distinct-user membership; no identity or export." },
     },
@@ -648,7 +648,7 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
   reader_event_totals: {
     storeClass: "READER_COLLECTION",
     columns: {
-      ...nonIdentifying("period", "period_start", "zip", "topic", "event_type", "events", "users"),
+      ...nonIdentifying("period", "period_start", "zip", "topic", "event_type", "events", "users", "run_class"),
       district: { space: "CIVIC_IDENTIFIER" },
     },
   },

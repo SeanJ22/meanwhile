@@ -268,7 +268,7 @@ export const searchLog = pgTable(
      * so a new class is excluded the moment it exists rather than the moment
      * someone remembers to exclude it.
      */
-    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
+    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR", "TESTER"] })
       .notNull()
       .default("ORGANIC"),
     /**
@@ -538,7 +538,7 @@ export const reactions = pgTable(
      * n-stores-never-join rule is unaffected: no other store carries a
      * `run_id`, and `tests/db-schema.test.ts` asserts the schemas share no key.
      */
-    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
+    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR", "TESTER"] })
       .notNull()
       .default("UNKNOWN"),
     /**
@@ -724,7 +724,7 @@ export const feedback = pgTable(
      */
     contactRef: text("contact_ref"),
     /** Same declaration and the same meanings as the search log's (C05). */
-    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
+    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR", "TESTER"] })
       .notNull()
       .default("ORGANIC"),
     /** Null on every ORGANIC row by construction — a run identity, never a person's. */
@@ -1103,7 +1103,7 @@ export const speakYourMind = pgTable(
     suspectReason: text("suspect_reason", {
       enum: ["VELOCITY", "LIMITER_UNAVAILABLE"],
     }),
-    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
+    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR", "TESTER"] })
       .notNull()
       .default("UNKNOWN"),
     /** `sha256("speak-run:" + runId)` — its own digest space, like every other. */
@@ -1267,7 +1267,7 @@ export const askInteractions = pgTable(
      * buyer-visible identifier.
      */
     askKeyHash: text("ask_key_hash").notNull(),
-    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
+    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR", "TESTER"] })
       .notNull()
       .default("UNKNOWN"),
     /** `sha256("ask-run:" + runId)` — namespaced, like every other run id. */
@@ -1362,7 +1362,7 @@ export const demandSignals = pgTable(
      * `reactions`: the write path REQUIRES the declaration, and the database
      * default is `UNKNOWN` so an undeclared row is never a reader.
      */
-    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
+    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR", "TESTER"] })
       .notNull()
       .default("UNKNOWN"),
     /** `sha256("demand-run:" + runId)` — its own digest space, joining nothing. */
@@ -1640,16 +1640,18 @@ export const readerEventBatches = pgTable("reader_event_batches", {
   archiveKey: text("archive_key").notNull(),
   payloadSha256: text("payload_sha256").notNull(),
   eventCount: integer("event_count").notNull(),
+  runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR", "TESTER"] }).notNull().default("UNKNOWN"),
 });
 const readerEventDimensions = () => ({
   period: text("period").notNull(), periodStart: date("period_start").notNull(),
   zip: text("zip").notNull(), district: text("district").notNull(),
   topic: text("topic").notNull(), eventType: text("event_type").notNull(),
+  runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR", "TESTER"] }).notNull().default("UNKNOWN"),
 });
 export const readerEventMembers = pgTable("reader_event_members", {
   ...readerEventDimensions(), readerHash: text("reader_hash").notNull(),
-}, t => [primaryKey({ columns: [t.period, t.periodStart, t.zip, t.district, t.topic, t.eventType, t.readerHash] })]);
+}, t => [primaryKey({ columns: [t.period, t.periodStart, t.zip, t.district, t.topic, t.eventType, t.runClass, t.readerHash] })]);
 export const readerEventTotals = pgTable("reader_event_totals", {
   ...readerEventDimensions(), events: bigint("events", { mode: "number" }).notNull(), users: bigint("users", { mode: "number" }).notNull(),
-}, t => [primaryKey({ columns: [t.period, t.periodStart, t.zip, t.district, t.topic, t.eventType] }),
+}, t => [primaryKey({ columns: [t.period, t.periodStart, t.zip, t.district, t.topic, t.eventType, t.runClass] }),
   index("reader_event_totals_period_idx").on(t.period, t.periodStart)]);

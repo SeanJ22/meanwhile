@@ -55,6 +55,8 @@ test("archive failure prevents database totals; retries reuse the archive and ex
     const history = JSON.parse(gunzipSync([...saved.values()][0]!.bytes).toString());
     assert.equal(history.events[1].cardId, "funding:committee:1");
     assert.equal(history.events.length, 2);
+    assert.equal(history.events[0].runClass, "TESTER");
+    assert.equal(history.events[0].tester, true);
     const unmatched = { ...batch, events: [{ ...batch.events[0]!, topic: null, question: "The place is damp from a burst pipe." }] };
     let label = "water-sewer";
     const derived = { ...options, classifyTopic: async () => label };
@@ -66,4 +68,23 @@ test("archive failure prevents database totals; retries reuse the archive and ex
   } finally {
     if (original === undefined) delete process.env.WTP_DB_ROLE; else process.env.WTP_DB_ROLE = original;
   }
+});
+
+test("a mixed cutoff week keeps tester and organic counts and memberships separate, including the midnight MST day", async () => {
+  const events = [
+    { id: "before", type: "ASK" as const, occurredAt: "2026-10-01T06:59:59Z", zip: "85701", topic: "water" },
+    { id: "after", type: "ASK" as const, occurredAt: "2026-10-01T07:00:00Z", zip: "85701", topic: "water" },
+    { id: "declared", type: "ASK" as const, occurredAt: "2026-10-01T08:00:00Z", zip: "85701", topic: "water", tester: true },
+  ];
+  const input = { ...batch, batchId: "mixed-week", events };
+  const prepared = prepareReaderEventBatch(input);
+  assert.deepEqual(prepared.body.events.map(event => event.runClass), ["TESTER", "ORGANIC", "TESTER"]);
+  for (const period of ["DAY", "WEEK"]) {
+    const counts = prepared.aggregates.filter(row => row.period === period && row.zip === "85701" && row.district === "" && row.topic === "*" && row.type === "*");
+    assert.equal(counts.find(row => row.runClass === "TESTER")?.events, 2);
+    assert.equal(counts.find(row => row.runClass === "ORGANIC")?.events, 1);
+  }
+  const synthetic = prepareReaderEventBatch({ ...input, runClass: "SYNTHETIC", events: [events[1]!] });
+  assert.equal(synthetic.body.events[0]!.runClass, "SYNTHETIC");
+  assert.equal(synthetic.body.events[0]!.tester, true);
 });

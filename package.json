@@ -59,7 +59,6 @@
     "deferred": "node scripts/deferred.mjs",
     "deferred:xlsx": "node scripts/deferred-xlsx.mjs",
     "definitions:verify": "tsx scripts/definitions-verify.mts",
-    "demo:sweep": "tsx scripts/demo-sweep.mts",
     "denominators": "tsx scripts/denominator-reconcile.mts",
     "deploy:live": "node scripts/deploy-live.mjs",
     "deploy:sha": "node scripts/deploy-live.mjs --sha",

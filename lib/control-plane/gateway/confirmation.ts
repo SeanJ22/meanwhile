@@ -76,35 +76,35 @@ const ROUND_ACTIONS: ReadonlySet<string> = new Set([
 
 /** What each action's pickup means, in the owner's words. */
 const APPLIED_WORDS: Readonly<Record<string, string>> = {
-  "runner.pause": "Paused. The runner confirmed it and is not starting new rounds.",
-  "runner.resume": "Resumed. The runner confirmed it and is starting its next round.",
-  "runner.runCycleNow": "Started. The runner confirmed it and began a round.",
-  "research.pause": "Paid research is paused. The runner confirmed it; no new paid work starts.",
-  "research.resume": "Paid research may run again. The runner confirmed it.",
-  "fleet.deployHere": "Sent. The runner read it and put that work first.",
-  "expansion.scope.set": "The runner has read it and is working on it.",
-  "expansion.scope.setMany": "The runner has read the list and is creating the work for each place.",
-  "expansion.scope.budget": "The runner is using the new budget.",
-  "expansion.scope.remove": "The runner has read the new list; that place is off it.",
-  "config.setFleetSpendCeiling": "The runner is using the new spending ceiling.",
-  "config.setPlaceTarget": "The runner has read the new target and orders this place's work by it.",
-  "config.setDiscoverySearch": "The runner is using the new search setting.",
+  "runner.pause": "Paused.",
+  "runner.resume": "Resumed.",
+  "runner.runCycleNow": "Started.",
+  "research.pause": "Paid research paused.",
+  "research.resume": "Paid research resumed.",
+  "fleet.deployHere": "Sent.",
+  "expansion.scope.set": "Runner has it.",
+  "expansion.scope.setMany": "Runner has the list.",
+  "expansion.scope.budget": "Budget in use.",
+  "expansion.scope.remove": "Removed.",
+  "config.setFleetSpendCeiling": "Ceiling in use.",
+  "config.setPlaceTarget": "Target in use.",
+  "config.setDiscoverySearch": "Search setting in use.",
 };
 
 const WAITING_WORDS: Readonly<Record<string, string>> = {
-  "runner.pause": "Saved. Waiting for the runner to confirm the pause.",
-  "runner.resume": "Saved. Waiting for the runner to confirm it is running again.",
-  "runner.runCycleNow": "Saved. Waiting for the runner to start the round.",
-  "research.pause": "Saved. Waiting for the next round to close the paid lane.",
-  "research.resume": "Saved. Waiting for the next round to open the paid lane.",
-  "fleet.deployHere": "Saved. Waiting for the runner to read it.",
-  "expansion.scope.set": "Saved. Waiting for the runner to read it.",
-  "expansion.scope.setMany": "Saved. Waiting for the runner to read the list.",
-  "expansion.scope.budget": "Saved. The runner uses it when its next round starts.",
-  "expansion.scope.remove": "Saved. Waiting for the runner to read the new list.",
-  "config.setFleetSpendCeiling": "Saved. The runner uses it when its next round starts.",
-  "config.setPlaceTarget": "Saved. The runner reads the target when its next round starts.",
-  "config.setDiscoverySearch": "Saved. The runner uses it when its next round starts.",
+  "runner.pause": "Saved. Waiting for the runner.",
+  "runner.resume": "Saved. Waiting for the runner.",
+  "runner.runCycleNow": "Saved. Waiting for the runner.",
+  "research.pause": "Saved. Waiting for the next round.",
+  "research.resume": "Saved. Waiting for the next round.",
+  "fleet.deployHere": "Saved. Waiting for the runner.",
+  "expansion.scope.set": "Saved. Waiting for the runner.",
+  "expansion.scope.setMany": "Saved. Waiting for the runner.",
+  "expansion.scope.budget": "Saved. Waiting for the next round.",
+  "expansion.scope.remove": "Saved. Waiting for the runner.",
+  "config.setFleetSpendCeiling": "Saved. Waiting for the next round.",
+  "config.setPlaceTarget": "Saved. Waiting for the next round.",
+  "config.setDiscoverySearch": "Saved. Waiting for the next round.",
 };
 
 function later(a: string | null | undefined, b: string | null | undefined): boolean {
@@ -149,6 +149,6 @@ export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: A
     if (later(heartbeat?.lastCycleStartedAt, receipt.completedAt ?? receipt.startedAt)) return applied(heartbeat?.lastCycleStartedAt ?? null);
     return waiting;
   } catch {
-    return { state: "unread", at: null, words: "Saved. The runner's records could not be read just now, so whether it has picked this up is not known." };
+    return { state: "unread", at: null, words: "Saved. Runner status —" };
   }
 }

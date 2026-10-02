@@ -124,16 +124,19 @@ test("a departure publishes through the registry door: the holder's rows leave w
     payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
   assert.ok((await processRegisteredManualCandidate(store, "registry-runtime-bindings", corrected, NOW, imported.versionId)).promoted);
   const full = capture(page("Contact the Mayor & Council"));
-  await publishRosterReading({ store, bodyId: BODY, now: NOW, reading: { id: "held:full", capture: full, linkingPage: null, complete: true, method: "fixture",
+  let carried = (await readRegistryRuntimePrior(store, NOW))!;
+  await publishRosterReading({ store, bodyId: BODY, now: NOW, prior: carried, onPublished: next => { carried = next; }, reading: { id: "held:full", capture: full, linkingPage: null, complete: true, method: "fixture",
     members: readHeldRoster(full.evidence.text, URL_)!.rows.map((row, i) => ({ recordId: `r${i}`, fields: { ...row } })) } });
-  const before = (await readRegistryRuntimePrior(store, NOW))!;
+  const before = carried;
+  assert.deepEqual(carried, await readRegistryRuntimePrior(store, NOW), "accepted snapshot exactly matches canonical readback without reloading between bodies");
   const faye = before.payload.bodyRosters.find(r => r.bodyId === BODY)!.members.find(m => m.name === "Faye Jackson")!;
   assert.ok(before.payload.officialCandidacies.rows.some(row => row.holder.id === faye.id));
   const smaller = capture(page("Contact the Mayor & Council", member(1, "McCaa II, Clea", "Mayor") + member(2, "Flowers, Carolyn", "Vice Mayor")));
-  const published = await publishRosterReading({ store, bodyId: BODY, now: NOW, reading: { id: "held:smaller", capture: smaller, linkingPage: null, complete: true, method: "fixture",
+  const published = await publishRosterReading({ store, bodyId: BODY, now: NOW, prior: carried, onPublished: next => { carried = next; }, reading: { id: "held:smaller", capture: smaller, linkingPage: null, complete: true, method: "fixture",
     members: readHeldRoster(smaller.evidence.text, URL_)!.rows.map((row, i) => ({ recordId: `r${i}`, fields: { ...row } })) } });
   assert.deepEqual(published.departed, ["Faye Jackson (Council Member)"]);
   const after = (await readRegistryRuntimePrior(store, NOW))!;
+  assert.deepEqual(carried, after, "the next accepted successor preserves the carried source authority and digest");
   assert.deepEqual(after.payload.bodyRosters.find(r => r.bodyId === BODY)!.members.map(m => m.name).sort(), ["Carolyn Flowers", "Clea McCaa II"]);
   assert.equal(after.payload.officialCandidacies.rows.some(row => row.holder.id === faye.id), false);
   assert.equal(after.payload.rosterReaderDispositions.some(row => row.sourceId === faye.id), false);

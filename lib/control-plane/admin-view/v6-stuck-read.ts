@@ -98,7 +98,7 @@ export function stuckViews(rows: readonly StuckRowLike[], scopeKey: string, nowI
     const state = stateNameOf(stateOfRow(row));
     const words = sendWordsFor({ stateNames: state ? [state] : [], subject: row.subjectName, label: row.label, zip: /^geo:[a-z]{2}.zcta.(d{5})$/.exec(at)?.[1] ?? null });
     return { id: row.id, title, applies: [at], lane: cause.lane, cause: cause.words, age: age.words, ageRank: age.rank,
-      tried: row.blocker ?? "The record says nothing about what was tried.", helped: "Not recorded", next: row.nextAction ?? cause.next,
+      tried: row.blocker === null ? "—" : row.blocker, helped: "—", next: row.nextAction ?? cause.next,
       owner: cause.owner, readersAffected: row.band === 1 ? true : undefined, group: cause.key,
       actions: words === null ? [] : [sendAction(at, "Send agents", words)] };
   });

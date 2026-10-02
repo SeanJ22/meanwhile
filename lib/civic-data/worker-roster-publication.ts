@@ -6,7 +6,9 @@ import { projectReaderRoster, type BodyRoster } from "../registry/body-rosters.t
 import type { OfficialCandidacyBridgeRow, RegistryRuntimePackage, RegistryRuntimePrior, RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { readCompletedWorkerResults } from "../control-plane/repository/worker-completion.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
-import { readRegistryRuntimePrior, registryRuntimeCandidate } from "../registry/runtime-data-plane.ts";
+import { readRegistryRuntimePrior, registryRuntimeCandidate, registryBaseSourceReceipt } from "../registry/runtime-data-plane.ts";
+import { canonicalCivicDataJson } from "./changes.ts";
+import type { PromotionOutcome } from "./promotion.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
 import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
@@ -47,6 +49,14 @@ export interface RosterReading {
 
 const requireThat = (value: unknown, reason: string): void => { if (!value) throw new Error(reason); };
 const digest = (text: string) => createHash("sha256").update(text).digest("hex");
+
+/** Carry the exact candidate accepted by the existing atomic door and typed readback. */
+export function acceptedRegistryPrior(published: PromotionOutcome): RegistryRuntimePrior {
+  if (!published.promoted) throw new Error("REGISTRY_PUBLICATION_NOT_ACCEPTED");
+  const candidate = published.candidate.candidate;
+  return { versionId: published.promoted.versionId, payload: candidate.readModel as RegistryRuntimeReadModel,
+    sourceReceipt: registryBaseSourceReceipt(candidate), readModelSha256: digest(canonicalCivicDataJson(candidate.readModel)) };
+}
 const words = (text: string) => text.replace(/<[^>]*>/g, " ").replace(/&(?:amp|nbsp);/g, " ").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const titleOf = (html: string) => words([/<title\b[^>]*>([\s\S]*?)<\/title>/i.exec(html)?.[1] ?? "", ...[...html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi)].map(m => m[1])].join(" "));
 const GOVERNING = /\b(council|mayor|select ?board|selectmen|board of (supervisors|commissioners|aldermen|selectmen)|township committee|commission(ers)?)\b/;
@@ -289,7 +299,7 @@ export async function publishWorkerRosterResults(input: {
   const readHeld = input.readHeld ?? localHeldCaptureReader();
   const allItems = (await input.repos.workItems.list()).map(row => row.value);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
-  // The registry is large; read it once and again only after this pass moves it.
+  // Carry accepted snapshots through the pass; reload only after an external base change.
   let registry: RegistryRuntimePrior | null | undefined;
   // Several jobs can owe the same body. Its saved pages are read once per pass, and
   // once a reading is published every other job for that body reuses that publication.
@@ -310,7 +320,8 @@ export async function publishWorkerRosterResults(input: {
     let captures: WorkerPublicationCapture[] = [], reading: RosterReading | null = null, heldDirectory: DirectoryReading | null = null, wentLive = 0;
     let schedule: HeldBodySchedule | null = null;
     try {
-      const prior = registry ??= await readRegistryRuntimePrior(input.store, input.now);
+      if (registry === undefined) registry = await readRegistryRuntimePrior(input.store, input.now);
+      const prior = registry;
       if (!prior) throw new Error("ROSTER_PRIOR_READER_AUTHORITY_MISSING");
       const parser = latestParserResult(records, id);
       parserId = parser?.id ?? null;
@@ -388,6 +399,7 @@ ${readingId}`);
       const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(input.store,
         requiredManualProductionContract("registry-runtime-bindings"), published.promoted, input.now);
       if (readback?.status !== "PASS") throw new Error(`ROSTER_READER_READBACK_FAILED:${readback?.detail ?? "missing typed reader receipt"}`);
+      registry = acceptedRegistryPrior(published);
       const count = directoryPackage ? prepared.payload.registry.bodies.length : prepared.payload.bodyRosters[0].members.length;
       outcome = { at: input.now, workerResultId: readingId, status: unresolved.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
         code: unresolved.length ? directoryPackage ? "DIRECTORY_ROWS_REQUIRE_REPAIR" : "ROSTER_IDENTITIES_REQUIRE_REPAIR" : published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",
@@ -439,8 +451,10 @@ ${readingId}`, outcome);
  */
 export async function publishRosterReading(input: {
   readonly store: RoutineDataStore; readonly bodyId: string; readonly reading: RosterReading; readonly now: string;
+  readonly prior?: RegistryRuntimePrior;
+  readonly onPublished?: (prior: RegistryRuntimePrior) => void;
 }): Promise<{ readonly versionId: string; readonly confirmed: boolean; readonly departed: readonly string[]; readonly unresolved: readonly string[] }> {
-  const prior = await readRegistryRuntimePrior(input.store, input.now);
+  const prior = input.prior ?? await readRegistryRuntimePrior(input.store, input.now);
   if (!prior) throw new Error("ROSTER_PRIOR_READER_AUTHORITY_MISSING");
   const roster = workerRosterPublication({ bodyId: input.bodyId, reading: input.reading, prior, now: input.now });
   const candidate = registryRuntimeCandidate(roster, { prior });
@@ -451,5 +465,6 @@ export async function publishRosterReading(input: {
   const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(input.store,
     requiredManualProductionContract("registry-runtime-bindings"), published.promoted, input.now);
   if (readback?.status !== "PASS") throw new Error(`ROSTER_READER_READBACK_FAILED:${readback?.detail ?? "missing typed reader receipt"}`);
+  input.onPublished?.(acceptedRegistryPrior(published));
   return { versionId: published.promoted.versionId, confirmed: Boolean(published.confirmed), departed: roster.departed, unresolved: roster.unresolved };
 }

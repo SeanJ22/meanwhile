@@ -10,12 +10,13 @@ import { observationFreshUntil, observationIsFresh } from "../ask/agenda-publica
 import { reconcilePublicationObservations } from "../outcomes/publication.ts";
 import { readPlacePointerSlice, readPlacePointerSlices, type PlaceCaptureRead } from "./held-place-slices.ts";
 import { REGISTRY_RUNTIME_SCOPE } from "../registry/runtime-data-plane.ts";
+import { readHeldPlaceGeography } from "./held-place-geography.ts";
 import { PostgresRoutineDataStore } from "./store.ts";
 import type { PlaceCaptureKind } from "../coverage/place-owed.ts";
 
 /** Derived from canonical published records, never filtered by their original job or ZIP. */
 export interface HeldPlaceCapture {
-  readonly subjects: readonly { id: string; kind: "body" | "seat" | "calendar" | "contest" | "funding" | "deadline"; divisionIds: readonly string[]; label: string; captureKind?: PlaceCaptureKind; calendarBodyId?: string }[];
+  readonly subjects: readonly { id: string; kind: "division" | "body" | "seat" | "calendar" | "contest" | "funding" | "deadline"; divisionIds: readonly string[]; label: string; captureKind?: PlaceCaptureKind; calendarBodyId?: string }[];
   readonly held: readonly { subjectId: string; checklistId: string; state: "published" | "held" | "unpublished";
     sourceUrl: string; checkedAt: string; freshUntil: string; value: unknown }[];
 }
@@ -149,12 +150,14 @@ export async function readHeldPlaceCapture(divisionIds: readonly string[], optio
   const outcomeScopes = ROUTINE_SOURCE_CONTRACTS.filter(contract => contract.recordClass === "MEETING_OUTCOME" &&
     contract.schedule?.follows?.some(partition => bodies.has(partition.bodyId) ||
       partitions.some(known => known.bodyId === partition.bodyId))).map(contract => contract.scope);
-  const [meetings, families, outcomes] = await Promise.all([
+  const [meetings, families, outcomes, geography] = await Promise.all([
     sliced ? readPlacePointerSlices<MeetingsSnapshot>("MEETING", partitions.map(partition => partition.scope), divisionIds, [...bodies]) :
       readPromotedCivicDataBatch<MeetingsSnapshot>("MEETING", partitions.map(partition => partition.scope), options),
     readHeldPlaceFamilies(divisionIds, options, sliced ? value : undefined),
     sliced ? readPlacePointerSlices<OutcomeSnapshot>("MEETING_OUTCOME", outcomeScopes, divisionIds, [...bodies]) :
       readPromotedCivicDataBatch<OutcomeSnapshot>("MEETING_OUTCOME", outcomeScopes, options),
+    sliced ? readHeldPlaceGeography(divisionIds, value?.registry.divisions ?? []) : Promise.resolve({ subjects: [], held: [] }),
   ]);
-  return projectHeldPlaceCapture(divisionIds, registry, meetings, options.now ?? new Date().toISOString(), families, outcomes);
+  const capture = projectHeldPlaceCapture(divisionIds, registry, meetings, options.now ?? new Date().toISOString(), families, outcomes);
+  return { subjects: [...capture.subjects, ...geography.subjects], held: [...capture.held, ...geography.held] };
 }

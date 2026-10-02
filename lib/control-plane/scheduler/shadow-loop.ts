@@ -956,22 +956,62 @@ export async function closeCycleOccurrences(
     readonly cycle: Pick<CycleResult, "dispatched" | "recovered">;
     readonly occurrenceFor: (obligationId: string) => string | null;
     readonly now: string;
+    /** Independent resource groups in flight; provider-neutral callers stay serial. */
+    readonly concurrency?: number;
   },
 ): Promise<void> {
+  const operations: { occurrenceId: string; obligationId: string; run: () => Promise<unknown> }[] = [];
   for (const result of input.cycle.dispatched) {
     const occurrenceId = input.occurrenceFor(result.obligationId);
     if (occurrenceId === null) continue;
-    const discharged = dischargesObligation(result);
-    await closeOccurrence(repos, {
-      occurrenceId,
-      disposition: discharged ? result.disposition : null,
-      unresolvedReason: discharged ? null : result.detail,
-      now: input.now,
-    });
+    operations.push({ occurrenceId, obligationId: result.obligationId, run: () => {
+      const discharged = dischargesObligation(result);
+      return closeOccurrence(repos, {
+        occurrenceId,
+        disposition: discharged ? result.disposition : null,
+        unresolvedReason: discharged ? null : result.detail,
+        now: input.now,
+      });
+    } });
   }
   for (const recovered of input.cycle.recovered) {
-    await closeSettledOccurrence(repos, { settled: recovered, now: input.now });
+    operations.push({ occurrenceId: recovered.occurrenceId, obligationId: recovered.obligationId,
+      run: () => closeSettledOccurrence(repos, { settled: recovered, now: input.now }) });
   }
+  // Closing also updates the standing obligation. Join both resource identities
+  // so duplicate occurrence aliases and two periods of one obligation stay serial.
+  const parents = new Map<string, string>();
+  const root = (key: string): string => {
+    let resolved = key;
+    const path: string[] = [];
+    while (parents.has(resolved) && parents.get(resolved) !== resolved) {
+      path.push(resolved);
+      resolved = parents.get(resolved)!;
+    }
+    parents.set(resolved, resolved);
+    for (const prior of path) parents.set(prior, resolved);
+    return resolved;
+  };
+  for (const operation of operations) parents.set(root(`occurrence:${operation.occurrenceId}`), root(`obligation:${operation.obligationId}`));
+  const groups = new Map<string, { index: number; run: () => Promise<unknown> }[]>();
+  operations.forEach((operation, index) => {
+    const key = root(`occurrence:${operation.occurrenceId}`);
+    const group = groups.get(key) ?? [];
+    group.push({ index, run: operation.run });
+    groups.set(key, group);
+  });
+  const failures: { index: number; error: unknown }[] = [];
+  await runPool([...groups.values()], input.concurrency ?? 1, async group => {
+    for (const operation of group) {
+      try { await operation.run(); }
+      catch (error) {
+        failures.push({ index: operation.index, error });
+        break; // A dependent closure cannot retry the unchanged failed resource.
+      }
+    }
+  });
+  // No closure remains running when finalization observes the failed cycle.
+  if (failures.length) throw failures.sort((a, b) => a.index - b.index)[0]!.error;
 }
 
 /**

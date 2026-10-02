@@ -35,6 +35,9 @@ concurrency:
 jobs:
   admission:
     name: admission (preflight and integrity)
+    # A draft pull request buys no Actions: sessions run lint and types for
+    # their files locally, and ready_for_review starts the real run.
+    if: (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -271,7 +274,7 @@ jobs:
         run: echo "No application rebuild; tests, lint and types still run."
     needs:
       - admission
-    if: always()
+    if: always() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
   test:
     name: test (${{ matrix.shard }}/4)
     needs:
@@ -373,7 +376,7 @@ jobs:
       - verify
       - test
       - build
-    if: always()
+    if: always() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:

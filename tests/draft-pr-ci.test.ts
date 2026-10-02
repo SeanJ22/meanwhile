@@ -85,7 +85,7 @@ test("ready_for_review is an explicit trigger and the existing shipping triggers
 
 test("admission alone classifies draft/full before preflight", () => {
   for (const [jobId, job] of Object.entries(workflow().jobs).filter(([id]) => id === "admission")) {
-    assert.equal(job.if, undefined, `${jobId} is job-gated, so a required context can disappear`);
+    assert.equal(job.if, "(github.event_name != 'pull_request' || github.event.pull_request.draft == false)", `${jobId} must skip drafts and run on every other event`);
     const classifier = job.steps.find((step) => step.id === "pr_tier");
     const preflight = job.steps.find((step) => step.id === "preflight");
     const tier = job.steps.find((step) => step.id === "tier");

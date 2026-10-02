@@ -42,9 +42,9 @@ import { MODELS } from "../lib/models.ts";
 
 test("H2: every Ask call site reads its model from the ONE declaring module — the frontier model and, since 2026-09-25, the fast writer", () => {
   /*
-   * Read off the source, because the rule is about what the product RUNS. A
-   * per-caller or per-question model would also shard the prompt cache, which
-   * is model-scoped, and forfeit every hit H1 exists to earn.
+   * Read off the source, because the rule is about what the product RUNS. Ask
+   * may route by tier, cheapest first (Sean, 2026-10-01: the one-model rule is
+   * removed); the tiers are still declared in one place.
    */
   const root = process.cwd();
 

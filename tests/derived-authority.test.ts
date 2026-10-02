@@ -73,9 +73,9 @@ test("only the publisher withdraws a row, with vaulted evidence", () => {
 });
 
 /**
- * C16 (the owner's decision recorded 2026-09-24T22:43Z): "a page returning 'not found' is not the only reason to
- * suspend or correct a connection. Wrong attribution, conflicting evidence, or a changed calendar must also trigger
- * review. Preserve previously verified records through temporary outages."
+ * Rulings §3 ("C16" was a session label, not Sean's decision: Sean, 2026-10-01): a page returning "not found" is not
+ * the only reason to suspend or correct a connection; wrong attribution, conflicting evidence, or a changed calendar
+ * also trigger review, and previously verified records are preserved through temporary outages.
  */
 test("C16: a trigger suspends a promoted row, which stays marked until a later review restores it", () => {
   const previous = [{ key: "trustees", row: trustees }];

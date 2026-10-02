@@ -64,16 +64,16 @@ export function DetailPanel(props: { readonly detail: Detail }) {
     const stuck = (v.data.stuck.data ?? []).filter((i) => i.resultId === r.id);
     const containRef = stuck.flatMap((i) => i.actions).find((a) => a.kind === "contain" || a.kind === "uncontain");
     return (
-      <Panel eyebrow={`${v.index.get(r.applies[0])?.name} · ${r.kind} · delivery trail`} title={r.title} summary={r.readerSees} badge={<Pill tone={r.kind === "New" ? "good" : r.kind === "Updated" ? "info" : "neutral"}>{r.kind}</Pill>}
+      <Panel eyebrow={`${v.index.get(r.applies[0])?.name}${r.kind === null ? "" : ` · ${r.kind}`} · delivery trail`} title={r.title} summary={r.readerSees} badge={r.kind === null ? undefined : <Pill tone={r.kind === "New" ? "good" : r.kind === "Updated" ? "info" : "neutral"}>{r.kind}</Pill>}
         actions={[{ kind: "recheck", target: r.id }, ...(containRef ? [containRef] : [])]} targets={[r.id, ...stuck.map((i) => i.id), ...r.trail.flatMap((t) => t.docs?.map((x) => x.id) ?? [])]}>
         <Card title="From source to reader">
-          <Facts rows={[["Applies to", r.applies.map((a) => v.index.get(a)?.name ?? a).join(", ")], ["Kind", r.kind]]} />
+          <Facts rows={[["Applies to", r.applies.map((a) => v.index.get(a)?.name ?? a).join(", ")], ...(r.kind === null ? [] : [["Kind", r.kind] as const])]} />
           <ol className={s.trail}>
             {r.trail.map((st, i) => (
               <li key={i} className={s.trailStep}>
                 <span className={cx(s.dot, s[`mark-${st.mark}`])} style={{ width: 16, height: 16, marginTop: 2 }} aria-hidden="true" />
                 <div className={s.stack} style={{ gap: 6 }}>
-                  <div className={s.spread}><strong style={{ fontSize: 13 }}>{i + 1}. {STAGE_NAMES[i] ?? st.name}</strong><span className={s.meta}>{markWords(st.mark)} · {st.when}</span></div>
+                  <div className={s.spread}><strong style={{ fontSize: 13 }}>{i + 1}. {STAGE_NAMES[i] ?? st.name}</strong><span className={s.meta}>{markWords(st.mark)} · {/^d{4}-dd-ddT/.test(st.when) ? mst(st.when) : st.when}</span></div>
                   <span className={s.small}>{st.what}</span>
                   {st.missing && <span className={cx(s.small, s.textWarn)}>Missing: {st.missing}</span>}
                   {st.next && <span className={s.small}><span className={s.dim}>Next:</span> {st.next}</span>}
@@ -191,7 +191,7 @@ export function DetailPanel(props: { readonly detail: Detail }) {
   // search
   const q = d.query.toLowerCase();
   const hits: { type: string; title: string; sub: string; go: () => void }[] = [
-    ...(v.data.results.data ?? []).filter((r) => relation(v.index, r.applies, v.scopeKey)).map((r) => ({ type: "Reader result", title: r.title, sub: `${v.index.get(r.applies[0])?.name} · ${r.kind}`, go: () => v.open({ type: "result", id: r.id }) })),
+    ...(v.data.results.data ?? []).filter((r) => relation(v.index, r.applies, v.scopeKey)).map((r) => ({ type: "Reader result", title: r.title, sub: `${v.index.get(r.applies[0])?.name}${r.kind === null ? "" : ` · ${r.kind}`}`, go: () => v.open({ type: "result", id: r.id }) })),
     ...(v.data.stuck.data ?? []).filter((i) => relation(v.index, i.applies, v.scopeKey)).map((i) => ({ type: "Stuck item", title: i.title, sub: `${v.index.get(i.applies[0])?.name} · ${LANE_WORDS[i.lane]}`, go: () => v.open({ type: "stuck", id: i.id }) })),
     ...(v.data.fixes.data?.open ?? []).map((f) => ({ type: "Fix", title: f.title, sub: f.owner, go: () => v.open({ type: "fix", id: f.id }) })),
     ...(v.data.checklist.data?.definitions ?? []).map((x) => ({ type: "Definition", title: `${x.id} ${x.requirement.split(" — ")[0]}`, sub: v.data.checklist.data?.groupNames[x.group] ?? x.group, go: () => v.go("checklist") })),

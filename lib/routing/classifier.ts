@@ -165,12 +165,10 @@ const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
  * The model, READ FROM `lib/ask/model.ts` rather than declared here.
  * (ITEM K, 2026-09-01.)
  *
- * This rung is an Ask call site — the ask box's second rung — so *one model
- * for all Ask traffic* binds it. It used to declare its own `claude-opus-5`
- * literal, and a rule enforced by four literals being equal is a rule that
- * survives only as long as everyone remembers to change all four. Importing
- * the shared constant makes it structural: there is no expression here that
- * could name a different model.
+ * This rung is an Ask call site — the ask box's second rung — so its model
+ * comes from the Ask role table. It used to declare its own `claude-opus-5`
+ * literal, and four literals kept equal by hand drift. Importing the shared
+ * table means a model change is one edit.
  *
  * `low` effort with thinking off is unchanged and is still this rung's own
  * choice — the task is one label out of sixteen. The cost lever remains effort

@@ -62,6 +62,8 @@ Use relevant resources Sean has provided. Check the current tool inventory and l
 
 Before escalating a retrieval blocker, challenge it with another appropriate method and evidence of prior success. Record the actual routes, results, missing information, and next approach. Distinguish discovery, access, extraction, verification, publication, and display problems. One failed step does not establish that the information is unavailable. “Not found in the sources checked” must not become “does not exist.”
 
+**Request pacing by publisher size.** The ten-requests-per-website cap applies only to small local governments under 10,000 population and school districts under 5,000 students. Everything else is read at full speed: state and federal sites and APIs (including census.gov and TigerWeb), larger counties, cities and districts, and national data sources. Always honor Retry-After and back off on 429 and 5xx responses. (Sean, October 1, 2026.)
+
 **Robots.txt alone does not block acquisition.** Automated reading of publicly accessible pages is authorized even when robots.txt asks otherwise. Record what robots.txt says as evidence, but do not stop reading, remove coverage, or ask Sean again about individual publishers or groups solely because of it. This does not authorize bypassing authentication or other access controls. When retrieval technically fails, use alternative public routes and the available tools above; one failed route is not a completed investigation. Existing spending limits and the paid-research pause still apply. (Sean, September 25, 2026, in the Admin completion instructions. It replaces the per-publisher robots.txt questions prepared that day.)
 
 ## 3. Publish verified information promptly
@@ -169,7 +171,7 @@ Automatic publishing under §3 is on. Any earlier setting or current-state note 
 
 Use short, transparent, high-school-level English. Lead with the result, problem, or exact decision needed. Separate facts from inferences. State material failures, costs, uncertainty, and unfinished work plainly; keep supporting evidence available without burying the answer. Admin shows times in Eastern time. (Sean, September 29, 2026.) Report schedules to Sean in Arizona MST unless he requests otherwise.
 
-**Admin and reader copy: plain labels and numbers.** No hedging, no "it's X, not Y" lines, no disclaimer boxes, no "what it will never do" lists, and no paragraphs about how something is enforced or what is not published. A number we do not have shows as "—". (Sean, October 1, 2026.)
+**Admin and reader copy: plain labels and numbers.** No hedging, no "it's X, not Y" lines, no disclaimer boxes, no "what it will never do" lists, and no paragraphs about how something is enforced or what is not published. In Admin, a number we do not have shows as "—". On reader pages, a section not covered yet says "We're working on getting this info" with the existing "Want us to get this sooner?" link, never "—". (Sean, October 1, 2026.)
 
 **Celebrate verified wins clearly and give them their own space.** Say what succeeded and why it matters. Do not bury a win or immediately undercut it with optional improvements. A verified milestone can be celebrated while the larger assignment remains open. No agent points or scoring system is needed.
 

@@ -579,7 +579,6 @@ export const SCHEDULING_HINTS = Object.freeze({
   "tests/snapshot-body-identity.test.ts": 50.4732,
   "tests/snapshot.test.ts": 38.4228,
   "tests/software-ci-boundary.test.ts": 37.524,
-  "tests/solicitation-ledger.test.ts": 10.6163,
   "tests/source-acquisition-failure.test.ts": 447.2639,
   "tests/source-adapters.test.ts": 84.7044,
   "tests/source-consolidation.test.ts": 7.5609,

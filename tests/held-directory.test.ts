@@ -83,8 +83,13 @@ test("a directory page outside its freshness window, from another government or 
 test("the runner offers a directory with no extraction yet, hourly, so its saved pages are read in code", () => {
   const item = { id: "wi-directory", autonomousPlan: plan } as unknown as WorkItem;
   const [task] = workerPublicationTasks([item], [], NOW);
-  assert.equal(task?.id, "registry-runtime-bindings");
+  assert.equal(task?.id, "worker-publication:registry-runtime-bindings:wi-directory");
+  assert.equal(task?.registeredContractId, "registry-runtime-bindings");
   assert.match(task.command.at(-1)!, /--worker-rosters=wi-directory$/);
+  const siblings = workerPublicationTasks([item, { ...item, id: "wi-other-body" }], [], NOW);
+  assert.equal(siblings.length, 2, "independent body work cannot share one publisher command");
+  assert.equal(new Set(siblings.map(job => job.acquisitionFailureDomain)).size, 2);
+  assert.deepEqual(siblings.map(job => job.command.at(-1)), ["--worker-rosters=wi-directory", "--worker-rosters=wi-other-body"]);
   assert.deepEqual(workerPublicationTasks([{ ...item, publicationOutcome: { at: "2026-09-29T19:30:00.000Z" } } as unknown as WorkItem], [], NOW), [], "not again within the hour");
 });
 

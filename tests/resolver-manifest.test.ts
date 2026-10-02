@@ -21,7 +21,7 @@ import { dirname, join } from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { COVERED_STATES } from "../lib/coverage/states.ts";
+import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
 import { boundingBoxOf, contains, type GeoFeature } from "../lib/registry/resolve.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -56,22 +56,13 @@ test("P-003 · every .geojson is either read or excluded WITH A REASON", () => {
   }
 });
 
-test("P-003 · the national congressional file is excluded, and its splits are all present", () => {
-  const excluded = manifest.excluded.map((e) => e.file);
-  assert.ok(excluded.includes(geometryPath("cd119.geojson")), "the 1.63 MB national file is being loaded again");
-
-  // The whole justification for excluding it: every covered state has its own.
-  for (const state of COVERED_STATES) {
-    assert.ok(
-      manifest.files.includes(geometryPath(`cd119-${state.fips}.geojson`)),
-      `cd119-${state.fips}.geojson is missing, so dropping the national file LOSES ${state.usps}`,
-    );
-  }
-  assert.deepEqual(
-    manifest.coveredStateFips,
-    COVERED_STATES.map((s) => s.fips),
-    "the manifest was generated against a different set of covered states",
-  );
+test("P-003 · national holdings remain available when state derivatives cover only some divisions", () => {
+  assert.ok(manifest.files.includes(geometryPath("cd119.geojson")));
+  const national = JSON.parse(readFileSync(join(ROOT, geometryPath("cd119.geojson")), "utf8"));
+  assert.ok(national.features.some((feature: GeoFeature) => feature.properties.ocdId?.includes("/state:wi/")));
+  assert.ok(national.features.some((feature: GeoFeature) => feature.properties.ocdId?.includes("/district:dc/")));
+  for (const row of manifest.excluded.filter(row => /cd119-\d{2}\.geojson$/.test(row.file))) assert.match(row.reason, /national file/);
+  assert.ok(US_JURISDICTIONS.filter(state => state.prefix !== "territory").every(state => manifest.coveredStateFips.includes(state.fips)));
 });
 
 test("P-003 · the state outline is still excluded, for the reason it always was", () => {

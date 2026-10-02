@@ -4,9 +4,8 @@
  * **ASK THE CONSOLE, as a view of the command center.** (ADM-C7, the 9.6.26 Operator
  * Control Room brief; moved in from its own page on 2026-10-01 per rulings §0.)
  *
- * The explainer, the list of controls it can ask for and the limits come first,
- * then the transcript. Every answer comes from a typed query over the records —
- * there is no model in the loop.
+ * The list of controls it can ask for comes first, then the transcript. Every
+ * answer comes from a typed query over the records.
  *
  * **THE CHAT, RENDERED IN THE FOUR LAYERS EVERY OTHER STATE ON THIS CONSOLE IS
  * RENDERED IN.** (ADM-C7, §9A.2.)
@@ -38,16 +37,10 @@ import { Code, NeedsYouLine, StatusBlock } from "@/app/(admin)/status-ui.tsx";
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import { count } from "@/lib/control-plane/plain-words.ts";
 import { REFUSAL_WORDS } from "@/lib/control-plane/gateway/contract.ts";
-import {
-  CHAT_PROHIBITIONS,
-  NO_CONTROLS_CONNECTED,
-  PROHIBITION_WORDS,
-  TOPIC_DEFINITIONS,
-  everyQuestion,
-} from "@/lib/control-plane/operator-chat/contract.ts";
+import { everyQuestion } from "@/lib/control-plane/operator-chat/contract.ts";
 import type { ChatAnswer, ChatResponse, ChatTurn } from "@/lib/control-plane/operator-chat/contract.ts";
 
-import { CHAT_PAGE, CHAT_ROUTE, CHAT_STANDFIRST, CHAT_TITLE } from "@/lib/control-plane/operator-chat/surface.ts";
+import { CHAT_PAGE, CHAT_ROUTE, CHAT_TITLE } from "@/lib/control-plane/operator-chat/surface.ts";
 
 interface Said {
   readonly id: number;
@@ -57,7 +50,7 @@ interface Said {
   readonly refusedWith: string | null;
 }
 
-const ASKING = "Reading the records…";
+const ASKING = "Reading…";
 
 /* ------------------------------------------------------------ one answer */
 
@@ -67,11 +60,7 @@ function Answer({ answer }: { answer: ChatAnswer }) {
     <StatusBlock
       what={<>You asked: {answer.understoodAs}</>}
       happened={lead}
-      next={
-        answer.readBackAt === null
-          ? "Answered from the records themselves, without a model."
-          : `Answered from the records themselves, without a model. The same thing is shown on ${answer.readBackAt}.`
-      }
+      next={answer.readBackAt === null ? undefined : `Shown on ${answer.readBackAt}`}
       needsYou={answer.needsYou}
       detail={
         answer.detail.length === 0 ? undefined : (
@@ -93,21 +82,12 @@ function Answer({ answer }: { answer: ChatAnswer }) {
 
       {answer.denominator.held ? (
         <p className="chat-denominator">
-          <strong>{answer.denominator.value.says}.</strong> {answer.denominator.value.measured.contract}{" "}
-          <span className="chat-denominator-source">Counted from {answer.denominator.value.measured.denominatorSource}.</span>
+          <strong>{answer.denominator.value.says}</strong>
         </p>
       ) : (
         <p className="chat-denominator chat-gap">
-          <strong>No number here.</strong> {answer.denominator.gap.says}
+          <strong>—</strong>
         </p>
-      )}
-
-      {answer.gaps.length > 0 && (
-        <ul className="chat-gaps">
-          {answer.gaps.map((gap) => (
-            <li key={gap.says}>{gap.says}</li>
-          ))}
-        </ul>
       )}
 
       <ul className="chat-sources">
@@ -142,9 +122,8 @@ function Turn({
   if (turn.kind === "PROHIBITED") {
     return (
       <StatusBlock
-        what="That is one of the things this console will not do."
+        what="Not done."
         happened={turn.says}
-        next="Ask it about the state of something instead, or use the control on the page that owns the thing you mean."
         needsYou={{ needed: false }}
       />
     );
@@ -153,7 +132,7 @@ function Turn({
   if (turn.kind === "UNROUTED") {
     return (
       <StatusBlock
-        what="The console did not recognise that question."
+        what="Not recognised."
         happened={turn.says}
         needsYou={{ needed: false }}
       >
@@ -169,7 +148,7 @@ function Turn({
   if (turn.kind === "REFUSED") {
     return (
       <StatusBlock
-        what="Nothing was done."
+        what="Not done."
         happened={turn.says}
         needsYou={{ needed: false }}
         detail={turn.actionType === null ? undefined : <code>{turn.actionType}</code>}
@@ -181,9 +160,8 @@ function Turn({
     const { definition, request, confirmToken } = turn.proposal;
     return (
       <StatusBlock
-        what={<>{definition.label} — proposed, and not done.</>}
+        what={<>{definition.label} — proposed</>}
         happened={turn.proposal.willDo}
-        next="Nothing happens until you confirm it. Confirming submits it through the same control the buttons use, and you get the same receipt."
         needsYou={{ needed: true, action: "confirm it, or ignore it" }}
         detail={
           <ul className="chat-detail">
@@ -205,17 +183,10 @@ function Turn({
         }
       >
         <p className="chat-line">
-          <strong>It will not:</strong> {turn.proposal.willNotDo}
+          <strong>Authority:</strong> <Code raw={definition.authority} />
         </p>
         <p className="chat-line">
-          <strong>Authority:</strong> <Code raw={definition.authority} withMeaning />
-        </p>
-        <p className="chat-line">
-          It acts on one {definition.subjectKind}: <span className="chat-subject">{request.subject}</span>
-        </p>
-        <p className="chat-line chat-refusals">
-          If it cannot be done, the reasons it can give are:{" "}
-          {definition.refusals.map((r) => REFUSAL_WORDS[r]).join(" ")}
+          <strong>{definition.subjectKind}:</strong> <span className="chat-subject">{request.subject}</span>
         </p>
         <button
           type="button"
@@ -232,15 +203,9 @@ function Turn({
   const receipt = turn.outcome.receipt;
   return (
     <StatusBlock
-      what={<>{receipt.label} — {turn.outcome.ok ? "done" : "not done"}.</>}
+      what={<>{receipt.label} — {turn.outcome.ok ? "done" : "not done"}</>}
       happened={receipt.says}
-      next={
-        receipt.readBackAt === null
-          ? turn.outcome.replayed
-            ? "This had already been done, so nothing was done a second time; the original receipt is above."
-            : "Nothing further is scheduled by this console."
-          : `The result can be read back on ${receipt.readBackAt}.`
-      }
+      next={receipt.readBackAt === null ? (turn.outcome.replayed ? "Already done" : undefined) : `Read back on ${receipt.readBackAt}`}
       needsYou={{ needed: false }}
       detail={
         <ul className="chat-detail">
@@ -263,23 +228,22 @@ function Turn({
     >
       <p className="chat-line">
         <strong>Outcome:</strong> <Code raw={receipt.outcome} /> — started {formatEastern(receipt.startedAt)}
-        {receipt.completedAt === null ? "" : `, finished ${formatEastern(receipt.completedAt)}`}.
+        {receipt.completedAt === null ? "" : `, finished ${formatEastern(receipt.completedAt)}`}
       </p>
       <p className="chat-line">
-        <strong>Authority:</strong> <Code raw={receipt.authority} withMeaning />
+        <strong>Authority:</strong> <Code raw={receipt.authority} />
       </p>
       {receipt.refusal !== null && (
         <p className="chat-line chat-gap">{REFUSAL_WORDS[receipt.refusal]}</p>
       )}
       {receipt.openedWork.length > 0 && (
         <p className="chat-line">
-          It opened {count(receipt.openedWork.length)} piece{receipt.openedWork.length === 1 ? "" : "s"} of work:{" "}
-          {receipt.openedWork.map((w) => w.title).join("; ")}.
+          <strong>Opened {count(receipt.openedWork.length)}:</strong> {receipt.openedWork.map((w) => w.title).join("; ")}
         </p>
       )}
       {receipt.undo !== null && (
         <p className="chat-line">
-          <strong>To undo it:</strong> {receipt.undo}
+          <strong>Undo:</strong> {receipt.undo}
         </p>
       )}
     </StatusBlock>
@@ -317,7 +281,7 @@ function ChatConsole({ from, suggestions }: { from: string; suggestions: readonl
           const sentence =
             body !== null && typeof body === "object" && typeof (body as { says?: unknown }).says === "string"
               ? (body as { says: string }).says
-              : "The console did not answer, and did not say why.";
+              : "No answer";
           setSaid((prior) => prior.map((s) => (s.id === id ? { ...s, refusedWith: sentence } : s)));
           return;
         }
@@ -326,7 +290,7 @@ function ChatConsole({ from, suggestions }: { from: string; suggestions: readonl
         setSaid((prior) =>
           prior.map((s) =>
             s.id === id
-              ? { ...s, refusedWith: "The console could not be reached, so nothing was read or done." }
+              ? { ...s, refusedWith: "Not reached" }
               : s,
           ),
         );
@@ -352,7 +316,7 @@ function ChatConsole({ from, suggestions }: { from: string; suggestions: readonl
             <p className="chat-asked">{entry.asked}</p>
             {entry.refusedWith !== null && (
               <div className="status-block">
-                <p className="status-what">Nothing was read or done.</p>
+                <p className="status-what">Not done.</p>
                 <p className="status-happened">{entry.refusedWith}</p>
                 <NeedsYouLine needs={{ needed: false }} />
               </div>
@@ -361,9 +325,8 @@ function ChatConsole({ from, suggestions }: { from: string; suggestions: readonl
             {entry.answered !== null && (
               <>
                 {entry.answered.storeRefusedBecause !== null && (
-                  <p className="chat-gap">{entry.answered.storeRefusedBecause}</p>
+                  <p className="chat-gap">—</p>
                 )}
-                {!entry.answered.controlsConnected && <p className="chat-gap">{NO_CONTROLS_CONNECTED}</p>}
                 <Turn
                   turn={entry.answered.turn}
                   asked={entry.answered.asked}
@@ -391,7 +354,7 @@ function ChatConsole({ from, suggestions }: { from: string; suggestions: readonl
 
       <div className="chat-composer">
         <label className="chat-label" htmlFor="chat-message">
-          Ask about the state of something
+          Ask
         </label>
         <textarea
           id="chat-message"
@@ -426,55 +389,16 @@ function ChatConsole({ from, suggestions }: { from: string; suggestions: readonl
   );
 }
 
-/** The whole view: what it answers, what it can ask for, what it will never do, then the transcript. */
+/** The whole view: what it can ask for, then the transcript. */
 export function ChatView({ controls }: { readonly controls: readonly string[] }) {
   return (
     <div className="chat-page">
       <h1>{CHAT_TITLE}</h1>
-      <p className="note">{CHAT_STANDFIRST}</p>
-
-      <StatusBlock
-        what="This answers from the records, not from a model."
-        happened="Every question below maps to a typed query over the same records the views show. An answer names what it read, how many of what it counted, and what it could not cover."
-        next="Ask one of the questions below, or type your own. If it is not one this console answers, it says so rather than guessing."
-        needsYou={{ needed: false }}
-        detailLabel="What it reads to answer each one"
-        detail={
-          <ul className="chat-reads">
-            {TOPIC_DEFINITIONS.map((topic) => (
-              <li key={topic.topic}>
-                <strong>{topic.asks}</strong> Reads {topic.reads}.
-              </li>
-            ))}
-          </ul>
-        }
-      >
-        <p className="chat-line">
-          It can also ask for {controls.length === 1 ? "one control" : `${controls.length} controls`} by name, and each one goes
-          through the same door the buttons do — the same permission, the same check on whether the world has moved since,
-          the same receipt, the same refusal. Nothing is done until you confirm it, and the confirmation is checked against
-          the proposal you were shown.
-        </p>
-      </StatusBlock>
-
       <section className="chat-controls">
         <h2>What it can ask for</h2>
-        <p className="note">
-          These are the console&rsquo;s own controls, not a list this view keeps. A control added to the console becomes
-          something you can ask for here; one taken away stops being askable at once.
-        </p>
         <ul>
           {controls.map((label) => (
             <li key={label}>{label}</li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="chat-limits">
-        <h2>What it will never do</h2>
-        <ul>
-          {CHAT_PROHIBITIONS.map((code) => (
-            <li key={code}>{PROHIBITION_WORDS[code]}</li>
           ))}
         </ul>
       </section>

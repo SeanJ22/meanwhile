@@ -6,23 +6,18 @@
  *
  * ```
  *   SWITCH ONLY IF EVERY QUESTION HOLDS.
- *   ONE MODEL FOR ALL ASK TRAFFIC — never per-caller, never per-question.
  * ```
  *
- * Both halves are load-bearing and neither is about money.
- *
- * The first is the constitution's order of trade applied to a model choice:
- * *correct first, fast second, nothing third.* A cheaper model that degrades
+ * It is not about money. It is the constitution's order of trade applied to a
+ * model choice: *correct first, fast second, nothing third.* A cheaper model that degrades
  * ONE of the canonical reader questions is a model that makes this product
  * wrong about a government somewhere, and a saving bought with that is not a
  * saving. So the criterion is affirmative and total — every question holds —
  * and it is deliberately not "the average score is no worse". An average lets
  * a regression on one government be paid for by an improvement on another.
  *
- * The second keeps the answer a reader gets independent of which door they came
- * through. It also happens to be what makes H1's prompt cache work at all:
- * **caches are model-scoped**, so a per-caller model choice would split one
- * warm prefix into several cold ones and forfeit every hit.
+ * A second half, one model for all Ask traffic, is removed (Sean,
+ * 2026-10-01): Ask routes cheapest tier first.
  *
  * ## What our failure to measure is NOT
  *

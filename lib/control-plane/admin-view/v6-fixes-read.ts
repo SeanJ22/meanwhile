@@ -20,8 +20,7 @@ import type { FixView, OpenFix } from "../../../app/(admin)/_mw/admin-v6/model.t
 import type { FixQueueItem, FixQueueView } from "../fix-queue.ts";
 import { formatEastern } from "../eastern-time.ts";
 
-export const FIXES_MISSING_HISTORY =
-  "Fixed and checked, and Came back: the fix queue records a row being opened, not a fix finishing, so no fixed history is shown.";
+export const FIXES_MISSING_HISTORY = "Fixed and checked, and Came back: —";
 
 const FIRST_SENTENCE = /^[^.!?]*[.!?]?/;
 
@@ -33,10 +32,10 @@ function titleOf(says: string): string {
 function openFix(item: FixQueueItem): OpenFix {
   const row = item.openedWork[0] ?? null;
   const placeInLine: Record<FixQueueItem["state"], string> = {
-    QUEUED: `On the queue since ${formatEastern(item.queuedAt)}. It waits for “Go fix these”.`,
-    SENT: `Sent for engineering. The next decision sync opens its work row.`,
-    OPENED: `A work row is open${row ? ` (${row.id})` : ""}.`,
-    REFUSED: `Refused by the gates${item.refusedReason ? `: ${item.refusedReason}` : ""}.`,
+    QUEUED: `Queued ${formatEastern(item.queuedAt)}`,
+    SENT: "Sent",
+    OPENED: row ? `Work row open (${row.id})` : "Work row open",
+    REFUSED: item.refusedReason ? `Refused: ${item.refusedReason}` : "Refused",
   };
   return {
     id: item.subjectId,
@@ -46,7 +45,7 @@ function openFix(item: FixQueueItem): OpenFix {
     problem: item.says,
     helps: item.where,
     placeInLine: placeInLine[item.state],
-    resourcesNow: "Not reported",
+    resourcesNow: "—",
     taskStage: item.state === "OPENED" ? 0 : null,
     taskId: row ? row.id : null,
     linkedStuck: [],

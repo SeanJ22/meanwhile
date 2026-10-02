@@ -5,11 +5,11 @@ import { directionalStateEdges, RELIEF_THEME } from "../lib/map/state-relief.ts"
 import { applicationLayer, holdMapPresentation, releaseMapPresentation, mapPresentationHeld, setPresentationVisible } from "../lib/map/flight-presentation.ts";
 import type { StateOutlines, StateOutlineFeature } from "../lib/map/state-focus.ts";
 import type { Map as MapLibreMap } from "maplibre-gl";
-import { COVERED_STATES } from "../lib/coverage/states.ts";
+import { HELD_GEOMETRY_FIPS } from "../lib/coverage/artifacts.ts";
 
 test("every directional segment preserves the canonical state's exact border and river vertices", () => {
   const states: StateOutlines = JSON.parse(readFileSync("public/geo/state-outlines.geojson", "utf8"));
-  assert.deepEqual(states.features.map(f => f.properties.statefp).sort(), COVERED_STATES.map(s => s.fips).sort());
+  assert.deepEqual(states.features.map(f => f.properties.statefp).sort(), HELD_GEOMETRY_FIPS.sort());
   for (const outline of states.features) {
     const result = directionalStateEdges(outline);
     for (const [ringIndex, ring] of outline.geometry.coordinates.entries()) {

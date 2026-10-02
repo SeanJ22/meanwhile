@@ -4,8 +4,8 @@
  *   node --experimental-strip-types scripts/vault-crosswalk-evidence.mts --package=<crosswalk package.json> --evidence=<dir>
  *     [--vault=<vault root, default data/control-plane/vault>]
  *
- * The owner's decision (recorded 2026-09-24T22:43Z) asks for "vaulted bytes plus the sha256 of the government's
- * own page naming the body". The reviewing agent runs this in the standing runtime's checkout, beside the manual
+ * Rulings §3 verification asks for saved evidence: vaulted bytes plus the sha256 of the government's own page naming
+ * the body ("C16" was a session label, not Sean's decision: Sean, 2026-10-01). The reviewing agent runs this in the standing runtime's checkout, beside the manual
  * promotion of the same package: for every row, the page naming the body and the calendar are found in the
  * evidence folder by their cited sha256 (a file whose bytes do not hash to the citation is never used), and put
  * into the runtime vault under the work item `crosswalk-evidence:<sha256>`. A page carrying a credential is held

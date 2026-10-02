@@ -7,17 +7,37 @@ import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../control-plane/scheduler
 import { admittedHuntSourceScopes } from "../civic-data/hunt-source-tasks.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
 import type { RoutineSourceTask } from "../civic-data/runner.ts";
-import { workerPublicationTasks } from "../civic-data/worker-publication-tasks.ts";
-import { readCompletedWorkerResults } from "../control-plane/repository/worker-completion.ts";
 import { DEFAULT_CADENCE_HOURS } from "../control-plane/scheduler/obligation.ts";
 import { dueNationalPlaceZips } from "./place-source-task.ts";
+import { orderNationalPlaceWork } from "../control-plane/expansion/dispatch-work.ts";
 
-/** Add national acquisition to the existing registry source, so its source
- * authority, child runner, publication and readback are shared with rosters. */
+/** Start a saved Send alongside standing work, before the standing backlog drains. */
+export function placeSourceLaunchOrder<T extends { readonly task: Pick<RoutineSourceTask, "id"> }>(jobs: readonly T[]): T[] {
+  const places = jobs.filter(job => job.task.id.startsWith("national-place:"));
+  if (!places.length) return [...jobs];
+  const standing = jobs.filter(job => !job.task.id.startsWith("national-place:"));
+  return [places[0]!, ...standing.slice(0, 1), ...places.slice(1), ...standing.slice(1)];
+}
+
+/** One ordinary source command per place; the existing occurrence owns its lease and resume clock. */
+export function nationalPlaceJobs(zips: readonly string[], owner: { requestedAt: string; instructions: readonly string[] }): RoutineSourceTask[] {
+  if (zips.some(zip => !/^\d{5}$/.test(zip))) throw new Error("National place acquisition needs five-digit ZIPs");
+  const contract = requiredManualProductionContract("registry-runtime-bindings");
+  return [...new Set(zips)].map(zip => ({ id: `national-place:${zip}`, registeredContractId: contract.id,
+    sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
+    acquisitionFailureDomain: `national-place:${zip}`, requestedUrl: "", authorityMode: "REGISTERED_SOURCE_ROUTES",
+    parserVersion: contract.parserNormalizerVersion,
+    command: [...contract.command, `--national-zips=${zip}`], cadenceMs: DEFAULT_CADENCE_HOURS * 3_600_000, retryMs: 15 * 60_000,
+    contract: { readerProjection: contract.readerProjection,
+      cadence: { description: "Refresh one admitted place's national sources", defaultEveryMs: DEFAULT_CADENCE_HOURS * 3_600_000 } },
+    ownerInvocation: { publicationPending: true, requestedAt: owner.requestedAt, instructions: [...new Set(owner.instructions)] } }));
+}
+
+/** Each due place uses the registered registry door through its own leased job. */
 export async function withNationalPlaceTasks(tasks: readonly RoutineSourceTask[], args: readonly string[]): Promise<RoutineSourceTask[]> {
   const explicit = args.find(arg => arg.startsWith("--national-zips="))?.slice("--national-zips=".length);
   const only = args.find(arg => arg.startsWith("--only="))?.slice("--only=".length).split(",");
-  if (only && !only.includes("registry-runtime-bindings")) return [...tasks];
+  if (only && !only.includes("registry-runtime-bindings") && !only.some(id => /^national-place:\d{5}$/.test(id))) return [...tasks];
   const now = new Date().toISOString();
   let zips = explicit?.split(",") ?? [];
   let requestedAt = now;
@@ -45,20 +65,5 @@ export async function withNationalPlaceTasks(tasks: readonly RoutineSourceTask[]
   if (zips.some(zip => !/^\d{5}$/.test(zip))) throw new Error("National place acquisition needs five-digit ZIPs");
   zips = await dueNationalPlaceZips(repos, zips, now);
   if (!zips.length) return [...tasks];
-  const contract = requiredManualProductionContract("registry-runtime-bindings");
-  const items = (await repos.workItems.list()).map(row => row.value)
-    .filter(item => item.autonomousPlan?.publication?.contractId === contract.id);
-  const publication = items.length ? workerPublicationTasks(items, await readCompletedWorkerResults(repos), now)
-    .find(task => task.id === contract.id) : undefined;
-  const prior = tasks.find(task => task.id === contract.id) ?? publication;
-  const task: RoutineSourceTask = { ...prior, id: contract.id, sourceId: contract.sourceId, recordClass: contract.recordClass,
-    scope: contract.scope, acquisitionFailureDomain: `routine-source:${contract.sourceId}`, requestedUrl: "",
-    authorityMode: "REGISTERED_SOURCE_ROUTES", parserVersion: contract.parserNormalizerVersion,
-    command: [...(prior?.command ?? contract.command).filter(arg => !arg.startsWith("--national-zips=")), `--national-zips=${zips.join(",")}`],
-    cadenceMs: Math.min(prior?.cadenceMs ?? Infinity, DEFAULT_CADENCE_HOURS * 3_600_000), retryMs: prior?.retryMs ?? 15 * 60_000,
-    contract: prior?.contract ?? { readerProjection: contract.readerProjection,
-      cadence: { description: "Refresh the admitted place's national sources on the ordinary roster cadence", defaultEveryMs: DEFAULT_CADENCE_HOURS * 3_600_000 } },
-    ownerInvocation: { ...prior?.ownerInvocation, publicationPending: true, requestedAt,
-      instructions: [...new Set([...(prior?.ownerInvocation?.instructions ?? []), ...instructions])] } };
-  return [...tasks.filter(existing => existing.id !== task.id), task];
+  return [...tasks, ...nationalPlaceJobs(await orderNationalPlaceWork(repos, zips, now), { requestedAt, instructions })];
 }

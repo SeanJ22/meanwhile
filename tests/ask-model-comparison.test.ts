@@ -18,31 +18,22 @@ import {
 import {
   ASK_SYNTHESIS_MODEL,
   synthesisRequestBody,
-  synthesizeAnswer,
 } from "../lib/ask/synthesize.ts";
 
 /**
  * **THE COMPARISON SEAM'S WALLS, ASSERTED RATHER THAN DESCRIBED.**
  * (Session C, lane H2, 2026-08-31.)
  *
- * H2 had to call the synthesis contract on a second model. The dangerous way to
- * do that is an `options.model` on the function every reader request goes
- * through: today's route would not pass one, every test would stay green, and
- * the law *one model for all Ask traffic* would survive only as a habit. The
- * first request header that wanted a cheaper model would break it silently, and
- * because caches are MODEL-SCOPED the first thing anyone would notice is a
- * collapsed hit rate with no cause attached.
+ * H2 had to call the synthesis contract on a second model, cold and outside the
+ * production request path. Ask itself may route by tier, cheapest first (Sean,
+ * 2026-10-01: the one-model-for-all-Ask-traffic rule is removed); the walls
+ * below are about the comparison seam only, which is uncached by design:
  *
- * So the walls are here, and each one is a thing a future edit would have to
- * defeat on purpose:
- *
- * 1. the production path emits `ASK_SYNTHESIS_MODEL` even when handed an
- *    options object carrying a `model` key;
- * 2. nothing under `app/` imports the comparison seam;
- * 3. the comparison request carries no cache marker ANYWHERE;
- * 4. the production request and the comparison request are the SAME contract —
+ * 1. nothing under `app/` imports the comparison seam;
+ * 2. the comparison request carries no cache marker ANYWHERE;
+ * 3. the production request and the comparison request are the SAME contract —
  *    identical but for the model and that marker;
- * 5. a model with no published rate is never costed at zero.
+ * 4. a model with no published rate is never costed at zero.
  *
  * No live call is made by anything in this file. The API is a double.
  */
@@ -91,35 +82,7 @@ function recorder(): { calls: string[]; impl: typeof fetch } {
   return { calls, impl };
 }
 
-/* ── 1. the production path cannot be told which model to use ────────────── */
-
-test("the production synthesis path emits the one Ask model, whatever it is handed", async () => {
-  const { calls, impl } = recorder();
-  /*
-   * The options object carries a `model` key AND the challenger's id. It is
-   * cast because `SynthesizeOptions` does not declare the field — which is
-   * itself the point: this asserts that the field is inert at RUNTIME too, so
-   * a caller reaching the route through untyped JSON cannot select a model
-   * either.
-   */
-  const outcome = await synthesizeAnswer(pack(), {
-    fetchImpl: impl,
-    apiKey: "test-key-not-a-credential",
-    model: ASK_CHALLENGER_MODEL,
-  } as unknown as Parameters<typeof synthesizeAnswer>[1]);
-
-  assert.equal(outcome.kind, "WROTE");
-  assert.equal(calls.length, 1);
-  const body = JSON.parse(calls[0]) as { model: string };
-  assert.equal(
-    body.model,
-    ASK_SYNTHESIS_MODEL,
-    "a model on the production path's options must be inert; one model for all Ask traffic",
-  );
-  assert.equal(ASK_INCUMBENT_MODEL, ASK_SYNTHESIS_MODEL);
-});
-
-/* ── 2. the seam is outside the production request path ──────────────────── */
+/* ── 1. the seam is outside the production request path ──────────────────── */
 
 test("nothing under app/ imports the comparison seam", () => {
   const root = process.cwd();
@@ -149,7 +112,7 @@ test("nothing under app/ imports the comparison seam", () => {
   );
 });
 
-/* ── 3 & 4. the same contract, cold, on a named model ────────────────────── */
+/* ── 2 & 3. the same contract, cold, on a named model ────────────────────── */
 
 test("the comparison request is the production request with the model named and no cache marker", async () => {
   const p = pack();

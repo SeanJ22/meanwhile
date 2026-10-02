@@ -12,7 +12,7 @@ import type { SwitchRow } from "@/lib/control-plane/data-business/switches.ts";
 import { audienceWords } from "@/lib/control-plane/data-business/types.ts";
 
 import { mst } from "./model.ts";
-import { Actions, Card, cx, Empty, Failed, Loading, Pill } from "./ui.tsx";
+import { Actions, Card, cx, Empty, Loading, Pill } from "./ui.tsx";
 import { useReading } from "./use-reading.ts";
 import s from "./v6.module.css";
 
@@ -29,11 +29,10 @@ export function DataSwitchesPanel() {
   return (
     <Card title="Who can see each number" id="data-switches">
       {reading.kind === "loading" && <Loading what="the switches" />}
-      {reading.kind === "failed" && <Failed what="The switches" retry={reload} />}
+      {reading.kind === "failed" && <p className={s.p}>— <button type="button" className={s.btn} onClick={reload}>Try again</button></p>}
       {data && (
         <div className={s.stack}>
-          <p className={cx(s.p, s.small, s.dim)}>Each number is one switch per audience. Admin starts on; the dashboard and every customer start off, so nothing leaves until you flip one. A flip takes effect on the next read.</p>
-          {!data.rows.length && <Empty>No numbers are defined yet.</Empty>}
+          {!data.rows.length && <Empty>No numbers</Empty>}
           {!!data.rows.length && (
             <div className={s.tableWrap}>
               <table className={s.table}>
@@ -41,7 +40,7 @@ export function DataSwitchesPanel() {
                 <tbody>
                   {data.rows.map((r) => (
                     <tr key={r.recipe}>
-                      <th scope="row" style={{ textTransform: "none", fontSize: 13, color: "var(--text)" }}>{r.label}<span className={cx(s.small, s.dim)} style={{ display: "block", fontWeight: 400 }}>{r.says}</span></th>
+                      <th scope="row" style={{ textTransform: "none", fontSize: 13, color: "var(--text)" }}>{r.label}</th>
                       {r.cells.map((c) => (
                         <td key={c.audience}>
                           <Pill tone={c.on ? "good" : "neutral"}>{c.on ? "On" : "Off"}</Pill>{!c.decided && <span className={cx(s.small, s.dim)}> default</span>}
@@ -56,7 +55,6 @@ export function DataSwitchesPanel() {
           )}
           {!!data.rows.length && (
             <div className={s.stack} style={{ gap: 6 }}>
-              <p className={cx(s.p, s.small, s.dim)}>Open a number for one customer by its short name (letters, digits, dashes). It then gets its own column here.</p>
               <div className={s.inline}>
                 <select className={s.select} aria-label="Number" value={chosen} onChange={(e) => setRecipe(e.target.value)}>
                   {data.rows.map((r) => <option key={r.recipe} value={r.recipe}>{r.label}</option>)}
@@ -66,7 +64,7 @@ export function DataSwitchesPanel() {
               </div>
             </div>
           )}
-          <p className={cx(s.p, s.meta)}>Read {mst(data.observedAt)}.{reading.kind === "ready" && reading.stale ? " The latest refresh failed, so this is the last good reading." : ""}</p>
+          <p className={cx(s.p, s.meta)}>Read {mst(data.observedAt)}</p>
         </div>
       )}
     </Card>

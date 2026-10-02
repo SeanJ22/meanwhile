@@ -2,11 +2,10 @@
  * **THE AUTOMATIC CALENDAR-TO-BODY RECORDS: ROWS THE RUNNER'S OWN REVIEWER
  * ACCEPTED, KEPT LIKE THE REVIEWED ONES.** (C16 option A, 2026-09-25.)
  *
- * The owner's decision, recorded 2026-09-24T22:43Z: "Agents may review and
- * promote the records connecting a calendar to its governing body. I should
- * not have to review every calendar. Use saved official evidence to establish
- * the exact body and which meetings belong to it, then publish through the
- * existing verified publication process."
+ * The authority is docs/rulings.md §3: a fact that passes verification on
+ * saved evidence publishes through the verified publication process, with no
+ * per-record owner review. "C16" is an earlier session's label, not Sean's
+ * decision (Sean, 2026-10-01); it stays only as the stored citation text below.
  *
  * The manual crosswalk (`meeting-body-crosswalk`) is promoted by a reviewing
  * agent session, one package at a time. This store is the same record, made by

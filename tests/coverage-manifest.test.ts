@@ -1,319 +1,46 @@
-import { rosterPath } from "../lib/holdings/files.ts";
-import { stateHoldingPath } from "../lib/holdings/paths.ts";
-/**
- * THE COVERAGE MANIFEST, AND THE ONE-EDIT CLAIM (AUD-06, g18, 2026-08-18).
- *
- * The auditor's row said one source of truth for covered states. The claim
- * this file has to prove is not "a manifest exists" — a manifest that half the
- * wiring ignores is worse than none, because it reads as centralised. The
- * claim is: **adding a state is exactly one edit, and every derived list sees
- * it.** So the test adds a THROWAWAY state to the manifest input and asserts
- * every derived list contains it. Nothing here asserts a shape and calls it a
- * behaviour.
- *
- * The second guard is the one that keeps it true: a grep over the tree for the
- * literal state codes, refusing any NEW hand-kept list. The fourteen that
- * existed are enumerated below as the fixed set of allowed sites, so a
- * fifteenth fails rather than joins.
- */
-
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync, statSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, existsSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
-import ts from "typescript";
+import { US_JURISDICTIONS, jurisdictionFromOcdId } from "../lib/coverage/states.ts";
+import { deriveArtifacts, heldStatesForDomain, ROSTER_FILES, BALLOT_FILES } from "../lib/coverage/artifacts.ts";
+import { rosterPath, ballotPath } from "../lib/holdings/runtime-paths.ts";
 
-// Plain .mjs, shared with the plain-node scripts that never see tsx.
-import { posixRelative } from "../scripts/repo-path.mjs";
-
-import {
-  COVERED_SLUGS,
-  COVERED_STATES,
-  FIPS_BY_USPS,
-  deriveClientLists,
-  type CoveredState,
-} from "../lib/coverage/states.ts";
-import {
-  BALLOT_FILES,
-  CLIP_COUNTIES,
-  COVERED,
-  COVERED_FIPS,
-  COVERED_USPS,
-  FIPS_BY_SLUG,
-  NAME_BY_USPS,
-  ROSTER_BY_USPS,
-  ROSTER_FILES,
-  SLUG_BY_FIPS,
-  USPS_BY_FIPS,
-  deriveArtifacts,
-} from "../lib/coverage/artifacts.ts";
-import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
-
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-
-/* -- the manifest agrees with the authority outside it -------------------- */
-
-test("every manifest FIPS/USPS pair matches the Census table in lib/ocd/fips.ts", () => {
-  assert.ok(COVERED_STATES.length > 0, "the manifest must not be empty");
-  for (const s of COVERED_STATES) {
-    const authoritative = FIPS_TO_STATE[s.fips];
-    assert.ok(authoritative, `FIPS ${s.fips} is not a Census state code`);
-    assert.equal(
-      s.usps,
-      authoritative.postal,
-      `manifest says FIPS ${s.fips} is ${s.usps}; Census says ${authoritative.postal}`,
-    );
-    assert.equal(s.slug, s.usps.toLowerCase(), `${s.usps} slug must be its own lower case`);
-  }
+// These exercise the existing holdings path, without an onboarding manifest.
+test("national geography identifies all states and DC without declaring artifact coverage", () => {
+  assert.equal(US_JURISDICTIONS.filter(state => state.prefix !== "territory").length, 51);
+  assert.equal(jurisdictionFromOcdId("ocd-division/country:us/district:dc/ward:1")?.fips, "11");
+  assert.equal(jurisdictionFromOcdId("ocd-division/country:us/state:dc"), null);
+  assert.equal(jurisdictionFromOcdId("ocd-division/country:us/state:xx"), null);
 });
 
-test("the manifest's generated artifacts are all committed on disk", () => {
-  // A manifest that names files nobody generated is a manifest that lies about
-  // coverage. Every artifact it claims is opened here.
-  for (const file of ROSTER_FILES) {
-    statSync(join(ROOT, rosterPath(file)));
-  }
-  for (const { file, state } of BALLOT_FILES) {
-    statSync(join(ROOT, stateHoldingPath(state.toLowerCase(), "ballot", file)));
-  }
-  assert.equal(ROSTER_FILES.length, COVERED_STATES.length + 1, "federal roster plus one per state");
-  assert.equal(BALLOT_FILES.length, COVERED_STATES.length);
-  assert.equal(CLIP_COUNTIES.length, COVERED_STATES.length);
-});
-
-/* -- the one-edit claim, proven by adding a state ------------------------- */
-
-/**
- * A state that does not exist in this product, added to a COPY of the manifest
- * input. FIPS 06 / CA is a real Census code — deliberately, so the derivation
- * is exercised with a plausible value rather than a sentinel that a defensive
- * filter somewhere might drop for looking wrong.
- */
-const THROWAWAY: CoveredState = { fips: "06", usps: "CA", slug: "ca" };
-const WITH_EXTRA = [...COVERED_STATES, THROWAWAY];
-
-test("adding one state to the manifest reaches every CLIENT-side derived list", () => {
-  const d = deriveClientLists(WITH_EXTRA);
-  const checks: [string, boolean][] = [
-    ["fipsByUsps", d.fipsByUsps.CA === "06"],
-    ["slugs", d.slugs.includes("ca")],
-  ];
-  for (const [name, saw] of checks) {
-    assert.ok(saw, `client list ${name} did not see the added state`);
-  }
-  assert.equal(
-    checks.length,
-    Object.keys(d).length,
-    "every client derivation must be checked — a new one must not slip in unchecked",
-  );
-});
-
-test("adding one state to the manifest reaches every SERVER-side derived list", () => {
-  const detail = {
-    "04": { name: "Arizona", countyFips: "04019", countyName: "Pima", countySlug: "pima" },
-    "33": { name: "New Hampshire", countyFips: "33013", countyName: "Merrimack", countySlug: "merrimack" },
-    "34": { name: "New Jersey", countyFips: "34027", countyName: "Morris", countySlug: "morris" },
-    "06": { name: "California", countyFips: "06037", countyName: "Los Angeles", countySlug: "los-angeles" },
+test("a first state holding appears only in its own artifact domain without code changes", () => {
+  const root = mkdtempSync(join(tmpdir(), "s16-held-states-"));
+  const put = (relative: string, value: unknown) => {
+    const parts = relative.split("/");
+    mkdirSync(join(root, ...parts.slice(0, -1)), { recursive: true });
+    writeFileSync(join(root, ...parts), JSON.stringify(value));
   };
-  const d = deriveArtifacts(WITH_EXTRA, detail);
-  const checks: [string, boolean][] = [
-    ["states", d.states.some((s) => s.usps === "CA")],
-    ["rosters", d.rosters.includes("officeholders-06.json")],
-    ["rosterByUsps", d.rosterByUsps.CA === "officeholders-06.json"],
-    ["nameByUsps", d.nameByUsps.CA === "California"],
-    ["clipCounties", d.clipCounties.some((c) => c.fips === "06037")],
-    ["ballotFiles", d.ballotFiles.some((b) => b.file === "ca-los-angeles-2026.json")],
-    ["slugByFips", d.slugByFips["06"] === "ca"],
-    ["uspsByFips", d.uspsByFips["06"] === "CA"],
-    ["fipsBySlug", d.fipsBySlug.ca === "06"],
-    ["fips", d.fips.includes("06")],
-    ["usps", d.usps.includes("CA")],
-  ];
-  for (const [name, saw] of checks) {
-    assert.ok(saw, `server list ${name} did not see the added state`);
-  }
-  assert.equal(
-    checks.length,
-    Object.keys(d).length,
-    "every server derivation must be checked — a new one must not slip in unchecked",
-  );
+  try {
+    assert.deepEqual(deriveArtifacts(root).states, []);
+    put("data/states/wi/ballot/wi-dane-2028.json", { election: { state: "WI" }, contests: [] });
+    put("data/states/wi/ballot/wi-brown-2028.json", { election: { state: "WI" }, contests: [] });
+    put("data/states/wi/ballot/wi-dane-contacts.json", { contacts: [] });
+    assert.equal(deriveArtifacts(root).ballotFiles.length, 2);
+    assert.deepEqual(deriveArtifacts(root).states, []);
+    assert.deepEqual(heldStatesForDomain(root, "ballot").map(state => state.usps), ["WI"]);
+    put("data/states/dc/officials/officeholders-11.json", { officeholders: [] });
+    put("data/states/hi/geo/sldu-15.geojson", { type: "FeatureCollection", features: [] });
+    const held = deriveArtifacts(root);
+    assert.deepEqual(held.states.map(state => state.usps), ["DC"]);
+    assert.deepEqual(held.rosters, ["officeholders-11.json"]);
+    assert.deepEqual(held.geometryStates.map(state => state.usps), ["HI"]);
+    assert.equal(held.ballotFiles.length, 2);
+  } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
-test("a manifest state with no artifacts detail row throws rather than being skipped", () => {
-  // The failure a silent skip would produce is a state that is covered on the
-  // map and absent from every roster — which renders as a state with no
-  // government. Absence manufactured by a default; refused here.
-  assert.throws(
-    () => deriveArtifacts(WITH_EXTRA),
-    /no detail row/,
-    "an unknown state must refuse, not degrade",
-  );
-});
-
-/* -- the applied exports are the derivation, not a second copy ------------ */
-
-test("the exported lists equal the derivation of the live manifest", () => {
-  const c = deriveClientLists(COVERED_STATES);
-  assert.deepEqual({ ...FIPS_BY_USPS }, c.fipsByUsps);
-  assert.deepEqual([...COVERED_SLUGS], c.slugs);
-
-  const a = deriveArtifacts(COVERED_STATES);
-  assert.deepEqual([...COVERED], a.states);
-  assert.deepEqual([...ROSTER_FILES], a.rosters);
-  assert.deepEqual({ ...ROSTER_BY_USPS }, a.rosterByUsps);
-  assert.deepEqual({ ...NAME_BY_USPS }, a.nameByUsps);
-  assert.deepEqual({ ...SLUG_BY_FIPS }, a.slugByFips);
-  assert.deepEqual({ ...USPS_BY_FIPS }, a.uspsByFips);
-  assert.deepEqual({ ...FIPS_BY_SLUG }, a.fipsBySlug);
-  assert.deepEqual([...COVERED_FIPS], a.fips);
-  assert.deepEqual([...COVERED_USPS], a.usps);
-});
-
-test("the client module exports ONLY what the browser reads", () => {
-  // The measured half of the split (g18): the four script-side lookups cost
-  // +159 raw bytes on every reader's initial JavaScript while they lived in
-  // the client module. This asserts they stayed out. A new export here is not
-  // forbidden — it is required to be a deliberate act with a re-measurement
-  // behind it, which a silently-passing test would not make anyone do.
-  const d = deriveClientLists(COVERED_STATES);
-  assert.deepEqual(
-    Object.keys(d).sort(),
-    ["fipsByUsps", "slugs"],
-    "a lookup added to the client module must be paid for — re-measure budget 2 and record it",
-  );
-});
-
-/* -- no fifteenth hand-kept list ----------------------------------------- */
-
-function sourceFiles(): string[] {
-  const out: string[] = [];
-  const skip = new Set(["node_modules", ".next", ".git", "public", "data", "docs", "tests"]);
-  const walk = (dir: string) => {
-    for (const entry of readdirSync(dir, { withFileTypes: true })) {
-      if (entry.name.startsWith(".") || skip.has(entry.name)) continue;
-      const abs = join(dir, entry.name);
-      if (entry.isDirectory()) walk(abs);
-      else if (/\.(ts|tsx|mts|mjs)$/.test(entry.name)) out.push(abs);
-    }
-  };
-  walk(ROOT);
-  return out;
-}
-
-/**
- * Files allowed to hold a state triple, with the reason each is not wiring.
- *
- * Content tables, not coverage lists: a manifest cannot generate an election
- * date or a registration URL, and these carry one record PER state rather than
- * a list OF states. The manifest is held against them by their own suites —
- * that is where an onboarded state with no content gets caught.
- */
-const CONTENT_FILES = new Set(
-  [
-    "lib/coverage/states.ts", // the manifest itself
-    "lib/coverage/artifacts.ts", // its server projection
-    "lib/ocd/fips.ts", // the Census table for all 56 jurisdictions
-    "lib/area/facts.ts",
-    "lib/ballot/election-dates.ts",
-    "lib/ballot/polling-place-links.ts",
-    "lib/ballot/registration-links.ts",
-    "lib/sources/legiscan/districts.ts", // per-state district NUMBERING rules
-    "lib/sources/mock/fixtures.ts",
-    "lib/registry/coverage-audit.ts", // per-body hunt notes, prose
-    "components/map/welcome-overlay.tsx", // four sample zips, a content list
-    // B19: one retrieval per state election authority. Three states use two
-    // voting models and three different publishers, so this is per-state
-    // CONTENT in the same sense as polling-place-links.ts above — no
-    // manifest can generate a county ArcGIS org id or a rowspan parser.
-    "scripts/fetch-voting-sites.mts",
-    // D52: one vocabulary record per state authority, each with its own
-    // filing system and its own recorded wall. Per-state CONTENT in the same
-    // sense as the rows above — no manifest can generate an Akamai refusal.
-    "lib/funding/state-vocabulary.ts",
-    // Session C3 lane C, RULING 229: one FILING-OFFICER ROUTING record per
-    // state — which statute names the officer, and what it routes to whom.
-    // Per-state CONTENT in the same sense as the two rows above: no manifest
-    // can generate A.R.S. § 16-928's three custodian classes, and a state
-    // whose statute nobody has read must never be defaulted into one. The
-    // generator DERIVES its state list from `COVERED_STATES` and throws BY
-    // NAME for a covered state it holds no routing for, so the failure this
-    // guard protects against — onboarding a state and silently producing no
-    // jurisdiction registry for it — is caught at generation time instead.
-    "scripts/enumerate-jurisdictions.mts",
-    // PDC V2: one official roster and roll-call authority record per covered
-    // state. URLs, chamber floors and publisher ids are content facts; the
-    // runtime registry separately proves every covered state has both rows.
-    "lib/state-rollcalls/authority.ts",
-  ],
-);
-
-/**
- * One separator, everywhere (F22, 2026-08-20).
- *
- * This allowlist used to be mapped through `.replace(/\//g, "\\")` and then
- * matched against `relative()`, which yields backslashes on Windows and
- * forward slashes on POSIX. The result was a guard that allowlisted all
- * fourteen files on Windows and NONE of them on Linux, where every content
- * table below reported itself as an offender — including
- * `lib/coverage/states.ts`, the manifest the list exists to exempt.
- *
- * It shipped green on 2026-08-18 because `build-check.yml` runs `pnpm build`
- * and the budgets and never `pnpm test`; the four scheduled refresh gates are
- * this repo's only Linux runner of the suite, so the failure surfaced as
- * "Refresh meetings snapshot is red" and the meetings snapshot stopped moving
- * for two days. Repo-relative paths are POSIX here and are normalized at the
- * one place they are produced.
- */
-const posixRel = (abs: string): string => posixRelative(ROOT, abs);
-
-/**
- * The allowlist has to BIND, and that is a separate claim from the sweep.
- *
- * A guard whose exemption list silently matches nothing does not fail — it
- * gets stricter, which is why the separator bug read as fourteen new
- * offenders rather than as a broken test. This asserts every allowlisted path
- * is a file the sweep actually walks, so a renamed file or a separator change
- * fails HERE, naming the entry, on every platform.
- */
-test("every allowlisted content file is a file the sweep actually reaches", () => {
-  const scanned = new Set(sourceFiles().map(posixRel));
-  const unbound = [...CONTENT_FILES].filter((p) => !scanned.has(p)).sort();
-  assert.deepEqual(
-    unbound,
-    [],
-    "these allowlist entries match no scanned file — renamed, deleted, or written with the wrong separator",
-  );
-});
-
-function handKeptStateList(source: string): boolean {
-  const tree = ts.createSourceFile("covered-state-sweep.tsx", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
-  let found = false;
-  const visit = (node: ts.Node): void => {
-    if (ts.isArrayLiteralExpression(node)) {
-      const literals = new Set(node.elements.filter(ts.isStringLiteral).map(value => value.text));
-      if (COVERED_USPS.every(code => literals.has(code)) || COVERED_FIPS.every(code => literals.has(code))) found = true;
-    }
-    ts.forEachChild(node, visit);
-  };
-  visit(tree);
-  return found;
-}
-
-test("no file outside the manifest holds a hand-kept list of every covered state", () => {
-  assert.equal(handKeptStateList('const duplicate = ["AZ", "NH", "NJ"]'), true,
-    "a real duplicate list must remain visible to the guard");
-  assert.equal(handKeptStateList('if (state === "AZ") az(); if (state === "NH") nh(); if (state === "NJ") nj();'), false,
-    "separate state-specific rules are not another coverage manifest");
-  const offenders: string[] = [];
-  for (const abs of sourceFiles()) {
-    const rel = posixRel(abs);
-    if (CONTENT_FILES.has(rel)) continue;
-    if (handKeptStateList(readFileSync(abs, "utf8"))) offenders.push(rel);
-  }
-  assert.deepEqual(
-    offenders,
-    [],
-    "these files enumerate every covered state by hand — derive from lib/coverage/states.ts instead",
-  );
+test("every discovered roster and ballot artifact is held on disk", () => {
+  for (const file of ROSTER_FILES) assert.ok(existsSync(rosterPath(file)), file);
+  for (const { file } of BALLOT_FILES) assert.ok(existsSync(ballotPath(file)), file);
 });

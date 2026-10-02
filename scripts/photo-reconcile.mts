@@ -35,7 +35,7 @@ import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { COVERED, rosterFile } from "../lib/coverage/artifacts.ts";
+import { HELD_ROSTER_STATES, rosterFile } from "../lib/coverage/artifacts.ts";
 import { rosterPath } from "../lib/holdings/files.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
 import { photoTotals } from "../lib/coverage/photo-slots.ts";
@@ -52,7 +52,7 @@ const manifest = read("lib/registry/official-photos.json") as {
 const divisionReached = new Set<string>();
 for (const file of [
   "lib/registry/officeholders-us.json",
-  ...COVERED.map((s) => rosterPath(rosterFile(s))),
+  ...HELD_ROSTER_STATES.map((s) => rosterPath(rosterFile(s))),
 ]) {
   const parsed = read(file) as { divisions?: { officeholderId: string }[] };
   for (const seat of parsed.divisions ?? []) divisionReached.add(seat.officeholderId);

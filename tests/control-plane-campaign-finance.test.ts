@@ -767,9 +767,9 @@ test("#15 an amended filing supersedes the claim and BOTH versions stay traceabl
   );
 });
 
-/* ══ RULING 126 — nothing added here reaches Postgres ═════════════════════ */
+/* ══ Filings are never sold (Sean, 2026-10-01): nothing here reaches Postgres ══ */
 
-test("nothing this domain adds introduces a Postgres table (RULING 126, wall 1)", () => {
+test("nothing this domain adds introduces a Postgres table (filings never sold, wall 1)", () => {
   // The SAME mechanism tests/campaign-finance-firewall.test.ts uses, run again
   // here so this workstream's own change is the thing under test rather than a
   // guard someone else owns.

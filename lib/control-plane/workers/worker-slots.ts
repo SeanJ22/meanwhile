@@ -15,9 +15,11 @@ export function availableWorkerMemoryBytes(): number {
       if (match) available = Number(match[1]) * 1024;
     } catch { /* os.freemem remains the conservative fallback. */ }
   }
-  // Staging can exercise the production host size while still respecting real OS availability.
+  // A staging host-size override must also pay for this parent. The real OS
+  // available figure already excludes it; a synthetic smaller host does not.
   const hostMiB = Number(process.env.WTP_WORKER_HOST_MEMORY_MIB);
-  return Number.isFinite(hostMiB) && hostMiB > 0 ? Math.min(available, hostMiB * MIB) : available;
+  return Number.isFinite(hostMiB) && hostMiB > 0
+    ? Math.min(available, Math.max(0, hostMiB * MIB - process.memoryUsage.rss())) : available;
 }
 
 export interface WorkerMemoryLimit {
@@ -29,6 +31,15 @@ export interface WorkerMemoryLimit {
 /** Shared budget/provider slots plus OS memory admission; ready work remains queued. */
 export interface WorkerProcessSlots {
   acquire(entry?: string): Promise<() => void>;
+}
+
+/** Routine commands share host memory with reader repairs and catch-up work.
+ * A national command owns a promoter and an acquiring child. Retain the
+ * largest existing measured entry reservation until both have been remeasured. */
+export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
+  const peak = Math.max(...Object.values(WORKER_ENTRY_PEAK_MIB)) * MIB;
+  return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
+    peakBytes: memory.peakBytes ?? (entry => peak * (entry.startsWith("national-place:") ? 2 : 1)) });
 }
 
 export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryLimit = {}): WorkerProcessSlots {

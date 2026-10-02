@@ -4,6 +4,7 @@ import { sharedScoutBrowser, browseWithPlaywright } from "../scripts/scout-brows
 import type { GuardedBrowser } from "../scripts/browser.mts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
 import { emptyFieldManual, newFieldManualEntry, readFieldManual } from "../lib/control-plane/field-manual.ts";
+import { availableWorkerMemoryBytes, routineProcessSlots, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
 
 test("concurrent workers share a browser and close only their own contexts", async () => {
   let launches = 0, pages = 0, contextsClosed = 0, browsersClosed = 0;
@@ -41,5 +42,29 @@ test("hosted workers receive state manual pieces and browser observations withou
     await host.close();
     if (priorUrl === undefined) delete process.env.WTP_WORKER_TOOLS_URL; else process.env.WTP_WORKER_TOOLS_URL = priorUrl;
     if (priorToken === undefined) delete process.env.WTP_WORKER_TOOLS_TOKEN; else process.env.WTP_WORKER_TOOLS_TOKEN = priorToken;
+  }
+});
+
+test("routine sources, reader repairs and catch-up share reservations including the national child", async () => {
+  const peak = Math.max(...Object.values(WORKER_ENTRY_PEAK_MIB)) * 1024 * 1024;
+  const slots = routineProcessSlots({ availableBytes: () => peak * 3 + 100, headroomBytes: 100 });
+  const national = await slots.acquire("national-place:85635");
+  const reader = await slots.acquire("reader:meetings");
+  let started = false;
+  const catchUp = slots.acquire("meetings:catch-up").then(release => { started = true; return release; });
+  await Promise.resolve(); assert.equal(started, false);
+  national(); const release = await catchUp; assert.equal(started, true);
+  national(); reader(); release();
+});
+
+test("the staging host size accounts for its already-running parent", () => {
+  const prior = process.env.WTP_WORKER_HOST_MEMORY_MIB;
+  process.env.WTP_WORKER_HOST_MEMORY_MIB = "1";
+  try {
+    assert.ok(process.memoryUsage.rss() > 1024 * 1024);
+    assert.equal(availableWorkerMemoryBytes(), 0);
+  } finally {
+    if (prior === undefined) delete process.env.WTP_WORKER_HOST_MEMORY_MIB;
+    else process.env.WTP_WORKER_HOST_MEMORY_MIB = prior;
   }
 });

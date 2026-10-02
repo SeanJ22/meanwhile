@@ -20,6 +20,8 @@ test("history preserves exact event time and card context, scrubs text and rolls
   assert.equal(day?.events, 2);
   assert.equal(day?.start, "2026-09-28");
   assert.equal(prepareReaderEventBatch(structuredClone(batch)).sha256, prepared.sha256);
+  const meeting = prepareReaderEventBatch({ ...batch, events: [{ ...batch.events[0]!, topic: null, question: "When is the next council meeting?" }] });
+  assert.equal(meeting.body.events[0]!.topic, "meetings-agendas");
   assert.throws(() => prepareReaderEventBatch({ ...batch, events: [batch.events[0]!, batch.events[0]!] }), /DUPLICATE_ID/);
 });
 
@@ -53,6 +55,14 @@ test("archive failure prevents database totals; retries reuse the archive and ex
     const history = JSON.parse(gunzipSync([...saved.values()][0]!.bytes).toString());
     assert.equal(history.events[1].cardId, "funding:committee:1");
     assert.equal(history.events.length, 2);
+    const unmatched = { ...batch, events: [{ ...batch.events[0]!, topic: null, question: "The place is damp from a burst pipe." }] };
+    let label = "water-sewer";
+    const derived = { ...options, classifyTopic: async () => label };
+    recorded = false; saved.clear();
+    assert.equal((await appendReaderEvents(unmatched, derived)).duplicate, false);
+    label = "free-form";
+    assert.equal((await appendReaderEvents(unmatched, derived)).duplicate, true);
+    assert.equal(saved.size, 1, "derived labels never change the captured batch's retry digest");
   } finally {
     if (original === undefined) delete process.env.WTP_DB_ROLE; else process.env.WTP_DB_ROLE = original;
   }

@@ -7,7 +7,7 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { BOOTSTRAP_DDL, BOOTSTRAP_VERSION } from "../lib/control-plane/repository/pg-schema.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
-import { pgArtifactsByCanonicalUrl, type Sql } from "../lib/control-plane/repository/pg-store.ts";
+import { bootstrap, pgArtifactsByCanonicalUrl, pgEnsureArtifactSourceIndex, type Sql } from "../lib/control-plane/repository/pg-store.ts";
 
 test("source capture reuse uses one bounded exact URL query across job keys", async () => {
   const calls: { text: string; params: readonly unknown[] }[] = [];
@@ -51,4 +51,60 @@ test("source lookup index builds online outside a transaction and covers its exa
   assert.match(ddl, /canonicalUrl/);
   assert.match(ddl, /recordedAt.*DESC NULLS LAST/);
   assert.match(ddl, /artifactId.*ASC/);
+});
+
+function indexSql(status: { valid: boolean; building: boolean }[], failure?: RegExp, locked = true) {
+  const calls: string[] = [];
+  const sql: Sql = { query: async text => {
+    calls.push(text);
+    if (failure?.test(text)) throw new Error("source index build interrupted");
+    if (text.includes("pg_try_advisory_lock")) return [{ locked }];
+    if (text.includes("FROM pg_index i")) return status;
+    return [];
+  } };
+  return { sql, calls };
+}
+
+test("bootstrap preserves a valid source index without dropping or rebuilding it", async () => {
+  const { sql, calls } = indexSql([{ valid: true, building: false }]);
+  await pgEnsureArtifactSourceIndex(sql);
+  assert.equal(calls.filter(text => /CREATE INDEX|DROP INDEX/.test(text)).length, 0);
+  assert.ok(calls.some(text => text.includes("pg_advisory_unlock")));
+});
+
+test("bootstrap creates a missing source index with standalone concurrent DDL", async () => {
+  const { sql, calls } = indexSql([]);
+  await pgEnsureArtifactSourceIndex(sql);
+  assert.equal(calls.filter(text => text.startsWith("CREATE INDEX CONCURRENTLY IF NOT EXISTS")).length, 1);
+  assert.ok(!calls.some(text => /DROP INDEX|\bBEGIN\b|\bCOMMIT\b|\bDO\b/.test(text)));
+});
+
+test("bootstrap drops only an interrupted invalid source index and recreates it concurrently", async () => {
+  const { sql, calls } = indexSql([{ valid: false, building: false }]);
+  await pgEnsureArtifactSourceIndex(sql);
+  const dropped = calls.indexOf("DROP INDEX CONCURRENTLY IF EXISTS cp_log_artifacts_source_url");
+  const created = calls.findIndex(text => text.startsWith("CREATE INDEX CONCURRENTLY IF NOT EXISTS"));
+  assert.ok(dropped > calls.findIndex(text => text.includes("FROM pg_index i")));
+  assert.ok(created > dropped);
+  assert.ok(!calls.some(text => /\bBEGIN\b|\bCOMMIT\b|\bDO\b/.test(text)));
+});
+
+test("bootstrap leaves another active concurrent builder intact", async () => {
+  const { sql, calls } = indexSql([{ valid: false, building: true }]);
+  await assert.rejects(pgEnsureArtifactSourceIndex(sql), /CONTROL_PLANE_SOURCE_INDEX_BUILD_IN_PROGRESS/);
+  assert.ok(!calls.some(text => /CREATE INDEX|DROP INDEX/.test(text)));
+  assert.ok(calls.some(text => text.includes("pg_advisory_unlock")));
+});
+
+test("overlapping bootstraps cannot use a stale INVALID observation to drop a valid replacement", async () => {
+  const { sql, calls } = indexSql([{ valid: false, building: false }], undefined, false);
+  await assert.rejects(pgEnsureArtifactSourceIndex(sql), /CONTROL_PLANE_SOURCE_INDEX_BUILD_IN_PROGRESS/);
+  assert.equal(calls.length, 1, "the losing bootstrap never reads status or runs DDL");
+});
+
+test("an interrupted source index build fails bootstrap before its version is recorded", async () => {
+  const { sql, calls } = indexSql([{ valid: false, building: false }], /^CREATE INDEX CONCURRENTLY/);
+  await assert.rejects(bootstrap(sql, "2026-10-02T03:00:00Z"), /source index build interrupted/);
+  assert.ok(calls.some(text => text.includes("pg_advisory_unlock")));
+  assert.ok(!calls.some(text => text.includes("INSERT INTO cp_schema_version")));
 });

@@ -98,6 +98,7 @@ import type { WorkItem } from "../work-item.ts";
 
 import { budgetRepositoryFrom } from "./shared.ts";
 import {
+  ARTIFACT_SOURCE_INDEX_DDL,
   BOOTSTRAP_DDL,
   BOOTSTRAP_VERSION,
   recordVersionStatement,
@@ -855,10 +856,48 @@ function pgLockManager(connectionString: string): LockManager {
   };
 }
 
+// Online index builds scan inside Postgres, not into the runner. Give this DDL
+// its own bounded build time rather than cancelling it at the small-row bound.
+const SOURCE_INDEX_BUILD_MS = 15 * 60_000;
+
+/** A pinned autocommit session is required; neither DDL runs in a transaction. */
+export async function pgEnsureArtifactSourceIndex(
+  sql: Sql,
+  bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS,
+): Promise<void> {
+  const run = boundedRunner(sql, "cp_schema.artifactSourceIndex", bounds);
+  const key = advisoryLockKey("cp_schema.cp_log_artifacts_source_url").toString();
+  const locks = await run("lock", "POINT", "SELECT pg_try_advisory_lock($1::bigint) AS locked", [key]) as { locked: boolean }[];
+  if (locks[0]?.locked !== true) {
+    throw new Error("CONTROL_PLANE_SOURCE_INDEX_BUILD_IN_PROGRESS: another bootstrap owns cp_log_artifacts_source_url; retry on the next runner cycle");
+  }
+  try {
+    const status = await run("status", "POINT", `SELECT i.indisvalid AS valid,
+      EXISTS (SELECT 1 FROM pg_stat_progress_create_index p WHERE p.index_relid = i.indexrelid) AS building
+      FROM pg_index i WHERE i.indexrelid = to_regclass('cp_log_artifacts_source_url')`) as { valid: boolean; building: boolean }[];
+    if (status[0]?.valid === true) return;
+    // An in-progress concurrent build is temporarily INVALID too. Do not drop it.
+    if (status[0]?.building === true) {
+      throw new Error("CONTROL_PLANE_SOURCE_INDEX_BUILD_IN_PROGRESS: cp_log_artifacts_source_url has an active builder; retry on the next runner cycle");
+    }
+    const ddlRun = boundedRunner(sql, "cp_schema.artifactSourceIndex", { ...bounds, POINT: SOURCE_INDEX_BUILD_MS });
+    await run("buildTimeout", "POINT", `SET statement_timeout = ${SOURCE_INDEX_BUILD_MS}`);
+    if (status[0]?.valid === false) {
+      await ddlRun("dropInvalid", "POINT", "DROP INDEX CONCURRENTLY IF EXISTS cp_log_artifacts_source_url");
+    }
+    await ddlRun("create", "POINT", ARTIFACT_SOURCE_INDEX_DDL);
+  } finally {
+    // A failed build retains its original error. The caller destroys the pinned
+    // session as well, releasing the session lock even after a transport failure.
+    await run("unlock", "POINT", "SELECT pg_advisory_unlock($1::bigint)", [key]).catch(() => {});
+    await run("restoreTimeout", "POINT", `SET statement_timeout = ${bounds.POINT}`).catch(() => {});
+  }
+}
+
 /**
- * Bring the schema up. Idempotent, and it records the version it reached. Each
- * statement is a POINT call: a hung statement times out by name and the
- * connect-retry around the bootstrap tries again.
+ * Bring the schema up on one pinned autocommit connection and record the version
+ * only after every statement succeeds. Online index recovery uses a session
+ * lock, never a transaction (including when replacing an interrupted build).
  */
 export async function bootstrap(
   sql: Sql,
@@ -866,7 +905,10 @@ export async function bootstrap(
   bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS,
 ): Promise<void> {
   const run = boundedRunner(sql, "cp_schema", bounds);
-  for (const statement of BOOTSTRAP_DDL) await run("bootstrap", "POINT", statement);
+  for (const statement of BOOTSTRAP_DDL) {
+    if (statement === ARTIFACT_SOURCE_INDEX_DDL) await pgEnsureArtifactSourceIndex(sql, bounds);
+    else await run("bootstrap", "POINT", statement);
+  }
   await run("recordVersion", "POINT", recordVersionStatement(BOOTSTRAP_VERSION, nowIso));
 }
 
@@ -926,7 +968,23 @@ export async function createPgRepositories(
        bootstrap is idempotent (it records the version it reaches), so retrying
        the transient connect is safe. A latched circuit or a real SQL/status
        error is not retried; see connect-retry.ts. */
-    await withControlPlaneConnectRetry(() => bootstrap(sql, nowIso, bounds), {
+    await withControlPlaneConnectRetry(async () => {
+      if (!neonConfig.webSocketConstructor) neonConfig.webSocketConstructor = globalThis.WebSocket;
+      const direct = new URL(connectionString);
+      direct.hostname = direct.hostname.replace("-pooler.", ".");
+      const pool = new Pool({
+        connectionString: direct.toString(),
+        connectionTimeoutMillis: bounds.POINT,
+        statement_timeout: bounds.POINT,
+        query_timeout: SOURCE_INDEX_BUILD_MS + 1_000,
+      });
+      try {
+        const client = await pool.connect();
+        try {
+          await bootstrap({ query: async (text, params = []) => (await client.query(text, [...params])).rows }, nowIso, bounds);
+        } finally { client.release(true); }
+      } finally { await pool.end(); }
+    }, {
       onRetry: ({ attempt, delayMs, error }) =>
         console.warn(
           `control-plane bootstrap connect: transient failure on attempt ${attempt} of ` +

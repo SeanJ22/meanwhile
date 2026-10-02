@@ -45,7 +45,7 @@ import {
   disposeRouteTask,
   recordArtifactMetadata,
 } from "../lib/control-plane/repository/coordinator.ts";
-import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+import { ConcurrentModification, type ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { recordFailure } from "../lib/control-plane/scheduler/debt.ts";
 import { dispatchOne, sweepExpiredLeases, type RunWork } from "../lib/control-plane/scheduler/dispatch.ts";
 import {
@@ -287,6 +287,99 @@ async function routeState(repos: ControlPlaneRepositories, routeTaskId: string, 
     leaseSlots: (await repos.leases.list()).map((row) => row.id),
   };
 }
+
+test("cycle closure runs independent occurrences together and serializes occurrence aliases and shared obligations", { timeout: 10_000 }, async () => {
+  for (const [label, repos] of await eachStore("wtp-close-parallel-")) {
+    const first = await interrupted(repos, obligation("shared-obligation"), disposes("WALKED_NO_YIELD"));
+    const other = await interrupted(repos, obligation("independent-obligation"), disposes("REQUIRES_NEW_ADAPTER"));
+    const resumed = await resumeOpenOccurrence(repos, (await repos.obligations.mustRead("shared-obligation")).value);
+    assert.equal(resumed?.kind, "SETTLED");
+    if (resumed?.kind !== "SETTLED") throw new Error("fixture did not settle");
+    const secondId = `${first.occurrenceId}:second-period`;
+    await repos.occurrences.put(secondId, { ...(await repos.occurrences.mustRead(first.occurrenceId)).value,
+      id: secondId, sequence: 2 }, T0);
+    const entered = new Set<string>();
+    let release!: () => void;
+    const independentStarted = new Promise<void>(resolve => { release = resolve; });
+    let firstReads = 0;
+    const seen: string[] = [];
+    const wrapped: ControlPlaneRepositories = { ...repos, occurrences: { ...repos.occurrences,
+      mustRead: async id => {
+        seen.push(id);
+        if (id === first.occurrenceId && ++firstReads > 1) {
+          assert.equal((await repos.occurrences.mustRead(id)).value.closedAt, T1, `${label}: alias waits for the first closure`);
+        }
+        if (id === secondId) {
+          assert.equal((await repos.obligations.mustRead("shared-obligation")).value.lastWorkedAt, T1,
+            `${label}: another occurrence waits for the same obligation's update`);
+        }
+        return repos.occurrences.mustRead(id);
+      },
+      compareAndSet: async (...args) => {
+        if (args[0] === first.occurrenceId || args[0] === other.occurrenceId) {
+          entered.add(args[0]);
+          if (entered.size === 2) release();
+          await independentStarted;
+        }
+        return repos.occurrences.compareAndSet(...args);
+      },
+    } };
+    await closeCycleOccurrences(wrapped, { concurrency: 2, now: T1,
+      cycle: { dispatched: [first.walked, other.walked, { ...first.walked, obligationId: "alias-row" }],
+        recovered: [{ ...resumed.settled, occurrenceId: secondId, discharged: true }] },
+      occurrenceFor: id => id === "independent-obligation" ? other.occurrenceId : first.occurrenceId });
+    assert.equal(entered.size, 2, `${label}: distinct resource groups reached actual CAS concurrently`);
+    assert.deepEqual(seen.filter(id => id !== other.occurrenceId), [first.occurrenceId, first.occurrenceId, secondId]);
+    assert.equal((await repos.obligations.mustRead("shared-obligation")).value.lastWorkedAt, T0,
+      `${label}: recovered reading keeps its original anchor after the dispatched closures`);
+    assert.equal((await repos.obligations.mustRead("independent-obligation")).value.lastWorkedAt, null,
+      `${label}: a non-reading remains owed`);
+  }
+});
+
+test("failed cycle closure joins every independent write before returning the original first error", { timeout: 10_000 }, async () => {
+  for (const [label, repos] of await eachStore("wtp-close-failure-")) {
+    const fixtures = await Promise.all(["first", "fast-failure", "slow", "remaining"].map(id =>
+      interrupted(repos, obligation(id), disposes("WALKED_NO_YIELD"))));
+    const [first, fast, slow, remaining] = fixtures;
+    const firstError = new ConcurrentModification("FreshnessOccurrence", first!.occurrenceId, 1, 2);
+    const fastError = new Error("later closure failed first in wall-clock order");
+    let failFirst!: () => void, releaseSlow!: () => void, slowStarted!: () => void, laterFailed!: () => void, remainingClosed!: () => void;
+    const firstFailure = new Promise<void>(resolve => { failFirst = resolve; });
+    const slowFinish = new Promise<void>(resolve => { releaseSlow = resolve; });
+    const slowEntry = new Promise<void>(resolve => { slowStarted = resolve; });
+    const fastFailure = new Promise<void>(resolve => { laterFailed = resolve; });
+    const remainingWrite = new Promise<void>(resolve => { remainingClosed = resolve; });
+    let firstCalls = 0, returned = false;
+    const wrapped: ControlPlaneRepositories = { ...repos, occurrences: { ...repos.occurrences,
+      compareAndSet: async (...args) => {
+        const id = args[0];
+        if (id === first!.occurrenceId) { firstCalls++; await firstFailure; throw firstError; }
+        if (id === fast!.occurrenceId) { laterFailed(); throw fastError; }
+        if (id === slow!.occurrenceId) { slowStarted(); await slowFinish; }
+        const result = await repos.occurrences.compareAndSet(...args);
+        if (id === remaining!.occurrenceId) remainingClosed();
+        return result;
+      },
+    } };
+    const closing = closeCycleOccurrences(wrapped, { concurrency: 2, now: T1,
+      cycle: { dispatched: [...fixtures.map(fixture => fixture.walked), { ...first!.walked, obligationId: "first-alias" }], recovered: [] },
+      occurrenceFor: id => id === "first-alias" ? first!.occurrenceId : fixtures.find(fixture => fixture.walked.obligationId === id)!.occurrenceId,
+    }).then(() => { returned = true; return null; }, error => { returned = true; return error; });
+    await Promise.all([fastFailure, slowEntry]);
+    assert.equal(returned, false, `${label}: a faster failure cannot return with other closures running`);
+    failFirst();
+    await remainingWrite;
+    assert.equal(returned, false, `${label}: remaining independent groups run, and the slow write is still joined`);
+    releaseSlow();
+    assert.equal(await closing, firstError, `${label}: original operation order chooses the error and preserves its class`);
+    assert.equal(firstCalls, 1, `${label}: a dependent alias does not retry the unchanged failure`);
+    for (const fixture of [slow!, remaining!]) {
+      assert.equal((await repos.occurrences.mustRead(fixture.occurrenceId)).value.closedAt, T1);
+      assert.equal((await repos.obligations.mustRead(fixture.walked.obligationId)).value.lastWorkedAt, T1);
+    }
+  }
+});
 
 test("SEEDED: an open occurrence on an already-disposed RouteTask is recovered, never dispatched — no second claim, Attempt or lease", async () => {
   for (const [label, repos] of await eachStore("wtp-settled-")) {

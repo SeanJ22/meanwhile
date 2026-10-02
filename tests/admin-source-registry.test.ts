@@ -64,13 +64,13 @@ test("§7: GitHub carries no routine data or operations clock", () => {
   const workflows = readdirSync(WORKFLOWS).filter((file) => /\.ya?ml$/.test(file));
   /*
    * One exemption, by exact name and exact cron (2026-10-02, owner's CI cost
-   * order via S0): Build Check's hourly run certifies SOFTWARE — the whole test
+   * order via S0): Build Check's three-hourly run certifies SOFTWARE — the whole test
    * suite on main's tip, the safety net behind affected-only pull-request
    * tests. It reads and writes no civic data and runs no operation; it is the
    * same read-only workflow a push runs.
    */
   const softwareCertification = (file: string, text: string) =>
-    file === "build-check.yml" && /^\s{2}schedule:\s*\n\s{4}- cron: '17 \* \* \* \*'\s*$/m.test(text);
+    file === "build-check.yml" && /^\s{2}schedule:\s*\n\s{4}- cron: '17 \*\/3 \* \* \*'\s*$/m.test(text);
   const scheduled = workflows.filter((file) => {
     const text = readFileSync(join(WORKFLOWS, file), "utf8");
     return workflowHasSchedule(text) && !softwareCertification(file, text);

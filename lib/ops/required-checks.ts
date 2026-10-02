@@ -62,8 +62,11 @@ type JobSpec = {
  * another expression form, a nested include — is REFUSED rather than guessed
  * at, because a parser that quietly dropped a leg would under-report the
  * produced set and make a rename look like agreement.
+ *
+ * Names can depend on the triggering event (see EVENT_PREFIX); the default
+ * answers for a pull request or a push, the events branch protection judges.
  */
-export function contextsProducedByWorkflow(source: string): string[] {
+export function contextsProducedByWorkflow(source: string, eventName = "pull_request"): string[] {
   const doc = parse(source) as { jobs?: Record<string, JobSpec> } | null;
   const jobs = doc?.jobs;
   if (!jobs || typeof jobs !== "object") {
@@ -78,7 +81,7 @@ export function contextsProducedByWorkflow(source: string): string[] {
     const template = typeof job?.name === "string" ? job.name : key;
     const matrix = matrixOf(job);
     for (const leg of expandMatrix(matrix)) {
-      produced.push(substitute(template, leg, key));
+      produced.push(substitute(template, leg, key, eventName));
     }
   }
   return produced.sort();
@@ -137,8 +140,17 @@ function expandMatrix(matrix: Record<string, unknown>): Array<Record<string, str
 
 const MATRIX_EXPRESSION = /\$\{\{\s*matrix\.([A-Za-z0-9_-]+)\s*\}\}/g;
 
-function substitute(template: string, leg: Record<string, string>, jobKey: string): string {
-  const filled = template.replace(MATRIX_EXPRESSION, (_whole, key: string) => {
+/**
+ * The one event expression a name may carry: a prefix chosen by the event,
+ * `${{ github.event_name == 'schedule' && 'scheduled ' || '' }}`. The hourly
+ * scheduled run renames its required-named jobs this way so its results never
+ * land on main's tip under a required context.
+ */
+const EVENT_PREFIX = /\$\{\{\s*github\.event_name\s*==\s*'([A-Za-z_]+)'\s*&&\s*'([^']*)'\s*\|\|\s*''\s*\}\}/g;
+
+function substitute(template: string, leg: Record<string, string>, jobKey: string, eventName: string): string {
+  const prefixed = template.replace(EVENT_PREFIX, (_whole, event: string, text: string) => (event === eventName ? text : ""));
+  const filled = prefixed.replace(MATRIX_EXPRESSION, (_whole, key: string) => {
     const value = leg[key];
     if (value === undefined) {
       throw new Error(

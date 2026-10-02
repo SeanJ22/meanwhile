@@ -73,7 +73,7 @@ test("a push to main needs only the build; the merged pull request already ran v
   assert.equal(evaluate(input).ok, false);
 });
 
-test("the hourly scheduled run is the full tier: verify, build and all tests are required", () => {
+test("the scheduled run is the full tier: verify, build and all tests are required", () => {
   const input = needs("yes");
   (input.admission.outputs as Record<string, string>).test_plan = "full";
   assert.equal(evaluate(input).ok, true);

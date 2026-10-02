@@ -358,7 +358,7 @@ test("build-check gives every push to main its own concurrency group", () => {
   assert.match(group, /github\.event_name == 'push'/, "and pull requests keep the old superseding behaviour");
 });
 
-test("the hourly scheduled run supersedes only its own earlier run", () => {
+test("the scheduled run supersedes only its own earlier run", () => {
   const yml = readFileSync(join(import.meta.dirname, "..", ".github/workflows/build-check.yml"), "utf8");
   const group = /group:\s*(.+)/.exec(yml)?.[1] ?? "";
   assert.match(group, /github\.event_name == 'schedule' && 'scheduled'/, "the scheduled run keeps one group of its own");

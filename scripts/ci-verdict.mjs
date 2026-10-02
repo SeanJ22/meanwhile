@@ -16,9 +16,9 @@ const record = (value) => value !== null && typeof value === "object" && !Array.
  * - draft / waiting: tests and builds are deferred; waiting never certifies.
  * - yes: structural checks, builds and tests are required. A skipped test job
  *   is accepted only when admission's plan says the change reaches no test.
- *   The hourly scheduled run on main is this tier with the whole suite.
+ *   The scheduled run on main is this tier with the whole suite.
  * - main: the builds; lint, types, governance and the pull request's tests
- *   ran on the pull request, and the hourly scheduled run re-runs the suite.
+ *   ran on the pull request, and the scheduled run re-runs the suite.
  *
  * @param {unknown} needs
  */

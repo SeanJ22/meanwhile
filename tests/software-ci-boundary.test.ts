@@ -44,11 +44,11 @@ test("admission runs preflight and defaults non-draft work to full tests", () =>
   }
 });
 
-test("push/main/manual/hourly triggers remain and no workflow hides behind a path filter", () => {
+test("push/main/manual/scheduled triggers remain and no workflow hides behind a path filter", () => {
   const build = workflow(BUILD_PATH);
   assert.deepEqual(build.on.push, { branches: ["main"] });
   assert.ok("workflow_dispatch" in build.on);
-  assert.deepEqual(build.on.schedule, [{ cron: "17 * * * *" }]);
+  assert.deepEqual(build.on.schedule, [{ cron: "17 */3 * * *" }]);
   for (const path of [BUILD_PATH, POST_DEPLOY_PATH]) {
     const source = readFileSync(path, "utf8");
     assert.doesNotMatch(source, /^\s*paths(?:-ignore)?:/m);

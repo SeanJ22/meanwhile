@@ -13,9 +13,11 @@ on:
       - labeled
       - auto_merge_enabled
   # The integration safety net for affected-only pull-request tests: the whole
-  # suite on main's tip, hourly. A software certification, not a data clock.
+  # suite on main's tip every three hours. A software certification, not a data
+  # clock. Its required-named jobs report under "scheduled …" names, so a
+  # scheduled result never lands on main's tip as a required context.
   schedule:
-    - cron: '17 * * * *'
+    - cron: '17 */3 * * *'
   workflow_dispatch:
     inputs:
       schema_smoke:
@@ -35,7 +37,7 @@ permissions:
   pull-requests: read
 # Every push to main keeps its own group, so a later (even docs-only) push never
 # cancels a code commit's run and leaves it unjudged. Each pull request
-# supersedes its own older run; the hourly scheduled run supersedes its own.
+# supersedes its own older run; the scheduled run supersedes its own.
 concurrency:
   group: build-check-${{ github.event_name == 'schedule' && 'scheduled' || github.ref }}${{ github.event_name == 'push' && format('-{0}', github.sha) || '' }}
   cancel-in-progress: true
@@ -105,7 +107,7 @@ jobs:
           COMMIT_REF: ${{ github.sha }}
         run: node scripts/netlify-ignore.mjs --ci
       # A pull request runs the tests its change can reach (or all four shards
-      # when the change is not code the import graph follows); the hourly
+      # when the change is not code the import graph follows); the
       # scheduled run and a manual dispatch run all four. Main runs none.
       - name: Select the tests this change can reach
         id: tests
@@ -184,7 +186,7 @@ jobs:
         mode:
           - standalone
           - default
-    name: build (${{ matrix.mode }})
+    name: ${{ github.event_name == 'schedule' && 'scheduled ' || '' }}build (${{ matrix.mode }})
     steps:
       - uses: actions/checkout@v7
         if: (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'main') && (matrix.mode == 'standalone' || github.event_name == 'workflow_dispatch') && needs.admission.outputs.deploy_build != 'no'
@@ -264,7 +266,7 @@ jobs:
           echo "the two production builds wait for the ready_for_review certification run."
       - name: Push to main — the merged pull request already ran its tests
         if: needs.admission.outputs.tier == 'main'
-        run: echo "Main runs the standalone build and the schema gate; lint, types, governance, the affected tests and the default build ran on the pull request, and the hourly scheduled run re-runs the whole suite."
+        run: echo "Main runs the standalone build and the schema gate; lint, types, governance, the affected tests and the default build ran on the pull request, and the scheduled run re-runs the whole suite every three hours."
       - name: Ready pull request — waiting for auto-merge
         if: needs.admission.outputs.tier == 'waiting'
         run: echo "Lint and types ran. The standalone build and the tests run when auto-merge is turned on (or the run-full-ci label is added)."
@@ -278,7 +280,7 @@ jobs:
     # One leg named `affected` for the tests a pull request's change can reach,
     # or the four shards (1/4 … 4/4) for the whole suite; see
     # scripts/ci-affected-tests.mjs. No leg runs when the change reaches no test,
-    # and main runs none (the hourly scheduled run covers it).
+    # and main runs none (the scheduled run covers it).
     name: test (${{ matrix.shard }})
     needs:
       - admission
@@ -374,7 +376,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
   gates:
-    name: gates (test · lint · tsc)
+    name: ${{ github.event_name == 'schedule' && 'scheduled ' || '' }}gates (test · lint · tsc)
     needs:
       - admission
       - verify

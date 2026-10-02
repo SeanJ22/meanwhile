@@ -29,7 +29,7 @@
  *
  * Output (GITHUB_OUTPUT and stdout): plan=affected|full|none, legs (the test
  * matrix as JSON), files (newline-separated, for CI_TEST_FILES) and
- * needs_browser. The hourly scheduled run (and a manual dispatch) always
+ * needs_browser. The scheduled run (and a manual dispatch) always
  * answers full: it re-runs the whole suite on main as the integration check,
  * so a miss here is caught there. A push to main runs no tests.
  *

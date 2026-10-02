@@ -91,7 +91,7 @@ const NOT_A_GATE = [
   // A push to main selects the main tier: the merged PR already ran its tests.
   'elif [ "${{ github.event_name }}" = "push" ]; then',
   'echo "expensive=main" >> "$GITHUB_OUTPUT"',
-  'echo "Main runs the standalone build and the schema gate; lint, types, governance, the affected tests and the default build ran on the pull request, and the hourly scheduled run re-runs the whole suite."',
+  'echo "Main runs the standalone build and the schema gate; lint, types, governance, the affected tests and the default build ran on the pull request, and the scheduled run re-runs the whole suite every three hours."',
   'elif [ "${{ steps.pr_tier.outputs.tier }}" = "full" ]; then',
   "else",
   'echo "expensive=yes" >> "$GITHUB_OUTPUT"',

@@ -73,8 +73,8 @@ test("every auxiliary context feeds the fail-closed required final status", () =
  */
 test("a renamed gates job is caught", () => {
   const renamed = source().replace(
-    "name: gates (test · lint · tsc)",
-    "name: gates (test, lint, tsc)",
+    "}}gates (test · lint · tsc)",
+    "}}gates (test, lint, tsc)",
   );
   assert.notEqual(renamed, source(), "the plant did not apply — the job name has moved");
   const produced = contextsProducedByWorkflow(renamed);
@@ -98,8 +98,8 @@ test("a renamed matrix leg is caught", () => {
 
 test("an unresolvable job name is refused rather than dropped", () => {
   const opaque = source().replace(
-    "name: build (${{ matrix.mode }})",
-    "name: build (${{ inputs.mode }})",
+    "build (${{ matrix.mode }})",
+    "build (${{ inputs.mode }})",
   );
   assert.throws(
     () => contextsProducedByWorkflow(opaque),
@@ -117,4 +117,18 @@ test("a matrix computed at run time expands to every leg it can produce, and an 
   );
   assert.notEqual(unknown, source(), "the plant did not apply — the test matrix has moved");
   assert.throws(() => contextsProducedByWorkflow(unknown), /DYNAMIC_MATRIX_LEGS/);
+});
+
+test("a scheduled run reports NONE of the required contexts, so it never overwrites main's tip", () => {
+  // The runtime adopts a main commit by its required contexts' latest check
+  // runs (filter=latest, by name). A scheduled run on that commit must not
+  // become the latest run of any required name.
+  const scheduled = contextsProducedByWorkflow(source(), "schedule");
+  assert.deepEqual(scheduled.filter((name) => REQUIRED_CONTEXTS.includes(name)), []);
+  for (const name of REQUIRED_CONTEXTS) assert.ok(scheduled.includes(`scheduled ${name}`), name);
+  for (const event of ["pull_request", "push", "workflow_dispatch"]) {
+    const produced = contextsProducedByWorkflow(source(), event);
+    assert.deepEqual(REQUIRED_CONTEXTS.filter((name) => !produced.includes(name)), [], event);
+    assert.ok(!produced.some((name) => name.startsWith("scheduled ")), event);
+  }
 });

@@ -6,7 +6,7 @@ import test from "node:test";
 
 import { parse } from "yaml";
 
-import { REQUIRED_CONTEXTS } from "../lib/ops/required-checks.ts";
+import { REQUIRED_CONTEXTS, contextsProducedByWorkflow } from "../lib/ops/required-checks.ts";
 import { GATES, PRECONDITIONS } from "../scripts/gates.mjs";
 import {
   PREFLIGHT_CHECKS,
@@ -100,8 +100,11 @@ test("a refused admission makes required build and final contexts fail loudly", 
 
 test("the existing required contexts remain and auxiliary jobs feed the final verdict", () => {
   const all = jobs();
-  const produced = [all.gates.name, ...["standalone", "default"].map((mode) => all.build.name?.replace("${{ matrix.mode }}", mode))];
-  assert.deepEqual(produced.sort(), [...REQUIRED_CONTEXTS].sort());
+  const source = readFileSync(WORKFLOW, "utf8");
+  for (const event of ["pull_request", "push", "workflow_dispatch"]) {
+    const produced = contextsProducedByWorkflow(source, event).filter((name) => /^(?:build|gates) \(/.test(name));
+    assert.deepEqual(produced.sort(), [...REQUIRED_CONTEXTS].sort(), event);
+  }
   for (const id of Object.keys(all).filter((id) => id !== "gates")) assert.ok(all.gates.needs?.includes(id));
 });
 
@@ -119,7 +122,7 @@ test("independent structural checks all report, from one install, before the bro
   assert.match(all.test.if ?? "", /needs\.admission\.outputs\.test_legs != ''/);
   assert.match(all.test.if ?? "", /needs\.admission\.outputs\.test_legs != '\[\]'/);
   assert.match(all.test.if ?? "", /test_plan == 'affected' \|\| needs\.admission\.outputs\.test_plan == 'full'/);
-  assert.doesNotMatch(all.test.if ?? "", /'main'/, "a push to main runs no tests; the hourly scheduled run does");
+  assert.doesNotMatch(all.test.if ?? "", /'main'/, "a push to main runs no tests; the scheduled run does");
   for (const name of ["Lint", "Types", "Canonical state holdings", "Generated state manifests"]) {
     const step = all.verify.steps.find((s) => label(s).startsWith(name));
     assert.ok(step, `${name} was lost`);

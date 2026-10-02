@@ -6,7 +6,7 @@ import test from "node:test";
 import { parse } from "yaml";
 
 import { classifyPullRequestCiTier } from "../lib/ops/pull-request-ci-tier.ts";
-import { REQUIRED_CONTEXTS } from "../lib/ops/required-checks.ts";
+import { REQUIRED_CONTEXTS, contextsProducedByWorkflow } from "../lib/ops/required-checks.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const WORKFLOW = join(ROOT, ".github", "workflows", "build-check.yml");
@@ -70,7 +70,7 @@ test("draft/waiting/full classifier is fail-closed for the complete pull-request
     { what: "missing PR state", eventName: "pull_request", action: "synchronize", draft: null, tier: "full" },
     { what: "push to main", eventName: "push", action: null, draft: null, tier: "full" },
     { what: "manual release proof", eventName: "workflow_dispatch", action: null, draft: null, tier: "full" },
-    { what: "hourly scheduled certification", eventName: "schedule", action: null, draft: null, tier: "full" },
+    { what: "scheduled certification every three hours", eventName: "schedule", action: null, draft: null, tier: "full" },
   ] as const;
 
   for (const row of rows) {
@@ -83,7 +83,7 @@ test("ready_for_review is an explicit trigger and the existing shipping triggers
   assert.deepEqual(buildCheck.on.pull_request.types, ["opened", "synchronize", "reopened", "ready_for_review", "labeled", "auto_merge_enabled"]);
   assert.deepEqual(buildCheck.on.push.branches, ["main"]);
   assert.ok(buildCheck.on.workflow_dispatch !== undefined, "manual shipping certification disappeared");
-  assert.deepEqual(buildCheck.on.schedule, [{ cron: "17 * * * *" }], "the hourly full run on main is the safety net for affected-only PR tests");
+  assert.deepEqual(buildCheck.on.schedule, [{ cron: "17 */3 * * *" }], "the three-hourly full run on main is the safety net for affected-only PR tests");
 });
 
 test("a scheduled run is the full tier: no classifier, preflight, then yes", () => {
@@ -177,11 +177,8 @@ test("draft cannot buy builds, browsers, the full suite, or shipping-only gates"
 
 test("required contexts, read-only permissions, and ready-for-review tests stay intact", () => {
   const buildCheck = workflow();
-  const produced = [buildCheck.jobs.gates, buildCheck.jobs.build].flatMap((job) =>
-    job.name.includes("${{ matrix.mode }}")
-      ? ["standalone", "default"].map((mode) => job.name.replace("${{ matrix.mode }}", mode))
-      : [job.name],
-  );
+  const produced = contextsProducedByWorkflow(readFileSync(WORKFLOW, "utf8"))
+    .filter((name) => REQUIRED_CONTEXTS.includes(name));
   assert.deepEqual(produced.sort(), [...REQUIRED_CONTEXTS].sort());
   assert.equal(buildCheck.permissions.contents, "read");
   assert.equal(buildCheck.permissions.checks, "read");

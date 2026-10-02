@@ -181,7 +181,7 @@ test("an empty diff selects nothing; a malformed one or too many files selects e
   assert.equal(repo(BASE)(many).plan, "full");
 });
 
-test("the hourly schedule, dispatch and a missing base run the whole suite; main and other tiers run none", () => {
+test("the schedule, dispatch and a missing base run the whole suite; main and other tiers run none", () => {
   assert.equal(decide({ root: ROOT, tier: "yes", eventName: "schedule", base: undefined }).plan, "full");
   assert.equal(decide({ root: ROOT, tier: "main", eventName: "push", base: undefined }).plan, "none");
   assert.equal(decide({ root: ROOT, tier: "yes", eventName: "workflow_dispatch", base: undefined }).plan, "full");

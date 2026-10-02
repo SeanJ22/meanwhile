@@ -1,7 +1,6 @@
 /**
  * **WALK EVERY HELD CREDENTIAL — Tier A, and three of them had never been
- * called.** (NJ Hunt 5 item 11, 2026-08-22, the author's instruction
- * mid-session.)
+ * called.** (NJ Hunt 5 item 11, 2026-08-22.)
  *
  * ```
  * pnpm keys:walk                    # both zips

@@ -2,7 +2,7 @@
  * The free-text scrub (session brief 4, wall clock 2026-08-14): the
  * refusal log captures raw typed questions, the store is publicly
  * described as identifier-free, and a reader WILL type an address or a
- * phone number into a question box. The author's decision: keep the
+ * phone number into a question box. The design: keep the
  * capture, scrub first — before storage, mechanically, with no judgment
  * calls.
  *

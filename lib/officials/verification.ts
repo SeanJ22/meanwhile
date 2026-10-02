@@ -1,8 +1,8 @@
 import { SOURCE_WIRING } from "../registry/source-wiring.ts";
 
 /**
- * What we may honestly say about a source's verification — g3 item 5, the
- * author's ruling (2026-08-16).
+ * What we may honestly say about a source's verification — g3 item 5
+ * (2026-08-16).
  *
  * ## The defect
  *

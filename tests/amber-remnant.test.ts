@@ -4,7 +4,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 /**
- * THE AMBER REMNANT (item 10, 2026-08-16, the author's ruling).
+ * THE AMBER REMNANT (item 10, 2026-08-16).
  *
  * The brown-dies pass moved the interactive accent to azure through three
  * tokens — `--link`, `--action`, `--signal` — and that was the whole of it.

@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 /**
  * **RULING 55 — A PHOTO NEVER BLOCKS ANYTHING, AND EVERY PHOTO IS REVIEWED BY
- * SEAN.** (Adopted 2026-08-21, the author's ruling, NH Hunt 3.)
+ * SEAN.** (Adopted 2026-08-21, NH Hunt 3.)
  *
  * ## Why this exists
  *

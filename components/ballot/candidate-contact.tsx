@@ -1,10 +1,9 @@
 /**
  * **BAL-15 (2026-08-25) — what the ballot row handed to the battlecard.**
  *
- * Sean's ruling, and his reason: *"The information matters — the placement is
- * what's wrong. The ballot points; the battlecard holds. We always want people
- * to choose the battlecard, in the campaign's own words. Stripping the ballot
- * page drives them there."*
+ * The information matters; the placement was what was wrong. The ballot
+ * points; the battlecard holds — the battlecard is where a reader meets the
+ * campaign in its own words, and a leaner ballot page leads them there.
  *
  * Three things moved off the ballot row and land here: the **campaign site**,
  * the **email address** and the **filed mailing address**. Each keeps the
@@ -23,8 +22,8 @@
  *
  * ## The Sources annotation, which is the third part of the item
  *
- * Sean also asked that the battlecard's Sources section say where the
- * ballot-card tagline came from. `TAGLINE_SOURCE_NOTE` is that sentence. It is
+ * The battlecard's Sources section also says where the ballot-card tagline
+ * came from. `TAGLINE_SOURCE_NOTE` is that sentence. It is
  * exported rather than inlined so the Sources section and this block cannot
  * drift into saying two different things about one fact.
  */

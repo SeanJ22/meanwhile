@@ -1,7 +1,6 @@
 /**
  * **THE GOVERNMENT GRAPH CRAWLER — a Tier A route that walks, rather than a
- * list that is read.** (Built 2026-08-22, NJ Hunt 5 item 10, the author's
- * instruction mid-session.)
+ * list that is read.** (Built 2026-08-22, NJ Hunt 5 item 10.)
  *
  * ## Why this is not `wikipedia-municipality` with a bigger list
  *
@@ -48,7 +47,7 @@
  * schedule. The last of those is the one that turns an enumeration into a
  * product surface, and it is why departments and agencies are in scope even
  * though whether their APPOINTED officials render as *who governs you* is a
- * scope question reserved to the author. Their MEETINGS are not in question.
+ * separate, open scope question. Their MEETINGS are not in question.
  */
 
 import {
@@ -314,7 +313,7 @@ export function expansionPriority(title: string): number {
 /**
  * **Does this node touch the zip?**
  *
- * The author's instruction is *governmental entities that touch this zip*, and
+ * The goal is *governmental entities that touch this zip*, and
  * without a scope test the crawl walks out through `United States` into every
  * government on earth. Two ways to be in scope, and both are stated rather than
  * inferred:

@@ -1,12 +1,12 @@
 /**
- * **THE DEMO-DELETION PROMISE, KEPT MECHANICALLY.** (`T10`, approved by Sean
- * 2026-08-24: *every row created during the password-walled test period is
+ * **THE DEMO-DELETION PROMISE, KEPT MECHANICALLY.** (`T10`, 2026-08-24:
+ * *every row created during the password-walled test period is
  * marked; when the wall comes down, those rows delete automatically and the
  * deletion is logged.* Built with **wall-down as the trigger**.)
  *
  * ## The promise
  *
- * Sean told the tester that everything collected during the demo gets deleted
+ * The tester was told that everything collected during the demo gets deleted
  * when testing ends. **A promise kept by memory is a promise broken** — it
  * depends on somebody remembering, on a particular day, to run something
  * nobody has written. This module is the mechanism that removes the
@@ -101,7 +101,7 @@ export function demoSweepVerdict(
      *
      * This branch used to be a CANNOT_RUN, and the reasoning was right at the
      * time: deleting from the beginning of time would take real reader rows
-     * with it. **Sean's ruling removes the premise.** Nothing collected before
+     * with it. **The ruling removes the premise.** Nothing collected before
      * the wall comes down is ever sold or shown as signal, organic-looking or
      * not — so there are no real reader rows below this bound to protect, and
      * the lower bound is not an unknown. It is the beginning.

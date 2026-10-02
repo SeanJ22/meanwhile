@@ -1,6 +1,6 @@
 /**
  * **RULING 127 — no tool prints a credential value.** (Adopted 2026-08-24,
- * Sean's instruction, item 3.)
+ * item 3.)
  *
  * The load-bearing test here is the one that reproduces the ACTUAL LEAK
  * CHANNEL. `CENSUS_API_KEY` did not escape by being pasted; it escaped because

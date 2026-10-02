@@ -12,14 +12,14 @@ import { VotePill } from "@/components/map/popup/official-popup";
 import { CardSection } from "./card-section";
 
 /**
- * The key votes section (B15) — the author's fixed list of questions, each
+ * The key votes section (B15) — a fixed list of questions, each
  * answered by this member's OWN chamber's roll call.
  *
  * ## Four things this must never become
  *
  * 1. **A score.** Nothing here is summed, averaged, graded or ordered by
- *    agreement with anything. The list order is the author's, fixed, and
- *    identical on every member's card.
+ *    agreement with anything. The list order is fixed, and identical on
+ *    every member's card.
  * 2. **A selection made after the fact.** The criteria sentence renders ON
  *    the surface, above the list, verbatim — so the reader can see the rule
  *    the entries were picked by rather than take our word for it.
@@ -37,7 +37,7 @@ import { CardSection } from "./card-section";
  */
 
 // The section's own eyebrow is gone (item 6b4, 2026-08-15): the CardSection
-// header above it now says "When it mattered" in the author's own words, and
+// header above it now says "When it mattered", and
 // a "Key votes" label one line under it was the same thing said twice.
 
 export interface KeyVoteRow {
@@ -69,8 +69,8 @@ const POSITION_PILL: Record<string, { label: string; tone: "yes" | "no" | "neutr
   NO: { label: "Voted no", tone: "no" },
   PRESENT: { label: "Voted present", tone: "neutral" },
   /*
-   * **F01 5.2 (2026-08-19, the author): *"if he was in session we'd need to
-   * record what he did."*** We did record it, and then failed to say it.
+   * **F01 5.2 (2026-08-19): if a member was in session, the card must say
+   * what they did.** We did record it, and then failed to say it.
    *
    * `NOT_VOTING` is what `scripts/fetch-key-vote-positions.mts` writes for a
    * member who WAS SEATED and did not vote — the chambers publish "Not Voting"
@@ -132,9 +132,9 @@ export function KeyVotesSection({
   const people = newestFirst(rows.filter((r) => r.entry.group === "PEOPLE"));
 
   /*
-   * Item 6b, the author's ruling on House cards: "Votes on people renders
-   * once as the single honest line 'the House doesn't vote on nominations',
-   * collapsed and inert — never repeated per entry, never an empty section."
+   * Item 6b, on House cards: Votes on people renders once as the single
+   * honest line "the House doesn't vote on nominations", collapsed and
+   * inert — never repeated per entry, never an empty section.
    *
    * The snapshot carries that sentence on every PEOPLE entry's `houseNote`,
    * which is right in the data and wrong on a card: sixteen identical
@@ -158,7 +158,7 @@ export function KeyVotesSection({
       </p>
 
       {/*
-        ITEM 6 (2026-08-16, the author): THE PANE THAT LOOKED EMPTY.
+        ITEM 6 (2026-08-16): THE PANE THAT LOOKED EMPTY.
         DIAGNOSED — the data was never the problem. Production's /api/votes
         serves 36 key votes for a senator, 20 laws and 16 people, and every
         one of them reached this component. What the reader saw on selecting
@@ -174,11 +174,9 @@ export function KeyVotesSection({
         INDENT as sub-groups, so what they are is legible: a thing containing
         two things, each still a thing to click.
 
-        **F01 5.3 (2026-08-19) REVERSES the `defaultOpen` half of that**, on
-        the author's direct instruction: *"when I hit when it mattered it
-        should drop down like it does but it should not automatically expand
-        both votes on laws and votes on people. They both should be
-        collapsed."* Recorded as a reversal rather than a tidy-up so a later
+        **F01 5.3 (2026-08-19) REVERSES the `defaultOpen` half of that**:
+        "When it mattered" still drops down, but Votes on laws and Votes on
+        people both start collapsed. Recorded as a reversal rather than a tidy-up so a later
         session reading the paragraph above does not restore it.
 
         The friction the old decision was protecting against is answered a

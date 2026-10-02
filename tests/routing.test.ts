@@ -104,7 +104,7 @@ test("85723: no routed step ever names a body that isn't the division's own gove
 });
 
 test("golden case: the stopped library, at Tucson", async () => {
-  // The author's example: "they stopped building the library down the road
+  // The golden question: "they stopped building the library down the road
   // — who should I talk to?" The route must land on the city council's body
   // (Tucson) and the county board (Pima — which sits as the Library
   // District board, D19), each with its denominator.
@@ -150,8 +150,8 @@ test("golden case: the stopped library, at Tucson", async () => {
        * ASK-10), DELIBERATELY AND WITH ITS REASON.**
        *
        * It asserted that a step naming a rostered body must name at least one
-       * PERSON. Ask no longer prints body rosters — the author's instruction
-       * is that Ask names bodies and the people live on the card — so an
+       * PERSON. Ask no longer prints body rosters — Ask names
+       * bodies and the people live on the card — so an
        * empty `people` beside a rostered body is now the CORRECT answer for a
        * council, and for several school districts it is the required one.
        *
@@ -177,7 +177,7 @@ test("golden case: the stopped library, at Tucson", async () => {
 });
 
 test("golden case: a school being run badly, at Tucson", async () => {
-  // The author's model sentence lives on this route: superintendent first
+  // The model sentence lives on this route: superintendent first
   // (runs the district), board second (bound by it).
   const coverage = await coverageAt(...TUCSON, 1);
   const answer = resolveRouting("schools-operations", coverage);
@@ -237,12 +237,12 @@ test("a thin area routes honestly: gaps stated, nothing guessed", async () => {
 /* --------------------------------------------------------------------------
  * ASK-9 / ASK-10 (2026-08-25) — ASK NAMES BODIES, NOT THEIR MEMBERS.
  *
- * The author boxed six names on `08-58-52` at Tucson, and on `09-22-18` at
+ * Capture `08-58-52` boxed six names at Tucson, and on `09-22-18` at
  * 07866 the answer named four school districts correctly and then printed ONE
  * of their rosters underneath — seven `@rocktwp.net` addresses standing in for
  * all four.
  *
- * The one exception he asked for by name is the person who RUNS the body, and
+ * The one named exception is the person who RUNS the body, and
  * only where there is exactly one body to run.
  * ------------------------------------------------------------------------ */
 

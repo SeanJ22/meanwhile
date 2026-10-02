@@ -159,13 +159,11 @@ interface DistrictPopupProps {
    */
   representationNoteState?: "gap" | "looking" | "unavailable";
   /*
-   * `placesWithin` REMOVED — F01 1.1, 2026-08-19, the author's ruling:
-   * *"I need clarification on what 'places within' means. It's listed as
-   * blank... either populate it with real data or remove it. As written,
-   * nobody can tell what it's supposed to mean."*
+   * `placesWithin` REMOVED — F01 1.1, 2026-08-19. The row was always blank
+   * and nobody could tell what "places within" meant: either populate it
+   * with real data or remove it.
    *
-   * REMOVED, and here is the reasoning, because the choice was his to inform
-   * and mine to make:
+   * REMOVED, and here is the reasoning:
    *
    * 1. **Nothing ever produced it.** No caller anywhere passed this prop, so
    *    the row rendered an em-dash on every district card at every zip since
@@ -279,7 +277,7 @@ export function DistrictPopup({
       {/*
         **BC-8 (2026-08-24) — THE COUNT IS A DOOR.**
 
-        The author: clicking the upcoming count minimizes this card and returns
+        Clicking the upcoming count minimizes this card and returns
         to that body's upcoming-meetings view. It is the same grammar the four
         sidebar tiles already carry — every number on a surface opens the list
         it counts — and this was the one counter still rendering as furniture.
@@ -308,11 +306,10 @@ export function DistrictPopup({
       <MeetingListingNotice groups={listingCount?.groups ?? []} />
 
       {/*
-        **F01 1.2 (2026-08-19, the author)** — WHO RUNS IT, AT THE TOP.
+        **F01 1.2 (2026-08-19)** — WHO RUNS IT, AT THE TOP.
 
-        *"As a reminder, the superintendent also should be listed at the top.
-        There should be a little bit of representation on the small card."* And
-        as the class: every small battlecard carries its top two office
+        The superintendent belongs at the top, so the small card carries a
+        little representation. And as the class: every small battlecard carries its top two office
         holders, whatever those offices are called for that body type.
 
         The list below is the body’s full roster in the body’s own published
@@ -370,8 +367,8 @@ export function DistrictPopup({
          * 264px for a label and a value; "County Supervisor, District 2
          * (Vice Chair)" refuses to wrap and eats all of it, the value column
          * collapses to a few pixels, and `.pv`'s `word-break: break-word`
-         * breaks the NAME one character per line. That is what the author
-         * saw live — Pima's supervisors reading vertically, "Dr. Matt Heinz"
+         * breaks the NAME one character per line. That is what rendered
+         * live — Pima's supervisors reading vertically, "Dr. Matt Heinz"
          * as a column of letters.
          *
          * It is not a style preference and it was never fixable by tuning a
@@ -409,8 +406,8 @@ export function DistrictPopup({
               **BC-14 (2026-08-25, third pass) — THE RIGHT-EDGE SOURCE LINK IS
               GONE FROM THE SMALL CARD.**
 
-              The author: *sources live in the large battlecard; the small card
-              lists names and nothing else.* His `09-01-39` boxes two rows on
+              Sources live in the large battlecard; the small card lists names
+              and nothing else. Screenshot `09-01-39` boxes two rows on
               this component wrapping onto two lines, and `09-20-11` shows the
               Morris card scrolling sideways — the `· SRC` run is what was
               pushing both.

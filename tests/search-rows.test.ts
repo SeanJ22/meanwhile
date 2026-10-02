@@ -19,8 +19,8 @@ import type { Meeting } from "@/lib/sources/types";
  *   AFTER   227 rows — 163 venue panel, 49 card, 14 fly only,  1 SILENT
  *
  * The AFTER row was 36 card / 26 fly / 2 SILENT at g15, when the place row was
- * the one deliberate non-conversion. g18 shipped the place card on the
- * author's ruling A, and re-measuring on 2026-08-19 (run id
+ * the one deliberate non-conversion. g18 shipped the place card (option A),
+ * and re-measuring on 2026-08-19 (run id
  * `m135-search-audit@2026-08-19T02:55:19.310Z`, 4 production GETs, all
  * declared SYNTHETIC) moved 13 place rows from fly-only to card and closed the
  * last silent place row. ONE row of 227 is still silent, and it is a refusal
@@ -201,7 +201,7 @@ test("onSearchPick opens a card for the rows it cannot fly to", () => {
 
 test("the place card elects nobody to stand for the place", () => {
   /*
-   * THE REASON THE CARD HAS THIS SHAPE (g18, the author's ruling A).
+   * THE REASON THE CARD HAS THIS SHAPE (g18, option A).
    *
    * g15 left the place row unconverted deliberately, and the reason is the
    * useful part: a place is a division several bodies sit in, and choosing one

@@ -11,14 +11,14 @@
  * to be writing the report. A set that is only ever assembled in prose gets
  * assembled differently every time.
  *
- * The author ruled on 2026-08-17: the Drive folder's actual contents define the
- * canonical set, and it is the ten below. This module is that ruling written
- * into the code, so the document mirror, the code mirror's duplicate refusal,
- * and the standing report all read the same array and cannot disagree again.
+ * As of 2026-08-17 the Drive folder's actual contents define the canonical
+ * set, and it is the ten below. This module is that rule written into the
+ * code, so the document mirror, the code mirror's duplicate refusal, and the
+ * standing report all read the same array and cannot disagree again.
  *
  * `civic-app-brief.md` is deliberately absent. It was on an earlier standing
  * list, it is not in the folder, and it has not been for some time — dropped by
- * the same ruling.
+ * the same rule.
  *
  * ## Copied versus generated
  *
@@ -34,20 +34,20 @@ import { existsSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 /**
- * The ten. Order is the author's, from the ruling.
+ * The ten.
  *
  * `mirrorName` is the filename in the Drive folder; `repoPath` is the repo file
  * it is copied from, or `null` when the file is generated into the mirror.
  */
 export const MIRRORED_DOCS = [
   /*
-   * **JOINED 2026-08-24, all four on Sean's instruction.** These are mirror
+   * **JOINED 2026-08-24, all four.** These are mirror
    * documents this repo PRODUCES, not files the author put in the folder — so
    * they belong in the canonical set rather than in `DECLARED_EXTRAS`, which
    * exists for things nothing here should touch.
    *
-   * The questionnaire instrument and its invitation are here because he asked
-   * to read them anywhere before anything sends, and nothing has been sent.
+   * The questionnaire instrument and its invitation are here so they can be
+   * read anywhere before anything sends, and nothing has been sent.
    * The transparency draft is here for the same reason. The portrait sheet is
    * how he now approves photographs: he glances at it and replies with numbers.
    *
@@ -114,7 +114,7 @@ export const MIRRORED_DOCS = [
     repoPath: null,
     generatedBy: "writeContext() in scripts/context-file.mjs (R15)",
   },
-  // Joined 2026-08-17 by the author's instruction, taking the canonical set
+  // Joined 2026-08-17, taking the canonical set
   // from ten to TWELVE. The deferred census (R31): the one complete list of
   // what is still open, so the reviewer reads the register rather than a
   // reconstruction of it. Both are ordinary committed repo files here — the
@@ -124,8 +124,8 @@ export const MIRRORED_DOCS = [
   // files in the folder because an undeclared file now fails the set check.
   { mirrorName: "deferred.md", repoPath: "docs/deferred.md" },
   { mirrorName: "deferred.csv", repoPath: "docs/deferred.csv" },
-  // Joined 2026-08-17: the census split into Build and Non-code decisions, the
-  // author's ruling that non-code work was confusing mixed in with build work.
+  // Joined 2026-08-17: the census split into Build and Non-code decisions,
+  // because non-code work was confusing mixed in with build work.
   // `binary: true` is load-bearing — the mirror's "does this copy match any
   // committed version" check reads text and trims whitespace, which on a zip
   // compares two corrupted strings and would refuse every ordinary update.
@@ -159,7 +159,7 @@ export const MIRRORED_DOCS = [
   { mirrorName: "log.md", repoPath: "docs/log.md" },
   { mirrorName: "gap-ledger.md", repoPath: "docs/gap-ledger.md" },
   /*
-   * **JOINED 2026-08-30 (Session A, Work Item 7 — the author's decision).**
+   * **JOINED 2026-08-30 (Session A, Work Item 7).**
    * The generated repo inventory: `pnpm repo-map` renders the tree, the
    * routes, the schema, the gates, the method store and the scheduled jobs
    * from the repository itself, so the reviewer reads a derived census from
@@ -193,8 +193,7 @@ export const COPIED_DOCS = MIRRORED_DOCS.filter((d) => d.repoPath !== null);
 export const EXPECTED_DIRS = ["transcripts", "code", "owner-intake"];
 
 /**
- * **OWNER INTAKE — the folder the author writes into.** (A.1 WI8, 2026-08-30,
- * the author's decision.)
+ * **OWNER INTAKE — the folder the author writes into.** (A.1 WI8, 2026-08-30.)
  *
  * `defects.md` was his production-defect scratchpad and it joined the mirror on
  * 2026-08-14 for exactly the right reason: he writes from outside the repo, so
@@ -237,7 +236,7 @@ export const DECLARED_EXTRA_DIRS = ["Screenshots from Feedback"];
 /**
  * Files in the folder that are the author's, not the mirror's.
  *
- * The ruling says a difference between the folder and the ten is a loud
+ * The rule says a difference between the folder and the ten is a loud
  * failure and never a silent reconciliation. Both halves are kept. But the
  * folder is the author's Drive folder, and on the day the check was written it
  * held three large CSV exports that nothing in this repo put there and nothing
@@ -248,7 +247,7 @@ export const DECLARED_EXTRA_DIRS = ["Screenshots from Feedback"];
  *
  * So: an extra file that is DECLARED here is reported and not failed, and the
  * declaration is in code where it can be read and argued with. An extra file
- * that is NOT declared still fails, which is the case the ruling was about.
+ * that is NOT declared still fails, which is the case the rule was about.
  * Nothing is ever deleted either way.
  *
  * If the author wants these gone from the folder, delete them in Drive and
@@ -311,8 +310,8 @@ export const MIRRORED_DOC_NAMES = new Set(MIRRORED_DOCS.map((d) => d.mirrorName)
 /**
  * Compare the folder's ACTUAL contents against the canonical ten.
  *
- * The author's ruling is that a difference here "is a loud failure, not a
- * silent reconciliation — name what is extra and what is missing." So this
+ * A difference here is a loud failure, not a silent reconciliation: name
+ * what is extra and what is missing. So this
  * returns both lists and never repairs either one. Reconciling silently is how
  * the folder and the list drifted far enough apart to produce two contradictory
  * reports in the first place; a mirror that quietly deletes what it did not

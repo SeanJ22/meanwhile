@@ -22,8 +22,8 @@ import {
 /**
  * D53 (2026-08-15) — the street becomes a point, or nothing.
  *
- * The author approved the Census Bureau's geocoder as this product's external
- * geocoding source. Wiring it turned up a fact worth pinning: **the Census
+ * The Census Bureau's geocoder is this product's external geocoding source.
+ * Wiring it turned up a fact worth pinning: **the Census
  * geocoder does not geocode street names**, only addresses. So this samples a
  * few house numbers and asks whether they agree about where the street is,
  * and refuses to answer when they do not.
@@ -600,7 +600,7 @@ test("M80: the promise changed in the same commit, on both surfaces", () => {
       /passes through our server/.test(page),
       `${name} does not say the address passes through our server`,
     );
-    // F01 1e (2026-08-19, the author): the never-store/never-log promise is
+    // F01 1e (2026-08-19): the never-store/never-log promise is
     // struck wherever THE ADDRESS is described. The keepable half is the
     // mechanism sentence asserted just above; the promise may not come back.
     //

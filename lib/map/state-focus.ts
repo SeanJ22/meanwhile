@@ -3,16 +3,16 @@ import { pointInRings } from "../geo/polygon.ts";
 
 /**
  * **The state rises out of the map** — M91, rebuilt for g4 item 2 after the
- * author ruled the first version SLOPPY against his own reference
- * (breakfreegraphics.com on neumorphism in user interfaces).
+ * first version fell short of its reference (breakfreegraphics.com on
+ * neumorphism in user interfaces).
  *
  * ## What was wrong, stated plainly, because it is the whole design
  *
  * The first version drew the rise as **two MapLibre `line` layers** — a white
  * one translated `[-2,-2]` and a black one translated `[+2,+2]`, each 7 px
- * wide with 6 px of `line-blur`. The author's report was that the edge reads
- * as "a visible STROKE — a gray band tracing the polygon with every coastal
- * vertex showing", and the arithmetic says exactly that:
+ * wide with 6 px of `line-blur`. The edge read as a visible STROKE — a gray
+ * band tracing the polygon with every coastal vertex showing — and the
+ * arithmetic says exactly that:
  *
  * - **The two shadows were 4 px apart and 7 px wide**, so they overlapped
  *   over roughly two-thirds of their width. White at 0.5 composited over
@@ -43,14 +43,14 @@ import { pointInRings } from "../geo/polygon.ts";
  * opacity to fake a gradient, buys a gradient at the cost of six more layers
  * per state and still traces every vertex.
  *
- * ## The three properties the author named, and where each is enforced
+ * ## The three required properties, and where each is enforced
  *
  * 1. **No visible line anywhere.** The shadow's inner edge is FEATHERED by
  *    the mask (`FEATHER_PX`), so it rises from zero AT the border rather than
  *    stepping to full strength the way a hard clip would. This is the whole
  *    reason the mask is a blurred `<mask>` and not a `<clipPath>`: a clip is
  *    binary, and a binary edge on a shadow that is at ~97% of peak where it
- *    meets the shape IS the line the author is objecting to.
+ *    meets the shape IS the visible line this design removes.
  * 2. **One light source, two opposed shadows.** The offset is applied in
  *    SCREEN space, so the sun does not rotate or scale with the map. Because
  *    each silhouette is offset a full `OFFSET_PX` before blurring, the dark
@@ -62,10 +62,10 @@ import { pointInRings } from "../geo/polygon.ts";
  *    1 px rule drops almost nothing at neighbourhood zoom and most of the
  *    coast at continental zoom.
  *
- * ## Zoom, and the author's ruling on release
+ * ## Zoom, and release
  *
  * The effect **never releases** — e's 6b2 rule that zooming out surrenders
- * focus is retired by the author's g4 ruling and recorded in `docs/DESIGN.md`.
+ * focus is retired in g4 and recorded in `docs/DESIGN.md`.
  * Only the SIZE of the rise scales with zoom, and it bottoms out well above
  * zero: a state seen at continental scale is small on screen and a 16 px
  * shadow would swamp it, but a zero-px one would be the release rule wearing
@@ -146,8 +146,8 @@ export interface ScreenPoint {
 /**
  * Ramer–Douglas–Peucker, in SCREEN pixels.
  *
- * The author's third complaint about the shipped extrusion — "the coastline's
- * vertices saw when zoomed out" — is a projection problem, not a data one.
+ * The third defect in the shipped extrusion — the coastline's vertices saw
+ * when zoomed out — is a projection problem, not a data one.
  * The outline is generalized once, in degrees, at fetch time; a fixed angular
  * tolerance is a different number of pixels at every zoom, so at continental
  * scale New Hampshire's 256 points land on top of each other and the edge
@@ -255,7 +255,7 @@ export interface ExtrusionSpec {
   /**
    * Gaussian sigma of the MASK's edge — how far the shadow takes to rise
    * from nothing at the border. This is the number that makes the difference
-   * between a soft gradient and the visible line the author rejected.
+   * between a soft gradient and a visible line.
    */
   featherPx: number;
   /** Sub-pixel simplification tolerance for the projected rings. */
@@ -273,9 +273,8 @@ const NEAR: ExtrusionSpec = {
 /**
  * Continental zoom: the whole outline is on screen at once.
  *
- * The floor is non-zero and deliberately so — the author's test is looking at
- * 85701 and zooming ALL the way out, and the effect holding there is the
- * ruling. A spec that interpolated to zero would be e's retired release rule
+ * The floor is non-zero and deliberately so — the test is looking at 85701
+ * and zooming ALL the way out, and the effect must hold there. A spec that interpolated to zero would be e's retired release rule
  * arriving through the back door.
  */
 const FAR: ExtrusionSpec = {
@@ -324,8 +323,8 @@ export function extrusionSpecForZoom(zoom: number): ExtrusionSpec {
  * zoom" instead, which is the true sentence.
  *
  * It is kept because the property is real below z4, where a state does become
- * smaller than the rise that marks it, and because the author's specification
- * is that the ENTIRE active state renders crisp at EVERY zoom. It is not what
+ * smaller than the rise that marks it, and because the specification is that
+ * the ENTIRE active state renders crisp at EVERY zoom. It is not what
  * fixed anything that was reported.
  *
  * So the same rule the zoom ramp already encodes is applied to the shape as

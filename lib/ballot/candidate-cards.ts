@@ -9,7 +9,7 @@ import { photoMayRender } from "../photos/review.ts";
  * The two files stay separate because they are different hunts with
  * different rules: a link is verified by fetching it; a card's photo must be
  * a URL from the candidate's own cited page (campaign site for challengers —
- * the author-adjusted photo rule — since a challenger has no official
+ * the adjusted photo rule — since a challenger has no official
  * portrait), HEAD-verified as an image, and labeled with its source. Bios
  * are the site's own words, attributed with a read date — never our
  * characterization of the person.

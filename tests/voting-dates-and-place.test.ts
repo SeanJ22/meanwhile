@@ -172,7 +172,7 @@ test("15: the ballot's polling-place affordance opens the map's own panel", () =
 
   // The affordance is the shared component, and there is exactly one of it.
   //
-  // AMENDED 2026-08-20 (F21, the author's ruling). This assertion read `2`,
+  // AMENDED 2026-08-20 (F21). This assertion read `2`,
   // with the message: "both polling-place affordances must use the shared
   // component — item 6 (2026-08-15) committed a guard requiring the pointer
   // in the dates header AND the checker box, so both render and both must be
@@ -213,9 +213,9 @@ test("15: the ballot's polling-place affordance opens the map's own panel", () =
  * **AMENDED 2026-08-24 (BAL-2) — THE HANDOFF IS A BEHAVIOUR NOW, NOT A LINK.**
  *
  * Item 15 (2026-08-19) required the state's own tool to be OFFERED beside the
- * in-app answer and LABELLED as leaving. The author's 8/24 ruling deletes the
- * offer: *delete "or search Arizona Secretary of State's own tool" — the pill
- * below it is that.*
+ * in-app answer and LABELLED as leaving. The 8/24 change deletes the offer
+ * ("or search Arizona Secretary of State's own tool"): the pill below it
+ * already is that tool's route.
  *
  * Item 15's substance is untouched, and the distinction is what this guard now
  * holds. Its defect was that one product answered one question two ways on two
@@ -234,8 +234,8 @@ test("BAL-2: the state's tool is reached through the pill, not offered beside it
   const where = read("components", "ballot", "where-to-vote.tsx");
   /*
    * Comments stripped before the check, and this is not a convenience: this
-   * file's own note QUOTES the author's instruction — *delete "or search
-   * ... own tool"* — so a guard reading the raw text would flag the record of
+   * file's own note can QUOTE the deleted phrase — *"or search ... own
+   * tool"* — so a guard reading the raw text would flag the record of
    * the fix as the defect. A sweep that cannot tell shipped copy from a
    * comment about shipped copy is reading the wrong thing (RULING 110).
    */

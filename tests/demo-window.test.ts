@@ -13,7 +13,7 @@ import {
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /**
- * **`T10` — the demo-deletion promise, kept mechanically.** (Approved by Sean
+ * **`T10` — the demo-deletion promise, kept mechanically.** (Adopted
  * 2026-08-24, built with wall-down as the trigger.)
  */
 
@@ -36,7 +36,7 @@ test("an unset WALL_UP means the lower bound is THE BEGINNING, and the verdict s
   /*
    * RULING 142 — the line in the sand. This test REPLACES
    * "an unbounded window REFUSES rather than deleting from the beginning of
-   * time", which asserted the opposite and was correct until Sean ruled.
+   * time", which asserted the opposite and was correct until this change.
    *
    * The old reasoning was that deleting from the beginning would take real
    * reader rows with it. The ruling removes the premise: nothing collected

@@ -153,7 +153,7 @@ const CLAUDE = join(ROOT, "CLAUDE.md");
 // they drifted the moment the file grew, and raising the constant alone would
 // just restart the same clock. CLAUDE.md grows every time the author adopts a
 // rule, so anything fixed here goes stale by design.
-// THE CEILING IS GONE (Prompt C item 4.2, 2026-08-20). The author's ruling:
+// THE CEILING IS GONE (Prompt C item 4.2, 2026-08-20). The rule:
 // CLAUDE.md has NO SIZE CAP. The 40 KB cap belongs to `docs/context.md` alone,
 // and an upper warning band here was that cap leaking into the one file it
 // does not govern — it fires on exactly the change the project wants, which is

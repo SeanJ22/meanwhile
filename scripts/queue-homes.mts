@@ -20,7 +20,7 @@
  * ## The homing rule, applied mechanically
  *
  * A row's home comes from the author's OWN disposition where it has one. The
- * mapping below is a reading of his words, not a decision about them, and a
+ * mapping below is a reading of the disposition text, not a decision about it, and a
  * row whose disposition does not decide a home is printed as NEEDS A HOME
  * rather than being assigned one quietly.
  */
@@ -78,7 +78,7 @@ type Home = "FINISHED" | "FEEDBACK SESSION" | "H" | "POST-H" | "KILLED" | "NEEDS
 function homeFrom(disposition: string, status: string, id: string): Home {
   if (/^(Done|Absorbed)/i.test(status)) return "FINISHED";
   const d = disposition.toLowerCase();
-  // The author's standing parks, named individually in the g21 brief.
+  // Standing parks, named individually in the g21 brief.
   if (id === "F01") return "FEEDBACK SESSION";
   if (id === "M07") return "FEEDBACK SESSION";
   if (/not rele[vw]ent|not relevant/.test(d)) return "KILLED";

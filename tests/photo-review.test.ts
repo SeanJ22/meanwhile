@@ -22,7 +22,7 @@ await installRegistryRuntimeFirstSeeds();
 
 /**
  * **RULING 55 — a photo never blocks anything, and every photo is reviewed by
- * Sean.** (Adopted 2026-08-21, the author's ruling, NH Hunt 3.)
+ * Sean.** (Adopted 2026-08-21, NH Hunt 3.)
  *
  * Three false portraits shipped past every mechanical check the repo had in a
  * single session, and every one was caught by a human READING THE IMAGE:

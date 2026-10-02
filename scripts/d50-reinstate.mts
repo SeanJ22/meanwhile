@@ -8,8 +8,8 @@
  */
 /**
  * **D50 item 7c — reinstate the two portraits the never-wrong-face gate held
- * back**, on the author's instruction (2026-08-19): *"Put them in for now,
- * but be prepared to pull them out. I want to see it to assess it."*
+ * back** (2026-08-19): they go in for now, visible so they can be assessed,
+ * and ready to be pulled back out.
  *
  * Brian Taylor and Bob Harb are New Hampshire House members whose OFFICIAL
  * portraits — door 2, published by the chamber to identify its own member —
@@ -22,11 +22,10 @@
  * about IDENTITY — a wrong face, a group shot where the subject is ambiguous,
  * a generated likeness — and neither of these fails it: both are the chamber's
  * own published portrait of the named member, on the member's own page. What
- * they fail is COMPOSITION, and composition is the thing the author has asked
- * to look at.
+ * they fail is COMPOSITION, and composition is the thing under review.
  *
  * So both ship, both are flagged in the review list as distance shots so the
- * author knows what he is looking at, and one line pulls either back out.
+ * reviewer knows what they are looking at, and one line pulls either back out.
  *
  * The four-door rule is unmoved: door 2, official government-published
  * portrait, attributed to the publishing body, source URL recorded per row,
@@ -76,7 +75,7 @@ interface Photo {
   license: string;
   attribution: string | null;
   collectedAt: string;
-  /** Present only on a row the author has asked to eyeball (item 7b). */
+  /** Present only on a row flagged for a human look (item 7b). */
   review?: string;
 }
 

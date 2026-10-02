@@ -76,8 +76,8 @@ export function intakeWindows(space: IntakeSpace): Windows {
    * nobody tunes and one of them quietly wrong. (OWN-Q6, 2026-08-31.)
    *
    * Its `perKey` window is CONSTRUCTED and never used — the route has no
-   * continuity key to bucket by, because the owner's instruction on that
-   * feature was no identity. Constructed anyway so the cache holds one shape
+   * continuity key to bucket by, because that feature carries no identity
+   * by design. Constructed anyway so the cache holds one shape
    * per space and a later caller with a key gets a real limiter rather than a
    * surprise.
    */

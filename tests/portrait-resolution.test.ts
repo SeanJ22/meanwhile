@@ -56,7 +56,7 @@
  * **RULING 55 — every photo is reviewed by the author, and a decision is about
  * an IMAGE, not a person.** A 480×720 original is a different image from the
  * 150×150 crop we hold, so it needs its own review, and a session shipping it
- * would be taking the author's decision.
+ * would be skipping that review.
  *
  * ## What this test is FOR
  *

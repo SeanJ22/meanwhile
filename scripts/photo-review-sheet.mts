@@ -1,13 +1,13 @@
 /**
- * `pnpm photo:sheet` — THE STANDING PORTRAIT REVIEW SHEET. (`R54`, Sean's
- * standing order, built 2026-08-24.)
+ * `pnpm photo:sheet` — THE STANDING PORTRAIT REVIEW SHEET. (`R54`, built
+ * 2026-08-24.)
  *
- * ## What Sean asked for, in his words
+ * ## What this produces
  *
  * One generated image — or a short set — holding **every pending portrait,
  * numbered**, dropped into the Drive mirror whenever anything is pending, and
- * **regenerated rather than hand-kept**. From then on he approves photos by
- * glancing at Drive and replying with numbers.
+ * **regenerated rather than hand-kept**. Photos are then approved by glancing
+ * at Drive and replying with numbers.
  *
  * ## Why this is a mechanism and not a job
  *
@@ -266,7 +266,7 @@ await page.waitForLoadState("networkidle");
 
 /*
  * A STABLE filename, deliberately. Sean approves photos by glancing at Drive,
- * so what he wants there is THE CURRENT SHEET — not an archive that grows a
+ * so what belongs there is THE CURRENT SHEET — not an archive that grows a
  * file a day and makes him work out which one is live. The date is printed
  * inside the image, where it belongs, and git history keeps every version.
  */

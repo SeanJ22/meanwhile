@@ -1,6 +1,6 @@
 /**
  * **RULING 124 — a commit that cannot change what a reader sees does not cost a
- * deploy.** (Adopted 2026-08-24, Sean's instruction, item 1.)
+ * deploy.** (Adopted 2026-08-24, item 1.)
  *
  * The guard has two halves and only the second one is interesting.
  *

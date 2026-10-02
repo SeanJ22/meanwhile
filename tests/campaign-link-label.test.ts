@@ -15,7 +15,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /**
  * **RULING 122** — a party-hosted candidate page is the candidate's page, with
- * the host labelled. (Sean's decision of 2026-08-24, closing `NH11`.)
+ * the host labelled. (Adopted 2026-08-24, closing `NH11`.)
  */
 
 test("an ordinary campaign domain is still a campaign site", () => {

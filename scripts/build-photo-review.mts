@@ -12,11 +12,11 @@
  * reader-facing regression to satisfy a new rule is not a trade this product
  * makes.
  *
- * **`NH26` closed on 2026-08-24**: Sean approved the set en bloc — he checked a
- * few, and if one has issues later he will call it out specifically. The label
- * says EN BLOC rather than per-asset because that is what happened. Recording
- * it as though he had read every one would be the unread-evidence problem the
- * ruling exists to end, pointed at his own decision.
+ * **`NH26` closed on 2026-08-24**: the set was approved en bloc, with any
+ * single one coming out if an issue is found later. The label says EN BLOC
+ * rather than per-asset because that is what happened. Recording it as
+ * though every one had been read would be the unread-evidence problem the
+ * ruling exists to end.
  *
  * **APPROVED PER ASSET.** The seventeen that sat PENDING behind `NH30`,
  * `NH65`, `NH78` and `NH111`, each read as an image and decided individually on
@@ -115,13 +115,13 @@ const REJECTIONS = [
 ];
 
 /**
- * **SEAN'S DECISIONS OF 2026-08-24.** Individually approved, by asset, after
- * reading each one as an image.
+ * **PER-ASSET APPROVALS OF 2026-08-24.** Individually approved, by asset,
+ * after reading each one as an image.
  *
  * These are the four groups that had been sitting PENDING behind Needs Sean
  * rows — `NH30` (3), `NH65` (5), `NH78` (7) and `NH111` (2) — seventeen
  * portraits in total. Every one was hunted, read as an image, and recorded
- * with its door before it was ever put in front of him; what was owed was the
+ * with its door before it was ever put up for review; what was owed was the
  * one judgement a machine cannot make.
  *
  * **The decision keys to the ASSET, not to the person**, which is why the URL
@@ -148,12 +148,12 @@ const SEAN_APPROVED_20260824: { name: string; url: string; door: string; row: st
 ];
 
 /**
- * **`NH10` — TOBIN MENARD STAYS INITIALS, and Sean affirmed the refusal.**
+ * **`NH10` — TOBIN MENARD STAYS INITIALS, and the refusal stands.**
  *
  * His campaign publishes exactly one picture of him and it carries the words
  * "Accountability Responsibility" printed across it in red. The composition
- * standard forbids a wordmark by name, at every door, and Sean's words on
- * 2026-08-24 were **"no campaign slogans or anything like that"**.
+ * standard forbids a wordmark by name, at every door — no campaign slogans of
+ * any kind.
  *
  * This is recorded as a REJECTION rather than left absent because a refusal is
  * a branch result (RULING 52) — it says *this image is not shippable*, and
@@ -202,7 +202,7 @@ for (const r of SEAN_REFUSED_20260824) {
 }
 const rejected = REJECTIONS.length + SEAN_REFUSED_20260824.length;
 
-/* ── Sean's individual approvals of 2026-08-24, before the grandfather pass ── */
+/* ── The per-asset approvals of 2026-08-24, before the grandfather pass ──── */
 let approvedBySean = 0;
 for (const a of SEAN_APPROVED_20260824) {
   const pk = personKey(a.name);
@@ -230,7 +230,7 @@ for (const [key, card] of Object.entries(cards.cards)) {
    * script wrote `.replace(/-/g, " ")` instead, producing `HOBBS KATIE` where
    * the lookup asks for `KATIE HOBBS`, so almost every grandfathered record
    * missed its key and portraits dropped across the product. Caught by the
-   * standing test on the author's own Hobbs card.
+   * standing test on the Hobbs card.
    *
    * A `contestId|Name` key has no dash form and is used as written.
    */
@@ -244,7 +244,7 @@ for (const [key, card] of Object.entries(cards.cards)) {
    * rule, and for the statewide executives the portrait is carried inline in
    * `statewide-executives.ts` rather than in the cards file at all. A grandfather
    * pass reading only the cards missed every one of them, and Katie Hobbs's
-   * portrait — the author's own flagged card — dropped out of the product. The
+   * portrait — a flagged card — dropped out of the product. The
    * standing test caught it.
    *
    * So this asks the same resolver the page asks, and records the answer.
@@ -257,17 +257,16 @@ for (const [key, card] of Object.entries(cards.cards)) {
   // own note. Only an existing decision for THIS url is left alone.
   if ((reviews[pk] ?? []).some((r) => r.url === url)) continue;
   /*
-   * **`NH26` CLOSED 2026-08-24 — THESE ARE SEAN'S NOW, EN BLOC.**
+   * **`NH26` CLOSED 2026-08-24 — THESE ARE APPROVED NOW, EN BLOC.**
    *
    * They were recorded `grandfathered`, which meant *shipping before the rule
-   * existed, not approved by anybody*. On 2026-08-24 he approved the set: he
-   * checked a few, and if one has issues later he will call it out
-   * specifically; otherwise good to go.
+   * existed, not approved by anybody*. On 2026-08-24 the set was approved en
+   * bloc, with any single one coming out if an issue is found later.
    *
    * **It is labelled EN BLOC rather than per-asset, and that distinction is
-   * kept deliberately.** He did not read forty-eight images one at a time, and
-   * recording this as though he had would be the unread-evidence problem
-   * RULING 55 exists to end, pointed at his own decision. What changed is real
+   * kept deliberately.** The forty-eight images were not read one at a time,
+   * and recording this as though they had been would be the unread-evidence
+   * problem RULING 55 exists to end. What changed is real
    * and is what the rule asked for: a named person with the authority to decide
    * has decided, and these no longer sit in a queue waiting for somebody.
    */

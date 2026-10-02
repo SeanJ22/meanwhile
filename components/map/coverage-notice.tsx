@@ -89,13 +89,12 @@ interface CoverageNoticeProps {
    */
   failedSourceOcdIds?: string[];
   /**
-   * **F01 7.2 (2026-08-19, the author)** — which of those bodies nevertheless
+   * **F01 7.2 (2026-08-19)** — which of those bodies nevertheless
    * has meetings ON SCREEN right now.
    *
-   * His finding: the New Hampshire card said it couldn’t reach Kearsarge’s and
+   * The finding: the New Hampshire card said it couldn’t reach Kearsarge’s and
    * Newbury’s calendar sources “so their meetings may be missing here”, and
    * clicking the maroon dot in New London showed Kearsarge meetings anyway.
-   * *"Something’s not right."*
    *
    * Diagnosed before fixing, and neither surface was lying — they were
    * answering different questions. `carry-forward.ts` exists precisely so a
@@ -129,8 +128,7 @@ interface CoverageNoticeProps {
   refreshing?: boolean;
   onOpenOfficial?: OpenOfficial;
   /**
-   * Opens a BODY's large battlecard (item 3, 2026-08-16, the author's
-   * ruling). The click grammar on this surface is exactly two moves: a
+   * Opens a BODY's large battlecard (item 3, 2026-08-16). The click grammar on this surface is exactly two moves: a
    * person's name opens their small card, a body's row opens the body's
    * large one. Nothing on this list leaves the product — Pima and Tucson
    * used to link straight out to their own websites from the row, and every
@@ -263,8 +261,8 @@ function SubjectLine({
  *
  * A component named `ElsewhereMark` stood here and rendered *"not yours —
  * covers another part of 85641"* beside a district the reader's address had
- * positively excluded. Three sessions improved that sentence. The owner
- * photographed it three times.
+ * positively excluded. Three sessions improved that sentence, and it was
+ * still wrong each time.
  *
  * The ruling ends the class rather than the wording: **after a confirmed
  * address the scope IS the address**, and an entity we have determined does
@@ -424,12 +422,11 @@ function Holder({
   onOpen?: () => void;
 }) {
   /*
-   * ITEM 3 (2026-08-16, the author's ruling): THE LIST GOES BACK TO CLEAN.
+   * ITEM 3 (2026-08-16): THE LIST GOES BACK TO CLEAN.
    *
    * The prior pass gave this row the battlecards' full element grammar — a
    * filled party chip and a "Their site →" link beside every name — and the
-   * author's verdict on the result was "way overcrowded... a forever scroll."
-   * It was: this card can carry twenty-odd people, and twenty rows each
+   * result was overcrowded, a forever scroll. This card can carry twenty-odd people, and twenty rows each
    * carrying a chip, an outbound link and a source mark is a wall.
    *
    * So the register here is DENSITY, not completeness. Three things per row
@@ -442,7 +439,7 @@ function Holder({
    *
    * "Their site →" is GONE from every row. External links do not live in the
    * list — they live inside the card the name opens, which is the click
-   * grammar the author set for this whole surface: a PERSON opens a person's
+   * grammar for this whole surface: a PERSON opens a person's
    * card, a BODY opens a body's card, and every door out of the product is
    * behind one of those two.
    */
@@ -480,9 +477,9 @@ function Holder({
           class of surface, removed for the same reason.**
 
           RULING 136: the author's id names an instance and the defect is the
-          class. He boxed the small battlecard; this is the who-governs card,
-          which carries the identical `· SOURCE` run at the right edge of every
-          holder row. Fixing only the row he photographed is what the last two
+          class. The report boxed the small battlecard; this is the who-governs
+          card, which carries the identical `· SOURCE` run at the right edge of
+          every holder row. Fixing only the row photographed is what the last two
           passes of BC-14 did.
 
           Of the four `.source-tag` sites, THREE are removed: this one, the
@@ -638,7 +635,7 @@ function CoverageBody({
    * `coverage.divisions`. It could not: `summarizeCoverage` derives
    * `coverage.seats` from `coverage.divisions` by filtering to the seat types,
    * so at those levels the two lists are one list. Measured against production
-   * at 85641 with the owner's address confirmed, the State section rendered
+   * at 85641 with a real address confirmed, the State section rendered
    * EMPTY — District 19 correctly set aside, District 17 still absent.
    *
    * The only list that carries District 17 is the reader's own confirmed
@@ -709,7 +706,7 @@ function CoverageBody({
   const bodiesHere = scopedToAddress(bodies, subject.location);
 
   /*
-   * ITEM 1a (2026-08-17, the author's ruling): ONE DENOMINATOR.
+   * ITEM 1a (2026-08-17): ONE DENOMINATOR.
    *
    * Production at 85701 read "4 bodies govern the area around 85701" above a
    * disclosure reading "Why these 5?" above 5 rows. Three numbers, one list.
@@ -928,8 +925,7 @@ function CoverageBody({
         The sentence above states how many boards, committees and commissions
         we track here. Until now that was the end of it: reaching one meant
         closing this panel, opening the sidebar, and clicking Bodies here.
-        The owner: *"there's no way for me to find out which one of those
-        are."*
+        A reader had no way to find out which ones they were.
 
         A number a reader cannot open is a panel describing contents it does
         not show — the same defect as WGH-19's completeness claim, one step
@@ -937,7 +933,7 @@ function CoverageBody({
         rows are `derived.otherRows`, so the label cannot state a number the
         list does not contain.
 
-        Collapsed by default (the owner's own rule for long content, MTG-5,
+        Collapsed by default (the same rule for long content as MTG-5,
         BAL-8, BAL-16, ASK-21), and each row opens the same battlecard the
         governing rows open — a board is a real body a reader can follow.
       */}
@@ -973,7 +969,7 @@ function CoverageBody({
         <p className="t-structure mt-3 text-local">Local</p>
       )}
       {/*
-        6g (2026-08-15, the author): "Why these five?" — the top list surfaces
+        6g (2026-08-15): "Why these five?" — the top list surfaces
         a Board of Adjustment beside a county, a city and a school district,
         and nothing on the surface says why those and not others.
 
@@ -1006,9 +1002,8 @@ function CoverageBody({
             This said *"All of them are listed; none is left out."* Read
             against its own subject — the GOVERNMENTS — it was true, and the
             following sentence separated boards and committees out explicitly.
-            The owner read it beside a sidebar reading 65 bodies here and
-            called it factually wrong and grammatically terrible in the same
-            breath, and he was right about the reading: a claim of
+            Beside a sidebar reading 65 bodies here, it read as factually
+            wrong and grammatically poor, and that reading is fair: a claim of
             completeness sitting above eight rows, on a panel that elsewhere
             says twenty-seven more calendars are tracked and thirty more
             bodies are being added, cannot be parsed as narrowly as it was
@@ -1061,7 +1056,7 @@ function CoverageBody({
               className="flex items-baseline justify-between gap-3 pb-1"
             >
               {/*
-                ITEM 3 (2026-08-16, the author's ruling): A BODY ROW OPENS ITS
+                ITEM 3 (2026-08-16): A BODY ROW OPENS ITS
                 LARGE BATTLECARD. It used to be an outbound link straight to
                 the body's own website — Pima and Tucson threw the reader out
                 of the product from the list, before they had been told
@@ -1080,12 +1075,12 @@ function CoverageBody({
                 It used to be the row's own second child. The row is
                 `justify-between` with three children, so the asterisk was
                 distributed into the dead space between the body name and the
-                right-aligned type label — the author's `17-30-58` shows the
+                right-aligned type label — screenshot `17-30-58` shows the
                 marks on `Rockaway township`, `Denville township` and
                 `Rockaway` floating a third of the way across the panel, nowhere
                 near the words they belong to.
 
-                **He is fine with the asterisk existing** — his objection is the
+                **The asterisk itself is fine** — the defect is the
                 placement, not the mark, which is why this moves it rather than
                 taking the RULING 138 route and removing it. `.could-govern-mark`
                 already carried `display: inline; margin-left: 3px`, which was
@@ -1165,12 +1160,12 @@ function CoverageBody({
             </li>
           ))}
           {/*
-            ITEM 6 (2026-08-17, the author's ruling): THE MAYOR ROW IS GONE
+            ITEM 6 (2026-08-17): THE MAYOR ROW IS GONE
             FROM THIS PANEL, everywhere it appeared, no exceptions.
 
             3e (2026-08-16) put it here because 85701 showed Tucson's
-            government without its highest-profile office. The author's ruling
-            is that the placement is awkward and the office already renders in
+            government without its highest-profile office. But the placement
+            is awkward and the office already renders in
             the battlecard's Representation tab, which it does.
 
             **Reachability after removal, checked against the committed
@@ -1272,8 +1267,7 @@ function CoverageBody({
 
       {/*
         WGH-1 and WGH-2 (2026-08-22): ONE pill for the whole panel, between
-        the Local listing and the State listing, exactly where the author put
-        it. Every affected row above carries an asterisk and nothing more.
+        the Local listing and the State listing. Every affected row above carries an asterisk and nothing more.
 
         What was here before: the full sentence "Could govern — add your
         address to confirm" on EVERY affected row. At 12 bodies that was
@@ -1477,14 +1471,13 @@ function CoverageBody({
                 * populated the panel printed nine statewide officeholders by
                 * name and party — Mayes, Yee, Horne, Presmyk and five
                 * corporation commissioners — and then said the governor was
-                * the only one. The owner highlighted it in yellow.
+                * the only one.
                 *
                 * It is not stale. It is FALSE about content rendered inches
                 * above it, and the governor is not even the nearest entry.
                 *
-                * The line is gone rather than corrected, and that is the
-                * owner's call verbatim: the contents are right, so the line is
-                * the thing that goes. Nothing replaces it, because the only
+                * The line is gone rather than corrected: the contents are
+                * right, so the line is the thing that goes. Nothing replaces it, because the only
                 * replacement would be a completeness claim — *these are all
                 * the statewide offices* — and we hold no source for the
                 * denominator of statewide offices. Asserting it would be the
@@ -1522,7 +1515,7 @@ function CoverageBody({
                   />
                 ))}
                 {/*
-                  ALIGN-2 (2026-08-26, the author's 8/26 walkthrough). This
+                  ALIGN-2 (2026-08-26, the 8/26 walkthrough). This
                   used to map over PEOPLE and emit a heading per person, so
                   every Arizona zip printed `U.S. Senator` twice — once above
                   Mark Kelly and once above Ruben Gallego.
@@ -1570,7 +1563,7 @@ function CoverageBody({
 
             A collapsed <details> stood here listing the districts the
             reader's address ruled out, under the reading that RULING 26/27
-            forbade dropping them. The author settled that reading: after a
+            forbade dropping them. That reading is settled now: after a
             confirmed address the scope IS the address, and an entity we have
             determined does not govern this reader is out of scope rather than
             disclosed. Show-everything guarantees completeness WITHIN the
@@ -1641,13 +1634,13 @@ function CoverageBody({
         number only when the reader's own street crosses a line.
       */}
       {/*
-        **WGH-7 (2026-08-24, the author's ruling) — DELETED, AND THIS IS WHAT
+        **WGH-7 (2026-08-24) — DELETED, AND THIS IS WHAT
         CLOSES WGH-3 AND WGH-4 RATHER THAN MERGING THEM.**
 
-        His words: *delete the "Narrow this area" link under the federal
-        representatives — the pill is the single entry point.*
+        The "Narrow this area" link under the federal representatives is
+        deleted: the pill is the single entry point.
 
-        The pill he means is `CouldGovernNotice`, above the Local list, which
+        That pill is `CouldGovernNotice`, above the Local list, which
         has opened this exact `AddressPrompt` since 2026-08-22. So the card was
         carrying TWO doors onto one surface — the duplicate-entry friction
         `CLAUDE.md` names — separated by the whole Local/State/Federal list, so

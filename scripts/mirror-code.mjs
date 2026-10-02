@@ -99,8 +99,8 @@ export const ID_MAP_PATH = "docs/mirror-code-ids.json";
  *
  * The per-file cap was 120 KB for one day. `app/globals.css` shipped at 120,124
  * bytes against a 122,880-byte ceiling — 2,756 bytes of headroom, so the design
- * tokens would have fallen out of the reviewer's reach on their next edit. The
- * author raised it to 200 KB on 2026-08-17 rather than watch that happen.
+ * tokens would have fallen out of the reviewer's reach on their next edit. It
+ * was raised to 200 KB on 2026-08-17 rather than watch that happen.
  *
  * **RAISED TO 256 KB ON 2026-08-25, AND THIS IS THE SECOND TIME FOR THE SAME
  * FILE FOR THE SAME REASON. That is the finding, not the number** (`RO06`).
@@ -122,12 +122,12 @@ export const ID_MAP_PATH = "docs/mirror-code-ids.json";
  * raising a limit treats a symptom, and by the third time the limit is the
  * problem.** The structural options — splitting the stylesheet so the tokens
  * mirror on their own, or mirroring tokens rather than the whole file — are
- * the author's call and are `RO06`. Nothing here trims a rationale to fit,
+ * a separate structural decision and are `RO06`. Nothing here trims a rationale to fit,
  * because a stripped rule reads as guidance.
  *
- * ## AND THE CAP CAME BACK DOWN (2026-08-25, `NH180`, Sean's ruling)
+ * ## AND THE CAP CAME BACK DOWN (2026-08-25, `NH180`)
  *
- * He ruled the structural option rather than the number: **strip the prose into
+ * The fix took the structural option rather than the number: **strip the prose into
  * its own file.** `app/globals.css` went from **206,120 bytes to 134,880** —
  * every one of the 125 comment blocks over 300 bytes moved verbatim to
  * `docs/globals-css-notes.md`, each leaving a one-line pointer at its rule, so

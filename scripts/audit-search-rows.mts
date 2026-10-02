@@ -105,12 +105,12 @@ function outcomeAfter(
   }
   if (item.kind === "body" && resolveBody(bodies, item) !== null) return "card";
   /*
-   * A PLACE ROW OPENS THE PLACE CARD (g18, the author's ruling A).
+   * A PLACE ROW OPENS THE PLACE CARD (g18, option A).
    *
    * g15 left this row as the audit's one non-defect miss: a place is a
    * division several bodies sit in, and electing one of them to stand for it
-   * would be an invented answer, so the card a place row should open was the
-   * author's to rule on rather than a build to guess at. He ruled: the place's
+   * would be an invented answer, so the card a place row should open was a
+   * design question rather than a build to guess at. The answer: the place's
    * own small card, listing every body in it, each row opening that body's
    * battlecard.
    *

@@ -543,8 +543,8 @@ export const VENUE_CACHE: VenueEntry[] = [
   // block reads `937 Route 103 / PO Box 296 / Newbury, NH 03255` beside a
   // `See map: Google Maps` link (`maps.google.com?q=937+Route+103%2C+Newbury%2C
   // +NH%2C+03255%2C+us`) — machine-readable markup, invisible to a reader
-  // scanning prose for "the meeting is at". The author found it in his own
-  // browser via the map link and ruled it the meeting address for this board.
+  // scanning prose for "the meeting is at". It was found in a browser via the
+  // map link and taken as the meeting address for this board.
   // The name is the town's OWN label for the building, from the site footer
   // that every page carries: "Newbury Offices, PO Box 296, US Rte 103". Both
   // strings verified against a live retrieval of the ZBA page on 2026-08-15.
@@ -849,11 +849,11 @@ export const VENUE_CACHE: VenueEntry[] = [
    *
    * ── SUPERSEDED IN PART BY RULING 65 (2026-08-21; applied 2026-08-22, NJ
    * Hunt item 2.1). The paragraph above is kept verbatim rather than rewritten,
-   * because it is the reasoning the author ruled ON and a later session must be
+   * because it is the reasoning that was revisited and a later session must be
    * able to read both halves. ──────────────────────────────────────────────
    *
-   * The author ruled that **one address hosting several bodies is normal in
-   * small and large towns alike**, and that the footer address is used and the
+   * The revised position: **one address hosting several bodies is normal in
+   * small and large towns alike**, and the footer address is used and the
    * route recorded. Fifteen bodies dark because the town uses a site template
    * is a worse answer for a reader than fifteen bodies pinned at the address
    * the town itself publishes.

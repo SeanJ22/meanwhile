@@ -126,6 +126,9 @@ import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
 import { publishRoutineReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
+import { readFieldManual } from "../lib/control-plane/field-manual.ts";
+import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
+import { sharedScoutBrowser } from "./scout-browse.mts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 import { childFatalLine, installFatalLine } from "../lib/ops/fatal-line.ts";
 import {
@@ -193,6 +196,11 @@ const ROUTINE_DATA_PROCESS_LEASE = TASK_SELECTION.ok ? await (async () => {
     return null;
   }
 })() : null;
+
+const sharedBrowser = sharedScoutBrowser();
+const workerToolsHost = ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()
+  ? await startWorkerToolsHost({ knowledge: await readFieldManual(await createPgRepositories(controlPlaneUrlFromEnv()!,
+    RUN_STARTED_AT, { skipBootstrap: true })), browse: sharedBrowser.browse }) : null;
 
 interface SupervisorFailure {
   readonly taskId: string;
@@ -1162,3 +1170,5 @@ step = "releasing the host-local singleton";
 await ROUTINE_DATA_PROCESS_LEASE.release();
 }
 await readCacheHost.close();
+await workerToolsHost?.close();
+await sharedBrowser.close();

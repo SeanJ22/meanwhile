@@ -105,6 +105,11 @@ test("below-target places continue every pass until a settled hunt makes no prog
   const changed = await repos.routeTasks.mustRead(task.id);
   await repos.routeTasks.compareAndSet(task.id, changed.revision, { ...changed.value,
     disposition: { ...changed.value.disposition!, note: JSON.stringify({ placeProgress: false }) } }, now);
+  assert.equal((await scheduleNationalPlace(repos, settled, now, true) as { nextDueAt: string }).nextDueAt, now,
+    "a capped acquisition with no records has not exhausted the available work");
+  const exhausted = await repos.routeTasks.mustRead(task.id);
+  await repos.routeTasks.compareAndSet(task.id, exhausted.revision, { ...exhausted.value,
+    disposition: { ...exhausted.value.disposition!, disposition: "INGESTED" } }, now);
   assert.equal((await scheduleNationalPlace(repos, settled, now, true) as { nextDueAt: string }).nextDueAt, "2026-10-02T00:00:00.000Z");
   assert.equal((await scheduleNationalPlace(repos, { ...settled, lastWorkedAt: null }, now, true) as { nextDueAt: string }).nextDueAt,
     "2026-10-02T00:00:00.000Z", "an unfinished no-progress hunt also backs off");
@@ -127,7 +132,7 @@ test("hunt progress uses new reader facts and official unpublished findings, ign
 
 });
 
-test("a national host bound saves admitted responses and defers all remaining ZIPs without abandoning Attempts", async t => {
+test("a national API completes its geography walk beyond ten requests and reuses saved responses", async t => {
   const repos = createMemoryRepositories();
   const store = new MemoryEvidenceStore();
   // Cross renewal boundaries during acquisition, with stale reads held long
@@ -163,28 +168,27 @@ test("a national host bound saves admitted responses and defers all remaining ZI
   const tools = { repos, store, now: () => "2026-09-30T00:00:00.000Z", spaceOut: async () => {} };
   const input = { tools, store: new MemoryRoutineDataStore(), zips: ["03060", "03101", "03301"],
     publish: async () => { assert.fail("incomplete geography cannot publish"); } };
-  const result = await runNationalPlaceTask(input);
+  await assert.rejects(runNationalPlaceTask(input), /HELD_PLACE_READ_FAILED:REGISTRY_RUNTIME_BINDING/);
   assert.ok(heartbeatWrites > 0, "the national acquisition exercised its canonical lease heartbeat");
-  assert.deepEqual(result.map(row => row.zip), input.zips);
-  assert.ok(result.every(row => "deferred" in row && row.deferred.includes("next pass")));
-  assert.equal(requests, RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);
-  assert.ok((await repos.attempts.list()).every(row => row.value.outcome === "COMPLETED"));
-  assert.ok((await repos.routeTasks.list()).every(row => row.value.disposition?.disposition === "BLOCKED_CURRENTLY"));
-  assert.ok((await repos.occurrences.list()).every(row => row.value.closedAt && row.value.unresolvedReason?.includes("DEFERRED") && row.value.disposition === null));
+  assert.ok(requests > RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost, "Census is a national API, not a small local publisher");
   assert.ok((await repos.obligations.list()).every(row => row.value.lastWorkedAt === null));
   const saved = await repos.artifacts.readAll();
   assert.ok(saved.some(row => row.canonicalUrl.includes("Places_CouSub_ConCity_SubMCD")), "parallel responses saved before completion");
+  assert.ok(saved.some(row => row.canonicalUrl.includes("School")), "the first pass reaches every layer without a ten-request deferral");
   const before = requests;
   // The saved geography now completes within the same request bound. This
   // fixture has no registry runtime, so reaching its next read is the boundary.
   await assert.rejects(runNationalPlaceTask(input), /HELD_PLACE_READ_FAILED:REGISTRY_RUNTIME_BINDING/);
-  assert.ok(requests - before <= RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);
+  assert.equal(requests, before, "the second pass reads saved Census responses without repeating API calls");
   const next = await repos.artifacts.readAll();
   assert.ok(next.some(row => row.canonicalUrl.includes("School")), "the next pass advances using held responses");
   assert.ok(saved.every(row => next.some(other => other.artifactId === row.artifactId)), "all earlier evidence remains held");
   // A cut-off pass must leave the recently worked head behind the older tail.
   const worked = ["2026-09-30T00:00:00.000Z", "2026-09-28T00:00:00.000Z", "2026-09-27T00:00:00.000Z"];
   for (const [index, zip] of input.zips.entries()) {
+    if (!await repos.obligations.read(`national-place:${zip}`)) await repos.obligations.put(`national-place:${zip}`, standing({
+      id: `national-place:${zip}`, subjectId: `zip:${zip}`, recordClass: "OFFICIAL_ROSTER", routeId: "national-place-sources",
+      active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null }, tools.now()), tools.now());
     const row = await repos.obligations.mustRead(`national-place:${zip}`);
     await repos.obligations.compareAndSet(row.id, row.revision, { ...row.value, lastWorkedAt: worked[index] }, tools.now());
   }
@@ -234,7 +238,8 @@ test("national collector binds saved CSV to its real Attempt and reuses another 
     const obligation: ScheduledObligation = { obligation: { id: subject, subjectId: subject, recordClass: "OFFICIAL_ROSTER",
       routeId: "national-place-sources", active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null },
       nextDueAt: now, cadenceHours: 24, cadenceSource: "DEFAULT_NO_SIGNAL", basis: "test" };
-    return placeSourceReader({ project: "freshness", context: { obligation, route: null, providerId: null,
+    return placeSourceReader({ project: "freshness", websiteSize: address => new URL(address).hostname === "legislature.gov"
+      ? { kind: "local-government", population: 9999 } : undefined, context: { obligation, route: null, providerId: null,
       attemptId: attempt.id, workItemId: work.id, routeTaskId: task.id, holder: subject,
       now: () => now, bound: RESEARCH_BOUNDS.perDispatch }, tools: {
       repos, store, now: () => now, spaceOut: async () => {}, openBytes: async request => {
@@ -280,6 +285,8 @@ test("national collector binds saved CSV to its real Attempt and reuses another 
   assert.ok(third.deferred?.message.includes("next pass"), "ordinary page hosts defer just like Census");
   assert.equal(third.cost.requestCount, RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);
   assert.equal((await third.read(url)).text, body, "the bound never blocks already saved pages");
+  assert.equal((await third.read("https://federal.gov/official")).text, "https://federal.gov/official",
+    "a small publisher's bound does not stop another national source");
 });
 
 test("the national election directory follows its published form for any state", () => {

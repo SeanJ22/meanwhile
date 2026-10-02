@@ -377,14 +377,11 @@ export function synthesisPayload(pack: EvidencePack): string {
  * product does not have. So the body is built here, and the model is a
  * parameter of THIS function only.
  *
- * **`synthesizeAnswer` — the one function the production route calls — passes
- * the module constant and reads nothing from its options.** `SynthesizeOptions`
- * carries no model field, so a route, a caller key, a reader or a request
- * header has no expression that could select one. That is the law *one model
- * for all Ask traffic* made structural rather than asserted, and
- * `tests/ask-model-comparison.test.ts` asserts it mechanically: the production
- * path emits `ASK_SYNTHESIS_MODEL` even when handed an options object carrying
- * a `model` key.
+ * The production route picks its models from the writing ladder
+ * (`synthesisLadder`: cheapest tier first, the frontier tier only after the
+ * fast answer fails a check). Sean, 2026-10-01: the one-model-for-all-Ask-
+ * traffic rule is removed, so routing by tier is allowed; `SynthesizeOptions`
+ * still carries no model field because the ladder, not a caller, names a rung.
  *
  * `cached` exists for the same reason and answers a different question. The
  * breakpoint is what makes the production request cheap; it is also what makes

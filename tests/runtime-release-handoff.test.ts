@@ -261,8 +261,14 @@ test("quiescent apply fetches only origin/main, detaches exact target, frozen-in
   const root = mkdtempSync(join(tmpdir(), "wtp-runtime-release-success-"));
   const calls: string[] = [];
   let statusReads = 0;
-  const run = (executable: string, args: readonly string[]): CommandResult => {
+  const run = (executable: string, args: readonly string[], options: { readonly env?: NodeJS.ProcessEnv }): CommandResult => {
     calls.push(`${executable} ${args.join(" ")}`);
+    if (args.includes("install")) {
+      assert.equal(options.env?.CI, "true");
+      return options.env?.CI === "true" ? { status: 0, stdout: "", stderr: "" }
+        : { status: 1, stdout: "", stderr: "ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY" };
+    }
+    assert.equal(options.env, undefined, "CI override belongs only to the install");
     if (executable === "git" && args[0] === "status") {
       statusReads += 1;
       return { status: 0, stdout: "", stderr: "" };

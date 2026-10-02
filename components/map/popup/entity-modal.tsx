@@ -595,7 +595,7 @@ function BodySections({
             ))}
           </>
         ) : null,
-      absence: "We haven't found a published way to contact this body yet.",
+      absence: "We’re working on getting this info.",
     },
     {
       id: "jurisdiction",
@@ -610,7 +610,7 @@ function BodySections({
             ))}
           </>
         ) : null,
-      absence: "We haven't recorded the area this body covers yet.",
+      absence: "We’re working on getting this info.",
     },
     {
       id: "sources",

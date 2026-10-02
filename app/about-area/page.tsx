@@ -2,7 +2,8 @@ import { ShuffledFacts } from "@/components/area/shuffled-facts";
 import Link from "next/link";
 
 import { areaFactsForState } from "@/lib/area/facts";
-import { COVERED } from "@/lib/coverage/artifacts";
+import { AREA_FACTS } from "@/lib/area/facts";
+const FACT_STATES = AREA_FACTS.map(row => ({ usps: row.state, name: row.stateName, slug: row.state.toLowerCase() }));
 import { resolveZip } from "@/lib/geo/zcta";
 import { divisionsAt } from "@/lib/registry/server";
 import { Logo } from "@/components/brand/logo";
@@ -125,7 +126,7 @@ export default async function AboutAreaPage({
               chain ending in a bare `: "New Hampshire"` — so a fourth state
               would have rendered under New Hampshire's name. A render default
               manufacturing a false claim about a place, one onboarding away. */}
-          {COVERED.filter((s) => s.usps !== state).map((s, i) => (
+          {FACT_STATES.filter((s) => s.usps !== state).map((s, i) => (
             <span key={s.usps}>
               {i > 0 && <span className="text-muted"> · </span>}
               <Link

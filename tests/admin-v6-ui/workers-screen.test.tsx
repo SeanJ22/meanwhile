@@ -1,5 +1,5 @@
 /**
- * Workers and Now screens explain the real `admin-v6/workers@1` reading.
+ * Workers and Now screens show the real `admin-v6/workers@1` reading.
  *
  * The section bodies below are the saved production-shaped readback
  * (`workers-readback-2026-09-28T22-12-27-388Z.json`, read-only, commit
@@ -123,44 +123,39 @@ async function livePage(scopeKey: string) {
 
 /* ---------------------------------------------------------------- tests */
 
-test("the saved readback explains itself on Workers for the country, Arizona and ZIP 85635", async () => {
+test("the saved readback shows on Workers for the country, Arizona and ZIP 85635 with plain labels and numbers", async () => {
   mock.timers.enable({ apis: ["Date"], now: Date.parse(PULSE_AT) });
   try {
-    for (const [key, scope, name] of SCOPES) {
+    for (const [key, scope] of SCOPES) {
       const { sync } = await livePage(key);
       const t = text(page(sync, scope, key, "workers"));
-      // What is waiting and why; the assignment reading is not checklist coverage or delivery.
+      // What is waiting and why.
       assert.match(t, /51 of 194 assigned tasks not finished/, key);
       assert.match(t, /40 tasks were stopped by a check, and 11 tasks have no finished, checked result yet/, key);
-      assert.match(t, /isn’t the 325-item checklist, and a finished task isn’t proof readers can see it/, key);
       // One retry loop is one waiting item and one change line, not nine results.
       assert.equal(occurrences(t, "failed tries since"), 1, key);
       assert.equal(occurrences(t, "stopped before publishing 9 times"), 1, key);
-      assert.match(t, /It’s one problem, not separate results/, key);
       assert.match(t, /Saved reason code: RECEIPT_COUNT_INVALID/, key);
-      // Last useful progress is unknown, with the section's own reason beside it.
-      assert.match(t, /Last useful progress[^.]*Unknown No publication or promotion/, key);
+      // Last useful progress has no value: a dash, with no explanation beside it.
+      assert.match(t, /Last useful progress[^—]{0,40}— /, key);
+      assert.doesNotMatch(t, /No publication or promotion|A check-in only means|A check-in isn’t progress/, key);
       // The round is late, from saved times.
-      assert.match(t, /The next round is late It was due 6:01 PM ET, about 10 minutes ago, and no newer start is saved/, key);
-      assert.match(t, /Workers last checked in Sep 28, 5:58 PM ET about 10 minutes ago\. A check-in only means they’re switched on, not that they made progress/, key);
-      // Jobs: unknown, not zero; the active-index reason sits in the jobs card.
-      assert.match(t, /how many are working [^.]*is unknown, not zero/, key);
-      assert.match(t, /The full list of jobs running now is not shown\. Paid research jobs are checked one by one/, key);
-      assert.match(t, /Supplied by Codex \(worker repository\) · DEP-WORKER-ACTIVE-INDEX/, key);
+      assert.match(t, /The next round is late/, key);
+      assert.match(t, /Last finished 5:58 PM ET/, key);
+      assert.match(t, /Workers last checked in Sep 28, 5:58 PM ET about 10 minutes ago/, key);
+      // Jobs: no list, so a dash and the lane counts; no explanation paragraphs or notices.
+      assert.doesNotMatch(t, /unknown, not zero|Supplied by|DEP-WORKER-ACTIVE-INDEX|Not shown here, and why|Some of this didn’t arrive/, key);
       assert.doesNotMatch(t, /\b0 running · 2,585 waiting/, `${key}: an unknown lane is not summed as 0`);
-      assert.match(t, /Unknown number running · 2,585 waiting/, key);
-      // Whole-system counts stay whole-system in a place.
+      assert.match(t, /— running · 2,585 waiting/, key);
+      assert.doesNotMatch(t, /Unknown number/, key);
+      // The place is named, never its key; whole-system counts carry a plain label, not a note.
       if (key !== "us") assert.ok(!t.includes(key), `${key}: the place is named, not its key`);
-      if (key === "us") assert.match(t, /Whole system/);
-      else {
-        assert.match(t, new RegExp(`Whole system, not just ${name}`), key);
-        assert.match(t, new RegExp(`Across every place, not just ${name}\\. How many are working in ${name} is unknown`), key);
-        assert.match(t, /Only work sent to a hunt is split by place/, key);
-      }
-      // Version: explicitly unavailable.
-      assert.match(t, /Are the workers on the latest update\? Unknown\./, key);
-      assert.match(t, /DEP-WORKER-VERSION/, key);
-      // Arrived data is never covered by the section's generic "not arrived" note.
+      assert.doesNotMatch(t, /Whole system|Across every place|split by place/, key);
+      if (key !== "us") assert.match(t, /Work, all places/, key);
+      // Version: a dash.
+      assert.match(t, /Are the workers on the latest update\? —/, key);
+      assert.doesNotMatch(t, /DEP-WORKER-VERSION/, key);
+      // Arrived data shows no generic "not arrived" note.
       assert.doesNotMatch(t, /detailed Workers reading hasn’t arrived/, key);
       assert.doesNotMatch(t, new RegExp(SECTION_DEP.workers.id), key);
       assert.doesNotMatch(t, /Nothing is waiting|No recorded changes|Nothing is running/, key);
@@ -216,10 +211,10 @@ test("an open page: unavailable → live → a later revision → an age step wi
     await settle(sync);
     let t = text(page(sync, scope, key, "workers"));
     assert.equal(b.log.length, 0);
-    assert.match(t, /The detailed Workers reading hasn’t arrived/);
+    assert.doesNotMatch(t, /The detailed Workers reading hasn’t arrived/);
     assert.match(t, /Workers last checked in Sep 28, 5:58 PM ET/, "the pulse's check-in still shows");
-    assert.match(t, /Whole system, not just ZIP 85635/);
-    assert.match(t, /Waiting reasons arrive with the detailed Workers reading\. Unknown doesn’t mean nothing is waiting/);
+    assert.match(t, /Waiting, and why —/, "a list that has not arrived is a dash");
+    assert.match(t, /What changed —/);
     assert.doesNotMatch(t, /Nothing is waiting|No recorded changes/);
     let now = text(page(sync, scope, key, "now"));
     assert.match(now, /What’s happening now/);
@@ -250,21 +245,20 @@ test("an open page: unavailable → live → a later revision → an age step wi
     assert.equal(occurrences(t, "failed tries since"), 1, "replaced, not appended");
 
     // 4. Five minutes on, the same revision: no read, but the ages step on.
-    assert.match(t, /about 10 minutes ago\. A check-in only means/);
+    assert.match(t, /Workers last checked in Sep 28, 5:58 PM ET about 10 minutes ago/);
     mock.timers.setTime(Date.parse(PULSE_AT) + 5 * 60_000);
     sync.onPulse(pulse("w2", new Date(Date.now()).toISOString()));
     await settle(sync);
     assert.equal(b.log.length, 2, "an unchanged revision reads nothing");
     t = text(page(sync, scope, key, "workers"));
-    assert.match(t, /about 15 minutes ago\. A check-in only means/);
-    assert.match(t, /It was due 6:01 PM ET, about 15 minutes ago/);
+    assert.match(t, /Workers last checked in Sep 28, 5:58 PM ET about 15 minutes ago/);
+    assert.match(t, /The next round is late/);
 
     // 5. Disconnected: no pulses, the last good reading stays and says so.
     t = text(page(sync, scope, key, "workers", "reconnecting"));
     assert.match(t, /Reconnecting/);
-    assert.match(t, /Nothing new is arriving\. What’s shown is the last good reading/);
     assert.match(t, /10 failed tries since/);
-    assert.match(t, /Nothing newer is arriving right now, so this may be out of date/);
+    assert.match(t, /Read Sep 28, 6:12 PM ET/);
 
     // 6. Reconnected: one catch-up read, no double counting, no action sent.
     sync.catchUp();
@@ -288,7 +282,7 @@ test("an authentication failure is never shown as an empty, successful reading",
     for (const view of ["workers", "now"] as const) {
       const t = text(page(sync, { kind: "all" }, "us", view));
       assert.doesNotMatch(t, /Nothing is waiting|No recorded changes|Nothing is running|0 jobs working/, `${status} ${view}`);
-      assert.match(t, view === "workers" ? /Unknown doesn’t mean nothing is waiting/ : /— jobs working now/, `${status} ${view}`);
+      assert.match(t, view === "workers" ? /Waiting, and why —/ : /— jobs working now/, `${status} ${view}`);
     }
     sync.onPulse(pulse("w1"));
     await settle(sync);

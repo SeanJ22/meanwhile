@@ -9,7 +9,7 @@ import { summaryForContest } from "../ballot/measure-summary.ts";
 import { provisionsForContest } from "../ballot/measure-provisions.ts";
 import { getMeasureAnalyses, type MeasureAnalysis } from "../ballot/analyses.ts";
 import { positionsFor } from "../candidates/positions.ts";
-import { ROSTER_FILES } from "../coverage/artifacts.ts";
+import { heldRosterFiles } from "../holdings/discovery.ts";
 import { mayReadRetiredPluralRoster } from "../officials/roster-authority.ts";
 import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
 import type { BallotAbsence, BallotSet, Contest } from "../ballot/types.ts";
@@ -272,7 +272,7 @@ export function readerRepresentatives(ocdIds: readonly string[]): {
   const out: ReturnType<typeof readerRepresentatives> = [];
   const seen = new Set<string>();
 
-  for (const file of ROSTER_FILES) {
+  for (const file of heldRosterFiles(process.cwd())) {
     /* The federal roster is keyed on bare state ids and carries no
        `sldu:`/`sldl:` links, so it contributes nothing here and is skipped
        rather than read and discarded. */

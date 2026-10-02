@@ -31,11 +31,11 @@ export function runnerStateWords(state: string | null): string {
     case "ALIVE":
       return "switched on";
     case "SILENT":
-      return "silent: no check-in for a while";
+      return "silent";
     case "NEVER_BEAT":
       return "no check-in on record";
     case null:
-      return "not reported";
+      return "—";
     default:
       return state.toLowerCase().replace(/_/g, " ");
   }

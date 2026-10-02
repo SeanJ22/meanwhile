@@ -35,10 +35,11 @@
  * stayed red across two merges while every local gate reported green.
  *
  * ─────────────────────────────────────────────────────────────────────────────
- * 2026-08-24 — RULING 124 item 5: THIS TOOL NO LONGER PUSHES.
+ * 2026-08-24 — THIS TOOL NO LONGER PUSHES.
  *
- * Sean's instruction: *the close-out tool refuses a separate push to `main`;
- * records ship inside the PR or not at all.* The gate above was the right
+ * The close-out tool refuses a separate push to `main`; records ship inside the
+ * PR or not at all, because a separate push to `main` costs a full production
+ * build and deploy to serve a paperwork diff. The gate above was the right
  * answer to the wrong half of the problem — it made the separate push SAFE, and
  * left it costing a full production build and deploy to serve a paperwork diff.
  * Three of the five production builds before 5 AM on 2026-08-24 were exactly
@@ -145,7 +146,7 @@ if (dirty) {
 const ahead = Number(git("rev-list", "--count", "origin/main..HEAD") ?? "0");
 
 /*
- * THE REFUSAL — RULING 124 item 5.
+ * THE REFUSAL — close-out does not push to `main`.
  *
  * Anything sitting unpushed on local `main` at close-out time is, by
  * definition, a record that did not ship inside the PR. Naming the commits is

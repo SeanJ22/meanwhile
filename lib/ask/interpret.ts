@@ -98,7 +98,7 @@ const MAX_PRIOR_TURNS = 4;
 /**
  * The model, READ FROM `lib/ask/model.ts`, with adaptive thinking at `low`
  * effort. (ITEM K, 2026-09-01 — the literal that used to sit below is gone so
- * *one model for all Ask traffic* is structural rather than four-way agreement.)
+ * the model comes from one table rather than four-way agreement.)
  *
  * Thinking is deliberately ON here where the topic classifier disables it.
  * The classifier's job is one label and thinking-off is defensible for it;

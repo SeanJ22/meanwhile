@@ -37,7 +37,6 @@
  * PURE. No store, no clock, no environment.
  */
 
-import { COVERED_STATES } from "../../coverage/states.ts";
 import { isWorkQuestion, type WorkQuestion } from "../work-question.ts";
 
 /** The five primary groupings the owner may select, in the lookup's own vocabulary. */
@@ -71,12 +70,7 @@ export const SCOPE_TYPE_WORDS: Readonly<Record<ExpansionScopeType, string>> = {
   state_leg_lower: "State house district",
 };
 
-/**
- * The states this repository covers today, read from the one coverage
- * manifest (`lib/coverage/states.ts`). Offered first on the page; never the
- * only ones offered. Selecting a scope never changes this list.
- */
-export const COVERED_SCOPE_STATES: readonly string[] = COVERED_STATES.map((s) => s.usps);
+
 
 export const SCOPE_PRIORITY_MAX = 999;
 export const SCOPE_LABEL_MAX_CHARS = 160;

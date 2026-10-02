@@ -119,6 +119,9 @@ function checkCycleFailsClosed(src: string): void {
   assert.match(closure[0], /unreadableControls,/);
   assert.match(src, /paused: intents\.runnerPause\.paused,\s*\/\*[^*]*\*\/\s*modelHold: laneDisabledReason,/, "FleetSafety does not hold model requests on the lane's answer");
 
+  assert.match(src, /admitScout: \(row\) => \{\s*if \(scoutFor\(row\)\.lane === "DETERMINISTIC"\) return \{ admit: true \};\s*if \(!modelLaneEnabled\)/,
+    "a held route reopened by a later source failure must pass the existing paid admission gates");
+
   /* 4 & 5. The row is read through the trusted reading, before the lane is decided. */
   assert.match(src, /const \{ config, holdPaidWork: configHold \} = adminConfigForPaidWork\(configRead\);/);
   assert.doesNotMatch(src, /isAdminConfig\(cfg\.value\)/, "the old reading that let a corrupt row fall back is back");
@@ -181,6 +184,7 @@ test("POSITIVE CONTROL: a cycle that drops any fail-closed wire, or gates free w
     ["modelHold: laneDisabledReason,", "", "a FleetSafety that reserves under a closed lane"],
     ["const scoutSearch = searchBudget === null ? null : makeScoutSearch({", "const scoutSearch = makeScoutSearch({", "a Scout search outside the switch"],
     ["auditCeilingUsd: effectiveCeilingUsd,", "", "an auditor on the static default"],
+    ['if (scoutFor(row).lane === "DETERMINISTIC") return { admit: true };', 'if (heldScoutFor(row) !== null) return { admit: true };', "a paid investigation admitted from invalidated held discovery"],
   ];
   for (const [from, to, what] of mutations) {
     const mutated = src.replace(from, to);

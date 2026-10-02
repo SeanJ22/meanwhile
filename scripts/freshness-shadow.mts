@@ -2739,7 +2739,7 @@ const cycle = await runCycle({
     /* The same canonical band comparator used for the visible/opening queue reaches the actual Scout pool. */
     compareModelRows: compareScoutRows,
     admitScout: (row) => {
-      if (heldScoutFor(row) !== null) return { admit: true };
+      if (scoutFor(row).lane === "DETERMINISTIC") return { admit: true };
       if (!modelLaneEnabled) return { admit: false, code: laneDisabledCode ?? "LANE_DISABLED", why: laneDisabledReason ?? "lane closed" };
       if (paidWorkerCapacity() === 0) return { admit: false, code: "CEILING", why: "paid model capacity is closed; held and plain-code work continue" };
       /* MW-028: a materialized meetings-discovery row goes to a paid Scout only after the free walk read the site and found nothing. */

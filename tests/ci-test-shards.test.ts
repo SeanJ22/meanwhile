@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import test from "node:test";
 
-import { parseShard, partitionTests, planTests, testFileConcurrency } from "../scripts/ci-tests.mjs";
+import { parseShard, parseTestFiles, partitionTests, planExplicitTests, planTests, testFileConcurrency } from "../scripts/ci-tests.mjs";
 import { evaluate } from "../scripts/ci-verdict.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -13,8 +13,10 @@ const RUNNER = join(ROOT, "scripts", "ci-tests.mjs");
 
 function runnerEnvironment(shard: number) {
   const env: NodeJS.ProcessEnv = { ...process.env, GITHUB_SHA: "", CI_TEST_SHARD: `${shard}/4` };
-  // A synthetic CLI invocation is a new test runner, not this test's worker.
+  // A synthetic CLI invocation is a new test runner, not this test's worker,
+  // and it must not inherit the parent run's affected-file selection.
   delete env.NODE_TEST_CONTEXT;
+  delete env.CI_TEST_FILES;
   return env;
 }
 
@@ -261,5 +263,51 @@ test("actual reporter and hint code changes invalidate the recorded configuratio
     const changedHints = run();
     assert.notEqual(changedHints.configHash, changedReporter.configHash);
     assert.equal(changedHints.suiteHash, before.suiteHash);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test("an explicit affected-file list runs exactly those files with the same flags, identity and timing proof", () => {
+  const root = fixture();
+  try {
+    const plan = planExplicitTests(root, "tests/nested/d.test.tsx\ntests/a.test.ts\n");
+    assert.equal(plan.mode, "explicit");
+    assert.deepEqual(plan.selected, ["tests/a.test.ts", "tests/nested/d.test.tsx"]);
+    assert.deepEqual(plan.args.slice(0, 4), ["--test", "--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"]);
+    assert.deepEqual(plan.assignments.map((row: { file: string; shard: number }) => [row.file, row.shard]),
+      [["tests/a.test.ts", 1], ["tests/nested/d.test.tsx", 1]]);
+
+    const affected = "tests/b.test.ts";
+    writeFileSync(join(root, affected), `import test from 'node:test'; import assert from 'node:assert/strict'; test('explicit-list-proof', () => assert.equal(2 + 2, 5));\n`);
+    const env = { ...runnerEnvironment(1), CI_TEST_SHARD: "", CI_TEST_FILES: `${affected}\n` };
+    const failed = spawnSync(process.execPath, [RUNNER], { cwd: root, env, encoding: "utf8", timeout: 120_000, windowsHide: true });
+    assert.equal(failed.status, 1, failed.stderr);
+    assert.match(failed.stdout, /Affected tests: 1\/1 files/);
+    assert.match(failed.stdout, /explicit-list-proof/);
+    assert.doesNotMatch(failed.stdout, /real assertion/, "only the named file runs");
+    const manifest = JSON.parse(readFileSync(join(root, ".scratch", "ci", "test-affected.json"), "utf8"));
+    assert.equal(manifest.mode, "explicit");
+    assert.equal(manifest.status, "failed");
+    assert.deepEqual(manifest.selected, [affected]);
+    assert.equal(manifest.timing.complete, true);
+    assert.equal(manifest.timing.usableForScheduling, false);
+    writeFileSync(join(root, affected), `import test from 'node:test'; import assert from 'node:assert/strict'; test('explicit-list-proof', () => assert.equal(2 + 2, 4));\n`);
+    const passed = spawnSync(process.execPath, [RUNNER], { cwd: root, env, encoding: "utf8", timeout: 120_000, windowsHide: true });
+    assert.equal(passed.status, 0, passed.stderr);
+    assert.equal(JSON.parse(readFileSync(join(root, ".scratch", "ci", "test-affected.json"), "utf8")).status, "passed");
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test("an explicit list outside the suite, repeated, empty, or set beside a shard is refused", () => {
+  const suite = ["tests/a.test.ts", "tests/b.test.ts"];
+  assert.deepEqual(parseTestFiles("tests/b.test.ts\r\ntests/a.test.ts", suite), suite);
+  assert.throws(() => parseTestFiles("tests/missing.test.ts", suite), /outside the canonical suite/);
+  assert.throws(() => parseTestFiles("tests/a.test.ts\ntests/a.test.ts", suite), /more than once/);
+  assert.throws(() => parseTestFiles(" \n ", suite), /names no test files/);
+  const root = fixture();
+  try {
+    const both = spawnSync(process.execPath, [RUNNER], { cwd: root,
+      env: { ...runnerEnvironment(1), CI_TEST_FILES: "tests/a.test.ts" }, encoding: "utf8", timeout: 120_000, windowsHide: true });
+    assert.equal(both.status, 1);
+    assert.match(both.stderr, /not both/);
   } finally { rmSync(root, { recursive: true, force: true }); }
 });

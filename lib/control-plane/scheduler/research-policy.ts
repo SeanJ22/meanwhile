@@ -33,7 +33,9 @@ import { HEARTBEAT_LATE_MINUTES } from "../owner-surface.ts";
 import type { CostEntry } from "../cost.ts";
 import { MODEL_FOR_CLASS, SCOUT_STEPS } from "./model-routing.ts";
 import type { DispatchOrdering, ResearchMetrics } from "../research-metrics.ts";
-import type { FleetSafetySnapshot } from "../fleet-safety.ts";
+import { aggregateModelSpend, type FleetSafetySnapshot } from "../fleet-safety.ts";
+import type { SpendHold } from "../budget.ts";
+import type { WorkerProcessSlots } from "../workers/worker-slots.ts";
 
 /* ------------------------------------------------------------------ bounds */
 
@@ -397,37 +399,25 @@ export function readIntents(log: readonly ResearchIntent[]): {
 /**
  * Scout spend in the rolling window, from the DURABLE cost ledger.
  *
- * `total` is the sum of MEASURED usd only; an Attempt whose usd is null is
- * counted as UNMEASURED and reported beside the total, never coerced to zero
- * (cost.ts). The cap is enforced against the measured sum, and an unmeasured
- * Attempt is a named runtime condition rather than a free one.
+ * The same pricing and conservative bounds govern Fleet admission and Scout
+ * accounting. An unknown bill without an exact standing hold stays unbounded.
  */
 export function scoutSpendInWindow(
   costs: readonly CostEntry[],
   nowIso: string,
   windowHours: number = RESEARCH_BOUNDS.windowHours,
-): { readonly windowUsd: number | null; readonly measured: number; readonly unmeasured: number } {
-  const since = Date.parse(nowIso) - windowHours * 3_600_000;
-  let total = 0;
-  let measured = 0;
-  let unmeasured = 0;
-  for (const c of costs) {
-    if (c.role !== "SCOUT") continue;
-    if (Date.parse(c.recordedAt) < since) continue;
-    if (c.cost.usd === null || c.cost.usd === undefined || Number.isNaN(c.cost.usd)) {
-      unmeasured += 1;
-      continue;
-    }
-    total += c.cost.usd;
-    measured += 1;
-  }
-  return { windowUsd: measured === 0 ? (unmeasured === 0 ? 0 : null) : total, measured, unmeasured };
+  spendHolds: readonly SpendHold[] = [],
+) {
+  const spend = aggregateModelSpend(costs.filter(c => c.role === "SCOUT"),
+    new Date(Date.parse(nowIso) - windowHours * 3_600_000).toISOString(), nowIso, spendHolds);
+  return { windowUsd: spend.usd, knownUsd: spend.knownUsd, measured: spend.measured, unmeasured: spend.unmeasured };
 }
 
 /** Both model lanes consume the existing rolling research ceiling; deterministic USD null is not model spend. */
-export function researchSpendInWindow(costs: readonly CostEntry[], nowIso: string, windowHours = RESEARCH_BOUNDS.windowHours) {
-  return scoutSpendInWindow(costs.filter(c => c.role === "SCOUT" || ((c.role === "ADVERSARIAL_AUDITOR" || c.role === "PARSER") && c.cost.requestCount !== 0))
-    .map(c => ({ ...c, role: "SCOUT" as const })), nowIso, windowHours);
+export function researchSpendInWindow(costs: readonly CostEntry[], nowIso: string, windowHours = RESEARCH_BOUNDS.windowHours, spendHolds: readonly SpendHold[] = []) {
+  const spend = aggregateModelSpend(costs,
+    new Date(Date.parse(nowIso) - windowHours * 3_600_000).toISOString(), nowIso, spendHolds);
+  return { windowUsd: spend.usd, knownUsd: spend.knownUsd, measured: spend.measured, unmeasured: spend.unmeasured };
 }
 
 /** Is more Scout work admissible under the rolling ceiling? Fires AT the cap. */
@@ -660,4 +650,27 @@ export function researchWorkerCapacity(input: {
   const outputCapacity = input.outputTokensPerMinute === undefined ? budgetCapacity
     : Math.floor(input.outputTokensPerMinute / Math.max(1, input.outputTokensPerRequest ?? 1));
   return Math.max(0, Math.min(readyWork, budgetCapacity, provider, inputCapacity, outputCapacity));
+}
+
+/** Paid slots never acquire a one-worker floor when spend is unbounded or the
+ * owner's model lane is closed. The process pool still admits plain work. */
+export function researchPaidWorkerCapacity(input: Omit<Parameters<typeof researchWorkerCapacity>[0], "availableUsd"> & {
+  readonly modelEnabled: boolean; readonly spentUsd: number | null; readonly ceilingUsd: number;
+}): number {
+  if (!input.modelEnabled || input.spentUsd === null || !Number.isFinite(input.spentUsd) || input.spentUsd < 0) return 0;
+  return researchWorkerCapacity({ ...input, availableUsd: Math.max(0, input.ceilingUsd - input.spentUsd) });
+}
+
+/** A paid job rechecks its admission after waiting for the shared host's
+ * memory. Closing paid work leaves the memory slot available for plain work. */
+export function paidWorkerSlots(slots: WorkerProcessSlots, capacity: () => number): WorkerProcessSlots {
+  return { acquire: async (entry) => {
+    if (capacity() <= 0) throw new Error("MODEL_LANE_CLOSED: no paid Scout capacity");
+    const release = await slots.acquire(entry);
+    if (capacity() <= 0) {
+      release();
+      throw new Error("MODEL_LANE_CLOSED: no paid Scout capacity");
+    }
+    return release;
+  } };
 }

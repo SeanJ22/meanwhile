@@ -169,14 +169,54 @@ export function parseShard(value) {
   return { index, count };
 }
 
-export function planTests(root, shardValue) {
-  const shard = parseShard(shardValue);
+/** The canonical suite: every file the test command owns, sorted, as POSIX paths. */
+export function discoverTests(root) {
+  return globSync(PATTERNS, { cwd: root }).map((file) => file.replaceAll("\\", "/")).sort();
+}
+
+function canonicalCommand(root) {
   const command = JSON.parse(readFileSync(join(root, "package.json"), "utf8")).scripts?.test;
   if (command !== COMMAND) {
     throw new Error("Canonical package scripts.test changed. Review the shard runner before certifying tests.");
   }
-  const files = globSync(PATTERNS, { cwd: root })
-    .map((file) => file.replaceAll("\\", "/")).sort();
+  return command;
+}
+
+/**
+ * An explicit file list (CI_TEST_FILES, newline-separated) — the tests a pull
+ * request's change can reach, chosen by scripts/ci-affected-tests.mjs. Every
+ * entry must be a file of the canonical suite, named once; an empty list is
+ * refused rather than read as a pass.
+ */
+export function parseTestFiles(value, suite) {
+  const files = String(value ?? "").split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  if (files.length === 0) throw new Error("CI_TEST_FILES names no test files; an empty selection cannot certify anything.");
+  if (new Set(files).size !== files.length) throw new Error("CI_TEST_FILES names a test file more than once.");
+  const known = new Set(suite);
+  const unknown = files.filter((file) => !known.has(file));
+  if (unknown.length) throw new Error(`CI_TEST_FILES names files outside the canonical suite: ${unknown.join(", ")}`);
+  return [...files].sort();
+}
+
+/**
+ * Run exactly the named files, with the same flags, reporters, identity and
+ * timing validation as a shard. What does not apply is only the partition:
+ * the selection is one group, so `assignments` lists the selected files (all
+ * in group 1) and the suite hash covers them, not the whole suite.
+ */
+export function planExplicitTests(root, filesValue) {
+  const command = canonicalCommand(root);
+  const selected = parseTestFiles(filesValue, discoverTests(root));
+  const available = availableParallelism();
+  const concurrency = { available, effective: testFileConcurrency(available) };
+  const { assignments, scheduling } = partitionTests(selected, 1, SCHEDULING_HINTS, concurrency.effective);
+  return { command, mode: "explicit", shard: { index: 1, count: 1 }, assignments, scheduling, concurrency, selected, args: [...FLAGS, ...selected] };
+}
+
+export function planTests(root, shardValue) {
+  const shard = parseShard(shardValue);
+  const command = canonicalCommand(root);
+  const files = discoverTests(root);
   if (files.length < shard.count || new Set(files).size !== files.length) {
     throw new Error("Test discovery must assign unique files and leave no empty shard.");
   }
@@ -184,7 +224,7 @@ export function planTests(root, shardValue) {
   const concurrency = { available, effective: testFileConcurrency(available) };
   const { assignments, scheduling } = partitionTests(files, shard.count, SCHEDULING_HINTS, concurrency.effective);
   const selected = assignments.filter((entry) => entry.shard === shard.index).map((entry) => entry.file);
-  return { command, shard, assignments, scheduling, concurrency, selected, args: [...FLAGS, ...selected] };
+  return { command, mode: "shard", shard, assignments, scheduling, concurrency, selected, args: [...FLAGS, ...selected] };
 }
 
 function identity(root, plan) {
@@ -217,13 +257,15 @@ function identity(root, plan) {
   };
 }
 
-export async function runTests(root = process.cwd(), shardValue = process.env.CI_TEST_SHARD ?? "1/1") {
+export async function runTests(root = process.cwd(), shardValue = process.env.CI_TEST_SHARD, filesValue = process.env.CI_TEST_FILES ?? "") {
   const started = Date.now();
-  const plan = planTests(root, shardValue);
+  const explicit = filesValue.trim().length > 0;
+  if (explicit && (shardValue ?? "").trim().length > 0) throw new Error("Set CI_TEST_SHARD or CI_TEST_FILES, not both.");
+  const plan = explicit ? planExplicitTests(root, filesValue) : planTests(root, shardValue ?? "1/1");
   const metadata = identity(root, plan);
   const directory = join(root, ".scratch", "ci");
   mkdirSync(directory, { recursive: true });
-  const stem = join(directory, `test-shard-${plan.shard.index}-of-${plan.shard.count}`);
+  const stem = join(directory, explicit ? "test-affected" : `test-shard-${plan.shard.index}-of-${plan.shard.count}`);
   const timingPath = `${stem}.timings.jsonl`;
   const invocationArgs = [...FLAGS, `--test-concurrency=${plan.concurrency.effective}`, "--test-reporter=spec", "--test-reporter-destination=stdout",
     `--test-reporter=${REPORTER.href}`, `--test-reporter-destination=${timingPath}`, ...plan.selected];
@@ -231,7 +273,7 @@ export async function runTests(root = process.cwd(), shardValue = process.env.CI
     startedAt: new Date(started).toISOString(), status: "running", exitCode: null, signal: null, elapsedMs: null,
     timing: { complete: false, usableForScheduling: false, issues: ["Test process has not completed."] } };
   const persist = () => writeFileSync(`${stem}.json`, `${JSON.stringify(manifest, null, 2)}\n`);
-  const header = `Test shard ${plan.shard.index}/${plan.shard.count}: ${plan.selected.length}/${plan.assignments.length} files; SHA ${metadata.commit}\n${plan.selected.join("\n")}\n`;
+  const header = `${explicit ? "Affected tests" : `Test shard ${plan.shard.index}/${plan.shard.count}`}: ${plan.selected.length}/${plan.assignments.length} files; SHA ${metadata.commit}\n${plan.selected.join("\n")}\n`;
   writeFileSync(`${stem}.log`, header);
   // A bootstrap failure must not inherit a prior invocation's complete timings.
   writeFileSync(timingPath, "");
@@ -281,7 +323,7 @@ export async function runTests(root = process.cwd(), shardValue = process.env.CI
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
-    if (process.argv.length !== 2) throw new Error("The shard runner takes no arguments; set CI_TEST_SHARD.");
+    if (process.argv.length !== 2) throw new Error("The shard runner takes no arguments; set CI_TEST_SHARD or CI_TEST_FILES.");
     process.exitCode = await runTests();
   } catch (error) {
     console.error(`Test sharding refused: ${error.message}`);

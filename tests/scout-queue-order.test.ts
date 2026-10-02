@@ -28,6 +28,9 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
+import { createRouteTask } from "../lib/control-plane/route-task.ts";
+import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { compareReaderImpact, orderableDueRow, orderByReaderImpact, TIE_BREAK, type OrderingInputs } from "../lib/control-plane/research-metrics.ts";
 import { recordFailure, retryable, type FreshnessDebt } from "../lib/control-plane/scheduler/debt.ts";
 import { dueNow, scheduleAll, type FreshnessObligation, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
@@ -185,6 +188,49 @@ test("the replay is the dispatcher: runCycle's Scout pool admits exactly the rep
     assert.equal(model.dispatched, 1);
     assert.equal(model.dispatched + (model.deferredBy.CYCLE_MAX ?? 0), model.due);
   }
+});
+
+test("actual paid and plain-code admissions retain hunt rounds through place priority refreshes", async () => {
+  const repos = createMemoryRepositories();
+  const now = new Date(START_MS).toISOString();
+  const ids = ["a1", "a2", "b1", "b2", "c1", "c2"];
+  const obligations = ["plain", "paid"].flatMap(lane => ids.map(id => row(`${lane}:${id}`, TIE)));
+  const tasks = new Map<string, string>();
+  for (const obligation of obligations) {
+    const item = createWorkItem({ project: "freshness", subject: obligation.subjectId,
+      obligation: `refresh:${obligation.recordClass}`, why: "offline queue regression", now });
+    const task = createRouteTask({ workItemId: item.id, routeId: obligation.routeId!,
+      routeLabel: "offline queue route", target: "fixture.invalid", inherited: false, now });
+    await registerWorkItem(repos, item, now);
+    await registerRouteTask(repos, task, now);
+    tasks.set(obligation.id, task.id);
+  }
+  const huntFor = (scheduled: ScheduledObligation) => scheduled.obligation.id.split(":")[1]![0]!;
+  const ran = { plain: [] as string[], paid: [] as string[] };
+  let priority = ["a", "b", "c"];
+  const execute = (lane: keyof typeof ran, scheduled: ScheduledObligation) => async () => {
+    ran[lane].push(scheduled.obligation.id.split(":")[1]!);
+    if (ran[lane].length === 3) priority = ["c", "b", "a"];
+    return { kind: "ABORTED" as const, ranAs: lane === "plain" ? "DETERMINISTIC" as const : "BOUNDED_MODEL_WORKER" as const,
+      detail: "Offline lease-owned execution; no provider call" };
+  };
+  const cycle = await runCycle({ repos, obligations, debts: [], routeTaskFor: id => tasks.get(id) ?? null,
+    maturity: () => "UNGRADUATED", holder: "hunt-round-regression", now, leaseTtlMs: 60_000,
+    executor: scheduled => ({ lane: "DETERMINISTIC", run: execute("plain", scheduled) }), workerCapacity: 1,
+    huntFor, placeComparator: async () => (a, b) => priority.indexOf(huntFor(a)) - priority.indexOf(huntFor(b)),
+    reader: { contract: "READER", state: "NOT_READY", reason: "offline fixture" },
+    truth: { contract: "TRUTH", state: "NOT_READY", reason: "offline fixture" },
+    research: { decide: scheduled => ({ kind: scheduled.obligation.id.startsWith("paid:") ? "BOUNDED_MODEL_WORKER" : "DETERMINISTIC",
+      why: "offline lane regression", disagreement: null }),
+      admitScout: () => ({ admit: true }), workerCapacity: 1, scoutLeaseTtlMs: 60_000,
+      modelExecutor: scheduled => ({ lane: "BOUNDED_MODEL_WORKER", run: execute("paid", scheduled) }) },
+  });
+  for (const lane of ["plain", "paid"] as const) {
+    assert.deepEqual([...ran[lane].slice(0, 3)].sort(), ["a1", "b1", "c1"], `${lane}: every hunt reaches execution before a second child`);
+    assert.deepEqual(ran[lane].slice(3), ["c2", "b2", "a2"], `${lane}: changed place priority orders the next round`);
+  }
+  assert.equal(cycle.dispatched.length, 12);
+  assert.equal(new Set(cycle.dispatched.map(result => result.attemptId)).size, 12, "each task has one actual attempt");
 });
 
 test("BOUND: within its band a row gets a Scout within ⌈(A + 1) / c⌉ cycles, and no row waits more than ⌈N / c⌉ − 1", async () => {

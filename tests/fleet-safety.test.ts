@@ -8,6 +8,9 @@ import test from "node:test";
 import { neonConfig } from "@neondatabase/serverless";
 
 import type { CostEntry } from "../lib/control-plane/cost.ts";
+import type { SpendHold } from "../lib/control-plane/budget.ts";
+import { paidWorkerSlots, researchPaidWorkerCapacity, researchSpendInWindow } from "../lib/control-plane/scheduler/research-policy.ts";
+import { workerProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import {
   FLEET_SAFETY_BOUNDS,
   FleetSafetyController,
@@ -16,6 +19,7 @@ import {
   classifyProviderFailure,
   operationalNightAt,
   scheduledBlackoutAt,
+  modelRequestWorstCaseUsd,
 } from "../lib/control-plane/fleet-safety.ts";
 import { runnerStanding } from "../lib/control-plane/runner-standing.ts";
 import { installNeonCircuitBreaker, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
@@ -194,14 +198,14 @@ test("an unmetered Scout cost row fails closed instead of disappearing from aggr
   };
   assert.deepEqual(
     aggregateModelSpend([unmeteredScout], "2026-09-05T01:00:00.000Z", NIGHT),
-    { usd: null, measured: 0, unmeasured: 1 },
+    { usd: null, knownUsd: 0, measured: 0, unmeasured: 1 },
   );
   const controller = fundedController({ now: NIGHT, costs: [unmeteredScout], clock: () => Date.parse(NIGHT) });
   assert.throws(() => controller.reserveModelRequest("anthropic", "after-unmetered-scout", REQUEST), (error: unknown) =>
     error instanceof FleetSafetyRefusal && error.code === "UNMEASURED_MODEL_SPEND");
 });
 
-test("a provider response with incomplete usage makes cycle spend UNMEASURED and stops later model work", () => {
+test("incomplete usage consumes the actual request bound while measurement stays unknown", () => {
   const controller = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
   const reservation = controller.reserveModelRequest("anthropic", "unmetered-response", REQUEST);
   assert.throws(
@@ -209,10 +213,195 @@ test("a provider response with incomplete usage makes cycle spend UNMEASURED and
     (error: unknown) => error instanceof FleetSafetyRefusal && error.code === "UNMEASURED_MODEL_SPEND",
   );
   assert.equal(controller.snapshot(NIGHT).cycle.modelUsd, null);
-  assert.throws(
-    () => controller.reserveModelRequest("anthropic", "after-unmetered-response", REQUEST),
-    (error: unknown) => error instanceof FleetSafetyRefusal && error.code === "UNMEASURED_MODEL_SPEND",
-  );
+  assert.equal(controller.admissionSpendUsd(), modelRequestWorstCaseUsd(REQUEST));
+  assert.doesNotThrow(() => controller.reserveModelRequest("anthropic", "after-unmetered-response", REQUEST));
+});
+
+test("Fleet and research recover each recorded tier's cache and batch price", () => {
+  const row: CostEntry = { ...cost(null, NIGHT), role: "ASK", source: "api.anthropic.com", model: "claude-haiku-4-5",
+    cost: { ...cost(null, NIGHT).cost, inputTokens: 1_000, outputTokens: 20, uncachedInputTokens: 100,
+      cacheReadInputTokens: 800, cacheCreationInputTokens: 100, cacheCreation5mInputTokens: 100, cacheCreation1hInputTokens: 0 } };
+  const rows = [row, { ...row, attemptId: "batch", model: "claude-opus-5-5", cost: { ...row.cost, batch: true } }];
+  // Haiku: .000405; Opus batch: (.0004 + .00016 + .0005 + .0004) / 2.
+  const expected = .000405 + .00073;
+  const fleet = aggregateModelSpend(rows, NIGHT, NIGHT);
+  assert.ok(Math.abs(fleet.usd! - expected) < 1e-12);
+  assert.equal(fleet.knownUsd, fleet.usd);
+  assert.equal(fleet.measured, 2);
+  assert.equal(researchSpendInWindow(rows, NIGHT).windowUsd, fleet.usd, "ASK is paid model work in both readers");
+  assert.equal(aggregateModelSpend([{ ...row, cost: { ...row.cost, inputTokens: null } }], NIGHT, NIGHT).usd,
+    aggregateModelSpend([row], NIGHT, NIGHT).usd, "complete billed cache quantities do not need a redundant total");
+});
+
+test("legacy tokens without cache detail consume the model's dearest cache-write bound", () => {
+  const row = { ...cost(null, NIGHT), model: "sonnet", cost: { ...cost(null, NIGHT).cost, inputTokens: 1_000, outputTokens: 100 } };
+  const fleet = aggregateModelSpend([row], NIGHT, NIGHT);
+  assert.equal(fleet.usd, .005, "1000 inputs at $4/MTok and 100 outputs at $10/MTok");
+  assert.equal(fleet.knownUsd, 0, "cache behaviour is bounded, not measured");
+  assert.equal(fleet.unmeasured, 1);
+  assert.equal(researchSpendInWindow([row], NIGHT).windowUsd, fleet.usd);
+});
+
+test("mixed-tier shares are recovered once and an incomplete split remains unbounded", () => {
+  const base = cost(null, NIGHT);
+  const share = (model: string) => ({ model, ...base.cost, requestCount: 1,
+    uncachedInputTokens: 1, cacheReadInputTokens: 0, cacheCreationInputTokens: 0,
+    cacheCreation5mInputTokens: 0, cacheCreation1hInputTokens: 0 });
+  const row: CostEntry = { ...base, cost: { ...base.cost, inputTokens: 2, outputTokens: 2, requestCount: 2 },
+    byModel: [share("haiku"), share("opus")] };
+  assert.ok(Math.abs(aggregateModelSpend([row], NIGHT, NIGHT).usd! - .00003) < 1e-12);
+  assert.equal(aggregateModelSpend([{ ...row, byModel: row.byModel!.slice(0, 1) }], NIGHT, NIGHT).usd, null);
+  const partial = aggregateModelSpend([{ ...row, byModel: [share("haiku"), share("unknown-served")] }], NIGHT, NIGHT);
+  assert.equal(partial.usd, null);
+  assert.ok(Math.abs(partial.knownUsd - .000006) < 1e-12, "an unknown second tier cannot erase the first tier's recorded price");
+});
+
+test("unknown ASK, Scout and error bills retain measured dollars and never gain one paid slot", () => {
+  for (const row of [
+    { ...cost(null, NIGHT), role: "ASK" as const, source: "api.anthropic.com", model: "haiku", cost: { ...cost(null, NIGHT).cost, inputTokens: null, outputTokens: null } },
+    { ...cost(null, NIGHT), role: "SCOUT" as const, cost: { ...cost(null, NIGHT).cost, inputTokens: null, outputTokens: null } },
+    { ...cost(null, NIGHT), role: "ASK" as const, model: "unknown-served", resultKind: "NO_DISPOSITION" },
+  ]) {
+    const rows = [cost(3, NIGHT), row];
+    const fleet = aggregateModelSpend(rows, NIGHT, NIGHT);
+    assert.equal(fleet.usd, null);
+    assert.equal(fleet.knownUsd, 3);
+    const research = researchSpendInWindow(rows, NIGHT);
+    assert.equal(research.windowUsd, null);
+    assert.equal(research.knownUsd, 3);
+    assert.equal(fundedController({ now: NIGHT, costs: rows }).admissionSpendUsd(), Infinity);
+    assert.equal(researchPaidWorkerCapacity({ modelEnabled: true, spentUsd: research.windowUsd, ceilingUsd: 100, requestUsd: .1 }), 0);
+  }
+  assert.equal(researchPaidWorkerCapacity({ modelEnabled: true, spentUsd: Infinity, ceilingUsd: 100, requestUsd: .1 }), 0);
+  assert.equal(researchPaidWorkerCapacity({ modelEnabled: false, spentUsd: 0, ceilingUsd: 100, requestUsd: .1 }), 0);
+  assert.equal(researchPaidWorkerCapacity({ modelEnabled: true, spentUsd: 1, ceilingUsd: 100, requestUsd: .1, readyWork: 20, requestsPerMinute: 50 }), 20);
+});
+
+test("historical Ask provider maxima bound missing usage and unknown served ids without inventing measured dollars", () => {
+  const base: CostEntry = { ...cost(null, NIGHT), role: "ASK", source: "api.anthropic.com", routeId: "ask:grounded", model: "haiku" };
+  const missing = Array.from({ length: 4 }, (_, index) => ({ ...base, attemptId: `missing-${index}`,
+    cost: { ...base.cost, inputTokens: null, outputTokens: null, requestCount: 1 } }));
+  const served = Array.from({ length: 12 }, (_, index) => ({ ...base, attemptId: `served-${index}`, model: "unknown-served",
+    cost: { ...base.cost, inputTokens: 1, outputTokens: 1, requestCount: 1 } }));
+  const rows = [cost(3, NIGHT), ...missing, ...served];
+  const before = JSON.stringify(rows);
+  const aggregate = aggregateModelSpend(rows, NIGHT, NIGHT);
+  assert.ok(Math.abs(aggregate.usd! - 14.520336) < 1e-12);
+  assert.equal(aggregate.knownUsd, 3);
+  assert.equal(aggregate.measured, 1);
+  assert.equal(aggregate.unmeasured, 16);
+  const research = researchSpendInWindow(rows, NIGHT);
+  assert.equal(research.windowUsd, aggregate.usd);
+  assert.equal(fundedController({ now: NIGHT, costs: rows }).admissionSpendUsd(), aggregate.usd);
+  assert.equal(researchPaidWorkerCapacity({ modelEnabled: true, spentUsd: research.windowUsd,
+    ceilingUsd: 100, requestUsd: .1, readyWork: 20, requestsPerMinute: 50 }), 20);
+  assert.equal(JSON.stringify(rows), before, "a scheduling bound never rewrites the historical bill");
+  assert.equal(aggregateModelSpend([{ ...base, model: "unknown-served", cost: missing[0]!.cost }], NIGHT, NIGHT).usd, null,
+    "missing usage and an unknown requested tier cannot establish a provider maximum");
+});
+
+test("an actual request maximum bounds an unmetered bill and rejects incomplete maximum metadata", () => {
+  const row: CostEntry = { ...cost(null, NIGHT), role: "ASK", source: "api.anthropic.com", model: "unknown-served",
+    requestedModel: "haiku", cost: { ...cost(null, NIGHT).cost, inputTokens: null, outputTokens: null, requestCount: 1 },
+    modelRequestBound: { model: "haiku", inputTokens: 5000, outputTokens: 1024, usd: 0,
+      basis: "REQUEST_UTF8_BYTES", measured: false } };
+  const priced = aggregateModelSpend([row], NIGHT, NIGHT);
+  assert.equal(priced.usd, .01512, "counts and central rates determine the maximum, not a supplied dollar value");
+  assert.equal(priced.knownUsd, 0);
+  assert.equal(priced.unmeasured, 1);
+  assert.equal(aggregateModelSpend([{ ...row, role: "PARSER", source: null, model: null }], NIGHT, NIGHT).usd, priced.usd,
+    "recorded requested identity and send bounds keep an otherwise tokenless model bill in the total");
+  assert.equal(aggregateModelSpend([{ ...row, modelRequestBound: { ...row.modelRequestBound!, inputTokens: -1 } }], NIGHT, NIGHT).usd, null);
+  assert.equal(aggregateModelSpend([{ ...row, requestedModel: "opus" }], NIGHT, NIGHT).usd, null);
+  assert.equal(aggregateModelSpend([{ ...row, cost: { ...row.cost, requestCount: 2 } }], NIGHT, NIGHT).usd, null,
+    "one request maximum cannot cover an additional unmetered send");
+});
+
+test("an explicit hold identity covers mixed tiers and different attempt ids once", () => {
+  const base = cost(null, NIGHT);
+  const row: CostEntry = { ...base, role: "SCOUT", attemptId: "different-attempt", spendHoldJobId: "actual-job",
+    cost: { ...base.cost, inputTokens: 2, outputTokens: 2, requestCount: 2 }, byModel: [
+      { ...base.cost, model: "haiku", inputTokens: 1, outputTokens: 1, requestCount: 1, usd: 2 },
+      { ...base.cost, model: "unknown-served", inputTokens: 1, outputTokens: 1, requestCount: 1, usd: null },
+    ] };
+  const hold: SpendHold = { holdId: "actual-job#0", jobId: "actual-job", obligationId: "ob", keys: [], usd: 6,
+    heldAt: NIGHT, what: "actual multi-tier job maximum", settled: null };
+  const out = aggregateModelSpend([row, { ...row, attemptId: "another-attempt", byModel: undefined,
+    cost: { ...base.cost, inputTokens: null, outputTokens: null } }], NIGHT, NIGHT, [hold, hold]);
+  assert.equal(out.usd, 6);
+  assert.equal(out.knownUsd, 2);
+  assert.equal(out.unmeasured, 2);
+  assert.equal(aggregateModelSpend([{ ...row, spendHoldJobId: undefined }], NIGHT, NIGHT, [hold]).usd, null);
+  assert.equal(aggregateModelSpend([row], NIGHT, NIGHT, [{ ...hold, jobId: "another-job" }]).usd, null);
+});
+
+test("an exact standing job hold covers tokenless rows once without charging measured dollars twice", () => {
+  const hold: SpendHold = { holdId: "job#0", jobId: "job", obligationId: "ob", keys: [], usd: 5, heldAt: NIGHT, what: "actual job maximum", settled: null };
+  const unknown = { ...cost(null, NIGHT), attemptId: "job", role: "SCOUT" as const,
+    cost: { ...cost(null, NIGHT).cost, inputTokens: null, outputTokens: null } };
+  const rows = [{ ...cost(2, NIGHT), attemptId: "job" }, unknown, unknown];
+  const fleet = aggregateModelSpend(rows, NIGHT, NIGHT, [hold, hold]);
+  assert.equal(fleet.usd, 5);
+  assert.equal(fleet.knownUsd, 2);
+  assert.equal(researchSpendInWindow(rows, NIGHT, 24, [hold]).windowUsd, 5);
+  assert.equal(aggregateModelSpend(rows, NIGHT, NIGHT, [{ ...hold, jobId: "same-obligation-other-attempt" }]).usd, null);
+  assert.equal(aggregateModelSpend(rows, NIGHT, NIGHT, [{ ...hold, settled: { usd: 0, costRecordedAt: NIGHT } }]).usd, null);
+  assert.equal(aggregateModelSpend(rows, NIGHT, NIGHT, [{ ...hold, heldAt: "2026-09-04T00:00:00Z" }]).usd, null);
+  assert.equal(aggregateModelSpend(rows, NIGHT, NIGHT, [{ ...hold, usd: 1 }]).usd, null, "a hold smaller than known job spend cannot cover another unknown bill");
+  assert.equal(aggregateModelSpend([cost(2, NIGHT)], NIGHT, NIGHT, [hold]).usd, 2, "an unrelated hold has no recorded model identity");
+});
+
+test("failed provider sends keep their maximum committed and settlement cannot charge it twice", () => {
+  const controller = fundedController({ now: NIGHT, costs: [], rollingCeilingUsd: 1, clock: () => Date.parse(NIGHT) });
+  const reservation = controller.reserveModelRequest("anthropic", "provider-error", REQUEST);
+  controller.failModelRequest(reservation, new ModelTransportError("bad request", 400), NIGHT);
+  controller.failModelRequest(reservation, new ModelTransportError("bad request", 400), NIGHT);
+  assert.equal(controller.admissionSpendUsd(), modelRequestWorstCaseUsd(REQUEST));
+  assert.equal(controller.snapshot(NIGHT).cycle.modelUsd, null);
+  assert.throws(() => controller.reserveModelRequest("anthropic", "another", REQUEST), (error: unknown) =>
+    error instanceof FleetSafetyRefusal && error.code === "ROLLING_24_HOUR_MODEL_SPEND_CEILING");
+});
+
+test("the reserved request maximum covers one-hour cache writes and refuses an unreadable maximum", () => {
+  const request: ModelRequest = { ...REQUEST, max_tokens: 0, cache_control: { type: "ephemeral", ttl: "1h" } };
+  assert.equal(modelRequestWorstCaseUsd(request), Buffer.byteLength(JSON.stringify(request)) * 4 * 2 / 1_000_000);
+  assert.equal(modelRequestWorstCaseUsd({ ...REQUEST, max_tokens: NaN }), null);
+});
+
+test("paid capacity observes a provider backoff expiry during the same cycle", async () => {
+  let time = Date.parse(NIGHT), calls = 0;
+  const safety = fundedController({ now: NIGHT, costs: [], clock: () => time });
+  const transport = safety.guardedModelTransport("anthropic", "held-obligation", async () => {
+    calls++;
+    if (calls === 1) throw new ModelTransportError("rate limited", 429, 20 * 60_000);
+    return RESPONSE;
+  });
+  await assert.rejects(transport(REQUEST), ModelTransportError);
+  time += 20 * 60_000 - 1;
+  assert.equal(safety.snapshot().providerCircuits.length, 1);
+  await assert.rejects(transport(REQUEST), error => error instanceof FleetSafetyRefusal && error.code === "PROVIDER_CIRCUIT_BROKEN");
+  assert.equal(calls, 1);
+  time++;
+  assert.equal(safety.snapshot().providerCircuits.length, 0, "the capacity reader sees the existing cooldown expire");
+  await transport(REQUEST);
+  assert.equal(calls, 2);
+  assert.ok(safety.admissionSpendUsd() >= modelRequestWorstCaseUsd(REQUEST)!, "the first send's conservative charge survives recovery");
+});
+
+test("a paid job waiting for memory releases its slot without launching after the lane closes", async () => {
+  let capacity = 20, launches = 0;
+  const slots = workerProcessSlots(() => 1, { availableBytes: () => 10_000, headroomBytes: 0, peakBytes: () => 1 });
+  const releasePlain = await slots.acquire("plain");
+  const paid = paidWorkerSlots(slots, () => capacity);
+  const waiting = paid.acquire("scout").then(release => { launches++; release(); });
+  const refused = assert.rejects(waiting, /MODEL_LANE_CLOSED/);
+  capacity = 0;
+  releasePlain();
+  await refused;
+  assert.equal(launches, 0);
+  const releaseNextPlain = await slots.acquire("held-bytes");
+  releaseNextPlain();
+  await assert.rejects(paid.acquire("another-scout"), /MODEL_LANE_CLOSED/);
 });
 
 test("requests and dispatches keep running across days without a cycle wall", () => {

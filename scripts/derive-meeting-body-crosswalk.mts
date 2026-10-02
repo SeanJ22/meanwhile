@@ -42,7 +42,7 @@ import {
   type AutoCrosswalkReview,
 } from "../lib/civic-data/derived-crosswalk.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
-import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { AUTO_CROSSWALK_VENDORS, autoCrosswalkReviewerId, reviewDiscoveryWalk, type HeldBytes, type RegisteredGovernment } from "../lib/control-plane/discovery/auto-crosswalk.ts";
@@ -73,16 +73,7 @@ const REVIEWER = autoCrosswalkReviewerId(digestValueClosure(process.cwd(), "lib/
 
 async function finish(candidate: RoutineCandidate): Promise<void> {
   const outcome = await processRegisteredRoutineCandidate(store, DERIVED_CROSSWALK_CONTRACT_ID, candidate, now);
-  console.log("RCD_RECEIPT=" + JSON.stringify({
-    source: DERIVED_CROSSWALK_CONTRACT_ID,
-    candidateId: candidate.id,
-    acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
-    state: outcome.candidate.state,
-    decision: outcome.candidate.receipt?.decision ?? null,
-    promotedVersion: outcome.promoted?.versionId ?? null,
-    lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
-    structuralReleaseContract: ZERO_RELEASE_EVENTS,
-  }));
+  printSourceRunnerReceipt(DERIVED_CROSSWALK_CONTRACT_ID, candidate, outcome);
   if (!outcome.promoted) process.exitCode = 2;
 }
 

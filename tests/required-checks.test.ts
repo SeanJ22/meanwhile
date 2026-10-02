@@ -48,8 +48,8 @@ test("every auxiliary context feeds the fail-closed required final status", () =
   const produced = contextsProducedByWorkflow(source());
   const extra = produced.filter((c) => !REQUIRED_CONTEXTS.includes(c));
   assert.deepEqual(extra.sort(), [
-    "admission (preflight and integrity)", "verify (lint)", "verify (types)", "verify (governance)",
-    "test (1/4)", "test (2/4)", "test (3/4)", "test (4/4)",
+    "admission (preflight and integrity)", "verify (lint · types · governance)",
+    "test (affected)", "test (1/4)", "test (2/4)", "test (3/4)", "test (4/4)",
   ].sort(), "unrecognized auxiliary checks require an explicit aggregation contract");
   assert.deepEqual(parsed.jobs.gates.needs, ["admission", "verify", "test", "build"]);
   assert.equal(parsed.jobs.gates.if, "always() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)");
@@ -73,8 +73,8 @@ test("every auxiliary context feeds the fail-closed required final status", () =
  */
 test("a renamed gates job is caught", () => {
   const renamed = source().replace(
-    "name: gates (test · lint · tsc)",
-    "name: gates (test, lint, tsc)",
+    "}}gates (test · lint · tsc)",
+    "}}gates (test, lint, tsc)",
   );
   assert.notEqual(renamed, source(), "the plant did not apply — the job name has moved");
   const produced = contextsProducedByWorkflow(renamed);
@@ -98,12 +98,37 @@ test("a renamed matrix leg is caught", () => {
 
 test("an unresolvable job name is refused rather than dropped", () => {
   const opaque = source().replace(
-    "name: build (${{ matrix.mode }})",
-    "name: build (${{ inputs.mode }})",
+    "build (${{ matrix.mode }})",
+    "build (${{ inputs.mode }})",
   );
   assert.throws(
     () => contextsProducedByWorkflow(opaque),
     /cannot resolve/,
     "a name this reader cannot expand must throw, never silently shrink the produced set",
   );
+});
+
+test("a matrix computed at run time expands to every leg it can produce, and an unknown one is refused", () => {
+  const produced = contextsProducedByWorkflow(source());
+  for (const leg of ["affected", "1/4", "2/4", "3/4", "4/4"]) assert.ok(produced.includes(`test (${leg})`), leg);
+  const unknown = source().replace(
+    "shard: ${{ fromJSON(needs.admission.outputs.test_legs) }}",
+    "shard: ${{ fromJSON(needs.admission.outputs.other_legs) }}",
+  );
+  assert.notEqual(unknown, source(), "the plant did not apply — the test matrix has moved");
+  assert.throws(() => contextsProducedByWorkflow(unknown), /DYNAMIC_MATRIX_LEGS/);
+});
+
+test("a scheduled run reports NONE of the required contexts, so it never overwrites main's tip", () => {
+  // The runtime adopts a main commit by its required contexts' latest check
+  // runs (filter=latest, by name). A scheduled run on that commit must not
+  // become the latest run of any required name.
+  const scheduled = contextsProducedByWorkflow(source(), "schedule");
+  assert.deepEqual(scheduled.filter((name) => REQUIRED_CONTEXTS.includes(name)), []);
+  for (const name of REQUIRED_CONTEXTS) assert.ok(scheduled.includes(`scheduled ${name}`), name);
+  for (const event of ["pull_request", "push", "workflow_dispatch"]) {
+    const produced = contextsProducedByWorkflow(source(), event);
+    assert.deepEqual(REQUIRED_CONTEXTS.filter((name) => !produced.includes(name)), [], event);
+    assert.ok(!produced.some((name) => name.startsWith("scheduled ")), event);
+  }
 });

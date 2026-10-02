@@ -61,7 +61,7 @@ import {
 import { today } from "./doc-dates.mjs";
 import { njMorrisFilingCandidate, sha256 } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
-import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import {
@@ -795,17 +795,7 @@ if (PROMOTE) {
     refused: [...refused.entries()].map(([key, value]) => ({ key, detail: value.why, record: { rows: value.rows } })),
   });
   const outcome = await processRegisteredRoutineCandidate(productionStore, "nj-morris-filing", candidate, RETRIEVED_AT);
-  console.log("RCD_RECEIPT=" + JSON.stringify({
-    source: "nj-morris-filing",
-    candidateId: candidate.id,
-    acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
-    state: outcome.candidate.state,
-    decision: outcome.candidate.receipt?.decision ?? null,
-    outcome: outcome.candidate.candidate.changeSet?.outcome ?? null,
-    promotedVersion: outcome.promoted?.versionId ?? null,
-    lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
-    structuralReleaseContract: ZERO_RELEASE_EVENTS,
-  }));
+  printSourceRunnerReceipt("nj-morris-filing", candidate, outcome);
   if (!outcome.promoted) process.exitCode = 2;
 } else {
   console.log("\n  dry run — pass --promote to validate and atomically promote; repository writes are retired");

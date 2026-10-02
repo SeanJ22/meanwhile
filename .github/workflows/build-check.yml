@@ -12,6 +12,12 @@ on:
       - ready_for_review
       - labeled
       - auto_merge_enabled
+  # The integration safety net for affected-only pull-request tests: the whole
+  # suite on main's tip every three hours. A software certification, not a data
+  # clock. Its required-named jobs report under "scheduled …" names, so a
+  # scheduled result never lands on main's tip as a required context.
+  schedule:
+    - cron: '17 */3 * * *'
   workflow_dispatch:
     inputs:
       schema_smoke:
@@ -29,20 +35,28 @@ permissions:
   contents: read
   checks: read
   pull-requests: read
+# Every push to main keeps its own group, so a later (even docs-only) push never
+# cancels a code commit's run and leaves it unjudged. Each pull request
+# supersedes its own older run; the scheduled run supersedes its own.
 concurrency:
-  group: build-check-${{ github.ref }}${{ github.event_name == 'push' && format('-{0}', github.sha) || '' }}
+  group: build-check-${{ github.event_name == 'schedule' && 'scheduled' || github.ref }}${{ github.event_name == 'push' && format('-{0}', github.sha) || '' }}
   cancel-in-progress: true
 jobs:
   admission:
     name: admission (preflight and integrity)
     # A draft pull request buys no Actions: sessions run lint and types for
     # their files locally, and ready_for_review starts the real run.
+    # Admission needs no installed dependencies: every step runs on bare Node.
     if: (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
       tier: ${{ steps.tier.outputs.expensive }}
       deploy_build: ${{ steps.deploy.outputs.build }}
+      test_plan: ${{ steps.tests.outputs.plan }}
+      test_legs: ${{ steps.tests.outputs.legs }}
+      test_files: ${{ steps.tests.outputs.files }}
+      needs_browser: ${{ steps.tests.outputs.needs_browser }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -92,76 +106,63 @@ jobs:
           CACHED_COMMIT_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
           COMMIT_REF: ${{ github.sha }}
         run: node scripts/netlify-ignore.mjs --ci
-      - name: Enable corepack (pnpm pinned by packageManager)
-        if: steps.tier.outputs.expensive == 'yes'
-        run: corepack enable
-      - name: Where is the pnpm store
-        id: pnpm-store
-        if: steps.tier.outputs.expensive == 'yes'
-        run: echo "path=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
-      - uses: actions/cache@v4
-        if: steps.tier.outputs.expensive == 'yes'
-        with:
-          path: ${{ steps.pnpm-store.outputs.path }}
-          key: pnpm-${{ runner.os }}-${{ runner.arch }}-node24-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            pnpm-${{ runner.os }}-${{ runner.arch }}-node24-
-      - name: Install
-        if: steps.tier.outputs.expensive == 'yes'
-        run: corepack pnpm install --frozen-lockfile
+      # A pull request runs the tests its change can reach (or all four shards
+      # when the change is not code the import graph follows); the
+      # scheduled run and a manual dispatch run all four. Main runs none.
+      - name: Select the tests this change can reach
+        id: tests
+        if: always() && steps.tier.outputs.expensive == 'yes'
+        env:
+          CI_TIER: ${{ steps.tier.outputs.expensive }}
+          CI_EVENT_NAME: ${{ github.event_name }}
+          CI_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: node scripts/ci-affected-tests.mjs
       - name: Explain selected verification
         if: always()
         env:
+          CI_EVENT_NAME: ${{ github.event_name }}
           CI_TIER: ${{ steps.tier.outputs.expensive }}
+          CI_TEST_PLAN: ${{ steps.tests.outputs.plan }}
         run: node scripts/ci-selection-summary.mjs
   verify:
-    name: verify (${{ matrix.group }})
+    name: verify (lint · types · governance)
     needs:
       - admission
     if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft' || needs.admission.outputs.tier == 'waiting'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    strategy:
-      fail-fast: false
-      matrix:
-        group:
-          - lint
-          - types
-          - governance
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
-        if: needs.admission.outputs.tier == 'yes' || ((needs.admission.outputs.tier == 'draft' || needs.admission.outputs.tier == 'waiting') && matrix.group != 'governance')
         with:
           fetch-depth: 0
           ref: ${{ github.sha }}
       - uses: actions/setup-node@v7
-        if: needs.admission.outputs.tier == 'yes' || ((needs.admission.outputs.tier == 'draft' || needs.admission.outputs.tier == 'waiting') && matrix.group != 'governance')
         with:
           node-version: 24
           package-manager-cache: false
       - name: Enable corepack (pnpm pinned by packageManager)
-        if: needs.admission.outputs.tier == 'yes' || ((needs.admission.outputs.tier == 'draft' || needs.admission.outputs.tier == 'waiting') && matrix.group != 'governance')
         run: corepack enable
       - name: Where is the pnpm store
         id: pnpm-store
-        if: needs.admission.outputs.tier == 'yes' || ((needs.admission.outputs.tier == 'draft' || needs.admission.outputs.tier == 'waiting') && matrix.group != 'governance')
         run: echo "path=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
       - uses: actions/cache@v4
-        if: needs.admission.outputs.tier == 'yes' || ((needs.admission.outputs.tier == 'draft' || needs.admission.outputs.tier == 'waiting') && matrix.group != 'governance')
         with:
           path: ${{ steps.pnpm-store.outputs.path }}
           key: pnpm-${{ runner.os }}-${{ runner.arch }}-node24-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
             pnpm-${{ runner.os }}-${{ runner.arch }}-node24-
       - name: Install
-        if: needs.admission.outputs.tier == 'yes' || ((needs.admission.outputs.tier == 'draft' || needs.admission.outputs.tier == 'waiting') && matrix.group != 'governance')
+        id: install
+        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft' || needs.admission.outputs.tier == 'waiting'
         run: corepack pnpm install --frozen-lockfile
+      # One install, then every check reports even when an earlier one fails;
+      # the job fails if any of them did.
       - name: Lint
-        if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft' || needs.admission.outputs.tier == 'waiting') && matrix.group == 'lint'
+        if: always() && steps.install.outcome == 'success' && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft' || needs.admission.outputs.tier == 'waiting')
         timeout-minutes: 10
         run: corepack pnpm lint
       - name: Types (fresh checkout, no build)
-        if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft' || needs.admission.outputs.tier == 'waiting') && matrix.group == 'types'
+        if: always() && steps.install.outcome == 'success' && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft' || needs.admission.outputs.tier == 'waiting')
         timeout-minutes: 10
         env:
           # The same whole-program check as the build's, measured at 1.79 GB on
@@ -169,11 +170,11 @@ jobs:
           NODE_OPTIONS: --max-old-space-size=4096
         run: corepack pnpm exec tsc --noEmit
       - name: Canonical state holdings and residual paths
-        if: always() && needs.admission.outputs.tier == 'yes' && matrix.group == 'governance'
+        if: always() && steps.install.outcome == 'success' && needs.admission.outputs.tier == 'yes'
         timeout-minutes: 5
         run: corepack pnpm state-holdings:check
       - name: Generated state manifests against committed observations
-        if: always() && needs.admission.outputs.tier == 'yes' && matrix.group == 'governance'
+        if: always() && steps.install.outcome == 'success' && needs.admission.outputs.tier == 'yes'
         timeout-minutes: 5
         run: corepack pnpm state-manifest --check
   build:
@@ -185,7 +186,7 @@ jobs:
         mode:
           - standalone
           - default
-    name: build (${{ matrix.mode }})
+    name: ${{ github.event_name == 'schedule' && 'scheduled ' || '' }}build (${{ matrix.mode }})
     steps:
       - uses: actions/checkout@v7
         if: (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'main') && (matrix.mode == 'standalone' || github.event_name == 'workflow_dispatch') && needs.admission.outputs.deploy_build != 'no'
@@ -263,12 +264,12 @@ jobs:
         run: |
           echo "Draft preflight passed. This required build context still reports, while"
           echo "the two production builds wait for the ready_for_review certification run."
-      - name: Push to main — the merged pull request already ran the full suite
+      - name: Push to main — the merged pull request already ran its tests
         if: needs.admission.outputs.tier == 'main'
-        run: echo "Main runs the standalone build and the schema gate; lint, types, governance, tests and the default build ran on the pull request."
+        run: echo "Main runs the standalone build and the schema gate; lint, types, governance, the affected tests and the default build ran on the pull request, and the scheduled run re-runs the whole suite every three hours."
       - name: Ready pull request — waiting for auto-merge
         if: needs.admission.outputs.tier == 'waiting'
-        run: echo "Lint and types ran. The standalone build and the four test shards run when auto-merge is turned on (or the run-full-ci label is added)."
+        run: echo "Lint and types ran. The standalone build and the tests run when auto-merge is turned on (or the run-full-ci label is added)."
       - name: Data and proof-only change
         if: needs.admission.outputs.deploy_build == 'no'
         run: echo "No application rebuild; tests, lint and types still run."
@@ -276,21 +277,23 @@ jobs:
       - admission
     if: always() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
   test:
-    name: test (${{ matrix.shard }}/4)
+    # One leg named `affected` for the tests a pull request's change can reach,
+    # or the four shards (1/4 … 4/4) for the whole suite; see
+    # scripts/ci-affected-tests.mjs. No leg runs when the change reaches no test,
+    # and main runs none (the scheduled run covers it).
+    name: test (${{ matrix.shard }})
     needs:
       - admission
       - verify
-    if: needs.admission.outputs.tier == 'yes'
+    # Tests wait for the structural checks. The plan and the legs are both
+    # checked so an empty matrix can never be expanded.
+    if: needs.admission.outputs.tier == 'yes' && needs.verify.result == 'success' && (needs.admission.outputs.test_plan == 'affected' || needs.admission.outputs.test_plan == 'full') && needs.admission.outputs.test_legs != '' && needs.admission.outputs.test_legs != '[]'
     runs-on: ubuntu-latest
     timeout-minutes: 75
     strategy:
       fail-fast: false
       matrix:
-        shard:
-          - 1
-          - 2
-          - 3
-          - 4
+        shard: ${{ fromJSON(needs.admission.outputs.test_legs) }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -332,26 +335,28 @@ jobs:
           [[ "$pdc_frozen_base" =~ ^[0-9a-f]{40}$ ]] || exit 1
           git cat-file -e "${pdc_frozen_base}:lib/funding/official-candidacies.json" 2>/dev/null || git fetch --no-tags --depth=1 origin "$pdc_frozen_base"
           git cat-file -e "${pdc_frozen_base}:lib/funding/official-candidacies.json"
+      # The browser is bought only when a selected test's imports reach Playwright
+      # (always for the whole suite).
       - uses: actions/cache@v4
-        if: needs.admission.outputs.tier == 'yes'
+        if: needs.admission.outputs.tier == 'yes' && needs.admission.outputs.needs_browser == 'true'
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}
       # Chromium's cache excludes the OS/font packages installed by --with-deps.
       - uses: actions/cache@v4
-        if: needs.admission.outputs.tier == 'yes'
+        if: needs.admission.outputs.tier == 'yes' && needs.admission.outputs.needs_browser == 'true'
         with:
           path: ${{ runner.temp }}/playwright-apt/*.deb
           key: playwright-apt-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('node_modules/.pnpm/playwright-core@*/node_modules/playwright-core/browsers.json') }}
       - name: Install the browser the suite needs
-        if: success() && needs.admission.outputs.tier == 'yes'
+        if: success() && needs.admission.outputs.tier == 'yes' && needs.admission.outputs.needs_browser == 'true'
         timeout-minutes: 15
         run: |
           mkdir -p "$RUNNER_TEMP/playwright-apt"
           printf 'Dir::Cache::archives "%s";\nBinary::apt-get::APT::Keep-Downloaded-Packages "true";\n' "$RUNNER_TEMP/playwright-apt" | sudo tee /etc/apt/apt.conf.d/99-playwright-cache > /dev/null
           corepack pnpm exec playwright install --with-deps chromium
       - name: Prove the browser is actually there
-        if: success() && needs.admission.outputs.tier == 'yes'
+        if: success() && needs.admission.outputs.tier == 'yes' && needs.admission.outputs.needs_browser == 'true'
         timeout-minutes: 5
         run: corepack pnpm run assert:browser
       - name: Test
@@ -359,18 +364,19 @@ jobs:
         timeout-minutes: 60
         env:
           NODE_OPTIONS: --max-old-space-size=4096
-          CI_TEST_SHARD: ${{ matrix.shard }}/4
+          CI_TEST_SHARD: ${{ matrix.shard != 'affected' && matrix.shard || '' }}
+          CI_TEST_FILES: ${{ matrix.shard == 'affected' && needs.admission.outputs.test_files || '' }}
         run: node scripts/ci-tests.mjs
       - name: Keep test diagnostics and partition manifest
         if: always()
         uses: actions/upload-artifact@v5
         with:
-          name: test-${{ matrix.shard }}-${{ github.sha }}-${{ github.run_attempt }}
+          name: test-${{ strategy.job-index }}-${{ github.sha }}-${{ github.run_attempt }}
           path: .scratch/ci/
           if-no-files-found: warn
           retention-days: 7
   gates:
-    name: gates (test · lint · tsc)
+    name: ${{ github.event_name == 'schedule' && 'scheduled ' || '' }}gates (test · lint · tsc)
     needs:
       - admission
       - verify

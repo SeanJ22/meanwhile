@@ -14,7 +14,7 @@ import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
-import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import {
   isSourceAcquisitionFailure,
   recordRegisteredSourceAcquisitionFailure,
@@ -67,20 +67,7 @@ async function main(): Promise<void> {
     candidate,
     candidate.retrieval.retrievedAt,
   );
-  console.log(
-    "RCD_RECEIPT=" +
-      JSON.stringify({
-        source: CENSUS_GEO_CONTRACT_ID,
-        candidateId: candidate.id,
-        coverage: (candidate.readModel as BuiltDataset).coverage,
-        acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
-        state: outcome.candidate.state,
-        decision: outcome.candidate.receipt?.decision ?? null,
-        promotedVersion: outcome.promoted?.versionId ?? null,
-        lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
-        structuralReleaseContract: ZERO_RELEASE_EVENTS,
-      }),
-  );
+  printSourceRunnerReceipt(CENSUS_GEO_CONTRACT_ID, candidate, outcome);
   if (!outcome.promoted) process.exitCode = 2;
 }
 

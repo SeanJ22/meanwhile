@@ -281,7 +281,7 @@ export function CommandCenter(props: CommandCenterProps) {
               ))}
             </nav>
             {props.mode === "sample" ? <span className={s.badge}>SAMPLE DATA</span> : null}
-            <button type="button" className={s.navBtn} onClick={() => setBulk({ pick: null })}>Start many hunts</button>
+            <button type="button" className={s.navBtn} onClick={() => setBulk({ pick: isZipPlace(scopeKey) ? null : bulkPickOf(scopeKey, place.name) })}>Start many hunts</button>
             <form className={s.search} role="search" onSubmit={(e) => { e.preventDefault(); if (query.trim()) openDetail({ type: "search", query: query.trim() }); }}>
               <input className={s.input} aria-label="Search everything in the selected place" placeholder="Search bodies, people, meetings, requirements, failures" value={query}
                 onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => { if (e.key === "Escape") setQuery(""); }} />

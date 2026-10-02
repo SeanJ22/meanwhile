@@ -323,6 +323,70 @@ test("SANTA FE TRANSFER: the same method, retrieved for a New Mexico district wi
   assert.equal(nmForAz.found.some((f) => f.url === "https://www.tusd1.org/Reconfiguration"), false);
 });
 
+test("LAZY VAULT: walks share the linking index, reload selected original pages, and keep the same events", async () => {
+  const expected = await walkMeetingsDiscoveryNeed(TUSD, runtime(fakeOpen(TUSD_SITE).open));
+  const reads = Array.from({ length: 3000 }, () => 0);
+  let directoryReads = 0, pageSetReads = 0, captureReads = 0;
+  const bodies = new Map<string, string>();
+  const shared: DiscoveryRuntime = {
+    ...runtime(fakeOpen(TUSD_SITE).open),
+    officialLinkingPageFor: () => null,
+    readOfficialPages: async () => {
+      pageSetReads++;
+      return [
+        ...reads.map((_, i) => ({ canonicalUrl: `https://unrelated-${i}.gov/`, readText: async () => { reads[i]++; return "<p>held unrelated page</p>"; } })),
+        { canonicalUrl: DIRECTORY.url, readText: async () => { directoryReads++; return DIRECTORY.html; } },
+      ];
+    },
+    vault: async (artifact, bytes) => { bodies.set(artifact.contentHash, bytes); return { stored: true, where: "vault", why: "stored" }; },
+    readOfficialPageTextFor: async artifact => { captureReads++; return bodies.get(artifact.contentHash)!; },
+  };
+  const first = await walkMeetingsDiscoveryNeed(TUSD, { ...shared });
+  const second = await walkMeetingsDiscoveryNeed(TUSD, { ...shared });
+  assert.deepEqual(first.found, expected.found);
+  assert.deepEqual(second.found, expected.found);
+  assert.equal(pageSetReads, 1, "spread per-walk runtimes still use one held page set");
+  assert.ok(reads.every(n => n === 1), "each unrelated capture is ingested once across both walks");
+  assert.ok(directoryReads > 1, "the selected endorsement is read again from its original capture");
+  assert.ok(captureReads > 0, "fresh captures are loaded through the vault reader");
+});
+
+test("LAZY VAULT DEADLINE: an expired body read leaves the walk and remaining needs owed", async () => {
+  for (const [label, repos] of await eachStore("wtp-lazy-discovery-")) {
+    let left = 60_000;
+    const pass = await runMeetingsDiscovery(repos, {
+      needs: [TUSD, SFPS], cycleIndex: 0, maxWalks: 5,
+      runtime: {
+        ...runtime(fakeOpen({ ...TUSD_SITE, ...SFPS_SITE }).open),
+        budget: { spent: () => left <= 0, remainingMs: () => left },
+        readOfficialPages: async () => [{ canonicalUrl: DIRECTORY.url, readText: async () => { left = 0; throw new Error("vault read deadline"); } }],
+      },
+    });
+    assert.deepEqual(pass.walked, [], label);
+    assert.equal(pass.cutShort.length, 1, label);
+    assert.deepEqual(new Set(pass.deferred), new Set([TUSD.jurisdictionId, SFPS.jurisdictionId]), label);
+    assert.deepEqual(await repos.discoveryAttempts.readRecent(pass.cutShort[0].jurisdictionId, 5), [], label);
+  }
+});
+
+test("VAULT INDEX DEADLINE: expiry before page metadata loads records no discovery reading", async () => {
+  for (const [label, repos] of await eachStore("wtp-index-discovery-")) {
+    let expired = false;
+    const pass = await runMeetingsDiscovery(repos, {
+      needs: [TUSD], cycleIndex: 0, maxWalks: 5,
+      runtime: {
+        ...runtime(fakeOpen(TUSD_SITE).open),
+        budget: { spent: () => expired, remainingMs: () => expired ? 0 : 60_000 },
+        readOfficialPages: async () => { expired = true; throw new Error("vault index deadline"); },
+      },
+    });
+    assert.deepEqual(pass.walked, [], label);
+    assert.deepEqual(pass.cutShort, [{ jurisdictionId: TUSD.jurisdictionId, requests: 0, search: [] }], label);
+    assert.deepEqual(pass.deferred, [TUSD.jurisdictionId], label);
+    assert.deepEqual(await repos.discoveryAttempts.readRecent(TUSD.jurisdictionId, 5), [], label);
+  }
+});
+
 test("THE RUNNER USES WHAT IT SAVED: cycle 1 credits the method for TUSD; cycle 2, a later process in New Mexico, reads it from the store and applies it", async () => {
   for (const [label, repos] of await eachStore("wtp-official-page-")) {
     const first = await runMeetingsDiscovery(repos, {

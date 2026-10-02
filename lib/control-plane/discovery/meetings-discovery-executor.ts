@@ -1,4 +1,4 @@
-import { officialLinkingPageFrom } from "../../sources/official-page-events/index.ts";
+import { officialLinkingPageFromAsync, type LazyOfficialPage } from "../../sources/official-page-events/index.ts";
 /**
  * **THE UNPAID MEETINGS-DISCOVERY EXECUTOR.** (2026-09-23.)
  *
@@ -105,7 +105,9 @@ export type DiscoveryOpen = (input: {
 
 export interface DiscoveryRuntime {
   /** Previously saved, readable publisher pages; never inferred from a hostname. */
-  readonly readOfficialPages?: () => Promise<readonly { canonicalUrl: string; text: string }[]>;
+  readonly readOfficialPages?: () => Promise<readonly (LazyOfficialPage | { canonicalUrl: string; text: string })[]>;
+  /** Reload a fresh walk capture's original bytes instead of retaining its HTML. */
+  readonly readOfficialPageTextFor?: (artifact: Artifact) => Promise<string>;
   /** Saved official-page links establish authority for government and vendor hosts. */
   readonly officialLinkingPageFor?: (url: string) => OfficialLinkingPage | null | Promise<OfficialLinkingPage | null>;
   readonly open: DiscoveryOpen;
@@ -296,17 +298,39 @@ function permissionState(p: StepPermission): PermissionState {
   return p === "ALLOWED" ? "ALLOWED" : p === "NO_ROBOTS" ? "NOT_APPLICABLE" : p === "DISALLOWED" ? "DISALLOWED" : "CANNOT_TELL";
 }
 
-/**
- * Walk one need's site. Never throws for a site-level failure; the attempt says
- * what happened. Throws DiscoveryTimeSpent when the caller's time ran out before
- * the walk confirmed anything.
- */
+const officialPageSets = new WeakMap<NonNullable<DiscoveryRuntime["readOfficialPages"]>, Promise<LazyOfficialPage[]>>();
+
+function officialPagesFor(runtime: DiscoveryRuntime): Promise<LazyOfficialPage[]> {
+  const read = runtime.readOfficialPages;
+  if (!read) return Promise.resolve([]);
+  let pages = officialPageSets.get(read);
+  if (!pages) {
+    pages = read().then(rows => rows.map(row => "readText" in row ? row : {
+      canonicalUrl: row.canonicalUrl, readText: async () => row.text,
+    }));
+    officialPageSets.set(read, pages);
+  }
+  return pages;
+}
+
+function lazyWalkCapture(artifact: Artifact, readText: NonNullable<DiscoveryRuntime["readOfficialPageTextFor"]>): LazyOfficialPage {
+  return { canonicalUrl: artifact.canonicalUrl, readText: () => readText(artifact) };
+}
+
+/** Walk one need; expired work uses DiscoveryTimeSpent and stays owed. */
 export async function walkMeetingsDiscoveryNeed(
   need: MeetingsDiscoveryNeed,
   runtime: DiscoveryRuntime,
 ): Promise<MeetingsDiscoveryAttempt> {
   const startedAt = runtime.now();
-  const officialPages = [...await runtime.readOfficialPages?.() ?? []];
+  let officialPages: LazyOfficialPage[];
+  try { officialPages = await officialPagesFor(runtime); }
+  catch (error) {
+    if (runtime.budget.spent() || (runtime.budget.remainingMs?.() ?? Infinity) <= 0) {
+      throw new DiscoveryTimeSpent(need.jurisdictionId, 0, []);
+    }
+    throw error;
+  }
   const attemptId = discoveryAttemptId(need.jurisdictionId, startedAt);
   const workId = discoveryWorkId(need.jurisdictionId);
   const maxRequests = runtime.maxRequestsPerWalk ?? DEFAULT_MAX_REQUESTS_PER_WALK;
@@ -347,7 +371,9 @@ export async function walkMeetingsDiscoveryNeed(
       try {
         const stored = await runtime.vault(artifact, bytes);
         if (stored.stored && artifact.tier !== "RESTRICTED_RAW" && status >= 200 && status < 300) {
-          officialPages.push({canonicalUrl: artifact.canonicalUrl, text: bytes});
+          officialPages.push(runtime.readOfficialPageTextFor
+            ? lazyWalkCapture(artifact, runtime.readOfficialPageTextFor)
+            : { canonicalUrl: artifact.canonicalUrl, readText: async () => bytes });
         }
         return stored.stored ? { id: artifact.id, why: null } : { id: null, why: stored.why };
       } catch (error) {
@@ -570,15 +596,24 @@ export async function walkMeetingsDiscoveryNeed(
    * attested: the recorded address, the current official site a route hint records with its evidence, or a host
    * one of those named by its own redirect. Before any homepage is read, the first origin tried.
    */
-  const pageIdentity = async (pageLabel: string | null, pageUrl: string): Promise<OfficialPageIdentity> => ({
+  const pageIdentity = async (pageLabel: string | null, pageUrl: string): Promise<OfficialPageIdentity> => {
+    let linkingPage;
+    try {
+      linkingPage = await officialLinkingPageFromAsync(pageUrl, officialPages) ?? await runtime.officialLinkingPageFor?.(pageUrl);
+    } catch (error) {
+      if (runtime.budget.spent() || timeLeftMs() < MIN_REQUEST_MS) throw new OutOfTime();
+      throw error;
+    }
+    return {
     bodyId: need.jurisdictionId,
     name: need.name,
     pageLabel,
-    linkingPage: officialLinkingPageFrom(pageUrl, officialPages) ?? await runtime.officialLinkingPageFor?.(pageUrl),
+    linkingPage,
     officialHost: new URL(homeOrigin ?? origins[0] ?? "https://invalid.invalid").host,
     stateCode: need.stateCode,
     now: runtime.now(),
-  });
+    };
+  };
   const found: DiscoveryFind[] = [];
   const leads: Omit<DiscoveryFind, "count" | "artifactId">[] = [];
   const recipeApplied: MeetingsDiscoveryAttempt["recipes"]["applied"][number][] = [];

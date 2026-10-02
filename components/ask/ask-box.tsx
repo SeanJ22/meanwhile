@@ -18,6 +18,7 @@ import {
 } from "@/lib/routing/ask";
 import { buildDigest, type Digest } from "@/lib/routing/digest";
 import { ROUTABLE_CATEGORIES } from "@/lib/routing/destinations";
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import type { NameableEntity } from "@/lib/routing/exact-name";
 import { ASK_BEAT_POOL, beatStem, drawAskBeat } from "@/lib/routing/ask-beat-pool";
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
@@ -1229,13 +1230,7 @@ export function AskBox({
             A fact about us, attributed, with no verdict on ourselves in it.
           */}
           {grounded.mode === "OFF" && (
-            <p
-              data-ask-grounded-state="OFF"
-              className="text-[0.8125rem] leading-relaxed text-voice"
-            >
-              Answering from our records is switched off right now, so we have
-              nothing to show for that question yet.
-            </p>
+            <WorkingOnIt attrs={{ "data-ask-grounded-state": "OFF" }} />
           )}
 
           {/*
@@ -1432,14 +1427,11 @@ export function AskBox({
                records that neither state got far enough to check. */
             grounded.mode !== "OFF" &&
             grounded.mode !== "TRANSPORT_FAILED" && (
-              <p
-                data-ask-grounded-state="NOTHING_HELD"
-                className="text-[0.8125rem] leading-relaxed text-voice"
-              >
-                {grounded.subject
-                  ? `We hold ${grounded.subject.name}, but nothing recorded that answers that.`
-                  : "We haven't recorded anything that answers that yet. Naming a government — a school district, a county board, someone on your ballot — is what this can answer from."}
-              </p>
+              <WorkingOnIt
+                attrs={{ "data-ask-grounded-state": "NOTHING_HELD" }}
+                about={grounded.subject?.name}
+                subject={grounded.subject?.kind === "BODY" ? { type: "BODY", id: grounded.subject.id } : null}
+              />
             )}
 
           {/* The sources, always, and a null publisher renders as the HOST
@@ -1533,13 +1525,7 @@ export function AskBox({
             what the reader is told.
           */}
           {asked.binding.kind === "UNRESOLVED" && !grounded?.subject && (
-            <p
-              data-ask-entity-state="UNRESOLVED"
-              className="text-[0.8125rem] leading-relaxed text-voice"
-            >
-              We haven&apos;t matched &ldquo;{asked.binding.mention}&rdquo; to a
-              government near you.
-            </p>
+            <WorkingOnIt attrs={{ "data-ask-entity-state": "UNRESOLVED" }} about={`“${asked.binding.mention}”`} />
           )}
           {asked.binding.kind === "AMBIGUOUS" && !grounded?.subject && (
             <p

@@ -2988,7 +2988,7 @@ function placeSubject(
            A reader needs to know this absence is OURS and that it is not a
            finding about the place — neither of which requires the app to grade
            its own coverage in the middle of the sentence. */
-        "We haven't recorded any governing body in this place yet — which is not a statement that it has none.",
+        "We’re working on getting this info.",
     },
     // A place has no roster of its own — the people are on the bodies' cards,
     // one level down, and saying so is better than an empty tab.

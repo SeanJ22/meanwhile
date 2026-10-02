@@ -176,10 +176,6 @@ function RegisteredNoActivityRecord({ record }: { record: StateMoneyRecord }) {
         Registered committee. No money raised and none spent has been reported to the{" "}
         {record.agency} as of {readableDate(record.checkedAt)}.
       </p>
-      <p className="mt-1 text-xs text-muted-foreground">
-        A committee registers before it reports. This is what the committee has
-        reported so far, not a statement that no money was raised.
-      </p>
       <AgencyLine record={record} />
     </div>
   );
@@ -198,11 +194,6 @@ function AbsentRecord({ record }: { record: StateMoneyRecord }) {
       <p className="text-sm">
         No reports on file with the {record.agency} as of{" "}
         {readableDate(record.checkedAt)}.
-      </p>
-      <p className="mt-1 text-xs text-muted-foreground">
-        Candidates in smaller races often file short forms, or fall under the
-        reporting threshold and file nothing at all. This is not a statement
-        that no money was raised.
       </p>
       {record.filingsUrl ? (
         <p className="mt-2 text-xs text-muted-foreground">
@@ -243,12 +234,12 @@ function OurGapRecord({ record }: { record: StateMoneyRecord }) {
   return (
     <div className="mt-3 first:mt-0">
       <p className="text-sm">
-        We haven&rsquo;t matched this candidate to a campaign finance filing yet.
+        We&rsquo;re working on getting this info.
       </p>
       <p className="mt-1 text-xs text-muted-foreground">
         {gap?.whatIsMissing ??
           "The agency holds a record we could not confirm belongs to this candidacy."}{" "}
-        This is a gap in our records, not a statement that nothing was filed.
+       
         {/*
           A LITERAL ENTITY IN A TEMPLATE STRING RENDERS AS ITS OWN SOURCE.
           This clause was written as `${agency}&rsquo;s` inside a JS template

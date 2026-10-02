@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { getOrCreateBrowserKey, mintBrowserKey } from "@/lib/state/browser-key";
 
 /**
  * **"WANT US TO GET THIS INFO SOONER?"** (OWN-Q6, the owner's amendment on
@@ -66,6 +67,8 @@ export function DemandPill({
 
   const send = async () => {
     setPhase("SENDING");
+    const tapAt = new Date().toISOString();
+    const tapId = mintBrowserKey();
     try {
       const response = await fetch("/api/demand-signal", {
         method: "POST",
@@ -74,6 +77,12 @@ export function DemandPill({
           subjectType,
           subjectId,
           signal: "WANT_THIS_SOONER",
+          // The returning-reader ID, the exact time and a one-per-tap event id,
+          // so the shared reader events count this tap once, by day and week,
+          // and a retried request is never counted twice.
+          continuityKey: getOrCreateBrowserKey("wtp.ask_key"),
+          occurredAt: tapAt,
+          eventId: tapId,
           ...(typeof lat === "number" && typeof lng === "number" ? { lat, lng } : {}),
         }),
       });

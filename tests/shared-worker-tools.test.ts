@@ -74,6 +74,28 @@ test("the measured national place pair admits four jobs while retaining the 768 
   }
 });
 
+test("legacy registry roster publications reserve their measured RSS and queue until memory is released", async () => {
+  // The 8 GiB host also pays for its existing parent; a larger host can admit
+  // two publishers, proving the limit follows memory rather than a fixed cap.
+  for (const [availableMiB, expected] of [[8192 - 1024, 1], [2 * 4012 + 768, 2]] as const) {
+    const slots = routineProcessSlots({ availableBytes: () => availableMiB * 1024 * 1024 });
+    const entries = ["worker-publication:registry-runtime-bindings:roster-one",
+      "worker-publication:registry-runtime-bindings:directory-two",
+      "worker-publication:registry-runtime-bindings:roster-three", "registry-runtime-bindings"];
+    const admitted: string[] = [];
+    const offers = entries.map(entry => slots.acquire(entry).then(release => { admitted.push(entry); return release; }));
+    await Promise.resolve();
+    assert.deepEqual(admitted, entries.slice(0, expected), "reserved future RSS protects the 768 MiB margin before publishers grow");
+    for (let index = 0; index < entries.length; index++) {
+      const release = await offers[index]!;
+      release();
+      await Promise.resolve();
+      assert.ok(admitted.length <= Math.min(entries.length, expected + index + 1));
+    }
+    assert.deepEqual(admitted, entries, "releasing each publisher wakes all remaining offered work");
+  }
+});
+
 test("the staging host size accounts for its already-running parent", () => {
   const prior = process.env.WTP_WORKER_HOST_MEMORY_MIB;
   process.env.WTP_WORKER_HOST_MEMORY_MIB = "1";

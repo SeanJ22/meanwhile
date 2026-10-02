@@ -1011,7 +1011,7 @@ async function writeFailedCycleBeat(cycleStartedAt: string): Promise<void> {
       ok: false,
       testedSha: RUNNING_CODE_SHA,
       host: hostname(),
-      intervalMin: INTERVAL_MIN,
+      intervalMin: Math.min(INTERVAL_MIN, 10),
       codeIdentity,
     }) };
     if (current === null) await repos.runnerHeartbeat.put(RUNNER_ID, next, finishedAt);
@@ -1736,7 +1736,7 @@ let lifetimeHuntStalledCycles = 0;
 /** Exact authorized lifetime work resumes in bounded cycles. The child still
  * enforces provider restrictions and atomically reserves every paid call. */
 async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
-  const ordinary = INTERVAL_MIN * 60_000;
+  const ordinary = (cycleOk ? INTERVAL_MIN : Math.min(INTERVAL_MIN, 10)) * 60_000;
   if (provider !== "postgres" || canary) return ordinary;
   try {
     const repos = await ownerRepositories();
@@ -1755,7 +1755,8 @@ async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
     const otherScopes = scopes.scopes.filter(scope => !scope.budgetStartedAt);
     const hunt = lifetime ?? (!cycleOk ? null : continuingDirectedHunt(otherScopes, expansion, assignments));
     if (hunt === null) return ordinary;
-    const waitMs = lifetime?.delayMs ?? POLL_MS;
+    const requestedWaitMs = lifetime?.delayMs ?? POLL_MS;
+    const waitMs = cycleOk ? requestedWaitMs : Math.min(requestedWaitMs, ordinary);
     const reason = lifetime?.reason === "ELIGIBLE_ZERO_DISPATCH"
       ? `Directed hunt ${hunt.label}: eligible work remains without a dispatch; bounded retry in ${waitMs / 60_000} minutes.`
       : hunt.due > hunt.dispatched

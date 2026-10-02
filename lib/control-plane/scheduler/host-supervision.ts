@@ -1,5 +1,7 @@
 import type { HostSupervision } from "./research-policy.ts";
 import { publisherSizeForState } from "../../sources/publisher-size.ts";
+import type { FreshnessObligation } from "./obligation.ts";
+import { scoutStateHint } from "./field-manual-scout.ts";
 
 /** Held facts about the website being requested, never the hunt's jurisdiction. */
 export interface WebsiteSize {
@@ -23,6 +25,14 @@ export function websiteSizeFromHoldings(states: readonly string[], root = proces
     }
     return found;
   };
+}
+
+export function websiteSizeForObligation(obligation: Pick<FreshnessObligation, "id" | "subjectId" | "autonomousPlan" | "scopeDivisions">, root?: string): WebsiteSizeForUrl {
+  return websiteSizeFromHoldings([
+    ...(obligation.autonomousPlan ? [obligation.autonomousPlan.jurisdiction] : []),
+    ...scoutStateHint(obligation.subjectId, obligation.id),
+    ...(obligation.scopeDivisions ?? []).flatMap(division => scoutStateHint(division, null)),
+  ], root);
 }
 
 /** Sean, October 1: only known small local publishers have a ten-request cap. */

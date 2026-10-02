@@ -96,8 +96,7 @@ import { contentHash } from "../ids.ts";
 
 import type { WorkArtifact } from "./dispatch.ts";
 import { DEFAULT_FETCH_TIMEOUT_MS, WALL_STATUSES } from "./http-executor.ts";
-import { websiteRequestLimit, websiteSizeFromHoldings } from "./host-supervision.ts";
-import { scoutStateHint } from "./field-manual-scout.ts";
+import { websiteRequestLimit, websiteSizeForObligation } from "./host-supervision.ts";
 import { evaluatePermission, DEFAULT_ROBOTS_TOKEN, type PermissionReading } from "./robots.ts";
 import { DEFAULT_USER_AGENT, realOpen, type OpenOne } from "./route-executor.ts";
 import {
@@ -568,12 +567,7 @@ function permissionState(verdict: PermissionReading["verdict"]): PermissionState
 }
 
 export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
-  const obligation = ctx.obligation.obligation;
-  const websiteSize = ctx.websiteSize ?? websiteSizeFromHoldings([
-    ...(obligation.autonomousPlan ? [obligation.autonomousPlan.jurisdiction] : []),
-    ...scoutStateHint(obligation.subjectId, obligation.id),
-    ...(obligation.scopeDivisions ?? []).flatMap(division => scoutStateHint(division, null)),
-  ], ctx.root);
+  const websiteSize = ctx.websiteSize ?? websiteSizeForObligation(ctx.obligation.obligation, ctx.root);
   const openOne: OpenOne = ctx.openOne ?? realOpen;
   /* An injected string opener never falls through to the real network. */
   const openBytes: OpenBytes | null =

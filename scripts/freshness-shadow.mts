@@ -19,7 +19,7 @@ import { planRepairBrief } from "../lib/control-plane/workers/plan-repair.ts";
 import { observeCyclePhases } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { cycleStateWriter } from "../lib/control-plane/scheduler/cycle-state-writer.ts";
 import { selectedCycleRepositories } from "../lib/control-plane/scheduler/cycle-selection.ts";
-import { readRelaunchTriggerVerification } from "../lib/control-plane/scheduler/host-supervision.ts";
+import { readRelaunchTriggerVerification, websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { runAdminEvidenceMirror } from "../lib/control-plane/evidence/admin-bridge-runner.ts";
 import { retainRecentRoutineMeetingEvidence } from "../lib/control-plane/workers/routine-meeting-intake.ts";
@@ -1587,7 +1587,9 @@ try {
 }
 /* The ceiling in force and the paid-search switch were read above the lane closure. */
 
+const websiteSize = websiteSizeFromHoldings(trackedStateCodes, ROOT);
 const fleetSafety = new FleetSafetyController({
+  websiteSize,
   now: NOW,
   costs: costLedger,
   costLedgerReadable: ledgerUnreadable === null,
@@ -3062,6 +3064,7 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
         sync.all.filter((o) => o.id.startsWith("freshness:meetings-discovery:") && o.openOccurrenceId !== null).map((o) => o.subjectId),
       ),
       runtime: {
+        websiteSize,
         open: async ({ url, headers, timeoutMs }) => {
           const got = await openDiscovery({ url, headers, timeoutMs });
           return {

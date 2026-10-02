@@ -70,6 +70,36 @@ test("geography quiet reads fetch only the pointer, and a changed or racing vers
   await assert.rejects(readHeldPlaceGeography(ids, [], query), /CIVIC_POINTER_CHANGED_DURING_READ/);
 });
 
+test("held Census status survives complementary projections without inventing governments for statistical areas", () => {
+  const statuses = ["S", "F", "N", "I", "A", "E", null];
+  const divisions = statuses.map((funcstat, i) => ({ ocdId: `${county}/place:area_${i}`,
+    label: "Same label", divisionType: "place", funcstat }));
+  assert.ok(registry.value);
+  const model = { ...registry.value, registry: { ...registry.value.registry, divisions,
+    bodies: [{ ...registry.value.registry.bodies[0], ocdId: divisions[0].ocdId, alsoServesOcdIds: [] }] } } as unknown as RegistryRuntimeReadModel;
+  const capture = projectHeldPlaceCapture(divisions.map(d => d.ocdId), published(model), [], at);
+  // A second projection contributes a field for the same division without
+  // repeating its optional Census metadata (as the geography reader does).
+  const geography = { id: divisions[0].ocdId, kind: "division" as const,
+    divisionIds: [divisions[0].ocdId], label: "Boundary" };
+  const input = { divisions: divisions.map(d => ({ id: d.ocdId, label: d.label })),
+    subjects: [...capture.subjects, geography], held: capture.held, now: at };
+  const rows = buildPlaceOwedList(input);
+  for (const [i, status] of statuses.entries()) {
+    const inventories = rows.filter(row => row.subject.id.startsWith(`${divisions[i].ocdId}#inventory:`));
+    assert.equal(inventories.length, i < 4 ? 0 : 6, `status ${status} uses only the held classification`);
+    assert.equal(rows.filter(row => row.subject.id === divisions[i].ocdId).length, 14, "geography remains owed");
+  }
+  assert.deepEqual(rows.find(row => row.subject.id === "shared-body" && row.checklistId === "GOV-01")?.held,
+    capture.held.filter(field => field.subjectId === "shared-body"), "actual records remain even within statistical geography");
+  assert.equal(capture.subjects.find(subject => subject.id === divisions[0].ocdId)?.funcstat, "S");
+  const explicit = buildPlaceOwedList({ ...input,
+    divisions: [{ id: divisions[0].ocdId, label: "Current input", funcstat: "A" }] });
+  assert.equal(explicit.filter(row => row.subject.id.includes("#inventory:")).length, 6, "explicit input status takes precedence");
+  const reversed = buildPlaceOwedList({ ...input, subjects: [geography, ...capture.subjects] });
+  assert.deepEqual(reversed.map(row => [row.id, row.state, row.held]), rows.map(row => [row.id, row.state, row.held]));
+});
+
 test("held fields reach every served division without filling inventory or missing meeting fields", () => {
   const primary = projectHeldPlaceCapture([county], registry, [meetings], at);
   const secondary = projectHeldPlaceCapture([neighbour], registry, [meetings], at);

@@ -16,7 +16,7 @@ import type { PlaceCaptureKind } from "../coverage/place-owed.ts";
 
 /** Derived from canonical published records, never filtered by their original job or ZIP. */
 export interface HeldPlaceCapture {
-  readonly subjects: readonly { id: string; kind: "division" | "body" | "seat" | "calendar" | "contest" | "funding" | "deadline"; divisionIds: readonly string[]; label: string; captureKind?: PlaceCaptureKind; calendarBodyId?: string }[];
+  readonly subjects: readonly { id: string; kind: "division" | "body" | "seat" | "calendar" | "contest" | "funding" | "deadline"; divisionIds: readonly string[]; label: string; captureKind?: PlaceCaptureKind; calendarBodyId?: string; funcstat?: string }[];
   readonly held: readonly { subjectId: string; checklistId: string; state: "published" | "held" | "unpublished";
     sourceUrl: string; checkedAt: string; freshUntil: string; value: unknown }[];
 }
@@ -38,6 +38,13 @@ export function projectHeldPlaceCapture(
   const wanted = new Set(divisionIds);
   const subjects = new Map<string, HeldPlaceCapture["subjects"][number]>();
   const held = new Map<string, HeldPlaceCapture["held"][number]>();
+  // Preserve the held Census classification even for callers that only know
+  // a division ID. Statistical geography is not another government inventory.
+  for (const division of registry?.registry.divisions ?? []) {
+    if (!wanted.has(division.ocdId)) continue;
+    subjects.set(division.ocdId, { id: division.ocdId, kind: "division", divisionIds: [division.ocdId],
+      label: division.label, ...(division.funcstat ? { funcstat: division.funcstat } : {}) });
+  }
   const bodies = new Map((registry?.registry.bodies ?? []).map(body => [body.id, body]));
   const divisionsFor = (id: string | undefined, division: string | null) => {
     const body = id === undefined ? undefined : bodies.get(id);

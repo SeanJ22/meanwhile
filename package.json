@@ -50,7 +50,7 @@
     "credentials": "tsx scripts/credential-ledger.mts",
     "crosswalk:build": "tsx scripts/build-census-nces-crosswalk.mts",
     "dark1": "tsx scripts/dark1-proposal.mts",
-    "db:apply": "tsx scripts/apply-migrations.mts",
+    "db:apply": "tsx scripts/db-apply.mts",
     "db:check": "tsx scripts/check-schema-state.mts",
     "db:gate": "tsx scripts/db-shipping-gate.mts",
     "db:generate": "drizzle-kit generate",

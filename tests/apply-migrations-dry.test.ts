@@ -4,6 +4,8 @@ import { dirname, join } from "node:path";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { declaredPhase } from "../lib/db/migration-phases.ts";
+import { runDbApply } from "../scripts/db-apply.mts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const REGISTER = join(ROOT, "tests", "fixtures", "apply-migrations-neon-register.mjs");
@@ -127,4 +129,86 @@ test("non-dry db:apply keeps setup and migration journalling fail-closed", () =>
   assert.match(result.output, /planted transaction failure/);
   assert.doesNotMatch(result.output, /journalled\s+hash=/);
   assert.doesNotMatch(result.output, /Applied \d+ migration/);
+});
+
+for (const phase of ["expand", "contract"] as const) {
+  test(`db:apply --phase=${phase} plans only that phase without writes`, () => {
+    const result = run(["--dry", `--phase=${phase}`], { APPLY_MIGRATIONS_FAKE_JOURNAL_EXISTS: "0" });
+    assert.equal(result.status, 0, result.output);
+    const pending = result.output.split(/\r?\n/).filter(line => line.startsWith("  pending: ")).map(line => line.slice(11));
+    assert.deepEqual(pending, journal().entries.filter(e => declaredPhase(e.tag)?.phase === phase).map(e => e.tag));
+    assert.ok(result.statements.every(statement => /^SELECT\b/i.test(statement)));
+    assert.deepEqual(result.events, []);
+  });
+}
+
+test("an unknown phase refuses before database setup", () => {
+  const result = run(["--phase=typo"]);
+  assert.equal(result.status, 1);
+  assert.match(result.output, /phase must be expand or contract/);
+  assert.deepEqual(result.statements, []);
+  assert.deepEqual(result.events, []);
+});
+
+test("an unknown upper bound refuses before any database setup", () => {
+  const result = run(["--upto=typo"]);
+  assert.equal(result.status, 1);
+  assert.deepEqual(result.statements, []);
+});
+
+test("concurrent migration reuse reports no statements applied and keeps the lock with the journal", () => {
+  const result = run([`--upto=${journal().entries[0].tag}`], { APPLY_MIGRATIONS_FAKE_CONCURRENT: "1" });
+  assert.equal(result.status, 0, result.output);
+  assert.match(result.output, /REUSED/);
+  assert.match(result.output, /Applied 0 migration\(s\), 0 statement\(s\)/);
+  const events = result.events as { kind: string; statement?: string; requests?: number }[];
+  assert.match(events.find(event => event.kind === "transaction-tag")?.statement ?? "", /pg_advisory_xact_lock/);
+  assert.match(events.find(event => event.kind === "transaction-query")?.statement ?? "", /IF NOT EXISTS[\s\S]*EXECUTE[\s\S]*INSERT INTO/);
+});
+
+test("the runtime refuses a contract before the exact commit is serving, records the refusal and redacts failure output", async () => {
+  const sha = "a".repeat(40);
+  const env: NodeJS.ProcessEnv = { NODE_ENV: "test", WTP_RUNTIME_MODE: "production", WTP_DB_ROLE: "production", PRIVATE_TOKEN: "private-token-value" };
+  const records: unknown[] = [];
+  let executed = false;
+  const args = ["--target=production", "--phase=contract", "--production-runtime", `--runtime-commit=${sha}`];
+  const status = await runDbApply(args, env, { head: () => sha, served: async () => "b".repeat(40),
+    execute: () => { executed = true; return { status: 0, stdout: "", stderr: "" }; },
+    record: async record => { records.push(record); } });
+  assert.equal(status, 1);
+  assert.equal(executed, false);
+  assert.match(JSON.stringify(records), /REFUSED/);
+  records.length = 0;
+  assert.equal(await runDbApply(args, env, { head: () => sha, served: async () => sha,
+    execute: () => ({ status: 1, stdout: "", stderr: "FAIL private-token-value postgresql://private:password@host/db" }),
+    record: async record => { records.push(record); } }), 1);
+  assert.doesNotMatch(JSON.stringify(records), /private-token-value|password|private:/);
+  assert.match(JSON.stringify(records), /FAILED/);
+});
+
+test("production apply refuses a writer on the old endpoint before database access", () => {
+  const result = run(["--target=production", "--phase=expand"], {
+    WTP_RUNTIME_MODE: "production",
+    WTP_PRODUCTION_DATABASE_URL_WRITE: "postgresql://writer:secret@ep-weathered-cherry-ax65m9rf.c-4.us-east-2.aws.neon.tech/neondb",
+  });
+  assert.equal(result.status, 1);
+  assert.match(result.output, /approved ep-dry-river endpoint/);
+  assert.doesNotMatch(result.output, /secret|ep-weathered/);
+  assert.deepEqual(result.statements, []);
+  assert.deepEqual(result.events, []);
+});
+
+test("preview, branch and local build hooks skip without reading a database", () => {
+  for (const settings of [
+    { NETLIFY: "true", CONTEXT: "deploy-preview", BRANCH: "main" },
+    { NETLIFY: "true", CONTEXT: "branch-deploy", BRANCH: "test" },
+    { NETLIFY: "true", CONTEXT: "production", BRANCH: "test" },
+    { NETLIFY: "false", CONTEXT: "production", BRANCH: "main" },
+  ]) {
+    const result = run(["--target=production", "--phase=expand", "--production-build"], settings);
+    assert.equal(result.status, 0, result.output);
+    assert.match(result.output, /skipped.*writes=0/);
+    assert.deepEqual(result.statements, []);
+    assert.deepEqual(result.events, []);
+  }
 });

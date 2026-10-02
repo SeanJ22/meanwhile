@@ -1295,7 +1295,7 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
   const startedAt = new Date().toISOString();
   const first = await inspectRuntimeRelease();
   if (first.state === "CURRENT") {
-    return null;
+    return await applyRuntimeContracts(RUNNING_CODE_SHA) ? null : 2;
   }
 
   // At process startup no clock has passed the method-authority gate yet. A
@@ -1340,8 +1340,25 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
     await persistRuntimeBoundaryFailure(applied, startedAt);
     return 2;
   }
+  if (!await applyRuntimeContracts(final.targetSha)) return 2;
   console.log(`  ${applied.detail}; exiting for the stable Scheduled Task launcher to relaunch this exact code`);
   return 0;
+}
+
+const runtimeContractsApplied = new Set<string>();
+async function applyRuntimeContracts(sha: string | null): Promise<boolean> {
+  if (sha === null || runtimeContractsApplied.has(sha)) return sha !== null;
+  const [result] = await runRuntimeChildren([{ id: "production-contract-migrations", executable: process.execPath,
+    args: ["--experimental-strip-types", "scripts/db-apply.mts", "--target=production", "--phase=contract",
+      "--production-runtime", `--runtime-commit=${sha}`] }], {
+    cwd: ROOT, env: process.env, maxBufferBytes: 16 * 1024 * 1024,
+    onStdout: (_id, output) => process.stdout.write(output),
+    onStderr: (_id, output) => process.stderr.write(output),
+  });
+  if (result?.status === 0) { runtimeContractsApplied.add(sha); return true; }
+  await persistRuntimeBoundaryFailure(releaseInspectionRefusal("PRODUCTION_CONTRACT_MIGRATION_FAILED",
+    "production contract migrations did not succeed; admissions remain held; see Admin's existing migration outcome", sha), new Date().toISOString());
+  return false;
 }
 
 /** The latest RESUME_RUNNER with no HONORED record beside it, or null. */

@@ -32,7 +32,9 @@ export function neon() {
 
   sql.transaction = async (build) => {
     const transaction = async (strings) => {
-      record(EVENT_PREFIX, { kind: "transaction-tag", statement: textOf(strings) });
+      const statement = textOf(strings);
+      record(EVENT_PREFIX, { kind: "transaction-tag", statement });
+      if (/AS applied$/i.test(statement)) return [{ applied: process.env.APPLY_MIGRATIONS_FAKE_CONCURRENT === "1" ? false : true }];
       return [];
     };
     transaction.query = async (statement) => {

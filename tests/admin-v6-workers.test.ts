@@ -288,14 +288,32 @@ test("reads stay bounded: no list, no whole-log read, no filtered scan", async (
     if (typeof v !== "function") return v;
     return (...args: unknown[]) => {
       calls.push(`${name}.${String(prop)}`);
-      if (["list", "listWhere", "readAll", "keys", "readWhere", "readRecentWhere"].includes(String(prop))) throw Error(`unbounded ${name}.${String(prop)}`);
+      if (["list", "listWhere", "readAll", "keys", "readWhere"].includes(String(prop))) throw Error(`unbounded ${name}.${String(prop)}`);
+      if (prop === "readRecentWhere") {
+        assert.equal(args[0], "owner-digest"); assert.deepEqual(args[1], ["headline"]);
+        assert.equal(args[2], "Production migrations"); assert.equal(args[3], 2);
+        assert.deepEqual(args[4], { writtenAt: true, migration: ["phase", "state", "summary", "targetHost"] });
+      }
       return (v as (...a: unknown[]) => unknown).apply(target, args);
     };
   } });
   const wrapped = Object.fromEntries(Object.entries(repos).map(([k, v]) => [k, v && typeof v === "object" ? guard(k, v) : v])) as unknown as ControlPlaneRepositories;
   ok(await section("us", wrapped));
   assert.ok(calls.filter(c => c.startsWith("attempts.")).length <= 16);
-  assert.deepEqual(calls.filter(c => c.startsWith("ownerDigests.")), ["ownerDigests.readRecent"]);
+  assert.deepEqual(calls.filter(c => c.startsWith("ownerDigests.")), ["ownerDigests.readRecent", "ownerDigests.readRecentWhere"]);
+});
+
+test("automatic migration outcomes use the existing deploy card and do not become source delivery", async () => {
+  const repos = await world({ sources: [] });
+  await repos.ownerDigests.append("owner-digest", "migration-1", { formatVersion: 1, digestId: "migration-1",
+    writtenAt: NOW, headline: "Production migrations", lines: [], cycleOk: false, testedSha: "a".repeat(40),
+    migration: { phase: "expand", state: "REFUSED", summary: "Committed journal mismatch; old deploy remains serving.",
+      targetHost: "ep-dry-river-axwtolzc" } } as never, NOW);
+  const result = ok(await section("us", repos));
+  assert.equal(result.data.update?.status, "REFUSED");
+  assert.equal(result.data.update?.fixId, null);
+  assert.equal(result.data.status.lastUsefulProgress, null);
+  assert.match(result.data.update?.what ?? "", /Committed journal mismatch/);
 });
 
 test("the revision follows saved sources, not the clock or a lease renewal", async () => {

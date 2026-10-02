@@ -39,6 +39,7 @@
  * Run: `pnpm db:apply [--target=production] [--dry]`
  */
 import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -46,11 +47,32 @@ import { config as loadEnv } from "dotenv";
 import { neon } from "@neondatabase/serverless";
 
 import { resolveProductionWriteHandle, WriteHandleRefused } from "../lib/db/write-handle.ts";
+import { declaredPhase, phaseFromSql } from "../lib/db/migration-phases.ts";
 
-loadEnv({ path: join(process.cwd(), ".env.local") });
+const PRODUCTION_BUILD = process.argv.includes("--production-build");
+if (PRODUCTION_BUILD && (process.env.CONTEXT !== "production" || process.env.BRANCH !== "main" || process.env.NETLIFY !== "true")) {
+  console.log("db:apply: production expand skipped outside the Netlify production main build; writes=0");
+  process.exit(0);
+}
+
+loadEnv({ path: join(process.cwd(), ".env.local"), quiet: true });
 
 const PRODUCTION = process.argv.includes("--target=production");
 const DRY = process.argv.includes("--dry");
+const phaseArg = process.argv.find(a => a.startsWith("--phase="));
+const PHASE = phaseArg?.slice("--phase=".length);
+if (PHASE !== undefined && PHASE !== "expand" && PHASE !== "contract") {
+  console.error("db:apply: REFUSED — phase must be expand or contract");
+  process.exit(1);
+}
+if (PRODUCTION_BUILD && (!PRODUCTION || PHASE !== "expand")) {
+  console.error("db:apply: REFUSED — the production build applies only production expand migrations");
+  process.exit(1);
+}
+if (PRODUCTION && PHASE === undefined) {
+  console.error("db:apply: REFUSED — production requires an explicit expand or contract phase");
+  process.exit(1);
+}
 
 let connection: string;
 let which: string;
@@ -58,6 +80,9 @@ let which: string;
 if (PRODUCTION) {
   try {
     const handle = resolveProductionWriteHandle();
+    if (handle.host.replace(/-pooler(?=\.)/, "").split(".")[0] !== "ep-dry-river-axwtolzc" || !handle.host.endsWith(".neon.tech")) {
+      throw new WriteHandleRefused("production migrations require the approved ep-dry-river endpoint");
+    }
     connection = handle.connection;
     which = handle.variable;
   } catch (error) {
@@ -103,6 +128,32 @@ interface JournalEntry {
 const journal = JSON.parse(
   readFileSync(join(process.cwd(), "lib/db/migrations/meta/_journal.json"), "utf8"),
 ) as { entries: JournalEntry[] };
+
+const uptoArg = process.argv.find((a) => a.startsWith("--upto="));
+const UPTO = uptoArg ? uptoArg.slice("--upto=".length) : null;
+if (UPTO !== null && !journal.entries.some((entry) => entry.tag === UPTO)) {
+  console.error("db:apply: REFUSED — --upto names no committed migration");
+  process.exit(1);
+}
+
+// Validate the exact committed files before even creating a journal schema.
+for (const entry of journal.entries) {
+  const relative = `lib/db/migrations/${entry.tag}.sql`;
+  const raw = readFileSync(join(process.cwd(), relative));
+  const declaration = declaredPhase(entry.tag);
+  if (!declaration || declaration.phase !== phaseFromSql(raw.toString("utf8")).phase) {
+    throw new Error(`db:apply: REFUSED — ${entry.tag} has no matching migration phase`);
+  }
+  if (PRODUCTION) {
+    const committed = execFileSync("git", ["show", `HEAD:${relative}`], { cwd: process.cwd(), stdio: ["ignore", "pipe", "pipe"] });
+    if (!committed.equals(raw)) throw new Error(`db:apply: REFUSED — ${entry.tag} differs from its committed SQL`);
+  }
+}
+if (PRODUCTION) {
+  const relative = "lib/db/migrations/meta/_journal.json";
+  const committed = execFileSync("git", ["show", `HEAD:${relative}`], { cwd: process.cwd(), stdio: ["ignore", "pipe", "pipe"] });
+  if (!committed.equals(readFileSync(join(process.cwd(), relative)))) throw new Error("db:apply: REFUSED — migration journal differs from its committed version");
+}
 
 type AppliedMigration = { hash: string; created_at: string | number };
 
@@ -153,26 +204,18 @@ const appliedWhen = new Set(applied.map((r) => Number(r.created_at)));
  * silently means "all of it" is how this flag would cause the failure it
  * exists to prevent.
  */
-const uptoArg = process.argv.find((a) => a.startsWith("--upto="));
-const UPTO = uptoArg ? uptoArg.slice("--upto=".length) : null;
-
 const allPending = journal.entries.filter((e) => !appliedWhen.has(e.when));
-if (UPTO && !journal.entries.some((e) => e.tag === UPTO)) {
-  console.error(
-    `REFUSED: --upto=${UPTO} names no migration in the journal. Tags are: ` +
-      journal.entries.map((e) => e.tag).join(", "),
-  );
-  process.exit(1);
-}
 const uptoIndex = UPTO ? allPending.findIndex((e) => e.tag === UPTO) : -1;
 if (UPTO && uptoIndex < 0) {
   console.log(`--upto=${UPTO} is already applied here; nothing before it is pending.`);
 }
-const pending = UPTO
+const boundedPending = UPTO
   ? uptoIndex >= 0
     ? allPending.slice(0, uptoIndex + 1)
     : []
   : allPending;
+const pending = PHASE ? boundedPending.filter(e => declaredPhase(e.tag)?.phase === PHASE) : boundedPending;
+if (PHASE) console.log(`phase: ${PHASE}; deferred other phase: ${boundedPending.length - pending.length}`);
 if (UPTO) {
   const held = allPending.slice(uptoIndex + 1);
   if (held.length > 0) {
@@ -201,6 +244,7 @@ if (nothingPending) {
 
 if (!nothingPending && !DRY) {
   let statementsRun = 0;
+  let migrationsApplied = 0;
   for (const entry of pending) {
     const path = join(process.cwd(), "lib/db/migrations", `${entry.tag}.sql`);
     const raw = readFileSync(path);
@@ -220,14 +264,29 @@ if (!nothingPending && !DRY) {
       process.exit(1);
     }
 
+    let appliedHere = false;
     try {
-      await sql.transaction((transaction) => [
-        ...statements.map((statement) => transaction.query(statement)),
-        transaction`
-          INSERT INTO drizzle.__drizzle_migrations (hash, created_at)
-          VALUES (${hash}, ${entry.when})
-        `,
+      // The existing journal is re-read under the same transaction lock as the DDL.
+      // Two concurrent build/runner callers cannot both apply an unseen migration.
+      const quote = (value: string) => `'${value.replaceAll("'", "''")}'`;
+      const delimiter = `$wtp_${hash}$`;
+      const apply = `DO ${delimiter} BEGIN
+        IF EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations WHERE created_at = ${entry.when} AND hash <> ${quote(hash)}) THEN
+          RAISE EXCEPTION 'MIGRATION_JOURNAL_HASH_MISMATCH';
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations WHERE created_at = ${entry.when}) THEN
+          ${statements.map(statement => `EXECUTE ${quote(statement)};`).join("\n")}
+          INSERT INTO drizzle.__drizzle_migrations (hash, created_at) VALUES (${quote(hash)}, ${entry.when});
+        END IF;
+      END ${delimiter};`;
+      const results = await sql.transaction((transaction) => [
+        transaction`SELECT pg_advisory_xact_lock(1835360622, 1)`,
+        transaction.query(apply),
+        transaction`SELECT EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations
+          WHERE created_at = ${entry.when} AND hash = ${hash}
+          AND xmin = pg_current_xact_id()::xid) AS applied`,
       ]);
+      appliedHere = (results[2] as { applied: boolean }[])[0]?.applied === true;
     } catch (error) {
       console.error(`  FAIL  transaction rolled back before the journal row was written`);
       console.error(`        ${(error as Error).message}`);
@@ -237,6 +296,11 @@ if (!nothingPending && !DRY) {
       );
       process.exit(1);
     }
+    if (!appliedHere) {
+      console.log(`  REUSED ${entry.tag}: a concurrent caller already applied this exact journal entry`);
+      continue;
+    }
+    migrationsApplied++;
     statementsRun += statements.length;
     for (const statement of statements) {
       console.log(`  OK    ${statement.replace(/\s+/g, " ").slice(0, 110)}`);
@@ -248,7 +312,7 @@ if (!nothingPending && !DRY) {
     n: string | number;
   }[];
   console.log(
-    `\nApplied ${pending.length} migration(s), ${statementsRun} statement(s). ` +
+    `\nApplied ${migrationsApplied} migration(s), ${statementsRun} statement(s). ` +
       `Journal now holds ${Number(after[0].n)} of ${journal.entries.length} committed.`,
   );
 }

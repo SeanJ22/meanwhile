@@ -121,3 +121,13 @@ test("S2.4 events: an id the event store would refuse is refused here, and card 
   assert.ok(readEventBatch(batch([event(1, { cardId: storeSafeId("POPUP:official:Jane Roe") })])));
   assert.equal(storeSafeId("x".repeat(500)).length, 200);
 });
+
+test("a refused batch is counted by day and reason, and a failing counter never changes the answer", async () => {
+  const { countRefusedBatch } = await import("../lib/db/reader-event-refusals.ts");
+  const seen: { statement: string; params: readonly unknown[] }[] = [];
+  await countRefusedBatch("MALFORMED", { now: new Date("2026-10-02T04:09:00Z"), query: async (statement, params) => { seen.push({ statement, params }); } });
+  assert.equal(seen.length, 1);
+  assert.deepEqual(seen[0]!.params, ["2026-10-02", "MALFORMED"]);
+  assert.match(seen[0]!.statement, /ON CONFLICT \(day, reason\) DO UPDATE SET refusals = reader_event_refusals\.refusals \+ 1/);
+  await countRefusedBatch("STORE_UNAVAILABLE", { query: async () => { throw new Error("store down"); } });
+});

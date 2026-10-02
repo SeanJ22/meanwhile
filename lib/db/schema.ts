@@ -1653,3 +1653,8 @@ export const readerEventTotals = pgTable("reader_event_totals", {
   ...readerEventDimensions(), events: bigint("events", { mode: "number" }).notNull(), users: bigint("users", { mode: "number" }).notNull(),
 }, t => [primaryKey({ columns: [t.period, t.periodStart, t.zip, t.district, t.topic, t.eventType] }),
   index("reader_event_totals_period_idx").on(t.period, t.periodStart)]);
+
+/** How many event batches the capture route refused, by day and reason. No content, no reader. */
+export const readerEventRefusals = pgTable("reader_event_refusals", {
+  day: date("day").notNull(), reason: text("reason").notNull(), refusals: bigint("refusals", { mode: "number" }).notNull(),
+}, t => [primaryKey({ columns: [t.day, t.reason] })]);

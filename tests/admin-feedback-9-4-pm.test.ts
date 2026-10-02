@@ -8,7 +8,7 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, relative, sep } from "node:path";
 import test from "node:test";
@@ -31,8 +31,7 @@ import {
   isRowDecision,
   parseFixField,
 } from "../lib/control-plane/fix-queue.ts";
-import { DECISION_LOG_KEY, appendDecisionIntent } from "../lib/control-plane/admin-data.ts";
-import { collapseDecisionLog } from "../lib/control-plane/decision-log.ts";
+import { appendDecisionIntent } from "../lib/control-plane/admin-data.ts";
 import { ANSWERED_IN_OWN_WORDS, held, measured, type OwnerDecisionCard, type OwnerDecisionIntent } from "../lib/control-plane/owner-surface.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { populationInCompleteZip, type StateAuthorities } from "../lib/control-plane/readiness/extract.ts";
@@ -45,17 +44,14 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { REFERENCE_ROW_COUNTS, readTable } from "../lib/reference/index.ts";
 import { normalize, toCsv, type AcsFetch } from "../lib/sources/census-acs-population/index.ts";
 import {
-  COLUMNS,
   DASHBOARD_OPENER,
   FIX_OPENER,
   FIX_PREFIX,
   NO_FOLLOW_UP_OPTION as CORE_NO_WORK,
-  dashboardCloser,
   fixRowMarker,
   goRowMarker,
   planFixQueue,
   planOwnerDecisions,
-  writeStore,
 } from "../scripts/tracker-core.mjs";
 
 const ROOT = process.cwd();
@@ -243,17 +239,12 @@ test("ADM-16: the page renders the split and receipt, while tracked tracker sync
   assert.equal(isConsolePath("/admin/sources"), false, "the Sources page is deleted: publication status is on Workers");
   assert.match(src("app/api/admin/decision/route.ts"), /consoleReturnPath\(/);
   assert.match(src("app/api/admin/research/route.ts"), /consoleReturnPath\(/);
-  const canon = src("scripts/canonicalize-owner-decisions.mts");
-  assert.match(canon, /openedWork: resolution\.openedWork/, "the twin carries the work opened");
-  assert.match(canon, /subjectTitle: resolution\.subjectTitle/);
-  assert.match(canon, /"Opened by"\] \?\? ""\)\.trim\(\) === DASHBOARD_OPENER/, "work opened is found by the dashboard opener, never guessed");
   const runner = src("scripts/pilot-runner.mts");
   assert.doesNotMatch(runner, /scripts\/apply-owner-decisions\.mts/, "a tracked engineering writer cannot dirty the clean detached production runtime");
   const apply = src("scripts/apply-owner-decisions.mts");
   assert.match(apply, /engineering sync, deliberately outside the standing runtime/);
   assert.match(apply, /owner-decisions-pull\.mts/);
   assert.match(apply, /"move", "--only=dashboard", "--session=dashboard-decision-nonhunt"/);
-  assert.match(apply, /canonicalize-owner-decisions\.mts/);
   assert.match(src("scripts/tracker.mjs"), /const book = ONLY_DASHBOARD \? null : readWorkbookRows\(\);/, "the unattended sync never imports the workbook");
   assert.match(src("package.json"), /"decisions:sync":/);
 });
@@ -278,7 +269,7 @@ function run(script: string, args: string[]): { code: number; out: string } {
   }
 }
 
-test("ADM-16: the whole way out, on a file-backed control plane: record → pull → the applied tracker rows → canonicalize → a receipt with every step DONE", async () => {
+test("ADM-16: the whole way out, on a file-backed control plane: record → pull exports the durable decisions", async () => {
   const dir = mkdtempSync(join(tmpdir(), "wtp-adm16-"));
   try {
     const store = join(dir, "store");
@@ -295,45 +286,6 @@ test("ADM-16: the whole way out, on a file-backed control plane: record → pull
     assert.equal(pull.code, 0, pull.out);
     assert.equal(JSON.parse(readFileSync(out, "utf8")).intents.length, 3);
 
-    // 2. What the move script writes when it applies them (proved in tests/owner-decisions-outflow.test.ts).
-    const row = (over: Record<string, string>) => ({ ...Object.fromEntries(COLUMNS.map((c) => [c, ""])), Section: "needs-sean", Priority: "P1", Title: "Abuse policy live", "What this is": "…", ...over });
-    const resolved = join(dir, "resolved.csv");
-    const working = join(dir, "working.csv");
-    writeFileSync(resolved, writeStore([row({ ID: "T05", Resolution: "Resolved", "Resolved on": "2026-09-05", "Closed by": dashboardCloser(decision.intentId) })]), "utf8");
-    writeFileSync(
-      working,
-      writeStore([
-        row({ ID: "DEC03", Section: "decided", Priority: "P2", Title: "Act on T05: Name yourself as the reviewer and build the surface", "Depends on": "T05", "Opened by": DASHBOARD_OPENER }),
-        row({ ID: "FIX01", Section: "decided", Priority: "P2", Title: "Fix: not measured yet", Detail: `${fixRowMarker(queued.intentId)} ${goRowMarker(go.intentId)} subject fix:abcd1234`, "Opened by": FIX_OPENER }),
-      ]),
-      "utf8",
-    );
-
-    // 3. The canonicalizer records what each intent became.
-    const canon = run("scripts/canonicalize-owner-decisions.mts", [`--file-store=${store}`, `--resolved=${resolved}`, `--working=${working}`]);
-    assert.equal(canon.code, 0, canon.out);
-    assert.ok(canon.out.includes("3 intent(s) resolved"), canon.out);
-    const log = await repos.ownerDecisions.read(DECISION_LOG_KEY);
-    assert.equal(log.length, 6, "three originals, three resolutions");
-
-    // 4. The page's receipt, from the collapsed log alone.
-    const collapsed = collapseDecisionLog(log);
-    const { decided, waiting } = splitDecided([CARD("T05", "Abuse policy live"), CARD("B01", "Settle the name")], collapsed);
-    assert.deepEqual(waiting.map((c) => c.rowId), ["B01"]);
-    assert.equal(decided.length, 1);
-    assert.deepEqual(decided[0].steps.map((s) => s.state), ["DONE", "DONE", "DONE"]);
-    assert.ok(decided[0].steps[1].says.includes(`Closed in the tracker as ${resolved}#T05 (resolved 2026-09-05)`), decided[0].steps[1].says);
-    assert.match(decided[0].steps[2].says, /DEC03 — Act on T05: Name yourself as the reviewer and build the surface/);
-    assert.equal(decided[0].decision.subjectTitle, "Abuse policy live");
-    const queue = fixQueueView(collapsed);
-    assert.deepEqual(queue.items.map((i) => [i.state, i.openedWork.map((w) => w.id)]), [["OPENED", ["FIX01"]]]);
-    assert.equal(queue.lastGo?.state, "CANONICALIZED");
-    assert.ok((queue.lastGo?.canonicalRef ?? "").includes("opened 1 fix row(s): FIX01"), queue.lastGo?.canonicalRef ?? "");
-
-    // Idempotent: a second canonicalize appends nothing.
-    const again = run("scripts/canonicalize-owner-decisions.mts", [`--file-store=${store}`, `--resolved=${resolved}`, `--working=${working}`]);
-    assert.equal(again.code, 0, again.out);
-    assert.equal((await repos.ownerDecisions.read(DECISION_LOG_KEY)).length, 6);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

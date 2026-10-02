@@ -9,7 +9,6 @@
  *               -> owner-decisions-pull  (docs/tracker-owner-decisions.json)
  *               -> planOwnerDecisions    (scripts/tracker-core.mjs, pure)
  *               -> planMoves on the "sean" path, with NO bypass
- *               -> canonicalize          (the intent learns what it became)
  *
  * The pure half runs on synthetic stores, deliberately: `tests/tracker-stores.test.ts`
  * guards the committed stores and this file guards the RULE, which has to be
@@ -21,13 +20,13 @@
 
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-import { DECISION_LOG_KEY, appendDecisionIntent } from "../lib/control-plane/admin-data.ts";
+import { appendDecisionIntent } from "../lib/control-plane/admin-data.ts";
 import {
   baseIntentId,
   collapseDecisionLog,
@@ -51,8 +50,6 @@ import {
   planMoves,
   planOwnerDecisions,
   readSections,
-  readStore,
-  writeStore,
 } from "../scripts/tracker-core.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -478,62 +475,6 @@ test("file-store round trip: appendDecisionIntent -> owner-decisions-pull -> the
     assert.equal(empty.code, 0, empty.out);
     assert.match(empty.out, /pulled 0 intent\(s\); file holds 0/);
     assert.match(empty.out, /COULD NOT ASSERT — the decision log is reachable and holds no intent yet/);
-  } finally {
-    rmSync(dir, { recursive: true, force: true });
-  }
-});
-
-test("canonicalize: a resolved tracker row naming the intent marks it CANONICALIZED, once", async () => {
-  const dir = mkdtempSync(join(tmpdir(), "wtp-outflow-canon-"));
-  try {
-    const store = join(dir, "store");
-    const repos = await createFileRepositories(store);
-    const applied = intent({ subjectId: "TD01", decidedAt: T0 });
-    const pending = intent({ subjectId: "TD05", decidedAt: T1, chosenOption: "Open none yet" });
-    await appendDecisionIntent(repos, applied, T0);
-    await appendDecisionIntent(repos, pending, T1);
-
-    // The resolved store the move script would have written for TD01, and nothing for TD05.
-    const csv = join(dir, "resolved.csv");
-    writeFileSync(
-      csv,
-      writeStore([
-        row({
-          ID: "TD01",
-          Resolution: "Resolved",
-          "Resolved on": "2026-08-29",
-          Notes: `Decided on the dashboard ${T0} (intent ${applied.intentId}): Approve the export — the export ships.`,
-          "Closed by": dashboardCloser(applied.intentId),
-        }),
-      ]),
-      "utf8",
-    );
-    assert.equal(readStore(csv, "").length, 1, "the temp resolved store reads back");
-
-    const first = run("scripts/canonicalize-owner-decisions.mts", [`--file-store=${store}`, `--resolved=${csv}`]);
-    assert.equal(first.code, 0, first.out);
-    assert.match(first.out, /names 1 dashboard close\(s\)/);
-    assert.match(first.out, /1 intent\(s\) resolved/);
-
-    const log = await repos.ownerDecisions.read(DECISION_LOG_KEY);
-    const twin = log.find((r) => r.intentId === resolvedIntentId(applied.intentId));
-    assert.ok(twin, "a #resolved record was appended for the applied intent");
-    assert.equal(twin?.state, "CANONICALIZED");
-    assert.equal(twin?.canonicalRef, `${csv}#TD01 (resolved 2026-08-29)`);
-    assert.equal(twin?.refusedReason, null);
-    assert.equal(
-      log.some((r) => r.intentId === resolvedIntentId(pending.intentId)),
-      false,
-      "an intent no store answers stays pending and no twin is written for a no-op",
-    );
-    assert.equal(log.length, 3, "two originals, one resolution");
-
-    // Run it again: the resolved original is SKIPPED, and the log does not grow.
-    const second = run("scripts/canonicalize-owner-decisions.mts", [`--file-store=${store}`, `--resolved=${csv}`]);
-    assert.equal(second.code, 0, second.out);
-    assert.match(second.out, /already resolved \(its #resolved record is in the log\)/);
-    assert.match(second.out, /0 intent\(s\) resolved; 2 of 3 log row\(s\)/);
-    assert.equal((await repos.ownerDecisions.read(DECISION_LOG_KEY)).length, 3, "nothing re-appended");
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

@@ -14,7 +14,7 @@
  * The owner's intent is already canonical and durable in the control plane;
  * applying it to tracked project files belongs in a clean software worktree.
  * Running this from the production checkout would dirty the exact detached
- * runtime and block its next release handoff. Three legs, in order, each its
+ * runtime and block its next release handoff. Two legs, in order, each its
  * own child process:
  *
  * ```
@@ -25,9 +25,6 @@
  *                                  open the work each implies (DEC rows) and
  *                                  the gaps he sent with "Go fix these"
  *                                  (FIX rows); regenerate the views
- *   3  owner:canonicalize          record on each intent what it became —
- *                                  the resolved row, the rows opened — so the
- *                                  card's receipt can name them
  * ```
  *
  * ## What it does NOT do
@@ -35,16 +32,13 @@
  * It does not import the owner's workbook (`--only=dashboard`), it does not
  * commit, and it does not push. The tracker stores and their generated views
  * change in the engineering checkout; the session that owns that checkout
- * commits them through RULING 266's single door. A leg that fails is PRINTED with its exit
- * and last stderr line and stops the legs after it — a canonicalize over a
- * move that did not happen would record closes that do not exist — but it
- * never alters the canonical owner intent if the engineering sync fails.
+ * commits them through a pull request. A failed leg prints its exit code and
+ * last stderr line, and never alters the canonical owner intent.
  *
  * ## Idempotent by construction
  *
  * A pull merges by intent id; the applier refuses an intent a row's `Closed by`
- * already names; the canonicalizer skips an intent whose `#resolved` twin is
- * in the log. Re-running with nothing new decided writes nothing new anywhere.
+ * already names. Re-running with nothing new decided opens no new tracker work.
  *
  * `--dry-run` runs the pull and prints what the applier WOULD do (the move
  * script's own plan output), moving nothing.
@@ -71,7 +65,6 @@ const LEGS: readonly Leg[] = [
     args: ["scripts/tracker.mjs", "move", "--only=dashboard", "--session=dashboard-decision-nonhunt"],
     writes: true,
   },
-  { name: "canonicalize", args: ["--env-file=.env.local", "--experimental-strip-types", "scripts/canonicalize-owner-decisions.mts"], writes: true },
 ];
 
 function say(line: string): void {
@@ -97,11 +90,6 @@ function main(): void {
   say(`${DRY_RUN ? "DRY RUN — " : ""}${LEGS.length} legs in ${ROOT}`);
   const outcomes: string[] = [];
   for (const leg of LEGS) {
-    if (DRY_RUN && leg.name === "canonicalize") {
-      say("canonicalize: skipped on a dry run (nothing was applied to record)");
-      outcomes.push("canonicalize skipped");
-      break;
-    }
     const result = runLeg(leg);
     // The move script's own summary lines are the sync's evidence; keep them.
     const kept = result.stdout

@@ -99,6 +99,8 @@ test("RULING 92: a file declaring itself GENERATED is registered here", () => {
   const registered = new Set(GENERATED.map((a) => a.path));
   const declaring: string[] = [];
   for (const file of tracked) {
+    // The retired governance views are preserved historical documents.
+    if (file.startsWith("docs/governance/")) continue;
     if (registered.has(file)) continue;
     let head: string;
     try {

@@ -8,13 +8,16 @@ test("a link's ZIP overrides a tab's previous ZIP before the map resolves", () =
   const table: Record<string, [number, number]> = { "85635": [31.55, -110.30], "85701": [32.22, -110.97] };
   let search = "?zip=85635";
   let blocked = false;
+  // The remembered ZIP is kept between visits (localStorage); the map camera stays per-tab.
+  const storage = { getItem(key: string) {
+    if (blocked) throw new Error("Storage disabled");
+    if (key === "wtp:map-camera") return JSON.stringify({ lat: 43.32, lng: -72.03, zoom: 10 });
+    return JSON.stringify({ zip: "85701", savedAt: "2026-09-29" });
+  } };
   Object.defineProperty(globalThis, "window", { configurable: true, value: {
     location: { get search() { return search; } },
-    sessionStorage: { getItem(key: string) {
-      if (blocked) throw new Error("Storage disabled");
-      if (key === "wtp:map-camera") return JSON.stringify({ lat: 43.32, lng: -72.03, zoom: 10 });
-      return JSON.stringify({ zip: "85701", savedAt: "2026-09-29" });
-    } },
+    sessionStorage: storage,
+    localStorage: storage,
   } });
   try {
     assert.equal(resolveStoredZip(table, readZipChoice())?.zip, "85635");

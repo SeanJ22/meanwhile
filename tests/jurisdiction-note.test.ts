@@ -150,11 +150,12 @@ test("BAL-7: the block attributes the limit to us without announcing a failure",
 
   // The attribution it used to carry is still on the page, in the paragraph
   // the author left unmarked.
-  assert.match(
-    note,
-    /what we cannot tell from a zip code alone is\s*\n?\s*which of them is yours/,
-    "the block no longer attributes the limit to the zip and to us",
+  assert.doesNotMatch(
+    code,
+    /not a boundary|what we cannot tell/,
+    "rulings §10: no disclaimer sentence in the block",
   );
+  assert.match(code, /This zip crosses several governments/);
 
   // And nothing was upgraded into a claim about a district in the process:
   // `unplaceable` divisions are still COUNTED rather than named.

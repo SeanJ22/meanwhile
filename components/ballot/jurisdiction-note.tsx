@@ -130,14 +130,11 @@ export function JurisdictionNote({
         {JURISDICTION_NOTE_HEADING}
       </h2>
       <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-voice">
-        A zip code is a mail route, not a boundary — this one crosses several
-        governments, and each of the contests marked{" "}
+        This zip crosses several governments. Each contest marked{" "}
         <span aria-hidden="true" className="text-signal">
           {JURISDICTION_MARK}
         </span>{" "}
-        below is decided by one of them rather than by all of you. We hold every
-        one of these races in full; what we cannot tell from a zip code alone is
-        which of them is yours.
+        below is decided by one of them rather than by all of you.
       </p>
       {jurisdictions.length > 0 && (
         <p className="mt-2 text-[0.8125rem] leading-relaxed text-voice">

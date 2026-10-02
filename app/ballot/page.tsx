@@ -1450,12 +1450,6 @@ export default async function BallotPage({
 
       {/* The app's voice (design pass): guidance renders in the voice
           register, distinct from the filed record below. */}
-      <p className="mt-3 text-[0.8125rem] leading-relaxed text-voice lg:max-w-2xl">
-        A zip code is orientation, not your exact ballot — zip areas cross
-        town and district lines. Everything below is presented as filed with
-        election authorities, with the filing linked on every item.{" "}
-        <span className="font-medium">We never suggest how to vote.</span>
-      </p>
 
       {/* RULING 59 (2026-08-21) — THE COVERAGE NOTE IS DELETED, and this
           comment is its headstone rather than a TODO.

@@ -167,7 +167,7 @@ test("a statewide office's holder: the same one is confirmed without losing thei
   assert.deepEqual([bridge.holder.name, bridge.status, bridge.candidacy], ["Jordan Reyes", "NOT_CHECKED", null], "the last holder's candidacy is never carried to the new one");
 });
 
-test('state portrait publishes through the existing blob path and registry binding only after two saved sources and licence', async () => {
+test('state portrait publishes through the existing blob path and registry binding after two saved sources confirm its identity and permitted use', async () => {
   const s=await store();
   const imageUrl='https://images.example.org/allison-russo.jpg';
   const officialUrl='https://ohiohouse.gov/members/allison-russo';
@@ -188,6 +188,13 @@ test('state portrait publishes through the existing blob path and registry bindi
   assert.equal(photo.verification?.sources.length,2);assert.match(photo.license ?? '',/official government portrait/);
   assert.equal(after.payload.rosterPhotos[holder.id],photo.url);assert.equal(reads,1);assert.equal(writes.size,1);
   assert.deepEqual(writes.values().next().value,image);
+  const changed = registryRuntimeCandidate({contractId:'registry-runtime-bindings',scope:'MEMBERS',version:'unverified-photo-replacement',sourceThrough:NOW,
+    sourceReceipt:{...after.sourceReceipt,sources:after.sourceReceipt.sources.map(source=>({...source,sourceClass:'OFFICIAL_PUBLISHER' as const}))},
+    payload:{...after.payload,registry:{...after.payload.registry,divisions:[],bodies:[]},bodyRosters:[],rosterReaderDispositions:[],statewideExecutives:[],
+      officialCandidacies:{...after.payload.officialCandidacies,rows:[]},officialPhotos:{photos:[{...photo,url:'/api/portraits/officials/replaced.jpg',verification:undefined}]},
+      rosterPhotos:{[holder.id]:'/api/portraits/officials/replaced.jpg'}}},{prior:after});
+  assert.equal((changed.readModel as typeof after.payload).rosterPhotos[holder.id],photo.url,'an uncorroborated replacement retains the published portrait');
+  assert.ok(changed.excludedFacts?.some(f=>f.key===`official-photo:${holder.id}` && /second-source/.test(f.detail ?? '')));
 });
 
 test('a portrait without corroboration stays a gap while its official still publishes', async () => {

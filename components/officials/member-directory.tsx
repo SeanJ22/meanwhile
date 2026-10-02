@@ -399,9 +399,7 @@ function CommitteeRow({ node, sub = false }: { node: CommitteeNode; sub?: boolea
         </details>
       ) : (
         <p className="mt-0.5 text-[0.625rem] leading-relaxed text-muted">
-          {sub
-            ? "We haven’t sourced what this subcommittee handles yet."
-            : "We haven’t sourced what this committee handles yet."}
+          We’re working on getting this info.
         </p>
       )}
     </>

@@ -11,7 +11,6 @@
  * effect (a job appears after a resource request, a hidden association can be
  * undone). The checklist uses the REAL 325 definitions passed in by the page.
  */
-import { COVERED_STATES } from "@/lib/coverage/states.ts";
 import { PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 
@@ -83,7 +82,6 @@ export const SAMPLE_AS_OF = "2026-09-28T06:53:00.000Z";
 /* ----------------------------------------------------------------- places */
 
 const STATE_NAMES: Readonly<Record<string, string>> = Object.fromEntries(US_STATES.map((st) => [st.code.toUpperCase(), st.name]));
-const TRACKED: ReadonlySet<string> = new Set(COVERED_STATES.map((st) => st.usps));
 
 export const K = {
   us: "us",
@@ -105,7 +103,7 @@ export const K = {
 function samplePlaces(): readonly Place[] {
   const out: Place[] = [{ key: K.us, name: "United States", kind: "Country", navParent: null, within: [] }];
   for (const [code, name] of Object.entries(STATE_NAMES)) {
-    out.push({ key: `st:${code.toLowerCase()}`, name, kind: "State", navParent: K.us, within: [K.us], code, tracked: TRACKED.has(code) });
+    out.push({ key: `st:${code.toLowerCase()}`, name, kind: "State", navParent: K.us, within: [K.us], code, tracked: Object.values(K).includes(`st:${code.toLowerCase()}` as typeof K[keyof typeof K]) });
   }
   const add = (key: string, name: string, kind: Place["kind"], navParent: string, within: readonly string[]) => out.push({ key, name, kind, navParent, within });
   add(K.cochise, "Cochise County, AZ", "County", K.az, [K.az]);
@@ -544,9 +542,9 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
       accountMonth: "September 2026",
       monthlyPlans: [{ name: "Claude subscription", note: "A flat monthly plan, shown apart from usage charges" }],
       limits: [
-        { name: "Fleet · rolling 24 hours", figure: "$17.33 / $105.00", fraction: 17.33 / 105, note: "Approved for removal Sep 28 · the change is waiting for the workers to restart · still enforced at the last read, 11:39 PM", tone: "warn" },
-        { name: "Anthropic account cap", figure: "Not read yet", fraction: null, note: "Needs a read from Anthropic", tone: "neutral" },
-        { name: "Neon and GitHub caps", figure: "Not read yet", fraction: null, note: "Typed in by hand until this is automated", tone: "neutral" },
+        { name: "Fleet · rolling 24 hours", figure: "$17.33 / $105.00", usedUsd: 17.33, limitUsd: 105, fraction: 17.33 / 105, note: "Approved for removal Sep 28 · the change is waiting for the workers to restart · still enforced at the last read, 11:39 PM", tone: "warn" },
+        { name: "Anthropic account cap", figure: "Not read yet", usedUsd: null, limitUsd: null, fraction: null, note: "Needs a read from Anthropic", tone: "neutral" },
+        { name: "Neon and GitHub caps", figure: "Not read yet", usedUsd: null, limitUsd: null, fraction: null, note: "Typed in by hand until this is automated", tone: "neutral" },
       ],
       reconciliation: null,
       readings: [],

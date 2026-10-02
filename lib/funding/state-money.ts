@@ -58,18 +58,10 @@
  * rather than merely regrettable.
  */
 
-import { COVERED_STATES } from "../coverage/states.ts";
 import type { Provenance } from "../sources/types.ts";
 
-/**
- * Which agency, and therefore which body of law and which terms.
- *
- * DERIVED from `lib/coverage/states.ts` rather than hand-kept. A second list of
- * covered states is a list that silently disagrees with the first the moment a
- * state is added — which is the separator-broken-allowlist class, and
- * `tests/coverage-states.test.ts` refuses it by name.
- */
-export type MoneyJurisdiction = (typeof COVERED_STATES)[number]["usps"];
+/** The jurisdiction is carried by each sourced money record. */
+export type MoneyJurisdiction = string;
 
 /**
  * Whether this candidate's money is filed, absent, or merely suspected.

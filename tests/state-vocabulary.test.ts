@@ -7,7 +7,7 @@ import {
   vocabularyCensus,
   type StateVocabulary,
 } from "../lib/funding/state-vocabulary.ts";
-import { COVERED_SLUGS } from "../lib/coverage/states.ts";
+import { HELD_ROSTER_STATES } from "../lib/coverage/artifacts.ts";
 
 /**
  * D52 — the state money-translation program, and the gate that is the whole
@@ -62,7 +62,7 @@ test("D52: an APPROVED table translates, and only the terms it holds", () => {
 });
 
 test("D52: every covered state has a vocabulary record, walled or not", () => {
-  for (const slug of COVERED_SLUGS) {
+  for (const slug of HELD_ROSTER_STATES.map(state => state.slug)) {
     const v = STATE_VOCABULARIES.find((x) => x.state.toLowerCase() === slug);
     assert.ok(v, `${slug} has no vocabulary record at all — indistinguishable from never walked`);
   }

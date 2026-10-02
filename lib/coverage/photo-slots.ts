@@ -32,7 +32,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { BALLOT_FILES, COVERED, rosterFile } from "./artifacts.ts";
+import { BALLOT_FILES, HELD_ROSTER_STATES, rosterFile } from "./artifacts.ts";
 import { stateForBallotFile } from "../holdings/runtime-paths.ts";
 import { BODY_ROSTERS } from "../registry/body-rosters.ts";
 import { STATEWIDE_EXECUTIVES } from "../officials/statewide-executives.ts";
@@ -177,7 +177,7 @@ export function photoSlots(root: string): PhotoSlot[] {
   }
 
   // ── Surface 3: state legislators (district popups) ────────────────────
-  for (const state of COVERED) {
+  for (const state of HELD_ROSTER_STATES) {
     const data = JSON.parse(readFileSync(join(root, "data", "states", state.slug, "officials", rosterFile(state)), "utf8")) as {
       officeholders: { id: string; name: string }[];
       divisions: { officeholderId: string; ocdId: string }[];

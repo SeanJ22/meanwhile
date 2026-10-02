@@ -447,13 +447,10 @@ export function isPlausibleTargetId(value: unknown): value is string {
  * Binary carries volume; text carries color. Never require the text."
  * — CLAUDE.md, reaction capture.
  *
- * Unblocked by the author 2026-08-18 for the testing window, and shipped
- * behind `ripcord.reactionFreeText` — the ripcord is the author's order in
- * the same breath as the unblocking, not a hedge added on top of it.
+ * Unblocked by the author 2026-08-18, and captured without a switch since
+ * October 1, 2026 (Sean: everything typed is captured).
  *
- * Everything here is validation, and validation is NEVER behind a flag
- * (CLAUDE.md, the collection-stores rule). The ripcord governs whether text
- * is CAPTURED. It does not govern whether a malformed payload is refused.
+ * Everything here is validation: a malformed payload is refused.
  */
 
 /**
@@ -506,15 +503,3 @@ export function normalizeFreeText(value: unknown): string | null {
   return trimmed.length === 0 ? null : trimmed;
 }
 
-/**
- * **What the reader is told when the ripcord is out.**
- *
- * The binary still counts — pulling free-text capture must not take reaction
- * capture down with it — so this says exactly that: the answer landed, the
- * words did not. Never "saved" for words that were dropped.
- */
-export const FREE_TEXT_CLOSED_LINE =
-  "Your answer was counted. Comments are turned off right now, so what you typed wasn't saved.";
-
-/** Response header the route sets when it dropped a verbatim. */
-export const FREE_TEXT_CLOSED_HEADER = "x-wtp-free-text";

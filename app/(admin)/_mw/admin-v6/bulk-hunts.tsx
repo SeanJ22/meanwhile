@@ -68,8 +68,8 @@ export function bulkPickOf(target: string, name: string): BulkPick | null {
 
 const money = (n: number): string => `$${n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const SHOWN_ROWS = 100;
-const LIST_UNREAD = "The list could not be read.";
-const CHECK_FAILED = "The list could not be checked, so nothing was prepared.";
+const LIST_UNREAD = "—";
+const CHECK_FAILED = "Check failed";
 
 export function BulkHunts(props: {
   readonly initialPick?: BulkPick | null;
@@ -116,10 +116,10 @@ export function BulkHunts(props: {
     fetch(`/api/admin/bulk-hunts?list=${type}&state=${state}`, { signal: ctl.signal, headers: { accept: "application/json" } })
       .then(async (r) => ({ ok: r.ok, body: (await r.json().catch(() => null)) as { items?: { geoid: string; label: string }[]; says?: string } | null }))
       .then(({ ok, body }) => {
-        if (ok && body?.items) keep({ items: body.items, note: body.items.length === 0 ? "Nothing is published for that yet." : null });
+        if (ok && body?.items) keep({ items: body.items, note: body.items.length === 0 ? "None" : null });
         else keep({ items: null, note: body?.says ?? LIST_UNREAD });
       })
-      .catch(() => keep({ items: null, note: "The list could not be read." }));
+      .catch(() => keep({ items: null, note: LIST_UNREAD }));
     return () => ctl.abort();
   }, [listKey, lists]);
 
@@ -158,7 +158,7 @@ export function BulkHunts(props: {
       if (res.ok && body?.ok) setPreview(body);
       else setProblem(body?.says ?? CHECK_FAILED);
     } catch {
-      setProblem("The list could not be checked, so nothing was prepared.");
+      setProblem(CHECK_FAILED);
     } finally {
       setChecking(false);
     }
@@ -170,7 +170,7 @@ export function BulkHunts(props: {
   const total = Math.round(items.reduce((sum, i) => sum + Math.round(i.budgetUsd * 100), 0)) / 100;
   const priorityNum = Number(priority);
   const badPriority = !Number.isInteger(priorityNum) || priorityNum < 1 || priorityNum > 999;
-  const reason = props.blocked ?? (badPriority ? "Priority is a whole number from 1 (first) to 999." : null);
+  const reason = props.blocked ?? (badPriority ? "Priority: 1 to 999." : null);
   const canSend = preview !== null && items.length > 0 && !reason && !sent;
 
   const onKeyDown = (e: React.KeyboardEvent) => { if (e.key === "Escape") { e.stopPropagation(); props.onClose(); } };
@@ -179,7 +179,6 @@ export function BulkHunts(props: {
     <div className={s.overlay} onMouseDown={(e) => { if (e.target === e.currentTarget) props.onClose(); }}>
       <div ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={titleId} className={s.dialog} onKeyDown={onKeyDown} style={{ maxWidth: 820, maxHeight: "90vh", overflow: "auto" }}>
         <h2 id={titleId} className={s.h2}>Start many hunts</h2>
-        <p className={cx(s.p, s.small)}>Each ZIP becomes its own hunt with its own budget for paid work. Nothing is sent until you check the list and press Send.</p>
 
         <div className={s.inline} role="tablist" aria-label="Where the list comes from">
           {([["paste", "Paste ZIPs"], ["file", "Upload a file"], ["pick", "Pick districts, counties or a state"]] as const).map(([id, label]) => (
@@ -197,7 +196,7 @@ export function BulkHunts(props: {
         {source === "file" && (
           <div className={s.stack} style={{ gap: 6 }}>
             <label className={s.stack} style={{ gap: 4 }}>
-              <span className={s.small}>A spreadsheet, as an Excel file or saved as CSV. It needs a column named zip. A column named district groups the ZIPs. Rows the file marks removed or inactive are left out and counted.</span>
+              <span className={s.small}>Excel or CSV file (column: zip, optional: district)</span>
               <input type="file" accept=".csv,.tsv,.txt,.xlsx,text/csv,text/plain,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={(e) => void onFile(e.target.files?.[0])} />
             </label>
             {fileName && <span className={s.meta}>{fileName} · {fileXlsx ? "Excel workbook ready to read" : `${fileText.length.toLocaleString("en-US")} characters read`}</span>}
@@ -266,11 +265,10 @@ export function BulkHunts(props: {
         {preview && (
           <section className={s.stack} aria-label="What will be sent" style={{ gap: 6 }}>
             <strong>{preview.items.length.toLocaleString("en-US")} hunts · {money(total)} of paid-work budget</strong>
-            <span className={s.small}>{mode === "each" ? "Each hunt has its own budget; change any below." : preview.words}</span>
             {preview.groups.length > 1 && <span className={s.meta}>{preview.groups.length} groups: {preview.groups.slice(0, 30).map((g) => `${g.name} (${g.count})`).join(", ")}{preview.groups.length > 30 ? ", …" : ""}</span>}
-            {preview.paddedZeros > 0 && <span className={s.meta}>{preview.paddedZeros.toLocaleString("en-US")} ZIPs had lost their leading zero and were fixed.</span>}
-            {preview.duplicates > 0 && <span className={s.meta}>{preview.duplicates.toLocaleString("en-US")} repeated ZIPs were counted once.</span>}
-            {preview.notInIndex.count > 0 && <span className={s.why}>{preview.notInIndex.count.toLocaleString("en-US")} are not ZIP areas the site knows, so they are left out: {preview.notInIndex.examples.join(", ")}{preview.notInIndex.count > preview.notInIndex.examples.length ? ", …" : ""}</span>}
+            {preview.paddedZeros > 0 && <span className={s.meta}>{preview.paddedZeros.toLocaleString("en-US")} leading zeros fixed</span>}
+            {preview.duplicates > 0 && <span className={s.meta}>{preview.duplicates.toLocaleString("en-US")} repeats counted once</span>}
+            {preview.notInIndex.count > 0 && <span className={s.why}>Left out {preview.notInIndex.count.toLocaleString("en-US")}, not ZIP areas: {preview.notInIndex.examples.join(", ")}{preview.notInIndex.count > preview.notInIndex.examples.length ? ", …" : ""}</span>}
             {preview.skipped.map((k) => <span key={k.why} className={s.meta}>Left out {k.count.toLocaleString("en-US")}: {k.why}{k.examples.length ? ` (${k.examples.join(", ")}…)` : ""}</span>)}
             {preview.pickNotes.map((n) => <span key={n} className={s.why}>{n}</span>)}
             <table className={s.small} style={{ width: "100%", borderCollapse: "collapse" }}>
@@ -286,7 +284,7 @@ export function BulkHunts(props: {
                 ))}
               </tbody>
             </table>
-            {items.length > SHOWN_ROWS && <span className={s.meta}>Showing the first {SHOWN_ROWS} of {items.length.toLocaleString("en-US")}. All of them are sent.</span>}
+            {items.length > SHOWN_ROWS && <span className={s.meta}>First {SHOWN_ROWS} of {items.length.toLocaleString("en-US")}</span>}
             {reason && <p className={s.why} role="alert">{reason}</p>}
             <div className={s.inline}>
               <button type="button" className={cx(s.btn, s.btnPrimary)} aria-disabled={canSend ? undefined : "true"} onClick={() => { if (!canSend) return; setSent(true); props.onSend({ items, priority: priorityNum }); }}>

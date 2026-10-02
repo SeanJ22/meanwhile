@@ -112,9 +112,11 @@ test("admission alone classifies draft/full before preflight", () => {
 test("draft runs install, lint and types; governance waits for ready", () => {
   const gates = workflow().jobs.verify;
   const install = named(gates, "Install");
-  assert.match(install.if ?? "", /(needs.admission.outputs.tier == 'draft' || needs.admission.outputs.tier == 'waiting') && matrix.group != 'governance'/, "the gates install no longer admits draft and waiting lint and types");
-  assert.match(install.if ?? "", /tier == 'yes'/, "the gates install no longer admits the full tier");
-  assert.doesNotMatch(install.if ?? "", /no-preflight/, "a refused preflight still buys the dependency install");
+  for (const tier of ["draft", "waiting", "yes"]) {
+    assert.match(install.if ?? "", new RegExp(`tier == '${tier}'`), `the verify install no longer admits the ${tier} tier`);
+  }
+  assert.doesNotMatch(install.if ?? "", /no-preflight|main/, "a refused preflight or a push to main still buys the verify install");
+  assert.equal(gates.steps.filter((step) => step.run === "corepack pnpm install --frozen-lockfile").length, 1, "verify installs once for every check");
 
   for (const name of ["Lint", "Types (fresh checkout, no build)"]) {
     const condition = named(gates, name).if ?? "";

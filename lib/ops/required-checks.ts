@@ -92,16 +92,38 @@ function matrixOf(job: JobSpec): Record<string, unknown> {
   return matrix as Record<string, unknown>;
 }
 
+/**
+ * Matrices admission computes at run time, with EVERY leg each can produce.
+ * The test matrix is `["affected"]` for a pull request's affected tests and
+ * the four shards otherwise (`TEST_LEGS` in scripts/ci-affected-tests.mjs;
+ * tests/ci-affected-tests.test.ts holds the two lists equal). An expression
+ * not listed here is refused, never skipped.
+ */
+export const DYNAMIC_MATRIX_LEGS: Readonly<Record<string, readonly string[]>> = {
+  "${{ fromJSON(needs.admission.outputs.test_legs) }}": ["affected", "1/4", "2/4", "3/4", "4/4"],
+};
+
 /** One entry per matrix leg; a job with no matrix has exactly one leg. */
 function expandMatrix(matrix: Record<string, unknown>): Array<Record<string, string>> {
   let legs: Array<Record<string, string>> = [{}];
-  for (const [key, raw] of Object.entries(matrix)) {
+  for (const [key, declared] of Object.entries(matrix)) {
     /* `include`/`exclude` are not used here; refuse rather than mis-expand. */
     if (key === "include" || key === "exclude") {
       throw new Error(
         `${REQUIRED_CHECKS_WORKFLOW}: matrix \`${key}\` is not supported by this ` +
           `reader. Expand it here before using it, or the produced set is wrong.`,
       );
+    }
+    let raw = declared;
+    if (typeof raw === "string") {
+      const known = DYNAMIC_MATRIX_LEGS[raw.trim()];
+      if (!known) {
+        throw new Error(
+          `${REQUIRED_CHECKS_WORKFLOW}: matrix \`${key}\` is the expression \`${raw}\`, ` +
+            `whose legs this reader does not know. List them in DYNAMIC_MATRIX_LEGS.`,
+        );
+      }
+      raw = known;
     }
     if (!Array.isArray(raw)) continue;
     const next: Array<Record<string, string>> = [];

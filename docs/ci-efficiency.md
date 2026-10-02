@@ -46,8 +46,8 @@ A later independent application change, Admin #343's [run 35687912600](https://g
 
 PR #344 merged normally as `116c8fc958ab2abe44f3a957f1c08f9c460fcc0c`. Its tree exactly matched the certified candidate. [Main run 35686685877](https://github.com/SeanJ22/meanwhile/actions/runs/35686685877) attested that tree in 2m34s elapsed / four rounded minutes without repeating install, builds or tests. [Post-deploy run 35686685793](https://github.com/SeanJ22/meanwhile/actions/runs/35686685793) took 1m25s runner time / two rounded minutes and recorded a real HELD/CURRENT receipt at `2026-09-21 21:24:40 America/Phoenix` for that served merge. This verifies deployment/integrity, not a browser or Admin integration walkthrough.
 
-1. Admission runs dependency-free deterministic preflight once. If full verification is needed, a bounded install enables the existing read-only release-integrity gate before any application build, browser or test suite starts. This network prerequisite is separate from the dependency-free preflight definition.
-2. Lint, fresh-checkout types and governance/evidence checks run in independent checkouts. The test jobs wait for their successful completion. Both original application configurations retain their distinct caches and bundle budgets.
+1. Admission runs dependency-free deterministic preflight once, classifies the tier and build impact, and plans the tests, all on bare Node with no dependency install.
+2. Lint, fresh-checkout types and governance/evidence checks run in one `verify (lint · types · governance)` job after one install; each check reports even when an earlier one fails, and the job fails if any did. A pull request's test job waits for its success. Both original application configurations retain their distinct caches and bundle budgets.
 3. Four test runners partition the canonical test command's complete TS and TSX file set, deterministically, with no changed-file omissions. Each uploads its exact assignment, commit/tree/configuration hashes, complete output and exit status. Measured file durations guide a bounded scheduling model with balanced file-count limits. Unknown files always run with an explicitly estimated scheduling cost; invalid hints fall back to equal positive costs. Hints never count as a test result.
 4. The existing required final gates context always reports. It explicitly rejects a selected job that failed, was cancelled, was skipped, or is absent. It verifies the current PR head/base/draft policy against the original event and its checkout against the exact workflow SHA, then runs schema and live integrity verification. Draft and exact-tree attestation omissions are explained separately from failures.
 
@@ -81,9 +81,17 @@ The follow-up's [run 35690749374](https://github.com/SeanJ22/meanwhile/actions/r
 
 ## Check selection rollout
 
-File-impact selection is **not enabled** in this first change. Every ready PR receives the full suite; draft structural checks and existing proven exact-tree main attestation remain the only bounded alternatives. Each run's selection summary states this explicitly.
+**Affected-test selection is enabled for pull requests (2026-10-02, owner's cost order).** `scripts/ci-affected-tests.mjs` runs in admission on bare Node and plans the tests of a ready PR that is about to merge:
 
-Before enabling impact selection, classify:
+- A changed code file under `lib/ app/ components/ hooks/ scripts/ tests/` (or `middleware.ts`) selects every test whose runtime import closure reaches it (static, side-effect and literal dynamic imports; relative paths and the `@/` alias; `import type` excluded), plus every test whose code names that file (a source read, a spawned script, a `moduleUrl("lib/…")` import). Tests and test helpers that sweep source trees, and tests reaching a computed `import()` that names nothing, run on every code change.
+- Markdown under `docs/` selects only tests that name the document; usually none, and the test job is skipped.
+- Anything else — data, fixtures, CSS, `package.json`, the lockfile, configuration, workflows, the test runner and its loader, unknown files — and any doubt (missing base, more than 400 files, an unresolvable import in any test's closure) selects the whole suite in its four shards.
+- The selection runs as one `test (affected)` job with `CI_TEST_FILES`; `scripts/ci-tests.mjs` keeps its flags, reporters, identity hashes and timing validation, and only the partition does not apply. Playwright is installed only when a selected test's imports reach it.
+- **Every push to main runs the whole suite again** as the integration check; concurrent pushes to main share one group, so a burst certifies its newest commit once.
+
+Measured against merged PRs #639–#649, a change inside the control-plane/civic-data import cycle reaches about 525 of 984 test files (about 72% of the hinted file time), and a leaf change about 120 (about 6%); about 114 sweep tests run on every code change.
+
+Before enabling impact selection, the classification was:
 
 | Category | Required treatment |
 | --- | --- |

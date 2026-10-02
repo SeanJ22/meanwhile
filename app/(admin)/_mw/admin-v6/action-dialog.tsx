@@ -4,8 +4,8 @@
  * **THE PREVIEW EVERY CHANGE GOES THROUGH.**
  *
  * Shows what the action affects, local or whole system ("Whole system · affects
- * every state" in amber), selected versus all matching, cost, what it won't do,
- * and undo. Send is focused on open; Escape closes; focus is kept inside the
+ * every state" in amber), selected versus all matching, cost and undo.
+ * Send is focused on open; Escape closes; focus is kept inside the
  * dialog and returns to the control that opened it. Send is one action: the
  * idempotency key is fixed when the dialog opens, and the button turns off the
  * moment it is pressed, so a double click or a retried request is one send.
@@ -81,10 +81,10 @@ export function ActionDialog(props: {
       <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={titleId} className={cx(s.dialog, global && s.dialogGlobal)} onKeyDown={onKeyDown}>
         <div className={s.inline}>
           <span className={cx(s.pill, global ? s["tone-warn"] : s["tone-neutral"])}>{global ? "Whole system · affects every state" : "Local"}</span>
-          {props.mode === "sample" && <span className={cx(s.pill, s["tone-gold"])}>Sample preview · nothing real is sent</span>}
+          {props.mode === "sample" && <span className={cx(s.pill, s["tone-gold"])}>Sample preview</span>}
         </div>
         <h2 id={titleId} className={s.h2}>{preview.title}</h2>
-        <Facts rows={preview.rows.map(([k, v]) => [k, v] as const).concat(items.length ? [["Selected", `${selected.length} of ${items.length} matching that this page has loaded`] as const] : [])} />
+        <Facts rows={preview.rows.map(([k, v]) => [k, v] as const).concat(items.length ? [["Selected", `${selected.length} of ${items.length}`] as const] : [])} />
 
         {!!preview.options?.length && (
           <div className={s.stack} role="radiogroup" aria-label="Choose one">
@@ -108,7 +108,7 @@ export function ActionDialog(props: {
 
         {!!items.length && (
           <fieldset className={s.stack} style={{ border: 0, padding: 0, margin: 0 }}>
-            <legend className={s.meta} style={{ marginBottom: 6 }}>Every matching item this page has loaded is listed. Untick any you want left alone. The server re-checks the full list when you send.</legend>
+            <legend className={s.meta} style={{ marginBottom: 6 }}>Items</legend>
             {items.map((i) => (
               <label key={i.id} className={s.check}>
                 <input type="checkbox" checked={!unticked.has(i.id)} onChange={() => setUnticked((u) => { const n = new Set(u); if (n.has(i.id)) n.delete(i.id); else n.add(i.id); return n; })} />

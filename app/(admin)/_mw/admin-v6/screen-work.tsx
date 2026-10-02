@@ -11,9 +11,9 @@ import { count, mst, type Lane, type SameCause, type StuckItem, type WorkStage }
 import { COUNTRY_KEY, isWithin, relation } from "./places.ts";
 import { HISTORY_FILTERS } from "./receipts.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
-import { LANE_MEANS, LANE_TONE, LANE_WORDS, StuckRow } from "./screen-now.tsx";
+import { LANE_TONE, LANE_WORDS, StuckRow } from "./screen-now.tsx";
 import { WorkReached } from "./trail-view.tsx";
-import { Actions, Card, cx, Empty, Pill, SourceNote, Tabs, useListView, usePager } from "./ui.tsx";
+import { Actions, Card, cx, Empty, Pill, Tabs, useListView, usePager } from "./ui.tsx";
 import s from "./v6.module.css";
 
 type Tab = "lanes" | "rows" | "history";
@@ -59,7 +59,6 @@ function CauseGroup(props: { readonly cause: SameCause; readonly items: readonly
       </div>
       <span className={s.meta}>
         {count(total)} {total === 1 ? "item" : "items"} stuck{places.length ? ` · ${places.slice(0, 4).join(" · ")}${places.length > 4 ? ` · and ${places.length - 4} more` : ""}` : ""}
-        {items.length < total ? ` · the ${count(items.length)} most urgent are listed` : ""}
       </span>
       <div className={s.inline}>
         <Actions actions={cause.action ? [cause.action] : []} primaryFirst />
@@ -86,15 +85,13 @@ function Sends() {
   const list = src.data ?? [];
   if (src.state === "live" && !list.length) return null;
   return (
-    <Card title="Instructions you sent the fleet" aside={<span className={s.meta}>{src.data ? `${list.filter((x) => x.canCancel).length} still running` : "Reading…"}</span>}>
-      <SourceNote source={src} what="Sent instructions" />
+    <Card title="Instructions you sent the fleet" aside={<span className={s.meta}>{src.data ? `${list.filter((x) => x.canCancel).length} running` : "—"}</span>}>
       <div className={s.stack}>
         {list.map((x) => (
           <div key={x.id} className={s.row}>
-            <div className={s.spread}><strong style={{ fontSize: 13 }}>{x.words || "(no words saved)"}</strong><Pill tone={x.state === "carried" || x.state === "waiting" ? "warn" : "slate"}>{x.state === "carried" ? "Running" : x.state === "waiting" ? "Waiting" : x.state === "cancel-requested" ? "Taking back" : "Taken back"}</Pill></div>
+            <div className={s.spread}><strong style={{ fontSize: 13 }}>{x.words ? x.words : "—"}</strong><Pill tone={x.state === "carried" || x.state === "waiting" ? "warn" : "slate"}>{x.state === "carried" ? "Running" : x.state === "waiting" ? "Waiting" : x.state === "cancel-requested" ? "Taking back" : "Taken back"}</Pill></div>
             <span className={s.meta}>Sent {mst(x.sentAt)}</span>
             <span className={s.small}>{x.stateWords}</span>
-            {x.ranAs && <span className={cx(s.small, s.dim)}>{x.ranAs}</span>}
             {x.state !== "waiting" && <WorkReached sendId={x.id} />}
             {x.canCancel && <Actions actions={[{ kind: "cancel-send", target: x.id, label: "Take it back", payload: { words: x.words } }]} />}
           </div>
@@ -115,8 +112,7 @@ function Lanes() {
   return (
     <>
       <Sends />
-      <SourceNote source={v.data.stuck.state === "live" ? v.data.stuck : v.data.sameCause} what="Stuck items" />
-      <Card title="Blockers by cause" aside={<span className={s.meta}>{v.data.sameCause.data ? `${count(totalStuck)} stuck ${v.scopeKey === COUNTRY_KEY ? "across every place" : "here and in the wider places that cover it"} · ${count(all.length)} ${all.length === 1 ? "cause" : "causes"}` : "Reading…"}</span>}>
+      <Card title="Blockers by cause" aside={<span className={s.meta}>{v.data.sameCause.data ? `${count(totalStuck)} stuck · ${count(all.length)} ${all.length === 1 ? "cause" : "causes"}` : "—"}</span>}>
         <div className={s.tabs} role="group" aria-label="Filter by who moves it">
           {LANES.map((k) => (
             <button key={k} type="button" className={s.tab} aria-pressed={lane === k} onClick={() => setLane(k)}>
@@ -124,7 +120,6 @@ function Lanes() {
             </button>
           ))}
         </div>
-        {lane !== "all" && <p className={cx(s.p, s.meta)}>{LANE_MEANS[lane]}</p>}
         {v.data.sameCause.state !== "not-connected" && !groups.length && <Empty>{lane === "all" ? `Nothing is stuck in ${v.place.name}.` : "Nothing in this group."}</Empty>}
         <div className={s.stack}>
           {groups.map((c) => (
@@ -144,11 +139,8 @@ function Rows() {
   const totals = v.data.workRows.data?.totals ?? [];
   const filtered = rows.filter((r) => r.stage === stage && (!q.trim() || r.title.toLowerCase().includes(q.trim().toLowerCase())));
   const { page, pager, reset } = useListView({ section: "workRows", page: v.data.workRows.page, list: filtered, params: { stage, q: q.trim() }, size: 6 });
-  const serverTotal = totals.find((t) => t.stage === stage)?.total ?? null;
   return (
     <Card title="All work rows">
-      <SourceNote source={v.data.workRows} what="Work rows" />
-      <p className={cx(s.p, s.meta)}>{v.scopeKey === COUNTRY_KEY ? "All tracked states. These are rows of work, not missing facts. Done and retired rows are counted apart so they never inflate unfinished work." : `Rows for ${v.place.name}.`}</p>
       <div className={s.tabs} role="group" aria-label="Stage">
         {(Object.keys(STAGE_WORDS) as WorkStage[]).map((k) => {
           const total = totals.find((t) => t.stage === k)?.total;
@@ -167,9 +159,6 @@ function Rows() {
         ))}
       </div>
       {pager}
-      {v.scopeKey === COUNTRY_KEY && serverTotal !== null && serverTotal > rows.filter((r) => r.stage === stage).length && (
-        <p className={cx(s.p, s.meta)}>The server holds {count(serverTotal)} rows in this group. This page has {rows.filter((r) => r.stage === stage).length} of them; searching and paging the rest runs on the server once cursor paging is connected.</p>
-      )}
     </Card>
   );
 }
@@ -182,8 +171,6 @@ function History() {
   const { page, pager, reset } = useListView({ section: "history", page: v.data.history.page, list, params: { status: filter }, size: 8 });
   return (
     <Card title="History of your instructions">
-      <p className={cx(s.p, s.small, s.dim)}>Every instruction, from any page. Each one moves through: saved → read by the workers → running → one final result. “Done” means that instruction took effect; it doesn’t mean the goal is finished or that readers can see it.</p>
-      {v.data.history.state !== "live" && <SourceNote source={v.data.history} what="Saved instructions" />}
       <div className={s.tabs} role="group" aria-label="Filter by result">
         {HISTORY_FILTERS.map((h) => (
           <button key={h.id} type="button" className={s.tab} aria-pressed={filter === h.id} onClick={() => { setFilter(h.id); reset(); }}>

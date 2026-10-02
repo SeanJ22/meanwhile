@@ -240,6 +240,69 @@ const PAGE = `<!doctype html><html><head><title>Board Agendas &amp; Minutes</tit
 
 const IN = { rung: "primary-site-navigation", why: "find the agenda packet route" };
 
+test("HTTP source requests acquire and retain the actual HTTPS text or binary identity", async () => {
+  for (const binary of [false, true]) {
+    const requested = `http://clerk.example.gov/${binary ? "packet.pdf" : "calendar"}`;
+    const secure = requested.replace("http:", "https:");
+    const final = "https://documents.example.gov/current";
+    const seen: string[] = [];
+    const vault = recordingVault();
+    const binaryPuts: Artifact[] = [];
+    const kit = buildScoutToolkit(context({openOne: fakeTransport({}).open, vault: vault.put,
+      openBytes: async ({url}) => {
+        seen.push(url);
+        const robots = url.endsWith("/robots.txt");
+        return {status: 200, bytes: Buffer.from(robots ? ROBOTS_ALLOW_ALL : binary ? "%PDF-1.4\nfixture" : PAGE),
+          contentType: robots ? "text/plain" : binary ? "application/pdf" : "text/html", finalUrl: robots ? url : final,
+          durationMs: 1, transportError: null};
+      }, vaultBytes: async artifact => {binaryPuts.push(artifact); return {stored:true,where:"mem",why:"saved"};}}));
+    const result = await kit.call("fetch_public", {url: requested, ...IN}, null);
+    assert.ok(seen.includes(secure));
+    assert.ok(!seen.includes(requested), "HTTP bytes were never used for the new capture");
+    const artifact = binary ? binaryPuts[0] : vault.puts.find(row=>row.artifact.methodRouteId === "scout:fetch_public")?.artifact;
+    assert.equal(artifact?.canonicalUrl, final);
+    assert.equal(artifact?.retrievalUrl, final);
+    assert.equal(artifact?.sourceId, "documents.example.gov");
+    assert.ok(result.provenance?.some(row=>row.canonicalUrl === final));
+  }
+});
+
+test("HTTPS unavailable keeps a real HTTP capture as HTTP and counts both requests", async () => {
+  const requested = "http://clerk.example.gov/calendar";
+  const transport = fakeTransport({["http://clerk.example.gov/robots.txt"]:{status:200,body:ROBOTS_ALLOW_ALL},
+    [requested]:{status:200,body:PAGE}});
+  const vault = recordingVault();
+  const result = await buildScoutToolkit(context({openOne:transport.open,vault:vault.put})).call("fetch_public",{url:requested,...IN},null);
+  assert.equal(result.ok,true);
+  assert.deepEqual(transport.seen,["http://clerk.example.gov/robots.txt","https://clerk.example.gov/calendar",requested]);
+  assert.equal(result.requestCount,3);
+  const artifact = vault.puts.find(row=>row.artifact.methodRouteId === "scout:fetch_public")!.artifact;
+  assert.equal(artifact.canonicalUrl,requested);
+  assert.equal(artifact.retrievalUrl,requested);
+});
+
+test("browser HTTP sources save their actual HTTPS render and retain HTTP on fallback", async () => {
+  for (const unavailable of [false,true]) {
+    const requested = "http://clerk.example.gov/calendar";
+    const secure = requested.replace("http:","https:");
+    const seen: string[] = [];
+    const vault = recordingVault();
+    const transport = fakeTransport({["http://clerk.example.gov/robots.txt"]:{status:200,body:ROBOTS_ALLOW_ALL}});
+    const browse: BrowseFn = async ({url}) => {
+      seen.push(url);
+      if(unavailable && url === secure) throw new Error("TLS unavailable");
+      return {html:PAGE, text:MARKER, finalUrl:url, status:200, transportError:null, durationMs:1, requests:[]};
+    };
+    const result = await buildScoutToolkit(context({openOne:transport.open,browse,vault:vault.put})).call("browse",{url:requested,...IN},null);
+    assert.equal(result.ok,true,result.forModel);
+    assert.deepEqual(seen,unavailable?[secure,requested]:[secure]);
+    const artifact = vault.puts.find(row=>row.artifact.methodRouteId === "scout:browse")!.artifact;
+    assert.equal(artifact.canonicalUrl,unavailable?requested:secure);
+    assert.equal(artifact.retrievalUrl,artifact.canonicalUrl);
+    assert.equal(result.requestCount,unavailable?3:2);
+  }
+});
+
 test('installed adapters use handed bytes and preserve their source provenance without HTTP',async()=>{
  const text=Array.from({length:95},(_,i)=>'<a href="/record/'+i+'">Record '+i+'</a>').join('');
  const id='held-source', hash=contentHash(text);
@@ -1100,6 +1163,30 @@ test('collector reads held bytes before HTTP and preserves their observation tim
   assert.deepEqual(await read(url),{url,text:'Clerk Ada',contentType:null,collectedAt:old,artifactId:'held',artifacts:[]});
 });
 
+test('collector reacquires held HTTP pages over HTTPS and reuses the actual redirected capture',async()=>{
+  const url='http://county.gov/calendar',secure='https://county.gov/calendar',finalUrl='https://documents.county.gov/calendar';
+  const body='<html><body>Council meets October 8 at 6 PM.</body></html>';
+  const seen:string[]=[];
+  const vault=recordingVault();
+  const read=savedPageReader(context({vault:vault.put,openOne:fakeTransport({}).open,openBytes:async({url:requested})=>{
+    seen.push(requested);
+    return {status:200,bytes:Buffer.from(requested.endsWith('/robots.txt')?ROBOTS_ALLOW_ALL:body),
+      contentType:requested.endsWith('/robots.txt')?'text/plain':'text/html',
+      finalUrl:requested.endsWith('/robots.txt')?requested:finalUrl,durationMs:1,transportError:null};
+  },inherited:{artifactIds:['old-http'],summary:'',provenance:[{artifactId:'old-http',canonicalUrl:url,
+    retrievedAt:NOW,httpStatus:200,permission:'ALLOWED',methodRouteId:'scout:fetch_public'}]},
+    readHeldArtifact:async()=>{throw Error('Old HTTP bytes cannot be relabeled as HTTPS');}}));
+  const got=await read(url);
+  assert.equal(got.url,finalUrl);
+  assert.equal(got.text,body);
+  assert.ok(got.artifacts.length>0);
+  assert.ok(seen.includes(secure));
+  assert.ok(!seen.includes(url));
+  assert.equal((await read(url)).artifactId,got.artifactId);
+  assert.equal(seen.filter(value=>value===secure).length,1);
+  assert.ok(vault.puts.some(row=>row.artifact.id===got.artifactId && row.artifact.canonicalUrl===finalUrl));
+});
+
 test('collector refreshes stale held CSV and returns complete saved parseable text',async()=>{
   for(const contentType of ['text/csv','application/json','text/plain']) {
     const url='https://county.gov/roster',body=contentType==='application/json'?'[{"name":"Ada"}]':'name\nAda\n';
@@ -1138,4 +1225,3 @@ test('collector falls back to the existing browser and returns only saved public
   const refused=savedPageReader(context({openOne:fakeTransport({[url]:{status:200,body:html}}).open,vault:recordingVault('refuse').put}));
   await assert.rejects(refused(url),/SOURCE_PAGE_UNREADABLE/);
 });
-

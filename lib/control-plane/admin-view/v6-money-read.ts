@@ -16,7 +16,7 @@ export interface AdminV6MoneyView {
   readonly account: readonly { readonly provider: string; readonly amountUsd: number | null; readonly how: string; readonly old?: boolean }[];
   readonly accountMonth: string;
   readonly monthlyPlans: readonly { readonly name: string; readonly note: string }[];
-  readonly limits: readonly { readonly name: string; readonly figure: string; readonly fraction: number | null; readonly note: string;
+  readonly limits: readonly { readonly name: string; readonly figure: string; readonly usedUsd: number | null; readonly limitUsd: number | null; readonly fraction: number | null; readonly note: string;
     readonly tone: "hunt" | "warn" | "neutral" }[];
   /** Our recorded request costs against each provider's own report, for that report's period. Null when the attribution was not read. */
   readonly reconciliation: readonly {
@@ -93,6 +93,8 @@ function fleetLimit(sources: V6ReadSources) {
   const fraction = rolling === null || resolved.rollingCeilingUsd <= 0 ? null : rolling / resolved.rollingCeilingUsd;
   return {
     name: "All paid AI · any 24 hours",
+    usedUsd: rolling,
+    limitUsd: resolved.rollingCeilingUsd,
     figure: rolling === null ? `Spend not reported · limit ${dollars(resolved.rollingCeilingUsd)}` : `${dollars(rolling)} of ${dollars(resolved.rollingCeilingUsd)}`,
     fraction,
     note: [
@@ -133,7 +135,7 @@ export function v6MoneySection(input: { readonly scopeKey: string; readonly scop
         : `${huntName(decision)}: ${dollars(row.otherKnownUsd)} known from search and data services${row.otherUsd === null ? ", but some of their charges have no price, so the full amount is unknown" : ""}. Combined with Anthropic, ${dollars(row.knownCombinedUsd)} is known${row.anthropicUsd === null || row.otherUsd === null ? "; the full combined cost is unknown" : ""}. Each charge is counted once here, even when overlapping hunts share it. These don't count against the Anthropic limit.`).join(" ");
   const limits = [
     fleetLimit(sources),
-    ...scoped.rolling.map(d => ({ name: `${d.geography.label} · any 24 hours`, figure: `${dollars(d.budgetUsd)} per rolling 24 hours`, fraction: null,
+    ...scoped.rolling.map(d => ({ name: `${d.geography.label} · any 24 hours`, usedUsd: null, limitUsd: d.budgetUsd, figure: `${dollars(d.budgetUsd)} per rolling 24 hours`, fraction: null,
       note: "An older kind of place limit, not a lifetime hunt. Its spend over the last 24 hours is not reported here.", tone: "neutral" as const })),
   ];
   const spanOf = new Map(readings.map(r => [r.provider, r] as const));

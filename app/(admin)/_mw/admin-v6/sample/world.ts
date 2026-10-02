@@ -544,9 +544,9 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
       accountMonth: "September 2026",
       monthlyPlans: [{ name: "Claude subscription", note: "A flat monthly plan, shown apart from usage charges" }],
       limits: [
-        { name: "Fleet · rolling 24 hours", figure: "$17.33 / $105.00", fraction: 17.33 / 105, note: "Approved for removal Sep 28 · the change is waiting for the workers to restart · still enforced at the last read, 11:39 PM", tone: "warn" },
-        { name: "Anthropic account cap", figure: "Not read yet", fraction: null, note: "Needs a read from Anthropic", tone: "neutral" },
-        { name: "Neon and GitHub caps", figure: "Not read yet", fraction: null, note: "Typed in by hand until this is automated", tone: "neutral" },
+        { name: "Fleet · rolling 24 hours", figure: "$17.33 / $105.00", usedUsd: 17.33, limitUsd: 105, fraction: 17.33 / 105, note: "Approved for removal Sep 28 · the change is waiting for the workers to restart · still enforced at the last read, 11:39 PM", tone: "warn" },
+        { name: "Anthropic account cap", figure: "Not read yet", usedUsd: null, limitUsd: null, fraction: null, note: "Needs a read from Anthropic", tone: "neutral" },
+        { name: "Neon and GitHub caps", figure: "Not read yet", usedUsd: null, limitUsd: null, fraction: null, note: "Typed in by hand until this is automated", tone: "neutral" },
       ],
       reconciliation: null,
       readings: [],

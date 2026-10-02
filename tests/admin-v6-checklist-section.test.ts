@@ -45,9 +45,9 @@ test("v6 section keeps all real definitions and one exact captured item, with ev
   assert.equal(item.subject, "seat-a");
   assert.equal(item.status, "unsure");
   assert.equal(item.actions.length, 0);
-  assert.match(item.missing, /unresolved/);
+  assert.equal(item.missing, "Unresolved");
   assert.equal(item.parts[0]?.tone, "muted");
-  assert.match(item.parts[0]?.proof ?? "", /not read/i);
+  assert.equal(item.parts[0]?.proof, "—");
   assert.ok(section.data.systemGroups.every(group => group.counts === null && group.audit === null));
   assert.ok(section.missingParts.some(part => /unknown/.test(part)));
   assert.ok(section.missingParts.some(part => /lower bound/.test(part)));

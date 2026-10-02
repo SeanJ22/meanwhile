@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { CAPTURE_DAYS, captureWindow, failuresView, headlineOf, readCaptureHealth, NOT_COUNTED_YET } from "../lib/control-plane/admin-view/v6-capture-health.ts";
+import { CAPTURE_DAYS, captureWindow, failuresView, headlineOf, readCaptureHealth } from "../lib/control-plane/admin-view/v6-capture-health.ts";
 import { readCaptureFailures, type HistoryStore, type Query } from "../lib/control-plane/data-business/live.ts";
 import { shardPlaceIndex } from "../lib/control-plane/data-business/places.ts";
 import { defaultAdminConfig, withDataSwitch } from "../lib/control-plane/gateway/admin-config.ts";
@@ -68,7 +68,7 @@ test("HEADLINE: recording, quiet, nothing yet, and unknown are four different se
   assert.equal(headlineOf(days, new Map(), "2026-10-01").state, "none");
   const unknown = headlineOf(days, null, "2026-10-01");
   assert.equal(unknown.state, "unknown");
-  assert.match(unknown.says, /unknown, not stopped/);
+  assert.equal(unknown.says, "—");
 });
 
 test("A STORE THAT IS NOT INSTALLED is said in every block; a recipe switched off for Admin is shown as off, never as empty", async () => {
@@ -83,7 +83,7 @@ test("A STORE THAT IS NOT INSTALLED is said in every block; a recipe switched of
   assert.equal(switched.byType.kind, "READ");
 });
 
-test("DID ANYTHING FAIL TO RECORD: the totals must match the batches, no batch may be archived and left uncounted, and the part nobody counts is said", () => {
+test("DID ANYTHING FAIL TO RECORD: the totals must match the batches, and no batch may be archived and left uncounted", () => {
   const ok = failuresView(measured, "2026-09-18", "2026-10-01");
   assert.equal(ok.kind === "MEASURED" && ok.lines.every((l) => l.ok), true);
   const lost = failuresView({ ...measured, eventsCounted: 19, archivedNotCounted: 2 }, "2026-09-18", "2026-10-01");
@@ -92,8 +92,6 @@ test("DID ANYTHING FAIL TO RECORD: the totals must match the batches, no batch m
   assert.match(lost.kind === "MEASURED" ? lost.lines[1].says : "", /2 batches .* never reached the counts/);
   const unchecked = failuresView({ ...measured, archivedNotCounted: null, archiveNote: "The history store is not reachable from here, so batches archived but never counted were not checked." }, "a", "b");
   assert.equal(unchecked.kind === "MEASURED" && unchecked.lines[1].ok, false, "an unchecked archive is not a clean one");
-  assert.equal(unchecked.kind === "MEASURED" && unchecked.notCounted, NOT_COUNTED_YET);
-  assert.match(NOT_COUNTED_YET, /cannot say none failed/);
 });
 
 test("THE MEASUREMENT: batches in the history store with no database row are the ones that failed to count", async () => {

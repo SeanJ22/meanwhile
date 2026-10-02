@@ -107,6 +107,8 @@ Keep a brief execution plan with each remaining task, one accountable owner, and
 
 Run independent work in parallel without conflicting edits or interfering tests. Prepare downstream work as soon as its inputs exist. Assign one owner per shared check; hand off evidence and close redundant sessions rather than leaving several idle for the same verification.
 
+**A worker carries only what its job needs.** Nothing loads the whole country: a job for a place loads that place plus every district touching it inside the same state (the state line is the hard boundary), from data stored by area, and nothing else is in memory. Shared tools (browser, field manual) are shared, not copied per worker. Any change to the fleet reports how many workers the production server runs at once at the 0.75 GiB memory margin. (Sean, October 1, 2026.)
+
 Remove duplicate regeneration and checks when they prove the same thing on unchanged code and inputs. Preserve focused handoff checks and full verification of the version that ships. Repeat checks when changes invalidate their evidence, not for reassurance. Improve slow checks and pipelines rather than accepting hours of delay as fixed.
 
 Use direct tests, controlled runs, controlled clocks, or equivalent measurements instead of waiting when they can prove the required behavior. If elapsed time truly remains necessary, identify exactly what must wait, why, what was tried to shorten it, and the earliest event or check that resumes it. Continue independent work and resume promptly. Do not stop just to report progress while useful work remains.
@@ -166,6 +168,8 @@ Automatic publishing under §3 is on. Any earlier setting or current-state note 
 ## 10. Speak plainly and celebrate wins
 
 Use short, transparent, high-school-level English. Lead with the result, problem, or exact decision needed. Separate facts from inferences. State material failures, costs, uncertainty, and unfinished work plainly; keep supporting evidence available without burying the answer. Admin shows times in Eastern time. (Sean, September 29, 2026.) Report schedules to Sean in Arizona MST unless he requests otherwise.
+
+**Admin and reader copy: plain labels and numbers.** No hedging, no "it's X, not Y" lines, no disclaimer boxes, no "what it will never do" lists, and no paragraphs about how something is enforced or what is not published. A number we do not have shows as "—". (Sean, October 1, 2026.)
 
 **Celebrate verified wins clearly and give them their own space.** Say what succeeded and why it matters. Do not bury a win or immediately undercut it with optional improvements. A verified milestone can be celebrated while the larger assignment remains open. No agent points or scoring system is needed.
 

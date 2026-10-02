@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
-import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
+import { deriveSanitized, recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import {
   crosswalkEvidenceWorkItem,
@@ -17,6 +17,7 @@ import { artifactMeta, objectKey, putArtifact } from "../lib/control-plane/evide
 import { NetlifyEvidenceStore } from "../lib/control-plane/evidence/netlify-store.ts";
 import type { Store } from "@netlify/blobs";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
+import { heldArtifactCaptureLookup, heldManualCrosswalkCapture } from "../lib/civic-data/held-artifact-captures.ts";
 import { copyVaultObjects } from "../scripts/pilot-runtime-transfer.mts";
 import { contentHash } from "../lib/control-plane/ids.ts";
 
@@ -54,6 +55,42 @@ test("C16: the read-only vault finds what the durable store committed, by id, co
     rmSync(root, { recursive: true, force: true });
   }
   assert.deepEqual((await indexVault(join(tmpdir(), "wtp-ro-vault-absent-root"))).byId.size, 0, "an absent root is an empty vault");
+});
+
+test("manual crosswalk evidence reads the cited directory without describing unrelated vault objects", async () => {
+  const root = mkdtempSync(join(tmpdir(), "wtp-crosswalk-cited-"));
+  try {
+    const body = "Official board calendar";
+    const hash = contentHash(body).slice("sha256-".length);
+    const at = "2026-09-24T20:00:00.000Z";
+    const { artifact } = recordAcquisition({
+      canonicalUrl: "https://www.example.gov/calendar", retrievedAt: at, httpStatus: 200,
+      contentType: "text/html", sourceId: "meeting-body-crosswalk", methodRouteId: "crosswalk:evidence",
+      workItemId: crosswalkEvidenceWorkItem(hash), attemptId: "crosswalk:x", permission: "ALLOWED", transport: "REACHABLE",
+    }, body);
+    const store = new DurableEvidenceStore(root);
+    await putArtifact(store, READ_ONLY_VAULT_PROJECT, artifact, Buffer.from(body));
+    const unrelated = { ...artifact, workItemId: "wi-unrelated", sourceId: "unrelated.example.gov" };
+    const { key } = await putArtifact(store, READ_ONLY_VAULT_PROJECT, unrelated, Buffer.from(body));
+    writeFileSync(join(root, key + ".meta.json"), "{broken unrelated sidecar");
+    await assert.rejects(indexVault(root), SyntaxError, "the replaced whole-vault path visits unrelated metadata");
+    const exact = await heldManualCrosswalkCapture(root, hash, at);
+    assert.equal(exact?.id, artifact.id);
+    assert.equal(new TextDecoder().decode(await readHeldBytes(exact!)), body);
+    assert.equal(await heldManualCrosswalkCapture(root, "f".repeat(64), at), null);
+    const credentialPage = "<p>Official board calendar</p><input type='password' value='example-test-value'>";
+    const rawHash = contentHash(credentialPage).slice("sha256-".length);
+    const { artifact: raw } = recordAcquisition({
+      canonicalUrl: artifact.canonicalUrl, retrievedAt: at, httpStatus: 200, contentType: "text/html",
+      sourceId: "meeting-body-crosswalk", methodRouteId: "crosswalk:evidence",
+      workItemId: crosswalkEvidenceWorkItem(rawHash), attemptId: "crosswalk:sanitized", permission: "ALLOWED", transport: "REACHABLE",
+    }, credentialPage);
+    const sanitized = deriveSanitized(raw, credentialPage, at);
+    await putArtifact(store, READ_ONLY_VAULT_PROJECT, sanitized.artifact, Buffer.from(sanitized.text));
+    const derivative = await heldManualCrosswalkCapture(root, rawHash, at);
+    assert.equal(derivative?.tier, "SANITIZED_DERIVED");
+    assert.equal(derivative?.id, sanitized.artifact.id, "the raw citation still locates its saved sanitized derivative");
+  } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
 test("Netlify vault preserves oversized metadata atomically with original bytes", async () => {
@@ -108,6 +145,24 @@ test("C16: the derived wiring child's closure reaches no filesystem writer", () 
   const reviewer = readFileSync("scripts/derive-meeting-body-crosswalk.mts", "utf8");
   assert.doesNotMatch(reviewer, /durable-store|DurableEvidenceStore|writeFile|appendFile/);
   assert.match(reviewer, /read-only-vault\.ts/);
+});
+
+test("derived captures read only cited IDs, reuse concurrent lookups, and keep attributed misses distinct", async () => {
+  const first = { artifactId: "ar-first", attemptId: "at-new" } as ArtifactRecord;
+  const older = { ...first, attemptId: "at-old" };
+  const other = { artifactId: "ar-other", attemptId: "at-other" } as ArtifactRecord;
+  const calls: string[] = [];
+  const held = { id: first.artifactId } as Awaited<ReturnType<typeof findHeldCapture>>;
+  const capture = heldArtifactCaptureLookup("vault", [first, older, other], async (_root, record) => {
+    calls.push(record.attemptId);
+    return record.attemptId === "at-old" ? held : null;
+  });
+  assert.deepEqual(await Promise.all([capture(first.artifactId), capture(first.artifactId)]), [held, held]);
+  assert.deepEqual(calls, ["at-new", "at-old"]);
+  assert.equal(await capture("ar-absent"), null);
+  assert.deepEqual(calls, ["at-new", "at-old"], "neither unrelated nor absent captures are looked up");
+  const corrupt = heldArtifactCaptureLookup("vault", [first], async () => { throw new Error("VAULT_CAPTURE_SIDECAR_MISMATCH"); });
+  await assert.rejects(corrupt(first.artifactId), /VAULT_CAPTURE_SIDECAR_MISMATCH/);
 });
 
 test("Admin capture lookup finds remote originals without a local vault or full metadata scan", async () => {

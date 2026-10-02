@@ -1116,7 +1116,7 @@ test("each admitted meeting source/body contract is its own concurrent child bou
   assert.match(runner, /command:\s*task\.command/);
   assert.match(runner, /dueCandidates\.push\(\{[\s\S]*?id:\s*task\.id,[\s\S]*?task,/);
   // Every admitted task, and only those, is launched, owed-soonest first (routinePassLaunchOrder).
-  assert.match(runner, /for \(const \{ task \} of routinePassLaunchOrder\(admitted\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
+  assert.match(runner, /for \(const \{ task \} of placeSourceLaunchOrder\(routinePassLaunchOrder\(admitted\)\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
   assert.match(runner, /parsed\.receipts\.length !== 1/);
   assert.match(runner, /parsed\.receipts\[0\]\?\.source !== pending\.task\.id/);
   assert.doesNotMatch(runner, /--partitions=/);

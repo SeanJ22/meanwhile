@@ -216,7 +216,7 @@ test("the runner honours a request only in its ordinary pass: the same due check
   assert.match(runner, /const dueRequest = FORCE \? null : routineDueRequestFor\(task, durableClock, admissionNowMs, dueRequests\);/);
   assert.match(runner, /!routineTaskDue\(task, durableClock, admissionNowMs, sittingHot\) && dueRequest === null/);
   assert.match(runner, /deadlineMs: routineDueRequestDeadlineMs\(\s+routineTaskDeadlineMs\(pending\.task, clock, sittingSignals\.get\(pending\.task\.id\)\),/);
-  assert.match(runner, /for \(const \{ task \} of routinePassLaunchOrder\(admitted\)\) pendingRuns\.push/);
+  assert.match(runner, /for \(const \{ task \} of placeSourceLaunchOrder\(routinePassLaunchOrder\(admitted\)\)\) pendingRuns\.push/);
   // The supervisor outcome records the request it honoured.
   assert.match(runner, /\.\.\.input\.dueRequestLines,/);
   assert.match(runner, /admitted by this ordinary pass/);

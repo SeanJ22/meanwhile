@@ -653,6 +653,11 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
     },
   },
 
+  reader_event_refusals: {
+    storeClass: "OPERATIONAL",
+    columns: nonIdentifying("day", "reason", "refusals"),
+  },
+
   civic_data_payload_parts: {
     storeClass: "OPERATIONAL",
     columns: {

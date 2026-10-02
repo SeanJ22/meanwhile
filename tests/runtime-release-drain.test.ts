@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { ChildProcess } from "node:child_process";
-import { runRuntimeChildren } from "../scripts/pilot-runtime-child.mts";
+import { runRuntimeChildren, waitForRuntimeQuiescence } from "../scripts/pilot-runtime-child.mts";
 import { workerProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 
 test("optional slot admission closure cancels queued work after the active worker finishes", async () => {
@@ -81,4 +81,63 @@ test("the launcher keeps the existing output limit separate for stdout and stder
   assert.ok(result);
   assert.equal(result.termination, "EXITED");
   assert.equal(result.status, 0);
+});
+
+test("the research idle guard kills its tree despite repeated beats and release notices", async () => {
+  let descendant = 0;
+  const [result] = await runRuntimeChildren([{ id: "stalled-research", executable: process.execPath,
+    args: ["--input-type=module", "-e", `
+      import { spawn } from 'node:child_process';
+      const worker = spawn(process.execPath, ['-e', 'setInterval(()=>{},1000)'], { stdio:'ignore' });
+      console.log('worker admitted pid '+worker.pid);
+      setInterval(()=>{console.log('heartbeat '+Date.now());console.log('runtime release drain '+Date.now());},40);
+      setInterval(()=>console.log('same unchanged output'),40);
+    `] }], { cwd: process.cwd(), env: process.env, maxBufferBytes: 4096, noProgressMs: 400,
+    onStdout: (_id, output) => { const pid = output.match(/worker admitted pid (\d+)/); if (pid) descendant = Number(pid[1]); },
+  });
+  assert.equal(result.termination, "TIMED_OUT");
+  assert.equal(result.status, null);
+  assert.match(result.errorMessage!, /RESEARCH_CHILD_NO_PROGRESS/);
+  assert.match(result.stderr, /ending owned child stalled-research process tree/);
+  assert.ok(descendant);
+  // Linux may briefly retain a reparented zombie; Windows taskkill removes it.
+  if (process.platform === "win32") assert.throws(() => process.kill(descendant, 0));
+});
+
+test("new completed phases and admissions keep a child alive beyond one quiet allowance and stream before exit", async () => {
+  let streamed = false;
+  const [result] = await runRuntimeChildren([{ id: "progressing", executable: process.execPath,
+    args: ["-e", `let n=0;const t=setInterval(()=>{console.log(n%2?'phase done '+n:'worker admitted '+n);if(++n===12){clearInterval(t);}},60)`] }], {
+    cwd: process.cwd(), env: process.env, maxBufferBytes: 4096, noProgressMs: 400,
+    onStdout: () => { streamed = true; }, onStarted: () => { assert.equal(streamed, false); },
+  });
+  assert.equal(result.termination, "EXITED");
+  assert.equal(result.status, 0);
+  assert.ok(streamed);
+});
+
+test("each coordination await in a drain is bounded even without a child", async () => {
+  for (const step of ["stopAdminCopyClock", "activeControlRead", "scheduler.waitForIdle", "shutdown.waitForIdle"]) {
+    await assert.rejects(waitForRuntimeQuiescence(() => new Promise(() => {}), {
+      reason: step, noProgressMs: 20,
+    }), new RegExp(`RUNTIME_DRAIN_NO_PROGRESS: ${step.replaceAll('.', '\\.')}`));
+  }
+});
+
+test("a release drain ends only its owned idle routine child while an unrelated process survives", async () => {
+  const { spawn } = await import("node:child_process");
+  const unrelated = spawn(process.execPath, ["-e", "setInterval(()=>{},1000)"], { stdio: "ignore" });
+  try {
+    const running = runRuntimeChildren([{ id: "idle-routine", executable: process.execPath,
+      args: ["-e", "console.log('routine entered');setInterval(()=>{},1000)"] }], {
+      cwd: process.cwd(), env: process.env, maxBufferBytes: 4096,
+    });
+    await assert.rejects(waitForRuntimeQuiescence(async () => { await running; }, {
+      reason: "release", noProgressMs: 400,
+    }), /RUNTIME_DRAIN_NO_PROGRESS/);
+    const [result] = await running;
+    assert.equal(result.termination, "TIMED_OUT");
+    assert.match(result.errorMessage!, /RUNTIME_DRAIN_NO_PROGRESS/);
+    assert.doesNotThrow(() => process.kill(unrelated.pid!, 0));
+  } finally { unrelated.kill(); }
 });

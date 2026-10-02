@@ -141,7 +141,8 @@ import {
 } from "../lib/ops/neon-request-deadline.ts";
 import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
 import { consoleInputReader, consolePublisher } from "./pilot-runtime-publish.mts";
-import { runRuntimeChildren } from "./pilot-runtime-child.mts";
+import { runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
+import { recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
   ROUTINE_SUPERVISOR_STARTED_AT_ENV,
@@ -383,6 +384,7 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
   readonly signal: string | null;
   readonly exitCode: number | null;
   readonly circuit: ProviderCircuit | null;
+  readonly failedAtMs?: number;
 }> {
   const before = new Date().toISOString();
   const latched = provider === "postgres" ? readNeonCircuit(ROOT, before) : null;
@@ -413,22 +415,42 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     cwd: ROOT,
     env: process.env,
     maxBufferBytes: 64 * 1024 * 1024,
+    noProgressMs: RUNTIME_NO_PROGRESS_MS,
     onStdout: (_id, output) => { process.stdout.write(output); },
     onStderr: (_id, output) => { process.stderr.write(output); currentCycleErrors = `${currentCycleErrors}${output}`.slice(-8000); },
     onStarted: (_id, child) => { researchCycleChild = child; },
   });
   if (!run) throw new Error("RESEARCH_CYCLE_CHILD_RESULT_MISSING");
+  const failedAtMs = Date.now();
+  let supervisorRecordPath: string | null = null;
+  if (run.termination === "TIMED_OUT") {
+    const reason = run.errorMessage ?? "RESEARCH_CHILD_NO_PROGRESS";
+    const outcome = await recordFailedCycle({
+      repos: await ownerRepositories(), error: new Error(reason),
+      cycleId: `research-supervisor:${hostname()}:${before}`, startedAt: before,
+      finishedAt: new Date(failedAtMs).toISOString(), testedSha: RUNNING_CODE_SHA, host: hostname(), pending: null,
+      writeLocalRecord: record => {
+        mkdirSync(RUNS_DIR, { recursive: true });
+        const path = join(RUNS_DIR, `supervisor-${failedAtMs}.json`);
+        writeFileSync(path, `${JSON.stringify(record)}\n`, "utf8");
+        return path;
+      },
+      log: line => console.error(line),
+    });
+    supervisorRecordPath = outcome.recordPath;
+    console.error(`  research round FAILED: ${reason}; canonical outcome ${outcome.canonical}; retry within 10 minutes`);
+  }
   const stdout = `${run.stdout ?? ""}${run.stderr ?? ""}`;
   const match = stdout.match(/local diagnostic: (.+\.json)/);
   const stderrLines = (run.stderr ?? "").split("\n").filter((l) => l.trim() !== "");
   const failure = classifyProviderFailure(new Error(`${run.stderr ?? ""}\n${run.stdout ?? ""}`));
   const databaseNamed = /neon|postgres|database|control plane|transfer allowance|compute quota|storage quota/i.test(failure.condition);
-  const circuit = provider === "postgres" && run.status !== 0 && failure.class === "HARD" && databaseNamed
+  const circuit = provider === "postgres" && run.termination !== "TIMED_OUT" && run.status !== 0 && failure.class === "HARD" && databaseNamed
     ? latchNeonCircuit(ROOT, failure.condition, new Date().toISOString())
     : null;
   return {
     ok: run.status === 0,
-    recordPath: match ? match[1].trim() : null,
+    recordPath: supervisorRecordPath ?? (match ? match[1].trim() : null),
     stdout,
     /* 40, not 12: a native abort prints its fatal line ("Assertion failed: …",
        "FATAL ERROR: …") above a stack trace longer than 12 frames, and the
@@ -437,6 +459,7 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     signal: run.signal ?? null,
     exitCode: run.status,
     circuit,
+    ...(run.status !== 0 ? { failedAtMs } : {}),
   };
 }
 
@@ -770,12 +793,12 @@ async function runRoutineCivicData(): Promise<void> {
     env: process.env,
 
     maxBufferBytes: 64 * 1024 * 1024,
-
+    onStdout: (_id, output) => process.stdout.write(output),
+    onStderr: (_id, output) => process.stderr.write(output),
   });
   if (!run) throw new Error("ROUTINE_CIVIC_DATA_CHILD_RESULT_MISSING");
   if (ownerRefresh && refreshRepos) await finishRoutineRefresh(refreshRepos, ownerRefresh, new Date().toISOString(), run.status);
   const lines = `${run.stdout ?? ""}\n${run.stderr ?? ""}`.split("\n").filter((line) => /^(RCD_|RCD_RECEIPT=)/.test(line));
-  for (const line of lines) console.log(`  ${line}`);
   const readerFailures = lines.filter((line) =>
     line.startsWith("RCD_READER_READBACK ") &&
     (line.includes(": RECORDED FAIL") || line.includes(": CURRENT FAIL (BACKOFF)")),
@@ -830,7 +853,7 @@ async function persistOuterRoutineChildFailure(
   // A child that died on an error nothing caught names its step and cause in
   // one sanitized line (lib/ops/fatal-line.ts); quote that, never raw stderr.
   const fatal = childFatalLine(output);
-  const evidence = fatal ? { ...outer, detail: `${outer.detail} The child's own last line: ${fatal}.` } : outer;
+  const evidence = { ...outer, detail: `${outer.detail}${run.errorMessage ? ` ${run.errorMessage}` : ""}${fatal ? ` The child's own last line: ${fatal}.` : ""}` };
   try {
     const repos = await ownerRepositories();
     if (repos === null) throw new Error("production control plane is not configured");
@@ -1234,16 +1257,24 @@ function startStandingRuntimeClock(): void {
   );
 }
 
+let standingDrainFailed = false;
 async function holdStandingRuntimeAtQuiescence(): Promise<void> {
   runtimeAdmissionsHeld = true;
-  await stopAdminCopyClock();
   if (standingRuntimeTimer !== null) {
     clearInterval(standingRuntimeTimer);
     standingRuntimeTimer = null;
   }
   if (ownerControlTimer !== null) { clearInterval(ownerControlTimer); ownerControlTimer = null; }
-  await activeControlRead;
-  await standingRuntimeScheduler.waitForIdle();
+  try {
+    await waitForRuntimeQuiescence(async () => {
+      await stopAdminCopyClock();
+      await activeControlRead;
+      await standingRuntimeScheduler.waitForIdle();
+    }, { reason: "release handoff quiescence" });
+  } catch (error) {
+    standingDrainFailed = true;
+    throw error;
+  }
 }
 
 function releaseInspectionRefusal(code: string, detail: string, targetSha: string | null = null): RuntimeReleaseInspection {
@@ -1350,7 +1381,12 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
   // timer is already live, so that exact prior state may be restored.
   const reopenStandingClock = standingRuntimeTimer !== null;
   const reopenAdminCopyClock = adminCopyTimer !== null;
-  await holdStandingRuntimeAtQuiescence();
+  try { await holdStandingRuntimeAtQuiescence(); }
+  catch (error) {
+    await persistRuntimeBoundaryFailure(releaseInspectionRefusal("RUNTIME_DRAIN_NO_PROGRESS",
+      error instanceof Error ? error.message : String(error), first.targetSha), startedAt);
+    return 2;
+  }
   if (first.state === "REFUSED") {
     await persistRuntimeBoundaryFailure(first, startedAt);
     return 2;
@@ -1716,6 +1752,7 @@ async function runNightlyWindow(trigger: string): Promise<void> {
 }
 /* ===================== LANE E — THE NIGHTLY WINDOW (RULING 242) — end ===================== */
 
+let failedRoundRetryActive = false;
 async function sleepUnlessRunNow(totalMs: number): Promise<void> {
   if (ownerWakePending) { ownerWakePending = false; return; }
   const until = Date.now() + totalMs;
@@ -1726,6 +1763,8 @@ async function sleepUnlessRunNow(totalMs: number): Promise<void> {
     if (says === "START_NOW") return;
     /* The owner's PAUSE_RUNNER holds the window between cycles too (holdWhilePaused holds it before one). */
     if (says === "HOLD") continue;
+    // A nightly pass cannot consume the failed research round's retry window.
+    if (failedRoundRetryActive || Date.now() >= until) continue;
     /* LANE E — the nightly window runs between cycles, on this clock. */
     const decision = await windowDecision();
     if (decision.run) await runNightlyWindow(decision.trigger);
@@ -1897,6 +1936,7 @@ while (cycle < CYCLES) {
     await writeLiveCycleBeat(startedAt, { code: null, signal: null });
     throw error;
   });
+  failedRoundRetryActive = !result.ok;
   await writeLiveCycleBeat(startedAt, { code: result.exitCode, signal: result.signal });
   await activeControlRead;
   if (result.circuit) {
@@ -2010,7 +2050,7 @@ while (cycle < CYCLES) {
      failed cycle reads as "alive, last cycle did not pass", not as a dead runner. */
   if (!result.ok) await writeFailedCycleBeat(startedAt);
 
-  if (provider === "postgres" && !canary && await ownerSays() !== "HOLD") await runNightlyWindow("RUNNER_CLOCK");
+  if (result.ok && provider === "postgres" && !canary && await ownerSays() !== "HOLD") await runNightlyWindow("RUNNER_CLOCK");
 
   /* ADM-1: the console is published by the machine after every digest, succeeded or failed. */
   await publishConsole();
@@ -2022,19 +2062,34 @@ while (cycle < CYCLES) {
   }
 
   if (cycle >= CYCLES) break;
-  await sleepUnlessRunNow(await nextCycleWaitMs(result.ok));
+  const waitMs = await nextCycleWaitMs(result.ok);
+  await sleepUnlessRunNow(result.failedAtMs === undefined ? waitMs : Math.max(0, waitMs - (Date.now() - result.failedAtMs)));
 }
 }
 
 if (standingRuntimeTimer !== null) clearInterval(standingRuntimeTimer);
 if (ownerControlTimer !== null) clearInterval(ownerControlTimer);
-await stopAdminCopyClock();
-await activeControlRead;
+if (!standingDrainFailed) {
+  try {
+    await waitForRuntimeQuiescence(async () => {
+      await stopAdminCopyClock();
+      await activeControlRead;
+      await standingRuntimeScheduler.waitForIdle();
+    }, { reason: "runner shutdown" });
+  } catch (error) {
+    standingDrainFailed = true;
+    handoffExitCode = 2;
+    await persistRuntimeBoundaryFailure(releaseInspectionRefusal("RUNTIME_DRAIN_NO_PROGRESS",
+      error instanceof Error ? error.message : String(error)), new Date().toISOString());
+  }
+}
 if (hangWatchdog !== null) await hangWatchdog.stop();
-await standingRuntimeScheduler.waitForIdle();
 await PILOT_PROCESS_LEASE.release();
 if (handoffExitCode === null) {
   console.log(`\npilot-runner · ${cycle} cycle(s) complete. Canonical outcomes are in the owner control-plane log; disposable diagnostics are under ${RUNS_DIR}.`);
 } else {
   process.exitCode = handoffExitCode;
 }
+// Timed-out coordination promises can retain sockets after their child is gone.
+// Restart=always resumes the startup release reconciliation without human help.
+if (standingDrainFailed) process.exit(handoffExitCode ?? 2);

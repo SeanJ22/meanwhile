@@ -223,7 +223,7 @@ test("an open page: unavailable → live → a later revision → an age step wi
     assert.doesNotMatch(t, /Nothing is waiting|No recorded changes/);
     let now = text(page(sync, scope, key, "now"));
     assert.match(now, /What’s happening now/);
-    assert.match(now, /Waiting reasons haven’t arrived yet/);
+    assert.match(now, /— waiting in ZIP 85635/);
 
     // 2. Announced: exactly one read, and the same page shows the real reading.
     sync.onPulse(pulse("w1"));
@@ -233,8 +233,8 @@ test("an open page: unavailable → live → a later revision → an age step wi
     assert.match(t, /9 failed tries since/);
     assert.doesNotMatch(t, /detailed Workers reading hasn’t arrived/);
     now = text(page(sync, scope, key, "now"));
-    assert.match(now, /2 waiting in ZIP 85635, each with a reason: ZIP 85635 \(Census ZCTA\) hunt: 51 of 194 assigned tasks not finished/);
-    assert.match(now, /Unknown jobs working now in ZIP 85635\. The full list of running jobs isn’t available yet, so this isn’t zero/);
+    assert.match(now, /2 waiting in ZIP 85635: ZIP 85635 \(Census ZCTA\) hunt: 51 of 194 assigned tasks not finished/);
+    assert.match(now, /— jobs working now in ZIP 85635/);
     assert.match(now, /Late The next round is late/);
     assert.doesNotMatch(now, /Not connected yet\. This part turns on by itself[^.]*\. You don’t need to reload\. The detailed Workers reading/, "no generic note over arrived data");
     assert.doesNotMatch(now, new RegExp(SECTION_DEP.workers.id));
@@ -288,7 +288,7 @@ test("an authentication failure is never shown as an empty, successful reading",
     for (const view of ["workers", "now"] as const) {
       const t = text(page(sync, { kind: "all" }, "us", view));
       assert.doesNotMatch(t, /Nothing is waiting|No recorded changes|Nothing is running|0 jobs working/, `${status} ${view}`);
-      assert.match(t, view === "workers" ? /Unknown doesn’t mean nothing is waiting/ : /Unknown jobs working now/, `${status} ${view}`);
+      assert.match(t, view === "workers" ? /Unknown doesn’t mean nothing is waiting/ : /— jobs working now/, `${status} ${view}`);
     }
     sync.onPulse(pulse("w1"));
     await settle(sync);

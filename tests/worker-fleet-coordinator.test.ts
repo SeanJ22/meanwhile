@@ -6,6 +6,7 @@ import { dispatchWorkerTask, evidenceProjection } from "../lib/control-plane/wor
 import { readAutonomousActivity } from "../lib/control-plane/workers/activity.ts";
 import { SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION, validateScoutFinishWithCandidates, type ScoutResult, type ScoutRung } from "../lib/control-plane/scheduler/scout-result.ts";
 import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
+import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
 import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { scheduleAutonomousAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
 import { FIRST_BACKOFF_MINUTES } from "../lib/control-plane/scheduler/debt.ts";
@@ -134,6 +135,56 @@ test("coordinator joins Scout and route history once before bounded selection", 
   assert.equal(scoutReads,1,"all Scout results are joined once, not scanned per WorkItem");
   assert.equal(routeLists,1,"route tasks are joined once, not scanned per WorkItem");
   assert.equal(pointReads,0,"selection uses the already loaded WorkItem snapshot");
+
+  await acceptRecordedScout(h);
+  const scout = (await h.repos.scoutResults.readAll())[0]!;
+  const missingId = "ar-fixture-missing-record";
+  const missingOnly = { ...scout, candidates: scout.candidates.map(candidate => ({ ...candidate, evidenceArtifactIds: [missingId] })) };
+  const goodIds: string[] = [];
+  const plan = h.item.autonomousPlan!;
+  assert(plan.contract.schemaVersion === 2);
+  for (let index = 0; index < 3; index++) {
+    const id = `wi-fixture-valid-${index}`;
+    const subject = `fixture:nh:county-${index}`;
+    await h.repos.workItems.put(id, { ...h.item, id, subject, autonomousPlan: { ...plan,
+      contract: { ...plan.contract, subjectId: subject, jurisdiction: { ...plan.contract.jurisdiction, canonicalId: subject } },
+      sources: [], acquisition: [] } }, h.now());
+    goodIds.push(id);
+  }
+  const isolated: AutonomousCoordinatorRuntime = { ...h.runtime,
+    readEvidence: workerVaultResolver(h.repos, h.store, h.item.project),
+    repos: { ...h.repos, scoutResults: { ...h.repos.scoutResults, readAll: async () => [missingOnly] } } };
+  const named = new RegExp(`WORKER_ARTIFACT_MISSING_OR_PARTIAL:${missingId}`);
+  const remaining = await runAutonomousCoordinator(isolated, { planOnly: true, concurrency: 4 });
+  assert.equal(remaining.decisions.filter(decision => goodIds.includes(decision.workItemId) && decision.task).length, 3,
+    "one unavailable historical source cannot discard the other three planned tasks");
+  const unresolved = remaining.decisions.find(decision => decision.workItemId === h.item.id)!;
+  assert.equal(unresolved.action, "SCOUT", "missing evidence remains acquisition work, never a grounded source");
+  assert.match(unresolved.reason, named);
+  assert.deepEqual(remaining.deferred.map(row => [row.workItemId, row.reason]), [[h.item.id, "WORKER_ARTIFACT_MISSING_OR_PARTIAL"]]);
+  assert.match(remaining.deferred[0]!.detail, new RegExp(missingId));
+  assert.equal(remaining.dispatches.length, 0);
+
+  const mixed = { ...scout, candidates: scout.candidates.map(candidate => ({ ...candidate,
+    evidenceArtifactIds: [missingId, ...candidate.evidenceArtifactIds] })) };
+  const usable: AutonomousCoordinatorRuntime = { ...isolated,
+    repos: { ...isolated.repos, scoutResults: { ...h.repos.scoutResults, readAll: async () => [mixed] } } };
+  const continued = await runAutonomousCoordinator(usable, { planOnly: true, concurrency: 4 });
+  const sameWork = continued.decisions.find(decision => decision.workItemId === h.item.id)!;
+  assert.equal(sameWork.action, "WORKER", "other retained evidence for the same work item still grounds acquisition");
+  assert.equal(sameWork.task?.workerTask?.acquisition?.route.observation.artifactId, scout.candidates[0]!.evidenceArtifactIds[0]);
+  assert.match(sameWork.reason, named);
+  assert.equal(continued.deferred.length, 1);
+  assert.match(continued.deferred[0]!.detail, new RegExp(missingId));
+  assert.equal(continued.decisions.filter(decision => goodIds.includes(decision.workItemId) && decision.task).length, 3);
+  assert.equal((await h.repos.workerResults.readAll()).length, 0, "selection cannot assert parsed or verified facts");
+  assert.deepEqual(h.calls, [], "held planning makes no source or model request");
+  for (const message of ["CONTROL_PLANE_REQUEST_TIMEOUT: repository read", "MODEL_PROVIDER_FAILURE:503", "WORKER_ARTIFACT_NOT_IN_VAULT"]) {
+    const failure = new Error(message);
+    await assert.rejects(runAutonomousCoordinator({ ...usable, readEvidence: async () => { throw failure; } },
+      { planOnly: true, concurrency: 4 }), error => error === failure,
+    "only the authorized missing-or-partial record class is isolated; other failures still propagate");
+  }
 });
 
 test("a newly observed Scout route flows to Hunter without rewriting its extraction contract",async()=>{

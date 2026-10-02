@@ -33,7 +33,7 @@ export function workerVaultResolver(repos: ControlPlaneRepositories, store: Evid
   const resolve = async (artifactId: string): Promise<ParserInput> => {
     const all = options.snapshot ? await (snapshotRecords ??= repos.artifacts.readAll()) : await repos.artifacts.readAll();
     const records = all.filter(a => a.artifactId === artifactId && !a.partial);
-    if (records.length === 0) throw new Error("WORKER_ARTIFACT_MISSING_OR_PARTIAL");
+    if (records.length === 0) throw new Error(`WORKER_ARTIFACT_MISSING_OR_PARTIAL:${artifactId}`);
     const listed = options.snapshot ? await (snapshotKeys ??= store.list(`project/${project}/`)) : await store.list(`project/${project}/`);
     const hashes = new Set(records.map(record => record.contentHash));
     const keys = listed.filter(key => hashes.has(key.slice(key.lastIndexOf("/") + 1).split(".")[0]));

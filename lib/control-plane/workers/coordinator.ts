@@ -121,7 +121,8 @@ export async function registerAutonomousPlan(repos: ControlPlaneRepositories, wo
 }
 
 /** Candidate assertions are usable only after matching the accepted Scout's actual vaulted observation. */
-async function scoutSources(runtime: FleetRuntime, item: WorkItem, knownScouts?: readonly ScoutResult[]): Promise<ObservedResearchRoute[]> {
+async function scoutSources(runtime: FleetRuntime, item: WorkItem, knownScouts?: readonly ScoutResult[],
+  onMissingArtifact?: (artifactId: string) => void): Promise<ObservedResearchRoute[]> {
   const plan = item.autonomousPlan!;
   const out: ObservedResearchRoute[] = [];
   for (const scout of knownScouts ?? await runtime.repos.scoutResults.readAll()) {
@@ -130,7 +131,14 @@ async function scoutSources(runtime: FleetRuntime, item: WorkItem, knownScouts?:
     if (attempt.outcome !== "COMPLETED") continue;
     for (const candidate of reusableScoutCandidates(scout)) {
       for (const id of candidate.evidenceArtifactIds) {
-        const evidence = evidenceProjection(await runtime.readEvidence(id));
+        let input: Awaited<ReturnType<FleetRuntime["readEvidence"]>>;
+        try { input = await runtime.readEvidence(id); }
+        catch (error) {
+          if (!(error instanceof Error) || !/^WORKER_ARTIFACT_MISSING_OR_PARTIAL(?::|$)/.test(error.message)) throw error;
+          onMissingArtifact?.(id);
+          continue;
+        }
+        const evidence = evidenceProjection(input);
         const start = evidence.text.indexOf(candidate.url);
         const direct = evidence.canonicalUrl === candidate.url;
         if (start < 0 && !direct) continue;
@@ -158,14 +166,17 @@ async function scoutSources(runtime: FleetRuntime, item: WorkItem, knownScouts?:
 
 /** Typed state chooses one next operation. Absence is never inferred from an empty list. */
 export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRuntime, workItemId: string, knownItems?: readonly WorkItem[],
-  knownHistory?: { readonly attempts: readonly Attempt[]; readonly scouts: readonly ScoutResult[]; readonly routeTasks: readonly RouteTask[] }): Promise<AutonomousDecision> {
+  knownHistory?: { readonly attempts: readonly Attempt[]; readonly scouts: readonly ScoutResult[]; readonly routeTasks: readonly RouteTask[];
+    readonly onMissingArtifact?: (artifactId: string) => void }): Promise<AutonomousDecision> {
   const repos = runtime.repos;
   // The coordinator already took a consistent candidate snapshot. Re-reading
   // each item is a costly point request for every owed subject and can consume
   // the entire runner selection wall before a held continuation is admitted.
   const item = knownItems?.find(row => row.id === workItemId) ?? (await repos.workItems.mustRead(workItemId)).value;
   const plan = item.autonomousPlan;
-  const decision = (action:AutonomousDecision["action"],reason:string,task:RouteTask|null=null):AutonomousDecision => ({workItemId,action,reason,task});
+  const missingArtifacts = new Set<string>();
+  const decision = (action:AutonomousDecision["action"],reason:string,task:RouteTask|null=null):AutonomousDecision => ({workItemId,action,task,
+    reason: missingArtifacts.size ? `${reason}; WORKER_ARTIFACT_MISSING_OR_PARTIAL:${[...missingArtifacts].join(",")}; these source references remain unresolved` : reason });
   if (!plan) return decision("BLOCKED","No versioned autonomous work instructions are registered for this obligation.");
   type LinkedItem = WorkItem & { planRepair?: { parentWorkItemId: string; authority: string }; planRepairObservation?: { successorWorkItemId: string | null } };
   const children = (knownItems ?? (await repos.workItems.list()).map(row => row.value)).filter(row => (row as LinkedItem).planRepair?.parentWorkItemId === item.id);
@@ -205,7 +216,11 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     }
     return admission.due ? decision("WORKER",admission.reason,task) : null;
   };
-  const sources = [...plan.sources,...await scoutSources(runtime,item,knownHistory?.scouts)];
+  const sources = [...plan.sources,...await scoutSources(runtime,item,knownHistory?.scouts, id => {
+    if (missingArtifacts.has(id)) return;
+    missingArtifacts.add(id);
+    knownHistory?.onMissingArtifact?.(id);
+  })];
   const acquisitions: AcquirerTaskSpec[] = [...plan.acquisition];
   for (const source of sources) if (!acquisitions.some(a=>a.route.id===source.id && a.route.url===source.url)) acquisitions.push({route:source,held:[]});
   const scoutOperation = async (novelty: boolean): Promise<AutonomousDecision> => {
@@ -522,16 +537,20 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
       try {
         d=await nextAutonomousOperation(runtime,id,knownItems,{
           attempts:attemptsByWork.get(id)??[],scouts:scoutsByWork.get(id)??[],routeTasks:routeTasksByWork.get(id)??[],
+          onMissingArtifact: artifactId => deferred.push({workItemId:id,reason:"WORKER_ARTIFACT_MISSING_OR_PARTIAL",
+            detail:`${artifactId}; this source reference remains unresolved; other eligible work continues`}),
         });
       } catch (error) {
         // Only a bounded, pre-dispatch selection can be deferred as unpaid
         // work. A timeout after dispatch may carry unknown provider exposure
         // and must reach the ordinary durable attempt/hold failure path.
-        if (isControlPlaneRequestTimeout(error) && error.kind === "DEADLINE") {
+        if (error instanceof Error && /^WORKER_ARTIFACT_MISSING_OR_PARTIAL(?::|$)/.test(error.message)) {
+          d = {workItemId:id,action:"BLOCKED",task:null,reason:`${error.message}; source reference remains unresolved`};
+          deferred.push({workItemId:id,reason:"WORKER_ARTIFACT_MISSING_OR_PARTIAL",detail:d.reason});
+        } else if (isControlPlaneRequestTimeout(error) && error.kind === "DEADLINE") {
           deferred.push({workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"the bounded cycle ended during repository selection; this work remains owed"});
           break;
-        }
-        throw error;
+        } else throw error;
       }
       decisions.push(d);
       if (!d.task || !["WORKER","SCOUT"].includes(d.action)) continue;

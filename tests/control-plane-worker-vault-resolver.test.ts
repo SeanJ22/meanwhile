@@ -121,9 +121,9 @@ test("a partial capture is never read; a complete record of the same bytes is", 
   assert.equal(input.attemptId, second.attemptId);
   await assert.rejects(
     workerVaultResolver(repos([record(first, true), record(second, true)]), store, PROJECT)(first.id),
-    /WORKER_ARTIFACT_MISSING_OR_PARTIAL/,
+    { message: `WORKER_ARTIFACT_MISSING_OR_PARTIAL:${first.id}` },
   );
-  await assert.rejects(workerVaultResolver(repos([]), store, PROJECT)(first.id), /WORKER_ARTIFACT_MISSING_OR_PARTIAL/);
+  await assert.rejects(workerVaultResolver(repos([]), store, PROJECT)(first.id), { message: `WORKER_ARTIFACT_MISSING_OR_PARTIAL:${first.id}` });
 });
 
 test("only an acquiring role may hand bytes to a worker, and a refusal still names why", async (t) => {

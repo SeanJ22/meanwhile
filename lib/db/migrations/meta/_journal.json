@@ -253,6 +253,13 @@
       "when": 1790899200000,
       "tag": "0036_tester_history",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1790899200001,
+      "tag": "0037_reader_capture_alarm",
+      "breakpoints": true
     }
   ]
 }

@@ -58,7 +58,8 @@ export type SoldStore =
    * failures are silent is the class RULING 25 exists about, whatever the row
    * is worth to a buyer.
    */
-  | "demand_signals";
+  | "demand_signals"
+  | "reader_events";
 
 /** The database's own words are useful; a parameter echo is not. Capped. */
 const MESSAGE_CAP = 400;

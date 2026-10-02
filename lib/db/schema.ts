@@ -865,7 +865,7 @@ export const writeAlarm = pgTable("write_alarm", {
   /** The database's own words, truncated at the call site. Never a value. */
   errorMessage: text("error_message"),
 }, (t) => [
-  check("write_alarm_store_known", sql`${t.store} IN ('search_log', 'reactions')`),
+    check("write_alarm_store_known", sql`${t.store} IN ('search_log', 'reactions', 'speak_your_mind', 'demand_signals', 'reader_events')`),
   index("write_alarm_raised_at_idx").on(t.raisedAt),
 ]);
 

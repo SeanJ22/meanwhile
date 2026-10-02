@@ -582,18 +582,8 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
     },
   },
   /**
-   * **OWN-Q6 (2026-08-31) — THE DEMAND SIGNAL.**
-   *
-   * A reader tapping *"Want us to get this info sooner?"*. It is a
-   * READER_COLLECTION store by construction — a reader wrote it — and it is
-   * the thinnest one in the product: nine columns, no prose, and **no digest
-   * column at all**.
-   *
-   * The absent digest is the load-bearing part. Every other reader store
-   * carries a namespaced continuity hash so a browser's rows relate to each
-   * other; the owner's instruction on this feature was no identity, so there
-   * is nothing here to relate anything. A reader who taps twice writes two
-   * unrelated rows.
+   * Retained legacy demand history. New taps go through the shared event
+   * store with their context and scrubbed text (Sean, October 1, 2026).
    */
   demand_signals: {
     storeClass: "READER_COLLECTION",

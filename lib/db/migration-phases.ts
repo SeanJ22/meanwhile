@@ -418,6 +418,7 @@ export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   },
   "0034_reader_events": { phase: "expand", why: "New aggregate and anonymous membership tables; existing capture stores are unaffected." },
   "0036_tester_history": { phase: "contract", why: "Retains pre-October-1 history as TESTER and separates event keys by collection class. Apply after the class-aware writer deploys, with capture still off until application; the older writer's conflict key is replaced." },
+  "0037_reader_capture_alarm": { phase: "contract", why: "Replaces the existing alarm constraint with its wider supported capture-family list. Existing labels remain accepted; apply after deployment so event capture failures can raise the existing alarm." },
   "0033_feedback_context": {
     phase: "expand",
     why: "Adds nullable report context columns. Older feedback writers keep working and existing reports retain unknown context.",

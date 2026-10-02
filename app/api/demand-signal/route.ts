@@ -99,6 +99,15 @@ export async function POST(request: Request) {
     signal?: unknown;
     lat?: unknown;
     lng?: unknown;
+    batchId?: unknown;
+    eventId?: unknown;
+    continuityKey?: unknown;
+    occurredAt?: unknown;
+    zip?: unknown;
+    question?: unknown;
+    durationMs?: unknown;
+    residencyRelation?: unknown;
+    tester?: unknown;
   };
 
   if (!isSubjectType(submission.subjectType)) {
@@ -110,6 +119,20 @@ export async function POST(request: Request) {
   if (!isPlausibleSubjectId(submission.subjectId)) {
     return Response.json({ error: "malformed subjectId" }, { status: 400 });
   }
+  for (const key of ["batchId", "eventId", "continuityKey"] as const) {
+    const value = submission[key];
+    if (value !== undefined && (typeof value !== "string" || !/^[a-zA-Z0-9/_.:#=+-]{1,200}$/.test(value))) {
+      return Response.json({ error: `malformed ${key}` }, { status: 400 });
+    }
+  }
+  if ((submission.batchId || submission.eventId) && !submission.occurredAt) return Response.json({ error: "retry ids require occurredAt" }, { status: 400 });
+  if (submission.occurredAt !== undefined && (typeof submission.occurredAt !== "string" || !Number.isFinite(Date.parse(submission.occurredAt)))) {
+    return Response.json({ error: "malformed occurredAt" }, { status: 400 });
+  }
+  if (submission.zip != null && (typeof submission.zip !== "string" || !/^\d{5}$/.test(submission.zip))) return Response.json({ error: "malformed zip" }, { status: 400 });
+  if (submission.question != null && typeof submission.question !== "string") return Response.json({ error: "malformed question" }, { status: 400 });
+  if (submission.durationMs != null && (typeof submission.durationMs !== "number" || !Number.isFinite(submission.durationMs) || submission.durationMs < 0)) return Response.json({ error: "malformed durationMs" }, { status: 400 });
+  if (submission.residencyRelation !== undefined && !["HOME", "BROWSING", "MOVING", "UNKNOWN"].includes(String(submission.residencyRelation))) return Response.json({ error: "malformed residencyRelation" }, { status: 400 });
 
   /*
    * The subject must exist in its canonical production authority. A missing store
@@ -180,16 +203,21 @@ export async function POST(request: Request) {
       signal: submission.signal,
       ocdIds,
       marker: markerFromRequest(request),
+      batchId: submission.batchId as string | undefined,
+      eventId: submission.eventId as string | undefined,
+      continuityKey: submission.continuityKey as string | undefined,
+      occurredAt: submission.occurredAt as string | undefined,
+      zip: submission.zip as string | null | undefined,
+      question: submission.question as string | null | undefined,
+      durationMs: submission.durationMs as number | null | undefined,
+      residencyRelation: submission.residencyRelation as "HOME" | "BROWSING" | "MOVING" | "UNKNOWN" | undefined,
+      tester: submission.tester === true,
     });
-    /*
-     * 204 stored, 202 accepted-with-no-store. The client's confirmation says
-     * the same thing either way — it confirms the ASK, which is true in both
-     * cases — and it never reports a total, because there is no read path.
-     */
-    return new Response(null, { status: stored ? 204 : 202 });
+    return stored ? new Response(null, { status: 204 })
+      : Response.json({ error: "reader event store unavailable" }, { status: 503 });
   } catch (error) {
     console.error("demand signal write failed", error);
-    await raiseWriteAlarm("demand_signals", error);
+    await raiseWriteAlarm("reader_events", error);
     return Response.json({ error: "could not store the signal" }, { status: 500 });
   }
 }

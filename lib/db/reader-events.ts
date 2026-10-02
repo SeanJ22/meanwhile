@@ -20,6 +20,7 @@ export interface ReaderEventInput {
   readonly occurredAt: string;
   readonly zip?: string | null;
   readonly district?: string | null;
+  readonly districtIds?: readonly string[];
   readonly residencyRelation?: "HOME" | "BROWSING" | "MOVING" | "UNKNOWN";
   readonly cardId?: string | null;
   readonly cardKind?: string | null;
@@ -68,6 +69,7 @@ export function prepareReaderEventBatch(input: ReaderEventBatchInput) {
     if (!READER_EVENT_TYPES.includes(event.type) || !Number.isFinite(Date.parse(event.occurredAt))) throw new Error("READER_EVENT_INVALID_TIME_OR_TYPE");
     const zip = event.zip == null ? null : /^\d{5}$/.test(event.zip) ? event.zip : (() => { throw new Error("READER_EVENT_INVALID_ZIP"); })();
     const district = event.district == null ? null : stableId(event.district, "DISTRICT");
+    const districtIds = [...new Set([...(event.districtIds ?? []), ...(district ? [district] : [])])].map(id => stableId(id, "DISTRICT"));
     const text = event.question == null ? null : redactSelfDisclosure(event.question.slice(0, 4000));
     const pick = event.ballotPick == null ? null : {
       contestId: stableId(event.ballotPick.contestId, "CONTEST"),
@@ -79,7 +81,7 @@ export function prepareReaderEventBatch(input: ReaderEventBatchInput) {
     const occurredAt = new Date(event.occurredAt).toISOString();
     const runClass: ReaderEventRunClass = event.tester === true || occurredAt < READER_TESTER_BEFORE ? "TESTER" : input.runClass ?? "ORGANIC";
     return {
-      id: event.id, type: event.type, occurredAt, zip, district, runClass, tester: runClass !== "ORGANIC",
+      id: event.id, type: event.type, occurredAt, zip, district, districtIds, runClass, tester: runClass !== "ORGANIC",
       residencyRelation: event.residencyRelation ?? "UNKNOWN",
       cardId: event.cardId == null ? null : stableId(event.cardId, "CARD"),
       cardKind: event.cardKind == null ? null : stableId(event.cardKind, "CARD_KIND"),
@@ -100,7 +102,8 @@ export function prepareReaderEventBatch(input: ReaderEventBatchInput) {
   const aggregates = new Map<string, Aggregate>();
   for (const event of events) {
     const day = event.occurredAt.slice(0, 10);
-    const scopes = new Map([[event.zip ?? "", event.district ?? ""], [event.zip ?? "", ""], ["", event.district ?? ""], ["", ""]].map(scope => [JSON.stringify(scope), scope]));
+    const scopes = new Map([[event.zip ?? "", ""], ["", ""],
+      ...event.districtIds.flatMap(id => [[event.zip ?? "", id], ["", id]])].map(scope => [JSON.stringify(scope), scope]));
     for (const [period, start] of [["DAY", day], ["WEEK", eventWeek(day)]] as const) for (const [zip, district] of scopes.values()) {
       for (const [topic, type] of [[event.topic, event.type], [event.topic, "*"], ["*", event.type], ["*", "*"]]) {
         const row: Aggregate = { period, start, zip: zip!, district: district!, topic: topic!, type: type!, runClass: event.runClass, events: 1 };

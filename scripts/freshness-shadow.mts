@@ -11,7 +11,7 @@ import { persistVerifiedPublicationAnchors, selectStandingLineages, standingLine
 import { browseWithPlaywright } from "./scout-browse.mts";
 import { autonomousCycleAllowed, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { MODELS } from "../lib/models.ts";
-import { researchWorkerCapacity } from "../lib/control-plane/scheduler/research-policy.ts";
+import { paidWorkerSlots, researchPaidWorkerCapacity } from "../lib/control-plane/scheduler/research-policy.ts";
 import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { isRetiredRoutineMeetingAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
@@ -299,6 +299,7 @@ import {
 import { researchDigestLines } from "../lib/control-plane/research-digest.ts";
 import { PILOT_ZIPS } from "../lib/health/owner-corpus-compile.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
+import type { SpendHold } from "../lib/control-plane/budget.ts";
 import type { AttemptCost } from "../lib/control-plane/attempt.ts";
 import { meteredCostFields, priceMeteredUsage, readMeteredUsage } from "../lib/control-plane/model-cost.ts";
 import { recordCost } from "../lib/control-plane/repository/coordinator.ts";
@@ -1507,6 +1508,35 @@ const effectiveCeilingUsd = rollingCeiling.rollingCeilingUsd;
  * the runner itself is paused, so this cycle's paid lane stays closed even when
  * the read above succeeds.
  */
+let costLedger: CostEntry[] = [];
+let historicalSpendHolds: readonly SpendHold[] = [];
+let ledgerUnreadable: string | null = null;
+try {
+  // readSince already pages under the repository's PAGE request bound.
+  // Only transient failures are retried, under the existing backoff and circuit.
+  costLedger = [...await retryStartupRead(
+    () => repos.costs.readSince(new Date(Date.parse(NOW) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
+    () => null, startupReadRetry)];
+  if (researchSpendInWindow(costLedger, NOW).unmeasured > 0) {
+    const heldBudget = await retryStartupRead(() => repos.budget.read(), () => null, startupReadRetry);
+    historicalSpendHolds = Object.values(heldBudget.value.spendHolds ?? {});
+  }
+} catch (error) {
+  ledgerUnreadable = error instanceof Error ? error.message : String(error);
+  runtimeConditions.push(`the cost ledger could not be read (${ledgerUnreadable}); paid model work waits while held and plain-code work continue`);
+}
+const spendWindow = researchSpendInWindow(costLedger, NOW, RESEARCH_BOUNDS.windowHours, historicalSpendHolds);
+const paidSpendHold = ledgerUnreadable !== null
+  ? `the cost ledger could not be read (${ledgerUnreadable})`
+  : spendWindow.windowUsd === null
+    ? `model spend includes ${spendWindow.unmeasured} unmeasured row(s) without complete usage or an existing worst-case reservation; known model spend is $${spendWindow.knownUsd.toFixed(6)}`
+    : !ceilingPermits(spendWindow.windowUsd, effectiveCeilingUsd).permits
+      ? `the owner's $${effectiveCeilingUsd.toFixed(2)} model ceiling is reached`
+      : null;
+if (paidSpendHold !== null && ledgerUnreadable === null) {
+  runtimeConditions.push(`${paidSpendHold}; paid model work waits while held and plain-code work continue`);
+}
+if (paidSpendHold !== null) console.log(`  Workers: ${paidSpendHold}; paid model work waits while held and plain-code work continue`);
 const unreadableControls: string[] = [
   ...(intentLogUnreadable === null ? [] : [`the owner's research intents could not be read (${intentLogUnreadable})`]),
   ...(ownerIntentsUnreadableByRunner
@@ -1532,7 +1562,8 @@ const laneClosure = modelLaneClosure({
   runnerPaused: intents.runnerPause.paused,
   runnerPauseIntentId: intents.runnerPause.intent?.intentId ?? null,
   unreadableControls,
-});
+}) ?? (paidSpendHold === null ? null : { code: "LANE_DISABLED" as const,
+  reason: `${paidSpendHold}; paid model work waits while held and plain-code work continue` });
 const laneDisabledCode = laneClosure?.code ?? null;
 const laneDisabledReason = laneClosure?.reason ?? null;
 const modelLaneEnabled = laneClosure === null;
@@ -1556,17 +1587,9 @@ const honoredLaneIntents: string[] = [];
   }
 }
 
-let costLedger: CostEntry[] = [];
-let ledgerUnreadable: string | null = null;
-try {
-  costLedger = [...(await repos.costs.readSince(new Date(Date.parse(NOW) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()))];
-} catch (error) {
-  ledgerUnreadable = error instanceof Error ? error.message : String(error);
-  runtimeConditions.push(`the cost ledger could not be read (${ledgerUnreadable}); the rolling ceiling cannot be enforced, so Scout work is deferred`);
-}
-const spendWindow = researchSpendInWindow(costLedger, NOW);
-const workerCapacity = researchWorkerCapacity({ readyWork: dueThisCycle.length,
-  availableUsd: ledgerUnreadable !== null || spendWindow.windowUsd === null ? 0 : Math.max(0, effectiveCeilingUsd - spendWindow.windowUsd),
+const workerCapacity = researchPaidWorkerCapacity({ readyWork: dueThisCycle.length,
+  modelEnabled: modelLaneEnabled,
+  spentUsd: ledgerUnreadable === null ? spendWindow.windowUsd : null, ceilingUsd: effectiveCeilingUsd,
   requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
   ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}) });
 let finalSpendWindow: ReturnType<typeof researchSpendInWindow> | null = null;
@@ -1592,6 +1615,7 @@ const fleetSafety = new FleetSafetyController({
   websiteSize,
   now: NOW,
   costs: costLedger,
+  spendHolds: historicalSpendHolds,
   costLedgerReadable: ledgerUnreadable === null,
   paused: intents.runnerPause.paused,
   /* The second lock: while the lane is closed for any reason, no model request is reserved at all. */
@@ -1902,17 +1926,32 @@ process.on("message", message => {
     console.log("  runtime release requested: current wave finishes normally; no new autonomous wave will start");
   }
 });
-const workerSlots = workerProcessSlots(() => {
+let paidCapacityHoldSaid = false;
+const paidWorkerCapacity = (readyWork?: number) => {
   const limits = providerQueue.limits(MODELS.haiku.model);
-  const spent = fleetSafety.snapshot(nowIso()).rolling24Hours.modelUsd;
-  return Math.max(1, researchWorkerCapacity({
-    availableUsd: spent === null ? 0 : Math.max(0, effectiveCeilingUsd - spent),
+  const spent = fleetSafety.admissionSpendUsd();
+  const providerHeld = fleetSafety.snapshot(nowIso()).providerCircuits.some(circuit => circuit.provider === "anthropic");
+  const capacity = researchPaidWorkerCapacity({
+    modelEnabled: modelLaneEnabled && !providerHeld,
+    spentUsd: spent, ceilingUsd: effectiveCeilingUsd,
+    ...(readyWork === undefined ? {} : { readyWork }),
     requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
     requestsPerMinute: limits?.requestsPerMinute ?? (process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) : undefined),
     inputTokensPerMinute: limits?.inputTokensPerMinute ?? undefined,
     outputTokensPerMinute: limits?.outputTokensPerMinute ?? undefined,
-    inputTokensPerRequest: 8192, outputTokensPerRequest: RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn }));
-});
+    inputTokensPerRequest: 8192, outputTokensPerRequest: RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn });
+  if (modelLaneEnabled && capacity === 0 && !paidCapacityHoldSaid) {
+    paidCapacityHoldSaid = true;
+    const reason = `paid model capacity is closed by ${providerHeld ? "the Anthropic provider circuit" : "the remaining budget or provider rate limits"}; held and plain-code work continue`;
+    runtimeConditions.push(reason);
+    console.log(`  Workers: ${reason}`);
+  }
+  return capacity;
+};
+// Paid admission happens before handing out a Scout. Held evidence and ordinary
+// code can still use the existing memory slots while the paid lane is closed.
+const workerSlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER);
+const paidScoutSlots = paidWorkerSlots(workerSlots, paidWorkerCapacity);
 // Hand out durable leases before unrelated histories or parent execution.
 const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
   runnerPaused: intents.runnerPause.paused });
@@ -2438,7 +2477,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
       sourceRoute:registry.routeFor(scheduled.obligation.id),
       toolkitFor: buildScoutToolkit,
       executorFactory: deps => scoutProcessExecutor({ root: ROOT, postgres: wantsPostgres,
-        fileStoreRoot: CONTROL_PLANE_ROOT, slots: workerSlots,
+        fileStoreRoot: CONTROL_PLANE_ROOT, slots: paidScoutSlots,
         search: (lifetimeHuntWork(scheduled.obligation.id) ? scoutSearchLifetime : scoutSearch) ?? undefined,
         onStarted: pid => console.log(`  Scout lease worker process: pid ${pid}; ${scheduled.obligation.id}`), deps }),
       /* MW-021: every request is checked against what the job holds on its Send and area budgets before the Fleet guard reserves it. */
@@ -2549,6 +2588,9 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         await repos.scoutResults.append(amended.obligationId, amended.attemptId, amended, nowIso());
         scoutResultsThisCycle.push(amended);
         priorScoutResults.set(amended.obligationId,[...(priorScoutResults.get(amended.obligationId)??[]),amended]);
+        const outcome = amended.refusal !== null ? "REFUSED"
+          : amended.outcome === "EVIDENCE_FOUND" ? "CAPTURED" : "NOTHING_FOUND";
+        console.log(`  Scout done: ${amended.obligationId}; ${outcome}; code ${amended.refusal?.map(issue => issue.code).join(",") || amended.outcome}; usd ${amended.usd === null ? "unmeasured" : amended.usd.toFixed(6)}`);
         return amended;
       },
     })
@@ -2655,7 +2697,7 @@ const cycle = await runCycle({
   routeTaskFor: (id) => occurrenceByObligation.get(id)?.routeTaskId ?? null,
   maturity,
   executor: executorFor,
-  workerCapacity: Math.max(1, workerCapacity),
+  workerCapacity: Math.max(1, dueDeterministicRows.length),
   placeComparator: async () => {
     await refreshPlaceOrder();
     return (a, b) => (placementRank(a.obligation.id) ?? Infinity) - (placementRank(b.obligation.id) ?? Infinity);
@@ -2695,7 +2737,9 @@ const cycle = await runCycle({
     /* The same canonical band comparator used for the visible/opening queue reaches the actual Scout pool. */
     compareModelRows: compareScoutRows,
     admitScout: (row) => {
+      if (heldScoutFor(row) !== null) return { admit: true };
       if (!modelLaneEnabled) return { admit: false, code: laneDisabledCode ?? "LANE_DISABLED", why: laneDisabledReason ?? "lane closed" };
+      if (paidWorkerCapacity() === 0) return { admit: false, code: "CEILING", why: "paid model capacity is closed; held and plain-code work continue" };
       /* MW-028: a materialized meetings-discovery row goes to a paid Scout only after the free walk read the site and found nothing. */
       const freeWalkFirst = paidDiscoveryHold(row.obligation.id, freeWalks);
       if (freeWalkFirst !== null) return { admit: false, code: freeWalkFirst.code, why: freeWalkFirst.why };
@@ -2878,7 +2922,7 @@ console.log(
 // Worker processes pull the existing ledger. Their results are joined before
 // finalization, alongside the independent discovery/publication passes.
 async function makeAutonomousFleet() {
-  const fleetTransport = modelLaneEnabled ? workerMessages : null;
+  const fleetTransport = paidWorkerCapacity() > 0 ? workerMessages : null;
   return autonomousStandingRuntime({ root: ROOT, repos, now: nowIso, environment: process.env,
     ...(scoutSearch ? { search: scoutSearch } : {}),
     ...(scoutSearchLifetime ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime : scoutSearch ?? undefined } : {}),
@@ -2898,18 +2942,14 @@ async function runAutonomousWave() {
   const planned = await runAutonomousCoordinator(fleet, { planOnly: true,
     prioritizedInstructions: placeOrder.map((receiptId, priority) => ({ receiptId, priority })) });
   const taskIds = [...new Set([...held.map(task => task.id),
-    ...planned.decisions.filter(row => row.task && ["SCOUT", "WORKER"].includes(row.action)).map(row => row.task!.id)])];
-  const availableUsd = Math.max(0, effectiveCeilingUsd - (spendWindow.windowUsd ?? effectiveCeilingUsd));
+    ...planned.decisions.filter(row => row.task && (row.action === "WORKER" ||
+      (row.action === "SCOUT" && paidWorkerCapacity() > 0))).map(row => row.task!.id)])];
   const dispatches = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
     slots: workerSlots,
-    config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: modelLaneEnabled,
+    config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidWorkerCapacity() > 0,
       searchEnabled: scoutSearch !== null, ceilingUsd: effectiveCeilingUsd, fundedSubjects: [...lifetimeHuntSubjects] },
-    capacity: () => modelLaneEnabled ? researchWorkerCapacity({ readyWork: taskIds.length, availableUsd,
-      requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
-      requestsPerMinute: providerQueue.limits(MODELS.haiku.model)?.requestsPerMinute ?? (process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) : undefined),
-      inputTokensPerMinute: providerQueue.limits(MODELS.haiku.model)?.inputTokensPerMinute ?? undefined,
-      outputTokensPerMinute: providerQueue.limits(MODELS.haiku.model)?.outputTokensPerMinute ?? undefined,
-      inputTokensPerRequest: 8192, outputTokensPerRequest: RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn }) : taskIds.length,
+    capacity: () => paidWorkerCapacity(taskIds.length) > 0
+      ? Math.min(taskIds.length, held.length + paidWorkerCapacity(taskIds.length)) : taskIds.length,
     transportFor: (jurisdiction, taskId) => async request => {
       const task = (await repos.routeTasks.mustRead(taskId)).value;
       const batching = task.workerTask?.role === "ADVERSARIAL_AUDITOR" ? batchEnabledFor("background-worker-audit")
@@ -2958,9 +2998,18 @@ async function runAutonomousWave() {
         const own = item.autonomousPlan?.ownerInstructions?.map(receipt => placeOrder.indexOf(receipt)).filter(at => at >= 0) ?? [];
         return Math.min(placeRankFor(item.subject) ?? Infinity, ...own);
       };
-      return ids.map((id, index) => ({ id, index })).sort((a, b) => rank(a.index) - rank(b.index)).map(row => row.id);
+      const paidOpen = paidWorkerCapacity() > 0;
+      return ids.map((id, index) => ({ id, index }))
+        .filter(row => paidOpen || !["SCOUT", "DETECTIVE"].includes(tasks[row.index]?.value.workerTask?.role ?? ""))
+        .sort((a, b) => rank(a.index) - rank(b.index)).map(row => row.id);
     },
-    onDispatched: () => { placeOrderDirty = true; },
+    onDispatched: result => {
+      placeOrderDirty = true;
+      if (result.worker?.role !== "SCOUT") return;
+      const outcome = result.disposition === "INGESTED" ? "CAPTURED"
+        : result.disposition === "WALKED_NO_YIELD" || result.disposition === "DISCOVERED" ? "NOTHING_FOUND" : "REFUSED";
+      console.log(`  Scout done: ${result.obligationId}; ${outcome}; code ${result.disposition ?? result.outcome ?? "NOT_RUN"}; usd ${result.cost?.usd === null || result.cost?.usd === undefined ? "unmeasured" : result.cost.usd.toFixed(6)}`);
+    },
     onStarted: pid => console.log(`  lease worker process: pid ${pid}; pulls existing RouteTasks`) });
   const scouts = dispatches.filter(row => row.attemptId && row.worker?.role === "SCOUT").length;
   return { ...planned, dispatches, scoutsAdmitted: scouts, scoutsLimitedAdmitted: scouts };
@@ -3413,7 +3462,7 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
     return null;
   }
   const at = nowIso();
-  finalSpendWindow = researchSpendInWindow(costsNow, at);
+  finalSpendWindow = researchSpendInWindow(costsNow, at, RESEARCH_BOUNDS.windowHours, historicalSpendHolds);
   finalSpendAsOf = at;
   const windowCycles: { startedAt: string; deterministic: number; model: number }[] = [];
   try {

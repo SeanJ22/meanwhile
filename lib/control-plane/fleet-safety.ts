@@ -7,6 +7,8 @@
  * concurrent model requests until their provider-reported cost is persisted.
  */
 import type { CostEntry } from "./cost.ts";
+import type { SpendHold } from "./budget.ts";
+import { canonicalModelId } from "../models.ts";
 import { CACHE_RATE_MULTIPLIERS, rateFor, priceMeteredUsage, readMeteredUsage } from "./model-cost.ts";
 import type { ModelRequest, ModelResponse, ModelTransport, ScoutEscalationAdmission, ScoutEscalationRequest } from "./scheduler/scout-executor.ts";
 import { ModelTransportError } from "./scheduler/scout-executor.ts";
@@ -125,40 +127,115 @@ export function operationalNightAt(nowIso: string): OperationalNight {
 }
 export function scheduledBlackoutAt(_nowIso: string): boolean { return false; }
 
-/**
- * Every token-bearing or dollar-bearing entry is model-backed, irrespective
- * of role. SCOUT is intrinsically model-backed, so a Scout row whose provider
- * omitted both usage and dollars is still counted as unmeasured rather than
- * disappearing from the denominator.
- */
+function amount(value: number | null | undefined): value is number {
+  return typeof value === "number" && Number.isFinite(value) && value >= 0;
+}
+
+/** Recover dollars from recorded identity and billed quantities. Missing cache
+ * detail is bounded at the dearest cache-write rate, never guessed as a hit. */
+function recordedModelPrice(model: string | null | undefined, cost: CostEntry["cost"]): { usd: number; measured: boolean } | null {
+  if (amount(cost.usd)) return { usd: cost.usd, measured: true };
+  if (!model || rateFor(canonicalModelId(model)) === null || !amount(cost.outputTokens)) return null;
+  const cacheFields = [cost.uncachedInputTokens, cost.cacheReadInputTokens, cost.cacheCreationInputTokens];
+  const split = [cost.cacheCreation5mInputTokens, cost.cacheCreation1hInputTokens];
+  const detailed = cacheFields.every(amount) &&
+    (cost.inputTokens == null || (amount(cost.inputTokens) &&
+      Math.abs(cost.inputTokens - cacheFields.reduce((n, value) => n + (value ?? 0), 0)) <= 1e-9)) &&
+    (split.every(value => value === null || value === undefined) ||
+      (split.every(amount) && split[0]! + split[1]! === cost.cacheCreationInputTokens));
+  if (!detailed && !amount(cost.inputTokens)) return null;
+  const priced = priceMeteredUsage(canonicalModelId(model), detailed ? {
+    uncachedInputTokens: cost.uncachedInputTokens, outputTokens: cost.outputTokens,
+    cacheReadInputTokens: cost.cacheReadInputTokens, cacheCreationInputTokens: cost.cacheCreationInputTokens,
+    cacheCreation5mInputTokens: cost.cacheCreation5mInputTokens ?? null,
+    cacheCreation1hInputTokens: cost.cacheCreation1hInputTokens ?? null, batch: cost.batch === true,
+  } : {
+    uncachedInputTokens: 0, outputTokens: cost.outputTokens, cacheReadInputTokens: 0,
+    cacheCreationInputTokens: cost.inputTokens, cacheCreation5mInputTokens: 0,
+    cacheCreation1hInputTokens: cost.inputTokens, batch: cost.batch === true,
+  }, "1h");
+  // An aggregate write without a TTL split is priced at 1h as a bound.
+  return priced.usd === null ? null : { usd: priced.usd, measured: detailed &&
+    (cost.cacheCreationInputTokens === 0 || split.every(amount)) };
+}
+
+function entryModelPrice(entry: CostEntry): { usd: number | null; knownUsd: number; measured: boolean } {
+  if (amount(entry.cost.usd)) return { usd: entry.cost.usd, knownUsd: entry.cost.usd, measured: true };
+  if (entry.byModel?.length) {
+    // A split must cover the recorded aggregate quantities. A partial split
+    // cannot make the missing part of an attempt free.
+    const shares = entry.byModel;
+    for (const key of ["inputTokens", "outputTokens"] as const) {
+      if (amount(entry.cost[key]) && (!shares.every(share => amount(share[key])) ||
+        shares.reduce((n, share) => n + share[key]!, 0) !== entry.cost[key])) return { usd: null, knownUsd: 0, measured: false };
+    }
+    const prices = shares.map(share => recordedModelPrice(share.model, { ...entry.cost, ...share }));
+    return { usd: prices.some(price => price === null) ? null : prices.reduce((n, price) => n + price!.usd, 0),
+      knownUsd: prices.reduce((n, price) => n + (price?.measured ? price.usd : 0), 0),
+      measured: prices.every(price => price?.measured === true) };
+  }
+  const price = recordedModelPrice(entry.model ?? (entry.tier === "none" ? null : entry.tier), entry.cost);
+  return { usd: price?.usd ?? null, knownUsd: price?.measured ? price.usd : 0, measured: price?.measured === true };
+}
+
+/** Every recorded model role/identity/usage is accounted for, including a
+ * tokenless Scout. Known prices remain visible beside unbounded historical
+ * charges; only exact model-backed job identities may consume a hold. */
 export function aggregateModelSpend(
   costs: readonly CostEntry[],
   since: string,
   until: string,
-): { readonly usd: number | null; readonly measured: number; readonly unmeasured: number } {
+  spendHolds: readonly SpendHold[] = [],
+): { readonly usd: number | null; readonly knownUsd: number; readonly measured: number; readonly unmeasured: number } {
   let usd = 0;
+  let knownUsd = 0;
   let measured = 0;
   let unmeasured = 0;
+  const jobs = new Map<string, { usd: number; unknown: boolean }>();
+  const start = Date.parse(since), end = Date.parse(until);
   for (const entry of costs) {
     // Search invoices are tracked separately; the Anthropic token budget must
     // never consume Brave/Exa charges merely because they carry a dollar value.
     if (entry.role === "DISCOVERY_SEARCH" || entry.source === "api.search.brave.com" || entry.source === "api.exa.ai") continue;
     const isModelBacked =
       entry.role === "SCOUT" ||
-      entry.cost.inputTokens !== null ||
-      entry.cost.outputTokens !== null ||
+      !!entry.model || (entry.tier !== undefined && entry.tier !== null && entry.tier !== "none") ||
+      entry.cost.inputTokens != null ||
+      entry.cost.outputTokens != null ||
         entry.source === "api.anthropic.com" ||
         entry.byModel?.some((part) => part.model.startsWith("claude-"));
     if (!isModelBacked) continue;
     const at = Date.parse(entry.recordedAt);
-    if (at < Date.parse(since) || at > Date.parse(until)) continue;
-    if (entry.cost.usd === null || entry.cost.usd === undefined || !Number.isFinite(entry.cost.usd)) unmeasured += 1;
-    else {
-      measured += 1;
-      usd += entry.cost.usd;
-    }
+    if (!(at >= start && at <= end)) continue;
+    const price = entryModelPrice(entry);
+    const job = jobs.get(entry.attemptId) ?? { usd: 0, unknown: false };
+    knownUsd += price.knownUsd;
+    if (price.measured) measured += 1;
+    else unmeasured += 1;
+    job.usd += price.usd ?? price.knownUsd;
+    job.unknown ||= price.usd === null;
+    jobs.set(entry.attemptId, job);
   }
-  return { usd: unmeasured > 0 ? null : usd, measured, unmeasured };
+  const held = new Map<string, number>();
+  const seen = new Set<string>();
+  for (const hold of spendHolds) {
+    const at = Date.parse(hold.heldAt);
+    if (seen.has(hold.holdId) || hold.settled !== null || !(at >= start && at <= end) || !amount(hold.usd)) continue;
+    seen.add(hold.holdId);
+    held.set(hold.jobId, (held.get(hold.jobId) ?? 0) + hold.usd);
+  }
+  let unbounded = false;
+  for (const [id, job] of jobs) {
+    const bound = held.get(id);
+    // Only an exact job identity can cover an unknown charge. Obligation-only
+    // attribution can reuse one hold for several failed attempts.
+    if (job.unknown && (bound === undefined || bound < job.usd)) unbounded = true;
+    usd += Math.max(job.usd, bound ?? 0);
+    held.delete(id);
+  }
+  // A hold carries no provider or model. Unmatched holds may reserve a paid
+  // API/search job, so they cannot be added to Anthropic spend by inference.
+  return { usd: unbounded ? null : usd, knownUsd, measured, unmeasured };
 }
 
 export type ProviderFailureClass = "HARD" | "TRANSIENT" | "OTHER";
@@ -289,6 +366,7 @@ export class FleetSafetyController {
   constructor(input: {
     readonly now: string;
     readonly costs: readonly CostEntry[];
+    readonly spendHolds?: readonly SpendHold[];
     /** The owner's runner-level PAUSE_RUNNER stands. The snapshot says PAUSED, and no model request is reserved. */
     readonly paused?: boolean;
     /**
@@ -326,11 +404,12 @@ export class FleetSafetyController {
     this.clock = input.clock ?? Date.now;
     this.websiteSize = input.websiteSize;
     this.lastSuccessfulActivity = input.lastSuccessfulActivity ?? null;
-    const nightSpend = aggregateModelSpend(input.costs, this.night.start, input.now);
+    const nightSpend = aggregateModelSpend(input.costs, this.night.start, input.now, input.spendHolds);
     const rollingSpend = aggregateModelSpend(
       input.costs,
       new Date(this.startedMs - 24 * 3_600_000).toISOString(),
       input.now,
+      input.spendHolds,
     );
     this.historicalNightUsd = input.costLedgerReadable === false ? null : nightSpend.usd;
     this.historicalRollingUsd = input.costLedgerReadable === false ? null : rollingSpend.usd;
@@ -400,7 +479,6 @@ export class FleetSafetyController {
     // free fetches (`admitProviderRequest`, `guardedOpenBytes`) keep running.
     if (this.paused) this.refuse(work, "OWNER_PAUSED", "the owner paused the runner; no model request is sent under the pause");
     if (this.modelHold !== null) this.refuse(work, "MODEL_LANE_CLOSED", this.modelHold);
-    if (!this.cycleModelSpendMeasured) this.refuse(work, "UNMEASURED_MODEL_SPEND", "an earlier model response in this cycle omitted complete metered usage");
     const bodyBytes = Buffer.byteLength(JSON.stringify(request));
     const reserve = modelRequestWorstCaseUsd(request);
     if (reserve === null) this.refuse(work, "UNMEASURED_MODEL_SPEND", `model ${request.model} has no stated rate`);
@@ -428,6 +506,7 @@ export class FleetSafetyController {
     const usd = modelResponseUsd(response);
     if (usd === null) {
       this.cycleModelSpendMeasured = false;
+      this.cycleUsd += reservation.usd;
       this.refuse(reservation.work, "UNMEASURED_MODEL_SPEND", `provider did not return complete metered usage for ${response.model}`);
     }
     this.cycleUsd += usd;
@@ -435,6 +514,12 @@ export class FleetSafetyController {
   }
 
   failModelRequest(reservation: Reservation, error: unknown, at: string = new Date(this.clock()).toISOString()): void {
+    // A sent request whose bill was not returned consumes its actual maximum.
+    // Settlement already released its reservation, including incomplete usage.
+    if (!reservation.released) {
+      this.cycleUsd += reservation.usd;
+      this.cycleModelSpendMeasured = false;
+    }
     this.releaseReservation(reservation);
     const failure = classifyProviderFailure(error);
     if (failure.class === "HARD" || failure.class === "TRANSIENT") this.latchProvider(reservation.provider, failure.condition, reservation.work, at,
@@ -494,6 +579,13 @@ export class FleetSafetyController {
     if (this.historicalRollingUsd === null) return { reached: false, spentUsd: null, capUsd };
     const projected = this.historicalRollingUsd + this.cycleUsd + this.reservedUsd + worstCaseUsd;
     return { reached: projected > capUsd, spentUsd: this.historicalRollingUsd + this.cycleUsd, capUsd };
+  }
+
+  /** Scheduling consumes known spend plus actual request/standing holds.
+   * Without any sound historical bound there is no funded paid capacity. */
+  admissionSpendUsd(): number {
+    return this.historicalRollingUsd === null ? Number.POSITIVE_INFINITY
+      : this.historicalRollingUsd + this.cycleUsd + this.reservedUsd;
   }
 
   private async readBoundedResponse(response: Response, cap: number, work: string): Promise<Uint8Array> {
@@ -758,7 +850,6 @@ export class FleetSafetyController {
    */
   holdModelBudget(work: string, usd: number): { readonly usd: number; readonly draw: (spentUsd: number) => void; readonly release: () => void } {
     if (!Number.isFinite(usd) || usd < 0) this.refuse(work, "UNMEASURED_MODEL_SPEND", `an escalation hold of ${String(usd)} USD is not a measured amount`);
-    if (!this.cycleModelSpendMeasured) this.refuse(work, "UNMEASURED_MODEL_SPEND", "an earlier model response in this cycle omitted complete metered usage");
     if (this.historicalRollingUsd === null) this.refuse(work, "UNMEASURED_MODEL_SPEND", "rolling-24-hour model spend is unmeasured");
     if (this.historicalRollingUsd + this.cycleUsd + this.reservedUsd + usd > this.bounds.rolling24HourModelUsd) {
       this.refuse(work, "ROLLING_24_HOUR_MODEL_SPEND_CEILING", `the escalation's worst case ($${usd.toFixed(2)}) would exceed the $${this.bounds.rolling24HourModelUsd.toFixed(2)} rolling-24-hour ceiling`);

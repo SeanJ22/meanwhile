@@ -336,14 +336,34 @@ export interface RecoveredOccurrence extends SettledOccurrence {
 /** A bounded pool: at most `limit` items in flight, in input order. */
 export type ScoutAdmission = { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string };
 
+/** Capture each hunt's rounds over the full queue. Filtering completed work or
+ * refreshing place priority must not move a hunt's second item ahead of
+ * another hunt's first. Items keep their original order within their hunt. */
+export function huntRoundComparator<T>(items: readonly T[], huntFor: (item: T) => string | null | undefined): (left: T, right: T) => number {
+  const counts = new Map<string, number>();
+  const rounds = new Map<T, number>();
+  for (const item of items) {
+    const key = huntFor(item) ?? "standing";
+    const round = counts.get(key) ?? 0;
+    rounds.set(item, round);
+    counts.set(key, round + 1);
+  }
+  return (left, right) => (rounds.get(left) ?? Number.MAX_SAFE_INTEGER) - (rounds.get(right) ?? Number.MAX_SAFE_INTEGER);
+}
+
 export async function runPool<T>(items: readonly T[], limit: number, fn: (item: T) => Promise<void>,
-  comparator?: () => Promise<(left: T, right: T) => number>): Promise<void> {
+  comparator?: () => Promise<(left: T, right: T) => number>,
+  huntFor?: (item: T) => string | null | undefined): Promise<void> {
   const pending = [...items];
+  const compareRound = huntFor ? huntRoundComparator(items, huntFor) : () => 0;
   let selection = Promise.resolve();
   const take = (): Promise<T | undefined> => {
     let item: T | undefined;
     const next = selection.then(async () => {
-      if (pending.length && comparator) pending.sort(await comparator());
+      if (pending.length && (comparator || huntFor)) {
+        const compare = comparator ? await comparator() : () => 0;
+        pending.sort((left, right) => compareRound(left, right) || compare(left, right));
+      }
       item = pending.shift();
     });
     selection = next;
@@ -685,20 +705,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
    */
   const debtAtCycleStart = new Map(input.debts.map((d) => [d.obligationId, d] as const));
   const debtOf = (obligationId: string) => debtAtCycleStart.get(obligationId);
-  const fairQueue = (rows: readonly ScheduledObligation[]): readonly ScheduledObligation[] => {
-    if (!input.huntFor) return rows;
-    const groups = new Map<string, ScheduledObligation[]>();
-    for (const row of rows) {
-      const key = input.huntFor(row) ?? "standing";
-      const group = groups.get(key) ?? []; group.push(row); groups.set(key, group);
-    }
-    const ordered: ScheduledObligation[] = [];
-    for (let round = 0; ordered.length < rows.length; round++) {
-      for (const group of groups.values()) if (group[round]) ordered.push(group[round]);
-    }
-    return ordered;
-  };
-  const plainCodeQueue = fairQueue(placeFirstRows(plainCodeQueueOrder(deterministicRows, debtOf), input.placeFirst));
+  const plainCodeQueue = placeFirstRows(plainCodeQueueOrder(deterministicRows, debtOf), input.placeFirst);
   const deferredBy: Record<string, number> = {};
   let modelDispatched = 0;
   let modelDeferred = 0;
@@ -799,7 +806,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         ...(research !== undefined ? { decision: decisions.get(row.obligation.id) } : {}),
       });
       if (research?.onDispatched) await research.onDispatched(result, "DETERMINISTIC");
-    }, input.placeComparator);
+    }, input.placeComparator, input.huntFor);
   };
 
   /*
@@ -828,7 +835,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
 
   const modelLane = async (): Promise<void> => {
     if (research === undefined) return;
-    await runPool(fairQueue(modelRows), research.workerCapacity, async (row) => {
+    await runPool(modelRows, research.workerCapacity, async (row) => {
       if (input.openOccurrence === undefined && input.requireOpenOccurrence && input.routeTaskFor(row.obligation.id) === null) {
         deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: outside this cycle's reserved lane slots; work remains due." });
         holdModel(row, "NO_OPEN_OCCURRENCE");
@@ -873,7 +880,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         decision: decisions.get(row.obligation.id),
       });
       if (research.onDispatched) await research.onDispatched(result, "BOUNDED_MODEL_WORKER");
-    }, input.placeComparator);
+    }, input.placeComparator, input.huntFor);
   };
 
   await Promise.all([deterministicLane(), modelLane()]);

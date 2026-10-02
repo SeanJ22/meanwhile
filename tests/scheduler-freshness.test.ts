@@ -44,7 +44,7 @@ import {
   chooseExecutor,
   sweepExpiredLeases,
 } from "../lib/control-plane/scheduler/dispatch.ts";
-import { digestLines, runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { digestLines, huntRoundComparator, runCycle, runPool } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { compareReaderImpact } from "../lib/control-plane/research-metrics.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import {
@@ -623,6 +623,44 @@ test("W3.5: work beyond the cycle's stated ceiling is DEFERRED with a reason", a
   await runPool(["a", "b", "c"], 3, async id => { concurrent.push(id); },
     async () => (a, b) => order.indexOf(a) - order.indexOf(b));
   assert.deepEqual([...concurrent].sort(), ["a", "b", "c"], "concurrent ranking cannot hand out a row twice");
+});
+
+test("hunt rounds survive changing place priority and completed tasks leaving the actual pool", async () => {
+  const ids = ["a1", "a2", "a3", "b1", "b2", "c1", "c2"];
+  const huntFor = (id: string) => id[0]!;
+  const pulled: string[] = [];
+  let priority = ["a", "b", "c"];
+  await runPool(ids, 1, async id => {
+    pulled.push(id);
+    if (id === "a1") priority = ["c", "b", "a"];
+  }, async () => (a, b) => priority.indexOf(huntFor(a)) - priority.indexOf(huntFor(b)), huntFor);
+  assert.deepEqual(pulled, ["a1", "c1", "b1", "c2", "b2", "a2", "a3"]);
+
+  // Lease children present different pending subsets after successful claims.
+  // All pulls compare against the original wave, so a2 cannot reset to round0.
+  const compareRound = huntRoundComparator(ids, huntFor);
+  const rank = (a: string, b: string) => compareRound(a, b) || ["a", "b", "c"].indexOf(huntFor(a)) - ["a", "b", "c"].indexOf(huntFor(b));
+  assert.deepEqual(["a2", "b1", "c1"].sort(rank), ["b1", "c1", "a2"]);
+  assert.deepEqual(["c2", "a3", "b2"].sort(rank), ["b2", "c2", "a3"]);
+  const resumed: string[] = [];
+  await runPool(["a2", "b1", "c1"], 1, async id => { resumed.push(id); }, async () => rank);
+  assert.deepEqual(resumed, ["b1", "c1", "a2"], "actual pending selection retains the full-wave rounds after a1 leaves");
+});
+
+test("twenty concurrent pulls serve every hunt before one hunt takes its second child", async () => {
+  const ids = Array.from({ length: 20 }, (_, hunt) => Array.from({ length: hunt === 0 ? 4 : 1 }, (_, child) => `${hunt}:${child}`)).flat();
+  const huntFor = (id: string) => id.split(":")[0]!;
+  const pulled: string[] = [];
+  let release!: () => void;
+  const firstRound = new Promise<void>(resolve => { release = resolve; });
+  await runPool(ids, 20, async id => {
+    pulled.push(id);
+    if (pulled.length === 20) release();
+    await firstRound;
+  }, async () => (a, b) => Number(huntFor(a)) - Number(huntFor(b)), huntFor);
+  assert.equal(new Set(pulled.slice(0, 20).map(huntFor)).size, 20);
+  assert.equal(new Set(pulled).size, ids.length, "a concurrent pull cannot duplicate a lease candidate");
+  assert.deepEqual(pulled.slice(20), ["0:1", "0:2", "0:3"]);
 });
 
 test("NH328: canonical reader-impact priority reaches the Scout pool before an older band-2 row", async () => {

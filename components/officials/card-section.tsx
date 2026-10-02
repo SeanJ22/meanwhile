@@ -17,12 +17,11 @@ import {
 } from "react";
 
 /**
- * **ONE PILL OPEN AT A TIME** — F01 4.1, 2026-08-19, the author.
+ * **ONE PILL OPEN AT A TIME** — F01 4.1, 2026-08-19.
  *
- * *"anytime I click on a new pill all other pills should collapse so I should
- * only have one pill that's expanded at a time."* His instance was Ciscomani's
- * card with Committees and Offices near you both standing open; his rule was
- * the class.
+ * Opening a pill collapses every other, so only one is ever expanded. The
+ * instance was Ciscomani's card with Committees and Offices near you both
+ * standing open; the rule is the class.
  *
  * ## Why a context and not a prop
  *
@@ -46,7 +45,7 @@ import {
  * `level="sub"` sections ("Votes on laws", "Votes on people") live INSIDE
  * another section's open pane. Closing one because the reader opened its
  * sibling would collapse half of a pane the reader had just chosen to look at,
- * and the author's rule is about the top-level pills he was clicking. Subs keep
+ * and the rule is about the top-level pills. Subs keep
  * their own state; F01 5.3 governs what they default to.
  */
 interface CardSectionGroupValue {
@@ -84,15 +83,15 @@ export function CardSectionGroup({
  *
  * ## What this is for
  *
- * The author: every major block on a person card collapses, "so the card
- * never reads as infinite scroll". Identity stays open; contact, campaign
+ * Every major block on a person card collapses, so the card never reads as
+ * infinite scroll. Identity stays open; contact, campaign
  * money, contributions, recent votes, when-it-mattered and everything else
  * collapses to a header.
  *
  * ## The header's bar, and why it is a pill
  *
- * The author's bar was "the header must make me want to open it", with the
- * shape left to the design and pill/bubble as his instinct. A pill is what
+ * The bar is that the header must make a reader want to open it, with the
+ * shape left to the design. A pill is what
  * this system already uses for every OTHER tappable thing that is not a link
  * — the funding type pills, the narrowing chip, the map floaters — so a pill
  * here is not a new pattern, it is the existing one applied. Nothing that

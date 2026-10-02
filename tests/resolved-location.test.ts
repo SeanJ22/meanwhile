@@ -914,7 +914,7 @@ test("WGH-16 WIRING: the browse copy has a branch for the weaker state", () => {
    *
    * This used to require the card to carry a branch gated on
    * `ELSEWHERE_IN_ZIP`, because the strong state earned the strong SENTENCE.
-   * The author's ruling ends that: after a confirmed address an excluded entity
+   * The ruling ends that: after a confirmed address an excluded entity
    * is out of scope, not annotated, so there is no row on this card for the
    * strong mark to sit on and a branch for it would be the defect returning.
    *

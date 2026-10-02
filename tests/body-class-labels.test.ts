@@ -18,7 +18,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 /**
  * **RULING 118** — an appointed official never carries the govern verb.
  * **RULING 119** — a sovereign tribal nation is its own category of government.
- * (Both Sean's decisions of 2026-08-24, closing `NS07` and `NS08`.)
+ * (Both adopted 2026-08-24, closing `NS07` and `NS08`.)
  */
 
 test("every body class has a reader label and a stated reason", () => {

@@ -14,9 +14,9 @@
  * page here is self-contained and an external asset is a request to somebody
  * else's server on a reader's behalf. The real one: shipping another
  * company's official mark is a claim of association this product does not
- * make and has no licence for, and "everyone does it" is not a licence. If
- * the author wants the official assets, that is a deliberate decision with a
- * licence behind it, and this file is where it would land.
+ * make and has no licence for, and "everyone does it" is not a licence.
+ * Using the official assets would be a deliberate decision with a licence
+ * behind it, and this file is where it would land.
  *
  * All three inherit nothing from the theme: a brand colour is the same colour
  * in dark and light, and the tile's face is drawn rather than left

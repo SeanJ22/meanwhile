@@ -1,8 +1,8 @@
 import { rosterPath } from "../lib/holdings/files.ts";
 /**
- * **The portrait review list** — D50 item 7b, the author's standing order
- * (2026-08-19): *"make sure those are noted in the tracker for ME to go look
- * at so I can give feedback."*
+ * **The portrait review list** — D50 item 7b (2026-08-19): every portrait
+ * that needs a human look, noted in one place where a reviewer can work
+ * from it and give feedback.
  *
  * `pnpm photo:review` → writes `docs/photo-review.md`.
  *
@@ -18,15 +18,15 @@ import { rosterPath } from "../lib/holdings/files.ts";
  * ## What lands on it, and it is deliberately two kinds
  *
  * 1. **FLAGGED** — a row carrying a `review` note. Today that is the two
- *    distance shots the author asked to see; tomorrow it is anything a hunt
- *    ships with a doubt attached. The note says what the doubt is, so he is
- *    not asked to guess what he is looking at.
+ *    distance shots flagged for a look; tomorrow it is anything a hunt
+ *    ships with a doubt attached. The note says what the doubt is, so the
+ *    reviewer is not asked to guess what they are looking at.
  * 2. **NEW SINCE** — every portrait collected on or after a given date, so a
  *    session's own additions can be eyeballed as a batch. `--since=YYYY-MM-DD`.
  *
  * The list is a WORKING SURFACE, not a report: one row per portrait, the
  * image served from our own origin, the source URL beside it, and the door it
- * shipped through. Everything he needs to say "pull that one".
+ * shipped through. Everything a reviewer needs to say "pull that one".
  */
 import { writeFileSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -74,13 +74,12 @@ function doorOf(license: string): string {
 /**
  * **WHERE DOES THIS PORTRAIT ACTUALLY RENDER?** — F01 2.3, 2026-08-19.
  *
- * The author's complaint, and it is about this file rather than about a
- * picture: *"fix docs/photo-review.md — it currently lists portraits with no
- * way to find them. Every entry states the zip and surface where it renders,
- * or says 'not rendered anywhere'. The author could not locate Taylor or Harb
- * because the file does not say where to look."*
+ * The defect is about this file rather than about a picture:
+ * `docs/photo-review.md` listed portraits with no way to find them, so every
+ * entry now states the zip and surface where it renders, or says 'not
+ * rendered anywhere'. Taylor and Harb could not be located from the file.
  *
- * He could not locate them because **they do not render**. Brian Taylor and
+ * They could not be located because **they do not render**. Brian Taylor and
  * Bob Harb are New Hampshire state representatives in `officeholders-33.json`
  * with NO division mapping — no `sldl:` seat — so no zip resolves to them and
  * no surface in this product draws their face. A review list that shows a

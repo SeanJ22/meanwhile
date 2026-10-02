@@ -8,7 +8,7 @@ import { readerPartyLabel } from "@/lib/text/reader-names";
 import { ageFrom, inSeatUntil } from "@/lib/officials/tenure";
 
 /**
- * **The identity header** — item 3, 2026-08-16, the author's ruling.
+ * **The identity header** — item 3, 2026-08-16.
  *
  * The test is one second to "who is this person", and the whole design serves
  * it: a circle, a name, and a row of chips where fill-versus-outline carries
@@ -116,12 +116,12 @@ export function PersonIdentity({
    */
   chips = [],
   /**
-   * **The small popup's form** (item 4, 2026-08-16, the author's ruling).
+   * **The small popup's form** (item 4, 2026-08-16).
    *
    * Exactly three things on that card and nothing else: the circle, the name,
-   * the party pill — then the contact column. The author's words for what was
-   * there before were "ugly and scattered, too much info", and what made it
-   * scattered was five competing facts at four type sizes inside 300px.
+   * the party pill — then the contact column. What was there before read as
+   * cluttered, and what made it scattered was five competing facts at four
+   * type sizes inside 300px.
    *
    * So `identityOnly` drops the office line, the in-seat line, and every
    * outlined chip (the state, the chamber, incumbent-or-challenger). **None

@@ -40,7 +40,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
  * matches the row that grandfathered it.
  *
  * `R57` carries the remaining half — where the store lives such that a Netlify
- * build can restore from it — which is the author's decision.
+ * build can restore from it.
  */
 
 const BINARY = /\.(jpg|jpeg|png|webp|gif|pdf)$/i;

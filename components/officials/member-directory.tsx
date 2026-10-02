@@ -38,7 +38,7 @@ const sectionEmptyLine = (id: BattlecardSectionId) =>
  * committee chairman does, with the honest content behind each. Collapse is
  * organization; it is never a way to render some people smaller than others.
  *
- * ## The clean render (the author's ruling)
+ * ## The clean render
  *
  * Directory facts carry NO per-surface source annotations. Full provenance
  * lives in the snapshot — SHA, read date, per-row tags — and one line on the
@@ -143,7 +143,7 @@ export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
           /* F01 4.2 (2026-08-19): PARENTS AND SUBCOMMITTEES, TOLD APART.
              The list was flat, so "Senate Committee on Armed Services" and
              "Senate Committee on Armed Services — Airland" read as two peers
-             and the author could not see that the second sits under the
+             and a reader could not see that the second sits under the
              first. Subcommittees now indent behind a rule under the parent
              they belong to, and drop the parent's name from their own label
              because it is directly above them. See lib/officials/committee-tree.ts
@@ -277,7 +277,7 @@ function useDirectoryCounts(holder: SeatHolder): {
  * **BAL-34 (2026-08-31) — THE SECTIONS EXIST FOR EVERYONE, OR THEY ARE A
  * SIGNAL ABOUT THE PERSON.**
  *
- * The owner reported the map battlecard missing its *Offices near you* pill.
+ * The map battlecard was missing its *Offices near you* pill.
  * The cause was the line below this comment: `if (!holder.id.startsWith(
  * "congress:")) return null` — the whole component, headers included, vanished
  * for every state legislator, mayor and school-board member in the product.
@@ -336,8 +336,8 @@ function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
  *
  * ## "Only some rows say what the committee handles"
  *
- * The author's other half of 4.2: *"there's multiple committees that he is a
- * part of however there's only two that says what this committee handles."*
+ * The other half of 4.2: a member sits on several committees, but only some
+ * rows say what the committee handles.
  *
  * That is a SOURCE fact, and it is now stated as one instead of rendering as
  * silence. The directory's jurisdiction text comes from

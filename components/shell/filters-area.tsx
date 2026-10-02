@@ -99,7 +99,7 @@ export function FiltersArea({
      * NOTHING.**
      *
      * `filtersPanelOpen` already defaulted to false, so the panel was closed
-     * on arrival and the author's capture `11-57-33` still shows a band of
+     * on arrival and capture `11-57-33` still shows a band of
      * empty space under the word FILTERS: the header carried a 12px bottom
      * margin and the area a 20px bottom padding whether or not anything
      * followed them. Closed, that is 32px of nothing — dead space is exactly
@@ -114,7 +114,7 @@ export function FiltersArea({
           aria-expanded={ui.filtersPanelOpen}
           onClick={() => dispatch({ type: "filter/togglePanel" })}
         >
-          {/* The author asked for a right-pointing arrow: closed it points
+          {/* A right-pointing arrow: closed it points
               right, open it turns down. One control, and its direction is the
               state — a disclosure with no marker is a button a reader has to
               press to discover. */}
@@ -412,10 +412,10 @@ function Group({
    * **LAY-2 (2026-08-23) — this is now EVERY group.** The comment here used
    * to say collapsing everything would trade one wall of controls for a wall
    * of headers, and against a panel of six open sections that was the right
-   * caution. The author's 8/22 pass settled it the other way: *the filter
-   * panel is off-center and crammed — coverage block, body-type block,
-   * meeting status, date range, district types and the coverage-quality
-   * toggle all competing.* Six headers each carrying its own state is not a
+   * caution. The 8/22 pass settled it the other way: the filter panel was
+   * off-center and crammed, with coverage block, body-type block, meeting
+   * status, date range, district types and the coverage-quality toggle all
+   * competing. Six headers each carrying its own state is not a
    * wall; six open sections of chips, sliders and checkboxes is. And
    * `openWhenNarrowed` is what keeps a set filter from hiding behind one.
    */

@@ -3,8 +3,8 @@
  *
  * ## The ruling and its exact scope
  *
- * The author ruled on 2026-08-17: generated-at lines carry Eastern as the
- * standard. That ruling is about the "this file was written at ..." header
+ * Since 2026-08-17, generated-at lines carry Eastern as the standard. That
+ * rule is about the "this file was written at ..." header
  * line on documents a script generates, and nothing else.
  *
  * It does NOT touch `pnpm stamp`, which stays America/Phoenix. Those are

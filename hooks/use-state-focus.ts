@@ -21,16 +21,15 @@ import {
  * ## The g3 amendment to e's spec, recorded because it is a conflict
  *
  * e's 6b2 said **zooming out RELEASES focus** — "surveying the country is
- * browsing". g3's brief says the opposite, twice and as the author's own
- * test: "looking at 85701 and zooming ALL THE WAY OUT, Arizona still reads
- * raised and everything else still reads muted and slightly blurred — the
- * effect holds at every zoom level", and "the EFFECT never disappears."
+ * browsing". g3's brief says the opposite, twice: at 85701 zoomed all the
+ * way out, Arizona still reads raised and everything else still reads muted
+ * and slightly blurred — the effect holds at every zoom level and never
+ * disappears.
  *
- * **The later, explicit instruction wins**, and the release rule is not
- * implemented. Both are defensible designs and this is the author's call, not
- * a build decision — it is flagged in the standing report so he can restore
- * the release if the zoom-invariance test was about the EDGE's subtlety
- * rather than about the treatment's existence. Only the shadow spread scales
+ * **The later brief wins**, and the release rule is not implemented. Both
+ * are defensible designs; the release can be restored if the zoom-invariance
+ * test turns out to be about the EDGE's subtlety rather than about the
+ * treatment's existence. Only the shadow spread scales
  * with zoom, which is the part of e's intent that survives either reading.
  *
  * ## Crossing
@@ -98,7 +97,7 @@ export function useStateFocus(): StateFocus {
        * **g4 item 1 — the mask follows the reader, and this line is why it
        * did not.**
        *
-       * The author's report: change the zip from a New Hampshire one to an
+       * The report: change the zip from a New Hampshire one to an
        * Arizona one, the map flies to Arizona, and Arizona is still blurred
        * and muted. The mask had kept New Hampshire.
        *

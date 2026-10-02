@@ -37,21 +37,19 @@ const allowlistPaths: string[] = (allowlist.files ?? []).map((e: unknown) =>
 /* ----------------------------------------------- 6b: the canonical ten --- */
 
 test("the canonical mirror set lives in one place, and holds what was ruled into it", () => {
-  // Ten by the author's ruling of 2026-08-17; twelve later the same day, when
-  // the deferred census (R31) was added by instruction; thirteen with the xlsx
-  // split; fourteen when the session map joined (R33), the author having placed
-  // it in docs/ himself after a session reported committing a file it never
-  // committed. Growth by decision is fine — the failure this guards is the set
+  // Ten on 2026-08-17; twelve later the same day, when the deferred census
+  // (R31) was added; thirteen with the xlsx split; fourteen when the session
+  // map joined (R33), placed in docs/ by hand after a session reported
+  // committing a file it never committed. Growth by decision is fine — the failure this guards is the set
   // living in two places and the two disagreeing, which is what produced two
   // contradictory reports.
   // Nineteen since 2026-08-20 (Prompt E): the tracker stopped being one CSV
   // and became a workbook plus three generated views, and all four are things
   // the author opens.
-  // TWENTY-THREE since 2026-08-24, and it was Sean's decision: the candidate
-  // questionnaire and its invitation so he can read them anywhere before
-  // anything sends, the transparency draft for the same reason, and the
-  // portrait review sheet, which is how he now approves photographs — he
-  // glances at it in Drive and replies with numbers.
+  // TWENTY-THREE since 2026-08-24: the candidate questionnaire and its
+  // invitation, so they can be read anywhere before anything sends, the
+  // transparency draft for the same reason, and the portrait review sheet,
+  // which is how photographs are reviewed from Drive.
   // TWENTY-FOUR since 2026-08-25, and it was a decision: `coverage-matrix.csv`,
   // written by `pnpm matrix` under RULING 149. It is one row per candidate and
   // one column per fact, which is a SPREADSHEET question — a thing to open in a
@@ -104,7 +102,7 @@ test("the canonical mirror set lives in one place, and holds what was ruled into
   // Twelve copied, two generated. The generated pair have no repo counterpart,
   // which is why they cannot be drift-checked and must not be counted as if
   // they could. (Eleven until session-map.md joined on 2026-08-17, R33.)
-  // Twenty-one copied since 2026-08-24: the four Sean added all have repo
+  // Twenty-one copied since 2026-08-24: the four added then all have repo
   // counterparts, so all four are drift-checkable, which is the point of
   // putting them in the canonical set rather than declaring them extras.
   // Twenty-two copied since 2026-08-25: coverage-matrix.csv has a repo
@@ -319,10 +317,10 @@ test("the size caps are the stated ones and today's allowlist fits", () => {
   // SAME reason — it stood at 203,556 bytes with 1,244 to spare before that
   // session wrote a line. The measurement that matters is in the script: 57%
   // of that file is comment prose. A THIRD raise is the wrong answer
-  // (RULING 106); the structural fix is RO06 and it is the author's call.
+  // (RULING 106); the structural fix is RO06.
   //
-  // **AND IT CAME BACK DOWN, the same day** (`NH180`, Sean's ruling). He took
-  // the structural option: the prose was stripped into
+  // **AND IT CAME BACK DOWN, the same day** (`NH180`). The structural option
+  // was taken: the prose was stripped into
   // `docs/globals-css-notes.md` — 125 comment blocks moved VERBATIM, each
   // leaving a one-line pointer at its rule — and `app/globals.css` went from
   // 206,120 bytes to 134,880 with the CSS itself byte-identical (82,089 bytes
@@ -490,7 +488,7 @@ test("the manifest heads with what it is, and never hides a refusal", () => {
 
 test("the expected mirror subdirectories are declared", () => {
   /*
-   * `owner-intake` joined on 2026-08-30 (A.1 WI8, the author's decision): the
+   * `owner-intake` joined on 2026-08-30 (A.1 WI8): the
    * folder the owner writes defects into, replacing `defects.md` as an owner
    * surface. It is a DIRECTORY, so it is declared here rather than in the
    * mirrored-document set — the same reasoning that put `transcripts/` and

@@ -21,8 +21,7 @@ await initializeFederalVoteFirstSeed();
 /**
  * B15 — the key votes tracker.
  *
- * The doctrine these guards hold, from the tracker row and the author's
- * order: votes only; published criteria; never aggregated into a score;
+ * The doctrine these guards hold, from the tracker row: votes only; published criteria; never aggregated into a score;
  * "no vote exists" and "the other chamber hasn't acted" are first-class
  * honest answers; read-dates on every line; and — the structural one — an
  * entry is a QUESTION that each chamber answered with its OWN roll calls.
@@ -344,7 +343,7 @@ function assertPassageQuestion(id: string, chamber: string, question: string | n
 }
 
 /*
- * ITEM 6 (2026-08-16, the author): "When it mattered" appeared to render
+ * ITEM 6 (2026-08-16): "When it mattered" appeared to render
  * NOTHING when selected.
  *
  * DIAGNOSED before anything was changed, and the data was never the problem:
@@ -358,9 +357,8 @@ function assertPassageQuestion(id: string, chamber: string, question: string | n
  */
 
 /**
- * **F01 5.3 (2026-08-19) REVERSED THIS TEST'S FIRST HALF**, on the author's
- * direct instruction: *"it should not automatically expand both votes on laws
- * and votes on people. They both should be collapsed."*
+ * **F01 5.3 (2026-08-19) REVERSED THIS TEST'S FIRST HALF**: votes on laws and
+ * votes on people both start collapsed; neither expands automatically.
  *
  * So the assertion flips: no sub-group may ship `defaultOpen`. The concern the
  * old rule was protecting — a pane whose whole visible content is one small
@@ -465,7 +463,7 @@ test("B15 g19: law coverage never falls below what has already been verified", (
   const snapshot = getKeyVotesSnapshot();
   const laws = snapshot.entries.filter((e) => e.group === "LAWS");
 
-  // The author's list is closed. Its size is a fact, not a floor.
+  // The list is closed. Its size is a fact, not a floor.
   assert.equal(laws.length, 20, "the author's law list changed size");
 
   const withHouse = laws.filter((e) => e.house.length > 0).length;
@@ -571,10 +569,11 @@ test("B15 g20 / F01 5.6: the park MECHANISM still holds, with the map now empty"
   const { PARKED_KEY_VOTES } = await import("../lib/votes/key-votes.ts");
 
   // A MISS is what a resolver could not find; it invites a better rung. A
-  // PARK is the author's decision that no attempt should be made, because
-  // the answer is his to give. The two must not be told apart only in prose.
+  // PARK is a recorded decision that no attempt should be made, because
+  // the answer is not a resolver's to give. The two must not be told apart
+  // only in prose.
   //
-  // F01 5.6 (2026-08-19): the author UNPARKED `funding-fight`, so the map is
+  // F01 5.6 (2026-08-19): `funding-fight` was UNPARKED, so the map is
   // now EMPTY — and the mechanism below is guarded exactly as hard, because
   // the next park has to work the day it is written. The loop over the map is
   // vacuous today and is kept deliberately.
@@ -609,8 +608,8 @@ test("B15 g20 / F01 5.6: the park MECHANISM still holds, with the map now empty"
  * 20 of 20.**
  *
  * This test replaces "the parked entry tells the reader what happened". That
- * one guarded the two notes explaining why the row was open; the author
- * unparked the row and both notes are gone, so guarding their wording would be
+ * one guarded the two notes explaining why the row was open; the row was
+ * unparked and both notes are gone, so guarding their wording would be
  * guarding a sentence the product no longer makes.
  *
  * What is guarded instead is the resolution itself, ref by ref, against the
@@ -667,8 +666,8 @@ test("F01 5.6: the shutdown row resolves to H.R. 5371 in both chambers, with tal
 });
 
 /**
- * **F01 5.2 (2026-08-19, the author): "if he was in session we'd need to
- * record what he did."**
+ * **F01 5.2 (2026-08-19): a member who was in session needs what they did
+ * recorded.**
  *
  * We did record it. The key-votes pill map had no key for `NOT_VOTING` — the
  * value the fetcher writes for a member who was SEATED and did not vote — so

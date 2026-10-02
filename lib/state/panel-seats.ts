@@ -64,8 +64,8 @@
  * ## RULING 222, and why the disclosure is gone rather than improved
  *
  * The 8/30 reading kept excluded districts on the panel behind a disclosure,
- * arguing RULING 26/27 forbade dropping them. The author's ruling of
- * 2026-08-31 settles that reading: **before a confirmed address the scope is
+ * arguing RULING 26/27 forbade dropping them. The ruling of 2026-08-31
+ * settles that reading: **before a confirmed address the scope is
  * the ZIP; after one, the scope IS the address.** Show-everything guarantees
  * completeness within the correct scope and never licensed displaying entities
  * we determined do not govern this reader. A *"not yours"* label on a

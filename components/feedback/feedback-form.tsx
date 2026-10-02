@@ -12,7 +12,7 @@ import {
 } from "@/lib/feedback/shape";
 
 /**
- * The feedback form (R40, 2026-08-17, the author's ruling: 1A, in-app).
+ * The feedback form (R40, 2026-08-17: 1A, in-app).
  *
  * ## What it replaced
  *
@@ -41,7 +41,7 @@ import {
  * The seam runs right down the middle of this component and that is the rule
  * working, not an inconsistency.
  *
- * ## The optional reply address (R41, 2026-08-17, the author's ruling A)
+ * ## The optional reply address (R41, 2026-08-17, option A)
  *
  * One more field, and everything about it is designed so that leaving it
  * alone stays the effortless default: it is blank, it is labelled optional in

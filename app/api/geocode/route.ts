@@ -6,8 +6,7 @@ import {
 } from "@/lib/geo/census-geocoder";
 
 /**
- * POST /api/geocode — the stateless Census geocoder proxy (M80, 2026-08-15,
- * the author's ruling).
+ * POST /api/geocode — the stateless Census geocoder proxy (M80, 2026-08-15).
  *
  * ## Why this route has to exist
  *
@@ -46,9 +45,9 @@ import {
  * address passes through our server to the Census Bureau's geocoder, which
  * turns it into a point.
  *
- * F01 1e (2026-08-19, the author, ordered verbatim): the never-store/never-log
- * half of that sentence is STRUCK from every reader surface — "we are going to
- * store and log at some point." The copy now describes the mechanism as it
+ * F01 1e (2026-08-19): the never-store/never-log half of that sentence is
+ * STRUCK from every reader surface, because it is a promise about the future
+ * the product may not keep. The copy now describes the mechanism as it
  * works today and makes no forward commitment in either direction.
  * `tests/geocoder.test.ts` pins the ban.
  */

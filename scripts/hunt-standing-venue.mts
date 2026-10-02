@@ -100,7 +100,7 @@ const BUILDING = /\b(hall|building|office|library|school|center|centre|station|h
  * building on the strength of a template."* That session refused the footer and
  * wired one body of sixteen.
  *
- * The author ruled the other way on 2026-08-21: **one address hosting several
+ * This route goes the other way as of 2026-08-21: **one address hosting several
  * bodies is normal in small and large towns alike**, and a town that publishes
  * one municipal address is telling a reader where to go. Fifteen bodies dark
  * because the town uses a site template is a worse answer for the reader than

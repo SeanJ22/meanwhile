@@ -23,7 +23,7 @@ import {
  *
  * Every test here runs against a store whose ripcord ships PULLED. That is
  * deliberate and it is the point: the shape has to be provable BEFORE the
- * capability is switched on, so that the author's approval is a one-flip
+ * capability is switched on, so that turning it on is a one-flip
  * activation rather than a build followed by a scramble.
  */
 
@@ -162,7 +162,7 @@ test("ASK03: the row carries no email, account, address or phone field at all", 
 
 test("ASK03: a self-declared ZIP is a ZIP COHORT and is NOT district membership", () => {
   /*
-   * The author's rule says the initial zip is a self-declared HOME zip, and
+   * The initial zip is a self-declared HOME zip, and
    * that is real signal. It is also not an address-validated residence, and
    * 85641 crosses school, legislative, fire and special-district lines — so
    * the two sentences must never be spoken as one.

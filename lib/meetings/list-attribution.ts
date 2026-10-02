@@ -1,10 +1,10 @@
 import type { Meeting } from "../sources/types.ts";
 
 /**
- * **SRC-1 / SRC-2 / SRC-3 (2026-08-24, the author's walkthrough) — ONE SOURCE
+ * **SRC-1 / SRC-2 / SRC-3 (2026-08-24, walkthrough) — ONE SOURCE
  * LINE AT THE BOTTOM OF THE CARD, AND ZERO INLINE ASTERISKS.**
  *
- * His captures are the specification. `11-59-24` puts a red arrow on a bare
+ * The walkthrough captures are the specification. `11-59-24` puts a red arrow on a bare
  * `*` floating between two meetings; `12-24-03` red-boxes the whole footnote
  * block at the foot of a Rockaway Township card —
  *
@@ -12,7 +12,7 @@ import type { Meeting } from "../sources/types.ts";
  *     † Rockaway Township, NJ — Rockaway Township Board of Adjustment
  *     ‡ Rockaway Township, NJ — Rockaway Township Planning Board
  *
- * — and the instruction is a sentence in its place. Single source: *These were
+ * — and the replacement is a sentence in its place. Single source: *These were
  * sourced from Tucson Unified School District Governing Board.* More than one:
  * *We sourced this information from these three sources,* and then the list,
  * still at the bottom.
@@ -30,8 +30,7 @@ import type { Meeting } from "../sources/types.ts";
  * F01 3.2's stated reason for putting markers on rows: **on a card carrying two
  * bodies at one building, a reader can no longer tell which row came from which
  * source.** Tucson splits city and school meetings at one address, so this is
- * not hypothetical. The author's instruction is explicit and it is his call;
- * what it buys is that the other ninety-odd cards, which carry ONE source,
+ * not hypothetical. The trade is deliberate; what it buys is that the other ninety-odd cards, which carry ONE source,
  * stop printing punctuation nobody reads. The list at the foot still names
  * every source in full, so nothing is de-sourced — what is lost is which of
  * two named sources a given row came from, never whether it was sourced.

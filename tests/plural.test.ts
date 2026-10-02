@@ -162,7 +162,9 @@ test("a national API completes its geography walk beyond ten requests and reuses
     // Siblings still in flight when another request is refused must be vaulted.
     await new Promise(resolve => setTimeout(resolve, 5));
     return Response.json(url.endsWith("/query")
-      ? { url, features: [{ attributes: {}, geometry: { rings: [[[0, 0], [1, 0], [1, 1], [0, 0]]] } }] }
+      ? { url, features: url.includes("ZCTA")
+        ? [{ attributes: {}, geometry: { rings: [[[0, 0], [1, 0], [1, 1], [0, 0]]] } }]
+        : url.includes("State_County/MapServer/4/query") ? [{ attributes: { STATE: "33", GEOID: "33", NAME: "New Hampshire" } }] : [] }
       : { url, layers: names.map((name, id) => ({ id, name, type: "Feature Layer" })) });
   });
   const tools = { repos, store, now: () => "2026-09-30T00:00:00.000Z", spaceOut: async () => {} };

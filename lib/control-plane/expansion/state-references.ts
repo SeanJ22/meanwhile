@@ -20,6 +20,8 @@ export interface StateReferenceIndex {
   units: Span[];
   /** Unit rows needed by each place and its in-state district candidates. */
   byZip: Record<string, number[]>;
+  /** Exact acquired intersections can select units missing from the sampled ZIP graph. */
+  byDivision?: Record<string, number[]>;
   shares: Record<string, Span>;
   facts: Span;
 }
@@ -28,6 +30,7 @@ export interface StateReferenceSelection {
   units?: ReadonlySet<string> | "state";
   shares?: ReadonlySet<string>;
   facts?: boolean;
+  divisions?: ReadonlySet<string>;
 }
 
 /** Read the selected rows by byte offset. The manifest contains addresses,
@@ -51,7 +54,8 @@ export function readStateReference(root: string, state: string, selection?: Stat
   };
   try {
     const selectedUnits = selection === undefined || selection.units === "state" ? index.units.keys()
-      : new Set([...(selection.units ?? [])].flatMap(zip => index.byZip[zip] ?? []));
+      : new Set([...[...(selection.units ?? [])].flatMap(zip => index.byZip[zip] ?? []),
+        ...[...(selection.divisions ?? [])].flatMap(division => index.byDivision?.[division] ?? [])]);
     const shard: StateReference = { formatVersion: 1, state: key, units: [...selectedUnits].map(i => read<CensusUnitTerritory>(index.units[i])),
       zips: {}, facts: selection === undefined || selection.facts ? read(index.facts) : {},
       censusSource: index.censusSource, exactShares: {} };

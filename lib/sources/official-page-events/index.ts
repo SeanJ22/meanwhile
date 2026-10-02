@@ -1242,13 +1242,22 @@ export interface OfficialPageRaw {
 }
 
 type SavedOfficialPage = { readonly canonicalUrl: string; readonly text: string };
+/** Captures are immutable; retain this append-only array between lookups. */
+export type LazyOfficialPage = { readonly canonicalUrl: string; readonly readText: () => Promise<string> };
+type IndexedOfficialPage = {
+  readonly canonicalUrl: string;
+  readonly links: ReadonlySet<string>;
+  readonly text?: string;
+  readonly readText?: () => Promise<string>;
+};
 type LinkingNode = {
-  readonly page: SavedOfficialPage;
+  readonly page: IndexedOfficialPage;
+  source: IndexedOfficialPage;
   readonly position: number;
   readonly host: string | null;
   readonly links: ReadonlySet<string>;
   pass: number;
-  chain: { url: string; html: string; linkingPage?: OfficialLinkingPage };
+  parent?: LinkingNode;
 };
 
 /** The source-authority host rules, including relative links and www aliases. */
@@ -1267,6 +1276,15 @@ function linkingBefore(a: LinkingNode, b: LinkingNode): boolean {
   return a.pass < b.pass || (a.pass === b.pass && a.position < b.position);
 }
 
+function savedLinkHosts(page: SavedOfficialPage): ReadonlySet<string> {
+  const links = new Set<string>();
+  for (const match of page.text.matchAll(/\b(?:href|src)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi)) {
+    const host = linkingHost((match[1] ?? match[2] ?? match[3]).replace(/&amp;/g, "&"), page.canonicalUrl);
+    if (host !== null) links.add(host);
+  }
+  return links;
+}
+
 /** Saved links are parsed once; the queue follows the old pass/page insertion order. */
 class OfficialLinkingIndex {
   private readonly nodes: LinkingNode[] = [];
@@ -1283,7 +1301,7 @@ class OfficialLinkingIndex {
     if (!parent) return;
     const pass = parent.pass === -1 ? 0 : parent.pass + Number(node.position <= parent.position);
     if (pass > node.pass) return;
-    node.chain.linkingPage = parent.chain;
+    node.parent = parent;
     if (pass === node.pass) return;
     node.pass = pass;
     const entry = { node, pass };
@@ -1334,19 +1352,14 @@ class OfficialLinkingIndex {
     }
   }
 
-  extend(pages: readonly SavedOfficialPage[]): void {
+  extend(pages: readonly IndexedOfficialPage[]): void {
     const appended: LinkingNode[] = [];
     for (let i = this.nodes.length; i < pages.length; i++) {
       const page = pages[i];
-      const links = new Set<string>();
-      for (const match of page.text.matchAll(/\b(?:href|src)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi)) {
-        const host = linkingHost((match[1] ?? match[2] ?? match[3]).replace(/&amp;/g, "&"), page.canonicalUrl);
-        if (host !== null) links.add(host);
-      }
       this.hasRepeatedUrls ||= this.urls.has(page.canonicalUrl);
       this.urls.add(page.canonicalUrl);
-      const node: LinkingNode = { page, position: i, host: linkingHost(page.canonicalUrl), links,
-        pass: Infinity, chain: { url: page.canonicalUrl, html: page.text } };
+      const node: LinkingNode = { page, source: page, position: i, host: linkingHost(page.canonicalUrl), links: page.links,
+        pass: Infinity };
       this.nodes.push(node);
       appended.push(node);
     }
@@ -1356,7 +1369,7 @@ class OfficialLinkingIndex {
     // that case, preserving Map's first position / last root value semantics.
     if (duplicate) {
       this.parents.clear(); this.waiting.clear(); this.chosen.clear(); this.queue.length = 0;
-      for (const node of this.nodes) { node.pass = Infinity; node.chain = { url: node.page.canonicalUrl, html: node.page.text }; }
+      for (const node of this.nodes) { node.pass = Infinity; node.parent = undefined; node.source = node.page; (node as { links: ReadonlySet<string> }).links = node.page.links; }
     }
     const added = duplicate ? this.nodes : appended;
     for (const node of added) {
@@ -1369,7 +1382,7 @@ class OfficialLinkingIndex {
     for (const node of added) if (node.host !== null && /(^|\.)gov$/.test(node.host)) {
       const previous = roots.get(node.page.canonicalUrl);
       // The old root Map overwrites the HTML but keeps the original position.
-      if (previous) { previous.chain.html = node.page.text; (previous as { links: ReadonlySet<string> }).links = node.links; }
+      if (previous) { previous.source = node.page; (previous as { links: ReadonlySet<string> }).links = node.links; }
       else roots.set(node.page.canonicalUrl, node);
     }
     for (const root of roots.values()) { root.pass = -1; this.chosen.set(root.page.canonicalUrl, root); }
@@ -1378,21 +1391,65 @@ class OfficialLinkingIndex {
     this.drain();
   }
 
-  linkingPageFor(url: string): OfficialLinkingPage | null {
+  sourcesFor(url: string): IndexedOfficialPage[] {
     const host = linkingHost(url);
-    return host === null || /(^|\.)gov$/.test(host) ? null : this.parents.get(host)?.chain ?? null;
+    const sources: IndexedOfficialPage[] = [];
+    let node = host === null || /(^|\.)gov$/.test(host) ? undefined : this.parents.get(host);
+    while (node) { sources.push(node.source); node = node.parent; }
+    return sources;
   }
 }
 
-const officialLinkingIndexes = new WeakMap<readonly SavedOfficialPage[], OfficialLinkingIndex>();
+type LinkingState = { index: OfficialLinkingIndex; pages: IndexedOfficialPage[] };
+const officialLinkingIndexes = new WeakMap<readonly SavedOfficialPage[], LinkingState>();
+const lazyOfficialLinkingIndexes = new WeakMap<readonly LazyOfficialPage[], LinkingState & { pending: Promise<void> }>();
+
+function chainFromSources(sources: readonly IndexedOfficialPage[], texts: readonly string[]): OfficialLinkingPage | null {
+  let chain: OfficialLinkingPage | null = null;
+  for (let i = sources.length - 1; i >= 0; i--) {
+    chain = { url: sources[i].canonicalUrl, html: texts[i], ...(chain ? { linkingPage: chain } : {}) };
+  }
+  return chain;
+}
 
 /** One index per append-only saved page set, shared by every caller. */
 export function officialLinkingPageFrom(url: string, pages: readonly SavedOfficialPage[]): OfficialLinkingPage | null {
   if (isOfficialSource(url)) return null;
-  let index = officialLinkingIndexes.get(pages);
-  if (!index) { index = new OfficialLinkingIndex(); officialLinkingIndexes.set(pages, index); }
-  index.extend(pages);
-  return index.linkingPageFor(url);
+  let state = officialLinkingIndexes.get(pages);
+  if (!state) { state = { index: new OfficialLinkingIndex(), pages: [] }; officialLinkingIndexes.set(pages, state); }
+  for (let i = state.pages.length; i < pages.length; i++) state.pages.push({ ...pages[i], links: savedLinkHosts(pages[i]) });
+  state.index.extend(state.pages);
+  const sources = state.index.sourcesFor(url);
+  return chainFromSources(sources, sources.map(page => page.text!));
+}
+
+/**
+ * Read each capture once to index its links, without retaining decoded HTML.
+ * Reload only the selected chain's original capture text for verification.
+ * Concurrent callers share ingestion; failed reads propagate and may be retried.
+ */
+export async function officialLinkingPageFromAsync(url: string, pages: readonly LazyOfficialPage[]): Promise<OfficialLinkingPage | null> {
+  if (isOfficialSource(url)) return null;
+  let state = lazyOfficialLinkingIndexes.get(pages);
+  if (!state) {
+    state = { index: new OfficialLinkingIndex(), pages: [], pending: Promise.resolve() };
+    lazyOfficialLinkingIndexes.set(pages, state);
+  }
+  const saved = state;
+  const pending = saved.pending.catch(() => {}).then(async () => {
+    while (saved.pages.length < pages.length) {
+      const page = pages[saved.pages.length];
+      const text = await page.readText();
+      saved.pages.push({ canonicalUrl: page.canonicalUrl, readText: page.readText, links: savedLinkHosts({ canonicalUrl: page.canonicalUrl, text }) });
+    }
+    saved.index.extend(saved.pages);
+  });
+  saved.pending = pending;
+  await pending;
+  const sources = saved.index.sourcesFor(url);
+  const texts: string[] = [];
+  for (const page of sources) texts.push(await page.readText!());
+  return chainFromSources(sources, texts);
 }
 
 

@@ -11,10 +11,11 @@ import { reconcilePublicationObservations } from "../outcomes/publication.ts";
 import { readPlacePointerSlice, readPlacePointerSlices, type PlaceCaptureRead } from "./held-place-slices.ts";
 import { REGISTRY_RUNTIME_SCOPE } from "../registry/runtime-data-plane.ts";
 import { PostgresRoutineDataStore } from "./store.ts";
+import type { PlaceCaptureKind } from "../coverage/place-owed.ts";
 
 /** Derived from canonical published records, never filtered by their original job or ZIP. */
 export interface HeldPlaceCapture {
-  readonly subjects: readonly { id: string; kind: "body" | "seat" | "calendar" | "contest" | "funding" | "deadline"; divisionIds: readonly string[]; label: string }[];
+  readonly subjects: readonly { id: string; kind: "body" | "seat" | "calendar" | "contest" | "funding" | "deadline"; divisionIds: readonly string[]; label: string; captureKind?: PlaceCaptureKind }[];
   readonly held: readonly { subjectId: string; checklistId: string; state: "published" | "held" | "unpublished";
     sourceUrl: string; checkedAt: string; freshUntil: string; value: unknown }[];
 }

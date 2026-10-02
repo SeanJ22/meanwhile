@@ -2,11 +2,16 @@ import checklist from "../control-plane/readiness/checklist-profile.json" with {
 
 /** A derived capture view, never a publication decision or a second store. */
 export type PlaceSubjectKind = "division" | "body" | "seat" | "calendar" | "funding" | "contest" | "deadline";
+/** The canonical reader supplies this from the record's schema, never its label. */
+export type PlaceCaptureKind = "federal-legislator" | "state-legislator" | "executive"
+  | "campaign-finance" | "public-finance" | "filing-deadline" | "voting-deadline"
+  | "voting-sites" | "election-navigation" | "candidate" | "election-result";
 export interface PlaceSubject {
   readonly id: string;
   readonly kind: PlaceSubjectKind;
   readonly divisionIds: readonly string[];
   readonly label: string;
+  readonly captureKind?: PlaceCaptureKind;
 }
 export interface HeldPlaceField {
   readonly subjectId: string;
@@ -33,6 +38,27 @@ const GROUPS: Readonly<Record<PlaceSubjectKind, readonly string[]>> = {
   calendar: ["MTG", "DOC"], funding: ["CAM", "FIN"], contest: ["ELE", "CAN"], deadline: ["ELE"],
 };
 const DEADLINE_ITEMS = new Set(["ELE-06", "ELE-08", "ELE-09", "ELE-20", "ELE-21", "ELE-22", "ELE-23", "ELE-24"]);
+
+/** Broad kinds preserve unresolved work; a known record only owes its own facts.
+ * A campaign committee has no public budget and a voting date has no polling
+ * location. Those remain discovery work for the place, not for this record. */
+function appliesToRecord(subject: PlaceSubject, definition: { id: string; group: string }): boolean {
+  const { id, group } = definition;
+  switch (subject.captureKind) {
+    case "federal-legislator": return ["OFF", "LEG", "PRL"].includes(group) && id !== "LEG-22";
+    case "state-legislator": return ["OFF", "LEG"].includes(group) && !["LEG-20", "LEG-21"].includes(id);
+    case "executive": return ["OFF", "EXE"].includes(group);
+    case "campaign-finance": return group === "CAM";
+    case "public-finance": return group === "FIN";
+    case "filing-deadline": return id === "ELE-06";
+    case "voting-deadline": return id === "ELE-08";
+    case "voting-sites": return ["ELE-09", "ELE-21", "ELE-22", "ELE-23", "ELE-24"].includes(id);
+    case "election-navigation": return ["ELE-09", "ELE-20", "ELE-23", "ELE-24"].includes(id);
+    case "candidate": return group === "CAN";
+    case "election-result": return ["ELE-15", "ELE-17", "ELE-18", "ELE-26"].includes(id);
+    default: return true;
+  }
+}
 
 /** Canonical identities make a county fact reusable by every ZIP and every job.
  * Unknown inventories remain explicit discovery work; an empty input cannot
@@ -72,7 +98,8 @@ export function buildPlaceOwedList(input: {
   return [...subjects.values()].sort((a, b) => a.id.localeCompare(b.id)).flatMap(subject => {
     const inventory = subject.id.includes("#inventory:");
     const definitions = checklist.definitions.filter(d => GROUPS[subject.kind].includes(d.group) &&
-      (subject.kind !== "deadline" || DEADLINE_ITEMS.has(d.id)));
+      (subject.kind !== "deadline" || DEADLINE_ITEMS.has(d.id)) &&
+      (inventory || appliesToRecord(subject, d) || heldByKey.has(JSON.stringify([subject.id, d.id]))));
     // The inventory is one discovery item, not a fictitious seat or contest.
     const wanted = inventory ? definitions.slice(0, 1) : definitions;
     return wanted.map(definition => {

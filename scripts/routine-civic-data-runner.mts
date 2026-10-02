@@ -1157,8 +1157,8 @@ try {
 
 const attemptedCount = floored(
   "attempted routine source tasks",
-  "the configured routine source/body partition registry",
-  STANDING_SOURCE_TASKS.length,
+  "the selected routine source/body partitions and owed hunt publications",
+  selectedTasks.length,
   attempted,
 );
 console.log("RCD_RUN=" + JSON.stringify({

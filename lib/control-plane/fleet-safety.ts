@@ -6,7 +6,7 @@
  * canonical `costs` repository. In-cycle reservations close the race between
  * concurrent model requests until their provider-reported cost is persisted.
  */
-import type { CostEntry } from "./cost.ts";
+import { costEntryModelRequestBound, type CostEntry } from "./cost.ts";
 import type { SpendHold } from "./budget.ts";
 import { canonicalModelId } from "../models.ts";
 import { CACHE_RATE_MULTIPLIERS, rateFor, priceMeteredUsage, readMeteredUsage } from "./model-cost.ts";
@@ -165,17 +165,24 @@ function entryModelPrice(entry: CostEntry): { usd: number | null; knownUsd: numb
     // A split must cover the recorded aggregate quantities. A partial split
     // cannot make the missing part of an attempt free.
     const shares = entry.byModel;
+    const prices = shares.map(share => recordedModelPrice(share.model, { ...entry.cost, ...share }));
+    const knownUsd = prices.reduce((n, price) => n + (price?.measured ? price.usd : 0), 0);
     for (const key of ["inputTokens", "outputTokens"] as const) {
       if (amount(entry.cost[key]) && (!shares.every(share => amount(share[key])) ||
-        shares.reduce((n, share) => n + share[key]!, 0) !== entry.cost[key])) return { usd: null, knownUsd: 0, measured: false };
+        shares.reduce((n, share) => n + share[key]!, 0) !== entry.cost[key])) {
+        const bound = costEntryModelRequestBound(entry);
+        return { usd: bound === null ? null : Math.max(knownUsd, bound), knownUsd, measured: false };
+      }
     }
-    const prices = shares.map(share => recordedModelPrice(share.model, { ...entry.cost, ...share }));
-    return { usd: prices.some(price => price === null) ? null : prices.reduce((n, price) => n + price!.usd, 0),
-      knownUsd: prices.reduce((n, price) => n + (price?.measured ? price.usd : 0), 0),
+    const sum = prices.some(price => price === null) ? null : prices.reduce((n, price) => n + price!.usd, 0);
+    const bound = sum === null ? costEntryModelRequestBound(entry) : null;
+    return { usd: sum ?? (bound === null ? null : Math.max(knownUsd, bound)),
+      knownUsd,
       measured: prices.every(price => price?.measured === true) };
   }
   const price = recordedModelPrice(entry.model ?? (entry.tier === "none" ? null : entry.tier), entry.cost);
-  return { usd: price?.usd ?? null, knownUsd: price?.measured ? price.usd : 0, measured: price?.measured === true };
+  const bound = price === null ? costEntryModelRequestBound(entry) : null;
+  return { usd: price?.usd ?? bound, knownUsd: price?.measured ? price.usd : 0, measured: price?.measured === true };
 }
 
 /** Every recorded model role/identity/usage is accounted for, including a
@@ -199,6 +206,7 @@ export function aggregateModelSpend(
     if (entry.role === "DISCOVERY_SEARCH" || entry.source === "api.search.brave.com" || entry.source === "api.exa.ai") continue;
     const isModelBacked =
       entry.role === "SCOUT" ||
+      !!entry.requestedModel || !!entry.servedModel || !!entry.modelRequestBound ||
       !!entry.model || (entry.tier !== undefined && entry.tier !== null && entry.tier !== "none") ||
       entry.cost.inputTokens != null ||
       entry.cost.outputTokens != null ||
@@ -208,13 +216,14 @@ export function aggregateModelSpend(
     const at = Date.parse(entry.recordedAt);
     if (!(at >= start && at <= end)) continue;
     const price = entryModelPrice(entry);
-    const job = jobs.get(entry.attemptId) ?? { usd: 0, unknown: false };
+    const jobId = entry.spendHoldJobId ?? entry.attemptId;
+    const job = jobs.get(jobId) ?? { usd: 0, unknown: false };
     knownUsd += price.knownUsd;
     if (price.measured) measured += 1;
     else unmeasured += 1;
     job.usd += price.usd ?? price.knownUsd;
     job.unknown ||= price.usd === null;
-    jobs.set(entry.attemptId, job);
+    jobs.set(jobId, job);
   }
   const held = new Map<string, number>();
   const seen = new Set<string>();

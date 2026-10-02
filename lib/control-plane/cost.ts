@@ -37,6 +37,7 @@
 import type { Attempt, AttemptCost, WorkerRole } from "./attempt.ts";
 import type { WorkQuestion } from "./work-question.ts";
 import { canonicalModelId, modelTierFor, MODEL_TIERS, MODELS, type ModelTier } from "../models.ts";
+import { CACHE_RATE_MULTIPLIERS, rateFor } from "./model-cost.ts";
 /* Re-exported so a cost reader keys on the one constant (2026-09-23). */
 export { DISCOVERY_SEARCH_ROLE } from "./attempt.ts";
 
@@ -125,6 +126,14 @@ export interface CostEntry {
   /** Absent only on older rows. Null is plain code or an unreported model. */
   readonly model?: string | null;
   readonly tier?: ModelTier | "none" | null;
+  /** Requested identity stays separate from the provider's returned identity. */
+  readonly requestedModel?: string | null;
+  readonly servedModel?: string | null;
+  /** Maximum bill for this exact send, with no prompt or prompt hash retained.
+   * These quantities are conservative limits, not measured provider usage. */
+  readonly modelRequestBound?: ModelRequestBound;
+  /** Exact durable budget job that covered this attempt; never inferred from geography. */
+  readonly spendHoldJobId?: string;
   readonly attemptId: string;
   readonly workItemId: string;
   readonly routeTaskId: string | null;
@@ -176,6 +185,68 @@ export interface CostEntry {
    * Read through `costPortionsByModel`, never summed beside `cost`.
    */
   readonly byModel?: readonly CostModelShare[];
+}
+
+export interface ModelRequestBound {
+  readonly model: string;
+  /** Serialized UTF-8 request bytes bound the billed text input tokens. */
+  readonly inputTokens: number;
+  /** The request's own max_tokens. Thinking counts inside this quantity. */
+  readonly outputTokens: number;
+  readonly usd: number;
+  readonly basis: "REQUEST_UTF8_BYTES";
+  readonly measured: false;
+}
+
+function boundedTokenCount(value: number | null | undefined): value is number {
+  return typeof value === "number" && Number.isSafeInteger(value) && value >= 0;
+}
+
+/** Maximum synchronous text-request bill. Charge all input at the dearest
+ * cache-write rate; no cache hit or batch discount is assumed. */
+export function modelRequestBoundFor(model: string, inputTokens: number, outputTokens: number): ModelRequestBound | null {
+  const rate = rateFor(canonicalModelId(model));
+  if (!rate || !boundedTokenCount(inputTokens) || !boundedTokenCount(outputTokens)) return null;
+  const usd = (inputTokens * rate.inputUsdPerMillion * CACHE_RATE_MULTIPLIERS.cacheCreation1h +
+    outputTokens * rate.outputUsdPerMillion) / 1_000_000;
+  return Number.isFinite(usd) ? { model, inputTokens, outputTokens, usd, basis: "REQUEST_UTF8_BYTES", measured: false } : null;
+}
+
+/** Scheduling bound, never an invented measured charge. Future rows carry an
+ * exact send limit. Older Ask rows use reported aggregate usage, or the known
+ * requested model's provider context/output maxima, at the dearest active
+ * tier's prices. An unknown request with missing usage stays unbounded. */
+export function costEntryModelRequestBound(entry: CostEntry): number | null {
+  const bound = entry.modelRequestBound;
+  if (bound) {
+    if (entry.cost.requestCount !== 1 || (entry.byModel?.length ?? 0) > 1 ||
+      bound.basis !== "REQUEST_UTF8_BYTES" || bound.measured !== false ||
+      !boundedTokenCount(bound.inputTokens) || !boundedTokenCount(bound.outputTokens) ||
+      typeof bound.usd !== "number" || !Number.isFinite(bound.usd) || bound.usd < 0 ||
+      typeof entry.requestedModel !== "string" || canonicalModelId(entry.requestedModel) !== canonicalModelId(bound.model)) return null;
+    return modelRequestBoundFor(bound.model, bound.inputTokens, bound.outputTokens)?.usd ?? null;
+  }
+  if (entry.role !== "ASK" || entry.source !== "api.anthropic.com" || !entry.routeId?.startsWith("ask:")) return null;
+  const tier = modelTierFor(canonicalModelId(entry.requestedModel ?? entry.model ?? ""));
+  const requests = entry.cost.requestCount;
+  const protocol = tier ? MODELS[tier] : null;
+  let input = entry.cost.inputTokens;
+  if (!boundedTokenCount(input) && [entry.cost.uncachedInputTokens, entry.cost.cacheReadInputTokens, entry.cost.cacheCreationInputTokens].every(boundedTokenCount)) {
+    input = entry.cost.uncachedInputTokens! + entry.cost.cacheReadInputTokens! + entry.cost.cacheCreationInputTokens!;
+  }
+  if (!boundedTokenCount(input)) {
+    if (!protocol || !boundedTokenCount(requests) || requests === 0) return null;
+    input = protocol.contextWindowTokens * requests;
+  }
+  let output = entry.cost.outputTokens;
+  if (!boundedTokenCount(output)) {
+    if (!protocol || !boundedTokenCount(requests) || requests === 0) return null;
+    output = protocol.maxOutputTokens * requests;
+  }
+  const maxInputRate = Math.max(...MODEL_TIERS.map(tier => MODELS[tier].inputUsdPerMillion));
+  const maxOutputRate = Math.max(...MODEL_TIERS.map(tier => MODELS[tier].outputUsdPerMillion));
+  const usd = (input * maxInputRate * CACHE_RATE_MULTIPLIERS.cacheCreation1h + output * maxOutputRate) / 1_000_000;
+  return Number.isFinite(usd) ? usd : null;
 }
 
 /** One model's part of a charge (`CostEntry.byModel`): the billed quantities of the requests sent to it. */

@@ -277,6 +277,64 @@ test("unknown ASK, Scout and error bills retain measured dollars and never gain 
   assert.equal(researchPaidWorkerCapacity({ modelEnabled: true, spentUsd: 1, ceilingUsd: 100, requestUsd: .1, readyWork: 20, requestsPerMinute: 50 }), 20);
 });
 
+test("historical Ask provider maxima bound missing usage and unknown served ids without inventing measured dollars", () => {
+  const base: CostEntry = { ...cost(null, NIGHT), role: "ASK", source: "api.anthropic.com", routeId: "ask:grounded", model: "haiku" };
+  const missing = Array.from({ length: 4 }, (_, index) => ({ ...base, attemptId: `missing-${index}`,
+    cost: { ...base.cost, inputTokens: null, outputTokens: null, requestCount: 1 } }));
+  const served = Array.from({ length: 12 }, (_, index) => ({ ...base, attemptId: `served-${index}`, model: "unknown-served",
+    cost: { ...base.cost, inputTokens: 1, outputTokens: 1, requestCount: 1 } }));
+  const rows = [cost(3, NIGHT), ...missing, ...served];
+  const before = JSON.stringify(rows);
+  const aggregate = aggregateModelSpend(rows, NIGHT, NIGHT);
+  assert.ok(Math.abs(aggregate.usd! - 14.520336) < 1e-12);
+  assert.equal(aggregate.knownUsd, 3);
+  assert.equal(aggregate.measured, 1);
+  assert.equal(aggregate.unmeasured, 16);
+  const research = researchSpendInWindow(rows, NIGHT);
+  assert.equal(research.windowUsd, aggregate.usd);
+  assert.equal(fundedController({ now: NIGHT, costs: rows }).admissionSpendUsd(), aggregate.usd);
+  assert.equal(researchPaidWorkerCapacity({ modelEnabled: true, spentUsd: research.windowUsd,
+    ceilingUsd: 100, requestUsd: .1, readyWork: 20, requestsPerMinute: 50 }), 20);
+  assert.equal(JSON.stringify(rows), before, "a scheduling bound never rewrites the historical bill");
+  assert.equal(aggregateModelSpend([{ ...base, model: "unknown-served", cost: missing[0]!.cost }], NIGHT, NIGHT).usd, null,
+    "missing usage and an unknown requested tier cannot establish a provider maximum");
+});
+
+test("an actual request maximum bounds an unmetered bill and rejects incomplete maximum metadata", () => {
+  const row: CostEntry = { ...cost(null, NIGHT), role: "ASK", source: "api.anthropic.com", model: "unknown-served",
+    requestedModel: "haiku", cost: { ...cost(null, NIGHT).cost, inputTokens: null, outputTokens: null, requestCount: 1 },
+    modelRequestBound: { model: "haiku", inputTokens: 5000, outputTokens: 1024, usd: 0,
+      basis: "REQUEST_UTF8_BYTES", measured: false } };
+  const priced = aggregateModelSpend([row], NIGHT, NIGHT);
+  assert.equal(priced.usd, .01512, "counts and central rates determine the maximum, not a supplied dollar value");
+  assert.equal(priced.knownUsd, 0);
+  assert.equal(priced.unmeasured, 1);
+  assert.equal(aggregateModelSpend([{ ...row, role: "PARSER", source: null, model: null }], NIGHT, NIGHT).usd, priced.usd,
+    "recorded requested identity and send bounds keep an otherwise tokenless model bill in the total");
+  assert.equal(aggregateModelSpend([{ ...row, modelRequestBound: { ...row.modelRequestBound!, inputTokens: -1 } }], NIGHT, NIGHT).usd, null);
+  assert.equal(aggregateModelSpend([{ ...row, requestedModel: "opus" }], NIGHT, NIGHT).usd, null);
+  assert.equal(aggregateModelSpend([{ ...row, cost: { ...row.cost, requestCount: 2 } }], NIGHT, NIGHT).usd, null,
+    "one request maximum cannot cover an additional unmetered send");
+});
+
+test("an explicit hold identity covers mixed tiers and different attempt ids once", () => {
+  const base = cost(null, NIGHT);
+  const row: CostEntry = { ...base, role: "SCOUT", attemptId: "different-attempt", spendHoldJobId: "actual-job",
+    cost: { ...base.cost, inputTokens: 2, outputTokens: 2, requestCount: 2 }, byModel: [
+      { ...base.cost, model: "haiku", inputTokens: 1, outputTokens: 1, requestCount: 1, usd: 2 },
+      { ...base.cost, model: "unknown-served", inputTokens: 1, outputTokens: 1, requestCount: 1, usd: null },
+    ] };
+  const hold: SpendHold = { holdId: "actual-job#0", jobId: "actual-job", obligationId: "ob", keys: [], usd: 6,
+    heldAt: NIGHT, what: "actual multi-tier job maximum", settled: null };
+  const out = aggregateModelSpend([row, { ...row, attemptId: "another-attempt", byModel: undefined,
+    cost: { ...base.cost, inputTokens: null, outputTokens: null } }], NIGHT, NIGHT, [hold, hold]);
+  assert.equal(out.usd, 6);
+  assert.equal(out.knownUsd, 2);
+  assert.equal(out.unmeasured, 2);
+  assert.equal(aggregateModelSpend([{ ...row, spendHoldJobId: undefined }], NIGHT, NIGHT, [hold]).usd, null);
+  assert.equal(aggregateModelSpend([row], NIGHT, NIGHT, [{ ...hold, jobId: "another-job" }]).usd, null);
+});
+
 test("an exact standing job hold covers tokenless rows once without charging measured dollars twice", () => {
   const hold: SpendHold = { holdId: "job#0", jobId: "job", obligationId: "ob", keys: [], usd: 5, heldAt: NIGHT, what: "actual job maximum", settled: null };
   const unknown = { ...cost(null, NIGHT), attemptId: "job", role: "SCOUT" as const,

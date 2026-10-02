@@ -298,7 +298,7 @@ import {
 } from "../lib/control-plane/research-metrics.ts";
 import { researchDigestLines } from "../lib/control-plane/research-digest.ts";
 import { PILOT_ZIPS } from "../lib/health/owner-corpus-compile.ts";
-import type { CostEntry } from "../lib/control-plane/cost.ts";
+import { modelRequestBoundFor, type CostEntry } from "../lib/control-plane/cost.ts";
 import type { SpendHold } from "../lib/control-plane/budget.ts";
 import type { AttemptCost } from "../lib/control-plane/attempt.ts";
 import { meteredCostFields, priceMeteredUsage, readMeteredUsage } from "../lib/control-plane/model-cost.ts";
@@ -1517,7 +1517,7 @@ try {
   costLedger = [...await retryStartupRead(
     () => repos.costs.readSince(new Date(Date.parse(NOW) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
     () => null, startupReadRetry)];
-  if (researchSpendInWindow(costLedger, NOW).unmeasured > 0) {
+  if (researchSpendInWindow(costLedger, NOW).windowUsd === null) {
     const heldBudget = await retryStartupRead(() => repos.budget.read(), () => null, startupReadRetry);
     historicalSpendHolds = Object.values(heldBudget.value.spendHolds ?? {});
   }
@@ -2449,8 +2449,10 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
         attemptId: `scout-prewarm:${NOW}`, workItemId: "scout-prewarm", routeTaskId: null, routeId: SCOUT_PREWARM_ROUTE_ID, source: "api.anthropic.com",
         /* Charged to the budgeted work it was held for, so the Send's and area's history carries it (MW-021); otherwise as before. */
         jurisdiction: prewarmHold === null ? null : (jobSubject.get(prewarmHold.obligationId) ?? null),
-        ...(prewarmHold === null ? {} : { obligationId: prewarmHold.obligationId }),
-        project: "freshness", role: "SCOUT", model: response.model, cost, recordedAt: at,
+        ...(prewarmHold === null ? {} : { obligationId: prewarmHold.obligationId, spendHoldJobId: prewarmHold.jobId }),
+        project: "freshness", role: "SCOUT", model: response.model, requestedModel: model, servedModel: response.model,
+        modelRequestBound: modelRequestBoundFor(model, Buffer.byteLength(JSON.stringify(request)), request.max_tokens) ?? undefined,
+        cost, recordedAt: at,
       },
       at,
     ).catch(() => undefined);

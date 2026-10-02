@@ -283,6 +283,13 @@ export interface WorkerJob {
   readonly next: string;
 }
 
+/** Workers running now: in the place in view, in the whole system, and whether the read stopped at its row limit (both counts are then lower bounds). */
+export interface WorkersRunning {
+  readonly count: number;
+  readonly system: number;
+  readonly lowerBound: boolean;
+}
+
 export interface WaitingItem {
   readonly kind: string;
   readonly title: string;
@@ -761,7 +768,7 @@ export interface AdminV6Data {
   readonly sameCause: Sourced<readonly SameCause[]>;
   readonly workRows: Sourced<{ readonly rows: readonly WorkRow[]; readonly totals: readonly WorkStageTotal[] }>;
   readonly history: Sourced<readonly UiReceipt[]>;
-  readonly workers: Sourced<{ readonly status: WorkerStatus; readonly jobs: readonly WorkerJob[] | null; readonly waiting: readonly WaitingItem[] | null; readonly events: readonly WorkerEvent[] | null; readonly update: UpdateCard | null; readonly next: readonly string[] | null }>;
+  readonly workers: Sourced<{ readonly status: WorkerStatus; readonly jobs: readonly WorkerJob[] | null; readonly running?: WorkersRunning | null; readonly waiting: readonly WaitingItem[] | null; readonly events: readonly WorkerEvent[] | null; readonly update: UpdateCard | null; readonly next: readonly string[] | null }>;
   readonly checklist: Sourced<ChecklistView>;
   readonly agents: Sourced<readonly AgentRun[]>;
   readonly spend: Sourced<SpendView>;

@@ -9,6 +9,22 @@ import { indexJson } from "./parser.ts";
 import { assertResearchResult, assertResearchWalk, type DetectiveResult, type DetectiveWorkerInput, type ResearchBlocker,
   type ResearchSpan } from "./research-types.ts";
 import type { WorkerEvidence } from "./types.ts";
+import type { FreshnessDebt } from "../scheduler/debt.ts";
+import type { ExecutorDecision } from "../scheduler/dispatch.ts";
+
+/** A broken known route needs a new route, not another replay of the same HTTP shape. */
+export function sourceFailureRecovery(decision: ExecutorDecision, debt: FreshnessDebt | null | undefined): ExecutorDecision {
+  if (!needsSourceInvestigation(debt)) return decision;
+  return {kind:'BOUNDED_MODEL_WORKER', disagreement:decision.disagreement,
+    why:`DETECTIVE FAILURE RESPONSE: ${debt.target} failed at ${debt.lastFailedAt} (${debt.cause}, ${debt.consecutiveFailures} consecutive failure(s)). ${debt.detail}\n`+
+      'Read held facts and the knowledge bank first, then available APIs. Find another working source or a documented dead end; do not replay the failed route.'};
+}
+
+function needsSourceInvestigation(debt: FreshnessDebt | null | undefined): debt is FreshnessDebt {
+  return !!debt && debt.consecutiveFailures > 0 && [
+    'REFUSED_BY_HOST', 'RATE_LIMITED', 'UPSTREAM_ERROR', 'TRANSPORT_FAILED', 'EXTRACTION_FAILED',
+  ].includes(debt.cause);
+}
 
 /** JSON grammar, duplicate-key checks and exact pointer offsets reuse the Parser's lexical index. */
 function valueAt(evidence: WorkerEvidence, pointer: string): { value: unknown; span: ResearchSpan } | null {
@@ -129,6 +145,7 @@ export function detectiveExecutor(deps: import('../scheduler/scout-executor.ts')
 /** Both Scout lanes use the same failure responder and keep their existing budgets and tools. */
 export function failureResponderExecutor(deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps & {
   solved?: import('../scheduler/scout-result.ts').ScoutResult | null;
+  sourceFailure?: FreshnessDebt | null;
   executorFactory?: ScoutExecutorFactory;
 }): import('../scheduler/dispatch.ts').DeclaredExecutor {
   const contexts=new Map<string,{value?:ReturnType<typeof deps.contextFor>;error?:unknown}>();
@@ -142,6 +159,7 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
   const scout=factory({...deps,contextFor}), detective=detectiveExecutor({...deps,contextFor},factory);
   const choose=(row:Parameters<typeof contextFor>[0])=>{
     try {
+      if (needsSourceInvestigation(deps.sourceFailure)) return detective;
       const inherited=contextFor(row).inherited;
       // Shared manual failures are knowledge, not failures of this job. Its
       // projected entries/instructions are indented; keep actual prior-result
@@ -151,7 +169,8 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
         /\b(?:REFUSED|BLOCKED|NO_PROGRESS|NEEDS_ADAPTER|REQUIRED_FIELD_MISSING)\b|failed parse|blocked route|retry loop|DEBT: [1-9]\d* consecutive failure/i.test(ownHistory) ? detective : scout;
     } catch { return scout; }
   };
-  const held=deps.solved;
+  const held=deps.solved && !(needsSourceInvestigation(deps.sourceFailure) &&
+    Date.parse(deps.sourceFailure.lastFailedAt)>=Date.parse(deps.solved.recordedAt)) ? deps.solved : null;
   return {lane:held?'DETERMINISTIC':'BOUNDED_MODEL_WORKER',
     ...(!held && scout.dispatch && detective.dispatch ? {dispatch: ((input) => choose(input.obligation).dispatch!(input)) as NonNullable<import('../scheduler/dispatch.ts').DeclaredExecutor['dispatch']>} : {}),
     workerFor:input=>held
@@ -210,7 +229,7 @@ export async function readSubjectScoutHistory(repos:import('../repository/types.
 export function investigationRole(results: readonly import('../scheduler/scout-result.ts').ScoutResult[], failedWorkers:boolean): 'SCOUT'|'DETECTIVE' {
   return failedWorkers || results.some(result=>result.refusal !== null || ['BLOCKED','NO_PROGRESS','NEEDS_ADAPTER'].includes(result.outcome)) ? 'DETECTIVE':'SCOUT';
 }
-function hasUntriedAdapter(latest:import('../scheduler/scout-result.ts').ScoutResult|undefined,installed:readonly string[],knowledge:readonly FieldManualEntry[]=[]) {
+export function hasUntriedAdapter(latest:import('../scheduler/scout-result.ts').ScoutResult|undefined,installed:readonly string[],knowledge:readonly FieldManualEntry[]=[]) {
   const description = latest ? [latest.narrative,...(latest.nextRungs ?? []),...(latest.candidates ?? []).map(c=>c.routeId)].join(' ').toLowerCase() : '';
   const sourceOrigin=(value:unknown)=>{
     if(typeof value!=='string' || archiveCapture(value))return null;
@@ -219,7 +238,7 @@ function hasUntriedAdapter(latest:import('../scheduler/scout-result.ts').ScoutRe
   const origins=new Set([...(latest?.candidates??[]).map(c=>c.url),...(latest?.rungs??[]).filter(r=>r.tool!=='search').map(r=>r.target)].map(sourceOrigin).filter(Boolean));
   const learned=new Set(knowledge.flatMap(entry=>{
     const payload=entry.payload as {sourceAttemptId?:string;files?:unknown;sourceUrls?:unknown}|null;
-    if(entry.kind!=='ENGINEER_ADAPTER_PR' || !latest || !Array.isArray(payload?.files))return [];
+    if(!['ENGINEER_ADAPTER_PR','PLATFORM_ADAPTER'].includes(entry.kind) || !latest || !Array.isArray(payload?.files))return [];
     const sameAttempt=Boolean(latest.attemptId && payload.sourceAttemptId===latest.attemptId);
     const sameSourceClass=entry.recordClasses.includes(latest.recordClass?.toLowerCase()) && Array.isArray(payload.sourceUrls) &&
       payload.sourceUrls.some(value=>{const origin=sourceOrigin(value);return origin!==null && origins.has(origin);});

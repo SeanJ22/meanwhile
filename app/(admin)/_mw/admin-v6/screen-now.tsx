@@ -16,7 +16,7 @@ import { count, huntLeftUsd, mst, ITEM_STATUS_ORDER, pctDown, usd, type Hunt, ty
 import { TILE_LAYOUT } from "./national-layout.ts";
 import { COUNTRY_KEY, huntAt, huntsWithin, isWithin, nationalDepth, relation } from "./places.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
-import { ageWords, roundReading, usePageClock } from "./screen-workers.tsx";
+import { ageWords, roundReading, runningCount, systemRunningCount, usePageClock } from "./screen-workers.tsx";
 import { ActionButton, Actions, Card, cx, Empty, Loading, Pill, StageDots } from "./ui.tsx";
 import s from "./v6.module.css";
 
@@ -299,6 +299,7 @@ function SixAnswers() {
   const pub = local.filter((x) => x.r.stages[4] === "done" && x.r.stages[5] !== "done").length;
   const totals = checklistTotals(v.data.checklist.data?.placeGroups?.map((g) => g.counts) ?? null);
   const N = totals ? totals.reduce((a, b) => a + b, 0) : null;
+  const score = v.data.checklist.data?.score ?? null;
   const harm = stuck.filter((x) => x.item.readersAffected).length;
   const dec = stuck.filter((x) => x.item.lane === "decision").length;
   const hunt = huntAt(v.index, v.hunts, v.scopeKey);
@@ -314,7 +315,7 @@ function SixAnswers() {
   const huntsKnown = v.data.hunts.state !== "not-connected";
   const answers: { q: string; big: string; small: string; href: string; warn?: boolean }[] = [
     { q: "Readers received", big: resultsKnown ? `${ver} checked on the page` : "—", small: resultsKnown ? `${pub} published, not checked on the page · ${shared.length} shared results` : "", href: "#v6-readers" },
-    { q: "Still missing", big: N !== null && totals ? count(N - totals[0]) : "—", small: N !== null ? `of ${count(N)} checklist items` : "", href: "#v6-missing" },
+    { q: "Place score", big: score && score.overall.percent !== null ? `${score.overall.percent.toFixed(1)}%` : "—", small: score ? `${count(score.overall.captured)} of ${count(score.overall.total)} captured · ${count(score.overall.total - score.overall.captured)} remaining` : "", href: "#v6-missing" },
     { q: "Happening now", big: multi ? (insideWorkers.includes(null) ? "—" : String(insideWorkers.reduce<number>((a, n) => a + (n ?? 0), 0))) : hf ? (workers(hf) === null ? "—" : String(workers(hf))) : "—", small: multi ? `research workers across ${inside.length} hunts` : hf ? (hf.status === "running" && hf.researchWorkers !== null ? `research workers on the ${hf.name}` : hf.status === "unreported" ? hf.name : `${hf.name} is ${hf.status}`) : huntsKnown ? "No hunt here" : "", href: "#v6-happening" },
     { q: "Stuck", big: stuckKnown ? String(stuck.length) : "—", small: stuckKnown ? `${harm} affecting readers · ${stuck.filter((x) => x.rel === "shared").length} through shared work` : "", href: "#v6-stuck", warn: harm > 0 },
     { q: "Your decisions", big: stuckKnown ? String(dec) : "—", small: dec ? "See Suggested next steps" : stuckKnown ? "Nothing needs you here" : "", href: "#v6-steps", warn: dec > 0 },
@@ -422,10 +423,12 @@ function Missing() {
   const groups = v.data.checklist.data?.placeGroups ?? null;
   const totals = checklistTotals(groups?.map((g) => g.counts) ?? null);
   const N = totals ? totals.reduce((a, b) => a + b, 0) : 0;
+  const score = v.data.checklist.data?.score ?? null;
   return (
     <Card id="v6-missing" title="What’s still missing" aside={<button type="button" className={s.btnLink} onClick={() => v.go("checklist")}>Open the checklist →</button>}>
       {totals && N > 0 ? (
         <>
+          {score && <p className={cx(s.p, s.small)}>Place score {score.overall.percent === null ? "—" : `${score.overall.percent.toFixed(1)}%`} · {count(score.overall.captured)} of {count(score.overall.total)} captured · {count(score.overall.total - score.overall.captured)} remaining</p>}
           <p className={cx(s.p, s.small)}>
             {count(N)} checklist items · Checked on a public page: {count(totals[0])} ({pctDown(totals[0], N)}) · Published, not checked on the page: {count(totals[1])} · Collected, not published: {count(totals[2])} · Applies: {count(N - totals[5])} · Not sure: {count(totals[5])}
           </p>
@@ -450,12 +453,13 @@ function Happening() {
   const lanes = w?.status.lanes;
   const round = roundReading(w?.status, now);
   const progress = w?.status.lastUsefulProgress ?? null;
+  const running = w?.running ?? null;
   return (
     <Card id="v6-happening" title="What’s happening now" aside={<button type="button" className={s.btnLink} onClick={() => v.go("workers")}>Open Workers →</button>}>
       <div className={s.gridTiles}>
         <div className={s.row}>
-          <span className={s.big}>{jobs ? jobs.length : "—"}</span>
-          <span className={s.meta}>{jobs ? `jobs working now in ${v.place.name}` : `jobs working now${isCountry ? "" : ` in ${v.place.name}`}`}</span>
+          <span className={s.big}>{runningCount(running, jobs)}</span>
+          <span className={s.meta}>{jobs ? `jobs working now in ${v.place.name}` : `jobs working now${isCountry ? "" : ` in ${v.place.name}`}`}{jobs && running && !isCountry ? ` · ${systemRunningCount(running)} in the whole system` : ""}</span>
         </div>
         <div className={s.row}>
           <span className={s.big}>{waiting ? waiting.length : "—"}</span>
@@ -470,6 +474,12 @@ function Happening() {
           <span className={s.meta}>{round.overdue ? round.headline : "Round of work"}</span>
         </div>
       </div>
+      {jobs && jobs.length > 0 && (
+        <ul className={s.stack} style={{ listStyle: "none", padding: 0, margin: 0 }}>
+          {jobs.slice(0, 5).map((j) => <li key={j.id} className={s.small}>{j.title} · {j.hunt} · {j.elapsed}</li>)}
+          {jobs.length > 5 && <li className={s.meta}>and {count(jobs.length - 5)} more</li>}
+        </ul>
+      )}
       {!jobs && lanes && (
         <div className={s.gridTiles}>
           {lanes.map((l) => (

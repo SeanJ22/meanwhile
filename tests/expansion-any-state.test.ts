@@ -163,6 +163,9 @@ function lookupOf(counties: Readonly<Record<string, { readonly label: string; re
     source: "published" as const,
     versionId: "cv-lookup-test",
     lookup: {
+      // This fixture publishes county-to-ZIP rows only; no reverse layer is held.
+      groupingsForZcta: async () => ({ status: { kind: "OK" }, memberships: [] }),
+      listVersions: async () => [],
       zctasForGrouping: async (g: { type: string; geoid: string; version: string }) => ({
         status: { kind: "OK" },
         geography: { type: g.type, geoid: g.geoid, version: g.version, ocdId: null, label: counties[g.geoid]!.label, stateFips: g.geoid.slice(0, 2), stateAbbr: counties[g.geoid]!.stateAbbr, memberStates: [counties[g.geoid]!.stateAbbr] },

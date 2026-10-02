@@ -74,11 +74,11 @@ test("a delta of zero passes", () => {
   assert.equal(verdict.delta.inSync, true);
 });
 
-test("a delta of two FAILS and names both migrations — the incident, exactly", () => {
+test("pending expands reach the production build, but still fail after deployment", () => {
   /*
    * The shape of run 33211710028: 23 committed, 21 applied, the two Ask
-   * migrations missing. Both are expand-phase, so both were owed BEFORE the
-   * deploy that carried the code naming `ask_interactions`.
+   * migrations missing. The production build now applies both before serving
+   * the code naming `ask_interactions`; neither may remain missing afterward.
    */
   const journal = journalOf(
     "0019_next_scarlet_witch",
@@ -95,20 +95,27 @@ test("a delta of two FAILS and names both migrations — the incident, exactly",
     moment: "pre-deploy",
   });
 
-  assert.equal(verdict.verdict, "fail");
+  assert.equal(verdict.verdict, "pass");
+  assert.equal(verdict.delta.appliedCount, 2, "pending expands must not be reported as applied");
+  assert.equal(verdict.delta.inSync, false);
   assert.deepEqual(
     verdict.expandNotApplied,
     ["0021_mixed_red_ghost", "0022_adorable_hemingway"],
     "the two Ask migrations must be named individually, never counted",
   );
-  const said = verdict.failures.join("\n");
+  assert.deepEqual(verdict.failures, []);
+  assert.match(verdict.summary, /pending for the production build/);
+  const after = evaluateShippingInvariant({
+    journal, appliedWhen: applied,
+    introduced: ["0021_mixed_red_ghost", "0022_adorable_hemingway"],
+    moment: "post-deploy",
+  });
+  assert.equal(after.verdict, "fail");
+  const said = after.failures.join("\n");
   for (const tag of ["0021_mixed_red_ghost", "0022_adorable_hemingway"]) {
+    assert.ok(verdict.summary.includes(tag), `the build plan does not name ${tag}`);
     assert.ok(said.includes(tag), `the refusal does not name ${tag}`);
   }
-  assert.ok(
-    said.includes("db:apply --target=production"),
-    "the refusal must state the remedy, not just the refusal",
-  );
 });
 
 test("a number is never the answer: the verdict carries every migration by name", () => {

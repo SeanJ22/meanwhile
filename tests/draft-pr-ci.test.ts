@@ -102,24 +102,24 @@ test("admission alone classifies draft/full before preflight", () => {
   }
 });
 
-test("draft runs install and every named deterministic gate", () => {
+test("draft runs install, lint and types; governance waits for ready", () => {
   const gates = workflow().jobs.verify;
   const install = named(gates, "Install");
-  assert.match(install.if ?? "", /tier == 'draft'/, "the gates install no longer admits the draft tier");
+  assert.match(install.if ?? "", /tier == 'draft' && matrix.group != 'governance'/, "the gates install no longer admits draft lint and types");
   assert.match(install.if ?? "", /tier == 'yes'/, "the gates install no longer admits the full tier");
   assert.doesNotMatch(install.if ?? "", /no-preflight/, "a refused preflight still buys the dependency install");
 
-  const deterministic = [
-    "Lint",
-    "Types (fresh checkout, no build)",
-    "Canonical state holdings and residual paths",
-    "Generated state manifests against committed observations",
-  ];
-  for (const name of deterministic) {
+  for (const name of ["Lint", "Types (fresh checkout, no build)"]) {
     const condition = named(gates, name).if ?? "";
-    assert.match(condition, /always\(\)/, `${name} no longer reports after a sibling deterministic gate fails`);
+    assert.match(condition, /always()/, `${name} no longer reports after a sibling deterministic gate fails`);
     assert.match(condition, /tier == 'draft'/, `${name} is missing from draft certification`);
     assert.match(condition, /tier == 'yes'/, `${name} is missing from full certification`);
+  }
+  for (const name of ["Canonical state holdings and residual paths", "Generated state manifests against committed observations"]) {
+    const condition = named(gates, name).if ?? "";
+    assert.match(condition, /always()/, `${name} no longer reports after a sibling deterministic gate fails`);
+    assert.match(condition, /tier == 'yes'/, `${name} is missing from full certification`);
+    assert.doesNotMatch(condition, /tier == 'draft'/, `${name} runs on draft pull requests`);
   }
 });
 

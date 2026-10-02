@@ -13,6 +13,40 @@ import { adapterWaitReason, investigationRole, subjectScoutHistory, reusableScou
 import { installedAdapters, installedAdapterVersion, runInstalledAdapter } from '../lib/control-plane/scheduler/scout-adapters.ts';
 import { readClientSource } from '../lib/control-plane/scheduler/scout-clients.ts';
 import { retryable } from '../lib/control-plane/scheduler/debt.ts';
+import { sourceFailureRecovery } from '../lib/control-plane/workers/detective.ts';
+import type { FreshnessDebt } from '../lib/control-plane/scheduler/debt.ts';
+
+test('source failures reach Detective with the failed route while non-source debts retain their lane',()=>{
+ const decision={kind:'DETERMINISTIC' as const,why:'Known HTTP_GET shape',disagreement:null};
+ const debt={obligationId:'owed',cause:'UPSTREAM_ERROR',target:'search-provider',detail:'HTTP 504',
+   lastFailedAt:'2026-10-01T05:27:35Z',consecutiveFailures:1,retryAt:'2026-10-01T05:42:35Z'} as FreshnessDebt;
+ for(const cause of ['REFUSED_BY_HOST','RATE_LIMITED','UPSTREAM_ERROR','TRANSPORT_FAILED','EXTRACTION_FAILED'] as const) {
+  const recovery=sourceFailureRecovery(decision,{...debt,cause});
+  assert.equal(recovery.kind,'BOUNDED_MODEL_WORKER');
+  assert.match(recovery.why,/search-provider.*2026-10-01T05:27:35Z/);assert.match(recovery.why,/HTTP 504/);
+ }
+ for(const cause of ['AWAITING_ADAPTER','AWAITING_ROUTINE_READ','NEVER_DISPATCHED','WORKER_LOST'] as const)
+  assert.equal(sourceFailureRecovery(decision,{...debt,cause}),decision);
+ assert.equal(sourceFailureRecovery(decision,{...debt,consecutiveFailures:0}),decision);
+ assert.equal(sourceFailureRecovery(decision,null),decision);
+ assert.equal(debt.retryAt,'2026-10-01T05:42:35Z','recovery does not change source backoff');
+});
+
+test('a source failure after discovery reopens Detective; a later solved route remains reusable',async()=>{
+ const solved={attemptId:'solved',recordedAt:'2026-10-01T00:00:00Z',refusal:null,candidates:[],findings:[]} as unknown as ScoutResult;
+ const debt={obligationId:'owed',cause:'UPSTREAM_ERROR',target:'api.example.gov',detail:'HTTP 504',
+   lastFailedAt:'2026-10-01T01:00:00Z',consecutiveFailures:2} as FreshnessDebt;
+ const input={obligation:{obligation:{id:'owed'}},holder:'worker'} as Parameters<NonNullable<ReturnType<typeof failureResponderExecutor>['workerFor']>>[0];
+ const make=(recordedAt:string)=>failureResponderExecutor({solved:{...solved,recordedAt},sourceFailure:debt,
+  transport:async()=>{throw Error('No model expected in selection');},toolkitFor:()=>{throw Error('No tools');},
+  contextFor:()=>({route:null,providerId:null,reason:'failed source',decision:'BOUNDED_MODEL_WORKER',inherited:{artifactIds:[],summary:''},
+   tools:{vault:async()=>({stored:true,where:'test',why:'saved'}),spaceOut:async()=>{}}})});
+ const failed=make(solved.recordedAt);
+ assert.equal(failed.lane,'BOUNDED_MODEL_WORKER');assert.equal(failed.workerFor!(input).role,'DETECTIVE');
+ const recovered=make('2026-10-01T02:00:00Z');
+ assert.equal(recovered.lane,'DETERMINISTIC');assert.equal(recovered.workerFor!(input).role,'ACQUIRER');
+ assert.equal((await recovered.run(input as Parameters<typeof recovered.run>[0])).cost?.requestCount,0);
+});
 
 test('adapter PR publication creates only adapter files and applies the merge label',async()=>{
  const calls:{method:string;path:string;body:unknown}[]=[];
@@ -178,7 +212,7 @@ test('Engineer saves captured source URLs with its reusable adapter knowledge',a
   transportFor:()=>async()=>({model:MODELS.haiku.model,stop_reason:'end_turn',content:[{type:'text',text:JSON.stringify({files})}],
     usage:{input_tokens:100,output_tokens:10,cache_read_input_tokens:0,cache_creation_input_tokens:0}}),request:async(method,path)=>path.includes('/pulls?')
   ?[{html_url:'https://github.com/SeanJ22/meanwhile/pull/999',number:999}]:{}});
- const entry=(await readFieldManual(repos,{role:'DETECTIVE'})).store.entries.find(e=>e.kind==='ENGINEER_ADAPTER_PR')!;
+ const entry=(await readFieldManual(repos,{role:'DETECTIVE'})).store.entries.find(e=>e.kind==='ENGINEER_ADAPTER_PR' && (e.payload as {sourceAttemptId?:string}).sourceAttemptId===source.attemptId)!;
  assert.deepEqual(entry.recordClasses,['meetings']);
  assert.deepEqual((entry.payload as {sourceUrls:string[]}).sourceUrls,['https://platform.example/first-tenant/calendar','https://platform.example/sitemap.xml']);
 });

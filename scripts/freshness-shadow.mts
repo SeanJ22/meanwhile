@@ -243,7 +243,7 @@ import {
   type WorkArtifact,
 } from "../lib/control-plane/scheduler/dispatch.ts";
 import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutJobWorstCaseUsd, scoutPrewarmPlan, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { failureResponderExecutor, readSubjectScoutHistory, solvedScoutResult, subjectScoutHistory, wakeInstalledAdapterDebts } from '../lib/control-plane/workers/detective.ts';
+import { failureResponderExecutor, readSubjectScoutHistory, solvedScoutResult, sourceFailureRecovery, subjectScoutHistory, wakeInstalledAdapterDebts } from '../lib/control-plane/workers/detective.ts';
 import { buildScoutToolkit, scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
 import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
@@ -806,7 +806,6 @@ const decisionFor = (obligationId: string, routeId: string | null): ExecutorDeci
   return d;
 };
 for (const u of units) decisionFor(u.obligation.id, u.obligation.routeId);
-const modelClassUnits = units.filter((u) => decisions.get(u.obligation.id)?.kind === "BOUNDED_MODEL_WORKER");
 const decisionDisagreements = units
   .map((u) => ({ obligationId: u.obligation.id, disagreement: decisions.get(u.obligation.id)?.disagreement ?? null }))
   .filter((d) => d.disagreement !== null);
@@ -985,6 +984,8 @@ const debtsIn = await wakeInstalledAdapterDebts(repos,(canary
 ).filter((debt) => !retiredDebtReasons.has(debt.obligationId)),NOW);
 /* The plain-code lane's queue key reads this debt (`waitingSince`); so does its reading while the cycle runs. */
 const debtAtCycleStart = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
+for (const [id, decision] of decisions) decisions.set(id, sourceFailureRecovery(decision, debtAtCycleStart.get(id)));
+const modelClassUnits = units.filter((u) => decisions.get(u.obligation.id)?.kind === "BOUNDED_MODEL_WORKER");
 const debtIds = new Set(debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
 const retryNow = new Set(retryable(debtsIn, nowMs).map((d) => d.obligationId));
 const backedOff = new Set([...debtIds].filter((id) => !retryNow.has(id)));
@@ -1226,7 +1227,7 @@ const expansionLoad = await loadExpansionPlan({
       ([state, why]) => `the ${state.toUpperCase()} registration could not be read as a jurisdiction registry (${why}); nothing in it is placed or created`,
     );
   },
-  ...("registries" in promoted ? { loadTerritory: (states: readonly string[], zips: ReadonlySet<string>) => readTerritoryIndex(ROOT, [...registriesNow(promoted.registries).values()], [...states], zips) } : {}),
+  ...("registries" in promoted ? { loadTerritory: (states: readonly string[], zips: ReadonlySet<string>, places: Parameters<typeof readTerritoryIndex>[4]) => readTerritoryIndex(ROOT, [...registriesNow(promoted.registries).values()], [...states], zips, places) } : {}),
 });
 runtimeConditions.push(...expansionLoad.conditions);
 const expansionPlan = expansionLoad.plan;
@@ -1237,7 +1238,6 @@ const lifetimeHuntSubjects = new Set((expansionPlan?.scopes ?? [])
 const lifetimeHuntWorkIds = new Set(sync.all.filter(o => lifetimeHuntSubjects.has(o.subjectId)).map(o => o.id));
 const lifetimeHuntWork = (work: string): boolean => lifetimeHuntSubjects.has(work) || lifetimeHuntWorkIds.has(work);
 const hasLifetimeHunt = lifetimeHuntSubjects.size > 0;
-const fundedHunts = (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED" && scope.decision.budgetUsd > 0);
 let placeOrder: readonly string[] = [];
 let placeOrderDirty = true;
 let placeOrderRead: Promise<void> | null = null;
@@ -1271,10 +1271,6 @@ const placeRankFor = (subject: string): number | null => {
   return ranks.length ? Math.min(...ranks) : null;
 };
 const providerQueue = new ModelProviderQueue({
-  ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}) });
-const workerCapacity = researchWorkerCapacity({ hunts: Math.max(1, fundedHunts.length),
-  availableUsd: fundedHunts.reduce((sum, scope) => sum + scope.decision.budgetUsd, 0),
-  requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
   ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}) });
 /** Current place order first; an unplaced owner dispatch follows the selected places. */
 const placementRank = (obligationId: string): number | null => {
@@ -1569,6 +1565,10 @@ try {
   runtimeConditions.push(`the cost ledger could not be read (${ledgerUnreadable}); the rolling ceiling cannot be enforced, so Scout work is deferred`);
 }
 const spendWindow = researchSpendInWindow(costLedger, NOW);
+const workerCapacity = researchWorkerCapacity({ readyWork: dueThisCycle.length,
+  availableUsd: ledgerUnreadable !== null || spendWindow.windowUsd === null ? 0 : Math.max(0, effectiveCeilingUsd - spendWindow.windowUsd),
+  requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
+  ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}) });
 let finalSpendWindow: ReturnType<typeof researchSpendInWindow> | null = null;
 let finalSpendAsOf: string | null = null;
 let spentThisCycle = 0;
@@ -1899,20 +1899,20 @@ let releaseDrainRequested = false;
 process.on("message", message => {
   if (message !== null && typeof message === "object" && "kind" in message && message.kind === "RUNTIME_RELEASE_DRAIN") {
     releaseDrainRequested = true;
-    console.log("  runtime release requested: new worker admissions closed; active workers finish and queued work remains owed");
+    console.log("  runtime release requested: current wave finishes normally; no new autonomous wave will start");
   }
 });
 const workerSlots = workerProcessSlots(() => {
   const limits = providerQueue.limits(MODELS.haiku.model);
   const spent = fleetSafety.snapshot(nowIso()).rolling24Hours.modelUsd;
-  return Math.max(1, researchWorkerCapacity({ hunts: Math.max(1, fundedHunts.length),
+  return Math.max(1, researchWorkerCapacity({
     availableUsd: spent === null ? 0 : Math.max(0, effectiveCeilingUsd - spent),
     requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
-    requestsPerMinute: limits?.requestsPerMinute ?? undefined,
+    requestsPerMinute: limits?.requestsPerMinute ?? (process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) : undefined),
     inputTokensPerMinute: limits?.inputTokensPerMinute ?? undefined,
     outputTokensPerMinute: limits?.outputTokensPerMinute ?? undefined,
     inputTokensPerRequest: 8192, outputTokensPerRequest: RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn }));
-}, { admissionsOpen: () => !releaseDrainRequested });
+});
 // Hand out durable leases before unrelated histories or parent execution.
 const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
   runnerPaused: intents.runnerPause.paused });
@@ -2049,7 +2049,7 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
     /* The robots.txt verdict is a record, never a reason to stop (owner decision 2026-09-25); the transport says whether a wall stood. */
     lines.push(`PRIOR DISPOSITION ${d.at}: ${d.disposition} (robots.txt ${d.permission}, recorded, never a refusal; transport ${d.transport}) — ${d.note.slice(0, 300)}`);
   }
-  if (debt) lines.push(`DEBT: ${debt.consecutiveFailures} consecutive failure(s), retry at ${debt.retryAt}`);
+  if (debt) lines.push(`DEBT: ${debt.consecutiveFailures} consecutive failure(s), retry at ${debt.retryAt}; ${debt.target} ${debt.cause} at ${debt.lastFailedAt}: ${debt.detail}`);
   /* A dispatched discovery row starts from what the free walk saw: its outcome and the leads it could not confirm. */
   const discovery = parseMeetingsDiscoveryId(id);
   const freeWalk = discovery === null ? null : (freeWalks.evidenceFor?.(discovery.jurisdictionId) ?? null);
@@ -2434,6 +2434,7 @@ const heldScoutFor = (scheduled: ScheduledObligation) => solvedScoutResult([...p
 const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled || heldScoutFor(scheduled)!==null
   ? failureResponderExecutor({
       solved:heldScoutFor(scheduled),
+      sourceFailure:debtAtCycleStart.get(scheduled.obligation.id),
       toolkitFor: buildScoutToolkit,
       executorFactory: deps => scoutProcessExecutor({ root: ROOT, postgres: wantsPostgres,
         fileStoreRoot: CONTROL_PLANE_ROOT, slots: workerSlots,
@@ -2902,9 +2903,9 @@ async function runAutonomousWave() {
     slots: workerSlots,
     config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: modelLaneEnabled,
       searchEnabled: scoutSearch !== null, ceilingUsd: effectiveCeilingUsd, fundedSubjects: [...lifetimeHuntSubjects] },
-    capacity: () => modelLaneEnabled ? researchWorkerCapacity({ hunts: taskIds.length, availableUsd,
+    capacity: () => modelLaneEnabled ? researchWorkerCapacity({ readyWork: taskIds.length, availableUsd,
       requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
-      requestsPerMinute: providerQueue.limits(MODELS.haiku.model)?.requestsPerMinute ?? undefined,
+      requestsPerMinute: providerQueue.limits(MODELS.haiku.model)?.requestsPerMinute ?? (process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) : undefined),
       inputTokensPerMinute: providerQueue.limits(MODELS.haiku.model)?.inputTokensPerMinute ?? undefined,
       outputTokensPerMinute: providerQueue.limits(MODELS.haiku.model)?.outputTokensPerMinute ?? undefined,
       inputTokensPerRequest: 8192, outputTokensPerRequest: RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn }) : taskIds.length,

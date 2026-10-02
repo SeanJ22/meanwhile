@@ -7,6 +7,8 @@
  */
 import { useMemo, useState } from "react";
 
+import { periodLabel } from "@/lib/control-plane/admin-view/periods.ts";
+
 import { StatusBar, StatusLegend, StatusTable } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
 import { SECTION_DEP } from "./dependencies.ts";
@@ -48,9 +50,11 @@ export function NowScreen() {
   return (
     <>
       <header>
-        <p className={s.eyebrow}>{v.place.name} · Account period: {v.period === "day" ? "Last 24 hours" : v.period === "hunt" ? "Whole hunt" : "September 2026"}</p>
+        <p className={s.eyebrow}>{v.place.name} · {periodLabel(v.period, new Date())}</p>
         <h1 className={s.h1}>Now</h1>
       </header>
+      {/* The control Sean uses most (daily budget, paid search, start a hunt): first under the header, one click to open. */}
+      <DirectWork />
       {v.scopeKey === COUNTRY_KEY && <National />}
       <Instruction />
       <NextSteps />
@@ -60,7 +64,6 @@ export function NowScreen() {
       <Missing />
       <Happening />
       <Cost />
-      <DirectWork />
       <Recent />
     </>
   );
@@ -505,17 +508,24 @@ function DirectWork() {
   const inside = huntsWithin(v.index, v.hunts, v.scopeKey);
   const cards = hunt ? [hunt] : inside;
   const [open, setOpen] = useState(!!hunt);
+  // Start a hunt and the whole-system controls are what gets used most, so a place with many hunts inside it shows them first;
+  // a place that has its own hunt shows that hunt first.
+  const huntCards = (
+    <>
+      {cards.map((h) => (
+        <div key={h.id} className={s.row}>
+          <div className={s.spread}><strong>{h.name}</strong><span className={cx(s.small, h.status === "running" ? s.textGood : s.textWarn)}>{({ running: "Running", paused: "Paid work paused", stopped: "Stopped", unreported: "Run state not reported" })[h.status]}{h.status === "running" ? (h.researchWorkers === null ? " · worker count not reported" : ` · ${h.researchWorkers} research workers`) : ""}</span></div>
+          <span className={s.meta}>Started {h.startedAt.includes("T") ? mst(h.startedAt) : h.startedAt} · {usd(h.limitUsd)} lifetime · {usd(h.spentUsd + h.heldUsd)} spent or set aside</span>
+          <Actions actions={[{ kind: h.status === "paused" ? "hunt-resume" : "hunt-pause", target: h.placeKey }, { kind: "hunt-limit", target: h.placeKey }, { kind: "hunt-stop", target: h.placeKey }]} />
+        </div>
+      ))}
+    </>
+  );
   return (
     <details className={s.card} open={open || !!hunt} onToggle={(e) => setOpen((e.target as HTMLDetailsElement).open)}>
       <summary className={s.h2} style={{ cursor: "pointer" }}>Direct work</summary>
       <div className={s.stack} style={{ marginTop: 12 }}>
-        {cards.map((h) => (
-          <div key={h.id} className={s.row}>
-            <div className={s.spread}><strong>{h.name}</strong><span className={cx(s.small, h.status === "running" ? s.textGood : s.textWarn)}>{({ running: "Running", paused: "Paid work paused", stopped: "Stopped", unreported: "Run state not reported" })[h.status]}{h.status === "running" ? (h.researchWorkers === null ? " · worker count not reported" : ` · ${h.researchWorkers} research workers`) : ""}</span></div>
-            <span className={s.meta}>Started {h.startedAt.includes("T") ? mst(h.startedAt) : h.startedAt} · {usd(h.limitUsd)} lifetime · {usd(h.spentUsd + h.heldUsd)} spent or set aside</span>
-            <Actions actions={[{ kind: h.status === "paused" ? "hunt-resume" : "hunt-pause", target: h.placeKey }, { kind: "hunt-limit", target: h.placeKey }, { kind: "hunt-stop", target: h.placeKey }]} />
-          </div>
-        ))}
+        {!!hunt && huntCards}
         <div className={s.row}>
           <strong className={s.small}>Start a hunt</strong>
           <span className={s.meta}>{v.place.kind === "Country" ? "Choose a state, county, ZIP or body first." : inside.length && !cards.some((h) => h.placeKey === v.scopeKey) ? `A hunt already runs inside ${v.place.name}. A new one here reuses its work and keeps its own limit.` : "Creates checklist work from the registry. Money is set aside before each call."}</span>
@@ -529,6 +539,7 @@ function DirectWork() {
           <strong className={s.small}>Whole system · affects every state</strong>
           <Actions actions={[{ kind: "global-paid", target: "system" }, { kind: "global-paid-resume", target: "system" }, { kind: "global-ceiling", target: "system" }, { kind: "global-search-on", target: "system" }, { kind: "global-search-off", target: "system" }, { kind: "global-runner-pause", target: "runner" }, { kind: "global-runner-resume", target: "runner" }]} />
         </div>
+        {!hunt && huntCards}
       </div>
     </details>
   );

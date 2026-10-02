@@ -9,7 +9,7 @@ import { canonicalJson, RepositoryLockHeld, type ControlPlaneRepositories } from
 import { isControlPlaneRequestTimeout } from "../repository/request-bounds.ts";
 import { registerRouteTask } from "../repository/coordinator.ts";
 import { dispatchOne, proofChargeOf, sweepExpiredLeases, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
-import { ceilingPermits, researchSpendInWindow, RESEARCH_BOUNDS } from "../scheduler/research-policy.ts";
+import { ceilingPermits, researchSpendInWindow } from "../scheduler/research-policy.ts";
 import { fingerprint } from "../ids.ts";
 import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
@@ -402,7 +402,7 @@ export function fairAutonomousWorkIds(items: readonly WorkItem[], lastServed: Re
     groups.set(key, group);
   }
   const ordered = [...groups].sort(([ak, a], [bk, b]) =>
-    a.lastServed.localeCompare(b.lastServed) || a.priority - b.priority || ak.localeCompare(bk));
+    a.priority - b.priority || a.lastServed.localeCompare(b.lastServed) || ak.localeCompare(bk));
   for (const [, group] of ordered) group.items.sort((a, b) =>
     (lastServed.get(a.id) ?? "").localeCompare(lastServed.get(b.id) ?? "") ||
     a.createdAt.localeCompare(b.createdAt) || a.id.localeCompare(b.id));

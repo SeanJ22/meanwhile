@@ -11,7 +11,6 @@ import type { CampaignSiteApprovedRecord } from "./campaign-site-chain.ts";
 import { memoryInProcess, researchFetch, type ResearchGet, type ResearchRuntime } from "../../hunt/robots-first-fetch.ts";
 
 export const CANDIDATE_PUBLICATION_MAX_READS = 2;
-export const CANDIDATE_PUBLICATION_BUDGET_MS = 30_000;
 export const CANDIDATE_PUBLICATION_RECHECK_MS = 7 * 24 * 60 * 60 * 1000;
 
 export interface CandidatePublicationCycleReport {
@@ -37,7 +36,6 @@ export async function runCandidatePublicationCycle(input: {
   readonly openFor: (candidacyId: string) => ResearchGet;
   readonly spaceOut?: (host: string) => Promise<void>;
   readonly maxReads?: number;
-  readonly budgetMs?: number;
   /** Replay may compress the clock; production keeps the seven-day default. */
   readonly recheckMs?: number;
 }): Promise<CandidatePublicationCycleReport> {
@@ -45,13 +43,10 @@ export async function runCandidatePublicationCycle(input: {
   if (!input.eligibleCandidacyIds.size) return empty;
   const recheckMs = input.recheckMs ?? CANDIDATE_PUBLICATION_RECHECK_MS;
   if (!Number.isFinite(recheckMs) || recheckMs < 0) throw new Error("CANDIDATE_PUBLICATION_RECHECK_INVALID");
-  const deadline = input.clock() + (input.budgetMs ?? CANDIDATE_PUBLICATION_BUDGET_MS);
   const recorder = campaignSiteReadRecorder({ repos: input.repos, vaultRoot: input.vaultRoot,
     methodVersion: input.methodVersion, now: () => new Date(input.clock()).toISOString(), heldVault: input.heldVault });
-  const inventoryRead = await withinWallTime(Promise.all([readPipelineStates(input.repos), input.repos.artifacts.readAll(),
-    input.repos.attempts.list(), input.repos.routeTasks.list(), input.repos.workItems.list()]), deadline - input.clock());
-  if (!inventoryRead.done) throw new Error("CANDIDATE_PUBLICATION_INVENTORY_TIMEOUT");
-  const [states, artifacts, attemptRows, routeRows, workRows] = inventoryRead.value;
+  const [states, artifacts, attemptRows, routeRows, workRows] = await Promise.all([readPipelineStates(input.repos),
+    input.repos.artifacts.readAll(), input.repos.attempts.list(), input.repos.routeTasks.list(), input.repos.workItems.list()]);
   const byId = new Map(artifacts.map(row => [row.artifactId, row]));
   const attempts = new Map(attemptRows.map(row => [row.id, row.value]));
   const workSubjects = new Map(workRows.map(row => [row.id, row.value.subject]));
@@ -87,7 +82,7 @@ export async function runCandidatePublicationCycle(input: {
     if (!source || source.partial || source.contentHash !== `sha256-${site.evidence.sha256}` ||
       source.attemptId !== site.evidence.attemptId || source.canonicalUrl !== site.evidence.requestedUrl) continue;
     let page;
-    try { const read = await withinWallTime(recorder.heldPage(source), deadline - input.clock()); page = read.done ? read.value : null; }
+    try { page = await recorder.heldPage(source); }
     catch { page = null; }
     if (!page || page.sha256 !== site.evidence.sha256 || page.finalUrl !== site.evidence.finalUrl ||
       page.httpStatus !== site.evidence.httpStatus) continue;
@@ -116,28 +111,23 @@ export async function runCandidatePublicationCycle(input: {
   const limit = input.maxReads ?? CANDIDATE_PUBLICATION_MAX_READS;
   let readsUsed = 0;
   for (const link of due) {
-    if (readsUsed >= limit || input.clock() >= deadline) {
+    if (readsUsed >= limit) {
       deferred += 1; outcomes.push({ candidacyId: link.source.candidacyId, url: link.url, code: "NOT_READ_BOUNDED", artifactId: null });
       continue;
     }
     readsUsed += 1;
-    const remaining = deadline - input.clock();
     const get = input.openFor(link.source.candidacyId);
     const runtime: ResearchRuntime = { memory: memoryInProcess(), now: input.clock,
-      sleep: ms => input.sleep(Math.max(0, Math.min(ms, deadline - input.clock()))), spacingMs: 0,
-      timeoutMs: Math.max(1, Math.min(10_000, remaining)), get: async request => {
+      sleep: input.sleep, spacingMs: 0, timeoutMs: 10_000, get: async request => {
         const host = new URL(request.url).host.toLowerCase();
         if (input.spaceOut) await input.spaceOut(host);
-        return get({ ...request, timeoutMs: Math.max(1, Math.min(request.timeoutMs, deadline - input.clock())) });
+        const timeoutMs = Math.max(1, Math.min(request.timeoutMs, 10_000));
+        const response = await withinWallTime(get({ ...request, timeoutMs }), timeoutMs);
+        return response.done ? response.value : { status: null, body: new Uint8Array(0), contentType: "",
+          location: null, transportError: "CANDIDATE_PUBLICATION_REQUEST_TIMED_OUT" };
       } };
     try {
-      const timed = await withinWallTime(researchFetch(link.url, runtime), deadline - input.clock());
-      if (!timed.done) {
-        await recorder.recordPublicationAbort(link.source.candidacyId, link, "TIMED_OUT", "the bounded robots-first read exceeded this slice");
-        deferred += 1; outcomes.push({ candidacyId: link.source.candidacyId, url: link.url, code: "NOT_READ_TIMEOUT", artifactId: null });
-        continue;
-      }
-      const fetched = timed.value;
+      const fetched = await researchFetch(link.url, runtime);
       if (fetched.outcome !== "FETCHED" || fetched.accessControl || !fetched.status || fetched.status < 200 || fetched.status >= 300 ||
         !/html/i.test(fetched.contentType) || fetched.body.byteLength === 0 ||
         new URL(fetched.finalUrl).hostname !== new URL(link.source.sourceUrl).hostname) {

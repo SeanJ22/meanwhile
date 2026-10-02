@@ -69,9 +69,14 @@ import {
   withFleetSpendCeiling,
   withPlaceTarget,
   placeTargetOf,
+  withDataSwitch,
+  dataSwitchOf,
   PLACE_TARGET_KEY,
   API_FALLBACK_MISSING_SEAM,
 } from "./admin-config.ts";
+import { RECIPES } from "../data-business/recipes.ts";
+import { defaultOn } from "../data-business/switches.ts";
+import { audienceWords, isAudience } from "../data-business/types.ts";
 import {
   billingFactId,
   billingFactsOf,
@@ -851,6 +856,62 @@ const REGISTRY: readonly RegisteredAction[] = [
         openedWork: [],
         readBackAt: "/admin?view=checklist",
         undo: previous === null ? "Clear the target." : `Set it back to ${previous}%.`,
+      };
+    },
+  },
+
+  /* ------------------------------------------------------ config.setDataSwitch */
+  {
+    definition: {
+      type: "config.setDataSwitch",
+      label: "Switch a number on or off for an audience",
+      does:
+        "Records whether one number from the data business (a recipe such as the word cloud or support and oppose per name) may be read by one audience: Admin, the dashboard, or one named customer. Durable, with the receipt that set it. Takes effect on the next read.",
+      doesNot:
+        "Does not send anything to anyone, change what is captured, or change what readers see. A switch only decides who may read a number; the dashboard itself is not built yet.",
+      authority: "OWNER_DECISION_REQUIRED",
+      subjectKind: "which number, and who may see it",
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const recipe = typeof input.recipe === "string" ? input.recipe.trim() : "";
+      if (!RECIPES.some((r) => r.id === recipe)) return bad("say which number the switch is for");
+      const audience = typeof input.audience === "string" ? input.audience.trim() : "";
+      if (!isAudience(audience)) return bad("say who the switch is for: Admin, the dashboard, or one named customer");
+      const on = input.on;
+      const yes = on === true || on === "true" || on === "on" || on === 1;
+      const no = on === false || on === "false" || on === "off" || on === 0;
+      if (!yes && !no) return bad("say whether the number is on or off for them");
+      return { ok: true, value: { recipe, audience, on: yes } };
+    },
+    async execute(deps, context, input) {
+      const recipe = String(input.recipe);
+      const audience = String(input.audience);
+      const on = input.on === true;
+      const at = context.at;
+      let before: boolean;
+      try {
+        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const current = existing !== null && isAdminConfig(existing.value) ? existing.value : defaultAdminConfig(at);
+        const decided = dataSwitchOf(current, recipe, audience);
+        before = decided !== null ? decided.on : defaultOn(audience);
+        const next = withDataSwitch(current, { recipe, audience, on, decidedAt: at, decidedBy: context.request.actorRef, receiptId: context.receiptId });
+        if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, next, at);
+        else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, next, at);
+      } catch (error) {
+        return storeRefusal("your data switch", error);
+      }
+      const label = RECIPES.find((r) => r.id === recipe)!.label;
+      const who = audienceWords(audience);
+      return {
+        ok: true,
+        outcome: "DONE",
+        subject: `${recipe}@${audience}`,
+        says: `Recorded: “${label}” is now ${on ? "on" : "off"} for ${who} (it was ${before ? "on" : "off"}), and that survives a restart. It takes effect on the next read; nothing was sent to anyone.`,
+        openedWork: [],
+        readBackAt: "/admin?view=now",
+        undo: `Switch it ${before ? "on" : "off"} again.`,
       };
     },
   },

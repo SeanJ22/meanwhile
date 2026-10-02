@@ -47,6 +47,7 @@ import {
   districtLayerPresent,
   districtsAt,
   drawnDistrictsOn,
+  onSettledDistrictChange,
   removeDistrictLayer,
   setNarrowedDistricts,
   setSelectedDistrict,
@@ -277,49 +278,6 @@ function createHereElement(zipLabel: string): HTMLDivElement {
   return element;
 }
 
-/** Coalesce source-driven queries after the updated tiles have rendered.
- * No continuous move/zoom/render handler drives React or boundary queries. */
-function onSettledSourceChange(map: MapLibreMap, run: () => void): () => void {
-  let scheduled = false;
-  let disposed = false;
-
-  const flush = () => {
-    scheduled = false;
-    if (disposed) return;
-    /*
-     * Still moving: drop this pass rather than pay it into a frame the reader
-     * is watching. Nothing is lost by dropping it — `moveend` schedules
-     * another, and every camera move MapLibre makes ends in exactly one.
-     */
-    if (map.isMoving()) return;
-    run();
-  };
-
-  const schedule = () => {
-    if (disposed || scheduled) return;
-    scheduled = true;
-    map.once("render", flush);
-    map.triggerRepaint();
-  };
-
-  schedule();
-  map.on("sourcedata", schedule);
-  // Idle can reveal cached layers after software-rendered motion. Read that
-  // settled frame directly; scheduling another repaint here would loop.
-  map.on("idle", flush);
-  // A move that consumed no sourcedata still has to report: a camera arriving
-  // somewhere new IS a change in which districts are drawn.
-  map.on("moveend", schedule);
-
-  return () => {
-    disposed = true;
-    map.off("render", flush);
-    scheduled = false;
-    map.off("sourcedata", schedule);
-    map.off("idle", flush);
-    map.off("moveend", schedule);
-  };
-}
 
 /**
  * The theme the page is painted in, read from the attribute `app/layout.tsx`
@@ -516,7 +474,9 @@ export function MapCanvas({
       container: containerRef.current,
       // Districts start without any dependency on the basemap provider.
       style: withDistricts(FALLBACK_STYLE, districtTypesRef.current),
-      ...(remembered
+      ...(camera
+        ? { center: [camera.lng, camera.lat] as [number, number], zoom: initialZoomForZip(camera.zip) }
+        : remembered
         ? {
             center: [remembered.lng, remembered.lat] as [number, number],
             zoom: remembered.zoom,
@@ -1427,7 +1387,7 @@ export function MapCanvas({
     const map = mapRef.current;
     if (!map) return;
 
-    return onSettledSourceChange(map, () => {
+    return onSettledDistrictChange(map, () => {
       const live = mapRef.current;
       if (!live) return;
       setNarrowedDistricts(live, narrowedRef.current);
@@ -1462,12 +1422,17 @@ export function MapCanvas({
     const map = mapRef.current;
     if (!map) return;
 
-    return onSettledSourceChange(map, () => {
+    let previous = "";
+    return onSettledDistrictChange(map, () => {
       const live = mapRef.current;
       if (!live) return;
-      onDrawnDistrictsRef.current(
-        drawnDistrictsOn(live, districtTypesRef.current),
-      );
+      const drawn = drawnDistrictsOn(live, districtTypesRef.current);
+      // Tiles repeat polygons at their edges and can arrive in any order.
+      // An unchanged drawn set should not rerender the entire reader shell.
+      const signature = JSON.stringify(drawn.map(row => [row.ocdId, row.type, row.label]).sort((a, b) => a[0].localeCompare(b[0])));
+      if (signature === previous) return;
+      previous = signature;
+      onDrawnDistrictsRef.current(drawn);
     });
   }, [districtTypes]);
 

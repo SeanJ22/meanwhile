@@ -4,6 +4,8 @@ import { readFileSync } from "node:fs";
 const MIB = 1024 * 1024;
 /** Rounded-up measured RSS peaks of each entry; free memory already excludes running work. */
 export const WORKER_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = { route: 248, scout: 248, lease: 342, national: 1258 };
+/** Measured combined promoter and national child peak over a 150-second place job. */
+export const NATIONAL_PLACE_PEAK_MIB = 999;
 /** Sean's 0.75 GiB margin on the 8 GiB host (7,424 MiB maximum total use). */
 export const WORKER_MEMORY_HEADROOM_MIB = 768;
 
@@ -36,12 +38,11 @@ export interface WorkerProcessSlots {
 }
 
 /** Routine commands share host memory with reader repairs and catch-up work.
- * A national command owns a promoter and an acquiring child. Retain the
- * largest existing measured entry reservation until both have been remeasured. */
+ * A national place reservation includes its promoter and acquiring child. */
 export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
   const peak = Math.max(...Object.values(WORKER_ENTRY_PEAK_MIB)) * MIB;
   return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
-    peakBytes: memory.peakBytes ?? (entry => peak * (entry.startsWith("national-place:") ? 2 : 1)) });
+    peakBytes: memory.peakBytes ?? (entry => entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB : peak) });
 }
 
 export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryLimit = {}): WorkerProcessSlots {

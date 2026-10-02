@@ -119,29 +119,31 @@ jobs:
           - governance
     steps:
       - uses: actions/checkout@v7
+        if: needs.admission.outputs.tier == 'yes' || (needs.admission.outputs.tier == 'draft' && matrix.group != 'governance')
         with:
           fetch-depth: 0
           ref: ${{ github.sha }}
       - uses: actions/setup-node@v7
+        if: needs.admission.outputs.tier == 'yes' || (needs.admission.outputs.tier == 'draft' && matrix.group != 'governance')
         with:
           node-version: 24
           package-manager-cache: false
       - name: Enable corepack (pnpm pinned by packageManager)
-        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft'
+        if: needs.admission.outputs.tier == 'yes' || (needs.admission.outputs.tier == 'draft' && matrix.group != 'governance')
         run: corepack enable
       - name: Where is the pnpm store
         id: pnpm-store
-        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft'
+        if: needs.admission.outputs.tier == 'yes' || (needs.admission.outputs.tier == 'draft' && matrix.group != 'governance')
         run: echo "path=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
       - uses: actions/cache@v4
-        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft'
+        if: needs.admission.outputs.tier == 'yes' || (needs.admission.outputs.tier == 'draft' && matrix.group != 'governance')
         with:
           path: ${{ steps.pnpm-store.outputs.path }}
           key: pnpm-${{ runner.os }}-${{ runner.arch }}-node24-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
             pnpm-${{ runner.os }}-${{ runner.arch }}-node24-
       - name: Install
-        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft'
+        if: needs.admission.outputs.tier == 'yes' || (needs.admission.outputs.tier == 'draft' && matrix.group != 'governance')
         run: corepack pnpm install --frozen-lockfile
       - name: Lint
         if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft') && matrix.group == 'lint'
@@ -156,11 +158,11 @@ jobs:
           NODE_OPTIONS: --max-old-space-size=4096
         run: corepack pnpm exec tsc --noEmit
       - name: Canonical state holdings and residual paths
-        if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft') && matrix.group == 'governance'
+        if: always() && needs.admission.outputs.tier == 'yes' && matrix.group == 'governance'
         timeout-minutes: 5
         run: corepack pnpm state-holdings:check
       - name: Generated state manifests against committed observations
-        if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft') && matrix.group == 'governance'
+        if: always() && needs.admission.outputs.tier == 'yes' && matrix.group == 'governance'
         timeout-minutes: 5
         run: corepack pnpm state-manifest --check
   build:
@@ -175,10 +177,12 @@ jobs:
     name: build (${{ matrix.mode }})
     steps:
       - uses: actions/checkout@v7
+        if: needs.admission.outputs.tier == 'yes' && needs.admission.outputs.deploy_build != 'no'
         with:
           fetch-depth: 0
           ref: ${{ github.sha }}
       - uses: actions/setup-node@v7
+        if: needs.admission.outputs.tier == 'yes' && needs.admission.outputs.deploy_build != 'no'
         with:
           node-version: 24
           package-manager-cache: false
@@ -280,21 +284,21 @@ jobs:
           node-version: 24
           package-manager-cache: false
       - name: Enable corepack (pnpm pinned by packageManager)
-        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft'
+        if: needs.admission.outputs.tier == 'yes'
         run: corepack enable
       - name: Where is the pnpm store
         id: pnpm-store
-        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft'
+        if: needs.admission.outputs.tier == 'yes'
         run: echo "path=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
       - uses: actions/cache@v4
-        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft'
+        if: needs.admission.outputs.tier == 'yes'
         with:
           path: ${{ steps.pnpm-store.outputs.path }}
           key: pnpm-${{ runner.os }}-${{ runner.arch }}-node24-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
             pnpm-${{ runner.os }}-${{ runner.arch }}-node24-
       - name: Install
-        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft'
+        if: needs.admission.outputs.tier == 'yes'
         run: corepack pnpm install --frozen-lockfile
       - name: Frozen holdings base for extraction proofs
         if: success() && needs.admission.outputs.tier == 'yes'

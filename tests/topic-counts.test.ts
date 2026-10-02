@@ -11,7 +11,7 @@ test("a store that is not installed answers 'no topic counts yet', never an empt
   const view = topicCountsView(seam);
   assert.equal(view.kind, "NOT_INSTALLED");
   assert.equal((view as { says: string }).says, NO_TOPIC_COUNTS_YET);
-  assert.match(NO_TOPIC_COUNTS_YET, /No topic counts yet/);
+  assert.equal(NO_TOPIC_COUNTS_YET, "—");
 });
 
 test("the store's totals become topic counts for everyone: a topic's readers beside all readers in the same week or day", async () => {

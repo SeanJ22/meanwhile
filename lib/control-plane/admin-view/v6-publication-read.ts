@@ -13,11 +13,11 @@ export const ADMIN_V6_PUBLICATION_CONTRACT = "admin-v6/publication@1" as const;
 export const PUBLICATION_EXCEPTION_LIMIT = 40;
 
 export const PUBLICATION_VERDICT_WORDS: Readonly<Record<PublicationVerdict, string>> = {
-  READER_VISIBLE: "Published and read back by the reader",
-  READBACK_FAILED: "Published, but the reader readback failed",
-  PUBLISHED_NOT_READ_BACK: "Published, with no readback of that version recorded",
-  PUBLISHED_NO_READER_SURFACE: "Published; no reader page shows it (publication is the last stage)",
-  NOT_PUBLISHED: "Not published: nothing names this contract",
+  READER_VISIBLE: "Published and read back",
+  READBACK_FAILED: "Published, readback failed",
+  PUBLISHED_NOT_READ_BACK: "Published, not read back",
+  PUBLISHED_NO_READER_SURFACE: "Published, no reader page",
+  NOT_PUBLISHED: "Not published",
 };
 
 const NOT_VISIBLE: readonly PublicationVerdict[] = ["READBACK_FAILED", "PUBLISHED_NOT_READ_BACK", "NOT_PUBLISHED"];

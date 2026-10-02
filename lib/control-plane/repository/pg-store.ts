@@ -870,6 +870,24 @@ export async function bootstrap(
  */
 const placeReadConnections = new WeakMap<ControlPlaneRepositories, Sql>();
 
+/** Reconcile all subjects in one place against one indexed query, rather
+ * than opening a serverless connection for every field's subject. */
+export async function readPlaceWorkItems(repos: ControlPlaneRepositories, subjects: readonly string[]): Promise<Persisted<WorkItem>[]> {
+  if (!subjects.length) return [];
+  const ids = [...new Set(subjects)];
+  const sql = placeReadConnections.get(repos);
+  if (!sql) {
+    const rows: Persisted<WorkItem>[] = [];
+    for (const subject of ids) rows.push(...await repos.workItems.listWhere(["subject"], subject));
+    return rows.sort((a, b) => a.id.localeCompare(b.id));
+  }
+  const run = boundedRunner(sql, "cp_work_items", CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  const rows = await run("placeSubjects", "PAGE", `SELECT id, revision, updated_at, value
+    FROM cp_work_items WHERE value->>'subject'=ANY($1::text[]) ORDER BY id`, [ids]) as Record<string, unknown>[];
+  return rows.map(row => ({ id: String(row.id), revision: Number(row.revision),
+    updatedAt: new Date(row.updated_at as string).toISOString(), value: parseValue<WorkItem>(row.value, `place work item ${String(row.id)}`) }));
+}
+
 /** Exact source observations from any job; unrelated vault metadata stays in
  * Postgres instead of being copied into every place worker. */
 export async function readPlaceArtifacts(repos: ControlPlaneRepositories, url: string, cutoff: string, now: string): Promise<readonly ArtifactRecord[]> {

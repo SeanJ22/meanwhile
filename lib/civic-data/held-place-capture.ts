@@ -8,7 +8,7 @@ import { ROUTINE_SOURCE_CONTRACTS } from "./contracts.ts";
 import type { OutcomeSnapshot } from "../outcomes/types.ts";
 import { observationFreshUntil, observationIsFresh } from "../ask/agenda-publication.ts";
 import { reconcilePublicationObservations } from "../outcomes/publication.ts";
-import { readPlacePointerSlice, type PlaceCaptureRead } from "./held-place-slices.ts";
+import { readPlacePointerSlice, readPlacePointerSlices, type PlaceCaptureRead } from "./held-place-slices.ts";
 import { REGISTRY_RUNTIME_SCOPE } from "../registry/runtime-data-plane.ts";
 import { PostgresRoutineDataStore } from "./store.ts";
 
@@ -145,10 +145,10 @@ export async function readHeldPlaceCapture(divisionIds: readonly string[], optio
     contract.schedule?.follows?.some(partition => bodies.has(partition.bodyId) ||
       partitions.some(known => known.bodyId === partition.bodyId))).map(contract => contract.scope);
   const [meetings, families, outcomes] = await Promise.all([
-    sliced ? Promise.all(partitions.map(partition => readPlacePointerSlice<MeetingsSnapshot>("MEETING", partition.scope, divisionIds, [...bodies]))) :
+    sliced ? readPlacePointerSlices<MeetingsSnapshot>("MEETING", partitions.map(partition => partition.scope), divisionIds, [...bodies]) :
       readPromotedCivicDataBatch<MeetingsSnapshot>("MEETING", partitions.map(partition => partition.scope), options),
     readHeldPlaceFamilies(divisionIds, options, sliced ? value : undefined),
-    sliced ? Promise.all(outcomeScopes.map(scope => readPlacePointerSlice<OutcomeSnapshot>("MEETING_OUTCOME", scope, divisionIds, [...bodies]))) :
+    sliced ? readPlacePointerSlices<OutcomeSnapshot>("MEETING_OUTCOME", outcomeScopes, divisionIds, [...bodies]) :
       readPromotedCivicDataBatch<OutcomeSnapshot>("MEETING_OUTCOME", outcomeScopes, options),
   ]);
   return projectHeldPlaceCapture(divisionIds, registry, meetings, options.now ?? new Date().toISOString(), families, outcomes);

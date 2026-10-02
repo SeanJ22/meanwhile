@@ -105,6 +105,11 @@ test("below-target places continue every pass until a settled hunt makes no prog
   const changed = await repos.routeTasks.mustRead(task.id);
   await repos.routeTasks.compareAndSet(task.id, changed.revision, { ...changed.value,
     disposition: { ...changed.value.disposition!, note: JSON.stringify({ placeProgress: false }) } }, now);
+  assert.equal((await scheduleNationalPlace(repos, settled, now, true) as { nextDueAt: string }).nextDueAt, now,
+    "a capped acquisition with no records has not exhausted the available work");
+  const exhausted = await repos.routeTasks.mustRead(task.id);
+  await repos.routeTasks.compareAndSet(task.id, exhausted.revision, { ...exhausted.value,
+    disposition: { ...exhausted.value.disposition!, disposition: "INGESTED" } }, now);
   assert.equal((await scheduleNationalPlace(repos, settled, now, true) as { nextDueAt: string }).nextDueAt, "2026-10-02T00:00:00.000Z");
   assert.equal((await scheduleNationalPlace(repos, { ...settled, lastWorkedAt: null }, now, true) as { nextDueAt: string }).nextDueAt,
     "2026-10-02T00:00:00.000Z", "an unfinished no-progress hunt also backs off");

@@ -17,8 +17,15 @@ const serves = `${division} OR x->'alsoServesOcdIds' ?| $3::text[]`;
  * run against the existing canonical pointer in the existing read-only store. */
 export async function readPlacePointerSlice<T>(recordClass: CivicDataReadMetadata["recordClass"], scope: string,
   ids: readonly string[], bodies: readonly string[] = [], targets: readonly string[] = []): Promise<PlaceCaptureRead<T>> {
+  return (await readPlacePointerSlices<T>(recordClass, [scope], ids, bodies, targets))[0];
+}
+
+/** Multiple existing partitions share one read-only connection. */
+export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetadata["recordClass"], scopes: readonly string[],
+  ids: readonly string[], bodies: readonly string[] = [], targets: readonly string[] = []): Promise<PlaceCaptureRead<T>[]> {
+  if (!scopes.length) return [];
   const query = readerQuery();
-  if (!query) throw new Error(`HELD_PLACE_READ_FAILED:${recordClass}:${scope}:STORE_UNCONFIGURED`);
+  if (!query) throw new Error(`HELD_PLACE_READ_FAILED:${recordClass}:${scopes.join(",")}:STORE_UNCONFIGURED`);
   let value: string;
   if (recordClass === "REGISTRY_RUNTIME_BINDING") {
     value = `jsonb_build_object('registry', jsonb_build_object('divisions', ${array("payload->'registry'->'divisions'", division)},
@@ -51,7 +58,11 @@ export async function readPlacePointerSlice<T>(recordClass: CivicDataReadMetadat
     value = `(payload - 'records') || jsonb_build_object('records', ${array("payload->'records'", `${division} OR x->>'stateOcdId'=ANY($3::text[])`)})`;
   }
   const [rows] = await query([{ text: `WITH selected AS (SELECT $3::text[] ids, $4::text[] bodies, $5::text[] targets)
-    SELECT ${value} AS value FROM civic_data_promotions WHERE record_class=$1 AND scope=$2`,
-    params: [recordClass, scope, [...ids], [...bodies], [...targets]] }]);
-  return { kind: rows?.length ? "PROMOTED" : "NOT_RECORDED", value: rows?.[0]?.value as T ?? null, metadata: { recordClass, scope } };
+    SELECT scope, ${value} AS value FROM civic_data_promotions WHERE record_class=$1 AND scope=ANY($2::text[])`,
+    params: [recordClass, [...new Set(scopes)], [...ids], [...bodies], [...targets]] }]);
+  const byScope = new Map(rows?.map(row => [row.scope, row]));
+  return scopes.map(scope => {
+    const row = byScope.get(scope);
+    return { kind: row ? "PROMOTED" : "NOT_RECORDED", value: row?.value as T ?? null, metadata: { recordClass, scope } };
+  });
 }

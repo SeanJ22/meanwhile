@@ -46,7 +46,7 @@ export async function heldDivisionsForZip(zip: string): Promise<PlaceDivision[]>
       type === "sldu" || type === "sldl" ? `${type}:${Math.floor((year - 1) / 2) * 2}` : null;
     if (expected && membership.geography.version !== expected) continue;
     const id = censusWorkDivision(membership.geography) ?? (type === "county"
-      ? countyIdentity(membership.geography.stateFips, membership.geography.label)?.ocdId : null);
+      ? countyIdentity(membership.geography.stateFips, membership.geography.label.split(",")[0].replace(/\s+(County|Parish|Borough|Census Area)$/i, ""))?.ocdId : null);
     if (!type || !id) continue;
     const versions = await state.lookup.listVersions();
     const version = versions.find(v => v.key === membership.geography.version);
@@ -171,10 +171,27 @@ export async function divisionsForZip(zip: string, options: GeographyReadOptions
     { type: "school", service: "School", name: /^Secondary School Districts$/ },
   ];
   layers.push(...await savedResponses(additional.filter(l => !heldTypes.has(l.type)).map(async l => ({ type: l.type, url: await layer(l.service, l.name, options) }))));
-  const readings = await savedResponses(layers.map(async l => ({ ...l, features: await query(l.url, spatial(area.geometry!), options) })));
+  const states = [...new Set(held.filter(d => d.divisionType === "state").map(d => d.geoid).filter(id => /^\d{2}$/.test(id)))];
+  const withinState: Record<string, string> = states.length ? { where: `STATE IN (${states.map(id => `'${id}'`).join(",")})` } : {};
+  const readings = await savedResponses(layers.map(async l => ({ ...l, features: (await query(l.url,
+    { ...spatial(area.geometry!), ...withinState }, options)).filter(feature => !states.length ||
+      states.includes(String(feature.attributes.STATE ?? feature.attributes.STATEFP))) })));
   const counties = new Map([...held.filter(d => d.divisionType === "county").map(d => [d.geoid, d.label] as const),
     ...readings.filter(l => l.type === "county").flatMap(l => l.features.map(f =>
     [String(f.attributes.GEOID), String(f.attributes.NAME ?? f.attributes.BASENAME)] as const))]);
+  // Current subdivision boundaries can touch a county absent from the older
+  // held ZIP relationship. Ask only for those missing parent identities.
+  const missingCounties = [...new Set(readings.filter(l => l.type === "cousub").flatMap(l => l.features.map(f =>
+    `${f.attributes.STATE ?? f.attributes.STATEFP}${f.attributes.COUNTY ?? f.attributes.COUNTYFP}`)))].filter(id => /^\d{5}$/.test(id) && !counties.has(id));
+  if (missingCounties.length) {
+    const endpoint = await layer("State_County", /^Counties$/, options);
+    const features = await query(endpoint, { where: `GEOID IN (${missingCounties.map(id => `'${id}'`).join(",")})`, returnGeometry: "false" }, options);
+    for (const feature of features) {
+      counties.set(String(feature.attributes.GEOID), String(feature.attributes.NAME ?? feature.attributes.BASENAME));
+      const row = division(feature, "county", endpoint);
+      if (row) readings.push({ type: "county", url: endpoint, features: [feature] });
+    }
+  }
   const divisions = readings.flatMap(l => l.features.flatMap(f => division(f, l.type, l.url, counties) ?? []));
   return [...new Map([
     { id: "ocd-division/country:us", label: "United States", divisionType: "country", geoid: "US", sourceUrl: zipLayer },

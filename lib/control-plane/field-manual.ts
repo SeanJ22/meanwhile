@@ -254,6 +254,12 @@ export interface FieldManualRead {
   readonly error?: string;
 }
 
+/** Portable entries and this worker's state/role only; the shared parent keeps the full manual. */
+export function narrowFieldManual(read: FieldManualRead, query: FieldManualQuery): FieldManualRead {
+  const store = { ...read.store, entries: read.store.entries.filter(entry => entryMatches(entry, query)) };
+  return { ...read, store, projection: projectFieldManual(store, query) };
+}
+
 /** Original entries for this source, across every worker role. A dead route
  * remains knowledge, not a permanent ban on its host or other routes. */
 export function fieldManualForSource(read: FieldManualRead, url: string, state?: string): readonly FieldManualEntry[] {
@@ -276,6 +282,13 @@ export function fieldManualForSource(read: FieldManualRead, url: string, state?:
  */
 export async function readFieldManual(repos: FieldManualRepos, query: FieldManualQuery = {}): Promise<FieldManualRead> {
   try {
+    if (process.env.WTP_WORKER_TOOLS_URL) {
+      const response = await fetch(process.env.WTP_WORKER_TOOLS_URL, { method: "POST",
+        headers: { "content-type": "application/json", authorization: process.env.WTP_WORKER_TOOLS_TOKEN ?? "" },
+        body: JSON.stringify({ kind: "manual", body: query }), signal: AbortSignal.timeout(30_000) });
+      if (!response.ok) throw new Error(`SHARED_MANUAL_FAILED:${response.status}`);
+      return await response.json() as FieldManualRead;
+    }
     const row = await repos.fieldManual.read(FIELD_MANUAL_ID);
     const store = row?.value ?? emptyFieldManual();
     return { projection: projectFieldManual(store, query), store, revision: row?.revision ?? null };

@@ -17,9 +17,7 @@ import { canonicalJson } from "../control-plane/repository/types.ts";
 import { ADMIN_CONFIG_ID } from "../control-plane/gateway/admin-config.ts";
 import { heldDivisionsForZip } from "../control-plane/expansion/national-geography.ts";
 import { expansionScopesOf } from "../control-plane/expansion/scopes.ts";
-import { resolveScopes } from "../control-plane/expansion/runner-load.ts";
 import type { ResolvedScope } from "../control-plane/expansion/membership.ts";
-import { loadPublishedAreaLookupState } from "../census-geography/area-lookup.ts";
 import { admittedHuntSourceScopes } from "../civic-data/hunt-source-tasks.ts";
 
 export interface NationalPlaceSendRequest {
@@ -56,8 +54,8 @@ export async function readNationalPlaceSendRequests(repos: ControlPlaneRepositor
   if (decisions.malformed) throw new Error("The owner's place scopes contain unreadable decisions");
   const sends = decisions.scopes.filter(scope => scope.sourceWorkVersion === 1);
   if (!sends.length || !zips.length) return new Map<string, NationalPlaceSendRequest>();
-  const resolved = await resolveScopes(sends, await loadPublishedAreaLookupState(zips), null);
-  return nationalPlaceSendRequests(resolved.scopes, zips, now);
+  const { resolveNationalPlaceSendScopes } = await import("./place-source-admission.ts");
+  return nationalPlaceSendRequests(await resolveNationalPlaceSendScopes(sends, zips), zips, now);
 }
 
 /** Compare reader facts, excluding observation times and publication versions. */

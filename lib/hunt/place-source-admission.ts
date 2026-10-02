@@ -1,8 +1,9 @@
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../control-plane/repository/pg-store.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../control-plane/gateway/admin-config.ts";
-import { expansionScopesOf } from "../control-plane/expansion/scopes.ts";
+import { expansionScopesOf, type ExpansionScopeDecision } from "../control-plane/expansion/scopes.ts";
 import { resolveScopes } from "../control-plane/expansion/runner-load.ts";
 import { loadPublishedLookupState } from "../census-geography/reader.ts";
+import { loadPublishedAreaLookupState } from "../census-geography/area-lookup.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes } from "../civic-data/hunt-source-tasks.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
@@ -10,6 +11,11 @@ import type { RoutineSourceTask } from "../civic-data/runner.ts";
 import { DEFAULT_CADENCE_HOURS } from "../control-plane/scheduler/obligation.ts";
 import { dueNationalPlaceZips, nationalPlaceSendRequests, readNationalPlaceSendRequests, type NationalPlaceSendRequest } from "./place-source-task.ts";
 import { orderNationalPlaceWork } from "../control-plane/expansion/dispatch-work.ts";
+
+/** The existing hunt admission boundary resolves saved Sends for acquiring workers too. */
+export async function resolveNationalPlaceSendScopes(sends: readonly ExpansionScopeDecision[], zips: readonly string[]) {
+  return (await resolveScopes(sends, await loadPublishedAreaLookupState(zips), null)).scopes;
+}
 
 /** Start a saved Send alongside standing work, before the standing backlog drains. */
 export function placeSourceLaunchOrder<T extends { readonly task: Pick<RoutineSourceTask, "id"> }>(jobs: readonly T[]): T[] {

@@ -15,7 +15,7 @@ import type { PlaceCaptureKind } from "../coverage/place-owed.ts";
 
 /** Derived from canonical published records, never filtered by their original job or ZIP. */
 export interface HeldPlaceCapture {
-  readonly subjects: readonly { id: string; kind: "body" | "seat" | "calendar" | "contest" | "funding" | "deadline"; divisionIds: readonly string[]; label: string; captureKind?: PlaceCaptureKind }[];
+  readonly subjects: readonly { id: string; kind: "body" | "seat" | "calendar" | "contest" | "funding" | "deadline"; divisionIds: readonly string[]; label: string; captureKind?: PlaceCaptureKind; calendarBodyId?: string }[];
   readonly held: readonly { subjectId: string; checklistId: string; state: "published" | "held" | "unpublished";
     sourceUrl: string; checkedAt: string; freshUntil: string; value: unknown }[];
 }
@@ -84,7 +84,8 @@ export function projectHeldPlaceCapture(
     for (const meeting of published(read)?.meetings ?? []) {
       const divisions = divisionsFor(meeting.bodyId, meeting.ocdId);
       if (!divisions.some(id => wanted.has(id))) continue;
-      subjects.set(meeting.id, { id: meeting.id, kind: "calendar", divisionIds: divisions, label: meeting.title });
+      subjects.set(meeting.id, { id: meeting.id, kind: "calendar", divisionIds: divisions, label: meeting.title,
+        captureKind: "meeting", ...(meeting.bodyId ? { calendarBodyId: meeting.bodyId } : {}) });
       const hours = Math.abs(Date.parse(meeting.startsAt) - Date.parse(now)) <= 7 * 24 * 3_600_000 ? 1 : 12;
       const field = (id: string, value: unknown) => add(meeting.id, id, value,
         meeting.provenance.sourceUrl, meeting.provenance.collectedAt, hours);
@@ -103,7 +104,10 @@ export function projectHeldPlaceCapture(
     for (const sitting of published(read)?.sittings ?? []) {
       const divisions = divisionsFor(sitting.bodyId ?? undefined, sitting.ocdId);
       if (!divisions.some(id => wanted.has(id))) continue;
-      subjects.set(sitting.meetingId, { id: sitting.meetingId, kind: "calendar", divisionIds: divisions, label: sitting.bodyName });
+      const previous = subjects.get(sitting.meetingId);
+      const calendarBodyId = sitting.bodyId ?? previous?.calendarBodyId;
+      subjects.set(sitting.meetingId, { id: sitting.meetingId, kind: "calendar", divisionIds: divisions, label: sitting.bodyName,
+        captureKind: "meeting", ...(calendarBodyId ? { calendarBodyId } : {}) });
       const agenda = reconcilePublicationObservations(sitting.meetingId, sitting.publicationObservations.filter(observation =>
         observation.provenance === "FIRST_PARTY_PUBLISHER" && observationIsFresh(observation, Date.parse(now))));
       if (agenda.actionable?.report === "NOT_AVAILABLE" && !sitting.publication.agendaFile &&

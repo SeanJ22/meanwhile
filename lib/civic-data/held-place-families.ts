@@ -185,7 +185,7 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
   for (const record of families.funding?.candidates ?? []) {
     const divisions = moneyDivisions(record.targetKeys);
     const id = `fec:${record.fecCandidateId}:${record.principalCommitteeId ?? "unrecorded"}:${record.cycle}`;
-    if (!subject(id, "funding", divisions, record.name, "campaign-finance")) continue;
+    if (!subject(id, "funding", divisions, record.name, "federal-campaign-finance")) continue;
     const add = (key: string, item: unknown) => field(id, key, item, record.provenance.sourceUrl, record.provenance.collectedAt, 24);
     add("CAM-01", { authority: "FEC", candidateId: record.fecCandidateId });
     if (record.principalCommitteeId) add("CAM-02", { committeeId: record.principalCommitteeId, candidateId: record.fecCandidateId, targetKeys: record.targetKeys });
@@ -197,7 +197,7 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
     if (!isRenderable(record)) continue;
     const divisions = moneyDivisions(record.targetKeys);
     const id = `state-money:${record.jurisdiction}:${record.electionYear}:${record.committeeId ?? record.targetKeys.join("+")}`;
-    if (!subject(id, "funding", divisions, record.registeredName || record.candidateNameAsFiled, "campaign-finance")) continue;
+    if (!subject(id, "funding", divisions, record.registeredName || record.candidateNameAsFiled, "state-campaign-finance")) continue;
     const add = (key: string, item: unknown) => field(id, key, item, record.provenance.sourceUrl, record.checkedAt, 24);
     add("CAM-01", { agency: record.agency, filingsUrl: record.filingsUrl });
     if (record.committeeId && record.match.allThreeAgree) add("CAM-02", { committeeId: record.committeeId, name: record.registeredName, targetKeys: record.targetKeys });

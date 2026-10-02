@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
+import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
 
 import { failedAcquisitionCandidate, fecFundingCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredRoutineCandidate, processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
@@ -846,6 +847,21 @@ test("the real child boundary enforces both timeout and per-stream output limits
   assert.equal(results[2]?.status, 0);
   assert.equal(results[3]?.termination, "TIMED_OUT", "repeating one unchanged result is no progress");
   assert.match(results[3]!.errorMessage!, /NO_PROGRESS_PAUSED/);
+});
+
+test("national and publication source commands retain the progress-renewed timeout", async () => {
+  const source = readFileSync(new URL("../scripts/routine-civic-data-runner.mts", import.meta.url), "utf8");
+  const start = source.indexOf("function sourceChildCommand(");
+  const end = source.indexOf("function recordSourceSettlementFailures", start);
+  const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
+  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", `
+    ${snippet} return sourceChildCommand;`)(() => process.env, () => null);
+  const commands = ["national-place:85635", "worker-publication:registry-runtime-bindings:fixture"].map(id => ({
+    ...commandFor({ id, kind: "SOURCE", task: { id, ownerInvocation: true, registeredContractId: id }, command: [] }),
+    executable: process.execPath, args: ["-e", "setTimeout(()=>{},400)"],
+  }));
+  const results = await runBoundedChildPass(commands, { cwd: process.cwd(), env: process.env, timeoutMs: 100 });
+  assert.deepEqual(results.map(result => result.termination), ["TIMED_OUT", "TIMED_OUT"]);
 });
 
 test("per-command child environments override the batch and never leak across siblings", async () => {

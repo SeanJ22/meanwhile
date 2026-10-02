@@ -7,7 +7,7 @@ const ownedChildren = new Set<{ lastProgressAt: number; stop: (reason: string) =
 const progressListeners = new Set<() => void>();
 
 /** Only the process group we spawned, or that exact Windows child's tree. */
-async function endOwnedProcessTree(child: ChildProcess): Promise<void> {
+export async function endOwnedProcessTree(child: ChildProcess): Promise<void> {
   if (!child.pid) return;
   if (process.platform === "win32") {
     await new Promise<void>((resolve, reject) => {

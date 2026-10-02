@@ -9,6 +9,7 @@ import type { RouteDescriptor } from "../scheduler/registry.ts";
 import type { WorkerProcessSlots } from "./worker-slots.ts";
 import { workerProcessSlots } from "./worker-slots.ts";
 import { ZERO_COST } from "../attempt.ts";
+import { endOwnedProcessTree } from "../../../scripts/pilot-runtime-child.mts";
 export { workerProcessSlots, type WorkerProcessSlots } from "./worker-slots.ts";
 const processMemorySlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER);
 
@@ -128,6 +129,8 @@ export async function runNationalPlaceWorkerProcesses(input: {
 /** IPC carries transient provider requests; work, leases and costs stay in the existing repositories. */
 export async function runLeaseWorkerProcesses(input: {
   readonly entry: string;
+  readonly deadlineMs?: number;
+  readonly childTimeoutMs?: number;
   readonly config: LeaseWorkerConfig;
   readonly slots?: WorkerProcessSlots;
   readonly capacity: () => number;
@@ -150,6 +153,8 @@ export async function runLeaseWorkerProcesses(input: {
     readonly onResult: (report: NationalPlaceReport) => void | Promise<void>;
   };
 }): Promise<DispatchResult[]> {
+  const timeoutMs = input.childTimeoutMs ?? 10 * 60_000;
+  if (!Number.isSafeInteger(timeoutMs) || timeoutMs <= 0) throw new Error("WORKER_CHILD_TIMEOUT_INVALID");
   const results: DispatchResult[] = [];
   const pending = new Set(input.config.taskIds);
   const assigned = new Set<string>();
@@ -158,7 +163,8 @@ export async function runLeaseWorkerProcesses(input: {
   let admissionClosed = false;
   const failures: { ids: readonly string[]; error: unknown }[] = [];
   const launch = async (): Promise<void> => {
-    const release = await (input.slots ?? (input.config.postgres ? processMemorySlots : undefined))?.acquire(input.entry)
+    if (Date.now() >= (input.deadlineMs ?? Infinity)) throw new WorkerAdmissionRefusal(new Error("WORKER_DISPATCH_SLICE: work remains owed"));
+    const release = await (input.slots ?? (input.config.postgres ? processMemorySlots : undefined))?.acquire(input.entry, input.deadlineMs)
       .catch(error => { throw new WorkerAdmissionRefusal(error); });
     try {
     // Acquiring host memory can wait until a sibling has drained this wave.
@@ -168,6 +174,7 @@ export async function runLeaseWorkerProcesses(input: {
     // Memory admission can queue several launches. Re-check after the asynchronous ranking read.
     const nextId = ordered.find(id => pending.has(id) && !assigned.has(id));
     if (!pending.size || (input.config.nationalZips && nextId === undefined)) return;
+    if (Date.now() >= (input.deadlineMs ?? Infinity)) throw new WorkerAdmissionRefusal(new Error("WORKER_DISPATCH_SLICE: work remains owed"));
     await new Promise<void>((resolve, reject) => {
     const ids = input.config.nationalZips ? [nextId!]
       : [...pending];
@@ -176,12 +183,23 @@ export async function runLeaseWorkerProcesses(input: {
       cwd: input.config.root, env: { ...process.env },
       execArgv: ["--experimental-strip-types", "--import", pathToFileURL(join(input.config.root, "scripts/register-test-loader.mjs")).href],
       stdio: ["ignore", "inherit", "inherit", "ipc"], serialization: "advanced",
+      detached: process.platform !== "win32",
     });
+    let terminationError: Error | null = null;
+    let terminating: Promise<void> | null = null;
+    const terminate = (error: Error) => {
+      if (terminating) return;
+      terminationError = error;
+      terminating = endOwnedProcessTree(child);
+      void terminating.catch(reject);
+    };
+    const killTimer = setTimeout(() => terminate(new Error(`WORKER_CHILD_TIMEOUT:${child.pid}: work remains owed`)),
+      Math.max(1, Math.min(timeoutMs, (input.deadlineMs ?? Infinity) - Date.now())));
     const reservations = new Map<string, Awaited<ReturnType<NonNullable<ScoutExecutorDeps["reserveEscalation"]>>>>();
     const offset = (launched - 1) % ids.length;
     child.once("spawn", () => { release?.observe?.(child.pid!); input.onStarted?.(child.pid!); child.send({ ...input.config,
       taskIds: [...ids.slice(offset), ...ids.slice(0, offset)] }); });
-    child.on("error", reject);
+    child.on("error", error => { clearTimeout(killTimer); terminate(error); if (!child.pid) reject(error); });
     child.on("message", async (raw: unknown) => {
       const message = raw as { kind: string; id: string; taskId: string; jurisdiction: AutonomousJurisdiction; body: unknown };
       if (message.kind === "result") {
@@ -279,9 +297,15 @@ export async function runLeaseWorkerProcesses(input: {
       }
     });
     child.once("exit", code => {
-      if (input.config.nationalZips) for (const id of ids) { assigned.delete(id); pending.delete(id); }
-      for (const reserved of reservations.values()) if (reserved.admit) reserved.release();
-      if (code === 0) resolve(); else reject(new Error(`LEASE_WORKER_EXIT:${child.pid}:${code}`));
+      clearTimeout(killTimer);
+      const finish = () => {
+        if (input.config.nationalZips) for (const id of ids) { assigned.delete(id); pending.delete(id); }
+        for (const reserved of reservations.values()) if (reserved.admit) reserved.release();
+        if (terminationError) reject(terminationError);
+        else if (code === 0) resolve(); else reject(new Error(`LEASE_WORKER_EXIT:${child.pid}:${code}`));
+      };
+      // Do not release the memory reservation while tree termination is still in flight.
+      if (terminating) void terminating.then(finish, reject); else finish();
     });
     }); } finally { release?.(); }
   };

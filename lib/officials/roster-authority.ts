@@ -1,10 +1,10 @@
-import { ROSTER_FILES } from "../coverage/artifacts.ts";
+import { heldRosterFiles } from "../holdings/discovery.ts";
 import { mayUseTestFixture } from "../civic-data/fixture-policy.ts";
 
 /**
  * Tracked officeholder projections that may participate in a production read.
  *
- * The state files in {@link ROSTER_FILES} were generated from the
+ * The state files in {@link heldRosterFiles} were generated from the
  * Plural/OpenStates intermediary. They are retained only as historical
  * research and deterministic test fixtures. A production Reader must wait for
  * a proof-validated projection from the legislature that owns the record.
@@ -14,9 +14,9 @@ export const PRODUCTION_OFFICEHOLDER_ROSTER_FILES = [
 ] as const;
 
 /** Historical intermediary projections; never production authority. */
-export const RETIRED_PLURAL_STATE_ROSTER_FILES = ROSTER_FILES.filter(
-  (file) => file !== "officeholders-us.json",
-);
+export function retiredPluralStateRosterFiles(): readonly string[] {
+  return heldRosterFiles(process.cwd()).filter(file => file !== "officeholders-us.json");
+}
 
 /**
  * The sole exception to the production boundary is Node's explicit test
@@ -52,6 +52,6 @@ export function officeholderRosterFiles(
   nodeEnv: string | undefined = process.env.NODE_ENV,
 ): readonly string[] {
   return mayReadRetiredPluralRoster(nodeTestContext, nodeEnv)
-    ? ROSTER_FILES
+    ? heldRosterFiles(process.cwd())
     : PRODUCTION_OFFICEHOLDER_ROSTER_FILES;
 }

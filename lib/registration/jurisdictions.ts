@@ -170,11 +170,8 @@ export function registrationJurisdictionRegistry(input: RegistrationRegistryInpu
     );
   }
 
-  /* The body each government has: the one the promoted version minted, on its division. */
-  const bodyOf = new Map<string, { readonly id: string; readonly ocdId: string }>();
-  for (const body of promoted.model.bodies) {
-    if (body.jurisdictionId !== null && !bodyOf.has(body.jurisdictionId)) bodyOf.set(body.jurisdictionId, { id: body.id, ocdId: body.ocdId });
-  }
+  /* Join only bodies actually held by the promoted registration, on the exact sourced pairing. */
+  const bodyById = new Map(promoted.model.bodies.map(body => [body.id, body]));
 
   /* Each division's Census layer and GEOID: the key its sampled ZCTA shares are read by. */
   const censusDivisionOf = new Map(ref.divisions.map(([ocdId, layer, geoid]) => [ocdId, `${layer}:${geoid}`] as const));
@@ -182,7 +179,7 @@ export function registrationJurisdictionRegistry(input: RegistrationRegistryInpu
   let withSite = 0;
   const rowsRead: Record<string, number> = {};
   const jurisdictions: Jurisdiction[] = [];
-  for (const [pid6, jurisdictionId, name, govType, , how] of ref.governments) {
+  for (const [pid6, jurisdictionId, name, govType, division, how, alternate] of ref.governments) {
     const govClass = CLASS_OF[govType];
     if (govClass === undefined) continue;
     const enumeratedFrom =
@@ -198,7 +195,13 @@ export function registrationJurisdictionRegistry(input: RegistrationRegistryInpu
     const facts = govType === "STATE" || how === "TIGER_FUNCSTAT" ? undefined : census.byPid.get(pid6);
     const site = ownWebAddress(facts?.web ?? "");
     if (site !== null) withSite += 1;
-    const body = govType === "STATE" ? undefined : bodyOf.get(jurisdictionId);
+    const slot = govType === "SCHOOL DISTRICT" || govType === "DEPENDENT SCHOOL SYSTEM" ? "board" : "governing";
+    const pairedIds = govType === "STATE" || division < 0 ? [] : [...new Set([division, alternate]
+      .filter(index => index >= 0)
+      .map(index => ref.divisions[index]?.[0])
+      .filter((id): id is string => id !== undefined))];
+    const heldBodies = pairedIds.map(id => bodyById.get(id + "#" + slot)).filter(body => body !== undefined);
+    const body = heldBodies.length === 1 ? heldBodies[0] : undefined;
     jurisdictions.push({
       id: jurisdictionId,
       stateCode: postal,

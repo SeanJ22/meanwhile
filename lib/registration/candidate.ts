@@ -1,38 +1,9 @@
 /**
- * **ONE STATE'S REGISTRATION, AS A PROMOTION CANDIDATE.** (2026-09-23.)
- *
- * Pure. From the committed reference, the pinned Census source receipt and
- * the promoted reviewed registry, it builds the state's REGISTRATION
- * candidate: every Census division in the state and a body for each
- * government the Census ties to a division — the ids the rest of the product
- * already joins on (`<ocdId>#governing`, `<ocdId>#board`).
- *
- * ```
- *   reviewed wins       a division or body id the reviewed registry holds is
- *                       never written here (one writer per id); a government
- *                       whose body the reviewed registry keys on its other
- *                       division (a place that is also a county subdivision)
- *                       gets no second body
- *   no stamps           records carry the reference's build date, never the
- *                       run's clock, so an unchanged month promotes UNCHANGED
- *   bounded             over REGISTRATION_MAX_CANDIDATE_BYTES escaped, or a
- *                       state with no government, is a named violation
- *   one id, one body    a second government on a body id already minted is
- *                       counted, never a second body
- * ```
- *
- * **The territories (2026-09-25).** The Census of Governments does not
- * enumerate them, so a territory's reference carries TIGER/Line 2023's
- * functional status on its divisions instead, and a body is minted only on a
- * division whose status governs (A, B, C, G: docs/state.md §4.6 M17), never
- * from geography alone: no board is derived from a territory's school
- * district (each is the territory's own department of education), and the
- * territory itself gets no body here, exactly as no state does. A territory
- * whose every division carries a non-governing status is registered with that
- * evidence stated (`functionalStatus.noLocalGovernment`), not refused. A state
- * with no government is still a failed extraction.
- *
- * It writes nothing; the promotion engine is the only door.
+ * One state's Census-backed registration, independent of reviewed-registry editions.
+ * Keep every sourced division and government body. Reader composition gives
+ * reviewed records precedence and resolves the exact primary/alternate pairing.
+ * An unpaired government gets no invented division; territory bodies require
+ * governing functional status. Records carry the source reference's build date.
  */
 import { sha256 } from "../civic-data/candidate-builders.ts";
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
@@ -91,15 +62,14 @@ export interface RegistrationReadModel {
     readonly sourceSha256: string;
     readonly referenceSha256: string;
   };
-  /** The reviewed registry version this state was derived against; its ids are never written here. */
-  readonly reviewedRegistryVersionId: string;
+  /** Historical compatibility: new registrations have no reviewed-registry dependency. */
+  readonly reviewedRegistryVersionId: string | null;
   readonly divisions: readonly RegistrationDivision[];
   readonly bodies: readonly RegistrationBody[];
   readonly counts: {
     readonly governments: number;
     readonly pairedGovernments: number;
     readonly unpairedByReason: Readonly<Record<string, number>>;
-    readonly heldByReviewedRegistry: { readonly divisions: number; readonly bodies: number };
     /** Governments whose body id another government already took (the committed geometry's one shared id: New Jersey's Union Township districts). The first keeps the body. */
     readonly sharedBodyClaims: number;
   };
@@ -177,9 +147,10 @@ export function registrationCandidate(input: {
   readonly target: RegistrationTarget;
   readonly reference: LoadedReference;
   readonly receipt: RegistrationSourceReceipt;
-  readonly reviewed: ReviewedRegistryIds;
+  /** Accepted for older callers; source-backed registration no longer omits reviewed ids. */
+  readonly reviewed?: ReviewedRegistryIds;
 }): RoutineCandidate {
-  const { target, reference: loaded, receipt, reviewed } = input;
+  const { target, reference: loaded, receipt } = input;
   const ref = loaded.reference;
   const provenance = { sourceUrl: receipt.requestedUrl, sourceOrg: "U.S. Census Bureau" as const, collectedAt: loaded.generatedAt, verifiedAt: null };
   const stateOcdId = ref.divisions[0]?.[0] ?? "";
@@ -218,7 +189,7 @@ export function registrationCandidate(input: {
     ocdId: string,
     slot: "governing" | "board",
     origin: RegistrationBody["bodyOrigin"],
-    gov: { readonly sourceDataset: RegistrationBody["sourceDataset"]; readonly jurisdictionId: string; readonly census: readonly [id: string, unitType: string] | null } | null,
+    gov: { readonly sourceDataset: RegistrationBody["sourceDataset"]; readonly jurisdictionId: string; readonly census: readonly [id: string, unitType: string] | null; readonly alsoServesOcdIds?: readonly string[] } | null,
     source: RegistrationBody["provenance"],
   ) => {
     const id = `${ocdId}#${slot}`;
@@ -243,6 +214,7 @@ export function registrationCandidate(input: {
       // The Census of Governments id and unit type; a TIGER/Line government has neither, only its division's GEOID.
       ...(gov?.census ? { censusId: gov.census[0], censusUnitType: gov.census[1] } : {}),
       jurisdictionId: gov ? gov.jurisdictionId : null,
+      ...(gov?.alsoServesOcdIds?.length ? { alsoServesOcdIds: [...gov.alsoServesOcdIds] } : {}),
       provenance: source,
     });
   };
@@ -269,10 +241,8 @@ export function registrationCandidate(input: {
         continue;
       }
     }
-    // The reviewed registry already registers this government, on either of its divisions.
-    if (reviewed.bodyDivisionIds.has(primary) || (other !== null && reviewed.bodyDivisionIds.has(other))) continue;
     if (how === "TIGER_FUNCSTAT") {
-      mint(primary, "governing", "REGISTERED_FROM_TIGER_FUNCSTAT", { sourceDataset: "TIGER_LINE2023", jurisdictionId, census: null }, {
+      mint(primary, "governing", "REGISTERED_FROM_TIGER_FUNCSTAT", { sourceDataset: "TIGER_LINE2023", jurisdictionId, census: null, ...(other === null ? {} : { alsoServesOcdIds: [other] }) }, {
         sourceUrl: territory?.sources[layer] ?? null,
         sourceOrg: "U.S. Census Bureau",
         collectedAt: loaded.generatedAt,
@@ -281,7 +251,7 @@ export function registrationCandidate(input: {
       continue;
     }
     if (SCHOOL_TYPES.has(govType)) claimedSchools.add(division);
-    mint(primary, SCHOOL_TYPES.has(govType) ? "board" : "governing", "REGISTERED_FROM_CENSUS_OF_GOVERNMENTS", { sourceDataset: "COG_2022", jurisdictionId, census: [pid6, govType] }, provenance);
+    mint(primary, SCHOOL_TYPES.has(govType) ? "board" : "governing", "REGISTERED_FROM_CENSUS_OF_GOVERNMENTS", { sourceDataset: "COG_2022", jurisdictionId, census: [pid6, govType], ...(other === null ? {} : { alsoServesOcdIds: [other] }) }, provenance);
   }
   // A territory's school district is its own department of education, a territorial agency with no functional status of its
   // own here: in a territory a body comes only from a governing status, never from a division's type.
@@ -289,7 +259,6 @@ export function registrationCandidate(input: {
     ref.divisions.forEach(([ocdId, layer, geoid], i) => {
       // A Census placeholder is geography, never a government: no board is minted on it (lib/registry/census-placeholders.ts).
       if (!SCHOOL_LAYERS.has(layer) || claimedSchools.has(i) || isCensusPlaceholderDivision({ ocdId, divisionType: "school_district", geoid })) return;
-      if (reviewed.bodyDivisionIds.has(ocdId)) return;
       mint(ocdId, "board", "DERIVED_FROM_DIVISION_TYPE", null, { sourceUrl: boundaryUrl(layer as Exclude<ReferenceLayer, "state">), sourceOrg: "U.S. Census Bureau", collectedAt: loaded.generatedAt, verifiedAt: null });
     });
   }
@@ -327,9 +296,9 @@ export function registrationCandidate(input: {
     };
   }
 
-  // Reviewed wins: never write an id the reviewed registry holds.
-  const divisions = allDivisions.filter((d) => !reviewed.divisionIds.has(d.ocdId));
-  const bodies = candidates.filter((b) => !reviewed.bodyIds.has(b.id)).sort((a, b) => a.id.localeCompare(b.id));
+  // These are source holdings. Current reviewed precedence belongs to composition.
+  const divisions = allDivisions;
+  const bodies = candidates.sort((a, b) => a.id.localeCompare(b.id));
   const readModel: RegistrationReadModel = {
     formatVersion: 1,
     state: target.state.toLowerCase(),
@@ -340,14 +309,13 @@ export function registrationCandidate(input: {
       sourceSha256: receipt.sha256,
       referenceSha256: loaded.sha256,
     },
-    reviewedRegistryVersionId: reviewed.versionId,
+    reviewedRegistryVersionId: null,
     divisions,
     bodies,
     counts: {
       governments,
       pairedGovernments: paired,
       unpairedByReason,
-      heldByReviewedRegistry: { divisions: allDivisions.length - divisions.length, bodies: candidates.length - bodies.length },
       sharedBodyClaims: duplicates,
     },
     ...(functionalStatus ? { functionalStatus } : {}),
@@ -364,7 +332,7 @@ export function registrationCandidate(input: {
   }
 
   const readModelHash = sha256(canonicalCivicDataJson(readModel));
-  const rawHash = sha256(`${receipt.sha256}\n${loaded.sha256}\n${reviewed.versionId}`);
+  const rawHash = sha256(`${receipt.sha256}\n${loaded.sha256}\n${null}`);
   const records = divisions.length + bodies.length;
   const considered = allDivisions.length + candidates.length;
   const normalizedPayload = {
@@ -373,7 +341,7 @@ export function registrationCandidate(input: {
     readModelHash,
     sourceSha256: receipt.sha256,
     referenceSha256: loaded.sha256,
-    reviewedRegistryVersionId: reviewed.versionId,
+    reviewedRegistryVersionId: null,
     divisions: divisions.length,
     bodies: bodies.length,
   };

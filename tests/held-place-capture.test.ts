@@ -288,6 +288,37 @@ test("only published present fields count, and failed reads cannot look like emp
     "conflicting official surfaces stay open");
 });
 
+test("published outcomes retain document status and every linked action and roll without renewing source dates", () => {
+  const source = { endpoint: "https://webapi.legistar.com/v1/example/events/7/eventitems", readOn: "2026-08-29", sourceOrg: "Clerk" };
+  const actions = [71, 72].map(eventItemId => ({ recordClass: "ACTION_SUMMARY", eventId: 7, eventItemId,
+    action: "approve", disposition: "PASSED", tallyText: "Approved", provenance: source }));
+  const rolls = [71, 72, 99].map(eventItemId => ({ recordClass: "ROLL_CALL", eventItemId,
+    votes: [{ personId: 3, personName: "Member", value: "Abstain", sort: 1 }],
+    provenance: { ...source, endpoint: `https://webapi.legistar.com/v1/example/eventitems/${eventItemId}/votes` } }));
+  const sitting = { meetingId: meeting.id, eventId: 7, bodyId: meeting.bodyId, ocdId: county, bodyName: "Shared district board",
+    startsAt: meeting.startsAt, sourceUrl: provenance.sourceUrl, extraction: "RETRIEVED", publicationObservations: [],
+    publication: { observedAt: at, inSiteUrl: provenance.sourceUrl, agendaFile: "https://example.gov/agenda.pdf",
+      minutesFile: "https://example.gov/minutes.pdf", minutesStatusName: "Draft", minutesStatusId: 9 },
+    agenda: [], outcomes: [...actions, { ...actions[0], eventId: 8, eventItemId: 80 }], rollCalls: rolls };
+  const capture = projectHeldPlaceCapture([county], registry, [], at, {},
+    [published({ sittings: [sitting] } as unknown as OutcomeSnapshot)]);
+  const fields = (id: string) => capture.held.filter(field => field.checklistId === id);
+  assert.equal(fields("DOC-08").length, 2, "same-shaped records for distinct items both survive");
+  assert.equal(fields("DOC-09").length, 2, "unlinked rolls cannot count as captured meeting votes");
+  assert.deepEqual(fields("DOC-08").map(field => field.value), actions.map(action => ({ meetingId: meeting.id, ...action })));
+  assert.deepEqual(fields("DOC-09").map(field => field.value), rolls.slice(0, 2).map(roll => ({ meetingId: meeting.id, ...roll })));
+  assert.ok([...fields("DOC-08"), ...fields("DOC-09")].every(field => field.checkedAt === source.readOn));
+  assert.deepEqual(fields("DOC-06")[0].value, { url: sitting.publication.minutesFile, publisherStatus: "Draft", publisherStatusId: 9 });
+  assert.equal(fields("DOC-06")[0].checkedAt, at);
+  const owed = buildPlaceOwedList({ divisions: [{ id: county, label: "County" }], ...capture, now: at });
+  for (const id of ["DOC-08", "DOC-09"]) assert.equal(owed.find(row => row.subject.id === meeting.id && row.checklistId === id)?.state, "stale");
+  for (const id of ["DOC-02", "DOC-03"]) assert.equal(owed.find(row => row.subject.id === meeting.id && row.checklistId === id)?.state, "missing", "pointers are not readable documents");
+  const empty = { ...sitting, publication: { ...sitting.publication, minutesStatusName: null }, outcomes: [], rollCalls: [] };
+  const unknown = projectHeldPlaceCapture([county], registry, [], at, {},
+    [published({ sittings: [empty] } as unknown as OutcomeSnapshot)]);
+  assert.ok(!unknown.held.some(field => ["DOC-06", "DOC-08", "DOC-09"].includes(field.checklistId)), "an unclassified pointer or empty extraction cannot fill these facts");
+});
+
 test("retained roster contacts keep separate values and their earlier source dates", () => {
   const older = "2026-08-01T00:00:00.000Z";
   const sourceUrl = "https://cochise.az.gov/old-roster";

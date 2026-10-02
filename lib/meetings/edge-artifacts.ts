@@ -129,6 +129,8 @@ export function readerScopeApplies(
 export interface ReaderManifest {
   /** Missing on the former state layout; the normal publisher replaces it once. */
   readonly meetingLayout?: "governing-area";
+  /** Registry version used for canonical body areas; absent on single-area copies. */
+  readonly meetingRegistryVersion?: string | null;
   readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
   readonly sequence: number;
   readonly generatedAt: string;
@@ -311,28 +313,32 @@ function countsFor(meetings: readonly Meeting[]): ReaderArtifactCounts {
 export function partitionSnapshotByScope(
   snapshot: MeetingsSnapshot,
   now: string = new Date().toISOString(),
+  bodies: readonly { readonly id: string; readonly ocdId: string | null; readonly alsoServesOcdIds?: readonly string[] }[] = [],
 ): ReaderGeoArtifact[] {
-  const meetingScope = new Map<string, string>();
-  const byScope = new Map<string, { meetings: Meeting[]; agenda: AgendaDocument[] }>();
-  const bucket = (scope: string) => {
+  const byBody = new Map(bodies.map(body => [body.id, body]));
+  const meetingScope = new Map<string, readonly { scope: string; ocdId?: string }[]>();
+  const byScope = new Map<string, { meetings: Meeting[]; agenda: AgendaDocument[]; ocdId?: string }>();
+  const bucket = (scope: string, ocdId?: string) => {
     let b = byScope.get(scope);
-    if (!b) { b = { meetings: [], agenda: [] }; byScope.set(scope, b); }
+    if (!b) { b = { meetings: [], agenda: [], ...(ocdId ? { ocdId } : {}) }; byScope.set(scope, b); }
     return b;
   };
 
   for (const meeting of snapshot.meetings) {
-    const scope = meetingAreaScope(meeting.ocdId);
-    meetingScope.set(meeting.id, scope);
-    bucket(scope).meetings.push(meeting);
+    const body = meeting.bodyId ? byBody.get(meeting.bodyId) : undefined;
+    const divisions = [...new Set([body?.ocdId ?? meeting.ocdId, ...(body?.alsoServesOcdIds ?? [])]
+      .map(id => id?.split("#")[0] ?? null))];
+    const areas = divisions.map(ocdId => ({ scope: meetingAreaScope(ocdId), ...(ocdId ? { ocdId } : {}) }));
+    meetingScope.set(meeting.id, areas);
+    for (const area of areas) bucket(area.scope, area.ocdId).meetings.push(meeting);
   }
   for (const doc of snapshot.agendaDocuments) {
-    const scope = meetingScope.get(doc.meetingId) ?? meetingAreaScope(doc.ocdId);
-    bucket(scope).agenda.push(doc);
+    const areas = meetingScope.get(doc.meetingId) ?? [{ scope: meetingAreaScope(doc.ocdId), ocdId: doc.ocdId?.split("#")[0] }];
+    for (const area of areas) bucket(area.scope, area.ocdId ?? undefined).agenda.push(doc);
   }
 
   return [...byScope.keys()].sort().flatMap((scope) => {
-    const { meetings, agenda } = byScope.get(scope)!;
-    const ocdId = (meetings[0]?.ocdId ?? agenda[0]?.ocdId)?.split("#")[0];
+    const { meetings, agenda, ocdId } = byScope.get(scope)!;
     const locations = meetings.flatMap(meeting => meeting.location && Number.isFinite(meeting.location.lat) && Number.isFinite(meeting.location.lng) ? [meeting.location] : []);
     const bounds = locations.reduce<ReaderAreaBounds | undefined>((held, point) => ({
       south: Math.min(held?.south ?? point.lat, point.lat), north: Math.max(held?.north ?? point.lat, point.lat),

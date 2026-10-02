@@ -17,6 +17,8 @@ import { refreshCommentAccessFromPromoted, readCuratedReaderProjection } from ".
 import { currentCommentAccess } from "../registry/comment-access.ts";
 import { readEverydayRoutingProjection } from "../routing/everyday-data-plane.ts";
 import { readRegistryRuntimeProjection } from "../registry/runtime-read-model.ts";
+import { REGISTRY_RUNTIME_SCOPE, type RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
+import { readPlacePointerSlice, type PlaceCaptureRead } from "./held-place-slices.ts";
 import { readCensusGeographyProjection } from "../census-geography/reader.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../census-geography/publication.ts";
 import { REGISTRATION_SCOPES, registrationEdgePlan } from "../registration/edge.ts";
@@ -47,7 +49,8 @@ function safeFailure(value: string): string {
 /** Publish serving copies independently of per-contract reader repair. */
 export async function publishRoutineReaderEdge(store: RoutineDataStore, observedAt: string,
   selected: readonly Pick<PromotedPointerIdentity, "recordClass" | "scope">[] | null = null,
-  options: { readonly artifactStore?: ReaderArtifactStore | null } = {},
+  options: { readonly artifactStore?: ReaderArtifactStore | null;
+    readonly readMeetingRegistry?: (divisions: readonly string[], bodies: readonly string[]) => Promise<PlaceCaptureRead<RegistryRuntimeReadModel>> } = {},
 ): Promise<boolean> {
   let failed = false;
   const owns = (recordClass: RoutineRecordClass, scope: string) => selected === null || selected.some(pointer => pointer.recordClass === recordClass && pointer.scope === scope);
@@ -107,7 +110,7 @@ export async function publishRoutineReaderEdge(store: RoutineDataStore, observed
           ? scopes.flatMap(scope => identities.get(recordClass + ":" + scope) ?? []) : target.readPromotionIdentities(recordClass, scopes);
         const value = Reflect.get(target, key); return typeof value === "function" ? value.bind(target) : value;
       } });
-      const preparesMeetings = selected === null || selected.some(pointer => pointer.recordClass === "MEETING");
+      const preparesMeetings = selected === null || selected.some(pointer => pointer.recordClass === "MEETING" || pointer.recordClass === "REGISTRY_RUNTIME_BINDING");
       const prepared = preparesMeetings ? await preparePublishedMeetingSnapshot(store, observedAt) : null;
       if (prepared?.status === "FAILED") { failed = true; console.error("PREPARED_MEETING_SNAPSHOT_FAILED: " + safeFailure(prepared.error)); }
 
@@ -324,7 +327,9 @@ export async function publishRoutineReaderEdge(store: RoutineDataStore, observed
 `);
       }
       // Authority-only updates carry geographic references; unchanged meeting payloads never cross the DB.
+      const meetingRegistryVersion = authority["registry-runtime"]?.versionId ?? null;
       const sameComposition = prepared?.status === "CURRENT" && servedManifest?.meetingLayout === "governing-area" &&
+        servedManifest.meetingRegistryVersion !== undefined && servedManifest.meetingRegistryVersion === meetingRegistryVersion &&
         (servedManifest.composition !== undefined ? servedManifest.composition === prepared.composition : servedManifest.generatedAt === prepared.generatedAt);
       const checks = prepared?.status === "CURRENT" || prepared?.status === "PUBLISHED" ? { composition: prepared.composition, freshChecks: prepared.freshChecks } : undefined;
       let meetingRead: Awaited<ReturnType<typeof readPreparedMeetingsProjection>> | null = null;
@@ -332,10 +337,28 @@ export async function publishRoutineReaderEdge(store: RoutineDataStore, observed
         meetingRead = await readPreparedMeetingsProjection({ store });
         if (meetingRead.kind !== "PROMOTED") throw new Error("Prepared meeting copy read " + meetingRead.kind);
       }
+      let meetingBodies: RegistryRuntimeReadModel["registry"]["bodies"] | undefined;
+      if (meetingRead?.kind === "PROMOTED") {
+        const registry = authority["registry-runtime"];
+        if (meetingRead.value.meetings.length === 0) {
+          meetingBodies = [];
+        } else if (registry && "value" in registry) {
+          meetingBodies = (registry.value as RegistryRuntimeReadModel).registry.bodies;
+        } else {
+          // A carried authority stays cheap: resolve only divisions represented
+          // in this changed meeting composition, including bodies' other areas.
+          const divisions = [...new Set(meetingRead.value.meetings.flatMap(meeting => meeting.ocdId ? [meeting.ocdId.split("#")[0]] : []))];
+          const bodyIds = [...new Set(meetingRead.value.meetings.flatMap(meeting => meeting.bodyId ? [meeting.bodyId] : []))];
+          const read = await (options.readMeetingRegistry ?? ((ids, bodies) =>
+            readPlacePointerSlice<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, ids, bodies)))(divisions, bodyIds);
+          if (read.kind !== "PROMOTED" || read.metadata.versionId !== meetingRegistryVersion) throw new Error(`Meeting territories read ${read.kind} at a different registry version`);
+          meetingBodies = read.value?.registry.bodies;
+        }
+      }
       const edge = await publishReaderEdgeArtifacts(meetingRead?.kind === "PROMOTED" ? meetingRead.value : null,
         meetingRead?.kind === "PROMOTED" ? { sourceThrough: meetingRead.metadata.sourceThrough, retrievedAt: meetingRead.metadata.retrievedAt, promotedThrough: meetingRead.metadata.promotedAt }
           : { sourceThrough: servedManifest?.sourceThrough ?? null, retrievedAt: prepared?.status === "CURRENT" ? prepared.checkedAt : servedManifest?.retrievedAt ?? null, promotedThrough: servedManifest?.promotedThrough ?? null },
-        { store: artifactStore, now: observedAt, extras, authority, registrations, ...(checks ? { checks } : {}) });
+        { store: artifactStore, now: observedAt, extras, authority, registrations, meetingBodies, meetingRegistryVersion, ...(checks ? { checks } : {}) });
       if (edge.status === "FAILED") throw new Error(edge.error);
       const purge = edge.status === "PUBLISHED" && artifactStore.kind === "netlify-blobs" ? await purgeReaderCacheTags([READER_MANIFEST_CACHE_TAG]) : null;
       console.log(JSON.stringify({ readerEdge: edge.status, ...("sequence" in edge ? { sequence: edge.sequence } : {}), ...(purge ? { purged: purge.purged } : {}) }));

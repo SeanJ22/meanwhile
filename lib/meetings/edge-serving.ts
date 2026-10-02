@@ -565,6 +565,8 @@ export async function publishReaderEdgeArtifacts(
     readonly extras?: PublishReaderExtras;
     readonly authority?: PublishAuthority;
     readonly registrations?: PublishRegistrations;
+    readonly meetingBodies?: Parameters<typeof partitionSnapshotByScope>[2];
+    readonly meetingRegistryVersion?: string | null;
     /** The composition and its quiet re-checks (lib/meetings/fresh-checks.ts), stated in the manifest. */
     readonly checks?: PublishReaderChecks;
   } = {},
@@ -575,7 +577,7 @@ export async function publishReaderEdgeArtifacts(
 
   let artifacts: ReaderGeoArtifact[];
   try {
-    artifacts = snapshot === null ? [] : partitionSnapshotByScope(snapshot, now);
+    artifacts = snapshot === null ? [] : partitionSnapshotByScope(snapshot, now, options.meetingBodies);
   } catch (error) {
     return { status: "NOT_COMPOSABLE", detail: error instanceof Error ? error.message : String(error) };
   }
@@ -615,7 +617,9 @@ export async function publishReaderEdgeArtifacts(
     const sameRegistrations = registrationVersions(
       current.manifest.registrations === undefined ? null : Object.entries(current.manifest.registrations).map(([state, ref]) => [state, ref.version] as const),
     ) === newRegistrationVersions;
-    if (sameSet && sameExtras && sameAuthority && sameRegistrations) {
+    const sameMeetingAreas = snapshot === null || options.meetingRegistryVersion === undefined ||
+      current.manifest.meetingRegistryVersion === options.meetingRegistryVersion;
+    if (sameSet && sameExtras && sameAuthority && sameRegistrations && sameMeetingAreas) {
       const generatedAt = snapshot?.generatedAt || (options.checks ? laterCheck(current.manifest.generatedAt, metadata.retrievedAt) : null) || current.manifest.generatedAt;
       const checks = options.checks ?? (snapshot === null && current.manifest.composition !== undefined
         ? { composition: current.manifest.composition, freshChecks: current.manifest.freshChecks ?? {} } : undefined);
@@ -722,6 +726,10 @@ export async function publishReaderEdgeArtifacts(
     formatVersion: READER_ARTIFACT_FORMAT_VERSION,
     sequence,
     ...(snapshot !== null ? { meetingLayout: "governing-area" as const } : current?.manifest.meetingLayout ? { meetingLayout: current.manifest.meetingLayout } : {}),
+    ...(snapshot !== null && options.meetingRegistryVersion !== undefined
+      ? { meetingRegistryVersion: options.meetingRegistryVersion }
+      : snapshot === null && current?.manifest.meetingRegistryVersion !== undefined
+        ? { meetingRegistryVersion: current.manifest.meetingRegistryVersion } : {}),
     generatedAt: snapshot?.generatedAt || (options.checks ? laterCheck(current?.manifest.generatedAt ?? null, metadata.retrievedAt) : null) || current?.manifest.generatedAt || now,
     sourceThrough: snapshot === null ? current?.manifest.sourceThrough ?? null : metadata.sourceThrough,
     retrievedAt: snapshot === null ? laterCheck(current?.manifest.retrievedAt ?? null, options.checks ? metadata.retrievedAt : null) : metadata.retrievedAt,

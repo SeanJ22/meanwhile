@@ -1,5 +1,6 @@
 "use client";
 
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { AskBodyConfirmation } from "./body-confirmation";
 import type { BodyConfirmation } from "@/lib/ask/body-confirmation";
 
@@ -349,11 +350,11 @@ export function BallotAsk({
             gaps.length === 0 &&
             reply.mode !== "CLARIFY" &&
             reply.mode !== "UNRESOLVED" && (
-              <p data-ask-state="NOTHING_HELD">
-                {reply.subject
-                  ? `We hold ${reply.subject.name}, but nothing recorded that answers that.`
-                  : "We have not recorded anything that answers that yet. Naming a government — a school district, a county board, a person on this ballot — is what this can answer from."}
-              </p>
+              <WorkingOnIt
+                attrs={{ "data-ask-state": "NOTHING_HELD" }}
+                about={reply.subject?.name}
+                subject={reply.subject?.kind === "BODY" ? { type: "BODY", id: reply.subject.id } : null}
+              />
             )}
 
           {/*

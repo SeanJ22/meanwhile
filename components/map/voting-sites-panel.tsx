@@ -216,8 +216,7 @@ export function VotingSitesPanel({
           <p className="voting-panel-status">
             {/* BAL-7 (2026-08-24): what is known, then the non-claim, and
                 nothing about how we feel about the shortfall. */}
-            That address is outside the places this app covers yet — which is
-            not a statement about your county.
+            We’re working on getting this info for that address.
           </p>
         )}
 

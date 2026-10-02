@@ -3,9 +3,9 @@
  *
  * The jurisdiction reference records each government's website from the
  * Census 2022 Government Units file, and some of those addresses have since
- * died, moved or were mistyped. The owner authorized one correction path, for
- * the website field only (the decision recorded 2026-09-24T22:43Z; see
- * `WEBSITE_CORRECTION_AUTHORIZATION`):
+ * died, moved or were mistyped. One correction path, for the website field
+ * only, under docs/rulings.md §3 ("C15" is an earlier session's label, not
+ * Sean's decision: Sean, 2026-10-01; see `WEBSITE_CORRECTION_AUTHORIZATION`):
  *
  * - the official homepage and the federal .gov registry must identify the SAME
  *   government. A registry row naming a parent (the State of Arizona for
@@ -20,8 +20,8 @@
  *
  * This establishes WHICH SITE is the government's. It never says which board a
  * calendar on that site belongs to: domain ownership does not prove that, and
- * nothing here may feed meetings body attribution (C16 carries its own
- * reviewed evidence).
+ * nothing here may feed meetings body attribution (the crosswalk carries its
+ * own reviewed evidence).
  *
  * The reference builder applies a correction only while the Census value is
  * still the address it replaces, and re-verifies it when the reference is
@@ -32,7 +32,11 @@
  * PURE: no fetch, no clock.
  */
 
-/** The owner's authorization, cited wherever a correction is used. */
+/**
+ * The citation text carried wherever a correction is used. Kept byte-identical
+ * so stored corrections still match; despite its words it is not an owner
+ * decision. The authority is docs/rulings.md §3 (Sean, 2026-10-01).
+ */
 export const WEBSITE_CORRECTION_AUTHORIZATION =
   "Owner decision C15, recorded 2026-09-24T22:43Z in the session closeout list: authorize the additional evidence for the website field only; the official homepage and federal .gov registry must identify the same government; record the evidence and the actual reviewer.";
 

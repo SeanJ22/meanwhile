@@ -477,6 +477,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     lkgBehavior: "A row whose evidence is not its receipted bytes, whose body or filter is not established, or that conflicts with another row holds only itself; every other reviewed row and the prior GOOD crosswalk stay live. A row leaves only when a later review withdraws it.",
     delegatedInvocation: {
       to: "REVIEWING_AGENT_SESSION",
+      /* Stored citation text, kept byte-identical; not an owner decision. The authority is rulings §3 (Sean, 2026-10-01). */
       authorization: "C16: owner decision recorded 2026-09-24T22:43Z — \"Agents may review and promote the records connecting a calendar to its governing body.\"",
     },
   },

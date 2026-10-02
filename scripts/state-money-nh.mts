@@ -3,7 +3,7 @@
  *
  * @freshness-reads-here — the candidate clock follows the reconciled official
  * corpus; the catch-path clock dates only the durable failed attempt.
- * (Session C, 2026-08-31. RULING 126, RULING 118. Split into acquisition and
+ * (Session C, 2026-08-31. RULING 118; filings never sold, Sean 2026-10-01. Split into acquisition and
  * projection by Session C3, lane C, 2026-09-01, under RULING 229.)
  *
  * ## WHAT CHANGED ON 2026-09-01, AND WHY THE PREVIOUS SHAPE COULD NOT BE RIGHT

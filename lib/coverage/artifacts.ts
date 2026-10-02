@@ -15,7 +15,7 @@ export function rosterFile(state: Pick<StateIdentity, "fips">): string {
 }
 
 /** Reference names are sourced geography data, separate from held artifacts. */
-export const NAME_BY_USPS: Readonly<Record<string, string>> = Object.fromEntries(
+export const NAME_BY_USPS: Readonly<Record<string, string>> = process.env.NODE_ENV === "production" ? {} : Object.fromEntries(
   readRecords("acs5_2024_b01003_state").flatMap(row => {
     const state = US_JURISDICTIONS.find(state => state.fips === row.state_fips);
     return state ? [[state.usps, row.name]] : [];
@@ -39,7 +39,12 @@ export function deriveArtifacts(root: string) {
   };
 }
 
-const held = deriveArtifacts(process.cwd());
+// These tracked holdings are offline research and deterministic fixtures.
+// Production roster Readers resolve their canonical pointer. Keep this literal
+// build-time branch so the fixture scan cannot trace the checkout into a route.
+const held = process.env.NODE_ENV === "production"
+  ? { states: [], rosters: [], ballotFiles: [], geometryStates: [] }
+  : deriveArtifacts(process.cwd());
 export const HELD_ROSTER_STATES = held.states;
 export const ROSTER_FILES: readonly string[] = held.rosters;
 export const BALLOT_FILES: readonly { file: string; state: string }[] = held.ballotFiles;

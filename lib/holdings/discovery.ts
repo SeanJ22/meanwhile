@@ -3,19 +3,19 @@ import { join } from "node:path";
 
 /** Sorted repository-relative files; holdings discovery does not use reader coverage. */
 export function stateDomainFiles(root: string, domain: string, base: "data" | "public" = "data"): string[] {
-  const dir = join(root, base, "states");
+  const dir = base === "data" ? join(root, "data", "states") : join(root, "public", "states");
   if (!existsSync(dir)) return [];
   const files: string[] = [];
   const walk = (relative: string) => {
-    if (!existsSync(join(root, relative))) return;
-    for (const entry of readdirSync(join(root, relative), { withFileTypes: true })) {
+    if (!existsSync(join(dir, relative))) return;
+    for (const entry of readdirSync(join(dir, relative), { withFileTypes: true })) {
       const path = `${relative}/${entry.name}`;
       if (entry.isDirectory()) walk(path);
-      else if (entry.isFile()) files.push(path);
+      else if (entry.isFile()) files.push(`${base}/states/${path}`);
     }
   };
   for (const state of readdirSync(dir, { withFileTypes: true })) {
-    if (state.isDirectory() && /^[a-z]{2}$/.test(state.name)) walk(`${base}/states/${state.name}/${domain}`);
+    if (state.isDirectory() && /^[a-z]{2}$/.test(state.name)) walk(`${state.name}/${domain}`);
   }
   return files.sort();
 }
@@ -27,4 +27,3 @@ export function geometryFiles(root: string): string[] {
     ...stateDomainFiles(root, "geo").filter((file) => file.endsWith(".geojson")),
   ].sort();
 }
-

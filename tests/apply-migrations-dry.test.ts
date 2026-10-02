@@ -275,3 +275,44 @@ test("preview, branch and local build hooks skip without reading a database", ()
     assert.deepEqual(result.events, []);
   }
 });
+
+const productionBuild = { NETLIFY: "true", CONTEXT: "production", BRANCH: "main",
+  DATABASE_URL: "postgresql://reader:secret@ep-dry-river-axwtolzc-pooler.c-4.us-east-2.aws.neon.tech/neondb",
+  WTP_PRODUCTION_DATABASE_URL_WRITE: "" };
+const expandBuildArgs = ["--target=production", "--phase=expand", "--production-build"];
+
+test("production build without a writer passes only when committed expands are already applied", () => {
+  // Pending contracts do not hold a zero-write expand build.
+  const expands = journal().entries.filter(entry => declaredPhase(entry.tag)?.phase === "expand");
+  const result = run(expandBuildArgs, { ...productionBuild,
+    APPLY_MIGRATIONS_FAKE_APPLIED_WHEN: expands.map(entry => entry.when).join(",") }, "");
+  assert.equal(result.status, 0, result.output);
+  assert.match(result.output, /No pending expand migrations/);
+  assert.match(result.output, /writes=0; no writer required/);
+  const events = result.events as { kind: string; statement?: string; readOnly?: boolean }[];
+  assert.ok(events.filter(event => event.statement).every(event => /^SELECT\b/.test(event.statement!)));
+  assert.ok(events.filter(event => event.kind === "transaction").every(event => event.readOnly));
+});
+
+test("production build without a writer refuses pending expands or an absent journal without DDL", () => {
+  for (const exists of ["0", "1"]) {
+    const result = run(expandBuildArgs, { ...productionBuild, APPLY_MIGRATIONS_FAKE_JOURNAL_EXISTS: exists }, "");
+    assert.equal(result.status, 1);
+    assert.match(result.output, /pending expand migrations require WTP_PRODUCTION_DATABASE_URL_WRITE/);
+    assert.ok((result.events as { statement?: string }[]).filter(event => event.statement)
+      .every(event => /^SELECT\b/.test(event.statement!)));
+    assert.doesNotMatch(result.output, /CREATE SCHEMA|CREATE TABLE|transaction-query/);
+  }
+});
+
+test("writerless production inspection still refuses the wrong endpoint and applied hash drift", () => {
+  const wrong = run(expandBuildArgs, { ...productionBuild, DATABASE_URL: "postgresql://reader:secret@old.invalid/db" }, "");
+  assert.equal(wrong.status, 1);
+  assert.match(wrong.output, /approved ep-dry-river endpoint/);
+  assert.deepEqual(wrong.events, []);
+  assert.doesNotMatch(wrong.output, /secret|old.invalid/);
+  const drift = run(expandBuildArgs, { ...productionBuild, APPLY_MIGRATIONS_FAKE_BAD_HASH: "1",
+    APPLY_MIGRATIONS_FAKE_APPLIED_WHEN: journal().entries.map(entry => entry.when).join(",") }, "");
+  assert.equal(drift.status, 1);
+  assert.match(drift.output, /does not match the applied journal hash/);
+});

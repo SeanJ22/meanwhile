@@ -18,6 +18,7 @@
  * PURE.
  */
 import type { MwScope } from "../scope.ts";
+import { districtLabelOfQuery } from "@/lib/control-plane/admin-view/district-catalog.ts";
 import type { Hunt, Place } from "./model.ts";
 
 export type PlaceIndex = ReadonlyMap<string, Place>;
@@ -112,9 +113,12 @@ export function scopeOfPlaceKey(key: string): MwScope | null {
 const KIND_ORDER = ["Country", "State", "County", "ZIP", "Area", "Body"];
 export function pickerMatches(places: readonly Place[], hunts: readonly Hunt[], query: string, limit = 30): readonly Place[] {
   const q = query.trim().toLowerCase();
+  // "az6", "AZ 6" and "az-06" all name AZ-06.
+  const district = districtLabelOfQuery(query)?.toLowerCase() ?? null;
   return places
     .filter((p) => {
       if (!q) return true;
+      if (district !== null && p.name.toLowerCase() === district) return true;
       if (p.name.toLowerCase().includes(q) || p.key.toLowerCase().includes(q)) return true;
       if (p.code && p.code.toLowerCase() === q) return true;
       return hunts.some((h) => h.placeKey === p.key && h.id.toLowerCase().includes(q));

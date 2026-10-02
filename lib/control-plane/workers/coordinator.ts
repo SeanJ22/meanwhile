@@ -1,6 +1,5 @@
 import { readSubjectScoutHistory } from "./detective.ts";
-import { adapterWaitReason, reusableScoutCandidates, subjectScoutHistory, scoutFactGrounded } from "./detective.ts";
-import { installedAdapters } from '../scheduler/scout-adapters.ts';
+import { adapterWaitReasonFromKnowledge, reusableScoutCandidates, subjectScoutHistory, scoutFactGrounded } from "./detective.ts";
 import { randomUUID } from "node:crypto";
 import type { WorkItem } from "../work-item.ts";
 import { ZERO_COST, type Attempt } from "../attempt.ts";
@@ -221,7 +220,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     let task = prior?.value ?? (await registerRouteTask(repos,created,now)).value;
     const {history,debt}=autonomousScoutHistory(task,knownHistory?.routeTasks ?? (await repos.routeTasks.list()).map(row=>row.value),attempts);
     const scoutHistory=subjectScoutHistory(knownHistory?.scouts ?? await repos.scoutResults.readAll(),item.subject,plan.contract.recordClass);
-    const adapterWait = adapterWaitReason(scoutHistory,await installedAdapters());
+    const adapterWait = await adapterWaitReasonFromKnowledge(repos,scoutHistory);
     if (adapterWait) return decision("BLOCKED",adapterWait,task);
     const retained = (item as WorkItem & { readonly planRepair?: { readonly retainedEvidenceIds?: readonly string[]; readonly sourceArtifactId?: string } }).planRepair;
     const handedHeldIds = [...new Set([...scoutHistory.flatMap(result => result.artifactIds),

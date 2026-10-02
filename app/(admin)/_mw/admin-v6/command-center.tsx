@@ -281,7 +281,7 @@ export function CommandCenter(props: CommandCenterProps) {
               ))}
             </nav>
             {props.mode === "sample" ? <span className={s.badge}>SAMPLE DATA</span> : null}
-            <button type="button" className={s.navBtn} onClick={() => setBulk({ pick: null })}>Start many hunts</button>
+            <button type="button" className={s.navBtn} onClick={() => setBulk({ pick: isZipPlace(scopeKey) ? null : bulkPickOf(scopeKey, place.name) })}>Start many hunts</button>
             <form className={s.search} role="search" onSubmit={(e) => { e.preventDefault(); if (query.trim()) openDetail({ type: "search", query: query.trim() }); }}>
               <input className={s.input} aria-label="Search everything in the selected place" placeholder="Search bodies, people, meetings, requirements, failures" value={query}
                 onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => { if (e.key === "Escape") setQuery(""); }} />
@@ -315,7 +315,7 @@ export function CommandCenter(props: CommandCenterProps) {
           {pickerOpen && (
             <div id="v6-picker" className={s.picker} role="dialog" aria-label="Choose a place"
               onKeyDown={(e) => { if (e.key === "Escape") { setPickerOpen(false); pickerButton.current?.focus(); } }}>
-              <input ref={pickerInput} className={s.input} aria-label="Find a state, county, ZIP, body or hunt" placeholder="Type a state, county, ZIP, body or hunt" value={pickerQ}
+              <input ref={pickerInput} className={s.input} aria-label="Find a state, district, county, ZIP, body or hunt" placeholder="Type a state, district (AZ-06), county, ZIP or hunt" value={pickerQ}
                 onChange={(e) => setPickerQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && pickerHits[0]) setScope(pickerHits[0].key); }} />
               <div className={s.pickerGrid}>
                 {pickerHits.map((p) => {
@@ -329,11 +329,6 @@ export function CommandCenter(props: CommandCenterProps) {
                 })}
                 {!pickerHits.length && <span className={s.meta}>No place matches “{pickerQ}”.</span>}
               </div>
-              <span className={s.meta}>
-                {data.places.state === "live" && data.places.load === "ready"
-                  ? "Searches every place the backend knows. A ZIP or body can overlap more than one county; its counts follow where it actually belongs."
-                  : data.places.state === "sample" ? "Sample places: 56 states and territories plus a few counties, ZIPs and bodies." : "Counties, ZIPs and bodies appear here by themselves once the backend lists them. Right now: the country and its 56 states and territories."}
-              </span>
             </div>
           )}
         </header>

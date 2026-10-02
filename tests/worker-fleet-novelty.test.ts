@@ -56,8 +56,11 @@ test("the actual Scout request inherits a learned method and the failed Hunter r
   assert.ok(request.includes(FIXTURE_URL));
   assert.match(request,/timeout/);
   assert.match(request,/seeded\.example\/door/,"the seeded field-manual door reaches the scout's request brief");
+  assert.match(request,/sopapi\/document\/getdocument/,"the first walk receives the route just learned from installed adapter code");
   const result=(await h.repos.scoutResults.readAll()).at(-1)!;
   assert.ok(result.inheritedFieldManualEntryIds?.includes(doorId),"the result records the exact projected door id (captured input)");
+  assert.ok(result.inheritedFieldManualEntryIds?.includes(fieldManualEntryId('installed-adapter','sparqdata-policy')),
+    "the same walk records the installed guide it received, without a second runtime startup");
   assert.ok(result.inheritedFieldManualLines?.some(l=>l.includes("https://seeded.example/door")),"the result records the exact rendered door line handed to the scout");
   const attempt=(await h.repos.attempts.mustRead(result.attemptId)).value;
   assert.ok(Date.parse(attempt.endedAt!)>=Date.parse(result.recordedAt),"Completion must use the actual post-provider clock, not dispatch admission time.");

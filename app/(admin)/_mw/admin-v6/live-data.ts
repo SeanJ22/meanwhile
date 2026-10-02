@@ -10,6 +10,7 @@
  *
  * PURE.
  */
+import { allDistricts } from "@/lib/control-plane/admin-view/district-catalog.ts";
 import { SECTION_DEP } from "./dependencies.ts";
 import type { SectionId } from "./contract.ts";
 import type { SectionState } from "./live-sync.ts";
@@ -56,6 +57,9 @@ export function referencePlaces(ref: LiveReference, hunts: readonly Hunt[] = [],
     const geo = /^geo:([a-z]{2})\.([a-z_]+)\.[0-9A-Za-z]+$/.exec(h.placeKey);
     if (geo && !out.some((p) => p.key === h.placeKey)) out.push({ key: h.placeKey, name: h.name.replace(/ hunt$/, ""), kind: geo[2] === "zcta" ? "ZIP" : geo[2] === "county" ? "County" : "Area", navParent: `st:${geo[1]}`, within: [`st:${geo[1]}`] });
   }
+  // Every congressional district is a place before anyone opens it (AZ-06 and any district typed into Change place).
+  const listed = new Set(out.map((p) => p.key));
+  for (const d of allDistricts()) if (!listed.has(d.placeKey)) out.push({ key: d.placeKey, name: d.label, kind: "Area", navParent: `st:${d.state}`, within: [`st:${d.state}`] });
   // A district or ZIP opened from The country: its place is the one the list filed it under, so its breadcrumbs run through the district.
   for (const p of seen) {
     const at = out.findIndex((x) => x.key === p.key);

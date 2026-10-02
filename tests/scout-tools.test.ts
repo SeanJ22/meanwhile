@@ -319,6 +319,37 @@ test('installed adapters use handed bytes and preserve their source provenance w
  assert.equal(refused.ok,false);assert.match(refused.forModel,/NOT_HANDED/);
 });
 
+test('freshly vaulted pages can be read and parsed by installed adapters in the same Scout walk',async()=>{
+ const url=HOST+'/directory';
+ const html='<html><body><a href="/policy/BEDH">Public participation policy</a></body></html>';
+ const http=fakeTransport({[HOST+'/robots.txt']:{status:200,body:ROBOTS_ALLOW_ALL},[url]:{status:200,body:html}});
+ const kit=buildScoutToolkit(context({openOne:http.open}));
+ const fetched=await kit.call('fetch_public',{...IN,url},null);
+ assert.equal(fetched.ok,true);
+ const id=fetched.artifacts.at(-1)!.artifactId,requests=http.seen.length;
+ const read=await kit.call('read_held',{...IN,artifactId:id,offset:0},null);
+ assert.equal(read.ok,true,read.forModel);assert.match(read.forModel,/Public participation policy/);
+ const parsed=await kit.call('run_adapter',{...IN,adapter:'uncapped-source-links',artifactId:id},null);
+ assert.equal(parsed.ok,true,parsed.forModel);assert.match(parsed.forModel,/policy\/BEDH/);
+ assert.equal(parsed.knowledgeRead?.contentHash,contentHash(html));
+ assert.equal(parsed.provenance?.[0].canonicalUrl,url);assert.equal(parsed.requestCount,0);
+ assert.equal(http.seen.length,requests,'reading and parsing reuse the already saved bytes');
+ const other=buildScoutToolkit(context({openOne:async()=>{throw Error('Must not fetch');}}));
+ assert.equal((await other.call('run_adapter',{...IN,adapter:'uncapped-source-links',artifactId:id},null)).ok,false);
+});
+
+test('an unpersisted or diagnostic page never becomes current adapter input',async()=>{
+ for(const status of [200,403]) {
+  const url=HOST+'/policy',vault=recordingVault();
+  const kit=buildScoutToolkit(context({openOne:fakeTransport({[url]:{status,body:PAGE}}).open,
+    vault:status===200?async()=>({stored:false,where:'none',why:'storage unavailable'}):vault.put}));
+  const fetched=await kit.call('fetch_public',{...IN,url},null);
+  const id=fetched.artifacts.at(-1)?.artifactId??'unpersisted';
+  const parsed=await kit.call('run_adapter',{...IN,adapter:'uncapped-source-links',artifactId:id},null);
+  assert.equal(parsed.ok,false);assert.match(parsed.forModel,/NOT_HANDED/);
+ }
+});
+
 /* ================================================= (h) the evaluator */
 
 test("robots: longest match decides, Allow winning a tie (Wikipedia's exact shape)", () => {

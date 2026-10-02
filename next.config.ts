@@ -90,8 +90,7 @@ const nextConfig: NextConfig = {
     // district's place score (the Checklist view of a district) reads them too; the shard names are computed, so the tracer cannot see them.
     "/api/admin/v6/{national,place}": ["./data/derived/zip-divisions/*.json"],
     "/api/admin/geography-preview": [
-      "./data/derived/census-unit-zips.json",
-      "./data/derived/zip-governments.json",
+      "./data/derived/place-reference/**",
       "./lib/control-plane/expansion/reference/az-fire-district-territory.json",
     ],
     // `/api/warm` resolves one place per published state on each instance it

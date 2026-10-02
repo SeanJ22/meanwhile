@@ -647,6 +647,7 @@ test("a blocked first linked page records a route Attempt and yields the next pa
 
 test("linked-publication inventory does not scan thousands of artifacts for every candidate link", async t => {
   const p = await plane(t);
+  await captureProfile(p);
   await cycle(p, T1);
   await cycle(p, T2);
   const artifacts = await p.repos.artifacts.readAll();
@@ -664,7 +665,9 @@ test("linked-publication inventory does not scan thousands of artifacts for ever
     sleep: async () => {}, openFor: () => { throw new Error("no read requested"); }, maxReads: 0 });
   console.log(`PUBLICATION_INDEX artifacts=${artifacts.length + 2400} links=${run.inventoried} vaultLookups=${lookups} due=${run.due}`);
   assert.ok(run.inventoried > 1);
-  assert.equal(run.due, run.inventoried);
+  const heldReused = run.outcomes.filter(row => row.code === "HELD_REUSED").length;
+  assert.equal(heldReused, 1);
+  assert.equal(run.due + heldReused, run.inventoried);
   assert.equal(run.deferred, run.due);
   assert.ok(lookups <= artifacts.length + 2400 + run.inventoried, "one artifact pass suffices for every link");
 });

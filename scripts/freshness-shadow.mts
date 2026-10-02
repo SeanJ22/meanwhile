@@ -281,6 +281,7 @@ import {
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import { readMethodKnowledge } from "../lib/method/manual-bridge.ts";
+import { candidateCounts as countMethodCandidates } from "../lib/method/candidate.ts";
 import { readConclusionStore } from "../lib/method/conclusions.ts";
 import {
   NO_PIPELINE_RECORDED,
@@ -3470,23 +3471,32 @@ leavePromotionTail();
  * cycle's own Attempts are in the denominators. A failed re-read is a named
  * runtime condition and the metrics record is withheld, never zeroed.
  */
+// These independent final reads share the existing repository transport limit.
+// Join failures too: neither finalization view retries an unchanged failed read.
+const finalizationReads = canary ? null : Promise.allSettled([
+  repos.scoutResults.readAll(),
+  repos.costs.readSince(new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
+  repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE"),
+  readMethodCandidateStore(repos),
+  dry ? Promise.resolve(null) : readMethodKnowledge(repos),
+] as const);
 async function computeMetrics(): Promise<ResearchMetrics | null> {
-  let results: readonly ScoutResult[];
-  let costsNow: readonly CostEntry[];
-  try {
-    results = await repos.scoutResults.readAll();
-    costsNow = await repos.costs.readSince(new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString());
-  } catch (error) {
+  const [resultsRead, costsRead, historyRead, candidatesRead] = (await finalizationReads)!;
+  if (resultsRead.status === "rejected" || costsRead.status === "rejected") {
+    const error = resultsRead.status === "rejected" ? resultsRead.reason : costsRead.status === "rejected" ? costsRead.reason : null;
     runtimeConditions.push(`research metrics NOT computed: a durable log could not be re-read (${error instanceof Error ? error.message : String(error)})`);
     return null;
   }
+  const results = resultsRead.value;
+  const costsNow = costsRead.value;
   const at = nowIso();
   finalSpendWindow = researchSpendInWindow(costsNow, at, RESEARCH_BOUNDS.windowHours, historicalSpendHolds);
   finalSpendAsOf = at;
   const windowCycles: { startedAt: string; deterministic: number; model: number }[] = [];
   try {
     const since = Date.parse(at) - RESEARCH_BOUNDS.windowHours * 3_600_000;
-    const priorDigests = await repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE");
+    if (historyRead.status === "rejected") throw historyRead.reason;
+    const priorDigests = historyRead.value;
     for (const rec of freshnessCycleOutcomes(priorDigests)) {
       const lanes = rec.research?.lanes;
       if (!lanes || Date.parse(rec.startedAt) < since) continue;
@@ -3501,7 +3511,10 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
       `research share history was unavailable from the canonical owner log (${error instanceof Error ? error.message : String(error)}); the window contains this cycle only`,
     );
   }
-  const counts = await candidateStoreCounts(repos);
+  let counts: ReturnType<typeof countMethodCandidates> | null = null;
+  if (candidatesRead.status === "fulfilled") {
+    try { counts = countMethodCandidates(candidatesRead.value); } catch { /* Unreadable authority remains unknown. */ }
+  }
   const candidateCounts = counts === null ? null : { proposed: counts.PROPOSED, validated: counts.VALIDATED, admitted: counts.ADMITTED, rejected: counts.REJECTED };
   const pipeline = await NO_PIPELINE_RECORDED();
   /*
@@ -3552,16 +3565,22 @@ const finishedAt = nowIso();
 if (!dry && !canary) {
   const leaveProgression = pending.enter("research-progression");
   try {
-    researchProgression = await (async () => readResearchProgression(repos, {
+    const [scoutsRead, , , candidatesRead, knowledgeRead] = (await finalizationReads)!;
+    if (candidatesRead.status === "rejected") throw candidatesRead.reason;
+    if (knowledgeRead.status === "rejected") throw knowledgeRead.reason;
+    if (knowledgeRead.value === null) throw new Error("the final method knowledge snapshot is unavailable");
+    if (scoutsRead.status === "rejected") throw scoutsRead.reason;
+    researchProgression = await readResearchProgression(repos, {
       windowId: researchWindowId, through: finishedAt, gate: readActivationGate(ROOT),
-      candidates: (await readMethodCandidateStore(repos)).candidates,
-      knowledge: await readMethodKnowledge(repos),
+      candidates: candidatesRead.value.candidates,
+      knowledge: knowledgeRead.value,
+      scouts: scoutsRead.value,
       conclusions: readConclusionStore(join(ROOT,"data","method","conclusions.json")),
       researchBoundary: {
         since: priorResearchState?.researchProgression?.through ?? priorResearchState?.cycleFinishedAt ?? NOW,
         previousCompletedWindowId: priorResearchState?.researchProgression?.windowId ?? (priorResearchState?.cycleFinishedAt ? `research:${priorResearchState.host}:${priorResearchState.cycleStartedAt}` : null),
       },
-    }))();
+    });
   } catch (error) {
     researchProgressionFailure = error instanceof Error ? error.message : String(error);
     runtimeConditions.push(`RESEARCH_PROGRESSION_UNAVAILABLE: ${researchProgressionFailure}; no zero-progress claim was produced`);

@@ -13,8 +13,10 @@ const RUNNER = join(ROOT, "scripts", "ci-tests.mjs");
 
 function runnerEnvironment(shard: number) {
   const env: NodeJS.ProcessEnv = { ...process.env, GITHUB_SHA: "", CI_TEST_SHARD: `${shard}/4` };
-  // A synthetic CLI invocation is a new test runner, not this test's worker.
+  // A synthetic CLI invocation is a new test runner, not this test's worker,
+  // and it must not inherit the parent run's affected-file selection.
   delete env.NODE_TEST_CONTEXT;
+  delete env.CI_TEST_FILES;
   return env;
 }
 

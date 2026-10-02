@@ -2136,6 +2136,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         ranAs: "BOUNDED_MODEL_WORKER" as const,
         artifacts: distinctArtifacts,
         cost,
+        ...(persisted.spendHoldJobId === undefined ? {} : { spendHoldJobId: persisted.spendHoldJobId }),
         ...(costByModel !== null ? { costByModel } : {}),
         endedAt: clock(),
       };

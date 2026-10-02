@@ -2587,6 +2587,8 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
             }
           }
         }
+        const heldJobId = jobSpend.get(amended.obligationId)?.jobId;
+        if (heldJobId !== undefined) amended = { ...amended, spendHoldJobId: heldJobId };
         await repos.scoutResults.append(amended.obligationId, amended.attemptId, amended, nowIso());
         scoutResultsThisCycle.push(amended);
         priorScoutResults.set(amended.obligationId,[...(priorScoutResults.get(amended.obligationId)??[]),amended]);

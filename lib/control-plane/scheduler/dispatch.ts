@@ -338,6 +338,8 @@ export interface WorkOutcome {
   readonly artifacts?: readonly WorkArtifact[];
   /** Measured. `ZERO_COST` is a measurement of nothing, not an absent one. */
   readonly cost?: AttemptCost;
+  /** Exact existing job hold carried by the runner's typed Scout result. */
+  readonly spendHoldJobId?: string;
   /**
    * The per-model split of `cost` when the worker ran more than one model
    * (MW-031, 2026-09-25: a Scout that escalated). Written onto the ledger row
@@ -733,6 +735,7 @@ export async function dispatchOne(
         role: worker.role,
         model: worker.provider === "anthropic" ? (byModel?.[0]?.model ?? worker.version) : null,
         cost,
+        spendHoldJobId: outcome?.spendHoldJobId,
         recordedAt: at,
         ...purpose,
         resultKind,
@@ -1045,6 +1048,7 @@ export async function dispatchOne(
         role: worker.role,
         model: worker.provider === "anthropic" ? (outcome.costByModel?.[0]?.model ?? worker.version) : null,
         cost: outcome.cost,
+        spendHoldJobId: outcome.spendHoldJobId,
         recordedAt: terminalAt,
         ...purpose,
         resultKind: disposition.disposition,

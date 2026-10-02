@@ -378,6 +378,8 @@ export interface ScoutResult {
   readonly usage: ScoutUsage;
   readonly usd: number | null;
   readonly elapsedMs: number;
+  /** Runner-owned identity of the existing budget hold, never model supplied. */
+  readonly spendHoldJobId?: string;
   readonly artifactIds: readonly string[];
   /** Tool protocol actually available to this Attempt. A later repair may
    * re-evaluate one older failed walk when saved-byte access has advanced. */

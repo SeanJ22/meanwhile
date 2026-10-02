@@ -101,8 +101,8 @@ export async function applyMigrations(args: string[], options: { beforeContract?
   const INSPECT_ONLY = PRODUCTION_BUILD && !process.env.WTP_PRODUCTION_DATABASE_URL_WRITE;
 
   if (INSPECT_ONLY) {
-    which = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY ? "WTP_PRODUCTION_DATABASE_URL_READONLY" : "DATABASE_URL";
-    connection = process.env[which] ?? "";
+    which = "DATABASE_URL";
+    connection = process.env.DATABASE_URL ?? "";
     let host = "";
     try { host = new URL(connection).hostname; } catch { /* Refuse without printing credentials. */ }
     if (host.replace(/-pooler(?=\.)/, "").split(".")[0] !== "ep-dry-river-axwtolzc" || !host.endsWith(".neon.tech")) {

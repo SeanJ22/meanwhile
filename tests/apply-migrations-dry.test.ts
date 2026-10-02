@@ -278,7 +278,7 @@ test("preview, branch and local build hooks skip without reading a database", ()
 
 const productionBuild = { NETLIFY: "true", CONTEXT: "production", BRANCH: "main",
   DATABASE_URL: "postgresql://reader:secret@ep-dry-river-axwtolzc-pooler.c-4.us-east-2.aws.neon.tech/neondb",
-  WTP_PRODUCTION_DATABASE_URL_WRITE: "", WTP_PRODUCTION_DATABASE_URL_READONLY: "" };
+  WTP_PRODUCTION_DATABASE_URL_WRITE: "" };
 const expandBuildArgs = ["--target=production", "--phase=expand", "--production-build"];
 
 test("production build without a writer passes only when committed expands are already applied", () => {

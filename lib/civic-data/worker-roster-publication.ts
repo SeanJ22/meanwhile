@@ -9,7 +9,8 @@ import type { WorkItem } from "../control-plane/work-item.ts";
 import { readRegistryRuntimePrior, registryRuntimeCandidate, registryBaseSourceReceipt } from "../registry/runtime-data-plane.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
 import type { PromotionOutcome } from "./promotion.ts";
-import type { RoutineDataStore } from "./store.ts";
+import { PostgresRoutineDataStore, type RoutineDataStore } from "./store.ts";
+import { registryAreaViewOf } from "./payload-parts.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
 import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
@@ -49,6 +50,31 @@ export interface RosterReading {
 
 const requireThat = (value: unknown, reason: string): void => { if (!value) throw new Error(reason); };
 const digest = (text: string) => createHash("sha256").update(text).digest("hex");
+
+/** Exact recorded divisions select native areas; a publication never hydrates the country. */
+async function registryPublicationPrior(store: RoutineDataStore, bodyId: string, now: string,
+  divisions: readonly string[] = [], carried?: RegistryRuntimePrior | null): Promise<{ store: RoutineDataStore; prior: RegistryRuntimePrior | null }> {
+  if (!(store instanceof PostgresRoutineDataStore)) return { store, prior: carried ?? await readRegistryRuntimePrior(store, now) };
+  const areaId = (id: string) => /^ocd-division\/country:us\/state:[a-z]{2}(?:\/|$)/.test(id);
+  const selected = [...new Set([...store.registryAreaScope ?? [], bodyId.split("#")[0], ...divisions].filter(areaId))];
+  if (!selected.length) throw new Error("ROSTER_REGISTRY_AREA_SCOPE_MISSING");
+  let scoped = store.forRegistryArea(selected);
+  const sameSelection = (prior: RegistryRuntimePrior | null | undefined) => {
+    const view = registryAreaViewOf(prior?.payload);
+    return view !== null && canonicalJson([...view.selection].sort()) === canonicalJson([...scoped.registryAreaScope!].sort());
+  };
+  let prior = sameSelection(carried) ? carried! : await readRegistryRuntimePrior(scoped, now);
+  const body = prior?.payload.registry.bodies.find(row => row.id === bodyId);
+  if (body) {
+    const touching = [body.ocdId, ...body.alsoServesOcdIds ?? []].filter((id): id is string => id !== null);
+    if (touching.some(id => !scoped.registryAreaScope!.includes(id))) {
+      // forRegistryArea enforces the state boundary on the body's recorded territory too.
+      scoped = scoped.forRegistryArea([...scoped.registryAreaScope!, ...touching]);
+      prior = await readRegistryRuntimePrior(scoped, now);
+    }
+  }
+  return { store: scoped, prior };
+}
 
 /** Carry the exact candidate accepted by the existing atomic door and typed readback. */
 export function acceptedRegistryPrior(published: PromotionOutcome): RegistryRuntimePrior {
@@ -302,6 +328,7 @@ export async function publishWorkerRosterResults(input: {
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   // Carry accepted snapshots through the pass; reload only after an external base change.
   let registry: RegistryRuntimePrior | null | undefined;
+  const areasByBody = new Map<string, readonly string[]>();
   // Several jobs can owe the same body. Its saved pages are read once per pass, and
   // once a reading is published every other job for that body reuses that publication.
   const heldByBody = new Map<string, Promise<RosterReading | null>>();
@@ -321,7 +348,18 @@ export async function publishWorkerRosterResults(input: {
     let captures: WorkerPublicationCapture[] = [], reading: RosterReading | null = null, heldDirectory: DirectoryReading | null = null, wentLive = 0;
     let schedule: HeldBodySchedule | null = null;
     try {
-      if (registry === undefined) registry = await readRegistryRuntimePrior(input.store, input.now);
+      const scope = [plan.directorySubject?.divisionId, plan.directorySubject?.jurisdiction.ocdId,
+        plan.contract.jurisdiction.canonicalId, ...areasByBody.get(bodyId) ?? []].filter((id): id is string => typeof id === "string");
+      if (input.store instanceof PostgresRoutineDataStore) {
+        const state = /^ocd-division\/country:us\/state:[a-z]{2}(?:\/|$)/.exec(bodyId.split("#")[0])?.[0].replace(/\/$/, "")
+          ?? `ocd-division/country:us/state:${plan.contract.jurisdiction.state.toLowerCase()}`;
+        const obligations = await input.repos.obligations.listWhere(["subjectId"], plan.contract.subjectId);
+        scope.push(...obligations.flatMap(row => row.value.scopeDivisions ?? []).filter(id => id === state || id.startsWith(`${state}/`)));
+      }
+      const area = await registryPublicationPrior(input.store, bodyId, input.now, scope, registry);
+      const publicationStore = area.store;
+      registry = area.prior;
+      if (publicationStore.registryAreaScope) areasByBody.set(bodyId, publicationStore.registryAreaScope);
       const prior = registry;
       if (!prior) throw new Error("ROSTER_PRIOR_READER_AUTHORITY_MISSING");
       const parser = latestParserResult(records, id);
@@ -393,11 +431,11 @@ ${readingId}`);
       if (!directoryPackage) requireThat(canonicalJson((candidate.readModel as RegistryRuntimeReadModel).bodyRosters.find(r => r.bodyId === bodyId)) ===
         canonicalJson(prepared.payload.bodyRosters[0]), "ROSTER_READER_FACTS_HELD");
       candidateId = candidate.id;
-      const published = await processRegisteredManualCandidate(input.store, "registry-runtime-bindings", candidate, input.now, prior.versionId);
+      const published = await processRegisteredManualCandidate(publicationStore, "registry-runtime-bindings", candidate, input.now, prior.versionId);
       if (!published.promoted) { if (published.candidate.failureCode === "PROMOTION_BASE_CHANGED") registry = undefined; throw new Error(`${published.candidate.failureCode === "PROMOTION_BASE_CHANGED" ? "PROMOTION_BASE_CHANGED" : "ROSTER_READER_GATE_HELD"}:${published.candidate.failureDetail ?? published.candidate.state}`); }
       versionId = published.promoted.versionId;
       registry = undefined;
-      const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(input.store,
+      const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(publicationStore,
         requiredManualProductionContract("registry-runtime-bindings"), published.promoted, input.now);
       if (readback?.status !== "PASS") throw new Error(`ROSTER_READER_READBACK_FAILED:${readback?.detail ?? "missing typed reader receipt"}`);
       registry = acceptedRegistryPrior(published);
@@ -455,15 +493,16 @@ export async function publishRosterReading(input: {
   readonly prior?: RegistryRuntimePrior;
   readonly onPublished?: (prior: RegistryRuntimePrior) => void;
 }): Promise<{ readonly versionId: string; readonly confirmed: boolean; readonly departed: readonly string[]; readonly unresolved: readonly string[] }> {
-  const prior = input.prior ?? await readRegistryRuntimePrior(input.store, input.now);
+  const area = await registryPublicationPrior(input.store, input.bodyId, input.now, [], input.prior);
+  const prior = area.prior;
   if (!prior) throw new Error("ROSTER_PRIOR_READER_AUTHORITY_MISSING");
   const roster = workerRosterPublication({ bodyId: input.bodyId, reading: input.reading, prior, now: input.now });
   const candidate = registryRuntimeCandidate(roster, { prior });
   requireThat(canonicalJson((candidate.readModel as RegistryRuntimeReadModel).bodyRosters.find(r => r.bodyId === input.bodyId)) ===
     canonicalJson(roster.payload.bodyRosters[0]), "ROSTER_READER_FACTS_HELD");
-  const published = await processRegisteredManualCandidate(input.store, "registry-runtime-bindings", candidate, input.now, prior.versionId);
+  const published = await processRegisteredManualCandidate(area.store, "registry-runtime-bindings", candidate, input.now, prior.versionId);
   if (!published.promoted) throw new Error(`ROSTER_READER_GATE_HELD:${published.candidate.failureCode ?? ""}:${published.candidate.failureDetail ?? published.candidate.state}`);
-  const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(input.store,
+  const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(area.store,
     requiredManualProductionContract("registry-runtime-bindings"), published.promoted, input.now);
   if (readback?.status !== "PASS") throw new Error(`ROSTER_READER_READBACK_FAILED:${readback?.detail ?? "missing typed reader receipt"}`);
   input.onPublished?.(acceptedRegistryPrior(published));

@@ -4,7 +4,8 @@ import { gunzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
 import test from "node:test";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { composeRegistryAreaView } from "../lib/civic-data/payload-parts.ts";
 import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
 import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
@@ -75,6 +76,37 @@ test("the wrong page, a stale page and an unlinked non-government page never pub
   assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Boards"))), prior: base, now: NOW }), /ROSTER_PAGE_NOT_THIS_BODY/);
   assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Contact the Mayor & Council"), URL_, "2026-07-01T00:00:00.000Z")), prior: base, now: NOW }), /OUTSIDE_FRESHNESS_WINDOW/);
   assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Contact the Mayor & Council"), "https://benson-az.example.com/council")), prior: base, now: NOW }), /NOT_OFFICIAL_SOURCE/);
+});
+
+test("the roster publisher reuses only its native area and reads recorded shared territory through the scoped store", async () => {
+  const base = await prior();
+  const area = BODY.split("#")[0]!, state = "ocd-division/country:us/state:az";
+  const payload = composeRegistryAreaView({ ...base.payload,
+    registry: { ...base.payload.registry, divisions: base.payload.registry.divisions.filter(row => row.ocdId === area),
+      bodies: base.payload.registry.bodies.filter(row => row.id === BODY) },
+    bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [],
+    officialCandidacies: { ...base.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} });
+  const carried = { ...base, payload: { ...payload,
+    $civicRegistryView: { ...payload.$civicRegistryView, selection: [area, state] } } };
+  const reads: string[][] = [];
+  const scopedStore = (selection?: readonly string[]): PostgresRoutineDataStore => Object.assign(Object.create(PostgresRoutineDataStore.prototype), {
+    registryAreaScope: selection,
+    forRegistryArea: (ids: readonly string[]) => scopedStore([...new Set([...ids, state])]),
+    readPromotion: async () => { reads.push([...selection ?? []]); throw new Error("SCOPED_PRIOR_READ"); },
+  });
+  const held = capture(page("Boards"));
+  const input = { store: scopedStore(), bodyId: BODY, now: NOW, prior: carried,
+    reading: { id: "wrong-page", capture: held, linkingPage: null, complete: true, method: "fixture",
+      members: [{ recordId: "r1", fields: { name: "Ana Rivera", office: "Council Member" } }] } };
+  await assert.rejects(publishRosterReading(input), /ROSTER_PAGE_NOT_THIS_BODY/);
+  assert.deepEqual(reads, [], "a compatible native prior reaches the source validator without a country read");
+  await assert.rejects(publishRosterReading({ ...input, prior: base }), /REGISTRY_RUNTIME_BASE_UNAVAILABLE:STORE_READ_FAILED/);
+  assert.deepEqual(reads[0], [area, state], "a carried country snapshot cannot bypass the native area read");
+  const shared = "ocd-division/country:us/state:az/county:cochise";
+  const regional = { ...carried, payload: { ...carried.payload, registry: { ...carried.payload.registry,
+    bodies: carried.payload.registry.bodies.map(body => ({ ...body, alsoServesOcdIds: [shared] })) } } };
+  await assert.rejects(publishRosterReading({ ...input, prior: regional }), /REGISTRY_RUNTIME_BASE_UNAVAILABLE:STORE_READ_FAILED/);
+  assert.deepEqual(reads[1], [area, state, shared], "the body's recorded additional jurisdiction is included before publication");
 });
 
 test("a complete official roster records a departure; a partial one keeps the prior member on its own source", async () => {

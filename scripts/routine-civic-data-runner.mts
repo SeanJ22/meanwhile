@@ -642,20 +642,27 @@ const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admi
   : `Owner due request ${request.id}: ${taskId} was due but deferred by the provider frontier; the next pass offers it again.`).concat(publicationInputLines);
 attempted = pendingRuns.length;
 
-// Every meeting partition child proves the registry-runtime pointer before it
-// acquires anything: 24.47 MB each, 19.81 MB of it the pointed candidate read
-// only for that proof. With two or more in a pass, prove it once here and hand
-// each child the attestation; a child whose pointer or payload no longer
-// matches runs its own full proof. One child keeps its own proof: attesting it
-// would cost the same read twice.
+// With two or more meeting children, read one admitted division's native
+// registry area through the existing typed door and share its attestation.
+// Every selection binds the same immutable composition; a changed pointer or
+// payload still makes a child run its own proof. One child keeps its own read.
 const meetingPartitionRuns = pendingRuns.filter((pending) => pending.kind === "MEETING_PARTITION").length;
 let meetingChildAttestations: Readonly<Record<string, string>> = {};
 if (meetingPartitionRuns >= 2) {
   step = "proving the registry once for this pass";
   try {
-    const registry = await readRegistryRuntimeProjection({ store });
+    const registryArea = pendingRuns.filter(pending => pending.kind === "MEETING_PARTITION")
+      .map(pending => MEETING_PARTITION_CONTRACTS.find(contract => contract.id === pending.id))
+      .map(contract => contract?.ocdId ?? (() => {
+        const state = /^US-([A-Z]{2})$/.exec(contract?.derivedFamily ?? "")?.[1];
+        return state ? `ocd-division/country:us/state:${state.toLowerCase()}` : null;
+      })())
+      .find((id): id is string => typeof id === "string" && /^ocd-division\/country:us\/state:[a-z]{2}(?:\/|$)/.test(id));
+    if (!registryArea) throw new Error("MEETING_REGISTRY_AREA_SCOPE_MISSING");
+    const registryStore = store.forRegistryArea([registryArea]);
+    const registry = await readRegistryRuntimeProjection({ store: registryStore });
     const attestation = registry.kind === "PROMOTED"
-      ? attestPromotedVersion("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, store)
+      ? attestPromotedVersion("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, registryStore)
       : null;
     if (attestation) meetingChildAttestations = { [ATTESTED_PROMOTIONS_ENV]: serializeAttestedPromotions([attestation]) };
     console.log(

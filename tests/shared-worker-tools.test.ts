@@ -11,6 +11,7 @@ import { join } from "node:path";
 import { fork, type ChildProcess } from "node:child_process";
 import { pathToFileURL } from "node:url";
 import { once } from "node:events";
+import { setImmediate as yieldToEventLoop } from "node:timers/promises";
 import { writeFile } from "node:fs/promises";
 
 test("concurrent workers share a browser and close only their own contexts", async () => {
@@ -83,13 +84,17 @@ test("national pairs retain both measured entry peaks and the 768 MiB margin", a
 
 test("all publication siblings and routine script families reserve their measured peak", async () => {
   const mib = 1024 * 1024;
-  const slots = routineProcessSlots({ availableBytes: () => (768 + 1042) * mib });
+  const slots = routineProcessSlots({ availableBytes: () => (768 + WORKER_ENTRY_PEAK_MIB.national!) * mib });
   const first = await slots.acquire("worker-publication:ballot-navigation:one/promote-manual-civic-projection.mts");
   await assert.rejects(slots.acquire("worker-publication:ballot-navigation:two/promote-manual-civic-projection.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
   first();
   const census = routineProcessSlots({ availableBytes: () => (768 + 1199) * mib });
   await assert.rejects(census.acquire("census-geography/census-geography-refresh.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
   const ordinary = await census.acquire("reader:meeting/ordinary-source.mts"); ordinary();
+  const small = routineProcessSlots({ availableBytes: () => (768 + 342) * mib });
+  for (const entry of ["meetings:any/ingest.ts", "az-money/state-money-az.mts", "nh-money/state-money-nh.mts", "nj-rollcalls/state-rollcalls.mts"]) {
+    await assert.rejects(small.acquire(entry, Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
+  }
 });
 
 test("legacy registry roster publications reserve their measured RSS and queue until memory is released", async () => {
@@ -101,7 +106,7 @@ test("legacy registry roster publications reserve their measured RSS and queue u
       "worker-publication:registry-runtime-bindings:roster-three", "registry-runtime-bindings"];
     const admitted: string[] = [];
     const offers = entries.map(entry => slots.acquire(entry).then(release => { admitted.push(entry); return release; }));
-    await Promise.resolve();
+    await yieldToEventLoop();
     assert.deepEqual(admitted, entries.slice(0, expected), "reserved future RSS protects the 768 MiB margin before publishers grow");
     for (let index = 0; index < entries.length; index++) {
       const release = await offers[index]!;
@@ -169,6 +174,16 @@ test("research parent growth is reserved before its first worker asks for admiss
   const result = await routine.acquire("routine", Date.now() + 25).then(release => { release(); return "admitted"; },
     error => { assert.match(error.message, /WORKER_MEMORY_DEADLINE/); return "deferred"; });
   assert.equal(result, "deferred", "routine must pay for the research parent's future growth while research is still preparing its queue");
+});
+
+test("a burst of queued offers shares one fresh admission sample without blocking child startup", async () => {
+  let samples = 0;
+  const host = workerMemoryHost({ processes: () => { samples++; return []; } });
+  const slots = workerProcessSlots(() => 20, { host, availableBytes: () => 1000, headroomBytes: 100, peakBytes: () => 600 });
+  const offers = Array.from({ length: 20 }, () => slots.acquire());
+  const first = await offers[0]!;
+  try { assert.equal(samples, 1, "waiting siblings must not synchronously resample the host before the admitted child can start"); }
+  finally { first(); for (const offer of offers.slice(1)) (await offer)(); }
 });
 
 test("children already at their peaks do not reserve their current RSS a second time", async () => {
@@ -255,12 +270,12 @@ test("twenty Scouts and a routine pass finish under one 8 GiB budget without a s
     routineDone = release; routineOverlap = admitted.size;
     assert.ok(2928 + 768 + admitted.size * 248 + 342 <= 8192);
   });
-  await Promise.resolve();
+  await yieldToEventLoop();
   assert.equal(admitted.size, 18);
   for (let id = 0; id < 20; id++) {
     await offers[id];
     admitted.get(id)!(); admitted.delete(id);
-    await Promise.resolve();
+    await yieldToEventLoop();
     if (id === 3) await pass;
   }
   await pass;

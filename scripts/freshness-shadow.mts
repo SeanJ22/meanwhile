@@ -1226,7 +1226,7 @@ const expansionLoad = await loadExpansionPlan({
       ([state, why]) => `the ${state.toUpperCase()} registration could not be read as a jurisdiction registry (${why}); nothing in it is placed or created`,
     );
   },
-  ...("registries" in promoted ? { loadTerritory: () => readTerritoryIndex(ROOT, [...registriesNow(promoted.registries).values()]) } : {}),
+  ...("registries" in promoted ? { loadTerritory: (states: readonly string[], zips: ReadonlySet<string>) => readTerritoryIndex(ROOT, [...registriesNow(promoted.registries).values()], [...states], zips) } : {}),
 });
 runtimeConditions.push(...expansionLoad.conditions);
 const expansionPlan = expansionLoad.plan;
@@ -1738,7 +1738,8 @@ if (dispatchTargets.length > 0) {
     if (dispatchTargets.some((t) => t.kind === "DISPATCH" && t.target.states.some((s) => !registries.has(s)))) {
       try {
         censusUnitsByState = new Map<string, number>();
-        for (const unit of readCensusUnitTerritories(ROOT)) {
+        const states = [...new Set(dispatchTargets.flatMap(target => target.kind === "DISPATCH" ? target.target.states : []))];
+        for (const unit of readCensusUnitTerritories(ROOT, states)) {
           const state = unit.state.toUpperCase();
           censusUnitsByState.set(state, (censusUnitsByState.get(state) ?? 0) + 1);
         }

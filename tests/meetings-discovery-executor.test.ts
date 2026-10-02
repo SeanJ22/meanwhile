@@ -33,6 +33,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
+  DEFAULT_MAX_REQUESTS_PER_WALK,
   DiscoveryTimeSpent,
   RECORDED_WALLS,
   discoveryFieldManualEntries,
@@ -337,6 +338,18 @@ test("BOUNDED: a walk stops at its request bound and says so", async () => {
   assert.equal(seen.length, 3);
   assert.equal(attempt.requestCount, 3);
   assert.ok(attempt.steps.some((s) => /request bound/.test(s.note)));
+});
+
+test("BOUNDED BY DEFAULT: a source with many linked calendars stays inside its finite request allowance and remains due", async () => {
+  const { open, seen } = fakeOpen({
+    "https://busy.gov/robots.txt": ALLOW,
+    "https://busy.gov/": { status: 200, body: Array.from({length: 60}, (_, i) => `<a href="/meeting-${i}.ics">Calendar ${i}</a>`).join("") },
+  });
+  const attempt = await walkMeetingsDiscoveryNeed(need("az:town:busy", "busy.gov"), runtime(open));
+  assert.ok(Number.isFinite(DEFAULT_MAX_REQUESTS_PER_WALK));
+  assert.equal(seen.length, DEFAULT_MAX_REQUESTS_PER_WALK);
+  assert.equal(attempt.recheckAfter, attempt.finishedAt, "unwalked routes keep the source due immediately");
+  assert.ok(attempt.steps.some(s => /request bound/.test(s.note)));
 });
 
 test("TIME: each request's timeout is cut to the time left; a walk the time runs out on concludes nothing unless it already confirmed a route", async () => {
@@ -818,6 +831,37 @@ test("A WALK THAT FAILS ON OUR SIDE IS NAMED, AND THE PASS GOES ON: the other wa
     assert.equal(pass.fieldManual.written, 1, `${label}: the other walk's route reached the field manual`);
   }
   assert.match(readFileSync("scripts/freshness-shadow.mts", "utf8"), /walkFailures: meetingsDiscovery\?\.walkFailures \?\? \[\],/, "the cycle record names them");
+});
+
+test("BOUNDED: failed walks consume maxWalks and the remaining dispatched needs stay deferred", async () => {
+  for (const [label, repos] of await eachStore("wtp-discovery-failed-bound-")) {
+    let requests = 0;
+    const needs = [need("az:a:broken", "broken.gov"), need("az:b:untouched", "untouched.gov"), need("az:c:untouched", "untouched.gov")];
+    const pass = await runMeetingsDiscovery(repos, {
+      needs, firstIds: new Set(needs.map(n => n.jurisdictionId)), cycleIndex: 0, maxWalks: 1,
+      runtime: runtime(async () => { requests++; throw new Error("transport adapter failure"); }),
+    });
+    assert.equal(requests, 1, `${label}: a failed walk consumes its place in the pass`);
+    assert.deepEqual(pass.walkFailures.map(f => f.jurisdictionId), [needs[0].jurisdictionId]);
+    assert.deepEqual(pass.deferred, needs.slice(1).map(n => n.jurisdictionId));
+    for (const n of needs) assert.deepEqual(await repos.discoveryAttempts.read(n.jurisdictionId), [], `${label}: no incomplete reading is saved`);
+  }
+});
+
+test("TIME, PASS: a spent phase stops reading need histories as well as sending requests", async () => {
+  for (const [label, repos] of await eachStore("wtp-discovery-spent-")) {
+    const needs = Array.from({length: 100}, (_, i) => need(`az:town:${i}`, "untouched.gov"));
+    const read = repos.discoveryAttempts.read.bind(repos.discoveryAttempts);
+    let historyReads = 0;
+    repos.discoveryAttempts.read = async id => { historyReads++; return read(id); };
+    const {open, seen} = fakeOpen({});
+    const pass = await runMeetingsDiscovery(repos, {needs, firstIds:new Set(needs.map(n=>n.jurisdictionId)),cycleIndex:0,maxWalks:12,
+      runtime:runtime(open,{budget:{spent:()=>true,remainingMs:()=>0}})});
+    assert.equal(historyReads,0,`${label}: phase exhaustion cannot leave an unbounded history-read tail`);
+    assert.deepEqual(seen,[]);
+    assert.deepEqual(pass.deferred,needs.map(n=>n.jurisdictionId));
+    assert.deepEqual(pass.walked,[]);
+  }
 });
 
 test("PROVENANCE (NH330): the walk records where the address came from, each redirect to the homepage, and a withdrawn route's own 404 as vaulted evidence", async () => {

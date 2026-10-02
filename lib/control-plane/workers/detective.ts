@@ -9,6 +9,45 @@ import { indexJson } from "./parser.ts";
 import { assertResearchResult, assertResearchWalk, type DetectiveResult, type DetectiveWorkerInput, type ResearchBlocker,
   type ResearchSpan } from "./research-types.ts";
 import type { WorkerEvidence } from "./types.ts";
+import type { FreshnessDebt } from "../scheduler/debt.ts";
+import type { ExecutorDecision } from "../scheduler/dispatch.ts";
+import type { RouteDescriptor } from "../scheduler/registry.ts";
+import { sourceReliabilityKey } from "../scheduler/scout-reliability.ts";
+
+/** A broken known route needs a new route, not another replay of the same HTTP shape. */
+export function sourceFailureRecovery(decision: ExecutorDecision, debt: FreshnessDebt | null | undefined): ExecutorDecision {
+  if (!needsSourceInvestigation(debt)) return decision;
+  return {kind:'BOUNDED_MODEL_WORKER', disagreement:decision.disagreement,
+    why:`DETECTIVE FAILURE RESPONSE: ${debt.target} failed at ${debt.lastFailedAt} (${debt.cause}, ${debt.consecutiveFailures} consecutive failure(s)). ${debt.detail}\n`+
+      'Read held facts and the knowledge bank first, then available APIs. Find another working source or a documented dead end; do not replay the failed route.'};
+}
+
+function needsSourceInvestigation(debt: FreshnessDebt | null | undefined): debt is FreshnessDebt {
+  return !!debt && debt.consecutiveFailures > 0 && [
+    'REFUSED_BY_HOST', 'RATE_LIMITED', 'UPSTREAM_ERROR', 'TRANSPORT_FAILED', 'EXTRACTION_FAILED',
+  ].includes(debt.cause);
+}
+
+/** A failed discovery provider does not invalidate another source already found for the subject. */
+function heldAfterSourceFailure(solved: import('../scheduler/scout-result.ts').ScoutResult | null | undefined,
+  debt: FreshnessDebt | null | undefined, route: RouteDescriptor | null | undefined) {
+  if (!solved) return null;
+  if (!needsSourceInvestigation(debt) || Date.parse(debt.lastFailedAt) < Date.parse(solved.recordedAt)) return solved;
+  const open = route?.open;
+  const failedUrl = open?.kind === 'HTTP_GET' || open?.kind === 'HTTP_POST' ? open.url : debt.target;
+  const sourceKey = (url: string) => {
+    try { return /^https?:\/\//i.test(url) ? sourceReliabilityKey(url) : null; } catch { return null; }
+  };
+  const failedSource = sourceKey(failedUrl);
+  if (!failedSource) return null;
+  const candidates = reusableScoutCandidates(solved).filter(candidate => {
+    const source = sourceKey(candidate.url);
+    return source !== null && source !== failedSource;
+  });
+  // Facts-only results are already represented as captured-source candidates above.
+  // Keep the stored result intact; only this acquisition handoff drops failed sources.
+  return candidates.length ? { ...solved, candidates, findings: [] } : null;
+}
 
 /** JSON grammar, duplicate-key checks and exact pointer offsets reuse the Parser's lexical index. */
 function valueAt(evidence: WorkerEvidence, pointer: string): { value: unknown; span: ResearchSpan } | null {
@@ -129,6 +168,8 @@ export function detectiveExecutor(deps: import('../scheduler/scout-executor.ts')
 /** Both Scout lanes use the same failure responder and keep their existing budgets and tools. */
 export function failureResponderExecutor(deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps & {
   solved?: import('../scheduler/scout-result.ts').ScoutResult | null;
+  sourceFailure?: FreshnessDebt | null;
+  sourceRoute?: RouteDescriptor | null;
   executorFactory?: ScoutExecutorFactory;
 }): import('../scheduler/dispatch.ts').DeclaredExecutor {
   const contexts=new Map<string,{value?:ReturnType<typeof deps.contextFor>;error?:unknown}>();
@@ -142,6 +183,7 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
   const scout=factory({...deps,contextFor}), detective=detectiveExecutor({...deps,contextFor},factory);
   const choose=(row:Parameters<typeof contextFor>[0])=>{
     try {
+      if (needsSourceInvestigation(deps.sourceFailure)) return detective;
       const inherited=contextFor(row).inherited;
       // Shared manual failures are knowledge, not failures of this job. Its
       // projected entries/instructions are indented; keep actual prior-result
@@ -151,7 +193,7 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
         /\b(?:REFUSED|BLOCKED|NO_PROGRESS|NEEDS_ADAPTER|REQUIRED_FIELD_MISSING)\b|failed parse|blocked route|retry loop|DEBT: [1-9]\d* consecutive failure/i.test(ownHistory) ? detective : scout;
     } catch { return scout; }
   };
-  const held=deps.solved;
+  const held=heldAfterSourceFailure(deps.solved,deps.sourceFailure,deps.sourceRoute);
   return {lane:held?'DETERMINISTIC':'BOUNDED_MODEL_WORKER',
     ...(!held && scout.dispatch && detective.dispatch ? {dispatch: ((input) => choose(input.obligation).dispatch!(input)) as NonNullable<import('../scheduler/dispatch.ts').DeclaredExecutor['dispatch']>} : {}),
     workerFor:input=>held

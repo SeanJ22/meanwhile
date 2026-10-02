@@ -1,19 +1,4 @@
-/**
- * **ONE STATE'S REGISTRATION, ON THE RUNNER'S CLOCK.** (2026-09-23.)
- *
- *   node --experimental-strip-types scripts/registration-refresh.mts --promote --state=OH
- *
- * The standing runner invokes this for each state's REGISTRATION contract
- * (`lib/civic-data/contracts.ts`). It confirms census.gov still serves the
- * pinned Census of Governments bytes (a conditional request: a 304 downloads
- * nothing), reads the state's committed reference
- * and the promoted reviewed registry, builds the candidate
- * (`lib/registration/candidate.ts`) and hands it to the promotion engine,
- * the one authorized door. It writes no file. A changed or unavailable Census
- * file records its reason and leaves the state's prior registration live; a
- * reviewed registry that cannot be read stops the run, because registering
- * without it could write an id the reviewed registry owns.
- */
+/** Refresh one state's sourced registration through its ordinary promotion door. */
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import {
@@ -26,10 +11,9 @@ import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { acquireRegistrationSource, type RegistrationSourceReceipt } from "../lib/registration/acquire.ts";
-import { registrationCandidate, type RegistrationReadModel, type ReviewedRegistryIds } from "../lib/registration/candidate.ts";
+import { registrationCandidate, type RegistrationReadModel } from "../lib/registration/candidate.ts";
 import { registrationTarget, type RegistrationTarget } from "../lib/registration/publication.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
-import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
 
 export function parseRegistrationArguments(args: readonly string[]): { readonly target: RegistrationTarget } {
@@ -38,20 +22,6 @@ export function parseRegistrationArguments(args: readonly string[]): { readonly 
   if (!args.includes("--promote")) throw new Error("REGISTRATION_PROMOTE_FLAG_REQUIRED: the runner invokes this with --promote.");
   if (states.length !== 1 || unknown.length > 0) throw new Error("REGISTRATION_ARGUMENTS_INVALID: exactly one --state=XX and --promote.");
   return { target: registrationTarget(states[0].slice("--state=".length)) };
-}
-
-async function reviewedRegistryIds(): Promise<ReviewedRegistryIds> {
-  const result = await readRegistryRuntimeProjection({ bypassCache: true });
-  if (result.kind !== "PROMOTED" || result.metadata.versionId === null) {
-    throw new Error(`REGISTRATION_REVIEWED_REGISTRY_UNREAD: the promoted reviewed registry answered ${result.kind}; registering without it could write an id it owns.`);
-  }
-  const registry = result.value.registry;
-  return {
-    versionId: result.metadata.versionId,
-    divisionIds: new Set(registry.divisions.map((d) => d.ocdId)),
-    bodyIds: new Set(registry.bodies.map((b) => b.id)),
-    bodyDivisionIds: new Set(registry.bodies.map((b) => b.ocdId).filter((id): id is string => typeof id === "string" && id !== "")),
-  };
 }
 
 async function main(): Promise<void> {
@@ -69,7 +39,6 @@ async function main(): Promise<void> {
       target,
       reference: loadRegistrationReference(process.cwd(), target.state),
       receipt,
-      reviewed: await reviewedRegistryIds(),
     });
   } catch (error) {
     if (!isSourceAcquisitionFailure(error)) throw error;

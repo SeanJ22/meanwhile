@@ -243,7 +243,7 @@ import {
   type WorkArtifact,
 } from "../lib/control-plane/scheduler/dispatch.ts";
 import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutJobWorstCaseUsd, scoutPrewarmPlan, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { failureResponderExecutor, readSubjectScoutHistory, solvedScoutResult, subjectScoutHistory, wakeInstalledAdapterDebts } from '../lib/control-plane/workers/detective.ts';
+import { failureResponderExecutor, readSubjectScoutHistory, solvedScoutResult, sourceFailureRecovery, subjectScoutHistory, wakeInstalledAdapterDebts } from '../lib/control-plane/workers/detective.ts';
 import { buildScoutToolkit, scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
 import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
@@ -806,7 +806,6 @@ const decisionFor = (obligationId: string, routeId: string | null): ExecutorDeci
   return d;
 };
 for (const u of units) decisionFor(u.obligation.id, u.obligation.routeId);
-const modelClassUnits = units.filter((u) => decisions.get(u.obligation.id)?.kind === "BOUNDED_MODEL_WORKER");
 const decisionDisagreements = units
   .map((u) => ({ obligationId: u.obligation.id, disagreement: decisions.get(u.obligation.id)?.disagreement ?? null }))
   .filter((d) => d.disagreement !== null);
@@ -985,6 +984,8 @@ const debtsIn = await wakeInstalledAdapterDebts(repos,(canary
 ).filter((debt) => !retiredDebtReasons.has(debt.obligationId)),NOW);
 /* The plain-code lane's queue key reads this debt (`waitingSince`); so does its reading while the cycle runs. */
 const debtAtCycleStart = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
+for (const [id, decision] of decisions) decisions.set(id, sourceFailureRecovery(decision, debtAtCycleStart.get(id)));
+const modelClassUnits = units.filter((u) => decisions.get(u.obligation.id)?.kind === "BOUNDED_MODEL_WORKER");
 const debtIds = new Set(debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
 const retryNow = new Set(retryable(debtsIn, nowMs).map((d) => d.obligationId));
 const backedOff = new Set([...debtIds].filter((id) => !retryNow.has(id)));
@@ -1226,7 +1227,7 @@ const expansionLoad = await loadExpansionPlan({
       ([state, why]) => `the ${state.toUpperCase()} registration could not be read as a jurisdiction registry (${why}); nothing in it is placed or created`,
     );
   },
-  ...("registries" in promoted ? { loadTerritory: (states: readonly string[], zips: ReadonlySet<string>) => readTerritoryIndex(ROOT, [...registriesNow(promoted.registries).values()], [...states], zips) } : {}),
+  ...("registries" in promoted ? { loadTerritory: (states: readonly string[], zips: ReadonlySet<string>, places: Parameters<typeof readTerritoryIndex>[4]) => readTerritoryIndex(ROOT, [...registriesNow(promoted.registries).values()], [...states], zips, places) } : {}),
 });
 runtimeConditions.push(...expansionLoad.conditions);
 const expansionPlan = expansionLoad.plan;
@@ -2048,7 +2049,7 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
     /* The robots.txt verdict is a record, never a reason to stop (owner decision 2026-09-25); the transport says whether a wall stood. */
     lines.push(`PRIOR DISPOSITION ${d.at}: ${d.disposition} (robots.txt ${d.permission}, recorded, never a refusal; transport ${d.transport}) — ${d.note.slice(0, 300)}`);
   }
-  if (debt) lines.push(`DEBT: ${debt.consecutiveFailures} consecutive failure(s), retry at ${debt.retryAt}`);
+  if (debt) lines.push(`DEBT: ${debt.consecutiveFailures} consecutive failure(s), retry at ${debt.retryAt}; ${debt.target} ${debt.cause} at ${debt.lastFailedAt}: ${debt.detail}`);
   /* A dispatched discovery row starts from what the free walk saw: its outcome and the leads it could not confirm. */
   const discovery = parseMeetingsDiscoveryId(id);
   const freeWalk = discovery === null ? null : (freeWalks.evidenceFor?.(discovery.jurisdictionId) ?? null);
@@ -2433,6 +2434,8 @@ const heldScoutFor = (scheduled: ScheduledObligation) => solvedScoutResult([...p
 const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled || heldScoutFor(scheduled)!==null
   ? failureResponderExecutor({
       solved:heldScoutFor(scheduled),
+      sourceFailure:debtAtCycleStart.get(scheduled.obligation.id),
+      sourceRoute:registry.routeFor(scheduled.obligation.id),
       toolkitFor: buildScoutToolkit,
       executorFactory: deps => scoutProcessExecutor({ root: ROOT, postgres: wantsPostgres,
         fileStoreRoot: CONTROL_PLANE_ROOT, slots: workerSlots,

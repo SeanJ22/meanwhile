@@ -6,6 +6,8 @@ const MIB = 1024 * 1024;
 export const WORKER_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = { route: 248, scout: 248, lease: 342, national: 1258 };
 /** Measured combined promoter and national child peak over a 150-second place job. */
 export const NATIONAL_PLACE_PEAK_MIB = 999;
+/** Staging RSS peak of a legacy registry roster publisher before native area storage. */
+export const REGISTRY_ROSTER_PUBLICATION_PEAK_MIB = 4012;
 /** Sean's 0.75 GiB margin on the 8 GiB host (7,424 MiB maximum total use). */
 export const WORKER_MEMORY_HEADROOM_MIB = 768;
 
@@ -42,7 +44,9 @@ export interface WorkerProcessSlots {
 export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
   const peak = Math.max(...Object.values(WORKER_ENTRY_PEAK_MIB)) * MIB;
   return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
-    peakBytes: memory.peakBytes ?? (entry => entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB : peak) });
+    peakBytes: memory.peakBytes ?? (entry => entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB :
+      entry === "registry-runtime-bindings" || entry.startsWith("worker-publication:registry-runtime-bindings:")
+        ? REGISTRY_ROSTER_PUBLICATION_PEAK_MIB * MIB : peak) });
 }
 
 export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryLimit = {}): WorkerProcessSlots {

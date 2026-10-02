@@ -77,13 +77,14 @@ for (const shard of shards.values()) {
   };
   try {
     const index: StateReferenceIndex = { formatVersion: 2, state: shard.state, censusSource: shard.censusSource,
-      units: shard.units.map(write), byZip: {}, shares: {}, facts: write(shard.facts) };
+      units: shard.units.map(write), byZip: {}, byDivision: {}, shares: {}, facts: write(shard.facts) };
     const byDivision = new Map<string, number[]>();
     for (const [i, unit] of shard.units.entries()) {
       const key = unitShareKey(unit);
       if (key) { const rows = byDivision.get(key) ?? []; rows.push(i); byDivision.set(key, rows); }
       for (const zip of unit.zips) (index.byZip[zip] ??= []).push(i);
     }
+    index.byDivision = Object.fromEntries(byDivision);
     for (const [zip, row] of Object.entries(shard.zips)) {
       const seeds = row.edges.map(edge => `${edge.layer}:${edge.id}`);
       const ring = new Set(seeds.flatMap(key => [key, ...(adjacent.get(key) ?? [])]));

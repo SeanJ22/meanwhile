@@ -7,11 +7,9 @@
  * `0021_mixed_red_ghost` created `ask_interactions`. `0022_adorable_hemingway`
  * added five evidence columns to it. Both merged — `e937958` and `dcdaac4`,
  * two squash merges on 2026-08-28 — and both DEPLOYED. Production's schema was
- * never advanced, because **nothing in this repository has ever applied a
- * migration automatically.** `git log -S` over `.github/` and `netlify.toml`
- * across the whole history returns no commit that ever ran `db:apply`,
- * `drizzle-kit migrate` or `apply-migrations` in CI or in the deploy. Applying
- * has always been a person, at a terminal, remembering.
+ * never advanced: that incident predates the automatic production migration
+ * path. The Netlify production main build now applies expand migrations before
+ * building; the exact serving and loaded runner applies contract migrations.
  *
  * The then-daily schema gate in `intake-tripwire.yml` caught it the next morning
  * and caught it correctly. **That was discovery after the fact.** PDC V2
@@ -35,8 +33,8 @@
  *
  * `lib/db/migration-phases.ts` carries the reasoning. In one line:
  *
- *   - an **EXPAND** migration MAY (and must) precede its code — an expand
- *     migration still pending at deploy time FAILS;
+ *   - an **EXPAND** migration must precede its serving code. Pre-deploy checks
+ *     report it pending for the production build; still pending post-deploy FAILS;
  *   - a **CONTRACT** migration may NOT precede its code — a contract migration
  *     introduced by this change and ALREADY APPLIED FAILS.
  *
@@ -172,7 +170,7 @@ export interface ShippingInvariantVerdict {
   readonly standing: readonly MigrationStanding[];
   /** Committed migrations with no phase declaration at all. */
   readonly undeclared: string[];
-  /** Expand migrations not yet on production. The deploy would outrun them. */
+  /** Expand migrations pending for the production build to apply before serving. */
   readonly expandNotApplied: string[];
   /** Contract migrations from THIS change already applied. The unsafe ordering. */
   readonly contractAppliedEarly: string[];
@@ -235,18 +233,6 @@ export function evaluateShippingInvariant(
   }
 
   if (input.moment === "pre-deploy") {
-    if (expandNotApplied.length > 0) {
-      failures.push(
-        `${expandNotApplied.length} EXPAND migration(s) are committed and NOT applied to ` +
-          `production: ${expandNotApplied.join(", ")}. ${PHASE_ORDERING.expand.sentence} ` +
-          "Deploying first is the 2026-08-28 incident: every insert names a column production " +
-          "does not have, the route catches the error and serves the page, and the loss is " +
-          "invisible from every surface. Run: corepack pnpm db:apply --target=production" +
-          (contractOwed.length > 0
-            ? ` --upto=${lastExpandBefore(standing, expandNotApplied)}`
-            : ""),
-      );
-    }
     if (contractAppliedEarly.length > 0) {
       failures.push(
         `${contractAppliedEarly.length} CONTRACT migration(s) introduced by this change are ` +
@@ -271,6 +257,9 @@ export function evaluateShippingInvariant(
     failures.length === 0
       ? `shipping invariant HOLDS at ${input.moment}: ${delta.appliedCount} of ${delta.codeCount} ` +
         `committed migration(s) applied, head ${delta.codeHead}` +
+        (input.moment === "pre-deploy" && expandNotApplied.length > 0
+          ? `; ${expandNotApplied.length} expand migration(s) pending for the production build: ${expandNotApplied.join(", ")}`
+          : "") +
         (contractOwed.length > 0
           ? `; ${contractOwed.length} contract migration(s) owed from an earlier deploy and reported: ${contractOwed.join(", ")}`
           : "")
@@ -289,20 +278,4 @@ export function evaluateShippingInvariant(
     failures,
     summary,
   };
-}
-
-/**
- * The last expand migration in journal order among those still pending.
- *
- * Used only to suggest an `--upto=` when a contract migration is also pending:
- * applying everything would drag that contract across the deploy it is supposed
- * to follow, which is the ordering `pnpm db:apply --upto=` exists for.
- */
-function lastExpandBefore(standing: readonly MigrationStanding[], pendingExpand: readonly string[]): string {
-  let last = "";
-  for (const s of standing) {
-    if (s.phase === "contract" && !s.applied) break;
-    if (s.phase === "expand" && !s.applied) last = s.tag;
-  }
-  return last !== "" ? last : (pendingExpand[pendingExpand.length - 1] ?? "");
 }

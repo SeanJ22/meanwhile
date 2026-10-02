@@ -72,7 +72,12 @@ test("an unprepared ZIP resolves national divisions after held geography fails, 
       seen.push(code);
       return ["mo", "ks"].flatMap(state => [{ id: `ocd-division/country:us/state:${state}/county:test`, label: "Test County", divisionType: "county", geoid: "001", sourceUrl: "https://census.gov/lookup" }]);
     },
-    loadTerritory: () => ({ bySubject: new Map(), unplaced: new Map(), statewide: new Set(), unregisteredUnitsByState: new Map() }) });
+    loadTerritory: (states, zips, places) => {
+      assert.deepEqual([...states].sort(), ["KS", "MO"]);
+      assert.deepEqual([...zips], ["12345"]);
+      assert.equal(places.get("12345")?.length, 2, "exact intersections reach the injected runner reader");
+      return { bySubject: new Map(), byDivision: new Map(), unplaced: new Map(), statewide: new Set(), unregisteredUnitsByState: new Map(), unjoinedUnitsByState: new Map(), unitShares: () => undefined };
+    } });
   assert.deepEqual(seen, ["12345"]);
   assert.equal(loaded.plan?.scopes[0].kind, "RESOLVED");
   assert.deepEqual([...loaded.plan!.scopes[0].states].sort(), ["KS", "MO"]);
@@ -372,6 +377,22 @@ test("on the committed data, Pima County holds Pima and Tucson and none of its n
   const total = edges.filter(edge => edge.layer === "county").reduce((sum, edge) => sum + edge.samples, 0);
   assert.equal(readZctaShares(root, new Set([key]), ["AZ"]).get(key)?.get(zip), county.samples / total, "state partitioning preserves the entire border ZIP denominator");
   assert.ok(az.zips[zip].edges.every(edge => edge.id.startsWith("04")), "the shard carries no other state's government");
+  const school = az.units.find(unit => unit.method?.startsWith("unsd GEOID"))!;
+  const schoolKey = unitShareKey(school)!;
+  const absentZip = "00000";
+  assert.equal(readCensusUnitTerritories(root, ["AZ"], new Set([absentZip])).length, 0);
+  const exactSelected = readCensusUnitTerritories(root, ["AZ"], new Set([absentZip]), new Set([schoolKey, "county:06001"]));
+  assert.ok(exactSelected.some(unit => unit.pid6 === school.pid6), "an acquired division selects the unit without a shared-ZIP edge");
+  assert.ok(exactSelected.every(unit => unit.state === "AZ"));
+  const subjectId = registryIdForUnit(school)!;
+  const registry: JurisdictionRegistry = { ...registries[0], stateCode: "AZ", registration: undefined,
+    jurisdictions: [{ ...registries[0].jurisdictions[0], id: subjectId, name: school.name, govClass: "SCHOOL_DISTRICT", stateCode: "AZ" }] };
+  const exactTerritory = readTerritoryIndex(root, [registry], ["AZ"], new Set([absentZip]), new Map([[absentZip, [
+    { id: "school", label: school.name, divisionType: "school", censusLayer: "unsd", geoid: schoolKey.split(":")[1], sourceUrl: "https://census.gov/saved-intersection" },
+    { id: "outside-state", label: "Outside state", divisionType: "county", geoid: "06001", sourceUrl: "https://census.gov/saved-intersection" },
+  ]]]));
+  assert.ok(certainlyOverlaps(exactTerritory.bySubject.get(subjectId)!, { zctas: new Set([absentZip]), whole: new Set([absentZip]), fractions: new Map() }));
+  assert.equal(exactTerritory.bySubject.get(subjectId)!.shares.get(absentZip), undefined, "an intersection never invents an area fraction");
 });
 
 test("the order puts DISPATCH first, then scopes by priority, and is exactly the old order with no scope", () => {
@@ -633,6 +654,20 @@ test("a ZIP hunt resolves only that published Census ZCTA, with no neighboring Z
     assert.deepEqual([...scope.zctas], [zip]);
     assert.deepEqual([...scope.whole], [zip]);
     assert.deepEqual(scope.states, ["AZ"]);
+    const repos = createMemoryRepositories();
+    await repos.adminConfig.put(ADMIN_CONFIG_ID, withExpansionScopes(defaultAdminConfig(), { scopes: [d], decidedAt: NOW }), NOW);
+    let selectedHeld = false;
+    await loadExpansionPlan({ repos, root: ".", now: NOW, obligations: [],
+      loadLookup: async () => ({ lookup, source: "published", versionId: "fixture-published" }),
+      loadNationalZip: async () => { throw Error("published memberships require no new acquisition"); },
+      loadTerritory: (states, zips, places) => {
+        assert.deepEqual(states, ["AZ"]);
+        assert.deepEqual([...zips], [zip]);
+        assert.ok(places.get(zip)?.some(d => d.divisionType === "county"), "already held intersections also reach territory selection");
+        selectedHeld = true;
+        return { bySubject: new Map(), byDivision: new Map(), unplaced: new Map(), statewide: new Set(), unregisteredUnitsByState: new Map(), unjoinedUnitsByState: new Map(), unitShares: () => undefined };
+      } });
+    assert.equal(selectedHeld, true);
     const absent = await resolveScopes([{ ...d, geography: { ...d.geography, version: "zcta:2099" } }], { lookup, source: "published", versionId: "v" }, null);
     assert.equal(absent.scopes[0].kind, "UNRESOLVED");
     const fixture = await resolveScopes([d], { lookup, source: "bootstrap", versionId: "v" }, null);

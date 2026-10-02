@@ -62,9 +62,9 @@ import { campaignLinkRefreshIssue } from "./campaign-link-refresh.ts";
 import { extractHtmlText } from "../extract/html-text.ts";
 import type { DerivedCampaignSiteEvidence } from "./derived-campaign-sites.ts";
 import type { DerivedLinkedPublicationEvidence } from "./derived-campaign-sites.ts";
-import { candidatePublicationLinkMatches } from "../control-plane/promotion/campaign-publication-links.ts";
-import type { ArtifactRecord } from "../control-plane/repository/types.ts";
-import type { Attempt } from "../control-plane/attempt.ts";
+import { candidatePublicationCaptureIssue, candidatePublicationCaptureTargets, candidatePublicationLinks,
+  type HeldCandidatePublicationRead as HeldLinkedPublicationRead } from "../control-plane/promotion/campaign-publication-links.ts";
+export type { HeldCandidatePublicationRead as HeldLinkedPublicationRead } from "../control-plane/promotion/campaign-publication-links.ts";
 import type { CandidateDocument, CandidatePublicationDate } from "../candidates/corpus.ts";
 import { readHeldBytes, type VaultIndex } from "../control-plane/evidence/read-only-vault.ts";
 
@@ -107,11 +107,6 @@ export interface PublishableCampaignSiteApproval {
 }
 
 const text = (value: unknown): value is string => typeof value === "string" && value.trim() !== "";
-const sameHttpsHost = (left: string | null, right: string): boolean => {
-  try { const a = new URL(left ?? ""), b = new URL(right); return a.protocol === "https:" && b.protocol === "https:" && a.hostname === b.hostname; }
-  catch { return false; }
-};
-
 /** Only an exact source tag identifying its own article publication time may
  * supply a publication date. A retrieval time or generic event `<time>` never
  * substitutes for it. Multiple conflicting source-stated dates stay unknown. */
@@ -219,22 +214,6 @@ export async function heldCampaignSiteReads(vault: VaultIndex, approvals: readon
     }
   }
   return held;
-}
-
-export interface HeldLinkedPublicationRead {
-  readonly record: ArtifactRecord;
-  readonly attempt: Attempt;
-  readonly workItemSubject: string;
-  readonly body: string;
-  readonly vaultSha256: string;
-  readonly vaultCanonicalUrl: string | null;
-  readonly vaultRetrievalUrl: string | null;
-  readonly vaultWorkItemId: string | null;
-  readonly vaultAttemptId: string | null;
-  readonly vaultHttpStatus: number | null;
-  readonly vaultContentType: string;
-  readonly vaultMethodRouteId: string | null;
-  readonly vaultPermission: string | null;
 }
 
 function publicationEvidence(record: PublishableCampaignSiteApproval): DerivedCampaignSiteEvidence {
@@ -418,31 +397,29 @@ export function planDerivedCampaignSites(input: {
         publications.push({ document, evidence: publicationEvidence(page.record) });
       }
       for (const capture of input.linkedPublications ?? []) {
-        const row = capture.record, source = row.publicationLink;
+        const row = capture.record;
+        const observed = verified.flatMap(page => candidatePublicationLinks({ html: page.held.body,
+          sourceUrl: page.record.campaignSite.evidence.finalUrl, sourceArtifactId: page.record.campaignSite.evidence.artifactId,
+          sourceContentHash: `sha256-${page.record.campaignSite.evidence.sha256}`,
+          approvalRecordId: page.record.recordId, candidacyId }).map(link => ({ page, link })))
+          .find(({ link }) => candidatePublicationCaptureTargets(link, capture));
+        const source = row.publicationLink ?? observed?.link.source;
         if (!source || source.candidacyId !== candidacyId || !site.readerKeys.includes(key)) continue;
         const parent = verified.find(page => page.record.recordId === source.approvalRecordId &&
           page.record.campaignSite.evidence.artifactId === source.sourceArtifactId &&
           `sha256-${page.record.campaignSite.evidence.sha256}` === source.sourceContentHash);
-        if (!parent) continue;
-        const link = { url: row.canonicalUrl, source };
+        if (!parent) {
+          held.push({ key: `${key}:${row.artifactId}`, code: "LINKED_PUBLICATION_UNVERIFIED",
+            detail: "The linked page names no exact independently verified parent approval in this version." });
+          continue;
+        }
+        const link = { url: observed?.link.url ?? row.canonicalUrl, source };
         const attempt = capture.attempt;
         const actualHash = sha256Hex(capture.body);
-        const valid = candidatePublicationLinkMatches(link, parent.held.body, source.sourceContentHash) &&
-          row.workItemId === capture.vaultWorkItemId && row.workItemId === attempt.workItemId &&
-          capture.workItemSubject === `candidate-publication:${candidacyId}` &&
-          row.attemptId === attempt.id && capture.vaultAttemptId === attempt.id &&
-          attempt.worker.role === "ACQUIRER" && attempt.worker.provider === "candidate-publication-reader" &&
-          attempt.outcome === "COMPLETED" && attempt.artifactIds.includes(row.artifactId) &&
-          row.contentHash === `sha256-${actualHash}` && capture.vaultSha256 === actualHash &&
-          row.canonicalUrl === capture.vaultCanonicalUrl && row.canonicalUrl === link.url &&
-          capture.vaultMethodRouteId === "candidate-publication-linked" && !row.partial &&
-          capture.vaultHttpStatus !== null && capture.vaultHttpStatus >= 200 && capture.vaultHttpStatus < 300 &&
-          /html/i.test(row.contentType) && row.contentType === capture.vaultContentType &&
-          sameHttpsHost(capture.vaultRetrievalUrl, site.url) &&
-          (row.tier === "RAW" || row.tier === "SANITIZED_DERIVED");
-        if (!valid) {
+        const issue = candidatePublicationCaptureIssue(link, parent.held.body, capture);
+        if (issue !== null) {
           held.push({ key: `${key}:${row.artifactId}`, code: "LINKED_PUBLICATION_UNVERIFIED",
-            detail: "The linked page lacks a completed same-candidacy capture or an exact href/vault identity match." });
+            detail: `The linked page remains owed: ${issue}.` });
           continue;
         }
         let content = "";
@@ -453,13 +430,13 @@ export function planDerivedCampaignSites(input: {
           continue;
         }
         const document = versionedDocument({ candidateKey: key, documentUrl: capture.vaultRetrievalUrl!, content,
-          rawContentHash: actualHash, artifactId: row.artifactId, retrievedAt: row.recordedAt,
+          rawContentHash: actualHash, artifactId: row.artifactId, retrievedAt: capture.vaultRetrievedAt!,
           contentType: row.contentType, html: capture.body });
         if (publications.some(existing => existing.document.id === document.id)) continue;
         add({ kind: "VAULTED_EVIDENCE", artifactId: source.sourceArtifactId, contentHash: source.sourceContentHash,
           tier: parent.held.tier, retrievedAt: parent.record.campaignSite.evidence.readAt });
         add({ kind: "VAULTED_EVIDENCE", artifactId: row.artifactId, contentHash: row.contentHash,
-          tier: row.tier, retrievedAt: row.recordedAt });
+          tier: row.tier as "RAW" | "SANITIZED_DERIVED", retrievedAt: capture.vaultRetrievedAt! });
         const evidence: DerivedLinkedPublicationEvidence = { kind: "LINKED_PAGE", approvalItemId: parent.record.itemId,
           approvalRecordId: parent.record.recordId, sourceArtifactId: source.sourceArtifactId,
           sourceContentHash: source.sourceContentHash, sourceUrl: source.sourceUrl,

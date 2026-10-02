@@ -570,8 +570,7 @@ function BodySections({
       title: listingCount.heading,
       meta: meetings.length > 0 ? `${upcoming} upcoming${listingCount.unresolved ? " listings" : ""}` : undefined,
       content: meetings.length > 0 ? <Meetings meetings={meetings} /> : null,
-      absence:
-        "No meetings on file for this body. That is our coverage, not a statement that nothing is scheduled.",
+      absence: "We’re working on getting this info.",
     },
     {
       id: "contact",
@@ -620,7 +619,7 @@ function BodySections({
       meta: sourceCountLabel(subject.sources) ?? undefined,
       content:
         subject.sources.length > 0 ? <Sources sources={subject.sources} /> : null,
-      absence: "Nothing on this card came from an external record.",
+      absence: "We’re working on getting this info.",
     },
   ];
 
@@ -1389,7 +1388,7 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
  */
 function Sources({ sources }: { sources: CardSource[] }) {
   if (sources.length === 0) {
-    return <Empty>Nothing on this card came from an external record.</Empty>;
+    return <Empty>We’re working on getting this info.</Empty>;
   }
   return <CardSourcesList sources={sources} />;
 }

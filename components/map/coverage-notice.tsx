@@ -759,8 +759,7 @@ function CoverageBody({
   const lead =
     kind === "unmapped" ? (
       <>
-        We haven&apos;t mapped the governing bodies covering {zip} yet. This is
-        not a statement that no government covers it.
+        We&rsquo;re working on getting this info for {zip}.
       </>
     ) : kind === "none-scheduled" ? (
       <>
@@ -779,18 +778,16 @@ function CoverageBody({
             ? "One body governs the area around "
             : `${g.total} bodies govern the area around `}
           {zip}.{" "}
-          {g.total === 1
-            ? "Its calendar is being added — we don't have it yet."
-            : "Their calendars are being added — we don't have them yet."}
+          We&rsquo;re working on getting this info on{" "}
+          {g.total === 1 ? "its calendar" : "their calendars"}.
         </>
       ) : (
         <>
           We track the {g.withSource === 1 ? "calendar" : "calendars"} of{" "}
           {g.withSource} of the {g.total} bodies that govern the area around{" "}
           {zip}.{" "}
-          {g.total - g.withSource === 1
-            ? "The other body's calendar is being added."
-            : `The other ${g.total - g.withSource} are being added.`}
+          We&rsquo;re working on getting this info on{" "}
+          {g.total - g.withSource === 1 ? "the other one" : `the other ${g.total - g.withSource}`}.
         </>
       )
     ) : kind === "all-wired" ? (
@@ -807,14 +804,12 @@ function CoverageBody({
         {g.total === 1 ? "One body governs" : `${g.total} bodies govern`} the
         area around {zip}.{" "}
         {g.withSource === 0
-          ? g.total === 1
-            ? "Its calendar is being added — we don't have it yet."
-            : "Their calendars are being added — we don't have them yet."
-          : `We track ${g.withSource === 1 ? "the calendar" : "the calendars"} of ${g.withSource}; the other ${
+          ? `We’re working on getting this info on ${g.total === 1 ? "its calendar" : "their calendars"}.`
+          : `We track ${g.withSource === 1 ? "the calendar" : "the calendars"} of ${g.withSource}. We’re working on getting this info on ${
               g.total - g.withSource === 1
-                ? "one is"
-                : `${g.total - g.withSource} are`
-            } being added.`}
+                ? "the other one"
+                : `the other ${g.total - g.withSource}`
+            }.`}
       </>
     );
 
@@ -833,13 +828,13 @@ function CoverageBody({
             : `${othersWithSource} more board and committee ${othersWithSource === 1 ? "calendar" : "calendars"} here`}
           .
           {othersWithSource < others &&
-            ` ${others - othersWithSource} more ${others - othersWithSource === 1 ? "body is" : "bodies are"} being added.`}
+            ` We’re working on getting this info on ${others - othersWithSource} more.`}
         </>
       ) : (
         <>
           {others === 1
-            ? "One more board, committee or commission serves the area — being added."
-            : `${others} more boards, committees and commissions serve the area — being added.`}
+            ? "One more board, committee or commission serves the area. We’re working on getting this info on it."
+            : `${others} more boards, committees and commissions serve the area. We’re working on getting this info on them.`}
         </>
       )
     ) : null;

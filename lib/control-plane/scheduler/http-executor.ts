@@ -42,7 +42,7 @@ import { assertPublicUrl } from "../../hunt/egress.ts";
 import { ZERO_COST, type AttemptCost } from "../attempt.ts";
 
 import type { RunWork, WorkOutcome } from "./dispatch.ts";
-import { websiteRequestLimit, type WebsiteSizeForUrl } from "./host-supervision.ts";
+import { websiteRequestLimit, websiteSizeForObligation, type WebsiteSizeForUrl } from "./host-supervision.ts";
 
 /** How long one route may take before the attempt is abandoned. */
 export const DEFAULT_FETCH_TIMEOUT_MS = 30_000;
@@ -180,6 +180,7 @@ export function httpExecutor(input: {
   /** Injected so tests do not sleep. Returns immediately when omitted. */
   readonly spaceOut?: (hostKey: string) => Promise<void>;
   readonly websiteSize?: WebsiteSizeForUrl;
+  readonly root?: string;
 }): RunWork {
   const fetchOne = input.fetchOne ?? realFetch;
   const timeoutMs = input.timeoutMs ?? DEFAULT_FETCH_TIMEOUT_MS;
@@ -210,7 +211,8 @@ export function httpExecutor(input: {
       };
     }
 
-    if (input.spaceOut && websiteRequestLimit(input.websiteSize?.(url.toString())) !== null) await input.spaceOut(url.host);
+    const websiteSize = input.websiteSize ?? websiteSizeForObligation(obligation.obligation, input.root);
+    if (input.spaceOut && websiteRequestLimit(websiteSize(url.toString())) !== null) await input.spaceOut(url.host);
     const got = await fetchOne(url.toString(), timeoutMs);
 
     const providerFailure = httpProviderFailure(url.toString(), got);

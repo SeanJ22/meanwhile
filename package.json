@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "postinstall": "node --experimental-strip-types scripts/project-place-references.mts",
     "absences": "tsx scripts/argue-absences-0825.mts",
     "acquire:filing-authorities": "tsx scripts/acquire-candidate-filing-authorities.mts",
     "ad:library": "tsx scripts/ad-library.mts",

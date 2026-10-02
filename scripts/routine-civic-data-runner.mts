@@ -38,6 +38,7 @@ import {
   routineTaskDeadlineMs,
   routineTaskDue,
   routineAdmissionClock,
+  unchangedRoutineProtocolFailure,
   routineTaskSelection,
   sittingWindowSignals,
   routineUnreceiptedSupervisorAttemptHistory,
@@ -263,7 +264,7 @@ function safeFailure(value: string): string {
  * owner log Admin consumes prevents one broken partition from monopolizing a
  * shared publisher frontier without fabricating a source attempt.
  */
-async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly RoutineSourceTask[]): Promise<RoutineSupervisorAttemptHistory> {
+async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly RoutineSourceTask[]): Promise<RoutineSupervisorAttemptHistory & { readonly protocolFailures: readonly unknown[] }> {
   const connection = controlPlaneUrlFromEnv();
   if (connection === null) {
     throw new Error(`${CONTROL_PLANE_URL_VAR} is not configured; provider-frontier fairness cannot be proved.`);
@@ -294,7 +295,13 @@ async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly Routi
         ),
     },
   );
-  return routineUnreceiptedSupervisorAttemptHistory(supervisorOutcomes, taskIds);
+  // This job's failure is saved as soon as it ends, while unrelated children
+  // can keep the round open. Waiting for the round digest repeated the defect.
+  const protocolFailures = await withControlPlaneConnectRetry(() => repos.ownerDigests.readRecentWhere(
+    HUNT_SOURCE_PROGRESS_LOG_KEY, ["huntSourceProgress", "stage"], "FAILED",
+    ROUTINE_SUPERVISOR_HISTORY_WINDOW, { testedSha: true, huntSourceProgress: true },
+  ));
+  return { ...routineUnreceiptedSupervisorAttemptHistory(supervisorOutcomes, taskIds), protocolFailures };
 }
 
 /**
@@ -541,9 +548,11 @@ if (!FORCE && selectedTasks.some(task => task.id === CAMPAIGN_PUBLICATION_TASK))
 }
 step = "reading unreceipted supervisor attempts";
 let supervisorAttempts: ReadonlyMap<string, string> = new Map();
+let protocolFailures: readonly unknown[] = [];
 if (selectedTasks.length > 0) try {
   const history = await latestUnreceiptedSupervisorAttempts(selectedTasks);
   supervisorAttempts = history.attempts;
+  protocolFailures = history.protocolFailures;
   for (const issue of history.issues) {
     const detail = safeFailure(`${issue.digestId}: ${issue.detail}`);
     supervisorFailures.push({
@@ -575,6 +584,10 @@ for (const read of clockReads) {
     continue;
   }
   const durableClock = routineAdmissionClock(read.clock, supervisorAttempts.get(task.id), admissionNowMs);
+  if (!FORCE && unchangedRoutineProtocolFailure(task, read.clock, protocolFailures, RUNNING_CODE_SHA, admissionNowMs)) {
+    console.log(`RCD_SKIP ${task.id}: unchanged receipt failure; awaiting changed code, Send or source evidence`);
+    continue;
+  }
   const sittingHot = sittingSignals.get(task.id);
   const dueRequest = FORCE ? null : routineDueRequestFor(task, durableClock, admissionNowMs, dueRequests);
   const publicationDue = campaignPublicationInputsDue(task.id, campaignPublicationInputs);

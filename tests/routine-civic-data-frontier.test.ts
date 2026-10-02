@@ -14,6 +14,7 @@ import {
   routineTaskDeadlineMs,
   routineTaskDue,
   routineAdmissionClock,
+  unchangedRoutineProtocolFailure,
   routineUnreceiptedSupervisorAttemptHistory,
   SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   type RoutineSourceTask,
@@ -677,6 +678,25 @@ test("an unreceipted child in a single-task pass waits its existing retry interv
   assert.equal(clock.lastAttemptedAt, "2026-09-01T12:00:00.000Z", "no durable source clock is changed");
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.ok(runner.indexOf("latestUnreceiptedSupervisorAttempts(selectedTasks)") < runner.indexOf("for (const read of clockReads)"));
+});
+
+test("an unfinished round's receipt failure waits for changed inputs rather than unchanged retries", () => {
+  const failedAt = "2026-10-01T20:00:00.000Z", sha = "a".repeat(40);
+  const task = { ...ROUTINE_SOURCE_TASKS[0]!, id: "national-place:12345", ownerInvocation: {
+    publicationPending: true as const, requestedAt: "2026-10-01T19:00:00.000Z", instructions: ["send"] } };
+  const failure = { testedSha: sha, huntSourceProgress: { taskId: task.id, instructionIds: ["send"],
+    stage: "FAILED", at: failedAt, detail: "RECEIPT_COUNT_INVALID: observed 0" } };
+  const now = Date.parse(failedAt) + 24 * 3_600_000;
+  assert.equal(unchangedRoutineProtocolFailure(task, undefined, [failure], sha, now), true,
+    "expiry of the old retry interval does not change the failed input");
+  assert.equal(unchangedRoutineProtocolFailure(task, undefined, [failure], "b".repeat(40), now), false);
+  assert.equal(unchangedRoutineProtocolFailure({ ...task, ownerInvocation: { ...task.ownerInvocation,
+    requestedAt: new Date(now).toISOString() } }, undefined, [failure], sha, now), false);
+  assert.equal(unchangedRoutineProtocolFailure(task, { lastSucceededObservedAt: new Date(now).toISOString() }, [failure], sha, now), false);
+  assert.equal(unchangedRoutineProtocolFailure(task, undefined, [{ ...failure, huntSourceProgress: {
+    ...failure.huntSourceProgress, detail: "RECEIPT_COUNT_INVALID: Child process HTTP status 429: Retry-After" } }], sha, now), false, "provider errors retain backoff");
+  assert.equal(unchangedRoutineProtocolFailure(task, undefined, [{ ...failure, huntSourceProgress: {
+    ...failure.huntSourceProgress, at: new Date(now + 1).toISOString() } }], sha, now), false);
 });
 
 test("source progress supersedes a supervisor failure and invalid future outcomes cannot delay work", () => {

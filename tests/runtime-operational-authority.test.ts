@@ -265,10 +265,12 @@ test("the runner opens clocks without the retired method-adoption gate and invok
   assert.doesNotMatch(runner, /ensureMethodCandidateAuthorityAtStartup/);
   assert.ok(clock >= 0, "the standing runtime still opens its source clock");
   assert.match(runner, /const reopenStandingClock = standingRuntimeTimer !== null;[\s\S]*if \(reopenStandingClock\) startStandingRuntimeClock\(\);/);
-  assert.doesNotMatch(
+  // The method-adoption gate is retired: a CURRENT release opens its clocks
+  // only after its runtime contracts applied.
+  assert.match(
     runner,
-    /runtimeAdmissionsHeld = false;\s*startStandingRuntimeClock\(\);/,
-    "startup reconciliation can open a source clock that was not previously running",
+    /if \(first\.state === "CURRENT"\) \{\s*if \(!await applyRuntimeContracts\(RUNNING_CODE_SHA\)\) return 2;\s*runtimeAdmissionsHeld = false;\s*startStandingRuntimeClock\(\);/,
+    "a CURRENT release can open its clocks before its runtime contracts applied",
   );
   assert.doesNotMatch(runner, /args:\s*\["scripts\/apply-owner-decisions\.mts"\]/);
   assert.doesNotMatch(runner, /scripts\/scout-candidates-rederive\.mts/);

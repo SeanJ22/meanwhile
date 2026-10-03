@@ -125,11 +125,15 @@ test("cycle selection uses its already joined item and history instead of reopen
 test("coordinator joins Scout and route history once before bounded selection", async () => {
   const h=await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})});
   await nextAutonomousOperation(h.runtime,h.item.id);
-  let scoutReads=0,routeLists=0,pointReads=0;
+  let scoutReads=0,routeLists=0,pointReads=0,workerResultReads=0,workerResultLists=0,attemptScopeLists=0;
   const runtime:AutonomousCoordinatorRuntime={...h.runtime,repos:{...h.repos,
     workItems:{...h.repos.workItems,mustRead:async (...args)=>{pointReads++;return h.repos.workItems.mustRead(...args);}},
     scoutResults:{...h.repos.scoutResults,readAll:async()=>{scoutReads++;return h.repos.scoutResults.readAll();}},
     routeTasks:{...h.repos.routeTasks,list:async()=>{routeLists++;return h.repos.routeTasks.list();}},
+    workerResults:{...h.repos.workerResults,
+      read:async (...args)=>{workerResultReads++;return h.repos.workerResults.read(...args);},
+      readAll:async()=>{workerResultLists++;return h.repos.workerResults.readAll();}},
+    attempts:{...h.repos.attempts,listWhere:async (...args)=>{attemptScopeLists++;return h.repos.attempts.listWhere(...args);}},
   }};
   const cycle=await runAutonomousCoordinator(runtime,{maximum:1,maxScoutDispatches:0,concurrency:1});
   assert.equal(cycle.decisions[0]?.action,"SCOUT");
@@ -137,6 +141,9 @@ test("coordinator joins Scout and route history once before bounded selection", 
   assert.equal(scoutReads,1,"all Scout results are joined once, not scanned per WorkItem");
   assert.equal(routeLists,1,"route tasks are joined once, not scanned per WorkItem");
   assert.equal(pointReads,0,"selection uses the already loaded WorkItem snapshot");
+  assert.equal(workerResultLists,2,"recovery reads history first; lineage and completion validation share the fresh selection snapshot");
+  assert.equal(workerResultReads,0,"selection does not reread results per item");
+  assert.equal(attemptScopeLists,0,"completion validation uses the already loaded exact Attempt rows");
 
   await acceptRecordedScout(h);
   const scout = (await h.repos.scoutResults.readAll())[0]!;
@@ -153,9 +160,9 @@ test("coordinator joins Scout and route history once before bounded selection", 
       sources: [], acquisition: [] } }, h.now());
     goodIds.push(id);
   }
-  const isolated: AutonomousCoordinatorRuntime = { ...h.runtime,
+  const isolated: AutonomousCoordinatorRuntime = { ...runtime,
     readEvidence: workerVaultResolver(h.repos, h.store, h.item.project),
-    repos: { ...h.repos, scoutResults: { ...h.repos.scoutResults, readAll: async () => [missingOnly] } } };
+    repos: { ...runtime.repos, scoutResults: { ...h.repos.scoutResults, readAll: async () => [missingOnly] } } };
   const named = new RegExp(`WORKER_ARTIFACT_MISSING_OR_PARTIAL:${missingId}`);
   const remaining = await runAutonomousCoordinator(isolated, { planOnly: true, concurrency: 4 });
   assert.equal(remaining.decisions.filter(decision => goodIds.includes(decision.workItemId) && decision.task).length, 3,
@@ -166,6 +173,9 @@ test("coordinator joins Scout and route history once before bounded selection", 
   assert.deepEqual(remaining.deferred.map(row => [row.workItemId, row.reason]), [[h.item.id, "WORKER_ARTIFACT_MISSING_OR_PARTIAL"]]);
   assert.match(remaining.deferred[0]!.detail, new RegExp(missingId));
   assert.equal(remaining.dispatches.length, 0);
+  assert.equal(workerResultLists,4,"the next invocation performs recovery and takes a fresh selection snapshot for all four items");
+  assert.equal(workerResultReads,0);
+  assert.equal(attemptScopeLists,0);
 
   const mixed = { ...scout, candidates: scout.candidates.map(candidate => ({ ...candidate,
     evidenceArtifactIds: [missingId, ...candidate.evidenceArtifactIds] })) };

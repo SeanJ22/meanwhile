@@ -467,6 +467,8 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   maximum?:number; concurrency?:number; deadlineMs?:number; maxScoutDispatches?:number;
   /** Selection enqueues existing RouteTasks; worker processes claim them later. */
   planOnly?: boolean;
+  /** Invocation-local ordering metadata, including held work without an autonomous plan. */
+  onSelectionSnapshot?:(items:readonly WorkItem[])=>void;
   acceptsWorkItem?:(item:WorkItem)=>boolean;
   prioritizedInstructions?:readonly {receiptId:string;priority:number}[];
   admitDispatch?:(work:string)=>{admit:true}|{admit:false;code:string;why:string};
@@ -474,6 +476,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   const now = runtime.now ?? (()=>new Date().toISOString());
   const recovery=await sweepExpiredLeases(runtime.repos,{now:now(),observedBy:"autonomous-coordinator"});
   const allItems=(await runtime.repos.workItems.list()).map(row=>row.value);
+  options.onSelectionSnapshot?.(allItems);
   const candidates=allItems.filter(item=>item.autonomousPlan && (options.acceptsWorkItem?.(item) ?? true));
   const attemptRows=await runtime.repos.attempts.list();
   const attempts=attemptRows.map(row=>row.value);

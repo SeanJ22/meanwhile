@@ -24,6 +24,8 @@ import { unchangedScoutFailure } from "../lib/control-plane/workers/scout-schedu
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { claimRouteTask, registerRouteTask } from "../lib/control-plane/repository/coordinator.ts";
 import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
+import type { WorkItem } from "../lib/control-plane/work-item.ts";
+import { huntRoundComparator } from "../lib/control-plane/scheduler/shadow-loop.ts";
 
 async function acceptRecordedScout(h:Awaited<ReturnType<typeof autonomousHarness>>) {
   const metadata=(await h.repos.artifacts.readAll())[0]; const held=await researchVaultResolver(h.repos,h.store,h.item.project)(metadata.artifactId);
@@ -476,9 +478,23 @@ test("unresolved identity permits independent diagnosis but never staging", asyn
 
  test("coordinator selection hands out canonical tasks without running tools or opening an Attempt", async () => {
   const h = await autonomousHarness({ plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
+  const legacy = { ...h.item, id: "work:legacy-held", autonomousPlan: undefined };
+  await h.repos.workItems.put(legacy.id, legacy, h.now());
   const before = (await h.repos.attempts.list()).length;
-  const planned = await runAutonomousCoordinator(h.runtime, { planOnly: true });
+  let snapshotCalls = 0;
+  let snapshot: readonly WorkItem[] = [];
+  const planned = await runAutonomousCoordinator(h.runtime, { planOnly: true,
+    onSelectionSnapshot: items => { snapshotCalls++; snapshot = items; },
+    acceptsWorkItem: item => {
+      assert.equal(item, snapshot.find(row => row.id === item.id), "ordering receives the exact selection rows, without another read or clone");
+      return true;
+    },
+  });
+  assert.equal(snapshotCalls, 1);
+  assert.deepEqual(snapshot.map(item => item.id).sort(), [h.item.id, legacy.id].sort());
+  assert.equal(snapshot.find(item => item.id === legacy.id)?.autonomousPlan, undefined, "held work without an autonomous plan is also available for ordering");
   assert.equal(planned.decisions[0]?.action, "SCOUT");
+  assert.equal(planned.decisions[0]?.task?.workItemId, h.item.id);
   assert.equal(planned.dispatches.length, 0);
   assert.equal((await h.repos.attempts.list()).length, before);
   assert.equal(h.calls.length, 0);
@@ -576,6 +592,50 @@ test("the autonomous wave loop stops at its dispatch slice even while waves keep
   const report = await run();
   assert.equal(calls, 2);
   assert.equal(report.dispatches.length, 2, "completed work is retained when the slice defers later waves");
+
+  const h = await autonomousHarness();
+  const legacy = { ...h.item, id: "work:legacy-held", subject: "subject:legacy", autonomousPlan: undefined };
+  const current = { ...h.item, id: "work:planned", subject: "subject:planned",
+    autonomousPlan: { ...h.item.autonomousPlan!, ownerInstructions: ["hunt:planned"] } };
+  const task = (workItemId: string, routeId: string) => createRouteTask({ workItemId, routeId,
+    routeLabel: routeId, target: FIXTURE_URL, inherited: false, now: h.now() });
+  const held = [task(legacy.id, "legacy:first"), task(legacy.id, "legacy:second"), task("work:missing", "dangling")];
+  const plannedTask = task(current.id, "planned:first");
+  const placeOrder = ["hunt:legacy", "hunt:planned"];
+  const snapshotStart = source.indexOf("const workItemsById =", source.indexOf("async function runAutonomousWave()"));
+  const snapshotEnd = source.indexOf("const plainTaskIds =", snapshotStart);
+  const queueStart = source.indexOf("const readTaskQueue =", snapshotEnd);
+  const queueEnd = source.indexOf("let taskQueue:", queueStart);
+  assert.ok(snapshotStart >= 0 && snapshotEnd > snapshotStart && queueStart > snapshotEnd && queueEnd > queueStart);
+  const ordering = transpileModule(`return (async () => {
+    ${source.slice(snapshotStart, snapshotEnd)}
+    ${source.slice(queueStart, queueEnd)}
+    return { taskIds, metadata, remainingSnapshotItems: workItemsById.size, readTaskQueue };
+  })();`, { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
+  let orderingReads = 0;
+  const unreadable = () => { orderingReads++; throw new Error("ordering must reuse the selected metadata"); };
+  const selected = await new Function("held", "fleet", "runAutonomousCoordinator", "placeOrder", "paidWorkerCapacity",
+    "placeRankFor", "huntRoundComparator", "repos", ordering)(held, {},
+    async (_fleet: unknown, options: { onSelectionSnapshot: (items: readonly WorkItem[]) => void }) => {
+      options.onSelectionSnapshot([legacy, current]);
+      return { decisions: [{ action: "WORKER", task: plannedTask }] };
+    }, placeOrder, () => 1,
+    (subject: string) => subject === legacy.subject ? placeOrder.indexOf("hunt:legacy") : null,
+    huntRoundComparator, { routeTasks: { read: unreadable }, workItems: { read: unreadable } });
+  assert.equal(selected.remainingSnapshotItems, 0, "the whole selection index is released after retaining only queued metadata");
+  assert.equal(selected.metadata.get(held[0]!.id), legacy);
+  assert.equal(selected.metadata.get(plannedTask.id), current);
+  assert.equal(selected.metadata.get(held[2]!.id), undefined, "a dangling task has no fabricated metadata and remains for the child's fresh read");
+  placeOrder.reverse(); // The first child asks after the owner priority refresh.
+  const queue = selected.readTaskQueue();
+  assert.equal(queue.rank(plannedTask.id), 0);
+  assert.equal(queue.rank(held[2]!.id), Infinity);
+  const ordered = [...selected.taskIds].sort((a, b) => queue.compareRound(a, b) || queue.rank(a) - queue.rank(b));
+  assert.equal(ordered[0], plannedTask.id);
+  assert.ok(ordered.indexOf(held[0]!.id) < ordered.indexOf(held[1]!.id));
+  assert.ok(ordered.includes(held[2]!.id), "ordering does not drop unresolved tasks or claim that they are absent");
+  assert.ok(queue.compareRound(held[1]!.id, plannedTask.id) > 0, "removing a completed first task does not reset the hunt's second round");
+  assert.equal(orderingReads, 0);
 });
 
 test("pool returns a completed dispatch and records unfinished work when a child exits unsuccessfully", async () => {

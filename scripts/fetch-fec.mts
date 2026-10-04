@@ -57,6 +57,7 @@ import { promotedCongressTargets, fecDistrictTargets, type FecTarget, type FecSe
 import { readFecSendDistricts } from "../lib/funding/fec-send-districts.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { FEDERAL_DIRECTORY_SCOPE, type FederalDirectoryReadModel } from "../lib/officials/federal-directory-data-plane.ts";
+import { smallDonorShare } from "../lib/funding/small-donors.ts";
 import { stamp } from "./stamp.mts";
 
 import { fecFundingCandidate } from "../lib/civic-data/candidate-builders.ts";
@@ -668,7 +669,8 @@ for (const [fecId, entry] of byFecId) {
   }
 
   const receipts = Number(totals.receipts ?? 0);
-  const unitemized = Number(totals.individual_unitemized_contributions ?? 0);
+  const unitemized = totals.individual_unitemized_contributions == null ? null : Number(totals.individual_unitemized_contributions);
+  const itemized = totals.individual_itemized_contributions == null ? null : Number(totals.individual_itemized_contributions);
   candidates.push({
     dataClass: "FEC_COMMITTEE",
     fecCandidateId: fecId,
@@ -684,11 +686,11 @@ for (const [fecId, entry] of byFecId) {
       receipts,
       disbursements: Number(totals.disbursements ?? 0),
       cashOnHand: Number(totals.last_cash_on_hand_end_period ?? 0),
-      individualItemized: Number(totals.individual_itemized_contributions ?? 0),
+      individualItemized: itemized,
       individualUnitemized: unitemized,
       /** Unitemized individual contributions (under $200) over total
        *  receipts — the method the surface states in its own words. */
-      smallDonorShare: receipts > 0 ? unitemized / receipts : null,
+      smallDonorShare: smallDonorShare(itemized, unitemized),
       coverageEndDate: totals.coverage_end_date
         ? String(totals.coverage_end_date).slice(0, 10)
         : null,

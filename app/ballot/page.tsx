@@ -2184,7 +2184,7 @@ export default async function BallotPage({
                   )}
                 </h2>
                 <p className="t-eyebrow text-muted">
-                  {contest.voteFor !== null ? `Vote for ${contest.voteFor}` : "We’re working on getting this info"}
+                  {contest.voteFor !== null ? `Vote for ${contest.voteFor}` : "We're working on getting this info"}
                   {contest.termYears ? ` · ${contest.termYears}-year term` : ""}
                 </p>
               </div>
@@ -2693,6 +2693,8 @@ export default async function BallotPage({
                     <p className="mt-1.5 text-[0.8125rem] font-semibold leading-relaxed">
                       {summary.summary}
                     </p>
+                    {summary.yesMeans && <p className="mt-2 text-[0.8125rem] leading-relaxed" data-measure-yes><strong>YES:</strong> {summary.yesMeans}</p>}
+                    {summary.noMeans && <p className="mt-2 text-[0.8125rem] leading-relaxed" data-measure-no><strong>NO:</strong> {summary.noMeans}</p>}
                   </div>
                 ) : (
                   measure && (

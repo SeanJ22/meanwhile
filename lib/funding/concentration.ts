@@ -92,6 +92,8 @@ export interface FundingConcentration {
   /** Contributions filed from the candidate's own state. */
   inStateCount: number;
   inStateAmount: number;
+  outStateAmount: number;
+  unlocatedAmount: number;
   /**
    * The candidate's state, as the FEC records it. Null when we do not have
    * it — and then the in-state figures are meaningless and `hasGeography`
@@ -167,6 +169,8 @@ export function concentrationOf(
     totalAmount: total,
     inStateCount: inState.length,
     inStateAmount: sum(inState),
+    outStateAmount: hasGeography ? sum(withState.filter(row => row.state!.trim().toUpperCase() !== home)) : 0,
+    unlocatedAmount: sum(rows.filter(row => !row.state?.trim())),
     candidateState: home,
     hasGeography,
     organizationCount: organizations.length,
@@ -213,52 +217,16 @@ export function concentrationSentences(
   concentration: FundingConcentration,
   stateName: string | null,
 ): string[] {
-  const sentences: string[] = [];
-  const n = concentration.contributionCount;
-
-  // The base, first and in plain words. Nothing below means anything
-  // without it.
-  const listed =
-    n === 1 ? "the one contribution listed above" : `the ${n} contributions listed above`;
-  sentences.push(
-    `These figures cover ${listed} — the biggest this campaign reported from ` +
-      `committees and organizations, and the biggest it reported from ` +
-      `individual people. They are not the whole of what it raised.`,
-  );
-
+  const sentences = [`Contributions listed above: ${dollars(concentration.totalAmount)}.`];
   if (concentration.hasGeography) {
     const where = stateName ?? concentration.candidateState;
-    sentences.push(
-      `Filed from inside ${where}: ${shareWords(concentration.inStateAmount, concentration.totalAmount)} ` +
-        `of the ${dollars(concentration.totalAmount)} in ${n === 1 ? "it" : `those ${n}`}, ` +
-        `across ${concentration.inStateCount} of them. That is the state a ` +
-        `contribution was filed from — the filings don't give a district.`,
-    );
+    sentences.push(`Filed from inside ${where}: ${dollars(concentration.inStateAmount)}.`);
+    sentences.push(`Filed from outside ${where}: ${dollars(concentration.outStateAmount)}.`);
+    if (concentration.unlocatedAmount > 0) sentences.push(`State not stated on the filing: ${dollars(concentration.unlocatedAmount)}.`);
   } else {
-    // Named gap, in the gap's own register — never a zero standing in for
-    // a fact we do not have.
-    sentences.push(
-      `Where these contributions were filed from isn't something we can ` +
-        `state here: the filings we have don't carry enough of it.`,
-    );
+    sentences.push("We're working on getting this info");
   }
-
-  // DOLLARS, not a share: the two groups were selected separately, so a
-  // percentage between them would be a percentage of a base we chose.
-  // Rendered only when both groups are actually present.
-  if (concentration.organizationCount > 0 && concentration.individualCount > 0) {
-    sentences.push(
-      `Of that, ${dollars(concentration.organizationAmount)} came from ` +
-        `committees and organizations and ${dollars(concentration.individualAmount)} ` +
-        `from individual people. That split is the FEC's own typing — we ` +
-        `don't sort donors into industries or causes.`,
-    );
-  }
-
-  sentences.push(
-    `The single biggest of them accounts for ` +
-      `${shareWords(concentration.largestAmount, concentration.totalAmount)} of the ${dollars(concentration.totalAmount)}.`,
-  );
-
+  if (concentration.organizationCount > 0) sentences.push(`${dollars(concentration.organizationAmount)} came from committees and organizations.`);
+  if (concentration.individualCount > 0) sentences.push(`${dollars(concentration.individualAmount)} came from individual people.`);
   return sentences;
 }

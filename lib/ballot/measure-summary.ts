@@ -4,6 +4,8 @@ export interface MeasureSummary {
   contestId: string;
   /** The 15-year-old register: what the measure would do. */
   summary: string;
+  yesMeans?: string | null;
+  noMeans?: string | null;
   /** The official text this was written from — the citation. */
   summarizesUrl: string;
   writtenAt: string;
@@ -27,7 +29,7 @@ export interface MeasureSummary {
 }
 
 function summary(record: MeasureRecord): MeasureSummary {
-  return { contestId: record.contestId, summary: record.whatItDoes,
+  return { contestId: record.contestId, summary: record.whatItDoes, yesMeans: record.yesMeans, noMeans: record.noMeans,
     summarizesUrl: record.sourceUrl, writtenAt: record.writtenAt, citation: record.citation };
 }
 

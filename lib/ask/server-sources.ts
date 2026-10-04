@@ -131,7 +131,7 @@ export interface BallotForDivisions {
     documentUrl: string;
     retrievedAt: string;
   }[];
-  measureSummary: (contestId: string) => { summary: string; summarizesUrl: string } | null;
+  measureSummary: (contestId: string) => { summary: string; summarizesUrl: string; yesMeans?: string | null; noMeans?: string | null } | null;
   measureProvisions: (contestId: string) => readonly {
     id: string;
     label: string;
@@ -185,7 +185,7 @@ export async function loadBallotForDivisions(
         measureSummary: (contestId) => {
           const summary = summaryForContest(contestId, measureRecords);
           return summary
-            ? { summary: summary.summary, summarizesUrl: summary.summarizesUrl }
+            ? { summary: summary.summary, summarizesUrl: summary.summarizesUrl, yesMeans: summary.yesMeans, noMeans: summary.noMeans }
             : null;
         },
         measureProvisions: (contestId) =>

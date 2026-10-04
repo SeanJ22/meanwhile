@@ -254,6 +254,8 @@ export interface EvidenceRecord {
   };
   /** The record's own words, or a mechanical read of its fields. Never a summary. */
   text: string;
+  /** Stored plain-English measure meaning, carried with its exact source. */
+  measureMeaning?: { readonly vote: "YES" | "NO"; readonly meaning: string };
   /** ISO date this record is ABOUT, where that is meaningful. */
   occurredAt?: string | null;
   sourceUrl?: string | null;

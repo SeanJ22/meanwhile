@@ -17,7 +17,7 @@ import { FRESHNESS_HOURS, meetingFreshnessHours } from "../coverage/checklist-ma
 
 /** Derived from canonical published records, never filtered by their original job or ZIP. */
 export interface HeldPlaceCapture {
-  readonly subjects: readonly { id: string; kind: "division" | "body" | "seat" | "calendar" | "contest" | "funding" | "deadline"; divisionIds: readonly string[]; label: string; captureKind?: PlaceCaptureKind; calendarBodyId?: string; funcstat?: string }[];
+  readonly subjects: readonly { id: string; kind: "division" | "body" | "seat" | "calendar" | "contest" | "funding" | "deadline"; divisionIds: readonly string[]; label: string; captureKind?: PlaceCaptureKind; calendarBodyId?: string; funcstat?: string; startsAt?: string }[];
   readonly held: readonly { subjectId: string; checklistId: string; state: "published" | "held" | "unpublished";
     sourceUrl: string; checkedAt: string; freshUntil: string; value: unknown }[];
 }
@@ -103,7 +103,7 @@ export function projectHeldPlaceCapture(
       const divisions = divisionsFor(meeting.bodyId, meeting.ocdId);
       if (!divisions.some(id => wanted.has(id))) continue;
       subjects.set(meeting.id, { id: meeting.id, kind: "calendar", divisionIds: divisions, label: meeting.title,
-        captureKind: "meeting", ...(meeting.bodyId ? { calendarBodyId: meeting.bodyId } : {}) });
+        captureKind: "meeting", startsAt: meeting.startsAt, ...(meeting.bodyId ? { calendarBodyId: meeting.bodyId } : {}) });
       const hours = meetingFreshnessHours(meeting.startsAt, now);
       const field = (id: string, value: unknown) => add(meeting.id, id, value,
         meeting.provenance.sourceUrl, meeting.provenance.collectedAt, hours);
@@ -125,7 +125,8 @@ export function projectHeldPlaceCapture(
       const previous = subjects.get(sitting.meetingId);
       const calendarBodyId = sitting.bodyId ?? previous?.calendarBodyId;
       subjects.set(sitting.meetingId, { id: sitting.meetingId, kind: "calendar", divisionIds: divisions, label: sitting.bodyName,
-        captureKind: "meeting", ...(calendarBodyId ? { calendarBodyId } : {}) });
+        captureKind: "meeting", ...(sitting.startsAt ? { startsAt: sitting.startsAt } : previous?.startsAt ? { startsAt: previous.startsAt } : {}),
+        ...(calendarBodyId ? { calendarBodyId } : {}) });
       const agenda = reconcilePublicationObservations(sitting.meetingId, sitting.publicationObservations.filter(observation =>
         observation.provenance === "FIRST_PARTY_PUBLISHER" && observationIsFresh(observation, Date.parse(now))));
       if (agenda.actionable?.report === "NOT_AVAILABLE" && !sitting.publication.agendaFile &&

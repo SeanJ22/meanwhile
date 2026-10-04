@@ -211,7 +211,7 @@ function Reliability() {
   const { page, pager } = usePager(rows, 8);
   const failing = rows.filter((r) => r.state === "failing").length;
   return (
-    <Card title="How reliable our sources are" aside={<span className={s.meta}>{src.data ? `${count(rows.length)} sources · ${count(failing)} failing now` : "—"}</span>}>
+    <Card title="How reliable our sources are · whole country" aside={<span className={s.meta}>{src.data ? `${count(rows.length)} sources across the country · ${count(failing)} failing now` : "—"}</span>}>
       {src.data && !rows.length && <Empty>No sources</Empty>}
       <div className={s.stack}>
         {page.map((r) => (

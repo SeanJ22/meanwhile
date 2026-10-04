@@ -1,5 +1,6 @@
 import checklist from "../control-plane/readiness/checklist-profile.json" with { type: "json" };
-import { CHECKLIST_GROUPS, DEADLINE_ITEMS, checklistItemApplies } from "./checklist-map.ts";
+import { rowStatuses, type HuntEvidence, type RowStatuses } from "./place-statuses.ts";
+import { CHECKLIST_GROUPS, DEADLINE_ITEMS, canonicalItemId, checklistItem, checklistItemApplies, subjectKindOfUnit } from "./checklist-map.ts";
 
 /** A derived capture view, never a publication decision or a second store. */
 export type PlaceSubjectKind = "division" | "body" | "seat" | "calendar" | "funding" | "contest" | "deadline";
@@ -16,6 +17,8 @@ export interface PlaceSubject {
   readonly calendarBodyId?: string;
   /** Census functional status from the held division, not its name or shape. */
   readonly funcstat?: string;
+  /** A meeting's start, so a posting-deadline item can be dated from it. */
+  readonly startsAt?: string;
 }
 export interface HeldPlaceField {
   readonly subjectId: string;
@@ -35,9 +38,17 @@ export interface PlaceOwedItem {
   readonly state: HeldPlaceField["state"] | "missing" | "stale";
   readonly held: readonly HeldPlaceField[];
   readonly label: string;
+  /** The six statuses of this blank. `state` is the old blended state, kept for compatibility. */
+  readonly statuses: RowStatuses;
 }
 
 const GROUPS = CHECKLIST_GROUPS as Readonly<Record<PlaceSubjectKind, readonly string[]>>;
+const GROUPED = new Set(Object.values(GROUPS).flat());
+
+/** A kind owes its families' items. A family no kind lists (reference data) is placed by each item's unit. */
+function owedByKind(kind: PlaceSubjectKind, definition: { id: string; group: string }): boolean {
+  return GROUPS[kind].includes(definition.group) || !GROUPED.has(definition.group) && subjectKindOfUnit(definition.id) === kind;
+}
 
 /** Broad kinds preserve unresolved work; a known record only owes its own facts.
  * The rules live in checklist-map.json. */
@@ -53,6 +64,10 @@ export function buildPlaceOwedList(input: {
   readonly subjects: readonly PlaceSubject[];
   readonly held: readonly HeldPlaceField[];
   readonly now: string;
+  /** What the hunt is doing about a blank, when known. Absent means not read, not "nothing to do". */
+  readonly hunt?: (subjectId: string, checklistId: string) => HuntEvidence | null;
+  /** The latest served-reader witness for a held work item. */
+  readonly witness?: (workItemId: string) => "CONFIRMED" | "NOT_OBSERVED" | null;
 }): PlaceOwedItem[] {
   const now = Date.parse(input.now);
   if (!Number.isFinite(now)) throw new Error("Invalid place capture time");
@@ -93,12 +108,13 @@ export function buildPlaceOwedList(input: {
   const heldByKey = new Map<string, HeldPlaceField[]>();
   for (const field of input.held) {
     if (!field.sourceUrl || Date.parse(field.checkedAt) > now || !Number.isFinite(Date.parse(field.checkedAt))) continue;
-    const key = JSON.stringify([field.subjectId, field.checklistId]);
+    // A shared predicate is one fact: a field kept under MTG-20 counts once, under MTG-17.
+    const key = JSON.stringify([field.subjectId, canonicalItemId(field.checklistId)]);
     heldByKey.set(key, [...(heldByKey.get(key) ?? []), field]);
   }
   return [...subjects.values()].sort((a, b) => a.id.localeCompare(b.id)).flatMap(subject => {
     const inventory = subject.id.includes("#inventory:");
-    const definitions = checklist.definitions.filter(d => GROUPS[subject.kind].includes(d.group) &&
+    const definitions = checklist.definitions.filter(d => owedByKind(subject.kind, d) && checklistItem(d.id)?.countsAs !== "shared" &&
       (subject.kind !== "deadline" || DEADLINE_ITEMS.has(d.id)) &&
       (inventory || appliesToRecord(subject, d) || heldByKey.has(JSON.stringify([subject.id, d.id]))));
     // The inventory is one discovery item, not a fictitious seat or contest.
@@ -111,7 +127,8 @@ export function buildPlaceOwedList(input: {
         : current.some(f => f.state === "held") ? "held"
         : current.some(f => f.state === "unpublished") ? "unpublished" : held.length ? "stale" : "missing";
       const requirement = inventory ? `Discover every ${subject.kind} for ${subject.label.split(": ")[0]}` : definition.requirement;
-      return { id, subject, checklistId: definition.id, requirement, state, held,
+      const statuses = rowStatuses({ checklistId: definition.id, subject, held }, { now: input.now, hunt: input.hunt, witness: input.witness });
+      return { id, subject, checklistId: definition.id, requirement, state, held, statuses,
         label: state === "missing" ? `${requirement} — not covered yet`
           : state === "stale" ? `${requirement} — captured; source refresh due`
           : state === "held" ? `${requirement} — captured, not published yet`

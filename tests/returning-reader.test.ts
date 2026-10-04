@@ -35,7 +35,7 @@ const WELCOME = join(process.cwd(), "components", "map", "welcome-overlay.tsx");
 const STORED_ZIP = join(process.cwd(), "hooks", "use-stored-zip.ts");
 const RECENTS = join(process.cwd(), "hooks", "use-recent-zips.ts");
 
-test("the returning reader is offered their own recent places, not only ours", () => {
+test("the returning reader is offered their own recent places without a pilot showcase", () => {
   const source = readFileSync(WELCOME, "utf8");
 
   assert.match(
@@ -54,15 +54,7 @@ test("the returning reader is offered their own recent places, not only ours", (
     "each recent zip is offered as its own one-tap button",
   );
 
-  // Ordering is part of the fix, not decoration: a list of where this reader
-  // has been outranks a list of where our coverage happens to be deepest.
-  const recentsAt = source.indexOf("recents.map(");
-  const quickAt = source.indexOf("QUICK_ZIPS.map(");
-  assert.ok(recentsAt > 0 && quickAt > 0, "both lists still render");
-  assert.ok(
-    recentsAt < quickAt,
-    "the reader's own places come before the coverage showcase",
-  );
+  assert.doesNotMatch(source, /QUICK_ZIPS/, "FE-39 removes the pilot showcase");
 });
 
 test("the zip is remembered between visits, and a link still wins", () => {

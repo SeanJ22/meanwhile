@@ -1,3 +1,4 @@
+import { officeholderIdentityMayEnterReader } from "../officials/roster-authority.ts";
 import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
 
 /**
@@ -87,6 +88,7 @@ function buildIndex(): Map<string, PersonPhoto> {
   const generated = runtime.officialPhotos as { photos: OfficialPhotoRow[] };
 
   for (const row of generated.photos) {
+    if (!officeholderIdentityMayEnterReader(row.officeholderId)) continue;
     const key = personKey(row.name);
     if (!key) continue;
     const existing = best.get(key);

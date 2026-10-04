@@ -10,6 +10,7 @@ import { provisionsForContest } from "../ballot/measure-provisions.ts";
 import { getMeasureAnalyses, type MeasureAnalysis } from "../ballot/analyses.ts";
 import { positionsFor } from "../candidates/positions.ts";
 import { heldRosterFiles } from "../holdings/discovery.ts";
+import { mayReadRetiredPluralRoster } from "../officials/roster-authority.ts";
 import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
 import type { BallotAbsence, BallotSet, Contest } from "../ballot/types.ts";
 import { allSeatHolders, seatHolderById, seatHoldersForDivision } from "../registry/server.ts";
@@ -80,6 +81,9 @@ export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: re
       for (const seat of held) {
         seats.set(seat.id, seat);
         at(seat).divisionIds.add(ocdId);
+      }
+      if (!mayReadRetiredPluralRoster() && /\/(?:sldu|sldl):/.test(ocdId) && held.length === 0) {
+        loaderFailures += 1;
       }
     } catch {
       loaderFailures += 1;
@@ -257,6 +261,11 @@ export function readerRepresentatives(ocdIds: readonly string[]): {
   sourceOrg: string | null;
   collectedAt: string | null;
 }[] {
+  // The tracked state rosters are recorded Plural/OpenStates research
+  // fixtures, not production authority. In production the existing Ask
+  // holding-failure path names the missing canonical officeholder projection;
+  // only node:test may exercise the historical rows.
+  if (!mayReadRetiredPluralRoster()) return [];
   const wanted = new Set(ocdIds.filter((id) => /\/(sldu|sldl):/.test(id)));
   if (wanted.size === 0) return [];
 

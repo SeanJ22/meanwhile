@@ -3,7 +3,7 @@ worker: registry
 provider: Claude
 run_id: session_01Gzddi9NT9jvbbesVsdSaTU (Claude Sonnet 5.5)
 lock: registry-20261004T080153Z-16054
-heartbeat: 2026-10-04T08:07:37Z
+heartbeat: 2026-10-04T08:08:28Z
 on_river: none
 ready: DB-09, DB-10, DB-11, DB-12, DB-25 (library only; runner hook pending) — cumulative, exact ready commit 426c69a20759c97ca275009dbbdf0a43879ba41c. Earlier points: DB-09 b8c61d41d47b4d2a2a7137404bc69f8ba619437b, DB-11 165e9536bbadb0f587bfefc897fb71457691a27c, DB-12 713fb9b8eef7280faca1895b0ba34627fd21bda8.
 checks: @ 426c69a20759c97ca275009dbbdf0a43879ba41c: tsc clean; tests/denominator-floor 6/6 (River return fixed: seed script now matches river-next c846a56); seed script on a file store prints "129 of 129" and "78 of 78"; door-registry*.test.ts 15/15 at the DB-25 commit. DB-12 wide run: 248 failures vs 268 on untouched river for the same 659 files, no new failure after the version-key fix.

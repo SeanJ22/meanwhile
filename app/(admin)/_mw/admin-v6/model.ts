@@ -632,6 +632,10 @@ export interface SpendView {
   readonly setAsideUsd?: number | null;
   /** The daily spending limit in force; null when not read. */
   readonly dailyLimitUsd?: number | null;
+  /** How many paid hunters the daily limit buys at once right now; null when unread. */
+  readonly huntersNow?: number | null;
+  /** Charges in the last 24 hours counted at their worst case; null when unread. */
+  readonly worstCaseCharges?: number | null;
 }
 
 /* -------------------------------------------------------------- learning */

@@ -43,6 +43,7 @@ export interface LearningTrendFacts {
   readonly asOf: string;
   readonly weeks: readonly WeekLearningRow[];
   readonly doors: DoorUse;
+  readonly bankWriteErrors: number;
 }
 
 // A CASE, not an AND: SQL does not promise to short-circuit, and jsonb_array_length of a non-array throws.
@@ -53,6 +54,20 @@ const arr = (key: string): string => `(case when jsonb_typeof(record->'${key}') 
 const isArr = (key: string): string => `jsonb_typeof(record->'${key}') = 'array'`;
 
 const WEEKS = `
+  with bank_entries as (
+    select e->>'id' as id, e->>'foundBy' as finder
+    from cp_field_manual m cross join lateral jsonb_array_elements(m.value->'entries') e
+    where m.id = 'live' and e->>'foundBy' in ('SCOUT', 'DETECTIVE')
+  ), finder_reuse as (
+    select to_char(date_trunc('week', (r.record->>'startedAt')::timestamptz at time zone 'UTC'), 'YYYY-MM-DD') as wk,
+      count(*)::int as attributed,
+      count(*) filter (where b.finder = 'SCOUT')::int as scouts,
+      count(*) filter (where b.finder = 'DETECTIVE')::int as detectives
+    from cp_log_scout_results r cross join lateral jsonb_array_elements_text(
+      case when jsonb_typeof(r.record->'usedFieldManualEntryIds') = 'array' then r.record->'usedFieldManualEntryIds' else '[]'::jsonb end) used(id)
+    join bank_entries b on b.id = used.id
+    where r.record->>'startedAt' is not null group by 1
+  )
   select to_char(date_trunc('week', (record->>'startedAt')::timestamptz at time zone 'UTC'), 'YYYY-MM-DD') as wk,
     count(*)::int as walks,
     count(*) filter (where (record->'inheritedFieldManual') is not null)::int as pair_recorded,
@@ -60,6 +75,9 @@ const WEEKS = `
     count(*) filter (where ${isArr("usedFieldManualEntryIds")} and ${arr("inheritedFieldManualEntryIds")} > 0)::int as used_recorded,
     count(*) filter (where ${arr("usedFieldManualEntryIds")} > 0)::int as used_walks,
     coalesce(sum(${arr("usedFieldManualEntryIds")}), 0)::int as reused_doors,
+    coalesce(max(finder_reuse.attributed), 0)::int as finder_attributed,
+    coalesce(max(finder_reuse.scouts), 0)::int as scout_reused,
+    coalesce(max(finder_reuse.detectives), 0)::int as detective_reused,
     count(*) filter (where ${isArr("rebuiltExistingRoutes")})::int as rebuilt_recorded,
     coalesce(sum(${arr("rebuiltExistingRoutes")}), 0)::int as rebuilt_routes,
     count(*) filter (where not (${REFUSED}) and ${RESUMED} > 0)::int as resumed,
@@ -71,7 +89,7 @@ const WEEKS = `
     count(*) filter (where record->>'usd' is null)::int as unpriced,
     count(*) filter (where (record->'modelClass') is not null)::int as ladder_recorded,
     count(*) filter (where coalesce(record->>'escalatedFrom', '') <> '')::int as escalated
-  from cp_log_scout_results
+  from cp_log_scout_results left join finder_reuse on finder_reuse.wk = to_char(date_trunc('week', (record->>'startedAt')::timestamptz at time zone 'UTC'), 'YYYY-MM-DD')
   where record->>'startedAt' is not null
   group by 1 order by 1`;
 
@@ -104,13 +122,15 @@ function str(v: unknown): string | null {
 export async function readLearningTrends(connection: string, nowIso: string): Promise<LearningTrendFacts> {
   const sql = neon(connection);
   const results = await sql.transaction(
-    [sql.query(`SET LOCAL statement_timeout = ${LEARNING_TRENDS_STATEMENT_TIMEOUT_MS}`), sql.query(WEEKS), sql.query(DOORS), sql.query(NAMED)],
+    [sql.query(`SET LOCAL statement_timeout = ${LEARNING_TRENDS_STATEMENT_TIMEOUT_MS}`), sql.query(WEEKS), sql.query(DOORS), sql.query(NAMED),
+      sql.query("select coalesce((select (value #>> '{entries,0,payload,count}')::bigint from cp_field_manual where id = 'write-errors'), 0) as write_errors")],
     { readOnly: true, isolationLevel: "RepeatableRead" },
   );
-  const [, weekRows, doorRows, namedRows] = results as unknown as Rows[];
+  const [, weekRows, doorRows, namedRows, healthRows] = results as unknown as Rows[];
   const d = doorRows[0] ?? {};
   return {
     asOf: nowIso,
+    bankWriteErrors: num(healthRows[0]?.write_errors),
     weeks: weekRows.map((w) => ({
       week: String(w.wk ?? ""),
       walks: num(w.walks),
@@ -119,6 +139,9 @@ export async function readLearningTrends(connection: string, nowIso: string): Pr
       usedRecorded: num(w.used_recorded),
       usedWalks: num(w.used_walks),
       reusedDoors: num(w.reused_doors),
+      finderAttributed: num(w.finder_attributed),
+      scoutReusedDoors: num(w.scout_reused),
+      detectiveReusedDoors: num(w.detective_reused),
       rebuiltRecorded: num(w.rebuilt_recorded),
       rebuiltRoutes: num(w.rebuilt_routes),
       resumed: num(w.resumed),

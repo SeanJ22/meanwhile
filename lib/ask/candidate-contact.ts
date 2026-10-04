@@ -7,6 +7,6 @@ export function contactForCandidate(candidacyId: string, name: string, office: s
   if (!contact) return null;
   return { id: `candidate-contact:${contact.candidacyId}`, name, officeTitle: office,
     relationship: `Candidate for ${office} — contact published on the filing`, basis: "SUBJECT_OFFICE",
-    email: contact.email, phone: null, websiteUrl: null, filedAddress: contact.filedAddress,
+    email: contact.email, phone: null, websiteUrl: null,
     sourceUrl: contact.sourceUrl, sourceOrg: contact.sourceOrg, retrievedAt: contact.collectedAt };
 }

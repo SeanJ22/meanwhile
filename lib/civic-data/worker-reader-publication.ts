@@ -24,6 +24,7 @@ import type { CommentAccess } from "../registry/comment-access-client.ts";
 import type { ArtifactRecord } from "../control-plane/repository/types.ts";
 import { publishHeldElectionOffices } from "./worker-held-elections.ts";
 import { localHeldCaptureReader } from "./worker-publication-context.ts";
+import { workerBallotContestsPackage, publishWorkerBallotContestsResults } from "./worker-ballot-contests.ts";
 import { EVERYDAY_TOPIC_IDS, everydayRoutingProjectionFromRecords, type EverydayRoutingRecord } from "../routing/everyday.ts";
 const text = (value: FieldValue | undefined) => typeof value === "string" ? value : "";
 const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
@@ -68,9 +69,10 @@ export function inheritVerifiedCommentDetails(input: ManualProjectionPackage, pr
 /** Field-specific conversion to existing readers; no arbitrary model payloads.
  * Null fields mean unacquired, never an assertion that a service is absent. */
 export function workerReaderPackage(input: Parameters<typeof verifiedWorkerRecords>[0] & { registry: RegistryRuntimePrior | null }): ManualProjectionPackage {
+  if (input.plan.publication?.contractId === "ballot-contests") return workerBallotContestsPackage(input).package;
   const target = input.plan.publication;
   requirePublication(target && isWorkerReaderContract(target.contractId), "READER_CONTRACT_UNRESOLVED");
-  const contractId = target.contractId as WorkerReaderContract;
+  const contractId = target.contractId as Exclude<WorkerReaderContract, "ballot-contests">;
   const checked = verifiedWorkerRecords(input);
   requirePublication(workerReaderClassMatches(contractId, checked.contract.recordClass), "READER_CLASS_MISMATCH");
   const body = input.registry?.payload.registry.bodies.find(body => body.id === target.bodyId);
@@ -138,6 +140,7 @@ export async function publishWorkerReaderResults(input: {
   /** Reads a held page straight from the vault by its artifact record; enables reuse of any job's saved evidence. */
   readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
 }) {
+  if (input.contractId === "ballot-contests") return publishWorkerBallotContestsResults(input);
   const results = await readCompletedWorkerResults(input.repos);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   // Owed election work with no extraction yet: the government's saved election pages are read in code.

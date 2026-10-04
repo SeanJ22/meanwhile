@@ -19,7 +19,6 @@ export function AskAnswerContacts({ contacts }: { contacts: readonly AskContact[
               {c.phone ? <a href={`tel:${c.phone}`} className="underline decoration-dotted underline-offset-2 hover:text-link">{c.phone}</a> : null}
               {c.websiteUrl ? <a href={c.websiteUrl} target="_blank" rel="noreferrer" className="underline decoration-dotted underline-offset-2 hover:text-link">Published website</a> : null}
             </div>
-            {c.filedAddress ? <p data-ask-filed-address>Filed mailing address: {c.filedAddress}</p> : null}
             {c.sourceUrl ? (
               <p className="text-muted"><a href={c.sourceUrl} target="_blank" rel="noreferrer" className="underline decoration-dotted underline-offset-2 hover:text-link">{contactReadLine(c) ?? c.sourceUrl}</a></p>
             ) : contactReadLine(c) ? <p className="text-muted">{contactReadLine(c)}</p> : null}

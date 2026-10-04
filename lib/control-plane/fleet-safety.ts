@@ -367,7 +367,7 @@ export class FleetSafetyController {
    * per-request guard (`reserveModelRequest`) and the pre-admission read
    * (`rollingCeilingReached`) read it, so moving this one value moves both.
    */
-  readonly bounds: FleetSafetyBounds;
+  bounds: FleetSafetyBounds;
   readonly startedAt: string;
   private readonly startedMs: number;
   private readonly historicalNightUsd: number | null;
@@ -446,6 +446,18 @@ export class FleetSafetyController {
     for (const circuit of input.circuits ?? []) {
       if (this.hardCircuit(circuit) || Date.parse(circuit.eligibleAt) > this.startedMs) this.circuits.set(circuit.provider, circuit);
     }
+  }
+
+  /**
+   * CH-03: the owner's dial moved mid-round. The very next reservation and
+   * pre-admission read use the new value; the same defence as the constructor
+   * applies, so a disappeared or invalid value falls back and never means no ceiling.
+   */
+  setRollingCeilingUsd(rollingCeilingUsd: number | null | undefined): void {
+    const ceiling = resolveRollingCeiling(rollingCeilingUsd);
+    this.bounds = ceiling.source === "OVERRIDE"
+      ? { ...FLEET_SAFETY_BOUNDS, rolling24HourModelUsd: ceiling.rollingCeilingUsd }
+      : FLEET_SAFETY_BOUNDS;
   }
 
   defer(work: string, code: string, why: string): void {

@@ -81,6 +81,7 @@ function verifierIdFor(contract: ReaderContract): string {
     case "registry-runtime-bindings": return "lib/registry/runtime-read-model.ts#readRegistryRuntimeProjection";
     case "congress-rollcalls": return "lib/votes/snapshot.ts#readFederalRollCallsProjection";
     case "federal-key-votes": return "lib/votes/key-votes-projection.ts#readFederalKeyVotesProjection";
+    case "ballot-contests": return "lib/ballot/generic-projection.ts#readGenericBallotProjection";
     case "az-sos-ballot": return "lib/civic-data/manual-read-models.ts#readAzBallotProjection";
     case "nh-curated-ballot": return "lib/civic-data/manual-read-models.ts#readNhBallotProjection";
     case "candidate-profiles": return "lib/civic-data/manual-read-models.ts#readCandidateProfilesProjection";
@@ -228,6 +229,10 @@ export async function verifyRoutineReaderProjection(
       case "federal-key-votes": {
         const { readFederalKeyVotesProjection } = await import("../votes/key-votes-projection.ts");
         return verifyExactVersion(verifierId, await readFederalKeyVotesProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal-key-vote");
+      }
+      case "ballot-contests": {
+        const { readGenericBallotProjection } = await import("../ballot/generic-projection.ts");
+        return verifyExactVersion(verifierId, await readGenericBallotProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "state-election-ballots");
       }
       case "az-sos-ballot":
       case "nh-curated-ballot":

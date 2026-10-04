@@ -87,3 +87,20 @@ test("a contest with no candidate held says so as a gap of ours; an office with 
   assert.deepEqual(none?.gaps, ["We have not recorded who is running for Governor."]);
   assert.equal(composeOfficeField({ key: "us_senator", contests: CONTESTS, election: ELECTION, nominees: () => [], candidacies: [], removedCandidacyIds: new Set() }), null);
 });
+
+test("local council, board, commission and district offices are matched from the reader's held contests", () => {
+  const local = [contest("council", "Member of the Borough Council"),
+    contest("board", "School Board Member"), contest("commission", "Water Commission Member"),
+    contest("district", "District Attorney"), contest("ward2", "City Council, Ward 2")];
+  for (const [phrase, id] of [["borough council", "council"], ["school board", "board"], ["water commission", "commission"], ["district attorney", "district"], ["city council ward 2", "ward2"]]) {
+    const shape = ballotQuestionShape(`Who is running for ${phrase}?`, local);
+    assert.ok(shape?.kind === "OFFICE");
+    const candidate = candidacy(`${id}:candidate`, id, "Avery", "Example", null);
+    const answer = composeOfficeField({ ...shape, contests: local, election: ELECTION,
+      nominees: () => [], candidacies: [candidate], removedCandidacyIds: new Set() });
+    assert.equal(answer?.records.filter(r => r.kind === "CONTEST")[0]?.id, id);
+    assert.ok(answer?.answer.includes("Avery Example"));
+  }
+  assert.equal(ballotQuestionShape("Who is running for parks commission?", local), null);
+  assert.equal(ballotQuestionShape("Who is running for city council ward 3?", local), null);
+});

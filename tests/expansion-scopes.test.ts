@@ -124,7 +124,7 @@ async function zctasOf(g: ExpansionScopeGeography): Promise<string[]> {
 
 /** A geography's ZCTAs as the overlap rule reads them: all, the wholly-inside ones, and each partial share. */
 async function geometryOf(g: ExpansionScopeGeography): Promise<ScopeZctas> {
-  if (g.type === "zcta") throw new Error("Use resolveScopes for a ZIP hunt");
+  if (g.type === "zcta" || g.type === "state") throw new Error("Use resolveScopes for a ZIP or state hunt");
   const lookup = loadBootstrapLookup();
   const result = await lookup.zctasForGrouping({ type: g.type, geoid: g.geoid, version: g.version });
   assert.equal(result.status.kind, "OK", `${g.label} resolves in the bootstrap fixture`);

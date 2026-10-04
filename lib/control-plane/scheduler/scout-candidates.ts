@@ -43,6 +43,7 @@ import { ConcurrentModification, IdentityCollision, type ControlPlaneRepositorie
 import { learnBatch, type LearnedRoute } from "../../method/learn-batch.ts";
 import { readMethodKnowledge } from "../../method/manual-bridge.ts";
 import { newFieldManualEntry, writeFieldManual } from "../field-manual.ts";
+import { scoutStateHint } from "./field-manual-scout.ts";
 import type { WorkArtifact } from "./dispatch.ts";
 import type { ScoutCandidate, ScoutResult } from "./scout-result.ts";
 
@@ -240,6 +241,8 @@ export async function proposeScoutCandidates(input: {
         role: "SHARED", kind: "ROUTE", title: route.title,
         summary: `Independently reached by Attempts ${prior.attemptId} and ${input.result.attemptId}. ${c.procedure}`,
         outcome: "YIELDED", url: c.url, recordClasses: route.fields,
+        states: scoutStateHint(input.result.subjectId, input.result.obligationId),
+        foundBy: input.result.researchRole === "DETECTIVE" ? "DETECTIVE" : "SCOUT",
         observedAt: input.stamp, tier: route.tier, payload: route,
       })], input.stamp);
       if (written.error || written.written !== 1) {

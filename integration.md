@@ -65,3 +65,11 @@ One line per batch folded into river.
 - measures: BR-21, BR-23, SC-13, SC-16 · ready 940b11c58
 - registry: DB-17, DB-23 · ready 8cd6e7034
 - hunters: CH-03 · ready 643a3a373
+
+## 2026-10-04T10:02:25Z — river d69e976 → d67aa5e29
+
+- Evidence: pnpm gates on d67aa5e29 (CI env): 12/12 PASS; 9120 tests pass, 0 fail, 11 skipped.
+- registry: DB-14 · ready 156fdb754
+- bank: DB-37, DB-38, DB-40, DB-41, DB-42, DB-43, DB-49, DB-51, DP-07, DP-08, DP-09, DP-19 · ready 7eb22ae28
+- ballot: CA-20, CA-24, CA-30, CA-44, CA-45, CA-51 · ready bfc11e7b5
+- Fold repair: tests/readiness-reader-delivery.test.ts stays deleted (SC-18 removed its imports; ballot only moved a count there).

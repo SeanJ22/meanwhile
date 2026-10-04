@@ -1,8 +1,8 @@
-build_state: active
+build_state: waiting
 worker: hunters
 provider: Claude
 run_id: session_01Tcr8g6Zc9uhpTgFoLgegYL
-lock: hunters-20261004T061614Z-5740
+lock: none
 heartbeat: 2026-10-04T06:58:22Z
 on_river: none
 ready: CH-02 at 9ae2d28bd8aba50e493664def23666c25a1eef3e

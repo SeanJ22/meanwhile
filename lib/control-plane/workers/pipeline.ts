@@ -22,12 +22,12 @@ export type FleetPipelineOptions = Pick<FactChainOptions, "readArtifactText" | "
 
 /** Offer exact worker outputs through the existing pipeline. */
 export async function projectFleetPipeline(repos: ControlPlaneRepositories, options?: FleetPipelineOptions): Promise<FactChainReport | null> {
+  const results = await readCompletedWorkerResults(repos);
+  if (!results.length) return null;
   if (options && !options.registryBodyIds) await refreshRegistryRuntimeFromPromoted();
   // Fact normalization consumes the promoted venue authority synchronously.
   // Refuse a missing/unreachable production pointer before offering any facts.
   if (options && !mayUseTestFixture()) await refreshVenueResolutionsFromPromoted();
-  const results = await readCompletedWorkerResults(repos);
-  if (!results.length) return null;
   const ctx = await contextFromRepositories(repos);
   for (const scout of await repos.scoutResults.readAll()) {
     for (const offered of scoutedFromScoutResult(scout)) {

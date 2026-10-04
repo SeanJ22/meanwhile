@@ -1,9 +1,9 @@
 build_state: active
 worker: hunters
 provider: Claude
-run_id: session_01Qpgbe3NU8pk5cZ93j7op4s
-lock: none
-heartbeat: 2026-10-04T10:00:00Z
+run_id: session_01RY44tTRT3PvcZkeuZ9fnEt
+lock: hunters-session_01RY44tTRT3PvcZkeuZ9fnEt
+heartbeat: 2026-10-04T09:16:52Z
 on_river: CH-02, CH-06, CH-10 part 1, hooks BR-08 and DB-09 (river c7914e8 and earlier; river fold ec495cf)
 ready: CH-02 at 9ae2d28bd8aba50e493664def23666c25a1eef3e; CH-06 at 89c20a3a107df0573005bade4344c8fcee7a953b; hooks BR-08 and DB-09 at 48dca0016542e2a864dd10cb581b06d8a1a9a26b (DB-09 hook adds the doors table to the console-input query, so it must fold after registry DB-09 creates cp_doors); CH-10 part 1 at 19cb8dafd6dfff155348c4cc58165bb475b249aa; DB-48 at 902041c35504c973863117b5c69b093772dc1523; CH-03 at 643a3a3732038368d45594a279a02b1a0a8627ca
 checks: DB-48: tsc clean; eslint 0 errors on changed files; selector chose 150 of 1002 test files (run without the status file), 1738 pass, 0 fail, 7 skipped, run as CI (DATABASE_URL, WTP_ASSET_STORE unset, no .next). Not run: live runner log check (needs deploy; River/Admin side). CH-10 part 1, CH-02, CH-06 checks as before. CH-03: tsc clean; eslint 0 errors; selector chose 568 of 1002 files; 5660 tests, 0 fail after fixing 3 source-shape tests (model-lane, paid-work-fails-closed, admin-action-gateway re-run green), CI env. Engineering choice: a mid-round raise adds capacity; a lane already closed at round start by the old ceiling reopens next round, not mid-round.

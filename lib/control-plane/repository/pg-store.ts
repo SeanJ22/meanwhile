@@ -177,9 +177,11 @@ export interface Sql {
  * of it moves hundreds of KB to MB each way. Measured 2026-09-23: research
  * state 1.1 MB (1.06 MB of it the FleetSafety deferral list), field manual
  * 1.4 MB, method candidates 0.8 MB, owner snapshot 428 KB, readiness snapshot
- * 119 KB. Every other aggregate row is under 13 KB.
+ * 119 KB. Measured staging 2026-10-02: the shared budget ledger is 3.37 MB
+ * as host state and lifetime spend holds accumulate.
  */
 export const DOCUMENT_ROW_TABLES: ReadonlySet<string> = new Set([
+  "cp_budget",
   "cp_research_state",
   "cp_field_manual",
   "cp_method_candidates",
@@ -492,23 +494,29 @@ export function pgAggregateRepository<T>(
        * exists to prevent, and it is precisely the window a second MACHINE
        * makes reachable.
        */
+      // Keep the exact submitted JSON: the caller may mutate next while the
+      // request is pending, and JSON normalizes undefined, dates and numbers.
+      const submitted = JSON.stringify(next);
       const updated = (await run(
         "compareAndSet",
         rowClass,
         `UPDATE ${table}
             SET revision = revision + 1, updated_at = $1, value = $2::jsonb
           WHERE id = $3 AND revision = $4
-       RETURNING id, revision, updated_at, value`,
-        [now, JSON.stringify(next), id, expectedRevision],
+       RETURNING id, revision, updated_at`,
+        [now, submitted, id, expectedRevision],
       )) as Record<string, unknown>[];
 
       if (updated.length === 0) {
-        const current = await read(id);
+        // A losing writer needs only the current revision, not another copy
+        // of a potentially multi-megabyte aggregate.
+        const current = (await run("readNarrowed", "POINT",
+          `SELECT revision FROM ${table} WHERE id = $1`, [id])) as Record<string, unknown>[];
         throw new ConcurrentModification(
           kind,
           id,
           expectedRevision,
-          current === null ? null : current.revision,
+          current.length === 0 ? null : Number(current[0].revision),
         );
       }
       const row = updated[0];
@@ -516,7 +524,10 @@ export function pgAggregateRepository<T>(
         id: String(row.id),
         revision: Number(row.revision),
         updatedAt: new Date(row.updated_at as string).toISOString(),
-        value: parseValue<T>(row.value, `${where} id ${id}`),
+        // The schema's aggregate tables have no value-rewrite triggers. The
+        // successful revision fence acknowledges this exact JSON assignment;
+        // downloading its identical value again adds no readback information.
+        value: parseValue<T>(submitted, `${where} id ${id}`),
       };
     },
 

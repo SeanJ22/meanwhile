@@ -5,7 +5,7 @@ worker: river
 provider: Claude (this run: Opus 5.5, selected by Sean with /model at 06:00Z; this run began on Sonnet 5.5)
 run_id: session_01M3CeUks1KpFZttTP6ZTEAq
 lock: river-20261004T060134Z-23a399b0
-heartbeat: 2026-10-04T09:34:14Z
+heartbeat: 2026-10-04T09:36:09Z
 
 ## Launch
 
@@ -86,7 +86,10 @@ First gates run on river-next (4f3bd5d): 23 failures before the repairs. 21 were
 
 Actions minutes, Netlify builds, runs: not yet measured.
 
-## needs_Sean
+## needs_Sean (sent 09:45Z)
 
-1. Allow egress to meanwhileusa.com, admin.meanwhileusa.com, test.meanwhileusa.com and api.netlify.com in the River cloud environment's network policy (environment settings → network access). Without it, River cannot check live pages in a browser.
-2. People lane, CA-01: that session's permission classifier denied the verification commands. Allow it there, or say to leave CA-01 parked.
+1. **Handoffs blocked by session permission checks.** Measures was denied pushing to stream/admin. admin, slide and frontend have been idle since 07:06Z, 07:39Z and 07:24Z. Either allow measures→stream/admin, hunters→stream/slide and auditors→stream/frontend, or restart those three Codex tasks.
+2. Allow River's environment egress to meanwhileusa.com, admin.meanwhileusa.com, test.meanwhileusa.com and api.netlify.com, for live browser checks.
+3. People CA-01: its session denied the verification commands.
+4. Auditors FE-01: its session denied removing the RULING 125 non-local refusals in four harnesses.
+5. Meetings DB-59: River ran the read-only production read instead (see returns/meetings.md). Nothing is needed unless meetings needs more.

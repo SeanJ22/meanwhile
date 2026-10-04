@@ -42,9 +42,11 @@ import {
   MEETINGS_RECORD_CLASS,
   MEETINGS_SCOPE,
   MEETINGS_SOURCE_ID,
+  snapshotCounts,
   type MeetingsProjectionReadResult,
   type MeetingsSnapshot,
 } from "./snapshot.ts";
+import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } from "./constants.ts";
 
 /**
  * Publish + read for the geographic reader edge artifacts.
@@ -340,6 +342,7 @@ export const READER_FUNDING_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
 
 export const READER_BALLOT_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   ...READER_MAP_AUTHORITY_FAMILIES,
+  "ballot-contests",
   "ballot-az",
   "ballot-nh",
   "candidate-profiles",
@@ -778,7 +781,66 @@ const areaReads = new Map<string, MeetingsProjectionReadResult>();
  * backstop, never the routine path.
  */
 export async function readReaderEdgeMeetings(
-  options: {
+  options: ReaderEdgeMeetingsOptions = {},
+): Promise<MeetingsProjectionReadResult> {
+  const read = await readReaderEdgeMeetingsHeld(options);
+  return applyServedWindow(read, options.window ?? "SHOWN", options.now);
+}
+
+/**
+ * Which part of what the partitions hold a read hands back (DB-01).
+ *
+ * `SHOWN` (the default): 90 days back and 90 ahead, for the map, "when does it
+ * meet next" and agenda listings. `HELD`: every kept past meeting and the same
+ * 90 ahead, for looking up a past meeting by body and date, since a promoted
+ * partition keeps its concluded meetings with records for good.
+ */
+export type ReaderMeetingsWindow = "SHOWN" | "HELD";
+
+const servedWindows = new WeakMap<object, Map<string, MeetingsProjectionReadResult>>();
+
+/** Applies the served window once, on whichever path produced the read. */
+function applyServedWindow(
+  read: MeetingsProjectionReadResult,
+  window: ReaderMeetingsWindow,
+  nowOption: string | undefined,
+): MeetingsProjectionReadResult {
+  if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") return read;
+  const now = nowOption ? Date.parse(nowOption) : Date.now();
+  if (!Number.isFinite(now)) return read;
+  const day = 86_400_000;
+  // Cached area reads are shared across requests; key the windowed copy by the day it was cut.
+  const key = `${window}:${Math.floor(now / day)}`;
+  const memo = servedWindows.get(read) ?? new Map<string, MeetingsProjectionReadResult>();
+  const hit = memo.get(key);
+  if (hit) return hit;
+  const lower = window === "HELD" ? Number.NEGATIVE_INFINITY : now - CONCLUDED_LOOKBACK_DAYS * day;
+  const upper = now + UPCOMING_HORIZON_DAYS * day;
+  const meetings = read.value.meetings.filter((meeting) => {
+    const startsAt = Date.parse(meeting.startsAt);
+    return !Number.isFinite(startsAt) || (startsAt >= lower && startsAt <= upper);
+  });
+  let served = read;
+  if (meetings.length !== read.value.meetings.length) {
+    const kept = new Set(meetings.map(({ id }) => id));
+    served = {
+      ...read,
+      value: {
+        ...read.value,
+        meetings,
+        agendaDocuments: read.value.agendaDocuments.filter((document) => kept.has(document.meetingId)),
+        counts: snapshotCounts(meetings, read.value.counts.duplicatesCollapsed ?? 0),
+      },
+    };
+    if (completeEdgeReads.has(read)) completeEdgeReads.add(served);
+  }
+  memo.set(key, served);
+  if (memo.size > 4) memo.delete([...memo.keys()][0]!);
+  servedWindows.set(read, memo);
+  return served;
+}
+
+type ReaderEdgeMeetingsOptions = {
     readonly store?: ReaderArtifactStore | null;
     readonly states?: readonly string[];
     readonly ocdIds?: readonly string[];
@@ -790,7 +852,12 @@ export async function readReaderEdgeMeetings(
     readonly manifest?: ReaderManifest | null;
     /** Backstop when the edge has no answer; defaults to the DB prepared-row reader. */
     readonly fallback?: () => Promise<MeetingsProjectionReadResult>;
-  } = {},
+    /** `SHOWN` (default) or `HELD`; see `ReaderMeetingsWindow`. */
+    readonly window?: ReaderMeetingsWindow;
+  };
+
+async function readReaderEdgeMeetingsHeld(
+  options: ReaderEdgeMeetingsOptions,
 ): Promise<MeetingsProjectionReadResult> {
   // The DB prepared-row / compose fallback takes only the clock — never the
   // artifact store, which is a different store from the routine data store.

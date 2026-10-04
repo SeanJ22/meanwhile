@@ -5,18 +5,14 @@ import type { RoutineSourceTask } from "./runner.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import { COCHISE_VOTE_CENTERS_URL } from "../sources/cochise-vote-centers.ts";
 import { scheduledBlackoutAt } from "../control-plane/fleet-safety.ts";
-import { ORIGINAL_LIFETIME_HUNT } from "../control-plane/scheduler/hunt-continuation.ts";
+import { isFundedHunt } from "../control-plane/scheduler/hunt-continuation.ts";
 import { COCHISE_VOTING_SOURCE_TASK_ID } from "./voting-sites-source-task.ts";
 
-/** The owner did not pause the already-started original lifetime Send during
- * the scheduled blackout. Other Sends retain that policy unchanged. */
+/** The owner did not pause a funded Send during the scheduled blackout. Unfunded Sends keep that policy. */
 export function admittedHuntSourceScopes(scopes: readonly ResolvedScope[], now: string): readonly ResolvedScope[] {
   if (!scheduledBlackoutAt(now)) return scopes;
   return scopes.filter(scope => scope.kind === "RESOLVED" &&
-    scope.decision.sourceWorkVersion === 1 && scope.decision.key === ORIGINAL_LIFETIME_HUNT.key &&
-    scope.decision.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
-    scope.decision.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
-    scope.decision.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd);
+    scope.decision.sourceWorkVersion === 1 && isFundedHunt(scope.decision));
 }
 
 export function huntSourceTasks(scopes: readonly ResolvedScope[], now: string, items: readonly WorkItem[] = []): RoutineSourceTask[] {

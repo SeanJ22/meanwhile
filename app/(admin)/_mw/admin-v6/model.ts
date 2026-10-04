@@ -127,7 +127,7 @@ export interface StateRow {
   readonly parentKey?: string;
   readonly zipsWorked?: number | null;
   readonly zipsTotal?: number | null;
-  /** The place score as a percentage, floored to one decimal. */
+  /** The place's completeness as a percentage, floored to one decimal. */
   readonly score?: number | null;
 }
 
@@ -415,6 +415,20 @@ export interface ScoreGroup {
   readonly percent: number | null;
 }
 
+/** One of the three measures: what is counted, what it is counted against, and the counts beside it. A count we do not have is null. */
+export interface MeasureView {
+  readonly n: number;
+  readonly of: number;
+  readonly percent: number | null;
+  readonly beside: Readonly<Record<string, number | null>>;
+}
+/** Completeness, freshness and delivery, each with its counts and never blended into one number. */
+export interface PlaceMeasuresView {
+  readonly completeness: MeasureView;
+  readonly freshness: MeasureView;
+  readonly delivery: MeasureView;
+}
+
 /** Sean’s checklist score for one place, overall and by group. It measures capture and never gates publishing. */
 export interface PlaceScoreView {
   readonly placeKey: string;
@@ -435,6 +449,15 @@ export interface PlaceScoreView {
   readonly summary?: ScoreGroup | null;
   /** Governments, bodies, seats and people accounted for against what is expected. */
   readonly coverage?: { readonly words: readonly string[] };
+  /** Completeness, freshness and delivery, each with its counts. */
+  readonly measures?: PlaceMeasuresView;
+  /** Up, down or same against the last earlier day's completeness. Null with no earlier point. */
+  readonly trend?: { readonly direction: "up" | "down" | "same"; readonly previousPercent: number | null; readonly previousDay: string } | null;
+  /** What is not captured, split into "hunted, not found" and "nothing hunts this yet", overall and by family. */
+  readonly notCaptured?: { readonly huntedNotFound: number; readonly nothingHunts: number };
+  readonly familyNotCaptured?: readonly { readonly group: string; readonly huntedNotFound: number; readonly nothingHunts: number }[];
+  /** Officials and candidates with a full profile, with the count behind each field. */
+  readonly profiles?: { readonly words: string; readonly figures: { readonly fields: readonly { readonly key: string; readonly label: string; readonly applies: number; readonly held: number | null }[]; readonly notMeasured: readonly string[] } };
 }
 
 export interface SystemGroup {
@@ -609,6 +632,10 @@ export interface SpendView {
   readonly setAsideUsd?: number | null;
   /** The daily spending limit in force; null when not read. */
   readonly dailyLimitUsd?: number | null;
+  /** How many paid hunters the daily limit buys at once right now; null when unread. */
+  readonly huntersNow?: number | null;
+  /** Charges in the last 24 hours counted at their worst case; null when unread. */
+  readonly worstCaseCharges?: number | null;
 }
 
 /* -------------------------------------------------------------- learning */

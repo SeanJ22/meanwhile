@@ -50,7 +50,7 @@ export async function runPlaceSource(input: {
   const publications: unknown[] = [];
   const electionPublications: (Awaited<ReturnType<typeof publishElectionFields>> | { error: string })[] = [];
   let families = null as NationalSourceFamilies | null;
-  const plan = await planPlaceHunt({ repos: input.repos, divisions, now: input.now, clock: input.clock, knowledge, readHeld,
+  const plan = await planPlaceHunt({ repos: input.repos, divisions, zips: [input.zip], now: input.now, clock: input.clock, knowledge, readHeld,
     acquireNational: async blanks => {
       // Read only the families that still have an open blank; a second pass on a place with nothing open reads nothing.
       families = openNationalFamilies(blanks);

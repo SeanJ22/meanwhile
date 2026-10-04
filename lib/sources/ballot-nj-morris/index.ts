@@ -90,7 +90,7 @@ export function validateBallotFile(value: unknown): asserts value is RawFile {
   for (const c of raw.contests) {
     if (!c.ocdId?.startsWith("ocd-division/")) throw new Error(`${c.id}: bad ocdId`);
     if (!c.divisionVintage) throw new Error(`${c.id}: missing division vintage`);
-    if (!Number.isInteger(c.voteFor) || c.voteFor < 1) throw new Error(`${c.id}: voteFor`);
+    if (!Number.isInteger(c.voteFor) || c.voteFor === null || c.voteFor < 1) throw new Error(`${c.id}: voteFor`);
     if (!c.provenance?.sourceUrl) throw new Error(`${c.id}: uncited contest`);
   }
   for (const cand of raw.candidacies ?? []) {

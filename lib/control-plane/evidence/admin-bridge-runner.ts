@@ -2,7 +2,9 @@ import { readFile, writeFile, rename, mkdir } from "node:fs/promises";
 import { dirname } from "node:path";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
 import type { WorkItem } from "../work-item.ts";
-import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
+import { isFundedHunt } from "../scheduler/hunt-continuation.ts";
+import { expansionScopesOf } from "../expansion/scopes.ts";
+import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
 import { adminEvidenceKey, mirrorOriginalCapture, type AdminEvidenceRemote } from "./admin-bridge.ts";
 import { NetlifyAdminEvidenceRemote } from "./admin-bridge-netlify.ts";
 import { findHeldCapture, readHeldBytes } from "./read-only-vault.ts";
@@ -18,7 +20,7 @@ export interface AdminMirrorReport {
 
 type Lane = "original" | "recent" | "history";
 const LANES: readonly Lane[] = ["original", "recent", "history"];
-// The exact active hunt and new captures receive more turns, while history
+// Funded hunts and new captures receive more turns, while history
 // still advances every six opportunities even under continuous new inflow.
 const TURN_ORDER: readonly Lane[] = ["original", "recent", "original", "history", "original", "recent"];
 const VERIFIED_RECHECK_MS = 7 * 24 * 60 * 60 * 1000;
@@ -34,17 +36,18 @@ const freshCursor = (): MirrorCursor => ({
   version: 2, nextByLane: { original: 0, recent: 0, history: 0 }, turn: 0, verifiedAt: Object.create(null),
 });
 
-function isOriginalHunt(work: WorkItem | undefined): boolean {
+/** Work opened by a funded Send's instruction gets the first lane, whichever Send it is. */
+function isFundedHuntWork(work: WorkItem | undefined, fundedReceipts: ReadonlySet<string>): boolean {
   if (!work || work.project !== "freshness") return false;
-  return work.autonomousPlan?.ownerInstructions?.includes(ORIGINAL_LIFETIME_HUNT.receiptId) === true ||
-    work.manualSourceGap?.instructionReceipt === ORIGINAL_LIFETIME_HUNT.receiptId;
+  return work.autonomousPlan?.ownerInstructions?.some(receipt => fundedReceipts.has(receipt)) === true ||
+    (work.manualSourceGap?.instructionReceipt !== undefined && fundedReceipts.has(work.manualSourceGap.instructionReceipt));
 }
 
-function partition(records: readonly ArtifactRecord[], owners: ReadonlyMap<string, WorkItem>, nowMs: number): Record<Lane, ArtifactRecord[]> {
+function partition(records: readonly ArtifactRecord[], owners: ReadonlyMap<string, WorkItem>, nowMs: number, fundedReceipts: ReadonlySet<string>): Record<Lane, ArtifactRecord[]> {
   const lanes: Record<Lane, ArtifactRecord[]> = { original: [], recent: [], history: [] };
   for (const record of records) {
     if (record.tier !== "RAW" || record.partial) continue;
-    const lane: Lane = isOriginalHunt(owners.get(record.workItemId)) ? "original" :
+    const lane: Lane = isFundedHuntWork(owners.get(record.workItemId), fundedReceipts) ? "original" :
       Date.parse(record.recordedAt) >= nowMs - 24 * 60 * 60 * 1000 ? "recent" : "history";
     lanes[lane].push(record);
   }
@@ -125,13 +128,15 @@ export async function runAdminEvidenceMirror(input: {
     read: key => beforeDeadline(() => source.read(key)),
     create: (key, blob) => beforeDeadline(() => source.create(key, blob)),
   };
-  const [records, attempts, workItems] = await beforeDeadline(() => Promise.all([
+  const [records, attempts, workItems, config] = await beforeDeadline(() => Promise.all([
     input.repos.artifacts.readAll(), input.repos.attempts.list(), input.repos.workItems.list(),
+    input.repos.adminConfig.read(ADMIN_CONFIG_ID),
   ]));
+  const fundedReceipts = new Set(expansionScopesOf(config?.value ?? null).scopes.filter(isFundedHunt).map(scope => scope.receiptId));
   const nowMs = input.nowMs ?? Date.now();
   const byAttempt = new Map(attempts.map(row => [row.id, row.value]));
   const byWorkItem = new Map(workItems.map(row => [row.id, row.value]));
-  const lanes = partition(records, byWorkItem, nowMs);
+  const lanes = partition(records, byWorkItem, nowMs, fundedReceipts);
   const total = LANES.reduce((sum, lane) => sum + lanes[lane].length, 0);
   if (!total) return empty("RAN");
   const cursor = await readCursor(input.cursorPath);

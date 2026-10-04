@@ -46,7 +46,7 @@ import { calendarFeedUrl } from "../sources/legistar-insite/calendar.ts";
 import { verifyOfficialPageEvents } from "../sources/official-page-events/index.ts";
 import type { OfficialLinkingPage } from "../civic-data/source-authority.ts";
 import { detectTenancy } from "./platform-tenancy.ts";
-import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } from "../meetings/constants.ts";
+import { MEETING_HELD_HORIZON_DAYS, MEETING_HELD_LOOKBACK_DAYS } from "../meetings/constants.ts";
 import { parseDiligentMeetings } from "../sources/diligent/index.ts";
 import { meetingSourceCadenceHours } from "../control-plane/scheduler/obligation.ts";
 
@@ -172,7 +172,7 @@ export function meetingEndpointCandidates(html: string, pageUrl: string, now?: s
   // the standing adapter. The caller supplies the clock; no tenant is guessed.
   if (now && /(^|\.)(highbond\.com|civicweb\.net|diligentoneplatform\.com)$/i.test(page.hostname) && /MeetingSchedule\.aspx/i.test(html)) {
     const day = (delta: number) => new Date(Date.parse(now) + delta * 86_400_000).toISOString().slice(0, 10);
-    add({ vendor: "diligent", url: `${origin}/Services/MeetingsService.svc/meetings?from=${day(-CONCLUDED_LOOKBACK_DAYS)}&to=${day(UPCOMING_HORIZON_DAYS)}`, basis: "SERVED_BY", evidence: "Diligent public portal links MeetingSchedule.aspx; existing MeetingsService adapter", verifiable: true });
+    add({ vendor: "diligent", url: `${origin}/Services/MeetingsService.svc/meetings?from=${day(-MEETING_HELD_LOOKBACK_DAYS)}&to=${day(MEETING_HELD_HORIZON_DAYS)}`, basis: "SERVED_BY", evidence: "Diligent public portal links MeetingSchedule.aspx; existing MeetingsService adapter", verifiable: true });
   }
 
   for (const href of pageLinks(html, pageUrl)) {
@@ -301,7 +301,7 @@ export interface EndpointVerification {
  * until this is bumped, and anything keyed on it (a saved method, a wiring row)
  * re-keys cleanly.
  */
-export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@5b75bc8eebd5";
+export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@992084e97305";
 
 /**
  * The zone a state's bodies meet in, for the states that sit in one zone. A

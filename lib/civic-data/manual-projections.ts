@@ -2,8 +2,10 @@ import { createHash } from "node:crypto";
 import { officialFilingIssue } from "./official-filings.ts";
 import { electionFieldIssue } from "./election-fields.ts";
 
+import { genericBallotProblems, type GenericBallotProjection } from "../ballot/generic-projection.ts";
 import type { BallotSet } from "../ballot/types.ts";
 import { readerCandidateProfiles } from "../ballot/candidate-reader-privacy.ts";
+import { measureRecordIssue, seedMeasureRecords, type MeasureRecord } from "../ballot/measure-records.ts";
 import type { CandidateCardData } from "../ballot/candidate-cards.ts";
 import type { CandidateLinks, RecordedHunt } from "../ballot/candidate-sites.ts";
 import type { GeneralLineup } from "../ballot/general-lineup.ts";
@@ -43,6 +45,7 @@ import type {
 import { sourceProjectionEvidence } from "./types.ts";
 
 export const MANUAL_PROJECTION_CONTRACT_IDS = [
+  "ballot-contests",
   "az-sos-ballot",
   "nh-curated-ballot",
   "candidate-profiles",
@@ -99,6 +102,7 @@ export interface CuratedReaderProjection {
 }
 
 export type ManualProjectionPayload =
+  | GenericBallotProjection
   | AzBallotProjection
   | NhBallotProjection
   | CandidateProfilesProjection
@@ -584,20 +588,46 @@ export async function readManualProjectionPrior(
   };
 }
 
+function genericBallotProjection(payload: ManualProjectionPayload): BuiltProjection {
+  const value = payload as GenericBallotProjection;
+  const ballots = Object.values(value?.ballots ?? {});
+  const records = ballots.flatMap(ballot => [
+    ...ballot.contests.map(record => ({ key: `contest:${record.id}`, record })),
+    ...ballot.candidacies.map(record => ({ key: `candidacy:${record.id}`, record })),
+  ]);
+  return { payload, records, identities: ballots.flatMap(ballot => [
+    ...ballot.contests.map(row => ({ subjectId: row.id, jurisdiction: `US-${ballot.election.state}`,
+      identifiers: { contest_id: row.id }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),
+    ...ballot.candidacies.map(row => ({ subjectId: row.id, jurisdiction: `US-${ballot.election.state}`,
+      identifiers: { candidacy_id: row.id, contest_id: row.contestId }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),
+  ]), missingRequiredFields: records.length ? [] : ["ballots.contests/candidacies"],
+    violations: genericBallotProblems(value), schemaVersion: "ballot-contests:1",
+    consumerChecks: [{ consumer: "generic state/election ballot Reader", passed: records.length > 0 && genericBallotProblems(value).length === 0,
+      detail: `${ballots.length} state/election ballot(s), each with its complete verified contests.` }],
+    factKind: "complete saved official ballot contests" };
+}
+
 function ballotProjection(
   contractId: "az-sos-ballot" | "nh-curated-ballot",
   payload: ManualProjectionPayload,
 ): BuiltProjection {
+  const original = payload as AzBallotProjection | NhBallotProjection;
+  if (original.ballot) {
+    payload = { ...original, ballot: seedMeasureRecords(original.ballot,
+      "measureAnalyses" in original ? original.measureAnalyses.analyses : []) };
+  }
   const held = object(payload);
   const ballot = object(held?.ballot);
   const contests = rows(ballot, "contests");
   const candidacies = rows(ballot, "candidacies");
   const contestIds = contests.map((row) => string(row.id));
   const candidacyIds = candidacies.map((row) => string(row.id));
+  const measureRecords = rows(ballot, "measureRecords");
   const jurisdiction = contractId === "az-sos-ballot" ? "US-AZ" : "US-NH";
   const records: CivicRecordMember[] = [
     ...contests.map((record) => ({ key: `contest:${string(record.id)}`, record })),
     ...candidacies.map((record) => ({ key: `candidacy:${string(record.id)}`, record })),
+    ...measureRecords.map((record) => ({ key: `measure-record:${string(record.contestId)}`, record })),
   ];
   const identities: IdentityEvidence[] = [
     ...contests.map((row) => ({
@@ -616,6 +646,12 @@ function ballotProjection(
     })),
   ];
   const violations = [
+    ...duplicateProblems(measureRecords.map(row => string(row.contestId)), "Measure record"),
+    ...measureRecords.flatMap(row => {
+      const issue = measureRecordIssue(row as unknown as MeasureRecord);
+      const contest = contests.find(contest => contest.id === row.contestId && contest.type === "MEASURE");
+      return issue ? [issue] : contest ? [] : ["A measure record names no exact measure contest."];
+    }),
     ...duplicateProblems(contestIds, "Contest"),
     ...duplicateProblems(candidacyIds, "Candidacy"),
     ...(candidacies.some((row) => !contestIds.includes(string(row.contestId)))
@@ -933,7 +969,9 @@ export function manualProjectionCandidate(
   // contests, and Arizona additionally cross-checks filings, certified lineup,
   // identity registry, and reconciliation rows. Splitting those members would
   // permit a cross-record proof assembled from incompatible source versions.
-  const built = input.contractId === "az-sos-ballot" || input.contractId === "nh-curated-ballot"
+  const built = input.contractId === "ballot-contests"
+    ? genericBallotProjection(payload)
+    : input.contractId === "az-sos-ballot" || input.contractId === "nh-curated-ballot"
     ? ballotProjection(input.contractId, payload)
     : input.contractId === "candidate-profiles"
       ? profileProjection(payload)

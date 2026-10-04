@@ -164,9 +164,18 @@ test("Ask retrieves the same verbatim candidate passages as Positions in AZ, NJ,
     const body = await ask(`What does ${control.name} say about ${control.topic}?`, control.state);
     const quoted = body.records.filter((r) => r.kind === "SOURCE_PASSAGE" && r.canonicalSubjectId === control.key);
     assert.ok(quoted.length, control.name);
-    assert.equal(body.answer, null, "a linked-page match alone cannot become a personal statement answer");
-    assert.ok(body.gaps.some((gap) => gap.whose === "OURS" && /have not verified a statement by/.test(gap.statement)));
-    assert.match(body.trace.synthesis?.why ?? "", /unverified-stance/);
+    if (control.state === "AZ") {
+      assert.ok(body.answer?.includes("own words, exactly as published"));
+      assert.ok(body.gaps.every((gap) => !/have not verified a statement by/.test(gap.statement)));
+      assert.match(body.trace.synthesis?.why ?? "", /composed-from-own-words/);
+      assert.ok(expected.passages.some((passage) => body.answer!.includes(passage.quote)));
+    } else if (body.answer) {
+      assert.ok(expected.passages.some((passage) => body.answer!.includes(passage.quote)));
+    } else {
+      // A pack that also contains a differently structured candidate-page
+      // passage keeps the existing path; CA-12 only composes clean own-page packs.
+      assert.match(body.trace.synthesis?.why ?? "", /unverified-stance/);
+    }
     for (const passage of expected.passages) {
       assert.ok(quoted.some((r) => r.text.includes(passage.quote) && r.sourceUrl === passage.url), passage.snapshotId);
     }
@@ -330,7 +339,7 @@ test("a congressional office's everyday name reaches the same canonical contest 
   }
 });
 
-test("all current filed candidate contacts and addresses survive the exact identity and Ask projection", () => {
+test("filed candidate email and source survive Ask projection while mailing addresses stay out", () => {
   const census = candidateContactCensus();
   assert.equal(census.contacts.length, 275);
   assert.equal(census.withheld.length, 0);
@@ -338,12 +347,12 @@ test("all current filed candidate contacts and addresses survive the exact ident
     const contact = contactForCandidate(row.candidacyId, "Filed candidate", "Filed office");
     assert.ok(contact, row.candidacyId);
     assert.equal(contact.email, row.email);
-    assert.equal(contact.filedAddress, row.filedAddress);
+    assert.equal(Object.hasOwn(contact, "filedAddress"), false);
     const record = contactRecord(contact);
     assert.equal(record.sourceUrl, row.sourceUrl);
     assert.equal(record.retrievedAt, row.collectedAt);
     if (row.email) assert.ok(record.text.includes(row.email));
-    if (row.filedAddress) assert.ok(record.text.includes(row.filedAddress));
+    if (row.filedAddress) assert.ok(!record.text.includes(row.filedAddress));
   }
   assert.equal(candidateContactForCandidacy("ballot-nj-morris:unknown:mejia"), null);
   assert.equal(candidateContactForCandidacy("ballot-az-pima:governor:hobbs-katie"), null);
@@ -354,6 +363,7 @@ test("the real Ask route carries Mejia's published filing contact with its own p
   const record = body.records.find((record) => record.id === "candidate-contact:ballot-nj-morris:us-house-11:mejia");
   assert.ok(record);
   assert.match(record.text, /info@analiliafornj\.com/);
+  assert.doesNotMatch(record.text, /13 Municipal Plaza/);
   assert.doesNotMatch(JSON.stringify(body), /13 Municipal Plaza/, "CP-01 keeps filed mailing addresses out of the whole Ask answer");
   assert.equal(record.sourceOrg, "Morris County Clerk");
   // The contact's own provenance is the held filing document, whichever edition of the clerk's list the
@@ -364,4 +374,24 @@ test("the real Ask route carries Mejia's published filing contact with its own p
   assert.ok(held);
   assert.match(held.sourceUrl, /^https:\/\/www\.morriscountyclerk\.org\/.+\.pdf$/);
   assert.equal(record.sourceUrl, held.sourceUrl);
+});
+
+test("Ask's local council answer lists the same held candidates as the reader ballot", async () => {
+  const source = BALLOT_SOURCES.find(source => source.state === "nj")!.source;
+  const all = source.normalize(await source.fetch());
+  const local = all.contests.find(contest => contest.type === "CANDIDACY" && /council/i.test(contest.title))!;
+  const ocdIds = [NJ, local.ocdId];
+  const ballot = await loadBallotForDivisions(ocdIds);
+  const contests = ballot.contests.filter(c => c.type === "CANDIDACY" && /council/i.test(c.title));
+  assert.ok(contests.length > 0);
+  const expected = ballot.set!.candidacies.filter(c => contests.some(contest => contest.id === c.contestId));
+  const answer = await ask("Who is running for council?", "NJ", { ocdIds });
+  assert.ok(answer.answer);
+  const actual = answer.records.filter(record => record.kind === "CANDIDACY");
+  assert.equal(actual.length, expected.length);
+  for (const candidate of expected) {
+    assert.ok(actual.some(record => record.id.startsWith(`${candidate.contestId}|`) &&
+      record.text.toLowerCase().includes(candidate.familyName.toLowerCase())));
+  }
+  assert.equal(answer.trace?.composition?.kind, "BALLOT");
 });

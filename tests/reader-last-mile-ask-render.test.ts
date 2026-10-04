@@ -27,9 +27,10 @@ test("map and ballot Ask share every held contact channel, exact rows and per-pe
   assert.equal([...markup.matchAll(/data-ask-contact-id=/g)].length, contacts.length + 1);
   assert.ok(markup.includes(`Who this is (${contacts.length + 1})`));
   assert.ok(!markup.includes('open=""'), "contact disclosure remains collapsed by default");
+  assert.ok(!markup.includes("PO Box 10, Test City"));
+  assert.ok(!markup.includes("data-ask-filed-address"));
   for (const contact of contacts) for (const value of [contact.id, contact.name, contact.email, contact.phone, contact.websiteUrl, contact.sourceUrl, contact.sourceOrg].filter((value): value is string => Boolean(value))) assert.ok(markup.includes(escaped(value)), `Missing held contact field: ${value}`);
   for (const value of [fixture.id, 'Clerk', 'Staff of the named body', 'mailto:clerk@example.test', 'tel:+1 555-555-0100', 'https://office.example.test/', 'https://clerk.example.test/filing', 'Current Clerk', 'September 1st, 2026']) assert.ok(markup.includes(value), `Missing field: ${value}`);
-  assert.ok(!markup.includes("PO Box 10, Test City"), "legacy filed addresses never render");
   assert.equal(empty, "");
   for (const path of ["components/ask/ask-box.tsx", "components/ask/ballot-ask.tsx"]) assert.match(readFileSync(path, "utf8"), /<AskAnswerContacts contacts=\{(?:grounded|reply)\.contacts \?\? \[\]\} \/>/);
 });

@@ -5,8 +5,8 @@
  * the read: `collectedAt` is taken at the moment of the fetch.
  */
 import {
-  CONCLUDED_LOOKBACK_DAYS,
-  UPCOMING_HORIZON_DAYS,
+  MEETING_HELD_HORIZON_DAYS,
+  MEETING_HELD_LOOKBACK_DAYS,
 } from "../../meetings/constants.ts";
 import {
   isPlacelessLocation,
@@ -73,8 +73,8 @@ import type {
 
 const SOURCE_NAME = "civicclerk";
 
-const WINDOW_FORWARD_DAYS = UPCOMING_HORIZON_DAYS;
-const WINDOW_BACK_DAYS = CONCLUDED_LOOKBACK_DAYS;
+const WINDOW_FORWARD_DAYS = MEETING_HELD_HORIZON_DAYS;
+const WINDOW_BACK_DAYS = MEETING_HELD_LOOKBACK_DAYS;
 
 /** The subset of the OData row this adapter reads. The API sends ~90 fields. */
 export interface CivicClerkEvent {

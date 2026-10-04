@@ -69,7 +69,7 @@ const WHO_BY_OUTCOME: Readonly<Record<string, string>> = {
  * from the tool calls that ran — but its outcome is not believed, so who moves
  * is the Scout lane retrying, never the outcome's claim.
  */
-export function scoutDeadEnd(result: ScoutResult | null, opts: { readonly retryAt?: string | null } = {}): DerivedDeadEnd {
+export function scoutDeadEnd(result: ScoutResult | null, opts: { readonly retryAt?: string | null; readonly unlockWhen?: { readonly text: string } | null } = {}): DerivedDeadEnd {
   if (result === null) {
     const none = "no Scout walk is on record for this work, so nothing here was read from one";
     return { ruledOut: null, wouldSettle: null, whoMoves: null, gaps: { ruledOut: none, wouldSettle: none, whoMoves: none } };
@@ -93,7 +93,8 @@ export function scoutDeadEnd(result: ScoutResult | null, opts: { readonly retryA
     gaps.ruledOut = `every rung the walk of ${when} tried succeeded, so it ruled nothing out`;
   }
 
-  const wouldSettle =
+  /* The stored unlock condition (DP-06) wins; the walk's own next rungs are the fallback for rows without one. */
+  const wouldSettle = opts.unlockWhen && opts.unlockWhen.text !== "" ? `Would unlock: ${opts.unlockWhen.text}.` :
     result.nextRungs.length > 0 ? `The next ${result.nextRungs.length === 1 ? "rung" : "rungs"} the walk of ${when} named: ${listed(result.nextRungs)}.` : null;
   if (wouldSettle === null) gaps.wouldSettle = `the walk of ${when} named no next rung`;
 

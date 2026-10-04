@@ -77,7 +77,7 @@ const NAT_COLUMNS: readonly { readonly key: NatKey; readonly label: string; read
   { key: "name", label: "Place", num: false },
   { key: "hunts", label: "Hunts", num: true },
   { key: "zips", label: "ZIPs worked / total", num: true },
-  { key: "score", label: "Place score", num: true },
+  { key: "score", label: "Completeness", num: true },
   { key: "stuck", label: "Stuck", num: true },
 ];
 /** Rows shown before "Show all": a state list opens on the tracked states and hunts, a district or ZIP list on its first rows. */
@@ -300,6 +300,7 @@ function SixAnswers() {
   const totals = checklistTotals(v.data.checklist.data?.placeGroups?.map((g) => g.counts) ?? null);
   const N = totals ? totals.reduce((a, b) => a + b, 0) : null;
   const score = v.data.checklist.data?.score ?? null;
+  const completeness = score?.measures?.completeness ?? null;
   const harm = stuck.filter((x) => x.item.readersAffected).length;
   const dec = stuck.filter((x) => x.item.lane === "decision").length;
   const hunt = huntAt(v.index, v.hunts, v.scopeKey);
@@ -315,7 +316,7 @@ function SixAnswers() {
   const huntsKnown = v.data.hunts.state !== "not-connected";
   const answers: { q: string; big: string; small: string; href: string; warn?: boolean }[] = [
     { q: "Readers received", big: resultsKnown ? `${ver} checked on the page` : "—", small: resultsKnown ? `${pub} published, not checked on the page · ${shared.length} shared results` : "", href: "#v6-readers" },
-    { q: "Place score", big: score && score.overall.percent !== null ? `${score.overall.percent.toFixed(1)}%` : "—", small: score ? `${count(score.overall.captured)} of ${count(score.overall.total)} captured · ${count(score.overall.total - score.overall.captured)} remaining` : "", href: "#v6-missing" },
+    { q: "Completeness", big: completeness && completeness.percent !== null ? `${completeness.percent.toFixed(1)}%` : "—", small: completeness ? `${count(completeness.n)} of ${count(completeness.of)} owed now, held · ${count(score!.measures!.freshness.n)} of ${count(score!.measures!.freshness.of)} fresh · ${count(score!.measures!.delivery.n)} of ${count(score!.measures!.delivery.of)} seen on the page` : "", href: "#v6-missing" },
     { q: "Happening now", big: multi ? (insideWorkers.includes(null) ? "—" : String(insideWorkers.reduce<number>((a, n) => a + (n ?? 0), 0))) : hf ? (workers(hf) === null ? "—" : String(workers(hf))) : "—", small: multi ? `research workers across ${inside.length} hunts` : hf ? (hf.status === "running" && hf.researchWorkers !== null ? `research workers on the ${hf.name}` : hf.status === "unreported" ? hf.name : `${hf.name} is ${hf.status}`) : huntsKnown ? "No hunt here" : "", href: "#v6-happening" },
     { q: "Stuck", big: stuckKnown ? String(stuck.length) : "—", small: stuckKnown ? `${harm} affecting readers · ${stuck.filter((x) => x.rel === "shared").length} through shared work` : "", href: "#v6-stuck", warn: harm > 0 },
     { q: "Your decisions", big: stuckKnown ? String(dec) : "—", small: dec ? "See Suggested next steps" : stuckKnown ? "Nothing needs you here" : "", href: "#v6-steps", warn: dec > 0 },
@@ -428,7 +429,7 @@ function Missing() {
     <Card id="v6-missing" title="What’s still missing" aside={<button type="button" className={s.btnLink} onClick={() => v.go("checklist")}>Open the checklist →</button>}>
       {totals && N > 0 ? (
         <>
-          {score && <p className={cx(s.p, s.small)}>Place score {score.overall.percent === null ? "—" : `${score.overall.percent.toFixed(1)}%`} · {count(score.overall.captured)} of {count(score.overall.total)} captured · {count(score.overall.total - score.overall.captured)} remaining</p>}
+          {score?.measures && <p className={cx(s.p, s.small)}>Completeness {score.measures.completeness.percent === null ? "—" : `${score.measures.completeness.percent.toFixed(1)}%`} · {count(score.measures.completeness.n)} of {count(score.measures.completeness.of)} · Freshness {count(score.measures.freshness.n)} of {count(score.measures.freshness.of)} · Delivery {count(score.measures.delivery.n)} of {count(score.measures.delivery.of)}</p>}
           <p className={cx(s.p, s.small)}>
             {count(N)} checklist items · Checked on a public page: {count(totals[0])} ({pctDown(totals[0], N)}) · Published, not checked on the page: {count(totals[1])} · Collected, not published: {count(totals[2])} · Applies: {count(N - totals[5])} · Not sure: {count(totals[5])}
           </p>

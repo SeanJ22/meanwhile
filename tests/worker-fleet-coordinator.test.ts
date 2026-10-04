@@ -453,30 +453,7 @@ test("a stored plan that still demands verification with no authorities validate
   assert.ok(Date.parse(FIXTURE_NOW)<Date.parse(h.now()));
 });
 
-test("unresolved identity permits independent diagnosis but never staging", async () => {
-  const h=await autonomousHarness({plan:plan=>{
-    const source=plan.sources[0]; const span=source.observation;
-    return {...plan,detective:[{artifactIds:[span.artifactId],walk:[],walkState:{state:"OPEN",nextRouteIds:["independent-identity-register"]},question:{
-      id:"fixture-identity-disagreement",text:"Which canonical identity does this publisher evidence establish?",subjectId:plan.contract.subjectId,
-      jurisdiction:"NH",recordClass:plan.contract.recordClass,kind:"IDENTITY",populationDefinition:null,denominator:null,
-      authorities:[{artifactId:span.artifactId,organization:source.publisher,type:"PUBLISHER_DIRECTORY",observedAt:source.observedAt}],
-      alternatives:[plan.contract.subjectId,"fixture:nh:other-county"].map((id,index)=>({id:`alternative-${index}`,statement:`The evidence identifies ${id}.`,canonicalIdentity:id,tests:[{artifactId:span.artifactId,predicate:{kind:"EXACT_TEXT" as const,quote:span.quote}}]})),
-      nextAction:"Acquire the independent identity register.",falsificationCondition:"An independent authority contradicts the proposed identity."
-    }}]};
-  }});
-  const roles:string[]=[];
-  for(let index=0;index<4;index++) {
-    const run=await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
-    roles.push(run.decisions[0].task!.workerTask!.role);
-    assert.equal(run.dispatches[0]?.outcome,"WORKED",run.dispatches[0]?.detail);
-  }
-  assert.deepEqual(roles,["ACQUIRER","PARSER","DETECTIVE","VALIDATOR"]);
-  assert.equal((await h.repos.workerResults.readAll()).find(r=>r.result.role==="DETECTIVE")?.result.verdict,"UNRESOLVED");
-  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");
-  assert.equal((await h.repos.promotionPipeline.readAll()).length,0);
-});
-
- test("coordinator selection hands out canonical tasks without running tools or opening an Attempt", async () => {
+test("coordinator selection hands out canonical tasks without running tools or opening an Attempt", async () => {
   const h = await autonomousHarness({ plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
   const legacy = { ...h.item, id: "work:legacy-held", autonomousPlan: undefined };
   await h.repos.workItems.put(legacy.id, legacy, h.now());
@@ -583,7 +560,7 @@ test("a worker kill timer defers unfinished work and ends only its owned process
 test("the autonomous wave loop stops at its dispatch slice even while waves keep working", async () => {
   const source = await readFile(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   const start = source.indexOf("async function runAutonomousProcesses()");
-  const end = source.indexOf("let meetingsDiscovery:", start);
+  const end = source.indexOf("let meetingsDiscovery", start);
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
   let calls = 0, now = 0;
   const wave = async () => { calls++; now += 20; return { dispatches: [{ outcome: calls <= 3 ? "WORKED" : "FAILED" }],

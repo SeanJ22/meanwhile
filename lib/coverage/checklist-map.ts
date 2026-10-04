@@ -15,7 +15,7 @@ export const CALENDAR_ITEMS: ReadonlySet<string> = new Set(map.calendarItems);
 export const FRESHNESS_HOURS = map.freshnessHours;
 export const MEETING_NEAR_WINDOW_MS = FRESHNESS_HOURS.meetingNearWindowDays * 24 * 3_600_000;
 
-export type ChecklistUnit = "division" | "body" | "seat" | "meeting" | "contest" | "candidate" | "funding" | "deadline" | "system";
+export type ChecklistUnit = "zip" | "division" | "body" | "seat" | "legislature" | "rollcall" | "meeting" | "contest" | "candidate" | "funding" | "deadline" | "system";
 export type ChecklistTrigger = "always" | "when-present" | "when-published" | "when-due" | "when-in-scope" | "when-offered" | "unknown";
 export type ChecklistDue = "now" | "per-meeting" | "per-election" | "per-session" | "per-filing-period" | "per-fiscal-year" | "on-change" | "unknown";
 export type PredicateKind = "fact" | "identity" | "source" | "freshness" | "reconciliation" | "separation" | "delivery" | "process" | "privacy";
@@ -34,8 +34,12 @@ export interface ChecklistItemRule {
   /** For a shared predicate: the ID it is counted under. */
   readonly into?: string;
   readonly replacedBy?: "admin";
+  /** A division item that applies only to one kind of division; the others never owe it. */
+  readonly onlyFor?: "school-district" | "special-district" | "tribal-overlap";
   /** A posting-deadline item: when it falls due is counted from its meeting. */
   readonly lifecycle?: "agenda" | "outcome";
+  /** The producers that can fill this item, named in `producers`. None means no squad or door covers it yet. */
+  readonly filledBy?: readonly string[];
   /** What the item is called when it is awaiting publication ("Agenda not published yet"). */
   readonly noun?: string;
 }
@@ -45,6 +49,7 @@ export const CHECKLIST_FAMILIES = map.families as unknown as Readonly<Record<str
 /** The starting squad for each family. A setting: Admin can change it. */
 export const SQUAD_START = map.settings.squads as Readonly<Record<string, string>>;
 export const LIFECYCLE = map.lifecycle;
+export const PRODUCERS = map.producers as unknown as Readonly<Record<string, { readonly file: string; readonly label: string } | string>>;
 export const REPLACED_BY_ADMIN = map.replacedByAdmin as Readonly<Record<string, string>>;
 
 export function checklistItem(id: string): ChecklistItemRule | undefined {
@@ -56,6 +61,13 @@ export function squadOf(id: string, settings: Readonly<Record<string, string>> =
   const group = id.slice(0, id.indexOf("-"));
   return settings[group] ?? null;
 }
+
+/** Whether any producer can fill this item today. */
+export function hasProducer(id: string): boolean {
+  return (CHECKLIST_ITEMS[id]?.filledBy?.length ?? 0) > 0;
+}
+
+export const NO_PRODUCER_REASON = "No squad or door covers this item yet";
 
 export function isCoreItem(id: string): boolean {
   return CHECKLIST_ITEMS[id]?.scoreAs === "core";
@@ -73,9 +85,16 @@ export function canonicalItemId(id: string): string {
   return item?.countsAs === "shared" && item.into ? item.into : id;
 }
 
+/** Whether a division is the kind a gated item is owed by. A tribal overlap is owed only where one is held, so it is decided by the caller. */
+export function divisionOwesGatedItem(divisionId: string, onlyFor: NonNullable<ChecklistItemRule["onlyFor"]>): boolean | "held-only" {
+  if (onlyFor === "school-district") return /\/school_district:[^/]+$/.test(divisionId);
+  if (onlyFor === "special-district") return /\/(?!school_district:|council_district:|congressional_district:)[a-z_]+_district:[^/]+$/.test(divisionId);
+  return "held-only";
+}
+
 /** The owed-list subject kind a unit puts an item on. */
 const UNIT_SUBJECT_KIND: Readonly<Record<ChecklistUnit, string | null>> = {
-  division: "division", body: "body", seat: "seat", meeting: "calendar", contest: "contest", candidate: "contest",
+  zip: "zip", division: "division", body: "body", seat: "seat", legislature: "legislature", rollcall: "rollcall", meeting: "calendar", contest: "contest", candidate: "contest",
   funding: "funding", deadline: "deadline", system: null,
 };
 export function subjectKindOfUnit(id: string): string | null {
@@ -101,3 +120,14 @@ export function checklistItemApplies(captureKind: string | undefined, calendarBo
   return (rule.groups?.includes(item.group) === true || rule.ids?.includes(item.id) === true)
     && !rule.excludeIds?.includes(item.id);
 }
+
+export type ProfileFieldKey = "portrait" | "contact" | "verifiedPage" | "campaignSite" | "stances" | "money" | "votes";
+export interface ProfileFieldRule {
+  readonly label: string;
+  /** Who the field applies to: everyone, only people with a campaign, or only voting members. */
+  readonly appliesTo: "everyone" | "campaign" | "voting-member";
+  readonly ids: { readonly seat: readonly string[]; readonly candidate: readonly string[] };
+}
+const { note: _kellyNote, ...KELLY_RULES } = map.kellyFields;
+/** What makes a profile full. A measure, never a gate. */
+export const KELLY_FIELDS = KELLY_RULES as unknown as Readonly<Record<ProfileFieldKey, ProfileFieldRule>>;

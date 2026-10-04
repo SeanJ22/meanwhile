@@ -47,11 +47,11 @@ export function projectCandidateProfile(
       }
     }
     const found = links[key];
-    for (const field of ["email", "phone", "filedAddress"] as const) {
+    for (const field of ["email", "phone"] as const) {
       const value = card?.[field];
       if (!value) continue;
-      const label = field === "phone" ? card.phoneLabel ?? "Recorded phone" : field === "email" ? "Recorded email" : "Filed mailing address";
-      const sourceNote = field === "phone" ? card.phoneSource ?? card.phoneLabel : field === "filedAddress" ? card.filedAddressSource : null;
+      const label = field === "phone" ? card.phoneLabel ?? "Recorded phone" : "Recorded email";
+      const sourceNote = field === "phone" ? card.phoneSource ?? card.phoneLabel : null;
       // A verified page is this field's source only when its held verification
       // actually includes this value. A biography URL is never a contact source.
       const exactLink = [found?.official, found?.campaign].find(link => link?.verification && sourceUrl(link.url)

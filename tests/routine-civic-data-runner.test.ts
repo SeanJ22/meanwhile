@@ -332,6 +332,8 @@ test("one canonical registry owns every supported authority and refuses arbitrar
     "nj-legislature",
     "legiscan",
     "plural-openstates",
+    // DB-06: a partition's durable history promotes under its partition's own contract (`meetingHistoryContract`), so it has no contract of its own to list.
+    "meetings-history",
   ];
   const expectedAuthorities = new Set([
     ...observableRoutineContracts().map((contract) => contract.sourceId),

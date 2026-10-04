@@ -1,8 +1,10 @@
+import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
+import { measureRecordsForBallot } from "../ballot/measure-records.ts";
 import { stateForRosterFile } from "../holdings/runtime-paths.ts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { ballotSourcesForDivisions } from "../ballot/registry.ts";
+import { readerBallotSourcesForDivisions } from "../ballot/reader-sources.ts";
 import { contestsForDivisions } from "../sources/ballot-nj-morris/index.ts";
 import { getGeneralLineup } from "../ballot/general-lineup.ts";
 import { summaryForContest } from "../ballot/measure-summary.ts";
@@ -116,6 +118,7 @@ export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: re
  */
 
 export interface BallotForDivisions {
+  authorityKind?: "GENERAL" | "LEGACY";
   /** Applicable canonical state holdings that could not be read or validated. */
   loaderFailures: string[];
   analysisLoaderFailed: boolean;
@@ -130,7 +133,7 @@ export interface BallotForDivisions {
     documentUrl: string;
     retrievedAt: string;
   }[];
-  measureSummary: (contestId: string) => { summary: string; summarizesUrl: string } | null;
+  measureSummary: (contestId: string) => { summary: string; summarizesUrl: string; yesMeans?: string | null; noMeans?: string | null } | null;
   measureProvisions: (contestId: string) => readonly {
     id: string;
     label: string;
@@ -161,17 +164,20 @@ const EMPTY: BallotForDivisions = {
  */
 export async function loadBallotForDivisions(
   ocdIds: readonly string[],
+  options: PromotedCivicDataReadOptions = {},
 ): Promise<BallotForDivisions> {
   if (ocdIds.length === 0) return EMPTY;
   const loaderFailures: string[] = [];
-  for (const { state, source } of ballotSourcesForDivisions(ocdIds)) {
+  for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds, options)) {
     try {
       const candidate = source.normalize(await source.fetch());
       const hit = contestsForDivisions(candidate, ocdIds);
       if (hit.contests.length === 0 && hit.absences.length === 0) continue;
       const analyses = state === "az" ? getMeasureAnalyses() : null;
       const lineup = state === "az" ? getGeneralLineup() : null;
+      const measureRecords = measureRecordsForBallot(candidate);
       return {
+        authorityKind: source.name.startsWith("ballot-contests:") ? "GENERAL" : "LEGACY",
         loaderFailures,
         analysisLoaderFailed: state === "az" && analyses === null,
         measureAnalysis: (contestId) => analyses?.analyses.find((analysis) => analysis.contestId === contestId) ?? null,
@@ -181,13 +187,13 @@ export async function loadBallotForDivisions(
         nominees: (contestId) => (lineup?.contests.find((contest) => contest.contestId === contestId)?.nominees ?? []).map((nominee) => ({ ...nominee, sourceUrl: lineup!.canvass.url, sourceOrg: lineup!.canvass.issuedBy, retrievedAt: lineup!.canvass.readAt })),
         positions: sourcedPositions,
         measureSummary: (contestId) => {
-          const summary = summaryForContest(contestId);
+          const summary = summaryForContest(contestId, measureRecords);
           return summary
-            ? { summary: summary.summary, summarizesUrl: summary.summarizesUrl }
+            ? { summary: summary.summary, summarizesUrl: summary.summarizesUrl, yesMeans: summary.yesMeans, noMeans: summary.noMeans }
             : null;
         },
         measureProvisions: (contestId) =>
-          provisionsForContest(contestId).map((p) => ({
+          provisionsForContest(contestId, measureRecords).map((p) => ({
             id: p.id,
             label: p.label,
             what: p.what,

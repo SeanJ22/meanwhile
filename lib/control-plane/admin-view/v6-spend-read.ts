@@ -69,6 +69,10 @@ export interface AdminV6SpendView {
   readonly setAsideUsd?: number | null;
   /** The daily spending limit (the rolling 24-hour ceiling in force); null when the policy row was not read. Filled by the route. */
   readonly dailyLimitUsd?: number | null;
+  /** BR-21: how many paid hunters the daily limit buys at once right now; null when the limit or the last 24 hours of spend was not read. Filled by the route. */
+  readonly huntersNow?: number | null;
+  /** BR-21: charges in the last 24 hours counted at their worst case because no price was recorded; null when not read. Filled by the route. */
+  readonly worstCaseCharges?: number | null;
 }
 
 /** `day` is null for a row older than the day window: it counts toward its month and nothing else. */

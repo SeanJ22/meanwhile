@@ -117,8 +117,8 @@ export const SCOUT_LADDER = [
 /** The minimum DISTINCT evidence-backed rungs before an absence-shaped outcome is accepted. */
 export const MIN_DISTINCT_RUNGS = 4;
 
-/** Who ended the walk. The rung minimum applies only when the MODEL chose to stop. */
-export type ScoutStop = "MODEL" | "BOUND";
+/** Who ended the walk. The rung minimum applies only when the MODEL chose to stop. TIMEOUT is the wall clock (CH-07): never an argued absence. */
+export type ScoutStop = "MODEL" | "BOUND" | "TIMEOUT";
 
 /** One rung walked — DERIVED from a tool call that ran, annotated by the model. */
 export interface ScoutRung {

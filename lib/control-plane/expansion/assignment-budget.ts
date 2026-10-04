@@ -46,7 +46,7 @@
  */
 
 import type { AssignmentCompletion } from "../assignment-completion.ts";
-import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
+import { isFundedHunt } from "../scheduler/hunt-continuation.ts";
 import type { CostEntry } from "../cost.ts";
 import { aggregateModelSpend } from "../fleet-safety.ts";
 import type { ObligationAssignment } from "../scheduler/obligation.ts";
@@ -402,12 +402,11 @@ export class AssignmentBudgetGate {
       .sort((a, b) => (a.sentAt < b.sentAt ? 1 : a.sentAt > b.sentAt ? -1 : a.key < b.key ? -1 : a.key > b.key ? 1 : 0));
   }
 
-  /** Only the owner's exact original $50 Send supersedes older rolling limits. */
+  /** Funded Sends supersede older rolling limits; each keeps its own allowance. */
   private effectiveBudgetsFor(obligationId: string): AssignmentBudgetSpec[] {
     const all = this.budgetedFor(obligationId);
-    const original = all.find(spec => spec.key === ORIGINAL_LIFETIME_HUNT.key && spec.ref === ORIGINAL_LIFETIME_HUNT.receiptId &&
-      spec.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt && spec.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd);
-    return original ? [original] : all;
+    const funded = all.filter(isFundedHunt);
+    return funded.length ? funded : all;
   }
 
   state(key: string): AssignmentBudgetState | null {

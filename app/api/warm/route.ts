@@ -72,6 +72,7 @@ import { settleStateMoneyReads } from "@/lib/funding/state-snapshot";
 import { zipCertainty } from "@/lib/geo/zip-certainty";
 import { lowestZipByDivision } from "@/lib/geo/zip-division-index";
 import { lookupZctaAsync } from "@/lib/geo/zcta-table";
+import { publishedCountyDivisions, warmPlacesForCounties, type WarmPlace } from "@/lib/ops/warm-places";
 import { NATIONAL_SCOPE, stateOfOcdId, type ReaderManifest } from "@/lib/meetings/edge-artifacts";
 import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { settleExecutiveActionsRead } from "@/lib/officials/executive-actions";
@@ -252,13 +253,39 @@ export async function primeReaderEdge(): Promise<ReaderEdgePrimed> {
   return { manifest: true, authorityFamilies: bundle ? Object.keys(bundle).length : 0, meetings, ...places, ask };
 }
 
+/**
+ * One place per county the reader edge manifest publishes, for the post-deploy
+ * warm (lib/ops/post-deploy-warm.ts): the county's lowest indexed ZIP and the
+ * centroid the map sends for it. Reads the manifest and the ZIP index only.
+ */
+export async function publishedWarmPlaces(): Promise<{ readonly places: readonly WarmPlace[]; readonly skipped: number }> {
+  const manifest = await readReaderManifest().catch(() => null);
+  if (!manifest) return { places: [], skipped: 0 };
+  const counties = publishedCountyDivisions(manifest.scopes);
+  const states = [...new Set(counties.map((county) => county.split("/state:")[1].split("/")[0]))];
+  const zipByDivision = new Map<string, string>();
+  await Promise.all(states.map(async (state) => {
+    for (const [division, zip] of (await lowestZipByDivision(state)) ?? []) zipByDivision.set(division, zip);
+  }));
+  const zips = [...new Set(counties.flatMap((county) => zipByDivision.get(county) ?? []))];
+  const centroids = new Map<string, { lat: number; lng: number }>();
+  await Promise.all(zips.map(async (zip) => {
+    const centroid = await lookupZctaAsync(zip);
+    if (centroid) centroids.set(zip, centroid);
+  }));
+  return warmPlacesForCounties({ counties, zipFor: (county) => zipByDivision.get(county), centroidFor: (zip) => centroids.get(zip) });
+}
+
 export async function GET(request: Request): Promise<Response> {
   const params = new URL(request.url).searchParams;
-  const unknown = rejectUnknown(params, ["hold"]);
+  const unknown = rejectUnknown(params, ["hold", "places"]);
   if (!unknown.ok) return refuse(unknown.error);
   const asked = numericInRange(params, "hold", 0, MAX_HOLD_MS, { default: 0 });
   if (!asked.ok) return refuse(asked.error);
   const marked = request.headers.get("x-wtp-synthetic-run") === KEEP_WARM_MARKER;
+  if (marked && params.get("places") === "1") {
+    return Response.json(await publishedWarmPlaces(), { headers: { "cache-control": "no-store, max-age=0" } });
+  }
   const primed = marked ? await primeReaderEdge() : null;
   const heldMs = marked ? Math.round(asked.value) : 0;
   if (heldMs > 0) await new Promise((resolve) => setTimeout(resolve, heldMs));

@@ -40,7 +40,9 @@ export interface PlaceOwedRefusal {
 
 export interface PlaceOwedDeps {
   readonly now: () => string;
-  readonly resolveDivisions: (place: ResolvedPlace) => Promise<{ readonly label: string; readonly covers: string; readonly divisions: readonly PlaceDivisionLike[] }>;
+  readonly resolveDivisions: (place: ResolvedPlace) => Promise<{ readonly label: string; readonly covers: string; readonly divisions: readonly PlaceDivisionLike[];
+    /** The ZIPs in the place when they are known; absent for a place whose ZIPs are not listed. */
+    readonly zips?: readonly string[] }>;
   readonly readHeld: (divisionIds: readonly string[], now: string) => Promise<HeldPlaceCapture>;
 }
 export interface PlaceDivisionLike {
@@ -96,7 +98,7 @@ export const defaultPlaceOwedDeps: PlaceOwedDeps = {
   async resolveDivisions(place) {
     if (place.kind === "zip") {
       const divisions = await divisionsForZip(place.zip);
-      return { label: `ZIP ${place.zip}`, covers: "Every government, district and body whose boundary touches this ZIP, plus the state and the country.", divisions };
+      return { label: `ZIP ${place.zip}`, covers: "Every government, district and body whose boundary touches this ZIP, plus the state and the country.", divisions, zips: [place.zip] };
     }
     if (place.kind === "district") {
       // One owed list for the whole district: the divisions of every ZIP in it, read from held data once. No network: the ZIPs come from the published lookup and the divisions from the committed ZIP index.
@@ -104,7 +106,7 @@ export const defaultPlaceOwedDeps: PlaceOwedDeps = {
       if (!read.ok) throw new Error(read.says);
       const district = read.districts.find((d) => d.geoid === place.geoid);
       if (district === undefined) throw new Error("The published lookup has no such congressional district in that state");
-      return { label: district.label, covers: "Every government, district and body whose boundary touches a ZIP in this district, plus the district itself, the state and the country.", divisions: await districtDivisions(district) };
+      return { label: district.label, covers: "Every government, district and body whose boundary touches a ZIP in this district, plus the district itself, the state and the country.", divisions: await districtDivisions(district), zips: district.zips };
     }
     if (place.kind === "county") {
       const county = await countyDivision(place.geoid, place.state);
@@ -140,7 +142,7 @@ export async function readPlaceOwed(placeKey: string, deps: PlaceOwedDeps = defa
   catch (error) {
     return { state: "REFUSED", code: "HELD_UNREAD", says: `What we hold for this place could not be read just now (${error instanceof Error ? error.message : "unknown error"}). The score is withheld rather than shown as zero.` };
   }
-  const rows = buildPlaceOwedList({ divisions: resolved.divisions, subjects: held.subjects, held: held.held, now });
+  const rows = buildPlaceOwedList({ divisions: resolved.divisions, subjects: held.subjects, held: held.held, now, ...(resolved.zips ? { zips: resolved.zips } : {}) });
   const read: PlaceOwedRead = { state: "READ", placeKey, label: resolved.label, covers: resolved.covers,
     divisions: resolved.divisions.map((d) => ({ id: d.id, label: d.label })), rows, observedAt: now, readMs: { geography: t1 - t0, held: Date.now() - t1 } };
   memo.set(placeKey, { at: Date.now(), read });

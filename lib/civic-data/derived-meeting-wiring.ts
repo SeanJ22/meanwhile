@@ -37,11 +37,12 @@ import {
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "./read-model.ts";
+import { DATA_DOOR_KINDS, DOOR_KIND_SPECS, dataDoorConfig, isDataDoorKind, type DataDoorKind } from "./derived-door-kinds.ts";
 import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE, derivedRequestedUrl } from "./derived-door.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
 
 /** The adapter kinds a derived row wires, as the crosswalk names them. */
-export type DerivedWiringKind = "ICAL" | "OFFICIAL_PAGE_EVENTS" | "DILIGENT" | "LEGISTAR";
+export type DerivedWiringKind = "ICAL" | "OFFICIAL_PAGE_EVENTS" | "DILIGENT" | "LEGISTAR" | DataDoorKind;
 
 /** The meeting source (adapter) name each kind's meetings carry. */
 export const DERIVED_WIRING_SOURCE_NAMES: Readonly<Record<DerivedWiringKind, string>> = {
@@ -49,6 +50,7 @@ export const DERIVED_WIRING_SOURCE_NAMES: Readonly<Record<DerivedWiringKind, str
   OFFICIAL_PAGE_EVENTS: "official-page-events",
   DILIGENT: "diligent",
   LEGISTAR: "legistar",
+  ...(Object.fromEntries(DATA_DOOR_KINDS.map((kind) => [kind, DOOR_KIND_SPECS[kind].sourceName])) as Record<DataDoorKind, string>),
 };
 
 /** One wired route of one body: exactly what the reader adapter needs, and where it came from. */
@@ -109,6 +111,7 @@ export function derivedAdapterConfig(input: {
   readonly filter: Readonly<Record<string, string>>;
 }): Readonly<Record<string, string>> {
   const common = { slug: derivedMeetingSlug(input.bodyId), bodyName: input.bodyName };
+  if (isDataDoorKind(input.kind)) return dataDoorConfig({ kind: input.kind, route: input.route, slug: common.slug, bodyName: input.bodyName, filter: input.filter });
   if (input.kind === "LEGISTAR") {
     const slug = /^\/v1\/([a-z0-9_-]+)\/events\/?$/i.exec(new URL(input.route).pathname)?.[1];
     if (!slug) throw new Error("Invalid Legistar calendar route");
@@ -129,7 +132,7 @@ export function bodySourceWiringFor(row: DerivedWiringRow): BodySourceWiring {
   return {
     bodyId: row.bodyId,
     ocdId: row.ocdId as BodySourceWiring["ocdId"],
-    agendaSourceType: row.kind,
+    agendaSourceType: isDataDoorKind(row.kind) ? DOOR_KIND_SPECS[row.kind].agendaSourceType : row.kind,
     jurisdiction: row.publishingOrg,
     publishingOrg: row.publishingOrg,
     timeZone: row.timeZone,

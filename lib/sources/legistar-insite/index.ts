@@ -8,8 +8,8 @@ import { unplacedVenueGap } from "../../meetings/venue-cache.ts";
 import { observationFromGridCell } from "../../outcomes/publication.ts";
 import type { AgendaPublicationObservation } from "../../outcomes/publication.ts";
 import {
-  CONCLUDED_LOOKBACK_DAYS,
-  UPCOMING_HORIZON_DAYS,
+  MEETING_HELD_HORIZON_DAYS,
+  MEETING_HELD_LOOKBACK_DAYS,
 } from "../../meetings/constants.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { isPlaceless, venuesWithinRadius } from "../legistar/client-registry.ts";
@@ -149,7 +149,7 @@ const SOURCE_NAME = "legistar-insite";
  */
 export { GRANICUS_LIVE_PROCEEDINGS_ROUTE } from "./horizon.ts";
 
-const WINDOW_BACK_DAYS = CONCLUDED_LOOKBACK_DAYS;
+const WINDOW_BACK_DAYS = MEETING_HELD_LOOKBACK_DAYS;
 
 /**
  * **THIS ADAPTER NO LONGER CLIPS THE FUTURE, AND THAT IS THE CORRECTION.**
@@ -181,7 +181,7 @@ const WINDOW_BACK_DAYS = CONCLUDED_LOOKBACK_DAYS;
  * constant and its value, so the gap between what we hold and what a reader
  * sees is a stated number and not a silence.
  */
-const SERVING_HORIZON_DAYS = UPCOMING_HORIZON_DAYS;
+const SERVING_HORIZON_DAYS = MEETING_HELD_HORIZON_DAYS;
 
 /**
  * The grid ranges this adapter drives, in order.
@@ -225,6 +225,16 @@ export const RANGES: InSiteRange[] = [
   "This Year",
   "Next Year",
 ];
+
+/**
+ * The ranges to drive on `now`. The held window reaches back `WINDOW_BACK_DAYS`; "Last Month" and "This Year" cover
+ * that until January to April, when it crosses into the prior calendar year, and then "Last Year" is read first too
+ * (DB-03). Otherwise the set is `RANGES`, unchanged.
+ */
+export function rangesAt(now: Date): InSiteRange[] {
+  const backYear = new Date(now.getTime() - WINDOW_BACK_DAYS * 86_400_000).getUTCFullYear();
+  return backYear < now.getUTCFullYear() ? ["Last Year", ...RANGES] : [...RANGES];
+}
 
 /**
  * How many pages of one range this adapter will walk before it reports the
@@ -1074,9 +1084,9 @@ function dispositionClaim(verdict: DispositionVerdict, because: string | null): 
     case "BEYOND_APP_SERVING_HORIZON":
       return (
         "OURS, and only ours: collected, keyed, and carried in the snapshot. " +
-        `It sits past this application's own ${SERVING_HORIZON_DAYS}-day serving ` +
-        "horizon (UPCOMING_HORIZON_DAYS in lib/meetings/constants.ts), which " +
-        "lib/meetings/query.ts applies to every source on every read. It is NOT " +
+        `It sits past this application's own ${SERVING_HORIZON_DAYS}-day held ` +
+        "horizon (MEETING_HELD_HORIZON_DAYS in lib/meetings/constants.ts), the furthest we hold a " +
+        "sitting for any source. It is NOT " +
         "a statement that the sitting is unpublished, uncertain or far off — the " +
         "county published it and we hold it."
       );
@@ -1397,7 +1407,7 @@ export function makeLegistarInSiteSource(
         const windows: LegistarInSiteRaw["windows"] = [];
         let latest = first.text;
 
-        for (const range of RANGES) {
+        for (const range of rangesAt(new Date())) {
           if (renderedRange(latest) !== range) {
             latest = (
               await session.postForm(calendarUrl, dateRangePostback(latest, range))

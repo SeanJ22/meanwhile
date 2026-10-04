@@ -109,10 +109,11 @@ test("normalize windows the year, times it from the page, and cites its source",
     NOW,
   );
 
-  // Four published sittings fall in the rolling 90-day window; later dates stay out.
+  // Seven published sittings fall in the held 120-day window (DB-05; the four of 15 June to 26 October were the 90-day
+  // window's, and 27 April, 11 May and 16 November are the three between 90 and 120 days out); later dates stay out.
   assert.deepEqual(
     meetings.map((m) => m.startsAt.slice(0, 10)),
-    ["2026-06-15", "2026-08-17", "2026-09-28", "2026-10-26"],
+    ["2026-04-27", "2026-05-11", "2026-06-15", "2026-08-17", "2026-09-28", "2026-10-26", "2026-11-16"],
   );
   assert.equal(drops.unknownVenue, 0);
   assert.equal(drops.placeless, 0);
@@ -256,10 +257,10 @@ test("Kearsarge normalizes with the page's time, place and documents", () => {
     NOW,
   );
 
-  // Seventeen sittings fall in the 90-day window. Three other rows are not meetings.
-  assert.equal(meetings.length, 17, JSON.stringify(meetings.map((m) => m.startsAt)));
-  assert.equal(meetings[0].startsAt.slice(0, 10), "2026-05-21");
-  assert.equal(meetings[16].startsAt.slice(0, 10), "2026-11-05");
+  // Twenty-two sittings fall in the held 120-day window (DB-05; seventeen in the 90-day one). Three other rows are not meetings.
+  assert.equal(meetings.length, 22, JSON.stringify(meetings.map((m) => m.startsAt)));
+  assert.equal(meetings[0].startsAt.slice(0, 10), "2026-04-25");
+  assert.equal(meetings[21].startsAt.slice(0, 10), "2026-12-10");
   assert.equal(drops.notConfigured, 3);
   assert.equal(drops.unknownVenue, 0);
   assert.equal(drops.unplaceableInTime, 0);
@@ -351,10 +352,10 @@ test("the Conservation Commission's two shapes union by date", () => {
     NOW,
   );
 
-  // Six sittings fall in the rolling 90-day window, through November 10.
+  // Eight sittings fall in the held 120-day window (DB-05; six in the 90-day one), from May 12 through December 8.
   assert.deepEqual(
     meetings.map((m) => m.startsAt.slice(0, 10)),
-    ["2026-06-09", "2026-07-14", "2026-08-11", "2026-09-10", "2026-10-15", "2026-11-10"],
+    ["2026-05-12", "2026-06-09", "2026-07-14", "2026-08-11", "2026-09-10", "2026-10-15", "2026-11-10", "2026-12-08"],
   );
   assert.equal(drops.unknownVenue, 0);
 
@@ -381,7 +382,8 @@ test("the Planning Board normalizes to the venue its own agenda states", () => {
 
   assert.deepEqual(
     meetings.map((m) => m.startsAt.slice(0, 10)),
-    ["2026-05-19", "2026-06-16", "2026-07-21", "2026-08-18"],
+    // DB-05: the held 120-day window adds 21 April.
+    ["2026-04-21", "2026-05-19", "2026-06-16", "2026-07-21", "2026-08-18"],
   );
   assert.equal(drops.unknownVenue, 0);
   for (const m of meetings) {
@@ -418,14 +420,15 @@ test("the Zoning Board is wired, on a venue the town publishes in markup", () =>
 
   assert.deepEqual(
     meetings.map((m) => m.startsAt.slice(0, 10)),
-    ["2026-08-13"],
+    // DB-05: the held 120-day window admits 13 May too.
+    ["2026-05-13", "2026-08-13"],
   );
   // Zero, not "no error": the venue resolves, so nothing drops for want of a
   // place. The other six sittings are outside the window, which is a different
   // fact from being unplaceable.
   assert.equal(drops.unknownVenue, 0);
 
-  const [aug] = meetings;
+  const aug = meetings.find((m) => m.startsAt.startsWith("2026-08-13"))!;
   assert.equal(aug.bodyName, "Zoning Board of Adjustment");
   assert.equal(aug.title, "Zoning Board of Adjustment", "never the document's label");
   // The town's own label for the building, and its own address — neither
@@ -593,15 +596,17 @@ test("SEEDED: a one-month calendar is walked BEHIND the current month, to the wi
 
 test("without a window the walk still reaches the serving window's back edge, and the year boundary holds", () => {
   const pages = monthPagesToWalk({ now: new Date("2027-01-15T12:00:00Z"), monthsAhead: 2 });
-  // CONCLUDED_LOOKBACK_DAYS (90) back from 15 January is 17 October;
-  // UPCOMING_HORIZON_DAYS (90) ahead is 15 April.
+  // MEETING_HELD_LOOKBACK_DAYS (120) back from 15 January is 17 September;
+  // MEETING_HELD_HORIZON_DAYS (120) ahead is 15 May (DB-05; the 90-day window began in October and ended in April).
   assert.deepEqual(pages, [
+    { year: 2026, month: 9 },
     { year: 2026, month: 10 },
     { year: 2026, month: 11 },
     { year: 2026, month: 12 },
     { year: 2027, month: 2 },
     { year: 2027, month: 3 },
     { year: 2027, month: 4 },
+    { year: 2027, month: 5 },
   ]);
 });
 

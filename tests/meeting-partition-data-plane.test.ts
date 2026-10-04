@@ -6,6 +6,7 @@ import {
   HELD_MEETING_PARTITIONS,
   MEETING_PARTITION_CONTRACTS,
   LEGACY_MEETINGS_AGGREGATE_SCOPE,
+  meetingHistoryScope,
 } from "../lib/civic-data/meeting-partitions.ts";
 import { readMeetingsProjection, type MeetingPartitionReadback } from "../lib/meetings/snapshot.ts";
 import { MEETINGS_PREPARED_SCOPE, preparePublishedMeetingSnapshot } from "../lib/meetings/prepared-snapshot.ts";
@@ -622,13 +623,16 @@ test("the batched Reader bounds database calls and isolates a corrupt partition"
   }
   assert.equal(scalarPromotionReads, 0);
   assert.equal(scalarCandidateReads, 0);
-  // One batch for every registered partition, and one more only for the held
-  // pointers of successors that have none yet (HELD_MEETING_PARTITIONS) — the
-  // college's successor has none in this store.
+  // One batch for every registered partition and its durable history (DB-06),
+  // and one more only for the held pointers of successors that have none yet
+  // (HELD_MEETING_PARTITIONS) — the college's successor has none in this store.
   assert.equal(promotionBatchReads, 2);
   assert.equal(candidateBatchReads, 1);
   assert.deepEqual(requestedScopeBatches, [
-    MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope),
+    [
+      ...MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope),
+      ...MEETING_PARTITION_CONTRACTS.map((partition) => meetingHistoryScope(partition.scope)),
+    ],
     HELD_MEETING_PARTITIONS.map((held) => held.scope),
   ]);
   assert.deepEqual(new Set(requestedCandidateIds), new Set(seeded.map((row) => row.candidate.id)));
@@ -834,4 +838,103 @@ test("a meeting re-check that finds no new fact is confirmed on the pointed vers
   assert.equal(third?.outcome.confirmed, undefined);
   assert.equal(third?.outcome.candidate.state, "PROMOTED");
   assert.notEqual((await store.readPromotion("MEETING", legistar.scope))?.versionId, pointer.versionId);
+});
+
+/* ── DB-01: meeting history stops being deleted ─────────────────────────── */
+
+const HELD_READ = "2026-09-08T13:00:01.000Z";
+const HELD_LATER = "2026-09-08T14:00:01.000Z";
+const daysBefore = (days: number) => new Date(Date.parse(HELD_READ) - days * 86_400_000).toISOString();
+
+function priorSnapshot(rows: readonly Meeting[], documents: readonly AgendaDocument[] = []) {
+  return {
+    formatVersion: 1 as const,
+    generatedAt: "2026-09-01T13:00:00.000Z",
+    counts: { fresh: rows.length, carried: 0, total: rows.length },
+    sources: [],
+    meetings: [...rows],
+    agendaDocuments: [...documents],
+  };
+}
+
+function reconcileAt(prior: readonly Meeting[], documents: readonly AgendaDocument[] = [], sourceName = legistar.meetingSource) {
+  return reconcileSuccessfulMeetingPartition({
+    sourceName,
+    generatedAt: HELD_READ,
+    freshMeetings: [meeting(legistar, HELD_READ, "fresh")],
+    freshAgendaDocuments: [],
+    previous: priorSnapshot(prior, documents),
+  });
+}
+
+test("DB-01: a concluded meeting with an agenda is kept past 120 days; one with no record is removed", () => {
+  const withAgenda: Meeting = {
+    ...meeting(legistar, HELD_READ, "with-agenda"),
+    startsAt: daysBefore(200),
+    status: "CONCLUDED",
+    agendaUrl: "https://example.gov/agenda/1",
+  };
+  const withMinutesDocument: Meeting = { ...meeting(legistar, HELD_READ, "with-doc"), startsAt: daysBefore(150), status: "CONCLUDED" };
+  const bare: Meeting = { ...meeting(legistar, HELD_READ, "bare"), startsAt: daysBefore(200), status: "CONCLUDED" };
+  const reconciliation = reconcileAt([withAgenda, withMinutesDocument, bare], [agendaDocument(withMinutesDocument, HELD_READ)]);
+  const kept = reconciliation.meetings.map(({ id }) => id);
+  assert.ok(kept.includes(withAgenda.id), "a concluded meeting with an agenda link is kept");
+  assert.ok(kept.includes(withMinutesDocument.id), "a concluded meeting with a stored agenda document is kept");
+  assert.ok(!kept.includes(bare.id), "a concluded meeting carrying nothing still ages out");
+  assert.deepEqual(reconciliation.removalEvidence.map(({ key }) => key), [`meeting:${bare.id}`]);
+  const [evidence] = reconciliation.removalEvidence;
+  assert.equal(evidence?.code === "OUTSIDE_REGISTERED_SERVING_WINDOW" ? evidence.windowContract : null, "MEETING_READER_SERVING_WINDOW_V2");
+});
+
+test("DB-01: rows outside the dates a read fetched are carried as outside the fetch, never as a disappearance", () => {
+  const ninetyFive: Meeting = { ...meeting(legistar, HELD_READ, "ninety-five"), startsAt: daysBefore(95), status: "CONCLUDED" };
+  const inside: Meeting = { ...meeting(legistar, HELD_READ, "inside"), startsAt: daysBefore(10), status: "CONCLUDED" };
+  const withRecord: Meeting = { ...meeting(legistar, HELD_READ, "old-record"), startsAt: daysBefore(130), status: "CONCLUDED", agendaUrl: "https://example.gov/a" };
+  const reasons = (reconciliation: ReturnType<typeof reconcileAt>) =>
+    new Map(reconciliation.meetings.filter((row) => row.carried).map((row) => [row.id, row.carried?.reason]));
+  // DB-03 to DB-05: legistar fetches the held 120 days, so a row 95 days back that its answer leaves out was asked about.
+  const held = reasons(reconcileAt([ninetyFive, inside, withRecord]));
+  assert.equal(held.get(ninetyFive.id), "UNEXPLAINED_DISAPPEARANCE");
+  assert.equal(held.get(inside.id), "UNEXPLAINED_DISAPPEARANCE");
+  assert.equal(held.get(withRecord.id), "OUTSIDE_FETCH_WINDOW", "130 days back was never asked about");
+  // An adapter that reads whatever its feed lists (onbase) never asked about 95 days back either.
+  const feed = reconcileAt([ninetyFive, inside], [], "onbase");
+  assert.equal(reasons(feed).get(ninetyFive.id), "OUTSIDE_FETCH_WINDOW");
+  assert.equal(reasons(feed).get(inside.id), "UNEXPLAINED_DISAPPEARANCE");
+  assert.deepEqual(feed.removalEvidence, []);
+});
+
+test("DB-01: the validator accepts a V1 removal for one pass and refuses removing a kept record", async () => {
+  const store = new MemoryRoutineDataStore();
+  const seedAt = "2026-01-01T12:00:00.000Z";
+  const old = { ...meeting(legistar, seedAt, "aged-out"), startsAt: "2025-12-20T17:00:00.000Z" };
+  const record = { ...meeting(legistar, seedAt, "has-minutes"), startsAt: "2025-12-21T17:00:00.000Z", status: "CONCLUDED" as const, agendaUrl: "https://example.gov/agenda/9" };
+  const seeded = await promoteMeetingPartitions({
+    store, partitions: [legistar], meetings: [old, record], agendaDocuments: [],
+    reports: [report(legistar.meetingSource, seedAt)], generatedAt: seedAt,
+  });
+  assert.equal(seeded[0]?.outcome.candidate.state, "PROMOTED");
+  const fresh = meeting(legistar, SECOND, "still-served");
+  const snapshotOf = (rows: Meeting[], at = HELD_READ) => ({
+    formatVersion: 1 as const,
+    generatedAt: at,
+    counts: { fresh: rows.length, carried: 0, total: rows.length },
+    sources: [{ ...report(legistar.meetingSource, at), error: null, fetched: rows.length, normalized: rows.length }],
+    meetings: rows,
+    agendaDocuments: [],
+  });
+  const window = (contract: "MEETING_READER_SERVING_WINDOW_V1" | "MEETING_READER_SERVING_WINDOW_V2", days: number, at: string) => ({
+    code: "OUTSIDE_REGISTERED_SERVING_WINDOW" as const,
+    windowContract: contract,
+    lowerBound: new Date(Date.parse(at) - days * 86_400_000).toISOString(),
+    upperBound: new Date(Date.parse(at) + days * 86_400_000).toISOString(),
+  });
+  const refused = await promoteMeetingPartition(store, legistar, snapshotOf([fresh, old]), [], [
+    { ...window("MEETING_READER_SERVING_WINDOW_V2", 120, HELD_READ), key: `meeting:${record.id}`, priorStartsAt: record.startsAt },
+  ]);
+  assert.equal(refused.outcome.candidate.state, "HORIZON_UNRESOLVED", "a concluded meeting carrying an agenda is never removed");
+  const accepted = await promoteMeetingPartition(store, legistar, snapshotOf([fresh, record], HELD_LATER), [], [
+    { ...window("MEETING_READER_SERVING_WINDOW_V1", 90, HELD_LATER), key: `meeting:${old.id}`, priorStartsAt: old.startsAt },
+  ]);
+  assert.equal(accepted.outcome.candidate.state, "PROMOTED", accepted.outcome.candidate.failureDetail ?? "");
 });

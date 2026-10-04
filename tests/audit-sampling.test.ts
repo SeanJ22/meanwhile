@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { newFieldManualEntry } from "../lib/control-plane/field-manual.ts";
 import {
-  auditCoverageReport, auditHistoryFrom, auditHistoryFromManual, createModelAuditSampler, DEFAULT_AUDIT_SAMPLE_POLICY, sampleDecision, stableFraction, stratumOf,
+  auditCoverageReport, boostReason, auditHistoryFrom, auditHistoryFromManual, createModelAuditSampler, DEFAULT_AUDIT_SAMPLE_POLICY, sampleDecision, stableFraction, stratumOf,
 } from "../lib/control-plane/workers/audit-sampling.ts";
 import { auditCoverage, recordOutcome } from "../lib/control-plane/workers/audit-outcome.ts";
 import type { GeneralizedCivicExtractionContract, WorkerFinding, WorkerResultRecord, WorkerTaskSpec } from "../lib/control-plane/workers/types.ts";
@@ -130,4 +130,22 @@ test("a record is broken only by a BLOCKING finding that names it; one that name
   assert.deepEqual(recordOutcome(["a", "b"], [], new Set(["a"])), { brokenRecordIds: ["a"], survivingRecordIds: ["b"] });
   assert.deepEqual(auditCoverage({ routesApplicable: 0, routesChecked: 0, sourceRecords: null, extractedRecords: 3 }).sourcesPercent, null);
   assert.equal(auditCoverage({ routesApplicable: 3, routesChecked: 9, sourceRecords: 4, extractedRecords: 2 }).sourcesPercent, 100, "never over 100");
+});
+
+test("a boosted fact (past its refresh date, in demand, single-source) is model-reviewed more often, and says why", () => {
+  const settled = auditHistoryFrom(Array.from({ length: 3 }, (_, i) => auditRecord("www.a.gov", "SURVIVED", `2026-09-0${i + 1}T00:00:00Z`)));
+  let plain = 0, boosted = 0;
+  const reasons = new Set<string>();
+  for (let i = 0; i < 3000; i++) {
+    const s = spec("www.a.gov", `boost-${i}`);
+    if (sampleDecision(s, settled, false).sample) plain += 1;
+    const d = sampleDecision(s, settled, false, undefined, { pastRefresh: true });
+    if (d.sample) { boosted += 1; reasons.add(d.reason); }
+  }
+  assert.ok(boosted > plain * 2, `boosted ${boosted} vs plain ${plain}`);
+  assert.ok(reasons.has("PAST_REFRESH") && reasons.has("SAMPLED"), [...reasons].join());
+  assert.equal(boostReason({ demandRank: 3 }), "DEMAND");
+  assert.equal(boostReason({ demandRank: 400 }), null, "outside the top places is no boost");
+  assert.equal(boostReason({ singleSource: true }), "SINGLE_SOURCE");
+  assert.equal(boostReason({ pastRefresh: true, singleSource: true }), "PAST_REFRESH", "the strongest reason is the one reported");
 });

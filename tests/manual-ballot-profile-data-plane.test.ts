@@ -6,6 +6,9 @@ import test from "node:test";
 
 import type { CandidateCorpus, CandidateDocument } from "../lib/candidates/corpus.ts";
 import { MEASURE_PROVISIONS } from "../lib/ballot/measure-provisions.ts";
+import { measureRecordsForBallot, type MeasureRecord } from "../lib/ballot/measure-records.ts";
+import { summaryForContest } from "../lib/ballot/measure-summary.ts";
+import type { NhBallotProjection } from "../lib/civic-data/manual-projections.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import {
   manualProjectionCandidate,
@@ -214,7 +217,7 @@ test("the four former tracked authorities promote through the canonical candidat
     const outcome = await processRegisteredManualCandidate(store, id, candidate, T0);
     assert.equal(outcome.candidate.state, "PROMOTED", id);
     assert.equal(outcome.candidate.receipt?.decision, "GOOD", id);
-    assert.equal(outcome.readerReadback?.status, "PASS", id);
+    assert.equal(outcome.readerReadback?.status, "PASS", JSON.stringify({ id, readback: outcome.readerReadback }));
     assert.deepEqual((await store.events(candidate.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"]);
   }
 
@@ -225,6 +228,28 @@ test("the four former tracked authorities promote through the canonical candidat
     readCandidateCorpusProjection({ store, bypassCache: true, now: T0 }),
   ]);
   assert.deepEqual(reads.map((read) => read.kind), ["PROMOTED", "PROMOTED", "PROMOTED", "PROMOTED"]);
+});
+
+test("measure records survive civic-data promotion and change without a software release", async () => {
+  const store = new MemoryRoutineDataStore();
+  const original = packageFor("nh-curated-ballot");
+  const payload = structuredClone(original.payload) as NhBallotProjection;
+  const contest = { ...payload.ballot.contests[0]!, id: "ballot-nh-test:measure", type: "MEASURE" as const };
+  payload.ballot.contests.push(contest);
+  const record: MeasureRecord = { contestId: contest.id, whatItDoes: "Creates a program.",
+    yesMeans: null, noMeans: null, parts: [], sourceUrl: URL, sourceHash: HASH_A, writtenAt: T0 };
+  for (const [at, whatItDoes] of [[T0, "Creates a program."], [T1, "Changes the program."]] as const) {
+    const input = { ...original, sourceThrough: at, sourceReceipt: receipt(at, "ELECTION_AUTHORITY", HASH_A),
+      payload: { ...payload, ballot: { ...payload.ballot, measureRecords: [{ ...record, whatItDoes }] } } };
+    const candidate = manualProjectionCandidate(input);
+    const published = await processRegisteredManualCandidate(store, "nh-curated-ballot", candidate, at);
+    assert.equal(published.candidate.state, "PROMOTED");
+    const read = await readNhBallotProjection({ store, now: at, bypassCache: true });
+    assert.equal(read.kind, "PROMOTED");
+    assert.ok(read.value);
+    assert.equal(summaryForContest(contest.id, measureRecordsForBallot(read.value.ballot))?.summary, whatItDoes);
+    assert.ok(candidate.civicRecords?.some(row => row.key === `measure-record:${contest.id}`));
+  }
 });
 
 test("a changed ballot yields an exact record delta; a bad successor is held and cannot erase LKG", async () => {

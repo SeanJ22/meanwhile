@@ -26,7 +26,7 @@
  * production membership boundary; only this module's own address did.
  */
 
-import { SOURCE_WIRING } from "../registry/source-wiring.ts";
+import { activeWiring } from "../registry/source-wiring.ts";
 
 /**
  * **EVERY PRODUCTION-SERVING TENANT NAMES A BODY THE REGISTRY ACTUALLY HAS.**
@@ -156,7 +156,7 @@ export function servingTenants(): ServingTenant[] {
   const rows: ServingTenant[] = [];
 
   // The shared table every `make(rows)` adapter serves from.
-  for (const row of SOURCE_WIRING) {
+  for (const row of activeWiring()) {
     rows.push({
       table: "SOURCE_WIRING",
       modulePath: "lib/registry/source-wiring.ts",

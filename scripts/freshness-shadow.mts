@@ -3226,7 +3226,15 @@ let meetingsDiscoveryByOutcome: Record<string, number> = {};
 let roundVaultIndex: VaultIndex | undefined;
 let roundVaultRead: Promise<VaultIndex> | undefined;
 let discoveryLaneRun: Promise<readonly IndependentRuntimeOutcome[]> | null = null;
-const readRoundVault = (signal?: AbortSignal) => roundVaultRead ??= indexVault(join(ROOT, ...VAULT_DIR), undefined, { signal }).then(index => (roundVaultIndex=index,index));
+/* One full listing per round; later captures join it through includeVaultCapture. The step is timed once in the round's phases. */
+const readRoundVault = (signal?: AbortSignal) => roundVaultRead ??= (async () => {
+  const startedMs = Date.now();
+  const index = await indexVault(join(ROOT, ...VAULT_DIR), undefined, { signal });
+  roundVaultIndex = index;
+  const phase = cycleObservation.note("vault-index", Date.now() - startedMs);
+  console.log(`  phase ${phase.name}: ${phase.durationMs}ms`);
+  return index;
+})();
 try {
 
 /*

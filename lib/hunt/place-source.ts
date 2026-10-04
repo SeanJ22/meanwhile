@@ -4,9 +4,8 @@ import { divisionsForZip, type GeographyReadOptions, type PlaceDivision } from "
 import { readHeldPlaceCapture } from "../civic-data/held-place-capture.ts";
 import type { RoutineDataStore } from "../civic-data/store.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
-import { collectNationalPlaceSources, type HeldSourcePage, type NationalPlaceSources } from "../sources/plural/place.ts";
-import { closePublishedPlaceWork, planPlaceHunt, type PlaceCapture } from "./place-plan.ts";
-import { buildPlaceOwedList } from "../coverage/place-owed.ts";
+import { collectNationalPlaceSources, openNationalFamilies, type HeldSourcePage, type NationalPlaceSources, type NationalSourceFamilies } from "../sources/plural/place.ts";
+import { planPlaceHunt, type PlaceCapture } from "./place-plan.ts";
 import type { publishElectionFields } from "../civic-data/election-field-publication.ts";
 import { section3Record } from "../control-plane/promotion/section3.ts";
 
@@ -50,9 +49,11 @@ export async function runPlaceSource(input: {
   let publication: unknown = null;
   const publications: unknown[] = [];
   const electionPublications: (Awaited<ReturnType<typeof publishElectionFields>> | { error: string })[] = [];
-  const closed = new Set<string>();
+  let families = null as NationalSourceFamilies | null;
   const plan = await planPlaceHunt({ repos: input.repos, divisions, now: input.now, clock: input.clock, knowledge, readHeld,
-    acquireNational: async () => {
+    acquireNational: async blanks => {
+      // Read only the families that still have an open blank; a second pass on a place with nothing open reads nothing.
+      families = openNationalFamilies(blanks);
       // One pointer is updated serially, while source reads remain parallel.
       // A ready official never waits behind the state's election-page walk.
       let publicationQueue = Promise.resolve();
@@ -76,21 +77,18 @@ export async function runPlaceSource(input: {
             }
             catch (error) { electionPublications.push({ error: error instanceof Error ? error.message : String(error) }); }
           }
-          const now = input.clock?.() ?? input.now;
-          const captured = await readHeld(ids);
-          const items = buildPlaceOwedList({ divisions, ...captured, now });
-          for (const id of await closePublishedPlaceWork(input.repos, items, now)) closed.add(id);
           publishedBatches++;
         });
         return publicationQueue;
       };
       sources = await collectNationalPlaceSources({ divisions, now: input.now, knowledge,
-        read: url => input.readSource(url, knowledge), onSources: publish });
+        read: url => input.readSource(url, knowledge), onSources: publish, families });
       if (!publishedBatches) await publish(sources);
       await publicationQueue;
       // Re-read the canonical pointer after publication. Do not substitute a
       // successful function return or a collected field for a published value.
       return { ...await readHeld(ids), replacesHeld: true };
     } });
-  return { ...plan, closed: [...new Set([...closed, ...plan.closed])], zip: input.zip, divisions, sources: sources as NationalPlaceSources | null, publication, publications, electionPublications };
+  // Acquisition never ran when nothing was open, so every family was skipped.
+  return { ...plan, zip: input.zip, families: families ?? { officials: false, elections: false }, divisions, sources: sources as NationalPlaceSources | null, publication, publications, electionPublications };
 }

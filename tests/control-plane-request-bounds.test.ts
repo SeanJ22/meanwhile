@@ -13,14 +13,15 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { neonConfig } from "@neondatabase/serverless";
+import { neon, neonConfig } from "@neondatabase/serverless";
 import { createLedger } from "../lib/control-plane/budget.ts";
 
 import {
   isTransientControlPlaneConnectError,
   withControlPlaneConnectRetry,
 } from "../lib/control-plane/repository/connect-retry.ts";
-import { CONTROL_PLANE_QUERY_CONCURRENCY, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
+import { CONTROL_PLANE_QUERY_CONCURRENCY, createPgRepositories, pgAggregateRepository } from "../lib/control-plane/repository/pg-store.ts";
+import { ConcurrentModification } from "../lib/control-plane/repository/types.ts";
 import {
   CONTROL_PLANE_REQUEST_BOUNDS_MS,
   ControlPlaneRequestTimeout,
@@ -175,7 +176,12 @@ test("a fetch that ignores the abort still cannot hold the call past its bound",
 test("each call class takes its own bound: a large document row is DOCUMENT, a page is PAGE, an append names its step", async () => {
   await withHungFetch(true, async () => {
     const repos = await createPgRepositories(URL, "2026-09-23T00:00:00.000Z", { skipBootstrap: true, requestBounds: TINY });
+    const budgetAggregate = pgAggregateRepository(neon(URL), "BudgetLedger", "cp_budget", { bounds: TINY });
     const cases: [() => Promise<unknown>, string, string, number][] = [
+      [() => repos.budget.read(), "cp_budget.read", "DOCUMENT", TINY.DOCUMENT],
+      [() => repos.budget.install(createLedger({ hosts: [] }), "2026-09-23T00:00:00.000Z"), "cp_budget.put", "DOCUMENT", TINY.DOCUMENT],
+      [() => repos.budget.compareAndSet(1, createLedger({ hosts: [] }), "2026-09-23T00:00:00.000Z"), "cp_budget.compareAndSet", "DOCUMENT", TINY.DOCUMENT],
+      [() => budgetAggregate.readNarrowed("shared-budget-ledger", {}), "cp_budget.readNarrowed", "POINT", TINY.POINT],
       [() => repos.researchState.read("level-1"), "cp_research_state.read", "DOCUMENT", TINY.DOCUMENT],
       [() => repos.fieldManual.read("live"), "cp_field_manual.read", "DOCUMENT", TINY.DOCUMENT],
       [() => repos.costs.readAll(), "cp_log_costs.readAll", "PAGE", TINY.PAGE],
@@ -194,6 +200,71 @@ test("each call class takes its own bound: a large document row is DOCUMENT, a p
       assert.equal(timeout.timeoutMs, bound, operation);
     }
   });
+});
+
+test("a large budget CAS returns metadata and the exact submitted JSON without downloading the ledger again", async () => {
+  const original = neonConfig.fetchFunction;
+  const now = "2026-10-02T18:00:00.000Z";
+  const next = { ...createLedger({ hosts: [] }), nested: { value: "submitted" },
+    omitted: undefined, normalizedNumber: NaN, date: new Date(now), payload: "x".repeat(3_370_000) };
+  const expected = JSON.parse(JSON.stringify(next));
+  let started!: () => void, release!: () => void;
+  const entered = new Promise<void>(resolve => { started = resolve; });
+  const held = new Promise<void>(resolve => { release = resolve; });
+  const requests: { query: string; params: unknown[] }[] = [];
+  let responseBytes = 0;
+  try {
+    neonConfig.fetchFunction = (async (_input: unknown, init?: { body?: string }) => {
+      const request = JSON.parse(init?.body ?? "{}") as { query: string; params: unknown[] };
+      requests.push(request);
+      assert.match(request.query, /WHERE id = \$3 AND revision = \$4\s+RETURNING id, revision, updated_at$/);
+      assert.deepEqual([request.params[0], request.params[2], request.params[3]], [now, "shared-budget-ledger", "7"]);
+      assert.equal(request.params[1], JSON.stringify(expected));
+      started();
+      await held;
+      const response = answer([{ id: "shared-budget-ledger", revision: "8", updated_at: now }]);
+      responseBytes = Buffer.byteLength(await response.clone().text());
+      return response;
+    }) as typeof neonConfig.fetchFunction;
+    const repos = await createPgRepositories(URL, now, { skipBootstrap: true });
+    const writing = repos.budget.compareAndSet(7, next, now);
+    await entered;
+    next.nested.value = "mutated while pending";
+    next.payload = "changed";
+    release();
+    const result = await writing;
+    assert.deepEqual(result, { id: "shared-budget-ledger", revision: 8, updatedAt: now, value: expected });
+    assert.ok(responseBytes < 1024, `revision metadata response was ${responseBytes} bytes`);
+    assert.equal(requests.length, 1, "one fenced write, with no ledger readback or retry");
+    next.nested.value = "mutated after completion";
+    assert.deepEqual(result.value, expected, "the returned persisted value is detached from caller-owned objects");
+  } finally { release(); neonConfig.fetchFunction = original; }
+});
+
+test("a lost CAS reads only current revision metadata and preserves conflict or missing-row refusal", async () => {
+  const original = neonConfig.fetchFunction;
+  const now = "2026-10-02T18:00:00.000Z";
+  try {
+    for (const foundRevision of [9, null]) {
+      const requests: { query: string; params: unknown[] }[] = [];
+      neonConfig.fetchFunction = (async (_input: unknown, init?: { body?: string }) => {
+        const request = JSON.parse(init?.body ?? "{}") as { query: string; params: unknown[] };
+        requests.push(request);
+        if (requests.length === 1) return answer([]);
+        assert.equal(request.query, "SELECT revision FROM cp_budget WHERE id = $1");
+        assert.deepEqual(request.params, ["shared-budget-ledger"]);
+        return answer(foundRevision === null ? [] : [{ revision: String(foundRevision) }]);
+      }) as typeof neonConfig.fetchFunction;
+      const repos = await createPgRepositories(URL, now, { skipBootstrap: true });
+      await assert.rejects(repos.budget.compareAndSet(7, createLedger({ hosts: [] }), now), error => {
+        assert.ok(error instanceof ConcurrentModification);
+        assert.equal(error.expectedRevision, 7);
+        assert.equal(error.foundRevision, foundRevision);
+        return true;
+      });
+      assert.equal(requests.length, 2, "one write and one revision lookup; an uncertain or refused write is not replayed");
+    }
+  } finally { neonConfig.fetchFunction = original; }
 });
 
 test("the measured defaults: POINT < DOCUMENT < PAGE, each inside the 30 s transport backstop so the named bound fires first", () => {

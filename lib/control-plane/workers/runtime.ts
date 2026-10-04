@@ -156,7 +156,13 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
     let input: FleetInput = { attemptId, worker, evidence, contract: spec.contract };
     if (role !== "PARSER") {
       if (!spec.producerResultId) throw new Error("WORKER_PRODUCER_REFERENCE_MISSING");
-      const producer = await readCompletedWorkerResult(runtime.repos, spec.producerResultId);
+      const heldResults = await runtime.repos.workerResults.read(workItemId);
+      const heldRepos = { ...runtime.repos, workerResults: { ...runtime.repos.workerResults, readAll: async () => heldResults } };
+      // Keep the exact producer validation and its current Attempt read. Only a
+      // successfully read batch can fall back to classify an absent/foreign id.
+      const readResult = (id: string) => readCompletedWorkerResult(
+        heldResults.some(record => record.id === id) ? heldRepos : runtime.repos, id);
+      const producer = await readResult(spec.producerResultId);
       if (producer.record.result.role !== "PARSER" || producer.record.result.verdict !== "EXTRACTED" ||
           producer.record.workItemId !== workItemId || producer.record.result.artifactId !== spec.artifactId ||
           canonicalJson(producer.record.completion.completedTask.workerTask!.contract) !== canonicalJson(spec.contract)) throw new Error("WORKER_EXACT_CANDIDATE_BINDING_REFUSED");
@@ -166,7 +172,7 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
         verifiedAt: now(), authorityEvidence: spec.contract.schemaVersion === 2 ? await Promise.all([...new Set(spec.contract.verification.authorities.flatMap(a => [...a.artifactIds, ...a.authorityEvidenceArtifactIds]))].map(async id => evidenceProjection(await runtime.readEvidence(id)))) : [] };
       else {
         if (!spec.validatorResultId || !independent) throw new Error("AUDIT_VALIDATOR_REFERENCE_MISSING");
-        const validator = await readCompletedWorkerResult(runtime.repos, spec.validatorResultId);
+        const validator = await readResult(spec.validatorResultId);
         if (validator.record.result.role !== "VALIDATOR" ||
             (validator.record.result.verdict !== "PASS" && !(spec.contract.schemaVersion === 2 && validator.record.result.verdict === "INCONCLUSIVE" && validator.record.result.extractionVerdict === "PASS")) ||
             validator.record.result.producerAttemptId !== producer.attempt.id || validator.record.workItemId !== workItemId ||

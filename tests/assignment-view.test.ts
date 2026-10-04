@@ -308,7 +308,7 @@ test("body publication attempts expose only recorded public-safe outcomes and re
       detail: "private detail", candidateId: "candidate-1", versionId: "version-1",
       acceptedMembers: [{ recordId: "record-1", memberId: "member-1" }] } });
   assert.deepEqual(bodyPublicationAttempts([work, workItem("wi-no-attempt")]), [{
-    bodyId: "body-1", workItemId: "wi-body", assignmentKeys: [], assignmentRefs: [], at: NOW, status: "PARTIALLY_PUBLISHED", code: "MORE_IDENTITIES_OWED",
+    bodyId: "body-1", family: "people", workItemId: "wi-body", assignmentKeys: [], assignmentRefs: [], at: NOW, status: "PARTIALLY_PUBLISHED", code: "MORE_IDENTITIES_OWED",
     sourceUrl: "https://example.gov/roster", workerResultId: "wr-1", acceptedCount: 1, versionId: "version-1",
   }]);
   const owned = bodyPublicationAttempts([work], [occurrence("ob-body", 1, "wi-body", "rt-body")],

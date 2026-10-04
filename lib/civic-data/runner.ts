@@ -16,6 +16,14 @@ import {
   successfulRoutineRunnerReceiptIssue,
 } from "./runner-receipt.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
+import type { BoundedChildResult } from "./bounded-child-pass.ts";
+
+/** An admission deadline before spawn leaves the original source work owed. */
+export function routinePreSpawnMemoryDeferral(run: BoundedChildResult, childStarted: boolean): string | null {
+  return !childStarted && run.termination === "SPAWN_FAILED" && run.status === null && run.signal === null &&
+    run.stdout === "" && run.stderr === "" && run.errorMessage?.startsWith("WORKER_MEMORY_DEADLINE:")
+    ? run.errorMessage : null;
+}
 
 /**
  * The standing parent supplies one exact start instant to the routine child so

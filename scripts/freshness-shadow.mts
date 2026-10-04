@@ -22,7 +22,7 @@ import { cycleStateWriter } from "../lib/control-plane/scheduler/cycle-state-wri
 import { selectedCycleRepositories } from "../lib/control-plane/scheduler/cycle-selection.ts";
 import { readRelaunchTriggerVerification, websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
-import { runAdminEvidenceMirror } from "../lib/control-plane/evidence/admin-bridge-runner.ts";
+import { ADMIN_MIRROR_BUDGET_MS, runAdminEvidenceMirror } from "../lib/control-plane/evidence/admin-bridge-runner.ts";
 import { retainRecentRoutineMeetingEvidence } from "../lib/control-plane/workers/routine-meeting-intake.ts";
 /**
  * `pnpm freshness:shadow` — ONE UNATTENDED CYCLE OF THE FRESHNESS SCHEDULER.
@@ -112,6 +112,7 @@ import {
   CONTROL_PLANE_QUERY_CONCURRENCY,
 } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import {
   closeCycleOccurrences,
   digestLines,
@@ -147,7 +148,8 @@ import {
 } from "../lib/control-plane/promotion/campaign-site-cycle.ts";
 import { runCandidatePublicationCycle,
   type CandidatePublicationCycleReport } from "../lib/control-plane/promotion/campaign-publication-cycle.ts";
-import { indexVault, readHeldBytes } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { includeVaultCapture, indexVault, readHeldBytes, type HeldVaultArtifact, type VaultIndex } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { VAULT_READ_TIMEOUT_MS } from "../lib/control-plane/evidence/netlify-store.ts";
 import {
   MEETINGS_DISCOVERY_NAMESPACE,
   meetingsDiscoveryObligationId,
@@ -315,7 +317,6 @@ import { OWNER_SURFACE_FORMAT_VERSION, type RunnerHeartbeat } from "../lib/contr
 import type { FreshnessCycleOutcome } from "../lib/control-plane/owner-surface.ts";
 import {
   appendFreshnessCycleDigest,
-  freshnessCycleOutcomes,
 } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { DIGEST_LOG_KEY } from "../lib/control-plane/admin-data.ts";
 import {
@@ -383,7 +384,6 @@ import { CYCLE_DRAIN_GRACE_MS, chosenExitCode, exitAfterDrainGrace } from "../li
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
-import { readMethodCandidateAuthorityStatus } from "../lib/control-plane/method-candidate-authority.ts";
 import { nextRunRecordPath } from "../lib/health/run-records.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
@@ -586,17 +586,17 @@ const startupReadRetry = {
     ),
 };
 
+/*
+ * The candidate store is read once, here. A store that cannot be read costs this
+ * round its candidate proposals and nothing else: research, meeting refresh and
+ * publication go on, and Admin shows one line (DP-01).
+ */
+let candidateStoreUnreadable: string | null = null;
 if (wantsPostgres) {
-  const methodAuthority = await retryStartupRead(
-    () => readMethodCandidateAuthorityStatus(repos),
-    (status) => (status.state === "STORE_UNREACHABLE" ? status.detail : null),
-    startupReadRetry,
-  );
-  if (methodAuthority.state !== "ADOPTED") {
-    throw new Error(
-      `METHOD_CANDIDATE_AUTHORITY_NOT_ADOPTED: ${methodAuthority.code} — ${methodAuthority.detail} ` +
-        "No Scout candidate write or tracked-file fallback was attempted.",
-    );
+  try {
+    await retryStartupRead(() => readMethodCandidateStore(repos), () => null, startupReadRetry);
+  } catch (error) {
+    candidateStoreUnreadable = error instanceof Error ? error.message : String(error);
   }
 }
 
@@ -823,6 +823,8 @@ const decisionDisagreements = units
 const nowMs = Date.parse(NOW);
 /** Named runtime conditions, accumulated from here on; the research state carries them. */
 const runtimeConditions: string[] = [];
+if (candidateStoreUnreadable !== null) runtimeConditions.push(
+  `method candidates could not be read (${candidateStoreUnreadable}); no candidate proposals this round, everything else continues`);
 let canonicalCandidateCounts = await candidateStoreCounts(repos);
 if (canonicalCandidateCounts === null) {
   runtimeConditions.push("METHOD_CANDIDATE_STORE_NOT_SEEDED: canonical candidate lifecycle is unavailable; no tracked-file fallback was used");
@@ -992,7 +994,13 @@ const debtsIn = await wakeInstalledAdapterDebts(repos,(canary
 ).filter((debt) => !retiredDebtReasons.has(debt.obligationId)),NOW);
 /* The plain-code lane's queue key reads this debt (`waitingSince`); so does its reading while the cycle runs. */
 const debtAtCycleStart = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
-for (const [id, decision] of decisions) decisions.set(id, sourceFailureRecovery(decision, debtAtCycleStart.get(id)));
+/* A shut door goes to a detective; a passing outage keeps its plain retry. While the paid lane is closed the shut door's plain re-read still runs (DP-02). */
+const plainDecisionBeforeDetective = new Map<string, ExecutorDecision>();
+for (const [id, decision] of decisions) {
+  const recovered = sourceFailureRecovery(decision, debtAtCycleStart.get(id));
+  if (recovered !== decision) plainDecisionBeforeDetective.set(id, decision);
+  decisions.set(id, recovered);
+}
 const modelClassUnits = units.filter((u) => decisions.get(u.obligation.id)?.kind === "BOUNDED_MODEL_WORKER");
 const debtIds = new Set(debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
 const retryNow = new Set(retryable(debtsIn, nowMs).map((d) => d.obligationId));
@@ -1468,8 +1476,8 @@ finishPhase("open-occurrences");
 
 /* The credential, BY NAME. Its value goes into the transport and nowhere else. */
 const workerKey = (process.env[WORKER_CREDENTIAL_VAR] ?? "").trim();
-const workerMessages = providerQueue.transport(anthropicTransport(workerKey, fetch, undefined, {
-  onRateLimits: (limits, request) => { providerQueue.observe(request.model, limits); } }));
+const workerMessages = anthropicTransport(workerKey, fetch, undefined, {
+  onRateLimits: (limits, request) => { providerQueue.observe(request.model, limits); } });
 const workerBatch = backgroundBatchTransport({ apiKey: workerKey });
 const credentialConfigured = workerKey.length > 0;
 
@@ -1927,9 +1935,11 @@ const budgetLinesFor = (obligationId: string, subjectId: string): { readonly lin
  * cannot be read, or the ledger, refuses.
  */
 let autonomousHoldSeq = 0;
+const guardedMessagesFor = (work: string, transport: ModelTransport = workerMessages): ModelTransport =>
+  providerQueue.transport(fleetSafety.guardedModelTransport("anthropic", work, transport));
 const autonomousTransportFor = (transport: ModelTransport) => (jurisdiction: AutonomousJurisdiction): ModelTransport =>
   areaGuardedTransport({
-    transport: fleetSafety.guardedModelTransport("anthropic", jurisdiction.subjectId, transport),
+    transport: guardedMessagesFor(jurisdiction.subjectId, transport),
     holds: spendHolds,
     jurisdiction,
     areasFor: (j) => {
@@ -1955,7 +1965,8 @@ let paidCapacityHoldSaid = false;
 const paidWorkerCapacity = (readyWork?: number) => {
   const limits = providerQueue.limits(MODELS.haiku.model);
   const spent = fleetSafety.admissionSpendUsd();
-  const providerHeld = fleetSafety.snapshot(nowIso()).providerCircuits.some(circuit => circuit.provider === "anthropic");
+  const providerHeld = fleetSafety.snapshot(nowIso()).providerCircuits.some(circuit =>
+    circuit.provider === "anthropic" && Date.parse(circuit.eligibleAt) > Date.parse(nowIso()));
   const capacity = researchPaidWorkerCapacity({
     modelEnabled: modelLaneEnabled && !providerHeld,
     spentUsd: spent, ceilingUsd: effectiveCeilingUsd,
@@ -2451,16 +2462,12 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
       const held = await prewarmHold.admit(worst, "the cycle's pre-warm");
       if (!held.admit) return { status: "SKIPPED", at, model, code: held.code, detail: `no paid call: ${held.why}`, durationMs: Date.now() - started };
     }
-    const transport = fleetSafety.guardedModelTransport("anthropic", prewarmHold?.obligationId ?? "scout-prewarm", workerMessages);
+    const transport = guardedMessagesFor(prewarmHold?.obligationId ?? "scout-prewarm");
     /* A failed pre-warm leaves its hold standing: what it was billed is unknown. */
     const response = await transport(request);
     const metered = readMeteredUsage(response.usage ?? {});
     const priced = priceMeteredUsage(model, metered, "5m");
     const durationMs = Date.now() - started;
-    if (prewarmHold !== null) {
-      const failed = await spendHolds.settle(prewarmHold.jobId, priced.usd, nowIso());
-      if (failed !== null) runtimeConditions.push(`the pre-warm's budget hold could not be settled (${failed}); it counts in full for its window`);
-    }
     const cost: AttemptCost = {
       inputTokens: metered.uncachedInputTokens === null ? null : metered.uncachedInputTokens + (metered.cacheReadInputTokens ?? 0) + (metered.cacheCreationInputTokens ?? 0),
       outputTokens: metered.outputTokens,
@@ -2482,7 +2489,11 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
         cost, recordedAt: at,
       },
       at,
-    ).catch(() => undefined);
+    );
+    if (prewarmHold !== null) {
+      const failed = await spendHolds.settle(prewarmHold.jobId, priced.usd, nowIso());
+      if (failed !== null) runtimeConditions.push(`the pre-warm's budget hold could not be settled (${failed}); it counts in full for its window`);
+    }
     if (priced.usd !== null) spentThisCycle += priced.usd;
     return { status: "WARMED", at, cacheCreationInputTokens: metered.cacheCreationInputTokens, cacheReadInputTokens: metered.cacheReadInputTokens, uncachedInputTokens: metered.uncachedInputTokens, usd: priced.usd, durationMs };
   } catch (error) {
@@ -2511,7 +2522,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         onStarted: pid => console.log(`  Scout lease worker process: pid ${pid}; ${scheduled.obligation.id}`), deps }),
       /* MW-021: every request is checked against what the job holds on its Send and area budgets before the Fleet guard reserves it. */
       transport: budgetGuardedTransport({
-        transport: fleetSafety.guardedModelTransport("anthropic", scheduled.obligation.id, workerMessages),
+        transport: guardedMessagesFor(scheduled.obligation.id),
         job: () => jobSpend.get(scheduled.obligation.id) ?? null,
         worstCaseOf: modelRequestWorstCaseUsd,
         priceOf: modelResponseUsd,
@@ -2561,7 +2572,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
       },
       onResult: async (result: ScoutResult, artifacts: readonly WorkArtifact[]) => {
         let amended = result;
-        if ((result.refusal === null && result.candidates.length > 0) || result.sourceDeadEnds?.length) {
+        if (candidateStoreUnreadable === null && ((result.refusal === null && result.candidates.length > 0) || result.sourceDeadEnds?.length)) {
           try {
             const report = await proposeScoutCandidates({ repos, result, artifacts, stamp: today() });
             candidateReports.push(report);
@@ -2764,7 +2775,7 @@ const cycle = await runCycle({
   /* With no DISPATCH pending (the set above is empty), the selected expansion scopes' due work goes first instead. */
   ...(scopePlaceFirst !== null ? { placeFirst: scopePlaceFirst } : {}),
   research: {
-    decide: (row) => decisionFor(row.obligation.id, row.obligation.routeId),
+    decide: (row) => (!modelLaneEnabled && plainDecisionBeforeDetective.get(row.obligation.id)) || decisionFor(row.obligation.id, row.obligation.routeId),
     /* The same canonical band comparator used for the visible/opening queue reaches the actual Scout pool. */
     compareModelRows: compareScoutRows,
     admitScout: (row) => {
@@ -2973,11 +2984,17 @@ async function runAutonomousWave() {
   await refreshPlaceOrder();
   const fleet = await makeAutonomousFleet();
   const held = await planHeldWorkerFleet(ROOT, fleet, true);
+  const workItemsById = new Map<string, WorkItem>();
   const planned = await runAutonomousCoordinator(fleet, { planOnly: true,
+    onSelectionSnapshot: items => { for (const item of items) workItemsById.set(item.id, item); },
     prioritizedInstructions: placeOrder.map((receiptId, priority) => ({ receiptId, priority })) });
+  const plannedTasks = planned.decisions.filter(row => row.task && (row.action === "WORKER" ||
+    (row.action === "SCOUT" && paidWorkerCapacity() > 0))).map(row => row.task!);
   const taskIds = [...new Set([...held.map(task => task.id),
-    ...planned.decisions.filter(row => row.task && (row.action === "WORKER" ||
-      (row.action === "SCOUT" && paidWorkerCapacity() > 0))).map(row => row.task!.id)])];
+    ...plannedTasks.map(task => task.id)])];
+  const taskWorkIds = new Map([...held, ...plannedTasks].map(task => [task.id, task.workItemId]));
+  const metadata = new Map(taskIds.map(id => [id, workItemsById.get(taskWorkIds.get(id)!)]));
+  workItemsById.clear();
   const plainTaskIds = new Set([...held.filter(task => !["SCOUT", "DETECTIVE"].includes(task.workerTask?.role ?? "")).map(task => task.id),
     ...planned.decisions.filter(row => row.task && row.action === "WORKER" &&
       !["SCOUT", "DETECTIVE"].includes(row.task.workerTask?.role ?? "")).map(row => row.task!.id)]);
@@ -2992,14 +3009,7 @@ async function runAutonomousWave() {
   };
   // Every child pulls from the same full wave. Capture hunt rounds once;
   // completed/leased tasks disappearing must not reset a hunt to round zero.
-  const readTaskQueue = async () => {
-    const items = await Promise.all(taskIds.map(async id => {
-      try {
-        const row = await repos.routeTasks.read(id);
-        return row ? await repos.workItems.read(row.value.workItemId) : null;
-      } catch (error) { failedQueueRead(id, error); return null; }
-    }));
-    const metadata = new Map(taskIds.map((id, index) => [id, items[index]?.value]));
+  const readTaskQueue = () => {
     const rank = (id: string): number => {
       const item = metadata.get(id);
       if (!item) return Infinity;
@@ -3039,8 +3049,8 @@ async function runAutonomousWave() {
       if ("code" in found) throw new SendBudgetRefusal(found.code, found.why);
       const job = new JobSpend(spendHolds, requestJobId, owner?.value.obligationId ?? task.id, found.lines);
       const transport = budgetGuardedTransport({ job: () => job,
-        transport: fleetSafety.guardedModelTransport("anthropic", jurisdiction.subjectId,
-          batching ? workerBatch.withJournal(journal) : workerMessages),
+        transport: batching ? fleetSafety.guardedModelTransport("anthropic", jurisdiction.subjectId,
+          workerBatch.withJournal(journal)) : guardedMessagesFor(jurisdiction.subjectId),
         worstCaseOf: modelRequestWorstCaseUsd, priceOf: modelResponseUsd });
       let response;
       try { response = await transport(request); }
@@ -3059,7 +3069,7 @@ async function runAutonomousWave() {
     reserveEscalation: scoutEscalationReservation(fleetSafety),
     orderPending: async ids => {
       await refreshPlaceOrder();
-      const queue = await (taskQueue ??= readTaskQueue().catch(error => { taskQueue = null; throw error; }));
+      const queue = taskQueue ??= readTaskQueue();
       const paidOpen = paidWorkerCapacity() > 0;
       // Only ordering is a wave snapshot. A changed task role must still read
       // the current paid admission; the child re-reads its task before claiming.
@@ -3103,6 +3113,9 @@ let candidatePublications: CandidatePublicationCycleReport | null = null;
 let candidatePublicationsState = "not run: no original-scope candidacy admission";
 const MEETINGS_DISCOVERY_ENABLED = process.env.WTP_MEETINGS_DISCOVERY !== "off";
 let meetingsDiscoveryByOutcome: Record<string, number> = {};
+let roundVaultIndex: VaultIndex | undefined;
+let roundVaultRead: Promise<VaultIndex> | undefined;
+const readRoundVault = (signal?: AbortSignal) => roundVaultRead ??= indexVault(join(ROOT, ...VAULT_DIR), undefined, { signal }).then(index => (roundVaultIndex=index,index));
 try {
 
 /*
@@ -3163,15 +3176,22 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
     if (directoryRegistry && directoryRegistry.kind !== "PROMOTED") throw new Error("Published body directory cannot be read for meeting discovery; its source work remains owed.");
     const meetingHints = directoryRegistry?.kind === "PROMOTED" ? directoryMeetingHints(directoryItems, directoryRegistry.value, ROUTE_HINTS) : ROUTE_HINTS;
     let costSeq = 0;
-    let officialPagesRead: Promise<{canonicalUrl:string;text:string}[]> | undefined;
+    const readOfficialText = async (held: HeldVaultArtifact) => {
+      const signal = AbortSignal.timeout(Math.max(1, Math.min(VAULT_READ_TIMEOUT_MS, discoveryDeadlineMs - Date.now())));
+      try { return new TextDecoder().decode(await readHeldBytes(held, signal)); }
+      catch (error) {
+        if (Date.now() < discoveryDeadlineMs) runtimeConditions.push(`Official-source linking evidence unreadable: ${held.id}`);
+        throw error;
+      }
+    };
+    let officialPagesRead: Promise<{canonicalUrl:string;readText:()=>Promise<string>}[]> | undefined;
     const readOfficialPages = () => officialPagesRead ??= (async () => {
-      const index = await indexVault(join(ROOT, ...VAULT_DIR));
-      const pages: {canonicalUrl:string;text:string}[] = [];
+      const index = await readRoundVault(AbortSignal.timeout(Math.max(1, discoveryDeadlineMs - Date.now())));
+      const pages: {canonicalUrl:string;readText:()=>Promise<string>}[] = [];
       for (const held of index.byId.values()) {
         if (!held.canonicalUrl || held.tier === "RESTRICTED_RAW" || held.retentionPolicy === "DIAGNOSTIC" ||
           held.httpStatus === null || held.httpStatus < 200 || held.httpStatus >= 300 || !/html/i.test(held.contentType)) continue;
-        try { pages.push({canonicalUrl:held.canonicalUrl,text:new TextDecoder().decode(await readHeldBytes(held))}); }
-        catch { runtimeConditions.push(`Official-source linking evidence unreadable: ${held.id}`); }
+        pages.push({ canonicalUrl: held.canonicalUrl, readText: () => readOfficialText(held) });
       }
       return pages;
     })();
@@ -3201,8 +3221,17 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
           };
         },
         spaceOut: spacer,
-        vault: vault.put,
+        vault: async (artifact, bytes) => {
+          const stored=await vault.put(artifact,bytes);
+          if(stored.stored && roundVaultIndex) includeVaultCapture(roundVaultIndex,artifact,stored.where,join(ROOT,...VAULT_DIR));
+          return stored;
+        },
         readOfficialPages,
+        readOfficialPageTextFor: async artifact => {
+          const held = (await readRoundVault()).byHash.get(artifact.contentHash.slice("sha256-".length));
+          if (!held) throw new Error(`Official-source linking capture is not held: ${artifact.id}`);
+          return readOfficialText(held);
+        },
         now: nowIso,
         budget: {
           spent: () => Date.now() >= discoveryDeadlineMs,
@@ -3270,7 +3299,7 @@ if (dry || canary || ONLY !== null || IDS !== null) {
       const holdings = candidateEnrichmentHoldings();
       if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
       const { subjects, linked } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
-      const vaultIndex = await indexVault(join(ROOT, ...VAULT_DIR));
+      const vaultIndex = await readRoundVault();
       /* An unreadable manifest holds only the Marginalia answers back a cycle; the held Scout findings still go through. */
       let stagingManifest: ReturnType<typeof readStagingManifest> = null;
       try {
@@ -3329,7 +3358,7 @@ if (dry || canary || ONLY !== null || IDS !== null || intents.runnerPause.paused
 } else {
   const leavePublications = pending.enter("candidate-publications");
   try {
-    const vaultRead = await indexVault(join(ROOT, ...VAULT_DIR));
+    const vaultRead = await readRoundVault();
     // Once an ACQUIRER begins committing a captured page or a typed blocked
     // disposition, let that repository operation settle. Racing a writer with
     // a wall timer would leave an apparently stopped pass writing in the back.
@@ -3527,7 +3556,9 @@ leavePromotionTail();
 const finalizationReads = canary ? null : Promise.allSettled([
   repos.scoutResults.readAll(),
   repos.costs.readSince(new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
-  repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE"),
+  repos.ownerDigests.readRecentWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE",
+    Number.MAX_SAFE_INTEGER, { runtimeOutcome: ["kind", "startedAt", "research"] },
+    new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
   readMethodCandidateStore(repos),
   dry ? Promise.resolve(null) : readMethodKnowledge(repos),
 ] as const);
@@ -3548,7 +3579,9 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
     const since = Date.parse(at) - RESEARCH_BOUNDS.windowHours * 3_600_000;
     if (historyRead.status === "rejected") throw historyRead.reason;
     const priorDigests = historyRead.value;
-    for (const rec of freshnessCycleOutcomes(priorDigests)) {
+    for (const row of [...priorDigests].reverse()) {
+      const rec = (row as { runtimeOutcome?: Pick<FreshnessCycleOutcome, "kind" | "startedAt" | "research"> }).runtimeOutcome;
+      if (rec?.kind !== "FRESHNESS_CYCLE") continue;
       const lanes = rec.research?.lanes;
       if (!lanes || Date.parse(rec.startedAt) < since) continue;
       windowCycles.push({
@@ -3747,7 +3780,8 @@ const researchLines = [
   "FLEET SAFETY",
   `  state              ${safety.status}`,
   `  model spend        cycle ${safety.cycle.modelUsd === null ? "UNMEASURED" : `$${safety.cycle.modelUsd.toFixed(4)}`} · ` +
-    `rolling 24h ${safety.rolling24Hours.modelUsd === null ? "UNMEASURED" : `$${safety.rolling24Hours.modelUsd.toFixed(4)}`} / $${safety.bounds.rolling24HourModelUsd.toFixed(2)} (the one spend ceiling)`,
+    `rolling 24h ${safety.rolling24Hours.modelUsd === null ? "UNMEASURED" : `$${safety.rolling24Hours.modelUsd.toFixed(4)}`} / $${safety.bounds.rolling24HourModelUsd.toFixed(2)} (the one spend ceiling)` +
+    ((safety.rolling24Hours.worstCaseCharges ?? 0) > 0 ? ` · ${safety.rolling24Hours.worstCaseCharges} unpriced charge(s) counted at worst case` : ""),
   `  aggregate          dispatches ${safety.cycle.dispatches} · requests ${safety.cycle.requests} · payload bytes ${safety.cycle.payloadBytes} · ` +
     `per-download cap ${safety.bounds.maxDownloadBytes} · elapsed ${safety.cycle.elapsedMs}ms`,
   `  stopped/deferred   ${safety.stoppedBecause.length === 0 ? "none" : safety.stoppedBecause.join("; ")}`,
@@ -4158,7 +4192,7 @@ if (!dry && !canary && process.env.WTP_ADMIN_EVIDENCE_MIRROR_ENABLED === "1") {
   try {
     const mirror = await runAdminEvidenceMirror({ repos, vaultRoot: join(ROOT, ...VAULT_DIR),
         cursorPath: join(ROOT, "data", "control-plane", "admin-evidence-mirror.cursor.json"),
-        deadlineMs: Number.POSITIVE_INFINITY });
+        deadlineMs: Date.now() + ADMIN_MIRROR_BUDGET_MS });
     console.log(`  private Admin evidence mirror: ${mirror.state}; examined ${mirror.examined}, copied ${mirror.copied}, verified existing ${mirror.alreadyVerified}, refused ${mirror.refused}`);
     if (mirror.failures.length) console.error(`  private Admin evidence copy remains owed: ${mirror.failures.slice(0, 8).join("; ")}`);
   } catch (error) {

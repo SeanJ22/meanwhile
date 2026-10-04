@@ -69,8 +69,17 @@ for(const width of [390,1280]) {
   await page.screenshot({path:dir+'/card-'+width+'-'+theme+'.png',fullPage:true});
   await page.getByRole('button',{name:'Close Public meeting'}).click();
   if(await page.locator('#closed').textContent()!=='Closed')throw new Error('Close action failed');
-  if(errors.length)throw new Error(errors.join('\n'));
-  result.push({width,theme,rungs,overflow,mapFallbackMs,WebGLDisabledNavigationAndList:'pass',sourcesDisclosure:'pass',closeAction:'pass'});
+  const cardScroll=await page.locator('.reader-card').evaluate(card=>{
+ const body=card.querySelector('.reader-card-body');
+ card.style.maxHeight='180px';
+ const padding=document.createElement('div');padding.style.height='1000px';body.append(padding);
+ body.scrollTop=body.scrollHeight;
+ const result={scrollHeight:body.scrollHeight,clientHeight:body.clientHeight,scrollTop:body.scrollTop,headerFixed:card.querySelector('.reader-card-header').getBoundingClientRect().top>=card.getBoundingClientRect().top};
+ padding.remove();card.style.maxHeight='';return result;
+});
+if(cardScroll.scrollTop<=0||cardScroll.scrollHeight<=cardScroll.clientHeight||!cardScroll.headerFixed)throw new Error('Card body does not scroll safely: '+JSON.stringify(cardScroll));
+if(errors.length)throw new Error(errors.join('\n'));
+  result.push({width,theme,rungs,overflow,mapFallbackMs,WebGLDisabledNavigationAndList:'pass',sourcesDisclosure:'pass',closeAction:'pass',cardScroll});
  }
 }
 writeFileSync(dir+'/result.json',JSON.stringify(result,null,2)+'\n');

@@ -3,6 +3,9 @@
 > eslint
 
 
+/workspace/meanwhile/.factory/evidence/frontend/batch-01/browser-proof.mjs
+  3:10  warning  'pathToFileURL' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
 /workspace/meanwhile/app/(admin)/_mw/admin-v6/screen-now.tsx
   301:9  warning  'N' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
 
@@ -156,5 +159,5 @@
 /workspace/meanwhile/tests/trusted-lkg-import.test.ts
   644:11  warning  'store' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
 
-✖ 69 problems (0 errors, 69 warnings)
+✖ 70 problems (0 errors, 70 warnings)
 

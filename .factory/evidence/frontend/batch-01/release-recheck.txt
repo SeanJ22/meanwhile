@@ -1,0 +1,100 @@
+✔ built registry routes contain their canonical geometry and roster inputs (22.44288ms)
+✔ a completed production build has current state serving projections (14.04938ms)
+✔ every non-shipping prefix carries a stated reason (0.163038ms)
+✔ the shipping directories are NOT on the allowlist (0.488506ms)
+✔ the paperwork paths ARE on the allowlist (0.163599ms)
+✔ a docs-only commit cancels; one shipping path anywhere in it builds (0.303161ms)
+✔ an unknown path is SHIPPING — the allowlist direction is the rule (0.15721ms)
+✔ an uncomputable diff BUILDS and says so, and is never a cancel (0.292143ms)
+✔ previews and branch deploys cancel without needing a diff (0.183618ms)
+✖ no file under a non-shipping prefix is traced into the deploy (99.449418ms)
+✔ SEEDED (NH289): a shipping commit accumulated in the range BUILDS, even under a data-only head (0.258365ms)
+✔ POSITIVE CONTROL (NH289): the observer commit alone cancels — the filter was never the defect (0.148356ms)
+  THIS RUN SPENDS EXTERNAL MAPTILER QUOTA. Both gates are open (WTP_PROVIDER_ACCESS=maptiler and the launch asked for it). At most 25 request(s) will be allowed to leave, and asking for one more fails the run.
+  chromium explicit executable (Playwright revision unavailable) — SUBSTITUTED for the pinned 1234, which is not installed. Launching /usr/bin/chromium
+  chromium explicit executable (Playwright revision unavailable) — SUBSTITUTED for the pinned 1234, which is not installed. Launching /usr/bin/chromium
+✖ THE PLANT: a guarded synthetic browser with a configured key does reach MapTiler (1219.633533ms)
+  This run asked to spend maptiler quota and WTP_PROVIDER_ACCESS does not say maptiler, so it is BLOCKED. Opting in is deliberate and both halves are required: set WTP_PROVIDER_ACCESS=maptiler for the one command that means to spend.
+  chromium explicit executable (Playwright revision unavailable) — SUBSTITUTED for the pinned 1234, which is not installed. Launching /usr/bin/chromium
+✔ THE BARRIER: the same page, the same key, and nothing reaches the provider (880.116324ms)
+  THIS RUN SPENDS EXTERNAL MAPTILER QUOTA. Both gates are open (WTP_PROVIDER_ACCESS=maptiler and the launch asked for it). At most 2 request(s) will be allowed to leave, and asking for one more fails the run.
+  chromium explicit executable (Playwright revision unavailable) — SUBSTITUTED for the pinned 1234, which is not installed. Launching /usr/bin/chromium
+✔ the environment alone cannot open the barrier, and neither can the option alone (853.995969ms)
+
+  !! CEILING EXCEEDED: this run was allowed 2 maptiler request(s) and asked for another. Every further request is refused and the run fails.
+
+✖ the ceiling is hard, and a run that blows it fails rather than reporting a result (847.92108ms)
+
+Interrupted while running:
+
+⚠ tests/maptiler-barrier.test.ts (tests/maptiler-barrier.test.ts:1:1)
+✖ tests/maptiler-barrier.test.ts (181762.535406ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 13
+ℹ fail 3
+ℹ cancelled 1
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 181775.199402
+
+✖ failing tests:
+
+test at tests/deploy-paths.test.ts:174:1
+✖ no file under a non-shipping prefix is traced into the deploy (99.449418ms)
+  AssertionError [ERR_ASSERTION]: 3330 traced file(s) sit under a non-shipping prefix — the allowlist would cancel a build that changes them: data/ballot/candidate-cards-2026.json, data/ballot/candidate-links-2026.json, data/candidates/corpus-2026.json, data/congress-legislators/directory.json, data/derived/resolver-geometry.json, data/derived/zip-divisions/00.json, data/derived/zip-divisions/01.json, data/derived/zip-divisions/02.json, data/derived/zip-divisions/03.json, data/derived/zip-divisions/04.json
+  
+  3330 !== 0
+  
+      at TestContext.<anonymous> (file:///workspace/meanwhile/tests/deploy-paths.test.ts:214:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 3330,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/maptiler-barrier.test.ts:139:1
+✖ THE PLANT: a guarded synthetic browser with a configured key does reach MapTiler (1219.633533ms)
+  AssertionError [ERR_ASSERTION]: the plant did not land: with the barrier open, a guarded browser must still reach the provider — otherwise this file proves nothing about the barrier
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///workspace/meanwhile/tests/maptiler-barrier.test.ts:163:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/maptiler-barrier.test.ts:242:1
+✖ the ceiling is hard, and a run that blows it fails rather than reporting a result (847.92108ms)
+  AssertionError [ERR_ASSERTION]: exactly the ceiling may leave — no more, and not fewer
+  
+  0 !== 2
+  
+      at TestContext.<anonymous> (file:///workspace/meanwhile/tests/maptiler-barrier.test.ts:260:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/maptiler-barrier.test.ts:1:1
+✖ tests/maptiler-barrier.test.ts (181762.535406ms)
+  'Promise resolution is still pending but the event loop has already resolved'

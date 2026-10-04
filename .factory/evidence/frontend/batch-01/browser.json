@@ -35,10 +35,16 @@
       }
     ],
     "overflow": false,
-    "mapFallbackMs": 558,
+    "mapFallbackMs": 978,
     "WebGLDisabledNavigationAndList": "pass",
     "sourcesDisclosure": "pass",
-    "closeAction": "pass"
+    "closeAction": "pass",
+    "cardScroll": {
+      "scrollHeight": 1292,
+      "clientHeight": 99,
+      "scrollTop": 1193,
+      "headerFixed": true
+    }
   },
   {
     "width": 390,
@@ -76,10 +82,16 @@
       }
     ],
     "overflow": false,
-    "mapFallbackMs": 202,
+    "mapFallbackMs": 403,
     "WebGLDisabledNavigationAndList": "pass",
     "sourcesDisclosure": "pass",
-    "closeAction": "pass"
+    "closeAction": "pass",
+    "cardScroll": {
+      "scrollHeight": 1292,
+      "clientHeight": 99,
+      "scrollTop": 1193,
+      "headerFixed": true
+    }
   },
   {
     "width": 1280,
@@ -117,10 +129,16 @@
       }
     ],
     "overflow": false,
-    "mapFallbackMs": 223,
+    "mapFallbackMs": 272,
     "WebGLDisabledNavigationAndList": "pass",
     "sourcesDisclosure": "pass",
-    "closeAction": "pass"
+    "closeAction": "pass",
+    "cardScroll": {
+      "scrollHeight": 1271,
+      "clientHeight": 99,
+      "scrollTop": 1172,
+      "headerFixed": true
+    }
   },
   {
     "width": 1280,
@@ -158,9 +176,15 @@
       }
     ],
     "overflow": false,
-    "mapFallbackMs": 286,
+    "mapFallbackMs": 163,
     "WebGLDisabledNavigationAndList": "pass",
     "sourcesDisclosure": "pass",
-    "closeAction": "pass"
+    "closeAction": "pass",
+    "cardScroll": {
+      "scrollHeight": 1271,
+      "clientHeight": 99,
+      "scrollTop": 1172,
+      "headerFixed": true
+    }
   }
 ]

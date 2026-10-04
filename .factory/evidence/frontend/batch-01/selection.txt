@@ -1,5 +1,22 @@
-ci-affected-tests · FULL — .factory/frontend.md is not code the import graph follows
+ci-affected-tests · FULL — .factory/evidence/frontend/batch-01/blocked-browser-download.txt is not code the import graph follows
 changed:
+  .factory/evidence/frontend/batch-01/blocked-browser-download.txt
+  .factory/evidence/frontend/batch-01/browser-proof.mjs
+  .factory/evidence/frontend/batch-01/browser-repair-focused.txt
+  .factory/evidence/frontend/batch-01/browser.json
+  .factory/evidence/frontend/batch-01/card-1280-dark.png
+  .factory/evidence/frontend/batch-01/card-1280-light.png
+  .factory/evidence/frontend/batch-01/card-390-dark.png
+  .factory/evidence/frontend/batch-01/card-390-light.png
+  .factory/evidence/frontend/batch-01/checks.json
+  .factory/evidence/frontend/batch-01/focused.txt
+  .factory/evidence/frontend/batch-01/full-result.json
+  .factory/evidence/frontend/batch-01/initial-full.log.gz
+  .factory/evidence/frontend/batch-01/lint-welcome-tests.txt
+  .factory/evidence/frontend/batch-01/lint.txt
+  .factory/evidence/frontend/batch-01/repaired-full.log.gz
+  .factory/evidence/frontend/batch-01/selection.txt
+  .factory/evidence/frontend/batch-01/types.txt
   .factory/frontend.md
   app/ballot/page.tsx
   app/globals.css
@@ -20,6 +37,8 @@ changed:
   tests/map-startup.test.ts
   tests/office-tiers.test.ts
   tests/reader-card.test.tsx
+  tests/returning-reader.test.ts
   tests/rhythm-tokens.baseline.json
   tests/rhythm-tokens.test.ts
+  tests/welcome-copy.test.ts
 needs_browser=true

@@ -3,11 +3,11 @@ worker: measures
 provider: Claude
 run_id: session_01RkTH4irupRuJQD5Ny5gPmk
 lock: measures-20261004-061450-01RkTH
-heartbeat: 2026-10-04T06:58:33Z
+heartbeat: 2026-10-04T07:01:03Z
 on_river: none
-ready: SC-01 @ 7d3c08528e09af8fd9eaccedc6b12073716ec470; SC-03 @ 1e2161a7d449bd7c2928ba45ed3e7435ee804a07; SC-20 @ 409187029bff1ebbe06a953c2eca71844f9595ec; SC-02 @ 5e52e0c20d51d9fc45e757a4bb410d7bbb7efc3d; SC-05 @ cac2cb10ccdb007f0040cec259a2dbff1beba1be; SC-12 @ 0fe4d20205dcbd0e89aaa61e98ecac7a82985de5
-checks: tsc --noEmit clean; eslint clean on changed files at 0fe4d20205dcbd0e89aaa61e98ecac7a82985de5. Tests: new open-blanks (grouping, family skipping, a second pass on a fully captured place reads zero sources and reports skipped families), plus place-statuses, place-percent, checklist-map, dispatch-work, held-place-capture, admin-v6-*, assignment-view, coverage, plural: 310 pass in the related set; coverage.test and plural.test show only the 3 failures (national geography walk, Arizona district seats x2) that also fail on the unchanged base. Full suite not run. Admin progress note not viewed live (no Admin sign-in here); the note JSON now carries families, skippedFamilies and sourcesRead.
-working_on: SC-12 ready (CH-17 to CH-21 can start once SC-05 and SC-12 are on River). Next in order: SC-08, SC-10 (needs BR-24 admin), BR-22 (needs SC-02, which is ready), BR-34, SC-04.
+ready: SC-01 @ 7d3c08528e09af8fd9eaccedc6b12073716ec470; SC-03 @ 1e2161a7d449bd7c2928ba45ed3e7435ee804a07; SC-20 @ 409187029bff1ebbe06a953c2eca71844f9595ec; SC-02 @ 5e52e0c20d51d9fc45e757a4bb410d7bbb7efc3d; SC-05 @ cac2cb10ccdb007f0040cec259a2dbff1beba1be; SC-12 @ 0fe4d20205dcbd0e89aaa61e98ecac7a82985de5; SC-08 @ cc8c0cf59d57b581fead4c1fa68cfab1acce1ab2
+checks: tsc --noEmit clean; eslint clean on changed files at cc8c0cf59d57b581fead4c1fa68cfab1acce1ab2. Tests: new place-coverage plus admin-v6-*, admin-v6-ui, open-blanks, place-statuses, checklist-map: 194 pass, 0 fail. Full suite not run. Live Admin line "Governments: N of M accounted for · Bodies: K found, total unknown" not viewed (no Admin sign-in here). Seats expected come only from held compositions (REF-06 or OFF-10 carrying authorized seats); none are captured yet, so seats and people read "total unknown" until a composition is held.
+working_on: SC-08 ready. Next: SC-04, then BR-22 (shared files need hooks), BR-34 waits on BR-14, SC-13, SC-14 (needs BR-06), SC-16, SC-07, SC-09.
 waiting_on: BR-23: BR-01 (admin lane) not yet on river. SC-17: Sean's decision D7 (parked)
 returned: none
 needs_hook: BR-08: admin-owned lib/control-plane/gateway/registry.ts (expansion.scope.set accepts a "state" scope type) and hunters-owned scripts/freshness-shadow.mts:1252-1278 (runner place ordering reads "state"). Requested through River; scopes.ts, place-owed-read memo, bulk-hunts.tsx and actions.ts are mine and proceed.

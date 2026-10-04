@@ -1,9 +1,9 @@
-build_state: waiting
+build_state: active
 worker: hunters
 provider: Claude
-run_id: session_01Tcr8g6Zc9uhpTgFoLgegYL
-lock: none
-heartbeat: 2026-10-04T06:58:22Z
+run_id: session_018RBYe1K4Ya5TSyE7CzC2T6
+lock: hunters-20261004T071804Z-s018RBY
+heartbeat: 2026-10-04T07:18:04Z
 on_river: none
 ready: CH-02 at 9ae2d28bd8aba50e493664def23666c25a1eef3e
 checks: tsc --noEmit clean; eslint clean on changed files; affected selector chose 548 test files, run on 9ae2d28b-equivalent tree: 244 failures, all also failing on base 0b31938 (sandbox has no store/DB/network) except 3 caused by CH-02, which were updated and now pass; tests/fleet-safety, admin-research, assignment-identity, expansion-scopes, append-only-log-pagination pass. Not run: live Admin check.

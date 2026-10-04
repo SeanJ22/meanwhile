@@ -19,11 +19,11 @@ export function retiredPluralStateRosterFiles(): readonly string[] {
 }
 
 /**
- * The sole exception to the production boundary is Node's explicit test
- * runner. This keeps recorded fixtures useful for deterministic contract tests
+ * The tracked state rosters stay out of every deployed read. The sole exception
+ * is Node's explicit test runner. This keeps recorded fixtures useful for deterministic contract tests
  * without turning them back into a deployable fallback.
  */
-export function mayReadRetiredPluralRoster(
+function mayReadTrackedStateRosterFixture(
   nodeTestContext: string | null | undefined = process.env.NODE_TEST_CONTEXT,
   nodeEnv: string | undefined = process.env.NODE_ENV,
 ): boolean {
@@ -44,14 +44,14 @@ export function officeholderIdentityMayEnterReader(
   nodeTestContext: string | null | undefined = process.env.NODE_TEST_CONTEXT,
   nodeEnv: string | undefined = process.env.NODE_ENV,
 ): boolean {
-  return !officeholderId.startsWith("plural:") || mayReadRetiredPluralRoster(nodeTestContext, nodeEnv);
+  return !officeholderId.startsWith("plural:") || mayReadTrackedStateRosterFixture(nodeTestContext, nodeEnv);
 }
 
 export function officeholderRosterFiles(
   nodeTestContext: string | null | undefined = process.env.NODE_TEST_CONTEXT,
   nodeEnv: string | undefined = process.env.NODE_ENV,
 ): readonly string[] {
-  return mayReadRetiredPluralRoster(nodeTestContext, nodeEnv)
+  return mayReadTrackedStateRosterFixture(nodeTestContext, nodeEnv)
     ? heldRosterFiles(process.cwd())
     : PRODUCTION_OFFICEHOLDER_ROSTER_FILES;
 }

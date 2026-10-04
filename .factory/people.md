@@ -2,7 +2,7 @@ build_state: active
 worker: people
 provider: Claude
 run_id: scheduled-2026-10-04T12Z
-lock: people-20261004T12Z-c7f1
+lock: none
 heartbeat: 2026-10-04T12:25:59Z
 on_river: CA-15 @ ac936387a (river 2009e8440, fold 10:58Z)
 ready: CA-40 + CA-41 (modules; live behaviour needs the two hooks below) @ 10677c503; CA-09 @ 542338583; CA-12 composer module (live behaviour needs the hook below) @ ceb0b0c1e; CA-06 @ 4b5bbc1dc; CA-42 departed-seat module @ 108ec9fb7 (live behaviour needs the second hook); CA-03 @ 2bc65b669 (the roster publisher accepts and page-verifies ISO termStart/termEnd; a reader that emits them from a term column is not built, so no live roster fills them yet); CA-13 @ 01894c1c4 (not verified against live: needs the live chips check after release); SC-15 @ 9a185c1c0 (exactScopeMembers kept, moved to lib/control-plane/provider-billing-scope-members.ts because billing attribution uses it; the checklist-instances route and its test were also removed since they only read the deleted index); SC-18 @ c022a0df9; CA-15 @ ac936387a (the module and its index entry are built; the live Admin view of the records belongs to the admin lane and reads unifiedStatementSweep in lib/corpus/unified.ts; people lists come from the roster and ballot readers)

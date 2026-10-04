@@ -1,16 +1,16 @@
-build_state: active
+build_state: waiting
 worker: hunters
 provider: Claude
 run_id: session_018RBYe1K4Ya5TSyE7CzC2T6
-lock: hunters-20261004T072606Z-s018RBY
-heartbeat: 2026-10-04T07:26:06Z
+lock: none
+heartbeat: 2026-10-04T07:30:52Z
 on_river: none
-ready: CH-02 at 9ae2d28bd8aba50e493664def23666c25a1eef3e; CH-06 at 89c20a3a107df0573005bade4344c8fcee7a953b; hooks BR-08 and DB-09 at 48dca0016542e2a864dd10cb581b06d8a1a9a26b (DB-09 hook adds the doors table to the console-input query, so it must fold after registry DB-09 creates cp_doors)
-checks: CH-06: tsc --noEmit clean; eslint 0 errors on workers/ and new test; tests/worker-fleet-*, cycle-lease-startup, dead-lease-sweep, new lease-runtime-once: 192/192 pass (run with DATABASE_URL and WTP_ASSET_STORE unset). Not run: full CI selector, live Admin tasks-per-hour check. CH-02 checks as before.
-working_on: CH-10 (every funded Send gets the same rules) next
+ready: CH-02 at 9ae2d28bd8aba50e493664def23666c25a1eef3e; CH-06 at 89c20a3a107df0573005bade4344c8fcee7a953b; hooks BR-08 and DB-09 at 48dca0016542e2a864dd10cb581b06d8a1a9a26b (DB-09 hook adds the doors table to the console-input query, so it must fold after registry DB-09 creates cp_doors); CH-10 part 1 at 19cb8dafd6dfff155348c4cc58165bb475b249aa
+checks: CH-10 part 1: tsc clean; eslint 0 errors on changed files; 336/336 across 28 test files that touch the changed modules plus lease-runtime-once (DATABASE_URL, WTP_ASSET_STORE unset). Two old tests that asserted the single-hunt privilege were rewritten to the funded-Send rule. Not run: full CI selector, live Admin check. CH-02 and CH-06 checks as before.
+working_on: CH-10 remainder, then DB-48
 waiting_on: CH-01 live read (needs Admin/production access this sandbox lacks); CH-06 live proof (tasks per hour rising on the same host) needs deploy, River/Admin side. Old per-task runtime stays behind WTP_LEASE_RUNTIME_PER_TASK=1 in the runner env file until live check, then remove.
 returned: hooks BR-08 and DB-09 done at 48dca0016542e2a864dd10cb581b06d8a1a9a26b. Hook BR-05 (shut-door threshold) not done: readSetting and the setting are not on river and nothing in the runner reads a shut threshold yet; it rides CH-03 (re-read AdminConfig each batch) with the code default 3.
-needs_hook: none
+needs_hook: admin: lib/control-plane/gateway/registry.ts:1055-1075 — replace `originalLifetime` (compares to ORIGINAL_LIFETIME_HUNT) with `lifetime` for the "Fleet ceiling does not bind" wording ONLY IF Admin confirms the ceiling really exempts funded work; code in hunters lane does not exempt the Fleet ceiling for any Send, so the safer fix is to use the plain "Fleet ceiling still binds first" sentence for every Send.
 needs_Sean: CH-01: someone with Admin access must read the Workers view heartbeat commit (need 022a183c or later). This cloud sandbox cannot reach production or the live site.
-seen_not_fixed: CH-02 worst-case count: rolling24Hours.worstCaseCharges in fleet-safety snapshot; Admin display is BR-21. CH-06: the per-task guards read a per-process current-task value, so CH-28 (many hunters per process) must pass guards per task instead. CH-06 does not change the hunter count, so no memory-margin report is owed. Hooks BR-08 (freshness-shadow place order reads "state" scope), DB-09 (add "doors" to AGGREGATES in pilot-runtime-publish.mts), BR-05 (re-read AdminConfig each pass, DETECTIVE_SHUT_THRESHOLD default 3) are still to do, queued after CH-10.
+seen_not_fixed: CH-02 worst-case count: rolling24Hours.worstCaseCharges in fleet-safety snapshot; Admin display is BR-21. CH-06: the per-task guards read a per-process current-task value, so CH-28 (many hunters per process) must pass guards per task instead. CH-06 does not change the hunter count, so no memory-margin report is owed. Hooks BR-08 (freshness-shadow place order reads "state" scope), DB-09 (add "doors" to AGGREGATES in pilot-runtime-publish.mts), BR-05 (re-read AdminConfig each pass, DETECTIVE_SHUT_THRESHOLD default 3) are still to do, queued after CH-10. CH-10 engineering choice: a funded Send = budgetStartedAt set and budgetUsd > 0 (isFundedHunt in hunt-continuation.ts); funded Sends supersede overlapping rolling limits, each keeping its own allowance. scheduledBlackoutAt is already always false, so the blackout exemption changes nothing today. Remaining ORIGINAL_LIFETIME_HUNT use: lib/civic-data/manual-producer-invocation.ts (Cochise-only voting-sites source rules, place-specific code outside CH-10 files); the constant stays until that is retired.
 runs_and_working_minutes: 2 runs

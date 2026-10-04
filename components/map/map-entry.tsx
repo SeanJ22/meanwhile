@@ -2779,6 +2779,14 @@ function bodySubject(
             },
           ]
         : []),
+      // The office address and phone as the body's own page states them;
+      // their source is in this card's Sources section.
+      ...(body.officeContact?.address
+        ? [{ label: "Office address", value: <>{body.officeContact.address}</> }]
+        : []),
+      ...(body.officeContact?.phone
+        ? [{ label: "Office phone", value: <>{body.officeContact.phone}</> }]
+        : []),
       // The body's own statement of when it meets, until a dated meeting is
       // held. Never turned into dates: the page says to check its calendar.
       ...(body.meetingCadence && meetings.length === 0
@@ -2819,7 +2827,7 @@ function bodySubject(
      */
     representationNote: representationNoteForClaim(claim),
     meetings,
-    sources: districtCardSources(roster, meetings),
+    sources: districtCardSources(roster, meetings, body.officeContact?.provenance),
     // M136 (2026-08-18): the seven sections. Every one renders for every
     // body — content where the product holds it, the section's own honest
     // absence line where it does not, and never a hidden section.

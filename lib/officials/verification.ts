@@ -1,4 +1,4 @@
-import { SOURCE_WIRING } from "../registry/source-wiring.ts";
+import { activeWiring } from "../registry/source-wiring.ts";
 
 /**
  * What we may honestly say about a source's verification — g3 item 5
@@ -111,7 +111,7 @@ let ownPages: Set<string> | null = null;
 function bodyOwnPageHosts(): Set<string> {
   if (ownPages) return ownPages;
   ownPages = new Set<string>();
-  for (const row of SOURCE_WIRING) {
+  for (const row of activeWiring()) {
     if (row.agendaSourceType !== "SCHEDULEPAGE") continue;
     for (const url of [
       row.config.schedulePage,

@@ -40,19 +40,29 @@ export function doorsFromWiringRow(row: BodySourceWiring): DoorDraft[] {
     // Some adapters read one fixed host that no setting names; the partition's upstream boundary is the host actually contacted.
     const upstream = meetingAcquisitionFailureDomain(source, row).replace(/^meeting-upstream:/, "").split("/")[0];
     return {
-    doorId: meetingPartitionId(source, row.bodyId),
-    kind: source,
-    ocdId: row.ocdId,
-    bodyIds: [row.bodyId],
-    hosts: [...new Set([upstream, ...hostsOfConfig(row.config, [row.noticeUrl])])].sort(),
-    config: { ...row.config, ...(row.noticeUrl ? { noticeUrl: row.noticeUrl } : {}) },
-    holds: ["meetings"],
-    checkEveryMinutes: null,
-    notes:
-      `Hand-wired meeting door for ${row.publishingOrg}, confirmed working ${row.verifiedAt}.` +
-      (row.publishesHistory === false ? ` Its route carries no past meetings: ${row.historyGapReason ?? "reason not recorded"}` : ""),
-    status: "OPEN" as const,
-    readNow: false,
+      doorId: meetingPartitionId(source, row.bodyId),
+      kind: source,
+      ocdId: row.ocdId,
+      bodyIds: [row.bodyId],
+      hosts: [...new Set([upstream, ...hostsOfConfig(row.config, [row.noticeUrl])])].sort(),
+      config: { ...row.config },
+      holds: ["meetings"],
+      checkEveryMinutes: null,
+      notes:
+        `Hand-wired meeting door for ${row.publishingOrg}, confirmed working ${row.verifiedAt}.` +
+        (row.publishesHistory === false ? ` Its route carries no past meetings: ${row.historyGapReason ?? "reason not recorded"}` : ""),
+      meeting: {
+        agendaSourceType: row.agendaSourceType,
+        jurisdiction: row.jurisdiction,
+        publishingOrg: row.publishingOrg,
+        timeZone: row.timeZone,
+        ...(row.noticeUrl ? { noticeUrl: row.noticeUrl } : {}),
+        ...(row.publishesHistory === false ? { publishesHistory: false as const, historyGapReason: row.historyGapReason ?? "reason not recorded" } : {}),
+        verifiedAt: row.verifiedAt,
+        family: null,
+      },
+      status: "OPEN" as const,
+      readNow: false,
     };
   });
 }
@@ -70,6 +80,14 @@ export function doorFromDerivedRecord(record: DerivedWiringRecord): DoorDraft {
     holds: ["meetings"],
     checkEveryMinutes: null,
     notes: `Derived meeting door for ${row.publishingOrg}, from the reviewed crosswalk row ${row.crosswalkRowId} (reviewed ${row.reviewedAt}).`,
+    meeting: {
+      agendaSourceType: row.kind,
+      jurisdiction: row.publishingOrg,
+      publishingOrg: row.publishingOrg,
+      timeZone: row.timeZone,
+      verifiedAt: row.verifiedAt,
+      family: derivedMeetingFamilyId(row.state.replace(/^US-/, "") as never),
+    },
     status: record.status === "SUSPENDED" ? "SUSPENDED" : "OPEN",
     readNow: false,
   };

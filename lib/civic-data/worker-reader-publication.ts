@@ -69,15 +69,21 @@ export function inheritVerifiedCommentDetails(input: ManualProjectionPackage, pr
 /** Field-specific conversion to existing readers; no arbitrary model payloads.
  * Null fields mean unacquired, never an assertion that a service is absent. */
 export function workerReaderPackage(input: Parameters<typeof verifiedWorkerRecords>[0] & { registry: RegistryRuntimePrior | null }): ManualProjectionPackage {
-  if (input.plan.publication?.contractId === "ballot-contests") return workerBallotContestsPackage(input).package;
+  return workerReaderPackageWithPulls(input).package;
+}
+
+/** The package plus the published member ids an auditor's pull takes out of the next version (DP-15). */
+export function workerReaderPackageWithPulls(input: Parameters<typeof verifiedWorkerRecords>[0] & { registry: RegistryRuntimePrior | null }):
+  { readonly package: ManualProjectionPackage; readonly pulledMemberIds: ReadonlySet<string> } {
+  if (input.plan.publication?.contractId === "ballot-contests") return { package: workerBallotContestsPackage(input).package, pulledMemberIds: new Set() };
   const target = input.plan.publication;
   requirePublication(target && isWorkerReaderContract(target.contractId), "READER_CONTRACT_UNRESOLVED");
   const contractId = target.contractId as Exclude<WorkerReaderContract, "ballot-contests">;
-  const checked = verifiedWorkerRecords(input);
+  const checked = verifiedWorkerRecords({ ...input, pullRemoves: true });
   requirePublication(workerReaderClassMatches(contractId, checked.contract.recordClass), "READER_CLASS_MISMATCH");
   const body = input.registry?.payload.registry.bodies.find(body => body.id === target.bodyId);
   requirePublication(body?.name, "CANONICAL_BODY_MISSING");
-  const records = checked.extraction.records.map(record => {
+  const rowFor = (record: (typeof checked.extraction.records)[number]) => {
     const f = record.fields;
     requirePublication(words(text(f.bodyName)) === words(body.name!), "CANONICAL_BODY_MISMATCH");
     if (contractId === "official-filings") {
@@ -127,11 +133,14 @@ export function workerReaderPackage(input: Parameters<typeof verifiedWorkerRecor
         commentPeriod: f.commentPeriod, commentPeriodDetail: f.commentPeriodDetail,
         signup: f.signup ?? null, writtenComment: f.writtenComment ?? null, attend: f.attend ?? null, timeLimit: f.timeLimit ?? null,
         sourceUrl: checked.primary.evidence.canonicalUrl, collectedAt: checked.primary.observedAt, verifiedAt: input.now };
-  });
+  };
+  const records = checked.extraction.records.map(rowFor);
   requirePublication(records.length === checked.extraction.records.length && new Set(records.map(r => r.id)).size === records.length, "READER_IDENTITY_COLLISION");
-  return { contractId, version: `worker:${input.parser.id}`, sourceThrough: input.now,
+  // A pulled record that cannot be turned into a row never reached the version, so it has nothing to remove.
+  const pulledMemberIds = new Set(checked.pulledRecords.flatMap(record => { try { return [String(rowFor(record).id)]; } catch { return []; } }));
+  return { pulledMemberIds, package: { contractId, version: `worker:${input.parser.id}`, sourceThrough: input.now,
     sourceReceipt: checked.sourceReceipt, payload: contractId === "everyday-routing"
-      ? everydayRoutingProjectionFromRecords(records as unknown as EverydayRoutingRecord[]) : { kind: contractId, records } };
+      ? everydayRoutingProjectionFromRecords(records as unknown as EverydayRoutingRecord[]) : { kind: contractId, records } } };
 }
 
 export async function publishWorkerReaderResults(input: {
@@ -169,12 +178,13 @@ export async function publishWorkerReaderResults(input: {
       requirePublication(parser.result.role === "PARSER" && plan.contract.schemaVersion === 2, "INPUT_CHAIN_MISSING");
       captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture: input.readCapture, officialLinks: manual.officialLinks });
       const registry = await readRegistryRuntimePrior(input.store, input.now);
-      const checked = workerReaderPackage({ plan, parser, captures, registry, now: input.now, results });
+      const built = workerReaderPackageWithPulls({ plan, parser, captures, registry, now: input.now, results });
+      const checked = built.package;
       const prior = await readManualProjectionPrior(input.contractId, input.store, input.now);
       const before = (prior?.payload as CuratedReaderProjection | undefined)?.records ?? [];
       const prepared = input.contractId === "comment-access" ? inheritVerifiedCommentDetails(checked, prior) : checked;
       const delivered = (prepared.payload as CuratedReaderProjection).records;
-      const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(prepared, input.store, input.now);
+      const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(prepared, input.store, input.now, built.pulledMemberIds);
       const composed = candidate.readModel as CuratedReaderProjection;
       requirePublication(delivered.every(row => composed.records.some(published => canonicalJson(published) === canonicalJson(row))),
         `READER_FACTS_HELD:${candidate.excludedFacts?.map(row => `${row.code}: ${row.detail}`).join("; ") ?? "typed record was withheld"}`);

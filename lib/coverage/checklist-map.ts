@@ -34,12 +34,17 @@ export interface ChecklistItemRule {
   /** For a shared predicate: the ID it is counted under. */
   readonly into?: string;
   readonly replacedBy?: "admin";
+  /** A posting-deadline item: when it falls due is counted from its meeting. */
+  readonly lifecycle?: "agenda" | "outcome";
+  /** What the item is called when it is awaiting publication ("Agenda not published yet"). */
+  readonly noun?: string;
 }
 
 export const CHECKLIST_ITEMS = map.items as unknown as Readonly<Record<string, ChecklistItemRule | undefined>>;
 export const CHECKLIST_FAMILIES = map.families as unknown as Readonly<Record<string, { readonly name: string; readonly squad: string | null }>>;
 /** The starting squad for each family. A setting: Admin can change it. */
 export const SQUAD_START = map.settings.squads as Readonly<Record<string, string>>;
+export const LIFECYCLE = map.lifecycle;
 export const REPLACED_BY_ADMIN = map.replacedByAdmin as Readonly<Record<string, string>>;
 
 export function checklistItem(id: string): ChecklistItemRule | undefined {

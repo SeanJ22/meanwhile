@@ -3,6 +3,7 @@ import type { OwedState } from "./place-scorecard.ts";
 import { OWED_STATE_WORDS, pageOwed, scorePlace, type GroupScore, type OwedListItem, type OwedRowLike } from "./place-scorecard.ts";
 import { GROUP_NAMES, PLACE_GROUPS, ADMIN_V6_CHECKLIST_CONTRACT } from "./v6-checklist-section.ts";
 import type { PlaceOwedRead } from "./place-owed-read.ts";
+import type { RowStatuses } from "../../coverage/place-statuses.ts";
 import { US_STATES } from "../readiness/catalog.ts";
 import { sendWordsFor } from "./blocker-causes.ts";
 
@@ -59,6 +60,10 @@ export interface AdminV6PlaceItem {
   readonly next: string;
   readonly parts: readonly { readonly text: string; readonly status: string; readonly proof: string; readonly tone: "good" | "warn" | "muted" }[];
   readonly sourceUrl: string | null;
+  /** The six statuses of this blank. `missing` words the one that matters most. */
+  readonly statuses: RowStatuses | null;
+  /** When the next check is due for a blank awaiting publication or due for a refresh. */
+  readonly nextCheckAt: string | null;
   readonly actions: readonly { readonly kind: "send-agents"; readonly target: string; readonly label: string; readonly payload: { readonly words: string } }[];
 }
 export interface AdminV6PlaceChecklistView {
@@ -98,6 +103,7 @@ function itemOf(item: OwedListItem, placeKey: string, words: string | null): Adm
     key: item.key, definitionId: item.checklistId, name: item.requirement.split(" — ")[0] ?? item.requirement,
     subject: item.subject, period: "Current", status,
     missing: item.state === "published" ? "—"
+      : item.statuses?.waitingWords ? item.statuses.waitingWords
       : item.state === "held" ? "Captured, not published yet"
       : item.state === "unpublished" ? "Not published by the government"
       : item.state === "stale" ? "Captured earlier, refresh due"
@@ -107,6 +113,7 @@ function itemOf(item: OwedListItem, placeKey: string, words: string | null): Adm
     parts: [{ text: item.requirement, status: OWED_STATE_WORDS[item.state], tone: open ? "warn" : "good",
       proof: item.sourceUrl ? `Saved from ${item.sourceUrl}${item.checkedAt ? `, checked ${item.checkedAt}` : ""}.` : "—" }],
     sourceUrl: item.sourceUrl,
+    statuses: item.statuses, nextCheckAt: item.statuses?.nextCheck ?? null,
     actions: open && words !== null ? [{ kind: "send-agents", target: placeKey, label: "Send agents", payload: { words } }] : [],
   };
 }

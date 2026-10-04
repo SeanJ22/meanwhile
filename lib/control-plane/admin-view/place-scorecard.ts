@@ -17,6 +17,7 @@
  * PURE.
  */
 
+import type { RowStatuses } from "../../coverage/place-statuses.ts";
 import { isCoreChecklistItem, isSummaryChecklistItem, percentOf } from "../../coverage/place-percent.ts";
 
 export type OwedState = "published" | "held" | "unpublished" | "stale" | "missing";
@@ -29,6 +30,8 @@ export interface OwedRowLike {
   readonly requirement: string;
   readonly subject: { readonly id: string; readonly kind: string; readonly label: string };
   readonly held: readonly { readonly sourceUrl: string; readonly checkedAt: string; readonly state: string }[];
+  /** The six statuses, when the owed list carries them. */
+  readonly statuses?: RowStatuses;
 }
 
 export interface ScoreCounts {
@@ -118,6 +121,7 @@ export interface OwedListItem {
   /** The saved source page for this fact when we hold one. */
   readonly sourceUrl: string | null;
   readonly checkedAt: string | null;
+  readonly statuses: RowStatuses | null;
 }
 
 export function owedListItem(row: OwedRowLike): OwedListItem {
@@ -133,6 +137,7 @@ export function owedListItem(row: OwedRowLike): OwedListItem {
     statusWords: OWED_STATE_WORDS[row.state],
     sourceUrl: held?.sourceUrl ?? null,
     checkedAt: held?.checkedAt ?? null,
+    statuses: row.statuses ?? null,
   };
 }
 

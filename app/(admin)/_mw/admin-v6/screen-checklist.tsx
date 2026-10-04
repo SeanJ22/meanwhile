@@ -138,7 +138,7 @@ export function ChecklistScreen() {
           {page.map((i) => (
             <button key={i.key} type="button" className={cx(s.row, s.rowButton)} onClick={() => v.open({ type: "item", key: i.key })}>
               <span className={s.spread}><strong style={{ fontSize: 13 }}>{i.definitionId} {i.name} · {i.subject}</strong><span className={s.legendItem}><Swatch cls={STATUS_COLOR[i.status]} /><span className={s.small}>{STATUS_LABEL[i.status]}</span></span></span>
-              <span className={s.meta}>{i.missing}</span>
+              <span className={s.meta}>{i.missing}{i.nextCheckAt ? ` · next check ${mst(i.nextCheckAt)}` : ""}</span>
             </button>
           ))}
         </div>

@@ -396,6 +396,8 @@ export interface ChecklistItem {
   readonly resultId?: string;
   /** The saved official page this fact came from, when we hold one. */
   readonly sourceUrl?: string | null;
+  /** When the next check is due, for an item awaiting publication or due for a refresh. */
+  readonly nextCheckAt?: string | null;
   readonly actions: readonly ActionRef[];
 }
 

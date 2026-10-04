@@ -2,6 +2,7 @@ import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
+import type { DoorRecord } from "../../doors/registry.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { pgActiveWorkClaimReader } from "./active-work-claims.ts";
 /**
@@ -1211,6 +1212,8 @@ export async function createPgRepositories(
     adminConfig: pgAggregateRepository<AdminConfig>(sql, "AdminConfig", "cp_admin_config", bounded),
     /* What readers were told Ask does not hold (schema v13). Ask's route adds through `pgAskGapObservationSink`, one atomic upsert per row. */
     askGapObservations: pgAggregateRepository<AskGapObservation>(sql, "AskGapObservation", "cp_ask_gap_observations", bounded),
+    /* The Door Registry (DB-09, schema v19). */
+    doors: pgAggregateRepository<DoorRecord>(sql, "Door", "cp_doors", bounded),
     budget,
     locks,
     describe: () =>

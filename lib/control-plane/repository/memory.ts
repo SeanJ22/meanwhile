@@ -1,6 +1,7 @@
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
+import type { DoorRecord } from "../../doors/registry.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
 /**
@@ -336,6 +337,8 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     adminConfig: memoryAggregateRepository<AdminConfig>("AdminConfig"),
     /* What readers were told Ask does not hold (schema v13). */
     askGapObservations: memoryAggregateRepository<AskGapObservation>("AskGapObservation"),
+    /* The Door Registry (DB-09, schema v19). */
+    doors: memoryAggregateRepository<DoorRecord>("Door"),
     budget: budgetRepositoryFrom(budgetAggregate, locks),
     locks,
     describe: () => "in-memory control-plane repositories (lost when this process ends)",

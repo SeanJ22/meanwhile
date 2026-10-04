@@ -4,6 +4,8 @@ import { authorityFor, authorityForManualReceipt, sourceAuthority } from "./sour
 import { derivedAuthorityFor } from "./derived-door.ts";
 import {
   MEETING_READER_SERVING_WINDOW_CONTRACT,
+  MEETING_READER_SERVING_WINDOW_CONTRACT_V1,
+  meetingLegacyServingWindowAt,
   meetingReaderServingWindowAt,
 } from "../meetings/constants.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
@@ -243,6 +245,8 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
   // A meeting removal is proven only by a meeting's authority; the registry's placeholder code never proves one.
   const validMeetingEvidence = new Map<string, Exclude<RoutineRemovalEvidence, CensusPlaceholderBodyRemovalEvidence>>();
   const registeredWindow = meetingReaderServingWindowAt(candidate.retrieval.retrievedAt);
+  // One pass after DB-01: a `V1` row (the old shown window) is still accepted.
+  const legacyWindow = meetingLegacyServingWindowAt(candidate.retrieval.retrievedAt);
   let currentMembers: ReadonlyMap<string, unknown> | null = null;
   const currentMember = (key: string): unknown => {
     currentMembers ??= new Map(
@@ -337,11 +341,16 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
     const lower = Date.parse(row.lowerBound);
     const upper = Date.parse(row.upperBound);
     const prior = Date.parse(row.priorStartsAt);
+    const expectedWindow = row.windowContract === MEETING_READER_SERVING_WINDOW_CONTRACT
+      ? registeredWindow
+      : row.windowContract === MEETING_READER_SERVING_WINDOW_CONTRACT_V1 ? legacyWindow : null;
+    const keptForRecords = row.windowContract === MEETING_READER_SERVING_WINDOW_CONTRACT &&
+      before?.status === "CONCLUDED" && meetingRowCarriesRecords(before);
     if (
-      row.windowContract !== MEETING_READER_SERVING_WINDOW_CONTRACT ||
-      registeredWindow === null ||
-      row.lowerBound !== registeredWindow.lowerBound ||
-      row.upperBound !== registeredWindow.upperBound ||
+      expectedWindow === null ||
+      keptForRecords ||
+      row.lowerBound !== expectedWindow.lowerBound ||
+      row.upperBound !== expectedWindow.upperBound ||
       row.parentMeetingKey !== undefined ||
       !meetingId || delta.key !== `meeting:${meetingId}` ||
       !startsAt || startsAt !== row.priorStartsAt ||
@@ -368,7 +377,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
       !!parentKey && row.parentMeetingKey === parentKey && removedKeys.has(parentKey) && !!parent &&
       row.code === parent.code && row.priorStartsAt === parent.priorStartsAt &&
       (row.code === "OUTSIDE_REGISTERED_SERVING_WINDOW" && parent.code === "OUTSIDE_REGISTERED_SERVING_WINDOW"
-        ? row.windowContract === MEETING_READER_SERVING_WINDOW_CONTRACT &&
+        ? row.windowContract === parent.windowContract &&
           row.lowerBound === parent.lowerBound && row.upperBound === parent.upperBound
         : row.code === "SUPERSEDED_BY_OCCURRENCE_IDENTITY" && parent.code === "SUPERSEDED_BY_OCCURRENCE_IDENTITY"
           ? row.successorKey === parent.successorKey
@@ -784,4 +793,12 @@ export function validateRoutineCandidate(
     excludedFacts: candidate.excludedFacts ?? [],
   };
   return { receipt, state: blocking ? failureStateFor(blocking) : "VALIDATED" };
+}
+
+/** A concluded meeting row that names an agenda, minutes, an outcome or a vote is a kept record (DB-01). */
+function meetingRowCarriesRecords(row: Record<string, unknown>): boolean {
+  if (typeof row.agendaUrl === "string" && row.agendaUrl !== "") return true;
+  const links = Array.isArray(row.publishedLinks) ? row.publishedLinks : [];
+  if (links.some((link) => typeof (link as { label?: unknown })?.label === "string" && /minutes|outcome|vote|result/i.test((link as { label: string }).label))) return true;
+  return row.outcome != null || (Array.isArray(row.votes) ? row.votes.length > 0 : row.votes != null);
 }

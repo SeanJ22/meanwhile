@@ -101,7 +101,7 @@ function meetingSnapshot(version: string, changed: boolean): MeetingSnapshot {
           // This row is deliberately already outside the registered Reader
           // window at SECOND. An incomplete source horizon may remove it only
           // with the exact source-scoped window evidence supplied below.
-          startsAt: "2026-06-01T17:00:00.000Z",
+          startsAt: "2026-04-01T17:00:00.000Z",
           provenance: { sourceUrl: "https://calendar.google.com/calendar/u/0/r", collectedAt: version },
         },
       ];
@@ -139,7 +139,7 @@ function meetingCandidate(version: string, changed: boolean): RoutineCandidate {
       windowContract: MEETING_READER_SERVING_WINDOW_CONTRACT,
       lowerBound: servingWindow.lowerBound,
       upperBound: servingWindow.upperBound,
-      priorStartsAt: "2026-06-01T17:00:00.000Z",
+      priorStartsAt: "2026-04-01T17:00:00.000Z",
     }] : [],
   });
 }

@@ -30,7 +30,6 @@ import { collectPlaceHistory } from "../lib/control-plane/admin-view/place-histo
 import { readPlaceOwed } from "../lib/control-plane/admin-view/place-owed-read.ts";
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import { neon } from "@neondatabase/serverless";
 
 import {
   freshnessContract,
@@ -59,9 +58,7 @@ import { collectMapTilerUsage } from "../lib/control-plane/maptiler/collector.ts
 import { collectProviderBilling } from "../lib/control-plane/provider-billing-collector.ts";
 import { providerBillingAttribution } from "../lib/control-plane/provider-billing-attribution.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
-import { buildChecklistCensus, exactScopeMembers } from "../lib/control-plane/readiness/checklist-census.ts";
-import { CHECKLIST_INDEX_ENABLED_VAR, publishChecklistIndexAfterSnapshot } from "../lib/control-plane/admin-view/checklist-index-publisher.ts";
-import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
+import { exactScopeMembers } from "../lib/control-plane/provider-billing-scope-members.ts";
 import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
 import { retainMapTilerLastKnownGood } from "../lib/control-plane/maptiler/usage.ts";
 import {
@@ -774,19 +771,11 @@ async function main(): Promise<void> {
       .map(w => [`${w.itemId}:${w.approvalId}`, w]));
     servedReader = { checkedAt: NOW_ISO, witnesses: [...joined.values()], errors: [...(servedReader?.errors ?? []), ...workerReadback.errors, ...manualReadback.errors] };
   }
-  const checklists = reads?.billingScopes?.filter(scope => scope.key === ORIGINAL_LIFETIME_HUNT.key &&
-    scope.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId && scope.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
-    scope.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd)
-    .map(scope => buildChecklistCensus({ scope,
-    sources: reads.assignmentSources.ok ? { ...reads.assignmentSources.value, servedReader } : null,
-    observedAt: NOW_ISO, heartbeat: reads.runnerHeartbeat,
-    previous: existing?.value.checklists?.find(row => row.scopeId === scope.key) }))
-    ?? existing?.value.checklists?.map(row => ({ ...row, readsComplete: false }));
   // Daily per-place score points, for places with a saved scope only. A failure keeps the earlier points and never blocks the snapshot.
   const placeHistory = DRY_RUN ? existing?.value.placeHistory
     : await collectPlaceHistory({ scopes: reads?.billingScopes ?? null, previous: existing?.value.placeHistory, now: NOW_ISO, read: key => readPlaceOwed(key) })
       .catch(() => existing?.value.placeHistory);
-  const snapshot: OwnerSnapshot = { ...buildSnapshot(reads, maptiler, servedReader), providerBilling, billingAttribution, checklists, ...(placeHistory ? { placeHistory } : {}) };
+  const snapshot: OwnerSnapshot = { ...buildSnapshot(reads, maptiler, servedReader), providerBilling, billingAttribution, ...(placeHistory ? { placeHistory } : {}) };
 
   /* The cheapest place to catch an aggregate-only violation is before it is durable. */
   assertAggregateOnly(snapshot, "owner snapshot");
@@ -883,24 +872,8 @@ async function main(): Promise<void> {
 
   // The snapshot is a SINGLE aggregate that moves, so a put on an existing id
   // is a no-op — compare-and-set is the write that actually replaces it.
-  const persistedSnapshot = existing === null
-    ? (await repos.ownerSnapshots.put(SNAPSHOT_ID, snapshot, NOW_ISO)).persisted
-    : await repos.ownerSnapshots.compareAndSet(SNAPSHOT_ID, existing.revision, snapshot, NOW_ISO);
-  // Only a successfully persisted revision may be indexed. This optional private
-  // projection cannot fail the authoritative snapshot or the normal cycle.
-  if (process.env[CHECKLIST_INDEX_ENABLED_VAR] === "1") {
-    let indexState: string;
-    try {
-      const url = controlPlaneUrlFromEnv();
-      const result = await publishChecklistIndexAfterSnapshot({ enabled: true, persisted: persistedSnapshot,
-        sql: url === null ? null : neon(url) });
-      indexState = result.state === "FAILED" ? `${result.state}:${result.code}` : result.state;
-    } catch {
-      indexState = "FAILED:INDEX_CONNECT_UNAVAILABLE";
-    }
-    log(`  checklist index: ${indexState}; snapshot revision ${persistedSnapshot.revision}`);
-  }
-
+  if (existing === null) await repos.ownerSnapshots.put(SNAPSHOT_ID, snapshot, NOW_ISO);
+  else await repos.ownerSnapshots.compareAndSet(SNAPSHOT_ID, existing.revision, snapshot, NOW_ISO);
   /*
    * The H1 waiver's standing check. The recorder is NOT wired — production
    * does not write cache observations to the control plane — so the published

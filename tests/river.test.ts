@@ -301,6 +301,23 @@ test("fold, migrations, promote and the lock protocol work end to end against a 
     assert.doesNotMatch(sh(riverCheckout, ["show", "origin/board/river:integration.md"]), /none yet/);
     assert.deepEqual(JSON.parse(river(riverCheckout, "scan").out).ready_lanes, [], "integrated work is not folded twice");
 
+    // A lane's second READY after catching up: its status file was deleted on
+    // river and modified on the stream. That modify/delete is not an application
+    // conflict, so the fold drops .factory and goes on.
+    sh(work, ["checkout", "--quiet", "-f", "measures"]);
+    sh(work, ["fetch", "--quiet", "origin", "+refs/heads/river:refs/remotes/origin/river"]);
+    sh(work, ["merge", "--quiet", "--no-edit", "-X", "theirs", "origin/river"]);
+    put(work, ".factory/measures.md", `build_state: active\nlock: m-1\nheartbeat: ${new Date().toISOString()}\nready: DB-12\n`);
+    put(work, "measures-two.txt", "ready\n");
+    sh(work, ["add", "-A"]);
+    sh(work, ["commit", "--quiet", "-m", "READY: DB-12"]);
+    sh(work, ["push", "--quiet", "origin", "measures:stream/measures"]);
+    const second = river(riverCheckout, "fold");
+    assert.equal(second.code, 0, second.out);
+    assert.equal(sh(riverCheckout, ["ls-tree", "-r", "--name-only", "HEAD", ".factory"]), "", "the status file stays off the application tree");
+    writeFileSync(join(riverCheckout, ".scratch/river/test.json"), JSON.stringify({ sha: sh(riverCheckout, ["rev-parse", "HEAD"]), gates: "pass" }));
+    assert.equal(river(riverCheckout, "promote").code, 0);
+
     // Two lanes editing the same line: the fold stops on the second, aborts and names it.
     for (const lane of ["hunters", "people"]) {
       sh(work, ["fetch", "--quiet", "origin", "+refs/heads/river:refs/remotes/origin/river"]);

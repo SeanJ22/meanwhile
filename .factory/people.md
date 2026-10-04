@@ -1,9 +1,9 @@
-build_state: waiting
+build_state: active
 worker: people
 provider: Claude
-run_id: scheduled-2026-10-04T06:19:20Z
-lock: none
-heartbeat: 2026-10-04T06:38:26Z
+run_id: scheduled-2026-10-04T07:20:54Z
+lock: people-20261004T072054Z-783
+heartbeat: 2026-10-04T07:20:54Z
 on_river: none
 ready: CA-09 @ 542338583; CA-12 composer module (live behaviour needs the hook below) @ ceb0b0c1e; CA-06 @ 4b5bbc1dc
 checks: at CA-06 ready: tsc --noEmit clean; eslint clean on touched CA-06 files; node tests held-directory (7), card-sources, coverage, panel-seats, who-governs pass. body-identity (6) and resolve-once (2) fail identically on the commit before CA-06 (seen_not_fixed). Full selector not run.

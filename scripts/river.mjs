@@ -705,6 +705,13 @@ async function test(flags) {
   // ignored by git, so a fresh worktree needs it rebuilt before tests read it.
   const env = { ...process.env };
   for (const name of CI_ABSENT_ENV) delete env[name];
+  // A previous gates run leaves its untracked run record behind, and the
+  // visible-tree gate then fails on a file this fold never made.
+  for (const path of (git(["ls-files", "--others", "--exclude-standard", "data/ops/gate-runs"], { allowFail: true }) ?? "").split("\n").filter(Boolean)) {
+    rmSync(join(ROOT, path), { force: true });
+  }
+  // A stale .next from an earlier build feeds tsc route types that may no longer exist.
+  rmSync(join(ROOT, ".next"), { recursive: true, force: true });
   spawnSync(process.execPath, ["--experimental-strip-types", "scripts/project-place-references.mts"], { cwd: ROOT, env, stdio: "ignore" });
   const child = spawn(command, args, { cwd: ROOT, env, stdio: ["inherit", "pipe", "pipe"], shell: process.platform === "win32" });
   const tail = [];

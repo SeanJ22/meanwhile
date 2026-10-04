@@ -1,19 +1,7 @@
 /**
- * **THE STATES WE TRACK, AND THE CAPABILITY TAXONOMY.** (State Readiness, 2026-09-03.)
- *
- * Two fixed reference lists, not measurements:
- *   - `US_STATES`: the 50 states, DC and the five territories the panel selects
- *     over. The selector is linkable (`/readiness/<code>`), and a state with no
- *     published snapshot still loads — rendering the taxonomy below fully
- *     NOT_WALKED, never blank and never an error (acceptance #14).
- *   - `CAPABILITY_TAXONOMY`: the starting capability rows (§5.3). It is a STARTING
- *     POINT, not a limit — the publisher adds every capability the repo actually
- *     tracks; these are the rows a bare, unwalked state shows. Loaded from the
- *     versioned readiness standard (`standard.json`, MW-063).
+ * **THE STATES WE TRACK.** The 50 states, DC and the five territories that
+ * Admin selects over. A fixed reference list, not a measurement.
  */
-import { CAPABILITY_DOMAINS, JURISDICTION_LEVELS, type CapabilityDomain, type JurisdictionLevel } from "./model.ts";
-import { currentStandard, type StandardCapability } from "./standard.ts";
-
 export interface StateEntry {
   readonly code: string;
   readonly name: string;
@@ -88,31 +76,3 @@ const STATE_BY_CODE: ReadonlyMap<string, StateEntry> = new Map(
 export function stateEntry(code: string): StateEntry | null {
   return STATE_BY_CODE.get(code.trim().toLowerCase()) ?? null;
 }
-
-/** One row of the starting capability taxonomy. */
-export interface TaxonomyRow {
-  readonly capabilityId: string;
-  readonly domain: CapabilityDomain;
-  readonly label: string;
-  readonly level: JurisdictionLevel;
-}
-
-/**
- * A standard capability row, checked: its domain and level must be ones the
- * panel groups and filters by. A row the code cannot place refuses to load
- * rather than rendering under no heading.
- */
-function taxonomyRow(row: StandardCapability): TaxonomyRow {
-  if (!(CAPABILITY_DOMAINS as readonly string[]).includes(row.domain) || !(JURISDICTION_LEVELS as readonly string[]).includes(row.level)) {
-    throw new Error(`READINESS_STANDARD_CAPABILITY_UNKNOWN: ${row.capabilityId} names domain "${row.domain}" and level "${row.level}"; the code knows neither or not both`);
-  }
-  return { capabilityId: row.capabilityId, domain: row.domain as CapabilityDomain, label: row.label, level: row.level as JurisdictionLevel };
-}
-
-/**
- * The starting rows (§5.3), from the readiness standard in force
- * (`standard.json`, MW-063). A starting point, never a limit: the publisher may
- * add every capability the repo tracks, and a bare state renders exactly these,
- * all NOT_WALKED.
- */
-export const CAPABILITY_TAXONOMY: readonly TaxonomyRow[] = currentStandard().capabilities.map(taxonomyRow);

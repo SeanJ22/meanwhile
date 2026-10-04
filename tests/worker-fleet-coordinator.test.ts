@@ -7,6 +7,7 @@ import { readAutonomousActivity } from "../lib/control-plane/workers/activity.ts
 import { SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION, validateScoutFinishWithCandidates, type ScoutResult, type ScoutRung } from "../lib/control-plane/scheduler/scout-result.ts";
 import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
 import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { scheduleAutonomousAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
 import { FIRST_BACKOFF_MINUTES } from "../lib/control-plane/scheduler/debt.ts";
@@ -180,11 +181,34 @@ test("coordinator joins Scout and route history once before bounded selection", 
   assert.equal(continued.decisions.filter(decision => goodIds.includes(decision.workItemId) && decision.task).length, 3);
   assert.equal((await h.repos.workerResults.readAll()).length, 0, "selection cannot assert parsed or verified facts");
   assert.deepEqual(h.calls, [], "held planning makes no source or model request");
-  for (const message of ["CONTROL_PLANE_REQUEST_TIMEOUT: repository read", "MODEL_PROVIDER_FAILURE:503", "WORKER_ARTIFACT_NOT_IN_VAULT"]) {
+  const absent = await runAutonomousCoordinator({ ...isolated,
+    readEvidence: workerVaultResolver(h.repos, new MemoryEvidenceStore(), h.item.project),
+    repos: { ...isolated.repos, scoutResults: { ...h.repos.scoutResults, readAll: async () => [scout] } } },
+  { planOnly: true, concurrency: 4 });
+  assert.equal(absent.decisions.filter(decision => goodIds.includes(decision.workItemId) && decision.task).length, 3);
+  assert.equal(absent.decisions.find(decision => decision.workItemId === h.item.id)?.action, "SCOUT");
+  assert.deepEqual(absent.deferred.map(row => [row.workItemId,row.reason]), [[h.item.id,"WORKER_ARTIFACT_NOT_IN_VAULT"]]);
+  assert.match(absent.deferred[0]!.detail, new RegExp(scout.candidates[0]!.evidenceArtifactIds[0]!));
+  assert.equal(absent.dispatches.length, 0);
+  const mixedVault = await runAutonomousCoordinator({ ...usable, readEvidence: async id => {
+    if (id === missingId) throw new Error("WORKER_ARTIFACT_NOT_IN_VAULT");
+    return isolated.readEvidence(id);
+  } }, { planOnly: true, concurrency: 4 });
+  const vaultSameWork = mixedVault.decisions.find(decision => decision.workItemId === h.item.id)!;
+  assert.equal(vaultSameWork.action, "WORKER");
+  assert.equal(vaultSameWork.task?.workerTask?.acquisition?.route.observation.artifactId, scout.candidates[0]!.evidenceArtifactIds[0]);
+  assert.match(vaultSameWork.reason, new RegExp(`WORKER_ARTIFACT_NOT_IN_VAULT:${missingId}`));
+  assert.equal(mixedVault.deferred.length, 1);
+  assert.equal(mixedVault.deferred[0]!.reason, "WORKER_ARTIFACT_NOT_IN_VAULT");
+  assert.equal(mixedVault.decisions.filter(decision => goodIds.includes(decision.workItemId) && decision.task).length, 3);
+  assert.equal((await h.repos.workerResults.readAll()).length, 0);
+  assert.deepEqual(h.calls, []);
+  for (const message of ["CONTROL_PLANE_REQUEST_TIMEOUT: repository read", "MODEL_PROVIDER_FAILURE:503",
+    "WORKER_ARTIFACT_PROVENANCE_REFUSED", "WORKER_ARTIFACT_NOT_IN_VAULTISH", "EvidenceCorrupted"]) {
     const failure = new Error(message);
     await assert.rejects(runAutonomousCoordinator({ ...usable, readEvidence: async () => { throw failure; } },
       { planOnly: true, concurrency: 4 }), error => error === failure,
-    "only the authorized missing-or-partial record class is isolated; other failures still propagate");
+    "only named absent held evidence is isolated; repository, provider and invalid evidence failures still propagate");
   }
 });
 

@@ -9,3 +9,15 @@ DP-02: read the shut-door escalation threshold from admin's `DETECTIVE_SHUT_THRE
 ## 2026-10-04T10:58:17Z — integration repair by River (FE-01 live-write guard)
 
 Two tests failed on the fold: `tests/origins.test.ts` (the test wrote the production host instead of importing `PUBLIC_SITE_ORIGIN` from `lib/ops/origins.ts`) and `tests/path-separator.test.ts` (RULING 14 sweep: `new URL(requestUrl).pathname`). River fixed both on river 8bbe9eeb5. The test now uses PUBLIC_SITE_ORIGIN, and the guard's expression joined the sweep's expression-exact HTTPS list. Catch up before editing those files.
+
+## 2026-10-04 14:00Z — FAILED LIVE after release 1 (dcddcf5): returned
+
+River checked release 1 against each step's "Done when" on production, using read-only SQL and git on main. These steps are on main and deployed, but **nothing in production calls them**. Each READY commit left its runtime call as a hook. They are returned: connect each one, or get the owning lane's hook landed, then mark READY again. Fix these before new steps.
+
+- DP-10: lib/.../absence-reopen.ts is called only by tests (no runtime caller).
+- DP-13: live-audit.ts has no runtime caller; v6-audit-read.ts is not served by any Admin route.
+- DP-14: live-audit-response.ts is called only by tests.
+- DP-16: the audit card read (v6-audit-read) is not served by any Admin route.
+- DP-18: only the core is built; no Scoreboard exists on main, so nothing shows it.
+- FE-17: data/health/resident-tasks.json exists but nothing outside tests reads it.
+- FE-18: no FE-18 code on main; nothing runs the resident tasks or shows them in Admin.

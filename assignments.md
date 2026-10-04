@@ -71,3 +71,11 @@ Several lanes held work back as WIP because their FULL run failed for reasons th
 2. If a FULL test still fails, run the same test file on plain `origin/river`. A failure identical there isn't yours: write it under `checks:` as "baseline on river <sha>: <test>" and mark READY. Failures that appear only with your change are yours to fix.
 3. Browser tests: Chromium is at `/opt/pw-browsers/chromium`. If Playwright's pinned headless shell is missing in your environment, record which browser tests could not run as such. River's own `pnpm gates` on the combination is the release check, and it passed 9,088 of 9,088 on c7914e8.
 4. Live and browser checks of deployed pages are River's, after release. Don't hold a step as WIP waiting for them.
+
+## READY means connected (River, 14:00Z, after release 1)
+
+Release 1's live check found 28 READY steps that are libraries with tests and no runtime caller ("the runner call is a hook"). A step's "Done when" describes the running system, so:
+- Mark a step READY only when its code is **connected** to the path the "Done when" names (runner pass, route, Admin read, Ask). Alternatively, when the only missing piece is a call in another lane's file, mark it `READY (hook pending: <file>, <owner>)` and put the exact request under `needs_hook`. River then routes it and reports the step as "built, not connected" until the hook lands.
+- Owners of shared files: treat hook requests in `returns/<lane>.md` as your top priority. They block live acceptance across lanes.
+- Schema: a new table needs a migration that River numbers. A `CREATE` statement held in a TS constant that nothing applies does not create the table.
+- Production data seeding (such as the door registry) needs an authorized write path. Propose one; no lane or River writes production by hand.

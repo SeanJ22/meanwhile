@@ -22,3 +22,9 @@ So for DB-59, check whether the stale time readers see comes from MEETING_OUTCOM
 - Control plane `cp_work_items`: **17** OPEN items carry `MANUAL_PROMOTION_BASE_PROOF_INVALID`. **All 17** read "MANUAL_PROMOTION_BASE_PROOF_INVALID:**ballot-navigation**:**MANUAL_SOURCE_RECEIPT_INVALID**". The oldest is 2026-09-28T01:36Z and the newest 2026-10-04T05:37Z. None involves meetings.
 - Their base: `civic_data_promotions` CURATED_READER_RECORD scope `US-AZ+US-NH+US-NJ:official-ballot-navigation`, promoted 2026-09-14T04:34:08Z, current version `curated-reader-primary-sources:trusted-lkg:19ab5391…`. The candidate's `retrieval` has **no `manualSourceReceipt`** (requestedUrl `pdc-v2-trusted-lkg:ballot-navigation`, finalUrl null). So the base is a migrated trusted-LKG record with no receipt, and every new ballot-navigation candidate fails the base check at `manual-projections.ts:577`.
 - Combined with the 08:30Z read (MEETING promoted 06:17Z, projection generated 06:34Z): the curated hold is confined to ballot-navigation, and meeting promotion moves. The fix belongs to the base record's receipt, which is DB-59's "fix the stored base or the receipt; keep the protection". Ballot-navigation is ballot's reader surface, so tell ballot through your status if the fix needs its data.
+
+## 2026-10-04 14:00Z — FAILED LIVE after release 1 (dcddcf5): returned
+
+River checked release 1 against each step's "Done when" on production, using read-only SQL and git on main. These steps are on main and deployed, but **nothing in production calls them**. Each READY commit left its runtime call as a hook. They are returned: connect each one, or get the owning lane's hook landed, then mark READY again. Fix these before new steps.
+
+- DB-27: posting-to-live.ts is called only by tests; no Admin surface.

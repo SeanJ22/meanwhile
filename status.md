@@ -5,7 +5,7 @@ worker: river
 provider: Claude (this run: Opus 5.5, selected by Sean with /model at 06:00Z; this run began on Sonnet 5.5)
 run_id: session_01M3CeUks1KpFZttTP6ZTEAq
 lock: river-20261004T060134Z-23a399b0
-heartbeat: 2026-10-04T07:07:32Z
+heartbeat: 2026-10-04T07:35:15Z
 
 ## Launch
 
@@ -36,16 +36,17 @@ heartbeat: 2026-10-04T07:07:32Z
 
 ## Release work
 
-- RL-01: CI's scheduled failure (crosswalk floor) is already fixed on main @ 0b31938. Local `pnpm gates` also failed `feedback:sweep` on main: six Admin feedback rows cited tests retired with the old Admin pages on Oct 1. Fixed on `rl01-feedback-debt` @ 26753d4: those rows moved to checkDebt with the reason, and the rule is unchanged. That fix is folded into river-next. The full `pnpm gates` run on 0b31938 is still in its test leg.
-- RL-02: Sorted all 33 open pull requests, 06:40Z.
-  - **Closed with a note, 13** (no branch deleted): #687, 644, 640, 633, 620, 615, 607, 603, 575, 572, 569, 471, 458. The useful parts are kept on `stream/salvage-*`: fe30-ballot-copy (#644 → frontend FE-30), fe04-cold-reader-shell (#640 → FE-04), ca21-filing-regimes (#633 → ballot CA-21/CA-34), ca21-money-registrations (#603 → CA-21), refusal-counter (#607), tester-retention (#569/#572), organic-only (#620).
-  - **Kept, 19**: folded into river-next in this order: 695, 698, 703, 700→701→704, 702, 696, 692, 693, 691, 689, 690, 686, 685, 677, 699, 694, 642. Two small conflicts resolved: #686 after #690 (tests file), and #692 needs OFFICIAL_PAGE_EVENTS_VERSION re-keyed, which is done. Each PR closes once its fold reaches river with steps named.
-  - **Held, 1**: #599. It converts the production registry on its first runtime start, and its own staging pass ended FAILED. It rides a later river only after a live check. Auto-merge is off.
-- RL-03: scripts/river.mjs (scan, fold, migrations, test, promote, release, lock, observe), 10/10 tests, plus CLAUDE/AGENTS guidance. On stream/river @ fcf9492, folded into river-next. Awaiting the full gates on the combination.
-- RL-04: #706 merged to main at 0b31938. Build check now runs on schedule once a day at 09:17 UTC. Still to confirm: one scheduled run a day on GitHub.
-- RL-05: not started.
-- RL-06: not started.
-- RL-07: docs-only selection. A rulings.md-only diff selects 56 test files instead of 482, and the doc's readers and compiled-copy freshness test still run. Code selection is unchanged. READY @ 818c6ef, folded into river-next.
+- RL-01: built and integrated. CI's crosswalk floor was already on main. The local `feedback:sweep` check-debt fix is on river @ 8f6185c. `pnpm gates` passes in the cloud except one trace-sweep test that also fails on main (see Seen, not fixed). Still to do: the next full check on main passes after release 1.
+- RL-02: done for all 33 PRs. 13 closed with a note. 19 are in river @ 8f6185c, each with its step named in a PR comment; they close as merged when release 1 lands. #599 is held for a live check. None is waiting on auto-merge.
+- RL-03: integrated (river.mjs @ 8f6185c). Fold fix d45831c (status-file conflicts and the CI env for gates) is READY on stream/river for the next fold. Still to do: a release through `river.mjs release`.
+- RL-04: on main via #706. Still to do: confirm the daily scheduled run (09:17Z) and full checks on release PRs.
+- RL-05: `river.mjs observe` is integrated. It found and reused the success run for 0b31938 (dry run). Still to do: use it on release 1.
+- RL-06: integrated behind the switch WTP_ADAPTER_PUBLICATION, default `pr`. Still to do: release, then set the repo variable to `river` first and the runner's env second, then watch for a real adapter repair arriving through the river.
+- RL-07: integrated. A rulings.md-only diff now selects 56 test files instead of 482. Still to do: measure a docs-only PR on GitHub.
+
+## Seen, not fixed
+
+- `tests/deploy-paths.test.ts` "no file under a non-shipping prefix is traced into the deploy" fails on main @ 0b31938 whenever a local `.next` exists. CI never runs it, because its test jobs have no build. Since ae476a5 (Sep 29) `isNonShippingPath` treats all of `data/` as non-shipping, yet the build traces 3,330 `data/` files (ballot cards, zip-divisions, candidates). A commit changing only those files would cancel its Netlify build and serve the old copy. River owns this deploy-classification question; it is not yet fixed.
 
 ## Worker health (06:31Z)
 

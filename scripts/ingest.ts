@@ -93,7 +93,7 @@ import {
 } from "../lib/civic-data/attested-promotion.ts";
 import type { PromotedCivicDataReadOptions } from "../lib/civic-data/read-model.ts";
 import { readCuratedReaderProjection, refreshVenueResolutionsFromPromoted } from "../lib/civic-data/curated-reader-read-model.ts";
-import { automaticVenuePackage, normalizeFamilyMeetingCitations, placeMeetingsFromVerifiedVenues, retainPreviouslyVerifiedVenuePoints } from "../lib/meetings/automatic-venue-resolutions.ts";
+import { normalizeFamilyMeetingCitations, placeMeetingsFromCensusVenues, placeMeetingsFromVerifiedVenues, retainPreviouslyVerifiedVenuePoints } from "../lib/meetings/automatic-venue-resolutions.ts";
 import { currentVenueCache, resolveVenue, venueResolutionRecordId, type VenueEntry } from "../lib/meetings/venue-cache.ts";
 import { placeUnplacedFromAgendas } from "./lib/agenda-meeting-location.ts";
 import type { Meeting, MeetingSource, PublisherExclusion, RecurrenceReport } from "../lib/sources/types.ts";
@@ -861,25 +861,12 @@ export async function promoteDerivedMeetingFamily(
   const retained = retainPreviouslyVerifiedVenuePoints(cited, previous?.meetings ?? []);
   const fromReviewed = placeMeetingsFromVerifiedVenues(retained, reviewed);
   const existingIds = new Set(venueRead.kind === "PROMOTED" ? venueRead.value.records.map((row) => row.id) : []);
-  const proposed = await automaticVenuePackage({
+  const census = await placeMeetingsFromCensusVenues({
     snapshot: { ...build.snapshot, meetings: [...fromReviewed.meetings] }, existingIds, memberRoutes,
   });
-  for (const hold of proposed.held) console.warn(`AUTOMATIC_VENUE_HELD ${hold}`);
-  const newRows = (proposed.package?.payload as { records?: VenueEntry[] } | undefined)?.records ?? [];
-  const placed = placeMeetingsFromVerifiedVenues(fromReviewed.meetings, newRows);
-  const references = (proposed.package?.sourceReceipt.sources ?? [])
-    .filter((source) => source.sourceClass === "REFERENCE_PUBLISHER");
-  const venueReferenceEvidence = newRows.map((row) => {
-    const reference = references.find((source) => source.finalUrl === row.coordinateSourceUrl);
-    if (!reference || reference.httpStatus < 200 || reference.httpStatus >= 300 ||
-        !/^[a-f0-9]{64}$/.test(reference.rawHash)) {
-      throw new Error(`AUTOMATIC_VENUE_REFERENCE_MISSING:${venueResolutionRecordId(row)}`);
-    }
-    return { venueId: venueResolutionRecordId(row), addressSourceUrl: row.addressSourceUrl,
-      censusRequestedUrl: reference.requestedUrl, censusFinalUrl: reference.finalUrl,
-      censusRawSha256: reference.rawHash, retrievedAt: reference.retrievedAt,
-      publishedAddress: row.address, lat: row.lat, lng: row.lng };
-  });
+  for (const hold of census.held) console.warn(`AUTOMATIC_VENUE_HELD ${hold}`);
+  const placed = census;
+  const venueReferenceEvidence = census.venueReferenceEvidence;
   const finalBuild = { ...build, snapshot: { ...build.snapshot, meetings: [...placed.meetings],
     ...(venueReferenceEvidence.length > 0 ? { venueReferenceEvidence } : {}) } };
   const candidate = derivedFamilyCandidate(partition, finalBuild);
@@ -889,7 +876,7 @@ export async function promoteDerivedMeetingFamily(
   console.log(`AUTOMATIC_VENUE_MEETING_RECEIPT=${JSON.stringify({ candidateId: candidate.id,
     placedFromReviewed: fromReviewed.placedCount, placedFromCensus: placed.placedCount,
     retainedFromPrior: retained.filter((meeting, index) => meeting !== cited[index]).length,
-    held: proposed.held.length, decision: outcome.candidate.receipt?.decision ?? null,
+    held: census.held.length, decision: outcome.candidate.receipt?.decision ?? null,
     promotedVersion: outcome.promoted?.versionId ?? null })}`);
 }
 
@@ -1660,6 +1647,8 @@ export async function promoteMeetingPartitions(input: {
   readonly previousByContract?: ReadonlyMap<string, MeetingsSnapshot | null>;
   readonly researchIntake?: (partition: MeetingPartitionContract, current: MeetingsSnapshot | null, now: string, observed: MeetingsSnapshot) => Promise<ApprovedResearchMeetingPartition | null>;
   readonly retainedResponses?: readonly RetainedSourceResponse[];
+  /** Test seam for the Census geocoder; production uses the global fetch. */
+  readonly venueFetch?: typeof fetch;
 }): Promise<readonly MeetingPartitionPromotionResult[]> {
   const results: MeetingPartitionPromotionResult[] = [];
   const intake = input.researchIntake ?? (input.store instanceof PostgresRoutineDataStore ? standingResearchMeetingIntake : undefined);
@@ -1737,6 +1726,23 @@ export async function promoteMeetingPartitions(input: {
       publisherExclusions: recurrence.exclusions,
       reviewedVenues: currentVenueCache,
     });
+    // BX-08: a hand-wired body's newly published address gets its pin the same way a derived family's does.
+    const acquired = (report.acquisitions ?? []).find((evidence) => evidence.httpStatus >= 200 && evidence.httpStatus < 300);
+    let census: Awaited<ReturnType<typeof placeMeetingsFromCensusVenues>> | null = null;
+    if (acquired) {
+      try {
+        census = await placeMeetingsFromCensusVenues({
+          snapshot: { generatedAt: input.generatedAt, meetings: [...reconciled.meetings],
+            sources: [{ source: partition.meetingSource, acquisitions: report.acquisitions }] } as unknown as MeetingsSnapshot,
+          existingIds: new Set(currentVenueCache().map((venue) => venueResolutionRecordId(venue))),
+          memberRoutes: new Map([[`${partition.meetingSource}:${partition.bodyId}`, acquired.finalUrl]]),
+          fetchImpl: input.venueFetch,
+        });
+        for (const hold of census.held) console.warn(`AUTOMATIC_VENUE_HELD ${hold}`);
+      } catch (error) {
+        console.warn(`AUTOMATIC_VENUE_SKIPPED ${partition.id}: ${error instanceof Error ? error.message : String(error)}`);
+      }
+    }
     const scopeFailures = [
       ...(partition.ocdId !== null && report.unreachableOcdIds?.includes(partition.ocdId)
         ? [`${partition.meetingSource} reported ${partition.ocdId} unreachable.`]
@@ -1761,9 +1767,10 @@ export async function promoteMeetingPartitions(input: {
         drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
         ...(report.acquisitions ? { acquisitions: report.acquisitions } : {}),
       }],
-      meetings: [...reconciled.meetings],
+      meetings: [...(census?.meetings ?? reconciled.meetings)],
       agendaDocuments: [...reconciled.agendaDocuments],
-    };
+      ...(census && census.venueReferenceEvidence.length > 0 ? { venueReferenceEvidence: census.venueReferenceEvidence } : {}),
+    } as MeetingsSnapshot;
     const { candidate, outcome } = await promoteMeetingPartition(
       input.store,
       partition,

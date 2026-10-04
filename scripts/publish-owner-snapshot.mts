@@ -59,7 +59,7 @@ import { providerBillingAttribution } from "../lib/control-plane/provider-billin
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { buildChecklistCensus, exactScopeMembers } from "../lib/control-plane/readiness/checklist-census.ts";
 import { CHECKLIST_INDEX_ENABLED_VAR, publishChecklistIndexAfterSnapshot } from "../lib/control-plane/admin-view/checklist-index-publisher.ts";
-import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
+import { isFundedHunt } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
 import { retainMapTilerLastKnownGood } from "../lib/control-plane/maptiler/usage.ts";
 import {
@@ -772,9 +772,7 @@ async function main(): Promise<void> {
       .map(w => [`${w.itemId}:${w.approvalId}`, w]));
     servedReader = { checkedAt: NOW_ISO, witnesses: [...joined.values()], errors: [...(servedReader?.errors ?? []), ...workerReadback.errors, ...manualReadback.errors] };
   }
-  const checklists = reads?.billingScopes?.filter(scope => scope.key === ORIGINAL_LIFETIME_HUNT.key &&
-    scope.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId && scope.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
-    scope.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd)
+  const checklists = reads?.billingScopes?.filter(isFundedHunt)
     .map(scope => buildChecklistCensus({ scope,
     sources: reads.assignmentSources.ok ? { ...reads.assignmentSources.value, servedReader } : null,
     observedAt: NOW_ISO, heartbeat: reads.runnerHeartbeat,

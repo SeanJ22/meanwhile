@@ -11,7 +11,8 @@ import { runAdminEvidenceMirror } from "../lib/control-plane/evidence/admin-brid
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
-import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
+import { withScopeSet } from "../lib/control-plane/expansion/scopes.ts";
+import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
 import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { putArtifact } from "../lib/control-plane/evidence/store.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
@@ -153,10 +154,14 @@ test("exact-hunt and recent captures advance with historical backfill across dur
     { label: "history", at: "2026-09-20T06:00:00.000Z", original: false },
   ] as const;
   const ids: Record<string, string> = {};
+  // Any funded Send's work takes the first lane; this one is not the owner's first hunt.
+  const funded = withScopeSet([], { geography: { type: "county", geoid: "04019", version: "county:2020", label: "Test County", stateAbbr: "AZ" },
+    priority: 1, budgetUsd: 20, huntBudget: true, newHunt: true, note: null, decidedAt: "2026-09-27T05:00:00.000Z", decidedBy: "adm", receiptId: "funded-send-receipt" }).scopes;
+  await repos.adminConfig.put(ADMIN_CONFIG_ID, { expansionScopes: funded } as never, "2026-09-27T05:00:00.000Z");
   for (const item of cases) {
     const base = createWorkItem({ project: "freshness", subject: item.label, obligation: "official-source", why: "test", now: item.at });
     const work: WorkItem = item.original ? { ...base, autonomousPlan: {
-      ownerInstructions: [ORIGINAL_LIFETIME_HUNT.receiptId],
+      ownerInstructions: ["funded-send-receipt"],
     } as unknown as WorkItem["autonomousPlan"] } : base;
     await repos.workItems.put(work.id, work, item.at);
     const at = `at-${item.label}`;

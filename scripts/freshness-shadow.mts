@@ -22,7 +22,7 @@ import { cycleStateWriter } from "../lib/control-plane/scheduler/cycle-state-wri
 import { selectedCycleRepositories } from "../lib/control-plane/scheduler/cycle-selection.ts";
 import { readRelaunchTriggerVerification, websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
-import { runAdminEvidenceMirror } from "../lib/control-plane/evidence/admin-bridge-runner.ts";
+import { ADMIN_MIRROR_BUDGET_MS, runAdminEvidenceMirror } from "../lib/control-plane/evidence/admin-bridge-runner.ts";
 import { retainRecentRoutineMeetingEvidence } from "../lib/control-plane/workers/routine-meeting-intake.ts";
 /**
  * `pnpm freshness:shadow` — ONE UNATTENDED CYCLE OF THE FRESHNESS SCHEDULER.
@@ -4184,7 +4184,7 @@ if (!dry && !canary && process.env.WTP_ADMIN_EVIDENCE_MIRROR_ENABLED === "1") {
   try {
     const mirror = await runAdminEvidenceMirror({ repos, vaultRoot: join(ROOT, ...VAULT_DIR),
         cursorPath: join(ROOT, "data", "control-plane", "admin-evidence-mirror.cursor.json"),
-        deadlineMs: Number.POSITIVE_INFINITY });
+        deadlineMs: Date.now() + ADMIN_MIRROR_BUDGET_MS });
     console.log(`  private Admin evidence mirror: ${mirror.state}; examined ${mirror.examined}, copied ${mirror.copied}, verified existing ${mirror.alreadyVerified}, refused ${mirror.refused}`);
     if (mirror.failures.length) console.error(`  private Admin evidence copy remains owed: ${mirror.failures.slice(0, 8).join("; ")}`);
   } catch (error) {

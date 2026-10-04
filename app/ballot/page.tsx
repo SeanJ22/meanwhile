@@ -150,7 +150,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { LevelTag } from "@/components/ui/level-tag";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 import { BallotCapture } from "@/components/ballot/ballot-capture";
-import { tierForOcdId } from "@/lib/ocd/tiers";
+import { tierForOcdId, tierForOffice } from "@/lib/ocd/tiers";
 import { Logo } from "@/components/brand/logo";
 import { PRODUCT_NAME, titleFor } from "@/lib/brand";
 import { readerPartyLabel } from "@/lib/text/reader-names";
@@ -2133,7 +2133,7 @@ export default async function BallotPage({
               data-ocd-id={contest.ocdId}
               data-office-tier-start={
                 contestIndex > 0 &&
-                tierForOcdId(contest.ocdId) !== tierForOcdId(candidacyContests[contestIndex - 1].ocdId)
+                tierForOffice(contest.title, contest.ocdId) !== tierForOffice(candidacyContests[contestIndex - 1].title, candidacyContests[contestIndex - 1].ocdId)
                   ? "true"
                   : undefined
               }
@@ -2150,7 +2150,7 @@ export default async function BallotPage({
                   {/* BAL-41 (2026-09-02): the level tag, immediately after the
                       last word of the race title, in the tier's accent. Tier
                       from the contest's OCD identity — never the office name. */}
-                  <LevelTag tier={tierForOcdId(contest.ocdId)} />
+                  <LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />
                   {/*
                     RULING 71, as JUR-4 leaves it (2026-08-23). The full
                     eleven-word pill rendered here twelve times across nine
@@ -2649,7 +2649,7 @@ export default async function BallotPage({
                   {/* BAL-41 (2026-09-02): the level tag on every proposition
                       title too — a statewide measure reads State, a county or
                       district one reads Local, from the measure's OCD identity. */}
-                  <LevelTag tier={tierForOcdId(contest.ocdId)} />
+                  <LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />
                 </h3>
 
                 {/*

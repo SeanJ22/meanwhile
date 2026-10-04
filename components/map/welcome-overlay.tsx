@@ -19,7 +19,7 @@ import { Logo } from "@/components/brand/logo";
  * The entry overlay.
  *
  * Ports EdiaStratMap's welcome card: a dimmed, blurred sheet over the map with
- * a single card on it, quick-jump buttons, and one secondary action. Replaces
+ * a single card on it, a ZIP input and a location action. Replaces
  * the old full-width entry notice.
  *
  * It stays a modal over the whole screen rather than a panel beside the map,
@@ -36,18 +36,6 @@ const MESSAGES = {
   uncovered:
     "We’re working on getting this info for that zip. Try a nearby one.",
 } as const;
-
-/**
- * The four zips with live sources behind them — the product's depth-first
- * coverage (docs/state.md §9). Labeled by place, because a tester should not
- * have to know a zip code to see the product work.
- */
-const QUICK_ZIPS = [
-  { zip: "85701", label: "Tucson, AZ" },
-  { zip: "85641", label: "Vail, AZ" },
-  { zip: "07866", label: "Rockaway Twp., NJ" },
-  { zip: "03255", label: "Newbury, NH" },
-] as const;
 
 interface WelcomeOverlayProps {
   open: boolean;
@@ -310,26 +298,6 @@ export function WelcomeOverlay({
             </div>
           </>
         )}
-
-        {/* RULING 59: "Or try a place we cover well" characterised our
-            holdings to sell four buttons. The buttons need a label, not a
-            coverage claim, and the label's job is the reader's next move. */}
-        <p className="welcome-divider">Or start with one of these</p>
-
-        <div className="welcome-teams">
-          {QUICK_ZIPS.map((quick) => (
-            <button
-              key={quick.zip}
-              type="button"
-              className="welcome-team-btn"
-              /* The showcase chips: the reader wanted to LOOK at this place.
-                 They have not said they live there, so this is BROWSING. */
-              onClick={() => void submit(quick.zip, "DEMO_ZIP")}
-            >
-              {quick.label}
-            </button>
-          ))}
-        </div>
 
         {/*
           RULING 59 (2026-08-21). This read: "These four areas have the deepest

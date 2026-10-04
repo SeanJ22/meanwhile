@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { Card } from "@/components/ui/card";
 import { useEffect, useRef } from "react";
 
 import { useCardVisibility } from "@/hooks/use-card-visibility";
@@ -11,7 +11,6 @@ import type { ReactionViewContext } from "@/lib/reactions/client";
 
 import {
   personCardSources,
-  sourceCountLabel,
 } from "@/lib/officials/card-sources";
 
 import { FundingBlock } from "@/components/funding/funding-block";
@@ -19,9 +18,7 @@ import { PublicStatementsProfile } from "@/components/officials/public-statement
 import { OfficialActions } from "@/components/officials/official-actions";
 import {
   CardSection,
-  CardSectionGroup,
 } from "@/components/officials/card-section";
-import { CardSourcesList } from "@/components/officials/card-sources-list";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 
 import { identityChipsFor } from "@/lib/officials/identity-chips";
@@ -130,73 +127,15 @@ export function OfficialModal({
         if (!embedded && event.target === event.currentTarget) onClose();
       }}
     >
-      <div className={embedded ? "account-modal mw-entity mw-person" : "account-modal"}>
-        {/*
-          Item 3 (2026-08-16): the header carries the TIER EYEBROW and the
-          close control, and nothing else.
-
-          It used to repeat the name as an h2 and the seat as a subtitle,
-          four pixels above an identity block that says both again at the
-          size it was designed at. Three renderings of "Mayor" and
-          two of the person's name on one card is friction with no exception
-          claiming it — the reader is trying to find out who this is, and
-          saying it twice does not help them do that faster. The identity
-          block's name is the card's heading now.
-        */}
-        <header className="account-modal-header">
-          <div className="min-w-0">
-            <p
-              className="popup-type"
-              style={{ color: `var(--accent-${tier})` }}
-            >
-              {TIER_LABEL[tier]}
-            </p>
-          </div>
-
-          {!embedded && (
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-            className="popup-expand-btn !static shrink-0"
-          >
-            <X className="size-4" />
-          </button>
-          )}
-        </header>
-
-        {/*
-          Item 6b4 (2026-08-15) — the card's information order is a design
-          decision, and this is it. Recorded in DESIGN.md beside the tokens.
-
-          IDENTITY IS OPEN. Name, photo, office, party, in-seat-until: what a
-          stranger sees in the first screen-height before any tap is the
-          card's argument, and the argument is "here is who this is".
-
-          EVERYTHING ELSE IS A COLLAPSED HEADER, in this order:
-
-            1. What this office does — the stranger test. A reader who does
-               not know what a ward council member IS cannot use a phone
-               number or a donor list. It sits directly under identity for
-               that reason, ahead of the other three.
-            2. How to reach them   ┐
-            3. Campaign money      ├ the stated order:
-            4. Their votes         ┘ identity → contact → funding → votes.
-
-          THE SECTION SET IS IDENTICAL PER OFFICE CLASS. A thin challenger
-          renders the same headers as a thirty-year incumbent, with honest
-          content behind each — collapse is organization, never a way to
-          render some people smaller than others. The one exception is
-          structural rather than editorial: a person with no roll-call store
-          at all (a mayor, a selectboard member) has no votes section, because
-          there is no such thing as their voting record to be missing.
-        */}
-        {/* F01 4.1 (2026-08-19): every top-level pill on this card belongs to
-            ONE group, so opening any collapses the rest. The wrap is here, at
-            the card, because the pills are constructed by five different
-            components and only their common ancestor can hold the state. */}
-        <CardSectionGroup independent={embedded}>
-        <div className="account-modal-body">
+      <Card
+        title={holder.name}
+        titleVisible={false}
+        eyebrow={<span style={{ color: `var(--accent-${tier})` }}>{TIER_LABEL[tier]}</span>}
+        onClose={embedded ? undefined : onClose}
+        className={embedded ? "account-modal mw-entity mw-person" : "account-modal"}
+        independent={embedded}
+        sources={sources}
+      >
           {/*
             Item 3 (2026-08-16). Circle portrait with a
             NEUTRAL ring, name as the dominant type, one chip row where party
@@ -304,33 +243,7 @@ export function OfficialModal({
             context={reactionContext ?? undefined}
           />
 
-          {/*
-            Item 1 (2026-08-16): the person battlecard's answer to "says
-            who?".
-
-            The division battlecard has a Sources TAB and this card has no tab
-            bar, so the same obligation lands in this card's own grammar — a
-            6b4 collapsible section, fed by the same assembler, with the
-            stated N in the header meta. A card class that answers the
-            question differently is fine; a card class that cannot answer it
-            at all was the defect.
-
-            Money and votes are deliberately absent from the list: those
-            sections cite themselves on the row, and the same claim in two
-            registers reads as two claims.
-          */}
-          <CardSection title="Sources" meta={sourceCountLabel(sources)}>
-            {sources.length === 0 ? (
-              <p className="text-[0.75rem] leading-relaxed text-muted">
-                We’re working on getting this info.
-              </p>
-            ) : (
-              <CardSourcesList sources={sources} />
-            )}
-          </CardSection>
-        </div>
-        </CardSectionGroup>
-      </div>
+      </Card>
     </div>
   );
 }

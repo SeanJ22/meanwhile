@@ -46,3 +46,15 @@ test("a write that fails is counted and never thrown into the attempt it describ
   const broken = { put: async () => { throw new Error("store down"); } };
   assert.deepEqual(await recordAttempts(broken, [base]), { written: 0, skipped: 0, failed: 2 });
 });
+
+test("a Scout's result becomes an attempt on the manual entries it opened, and says nothing when it could not tell", async () => {
+  const { attemptFromScoutResult } = await import("../lib/method/fix-map-record.ts");
+  const result = { attemptId: "att", outcome: "ROUTE_CANDIDATE", refusal: null, researchRole: "SCOUT", unverified: [], recordedAt: at,
+    knowledgeReads: [{ kind: "MANUAL_ENTRY", id: "entry-1", contentHash: "h", offset: 0, length: 1 }, { kind: "HELD_ARTIFACT", id: "page", contentHash: "h", offset: 0, length: 1 }] } as const;
+  const win = attemptFromScoutResult(result as never, "place-1");
+  assert.deepEqual([win.kind, win.outcome, win.methodIds], ["SCOUT", "SUCCEEDED", ["entry-1"]]);
+  assert.equal(attemptFromScoutResult({ ...result, outcome: "BLOCKED", researchRole: "DETECTIVE" } as never, "p").outcome, "FAILED");
+  assert.equal(attemptFromScoutResult({ ...result, outcome: "NEEDS_ADAPTER" } as never, "p").outcome, "INCONCLUSIVE");
+  assert.equal(attemptFromScoutResult({ ...result, refusal: [{}] } as never, "p").outcome, "INCONCLUSIVE");
+  assert.deepEqual(fixResultsFromAttempt(attemptFromScoutResult({ ...result, outcome: "HUMAN_REQUIRED" } as never, "p")), []);
+});

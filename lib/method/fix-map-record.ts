@@ -16,6 +16,7 @@
  * Nothing here names a place; the place is the data.
  */
 
+import type { ScoutResult } from "../control-plane/scheduler/scout-result.ts";
 import { applyFixResult, type FixMapRepository, type FixMapRow } from "./fix-map.ts";
 
 export const ATTEMPT_KINDS = ["SCOUT", "DETECTIVE", "ROUTE_RUN", "ACQUIRER_VERDICT", "AUDIT"] as const;
@@ -89,5 +90,30 @@ export function memoryFixMap(): FixMapRepository & { readonly rows: () => readon
     forPlace: async (placeId) => [...rows.values()].filter((r) => r.placeId === placeId).sort((a, b) => (a.methodId < b.methodId ? -1 : 1)),
     forMethod: async (methodId) => [...rows.values()].filter((r) => r.methodId === methodId).sort((a, b) => (a.placeId < b.placeId ? -1 : 1)),
     put: async (row) => { rows.set(key(row), applyFixResult(rows.get(key(row)) ?? null, row)); },
+  };
+}
+
+/**
+ * A Scout's or detective's attempt as the fix map reads it: the manual entries
+ * it actually opened are the methods it used. Finding a route or the record's
+ * evidence is a success; an exhausted ladder or an access wall is a failure of
+ * what it tried; needing an adapter, a person, or a refused finish says nothing
+ * about the methods, so it writes nothing.
+ */
+export function attemptFromScoutResult(
+  result: Pick<ScoutResult, "attemptId" | "outcome" | "refusal" | "knowledgeReads" | "researchRole" | "unverified" | "recordedAt">,
+  placeId: string,
+): MethodAttempt {
+  const succeeded = result.outcome === "ROUTE_CANDIDATE" || result.outcome === "EVIDENCE_FOUND";
+  const failed = result.outcome === "NO_PROGRESS" || result.outcome === "BLOCKED";
+  const refused = result.refusal !== null;
+  return {
+    kind: result.researchRole === "DETECTIVE" ? "DETECTIVE" : "SCOUT",
+    attemptId: result.attemptId,
+    placeId,
+    methodIds: (result.knowledgeReads ?? []).filter((read) => read.kind === "MANUAL_ENTRY").map((read) => read.id),
+    outcome: refused ? "INCONCLUSIVE" : succeeded ? "SUCCEEDED" : failed ? "FAILED" : "INCONCLUSIVE",
+    cause: failed ? (result.outcome === "BLOCKED" ? "an access control stood in the way" : result.unverified[0] ?? "the walk found nothing that advanced") : null,
+    at: result.recordedAt,
   };
 }

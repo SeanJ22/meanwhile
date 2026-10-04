@@ -12,7 +12,7 @@ The authoritative assignment table. River writes it. Workers read it every run.
 | people | people | Claude | yes | — |
 | admin | **measures** (handed off 08:20Z) | Claude | yes | measures (only after a recorded handoff below) |
 | slide | **hunters** (handed off 08:20Z) | Claude | yes | hunters (only after a recorded handoff below) |
-| ballot | codex-ballot | Codex | yes | meetings (only after a recorded handoff below) |
+| ballot | **meetings** (handed off 11:05Z) | Claude | yes | meetings (only after a recorded handoff below) |
 | bank | **registry** (handed off 08:20Z) | Claude | yes | registry (only after a recorded handoff below) |
 | frontend | **auditors** (handed off 08:20Z) | Claude | yes | auditors (only after a recorded handoff below) |
 
@@ -24,8 +24,9 @@ The authoritative assignment table. River writes it. Workers read it every run.
 | 2026-10-04 08:20Z | slide | codex-slide | hunters | released at 07:39Z and stopped | stream/slide as of 08:20Z |
 | 2026-10-04 08:20Z | bank | codex-bank | registry | released at 07:34Z and stopped | stream/bank as of 08:20Z |
 | 2026-10-04 08:20Z | frontend | codex-frontend | auditors | released at 07:24Z and stopped | stream/frontend as of 08:20Z |
+| 2026-10-04 11:05Z | ballot | codex-ballot | meetings | released its lock at 09:23Z "for recorded continuation" and stopped | stream/ballot @ d63bbe831 |
 
-The continuation worker reads the lane's brief and its saved continuation file, claims `.factory/<lane>.md` with its own token (the previous lock is `none`), and alternates ready batches with its primary lane. Do returned failures and unblocking work first, and never starve either lane. If a Codex run comes back, it sees this table and exits without writing. Ballot stays with codex-ballot, which is still active.
+The continuation worker reads the lane's brief and its saved continuation file, claims `.factory/<lane>.md` with its own token (the previous lock is `none`), and alternates ready batches with its primary lane. Do returned failures and unblocking work first, and never starve either lane. If a Codex run comes back, it sees this table and exits without writing. Ballot was handed to meetings at 11:05Z.
 
 Previously: None yet. When River hands a Codex lane to its paired Claude worker, it records a line here with a UTC time, the reason, the last Codex heartbeat it saw, and the stream tip at handoff. A Claude worker takes a Codex lane only when this section names it.
 

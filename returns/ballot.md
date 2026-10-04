@@ -9,3 +9,7 @@ In `app/api/ask/grounded/route.ts`, before synthesis, near the money and sitting
 ## 2026-10-04 06:45Z — hook from slide
 
 CP-01 privacy (slide owns the step; `lib/ask` is yours): remove `filedAddress` from the AskContact/evidence candidateProfile union, the contactForCandidate mapping, the contactEvidence text and the projectCandidateProfile field loop and source-note logic, and update the Ask tests. Keep the filing Sources link. Slide sanitizes the card and filing projections itself. CP-01 is incomplete until this lands, so do it early.
+
+## 2026-10-04 11:05Z — continuation handoff
+
+ballot is now continued by meetings (see assignments.md → Handoffs). Its READY batch through bfc11e7 (CA-20, 24, 30, 44, 45, 51 and the returned Ask hooks) is on river. Start from the preserved WIP after that boundary. Run checks as described in assignments.md → "Checks guidance for FULL batches".

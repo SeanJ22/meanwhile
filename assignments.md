@@ -10,8 +10,8 @@ The authoritative assignment table. River writes it. Workers read it every run.
 | meetings | meetings | Claude | yes | — |
 | auditors | auditors | Claude | yes | — |
 | people | people | Claude | yes | — |
-| admin | **overflow-1** (River-run worker, 13:45Z; measures' handoff blocked) | Claude | yes | measures (only after a recorded handoff below) |
-| slide | **overflow-2** (River-run worker, 13:45Z; hunters never claimed it) | Claude | yes | hunters (only after a recorded handoff below) |
+| admin | **overflow-1** (River-run worker, 13:30Z; measures' handoff blocked) | Claude | yes | measures (only after a recorded handoff below) |
+| slide | **overflow-2** (River-run worker, 13:30Z; hunters never claimed it) | Claude | yes | hunters (only after a recorded handoff below) |
 | ballot | **meetings** (handed off 11:05Z) | Claude | yes | meetings (only after a recorded handoff below) |
 | bank | **registry** (handed off 08:20Z) | Claude | yes | registry (only after a recorded handoff below) |
 | frontend | **auditors** (handed off 08:20Z) | Claude | yes | auditors (only after a recorded handoff below) |
@@ -46,8 +46,8 @@ Sean's launch authorization allows up to two overflow workers when a lane falls 
 
 | Time | Worker | Lane | Why |
 |---|---|---|---|
-| 2026-10-04 13:45Z | overflow-1 | admin | No progress since 07:06Z. measures' session permission check denied claiming stream/admin twice. About 20 measures steps and several auditors steps wait on BR-01, BR-03, BR-05, BR-12 and BR-24. |
-| 2026-10-04 13:45Z | overflow-2 | slide | No progress since 07:39Z, and hunters never claimed it. Slide carries the reader-harm fixes CP-01 (privacy) and CP-19 (wrong person's facts). |
+| 2026-10-04 13:30Z | overflow-1 | admin | No progress since 07:06Z. measures' session permission check denied claiming stream/admin twice. About 20 measures steps and several auditors steps wait on BR-01, BR-03, BR-05, BR-12 and BR-24. |
+| 2026-10-04 13:30Z | overflow-2 | slide | No progress since 07:39Z, and hunters never claimed it. Slide carries the reader-harm fixes CP-01 (privacy) and CP-19 (wrong person's facts). |
 
 Both run as background workers inside River's cloud session (session_01M3CeUks1KpFZttTP6ZTEAq), under the common lock and READY rules, on their lane's stream. **measures and hunters: do not claim admin or slide while this row stands.** Frontend stays with auditors, unless Sean restarts its Codex task.
 

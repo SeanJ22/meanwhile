@@ -384,7 +384,6 @@ import { CYCLE_DRAIN_GRACE_MS, chosenExitCode, exitAfterDrainGrace } from "../li
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
-import { readMethodCandidateAuthorityStatus } from "../lib/control-plane/method-candidate-authority.ts";
 import { nextRunRecordPath } from "../lib/health/run-records.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
@@ -587,17 +586,17 @@ const startupReadRetry = {
     ),
 };
 
+/*
+ * The candidate store is read once, here. A store that cannot be read costs this
+ * round its candidate proposals and nothing else: research, meeting refresh and
+ * publication go on, and Admin shows one line (DP-01).
+ */
+let candidateStoreUnreadable: string | null = null;
 if (wantsPostgres) {
-  const methodAuthority = await retryStartupRead(
-    () => readMethodCandidateAuthorityStatus(repos),
-    (status) => (status.state === "STORE_UNREACHABLE" ? status.detail : null),
-    startupReadRetry,
-  );
-  if (methodAuthority.state !== "ADOPTED") {
-    throw new Error(
-      `METHOD_CANDIDATE_AUTHORITY_NOT_ADOPTED: ${methodAuthority.code} — ${methodAuthority.detail} ` +
-        "No Scout candidate write or tracked-file fallback was attempted.",
-    );
+  try {
+    await retryStartupRead(() => readMethodCandidateStore(repos), () => null, startupReadRetry);
+  } catch (error) {
+    candidateStoreUnreadable = error instanceof Error ? error.message : String(error);
   }
 }
 
@@ -824,6 +823,8 @@ const decisionDisagreements = units
 const nowMs = Date.parse(NOW);
 /** Named runtime conditions, accumulated from here on; the research state carries them. */
 const runtimeConditions: string[] = [];
+if (candidateStoreUnreadable !== null) runtimeConditions.push(
+  `method candidates could not be read (${candidateStoreUnreadable}); no candidate proposals this round, everything else continues`);
 let canonicalCandidateCounts = await candidateStoreCounts(repos);
 if (canonicalCandidateCounts === null) {
   runtimeConditions.push("METHOD_CANDIDATE_STORE_NOT_SEEDED: canonical candidate lifecycle is unavailable; no tracked-file fallback was used");
@@ -993,7 +994,13 @@ const debtsIn = await wakeInstalledAdapterDebts(repos,(canary
 ).filter((debt) => !retiredDebtReasons.has(debt.obligationId)),NOW);
 /* The plain-code lane's queue key reads this debt (`waitingSince`); so does its reading while the cycle runs. */
 const debtAtCycleStart = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
-for (const [id, decision] of decisions) decisions.set(id, sourceFailureRecovery(decision, debtAtCycleStart.get(id)));
+/* A shut door goes to a detective; a passing outage keeps its plain retry. While the paid lane is closed the shut door's plain re-read still runs (DP-02). */
+const plainDecisionBeforeDetective = new Map<string, ExecutorDecision>();
+for (const [id, decision] of decisions) {
+  const recovered = sourceFailureRecovery(decision, debtAtCycleStart.get(id));
+  if (recovered !== decision) plainDecisionBeforeDetective.set(id, decision);
+  decisions.set(id, recovered);
+}
 const modelClassUnits = units.filter((u) => decisions.get(u.obligation.id)?.kind === "BOUNDED_MODEL_WORKER");
 const debtIds = new Set(debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
 const retryNow = new Set(retryable(debtsIn, nowMs).map((d) => d.obligationId));
@@ -2565,7 +2572,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
       },
       onResult: async (result: ScoutResult, artifacts: readonly WorkArtifact[]) => {
         let amended = result;
-        if ((result.refusal === null && result.candidates.length > 0) || result.sourceDeadEnds?.length) {
+        if (candidateStoreUnreadable === null && ((result.refusal === null && result.candidates.length > 0) || result.sourceDeadEnds?.length)) {
           try {
             const report = await proposeScoutCandidates({ repos, result, artifacts, stamp: today() });
             candidateReports.push(report);
@@ -2768,7 +2775,7 @@ const cycle = await runCycle({
   /* With no DISPATCH pending (the set above is empty), the selected expansion scopes' due work goes first instead. */
   ...(scopePlaceFirst !== null ? { placeFirst: scopePlaceFirst } : {}),
   research: {
-    decide: (row) => decisionFor(row.obligation.id, row.obligation.routeId),
+    decide: (row) => (!modelLaneEnabled && plainDecisionBeforeDetective.get(row.obligation.id)) || decisionFor(row.obligation.id, row.obligation.routeId),
     /* The same canonical band comparator used for the visible/opening queue reaches the actual Scout pool. */
     compareModelRows: compareScoutRows,
     admitScout: (row) => {

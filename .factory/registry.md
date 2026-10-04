@@ -1,13 +1,13 @@
-build_state: waiting
+build_state: active
 worker: registry
 provider: Claude
-run_id: none
-lock: none
-heartbeat: none
+run_id: session_012Br3oqBisWocYf2w8VnPPs (Claude Sonnet 5.5)
+lock: registry-20261004T061107Z-30911
+heartbeat: 2026-10-04T06:11:07Z
 on_river: none
 ready: none
 checks: none
-working_on: none. Seeded by River from river @ 0b31938 at 2026-10-04T06:02:15Z. Take your first ready step from your brief.
+working_on: DB-09 (starting)
 waiting_on: none
 returned: none
 needs_hook: none

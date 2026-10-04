@@ -190,6 +190,7 @@ import {
 } from "../lib/control-plane/expansion/dispatch-work.ts";
 import { readHeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
+import { liveFamiliesByGovernment } from "../lib/control-plane/expansion/live-families.ts";
 import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
 import { evidenceProjection } from "../lib/control-plane/workers/evidence-projection.ts";
 import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
@@ -1838,9 +1839,23 @@ if (dispatchTargets.length > 0) {
     }
     const durable = new Map<string, DurableRowFacts>();
     for (const row of [...sync.all, ...(sync.outside ?? [])]) durable.set(row.id, { active: row.active, materializedBy: row.materializedBy, assignments: row.assignments });
+    /* CH-04: a government whose family rows an earlier Send already made live gets no paid discovery Scout for it.
+     * The held capture is read once per cycle; if it cannot be read the Scouts are planned as before. */
+    let liveFamilies: ReadonlyMap<string, ReadonlySet<string>> | undefined;
+    try {
+      const wanted = new Set(dispatchScopes.flatMap(scope => scope.kind === "RESOLVED" ? [...scope.members] : []));
+      const governments = [...registries.values()].flatMap(reg => reg.jurisdictions.filter(j => wanted.has(j.id) && j.ocdId));
+      if (governments.length > 0) {
+        const capture = await readHeldPlaceCapture([...new Set(governments.map(j => j.ocdId!))], { now: nowIso(), bypassCache: true });
+        liveFamilies = liveFamiliesByGovernment({ governments, capture, now: nowIso() });
+      }
+    } catch (error) {
+      console.warn(`  held capture unread; discovery Scouts planned as before: ${error instanceof Error ? error.message : String(error)}`);
+    }
     const plan = planDispatchWork({
       targets: dispatchTargets,
       world: {
+        liveFamilies,
         registries,
         territory: expansionLoad.territory ?? null,
         territoryDetail: expansionLoad.territoryDetail ?? null,

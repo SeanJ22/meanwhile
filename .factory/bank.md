@@ -3,7 +3,7 @@ worker: registry (continuing bank after recorded handoff 2026-10-04 08:20Z)
 provider: Claude
 run_id: session_01Gzddi9NT9jvbbesVsdSaTU (Claude Sonnet 5.5)
 lock: bank-20261004T093829Z-28469
-heartbeat: 2026-10-04T09:43:23Z
+heartbeat: 2026-10-04T09:44:24Z
 on_river: none
 ready: DP-07, DB-42, DB-38, DB-49, DP-09, DB-37, DB-40, DB-41, DP-08, DP-19, DB-43 @ ce0f60fff7b3edbaabaf3c58b692613c95888c19; DB-51 @ 7eb22ae28ea5720965cde81e4ff400b585f9850b; DP-20 (writer and adapters; callers not yet connected) — cumulative, exact ready commit ee1c356ca74df11d7a0532e5da8c428111735a4a.
 checks: DP-20 delta @ ee1c356ca74df11d7a0532e5da8c428111735a4a: the 132 affected files of the DB-51 delta plus tests/fix-map-record.test.ts, 1467 tests, 1463 pass, 0 fail (rest skipped); tsc clean; eslint clean. Earlier:  DB-51 delta @ 7eb22ae28ea5720965cde81e4ff400b585f9850b (code tree minus .factory, selector against the previous tested tree): AFFECTED 132 files, 1463 tests, all pass except tests/source-stamp.test.ts "AGREES with git", which fails only on the synthetic no-history copy and passes (10/10) on the real branch; tsc clean; eslint clean. Earlier batch:  FULL `pnpm test` (selector said FULL; env -u DATABASE_URL -u WTP_ASSET_STORE) on the merged tree (stream/bank + river 8c67d4b65, .factory excluded): 9033 tests, 9022 pass, 0 fail, 11 skipped. tsc --noEmit clean; eslint on changed files 0 errors, 1 warning. Earlier Codex FULL failures (6) do not reproduce here: deploy-trace passes without a stale .next; local-browser fixture not exercised (no browser step in pnpm test). Tested code tree = ready commit ce0f60fff7b3edbaabaf3c58b692613c95888c19 minus .factory. Not checked: live Admin, production schema, browser fixtures.

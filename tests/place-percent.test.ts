@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { isCoreChecklistItem, percentOf, placePercent } from "../lib/coverage/place-percent.ts";
+import { isCoreChecklistItem, percentOf } from "../lib/coverage/place-percent.ts";
+import { placePercent } from "../lib/coverage/place-measures.ts";
 import { GROUP_NAMES, PLACE_GROUPS } from "../lib/coverage/group-names.ts";
 import { CHECKLIST_GROUPS } from "../lib/coverage/checklist-map.ts";
 import { scorePlace, type OwedRowLike } from "../lib/control-plane/admin-view/place-scorecard.ts";

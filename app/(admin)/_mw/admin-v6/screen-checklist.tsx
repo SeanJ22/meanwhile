@@ -10,7 +10,7 @@ import { useState } from "react";
 
 import { STATUS_COLOR, STATUS_LABEL, StatusBar, StatusLegend, StatusTable, Swatch } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
-import { count, ITEM_STATUS_ORDER, mst, type ItemStatus, type PlaceScoreView, type ScoreGroup } from "./model.ts";
+import { count, ITEM_STATUS_ORDER, mst, type ItemStatus, type MeasureView, type PlaceScoreView, type ScoreGroup } from "./model.ts";
 
 import { Actions, Card, cx, Empty, Loading, useListView, usePager } from "./ui.tsx";
 import s from "./v6.module.css";
@@ -47,6 +47,24 @@ const percentWords = (g: ScoreGroup) => (g.percent === null ? "—" : `${g.perce
  */
 const FOUND_WORDS: Readonly<Record<string, string>> = { "local-jurisdiction": "Local governments", "candidate-enrichment": "Candidates", "meetings-discovery": "Meetings" };
 
+/** Three figures, each "N of M", with the counts beside it. They are never added or averaged. */
+const BESIDE_WORDS: Readonly<Record<string, string>> = { blocked: "blocked", notChecked: "not checked", awaitingPublication: "awaiting publication", noProducer: "no producer", unresolved: "unresolved", notYetDue: "not yet due",
+  notPublishedByGovernment: "not published by the government", refreshDue: "refresh due", notSeen: "not seen on the page" };
+function MeasureFigures(props: { readonly measures: PlaceScoreView["measures"] & object }) {
+  const rows: readonly [string, string, MeasureView][] = [["Completeness", "of what is owed now, held", props.measures.completeness], ["Freshness", "of what we hold, current", props.measures.freshness], ["Delivery", "of what is published, seen on the page", props.measures.delivery]];
+  return (
+    <div className={s.stack}>
+      {rows.map(([name, what, m]) => (
+        <div key={name} className={s.spread} style={{ alignItems: "baseline" }}>
+          <span><strong style={{ fontSize: 13 }}>{name}</strong> <span className={cx(s.meta)}>{what}</span></span>
+          <span className={s.mono} aria-label={`${name}: ${count(m.n)} of ${count(m.of)}`}>{m.percent === null ? "—" : `${m.percent.toFixed(1)}%`} · {count(m.n)} of {count(m.of)}</span>
+          <span className={cx(s.meta, s.small)}>{Object.entries(m.beside).map(([k, n]) => `${n === null ? "—" : count(n)} ${BESIDE_WORDS[k] ?? k}`).join(" · ")}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function PlaceScoreCard(props: { readonly score: PlaceScoreView; readonly group: string; readonly onGroup: (g: string) => void }) {
   const v = useV6();
   const { score } = props;
@@ -56,14 +74,16 @@ function PlaceScoreCard(props: { readonly score: PlaceScoreView; readonly group:
   return (
     <Card title={`Checklist score · ${score.placeLabel}`} aside={<span className={s.meta}>Read {mst(score.observedAt)}</span>}>
       <div className={s.stack}>
-        <div className={s.spread} style={{ alignItems: "baseline" }}>
-          <span className={s.mono} style={{ fontSize: 34, fontWeight: 600 }} aria-label={`Captured: ${percentWords(o)}`}>{percentWords(o)}</span>
-          <span className={cx(s.p, s.small)}>{count(o.captured)} of {count(o.total)} captured</span>
-        </div>
+        {score.measures ? <MeasureFigures measures={score.measures} /> : (
+          <div className={s.spread} style={{ alignItems: "baseline" }}>
+            <span className={s.mono} style={{ fontSize: 34, fontWeight: 600 }} aria-label={`Held: ${percentWords(o)}`}>{percentWords(o)}</span>
+            <span className={cx(s.p, s.small)}>{count(o.captured)} of {count(o.total)} held</span>
+          </div>
+        )}
         <ScoreBar g={o} label="Everything this place is owed" tall />
         <div className={s.legend}>{SCORE_PARTS.map((p) => <span key={p.key} className={s.legendItem}><Swatch cls={p.cls} />{p.words} · {count(o[p.key])}</span>)}</div>
         {found && found.length > 0 && <p className={cx(s.p, s.small)}>Agents found in the last 24 hours, across all places: {found.map((f) => `${FOUND_WORDS[f.recordClass] ?? f.recordClass.replace(/-/g, " ")} ${count(f.found)} evidence, ${count(f.route)} routes`).join(" · ")}</p>}
-        {score.target && <p className={cx(s.p, s.small)}>Target: <strong>{score.target.goalPercent}%</strong> · now {percentWords(o)}{o.percent !== null && o.percent >= score.target.goalPercent ? " · reached" : ""} · set {mst(score.target.setAt)}</p>}
+        {score.target && <p className={cx(s.p, s.small)}>Target: <strong>{score.target.goalPercent}%</strong> · now {score.measures ? (score.measures.completeness.percent === null ? "—" : `${score.measures.completeness.percent.toFixed(1)}%`) : percentWords(o)}{(score.measures ? score.measures.completeness.percent : o.percent) !== null && (score.measures ? score.measures.completeness.percent : o.percent)! >= score.target.goalPercent ? " · reached" : ""} · set {mst(score.target.setAt)}</p>}
         <Actions actions={[{ kind: "target-set", target: v.scopeKey, label: score.target ? "Change the target" : "Set a target" }, ...(score.target ? [{ kind: "target-clear" as const, target: v.scopeKey, label: "Clear the target" }] : [])]} />
         {words && <Actions actions={[{ kind: "send-agents", target: v.scopeKey, label: "Send agents to fill the blanks", payload: { words } }]} primaryFirst />}
         {!words && /^geo:[a-z]{2}\.(congressional_district|county)\./.test(v.scopeKey) && <Actions actions={[{ kind: "hunt-start", target: v.scopeKey, label: "Start hunts for the ZIPs here" }]} primaryFirst />}

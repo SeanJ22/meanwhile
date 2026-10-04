@@ -27,7 +27,7 @@ import { createWorkItem } from "../work-item.ts";
 import { registerWorkItem } from "../repository/coordinator.ts";
 import type { ResolvedScope } from "./membership.ts";
 import { buildPlaceOwedList, type PlaceOwedItem } from "../../coverage/place-owed.ts";
-import { placePercent } from "../../coverage/place-percent.ts";
+import { placePercent } from "../../coverage/place-measures.ts";
 import { readHeldPlaceCapture } from "../../civic-data/held-place-capture.ts";
 import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
 import { expansionScopesOf, VERSION_PREFIX } from "./scopes.ts";

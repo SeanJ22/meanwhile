@@ -18,6 +18,7 @@
  */
 
 import type { RowStatuses } from "../../coverage/place-statuses.ts";
+import { measuresByFamily, placeMeasures, type PlaceMeasures } from "../../coverage/place-measures.ts";
 import { isCoreChecklistItem, isSummaryChecklistItem, percentOf } from "../../coverage/place-percent.ts";
 
 export type OwedState = "published" | "held" | "unpublished" | "stale" | "missing";
@@ -59,6 +60,10 @@ export interface PlaceScore {
   readonly extension: GroupScore | null;
   /** Summary items whose detail items carry the count: listed, but out of the denominator. Null when none. */
   readonly summary: GroupScore | null;
+  /** Completeness, freshness and delivery, each with its counts and never blended. */
+  readonly measures: PlaceMeasures;
+  /** The same three measures for each family. */
+  readonly familyMeasures: readonly { readonly group: string; readonly measures: PlaceMeasures }[];
 }
 
 export const OWED_STATE_WORDS: Readonly<Record<OwedState, string>> = {
@@ -105,6 +110,8 @@ export function scorePlace(rows: readonly OwedRowLike[], groupNames: Readonly<Re
     groups: order.map((g) => scored(g, groupNames[g] ?? g, by.get(g)!)),
     extension: Object.values(extension).some((n) => n > 0) ? scored("EXT", "Extra items beyond the core list", extension) : null,
     summary: Object.values(summary).some((n) => n > 0) ? scored("SUM", "Summary items counted through their detail items", summary) : null,
+    measures: placeMeasures(rows),
+    familyMeasures: measuresByFamily(rows, groupOrder),
   };
 }
 

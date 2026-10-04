@@ -96,3 +96,12 @@ One line per batch folded into river.
 - hunters: CH-05 · ready 89c49c1d6
 - auditors: DP-05, DP-15, FE-03, FE-17, FE-18 · ready 1f9769067
 - bank: DB-50, DP-24 · ready 20ae5c0c9
+
+## 2026-10-04T11:59:37Z — river 3690498 → bbe97c72a
+
+- Evidence: pnpm gates on bbe97c72a (CI env): 12/12 PASS; 9242 tests pass, 0 fail, 11 skipped.
+- registry: DB-33 · ready 5fecfca32
+- meetings: BX-10, DB-06, DB-07, DB-55 · ready 615092663
+- auditors: DP-10, DP-13, DP-14, DP-16, DP-18 · ready e19d677d4
+- bank: DP-28 · ready fa4a868ef
+- Fold repair: RoutineRemovalEvidence union carries both AuditPull (auditors) and MovedToHistory (meetings).

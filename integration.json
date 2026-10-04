@@ -716,5 +716,60 @@
     "gates": "pass-after-repair",
     "evidence": "pnpm gates on ba758a7 (CI env): 11/12, test 9191 pass 1 fail (RULING 107 freshness stamp in lib/sources/feed-kinds.ts, bank DB-50). Repaired in 3690498 (header declaration); freshness-provenance + feed-kinds tests 11/11, eslint clean.",
     "at": "2026-10-04T11:27:36Z"
+  },
+  {
+    "lane": "registry",
+    "steps": [
+      "DB-33"
+    ],
+    "ready_sha": "5fecfca3262b0fe2f587d8f293388de9f6e06cc7",
+    "river_sha": "bbe97c72af7f227b7d6a38038b45565ff20e515c",
+    "tested_sha": "bbe97c72af7f227b7d6a38038b45565ff20e515c",
+    "gates": "pass",
+    "evidence": "pnpm gates on bbe97c72a (CI env): 12/12 PASS; 9242 tests pass, 0 fail, 11 skipped.",
+    "at": "2026-10-04T11:59:37Z"
+  },
+  {
+    "lane": "meetings",
+    "steps": [
+      "BX-10",
+      "DB-06",
+      "DB-07",
+      "DB-55"
+    ],
+    "ready_sha": "615092663c10e0e44c9007771a19a5465fbe3ab3",
+    "river_sha": "bbe97c72af7f227b7d6a38038b45565ff20e515c",
+    "tested_sha": "bbe97c72af7f227b7d6a38038b45565ff20e515c",
+    "gates": "pass",
+    "evidence": "pnpm gates on bbe97c72a (CI env): 12/12 PASS; 9242 tests pass, 0 fail, 11 skipped.",
+    "at": "2026-10-04T11:59:37Z"
+  },
+  {
+    "lane": "auditors",
+    "steps": [
+      "DP-10",
+      "DP-13",
+      "DP-14",
+      "DP-16",
+      "DP-18"
+    ],
+    "ready_sha": "e19d677d430f549391603220cb227bbd661798a2",
+    "river_sha": "bbe97c72af7f227b7d6a38038b45565ff20e515c",
+    "tested_sha": "bbe97c72af7f227b7d6a38038b45565ff20e515c",
+    "gates": "pass",
+    "evidence": "pnpm gates on bbe97c72a (CI env): 12/12 PASS; 9242 tests pass, 0 fail, 11 skipped.",
+    "at": "2026-10-04T11:59:37Z"
+  },
+  {
+    "lane": "bank",
+    "steps": [
+      "DP-28"
+    ],
+    "ready_sha": "fa4a868ef586bdba5fdddb65c9fb4b4b072a9033",
+    "river_sha": "bbe97c72af7f227b7d6a38038b45565ff20e515c",
+    "tested_sha": "bbe97c72af7f227b7d6a38038b45565ff20e515c",
+    "gates": "pass",
+    "evidence": "pnpm gates on bbe97c72a (CI env): 12/12 PASS; 9242 tests pass, 0 fail, 11 skipped.",
+    "at": "2026-10-04T11:59:37Z"
   }
 ]

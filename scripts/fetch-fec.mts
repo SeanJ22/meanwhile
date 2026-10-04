@@ -118,9 +118,12 @@ const currentFec = store
   ? await store.readPromotion<FundingSnapshot>("FEC_FUNDING", "federal-supported")
   : null;
 const targetFloor = currentFec?.payload ?? bundledFec;
-const canonicalCongress = store
+// Keep the held target population as the way back until the expanded path
+// has been checked live (rulings §5). This changes targets, never budgets.
+const upgradeTargets = process.env.WTP_FEC_TARGET_UNIVERSE?.trim().toLowerCase() === "promoted";
+const canonicalCongress = store && upgradeTargets
   ? await readPromotedCivicData<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_SCOPE, { store, bypassCache: true }) : null;
-if (PROMOTE && canonicalCongress?.kind !== "PROMOTED") {
+if (PROMOTE && upgradeTargets && canonicalCongress?.kind !== "PROMOTED") {
   throw new Error("FEC_TARGET_UNIVERSE_HELD:promoted national congressional membership is unavailable");
 }
 
@@ -343,7 +346,7 @@ if (canonicalCongress?.kind === "PROMOTED") {
 }
 // Read every page of the scoped FEC list for each district in an existing admitted Send.
 // Its own ids remain financial keys; these rows never enter the ballot projection.
-if (PROMOTE) {
+if (PROMOTE && upgradeTargets) {
   const sentDistricts = await readFecSendDistricts(new Date().toISOString());
   const scopes: FecSearchScope[] = [...sentDistricts.map(district => ({ ...district, office: "H" as const })),
     ...[...new Set(sentDistricts.map(district => district.state))].map(state => ({ state, office: "S" as const, district: null }))];

@@ -285,5 +285,6 @@ test("recorded, planted: a portal row whose place is blanked is published with t
 });
 
 test("the calendar route reads exactly the forward window's months", () => {
-  assert.deepEqual(forwardCalendarMonths(NOW), ["2026-09-01", "2026-10-01", "2026-11-01", "2026-12-01"]);
+  // DB-04: the forward window is the held 120 days, which from this NOW reaches into January.
+  assert.deepEqual(forwardCalendarMonths(NOW), ["2026-09-01", "2026-10-01", "2026-11-01", "2026-12-01", "2027-01-01"]);
 });

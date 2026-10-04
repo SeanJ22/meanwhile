@@ -3,7 +3,7 @@ worker: registry
 provider: Claude
 run_id: session_012Br3oqBisWocYf2w8VnPPs (Claude Sonnet 5.5)
 lock: registry-20261004T061107Z-30911
-heartbeat: 2026-10-04T06:25:34Z
+heartbeat: 2026-10-04T06:55:49Z
 on_river: none
 ready: DB-09, DB-10, DB-11 at 165e9536bbadb0f587bfefc897fb71457691a27c (cumulative; DB-09 alone at b8c61d41d47b4d2a2a7137404bc69f8ba619437b)
 checks: DB-11 @ 165e9536bbadb0f587bfefc897fb71457691a27c: tsc --noEmit clean; eslint clean; door-registry*.test.ts 9/9; seed script against a file store: 129 hand-wired + 78 feed doors created, re-run unchanged. Earlier: control-plane-conformance + admin-action-gateway pass; 9 pre-existing unrelated failures noted.

@@ -1,0 +1,581 @@
+{
+  "commit": "c8b52f7185fad667169648b90548c47868c4dfe0",
+  "tree": "9a0c135758a370d1d123a0d6cbdf126431633604",
+  "workingTreeStatus": "",
+  "runner": {
+    "platform": "linux",
+    "arch": "x64",
+    "totalMemoryBytes": 18882699264
+  },
+  "node": "v24.19.0",
+  "configInputs": [
+    "package.json",
+    "pnpm-lock.yaml",
+    "tsconfig.json",
+    "scripts/register-test-loader.mjs",
+    "scripts/test-alias-loader.mjs",
+    "scripts/ci-tests.mjs",
+    "scripts/ci-test-timing-reporter.mjs",
+    "scripts/ci-test-scheduling-hints.mjs"
+  ],
+  "configHash": "92a2fbffa0b49acf5263a95a0c0dcd7e5450daee4d4daa9e8bf4c4d35a6a5808",
+  "suiteHash": "a723376903a8e82ff1a325399e4fcc657920b6875261aff79996d45c2dbb1bdc",
+  "command": "node scripts/ci-tests.mjs",
+  "mode": "explicit",
+  "shard": {
+    "index": 1,
+    "count": 1
+  },
+  "assignments": [
+    {
+      "file": "tests/adapter-test-selection.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 4457.091
+    },
+    {
+      "file": "tests/admin-v6-learning.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 4457.091
+    },
+    {
+      "file": "tests/bank-job-cost.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 4457.091
+    },
+    {
+      "file": "tests/bank-methods.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 4457.091
+    },
+    {
+      "file": "tests/bank-platform-fingerprints.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 4457.091
+    },
+    {
+      "file": "tests/bank-playbooks.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 4457.091
+    },
+    {
+      "file": "tests/bank-write-health.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 4457.091
+    },
+    {
+      "file": "tests/field-manual-learnings.test.ts",
+      "shard": 1,
+      "hintDurationMs": 8.6103,
+      "schedulingCost": 8.6103
+    },
+    {
+      "file": "tests/field-manual-scout.test.ts",
+      "shard": 1,
+      "hintDurationMs": 28.677,
+      "schedulingCost": 28.677
+    },
+    {
+      "file": "tests/field-manual.test.ts",
+      "shard": 1,
+      "hintDurationMs": 20.9194,
+      "schedulingCost": 20.9194
+    },
+    {
+      "file": "tests/fix-map.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 4457.091
+    },
+    {
+      "file": "tests/learning-trends.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 4457.091
+    },
+    {
+      "file": "tests/model-parser-runtime.test.ts",
+      "shard": 1,
+      "hintDurationMs": null,
+      "schedulingCost": 4457.091
+    },
+    {
+      "file": "tests/scout-candidates.test.ts",
+      "shard": 1,
+      "hintDurationMs": 59.1274,
+      "schedulingCost": 59.1274
+    },
+    {
+      "file": "tests/scout-lane.test.ts",
+      "shard": 1,
+      "hintDurationMs": 51.642,
+      "schedulingCost": 51.642
+    },
+    {
+      "file": "tests/scout-prewarm.test.ts",
+      "shard": 1,
+      "hintDurationMs": 56.3955,
+      "schedulingCost": 56.3955
+    },
+    {
+      "file": "tests/scout-tools.test.ts",
+      "shard": 1,
+      "hintDurationMs": 208.7647,
+      "schedulingCost": 208.7647
+    },
+    {
+      "file": "tests/state-manifest.test.ts",
+      "shard": 1,
+      "hintDurationMs": 4457.091,
+      "schedulingCost": 4457.091
+    }
+  ],
+  "scheduling": {
+    "algorithm": "lexical-model-fallback-with-bounded-swaps-v1",
+    "hintsValid": true,
+    "source": "Complete successful local canonical suite at f3e18b585c86735355e4405f2a6a457de7b84fb9; tree c1326824efff1a50536e51018bbb7ebb7ee5e007; v24.19.0 win32/x64; concurrency 2; NODE_OPTIONS=--max-old-space-size=4096; 682 exact-once file summaries. File-harness duration hints only, never verification reuse or hosted savings. Full identity and input hashes: local.weights.json and run.json.",
+    "hintedFiles": 8,
+    "unknownFiles": 10,
+    "unknownEstimate": 4457.091,
+    "estimateBasis": "measured-p95-with-1ms-floor",
+    "model": {
+      "label": "ESTIMATE",
+      "model": "lexical-greedy-worker-dispatch-v1",
+      "workers": 2,
+      "initialPlan": "round-robin",
+      "roundRobinMakespanCost": 26858.068900000002,
+      "longestFirstMakespanCost": 26858.068900000002,
+      "selectedMakespanCost": 26858.068900000002,
+      "shardMakespanCosts": [
+        26858.068900000002
+      ],
+      "swapsAccepted": 0,
+      "evaluatedSwaps": 0,
+      "passLimit": 8,
+      "candidatesPerEnd": 16,
+      "limitation": "Scheduling estimate from historical file-harness hints; excludes startup, shared-resource contention, queues and billing. Not an actual runtime measurement.",
+      "costUnit": "estimated-ms"
+    },
+    "note": "Hints change scheduling only; unknown files always run with an explicitly estimated cost, never a measured duration."
+  },
+  "concurrency": {
+    "available": 4,
+    "effective": 2
+  },
+  "selected": [
+    "tests/adapter-test-selection.test.ts",
+    "tests/admin-v6-learning.test.ts",
+    "tests/bank-job-cost.test.ts",
+    "tests/bank-methods.test.ts",
+    "tests/bank-platform-fingerprints.test.ts",
+    "tests/bank-playbooks.test.ts",
+    "tests/bank-write-health.test.ts",
+    "tests/field-manual-learnings.test.ts",
+    "tests/field-manual-scout.test.ts",
+    "tests/field-manual.test.ts",
+    "tests/fix-map.test.ts",
+    "tests/learning-trends.test.ts",
+    "tests/model-parser-runtime.test.ts",
+    "tests/scout-candidates.test.ts",
+    "tests/scout-lane.test.ts",
+    "tests/scout-prewarm.test.ts",
+    "tests/scout-tools.test.ts",
+    "tests/state-manifest.test.ts"
+  ],
+  "args": [
+    "--test",
+    "--experimental-strip-types",
+    "--import",
+    "./scripts/register-test-loader.mjs",
+    "tests/adapter-test-selection.test.ts",
+    "tests/admin-v6-learning.test.ts",
+    "tests/bank-job-cost.test.ts",
+    "tests/bank-methods.test.ts",
+    "tests/bank-platform-fingerprints.test.ts",
+    "tests/bank-playbooks.test.ts",
+    "tests/bank-write-health.test.ts",
+    "tests/field-manual-learnings.test.ts",
+    "tests/field-manual-scout.test.ts",
+    "tests/field-manual.test.ts",
+    "tests/fix-map.test.ts",
+    "tests/learning-trends.test.ts",
+    "tests/model-parser-runtime.test.ts",
+    "tests/scout-candidates.test.ts",
+    "tests/scout-lane.test.ts",
+    "tests/scout-prewarm.test.ts",
+    "tests/scout-tools.test.ts",
+    "tests/state-manifest.test.ts"
+  ],
+  "invocationArgs": [
+    "--test",
+    "--experimental-strip-types",
+    "--import",
+    "./scripts/register-test-loader.mjs",
+    "--test-concurrency=2",
+    "--test-reporter=spec",
+    "--test-reporter-destination=stdout",
+    "--test-reporter=file:///workspace/meanwhile/scripts/ci-test-timing-reporter.mjs",
+    "--test-reporter-destination=/workspace/meanwhile/.scratch/ci/test-affected.timings.jsonl",
+    "tests/adapter-test-selection.test.ts",
+    "tests/admin-v6-learning.test.ts",
+    "tests/bank-job-cost.test.ts",
+    "tests/bank-methods.test.ts",
+    "tests/bank-platform-fingerprints.test.ts",
+    "tests/bank-playbooks.test.ts",
+    "tests/bank-write-health.test.ts",
+    "tests/field-manual-learnings.test.ts",
+    "tests/field-manual-scout.test.ts",
+    "tests/field-manual.test.ts",
+    "tests/fix-map.test.ts",
+    "tests/learning-trends.test.ts",
+    "tests/model-parser-runtime.test.ts",
+    "tests/scout-candidates.test.ts",
+    "tests/scout-lane.test.ts",
+    "tests/scout-prewarm.test.ts",
+    "tests/scout-tools.test.ts",
+    "tests/state-manifest.test.ts"
+  ],
+  "startedAt": "2026-10-04T07:29:50.464Z",
+  "status": "passed",
+  "exitCode": 0,
+  "signal": null,
+  "elapsedMs": 28279,
+  "timing": {
+    "complete": true,
+    "issues": [],
+    "missingFiles": [],
+    "files": [
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/adapter-test-selection.test.ts",
+        "durationMs": 128.456121,
+        "success": true,
+        "counts": {
+          "tests": 2,
+          "failed": 0,
+          "passed": 2,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 2,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/admin-v6-learning.test.ts",
+        "durationMs": 78.244874,
+        "success": true,
+        "counts": {
+          "tests": 3,
+          "failed": 0,
+          "passed": 3,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 3,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/bank-job-cost.test.ts",
+        "durationMs": 32.386455,
+        "success": true,
+        "counts": {
+          "tests": 3,
+          "failed": 0,
+          "passed": 3,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 3,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/bank-methods.test.ts",
+        "durationMs": 76.870765,
+        "success": true,
+        "counts": {
+          "tests": 2,
+          "failed": 0,
+          "passed": 2,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 2,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/bank-platform-fingerprints.test.ts",
+        "durationMs": 73.425057,
+        "success": true,
+        "counts": {
+          "tests": 2,
+          "failed": 0,
+          "passed": 2,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 2,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/bank-playbooks.test.ts",
+        "durationMs": 24.507929,
+        "success": true,
+        "counts": {
+          "tests": 3,
+          "failed": 0,
+          "passed": 3,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 3,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/bank-write-health.test.ts",
+        "durationMs": 19.643389,
+        "success": true,
+        "counts": {
+          "tests": 2,
+          "failed": 0,
+          "passed": 2,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 2,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/field-manual-learnings.test.ts",
+        "durationMs": 51.191644,
+        "success": true,
+        "counts": {
+          "tests": 6,
+          "failed": 0,
+          "passed": 6,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 6,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/field-manual-scout.test.ts",
+        "durationMs": 42.45016,
+        "success": true,
+        "counts": {
+          "tests": 7,
+          "failed": 0,
+          "passed": 7,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 7,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/field-manual.test.ts",
+        "durationMs": 49.501739,
+        "success": true,
+        "counts": {
+          "tests": 14,
+          "failed": 0,
+          "passed": 14,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 14,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/fix-map.test.ts",
+        "durationMs": 44.90343,
+        "success": true,
+        "counts": {
+          "tests": 3,
+          "failed": 0,
+          "passed": 3,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 3,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/learning-trends.test.ts",
+        "durationMs": 89.370778,
+        "success": true,
+        "counts": {
+          "tests": 4,
+          "failed": 0,
+          "passed": 4,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 4,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/model-parser-runtime.test.ts",
+        "durationMs": 1607.508434,
+        "success": true,
+        "counts": {
+          "tests": 5,
+          "failed": 0,
+          "passed": 5,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 5,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/scout-candidates.test.ts",
+        "durationMs": 579.866287,
+        "success": true,
+        "counts": {
+          "tests": 7,
+          "failed": 0,
+          "passed": 7,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 7,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/scout-lane.test.ts",
+        "durationMs": 11194.07718,
+        "success": true,
+        "counts": {
+          "tests": 34,
+          "failed": 0,
+          "passed": 34,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 34,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/scout-prewarm.test.ts",
+        "durationMs": 98.703216,
+        "success": true,
+        "counts": {
+          "tests": 5,
+          "failed": 0,
+          "passed": 5,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 5,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/scout-tools.test.ts",
+        "durationMs": 1170.234619,
+        "success": true,
+        "counts": {
+          "tests": 59,
+          "failed": 0,
+          "passed": 59,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 59,
+          "suites": 0
+        }
+      },
+      {
+        "schemaVersion": 1,
+        "kind": "file",
+        "file": "tests/state-manifest.test.ts",
+        "durationMs": 4055.774941,
+        "success": true,
+        "counts": {
+          "tests": 22,
+          "failed": 0,
+          "passed": 22,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 22,
+          "suites": 0
+        }
+      }
+    ],
+    "run": {
+      "schemaVersion": 1,
+      "kind": "run",
+      "durationMs": 28032.626949,
+      "success": true,
+      "counts": {
+        "tests": 183,
+        "failed": 0,
+        "passed": 183,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "topLevel": 183,
+        "suites": 0
+      }
+    },
+    "usableForScheduling": true,
+    "file": "test-affected.timings.jsonl",
+    "measurement": "Node file harness duration; excludes some process startup/exit time and is not billed runner usage."
+  }
+}

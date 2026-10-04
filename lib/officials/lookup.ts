@@ -49,6 +49,8 @@ export interface SeatHolder {
    * product cannot survive. No sourced term, nothing renders.
    */
   termEnd: string | null;
+  /** Where the source states one: the ISO date this term starts. */
+  termStart?: string | null;
   /** Verbatim sourced term/appointment wording; never parsed into a term date. */
   termNote?: string | null;
   /**
@@ -81,7 +83,7 @@ export interface SeatHolder {
   /** Distinguishes a shared public office channel from a direct office line. */
   contactScope?: "SHARED_OFFICE" | "INDIVIDUAL_OFFICE";
   /** Earlier verified sources for optional facts retained after an incomplete update. */
-  retainedFieldSources?: Partial<Record<"termNote" | "email" | "phone" | "websiteUrl", { sourceUrl: string; sourceOrg: string; collectedAt: string }>>;
+  retainedFieldSources?: Partial<Record<"termNote" | "termStart" | "termEnd" | "email" | "phone" | "websiteUrl", { sourceUrl: string; sourceOrg: string; collectedAt: string }>>;
   contactFormUrl: string | null;
   /** Portrait on our origin (3b), from the licensed-photos manifest. */
   photoUrl: string | null;

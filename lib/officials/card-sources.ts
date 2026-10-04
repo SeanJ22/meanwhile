@@ -116,7 +116,7 @@ function holderSource(holder: SeatHolder, what: string): CardSource | null {
 function retainedHolderSources(holder: SeatHolder): CardSource[] {
   return Object.entries(holder.retainedFieldSources ?? {}).flatMap(([field, source]) => {
     if (!source) return [];
-    const label = { termNote: "term wording", email: "office email", phone: "office phone", websiteUrl: "official page link" }[field] ?? field;
+    const label = { termNote: "term wording", termStart: "term start date", termEnd: "term end date", email: "office email", phone: "office phone", websiteUrl: "official page link" }[field] ?? field;
     return [{ what: `${holder.name}'s previously verified ${label}, retained after an incomplete update`,
       provenance: { ...source, verifiedAt: null } }];
   });
@@ -202,6 +202,23 @@ export function personCardSources(
   entries.push(...extra);
 
   return mergeSources(entries);
+}
+
+/**
+ * The Polarization Research Lab's measurements, credited to the lab in the
+ * card's Sources. Meanwhile names the measurement and its maker and never
+ * scores, rates or labels the person itself.
+ */
+export function prlCardSource(profile: { attribution: { text: string; url: string }; sourceUrl: string; readAt: string }): CardSource {
+  return {
+    what: "The shares of their public statements about policy, criticism and more — measured by the Polarization Research Lab, not by Meanwhile",
+    provenance: {
+      sourceUrl: profile.sourceUrl || profile.attribution.url,
+      sourceOrg: profile.attribution.text,
+      collectedAt: profile.readAt.slice(0, 10),
+      verifiedAt: null,
+    },
+  };
 }
 
 /**

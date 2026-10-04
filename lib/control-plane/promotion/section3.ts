@@ -161,8 +161,8 @@ export function section3Record(input: {
   const page = input.pageVerdict ?? section3Page(input.page, input.recordClass, input.now);
   const present = Object.entries(input.fields).filter(([, value]) => value !== null && value !== undefined && value !== "").map(([field]) => field);
   if (!page.ok) return { live: false, verifiedFields: [], openFields: present, reason: page.reason };
-  const nameField = personNameField(input.fields);
-  const blocks = nameField ? personRecordBlocks(input.page.text, String(input.fields[nameField])) : [];
+  const nameField = personNameField(input.fields, input.recordClass);
+  const blocks = nameField ? personRecordBlocks(input.page.text, String(input.fields[nameField]), (name, text) => pageWords(text).includes(pageWords(name))) : [];
   // Repeated names are resolved by the record's other minimums, never by
   // pooling contact fields from several rows belonging to different people.
   const minimums = input.minimums ?? SECTION3_MINIMUMS[input.recordClass] ?? [];

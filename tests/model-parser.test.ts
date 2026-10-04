@@ -247,6 +247,7 @@ test("an audit that breaks a model-parsed publisher sends the next parse one tie
 for (const [shape, text] of Object.entries({
   table: '<table><tr><td>Alice Adams</td><td>Clerk</td><td>alice@example.test</td></tr><tr><td>Bob Brown</td><td>Treasurer</td><td>bob@example.test</td></tr></table>',
   columns: '<div class="roster"><div class="person-card"><p>Alice Adams</p><p>Clerk</p><p>alice@example.test</p></div><div class="person-card"><p>Bob Brown</p><p>Treasurer</p><p>bob@example.test</p></div></div>',
+  nestedCards: '<div class="person-card"><div class="person-name">Alice Adams</div><p>Clerk</p><p>alice@example.test</p></div><div class="person-card"><div class="person-name">Bob Brown</div><p>Treasurer</p><p>bob@example.test</p></div>',
   tableColumns: '<table><tr><td>Alice Adams<br>Clerk<br>alice@example.test</td><td>Bob Brown<br>Treasurer<br>bob@example.test</td></tr></table>',
   paragraphs: 'Alice Adams, Clerk, alice@example.test\n\nBob Brown, Treasurer, bob@example.test',
   list: '<ul><li>Alice Adams, Clerk, alice@example.test</li><li>Bob Brown, Treasurer, bob@example.test</li></ul>',
@@ -269,3 +270,18 @@ for (const [shape, text] of Object.entries({
     assert.ok(quotesHoldAgainst(forged, text).failures.some(failure => failure.field === "email"), "replay rejects the old parser's cross-row result");
   });
 }
+
+
+test("CP-19: a wrapped name retains the same record's fields and exact source offsets", () => {
+  const text = "Alice\nAdams, Clerk, alice@example.test\n\nBob Brown, Treasurer, bob@example.test";
+  const source = { ...evidence, text, contentHash: contentHash(text) };
+  const roster = { ...contract, recordClass: "OFFICIAL_ROSTER", requiredFields: ["name", "office"], identity: { namespace: "test:roster", keyFields: ["name"] } };
+  const result = confirmQuotedRecords({ evidence: source, contract: roster }, [{ windowStart: 0, fields: [
+    { name: "name", value: "Alice Adams", quote: "Alice\nAdams" },
+    { name: "office", value: "Clerk", quote: "Clerk" },
+    { name: "email", value: "alice@example.test", quote: "alice@example.test" },
+  ] }]);
+  assert.equal(result.records.length, 1);
+  assert.equal(result.records[0].fields.email, "alice@example.test");
+  assert.equal(quotesHoldAgainst(result, text).ok, true);
+});

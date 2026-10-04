@@ -2,8 +2,13 @@
 export interface RecordBlock { readonly start: number; readonly end: number }
 
 export const PERSON_NAME_FIELDS = ["name", "candidateName", "personName", "officialName", "fullName"] as const;
-export function personNameField(fields: Readonly<Record<string, unknown>>): string | null {
-  return PERSON_NAME_FIELDS.find(field => typeof fields[field] === "string" && String(fields[field]).trim()) ?? null;
+export function personNameField(fields: Readonly<Record<string, unknown>>, recordClass?: string): string | null {
+  const field = PERSON_NAME_FIELDS.find(key => typeof fields[key] === "string" && String(fields[key]).trim()) ?? null;
+  if (field !== "name" || !recordClass) return field;
+  // A district or a published-link inventory also has a name. It is not a
+  // person record; its deterministic decoder already ties its own fields.
+  return /(?:ROSTER|PERSON|CANDIDATE|OFFICEHOLDER|OFFICIAL)/.test(recordClass) ||
+    ["email", "phone", "office", "role"].some(key => key in fields) ? field : null;
 }
 
 /** Keep UTF-16 offsets while hiding content that never belongs to a visible record. */
@@ -11,10 +16,9 @@ function visibleSource(text: string): string {
   return text.replace(/<!--[\s\S]*?-->|<(script|style|template)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, value => " ".repeat(value.length));
 }
 
-/** The row, list item or card enclosing a name, otherwise its paragraph. */
-export function recordBlockAt(text: string, start: number, end: number): RecordBlock | null {
+/** Structural record containers, retaining offsets in the captured page. */
+function structuralBlocks(text: string): (RecordBlock & { record: boolean })[] {
   const source = visibleSource(text);
-  if (start < 0 || end <= start || end > text.length || source.slice(start, end).trim() === "") return null;
   const stack: { tag: string; start: number; record: boolean; paragraph: boolean }[] = [];
   const blocks: (RecordBlock & { record: boolean })[] = [];
   for (const match of source.matchAll(/<\/?([a-z][\w:-]*)\b[^>]*>/gi)) {
@@ -29,13 +33,22 @@ export function recordBlockAt(text: string, start: number, end: number): RecordB
       if ((tag === "td" || tag === "th") && /<br\b|<(?:p|div|h[1-6])\b/i.test(source.slice(item.start + source.slice(item.start).indexOf(">") + 1, match.index))) item.record = true;
       stack.splice(index);
       const blockEnd = match.index + match[0].length;
-      if ((item.record || item.paragraph) && item.start <= start && blockEnd >= end) blocks.push({ start: item.start, end: blockEnd, record: item.record });
+      if (item.record || item.paragraph) blocks.push({ start: item.start, end: blockEnd, record: item.record });
     } else if (!/\/\s*>$/.test(match[0]) && !/^(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)$/.test(tag)) {
       const className = /\bclass\s*=\s*(["'])(.*?)\1/i.exec(match[0])?.[2] ?? "";
-      const record = /^(tr|li|article)$/.test(tag) || /(?:^|[\s_-])(?:card|person|profile|official|candidate|member)(?:$|[\s_-])/i.test(className);
+      const record = /^(tr|li|article)$/.test(tag) || className.split(/\s+/).some(token => /^(?:card|person|profile|official|candidate|member)$|-(?:card|profile)$/i.test(token));
       stack.push({ tag, start: match.index, record, paragraph: tag === "p" });
     }
   }
+  return blocks;
+}
+
+/** The row, list item or card enclosing a name, otherwise its paragraph. */
+export function recordBlockAt(text: string, start: number, end: number): RecordBlock | null {
+  const source = visibleSource(text);
+  if (start < 0 || end <= start || end > text.length || source.slice(start, end).trim() === "") return null;
+  if (source.lastIndexOf("<", start) > source.lastIndexOf(">", start)) return null;
+  const blocks = structuralBlocks(text).filter(block => block.start <= start && block.end >= end);
   // A paragraph inside a record is only one cell of it. Prefer the innermost
   // record container, including cards arranged side by side inside a table row.
   const records = blocks.filter(block => block.record);
@@ -53,12 +66,26 @@ export function recordBlockAt(text: string, start: number, end: number): RecordB
 }
 
 /** All distinct paragraphs/rows containing the exact name; no cross-row union. */
-export function personRecordBlocks(text: string, name: string): readonly RecordBlock[] {
+export function personRecordBlocks(text: string, name: string, contains?: (name: string, text: string) => boolean): readonly RecordBlock[] {
   const source = visibleSource(text);
   const found = new Map<string, RecordBlock>();
-  for (let at = source.indexOf(name); at >= 0; at = source.indexOf(name, at + Math.max(1, name.length))) {
-    const block = recordBlockAt(text, at, at + name.length);
+  const escaped = name.trim().split(/\s+/).map(word => word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("\\s+");
+  if (!escaped) return [];
+  for (const match of source.matchAll(new RegExp(escaped, "g"))) {
+    const block = recordBlockAt(text, match.index, match.index + match[0].length);
     if (block) found.set(`${block.start}:${block.end}`, block);
+  }
+  if (contains) {
+    const matches = structuralBlocks(text).filter(block => contains(name, text.slice(block.start, block.end)));
+    const records = matches.filter(block => block.record);
+    for (const block of matches) {
+      // A name formatted across tags/entities still anchors its own row.
+      // Exclude an outer container when a smaller record holds the same name,
+      // and a paragraph when it is only part of a matching record.
+      if (block.record ? records.some(other => other !== block && other.start >= block.start && other.end <= block.end)
+        : records.some(other => other.start <= block.start && other.end >= block.end)) continue;
+      found.set(`${block.start}:${block.end}`, block);
+    }
   }
   return [...found.values()];
 }

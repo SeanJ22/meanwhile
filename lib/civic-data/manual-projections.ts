@@ -3,6 +3,7 @@ import { officialFilingIssue } from "./official-filings.ts";
 import { electionFieldIssue } from "./election-fields.ts";
 
 import type { BallotSet } from "../ballot/types.ts";
+import { readerCandidateProfiles } from "../ballot/candidate-reader-privacy.ts";
 import type { CandidateCardData } from "../ballot/candidate-cards.ts";
 import type { CandidateLinks, RecordedHunt } from "../ballot/candidate-sites.ts";
 import type { GeneralLineup } from "../ballot/general-lineup.ts";
@@ -674,6 +675,7 @@ function ballotProjection(
 }
 
 function profileProjection(payload: ManualProjectionPayload): BuiltProjection {
+  payload = readerCandidateProfiles(payload as CandidateProfilesProjection);
   const held = object(payload);
   const cards = object(object(held?.cards)?.cards) ?? {};
   const links = object(object(held?.links)?.links) ?? {};

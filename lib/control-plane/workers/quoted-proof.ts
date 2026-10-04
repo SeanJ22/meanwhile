@@ -86,11 +86,13 @@ export function confirmQuotedRecords(
     const fields: Record<string, FieldValue> = Object.create(null);
     const kept: { field: string; start: number; end: number; quote: string }[] = [];
     const from = recordFrom.get(proposal.windowStart) ?? proposal.windowStart;
-    const nameField = personNameField(Object.fromEntries(proposal.fields.map(claim => [claim.name, claim.value])));
+    const nameField = personNameField(Object.fromEntries(proposal.fields.map(claim => [claim.name, claim.value])), contract.recordClass);
     const nameClaim = proposal.fields.find(claim => claim.name === nameField);
-    const nameAt = nameClaim && nameClaim.quote.includes(nameClaim.value) ? locateQuote(text, nameClaim.quote, from) : null;
-    const anchorAt = nameAt !== null && nameClaim ? nameAt + nameClaim.quote.indexOf(nameClaim.value) : null;
-    const block = anchorAt !== null && nameClaim ? recordBlockAt(text, anchorAt, anchorAt + nameClaim.value.length) : null;
+    const nameAt = nameClaim && collapse(nameClaim.quote).includes(collapse(nameClaim.value)) ? locateQuote(text, nameClaim.quote, from) : null;
+    const withinQuote = nameClaim?.quote.indexOf(nameClaim.value) ?? -1;
+    const anchorAt = nameAt !== null ? nameAt + Math.max(0, withinQuote) : null;
+    const block = anchorAt !== null && nameClaim ? recordBlockAt(text, anchorAt,
+      anchorAt + (withinQuote >= 0 ? nameClaim.value.length : nameClaim.quote.length)) : null;
     for (const claim of proposal.fields) {
       const reject = (code: RejectionCode) => rejections.push({ code, recordIndex, field: claim.name });
       if (!/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(claim.name)) { reject("FIELD_NAME_INVALID"); continue; }
@@ -164,8 +166,10 @@ export function quotesHoldAgainst(result: Pick<ParserResult, "records" | "spans"
     const nameField = personNameField(record.fields);
     const nameSpan = nameField ? record.evidenceSpanIds.map(id => spanById.get(id)).find(span => span?.field === nameField) : null;
     const name = nameField ? String(record.fields[nameField]) : "";
-    const anchorAt = nameSpan && nameSpan.quote.includes(name) ? nameSpan.start + nameSpan.quote.indexOf(name) : null;
-    const block = anchorAt !== null ? recordBlockAt(documentText, anchorAt, anchorAt + name.length) : null;
+    const withinQuote = nameSpan?.quote.indexOf(name) ?? -1;
+    const anchorAt = nameSpan && collapse(nameSpan.quote).includes(collapse(name)) ? nameSpan.start + Math.max(0, withinQuote) : null;
+    const block = anchorAt !== null && nameSpan ? recordBlockAt(documentText, anchorAt,
+      anchorAt + (withinQuote >= 0 ? name.length : nameSpan.quote.length)) : null;
     for (const field of Object.keys(record.fields)) {
       const span = record.evidenceSpanIds.map((id) => spanById.get(id)).find((s) => s?.field === field);
       const value = String(record.fields[field]);

@@ -70,13 +70,7 @@ export interface CandidateCardsFile {
 }
 
 function load(): CandidateCardsFile {
-  const held = currentCandidateProfilesProjection().cards;
-  // Acquisition notes can contain the same filed addresses. They remain in
-  // saved evidence, never in the object passed to a reader or Ask.
-  return { curatedAt: held.curatedAt, note: "", hunts: [],
-    cards: Object.fromEntries(Object.entries(held.cards).map(([key, card]) =>
-      [key, { ...card, filedAddress: null, filedAddressSource: null }])) };
-
+  return currentCandidateProfilesProjection().cards;
 }
 
 /**

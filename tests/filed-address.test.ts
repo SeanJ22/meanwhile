@@ -3,6 +3,8 @@ import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { allCandidateCards, cardForCandidacy, cardForNominee } from "../lib/ballot/candidate-cards.ts";
+import { readerCandidateProfiles } from "../lib/ballot/candidate-reader-privacy.ts";
+import type { CandidateProfilesProjection } from "../lib/civic-data/manual-projections.ts";
 import { candidateContactCensus } from "../lib/ballot/candidate-contacts.ts";
 import { candidateProfileEvidenceFor } from "../lib/ask/candidate-profile.ts";
 import { contactForCandidate } from "../lib/ask/candidate-contact.ts";
@@ -61,4 +63,18 @@ test("both renderers reject legacy address props and retain a filing source even
   }
   assert.ok(result.card.includes("mailto:campaign@example.test"));
   assert.ok(result.ask.includes("mailto:campaign@example.test"));
+});
+
+
+test("reader publication redacts fields and acquisition notes without changing the retained source", () => {
+  const address = "123 Private Lane, Example City";
+  const held = { cards: { curatedAt: "2026-10-01", note: address,
+    hunts: [{ key: "example", name: "Candidate", note: address, attemptedAt: "2026-10-01" }],
+    cards: { example: { filedAddress: address, filedAddressSource: "Filing", email: "campaign@example.test" } } },
+    links: { curatedAt: "2026-10-01", note: "", hunts: [], links: {} } } as unknown as CandidateProfilesProjection;
+  const before = JSON.stringify(held);
+  const projected = readerCandidateProfiles(held);
+  assert.ok(!JSON.stringify(projected).includes(address));
+  assert.equal(projected.cards.cards.example.email, "campaign@example.test");
+  assert.equal(JSON.stringify(held), before);
 });

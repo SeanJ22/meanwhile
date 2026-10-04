@@ -19,6 +19,7 @@
  * The switch is off until the new path is checked live (rulings §5).
  */
 
+import { refreshCuratedBodyStatus } from "../registry/curated-bodies.ts";
 import { refreshMeetingPartitions, type MeetingPartitionRefresh } from "../civic-data/meeting-partitions.ts";
 import { SOURCE_WIRING, installRegistryWiring, type BodySourceWiring } from "../registry/source-wiring.ts";
 import { listDoors, type DoorRepository } from "./registry.ts";
@@ -92,5 +93,7 @@ export async function refreshDoorsForPass(
 ): Promise<DoorPassResult> {
   const installed = await installDoorWiringFromRegistry(repo, options);
   if (installed.mode !== "registry") return { ...installed, partitions: null };
-  return { ...installed, partitions: refreshMeetingPartitions() };
+  const partitions = refreshMeetingPartitions();
+  refreshCuratedBodyStatus();
+  return { ...installed, partitions };
 }

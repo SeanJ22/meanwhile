@@ -771,5 +771,17 @@
     "gates": "pass",
     "evidence": "pnpm gates on bbe97c72a (CI env): 12/12 PASS; 9242 tests pass, 0 fail, 11 skipped.",
     "at": "2026-10-04T11:59:37Z"
+  },
+  {
+    "lane": "hunters",
+    "steps": [
+      "CH-07"
+    ],
+    "ready_sha": "f75a8a8cf19f6d61f87a9edfc5ed3d99f5ff18b6",
+    "river_sha": "1abac17ea12a046aa90fd3733b19863957fe8102",
+    "tested_sha": "1abac17ea12a046aa90fd3733b19863957fe8102",
+    "gates": "pass",
+    "evidence": "pnpm gates on 1abac17ea (CI env): 12/12 PASS; 9243 tests pass, 0 fail, 11 skipped.",
+    "at": "2026-10-04T12:29:10Z"
   }
 ]

@@ -73,7 +73,7 @@ import { certainlyOverlaps, type DivisionTerritory } from "./overlap.ts";
 import type { ExpansionScopeDecision } from "./scopes.ts";
 import { areaBudgetKey, type BudgetLine } from "./spend-holds.ts";
 import { stateOfSubject } from "./subjects.ts";
-import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
+import { isFundedHunt } from "../scheduler/hunt-continuation.ts";
 
 /* ------------------------------------------------------------ territory */
 
@@ -496,13 +496,10 @@ export class ScopeBudgetGate {
     );
   }
 
-  /** Only the exact original Send supersedes overlapping rolling scopes. */
+  /** Funded Sends supersede overlapping rolling scopes; each keeps its own allowance. */
   private effectiveScopes(binding: readonly BudgetScope[]): readonly BudgetScope[] {
-    const original = binding.find(scope => scope.key === ORIGINAL_LIFETIME_HUNT.key &&
-      scope.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
-      scope.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
-      scope.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd);
-    return original ? [original] : binding;
+    const funded = binding.filter(isFundedHunt);
+    return funded.length ? funded : binding;
   }
 
   /** A selected hunt authorizes its own work, including explicitly shared

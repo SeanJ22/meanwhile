@@ -1,3 +1,4 @@
+import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type { BallotSet } from "./types.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
@@ -20,7 +21,7 @@ export function genericBallotProblems(value: GenericBallotProjection): string[] 
     }
     const ids = new Set(ballot.contests.map(row => row.id));
     if (ids.size !== ballot.contests.length || new Set(ballot.candidacies.map(row => row.id)).size !== ballot.candidacies.length) problems.push("A ballot repeats an identity.");
-    if (ballot.contests.some(row => row.electionId !== ballot.election.id || !row.title || !row.ocdId.includes(`/state:${ballot.election.state.toLowerCase()}`) ||
+    if (ballot.contests.some(row => row.electionId !== ballot.election.id || !row.title || jurisdictionFromOcdId(row.ocdId)?.usps !== ballot.election.state ||
       !row.provenance?.sourceUrl || (row.type === "CANDIDACY" && !ballot.candidacies.some(candidate => candidate.contestId === row.id)))) problems.push("A contest lacks its election, territory, source or candidates.");
     if (ballot.candidacies.some(row => !ids.has(row.contestId) || !row.familyName || !row.provenance?.sourceUrl)) problems.push("A candidacy lacks its exact contest, filed name or source.");
   }

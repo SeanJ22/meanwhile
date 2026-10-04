@@ -58,6 +58,22 @@ test("a saved CSV or PDF text candidate list publishes whole contests into the g
   }
 });
 
+test("district and territory ballots use their registered OCD prefixes through promotion and the reader", async () => {
+  for (const [state, prefix] of [["DC", "district:dc/ward:1"], ["PR", "territory:pr/municipio:alder"]]) {
+    const input = fixture(undefined, false, state);
+    const ocdId = `ocd-division/country:us/${prefix}`;
+    input.registry = { payload: { registry: { divisions: [{ state, label: "Alder County", ocdId, sourceDataset: "TIGER_CB2023" }] } } } as RegistryRuntimePrior;
+    const checked = workerBallotContestsPackage(input).package;
+    const store = new MemoryRoutineDataStore();
+    const promoted = await processRegisteredManualCandidate(store, "ballot-contests", manualProjectionCandidate(checked), now, null);
+    assert.ok(promoted.promoted, JSON.stringify(promoted.candidate));
+    const read = await loadBallotForDivisions([ocdId], { store, now, bypassCache: true });
+    assert.equal(read.set?.election.state, state);
+    assert.equal(read.contests.length, 2);
+    assert.deepEqual(read.loaderFailures, []);
+  }
+});
+
 test("an omitted or contradicted candidate holds its entire contest while a complete neighboring contest publishes", () => {
   for (const contradict of [false, true]) {
     const input = fixture();

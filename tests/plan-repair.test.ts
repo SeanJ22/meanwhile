@@ -346,16 +346,12 @@ test("completed fresh fetch can reobserve unchanged old bytes without rewriting 
   assert.equal(evidenceProjection(await f.h.runtime.readEvidence(f.evidence[0].artifactId)).retrievedAt, f.evidence[0].retrievedAt);
 });
 
-test("successors preserve Detective burdens and continue beyond three repairs only on new evidence", async () => {
+test("successors continue beyond three repairs only on new evidence", async () => {
   const f = await fixture();
   const row = await f.h.repos.workItems.mustRead(f.h.item.id);
-  const detective = { question: { id: "unresolved-identity", text: "Official canonical identity remains owed", subjectId: f.h.item.subject } } as never;
-  const priorPlan = { ...row.value.autonomousPlan!, detective: [detective] };
-  await f.h.repos.workItems.compareAndSet(row.id, row.revision, { ...row.value, autonomousPlan: priorPlan }, f.h.now());
   const first = await f.consume();
   const child = (await f.h.repos.workItems.mustRead(first[0].successorWorkItemId!)).value;
-  assert.deepEqual(child.autonomousPlan!.detective, [detective]);
-  assert.match(first[0].detail, /PARENT_DETECTIVE_BURDENS_RETAINED/);
+  assert.ok(child.autonomousPlan);
   const bounded = await fixture();
   const current = await bounded.h.repos.workItems.mustRead(bounded.h.item.id);
   const link = (depth: number, parentWorkItemId: string) => ({ depth, parentWorkItemId, rootWorkItemId: "retained-root",

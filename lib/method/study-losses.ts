@@ -53,7 +53,7 @@ function aheadBand(days: number): string {
 }
 
 /** The comparable value of each trait for one place; a trait the place does not state is simply absent. */
-function valuesOf(traits: PlaceTraits | undefined): Map<TraitName, string> {
+export function valuesOf(traits: PlaceTraits | undefined): Map<TraitName, string> {
   const out = new Map<TraitName, string>();
   if (traits === undefined) return out;
   const text = (v: string | null | undefined): string | null => (typeof v === "string" && v.trim() !== "" ? v.trim().toLowerCase() : null);

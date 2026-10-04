@@ -6,6 +6,7 @@ import {
   HELD_MEETING_PARTITIONS,
   MEETING_PARTITION_CONTRACTS,
   LEGACY_MEETINGS_AGGREGATE_SCOPE,
+  meetingHistoryScope,
 } from "../lib/civic-data/meeting-partitions.ts";
 import { readMeetingsProjection, type MeetingPartitionReadback } from "../lib/meetings/snapshot.ts";
 import { MEETINGS_PREPARED_SCOPE, preparePublishedMeetingSnapshot } from "../lib/meetings/prepared-snapshot.ts";
@@ -622,13 +623,16 @@ test("the batched Reader bounds database calls and isolates a corrupt partition"
   }
   assert.equal(scalarPromotionReads, 0);
   assert.equal(scalarCandidateReads, 0);
-  // One batch for every registered partition, and one more only for the held
-  // pointers of successors that have none yet (HELD_MEETING_PARTITIONS) — the
-  // college's successor has none in this store.
+  // One batch for every registered partition and its durable history (DB-06),
+  // and one more only for the held pointers of successors that have none yet
+  // (HELD_MEETING_PARTITIONS) — the college's successor has none in this store.
   assert.equal(promotionBatchReads, 2);
   assert.equal(candidateBatchReads, 1);
   assert.deepEqual(requestedScopeBatches, [
-    MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope),
+    [
+      ...MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope),
+      ...MEETING_PARTITION_CONTRACTS.map((partition) => meetingHistoryScope(partition.scope)),
+    ],
     HELD_MEETING_PARTITIONS.map((held) => held.scope),
   ]);
   assert.deepEqual(new Set(requestedCandidateIds), new Set(seeded.map((row) => row.candidate.id)));

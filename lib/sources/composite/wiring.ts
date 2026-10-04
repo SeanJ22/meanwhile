@@ -29,6 +29,7 @@ import { inSiteTenantsFromWiring } from "../legistar-insite/tenant-registry.ts";
 import { makeOnBaseSource } from "../onbase/index.ts";
 import type { ReportingMeetingSource } from "../types.ts";
 
+import { feedKindWiringType, installedFeedKinds, makeFeedKindSource } from "../feed-kinds.ts";
 import { CompositeSource } from "./index.ts";
 
 /**
@@ -237,13 +238,30 @@ export const CAPABILITIES: Array<{
 ];
 
 /**
+ * The built-in adapters, then the feed kinds an engineer built and installed for this pass (DB-50). Built-in names
+ * come first and can never be taken; with no feed kind installed this is `CAPABILITIES` exactly.
+ */
+export function allCapabilities(): typeof CAPABILITIES {
+  const feeds = installedFeedKinds();
+  if (feeds.length === 0) return CAPABILITIES;
+  return [
+    ...CAPABILITIES,
+    ...feeds.map((kind) => ({
+      name: kind.kind,
+      types: [feedKindWiringType(kind.kind) as AgendaSourceType],
+      make: ((rows: BodySourceWiring[], fetchImpl?: typeof fetch) => makeFeedKindSource(kind, rows, fetchImpl) as ReportingMeetingSource<unknown>),
+    })),
+  ];
+}
+
+/**
  * The wiring rows a named adapter serves — how a snapshot's "this source
  * failed at the last refresh" becomes "these are the bodies you can't see
  * because of it". An unknown name returns no rows rather than throwing: a
  * snapshot can legitimately name a source this build no longer has.
  */
 export function wiringForSourceName(name: string): BodySourceWiring[] {
-  return CAPABILITIES.some((capability) => capability.name === name)
+  return allCapabilities().some((capability) => capability.name === name)
     ? wiringForMeetingSource(name)
     : [];
 }
@@ -323,7 +341,7 @@ export function buildCompositeSource(
     }
   }
   const children: ReportingMeetingSource<unknown>[] = [];
-  for (const capability of CAPABILITIES) {
+  for (const capability of allCapabilities()) {
     if (options.sourceNames && !options.sourceNames.includes(capability.name)) continue;
     const rows = options.derivedRows !== undefined
       ? options.derivedRows.filter((row) => meetingSourceNamesForWiring(row).includes(capability.name))

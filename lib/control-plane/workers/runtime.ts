@@ -85,7 +85,7 @@ export async function enqueueWorkerTask(repos: ControlPlaneRepositories, input: 
   workItemId: string; role: FleetRole; artifactId: string; contract: CivicExtractionContract; now: string;
   producerResultId?: string; validatorResultId?: string; auditScope?: WorkerTaskSpec["auditScope"]; replayLabel?: string;
   purpose?: WorkerTaskSpec["purpose"];
-  acquisition?: WorkerTaskSpec["acquisition"]; detective?: WorkerTaskSpec["detective"]; engineering?: WorkerTaskSpec["engineering"];
+  acquisition?: WorkerTaskSpec["acquisition"]; engineering?: WorkerTaskSpec["engineering"];
   auditEscalation?: WorkerTaskSpec["auditEscalation"];
 }): Promise<RouteTask> {
   const spec: WorkerTaskSpec = { schemaVersion: 1, role: input.role, artifactId: input.artifactId, contract: input.contract,
@@ -93,7 +93,7 @@ export async function enqueueWorkerTask(repos: ControlPlaneRepositories, input: 
     auditScope: input.auditScope ?? "CAPTURED_ARTIFACT", implementationVersion: FLEET_IMPLEMENTATION_VERSION,
     ...(input.auditEscalation ? { auditEscalation: input.auditEscalation } : {}),
     ...(input.purpose ? { purpose: input.purpose } : {}),
-    ...(input.acquisition ? { acquisition: input.acquisition } : {}), ...(input.detective ? { detective: input.detective } : {}),
+    ...(input.acquisition ? { acquisition: input.acquisition } : {}),
     ...(input.engineering ? { engineering: input.engineering } : {}) };
   const signature = fingerprint([canonicalJson(spec), input.replayLabel ?? "canonical"]);
   const task: RouteTask = { ...createRouteTask({ workItemId: input.workItemId, routeId: `worker:${input.role}:${signature}`,

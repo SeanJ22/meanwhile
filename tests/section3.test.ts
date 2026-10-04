@@ -79,3 +79,12 @@ test("CP-19: a heading is its own text block; a neighbouring person's paragraph 
   assert.equal(verdict.live, true);
   assert.deepEqual(verdict.openFields, ["email"]);
 });
+
+test("CP-19: markup formatting a scalar name cell does not detach its own office and contact columns", () => {
+  for (const name of ["<div>Alice Adams</div>", "Alice<br>Adams"]) {
+    const source = page(`<table><tr><td>${name}</td><td>Clerk</td><td>alice@example.test</td></tr><tr><td>Bob Brown</td><td>Treasurer</td><td>bob@example.test</td></tr></table>`);
+    const verdict = section3Record({ recordClass: "OFFICIAL_ROSTER", fields: { name: "Alice Adams", office: "Clerk", email: "alice@example.test" }, page: source, now: NOW });
+    assert.equal(verdict.live, true);
+    assert.deepEqual(verdict.verifiedFields, ["email", "name", "office"]);
+  }
+});

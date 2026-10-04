@@ -20,7 +20,7 @@ function visibleSource(text: string): string {
 function structuralBlocks(text: string): (RecordBlock & { record: boolean })[] {
   const source = visibleSource(text);
   const stack: { tag: string; start: number; record: boolean; paragraph: boolean }[] = [];
-  const blocks: (RecordBlock & { record: boolean })[] = [];
+  const blocks: (RecordBlock & { record: boolean; cellRow?: number })[] = [];
   for (const match of source.matchAll(/<\/?([a-z][\w:-]*)\b[^>]*>/gi)) {
     const tag = match[1].toLowerCase();
     if (match[0].startsWith("</")) {
@@ -31,16 +31,20 @@ function structuralBlocks(text: string): (RecordBlock & { record: boolean })[] {
       // with its own paragraphs/line breaks is a record, unlike a scalar
       // name cell whose office and email occupy neighbouring columns.
       if ((tag === "td" || tag === "th") && /<br\b|<(?:p|div|h[1-6])\b/i.test(source.slice(item.start + source.slice(item.start).indexOf(">") + 1, match.index))) item.record = true;
+      const cellRow = /^(td|th)$/.test(tag) ? stack.findLast(parent => parent.tag === "tr")?.start : undefined;
       stack.splice(index);
       const blockEnd = match.index + match[0].length;
-      if (item.record || item.paragraph) blocks.push({ start: item.start, end: blockEnd, record: item.record });
+      if (item.record || item.paragraph) blocks.push({ start: item.start, end: blockEnd, record: item.record, ...(cellRow !== undefined ? { cellRow } : {}) });
     } else if (!/\/\s*>$/.test(match[0]) && !/^(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)$/.test(tag)) {
       const className = /\bclass\s*=\s*(["'])(.*?)\1/i.exec(match[0])?.[2] ?? "";
       const record = /^(tr|li|article)$/.test(tag) || className.split(/\s+/).some(token => /^(?:card|person|profile|official|candidate|member)$|-(?:card|profile)$/i.test(token));
       stack.push({ tag, start: match.index, record, paragraph: /^(?:p|h[1-6])$/.test(tag) });
     }
   }
-  return blocks;
+  // A div or line break used only to format the name cell does not turn it
+  // into an entire person record. Side-by-side person cells repeat that
+  // structure within the same row; ordinary scalar columns remain one row.
+  return blocks.filter(block => block.cellRow === undefined || blocks.filter(other => other.cellRow === block.cellRow).length > 1);
 }
 
 /** The row, list item or card enclosing a name, otherwise its paragraph. */

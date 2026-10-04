@@ -3,7 +3,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { backfillBox, boxCounts, boxCountsBySend, boxFindingId, finishBoxFinding, indexBoxFinding, takeBoxFinding, type BoxFinding, type BoxInput } from "../lib/control-plane/box.ts";
+import { backfillBox, boxCounts, boxCountsByWorkItem, boxFindingId, finishBoxFinding, indexBoxFinding, takeBoxFinding, type BoxFinding, type BoxInput } from "../lib/control-plane/box.ts";
 import { memoryAggregateRepository } from "../lib/control-plane/repository/memory.ts";
 import { fileAggregateRepository } from "../lib/control-plane/repository/file-store.ts";
 
@@ -79,7 +79,7 @@ test("historical Scout and detective findings share the index, including missing
   assert.equal(shared.origins.length, 2);
   assert.equal(shared.subjectId, "person:alice", "the target overrides the starting subject");
   assert.equal(shared.origins.find(o => o.kind === "SCOUT")?.missionPart, "roster");
-  const counts = await boxCountsBySend(repo);
+  const counts = await boxCountsByWorkItem(repo);
   assert.equal(counts["send-1"].waiting, 2);
   assert.equal(counts["send-2"].waiting, 2);
 });

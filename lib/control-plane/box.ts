@@ -158,12 +158,12 @@ export async function backfillBox(repo: AggregateRepository<BoxFinding>, input: 
   for (const result of input.detectives) await indexDetectiveFindings(repo, result, input.artifacts, now);
 }
 
-/** One finding may help several Sends; count it once for each linked Send, never once per result. */
-export async function boxCountsBySend(repo: AggregateRepository<BoxFinding>): Promise<Readonly<Record<string, Readonly<Record<BoxFinding["state"], number>>>>> {
+/** Count once per linked work item, never once per result. Admin joins the canonical Send mapping. */
+export async function boxCountsByWorkItem(repo: AggregateRepository<BoxFinding>): Promise<Readonly<Record<string, Readonly<Record<BoxFinding["state"], number>>>>> {
   const counts: Record<string, Record<BoxFinding["state"], number>> = Object.create(null);
-  for (const row of await repo.list()) for (const send of new Set(row.value.origins.map(origin => origin.workItemId))) {
-    counts[send] ??= { waiting: 0, taken: 0, built: 0, refused: 0 };
-    counts[send][row.value.state]++;
+  for (const row of await repo.list()) for (const workItem of new Set(row.value.origins.map(origin => origin.workItemId))) {
+    counts[workItem] ??= { waiting: 0, taken: 0, built: 0, refused: 0 };
+    counts[workItem][row.value.state]++;
   }
   return counts;
 }

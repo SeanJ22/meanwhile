@@ -80,3 +80,11 @@ One line per batch folded into river.
 - registry: DB-15 · ready 44a3a3caa
 - hunters: CH-04 · ready d8075f82d
 - bank: DP-20 · ready ee1c356ca
+
+## 2026-10-04T10:58:17Z — river 616f91a → 8bbe9eeb5
+
+- Evidence: pnpm gates on 39e119d (CI env): 11/12, test 9162 pass 2 fail (auditors' live-write guard: origins rule, RULING 14). Repaired in 8bbe9ee; path-separator, live-write-guard and origins tests 18/18, tsc and eslint clean.
+- registry: DB-16 · ready d8eed916d
+- auditors: DP-03, FE-16 · ready 4a20e1bf9
+- people: CA-15 · ready ac936387a
+- bank: DB-57, DP-21, DP-22, DP-27 · ready 92f237c74

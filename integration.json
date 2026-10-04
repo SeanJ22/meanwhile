@@ -610,5 +610,57 @@
     "gates": "pass",
     "evidence": "pnpm gates on 616f91a1c (CI env): 12/12 PASS; 9132 tests pass, 0 fail, 11 skipped.",
     "at": "2026-10-04T10:29:36Z"
+  },
+  {
+    "lane": "registry",
+    "steps": [
+      "DB-16"
+    ],
+    "ready_sha": "d8eed916dd288d6205c45774434c0c21941f1d13",
+    "river_sha": "8bbe9eeb5f85e387e566815be68f1dccd6a947e7",
+    "tested_sha": "39e119d4c8bb3bd43862206623a4a7d3fa7b378e",
+    "gates": "pass-after-repair",
+    "evidence": "pnpm gates on 39e119d (CI env): 11/12, test 9162 pass 2 fail (auditors' live-write guard: origins rule, RULING 14). Repaired in 8bbe9ee; path-separator, live-write-guard and origins tests 18/18, tsc and eslint clean.",
+    "at": "2026-10-04T10:58:17Z"
+  },
+  {
+    "lane": "auditors",
+    "steps": [
+      "DP-03",
+      "FE-16"
+    ],
+    "ready_sha": "4a20e1bf9bdb075ab91177b6abdb8d2dc8fec3d0",
+    "river_sha": "8bbe9eeb5f85e387e566815be68f1dccd6a947e7",
+    "tested_sha": "39e119d4c8bb3bd43862206623a4a7d3fa7b378e",
+    "gates": "pass-after-repair",
+    "evidence": "pnpm gates on 39e119d (CI env): 11/12, test 9162 pass 2 fail (auditors' live-write guard: origins rule, RULING 14). Repaired in 8bbe9ee; path-separator, live-write-guard and origins tests 18/18, tsc and eslint clean.",
+    "at": "2026-10-04T10:58:17Z"
+  },
+  {
+    "lane": "people",
+    "steps": [
+      "CA-15"
+    ],
+    "ready_sha": "ac936387a95fa6d8e3e4523817ba85e88a04f8ee",
+    "river_sha": "8bbe9eeb5f85e387e566815be68f1dccd6a947e7",
+    "tested_sha": "39e119d4c8bb3bd43862206623a4a7d3fa7b378e",
+    "gates": "pass-after-repair",
+    "evidence": "pnpm gates on 39e119d (CI env): 11/12, test 9162 pass 2 fail (auditors' live-write guard: origins rule, RULING 14). Repaired in 8bbe9ee; path-separator, live-write-guard and origins tests 18/18, tsc and eslint clean.",
+    "at": "2026-10-04T10:58:17Z"
+  },
+  {
+    "lane": "bank",
+    "steps": [
+      "DB-57",
+      "DP-21",
+      "DP-22",
+      "DP-27"
+    ],
+    "ready_sha": "92f237c742eb6fd7d157571f14a3fe58d8000db8",
+    "river_sha": "8bbe9eeb5f85e387e566815be68f1dccd6a947e7",
+    "tested_sha": "39e119d4c8bb3bd43862206623a4a7d3fa7b378e",
+    "gates": "pass-after-repair",
+    "evidence": "pnpm gates on 39e119d (CI env): 11/12, test 9162 pass 2 fail (auditors' live-write guard: origins rule, RULING 14). Repaired in 8bbe9ee; path-separator, live-write-guard and origins tests 18/18, tsc and eslint clean.",
+    "at": "2026-10-04T10:58:17Z"
   }
 ]

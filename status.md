@@ -5,7 +5,7 @@ worker: river
 provider: Claude (this run: Opus 5.5, selected by Sean with /model at 06:00Z; this run began on Sonnet 5.5)
 run_id: session_01M3CeUks1KpFZttTP6ZTEAq
 lock: river-20261004T060134Z-23a399b0
-heartbeat: 2026-10-04T06:05:59Z
+heartbeat: 2026-10-04T06:24:05Z
 
 ## Launch
 
@@ -35,8 +35,11 @@ heartbeat: 2026-10-04T06:05:59Z
 
 ## Release work
 
-- RL-01: the Oct 3 scheduled failure ran on 022a183c. main @ 0b31938 already floors the crosswalk counts (#705/#706). tests/denominator-floor.test.ts passes 6/6 here. Full `pnpm gates` on 0b31938 is running in the cloud. The next scheduled run on main is 09:17 UTC.
-- RL-02: auto-merge disabled on all 20 ready PRs at 06:05Z (#599, 677, 685-687, 689-696, 698-704); no PR can merge on its own. Per-PR keep/close triage in progress.
+- RL-01: CI's scheduled failure (crosswalk floor) is already fixed on main @ 0b31938. Local `pnpm gates` also failed `feedback:sweep` on main: six Admin feedback rows cited tests retired with the old Admin pages on Oct 1. Fixed on `rl01-feedback-debt` @ 26753d4: those rows moved to checkDebt with the reason, and the rule is unchanged. That fix is folded into river-next. The full `pnpm gates` run on 0b31938 is still in its test leg.
+- RL-02: Sorted all 33 open pull requests, 06:40Z.
+  - **Closed with a note, 13** (no branch deleted): #687, 644, 640, 633, 620, 615, 607, 603, 575, 572, 569, 471, 458. The useful parts are kept on `stream/salvage-*`: fe30-ballot-copy (#644 → frontend FE-30), fe04-cold-reader-shell (#640 → FE-04), ca21-filing-regimes (#633 → ballot CA-21/CA-34), ca21-money-registrations (#603 → CA-21), refusal-counter (#607), tester-retention (#569/#572), organic-only (#620).
+  - **Kept, 19**: folded into river-next in this order: 695, 698, 703, 700→701→704, 702, 696, 692, 693, 691, 689, 690, 686, 685, 677, 699, 694, 642. Two small conflicts resolved: #686 after #690 (tests file), and #692 needs OFFICIAL_PAGE_EVENTS_VERSION re-keyed, which is done. Each PR closes once its fold reaches river with steps named.
+  - **Held, 1**: #599. It converts the production registry on its first runtime start, and its own staging pass ended FAILED. It rides a later river only after a live check. Auto-merge is off.
 - RL-03: scripts/river.mjs in progress on stream/river.
 - RL-04: #706 merged to main at 0b31938. Build check now runs on schedule once a day at 09:17 UTC. Still to confirm: one scheduled run a day on GitHub.
 - RL-05: not started.

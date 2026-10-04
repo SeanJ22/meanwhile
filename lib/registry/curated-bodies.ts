@@ -1,5 +1,5 @@
 import type { Body, BodyClass } from "./types.ts";
-import { SOURCE_WIRING } from "./source-wiring.ts";
+import { activeWiring, type BodySourceWiring } from "./source-wiring.ts";
 
 /**
  * Bodies the boundary-file derivation cannot produce, curated from the
@@ -243,11 +243,13 @@ const TUCSON_BOARDS: Array<[name: string, boardId: number, cls?: BodyClass]> = [
  * today's serving window, and both could. Recorded as a tracker row rather
  * than folded in here, and named so it is not rediscovered as a surprise.
   */
-const LIVE_BOARD_IDS = new Set(
-  SOURCE_WIRING
-    .filter((row) => row.ocdId === TUCSON_OCD && row.agendaSourceType === "CLERKSBOARDS")
-    .map((row) => Number(row.config.boardId)),
-);
+function liveBoardIds(wirings: readonly BodySourceWiring[]): ReadonlySet<number> {
+  return new Set(
+    wirings
+      .filter((row) => row.ocdId === TUCSON_OCD && row.agendaSourceType === "CLERKSBOARDS")
+      .map((row) => Number(row.config.boardId)),
+  );
+}
 
 function slugOf(name: string): string {
   return name
@@ -262,7 +264,7 @@ function classOf(entry: [string, number, BodyClass?]): BodyClass {
   return "ADVISORY";
 }
 
-function tucsonBoardRow(entry: [string, number, BodyClass?]): Body {
+function tucsonBoardRow(entry: [string, number, BodyClass?], live: ReadonlySet<number> = liveBoardIds(activeWiring())): Body {
   const [name, boardId] = entry;
   const pageUrl = `${CLERKSBOARDS}${boardId}`;
   return {
@@ -272,8 +274,8 @@ function tucsonBoardRow(entry: [string, number, BodyClass?]): Body {
     name,
     bodyClass: classOf(entry),
     bodyOrigin: "CURATED",
-    coverageStatus: LIVE_BOARD_IDS.has(boardId) ? "LIVE" : "KNOWN_UNCOVERED",
-    agendaSourceType: LIVE_BOARD_IDS.has(boardId) ? "CLERKSBOARDS" : "HTML",
+    coverageStatus: live.has(boardId) ? "LIVE" : "KNOWN_UNCOVERED",
+    agendaSourceType: live.has(boardId) ? "CLERKSBOARDS" : "HTML",
     agendaSourceRef: pageUrl,
     meetingCadence: null,
     homepageUrl: pageUrl,
@@ -345,7 +347,7 @@ export const CURATED_BODIES: Body[] = [
   },
 
   // ── D29: every body in the Clerk's directory, verbatim ──────────────────
-  ...TUCSON_BOARDS.map(tucsonBoardRow),
+  ...TUCSON_BOARDS.map((entry) => tucsonBoardRow(entry)),
 
   // ── 3c (2026-08-17): special districts serving the four zips, from the
   // 2022 Census of Governments individual-units listing (the official
@@ -2556,4 +2558,24 @@ function nhHunt5TwigRows(): Body[] {
       verifiedAt: NH5_COLLECTED,
     },
   }));
+}
+
+/**
+ * DB-15: a curated board is LIVE when a door in use names it. The rows keep
+ * their identity; only the status and source type follow the doors, so a door
+ * added or shut in the registry changes what the registry's readers say with
+ * no edit to this file. Returns how many rows changed.
+ */
+export function refreshCuratedBodyStatus(wirings: readonly BodySourceWiring[] = activeWiring()): number {
+  const live = liveBoardIds(wirings);
+  let changed = 0;
+  for (const entry of TUCSON_BOARDS) {
+    const fresh = tucsonBoardRow(entry, live);
+    const row = CURATED_BODIES.find((body) => body.id === fresh.id);
+    if (!row || (row.coverageStatus === fresh.coverageStatus && row.agendaSourceType === fresh.agendaSourceType)) continue;
+    row.coverageStatus = fresh.coverageStatus;
+    row.agendaSourceType = fresh.agendaSourceType;
+    changed += 1;
+  }
+  return changed;
 }

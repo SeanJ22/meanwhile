@@ -287,6 +287,27 @@ export async function readSubjectScoutHistory(repos:import('../repository/types.
   }
   return results;
 }
+/**
+ * Publication holds and validator failures that a detective takes with the failing code in its brief,
+ * instead of a fresh Scout starting over (DP-03). The §3 holds and the validator codes name the check
+ * that failed, so the detective goes to the exact field. Date-sanity refusals (CP-06) arrive as held
+ * outcomes with a worker recovery and are covered by that rule; add their code here if they get one.
+ */
+export const DETECTIVE_HELD_CODES: readonly string[] = ['SOURCE_REPLAY_FAILED', 'PAGE_UNVERIFIED', 'ROSTER_PAGE_UNVERIFIED',
+  'PARSE_INVALID', 'IDENTITY_UNRESOLVED', 'SEMANTIC_INVALID', 'DATE_OUT_OF_WINDOW'];
+
+type HeldOutcome = { readonly status: string; readonly code: string; readonly detail: string;
+  readonly recovery?: string; readonly candidateId?: string | null } | null | undefined;
+
+/** The detective's brief line for a held record, or null when the outcome is not one it owns. */
+export function heldRecoveryBrief(outcome: HeldOutcome): string | null {
+  if (!outcome || outcome.status !== 'HELD') return null;
+  const listed = DETECTIVE_HELD_CODES.includes(outcome.code);
+  if (!listed && outcome.recovery !== 'WORKER') return null;
+  return `Publication was held: failed check ${outcome.code}${outcome.candidateId ? ` on candidate ${outcome.candidateId}` : ''}. ${outcome.detail} `+
+    'Find the exact field that failed that check, confirm it against the source, and return a corrected result; do not start the search over.';
+}
+
 export function investigationRole(results: readonly import('../scheduler/scout-result.ts').ScoutResult[], failedWorkers:boolean): 'SCOUT'|'DETECTIVE' {
   return failedWorkers || results.some(result=>result.refusal !== null || ['BLOCKED','NO_PROGRESS','NEEDS_ADAPTER'].includes(result.outcome)) ? 'DETECTIVE':'SCOUT';
 }

@@ -960,6 +960,21 @@ export function authorityForManualReceipt(
   return { ok: true, contract };
 }
 
+/**
+ * DB-16: hosts the doors in use name for meetings, installed by a pass that
+ * reads the registry (lib/doors/install.ts). Null, the default and the way
+ * back, means only the contract's own routes are registered. A door's host
+ * lets a read land anywhere on that host over HTTPS; the rulings §3 rule that
+ * a vendor host counts when an official page links to it is checked elsewhere
+ * and is unchanged.
+ */
+let doorHosts: ReadonlySet<string> | null = null;
+const DOOR_HOST_SOURCE = "meetings-public-bodies";
+
+export function installDoorHosts(hosts: Iterable<string> | null): void {
+  doorHosts = hosts === null ? null : new Set([...hosts].map((host) => host.trim().toLowerCase()).filter((host) => host !== ""));
+}
+
 export function authorityFor(
   sourceId: string,
   recordClass: RoutineRecordClass,
@@ -974,7 +989,8 @@ export function authorityFor(
   try { url = new URL(finalUrl); }
   catch { return { ok: false, code: "FINAL_URL_INVALID", detail: `Final URL is not parseable: ${JSON.stringify(finalUrl)}.` }; }
   if (url.protocol !== "https:") return { ok: false, code: "FINAL_URL_NOT_HTTPS", detail: `${url.href} is not HTTPS.` };
-  if (!contract.routePrefixes.some((prefix) => url.href.startsWith(prefix))) {
+  const onDoorHost = sourceId === DOOR_HOST_SOURCE && doorHosts !== null && doorHosts.has(url.hostname.toLowerCase());
+  if (!onDoorHost && !contract.routePrefixes.some((prefix) => url.href.startsWith(prefix))) {
     return { ok: false, code: "FINAL_ROUTE_NOT_REGISTERED", detail: `${url.href} is outside ${sourceId}'s registered publication routes.` };
   }
   if (!contract.routineAutoPromotion) {

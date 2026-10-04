@@ -114,6 +114,11 @@ async function options(repos: ReturnType<typeof createMemoryRepositories>, vault
 
 test("a held paid-research finding reaches APPROVED with measured checks, clean controls and an independent saved profile", async (t) => {
   const { repos, vaultRoot, duarte, kapner } = await plane(t);
+  let workerResultReads = 0, workItemLists = 0;
+  const results = repos.workerResults.readAll.bind(repos.workerResults);
+  const workItems = repos.workItems.list.bind(repos.workItems);
+  t.mock.method(repos.workerResults, "readAll", async () => { workerResultReads++; return results(); });
+  t.mock.method(repos.workItems, "list", async () => { workItemLists++; return workItems(); });
   const run = await options(repos, vaultRoot, "2026-09-25T21:00:00.000Z");
   const report = await projectCampaignSiteChains(repos, run.options);
   const laterRecorder = campaignSiteReadRecorder({ repos, vaultRoot, methodVersion: 1,
@@ -127,6 +132,9 @@ test("a held paid-research finding reaches APPROVED with measured checks, clean 
     assert.deepEqual(await laterRecorder.heldPage(artifact), await rescannedRecorder.heldPage(artifact),
       "a subsequent publication reader sees the original saved page through the shared index");
   }
+  console.log(`CAMPAIGN_CONTEXT workerResultReads=${workerResultReads} workItemLists=${workItemLists}`);
+  assert.equal(workerResultReads, 1, "recording campaign acquisitions changes no worker result");
+  assert.equal(workItemLists, 1, "campaign acquisition owners have no worker audit result to refresh");
   const states = new Map((await readPipelineStates(repos)).map((s) => [s.itemId, s]));
 
   const d = states.get(duarte.itemId)!;

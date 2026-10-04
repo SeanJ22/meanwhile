@@ -44,14 +44,13 @@ import {
   openConclusions,
   readConclusionStore,
   recordConclusion,
-  reopenConclusions,
   validateConclusions,
   withdrawConclusion,
   workItemStateAfterReopening,
   writeConclusionStore,
   type ConclusionStore,
 } from "../lib/method/conclusions.ts";
-import { findReopenings, type MethodKnowledge } from "../lib/method/knowledge.ts";
+import { applyReopenings, findReopenings, type MethodKnowledge } from "../lib/method/knowledge.ts";
 import { emptyCandidateStore } from "../lib/method/candidate.ts";
 import { admitLearnedRoutes, type LearnedRoute } from "../lib/method/learn-batch.ts";
 import { methodFixture } from "./method-store-fixture.ts";
@@ -59,6 +58,13 @@ import { projectionHasRoute, projectMethodFor } from "../lib/method/projection.t
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ON = "2026-08-29";
+
+/** The sweep the retired `reopenConclusions` wrapped: find what the new route reopens, record it on the conclusions. */
+function runReopenings(store: ConclusionStore, k: MethodKnowledge, on: string) {
+  const reopenings = findReopenings(k, store);
+  const applied = applyReopenings(store, reopenings, on) as ConclusionStore;
+  return { store: applied, reopenings, reopened: reopenings.map((r) => r.conclusion.id) };
+}
 const AZ = { state: "az", governmentType: "county" };
 
 function scratch(name: string): { dir: string; conclusionPath: string } {
@@ -141,7 +147,7 @@ test("THE LOOP — a conclusion earned at vN is reopened by a route admitted at 
   assert.equal(after.version, before.version + 1);
 
   /* (3) FINDREOPENINGS IDENTIFIES IT. */
-  const run = reopenConclusions(reloaded, after, ON);
+  const run = runReopenings(reloaded, after, ON);
   assert.equal(run.reopenings.length, 1, "knowledge grew past a closed conclusion and nothing noticed");
   assert.equal(run.reopenings[0].conclusion.id, earned.record.id);
   assert.equal(run.reopenings[0].route.id, "reopening-loop-avenue");
@@ -184,7 +190,7 @@ test("THE LOOP — a conclusion earned at vN is reopened by a route admitted at 
   assert.notEqual(stillOpen.why, moved.why);
 
   /* AND THE LOOP TERMINATES: a reopened conclusion is not reopened again. */
-  const second = reopenConclusions(run.store, after, ON);
+  const second = runReopenings(run.store, after, ON);
   assert.deepEqual(second.reopened, [], "a reopened conclusion was reopened a second time");
 
   rmSync(dir, { recursive: true, force: true });

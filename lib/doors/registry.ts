@@ -78,12 +78,12 @@ export interface DoorDraft {
 
 export type Checked<T> = { readonly ok: true; readonly value: T } | { readonly ok: false; readonly why: string };
 
-const DOOR_ID = /^[a-z0-9][a-z0-9:._~#@+-]{0,199}$/i;
+const DOOR_ID = /^[a-z0-9][a-z0-9:._~#@+%/-]{0,299}$/i;
 const KIND = /^[a-z][a-z0-9-]{0,63}$/;
 const HOST = /^[a-z0-9]([a-z0-9.-]{0,251}[a-z0-9])?$/;
 const OCD = /^ocd-division\/[a-z0-9_.~:\/-]{1,300}$/;
 const HOLD = /^[a-z][a-z0-9-]{0,63}$/;
-const CONFIG_KEY = /^[A-Za-z][A-Za-z0-9_.-]{0,63}$/;
+const CONFIG_KEY = /^[^\s\x00-\x1f]([^\x00-\x1f]{0,118}[^\s\x00-\x1f])?$/;
 /** A config key that names a secret must say it is a reference. */
 const SECRET_KEY = /(secret|token|password|passwd|apikey|api_key|credential|bearer|auth)/i;
 const REFERENCE_KEY = /(ref|env|name)$/i;
@@ -155,7 +155,7 @@ export function checkDoorDraft(input: unknown): Checked<Required<DoorDraft>> {
   if (typeof input !== "object" || input === null || Array.isArray(input)) return { ok: false, why: "a door must be a set of fields" };
   const draft = input as Record<string, unknown>;
   const doorId = clean(draft.doorId);
-  if (!DOOR_ID.test(doorId)) return { ok: false, why: "a door needs a readable id of letters, digits and : . _ - characters" };
+  if (!DOOR_ID.test(doorId)) return { ok: false, why: "a door needs a readable id of letters, digits and : . _ - / characters" };
   const kind = clean(draft.kind);
   if (!KIND.test(kind)) return { ok: false, why: "a door needs a kind (the reader that opens it), in lower case" };
   const ocdRaw = draft.ocdId === undefined || draft.ocdId === null ? "" : clean(draft.ocdId);

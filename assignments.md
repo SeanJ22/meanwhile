@@ -40,3 +40,9 @@ None started. Up to two are authorized if a lane falls behind (measured from hou
 - **Fetch full history before running tests.** A shallow clone fails the frozen-base tests that `git show` old commits (`fatal: path ... does not exist in <sha>`). Run `git fetch --unshallow origin` once per environment.
 - `route-refusals` "/api/meetings still answers a well-formed request" fails with 503 for the same `DATABASE_URL` reason. It isn't your change.
 - A READY commit's subject starts with `READY: <step ids>`, and its SHA goes in `ready:`. River folds exactly that SHA.
+
+## Fold notes (River, 2026-10-04 07:55Z)
+
+- **`OFFICIAL_PAGE_EVENTS_VERSION`** (`lib/hunt/meetings-site-discovery.ts`) is a hash of the official-page parser's code closure. Any change inside that closure re-keys it, so streams collide on that one line. At each fold, River sets it to the value `tests/meetings-official-page.test.ts` computes on the combined tree. When you catch up with `river`, take river's value and re-run that test.
+- **Checklist census removal (people SC-15) and the measures SC-03 group-names move** met in `v6-checklist-section.ts`, `owner-surface.ts` and `publish-owner-snapshot.mts`. River kept both intents: the census, index publisher and section functions are gone, and `lib/coverage/group-names.ts` and the per-place history stay. Measures and people: catch up before your next edit there.
+- Delete a stale `.next` before running `tsc`. Its generated types still name routes that SC-15 removed.

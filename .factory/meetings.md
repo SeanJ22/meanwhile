@@ -3,11 +3,11 @@ worker: meetings
 provider: Claude
 run_id: session_01TeLefpaQ8bqbZr1e4re9jE
 lock: meetings-20261004T1020Z-a7c3
-heartbeat: 2026-10-04T10:31:46Z
+heartbeat: 2026-10-04T11:03:19Z
 on_river: DB-01, DB-02, BX-08 (river 4b5102044)
 ready: none pending
 checks: tsc clean; eslint clean on changed files; env -u DATABASE_URL -u WTP_ASSET_STORE pnpm test on 31 ingest/venue/firewall files + official-page, 364/364 pass (DB-02 62/62 earlier). New: tests/hand-wired-venue-pins.test.ts. Live pins on the map are River's post-release check.
-working_on: DB-06 code complete locally (history contract, move-first ordering, door check, reader merge, kill switch); full suite running; then READY
+working_on: DB-06 ready; next BX-10
 waiting_on: DB-59: live evidence only. Code check: readManualProjectionPrior throws inside publishWorkerReaderResults per work item (try/catch -> HELD outcome), and no meeting ingest/runner path calls it, so a curated hold cannot stop MEETING promotion. Snapshot generatedAt = newest partition generatedAt, and quiet re-checks restamp the manifest (publishReaderEdgeChecks). River read: MEETING manifest moved to 06:34Z; the Sept 29 05:38Z time is MEETING_OUTCOME (2 scopes, no new promotion since 10-01, likely no change). Not closing DB-59 until a live pass shows the hold gone; no code change made.
 returned: none
 needs_hook: none

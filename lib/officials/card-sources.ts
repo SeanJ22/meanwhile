@@ -116,7 +116,7 @@ function holderSource(holder: SeatHolder, what: string): CardSource | null {
 function retainedHolderSources(holder: SeatHolder): CardSource[] {
   return Object.entries(holder.retainedFieldSources ?? {}).flatMap(([field, source]) => {
     if (!source) return [];
-    const label = { termNote: "term wording", email: "office email", phone: "office phone", websiteUrl: "official page link" }[field] ?? field;
+    const label = { termNote: "term wording", termStart: "term start date", termEnd: "term end date", email: "office email", phone: "office phone", websiteUrl: "official page link" }[field] ?? field;
     return [{ what: `${holder.name}'s previously verified ${label}, retained after an incomplete update`,
       provenance: { ...source, verifiedAt: null } }];
   });

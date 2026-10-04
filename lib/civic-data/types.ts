@@ -325,7 +325,20 @@ export type RoutineRemovalEvidence =
   | PublisherExclusionRemovalEvidence
   | CensusPlaceholderBodyRemovalEvidence
   | RosterDepartureRemovalEvidence
+  | AuditPullRemovalEvidence
   | MovedToHistoryRemovalEvidence;
+
+/**
+ * A published member an auditor broke (BROKE). It leaves the next version instead of being carried
+ * from its base. The candidate must also hold the member as an `AUDIT_PULLED_FROM_VERSION` excluded fact.
+ */
+export interface AuditPullRemovalEvidence {
+  /** Exact `RoutineChangeSet.removed[].key`. */
+  readonly key: string;
+  readonly code: "REMOVED_BY_AUDIT_PULL";
+  /** The curated member id the audit named. */
+  readonly memberId: string;
+}
 
 /**
  * A concluded meeting that carries a record leaves its live partition only

@@ -294,3 +294,24 @@ test("a stale source-scoped merge base is durably refused before it can roll bac
   assert.equal(refused.candidate.failureCode, "PROMOTION_BASE_CHANGED");
   assert.equal((await store.readPromotion(first.recordClass, first.scope))?.versionId, newer.id);
 });
+
+test("a member an auditor pulled leaves the next version instead of being inherited from its base (DP-15)", async () => {
+  const { store, record } = importedVenueFixture();
+  const priorRows = (record.candidate.readModel as CuratedReaderProjection).records;
+  const { candidate: first, expectedBaseVersionId } = await prepareManualProjectionSuccessor(packageFor("venue-resolutions", T1, "new", false, true), store, T1);
+  assert.ok((first.readModel as CuratedReaderProjection).records.some((row) => row.id === priorRows[1].id), "unpulled, the old member is retained");
+  const firstOutcome = await processRegisteredManualCandidate(store, "venue-resolutions", first, T1, expectedBaseVersionId);
+  assert.ok(firstOutcome.promoted);
+
+  const pulledIds = new Set([priorRows[1].id]);
+  const { candidate: next, expectedBaseVersionId: base } = await prepareManualProjectionSuccessor(
+    packageFor("venue-resolutions", T2, "newer", false, true), store, T2, pulledIds);
+  const rows = (next.readModel as CuratedReaderProjection).records;
+  assert.ok(!rows.some((row) => row.id === priorRows[1].id), "the pulled member is gone from the next version");
+  assert.ok(next.excludedFacts?.some((fact) => fact.code === "AUDIT_PULLED_FROM_VERSION" && fact.key === priorRows[1].id));
+  const outcome = await processRegisteredManualCandidate(store, "venue-resolutions", next, T2, base);
+  assert.ok(outcome.promoted, JSON.stringify(outcome.candidate.receipt));
+  const stored = await store.readCandidate(next.id);
+  assert.ok(!(stored?.candidate.readModel as CuratedReaderProjection).records.some((row) => row.id === priorRows[1].id),
+    "the promoted version no longer carries the pulled member");
+});

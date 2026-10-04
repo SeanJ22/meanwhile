@@ -141,7 +141,7 @@ test("Admin's preview: the registration slice, and the governments a Send must p
 test("the runner reads a state's registration before its providers run, before the territory, and for a DISPATCH", () => {
   const runner = readFileSync(join(ROOT, "scripts", "freshness-shadow.mts"), "utf8");
   const preload = runner.indexOf("await preloadRegistrationJurisdictions({ root: ROOT, states: [...materialized.ids]");
-  assert.ok(preload > 0 && preload < runner.indexOf("const registry = buildRegistry("), "created work's states are read before the providers keep it");
+  assert.ok(preload > 0 && preload < runner.indexOf("const registryProviders = ["), "created work's states are read before the providers keep it");
   const beforeTerritory = runner.slice(runner.indexOf("beforeTerritory: async (states) => {"), runner.indexOf("...(\"registries\" in promoted"));
   const registrationRead = beforeTerritory.indexOf("await preloadRegistrationJurisdictions({ root: ROOT, states,");
   const ownershipRead = beforeTerritory.indexOf("await meetingPartitions.readStates(states)");

@@ -29,7 +29,7 @@ export interface AbsenceUnlock {
 export type AbsenceUnlockTrigger =
   | { readonly kind: "ADAPTER"; readonly platform: string }
   | { readonly kind: "TOOL"; readonly tool: string }
-  | { readonly kind: "ROUTE"; readonly recordClass: string }
+  | { readonly kind: "ROUTE"; readonly recordClass: string; readonly platform?: string }
   | { readonly kind: "DATE"; readonly at: string };
 
 /**
@@ -37,7 +37,7 @@ export type AbsenceUnlockTrigger =
  * dead-end narrative. A new route for the record class and the recheck date always reopen it.
  */
 export function absenceUnlockFrom(
-  result: { readonly nextRungs: readonly string[]; readonly narrative: string; readonly recordClass?: string | null },
+  result: { readonly nextRungs: readonly string[]; readonly narrative: string; readonly recordClass?: string | null; readonly platform?: string | null },
   absentUntil: string,
 ): AbsenceUnlock {
   const steps = result.nextRungs.map((r) => r.trim()).filter((r) => r !== "");
@@ -47,7 +47,7 @@ export function absenceUnlockFrom(
   return {
     text,
     triggers: [
-      ...(result.recordClass ? [{ kind: "ROUTE", recordClass: result.recordClass } as const] : []),
+      ...(result.recordClass ? [{ kind: "ROUTE", recordClass: result.recordClass, ...(result.platform ? { platform: result.platform } : {}) } as const] : []),
       { kind: "DATE", at: absentUntil },
     ],
   };

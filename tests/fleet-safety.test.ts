@@ -1174,3 +1174,20 @@ test('redirects apply the destination website size and uncapped HTTP still honor
   now+=1;
   assert.equal((await controller.guardedOpenOne('public-web','redirect-work',async()=>new Response('ok'))(direct)).status,200);
 });
+
+test("CH-03: raising the owner's dial mid-round moves the very next reservation and pre-admission read", () => {
+  const recent = "2026-09-05T02:00:00.000Z";
+  const safety = fundedController({ now: NIGHT, costs: [cost(99.5, recent)], clock: () => Date.parse(NIGHT) });
+  assert.equal(safety.rollingCeilingReached(0.6).reached, true);
+  assert.throws(() => safety.reserveModelRequest("anthropic", "before-raise", REQUEST), (error: unknown) =>
+    error instanceof FleetSafetyRefusal && error.code === "ROLLING_24_HOUR_MODEL_SPEND_CEILING");
+  safety.setRollingCeilingUsd(500);
+  assert.equal(safety.rollingCeilingReached(0.6).reached, false);
+  assert.equal(safety.rollingCeilingReached(0.6).capUsd, 500);
+  assert.doesNotThrow(() => safety.reserveModelRequest("anthropic", "after-raise", REQUEST));
+  // A disappeared or invalid value is never no ceiling: it falls back to the built-in, which spends nothing.
+  safety.setRollingCeilingUsd(null);
+  assert.equal(safety.rollingCeilingReached(0).capUsd, 0);
+  safety.setRollingCeilingUsd(Number.NaN);
+  assert.equal(safety.rollingCeilingReached(0).reached, true);
+});

@@ -205,6 +205,13 @@ export interface CycleInput {
 export interface ResearchLanes {
   readonly decide: (row: ScheduledObligation) => ExecutorDecision;
   /**
+   * A shut door goes to a detective, and its plain re-read must not stop (DP-02). One occurrence
+   * carries one route task, so the plain re-read runs in the same cycle only when the detective
+   * is refused (paid lane paused, capped or blacked out). Absent or null, the row has no plain
+   * decision to keep.
+   */
+  readonly plainBesideDetective?: (row: ScheduledObligation) => ExecutorDecision | null;
+  /**
    * Optional canonical order for the actual due model rows. `runCycle` sorts a
    * copy of the rows it already owns, so a caller can reorder but cannot omit,
    * duplicate, or manufacture work. Absent, the historical oldest-due order
@@ -839,6 +846,23 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     prewarmOutcome = await prewarmOnce;
   };
 
+  /** The plain re-read that keeps running beside (or instead of) a detective for a shut door. */
+  const plainBeside = async (row: ScheduledObligation): Promise<void> => {
+    const plain = research?.plainBesideDetective?.(row) ?? null;
+    if (plain === null || plain.kind === "BOUNDED_MODEL_WORKER") return;
+    if (input.openOccurrence === undefined && input.requireOpenOccurrence && input.routeTaskFor(row.obligation.id) === null) return;
+    const opened = await tryOpen(row);
+    if (opened !== true) return;
+    if (aggregateRefusal(row) !== null) return;
+    deterministicDispatched += 1;
+    const result = await dispatchRow(row, {
+      executor: typeof input.executor === "function" ? input.executor(row) : input.executor,
+      leaseTtlMs: input.leaseTtlMs,
+      decision: plain,
+    });
+    if (research?.onDispatched) await research.onDispatched(result, "DETERMINISTIC");
+  };
+
   const modelLane = async (): Promise<void> => {
     if (research === undefined) return;
     await runPool(modelRows, research.workerCapacity, async (row) => {
@@ -854,6 +878,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
           why: `${admit.code}: ${admit.why}. Deferred with its next-due, never dropped and never reported complete.`,
         });
         holdModel(row, admit.code);
+        await plainBeside(row);
         return;
       }
       const opened = await tryOpen(row);
@@ -875,6 +900,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
       if (refusedBy !== null) {
         holdModel(row, refusedBy);
         if (research.onAdmittedNotDispatched) await research.onAdmittedNotDispatched(row, refusedBy);
+        await plainBeside(row);
         return;
       }
       /* Admitted: the static prefix is warmed once, before the first dispatch, and every dispatch waits for it. */

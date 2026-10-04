@@ -206,6 +206,7 @@ export interface ReaderManifest {
  * on production for one cold Mesa question, 2026-09-25).
  */
 export type PromotedAuthorityFamily =
+  | "ballot-contests"
   | "ballot-az"
   | "ballot-nh"
   | "candidate-profiles"
@@ -224,6 +225,7 @@ export type PromotedAuthorityFamily =
   | "executive-actions";
 
 export const PROMOTED_AUTHORITY_FAMILIES: readonly PromotedAuthorityFamily[] = [
+  "ballot-contests",
   "ballot-az",
   "ballot-nh",
   "candidate-profiles",

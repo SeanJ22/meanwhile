@@ -60,7 +60,7 @@ function trend(trends: LearningTrends, input: {
   };
 }
 
-export function v6LearningView(trends: LearningTrends, doors: DoorFacts | null): LearningView {
+export function v6LearningView(trends: LearningTrends, doors: DoorFacts | null, bankWriteErrors: number | null = null): LearningView {
   const s = trends.series;
   const trendList: Trend[] = [];
   if (s.handed.measuredWeeks > 0) {
@@ -102,6 +102,9 @@ export function v6LearningView(trends: LearningTrends, doors: DoorFacts | null):
   }
 
   const readings: Reading[] = [];
+  readings.push({ question: "Are lessons reaching the Bank?", big: bankWriteErrors === null ? "—" : bankWriteErrors.toLocaleString("en-US"),
+    bigNote: "Bank write errors", body: "Failed writes after their retry attempts.",
+    method: [{ k: "Counted", v: "Bank writes that could not be saved after retries. A count unavailable from the store shows —." }] });
   if (doors !== null && doors.walks > 0) {
     readings.push({
       question: "Do walks use the ways in they are handed?",

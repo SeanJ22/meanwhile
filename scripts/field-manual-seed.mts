@@ -31,6 +31,7 @@ import {
   type FieldManualRole,
 } from "../lib/control-plane/field-manual.ts";
 import { leadLine, researchDocEntries, splitMarkdownDocument } from "../lib/method/research-docs.ts";
+import { defaultPlaybookEntries } from "../lib/control-plane/playbooks.ts";
 import { MANIFEST_ROUTES } from "../lib/hunt/branch-manifest.ts";
 import { KNOWN_PLATFORMS } from "../lib/hunt/platform-tenancy.ts";
 import { DESCENT_SEEDS } from "../lib/hunt/descent-seeds.ts";
@@ -510,6 +511,7 @@ async function main(): Promise<void> {
     ...fromCoverageAudits(),
     ...(target === "control-plane" ? await fromMethodCandidates(repos) : []),
     ...fromDocs(),
+    ...defaultPlaybookEntries(["SCOUT", "DETECTIVE"]),
     ...fromTenantRegistries(),
     ...fromTiers(),
     ...fromDescentResults(),

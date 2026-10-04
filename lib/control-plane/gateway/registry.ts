@@ -106,6 +106,7 @@ import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
 import { WORK_QUESTION_WORDS, validateWorkQuestions, type WorkQuestion } from "../work-question.ts";
 import { huntPlaceKey } from "../admin-view/v6-hunts-read.ts";
 import { BULK_ACTIONS } from "./bulk-actions.ts";
+import { DOOR_ACTIONS } from "../../doors/actions.ts";
 import { appendFailureSays, writeFailureSays } from "./write-readback.ts";
 import { settingDefinition, settingUndo, withSetting, type SettingValue } from "../settings.ts";
 import { publishReaderSettings } from "../../civic-data/reader-settings-publication.ts";
@@ -1200,6 +1201,9 @@ const REGISTRY: readonly RegisteredAction[] = [
 
   /* ------------------------------------ expansion.scope.setMany and .budget */
   ...BULK_ACTIONS,
+
+  /* ------------------------------------------------------------ door.save */
+  ...DOOR_ACTIONS,
 
   /* ---------------------------------------------------- billing.fact.record */
   {

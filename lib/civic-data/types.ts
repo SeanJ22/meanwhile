@@ -324,14 +324,52 @@ export type RoutineRemovalEvidence =
   | OccurrenceSupersessionRemovalEvidence
   | PublisherExclusionRemovalEvidence
   | CensusPlaceholderBodyRemovalEvidence
-  | RosterDepartureRemovalEvidence;
+  | RosterDepartureRemovalEvidence
+  | AuditPullRemovalEvidence
+  | MovedToHistoryRemovalEvidence;
+
+/**
+ * A published member an auditor broke (BROKE). It leaves the next version instead of being carried
+ * from its base. The candidate must also hold the member as an `AUDIT_PULLED_FROM_VERSION` excluded fact.
+ */
+export interface AuditPullRemovalEvidence {
+  /** Exact `RoutineChangeSet.removed[].key`. */
+  readonly key: string;
+  readonly code: "REMOVED_BY_AUDIT_PULL";
+  /** The curated member id the audit named. */
+  readonly memberId: string;
+}
+
+/**
+ * A concluded meeting that carries a record leaves its live partition only
+ * into the partition's durable history (DB-06). The history version is
+ * promoted FIRST; the validator re-derives the rest from the candidate, and the
+ * door confirms the named history version holds the exact record, so no record
+ * is ever in neither place. An attached agenda document inherits this from its
+ * meeting.
+ */
+export interface MovedToHistoryRemovalEvidence {
+  /** Exact `RoutineChangeSet.removed[].key`; evidence is never positional. */
+  readonly key: string;
+  readonly code: "MOVED_TO_HISTORY";
+  /** The partition's history scope that holds the record. */
+  readonly historyScope: string;
+  /** The promoted history version that holds it. */
+  readonly historyVersionId: string;
+  /** The held window's lower bound at this candidate's clock; the sitting began before it. */
+  readonly lowerBound: string;
+  /** The previously promoted meeting's exact `startsAt`. */
+  readonly priorStartsAt: string;
+  /** Required only for an agenda document; names its exact moved meeting. */
+  readonly parentMeetingKey?: string;
+}
 
 export interface ServingWindowRemovalEvidence {
   /** Exact `RoutineChangeSet.removed[].key`; evidence is never positional. */
   readonly key: string;
   readonly code: "OUTSIDE_REGISTERED_SERVING_WINDOW";
   /** Exact versioned Reader/acquisition window policy, never a caller-defined window. */
-  readonly windowContract: "MEETING_READER_SERVING_WINDOW_V1";
+  readonly windowContract: "MEETING_READER_SERVING_WINDOW_V1" | "MEETING_READER_SERVING_WINDOW_V2";
   /** Inclusive registered window used by the acquisition/Reader. */
   readonly lowerBound: string;
   readonly upperBound: string;

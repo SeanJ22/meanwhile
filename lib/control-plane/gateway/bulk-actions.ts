@@ -31,6 +31,7 @@ import {
   validateScopeKey,
   validateScopeNote,
   validateScopePriority,
+  scopeKeyOf,
   withScopeSet,
   SCOPE_NOTE_MAX_CHARS,
   type ExpansionScopeDecision,
@@ -41,7 +42,7 @@ import type { ActionResult, RegisteredAction, Validation } from "./registry.ts";
 import { writeFailureSays } from "./write-readback.ts";
 
 /** A hunt is named by its scope key (`zcta:2020/85635`) or by the place key a screen shows it under (`geo:az.zcta.85635`). */
-const PLACE_KEY = /^geo:[a-z]{2}.[a-z_]+.[0-9A-Za-z]{2,12}$/;
+const PLACE_KEY = /^(?:geo:[a-z]{2}.[a-z_]+.[0-9A-Za-z]{2,12}|st:[a-z]{2})$/;
 
 /** The most ZIPs one send takes. A bigger list is a file to split, not one click. */
 export const BULK_SEND_MAX_ITEMS = 5000;
@@ -59,27 +60,27 @@ interface BulkItem {
 
 /** The items as the action accepts them; any bad item refuses the whole send with its number. */
 function validateItems(raw: unknown): { readonly ok: true; readonly items: readonly BulkItem[] } | { readonly ok: false; readonly why: string } {
-  if (!Array.isArray(raw) || raw.length === 0) return { ok: false, why: "there are no ZIPs in this send" };
+  if (!Array.isArray(raw) || raw.length === 0) return { ok: false, why: "there is nothing in this send" };
   if (raw.length > BULK_SEND_MAX_ITEMS) return { ok: false, why: `one send takes at most ${BULK_SEND_MAX_ITEMS.toLocaleString("en-US")} ZIPs` };
   const seen = new Set<string>();
   const items: BulkItem[] = [];
   for (let i = 0; i < raw.length; i += 1) {
     const r = raw[i];
-    if (r === null || typeof r !== "object") return { ok: false, why: `item ${i + 1} is not a ZIP` };
+    if (r === null || typeof r !== "object") return { ok: false, why: `item ${i + 1} is not a ZIP or a mission` };
     const o = r as Readonly<Record<string, unknown>>;
+    // A mission names a whole geography (a state, county, district or metro); a ZIP item names a ZIP.
+    const mission = o.geography !== null && typeof o.geography === "object";
     const zip = typeof o.zip === "string" ? o.zip.trim() : "";
-    const geography = validateScopeGeography({
-      type: "zcta",
-      geoid: zip,
-      version: ZCTA_VERSION,
-      label: `ZIP ${zip} (Census ZCTA)`,
-      stateAbbr: o.stateAbbr,
-    });
-    if (!geography.ok) return { ok: false, why: `item ${i + 1} (${zip || "no ZIP"}): ${geography.why}` };
-    if (seen.has(zip)) return { ok: false, why: `${zip} is in the send twice` };
-    seen.add(zip);
+    const geography = mission
+      ? validateScopeGeography(o.geography as Readonly<Record<string, unknown>>)
+      : validateScopeGeography({ type: "zcta", geoid: zip, version: ZCTA_VERSION, label: `ZIP ${zip} (Census ZCTA)`, stateAbbr: o.stateAbbr });
+    const name = mission ? (geography.ok ? geography.value.label : "a mission") : zip || "no ZIP";
+    if (!geography.ok) return { ok: false, why: `item ${i + 1} (${name}): ${geography.why}` };
+    const identity = scopeKeyOf(geography.value);
+    if (seen.has(identity)) return { ok: false, why: `${name} is in the send twice` };
+    seen.add(identity);
     const budget = validateScopeBudget(o.budgetUsd);
-    if (!budget.ok) return { ok: false, why: `item ${i + 1} (${zip}): ${budget.why}` };
+    if (!budget.ok) return { ok: false, why: `item ${i + 1} (${name}): ${budget.why}` };
     const group = typeof o.group === "string" && o.group.trim() !== "" ? o.group.trim().replace(/\s+/g, " ").slice(0, 120) : null;
     items.push({ geography: geography.value, budgetUsd: budget.value, group });
   }

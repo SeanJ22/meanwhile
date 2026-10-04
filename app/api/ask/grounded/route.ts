@@ -56,8 +56,11 @@ import { bodyNameFromQuestion, groupMoneyShapeForBoundSubject, lexicalQuestionSh
 import { composePersonVotes } from "@/lib/ask/person-votes";
 import { composeBodyRoster, composeReaderOfficials, placeNamesOf, readerOfficialsQuestion } from "@/lib/ask/reader-officials";
 import { areaMeetingsQuestion, composeAreaMeetings, type AreaSitting } from "@/lib/ask/area-meetings";
-import { ballotQuestionShape, composeBallotSummary, composeOfficeField, contestsOfOffice } from "@/lib/ask/ballot-summary";
+import { composeBallotOnlyAnswer } from "@/lib/ask/ballot-only-answer";
+import { ballotQuestionHint, ballotQuestionShape, composeBallotSummary, composeOfficeField, contestsForBallotAsk } from "@/lib/ask/ballot-summary";
 import { composeSittingAnswerWithBasis, settleSittingComposition, sittingVenue, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
+import { composeOwnWordsAnswer } from "@/lib/ask/own-words";
+import { composeMeasureMeaningAnswer } from "@/lib/ask/measure-meaning";
 import { composeGroupMoneyAnswer, composeMoneyAnswer, composeNoRaceMoneyAnswer, contestFitsBody, moneyQuestionShape } from "@/lib/ask/money-answer";
 import { codeBestReading, speculationVerdict, type ReadingOutcome } from "@/lib/ask/speculative-reading";
 import { resolveInterpretation } from "@/lib/ask/resolve";
@@ -695,6 +698,10 @@ export async function POST(request: Request) {
     ? areaMeetingsQuestion(question) : null;
   /* Both answer from the registry and what is already held for the reader's divisions: no ballot, no money, no votes, no recorded outcomes. */
   const leanAsk = Boolean(officialsAsk || areaMeetingsAsk);
+  const ballotOnlyHint = !topicRoute && !leanAsk && ocdIds.length > 0 && ballotQuestionHint(question) &&
+    readSubjectRefs(body.activeSubjects).every(ref => !ref.focused) &&
+    readSubjectRefs(body.priorSubjects, 8).length === 0 &&
+    (!Array.isArray(body.priorTurns) || body.priorTurns.length === 0);
   // A shape is only a scheduling hint here. The complete subject inventory
   // still loads, and lexicalReading below must prove the body binding before
   // unrelated evidence may stay unread. A failed/ambiguous binding restores
@@ -748,29 +755,68 @@ export async function POST(request: Request) {
   const onEdge = (family: AuthorityFamily) => Boolean(edgeManifest?.authorityArtifacts?.[family]);
   // Each database read is observed at once, so a failure while the edge is
   // fetched is never an unhandled rejection; the settle below still records it.
-  const outcomesFromDatabase = leanAsk || onEdge("meeting-outcomes") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
+  const outcomesFromDatabase = leanAsk || ballotOnlyHint || onEdge("meeting-outcomes") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
   outcomesFromDatabase?.catch(() => undefined);
-  const commentAccessFromDatabase = production && !leanAsk && !onEdge("comment-access")
+  const commentAccessFromDatabase = production && !leanAsk && !ballotOnlyHint && !onEdge("comment-access")
     // Public-comment rules are an independent optional family. Initialize its
     // pointer, but do not let a store outage suppress meetings, ballots,
     // officials, or any other source's answer.
     ? timed("commentAccess", () => refreshCommentAccessFromPromoted().catch(() => undefined))()
     : null;
+  let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
+  if (edgeManifest?.authorityArtifacts) {
+    authorityEdge = await timed("authorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined,
+      ballotOnlyHint ? ["ballot-contests", "ballot-az", "ballot-nh"]
+        : leanAsk ? READER_MAP_AUTHORITY_FAMILIES
+        : deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => !unrelatedFamilies.has(family)) : AUTHORITY_FAMILIES).catch(() => null))();
+    if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
+  }
+  // Confirm the hint from the published ballot before leaving any source
+  // unread. Legacy authorities and unmatched titles continue through the full path.
+  if (ballotOnlyHint) {
+    const ballot = await timed("ballot", () => loadBallotForDivisions(ocdIds))();
+    const today = typeof body.today === "string" && /^\d{4}-\d{2}-\d{2}$/.test(body.today)
+      ? body.today : new Date().toISOString().slice(0, 10);
+    const direct = composeBallotOnlyAnswer(ballot, question, today);
+    if (direct) {
+      const { pack, composed, verdict, shape } = direct;
+      const interpretation = { ...unavailableInterpretation(), intent: pack.intent, temporal: pack.temporal };
+      trace.interpretation = { ran: false, why: "ballot-shape", intent: pack.intent, temporal: pack.temporal, fellBackToDeterministic: true };
+      trace.resolution = { state: "NONE", basis: "HELD_BALLOT" };
+      trace.retrieval = { selection: "HELD_BALLOT", recordCount: pack.records.length,
+        sourceCount: composed.citedUrls.length, gapCount: pack.gaps.length, denominators: pack.denominators };
+      trace.composition = { kind: "BALLOT", shape: shape.kind === "SUMMARY" ? "SUMMARY" : `OFFICE_${shape.key ?? shape.phrase}`,
+        basis: "HELD_BALLOT", composed: true, passed: true };
+      trace.synthesis = { ran: false, why: "composed-from-ballot-records" };
+      trace.validation = { ran: true, passed: true, checked: verdict.checked };
+      trace.sourcesLoaded = "ESSENTIAL";
+      trace.preloads = preloadMs;
+      trace.answerMode = "STRUCTURED_GROUNDED";
+      trace.totalMs = Date.now() - started;
+      await captureDelivered({ request, question, interpretation, resolutionState: "NONE",
+        mode: "STRUCTURED_GROUNDED", subjectIds: [], answer: composed.answer, answerModel: null,
+        validationPassed: true, records: [...pack.records], gaps: [...pack.gaps],
+        surface: body.surface === "MAP" || body.surface === "BALLOT" ? body.surface : "UNKNOWN",
+        approximateLocation: typeof body.approximateLocation === "string" ? body.approximateLocation : null,
+        ocdIds, residency: stampResidency(readLocationOrigin(body.locationOrigin)),
+        continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" });
+      return Response.json(askAnswer({ mode: "STRUCTURED_GROUNDED", pack, answer: composed.answer, contacts: [], trace }));
+    }
+    if (edgeManifest?.authorityArtifacts) {
+      authorityEdge = await timed("remainingAuthorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined,
+        deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => !unrelatedFamilies.has(family)) : AUTHORITY_FAMILIES).catch(() => null))();
+      if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
+    }
+  }
 // Area questions share governing pieces with every ZIP in those divisions.
   // Questions naming a body elsewhere retain their wider subject inventory.
   const meetingsRead = readReaderEdgeMeetings({
     manifest: edgeManifest,
+    window: "HELD",
     ...(ocdIds.length && (topicRoute || areaMeetingsAsk) ? { states: statesOf(ocdIds), ocdIds } : {}),
 
   });
   meetingsRead.catch(() => undefined);
-  let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
-  if (edgeManifest?.authorityArtifacts) {
-    authorityEdge = await timed("authorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined,
-      leanAsk ? READER_MAP_AUTHORITY_FAMILIES
-        : deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => !unrelatedFamilies.has(family)) : AUTHORITY_FAMILIES).catch(() => null))();
-    if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
-  }
   const essentialPreloads = [
     timed("registry", () => settleRegistryAuthorityReads("REGISTRY")),
     timed("federalDirectory", settleFederalDirectoryRead),
@@ -1098,14 +1144,14 @@ export async function POST(request: Request) {
    * contest whose candidates carry a party conflict between two authorities, goes the
    * ordinary way (the model reads it and the records are retrieved by subject).
    */
-  const ballotShape = !topicRoute && !leanAsk && ballot.set ? ballotQuestionShape(question) : null;
+  const ballotShape = !topicRoute && !leanAsk && ballot.set ? ballotQuestionShape(question, ballot.contests) : null;
   const ballotComposed = !ballotShape || !ballot.set ? null
     : ballotShape.kind === "SUMMARY"
       ? composeBallotSummary({ contests: ballot.contests, election: ballot.set.election })
-      : contestsOfOffice(ballot.contests, ballotShape.key).some((contest) => [...partyConflictFilings.keys()].some((key) => key.startsWith(`${contest.id}|`)))
+      : contestsForBallotAsk(ballot.contests, ballotShape).some((contest) => [...partyConflictFilings.keys()].some((key) => key.startsWith(`${contest.id}|`)))
         ? null
         : composeOfficeField({
-          key: ballotShape.key, contests: ballot.contests, election: ballot.set.election, nominees: ballot.nominees, candidacies: ballot.set.candidacies,
+          key: ballotShape.key, phrase: ballotShape.phrase, contests: ballot.contests, election: ballot.set.election, nominees: ballot.nominees, candidacies: ballot.set.candidacies,
           removedCandidacyIds: new Set((ballot.set.removals ?? []).map((removal) => removal.id)),
         });
   const ballotAsk = ballotComposed ? ballotShape : null;
@@ -2345,7 +2391,7 @@ export async function POST(request: Request) {
     }
 
     /* The reader's ballot, composed above from the contests their divisions reach: each contest is a record they are shown. */
-    if (ballotAsk && ballotComposed && !subject) {
+    if (ballotAsk && ballotComposed && (!subject || ballotAsk.kind === "OFFICE")) {
       records.push(...ballotComposed.records);
       for (const statement of ballotComposed.gaps) gaps.push({ whose: "OURS", statement });
       denominators.contestsOnTheBallot = ballot.contests.length;
@@ -2581,7 +2627,8 @@ export async function POST(request: Request) {
     denominators.recordsExcludedOffSubject = relevant.excluded.length;
     const packRecords = relevant.records;
 
-    if (stanceAnswerability({ subject, question }) === "UNVERIFIED_PERSONAL_STANCE") {
+    const ownWordsComposed = composeOwnWordsAnswer({ subject, question, records: packRecords });
+    if (!ownWordsComposed && stanceAnswerability({ subject, question }) === "UNVERIFIED_PERSONAL_STANCE") {
       const pageMatches = packRecords.filter((record) => record.kind === "SOURCE_PASSAGE").length;
       denominators.personalStanceVerified = 0;
       denominators.linkedSourcePassages = pageMatches;
@@ -2796,7 +2843,7 @@ export async function POST(request: Request) {
     }
     /* The reader's ballot (lib/ask/ballot-summary.ts): composed above, held to the same validator. */
     const ballotSettled = settleSittingComposition(
-      ballotAsk && ballotComposed && !topicComposed && (!subject || (subject.kind === "CONTEST" && ballotAsk.kind === "OFFICE" && contestsOfOffice(ballot.contests, ballotAsk.key).some((contest) => contest.id === subject.id)))
+      ballotAsk && ballotComposed && !topicComposed && (!subject || ballotAsk.kind === "OFFICE")
         ? { answer: ballotComposed.answer, citedUrls: ballotComposed.citedUrls } : null,
       (text, urls) => validateAnswer(text, urls, pack, bodies),
     );
@@ -2810,8 +2857,13 @@ export async function POST(request: Request) {
         ...(ballotSettled.verdict?.kind === "FAILED" ? { failed: ballotSettled.verdict.failed } : {}),
       };
     }
-    const composed = topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
-    const composedWhy = topicComposed ? "composed-from-structured-evidence"
+    const preferredBallot = ballotAsk?.kind === "OFFICE" ? ballotSettled.composed : null;
+    const measureSettled = settleSittingComposition(composeMeasureMeaningAnswer({ subject, question, records: packRecords }),
+      (text, urls) => validateAnswer(text, urls, pack, bodies));
+    const ownWordsSettled = settleSittingComposition(ownWordsComposed,
+      (text, urls) => validateAnswer(text, urls, pack, bodies));
+    const composed = ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
+    const composedWhy = ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
       : sittingSettled.composed ? "composed-from-sitting-records"
         : moneySettled.composed ?? groupSettled.composed ? "composed-from-money-records"
           : officialsSettled.composed ? "composed-from-officeholder-records"

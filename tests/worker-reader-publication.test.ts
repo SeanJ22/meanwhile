@@ -14,7 +14,7 @@ import { dispatchWorkerTask, evidenceProjection, FLEET_POLICY_VERSION } from "..
 import { nextAutonomousOperation } from "../lib/control-plane/workers/coordinator.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
-import { publishWorkerReaderResults, workerReaderPackage, inheritVerifiedCommentDetails } from "../lib/civic-data/worker-reader-publication.ts";
+import { publishWorkerReaderResults, workerReaderPackage, workerReaderPackageWithPulls, inheritVerifiedCommentDetails } from "../lib/civic-data/worker-reader-publication.ts";
 import { readManualProjectionPrior, type CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
 import { prepareManualProjectionSuccessor } from "../lib/civic-data/manual-successor.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
@@ -286,4 +286,23 @@ test("normal voter-access workers publish the independently verified statewide r
   assert.equal(read.value.records[0].kind, "REGISTRATION_LINK");
   assert.equal((read.value.records[0].value as { url: string }).url, FIXTURE_URL);
   assert.deepEqual(await publishWorkerReaderResults(input), result);
+});
+
+test("a BROKE audit names the published reader members it takes out of the next version (DP-15)", async () => {
+  const { input, h, store, results, artifact, ready, prior } = await workerFixture("comment-access", {
+    commentPeriod: "YES", commentPeriodDetail: "The board provides a public comment period.", signup: "Sign up before the meeting." });
+  const published = await publishWorkerReaderResults(input);
+  assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
+  const parser = results.find(row => row.result.role === "PARSER")!;
+  if (parser.result.role !== "PARSER") throw new Error("parser missing");
+  const captures = await Promise.all([parser.result.artifactId, artifact.id].map(input.readCapture));
+  const check = { plan: ready, parser, captures, registry: prior, now: h.now() };
+  assert.equal(workerReaderPackageWithPulls({ ...check, results }).pulledMemberIds.size, 0, "no audit, nothing pulled");
+  const broke = { id: "wr-audit-broke", workItemId: h.item.id, endedAt: "2099-01-01T00:00:00.000Z",
+    result: { role: "ADVERSARIAL_AUDITOR", verdict: "BROKE", producerAttemptId: parser.result.attemptId, brokenRecordIds: [parser.result.records[0].id] } } as unknown as typeof parser;
+  const built = workerReaderPackageWithPulls({ ...check, results: [...results, broke] });
+  const live = await readCuratedReaderProjection("comment-access", { store, now: h.now(), bypassCache: true });
+  if (live.kind !== "PROMOTED") throw new Error("reader missing");
+  assert.deepEqual([...built.pulledMemberIds], [live.value.records[0].id as string], "the pull names the exact published member");
+  assert.equal((built.package.payload as CuratedReaderProjection).records.length, 0, "the pulled record is not republished");
 });

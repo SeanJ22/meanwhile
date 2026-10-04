@@ -35,6 +35,8 @@ export const AUDIT_LEARNING_SOURCE = "auditor-learning";
 export interface AuditSamplePolicy {
   /** Fraction of rule-parsed results the model reviews once their stratum is established. */
   readonly ratio: number;
+  /** A boosted fact is model-reviewed this many times as often (capped at every one). */
+  readonly boostMultiplier?: number;
   /** Fraction of model-parsed (quoted) results the model reviews once their stratum is established. */
   readonly quotedRatio: number;
   /** The first N results of any stratum are always reviewed. */
@@ -43,7 +45,7 @@ export interface AuditSamplePolicy {
   readonly survivedAfterBreak: number;
 }
 
-export const DEFAULT_AUDIT_SAMPLE_POLICY: AuditSamplePolicy = { ratio: 0.1, quotedRatio: 0.25, floorPerStratum: 3, survivedAfterBreak: 5 };
+export const DEFAULT_AUDIT_SAMPLE_POLICY: AuditSamplePolicy = { ratio: 0.1, quotedRatio: 0.25, floorPerStratum: 3, survivedAfterBreak: 5, boostMultiplier: 3 };
 
 /** A record class from one publisher: the unit the sample must reach. */
 export function stratumOf(contract: CivicExtractionContract): string {
@@ -113,7 +115,26 @@ export function auditHistoryFromManual(store: Pick<FieldManualStore, "entries">)
   return history;
 }
 
-export type SampleReason = "ESCALATION" | "JUDGMENT_CALL" | "NEW_STRATUM" | "BROKEN_STRATUM" | "SAMPLED" | "NOT_SAMPLED";
+export type SampleReason = "ESCALATION" | "JUDGMENT_CALL" | "NEW_STRATUM" | "BROKEN_STRATUM" | "PAST_REFRESH" | "DEMAND" | "SINGLE_SOURCE" | "SAMPLED" | "NOT_SAMPLED";
+
+/** Where the sampler should look harder (DP-16): facts readers ask for, facts with one source, facts past their refresh date. */
+export interface SampleBoosts {
+  /** 0 is the most-asked-for; null or absent when readers have not asked. */
+  readonly demandRank?: number | null;
+  readonly singleSource?: boolean;
+  readonly pastRefresh?: boolean;
+}
+/** How many of the most-asked-for places count as high demand. */
+export const DEMAND_TOP_RANKS = 20;
+
+/** The boost that applies, strongest first: a fact past its refresh date, then reader demand, then a single source. */
+export function boostReason(boosts: SampleBoosts | undefined): "PAST_REFRESH" | "DEMAND" | "SINGLE_SOURCE" | null {
+  if (!boosts) return null;
+  if (boosts.pastRefresh) return "PAST_REFRESH";
+  if (boosts.demandRank !== null && boosts.demandRank !== undefined && boosts.demandRank < DEMAND_TOP_RANKS) return "DEMAND";
+  if (boosts.singleSource) return "SINGLE_SOURCE";
+  return null;
+}
 
 /** A stable value in [0, 1) from a result key: the same result always lands the same side of the line. */
 export function stableFraction(key: string): number {
@@ -129,6 +150,7 @@ export function sampleDecision(
   history: AuditHistory,
   quoted: boolean,
   policy: AuditSamplePolicy = DEFAULT_AUDIT_SAMPLE_POLICY,
+  boosts?: SampleBoosts,
 ): { readonly sample: boolean; readonly reason: SampleReason; readonly stratum: string } {
   const stratum = stratumOf(spec.contract);
   if (spec.auditEscalation) return { sample: true, reason: "ESCALATION", stratum };
@@ -138,7 +160,11 @@ export function sampleDecision(
   if (!h || h.reviewed < policy.floorPerStratum) return { sample: true, reason: "NEW_STRATUM", stratum };
   if (h.everBroken && h.survivedSinceBreak < policy.survivedAfterBreak) return { sample: true, reason: "BROKEN_STRATUM", stratum };
   const fraction = stableFraction(`${spec.artifactId}|${spec.producerResultId ?? ""}|${stratum}`);
-  return fraction < (quoted ? policy.quotedRatio : policy.ratio) ? { sample: true, reason: "SAMPLED", stratum } : { sample: false, reason: "NOT_SAMPLED", stratum };
+  const base = quoted ? policy.quotedRatio : policy.ratio;
+  if (fraction < base) return { sample: true, reason: "SAMPLED", stratum };
+  const boost = boostReason(boosts);
+  if (boost && fraction < Math.min(1, base * (policy.boostMultiplier ?? 1))) return { sample: true, reason: boost, stratum };
+  return { sample: false, reason: "NOT_SAMPLED", stratum };
 }
 
 /**

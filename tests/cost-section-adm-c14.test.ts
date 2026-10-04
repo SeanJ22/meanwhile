@@ -124,9 +124,9 @@ test("§9A.4: every role the cost policy calls plain code is one no executor han
   assert.match(runtime, /const parseAssisted = usesModelParse\(runtime, spec\)/, "Parser model fallback is included in the spend policy");
 
   const research = codeOf("lib/control-plane/workers", "research-runtime.ts");
-  assert.match(research, /\["ACQUIRER","DETECTIVE","ENGINEERING"\]/, "the research executor still owns exactly those three roles");
+  assert.match(research, /\["ACQUIRER","ENGINEERING"\]/, "the research executor still owns exactly those two roles");
   assert.match(research, /provider:\s*"we-the-people"/, "and still declares itself deterministic");
-  assert.doesNotMatch(research, /anthropic/i, "no Anthropic provider is declared for an acquirer, detective or engineering Attempt");
+  assert.doesNotMatch(research, /anthropic/i, "no Anthropic provider is declared for an acquirer or engineering Attempt");
 
   /*
    * POSITIVE CONTROL. The instrument is shown catching the defect it exists

@@ -7,8 +7,8 @@ import { formatDateLong } from "@/lib/text/format-date";
 import { CardSection } from "./card-section";
 
 /** Shared map and ballot presentation; the source's measurement stays attributed. */
-export function PublicStatementsProfile({ subjectId }: { subjectId: string }) {
-  return <ProfileForIdentity key={subjectId} subjectId={subjectId} />;
+export function PublicStatementsProfile({ subjectId, onProfile }: { subjectId: string; onProfile?: (profile: PrlReaderProfile | null) => void }) {
+  return <ProfileForIdentity key={subjectId} subjectId={subjectId} onProfile={onProfile} />;
 }
 
 /** Only congressional identities have a PRL profile to look for. */
@@ -39,7 +39,7 @@ export function settleStatementsAnswer(
   return profile && profile.subjectId === subjectId ? { kind: "held", profile } : { kind: "none" };
 }
 
-function ProfileForIdentity({ subjectId }: { subjectId: string }) {
+function ProfileForIdentity({ subjectId, onProfile }: { subjectId: string; onProfile?: (profile: PrlReaderProfile | null) => void }) {
   const [load, setLoad] = useState<StatementsLoad>(() => statementsLoadFor(subjectId));
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
@@ -51,6 +51,8 @@ function ProfileForIdentity({ subjectId }: { subjectId: string }) {
       .catch(() => { if (!controller.signal.aborted) setLoad({ kind: "failed" }); });
     return () => controller.abort();
   }, [subjectId, attempt]);
+  const heldProfile = load.kind === "held" ? load.profile : null;
+  useEffect(() => { onProfile?.(heldProfile); }, [heldProfile, onProfile]);
   switch (load.kind) {
     case "not-applicable":
     case "none":

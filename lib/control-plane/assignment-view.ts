@@ -57,6 +57,7 @@
  * never split across assignments by guesswork — it is named as shared. PURE:
  * records in, rows out; the only clock is `nowIso`.
  */
+import { attemptFamilyOf, type AttemptFamily } from "../registry/attempt-families.ts";
 import { ASK_GAP_CODES, ASK_GAP_CODE_WORDS, type AskGapCode } from "../ask/gap-codes.ts";
 import { askGapNoteParts, askGapTitle, parseAskGapObligationId } from "./ask-gap-id.ts";
 import {
@@ -2625,6 +2626,8 @@ export interface AssignmentIndexRow {
 
 export interface BodyPublicationAttempt {
   readonly bodyId: string;
+  /** The kind of fact this attempt was for, from the publication door it used. Null when the door is not mapped. */
+  readonly family: AttemptFamily | null;
   readonly workItemId: string;
   /** Only marks from this WorkItem's owning standing obligation. */
   readonly assignmentKeys: readonly string[];
@@ -2679,7 +2682,7 @@ export function bodyPublicationAttempts(workItems: readonly WorkItem[],
       if (!old || mark.at > old.at || (mark.at === old.at && mark.ref > old.ref)) effective.set(mark.assignmentKey,mark);
     }
     const assignmentRefs=[...effective.values()].map(mark=>({key:mark.assignmentKey,ref:mark.ref}));
-    return [{ bodyId, workItemId: item.id, assignmentKeys: assignmentRefs.map(mark=>mark.key), assignmentRefs,
+    return [{ bodyId, family: attemptFamilyOf(item.autonomousPlan?.publication?.contractId), workItemId: item.id, assignmentKeys: assignmentRefs.map(mark=>mark.key), assignmentRefs,
       at: outcome.at, status: outcome.status,
       code: outcome.code, sourceUrl: item.autonomousPlan?.contract.schemaVersion === 2
         ? item.autonomousPlan.contract.sourceScope.canonicalUrls[0] ?? null : null,

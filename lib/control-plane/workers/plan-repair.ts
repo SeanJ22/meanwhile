@@ -145,8 +145,7 @@ export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate:
   const contract: GeneralizedCivicExtractionContract = { ...plan.contract, sourceScope, extraction, verification: { required: true, authorities } };
   assertGeneralizedScope(contract, primary);
   if (unmapped) {
-    return { contract, primary, unresolved: ["EXTRACTION_BY_QUOTED_MODEL", ...(!authorities.length ? ["EXTERNAL_VERIFICATION_MISSING"] : []),
-      ...(plan.detective.length ? ["PARENT_DETECTIVE_BURDENS_RETAINED"] : [])], profileRoutes: [] as ObservedResearchRoute[],
+    return { contract, primary, unresolved: ["EXTRACTION_BY_QUOTED_MODEL", ...(!authorities.length ? ["EXTERNAL_VERIFICATION_MISSING"] : [])], profileRoutes: [] as ObservedResearchRoute[],
       proposalHash: fingerprint([canonicalJson(contract), primary.contentHash]) };
   }
   // These local replay IDs are not Attempts and are never written as worker
@@ -173,8 +172,7 @@ export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate:
   const verifiedIds = new Set(checks.flatMap(check => check.verifiedRecordIds ?? []).filter(id => !contradictedIds.has(id)));
   const rosterUnverified = contract.recordClass === "OFFICIAL_ROSTER" ? replay.records.filter(record => !verifiedIds.has(record.id)).length : 0;
   const unresolved = [...(!authorities.length ? ["EXTERNAL_VERIFICATION_MISSING"] : []),
-    ...(rosterUnverified ? [`UNVERIFIED_ROSTER_MEMBERS:${rosterUnverified}`] : []),
-    ...(plan.detective.length ? ["PARENT_DETECTIVE_BURDENS_RETAINED"] : [])];
+    ...(rosterUnverified ? [`UNVERIFIED_ROSTER_MEMBERS:${rosterUnverified}`] : [])];
   // A verified source row can itself point to independent official profile
   // pages. The route is grounded in the exact href span; it is an acquisition
   // instruction, never authority evidence or a pre-approved comparison.

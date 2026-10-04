@@ -1,3 +1,4 @@
+import { seedMeasureRecords } from "../../ballot/measure-records.ts";
 import type { BallotSet, BallotSource } from "../../ballot/types.ts";
 import { curatedCoverageNotes } from "../../ballot/coverage-notes.ts";
 import { validateBallotFile } from "../ballot-nj-morris/index.ts";
@@ -77,7 +78,11 @@ export function curatedBallotSource(name: string): BallotSource {
       const notes = curatedCoverageNotes(name, parsed as { coverageNotes?: unknown; scopedCoverageNotes?: unknown });
       const state = entry.state();
       const authorityNote = ballotFreshnessNote(state, "this ballot");
+      const projection = state.kind === "PROMOTED" || state.kind === "BOOTSTRAP" ? state.value : null;
+      const seeded = seedMeasureRecords(parsed, projection && name === "ballot-az-pima"
+        ? (projection as AzBallotProjection).measureAnalyses.analyses : []);
       return {
+        measureRecords: seeded.measureRecords,
         election: parsed.election,
         contests: parsed.contests,
         candidacies: parsed.candidacies,

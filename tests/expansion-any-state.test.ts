@@ -364,7 +364,8 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   const missingFamilies = created.filter(o => !o.id.startsWith(MEETINGS_DISCOVERY_NAMESPACE));
   assert.equal(missingFamilies.length, n * 7);
   assert.equal(missingFamilies.filter(o => o.autonomousPlan?.contract.recordClass === "OFFICIAL_BOARD_DIRECTORY").length, n);
-  assert.equal(missingFamilies.filter(o => o.autonomousPlan?.publication?.contractId === "official-filings").length, n * 2, "candidate and finance filing work both reach their verified-fact publisher");
+  assert.equal(missingFamilies.filter(o => o.autonomousPlan?.publication?.contractId === "official-filings").length, n, "finance filing work reaches its verified-fact publisher");
+  assert.equal(missingFamilies.filter(o => o.autonomousPlan?.publication?.contractId === "ballot-contests" && o.autonomousPlan.contract.recordClass === "BALLOT_CONTEST").length, n, "candidate lists reach the whole-contest publisher");
   assert.equal(missingFamilies.filter(o => o.autonomousPlan?.publication?.contractId === "everyday-routing").length, n);
   assert.equal(missingFamilies.filter(o => o.autonomousPlan?.publication?.contractId === "ballot-navigation").length, n);
   assert.equal(missingFamilies.filter(o => o.autonomousPlan?.publication?.contractId === "comment-access").length, n, "every mapped body owes its own verified participation rules");

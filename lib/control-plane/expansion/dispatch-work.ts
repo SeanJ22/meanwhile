@@ -27,9 +27,10 @@ import { createWorkItem } from "../work-item.ts";
 import { registerWorkItem } from "../repository/coordinator.ts";
 import type { ResolvedScope } from "./membership.ts";
 import { buildPlaceOwedList, type PlaceOwedItem } from "../../coverage/place-owed.ts";
+import { placePercent } from "../../coverage/place-measures.ts";
 import { readHeldPlaceCapture } from "../../civic-data/held-place-capture.ts";
 import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
-import { expansionScopesOf, VERSION_PREFIX } from "./scopes.ts";
+import { expansionScopesOf, VERSION_PREFIX, type ExpansionScopeDecision } from "./scopes.ts";
 import { resolveScopes } from "./runner-load.ts";
 import { loadPublishedAreaLookupState } from "../../census-geography/area-lookup.ts";
 import { declaredWorkMembers } from "./declared-work-scope.ts";
@@ -40,7 +41,7 @@ import { readPlaceStandingWork } from "../repository/pg-store.ts";
 export interface PlaceWorkReading {
   readonly key: string;
   readonly receiptId: string;
-  readonly items: readonly Pick<PlaceOwedItem, "state">[];
+  readonly items: readonly Pick<PlaceOwedItem, "state" | "checklistId">[];
 }
 
 /** Order the existing place capture rows; this creates no score or policy store. */
@@ -64,8 +65,8 @@ export function placeWorkReadings(config: unknown, places: readonly PlaceWorkRea
     if (!previous || Date.parse(target.setAt) >= Date.parse(previous.setAt)) targets.set(key, target as { goalPercent: number; setAt: string });
   }
   const readings = places.map(place => {
-    const resolved = place.items.filter(item => item.state === "published" || item.state === "unpublished").length;
-    const percent = place.items.length ? resolved / place.items.length * 100 : 0;
+    // The same percent Admin and the national list show, so the runner's order matches what Sean reads.
+    const percent = placePercent(place.items) ?? 0;
     const target = targets.get(placeKey(place.key));
     return { ...place, percent, target: target && percent < target.goalPercent ? target : null };
   });
@@ -84,6 +85,17 @@ export async function orderNationalPlaceWork(repos: ControlPlaneRepositories, zi
   return (await nationalPlaceWorkReading(repos, zips, now)).ordered;
 }
 
+/**
+ * A mission's owed list, kept for a few minutes per decision. A whole-state mission spans thousands of divisions, so each
+ * pass rebuilds only the scopes whose decision changed or whose reading went stale; the rest reuse their last owed list.
+ */
+const READING_MEMO_MS = 5 * 60_000;
+const READING_MEMO_MAX = 32;
+const readingMemo = new Map<string, { readonly at: number; readonly items: PlaceOwedItem[] }>();
+const memoKeyOf = (decision: ExpansionScopeDecision): string =>
+  [decision.receiptId, decision.latestDecisionReceiptId ?? "", decision.decidedAt, decision.geography.type, decision.geography.geoid].join("|");
+export function clearPlaceReadingMemo(): void { readingMemo.clear(); }
+
 /** Due admission and process ordering share the owner's target and held facts. */
 export async function nationalPlaceWorkReading(repos: ControlPlaneRepositories, zips: readonly string[], now: string) {
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
@@ -95,7 +107,14 @@ export async function nationalPlaceWorkReading(repos: ControlPlaneRepositories, 
   const scopes = resolved.scopes.filter(scope => scope.kind === "RESOLVED" && zips.some(zip => scope.zctas.has(zip)) ||
     scope.kind === "UNRESOLVED" && scope.decision.geography.type === "zcta" && zips.includes(scope.decision.geography.geoid));
   const selectedZips = new Set(zips);
-  const scopeZips = [...new Set([...zips, ...scopes.flatMap(scope => scope.kind === "RESOLVED" ? [...scope.zctas] : [])])];
+  const nowMs = Date.parse(now);
+  const remembered = (scope: (typeof scopes)[number]) => {
+    const hit = readingMemo.get(memoKeyOf(scope.decision));
+    return hit !== undefined && nowMs - hit.at >= 0 && nowMs - hit.at < READING_MEMO_MS ? hit : null;
+  };
+  // Only scopes without a fresh owed list are read again; a changed decision has a new key and so rebuilds alone.
+  const rebuilt = scopes.filter(scope => remembered(scope) === null);
+  const scopeZips = [...new Set([...zips, ...rebuilt.flatMap(scope => scope.kind === "RESOLVED" ? [...scope.zctas] : [])])];
   // A selected ZIP can name a whole district. Keep that district's denominator
   // and read its actual ZIPs before resolving shared standing work and facts.
   if (scopeZips.some(zip => !selectedZips.has(zip))) lookup = await loadPublishedAreaLookupState(scopeZips);
@@ -118,6 +137,7 @@ export async function nationalPlaceWorkReading(repos: ControlPlaneRepositories, 
     const selected = scope.kind === "RESOLVED" ? scope.zctas :
       scope.decision.geography.type === "zcta" ? new Set([scope.decision.geography.geoid]) : new Set<string>();
     inScope.set(receiptId, selected);
+    if (remembered(scope) !== null) continue;
     const divisions = new Set<string>();
     for (const subject of members.get(scope.decision.key) ?? []) {
       for (const id of bySubject.get(subject)?.scopeDivisions ?? []) if (id.startsWith("ocd-division/")) divisions.add(id);
@@ -137,11 +157,21 @@ export async function nationalPlaceWorkReading(repos: ControlPlaneRepositories, 
   }
   const divisionIds = [...new Set([...divisionsByReceipt.values()].flatMap(ids => [...ids]))];
   const capture = divisionIds.length ? await readHeldPlaceCapture(divisionIds, { now, bypassCache: true }) : { subjects: [], held: [] };
+  const itemsOf = (scope: (typeof scopes)[number]): PlaceOwedItem[] => {
+    const hit = remembered(scope);
+    if (hit !== null) return hit.items;
+    const items = buildPlaceOwedList({ divisions: [...divisionsByReceipt.get(scope.decision.receiptId)!].map(id => ({ id, label: id })),
+      subjects: capture.subjects, held: capture.held, now, zips: [...(inScope.get(scope.decision.receiptId) ?? [])] });
+    readingMemo.set(memoKeyOf(scope.decision), { at: nowMs, items });
+    while (readingMemo.size > READING_MEMO_MAX) readingMemo.delete(readingMemo.keys().next().value as string);
+    return items;
+  };
   const readings = placeWorkReadings(row?.value, scopes.map(scope => ({
-    key: `${scope.decision.geography.stateAbbr.toLowerCase()}.${VERSION_PREFIX[scope.decision.geography.type]}.${scope.decision.geography.geoid.toLowerCase()}`,
+    // A whole-state mission is ordered and targeted under the state's own place key.
+    key: scope.decision.geography.type === "state" ? `st:${scope.decision.geography.stateAbbr.toLowerCase()}`
+      : `${scope.decision.geography.stateAbbr.toLowerCase()}.${VERSION_PREFIX[scope.decision.geography.type]}.${scope.decision.geography.geoid.toLowerCase()}`,
     receiptId: scope.decision.receiptId,
-    items: buildPlaceOwedList({ divisions: [...divisionsByReceipt.get(scope.decision.receiptId)!].map(id => ({ id, label: id })),
-      subjects: capture.subjects, held: capture.held, now }),
+    items: itemsOf(scope),
   })));
   const rank = (zip: string) => readings.findIndex(place => inScope.get(place.receiptId)?.has(zip));
   return { ordered: [...zips].sort((a, b) => (rank(a) < 0 ? Infinity : rank(a)) - (rank(b) < 0 ? Infinity : rank(b))),
@@ -258,6 +288,12 @@ export interface DispatchWorkWorld {
   readonly censusUnitsByState?: ReadonlyMap<string, number> | null;
   /** Registries the promoted bundle carries that the runtime's reader refuses, by lower-case state, with the reason. */
   readonly refusedRegistries?: ReadonlyMap<string, string>;
+  /**
+   * CH-04: the information families already live for a government, from the held place capture
+   * (`liveFamiliesByGovernment`). A government listed here gets no paid discovery Scout for that
+   * family; its refresh and comparison stay on their existing routes. Absent means not read.
+   */
+  readonly liveFamilies?: ReadonlyMap<string, ReadonlySet<string>>;
 }
 
 /* ---------------------------------------------------------- requirements */
@@ -302,11 +338,12 @@ export function requirementsFor(
   need: MeetingsDiscoveryNeed | null,
   meetingPartitions: MeetingPartitionOwnership,
   discoverMissingFamilies = false,
+  liveFamilies?: ReadonlySet<string>,
 ): RequirementInstance[] {
   const out: RequirementInstance[] = [];
   const from = registrySourceOf(reg);
   const bodyId = meetingPartitions.bodyIdFor ? meetingPartitions.bodyIdFor(j.id) : j.bodyId ?? null;
-  for (const r of jurisdictionRequirements(reg, j, meetingPartitions, discoverMissingFamilies)) {
+  for (const r of jurisdictionRequirements(reg, j, meetingPartitions, discoverMissingFamilies, liveFamilies)) {
     const autonomousPlan = discoverMissingFamilies ? r.route.routeId === "coverage-discovery:body-directory"
       ? bodyDirectoryDiscoveryPlan(j, bodyId) : r.source.recordClass === "PUBLIC_COMMENT"
       ? publicCommentDiscoveryPlan(j, bodyId) : jurisdictionDiscoveryPlan(j, r.source, r.route.routeId, bodyId) : null;
@@ -633,7 +670,7 @@ export function planDispatchWork(input: {
     const instances: RequirementInstance[] = [];
     for (const { reg, jurisdiction } of units.placed) {
       instances.push(...requirementsFor(reg, jurisdiction, needOf(reg, jurisdiction.id), world.meetingPartitions,
-        target.kind === "SCOPE" && target.sourceWorkVersion === 1));
+        target.kind === "SCOPE" && target.sourceWorkVersion === 1, world.liveFamilies?.get(jurisdiction.id)));
     }
     /* MW-001: does the row already record this Send, in any relation? */
     const recorded = (row: DurableRowFacts | undefined): boolean => (row?.assignments ?? []).some((a) => a.assignmentKey === target.key && a.ref === target.ref);

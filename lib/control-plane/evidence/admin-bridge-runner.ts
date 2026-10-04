@@ -2,7 +2,9 @@ import { readFile, writeFile, rename, mkdir } from "node:fs/promises";
 import { dirname } from "node:path";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
 import type { WorkItem } from "../work-item.ts";
-import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
+import { isFundedHunt } from "../scheduler/hunt-continuation.ts";
+import { expansionScopesOf } from "../expansion/scopes.ts";
+import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
 import { adminEvidenceKey, mirrorOriginalCapture, type AdminEvidenceRemote } from "./admin-bridge.ts";
 import { NetlifyAdminEvidenceRemote } from "./admin-bridge-netlify.ts";
 import { findHeldCapture, readHeldBytes } from "./read-only-vault.ts";
@@ -18,10 +20,11 @@ export interface AdminMirrorReport {
 
 type Lane = "original" | "recent" | "history";
 const LANES: readonly Lane[] = ["original", "recent", "history"];
-// The exact active hunt and new captures receive more turns, while history
+// Funded hunts and new captures receive more turns, while history
 // still advances every six opportunities even under continuous new inflow.
 const TURN_ORDER: readonly Lane[] = ["original", "recent", "original", "history", "original", "recent"];
 const VERIFIED_RECHECK_MS = 7 * 24 * 60 * 60 * 1000;
+export const ADMIN_MIRROR_BUDGET_MS = 60_000;
 interface MirrorCursor {
   readonly version: 2;
   nextByLane: Record<Lane, number>;
@@ -33,17 +36,18 @@ const freshCursor = (): MirrorCursor => ({
   version: 2, nextByLane: { original: 0, recent: 0, history: 0 }, turn: 0, verifiedAt: Object.create(null),
 });
 
-function isOriginalHunt(work: WorkItem | undefined): boolean {
+/** Work opened by a funded Send's instruction gets the first lane, whichever Send it is. */
+function isFundedHuntWork(work: WorkItem | undefined, fundedReceipts: ReadonlySet<string>): boolean {
   if (!work || work.project !== "freshness") return false;
-  return work.autonomousPlan?.ownerInstructions?.includes(ORIGINAL_LIFETIME_HUNT.receiptId) === true ||
-    work.manualSourceGap?.instructionReceipt === ORIGINAL_LIFETIME_HUNT.receiptId;
+  return work.autonomousPlan?.ownerInstructions?.some(receipt => fundedReceipts.has(receipt)) === true ||
+    (work.manualSourceGap?.instructionReceipt !== undefined && fundedReceipts.has(work.manualSourceGap.instructionReceipt));
 }
 
-function partition(records: readonly ArtifactRecord[], owners: ReadonlyMap<string, WorkItem>, nowMs: number): Record<Lane, ArtifactRecord[]> {
+function partition(records: readonly ArtifactRecord[], owners: ReadonlyMap<string, WorkItem>, nowMs: number, fundedReceipts: ReadonlySet<string>): Record<Lane, ArtifactRecord[]> {
   const lanes: Record<Lane, ArtifactRecord[]> = { original: [], recent: [], history: [] };
   for (const record of records) {
     if (record.tier !== "RAW" || record.partial) continue;
-    const lane: Lane = isOriginalHunt(owners.get(record.workItemId)) ? "original" :
+    const lane: Lane = isFundedHuntWork(owners.get(record.workItemId), fundedReceipts) ? "original" :
       Date.parse(record.recordedAt) >= nowMs - 24 * 60 * 60 * 1000 ? "recent" : "history";
     lanes[lane].push(record);
   }
@@ -105,14 +109,34 @@ export async function runAdminEvidenceMirror(input: {
     ({ state, examined: 0, copied: 0, alreadyVerified: 0, refused: 0, failures: [] });
   if (env.WTP_ADMIN_EVIDENCE_MIRROR_ENABLED !== "1") return empty("DISABLED");
   if (!input.remote && (!env.NETLIFY_SITE_ID || !env.NETLIFY_BLOBS_TOKEN)) return empty("NOT_CONFIGURED");
-  const remote = input.remote ?? new NetlifyAdminEvidenceRemote({ siteID: env.NETLIFY_SITE_ID, token: env.NETLIFY_BLOBS_TOKEN });
-  const [records, attempts, workItems] = await Promise.all([
+  const deadlineMs = Math.min(input.deadlineMs ?? Number.POSITIVE_INFINITY, Date.now() + ADMIN_MIRROR_BUDGET_MS);
+  let expired = false;
+  const beforeDeadline = async <T>(read: () => Promise<T>): Promise<T> => {
+    const remaining = deadlineMs - Date.now();
+    if (expired || remaining <= 0) throw new Error("ADMIN_EVIDENCE_MIRROR_DEADLINE");
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    try {
+      return await Promise.race([read(), new Promise<never>((_, reject) => {
+        timer = setTimeout(() => { expired = true; reject(new Error("ADMIN_EVIDENCE_MIRROR_DEADLINE")); }, remaining);
+      })]);
+    } finally { if (timer) clearTimeout(timer); }
+  };
+  const source = input.remote ?? new NetlifyAdminEvidenceRemote({ siteID: env.NETLIFY_SITE_ID, token: env.NETLIFY_BLOBS_TOKEN });
+  // An immutable create may settle after timeout. Its next ordinary turn reads
+  // and verifies the same key; no timed-out operation is counted as a copy.
+  const remote: AdminEvidenceRemote = {
+    read: key => beforeDeadline(() => source.read(key)),
+    create: (key, blob) => beforeDeadline(() => source.create(key, blob)),
+  };
+  const [records, attempts, workItems, config] = await beforeDeadline(() => Promise.all([
     input.repos.artifacts.readAll(), input.repos.attempts.list(), input.repos.workItems.list(),
-  ]);
+    input.repos.adminConfig.read(ADMIN_CONFIG_ID),
+  ]));
+  const fundedReceipts = new Set(expansionScopesOf(config?.value ?? null).scopes.filter(isFundedHunt).map(scope => scope.receiptId));
   const nowMs = input.nowMs ?? Date.now();
   const byAttempt = new Map(attempts.map(row => [row.id, row.value]));
   const byWorkItem = new Map(workItems.map(row => [row.id, row.value]));
-  const lanes = partition(records, byWorkItem, nowMs);
+  const lanes = partition(records, byWorkItem, nowMs, fundedReceipts);
   const total = LANES.reduce((sum, lane) => sum + lanes[lane].length, 0);
   if (!total) return empty("RAN");
   const cursor = await readCursor(input.cursorPath);
@@ -122,7 +146,7 @@ export async function runAdminEvidenceMirror(input: {
   const failures: string[] = [];
   const perLaneVisited: Record<Lane, number> = { original: 0, recent: 0, history: 0 };
   const limit = input.maxExamined ?? Number.POSITIVE_INFINITY;
-  while (visited < total && examined < limit && (input.deadlineMs === undefined || Date.now() < input.deadlineMs - 500)) {
+  while (visited < total && examined < limit && Date.now() < deadlineMs - 500) {
     const lane = TURN_ORDER[cursor.turn % TURN_ORDER.length];
     cursor.turn = (cursor.turn + 1) % TURN_ORDER.length;
     const group = lanes[lane];
@@ -140,9 +164,10 @@ export async function runAdminEvidenceMirror(input: {
       const attempt = byAttempt.get(record.attemptId);
       const owner = byWorkItem.get(record.workItemId);
       if (!attempt || !owner || owner.project !== "freshness") throw new Error("ATTRIBUTION_NOT_HELD");
-      const held = await findHeldCapture(input.vaultRoot, record);
+      const held = await beforeDeadline(() => findHeldCapture(input.vaultRoot, record));
       if (!held) throw new Error("ATTRIBUTION_NOT_HELD");
-      const outcome = await mirrorOriginalCapture({ record, attempt, held, bytes: await readHeldBytes(held), remote });
+      const bytes = await beforeDeadline(() => readHeldBytes(held));
+      const outcome = await mirrorOriginalCapture({ record, attempt, held, bytes, remote });
       if (outcome === "COPIED") copied++; else alreadyVerified++;
       cursor.verifiedAt[key] = nowMs;
     } catch (error) {
@@ -151,6 +176,7 @@ export async function runAdminEvidenceMirror(input: {
     }
     // Persist each completed remote result before the next operation may block.
     await saveCursor(input.cursorPath, cursor);
+    if (expired) break;
   }
   await saveCursor(input.cursorPath, cursor);
   return { state: "RAN", examined, copied, alreadyVerified, refused, failures };

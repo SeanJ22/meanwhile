@@ -1,6 +1,7 @@
 import { freemem, platform, tmpdir } from "node:os";
-import { existsSync, openSync, closeSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
-import { execFileSync } from "node:child_process";
+import { existsSync, openSync, closeSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
+import { readFile, readdir } from "node:fs/promises";
+import { execFile } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { join } from "node:path";
 
@@ -40,22 +41,22 @@ export function availableWorkerMemoryBytes(): number {
 }
 
 export interface WorkerProcessMemory { readonly pid: number; readonly parentPid: number; readonly rss: number }
-function hostProcesses(): readonly WorkerProcessMemory[] {
+async function hostProcesses(): Promise<readonly WorkerProcessMemory[]> {
   const rows: WorkerProcessMemory[] = [];
   try {
     if (platform() === "linux") {
-      for (const name of readdirSync("/proc")) {
-        if (!/^\d+$/.test(name)) continue;
+      await Promise.all((await readdir("/proc")).filter(name => /^\d+$/.test(name)).map(async name => {
         try {
-          const status = readFileSync(`/proc/${name}/status`, "utf8");
+          const status = await readFile(`/proc/${name}/status`, "utf8");
           rows.push({ pid: Number(name), parentPid: Number(/^PPid:\s+(\d+)/m.exec(status)?.[1] ?? 0),
             rss: Number(/^VmRSS:\s+(\d+)/m.exec(status)?.[1] ?? 0) * 1024 });
         } catch { /* A process can exit while the host is sampled. */ }
-      }
+      }));
     } else if (platform() === "win32") {
-      const source = execFileSync("powershell.exe", ["-NoProfile", "-Command",
+      const source = await new Promise<string>((resolve, reject) => execFile("powershell.exe", ["-NoProfile", "-Command",
         "Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,WorkingSetSize | ConvertTo-Json -Compress"],
-      { encoding: "utf8", windowsHide: true, timeout: 5000, maxBuffer: 4 * MIB });
+      { encoding: "utf8", windowsHide: true, timeout: 5000, maxBuffer: 4 * MIB },
+      (error, stdout) => { if (error) reject(error); else resolve(stdout); }));
       const values = JSON.parse(source) as { ProcessId: number; ParentProcessId: number; WorkingSetSize: string | number }[];
       for (const row of values) rows.push({ pid: row.ProcessId, parentPid: row.ParentProcessId, rss: Number(row.WorkingSetSize) });
     }
@@ -82,14 +83,14 @@ function alive(pid: number): boolean {
 interface MemoryReservation { id: string; owner: number; pid: number | null; peak: number; entry: string }
 interface HostState { reservations: MemoryReservation[]; parents: { pid: number; peak: number }[] }
 export interface WorkerMemoryHost {
-  transact(operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void, sampleProcesses?: boolean): boolean;
+  transact(operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void, sampleProcesses?: boolean): boolean | Promise<boolean>;
 }
 /** Transient host reservations, shared by independent research/routine parents.
  * No work, receipt, spending or publication state is written here. */
-export function workerMemoryHost(input: { readonly shared?: boolean; readonly processes?: () => readonly WorkerProcessMemory[] } = {}): WorkerMemoryHost {
+export function workerMemoryHost(input: { readonly shared?: boolean; readonly processes?: () => readonly WorkerProcessMemory[] | PromiseLike<readonly WorkerProcessMemory[]> } = {}): WorkerMemoryHost {
   let local: HostState = { reservations: [], parents: [] };
   const sample = input.processes ?? hostProcesses;
-  return { transact: (operation, sampleProcesses = true) => {
+  const apply = (operation: Parameters<WorkerMemoryHost["transact"]>[0], rows: readonly WorkerProcessMemory[]): boolean => {
     const path = join(tmpdir(), "meanwhile-worker-memory.json");
     const lock = join(tmpdir(), "meanwhile-worker-memory.json.lock");
     const temporary = join(tmpdir(), "meanwhile-worker-memory.json.tmp");
@@ -108,7 +109,7 @@ export function workerMemoryHost(input: { readonly shared?: boolean; readonly pr
       // A dead parent cannot retain future growth. A surviving job tree still can.
       local.parents = local.parents.filter(parent => alive(parent.pid));
       local.reservations = local.reservations.filter(row => alive(row.owner) || (row.pid !== null && alive(row.pid)));
-      operation(local, sampleProcesses ? sample() : []);
+      operation(local, rows);
       if (input.shared) {
         writeFileSync(temporary, JSON.stringify(local)); renameSync(temporary, path);
       }
@@ -117,6 +118,12 @@ export function workerMemoryHost(input: { readonly shared?: boolean; readonly pr
       if (descriptor !== undefined) closeSync(descriptor);
       if (input.shared) unlinkSync(lock);
     }
+  };
+  return { transact: (operation, sampleProcesses = true) => {
+    if (!sampleProcesses) return apply(operation, []);
+    const rows = sample();
+    // Sampling may wait on the OS; the shared lock only protects the state update.
+    return Array.isArray(rows) ? apply(operation, rows) : Promise.resolve(rows).then(values => apply(operation, values));
   } };
 }
 const sharedHost = workerMemoryHost({ shared: true });
@@ -151,6 +158,7 @@ export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProce
 export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
   let active = 0;
   let drainScheduled = false;
+  let draining = false;
   let wake: ReturnType<typeof setTimeout> | undefined;
   const available = memory.availableBytes ?? availableWorkerMemoryBytes;
   const headroom = memory.headroomBytes ?? WORKER_MEMORY_HEADROOM_MIB * MIB;
@@ -160,19 +168,19 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     return WORKER_ENTRY_PEAK_MIB[kind]! * MIB;
   });
   const waiting: { entry: string; deadline: number; resolve: (release: WorkerMemoryRelease) => void; reject: (error: Error) => void }[] = [];
-  const mutate = (operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void, sampleProcesses = false): void => {
+  const mutate = (operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void): void => {
     try {
-      if (!host.transact(operation, sampleProcesses)) setTimeout(() => mutate(operation, sampleProcesses), 50).unref();
-    } catch { setTimeout(() => mutate(operation, sampleProcesses), 1000).unref(); }
+      void Promise.resolve(host.transact(operation, false)).then(applied => {
+        if (!applied) setTimeout(() => mutate(operation), 50).unref();
+      }, () => { setTimeout(() => mutate(operation), 1000).unref(); });
+    } catch { setTimeout(() => mutate(operation), 1000).unref(); }
   };
-  if ((memory.parentPeakBytes ?? 0) > 0) mutate((state, rows) => {
-    if (state.reservations.some(row => row.owner !== process.pid && row.pid !== null && descendants(row.pid, rows).has(process.pid))) return;
+  if ((memory.parentPeakBytes ?? 0) > 0) mutate(state => {
     const parent = state.parents.find(row => row.pid === process.pid);
     if (parent) parent.peak = Math.max(parent.peak, memory.parentPeakBytes!);
     else state.parents.push({ pid: process.pid, peak: memory.parentPeakBytes! });
-  }, true);
-  const drain = (): void => {
-    clearTimeout(wake); wake = undefined;
+  });
+  const expire = (): void => {
     const now = Date.now();
     for (let index = waiting.length - 1; index >= 0; index--) {
       if (memory.admissionsOpen?.() === false || now >= waiting[index]!.deadline) {
@@ -180,13 +188,29 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
         item!.reject(new Error(memory.admissionsOpen?.() === false ? "RUNTIME_RELEASE_DRAINED: queued work remains owed" : "WORKER_MEMORY_DEADLINE: memory wait deferred; work remains owed"));
       }
     }
+  };
+  const scheduleWake = (): void => {
+    clearTimeout(wake); wake = undefined;
+    if (waiting.length) wake = setTimeout(() => { void drain(); }, Math.max(1, Math.min(1000, ...waiting.map(item => item.deadline - Date.now()))));
+  };
+  const drain = async (): Promise<void> => {
+    expire();
     const maximum = capacity();
     if (!Number.isSafeInteger(maximum) || maximum <= 0) {
       for (const item of waiting.splice(0)) item.reject(new Error("LEASE_WORKER_CAPACITY_INVALID"));
+      scheduleWake();
       return;
     }
-    if (waiting.length && active < maximum) {
-      try { host.transact((state, rows) => {
+    if (draining || !waiting.length || active >= maximum) { scheduleWake(); return; }
+    draining = true;
+    scheduleWake();
+    try { await host.transact((state, rows) => {
+        expire();
+        const maximum = capacity();
+        if (!Number.isSafeInteger(maximum) || maximum <= 0) {
+          for (const item of waiting.splice(0)) item.reject(new Error("LEASE_WORKER_CAPACITY_INVALID"));
+          return;
+        }
         const current = new Map(rows.map(row => [row.pid, row.rss]));
         const trees = new Map<number, Set<number>>();
         const idsFor = (pid: number): Set<number> => {
@@ -194,7 +218,8 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
         };
         const rssFor = (pid: number | null): number => pid === null ? 0 : rows.reduce((sum, row) => idsFor(pid).has(row.pid) ? sum + row.rss : sum, 0);
         const inherited = state.reservations.find(row => row.owner !== process.pid && row.pid !== null && idsFor(row.pid).has(process.pid));
-        if (!inherited) {
+        if (inherited) state.parents = state.parents.filter(parent => parent.pid !== process.pid);
+        else {
           const parent = state.parents.find(row => row.pid === process.pid);
           if (parent) parent.peak = Math.max(parent.peak, memory.parentPeakBytes ?? 0);
           else state.parents.push({ pid: process.pid, peak: memory.parentPeakBytes ?? 0 });
@@ -231,14 +256,12 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
         }
       }); } catch (error) {
         console.warn(`Host memory admission unavailable; queued work keeps its deadline: ${error instanceof Error ? error.message : String(error)}`);
-      }
-    }
-    if (waiting.length) wake = setTimeout(drain, Math.max(1, Math.min(1000, ...waiting.map(item => item.deadline - Date.now()))));
+    } finally { draining = false; scheduleWake(); }
   };
   const requestDrain = (): void => {
     if (drainScheduled) return;
     drainScheduled = true;
-    queueMicrotask(() => { drainScheduled = false; drain(); });
+    queueMicrotask(() => { drainScheduled = false; void drain(); });
   };
   return { acquire: (entry = "lease-worker.ts", deadlineMs = Date.now() + (memory.waitMs ?? 120_000)) =>
     new Promise<WorkerMemoryRelease>((resolve, reject) => { waiting.push({ entry, deadline: deadlineMs, resolve, reject }); requestDrain(); }) };

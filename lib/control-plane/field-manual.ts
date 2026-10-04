@@ -44,9 +44,13 @@
  * argument, so this module still imports nothing that touches a store.
  */
 
+import type { FixMapRow } from "../method/fix-map.ts";
+import { hereNote, mergePlaceResults, methodHere, placeResultsOf, type PlaceResult } from "./field-manual-places.ts";
 import { createHash } from "node:crypto";
 
 import type { ControlPlaneRepositories } from "./repository/types.ts";
+import { flushBankWriteFailures, recordBankWriteFailure } from "./bank-write-health.ts";
+import { jobCostProfiles } from "./bank-job-cost.ts";
 
 /** Every worker role whose learnings the manual carries. SHARED = every role reads it. */
 export const FIELD_MANUAL_ROLES = [
@@ -84,7 +88,14 @@ export interface FieldManualEntry {
   readonly recordClasses: readonly string[];
   /** Vendor platforms this is about (e.g. "legistar", "civicplus"). Empty = any. */
   readonly platforms: readonly string[];
+  /** Place scope. Division prefixes apply to their descendants; body IDs are exact. */
+  readonly ocdIds?: readonly string[];
+  readonly bodyIds?: readonly string[];
+  readonly foundBy?: "SCOUT" | "DETECTIVE";
+  /** The latest result anywhere, for display. What happened in each place is `placeResults` (DP-22). */
   readonly outcome: FieldManualOutcome;
+  /** One result per place, so a result in one place never overwrites another's. Absent on entries written before DP-22. */
+  readonly placeResults?: readonly PlaceResult[];
   /** The door itself, when the entry is one. */
   readonly url: string | null;
   /** Which original store this came from (path or table name). Provenance, never dropped. */
@@ -116,11 +127,30 @@ function lower(values: readonly string[]): string[] {
   return [...new Set(values.map((v) => v.trim().toLowerCase()).filter((v) => v !== ""))].sort();
 }
 
+/** Resolve scope from existing investigation/route payloads as well as new envelopes. */
+export function fieldManualPlaceHints(payload: unknown): { states: string[]; ocdIds: string[]; bodyIds: string[] } {
+  const p = payload && typeof payload === "object" ? payload as Record<string, unknown> : {};
+  const outcomes = Array.isArray(p.outcomes) ? p.outcomes : [];
+  const subjects = [p.subjectId, p.jurisdiction, ...outcomes.map(value => value && typeof value === "object" ? (value as Record<string, unknown>).jurisdiction : null)]
+    .filter((value): value is string => typeof value === "string");
+  const ocdIds = lower(subjects.filter(value => value.startsWith("ocd-division/")).map(value => value.split("#")[0]!));
+  const states = lower(subjects.flatMap(value => {
+    const state = /(?:state:|^)([a-z]{2})(?:\b|:)/i.exec(value)?.[1];
+    return state ? [state] : [];
+  }));
+  const bodyIds = [...new Set([p.bodyId, ...(Array.isArray(p.bodyIds) ? p.bodyIds : [])].filter((value): value is string => typeof value === "string"))];
+  return { states, ocdIds, bodyIds };
+}
+
 /** Normalise an entry's hint arrays so projection and dedup are order-insensitive. */
 export function normalizeEntry(entry: FieldManualEntry): FieldManualEntry {
+  const place = ["INVESTIGATION_RESULT", "ROUTE", "SCOUT_DISCOVERY", "SOURCE_DEAD_END"].includes(entry.kind)
+    ? fieldManualPlaceHints(entry.payload) : { states: [], ocdIds: [], bodyIds: [] };
   return {
     ...entry,
-    states: lower(entry.states),
+    states: lower([...entry.states, ...place.states]),
+    ...((entry.ocdIds || place.ocdIds.length) ? { ocdIds: lower([...(entry.ocdIds ?? []), ...place.ocdIds]) } : {}),
+    ...((entry.bodyIds || place.bodyIds.length) ? { bodyIds: [...new Set([...(entry.bodyIds ?? []), ...place.bodyIds])].sort() } : {}),
     recordClasses: lower(entry.recordClasses),
     platforms: lower(entry.platforms),
     summary: entry.summary.replace(/\s+/g, " ").trim().slice(0, 320),
@@ -156,10 +186,22 @@ export function upsertEntries(
       states: lower([...prior.states, ...entry.states]),
       recordClasses: lower([...prior.recordClasses, ...entry.recordClasses]),
       platforms: lower([...prior.platforms, ...entry.platforms]),
+      ...((prior.ocdIds || entry.ocdIds) ? { ocdIds: lower([...(prior.ocdIds ?? []), ...(entry.ocdIds ?? [])]) } : {}),
+      ...((prior.bodyIds || entry.bodyIds) ? { bodyIds: [...new Set([...(prior.bodyIds ?? []), ...(entry.bodyIds ?? [])])].sort() } : {}),
       observedAt: nextAt >= priorAt ? entry.observedAt : prior.observedAt,
+      placeResults: mergePlaceResults(placeResultsOf(prior), placeResultsOf(entry)),
+      foundBy: prior.foundBy ?? entry.foundBy,
+      ...(entry.kind === "METHOD" && prior.kind === "METHOD" ? { payload: unionMethodReach(prior.payload, entry.payload, newerWins) } : {}),
     });
   }
+  for (const profile of jobCostProfiles([...byId.values()], incoming, now)) byId.set(profile.id, profile);
   return { formatVersion: 1, updatedOn: now, entries: [...byId.values()] };
+}
+
+function unionMethodReach(prior: unknown, next: unknown, newerWins: boolean): unknown {
+  const a = prior as Record<string, unknown>, b = next as Record<string, unknown>;
+  const union = (key: string) => [...new Set([...(Array.isArray(a?.[key]) ? a[key] : []), ...(Array.isArray(b?.[key]) ? b[key] : [])])].sort();
+  return { ...(newerWins ? b : a), places: union("places"), doorEntryIds: union("doorEntryIds") };
 }
 
 const OUTCOME_RANK: Readonly<Record<FieldManualOutcome, number>> = {
@@ -177,8 +219,15 @@ export interface FieldManualQuery {
   readonly state?: string;
   readonly recordClass?: string;
   readonly platform?: string;
+  readonly ocdIds?: readonly string[];
+  readonly bodyIds?: readonly string[];
   /** Hard cap on projected lines so a walk's context stays a cache-cheap projection, never the whole store. */
   readonly limit?: number;
+  /**
+   * The fix map's rows for the place this projection is for (DP-21). Given, each method line says whether it works
+   * here or is untried here, and a method that fails here is left out. Omitted, the projection is as it always was.
+   */
+  readonly fixMapRows?: readonly FixMapRow[];
 }
 
 export interface FieldManualProjection {
@@ -186,16 +235,35 @@ export interface FieldManualProjection {
   readonly lines: readonly string[];
   /** The entry ids offered — the "inherited branches" half of the RULING 63 pair. */
   readonly entryIds: readonly string[];
+  /** Methods left out because they fail in this place (DP-21); 0 when no fix map rows were given. */
+  readonly leftOutFailingHere?: number;
   /** How many entries matched before the limit; total how many the store holds. */
   readonly matched: number;
   readonly total: number;
 }
 
-function entryMatches(entry: FieldManualEntry, q: FieldManualQuery): boolean {
+function divisionApplies(scope: string, subject: string): boolean {
+  const place = subject.toLowerCase().split("#")[0]!;
+  return place === scope || place.startsWith(scope + "/");
+}
+
+export function fieldManualPlaceRank(entry: FieldManualEntry, query: FieldManualQuery): number {
+  if (query.bodyIds?.some(id => entry.bodyIds?.includes(id))) return 0;
+  if (query.ocdIds?.some(id => entry.ocdIds?.some(scope => divisionApplies(scope, id)))) return 1;
+  if (query.state && entry.states.includes(query.state.toLowerCase())) return 2;
+  return 3;
+}
+
+function entryMatches(raw: FieldManualEntry, q: FieldManualQuery): boolean {
+  // Old investigation rows also gain their recorded place scope on reads.
+  const entry = normalizeEntry(raw);
+  if (entry.kind === "JOB_COST") return false;
   if (q.role !== undefined && entry.role !== "SHARED" && entry.role !== q.role) return false;
   if (q.state !== undefined && entry.states.length > 0 && !entry.states.includes(q.state.toLowerCase())) return false;
   if (q.recordClass !== undefined && entry.recordClasses.length > 0 && !entry.recordClasses.includes(q.recordClass.toLowerCase())) return false;
   if (q.platform !== undefined && entry.platforms.length > 0 && !entry.platforms.includes(q.platform.toLowerCase())) return false;
+  if (q.ocdIds?.length && entry.ocdIds?.length && !q.ocdIds.some(id => entry.ocdIds!.some(scope => divisionApplies(scope, id)))) return false;
+  if (q.bodyIds?.length && entry.bodyIds?.length && !q.bodyIds.some(id => entry.bodyIds!.includes(id))) return false;
   return true;
 }
 
@@ -208,8 +276,10 @@ function entryMatches(entry: FieldManualEntry, q: FieldManualQuery): boolean {
  */
 export function projectFieldManual(store: FieldManualStore, query: FieldManualQuery = {}): FieldManualProjection {
   const limit = query.limit ?? 40;
-  const matched = store.entries.filter((e) => entryMatches(e, query));
+  const matched = store.entries.map(normalizeEntry).filter((e) => entryMatches(e, query));
   const ranked = [...matched].sort((a, b) => {
+    const place = query.ocdIds?.length || query.bodyIds?.length ? fieldManualPlaceRank(a, query) - fieldManualPlaceRank(b, query) : 0;
+    if (place !== 0) return place;
     const outcome = OUTCOME_RANK[a.outcome] - OUTCOME_RANK[b.outcome];
     if (outcome !== 0) return outcome;
     const aSpecific = query.state !== undefined && a.states.includes(query.state.toLowerCase()) ? 0 : 1;
@@ -219,10 +289,14 @@ export function projectFieldManual(store: FieldManualStore, query: FieldManualQu
     if (freshness !== 0) return freshness;
     return a.id.localeCompare(b.id);
   });
-  const chosen = ranked.slice(0, limit);
+  const rows = query.fixMapRows;
+  const here = new Map(rows === undefined ? [] : ranked.flatMap((e) => { const h = methodHere(e, rows); return h === null ? [] : [[e.id, h] as const]; }));
+  const open = rows === undefined ? ranked : ranked.filter((e) => here.get(e.id)?.status !== "FAILS");
+  const chosen = open.slice(0, limit);
   return {
-    lines: chosen.map((e) => fieldManualLine(e)),
+    lines: chosen.map((e) => fieldManualLine(e) + (here.has(e.id) ? hereNote(here.get(e.id)!) : "")),
     entryIds: chosen.map((e) => e.id),
+    ...(rows === undefined ? {} : { leftOutFailingHere: ranked.length - open.length }),
     matched: matched.length,
     total: store.entries.length,
   };
@@ -341,9 +415,13 @@ export async function writeFieldManual(
       const next = upsertEntries(current?.value ?? emptyFieldManual(), entries, now);
       if (current === null) await repos.fieldManual.put(FIELD_MANUAL_ID, next, now);
       else await repos.fieldManual.compareAndSet(FIELD_MANUAL_ID, current.revision, next, now);
+      await flushBankWriteFailures(repos, now);
       return { written: entries.length };
     } catch (error) {
-      if (attempt === 3) return { written: 0, error: error instanceof Error ? error.message : String(error) };
+      if (attempt === 3) {
+        await recordBankWriteFailure(repos, now);
+        return { written: 0, error: error instanceof Error ? error.message : String(error) };
+      }
     }
   }
   return { written: 0 };

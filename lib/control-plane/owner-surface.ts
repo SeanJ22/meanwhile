@@ -511,8 +511,7 @@ export interface OwnerDigestRecord {
     | FreshnessCycleOutcome
     | RoutineCivicDataSupervisorOutcome
     | IntakeRuntimeObservationOutcome
-    | MapTilerUsageCollectionOutcome
-    | MethodCandidateAuthorityAdoptionOutcome;
+    | MapTilerUsageCollectionOutcome;
 }
 
 /** Separate key in the existing log so task activity never replaces the runner's latest cycle digest. */
@@ -562,56 +561,6 @@ export interface MapTilerUsageCollectionOutcome {
     readonly trackedRuntimeWrites: 0;
     readonly gitWrites: 0;
     readonly softwareReleaseEvents: 0;
-  };
-}
-
-/**
- * The one-time, clean-code adoption of the method-candidate aggregate that was
- * imported during PDC.  The seven candidate rows are not repeated here: the
- * receipt binds their canonical aggregate hash, the immutable Git seed
- * evidence, and the exact clean verifier commit.  It lives in the owner digest
- * log Admin already reads, not in a second migration ledger.
- */
-export interface MethodCandidateAuthorityAdoptionOutcome {
-  readonly kind: "METHOD_CANDIDATE_AUTHORITY_ADOPTION";
-  readonly state: "ADOPTED";
-  readonly receiptId: string;
-  readonly startedAt: string;
-  readonly finishedAt: string;
-  readonly testedSha: string;
-  readonly authority: {
-    readonly repository: "cp_method_candidates";
-    readonly aggregateId: "live";
-    readonly aggregateRevision: 1;
-    readonly aggregateUpdatedAt: string;
-    readonly canonicalSha256: string;
-  };
-  readonly seedEvidence: {
-    readonly frozenBaseSha: string;
-    readonly trackedSourcePath: "data/method/candidates.json";
-    readonly sourceGitBlobSha1: string;
-    readonly sourceRawSha256: string;
-    readonly canonicalSha256: string;
-    readonly candidateCount: 7;
-    readonly lifecycleCounts: {
-      readonly PROPOSED: 0;
-      readonly VALIDATED: 7;
-      readonly ADMITTED: 0;
-      readonly REJECTED: 0;
-    };
-  };
-  readonly verifier: {
-    readonly codeSha: string;
-    readonly headEqualsCodeSha: true;
-    readonly cleanTree: true;
-    readonly detachedHead: true;
-    readonly originMainContainsHead: true;
-  };
-  readonly authorityBoundary: {
-    readonly canonicalAuthority: "CONTROL_PLANE_CP_METHOD_CANDIDATES";
-    readonly gitRole: "HISTORICAL_SEED_EVIDENCE_ONLY";
-    readonly trackedRuntimeReads: 0;
-    readonly trackedRuntimeWrites: 0;
   };
 }
 
@@ -1119,19 +1068,11 @@ export function ownerDigestAttention(digest: OwnerDigestRecord): OwnerDigestAtte
       action: null,
     };
   }
-  if (digest.cycleOk !== true || outcome.state !== "ADOPTED") {
-    return {
-      level: "RED",
-      headline: "Authority adoption report is inconsistent",
-      happened: "The durable adoption outcome and cycle verdict do not agree.",
-      needsYou: true,
-      action: "inspect the authority-adoption receipt",
-    };
-  }
+  /* An older report of a kind this code no longer writes (the retired method-authority adoption receipt): history, not a signal. */
   return {
-    level: "GREEN",
-    headline: "Method authority adoption completed",
-    happened: "The latest structured authority-adoption receipt is consistent.",
+    level: "UNKNOWN",
+    headline: "Earlier runner report",
+    happened: "An older report of a kind the runner no longer writes.",
     needsYou: false,
     action: null,
   };
@@ -1474,8 +1415,8 @@ export interface OwnerCostRow {
  * and it carries that instant.
  */
 export interface OwnerSnapshot {
-  /** Derived exact-instruction inventories. Unknown object universes remain open. */
-  readonly checklists?: readonly import("./readiness/checklist-census.ts").ChecklistCensus[];
+  /** Daily completeness, freshness and delivery counts for each place with a saved scope, newest last. Counts only; it never gates publishing. */
+  readonly placeHistory?: Readonly<Record<string, readonly import("../coverage/place-history.ts").PlaceHistoryPoint[]>>;
   readonly formatVersion: number;
   readonly publishedAt: string;
   readonly publishedFromSha: string | null;

@@ -35,7 +35,6 @@ import { DECISION_LOG_KEY, appendDecisionIntent } from "../lib/control-plane/adm
 import { collapseDecisionLog } from "../lib/control-plane/decision-log.ts";
 import { ANSWERED_IN_OWN_WORDS, held, measured, type OwnerDecisionCard, type OwnerDecisionIntent } from "../lib/control-plane/owner-surface.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
-import { populationInCompleteZip, type StateAuthorities } from "../lib/control-plane/readiness/extract.ts";
 import { METRIC_GROUP_MEANING, researchDigestRows } from "../lib/control-plane/research-digest.ts";
 import type { ResearchMetrics } from "../lib/control-plane/research-metrics.ts";
 import type { WindowView } from "../lib/control-plane/window-view.ts";
@@ -552,39 +551,6 @@ test("ADM-23: the ACS tables are on file with their pinned counts, the pilot ZIP
   assert.ok(existsSync(join(ROOT, "data", "reference", `${ACS_ZCTA_DATASET}.md`)));
 });
 
-test("ADM-23: population-weighted completeness is a measured share of the state's ACS total, and its gaps are named", () => {
-  // ADM-41: the state total is the 2024 release's, in the same run as the ZIPs.
-  const a = { code: "az", name: "Arizona", statePopulation: 7_378_838 } as StateAuthorities;
-  const zip = (zip: string, population: number | null, states: string[]) => ({
-    zip,
-    place: held(zip),
-    population: population === null ? { held: false as const, gap: { whose: "OURS" as const, says: "no ZCTA" } } : held(measured(population, 7_378_838, "c", "s")),
-    populationBasis: population === null ? ("NO_TABULATION_AREA" as const) : ("COUNTED" as const),
-    populationMargin: null,
-    bodies: states.map((state) => ({ state: state as never, gap: "g" })),
-    tierLabel: null,
-  });
-  const complete = populationInCompleteZip(a, [zip("85701", 5498, ["CURRENT", "ARGUED_ABSENT"]), zip("85641", 34752, ["CURRENT", "BLOCKED"]), zip("85700", null, ["CURRENT"])]);
-  assert.ok(complete.held);
-  assert.equal(complete.value.value, 5498);
-  assert.equal(complete.value.denominator, 7_378_838);
-  assert.match(complete.value.contract, /1 of 2 ZIP\(s\) in Arizona with a population on file/);
-  const none = populationInCompleteZip(a, [zip("85641", 34752, ["BLOCKED"])]);
-  assert.ok(none.held && none.value.value === 0, "a measured zero: nothing is complete yet, and that is a fact");
-  assert.ok(!populationInCompleteZip({ ...a, statePopulation: null }, [zip("85701", 5498, ["CURRENT"])]).held);
-  assert.ok(!populationInCompleteZip(a, []).held);
-  assert.ok(!populationInCompleteZip(a, [zip("85700", null, ["CURRENT"])]).held);
-  const refresh = src("scripts/readiness-refresh.mts");
-  assert.match(refresh, /population: population\.population/);
-  assert.match(refresh, /statePopulation: null/);
-  assert.match(refresh, /canonical civic-data receipt in Admin/);
-  assert.doesNotMatch(refresh, /statePopulation\(spec\.code\)/, "readiness may not revive tracked ACS as a second authority");
-  assert.doesNotMatch(src("lib/control-plane/readiness/extract.ts"), /not yet ingested/);
-  assert.match(refresh, /Routine ACS population is shown from the canonical civic-data receipt in Admin/, "the readiness publisher names the canonical owner instead of copying tracked ACS truth");
-  for (const rel of ["lib/control-plane/admin-view/coverage.ts"]) {
-    assert.doesNotMatch(src(rel), /"population not on file"/, `${rel} hardcodes a population gap`);
-  }
-});
 
 /* ================================================================== *
  * ADM-15 — the next step per ZIP

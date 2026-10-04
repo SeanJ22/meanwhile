@@ -8,8 +8,8 @@
  */
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
-  CONCLUDED_LOOKBACK_DAYS,
-  UPCOMING_HORIZON_DAYS,
+  MEETING_HELD_HORIZON_DAYS,
+  MEETING_HELD_LOOKBACK_DAYS,
 } from "../../meetings/constants.ts";
 import {
   isPlacelessLocation,
@@ -57,8 +57,8 @@ const SOURCE_NAME = "iqm2";
  * honestly reported what it had asked for. Deriving them is what makes the
  * drift impossible rather than merely noticed.
  */
-const WINDOW_FORWARD_DAYS = UPCOMING_HORIZON_DAYS;
-const WINDOW_BACK_DAYS = CONCLUDED_LOOKBACK_DAYS;
+const WINDOW_FORWARD_DAYS = MEETING_HELD_HORIZON_DAYS;
+const WINDOW_BACK_DAYS = MEETING_HELD_LOOKBACK_DAYS;
 
 export interface Iqm2Raw {
   wiring: BodySourceWiring;

@@ -1,3 +1,5 @@
+import { defaultPlatformFingerprints, platformFingerprints, type PlatformFingerprint } from "../control-plane/platform-fingerprints.ts";
+import type { FieldManualEntry } from "../control-plane/field-manual.ts";
 /**
  * IS THIS BODY A TENANT OF A PLATFORM WE ALREADY READ?
  * (2026-08-26, the descent session, Item 4. RULING 103 and RULING 169.)
@@ -37,19 +39,9 @@
  */
 
 /** Every platform this project already has an adapter for. */
-export const KNOWN_PLATFORMS = [
-  { id: "legistar", label: "Legistar / Granicus", hostPattern: /\blegistar\.com\b/i },
-  { id: "boardbook", label: "BoardBook", hostPattern: /\bboardbook\.org\b/i },
-  { id: "civicplus", label: "CivicPlus", hostPattern: /\bcivicplus\.com\b/i },
-  { id: "iqm2", label: "IQM2 / Accela", hostPattern: /\biqm2\.com\b/i },
-  { id: "onbase", label: "OnBase", hostPattern: /\bonbase\b/i },
-  { id: "revize", label: "Revize", hostPattern: /\brevize\.com\b/i },
-  { id: "apptegy", label: "Apptegy", hostPattern: /\b(apptegy|thrillshare)\.com\b/i },
-  { id: "diligent", label: "Diligent / BoardDocs", hostPattern: /\b(boarddocs|diligent)\.com\b/i },
-  { id: "schedulepage", label: "SchedulePage", hostPattern: /\bschedulepage\b/i },
-] as const;
+export const KNOWN_PLATFORMS = defaultPlatformFingerprints().filter(p => p.haveAdapter);
 
-export type PlatformId = (typeof KNOWN_PLATFORMS)[number]["id"];
+export type PlatformId = string;
 
 /**
  * Platforms we can RECOGNISE but have no adapter for.
@@ -60,16 +52,7 @@ export type PlatformId = (typeof KNOWN_PLATFORMS)[number]["id"];
  * other is a hunt. Running them together would make the second look like the
  * first.
  */
-export const UNHANDLED_PLATFORMS = [
-  { id: "escribe", label: "eSCRIBE", hostPattern: /\bescribemeetings\.com\b/i },
-  { id: "novusagenda", label: "NovusAgenda", hostPattern: /\bnovusagenda\.com\b/i },
-  { id: "civicclerk", label: "CivicClerk", hostPattern: /\bcivicclerk\.com\b/i },
-  { id: "municode", label: "Municode", hostPattern: /\bmunicode\.com\b/i },
-  { id: "ecode360", label: "eCode360 / General Code", hostPattern: /\becode360\.com\b/i },
-  { id: "granicus-vp", label: "Granicus ViewPublisher", hostPattern: /\bgranicus\.com\b/i },
-  { id: "primegov", label: "PrimeGov", hostPattern: /\bprimegov\.com\b/i },
-  { id: "swagit", label: "Swagit", hostPattern: /\bswagit\.com\b/i },
-] as const;
+export const UNHANDLED_PLATFORMS = defaultPlatformFingerprints().filter(p => !p.haveAdapter);
 
 /**
  * Markup fingerprints for vendors that host under the CUSTOMER'S OWN domain.
@@ -79,16 +62,7 @@ export const UNHANDLED_PLATFORMS = [
  * Reading the markup is the only route, and it is why the sweep reports which
  * SHAPES it searched rather than only which hosts it matched.
  */
-export const MARKUP_FINGERPRINTS: readonly { readonly platform: string; readonly pattern: RegExp; readonly why: string }[] = [
-  { platform: "civicplus", pattern: /CivicPlus|\/Common\/Modules\/|CivicAlerts\.aspx|AgendaCenter/i, why: "CivicPlus module paths and its AgendaCenter route" },
-  { platform: "revize", pattern: /revize|revizeadmin/i, why: "Revize's own name in template paths" },
-  { platform: "apptegy", pattern: /apptegy|thrillshare|edlio/i, why: "Apptegy's Thrillshare asset host" },
-  { platform: "granicus-vp", pattern: /granicus|ViewPublisher\.php/i, why: "Granicus ViewPublisher, the video-and-agenda product" },
-  { platform: "civicclerk", pattern: /civicclerk/i, why: "CivicClerk's portal script" },
-  { platform: "escribe", pattern: /escribe/i, why: "eSCRIBE's embedded meeting list" },
-  { platform: "novusagenda", pattern: /novusagenda|NovusAGENDA/i, why: "NovusAgenda's portal path" },
-  { platform: "primegov", pattern: /primegov/i, why: "PrimeGov's portal script" },
-];
+export const MARKUP_FINGERPRINTS = defaultPlatformFingerprints().flatMap(p => p.markup.map(f => ({ ...f, platform: p.id })));
 
 export type TenancyStrength = "LINKED" | "SERVED_BY" | "DERIVED_LEAD";
 
@@ -102,10 +76,10 @@ export interface TenancyHit {
   readonly evidence: string;
 }
 
-function labelFor(id: string): { label: string; haveAdapter: boolean } {
-  const known = KNOWN_PLATFORMS.find((p) => p.id === id);
+function labelFor(id: string, fingerprints: readonly PlatformFingerprint[]): { label: string; haveAdapter: boolean } {
+  const known = fingerprints.find((p) => p.id === id && p.haveAdapter);
   if (known) return { label: known.label, haveAdapter: true };
-  const un = UNHANDLED_PLATFORMS.find((p) => p.id === id);
+  const un = fingerprints.find((p) => p.id === id && !p.haveAdapter);
   if (un) return { label: un.label, haveAdapter: false };
   return { label: id, haveAdapter: false };
 }
@@ -118,7 +92,8 @@ function labelFor(id: string): { label: string; haveAdapter: boolean } {
  * The caller decides what to do with a `DERIVED_LEAD`, and the type makes it
  * impossible to mistake one for a `LINKED`.
  */
-export function detectTenancy(html: string, pageUrl: string): readonly TenancyHit[] {
+export function detectTenancy(html: string, pageUrl: string, entries?: readonly FieldManualEntry[]): readonly TenancyHit[] {
+  const fingerprints = entries ? platformFingerprints(entries) : defaultPlatformFingerprints();
   const hits: TenancyHit[] = [];
   const seen = new Set<string>();
 
@@ -126,7 +101,7 @@ export function detectTenancy(html: string, pageUrl: string): readonly TenancyHi
     const key = `${platform}:${strength}`;
     if (seen.has(key)) return;
     seen.add(key);
-    const { label, haveAdapter } = labelFor(platform);
+    const { label, haveAdapter } = labelFor(platform, fingerprints);
     hits.push({ platform, label, haveAdapter, strength, evidence });
   };
 
@@ -153,7 +128,7 @@ export function detectTenancy(html: string, pageUrl: string): readonly TenancyHi
       continue;
     }
     const boilerplate = /university|training|support|help|marketing|\bwww\.(civicplus|revize|granicus)\./i.test(host);
-    for (const p of [...KNOWN_PLATFORMS, ...UNHANDLED_PLATFORMS]) {
+    for (const p of fingerprints) {
       if (!p.hostPattern.test(host)) continue;
       push(
         p.id,
@@ -170,7 +145,7 @@ export function detectTenancy(html: string, pageUrl: string): readonly TenancyHi
   } catch {
     /* an unparseable page URL still gets the markup test */
   }
-  for (const f of MARKUP_FINGERPRINTS) {
+  for (const f of fingerprints.flatMap(p => p.markup.map(m => ({...m, platform:p.id})))) {
     const m = f.pattern.exec(html);
     if (!m) continue;
     /* If the only reason it matched is a link we already counted, do not claim

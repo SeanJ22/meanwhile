@@ -1,3 +1,4 @@
+import { feedKindForWiringType } from "../sources/feed-kind-registry.ts";
 import type { OcdId } from "../sources/types.ts";
 import type { AgendaSourceType } from "./types.ts";
 
@@ -149,7 +150,10 @@ export function meetingSourceNamesForWiring(row: BodySourceWiring): readonly str
       );
     }
   }
-  return route ? [route] : [];
+  if (route) return [route];
+  // DB-50: a door of an installed engineer-built feed kind is served by that kind's own source.
+  const feed = feedKindForWiringType(row.agendaSourceType);
+  return feed ? [feed.kind] : [];
 }
 
 /**
@@ -298,7 +302,7 @@ export function isUnreadableRetiredMeetingHost(url: string): boolean {
 }
 
 export function wiringForMeetingSource(sourceName: string): BodySourceWiring[] {
-  return SOURCE_WIRING.filter((row) => meetingSourceNamesForWiring(row).includes(sourceName));
+  return activeWiring().filter((row) => meetingSourceNamesForWiring(row).includes(sourceName));
 }
 
 export const SOURCE_WIRING: BodySourceWiring[] = [
@@ -2622,9 +2626,27 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
   },
 ];
 
+/**
+ * The Door Registry's rows for this process, when the registry is the source (DB-12).
+ *
+ * Null means the code's own `SOURCE_WIRING`, the path that has always run. It
+ * stays the default and the way back: the registry is read only after
+ * `lib/doors/install.ts` checked it against the code and the switch is on.
+ */
+let registryWiring: readonly BodySourceWiring[] | null = null;
+
+export function installRegistryWiring(rows: readonly BodySourceWiring[] | null): void {
+  registryWiring = rows;
+}
+
+/** The hand-wired rows adapters read right now: the registry's when installed, otherwise the code's. */
+export function activeWiring(): readonly BodySourceWiring[] {
+  return registryWiring ?? SOURCE_WIRING;
+}
+
 /** Rows a given adapter capability should serve. */
 export function wiringForTypes(
   types: AgendaSourceType[],
 ): BodySourceWiring[] {
-  return SOURCE_WIRING.filter((row) => types.includes(row.agendaSourceType));
+  return activeWiring().filter((row) => types.includes(row.agendaSourceType));
 }

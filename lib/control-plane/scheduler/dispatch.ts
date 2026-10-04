@@ -113,9 +113,23 @@ export interface WorkerBound {
   readonly maxCostUnits?: number;
 }
 
+/**
+ * CH-07: the clock on every hunter. A hunter that reaches it stops, saves the
+ * steps it walked as its case file and hands the next turn to a detective. It
+ * sits below the worker process's own kill timeout (10 minutes) so the hunter
+ * ends itself, with its case file, before the process is killed. A code
+ * default until the admin setting exists; `WTP_HUNTER_WALL_MS` overrides it.
+ */
+export const HUNTER_WALL_LIMIT_MS = 8 * 60_000;
+
+export function hunterWallLimitMs(env: Readonly<Record<string, string | undefined>> = process.env): number {
+  const raw = Number(env.WTP_HUNTER_WALL_MS);
+  return Number.isSafeInteger(raw) && raw > 0 ? raw : HUNTER_WALL_LIMIT_MS;
+}
+
 export const DEFAULT_WORKER_BOUND: WorkerBound = {
   maxAttempts: 3,
-  maxWallMs: 120_000,
+  maxWallMs: HUNTER_WALL_LIMIT_MS,
   maxCostUnits: 50_000,
 };
 

@@ -2,10 +2,13 @@
  * **PREVIEW A SEND OF MANY HUNTS, AND LIST WHAT CAN BE PICKED.** (S11.)
  *
  * ```
- *   GET  ?list=county|congressional_district&state=AZ   what can be picked
- *   POST { text?, picks?, budget, priority? }            the list of ZIPs, each
- *                                                        with its budget, and
- *                                                        everything left out
+ *   GET  ?list=county|congressional_district|cbsa|state_leg_upper|state_leg_lower&state=AZ
+ *                                                        what can be picked
+ *   POST { text?, picks?, budget, priority? }            the ZIPs pasted or uploaded and one
+ *                                                        mission for each pick (a state,
+ *                                                        county, district or metro area,
+ *                                                        never a pile of ZIPs), each with
+ *                                                        its budget, and everything left out
  * ```
  *
  * It changes nothing. The send itself is the one gateway action
@@ -20,7 +23,8 @@ import { BULK_MAX_ZIPS, ZIP_COLUMN, parseZips } from "@/lib/control-plane/bulk-h
 // The repository's own workbook reader (there is no spreadsheet library here): a ZIP of XML parts, read without one.
 import { readWorkbook, toCsv } from "../../../../scripts/xlsx.mjs";
 import { planBudgets, type BudgetSpec } from "@/lib/control-plane/bulk-hunts/plan.ts";
-import { describeZips, pickable, validPick, zipsForPick } from "@/app/(admin)/_mw/data/bulk-places.ts";
+import { PICKABLE_TYPES, describeZips, missionForPick, pickable, validPick, type PickableType } from "@/app/(admin)/_mw/data/bulk-places.ts";
+import { scopeKeyOf } from "@/lib/control-plane/expansion/scopes.ts";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -64,10 +68,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
   const type = request.nextUrl.searchParams.get("list");
   const state = request.nextUrl.searchParams.get("state") ?? "";
-  if ((type !== "county" && type !== "congressional_district") || !/^[A-Za-z]{2}$/.test(state)) {
-    return NextResponse.json({ says: "Say which list (county or congressional_district) and which state." }, { status: 400, headers });
+  if (type === null || !(PICKABLE_TYPES as readonly string[]).includes(type) || !/^[A-Za-z]{2}$/.test(state)) {
+    return NextResponse.json({ says: `Say which list (${PICKABLE_TYPES.join(", ")}) and which state.` }, { status: 400, headers });
   }
-  const read = await pickable(state.toUpperCase(), type);
+  const read = await pickable(state.toUpperCase(), type as PickableType);
   return read.ok ? NextResponse.json({ items: read.items }, { headers }) : NextResponse.json({ says: read.why }, { status: 503, headers });
 }
 
@@ -104,25 +108,27 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const spec = budgetSpecOf(body.budget);
   if (spec === null) return NextResponse.json({ says: "Choose how the budget works: one total for all, the same for each, or one for each." }, { status: 400, headers });
 
-  // 1. ZIPs from the paste or file, then from each pick. The first group a ZIP was seen under is the one it keeps.
+  // 1. ZIPs from the paste or file. Each pick is one mission of its own, never expanded into ZIPs.
   const parsed = parseZips(text);
   const groupOf = new Map<string, string | null>();
   for (const z of parsed.zips) groupOf.set(z.zip, z.group);
   const pickNotes: string[] = [];
+  const missions: { readonly key: string; readonly geography: { readonly type: string; readonly geoid: string; readonly version: string; readonly label: string; readonly stateAbbr: string } }[] = [];
   for (const raw of rawPicks) {
     const pick = validPick(raw);
     if (pick === null) {
       pickNotes.push("A pick was not understood and was left out.");
       continue;
     }
-    const got = await zipsForPick(pick);
+    const got = await missionForPick(pick);
     if (!got.ok) {
       pickNotes.push(got.why);
       continue;
     }
-    for (const z of got.zips) if (!groupOf.has(z.zip)) groupOf.set(z.zip, z.group);
+    const key = scopeKeyOf(got.geography);
+    if (!missions.some((m) => m.key === key)) missions.push({ key, geography: got.geography });
   }
-  if (groupOf.size === 0) {
+  if (groupOf.size === 0 && missions.length === 0) {
     return NextResponse.json({ ok: false, says: pickNotes[0] ?? NOTHING_FOUND, skipped: parsed.skipped, pickNotes }, { status: 200, headers });
   }
   if (groupOf.size > BULK_MAX_ZIPS) {
@@ -135,16 +141,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const unknown = facts.filter((f) => f.stateAbbr === null).map((f) => f.zip);
 
   // 3. The budgets, over the ZIPs that will actually be sent.
-  const planned = planBudgets(known.map((f) => f.zip), spec);
+  const planned = planBudgets([...known.map((f) => f.zip), ...missions.map((m) => m.key)], spec);
   if (!planned.ok) return NextResponse.json({ ok: false, says: planned.why, pickNotes }, { status: 200, headers });
   const stateOf = new Map(known.map((f) => [f.zip, f.stateAbbr as string]));
-  const items = planned.items.map((i) => ({ zip: i.zip, stateAbbr: stateOf.get(i.zip)!, budgetUsd: i.budgetUsd, group: groupOf.get(i.zip) ?? null }));
+  const missionKeys = new Set(missions.map((m) => m.key));
+  const items = planned.items.filter((i) => !missionKeys.has(i.zip)).map((i) => ({ zip: i.zip, stateAbbr: stateOf.get(i.zip)!, budgetUsd: i.budgetUsd, group: groupOf.get(i.zip) ?? null }));
+  const budgetOf = new Map(planned.items.map((i) => [i.zip, i.budgetUsd]));
+  const missionItems = missions.map((m) => ({ key: m.key, geography: m.geography, label: m.geography.label, budgetUsd: budgetOf.get(m.key) ?? 0 }));
   const groups = new Map<string, number>();
   for (const i of items) groups.set(i.group ?? NO_GROUP, (groups.get(i.group ?? NO_GROUP) ?? 0) + 1);
   return NextResponse.json(
     {
       ok: true,
       items,
+      missions: missionItems,
       totalUsd: planned.totalUsd,
       words: planned.words,
       groups: [...groups.entries()].map(([name, count]) => ({ name, count })),

@@ -7,8 +7,8 @@
  * 2026-08-23 by reading each stamp site against the retrieval it sits in.
  */
 import {
-  CONCLUDED_LOOKBACK_DAYS,
-  UPCOMING_HORIZON_DAYS,
+  MEETING_HELD_HORIZON_DAYS,
+  MEETING_HELD_LOOKBACK_DAYS,
 } from "../../meetings/constants.ts";
 import {
   meetingBodiesFor,
@@ -146,8 +146,8 @@ export function legistarStartsAt(
  * honestly reported what it had asked for. Deriving them is what makes the
  * drift impossible rather than merely noticed.
  */
-const WINDOW_FORWARD_DAYS = UPCOMING_HORIZON_DAYS;
-const WINDOW_BACK_DAYS = CONCLUDED_LOOKBACK_DAYS;
+const WINDOW_FORWARD_DAYS = MEETING_HELD_HORIZON_DAYS;
+const WINDOW_BACK_DAYS = MEETING_HELD_LOOKBACK_DAYS;
 
 /** A raw event carries its client through the transform, since normalize() is pure. */
 export interface LegistarEventWithClient {
@@ -236,6 +236,39 @@ function wallClock(raw: string): { hour: number; minute: number } | null {
  * the word, and looking in one of two possible places is how a real
  * cancellation gets rendered as a meeting going ahead.
  */
+/**
+ * The recording the publisher's own record links for this sitting (BX-10): `EventVideoPath`, only while the
+ * publisher marks the video "Public", and only as a plain https address without credentials. A pointer, never
+ * fetched; null when the record carries none.
+ */
+/** A Legistar `...UTC` stamp carries no zone designator; its name says UTC, so it is read as UTC. Null when absent or unreadable. */
+function utcInstant(value: string | null | undefined): string | null {
+  const text = typeof value === "string" ? value.trim() : "";
+  if (text === "") return null;
+  const at = Date.parse(/(?:Z|[+-]\d{2}:?\d{2})$/i.test(text) ? text : `${text}Z`);
+  return Number.isFinite(at) ? new Date(at).toISOString() : null;
+}
+
+/** The later of the publisher's own agenda and minutes posting stamps for this sitting (DB-27), or null when it states none. */
+export function publisherPostedAt(event: LegistarEvent): string | null {
+  const stamps = [utcInstant(event.EventAgendaLastPublishedUTC), utcInstant(event.EventMinutesLastPublishedUTC)]
+    .filter((stamp): stamp is string => stamp !== null)
+    .sort();
+  return stamps.at(-1) ?? null;
+}
+
+export function publicVideoUrl(event: LegistarEvent): string | null {
+  if (event.EventVideoStatus?.trim().toLowerCase() !== "public") return null;
+  const raw = event.EventVideoPath?.trim();
+  if (!raw) return null;
+  try {
+    const url = new URL(raw);
+    return url.protocol === "https:" && !url.username && !url.password ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
 function isCanceled(event: LegistarEvent): boolean {
   const fields = [event.EventComment ?? "", event.EventAgendaStatusName ?? ""];
   return fields.some((field) => /\bcancell?ed\b/i.test(field));
@@ -416,6 +449,8 @@ export function normalizeWithDrops(
       ...(online ? { online } : {}),
       ...(venueGap ? { venueGap } : {}),
       agendaUrl: event.EventAgendaFile,
+      ...(publicVideoUrl(event) ? { videoUrl: publicVideoUrl(event)! } : {}),
+      ...(publisherPostedAt(event) ? { postedAt: publisherPostedAt(event)! } : {}),
       /*
        * **THE API RECORD ITSELF IS THE OBSERVED SURFACE.** (ASK-18.)
        *

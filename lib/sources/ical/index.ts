@@ -8,8 +8,8 @@
  */
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
-  CONCLUDED_LOOKBACK_DAYS,
-  UPCOMING_HORIZON_DAYS,
+  MEETING_HELD_HORIZON_DAYS,
+  MEETING_HELD_LOOKBACK_DAYS,
 } from "../../meetings/constants.ts";
 import {
   isPlacelessLocation,
@@ -102,8 +102,8 @@ import {
 
 const SOURCE_NAME = "ical";
 
-const WINDOW_FORWARD_DAYS = UPCOMING_HORIZON_DAYS;
-const WINDOW_BACK_DAYS = CONCLUDED_LOOKBACK_DAYS;
+const WINDOW_FORWARD_DAYS = MEETING_HELD_HORIZON_DAYS;
+const WINDOW_BACK_DAYS = MEETING_HELD_LOOKBACK_DAYS;
 
 /**
  * The body itself says so, in its own summary. Warner also writes the bare
@@ -549,6 +549,12 @@ export interface IdentityClaim {
 function lastModifiedAt(value: string | null): number | null {
   const m = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z?$/.exec(value ?? "");
   return m ? Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]) : null;
+}
+
+/** The publisher's own `LAST-MODIFIED` as an ISO instant (DB-27), or null when the event states none. `DTSTAMP` is never used. */
+export function publisherPostedAt(event: Pick<IcalEvent, "lastModified">): string | null {
+  const at = lastModifiedAt(event.lastModified);
+  return at === null ? null : new Date(at).toISOString();
 }
 
 /**
@@ -1348,6 +1354,7 @@ export function makeIcalSource(
             ...(online ? { online } : {}),
             ...(venueGap ? { venueGap } : {}),
             agendaUrl: null,
+            ...(publisherPostedAt(event) ? { postedAt: publisherPostedAt(event)! } : {}),
             jurisdiction: wiring.jurisdiction,
             status:
               CANCELED.test(title) || /^CANCELLED$/i.test(event.status ?? "") ||

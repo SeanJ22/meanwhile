@@ -113,6 +113,7 @@ import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discover
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { CandidateStore } from "../../method/candidate.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
+import type { DoorRecord } from "../../doors/registry.ts";
 
 /** ------------------------------------------------------------- envelopes */
 
@@ -415,7 +416,7 @@ export interface AppendOnlyRepository<T> {
    * regardless of where it sits, so it is stable as the log grows and cannot
    * false-negative an existing record the way "give me position N" can. Reading
    * by what the caller is looking for is the point — `["runtimeOutcome","kind"]
-   * = "METHOD_CANDIDATE_AUTHORITY_ADOPTION"` still finds the receipt after ten
+   * = "FRESHNESS_CYCLE"` still finds every cycle after ten
    * thousand later rows shift its position. An empty result means the store
    * genuinely holds no such record; the CALLER decides whether that is a valid
    * absence or a failure (an empty where a record must exist is the caller's to
@@ -429,6 +430,8 @@ export interface AppendOnlyRepository<T> {
    * that needs a few fields of recent records reads them here rather than every
    * whole record the log has ever held. The records are narrowed, so they are
    * `unknown`: a caller validates what it reads, as it would a whole record.
+   * Optional `recordedAtSince` filters the saved append clock inclusively
+   * before limiting, so a time window need not transfer archived records.
    */
   readRecentWhere(
     key: string,
@@ -436,6 +439,7 @@ export interface AppendOnlyRepository<T> {
     value: string,
     limit: number,
     projection: RecordProjection,
+    recordedAtSince?: string,
   ): Promise<readonly unknown[]>;
   /** Every record, in key order then append order. */
   readAll(): Promise<readonly T[]>;
@@ -817,6 +821,8 @@ export interface ControlPlaneRepositories {
    * (`lib/control-plane/ask-gap-observations.ts`).
    */
   readonly askGapObservations: AggregateRepository<AskGapObservation>;
+  /** The Door Registry (DB-09, schema v19): one aggregate per door, id = door id. Written only through the `door.save` gateway action, and by derive steps that never overwrite a newer manual edit. */
+  readonly doors: AggregateRepository<DoorRecord>;
   readonly budget: BudgetRepository;
   readonly locks: LockManager;
   /** What this store is, for a report that must say where the state lives. */

@@ -67,6 +67,9 @@ function PlaceScoreCard(props: { readonly score: PlaceScoreView; readonly group:
         <Actions actions={[{ kind: "target-set", target: v.scopeKey, label: score.target ? "Change the target" : "Set a target" }, ...(score.target ? [{ kind: "target-clear" as const, target: v.scopeKey, label: "Clear the target" }] : [])]} />
         {words && <Actions actions={[{ kind: "send-agents", target: v.scopeKey, label: "Send agents to fill the blanks", payload: { words } }]} primaryFirst />}
         {!words && /^geo:[a-z]{2}\.(congressional_district|county)\./.test(v.scopeKey) && <Actions actions={[{ kind: "hunt-start", target: v.scopeKey, label: "Start hunts for the ZIPs here" }]} primaryFirst />}
+        {score.extension && <p className={cx(s.p, s.small)}>Extra items beyond the core list, counted apart: {count(score.extension.captured)} of {count(score.extension.total)} captured{score.extension.percent === null ? "" : ` · ${percentWords(score.extension)}`}</p>}
+        {score.coverage && <p className={cx(s.p, s.small)}>{score.coverage.words.join(" · ")}</p>}
+        {score.summary && <p className={cx(s.p, s.small)}>Summary items, counted through their detail items and left out of the headline: {count(score.summary.captured)} of {count(score.summary.total)} captured</p>}
         <div className={s.stack}>
           {score.groups.map((g) => (
             <button key={g.group} type="button" className={cx(s.row, s.rowButton)} aria-pressed={props.group === g.group} style={props.group === g.group ? { boxShadow: "inset 0 0 0 1px var(--ring)" } : undefined} onClick={() => props.onGroup(g.group)}>
@@ -136,7 +139,7 @@ export function ChecklistScreen() {
           {page.map((i) => (
             <button key={i.key} type="button" className={cx(s.row, s.rowButton)} onClick={() => v.open({ type: "item", key: i.key })}>
               <span className={s.spread}><strong style={{ fontSize: 13 }}>{i.definitionId} {i.name} · {i.subject}</strong><span className={s.legendItem}><Swatch cls={STATUS_COLOR[i.status]} /><span className={s.small}>{STATUS_LABEL[i.status]}</span></span></span>
-              <span className={s.meta}>{i.missing}</span>
+              <span className={s.meta}>{i.missing}{i.nextCheckAt ? ` · next check ${mst(i.nextCheckAt)}` : ""}</span>
             </button>
           ))}
         </div>

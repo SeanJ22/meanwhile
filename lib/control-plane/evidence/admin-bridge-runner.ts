@@ -22,6 +22,7 @@ const LANES: readonly Lane[] = ["original", "recent", "history"];
 // still advances every six opportunities even under continuous new inflow.
 const TURN_ORDER: readonly Lane[] = ["original", "recent", "original", "history", "original", "recent"];
 const VERIFIED_RECHECK_MS = 7 * 24 * 60 * 60 * 1000;
+export const ADMIN_MIRROR_BUDGET_MS = 60_000;
 interface MirrorCursor {
   readonly version: 2;
   nextByLane: Record<Lane, number>;
@@ -105,10 +106,28 @@ export async function runAdminEvidenceMirror(input: {
     ({ state, examined: 0, copied: 0, alreadyVerified: 0, refused: 0, failures: [] });
   if (env.WTP_ADMIN_EVIDENCE_MIRROR_ENABLED !== "1") return empty("DISABLED");
   if (!input.remote && (!env.NETLIFY_SITE_ID || !env.NETLIFY_BLOBS_TOKEN)) return empty("NOT_CONFIGURED");
-  const remote = input.remote ?? new NetlifyAdminEvidenceRemote({ siteID: env.NETLIFY_SITE_ID, token: env.NETLIFY_BLOBS_TOKEN });
-  const [records, attempts, workItems] = await Promise.all([
+  const deadlineMs = Math.min(input.deadlineMs ?? Number.POSITIVE_INFINITY, Date.now() + ADMIN_MIRROR_BUDGET_MS);
+  let expired = false;
+  const beforeDeadline = async <T>(read: () => Promise<T>): Promise<T> => {
+    const remaining = deadlineMs - Date.now();
+    if (expired || remaining <= 0) throw new Error("ADMIN_EVIDENCE_MIRROR_DEADLINE");
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    try {
+      return await Promise.race([read(), new Promise<never>((_, reject) => {
+        timer = setTimeout(() => { expired = true; reject(new Error("ADMIN_EVIDENCE_MIRROR_DEADLINE")); }, remaining);
+      })]);
+    } finally { if (timer) clearTimeout(timer); }
+  };
+  const source = input.remote ?? new NetlifyAdminEvidenceRemote({ siteID: env.NETLIFY_SITE_ID, token: env.NETLIFY_BLOBS_TOKEN });
+  // An immutable create may settle after timeout. Its next ordinary turn reads
+  // and verifies the same key; no timed-out operation is counted as a copy.
+  const remote: AdminEvidenceRemote = {
+    read: key => beforeDeadline(() => source.read(key)),
+    create: (key, blob) => beforeDeadline(() => source.create(key, blob)),
+  };
+  const [records, attempts, workItems] = await beforeDeadline(() => Promise.all([
     input.repos.artifacts.readAll(), input.repos.attempts.list(), input.repos.workItems.list(),
-  ]);
+  ]));
   const nowMs = input.nowMs ?? Date.now();
   const byAttempt = new Map(attempts.map(row => [row.id, row.value]));
   const byWorkItem = new Map(workItems.map(row => [row.id, row.value]));
@@ -122,7 +141,7 @@ export async function runAdminEvidenceMirror(input: {
   const failures: string[] = [];
   const perLaneVisited: Record<Lane, number> = { original: 0, recent: 0, history: 0 };
   const limit = input.maxExamined ?? Number.POSITIVE_INFINITY;
-  while (visited < total && examined < limit && (input.deadlineMs === undefined || Date.now() < input.deadlineMs - 500)) {
+  while (visited < total && examined < limit && Date.now() < deadlineMs - 500) {
     const lane = TURN_ORDER[cursor.turn % TURN_ORDER.length];
     cursor.turn = (cursor.turn + 1) % TURN_ORDER.length;
     const group = lanes[lane];
@@ -140,9 +159,10 @@ export async function runAdminEvidenceMirror(input: {
       const attempt = byAttempt.get(record.attemptId);
       const owner = byWorkItem.get(record.workItemId);
       if (!attempt || !owner || owner.project !== "freshness") throw new Error("ATTRIBUTION_NOT_HELD");
-      const held = await findHeldCapture(input.vaultRoot, record);
+      const held = await beforeDeadline(() => findHeldCapture(input.vaultRoot, record));
       if (!held) throw new Error("ATTRIBUTION_NOT_HELD");
-      const outcome = await mirrorOriginalCapture({ record, attempt, held, bytes: await readHeldBytes(held), remote });
+      const bytes = await beforeDeadline(() => readHeldBytes(held));
+      const outcome = await mirrorOriginalCapture({ record, attempt, held, bytes, remote });
       if (outcome === "COPIED") copied++; else alreadyVerified++;
       cursor.verifiedAt[key] = nowMs;
     } catch (error) {
@@ -151,6 +171,7 @@ export async function runAdminEvidenceMirror(input: {
     }
     // Persist each completed remote result before the next operation may block.
     await saveCursor(input.cursorPath, cursor);
+    if (expired) break;
   }
   await saveCursor(input.cursorPath, cursor);
   return { state: "RAN", examined, copied, alreadyVerified, refused, failures };

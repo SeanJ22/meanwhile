@@ -179,4 +179,38 @@ test("exact-hunt and recent captures advance with historical backfill across dur
     assert.equal([...remote.rows.values()].at(-1)?.copy.artifactId, ids[label]);
   }
   assert.equal((await runAdminEvidenceMirror(input)).examined, 0, "verified copies are skipped until scheduled recheck");
+
+  const boundedRemote = new MemoryPrivateStore();
+  const create = boundedRemote.create.bind(boundedRemote);
+  let clock = Date.now();
+  const startedAt = clock;
+  t.mock.method(Date, "now", () => clock);
+  boundedRemote.create = async (key, blob) => {
+    const result = await create(key, blob);
+    clock += 30_000;
+    return result;
+  };
+  const boundedInput = { ...input, remote: boundedRemote, maxExamined: undefined,
+    cursorPath: join(root, "bounded-cursor.json"), deadlineMs: Number.POSITIVE_INFINITY };
+  const slice = await runAdminEvidenceMirror(boundedInput);
+  console.log(`ADMIN_MIRROR firstSliceCopied=${slice.copied} elapsedSimulatedMs=${clock - startedAt}`);
+  assert.equal(slice.copied, 1, "an infinite caller allowance cannot make the optional mirror own the whole round");
+  assert.equal(slice.refused, 1, "a create that consumed the deadline remains unverified");
+  const resumed = await runAdminEvidenceMirror(boundedInput);
+  assert.equal(resumed.copied, 1, "the ordinary next cycle resumes the untouched remaining capture");
+  assert.equal(resumed.alreadyVerified, 1, "the next turn verifies the immutable create whose status was unknown");
+  assert.deepEqual(new Set([...boundedRemote.rows.values()].map(row => row.copy.artifactId)), new Set(Object.values(ids)),
+    "bounded slices eventually produce exactly the original three verified copies");
+
+  const stalled = new MemoryPrivateStore();
+  let reads = 0;
+  stalled.read = async () => { reads++; return new Promise(() => {}); };
+  const started = performance.now();
+  const stopped = await runAdminEvidenceMirror({ ...boundedInput, remote: stalled,
+    cursorPath: join(root, "stalled-cursor.json"), deadlineMs: clock + 550 });
+  assert.ok(performance.now() - started < 1500, "a stuck private read cannot hold the round open");
+  assert.equal(reads, 1);
+  assert.equal(stopped.copied, 0);
+  assert.match(stopped.failures[0], /ADMIN_EVIDENCE_MIRROR_DEADLINE/);
+  console.log(`ADMIN_MIRROR stalledReadElapsedMs=${(performance.now() - started).toFixed(2)} copied=${stopped.copied}`);
 });

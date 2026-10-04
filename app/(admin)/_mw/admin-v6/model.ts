@@ -396,6 +396,8 @@ export interface ChecklistItem {
   readonly resultId?: string;
   /** The saved official page this fact came from, when we hold one. */
   readonly sourceUrl?: string | null;
+  /** When the next check is due, for an item awaiting publication or due for a refresh. */
+  readonly nextCheckAt?: string | null;
   readonly actions: readonly ActionRef[];
 }
 
@@ -424,8 +426,15 @@ export interface PlaceScoreView {
   readonly sendWords: string | null;
   /** The target Sean set for this place, or null. Nothing here gates publishing. */
   readonly target: { readonly goalPercent: number; readonly setAt: string } | null;
+  /** Core items only. The family rows below add up to it. */
   readonly overall: ScoreGroup;
   readonly groups: readonly ScoreGroup[];
+  /** Extension items, counted apart from the headline. Null when the place owes none. */
+  readonly extension?: ScoreGroup | null;
+  /** Summary items whose detail items carry the count: listed, out of the denominator. Null when none. */
+  readonly summary?: ScoreGroup | null;
+  /** Governments, bodies, seats and people accounted for against what is expected. */
+  readonly coverage?: { readonly words: readonly string[] };
 }
 
 export interface SystemGroup {

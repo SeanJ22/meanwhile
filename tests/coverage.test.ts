@@ -63,7 +63,8 @@ test("known record classes owe their own facts while place inventories and unkno
   ];
   const items = buildPlaceOwedList({ divisions: [division], subjects: records, held: [], now });
   const ids = (subject: string) => items.filter(i => i.subject.id === subject).map(i => i.checklistId);
-  assert.ok(ids("state-seat").includes("LEG-22"));
+  assert.ok(ids("state-seat").includes("LEG-02") && !ids("state-seat").includes("LEG-22"), "publisher authority is the legislature's, not each seat's");
+  assert.deepEqual(ids("ocd-division/country:us/state:mo#legislature").sort(), ["LEG-01", "LEG-10", "LEG-22"]);
   assert.ok(!ids("state-seat").some(id => /^(EXE|PRL)-/.test(id) || ["LEG-20", "LEG-21"].includes(id)));
   assert.ok(ids("federal-seat").includes("PRL-01") && ids("federal-seat").includes("LEG-21"));
   assert.ok(!ids("federal-seat").includes("LEG-22"));

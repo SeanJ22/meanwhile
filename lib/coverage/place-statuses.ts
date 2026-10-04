@@ -1,4 +1,4 @@
-import { LIFECYCLE, applicabilityOf, checklistItem } from "./checklist-map.ts";
+import { LIFECYCLE, NO_PRODUCER_REASON, applicabilityOf, checklistItem, hasProducer } from "./checklist-map.ts";
 
 /**
  * **THE SIX STATUSES OF ONE OWED BLANK.** Whether it applies, whether it is due,
@@ -29,6 +29,10 @@ export interface RowStatuses {
   readonly nextCheck: string | null;
   /** The plain sentence for an item awaiting publication, e.g. "Agenda not published yet". Null otherwise. */
   readonly waitingWords: string | null;
+  /** Whether any squad or door can fill this item today. */
+  readonly hasProducer: boolean;
+  /** Why an uncaptured item is not being hunted: "No squad or door covers this item yet". Null when it has a producer or is captured. */
+  readonly noProducerWords: string | null;
 }
 
 export interface StatusHeldField {
@@ -98,5 +102,7 @@ export function rowStatuses(row: StatusRow, ctx: StatusContext): RowStatuses {
   const noun = item?.noun;
   return { applies: applicabilityOf(row.checklistId) === "applies" ? "applies" : applicabilityOf(row.checklistId) === "unresolved" ? "unresolved" : "depends",
     due: dueOf(row, now), found, published, fresh, seen, nextCheck,
-    waitingWords: awaiting && noun ? `${noun} not published yet` : null };
+    waitingWords: awaiting && noun ? `${noun} not published yet` : null,
+    hasProducer: hasProducer(row.checklistId),
+    noProducerWords: !kept.length && !absence && !hasProducer(row.checklistId) ? NO_PRODUCER_REASON : null };
 }

@@ -2771,7 +2771,8 @@ const cycle = await runCycle({
   /* With no DISPATCH pending (the set above is empty), the selected expansion scopes' due work goes first instead. */
   ...(scopePlaceFirst !== null ? { placeFirst: scopePlaceFirst } : {}),
   research: {
-    decide: (row) => (!modelLaneEnabled && plainDecisionBeforeDetective.get(row.obligation.id)) || decisionFor(row.obligation.id, row.obligation.routeId),
+    decide: (row) => decisionFor(row.obligation.id, row.obligation.routeId),
+    plainBesideDetective: (row) => plainDecisionBeforeDetective.get(row.obligation.id) ?? null,
     /* The same canonical band comparator used for the visible/opening queue reaches the actual Scout pool. */
     compareModelRows: compareScoutRows,
     admitScout: (row) => {

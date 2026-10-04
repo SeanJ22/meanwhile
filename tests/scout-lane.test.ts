@@ -19,6 +19,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { isArguedAbsence } from "../lib/control-plane/scheduler/absence.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { DurableSpendHolds, JobSpend, SendBudgetRefusal, budgetGuardedTransport } from "../lib/control-plane/expansion/spend-holds.ts";
 import { aggregateModelSpend, FleetSafetyController, FleetPreSendRefusal } from "../lib/control-plane/fleet-safety.ts";
@@ -756,6 +757,41 @@ test("5. a deliberate stop preserves next rungs without an artificial tool cap",
   assert.equal(r.rungs[1].note, "sitemap");
   const last = transport.requests.at(-1)!;
   assert.deepEqual(last.tool_choice, { type: "auto" }, "the finish stays auto without a cache-invalidating forced-tool rewrite");
+});
+
+/* -------------------------------------------------------------- 5a (CH-07 wall clock) */
+
+test("CH-07: a hunter past its wall clock stops, saves the steps walked as a NO_PROGRESS case file, and is never an argued absence", async () => {
+  const { repos, task } = await registered();
+  const toolkit = fakeToolkit();
+  const scripted = scriptedTransport([
+    [toolUse("u1", "fetch_public", { url: "https://a.gov/", rung: "primary-site-navigation", why: "start" })],
+    [finish("f", "NO_PROGRESS", { rungsWalked: [{ index: 0, note: "home" }], nextRungs: ["never-reached"] })],
+  ]);
+  const slow: ModelTransport & { requests: ModelRequest[] } = Object.assign(
+    async (request: ModelRequest) => { await new Promise((resolve) => setTimeout(resolve, 60)); return scripted(request); },
+    { requests: scripted.requests },
+  );
+  const { exec, results } = executorWith(slow, toolkit, { minRungs: 1 });
+  const result = await dispatchOne(repos, {
+    obligation: scheduledFixture(OBLIGATION, NOW_MS),
+    routeTaskId: task.id,
+    holder: "t",
+    now: NOW,
+    leaseTtlMs: 60_000,
+    bound: { maxAttempts: 3, maxWallMs: 30 },
+    maturity: () => "UNGRADUATED",
+    executor: exec,
+  });
+  const r = results[0];
+  assert.equal(r.stoppedBy, "TIMEOUT");
+  assert.equal(r.outcome, "NO_PROGRESS");
+  assert.equal(r.refusal, null, "a timeout is a result, not a refusal");
+  assert.equal(r.rungs.length, 1, "the step walked before the clock ran out is kept");
+  assert.match(r.nextRungs[0], /fetch_public.*a\.gov/);
+  assert.equal(slow.requests.length, 1, "no further model request is sent after the limit");
+  assert.match(result.detail, /\(TIMEOUT\)/);
+  assert.equal(isArguedAbsence({ ...r, researchRole: "DETECTIVE" }, 1), false, "a timeout is never filed as a 30-day absence");
 });
 
 /* -------------------------------------------------------------- 5b (early stop) */

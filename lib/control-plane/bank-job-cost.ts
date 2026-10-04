@@ -4,7 +4,7 @@ import type { ScoutResult } from "./scheduler/scout-result.ts";
 
 interface JobCost {
   readonly platform: string; readonly recordClass: string; readonly attemptId: string;
-  readonly durationMs: number; readonly usd: number | null; readonly requestCount: number; readonly success: boolean;
+  readonly durationMs: number; readonly usd: number | null; readonly requestCount: number | null; readonly success: boolean;
 }
 
 /** Each completed attempt is an idempotent observation, including failed attempts on the same platform. */
@@ -15,7 +15,7 @@ export function scoutJobCostEntries(result: ScoutResult): FieldManualEntry[] {
     role: "SHARED", kind: "JOB_COST", title: `${platform}: ${result.recordClass}`, summary: "Measured attempt cost",
     platforms: [platform], recordClasses: [result.recordClass], observedAt: result.recordedAt, outcome: "REFERENCE",
     payload: { platform, recordClass: result.recordClass, attemptId: result.attemptId, durationMs: result.elapsedMs,
-      usd: result.usd, requestCount: result.rungs.filter(r => ["fetch_public", "browse", "search", "call_api"].includes(r.tool)).length,
+      usd: result.usd, requestCount: result.rungs.length ? result.rungs.filter(r => ["fetch_public", "browse", "search", "call_api"].includes(r.tool)).length : null,
       success: result.refusal === null && (result.candidates.length > 0 || result.findings.length > 0) } satisfies JobCost,
   }));
 }
@@ -29,13 +29,13 @@ export function jobCostProfiles(entries: readonly FieldManualEntry[], affected: 
     const rows = entries.filter(e => e.kind === "JOB_COST").map(e => e.payload as JobCost).filter(p => `${p.platform}:${p.recordClass}` === key);
     const first = rows[0]!;
     const successes = rows.filter(r => r.success).length;
-    const totalRequests = rows.reduce((n, r) => n + r.requestCount, 0);
+    const totalRequests = rows.every(r => r.requestCount !== null) ? rows.reduce((n, r) => n + r.requestCount!, 0) : null;
     const totalMs = rows.reduce((n, r) => n + r.durationMs, 0);
     const priced = rows.filter(r => r.usd !== null);
     const usd = priced.length === rows.length && successes ? priced.reduce((n, r) => n + r.usd!, 0) / successes : null;
-    const requests = successes ? Math.round(totalRequests / successes * 10) / 10 : null;
+    const requests = successes && totalRequests !== null ? Math.round(totalRequests / successes * 10) / 10 : null;
     return newFieldManualEntry("job-cost-profile", key, { role: "SHARED", kind: "COST_PROFILE", title: key,
-      summary: successes ? `typically ${requests} requests, ${usd === null ? "cost not fully recorded" : "$" + usd.toFixed(2)} per success; ${Math.round(totalMs / successes)} ms` : "No successful attempt recorded yet",
+      summary: successes ? `typically ${requests === null ? "request count not recorded" : requests + " requests"}, ${usd === null ? "cost not fully recorded" : "$" + usd.toFixed(2)} per success; ${Math.round(totalMs / successes)} ms` : "No successful attempt recorded yet",
       platforms: [first.platform], recordClasses: [first.recordClass], observedAt: now, outcome: "REFERENCE",
       payload: { platform: first.platform, recordClass: first.recordClass, attempts: rows.length, successes, typicalRequests: requests,
         usdPerSuccess: usd, durationMsPerSuccess: successes ? totalMs / successes : null },

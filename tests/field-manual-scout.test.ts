@@ -90,7 +90,8 @@ test("writeFieldManualDiscoveries writes live and is grow-only across a second w
   // A second scout re-discovers the same door: the store refreshes, never forks.
   await writeFieldManualDiscoveries(repos, scoutDiscoveryEntries(result({ attemptId: "att-2" }), ["nj"]), "2026-09-20T00:00:00.000Z");
   store = (await repos.fieldManual.read("live"))!.value;
-  assert.equal(store.entries.length, 4, "a re-discovery updates in place — the store only grows");
+  assert.equal(store.entries.filter(e => e.kind === "SCOUT_DISCOVERY").length, 1, "a re-discovery updates the place door in place");
+  assert.equal(store.entries.length, 5, "the new attempt adds a cost observation, not another door or method");
 
   // The next scout inherits it via the projection.
   const projection = scoutFieldManualProjection(store, { subjectId: "ocd-division/country:us/state:nj/county:morris#governing", recordClass: "meetings" });

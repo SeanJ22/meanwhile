@@ -50,3 +50,11 @@ One line per batch folded into river.
 - measures: BR-08 · ready d8e596990
 - people: SC-18 · ready c022a0df9
 - river: RL-03 · ready fc14ff341
+
+## 2026-10-04T09:06:50Z — river 8c67d4b → 4b5102044
+
+- Evidence: pnpm gates on 4b5102044 (CI env): 12/12 PASS; 9020 tests pass, 0 fail, 11 skipped.
+- registry: DB-13, DB-21 · ready ffa73d305
+- hunters: DB-48 · ready 902041c35
+- meetings: DB-02, BX-08 · ready fd0917fa2
+- auditors: DP-02, DP-04, DP-06 · ready 29ce64461

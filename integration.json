@@ -430,5 +430,57 @@
     "gates": "pass",
     "evidence": "pnpm gates on 2c1223f (CI env): 11/12 PASS, test 8999 pass 0 fail; feedback:sweep failed on SC-18's removed ADM-1/ADM-23 tests -> repaired in 8c67d4b (checkDebt), then feedback:sweep PASS and the 3 test files reading the ledger 40/40.",
     "at": "2026-10-04T08:39:26Z"
+  },
+  {
+    "lane": "registry",
+    "steps": [
+      "DB-13",
+      "DB-21"
+    ],
+    "ready_sha": "ffa73d305583f6a9375b718c147827a6321dcc95",
+    "river_sha": "4b5102044feaee1b3e088499e88ea3cea610bc3b",
+    "tested_sha": "4b5102044feaee1b3e088499e88ea3cea610bc3b",
+    "gates": "pass",
+    "evidence": "pnpm gates on 4b5102044 (CI env): 12/12 PASS; 9020 tests pass, 0 fail, 11 skipped.",
+    "at": "2026-10-04T09:06:50Z"
+  },
+  {
+    "lane": "hunters",
+    "steps": [
+      "DB-48"
+    ],
+    "ready_sha": "902041c35504c973863117b5c69b093772dc1523",
+    "river_sha": "4b5102044feaee1b3e088499e88ea3cea610bc3b",
+    "tested_sha": "4b5102044feaee1b3e088499e88ea3cea610bc3b",
+    "gates": "pass",
+    "evidence": "pnpm gates on 4b5102044 (CI env): 12/12 PASS; 9020 tests pass, 0 fail, 11 skipped.",
+    "at": "2026-10-04T09:06:50Z"
+  },
+  {
+    "lane": "meetings",
+    "steps": [
+      "DB-02",
+      "BX-08"
+    ],
+    "ready_sha": "fd0917fa2080bd31aefb35d9241113038d98d383",
+    "river_sha": "4b5102044feaee1b3e088499e88ea3cea610bc3b",
+    "tested_sha": "4b5102044feaee1b3e088499e88ea3cea610bc3b",
+    "gates": "pass",
+    "evidence": "pnpm gates on 4b5102044 (CI env): 12/12 PASS; 9020 tests pass, 0 fail, 11 skipped.",
+    "at": "2026-10-04T09:06:50Z"
+  },
+  {
+    "lane": "auditors",
+    "steps": [
+      "DP-02",
+      "DP-04",
+      "DP-06"
+    ],
+    "ready_sha": "29ce64461c4c6478a923805c146edab40028d1c0",
+    "river_sha": "4b5102044feaee1b3e088499e88ea3cea610bc3b",
+    "tested_sha": "4b5102044feaee1b3e088499e88ea3cea610bc3b",
+    "gates": "pass",
+    "evidence": "pnpm gates on 4b5102044 (CI env): 12/12 PASS; 9020 tests pass, 0 fail, 11 skipped.",
+    "at": "2026-10-04T09:06:50Z"
   }
 ]

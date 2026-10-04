@@ -205,6 +205,23 @@ export function personCardSources(
 }
 
 /**
+ * The Polarization Research Lab's measurements, credited to the lab in the
+ * card's Sources. Meanwhile names the measurement and its maker and never
+ * scores, rates or labels the person itself.
+ */
+export function prlCardSource(profile: { attribution: { text: string; url: string }; sourceUrl: string; readAt: string }): CardSource {
+  return {
+    what: "The shares of their public statements about policy, criticism and more — measured by the Polarization Research Lab, not by Meanwhile",
+    provenance: {
+      sourceUrl: profile.sourceUrl || profile.attribution.url,
+      sourceOrg: profile.attribution.text,
+      collectedAt: profile.readAt.slice(0, 10),
+      verifiedAt: null,
+    },
+  };
+}
+
+/**
  * What the Sources tab states beside its name.
  *
  * Computed from the array the tab renders, never counted a second way — a

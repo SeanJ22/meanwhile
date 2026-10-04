@@ -49,6 +49,17 @@ export interface DoorMeeting {
   readonly family: string | null;
 }
 
+/** What the last first look saw (DB-25). Stored on the door so the next look can be conditional. */
+export interface DoorValidators {
+  readonly etag: string | null;
+  readonly lastModified: string | null;
+  /** SHA-256 of the listing page or feed bytes, when the last look read them. */
+  readonly contentHash: string | null;
+  readonly checkedAt: string;
+  /** When a look last found a change. */
+  readonly changedAt: string | null;
+}
+
 export interface DoorRecord {
   readonly formatVersion: 1;
   /** Stable and readable, e.g. `meetings:<source>:<bodyId>`. Never reused. */
@@ -77,6 +88,8 @@ export interface DoorRecord {
   readonly shutSince: string | null;
   /** Read at the next opportunity instead of waiting for the schedule. */
   readonly readNow: boolean;
+  /** System-kept: what the last first look saw. Never edited by hand, never a derive input. */
+  readonly validators?: DoorValidators | null;
   readonly origin: DoorOrigin;
   /** When the editable fields last changed by hand, or null if never. */
   readonly editedAt: string | null;
@@ -293,6 +306,7 @@ export function applyManualEdit(previous: DoorRecord | null, draft: Required<Doo
     ...draft,
     lastSuccessAt: previous?.lastSuccessAt ?? null,
     lastFailureAt: previous?.lastFailureAt ?? null,
+    validators: previous?.validators ?? null,
     shutSince: shutSinceFor(draft.status, previous, at),
     origin: "MANUAL",
     editedAt: at,
@@ -323,6 +337,7 @@ export function applyDerivedRow(
     readNow: previous?.readNow ?? draft.readNow,
     lastSuccessAt: previous?.lastSuccessAt ?? null,
     lastFailureAt: previous?.lastFailureAt ?? null,
+    validators: previous?.validators ?? null,
     shutSince: previous?.shutSince ?? shutSinceFor(draft.status, null, at),
     origin: "DERIVED",
     editedAt: previous?.editedAt ?? null,

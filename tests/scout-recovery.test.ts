@@ -9,7 +9,7 @@ import {SendBudgetRefusal} from '../lib/control-plane/expansion/spend-holds.ts';
 import {solvedScoutResult,readSubjectScoutHistory,wakeInstalledAdapterDebts,adapterWaitReasonFromKnowledge} from '../lib/control-plane/workers/detective.ts';
 import {newFieldManualEntry,writeFieldManual,readFieldManual} from '../lib/control-plane/field-manual.ts';
 import { sourceReliabilityKey, reduceSourceReliability } from '../lib/control-plane/scheduler/scout-reliability.ts';
-import { adapterWaitReason, investigationRole, subjectScoutHistory, reusableScoutCandidates, scoutFactGrounded, failureResponderExecutor } from '../lib/control-plane/workers/detective.ts';
+import { adapterWaitReason, heldRecoveryBrief, investigationRole, subjectScoutHistory, reusableScoutCandidates, scoutFactGrounded, failureResponderExecutor } from '../lib/control-plane/workers/detective.ts';
 import { installedAdapters, installedAdapterVersion, runInstalledAdapter } from '../lib/control-plane/scheduler/scout-adapters.ts';
 import { readClientSource } from '../lib/control-plane/scheduler/scout-clients.ts';
 import { retryable } from '../lib/control-plane/scheduler/debt.ts';
@@ -383,4 +383,12 @@ test('Engineer does not escalate or publish when the existing budget transport r
  const prs=await workAdapterQueue({repos,results:[source],now:'2026-09-30',readEvidence:async()=>({text:'Clerk Ada'} as never),
    transportFor:()=>async()=>{calls++;throw new SendBudgetRefusal('CEILING','already spent');},request:async()=>{throw Error('Must not publish');}});
  assert.deepEqual(prs,[]);assert.equal(calls,1);assert.equal((await repos.costs.readAll()).length,0);
+});
+test('a held record goes to a detective with the failing check in its brief (DP-03)',()=>{
+ const held={status:'HELD',code:'SOURCE_REPLAY_FAILED',detail:'SOURCE_REPLAY_FAILED:PAGE_UNVERIFIED. Evidence repair owed',recovery:'WORKER',candidateId:'cand-1'};
+ assert.match(heldRecoveryBrief(held)!,/failed check SOURCE_REPLAY_FAILED on candidate cand-1/);
+ assert.match(heldRecoveryBrief({...held,code:'PARSE_INVALID',recovery:'PUBLISHER'})!,/PARSE_INVALID/);
+ assert.equal(heldRecoveryBrief({...held,code:'SOMETHING_ELSE',recovery:'PUBLISHER'}),null,'publisher retries stay with the publisher');
+ assert.equal(heldRecoveryBrief({...held,status:'PUBLISHED'}),null);
+ assert.equal(heldRecoveryBrief(undefined),null);
 });

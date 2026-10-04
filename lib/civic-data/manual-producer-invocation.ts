@@ -33,7 +33,7 @@ const RULES = {
   "ballot-navigation": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output must pass independent verification and audit before publication." },
   "campaign-sites": { mode: "EXISTING_DERIVED", reason: "The separate derived campaign-site routine verifies current publications and promotes its reader projection." },
   "member-offices": { mode: "EXISTING_DERIVED", reason: "The daily member-office refresh reads every official state roster and Open States file and promotes its reader projection." },
-  "venue-resolutions": { mode: "REVIEWED_INPUT", reason: "Venue projection requires meeting-specific location evidence and an exact body/venue join." },
+  "venue-resolutions": { mode: "EXISTING_DERIVED", reason: "Each meeting pass matches a newly published address to one exact Census street point and promotes the pin through this pointer itself (lib/meetings/venue-publication.ts); no person reviews it." },
   "meeting-body-crosswalk": { mode: "EXISTING_DERIVED", reason: "The existing meeting source-wiring session owns the normal held meeting/body binding and publication path." },
   "everyday-routing": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output must pass independent verification and audit before publication." },
 } as const satisfies Record<ManualProductionContractId, Rule>;

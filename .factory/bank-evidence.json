@@ -1,0 +1,26 @@
+{
+  "source_sha": "145596fbc",
+  "lint": {
+    "exit_code": 0,
+    "warnings": 69
+  },
+  "types": {
+    "exit_code": 0
+  },
+  "first_full": {
+    "status": "interrupted",
+    "cause": "Pinned Playwright browser directory absent; existing system Chromium was outside the resolver search root",
+    "retained_locally": "/tmp/meanwhile-bank-first-full/"
+  },
+  "browser_repair": {
+    "passed": 19,
+    "failed": 0,
+    "skipped": 1,
+    "skip_reason": "Existing beacon transport positive control refuses substituted browser build",
+    "actual_browser": "Chromium 151.0.7922.173",
+    "setup": "mkdir -p /tmp/meanwhile-bank-browsers/chromium-0/chrome-linux; ln -s /usr/bin/chromium /tmp/meanwhile-bank-browsers/chromium-0/chrome-linux/chrome; export PLAYWRIGHT_BROWSERS_PATH=/tmp/meanwhile-bank-browsers"
+  },
+  "pnpm_setup": "XDG_DATA_HOME=/tmp/meanwhile-bank-pnpm-data PNPM_HOME=/tmp/meanwhile-bank-pnpm-home pnpm --config.manage-package-manager-versions=false --config.verify-deps-before-run=false",
+  "test_environment": "env -u DATABASE_URL -u WTP_ASSET_STORE; full Git history already present",
+  "model": "Actual runtime identifier not visible; requested GPT Sol 6.1"
+}

@@ -5,7 +5,7 @@ worker: river
 provider: Claude (this run: Opus 5.5, selected by Sean with /model at 06:00Z; this run began on Sonnet 5.5)
 run_id: session_01M3CeUks1KpFZttTP6ZTEAq
 lock: river-20261004T060134Z-23a399b0
-heartbeat: 2026-10-04T10:29:36Z
+heartbeat: 2026-10-04T10:30:38Z
 
 ## Launch
 
@@ -45,6 +45,12 @@ heartbeat: 2026-10-04T10:29:36Z
 - Fresh scheduled cloud runs publish streams, mark READY and resume from saved status. Every Claude lane has done this across more than one hourly run since 06:10Z.
 - Handoff verified: River handed bank (codex-bank stopped 07:34Z) to registry at 08:20Z. By 09:05Z a fresh scheduled registry run had claimed stream/bank under its own lock ("registry (continuing bank after recorded handoff 2026-10-04 08:20Z)"). The other three handoffs (admin→measures, slide→hunters, frontend→auditors) are waiting on those workers' next hourly runs.
 - No verified Codex restart mechanism exists. The Claude fallback is the continuation path.
+
+## Pace (10:35Z, hour 4.4)
+
+- 76 of 314 build steps are integrated or in a gates run, about 17 an hour overall.
+- On pace: measures, registry (plus bank), hunters, meetings, auditors, people, ballot. Measures' last heartbeat was 98 minutes ago; it is waiting on admin's BR-01.
+- **At risk:** admin (29 steps), slide (28) and frontend (29) have made no progress since about 07:30Z. Their Claude continuation is blocked by session permission checks (needs_Sean 1). At the current pace the other lanes finish well before hour 36. These 86 steps decide the deadline: unblocked by about hour 8, they fit, and every hour of delay pushes the finish later.
 
 ## Release work
 

@@ -1,9 +1,9 @@
 build_state: active
 worker: auditors
 provider: Claude
-run_id: session_012zKTJ8roV1UZTTRBSRQA5h
-lock: none
-heartbeat: 2026-10-04T07:45:00Z
+run_id: session_01YaQuTpU6QV4F24LPhTNmXg
+lock: auditors-20261004T081837-18483
+heartbeat: 2026-10-04T08:18:37Z
 on_river: none
 ready: DP-01 at ec1157a97c25f4f7c892395673974553666afe46 (tree also carries DP-02 policy half; DP-02 itself is NOT ready)
 checks: tsc --noEmit clean; eslint clean on changed files; 1140 affected tests run with repo loader: 1128 pass, 11 fail, the same 11 fail on the unmodified base (plural, worker-fleet-coordinator, ask-gap-observation, control-plane-request-bounds). Not verified on the live runner.

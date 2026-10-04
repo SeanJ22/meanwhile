@@ -1,28 +1,11 @@
-import HOLDINGS from "../../data/states/az/ballot/measure-summaries.json" with { type: "json" };
-
-/**
- * Hand-curated plain-language summaries of ballot measures (4d).
- *
- * The rules, each of them load-bearing:
- * - **Written ONLY from the official source text on the page** — the
- *   Legislative Council analysis each row cites. Nothing here came from
- *   news coverage, advocacy material, or general knowledge.
- * - **What it does, never whether it's good.** No advocacy vocabulary; a
- *   test holds this mechanically (tests/measure-summaries.test.ts).
- * - **Rendered ABOVE the official text, clearly labeled, never replacing
- *   it.** The label on the surface says "read the official text below".
- * - **Every row cites the text it summarizes** — `summarizesUrl` must
- *   match the analysis record for the same contest, asserted in tests.
- *
- * The generated-at-runtime version of this belongs to the natural-language
- * track and its A07 gates; these are curated data, reviewed like any other
- * curated row.
- */
+import { currentMeasureRecords, MEASURE_RECORD_FIRST_SEED, type MeasureRecord } from "./measure-records.ts";
 
 export interface MeasureSummary {
   contestId: string;
   /** The 15-year-old register: what the measure would do. */
   summary: string;
+  yesMeans?: string | null;
+  noMeans?: string | null;
   /** The official text this was written from — the citation. */
   summarizesUrl: string;
   writtenAt: string;
@@ -45,8 +28,15 @@ export interface MeasureSummary {
   citation?: "azleg-analysis" | "measure-source";
 }
 
-export const MEASURE_SUMMARIES: MeasureSummary[] = HOLDINGS.records.MEASURE_SUMMARIES as MeasureSummary[];
+function summary(record: MeasureRecord): MeasureSummary {
+  return { contestId: record.contestId, summary: record.whatItDoes, yesMeans: record.yesMeans, noMeans: record.noMeans,
+    summarizesUrl: record.sourceUrl, writtenAt: record.writtenAt, citation: record.citation };
+}
 
-export function summaryForContest(contestId: string): MeasureSummary | null {
-  return MEASURE_SUMMARIES.find((s) => s.contestId === contestId) ?? null;
+/** First-seed export retained for migration checks. Runtime readers use the loaded records. */
+export const MEASURE_SUMMARIES: MeasureSummary[] = MEASURE_RECORD_FIRST_SEED.map(summary);
+
+export function summaryForContest(contestId: string, records: readonly MeasureRecord[] = currentMeasureRecords()): MeasureSummary | null {
+  const record = records.find(record => record.contestId === contestId);
+  return record ? summary(record) : null;
 }

@@ -318,7 +318,7 @@ function MoneyOverview({ data }: { data: FundingDisplayData }) {
       )}
       {!totals && (
         <p className="mw-share-note" data-money-chart="totals-not-held">
-          Raised, spent and cash on hand aren’t loaded for this committee yet. The filing’s own sentences below carry what we hold.
+          {"We're working on getting this info"}
         </p>
       )}
     </div>
@@ -334,20 +334,10 @@ function MoneyTile({ label, amount }: { label: string; amount: number }) {
   );
 }
 
-/** A labelled bar on the shared 0–100% scale, with its value in words. */
-function ShareBar({ label, share, detail }: { label: string; share: number; detail: string }) {
-  const pct = Math.max(0, Math.min(100, share * 100));
-  return (
-    <div className="mw-share-row">
-      <span className="mw-share-label">{label}</span>
-      <span className="mw-bar-track" aria-hidden="true">
-        <span className="mw-bar-fill" style={{ width: `${pct}%`, background: "var(--bar)" }} />
-      </span>
-      <span className="mw-share-value">
-        {Math.round(pct)}%<span className="mw-share-detail"> · {detail}</span>
-      </span>
-    </div>
-  );
+/** Dollar amounts on the filing, in a consistent row. */
+function AmountRow({ label, amount, detail }: { label: string; amount: number; detail?: string }) {
+  return <div className="flex flex-wrap items-baseline justify-between gap-2"><span className="mw-share-label">{label}</span>
+    <span className="mw-share-value">${usd(amount)}{detail && <span className="mw-share-detail"> · {detail}</span>}</span></div>;
 }
 
 function usd(n: number): string {
@@ -365,46 +355,42 @@ function OriginBars({ data }: { data: FundingDisplayData }) {
   if (c.totalAmount <= 0) {
     return (
       <p className="mw-share-note" data-money-chart="origin-not-held">
-        The chart of where this money came from isn’t available yet — no itemized contribution amounts are held to draw it from.
+        {"We're working on getting this info"}
       </p>
     );
   }
-  const outCount = c.contributionCount - c.inStateCount;
-  const outAmount = c.totalAmount - c.inStateAmount;
   return (
     <div className="mw-share-block">
       <p className="mw-scope-badge">
-        Covers the {c.contributionCount} contributions listed above · {usd(c.totalAmount)}. Not the whole campaign.
+        Contributions listed above · ${usd(c.totalAmount)}.
       </p>
       {c.hasGeography && (
         <>
           <p className="mw-share-heading">State on the filing</p>
-          <ShareBar
+          <AmountRow
             label={`Inside ${c.candidateState}`}
-            share={c.inStateAmount / c.totalAmount}
-            detail={`${usd(c.inStateAmount)}, ${c.inStateCount} of ${c.contributionCount}`}
+            amount={c.inStateAmount}
+
           />
-          <ShareBar
+          <AmountRow
             label={`Outside ${c.candidateState}`}
-            share={outAmount / c.totalAmount}
-            detail={`${usd(outAmount)}, ${outCount} of ${c.contributionCount}`}
+            amount={c.outStateAmount}
+
           />
         </>
       )}
       <p className="mw-share-heading">Who filed it</p>
-      <ShareBar
+      <AmountRow
         label="Committees and organizations"
-        share={c.organizationAmount / c.totalAmount}
-        detail={`${usd(c.organizationAmount)}, ${c.organizationCount}`}
+        amount={c.organizationAmount}
+
       />
-      <ShareBar
+      <AmountRow
         label="Individual people"
-        share={c.individualAmount / c.totalAmount}
-        detail={`${usd(c.individualAmount)}, ${c.individualCount}`}
+        amount={c.individualAmount}
+
       />
-      <p className="mw-share-note">
-        The single biggest of them is {Math.round((c.largestAmount / c.totalAmount) * 100)}% of the {usd(c.totalAmount)}.
-      </p>
+      {c.unlocatedAmount > 0 && <AmountRow label="State not stated" amount={c.unlocatedAmount} />}
     </div>
   );
 }
@@ -420,7 +406,7 @@ function TypeBars({ data }: { data: FundingDisplayData }) {
   if (rows.length === 0 || total <= 0) {
     return (
       <p className="mw-share-note" data-money-chart="type-not-held">
-        The chart of what kind of money it was isn’t available yet — no committee or organization contributions are held to draw it from.
+        {"We're working on getting this info"}
       </p>
     );
   }
@@ -441,11 +427,11 @@ function TypeBars({ data }: { data: FundingDisplayData }) {
         Covers the {count} committee and organization contributions listed above · {usd(total)}.
       </p>
       {kinds.map((kind) => (
-        <ShareBar
+        <AmountRow
           key={kind.label}
           label={kind.label}
-          share={kind.amount / total}
-          detail={`${usd(kind.amount)}, ${kind.count} ${kind.count === 1 ? "contribution" : "contributions"}`}
+          amount={kind.amount}
+
         />
       ))}
     </div>

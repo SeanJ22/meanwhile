@@ -65,8 +65,6 @@ export interface AskContact {
   email: string | null;
   phone: string | null;
   websiteUrl: string | null;
-  /** Public mailing address the candidate submitted on the cited filing. */
-  filedAddress?: string | null;
   sourceUrl: string | null;
   sourceOrg: string | null;
   retrievedAt: string | null;
@@ -293,7 +291,6 @@ export function contactRecord(contact: AskContact): EvidenceRecord {
   const channels: string[] = [];
   if (contact.email) channels.push(`email ${contact.email}`);
   if (contact.phone) channels.push(`phone ${contact.phone}`);
-  if (contact.filedAddress) channels.push(`filed mailing address ${contact.filedAddress}`);
   const tail = channels.length > 0 ? ` Published contact: ${channels.join(", ")}.` : "";
   return {
     kind: "CONTACT",

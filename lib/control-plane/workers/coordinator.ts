@@ -22,6 +22,7 @@ import type { FreshnessObligation } from "../scheduler/obligation.ts";
 import type { FreshnessOccurrence } from "../scheduler/durable.ts";
 import type { AcquirerTaskSpec, ObservedResearchRoute, ResearchSpan } from "./research-types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
+import type { WorkerResultRecord } from "./types.ts";
 import { nextAuditEscalation } from "./audit-escalation.ts";
 import { needsSecondSource } from "../promotion/section3.ts";
 
@@ -177,6 +178,7 @@ async function scoutSources(runtime: FleetRuntime, item: WorkItem, knownScouts?:
 /** Typed state chooses one next operation. Absence is never inferred from an empty list. */
 export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRuntime, workItemId: string, knownItems?: readonly WorkItem[],
   knownHistory?: { readonly attempts: readonly Attempt[]; readonly scouts: readonly ScoutResult[]; readonly routeTasks: readonly RouteTask[];
+    readonly completedRecords?: readonly WorkerResultRecord[];
     readonly onMissingArtifact?: (artifactId: string, reason: MissingHeldArtifactReason) => void }): Promise<AutonomousDecision> {
   const repos = runtime.repos;
   // The coordinator already took a consistent candidate snapshot. Re-reading
@@ -215,7 +217,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     );
   }
   const now = (runtime.now ?? (()=>new Date().toISOString()))();
-  const records = [...await readCompletedWorkerResults(repos, item.id)];
+  const records = [...(knownHistory?.completedRecords ?? await readCompletedWorkerResults(repos, item.id))];
   records.sort((a,b) => b.endedAt.localeCompare(a.endedAt) || b.id.localeCompare(a.id));
   const attempts = knownHistory?.attempts ?? (await repos.attempts.list()).map(a=>a.value);
   const taskFor = async (input:Parameters<typeof enqueueWorkerTask>[1]) => {
@@ -473,13 +475,14 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   const recovery=await sweepExpiredLeases(runtime.repos,{now:now(),observedBy:"autonomous-coordinator"});
   const allItems=(await runtime.repos.workItems.list()).map(row=>row.value);
   const candidates=allItems.filter(item=>item.autonomousPlan && (options.acceptsWorkItem?.(item) ?? true));
-  const attempts=(await runtime.repos.attempts.list()).map(row=>row.value);
+  const attemptRows=await runtime.repos.attempts.list();
+  const attempts=attemptRows.map(row=>row.value);
   // A cycle's candidate set is fixed before dispatch. Join immutable Scout
   // results and existing route tasks once, then hand each item only its own
   // history. Re-reading both entire logs for every owed item made selection
   // quadratic and exhausted the original hunt's early worker wall.
-  const [scouts, routeTaskRows] = await Promise.all([
-    runtime.repos.scoutResults.readAll(), runtime.repos.routeTasks.list(),
+  const [scouts, routeTaskRows, workerRecords] = await Promise.all([
+    runtime.repos.scoutResults.readAll(), runtime.repos.routeTasks.list(), runtime.repos.workerResults.readAll(),
   ]);
   const scoutsByWork=new Map<string,ScoutResult[]>();
   for(const scout of scouts) {
@@ -495,7 +498,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   }
   const lineages=selectStandingLineages({occurrences:(await runtime.repos.occurrences.list()).map(row=>row.value),
     workItems:allItems,artifacts:await runtime.repos.artifacts.readAll(),attempts,
-    workerResults:await runtime.repos.workerResults.readAll()});
+    workerResults:workerRecords});
   const selectedRoot=new Map(lineages.flatMap(lineage=>lineage.siblingRootIds.map(id=>[id,lineage.rootWorkItemId] as const)));
   const byItem=new Map(allItems.map(item=>[item.id,item] as const));
   const lineageRoot=(item:WorkItem):string|null=>{
@@ -527,6 +530,18 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
     if (attempt.startedAt>(lastServed.get(attempt.workItemId)??"")) lastServed.set(attempt.workItemId,attempt.startedAt);
   }
   const ids=fairAutonomousWorkIds(items.map(row => row.value), lastServed, options.prioritizedInstructions);
+  // Validate this invocation's already loaded history through the same shared
+  // completion path. Independent calls still read current repository state;
+  // leases, capabilities and budget admission are never frozen by this join.
+  const candidateIds=new Set(ids);
+  const completedRecords=await readCompletedWorkerResults({...runtime.repos,
+    workerResults:{...runtime.repos.workerResults,readAll:async()=>workerRecords.filter(record=>candidateIds.has(record.workItemId))},
+    attempts:{...runtime.repos.attempts,list:async()=>attemptRows},
+  });
+  const recordsByWork=new Map<string,WorkerResultRecord[]>();
+  for(const record of completedRecords) {
+    const rows=recordsByWork.get(record.workItemId)??[]; rows.push(record); recordsByWork.set(record.workItemId,rows);
+  }
   const decisions:AutonomousDecision[]=[]; const dispatches:DispatchResult[]=[];
   const deferred:{workItemId:string;reason:string;detail:string}[]=[...duplicateLineageDeferred];
   const maximum=options.maximum??ids.length; const concurrency=Math.min(options.concurrency??Math.max(1,ids.length),Math.max(1,ids.length));
@@ -547,6 +562,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
       try {
         d=await nextAutonomousOperation(runtime,id,knownItems,{
           attempts:attemptsByWork.get(id)??[],scouts:scoutsByWork.get(id)??[],routeTasks:routeTasksByWork.get(id)??[],
+          completedRecords:recordsByWork.get(id)??[],
           onMissingArtifact: (artifactId,reason) => deferred.push({workItemId:id,reason,
             detail:`${artifactId}; this source reference remains unresolved; other eligible work continues`}),
         });

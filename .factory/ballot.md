@@ -3,11 +3,11 @@ worker: codex-ballot
 provider: Codex
 run_id: codex-ballot-9378cafcef294004a0aa48621d1a1e44
 lock: codex-ballot-9378cafcef294004a0aa48621d1a1e44
-heartbeat: 2026-10-04T07:11:31Z
+heartbeat: 2026-10-04T07:19:55Z
 on_river: none
 ready: none
-checks: 2b4e92b240a9d0bae86c8e9eaced5811514f51ae: CA-51 diagnostic 27/27 pass, types/lint pass. CA-31 new dirty focused 3/3 pass; type/lint pass before final source-scope fixes. FULL 812f894 partial 20+ min run retained WTP_ASSET_STORE, with browser/geography failures; no READY. Final CI-equivalent full batch pending.
-working_on: CA-31 complete-contest generic publisher WIP: 3/3 focused tests pass, types/lint pass before final small fixes; CA-24/51 + CP-01 saved on 2b4e92b24. CA-20 next.
+checks: d058c58b9: 52/52 scoped ballot/Ask/worker regression cases pass. CA-20 dirty diagnostics: 73/73 funding/FEC cases pass, types and lint pass; exact post-commit rerun pending. Earlier invalid-environment FULL remains incomplete; final CI-equivalent FULL required, pinned browser absent and download blocked. No READY.
+working_on: CA-20 collector target universe checkpoint; CA-44/45 next. CA-31 d058c58b9 builds generic complete-contest projection, awaits slide capture-format hook.
 waiting_on: CA-12 integration (River); CA-25 DB-42 (bank), CA-37 BR-24 (admin), CA-19 CP-03/CA-33 CP-09 (slide); other ready work continues.
 returned: CP-01 Ask privacy hook implemented (812f89416), focused tests passed; CA-12 own-words hook waits for people cf622f3 on river (currently river is 0b31938).
 needs_hook: slide via River: CA-31 adds ballot-contests worker reader door and complete-contest generic BALLOT_CANDIDACY publisher. In worker-publication-evidence.ts heldPageCopies/capturesForPublication, admit saved PDF text and CSV/text captures with their raw-document hash; current HTML-only discovery skips these. Existing registered task factory recognizes new door automatically; standing runtime must keep/attach its ballot-contests publication on BALLOT_CONTEST jobs. Also CA-12 cf622f3 still only on river-next; integrate. Verification blocker: missing Chromium; cdn.playwright.dev download returns 403 Domain forbidden, baseline 11 browser failures.

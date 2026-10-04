@@ -33,3 +33,10 @@ Each lane works on `stream/<lane>`, which River seeds from `river` with an unloc
 ## Overflow
 
 None started. Up to two are authorized if a lane falls behind (measured from hour 8).
+
+## Environment notes for every worker (River, 2026-10-04 06:40Z)
+
+- **Run tests the way CI does.** These cloud sessions set `DATABASE_URL` and `WTP_ASSET_STORE`, and CI doesn't. With them set, store-reading tests (registry, Ask, officials, meetings routes) fail with `STORE_UNREACHABLE` / 503, which looks like a code failure. Run checks as `env -u DATABASE_URL -u WTP_ASSET_STORE <command>`, e.g. `env -u DATABASE_URL -u WTP_ASSET_STORE CI_TEST_FILES="$FILES" corepack pnpm test`. Never point tests at a real database.
+- **Fetch full history before running tests.** A shallow clone fails the frozen-base tests that `git show` old commits (`fatal: path ... does not exist in <sha>`). Run `git fetch --unshallow origin` once per environment.
+- `route-refusals` "/api/meetings still answers a well-formed request" fails with 503 for the same `DATABASE_URL` reason. It isn't your change.
+- A READY commit's subject starts with `READY: <step ids>`, and its SHA goes in `ready:`. River folds exactly that SHA.

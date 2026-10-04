@@ -44,3 +44,20 @@ export async function recordMemberOutcomes(
   }
   return { recorded, missing };
 }
+
+/**
+ * The one line the derived family child calls after its member reads (hook for
+ * the meetings lane's `scripts/ingest.ts`): each member's own result onto its
+ * own door. A registry that cannot be written never changes the read's outcome.
+ */
+export async function recordFamilyReads(
+  repo: DoorRepository,
+  reads: readonly { readonly ok: boolean; readonly member: { readonly id: string } }[],
+  at: string,
+): Promise<{ readonly recorded: number; readonly missing: number } | null> {
+  try {
+    return await recordMemberOutcomes(repo, reads.map((read) => ({ doorId: read.member.id, outcome: read.ok ? "SUCCESS" : "FAILURE" })), at);
+  } catch {
+    return null;
+  }
+}

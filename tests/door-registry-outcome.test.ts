@@ -46,3 +46,13 @@ test("a family read records each member on its own door, and a door that is not 
   assert.equal(after.find((d) => d.doorId === b.doorId)!.lastFailureAt, AT);
   assert.equal((await repos.doors.read("meetings:nowhere:none")), null);
 });
+
+test("the family child's one call records every member's own result and survives an unwritable registry", async () => {
+  const repos = await seeded();
+  const [a, b] = (await listDoors(repos.doors)).doors;
+  const { recordFamilyReads } = await import("@/lib/doors/outcome.ts");
+  const done = await recordFamilyReads(repos.doors, [{ ok: true, member: { id: a.doorId } }, { ok: false, member: { id: b.doorId } }], AT);
+  assert.deepEqual(done, { recorded: 2, missing: 0 });
+  const broken = { read: async () => { throw new Error("store down"); } } as never;
+  assert.equal(await recordFamilyReads(broken, [{ ok: true, member: { id: a.doorId } }], AT), null);
+});

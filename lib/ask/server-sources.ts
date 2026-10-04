@@ -11,6 +11,9 @@ import { summaryForContest } from "../ballot/measure-summary.ts";
 import { provisionsForContest } from "../ballot/measure-provisions.ts";
 import { getMeasureAnalyses, type MeasureAnalysis } from "../ballot/analyses.ts";
 import { positionsFor } from "../candidates/positions.ts";
+import { heldRosterFiles } from "../holdings/discovery.ts";
+import { mayReadRetiredPluralRoster } from "../officials/roster-authority.ts";
+import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
 import type { BallotAbsence, BallotSet, Contest } from "../ballot/types.ts";
 import { allSeatHolders, seatHolderById, seatHoldersForDivision } from "../registry/server.ts";
 import { officialStateVoteScopeForOfficeholderId } from "../state-rollcalls/authority.ts";
@@ -81,7 +84,7 @@ export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: re
         seats.set(seat.id, seat);
         at(seat).divisionIds.add(ocdId);
       }
-      if (/\/(?:sldu|sldl):/.test(ocdId) && held.length === 0) {
+      if (!mayReadRetiredPluralRoster() && /\/(?:sldu|sldl):/.test(ocdId) && held.length === 0) {
         loaderFailures += 1;
       }
     } catch {
@@ -240,12 +243,20 @@ function sourcedPositions(targetKey: string) {
 }
 
 /**
- * State legislators now come from the promoted state snapshot through
- * `seatHoldersForDivision`, which Ask already reads. The tracked state roster
- * files this once read are gone from the read path; the route's call is
- * removed by the ballot lane (see the hook in people's status).
+ * The legislators whose districts the reader's divisions actually name.
+ *
+ * **Selected by DIVISION ID, never by state.** A reader in Arizona has two
+ * state senators near them and exactly one who represents the district they are
+ * standing in; handing them the state's whole roster and calling it "your
+ * senator" would be a false relationship for 29 of 30. The `sldu:`/`sldl:` ids
+ * in their own division list are what the geometry already resolved.
+ *
+ * Congressional and federal rows are deliberately not included: the ballot and
+ * the who-governs card already carry them with their own provenance, and an Ask
+ * answer about a school board agenda listing a U.S. senator would be a contact
+ * with no relationship to the question.
  */
-export function readerRepresentatives(_ocdIds: readonly string[]): {
+export function readerRepresentatives(ocdIds: readonly string[]): {
   id: string;
   name: string;
   officeTitle: string;
@@ -256,5 +267,82 @@ export function readerRepresentatives(_ocdIds: readonly string[]): {
   sourceOrg: string | null;
   collectedAt: string | null;
 }[] {
-  return [];
+  // The tracked state rosters are recorded Plural/OpenStates research
+  // fixtures, not production authority. In production the existing Ask
+  // holding-failure path names the missing canonical officeholder projection;
+  // only node:test may exercise the historical rows.
+  if (!mayReadRetiredPluralRoster()) return [];
+  const wanted = new Set(ocdIds.filter((id) => /\/(sldu|sldl):/.test(id)));
+  if (wanted.size === 0) return [];
+
+  const out: ReturnType<typeof readerRepresentatives> = [];
+  const seen = new Set<string>();
+
+  for (const file of heldRosterFiles(process.cwd())) {
+    /* The federal roster is keyed on bare state ids and carries no
+       `sldu:`/`sldl:` links, so it contributes nothing here and is skipped
+       rather than read and discarded. */
+    if (file === "officeholders-us.json") continue;
+    const set = readRoster(file);
+    if (!set) continue;
+    const byId = new Map(set.officeholders.map((o) => [o.id, o]));
+    for (const link of set.divisions) {
+      if (!wanted.has(link.ocdId)) continue;
+      const person = byId.get(link.officeholderId);
+      if (!person || seen.has(person.id)) continue;
+      seen.add(person.id);
+      out.push({
+        id: person.id,
+        name: person.name,
+        officeTitle: person.officeTitle,
+        email: person.email ?? null,
+        phone: person.phone ?? null,
+        websiteUrl: person.websiteUrl ?? null,
+        sourceUrl: person.provenance?.sourceUrl ?? null,
+        sourceOrg: person.provenance?.sourceOrg ?? null,
+        collectedAt: person.provenance?.collectedAt ?? null,
+      });
+    }
+  }
+  return out;
+}
+
+interface RosterFile {
+  officeholders: {
+    id: string;
+    name: string;
+    officeTitle: string;
+    email?: string | null;
+    phone?: string | null;
+    websiteUrl?: string | null;
+    provenance?: { sourceUrl?: string | null; sourceOrg?: string | null; collectedAt?: string | null } | null;
+  }[];
+  divisions: { ocdId: string; officeholderId: string }[];
+}
+
+const rosterCache = new Map<string, RosterFile | null>();
+
+/**
+ * One roster file, cached per process.
+ *
+ * Read through `process.cwd()` like every other committed artifact, which is
+ * why `/api/ask/grounded` names `./lib/registry/*.json` in
+ * `outputFileTracingIncludes` — a file reached this way is absent from a
+ * serverless bundle unless the tracer is told, and an absent roster would
+ * render as "we have not recorded who represents you", which is
+ * indistinguishable from honest missing data.
+ */
+function readRoster(name: string): RosterFile | null {
+  if (rosterCache.has(name)) return rosterCache.get(name) ?? null;
+  let parsed: RosterFile | null = null;
+  try {
+    parsed = stateForRosterFile(name) === null
+      ? getFederalOfficeholderSet() as RosterFile
+      : JSON.parse(readFileSync(join(process.cwd(), "data", "states", stateForRosterFile(name)!, "officials", name), "utf8")) as RosterFile;
+  } catch (error) {
+    if (stateForRosterFile(name) === null) throw error;
+    parsed = null;
+  }
+  rosterCache.set(name, parsed);
+  return parsed;
 }

@@ -953,6 +953,13 @@ function workflowExecutableClosure(
     problems: [...new Set(problems)].sort(),
   };
 }
+const RETIRED_PLURAL_WRITER_SOURCE = /(?:from\s*["'][^"']*sources\/plural\/index\.ts["']|officeholders-\$\{|data\/states\/\*\/officials\/officeholders-\?\?\.json)/;
+const RETIRED_PLURAL_READER_GATES = [
+  { path: "lib/photos/person.ts", gate: /officeholderIdentityMayEnterReader\(row\.officeholderId\)/ },
+  { path: "lib/registry/server.ts", gate: /officeholderIdentityMayEnterReader\(photo\.officeholderId\)/ },
+  { path: "lib/officials/campaign-sites.ts", gate: /officeholderIdentityMayEnterReader\(officeholderId\)/ },
+  { path: "lib/corpus/unified.ts", gate: /currentOfficeholderStatements\(\)/ },
+] as const;
 const OFFICEHOLDER_STATEMENT_FIRST_SEEDS = [
   "statements.json",
   "statement-identity-first-seed-v1.json",
@@ -1751,6 +1758,22 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
     add("LEGACY_INTERMEDIARY_COMMAND", "package.json", "A retired Plural/OpenStates state-roster writer remains callable.");
   }
 
+  for (const path of [
+    "scripts/build-officeholders.ts",
+    "scripts/enrich-federal-officeholders.mts",
+    "scripts/reader-finance-identity.mts",
+  ]) {
+    const source = tree.files[path] ?? "";
+    const executable = source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+    if (RETIRED_PLURAL_WRITER_SOURCE.test(executable)) {
+      add("RETIRED_INTERMEDIARY_WRITER", path, "Executable code can rebuild production output from a retired Plural/OpenStates state roster.");
+    }
+  }
+
+  const candidateLinks = tree.files["data/ballot/candidate-links-2026.json"] ?? "";
+  if (/"verification"\s*:\s*"[^"]*(?:Plural Open States|OpenStates)|"note"\s*:\s*"MISS — B14 official-page rung/.test(candidateLinks)) {
+    add("RETIRED_INTERMEDIARY_READER_ARTIFACT", "data/ballot/candidate-links-2026.json", "A Reader candidate link or gap was derived from the retired intermediary roster.");
+  }
   const reviewedLinks = tree.files["lib/funding/official-person-candidacy-links.json"] ?? "";
   if (reviewedLinks) {
     add("TRACKED_OFFICIAL_CANDIDACY_AUTHORITY", "lib/funding/official-person-candidacy-links.json", "The old production-looking identity input path is retired; reviewed first-seed evidence belongs only under lib/registry/fixtures and live outcomes belong in REGISTRY_RUNTIME_BINDING.");
@@ -1764,6 +1787,15 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
   const financeBridge = tree.files["lib/funding/official-candidacies.json"] ?? "";
   if (financeBridge) {
     add("TRACKED_OFFICIAL_CANDIDACY_AUTHORITY", "lib/funding/official-candidacies.json", "The mutable officeholder/candidacy bridge must live in the canonical registry runtime projection, not a tracked generated file.");
+  }
+  if (/"sourcePath"\s*:\s*"data\/states\/[a-z]{2}\/officials\/officeholders-\d{2}\.json"|"id"\s*:\s*"plural:/.test(financeBridge)) {
+    add("RETIRED_INTERMEDIARY_READER_ARTIFACT", "lib/funding/official-candidacies.json", "Generated Reader identity output still contains a retired state-roster identity.");
+  }
+  for (const { path, gate } of RETIRED_PLURAL_READER_GATES) {
+    const source = tree.files[path];
+    if (source !== undefined && !gate.test(source)) {
+      add("RETIRED_INTERMEDIARY_READER", path, "A production identity bridge no longer proves that Plural/OpenStates ids are test-only.");
+    }
   }
   const campaignMoney = tree.files["lib/funding/campaign-money.ts"];
   if (campaignMoney !== undefined && (!/getRegistryRuntimeReadModel\(\)\.officialCandidacies/.test(campaignMoney) || /official-candidacies\.json|readFile(?:Sync)?\s*\(/.test(campaignMoney))) {

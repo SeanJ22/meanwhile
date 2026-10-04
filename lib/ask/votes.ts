@@ -1,5 +1,10 @@
+import { readFileSync } from "node:fs";
+import { stateForRosterFile } from "../holdings/runtime-paths.ts";
+import { join } from "node:path";
 
 import { nameParts, splitDisplayName } from "../ballot/incumbency.ts";
+import { heldRosterStates } from "../holdings/discovery.ts";
+import { mayReadRetiredPluralRoster } from "../officials/roster-authority.ts";
 import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
 import { formatDateLong } from "../text/format-date.ts";
 import {
@@ -125,14 +130,25 @@ import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
  * and for the reason AUD-06 exists: fourteen hand-kept state lists across
  * thirteen files was not an annoyance at three states, it was the omission a
  * session makes at fifty while believing the state is fully onboarded.
+ * A recorded state roster is discovered from held data; adding one needs
+ * no state-specific code branch.
  *
  * The federal roster is the promoted FEDERAL_DIRECTORY authority because it
  * is not a covered STATE — it is national, keyed on `congress:` ids, and its
- * members carry their own `state` on the row. State legislators resolve from
- * the promoted state snapshot, never from a tracked file.
+ * members carry their own `state` on the row. Retired state files can enter
+ * only through the explicit node:test fixture gate.
  */
-const ROSTER_SCOPES: Readonly<Record<string, { readonly state: null }>> = {
-  us: { state: null },
+type VoteRosterAuthority =
+  | { readonly kind: "FEDERAL_DIRECTORY"; readonly state: null }
+  | { readonly kind: "RETIRED_STATE_TEST_FIXTURE"; readonly file: string; readonly state: string };
+
+const ROSTER_SCOPES: Readonly<Record<string, VoteRosterAuthority>> = {
+  us: { kind: "FEDERAL_DIRECTORY", state: null },
+  ...(mayReadRetiredPluralRoster()
+    ? Object.fromEntries(
+        heldRosterStates(process.cwd()).map((s) => [s.fips, { kind: "RETIRED_STATE_TEST_FIXTURE" as const, file: `officeholders-${s.fips}.json`, state: s.usps }]),
+      )
+    : {}),
 };
 
 interface RosterRow {
@@ -180,7 +196,19 @@ function loadRoster(): VoteSubjectSeat[] {
   const out: VoteSubjectSeat[] = [];
   for (const [scope, authority] of Object.entries(ROSTER_SCOPES)) {
     const state = authority.state;
-    const set: RosterSet = federal;
+    let set: RosterSet | null = null;
+    try {
+      set = authority.kind === "FEDERAL_DIRECTORY"
+        ? federal
+        : JSON.parse(readFileSync(join(process.cwd(), "data", "states", stateForRosterFile(authority.file)!, "officials", authority.file), "utf8")) as RosterSet;
+    } catch (error) {
+      if (authority.kind === "FEDERAL_DIRECTORY") throw error;
+      /* A committed file that will not read is a real state. It contributes
+         nothing and the caller reports an honest gap — never a 500, and never
+         a claim that the person cast no votes. */
+      set = null;
+    }
+    if (!set) continue;
     const divisions = new Map<string, string[]>();
     for (const link of set.divisions ?? []) {
       const arr = divisions.get(link.officeholderId) ?? [];

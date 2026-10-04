@@ -148,7 +148,7 @@ test("POS-5: the statewide measure treatment the owner praised is intact — sum
   const page = read("app/ballot/page.tsx");
   // The part-by-part pill and the collapsed official analysis both still render.
   assert.match(page, /What&apos;s in it, part by part/, "the part-by-part pill is gone");
-  assert.match(page, /provisionsForContest\(contest\.id\)\.length > 0/);
+  assert.match(page, /provisionsForContest\(contest\.id, measureRecords\)\.length > 0/);
   assert.match(page, /Official analysis — \{analysis\.sourceOrg\}/, "the collapsed official analysis is gone");
   // The state summary renders in the standard sans face — no serif on the face.
   assert.ok(!/t-record[^"]*"[^>]*>\s*\{summary\.summary\}/.test(page), "the plain-language summary must not wear the serif record face");

@@ -5,6 +5,8 @@
  * the same pure projection. It creates no second ledger, performs no write,
  * and never turns a failed read into an empty production-data observation.
  */
+import { refreshDoorsForPass } from "../doors/install.ts";
+import type { DoorRepository } from "../doors/registry.ts";
 import { Pool } from "@neondatabase/serverless";
 import { and, eq, gte, inArray, lte, notExists, or, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-serverless";
@@ -271,6 +273,8 @@ export async function readRoutineDataObservabilityFromConnection(
     readonly currentReaderBuild?: CurrentReaderBuildIdentity;
     /** A request-scoped caller's server-side limit; absent means none. */
     readonly statementTimeoutMs?: number;
+    /** DB-14: the door registry, so a door added as data is listed FRESH, DUE or STALE. */
+    readonly doors?: DoorRepository;
   } = {},
 ): Promise<RoutineObservabilityRead> {
   const now = options.now ?? new Date().toISOString();
@@ -283,6 +287,7 @@ export async function readRoutineDataObservabilityFromConnection(
     now,
     connected: selected !== "",
     currentReaderBuild: options.currentReaderBuild,
+    ...(options.doors ? { adoptDoors: () => refreshDoorsForPass(options.doors!) } : {}),
     ...(selected !== "" ? { readRows: (since: string) => readRowsFromCanonicalTables(selected, since, now, limit ?? null) } : {}),
   });
 }

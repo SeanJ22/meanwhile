@@ -1,5 +1,6 @@
 /** Existing publication doors and their executable worker record contracts. */
 export const WORKER_READER_CLASSES = {
+  "ballot-contests": "BALLOT_CONTEST",
   "comment-access": "PUBLIC_COMMENT_RULE",
   "everyday-routing": "SERVICE_CONTACT",
   "ballot-navigation": "VOTER_ACCESS_ROUTE",

@@ -1,3 +1,4 @@
+import { readGenericBallotProjection } from "../ballot/generic-projection.ts";
 import { createHash } from "node:crypto";
 
 import {
@@ -87,6 +88,7 @@ const manual = (id: Parameters<typeof requiredManualProductionContract>[0], read
 export function promotedEdgePointers(): Readonly<Record<PromotedAuthorityFamily, readonly PromotedEdgePointer[]>> {
   const nhMembers = requiredRoutineContract("nh-members");
   return {
+    "ballot-contests": [manual("ballot-contests", readGenericBallotProjection)],
     "ballot-az": [manual("az-sos-ballot", readAzBallotProjection)],
     "ballot-nh": [manual("nh-curated-ballot", readNhBallotProjection)],
     "candidate-profiles": [

@@ -358,7 +358,7 @@ export interface BallotRetrievalDeps {
     publicationDate?: CandidatePublicationDate;
   }[];
   /** The plain-language measure summary and the analysis it cites. */
-  measureSummary?: (contestId: string) => { summary: string; summarizesUrl: string } | null;
+  measureSummary?: (contestId: string) => { summary: string; summarizesUrl: string; yesMeans?: string | null; noMeans?: string | null } | null;
   /** What a measure would actually change, provision by provision. */
   measureProvisions?: (contestId: string) => readonly {
     id: string;
@@ -425,7 +425,7 @@ export function ballotRecordsFor(
       text:
         `${contest.title} appears on this ballot for ${deps.set.election.name}` +
         ` on ${formatDateLong(deps.set.election.date) ?? deps.set.election.date}.` +
-        ` Voters choose ${contest.voteFor}` +
+        (contest.voteFor === null ? "" : ` Voters choose ${contest.voteFor}`) +
         `${contest.termYears ? `, for a term of ${contest.termYears} years` : ""}.` +
         (scope.currentNote ? ` ${scope.currentNote}` : ""),
       occurredAt: deps.set.election.date,
@@ -454,6 +454,11 @@ export function ballotRecordsFor(
         text: summary.summary,
         sourceUrl: summary.summarizesUrl,
       });
+      for (const vote of ["YES", "NO"] as const) {
+        const meaning = vote === "YES" ? summary.yesMeans : summary.noMeans;
+        if (meaning) records.push({ kind: "MEASURE_SUMMARY", id: `${record.contestId}#${vote.toLowerCase()}-meaning`,
+          text: `${vote}: ${meaning}`, measureMeaning: { vote, meaning }, sourceUrl: summary.summarizesUrl });
+      }
     }
     const provisions = deps.measureProvisions?.(record.contestId) ?? [];
     denominators.provisionsRecorded = provisions.length;

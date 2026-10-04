@@ -80,6 +80,7 @@ export function researchLearningEntries(result: FleetResult, now: string): Field
         states: statesFor(question.jurisdiction, question.subjectId),
         recordClasses: question.recordClass ? [question.recordClass] : [],
         platforms: [],
+        foundBy: "DETECTIVE",
         outcome,
         url: null,
         source: DETECTIVE_LEARNING_SOURCE,

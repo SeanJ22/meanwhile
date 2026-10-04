@@ -342,6 +342,7 @@ export const READER_FUNDING_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
 
 export const READER_BALLOT_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   ...READER_MAP_AUTHORITY_FAMILIES,
+  "ballot-contests",
   "ballot-az",
   "ballot-nh",
   "candidate-profiles",

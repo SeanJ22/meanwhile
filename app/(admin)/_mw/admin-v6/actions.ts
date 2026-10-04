@@ -669,9 +669,15 @@ const defs: ActionDef[] = [
       rows: [
         ["Affects", ctx.words ? `Work whose name matches: “${ctx.words}”` : `Waiting work in ${ctx.scopeName}`],
         ["What changes", "The fleet puts what matches first"],
-        ["Cost", "Nothing by itself"],
+        ["Cost", "Nothing by itself. A budget below limits what this send may spend."],
         ["Undo", "Send it somewhere else"],
       ],
+      amount: { label: "Budget for this send in dollars (optional, rolling 24 hours)", initial: "" },
+      invalid: ({ amount }) => {
+        if (amount.trim() === "") return null;
+        const n = Number(amount);
+        return !Number.isFinite(n) || n < 0 ? "Enter an amount of $0 or more, or leave it empty." : null;
+      },
     }),
     gateway: { type: "fleet.deployHere" },
     dependency: null,

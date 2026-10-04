@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../control-plane/gateway/admin-config.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+import { refreshDoorsForPass } from "../doors/install.ts";
 import { MEETING_PARTITION_CONTRACTS } from "./meeting-partitions.ts";
 
 /**
@@ -194,6 +195,8 @@ function openAt(request: RoutineDueRequest, nowMs: number): boolean {
 
 /** Record a request on the owner's config row (compare-and-set). One open request at a time. */
 export async function requestRoutineDue(repos: ControlPlaneRepositories, args: readonly string[], now: string): Promise<RoutineDueRequest> {
+  // DB-14: a door added as data is a partition this request may name.
+  await refreshDoorsForPass(repos.doors);
   const command = routineDueCommand(args);
   if (command.kind !== "REQUEST") throw new Error("ROUTINE_DUE_REQUEST_EXPECTED_REQUEST");
   const nowMs = Date.parse(now);

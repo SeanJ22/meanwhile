@@ -89,11 +89,13 @@ async function finish(candidate: RoutineCandidate): Promise<void> {
 
 /* A state, DC or a territory: every registered one has its registration (lib/ocd/state-of.ts). */
 const stateOf = (ocdId: string): string | null => ocdStateCode(ocdId)?.toUpperCase() ?? null;
+import { DATA_DOOR_KINDS, DOOR_KIND_SPECS, type DataDoorKind } from "../lib/civic-data/derived-door-kinds.ts";
 const ADAPTER_ENTRY: Readonly<Record<DerivedWiringKind, string>> = {
   ICAL: "lib/sources/ical/index.ts",
   OFFICIAL_PAGE_EVENTS: "lib/sources/official-page-events/index.ts",
   DILIGENT: "lib/sources/diligent/index.ts",
   LEGISTAR: "lib/sources/legistar/index.ts",
+  ...(Object.fromEntries(DATA_DOOR_KINDS.map((kind) => [kind, DOOR_KIND_SPECS[kind].entry])) as Record<DataDoorKind, string>),
 };
 const digests = new Map<DerivedWiringKind, string>();
 const adapterDigest = (kind: DerivedWiringKind): string => {

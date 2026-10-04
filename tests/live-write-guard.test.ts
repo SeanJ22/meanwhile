@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import { isLiveWriteRequest, isLocalBase } from "../lib/ops/live-write-guard.ts";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 
 test("FE-01: every write route is aborted", () => {
   for (const p of ["/api/log", "/api/events", "/api/reactions", "/api/feedback", "/api/speak"]) {
@@ -20,7 +21,7 @@ test("FE-01: reads pass", () => {
 
 test("FE-01: a local base is recognised", () => {
   assert.equal(isLocalBase("http://localhost:3000"), true);
-  assert.equal(isLocalBase("https://meanwhileusa.com"), false);
+  assert.equal(isLocalBase(PUBLIC_SITE_ORIGIN), false);
 });
 
 test("FE-01: launchGuarded applies the guard when asked", async () => {

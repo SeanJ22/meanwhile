@@ -44,6 +44,8 @@
  * argument, so this module still imports nothing that touches a store.
  */
 
+import type { FixMapRow } from "../method/fix-map.ts";
+import { hereNote, mergePlaceResults, methodHere, placeResultsOf, type PlaceResult } from "./field-manual-places.ts";
 import { createHash } from "node:crypto";
 
 import type { ControlPlaneRepositories } from "./repository/types.ts";
@@ -90,7 +92,10 @@ export interface FieldManualEntry {
   readonly ocdIds?: readonly string[];
   readonly bodyIds?: readonly string[];
   readonly foundBy?: "SCOUT" | "DETECTIVE";
+  /** The latest result anywhere, for display. What happened in each place is `placeResults` (DP-22). */
   readonly outcome: FieldManualOutcome;
+  /** One result per place, so a result in one place never overwrites another's. Absent on entries written before DP-22. */
+  readonly placeResults?: readonly PlaceResult[];
   /** The door itself, when the entry is one. */
   readonly url: string | null;
   /** Which original store this came from (path or table name). Provenance, never dropped. */
@@ -184,6 +189,7 @@ export function upsertEntries(
       ...((prior.ocdIds || entry.ocdIds) ? { ocdIds: lower([...(prior.ocdIds ?? []), ...(entry.ocdIds ?? [])]) } : {}),
       ...((prior.bodyIds || entry.bodyIds) ? { bodyIds: [...new Set([...(prior.bodyIds ?? []), ...(entry.bodyIds ?? [])])].sort() } : {}),
       observedAt: nextAt >= priorAt ? entry.observedAt : prior.observedAt,
+      placeResults: mergePlaceResults(placeResultsOf(prior), placeResultsOf(entry)),
       foundBy: prior.foundBy ?? entry.foundBy,
       ...(entry.kind === "METHOD" && prior.kind === "METHOD" ? { payload: unionMethodReach(prior.payload, entry.payload, newerWins) } : {}),
     });
@@ -217,6 +223,11 @@ export interface FieldManualQuery {
   readonly bodyIds?: readonly string[];
   /** Hard cap on projected lines so a walk's context stays a cache-cheap projection, never the whole store. */
   readonly limit?: number;
+  /**
+   * The fix map's rows for the place this projection is for (DP-21). Given, each method line says whether it works
+   * here or is untried here, and a method that fails here is left out. Omitted, the projection is as it always was.
+   */
+  readonly fixMapRows?: readonly FixMapRow[];
 }
 
 export interface FieldManualProjection {
@@ -224,6 +235,8 @@ export interface FieldManualProjection {
   readonly lines: readonly string[];
   /** The entry ids offered — the "inherited branches" half of the RULING 63 pair. */
   readonly entryIds: readonly string[];
+  /** Methods left out because they fail in this place (DP-21); 0 when no fix map rows were given. */
+  readonly leftOutFailingHere?: number;
   /** How many entries matched before the limit; total how many the store holds. */
   readonly matched: number;
   readonly total: number;
@@ -276,10 +289,14 @@ export function projectFieldManual(store: FieldManualStore, query: FieldManualQu
     if (freshness !== 0) return freshness;
     return a.id.localeCompare(b.id);
   });
-  const chosen = ranked.slice(0, limit);
+  const rows = query.fixMapRows;
+  const here = new Map(rows === undefined ? [] : ranked.flatMap((e) => { const h = methodHere(e, rows); return h === null ? [] : [[e.id, h] as const]; }));
+  const open = rows === undefined ? ranked : ranked.filter((e) => here.get(e.id)?.status !== "FAILS");
+  const chosen = open.slice(0, limit);
   return {
-    lines: chosen.map((e) => fieldManualLine(e)),
+    lines: chosen.map((e) => fieldManualLine(e) + (here.has(e.id) ? hereNote(here.get(e.id)!) : "")),
     entryIds: chosen.map((e) => e.id),
+    ...(rows === undefined ? {} : { leftOutFailingHere: ranked.length - open.length }),
     matched: matched.length,
     total: store.entries.length,
   };

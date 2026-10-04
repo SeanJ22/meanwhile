@@ -113,6 +113,7 @@ import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discover
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { CandidateStore } from "../../method/candidate.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
+import type { DoorRecord } from "../../doors/registry.ts";
 
 /** ------------------------------------------------------------- envelopes */
 
@@ -820,6 +821,8 @@ export interface ControlPlaneRepositories {
    * (`lib/control-plane/ask-gap-observations.ts`).
    */
   readonly askGapObservations: AggregateRepository<AskGapObservation>;
+  /** The Door Registry (DB-09, schema v19): one aggregate per door, id = door id. Written only through the `door.save` gateway action, and by derive steps that never overwrite a newer manual edit. */
+  readonly doors: AggregateRepository<DoorRecord>;
   readonly budget: BudgetRepository;
   readonly locks: LockManager;
   /** What this store is, for a report that must say where the state lives. */

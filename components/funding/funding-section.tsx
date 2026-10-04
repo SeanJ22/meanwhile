@@ -355,7 +355,7 @@ function OriginBars({ data }: { data: FundingDisplayData }) {
   if (c.totalAmount <= 0) {
     return (
       <p className="mw-share-note" data-money-chart="origin-not-held">
-        {"We\'re working on getting this info"}
+        {"We're working on getting this info"}
       </p>
     );
   }
@@ -370,12 +370,12 @@ function OriginBars({ data }: { data: FundingDisplayData }) {
           <AmountRow
             label={`Inside ${c.candidateState}`}
             amount={c.inStateAmount}
-            
+
           />
           <AmountRow
             label={`Outside ${c.candidateState}`}
             amount={c.outStateAmount}
-            
+
           />
         </>
       )}
@@ -383,12 +383,12 @@ function OriginBars({ data }: { data: FundingDisplayData }) {
       <AmountRow
         label="Committees and organizations"
         amount={c.organizationAmount}
-        
+
       />
       <AmountRow
         label="Individual people"
         amount={c.individualAmount}
-        
+
       />
       {c.unlocatedAmount > 0 && <AmountRow label="State not stated" amount={c.unlocatedAmount} />}
     </div>
@@ -406,7 +406,7 @@ function TypeBars({ data }: { data: FundingDisplayData }) {
   if (rows.length === 0 || total <= 0) {
     return (
       <p className="mw-share-note" data-money-chart="type-not-held">
-        {"We\'re working on getting this info"}
+        {"We're working on getting this info"}
       </p>
     );
   }
@@ -431,7 +431,7 @@ function TypeBars({ data }: { data: FundingDisplayData }) {
           key={kind.label}
           label={kind.label}
           amount={kind.amount}
-          
+
         />
       ))}
     </div>

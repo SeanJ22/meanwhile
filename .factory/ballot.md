@@ -3,10 +3,10 @@ worker: codex-ballot
 provider: Codex
 run_id: codex-ballot-9378cafcef294004a0aa48621d1a1e44
 lock: codex-ballot-9378cafcef294004a0aa48621d1a1e44
-heartbeat: 2026-10-04T07:32:27Z
+heartbeat: 2026-10-04T07:39:28Z
 on_river: none
 ready: none
-checks: d058c58b9: 52/52 ballot/Ask/worker regression cases pass; 82e4ade3e: CA-20 diagnostics 73/73 pass, type/lint pass. CA-44/45/30 dirty diagnostic 108/108 pass, types pass, lint corrected JSX apostrophe only; exact checkpoint rerun and CI-equivalent FULL pending. No READY: Chromium missing, supported download blocked; River has browser capability and can verify exact checkpoint.
+checks: d058c58b9: 52/52 ballot/Ask/worker regression cases pass; 82e4ade3e: CA-20 diagnostics 73/73 pass, type/lint pass. CA-44/45/30 dirty diagnostic 108/108 pass, CA-30 subjectId repair: type check and 5/5 meaning/render diagnostics pass; focused lint pass; exact checkpoint rerun and CI-equivalent FULL pending. No READY: Chromium missing, supported download blocked; River has browser capability and can verify exact checkpoint.
 working_on: CA-44/45 filings-only money + individual-dollar small-donor share; CA-30 stored YES/NO lines and deterministic Ask composition checkpoint. CA-23 investigated: held local register has office links but no reported summary totals or exact candidacy links; never sum itemized rows into a filer total. CA-49 next.
 waiting_on: CA-12 integration (River); CA-25 DB-42 (bank), CA-37 BR-24 (admin), CA-19 CP-03/CA-33 CP-09 (slide); other ready work continues.
 returned: CP-01 Ask privacy hook implemented (812f89416), focused tests passed; CA-12 own-words hook waits for people cf622f3 on river (currently river is 0b31938).

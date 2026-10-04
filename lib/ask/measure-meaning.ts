@@ -10,7 +10,7 @@ export function composeMeasureMeaningAnswer(input: {
   const votes = new Set(requested);
   if (!votes.size) return null;
   const held = input.records.filter(record => record.kind === "MEASURE_SUMMARY" && record.measureMeaning &&
-    votes.has(record.measureMeaning.vote) && record.subjectIds?.includes(input.subject!.id) && record.sourceUrl);
+    votes.has(record.measureMeaning.vote) && record.subjectId === input.subject!.id && record.sourceUrl);
   if (held.length !== votes.size || new Set(held.map(record => record.measureMeaning!.vote)).size !== votes.size) return null;
   return { answer: held.map(record => `${record.measureMeaning!.vote}: ${record.measureMeaning!.meaning}`).join("\n\n"),
     citedUrls: [...new Set(held.map(record => record.sourceUrl!))] };

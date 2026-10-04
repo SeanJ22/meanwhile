@@ -7,5 +7,6 @@ export function readerCandidateProfiles(value: CandidateProfilesProjection): Can
     // Older acquisition notes contain the same addresses as the filed fields.
     note: "", hunts: [],
     cards: Object.fromEntries(Object.entries(value.cards.cards).map(([key, card]) =>
-      [key, { ...card, filedAddress: null, filedAddressSource: null }])) } };
+      [key, { ...card, ...(Object.hasOwn(card, "filedAddress") ? { filedAddress: null } : {}),
+        ...(Object.hasOwn(card, "filedAddressSource") ? { filedAddressSource: null } : {}) }])) } };
 }

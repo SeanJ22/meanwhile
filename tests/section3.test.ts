@@ -55,3 +55,12 @@ test("CP-19: a two-column roster and ambiguous names cannot pool contacts", () =
   const repeated = page('<p>Alice Adams, Clerk, alice@example.test</p><p>Alice Adams, Clerk, bob@example.test</p>');
   assert.equal(section3Record({ recordClass: "OFFICIAL_ROSTER", fields, page: repeated, now: NOW }).live, false);
 });
+
+
+test("CP-19: derived display names anchor on the name actually written in their row", () => {
+  const source = page('<table><tr><td>Adams, Alice</td><td>Clerk</td><td>alice@example.test</td></tr><tr><td>Brown, Bob</td><td>Treasurer</td><td>bob@example.test</td></tr></table>');
+  const verdict = section3Record({ recordClass: "OFFICIAL_ROSTER", fields: { name: "Alice Adams", nameAsWritten: "Adams, Alice", office: "Clerk", email: "bob@example.test" }, derived: { name: "nameAsWritten" }, page: source, now: NOW });
+  assert.equal(verdict.live, true);
+  assert.deepEqual(verdict.verifiedFields, ["name", "nameAsWritten", "office"]);
+  assert.deepEqual(verdict.openFields, ["email"]);
+});

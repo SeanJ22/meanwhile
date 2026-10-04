@@ -38,7 +38,7 @@ test("filing email and its source survive while the filed address cannot reach A
   for (const row of candidateContactCensus().contacts) {
     assert.equal(row.filedAddress, null);
     const contact = contactForCandidate(row.candidacyId, "Candidate", "Office")!;
-    assert.equal(contact.filedAddress, null);
+    assert.ok(!("filedAddress" in contact) || contact.filedAddress === null);
     assert.equal(contact.email, row.email);
     assert.equal(contactRecord(contact).sourceUrl, row.sourceUrl);
     assert.ok(!contactRecord(contact).text.includes("filed mailing address"));

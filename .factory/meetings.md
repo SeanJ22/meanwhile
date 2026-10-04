@@ -3,7 +3,7 @@ worker: meetings
 provider: Claude
 run_id: session_01TeLefpaQ8bqbZr1e4re9jE
 lock: meetings-20261004T1020Z-a7c3
-heartbeat: 2026-10-04T11:41:25Z
+heartbeat: 2026-10-04T11:45:17Z
 on_river: DB-01, DB-02, BX-08 (river 4b5102044)
 ready: DB-06 f910791e7692db5948c28e87e50638446dbdf0d6; BX-10 ebde2efb9; DB-07 fd78bf5a4; DB-55 615092663c10e0e44c9007771a19a5465fbe3ab3 (each READY commit includes the earlier ones; fold the last)
 checks: DB-55: tsc clean, eslint clean, 435/435 on meeting/derived/carried/ingest/partition/history/official-page test files; tests/meeting-history.test.ts now 9. | On river 8bbe9eeb5 + DB-06: tsc clean; eslint clean (one old warning in firewall.ts); FULL `pnpm test` as CI (env -u DATABASE_URL -u WTP_ASSET_STORE, no .next) before the last river catch-up: 9124/9138 pass, 3 fails all mine and fixed (batched-reader scope list now includes history scopes; authority registry lists meetings-history; official-page version); then 170 meeting/civic-data/validate/promotion/reader test files 1325/1325; after the catch-up, tsc + 6 key files 107/107. BX-10: tsc clean, eslint clean (old warnings only), 407/407 on legistar/card-sources/adapter/agenda/carried/venue test files, new tests/meeting-video-link.test.ts (4). New: tests/meeting-history.test.ts (7). OFFICIAL_PAGE_EVENTS_VERSION on the combined tree = official-page-events@7716ae8033c2 (River re-sets at fold). Live check (Admin publication view, ask for a >120-day sitting) is River's after release.

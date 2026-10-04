@@ -18,6 +18,7 @@ import { createFileRepositories } from "../lib/control-plane/repository/file-sto
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
 import { listDoors } from "../lib/doors/registry.ts";
+import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { feedDoorDrafts, seedFeedDoors } from "../lib/doors/seed-feeds.ts";
 import { doorFromDerivedRecord, doorsFromWiringRow, seedMeetingDoors } from "../lib/doors/seed-meetings.ts";
 import type { DerivedWiringRecord } from "../lib/civic-data/derived-meeting-wiring.ts";
@@ -76,9 +77,14 @@ if (!FLAGS.has("apply")) {
 const counts = await seedMeetingDoors({ repo: repos.doors, wiring: SOURCE_WIRING, derived, deriveInputAt: now, at: now });
 say(`created ${counts.created}, updated ${counts.updated}, unchanged ${counts.unchanged}, kept hand edits ${counts.keptManualEdit}, refused ${counts.refused.length}.`);
 for (const line of counts.refused) say(`refused: ${line}`);
+// RULING 159: the import reports what it settled out of what it was handed.
+const meetingSettled = counts.created + counts.updated + counts.unchanged + counts.keptManualEdit;
+say(floorLine(floored("meeting doors settled", "seedMeetingDoors", meetingSettled + counts.refused.length, meetingSettled, "no meeting door drafts were handed to the import")));
 const feeds = await seedFeedDoors({ repo: repos.doors, deriveInputAt: now, at: now });
 say(`feeds: created ${feeds.created}, updated ${feeds.updated}, unchanged ${feeds.unchanged}, kept hand edits ${feeds.keptManualEdit}, refused ${feeds.refused.length}.`);
 for (const line of feeds.refused) say(`refused: ${line}`);
+const feedSettled = feeds.created + feeds.updated + feeds.unchanged + feeds.keptManualEdit;
+say(floorLine(floored("feed doors settled", "seedFeedDoors", feedSettled + feeds.refused.length, feedSettled, "no feed door drafts were handed to the import")));
 const after = await listDoors(repos.doors);
 say(`the registry now holds ${after.doors.length} doors.`);
 process.exit(counts.refused.length + feeds.refused.length === 0 ? 0 : 2);

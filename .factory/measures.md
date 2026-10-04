@@ -3,7 +3,7 @@ worker: measures
 provider: Claude
 run_id: session_014QYmmZEot5HccVgN7npmqN
 lock: measures-20261004T0830Z-014QYm
-heartbeat: 2026-10-04T08:15:18Z
+heartbeat: 2026-10-04T08:24:19Z
 on_river: SC-01, SC-02, SC-03, SC-05, SC-08, SC-12, SC-20 (River fold 21789c922, ready cc8c0cf59)
 ready: BR-08 at d8e596990. That one commit carries, in order after the folded work: SC-04 95f461c3a, SC-07 f423c8047, SC-09 build only 9473f2cb0, SC-06 f1cbdc4da, SC-11 21c587968, BR-08 d8e596990. BR-08 also needs the hunters hook at 48dca0016542e2a864dd10cb581b06d8a1a9a26b on stream/hunters. SC-09 retirements are not done (see waiting_on).
 checks: tsc --noEmit clean; eslint clean on changed files at d8e596990048a18a37218c4ac38c41be49931a65. Tests: admin-bulk-hunts (new: state scope validates and keys, one mission per pick, state resolved to the union of its counties, wrong plan or no counties unresolved), expansion-scopes, dispatch-work, early-hunt-membership, plural, admin-v6-*, admin-v6-ui, place-*: 288 pass; 3 fail, all on the unchanged base (national geography walk, Arizona district seats x2). Full suite not run. The Start-missions dialog and the state mission row were not viewed live (no Admin sign-in here).

@@ -783,5 +783,48 @@
     "gates": "pass",
     "evidence": "pnpm gates on 1abac17ea (CI env): 12/12 PASS; 9243 tests pass, 0 fail, 11 skipped.",
     "at": "2026-10-04T12:29:10Z"
+  },
+  {
+    "lane": "registry",
+    "steps": [
+      "DB-54"
+    ],
+    "ready_sha": "ea37c9c0bb02bdac5f245719746c4e26611ef9bf",
+    "river_sha": "a88a0726c0c514cd929b0a352d0fa00c38dda239",
+    "tested_sha": "a88a0726c0c514cd929b0a352d0fa00c38dda239",
+    "gates": "pass",
+    "evidence": "pnpm gates on a88a0726c (CI env): 12/12 PASS; 9282 tests pass, 0 fail, 11 skipped.",
+    "at": "2026-10-04T12:59:35Z"
+  },
+  {
+    "lane": "meetings",
+    "steps": [
+      "DB-03",
+      "DB-04",
+      "DB-05",
+      "DB-08",
+      "DB-27",
+      "DB-31",
+      "DB-56"
+    ],
+    "ready_sha": "653e1d6cb628af4fcba493309c65ca629fa42de6",
+    "river_sha": "a88a0726c0c514cd929b0a352d0fa00c38dda239",
+    "tested_sha": "a88a0726c0c514cd929b0a352d0fa00c38dda239",
+    "gates": "pass",
+    "evidence": "pnpm gates on a88a0726c (CI env): 12/12 PASS; 9282 tests pass, 0 fail, 11 skipped.",
+    "at": "2026-10-04T12:59:35Z"
+  },
+  {
+    "lane": "people",
+    "steps": [
+      "CA-40",
+      "CA-41"
+    ],
+    "ready_sha": "10677c503dc6ff53daf376bc69f1c245cde10334",
+    "river_sha": "a88a0726c0c514cd929b0a352d0fa00c38dda239",
+    "tested_sha": "a88a0726c0c514cd929b0a352d0fa00c38dda239",
+    "gates": "pass",
+    "evidence": "pnpm gates on a88a0726c (CI env): 12/12 PASS; 9282 tests pass, 0 fail, 11 skipped.",
+    "at": "2026-10-04T12:59:35Z"
   }
 ]

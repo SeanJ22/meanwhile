@@ -110,3 +110,10 @@ One line per batch folded into river.
 
 - Evidence: pnpm gates on 1abac17ea (CI env): 12/12 PASS; 9243 tests pass, 0 fail, 11 skipped.
 - hunters: CH-07 · ready f75a8a8cf
+
+## 2026-10-04T12:59:35Z — river 1abac17 → a88a0726c
+
+- Evidence: pnpm gates on a88a0726c (CI env): 12/12 PASS; 9282 tests pass, 0 fail, 11 skipped.
+- registry: DB-54 · ready ea37c9c0b
+- meetings: DB-03, DB-04, DB-05, DB-08, DB-27, DB-31, DB-56 · ready 653e1d6cb
+- people: CA-40, CA-41 · ready 10677c503

@@ -20,7 +20,8 @@ export function applyFixResult(prior: FixMapRow | null, incoming: FixMapRow): Fi
   if (!prior) return incoming;
   if (prior.methodId !== incoming.methodId || prior.placeId !== incoming.placeId) throw new Error("Fix-map row identities differ");
   if (prior.state !== "UNTRIED" && incoming.state === "UNTRIED") return prior;
-  if ((incoming.triedAt ?? incoming.updatedAt) < (prior.triedAt ?? prior.updatedAt)) return prior;
+  if (!(prior.state === "UNTRIED" && incoming.state !== "UNTRIED") &&
+      Date.parse(incoming.triedAt ?? incoming.updatedAt) < Date.parse(prior.triedAt ?? prior.updatedAt)) return prior;
   return { ...incoming, supersededAttemptId: incoming.attemptId !== prior.attemptId ? prior.attemptId : prior.supersededAttemptId ?? null };
 }
 
@@ -54,7 +55,8 @@ export function createFixMapRepository(query: Query): FixMapRepository {
           attempt_id = EXCLUDED.attempt_id, cause = EXCLUDED.cause, updated_at = EXCLUDED.updated_at,
           superseded_attempt_id = CASE WHEN EXCLUDED.attempt_id IS DISTINCT FROM cp_fix_map.attempt_id
             THEN cp_fix_map.attempt_id ELSE cp_fix_map.superseded_attempt_id END
-        WHERE cp_fix_map.state = 'UNTRIED' OR (EXCLUDED.state != 'UNTRIED' AND EXCLUDED.tried_at >= cp_fix_map.tried_at)`,
+        WHERE (cp_fix_map.state = 'UNTRIED' AND (EXCLUDED.state != 'UNTRIED' OR EXCLUDED.updated_at >= cp_fix_map.updated_at))
+          OR (cp_fix_map.state != 'UNTRIED' AND EXCLUDED.state != 'UNTRIED' AND EXCLUDED.tried_at >= cp_fix_map.tried_at)`,
       [row.methodId, row.placeId, row.state, row.triedAt, row.attemptId, row.cause, row.updatedAt]);
     },
   };

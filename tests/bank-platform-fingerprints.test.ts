@@ -21,4 +21,6 @@ test("editing an existing fingerprint replaces the pattern without losing other 
   assert.ok(!detectTenancy("https://old.legistar.com/", "https://example.gov", [changed]).some(hit => hit.platform === "legistar"));
   assert.ok(detectTenancy("https://new.other-vendor.example/", "https://example.gov", [changed]).some(hit => hit.platform === "legistar"));
   assert.ok(detectTenancy("https://meetings.boardbook.org/", "https://example.gov", [changed]).some(hit => hit.platform === "boardbook"));
+  const edited = { ...changed, id: "older-seed-key", observedAt: "2026-10-04T00:00:00Z" };
+  assert.ok(detectTenancy("https://new.other-vendor.example/", "https://example.gov", [edited, ...seeded]).some(hit => hit.platform === "legistar"), "a later-in-array seed never erases a dated Bank edit");
 });

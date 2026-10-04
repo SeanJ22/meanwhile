@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import fingerprintData from "./playbooks/platform-fingerprints.json" with { type: "json" };
 import { newFieldManualEntry, type FieldManualEntry } from "./field-manual.ts";
 
 interface FingerprintData {
@@ -11,7 +11,7 @@ export interface PlatformFingerprint {
 }
 
 function defaults(): FingerprintData[] {
-  return JSON.parse(readFileSync(new URL("./playbooks/platform-fingerprints.json", import.meta.url), "utf8")) as FingerprintData[];
+  return fingerprintData as FingerprintData[];
 }
 
 function compile(row: FingerprintData): PlatformFingerprint {
@@ -24,7 +24,7 @@ export function defaultPlatformFingerprints(): PlatformFingerprint[] { return de
 /** Bank entries override seed data by platform ID; new kinds need no code list edit. */
 export function platformFingerprints(entries: readonly FieldManualEntry[]): PlatformFingerprint[] {
   const byId = new Map(defaults().map(row => [row.id, row]));
-  for (const entry of entries) {
+  for (const entry of [...entries].sort((a, b) => (a.observedAt ?? "").localeCompare(b.observedAt ?? ""))) {
     if (entry.kind !== "PLATFORM_FINGERPRINT") continue;
     const p = entry.payload as Partial<FingerprintData> | null;
     if (typeof p?.id !== "string" || typeof p.label !== "string" || typeof p.hostPattern !== "string") continue;

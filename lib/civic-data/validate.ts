@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { authorityFor, authorityForManualReceipt, sourceAuthority } from "./source-authority.ts";
 import { derivedAuthorityFor } from "./derived-door.ts";
 import {
+  MEETING_HISTORY_SCOPE_SUFFIX,
   MEETING_READER_SERVING_WINDOW_CONTRACT,
   MEETING_READER_SERVING_WINDOW_CONTRACT_V1,
   meetingLegacyServingWindowAt,
@@ -335,6 +336,32 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
       validMeetingEvidence.set(delta.key, row);
       continue;
     }
+    if (row.code === "MOVED_TO_HISTORY") {
+      /*
+       * A concluded sitting leaves its live partition only into the partition's durable history (DB-06). The record
+       * must have been concluded, started before this clock's held window, and be named here under exactly its own
+       * partition's history scope. That the named history version really holds the record is the door's check against
+       * the store (`movedToHistoryAuthorityIssue`), which runs before this validator.
+       */
+      const heldWindow = registeredWindow;
+      const prior = Date.parse(row.priorStartsAt);
+      const lower = Date.parse(row.lowerBound);
+      if (
+        heldWindow === null ||
+        row.lowerBound !== heldWindow.lowerBound ||
+        row.historyScope !== `${candidate.scope}${MEETING_HISTORY_SCOPE_SUFFIX}` ||
+        typeof row.historyVersionId !== "string" || row.historyVersionId === "" ||
+        row.parentMeetingKey !== undefined ||
+        before?.status !== "CONCLUDED" ||
+        !meetingId || delta.key !== `meeting:${meetingId}` ||
+        !startsAt || startsAt !== row.priorStartsAt ||
+        !Number.isFinite(prior) || !Number.isFinite(lower) || !(prior < lower)
+      ) {
+        return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is not proven a concluded sitting older than the held window, moved to its own history.`);
+      }
+      validMeetingEvidence.set(delta.key, row);
+      continue;
+    }
     if (row.code !== "OUTSIDE_REGISTERED_SERVING_WINDOW") {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} names no removal authority this validator recognizes.`);
     }
@@ -379,6 +406,9 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
       (row.code === "OUTSIDE_REGISTERED_SERVING_WINDOW" && parent.code === "OUTSIDE_REGISTERED_SERVING_WINDOW"
         ? row.windowContract === parent.windowContract &&
           row.lowerBound === parent.lowerBound && row.upperBound === parent.upperBound
+        : row.code === "MOVED_TO_HISTORY" && parent.code === "MOVED_TO_HISTORY"
+          ? row.historyScope === parent.historyScope && row.historyVersionId === parent.historyVersionId &&
+            row.lowerBound === parent.lowerBound
         : row.code === "SUPERSEDED_BY_OCCURRENCE_IDENTITY" && parent.code === "SUPERSEDED_BY_OCCURRENCE_IDENTITY"
           ? row.successorKey === parent.successorKey
           : row.code === "EXCLUDED_BY_PUBLISHER" && parent.code === "EXCLUDED_BY_PUBLISHER" &&

@@ -324,7 +324,32 @@ export type RoutineRemovalEvidence =
   | OccurrenceSupersessionRemovalEvidence
   | PublisherExclusionRemovalEvidence
   | CensusPlaceholderBodyRemovalEvidence
-  | RosterDepartureRemovalEvidence;
+  | RosterDepartureRemovalEvidence
+  | MovedToHistoryRemovalEvidence;
+
+/**
+ * A concluded meeting that carries a record leaves its live partition only
+ * into the partition's durable history (DB-06). The history version is
+ * promoted FIRST; the validator re-derives the rest from the candidate, and the
+ * door confirms the named history version holds the exact record, so no record
+ * is ever in neither place. An attached agenda document inherits this from its
+ * meeting.
+ */
+export interface MovedToHistoryRemovalEvidence {
+  /** Exact `RoutineChangeSet.removed[].key`; evidence is never positional. */
+  readonly key: string;
+  readonly code: "MOVED_TO_HISTORY";
+  /** The partition's history scope that holds the record. */
+  readonly historyScope: string;
+  /** The promoted history version that holds it. */
+  readonly historyVersionId: string;
+  /** The held window's lower bound at this candidate's clock; the sitting began before it. */
+  readonly lowerBound: string;
+  /** The previously promoted meeting's exact `startsAt`. */
+  readonly priorStartsAt: string;
+  /** Required only for an agenda document; names its exact moved meeting. */
+  readonly parentMeetingKey?: string;
+}
 
 export interface ServingWindowRemovalEvidence {
   /** Exact `RoutineChangeSet.removed[].key`; evidence is never positional. */

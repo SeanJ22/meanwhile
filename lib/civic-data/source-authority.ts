@@ -554,6 +554,33 @@ export const SOURCE_AUTHORITIES = {
     },
   },
   /*
+   * A partition's durable meeting history (DB-06): concluded sittings that carry an agenda, minutes, an outcome or a
+   * vote, moved out of the live partition once they are older than the held window, and kept for good (rulings §4:
+   * "do not delete history"). No route of its own: authentic only as the exact promoted partition version the
+   * sittings were taken from (and the history version it extends), each of which carries its publisher's own evidence.
+   */
+  "meetings-history": {
+    id: "meetings-history",
+    publisher: "The public bodies whose sittings the live meeting partitions hold, kept from the promoted partition version they were read in",
+    trust: "T1_AUTHORITATIVE_STRUCTURED",
+    sourceClass: "OFFICIAL_PLATFORM",
+    routePrefixes: [],
+    jurisdictions: [...REGISTRATION_TARGETS.map((t) => t.jurisdiction), "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
+    recordClasses: ["MEETING"],
+    competentFacts: ["meeting time", "meeting status", "public body", "location", "agenda link", "agenda document"],
+    expectedIdentifierKeys: ["meeting_id", "body_id", "source_route"],
+    expectedTemporalFields: ["starts_at", "ends_at", "source_through"],
+    horizonSemantics: "Append-only: a sitting is added when it leaves its live partition and is never removed. It is never re-read, so it makes no claim about what the publisher lists today.",
+    parserVersion: "meetings-composite/2",
+    freshnessExpectation: "None: history is kept as last published and moves only when a sitting leaves its partition.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+    derivedPromotion: {
+      inputKinds: ["PROMOTED_VERSION"],
+      authorization: "Rulings §4 (history is kept, never deleted; Sean, October 3, 2026) and build plan v6 DB-06",
+    },
+  },
+  /*
    * The verified campaign sites the standing runner's campaign-site chain approves (2026-09-25): each row is a site
    * our own robots-first read verified, audited with measured controls and an independent second signal, and
    * approved; the writer verifies its vaulted bytes again before it cites them. No route of its own: authentic only

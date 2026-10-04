@@ -14,7 +14,13 @@ import {
   type RoutineSourceContract,
 } from "./contracts.ts";
 
+import { MEETING_HISTORY_SCOPE_SUFFIX } from "../meetings/constants.ts";
+import { derivedRequestedUrl } from "./derived-door.ts";
+
 export const LEGACY_MEETINGS_AGGREGATE_SCOPE = "supported-bodies";
+
+/** The source authority a partition's durable history promotes under (`source-authority.ts`). */
+export const MEETING_HISTORY_SOURCE_ID = "meetings-history" as const;
 
 export interface MeetingPartitionContract extends RoutineSourceContract {
   readonly meetingSource: string;
@@ -29,6 +35,12 @@ export interface MeetingPartitionContract extends RoutineSourceContract {
    * ACTIVE rows for that state. Null for a SOURCE_WIRING partition.
    */
   readonly derivedFamily: DerivedMeetingFamilyState | null;
+  /**
+   * Set only on a history contract (DB-06): the id of the live partition whose concluded sittings it keeps. A history
+   * contract is built from its partition (`meetingHistoryContract`), is never in `MEETING_PARTITION_CONTRACTS`, has no
+   * clock or task of its own, and is written only by its partition's own child.
+   */
+  readonly historyOf?: string;
 }
 
 /** A derived family's meetings carry their members' own sources; the family itself is named by this one. */
@@ -378,4 +390,55 @@ export function observableRoutineContracts(): readonly RoutineSourceContract[] {
     ...ROUTINE_SOURCE_CONTRACTS,
     ...MEETING_PARTITION_CONTRACTS,
   ];
+}
+
+/** A partition's durable history scope: its own scope plus `:history`, under the same record class. */
+export function meetingHistoryScope(partitionScope: string): string {
+  return `${partitionScope}${MEETING_HISTORY_SCOPE_SUFFIX}`;
+}
+
+export function isMeetingHistoryScope(scope: string): boolean {
+  return scope.endsWith(MEETING_HISTORY_SCOPE_SUFFIX);
+}
+
+const historyContracts = new WeakMap<MeetingPartitionContract, MeetingPartitionContract>();
+
+/**
+ * The contract a partition's durable history promotes under (DB-06). Derived from its partition, so it can never name
+ * a partition that is not registered, and kept out of `MEETING_PARTITION_CONTRACTS` so no clock, task or reader
+ * composition treats it as a partition of its own.
+ */
+export function meetingHistoryContract(partition: MeetingPartitionContract): MeetingPartitionContract {
+  const held = historyContracts.get(partition);
+  if (held) return held;
+  const scope = meetingHistoryScope(partition.scope);
+  const contract: MeetingPartitionContract = {
+    ...partition,
+    id: `${partition.id}${MEETING_HISTORY_SCOPE_SUFFIX}`,
+    sourceId: MEETING_HISTORY_SOURCE_ID,
+    scope,
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: MEETING_HISTORY_SOURCE_ID },
+    acquisitionAdapter: { authorityMode: "DERIVED", command: partition.acquisitionAdapter.command },
+    readerProjection: {
+      id: `meetings-history:${partition.id}`,
+      consumers: ["Ask", "/api/agenda"],
+    },
+    lkgBehavior: `Only ${partition.id} may move this pointer, and only by adding sittings that left its live partition. History is never removed or replaced by an older version.`,
+    derivedFamily: null,
+    historyOf: partition.id,
+  };
+  historyContracts.set(partition, contract);
+  return contract;
+}
+
+/** The live partition a history scope belongs to, or null when the scope is no registered partition's history. */
+export function meetingPartitionForHistoryScope(scope: string): MeetingPartitionContract | null {
+  if (!isMeetingHistoryScope(scope)) return null;
+  const partitionScope = scope.slice(0, -MEETING_HISTORY_SCOPE_SUFFIX.length);
+  return MEETING_PARTITION_CONTRACTS.find((partition) => partition.scope === partitionScope) ?? null;
+}
+
+/** The request a history candidate names in place of a URL. */
+export function meetingHistoryRequestedUrl(partition: MeetingPartitionContract): string {
+  return derivedRequestedUrl(MEETING_HISTORY_SOURCE_ID, meetingHistoryScope(partition.scope));
 }

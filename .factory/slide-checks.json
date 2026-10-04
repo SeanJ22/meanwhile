@@ -181,5 +181,68 @@
     "fullSuite": "not run after this change; not READY",
     "typescript": "passed",
     "fullLint": "passed: 69 warnings, 0 errors"
-  }
+  },
+  "latestPreRiverWip": {
+    "commit": "a0e5c7b22892922f8380fa3bb69afed54196515d",
+    "focusedTests": 40,
+    "passed": 40,
+    "failed": 0,
+    "skipped": 0,
+    "typescript": "passed",
+    "changedFileLint": "passed",
+    "fullSuite": "not run on this later WIP"
+  },
+  "riverCatchup": {
+    "commit": "b4a2c902b7eea72bababdfe5dc8fc7e5d950e075",
+    "river": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "focusedFiles": [
+      "tests/section3.test.ts",
+      "tests/model-parser.test.ts",
+      "tests/box.test.ts",
+      "tests/filed-address.test.ts",
+      "tests/reader-last-mile-ask-render.test.ts"
+    ],
+    "tests": 42,
+    "passed": 42,
+    "failed": 0,
+    "skipped": 0,
+    "typescript": "passed",
+    "selector": {
+      "plan": "full",
+      "files": [],
+      "needsBrowser": true,
+      "reasons": [
+        ".factory/slide-checks.json is not code the import graph follows"
+      ],
+      "changed": [
+        ".factory/slide-checks.json",
+        ".factory/slide-continuation.md",
+        ".factory/slide.md",
+        "components/ask/answer-contacts.tsx",
+        "components/ballot/candidate-contact.tsx",
+        "lib/ballot/candidate-cards.ts",
+        "lib/ballot/candidate-contacts.ts",
+        "lib/ballot/candidate-reader-privacy.ts",
+        "lib/civic-data/manual-projections.ts",
+        "lib/civic-data/manual-read-models.ts",
+        "lib/control-plane/box.ts",
+        "lib/control-plane/promotion/section3.ts",
+        "lib/control-plane/scheduler/scout-result.ts",
+        "lib/control-plane/workers/quoted-proof.ts",
+        "lib/control-plane/workers/record-block.ts",
+        "lib/ops/chromium-pin.ts",
+        "scripts/build-nj-morris-ballot.mts",
+        "tests/box.test.ts",
+        "tests/chromium-pin.test.ts",
+        "tests/filed-address.test.ts",
+        "tests/model-parser.test.ts",
+        "tests/reader-candidate-profile.test.ts",
+        "tests/reader-last-mile-ask-render.test.ts",
+        "tests/reader-last-mile-ask.test.ts",
+        "tests/section3.test.ts"
+      ]
+    },
+    "fullSuite": "not run on merged WIP; no READY claim"
+  },
+  "ready": null
 }

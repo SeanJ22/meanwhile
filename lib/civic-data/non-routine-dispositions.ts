@@ -191,7 +191,6 @@ export const NON_ROUTINE_DISPOSITIONS: readonly NonRoutineDispositionContract[] 
       "lib/corpus/unified.ts intermediary-keyed statement bridge",
       "lib/holdings/reader-census.ts portrait delivery projection",
       "next.config.ts production trace",
-      "scripts/readiness-refresh.mts Admin projection",
     ],
     retiredWriterExecutables: [
       "scripts/build-officeholders.ts#state",

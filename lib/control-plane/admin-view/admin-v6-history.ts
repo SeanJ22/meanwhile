@@ -50,7 +50,8 @@ function mapped(receipt: ActionReceipt, scope: string, confirmation: Confirmatio
   const target = receipt.requestedSubject || receipt.subject;
   const kind = gatewayActionKind(receipt.type, { subject: target, says: receipt.says });
   if (receipt.formatVersion !== 1 || !kind || !receipt.receiptId || !receipt.idempotencyKey || !eventTime(receipt.startedAt)) return null;
-  const place = /^(?:us|st:[a-z]{2}|geo:[a-z]{2}\.[a-z_]+\.[0-9A-Za-z]{1,16})$/.test(target) ? target : "us";
+  const global = kind.startsWith("global-") || kind === "hunt-start-many";
+  const place = /^(?:us|st:[a-z]{2}|geo:[a-z]{2}\.[a-z_]+\.[0-9A-Za-z]{1,16})$/.test(target) ? target : global ? "us" : "unknown";
   if (scope !== "us" && place !== scope && receipt.subject !== scope) return null;
   const confirmed = confirmation?.state === "applied" && receipt.outcome !== "REFUSED";
   const status = confirmed ? "done" : statusOf(receipt);
@@ -60,7 +61,7 @@ function mapped(receipt: ActionReceipt, scope: string, confirmation: Confirmatio
     key: receipt.idempotencyKey,
     kind,
     target: kind.startsWith("global-runner-") ? "runner" : target, targetName: kind.startsWith("global-runner-") ? "the standing runner" : receipt.label, label: receipt.label,
-    scopeKey: place, scopeName: place === "us" ? "United States" : "Selected place", level: place === "us" ? "global" : "local", status,
+    scopeKey: place, scopeName: place === "us" ? "United States" : place === "unknown" ? "Place not recorded" : "Selected place", level: place === "us" ? "global" : "local", status,
     statusWords: status === "queued" ? "Request saved; runner response unknown" :
       status === "refused" ? "Request refused" : confirmed ? "Done" : status === "done" ? "Gateway action recorded" :
       status === "running" ? "Gateway action in progress" : "Outcome unknown",

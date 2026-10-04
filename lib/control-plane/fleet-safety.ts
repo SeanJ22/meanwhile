@@ -17,6 +17,7 @@ import type { OpenOne } from "./scheduler/route-executor.ts";
 import { httpProviderFailure, type FetchOutcome } from "./scheduler/http-executor.ts";
 import { sourceReliabilityKey } from "./scheduler/scout-reliability.ts";
 import { websiteRequestLimit, type WebsiteSizeForUrl } from "./scheduler/host-supervision.ts";
+import { FIRST_BACKOFF_MINUTES, MAX_BACKOFF_MINUTES } from "./scheduler/debt.ts";
 
 export const FLEET_ZONE = "America/Phoenix";
 
@@ -92,6 +93,9 @@ export interface ProviderCircuit {
   readonly firstObservedAt: string;
   readonly workDeferred: readonly string[];
   readonly eligibleAt: string;
+  readonly failureClass?: "HARD" | "TRANSIENT";
+  readonly consecutiveFailures?: number;
+  readonly lastObservedAt?: string;
 }
 
 export interface FleetNamedDeferral {
@@ -426,7 +430,7 @@ export class FleetSafetyController {
     this.historicalNightUsd = input.costLedgerReadable === false ? null : nightSpend.usd;
     this.historicalRollingUsd = input.costLedgerReadable === false ? null : rollingSpend.usd;
     for (const circuit of input.circuits ?? []) {
-      if (Date.parse(circuit.eligibleAt) > this.startedMs) this.circuits.set(circuit.provider, circuit);
+      if (this.hardCircuit(circuit) || Date.parse(circuit.eligibleAt) > this.startedMs) this.circuits.set(circuit.provider, circuit);
     }
   }
 
@@ -448,14 +452,52 @@ export class FleetSafetyController {
 
   private expireProviderCircuits(nowMs: number = this.clock()): void {
     for (const [provider, circuit] of this.circuits) {
-      if (Date.parse(circuit.eligibleAt) <= nowMs) this.circuits.delete(provider);
+      if (!this.hardCircuit(circuit) && Date.parse(circuit.eligibleAt) <= nowMs) this.circuits.delete(provider);
     }
+  }
+
+  private hardCircuit(circuit: ProviderCircuit): boolean {
+    return circuit.failureClass === "HARD" || (circuit.failureClass === undefined && classifyProviderFailure(new Error(circuit.condition)).class === "HARD");
+  }
+
+  /** Reuse the source queue only for an eligible HARD recovery. Healthy model
+   * requests stay concurrent; waiters observe the recovery before sending. */
+  private async beginProviderRecovery(provider: string): Promise<(() => void) | null> {
+    for (;;) {
+      const circuit = this.circuits.get(provider);
+      if (!circuit || !this.hardCircuit(circuit) || Date.parse(circuit.eligibleAt) > this.clock()) return null;
+      const preceding = this.httpPending.get(provider);
+      if (preceding) { await preceding; continue; }
+      let release!: () => void;
+      const pending = new Promise<void>(resolve => { release = resolve; });
+      this.httpPending.set(provider, pending);
+      return () => {
+        release();
+        if (this.httpPending.get(provider) === pending) this.httpPending.delete(provider);
+      };
+    }
+  }
+
+  private providerSucceeded(provider: string, observed: ProviderCircuit | undefined): void {
+    const current = this.circuits.get(provider);
+    // A response sent before a newer failure cannot erase that failure. A
+    // deferred sibling may extend workDeferred without changing this generation.
+    if (observed && current && (current.consecutiveFailures ?? 1) === (observed.consecutiveFailures ?? 1) &&
+      (current.lastObservedAt ?? current.firstObservedAt) === (observed.lastObservedAt ?? observed.firstObservedAt)) this.circuits.delete(provider);
+  }
+
+  private retryAfterMs(response: Response): number | null {
+    const retry = response.headers.get("retry-after");
+    if (retry === null) return null;
+    const seconds = Number(retry);
+    const delay = Number.isFinite(seconds) ? seconds * 1000 : Date.parse(retry) - this.clock();
+    return Number.isFinite(delay) ? Math.max(0, delay) : null;
   }
 
   admitProviderRequest(provider: string, work: string, outboundPayloadBytes = 0): number {
     this.expireProviderCircuits();
     const circuit = this.circuits.get(provider);
-    if (circuit) {
+    if (circuit && Date.parse(circuit.eligibleAt) > this.clock()) {
       this.circuits.set(provider, {
         ...circuit,
         workDeferred: [...new Set([...circuit.workDeferred, work])],
@@ -532,7 +574,7 @@ export class FleetSafetyController {
     this.lastSuccessfulActivity = new Date(this.clock()).toISOString();
   }
 
-  failModelRequest(reservation: Reservation, error: unknown, at: string = new Date(this.clock()).toISOString()): void {
+  failModelRequest(reservation: Reservation, error: unknown, at: string = new Date(this.clock()).toISOString(), observed?: ProviderCircuit): void {
     // A sent request whose bill was not returned consumes its actual maximum.
     // Settlement already released its reservation, including incomplete usage.
     if (!reservation.released) {
@@ -541,15 +583,27 @@ export class FleetSafetyController {
     }
     this.releaseReservation(reservation);
     const failure = classifyProviderFailure(error);
-    if (failure.class === "HARD" || failure.class === "TRANSIENT") this.latchProvider(reservation.provider, failure.condition, reservation.work, at,
-      error instanceof ModelTransportError ? error.retryAfterMs : null);
+    const failedRecovery = observed && this.hardCircuit(observed) && Date.parse(observed.eligibleAt) <= Date.parse(at) &&
+      !(error instanceof FleetPreSendRefusal);
+    if (failure.class === "HARD" || failure.class === "TRANSIENT" || failedRecovery) this.latchProvider(reservation.provider, failure.condition, reservation.work, at,
+      error instanceof ModelTransportError ? error.retryAfterMs : null, failure.class === "OTHER" ? "HARD" : failure.class);
   }
 
-  latchProvider(provider: string, condition: string, work: string, at: string, retryAfterMs: number | null = null): ProviderCircuit {
+  latchProvider(provider: string, condition: string, work: string, at: string, retryAfterMs: number | null = null,
+    failureClass: "HARD" | "TRANSIENT" = classifyProviderFailure(new Error(condition)).class === "HARD" ? "HARD" : "TRANSIENT"): ProviderCircuit {
     const existing = this.circuits.get(provider);
-    const circuit: ProviderCircuit = existing
-      ? { ...existing, workDeferred: [...new Set([...existing.workDeferred, work])] }
-      : { provider, condition, firstObservedAt: at, workDeferred: [work], eligibleAt: new Date(Date.parse(at) + Math.max(15 * 60_000, retryAfterMs ?? 0)).toISOString() };
+    // A changed provider error is not a successful recovery. Keep prior HARD
+    // history through transient responses until the same provider succeeds.
+    const retainedClass = existing && this.hardCircuit(existing) ? "HARD" : failureClass;
+    const consecutiveFailures = existing ? (existing.consecutiveFailures ?? 1) + 1 : 1;
+    const backoff = retainedClass === "HARD" ? Math.min(MAX_BACKOFF_MINUTES,
+      FIRST_BACKOFF_MINUTES * 2 ** Math.min(consecutiveFailures - 1, 16)) : FIRST_BACKOFF_MINUTES;
+    const circuit: ProviderCircuit = {
+      provider, condition, firstObservedAt: existing?.firstObservedAt ?? at,
+      workDeferred: [...new Set([...(existing?.workDeferred ?? []), work])],
+      eligibleAt: new Date(Date.parse(at) + Math.max(backoff * 60_000, retryAfterMs ?? 0)).toISOString(),
+      failureClass: retainedClass, consecutiveFailures, lastObservedAt: at,
+    };
     this.circuits.set(provider, circuit);
     this.defer(work, "PROVIDER_CIRCUIT_BROKEN", `${provider} hard-refused work: ${condition}; no automated retry before ${circuit.eligibleAt}`);
     return circuit;
@@ -561,21 +615,25 @@ export class FleetSafetyController {
 
   guardedModelTransport(provider: string, work: string, transport: ModelTransport): ModelTransport {
     return async (request) => {
-      let reservation: Reservation;
+      const releaseRecovery = await this.beginProviderRecovery(provider);
+      const observed = this.circuits.get(provider);
       try {
-        reservation = this.reserveModelRequest(provider, work, request);
-      } catch (error) {
-        if (error instanceof FleetSafetyRefusal) throw new FleetPreSendRefusal(error);
-        throw error;
-      }
-      try {
-        const response = await transport(request);
-        this.settleModelRequest(reservation, response);
-        return response;
-      } catch (error) {
-        this.failModelRequest(reservation, error);
-        throw error;
-      }
+        let reservation: Reservation;
+        try { reservation = this.reserveModelRequest(provider, work, request); }
+        catch (error) {
+          if (error instanceof FleetSafetyRefusal) throw new FleetPreSendRefusal(error);
+          throw error;
+        }
+        try {
+          const response = await transport(request);
+          this.settleModelRequest(reservation, response);
+          this.providerSucceeded(provider, observed);
+          return response;
+        } catch (error) {
+          this.failModelRequest(reservation, error, undefined, observed);
+          throw error;
+        }
+      } finally { releaseRecovery?.(); }
     };
   }
 
@@ -675,10 +733,17 @@ export class FleetSafetyController {
       const pending = new Promise<void>(resolve => { release = resolve; });
       this.httpPending.set(source, pending);
       await preceding;
+      let sourceReleased = false;
+      const releaseSource = () => {
+        release(); sourceReleased = true;
+        if (this.httpPending.get(source) === pending) this.httpPending.delete(source);
+      };
       const started = Date.now();
       let requests = 0;
       let currentUrl = url;
       let provider = source;
+      let observed: ProviderCircuit | undefined;
+      const recoveries: [string, () => void][] = [];
       try {
         let currentMethod = method;
         let currentBody = body;
@@ -686,8 +751,13 @@ export class FleetSafetyController {
         let merged: Uint8Array;
         while (true) {
           provider = sourceReliabilityKey(currentUrl);
+          if ((provider !== source || sourceReleased) && !recoveries.some(([key]) => key === provider)) {
+            const recovery = await this.beginProviderRecovery(provider);
+            if (recovery) recoveries.push([provider, recovery]);
+          }
           this.expireProviderCircuits();
-          if (!this.circuits.has(provider)) this.admitWebsiteRequest(currentUrl, work);
+          observed = this.circuits.get(provider);
+          if (!observed || Date.parse(observed.eligibleAt) <= this.clock()) this.admitWebsiteRequest(currentUrl, work);
           const reservation = this.reservePayloadRequest(provider, work, currentBody === undefined ? 0 : Buffer.byteLength(currentBody));
           try {
             requests++;
@@ -716,7 +786,13 @@ export class FleetSafetyController {
           }
           const location = response.headers.get("location");
           if (![301, 302, 303, 307, 308].includes(response.status) || location === null) break;
-          currentUrl = new URL(location, currentUrl).toString();
+          const nextUrl = new URL(location, currentUrl).toString();
+          if (sourceReliabilityKey(nextUrl) !== provider) {
+            if (provider === source && !sourceReleased) releaseSource();
+            const index = recoveries.findIndex(([key]) => key === provider);
+            if (index !== -1) recoveries.splice(index, 1)[0][1]();
+          }
+          currentUrl = nextUrl;
           if (response.status === 303 || ((response.status === 301 || response.status === 302) && currentMethod === "POST")) {
             currentMethod = "GET";
             currentBody = undefined;
@@ -732,13 +808,9 @@ export class FleetSafetyController {
         const hard = classifyProviderFailure(new ModelTransportError(
           `HTTP ${response.status}: ${outcome.body.slice(0, 300)}`, response.status));
         if (failure !== null || hard.class === "HARD") {
-          const retry = response.headers.get("retry-after");
-          const seconds = retry === null ? NaN : Number(retry);
-          const retryMs = Number.isFinite(seconds) ? Math.max(0, seconds * 1000)
-            : retry === null ? 0 : Math.max(0, Date.parse(retry) - this.clock());
           this.latchProvider(provider, failure ?? hard.condition, work, new Date(this.clock()).toISOString(),
-            Number.isFinite(retryMs) ? retryMs : null);
-        }
+            this.retryAfterMs(response), hard.class === "HARD" ? "HARD" : "TRANSIENT");
+        } else if (response.ok) this.providerSucceeded(provider, observed);
         return outcome;
       } catch (error) {
         if (error instanceof FleetSafetyRefusal) this.defer(work, error.code, error.message);
@@ -747,8 +819,8 @@ export class FleetSafetyController {
         return { status: null, bytes: 0, contentType: "", body: "", durationMs: Date.now() - started,
           transportError: error instanceof Error ? error.message : String(error), requestCount: requests };
       } finally {
-        release();
-        if (this.httpPending.get(source) === pending) this.httpPending.delete(source);
+        recoveries.forEach(([, release]) => release());
+        releaseSource();
       }
     };
   }
@@ -760,7 +832,7 @@ export class FleetSafetyController {
    * itself; nothing else changes.
    */
   guardedOpenBytes(
-    provider: string,
+    _provider: string,
     work: string,
     fetchImpl: typeof fetch = fetch,
     options: { readonly followRedirects?: boolean } = {},
@@ -768,20 +840,41 @@ export class FleetSafetyController {
     const follow = options.followRedirects !== false;
     return async ({ url, headers }) => {
       const started = Date.now();
+      const recoveries: [string, () => void][] = [];
+      let provider = sourceReliabilityKey(url);
+      let observed: ProviderCircuit | undefined;
+      let sent = false;
+      let partialFailureObserved = false;
       try {
         let currentUrl = url;
         let response: Response;
         let merged: Uint8Array;
         let location: string | null = null;
         while (true) {
-          this.admitWebsiteRequest(currentUrl, work);
+          provider = sourceReliabilityKey(currentUrl);
+          if (!recoveries.some(([key]) => key === provider)) {
+            const recovery = await this.beginProviderRecovery(provider);
+            if (recovery) recoveries.push([provider, recovery]);
+          }
+          observed = this.circuits.get(provider);
+          if (!observed || Date.parse(observed.eligibleAt) <= this.clock()) this.admitWebsiteRequest(currentUrl, work);
           const reservation = this.reservePayloadRequest(provider, work);
           try {
+            sent = true;
+            partialFailureObserved = false;
             response = await fetchImpl(currentUrl, {
               method: "GET",
               redirect: "manual",
               headers,
             });
+            // The bounded reader may refuse a partial response before it can
+            // be classified below. Record this actual failed recovery once;
+            // a complete oversized body remains a local memory refusal.
+            if (observed && this.hardCircuit(observed) && (response.status === 206 || response.headers.has("content-range"))) {
+              this.latchProvider(provider, `partial HTTP ${response.status} response`, work,
+                new Date(this.clock()).toISOString(), this.retryAfterMs(response), "TRANSIENT");
+              partialFailureObserved = true;
+            }
             merged = await this.readBoundedResponse(response, reservation.streamCapBytes, work);
             this.settlePayloadReservation(reservation, merged.byteLength);
           } catch (error) {
@@ -790,11 +883,24 @@ export class FleetSafetyController {
           }
           location = response.headers.get("location");
           if (![301, 302, 303, 307, 308].includes(response.status) || location === null || !follow) break;
-          currentUrl = new URL(location, currentUrl).toString();
+          const nextUrl = new URL(location, currentUrl).toString();
+          if (sourceReliabilityKey(nextUrl) !== provider) {
+            const index = recoveries.findIndex(([key]) => key === provider);
+            if (index !== -1) recoveries.splice(index, 1)[0][1]();
+          }
+          currentUrl = nextUrl;
         }
         const decoded = new TextDecoder().decode(merged.subarray(0, Math.min(merged.byteLength, 300)));
         const failure = classifyProviderFailure(new ModelTransportError(`HTTP ${response.status}: ${decoded}`, response.status));
-        if (failure.class === "HARD") this.latchProvider(provider, failure.condition, work, new Date(this.clock()).toISOString());
+        const recoveryFailure = observed && this.hardCircuit(observed) ? httpProviderFailure(currentUrl, {
+          status: response.status, bytes: merged.byteLength, body: new TextDecoder().decode(merged),
+          contentType: response.headers.get("content-type") ?? "", durationMs: Date.now() - started,
+          transportError: null, contentRange: response.headers.get("content-range"),
+        }) : null;
+        if (!partialFailureObserved && failure.class === "HARD") this.latchProvider(provider, failure.condition, work, new Date(this.clock()).toISOString(), this.retryAfterMs(response), "HARD");
+        else if (!partialFailureObserved && observed && this.hardCircuit(observed) && (failure.class === "TRANSIENT" || recoveryFailure !== null)) {
+          this.latchProvider(provider, recoveryFailure ?? failure.condition, work, new Date(this.clock()).toISOString(), this.retryAfterMs(response), "TRANSIENT");
+        } else if (response.ok && recoveryFailure === null) this.providerSucceeded(provider, observed);
         return {
           status: response.status,
           bytes: merged,
@@ -806,6 +912,11 @@ export class FleetSafetyController {
         };
       } catch (error) {
         if (error instanceof FleetSafetyRefusal) this.defer(work, error.code, error.message);
+        else if (!partialFailureObserved && sent && observed && this.hardCircuit(observed)) {
+          const failure = classifyProviderFailure(error);
+          this.latchProvider(provider, failure.condition, work, new Date(this.clock()).toISOString(), null,
+            failure.class === "HARD" ? "HARD" : "TRANSIENT");
+        }
         return {
           status: null,
           bytes: new Uint8Array(0),
@@ -814,7 +925,7 @@ export class FleetSafetyController {
           durationMs: Date.now() - started,
           transportError: error instanceof Error ? error.message : String(error),
         };
-      }
+      } finally { recoveries.forEach(([, release]) => release()); }
     };
   }
 
@@ -825,7 +936,7 @@ export class FleetSafetyController {
       ? "SCHEDULED BLACKOUT"
       : this.paused
         ? "PAUSED"
-        : this.circuits.size > 0
+        : [...this.circuits.values()].some(circuit => Date.parse(circuit.eligibleAt) > Date.parse(now))
           ? "CIRCUIT BROKEN"
           : "ACTIVE";
     return {

@@ -26,12 +26,13 @@ import {
 } from "../lib/control-plane/fleet-safety.ts";
 import { runnerStanding } from "../lib/control-plane/runner-standing.ts";
 import { installNeonCircuitBreaker, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
-import { ModelTransportError, type ModelRequest, type ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { anthropicTransport, ModelTransportError, type ModelRequest, type ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 
 function fundedController(input: ConstructorParameters<typeof FleetSafetyController>[0]) {
   return new FleetSafetyController({ rollingCeilingUsd: 100, ...input });
@@ -610,7 +611,225 @@ test("402 and quota refusals hard-latch one provider without probing or substitu
   await assert.rejects(() => quotaGuard(REQUEST), /PROVIDER_CIRCUIT_BROKEN/);
   assert.equal(quotaCalls, 1);
   assert.deepEqual(quotaController.snapshot(NIGHT).providerCircuits[0]?.workDeferred, ["quota-work"]);
+
+  // generic 402 history survives eligibility and restart, doubles to six hours, and respects Retry-After
+  await (async () => {
+  let time = Date.parse(NIGHT), calls = 0;
+  let controller = fundedController({ now: NIGHT, costs: [], clock: () => time });
+  for (let attempt = 1; attempt <= 8; attempt++) {
+    const started = time;
+    const retryAfter = attempt === 8 ? 8 * 3_600_000 : null;
+    await assert.rejects(controller.guardedModelTransport("anthropic", "work", async () => {
+      calls++;
+      throw new ModelTransportError("Denied", 402, retryAfter);
+    })(REQUEST), /Denied/);
+    const circuit = controller.snapshot().providerCircuits[0];
+    assert.equal(circuit.failureClass, "HARD", "the actual status carries HARD even without billing words");
+    assert.equal(circuit.consecutiveFailures, attempt);
+    assert.equal(circuit.firstObservedAt, NIGHT);
+    assert.equal(circuit.lastObservedAt, new Date(started).toISOString());
+    const minutes = Math.min(360, 15 * 2 ** (attempt - 1));
+    assert.equal(Date.parse(circuit.eligibleAt) - started, Math.max(minutes * 60_000, retryAfter ?? 0));
+    time = Date.parse(circuit.eligibleAt);
+    const saved = JSON.parse(JSON.stringify(controller.snapshot().providerCircuits));
+    assert.equal(saved.length, 1, "eligibility retains failure history");
+    assert.equal(controller.snapshot().status, "ACTIVE");
+    controller = fundedController({ now: new Date(time).toISOString(), costs: [], clock: () => time, circuits: saved });
+    assert.equal(controller.snapshot().providerCircuits[0].consecutiveFailures, attempt);
+  }
+  assert.equal(calls, 8);
+  for (const status of [503, 402]) {
+    await assert.rejects(controller.guardedModelTransport("anthropic", "changed-provider-error", async () => {
+      calls++; throw new ModelTransportError("Denied", status);
+    })(REQUEST));
+    const retained = controller.snapshot().providerCircuits[0];
+    assert.equal(retained.failureClass, "HARD", "a transient recovery failure cannot discard billing history");
+    assert.equal(retained.consecutiveFailures, calls);
+    assert.equal(Date.parse(retained.eligibleAt) - time, 6 * 3_600_000);
+    time = Date.parse(retained.eligibleAt);
+    controller = fundedController({ now: new Date(time).toISOString(), costs: [], clock: () => time,
+      circuits: JSON.parse(JSON.stringify(controller.snapshot().providerCircuits)) });
+  }
+})();
+
+  // one eligible HARD recovery settles before its siblings; successful recovery restores healthy concurrency
+  await (async () => {
+  let time = Date.parse(NIGHT), calls = 0;
+  const controller = fundedController({ now: NIGHT, costs: [], clock: () => time });
+  controller.latchProvider("anthropic", "billing disabled", "earlier-work", NIGHT);
+  time += 15 * 60_000;
+  let release!: () => void, started!: () => void;
+  const barrier = new Promise<void>(resolve => { release = resolve; });
+  const entered = new Promise<void>(resolve => { started = resolve; });
+  const failed = controller.guardedModelTransport("anthropic", "recovery", async () => {
+    calls++; started(); await barrier;
+    throw new ModelTransportError("Denied", 402);
+  });
+  const settled = Promise.allSettled(Array.from({ length: 20 }, () => failed(REQUEST)));
+  await entered;
+  assert.equal(calls, 1);
+  release();
+  assert.ok((await settled).every(value => value.status === "rejected"));
+  assert.equal(calls, 1, "the other nineteen requests never reach the provider");
+  assert.equal(controller.snapshot().providerCircuits[0].consecutiveFailures, 2);
+  time += 30 * 60_000;
+  let live = 0, peak = 0;
+  const healthy = controller.guardedModelTransport("anthropic", "recovered", async () => {
+    calls++; live++; peak = Math.max(peak, live);
+    await new Promise<void>(resolve => setImmediate(resolve));
+    live--; return RESPONSE;
+  });
+  await Promise.all(Array.from({ length: 20 }, () => healthy(REQUEST)));
+  assert.equal(calls, 21);
+  assert.ok(peak > 1, "the successful probe releases healthy workers to run concurrently");
+  assert.equal(controller.snapshot().providerCircuits.length, 0);
+  for (const responseKind of ["malformed", "unmetered"] as const) {
+    const recovering = fundedController({ now: NIGHT, costs: [], clock: () => time });
+    recovering.latchProvider("anthropic", "billing disabled", "prior", new Date(time).toISOString());
+    time += 15 * 60_000;
+    let sends = 0;
+    const raw = anthropicTransport("mock-fixture-key", async () => {
+      sends++;
+      return new Response(responseKind === "malformed" ? "invalid JSON" : JSON.stringify({ ...RESPONSE, usage: {} }), {
+        status: 200, headers: { "content-type": "application/json" },
+      });
+    });
+    const actualGuard = recovering.guardedModelTransport("anthropic", "recovering", raw);
+    const outcomes = await Promise.allSettled(Array.from({ length: 20 }, () => actualGuard(REQUEST)));
+    assert.equal(sends, 1, `${responseKind}: the actual Messages decoder/settler fails one probe only`);
+    assert.equal(outcomes.filter(outcome => outcome.status === "rejected" && outcome.reason instanceof FleetSafetyRefusal &&
+      outcome.reason.code === "PROVIDER_CIRCUIT_BROKEN").length, 19);
+    const history = recovering.snapshot().providerCircuits[0];
+    assert.equal(history.failureClass, "HARD");
+    assert.equal(history.consecutiveFailures, 2);
+    assert.equal(Date.parse(history.eligibleAt) - time, 30 * 60_000);
+    assert.equal(recovering.admissionSpendUsd(), modelRequestWorstCaseUsd(REQUEST));
+    const healthyOther = fundedController({ now: NIGHT, costs: [], clock: () => time });
+    await assert.rejects(healthyOther.guardedModelTransport("anthropic", "healthy-other", raw)(REQUEST));
+    assert.equal(healthyOther.snapshot().providerCircuits.length, 0, "healthy OTHER handling is unchanged");
+  }
+})();
+
+  // an older same-provider success cannot erase a newer HARD failure
+  await (async () => {
+  const controller = fundedController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+  let release!: () => void, started!: () => void;
+  const barrier = new Promise<void>(resolve => { release = resolve; });
+  const entered = new Promise<void>(resolve => { started = resolve; });
+  const earlier = controller.guardedModelTransport("anthropic", "earlier", async () => {
+    started(); await barrier; return RESPONSE;
+  })(REQUEST);
+  await entered;
+  await assert.rejects(controller.guardedModelTransport("anthropic", "later", async () => {
+    throw new ModelTransportError("Denied", 402);
+  })(REQUEST));
+  release(); await earlier;
+  controller.recordSuccessfulActivity(NIGHT);
+  assert.equal(controller.snapshot().providerCircuits[0].failureClass, "HARD");
+  let time = Date.parse(NIGHT);
+  const retained = fundedController({ now: NIGHT, costs: [], clock: () => time });
+  retained.latchProvider("anthropic", "billing disabled", "initial", NIGHT);
+  time += 15 * 60_000;
+  let releaseProbe!: () => void, enteredProbe!: () => void;
+  const probeBarrier = new Promise<void>(resolve => { releaseProbe = resolve; });
+  const probeEntered = new Promise<void>(resolve => { enteredProbe = resolve; });
+  const probe = retained.guardedModelTransport("anthropic", "probe", async () => {
+    enteredProbe(); await probeBarrier; return RESPONSE;
+  })(REQUEST);
+  await probeEntered;
+  retained.latchProvider("anthropic", "a newer billing refusal", "newer-failure", new Date(time).toISOString(), null, "HARD");
+  releaseProbe(); await probe;
+  assert.equal(retained.snapshot().providerCircuits[0].consecutiveFailures, 2, "a successful older generation cannot erase a newer failure");
+})();
+
+  // a Messages request waiting in the actual rate queue rechecks the live Fleet circuit before sending
+  await (async () => {
+  let time = Date.parse(NIGHT), calls = 0;
+  const controller = fundedController({ now: NIGHT, costs: [], clock: () => time });
+  const queue = new ModelProviderQueue({ now: () => time, sleep: async ms => {
+    time += ms; await new Promise<void>(resolve => setImmediate(resolve));
+  } });
+  const guarded = queue.transport(controller.guardedModelTransport("anthropic", "queued", async () => {
+    calls++; throw new ModelTransportError("Denied", 402);
+  }));
+  const outcomes = await Promise.allSettled(Array.from({ length: 20 }, () => guarded(REQUEST)));
+  assert.equal(calls, 1);
+  assert.ok(outcomes.every(value => value.status === "rejected"));
+  assert.equal(controller.admissionSpendUsd(), modelRequestWorstCaseUsd(REQUEST), "queued refusals reserve and consume no paid spend");
+})();
+
+  // byte recovery belongs to the actual source and clears only its accepted complete response
+  await (async () => {
+  let time = Date.parse(NIGHT), calls = 0;
+  const controller = fundedController({ now: NIGHT, costs: [], clock: () => time });
+  const fetcher: typeof fetch = async url => {
+    calls++;
+    return String(url).includes("broken.gov") ? new Response("Denied", { status: 402, headers: { "retry-after": "1200" } })
+      : new Response("a complete public document");
+  };
+  const opened = controller.guardedOpenBytes("public-web", "byte-work", fetcher);
+  assert.equal((await opened({ url: "https://broken.gov/page", headers: {}, timeoutMs: 1000 })).status, 402);
+  const circuit = controller.snapshot().providerCircuits[0];
+  assert.equal(circuit.provider, "https://broken.gov");
+  assert.equal(circuit.failureClass, "HARD");
+  assert.equal(Date.parse(circuit.eligibleAt) - time, 20 * 60_000);
+  assert.equal((await opened({ url: "https://other.gov/page", headers: {}, timeoutMs: 1000 })).status, 200);
+  assert.equal(controller.snapshot().providerCircuits.length, 1, "an unrelated host cannot clear the source refusal");
+  assert.equal((await opened({ url: "https://broken.gov/page", headers: {}, timeoutMs: 1000 })).status, null);
+  assert.equal(calls, 2);
+  time += 20 * 60_000;
+  const recovered = controller.guardedOpenBytes("public-web", "byte-recovery", async () => new Response("full document"));
+  assert.equal((await recovered({ url: "https://broken.gov/page", headers: {}, timeoutMs: 1000 })).status, 200);
+  assert.equal(controller.snapshot().providerCircuits.length, 0);
+  for (const failure of ["503", "malformed", "network", "partial", "partial-transport"] as const) {
+    const subject = "https://api.wikimedia.org";
+    const retrying = fundedController({ now: NIGHT, costs: [], clock: () => time });
+    retrying.latchProvider(subject, "billing disabled", "prior", new Date(time).toISOString());
+    time += 15 * 60_000;
+    let attempts = 0;
+    const failedFetch: typeof fetch = async () => {
+      attempts++;
+      if (failure === "network") throw new Error("network timeout");
+      if (failure === "partial-transport") return new Response(new ReadableStream({
+        start(stream) { stream.error(new Error("network timeout")); },
+      }), { status: 206, headers: { "content-range": "bytes 0-19/20" } });
+      return new Response("not JSON", { status: failure === "503" ? 503 : failure === "partial" ? 206 : 200 });
+    };
+    const outcomes = await Promise.all(Array.from({ length: 20 }, (_, i) => retrying.guardedOpenBytes("public-web", `retry-${i}`, failedFetch)({
+      url: `${subject}/core/v1/wikipedia/en/search/page?q=mock`, headers: {}, timeoutMs: 1000,
+    })));
+    assert.equal(attempts, 1, `${failure}: nineteen siblings send nothing after the actual failed probe`);
+    assert.equal(outcomes.filter(outcome => /PROVIDER_CIRCUIT_BROKEN/.test(outcome.transportError ?? "")).length, 19);
+    const history = retrying.snapshot().providerCircuits[0];
+    assert.equal(history.failureClass, "HARD");
+    assert.equal(history.consecutiveFailures, 2);
+    assert.equal(Date.parse(history.eligibleAt) - time, 30 * 60_000);
+    time += 30 * 60_000;
+    assert.equal(retrying.snapshot().providerCircuits.length, 1, "failed recovery history survives the next eligibility");
+  }
+  const oversized = fundedController({ now: NIGHT, costs: [], clock: () => time });
+  oversized.latchProvider("https://oversized.gov", "billing disabled", "prior", new Date(time).toISOString());
+  time += 15 * 60_000;
+  const tooLarge = oversized.guardedOpenBytes("public-web", "complete-oversized", async () => new Response("large document", {
+    headers: { "content-length": String(FLEET_SAFETY_BOUNDS.maxDownloadBytes + 1) },
+  }));
+  assert.equal((await tooLarge({ url: "https://oversized.gov/large", headers: {}, timeoutMs: 1000 })).status, null);
+  assert.equal(oversized.snapshot().providerCircuits[0].consecutiveFailures, 1, "a complete oversized response is a local cap refusal, not another provider failure");
+  assert.equal(Date.parse(oversized.snapshot().providerCircuits[0].eligibleAt), time);
+})();
 });
+
+
+
+
+
+
+
+
+
+
+
+
 
 test("public redirects are counted as separate provider requests under one byte ceiling", async () => {
   let calls = 0;
@@ -628,6 +847,29 @@ test("public redirects are counted as separate provider requests under one byte 
   assert.equal(calls, 2);
   assert.equal(controller.snapshot(NIGHT).cycle.requests, 2);
   assert.equal(controller.snapshot(NIGHT).cycle.payloadBytes, 8);
+
+  // eligible text and byte recovery release completed redirect sources before waiting on each other
+  await (async () => {
+  let time = Date.parse(NIGHT), calls = 0;
+  const controller = fundedController({ now: NIGHT, costs: [], clock: () => time });
+  for (const host of ["a.gov", "b.gov"]) controller.latchProvider(`https://${host}`, "billing disabled", "prior", NIGHT);
+  time += 15 * 60_000;
+  const fetcher: typeof fetch = async input => {
+    calls++;
+    const url = new URL(String(input));
+    if (url.pathname === "/start") return new Response("redirect", { status: 302,
+      headers: { location: `https://${url.hostname === "a.gov" ? "b.gov" : "a.gov"}/end` } });
+    return new Response("a complete document");
+  };
+  const [text, bytes] = await Promise.all([
+    controller.guardedOpenOne("public-web", "text", fetcher)({ url: "https://a.gov/start", method: "GET", headers: {}, timeoutMs: 1000 }),
+    controller.guardedOpenBytes("public-web", "bytes", fetcher)({ url: "https://b.gov/start", headers: {}, timeoutMs: 1000 }),
+  ]);
+  assert.equal(text.status, 200);
+  assert.equal(bytes.status, 200);
+  assert.equal(calls, 4);
+  assert.equal(controller.snapshot().providerCircuits.length, 0);
+})();
 });
 
 test("an in-flight public read reserves only a bounded slice, so another source still proceeds", async () => {

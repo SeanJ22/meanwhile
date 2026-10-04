@@ -1468,8 +1468,8 @@ finishPhase("open-occurrences");
 
 /* The credential, BY NAME. Its value goes into the transport and nowhere else. */
 const workerKey = (process.env[WORKER_CREDENTIAL_VAR] ?? "").trim();
-const workerMessages = providerQueue.transport(anthropicTransport(workerKey, fetch, undefined, {
-  onRateLimits: (limits, request) => { providerQueue.observe(request.model, limits); } }));
+const workerMessages = anthropicTransport(workerKey, fetch, undefined, {
+  onRateLimits: (limits, request) => { providerQueue.observe(request.model, limits); } });
 const workerBatch = backgroundBatchTransport({ apiKey: workerKey });
 const credentialConfigured = workerKey.length > 0;
 
@@ -1927,9 +1927,11 @@ const budgetLinesFor = (obligationId: string, subjectId: string): { readonly lin
  * cannot be read, or the ledger, refuses.
  */
 let autonomousHoldSeq = 0;
+const guardedMessagesFor = (work: string, transport: ModelTransport = workerMessages): ModelTransport =>
+  providerQueue.transport(fleetSafety.guardedModelTransport("anthropic", work, transport));
 const autonomousTransportFor = (transport: ModelTransport) => (jurisdiction: AutonomousJurisdiction): ModelTransport =>
   areaGuardedTransport({
-    transport: fleetSafety.guardedModelTransport("anthropic", jurisdiction.subjectId, transport),
+    transport: guardedMessagesFor(jurisdiction.subjectId, transport),
     holds: spendHolds,
     jurisdiction,
     areasFor: (j) => {
@@ -1955,7 +1957,8 @@ let paidCapacityHoldSaid = false;
 const paidWorkerCapacity = (readyWork?: number) => {
   const limits = providerQueue.limits(MODELS.haiku.model);
   const spent = fleetSafety.admissionSpendUsd();
-  const providerHeld = fleetSafety.snapshot(nowIso()).providerCircuits.some(circuit => circuit.provider === "anthropic");
+  const providerHeld = fleetSafety.snapshot(nowIso()).providerCircuits.some(circuit =>
+    circuit.provider === "anthropic" && Date.parse(circuit.eligibleAt) > Date.parse(nowIso()));
   const capacity = researchPaidWorkerCapacity({
     modelEnabled: modelLaneEnabled && !providerHeld,
     spentUsd: spent, ceilingUsd: effectiveCeilingUsd,
@@ -2451,7 +2454,7 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
       const held = await prewarmHold.admit(worst, "the cycle's pre-warm");
       if (!held.admit) return { status: "SKIPPED", at, model, code: held.code, detail: `no paid call: ${held.why}`, durationMs: Date.now() - started };
     }
-    const transport = fleetSafety.guardedModelTransport("anthropic", prewarmHold?.obligationId ?? "scout-prewarm", workerMessages);
+    const transport = guardedMessagesFor(prewarmHold?.obligationId ?? "scout-prewarm");
     /* A failed pre-warm leaves its hold standing: what it was billed is unknown. */
     const response = await transport(request);
     const metered = readMeteredUsage(response.usage ?? {});
@@ -2511,7 +2514,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         onStarted: pid => console.log(`  Scout lease worker process: pid ${pid}; ${scheduled.obligation.id}`), deps }),
       /* MW-021: every request is checked against what the job holds on its Send and area budgets before the Fleet guard reserves it. */
       transport: budgetGuardedTransport({
-        transport: fleetSafety.guardedModelTransport("anthropic", scheduled.obligation.id, workerMessages),
+        transport: guardedMessagesFor(scheduled.obligation.id),
         job: () => jobSpend.get(scheduled.obligation.id) ?? null,
         worstCaseOf: modelRequestWorstCaseUsd,
         priceOf: modelResponseUsd,
@@ -3039,8 +3042,8 @@ async function runAutonomousWave() {
       if ("code" in found) throw new SendBudgetRefusal(found.code, found.why);
       const job = new JobSpend(spendHolds, requestJobId, owner?.value.obligationId ?? task.id, found.lines);
       const transport = budgetGuardedTransport({ job: () => job,
-        transport: fleetSafety.guardedModelTransport("anthropic", jurisdiction.subjectId,
-          batching ? workerBatch.withJournal(journal) : workerMessages),
+        transport: batching ? fleetSafety.guardedModelTransport("anthropic", jurisdiction.subjectId,
+          workerBatch.withJournal(journal)) : guardedMessagesFor(jurisdiction.subjectId),
         worstCaseOf: modelRequestWorstCaseUsd, priceOf: modelResponseUsd });
       let response;
       try { response = await transport(request); }

@@ -3,6 +3,8 @@ import type { CandidateCorpus, CandidateDocument } from "../candidates/corpus.ts
 import { getCandidateCorpus } from "../candidates/positions.ts";
 import { currentOfficeholderStatements } from "./data-plane.ts";
 import type { SourceSnapshot, StatementCorpus } from "./types.ts";
+import { sweepPeople } from "./statement-sweep.ts";
+import type { SweepPerson, SweepRecord } from "./statement-sweep.ts";
 
 /**
  * **The battlecard's positions search had two corpora and looked in one.**
@@ -152,4 +154,17 @@ export function unifiedCorpusCounts() {
     subjects: new Set(all.map((s) => s.subjectId)).size,
     readable: all.filter((s) => s.extraction === "ok" && s.text).length,
   };
+}
+
+/**
+ * The statement sweep over everything held (CA-15): one record per person and
+ * topic, listing the sources searched. People are those the two corpora hold
+ * pages for; the roster and ballot lanes pass the rest of a place's people and
+ * they get a record too, with "not yet collected" until a page arrives.
+ */
+export function unifiedStatementSweep(
+  people: readonly SweepPerson[],
+  topics?: readonly string[],
+): SweepRecord[] {
+  return sweepPeople(people, unifiedCorpus(), topics);
 }

@@ -176,7 +176,6 @@ export function censusAcsCandidate(zctaFetch: AcsFetch, stateFetch: AcsFetch): R
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
     dependentChecks: [
       { consumer: "lib/reference/acs-population.ts", passed: zcta.length === 33_772 && state.length === 52, detail: `${zcta.length} ZCTA + ${state.length} state rows.` },
-      { consumer: "scripts/readiness-refresh.mts", passed: state.some((row) => row.code === "04") && zcta.every((row) => row.marginOfError === null || row.marginOfError >= 0), detail: "State FIPS 04 and nonnegative/null margins are readable." },
     ],
     normalizedPayload,
     readModel,

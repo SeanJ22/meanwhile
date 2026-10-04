@@ -90,7 +90,6 @@ import type {
   RunnerHeartbeat,
 } from "../owner-surface.ts";
 import type { FieldManualStore } from "../field-manual.ts";
-import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
 import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
@@ -766,11 +765,6 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
       resolved,
       "OwnerSnapshot",
       "owner-snapshots",
-    ),
-    readinessSnapshots: fileAggregateRepository<ReadinessStateSnapshot>(
-      resolved,
-      "ReadinessStateSnapshot",
-      "readiness-snapshots",
     ),
     fieldManual: fileAggregateRepository<FieldManualStore>(
       resolved,

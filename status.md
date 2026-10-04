@@ -5,7 +5,7 @@ worker: river
 provider: Claude (this run: Opus 5.5, selected by Sean with /model at 06:00Z; this run began on Sonnet 5.5)
 run_id: session_01M3CeUks1KpFZttTP6ZTEAq
 lock: river-20261004T060134Z-23a399b0
-heartbeat: 2026-10-04T06:35:36Z
+heartbeat: 2026-10-04T07:07:32Z
 
 ## Launch
 
@@ -60,10 +60,20 @@ heartbeat: 2026-10-04T06:35:36Z
 | admin | Codex | active, lock 06:27Z | none (BR-05) |
 | slide | Codex | active, lock 06:29Z | none (CP-01) |
 | ballot | Codex | active, lock 06:29Z | none (CA-24) |
-| bank | Codex | **not started**, no lock or heartbeat | — |
-| frontend | Codex | **not started**, no lock or heartbeat | — |
+| bank | Codex | active since 06:31Z | none yet |
+| frontend | Codex | active since 06:31Z | none yet |
 
-Bank and frontend are Codex environment 2 tasks, which Sean starts by hand. They show no run yet.
+All eleven lanes are running (bank and frontend locked at 06:31Z).
+
+## Integration in progress
+
+river-next @ 8f6185c (full `pnpm gates` running, 07:10Z). It contains:
+- 19 kept PRs (RL-02) plus the #692 re-key
+- RL-01 feedback check-debt; RL-03 river.mjs; RL-07 docs-only selection; RL-06 adapter streams (switch default `pr`)
+- measures SC-01, 02, 03, 05, 08, 12, 20 @ cc8c0cf; registry DB-09..11 @ 165e953; auditors DP-01 @ ec1157a; people CA-06, 09, 12 @ 4b5bbc1; hunters CH-02 @ 9ae2d28
+- River fold repairs: the door-import floor, and the #701 history-read spy
+
+First gates run on river-next (4f3bd5d): 23 failures before the repairs. 21 were environmental: `DATABASE_URL` set in the cloud, and a git-ignored place-reference projection missing in worktrees. 2 were real and are repaired above. The build failed only because of a symlinked node_modules. With a clean env, plain main has no failures in those files.
 
 ## Usage tally
 

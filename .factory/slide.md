@@ -10,7 +10,7 @@ checks: none
 working_on: CP-01; startup complete, implementation not yet started.
 waiting_on: none
 returned: none
-needs_hook: none
+needs_hook: River -> ballot: CP-01 owns the privacy change but lib/ask is ballot-owned. Remove filedAddress from AskContact/evidence candidateProfile union, contactForCandidate mapping, contactEvidence text and projectCandidateProfile field loop/source-note logic; update Ask tests. Preserve filing Sources link. Slide will sanitize card/filing projections and remove both component renderers. Please integrate this hook or grant the narrow lib/ask change; CP-01 stays incomplete until connected.
 needs_Sean: none
 seen_not_fixed: none
 runs_and_working_minutes: 1 run; working minutes not yet measured

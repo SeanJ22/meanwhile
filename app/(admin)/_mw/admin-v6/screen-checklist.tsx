@@ -88,6 +88,7 @@ function PlaceScoreCard(props: { readonly score: PlaceScoreView; readonly group:
         {words && <Actions actions={[{ kind: "send-agents", target: v.scopeKey, label: "Send agents to fill the blanks", payload: { words } }]} primaryFirst />}
         {!words && /^geo:[a-z]{2}\.(congressional_district|county)\./.test(v.scopeKey) && <Actions actions={[{ kind: "hunt-start", target: v.scopeKey, label: "Start hunts for the ZIPs here" }]} primaryFirst />}
         {score.extension && <p className={cx(s.p, s.small)}>Extra items beyond the core list, counted apart: {count(score.extension.captured)} of {count(score.extension.total)} captured{score.extension.percent === null ? "" : ` · ${percentWords(score.extension)}`}</p>}
+        {score.profiles && <p className={cx(s.p, s.small)}>{score.profiles.words} · {score.profiles.figures.fields.map((f) => `${f.label} ${f.held === null ? "—" : count(f.held)} of ${count(f.applies)}`).join(" · ")}{score.profiles.figures.notMeasured.length ? ` · not measured yet: ${score.profiles.figures.notMeasured.join(", ").toLowerCase()}` : ""}</p>}
         {score.coverage && <p className={cx(s.p, s.small)}>{score.coverage.words.join(" · ")}</p>}
         {score.summary && <p className={cx(s.p, s.small)}>Summary items, counted through their detail items and left out of the headline: {count(score.summary.captured)} of {count(score.summary.total)} captured</p>}
         <div className={s.stack}>

@@ -451,6 +451,8 @@ export interface PlaceScoreView {
   readonly coverage?: { readonly words: readonly string[] };
   /** Completeness, freshness and delivery, each with its counts. */
   readonly measures?: PlaceMeasuresView;
+  /** Officials and candidates with a full profile, with the count behind each field. */
+  readonly profiles?: { readonly words: string; readonly figures: { readonly fields: readonly { readonly key: string; readonly label: string; readonly applies: number; readonly held: number | null }[]; readonly notMeasured: readonly string[] } };
 }
 
 export interface SystemGroup {

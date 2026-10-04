@@ -110,3 +110,14 @@ export function checklistItemApplies(captureKind: string | undefined, calendarBo
   return (rule.groups?.includes(item.group) === true || rule.ids?.includes(item.id) === true)
     && !rule.excludeIds?.includes(item.id);
 }
+
+export type ProfileFieldKey = "portrait" | "contact" | "verifiedPage" | "campaignSite" | "stances" | "money" | "votes";
+export interface ProfileFieldRule {
+  readonly label: string;
+  /** Who the field applies to: everyone, only people with a campaign, or only voting members. */
+  readonly appliesTo: "everyone" | "campaign" | "voting-member";
+  readonly ids: { readonly seat: readonly string[]; readonly candidate: readonly string[] };
+}
+const { note: _kellyNote, ...KELLY_RULES } = map.kellyFields;
+/** What makes a profile full. A measure, never a gate. */
+export const KELLY_FIELDS = KELLY_RULES as unknown as Readonly<Record<ProfileFieldKey, ProfileFieldRule>>;

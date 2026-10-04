@@ -572,5 +572,64 @@
     "PUB-16": {"unit": "system", "trigger": "always", "due": "now", "predicateKind": "delivery", "scoreAs": "delivery", "countsAs": "row"},
     "PUB-17": {"unit": "system", "trigger": "always", "due": "now", "predicateKind": "delivery", "scoreAs": "delivery", "countsAs": "row"},
     "PUB-18": {"unit": "system", "trigger": "always", "due": "now", "predicateKind": "delivery", "scoreAs": "delivery", "countsAs": "row"}
+  },
+  "kellyFields": {
+    "note": "What makes a profile full, as a measure and never a gate. The union of the design's two lists: portrait, phone and contact, verified page, campaign site, stances, money and votes. Only the fields that apply to a person are counted: campaign site and money only for people with a campaign, votes only for voting members. `ids` names the checklist items that evidence the field for a seat or a candidate; an empty list means that field cannot be joined to the person yet and is reported as not measured, never as missing.",
+    "portrait": {
+      "label": "Portrait",
+      "appliesTo": "everyone",
+      "ids": {
+        "seat": ["OFF-17"],
+        "candidate": ["CAN-17"]
+      }
+    },
+    "contact": {
+      "label": "Phone and contact",
+      "appliesTo": "everyone",
+      "ids": {
+        "seat": ["OFF-09"],
+        "candidate": ["CAN-06"]
+      }
+    },
+    "verifiedPage": {
+      "label": "Verified page",
+      "appliesTo": "everyone",
+      "ids": {
+        "seat": ["OFF-08"],
+        "candidate": ["CAN-01"]
+      }
+    },
+    "campaignSite": {
+      "label": "Campaign site",
+      "appliesTo": "campaign",
+      "ids": {
+        "seat": [],
+        "candidate": ["CAN-05"]
+      }
+    },
+    "stances": {
+      "label": "Stances",
+      "appliesTo": "everyone",
+      "ids": {
+        "seat": ["OFF-19"],
+        "candidate": ["CAN-07"]
+      }
+    },
+    "money": {
+      "label": "Campaign money",
+      "appliesTo": "campaign",
+      "ids": {
+        "seat": [],
+        "candidate": []
+      }
+    },
+    "votes": {
+      "label": "Votes",
+      "appliesTo": "voting-member",
+      "ids": {
+        "seat": [],
+        "candidate": []
+      }
+    }
   }
 }

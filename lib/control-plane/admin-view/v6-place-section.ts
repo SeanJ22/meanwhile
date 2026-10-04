@@ -5,6 +5,7 @@ import { GROUP_NAMES, PLACE_GROUPS, ADMIN_V6_CHECKLIST_CONTRACT } from "./v6-che
 import type { PlaceOwedRead } from "./place-owed-read.ts";
 import type { RowStatuses } from "../../coverage/place-statuses.ts";
 import type { PlaceMeasures } from "../../coverage/place-measures.ts";
+import { peopleCoverage, peopleCoverageWords, type PeopleCoverage } from "../../coverage/people-coverage.ts";
 import { coverageWords, placeCoverage, type PlaceCoverage } from "../../coverage/place-coverage.ts";
 import { US_STATES } from "../readiness/catalog.ts";
 import { sendWordsFor } from "./blocker-causes.ts";
@@ -51,6 +52,8 @@ export interface AdminV6PlaceScore {
   /** Completeness, freshness and delivery, each with its counts and never blended. */
   readonly measures: PlaceMeasures;
   readonly familyMeasures: readonly { readonly group: string; readonly measures: PlaceMeasures }[];
+  /** Officials and candidates with a full profile, with the count behind each field. A measure, never a gate. */
+  readonly profiles: { readonly words: string; readonly figures: PeopleCoverage };
   /** Governments, bodies, seats and people accounted for against what is expected; "total unknown" where it cannot be known. */
   readonly coverage: { readonly words: readonly string[]; readonly figures: PlaceCoverage };
 }
@@ -135,6 +138,7 @@ export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, ta
   const rows = read.rows as readonly OwedRowLike[];
   const score = scorePlace(rows, GROUP_NAMES, GROUP_ORDER);
   const coverage = placeCoverage(read.rows, read.divisions);
+  const profiles = peopleCoverage(read.rows);
   const windowed = pageOwed(rows, query);
   const placeGroups = score.groups.map((g) => {
     const counts = [0, 0, 0, 0, 0, 0, 0];
@@ -151,7 +155,8 @@ export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, ta
       groupNames: GROUP_NAMES, placeGroups, items: windowed.items.map((i) => itemOf(i, read.placeKey, placeSendWords(read.placeKey, read.label, read.divisions))), systemGroups: SYSTEM_GROUPS,
       score: { placeKey: read.placeKey, placeLabel: read.label, covers: read.covers, observedAt: read.observedAt,
         divisionCount: read.divisions.length, sendWords: placeSendWords(read.placeKey, read.label, read.divisions), target, overall: score.overall, groups: score.groups, extension: score.extension, summary: score.summary, measures: score.measures, familyMeasures: score.familyMeasures,
-          coverage: { words: coverageWords(coverage), figures: coverage } },
+          coverage: { words: coverageWords(coverage), figures: coverage },
+          profiles: { words: peopleCoverageWords(profiles), figures: profiles } },
     },
     missingParts: [
       "Totals grow as agents find more governments, districts and bodies.",

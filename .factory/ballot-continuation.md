@@ -49,3 +49,11 @@ All source/READY/WIP history is preserved on the stream. Never force-push or ove
 ## Current certification boundary
 
 FULL at f049ae93d5650a4409d9f5769412b52e1b5e703c completed: 9,121 tests, 9,110 passed, zero failed, 11 skipped; types and lint passed (68 warnings). The later FEC rollout switch and finance binding bridge required re-certification. Exact local READY candidate bfc11e7b5ad94530244900c9c1a158427ad65a92 is being tested in /workspace/meanwhile-ballot-ready-check; it is not published until that exact FULL passes. Later CA-35 WIP is separate and must not be folded as part of that candidate. Read current status/evidence for the final result.
+
+## Next batch and handoff
+
+Use the READY boundary above rather than stream HEAD when folding this batch. Start any new source batch by catching up with current river and preserving only ballot's coordination files. A continuation claims this branch only after River records its assignment and the previous lock is none; this note does not assign another worker or authorize replacing a live lock.
+
+Ready independent work is still available: CA-23 card finance needs a source-supported person join (use exact candidate bindings, not a committee-to-body name shortcut); CA-49 still needs the remaining section 11 question paths and cold speed acceptance; CA-21 needs publication and reader routing after the saved-byte adapters. CA-31's owned-file admission hook is still pending. CA-32's legacy retirement follows complete general publication; preserve the way back until checked live. CA-35 is subsequent WIP with its extractor limitation recorded. These are implementation tasks, not invented owner decisions. Do not mark the lane complete or wait for Sean to say keep going.
+
+The remaining dependency chains are CA-25→26→27→28→29/50 (DB-42), CA-37→38→39/55 (BR-24 and SC-10), CA-19 (CP-03), CA-33 (CA-31/24 and CP-09), CA-52→53→54 (DB-11/BX-02 then FE-13), and CA-21→22/34→36 as the full plan defines. Check integration records again: a newer source branch's READY subject alone does not satisfy a prerequisite.

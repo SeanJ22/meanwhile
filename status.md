@@ -46,7 +46,7 @@ heartbeat: 2026-10-04T07:35:15Z
 
 ## Seen, not fixed
 
-- `tests/deploy-paths.test.ts` "no file under a non-shipping prefix is traced into the deploy" fails on main @ 0b31938 whenever a local `.next` exists. CI never runs it, because its test jobs have no build. Since ae476a5 (Sep 29) `isNonShippingPath` treats all of `data/` as non-shipping, yet the build traces 3,330 `data/` files (ballot cards, zip-divisions, candidates). A commit changing only those files would cancel its Netlify build and serve the old copy. River owns this deploy-classification question; it is not yet fixed.
+- `tests/deploy-paths.test.ts` "no file under a non-shipping prefix is traced into the deploy" fails on main @ 0b31938 whenever a local `.next` exists. CI never runs it, because its test jobs have no build. Since ae476a5 (Sep 29) `isNonShippingPath` treats all of `data/` as non-shipping, yet the build traces 3,330 `data/` files (ballot cards, zip-divisions, candidates). A commit changing only those files would cancel its Netlify build and serve the old copy. Sean's own Sep 29 tests pin that data-only changes cancel (`tests/hosted-cost-invariant.test.ts`, `deploy-paths.test.ts:132-133`), while RULING 124's trace sweep says traced files must ship. **Owner question, not yet asked:** should a committed change to a traced `data/` file (ballot cards, zip-divisions, states) rebuild the site, or do those files reach readers only through the data plane? Until he answers, lanes test without `.next`, as CI does.
 
 ## Worker health (06:31Z)
 

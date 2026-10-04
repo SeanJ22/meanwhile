@@ -10,15 +10,24 @@ The authoritative assignment table. River writes it. Workers read it every run.
 | meetings | meetings | Claude | yes | — |
 | auditors | auditors | Claude | yes | — |
 | people | people | Claude | yes | — |
-| admin | codex-admin | Codex | yes | measures (only after a recorded handoff below) |
-| slide | codex-slide | Codex | yes | hunters (only after a recorded handoff below) |
+| admin | **measures** (handed off 08:20Z) | Claude | yes | measures (only after a recorded handoff below) |
+| slide | **hunters** (handed off 08:20Z) | Claude | yes | hunters (only after a recorded handoff below) |
 | ballot | codex-ballot | Codex | yes | meetings (only after a recorded handoff below) |
-| bank | codex-bank | Codex | yes | registry (only after a recorded handoff below) |
-| frontend | codex-frontend | Codex | yes | auditors (only after a recorded handoff below) |
+| bank | **registry** (handed off 08:20Z) | Claude | yes | registry (only after a recorded handoff below) |
+| frontend | **auditors** (handed off 08:20Z) | Claude | yes | auditors (only after a recorded handoff below) |
 
 ## Handoffs
 
-None yet. When River hands a Codex lane to its paired Claude worker, it records a line here with a UTC time, the reason, the last Codex heartbeat it saw, and the stream tip at handoff. A Claude worker takes a Codex lane only when this section names it.
+| Time | Lane | From | To | Reason | Stream tip at handoff |
+|---|---|---|---|---|---|
+| 2026-10-04 08:20Z | admin | codex-admin | measures | Codex task released its lock at 07:06Z and stopped; no verified Codex restart mechanism exists | stream/admin as of 08:20Z |
+| 2026-10-04 08:20Z | slide | codex-slide | hunters | released at 07:39Z and stopped | stream/slide as of 08:20Z |
+| 2026-10-04 08:20Z | bank | codex-bank | registry | released at 07:34Z and stopped | stream/bank as of 08:20Z |
+| 2026-10-04 08:20Z | frontend | codex-frontend | auditors | released at 07:24Z and stopped | stream/frontend as of 08:20Z |
+
+The continuation worker reads the lane's brief and its saved continuation file, claims `.factory/<lane>.md` with its own token (the previous lock is `none`), and alternates ready batches with its primary lane. Do returned failures and unblocking work first, and never starve either lane. If a Codex run comes back, it sees this table and exits without writing. Ballot stays with codex-ballot, which is still active.
+
+Previously: None yet. When River hands a Codex lane to its paired Claude worker, it records a line here with a UTC time, the reason, the last Codex heartbeat it saw, and the stream tip at handoff. A Claude worker takes a Codex lane only when this section names it.
 
 ## Priorities
 
@@ -46,3 +55,11 @@ None started. Up to two are authorized if a lane falls behind (measured from hou
 - **`OFFICIAL_PAGE_EVENTS_VERSION`** (`lib/hunt/meetings-site-discovery.ts`) is a hash of the official-page parser's code closure. Any change inside that closure re-keys it, so streams collide on that one line. At each fold, River sets it to the value `tests/meetings-official-page.test.ts` computes on the combined tree. When you catch up with `river`, take river's value and re-run that test.
 - **Checklist census removal (people SC-15) and the measures SC-03 group-names move** met in `v6-checklist-section.ts`, `owner-surface.ts` and `publish-owner-snapshot.mts`. River kept both intents: the census, index publisher and section functions are gone, and `lib/coverage/group-names.ts` and the per-place history stay. Measures and people: catch up before your next edit there.
 - Delete a stale `.next` before running `tsc`. Its generated types still name routes that SC-15 removed.
+
+## Checks guidance for FULL batches (River, 08:20Z)
+
+Several lanes held work back as WIP because their FULL run failed for reasons that aren't theirs. In order:
+1. Run as CI does: `env -u DATABASE_URL -u WTP_ASSET_STORE`, full history, the place-reference projection rebuilt (`node --experimental-strip-types scripts/project-place-references.mts`), and **no `.next` present** when the test leg runs. CI's test jobs never have a build. With a `.next` present, `tests/deploy-paths.test.ts` "no file under a non-shipping prefix is traced into the deploy" fails on plain river and main as well: 3,330 traced `data/` files against the owner's Sep 29 data-is-non-shipping rule. That is an open owner question River holds. It isn't your failure.
+2. If a FULL test still fails, run the same test file on plain `origin/river`. A failure identical there isn't yours: write it under `checks:` as "baseline on river <sha>: <test>" and mark READY. Failures that appear only with your change are yours to fix.
+3. Browser tests: Chromium is at `/opt/pw-browsers/chromium`. If Playwright's pinned headless shell is missing in your environment, record which browser tests could not run as such. River's own `pnpm gates` on the combination is the release check, and it passed 9,088 of 9,088 on c7914e8.
+4. Live and browser checks of deployed pages are River's, after release. Don't hold a step as WIP waiting for them.

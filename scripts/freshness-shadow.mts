@@ -129,7 +129,7 @@ import {
 import { WindowLockHeld, acquireWindowLease, releaseWindowLease } from "../lib/control-plane/promotion/window.ts";
 import { scheduleObligation, isScheduled, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { retryable } from "../lib/control-plane/scheduler/debt.ts";
-import { ABSENCE_EXPIRY_DAYS, absenceExpiry, isArguedAbsence } from "../lib/control-plane/scheduler/absence.ts";
+import { ABSENCE_EXPIRY_DAYS, absenceExpiry, absenceUnlockFrom, isArguedAbsence } from "../lib/control-plane/scheduler/absence.ts";
 import { buildRegistry, registryLines } from "../lib/control-plane/scheduler/registry.ts";
 import { campaignFinanceProvider } from "../lib/control-plane/scheduler/providers/campaign-finance.ts";
 import { trackerIntakeProvider } from "../lib/control-plane/scheduler/providers/tracker-intake.ts";
@@ -3405,7 +3405,7 @@ if (!dry && !canary) {
     if (!isArguedAbsence(r, MIN_DISTINCT_RUNGS)) continue;
     try {
       await pending.step("absences:record", () =>
-        recordArguedAbsence(repos, { obligationId: r.obligationId, absentUntil: until, now: NOW }));
+        recordArguedAbsence(repos, { obligationId: r.obligationId, absentUntil: until, now: NOW, unlockWhen: absenceUnlockFrom(r, until) }));
       absencesRecorded += 1;
     } catch (error) {
       console.error(

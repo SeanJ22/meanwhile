@@ -21,6 +21,38 @@
 /** How long a proven absence stands before the record is re-walked. RULING 53. */
 export const ABSENCE_EXPIRY_DAYS = 30;
 
+/** What would reopen an absence, as text for Admin plus typed triggers a later capability can match (DP-06, DP-10). */
+export interface AbsenceUnlock {
+  readonly text: string;
+  readonly triggers: readonly AbsenceUnlockTrigger[];
+}
+export type AbsenceUnlockTrigger =
+  | { readonly kind: "ADAPTER"; readonly platform: string }
+  | { readonly kind: "TOOL"; readonly tool: string }
+  | { readonly kind: "ROUTE"; readonly recordClass: string }
+  | { readonly kind: "DATE"; readonly at: string };
+
+/**
+ * The unlock condition stored with an absence, built from the detective's own next steps and
+ * dead-end narrative. A new route for the record class and the recheck date always reopen it.
+ */
+export function absenceUnlockFrom(
+  result: { readonly nextRungs: readonly string[]; readonly narrative: string; readonly recordClass?: string | null },
+  absentUntil: string,
+): AbsenceUnlock {
+  const steps = result.nextRungs.map((r) => r.trim()).filter((r) => r !== "");
+  const text = steps.length > 0
+    ? `${steps.slice(0, 4).join("; ")}${steps.length > 4 ? `; and ${steps.length - 4} more` : ""}`
+    : result.narrative.trim().split(/(?<=[.!?])\s/)[0]?.slice(0, 300) ?? "";
+  return {
+    text,
+    triggers: [
+      ...(result.recordClass ? [{ kind: "ROUTE", recordClass: result.recordClass } as const] : []),
+      { kind: "DATE", at: absentUntil },
+    ],
+  };
+}
+
 /** The instant an absence recorded `now` expires and the record is owed again. */
 export function absenceExpiry(now: string): string {
   return new Date(Date.parse(now) + ABSENCE_EXPIRY_DAYS * 86_400_000).toISOString();

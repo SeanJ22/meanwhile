@@ -239,7 +239,7 @@ test("PDC: readiness authority coverage accounts for every production contract",
   // + the state legislators' capitol and district offices, refreshed daily (member-offices, 2026-09-30).
   assert.equal(
     contracts.length,
-    169 + 56 + 1 + (REGISTRATION_TARGETS.length - 3) + 1 + 1 + 1 + 1, // official filing facts, separate AZ operational-reference contract, member offices
+    169 + 56 + 1 + (REGISTRATION_TARGETS.length - 3) + 1 + 1 + 1 + 1 + 1, // official filing facts, AZ operational reference, member offices, general ballot contests
     "the coverage guard must move when the production contract denominator moves (56: one registration per FIPS state, DC and territory)",
   );
   assert.deepEqual(

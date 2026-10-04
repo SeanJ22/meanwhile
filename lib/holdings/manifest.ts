@@ -144,7 +144,7 @@ export function statesFromIdentity(value: unknown): string[] {
 function taggedStates(row: Row): string[] {
   const tags = [...(Array.isArray(row.stateCodes) ? row.stateCodes : []), ...(Array.isArray(row.states) ? row.states : []), ...(Array.isArray(row._manifestStateCodes) ? row._manifestStateCodes : [])];
   const fips = Array.isArray(row.coveredStateFips) ? row.coveredStateFips : [];
-  return unique([...tags.flatMap(statesFromIdentity), ...fips.flatMap((code) => FIPS_TO_STATE[string(code)] ? [FIPS_TO_STATE[string(code)].postal.toLowerCase()] : []), ...["stateCode", "state", "jurisdiction", "ocdId", "bodyId", "bodyOcdId", "stateOcdId", "divisionOcdId", "formKey", "subjectId", "subject", "id", "canonicalContestId", "candidateKey", "targetKey"].flatMap((key) => statesFromIdentity(row[key]))]);
+  return unique([...tags.flatMap(statesFromIdentity), ...fips.flatMap((code) => FIPS_TO_STATE[string(code)] ? [FIPS_TO_STATE[string(code)].postal.toLowerCase()] : []), ...["stateCode", "state", "jurisdiction", "ocdId", "bodyId", "bodyOcdId", "stateOcdId", "divisionOcdId", "formKey", "contestId", "subjectId", "subject", "id", "canonicalContestId", "candidateKey", "targetKey"].flatMap((key) => statesFromIdentity(row[key]))]);
 }
 
 function walkFiles(root: string, dir: string): string[] {
@@ -391,7 +391,7 @@ function dataset(root: string, path: string, congressState: Map<string, string>,
     row._manifestStateCodes = unique(states);
     for (const state of unique(states)) rowsByState.set(state, (rowsByState.get(state) ?? 0) + 1);
   }
-  let states = fixedState && VALID_STATES.has(fixedState) ? [fixedState] : unique([...rowsByState.keys(), ...(path.startsWith("data/fec/") ? [] : recursiveStates(value))]);
+  let states = fixedState && VALID_STATES.has(fixedState) ? [fixedState] : unique([...rowsByState.keys(), ...(path.startsWith("data/fec/") || path.endsWith("/measure-records-first-seed.json") ? [] : recursiveStates(value))]);
   if (path.includes("/officeholders-") && states.length === 0) states = recursiveStates(value);
   if (path.endsWith("directory.json") && path.startsWith("data/congress-legislators/")) states = unique([...states, ...rowsByState.keys()]);
   return { path, family: family?.id ?? "unmapped", domain: family?.domain ?? (path.split("/")[3] || "unmapped"), states, value, bytes: bytes.length, sha256: hash(bytes), rowsByState, totalRows: rows.length, unit };

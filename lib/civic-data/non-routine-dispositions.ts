@@ -328,7 +328,8 @@ export const MANUAL_PRODUCTION_INVENTORY_BINDINGS: readonly ManualProductionInve
   },
   {
     inventorySourceId: "az-sos-ballot", contractId: "az-sos-ballot", contractSourceId: "az-election-authorities",
-    reason: "The explicit-owner Arizona ballot contract owns the canonical Reader projection; tracked holdings are first-seed evidence only.",
+    additionalContracts: [{ contractId: "ballot-contests", contractSourceId: "official-ballot-authorities" }],
+    reason: "The first-seed ballot contract and its general official-authority worker replacement own canonical Reader projections; tracked holdings remain first-seed evidence only.",
   },
   {
     inventorySourceId: "nh-curated-ballot", contractId: "nh-curated-ballot", contractSourceId: "nh-election-authorities",

@@ -226,11 +226,15 @@ function descriptorFor(j: Jurisdiction, s: JurisdictionSource, routeId: string):
  * Sources are taken in the row's own order, custodian-deduped, and non-meetings
  * sources keep the positional ids they have always had.
  */
+const NO_LIVE_FAMILIES: ReadonlySet<string> = new Set();
+
 export function jurisdictionRequirements(
   reg: JurisdictionRegistry,
   j: Jurisdiction,
   meetingPartitions: MeetingPartitionOwnership = UNREAD_MEETING_PARTITIONS,
   discoverMissingFamilies = false,
+  /** Record classes whose owed rows for this government are already live (CH-04): no paid discovery Scout is queued for them. */
+  liveFamilies: ReadonlySet<string> = NO_LIVE_FAMILIES,
 ): readonly JurisdictionRequirement[] {
   const out: JurisdictionRequirement[] = [];
   let n = 0;
@@ -279,7 +283,7 @@ export function jurisdictionRequirements(
       ["VOTER_ACCESS", "Find the responsible election authority's polling-place and registration lookup routes. Independently verify the state, route kind and destination; do not infer that a local route serves an entire state. Publish only verified statewide lookup routes through the statewide Reader; retain narrower applicability as unresolved work."],
     ] as const;
     for (const [recordClass, owed] of families) {
-      if (represented.has(recordClass)) continue;
+      if (represented.has(recordClass) || liveFamilies.has(recordClass)) continue;
       const routeId = `coverage-discovery:${recordClass.toLowerCase()}`;
       const source: JurisdictionSource = { recordClass, authority: j.name,
         authorityBasis: "The registered government's missing information family requires discovery; publisher, custodian and applicability have not yet been established.",

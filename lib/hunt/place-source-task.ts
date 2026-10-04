@@ -58,6 +58,11 @@ export async function readNationalPlaceSendRequests(repos: ControlPlaneRepositor
   return nationalPlaceSendRequests(await resolveNationalPlaceSendScopes(sends, zips), zips, now);
 }
 
+/** The national source families this pass left unread because nothing in them was open. */
+export function skippedFamilies(families: { readonly officials: boolean; readonly elections: boolean } | null | undefined): string[] {
+  return families ? (Object.keys(families) as (keyof typeof families)[]).filter(family => !families[family]) : [];
+}
+
 /** Compare reader facts, excluding observation times and publication versions. */
 export function placeMadeProgress(before: readonly PlaceOwedItem[], after: readonly PlaceOwedItem[]): boolean {
   const facts = (items: readonly PlaceOwedItem[]) => new Map(items.filter(item => item.state === "published" || item.state === "unpublished")
@@ -176,7 +181,7 @@ export async function runNationalPlaceTask(input: {
             report = await (input.acquire ?? runPlaceSource)({ repos: tools.repos, store: input.store, zip, now, clock: tools.now, knowledge,
               readHeld: async ids => {
                 const capture = await readHeldPlaceCapture(ids, { store: input.store, now: tools.now(), bypassCache: true });
-                before ??= buildPlaceOwedList({ divisions: ids.map(id => ({ id, label: id })), ...capture, now: tools.now() });
+                before ??= buildPlaceOwedList({ divisions: ids.map(id => ({ id, label: id })), zips: [zip], ...capture, now: tools.now() });
                 return capture;
               },
               readSource: async url => { assertLeaseHealthy?.(); return saved.read(url); },
@@ -204,7 +209,9 @@ export async function runNationalPlaceTask(input: {
               observation: { rawCount: artifacts.length, normalizedCount: report.sources?.officials.length ?? 0,
                 routeOnlyCount: null, earliest: null, latest: null },
               note: "Saved national sources acquired; published fields come only from canonical readback; remaining fields stay owed. " +
-                JSON.stringify({ placeProgress: placeMadeProgress(before ?? [], report.items), inherited: report.inherited, sourceGaps: report.sources?.gaps ?? [], publications: report.publications,
+                JSON.stringify({ placeProgress: placeMadeProgress(before ?? [], report.items), inherited: report.inherited,
+                  // The families with nothing open were not read; the count is of saved pages this pass actually read.
+                  families: report.families, skippedFamilies: skippedFamilies(report.families), sourcesRead: report.sources?.documents.length ?? 0, sourceGaps: report.sources?.gaps ?? [], publications: report.publications,
                   electionPublications: report.electionPublications }) },
             cost: { ...ZERO_COST, ...saved.cost, durationMs: Date.now() - started },
             detail: `ZIP ${zip}: ${report.items.filter(item => item.state === "published").length} published fields, ${report.work.length} source gaps` };

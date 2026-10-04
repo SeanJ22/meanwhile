@@ -447,9 +447,9 @@ test("the funding sentences name the cycle and the small-donor method", () => {
   assert.equal(answer.kind, "funding");
   if (answer.kind !== "funding") return;
   assert.match(answer.data.sentences[0], /raised .* in the 2025–26 election cycle/);
-  const donorSentence = answer.data.sentences.find((s) => s.includes("small donors"));
+  const donorSentence = answer.data.sentences.find((s) => s.includes("of individual money"));
   assert.ok(donorSentence, "small-donor share missing");
-  assert.match(donorSentence!, /under \$200/, "the method must be stated in the words");
+  assert.match(donorSentence!, /giving \$200 or less/, "the method must be stated in the words");
   // No internal identifier reaches the reader path.
   for (const s of answer.data.sentences) {
     assert.ok(!/FEC_(COMMITTEE|CONTRIBUTOR)/.test(s));
@@ -736,52 +736,29 @@ test("a surface headed 'contributions' carries only contributions — no offsets
   assert.deepEqual(offenders, [], "non-contribution receipts reached a contributions surface");
 });
 
-// ── Item 4: the small-donor honesty floor ────────────────────────────────
-
-test("item 4: below the floor the percentage is replaced by the raw dollars", async () => {
-  const { smallDonorSentence, SMALL_DONOR_FLOOR_DEFAULT } = await import(
-    "../lib/funding/display.ts"
-  );
-  assert.equal(SMALL_DONOR_FLOOR_DEFAULT, 5000);
-
-  // Dan Nicholson's shape: $325 raised, $175 unitemized — 54%, true and
-  // meaningless. The floor replaces it with the money itself.
-  const below = smallDonorSentence(325, 175, 175 / 325)!;
-  assert.match(below, /About \$175 came from small unitemized gifts/);
-  assert.ok(!/%/.test(below), "a percentage survived below the floor");
-
-  // Exactly AT the floor the percentage stands — the boundary is tested on
-  // both sides, not near it.
-  const at = smallDonorSentence(5000, 500, 0.1)!;
-  assert.match(at, /About 10% of the money came from small donors/);
-  const justBelow = smallDonorSentence(4999, 500, 500 / 4999)!;
-  assert.ok(!/%/.test(justBelow));
-
-  // Nothing raised: no sentence at all, rather than a zero pretending to be
-  // a finding.
-  assert.equal(smallDonorSentence(0, 0, null), null);
-
-  // Tunable without a deploy, like every other threshold here.
-  assert.match(smallDonorSentence(6000, 600, 0.1, 10_000)!, /came from small unitemized gifts/);
+// CA-45: the individual-dollar denominator comes from the filing's two own lines.
+test("small-donor money uses individual dollars and the inclusive $200 threshold", async () => {
+  const { smallDonorSentence, smallDonorShare } = await import("../lib/funding/display.ts");
+  assert.equal(smallDonorShare(150, 175), 175 / 325);
+  assert.match(smallDonorSentence(150, 175)!, /\$175 \(54%\) of individual money/);
+  assert.match(smallDonorSentence(150, 175)!, /giving \$200 or less in the cycle/);
+  assert.match(smallDonorSentence(380, 620)!, /62%/);
+  assert.equal(smallDonorSentence(0, 0), null);
+  assert.equal(smallDonorSentence(null, 175), null);
+  assert.equal(smallDonorSentence(150, null), null);
+  assert.equal(smallDonorSentence(-1, 175), null);
+  assert.match(smallDonorSentence(1_000_000, 1)!, /under 1%/);
 });
 
-test("item 4: the live Nicholson card renders the raw sentence, and Booker keeps his percentage", () => {
-  const nicholson = fundingAnswerForTarget(
-    "ballot-nh-merrimack:us-house-2:nicholson-dan",
-  );
-  assert.equal(nicholson.kind, "funding");
-  if (nicholson.kind !== "funding") return;
-  const line = nicholson.data.sentences.find((s) => /small/.test(s));
-  assert.ok(line, "Nicholson's small-donor line vanished");
-  assert.ok(
-    !/%/.test(line!),
-    `a percentage of a $325 raise reached the reader: "${line}"`,
-  );
-
-  const booker = fundingAnswerForTarget("congress:B001288");
-  if (booker.kind === "funding") {
-    const bookerLine = booker.data.sentences.find((s) => /small donors/.test(s));
-    assert.ok(bookerLine && /%/.test(bookerLine), "Booker lost his percentage");
+test("held federal cards show the authorized small-donor dollar share without a size floor", () => {
+  for (const key of ["ballot-nh-merrimack:us-house-2:nicholson-dan", "congress:B001288"]) {
+    const answer = fundingAnswerForTarget(key);
+    assert.equal(answer.kind, "funding");
+    if (answer.kind !== "funding") continue;
+    const line = answer.data.sentences.find(sentence => /of individual money/.test(sentence));
+    assert.ok(line && /%/.test(line));
+    assert.doesNotMatch(answer.data.concentrationSentences.join(" "), /%|not the whole|don't sort|don't give a district|single biggest/i);
+    assert.doesNotMatch(answer.data.typeConcentrationSentences.join(" "), /%|don't sort|we picked/i);
   }
 });
 
@@ -1691,7 +1668,7 @@ test("D06: the sentences state their base before they state any figure", async (
 
   // The base comes FIRST — every number after it is a share of it.
   assert.match(sentences[0], /listed above/i);
-  assert.match(sentences[0], /not the whole of what it raised/i);
+  assert.doesNotMatch(sentences.join(" "), /not the whole|%/i);
 
   // And it never claims to be the largest contributions overall, which is
   // what the first draft said and what the fetch loop does not do.
@@ -1734,7 +1711,8 @@ test("D06: no district is claimed from a filing that gives only a state", async 
   // A congressional district is a ballot fact, and zip cannot resolve one
   // (CLAUDE.md). The surface says state, and says the filings give no
   // district, rather than letting a reader assume otherwise.
-  assert.match(sentences, /the filings don't give a district/i);
+  assert.match(sentences, /Filed from inside Arizona: \$1,000/);
+  assert.doesNotMatch(sentences, /don't give a district|%/i);
   assert.doesNotMatch(sentences, /in-district|out-of-district|their district/i);
 });
 
@@ -1758,12 +1736,12 @@ test("D06: nothing is sorted into an industry, and the org split is dollars not 
   // aggregators CLAUDE.md's source rule excludes. Inventing one would be
   // the app characterizing an organization, which is forbidden outright.
   assert.doesNotMatch(sentences, /industry|sector|interest group|lobby/i);
-  assert.match(sentences, /don't sort donors into industries or causes/i);
+  assert.doesNotMatch(sentences, /don't sort donors|%/i);
 
   // The two groups are fetched as separate top-fives, so a percentage
   // between them would be a percentage of a base we chose. Dollars only.
   assert.match(sentences, /\$10,000 came from committees/);
-  assert.match(sentences, /\$2,000\s+from individual people/);
+  assert.match(sentences, /\$2,000 came from individual people/);
 });
 
 test("D06: an unknown state is a named gap, never a zero that reads as 'none from home'", async () => {
@@ -1774,7 +1752,7 @@ test("D06: an unknown state is a named gap, never a zero that reads as 'none fro
   assert.ok(concentration);
   assert.equal(concentration.hasGeography, false);
   const sentences = concentrationSentences(concentration, null).join(" ");
-  assert.match(sentences, /isn't something we can state here/i);
+  assert.match(sentences, /We're working on getting this info/);
   assert.doesNotMatch(sentences, /\b0% of/);
 });
 
@@ -1888,12 +1866,12 @@ test("D06 g20: bands come from the FEC's filed typing, and cross no sampled base
   assert.equal(concentration.bands[1].id, "pac-labor");
 
   const sentences = typeConcentrationSentences(concentration).join(" ");
-  assert.match(sentences, /didn't come from individual donors/);
-  assert.match(sentences, /\$14,000/);
+  assert.match(sentences, /\$10,000 from a PAC connected to a trade association/);
+  assert.match(sentences, /\$4,000 from a PAC connected to a labor union/);
   assert.doesNotMatch(sentences, /99,000/);
   // Never an industry, and it says so rather than leaving the reader to
   // assume these categories are one.
-  assert.match(sentences, /don't sort donors into industries or causes/i);
+  assert.doesNotMatch(sentences, /don't sort donors|%/i);
 });
 
 test("D06 g20: a filing with no typing is a named gap, not the generic organization", async () => {

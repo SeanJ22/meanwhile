@@ -762,8 +762,21 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
     }
     pending.push({ state, subject, verdicts });
   }
-  /* The confirmation rules see this run's Attempts and artifacts only once the context is read again. */
-  if (recordedThisRun > recordedBeforeLeads) ctx = await contextFromRepositories(repos);
+  /* Only acquisition artifacts and Attempts changed. Preserve the held worker
+   * result/audit context instead of loading its completion evidence again. */
+  if (recordedThisRun > recordedBeforeLeads) {
+    const [artifacts, attempts] = await Promise.all([repos.artifacts.readAll(), repos.attempts.list()]);
+    const byArtifact = new Map(artifacts.map(artifact => [artifact.artifactId, artifact]));
+    const byAttempt = new Map(attempts.map(attempt => [attempt.id, attempt.value]));
+    ctx = { ...ctx,
+      artifactById: id => byArtifact.get(id) ?? null,
+      attemptRoleById: id => byAttempt.get(id)?.worker.role ?? null,
+      attemptArtifactIds: id => {
+        const attempt = byAttempt.get(id);
+        return attempt?.outcome === "COMPLETED" ? attempt.artifactIds : null;
+      },
+    };
+  }
   for (const { state, subject, verdicts } of pending) {
     const scouted = state.byStage.SCOUTED!;
     const verified = verdicts.filter((v) => v.verdict.verdict === "VERIFIED");

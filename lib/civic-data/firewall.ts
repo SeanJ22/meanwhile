@@ -1124,7 +1124,7 @@ const MEETING_PARTITION_AUTHORITY_GATES = [
   },
   {
     path: "lib/registry/curated-bodies.ts",
-    required: [/SOURCE_WIRING/, /agendaSourceType === "CLERKSBOARDS"/],
+    required: [/activeWiring/, /agendaSourceType === "CLERKSBOARDS"/],
   },
   {
     path: "lib/civic-data/meeting-partitions.ts",

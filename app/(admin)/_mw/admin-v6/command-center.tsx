@@ -20,7 +20,7 @@ import { ActionDialog, type DialogSend } from "./action-dialog.tsx";
 import { ChangesView } from "./changes-view.tsx";
 import { ChatView } from "./chat-view.tsx";
 import { actionDef, isZipPlace, type PreviewContext } from "./actions.ts";
-import { BulkHunts, bulkPickOf, type BulkItem, type BulkPick } from "./bulk-hunts.tsx";
+import { BulkHunts, bulkPickOf, type BulkItem, type BulkMission, type BulkPick } from "./bulk-hunts.tsx";
 import type { SectionId } from "./contract.ts";
 import { V6Context, VIEWS, type Detail, type V6, type View } from "./context.tsx";
 import { DetailPanel } from "./details.tsx";
@@ -199,18 +199,18 @@ export function CommandCenter(props: CommandCenterProps) {
     void props.executor.send(receipt, { def, target, scopeKey, option: send.option, words: send.words, amount: send.amount, selectedItems: send.selected, payload: ref.payload }, update);
   };
 
-  const doSendBulk = (send: { readonly items: readonly BulkItem[]; readonly priority: number }) => {
+  const doSendBulk = (send: { readonly items: readonly BulkItem[]; readonly missions: readonly BulkMission[]; readonly priority: number }) => {
     const def = actionDef("hunt-start-many");
     const key = newActionKey();
     if (sendingKeys.current.has(key)) return;
     sendingKeys.current.add(key);
     const receipt = startReceipt({
-      key, def, target: "hunts", targetName: `${send.items.length.toLocaleString("en-US")} hunts`, label: def.label,
+      key, def, target: "hunts", targetName: send.missions.length > 0 && send.items.length === 0 ? `${send.missions.length.toLocaleString("en-US")} mission${send.missions.length === 1 ? "" : "s"}` : `${(send.items.length + send.missions.length).toLocaleString("en-US")} hunts`, label: def.label,
       scopeKey, scopeName: place.name, level: "global", at: new Date().toISOString(), simulated: props.mode === "sample",
     });
     update(receipt);
     setBulk(null);
-    void props.executor.send(receipt, { def, target: "hunts", scopeKey, option: null, words: "", amount: "", selectedItems: [], payload: { items: JSON.stringify(send.items), priority: String(send.priority) } }, update);
+    void props.executor.send(receipt, { def, target: "hunts", scopeKey, option: null, words: "", amount: "", selectedItems: [], payload: { items: JSON.stringify([...send.items, ...send.missions.map((m) => ({ geography: m.geography, budgetUsd: m.budgetUsd, group: null }))]), priority: String(send.priority) } }, update);
   };
 
   const openDetail = (d: Detail) => {

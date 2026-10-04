@@ -32,7 +32,8 @@
 
 import type { CandidateSourceRevision } from "../candidates/corpus.ts";
 
-export type SnapshotKind = "CAMPAIGN_SITE" | "OFFICIAL_PAGE";
+import type { SnapshotKind } from "./source-kinds.ts";
+export type { SnapshotKind } from "./source-kinds.ts";
 
 export interface SourceSnapshot {
   /** `${subjectId}|${url}|${contentHash}` — content-addressed, stable. */
@@ -48,6 +49,12 @@ export interface SourceSnapshot {
   /** Original captured-source identity when held; older snapshots may lack it. */
   sourceRevision?: CandidateSourceRevision;
   retrievedAt: string;
+  /**
+   * The calendar day (YYYY-MM-DD) a social post was published, when its source
+   * states one. Only a dated post can be tied to a vote (CA-40); `retrievedAt`
+   * is when we read it, never when it was said.
+   */
+  postedOn?: string;
   httpStatus: number;
   extraction: "ok" | "failed";
   /** Extracted visible text. Null when extraction failed. */

@@ -90,7 +90,11 @@ test("HOLBROOK · in-window sittings reach readers date-only, each citing its ow
   const source = makeDocumentListingSource([WIRING]);
   const { meetings, drops, accounting } = source.normalizeWithDrops([raw()], new Date("2026-09-25T18:00:00Z"));
   assert.equal(accounting.outcome, "CONSERVED");
+  // DB-05 (2026-10-04): the adapter holds 120 days, so the three sittings of 10 and 24 June (between 90 and 120 days back) are in.
   assert.deepEqual(meetings.map((m) => m.id), [
+    "document-listing:holbrook-city-council:2026-06-10:regular-meeting",
+    "document-listing:holbrook-city-council:2026-06-24:special-meeting",
+    "document-listing:holbrook-city-council:2026-06-24:work-session",
     "document-listing:holbrook-city-council:2026-07-08:regular-meeting",
     "document-listing:holbrook-city-council:2026-07-22:special-meeting",
     "document-listing:holbrook-city-council:2026-07-28:special-meeting",
@@ -115,9 +119,9 @@ test("HOLBROOK · in-window sittings reach readers date-only, each citing its ow
   assert.equal(sept9.agendaUrl, drive("1M_HnC-Qbg9Pm9Jp1ohE99fq5-37-9zFD"));
   assert.deepEqual(sept9.publishedLinks, [{ label: "Statement of Legal Action", href: drive("1YDL1CjG9gsrTcvroPt1fLAW_hFvdTiuY") }]);
   assert.equal(sept9.provenance.evidenceExcerpt, "Agendas: Regular Meeting 9-9-2026 | Minutes: Statement of Legal Action 9-9-2026");
-  const aug12 = meetings[3];
+  const aug12 = meetings.find((m) => m.id.endsWith(":2026-08-12:regular-meeting"))!;
   assert.deepEqual(aug12.publishedLinks, [{ label: "Minutes (not marked draft or approved)", href: drive("1wPZOYCFD89mSjHLnulf4t-rkC4PdVJSR") }]);
-  assert.equal(drops.unknownVenue, 5);
+  assert.equal(drops.unknownVenue, 8);
 });
 
 test("HOLBROOK · a sitting whose agenda is posted is upcoming until its day ends; two on one day stay two", () => {
@@ -155,7 +159,9 @@ test("HOLBROOK · labels: dates as a clerk writes them, minutes labelled only in
 });
 
 test("HOLBROOK · the serving window's years are read; next year's missing page is the city not having posted it", async () => {
-  assert.deepEqual(yearsToRead({ now: new Date("2026-09-25T18:00:00Z") }), { years: [2026], required: 2026 });
+  // 120 days ahead of 25 September reaches 23 January, so the held window already reads next year's page.
+  assert.deepEqual(yearsToRead({ now: new Date("2026-09-25T18:00:00Z") }), { years: [2026, 2027], required: 2026 });
+  assert.deepEqual(yearsToRead({ now: new Date("2026-08-25T18:00:00Z") }), { years: [2026], required: 2026 });
   assert.deepEqual(yearsToRead({ now: new Date("2027-01-10T18:00:00Z") }), { years: [2026, 2027], required: 2027 });
 
   const requested: string[] = [];

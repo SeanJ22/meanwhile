@@ -22,30 +22,24 @@
  * tests/post-deploy-warm.test.ts proves the plan without a network.
  */
 import { PUBLIC_SITE_ORIGIN } from "./origins.ts";
+import type { WarmPlace } from "./warm-places.ts";
 
 /** The marker every request here carries, so no log can count it as a reader. */
 export const POST_DEPLOY_WARM_MARKER = "post-deploy-warm";
 
-/**
- * The pilot ZIPs, with the ZCTA centroid the map sends for each
- * (`lib/geo/zcta-centroids.json`; tests/post-deploy-warm.test.ts holds the
- * two equal). The CDN keys on the exact query, so a fill with any other
- * coordinates would fill an object no reader ever asks for.
- */
-export const PILOT_ZIP_POINTS: readonly { readonly zip: string; readonly lat: number; readonly lng: number }[] = [
-  { zip: "85701", lat: 32.21696, lng: -110.971 },
-  { zip: "85201", lat: 33.43355, lng: -111.8504 },
-  { zip: "07866", lat: 40.95499, lng: -74.48801 },
-  { zip: "03255", lat: 43.31403, lng: -72.02455 },
-  { zip: "86001", lat: 35.28766, lng: -111.6393 },
-];
+export type { WarmPlace } from "./warm-places.ts";
+
+/** The most places one deploy fills; the rest wait for the next deploy or the CDN's own fills. */
+export const MAX_WARM_PLACES = 300;
+/** How many place requests are in flight at once. */
+export const WARM_CONCURRENCY = 24;
 
 /**
  * The map's request for a typed ZIP, byte for byte: `components/map/map-entry.tsx`
  * builds `/api/meetings?lat=${lat}&lng=${lng}${zipParam}${radiusParam}`, and a
  * typed ZIP's view carries no radius.
  */
-export function readerMeetingsPath(point: { readonly zip: string; readonly lat: number; readonly lng: number }): string {
+export function readerMeetingsPath(point: WarmPlace): string {
   return `/api/meetings?lat=${point.lat}&lng=${point.lng}&zip=${point.zip}`;
 }
 
@@ -84,11 +78,15 @@ export interface PostDeployWarmOptions {
   readonly requestTimeoutMs?: number;
   /** The fourteen marked warm calls (`netlify/functions/keep-warm.mts`). */
   readonly warmCalls: (fetchImpl: typeof fetch) => Promise<{ answered: number; ms: number }>;
+  /** The places to fill; by default one per published county, read from the live site (`/api/warm?places=1`). */
+  readonly places?: (fetchImpl: typeof fetch) => Promise<readonly WarmPlace[]>;
+  /** Total time for the fills and the rereads together; places not reached are counted, not read. */
+  readonly fillBudgetMs?: number;
 }
 
 export interface PilotRead {
   readonly zip: string;
-  readonly status: number | "ERROR";
+  readonly status: number | "ERROR" | "SKIPPED";
   readonly ms: number;
   /** Netlify's `Cache-Status` header, which says whether the CDN answered. */
   readonly cacheStatus: string | null;
@@ -101,6 +99,8 @@ export type PostDeployWarmResult =
       readonly commit: string;
       readonly waitedMs: number;
       readonly warm: { readonly answered: number; readonly ms: number };
+      /** Places asked for, and how many of them the fills reached within the budget. */
+      readonly places: number;
       readonly fills: readonly PilotRead[];
       readonly rereads: readonly PilotRead[];
     };
@@ -118,7 +118,7 @@ async function servedCommit(origin: string, fetchImpl: typeof fetch, timeoutMs: 
   }
 }
 
-async function readPilot(origin: string, point: (typeof PILOT_ZIP_POINTS)[number], fetchImpl: typeof fetch, now: () => number, timeoutMs: number): Promise<PilotRead> {
+async function readPilot(origin: string, point: WarmPlace, fetchImpl: typeof fetch, now: () => number, timeoutMs: number): Promise<PilotRead> {
   const started = now();
   try {
     const response = await fetchImpl(`${origin}${readerMeetingsPath(point)}`, { headers: HEADERS, signal: AbortSignal.timeout(timeoutMs) });
@@ -150,10 +150,40 @@ export async function warmAfterDeploy(deploy: DeployToWarm, options: PostDeployW
   }
   const waitedMs = Math.round(now() - started);
 
-  const [warm, fills] = await Promise.all([
-    options.warmCalls(fetchImpl),
-    Promise.all(PILOT_ZIP_POINTS.map((point) => readPilot(origin, point, fetchImpl, now, timeoutMs))),
-  ]);
-  const rereads = await Promise.all(PILOT_ZIP_POINTS.map((point) => readPilot(origin, point, fetchImpl, now, timeoutMs)));
-  return { outcome: "WARMED", commit: deploy.commit, waitedMs, warm, fills, rereads };
+  const placesOf = options.places ?? ((f: typeof fetch) => publishedPlaces(origin, f, timeoutMs));
+  const budgetMs = options.fillBudgetMs ?? 25_000;
+  const [warm, places] = await Promise.all([options.warmCalls(fetchImpl), placesOf(fetchImpl).catch(() => [] as readonly WarmPlace[])]);
+  const wanted = places.slice(0, MAX_WARM_PLACES);
+  const fillDeadline = now() + budgetMs * 0.6;
+  const fills = await readAll(origin, wanted, fetchImpl, now, timeoutMs, fillDeadline);
+  const rereads = await readAll(origin, wanted, fetchImpl, now, timeoutMs, now() + budgetMs * 0.4);
+  return { outcome: "WARMED", commit: deploy.commit, waitedMs, warm, places: wanted.length, fills, rereads };
+}
+
+/** One place per published county, from the live site's own reader edge manifest. */
+async function publishedPlaces(origin: string, fetchImpl: typeof fetch, timeoutMs: number): Promise<readonly WarmPlace[]> {
+  const response = await fetchImpl(`${origin}/api/warm?places=1`, {
+    headers: { "x-wtp-synthetic-run": "keep-warm", accept: "application/json" }, signal: AbortSignal.timeout(timeoutMs),
+  });
+  if (!response.ok) return [];
+  const body = (await response.json()) as { places?: unknown };
+  return Array.isArray(body.places) ? body.places.filter((p): p is WarmPlace =>
+    typeof p?.zip === "string" && typeof p.lat === "number" && typeof p.lng === "number") : [];
+}
+
+/** Read every place with bounded concurrency; a place not started by the deadline is marked SKIPPED, never read. */
+async function readAll(origin: string, places: readonly WarmPlace[], fetchImpl: typeof fetch, now: () => number, timeoutMs: number, deadline: number): Promise<PilotRead[]> {
+  const out: PilotRead[] = new Array(places.length);
+  let next = 0;
+  const worker = async () => {
+    for (;;) {
+      const i = next++;
+      if (i >= places.length) return;
+      out[i] = now() > deadline
+        ? { zip: places[i].zip, status: "SKIPPED", ms: 0, cacheStatus: null }
+        : await readPilot(origin, places[i], fetchImpl, now, timeoutMs);
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(WARM_CONCURRENCY, places.length) }, worker));
+  return out;
 }

@@ -52,7 +52,6 @@ import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { AggregateRepository } from "../lib/control-plane/repository/types.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
-import { buildChecklistCensus } from "../lib/control-plane/readiness/checklist-census.ts";
 import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
 import type { RouteDisposition, RouteTask } from "../lib/control-plane/route-task.ts";
 import type { FreshnessDebt } from "../lib/control-plane/scheduler/debt.ts";
@@ -308,7 +307,7 @@ test("body publication attempts expose only recorded public-safe outcomes and re
       detail: "private detail", candidateId: "candidate-1", versionId: "version-1",
       acceptedMembers: [{ recordId: "record-1", memberId: "member-1" }] } });
   assert.deepEqual(bodyPublicationAttempts([work, workItem("wi-no-attempt")]), [{
-    bodyId: "body-1", workItemId: "wi-body", assignmentKeys: [], assignmentRefs: [], at: NOW, status: "PARTIALLY_PUBLISHED", code: "MORE_IDENTITIES_OWED",
+    bodyId: "body-1", family: "people", workItemId: "wi-body", assignmentKeys: [], assignmentRefs: [], at: NOW, status: "PARTIALLY_PUBLISHED", code: "MORE_IDENTITIES_OWED",
     sourceUrl: "https://example.gov/roster", workerResultId: "wr-1", acceptedCount: 1, versionId: "version-1",
   }]);
   const owned = bodyPublicationAttempts([work], [occurrence("ob-body", 1, "wi-body", "rt-body")],
@@ -746,11 +745,6 @@ test("projected publisher listings retain the full assignment view and named gap
   const after = await readAllAssignmentSources(repos, base, already);
   assert.deepEqual(buildAssignments(after), buildAssignments(before));
   assert.deepEqual(buildAssignmentView(after), buildAssignmentView(before));
-  const census = (sources: AssignmentSources) => buildChecklistCensus({ scope, sources, observedAt: NOW });
-  assert.deepEqual(census(after), census(before));
-  const timing = census(after).deliveryTimings?.find(row => row.workItemId === "timed-work");
-  assert.equal(timing?.timingIssue, true, "measured execution with identical endpoint stamps stays unknown");
-  assert.equal(timing?.firstStartedAt, null);
   assert.ok(Buffer.byteLength(JSON.stringify(after)) < Buffer.byteLength(JSON.stringify(before)),
     "unused replay and task fields no longer reach the publisher");
   assert.ok(after.attempts.every(row => !("usd" in row.cost) && !("policyVersion" in row)));

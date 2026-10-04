@@ -16,6 +16,7 @@ import { mayReadRetiredPluralRoster, officeholderIdentityMayEnterReader, officeh
 import { officeIdentity } from "../officials/office-identity.ts";
 import { BODY_TERRITORY_FILE, type BodyTerritoryFile } from "./body-territory.ts";
 import { readPublicBodyAttempts, type PublicBodyAttempt } from "./body-attempt-read.ts";
+import { attemptsByFamily } from "./attempt-families.ts";
 import { currentStatewideExecutives, statewideExecutivesFor } from "../officials/statewide-executives.ts";
 import { currentBodyRosters, currentRosterMemberReaderDisposition, rosterGapForBody, rosterHoldersForBody } from "./body-rosters.ts";
 import { membersOfBody } from "./body-membership.ts";
@@ -974,10 +975,9 @@ export async function coverageAt(
     heldMeetings,
   );
   const publicAttempts = await attemptRead;
-  const latestAttempt = new Map<string, PublicBodyAttempt>();
+  const attemptsByBody = new Map<string, PublicBodyAttempt[]>();
   if (publicAttempts.kind === "HELD") for (const attempt of publicAttempts.rows) {
-    const previous = latestAttempt.get(attempt.bodyId);
-    if (!previous || attempt.at > previous.at) latestAttempt.set(attempt.bodyId, attempt);
+    attemptsByBody.set(attempt.bodyId, [...(attemptsByBody.get(attempt.bodyId) ?? []), attempt]);
   }
   return {
     ...coverage,
@@ -985,7 +985,7 @@ export async function coverageAt(
       const gap = rosterGapForBody(body.bodyId);
       return {
         ...body,
-        ...(publicAttempts.kind === "HELD" ? { publicationAttempt: latestAttempt.get(body.bodyId) ?? null } : {}),
+        ...(publicAttempts.kind === "HELD" ? { publicationAttempts: attemptsByFamily(attemptsByBody.get(body.bodyId) ?? []) } : {}),
         readerRoster: {
           members: membersOfBody(body.bodyId).members,
           gaps: gap === null ? [] : [gap],

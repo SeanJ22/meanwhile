@@ -1,4 +1,4 @@
-import { SOURCE_WIRING } from "../registry/source-wiring.ts";
+import { activeWiring, type BodySourceWiring } from "../registry/source-wiring.ts";
 import type { CoveredBody } from "../registry/coverage.ts";
 
 /**
@@ -23,8 +23,18 @@ export interface HistoryGap {
   reason: string;
 }
 
-const GAPS_BY_BODY_ID = new Map<string, HistoryGap>(
-  SOURCE_WIRING.filter((row) => row.publishesHistory === false).map((row) => [
+/** Built from the doors in use, and rebuilt when a pass installs a different list (DB-15). */
+let gapsFor: { readonly wiring: readonly BodySourceWiring[]; readonly gaps: ReadonlyMap<string, HistoryGap> } | null = null;
+
+function gapsByBodyId(): ReadonlyMap<string, HistoryGap> {
+  const wiring = activeWiring();
+  if (gapsFor?.wiring !== wiring) gapsFor = { wiring, gaps: buildGaps(wiring) };
+  return gapsFor.gaps;
+}
+
+function buildGaps(wiring: readonly BodySourceWiring[]): Map<string, HistoryGap> {
+  return new Map<string, HistoryGap>(
+  wiring.filter((row) => row.publishesHistory === false).map((row) => [
     row.bodyId,
     {
       bodyId: row.bodyId,
@@ -35,11 +45,12 @@ const GAPS_BY_BODY_ID = new Map<string, HistoryGap>(
       reason: row.historyGapReason ?? "",
     },
   ]),
-);
+  );
+}
 
 /** Every wired body, anywhere, whose route serves no concluded meetings. */
 export function allHistoryGaps(): HistoryGap[] {
-  return [...GAPS_BY_BODY_ID.values()];
+  return [...gapsByBodyId().values()];
 }
 
 /**
@@ -53,7 +64,7 @@ export function historyGapsFor(
 ): HistoryGap[] {
   const out: HistoryGap[] = [];
   for (const body of bodies) {
-    const gap = GAPS_BY_BODY_ID.get(body.bodyId);
+    const gap = gapsByBodyId().get(body.bodyId);
     if (gap) out.push(gap);
   }
   return out;

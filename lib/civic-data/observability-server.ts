@@ -6,6 +6,9 @@ import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
 import { observableRoutineContracts } from "./meeting-partitions.ts";
 import { projectPublicationStatus, type PublicationStatusRead } from "./publication-status.ts";
 import { readPublicationStatusRows } from "./publication-status-store.ts";
+import { doorReadModeFromEnv } from "../doors/install.ts";
+import type { DoorRepository } from "../doors/registry.ts";
+import { controlPlaneUrlFromEnv, createPgRepositories } from "../control-plane/repository/pg-store.ts";
 
 /** The narrow publication read's per-statement limit: pointers, latest attempts, readbacks; no payload. */
 export const ADMIN_PUBLICATION_STATUS_STATEMENT_TIMEOUT_MS = 4_000;
@@ -50,8 +53,16 @@ export const ADMIN_ROUTINE_READ_STATEMENT_TIMEOUT_MS = 1_500;
 export async function readRoutineDataObservability(
   options: { readonly now?: string } = {},
 ): Promise<RoutineObservabilityRead> {
+  // DB-14: with the doors switch on, a door added as data is listed here.
+  // Without it, or when the registry cannot be opened, the code's list is used.
+  let doors: DoorRepository | undefined;
+  const url = controlPlaneUrlFromEnv();
+  if (doorReadModeFromEnv() === "registry" && url) {
+    try { doors = (await createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true })).doors; } catch { doors = undefined; }
+  }
   return readRoutineDataObservabilityFromConnection(process.env.DATABASE_URL, {
     ...options,
+    ...(doors ? { doors } : {}),
     statementTimeoutMs: ADMIN_ROUTINE_READ_STATEMENT_TIMEOUT_MS,
     currentReaderBuild: {
       codeSha: process.env.WTP_BUILD_COMMIT ?? null,

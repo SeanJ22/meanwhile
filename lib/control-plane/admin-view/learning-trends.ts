@@ -37,6 +37,9 @@ export interface WeekLearningRow {
   readonly usedWalks: number;
   /** Handed doors used, summed. */
   readonly reusedDoors: number;
+  readonly finderAttributed?: number;
+  readonly scoutReusedDoors?: number;
+  readonly detectiveReusedDoors?: number;
   /** Walks that record the rebuilt list, and the routes on it, summed. */
   readonly rebuiltRecorded: number;
   readonly rebuiltRoutes: number;
@@ -65,7 +68,7 @@ export interface SeriesPoint {
   readonly floor: boolean;
 }
 
-export type SeriesKey = "handed" | "used" | "rebuilt" | "reused" | "resumedFound" | "freshFound" | "perFind";
+export type SeriesKey = "handed" | "used" | "rebuilt" | "reused" | "scoutReused" | "detectiveReused" | "resumedFound" | "freshFound" | "perFind";
 
 export interface LearningSeries {
   readonly key: SeriesKey;
@@ -115,6 +118,8 @@ const LABEL: Readonly<Record<SeriesKey, { readonly label: string; readonly unit:
   used: { label: "Walks that used a way in they were handed", unit: "share" },
   rebuilt: { label: "Ways in rebuilt that the manual already held", unit: "count" },
   reused: { label: "Handed ways in walked again", unit: "count" },
+  scoutReused: { label: "Scout routes reused", unit: "count" },
+  detectiveReused: { label: "Detective routes reused", unit: "count" },
   resumedFound: { label: "Resumed walks that found something", unit: "share" },
   freshFound: { label: "Fresh walks that found something", unit: "share" },
   perFind: { label: "Dollars per find", unit: "usd" },
@@ -142,6 +147,8 @@ export function buildLearningTrends(rows: readonly WeekLearningRow[], nowIso: st
     used: (r) => share(r.usedWalks, r.usedRecorded),
     rebuilt: (r) => (r.rebuiltRecorded > 0 ? { value: r.rebuiltRoutes, of: null } : { value: null, of: null }),
     reused: (r) => (r.usedRecorded > 0 ? { value: r.reusedDoors, of: null } : { value: null, of: null }),
+    scoutReused: (r) => ((r.finderAttributed ?? 0) > 0 ? { value: r.scoutReusedDoors ?? 0, of: r.finderAttributed! } : { value: null, of: null }),
+    detectiveReused: (r) => ((r.finderAttributed ?? 0) > 0 ? { value: r.detectiveReusedDoors ?? 0, of: r.finderAttributed! } : { value: null, of: null }),
     resumedFound: (r) => share(r.resumedFound, r.resumed),
     freshFound: (r) => share(r.freshFound, r.fresh),
     perFind: (r) => (r.found > 0 && r.walks > r.unpriced ? { value: r.usd / r.found, of: r.found, floor: r.unpriced > 0 } : { value: null, of: null }),
@@ -155,6 +162,8 @@ export function buildLearningTrends(rows: readonly WeekLearningRow[], nowIso: st
     used: build("used"),
     rebuilt: build("rebuilt"),
     reused: build("reused"),
+    scoutReused: build("scoutReused"),
+    detectiveReused: build("detectiveReused"),
     resumedFound: build("resumedFound"),
     freshFound: build("freshFound"),
     perFind: build("perFind"),

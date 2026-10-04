@@ -10,7 +10,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # MEANWHILE — INSTRUCTIONS FOR CODEX AND EVERY CODING AGENT
 
-<!-- BEGIN:claude-md-mirror source=CLAUDE.md sha256=555fcf3a1319053b446074dfac469933157c844f2b17b4db74929782493d17cb bytes=5118 -->
+<!-- BEGIN:claude-md-mirror source=CLAUDE.md sha256=eaa06c5565b3ac5928902e9a6bccf080ea47dafba916ed24742752343a85d575 bytes=6057 -->
 **Codex and every other coding agent: Sean's standing decisions are `docs/rulings.md`,
 the single source for owner policy. Read it first. It binds you exactly as it binds Claude.**
 
@@ -62,6 +62,12 @@ Publish each fact as soon as it meets the §3 standard, and let later facts atta
 Apply rulings §6. Verification means the §3 standard and the §0 tests. Test the full result, including actual connections, first-use performance, and the original failing conditions. Inspect visible changes on the live page. Investigate contradictions, and second-attempt successes in our own code; fix causes rather than merely explaining them.
 
 State which evidence shows the result works for readers. Do not report a skipped or failed check as passing. Retire proof steps that protect no reader outcome instead of repeating them. Preserve evidence and working data under §9; use the project's actual data-publishing and software-release processes.
+
+## How code ships: streams → river → main
+
+This describes the release mechanism; it adds no policy. Builders push only their own `stream/<lane>` branch, cut from `river`, and open no pull requests. The one exception is Codex: when publishing a branch needs a PR, keep one draft PR into `river`, never into `main`. After a step's focused checks pass, mark it with a `READY: <step ids>` commit; later WIP commits are not integrated. Name new migrations by step id and leave numbering and the journal to River.
+
+River (`scripts/river.mjs`) folds each lane's exact READY commit into `river-next`, drops `.factory/`, numbers migrations, runs `pnpm gates` once on the combination, and fast-forwards `river` to that tested commit. A couple of times a day it ships `river` to `main` through one `release/<n>` pull request listing its steps. Data never rides the river: facts, doors, settings and playbooks go live as data, without a release.
 
 ## Finish and report
 

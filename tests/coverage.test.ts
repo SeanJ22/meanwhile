@@ -11,7 +11,7 @@ import { type GeoFeature } from "../lib/registry/resolve.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { planPlaceHunt, placeFieldWork } from "../lib/hunt/place-plan.ts";
+import { planPlaceHunt } from "../lib/hunt/place-plan.ts";
 import { buildPlaceOwedList, missingPlaceWork, type PlaceSubject } from "../lib/coverage/place-owed.ts";
 import { runPlaceSource } from "../lib/hunt/place-source.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -63,7 +63,8 @@ test("known record classes owe their own facts while place inventories and unkno
   ];
   const items = buildPlaceOwedList({ divisions: [division], subjects: records, held: [], now });
   const ids = (subject: string) => items.filter(i => i.subject.id === subject).map(i => i.checklistId);
-  assert.ok(ids("state-seat").includes("LEG-22"));
+  assert.ok(ids("state-seat").includes("LEG-02") && !ids("state-seat").includes("LEG-22"), "publisher authority is the legislature's, not each seat's");
+  assert.deepEqual(ids("ocd-division/country:us/state:mo#legislature").sort(), ["LEG-01", "LEG-10", "LEG-22"]);
   assert.ok(!ids("state-seat").some(id => /^(EXE|PRL)-/.test(id) || ["LEG-20", "LEG-21"].includes(id)));
   assert.ok(ids("federal-seat").includes("PRL-01") && ids("federal-seat").includes("LEG-21"));
   assert.ok(!ids("federal-seat").includes("LEG-22"));
@@ -89,11 +90,6 @@ test("the place source reads shared holdings, publishes source data, then uses t
   let live = false;
   let clock = now;
   const acquiredAt = "2026-09-30T00:02:00Z";
-  const name = buildPlaceOwedList({ divisions: [division], subjects: [body], held: [], now })
-    .find(item => item.subject.id === body.id && item.checklistId === "GOV-01")!;
-  const work = placeFieldWork(name, now);
-  await repos.workItems.put(work.id, work, now);
-  let canonicalReads = 0;
   const result = await runPlaceSource({ repos, store: new MemoryRoutineDataStore(), zip: "65101", divisions: [division], now,
     clock: () => clock,
     geographyCaptures: [], readSource: async (url, knowledge) => {
@@ -102,15 +98,12 @@ test("the place source reads shared holdings, publishes source data, then uses t
       return { url, text: "<h1>Public source</h1>", collectedAt: acquiredAt };
     },
     readHeld: async () => {
-      if (++canonicalReads === 3) assert.equal((await repos.workItems.mustRead(work.id)).value.state, "VERIFIED_COMPLETE",
-        "the publication closes its own field before the final whole-place read");
       events.push("held"); return { subjects: [body], held: live ? [{ subjectId: body.id,
       checklistId: "GOV-01", state: "published", sourceUrl: "https://example.gov", checkedAt: acquiredAt, freshUntil: "2026-10-01T00:00:00Z" }] : [] }; },
     publish: async input => { assert.equal(input.now, acquiredAt); events.push("publish"); live = true; return { published: true }; } });
   assert.equal(events[0], "held");
   assert.equal(events.at(-1), "held");
   assert.ok(events.indexOf("source") < events.indexOf("publish"));
-  assert.deepEqual(result.closed, [work.id]);
   assert.equal(result.items.find(item => item.subject.id === body.id && item.checklistId === "GOV-01")?.state, "published");
 });
 
@@ -135,10 +128,9 @@ test("a registry publication failure leaves its fields open while later election
   assert.equal(offers, 2, "later publication batches survive the earlier rejected call");
   assert.deepEqual(result.publications, [{ error: "Registry temporarily unavailable" }, { error: "Registry temporarily unavailable" }]);
   assert.equal(result.electionPublications.length, 1);
-  assert.deepEqual(result.closed, [], "a callback alone never closes a field absent from canonical readback");
 });
 
-test("a place inherits other jobs' published fields before national acquisition and closes only those fields", async () => {
+test("a place inherits other jobs' published fields before national acquisition", async () => {
   const repos = createMemoryRepositories();
   const now = "2026-09-30T00:00:00Z";
   const division = { id: "ocd-division/country:us/state:az/county:test", label: "Test County" };
@@ -146,8 +138,6 @@ test("a place inherits other jobs' published fields before national acquisition 
   const owed = buildPlaceOwedList({ divisions: [division], subjects: [subject], held: [], now });
   const name = owed.find(i => i.subject.id === subject.id && i.checklistId === "GOV-01")!;
   const contact = owed.find(i => i.subject.id === subject.id && i.checklistId === "GOV-08")!;
-  await repos.workItems.put(placeFieldWork(name, now).id, placeFieldWork(name, now), now);
-  await repos.workItems.put(placeFieldWork(contact, now).id, placeFieldWork(contact, now), now);
   const seen: string[] = [];
   const bank = repos.fieldManual.read.bind(repos.fieldManual);
   repos.fieldManual.read = async id => { seen.push("knowledge"); return bank(id); };
@@ -163,15 +153,11 @@ test("a place inherits other jobs' published fields before national acquisition 
       return { subjects: [], held: [] };
     } });
   assert.deepEqual(seen, ["knowledge", "held", "national"]);
-  assert.deepEqual(result.closed, [placeFieldWork(name, now).id]);
-  assert.equal((await repos.workItems.mustRead(placeFieldWork(name, now).id)).value.state, "VERIFIED_COMPLETE");
-  assert.equal((await repos.workItems.mustRead(placeFieldWork(contact, now).id)).value.state, "OPEN");
   assert.ok(result.work.some(i => i.id === contact.id));
   const expired = await planPlaceHunt({ repos, divisions: [division], now: "2026-10-02T00:00:00Z",
     readHeld: async () => ({ subjects: [subject], held: [{ subjectId: subject.id, checklistId: "GOV-01", state: "published",
       sourceUrl: "https://county.example.gov/board", checkedAt: now, freshUntil: "2026-10-01T00:00:00Z" }] }),
     acquireNational: async () => ({ subjects: [], held: [] }) });
-  assert.equal((await repos.workItems.mustRead(placeFieldWork(name, now).id)).value.state, "REOPENED");
   assert.ok(expired.work.some(i => i.id === name.id), "expired fields return to standing work using the same identity");
   assert.equal(expired.items.find(i => i.id === name.id)?.state, "stale");
   assert.match(expired.items.find(i => i.id === name.id)?.label ?? "", /source refresh due/);

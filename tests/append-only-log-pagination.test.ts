@@ -28,7 +28,7 @@ import { projectRecord } from "../lib/control-plane/repository/types.ts";
 import { aggregateModelSpend } from "../lib/control-plane/fleet-safety.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 
-test("rolling cost reads exclude old rows before transfer, page every recent charge, and keep unknown spend unknown", async () => {
+test("rolling cost reads exclude old rows before transfer, page every recent charge, and count unknown spend at worst case", async () => {
   const since = "2026-10-01T01:00:00.000Z";
   const rows = Array.from({ length: APPEND_ONLY_LOG_READ_PAGE + 1 }, (_, position) => ({
     log_key: "costs", position, record: { role: "SCOUT", recordedAt: since, cost: { usd: position === APPEND_ONLY_LOG_READ_PAGE ? null : 0.01 } },
@@ -44,12 +44,15 @@ test("rolling cost reads exclude old rows before transfer, page every recent cha
   const read = await pgAppendOnlyRepository<CostEntry>(sql as never, "costs").readSince(since);
   assert.equal(pages, 2);
   assert.equal(read.length, rows.length, "no recent charge is dropped at a page boundary");
-  assert.equal(aggregateModelSpend(read, since, "2026-10-02T01:00:00.000Z").usd, null, "an unmeasured recent charge still refuses admission");
+  const spend = aggregateModelSpend(read, since, "2026-10-02T01:00:00.000Z");
+  assert.equal(spend.worstCaseCharges, 1, "an unmeasured recent charge is counted at its worst case, not dropped");
+  assert.ok(spend.usd > 0.01 * (APPEND_ONLY_LOG_READ_PAGE), "the worst case adds to the measured charges");
 });
 
 interface Row {
   readonly log_key: string;
   readonly position: number;
+  readonly recorded_at?: string;
   readonly record: Record<string, unknown>;
 }
 
@@ -92,10 +95,11 @@ function fakeLogSql(rows: readonly Row[]) {
       // from the statement itself, so a statement naming the wrong keys fails.
       const recentWhere = /record #>> '\{([^}]*)\}' = \$2/.exec(text);
       if (recentWhere !== null && /ORDER BY\s+position DESC/i.test(text)) {
-        const [key, value, limit] = params as [string, string, number];
+        const [key, value, limit, since] = params as [string, string, number, string | undefined];
         const path = recentWhere[1].split(",");
         const projection = projectionIn(text, "readRecentWhere");
-        return rows.filter((r) => r.log_key === key && textAt(r.record, path) === value)
+        return rows.filter((r) => r.log_key === key && textAt(r.record, path) === value &&
+          (!/recorded_at >= \$4::timestamptz/.test(text) || Date.parse(r.recorded_at ?? "") >= Date.parse(since!)))
           .sort((a, b) => b.position - a.position).slice(0, Number(limit))
           .map((r) => ({ record: projectRecord(r.record, projection) }));
       }
@@ -169,6 +173,36 @@ test("read() pages a log larger than one response and returns every record in po
   assert.deepEqual(out.map((r) => r.seq), Array.from({ length: n }, (_, i) => i));
   assert.ok(calls.length >= 3, `expected multiple bounded pages, saw ${calls.length}`);
   assert.ok(calls.every((c) => /LIMIT/i.test(c)), "every read statement must carry LIMIT");
+});
+
+test("recent cycle projection retains the complete time window with late finishes and more than a fixed tail", async () => {
+  const since = "2026-10-02T08:00:00.000Z";
+  const old = "2026-10-01T08:00:00.000Z";
+  const recent = "2026-10-02T09:00:00.000Z";
+  const rows: Row[] = Array.from({ length: 4601 }, (_, position) => ({
+    log_key: "owner-digest", position, recorded_at: position < 4000 ? old : recent,
+    record: { lines: ["unused history payload".repeat(50)], runtimeOutcome: {
+      kind: "FRESHNESS_CYCLE", startedAt: position === 4600 || position < 4000 ? old : recent,
+      research: { lanes: { deterministic: { dispatched: 1 }, model: { dispatched: 2 } } },
+      risk: { unused: "unchanged history".repeat(50) },
+    } },
+  }));
+  const { sql, calls } = fakeLogSql(rows);
+  const repo = pgAppendOnlyRepository<Record<string, unknown>>(sql, "owner_digests");
+  const projected = await repo.readRecentWhere("owner-digest", ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE",
+    Number.MAX_SAFE_INTEGER, { runtimeOutcome: ["kind", "startedAt", "research"] }, since);
+  const inWindow = (records: readonly unknown[]) => records.flatMap(row => {
+    const outcome = (row as typeof rows[number]["record"]).runtimeOutcome as { startedAt: string; research: unknown };
+    return Date.parse(outcome.startedAt) >= Date.parse(since) ? [{ startedAt: outcome.startedAt, research: outcome.research }] : [];
+  });
+  const expected = inWindow(rows.map(row => row.record));
+  assert.deepEqual(inWindow([...projected].reverse()), expected);
+  assert.equal(expected.length, 600, "all current-window cycles survive beyond a 128/512-record tail");
+  assert.equal(projected.length, 601, "a late-finished old cycle is returned and removed by the caller's existing start-clock filter");
+  assert.equal(calls.length, 1);
+  assert.match(calls[0], /recorded_at >= \$4::timestamptz/);
+  assert.ok(JSON.stringify(projected).length < JSON.stringify(rows.map(row => row.record)).length / 50);
+  console.log(`CYCLE_HISTORY archived=4000 current=600 lateOld=1 selected=${projected.length} fields=kind,startedAt,research`);
 });
 
 test("read() of an absent key is one empty bounded page", async () => {

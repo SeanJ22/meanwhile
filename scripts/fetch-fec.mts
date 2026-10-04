@@ -23,9 +23,9 @@
  * denominators BEFORE any adapter fetch. `--match-only` stops there.
  *
  * Match routes, in order of confidence:
- *  - Roster officials: bioguide → FEC candidate id via the public-domain
- *    legislators-current.json (`id.fec`), chamber-checked (H/S id prefix).
- *    An exact-key bridge, not a name match.
+ *  - Held FEC keys remain exact-key matches. Newly promoted roster members
+ *    enter the same state/office/district-scoped conservative name search.
+ *  - Sent congressional districts enumerate financial filers by FEC id.
  *  - Ballot candidates: FEC /candidates/search scoped to state + office +
  *    district + 2026, then surname exact + given-name first-token prefix.
  *    Anything ambiguous or absent is a recorded miss, never a guess.
@@ -53,6 +53,11 @@ import type {
   ContributionRow,
   SecondHopCommittee,
 } from "../lib/funding/types.ts";
+import { promotedCongressTargets, fecDistrictTargets, type FecTarget, type FecSearchCandidate, type FecSearchScope } from "../lib/funding/fec-targets.ts";
+import { readFecSendDistricts } from "../lib/funding/fec-send-districts.ts";
+import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
+import { FEDERAL_DIRECTORY_SCOPE, type FederalDirectoryReadModel } from "../lib/officials/federal-directory-data-plane.ts";
+import { smallDonorShare } from "../lib/funding/small-donors.ts";
 import { stamp } from "./stamp.mts";
 
 import { fecFundingCandidate } from "../lib/civic-data/candidate-builders.ts";
@@ -60,7 +65,6 @@ import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
-import type { NjMorrisReadModel } from "../lib/sources/ballot-nj-morris/index.ts";
 import {
   isSourceAcquisitionFailure,
   publisherDeadlineFailure,
@@ -98,14 +102,9 @@ if (!apiKey && !MATCH_ONLY) {
   process.exit(1);
 }
 
-/*
- * The FEC adapter used to enumerate its targets from mutable tracked rosters,
- * three tracked ballot files, and the AZ lineup. That made a routine FEC
- * acquisition depend on Git changing first. The permanent target floor is the
- * last promoted FEC projection (or the explicit bundled first-seed fixture),
- * augmented only by a canonical promoted ballot projection. A missing NJ
- * pointer therefore holds FEC rather than silently reopening the tracked file.
- */
+/* Targets come from the promoted national Congress directory and saved admitted Sends.
+ * The prior FEC projection remains a non-regressing floor. FEC searches add
+ * financial identities only; election authorities alone establish contests. */
 let store: PostgresRoutineDataStore | null = null;
 if (PROMOTE) {
   prepareProductionCivicDataWrite();
@@ -119,20 +118,20 @@ const currentFec = store
   ? await store.readPromotion<FundingSnapshot>("FEC_FUNDING", "federal-supported")
   : null;
 const targetFloor = currentFec?.payload ?? bundledFec;
-const canonicalNj = store
-  ? await store.readPromotion<NjMorrisReadModel>("BALLOT_FILING", "US-NJ:county:morris:2026-general")
-  : null;
-if (PROMOTE && !canonicalNj) {
-  throw new Error(
-    "FEC_TARGET_UNIVERSE_HELD:NJ_MORRIS_CANONICAL_BALLOT_NOT_PROMOTED — refusing to read the retired tracked ballot authority.",
-  );
+// Keep the held target population as the way back until the expanded path
+// has been checked live (rulings §5). This changes targets, never budgets.
+const upgradeTargets = process.env.WTP_FEC_TARGET_UNIVERSE?.trim().toLowerCase() === "promoted";
+const canonicalCongress = store && upgradeTargets
+  ? await readPromotedCivicData<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_SCOPE, { store, bypassCache: true }) : null;
+if (PROMOTE && upgradeTargets && canonicalCongress?.kind !== "PROMOTED") {
+  throw new Error("FEC_TARGET_UNIVERSE_HELD:promoted national congressional membership is unavailable");
 }
 
 // The slices of the FEC API's response shapes this script actually reads.
 interface FecPrincipalCommittee {
   committee_id?: string;
 }
-interface FecSearchResult {
+interface FecSearchResult extends FecSearchCandidate {
   candidate_id: string;
   name?: string;
   election_years?: number[];
@@ -236,7 +235,7 @@ function fecSourceFailure(
 async function fecGet<T>(
   path: string,
   params: Record<string, string | number | boolean>,
-): Promise<{ results?: T[] }> {
+): Promise<{ results?: T[]; pagination?: { pages?: number; count?: number } }> {
   const url = new URL(`${API}${path}`);
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, String(v));
   url.searchParams.set("api_key", apiKey ?? "");
@@ -307,29 +306,14 @@ async function fecGet<T>(
       );
     }
     rawFecBodies.push(text);
-    return parsed as { results?: T[] };
+    return parsed as { results?: T[]; pagination?: { pages?: number; count?: number } };
   }
   throw fecSourceFailure("PUBLISHER_UNAVAILABLE", `${path} -> rate-limited after retries`);
 }
 
 // ---- 1. Enumerate the app-side federal targets -----------------------------
 
-interface Target {
-  /** The app-side id a funding record joins back to. */
-  targetKey: string;
-  displayName: string;
-  /** "LAST" surname for search matching (ballot targets). */
-  familyName: string | null;
-  givenName: string | null;
-  state: string;
-  office: "H" | "S";
-  district: string | null; // zero-padded 2-digit for House
-  route: "roster" | "ballot";
-  bioguide: string | null;
-  /** Existing canonical FEC identity; avoids rematching an LKG target by name. */
-  knownFecCandidateId: string | null;
-  knownPrincipalCommitteeId: string | null;
-}
+type Target = FecTarget;
 
 const targets: Target[] = [];
 
@@ -355,36 +339,37 @@ for (const held of targetFloor.candidates) {
   }
 }
 
-// New Morris County federal candidacies enter from the promoted ballot
-// projection. No tracked ballot is opened in a routine FEC run.
-const knownTargetKeys = new Set(targets.map((target) => target.targetKey));
-for (const contest of canonicalNj?.payload.ballot.contests ?? []) {
-  if (contest.type !== "CANDIDACY") continue;
-  const isSenate = /:us-senate$/.test(contest.id);
-  const houseMatch = /:us-house-(\d+)$/.exec(contest.id);
-  if (!isSenate && !houseMatch) continue;
-  const stateMatch = /state:(\w\w)/.exec(contest.ocdId);
-  if (!stateMatch) continue;
-  for (const candidacy of canonicalNj!.payload.ballot.candidacies.filter((row) => row.contestId === contest.id)) {
-    if (knownTargetKeys.has(candidacy.id)) continue;
-    targets.push({
-      targetKey: candidacy.id,
-      displayName: `${candidacy.givenName} ${candidacy.familyName}`,
-      familyName: candidacy.familyName,
-      givenName: candidacy.givenName,
-      state: stateMatch[1].toUpperCase(),
-      office: isSenate ? "S" : "H",
-      district: isSenate ? null : houseMatch![1].padStart(2, "0"),
-      route: "ballot",
-      bioguide: null,
-      knownFecCandidateId: null,
-      knownPrincipalCommitteeId: null,
-    });
-    knownTargetKeys.add(candidacy.id);
+// Every promoted member is independently owed, including a state never held in FEC before.
+const byTarget = new Map(targets.map(target => [target.targetKey, target]));
+if (canonicalCongress?.kind === "PROMOTED") {
+  for (const target of promotedCongressTargets(canonicalCongress.value.roster, targetFloor)) byTarget.set(target.targetKey, target);
+}
+// Read every page of the scoped FEC list for each district in an existing admitted Send.
+// Its own ids remain financial keys; these rows never enter the ballot projection.
+if (PROMOTE && upgradeTargets) {
+  const sentDistricts = await readFecSendDistricts(new Date().toISOString());
+  const scopes: FecSearchScope[] = [...sentDistricts.map(district => ({ ...district, office: "H" as const })),
+    ...[...new Set(sentDistricts.map(district => district.state))].map(state => ({ state, office: "S" as const, district: null }))];
+  for (const district of scopes) {
+    const found: FecSearchResult[] = [];
+    let pages = 1, expected: number | null = null;
+    for (let page = 1; page <= pages; page++) {
+      const result = await fecGet<FecSearchResult>("/candidates/search/", { state: district.state, ...(district.district ? { district: district.district } : {}),
+        office: district.office!, cycle: CYCLE, per_page: 100, page });
+      if (!Number.isInteger(result.pagination?.pages) || !Number.isInteger(result.pagination?.count)) {
+        throw fecSourceFailure("PUBLISHER_DOCUMENT_INVALID", "The sent-district FEC search lacks its pagination denominator");
+      }
+      if (expected !== null && expected !== result.pagination!.count) throw fecSourceFailure("PUBLISHER_DOCUMENT_INVALID", "The FEC list changed while its pages were read");
+      pages = result.pagination!.pages!; expected = result.pagination!.count!;
+      found.push(...result.results ?? []);
+    }
+    if (found.length !== expected) throw fecSourceFailure("PUBLISHER_DOCUMENT_INVALID", "The sent-district FEC candidate list is incomplete");
+    for (const target of fecDistrictTargets(district, found)) byTarget.set(target.targetKey, target);
   }
 }
+targets.splice(0, targets.length, ...byTarget.values());
 
-console.log(`targets enumerated: ${targets.length} (${targets.filter((t) => t.route === "roster").length} roster officials, ${targets.filter((t) => t.route === "ballot").length} ballot candidacies)`);
+console.log(`targets enumerated: ${targets.length} (${targets.filter((t) => t.route === "roster").length} roster officials, ${targets.filter((t) => t.route === "ballot").length} ballot candidacies, ${targets.filter((t) => t.route === "fec").length} FEC filers)`);
 
 // ---- 2. The match phase — printed before anything else is fetched ----------
 
@@ -411,7 +396,7 @@ for (const target of targets.filter((row) => row.knownFecCandidateId !== null)) 
   matches.push({
     target,
     fecCandidateId: target.knownFecCandidateId!,
-    matchRoute: "canonical-fec-lkg",
+    matchRoute: target.route === "fec" ? "sent-district-fec-id" : "canonical-fec-lkg",
     principalCommittees: target.knownPrincipalCommitteeId
       ? [{ committee_id: target.knownPrincipalCommitteeId }]
       : [],
@@ -440,7 +425,7 @@ for (const m of matches) {
   );
 }
 
-for (const target of targets.filter((row) => row.route === "ballot" && row.knownFecCandidateId === null)) {
+for (const target of targets.filter((row) => row.route !== "fec" && row.knownFecCandidateId === null)) {
   const personKey = `${normalizeName(target.displayName)}|${target.state}|${target.office}`;
   const viaRoster = rosterMatchByPerson.get(personKey);
   if (viaRoster) {
@@ -687,7 +672,8 @@ for (const [fecId, entry] of byFecId) {
   }
 
   const receipts = Number(totals.receipts ?? 0);
-  const unitemized = Number(totals.individual_unitemized_contributions ?? 0);
+  const unitemized = totals.individual_unitemized_contributions == null ? null : Number(totals.individual_unitemized_contributions);
+  const itemized = totals.individual_itemized_contributions == null ? null : Number(totals.individual_itemized_contributions);
   candidates.push({
     dataClass: "FEC_COMMITTEE",
     fecCandidateId: fecId,
@@ -703,11 +689,11 @@ for (const [fecId, entry] of byFecId) {
       receipts,
       disbursements: Number(totals.disbursements ?? 0),
       cashOnHand: Number(totals.last_cash_on_hand_end_period ?? 0),
-      individualItemized: Number(totals.individual_itemized_contributions ?? 0),
+      individualItemized: itemized,
       individualUnitemized: unitemized,
       /** Unitemized individual contributions (under $200) over total
        *  receipts — the method the surface states in its own words. */
-      smallDonorShare: receipts > 0 ? unitemized / receipts : null,
+      smallDonorShare: smallDonorShare(itemized, unitemized),
       coverageEndDate: totals.coverage_end_date
         ? String(totals.coverage_end_date).slice(0, 10)
         : null,

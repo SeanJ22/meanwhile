@@ -191,7 +191,6 @@ export const NON_ROUTINE_DISPOSITIONS: readonly NonRoutineDispositionContract[] 
       "lib/corpus/unified.ts intermediary-keyed statement bridge",
       "lib/holdings/reader-census.ts portrait delivery projection",
       "next.config.ts production trace",
-      "scripts/readiness-refresh.mts Admin projection",
     ],
     retiredWriterExecutables: [
       "scripts/build-officeholders.ts#state",
@@ -328,7 +327,8 @@ export const MANUAL_PRODUCTION_INVENTORY_BINDINGS: readonly ManualProductionInve
   },
   {
     inventorySourceId: "az-sos-ballot", contractId: "az-sos-ballot", contractSourceId: "az-election-authorities",
-    reason: "The explicit-owner Arizona ballot contract owns the canonical Reader projection; tracked holdings are first-seed evidence only.",
+    additionalContracts: [{ contractId: "ballot-contests", contractSourceId: "official-ballot-authorities" }],
+    reason: "The first-seed ballot contract and its general official-authority worker replacement own canonical Reader projections; tracked holdings remain first-seed evidence only.",
   },
   {
     inventorySourceId: "nh-curated-ballot", contractId: "nh-curated-ballot", contractSourceId: "nh-election-authorities",

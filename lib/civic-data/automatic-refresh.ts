@@ -7,6 +7,10 @@ export const AUTOMATIC_REFRESH_CONTRACT_IDS = [
   "nj-elec-campaign-finance", "az-pima-local-finance",
   // State legislators' offices from Open States, joined to each official roster (lib/officials/member-offices-publication.ts).
   "member-offices",
+  // DB-08: Congress refreshes itself every day, with no Send. The roster is read at the project's current revision, the
+  // roll calls from the chambers' own clerks (catching up from the last roll held, `scripts/fetch-votes.mts`), and the
+  // reviewed key-vote selection's positions from the same roll calls.
+  "congress-bulk-roster", "congress-rollcalls", "federal-key-votes",
 ] as const satisfies readonly ManualProductionContractId[];
 
 export const AUTOMATIC_REFRESH_TASKS: readonly RoutineSourceTask[] = AUTOMATIC_REFRESH_CONTRACT_IDS.map(id => {

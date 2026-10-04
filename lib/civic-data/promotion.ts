@@ -4,7 +4,8 @@ import { validateRoutineCandidate } from "./validate.ts";
 import { canonicalCivicDataJson, candidateChangeSet } from "./changes.ts";
 import { promotionProofIssue } from "./read-model.ts";
 import { requiredRoutineContract, type RoutineSourceContract } from "./contracts.ts";
-import { requiredMeetingPartitionContract } from "./meeting-partitions.ts";
+import { meetingHistoryContract, requiredMeetingPartitionContract } from "./meeting-partitions.ts";
+import { movedToHistoryAuthorityIssue } from "./meeting-history.ts";
 import { routineTaskFromContract } from "./runner.ts";
 import { authorityFor, authorityForManualReceipt } from "./source-authority.ts";
 import {
@@ -288,7 +289,7 @@ export async function processRegisteredMeetingPartitionCandidate(
   if (issue !== null) {
     throw new Error(`MEETING_PARTITION_CANDIDATE_MISMATCH:${partitionId}:${issue}`);
   }
-  const derivedChecked = await withDerivedInputAuthority(store, contract, boundedCandidate);
+  const derivedChecked = await withMovedToHistoryAuthority(store, await withDerivedInputAuthority(store, contract, boundedCandidate));
   const sourceProjectionVerification = await verifySourceScopedCandidateProjection(
     contract,
     derivedChecked,
@@ -306,6 +307,58 @@ export async function processRegisteredMeetingPartitionCandidate(
     sourceProjectionVerification,
     options,
   );
+}
+
+/**
+ * A partition's durable history enters only through its own partition's registered authority (DB-06): the partition's
+ * child holds the contract, and the history contract is derived from it. Its candidate names the promoted partition
+ * version the sittings were taken from, checked against the store like any derived input.
+ */
+export async function processRegisteredMeetingHistoryCandidate(
+  store: RoutineDataStore,
+  partitionId: string,
+  candidate: RoutineCandidate,
+  now: string = new Date().toISOString(),
+  expectedBaseVersionId: string | null | undefined = undefined,
+  options: { readonly confirmUnchanged?: boolean } = {},
+): Promise<PromotionOutcome> {
+  if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(partitionId, "routine");
+  const boundedCandidate = durableCandidateSnapshot(candidate);
+  const contract = meetingHistoryContract(requiredMeetingPartitionContract(partitionId));
+  const issue = routineCandidateContractIssueFor(contract, boundedCandidate);
+  if (issue !== null) {
+    throw new Error(`MEETING_HISTORY_CANDIDATE_MISMATCH:${partitionId}:${issue}`);
+  }
+  const derivedChecked = await withDerivedInputAuthority(store, contract, boundedCandidate);
+  const sourceProjectionVerification = await verifySourceScopedCandidateProjection(
+    contract,
+    derivedChecked,
+    sourceProjectionObservedAt(store, now),
+    null,
+  );
+  return processRoutineCandidate(
+    store,
+    derivedChecked,
+    now,
+    expectedBaseVersionId,
+    REGISTERED_PRODUCTION_DOOR,
+    sourceProjectionVerification,
+    options,
+  );
+}
+
+/** A partition candidate that removes sittings into history is refused, by name, unless the history pointer holds them. */
+async function withMovedToHistoryAuthority(store: RoutineDataStore, candidate: RoutineCandidate): Promise<RoutineCandidate> {
+  const issue = await movedToHistoryAuthorityIssue(store, candidate);
+  return issue === null
+    ? candidate
+    : {
+        ...candidate,
+        dependentChecks: [
+          ...candidate.dependentChecks,
+          { consumer: "moved-to-history authority (lib/civic-data/meeting-history.ts)", passed: false, detail: issue },
+        ],
+      };
 }
 
 /**

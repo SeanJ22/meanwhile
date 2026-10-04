@@ -152,6 +152,35 @@ export function readCensusUnitTerritories(root: string, states: readonly string[
 }
 
 /**
+ * A whole state is the union of its counties' ZIP areas, because the lookup has no state container and counties tile a
+ * state without a gap. A ZIP that sits inside the state in more than one county is wholly in it; a ZIP in one county only keeps
+ * that county's share. The state plan version follows the county plan it was built from.
+ */
+export async function resolveStateScope(decision: ExpansionScopeDecision, lookup: CensusGeographyLookup): Promise<ResolvedScope> {
+  const g = decision.geography;
+  const counties = await lookup.enumerateGroupings("county");
+  const countyYear = counties.version.key.split(":")[1];
+  if (g.version !== `state:${countyYear}`) {
+    return { kind: "UNRESOLVED", decision, why: `the published county plan is ${counties.version.key}, so only the state:${countyYear} plan can be resolved from it`, states: [g.stateAbbr] };
+  }
+  const inState = counties.instances.filter(c => c.stateAbbr.toUpperCase() === g.stateAbbr.toUpperCase());
+  if (inState.length === 0) return { kind: "UNRESOLVED", decision, why: "the published lookup holds no counties for this state", states: [g.stateAbbr] };
+  const seen = new Map<string, { whole: boolean; fraction: number | null; counties: number }>();
+  for (const county of inState) {
+    const result = await lookup.zctasForGrouping({ type: "county", geoid: county.geoid, version: county.version });
+    if (result.status.kind !== "OK") return { kind: "UNRESOLVED", decision, why: `a county of this state could not be read (${result.status.note})`, states: [g.stateAbbr] };
+    for (const o of result.overlaps) {
+      const prior = seen.get(o.zcta5);
+      seen.set(o.zcta5, { whole: (prior?.whole ?? false) || o.whole, fraction: o.whole ? null : o.fraction, counties: (prior?.counties ?? 0) + 1 });
+    }
+  }
+  const zctas = new Set(seen.keys());
+  const whole = new Set([...seen].filter(([, v]) => v.whole || v.counties > 1).map(([zcta]) => zcta));
+  const fractions = new Map([...seen].filter(([, v]) => !v.whole && v.counties === 1 && v.fraction !== null).map(([zcta, v]) => [zcta, v.fraction as number] as const));
+  return { kind: "RESOLVED", decision, zctas, whole, fractions, states: [g.stateAbbr.toUpperCase()] };
+}
+
+/**
  * Resolve every selected scope's ZCTAs against the lookup the caller loaded
  * once. A scope that cannot be resolved says why, by name; it never resolves
  * to an empty set that would read as "nothing is in it".
@@ -203,6 +232,10 @@ export async function resolveScopes(
           if (states.length === 0) throw new Error("The published ZIP has no county membership to establish its states.");
           scopes.push({ kind: "RESOLVED", decision, zctas: new Set([g.geoid]), whole: new Set([g.geoid]), fractions: new Map(), states });
         }
+        continue;
+      }
+      if (g.type === "state") {
+        scopes.push(await resolveStateScope(decision, state.lookup));
         continue;
       }
       const result = await state.lookup.zctasForGrouping({ type: g.type as GeographyType, geoid: g.geoid, version: g.version });

@@ -11,7 +11,8 @@ import { runAdminEvidenceMirror } from "../lib/control-plane/evidence/admin-brid
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
-import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
+import { withScopeSet } from "../lib/control-plane/expansion/scopes.ts";
+import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
 import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { putArtifact } from "../lib/control-plane/evidence/store.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
@@ -153,10 +154,14 @@ test("exact-hunt and recent captures advance with historical backfill across dur
     { label: "history", at: "2026-09-20T06:00:00.000Z", original: false },
   ] as const;
   const ids: Record<string, string> = {};
+  // Any funded Send's work takes the first lane; this one is not the owner's first hunt.
+  const funded = withScopeSet([], { geography: { type: "county", geoid: "04019", version: "county:2020", label: "Test County", stateAbbr: "AZ" },
+    priority: 1, budgetUsd: 20, huntBudget: true, newHunt: true, note: null, decidedAt: "2026-09-27T05:00:00.000Z", decidedBy: "adm", receiptId: "funded-send-receipt" }).scopes;
+  await repos.adminConfig.put(ADMIN_CONFIG_ID, { expansionScopes: funded } as never, "2026-09-27T05:00:00.000Z");
   for (const item of cases) {
     const base = createWorkItem({ project: "freshness", subject: item.label, obligation: "official-source", why: "test", now: item.at });
     const work: WorkItem = item.original ? { ...base, autonomousPlan: {
-      ownerInstructions: [ORIGINAL_LIFETIME_HUNT.receiptId],
+      ownerInstructions: ["funded-send-receipt"],
     } as unknown as WorkItem["autonomousPlan"] } : base;
     await repos.workItems.put(work.id, work, item.at);
     const at = `at-${item.label}`;
@@ -179,4 +184,38 @@ test("exact-hunt and recent captures advance with historical backfill across dur
     assert.equal([...remote.rows.values()].at(-1)?.copy.artifactId, ids[label]);
   }
   assert.equal((await runAdminEvidenceMirror(input)).examined, 0, "verified copies are skipped until scheduled recheck");
+
+  const boundedRemote = new MemoryPrivateStore();
+  const create = boundedRemote.create.bind(boundedRemote);
+  let clock = Date.now();
+  const startedAt = clock;
+  t.mock.method(Date, "now", () => clock);
+  boundedRemote.create = async (key, blob) => {
+    const result = await create(key, blob);
+    clock += 30_000;
+    return result;
+  };
+  const boundedInput = { ...input, remote: boundedRemote, maxExamined: undefined,
+    cursorPath: join(root, "bounded-cursor.json"), deadlineMs: Number.POSITIVE_INFINITY };
+  const slice = await runAdminEvidenceMirror(boundedInput);
+  console.log(`ADMIN_MIRROR firstSliceCopied=${slice.copied} elapsedSimulatedMs=${clock - startedAt}`);
+  assert.equal(slice.copied, 1, "an infinite caller allowance cannot make the optional mirror own the whole round");
+  assert.equal(slice.refused, 1, "a create that consumed the deadline remains unverified");
+  const resumed = await runAdminEvidenceMirror(boundedInput);
+  assert.equal(resumed.copied, 1, "the ordinary next cycle resumes the untouched remaining capture");
+  assert.equal(resumed.alreadyVerified, 1, "the next turn verifies the immutable create whose status was unknown");
+  assert.deepEqual(new Set([...boundedRemote.rows.values()].map(row => row.copy.artifactId)), new Set(Object.values(ids)),
+    "bounded slices eventually produce exactly the original three verified copies");
+
+  const stalled = new MemoryPrivateStore();
+  let reads = 0;
+  stalled.read = async () => { reads++; return new Promise(() => {}); };
+  const started = performance.now();
+  const stopped = await runAdminEvidenceMirror({ ...boundedInput, remote: stalled,
+    cursorPath: join(root, "stalled-cursor.json"), deadlineMs: clock + 550 });
+  assert.ok(performance.now() - started < 1500, "a stuck private read cannot hold the round open");
+  assert.equal(reads, 1);
+  assert.equal(stopped.copied, 0);
+  assert.match(stopped.failures[0], /ADMIN_EVIDENCE_MIRROR_DEADLINE/);
+  console.log(`ADMIN_MIRROR stalledReadElapsedMs=${(performance.now() - started).toFixed(2)} copied=${stopped.copied}`);
 });

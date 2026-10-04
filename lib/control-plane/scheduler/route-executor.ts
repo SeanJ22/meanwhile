@@ -46,7 +46,8 @@
 
 import { assertPublicUrl } from "../../hunt/egress.ts";
 import { ZERO_COST, type AttemptCost } from "../attempt.ts";
-import { recordAcquisition, type Artifact } from "../evidence/artifact.ts";
+import { deriveSanitized, recordAcquisition, type Artifact } from "../evidence/artifact.ts";
+import { sanitizedErrorDiagnostic } from "../../ops/error-diagnostic.ts";
 
 import type { RunWork, WorkOutcome } from "./dispatch.ts";
 import {
@@ -240,9 +241,8 @@ export function checkYield(contract: YieldContract, body: string): ContractReadi
  * RULING 224's promotion tail cannot run over it: normalization needs the
  * bytes. This seam is what makes the note true.
  *
- * It returns a REPORT rather than throwing, because a vault refusal is a fact
- * about our storage that belongs in the disposition, not an exception that
- * would abandon an Attempt over a retrieval that succeeded.
+ * A successful HTTP response is acquired only when its readable bytes are
+ * saved. A storage refusal leaves the source owed through the existing retry.
  */
 export type VaultPut = (
   artifact: Artifact,
@@ -263,7 +263,7 @@ export function routeExecutor(input: {
   readonly spaceOut?: (hostKey: string) => Promise<void>;
   readonly websiteSize?: WebsiteSizeForUrl;
   readonly root?: string;
-  /** Where retrieved bytes are persisted. Omitted means metadata only, SAID. */
+  /** Where retrieved bytes are persisted. A missing store leaves acquisition owed. */
   readonly vault?: VaultPut;
   readonly now?: () => string;
 }): RunWork {
@@ -271,7 +271,7 @@ export function routeExecutor(input: {
   const timeoutMs = input.timeoutMs ?? DEFAULT_FETCH_TIMEOUT_MS;
   const clock = input.now ?? (() => new Date().toISOString());
 
-  return async ({ obligation, routeTaskId, workItemId, attemptId }): Promise<WorkOutcome> => {
+  return async ({ obligation, workItemId, attemptId }): Promise<WorkOutcome> => {
     const obligationId = obligation.obligation.id;
     const route = input.routeFor(obligationId);
 
@@ -505,7 +505,7 @@ async function ingested(input: {
   readonly at: string;
 }): Promise<WorkOutcome> {
   const { route, url, got, rows } = input;
-  const { artifact } = recordAcquisition(
+  const { artifact: raw } = recordAcquisition(
     {
       canonicalUrl: url.toString(),
       retrievedAt: input.at,
@@ -521,21 +521,36 @@ async function ingested(input: {
     got.body,
   );
 
-  let vaulted = "no vault was supplied to this executor, so only the artifact METADATA is recorded";
+  let artifact = raw;
+  let body = got.body;
+  if (raw.tier === "RESTRICTED_RAW") {
+    // Public portals embed credentials unrelated to their civic content. Use
+    // the same derivative as Scout: retain the source hash and redactions,
+    // while giving parsers the saved, readable page instead of a missing raw copy.
+    if (input.vault) {
+      try { await input.vault(raw, body); }
+      catch { /* A restricted substrate is optional; the derivative is still owed. */ }
+    }
+    const derived = deriveSanitized(raw, body, input.at);
+    artifact = derived.artifact;
+    body = derived.text;
+  }
+
+  let stored = false;
+  let vaulted = "no vault was supplied to this executor";
   if (input.vault) {
     try {
-      const report = await input.vault(artifact, got.body);
+      const report = await input.vault(artifact, body);
+      stored = report.stored;
       vaulted = report.stored
         ? `bytes persisted at ${report.where}`
-        : `bytes were NOT persisted: ${report.why}`;
+        : `bytes were NOT persisted: ${sanitizedErrorDiagnostic(report.why)}`;
     } catch (error) {
-      /* A vault refusal is a fact about our storage and belongs in the record.
-         It does not abandon an Attempt whose retrieval succeeded. */
-      vaulted = `the vault REFUSED these bytes: ${
-        error instanceof Error ? error.message : String(error)
-      }`;
+      vaulted = `the vault REFUSED these bytes: ${sanitizedErrorDiagnostic(error)}`;
     }
   }
+  if (!stored) return { ranAs: RAN_AS, kind: "ABORTED", cost: cost(got),
+    detail: `SOURCE_PAGE_NOT_SAVED: HTTP ${got.status} from ${url.host}; ${vaulted}. Acquisition remains owed.` };
 
   return {
     ranAs: RAN_AS,

@@ -365,8 +365,8 @@ function registryIsolationIssue(member: SourceScopedMember<RegistryIsolationReco
         registryIsolationUrls(member).length === 0 || duplicate(roster.members.map((row) => row.id)) ||
         roster.members.some((row) => !row.name || !row.officeTitle || (row.membershipSource &&
           (!/^https:\/\//.test(row.membershipSource.sourceUrl) || !row.membershipSource.sourceOrg || !Number.isFinite(Date.parse(row.membershipSource.collectedAt)))) ||
-          Object.entries(row.retainedFieldSources ?? {}).some(([field, source]) => !source || !["termNote", "email", "phone", "websiteUrl"].includes(field) ||
-            !row[field as "termNote" | "email" | "phone" | "websiteUrl"] || !/^https:\/\//.test(source.sourceUrl) || !source.sourceOrg || !Number.isFinite(Date.parse(source.collectedAt))))
+          Object.entries(row.retainedFieldSources ?? {}).some(([field, source]) => !source || !["termNote", "termStart", "termEnd", "email", "phone", "websiteUrl"].includes(field) ||
+            !row[field as "termNote" | "termStart" | "termEnd" | "email" | "phone" | "websiteUrl"] || !/^https:\/\//.test(source.sourceUrl) || !source.sourceOrg || !Number.isFinite(Date.parse(source.collectedAt))))
       ? `${member.key} lacks exact roster identity, provenance, or unique person rows.`
       : null;
   }
@@ -706,8 +706,20 @@ export async function readRegistryRuntimePrior(
   now: string,
 ): Promise<RegistryRuntimePrior | null> {
   const contract = requiredManualProductionContract("registry-runtime-bindings");
+  const captured = { candidate: null as Awaited<ReturnType<typeof store.readCandidate>> };
+  const proofReader = store as CivicDataReadStore & { readonly readCandidateProof?: typeof store.readCandidate };
+  const observedStore = {
+    readPromotion: store.readPromotion.bind(store),
+    readCandidate: store.readCandidate.bind(store),
+    async readCandidateProof(candidateId: string) {
+      captured.candidate = typeof proofReader.readCandidateProof === "function"
+        ? await proofReader.readCandidateProof(candidateId)
+        : await store.readCandidate(candidateId);
+      return captured.candidate;
+    },
+  };
   const read = await readPromotedCivicData<RegistryRuntimeReadModel>(contract.recordClass, contract.scope, {
-    store,
+    store: observedStore,
     now,
     bypassCache: true,
   });
@@ -716,12 +728,9 @@ export async function readRegistryRuntimePrior(
     const code = read.kind === "STORE_UNREACHABLE" ? read.code : "BOOTSTRAP_NOT_PERMITTED";
     throw new Error(`REGISTRY_RUNTIME_BASE_UNAVAILABLE:${code}:${read.detail}`);
   }
-  const candidate = await store.readCandidate(read.projection.versionId);
+  const candidate = captured.candidate;
   if (!candidate) throw new Error("REGISTRY_RUNTIME_BASE_PROOF_INVALID:BASE_CANDIDATE_UNREADABLE");
-  const readModelSha256 = sha256(canonicalCivicDataJson(candidate.candidate.readModel));
-  if (readModelSha256 !== sha256(canonicalCivicDataJson(read.value))) {
-    throw new Error("REGISTRY_RUNTIME_BASE_PROOF_INVALID:POINTER_AND_CANDIDATE_DIFFER");
-  }
+  const readModelSha256 = candidate.candidate.normalization.normalizedHash!;
   return { versionId: read.projection.versionId, payload: read.value, sourceReceipt: registryBaseSourceReceipt(candidate.candidate), readModelSha256 };
 }
 

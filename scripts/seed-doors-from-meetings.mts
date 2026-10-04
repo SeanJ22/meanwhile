@@ -19,6 +19,8 @@ import type { ControlPlaneRepositories } from "../lib/control-plane/repository/t
 import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
 import { listDoors } from "../lib/doors/registry.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
+import { ROUTE_HINTS } from "../lib/hunt/meetings-route-hints.ts";
+import { seedRouteHintDoors } from "../lib/doors/route-hints.ts";
 import { feedDoorDrafts, seedFeedDoors } from "../lib/doors/seed-feeds.ts";
 import { doorFromDerivedRecord, doorsFromWiringRow, seedMeetingDoors } from "../lib/doors/seed-meetings.ts";
 import type { DerivedWiringRecord } from "../lib/civic-data/derived-meeting-wiring.ts";
@@ -85,6 +87,12 @@ say(`feeds: created ${feeds.created}, updated ${feeds.updated}, unchanged ${feed
 for (const line of feeds.refused) say(`refused: ${line}`);
 const feedSettled = feeds.created + feeds.updated + feeds.unchanged + feeds.keptManualEdit;
 say(floorLine(floored("feed doors settled", "seedFeedDoors", feedSettled + feeds.refused.length, feedSettled, "no feed door drafts were handed to the import")));
+// DB-23: the committed route hints, one door per government.
+const hintDoors = await seedRouteHintDoors({ repo: repos.doors, hints: ROUTE_HINTS, deriveInputAt: now, at: now });
+say(`route hints: created ${hintDoors.created}, updated ${hintDoors.updated}, unchanged ${hintDoors.unchanged}, kept hand edits ${hintDoors.keptManualEdit}, refused ${hintDoors.refused.length}.`);
+for (const line of hintDoors.refused) say(`refused: ${line}`);
+const hintSettled = hintDoors.created + hintDoors.updated + hintDoors.unchanged + hintDoors.keptManualEdit;
+say(floorLine(floored("route hint doors settled", "seedRouteHintDoors", hintSettled + hintDoors.refused.length, hintSettled, "no route hints were handed to the import")));
 const after = await listDoors(repos.doors);
 say(`the registry now holds ${after.doors.length} doors.`);
-process.exit(counts.refused.length + feeds.refused.length === 0 ? 0 : 2);
+process.exit(counts.refused.length + feeds.refused.length + hintDoors.refused.length === 0 ? 0 : 2);

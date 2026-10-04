@@ -17,6 +17,7 @@ import type { SectionState } from "./live-sync.ts";
 import { toSourced } from "./live-sync.ts";
 import type { AdminV6Data, ChecklistView, Definition, Dependency, Hunt, Place, StateRow, WorkerStatus } from "./model.ts";
 import { COUNTRY_KEY } from "./places.ts";
+import { PLACE_GROUPS } from "@/lib/coverage/group-names.ts";
 
 export interface LiveReference {
   readonly states: readonly { readonly code: string; readonly name: string; readonly tracked: boolean }[];
@@ -76,7 +77,7 @@ export function referenceNational(ref: LiveReference): readonly StateRow[] {
 
 export function referenceChecklist(ref: LiveReference): ChecklistView {
   const groups = [...new Set(ref.definitions.map((d) => d.group))];
-  const place = new Set(["GEO", "GOV", "OFF", "MTG", "DOC", "LEG", "ELE", "CAN", "CAM", "FIN", "PAR", "ASK"]);
+  const place = PLACE_GROUPS;
   return {
     profileVersion: ref.profileVersion,
     definitionCount: ref.definitions.length,

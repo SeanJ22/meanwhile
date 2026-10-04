@@ -17,7 +17,7 @@
 import { DurableEvidenceStore } from "../evidence/durable-store.ts";
 import { recordAcquisition } from "../evidence/artifact.ts";
 import { putArtifact } from "../evidence/store.ts";
-import { readHeldBytes, type VaultIndex } from "../evidence/read-only-vault.ts";
+import { includeVaultCapture, readHeldBytes, type VaultIndex } from "../evidence/read-only-vault.ts";
 import { fingerprint } from "../ids.ts";
 import { abandonAttempt, beginAttemptFor, claimRouteTask, disposeRouteTask, recordArtifactMetadata, registerRouteTask, registerWorkItem } from "../repository/coordinator.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
@@ -97,7 +97,8 @@ export function campaignSiteReadRecorder(input: {
       permission: permissionStateOf(read),
       transport: "REACHABLE",
     }, read.body);
-    await putArtifact(store, CAMPAIGN_SITE_READ_PROJECT, artifact, Buffer.from(read.body, "utf8"));
+    const {key} = await putArtifact(store, CAMPAIGN_SITE_READ_PROJECT, artifact, Buffer.from(read.body, "utf8"));
+    if(input.heldVault) includeVaultCapture(input.heldVault,artifact,key,input.vaultRoot);
     const record: ArtifactRecord = {
       artifactId: artifact.id, workItemId: item.id, routeTaskId: task.id, attemptId: attempt.id, tier: artifact.tier,
       contentHash: artifact.contentHash, byteLength: artifact.byteLength, contentType: artifact.contentType,
@@ -141,7 +142,8 @@ export function campaignSiteReadRecorder(input: {
       retrievedAt: read.retrievedAt, httpStatus: read.httpStatus, contentType: read.contentType,
       sourceId: siteHost(read.finalUrl) ?? "candidate-publication", methodRouteId: CANDIDATE_PUBLICATION_READ_ROUTE,
       workItemId: item.id, attemptId: attempt.id, permission: permissionStateOf(read), transport: "REACHABLE" }, read.body);
-    await putArtifact(store, CAMPAIGN_SITE_READ_PROJECT, artifact, Buffer.from(read.body, "utf8"));
+    const {key} = await putArtifact(store, CAMPAIGN_SITE_READ_PROJECT, artifact, Buffer.from(read.body, "utf8"));
+    if(input.heldVault) includeVaultCapture(input.heldVault,artifact,key,input.vaultRoot);
     const record: ArtifactRecord = { artifactId: artifact.id, workItemId: item.id, routeTaskId: task.id, attemptId: attempt.id,
       tier: artifact.tier, contentHash: artifact.contentHash, byteLength: artifact.byteLength, contentType: artifact.contentType,
       canonicalUrl: link.url, partial: false, recordedAt: read.retrievedAt, publicationLink: link.source };

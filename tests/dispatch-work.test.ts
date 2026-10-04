@@ -758,19 +758,19 @@ test("syncObligations keeps the owner's mark when a provider's signals move", as
 
 test("Admin reads the creation receipt for the decision it belongs to, with every number carrying its denominator", async () => {
   const places = [
-    { key: "az.cd.06", receiptId: "target", items: [{ state: "published" as const }, { state: "unpublished" as const }, { state: "missing" as const }] },
-    { key: "az.zcta.10001", receiptId: "lowest", items: [{ state: "missing" as const }] },
-    { key: "az.zcta.10002", receiptId: "middle", items: [{ state: "published" as const }, { state: "missing" as const }] },
+    { key: "az.cd.06", receiptId: "target", items: [{ checklistId: "GOV-01", state: "published" as const }, { checklistId: "GOV-01", state: "unpublished" as const }, { checklistId: "GOV-01", state: "missing" as const }] },
+    { key: "az.zcta.10001", receiptId: "lowest", items: [{ checklistId: "GOV-01", state: "missing" as const }] },
+    { key: "az.zcta.10002", receiptId: "middle", items: [{ checklistId: "GOV-01", state: "published" as const }, { checklistId: "GOV-01", state: "missing" as const }] },
   ];
   const config = { placeTargets: [{ key: "az.cd.06", goalPercent: 95, setAt: T0, receiptId: "owner-target" }] };
   assert.deepEqual(orderPlaceWork(config, places), ["target", "lowest", "middle"]);
   assert.deepEqual(orderPlaceWork({ placeTargets: [{ ...config.placeTargets[0], key: "geo:az.congressional_district.06" }] }, places),
     ["target", "lowest", "middle"], "the existing v6 hunt key and checklist place key identify the same target");
-  assert.deepEqual(orderPlaceWork({}, places), ["lowest", "middle", "target"], "official unpublished fields count as resolved");
-  assert.deepEqual(orderPlaceWork({ placeTargets: [{ ...config.placeTargets[0], goalPercent: 60 }] }, places),
-    ["lowest", "middle", "target"], "a reached owner target returns to ordinary completion order");
-  assert.deepEqual(orderPlaceWork({}, [{ ...places[0], items: [{ state: "missing" }] },
-    { ...places[1], items: [{ state: "published" }] }]), ["target", "lowest"], "new captures rerank places");
+  assert.deepEqual(orderPlaceWork({}, places), ["lowest", "target", "middle"], "an item the government does not publish leaves the count, so target and middle tie at half and the key breaks it");
+  assert.deepEqual(orderPlaceWork({ placeTargets: [{ ...config.placeTargets[0], goalPercent: 40 }] }, places),
+    ["lowest", "target", "middle"], "a reached owner target returns to ordinary completion order");
+  assert.deepEqual(orderPlaceWork({}, [{ ...places[0], items: [{ checklistId: "GOV-01", state: "missing" }] },
+    { ...places[1], items: [{ checklistId: "GOV-01", state: "published" }] }]), ["target", "lowest"], "new captures rerank places");
   assert.throws(() => orderPlaceWork({ placeTargets: [{}] }, places), /PLACE_TARGETS_UNREADABLE/);
   const repos = createMemoryRepositories();
   const { world } = await cycleWorld(repos, T0);

@@ -5,10 +5,9 @@
 `candidates.json` is the immutable 2026-09-02 cutover seed evidence only. Its
 Git blob is `5ca91ada3d17f18c64abe346a31351d1d37337b9`; it is not live state and no
 runtime process may read or write it. The mutable candidate lifecycle lives at
-`cp_method_candidates/live` in the standing control plane. The first clean
-deployed runtime binds the imported revision to this evidence with a canonical
-`METHOD_CANDIDATE_AUTHORITY_ADOPTION` receipt in the existing owner outcome
-history.
+`cp_method_candidates/live` in the standing control plane. No adoption receipt
+is required: a research round that cannot read the store skips candidate
+proposals and carries on.
 
 ## The live method store is the field manual
 

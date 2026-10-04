@@ -51,7 +51,7 @@
 import { createHash } from "node:crypto";
 
 import type { AgendaDocument } from "../../meetings/agenda-documents.ts";
-import { SOURCE_WIRING, type BodySourceWiring } from "../../registry/source-wiring.ts";
+import { activeWiring, type BodySourceWiring } from "../../registry/source-wiring.ts";
 import { makeCivicClerkSource, type CivicClerkEvent } from "../../sources/civicclerk/index.ts";
 import { findClient } from "../../sources/legistar/client-registry.ts";
 import { normalizeWithDrops as normalizeLegistarEvents, type LegistarEventWithClient } from "../../sources/legistar/index.ts";
@@ -260,7 +260,7 @@ export function normalizeFactsFromBytes(input: {
       refusal: null };
   }
 
-  const wired = (input.wiring ?? SOURCE_WIRING).filter((row) => row.agendaSourceType === "CIVICCLERK" && row.config.slug === slug);
+  const wired = (input.wiring ?? activeWiring()).filter((row) => row.agendaSourceType === "CIVICCLERK" && row.config.slug === slug);
   if (wired.length === 0) {
     return { ...base, rows, rowById, body: null, considered: rows.length,
       refusal: { code: "BODY_IDENTITY_UNRESOLVED", detail: `no SOURCE_WIRING row serves CivicClerk tenant ${slug}; the canonical body cannot be named`, recordId: null } };

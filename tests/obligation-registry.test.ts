@@ -51,7 +51,10 @@ import {
 } from "../lib/control-plane/scheduler/providers/tracker-intake.ts";
 import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import { meetingsDiscoveryProvider } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
-import { checkYield, routeExecutor, type OpenOne } from "../lib/control-plane/scheduler/route-executor.ts";
+import { checkYield, routeExecutor, type OpenOne, type VaultPut } from "../lib/control-plane/scheduler/route-executor.ts";
+import { cycleVault } from "../lib/control-plane/scheduler/vault.ts";
+import { classifyAcquisition } from "../lib/control-plane/evidence/artifact.ts";
+import { contentHash } from "../lib/control-plane/ids.ts";
 import {
   NORMALIZERS,
   promotionLines,
@@ -358,10 +361,11 @@ function fakeOpen(body: string, status = 200, contentType = "application/json"):
   });
 }
 
-async function run(route: RouteDescriptor | null, open: OpenOne): Promise<WorkOutcome> {
+async function run(route: RouteDescriptor | null, open: OpenOne, vault: VaultPut | null = cycleVault(tmp()).put): Promise<WorkOutcome> {
   const executor = routeExecutor({
     routeFor: () => route,
     openOne: open,
+    ...(vault ? { vault } : {}),
     now: () => NOW,
   });
   return executor({
@@ -439,6 +443,53 @@ test("a satisfied response is DISPOSED INGESTED with the tier decided by SCANNIN
     0,
     "normalization is a later stage; claiming it here would report parsing that did not happen",
   );
+});
+
+
+test("public source credentials leave a readable saved page for the roster and directory readers", async () => {
+  const key = ["AI", "za"].join("") + "SyD4mQ8vX1nR7pLbT2wCzE0jHfGuY5aKs_-3xNp".slice(0, 35);
+  const page = '<h1>Village Council</h1><p>Jane Smith — Mayor</p><a href="/boards">Boards and Commissions</a>' +
+    '<script src="https://maps.googleapis.com/maps/api/js?key=' + key + '"></script>';
+  assert.equal(classifyAcquisition(page).tier, "RESTRICTED_RAW");
+  const vault = cycleVault(tmp());
+  const route: RouteDescriptor = { ...AZ_ROUTE, open: { kind: "HTTP_GET", url: "https://city.example.gov/council" }, yieldContract: undefined };
+  const outcome = await run(route, fakeOpen(page, 200, "text/html"), vault.put);
+  assert.equal(outcome.disposition?.disposition, "INGESTED");
+  assert.equal(outcome.artifacts?.length, 1);
+  const artifact = outcome.artifacts![0];
+  assert.equal(artifact.tier, "SANITIZED_DERIVED");
+  const held = vault.ledger.get(artifact.artifactId);
+  assert.ok(held);
+  const text = await vault.readBack(held.key);
+  assert.ok(text);
+  assert.ok(text.includes("Jane Smith — Mayor"));
+  assert.ok(text.includes('<a href="/boards">Boards and Commissions</a>'));
+  assert.ok(!text.includes(key));
+  assert.equal(contentHash(text), artifact.contentHash);
+  assert.equal(Buffer.byteLength(text), artifact.byteLength);
+  assert.equal(artifact.recordedAt, NOW);
+  assert.equal(artifact.canonicalUrl, "https://city.example.gov/council");
+  assert.equal(outcome.cost?.bytesFetched, Buffer.byteLength(page));
+  assert.equal(outcome.disposition?.observation?.normalizedCount, 0);
+});
+
+test("missing or failed vault storage never reports unsaved page bytes as INGESTED", async () => {
+  const key = ["AI", "za"].join("") + "SyD4mQ8vX1nR7pLbT2wCzE0jHfGuY5aKs_-3xNp".slice(0, 35);
+  const route: RouteDescriptor = { ...AZ_ROUTE, open: { kind: "HTTP_GET", url: "https://city.example.gov/boards" }, yieldContract: undefined };
+  for (const body of ["<h1>Boards</h1>", '<h1>Boards</h1><script src="https://maps.googleapis.com/maps/api/js?key=' + key + '"></script>']) {
+    const failed: (VaultPut | null)[] = [null,
+      async () => ({ stored: false, where: "", why: "storage unavailable" }),
+      async () => { throw new Error("storage unavailable"); }];
+    for (const vault of failed) {
+      const outcome = await run(route, fakeOpen(body, 200, "text/html"), vault);
+      assert.equal(outcome.kind, "ABORTED");
+      assert.equal(outcome.disposition, undefined);
+      assert.equal(outcome.artifacts, undefined);
+      assert.match(outcome.detail, /SOURCE_PAGE_NOT_SAVED/);
+      assert.equal(outcome.cost?.requestCount, 1);
+      assert.equal(outcome.cost?.bytesFetched, Buffer.byteLength(body));
+    }
+  }
 });
 
 test("a route with no client disposes REQUIRES_NEW_ADAPTER and stays owed", async () => {

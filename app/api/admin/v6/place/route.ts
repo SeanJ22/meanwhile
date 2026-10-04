@@ -6,6 +6,10 @@ import { PLACE_ITEM_PAGE, v6PlaceNotMeasured, v6PlaceSection } from "@/lib/contr
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig, placeTargetOf } from "@/lib/control-plane/gateway/admin-config.ts";
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
+import { readPlaceHistory } from "@/lib/control-plane/admin-view/place-history-read.ts";
+import type { PlaceHistoryPoint } from "@/lib/coverage/place-history.ts";
+import { controlPlaneUrlFromEnv } from "@/lib/control-plane/repository/pg-store.ts";
+import { neon } from "@neondatabase/serverless";
 
 /** The target Sean set for this place, from the saved owner config. A config that cannot be read is no target, never a made-up one. */
 async function targetFor(placeKey: string): Promise<{ goalPercent: number; setAt: string } | null> {
@@ -16,6 +20,14 @@ async function targetFor(placeKey: string): Promise<{ goalPercent: number; setAt
     const t = row !== null && isAdminConfig(row.value) ? placeTargetOf(row.value, placeKey) : null;
     return t ? { goalPercent: t.goalPercent, setAt: t.setAt } : null;
   } catch { return null; }
+}
+
+/** The place's daily points from the published snapshot. A history that cannot be read is no trend, never an invented one. */
+async function historyFor(placeKey: string): Promise<readonly PlaceHistoryPoint[]> {
+  try {
+    const url = controlPlaneUrlFromEnv();
+    return url ? await readPlaceHistory(neon(url), placeKey) : [];
+  } catch { return []; }
 }
 
 export const dynamic = "force-dynamic";
@@ -53,5 +65,5 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (read.code === "NOT_A_PLACE" || read.code === "UNSUPPORTED_PLACE") return NextResponse.json(v6PlaceNotMeasured(params.get("scope")!, read.says, new Date().toISOString()), { headers: NO_STORE });
     return NextResponse.json({ code: read.code, says: read.says }, { status: 503, headers: NO_STORE });
   }
-  return NextResponse.json(v6PlaceSection(read, { group, states: status === null ? null : owedStatesOf(status), q, offset, limit }, await targetFor(read.placeKey)), { headers: NO_STORE });
+  return NextResponse.json(v6PlaceSection(read, { group, states: status === null ? null : owedStatesOf(status), q, offset, limit }, await targetFor(read.placeKey), await historyFor(read.placeKey)), { headers: NO_STORE });
 }

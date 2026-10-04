@@ -27,6 +27,7 @@ import { createWorkItem } from "../work-item.ts";
 import { registerWorkItem } from "../repository/coordinator.ts";
 import type { ResolvedScope } from "./membership.ts";
 import { buildPlaceOwedList, type PlaceOwedItem } from "../../coverage/place-owed.ts";
+import { placePercent } from "../../coverage/place-measures.ts";
 import { readHeldPlaceCapture } from "../../civic-data/held-place-capture.ts";
 import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
 import { expansionScopesOf, VERSION_PREFIX } from "./scopes.ts";
@@ -40,7 +41,7 @@ import { readPlaceStandingWork } from "../repository/pg-store.ts";
 export interface PlaceWorkReading {
   readonly key: string;
   readonly receiptId: string;
-  readonly items: readonly Pick<PlaceOwedItem, "state">[];
+  readonly items: readonly Pick<PlaceOwedItem, "state" | "checklistId">[];
 }
 
 /** Order the existing place capture rows; this creates no score or policy store. */
@@ -64,8 +65,8 @@ export function placeWorkReadings(config: unknown, places: readonly PlaceWorkRea
     if (!previous || Date.parse(target.setAt) >= Date.parse(previous.setAt)) targets.set(key, target as { goalPercent: number; setAt: string });
   }
   const readings = places.map(place => {
-    const resolved = place.items.filter(item => item.state === "published" || item.state === "unpublished").length;
-    const percent = place.items.length ? resolved / place.items.length * 100 : 0;
+    // The same percent Admin and the national list show, so the runner's order matches what Sean reads.
+    const percent = placePercent(place.items) ?? 0;
     const target = targets.get(placeKey(place.key));
     return { ...place, percent, target: target && percent < target.goalPercent ? target : null };
   });
@@ -141,7 +142,7 @@ export async function nationalPlaceWorkReading(repos: ControlPlaneRepositories, 
     key: `${scope.decision.geography.stateAbbr.toLowerCase()}.${VERSION_PREFIX[scope.decision.geography.type]}.${scope.decision.geography.geoid.toLowerCase()}`,
     receiptId: scope.decision.receiptId,
     items: buildPlaceOwedList({ divisions: [...divisionsByReceipt.get(scope.decision.receiptId)!].map(id => ({ id, label: id })),
-      subjects: capture.subjects, held: capture.held, now }),
+      subjects: capture.subjects, held: capture.held, now, zips: [...(inScope.get(scope.decision.receiptId) ?? [])] }),
   })));
   const rank = (zip: string) => readings.findIndex(place => inScope.get(place.receiptId)?.has(zip));
   return { ordered: [...zips].sort((a, b) => (rank(a) < 0 ? Infinity : rank(a)) - (rank(b) < 0 ? Infinity : rank(b))),

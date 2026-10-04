@@ -5,9 +5,8 @@ import { meetingFetchedWindowAt, meetingHeldWindowAt } from "./constants.ts";
  * 120 days out that such a read's answer leaves out was asked about, so it is a disappearance like any other; for an
  * adapter outside this set it was never asked about and is carried as `OUTSIDE_FETCH_WINDOW`.
  *
- * `clerksboards` is also absent for now: its Past Agendas fallback (R8) is chosen by whether the schedule places a
- * sitting in the window, so widening the window changes which boards fall back and loses concluded sittings. It needs
- * its own change to decide the fallback on the shown window and still hold 120 days of concluded sittings.
+ * `clerksboards` is also absent: its schedule stays on the shown window (it decides whether a board falls back to the
+ * Past Agendas list, R8), and only that list, which carries the concluded sittings, reaches back the held 120 days.
  *
  * `onbase`, `civicplus` and `revize` are deliberately absent: they read whatever their feed lists
  * (`publishedLookbackDays: null`), so a row a feed has stopped listing is the feed's own horizon, not a disappearance.

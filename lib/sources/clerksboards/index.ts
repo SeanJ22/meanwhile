@@ -9,6 +9,7 @@
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
   CONCLUDED_LOOKBACK_DAYS,
+  MEETING_HELD_LOOKBACK_DAYS,
   UPCOMING_HORIZON_DAYS,
 } from "../../meetings/constants.ts";
 import {
@@ -72,6 +73,13 @@ const SOURCE_NAME = "clerksboards";
  */
 const WINDOW_FORWARD_DAYS = UPCOMING_HORIZON_DAYS;
 const WINDOW_BACK_DAYS = CONCLUDED_LOOKBACK_DAYS;
+/**
+ * The Past Agendas list is the only part of this adapter that carries concluded records (each citing its agenda PDF),
+ * so it holds the full held window back (DB-05, 120 days). The schedule's own dates stay on the shown window: whether a
+ * schedule "places a sitting in the window" is what sends a board to the list (R8), and a wider window would let an old
+ * schedule date satisfy that and hide the very sittings the list exists to supply.
+ */
+const PAST_AGENDA_BACK_DAYS = MEETING_HELD_LOOKBACK_DAYS;
 
 export interface ClerksBoardsRaw {
   wiring: BodySourceWiring;
@@ -721,7 +729,10 @@ export function makeClerksBoardsSource(
       // A schedule that places nothing in the window falls back to the
       // sittings the board's own Past Agendas list dates (R8, 2026-09-25).
       const pastSittings = (expanded === null || expanded.length === 0) && pastAgendaHtml !== undefined
-        ? concludedSittingsFromPastAgendas(parsePastAgendaList(pastAgendaHtml, wiring.config.documentHost), page.boardName, windowStart, now, wiring.timeZone)
+        ? concludedSittingsFromPastAgendas(
+            parsePastAgendaList(pastAgendaHtml, wiring.config.documentHost), page.boardName,
+            new Date(now.getTime() - PAST_AGENDA_BACK_DAYS * 86_400_000), now, wiring.timeZone,
+          )
         : [];
       if (expanded === null) {
         // No schedule, "Meets as required", or a format this parser does not

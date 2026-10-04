@@ -46,7 +46,7 @@ import {
   type MeetingsProjectionReadResult,
   type MeetingsSnapshot,
 } from "./snapshot.ts";
-import { CONCLUDED_LOOKBACK_DAYS, MEETING_HELD_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } from "./constants.ts";
+import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } from "./constants.ts";
 
 /**
  * Publish + read for the geographic reader edge artifacts.
@@ -790,9 +790,9 @@ export async function readReaderEdgeMeetings(
  * Which part of what the partitions hold a read hands back (DB-01).
  *
  * `SHOWN` (the default): 90 days back and 90 ahead, for the map, "when does it
- * meet next" and agenda listings. `HELD`: 120 days back and the same 90 ahead,
- * for looking up a past meeting by body and date, since a promoted partition
- * keeps its history for good.
+ * meet next" and agenda listings. `HELD`: every kept past meeting and the same
+ * 90 ahead, for looking up a past meeting by body and date, since a promoted
+ * partition keeps its concluded meetings with records for good.
  */
 export type ReaderMeetingsWindow = "SHOWN" | "HELD";
 
@@ -808,13 +808,12 @@ function applyServedWindow(
   const now = nowOption ? Date.parse(nowOption) : Date.now();
   if (!Number.isFinite(now)) return read;
   const day = 86_400_000;
-  const lowerDays = window === "HELD" ? MEETING_HELD_LOOKBACK_DAYS : CONCLUDED_LOOKBACK_DAYS;
   // Cached area reads are shared across requests; key the windowed copy by the day it was cut.
   const key = `${window}:${Math.floor(now / day)}`;
   const memo = servedWindows.get(read) ?? new Map<string, MeetingsProjectionReadResult>();
   const hit = memo.get(key);
   if (hit) return hit;
-  const lower = now - lowerDays * day;
+  const lower = window === "HELD" ? Number.NEGATIVE_INFINITY : now - CONCLUDED_LOOKBACK_DAYS * day;
   const upper = now + UPCOMING_HORIZON_DAYS * day;
   const meetings = read.value.meetings.filter((meeting) => {
     const startsAt = Date.parse(meeting.startsAt);

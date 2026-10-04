@@ -30,11 +30,11 @@ function heldRead(): MeetingsProjectionReadResult {
 const idsOf = (read: MeetingsProjectionReadResult) =>
   read.kind === "PROMOTED" ? read.value.meetings.map(({ id }) => id) : [];
 
-test("SHOWN is 90 days each way; HELD adds the history out to 120 days back", async () => {
+test("SHOWN is 90 days each way; HELD keeps all kept history", async () => {
   const shown = await readReaderEdgeMeetings({ now: NOW, fallback: async () => heldRead() });
   assert.deepEqual(idsOf(shown), ["recent", "soon"]);
   const held = await readReaderEdgeMeetings({ now: NOW, window: "HELD", fallback: async () => heldRead() });
-  assert.deepEqual(idsOf(held), ["recent", "ninety-five", "soon"]);
+  assert.deepEqual(idsOf(held), ["recent", "ninety-five", "far", "soon"]);
 });
 
 test("the window follows its meetings: agenda documents and counts agree", async () => {

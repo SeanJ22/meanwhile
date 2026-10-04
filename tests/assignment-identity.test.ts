@@ -496,8 +496,8 @@ test("an assignment budget that cannot be checked holds the work, by name", () =
 
   const unmeasured = gate([A], [row("ob-a", "s", [A.key])], [charge({ obligationId: "ob-a", usd: null })]);
   const v3 = unmeasured.admit("ob-a");
-  assert.equal(v3.admit, false);
-  if (!v3.admit) assert.match(v3.why, /budget cannot be checked: a charge on its work in the rolling 24 hours reported no dollar figure/);
+  assert.equal(v3.admit, false, "an unpriced charge is counted at its worst case, so the $5 budget is spent");
+  if (!v3.admit) assert.match(v3.why, /budget is spent: \$10\.56 spent/);
 });
 
 test("the runner's reading names what each Send reached and its budget — spent, held, left — with the window", () => {

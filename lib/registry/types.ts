@@ -477,6 +477,10 @@ export interface Body {
   /** The saved official page that states `meetingCadence`, when it is not the body's own source. */
   meetingCadenceSource?: { sourceUrl: string; collectedAt: string };
   homepageUrl: string | null;
+  /** The body's office address, as its own page states it. Its source is the body's `provenance`. */
+  officeAddress?: string;
+  /** The body's office phone, as its own page states it. */
+  officePhone?: string;
   /**
    * How many readers said this division applies to them. A bare count, never
    * per person and never with an identifier attached — it is a work queue for

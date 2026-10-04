@@ -18,8 +18,19 @@
  *     that lists directories) are selected whenever any code changes, and so
  *     is any test reaching a module that loads code through a computed
  *     `import(...)` this reader cannot name.
- *   - Markdown under docs/ selects only the tests whose code names that
- *     document; usually none.
+ *   - A change made only of documents (anything under docs/, and Markdown
+ *     anywhere outside the code roots: CLAUDE.md, AGENTS.md, README.md, state
+ *     notes) selects only the tests that read those documents (RL-07): a test
+ *     whose code names one; a test reaching, through test files only, a module
+ *     or script that names one (one hop, so a citation in a widely imported
+ *     module does not pull in its whole import tree); a test reaching a module
+ *     that names a script that names one (a test spawning the compiler); and
+ *     a test or test helper that lists files where the document lives (the
+ *     whole repository, the document's top directory, or Markdown). Source
+ *     sweeps that list only code are not selected. No reader answers NONE.
+ *   - Code mixed with documents keeps the code selection, unchanged: Markdown
+ *     under docs/ selects the tests whose code names that document, and any
+ *     other document selects the FULL suite.
  *   - ANY other changed file — data, fixtures, package.json, the lockfile,
  *     tsconfig, Next or ESLint config, CSS, workflows, public assets, the test
  *     runner and its loader, an unknown extension — selects the FULL suite.
@@ -27,7 +38,8 @@
  *     many changed files, or an import inside any test's closure that does not
  *     resolve to a tracked file.
  *
- * Output (GITHUB_OUTPUT and stdout): plan=affected|full|none, legs (the test
+ * Output (GITHUB_OUTPUT and stdout): plan=affected|full|none, scope
+ * (documents when the change is documents only, else code), legs (the test
  * matrix as JSON), files (newline-separated, for CI_TEST_FILES) and
  * needs_browser. The scheduled run (and a manual dispatch) always
  * answers full: it re-runs the whole suite on main as the integration check,
@@ -91,6 +103,18 @@ export function isCodePath(path) {
 
 export function isDocsMarkdown(path) {
   return path.startsWith("docs/") && path.endsWith(".md");
+}
+
+/**
+ * A document for RL-07's documents-only selection: anything under docs/, or
+ * Markdown outside the code roots and public/ (CLAUDE.md, AGENTS.md,
+ * README.md, state notes). Markdown under a code root may be a runtime input
+ * (a prompt template read by computed path), so it keeps the code rules.
+ */
+export function isDocumentPath(path) {
+  if (path.startsWith("docs/")) return true;
+  if (!path.endsWith(".md")) return false;
+  return !CODE_ROOTS.some((root) => path.startsWith(root)) && !path.startsWith("public/");
 }
 
 const KEYWORDS_BEFORE_REGEX = new Set(["return", "typeof", "case", "do", "else", "in", "of", "new", "delete", "void", "throw", "yield", "await", "instanceof"]);
@@ -368,7 +392,7 @@ function namer(path, basenameCounts) {
 }
 
 /**
- * @typedef {{ plan: "affected" | "full" | "none", files: string[], needsBrowser: boolean, reasons: string[], changed?: string[] }} TestPlan
+ * @typedef {{ plan: "affected" | "full" | "none", files: string[], needsBrowser: boolean, reasons: string[], scope?: "code" | "documents", changed?: string[] }} TestPlan
  */
 
 /** @param {string} reason @returns {TestPlan} */
@@ -384,7 +408,8 @@ export function selectTests({ changed, tracked, tests, readText }) {
   const unique = [...new Set(changed.filter(Boolean))].sort();
   if (unique.length === 0) return { plan: "none", files: [], needsBrowser: false, reasons: ["the pull request changes no files"] };
   if (unique.length > MAX_CHANGED_FILES) return fullPlan(`${unique.length} changed files exceed ${MAX_CHANGED_FILES}`);
-  for (const path of unique) {
+  const documentsOnly = unique.every(isDocumentPath);
+  for (const path of documentsOnly ? [] : unique) {
     if (RUNNER_FILES.has(path)) return fullPlan(`${path} changes how every test runs`);
     if (!isDocsMarkdown(path) && !isCodePath(path)) return fullPlan(`${path} is not code the import graph follows`);
   }
@@ -410,6 +435,8 @@ export function selectTests({ changed, tracked, tests, readText }) {
     basenameCounts.set(name, (basenameCounts.get(name) ?? 0) + 1);
   }
 
+  if (documentsOnly) return selectDocumentReaders({ changed: unique, tests, graph, importers, basenameCounts, edges });
+
   const codeChanged = unique.some((path) => !isDocsMarkdown(path));
   const seeds = new Set(unique.filter((path) => !isDocsMarkdown(path)));
   for (const path of unique) {
@@ -428,7 +455,68 @@ export function selectTests({ changed, tracked, tests, readText }) {
   const browserClosure = reach(files, edges);
   const needsBrowser = [...browserClosure].some((path) => (graph.get(path)?.packages ?? []).some((name) => BROWSER_PACKAGES.has(name)));
   const reasons = [floorLine(floored("test files the change reaches", "scripts/ci-affected-tests.mjs", tests.length, files.length))];
-  return { plan: files.length ? "affected" : "none", files, needsBrowser, reasons };
+  return { plan: files.length ? "affected" : "none", scope: "code", files, needsBrowser, reasons };
+}
+
+/** Whether a source lists every repository file (rather than one tree). */
+function listsRepository(text) {
+  return /(?<![\w$.])filesThatWouldBeCommitted\s*\(/.test(text) || GIT_LISTING.test(text);
+}
+
+/**
+ * RL-07: the tests that read a documents-only change, and nothing else. See
+ * the header. `graph`, `importers` and `basenameCounts` are selectTests'.
+ * @returns {TestPlan}
+ */
+function selectDocumentReaders({ changed, tests, graph, importers, basenameCounts, edges }) {
+  const inTests = (path) => path.startsWith("tests/");
+  // Files whose code names a changed document.
+  const namers = new Set();
+  for (const path of changed) {
+    const names = namer(path, basenameCounts);
+    for (const [other, node] of graph) if (names(other, node.text)) namers.add(other);
+  }
+  // A script outside tests/ that names a document is often its reader or
+  // compiler; a file that names that script (spawns or reads it) reads the
+  // document through it.
+  const referrers = new Map();
+  for (const path of namers) {
+    if (inTests(path) || !path.startsWith("scripts/")) continue;
+    const names = namer(path, basenameCounts);
+    for (const [other, node] of graph) {
+      if (other === path || !names(other, node.text)) continue;
+      if (!referrers.has(path)) referrers.set(path, []);
+      referrers.get(path).push(other);
+    }
+  }
+  // Tests and test helpers that list files where a changed document lives.
+  const tokens = new Set();
+  for (const path of changed) {
+    const top = path.includes("/") ? path.slice(0, path.indexOf("/")) : null;
+    if (top) tokens.add(new RegExp(`(?:^|[^\\w.-])${top.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\w-])`));
+    if (path.endsWith(".md")) tokens.add(/\.md(?![\w-])/);
+  }
+  const sweeps = new Set();
+  for (const [path, node] of graph) {
+    if (!inTests(path) || !node.enumerates) continue;
+    if (listsRepository(node.text) || [...tokens].some((token) => token.test(node.text))) sweeps.add(path);
+  }
+  // One hop out of a module or script that names a document; past that, only
+  // through test files, so a citation in a widely imported module does not
+  // select its whole import tree.
+  const affected = reach([...namers, ...sweeps], (path) => {
+    if (!namers.has(path) && !sweeps.has(path) && !inTests(path)) return [];
+    return [...(importers.get(path) ?? []), ...(referrers.get(path) ?? [])];
+  });
+  const files = tests.filter((test) => affected.has(test)).sort();
+  const browserClosure = reach(files, edges);
+  const needsBrowser = [...browserClosure].some((path) => (graph.get(path)?.packages ?? []).some((name) => BROWSER_PACKAGES.has(name)));
+  const count = floorLine(floored("test files that read the changed documents", "scripts/ci-affected-tests.mjs", tests.length, files.length));
+  const reasons = [
+    files.length ? `documents only: ${count}` : `documents only: NONE of the test files read the changed documents (${count})`,
+    "lint, types and governance still run; source sweeps do not, and builds follow the deploy classification",
+  ];
+  return { plan: files.length ? "affected" : "none", scope: "documents", files, needsBrowser, reasons };
 }
 
 function git(root, args) {
@@ -479,13 +567,14 @@ function main() {
     base: process.env.CI_BASE_SHA,
   });
   emit("plan", decision.plan);
+  emit("scope", decision.scope ?? "code");
   emit("legs", JSON.stringify(TEST_LEGS[decision.plan]));
   emit("needs_browser", String(decision.needsBrowser));
   emit("files", decision.files.join("\n"));
   console.log(`ci-affected-tests · ${decision.plan.toUpperCase()} — ${decision.reasons.join("; ")}`);
   if (decision.changed) console.log(`changed:\n  ${decision.changed.join("\n  ")}`);
   if (decision.plan === "affected") console.log(`selected:\n  ${decision.files.join("\n  ")}`);
-  console.log(`needs_browser=${decision.needsBrowser}`);
+  console.log(`scope=${decision.scope ?? "code"} needs_browser=${decision.needsBrowser}`);
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();

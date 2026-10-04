@@ -52,6 +52,7 @@ import {
   MEETING_PARTITION_CONTRACTS,
   observableRoutineContracts,
 } from "../lib/civic-data/meeting-partitions.ts";
+import { recordDoorOutcome, type DoorOutcome } from "../lib/doors/outcome.ts";
 import { doorReadModeFromEnv, refreshDoorsForPass } from "../lib/doors/install.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { attestPromotedVersion } from "../lib/civic-data/read-model.ts";
@@ -237,6 +238,24 @@ async function acquireChildMemory(command: BoundedChildCommand): Promise<void> {
 function releaseChildMemory(id: string): void {
   childMemoryReleases.get(id)?.(); childMemoryReleases.delete(id);
   startedSourceChildren.delete(id);
+}
+
+/**
+ * DB-21: a hand-wired meeting door's last success or failure, from its partition's
+ * promotion outcome. A derived family's members are recorded by the family's own
+ * child, from each member's result. A door that is not in the registry is left alone,
+ * and a registry that cannot be written never changes the outcome of the pass.
+ */
+let doorOutcomeRepos: Promise<Awaited<ReturnType<typeof createPgRepositories>>> | null = null;
+async function recordMeetingDoorOutcome(taskId: string, outcome: DoorOutcome): Promise<void> {
+  const connection = controlPlaneUrlFromEnv();
+  if (connection === null) return;
+  try {
+    doorOutcomeRepos ??= createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
+    await recordDoorOutcome((await doorOutcomeRepos).doors, taskId, outcome, new Date().toISOString());
+  } catch (error) {
+    console.warn(`RCD_TASK ${taskId}: the door's last ${outcome === "SUCCESS" ? "success" : "failure"} could not be recorded — ${error instanceof Error ? error.message : String(error)}`);
+  }
 }
 
 interface SupervisorFailure {
@@ -829,11 +848,13 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
       console.error(`RCD_TASK ${pending.task.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${durableIssue}`);
     } else if (promoted) {
       verifiedSourceSuccesses += 1;
+      await recordMeetingDoorOutcome(pending.task.id, "SUCCESS");
       captureTaskReceipt(pending, receipt, "VERIFIED_SOURCE_SUCCESS");
       console.log("RCD_RECEIPT=" + JSON.stringify(receipt));
       console.log(`RCD_TASK ${pending.task.id}: GOOD (${receipt.state})`);
     } else {
       verifiedSourceFailures += 1;
+      await recordMeetingDoorOutcome(pending.task.id, "FAILURE");
       captureTaskReceipt(pending, receipt, "VERIFIED_SOURCE_FAILURE");
       console.log("RCD_RECEIPT=" + JSON.stringify(receipt));
       console.log(`RCD_TASK ${pending.task.id}: SOURCE_HELD_LKG (${receipt.state})`);

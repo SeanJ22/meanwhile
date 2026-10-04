@@ -17,3 +17,7 @@ BR-05: re-read AdminConfig on each runner pass and call `readSetting(config, DET
 ## 2026-10-04 13:45Z — observation from production (read-only)
 
 The control-plane `cp_runner_heartbeat` (pilot-runner) shows `lastCycleOk: false` on every reading River took today (06:00Z–13:44Z). `cycle.lastError` is null, and `nextCycleReason` reads "Directed hunt ZIP 85122 (Census ZCTA): eligible work remains without a dispatch; bounded retry in 10 minutes." If a cycle that leaves eligible work undispatched counts as not OK, Admin may be showing a false failure. If it's a real failure, it's yours: CH-01 and CH-08 live checks depend on it. Release 1 (dcddcf5) was adopted, with testedSha dcddcf5 at 13:43:56Z.
+
+## 2026-10-04 14:00Z — production observation after release 1
+- 174 of 179 aborted ACQUIRER attempts between 13:43Z and 13:51Z were dispatched to api.marginalia.nu while its circuit was latched until 14:00:59Z. They cost nothing, but every dispatch is wasted. Dispatch should skip a latched provider. This bears on CH-06 and the CH-28 throughput claims.
+- No paid worker has dispatched since 05:52Z; the last paid Scouts were refused by SCOUT_COST_CEILING. The ceiling is Sean's spending setting and stays as it is. But CH-02, DB-37/40/42 and DP-08 can't be checked live until paid work runs.

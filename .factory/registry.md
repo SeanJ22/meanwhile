@@ -3,7 +3,7 @@ worker: registry
 provider: Claude
 run_id: session_01Gzddi9NT9jvbbesVsdSaTU (Claude Sonnet 5.5)
 lock: registry-20261004T080153Z-16054
-heartbeat: 2026-10-04T08:37:32Z
+heartbeat: 2026-10-04T08:39:21Z
 on_river: none
 ready: DB-09, DB-10, DB-11, DB-12, DB-25 (library; runner hook pending), DB-13 (runner side; child hook pending), DB-21 (hand-wired doors in runner; derived members need one-line hook) — cumulative, exact ready commit ffa73d305583f6a9375b718c147827a6321dcc95. Earlier: 426c69a20759c97ca275009dbbdf0a43879ba41c (DB-09..DB-12, DB-25).
 checks: full `pnpm test` (env -u DATABASE_URL -u WTP_ASSET_STORE) at the DB-13 tree: 9097 pass, 1 fail (official-page version key, re-keyed to ebf07e47c8ea and re-run: pass); tsc clean; eslint clean on changed files; runner-reading tests 190/190; new tests door-registry-pass/-outcome and updated door-registry-rows pass @ ffa73d305583f6a9375b718c147827a6321dcc95. NOT checked live: switch WTP_DOORS_READ stays off.

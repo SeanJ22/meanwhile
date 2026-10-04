@@ -161,6 +161,8 @@ export function meetingCardSources(
   const entries: CardSource[] = [
     { what: `This sitting — ${meeting.title}`, provenance: meeting.provenance },
   ];
+  // BX-10: the recording is linked from the publisher's own record of the sitting, so that record is its source.
+  if (meeting.videoUrl) entries.push({ what: "The recording of this sitting", provenance: meeting.provenance });
 
   for (const holder of representation) {
     const source = holderSource(holder, `Who sits on this body — ${holder.name}`);

@@ -1,9 +1,9 @@
-build_state: waiting
+build_state: active
 worker: hunters
 provider: Claude
 run_id: session_018RBYe1K4Ya5TSyE7CzC2T6
-lock: none
-heartbeat: 2026-10-04T07:25:53Z
+lock: hunters-20261004T072606Z-s018RBY
+heartbeat: 2026-10-04T07:26:06Z
 on_river: none
 ready: CH-02 at 9ae2d28bd8aba50e493664def23666c25a1eef3e; CH-06 at 89c20a3a107df0573005bade4344c8fcee7a953b; hooks BR-08 and DB-09 at 48dca0016542e2a864dd10cb581b06d8a1a9a26b (DB-09 hook adds the doors table to the console-input query, so it must fold after registry DB-09 creates cp_doors)
 checks: CH-06: tsc --noEmit clean; eslint 0 errors on workers/ and new test; tests/worker-fleet-*, cycle-lease-startup, dead-lease-sweep, new lease-runtime-once: 192/192 pass (run with DATABASE_URL and WTP_ASSET_STORE unset). Not run: full CI selector, live Admin tasks-per-hour check. CH-02 checks as before.

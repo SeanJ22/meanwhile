@@ -164,6 +164,7 @@ const RUNTIME_OWNED = [
      not a corpus signal; a registration pass must never reset it. */
   "absentUntil",
   "absenceUnlock",
+  "absenceReopened",
   /* The owner's dispatch materialized this row (MW-028). A provider that
      re-emits it without the mark must not erase the mark that keeps it owed. */
   "materializedBy",

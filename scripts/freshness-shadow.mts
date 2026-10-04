@@ -316,7 +316,6 @@ import { OWNER_SURFACE_FORMAT_VERSION, type RunnerHeartbeat } from "../lib/contr
 import type { FreshnessCycleOutcome } from "../lib/control-plane/owner-surface.ts";
 import {
   appendFreshnessCycleDigest,
-  freshnessCycleOutcomes,
 } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { DIGEST_LOG_KEY } from "../lib/control-plane/admin-data.ts";
 import {
@@ -3530,7 +3529,9 @@ leavePromotionTail();
 const finalizationReads = canary ? null : Promise.allSettled([
   repos.scoutResults.readAll(),
   repos.costs.readSince(new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
-  repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE"),
+  repos.ownerDigests.readRecentWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE",
+    Number.MAX_SAFE_INTEGER, { runtimeOutcome: ["kind", "startedAt", "research"] },
+    new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
   readMethodCandidateStore(repos),
   dry ? Promise.resolve(null) : readMethodKnowledge(repos),
 ] as const);
@@ -3551,7 +3552,9 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
     const since = Date.parse(at) - RESEARCH_BOUNDS.windowHours * 3_600_000;
     if (historyRead.status === "rejected") throw historyRead.reason;
     const priorDigests = historyRead.value;
-    for (const rec of freshnessCycleOutcomes(priorDigests)) {
+    for (const row of [...priorDigests].reverse()) {
+      const rec = (row as { runtimeOutcome?: Pick<FreshnessCycleOutcome, "kind" | "startedAt" | "research"> }).runtimeOutcome;
+      if (rec?.kind !== "FRESHNESS_CYCLE") continue;
       const lanes = rec.research?.lanes;
       if (!lanes || Date.parse(rec.startedAt) < since) continue;
       windowCycles.push({

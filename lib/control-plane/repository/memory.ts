@@ -226,9 +226,12 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
       value: string,
       limit: number,
       projection: RecordProjection,
+      recordedAtSince?: string,
     ): Promise<readonly unknown[]> => {
+      const since = recordedAtSince === undefined ? null : Date.parse(recordedAtSince);
       const matches = (partitions.get(key) ?? [])
-        .filter((entry) => jsonTextAtPath(entry.record, jsonPath) === value);
+        .filter((entry) => jsonTextAtPath(entry.record, jsonPath) === value &&
+          (since === null || Date.parse(entry.at) >= since));
       const bounded = Math.max(0, Math.trunc(limit));
       return matches
         .slice(Math.max(0, matches.length - bounded))

@@ -766,7 +766,7 @@ export function pgAppendOnlyRepository<T>(
       return out;
     },
 
-    async readRecentWhere(key, path, value, limit, projection) {
+    async readRecentWhere(key, path, value, limit, projection, recordedAtSince) {
       /* `readWhere` newest first, stopped at `limit` matches, each record
          narrowed in the SELECT list: the database projects only the rows it
          returns, and `limit` bounds the response, so this needs no paging.
@@ -778,10 +778,10 @@ export function pgAppendOnlyRepository<T>(
         "readRecentWhere",
         "PAGE",
         `SELECT ${narrowed} AS record FROM ${table}
-         WHERE log_key = $1 AND record #>> '${jsonPath}' = $2
+         WHERE log_key = $1 AND record #>> '${jsonPath}' = $2${recordedAtSince === undefined ? "" : " AND recorded_at >= $4::timestamptz"}
          ORDER BY position DESC
          LIMIT $3`,
-        [key, value, Math.max(0, Math.trunc(limit))],
+        [key, value, Math.max(0, Math.trunc(limit)), ...(recordedAtSince === undefined ? [] : [recordedAtSince])],
       )) as Record<string, unknown>[];
       return rows.map((r) => parseValue<unknown>(r.record, `${table} ${key}`));
     },

@@ -7,8 +7,8 @@
  * 2026-08-23 by reading each stamp site against the retrieval it sits in.
  */
 import {
-  CONCLUDED_LOOKBACK_DAYS,
-  UPCOMING_HORIZON_DAYS,
+  MEETING_HELD_HORIZON_DAYS,
+  MEETING_HELD_LOOKBACK_DAYS,
 } from "../../meetings/constants.ts";
 import {
   meetingBodiesFor,
@@ -146,8 +146,8 @@ export function legistarStartsAt(
  * honestly reported what it had asked for. Deriving them is what makes the
  * drift impossible rather than merely noticed.
  */
-const WINDOW_FORWARD_DAYS = UPCOMING_HORIZON_DAYS;
-const WINDOW_BACK_DAYS = CONCLUDED_LOOKBACK_DAYS;
+const WINDOW_FORWARD_DAYS = MEETING_HELD_HORIZON_DAYS;
+const WINDOW_BACK_DAYS = MEETING_HELD_LOOKBACK_DAYS;
 
 /** A raw event carries its client through the transform, since normalize() is pure. */
 export interface LegistarEventWithClient {

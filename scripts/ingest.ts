@@ -28,9 +28,9 @@ import {
 import {
   MEETING_HELD_HORIZON_DAYS,
   MEETING_HELD_LOOKBACK_DAYS,
-  meetingFetchedWindowAt,
   meetingHeldWindowAt,
 } from "../lib/meetings/constants.ts";
+import { meetingFetchedWindowFor } from "../lib/meetings/fetch-window.ts";
 import {
   attributionSummary,
   resolveMeetingBodies,
@@ -1339,8 +1339,8 @@ export function reconcileSuccessfulMeetingPartition(input: {
    */
   readonly reviewedVenues?: () => readonly VenueEntry[];
   /**
-   * The dates this read actually fetched. Omitted, the shown 90-day window
-   * each way, which is what every adapter fetches until DB-03 to DB-05.
+   * The dates this read actually fetched. Omitted, the held 120-day window each way for an adapter that fetches it
+   * (`HELD_WINDOW_FETCH_SOURCES`), else the shown 90 days.
    */
   readonly fetchedWindow?: { readonly lowerBound: string; readonly upperBound: string };
   /**
@@ -1351,7 +1351,7 @@ export function reconcileSuccessfulMeetingPartition(input: {
   readonly movedToHistory?: ReadonlyMap<string, MeetingHistoryMoveRecord>;
 }): SuccessfulMeetingPartitionReconciliation {
   const window = meetingHeldWindowAt(input.generatedAt);
-  const fetched = input.fetchedWindow ?? meetingFetchedWindowAt(input.generatedAt);
+  const fetched = input.fetchedWindow ?? meetingFetchedWindowFor(input.sourceName, input.generatedAt);
   if (window === null || fetched === null) throw new Error(`MEETING_RECONCILIATION_CLOCK_INVALID:${input.generatedAt}`);
   const { lowerBound, upperBound } = window;
   const lower = Date.parse(lowerBound);

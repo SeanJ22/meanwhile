@@ -32,7 +32,7 @@ heartbeat: 2026-10-04T07:35:15Z
 - Notifications: PushNotification is available to River.
 - Neon MCP is connected with write tools exposed. River uses only read-only queries, as authorized.
 - Netlify MCP: coding-context tool only. No deploy/site-settings reads seen yet.
-- Browser: Chromium and Playwright installed. Public pages can be checked. Admin needs Sean's Google sign-in, so Admin screens are a known verification limitation.
+- Browser: Chromium runs, at `/opt/pw-browsers/chromium` (Playwright's bundled headless shell 1234 is missing). **This environment's network policy blocks meanwhileusa.com, admin.meanwhileusa.com, api.netlify.com, console.neon.tech and tiles.meanwhilemaps.com**: CONNECT returns 403 at the egress proxy, and WebFetch reports EGRESS_BLOCKED. Only GitHub and package registries are reachable. Until Sean allows those hosts in this cloud environment's network settings, live checks run only through GitHub Actions (post-deploy-integrity reads the deployed site) and the Neon MCP connection (read-only). No rendered page, button or mobile layout can be checked from River. That is an open verification gap, not a pass. Admin also needs Sean's Google sign-in.
 
 ## Release work
 
@@ -82,4 +82,5 @@ Actions minutes, Netlify builds, runs: not yet measured.
 
 ## needs_Sean
 
-none yet
+1. Allow egress to meanwhileusa.com, admin.meanwhileusa.com, test.meanwhileusa.com and api.netlify.com in the River cloud environment's network policy (environment settings → network access). Without it, River cannot check live pages in a browser.
+2. People lane, CA-01: that session's permission classifier denied the verification commands. Allow it there, or say to leave CA-01 parked.

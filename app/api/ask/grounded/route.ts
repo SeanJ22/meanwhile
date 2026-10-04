@@ -58,6 +58,7 @@ import { composeBodyRoster, composeReaderOfficials, placeNamesOf, readerOfficial
 import { areaMeetingsQuestion, composeAreaMeetings, type AreaSitting } from "@/lib/ask/area-meetings";
 import { ballotQuestionShape, composeBallotSummary, composeOfficeField, contestsForBallotAsk } from "@/lib/ask/ballot-summary";
 import { composeSittingAnswerWithBasis, settleSittingComposition, sittingVenue, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
+import { composeOwnWordsAnswer } from "@/lib/ask/own-words";
 import { composeMeasureMeaningAnswer } from "@/lib/ask/measure-meaning";
 import { composeGroupMoneyAnswer, composeMoneyAnswer, composeNoRaceMoneyAnswer, contestFitsBody, moneyQuestionShape } from "@/lib/ask/money-answer";
 import { codeBestReading, speculationVerdict, type ReadingOutcome } from "@/lib/ask/speculative-reading";
@@ -2582,7 +2583,8 @@ export async function POST(request: Request) {
     denominators.recordsExcludedOffSubject = relevant.excluded.length;
     const packRecords = relevant.records;
 
-    if (stanceAnswerability({ subject, question }) === "UNVERIFIED_PERSONAL_STANCE") {
+    const ownWordsComposed = composeOwnWordsAnswer({ subject, question, records: packRecords });
+    if (!ownWordsComposed && stanceAnswerability({ subject, question }) === "UNVERIFIED_PERSONAL_STANCE") {
       const pageMatches = packRecords.filter((record) => record.kind === "SOURCE_PASSAGE").length;
       denominators.personalStanceVerified = 0;
       denominators.linkedSourcePassages = pageMatches;
@@ -2814,8 +2816,10 @@ export async function POST(request: Request) {
     const preferredBallot = ballotAsk?.kind === "OFFICE" ? ballotSettled.composed : null;
     const measureSettled = settleSittingComposition(composeMeasureMeaningAnswer({ subject, question, records: packRecords }),
       (text, urls) => validateAnswer(text, urls, pack, bodies));
-    const composed = preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
-    const composedWhy = preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
+    const ownWordsSettled = settleSittingComposition(ownWordsComposed,
+      (text, urls) => validateAnswer(text, urls, pack, bodies));
+    const composed = ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
+    const composedWhy = ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
       : sittingSettled.composed ? "composed-from-sitting-records"
         : moneySettled.composed ?? groupSettled.composed ? "composed-from-money-records"
           : officialsSettled.composed ? "composed-from-officeholder-records"

@@ -1,3 +1,4 @@
+import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type { BallotSet } from "./types.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 
@@ -27,7 +28,9 @@ export function genericBallotProblems(value: GenericBallotProjection): string[] 
 }
 
 export async function readGenericBallotProjection(options: PromotedCivicDataReadOptions = {}) {
-  const result = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE, options);
+  const read = (readOptions: PromotedCivicDataReadOptions) => readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE, readOptions);
+  const result = Object.keys(options).length ? await read(options)
+    : await readPromotedEdgeFirst("BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE, read, "General ballot");
   if (result.kind === "PROMOTED") {
     const problems = genericBallotProblems(result.value);
     if (problems.length) throw new Error(`GENERIC_BALLOT_INVALID:${problems.join(" ")}`);

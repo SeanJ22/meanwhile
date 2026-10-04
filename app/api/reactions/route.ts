@@ -1,5 +1,5 @@
 import { measureRecordsForBallot } from "@/lib/ballot/measure-records";
-import { ballotSourceForTargetId } from "@/lib/ballot/registry";
+import { readerBallotSourceForTargetId } from "@/lib/ballot/reader-sources";
 import { writeReaction } from "@/lib/db/reactions";
 import { raiseWriteAlarm } from "@/lib/db/write-alarm";
 import { noteSubmission } from "@/lib/db/intake-limiter";
@@ -91,7 +91,7 @@ interface ReactionAuthorityReaders {
 const reactionAuthorityReaders: ReactionAuthorityReaders = {
   candidateTargets: getCandidateTargetIds,
   provisionTargets: async (targetId) => {
-    const authority = ballotSourceForTargetId(targetId);
+    const authority = await readerBallotSourceForTargetId(targetId);
     if (!authority) return new Set();
     const ballot = authority.source.normalize(await authority.source.fetch());
     return getProvisionTargetIds(measureRecordsForBallot(ballot));

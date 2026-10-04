@@ -7,7 +7,7 @@ import { filingsForDivisions, type OfficialFiling } from "@/lib/civic-data/offic
 import { readOfficialFilingsForReader } from "@/lib/civic-data/curated-reader-read-model";
 
 import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
-import { ballotSourcesForDivisions } from "@/lib/ballot/registry";
+import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { coverageNotesForScope } from "@/lib/ballot/coverage-notes";
 import {
   ballotAuxiliaryPreloadSucceeded,
@@ -1001,7 +1001,7 @@ export default async function BallotPage({
      */
     const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds);
     askOcdIds = ocdIds;
-    for (const { state, source } of ballotSourcesForDivisions(ocdIds)) {
+    for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds)) {
       try {
         const candidate = source.normalize(await source.fetch());
         const hit = contestsForDivisions(candidate, ocdIds);

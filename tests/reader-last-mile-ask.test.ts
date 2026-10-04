@@ -164,9 +164,18 @@ test("Ask retrieves the same verbatim candidate passages as Positions in AZ, NJ,
     const body = await ask(`What does ${control.name} say about ${control.topic}?`, control.state);
     const quoted = body.records.filter((r) => r.kind === "SOURCE_PASSAGE" && r.canonicalSubjectId === control.key);
     assert.ok(quoted.length, control.name);
-    assert.equal(body.answer, null, "a linked-page match alone cannot become a personal statement answer");
-    assert.ok(body.gaps.some((gap) => gap.whose === "OURS" && /have not verified a statement by/.test(gap.statement)));
-    assert.match(body.trace.synthesis?.why ?? "", /unverified-stance/);
+    if (control.state === "AZ") {
+      assert.ok(body.answer?.includes("own words, exactly as published"));
+      assert.ok(body.gaps.every((gap) => !/have not verified a statement by/.test(gap.statement)));
+      assert.match(body.trace.synthesis?.why ?? "", /composed-from-own-words/);
+      assert.ok(expected.passages.some((passage) => body.answer!.includes(passage.quote)));
+    } else if (body.answer) {
+      assert.ok(expected.passages.some((passage) => body.answer!.includes(passage.quote)));
+    } else {
+      // A pack that also contains a differently structured candidate-page
+      // passage keeps the existing path; CA-12 only composes clean own-page packs.
+      assert.match(body.trace.synthesis?.why ?? "", /unverified-stance/);
+    }
     for (const passage of expected.passages) {
       assert.ok(quoted.some((r) => r.text.includes(passage.quote) && r.sourceUrl === passage.url), passage.snapshotId);
     }

@@ -1,9 +1,10 @@
+import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { measureRecordsForBallot } from "../ballot/measure-records.ts";
 import { stateForRosterFile } from "../holdings/runtime-paths.ts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { ballotSourcesForDivisions } from "../ballot/registry.ts";
+import { readerBallotSourcesForDivisions } from "../ballot/reader-sources.ts";
 import { contestsForDivisions } from "../sources/ballot-nj-morris/index.ts";
 import { getGeneralLineup } from "../ballot/general-lineup.ts";
 import { summaryForContest } from "../ballot/measure-summary.ts";
@@ -162,10 +163,11 @@ const EMPTY: BallotForDivisions = {
  */
 export async function loadBallotForDivisions(
   ocdIds: readonly string[],
+  options: PromotedCivicDataReadOptions = {},
 ): Promise<BallotForDivisions> {
   if (ocdIds.length === 0) return EMPTY;
   const loaderFailures: string[] = [];
-  for (const { state, source } of ballotSourcesForDivisions(ocdIds)) {
+  for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds, options)) {
     try {
       const candidate = source.normalize(await source.fetch());
       const hit = contestsForDivisions(candidate, ocdIds);

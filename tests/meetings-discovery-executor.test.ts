@@ -923,3 +923,36 @@ test('discovery caps only known small publishers, leaving larger and unknown web
     else {assert.ok(seen.length>10,JSON.stringify({size,count:seen.length}));assert.equal(spacings,0);}
   }
 });
+
+test("CH-08 NO PROGRESS: a lane stops after its limit of walks in a row that fail on our side, and the rest stay due", async () => {
+  for (const [label, repos] of await eachStore("wtp-discovery-no-progress-")) {
+    let requests = 0;
+    const needs = Array.from({ length: 8 }, (_, i) => need(`az:town:${i}`, "broken.gov"));
+    const pass = await runMeetingsDiscovery(repos, {
+      needs, firstIds: new Set(needs.map(n => n.jurisdictionId)), cycleIndex: 0, maxWalks: Number.MAX_SAFE_INTEGER, noProgressLimit: 3,
+      runtime: runtime(async () => { requests++; throw new Error("transport adapter failure"); }),
+    });
+    assert.equal(requests, 3, `${label}: the lane stopped sending after three failed walks in a row`);
+    assert.equal(pass.walkFailures.length, 3);
+    assert.deepEqual(pass.deferred, needs.slice(3).map(n => n.jurisdictionId), `${label}: the rest stay due`);
+  }
+});
+
+test("CH-08 UNCAPPED: with no walk cap the rotation still moves by its step, and every need is in the window", () => {
+  const needs = Array.from({ length: 30 }, (_, i) => ({ jurisdictionId: `az:town:${String(i).padStart(2, "0")}` }));
+  const first = rotationWindow(needs, 0, Number.MAX_SAFE_INTEGER, 12);
+  const next = rotationWindow(needs, 1, Number.MAX_SAFE_INTEGER, 12);
+  assert.equal(first.length, 30);
+  assert.equal(new Set(next.map(n => n.jurisdictionId)).size, 30);
+  assert.equal(first[0].jurisdictionId, "az:town:00");
+  assert.equal(next[0].jurisdictionId, "az:town:12", "the start moves by the step, not by the cap");
+});
+
+test("CH-08 LANES: the three discovery passes start together beside the worker wave unless WTP_DISCOVERY_SERIAL=1 keeps the old order", () => {
+  const source = readFileSync("scripts/freshness-shadow.mts", "utf8");
+  assert.match(source, /process\.env\.WTP_DISCOVERY_SERIAL === "1"/);
+  assert.match(source, /discoveryLaneRun = runIndependentRuntimePass\(\[\s*timed\("meetings-discovery"[\s\S]*timed\("campaign-sites"[\s\S]*timed\("candidate-publications"/);
+  assert.match(source, /runMeetingsDiscoveryPass\(dispatchDeadlineMs, Number\.MAX_SAFE_INTEGER\)/, "the new path is bounded by the time left, not a walk count");
+  assert.match(source, /runMeetingsDiscoveryPass\(Date\.now\(\) \+ MEETINGS_DISCOVERY_BUDGET_MS, MEETINGS_DISCOVERY_MAX_WALKS\)/, "the old path keeps 12 walks and 60 s");
+  assert.ok(source.indexOf("await discoveryLaneRun") > source.indexOf("const autonomous = await runAutonomousProcesses()"), "the round joins the lanes after the worker wave, before finalization");
+});

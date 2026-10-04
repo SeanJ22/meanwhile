@@ -1034,11 +1034,12 @@ export function rotationWindow<T extends { readonly jurisdictionId: string }>(
   needs: readonly T[],
   cycleIndex: number,
   size: number,
+  step: number = size,
 ): readonly T[] {
   if (needs.length === 0 || size <= 0) return [];
   const sorted = [...needs].sort((a, b) => (a.jurisdictionId < b.jurisdictionId ? -1 : a.jurisdictionId > b.jurisdictionId ? 1 : 0));
   const span = Math.min(sorted.length, size * 3);
-  const start = ((cycleIndex * size) % sorted.length + sorted.length) % sorted.length;
+  const start = ((cycleIndex * step) % sorted.length + sorted.length) % sorted.length;
   return Array.from({ length: span }, (_, i) => sorted[(start + i) % sorted.length]);
 }
 
@@ -1118,6 +1119,10 @@ export async function runMeetingsDiscovery(
     readonly runtime: DiscoveryRuntime;
     readonly cycleIndex: number;
     readonly maxWalks: number;
+    /** How far the rotation's start moves each cycle; default maxWalks. A time-bounded pass sets it so an uncapped window still comes round. */
+    readonly rotationStep?: number;
+    /** Stop, deferring the rest, after this many walks in a row that failed on our side or ran out of time. */
+    readonly noProgressLimit?: number;
     /** Jurisdictions an owner dispatch materialized: walked before the rotation, in dispatch priority. */
     readonly firstIds?: ReadonlySet<string>;
     /** Jurisdictions another executor is working now (an open occurrence): never walked by this one too. */
@@ -1137,6 +1142,7 @@ export async function runMeetingsDiscovery(
     walkable.filter((n) => input.firstIds?.has(n.jurisdictionId) !== true && !hinted.has(n.jurisdictionId)),
     input.cycleIndex,
     input.maxWalks,
+    input.rotationStep,
   );
   const window = [...dispatchedFirst, ...hintedFirst, ...rotation];
   const walked: MeetingsDiscoveryAttempt[] = [];
@@ -1147,9 +1153,10 @@ export async function runMeetingsDiscovery(
   const walkFailures: { jurisdictionId: string; why: string }[] = [];
   const nowMs = Date.parse(input.runtime.now());
   let walksStarted = 0;
+  let stalledInARow = 0;
 
   for (const need of window) {
-    if (walksStarted >= input.maxWalks || input.runtime.budget.spent()) {
+    if (walksStarted >= input.maxWalks || input.runtime.budget.spent() || stalledInARow >= (input.noProgressLimit ?? Infinity)) {
       deferred.push(need.jurisdictionId);
       continue;
     }
@@ -1178,6 +1185,7 @@ export async function runMeetingsDiscovery(
       if (error instanceof DiscoveryTimeSpent) {
         deferred.push(need.jurisdictionId);
         cutShort.push({ jurisdictionId: need.jurisdictionId, requests: error.requestCount, search: error.search });
+        stalledInARow++;
         continue;
       }
       /*
@@ -1185,8 +1193,10 @@ export async function runMeetingsDiscovery(
        * cost every other walk of the cycle its record. Nothing is recorded as a reading, so the need stays due.
        */
       walkFailures.push({ jurisdictionId: need.jurisdictionId, why: (error instanceof Error ? error.message : String(error)).slice(0, 400) });
+      stalledInARow++;
       continue;
     }
+    stalledInARow = 0;
     walked.push(attempt);
     try {
       await repos.discoveryAttempts.append(need.jurisdictionId, attempt.attemptId, attempt, attempt.finishedAt);

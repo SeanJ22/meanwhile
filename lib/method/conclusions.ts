@@ -55,8 +55,6 @@ import { isTerminalState, type WorkItemState } from "../control-plane/work-item.
 import { atomicWriteJson } from "./candidate.ts";
 import {
   CONCLUSION_STATUSES,
-  applyReopenings,
-  findReopenings,
   isClosing,
   type ConclusionStatus,
   type Jurisdiction,
@@ -225,31 +223,6 @@ export function withdrawConclusion(
     withdrawn: true,
     reason: `${withdrawal.kind} ${id} on ${withdrawal.on}; WHAT SURVIVES: ${withdrawal.survives}`,
   };
-}
-
-export interface ReopeningRun {
-  store: ConclusionStore;
-  reopenings: Reopening[];
-  /** The conclusion ids that moved to REOPENED. */
-  reopened: string[];
-}
-
-/**
- * **THE LOOP, CLOSED.** Ask current knowledge which prior conclusions it has
- * grown past, and record the answer on them.
- *
- * `findReopenings` and `applyReopenings` do the reasoning; this supplies the
- * corpus they were always missing and persists what they concluded. A reopening
- * PRESERVES `earnedAtVersion` and `earnedOn` — it adds a fact and erases none.
- */
-export function reopenConclusions(
-  store: ConclusionStore,
-  k: MethodKnowledge,
-  on: string,
-): ReopeningRun {
-  const reopenings = findReopenings(k, store);
-  const applied = applyReopenings(store, reopenings, on) as ConclusionRecord[];
-  return { store: applied, reopenings, reopened: reopenings.map((r) => r.conclusion.id) };
 }
 
 /* ------------------------------------------------- WHAT A REOPENING DOES TO A WORKITEM */

@@ -66,6 +66,11 @@ export function verifiedWorkerRecords(input: {
   plan: AutonomousWorkPlan; parser: WorkerResultRecord; captures: readonly WorkerPublicationCapture[]; now: string;
   /** Every worker result, so a BROKE audit of this extraction pulls what it broke. */
   results?: readonly WorkerResultRecord[];
+  /**
+   * A pulled record leaves the published version (DP-15) instead of holding the whole publication: the
+   * result may then publish fewer records, or none, and `pulledRecords` names what the audit took out.
+   */
+  pullRemoves?: boolean;
 }) {
   const { plan, parser, now } = input;
   const contract = plan.contract;
@@ -75,7 +80,7 @@ export function verifiedWorkerRecords(input: {
   requirePublication(extraction.role === "PARSER" && extraction.verdict === "EXTRACTED", "PARSER_RESULT_UNRESOLVED");
   if (extraction.role !== "PARSER") throw new Error("WORKER_PUBLICATION_PARSER_RESULT_UNRESOLVED");
   const pulled = input.results ? auditPull(input.results, parser) : null;
-  requirePublication(!pulled?.all, "AUDIT_BROKE:the Auditor broke this extraction; a new extraction is owed");
+  requirePublication(!pulled?.all || input.pullRemoves, "AUDIT_BROKE:the Auditor broke this extraction; a new extraction is owed");
   const primary = input.captures.find(c => c.evidence.artifactId === extraction.artifactId);
   requirePublication(primary && captureIntact(primary), "PRIMARY_CAPTURE_MISSING_OR_INCOMPLETE");
   const linkingPage = linkingPageFrom(primary.evidence.canonicalUrl, input.captures.filter(captureIntact).map(c => c.evidence));
@@ -92,7 +97,9 @@ export function verifiedWorkerRecords(input: {
 ${f.field}`));
   const heldRecordIds: string[] = [];
   const records: ParserResult["records"][number][] = [];
+  const pulledRecords: ParserResult["records"][number][] = [];
   for (const record of extraction.records) {
+    if (input.pullRemoves && pulled && (pulled.all || pulled.recordIds.has(record.id))) { pulledRecords.push(record); heldRecordIds.push(record.id); continue; }
     const fields = Object.fromEntries(Object.entries(record.fields).filter(([field]) => !badFields.has(`${record.id}
 ${field}`)));
     const verdict = section3Record({ recordClass: contract.recordClass, fields, page, now, pageVerdict, minimums });
@@ -100,11 +107,11 @@ ${field}`)));
     // Only verified values publish; the rest stay blank and owed.
     records.push({ ...record, fields: Object.fromEntries(Object.entries(record.fields).filter(([field]) => verdict.verifiedFields.includes(field))) });
   }
-  requirePublication(records.length > 0, `NO_RECORD_MEETS_MINIMUMS:${minimums.join(",")}`);
+  requirePublication(records.length > 0 || pulledRecords.length > 0, `NO_RECORD_MEETS_MINIMUMS:${minimums.join(",")}`);
   const captures = linkingPage ? [primary, ...input.captures.filter(c => c.evidence.canonicalUrl === linkingPage.url).slice(0, 1)] : [primary];
   const sourceReceipt = section3SourceReceipt(captures, now, `section3-validator:${parser.id}`,
     `Parser result ${parser.id}: ${records.length} record(s) found on the saved official page inside its freshness window (§3).`);
-  return { contract, extraction: { ...extraction, records }, primary, captures, sourceReceipt, heldRecordIds };
+  return { contract, extraction: { ...extraction, records }, primary, captures, sourceReceipt, heldRecordIds, pulledRecords };
 }
 
 /** The latest completed extraction for a work item: what the Validator checks and publishes. */

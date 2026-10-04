@@ -49,7 +49,7 @@ function contract(observationArtifactIds: readonly string[]): GeneralizedCivicEx
 
 function plan(value: GeneralizedCivicExtractionContract): AutonomousWorkPlan {
   return { version: 1, contract: value, capability: "meetings", jurisdiction: "AZ", sourceRegistryReferences: ["lib/registry/registry.json"],
-    seedUrls: [], sources: [], acquisition: [], detective: [], engineering: [], auditScope: "CAPTURED_ARTIFACT" };
+    seedUrls: [], sources: [], acquisition: [], engineering: [], auditScope: "CAPTURED_ARTIFACT" };
 }
 
 async function harness(t: TestContext) {

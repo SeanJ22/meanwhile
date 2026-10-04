@@ -65,6 +65,8 @@ export interface LegistarEvent {
   EventGuid?: string | null;
   /** "Public", "Not Viewable", null. A MEDIA_RECORD fact, never an outcome. */
   EventVideoStatus?: string | null;
+  /** The recording's address on the publisher's video host; only a link while `EventVideoStatus` is "Public" (BX-10). */
+  EventVideoPath?: string | null;
   /**
    * "Final", "Draft", or null. **"Draft" on all 20 Pima Board sittings from
    * 2026-05-05 to 2026-08-25**, including sittings four months old — so

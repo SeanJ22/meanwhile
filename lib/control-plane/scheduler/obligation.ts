@@ -128,6 +128,8 @@ export interface FreshnessObligation {
   readonly absentUntil?: string | null;
   /** What would reopen a recorded absence before it expires, stored with it (DP-06). Cleared with `absentUntil`. */
   readonly absenceUnlock?: import("./absence.ts").AbsenceUnlock | null;
+  /** The last time a new capability cleared this obligation's absence early, and what it was (DP-10). */
+  readonly absenceReopened?: { readonly at: string; readonly because: string } | null;
   /**
    * Set when the owner's dispatch MATERIALIZED this obligation (MW-028,
    * `lib/control-plane/expansion/dispatch-work.ts`): the registry defined the

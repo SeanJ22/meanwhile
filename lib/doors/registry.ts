@@ -94,7 +94,7 @@ export const MAX_HOLDS = 30;
 export const MAX_CONFIG_KEYS = 40;
 export const MAX_NOTES = 2000;
 export const MIN_CHECK_MINUTES = 5;
-export const MAX_CHECK_MINUTES = 60 * 24 * 30;
+export const MAX_CHECK_MINUTES = 60 * 24 * 400;
 
 const clean = (value: unknown): string => (typeof value === "string" ? value.trim() : "");
 

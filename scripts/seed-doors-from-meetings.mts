@@ -1,5 +1,5 @@
 /**
- * DB-10: the one-time import of today's meeting doors into the Door Registry.
+ * DB-10 and DB-11: the one-time import of today's meeting doors and non-meeting feed doors into the Door Registry.
  *
  * Dry run by default: it says what it would add and writes nothing. `--apply`
  * writes, through the same upsert every derive step uses, so running it twice
@@ -18,6 +18,7 @@ import { createFileRepositories } from "../lib/control-plane/repository/file-sto
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
 import { listDoors } from "../lib/doors/registry.ts";
+import { feedDoorDrafts, seedFeedDoors } from "../lib/doors/seed-feeds.ts";
 import { doorFromDerivedRecord, doorsFromWiringRow, seedMeetingDoors } from "../lib/doors/seed-meetings.ts";
 import type { DerivedWiringRecord } from "../lib/civic-data/derived-meeting-wiring.ts";
 
@@ -64,7 +65,7 @@ const handWired = SOURCE_WIRING.flatMap((row) => {
     return [];
   }
 });
-say(`${handWired.length} hand-wired doors and ${derived.map(doorFromDerivedRecord).length} derived doors found.`);
+say(`${handWired.length} hand-wired doors, ${derived.map(doorFromDerivedRecord).length} derived doors and ${feedDoorDrafts().length} non-meeting feed doors found.`);
 
 if (!FLAGS.has("apply")) {
   const held = await listDoors(repos.doors);
@@ -75,6 +76,9 @@ if (!FLAGS.has("apply")) {
 const counts = await seedMeetingDoors({ repo: repos.doors, wiring: SOURCE_WIRING, derived, deriveInputAt: now, at: now });
 say(`created ${counts.created}, updated ${counts.updated}, unchanged ${counts.unchanged}, kept hand edits ${counts.keptManualEdit}, refused ${counts.refused.length}.`);
 for (const line of counts.refused) say(`refused: ${line}`);
+const feeds = await seedFeedDoors({ repo: repos.doors, deriveInputAt: now, at: now });
+say(`feeds: created ${feeds.created}, updated ${feeds.updated}, unchanged ${feeds.unchanged}, kept hand edits ${feeds.keptManualEdit}, refused ${feeds.refused.length}.`);
+for (const line of feeds.refused) say(`refused: ${line}`);
 const after = await listDoors(repos.doors);
 say(`the registry now holds ${after.doors.length} doors.`);
-process.exit(counts.refused.length === 0 ? 0 : 2);
+process.exit(counts.refused.length + feeds.refused.length === 0 ? 0 : 2);

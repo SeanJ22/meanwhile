@@ -551,6 +551,12 @@ function lastModifiedAt(value: string | null): number | null {
   return m ? Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]) : null;
 }
 
+/** The publisher's own `LAST-MODIFIED` as an ISO instant (DB-27), or null when the event states none. `DTSTAMP` is never used. */
+export function publisherPostedAt(event: Pick<IcalEvent, "lastModified">): string | null {
+  const at = lastModifiedAt(event.lastModified);
+  return at === null ? null : new Date(at).toISOString();
+}
+
 /**
  * **WHICH OF TWO EVENTS ON ONE ID KEEPS IT, DECIDED BY WHAT THEY SAY.**
  * (2026-09-23.)
@@ -1348,6 +1354,7 @@ export function makeIcalSource(
             ...(online ? { online } : {}),
             ...(venueGap ? { venueGap } : {}),
             agendaUrl: null,
+            ...(publisherPostedAt(event) ? { postedAt: publisherPostedAt(event)! } : {}),
             jurisdiction: wiring.jurisdiction,
             status:
               CANCELED.test(title) || /^CANCELLED$/i.test(event.status ?? "") ||

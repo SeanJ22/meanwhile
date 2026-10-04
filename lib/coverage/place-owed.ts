@@ -1,5 +1,5 @@
 import checklist from "../control-plane/readiness/checklist-profile.json" with { type: "json" };
-import { CHECKLIST_GROUPS, DEADLINE_ITEMS, checklistItemApplies } from "./checklist-map.ts";
+import { CHECKLIST_GROUPS, DEADLINE_ITEMS, canonicalItemId, checklistItem, checklistItemApplies, subjectKindOfUnit } from "./checklist-map.ts";
 
 /** A derived capture view, never a publication decision or a second store. */
 export type PlaceSubjectKind = "division" | "body" | "seat" | "calendar" | "funding" | "contest" | "deadline";
@@ -38,6 +38,12 @@ export interface PlaceOwedItem {
 }
 
 const GROUPS = CHECKLIST_GROUPS as Readonly<Record<PlaceSubjectKind, readonly string[]>>;
+const GROUPED = new Set(Object.values(GROUPS).flat());
+
+/** A kind owes its families' items. A family no kind lists (reference data) is placed by each item's unit. */
+function owedByKind(kind: PlaceSubjectKind, definition: { id: string; group: string }): boolean {
+  return GROUPS[kind].includes(definition.group) || !GROUPED.has(definition.group) && subjectKindOfUnit(definition.id) === kind;
+}
 
 /** Broad kinds preserve unresolved work; a known record only owes its own facts.
  * The rules live in checklist-map.json. */
@@ -93,12 +99,13 @@ export function buildPlaceOwedList(input: {
   const heldByKey = new Map<string, HeldPlaceField[]>();
   for (const field of input.held) {
     if (!field.sourceUrl || Date.parse(field.checkedAt) > now || !Number.isFinite(Date.parse(field.checkedAt))) continue;
-    const key = JSON.stringify([field.subjectId, field.checklistId]);
+    // A shared predicate is one fact: a field kept under MTG-20 counts once, under MTG-17.
+    const key = JSON.stringify([field.subjectId, canonicalItemId(field.checklistId)]);
     heldByKey.set(key, [...(heldByKey.get(key) ?? []), field]);
   }
   return [...subjects.values()].sort((a, b) => a.id.localeCompare(b.id)).flatMap(subject => {
     const inventory = subject.id.includes("#inventory:");
-    const definitions = checklist.definitions.filter(d => GROUPS[subject.kind].includes(d.group) &&
+    const definitions = checklist.definitions.filter(d => owedByKind(subject.kind, d) && checklistItem(d.id)?.countsAs !== "shared" &&
       (subject.kind !== "deadline" || DEADLINE_ITEMS.has(d.id)) &&
       (inventory || appliesToRecord(subject, d) || heldByKey.has(JSON.stringify([subject.id, d.id]))));
     // The inventory is one discovery item, not a fictitious seat or contest.

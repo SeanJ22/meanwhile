@@ -429,6 +429,8 @@ export interface PlaceScoreView {
   readonly groups: readonly ScoreGroup[];
   /** Extension items, counted apart from the headline. Null when the place owes none. */
   readonly extension?: ScoreGroup | null;
+  /** Summary items whose detail items carry the count: listed, out of the denominator. Null when none. */
+  readonly summary?: ScoreGroup | null;
 }
 
 export interface SystemGroup {

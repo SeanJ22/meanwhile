@@ -43,6 +43,8 @@ export interface AdminV6PlaceScore {
   readonly groups: readonly GroupScore[];
   /** Extension items, counted apart from the headline. Null when the place owes none. */
   readonly extension: GroupScore | null;
+  /** Summary items whose detail items carry the count: listed, out of the denominator. Null when none. */
+  readonly summary: GroupScore | null;
 }
 export interface AdminV6PlaceItem {
   readonly key: string;
@@ -133,7 +135,7 @@ export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, ta
       profileVersion: CHECKLIST_PROFILE.version, definitionCount: CHECKLIST_PROFILE.definitionCount, definitions: DEFINITIONS,
       groupNames: GROUP_NAMES, placeGroups, items: windowed.items.map((i) => itemOf(i, read.placeKey, placeSendWords(read.placeKey, read.label, read.divisions))), systemGroups: SYSTEM_GROUPS,
       score: { placeKey: read.placeKey, placeLabel: read.label, covers: read.covers, observedAt: read.observedAt,
-        divisionCount: read.divisions.length, sendWords: placeSendWords(read.placeKey, read.label, read.divisions), target, overall: score.overall, groups: score.groups, extension: score.extension },
+        divisionCount: read.divisions.length, sendWords: placeSendWords(read.placeKey, read.label, read.divisions), target, overall: score.overall, groups: score.groups, extension: score.extension, summary: score.summary },
     },
     missingParts: [
       "The owed list is what the checklist says a place is owed for the governments, districts and bodies we know about. Governments we haven’t found yet are listed as “discover every …” items, so a total here can grow as agents find more.",

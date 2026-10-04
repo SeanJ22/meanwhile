@@ -1,24 +1,18 @@
-import { CHECKLIST_GROUPS } from "./checklist-map.ts";
+import { CHECKLIST_FAMILIES, CHECKLIST_ITEMS } from "./checklist-map.ts";
 
 /**
  * The one set of plain-English names for the checklist's families, shared by
- * Admin's checklist view and the Admin screens. The place families are exactly
- * the groups the overlay says a place owes, so the family rows can add up to
- * the headline score.
+ * Admin's checklist view and the Admin screens. The names live in the overlay
+ * (checklist-map.json); a place family is one that owes items to a place.
  *
  * PURE.
  */
-export const PLACE_GROUP_NAMES: Readonly<Record<string, string>> = {
-  GEO: "Geography", GOV: "Governments", OFF: "Officeholders", MTG: "Meetings", DOC: "Agendas and documents", LEG: "Laws and votes",
-  ELE: "Elections", CAN: "Candidates", CAM: "Campaign finance", FIN: "Government money", PAR: "Taking part",
-  EXE: "Executive actions", PRL: "Public statement profiles",
-};
+const names = (keep: (group: string) => boolean): Readonly<Record<string, string>> =>
+  Object.fromEntries(Object.entries(CHECKLIST_FAMILIES).filter(([group]) => keep(group)).map(([group, family]) => [group, family.name]));
 
-export const GROUP_NAMES: Readonly<Record<string, string>> = {
-  ...PLACE_GROUP_NAMES,
-  ASK: "Ask", GATE: "Setup and safety checks", ACQ: "Finding sources", REC: "Recovery", PUB: "Publishing", SAFE: "Safety and privacy",
-  REF: "Reference data", ENG: "Reader participation",
-};
+/** The groups with at least one item a place owes: those whose items are not system-level. */
+export const PLACE_GROUPS: ReadonlySet<string> = new Set(Object.entries(CHECKLIST_ITEMS)
+  .filter(([, item]) => item?.unit !== "system").map(([id]) => id.slice(0, id.indexOf("-"))));
 
-/** The families a place is scored on, taken from the overlay rather than listed a second time. */
-export const PLACE_GROUPS: ReadonlySet<string> = new Set(Object.values(CHECKLIST_GROUPS).flat());
+export const PLACE_GROUP_NAMES: Readonly<Record<string, string>> = names((group) => PLACE_GROUPS.has(group));
+export const GROUP_NAMES: Readonly<Record<string, string>> = names(() => true);

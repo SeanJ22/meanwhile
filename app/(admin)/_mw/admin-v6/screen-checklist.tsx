@@ -68,6 +68,7 @@ function PlaceScoreCard(props: { readonly score: PlaceScoreView; readonly group:
         {words && <Actions actions={[{ kind: "send-agents", target: v.scopeKey, label: "Send agents to fill the blanks", payload: { words } }]} primaryFirst />}
         {!words && /^geo:[a-z]{2}\.(congressional_district|county)\./.test(v.scopeKey) && <Actions actions={[{ kind: "hunt-start", target: v.scopeKey, label: "Start hunts for the ZIPs here" }]} primaryFirst />}
         {score.extension && <p className={cx(s.p, s.small)}>Extra items beyond the core list, counted apart: {count(score.extension.captured)} of {count(score.extension.total)} captured{score.extension.percent === null ? "" : ` · ${percentWords(score.extension)}`}</p>}
+        {score.summary && <p className={cx(s.p, s.small)}>Summary items, counted through their detail items and left out of the headline: {count(score.summary.captured)} of {count(score.summary.total)} captured</p>}
         <div className={s.stack}>
           {score.groups.map((g) => (
             <button key={g.group} type="button" className={cx(s.row, s.rowButton)} aria-pressed={props.group === g.group} style={props.group === g.group ? { boxShadow: "inset 0 0 0 1px var(--ring)" } : undefined} onClick={() => props.onGroup(g.group)}>

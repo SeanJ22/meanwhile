@@ -1,4 +1,4 @@
-import checklist from "../control-plane/readiness/checklist-profile.json" with { type: "json" };
+import { checklistItem } from "./checklist-map.ts";
 
 /** The one percent formula for a place: Admin, the national list and the runner's
  * place order all read it. Captured means published, captured and waiting to
@@ -8,11 +8,19 @@ import checklist from "../control-plane/readiness/checklist-profile.json" with {
  * PURE. */
 export type PlaceItemState = "published" | "held" | "unpublished" | "stale" | "missing";
 
-const CORE_IDS: ReadonlySet<string> = new Set(checklist.definitions.filter(d => d.originalCore).map(d => d.id));
-
-/** An item is core when Sean's checklist says so; every other civic item is an extension. */
+/** An item is core when the overlay scores it as core; every other civic item is an extension. */
 export function isCoreChecklistItem(checklistId: string): boolean {
-  return CORE_IDS.has(checklistId);
+  return checklistItem(checklistId)?.scoreAs === "core";
+}
+
+/** A summary item's detail items carry its count, so it stays out of the denominator. */
+export function isSummaryChecklistItem(checklistId: string): boolean {
+  return checklistItem(checklistId)?.countsAs === "summary";
+}
+
+/** In the headline: a core item that counts under its own ID. */
+export function isCountedChecklistItem(checklistId: string): boolean {
+  return isCoreChecklistItem(checklistId) && !isSummaryChecklistItem(checklistId);
 }
 
 export function isCapturedState(state: PlaceItemState): boolean {
@@ -25,6 +33,6 @@ export function percentOf(captured: number, total: number): number | null {
 }
 
 export function placePercent(rows: readonly { readonly checklistId: string; readonly state: PlaceItemState }[]): number | null {
-  const core = rows.filter(row => isCoreChecklistItem(row.checklistId));
+  const core = rows.filter(row => isCountedChecklistItem(row.checklistId));
   return percentOf(core.filter(row => isCapturedState(row.state)).length, core.length);
 }

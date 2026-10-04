@@ -17,7 +17,7 @@
  * PURE.
  */
 
-import { isCoreChecklistItem, percentOf } from "../../coverage/place-percent.ts";
+import { isCoreChecklistItem, isSummaryChecklistItem, percentOf } from "../../coverage/place-percent.ts";
 
 export type OwedState = "published" | "held" | "unpublished" | "stale" | "missing";
 
@@ -54,6 +54,8 @@ export interface PlaceScore {
   readonly groups: readonly GroupScore[];
   /** Extension items, counted apart and never part of the headline. Null when the place owes none. */
   readonly extension: GroupScore | null;
+  /** Summary items whose detail items carry the count: listed, but out of the denominator. Null when none. */
+  readonly summary: GroupScore | null;
 }
 
 export const OWED_STATE_WORDS: Readonly<Record<OwedState, string>> = {
@@ -84,8 +86,10 @@ export function scorePlace(rows: readonly OwedRowLike[], groupNames: Readonly<Re
   const by = new Map<string, { -readonly [K in keyof ScoreCounts]: number }>();
   const all = { ...EMPTY } as { -readonly [K in keyof ScoreCounts]: number };
   const extension = { ...EMPTY } as { -readonly [K in keyof ScoreCounts]: number };
+  const summary = { ...EMPTY } as { -readonly [K in keyof ScoreCounts]: number };
   for (const row of rows) {
     if (!isCoreChecklistItem(row.checklistId)) { extension[row.state] += 1; continue; }
+    if (isSummaryChecklistItem(row.checklistId)) { summary[row.state] += 1; continue; }
     const g = groupOf(row.checklistId);
     const counts = by.get(g) ?? { ...EMPTY };
     counts[row.state] += 1;
@@ -97,6 +101,7 @@ export function scorePlace(rows: readonly OwedRowLike[], groupNames: Readonly<Re
     overall: scored("ALL", "Everything this place is owed", all),
     groups: order.map((g) => scored(g, groupNames[g] ?? g, by.get(g)!)),
     extension: Object.values(extension).some((n) => n > 0) ? scored("EXT", "Extra items beyond the core list", extension) : null,
+    summary: Object.values(summary).some((n) => n > 0) ? scored("SUM", "Summary items counted through their detail items", summary) : null,
   };
 }
 

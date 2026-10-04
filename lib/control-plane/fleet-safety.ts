@@ -6,7 +6,7 @@
  * canonical `costs` repository. In-cycle reservations close the race between
  * concurrent model requests until their provider-reported cost is persisted.
  */
-import { costEntryModelRequestBound, type CostEntry } from "./cost.ts";
+import { costEntryModelRequestBound, costEntryWorstCaseUsd, type CostEntry } from "./cost.ts";
 import type { SpendHold } from "./budget.ts";
 import { canonicalModelId } from "../models.ts";
 import { CACHE_RATE_MULTIPLIERS, rateFor, priceMeteredUsage, readMeteredUsage } from "./model-cost.ts";
@@ -114,7 +114,7 @@ export interface FleetSafetySnapshot {
     readonly elapsedMs: number;
   };
   readonly operationalNight: OperationalNight & { readonly modelUsd: number | null };
-  readonly rolling24Hours: { readonly modelUsd: number | null; readonly asOf: string };
+  readonly rolling24Hours: { readonly modelUsd: number | null; readonly asOf: string; readonly worstCaseCharges?: number };
   readonly stoppedBecause: readonly string[];
   readonly deferred: readonly FleetNamedDeferral[];
   readonly providerCircuits: readonly ProviderCircuit[];
@@ -159,7 +159,15 @@ function recordedModelPrice(model: string | null | undefined, cost: CostEntry["c
     (cost.cacheCreationInputTokens === 0 || split.every(amount)) };
 }
 
-function entryModelPrice(entry: CostEntry): { usd: number | null; knownUsd: number; measured: boolean } {
+/** CH-02: a charge no price or request bound covers is counted at its worst
+ * case, so spend stays a number and the budget dial keeps control. */
+function entryModelPrice(entry: CostEntry): { usd: number; knownUsd: number; measured: boolean; worstCase: boolean } {
+  const price = entryModelPriceOrNull(entry);
+  return price.usd === null ? { ...price, usd: Math.max(price.knownUsd, costEntryWorstCaseUsd(entry)), worstCase: true }
+    : { ...price, usd: price.usd, worstCase: false };
+}
+
+function entryModelPriceOrNull(entry: CostEntry): { usd: number | null; knownUsd: number; measured: boolean } {
   if (amount(entry.cost.usd)) return { usd: entry.cost.usd, knownUsd: entry.cost.usd, measured: true };
   if (entry.byModel?.length) {
     // A split must cover the recorded aggregate quantities. A partial split
@@ -193,12 +201,13 @@ export function aggregateModelSpend(
   since: string,
   until: string,
   spendHolds: readonly SpendHold[] = [],
-): { readonly usd: number | null; readonly knownUsd: number; readonly measured: number; readonly unmeasured: number } {
+): { readonly usd: number; readonly knownUsd: number; readonly measured: number; readonly unmeasured: number; readonly worstCaseCharges: number } {
   let usd = 0;
   let knownUsd = 0;
   let measured = 0;
   let unmeasured = 0;
-  const jobs = new Map<string, { usd: number; unknown: boolean }>();
+  let worstCaseCharges = 0;
+  const jobs = new Map<string, { usd: number; worstCaseUsd: number }>();
   const start = Date.parse(since), end = Date.parse(until);
   for (const entry of costs) {
     // Search invoices are tracked separately; the Anthropic token budget must
@@ -217,12 +226,13 @@ export function aggregateModelSpend(
     if (!(at >= start && at <= end)) continue;
     const price = entryModelPrice(entry);
     const jobId = entry.spendHoldJobId ?? entry.attemptId;
-    const job = jobs.get(jobId) ?? { usd: 0, unknown: false };
+    const job = jobs.get(jobId) ?? { usd: 0, worstCaseUsd: 0 };
     knownUsd += price.knownUsd;
     if (price.measured) measured += 1;
     else unmeasured += 1;
-    job.usd += price.usd ?? price.knownUsd;
-    job.unknown ||= price.usd === null;
+    if (price.worstCase) worstCaseCharges += 1;
+    job.usd += price.usd;
+    if (price.worstCase) job.worstCaseUsd += price.usd;
     jobs.set(jobId, job);
   }
   const held = new Map<string, number>();
@@ -235,18 +245,19 @@ export function aggregateModelSpend(
     worstCase.set(hold.jobId, (worstCase.get(hold.jobId) ?? 0) + hold.usd);
     if (hold.settled === null) held.set(hold.jobId, (held.get(hold.jobId) ?? 0) + hold.usd);
   }
-  let unbounded = false;
   for (const [id, job] of jobs) {
-    const bound = job.unknown ? worstCase.get(id) : held.get(id);
-    // Only an exact job identity can cover an unknown charge. Obligation-only
-    // attribution can reuse one hold for several failed attempts.
-    if (job.unknown && (bound === undefined || bound < job.usd)) unbounded = true;
-    usd += Math.max(job.usd, bound ?? 0);
+    // Only an exact job identity can stand in for the worst case of an
+    // unpriced charge: its hold is the job's actual maximum, which is tighter.
+    // Obligation-only attribution can reuse one hold for several failed
+    // attempts, so it never does; the worst case then stays counted.
+    const known = job.usd - job.worstCaseUsd;
+    const exact = job.worstCaseUsd > 0 ? worstCase.get(id) : undefined;
+    usd += exact !== undefined && exact >= known ? exact : Math.max(job.usd, held.get(id) ?? 0);
     held.delete(id);
   }
   // A hold carries no provider or model. Unmatched holds may reserve a paid
   // API/search job, so they cannot be added to Anthropic spend by inference.
-  return { usd: unbounded ? null : usd, knownUsd, measured, unmeasured };
+  return { usd, knownUsd, measured, unmeasured, worstCaseCharges };
 }
 
 export type ProviderFailureClass = "HARD" | "TRANSIENT" | "OTHER";
@@ -357,6 +368,8 @@ export class FleetSafetyController {
   private readonly startedMs: number;
   private readonly historicalNightUsd: number | null;
   private readonly historicalRollingUsd: number | null;
+  /** CH-02: charges in the rolling window counted at worst case because nothing priced them. */
+  private readonly worstCaseCharges: number;
   private readonly night: OperationalNight;
   private readonly paused: boolean;
   private readonly modelHold: string | null;
@@ -425,6 +438,7 @@ export class FleetSafetyController {
     );
     this.historicalNightUsd = input.costLedgerReadable === false ? null : nightSpend.usd;
     this.historicalRollingUsd = input.costLedgerReadable === false ? null : rollingSpend.usd;
+    this.worstCaseCharges = rollingSpend.worstCaseCharges;
     for (const circuit of input.circuits ?? []) {
       if (Date.parse(circuit.eligibleAt) > this.startedMs) this.circuits.set(circuit.provider, circuit);
     }
@@ -847,6 +861,7 @@ export class FleetSafetyController {
       rolling24Hours: {
         modelUsd: this.historicalRollingUsd === null || !this.cycleModelSpendMeasured ? null : this.historicalRollingUsd + this.cycleUsd,
         asOf: now,
+        worstCaseCharges: this.worstCaseCharges,
       },
       stoppedBecause: [...this.stopReasons],
       deferred: [...this.deferrals],

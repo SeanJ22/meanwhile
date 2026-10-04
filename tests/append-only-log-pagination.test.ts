@@ -28,7 +28,7 @@ import { projectRecord } from "../lib/control-plane/repository/types.ts";
 import { aggregateModelSpend } from "../lib/control-plane/fleet-safety.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 
-test("rolling cost reads exclude old rows before transfer, page every recent charge, and keep unknown spend unknown", async () => {
+test("rolling cost reads exclude old rows before transfer, page every recent charge, and count unknown spend at worst case", async () => {
   const since = "2026-10-01T01:00:00.000Z";
   const rows = Array.from({ length: APPEND_ONLY_LOG_READ_PAGE + 1 }, (_, position) => ({
     log_key: "costs", position, record: { role: "SCOUT", recordedAt: since, cost: { usd: position === APPEND_ONLY_LOG_READ_PAGE ? null : 0.01 } },
@@ -44,7 +44,9 @@ test("rolling cost reads exclude old rows before transfer, page every recent cha
   const read = await pgAppendOnlyRepository<CostEntry>(sql as never, "costs").readSince(since);
   assert.equal(pages, 2);
   assert.equal(read.length, rows.length, "no recent charge is dropped at a page boundary");
-  assert.equal(aggregateModelSpend(read, since, "2026-10-02T01:00:00.000Z").usd, null, "an unmeasured recent charge still refuses admission");
+  const spend = aggregateModelSpend(read, since, "2026-10-02T01:00:00.000Z");
+  assert.equal(spend.worstCaseCharges, 1, "an unmeasured recent charge is counted at its worst case, not dropped");
+  assert.ok(spend.usd > 0.01 * (APPEND_ONLY_LOG_READ_PAGE), "the worst case adds to the measured charges");
 });
 
 interface Row {

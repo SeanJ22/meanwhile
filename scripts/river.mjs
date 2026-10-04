@@ -15,6 +15,7 @@
  *   node scripts/river.mjs migrations                    number step-named migrations on river-next
  *   node scripts/river.mjs test [--heartbeat --token T]  pnpm gates on river-next
  *   node scripts/river.mjs promote                       fast-forward river to the tested SHA
+ *   node scripts/river.mjs return <lane> --check C [--output-file F]   send a failure back (returns/<lane>.md)
  *   node scripts/river.mjs release <n> [--dry-run]       one release/<n> PR to main
  *   node scripts/river.mjs release --check-main          did main move after river was tested?
  *   node scripts/river.mjs lock claim|heartbeat|release --branch B --file F --token T [--worker W --run-id R]
@@ -346,6 +347,12 @@ function git(args, { env, input, allowFail = false } = {}) {
 }
 
 const ok = (args) => git(args, { allowFail: true }) !== null;
+
+/** Run git and keep what it printed either way, for a return record. */
+function gitTry(args) {
+  const run = spawnSync("git", args, { cwd: ROOT, encoding: "utf8", maxBuffer: 256 * 1024 * 1024, windowsHide: true });
+  return { ok: run.status === 0, output: `${run.stdout ?? ""}${run.stderr ?? ""}`.trim() };
+}
 const remoteRef = (branch) => `refs/remotes/origin/${branch}`;
 
 /** Fetch branches into explicit remote-tracking refs. Missing branches are skipped. */
@@ -517,6 +524,9 @@ export function scan({ now = Date.now() } = {}) {
       stale_lock: locked && (age === null || age >= STALE_LOCK_MS),
     };
     if (lane.startsWith("adapter-") && pending) {
+      // `READY: adapter <kind>` names no plan step; the stream itself is the
+      // step, so a release carrying only an adapter repair still has contents.
+      if (!pending.steps.length) pending.steps = [lane];
       const files = git(["diff", "--name-only", "--no-renames", `${river}...${pending.ready_sha}`]).split("\n").filter(Boolean)
         .filter((path) => !path.startsWith(".factory/"));
       entry.outside_adapter_path = files.filter((path) => !adapterPath(path));
@@ -538,7 +548,7 @@ export function scan({ now = Date.now() } = {}) {
 /* fold                                                                       */
 /* -------------------------------------------------------------------------- */
 
-function fold(flags) {
+async function fold(flags) {
   requireClean();
   const plan = scan();
   const wanted = flags.lanes ? new Set(flags.lanes.split(",").map((lane) => lane.trim())) : null;
@@ -560,11 +570,17 @@ function fold(flags) {
     const lane = ready.find((entry) => entry.lane === name);
     const { ready_sha: sha, steps } = lane.ready;
     const message = `River: fold ${name} READY ${short(sha)} (${steps.join(", ") || "no step ids"})`;
-    if (!ok(["merge", "--no-ff", "--no-edit", "-m", message, sha])) {
+    const merged = gitTry(["merge", "--no-ff", "--no-edit", "-m", message, sha]);
+    if (!merged.ok) {
       git(["merge", "--abort"], { allowFail: true });
       record.conflict = { lane: name, ready_sha: sha, steps };
       record.head = git(["rev-parse", "HEAD"]);
       writeScratch("fold.json", record);
+      // The runner's adapter engineer cannot read a session's terminal: its
+      // stream's failure goes back to it, and to the fix list, as a record.
+      if (name.startsWith("adapter-")) {
+        await recordReturn({ lane: name, check: "fold", output: merged.output, readySha: sha, steps, riverSha: plan.river });
+      }
       throw new Refusal(`fold stopped: ${name} (${short(sha)}) conflicts with river-next; merge aborted at ${short(record.head)}. Return it to ${name} or resolve by hand.`);
     }
     // Coordination files never reach the application tree: drop them from the merge itself.
@@ -669,7 +685,17 @@ async function test(flags) {
   const [command, ...args] = whichPnpm() ? ["pnpm", "gates"] : ["corepack", "pnpm", "gates"];
   const startedAt = nowIso();
   console.log(`river test: ${command} ${args.join(" ")} on ${short(sha)}`);
-  const child = spawn(command, args, { cwd: ROOT, stdio: "inherit", shell: process.platform === "win32" });
+  // Output is passed through as it runs and its tail kept, so a failure can be
+  // returned to the lane that wrote it with the lines that show it.
+  const child = spawn(command, args, { cwd: ROOT, stdio: ["inherit", "pipe", "pipe"], shell: process.platform === "win32" });
+  const tail = [];
+  const keep = (sink) => (chunk) => {
+    sink.write(chunk);
+    tail.push(...`${chunk}`.split("\n"));
+    if (tail.length > 2000) tail.splice(0, tail.length - 2000);
+  };
+  child.stdout.on("data", keep(process.stdout));
+  child.stderr.on("data", keep(process.stderr));
   let abandoned = null;
   const timer = flags.heartbeat ? setInterval(() => {
     try {
@@ -694,6 +720,21 @@ async function test(flags) {
   };
   writeScratch("test.json", result);
   console.log(`river test: gates ${result.gates} on ${short(sha)} (recorded in .scratch/river/test.json)`);
+  if (result.gates === "fail") {
+    const output = tail.join("\n");
+    mkdirSync(SCRATCH, { recursive: true });
+    writeFileSync(join(SCRATCH, "test-output.txt"), `${output}\n`, "utf8");
+    const folded = readScratch("fold.json");
+    const lanes = folded?.lanes ?? [];
+    const only = lanes.length === 1 ? lanes[0] : null;
+    if (only?.lane.startsWith("adapter-")) {
+      // A fold of one adapter stream: the failure is that stream's.
+      await recordReturn({ lane: only.lane, check: "gates", output, readySha: only.ready_sha, steps: only.steps, riverSha: folded.base_river_sha });
+    } else if (lanes.some((lane) => lane.lane.startsWith("adapter-"))) {
+      console.log("river test: an adapter stream is in this fold. Isolate it with `fold --lanes adapter-<kind>` and test again (a failure is then returned to it),");
+      console.log("  or return it directly: river.mjs return adapter-<kind> --check gates --output-file .scratch/river/test-output.txt");
+    }
+  }
   if (result.gates !== "pass") throw new Refusal(`gates ${result.gates}; isolate the failing lane before promoting`);
 }
 
@@ -737,15 +778,70 @@ function promote() {
     const markdown = (readAt(tip, "integration.md") ?? "# Integration record").replace(/\n\(none yet\)\n?/, "\n").trimEnd();
     const separator = /\n- [^\n]*$/.test(markdown) ? "\n" : "\n\n";
     const lines = fresh.map((entry) => `- ${entry.at} · ${entry.lane} · ${entry.steps.join(", ")} · ready ${short(entry.ready_sha)} · river ${short(entry.river_sha)} · pnpm gates pass on ${short(entry.tested_sha)}`);
+    // An adapter stream's open return is cleared by the integration that repairs it.
+    const cleared = {};
+    for (const entry of fresh) {
+      const open = entry.lane.startsWith("adapter-") ? readAt(tip, `returns/${entry.lane}.md`) : null;
+      if (open !== null && parseStatus(open).state === "returned") {
+        cleared[`returns/${entry.lane}.md`] = `${setStatusFields(open, { state: `cleared: integrated ready ${entry.ready_sha} on river ${entry.river_sha}` })}\n`;
+      }
+    }
     return {
       files: {
         "integration.json": `${JSON.stringify([...integration, ...fresh], null, 2)}\n`,
         "integration.md": `${markdown}${separator}${lines.join("\n")}\n`,
+        ...cleared,
       },
       message: `integration: ${fresh.map((entry) => `${entry.lane} ${entry.steps.join(",")}`).join("; ")} on river ${short(head)}`,
     };
   });
   console.log(`river promote: recorded ${entries.length} lane(s) on ${BOARD}`);
+}
+
+/* -------------------------------------------------------------------------- */
+/* return                                                                     */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Send a stream's failed check back to the lane that wrote it (RL-06): print
+ * the record, keep it in `.scratch/river/`, and write `returns/<lane>.md` on
+ * `board/river`. The record carries the fix-list entry ("Add this to the
+ * queue" shape, `lib/control-plane/river-returns.ts`); writing it into the
+ * control plane's fix list is BR-03's, since River has no database here.
+ */
+async function recordReturn({ lane, check, output, readySha = null, steps = [], riverSha = null }) {
+  const { riverReturn, riverReturnMarkdown } = await import("../lib/control-plane/river-returns.ts");
+  const record = riverReturn({ lane, check, output, readySha, steps, riverSha, at: nowIso() });
+  console.log(`RETURN: ${lane} failed ${check}; owner ${record.owner} (${record.writer})`);
+  console.log(`  fix list: ${record.fix.consequenceShown} [${record.fix.subjectId}]`);
+  console.log(JSON.stringify({ return: record }, null, 2));
+  writeScratch(`return-${lane}.json`, record);
+  if (!fetchBranches([BOARD]).has(BOARD)) {
+    console.log(`ACTION NEEDED: ${BOARD} does not exist on origin; returns/${lane}.md was not written (record kept in .scratch/river/return-${lane}.json)`);
+    return record;
+  }
+  commitToBranch(BOARD, (tip) => {
+    const markdown = riverReturnMarkdown(record);
+    if (readAt(tip, `returns/${lane}.md`) === markdown.trimEnd()) return null;
+    return { files: { [`returns/${lane}.md`]: markdown }, message: `returns: ${lane} failed ${check}${readySha ? ` at ${short(readySha)}` : ""}` };
+  });
+  console.log(`river return: wrote returns/${lane}.md on ${BOARD}`);
+  return record;
+}
+
+async function returnCommand(lane, flags) {
+  if (!lane || !/^[a-z0-9][a-z0-9-]*$/.test(lane) || !flags.check || typeof flags.check !== "string") {
+    throw new Refusal("usage: river.mjs return <lane> --check <name> [--output-file F | --output TEXT] [--sha READY_SHA]", 2);
+  }
+  const output = typeof flags["output-file"] === "string" ? readFileSync(resolve(ROOT, flags["output-file"]), "utf8")
+    : typeof flags.output === "string" ? flags.output : "";
+  const folded = readScratch("fold.json");
+  const known = [...(folded?.lanes ?? []), ...(folded?.conflict ? [folded.conflict] : [])].find((entry) => entry.lane === lane);
+  await recordReturn({
+    lane, check: flags.check, output,
+    readySha: typeof flags.sha === "string" ? flags.sha : known?.ready_sha ?? null,
+    steps: known?.steps ?? [], riverSha: folded?.base_river_sha ?? null,
+  });
 }
 
 /* -------------------------------------------------------------------------- */
@@ -916,7 +1012,8 @@ async function main(argv) {
   }
   switch (command) {
     case "scan": console.log(JSON.stringify(scan(), null, 2)); return;
-    case "fold": fold(flags); return;
+    case "fold": await fold(flags); return;
+    case "return": await returnCommand(positional[0], flags); return;
     case "migrations": migrations(); return;
     case "test": await test(flags); return;
     case "promote": promote(); return;
@@ -929,7 +1026,7 @@ async function main(argv) {
       return;
     }
     default:
-      throw new Refusal("usage: river.mjs scan | fold | migrations | test | promote | release <n> | lock <mode> | observe <sha>", 2);
+      throw new Refusal("usage: river.mjs scan | fold | migrations | test | promote | return <lane> | release <n> | lock <mode> | observe <sha>", 2);
   }
 }
 

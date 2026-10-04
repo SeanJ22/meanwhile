@@ -13,6 +13,19 @@ import {
 
 const ROOT = join(import.meta.dirname, "..");
 
+test("an explicitly supplied browser is a stated substitution with no invented revision", () => {
+  const dir = mkdtempSync(join(tmpdir(), "explicit-chromium-"));
+  try {
+    const executable = join(dir, "system-chromium");
+    writeFileSync(executable, "fixture executable");
+    const result = resolveChromium({ PLAYWRIGHT_BROWSERS_PATH: join(dir, "empty"), WTP_CHROMIUM_EXECUTABLE: executable });
+    assert.equal(result.kind, "SUBSTITUTED");
+    assert.equal(result.kind === "SUBSTITUTED" && result.executablePath, executable);
+    assert.match(describeChromium(result), /revision unavailable/);
+    assert.equal(resolveChromium({ PLAYWRIGHT_BROWSERS_PATH: dir, WTP_CHROMIUM_EXECUTABLE: join(dir, "absent") }).kind, "ABSENT");
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
 /**
  * **`NH91`, item 7, 2026-08-23 — the harness and the image may not drift
  * apart silently.**

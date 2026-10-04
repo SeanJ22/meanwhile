@@ -226,6 +226,18 @@ export function resolveChromium(
   }
   const fallback = installed[0];
   if (fallback === undefined) {
+    // Cloud images can supply Chromium as a system package. Use an explicit
+    // selector when the pinned download is unavailable; never invent its revision.
+    const explicit = env.WTP_CHROMIUM_EXECUTABLE?.trim();
+    if (explicit) {
+      try {
+        if (statSync(explicit).isFile()) return {
+          kind: "SUBSTITUTED",
+          revision: "explicit executable (Playwright revision unavailable)",
+          executablePath: explicit,
+        };
+      } catch { /* Keep the absent-browser result for an invalid selector. */ }
+    }
     let sawBuildDirs: string[] = [];
     try {
       sawBuildDirs = readdirSync(root).filter((e) => /^chromium-\d+$/.test(e));

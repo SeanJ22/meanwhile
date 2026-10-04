@@ -33,7 +33,7 @@ import type { MeetingPartitionContract } from "./meeting-partitions.ts";
 import { sourceProjectionEvidence, type RoutineCandidate, type RoutineRemovalEvidence } from "./types.ts";
 import type { DerivedFamilyMemberReport, MeetingsSnapshot } from "../meetings/snapshot.ts";
 import type { Meeting } from "../sources/types.ts";
-import { mark as markCarried } from "../meetings/carry-forward.ts";
+import { carriedFromAnswer, mark as markCarried } from "../meetings/carry-forward.ts";
 import { ocdStateCode } from "../ocd/state-of.ts";
 
 export const DERIVED_FAMILY_SOURCE_ID = "meetings-derived-routes" as const;
@@ -261,7 +261,7 @@ export function buildDerivedFamily(input: {
       const answered = t.acquisitions.length > 0;
       const carried = combined.meetings.filter(row => row.carried?.source === source);
       const dropped = combined.dropped.filter(row => row.carried?.source === source);
-      const successful = (row: Meeting) => row.carried?.reason === "UNEXPLAINED_DISAPPEARANCE";
+      const successful = (row: Meeting) => carriedFromAnswer(row.carried?.reason);
       const report = (ok: boolean, rows: Meeting[], collapsed: Meeting[], acquired: boolean) => ({
         source, ok, error: ok ? null : "calendar routes are held on their last verified sittings",
         fetched: acquired ? t.fetched : 0, normalized: acquired ? t.normalized : 0,

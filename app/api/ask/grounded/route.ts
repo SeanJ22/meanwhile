@@ -760,6 +760,7 @@ export async function POST(request: Request) {
   // Questions naming a body elsewhere retain their wider subject inventory.
   const meetingsRead = readReaderEdgeMeetings({
     manifest: edgeManifest,
+    window: "HELD",
     ...(ocdIds.length && (topicRoute || areaMeetingsAsk) ? { states: statesOf(ocdIds), ocdIds } : {}),
 
   });

@@ -1,0 +1,315 @@
+[
+  {
+    "lane": "measures",
+    "steps": [
+      "SC-01",
+      "SC-02",
+      "SC-03",
+      "SC-05",
+      "SC-08",
+      "SC-12",
+      "SC-20"
+    ],
+    "ready_sha": "cc8c0cf59d57b581fead4c1fa68cfab1acce1ab2",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "registry",
+    "steps": [
+      "DB-09",
+      "DB-10",
+      "DB-11"
+    ],
+    "ready_sha": "165e9536bbadb0f587bfefc897fb71457691a27c",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "hunters",
+    "steps": [
+      "CH-02"
+    ],
+    "ready_sha": "9ae2d28bd8aba50e493664def23666c25a1eef3e",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "auditors",
+    "steps": [
+      "DP-01"
+    ],
+    "ready_sha": "ec1157a97c25f4f7c892395673974553666afe46",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "people",
+    "steps": [
+      "CA-06",
+      "CA-09",
+      "CA-12"
+    ],
+    "ready_sha": "4b5bbc1dc1c58fbf9d0fd845b2178a127545b82d",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "river",
+    "steps": [
+      "RL-01",
+      "RL-03",
+      "RL-06",
+      "RL-07"
+    ],
+    "ready_sha": "44bbb2a7c630d51306ff4ec2114e4988be730ba5",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "pr-695",
+    "steps": [
+      "CH-26"
+    ],
+    "ready_sha": "33646180",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "pr-698",
+    "steps": [
+      "CH-30"
+    ],
+    "ready_sha": "f7282ab9",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "pr-703",
+    "steps": [
+      "CH-02/BR-31"
+    ],
+    "ready_sha": "f46f880e",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "pr-700",
+    "steps": [
+      "CH-26"
+    ],
+    "ready_sha": "8695fe92",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "pr-701",
+    "steps": [
+      "CH-26"
+    ],
+    "ready_sha": "5b818a03",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "pr-704",
+    "steps": [
+      "CH-26"
+    ],
+    "ready_sha": "e9ff3bf9",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "pr-702",
+    "steps": [
+      "CH-26"
+    ],
+    "ready_sha": "bdd8e06d",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "pr-696",
+    "steps": [
+      "CH-02"
+    ],
+    "ready_sha": "4771d4cc",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "pr-692",
+    "steps": [
+      "CH-26"
+    ],
+    "ready_sha": "edfaae4a",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "pr-693",
+    "steps": [
+      "CH-26"
+    ],
+    "ready_sha": "082edb9a",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "pr-691",
+    "steps": [
+      "CH-26/CH-02"
+    ],
+    "ready_sha": "466cdd4d",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "pr-689",
+    "steps": [
+      "CH-26"
+    ],
+    "ready_sha": "caec33db",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "pr-690",
+    "steps": [
+      "CH-09"
+    ],
+    "ready_sha": "15c4b93e",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "pr-686",
+    "steps": [
+      "CH-26"
+    ],
+    "ready_sha": "6568d02e",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "pr-685",
+    "steps": [
+      "CH-01/CH-08"
+    ],
+    "ready_sha": "d9700a66",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "pr-677",
+    "steps": [
+      "BX-02/CP-05"
+    ],
+    "ready_sha": "764ba547",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "pr-699",
+    "steps": [
+      "CH-28/CH-25"
+    ],
+    "ready_sha": "709309f9",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "pr-694",
+    "steps": [
+      "CH-29/DB-58"
+    ],
+    "ready_sha": "9493f4b0",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "pr-642",
+    "steps": [
+      "FE-39"
+    ],
+    "ready_sha": "6c43d31c",
+    "river_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "tested_sha": "8f6185c5436b2be939c0333101713b6b5263e730",
+    "gates": "pass-with-baseline-exception",
+    "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
+    "at": "2026-10-04T07:34:08Z"
+  }
+]

@@ -1,0 +1,18 @@
+{
+  "release": 1,
+  "branch": "release/1",
+  "river_sha": "a88a0726c0c514cd929b0a352d0fa00c38dda239",
+  "pr": 707,
+  "pr_url": "https://github.com/SeanJ22/meanwhile/pull/707",
+  "opened_at": "2026-10-04T13:00:10Z",
+  "auto_merge": "MERGE, enabled 2026-10-04T12:59:57Z",
+  "build_steps": 108,
+  "rl_steps": ["RL-01","RL-03","RL-06","RL-07"],
+  "kept_prs": [695,698,703,700,701,704,702,696,692,693,691,689,690,686,685,677,699,694,642],
+  "migrations": 0,
+  "state": "checks running",
+  "merged_sha": null,
+  "deployed": null,
+  "post_deploy_run": null,
+  "runner_adopted": null
+}

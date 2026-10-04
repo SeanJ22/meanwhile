@@ -25,7 +25,7 @@ Use the full brief's 30-step order. Cross-lane readiness requires integration on
 - CA-25 waits for DB-42 (registry continuing bank); then CA-26/27/28 and CA-29/50.
 - CA-37 waits for BR-24 (measures continuing admin); then CA-38/39/55, respecting SC-10.
 - CA-19 waits for CP-03; CA-33 waits for CP-09 (hunters continuing slide). CA-34/36/22 depend on the generic finance work.
-- CA-52/53/54 require DB-11, BX-02 and FE-13 as the plan specifies. CA-35's prerequisite DB-11 is integrated; polling-place door work has not been built here.
+- CA-52/53/54 require DB-11, BX-02 and FE-13 as the plan specifies. CA-35's prerequisite DB-11 is integrated. Subsequent WIP `lib/ballot/polling-door-reader.ts` reads saved registered CSV/JSON/HTML/PDF-text rows; tests cover OH/MI/DC/PR, zero coordinates, unlocated addresses, source-stated assignments, and refusal of incomplete/repeated/cross-jurisdiction/contradictory records. It does not publish, dispatch or retire the legacy source list. Shared generic extraction currently refuses mapped empty CSV cells and any empty HTML cells: nullable optional column support is requested through River; mixed known/unknown captures remain held rather than dropping known values. Config may omit columns absent from the entire source, but must not omit partly populated columns to conceal this limitation. Focused 3/3, types and file lint passed; excluded from the exact READY candidate.
 - CA-23: the old local Ask bridge links committees to an office/body, explicitly not a particular person, and its itemized rows do not supply reported committee totals. Do not sum those transactions or attach the body's campaign money to one person. Continue with source-supported general finance records; no owner policy change is needed.
 
 ## Verification and environment
@@ -45,3 +45,7 @@ Initial FULL at `3c4617ef12a25edee1cb4eab0cccf784b164ccd9`: 9,117 tests, 9,088 p
 The official-page extractor version hashes its value-import closure. A runtime change can require recomputing `digestValueClosure(process.cwd(), "lib/sources/official-page-events/index.ts").digest.slice(0,12)` and re-keying `OFFICIAL_PAGE_EVENTS_VERSION`; do not edit generated artifacts by hand. State manifests were regenerated from the corrected dataset declaration. The new seed belongs to the existing 42-family inventory, and the general contest contract extends the existing frozen ballot source row through `additionalContracts`.
 
 All source/READY/WIP history is preserved on the stream. Never force-push or overwrite it. Release the lock at an ending or safe handoff point, and leave the remaining scope explicit. River owns integration, release, deployed verification and real network/owner issues.
+
+## Current certification boundary
+
+FULL at f049ae93d5650a4409d9f5769412b52e1b5e703c completed: 9,121 tests, 9,110 passed, zero failed, 11 skipped; types and lint passed (68 warnings). The later FEC rollout switch and finance binding bridge required re-certification. Exact local READY candidate bfc11e7b5ad94530244900c9c1a158427ad65a92 is being tested in /workspace/meanwhile-ballot-ready-check; it is not published until that exact FULL passes. Later CA-35 WIP is separate and must not be folded as part of that candidate. Read current status/evidence for the final result.

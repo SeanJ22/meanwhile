@@ -56,7 +56,7 @@ import { bodyNameFromQuestion, groupMoneyShapeForBoundSubject, lexicalQuestionSh
 import { composePersonVotes } from "@/lib/ask/person-votes";
 import { composeBodyRoster, composeReaderOfficials, placeNamesOf, readerOfficialsQuestion } from "@/lib/ask/reader-officials";
 import { areaMeetingsQuestion, composeAreaMeetings, type AreaSitting } from "@/lib/ask/area-meetings";
-import { ballotQuestionShape, composeBallotSummary, composeOfficeField, contestsOfOffice } from "@/lib/ask/ballot-summary";
+import { ballotQuestionShape, composeBallotSummary, composeOfficeField, contestsForBallotAsk } from "@/lib/ask/ballot-summary";
 import { composeSittingAnswerWithBasis, settleSittingComposition, sittingVenue, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
 import { composeGroupMoneyAnswer, composeMoneyAnswer, composeNoRaceMoneyAnswer, contestFitsBody, moneyQuestionShape } from "@/lib/ask/money-answer";
 import { codeBestReading, speculationVerdict, type ReadingOutcome } from "@/lib/ask/speculative-reading";
@@ -1098,14 +1098,14 @@ export async function POST(request: Request) {
    * contest whose candidates carry a party conflict between two authorities, goes the
    * ordinary way (the model reads it and the records are retrieved by subject).
    */
-  const ballotShape = !topicRoute && !leanAsk && ballot.set ? ballotQuestionShape(question) : null;
+  const ballotShape = !topicRoute && !leanAsk && ballot.set ? ballotQuestionShape(question, ballot.contests) : null;
   const ballotComposed = !ballotShape || !ballot.set ? null
     : ballotShape.kind === "SUMMARY"
       ? composeBallotSummary({ contests: ballot.contests, election: ballot.set.election })
-      : contestsOfOffice(ballot.contests, ballotShape.key).some((contest) => [...partyConflictFilings.keys()].some((key) => key.startsWith(`${contest.id}|`)))
+      : contestsForBallotAsk(ballot.contests, ballotShape).some((contest) => [...partyConflictFilings.keys()].some((key) => key.startsWith(`${contest.id}|`)))
         ? null
         : composeOfficeField({
-          key: ballotShape.key, contests: ballot.contests, election: ballot.set.election, nominees: ballot.nominees, candidacies: ballot.set.candidacies,
+          key: ballotShape.key, phrase: ballotShape.phrase, contests: ballot.contests, election: ballot.set.election, nominees: ballot.nominees, candidacies: ballot.set.candidacies,
           removedCandidacyIds: new Set((ballot.set.removals ?? []).map((removal) => removal.id)),
         });
   const ballotAsk = ballotComposed ? ballotShape : null;
@@ -2345,7 +2345,7 @@ export async function POST(request: Request) {
     }
 
     /* The reader's ballot, composed above from the contests their divisions reach: each contest is a record they are shown. */
-    if (ballotAsk && ballotComposed && !subject) {
+    if (ballotAsk && ballotComposed && (!subject || ballotAsk.kind === "OFFICE")) {
       records.push(...ballotComposed.records);
       for (const statement of ballotComposed.gaps) gaps.push({ whose: "OURS", statement });
       denominators.contestsOnTheBallot = ballot.contests.length;
@@ -2796,7 +2796,7 @@ export async function POST(request: Request) {
     }
     /* The reader's ballot (lib/ask/ballot-summary.ts): composed above, held to the same validator. */
     const ballotSettled = settleSittingComposition(
-      ballotAsk && ballotComposed && !topicComposed && (!subject || (subject.kind === "CONTEST" && ballotAsk.kind === "OFFICE" && contestsOfOffice(ballot.contests, ballotAsk.key).some((contest) => contest.id === subject.id)))
+      ballotAsk && ballotComposed && !topicComposed && (!subject || ballotAsk.kind === "OFFICE")
         ? { answer: ballotComposed.answer, citedUrls: ballotComposed.citedUrls } : null,
       (text, urls) => validateAnswer(text, urls, pack, bodies),
     );
@@ -2810,8 +2810,9 @@ export async function POST(request: Request) {
         ...(ballotSettled.verdict?.kind === "FAILED" ? { failed: ballotSettled.verdict.failed } : {}),
       };
     }
-    const composed = topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
-    const composedWhy = topicComposed ? "composed-from-structured-evidence"
+    const preferredBallot = ballotAsk?.kind === "OFFICE" ? ballotSettled.composed : null;
+    const composed = preferredBallot ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
+    const composedWhy = preferredBallot ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
       : sittingSettled.composed ? "composed-from-sitting-records"
         : moneySettled.composed ?? groupSettled.composed ? "composed-from-money-records"
           : officialsSettled.composed ? "composed-from-officeholder-records"

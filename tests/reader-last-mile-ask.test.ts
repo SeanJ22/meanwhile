@@ -365,3 +365,19 @@ test("the real Ask route carries Mejia's published filing contact with its own p
   assert.match(held.sourceUrl, /^https:\/\/www\.morriscountyclerk\.org\/.+\.pdf$/);
   assert.equal(record.sourceUrl, held.sourceUrl);
 });
+
+test("Ask's local council answer lists the same held candidates as the reader ballot", async () => {
+  const ballot = await loadBallotForDivisions(divisions.NJ);
+  const contests = ballot.contests.filter(c => c.type === "CANDIDACY" && /council/i.test(c.title));
+  assert.ok(contests.length > 0);
+  const expected = ballot.set!.candidacies.filter(c => contests.some(contest => contest.id === c.contestId));
+  const answer = await ask("Who is running for council?", "NJ");
+  assert.ok(answer.answer);
+  const actual = answer.records.filter(record => record.kind === "CANDIDACY");
+  assert.equal(actual.length, expected.length);
+  for (const candidate of expected) {
+    assert.ok(actual.some(record => record.id.startsWith(`${candidate.contestId}|`) &&
+      record.text.toLowerCase().includes(candidate.familyName.toLowerCase())));
+  }
+  assert.equal(answer.trace?.composition?.kind, "BALLOT");
+});

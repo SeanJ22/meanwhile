@@ -31,7 +31,7 @@ import type { EvidenceRecord } from "./evidence.ts";
 
 export type BallotAsk =
   | { kind: "SUMMARY" }
-  | { kind: "OFFICE"; key: OfficeKey; phrase: string };
+  | { kind: "OFFICE"; key: OfficeKey | null; phrase: string };
 
 /** Written against `normalizeName`. */
 const SUMMARY_FORMS: readonly RegExp[] = [
@@ -65,7 +65,7 @@ const OFFICE_FORMS: readonly RegExp[] = [
 ];
 
 /** The ballot question this is, or null. Nothing is bound here; an office the table does not hold is the model's. */
-export function ballotQuestionShape(question: string): BallotAsk | null {
+export function ballotQuestionShape(question: string, contests: readonly Contest[] = []): BallotAsk | null {
   const normalized = normalizeName(question);
   if (!normalized || normalized.length > 100) return null;
   if (SUMMARY_FORMS.some((form) => form.test(normalized))) return { kind: "SUMMARY" };
@@ -74,8 +74,28 @@ export function ballotQuestionShape(question: string): BallotAsk | null {
     if (!phrase) continue;
     const found = OFFICE_WORDS.find((entry) => entry.pattern.test(phrase));
     if (found) return { kind: "OFFICE", key: found.key, phrase };
+    if (contestsForOfficePhrase(contests, phrase).length > 0) return { kind: "OFFICE", key: null, phrase };
   }
   return null;
+}
+
+/** An office named by this ballot, including local offices outside the synonym table. */
+export function contestsForOfficePhrase(contests: readonly Contest[], phrase: string): Contest[] {
+  const words = (value: string) => normalizeName(value).replace(/\b(members?|of|the|for|a|an|seat)\b/g, " ").replace(/\s+/g, " ").trim();
+  const requested = words(phrase);
+  if (!requested) return [];
+  const exact = contests.filter(contest => contest.type === "CANDIDACY" && words(contest.title) === requested);
+  if (exact.length) return exact;
+  const tokens = requested.split(" ");
+  return contests.filter(contest => {
+    if (contest.type !== "CANDIDACY") return false;
+    const title = words(contest.title).split(" ");
+    return tokens.every(token => title.includes(token));
+  });
+}
+
+export function contestsForBallotAsk(contests: readonly Contest[], ask: Extract<BallotAsk, { kind: "OFFICE" }>): Contest[] {
+  return ask.key === null ? contestsForOfficePhrase(contests, ask.phrase) : contestsOfOffice(contests, ask.key);
 }
 
 /** The contests of one office, in the ballot's own vocabulary. */
@@ -145,8 +165,8 @@ export interface OfficeFieldInput {
  * Every contest of an office the reader's divisions reach, with its candidates.
  * Null when the ballot holds no such contest (the caller says so as a gap of ours).
  */
-export function composeOfficeField(input: OfficeFieldInput & { key: OfficeKey }): BallotComposition | null {
-  const matched = contestsOfOffice(input.contests, input.key);
+export function composeOfficeField(input: OfficeFieldInput & { key: OfficeKey | null; phrase?: string }): BallotComposition | null {
+  const matched = input.key === null ? contestsForOfficePhrase(input.contests, input.phrase ?? "") : contestsOfOffice(input.contests, input.key);
   if (matched.length === 0) return null;
   const records: EvidenceRecord[] = [];
   const gaps: string[] = [];

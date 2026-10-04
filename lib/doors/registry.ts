@@ -92,6 +92,12 @@ export interface DoorRecord {
   readonly shutReason?: string | null;
   /** DB-32, system-kept: when the door last reopened after being shut. */
   readonly reopenedAt?: string | null;
+  /** DB-30, system-kept: when a read of this door last promoted something different from before. Absent means never seen. */
+  readonly lastChangedAt?: string | null;
+  /** DB-30, system-kept: minutes between its changed promotions, as a running average (lib/doors/observed-rate.ts). Absent until two have been seen. */
+  readonly observedChangeMinutes?: number | null;
+  /** DB-30, system-kept: how many changed promotions the average rests on. */
+  readonly observedChanges?: number;
   /** Read at the next opportunity instead of waiting for the schedule. */
   readonly readNow: boolean;
   /** System-kept: what the last first look saw. Never edited by hand, never a derive input. */
@@ -312,6 +318,9 @@ function healthKept(previous: DoorRecord | null, status: DoorStatus): Partial<Do
     ...(previous.transportFailures !== undefined ? { transportFailures: previous.transportFailures } : {}),
     ...(status === "SHUT" && previous.shutReason !== undefined ? { shutReason: previous.shutReason } : {}),
     ...(previous.reopenedAt !== undefined ? { reopenedAt: previous.reopenedAt } : {}),
+    ...(previous.lastChangedAt !== undefined ? { lastChangedAt: previous.lastChangedAt } : {}),
+    ...(previous.observedChangeMinutes !== undefined ? { observedChangeMinutes: previous.observedChangeMinutes } : {}),
+    ...(previous.observedChanges !== undefined ? { observedChanges: previous.observedChanges } : {}),
   };
 }
 

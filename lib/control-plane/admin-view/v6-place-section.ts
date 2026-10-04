@@ -3,6 +3,8 @@ import type { OwedState } from "./place-scorecard.ts";
 import { OWED_STATE_WORDS, pageOwed, scorePlace, type GroupScore, type OwedListItem, type OwedRowLike } from "./place-scorecard.ts";
 import { GROUP_NAMES, PLACE_GROUPS, ADMIN_V6_CHECKLIST_CONTRACT } from "./v6-checklist-section.ts";
 import type { PlaceOwedRead } from "./place-owed-read.ts";
+import type { RowStatuses } from "../../coverage/place-statuses.ts";
+import { coverageWords, placeCoverage, type PlaceCoverage } from "../../coverage/place-coverage.ts";
 import { US_STATES } from "../readiness/catalog.ts";
 import { sendWordsFor } from "./blocker-causes.ts";
 
@@ -38,8 +40,15 @@ export interface AdminV6PlaceScore {
   readonly sendWords: string | null;
   /** The target Sean set for this place, or null. */
   readonly target: { readonly goalPercent: number; readonly setAt: string } | null;
+  /** Core items only; the family rows add up to it. */
   readonly overall: GroupScore;
   readonly groups: readonly GroupScore[];
+  /** Extension items, counted apart from the headline. Null when the place owes none. */
+  readonly extension: GroupScore | null;
+  /** Summary items whose detail items carry the count: listed, out of the denominator. Null when none. */
+  readonly summary: GroupScore | null;
+  /** Governments, bodies, seats and people accounted for against what is expected; "total unknown" where it cannot be known. */
+  readonly coverage: { readonly words: readonly string[]; readonly figures: PlaceCoverage };
 }
 export interface AdminV6PlaceItem {
   readonly key: string;
@@ -54,6 +63,10 @@ export interface AdminV6PlaceItem {
   readonly next: string;
   readonly parts: readonly { readonly text: string; readonly status: string; readonly proof: string; readonly tone: "good" | "warn" | "muted" }[];
   readonly sourceUrl: string | null;
+  /** The six statuses of this blank. `missing` words the one that matters most. */
+  readonly statuses: RowStatuses | null;
+  /** When the next check is due for a blank awaiting publication or due for a refresh. */
+  readonly nextCheckAt: string | null;
   readonly actions: readonly { readonly kind: "send-agents"; readonly target: string; readonly label: string; readonly payload: { readonly words: string } }[];
 }
 export interface AdminV6PlaceChecklistView {
@@ -93,6 +106,7 @@ function itemOf(item: OwedListItem, placeKey: string, words: string | null): Adm
     key: item.key, definitionId: item.checklistId, name: item.requirement.split(" — ")[0] ?? item.requirement,
     subject: item.subject, period: "Current", status,
     missing: item.state === "published" ? "—"
+      : item.statuses?.waitingWords ? item.statuses.waitingWords
       : item.state === "held" ? "Captured, not published yet"
       : item.state === "unpublished" ? "Not published by the government"
       : item.state === "stale" ? "Captured earlier, refresh due"
@@ -102,6 +116,7 @@ function itemOf(item: OwedListItem, placeKey: string, words: string | null): Adm
     parts: [{ text: item.requirement, status: OWED_STATE_WORDS[item.state], tone: open ? "warn" : "good",
       proof: item.sourceUrl ? `Saved from ${item.sourceUrl}${item.checkedAt ? `, checked ${item.checkedAt}` : ""}.` : "—" }],
     sourceUrl: item.sourceUrl,
+    statuses: item.statuses, nextCheckAt: item.statuses?.nextCheck ?? null,
     actions: open && words !== null ? [{ kind: "send-agents", target: placeKey, label: "Send agents", payload: { words } }] : [],
   };
 }
@@ -115,8 +130,9 @@ export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, ta
 } {
   const rows = read.rows as readonly OwedRowLike[];
   const score = scorePlace(rows, GROUP_NAMES, GROUP_ORDER);
+  const coverage = placeCoverage(read.rows, read.divisions);
   const windowed = pageOwed(rows, query);
-  const placeGroups = score.groups.filter((g) => PLACE_GROUPS.has(g.group)).map((g) => {
+  const placeGroups = score.groups.map((g) => {
     const counts = [0, 0, 0, 0, 0, 0, 0];
     counts[STATUS_INDEX.published] += g.published; counts[STATUS_INDEX.held] += g.held;
     counts[STATUS_INDEX.stale] += g.stale + g.missing; counts[STATUS_INDEX.unpublished] += g.unpublished;
@@ -130,7 +146,8 @@ export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, ta
       profileVersion: CHECKLIST_PROFILE.version, definitionCount: CHECKLIST_PROFILE.definitionCount, definitions: DEFINITIONS,
       groupNames: GROUP_NAMES, placeGroups, items: windowed.items.map((i) => itemOf(i, read.placeKey, placeSendWords(read.placeKey, read.label, read.divisions))), systemGroups: SYSTEM_GROUPS,
       score: { placeKey: read.placeKey, placeLabel: read.label, covers: read.covers, observedAt: read.observedAt,
-        divisionCount: read.divisions.length, sendWords: placeSendWords(read.placeKey, read.label, read.divisions), target, overall: score.overall, groups: score.groups },
+        divisionCount: read.divisions.length, sendWords: placeSendWords(read.placeKey, read.label, read.divisions), target, overall: score.overall, groups: score.groups, extension: score.extension, summary: score.summary,
+          coverage: { words: coverageWords(coverage), figures: coverage } },
     },
     missingParts: [
       "The owed list is what the checklist says a place is owed for the governments, districts and bodies we know about. Governments we haven’t found yet are listed as “discover every …” items, so a total here can grow as agents find more.",

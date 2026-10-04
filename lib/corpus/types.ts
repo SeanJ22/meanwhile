@@ -32,7 +32,8 @@
 
 import type { CandidateSourceRevision } from "../candidates/corpus.ts";
 
-export type SnapshotKind = "CAMPAIGN_SITE" | "OFFICIAL_PAGE";
+import type { SnapshotKind } from "./source-kinds.ts";
+export type { SnapshotKind } from "./source-kinds.ts";
 
 export interface SourceSnapshot {
   /** `${subjectId}|${url}|${contentHash}` — content-addressed, stable. */

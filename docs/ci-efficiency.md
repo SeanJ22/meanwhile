@@ -91,6 +91,10 @@ The follow-up's [run 35690749374](https://github.com/SeanJ22/meanwhile/actions/r
 
 Measured against merged PRs #639–#649, a change inside the control-plane/civic-data import cycle reaches about 525 of 984 test files (about 72% of the hinted file time), and a leaf change about 120 (about 6%); about 114 sweep tests run on every code change.
 
+<!-- RL-07 (documents-only selection) begin -->
+**RL-07, documents-only changes (October 4, 2026).** On October 3 a pull request that changed only `docs/rulings.md` selected 482 of 985 test files: twelve modules and scripts name that document in their code (one in a widely imported scheduler module), and the selection followed each one's whole import tree. A change made only of documents (anything under `docs/`, and Markdown outside the code roots and `public/`, such as `CLAUDE.md`, `AGENTS.md`, `README.md` and state notes) now selects only the tests that read those documents: a test that names one; a test reaching, through test files only, a module or script that names one (one hop, not the citing module's import tree); a test that names a script that names one, such as the compiler that writes `docs/governance/constitution.md` from `docs/rulings.md`; and a test or test helper that lists files where the document lives (the whole repository, the document's top directory, or Markdown), such as the secret, mojibake and generated-artifact freshness checks. Sweeps that list only source are skipped. Measured on this tree, `docs/rulings.md` alone now selects 56 files, including `tests/generated-artifacts.test.ts`. A documents-only change no test reads reports `NONE` with its count; lint, types and governance still run in `verify`, the final gate still requires every selected job, and builds keep following the deploy classification (documents do not rebuild). Code, or code mixed with documents, keeps the selection above unchanged. Admission reports `scope=documents` and the selection summary says so. Some `docs/` Markdown edits that used to select no test now run the repository-wide readers (about forty files), because those tests read every committed document.
+<!-- RL-07 (documents-only selection) end -->
+
 Before enabling impact selection, the classification was:
 
 | Category | Required treatment |
@@ -132,3 +136,13 @@ Rollback is a normal reviewed revert of this CI change, retaining the same requi
 Sean requested one scheduled full certification per day before the cloud build sessions start. This replaces eight scheduled opportunities per day with one (seven fewer, an 87.5% reduction in scheduled frequency). Pull-request, main-push and manual-dispatch checks remain unchanged, as do the required merge checks and post-deploy observation. Total Actions usage also includes those event-driven runs and retries; this is not a claim of an 87.5% reduction in the whole bill.
 
 Keep working and integration branches without ready pull requests until a release batch is ready. Their pushes do not trigger the current workflows. River coordination and routing engineer-adapter repairs through River remain separate implementation work; the daily schedule does not implement either.
+
+## Streams, river and one release PR (RL-03, October 4, 2026)
+
+`scripts/river.mjs` implements the River coordination that the previous section left as separate work. Builders push `stream/<lane>` branches and open no pull requests, so their pushes start no Actions runs. Codex's one permitted draft PR into `river` still triggers the Build check workflow on pull-request events; its draft tier defers builds and tests. River folds each lane's exact `READY:` commit into `river-next`, removes `.factory/` status files, numbers step-named migrations, runs `pnpm gates` once on the combination in its own cloud session, and fast-forwards `river` to that tested commit. Integrated ready SHAs are recorded in `board/river:integration.json`, so a fresh session never folds the same batch twice.
+
+`river.mjs release <n>` opens one `release/<n>` pull request from the tested `river` to `main`, listing the steps it carries, and refuses while another release PR is open or when `main` moved after `river` was tested. `river.mjs observe <sha>` reuses an existing post-deploy run for that commit and dispatches one only when none covers it (RL-05).
+
+Cost effect: hosted certification moves from one pull-request run per session to one per release batch, plus pushes to `main` and the daily scheduled run. Each release still runs the required checks on its pull request; the saving is in how many such runs happen, not in what each run checks. No hosted measurement of the new cadence exists yet.
+
+Routing engineer-adapter repairs through River (RL-06) is still separate work; `scan` already reads `stream/adapter-*` branches and flags any that change files outside the adapter path.

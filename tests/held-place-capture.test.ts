@@ -302,7 +302,7 @@ test("held Census status survives complementary projections without inventing go
   for (const [i, status] of statuses.entries()) {
     const inventories = rows.filter(row => row.subject.id.startsWith(`${divisions[i].ocdId}#inventory:`));
     assert.equal(inventories.length, i < 4 ? 0 : 6, `status ${status} uses only the held classification`);
-    assert.equal(rows.filter(row => row.subject.id === divisions[i].ocdId).length, 14, "geography remains owed");
+    assert.equal(rows.filter(row => row.subject.id === divisions[i].ocdId).length, 18, "geography (14) and the division reference items (4) remain owed");
   }
   assert.deepEqual(rows.find(row => row.subject.id === "shared-body" && row.checklistId === "GOV-01")?.held,
     capture.held.filter(field => field.subjectId === "shared-body"), "actual records remain even within statistical geography");
@@ -334,7 +334,7 @@ test("registry bodies owe civic facts without duplicating product feature work, 
   const rows = buildPlaceOwedList(input);
   const bodyRows = rows.filter(row => row.subject.id === "shared-body");
   assert.equal(capture.subjects.find(subject => subject.id === "shared-body")?.captureKind, "registry-body");
-  assert.equal(bodyRows.length, 22, "all 14 government and 8 participation requirements stay open or captured");
+  assert.equal(bodyRows.length, 26, "all 14 government, 8 participation and 4 body reference requirements stay open or captured");
   assert.ok(!bodyRows.some(row => row.checklistId.startsWith("ENG-")));
   assert.ok(bodyRows.some(row => row.checklistId === "GOV-08" && row.state === "missing"));
   assert.ok(bodyRows.some(row => row.checklistId === "PAR-02" && row.state === "missing"));
@@ -342,10 +342,11 @@ test("registry bodies owe civic facts without duplicating product feature work, 
     capture.held.filter(field => field.subjectId === "shared-body"));
   assert.deepEqual(bodyRows[0].subject.divisionIds, [county, neighbour]);
   const retained = buildPlaceOwedList({ ...input, held: [...capture.held, existing] });
-  assert.deepEqual(retained.find(row => row.subject.id === "shared-body" && row.checklistId === "ENG-07")?.held, [existing]);
+  assert.ok(!retained.some(row => row.checklistId.startsWith("ENG-")), "reader participation is measured on the product, not owed per body");
   const unresolved = buildPlaceOwedList({ ...input,
     subjects: [{ id: "unknown-body", kind: "body", divisionIds: [county], label: "Unknown body" }] });
-  assert.equal(unresolved.filter(row => row.subject.id === "unknown-body" && row.checklistId.startsWith("ENG-")).length, 7);
+  assert.equal(unresolved.filter(row => row.subject.id === "unknown-body" && row.checklistId.startsWith("ENG-")).length, 0);
+  assert.ok(unresolved.some(row => row.subject.id === "unknown-body" && row.checklistId.startsWith("GOV-")));
   assert.equal(rows.filter(row => row.subject.id.includes("#inventory:")).length, 12);
 });
 
@@ -372,7 +373,7 @@ test("a known body starts calendar discovery before its first meeting is capture
   const divisions = [county, neighbour].map(id => ({ id, label: id }));
   const rows = buildPlaceOwedList({ divisions, ...capture, now: at });
   const calendar = rows.filter(row => row.subject.id === "shared-body#calendar");
-  assert.equal(calendar.length, 9);
+  assert.equal(calendar.length, 8, "nine calendar items, with the shared MTG-20 counted once under MTG-17");
   assert.ok(calendar.every(row => row.state === "missing" && row.held.length === 0));
   assert.deepEqual(calendar[0].subject.divisionIds, [county, neighbour]);
   assert.ok(!calendar.some(row => row.checklistId === "MTG-06" || row.checklistId.startsWith("DOC-")), "no invented sitting");

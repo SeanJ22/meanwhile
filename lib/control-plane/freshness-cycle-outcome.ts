@@ -8,7 +8,6 @@ import {
   intakeRuntimeObservationOutcomeIssue,
   type IntakeRuntimeObservationOutcome,
   type MapTilerUsageCollectionOutcome,
-  type MethodCandidateAuthorityAdoptionOutcome,
   type OwnerDigestRecord,
   routineReaderReadbackEvidenceIssue,
   type RoutineCivicDataSupervisorOutcome,
@@ -30,11 +29,6 @@ export interface FreshnessCycleDigestInput {
 
 export interface RoutineCivicDataSupervisorDigestInput {
   readonly outcome: RoutineCivicDataSupervisorOutcome;
-  readonly lines: readonly string[];
-}
-
-export interface MethodCandidateAuthorityAdoptionDigestInput {
-  readonly outcome: MethodCandidateAuthorityAdoptionOutcome;
   readonly lines: readonly string[];
 }
 
@@ -101,8 +95,7 @@ type RuntimeDigestInput =
   | FreshnessCycleDigestInput
   | RoutineCivicDataSupervisorDigestInput
   | IntakeRuntimeObservationDigestInput
-  | MapTilerUsageCollectionDigestInput
-  | MethodCandidateAuthorityAdoptionDigestInput;
+  | MapTilerUsageCollectionDigestInput;
 
 /**
  * Append one exact runner outcome to the existing canonical owner digest log.
@@ -115,21 +108,14 @@ async function appendRuntimeDigest(
 ): Promise<OwnerDigestRecord> {
   const record: OwnerDigestRecord = {
     formatVersion: OWNER_SURFACE_FORMAT_VERSION,
-    digestId:
-      input.outcome.kind === "METHOD_CANDIDATE_AUTHORITY_ADOPTION"
-        ? input.outcome.receiptId
-        : input.outcome.cycleId,
+    digestId: input.outcome.cycleId,
     writtenAt: input.outcome.finishedAt,
     headline: input.lines[0] ?? `${input.outcome.state} standing-runner cycle`,
     lines: input.lines,
     cycleOk:
-       input.outcome.kind === "METHOD_CANDIDATE_AUTHORITY_ADOPTION"
-         ? true
-         : input.outcome.kind === "INTAKE_RUNTIME_OBSERVATION"
-           ? input.outcome.state === "HEALTHY"
-           : input.outcome.kind === "MAPTILER_USAGE_COLLECTION"
-             ? input.outcome.state === "SUCCEEDED"
-             : input.outcome.state === "SUCCEEDED",
+      input.outcome.kind === "INTAKE_RUNTIME_OBSERVATION"
+        ? input.outcome.state === "HEALTHY"
+        : input.outcome.state === "SUCCEEDED",
     testedSha: input.outcome.testedSha,
     runtimeOutcome: input.outcome,
   };
@@ -165,14 +151,6 @@ export async function appendIntakeRuntimeObservationDigest(
 export async function appendMapTilerUsageCollectionDigest(
   repos: ControlPlaneRepositories,
   input: MapTilerUsageCollectionDigestInput,
-): Promise<OwnerDigestRecord> {
-  return appendRuntimeDigest(repos, input);
-}
-
-/** Append the PDC authority-adoption receipt to the same history Admin reads. */
-export async function appendMethodCandidateAuthorityAdoptionDigest(
-  repos: ControlPlaneRepositories,
-  input: MethodCandidateAuthorityAdoptionDigestInput,
 ): Promise<OwnerDigestRecord> {
   return appendRuntimeDigest(repos, input);
 }

@@ -61,7 +61,12 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
   for (const record of checked.extraction.records) {
     try {
       const f = record.fields;
-      requirePublication(Object.keys(f).every(key => ["bodyName", "bodyClass", "homepageUrl", "jurisdictionName", "coverage", "coverageEvidence", "territoryNames", "meetingCadence"].includes(key)), "DIRECTORY_FIELD_UNSUPPORTED");
+      requirePublication(Object.keys(f).every(key => ["bodyName", "bodyClass", "homepageUrl", "jurisdictionName", "coverage", "coverageEvidence", "territoryNames", "meetingCadence", "officeAddress", "officePhone"].includes(key)), "DIRECTORY_FIELD_UNSUPPORTED");
+      // An office address and phone attach only as plain text found on the body's own page.
+      const address = typeof f.officeAddress === "string" ? f.officeAddress.replace(/\s+/g, " ").trim() : "";
+      const phone = typeof f.officePhone === "string" ? f.officePhone.replace(/\s+/g, " ").trim() : "";
+      requirePublication(f.officeAddress === undefined || (address.length >= 8 && address.length <= 200 && /\d/.test(address)), "DIRECTORY_OFFICE_ADDRESS_INVALID");
+      requirePublication(f.officePhone === undefined || (phone.length <= 40 && (phone.match(/\d/g) ?? []).length >= 7), "DIRECTORY_OFFICE_PHONE_INVALID");
       const classification = bodyClasses[words(f.bodyClass)];
       requirePublication(classification && words(f.bodyName), "DIRECTORY_BODY_IDENTITY_MISSING");
       // A home page attaches when verified; its absence is an open blank, not a hold.
@@ -99,6 +104,7 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
         alsoServesOcdIds: territoryIds.filter(id => id !== primaryDivision),
         homepageUrl: url?.href ?? prior?.homepageUrl ?? null, bodyOrigin: "SOURCED", sourceDataset: "GOV_DIRECTORY",
         ...(typeof f.meetingCadence === "string" ? { meetingCadence: f.meetingCadence } : {}),
+        ...(address ? { officeAddress: address } : {}), ...(phone ? { officePhone: phone } : {}),
         provenance: { sourceUrl: (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl, sourceOrg: checked.contract.sourceScope.publisher,
           collectedAt: (checked.sourceOf?.get(record.id) ?? checked.primary).observedAt, verifiedAt: input.now } });
     } catch (error) {
@@ -156,7 +162,8 @@ export async function heldDirectoryReading(input: {
       const verdict = section3Record({ recordClass: contract.recordClass, fields: { ...row }, page, now: input.now, pageVerdict });
       if (sourceOf.has(id) || !verdict.live) continue;
       // A schedule attaches only when code found it on the page; the body is live without it.
-      const fields = verdict.verifiedFields.includes("meetingCadence") ? { ...row } : { bodyName: row.bodyName, bodyClass: row.bodyClass };
+      const fields: Record<string, unknown> = { bodyName: row.bodyName, bodyClass: row.bodyClass };
+      for (const key of ["meetingCadence", "officeAddress", "officePhone"] as const) if (verdict.verifiedFields.includes(key)) fields[key] = row[key];
       records.push({ id, fields }); sourceOf.set(id, capture); kept = true;
     }
     if (kept) used.push(capture);

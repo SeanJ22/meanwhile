@@ -611,8 +611,11 @@ export function fileAppendOnlyRepository<T>(
       value: string,
       limit: number,
       projection: RecordProjection,
+      recordedAtSince?: string,
     ): Promise<readonly unknown[]> => {
+      const since = recordedAtSince === undefined ? null : Date.parse(recordedAtSince);
       const matches = (await readLines(key))
+        .filter(line => since === null || Date.parse(line.at) >= since)
         .map((line) => line.record)
         .filter((record) => jsonTextAtPath(record, jsonPath) === value);
       const bounded = Math.max(0, Math.trunc(limit));

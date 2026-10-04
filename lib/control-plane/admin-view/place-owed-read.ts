@@ -15,6 +15,7 @@
 import { divisionsForZip, type PlaceDivision } from "../expansion/national-geography.ts";
 import { readHeldPlaceCapture, type HeldPlaceCapture } from "../../civic-data/held-place-capture.ts";
 import { buildPlaceOwedList, type PlaceOwedItem } from "../../coverage/place-owed.ts";
+import { openBlanksOf, type OpenBlanks } from "../../coverage/open-blanks.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import { countyIdentity, stateBase } from "../../ocd/divisions.ts";
 import { parseV6PlaceKey } from "./v6-hunts-read.ts";
@@ -146,6 +147,12 @@ export async function readPlaceOwed(placeKey: string, deps: PlaceOwedDeps = defa
   // A long-lived server holds at most a couple of dozen places; the oldest goes first.
   while (memo.size > MEMO_PLACES) memo.delete(memo.keys().next().value as string);
   return read;
+}
+
+/** The mission map's open blanks for a place, grouped by squad then subject: what applies, is due, is not satisfied and is not in progress. A refused read is returned as the refusal, never as an empty map. */
+export async function openBlanks(placeKey: string, deps: PlaceOwedDeps = defaultPlaceOwedDeps, options: { readonly fresh?: boolean; readonly squads?: Readonly<Record<string, string>> } = {}): Promise<{ readonly state: "READ"; readonly placeKey: string; readonly blanks: OpenBlanks } | PlaceOwedRefusal> {
+  const read = await readPlaceOwed(placeKey, deps, options);
+  return read.state === "REFUSED" ? read : { state: "READ", placeKey, blanks: openBlanksOf(read.rows, options.squads) };
 }
 
 export type { PlaceDivision };

@@ -37,7 +37,7 @@ function structuralBlocks(text: string): (RecordBlock & { record: boolean })[] {
     } else if (!/\/\s*>$/.test(match[0]) && !/^(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)$/.test(tag)) {
       const className = /\bclass\s*=\s*(["'])(.*?)\1/i.exec(match[0])?.[2] ?? "";
       const record = /^(tr|li|article)$/.test(tag) || className.split(/\s+/).some(token => /^(?:card|person|profile|official|candidate|member)$|-(?:card|profile)$/i.test(token));
-      stack.push({ tag, start: match.index, record, paragraph: tag === "p" });
+      stack.push({ tag, start: match.index, record, paragraph: /^(?:p|h[1-6])$/.test(tag) });
     }
   }
   return blocks;

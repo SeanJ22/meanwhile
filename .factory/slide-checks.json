@@ -1,0 +1,59 @@
+{
+  "failedBaseline": {
+    "testedCommit": "b283fac949540b481f48c266cc7c8ea61da573e6",
+    "testedTree": "289208ff3ce536773c969acb5a28d3a474c18075",
+    "result": "FAILED",
+    "fileCount": 985,
+    "failedFiles": [
+      "tests/held-roster-publication.test.ts",
+      "tests/maptiler-barrier.test.ts",
+      "tests/national-place-publication.test.ts",
+      "tests/reader-last-mile-ask.test.ts"
+    ],
+    "skips": [
+      {
+        "file": "tests/acquisition-repair-profile.test.ts",
+        "count": 1
+      },
+      {
+        "file": "tests/acquisition-repair-roster.test.ts",
+        "count": 1
+      },
+      {
+        "file": "tests/beacon-guard.test.ts",
+        "count": 1
+      },
+      {
+        "file": "tests/deploy-paths.test.ts",
+        "count": 2
+      },
+      {
+        "file": "tests/feedback.test.ts",
+        "count": 1
+      },
+      {
+        "file": "tests/new-zip-render.test.ts",
+        "count": 1
+      },
+      {
+        "file": "tests/pilot-runtime-config.test.ts",
+        "count": 1
+      },
+      {
+        "file": "tests/pilot-task-installer.test.ts",
+        "count": 2
+      },
+      {
+        "file": "tests/reader-last-mile-trace.test.ts",
+        "count": 1
+      }
+    ],
+    "notes": [
+      "Failed browser file terminated after assertion failures left Chromium alive; corrected local-proxy setup passes all four assertions in separate focused run.",
+      "Other failures: repeated identical CMS rows, profile headings, and obsolete Ask address assertion. Repairs being verified."
+    ],
+    "selector": "FULL: .factory/slide.md is not code the import graph follows",
+    "fullHistory": true,
+    "browser": "system Chromium 151.0.7922.173 (substituted; pinned 1234 unavailable)"
+  }
+}

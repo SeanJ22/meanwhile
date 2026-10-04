@@ -167,8 +167,11 @@ export function section3Record(input: {
   // Repeated names are resolved by the record's other minimums, never by
   // pooling contact fields from several rows belonging to different people.
   const minimums = input.minimums ?? SECTION3_MINIMUMS[input.recordClass] ?? [];
-  const matching = blocks.filter(block => minimums.every(field =>
-    SECTION3_LABEL_FIELDS.includes(field) || input.derived?.[field] || valueOnPage(input.fields[field], input.page.text.slice(block.start, block.end))));
+  const matching = [...new Map(blocks.filter(block => minimums.every(field =>
+    SECTION3_LABEL_FIELDS.includes(field) || input.derived?.[field] || valueOnPage(input.fields[field], input.page.text.slice(block.start, block.end))))
+    // CMS pages may repeat the exact same row for desktop and mobile. This
+    // is one record twice, not permission to combine differing rows.
+    .map(block => [input.page.text.slice(block.start, block.end), block])).values()];
   const recordText = nameField ? (matching.length === 1 ? input.page.text.slice(matching[0].start, matching[0].end) : "") : input.page.text;
   const words = pageWords(recordText);
   const verified = new Set<string>();

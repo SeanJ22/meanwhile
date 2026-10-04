@@ -354,7 +354,7 @@ test("the real Ask route carries Mejia's published filing contact with its own p
   const record = body.records.find((record) => record.id === "candidate-contact:ballot-nj-morris:us-house-11:mejia");
   assert.ok(record);
   assert.match(record.text, /info@analiliafornj\.com/);
-  assert.match(record.text, /13 Municipal Plaza/);
+  assert.doesNotMatch(JSON.stringify(body), /13 Municipal Plaza/, "CP-01 keeps filed mailing addresses out of the whole Ask answer");
   assert.equal(record.sourceOrg, "Morris County Clerk");
   // The contact's own provenance is the held filing document, whichever edition of the clerk's list the
   // seed mirrors (the clerk republished it on 2026-09-24), never a pinned filename that goes stale.

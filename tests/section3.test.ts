@@ -64,3 +64,18 @@ test("CP-19: derived display names anchor on the name actually written in their 
   assert.deepEqual(verdict.verifiedFields, ["name", "nameAsWritten", "office"]);
   assert.deepEqual(verdict.openFields, ["email"]);
 });
+
+test("CP-19: identical desktop/mobile rows remain publishable without pooling distinct rows", () => {
+  const row = '<tr><td>Alice Adams</td><td>Clerk</td><td>alice@example.test</td></tr>';
+  const source = page(`<table>${row}</table><table>${row}</table>`);
+  const verdict = section3Record({ recordClass: "OFFICIAL_ROSTER", fields: { name: "Alice Adams", office: "Clerk", email: "alice@example.test" }, page: source, now: NOW });
+  assert.equal(verdict.live, true);
+  assert.deepEqual(verdict.verifiedFields, ["email", "name", "office"]);
+});
+
+test("CP-19: a heading is its own text block; a neighbouring person's paragraph is not", () => {
+  const source = page('<h1>Clerk Alice Adams</h1><p>Bob Brown, bob@example.test</p>');
+  const verdict = section3Record({ recordClass: "OFFICIAL_ROSTER", fields: { name: "Alice Adams", office: "Clerk", email: "bob@example.test" }, page: source, now: NOW });
+  assert.equal(verdict.live, true);
+  assert.deepEqual(verdict.openFields, ["email"]);
+});

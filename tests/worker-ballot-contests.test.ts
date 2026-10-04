@@ -1,3 +1,7 @@
+import { composeBallotOnlyAnswer } from "../lib/ask/ballot-only-answer.ts";
+import { promotedEdgeEntryOf } from "../lib/civic-data/read-model.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { GENERIC_BALLOT_SCOPE } from "../lib/ballot/generic-projection.ts";
 import { loadBallotForDivisions } from "../lib/ask/server-sources.ts";
 import { readerBallotSourceForTargetId, genericSourcesForDivisions } from "../lib/ballot/reader-sources.ts";
 import { ballotQuestionShape, composeOfficeField } from "../lib/ask/ballot-summary.ts";
@@ -113,4 +117,36 @@ test("a newly published jurisdiction is readable in Ask, the ballot source loop 
   assert.deepEqual(genericSourcesForDivisions(checked.payload as GenericBallotProjection,
     ["ocd-division/country:us/state:tx/county:neighbor"]), [], "a nearby county never inherits the contest");
   assert.equal(await readerBallotSourceForTargetId("invented:person", options), null);
+});
+
+
+test("a direct ballot request serves from its proven edge without unrelated source reads", async () => {
+  const checked = workerBallotContestsPackage(fixture(undefined, false, "TX")).package;
+  const store = new MemoryRoutineDataStore();
+  const published = await processRegisteredManualCandidate(store, "ballot-contests", manualProjectionCandidate(checked), now, null);
+  assert.ok(published.promoted);
+  const read = await readGenericBallotProjection({ store, now });
+  const edge = promotedEdgeEntryOf(read, "BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE, store);
+  assert.ok(edge);
+  const bundle = { promoted: new Map([[`BALLOT_CANDIDACY:${GENERIC_BALLOT_SCOPE}`, edge]]),
+    promotedFamilies: new Set(["ballot-contests"]), edgeOnly: true as const };
+  const { POST } = await import("../app/api/ask/grounded/route.ts");
+  const response = await withReaderAuthorityEdge(bundle, () => POST(new Request("https://wtp.test/api/ask/grounded", {
+    method: "POST", headers: { "content-type": "application/json", origin: "https://wtp.test", "x-forwarded-for": "ballot-direct-fixture" },
+    body: JSON.stringify({ question: "Who is running for School Board?", ocdIds: ["ocd-division/country:us/state:tx/county:alder"], today: "2026-10-04", surface: "BALLOT" }),
+  })));
+  assert.equal(response.status, 200);
+  const answer = await response.json();
+  assert.ok(answer.answer.includes("Alice Adams"));
+  assert.ok(answer.answer.includes("Bob Baker"));
+  assert.equal(answer.trace.validation.passed, true);
+  assert.equal(answer.trace.synthesis.ran, false);
+  assert.equal(answer.trace.sourcesLoaded, "ESSENTIAL");
+  for (const name of ["funding", "stateMoney", "outcomes", "candidateProfiles", "candidateCorpus", "azPimaFinance", "federalVotes", "meetings"]) {
+    assert.equal(answer.trace.preloads[name], undefined, name);
+  }
+  assert.equal(answer.records.filter((row: { kind: string }) => row.kind === "CANDIDACY").length, 2);
+  const ballot = await loadBallotForDivisions(["ocd-division/country:us/state:tx/county:alder"], { store, now, bypassCache: true });
+  assert.equal(composeBallotOnlyAnswer(ballot, "Who is running for Unknown Office?", "2026-10-04"), null);
+  assert.equal(composeBallotOnlyAnswer({ ...ballot, authorityKind: "LEGACY" }, "Who is running for School Board?", "2026-10-04"), null);
 });

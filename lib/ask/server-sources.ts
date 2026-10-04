@@ -118,6 +118,7 @@ export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: re
  */
 
 export interface BallotForDivisions {
+  authorityKind?: "GENERAL" | "LEGACY";
   /** Applicable canonical state holdings that could not be read or validated. */
   loaderFailures: string[];
   analysisLoaderFailed: boolean;
@@ -176,6 +177,7 @@ export async function loadBallotForDivisions(
       const lineup = state === "az" ? getGeneralLineup() : null;
       const measureRecords = measureRecordsForBallot(candidate);
       return {
+        authorityKind: source.name.startsWith("ballot-contests:") ? "GENERAL" : "LEGACY",
         loaderFailures,
         analysisLoaderFailed: state === "az" && analyses === null,
         measureAnalysis: (contestId) => analyses?.analyses.find((analysis) => analysis.contestId === contestId) ?? null,

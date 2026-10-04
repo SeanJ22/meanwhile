@@ -64,6 +64,13 @@ const OFFICE_FORMS: readonly RegExp[] = [
   /^who (?:are|is) the candidates? for (.+?)(?: (?:in|for) my (?:district|area|zip|zip code)| near me| in my area)?$/,
 ];
 
+/** A scheduling hint only: a local title is confirmed against held contests later. */
+export function ballotQuestionHint(question: string): boolean {
+  const normalized = normalizeName(question);
+  return Boolean(normalized && normalized.length <= 100 &&
+    [...SUMMARY_FORMS, ...OFFICE_FORMS].some(form => form.test(normalized)));
+}
+
 /** The ballot question this is, or null. Nothing is bound here; an office the table does not hold is the model's. */
 export function ballotQuestionShape(question: string, contests: readonly Contest[] = []): BallotAsk | null {
   const normalized = normalizeName(question);
@@ -113,7 +120,7 @@ const list = (items: readonly string[]): string =>
 function contestRecord(contest: Contest, election: Election): EvidenceRecord {
   return {
     kind: "CONTEST", id: contest.id, subjectId: null,
-    text: `${contest.title} appears on this ballot for ${election.name} on ${formatDateLong(election.date) ?? election.date}.`,
+    text: `${contest.title} appears on this ballot for ${election.name}${electionDate(election)}.`,
     occurredAt: election.date,
     sourceUrl: contest.provenance?.sourceUrl ?? null, sourceOrg: contest.provenance?.sourceOrg ?? null, retrievedAt: contest.provenance?.collectedAt ?? null,
   };
@@ -128,6 +135,7 @@ export interface BallotComposition {
 }
 
 /** "the 2026 General Election": the election's own name, with its article. */
+const electionDate = (election: Election): string => election.date ? ` on ${formatDateLong(election.date) ?? election.date}` : "";
 const electionName = (election: Election): string => /^the /i.test(election.name) ? election.name : `the ${election.name}`;
 
 /** The measure's designation ("Proposition 141") or its title when it has none. */
@@ -143,7 +151,7 @@ export function composeBallotSummary(input: { contests: readonly Contest[]; elec
   const measures = input.contests.filter((contest) => contest.type === "MEASURE");
   if (races.length + measures.length === 0) return null;
   const count = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
-  const sentences = [`Your ballot for ${electionName(input.election)} on ${formatDateLong(input.election.date) ?? input.election.date} has ${count(races.length, "race", "races")} and ${count(measures.length, "ballot measure", "ballot measures")}`];
+  const sentences = [`Your ballot for ${electionName(input.election)}${electionDate(input.election)} has ${count(races.length, "race", "races")} and ${count(measures.length, "ballot measure", "ballot measures")}`];
   if (races.length > 0) sentences.push(`The races are ${list(races.map((race) => spelled(race.title)))}`);
   if (measures.length > 0) sentences.push(`The measures are ${list(measures.map((measure) => measureName(measure.title)))}`);
   const records = [...races, ...measures].map((contest) => contestRecord(contest, input.election));
@@ -194,7 +202,7 @@ export function composeOfficeField(input: OfficeFieldInput & { key: OfficeKey | 
     }
     clauses.push(`${title}: ${list(fielded.map((candidate) => candidate.party ? `${candidate.name} (${candidate.party})` : candidate.name))}`);
   }
-  const lead = `On your ballot for ${electionName(input.election)} on ${formatDateLong(input.election.date) ?? input.election.date}`;
+  const lead = `On your ballot for ${electionName(input.election)}${electionDate(input.election)}`;
   const answer = `${lead}, ${clauses.join("; ")}.`;
   return { answer, citedUrls: [...new Set(records.flatMap((record) => record.sourceUrl ? [record.sourceUrl] : []))], records, gaps };
 }

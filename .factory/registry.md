@@ -3,7 +3,7 @@ worker: registry
 provider: Claude
 run_id: session_012vpYZNvpJghqihU6Pa4QE1 (Claude Sonnet 5.5)
 lock: registry-20261004T090028-s012v
-heartbeat: 2026-10-04T09:00:28Z
+heartbeat: 2026-10-04T09:13:59Z
 on_river: none
 ready: DB-09, DB-10, DB-11, DB-12, DB-25 (library; runner hook pending), DB-13 (runner side; child hook pending), DB-21 (hand-wired doors in runner; derived members need hook), DB-17 (kinds as data rows; auto-crosswalk review for the new kinds not extended), DB-23 (records, importer and reader; ROUTE_HINTS file stays until hunters hook) — cumulative, exact ready commit 8cd6e7034d885d5b6b5be02449ff3c6f6d80048a. Earlier: ffa73d305583f6a9375b718c147827a6321dcc95 (to DB-21), 426c69a20759c97ca275009dbbdf0a43879ba41c (to DB-12/DB-25).
 checks: DB-13/DB-21 tree: full `pnpm test` 9097 pass, 1 fail (version key, then fixed and re-run). DB-17 tree (code-only, .factory excluded so the affected selector ran): affected 664 files, 6550 tests, 6544 pass, 0 fail, 6 skipped. DB-23 added after: door-registry-route-hints (3), door-registry-seed, denominator-floor pass; tsc clean; all with env -u DATABASE_URL -u WTP_ASSET_STORE. DB-23 was not in the 664-file run. Nothing checked live; WTP_DOORS_READ stays off.

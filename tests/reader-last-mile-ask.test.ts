@@ -367,11 +367,15 @@ test("the real Ask route carries Mejia's published filing contact with its own p
 });
 
 test("Ask's local council answer lists the same held candidates as the reader ballot", async () => {
-  const ballot = await loadBallotForDivisions(divisions.NJ);
+  const source = BALLOT_SOURCES.find(source => source.state === "nj")!.source;
+  const all = source.normalize(await source.fetch());
+  const local = all.contests.find(contest => contest.type === "CANDIDACY" && /council/i.test(contest.title))!;
+  const ocdIds = [NJ, local.ocdId];
+  const ballot = await loadBallotForDivisions(ocdIds);
   const contests = ballot.contests.filter(c => c.type === "CANDIDACY" && /council/i.test(c.title));
   assert.ok(contests.length > 0);
   const expected = ballot.set!.candidacies.filter(c => contests.some(contest => contest.id === c.contestId));
-  const answer = await ask("Who is running for council?", "NJ");
+  const answer = await ask("Who is running for council?", "NJ", { ocdIds });
   assert.ok(answer.answer);
   const actual = answer.records.filter(record => record.kind === "CANDIDACY");
   assert.equal(actual.length, expected.length);

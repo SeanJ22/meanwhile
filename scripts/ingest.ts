@@ -39,7 +39,8 @@ import { agendaItems } from "../lib/routing/agenda-search.ts";
 import { isAnotherBodysNoticePage, isWiredNoticePage } from "../lib/meetings/notice-pages.ts";
 import { meetingFetchPass } from "../lib/meetings/shared-fetch.ts";
 import { meetingCarriesRecords } from "../lib/meetings/carries-records.ts";
-import { meetingHistoryMoveEnabled, movedToHistoryEvidence, moveConcludedMeetingsToHistory, type MeetingHistoryMove, type MeetingHistoryMoveRecord } from "../lib/civic-data/meeting-history.ts";
+import { meetingHistoryRestoreEnabled, restoreRemovedMeetingHistory, withRestoredHistory } from "../lib/civic-data/meeting-history-restore.ts";
+import { meetingHistoryMoveEnabled, movedToHistoryEvidence, moveConcludedMeetingsToHistory, readMeetingHistory, type MeetingHistoryMove, type MeetingHistoryMoveRecord } from "../lib/civic-data/meeting-history.ts";
 import {
   readMeetingPartitionProjection,
   snapshotCounts,
@@ -827,6 +828,7 @@ export async function promoteDerivedMeetingFamily(
     return;
   }
   const history = await moveConcludedMeetingsForPartition(store, partition, previous, generatedAt);
+  const restoredPrevious = await restoreRemovedHistoryForPartition(store, partition, previous, generatedAt);
   const build = buildDerivedFamily({
     wiringInput: {
       kind: "PROMOTED_VERSION",
@@ -838,7 +840,7 @@ export async function promoteDerivedMeetingFamily(
     },
     members,
     reads,
-    previous,
+    previous: restoredPrevious,
     generatedAt,
     reconcile: (read, previousSlice, windowAnchor) => {
       const reconciled = reconcileSuccessfulMeetingPartition({
@@ -1211,6 +1213,31 @@ async function moveConcludedMeetingsForPartition(
   } catch (error) {
     console.warn(`  ${partition.id}: history move skipped: ${error instanceof Error ? error.message : String(error)}`);
     return { outcome: "UNAVAILABLE", moved: new Map(), detail: "the history move failed; every sitting stays in the partition" };
+  }
+}
+
+/**
+ * DB-55: with `WTP_MEETING_HISTORY_RESTORE=on`, add back the concluded sittings with records that the old 90-day rule
+ * removed (`restoreRemovedMeetingHistory`), as carried rows of this partition's own candidate. Anything that goes
+ * wrong leaves the partition exactly as it was.
+ */
+async function restoreRemovedHistoryForPartition(
+  store: RoutineDataStore,
+  partition: MeetingPartitionContract,
+  previous: MeetingsSnapshot | null,
+  generatedAt: string,
+): Promise<MeetingsSnapshot | null> {
+  if (previous === null || !meetingHistoryRestoreEnabled()) return previous;
+  try {
+    const history = await readMeetingHistory(partition, { store, now: generatedAt });
+    const restored = await restoreRemovedMeetingHistory({
+      store, partition, live: previous, history: history.kind === "PROMOTED" ? history.value : null, generatedAt,
+    });
+    if (restored.meetings.length > 0 || restored.versionsRead > 0) console.log(`  ${partition.id}: history restore: ${restored.detail}`);
+    return withRestoredHistory(previous, restored, generatedAt);
+  } catch (error) {
+    console.warn(`  ${partition.id}: history restore skipped: ${error instanceof Error ? error.message : String(error)}`);
+    return previous;
   }
 }
 
@@ -1763,7 +1790,7 @@ export async function promoteMeetingPartitions(input: {
       generatedAt: input.generatedAt,
       freshMeetings: freshRows,
       freshAgendaDocuments: freshDocuments,
-      previous,
+      previous: await restoreRemovedHistoryForPartition(input.store, partition, previous, input.generatedAt),
       publisherExclusions: recurrence.exclusions,
       reviewedVenues: currentVenueCache,
       movedToHistory: history.moved,

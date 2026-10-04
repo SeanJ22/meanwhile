@@ -224,3 +224,93 @@ test("DB-06: history contracts are derived from their partition and never join t
   assert.equal(contract.scope, `${legistar.scope}:history`);
   assert.ok(!MEETING_PARTITION_CONTRACTS.some((partition) => partition.scope === contract.scope || partition.id === contract.id));
 });
+
+/* ── DB-55: meeting history already deleted is restored ─────────────────── */
+
+const EARLIER_NOW = "2026-09-08T12:00:00.000Z";
+
+async function seedThenDeleteTheOldWay() {
+  const keep = concludedWithAgenda("kept-in-window", daysBefore(30, EARLIER_NOW));
+  const store = await seed([oldRecord, oldBare, keep], [agendaDocument(oldRecord)]);
+  const snapshot: MeetingsSnapshot = {
+    formatVersion: 1, generatedAt: EARLIER_NOW,
+    counts: { fresh: 1, carried: 0, total: 1 },
+    sources: [{ source: "legistar", ok: true, error: null, fetched: 1, normalized: 1, drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 }, acquisitions: report(EARLIER_NOW).acquisitions }],
+    meetings: [keep], agendaDocuments: [],
+  };
+  // What every pass did before DB-01: remove every sitting outside the shown 90 days, records or not.
+  const removal = (row: Meeting) => ({
+    key: `meeting:${row.id}`, code: "OUTSIDE_REGISTERED_SERVING_WINDOW" as const,
+    windowContract: "MEETING_READER_SERVING_WINDOW_V1" as const,
+    lowerBound: new Date(Date.parse(EARLIER_NOW) - 90 * 86_400_000).toISOString(),
+    upperBound: new Date(Date.parse(EARLIER_NOW) + 90 * 86_400_000).toISOString(),
+    priorStartsAt: row.startsAt,
+  });
+  const agendaRemoval = {
+    ...removal(oldRecord), key: `agenda-document:${oldRecord.id}`, parentMeetingKey: `meeting:${oldRecord.id}`,
+  };
+  const deleted = await promoteMeetingPartition(store, legistar, snapshot, [], [removal(oldRecord), removal(oldBare), agendaRemoval]);
+  assert.equal(deleted.outcome.candidate.state, "PROMOTED", deleted.outcome.candidate.failureDetail ?? "");
+  return store;
+}
+
+test("DB-55: a sitting the old rule removed is restored from an earlier promoted version, then moves to history", async () => {
+  const store = await seedThenDeleteTheOldWay();
+  const gone = (await promotedRows(store, legistar.scope))!;
+  assert.ok(!gone.meetings.some(({ id }) => id === oldRecord.id), "it was deleted the old way");
+
+  process.env.WTP_MEETING_HISTORY_RESTORE = "on";
+  try {
+    const [restoredPass] = await promoteMeetingPartitions({
+      store, partitions: [legistar], meetings: [meeting("fresh", daysBefore(-5))], agendaDocuments: [],
+      reports: [report(NOW)], generatedAt: NOW,
+      // History moves on the pass after the restore, which is what the partition keeps until then.
+    });
+    assert.equal(restoredPass?.outcome.candidate.state, "PROMOTED", restoredPass?.outcome.candidate.failureDetail ?? "");
+  } finally {
+    delete process.env.WTP_MEETING_HISTORY_RESTORE;
+  }
+  const back = (await promotedRows(store, legistar.scope))!;
+  const row = back.meetings.find(({ id }) => id === oldRecord.id);
+  assert.ok(row, "the concluded sitting with an agenda is back in its partition");
+  assert.equal(row?.carried?.reason, "OUTSIDE_FETCH_WINDOW");
+  assert.equal(row?.carried?.lastFreshAt, SEED, "it keeps the instant it was really read");
+  assert.equal(row?.agendaUrl, oldRecord.agendaUrl);
+  assert.ok(back.agendaDocuments.every(({ meetingId }) => back.meetings.some(({ id }) => id === meetingId)));
+  assert.ok(!back.meetings.some(({ id }) => id === oldBare.id), "a sitting that carried no record is not brought back");
+
+  // The next ordinary pass moves it into history, history first.
+  const [next] = await promoteMeetingPartitions({
+    store, partitions: [legistar], meetings: [meeting("fresh", daysBefore(-5, NEXT))], agendaDocuments: [],
+    reports: [report(NEXT)], generatedAt: NEXT,
+  });
+  assert.equal(next?.outcome.candidate.state, "PROMOTED", next?.outcome.candidate.failureDetail ?? "");
+  const history = (await promotedRows(store, meetingHistoryScope(legistar.scope)))!;
+  assert.ok(history.meetings.some(({ id }) => id === oldRecord.id));
+  assert.ok(!(await promotedRows(store, legistar.scope))!.meetings.some(({ id }) => id === oldRecord.id));
+});
+
+test("DB-55: nothing is restored unless it is asked for, and a restore is idempotent", async () => {
+  const store = await seedThenDeleteTheOldWay();
+  const [plain] = await promoteMeetingPartitions({
+    store, partitions: [legistar], meetings: [meeting("fresh", daysBefore(-5))], agendaDocuments: [],
+    reports: [report(NOW)], generatedAt: NOW,
+  });
+  assert.equal(plain?.outcome.candidate.state, "PROMOTED");
+  assert.ok(!(await promotedRows(store, legistar.scope))!.meetings.some(({ id }) => id === oldRecord.id), "off by default");
+  process.env.WTP_MEETING_HISTORY_RESTORE = "on";
+  try {
+    for (const at of [NEXT, "2026-09-08T15:00:01.000Z"]) {
+      await promoteMeetingPartitions({
+        store, partitions: [legistar], meetings: [meeting("fresh", daysBefore(-5, at))], agendaDocuments: [],
+        reports: [report(at)], generatedAt: at,
+      });
+    }
+  } finally {
+    delete process.env.WTP_MEETING_HISTORY_RESTORE;
+  }
+  const live = (await promotedRows(store, legistar.scope))!;
+  const history = (await promotedRows(store, meetingHistoryScope(legistar.scope)))!;
+  const holding = [...live.meetings, ...history.meetings].filter(({ id }) => id === oldRecord.id);
+  assert.equal(holding.length, 1, "restored once, in one place");
+});

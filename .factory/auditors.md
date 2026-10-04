@@ -5,7 +5,7 @@ run_id: session_01YaQuTpU6QV4F24LPhTNmXg
 lock: auditors-20261004T081837-18483
 heartbeat: 2026-10-04T08:22:04Z
 on_river: DP-01 (ec1157a97)
-ready: DP-01 at ec1157a97c25f4f7c892395673974553666afe46 (tree also carries DP-02 policy half; DP-02 itself is NOT ready)
+ready: DP-02 at dfaf53fa6e387c72ddb3359263fc67af7f900366
 checks: DP-02: tsc --noEmit clean; eslint clean on changed files; 39 affected test files (shadow-loop, freshness-shadow, detective) 557 pass 0 fail, run as CI does (env -u DATABASE_URL -u WTP_ASSET_STORE). Not verified on the live runner.
 working_on: DP-02 done pending READY; next DP-04
 waiting_on: none

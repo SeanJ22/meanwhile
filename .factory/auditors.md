@@ -2,7 +2,7 @@ build_state: active
 worker: auditors
 provider: Claude
 run_id: session_012zKTJ8roV1UZTTRBSRQA5h
-lock: auditors-20261004T061821Z-11534
+lock: none
 heartbeat: 2026-10-04T06:26:51Z
 on_river: none
 ready: DP-01 at ec1157a97c25f4f7c892395673974553666afe46 (tree also carries DP-02 policy half; DP-02 itself is NOT ready)

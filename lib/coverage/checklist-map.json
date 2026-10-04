@@ -2,7 +2,7 @@
   "note": "Sean's State Run Checklist v1.1 rules as data, keyed by checklist ID. This is Admin's scorecard and never holds back publishing. The v1.1 profile (lib/control-plane/readiness/checklist-profile.json) is left untouched because its importer rewrites it.",
   "groups": {
     "division": ["GEO"],
-    "body": ["GOV", "PAR", "ENG"],
+    "body": ["GOV", "PAR"],
     "seat": ["OFF", "LEG", "EXE", "PRL"],
     "calendar": ["MTG", "DOC"],
     "funding": ["CAM", "FIN"],

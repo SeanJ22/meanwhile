@@ -424,8 +424,11 @@ export interface PlaceScoreView {
   readonly sendWords: string | null;
   /** The target Sean set for this place, or null. Nothing here gates publishing. */
   readonly target: { readonly goalPercent: number; readonly setAt: string } | null;
+  /** Core items only. The family rows below add up to it. */
   readonly overall: ScoreGroup;
   readonly groups: readonly ScoreGroup[];
+  /** Extension items, counted apart from the headline. Null when the place owes none. */
+  readonly extension?: ScoreGroup | null;
 }
 
 export interface SystemGroup {

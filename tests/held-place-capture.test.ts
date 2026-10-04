@@ -342,10 +342,11 @@ test("registry bodies owe civic facts without duplicating product feature work, 
     capture.held.filter(field => field.subjectId === "shared-body"));
   assert.deepEqual(bodyRows[0].subject.divisionIds, [county, neighbour]);
   const retained = buildPlaceOwedList({ ...input, held: [...capture.held, existing] });
-  assert.deepEqual(retained.find(row => row.subject.id === "shared-body" && row.checklistId === "ENG-07")?.held, [existing]);
+  assert.ok(!retained.some(row => row.checklistId.startsWith("ENG-")), "reader participation is measured on the product, not owed per body");
   const unresolved = buildPlaceOwedList({ ...input,
     subjects: [{ id: "unknown-body", kind: "body", divisionIds: [county], label: "Unknown body" }] });
-  assert.equal(unresolved.filter(row => row.subject.id === "unknown-body" && row.checklistId.startsWith("ENG-")).length, 7);
+  assert.equal(unresolved.filter(row => row.subject.id === "unknown-body" && row.checklistId.startsWith("ENG-")).length, 0);
+  assert.ok(unresolved.some(row => row.subject.id === "unknown-body" && row.checklistId.startsWith("GOV-")));
   assert.equal(rows.filter(row => row.subject.id.includes("#inventory:")).length, 12);
 });
 

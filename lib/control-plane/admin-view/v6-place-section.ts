@@ -38,8 +38,11 @@ export interface AdminV6PlaceScore {
   readonly sendWords: string | null;
   /** The target Sean set for this place, or null. */
   readonly target: { readonly goalPercent: number; readonly setAt: string } | null;
+  /** Core items only; the family rows add up to it. */
   readonly overall: GroupScore;
   readonly groups: readonly GroupScore[];
+  /** Extension items, counted apart from the headline. Null when the place owes none. */
+  readonly extension: GroupScore | null;
 }
 export interface AdminV6PlaceItem {
   readonly key: string;
@@ -116,7 +119,7 @@ export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, ta
   const rows = read.rows as readonly OwedRowLike[];
   const score = scorePlace(rows, GROUP_NAMES, GROUP_ORDER);
   const windowed = pageOwed(rows, query);
-  const placeGroups = score.groups.filter((g) => PLACE_GROUPS.has(g.group)).map((g) => {
+  const placeGroups = score.groups.map((g) => {
     const counts = [0, 0, 0, 0, 0, 0, 0];
     counts[STATUS_INDEX.published] += g.published; counts[STATUS_INDEX.held] += g.held;
     counts[STATUS_INDEX.stale] += g.stale + g.missing; counts[STATUS_INDEX.unpublished] += g.unpublished;
@@ -130,7 +133,7 @@ export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, ta
       profileVersion: CHECKLIST_PROFILE.version, definitionCount: CHECKLIST_PROFILE.definitionCount, definitions: DEFINITIONS,
       groupNames: GROUP_NAMES, placeGroups, items: windowed.items.map((i) => itemOf(i, read.placeKey, placeSendWords(read.placeKey, read.label, read.divisions))), systemGroups: SYSTEM_GROUPS,
       score: { placeKey: read.placeKey, placeLabel: read.label, covers: read.covers, observedAt: read.observedAt,
-        divisionCount: read.divisions.length, sendWords: placeSendWords(read.placeKey, read.label, read.divisions), target, overall: score.overall, groups: score.groups },
+        divisionCount: read.divisions.length, sendWords: placeSendWords(read.placeKey, read.label, read.divisions), target, overall: score.overall, groups: score.groups, extension: score.extension },
     },
     missingParts: [
       "The owed list is what the checklist says a place is owed for the governments, districts and bodies we know about. Governments we haven’t found yet are listed as “discover every …” items, so a total here can grow as agents find more.",

@@ -1,9 +1,9 @@
 build_state: active
 worker: hunters
 provider: Claude
-run_id: session_01RY44tTRT3PvcZkeuZ9fnEt
-lock: none
-heartbeat: 2026-10-04T09:43:00Z
+run_id: session_01N6mzHoCUWMZ5BD3gFSCZgR
+lock: hunters-20261004T101620Z-686
+heartbeat: 2026-10-04T10:16:20Z
 on_river: CH-02, CH-06, CH-10 part 1, hooks BR-08 and DB-09 (river c7914e8 and earlier; river fold ec495cf)
 ready: CH-02 at 9ae2d28bd8aba50e493664def23666c25a1eef3e; CH-06 at 89c20a3a107df0573005bade4344c8fcee7a953b; hooks BR-08 and DB-09 at 48dca0016542e2a864dd10cb581b06d8a1a9a26b (DB-09 hook adds the doors table to the console-input query, so it must fold after registry DB-09 creates cp_doors); CH-10 part 1 at 19cb8dafd6dfff155348c4cc58165bb475b249aa; DB-48 at 902041c35504c973863117b5c69b093772dc1523; CH-03 at 643a3a3732038368d45594a279a02b1a0a8627ca; CH-04 at d8075f82d9c7ad9ebe33896896afc8eeac671a23
 checks: CH-04: tsc clean; eslint 0 errors on changed files; selector chose 542 of 999 test files (run without the status file), 5409 pass, 0 fail, 6 skipped, CI env, no .next; new tests/live-families.test.ts. Engineering choice: only the OFFICEHOLDERS family is mapped (groups GOV, OFF); the never-held 'discover every body' inventory row is not counted; body-directory Scout and all existing source routes stay scheduled; unreadable capture falls back to planning Scouts as before. Earlier: DB-48: tsc clean; eslint 0 errors on changed files; selector chose 150 of 1002 test files (run without the status file), 1738 pass, 0 fail, 7 skipped, run as CI (DATABASE_URL, WTP_ASSET_STORE unset, no .next). Not run: live runner log check (needs deploy; River/Admin side). CH-10 part 1, CH-02, CH-06 checks as before. CH-03: tsc clean; eslint 0 errors; selector chose 568 of 1002 files; 5660 tests, 0 fail after fixing 3 source-shape tests (model-lane, paid-work-fails-closed, admin-action-gateway re-run green), CI env. Engineering choice: a mid-round raise adds capacity; a lane already closed at round start by the old ceiling reopens next round, not mid-round.

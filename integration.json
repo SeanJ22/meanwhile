@@ -574,5 +574,41 @@
     "gates": "pass",
     "evidence": "pnpm gates on d67aa5e29 (CI env): 12/12 PASS; 9120 tests pass, 0 fail, 11 skipped.",
     "at": "2026-10-04T10:02:25Z"
+  },
+  {
+    "lane": "registry",
+    "steps": [
+      "DB-15"
+    ],
+    "ready_sha": "44a3a3caa3ba110b36ae27de904818bacd396369",
+    "river_sha": "616f91a1cf6c6a8569e68006bd242136e9efc3d4",
+    "tested_sha": "616f91a1cf6c6a8569e68006bd242136e9efc3d4",
+    "gates": "pass",
+    "evidence": "pnpm gates on 616f91a1c (CI env): 12/12 PASS; 9132 tests pass, 0 fail, 11 skipped.",
+    "at": "2026-10-04T10:29:36Z"
+  },
+  {
+    "lane": "hunters",
+    "steps": [
+      "CH-04"
+    ],
+    "ready_sha": "d8075f82d9c7ad9ebe33896896afc8eeac671a23",
+    "river_sha": "616f91a1cf6c6a8569e68006bd242136e9efc3d4",
+    "tested_sha": "616f91a1cf6c6a8569e68006bd242136e9efc3d4",
+    "gates": "pass",
+    "evidence": "pnpm gates on 616f91a1c (CI env): 12/12 PASS; 9132 tests pass, 0 fail, 11 skipped.",
+    "at": "2026-10-04T10:29:36Z"
+  },
+  {
+    "lane": "bank",
+    "steps": [
+      "DP-20"
+    ],
+    "ready_sha": "ee1c356ca74df11d7a0532e5da8c428111735a4a",
+    "river_sha": "616f91a1cf6c6a8569e68006bd242136e9efc3d4",
+    "tested_sha": "616f91a1cf6c6a8569e68006bd242136e9efc3d4",
+    "gates": "pass",
+    "evidence": "pnpm gates on 616f91a1c (CI env): 12/12 PASS; 9132 tests pass, 0 fail, 11 skipped.",
+    "at": "2026-10-04T10:29:36Z"
   }
 ]

@@ -32,3 +32,14 @@ One line per batch folded into river.
 - PR #694 (CH-29/DB-58) · head 9493f4b0
 - PR #642 (FE-39) · head 6c43d31c
 - River fold repairs on the combination: the #692 OFFICIAL_PAGE_EVENTS_VERSION re-key; a floor for the door import (registry script); the #701 history-read spy
+
+## 2026-10-04T08:07:39Z — river 8f6185c → c7914e8
+
+- Evidence: pnpm gates on c7914e8 (CI env): 12/12 PASS; 9088 tests pass, 0 fail, 11 skipped (the deploy-paths trace sweep reports a named skip because .next was absent before build, as in CI).
+- river: RL-03 · ready d45831c1f
+- measures: SC-04, SC-06, SC-07, SC-09, SC-11 · ready 21c587968
+- registry: DB-12, DB-25 · ready 426c69a20
+- hunters: CH-06, CH-10, BR-08 hook, DB-09 hook · ready 19cb8dafd
+- meetings: DB-01 · ready 6afc9006d
+- people: CA-03, CA-13, CA-42, SC-15 · ready 9a185c1c0
+- Fold repairs: official-page key re-keyed twice (registry, meetings); admin-bridge-runner keeps #685's deadline and hunters' funded-scope read; SC-15 vs SC-03 resolved to keep both intents.

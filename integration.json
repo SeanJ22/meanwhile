@@ -311,5 +311,88 @@
     "gates": "pass-with-baseline-exception",
     "evidence": "pnpm gates on 8f6185c (CI env): 11/12 gates PASS; test 9088 pass, 1 fail, 10 skipped. The 1 failure (deploy-paths trace sweep, 3330 data/ files) is identical on main @ 0b31938 and predates this batch; recorded as a baseline exception.",
     "at": "2026-10-04T07:34:08Z"
+  },
+  {
+    "lane": "river",
+    "steps": [
+      "RL-03"
+    ],
+    "ready_sha": "d45831c1f9ff476b9cdb028d3fd78479d98c6503",
+    "river_sha": "c7914e8a89f79931c2a946dd8be6d41e9f4a570c",
+    "tested_sha": "c7914e8a89f79931c2a946dd8be6d41e9f4a570c",
+    "gates": "pass",
+    "evidence": "pnpm gates on c7914e8 (CI env): 12/12 PASS; 9088 tests pass, 0 fail, 11 skipped (the deploy-paths trace sweep reports a named skip because .next was absent before build, as in CI).",
+    "at": "2026-10-04T08:07:39Z"
+  },
+  {
+    "lane": "measures",
+    "steps": [
+      "SC-04",
+      "SC-06",
+      "SC-07",
+      "SC-09",
+      "SC-11"
+    ],
+    "ready_sha": "21c587968d44bf95bd9d9e517f44136695284fee",
+    "river_sha": "c7914e8a89f79931c2a946dd8be6d41e9f4a570c",
+    "tested_sha": "c7914e8a89f79931c2a946dd8be6d41e9f4a570c",
+    "gates": "pass",
+    "evidence": "pnpm gates on c7914e8 (CI env): 12/12 PASS; 9088 tests pass, 0 fail, 11 skipped (the deploy-paths trace sweep reports a named skip because .next was absent before build, as in CI).",
+    "at": "2026-10-04T08:07:39Z"
+  },
+  {
+    "lane": "registry",
+    "steps": [
+      "DB-12",
+      "DB-25"
+    ],
+    "ready_sha": "426c69a20759c97ca275009dbbdf0a43879ba41c",
+    "river_sha": "c7914e8a89f79931c2a946dd8be6d41e9f4a570c",
+    "tested_sha": "c7914e8a89f79931c2a946dd8be6d41e9f4a570c",
+    "gates": "pass",
+    "evidence": "pnpm gates on c7914e8 (CI env): 12/12 PASS; 9088 tests pass, 0 fail, 11 skipped (the deploy-paths trace sweep reports a named skip because .next was absent before build, as in CI).",
+    "at": "2026-10-04T08:07:39Z"
+  },
+  {
+    "lane": "hunters",
+    "steps": [
+      "CH-06",
+      "CH-10",
+      "BR-08 hook",
+      "DB-09 hook"
+    ],
+    "ready_sha": "19cb8dafd6dfff155348c4cc58165bb475b249aa",
+    "river_sha": "c7914e8a89f79931c2a946dd8be6d41e9f4a570c",
+    "tested_sha": "c7914e8a89f79931c2a946dd8be6d41e9f4a570c",
+    "gates": "pass",
+    "evidence": "pnpm gates on c7914e8 (CI env): 12/12 PASS; 9088 tests pass, 0 fail, 11 skipped (the deploy-paths trace sweep reports a named skip because .next was absent before build, as in CI).",
+    "at": "2026-10-04T08:07:39Z"
+  },
+  {
+    "lane": "meetings",
+    "steps": [
+      "DB-01"
+    ],
+    "ready_sha": "6afc9006dfbf3cb68367481065fe8d3e0c46c154",
+    "river_sha": "c7914e8a89f79931c2a946dd8be6d41e9f4a570c",
+    "tested_sha": "c7914e8a89f79931c2a946dd8be6d41e9f4a570c",
+    "gates": "pass",
+    "evidence": "pnpm gates on c7914e8 (CI env): 12/12 PASS; 9088 tests pass, 0 fail, 11 skipped (the deploy-paths trace sweep reports a named skip because .next was absent before build, as in CI).",
+    "at": "2026-10-04T08:07:39Z"
+  },
+  {
+    "lane": "people",
+    "steps": [
+      "CA-03",
+      "CA-13",
+      "CA-42",
+      "SC-15"
+    ],
+    "ready_sha": "9a185c1c0e4593d6c8a17ed36a857301c568c738",
+    "river_sha": "c7914e8a89f79931c2a946dd8be6d41e9f4a570c",
+    "tested_sha": "c7914e8a89f79931c2a946dd8be6d41e9f4a570c",
+    "gates": "pass",
+    "evidence": "pnpm gates on c7914e8 (CI env): 12/12 PASS; 9088 tests pass, 0 fail, 11 skipped (the deploy-paths trace sweep reports a named skip because .next was absent before build, as in CI).",
+    "at": "2026-10-04T08:07:39Z"
   }
 ]

@@ -1,13 +1,13 @@
-build_state: waiting
+build_state: active
 worker: auditors
 provider: Claude
-run_id: none
-lock: none
-heartbeat: none
+run_id: session_012zKTJ8roV1UZTTRBSRQA5h
+lock: auditors-20261004T061821Z-11534
+heartbeat: 2026-10-04T06:18:21Z
 on_river: none
 ready: none
 checks: none
-working_on: none. Seeded by River from river @ 0b31938 at 2026-10-04T06:02:18Z. Take your first ready step from your brief.
+working_on: DP-02 (starting)
 waiting_on: none
 returned: none
 needs_hook: none

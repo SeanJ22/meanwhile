@@ -291,11 +291,30 @@ export interface RegistryBodyFields {
   readonly bodyClass: string | null;
 }
 
-const REGISTRY_BODIES =
-  "SELECT b->>'id' AS id, b->>'name' AS name, b->>'ocdId' AS ocd_id, b->'alsoServesOcdIds' AS also_serves," +
-  " b->'coverageStatus' AS coverage_status, b->>'bodyClass' AS body_class" +
-  " FROM civic_data_promotions p CROSS JOIN LATERAL jsonb_array_elements(p.payload->'registry'->'bodies') b" +
-  " WHERE p.record_class = $1 AND p.scope = $2";
+const REGISTRY_BODIES = `WITH RECURSIVE nodes(phase, value) AS (
+  SELECT 'ROOT'::text, payload FROM civic_data_promotions WHERE record_class=$1 AND scope=$2
+  UNION
+  SELECT child.phase, child.value FROM nodes n CROSS JOIN LATERAL (
+    SELECT n.phase, p.payload FROM civic_data_payload_parts p WHERE p.hash=n.value->>'$civicPayloadPart'
+    UNION ALL
+    SELECT n.phase, n.value->'value' WHERE n.value->>'kind'='object'
+    UNION ALL
+    SELECT 'INDEX', s.value FROM jsonb_each(CASE WHEN n.phase='ROOT' THEN COALESCE(n.value->'$civicRegistryAreas'->'states','{}'::jsonb) ELSE '{}'::jsonb END) s
+    UNION ALL
+    SELECT 'ROOT', a.value->'part' FROM jsonb_each(CASE WHEN n.phase='INDEX' THEN n.value ELSE '{}'::jsonb END) a WHERE a.value ? 'part'
+    UNION ALL
+    SELECT 'REGISTRY', n.value->'registry' WHERE n.phase='ROOT' AND n.value ? 'registry'
+    UNION ALL
+    SELECT 'BODIES', n.value->'bodies' WHERE n.phase='REGISTRY' AND n.value ? 'bodies'
+    UNION ALL
+    SELECT 'BODIES', g.value FROM jsonb_array_elements(CASE WHEN n.phase='BODIES' AND n.value->>'kind'='array' THEN n.value->'groups' ELSE '[]'::jsonb END) g
+    UNION ALL
+    SELECT 'BODY', b.value FROM jsonb_array_elements(CASE WHEN n.phase='BODIES' AND jsonb_typeof(n.value)='array' THEN n.value ELSE '[]'::jsonb END) b
+  ) child(phase,value)
+)
+SELECT value->>'id' AS id, value->>'name' AS name, value->>'ocdId' AS ocd_id, value->'alsoServesOcdIds' AS also_serves,
+  value->'coverageStatus' AS coverage_status, value->>'bodyClass' AS body_class
+FROM nodes WHERE phase='BODY' AND value ? 'id'`;
 
 export function registryBodyOfRow(row: Row): RegistryBodyFields | null {
   const id = text(row.id);

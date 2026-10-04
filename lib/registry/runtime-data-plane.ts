@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { composeRegistryAreaView, registryAreaViewOf } from "../civic-data/payload-parts.ts";
 
 import { canonicalCivicDataJson, civicRecordsFor } from "../civic-data/changes.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
@@ -113,10 +114,14 @@ export interface RegistryRuntimePrior {
   readonly sourceReceipt: ManualSourceSetReceipt;
   /** The exact GOOD base's read model, bound so inherited members name the version they came from. */
   readonly readModelSha256: string;
+  /** The held candidate's source horizon, distinct from its review instant. */
+  readonly sourceThrough?: string;
 }
 
 export interface RegistryRuntimeCandidateOptions {
   readonly prior?: RegistryRuntimePrior | null;
+  /** Explicit owner publisher conversion; bounded place jobs never fall back to a legacy country load. */
+  readonly areaStored?: boolean;
 }
 
 type RegistryIsolationRecord =
@@ -533,6 +538,7 @@ function sourceScopedRegistryProjection(
 
 export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel): string[] {
   const issues: string[] = [];
+  const areaStored = registryAreaViewOf(value) !== null;
   const divisions = value.registry?.divisions ?? [];
   const bodies = value.registry?.bodies ?? [];
   const bodyRosters = value.bodyRosters ?? [];
@@ -542,7 +548,7 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
   const photos = value.officialPhotos?.photos ?? [];
   const divisionIds = new Set(divisions.map((division) => division.ocdId));
   if (value.formatVersion !== 1) issues.push("FORMAT_VERSION_UNSUPPORTED");
-  if (!divisions.length || !bodies.length) issues.push("REGISTRY_EMPTY");
+  if (!areaStored && (!divisions.length || !bodies.length)) issues.push("REGISTRY_EMPTY");
   if (duplicate(divisions.map((division) => division.ocdId))) issues.push("DIVISION_ID_INVALID_OR_DUPLICATED");
   if (duplicate(bodies.map((body) => body.id))) issues.push("BODY_ID_INVALID_OR_DUPLICATED");
   if (bodies.some((body) => body.ocdId !== null && !divisionIds.has(body.ocdId))) issues.push("BODY_DIVISION_UNRESOLVED");
@@ -551,7 +557,7 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
   const placeholderBodies = bodies.filter((body) => body.ocdId !== null && placeholderDivisionIds.has(body.ocdId)).map((body) => body.id).sort();
   if (placeholderBodies.length > 0) issues.push(`${CENSUS_PLACEHOLDER_BODY_ISSUE}:${placeholderBodies.join(",")}`);
   const bodyIds = new Set(bodies.map((body) => body.id));
-  if (!bodyRosters.length) issues.push("BODY_ROSTERS_EMPTY");
+  if (!areaStored && !bodyRosters.length) issues.push("BODY_ROSTERS_EMPTY");
   if (duplicate(bodyRosters.map((roster) => roster.bodyId))) issues.push("BODY_ROSTER_ID_INVALID_OR_DUPLICATED");
   if (bodyRosters.some((roster) => !bodyIds.has(roster.bodyId))) issues.push("BODY_ROSTER_BINDING_UNRESOLVED");
   const memberIds = bodyRosters.flatMap((roster) => roster.members.map((member) => member.id));
@@ -560,7 +566,7 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
     issues.push("BODY_ROSTER_REQUIRED_FACT_MISSING");
   }
   const dispositionIds = rosterReaderDispositions.map((row) => row.sourceId);
-  if (!rosterReaderDispositions.length) issues.push("ROSTER_DISPOSITIONS_EMPTY");
+  if (!areaStored && !rosterReaderDispositions.length) issues.push("ROSTER_DISPOSITIONS_EMPTY");
   if (duplicate(dispositionIds)) issues.push("ROSTER_DISPOSITION_ID_INVALID_OR_DUPLICATED");
   const eligibleDispositions = rosterReaderDispositions.filter((row) => row.state === "READER_ELIGIBLE");
   // Membership is asked of Sets, not arrays (C21): the same answers, without walking every member once per row.
@@ -571,7 +577,7 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
   if (rosterReaderDispositions.some((row) => row.state === "EXACT_DUPLICATE" && (!row.canonicalId || !memberIdSet.has(row.canonicalId)))) issues.push("ROSTER_DUPLICATE_CANONICAL_ID_UNRESOLVED");
   if (rosterReaderDispositions.some((row) => row.state === "IDENTITY_UNRESOLVED" && row.canonicalId !== null)) issues.push("ROSTER_UNRESOLVED_DISPOSITION_HAS_CANONICAL_ID");
   const executiveIds = statewideExecutives.map((row) => row.holder.id);
-  if (!statewideExecutives.length) issues.push("STATEWIDE_EXECUTIVES_EMPTY");
+  if (!areaStored && !statewideExecutives.length) issues.push("STATEWIDE_EXECUTIVES_EMPTY");
   if (duplicate(executiveIds)) issues.push("STATEWIDE_EXECUTIVE_ID_INVALID_OR_DUPLICATED");
   if (statewideExecutives.some((row) => !row.stateOcdId || !row.sourceUrl || !row.sourceOrg || !row.collectedAt || !row.holder.name || !row.holder.officeTitle)) {
     issues.push("STATEWIDE_EXECUTIVE_REQUIRED_FACT_MISSING");
@@ -590,7 +596,7 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
   const bridgeHolderIds = new Set(bridgeRows.map((row) => row.holder.id));
   const bodyHolderById = new Map(bodyRosters.flatMap((roster) => roster.members.map((holder) => [holder.id, { holder, division: roster.bodyId.split("#")[0] }] as const)));
   const statewideHolderById = new Map(statewideExecutives.map((row) => [row.holder.id, row] as const));
-  if (!bridgeRows.length) issues.push("OFFICIAL_CANDIDACY_BRIDGE_EMPTY");
+  if (!areaStored && !bridgeRows.length) issues.push("OFFICIAL_CANDIDACY_BRIDGE_EMPTY");
   if (officialCandidacies?.formatVersion !== 1 || officialCandidacies?.rule !== "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE") issues.push("OFFICIAL_CANDIDACY_BRIDGE_FORMAT_INVALID");
   if (duplicate(bridgeRows.map((row) => row.holder.id))) issues.push("OFFICIAL_CANDIDACY_HOLDER_ID_INVALID_OR_DUPLICATED");
   if (bridgeRows.some((row) => !row.holder.name || !row.holder.officeTitle || !row.holder.sourceUrl || !row.reason)) issues.push("OFFICIAL_CANDIDACY_REQUIRED_FACT_MISSING");
@@ -716,13 +722,23 @@ export async function readRegistryRuntimePrior(
     const code = read.kind === "STORE_UNREACHABLE" ? read.code : "BOOTSTRAP_NOT_PERMITTED";
     throw new Error(`REGISTRY_RUNTIME_BASE_UNAVAILABLE:${code}:${read.detail}`);
   }
-  const candidate = await store.readCandidate(read.projection.versionId);
+  const candidate = await (store.readCandidateProof?.(read.projection.versionId) ?? store.readCandidate(read.projection.versionId));
   if (!candidate) throw new Error("REGISTRY_RUNTIME_BASE_PROOF_INVALID:BASE_CANDIDATE_UNREADABLE");
   const readModelSha256 = sha256(canonicalCivicDataJson(candidate.candidate.readModel));
   if (readModelSha256 !== sha256(canonicalCivicDataJson(read.value))) {
     throw new Error("REGISTRY_RUNTIME_BASE_PROOF_INVALID:POINTER_AND_CANDIDATE_DIFFER");
   }
-  return { versionId: read.projection.versionId, payload: read.value, sourceReceipt: registryBaseSourceReceipt(candidate.candidate), readModelSha256 };
+  return { versionId: read.projection.versionId, payload: read.value, sourceReceipt: registryBaseSourceReceipt(candidate.candidate), readModelSha256,
+    sourceThrough: candidate.candidate.temporal.sourceThrough };
+}
+
+/** Storage-only conversion of the held GOOD edition; no source is re-observed. */
+export function heldRegistryAreaPackage(prior: RegistryRuntimePrior): RegistryRuntimePackage | null {
+  if (registryAreaViewOf(prior.payload)) return null;
+  return { contractId: "registry-runtime-bindings", scope: "MEMBERS",
+    version: `worker-roster:wr-${sha256(`registry-area-storage:${prior.versionId}`).slice(0, 24)}`,
+    sourceThrough: prior.sourceThrough ?? prior.sourceReceipt.reviewedAt,
+    sourceReceipt: prior.sourceReceipt, payload: prior.payload };
 }
 
 /**
@@ -781,7 +797,8 @@ export function registryRuntimeCandidate(
   }
 
   const isolated = sourceScopedRegistryProjection(input, options.prior ?? null);
-  const payload = isolated.payload;
+  const payload = options.areaStored || registryAreaViewOf(options.prior?.payload)
+    ? composeRegistryAreaView(isolated.payload, options.prior?.payload) : isolated.payload;
   const promotionReceipt = isolated.sourceReceipt;
   const issues = registryRuntimeProjectionIssues(payload);
   const receipted = new Set(promotionReceipt.sources.flatMap((source) => [source.requestedUrl, source.finalUrl]));
@@ -898,7 +915,7 @@ export function registryRuntimeCandidate(
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
     sourceProjectionEvidence: sourceProjectionEvidence(contract.sourceId, contract.recordClass, contract.scope),
     dependentChecks: [
-      { consumer: "registry/representation/map/ballot", passed: payload.registry.divisions.length > 0 && payload.registry.bodies.length > 0, detail: `${payload.registry.divisions.length} divisions and ${payload.registry.bodies.length} bodies.` },
+      { consumer: "registry/representation/map/ballot", passed: !issues.includes("REGISTRY_EMPTY"), detail: `${payload.registry.divisions.length} divisions and ${payload.registry.bodies.length} bodies.` },
       { consumer: "body-person/contact readers", passed: !issues.some((issue) => issue.startsWith("BODY_ROSTER_")), detail: `${payload.bodyRosters.length} sourced body rosters are bound to exact body and member IDs.` },
       { consumer: "person identity readers", passed: !issues.some((issue) => issue.startsWith("ROSTER_") || issue.startsWith("OFFICIAL_CANDIDACY_")), detail: `${payload.rosterReaderDispositions.length} roster identity dispositions and ${payload.officialCandidacies.rows.length} exact officeholder/candidacy outcomes.` },
       { consumer: "statewide officeholder readers", passed: !issues.some((issue) => issue.startsWith("STATEWIDE_EXECUTIVE_")), detail: `${payload.statewideExecutives.length} sourced statewide officeholder bindings.` },
@@ -910,7 +927,7 @@ export function registryRuntimeCandidate(
     civicRecords: records,
     excludedFacts: isolated.excludedFacts,
     ...(removalEvidence.length > 0 ? { removalEvidence } : {}),
-    ...(options.prior && (inherited.size > 0 || retainedRosterSources.length > 0)
+    ...(options.prior && (inherited.size > 0 || retainedRosterSources.length > 0 || registryAreaViewOf(options.prior.payload))
       ? {
         manualPriorAuthority: {
           kind: "VALIDATED_PRIOR_PROJECTION" as const,

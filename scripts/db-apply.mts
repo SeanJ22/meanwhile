@@ -3,14 +3,26 @@ import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { pathToFileURL } from "node:url";
 import { config as loadEnv } from "dotenv";
+import { admittedRuntimeChildEnvironment, RUNTIME_AUTHORITY_ENV } from "../lib/civic-data/runtime-authority.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, type OwnerDigestRecord } from "../lib/control-plane/owner-surface.ts";
 import { PRODUCTION_MIGRATION_HEADLINE, redactMigrationOutput, type ProductionMigrationOutcome } from "../lib/db/migration-phases.ts";
 
 type MigrationRecord = OwnerDigestRecord & { readonly migration: ProductionMigrationOutcome };
 interface ApplyDeps {
   readonly execute?: (args: readonly string[], env: NodeJS.ProcessEnv) => { status: number | null; stdout: string; stderr: string };
+  readonly convertRegistryStorage?: (env: NodeJS.ProcessEnv) => { status: number | null; stdout: string; stderr: string };
   readonly head?: () => string | null;
   readonly record?: (record: MigrationRecord) => Promise<void>;
+}
+
+/** The same admitted publisher child runs at automatic adoption and explicit conversion. */
+export function convertRegistryStorageAtApply(parentEnv: NodeJS.ProcessEnv): { status: number | null; stdout: string; stderr: string } {
+  const env = admittedRuntimeChildEnvironment({ parentEnv, capability: "MANUAL_CONTRACT", contract: "registry-runtime-bindings" });
+  const child = spawnSync(process.execPath, ["--experimental-strip-types", "scripts/promote-registry-runtime.mts",
+    "--promote", "--convert-held-registry"], {
+    cwd: process.cwd(), env, encoding: "utf8", windowsHide: true, maxBuffer: 16 * 1024 * 1024,
+  });
+  return { status: child.status, stdout: child.stdout ?? "", stderr: child.stderr ?? child.error?.name ?? "" };
 }
 
 export function productionBuildCanApply(env: Record<string, string | undefined>): boolean {
@@ -49,6 +61,18 @@ export async function runDbApply(args: string[], env = process.env, deps: ApplyD
     });
     try { result = execute(args, env); }
     catch { result = { status: 1, stdout: "", stderr: "db:apply: migration command failed to launch\n" }; }
+    if (contract && result.status === 0) {
+      // The runner calls this existing boundary before admitting work for the
+      // exact adopted SHA. Reuse the held GOOD edition, including its source
+      // clocks; an already-native edition needs no promotion.
+      const convert = deps.convertRegistryStorage ?? convertRegistryStorageAtApply;
+      try {
+        const converted = convert({ ...env, [RUNTIME_AUTHORITY_ENV.sha]: testedSha! });
+        result = { status: converted.status, stdout: `${result.stdout}${converted.stdout}`, stderr: `${result.stderr}${converted.stderr}` };
+      } catch {
+        result = { status: 1, stdout: result.stdout, stderr: `${result.stderr}db:apply: held-registry storage conversion failed to launch\n` };
+      }
+    }
   }
   const stdout = redactMigrationOutput(result.stdout, env);
   const stderr = redactMigrationOutput(result.stderr, env);

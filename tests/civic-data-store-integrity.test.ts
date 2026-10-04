@@ -5,6 +5,8 @@ import test from "node:test";
 
 import { neonConfig } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
+import { CivicPayloadParts, composeRegistryAreaView } from "../lib/civic-data/payload-parts.ts";
+import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 
 import * as schema from "../lib/db/schema.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
@@ -13,6 +15,7 @@ import {
   assertRoutineDataStoreMutationAuthority,
   canonicalPostgresRoutineTimestamp,
   candidateSummaryRead,
+  candidatePromotionRead,
   preparedProjectionCouplingRead,
   MemoryRoutineDataStore,
   PostgresRoutineDataStore,
@@ -885,6 +888,54 @@ async function withCannedNeon<T>(
   }
 }
 
+test("native directory name lookup keeps same-state ambiguity and returns no body or roster payloads", async () => {
+  const ids = ["ocd-division/country:us/state:az/place:benson", "ocd-division/country:us/state:az/county:benson", "ocd-division/country:us/state:nh/place:benson"];
+  const saved = new Map<string, unknown>();
+  const parts = new CivicPayloadParts({ existing: async () => [],
+    write: async rows => { for (const row of rows) saved.set(row.hash, row.payload); },
+    read: async hashes => hashes.map(hash => ({ hash, payload: saved.get(hash) })), });
+  const payload = composeRegistryAreaView({ formatVersion: 1, registry: { generatedAt: "2026-10-02T00:00:00.000Z",
+    divisions: ids.map(ocdId => ({ ocdId, state: ocdId.includes("state:az") ? "AZ" : "NH", label: "Benson" })),
+    bodies: ids.map(ocdId => ({ id: `${ocdId}#regional`, ocdId, unrelatedBodyText: "BODY_SECRET".repeat(10_000) })) },
+    bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
+    officialCandidacies: { formatVersion: 1, rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE", rows: [] },
+  } as unknown as RegistryRuntimeReadModel);
+  const stored = await parts.store(payload);
+  const view = await parts.load(stored, [ids[0]]) as RegistryRuntimeReadModel;
+  const replies: unknown[] = [];
+  await withCannedNeon(statement => {
+    assert.match(statement.query, /from "civic_data_payload_parts"/);
+    const hashes = statement.params as readonly string[];
+    const descriptorRead = statement.query.includes("->'divisions'");
+    const rows = hashes.map(hash => {
+      const part = saved.get(hash) as Record<string, unknown>;
+      assert.ok(part, `requested existing part ${hash}`);
+      if (!descriptorRead) return [hash, part];
+      const root = part.kind === "object" ? part.value as Record<string, unknown> : part;
+      const registry = statement.query.includes("->'registry'") ? root.registry as Record<string, unknown> | undefined : root;
+      return [hash, root.$civicPayloadPart ?? null, registry?.$civicPayloadPart ?? null, registry?.divisions ?? null];
+    });
+    replies.push(rows);
+    return { columns: descriptorRead ? [["hash", "text"], ["rootRef", "text"], ["registryRef", "text"], ["divisions", "jsonb"]]
+      : [["hash", "text"], ["payload", "jsonb"]], rows };
+  }, async (store, sent) => {
+    for (const root of ["district:dc", "territory:as", "territory:gu", "territory:mp", "territory:pr", "territory:vi"]) {
+      const area = `ocd-division/country:us/${root}/place:held`;
+      assert.deepEqual(store.forRegistryArea([area]).registryAreaScope, [area, `ocd-division/country:us/${root}`]);
+    }
+    assert.throws(() => store.forRegistryArea(["ocd-division/country:us/district:dc", "ocd-division/country:us/state:dc"]), /REGISTRY_AREA_STATE_BOUNDARY/);
+    assert.throws(() => store.forRegistryArea([ids[0], ids[2]]), /REGISTRY_AREA_STATE_BOUNDARY/);
+    const scoped = store.forRegistryArea([ids[0]]);
+    assert.deepEqual([...(await scoped.readRegistryDivisionIdsNamed(view, ["BENSON!"]))].sort(), ids.slice(0, 2).sort(),
+      "every same-state match reaches the directory validator, including ambiguity");
+    assert.deepEqual(await scoped.readRegistryDivisionIdsNamed(view, ["unmatched"]), []);
+    assert.ok(sent.every(statement => !statement.query.includes("'bodies'") && !statement.query.includes("'bodyRosters'")));
+    assert.ok(!JSON.stringify(replies).includes("BODY_SECRET"), "only division descriptors and facts crossed the driver seam");
+    const foreignHashes = Object.values(payload.$civicRegistryView.indexes.NH).map(row => row.part.$civicPayloadPart);
+    assert.ok(sent.every(statement => foreignHashes.every(hash => !statement.params.includes(hash))), "another state's area is never requested");
+  });
+});
+
 /** The RETURNING list of a statement, or null when it has none. */
 function returningList(query: string): string | null {
   const at = query.lastIndexOf(" returning ");
@@ -931,10 +982,14 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
   });
   const none: NeonAnswer = { columns: [], rows: [] };
 
+  for (const held of [undefined, value]) {
+  const selected = ["id", "source_id", "record_class", "scope", "state", "acquisition_succeeded", "validation_receipt",
+    "promoted_version_id", "last_known_good_version_id", "failure_code", "failure_detail", "retrieved_at", "raw_hash", "normalized_hash"];
+  const heldRow = selected.map(name => candidateRow.find(([[column]]) => column === name)!);
   const promoted = await withCannedNeon((statement) => {
     const text = statement.query;
     if (/^select pg_advisory_xact_lock/.test(text.trim())) return { columns: [["pg_advisory_xact_lock", "void"]], rows: [[""]] };
-    if (text.startsWith("select") && text.includes(`from "civic_data_candidates"`)) return answer(candidateRow);
+    if (text.startsWith("select") && text.includes(`from "civic_data_candidates"`)) return answer(held ? heldRow : candidateRow);
     if (text.startsWith("select") && text.includes(`from "civic_data_promotions"`)) return none;
     if (text.startsWith(`insert into "civic_data_promotions"`)) return answer(pointerRow);
     if (text.startsWith(`insert into "civic_data_candidate_events"`)) return none;
@@ -943,8 +998,15 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
   }, async (store, sent) => {
     // Judge the statements sent before the answer is mapped, so a whole-row
     // RETURNING fails on what it asked for, not on the canned reply's shape.
-    const settled = await store.promote(value.id, structuredClone(persisted), promotedAt)
+    const settled = await store.promote(value.id, structuredClone(persisted), promotedAt, held ? { candidate: held } : {})
       .then((result) => ({ result }), (error: unknown) => ({ error }));
+
+    if (held) {
+      const reads = sent.filter(({ query }) => query.startsWith("select") && query.includes(`from "civic_data_candidates"`));
+      assert.equal(reads.length, 1);
+      assert.doesNotMatch(selectList({ toSQL: () => ({ sql: reads[0]!.query }) }), /"candidate"|"identity"/,
+        "the validated envelope in hand is not rehydrated at the pointer move");
+    }
 
     const priorRead = sent.find(({ query }) => query.startsWith("select") && query.includes(`from "civic_data_promotions"`));
     assert.match(priorRead?.query ?? "", /^select "current_version_id" from "civic_data_promotions"/, "the prior pointer is read for its version id alone");
@@ -970,6 +1032,32 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
     payload: value.readModel,
     receipt: persisted,
   });
+  }
+});
+
+test("a pointer move refuses a foreign held envelope before any mutation", async () => {
+  const value = candidate("held-promotion-mismatch");
+  const persisted = receiptFor(value);
+  const columns: NeonColumn[] = [["id", "text"], ["source_id", "text"], ["record_class", "text"], ["scope", "text"],
+    ["state", "text"], ["acquisition_succeeded", "bool"], ["validation_receipt", "jsonb"], ["promoted_version_id", "text"],
+    ["last_known_good_version_id", "text"], ["failure_code", "text"], ["failure_detail", "text"], ["retrieved_at", "timestamptz"],
+    ["raw_hash", "text"], ["normalized_hash", "text"]];
+  for (const foreign of [
+    { ...value, id: "foreign" },
+    { ...value, normalization: { ...value.normalization, normalizedHash: "b".repeat(64) } },
+    { ...value, retrieval: { ...value.retrieval, rawHash: "b".repeat(64) } },
+    { ...value, scope: "another-scope" },
+  ]) {
+    await withCannedNeon(() => ({ columns, rows: [[value.id, value.sourceId, value.recordClass, value.scope, "VALIDATED", true,
+      persisted, null, null, null, null, value.retrieval.retrievedAt, value.retrieval.rawHash, value.normalization.normalizedHash]] }),
+    async (store, sent) => {
+      await assert.rejects(store.promote(value.id, persisted, "2026-09-08T12:01:00.000Z", { candidate: foreign }),
+        /CANDIDATE_TRANSITION_ENVELOPE_MISMATCH/);
+      assert.equal(sent.length, 1, "no pointer, event or disposition is written for a foreign envelope");
+    });
+  }
+  const select = selectList(candidatePromotionRead(drizzle.mock({ schema }), value.id));
+  assert.doesNotMatch(select, /"candidate"|"identity"/);
 });
 
 test("the prepared projection's coupling read carries no composed payload", () => {

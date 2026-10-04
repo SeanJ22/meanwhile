@@ -6,6 +6,7 @@ import test from "node:test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { declaredPhase } from "../lib/db/migration-phases.ts";
 import { runDbApply } from "../scripts/db-apply.mts";
+import { RUNTIME_AUTHORITY_ENV } from "../lib/civic-data/runtime-authority.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const REGISTER = join(ROOT, "tests", "fixtures", "apply-migrations-neon-register.mjs");
@@ -259,6 +260,68 @@ test("an unreadable runtime commit is redacted and saved as a contract refusal",
     assert.equal(records.length, 1);
     assert.match(JSON.stringify(records), /REFUSED/);
     assert.doesNotMatch(JSON.stringify(records), /private-git-error|private-fetch-error/);
+});
+
+test("exact runtime adoption converts held registry storage after SQL, including when no contract SQL is pending", async () => {
+  const sha = "a".repeat(40);
+  const parentSha = "b".repeat(40);
+  const order: string[] = [];
+  const records: unknown[] = [];
+  const args = ["--target=production", "--phase=contract", "--production-runtime", `--runtime-commit=${sha}`];
+  for (const converted of [true, false]) {
+    const env: NodeJS.ProcessEnv = { NODE_ENV: "test", WTP_RUNTIME_MODE: "production", [RUNTIME_AUTHORITY_ENV.sha]: parentSha };
+    assert.equal(await runDbApply(args, env, {
+      head: () => sha,
+      execute: (_args, sqlEnv) => {
+        assert.equal(sqlEnv, env);
+        assert.equal(sqlEnv[RUNTIME_AUTHORITY_ENV.sha], parentSha);
+        order.push("sql"); return { status: 0, stdout: "No pending contract migrations.\n", stderr: "" };
+      },
+      convertRegistryStorage: childEnv => {
+        assert.notEqual(childEnv, env);
+        assert.equal(childEnv[RUNTIME_AUTHORITY_ENV.sha], sha);
+        assert.equal(env[RUNTIME_AUTHORITY_ENV.sha], parentSha);
+        order.push("registry"); return { status: 0,
+        stdout: JSON.stringify({ converted, promotedVersionId: "held-native-version" }) + "\n", stderr: "" }; },
+      record: async record => { order.push("record"); records.push(record); },
+    }), 0);
+    assert.equal(env[RUNTIME_AUTHORITY_ENV.sha], parentSha);
+  }
+  assert.deepEqual(order, ["sql", "registry", "record", "sql", "registry", "record"]);
+  assert.match(JSON.stringify(records), /SUCCEEDED/);
+  assert.match(JSON.stringify(records), /held-native-version/);
+});
+
+test("failed held registry conversion prevents successful adoption and records its redacted failure", async () => {
+  const sha = "a".repeat(40);
+  const records: unknown[] = [];
+  assert.equal(await runDbApply(["--target=production", "--phase=contract", "--production-runtime", `--runtime-commit=${sha}`],
+    { NODE_ENV: "test", WTP_RUNTIME_MODE: "production", PRIVATE_TOKEN: "private-token-value" }, {
+      head: () => sha,
+      execute: () => ({ status: 0, stdout: "SQL succeeded\n", stderr: "" }),
+      convertRegistryStorage: () => ({ status: 1, stdout: "", stderr: "REGISTRY_AREA_STORAGE_CONVERSION_FAILED private-token-value\n" }),
+      record: async record => { records.push(record); },
+    }), 1);
+  assert.match(JSON.stringify(records), /FAILED/);
+  assert.match(JSON.stringify(records), /REGISTRY_AREA_STORAGE_CONVERSION_FAILED/);
+  assert.doesNotMatch(JSON.stringify(records), /private-token-value/);
+});
+
+test("failed SQL and dry, local or expand apply paths never convert registry storage", async () => {
+  const sha = "a".repeat(40);
+  const runtime = ["--target=production", "--phase=contract", "--production-runtime", `--runtime-commit=${sha}`];
+  for (const [args, sqlStatus] of [
+    [runtime, 1], [[...runtime, "--dry"], 0], [["--target=local", "--phase=contract"], 0],
+    [["--target=production", "--phase=expand"], 0],
+  ] as const) {
+    let converted = false;
+    await runDbApply([...args], { NODE_ENV: "test", WTP_RUNTIME_MODE: "production" }, {
+      head: () => sha, execute: () => ({ status: sqlStatus, stdout: "", stderr: "" }),
+      convertRegistryStorage: () => { converted = true; throw new Error("must not convert"); },
+      record: async () => {},
+    });
+    assert.equal(converted, false);
+  }
 });
 
 test("preview, branch and local build hooks skip without reading a database", () => {

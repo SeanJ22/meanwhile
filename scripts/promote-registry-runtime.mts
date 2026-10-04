@@ -11,6 +11,7 @@ import { resolve, join } from "node:path";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { registryAreaViewOf } from "../lib/civic-data/payload-parts.ts";
 import {
   readRegistryRuntimePrior,
   REGISTRY_RUNTIME_SCOPE,
@@ -18,7 +19,7 @@ import {
   type RegistryRuntimePackage,
 } from "../lib/registry/runtime-data-plane.ts";
 import { assignment } from "./cli-args.mts";
-import { publishWorkerRosterResults } from "../lib/civic-data/worker-roster-publication.ts";
+import { convertHeldRegistryStorage, publishWorkerRosterResults } from "../lib/civic-data/worker-roster-publication.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
@@ -55,7 +56,7 @@ async function main(): Promise<void> {
         await runNationalPlaceWorkerProcesses({ root: process.cwd(), store, zips,
           orderPending: ready => orderNationalPlaceWork(repos, ready, new Date().toISOString()),
           capacity: () => zips.length, publish: async input => {
-            const publication = await publishNationalPlaceSources({ ...input,
+            const publication = await publishNationalPlaceSources({ ...input, areaDivisionIds: input.divisions.map(row => row.id),
               divisions: input.divisions.filter(row => row.sourceDataset).map(row => ({ ...row, sourceDataset: row.sourceDataset! })) });
             nationalPublications.push(publication);
             return publication;
@@ -104,19 +105,26 @@ async function main(): Promise<void> {
     return;
   }
   const packagePath = assignment(process.argv, "package");
-  if (!packagePath) throw new Error("Pass --package=<reviewed-registry-runtime-package.json>.");
-  const input = JSON.parse(readFileSync(resolve(packagePath), "utf8")) as RegistryRuntimePackage;
-  if (input.contractId !== "registry-runtime-bindings") throw new Error(`Wrong registry contract: ${String(input.contractId)}.`);
+  const convertHeld = process.argv.includes("--convert-held-registry");
+  if (!packagePath && !convertHeld) throw new Error("Pass --package=<reviewed-registry-runtime-package.json> or --convert-held-registry.");
+  const input = packagePath && !convertHeld ? JSON.parse(readFileSync(resolve(packagePath), "utf8")) as RegistryRuntimePackage : null;
   prepareProductionCivicDataWrite();
   const store = new PostgresRoutineDataStore();
+  if (convertHeld) {
+    console.log(JSON.stringify({ contractId: "registry-runtime-bindings",
+      ...await convertHeldRegistryStorage(store, new Date().toISOString()) }, null, 2));
+    return;
+  }
+  if (!input || input.contractId !== "registry-runtime-bindings") throw new Error(`Wrong registry contract: ${String(input?.contractId)}.`);
   const prior = await readRegistryRuntimePrior(store, input.sourceReceipt.reviewedAt);
-  const candidate = registryRuntimeCandidate(input, { prior });
+  const candidate = registryRuntimeCandidate(input, { prior, areaStored: true });
   const outcome = await processRegisteredManualCandidate(
     store,
     "registry-runtime-bindings",
     candidate,
     input.sourceReceipt.reviewedAt,
     prior?.versionId ?? null,
+    { confirmUnchanged: registryAreaViewOf(prior?.payload) !== null },
   );
   if (!outcome.promoted) {
     throw new Error(`Registry runtime candidate ${candidate.id} was held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);

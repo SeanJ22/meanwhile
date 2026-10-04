@@ -18,7 +18,7 @@
  * Anything that does not pass stays a gap with its reason; nothing is invented
  * and no state is registered by hand.
  */
-import type { RoutineDataStore } from "./store.ts";
+import { PostgresRoutineDataStore, type RoutineDataStore } from "./store.ts";
 import type { OfficialLinkingPage } from "./source-authority.ts";
 import type { Body, Division, SourceDataset } from "../registry/types.ts";
 import type { Tier } from "../ocd/tiers.ts";
@@ -68,6 +68,8 @@ export interface NationalPlacePublicationInput {
   readonly store: RoutineDataStore;
   readonly now: string;
   readonly divisions: readonly NationalDivisionInput[];
+  /** The held place/ring, including divisions whose already-held Census facts need no new publication. */
+  readonly areaDivisionIds?: readonly string[];
   readonly geographyCaptures: readonly WorkerPublicationCapture[];
   readonly sources: { readonly officials: readonly NationalOfficialInput[] };
   readonly portraitRuntime?: PortraitRuntime;
@@ -169,6 +171,25 @@ async function promote(store: RoutineDataStore, prepared: Parameters<typeof regi
  * saved evidence confirms rather than duplicates.
  */
 export async function publishNationalPlaceSources(input: NationalPlacePublicationInput): Promise<NationalPlacePublication> {
+  if (!input.divisions.length && !input.sources.officials.length) return { candidateId: null, promotedVersionId: null, divisions: [], bodies: [], members: [], gaps: [] };
+  const divisionIds = [...new Set([...(input.areaDivisionIds ?? []), ...input.divisions.map(row => row.id), ...input.sources.officials.map(row => row.divisionId)])]
+    .filter(id => /^ocd-division\/country:us\/state:[a-z]{2}(?:\/|$)/.test(id));
+  if (!divisionIds.length) return { candidateId: null, promotedVersionId: null, divisions: [], bodies: [], members: [], gaps: [] };
+  const states = [...new Set(divisionIds.map(id => /\/state:([a-z]{2})(?:\/|$)/.exec(id)![1]))];
+  if (states.length > 1) {
+    const publications: NationalPlacePublication[] = [];
+    for (const state of states) {
+      const inState = (id: string) => id.startsWith(`ocd-division/country:us/state:${state}`) && /^ocd-division\/country:us\/state:[a-z]{2}(?:\/|$)/.test(id);
+      publications.push(await publishNationalPlaceSources({ ...input, divisions: input.divisions.filter(row => inState(row.id)),
+        areaDivisionIds: divisionIds.filter(inState),
+        sources: { officials: input.sources.officials.filter(row => inState(row.divisionId)) } }));
+    }
+    const last = publications.filter(row => row.promotedVersionId).at(-1);
+    return { candidateId: last?.candidateId ?? null, promotedVersionId: last?.promotedVersionId ?? null,
+      divisions: publications.flatMap(row => row.divisions), bodies: publications.flatMap(row => row.bodies),
+      members: publications.flatMap(row => row.members), gaps: publications.flatMap(row => row.gaps) };
+  }
+  if (input.store instanceof PostgresRoutineDataStore) input = { ...input, store: input.store.forRegistryArea(divisionIds) };
   const gaps: { key: string; detail: string }[] = [];
   let prior = await readRegistryRuntimePrior(input.store, input.now);
   if (!prior) throw new Error("NATIONAL_REGISTRY_PRIOR_MISSING");

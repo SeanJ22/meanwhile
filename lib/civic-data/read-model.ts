@@ -108,7 +108,7 @@ export type CivicDataReadResult<T> =
 export type CivicDataReadStore = Pick<
   RoutineDataStore,
   "readPromotion" | "readCandidate"
-> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities">>;
+> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readCandidateProof" | "readPromotionIdentity" | "readPromotionIdentities">>;
 
 /**
  * Optional set-oriented read door used by projections that compose many

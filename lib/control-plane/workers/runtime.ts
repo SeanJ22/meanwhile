@@ -10,7 +10,7 @@ import { createRouteTask, type RouteTask } from "../route-task.ts";
 import { registerRouteTask } from "../repository/coordinator.ts";
 import { readCompletedWorkerResult, reconcileWorkerCompletions, type UncommittedWorkerResult } from "../repository/worker-completion.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "../repository/types.ts";
-import { dispatchOne, proofChargeOf, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
+import { dispatchOne, hunterWallLimitMs, proofChargeOf, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
 import type { ScheduledObligation } from "../scheduler/obligation.ts";
 import { ceilingPermits, RESEARCH_BOUNDS, researchSpendInWindow } from "../scheduler/research-policy.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
@@ -273,7 +273,7 @@ async function dispatchAdmittedWorkerTask(runtime: FleetRuntime, task: RouteTask
   const proof = proofChargeOf((await runtime.repos.workItems.read(task.workItemId).catch(() => null))?.value.project);
   return dispatchOne(runtime.repos, { obligation, routeTaskId: task.id, holder, now, leaseTtlMs: 300_000,
     clock: runtime.now ?? (()=>new Date().toISOString()),
-    bound: { maxAttempts: 3, maxWallMs: 0, maxCostUnits: 20_000 }, maturity: () => executor.lane === "DETERMINISTIC" ? "GRADUATED" : "UNGRADUATED",
+    bound: { maxAttempts: 3, maxWallMs: hunterWallLimitMs(), maxCostUnits: 20_000 }, maturity: () => executor.lane === "DETERMINISTIC" ? "GRADUATED" : "UNGRADUATED",
     executor, methodVersion: runtime.methodVersion, policyVersion: FLEET_POLICY_VERSION, ...proof });
 }
 

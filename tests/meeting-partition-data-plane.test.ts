@@ -857,9 +857,9 @@ function priorSnapshot(rows: readonly Meeting[], documents: readonly AgendaDocum
   };
 }
 
-function reconcileAt(prior: readonly Meeting[], documents: readonly AgendaDocument[] = []) {
+function reconcileAt(prior: readonly Meeting[], documents: readonly AgendaDocument[] = [], sourceName = legistar.meetingSource) {
   return reconcileSuccessfulMeetingPartition({
-    sourceName: legistar.meetingSource,
+    sourceName,
     generatedAt: HELD_READ,
     freshMeetings: [meeting(legistar, HELD_READ, "fresh")],
     freshAgendaDocuments: [],
@@ -886,14 +886,22 @@ test("DB-01: a concluded meeting with an agenda is kept past 120 days; one with 
   assert.equal(evidence?.code === "OUTSIDE_REGISTERED_SERVING_WINDOW" ? evidence.windowContract : null, "MEETING_READER_SERVING_WINDOW_V2");
 });
 
-test("DB-01: rows between the shown and held windows are carried as outside the fetch, never as a disappearance", () => {
+test("DB-01: rows outside the dates a read fetched are carried as outside the fetch, never as a disappearance", () => {
   const ninetyFive: Meeting = { ...meeting(legistar, HELD_READ, "ninety-five"), startsAt: daysBefore(95), status: "CONCLUDED" };
   const inside: Meeting = { ...meeting(legistar, HELD_READ, "inside"), startsAt: daysBefore(10), status: "CONCLUDED" };
-  const reconciliation = reconcileAt([ninetyFive, inside]);
-  const carried = new Map(reconciliation.meetings.filter((row) => row.carried).map((row) => [row.id, row.carried?.reason]));
-  assert.equal(carried.get(ninetyFive.id), "OUTSIDE_FETCH_WINDOW");
-  assert.equal(carried.get(inside.id), "UNEXPLAINED_DISAPPEARANCE");
-  assert.deepEqual(reconciliation.removalEvidence, []);
+  const withRecord: Meeting = { ...meeting(legistar, HELD_READ, "old-record"), startsAt: daysBefore(130), status: "CONCLUDED", agendaUrl: "https://example.gov/a" };
+  const reasons = (reconciliation: ReturnType<typeof reconcileAt>) =>
+    new Map(reconciliation.meetings.filter((row) => row.carried).map((row) => [row.id, row.carried?.reason]));
+  // DB-03 to DB-05: legistar fetches the held 120 days, so a row 95 days back that its answer leaves out was asked about.
+  const held = reasons(reconcileAt([ninetyFive, inside, withRecord]));
+  assert.equal(held.get(ninetyFive.id), "UNEXPLAINED_DISAPPEARANCE");
+  assert.equal(held.get(inside.id), "UNEXPLAINED_DISAPPEARANCE");
+  assert.equal(held.get(withRecord.id), "OUTSIDE_FETCH_WINDOW", "130 days back was never asked about");
+  // An adapter that reads whatever its feed lists (onbase) never asked about 95 days back either.
+  const feed = reconcileAt([ninetyFive, inside], [], "onbase");
+  assert.equal(reasons(feed).get(ninetyFive.id), "OUTSIDE_FETCH_WINDOW");
+  assert.equal(reasons(feed).get(inside.id), "UNEXPLAINED_DISAPPEARANCE");
+  assert.deepEqual(feed.removalEvidence, []);
 });
 
 test("DB-01: the validator accepts a V1 removal for one pass and refuses removing a kept record", async () => {

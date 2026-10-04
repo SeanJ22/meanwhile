@@ -1,5 +1,5 @@
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
-import { UPCOMING_HORIZON_DAYS } from "../../meetings/constants.ts";
+import { MEETING_HELD_HORIZON_DAYS } from "../../meetings/constants.ts";
 import { isPlacelessLocation, resolveVenue } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { sittingBodyKey } from "../event-identity.ts";
@@ -64,7 +64,7 @@ export function sittingKey(
 
 /** The months from `now`'s month through the forward horizon, as `YYYY-MM-01`. */
 export function forwardCalendarMonths(now: Date): string[] {
-  const end = new Date(now.getTime() + UPCOMING_HORIZON_DAYS * 86_400_000);
+  const end = new Date(now.getTime() + MEETING_HELD_HORIZON_DAYS * 86_400_000);
   const out: string[] = [];
   let y = now.getUTCFullYear();
   let m = now.getUTCMonth() + 1;
@@ -182,7 +182,7 @@ export function calendarSittingsNotInPortal(input: {
 }): CalendarUnion {
   const { wiring, now } = input;
   const cfg = wiring.config;
-  const upper = now.getTime() + UPCOMING_HORIZON_DAYS * 86_400_000;
+  const upper = now.getTime() + MEETING_HELD_HORIZON_DAYS * 86_400_000;
   const unmatched = new Map<string, string[]>();
   for (const row of input.portal) unmatched.set(row.key, [...(unmatched.get(row.key) ?? []), row.id]);
   const legacy = legacySittings(cfg);

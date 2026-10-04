@@ -23,7 +23,8 @@ import { refreshCuratedBodyStatus } from "../registry/curated-bodies.ts";
 import { refreshMeetingPartitions, type MeetingPartitionRefresh } from "../civic-data/meeting-partitions.ts";
 import { SOURCE_WIRING, installRegistryWiring, type BodySourceWiring } from "../registry/source-wiring.ts";
 import { listDoors, type DoorRepository } from "./registry.ts";
-import { wiringParity, wiringRowsFromDoors } from "./rows.ts";
+import { installDoorHosts } from "../civic-data/source-authority.ts";
+import { meetingDoorHosts, wiringParity, wiringRowsFromDoors } from "./rows.ts";
 
 export const DOORS_READ_SWITCH = "WTP_DOORS_READ";
 
@@ -51,13 +52,18 @@ export async function installDoorWiringFromRegistry(
   const code = options.code ?? SOURCE_WIRING;
   if (mode !== "registry") {
     installRegistryWiring(null);
+    installDoorHosts(null);
     return { mode, reading: "code", rows: code.length, reason: null, differences: [] };
   }
   let rows: BodySourceWiring[];
+  let hosts: string[];
   try {
-    rows = wiringRowsFromDoors((await listDoors(repo)).doors);
+    const doors = (await listDoors(repo)).doors;
+    rows = wiringRowsFromDoors(doors);
+    hosts = meetingDoorHosts(doors);
   } catch {
     installRegistryWiring(null);
+    installDoorHosts(null);
     return { mode, reading: "code", rows: code.length, reason: "the door registry could not be read, so the code's own list is in use", differences: [] };
   }
   const differences = wiringParity(code, rows);
@@ -65,6 +71,7 @@ export async function installDoorWiringFromRegistry(
   const lost = code.filter((row) => !named.has(`${row.bodyId} ${row.agendaSourceType}`));
   if (rows.length === 0 || lost.length > 0) {
     installRegistryWiring(null);
+    installDoorHosts(null);
     return {
       mode,
       reading: "code",
@@ -76,6 +83,7 @@ export async function installDoorWiringFromRegistry(
     };
   }
   installRegistryWiring(rows);
+  installDoorHosts(hosts);
   return { mode, reading: "registry", rows: rows.length, reason: null, differences };
 }
 

@@ -32,7 +32,11 @@ jobs:
           node-version: 24
           package-manager-cache: false
       - run: corepack enable
+      # RL-06: merges only while the adapter publication switch reads `pr`
+      # (lib/control-plane/workers/adapter-publication.mjs). Under `river` the
+      # script merges nothing; River integrates stream/adapter-* instead.
       - run: node scripts/merge-engineer-adapters.mjs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPOSITORY: ${{ github.repository }}
+          WTP_ADAPTER_PUBLICATION: ${{ vars.WTP_ADAPTER_PUBLICATION }}

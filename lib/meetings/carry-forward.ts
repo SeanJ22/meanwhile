@@ -3,6 +3,16 @@ import type { MeetingsSnapshot } from "./snapshot.ts";
 import type { Meeting, PartialScopeFailure } from "../sources/types.ts";
 
 /**
+ * A carried row retained out of a response that ANSWERED: either its listing
+ * was absent from the answer, or it lies outside the dates the read fetched
+ * (`OUTSIDE_FETCH_WINDOW`, never a disappearance). Both charge a successful
+ * report.
+ */
+export function carriedFromAnswer(reason: string | undefined): boolean {
+  return reason === "UNEXPLAINED_DISAPPEARANCE" || reason === "OUTSIDE_FETCH_WINDOW";
+}
+
+/**
  * The refresh corollary: **a failed fetch never silently empties a
  * previously-full calendar.** (g3, 2026-08-16.)
  *

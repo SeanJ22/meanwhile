@@ -118,7 +118,8 @@
  * Version 17 preserves writes from older receipt providers while invalidating
  * partial history instead of demanding a companion from those providers. */
 // Version 18 adds the exact source-URL artifact index, online while captures continue.
-export const BOOTSTRAP_VERSION = 18;
+// Version 19 adds the Door Registry table (DB-09).
+export const BOOTSTRAP_VERSION = 19;
 
 /**
  * The tables, and the shape each one carries.
@@ -244,6 +245,16 @@ export const AGGREGATE_KINDS = [
    *                         ask the same day is a count, never a new row.
    */
   "ask_gap_observations",
+  /*
+   * THE DOOR REGISTRY. (DB-09 — version 19.)
+   *
+   *   doors  one aggregate per door, id = the door id: what reads it, the
+   *          bodies and hosts behind it, what it holds, how often it is
+   *          checked, and whether it is open, shut or set aside. An AGGREGATE
+   *          because the question every reader asks is "what is this door now";
+   *          the history of each change is the receipt log. Additive.
+   */
+  "doors",
   /** Original-byte copy requests; never source acquisition or a second scheduler. */
   "admin_evidence_copy_requests",
 ] as const;

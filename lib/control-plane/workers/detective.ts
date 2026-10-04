@@ -14,18 +14,31 @@ import type { ExecutorDecision } from "../scheduler/dispatch.ts";
 import type { RouteDescriptor } from "../scheduler/registry.ts";
 import { sourceReliabilityKey } from "../scheduler/scout-reliability.ts";
 
-/** A broken known route needs a new route, not another replay of the same HTTP shape. */
-export function sourceFailureRecovery(decision: ExecutorDecision, debt: FreshnessDebt | null | undefined): ExecutorDecision {
-  if (!needsSourceInvestigation(debt)) return decision;
+/** Consecutive failures after which a door counts as shut. Becomes an Admin setting once BR-05 lands. */
+export const DETECTIVE_SHUT_THRESHOLD = 3;
+
+/**
+ * A shut door needs a new route, not another replay of the same HTTP shape. A passing outage
+ * (one 429, 5xx or timeout) is not shut: it keeps its plain backoff retry and costs nothing.
+ */
+export function sourceFailureRecovery(decision: ExecutorDecision, debt: FreshnessDebt | null | undefined,
+  shutThreshold: number = DETECTIVE_SHUT_THRESHOLD): ExecutorDecision {
+  if (!needsSourceInvestigation(debt, shutThreshold)) return decision;
   return {kind:'BOUNDED_MODEL_WORKER', disagreement:decision.disagreement,
     why:`DETECTIVE FAILURE RESPONSE: ${debt.target} failed at ${debt.lastFailedAt} (${debt.cause}, ${debt.consecutiveFailures} consecutive failure(s)). ${debt.detail}\n`+
       'Read held facts and the knowledge bank first, then available APIs. Find another working source or a documented dead end; do not replay the failed route.'};
 }
 
-function needsSourceInvestigation(debt: FreshnessDebt | null | undefined): debt is FreshnessDebt {
-  return !!debt && debt.consecutiveFailures > 0 && [
-    'REFUSED_BY_HOST', 'RATE_LIMITED', 'UPSTREAM_ERROR', 'TRANSPORT_FAILED', 'EXTRACTION_FAILED',
-  ].includes(debt.cause);
+/** The site itself changed: the same request cannot work again, so a detective goes at once. */
+const SHUT_AT_ONCE = ['REFUSED_BY_HOST', 'EXTRACTION_FAILED'];
+/** Plain backoff retries own these until the door has failed past the shut threshold. */
+const PASSING_OUTAGE = ['RATE_LIMITED', 'UPSTREAM_ERROR', 'TRANSPORT_FAILED'];
+
+export function needsSourceInvestigation(debt: FreshnessDebt | null | undefined,
+  shutThreshold: number = DETECTIVE_SHUT_THRESHOLD): debt is FreshnessDebt {
+  if (!debt || debt.consecutiveFailures <= 0) return false;
+  if (SHUT_AT_ONCE.includes(debt.cause)) return true;
+  return PASSING_OUTAGE.includes(debt.cause) && debt.consecutiveFailures >= shutThreshold;
 }
 
 /** A failed discovery provider does not invalidate another source already found for the subject. */

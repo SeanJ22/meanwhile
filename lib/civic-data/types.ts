@@ -331,7 +331,7 @@ export interface ServingWindowRemovalEvidence {
   readonly key: string;
   readonly code: "OUTSIDE_REGISTERED_SERVING_WINDOW";
   /** Exact versioned Reader/acquisition window policy, never a caller-defined window. */
-  readonly windowContract: "MEETING_READER_SERVING_WINDOW_V1";
+  readonly windowContract: "MEETING_READER_SERVING_WINDOW_V1" | "MEETING_READER_SERVING_WINDOW_V2";
   /** Inclusive registered window used by the acquisition/Reader. */
   readonly lowerBound: string;
   readonly upperBound: string;

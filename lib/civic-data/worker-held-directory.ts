@@ -14,12 +14,20 @@ export interface HeldDirectoryRow {
   readonly bodyClass: "Commission" | "Advisory";
   /** When the body regularly meets, as its own section of the page says it, with the time. */
   readonly meetingCadence?: string;
+  /** The body's office address and phone, as its own section of the page writes them. */
+  readonly officeAddress?: string;
+  readonly officePhone?: string;
 }
 
 const DIRECTORY_PAGE = /\b(boards|commissions|committees)\b/i;
 const BODY_NAME = /(\b(board|commission|committee|council|trust|authority|corporation|panel)$)|(^(board|commission|committee|council) (of|on|for)\b)/i;
 /** A bare noun is a heading, not a body. */
 const BARE = /^(the )?(city |town |county )?(board|commission|committee|council)s?$/i;
+
+const STREET = "(?:St|Street|Ave|Avenue|Rd|Road|Blvd|Boulevard|Dr|Drive|Way|Ln|Lane|Ct|Court|Pkwy|Parkway|Hwy|Highway|Pl|Place|Plaza|Sq|Square|Cir|Circle)";
+/** A US street address that ends in a state and ZIP: the shape a body's office address takes on its page. */
+const ADDRESS = new RegExp(`\\b\\d{1,6}\\s+(?:[A-Z0-9][\\w.'-]*\\s+){0,5}?${STREET}\\b\\.?(?:,?\\s+(?:Suite|Ste|Room|Rm|Floor|Fl|Unit|#)\\.?\\s*[\\w-]+)?,?\\s+[A-Z][A-Za-z.' -]{1,30},?\\s+[A-Z]{2}\\s+\\d{5}(?:-\\d{4})?\\b`);
+const PHONE = /\(\d{3}\)\s?\d{3}-\d{4}|\b\d{3}[-.]\d{3}[-.]\d{4}\b/;
 
 const decode = (text: string) => text
   .replace(/&#(\d+);/g, (_, n: string) => String.fromCodePoint(Number(n)))
@@ -41,7 +49,11 @@ export function readHeldDirectory(html: string): readonly HeldDirectoryRow[] | n
     // The body's own section runs to the next title; its schedule is read there and nowhere else.
     const section = content.slice((match.index ?? 0) + match[0].length, titles[index + 1]?.index ?? content.length);
     const meetingCadence = scheduleSentences(section);
-    rows.set(name.toLowerCase(), { bodyName: name, bodyClass: /\bcommission\b/i.test(name) ? "Commission" : "Advisory", ...(meetingCadence ? { meetingCadence } : {}) });
+    const text = visible(section);
+    const officeAddress = ADDRESS.exec(text)?.[0];
+    const officePhone = PHONE.exec(text)?.[0];
+    rows.set(name.toLowerCase(), { bodyName: name, bodyClass: /\bcommission\b/i.test(name) ? "Commission" : "Advisory", ...(meetingCadence ? { meetingCadence } : {}),
+      ...(officeAddress ? { officeAddress } : {}), ...(officePhone ? { officePhone } : {}) });
   });
   return rows.size ? [...rows.values()] : null;
 }

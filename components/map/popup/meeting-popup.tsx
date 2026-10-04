@@ -1,5 +1,6 @@
 "use client";
 
+import type { PublicBodyAttempt } from "@/lib/registry/body-attempt-read";
 import { ExternalLink } from "lucide-react";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 
@@ -306,7 +307,7 @@ export function MeetingPopup({
       )}
 
       <PopupSectionLabel>{concluded ? "Records" : "Where to go"}</PopupSectionLabel>
-      <LinkLadder links={links} lookedAt={body?.lookedAt ?? false} publicationAttempt={body?.publicationAttempt} />
+      <LinkLadder links={links} lookedAt={body?.lookedAt ?? false} publicationAttempt={body?.publicationAttempts?.meetings?.latest ?? null} />
 
       <PopupSectionLabel>Representation</PopupSectionLabel>
       {representation.length > 0 ? (
@@ -352,7 +353,7 @@ function LinkLadder({
 }: {
   links: OutboundLink[];
   lookedAt: boolean;
-  publicationAttempt?: CoveredBody["publicationAttempt"];
+  publicationAttempt?: PublicBodyAttempt | null;
 }) {
   if (links.length === 0) {
     return (

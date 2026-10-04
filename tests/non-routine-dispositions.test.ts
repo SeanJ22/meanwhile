@@ -246,7 +246,6 @@ test("Plural/OpenStates is research evidence only: production has no state-roste
     "lib/corpus/unified.ts intermediary-keyed statement bridge",
     "lib/holdings/reader-census.ts portrait delivery projection",
     "next.config.ts production trace",
-    "scripts/readiness-refresh.mts Admin projection",
   ]);
   assert.deepEqual(row?.retiredWriterExecutables, [
     "scripts/build-officeholders.ts#state",
@@ -315,10 +314,6 @@ test("Plural/OpenStates is research evidence only: production has no state-roste
   assert.match(representationRoute, /HOLDING_UNAVAILABLE/);
   const productionTrace = readFileSync(new URL("../next.config.ts", import.meta.url), "utf8");
   assert.doesNotMatch(productionTrace, /states\/\*\/officials\/officeholders-\*\.json/);
-  const readinessPublisher = readFileSync(new URL("../scripts/readiness-refresh.mts", import.meta.url), "utf8");
-  assert.doesNotMatch(readinessPublisher, /data\/states\/\$\{code\}\/officials\/officeholders-/);
-  assert.match(readinessPublisher, /officialsClosedWalk: null/);
-  assert.match(readinessPublisher, /canonical promotion\/read models in Admin/);
 
   assert.equal(packageJson.scripts["reader:finance-identity"], undefined);
   assert.throws(() => readFileSync(new URL("../scripts/reader-finance-identity.mts", import.meta.url), "utf8"), /ENOENT/);

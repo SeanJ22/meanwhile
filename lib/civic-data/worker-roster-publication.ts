@@ -23,6 +23,7 @@ import { heldBodySchedule, type HeldBodySchedule } from "./worker-held-meetings.
 import { localHeldCaptureReader } from "./worker-publication-context.ts";
 import { isOfficialSource, type OfficialLinkingPage } from "./source-authority.ts";
 import { linkingPageFrom, pageWords, section3Page, section3Record } from "../control-plane/promotion/section3.ts";
+import { isoTermDate, isoTermDateOnPage } from "./term-dates.ts";
 import { inventoryRecordEvidence } from "../control-plane/workers/record-evidence.ts";
 import { compareCandidateWithSource } from "../control-plane/workers/record-verification.ts";
 
@@ -170,10 +171,19 @@ export function workerRosterPublication(input: {
       if (retained !== null && priorSource) retainedFieldSources[field] = old?.retainedFieldSources?.[field] ?? priorSource;
       return retained;
     };
+    const pageText = pageWords(capture.evidence.text);
+    const termDate = (field: "termStart" | "termEnd"): string | null => {
+      const fresh = isoTermDate(member.fields[field]);
+      if (fresh !== null && isoTermDateOnPage(fresh, pageText)) return fresh;
+      const retained = isoTermDate(old?.[field]);
+      if (retained !== null && priorSource) retainedFieldSources[field] = old?.retainedFieldSources?.[field] ?? priorSource;
+      return retained;
+    };
+    const termStart = termDate("termStart"), termEnd = termDate("termEnd");
     const phone = value("phone", publicContact), email = value("email", publicContact);
     const freshContact = publicContact && (verifiedValue(member, "phone") !== null || verifiedValue(member, "email") !== null);
     accepted.push({ recordId: member.recordId, memberId: identity.id });
-    return { ...identity, name, officeTitle, termNote: value("termNote"), email, phone, websiteUrl: value("websiteUrl"),
+    return { ...identity, name, officeTitle, termNote: value("termNote"), ...(termStart ? { termStart } : {}), ...(termEnd ? { termEnd } : {}), email, phone, websiteUrl: value("websiteUrl"),
       ...(freshContact ? { contactKind: "PUBLIC_OFFICE" as const } : old?.contactKind ? { contactKind: old.contactKind } : {}),
       ...(phone && freshContact ? { contactScope: (phones.get(phone) ?? 0) > 1 ? "SHARED_OFFICE" as const : old?.contactScope ?? "INDIVIDUAL_OFFICE" as const }
         : old?.contactScope ? { contactScope: old.contactScope } : {}),

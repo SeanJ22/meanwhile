@@ -29,7 +29,22 @@ export interface NationalOfficialCandidate {
   readonly linkingPage?: OfficialLinkingPage;
   readonly portrait?: import("../../photos/evidence.ts").PortraitSources;
 }
+/** The kinds of fact this job collects. A family with no open blank is not read. */
+export interface NationalSourceFamilies { readonly officials: boolean; readonly elections: boolean }
+export const ALL_NATIONAL_FAMILIES: NationalSourceFamilies = { officials: true, elections: true };
+/** The checklist families each national source family fills. */
+export const NATIONAL_FAMILY_GROUPS: Readonly<Record<keyof NationalSourceFamilies, readonly string[]>> = {
+  officials: ["OFF"], elections: ["ELE"],
+};
+/** Which families still have an open blank, from the place's open blanks. */
+export function openNationalFamilies(blanks: readonly { readonly checklistId: string }[]): NationalSourceFamilies {
+  const open = (family: keyof NationalSourceFamilies) => blanks.some(blank => NATIONAL_FAMILY_GROUPS[family].includes(blank.checklistId.slice(0, blank.checklistId.indexOf("-"))));
+  return { officials: open("officials"), elections: open("elections") };
+}
+
 export interface NationalPlaceSources {
+  /** The families this pass read. A family with nothing open was skipped. */
+  readonly families?: NationalSourceFamilies;
   readonly officials: readonly NationalOfficialCandidate[];
   readonly electionDocuments: readonly HeldSourcePage[];
   readonly electionFields: readonly ElectionFieldCandidate[];
@@ -78,7 +93,10 @@ export async function collectNationalPlaceSources(input: {
   readonly read: (url: string) => Promise<HeldSourcePage>;
   readonly knowledge?: FieldManualRead;
   readonly onSources?: (sources: NationalPlaceSources) => Promise<void>;
+  /** Only the families with open blanks are read. Omitted, every family is read. */
+  readonly families?: NationalSourceFamilies;
 }): Promise<NationalPlaceSources> {
+  const families = input.families ?? ALL_NATIONAL_FAMILIES;
   const documents = new Map<string, HeldSourcePage>();
   const inFlight = new Map<string, Promise<HeldSourcePage>>();
   const gaps: { sourceUrl: string; detail: string }[] = [];
@@ -123,10 +141,11 @@ export async function collectNationalPlaceSources(input: {
     await input.onSources({ officials: readyOfficials, electionFields: readyFields,
       electionDocuments: [...electionDocuments], documents: [...documents.values()], gaps: [] });
   };
-  const directory = await attempt("https://www.usa.gov/state-governments");
+  // The directory leads to both families; with nothing open in either, nothing is read.
+  const directory = families.officials || families.elections ? await attempt("https://www.usa.gov/state-governments") : null;
   let electionDirectory: Promise<HeldSourcePage | null> | undefined;
   await Promise.all(states.map(async state => {
-    const csv = await attempt(bulkUrl(state));
+    const csv = families.officials ? await attempt(bulkUrl(state)) : null;
     if (csv) {
       const issue = pluralRosterIssue(csv.text);
       if (issue) gaps.push({ sourceUrl: csv.url, detail: issue });
@@ -206,8 +225,10 @@ export async function collectNationalPlaceSources(input: {
           quote: text.slice(Math.max(0, at - 100), at + member.name.length + 160), linkingPage });
       }
     };
-    addOfficials(statePage);
-    await flush();
+    if (families.officials) {
+      addOfficials(statePage);
+      await flush();
+    }
     const stateProvenance = { url: statePage.url, html: statePage.text };
     // Office landing pages often name the office but link a separate biography.
     // Read that profile rather than trying to infer a person from a URL slug.
@@ -226,8 +247,8 @@ export async function collectNationalPlaceSources(input: {
         if (profile) { addOfficials(profile, link.office, provenance); await flush(); }
       }));
     };
-    await Promise.all(officeLinks.map(link => followOffice(link, stateProvenance)));
-    const government = /field--name-field-website[\s\S]*?href=["']([^"']+)/i.exec(statePage.text)?.[1];
+    if (families.officials) await Promise.all(officeLinks.map(link => followOffice(link, stateProvenance)));
+    const government = families.officials ? /field--name-field-website[\s\S]*?href=["']([^"']+)/i.exec(statePage.text)?.[1] : undefined;
     if (government) {
       let page = await attempt(government) ?? await attempt(new URL(government).origin);
       if (!page) {
@@ -259,6 +280,7 @@ export async function collectNationalPlaceSources(input: {
         }));
       }
     }
+    if (!families.elections) return;
     electionDirectory ??= attempt(ELECTION_DIRECTORY);
     const electionIndex = await electionDirectory;
     const stateName = cellText(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i.exec(statePage.text)?.[1] ?? "");
@@ -273,10 +295,10 @@ export async function collectNationalPlaceSources(input: {
       if (!page) return;
       electionDocuments.push(page);
       electionFields.push(...electionPageFields(page, divisionId, parent));
-      addOfficials(page, undefined, parent);
+      if (families.officials) addOfficials(page, undefined, parent);
       await flush();
       const provenance = { url: page.url, html: page.text, linkingPage: parent };
-      await Promise.all(links(page).flatMap(l => {
+      if (families.officials) await Promise.all(links(page).flatMap(l => {
         const office = new RegExp(`^(?:Office of (?:the )?)?(${OFFICE})$`, "i").exec(l.label)?.[1];
         return office ? [followOffice({ url: l.url, office }, provenance)] : [];
       }));
@@ -304,5 +326,5 @@ export async function collectNationalPlaceSources(input: {
   return { officials: [...new Map(officials.map(o => [`${o.divisionId}|${o.officeTitle}|${o.name}`, o])).values()],
     electionDocuments: [...new Map(electionDocuments.map(d => [d.url, d])).values()],
     electionFields: [...new Map(electionFields.map(f => [`${f.divisionId}|${f.kind}|${f.sourceUrl}|${f.quote}`, f])).values()],
-    documents: [...documents.values()], gaps };
+    documents: [...documents.values()], gaps, families };
 }

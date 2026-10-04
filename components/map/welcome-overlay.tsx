@@ -354,7 +354,7 @@ export function WelcomeOverlay({
           What survives is the only part that was ever about what the reader
           can DO, which is the register this surface is in.
         */}
-        <p className="welcome-fineprint">Any U.S. zip works.</p>
+        <p id="welcome-fineprint" className="welcome-fineprint">Any U.S. zip works.</p>
 
         <button
           type="button"
@@ -377,15 +377,6 @@ export function WelcomeOverlay({
             </button>
           </>
         )}
-
-        <p id="welcome-fineprint" className="welcome-fineprint">
-          A zip code points the map somewhere. It can&apos;t tell us your
-          districts — zip boundaries run straight through cities, counties, and
-          school districts. Using your location does the same thing: it finds
-          the nearest zip, and is no more authoritative for having come from
-          GPS. If you later want the ballot you personally vote, we&apos;ll ask
-          for a street address and explain why then.
-        </p>
 
         <p className="welcome-fineprint">
           <a

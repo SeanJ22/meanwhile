@@ -62,6 +62,7 @@ async function readHeldMeetings(now: string): Promise<MeetingsProjectionReadResu
   let fellBack = false;
   const edge = await readReaderEdgeMeetings({
     now,
+    window: "HELD",
     store: resolveReaderArtifactWriteStore(),
     fallback: () => {
       fellBack = true;

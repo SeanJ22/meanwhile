@@ -253,7 +253,7 @@ test("every row's score comes from one read of held data, and equals what that p
   assert.equal(calls, 1, "not once per district, not once per ZIP");
   assert.equal(new Set(ids).size, ids.length);
   for (const t of [t5, t6]) {
-    const alone = scorePlace(buildPlaceOwedList({ divisions: t.divisions, subjects: held.subjects, held: held.held, now: NOW }) as readonly OwedRowLike[], {}, []).overall.percent;
+    const alone = scorePlace(buildPlaceOwedList({ divisions: t.divisions, subjects: held.subjects, held: held.held, now: NOW }) as readonly OwedRowLike[], {}, []).measures.completeness.percent;
     assert.equal(scores.get(t.placeKey), alone, `${t.placeKey} matches a read of that place alone`);
   }
   assert.ok((scores.get(t6.placeKey) ?? 0) > (scores.get(t5.placeKey) ?? 0), "a place that holds more scores higher");

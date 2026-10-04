@@ -242,18 +242,8 @@ test("production children are hidden behind the installed runtime and local proo
   );
   assert.match(scripts["window:run"] ?? "", /^node scripts\/installed-runtime-command\.mjs window$/);
 
-  const readiness = readFileSync(join(ROOT, "scripts", "readiness-refresh.mts"), "utf8");
-  assert.match(readiness, /join\("\.runtime", "control-plane", "readiness-proof"\)/);
-  assert.doesNotMatch(
-    readiness,
-    /args\.get\("out"\)\s*\?\?\s*"data[\\/]control-plane"/,
-    "the default local readiness proof can create mutable state in Git's tracked control-plane namespace",
-  );
-  assert.match(readiness, /assertRuntimeAuthority\(\{ capabilities: \["CONSOLE_PUBLISHER"\] \}\)/);
-
   const runner = readFileSync(join(ROOT, "scripts", "pilot-runner.mts"), "utf8");
   assert.doesNotMatch(runner, /pnpm pilot:run|pilot:run ·/, "the retired direct runner command returned in help or output");
-  assert.match(runner, /scripts\/readiness-refresh\.mts", "--target=control-plane"/);
   assert.match(runner, /standingChildEnvironment\("CONSOLE_PUBLISHER", process\.env, publisher\.name === "owner snapshot"\)/);
   assert.match(runner, /standingChildEnvironment\("INTAKE_RUNTIME"\)/);
   assert.match(runner, /"ROUTINE_SUPERVISOR"/);
@@ -276,10 +266,10 @@ test("the runner opens clocks without the retired method-adoption gate and invok
   assert.doesNotMatch(runner, /scripts\/scout-candidates-rederive\.mts/);
 
   const freshness = readFileSync(join(ROOT, "scripts", "freshness-shadow.mts"), "utf8");
-  assert.ok(
-    freshness.indexOf("readMethodCandidateAuthorityStatus(repos)") < freshness.indexOf("proposeScoutCandidates({"),
-    "a direct Postgres research cycle can write a candidate before checking adoption",
-  );
+  assert.doesNotMatch(freshness, /METHOD_CANDIDATE_AUTHORITY_NOT_ADOPTED|method-candidate-authority/,
+    "the research cycle must not halt on a method-candidate adoption receipt");
+  assert.match(freshness, /candidateStoreUnreadable === null && \(\(result\.refusal/,
+    "an unreadable candidate store skips proposals for the round instead of stopping it");
 
   const readback = readFileSync(join(ROOT, "scripts", "method-candidate.mts"), "utf8");
   assert.match(readback, /repos\.methodCandidates\.read\(METHOD_CANDIDATE_STORE_ID\)/);

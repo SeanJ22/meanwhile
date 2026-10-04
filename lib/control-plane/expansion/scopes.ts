@@ -3,8 +3,8 @@
  * (Expansion controls, 2026-09-23.)
  *
  * An expansion scope is ONE geography from the Census geography lookup (a
- * county, a congressional district, a metro/micro area, or a state upper- or
- * lower-chamber district), with two owner decisions attached:
+ * county, a congressional district, a metro/micro area, a state upper- or
+ * lower-chamber district, or a whole state), with two owner decisions attached:
  *
  * ```
  *   priority   an integer order among the selected scopes; 1 runs first
@@ -42,6 +42,7 @@ import { isWorkQuestion, type WorkQuestion } from "../work-question.ts";
 /** The five primary groupings the owner may select, in the lookup's own vocabulary. */
 export const EXPANSION_SCOPE_TYPES = [
   "zcta",
+  "state",
   "county",
   "congressional_district",
   "cbsa",
@@ -53,6 +54,7 @@ export type ExpansionScopeType = (typeof EXPANSION_SCOPE_TYPES)[number];
 /** The version-key prefix each type's plan carries (`"cd:119"`, `"county:2020"`, …). */
 export const VERSION_PREFIX: Readonly<Record<ExpansionScopeType, string>> = {
   zcta: "zcta",
+  state: "state",
   county: "county",
   congressional_district: "cd",
   cbsa: "cbsa",
@@ -63,6 +65,7 @@ export const VERSION_PREFIX: Readonly<Record<ExpansionScopeType, string>> = {
 /** The words a type renders as. */
 export const SCOPE_TYPE_WORDS: Readonly<Record<ExpansionScopeType, string>> = {
   zcta: "ZIP (Census ZCTA)",
+  state: "State",
   county: "County",
   congressional_district: "Congressional district",
   cbsa: "Metro or micro area",
@@ -144,7 +147,7 @@ export function isExpansionScopeType(value: unknown): value is ExpansionScopeTyp
 export function validateScopeGeography(input: Readonly<Record<string, unknown>>): ScopeValidation<ExpansionScopeGeography> {
   const type = collapse(input.type);
   if (!isExpansionScopeType(type)) {
-    return { ok: false, why: "choose a county, congressional district, metro area or state legislative district" };
+    return { ok: false, why: "choose a state, county, congressional district, metro area or state legislative district" };
   }
   const geoid = collapse(input.geoid);
   if (type === "zcta" && !/^\d{5}$/.test(geoid)) return { ok: false, why: "Enter a five-digit ZIP with published Census ZCTA coverage." };
@@ -314,7 +317,7 @@ export function withScopeRemoved(
 /** A key as the remove action accepts it: `<version>/<geoid>`, nothing else. */
 export function validateScopeKey(raw: unknown): ScopeValidation<string> {
   const key = collapse(raw);
-  if (!/^(zcta|county|cd|cbsa|sldu|sldl):[0-9]{2,4}\/[0-9A-Za-z]{2,12}$/.test(key)) {
+  if (!/^(zcta|state|county|cd|cbsa|sldu|sldl):[0-9]{2,4}\/[0-9A-Za-z]{2,12}$/.test(key)) {
     return { ok: false, why: "say which selected geography to remove" };
   }
   return { ok: true, value: key };

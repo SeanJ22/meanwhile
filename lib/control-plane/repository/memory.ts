@@ -1,6 +1,7 @@
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
+import type { DoorRecord } from "../../doors/registry.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
 /**
@@ -45,7 +46,6 @@ import type {
   RunnerHeartbeat,
 } from "../owner-surface.ts";
 import type { FieldManualStore } from "../field-manual.ts";
-import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
 import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
@@ -226,9 +226,12 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
       value: string,
       limit: number,
       projection: RecordProjection,
+      recordedAtSince?: string,
     ): Promise<readonly unknown[]> => {
+      const since = recordedAtSince === undefined ? null : Date.parse(recordedAtSince);
       const matches = (partitions.get(key) ?? [])
-        .filter((entry) => jsonTextAtPath(entry.record, jsonPath) === value);
+        .filter((entry) => jsonTextAtPath(entry.record, jsonPath) === value &&
+          (since === null || Date.parse(entry.at) >= since));
       const bounded = Math.max(0, Math.trunc(limit));
       return matches
         .slice(Math.max(0, matches.length - bounded))
@@ -310,7 +313,6 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     costs: memoryAppendOnlyRepository<CostEntry>("costs"),
     /* The owner control centre's data plane (ITEM H). */
     ownerSnapshots: memoryAggregateRepository<OwnerSnapshot>("OwnerSnapshot"),
-    readinessSnapshots: memoryAggregateRepository<ReadinessStateSnapshot>("ReadinessStateSnapshot"),
     fieldManual: memoryAggregateRepository<FieldManualStore>("FieldManual"),
     runnerHeartbeat: memoryAggregateRepository<RunnerHeartbeat>("RunnerHeartbeat"),
     cacheObservations: memoryAggregateRepository<CacheObservationRecord>("CacheObservationRecord"),
@@ -336,6 +338,8 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     adminConfig: memoryAggregateRepository<AdminConfig>("AdminConfig"),
     /* What readers were told Ask does not hold (schema v13). */
     askGapObservations: memoryAggregateRepository<AskGapObservation>("AskGapObservation"),
+    /* The Door Registry (DB-09, schema v19). */
+    doors: memoryAggregateRepository<DoorRecord>("Door"),
     budget: budgetRepositoryFrom(budgetAggregate, locks),
     locks,
     describe: () => "in-memory control-plane repositories (lost when this process ends)",

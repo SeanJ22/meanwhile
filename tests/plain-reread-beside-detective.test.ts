@@ -45,3 +45,18 @@ test("paid research open: the detective dispatches and is not duplicated", async
   assert.equal(dispatched, 1);
   assert.deepEqual(deferred, []);
 });
+
+import { plainRereadSlot, PLAIN_REREAD_SLOT_MS } from "../lib/control-plane/workers/detective.ts";
+import type { FreshnessDebt } from "../lib/control-plane/scheduler/debt.ts";
+
+test("an admitted detective alternates with the plain re-read by hourly slot; a fresh refusal goes to the detective at once", () => {
+  const debt = { obligationId: "o", cause: "UPSTREAM_ERROR", target: "h", detail: "", lastFailedAt: NOW, consecutiveFailures: 3, retryAt: NOW } as FreshnessDebt;
+  const even = 10 * 2 * PLAIN_REREAD_SLOT_MS;
+  const odd = even + PLAIN_REREAD_SLOT_MS;
+  assert.equal(plainRereadSlot(debt, even), false);
+  assert.equal(plainRereadSlot(debt, odd), true);
+  assert.equal(plainRereadSlot({ ...debt, consecutiveFailures: 1 }, odd), false, "a passing outage is never sent to a detective");
+  assert.equal(plainRereadSlot({ ...debt, cause: "REFUSED_BY_HOST", consecutiveFailures: 1 }, odd), false);
+  assert.equal(plainRereadSlot({ ...debt, cause: "REFUSED_BY_HOST", consecutiveFailures: 2 }, odd), true);
+  assert.equal(plainRereadSlot(null, odd), false);
+});

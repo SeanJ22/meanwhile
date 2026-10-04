@@ -43,6 +43,9 @@ export function absenceExpiry(now: string): string {
  *    became reachable. An empty branch is the correct negative (RULING 52); a
  *    wall is a fact about the route, retried, never a recorded absence.
  *  - it ended by the model's own judgment or at the bound, not mid-flight;
+ *  - it was a DETECTIVE walk (DP-04): a Scout walk that hits its limit records nothing, so the
+ *    next walk goes to a detective (the existing NO_PROGRESS trigger) and only an empty
+ *    detective walk records the absence;
  *  - it cleared the distinct-evidence-rung floor — RULING 52's "argued, never
  *    asserted": the floor is what makes an absence argued rather than assumed.
  */
@@ -52,10 +55,12 @@ export function isArguedAbsence(
     readonly stoppedBy: string;
     readonly distinctEvidenceRungs: number;
     readonly refusal: unknown;
+    readonly researchRole?: "SCOUT" | "DETECTIVE";
   },
   minRungs: number,
 ): boolean {
   if (result.refusal !== null && result.refusal !== undefined) return false;
+  if (result.researchRole !== "DETECTIVE") return false;
   if (result.outcome !== "NO_PROGRESS") return false;
   if (result.stoppedBy !== "MODEL" && result.stoppedBy !== "BOUND") return false;
   return result.distinctEvidenceRungs >= minRungs;

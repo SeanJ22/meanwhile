@@ -9,7 +9,7 @@ import {
   beginAttemptFor, claimRouteTask, disposeRouteTask, recordArtifactMetadata, registerRouteTask, registerWorkItem,
 } from "../lib/control-plane/repository/coordinator.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { readFieldManual } from "../lib/control-plane/field-manual.ts";
+import { readFieldManual, newFieldManualEntry, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { researchSpendInWindow } from "../lib/control-plane/scheduler/research-policy.ts";
 import { MODEL_FOR_CLASS } from "../lib/control-plane/scheduler/model-routing.ts";
 import type { ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
@@ -209,4 +209,29 @@ test("partial provider failure commits answered Parser window costs by tier on t
   assert.ok(costs[0].byModel?.some(share => share.usd === null));
   assert.equal((await h.repos.workerResults.readAll()).length, 0, "failed extraction publishes no record");
   assert.equal(calls, 2);
+});
+
+test('the next parser request uses an edited Bank playbook inside its cached system block', async () => {
+  let sawEdited = false;
+  const transport: ModelTransport = async request => {
+    const system = request.system[0]!;
+    assert.match(system.text, /Read the saved heading before listing records/);
+    assert.match(system.text, /Never bypass/);
+    assert.ok(system.cache_control);
+    sawEdited = true;
+    return { model: request.model, stop_reason: 'tool_use', usage: { input_tokens: 100, output_tokens: 50 },
+      content: [{ type: 'tool_use', id: 'edited', name: 'record_extraction', input: { records: [{ fields: [
+        { name: 'title', value: 'Regular Meeting', quote: 'Regular Meeting' },
+        { name: 'when', value: 'Tuesday, October 14, 2026 at 6:00 PM', quote: 'Tuesday, October 14, 2026 at 6:00 PM' },
+      ] }] } }] };
+  };
+  const { repos, runtime, item, artifact, contract, now } = await parserHarness(TEXT, transport);
+  await writeFieldManual(repos, [newFieldManualEntry('role-playbook', 'PARSER', {
+    role: 'PARSER', kind: 'PLAYBOOK', title: 'parser', summary: 'current instructions', outcome: 'REFERENCE',
+    payload: { text: 'Read the saved heading before listing records.' },
+  })], now());
+  const task = await enqueueWorkerTask(repos, { workItemId: item.id, role: 'PARSER', artifactId: artifact.id, contract, now: now() });
+  const dispatched = await dispatchWorkerTask(runtime, task);
+  assert.equal(dispatched.outcome, 'WORKED', dispatched.detail);
+  assert.ok(sawEdited);
 });

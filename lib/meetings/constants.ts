@@ -46,11 +46,6 @@ export const MEETING_HELD_HORIZON_DAYS = 120;
  */
 export const MEETING_READER_SERVING_WINDOW_CONTRACT =
   "MEETING_READER_SERVING_WINDOW_V2" as const;
-/**
- * A partition's durable history lives at its own scope plus this suffix, under
- * the same record class (DB-06): `source:<s>:body:<b>:history`.
- */
-export const MEETING_HISTORY_SCOPE_SUFFIX = ":history" as const;
 export const MEETING_READER_SERVING_WINDOW_CONTRACT_V1 =
   "MEETING_READER_SERVING_WINDOW_V1" as const;
 

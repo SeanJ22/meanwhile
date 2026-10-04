@@ -14,7 +14,7 @@ import {
   type RoutineSourceContract,
 } from "./contracts.ts";
 
-import { MEETING_HISTORY_SCOPE_SUFFIX } from "../meetings/constants.ts";
+import { MEETING_HISTORY_SCOPE_SUFFIX } from "./meeting-history-scope.ts";
 import { derivedRequestedUrl } from "./derived-door.ts";
 
 export const LEGACY_MEETINGS_AGGREGATE_SCOPE = "supported-bodies";

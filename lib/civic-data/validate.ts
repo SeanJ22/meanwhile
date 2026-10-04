@@ -2,8 +2,8 @@ import { createHash } from "node:crypto";
 
 import { authorityFor, authorityForManualReceipt, sourceAuthority } from "./source-authority.ts";
 import { derivedAuthorityFor } from "./derived-door.ts";
+import { MEETING_HISTORY_SCOPE_SUFFIX } from "./meeting-history-scope.ts";
 import {
-  MEETING_HISTORY_SCOPE_SUFFIX,
   MEETING_READER_SERVING_WINDOW_CONTRACT,
   MEETING_READER_SERVING_WINDOW_CONTRACT_V1,
   meetingLegacyServingWindowAt,

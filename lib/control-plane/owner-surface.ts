@@ -1474,6 +1474,8 @@ export interface OwnerCostRow {
  * and it carries that instant.
  */
 export interface OwnerSnapshot {
+  /** Daily completeness, freshness and delivery counts for each place with a saved scope, newest last. Counts only; it never gates publishing. */
+  readonly placeHistory?: Readonly<Record<string, readonly import("../coverage/place-history.ts").PlaceHistoryPoint[]>>;
   /** Derived exact-instruction inventories. Unknown object universes remain open. */
   readonly checklists?: readonly import("./readiness/checklist-census.ts").ChecklistCensus[];
   readonly formatVersion: number;

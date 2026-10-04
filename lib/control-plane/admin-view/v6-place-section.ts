@@ -4,6 +4,7 @@ import { OWED_STATE_WORDS, pageOwed, scorePlace, type GroupScore, type OwedListI
 import { GROUP_NAMES, PLACE_GROUPS, ADMIN_V6_CHECKLIST_CONTRACT } from "./v6-checklist-section.ts";
 import type { PlaceOwedRead } from "./place-owed-read.ts";
 import type { RowStatuses } from "../../coverage/place-statuses.ts";
+import { trendOf, type PlaceHistoryPoint, type PlaceTrend } from "../../coverage/place-history.ts";
 import type { NotCaptured, PlaceMeasures } from "../../coverage/place-measures.ts";
 import { peopleCoverage, peopleCoverageWords, type PeopleCoverage } from "../../coverage/people-coverage.ts";
 import { coverageWords, placeCoverage, type PlaceCoverage } from "../../coverage/place-coverage.ts";
@@ -52,6 +53,8 @@ export interface AdminV6PlaceScore {
   /** Completeness, freshness and delivery, each with its counts and never blended. */
   readonly measures: PlaceMeasures;
   readonly familyMeasures: readonly { readonly group: string; readonly measures: PlaceMeasures }[];
+  /** Up, down or same against the last earlier day's completeness, with that day's value. Null with no earlier point. */
+  readonly trend: PlaceTrend | null;
   /** What is not captured, split into "hunted, not found" and "nothing hunts this yet", overall and by family. */
   readonly notCaptured: NotCaptured;
   readonly familyNotCaptured: readonly ({ readonly group: string } & NotCaptured)[];
@@ -134,7 +137,7 @@ function itemOf(item: OwedListItem, placeKey: string, words: string | null): Adm
 
 export interface PlaceSectionQuery { readonly group: string | null; readonly states: readonly OwedState[] | null; readonly q: string | null; readonly offset: number; readonly limit: number }
 
-export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, target: { readonly goalPercent: number; readonly setAt: string } | null = null): {
+export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, target: { readonly goalPercent: number; readonly setAt: string } | null = null, history: readonly PlaceHistoryPoint[] = []): {
   readonly contract: typeof ADMIN_V6_CHECKLIST_CONTRACT; readonly scope: string; readonly revision: string; readonly asOf: string;
   readonly data: AdminV6PlaceChecklistView; readonly missingParts: readonly string[];
   readonly page: { readonly total: number; readonly nextCursor: string | null; readonly prevCursor: string | null };
@@ -158,7 +161,7 @@ export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, ta
       profileVersion: CHECKLIST_PROFILE.version, definitionCount: CHECKLIST_PROFILE.definitionCount, definitions: DEFINITIONS,
       groupNames: GROUP_NAMES, placeGroups, items: windowed.items.map((i) => itemOf(i, read.placeKey, placeSendWords(read.placeKey, read.label, read.divisions))), systemGroups: SYSTEM_GROUPS,
       score: { placeKey: read.placeKey, placeLabel: read.label, covers: read.covers, observedAt: read.observedAt,
-        divisionCount: read.divisions.length, sendWords: placeSendWords(read.placeKey, read.label, read.divisions), target, overall: score.overall, groups: score.groups, extension: score.extension, summary: score.summary, measures: score.measures, familyMeasures: score.familyMeasures, notCaptured: score.notCaptured, familyNotCaptured: score.familyNotCaptured,
+        divisionCount: read.divisions.length, sendWords: placeSendWords(read.placeKey, read.label, read.divisions), target, overall: score.overall, groups: score.groups, extension: score.extension, summary: score.summary, measures: score.measures, familyMeasures: score.familyMeasures, trend: trendOf(history, score.measures.completeness.percent, read.observedAt.slice(0, 10)), notCaptured: score.notCaptured, familyNotCaptured: score.familyNotCaptured,
           coverage: { words: coverageWords(coverage), figures: coverage },
           profiles: { words: peopleCoverageWords(profiles), figures: profiles } },
     },

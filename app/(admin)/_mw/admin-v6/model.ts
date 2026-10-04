@@ -451,6 +451,8 @@ export interface PlaceScoreView {
   readonly coverage?: { readonly words: readonly string[] };
   /** Completeness, freshness and delivery, each with its counts. */
   readonly measures?: PlaceMeasuresView;
+  /** Up, down or same against the last earlier day's completeness. Null with no earlier point. */
+  readonly trend?: { readonly direction: "up" | "down" | "same"; readonly previousPercent: number | null; readonly previousDay: string } | null;
   /** What is not captured, split into "hunted, not found" and "nothing hunts this yet", overall and by family. */
   readonly notCaptured?: { readonly huntedNotFound: number; readonly nothingHunts: number };
   readonly familyNotCaptured?: readonly { readonly group: string; readonly huntedNotFound: number; readonly nothingHunts: number }[];

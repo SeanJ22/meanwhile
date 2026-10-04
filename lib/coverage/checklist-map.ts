@@ -38,6 +38,8 @@ export interface ChecklistItemRule {
   readonly onlyFor?: "school-district" | "special-district" | "tribal-overlap";
   /** A posting-deadline item: when it falls due is counted from its meeting. */
   readonly lifecycle?: "agenda" | "outcome";
+  /** The producers that can fill this item, named in `producers`. None means no squad or door covers it yet. */
+  readonly filledBy?: readonly string[];
   /** What the item is called when it is awaiting publication ("Agenda not published yet"). */
   readonly noun?: string;
 }
@@ -47,6 +49,7 @@ export const CHECKLIST_FAMILIES = map.families as unknown as Readonly<Record<str
 /** The starting squad for each family. A setting: Admin can change it. */
 export const SQUAD_START = map.settings.squads as Readonly<Record<string, string>>;
 export const LIFECYCLE = map.lifecycle;
+export const PRODUCERS = map.producers as unknown as Readonly<Record<string, { readonly file: string; readonly label: string } | string>>;
 export const REPLACED_BY_ADMIN = map.replacedByAdmin as Readonly<Record<string, string>>;
 
 export function checklistItem(id: string): ChecklistItemRule | undefined {
@@ -58,6 +61,13 @@ export function squadOf(id: string, settings: Readonly<Record<string, string>> =
   const group = id.slice(0, id.indexOf("-"));
   return settings[group] ?? null;
 }
+
+/** Whether any producer can fill this item today. */
+export function hasProducer(id: string): boolean {
+  return (CHECKLIST_ITEMS[id]?.filledBy?.length ?? 0) > 0;
+}
+
+export const NO_PRODUCER_REASON = "No squad or door covers this item yet";
 
 export function isCoreItem(id: string): boolean {
   return CHECKLIST_ITEMS[id]?.scoreAs === "core";

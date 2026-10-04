@@ -18,7 +18,7 @@
  */
 
 import type { RowStatuses } from "../../coverage/place-statuses.ts";
-import { measuresByFamily, placeMeasures, type PlaceMeasures } from "../../coverage/place-measures.ts";
+import { measuresByFamily, notCapturedOf, placeMeasures, type NotCaptured, type PlaceMeasures } from "../../coverage/place-measures.ts";
 import { isCoreChecklistItem, isSummaryChecklistItem, percentOf } from "../../coverage/place-percent.ts";
 
 export type OwedState = "published" | "held" | "unpublished" | "stale" | "missing";
@@ -62,6 +62,9 @@ export interface PlaceScore {
   readonly summary: GroupScore | null;
   /** Completeness, freshness and delivery, each with its counts and never blended. */
   readonly measures: PlaceMeasures;
+  /** What is not captured, split into "hunted, not found" and "nothing hunts this yet". */
+  readonly notCaptured: NotCaptured;
+  readonly familyNotCaptured: readonly ({ readonly group: string } & NotCaptured)[];
   /** The same three measures for each family. */
   readonly familyMeasures: readonly { readonly group: string; readonly measures: PlaceMeasures }[];
 }
@@ -111,6 +114,8 @@ export function scorePlace(rows: readonly OwedRowLike[], groupNames: Readonly<Re
     extension: Object.values(extension).some((n) => n > 0) ? scored("EXT", "Extra items beyond the core list", extension) : null,
     summary: Object.values(summary).some((n) => n > 0) ? scored("SUM", "Summary items counted through their detail items", summary) : null,
     measures: placeMeasures(rows),
+    notCaptured: notCapturedOf(rows),
+    familyNotCaptured: order.map((group) => ({ group, ...notCapturedOf(rows.filter((row) => groupOf(row.checklistId) === group)) })),
     familyMeasures: measuresByFamily(rows, groupOrder),
   };
 }

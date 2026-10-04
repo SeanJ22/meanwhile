@@ -4,7 +4,7 @@ import { OWED_STATE_WORDS, pageOwed, scorePlace, type GroupScore, type OwedListI
 import { GROUP_NAMES, PLACE_GROUPS, ADMIN_V6_CHECKLIST_CONTRACT } from "./v6-checklist-section.ts";
 import type { PlaceOwedRead } from "./place-owed-read.ts";
 import type { RowStatuses } from "../../coverage/place-statuses.ts";
-import type { PlaceMeasures } from "../../coverage/place-measures.ts";
+import type { NotCaptured, PlaceMeasures } from "../../coverage/place-measures.ts";
 import { peopleCoverage, peopleCoverageWords, type PeopleCoverage } from "../../coverage/people-coverage.ts";
 import { coverageWords, placeCoverage, type PlaceCoverage } from "../../coverage/place-coverage.ts";
 import { US_STATES } from "../readiness/catalog.ts";
@@ -52,6 +52,9 @@ export interface AdminV6PlaceScore {
   /** Completeness, freshness and delivery, each with its counts and never blended. */
   readonly measures: PlaceMeasures;
   readonly familyMeasures: readonly { readonly group: string; readonly measures: PlaceMeasures }[];
+  /** What is not captured, split into "hunted, not found" and "nothing hunts this yet", overall and by family. */
+  readonly notCaptured: NotCaptured;
+  readonly familyNotCaptured: readonly ({ readonly group: string } & NotCaptured)[];
   /** Officials and candidates with a full profile, with the count behind each field. A measure, never a gate. */
   readonly profiles: { readonly words: string; readonly figures: PeopleCoverage };
   /** Governments, bodies, seats and people accounted for against what is expected; "total unknown" where it cannot be known. */
@@ -114,6 +117,7 @@ function itemOf(item: OwedListItem, placeKey: string, words: string | null): Adm
     subject: item.subject, period: "Current", status,
     missing: item.state === "published" ? "—"
       : item.statuses?.waitingWords ? item.statuses.waitingWords
+      : item.statuses?.noProducerWords ? item.statuses.noProducerWords
       : item.state === "held" ? "Captured, not published yet"
       : item.state === "unpublished" ? "Not published by the government"
       : item.state === "stale" ? "Captured earlier, refresh due"
@@ -154,7 +158,7 @@ export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, ta
       profileVersion: CHECKLIST_PROFILE.version, definitionCount: CHECKLIST_PROFILE.definitionCount, definitions: DEFINITIONS,
       groupNames: GROUP_NAMES, placeGroups, items: windowed.items.map((i) => itemOf(i, read.placeKey, placeSendWords(read.placeKey, read.label, read.divisions))), systemGroups: SYSTEM_GROUPS,
       score: { placeKey: read.placeKey, placeLabel: read.label, covers: read.covers, observedAt: read.observedAt,
-        divisionCount: read.divisions.length, sendWords: placeSendWords(read.placeKey, read.label, read.divisions), target, overall: score.overall, groups: score.groups, extension: score.extension, summary: score.summary, measures: score.measures, familyMeasures: score.familyMeasures,
+        divisionCount: read.divisions.length, sendWords: placeSendWords(read.placeKey, read.label, read.divisions), target, overall: score.overall, groups: score.groups, extension: score.extension, summary: score.summary, measures: score.measures, familyMeasures: score.familyMeasures, notCaptured: score.notCaptured, familyNotCaptured: score.familyNotCaptured,
           coverage: { words: coverageWords(coverage), figures: coverage },
           profiles: { words: peopleCoverageWords(profiles), figures: profiles } },
     },

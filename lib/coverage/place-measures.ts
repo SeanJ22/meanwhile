@@ -35,8 +35,8 @@ export interface Completeness extends Measure {
     readonly notChecked: number;
     /** Due, and the government has not posted it yet. Still owed. */
     readonly awaitingPublication: number;
-    /** Due and owed, and no hunter is assigned to it. Not recorded yet. */
-    readonly noProducer: number | null;
+    /** Due and owed, and no squad or door can fill it yet. */
+    readonly noProducer: number;
     /** Applicability or due date cannot be told yet; held out of the figure, never dropped. */
     readonly unresolved: number;
     /** Not yet due, so not yet owed. */
@@ -74,7 +74,7 @@ export function placeMeasures(rows: readonly MeasureRow[]): PlaceMeasures {
     blocked: null,
     notChecked: open.filter(row => (row.statuses?.found ?? "nothing-yet") === "nothing-yet" && row.state === "missing").length,
     awaitingPublication: open.filter(row => row.statuses?.published === "awaiting-publication").length,
-    noProducer: null,
+    noProducer: open.filter(row => row.statuses?.hasProducer === false).length,
     unresolved: unresolved.length, notYetDue: notYetDue.length, notPublishedByGovernment: notPublished.length } };
   const held = counted.filter(row => row.state === "published" || row.state === "held" || row.state === "stale");
   const current = held.filter(row => row.state !== "stale");
@@ -86,6 +86,15 @@ export function placeMeasures(rows: readonly MeasureRow[]): PlaceMeasures {
     notChecked: live.filter(row => (row.statuses?.seen ?? "not-checked") === "not-checked").length,
     notSeen: live.filter(row => row.statuses?.seen === "not-seen").length } };
   return { completeness, freshness, delivery };
+}
+
+/** What is not captured, split: the items with a producer that has not found them yet, and the items nothing hunts yet. */
+export interface NotCaptured { readonly huntedNotFound: number; readonly nothingHunts: number }
+
+export function notCapturedOf(rows: readonly MeasureRow[]): NotCaptured {
+  const missing = rows.filter(row => isCountedChecklistItem(row.checklistId) && (row.state === "missing" || row.state === "stale"));
+  const nothing = missing.filter(row => row.statuses?.hasProducer === false);
+  return { huntedNotFound: missing.length - nothing.length, nothingHunts: nothing.length };
 }
 
 /** The same three measures for each family, in the order given. A family with nothing counted is left out. */

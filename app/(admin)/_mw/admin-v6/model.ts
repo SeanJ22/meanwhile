@@ -451,6 +451,9 @@ export interface PlaceScoreView {
   readonly coverage?: { readonly words: readonly string[] };
   /** Completeness, freshness and delivery, each with its counts. */
   readonly measures?: PlaceMeasuresView;
+  /** What is not captured, split into "hunted, not found" and "nothing hunts this yet", overall and by family. */
+  readonly notCaptured?: { readonly huntedNotFound: number; readonly nothingHunts: number };
+  readonly familyNotCaptured?: readonly { readonly group: string; readonly huntedNotFound: number; readonly nothingHunts: number }[];
   /** Officials and candidates with a full profile, with the count behind each field. */
   readonly profiles?: { readonly words: string; readonly figures: { readonly fields: readonly { readonly key: string; readonly label: string; readonly applies: number; readonly held: number | null }[]; readonly notMeasured: readonly string[] } };
 }

@@ -415,7 +415,7 @@ export interface AppendOnlyRepository<T> {
    * regardless of where it sits, so it is stable as the log grows and cannot
    * false-negative an existing record the way "give me position N" can. Reading
    * by what the caller is looking for is the point — `["runtimeOutcome","kind"]
-   * = "METHOD_CANDIDATE_AUTHORITY_ADOPTION"` still finds the receipt after ten
+   * = "FRESHNESS_CYCLE"` still finds every cycle after ten
    * thousand later rows shift its position. An empty result means the store
    * genuinely holds no such record; the CALLER decides whether that is a valid
    * absence or a failure (an empty where a record must exist is the caller's to

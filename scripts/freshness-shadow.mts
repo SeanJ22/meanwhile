@@ -383,7 +383,6 @@ import { CYCLE_DRAIN_GRACE_MS, chosenExitCode, exitAfterDrainGrace } from "../li
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
-import { readMethodCandidateAuthorityStatus } from "../lib/control-plane/method-candidate-authority.ts";
 import { nextRunRecordPath } from "../lib/health/run-records.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
@@ -586,17 +585,17 @@ const startupReadRetry = {
     ),
 };
 
+/*
+ * The candidate store is read once, here. A store that cannot be read costs this
+ * round its candidate proposals and nothing else: research, meeting refresh and
+ * publication go on, and Admin shows one line (DP-01).
+ */
+let candidateStoreUnreadable: string | null = null;
 if (wantsPostgres) {
-  const methodAuthority = await retryStartupRead(
-    () => readMethodCandidateAuthorityStatus(repos),
-    (status) => (status.state === "STORE_UNREACHABLE" ? status.detail : null),
-    startupReadRetry,
-  );
-  if (methodAuthority.state !== "ADOPTED") {
-    throw new Error(
-      `METHOD_CANDIDATE_AUTHORITY_NOT_ADOPTED: ${methodAuthority.code} — ${methodAuthority.detail} ` +
-        "No Scout candidate write or tracked-file fallback was attempted.",
-    );
+  try {
+    await retryStartupRead(() => readMethodCandidateStore(repos), () => null, startupReadRetry);
+  } catch (error) {
+    candidateStoreUnreadable = error instanceof Error ? error.message : String(error);
   }
 }
 
@@ -823,6 +822,8 @@ const decisionDisagreements = units
 const nowMs = Date.parse(NOW);
 /** Named runtime conditions, accumulated from here on; the research state carries them. */
 const runtimeConditions: string[] = [];
+if (candidateStoreUnreadable !== null) runtimeConditions.push(
+  `method candidates could not be read (${candidateStoreUnreadable}); no candidate proposals this round, everything else continues`);
 let canonicalCandidateCounts = await candidateStoreCounts(repos);
 if (canonicalCandidateCounts === null) {
   runtimeConditions.push("METHOD_CANDIDATE_STORE_NOT_SEEDED: canonical candidate lifecycle is unavailable; no tracked-file fallback was used");
@@ -2567,7 +2568,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
       },
       onResult: async (result: ScoutResult, artifacts: readonly WorkArtifact[]) => {
         let amended = result;
-        if ((result.refusal === null && result.candidates.length > 0) || result.sourceDeadEnds?.length) {
+        if (candidateStoreUnreadable === null && ((result.refusal === null && result.candidates.length > 0) || result.sourceDeadEnds?.length)) {
           try {
             const report = await proposeScoutCandidates({ repos, result, artifacts, stamp: today() });
             candidateReports.push(report);

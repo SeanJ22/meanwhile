@@ -577,8 +577,7 @@ export function pgAggregateRepository<T>(
  * every `SELECT record ... ORDER BY position` for it began throwing
  * `NeonDbError: Server error (HTTP status 507): response is too large`, which
  * surfaced to callers as STORE_UNREACHABLE and stopped the standing runner at
- * its startup method-candidate-authority gate (the read there is how it verifies
- * the adoption receipt in the owner digest log). Appends kept succeeding — they
+ * its startup gate, which read this log (that gate is gone). Appends kept succeeding — they
  * are small — so the log only grew, one crash-loop hold every five minutes.
  *
  * Reads are fetched in keyset pages instead. 100 rows keeps a page far under the

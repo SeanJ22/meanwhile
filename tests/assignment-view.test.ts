@@ -52,7 +52,6 @@ import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { AggregateRepository } from "../lib/control-plane/repository/types.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
-import { buildChecklistCensus } from "../lib/control-plane/readiness/checklist-census.ts";
 import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
 import type { RouteDisposition, RouteTask } from "../lib/control-plane/route-task.ts";
 import type { FreshnessDebt } from "../lib/control-plane/scheduler/debt.ts";
@@ -746,11 +745,6 @@ test("projected publisher listings retain the full assignment view and named gap
   const after = await readAllAssignmentSources(repos, base, already);
   assert.deepEqual(buildAssignments(after), buildAssignments(before));
   assert.deepEqual(buildAssignmentView(after), buildAssignmentView(before));
-  const census = (sources: AssignmentSources) => buildChecklistCensus({ scope, sources, observedAt: NOW });
-  assert.deepEqual(census(after), census(before));
-  const timing = census(after).deliveryTimings?.find(row => row.workItemId === "timed-work");
-  assert.equal(timing?.timingIssue, true, "measured execution with identical endpoint stamps stays unknown");
-  assert.equal(timing?.firstStartedAt, null);
   assert.ok(Buffer.byteLength(JSON.stringify(after)) < Buffer.byteLength(JSON.stringify(before)),
     "unused replay and task fields no longer reach the publisher");
   assert.ok(after.attempts.every(row => !("usd" in row.cost) && !("policyVersion" in row)));

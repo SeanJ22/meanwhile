@@ -1474,8 +1474,6 @@ export interface OwnerCostRow {
  * and it carries that instant.
  */
 export interface OwnerSnapshot {
-  /** Derived exact-instruction inventories. Unknown object universes remain open. */
-  readonly checklists?: readonly import("./readiness/checklist-census.ts").ChecklistCensus[];
   readonly formatVersion: number;
   readonly publishedAt: string;
   readonly publishedFromSha: string | null;

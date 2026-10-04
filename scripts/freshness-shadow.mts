@@ -112,6 +112,7 @@ import {
   CONTROL_PLANE_QUERY_CONCURRENCY,
 } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import {
   closeCycleOccurrences,
   digestLines,
@@ -2976,11 +2977,17 @@ async function runAutonomousWave() {
   await refreshPlaceOrder();
   const fleet = await makeAutonomousFleet();
   const held = await planHeldWorkerFleet(ROOT, fleet, true);
+  const workItemsById = new Map<string, WorkItem>();
   const planned = await runAutonomousCoordinator(fleet, { planOnly: true,
+    onSelectionSnapshot: items => { for (const item of items) workItemsById.set(item.id, item); },
     prioritizedInstructions: placeOrder.map((receiptId, priority) => ({ receiptId, priority })) });
+  const plannedTasks = planned.decisions.filter(row => row.task && (row.action === "WORKER" ||
+    (row.action === "SCOUT" && paidWorkerCapacity() > 0))).map(row => row.task!);
   const taskIds = [...new Set([...held.map(task => task.id),
-    ...planned.decisions.filter(row => row.task && (row.action === "WORKER" ||
-      (row.action === "SCOUT" && paidWorkerCapacity() > 0))).map(row => row.task!.id)])];
+    ...plannedTasks.map(task => task.id)])];
+  const taskWorkIds = new Map([...held, ...plannedTasks].map(task => [task.id, task.workItemId]));
+  const metadata = new Map(taskIds.map(id => [id, workItemsById.get(taskWorkIds.get(id)!)]));
+  workItemsById.clear();
   const plainTaskIds = new Set([...held.filter(task => !["SCOUT", "DETECTIVE"].includes(task.workerTask?.role ?? "")).map(task => task.id),
     ...planned.decisions.filter(row => row.task && row.action === "WORKER" &&
       !["SCOUT", "DETECTIVE"].includes(row.task.workerTask?.role ?? "")).map(row => row.task!.id)]);
@@ -2995,14 +3002,7 @@ async function runAutonomousWave() {
   };
   // Every child pulls from the same full wave. Capture hunt rounds once;
   // completed/leased tasks disappearing must not reset a hunt to round zero.
-  const readTaskQueue = async () => {
-    const items = await Promise.all(taskIds.map(async id => {
-      try {
-        const row = await repos.routeTasks.read(id);
-        return row ? await repos.workItems.read(row.value.workItemId) : null;
-      } catch (error) { failedQueueRead(id, error); return null; }
-    }));
-    const metadata = new Map(taskIds.map((id, index) => [id, items[index]?.value]));
+  const readTaskQueue = () => {
     const rank = (id: string): number => {
       const item = metadata.get(id);
       if (!item) return Infinity;
@@ -3062,7 +3062,7 @@ async function runAutonomousWave() {
     reserveEscalation: scoutEscalationReservation(fleetSafety),
     orderPending: async ids => {
       await refreshPlaceOrder();
-      const queue = await (taskQueue ??= readTaskQueue().catch(error => { taskQueue = null; throw error; }));
+      const queue = taskQueue ??= readTaskQueue();
       const paidOpen = paidWorkerCapacity() > 0;
       // Only ordering is a wave snapshot. A changed task role must still read
       // the current paid admission; the child re-reads its task before claiming.

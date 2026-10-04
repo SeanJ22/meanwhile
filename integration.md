@@ -117,3 +117,9 @@ One line per batch folded into river.
 - registry: DB-54 · ready ea37c9c0b
 - meetings: DB-03, DB-04, DB-05, DB-08, DB-27, DB-31, DB-56 · ready 653e1d6cb
 - people: CA-40, CA-41 · ready 10677c503
+
+## 2026-10-04T13:30:31Z — river a88a072 → ef13298 (after release 1)
+
+- Evidence: pnpm gates on 4dd5c7b (CI env): 12/12 PASS; 9286 tests pass, 0 fail, 11 skipped. main (dcddcf5) reconciled into river as ef13298 with zero tree change.
+- hunters: CH-08 · ready ec8eb4982
+- meetings: DB-06 safety net · ready 4ca547ae4

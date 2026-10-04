@@ -35,11 +35,12 @@
     642
   ],
   "migrations": 0,
-  "state": "merged; checking deploy",
+  "state": "deployed; production integrity HELD; runner adoption pending",
   "merged_sha": "dcddcf57c235c1ec87ba3d6a2dc6ec4cdf13f88b",
-  "deployed": null,
+  "deployed": "post-deploy-integrity 37205300500 success: 'Production integrity held against dcddcf57\u2026 at 2026-10-04T13:23:06.804Z'; durable receipt read back",
   "post_deploy_run": "37205300500 (push-triggered, reused; no dispatch)",
-  "runner_adopted": null,
+  "runner_adopted": "not yet: pilot-runner testedSha 2aac424 at 13:29:51Z, code identity last read 13:14:49Z (before merge)",
   "merged_at": "2026-10-04T13:20:51Z",
-  "pr_check_run": "37204046350 success (full tier)"
+  "pr_check_run": "37204046350 success (full tier)",
+  "schema": "35 of 35 committed migrations applied, head 0034_reader_events; release added none"
 }

@@ -1,9 +1,9 @@
-build_state: waiting
-worker: codex-slide
-provider: Codex
-run_id: 01a10597-8d28-739a-bd97-9da5600d1019
-lock: none
-heartbeat: 2026-10-04T07:39:08.610201+00:00
+build_state: active
+worker: overflow-2
+provider: Claude (River-run overflow)
+run_id: session_01M3CeUks1KpFZttTP6ZTEAq/overflow-2
+lock: overflow-2-20261004T133242Z-eb0c4996
+heartbeat: 2026-10-04T13:32:48Z
 on_river: none of slide's steps; caught up with river 8f6185c5436b2be939c0333101713b6b5263e730 at b4a2c902b7eea72bababdfe5dc8fc7e5d950e075
 ready: none
 checks: FULL at 4717f3e5c4d3da15ecc149783b7cbbfa0b53570b passed: 985 files, 9012 passed tests, 11 skipped, 0 failed; types and lint passed. Later WIP a0e5c7b22892922f8380fa3bb69afed54196515d: 40 focused tests/types/changed-file lint passed. River merge b4a2c902b7eea72bababdfe5dc8fc7e5d950e075: 42 focused tests/types passed; actual selector FULL not run on the latest combination. Exact scope and skips: .factory/slide-checks.json. No READY claim.

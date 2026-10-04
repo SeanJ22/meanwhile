@@ -3,6 +3,7 @@ import { officialFilingIssue } from "./official-filings.ts";
 import { electionFieldIssue } from "./election-fields.ts";
 
 import type { BallotSet } from "../ballot/types.ts";
+import { measureRecordIssue, seedMeasureRecords, type MeasureRecord } from "../ballot/measure-records.ts";
 import type { CandidateCardData } from "../ballot/candidate-cards.ts";
 import type { CandidateLinks, RecordedHunt } from "../ballot/candidate-sites.ts";
 import type { GeneralLineup } from "../ballot/general-lineup.ts";
@@ -587,16 +588,23 @@ function ballotProjection(
   contractId: "az-sos-ballot" | "nh-curated-ballot",
   payload: ManualProjectionPayload,
 ): BuiltProjection {
+  const original = payload as AzBallotProjection | NhBallotProjection;
+  if (original.ballot) {
+    payload = { ...original, ballot: seedMeasureRecords(original.ballot,
+      "measureAnalyses" in original ? original.measureAnalyses.analyses : []) };
+  }
   const held = object(payload);
   const ballot = object(held?.ballot);
   const contests = rows(ballot, "contests");
   const candidacies = rows(ballot, "candidacies");
   const contestIds = contests.map((row) => string(row.id));
   const candidacyIds = candidacies.map((row) => string(row.id));
+  const measureRecords = rows(ballot, "measureRecords");
   const jurisdiction = contractId === "az-sos-ballot" ? "US-AZ" : "US-NH";
   const records: CivicRecordMember[] = [
     ...contests.map((record) => ({ key: `contest:${string(record.id)}`, record })),
     ...candidacies.map((record) => ({ key: `candidacy:${string(record.id)}`, record })),
+    ...measureRecords.map((record) => ({ key: `measure-record:${string(record.contestId)}`, record })),
   ];
   const identities: IdentityEvidence[] = [
     ...contests.map((row) => ({
@@ -615,6 +623,12 @@ function ballotProjection(
     })),
   ];
   const violations = [
+    ...duplicateProblems(measureRecords.map(row => string(row.contestId)), "Measure record"),
+    ...measureRecords.flatMap(row => {
+      const issue = measureRecordIssue(row as unknown as MeasureRecord);
+      const contest = contests.find(contest => contest.id === row.contestId && contest.type === "MEASURE");
+      return issue ? [issue] : contest ? [] : ["A measure record names no exact measure contest."];
+    }),
     ...duplicateProblems(contestIds, "Contest"),
     ...duplicateProblems(candidacyIds, "Candidacy"),
     ...(candidacies.some((row) => !contestIds.includes(string(row.contestId)))

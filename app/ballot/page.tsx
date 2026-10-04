@@ -1,3 +1,4 @@
+import { measureRecordsForBallot } from "@/lib/ballot/measure-records";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { FilingChanges } from "@/components/ballot/filing-changes";
@@ -1112,6 +1113,7 @@ export default async function BallotPage({
    * wins where one is published; otherwise the proposition number, compared
    * as a NUMBER so 100 never sorts before 20. See lib/ballot/measure-order.ts.
    */
+  const measureRecords = set ? measureRecordsForBallot(set) : [];
   const measureContests = orderMeasures(
     matched?.contests.filter((c) => c.type === "MEASURE") ?? [],
   );
@@ -2629,7 +2631,7 @@ export default async function BallotPage({
           <div className="ballot-card-grid">
           {group.list.map((contest) => {
             const analysis = analysisForContest(contest.id);
-            const summary = summaryForContest(contest.id);
+            const summary = summaryForContest(contest.id, measureRecords);
             /*
              * BAL-30: the official words this repository already holds for
              * this contest. Null for the eleven statewide propositions, whose
@@ -2747,7 +2749,7 @@ export default async function BallotPage({
                   one buys a page a reader can navigate, and the control names
                   exactly what is behind it.
                 */}
-                {provisionsForContest(contest.id).length > 0 && (
+                {provisionsForContest(contest.id, measureRecords).length > 0 && (
                   <details className="mt-3.5" data-provisions>
                     {/* Styled as the voting pills are — the author named them
                         as the pattern: light-purple, bolded, a right-pointing
@@ -2759,7 +2761,7 @@ export default async function BallotPage({
                       What&apos;s in it, part by part
                     </summary>
                     <ul className="mt-2.5 space-y-2.5">
-                      {provisionsForContest(contest.id).map((provision) => (
+                      {provisionsForContest(contest.id, measureRecords).map((provision) => (
                         <li
                           key={provision.id}
                           data-provision-id={provision.id}

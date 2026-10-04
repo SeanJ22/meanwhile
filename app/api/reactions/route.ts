@@ -1,3 +1,5 @@
+import { measureRecordsForBallot } from "@/lib/ballot/measure-records";
+import { ballotSourceForTargetId } from "@/lib/ballot/registry";
 import { writeReaction } from "@/lib/db/reactions";
 import { raiseWriteAlarm } from "@/lib/db/write-alarm";
 import { noteSubmission } from "@/lib/db/intake-limiter";
@@ -76,7 +78,7 @@ const MAX_BODY_BYTES = 4096;
 
 interface ReactionAuthorityReaders {
   readonly candidateTargets: (targetId: string) => Promise<Set<string>>;
-  readonly provisionTargets: () => Set<string>;
+  readonly provisionTargets: (targetId: string) => Set<string> | Promise<Set<string>>;
   readonly refreshFunding: () => Promise<unknown>;
   readonly fundingTargets: () => Set<string>;
   readonly refreshStateMoney: (state: StateCampaignFinanceJurisdiction) => Promise<unknown>;
@@ -88,7 +90,12 @@ interface ReactionAuthorityReaders {
 
 const reactionAuthorityReaders: ReactionAuthorityReaders = {
   candidateTargets: getCandidateTargetIds,
-  provisionTargets: getProvisionTargetIds,
+  provisionTargets: async (targetId) => {
+    const authority = ballotSourceForTargetId(targetId);
+    if (!authority) return new Set();
+    const ballot = authority.source.normalize(await authority.source.fetch());
+    return getProvisionTargetIds(measureRecordsForBallot(ballot));
+  },
   refreshFunding: refreshFundingFromPromoted,
   fundingTargets: getFundingTargetIds,
   refreshStateMoney: (state) => settleStateMoneyRead(state),
@@ -117,7 +124,7 @@ export async function validReactionTargetsFor(
     case "CANDIDATE":
       return readers.candidateTargets(targetId);
     case "MEASURE_PROVISION":
-      return readers.provisionTargets();
+      return readers.provisionTargets(targetId);
     case "FUNDING_TOTAL_REACTION": {
       // A state or local candidacy key (`ballot-xx-...`) is valid when that
       // state's promoted money holds a committee for it; anything else is an

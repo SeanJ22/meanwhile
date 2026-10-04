@@ -1,3 +1,4 @@
+import type { MeasureRecord } from "./measure-records.ts";
 import type { OcdId, Provenance } from "../sources/types.ts";
 
 /**
@@ -135,6 +136,8 @@ export interface CandidacyRemoval {
 }
 
 export interface BallotSet {
+  /** Plain-language records carried by the civic-data ballot projection. */
+  measureRecords?: readonly MeasureRecord[];
   election: Election;
   contests: Contest[];
   candidacies: Candidacy[];

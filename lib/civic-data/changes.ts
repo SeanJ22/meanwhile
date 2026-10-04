@@ -394,6 +394,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         ...keyed("contest", array(ballot.contests), ["id"]),
         ...keyed("candidacy", array(ballot.candidacies), ["id"]),
         ...keyed("measure", array(ballot.measures), ["id", "contestId"]),
+        ...keyed("measure-record", array(ballot.measureRecords), ["contestId"]),
         ...array(ballot.absences).map((record, index) => {
           const row = object(record) ?? {};
           const identity = [textKey(row, ["ocdId"]), textKey(row, ["statement"])].filter(Boolean).join(":");

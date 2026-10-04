@@ -3,11 +3,11 @@ worker: codex-ballot
 provider: Codex
 run_id: codex-ballot-9378cafcef294004a0aa48621d1a1e44
 lock: codex-ballot-9378cafcef294004a0aa48621d1a1e44
-heartbeat: 2026-10-04T06:29:55Z
+heartbeat: 2026-10-04T06:39:21Z
 on_river: none
 ready: none
-checks: none
-working_on: CA-24 — inspect existing ballot measure authority and implement missing record path
+checks: early dirty-tree diagnostics only; types/lint passed; canonical test runner needs sandbox network permission for child IPC. No ready SHA yet.
+working_on: CA-24 WIP — record migration, scoped Reader/Ask and reaction authority; focused/type/lint checks underway
 waiting_on: none
 returned: none
 needs_hook: none

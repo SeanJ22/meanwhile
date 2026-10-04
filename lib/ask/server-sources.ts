@@ -1,3 +1,4 @@
+import { measureRecordsForBallot } from "../ballot/measure-records.ts";
 import { stateForRosterFile } from "../holdings/runtime-paths.ts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -171,6 +172,7 @@ export async function loadBallotForDivisions(
       if (hit.contests.length === 0 && hit.absences.length === 0) continue;
       const analyses = state === "az" ? getMeasureAnalyses() : null;
       const lineup = state === "az" ? getGeneralLineup() : null;
+      const measureRecords = measureRecordsForBallot(candidate);
       return {
         loaderFailures,
         analysisLoaderFailed: state === "az" && analyses === null,
@@ -181,13 +183,13 @@ export async function loadBallotForDivisions(
         nominees: (contestId) => (lineup?.contests.find((contest) => contest.contestId === contestId)?.nominees ?? []).map((nominee) => ({ ...nominee, sourceUrl: lineup!.canvass.url, sourceOrg: lineup!.canvass.issuedBy, retrievedAt: lineup!.canvass.readAt })),
         positions: sourcedPositions,
         measureSummary: (contestId) => {
-          const summary = summaryForContest(contestId);
+          const summary = summaryForContest(contestId, measureRecords);
           return summary
             ? { summary: summary.summary, summarizesUrl: summary.summarizesUrl }
             : null;
         },
         measureProvisions: (contestId) =>
-          provisionsForContest(contestId).map((p) => ({
+          provisionsForContest(contestId, measureRecords).map((p) => ({
             id: p.id,
             label: p.label,
             what: p.what,

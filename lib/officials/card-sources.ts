@@ -132,10 +132,13 @@ function retainedHolderSources(holder: SeatHolder): CardSource[] {
 export function districtCardSources(
   representation: SeatHolder[],
   meetings: Meeting[],
+  /** The saved page that states a body's office address and phone, when the card shows them. */
+  officeContact?: Provenance | null,
 ): CardSource[] {
   const entries: CardSource[] = [
     { what: "This district's boundary, type and label", provenance: BOUNDARY_PROVENANCE },
   ];
+  if (officeContact) entries.push({ what: "The body's office address and phone", provenance: officeContact });
 
   for (const holder of representation) {
     const source = holderSource(holder, `Who represents it — ${holder.name}`);

@@ -21,6 +21,7 @@ import type {
   CoverageStatus,
   Division,
   DivisionType,
+  RegistryProvenance,
 } from "./types.ts";
 import { WIRED_STATUSES } from "./coverage-client.ts";
 import { indexAudits } from "./audit.ts";
@@ -172,6 +173,8 @@ export interface CoveredBody {
   homepageUrl: string | null;
   /** Where this body's agendas live, when a hunt found them. */
   agendaSourceRef: string | null;
+  /** The body's office address and phone, with the saved page that states them. */
+  officeContact?: { address: string | null; phone: string | null; provenance: RegistryProvenance } | null;
   /** When the body regularly meets, in its official page's words, with that page. */
   meetingCadence?: { text: string; sourceUrl: string | null } | null;
   /**
@@ -429,6 +432,9 @@ export function summarizeCoverage(
       meetingCadence: body.meetingCadence
         ? { text: body.meetingCadence, sourceUrl: body.meetingCadenceSource?.sourceUrl ?? body.provenance.sourceUrl ?? null }
         : null,
+      ...(body.officeAddress || body.officePhone
+        ? { officeContact: { address: body.officeAddress ?? null, phone: body.officePhone ?? null, provenance: body.provenance } }
+        : {}),
       lookedAt: held !== undefined || DOCUMENTED_SEARCHES.has(body.id),
       tier: division?.tier ?? "local",
     };

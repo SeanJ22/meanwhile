@@ -73,8 +73,7 @@
  * RESUME_RUNNER, RUN_CYCLE_NOW and a DISPATCH end the sleep early, and the
  * cycle puts the dispatched units first in both lanes (ADM-8). After every
  * cycle's digest the runner publishes the admin console ITSELF —
- * `publish-owner-snapshot.mts`, then `readiness-refresh.mts
- * --target=control-plane` — so the deployed pages never again wait on a
+ * `publish-owner-snapshot.mts` — so the deployed pages never again wait on a
  * person (ADM-1). `pnpm pilot:stop` / `pilot:disable` / `pilot:start` write
  * the matching PAUSE_RUNNER / RESUME_RUNNER note through
  * `scripts/runner-pause-note.mts`, best effort.
@@ -699,7 +698,6 @@ const CONSOLE_PUBLISHERS: readonly { readonly name: string; readonly args: reado
    * the next exact-SHA handoff.
    */
   { name: "owner snapshot", args: ["scripts/publish-owner-snapshot.mts"] },
-  { name: "readiness", args: ["scripts/readiness-refresh.mts", "--target=control-plane"] },
 ];
 
 const publishChangedConsole = consolePublisher({
@@ -726,7 +724,7 @@ async function publishConsole(): Promise<void> {
     return;
   }
   if (await publishChangedConsole() === "UNCHANGED") {
-    console.log("  console publish: unchanged inputs; owner snapshot and readiness retained");
+    console.log("  console publish: unchanged inputs; owner snapshot retained");
   }
 }
 

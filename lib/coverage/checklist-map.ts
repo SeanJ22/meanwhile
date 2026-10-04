@@ -15,7 +15,7 @@ export const CALENDAR_ITEMS: ReadonlySet<string> = new Set(map.calendarItems);
 export const FRESHNESS_HOURS = map.freshnessHours;
 export const MEETING_NEAR_WINDOW_MS = FRESHNESS_HOURS.meetingNearWindowDays * 24 * 3_600_000;
 
-export type ChecklistUnit = "division" | "body" | "seat" | "meeting" | "contest" | "candidate" | "funding" | "deadline" | "system";
+export type ChecklistUnit = "zip" | "division" | "body" | "seat" | "legislature" | "rollcall" | "meeting" | "contest" | "candidate" | "funding" | "deadline" | "system";
 export type ChecklistTrigger = "always" | "when-present" | "when-published" | "when-due" | "when-in-scope" | "when-offered" | "unknown";
 export type ChecklistDue = "now" | "per-meeting" | "per-election" | "per-session" | "per-filing-period" | "per-fiscal-year" | "on-change" | "unknown";
 export type PredicateKind = "fact" | "identity" | "source" | "freshness" | "reconciliation" | "separation" | "delivery" | "process" | "privacy";
@@ -34,6 +34,8 @@ export interface ChecklistItemRule {
   /** For a shared predicate: the ID it is counted under. */
   readonly into?: string;
   readonly replacedBy?: "admin";
+  /** A division item that applies only to one kind of division; the others never owe it. */
+  readonly onlyFor?: "school-district" | "special-district" | "tribal-overlap";
   /** A posting-deadline item: when it falls due is counted from its meeting. */
   readonly lifecycle?: "agenda" | "outcome";
   /** What the item is called when it is awaiting publication ("Agenda not published yet"). */
@@ -73,9 +75,16 @@ export function canonicalItemId(id: string): string {
   return item?.countsAs === "shared" && item.into ? item.into : id;
 }
 
+/** Whether a division is the kind a gated item is owed by. A tribal overlap is owed only where one is held, so it is decided by the caller. */
+export function divisionOwesGatedItem(divisionId: string, onlyFor: NonNullable<ChecklistItemRule["onlyFor"]>): boolean | "held-only" {
+  if (onlyFor === "school-district") return /\/school_district:[^/]+$/.test(divisionId);
+  if (onlyFor === "special-district") return /\/(?!school_district:|council_district:|congressional_district:)[a-z_]+_district:[^/]+$/.test(divisionId);
+  return "held-only";
+}
+
 /** The owed-list subject kind a unit puts an item on. */
 const UNIT_SUBJECT_KIND: Readonly<Record<ChecklistUnit, string | null>> = {
-  division: "division", body: "body", seat: "seat", meeting: "calendar", contest: "contest", candidate: "contest",
+  zip: "zip", division: "division", body: "body", seat: "seat", legislature: "legislature", rollcall: "rollcall", meeting: "calendar", contest: "contest", candidate: "contest",
   funding: "funding", deadline: "deadline", system: null,
 };
 export function subjectKindOfUnit(id: string): string | null {

@@ -87,9 +87,9 @@
     }
   },
   "groups": {
-    "division": ["GEO"],
+    "division": [],
     "body": ["GOV", "PAR"],
-    "seat": ["OFF", "LEG", "EXE", "PRL"],
+    "seat": ["OFF", "EXE", "PRL"],
     "calendar": ["MTG", "DOC"],
     "funding": ["CAM", "FIN"],
     "contest": ["ELE", "CAN"],
@@ -99,7 +99,9 @@
   "calendarItems": ["MTG-01", "MTG-02", "MTG-03", "MTG-04", "MTG-13", "MTG-15", "MTG-16", "MTG-17", "MTG-20"],
   "appliesTo": {
     "note": "A known record only owes its own facts. A matching rule lists the groups or IDs the record owes, less excludeIds. A capture kind with no rule owes every item in its subject kind's groups. Registry bodies owe GOV, PAR and REF, not ENG: ENG measures the app's reactions, privacy, feedback and alert delivery, so it is not an acquisition task per body. Local votes belong to the body's meeting actions, not Congress or state roll calls or federal PRL; a roster can include a mayor, so local officeholders keep EXE. A campaign committee has no public budget and a voting date has no polling location; those stay discovery work for the place, not the record.",
-    "registry-body": { "groups": ["GOV", "PAR", "REF"] },
+    "registry-body": {
+      "groups": ["GOV", "PAR", "REF"]
+    },
     "federal-legislator": {
       "groups": ["OFF", "LEG", "PRL"],
       "excludeIds": ["LEG-22"]
@@ -151,6 +153,12 @@
     },
     "body-calendar": {
       "calendarItems": "only"
+    },
+    "federal-legislature": {
+      "ids": ["LEG-01", "LEG-10"]
+    },
+    "state-legislature": {
+      "ids": ["LEG-01", "LEG-10", "LEG-22"]
     }
   },
   "freshnessHours": {
@@ -200,7 +208,10 @@
       "candidate": "one per candidate",
       "funding": "one per committee or budget",
       "deadline": "one per election deadline",
-      "system": "not owed by a place"
+      "system": "not owed by a place",
+      "zip": "one per ZIP in the place",
+      "legislature": "one per legislature and session",
+      "rollcall": "one per roll call, owed only where roll calls are held"
     },
     "trigger": {
       "always": "every unit owes it",
@@ -228,6 +239,11 @@
       "shared": "counted once under the ID in `into`",
       "summary": "a summary whose detail items carry the count; kept out of the denominator",
       "superseded": "replaced by a standing decision"
+    },
+    "onlyFor": {
+      "school-district": "only for a school district",
+      "special-district": "only for a special district",
+      "tribal-overlap": "only where a tribal overlap is held"
     }
   },
   "items": {
@@ -245,18 +261,18 @@
     "GATE-12": {"unit": "system", "trigger": "always", "due": "now", "predicateKind": "process", "scoreAs": "gate", "countsAs": "row"},
     "GATE-13": {"unit": "system", "trigger": "always", "due": "now", "predicateKind": "process", "scoreAs": "gate", "countsAs": "row", "replacedBy": "admin"},
     "GATE-14": {"unit": "system", "trigger": "always", "due": "now", "predicateKind": "process", "scoreAs": "gate", "countsAs": "superseded"},
-    "GEO-01": {"unit": "division", "trigger": "always", "due": "now", "predicateKind": "identity", "scoreAs": "core", "countsAs": "row"},
-    "GEO-02": {"unit": "division", "trigger": "always", "due": "now", "predicateKind": "separation", "scoreAs": "core", "countsAs": "row"},
+    "GEO-01": {"unit": "zip", "trigger": "always", "due": "now", "predicateKind": "identity", "scoreAs": "core", "countsAs": "row"},
+    "GEO-02": {"unit": "zip", "trigger": "always", "due": "now", "predicateKind": "separation", "scoreAs": "core", "countsAs": "row"},
     "GEO-03": {"unit": "division", "trigger": "always", "due": "now", "predicateKind": "separation", "scoreAs": "core", "countsAs": "row"},
-    "GEO-04": {"unit": "division", "trigger": "always", "due": "now", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
-    "GEO-05": {"unit": "division", "trigger": "always", "due": "now", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
-    "GEO-06": {"unit": "division", "trigger": "when-present", "due": "now", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
+    "GEO-04": {"unit": "zip", "trigger": "always", "due": "now", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
+    "GEO-05": {"unit": "zip", "trigger": "always", "due": "now", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
+    "GEO-06": {"unit": "zip", "trigger": "when-present", "due": "now", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
     "GEO-07": {"unit": "division", "trigger": "always", "due": "now", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
     "GEO-08": {"unit": "division", "trigger": "always", "due": "now", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
-    "GEO-09": {"unit": "division", "trigger": "when-present", "due": "now", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
-    "GEO-10": {"unit": "division", "trigger": "when-present", "due": "now", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
-    "GEO-11": {"unit": "division", "trigger": "when-present", "due": "now", "predicateKind": "source", "scoreAs": "core", "countsAs": "row"},
-    "GEO-12": {"unit": "division", "trigger": "when-present", "due": "now", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
+    "GEO-09": {"unit": "division", "trigger": "when-present", "due": "now", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row", "onlyFor": "school-district"},
+    "GEO-10": {"unit": "division", "trigger": "when-present", "due": "now", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row", "onlyFor": "special-district"},
+    "GEO-11": {"unit": "division", "trigger": "when-present", "due": "now", "predicateKind": "source", "scoreAs": "core", "countsAs": "row", "onlyFor": "tribal-overlap"},
+    "GEO-12": {"unit": "zip", "trigger": "when-present", "due": "now", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
     "GEO-13": {"unit": "division", "trigger": "when-present", "due": "on-change", "predicateKind": "separation", "scoreAs": "core", "countsAs": "row"},
     "GEO-14": {"unit": "division", "trigger": "always", "due": "now", "predicateKind": "reconciliation", "scoreAs": "core", "countsAs": "row"},
     "GOV-01": {"unit": "body", "trigger": "always", "due": "now", "predicateKind": "identity", "scoreAs": "core", "countsAs": "row"},
@@ -320,25 +336,25 @@
     "DOC-11": {"unit": "meeting", "trigger": "when-published", "due": "per-meeting", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row", "lifecycle": "outcome", "noun": "Scanned record"},
     "DOC-12": {"unit": "meeting", "trigger": "when-published", "due": "per-meeting", "predicateKind": "fact", "scoreAs": "extension", "countsAs": "row", "lifecycle": "outcome", "noun": "Transcript"},
     "DOC-13": {"unit": "meeting", "trigger": "when-published", "due": "per-meeting", "predicateKind": "fact", "scoreAs": "extension", "countsAs": "row", "lifecycle": "outcome", "noun": "Related documents"},
-    "LEG-01": {"unit": "body", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "identity", "scoreAs": "core", "countsAs": "row"},
+    "LEG-01": {"unit": "legislature", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "identity", "scoreAs": "core", "countsAs": "row"},
     "LEG-02": {"unit": "seat", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
-    "LEG-03": {"unit": "seat", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "identity", "scoreAs": "core", "countsAs": "row"},
-    "LEG-04": {"unit": "seat", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
-    "LEG-05": {"unit": "seat", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
-    "LEG-06": {"unit": "seat", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
-    "LEG-07": {"unit": "seat", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
-    "LEG-08": {"unit": "seat", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "reconciliation", "scoreAs": "core", "countsAs": "row"},
-    "LEG-09": {"unit": "seat", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "source", "scoreAs": "core", "countsAs": "row"},
-    "LEG-10": {"unit": "body", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "reconciliation", "scoreAs": "core", "countsAs": "row"},
-    "LEG-11": {"unit": "seat", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
-    "LEG-12": {"unit": "seat", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "delivery", "scoreAs": "core", "countsAs": "row"},
+    "LEG-03": {"unit": "rollcall", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "identity", "scoreAs": "core", "countsAs": "row"},
+    "LEG-04": {"unit": "rollcall", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
+    "LEG-05": {"unit": "rollcall", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
+    "LEG-06": {"unit": "rollcall", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
+    "LEG-07": {"unit": "rollcall", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
+    "LEG-08": {"unit": "rollcall", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "reconciliation", "scoreAs": "core", "countsAs": "row"},
+    "LEG-09": {"unit": "rollcall", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "source", "scoreAs": "core", "countsAs": "row"},
+    "LEG-10": {"unit": "legislature", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "reconciliation", "scoreAs": "core", "countsAs": "row"},
+    "LEG-11": {"unit": "rollcall", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
+    "LEG-12": {"unit": "rollcall", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "delivery", "scoreAs": "core", "countsAs": "row"},
     "LEG-13": {"unit": "seat", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "delivery", "scoreAs": "core", "countsAs": "row"},
     "LEG-14": {"unit": "seat", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
-    "LEG-15": {"unit": "seat", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "source", "scoreAs": "core", "countsAs": "row"},
-    "LEG-16": {"unit": "seat", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "freshness", "scoreAs": "core", "countsAs": "row"},
-    "LEG-17": {"unit": "seat", "trigger": "when-published", "due": "per-session", "predicateKind": "fact", "scoreAs": "extension", "countsAs": "row"},
-    "LEG-18": {"unit": "seat", "trigger": "when-published", "due": "per-session", "predicateKind": "fact", "scoreAs": "extension", "countsAs": "row"},
-    "LEG-19": {"unit": "seat", "trigger": "when-published", "due": "per-session", "predicateKind": "fact", "scoreAs": "extension", "countsAs": "row"},
+    "LEG-15": {"unit": "rollcall", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "source", "scoreAs": "core", "countsAs": "row"},
+    "LEG-16": {"unit": "rollcall", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "freshness", "scoreAs": "core", "countsAs": "row"},
+    "LEG-17": {"unit": "rollcall", "trigger": "when-published", "due": "per-session", "predicateKind": "fact", "scoreAs": "extension", "countsAs": "row"},
+    "LEG-18": {"unit": "rollcall", "trigger": "when-published", "due": "per-session", "predicateKind": "fact", "scoreAs": "extension", "countsAs": "row"},
+    "LEG-19": {"unit": "rollcall", "trigger": "when-published", "due": "per-session", "predicateKind": "fact", "scoreAs": "extension", "countsAs": "row"},
     "ELE-01": {"unit": "contest", "trigger": "always", "due": "per-election", "predicateKind": "identity", "scoreAs": "core", "countsAs": "row"},
     "ELE-02": {"unit": "contest", "trigger": "always", "due": "per-election", "predicateKind": "source", "scoreAs": "core", "countsAs": "row"},
     "ELE-03": {"unit": "contest", "trigger": "always", "due": "per-election", "predicateKind": "reconciliation", "scoreAs": "core", "countsAs": "row"},
@@ -523,7 +539,7 @@
     "CAM-18": {"unit": "funding", "trigger": "when-in-scope", "due": "per-filing-period", "predicateKind": "reconciliation", "scoreAs": "core", "countsAs": "row"},
     "LEG-20": {"unit": "seat", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "fact", "scoreAs": "core", "countsAs": "summary"},
     "LEG-21": {"unit": "seat", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "fact", "scoreAs": "core", "countsAs": "summary"},
-    "LEG-22": {"unit": "body", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "freshness", "scoreAs": "core", "countsAs": "summary"},
+    "LEG-22": {"unit": "legislature", "trigger": "when-in-scope", "due": "per-session", "predicateKind": "freshness", "scoreAs": "core", "countsAs": "summary"},
     "ASK-09": {"unit": "system", "trigger": "when-offered", "due": "now", "predicateKind": "delivery", "scoreAs": "answer", "countsAs": "row"},
     "ASK-10": {"unit": "system", "trigger": "when-offered", "due": "now", "predicateKind": "delivery", "scoreAs": "answer", "countsAs": "row"},
     "ASK-11": {"unit": "system", "trigger": "when-offered", "due": "now", "predicateKind": "delivery", "scoreAs": "answer", "countsAs": "row"},

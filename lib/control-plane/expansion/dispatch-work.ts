@@ -142,7 +142,7 @@ export async function nationalPlaceWorkReading(repos: ControlPlaneRepositories, 
     key: `${scope.decision.geography.stateAbbr.toLowerCase()}.${VERSION_PREFIX[scope.decision.geography.type]}.${scope.decision.geography.geoid.toLowerCase()}`,
     receiptId: scope.decision.receiptId,
     items: buildPlaceOwedList({ divisions: [...divisionsByReceipt.get(scope.decision.receiptId)!].map(id => ({ id, label: id })),
-      subjects: capture.subjects, held: capture.held, now }),
+      subjects: capture.subjects, held: capture.held, now, zips: [...(inScope.get(scope.decision.receiptId) ?? [])] }),
   })));
   const rank = (zip: string) => readings.findIndex(place => inScope.get(place.receiptId)?.has(zip));
   return { ordered: [...zips].sort((a, b) => (rank(a) < 0 ? Infinity : rank(a)) - (rank(b) < 0 ? Infinity : rank(b))),

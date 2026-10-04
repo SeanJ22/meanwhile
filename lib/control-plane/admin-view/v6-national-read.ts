@@ -195,6 +195,8 @@ export function nationalRows(inputs: NationalInputs): readonly AdminV6NationalRo
 export interface ScoreTarget {
   readonly placeKey: string;
   readonly divisions: readonly NationalDivision[];
+  /** The ZIPs in the target, so its ZIP-scope items are owed once per ZIP. Absent when they are not known. */
+  readonly zips?: readonly string[];
 }
 
 export interface ScoreDeps {
@@ -215,7 +217,7 @@ export async function scoreTargets(targets: readonly ScoreTarget[], deps: ScoreD
   const now = deps.now();
   const held = await deps.readHeld([...new Set(targets.flatMap((t) => t.divisions.map((d) => d.id)))], now);
   for (const target of targets) {
-    const rows = buildPlaceOwedList({ divisions: target.divisions, subjects: held.subjects, held: held.held, now });
+    const rows = buildPlaceOwedList({ divisions: target.divisions, subjects: held.subjects, held: held.held, now, ...(target.zips ? { zips: target.zips } : {}) });
     out.set(target.placeKey, scorePlace(rows as readonly OwedRowLike[], {}, []).overall.percent);
     await tick();
   }
@@ -300,12 +302,12 @@ async function targetsOf(scope: V6PlaceScope, districts: readonly DistrictInfo[]
   if (districts === null) return [];
   if (scope.kind === "state") {
     const ids = await deps.zipDivisions(districts.flatMap((d) => d.zips));
-    return districts.map((d) => ({ placeKey: d.placeKey, divisions: unionDivisions(d.zips.map((z) => ids.get(z) ?? []), districtAlways(d)) }));
+    return districts.map((d) => ({ placeKey: d.placeKey, zips: d.zips, divisions: unionDivisions(d.zips.map((z) => ids.get(z) ?? []), districtAlways(d)) }));
   }
   const district = districts.find((d) => d.geoid === scope.geoid && d.state === scope.state);
   if (district === undefined) return [];
   const ids = await deps.zipDivisions(district.zips);
-  return district.zips.map((z) => ({ placeKey: `geo:${district.state}.zcta.${z}`, divisions: unionDivisions([ids.get(z) ?? []], districtAlways(district)) }));
+  return district.zips.map((z) => ({ placeKey: `geo:${district.state}.zcta.${z}`, zips: [z], divisions: unionDivisions([ids.get(z) ?? []], districtAlways(district)) }));
 }
 
 /**

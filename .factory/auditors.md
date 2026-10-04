@@ -5,7 +5,7 @@ run_id: session_01Qe7w1irSM1yf4rH8Y4sjSU
 lock: none
 heartbeat: 2026-10-04T10:45:30Z
 on_river: DP-01 (ec1157a97); DP-02, DP-04, DP-06 (folded in 4b5102044)
-ready: FE-16 (4d0d27d2e); DP-03 (see log "READY: DP-03"); FE-17 (53cc708961d323539518e6148240311d005e640d, file only: FE-18 runs it); DP-15 (a2c209952dbdd2591f140f642decb9639f205699, reader contracts, partial: see seen_not_fixed). Earlier READY commits are in this one's history; fold a2c209952dbdd2591f140f642decb9639f205699 to take all.
+ready: FE-16 (4d0d27d2e); DP-03 (4a20e1bf9); FE-17 (53cc708961d323539518e6148240311d005e640d, file only: FE-18 runs it); DP-15 (a2c209952dbdd2591f140f642decb9639f205699, reader contracts, partial: see seen_not_fixed). Earlier READY commits are in this one's history; fold a2c209952dbdd2591f140f642decb9639f205699 to take all.
 checks: env -u DATABASE_URL -u WTP_ASSET_STORE via pnpm test: 22 civic-data test files, 181 pass at a2c209952dbdd2591f140f642decb9639f205699; tsc clean; eslint no new warnings (firewall.ts matchingCalls warning predates me). Not FULL: no selector/shared-hook change.
 working_on: Next: DP-13 (live-audit job), DP-05, FE-03. FE-01 harness edits still waiting on needs_Sean.
 waiting_on: none

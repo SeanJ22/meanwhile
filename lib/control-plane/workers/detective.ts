@@ -41,6 +41,23 @@ export function needsSourceInvestigation(debt: FreshnessDebt | null | undefined,
   return PASSING_OUTAGE.includes(debt.cause) && debt.consecutiveFailures >= shutThreshold;
 }
 
+/** Slot length for alternating a shut door between its detective and its plain re-read. */
+export const PLAIN_REREAD_SLOT_MS = 3_600_000;
+
+/**
+ * One occurrence holds one executor, so a shut door whose detective is admitted cannot get both in one
+ * cycle. It alternates by hourly slot instead: the plain re-read runs in every other slot (a door that
+ * recovers is noticed within two slots, with no model charge), and the detective runs in the rest. A
+ * door the host refused or whose page changed first goes to its detective at once (its plain re-read
+ * can only fail the same way); it alternates from its second failure on.
+ */
+export function plainRereadSlot(debt: FreshnessDebt | null | undefined, nowMs: number,
+  shutThreshold: number = DETECTIVE_SHUT_THRESHOLD): boolean {
+  if (!needsSourceInvestigation(debt, shutThreshold)) return false;
+  if (SHUT_AT_ONCE.includes(debt.cause) && debt.consecutiveFailures <= 1) return false;
+  return Math.floor(nowMs / PLAIN_REREAD_SLOT_MS) % 2 === 1;
+}
+
 /** A failed discovery provider does not invalidate another source already found for the subject. */
 function heldAfterSourceFailure(solved: import('../scheduler/scout-result.ts').ScoutResult | null | undefined,
   debt: FreshnessDebt | null | undefined, route: RouteDescriptor | null | undefined) {

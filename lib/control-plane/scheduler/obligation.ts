@@ -126,6 +126,8 @@ export interface FreshnessObligation {
    * means no standing absence. Runtime-owned and durable.
    */
   readonly absentUntil?: string | null;
+  /** What would reopen a recorded absence before it expires, stored with it (DP-06). Cleared with `absentUntil`. */
+  readonly absenceUnlock?: import("./absence.ts").AbsenceUnlock | null;
   /**
    * Set when the owner's dispatch MATERIALIZED this obligation (MW-028,
    * `lib/control-plane/expansion/dispatch-work.ts`): the registry defined the

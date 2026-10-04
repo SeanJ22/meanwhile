@@ -27,6 +27,7 @@ import { deriveCandidateUniverse } from "../hunt/candidate-universe.ts";
 import { campaignSiteSubjects, type LineupContest } from "../candidates/campaign-site-subjects.ts";
 import { composeCampaignLinks, derivedCampaignSitesProjectionIssue, DERIVED_CAMPAIGN_SITES_SCOPE,
   type DerivedCampaignSitesProjection, type DerivedCampaignSiteRecord } from "./derived-campaign-sites.ts";
+import { FRESHNESS_HOURS } from "../coverage/checklist-map.ts";
 
 /** Canonical published families, plus the existing explicitly adopted election calendars. */
 export interface HeldPlaceFamilies {
@@ -153,7 +154,7 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
       const captureKind = holder.level === "FEDERAL" && holder.id.startsWith("congress:") ? "federal-legislator"
         : holder.level === "STATE" && divisions.some(id => /\/sld[ul]:/.test(id)) ? "state-legislator" : undefined;
       if (!subject(holder.id, "seat", divisions, holder.officeTitle, captureKind)) continue;
-      const add = (id: string, item: unknown) => field(holder.id, id, item, holder.provenance.sourceUrl, holder.provenance.collectedAt, 24);
+      const add = (id: string, item: unknown) => field(holder.id, id, item, holder.provenance.sourceUrl, holder.provenance.collectedAt, FRESHNESS_HOURS.daily);
       add("OFF-04", { name: holder.name, office: holder.officeTitle });
       add("OFF-08", { profile: holder.websiteUrl, source: holder.provenance.sourceUrl });
       if (holder.termStart || holder.termEnd) add("OFF-06", { start: holder.termStart, end: holder.termEnd });
@@ -164,12 +165,12 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
   for (const row of registry?.statewideExecutives ?? []) {
     const holder = row.holder;
     if (!subject(holder.id, "seat", [row.stateOcdId], holder.officeTitle, "executive")) continue;
-    const add = (id: string, item: unknown) => field(holder.id, id, item, row.sourceUrl, row.collectedAt, 30 * 24);
+    const add = (id: string, item: unknown) => field(holder.id, id, item, row.sourceUrl, row.collectedAt, FRESHNESS_HOURS.registryRecord);
     add("OFF-04", { name: holder.name, office: holder.officeTitle });
     add("OFF-08", { profile: holder.websiteUrl, source: row.sourceUrl });
     if (holder.termEnd) add("OFF-06", { end: holder.termEnd });
     if (holder.email || holder.phone || holder.contactFormUrl) add("OFF-09", { email: holder.email, phone: holder.phone, contactFormUrl: holder.contactFormUrl });
-    if (holder.partyLabel && row.partySourceUrl) field(holder.id, "OFF-11", holder.partyLabel, row.partySourceUrl, row.collectedAt, 30 * 24);
+    if (holder.partyLabel && row.partySourceUrl) field(holder.id, "OFF-11", holder.partyLabel, row.partySourceUrl, row.collectedAt, FRESHNESS_HOURS.registryRecord);
   }
   // Exact membership/candidacy bridges also let a finance target reach every served division.
   for (const body of registry?.registry.bodies ?? []) {
@@ -188,17 +189,17 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
     for (const contest of ballot.contests) {
       const divisions = [contest.ocdId];
       if (!subject(contest.id, "contest", divisions, contest.title)) continue;
-      const add = (id: string, item: unknown) => field(contest.id, id, item, contest.provenance.sourceUrl, contest.provenance.collectedAt, 24);
+      const add = (id: string, item: unknown) => field(contest.id, id, item, contest.provenance.sourceUrl, contest.provenance.collectedAt, FRESHNESS_HOURS.daily);
       add("ELE-01", ballot.election);
       add("ELE-04", { office: contest.title, divisionId: contest.ocdId, termYears: contest.termYears, voteFor: contest.voteFor });
       for (const candidate of ballot.candidacies.filter(row => row.contestId === contest.id)) {
         subject(candidate.id, "contest", divisions, `${candidate.givenName} ${candidate.familyName}`, "candidate");
-        field(candidate.id, "CAN-01", { id: candidate.id, name: `${candidate.givenName} ${candidate.familyName}` }, candidate.provenance.sourceUrl, candidate.provenance.collectedAt, 24);
-        field(candidate.id, "CAN-02", { contestId: contest.id, electionId: contest.electionId, office: contest.title, divisionId: contest.ocdId }, candidate.provenance.sourceUrl, candidate.provenance.collectedAt, 24);
-        if (candidate.incumbent !== null) field(candidate.id, "CAN-03", candidate.incumbent, candidate.provenance.sourceUrl, candidate.provenance.collectedAt, 24);
+        field(candidate.id, "CAN-01", { id: candidate.id, name: `${candidate.givenName} ${candidate.familyName}` }, candidate.provenance.sourceUrl, candidate.provenance.collectedAt, FRESHNESS_HOURS.daily);
+        field(candidate.id, "CAN-02", { contestId: contest.id, electionId: contest.electionId, office: contest.title, divisionId: contest.ocdId }, candidate.provenance.sourceUrl, candidate.provenance.collectedAt, FRESHNESS_HOURS.daily);
+        if (candidate.incumbent !== null) field(candidate.id, "CAN-03", candidate.incumbent, candidate.provenance.sourceUrl, candidate.provenance.collectedAt, FRESHNESS_HOURS.daily);
       }
       for (const measure of ballot.measures.filter(row => row.contestId === contest.id)) {
-        field(contest.id, "ELE-11", { question: measure.questionText, divisionId: contest.ocdId }, measure.provenance.sourceUrl, measure.provenance.collectedAt, 24);
+        field(contest.id, "ELE-11", { question: measure.questionText, divisionId: contest.ocdId }, measure.provenance.sourceUrl, measure.provenance.collectedAt, FRESHNESS_HOURS.daily);
       }
     }
   }
@@ -217,7 +218,7 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
   const composed = composeCampaignLinks(profiles?.links?.links ?? {}, derived);
   const date = (text: string | null | undefined) => text?.match(/\b\d{4}-\d{2}-\d{2}\b/)?.[0] ?? "";
   const onCandidate = (key: string, id: string, item: unknown, url: string | null, checkedAt: string) => {
-    for (const subjectId of keySubjects.get(key) ?? []) field(subjectId, id, item, url, checkedAt, 7 * 24);
+    for (const subjectId of keySubjects.get(key) ?? []) field(subjectId, id, item, url, checkedAt, FRESHNESS_HOURS.weekly);
   };
   for (const [key, card] of Object.entries(profiles?.cards?.cards ?? {})) {
     if (!keySubjects.has(key)) continue;
@@ -271,7 +272,7 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
   }
   for (const jurisdiction of families.votingSites?.jurisdictions ?? []) {
     if (jurisdiction.refusal || !jurisdiction.sites.length || !subject(`voting-sites:${jurisdiction.ocdId}`, "deadline", [jurisdiction.ocdId], jurisdiction.name, "voting-sites")) continue;
-    field(`voting-sites:${jurisdiction.ocdId}`, "ELE-09", { model: jurisdiction.model, election: jurisdiction.election, sites: jurisdiction.sites }, jurisdiction.sourceUrl, jurisdiction.collectedAt, 24);
+    field(`voting-sites:${jurisdiction.ocdId}`, "ELE-09", { model: jurisdiction.model, election: jurisdiction.election, sites: jurisdiction.sites }, jurisdiction.sourceUrl, jurisdiction.collectedAt, FRESHNESS_HOURS.daily);
   }
   for (const calendar of families.electionDates ?? []) {
     const division = `ocd-division/country:us/state:${calendar.state.toLowerCase()}`;
@@ -290,14 +291,14 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
       : ["registration_deadline", "early_voting"].includes(row.value.fieldKind) ? "voting-deadline" : undefined;
     if (!subject(row.id, row.value.fieldKind === "certified_outcome" ? "contest" : "deadline", [row.value.divisionId], row.value.quote, captureKind)) continue;
     field(row.id, row.value.fieldKind === "certified_outcome" ? "ELE-15" : row.value.fieldKind.endsWith("_lookup") ? "ELE-09" : "ELE-08", row.value,
-      row.value.url, row.value.collectedAt, 7 * 24);
+      row.value.url, row.value.collectedAt, FRESHNESS_HOURS.weekly);
   }
   const moneyDivisions = (keys: readonly string[]) => [...new Set(keys.flatMap(key => targets.get(key) ?? []))];
   for (const record of families.funding?.candidates ?? []) {
     const divisions = moneyDivisions(record.targetKeys);
     const id = `fec:${record.fecCandidateId}:${record.principalCommitteeId ?? "unrecorded"}:${record.cycle}`;
     if (!subject(id, "funding", divisions, record.name, "federal-campaign-finance")) continue;
-    const add = (key: string, item: unknown) => field(id, key, item, record.provenance.sourceUrl, record.provenance.collectedAt, 24);
+    const add = (key: string, item: unknown) => field(id, key, item, record.provenance.sourceUrl, record.provenance.collectedAt, FRESHNESS_HOURS.daily);
     add("CAM-01", { authority: "FEC", candidateId: record.fecCandidateId });
     if (record.principalCommitteeId) add("CAM-02", { committeeId: record.principalCommitteeId, candidateId: record.fecCandidateId, targetKeys: record.targetKeys });
     add("CAM-05", { amount: record.totals.receipts, coverageEndDate: record.totals.coverageEndDate, cycle: record.cycle });
@@ -309,7 +310,7 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
     const divisions = moneyDivisions(record.targetKeys);
     const id = `state-money:${record.jurisdiction}:${record.electionYear}:${record.committeeId ?? record.targetKeys.join("+")}`;
     if (!subject(id, "funding", divisions, record.registeredName || record.candidateNameAsFiled, "state-campaign-finance")) continue;
-    const add = (key: string, item: unknown) => field(id, key, item, record.provenance.sourceUrl, record.checkedAt, 24);
+    const add = (key: string, item: unknown) => field(id, key, item, record.provenance.sourceUrl, record.checkedAt, FRESHNESS_HOURS.daily);
     add("CAM-01", { agency: record.agency, filingsUrl: record.filingsUrl });
     if (record.committeeId && record.match.allThreeAgree) add("CAM-02", { committeeId: record.committeeId, name: record.registeredName, targetKeys: record.targetKeys });
     if (record.filingState !== "FILED") continue;
@@ -321,7 +322,7 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
   for (const filing of families.filings ?? []) {
     if (officialFilingIssue(filing) !== null || !subject(filing.id, filing.kind === "CAMPAIGN_FINANCE_FILING" ? "funding" : "contest", [filing.ocdId], filing.bodyName,
       filing.kind === "CAMPAIGN_FINANCE_FILING" ? "campaign-finance" : "candidate")) continue;
-    const add = (id: string, item: unknown) => field(filing.id, id, item, filing.documentUrl, filing.collectedAt, 24);
+    const add = (id: string, item: unknown) => field(filing.id, id, item, filing.documentUrl, filing.collectedAt, FRESHNESS_HOURS.daily);
     if (filing.kind === "CANDIDATE_FILING_DOCUMENT") {
       add("CAN-01", { name: filing.facts.candidateName, document: filing.documentUrl });
       // A filing is not certification, and its body ID never invents a contest join.

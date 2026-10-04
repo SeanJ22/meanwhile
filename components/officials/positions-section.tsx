@@ -8,6 +8,7 @@ import {
   type PositionAnswer,
 } from "@/lib/corpus/positions";
 import { formatDateMDY } from "@/lib/map/format";
+import { sourceKindLabel } from "@/lib/corpus/source-kinds";
 
 /**
  * D35's THREE ANSWERS, ON SCREEN.
@@ -180,9 +181,7 @@ export function PositionsSection({
                         rel="noreferrer"
                         className="underline decoration-dotted underline-offset-2 hover:text-link"
                       >
-                        {p.kind === "CAMPAIGN_SITE"
-                          ? "their campaign site"
-                          : "their official page"}
+                        {sourceKindLabel(p.kind)}
                       </a>{" "}
                       · last checked {formatDateMDY(p.retrievedAt.slice(0, 10))}
                       {p.changedSince && (

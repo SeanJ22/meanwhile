@@ -22,9 +22,9 @@ import type { Dirent } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import { netlifyEvidenceStoreFromEnv, type NetlifyEvidenceStore } from "./netlify-store.ts";
-import { extensionFor } from "./store.ts";
-import { ARTIFACT_TIERS, artifactId, type ArtifactTier } from "./artifact.ts";
+import { netlifyEvidenceStoreFromEnv, VAULT_READ_TIMEOUT_MS, type NetlifyEvidenceStore } from "./netlify-store.ts";
+import { artifactMeta, extensionFor } from "./store.ts";
+import { ARTIFACT_TIERS, artifactId, type Artifact, type ArtifactTier } from "./artifact.ts";
 import type { ArtifactRecord } from "../repository/types.ts";
 
 /** The project every standing-runner artifact is filed under (`FRESHNESS_PROJECT`). */
@@ -73,71 +73,96 @@ interface Sidecar {
 }
 
 const TIERS: readonly string[] = ARTIFACT_TIERS;
+const INDEX_READ_CONCURRENCY = 16;
+const capturesByIndex = new WeakMap<VaultIndex, Map<string, HeldVaultArtifact>>();
+
+function heldFromSidecar(sidecar: Sidecar, bodyPath: string): HeldVaultArtifact | null {
+  const meta = sidecar.meta, tier = meta?.custom?.tier, hash = meta?.contentHash;
+  if (!meta || typeof hash !== "string" || !/^sha256-[0-9a-f]{64}$/.test(hash) || typeof tier !== "string" || !TIERS.includes(tier) || typeof sidecar.bodySha256 !== "string") return null;
+  const status = Number(meta.custom?.httpStatus);
+  return { id:artifactId(tier as ArtifactTier,hash),tier:tier as ArtifactTier,contentHash:hash,contentType:meta.contentType??"",
+    canonicalUrl:meta.custom?.canonicalUrl??null,retrievalUrl:meta.custom?.retrievalUrl??null,retrievedAt:meta.custom?.retrievedAt??null,
+    httpStatus:Number.isInteger(status)?status:null,sourceId:meta.custom?.sourceId??null,workItemId:meta.custom?.workItemId??null,
+    attemptId:meta.custom?.attemptId??null,methodRouteId:meta.custom?.methodRouteId??null,permission:meta.custom?.permission??null,
+    retentionPolicy:meta.custom?.retentionPolicy??null,bodyPath,bodySha256:sidecar.bodySha256 };
+}
+
+function populateIndex(index: VaultIndex, captures: ReadonlyMap<string,HeldVaultArtifact>): void {
+  const byId=index.byId as Map<string,HeldVaultArtifact>,byHash=index.byHash as Map<string,HeldVaultArtifact>,byWorkItem=index.byWorkItem as Map<string,HeldVaultArtifact[]>;
+  byId.clear();byHash.clear();byWorkItem.clear();
+  for(const held of captures.values()) {
+    byId.set(held.id,held);byHash.set(held.contentHash.slice(7),held);
+    if(held.workItemId!==null) {
+      const group=byWorkItem.get(held.workItemId)??[];group.push(held);byWorkItem.set(held.workItemId,group);
+    }
+  }
+}
+
+/** Add a successfully vaulted capture without listing the vault again. */
+export function includeVaultCapture(index: VaultIndex, artifact: Artifact, key: string, root: string): void {
+  const bodyPath=process.env.WTP_VAULT_PROVIDER==="netlify"?`netlify:${key}`:join(root,...key.split("/"));
+  const held=heldFromSidecar({meta:artifactMeta(artifact),bodySha256:artifact.contentHash},bodyPath)!;
+  const captures=capturesByIndex.get(index)??new Map([...index.byId.values()].map(row=>[row.bodyPath,row]));
+  captures.set(bodyPath,held);
+  const ordered=new Map([...captures].sort(([a],[b])=>a<b?-1:a>b?1:0));
+  capturesByIndex.set(index,ordered);populateIndex(index,ordered);
+}
+
+async function orderedPool<T,R>(rows:readonly T[], read:(row:T)=>Promise<R>):Promise<R[]> {
+  const results=new Array<R>(rows.length);let next=0;let failed=false;
+  await Promise.all(Array.from({length:Math.min(INDEX_READ_CONCURRENCY,rows.length)},async()=>{
+    while(!failed) {
+      const at=next++;if(at>=rows.length)return;
+      try {results[at]=await read(rows[at]);} catch(error) {failed=true;throw error;}
+    }
+  }));
+  return results;
+}
 
 /** Index every committed artifact under the project, by id and by content. */
-export async function indexVault(root: string, project: string = READ_ONLY_VAULT_PROJECT): Promise<VaultIndex> {
+export async function indexVault(root: string, project: string = READ_ONLY_VAULT_PROJECT, options: {readonly signal?:AbortSignal} = {}): Promise<VaultIndex> {
   const byId = new Map<string, HeldVaultArtifact>();
   const byHash = new Map<string, HeldVaultArtifact>();
   const byWorkItem = new Map<string, HeldVaultArtifact[]>();
-  const add = (sidecar: Sidecar, bodyPath: string): void => {
-    const meta = sidecar.meta;
-    const tier = meta?.custom?.tier;
-    const hash = meta?.contentHash;
-    if (!meta || typeof hash !== "string" || !/^sha256-[0-9a-f]{64}$/.test(hash) || typeof tier !== "string" || !TIERS.includes(tier)) return;
-    if (typeof sidecar.bodySha256 !== "string") return;
-    const status = Number(meta.custom?.httpStatus);
-    const held: HeldVaultArtifact = {
-      id: artifactId(tier as ArtifactTier, hash),
-      tier: tier as ArtifactTier,
-      contentHash: hash,
-      contentType: meta.contentType ?? "",
-      canonicalUrl: meta.custom?.canonicalUrl ?? null,
-      retrievalUrl: meta.custom?.retrievalUrl ?? null,
-      retrievedAt: meta.custom?.retrievedAt ?? null,
-      httpStatus: Number.isInteger(status) ? status : null,
-      sourceId: meta.custom?.sourceId ?? null,
-      workItemId: meta.custom?.workItemId ?? null,
-      attemptId: meta.custom?.attemptId ?? null,
-      methodRouteId: meta.custom?.methodRouteId ?? null,
-      permission: meta.custom?.permission ?? null,
-      retentionPolicy: meta.custom?.retentionPolicy ?? null,
-      bodyPath,
-      bodySha256: sidecar.bodySha256,
-    };
-    byId.set(held.id, held);
-    byHash.set(hash.slice("sha256-".length), held);
-    if (held.workItemId !== null) byWorkItem.set(held.workItemId, [...(byWorkItem.get(held.workItemId) ?? []), held]);
-  };
-  const walk = async (directory: string): Promise<void> => {
-    let entries: Dirent[];
-    try {
-      entries = await readdir(directory, { withFileTypes: true });
-    } catch (cause) {
-      if ((cause as NodeJS.ErrnoException).code === "ENOENT") return;
-      throw cause;
-    }
-    for (const entry of entries) {
-      if (entry.name.startsWith(TEMP_PREFIX)) continue;
-      const path = join(directory, entry.name);
-      if (entry.isDirectory()) {
-        await walk(path);
-        continue;
-      }
-      if (!entry.name.endsWith(SIDECAR_SUFFIX)) continue;
-      const sidecar = JSON.parse(await readFile(path, "utf8")) as Sidecar;
-      add(sidecar, path.slice(0, -SIDECAR_SUFFIX.length));
-    }
-  };
+  const stopped=new AbortController();
+  const requestSignal=()=>AbortSignal.any([stopped.signal,AbortSignal.timeout(VAULT_READ_TIMEOUT_MS),...(options.signal?[options.signal]:[])]);
+  let held: (HeldVaultArtifact|null)[];
   const remote = netlifyEvidenceStoreFromEnv();
-  if (remote) {
-    for (const key of await remote.list(`project/${project}/`)) {
-      const description = await remote.describe(key);
-      if (description) add(description, `netlify:${key}`);
+  try {
+    if (remote) {
+      const keys=await remote.list(`project/${project}/`,requestSignal());
+      held=await orderedPool(keys,async key=>{
+        const description=await remote.describe(key,requestSignal());
+        return description?heldFromSidecar(description,`netlify:${key}`):null;
+      });
+    } else {
+      const paths:string[]=[];
+      let directories=[join(root,"project",project)];
+      while(directories.length) {
+        const found=await orderedPool(directories,async directory=>{
+          requestSignal().throwIfAborted();
+          let entries:Dirent[];
+          try {entries=await readdir(directory,{withFileTypes:true});}
+          catch(cause) {if((cause as NodeJS.ErrnoException).code==="ENOENT")return [] as string[];throw cause;}
+          const next:string[]=[];
+          for(const entry of entries) {
+            if(entry.name.startsWith(TEMP_PREFIX))continue;
+            const path=join(directory,entry.name);
+            if(entry.isDirectory())next.push(path);
+            else if(entry.name.endsWith(SIDECAR_SUFFIX))paths.push(path);
+          }
+          return next;
+        });
+        directories=found.flat();
+      }
+      // libuv's directory listings are ordered; parallel completion cannot
+      // change which capture wins a repeated content id or its work-item order.
+      held=await orderedPool(paths.sort(),async path=>heldFromSidecar(JSON.parse(await readFile(path,{encoding:"utf8",signal:requestSignal()})) as Sidecar,path.slice(0,-SIDECAR_SUFFIX.length)));
     }
-  } else {
-    await walk(join(root, "project", project));
-  }
-  return { byId, byHash, byWorkItem };
+  } catch(error) {stopped.abort(error);throw error;}
+  const captures=new Map(held.flatMap(row=>row?[[row.bodyPath,row] as const]:[]));
+  const index={byId,byHash,byWorkItem};capturesByIndex.set(index,captures);populateIndex(index,captures);
+  return index;
 }
 
 /**
@@ -149,12 +174,12 @@ export function crosswalkEvidenceWorkItem(rawSha256: string): string {
 }
 
 /** The held bytes, proved to be the bytes the sidecar committed. */
-export async function readHeldBytes(artifact: HeldVaultArtifact): Promise<Uint8Array> {
+export async function readHeldBytes(artifact: HeldVaultArtifact, signal = AbortSignal.timeout(VAULT_READ_TIMEOUT_MS)): Promise<Uint8Array> {
   const remote = artifact.bodyPath.startsWith("netlify:") ? netlifyEvidenceStoreFromEnv() : null;
   if (artifact.bodyPath.startsWith("netlify:") && !remote) throw new Error("NETLIFY_VAULT_UNCONFIGURED");
-  const held = remote ? await remote.get(artifact.bodyPath.slice("netlify:".length)) : null;
+  const held = remote ? await remote.get(artifact.bodyPath.slice("netlify:".length),signal) : null;
   if (remote && !held) throw new Error(`VAULT_BODY_MISSING:${artifact.id}`);
-  const bytes = held?.bytes ?? await readFile(artifact.bodyPath);
+  const bytes = held?.bytes ?? await readFile(artifact.bodyPath,{signal});
   const actual = `sha256-${createHash("sha256").update(bytes).digest("hex")}`;
   if (actual !== artifact.bodySha256) {
     throw new Error(`VAULT_BODY_CORRUPTED:${artifact.id}: the sidecar committed ${artifact.bodySha256}, the body hashes to ${actual}`);

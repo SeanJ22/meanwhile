@@ -340,7 +340,6 @@ export const SCHEDULING_HINTS = Object.freeze({
   "tests/meeting-partition-data-plane.test.ts": 1049.9455,
   "tests/meeting-subline.test.ts": 11.9611,
   "tests/meetings-data-plane-cutover.test.ts": 1121.1902,
-  "tests/method-candidate-authority.test.ts": 40.9923,
   "tests/method-candidates.test.ts": 103.46,
   "tests/method-claims.test.ts": 27.5048,
   "tests/method-conclusions.test.ts": 96.3724,

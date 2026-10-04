@@ -276,6 +276,8 @@ function fullContext(overrides: Partial<OperatorContext> = {}): OperatorContext 
   };
 }
 
+
+
 /* ========================================================================== */
 /* THE ROUTER                                                                 */
 /* ========================================================================== */
@@ -482,6 +484,29 @@ test("acceptance 2: 'what is blocking the Fleet' crosses four domains in one ans
   assert.ok(answer.sources.length >= 4, `expected four sources, saw ${answer.sources.length}`);
   assert.equal(answer.needsYou.needed, true, "a work item awaiting the owner needs him");
   assert.ok((answer.needsYou.action ?? "").length > 5, "and says what to do");
+
+  // Fleet blockers name only active provider backoff while keeping eligible retry history available
+  (() => {
+  const circuits = [
+    { provider: "eligible-provider", condition: "billing disabled", firstObservedAt: NOW,
+      workDeferred: ["earlier-work"], eligibleAt: NOW, failureClass: "HARD" as const, consecutiveFailures: 2 },
+    { provider: "waiting-provider", condition: "payment required", firstObservedAt: NOW,
+      workDeferred: ["later-work"], eligibleAt: new Date(Date.parse(NOW) + 60_000).toISOString(), failureClass: "HARD" as const },
+  ];
+  const ctx = fullContext();
+  const research = ctx.research;
+  assert.equal(research?.kind, "HELD");
+  if (!research || research.kind !== "HELD") throw new Error("fixture");
+  const answer = answerFor("FLEET_BLOCKERS", fullContext({ research: { kind: "HELD", value: {
+    ...research.value, fleetSafety: { ...SAFETY, providerCircuits: circuits },
+  } } }), "what is blocking the fleet", null);
+  const paragraph = answer.says.filter(line => line.includes("paused after refusing work")).join(" ");
+  assert.match(paragraph, /1 provider is/);
+  assert.match(paragraph, /waiting-provider/);
+  assert.doesNotMatch(paragraph, /eligible-provider/);
+  assert.match(answer.says.join(" "), /eligible to retry: eligible-provider after billing disabled/);
+  assert.ok(answer.detail.some(line => line.includes("eligible-provider") && line.includes("billing disabled")));
+})();
 });
 
 test("a reading that failed becomes a named gap, and never a zero", () => {

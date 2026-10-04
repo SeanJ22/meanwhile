@@ -127,8 +127,10 @@ export interface CarriedForward {
    * Exact reason this run retained the prior row. Older snapshots predate the
    * discriminator; new successful-but-thin responses must name
    * `UNEXPLAINED_DISAPPEARANCE` so they cannot masquerade as fresh.
+   * `OUTSIDE_FETCH_WINDOW` is a held row the read never asked about (older or
+   * later than the dates it fetched); it is never a disappearance.
    */
-  reason?: "SOURCE_UNAVAILABLE" | "PARTIAL_SCOPE_UNAVAILABLE" | "UNEXPLAINED_DISAPPEARANCE";
+  reason?: "SOURCE_UNAVAILABLE" | "PARTIAL_SCOPE_UNAVAILABLE" | "UNEXPLAINED_DISAPPEARANCE" | "OUTSIDE_FETCH_WINDOW";
 }
 
 /**

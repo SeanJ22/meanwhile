@@ -28,7 +28,7 @@
  * re-offers the same records and the log dedupes them; a refusal whose reasons
  * did not change is the same refusal.
  */
-import { SOURCE_WIRING, type BodySourceWiring } from "../../registry/source-wiring.ts";
+import { activeWiring, type BodySourceWiring } from "../../registry/source-wiring.ts";
 import { getRegistryRuntimeReadModel } from "../../registry/runtime-read-model.ts";
 import { fingerprint } from "../ids.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
@@ -73,7 +73,7 @@ export function factItemId(recordClass: MeetingFactClass, factKey: string): stri
 }
 
 /** Body ids the Reader recognises: the canonical registry and SOURCE_WIRING. */
-export function readRegistryBodyIds(root: string, wiring: readonly BodySourceWiring[] = SOURCE_WIRING): ReadonlySet<string> {
+export function readRegistryBodyIds(root: string, wiring: readonly BodySourceWiring[] = activeWiring()): ReadonlySet<string> {
   const ids = new Set<string>(wiring.map((row) => row.bodyId));
   void root;
   for (const body of getRegistryRuntimeReadModel().registry.bodies) ids.add(body.id);

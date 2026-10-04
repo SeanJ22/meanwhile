@@ -1,6 +1,7 @@
 import { readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
+import { carriedFromAnswer } from "./carry-forward.ts";
 import { canonicalAgendaDocument, type AgendaDocument } from "./agenda-documents.ts";
 import type { Meeting, NormalizeDropCounts } from "../sources/types.ts";
 import type { SourceAcquisitionEvidence } from "../sources/acquisition-trace.ts";
@@ -334,7 +335,7 @@ export function accountCarriedCollapses(
   const answered = (report: SnapshotSourceReport) => report.ok && (report.unreachableOcdIds?.length ?? 0) === 0;
   for (const row of carriedDropped) {
     const carried = row.carried!;
-    const fromAnswer = carried.reason === "UNEXPLAINED_DISAPPEARANCE";
+    const fromAnswer = carriedFromAnswer(carried.reason);
     const report = (ownReports.get(row.id) ?? []).find((candidate) => {
       const now = current(candidate);
       return now.source === carried.source && (now.carriedForward ?? 0) > 0 && answered(now) === fromAnswer;
@@ -430,11 +431,11 @@ export function reconcileCounts(snap: MeetingsSnapshot): void {
       .filter((row) => row.ok && (row.unreachableOcdIds?.length ?? 0) === 0)
       .reduce((sum, row) => sum + (row.carriedForward ?? 0), 0);
     const unexplainedRows = snap.meetings.filter((meeting) =>
-      meeting.carried?.source === source && meeting.carried.reason === "UNEXPLAINED_DISAPPEARANCE"
+      meeting.carried?.source === source && carriedFromAnswer(meeting.carried.reason)
     ).length;
     if (unexplainedClaims !== unexplainedRows) {
       throw new Error(
-        `${source}: reports ${unexplainedClaims} successful-response carry row(s) but ${unexplainedRows} row(s) name UNEXPLAINED_DISAPPEARANCE`,
+        `${source}: reports ${unexplainedClaims} successful-response carry row(s) but ${unexplainedRows} row(s) name UNEXPLAINED_DISAPPEARANCE or OUTSIDE_FETCH_WINDOW`,
       );
     }
   }

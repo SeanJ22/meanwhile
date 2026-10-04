@@ -32,10 +32,9 @@
  * state.
  */
 
-import { MODELS } from "../models.ts";
-import { cacheMeteringOf, type CostEntry } from "./cost.ts";
-import type { WorkerRole } from "./attempt.ts";
-import { cacheReadMultiplierFor, rateFor } from "./model-cost.ts";
+import { MODELS, canonicalModelId, modelTierFor } from "../models.ts";
+import { cacheMeteringOf, costPortionsByModel, type CostEntry } from "./cost.ts";
+import { CACHE_RATE_MULTIPLIERS, cacheSavingUsd } from "./model-cost.ts";
 import type { ScoutResult, ScoutStep } from "./scheduler/scout-result.ts";
 import { SCOUT_PREWARM_ROUTE_ID } from "./scheduler/research-policy.ts";
 import { waitingSince, type QueueDebt } from "./scheduler/obligation.ts";
@@ -353,15 +352,40 @@ export function modelShareTrend(input: {
 /* ----------------------------------------------------------------- cache */
 
 
-/**
- * The model each role's requests run on, for the dollar effect of caching.
- * A role not named here reports its saving as UNMEASURED rather than at a
- * guessed rate.
- */
-export const ROLE_MODEL: Readonly<Partial<Record<WorkerRole, string>>> = {
-  SCOUT: MODELS.opus.model,
-  ADVERSARIAL_AUDITOR: MODELS.opus.model,
-};
+/** Historical model roles stay in the denominator when their identity is missing.
+ * Roles that also run plain code require recorded model evidence. */
+const LEGACY_MODEL_CACHE_ROLES = new Set(["SCOUT", "ADVERSARIAL_AUDITOR", "ASK"]);
+
+function recordedCacheSaving(entry: CostEntry): number | null {
+  const aggregate = cacheMeteringOf(entry.cost);
+  if (aggregate.status !== "MEASURED") return null;
+  const portions = costPortionsByModel(entry, "");
+  const split = portions[0].entry !== entry;
+  // A contradictory split cannot assign the aggregate cache reads to one model.
+  if (entry.byModel?.length && !split) return null;
+  let read = 0, write = 0, uncached = 0, saved = 0;
+  for (const [index, portion] of portions.entries()) {
+    const share = split ? entry.byModel![index] : undefined;
+    const tier = share ? share.tier : entry.tier;
+    if (typeof portion.model !== "string") return null;
+    const identity = portion.model.trim() || (tier && tier !== "none" && modelTierFor(tier) === tier ? MODELS[tier].model : "");
+    const model = canonicalModelId(identity);
+    if (!model || (tier != null && modelTierFor(model) !== tier)) return null;
+    const metering = cacheMeteringOf(portion.entry.cost);
+    if (metering.status !== "MEASURED") return null;
+    // Current shares inherit the row's batch flag. Retained explicit flags must
+    // be actual booleans and agree; conflicting metadata is not a price estimate.
+    if (share && "batch" in share && (typeof share.batch !== "boolean" || share.batch !== metering.batch)) return null;
+    const amount = cacheSavingUsd(metering.cacheReadInputTokens, model);
+    if (amount === null) return null;
+    saved += amount * (metering.batch ? CACHE_RATE_MULTIPLIERS.batch : 1);
+    read += metering.cacheReadInputTokens;
+    write += metering.cacheCreationInputTokens;
+    uncached += metering.uncachedInputTokens;
+  }
+  return read === aggregate.cacheReadInputTokens && write === aggregate.cacheCreationInputTokens &&
+    uncached === aggregate.uncachedInputTokens ? saved : null;
+}
 
 export interface CacheHitRate {
   readonly role: string;
@@ -391,7 +415,8 @@ export interface CacheHitRate {
   readonly uncachedPerAttempt?: { readonly mean: number; readonly max: number } | null;
   /** Requests served through the Batches API, over requests, on measured rows. Null when nothing was measured. */
   readonly batchShare?: number | null;
-  /** read tokens × (base input price − cache read price) at the role's model rate. Null when the role has no stated model. */
+  /** Saved cache-read cost at each recorded model's rate and batch discount.
+   * Null when any included row's usage or model portions are unknown. */
   readonly savedUsd?: number | null;
   /** Measured rows whose cache write was priced from the aggregate at the requested TTL because the response carried no split. */
   readonly aggregatePricedRows?: number;
@@ -422,20 +447,23 @@ export function cacheHitRateByRole(input: {
   interface Acc {
     read: number; write: number; uncached: number; attempts: number; measured: number; predating: number; unreported: number;
     uncachedPerRow: number[]; batched: number; requests: number; aggregatePriced: number;
-    turns: number | null; misses: number | null; stationary: number | null;
+    turns: number | null; misses: number | null; stationary: number | null; saved: number | null;
   }
   const byRole = new Map<string, Acc>();
-  const fresh = (): Acc => ({ read: 0, write: 0, uncached: 0, attempts: 0, measured: 0, predating: 0, unreported: 0, uncachedPerRow: [], batched: 0, requests: 0, aggregatePriced: 0, turns: null, misses: null, stationary: null });
+  const fresh = (): Acc => ({ read: 0, write: 0, uncached: 0, attempts: 0, measured: 0, predating: 0, unreported: 0, uncachedPerRow: [], batched: 0, requests: 0, aggregatePriced: 0, turns: null, misses: null, stationary: null, saved: 0 });
   const inWindow = new Set<string>();
   for (const c of input.costs) {
     const at = Date.parse(c.recordedAt);
     if (at < since || at > until) continue;
     if (c.routeId === SCOUT_PREWARM_ROUTE_ID) continue;
-    /* Only the roles that invoke a model have a cache to measure; a deterministic lane's row is not a missing measurement. */
-    if (c.role !== "ASK" && ROLE_MODEL[c.role] === undefined) continue;
+    /* A deterministic parser/engineer is not missing model usage. Recorded
+     * identities include actual model rows without assigning a model by role. */
+    if (!LEGACY_MODEL_CACHE_ROLES.has(c.role) && !c.model && (!c.tier || c.tier === "none") && !c.byModel?.length) continue;
     const acc = byRole.get(c.role) ?? fresh();
     acc.attempts += 1;
     inWindow.add(c.attemptId);
+    const saving = recordedCacheSaving(c);
+    acc.saved = acc.saved === null || saving === null ? null : acc.saved + saving;
     const m = cacheMeteringOf(c.cost);
     if (m.status === "PREDATES_FIELDS") acc.predating += 1;
     else if (m.status === "UNREPORTED") acc.unreported += 1;
@@ -470,7 +498,6 @@ export function cacheHitRateByRole(input: {
   }
   return [...byRole.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([role, a]) => {
     const total = a.read + a.write + a.uncached;
-    const rate = ROLE_MODEL[role as WorkerRole] === undefined ? null : rateFor(ROLE_MODEL[role as WorkerRole]!);
     const mean = a.uncachedPerRow.length === 0 ? null : a.uncachedPerRow.reduce((n, v) => n + v, 0) / a.uncachedPerRow.length;
     return {
       role,
@@ -487,7 +514,7 @@ export function cacheHitRateByRole(input: {
       unreportedRows: a.unreported,
       uncachedPerAttempt: mean === null ? null : { mean, max: Math.max(...a.uncachedPerRow) },
       batchShare: a.requests === 0 ? null : a.batched / a.requests,
-      savedUsd: rate === null ? null : (a.read / 1_000_000) * rate.inputUsdPerMillion * (1 - cacheReadMultiplierFor(rate.model)),
+      savedUsd: a.measured === 0 ? null : a.saved,
       aggregatePricedRows: a.aggregatePriced,
       denominator:
         `cacheRead over cacheRead + cacheWrite + uncachedInput across ${a.measured} measured ${role} ledger row(s) of ${a.attempts} in the window` +

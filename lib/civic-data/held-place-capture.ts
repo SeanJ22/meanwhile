@@ -13,10 +13,11 @@ import { REGISTRY_RUNTIME_SCOPE } from "../registry/runtime-data-plane.ts";
 import { readHeldPlaceGeography } from "./held-place-geography.ts";
 import { PostgresRoutineDataStore } from "./store.ts";
 import type { PlaceCaptureKind } from "../coverage/place-owed.ts";
+import { FRESHNESS_HOURS, meetingFreshnessHours } from "../coverage/checklist-map.ts";
 
 /** Derived from canonical published records, never filtered by their original job or ZIP. */
 export interface HeldPlaceCapture {
-  readonly subjects: readonly { id: string; kind: "division" | "body" | "seat" | "calendar" | "contest" | "funding" | "deadline"; divisionIds: readonly string[]; label: string; captureKind?: PlaceCaptureKind; calendarBodyId?: string; funcstat?: string }[];
+  readonly subjects: readonly { id: string; kind: "division" | "body" | "seat" | "calendar" | "contest" | "funding" | "deadline"; divisionIds: readonly string[]; label: string; captureKind?: PlaceCaptureKind; calendarBodyId?: string; funcstat?: string; startsAt?: string }[];
   readonly held: readonly { subjectId: string; checklistId: string; state: "published" | "held" | "unpublished";
     sourceUrl: string; checkedAt: string; freshUntil: string; value: unknown }[];
 }
@@ -69,7 +70,7 @@ export function projectHeldPlaceCapture(
       divisionIds: divisions, label: body.name ?? body.id });
     if (body.name && body.bodyClass && body.ocdId) add(body.id, "GOV-01",
       { id: body.id, name: body.name, type: body.bodyClass, divisionIds: divisions },
-      body.provenance.sourceUrl, body.provenance.collectedAt, 30 * 24);
+      body.provenance.sourceUrl, body.provenance.collectedAt, FRESHNESS_HOURS.registryRecord);
   }
   for (const roster of registry?.bodyRosters ?? []) {
     const divisions = divisionsFor(roster.bodyId, null);
@@ -86,14 +87,14 @@ export function projectHeldPlaceCapture(
       subjects.set(member.id, { id: member.id, kind: "seat", divisionIds: divisions, label: member.officeTitle,
         ...(captureKind ? { captureKind } : {}) });
       const source = member.membershipSource ?? roster;
-      add(member.id, "OFF-04", { name: member.name, office: member.officeTitle }, source.sourceUrl, source.collectedAt, 30 * 24);
-      add(member.id, "OFF-08", { name: member.name, office: member.officeTitle }, source.sourceUrl, source.collectedAt, 30 * 24);
+      add(member.id, "OFF-04", { name: member.name, office: member.officeTitle }, source.sourceUrl, source.collectedAt, FRESHNESS_HOURS.registryRecord);
+      add(member.id, "OFF-08", { name: member.name, office: member.officeTitle }, source.sourceUrl, source.collectedAt, FRESHNESS_HOURS.registryRecord);
       // Optional facts retained from older reads keep their own source clocks.
       for (const key of ["termNote", "email", "phone", "websiteUrl"] as const) {
         if (!member[key]) continue;
         const origin = member.retainedFieldSources?.[key] ?? source;
         add(member.id, key === "termNote" ? "OFF-06" : key === "websiteUrl" ? "OFF-08" : "OFF-09", { [key]: member[key], contactScope: member.contactScope },
-          origin.sourceUrl, origin.collectedAt, 30 * 24);
+          origin.sourceUrl, origin.collectedAt, FRESHNESS_HOURS.registryRecord);
       }
     }
   }
@@ -102,8 +103,8 @@ export function projectHeldPlaceCapture(
       const divisions = divisionsFor(meeting.bodyId, meeting.ocdId);
       if (!divisions.some(id => wanted.has(id))) continue;
       subjects.set(meeting.id, { id: meeting.id, kind: "calendar", divisionIds: divisions, label: meeting.title,
-        captureKind: "meeting", ...(meeting.bodyId ? { calendarBodyId: meeting.bodyId } : {}) });
-      const hours = Math.abs(Date.parse(meeting.startsAt) - Date.parse(now)) <= 7 * 24 * 3_600_000 ? 1 : 12;
+        captureKind: "meeting", startsAt: meeting.startsAt, ...(meeting.bodyId ? { calendarBodyId: meeting.bodyId } : {}) });
+      const hours = meetingFreshnessHours(meeting.startsAt, now);
       const field = (id: string, value: unknown) => add(meeting.id, id, value,
         meeting.provenance.sourceUrl, meeting.provenance.collectedAt, hours);
       if (meeting.bodyId) field("MTG-05", { id: meeting.id, bodyId: meeting.bodyId });
@@ -124,7 +125,8 @@ export function projectHeldPlaceCapture(
       const previous = subjects.get(sitting.meetingId);
       const calendarBodyId = sitting.bodyId ?? previous?.calendarBodyId;
       subjects.set(sitting.meetingId, { id: sitting.meetingId, kind: "calendar", divisionIds: divisions, label: sitting.bodyName,
-        captureKind: "meeting", ...(calendarBodyId ? { calendarBodyId } : {}) });
+        captureKind: "meeting", ...(sitting.startsAt ? { startsAt: sitting.startsAt } : previous?.startsAt ? { startsAt: previous.startsAt } : {}),
+        ...(calendarBodyId ? { calendarBodyId } : {}) });
       const agenda = reconcilePublicationObservations(sitting.meetingId, sitting.publicationObservations.filter(observation =>
         observation.provenance === "FIRST_PARTY_PUBLISHER" && observationIsFresh(observation, Date.parse(now))));
       if (agenda.actionable?.report === "NOT_AVAILABLE" && !sitting.publication.agendaFile &&
@@ -139,7 +141,7 @@ export function projectHeldPlaceCapture(
       }
       // This is the typed finding made by the official minutes reader, never an empty array or failed extraction.
       const checked = Date.parse(sitting.publication.observedAt);
-      const hours = Math.abs(Date.parse(sitting.startsAt ?? "") - Date.parse(now)) <= 7 * 24 * 3_600_000 ? 1 : 12;
+      const hours = meetingFreshnessHours(sitting.startsAt ?? "", now);
       const sourceUrl = sitting.publication.inSiteUrl ?? sitting.sourceUrl;
       if (sitting.publication.agendaFile) add(sitting.meetingId, "DOC-01", { url: sitting.publication.agendaFile },
         sourceUrl, sitting.publication.observedAt, hours);

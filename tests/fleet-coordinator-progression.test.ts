@@ -49,8 +49,12 @@ test("a short legacy deadline does not stop planning or dispatch within the stat
   const h = await autonomousHarness({ plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
   for (let i = 0; i < 24; i++) await addUnknownSource(h, i);
   let resultReads = 0;
+  // Histories may arrive per item or as the cycle's one joined read (#701);
+  // either counts, as long as the coordinator actually consulted them.
   const read = h.repos.workerResults.read.bind(h.repos.workerResults);
   h.repos.workerResults.read = async key => { resultReads++; return read(key); };
+  const readAll = h.repos.workerResults.readAll.bind(h.repos.workerResults);
+  h.repos.workerResults.readAll = async () => { resultReads++; return readAll(); };
   const beforeTasks = await h.repos.routeTasks.list();
   const beforeAttempts = await h.repos.attempts.list();
   const cycle = await runAutonomousCoordinator(h.runtime, {

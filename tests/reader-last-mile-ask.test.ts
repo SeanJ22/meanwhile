@@ -352,7 +352,7 @@ test("filed candidate email and source survive Ask projection while mailing addr
     assert.equal(record.sourceUrl, row.sourceUrl);
     assert.equal(record.retrievedAt, row.collectedAt);
     if (row.email) assert.ok(record.text.includes(row.email));
-    if (row.filedAddress) assert.ok(!record.text.includes(row.filedAddress));
+    assert.equal(Object.hasOwn(row, "filedAddress"), false, "the reader contact census carries no filed address");
   }
   assert.equal(candidateContactForCandidacy("ballot-nj-morris:unknown:mejia"), null);
   assert.equal(candidateContactForCandidacy("ballot-az-pima:governor:hobbs-katie"), null);

@@ -36,7 +36,7 @@ test("filed addresses stay in preserved evidence and never reach candidate card 
 
 test("filing email and its source survive while the filed address cannot reach Ask", () => {
   for (const row of candidateContactCensus().contacts) {
-    assert.equal(row.filedAddress, null);
+    assert.equal(Object.hasOwn(row, "filedAddress"), false, "the reader contact contract carries no address field at all");
     const contact = contactForCandidate(row.candidacyId, "Candidate", "Office")!;
     assert.ok(!("filedAddress" in contact) || contact.filedAddress === null);
     assert.equal(contact.email, row.email);

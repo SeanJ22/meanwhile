@@ -4,8 +4,6 @@ import { currentNjMorrisReadModel, validateBallotFile } from "../sources/ballot-
 export interface CandidateContact {
   candidacyId: string;
   email: string | null;
-  /** @deprecated Compatibility for Ask; filed addresses never leave evidence. */
-  filedAddress: null;
   sourceUrl: string;
   sourceOrg: string;
   collectedAt: string;
@@ -41,8 +39,8 @@ export function candidateContactCensus(): CandidateContactCensus {
       : !row.sourceUrl?.startsWith("https://") || !row.sourceOrg || !row.collectedAt ? "The contact lacks its published source or read date."
       : null;
     if (reason) { withheld.push({ candidacyId: row.candidacyId, reason }); continue; }
-    contacts.push({ candidacyId: row.candidacyId, email: row.email?.trim() || null,
-      filedAddress: null, sourceUrl: row.sourceUrl,
+    // Filed mailing addresses stay in the saved filing (rulings §9); only the email and filing link reach readers.
+    contacts.push({ candidacyId: row.candidacyId, email: row.email?.trim() || null, sourceUrl: row.sourceUrl,
       sourceOrg: row.sourceOrg, collectedAt: row.collectedAt });
   }
   cachedModel = projection;

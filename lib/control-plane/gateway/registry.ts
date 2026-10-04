@@ -107,6 +107,8 @@ import { WORK_QUESTION_WORDS, validateWorkQuestions, type WorkQuestion } from ".
 import { huntPlaceKey } from "../admin-view/v6-hunts-read.ts";
 import { BULK_ACTIONS } from "./bulk-actions.ts";
 import { appendFailureSays, writeFailureSays } from "./write-readback.ts";
+import { settingDefinition, settingUndo, withSetting, type SettingValue } from "../settings.ts";
+import { publishReaderSettings } from "../../civic-data/reader-settings-publication.ts";
 import type { ActionDefinition, ActionRequest, ReceiptOutcome, RefusalCode } from "./contract.ts";
 
 /** How much the runner creates for one Send, in the words every receipt below quotes (MW-028). */
@@ -273,6 +275,51 @@ const READBACK_SUBJECTS: Readonly<Record<string, { readonly name: string; readon
 };
 
 const REGISTRY: readonly RegisteredAction[] = [
+  {
+    definition: {
+      type: "config.setSetting", label: "Change a setting",
+      does: "Saves the new value, its previous value, the reason and an undo action.",
+      doesNot: "Leaves spending limits and pauses as they are.",
+      authority: "OWNER_DECISION_REQUIRED", subjectKind: "a setting", requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const key = text(input.key);
+      const definition = settingDefinition(key);
+      const why = collapse(input.why);
+      if (!definition) return bad("choose a registered setting");
+      if (!why || why.length > 2000) return bad("say why this setting is changing in at most 2,000 characters");
+      if (input.undoOf !== undefined && (typeof input.undoOf !== "string" || !input.undoOf)) return bad("choose the change to undo");
+      if (!definition.validate(input.value)) return bad(`choose a valid value for ${definition.label.toLowerCase()}`);
+      return { ok: true, value: { key, value: input.value, why, ...(input.undoOf ? { undoOf: input.undoOf } : {}) } };
+    },
+    async execute(deps, context, input) {
+      const key = String(input.key);
+      const definition = settingDefinition(key)!;
+      let next: import("./admin-config.ts").AdminConfig;
+      let revision: number;
+      try {
+        const held = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const current = held && isAdminConfig(held.value) ? held.value : defaultAdminConfig(context.at);
+        if (input.undoOf) {
+          const undo = settingUndo(current, String(input.undoOf));
+          if (!undo || undo.key !== key || JSON.stringify(undo.value) !== JSON.stringify(input.value)) return refuse("INVALID_INPUT", "This setting has changed again. Refresh its history before undoing it.");
+        }
+        next = withSetting(current, { id: context.receiptId, key, after: input.value as SettingValue,
+          at: context.at, why: String(input.why), ...(input.undoOf ? { undoOf: String(input.undoOf) } : {}) });
+        const written = held ? await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, held.revision, next, context.at)
+          : (await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, next, context.at)).persisted;
+        revision = written.revision;
+      } catch (error) { return storeRefusal("your setting", error); }
+      let published = true;
+      if (definition.readerFacing) {
+        try { published = await publishReaderSettings(next, revision); } catch { published = false; }
+      }
+      return { ok: true, outcome: published ? "DONE" : "QUEUED", subject: key,
+        says: published ? `${definition.label} changed to ${JSON.stringify(input.value)}.` : `${definition.label} is saved; the reader update is waiting to publish.`,
+        readBackAt: "/admin?view=settings", undo: "Undo this change in Settings." };
+    },
+  },
   /* ---------------------------------------------------------- queue.add */
   {
     definition: {

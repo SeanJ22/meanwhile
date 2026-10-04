@@ -43,3 +43,10 @@ One line per batch folded into river.
 - meetings: DB-01 · ready 6afc9006d
 - people: CA-03, CA-13, CA-42, SC-15 · ready 9a185c1c0
 - Fold repairs: official-page key re-keyed twice (registry, meetings); admin-bridge-runner keeps #685's deadline and hunters' funded-scope read; SC-15 vs SC-03 resolved to keep both intents.
+
+## 2026-10-04T08:39:26Z — river c7914e8 → 8c67d4b65
+
+- Evidence: pnpm gates on 2c1223f (CI env): 11/12 PASS, test 8999 pass 0 fail; feedback:sweep failed on SC-18's removed ADM-1/ADM-23 tests -> repaired in 8c67d4b (checkDebt), then feedback:sweep PASS and the 3 test files reading the ledger 40/40.
+- measures: BR-08 · ready d8e596990
+- people: SC-18 · ready c022a0df9
+- river: RL-03 · ready fc14ff341

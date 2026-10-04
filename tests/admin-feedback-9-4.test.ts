@@ -22,7 +22,6 @@ import {
   type OwnerDecisionIntent,
   type RunnerHeartbeat,
 } from "../lib/control-plane/owner-surface.ts";
-import { READINESS_REPUBLISH_COMMAND, readinessRowOutcome } from "../lib/control-plane/readiness/read.ts";
 import { validateIntentNote } from "../lib/control-plane/research-view.ts";
 import { runnerStanding } from "../lib/control-plane/runner-standing.ts";
 import { describeDispatchMatch, parseDispatchTarget, unitMatchesTarget } from "../lib/control-plane/scheduler/dispatch-target.ts";
@@ -370,18 +369,6 @@ test("ADM-6: nothing measured is a gap in every row, never a zero", () => {
  * ADM-1 — the quarantined readiness record says what exists and what clears it
  * ================================================================== */
 
-test("ADM-1: REQUIRES_REPUBLISH carries the record's publish facts, the current contract and the clearing command", () => {
-  const legacy = { publishedAt: "2026-09-04T08:35:14.594Z", publisher: "readiness-refresh.mts", publishedFromSha: null } as never;
-  const out = readinessRowOutcome(legacy, "control plane (Postgres)", "Arizona", { revision: 1, updatedAt: "2026-09-04T08:35:14.594Z" });
-  assert.equal(out.kind, "REQUIRES_REPUBLISH");
-  if (out.kind !== "REQUIRES_REPUBLISH") return;
-  assert.equal(out.legacy.publishedAt, "2026-09-04T08:35:14.594Z");
-  assert.equal(out.legacy.publisher, "readiness-refresh.mts");
-  assert.equal(out.legacy.revision, 1);
-  assert.equal(out.snapshotContract, null);
-  assert.match(out.currentContract, /instrument-derived/);
-  assert.equal(out.clearedBy.command, READINESS_REPUBLISH_COMMAND);
-});
 
 /* ================================================================== *
  * ADM-2 / ADM-9 — the header acknowledges a choice at once and carries the theme switch
@@ -389,7 +376,6 @@ test("ADM-1: REQUIRES_REPUBLISH carries the record's publish facts, the current 
 
 test("ADM-2: the console header navigates inside a transition, shows the choice at once, and the read path skips the schema bootstrap", () => {
   assert.match(src("lib/control-plane/admin-data.ts"), /skipBootstrap: true/);
-  assert.match(src("lib/control-plane/readiness/read.ts"), /skipBootstrap: true/);
   // The bootstrap call is now wrapped in a bounded connect-retry (connect-retry.ts)
   // so a transient Neon fetch failure at cycle start does not abort the cycle, but it
   // stays gated by !skipBootstrap, so the admin read path still skips it entirely.

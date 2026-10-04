@@ -6,7 +6,8 @@ import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 import { GROUP_NAMES, PLACE_GROUPS } from "../lib/coverage/group-names.ts";
 
 test("the overlay carries the checklist's groups and item sets", () => {
-  assert.deepEqual(CHECKLIST_GROUPS.seat, ["OFF", "LEG", "EXE", "PRL"]);
+  assert.deepEqual(CHECKLIST_GROUPS.seat, ["OFF", "EXE", "PRL"], "laws and votes are placed by unit, not owed by every seat");
+  assert.deepEqual(CHECKLIST_GROUPS.division, [], "geography is placed by unit, not owed by every division");
   assert.deepEqual(CHECKLIST_GROUPS.body, ["GOV", "PAR"]);
   assert.equal(DEADLINE_ITEMS.size, 8);
   assert.equal(CALENDAR_ITEMS.size, 9);

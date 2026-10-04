@@ -182,7 +182,7 @@ function decision(geography: ExpansionScopeGeography, priority = 1, budgetUsd = 
 
 async function planned(d: ExpansionScopeDecision): Promise<PlannedScope> {
   assert.notEqual(d.geography.type, "zcta", "this grouping fixture helper takes a container");
-  if (d.geography.type === "zcta") throw new Error("Use resolveScopes for a ZIP hunt");
+  if (d.geography.type === "zcta" || d.geography.type === "state") throw new Error("Use resolveScopes for a ZIP or state hunt");
   const result = await loadBootstrapLookup().zctasForGrouping({ type: d.geography.type, geoid: d.geography.geoid, version: d.geography.version });
   assert.equal(result.status.kind, "OK", `${d.geography.label} resolves in the bootstrap fixture`);
   const fractions = new Map<string, number>();
@@ -766,9 +766,9 @@ test("Admin reads the creation receipt for the decision it belongs to, with ever
   assert.deepEqual(orderPlaceWork(config, places), ["target", "lowest", "middle"]);
   assert.deepEqual(orderPlaceWork({ placeTargets: [{ ...config.placeTargets[0], key: "geo:az.congressional_district.06" }] }, places),
     ["target", "lowest", "middle"], "the existing v6 hunt key and checklist place key identify the same target");
-  assert.deepEqual(orderPlaceWork({}, places), ["lowest", "middle", "target"], "official unpublished fields count as resolved");
-  assert.deepEqual(orderPlaceWork({ placeTargets: [{ ...config.placeTargets[0], goalPercent: 60 }] }, places),
-    ["lowest", "middle", "target"], "a reached owner target returns to ordinary completion order");
+  assert.deepEqual(orderPlaceWork({}, places), ["lowest", "target", "middle"], "an item the government does not publish leaves the count, so target and middle tie at half and the key breaks it");
+  assert.deepEqual(orderPlaceWork({ placeTargets: [{ ...config.placeTargets[0], goalPercent: 40 }] }, places),
+    ["lowest", "target", "middle"], "a reached owner target returns to ordinary completion order");
   assert.deepEqual(orderPlaceWork({}, [{ ...places[0], items: [{ checklistId: "GOV-01", state: "missing" }] },
     { ...places[1], items: [{ checklistId: "GOV-01", state: "published" }] }]), ["target", "lowest"], "new captures rerank places");
   assert.throws(() => orderPlaceWork({ placeTargets: [{}] }, places), /PLACE_TARGETS_UNREADABLE/);

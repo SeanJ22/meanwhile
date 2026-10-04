@@ -302,7 +302,7 @@ test("held Census status survives complementary projections without inventing go
   for (const [i, status] of statuses.entries()) {
     const inventories = rows.filter(row => row.subject.id.startsWith(`${divisions[i].ocdId}#inventory:`));
     assert.equal(inventories.length, i < 4 ? 0 : 6, `status ${status} uses only the held classification`);
-    assert.equal(rows.filter(row => row.subject.id === divisions[i].ocdId).length, 18, "geography (14) and the division reference items (4) remain owed");
+    assert.equal(rows.filter(row => row.subject.id === divisions[i].ocdId).length, 9, "geography owed per division (5, the school, special and tribal items gated away) and the division reference items (4) remain owed");
   }
   assert.deepEqual(rows.find(row => row.subject.id === "shared-body" && row.checklistId === "GOV-01")?.held,
     capture.held.filter(field => field.subjectId === "shared-body"), "actual records remain even within statistical geography");
@@ -342,7 +342,8 @@ test("registry bodies owe civic facts without duplicating product feature work, 
     capture.held.filter(field => field.subjectId === "shared-body"));
   assert.deepEqual(bodyRows[0].subject.divisionIds, [county, neighbour]);
   const retained = buildPlaceOwedList({ ...input, held: [...capture.held, existing] });
-  assert.ok(!retained.some(row => row.checklistId.startsWith("ENG-")), "reader participation is measured on the product, not owed per body");
+  assert.deepEqual(retained.find(row => row.subject.id === "shared-body" && row.checklistId === "ENG-07")?.held, [existing], "held evidence keeps its row");
+  assert.equal(retained.filter(row => row.subject.id === "shared-body" && row.checklistId.startsWith("ENG-")).length, 1, "reader participation is not owed per body; only the held observation shows");
   const unresolved = buildPlaceOwedList({ ...input,
     subjects: [{ id: "unknown-body", kind: "body", divisionIds: [county], label: "Unknown body" }] });
   assert.equal(unresolved.filter(row => row.subject.id === "unknown-body" && row.checklistId.startsWith("ENG-")).length, 0);
@@ -406,7 +407,7 @@ test("body rosters retain canonical legislative and local scope without borrowin
     held: [...capture.held, extra], now: at });
   const rows = (i: number) => owed.filter(row => row.subject.id === `member:${i}`);
   for (const i of [0, 1]) {
-    assert.ok(rows(i).some(row => row.checklistId === "LEG-22"));
+    assert.ok(rows(i).some(row => row.checklistId === "LEG-02") && !rows(i).some(row => row.checklistId === "LEG-22"));
     assert.ok(!rows(i).some(row => /^(?:EXE|PRL)-/.test(row.checklistId)));
   }
   for (const i of [2, 3, 4, 5]) {

@@ -18,6 +18,8 @@ export interface PlaceCapture {
 export async function planPlaceHunt(input: {
   readonly repos: ControlPlaneRepositories;
   readonly divisions: readonly { readonly id: string; readonly label: string }[];
+  /** The ZIPs in the place, so ZIP-scope items are owed once per ZIP. */
+  readonly zips?: readonly string[];
   readonly now: string;
   readonly clock?: () => string;
   readonly knowledge?: Awaited<ReturnType<typeof readFieldManual>>;

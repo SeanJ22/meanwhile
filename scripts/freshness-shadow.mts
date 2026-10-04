@@ -1270,9 +1270,9 @@ async function refreshPlaceOrder(): Promise<void> {
     const [row, capture] = await Promise.all([repos.adminConfig.read(ADMIN_CONFIG_ID),
       readHeldPlaceCapture(divisionIds, { now: nowIso(), bypassCache: true })]);
     const shortType: Readonly<Record<string, string>> = { zcta: "zcta", county: "county", congressional_district: "cd",
-      cbsa: "cbsa", state_leg_upper: "sldu", state_leg_lower: "sldl" };
+      cbsa: "cbsa", state_leg_upper: "sldu", state_leg_lower: "sldl", state: "state" };
     placeOrder = orderPlaceWork(row?.value, scopes.map(scope => ({
-      key: `${scope.decision.geography.stateAbbr.toLowerCase()}.${shortType[scope.decision.geography.type]}.${scope.decision.geography.geoid.toLowerCase()}`,
+      key: `${scope.decision.geography.stateAbbr.toLowerCase()}.${shortType[scope.decision.geography.type] ?? scope.decision.geography.type}.${scope.decision.geography.geoid.toLowerCase()}`,
       receiptId: scope.decision.receiptId,
       items: buildPlaceOwedList({ divisions: (divisionsByReceipt.get(scope.decision.receiptId) ?? []).map(id => ({ id, label: id })),
         subjects: capture.subjects, held: capture.held, now: nowIso() }),

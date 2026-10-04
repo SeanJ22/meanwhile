@@ -31,8 +31,3 @@ export function isCapturedState(state: PlaceItemState): boolean {
 export function percentOf(captured: number, total: number): number | null {
   return total === 0 ? null : Math.floor((captured / total) * 1000) / 10;
 }
-
-export function placePercent(rows: readonly { readonly checklistId: string; readonly state: PlaceItemState }[]): number | null {
-  const core = rows.filter(row => isCountedChecklistItem(row.checklistId));
-  return percentOf(core.filter(row => isCapturedState(row.state)).length, core.length);
-}

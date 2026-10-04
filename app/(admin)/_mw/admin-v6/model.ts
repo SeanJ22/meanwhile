@@ -743,7 +743,7 @@ export type ActionKind =
   | "global-ceiling" | "global-search-on" | "global-search-off" | "fix-go"
   | "scope-first" | "scope-recheck" | "doc-request" | "use-url" | "reprocess" | "retry-method" | "resume-publish"
   | "eng-task" | "job-stop" | "focus" | "send-agents" | "cancel-send" | "target-set" | "target-clear"
-  | "data-switch-on" | "data-switch-off";
+  | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo";
 
 export type ReceiptStatus = "queued" | "read" | "running" | "done" | "partial" | "refused" | "failed" | "unknown";
 export const PENDING_STATUSES: readonly ReceiptStatus[] = ["queued", "read", "running", "unknown"];

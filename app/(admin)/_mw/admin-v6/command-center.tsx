@@ -41,6 +41,7 @@ import { TopicCountsPanel } from "./topic-counts.tsx";
 import { DataSwitchesPanel } from "./data-switches.tsx";
 import { CaptureHealthPanel } from "./capture-health.tsx";
 import { ReportsView } from "./reports-view.tsx";
+import { RunnerSettingsPanel, SettingsScreen } from "./screen-settings.tsx";
 import { WorkScreen } from "./screen-work.tsx";
 import { WorkersScreen } from "./screen-workers.tsx";
 import { cx } from "./ui.tsx";
@@ -156,7 +157,7 @@ export function CommandCenter(props: CommandCenterProps) {
     const stuckForFix = data.stuck.data?.find((i) => i.fixId === ref.target);
     return {
       target: ref.target,
-      targetName: nameOf(ref.target || scopeKey),
+      targetName: ref.payload?.name ?? nameOf(ref.target || scopeKey),
       scopeName: index.get(ref.target)?.name ?? place.name,
       scopeIsCountry: (index.get(ref.target)?.kind ?? place.kind) === "Country",
       matching,
@@ -166,6 +167,7 @@ export function CommandCenter(props: CommandCenterProps) {
         : stuckForFix ? { id: ref.target, title: nameOf(ref.target), owner: stuckForFix.owner, resourcesNow: "Not reported", helps: stuckForFix.title, needsCode: true } : undefined,
       url: ref.payload?.url,
       words: ref.payload?.words,
+      payload: ref.payload,
       waitingCount: scopeKey === COUNTRY_KEY ? data.workRows.data?.totals.find((t) => t.stage === "waiting")?.total ?? null : null,
       outreachAuthorized: props.access.outreachAuthorized,
     };
@@ -379,12 +381,13 @@ export function CommandCenter(props: CommandCenterProps) {
           {detail ? <DetailPanel detail={detail} /> : (
             <>
               {view === "now" && <><NowScreen key={scopeKey} /><ReaderDemandPanel /><CaptureHealthPanel /><TopicCountsPanel /><DataSwitchesPanel /></>}
-              {view === "workers" && <WorkersScreen />}
+              {view === "workers" && <><WorkersScreen /><RunnerSettingsPanel /></>}
               {view === "work" && <WorkScreen />}
               {view === "checklist" && <ChecklistScreen />}
               {view === "money" && <MoneyScreen />}
               {view === "learning" && <LearningScreen />}
               {view === "fix" && <><FixQueueControls /><FixScreen /></>}
+              {view === "settings" && <SettingsScreen />}
               {view === "reports" && <ReportsView />}
               {view === "changes" && <ChangesView />}
               {view === "chat" && <ChatView controls={props.chatControls ?? []} />}

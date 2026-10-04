@@ -53,6 +53,24 @@ export async function publishReaderSettings(config: AdminConfig, revision: numbe
   }
   return false;
 }
+/**
+ * Catch the reader edge up with the saved settings: a publish that failed when
+ * the setting changed is retried here (the runner calls this each pass). Values
+ * already equal publish nothing; a newer snapshot is never overwritten.
+ */
+export async function ensureReaderSettingsPublished(config: AdminConfig | null, revision: number,
+  options: { store?: SettingsEdgeStore; purge?: (tags: readonly string[]) => Promise<unknown> } = {},
+): Promise<"current" | "published" | "behind"> {
+  if (config === null) return "current";
+  const store = options.store ?? settingsEdgeStore();
+  const held = await store.read();
+  const wanted = readerSettings(config);
+  if (held && JSON.stringify(held.snapshot.values) === JSON.stringify(wanted)) return "current";
+  if (held === null && Object.keys(wanted).length === 0) return "current";
+  // A snapshot from a newer config row is left alone: this caller read an older row.
+  if (held && held.snapshot.revision >= revision) return "behind";
+  return await publishReaderSettings(config, revision, options) ? "published" : "behind";
+}
 /** Reader defaults never cause a control-plane read. */
 export async function readReaderSetting<T extends SettingValue>(key: string, fallback: T, store?: SettingsEdgeStore): Promise<T> {
   try {

@@ -108,7 +108,7 @@ import { huntPlaceKey } from "../admin-view/v6-hunts-read.ts";
 import { BULK_ACTIONS } from "./bulk-actions.ts";
 import { DOOR_ACTIONS } from "../../doors/actions.ts";
 import { appendFailureSays, writeFailureSays } from "./write-readback.ts";
-import { settingDefinition, settingUndo, withSetting, type SettingValue } from "../settings.ts";
+import { settingDefinition, settingUndo, settingValueWords, SPEND_CEILING_LOG_KEY, withLoggedChange, withSetting, type SettingValue } from "../settings.ts";
 import { publishReaderSettings } from "../../civic-data/reader-settings-publication.ts";
 import type { ActionDefinition, ActionRequest, ReceiptOutcome, RefusalCode } from "./contract.ts";
 
@@ -279,7 +279,7 @@ const REGISTRY: readonly RegisteredAction[] = [
   {
     definition: {
       type: "config.setSetting", label: "Change a setting",
-      does: "Saves the new value, its previous value, the reason and an undo action.",
+      does: "Saves the new value with when it changed, its previous value and an optional note, so it can be undone.",
       doesNot: "Leaves spending limits and pauses as they are.",
       authority: "OWNER_DECISION_REQUIRED", subjectKind: "a setting", requiresStateVersion: false,
       refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
@@ -287,9 +287,9 @@ const REGISTRY: readonly RegisteredAction[] = [
     validate(input) {
       const key = text(input.key);
       const definition = settingDefinition(key);
-      const why = collapse(input.why);
+      const why = input.why === undefined || input.why === null ? "" : collapse(input.why);
       if (!definition) return bad("choose a registered setting");
-      if (!why || why.length > 2000) return bad("say why this setting is changing in at most 2,000 characters");
+      if (why.length > 2000) return bad("keep the note to 2,000 characters");
       if (input.undoOf !== undefined && (typeof input.undoOf !== "string" || !input.undoOf)) return bad("choose the change to undo");
       if (!definition.validate(input.value)) return bad(`choose a valid value for ${definition.label.toLowerCase()}`);
       return { ok: true, value: { key, value: input.value, why, ...(input.undoOf ? { undoOf: input.undoOf } : {}) } };
@@ -316,9 +316,10 @@ const REGISTRY: readonly RegisteredAction[] = [
       if (definition.readerFacing) {
         try { published = await publishReaderSettings(next, revision); } catch { published = false; }
       }
+      const words = settingValueWords(input.value as SettingValue, definition.unit);
       return { ok: true, outcome: published ? "DONE" : "QUEUED", subject: key,
-        says: published ? `${definition.label} changed to ${JSON.stringify(input.value)}.` : `${definition.label} is saved; the reader update is waiting to publish.`,
-        readBackAt: "/admin?view=settings", undo: "Undo this change in Settings." };
+        says: published ? `${definition.label} is now ${words}.` : `${definition.label} is saved as ${words}; readers get it on the next publish.`,
+        readBackAt: "/admin?view=settings", undo: null };
     },
   },
   /* ---------------------------------------------------------- queue.add */
@@ -828,13 +829,14 @@ const REGISTRY: readonly RegisteredAction[] = [
         // carries no override, so the previous ceiling is the built-in fallback.
         const current = existing !== null && isAdminConfig(existing.value) ? existing.value : defaultAdminConfig(at);
         previousUsd = resolveRollingCeiling(fleetSpendCeilingOverrideUsd(current)).rollingCeilingUsd;
-        const next = withFleetSpendCeiling(current, {
+        // BR-05/BR-06: the change also joins the settings log, so Settings shows when it changed, its value before, and an undo.
+        const next = withLoggedChange(withFleetSpendCeiling(current, {
           rollingCeilingUsd,
           previousUsd,
           decidedAt: at,
           decidedBy: context.request.actorRef,
           receiptId: context.receiptId,
-        });
+        }), { id: context.receiptId, key: SPEND_CEILING_LOG_KEY, before: previousUsd, after: rollingCeilingUsd, at, why: "" });
         if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, next, at);
         else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, next, at);
       } catch (error) {

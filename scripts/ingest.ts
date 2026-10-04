@@ -28,7 +28,8 @@ import {
 import {
   CONCLUDED_LOOKBACK_DAYS,
   UPCOMING_HORIZON_DAYS,
-  meetingReaderServingWindowAt,
+  meetingFetchedWindowAt,
+  meetingHeldWindowAt,
 } from "../lib/meetings/constants.ts";
 import {
   attributionSummary,
@@ -1238,6 +1239,19 @@ export function placeCarriedFromReviewedVenue(
 }
 
 /**
+ * Whether a prior meeting row carries a record readers can still be owed: it
+ * concluded and holds an agenda, minutes, an outcome or a vote. Such a row is
+ * kept for good (DB-01), whatever its age.
+ */
+export function meetingCarriesRecords(meeting: Meeting, hasAgendaDocument: boolean): boolean {
+  if (meeting.status !== "CONCLUDED") return false;
+  if (hasAgendaDocument || meeting.agendaUrl) return true;
+  if ((meeting.publishedLinks ?? []).some((link) => /minutes|outcome|vote|result/i.test(link.label))) return true;
+  const extra = meeting as unknown as { outcome?: unknown; votes?: unknown };
+  return extra.outcome != null || (Array.isArray(extra.votes) ? extra.votes.length > 0 : extra.votes != null);
+}
+
+/**
  * Reconcile one authenticated source/body response against its exact LKG.
  *
  * A successful response is still an OPEN fact set. Omission therefore cannot
@@ -1286,12 +1300,21 @@ export function reconcileSuccessfulMeetingPartition(input: {
    * exactly as before.
    */
   readonly reviewedVenues?: () => readonly VenueEntry[];
+  /**
+   * The dates this read actually fetched. Omitted, the shown 90-day window
+   * each way, which is what every adapter fetches until DB-03 to DB-05.
+   */
+  readonly fetchedWindow?: { readonly lowerBound: string; readonly upperBound: string };
 }): SuccessfulMeetingPartitionReconciliation {
-  const window = meetingReaderServingWindowAt(input.generatedAt);
-  if (window === null) throw new Error(`MEETING_RECONCILIATION_CLOCK_INVALID:${input.generatedAt}`);
+  const window = meetingHeldWindowAt(input.generatedAt);
+  const fetched = input.fetchedWindow ?? meetingFetchedWindowAt(input.generatedAt);
+  if (window === null || fetched === null) throw new Error(`MEETING_RECONCILIATION_CLOCK_INVALID:${input.generatedAt}`);
   const { lowerBound, upperBound } = window;
   const lower = Date.parse(lowerBound);
   const upper = Date.parse(upperBound);
+  const fetchedLower = Date.parse(fetched.lowerBound);
+  const fetchedUpper = Date.parse(fetched.upperBound);
+  const documentedMeetingIds = new Set((input.previous?.agendaDocuments ?? []).map((document) => document.meetingId));
   const meetings = [...input.freshMeetings];
   const meetingIds = new Set(meetings.map(({ id }) => id));
   const carriedMeetingIds: string[] = [];
@@ -1320,7 +1343,12 @@ export function reconcileSuccessfulMeetingPartition(input: {
   for (const prior of input.previous?.meetings ?? []) {
     if (meetingIds.has(prior.id)) continue;
     const startsAt = Date.parse(prior.startsAt);
-    if (Number.isFinite(startsAt) && (startsAt < lower || startsAt > upper)) {
+    // History is kept: a concluded sitting that carries a record is never removed
+    // for its age (`meetingCarriesRecords`), so it falls through to the carry below.
+    if (
+      Number.isFinite(startsAt) && (startsAt < lower || startsAt > upper) &&
+      !meetingCarriesRecords(prior, documentedMeetingIds.has(prior.id))
+    ) {
       const meetingKey = `meeting:${prior.id}`;
       removalEvidence.push({
         key: meetingKey,
@@ -1387,12 +1415,16 @@ export function reconcileSuccessfulMeetingPartition(input: {
         ? prior.provenance.collectedAt
         : input.previous!.generatedAt
     );
+    // A prior row this read never asked about (outside the dates it fetched) is
+    // held as it was; only a row inside the fetched dates that the answer left
+    // out is a disappearance.
+    const outsideFetch = Number.isFinite(startsAt) && (startsAt < fetchedLower || startsAt > fetchedUpper);
     meetings.push({
       ...placeCarriedFromReviewedVenue(prior, input.sourceName, input.reviewedVenues),
       carried: {
         source: input.sourceName,
         lastFreshAt,
-        reason: "UNEXPLAINED_DISAPPEARANCE",
+        reason: outsideFetch ? "OUTSIDE_FETCH_WINDOW" : "UNEXPLAINED_DISAPPEARANCE",
       },
     });
     meetingIds.add(prior.id);

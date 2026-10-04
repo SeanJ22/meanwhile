@@ -99,12 +99,12 @@ export interface CommitteeTotals {
   receipts: number;
   disbursements: number;
   cashOnHand: number;
-  individualItemized: number;
-  individualUnitemized: number;
+  individualItemized: number | null;
+  individualUnitemized: number | null;
   /**
-   * Unitemized individual contributions (under $200 total per donor, the
-   * FEC's own itemization threshold) divided by total receipts. Null when
-   * nothing has been raised. The surface states this method in plain words.
+   * Unitemized individual dollars ($200 or less per donor in the cycle)
+   * divided by the filing's itemized plus unitemized individual dollars.
+   * Null when either filed line is unrecorded or their sum is zero.
    */
   smallDonorShare: number | null;
   coverageEndDate: string | null;

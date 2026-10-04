@@ -96,7 +96,7 @@ const PAGE_HTML = `<!doctype html><meta charset="utf-8"><title>barrier</title>
 async function serve(landed: Landed[]): Promise<{ server: Server; port: number }> {
   const server = createServer((req, res) => {
     const host = (req.headers.host ?? "").split(":")[0];
-    if (host !== "127.0.0.1" && host !== "localhost") {
+    if (host === "maptiler.com" || host.endsWith(".maptiler.com")) {
       const headers: Record<string, string> = {};
       for (const [k, v] of Object.entries(req.headers)) if (typeof v === "string") headers[k] = v;
       landed.push({ host, url: req.url ?? "", headers });
@@ -108,6 +108,11 @@ async function serve(landed: Landed[]): Promise<{ server: Server; port: number }
         })
         .end(JSON.stringify({ version: 8, layers: [] }));
       return;
+    }
+    // The explicit local proxy also receives Chromium background requests.
+    // Sink them locally; only provider requests belong in this instrument.
+    if (host !== "127.0.0.1" && host !== "localhost") {
+      req.resume(); res.writeHead(204).end(); return;
     }
     res.writeHead(200, { "content-type": "text/html" }).end(PAGE_HTML);
   });
@@ -121,8 +126,13 @@ async function serve(landed: Landed[]): Promise<{ server: Server; port: number }
  * The blackhole. Every MapTiler host resolves to the local server, so nothing
  * in this file can reach the real provider whatever the barrier does.
  */
-function blackhole(port: number): string[] {
-  return [`--host-resolver-rules=MAP *.maptiler.com 127.0.0.1:${port},MAP maptiler.com 127.0.0.1:${port}`];
+function blackhole(port: number) {
+  return {
+    args: [`--host-resolver-rules=MAP *.maptiler.com 127.0.0.1:${port},MAP maptiler.com 127.0.0.1:${port}`],
+    // Managed browsers may proxy HTTP before applying DNS rules. Send every
+    // third-party request to our instrument explicitly; it never forwards.
+    proxy: { server: `http://127.0.0.1:${port}`, bypass: "127.0.0.1,localhost" },
+  };
 }
 
 /** Set an env var for one test and put it back, whatever happens. */
@@ -145,13 +155,16 @@ test("THE PLANT: a guarded synthetic browser with a configured key does reach Ma
    */
   const landed: Landed[] = [];
   const { server, port } = await serve(landed);
-  t.after(() => new Promise<void>((r) => server.close(() => r())));
+  t.after(() => {
+    server.closeAllConnections();
+    return new Promise<void>((r) => server.close(() => r()));
+  });
 
   withEnv(t, PROVIDER_ACCESS_VAR, MAPTILER);
   const browser = await launchGuarded({
     label: "maptiler-barrier-plant",
     spendsProviderQuota: MAPTILER,
-    args: blackhole(port),
+    ...blackhole(port),
   });
   t.after(() => browser.close());
 
@@ -182,7 +195,10 @@ test("THE PLANT: a guarded synthetic browser with a configured key does reach Ma
 test("THE BARRIER: the same page, the same key, and nothing reaches the provider", async (t) => {
   const landed: Landed[] = [];
   const { server, port } = await serve(landed);
-  t.after(() => new Promise<void>((r) => server.close(() => r())));
+  t.after(() => {
+    server.closeAllConnections();
+    return new Promise<void>((r) => server.close(() => r()));
+  });
 
   /*
    * The environment still says the operator once opted in. That is deliberate:
@@ -191,7 +207,7 @@ test("THE BARRIER: the same page, the same key, and nothing reaches the provider
    * stops it. This run does not ask, so this run does not spend.
    */
   withEnv(t, PROVIDER_ACCESS_VAR, MAPTILER);
-  const browser = await launchGuarded({ label: "maptiler-barrier", args: blackhole(port) });
+  const browser = await launchGuarded({ label: "maptiler-barrier", ...blackhole(port) });
   t.after(() => browser.close());
 
   const page = await browser.page();
@@ -220,13 +236,16 @@ test("THE BARRIER: the same page, the same key, and nothing reaches the provider
 test("the environment alone cannot open the barrier, and neither can the option alone", async (t) => {
   const landed: Landed[] = [];
   const { server, port } = await serve(landed);
-  t.after(() => new Promise<void>((r) => server.close(() => r())));
+  t.after(() => {
+    server.closeAllConnections();
+    return new Promise<void>((r) => server.close(() => r()));
+  });
 
   withEnv(t, PROVIDER_ACCESS_VAR, undefined);
   const browser = await launchGuarded({
     label: "maptiler-barrier-half-open",
     spendsProviderQuota: MAPTILER,
-    args: blackhole(port),
+    ...blackhole(port),
   });
   t.after(() => browser.close());
 
@@ -242,14 +261,17 @@ test("the environment alone cannot open the barrier, and neither can the option 
 test("the ceiling is hard, and a run that blows it fails rather than reporting a result", async (t) => {
   const landed: Landed[] = [];
   const { server, port } = await serve(landed);
-  t.after(() => new Promise<void>((r) => server.close(() => r())));
+  t.after(() => {
+    server.closeAllConnections();
+    return new Promise<void>((r) => server.close(() => r()));
+  });
 
   withEnv(t, PROVIDER_ACCESS_VAR, MAPTILER);
   withEnv(t, PROVIDER_CEILING_VAR, "2");
   const browser = await launchGuarded({
     label: "maptiler-barrier-ceiling",
     spendsProviderQuota: MAPTILER,
-    args: blackhole(port),
+    ...blackhole(port),
   });
 
   const page = await browser.page();

@@ -159,7 +159,7 @@ test("only non-reader placement callers load the approximate boundary extract", 
   const namers = trackedFilesNaming(["-e", "az-fire-district-territory", "-e", "APPROXIMATE_DISTRICT_EXTRACT_PATH", "-e", "readApproximateDistrictExtract"]);
   assert.deepEqual(namers, ["lib/control-plane/expansion/district-territory.ts", APPROXIMATE_DISTRICT_EXTRACT_PATH.join("/"), "lib/control-plane/expansion/runner-load.ts"]);
   const importers = trackedFilesNaming(["-e", "expansion/runner-load"]);
-  assert.deepEqual(importers, ["app/(admin)/_mw/data/send-preview.ts", "lib/hunt/place-source-admission.ts"], "only Admin preview and hunt admission load dispatch placement; no public reader does");
+  assert.deepEqual(importers, ["app/(admin)/_mw/data/send-preview.ts", "lib/funding/fec-send-districts.ts", "lib/hunt/place-source-admission.ts"], "only Admin preview and hunt admission load dispatch placement; no public reader does");
 });
 
 test("THE RULES: each names its evidence; a member union never adds shares and names what it leaves out; an unknown unit has no rule", () => {

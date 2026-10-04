@@ -1,3 +1,4 @@
+import type { MeasureRecord } from "./measure-records.ts";
 import type { OcdId, Provenance } from "../sources/types.ts";
 
 /**
@@ -42,7 +43,7 @@ export interface Contest {
   title: string;
   type: ContestType;
   /** Seats to vote for — mandatory, not an edge case (NH multi-member). */
-  voteFor: number;
+  voteFor: number | null;
   /** Term in years, where the filing states it. */
   termYears: number | null;
   /**
@@ -135,6 +136,8 @@ export interface CandidacyRemoval {
 }
 
 export interface BallotSet {
+  /** Plain-language records carried by the civic-data ballot projection. */
+  measureRecords?: readonly MeasureRecord[];
   election: Election;
   contests: Contest[];
   candidacies: Candidacy[];

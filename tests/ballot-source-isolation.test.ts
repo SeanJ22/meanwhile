@@ -172,13 +172,13 @@ test("all production ballot entry points use state-scoped selection", () => {
     "lib/ask/server-sources.ts",
   ]) {
     const source = readFileSync(join(process.cwd(), path), "utf8");
-    assert.match(source, /ballotSourcesForDivisions\(/, `${path} did not scope its ballot authority`);
+    assert.match(source, /readerBallotSourcesForDivisions\(/, `${path} did not scope its ballot authority`);
     assert.doesNotMatch(source, /for\s*\([^)]*\bBALLOT_SOURCES\b/, `${path} reopened every state authority`);
   }
 
   const page = readFileSync(join(process.cwd(), "app/ballot/page.tsx"), "utf8");
   assert.ok(
-    page.indexOf("ballotSourcesForDivisions(ocdIds)") < page.indexOf("settleBallotAuxiliaryPreloads(auxiliaryPreloads)"),
+    page.indexOf("readerBallotSourcesForDivisions(ocdIds)") < page.indexOf("settleBallotAuxiliaryPreloads(auxiliaryPreloads)"),
     "supporting authorities were opened before the requested ballot authority was selected",
   );
   assert.match(page, /data-ballot-canonical-holding-gaps/);

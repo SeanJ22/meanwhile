@@ -155,41 +155,9 @@ function dollars(amount: number): string {
 export function typeConcentrationSentences(
   concentration: TypeConcentration,
 ): string[] {
-  const { bandCount, contributionCount, totalAmount, bands } = concentration;
-  const sentences: string[] = [];
-
-  // The base names itself as what it is: the rows above that the FEC does
-  // NOT type as an individual donor. Calling it "committee money" would be
-  // wrong wherever a candidate put their own money in — which is filed on
-  // this side, and is the largest figure on several real cards.
-  const base =
-    contributionCount === 1
-      ? `The one contribution listed above that didn't come from an individual donor`
-      : `The ${contributionCount} contributions listed above that didn't come from individual donors`;
-
-  sentences.push(
-    bandCount === 1
-      ? `${base} — ${dollars(totalAmount)} — ${contributionCount === 1 ? "is" : "are"} all one kind of money under the FEC's own rules: ${bands[0].label}.`
-      : `${base} come to ${dollars(totalAmount)}, and the FEC's own rules put them in ${bandCount} different kinds. Individual donors aren't counted here: the two lists were pulled separately, so adding them together would compare a number to a base we picked.`,
+  return concentration.bands.map(band =>
+    band.id === OWN_MONEY_BAND_ID
+      ? `${dollars(band.amount)} was ${band.label}.`
+      : `${dollars(band.amount)} from ${band.label}.`,
   );
-
-  if (bandCount > 1) {
-    for (const band of bands) {
-      const filings =
-        band.count === 1 ? "1 contribution" : `${band.count} contributions`;
-      // "from the candidate's own money" is not English. That band is the
-      // money rather than its source, so it gets the verb that fits it.
-      sentences.push(
-        band.id === OWN_MONEY_BAND_ID
-          ? `${dollars(band.amount)} was ${band.label} — ${filings}.`
-          : `${dollars(band.amount)} from ${band.label} — ${filings}.`,
-      );
-    }
-  }
-
-  sentences.push(
-    `Those are the categories these filers put on their own FEC filings. We don't sort donors into industries or causes — nobody publishes that as a public record, so we'd have to make it up.`,
-  );
-
-  return sentences;
 }

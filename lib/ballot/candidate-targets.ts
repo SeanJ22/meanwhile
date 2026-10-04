@@ -1,6 +1,6 @@
+import { readerBallotSourceForTargetId } from "./reader-sources.ts";
 import {
   BALLOT_SOURCES,
-  ballotSourceForTargetId,
   type RegisteredBallotSource,
 } from "./registry.ts";
 import { getGeneralLineup } from "./general-lineup.ts";
@@ -35,7 +35,7 @@ async function addCandidateTargets(
  */
 export async function getCandidateTargetIds(targetId?: string): Promise<Set<string>> {
   const ids = new Set<string>();
-  const exact = targetId === undefined ? null : ballotSourceForTargetId(targetId);
+  const exact = targetId === undefined ? null : await readerBallotSourceForTargetId(targetId);
   const sources = targetId === undefined ? BALLOT_SOURCES : exact ? [exact] : [];
   for (const source of sources) await addCandidateTargets(ids, source);
   if (targetId !== undefined) return ids;

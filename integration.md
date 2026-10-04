@@ -88,3 +88,11 @@ One line per batch folded into river.
 - auditors: DP-03, FE-16 · ready 4a20e1bf9
 - people: CA-15 · ready ac936387a
 - bank: DB-57, DP-21, DP-22, DP-27 · ready 92f237c74
+
+## 2026-10-04T11:27:36Z — river 8bbe9ee → 3690498b5
+
+- Evidence: pnpm gates on ba758a7 (CI env): 11/12, test 9191 pass 1 fail (RULING 107 freshness stamp in lib/sources/feed-kinds.ts, bank DB-50). Repaired in 3690498 (header declaration); freshness-provenance + feed-kinds tests 11/11, eslint clean.
+- registry: DB-18, DB-32 · ready 18eed9afa
+- hunters: CH-05 · ready 89c49c1d6
+- auditors: DP-05, DP-15, FE-03, FE-17, FE-18 · ready 1f9769067
+- bank: DB-50, DP-24 · ready 20ae5c0c9

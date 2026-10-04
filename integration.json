@@ -662,5 +662,59 @@
     "gates": "pass-after-repair",
     "evidence": "pnpm gates on 39e119d (CI env): 11/12, test 9162 pass 2 fail (auditors' live-write guard: origins rule, RULING 14). Repaired in 8bbe9ee; path-separator, live-write-guard and origins tests 18/18, tsc and eslint clean.",
     "at": "2026-10-04T10:58:17Z"
+  },
+  {
+    "lane": "registry",
+    "steps": [
+      "DB-18",
+      "DB-32"
+    ],
+    "ready_sha": "18eed9afa9dc19d1c79805532fe5fad7bd3dca2b",
+    "river_sha": "3690498b5809bdb28b399ecd36881e4e303a155e",
+    "tested_sha": "ba758a728b6592ee705f06aed723b4252b207823",
+    "gates": "pass-after-repair",
+    "evidence": "pnpm gates on ba758a7 (CI env): 11/12, test 9191 pass 1 fail (RULING 107 freshness stamp in lib/sources/feed-kinds.ts, bank DB-50). Repaired in 3690498 (header declaration); freshness-provenance + feed-kinds tests 11/11, eslint clean.",
+    "at": "2026-10-04T11:27:36Z"
+  },
+  {
+    "lane": "hunters",
+    "steps": [
+      "CH-05"
+    ],
+    "ready_sha": "89c49c1d61e89f37fe5a7c13cd43c55f9b9a0a23",
+    "river_sha": "3690498b5809bdb28b399ecd36881e4e303a155e",
+    "tested_sha": "ba758a728b6592ee705f06aed723b4252b207823",
+    "gates": "pass-after-repair",
+    "evidence": "pnpm gates on ba758a7 (CI env): 11/12, test 9191 pass 1 fail (RULING 107 freshness stamp in lib/sources/feed-kinds.ts, bank DB-50). Repaired in 3690498 (header declaration); freshness-provenance + feed-kinds tests 11/11, eslint clean.",
+    "at": "2026-10-04T11:27:36Z"
+  },
+  {
+    "lane": "auditors",
+    "steps": [
+      "DP-05",
+      "DP-15",
+      "FE-03",
+      "FE-17",
+      "FE-18"
+    ],
+    "ready_sha": "1f9769067bf9df11a647df4abca0f17f39919056",
+    "river_sha": "3690498b5809bdb28b399ecd36881e4e303a155e",
+    "tested_sha": "ba758a728b6592ee705f06aed723b4252b207823",
+    "gates": "pass-after-repair",
+    "evidence": "pnpm gates on ba758a7 (CI env): 11/12, test 9191 pass 1 fail (RULING 107 freshness stamp in lib/sources/feed-kinds.ts, bank DB-50). Repaired in 3690498 (header declaration); freshness-provenance + feed-kinds tests 11/11, eslint clean.",
+    "at": "2026-10-04T11:27:36Z"
+  },
+  {
+    "lane": "bank",
+    "steps": [
+      "DB-50",
+      "DP-24"
+    ],
+    "ready_sha": "20ae5c0c97e11da424dd4abafba48d77974cb42c",
+    "river_sha": "3690498b5809bdb28b399ecd36881e4e303a155e",
+    "tested_sha": "ba758a728b6592ee705f06aed723b4252b207823",
+    "gates": "pass-after-repair",
+    "evidence": "pnpm gates on ba758a7 (CI env): 11/12, test 9191 pass 1 fail (RULING 107 freshness stamp in lib/sources/feed-kinds.ts, bank DB-50). Repaired in 3690498 (header declaration); freshness-provenance + feed-kinds tests 11/11, eslint clean.",
+    "at": "2026-10-04T11:27:36Z"
   }
 ]

@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
-import { buildPlaceOwedList, type HeldPlaceField, type PlaceSubject } from "../lib/coverage/place-owed.ts";
+import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
+import type { HeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
 import { liveFamiliesByGovernment } from "../lib/control-plane/expansion/live-families.ts";
 import { jurisdictionRequirements } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import { UNREAD_MEETING_PARTITIONS } from "../lib/control-plane/scheduler/provider-inputs.ts";
@@ -10,18 +11,18 @@ import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts"
 
 const NOW = "2026-10-04T12:00:00.000Z";
 const D = "ocd-division/country:us/state:xx/county:example";
-const subjects: PlaceSubject[] = [
+const subjects: HeldPlaceCapture["subjects"][number][] = [
   { id: `${D}#governing`, kind: "body", divisionIds: [D], captureKind: "registry-body", label: "Example County board" },
   { id: `${D}#seat-1`, kind: "seat", divisionIds: [D], captureKind: "local-officeholder", label: "Example County commissioner" },
 ];
 const government = { id: "xx:county:example", ocdId: D };
 
 /** Every owed officeholder/government row for the two subjects, held as `state` and fresh until `freshUntil`. */
-function heldAll(state: HeldPlaceField["state"], freshUntil: string): HeldPlaceField[] {
+function heldAll(state: HeldPlaceCapture["held"][number]["state"], freshUntil: string): HeldPlaceCapture["held"][number][] {
   return buildPlaceOwedList({ divisions: [{ id: D, label: D }], subjects, held: [], now: NOW })
     .filter(item => !item.subject.id.includes("#inventory:") && item.subject.kind !== "calendar" && /^(GOV|OFF|EXE)-/.test(item.checklistId))
     .map(item => ({ subjectId: item.subject.id, checklistId: item.checklistId, state, sourceUrl: "https://example.gov/people",
-      checkedAt: "2026-10-03T00:00:00.000Z", freshUntil }));
+      checkedAt: "2026-10-03T00:00:00.000Z", freshUntil, value: null }));
 }
 
 test("a government whose officeholder rows are all published and fresh is live for that family", () => {

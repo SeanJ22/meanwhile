@@ -24,7 +24,8 @@
  * store as arguments, so tests prove it without a network or a database.
  */
 import { createHash } from "node:crypto";
-import { pageWords, valueOnPage, SECTION3_LABEL_FIELDS } from "../promotion/section3.ts";
+import { pageWords, valueOnPage, FRESHNESS_WINDOW_HOURS, SECTION3_LABEL_FIELDS } from "../promotion/section3.ts";
+import { boostReason, type SampleBoosts } from "./audit-sampling.ts";
 
 /** One published fact as the audit needs it: a record from a live read model. */
 export interface LiveFact {
@@ -42,6 +43,10 @@ export interface LiveFact {
   readonly verifiedAt: string | null;
   /** Content hash of the page at verification, when known; lets a refresh show "unchanged". */
   readonly verifiedContentHash?: string | null;
+  /** The kind of fact, for its freshness window; the family's own window when absent. */
+  readonly recordClass?: string;
+  /** Distinct source pages the fact rests on; 1 when it rests on one. */
+  readonly sourceCount?: number;
 }
 
 export interface LiveFactCatalog {
@@ -64,6 +69,10 @@ export interface LiveAuditPolicy {
   readonly refreshMaxAgeHours: number;
   /** The most new fetches one pass makes. */
   readonly maxFetchesPerPass: number;
+  /** Extra facts an area gets when it holds past-refresh or high-demand facts (DP-16). */
+  readonly boostExtraPerArea: number;
+  /** A boosted fact may be audited again after this long, sooner than an ordinary one. */
+  readonly boostedMinHoursBetweenAudits: number;
 }
 
 export const LIVE_AUDIT_DEFAULT_POLICY: LiveAuditPolicy = {
@@ -73,6 +82,8 @@ export const LIVE_AUDIT_DEFAULT_POLICY: LiveAuditPolicy = {
   poolPerArea: 50,
   refreshMaxAgeHours: 36,
   maxFetchesPerPass: 60,
+  boostExtraPerArea: 1,
+  boostedMinHoursBetweenAudits: 48,
 };
 
 export type LiveAuditVerdict = "GREEN" | "RED" | "INCONCLUSIVE";
@@ -85,7 +96,12 @@ export interface LiveAuditCheck {
   readonly value: string;
 }
 
+/** Why a fact was picked: the boost that applied, or the ordinary rotation. The audit card splits the sample by this. */
+export type PickReason = "PAST_REFRESH" | "DEMAND" | "SINGLE_SOURCE" | "ROUTINE";
+
 export interface LiveAuditResult {
+  /** Why this fact was in the sample. */
+  readonly pickedBecause: PickReason;
   readonly factId: string;
   readonly family: string;
   readonly area: string;
@@ -198,10 +214,10 @@ function trimmed(value: string | number): string {
 }
 
 /** Re-run the value-on-page check and the date check for one fact against a page read now. */
-export function auditLiveFact(fact: LiveFact, page: PageRead, now: string): LiveAuditResult {
+export function auditLiveFact(fact: LiveFact, page: PageRead, now: string, pickedBecause: PickReason = "ROUTINE"): LiveAuditResult {
   const fields = auditableFields(fact.record, fact.sourceUrl);
   const reread = { url: page.url, retrievedAt: page.retrievedAt, contentHash: page.contentHash, artifactId: page.artifactId ?? null };
-  const base = { factId: fact.id, family: fact.family, area: fact.area, checkedAt: now, sourceUrl: fact.sourceUrl, reread, basis: "REREAD" as const };
+  const base = { pickedBecause, factId: fact.id, family: fact.family, area: fact.area, checkedAt: now, sourceUrl: fact.sourceUrl, reread, basis: "REREAD" as const };
   if (!page.text.trim()) {
     return { ...base, verdict: "INCONCLUSIVE", checks: [], reason: "The page came back empty, so nothing could be checked." };
   }
@@ -223,15 +239,30 @@ export function auditLiveFact(fact: LiveFact, page: PageRead, now: string): Live
 }
 
 /** A routine refresh that already re-read this source and found it unchanged since the fact was verified. */
-export function greenFromRefresh(fact: LiveFact, refresh: RoutineRefresh | null | undefined, now: string, policy: LiveAuditPolicy): LiveAuditResult | null {
+export function greenFromRefresh(fact: LiveFact, refresh: RoutineRefresh | null | undefined, now: string, policy: LiveAuditPolicy, pickedBecause: PickReason = "ROUTINE"): LiveAuditResult | null {
   if (!refresh || !fact.verifiedContentHash || refresh.sourceUrl !== fact.sourceUrl) return null;
   const age = Date.parse(now) - Date.parse(refresh.retrievedAt);
   if (!Number.isFinite(age) || age < 0 || age > policy.refreshMaxAgeHours * 3_600_000) return null;
   if (refresh.contentHash !== fact.verifiedContentHash) return null;
-  return { factId: fact.id, family: fact.family, area: fact.area, verdict: "GREEN", checkedAt: now, sourceUrl: fact.sourceUrl,
+  return { pickedBecause, factId: fact.id, family: fact.family, area: fact.area, verdict: "GREEN", checkedAt: now, sourceUrl: fact.sourceUrl,
     reread: { url: refresh.sourceUrl, retrievedAt: refresh.retrievedAt, contentHash: refresh.contentHash, artifactId: null },
     basis: "UNCHANGED_ROUTINE_REFRESH", checks: [],
     reason: "A routine refresh re-read this page and it is unchanged since the fact was verified." };
+}
+
+/**
+ * A fact's demand rank from the reader-demand lists (ZIPs, districts, meetings,
+ * officials; most-asked first). A fact ranks by the best-placed key it carries: its
+ * area, ZIP, division, body, or its own record ID. Null when readers have not asked.
+ */
+export function demandRanker(lists: readonly (readonly { readonly key: string }[])[]): (fact: LiveFact) => number | null {
+  const rank = new Map<string, number>();
+  for (const list of lists) list.forEach((row, index) => rank.set(row.key, Math.min(rank.get(row.key) ?? Infinity, index)));
+  return (fact) => {
+    const keys = [fact.area, fact.record.zip, fact.record.ocdId, fact.record.bodyId, fact.record.id].filter((k): k is string => typeof k === "string");
+    const best = Math.min(...keys.map((k) => rank.get(k) ?? Infinity));
+    return Number.isFinite(best) ? best : null;
+  };
 }
 
 // --- the sample ----------------------------------------------------------
@@ -241,22 +272,50 @@ function order(passId: string, id: string): string {
   return createHash("sha256").update(`${passId}\u0000${id}`).digest("hex");
 }
 
+/** The family's freshness class, for the refresh date. */
+const FAMILY_CLASS: Readonly<Record<string, string>> = {
+  "comment-access": "PUBLIC_COMMENT_RULE", "everyday-routing": "SERVICE_CONTACT", "ballot-navigation": "VOTER_ACCESS_ROUTE",
+  "official-filings": "CAMPAIGN_FINANCE_FILING", meetings: "MEETING", rosters: "OFFICIAL_ROSTER",
+};
+const DEFAULT_WINDOW_HOURS = 7 * 24;
+
+/** The three reasons to look harder at a fact (DP-16), as the sampler reads them. */
+export function boostsOf(fact: LiveFact, input: { readonly now: string; readonly demandRank?: number | null }): SampleBoosts {
+  const window = FRESHNESS_WINDOW_HOURS[fact.recordClass ?? FAMILY_CLASS[fact.family] ?? ""] ?? DEFAULT_WINDOW_HOURS;
+  const verified = fact.verifiedAt ? Date.parse(fact.verifiedAt) : NaN;
+  return {
+    // Past its refresh date: verified longer ago than twice its window, so the routine refresh has not reached it.
+    pastRefresh: Number.isFinite(verified) ? Date.parse(input.now) - verified > 2 * window * 3_600_000 : false,
+    singleSource: (fact.sourceCount ?? 1) <= 1,
+    demandRank: input.demandRank ?? null,
+  };
+}
+
 /**
  * Pick facts from one area's pool: not audited recently, oldest-audited first
  * (never-audited before any), ties broken by a hash of the pass so no fact is
- * favoured by its name.
+ * favoured by its name. Facts past their refresh date or in high demand come
+ * first, may be audited again sooner, and the area gets extra slots for them;
+ * a single-source fact only wins ties in the order.
  */
 export function pickFromArea(pool: readonly LiveFact[], input: {
   readonly passId: string; readonly now: string; readonly policy: LiveAuditPolicy;
   readonly lastAuditedAt: (factId: string) => string | null | undefined;
-}): LiveFact[] {
-  const cutoff = Date.parse(input.now) - input.policy.minHoursBetweenAudits * 3_600_000;
-  return pool
-    .map((fact) => ({ fact, last: input.lastAuditedAt(fact.id) ?? null }))
-    .filter(({ last }) => last === null || !(Date.parse(last) > cutoff))
-    .sort((a, b) => (a.last ?? "").localeCompare(b.last ?? "") || order(input.passId, a.fact.id).localeCompare(order(input.passId, b.fact.id)))
-    .slice(0, input.policy.perAreaPerPass)
-    .map(({ fact }) => fact);
+  readonly demandRankFor?: (fact: LiveFact) => number | null | undefined;
+}): { readonly fact: LiveFact; readonly reason: PickReason }[] {
+  const { policy } = input;
+  const rows = pool.map((fact) => {
+    const reason: PickReason = boostReason(boostsOf(fact, { now: input.now, demandRank: input.demandRankFor?.(fact) ?? null })) ?? "ROUTINE";
+    return { fact, reason, last: input.lastAuditedAt(fact.id) ?? null };
+  }).filter(({ reason, last }) => {
+    const hours = reason === "PAST_REFRESH" || reason === "DEMAND" ? policy.boostedMinHoursBetweenAudits : policy.minHoursBetweenAudits;
+    return last === null || !(Date.parse(last) > Date.parse(input.now) - hours * 3_600_000);
+  });
+  const rank = { PAST_REFRESH: 0, DEMAND: 1, SINGLE_SOURCE: 2, ROUTINE: 3 } as const;
+  rows.sort((a, b) => rank[a.reason] - rank[b.reason] || (a.last ?? "").localeCompare(b.last ?? "") ||
+    order(input.passId, a.fact.id).localeCompare(order(input.passId, b.fact.id)));
+  const strong = rows.filter(({ reason }) => reason === "PAST_REFRESH" || reason === "DEMAND").length;
+  return rows.slice(0, policy.perAreaPerPass + Math.min(strong, policy.boostExtraPerArea)).map(({ fact, reason }) => ({ fact, reason }));
 }
 
 /** Which areas this pass looks at: a rotating window, so every area comes round. */
@@ -271,6 +330,8 @@ export interface LiveAuditPassDeps {
   /** Names this pass; a new id each pass. */
   readonly passId: string;
   readonly lastAuditedAt: (factId: string) => string | null | undefined;
+  /** How much readers ask for this fact's place: 0 is the most; null when they have not. */
+  readonly demandRankFor?: (fact: LiveFact) => number | null | undefined;
   /** The routine refresh of a fact's source, when one exists. */
   readonly refreshFor?: (fact: LiveFact) => RoutineRefresh | null | undefined;
   /** Re-read a page through the acquirer toolkit (spaced per host); null when it could not be read. */
@@ -289,21 +350,26 @@ export interface LiveAuditPassSummary {
   readonly fromRefresh: number;
   /** Facts that needed a fetch after the pass had used its fetch allowance. They wait for the next pass. */
   readonly deferred: number;
+  /** The sample split by why each fact was picked. */
+  readonly byReason: Readonly<Record<PickReason, number>>;
 }
 
 /** One live-audit pass: sample by area, prefer a routine refresh, re-read the rest, record green or red. */
 export async function runLiveAuditPass(deps: LiveAuditPassDeps): Promise<LiveAuditPassSummary> {
   const policy = deps.policy ?? LIVE_AUDIT_DEFAULT_POLICY;
   const areas = areasForPass(await deps.catalog.areas(), deps.passId, policy);
-  const summary = { areas: areas.length, sampled: 0, green: 0, red: 0, inconclusive: 0, fetches: 0, fromRefresh: 0, deferred: 0 };
+  const byReason: Record<PickReason, number> = { PAST_REFRESH: 0, DEMAND: 0, SINGLE_SOURCE: 0, ROUTINE: 0 };
+  const summary = { areas: areas.length, sampled: 0, green: 0, red: 0, inconclusive: 0, fetches: 0, fromRefresh: 0, deferred: 0, byReason };
   const count = (result: LiveAuditResult) => {
     summary[result.verdict === "GREEN" ? "green" : result.verdict === "RED" ? "red" : "inconclusive"] += 1;
   };
   for (const area of areas) {
     const pool = await deps.catalog.factsInArea(area, policy.poolPerArea);
-    for (const fact of pickFromArea(pool, { passId: deps.passId, now: deps.now, policy, lastAuditedAt: deps.lastAuditedAt })) {
+    for (const { fact, reason } of pickFromArea(pool, { passId: deps.passId, now: deps.now, policy, lastAuditedAt: deps.lastAuditedAt,
+      ...(deps.demandRankFor ? { demandRankFor: deps.demandRankFor } : {}) })) {
       summary.sampled += 1;
-      const refreshed = greenFromRefresh(fact, deps.refreshFor?.(fact), deps.now, policy);
+      byReason[reason] += 1;
+      const refreshed = greenFromRefresh(fact, deps.refreshFor?.(fact), deps.now, policy, reason);
       if (refreshed) {
         await deps.record(refreshed);
         summary.fromRefresh += 1;
@@ -314,8 +380,8 @@ export async function runLiveAuditPass(deps: LiveAuditPassDeps): Promise<LiveAud
       summary.fetches += 1;
       const page = await deps.fetchPage(fact.sourceUrl).catch(() => null);
       const result: LiveAuditResult = page
-        ? auditLiveFact(fact, page, deps.now)
-        : { factId: fact.id, family: fact.family, area: fact.area, verdict: "INCONCLUSIVE", checkedAt: deps.now, sourceUrl: fact.sourceUrl,
+        ? auditLiveFact(fact, page, deps.now, reason)
+        : { pickedBecause: reason, factId: fact.id, family: fact.family, area: fact.area, verdict: "INCONCLUSIVE", checkedAt: deps.now, sourceUrl: fact.sourceUrl,
             reread: null, basis: "NOT_READ", checks: [], reason: "The page could not be read this time; the fact is not called broken." };
       await deps.record(result);
       count(result);

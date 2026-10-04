@@ -4,9 +4,11 @@ import test from "node:test";
 
 import {
   areasForPass,
+  boostsOf,
   auditableFields,
   auditLiveFact,
   curatedReaderCatalog,
+  demandRanker,
   dateOnPage,
   greenFromRefresh,
   LIVE_AUDIT_DEFAULT_POLICY,
@@ -90,7 +92,8 @@ test("an unchanged routine refresh is a green flag with no new fetch; a changed 
 test("sampling: recently audited facts are passed over, never-audited come first, and the pick is stable for a pass", () => {
   const pool = ["a", "b", "c", "d"].map((id) => fact(rule(id)));
   const last: Record<string, string> = { "comment-access:a": "2026-10-04T00:00:00.000Z", "comment-access:b": "2026-08-01T00:00:00.000Z" };
-  const pick = (passId: string) => pickFromArea(pool, { passId, now: NOW, policy: { ...LIVE_AUDIT_DEFAULT_POLICY, perAreaPerPass: 3 }, lastAuditedAt: (id) => last[id] });
+  const pick = (passId: string) => pickFromArea(pool, { passId, now: NOW, policy: { ...LIVE_AUDIT_DEFAULT_POLICY, perAreaPerPass: 3 }, lastAuditedAt: (id) => last[id] })
+    .map((p) => p.fact);
   const picked = pick("p1").map((f) => f.id);
   assert.ok(!picked.includes("comment-access:a"), "audited yesterday: passed over");
   assert.ok(picked.indexOf("comment-access:b") === 2, "audited long ago comes after the never-audited");
@@ -133,4 +136,40 @@ test("a page that cannot be read leaves the fact inconclusive and recorded as no
   await runLiveAuditPass({ catalog: curatedReaderCatalog("comment-access", [rule("a")]), now: NOW, passId: "p", lastAuditedAt: () => null,
     fetchPage: async () => null, record: async (r) => { rec.push(r); } });
   assert.deepEqual(rec.map((r) => [r.verdict, r.basis]), [["INCONCLUSIVE", "NOT_READ"]]);
+});
+
+test("auditors look harder where it matters: past-refresh and high-demand facts first, with an extra slot and a shorter wait (DP-16)", () => {
+  const multi = (id: string, over: Partial<LiveFact> = {}) => fact(rule(id), { area: "area", sourceCount: 2, ...over });
+  const stale = multi("stale", { verifiedAt: "2026-05-01T00:00:00.000Z" });
+  const wanted = multi("wanted");
+  const single = multi("single", { sourceCount: 1 });
+  const plain = multi("plain");
+  const pool = [plain, single, wanted, stale];
+  const demand = (f: LiveFact) => (f.id === "comment-access:wanted" ? 2 : null);
+  const pick = pickFromArea(pool, { passId: "p", now: NOW, policy: LIVE_AUDIT_DEFAULT_POLICY, lastAuditedAt: () => null, demandRankFor: demand });
+  assert.deepEqual(pick.map((p) => [p.fact.id, p.reason]), [["comment-access:stale", "PAST_REFRESH"], ["comment-access:wanted", "DEMAND"]],
+    "one ordinary slot plus one extra for the boosted facts; the boosted come first");
+  const none = pickFromArea([plain, single], { passId: "p", now: NOW, policy: LIVE_AUDIT_DEFAULT_POLICY, lastAuditedAt: () => null });
+  assert.deepEqual(none.map((p) => p.reason), ["SINGLE_SOURCE"], "a single source wins the ordinary slot but earns no extra one");
+  // A boosted fact comes round again after two days; an ordinary one waits a week.
+  const lastAt = "2026-10-02T00:00:00.000Z";
+  assert.equal(pickFromArea([wanted], { passId: "p", now: NOW, policy: LIVE_AUDIT_DEFAULT_POLICY, lastAuditedAt: () => lastAt, demandRankFor: demand }).length, 1);
+  assert.equal(pickFromArea([plain], { passId: "p", now: NOW, policy: LIVE_AUDIT_DEFAULT_POLICY, lastAuditedAt: () => lastAt }).length, 0);
+  assert.deepEqual(boostsOf(stale, { now: NOW }), { pastRefresh: true, singleSource: false, demandRank: null });
+});
+
+test("the pass splits its sample by reason", async () => {
+  const records = [rule("a"), rule("b", { verifiedAt: "2026-04-01T00:00:00.000Z" })];
+  const summary = await runLiveAuditPass({ catalog: curatedReaderCatalog("comment-access", records), now: NOW, passId: "p", lastAuditedAt: () => null,
+    fetchPage: async () => page("Residents may speak for three minutes. Sign up at the clerk's desk."), record: async () => {} });
+  assert.equal(summary.byReason.PAST_REFRESH, 1);
+  assert.equal(Object.values(summary.byReason).reduce((a, b) => a + b, 0), summary.sampled);
+});
+
+test("demand rank comes from the reader-demand lists by area, ZIP, division, body or record", () => {
+  const rank = demandRanker([[{ key: "12345" }, { key: "body-a" }], [{ key: "ocd-division/country:us/state:az" }]]);
+  assert.equal(rank(fact(rule("a"), { area: "body-a" })), 1);
+  assert.equal(rank(fact(rule("z", { zip: "12345" }), { area: "elsewhere" })), 0);
+  assert.equal(rank(fact(rule("q", { ocdId: "ocd-division/country:us/state:az" }), { area: "elsewhere" })), 0);
+  assert.equal(rank(fact(rule("n"), { area: "nobody" })), null);
 });

@@ -66,7 +66,10 @@ test("normalize emits windowed meetings with cited venues and real agenda links"
   // in. Jul 14, previously "31 days back, one day outside", is one of them.
   // The 2018 row and the spring rows are still outside 90 days and are a
   // deliberate archive clip, not drops: the count says which is which.
-  assert.equal(meetings.length, 6, `${meetings.length} meetings in window`);
+  // DB-04 (2026-10-04): the adapter now holds the 120-day window, so the two sittings between 90 and 120 days out are in too.
+  const within = (days: number) => meetings.filter((m) => Math.abs(Date.parse(m.startsAt) - NOW.getTime()) <= days * 86_400_000).length;
+  assert.equal(within(90), 6, "the six sittings inside 90 days are unchanged");
+  assert.equal(meetings.length, 8, `${meetings.length} meetings in the 120-day window`);
   assert.equal(drops.unknownVenue, 0, "venue cache missed an observed venue");
   assert.equal(drops.unplaceableInTime, 0);
 

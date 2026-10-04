@@ -7,8 +7,8 @@
  */
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
-  CONCLUDED_LOOKBACK_DAYS,
-  UPCOMING_HORIZON_DAYS,
+  MEETING_HELD_HORIZON_DAYS,
+  MEETING_HELD_LOOKBACK_DAYS,
 } from "../../meetings/constants.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { SourceHttpError, decodeEntities } from "../http.ts";
@@ -95,8 +95,8 @@ import type {
 
 export const SOURCE_NAME = "document-listing";
 
-const WINDOW_FORWARD_DAYS = UPCOMING_HORIZON_DAYS;
-const WINDOW_BACK_DAYS = CONCLUDED_LOOKBACK_DAYS;
+const WINDOW_FORWARD_DAYS = MEETING_HELD_HORIZON_DAYS;
+const WINDOW_BACK_DAYS = MEETING_HELD_LOOKBACK_DAYS;
 
 /* ------------------------------------------------------------ parsing -- */
 

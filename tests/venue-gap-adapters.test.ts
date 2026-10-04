@@ -243,7 +243,7 @@ test("ical: a LOCATION with no reviewed row, a blank one, and an online one are 
   assert.equal(zoom.location, null);
   assert.deepEqual(zoom.online, { label: "Zoom", joinUrl: null }, "a LOCATION naming no building is online (D18)");
   assert.equal(zoom.venueGap, undefined);
-  assert.equal(at("2026-11-19"), undefined, "beyond the rolling 90-day window");
+  assert.ok(at("2026-11-19"), "92 days out: inside the held 120-day window (DB-03), though the map shows only 90");
   assert.equal(drops.unknownVenue, 2);
   assert.equal(drops.placeless, 1);
   assert.equal(accounting.outcome, "CONSERVED");

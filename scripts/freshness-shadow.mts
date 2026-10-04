@@ -171,6 +171,7 @@ import {
 import { createMeetingPartitionOwnership } from "../lib/control-plane/scheduler/meeting-ownership.ts";
 import { readFreeDiscoveryWalks, type FreeWalkSubject } from "../lib/control-plane/discovery/free-walks.ts";
 import { OWNER_DISPATCH } from "../lib/control-plane/scheduler/obligation.ts";
+import { foldNewWorkIntoRound, sameRoundFirstHuntEnabled } from "../lib/control-plane/scheduler/same-round-work.ts";
 import {
   applyDispatchWork,
   applyManualSourceGaps,
@@ -694,30 +695,30 @@ await meetingPartitions.readStates([
   ...("states" in ownershipStates ? ownershipStates.states : []),
   ...("ids" in materialized ? [...materialized.ids].flatMap(id => stateOfJurisdictionId(id) ?? []) : []),
 ]);
-const registry = buildRegistry(
-  [
-    campaignFinanceProvider(),
-    trackerIntakeProvider(),
-    localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions }),
-    candidateEnrichmentProvider({ trackedStates }),
-    meetingsDiscoveryProvider({ materialized: () => materialized }),
-    /*
-     * The gaps Ask states about each body, decided by Ask's own rule over what we hold (2026-09-25); read once, here, bounded.
-     * Beside it, the counts of gaps readers were told (body, code, day, count — the owner's decision of 2026-09-25), which
-     * make those gaps reader impact now and create the work for a body readers were told we hold no meeting of.
-     */
-    (await import("../lib/control-plane/scheduler/providers/ask-gaps.ts")).askGapsProvider(
-      await pending.step("ask-gaps:held-reading", async () =>
-        (await import("../lib/control-plane/scheduler/ask-gap-holdings.ts")).askGapsInputFromHeld({ now: NOW, observations: repos.askGapObservations })),
-    ),
-  ],
-  { root: ROOT, nowIso: NOW },
-);
+/* CH-05: the providers and context are kept so the registry can be built again in the same round when the owner's dispatch has just written new work. */
+const registryProviders = [
+  campaignFinanceProvider(),
+  trackerIntakeProvider(),
+  localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions }),
+  candidateEnrichmentProvider({ trackedStates }),
+  meetingsDiscoveryProvider({ materialized: () => materialized }),
+  /*
+   * The gaps Ask states about each body, decided by Ask's own rule over what we hold (2026-09-25); read once, here, bounded.
+   * Beside it, the counts of gaps readers were told (body, code, day, count — the owner's decision of 2026-09-25), which
+   * make those gaps reader impact now and create the work for a body readers were told we hold no meeting of.
+   */
+  (await import("../lib/control-plane/scheduler/providers/ask-gaps.ts")).askGapsProvider(
+    await pending.step("ask-gaps:held-reading", async () =>
+      (await import("../lib/control-plane/scheduler/ask-gap-holdings.ts")).askGapsInputFromHeld({ now: NOW, observations: repos.askGapObservations })),
+  ),
+];
+const registryContext = { root: ROOT, nowIso: NOW };
+let registry = buildRegistry(registryProviders, registryContext);
 const trackedReading = trackedStates.read();
 const trackedStateCodes: readonly string[] = "states" in trackedReading ? trackedReading.states : [];
 
-const allUnits = registry.units;
-const units = allUnits.filter(
+let allUnits = registry.units;
+let units = allUnits.filter(
   (u) => (ONLY === null || u.obligation.id.startsWith(ONLY)) && (IDS === null || IDS.has(u.obligation.id)),
 );
 const corpus = units.map((u) => u.obligation);
@@ -1315,7 +1316,7 @@ const placementRank = (obligationId: string): number | null => {
   return at ?? (dispatchPriority.has(obligationId) ? placeOrder.length : null);
 };
 /** The dispatcher's first rows when NO DISPATCH is pending: every selected scope's work. Null otherwise, so a DISPATCH keeps both lanes. */
-const scopePlaceFirst: ReadonlySet<string> | null =
+const scopePlaceFirst: Set<string> | null =
   dispatchPriority.size > 0 || expansionPlan === null
     ? null
     : new Set(sync.all.filter((o) => expansionPlan.placedSubjects.has(o.subjectId)).map((o) => o.id));
@@ -1336,7 +1337,7 @@ const dueOrdered = expansionPlan === null
   : orderByPlacement(dueThisCycle, (d) => placementRank(d.obligation.id));
 const dueModel = dueOrdered.filter((d) => decisionFor(d.obligation.id, d.obligation.routeId).kind === "BOUNDED_MODEL_WORKER");
 const dueDeterministicRows = dueOrdered.filter((d) => !dueModel.includes(d));
-const dueDeterministic = dueDeterministicRows.length;
+let dueDeterministic = dueDeterministicRows.length;
 
 /*
  * **READER IMPACT FIRST for the Scout lane.** (Work Item 5, 2026-09-02.
@@ -1815,6 +1816,8 @@ let dispatchWork: DispatchWorkReading | null = null;
 let dispatchRecorded: NonNullable<DispatchWorkApplied["recorded"]> = [];
 /** MW-021: every Send record the dispatch-work plan meant to write this cycle (null: no plan was made). */
 let plannedSendMarks: { readonly obligationId: string; readonly key: string }[] | null = null;
+/** CH-05: the obligations this cycle's Sends just created or revived, with the Send each belongs to, so they can start in this round. */
+let dispatchWrittenThisCycle: ReadonlyMap<string, string> = new Map();
 if (dispatchTargets.length > 0) {
   try {
     if ("unreadable" in promoted) throw new Error(`the promoted jurisdiction registries could not be read (${promoted.unreadable})`);
@@ -1871,6 +1874,10 @@ if (dispatchTargets.length > 0) {
       ? await applyDispatchWork(repos, plan, { now: NOW })
       : null;
     dispatchRecorded = applied?.recorded ?? [];
+    if (applied !== null) {
+      const targetOf = new Map(plan.writes.map(w => [w.instance.obligation.id, w.target.key] as const));
+      dispatchWrittenThisCycle = new Map(applied.written.flatMap(id => { const key = targetOf.get(id); return key === undefined ? [] : [[id, key] as const]; }));
+    }
     dispatchWork = dispatchWorkReading(plan, applied, {
       at: NOW,
       modelLaneClosed: laneDisabledReason,
@@ -1892,6 +1899,60 @@ if (dispatchTargets.length > 0) {
   } catch (error) {
     runtimeConditions.push(
       `the work the owner sent the fleet to could not be planned (${error instanceof Error ? error.message : String(error)}); nothing was created, and the targets are planned again next cycle`,
+    );
+  }
+}
+/*
+ * **CH-05 — THE FIRST HUNT STARTS IN THE SAME ROUND AS THE ORDER.** The rows the
+ * step above just wrote join the corpus through their providers, which ran
+ * before it; so the providers are run again over the rows now on file, the new
+ * rows are synced, scheduled on this round's clock, and the due ones added to
+ * this round's work before the lanes start. Nothing here opens an occurrence or
+ * spends: the lanes still admit each row behind every gate, in the same order
+ * rules. A failure is named and the rows join next round, as they did before.
+ * `WTP_FIRST_HUNT_NEXT_ROUND=1` in the runner's environment file keeps the old
+ * path until the same-round start is checked live.
+ */
+if (dispatchWrittenThisCycle.size > 0 && sameRoundFirstHuntEnabled(process.env)) {
+  try {
+    const written = [...dispatchWrittenThisCycle.keys()];
+    const onFile = await repos.obligations.listWhere(["materializedBy"], OWNER_DISPATCH);
+    materialized = { ids: new Set(onFile.map((row) => row.id)) };
+    const rebuilt = buildRegistry(registryProviders, registryContext);
+    const known = new Set(allUnits.map((u) => u.obligation.id));
+    const wanted = new Set(written);
+    const freshUnits = rebuilt.units.filter((u) => wanted.has(u.obligation.id) && !known.has(u.obligation.id));
+    if (freshUnits.length > 0) {
+      const synced = await syncObligations(repos, freshUnits.map((u) => u.obligation), NOW, { exactReads: true });
+      const freshIds = new Set(synced.all.map((o) => o.id));
+      registry = rebuilt;
+      allUnits = [...allUnits, ...freshUnits];
+      units = [...units, ...freshUnits];
+      sync = { ...sync, all: [...sync.all, ...synced.all], outside: sync.outside === null ? null : sync.outside.filter((o) => !freshIds.has(o.id)) };
+      for (const o of synced.all) {
+        decisionFor(o.id, o.routeId);
+        standingById.set(o.id, o);
+        subjectByObligation.set(o.id, o.subjectId);
+        if (lifetimeHuntSubjects.has(o.subjectId)) lifetimeHuntWorkIds.add(o.id);
+        if (dispatchWrittenThisCycle.get(o.id)?.startsWith("dispatch:")) dispatchPriority.add(o.id);
+        if (scopePlaceFirst !== null) scopePlaceFirst.add(o.id);
+      }
+      const folded = foldNewWorkIntoRound({ rows: synced.all, nowMs });
+      for (const id of folded.nextDueWrites) nextDueWrites.push(id);
+      for (const d of folded.due) {
+        dueThisCycle.push(d);
+        (decisionFor(d.obligation.id, d.obligation.routeId).kind === "BOUNDED_MODEL_WORKER" ? dueModel : dueDeterministicRows).push(d);
+      }
+      dueDeterministic = dueDeterministicRows.length;
+      console.log(
+        `  first hunt in the same round: ${synced.all.length} new row(s) from this round's Sends joined the corpus; ` +
+          `${folded.due.length} due now (${folded.due.filter((d) => dueModel.includes(d)).length} model-class), ${folded.notYetDue.length} wait for their clock` +
+          (folded.unscheduled.length > 0 ? `, ${folded.unscheduled.length} owe nothing on a clock` : ""),
+      );
+    }
+  } catch (error) {
+    runtimeConditions.push(
+      `rows this round's Sends created could not start in the same round (${error instanceof Error ? error.message : String(error)}); they join next round`,
     );
   }
 }

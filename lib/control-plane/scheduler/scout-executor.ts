@@ -1226,9 +1226,11 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
   return {
     lane: "BOUNDED_MODEL_WORKER",
     workerFor: ({ holder }) => ({ role: deps.role ?? "SCOUT", provider: "anthropic", version: model, instance: holder }),
-    run: async ({ obligation: row, routeTaskId, workItemId, attemptId, holder, executor: decidedKind }): Promise<WorkOutcome> => {
+    run: async ({ obligation: row, routeTaskId, workItemId, attemptId, holder, executor: decidedKind, bound: workerBound }): Promise<WorkOutcome> => {
       const startedMs = Date.now();
       const startedAt = clock();
+      /* CH-07: the hunter's wall clock. 0 means no limit stated (tests); every production caller states one. */
+      const wallLimitMs = workerBound?.maxWallMs ?? 0;
       let ctx: ReturnType<ScoutExecutorDeps["contextFor"]>;
       try {
         ctx = deps.contextFor(row);
@@ -1419,6 +1421,11 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       }
       const runModelAttempt = async (current: ModelAttemptRun): Promise<void> => {
         while (finish === null && lastRefusal?.[0]?.code !== "SCOUT_GRADUATED_ROUTE") {
+          /* CH-07: out of time. Nothing more is sent; the steps walked so far become the case file below. */
+          if (wallLimitMs > 0 && Date.now() - startedMs >= wallLimitMs) {
+            stoppedBy = "TIMEOUT";
+            break;
+          }
           if (boundNotice !== null && graceUsed >= GRACE_TURNS) break;
           if (boundNotice !== null) graceUsed += 1;
 
@@ -1767,6 +1774,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
 
       let previousAttempt = first;
       for (let rung = 1; rung < MODEL_CLASSES.length; rung++) {
+        if (stoppedBy === "TIMEOUT") break;
         const escalationTarget = escalationTargetFor(SCOUT_LOOP_STEP, previousAttempt.modelClass);
         const observed = escalationTarget === null ? null : observedEscalation();
         if (escalationTarget === null || observed === null) break;
@@ -1998,7 +2006,20 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       if (defectReading) defectTurns.push(...defectReading.turns);
 
       let refusal: ScoutIssue[] | null = null;
-      if (finish === null) {
+      /*
+       * CH-07: a hunter that ran out of time is not a refusal and not an absence. Its result is a
+       * NO_PROGRESS carrying the rungs it walked as the next steps, stoppedBy "TIMEOUT", so the next turn
+       * goes to a detective with what was tried (the existing NO_PROGRESS trigger) and `isArguedAbsence`
+       * never files it as a 30-day absence.
+       */
+      const timedOut = finish === null && stoppedBy === "TIMEOUT";
+      const timeoutCaseFile: { narrative: string; nextRungs: string[] } | null = timedOut
+        ? {
+            narrative: `Stopped at the ${Math.round(wallLimitMs / 1000)}-second time limit after ${turns} turn(s) and ${rungs.length} step(s); not a finding of absence.`,
+            nextRungs: rungs.map((r) => `${r.tool} -> ${r.target}${r.observed ? `: ${String(r.observed).slice(0, 160)}` : ""}`).slice(0, 40),
+          }
+        : null;
+      if (finish === null && !timedOut) {
         refusal =
           transportFailure !== null
             ? [{ code: policyRefusedBeforeSending ? "SCOUT_POLICY_DENIED" : "SCOUT_TRANSPORT_FAILED",
@@ -2054,9 +2075,9 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         distinctEvidenceRungs: distinctEvidenceRungs(rungsAnnotated),
         candidates: accepted ? acceptedCandidates : [],
         findings: accepted?.findings ?? [],
-        nextRungs: accepted?.nextRungs ?? [],
+        nextRungs: accepted?.nextRungs ?? timeoutCaseFile?.nextRungs ?? [],
         unverified: accepted?.unverified ?? [],
-        narrative: accepted?.narrative ?? (refusal ? `REFUSED: ${refusal.map((i) => i.code).join(", ")}` : ""),
+        narrative: accepted?.narrative ?? timeoutCaseFile?.narrative ?? (refusal ? `REFUSED: ${refusal.map((i) => i.code).join(", ")}` : ""),
         /* The model whose attempt produced this result; `modelAttempts` names every model that ran. */
         worker: { provider: "anthropic", model: last.model, modelReported },
         usage: {

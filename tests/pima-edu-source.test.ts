@@ -149,8 +149,10 @@ test("normalize: every Diligent sitting in the window is re-found, conserved, wi
   assert.equal(accounting.outcome, "CONSERVED");
   assert.equal(meetings.length, 12, meetings.map((m) => m.id).join(", "));
   assert.equal(drops.unknownVenue, 0);
-  assert.equal(drops.unplaceableInTime, 0);
-  assert.equal(accounting.outOfWindow, 22);
+  // DB-05: the held 120-day window reaches three more sittings (90 to 120 days out) that the college's pages date but
+  // state no time for; they are counted as unplaceable in time, never guessed (they were out of the window: 22 then).
+  assert.equal(drops.unplaceableInTime, 3);
+  assert.equal(accounting.outOfWindow, 19);
 
   const byId = new Map(meetings.map((m) => [m.id, m]));
   // The seven sittings production held from the disallowed tenant (Diligent
@@ -208,7 +210,7 @@ test("a place nothing sitting-specific states drops the sitting, counted, never 
   const { meetings, drops, accounting } = source.normalizeWithDrops([doctored], NOW);
   assert.equal(accounting.outcome, "CONSERVED");
   assert.ok(!meetings.some((m) => m.id === "pima-edu:pcc:2026-08-10-study-session"));
-  assert.equal(drops.unplaceableInTime, 1, "the Aug 10 sitting has no statement of its time without its agenda");
+  assert.equal(drops.unplaceableInTime, 4, "the Aug 10 sitting has no statement of its time without its agenda, nor do the three the held window reaches (DB-05)");
 });
 
 test("the permission gate reads robots.txt first, records a disallow, and still reads the public page (owner decision 2026-09-25)", async () => {

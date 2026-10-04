@@ -351,6 +351,20 @@ export interface Meeting {
    */
   agendaUrl: string | null;
   /**
+   * The public recording of this sitting, when the publisher's own record links one (BX-10): Legistar's
+   * `EventVideoPath` while `EventVideoStatus` is "Public". A pointer only, shown on a concluded meeting's card and
+   * never fetched. Absent means the publisher gave none, which is not a claim that no recording exists.
+   */
+  videoUrl?: string;
+  /**
+   * The publisher's own stamp of when this sitting's newest posting was made, as an ISO instant, where its feed
+   * states one (DB-27): Legistar's `EventAgendaLastPublishedUTC` or `EventMinutesLastPublishedUTC`, whichever is later;
+   * iCalendar's `LAST-MODIFIED`. Never our clock and never `DTSTAMP`, which a feed may restamp on every export. It
+   * dates the posting for the posted-to-live measure; absent means the feed states none, and the measure then counts
+   * from when we first saw the change.
+   */
+  postedAt?: string;
+  /**
    * **THE PUBLISHER'S OWN SURFACE CARRIED AN AGENDA SLOT AND IT WAS EMPTY.**
    * (Session B resume, W2 — ASK-18 / SWEEP-01, 2026-08-31.)
    *

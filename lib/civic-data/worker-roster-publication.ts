@@ -26,6 +26,7 @@ import { linkingPageFrom, pageWords, section3Page, section3Record } from "../con
 import { isoTermDate, isoTermDateOnPage } from "./term-dates.ts";
 import { inventoryRecordEvidence } from "../control-plane/workers/record-evidence.ts";
 import { compareCandidateWithSource } from "../control-plane/workers/record-verification.ts";
+import { recordPublishedPageDoor } from "./worker-page-doors.ts";
 
 export interface WorkerPublicationCapture {
   readonly evidence: WorkerEvidence;
@@ -448,6 +449,7 @@ ${readingId}`, outcome);
     await input.repos.workItems.compareAndSet(id, current.revision, { ...current.value, publicationOutcome: outcome }, input.now);
     report.push({ workItemId: id, outcome });
     const pages = captures.length ? captures : [reading?.capture ?? heldDirectory?.checked.primary].filter((c): c is WorkerPublicationCapture => Boolean(c));
+    if (outcome.code !== "VERIFIED_RESULT_REUSED") await recordPublishedPageDoor({ repos: input.repos, page: pages[0], recordClass: plan.contract.recordClass, bodyId, published: wentLive, now: input.now });
     if (outcome.code !== "VERIFIED_RESULT_REUSED") learned.push(validatorObservation({ plan, workItemId: id, page: pages[0], captures: pages, published: wentLive, outcome }));
   }
   await writeValidatorLessons(input.repos, learned, input.now);

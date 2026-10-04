@@ -482,5 +482,45 @@
     "gates": "pass",
     "evidence": "pnpm gates on 4b5102044 (CI env): 12/12 PASS; 9020 tests pass, 0 fail, 11 skipped.",
     "at": "2026-10-04T09:06:50Z"
+  },
+  {
+    "lane": "measures",
+    "steps": [
+      "BR-21",
+      "BR-23",
+      "SC-13",
+      "SC-16"
+    ],
+    "ready_sha": "940b11c5854b9467d23cffcd7b1979a98c51d0e5",
+    "river_sha": "d69e9760e3fa2faca1eaa0e84671868e7ff0579d",
+    "tested_sha": "d69e9760e3fa2faca1eaa0e84671868e7ff0579d",
+    "gates": "pass",
+    "evidence": "pnpm gates on d69e9760e (CI env): 12/12 PASS; 9063 tests pass, 0 fail, 11 skipped.",
+    "at": "2026-10-04T09:34:14Z"
+  },
+  {
+    "lane": "registry",
+    "steps": [
+      "DB-17",
+      "DB-23"
+    ],
+    "ready_sha": "8cd6e7034d885d5b6b5be02449ff3c6f6d80048a",
+    "river_sha": "d69e9760e3fa2faca1eaa0e84671868e7ff0579d",
+    "tested_sha": "d69e9760e3fa2faca1eaa0e84671868e7ff0579d",
+    "gates": "pass",
+    "evidence": "pnpm gates on d69e9760e (CI env): 12/12 PASS; 9063 tests pass, 0 fail, 11 skipped.",
+    "at": "2026-10-04T09:34:14Z"
+  },
+  {
+    "lane": "hunters",
+    "steps": [
+      "CH-03"
+    ],
+    "ready_sha": "643a3a3732038368d45594a279a02b1a0a8627ca",
+    "river_sha": "d69e9760e3fa2faca1eaa0e84671868e7ff0579d",
+    "tested_sha": "d69e9760e3fa2faca1eaa0e84671868e7ff0579d",
+    "gates": "pass",
+    "evidence": "pnpm gates on d69e9760e (CI env): 12/12 PASS; 9063 tests pass, 0 fail, 11 skipped.",
+    "at": "2026-10-04T09:34:14Z"
   }
 ]

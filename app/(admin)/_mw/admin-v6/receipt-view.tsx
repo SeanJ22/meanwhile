@@ -30,7 +30,7 @@ export function ReceiptCard(props: { readonly receipt: UiReceipt; readonly compa
   return (
     <article className={s.row} aria-label={`${r.label}: ${r.statusWords}`}>
       <div className={s.spread}>
-        <strong style={{ fontSize: 13 }}>{r.label} · {r.targetName}</strong>
+        <strong style={{ fontSize: 13 }}>{r.label}{r.targetName ? ` · ${r.targetName}` : ""}</strong>
         <ReceiptChip receipt={r} />
       </div>
       <span className={s.meta}>{r.level === "global" ? "Whole system" : "Local"} · {r.scopeName} · sent {mst(r.sentAt)}{r.simulated ? " · sample receipt" : ""}</span>

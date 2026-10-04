@@ -1,6 +1,6 @@
-/** Exact, partial Admin v6 history. This section is not announced in live pulse. */
+/** Admin v6 order history (BR-01): one bounded newest-first page of every order, mapped to its kind at read time. */
 import { createHash } from "node:crypto";
-import type { ActionReceipt } from "../gateway/contract.ts";
+import { ADMIN_RECEIPT_LOG_KEY, type ActionReceipt } from "../gateway/contract.ts";
 import { gatewayActionKind } from "../../../app/(admin)/_mw/admin-v6/actions.ts";
 import type { ActionKind } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import { confirmReceipt, type Confirmation } from "../gateway/confirmation.ts";
@@ -46,6 +46,18 @@ function statusOf(receipt: ActionReceipt): V6ReceiptStatus {
   if (receipt.outcome === "IN_PROGRESS") return "running";
   return eventTime(receipt.completedAt) ? "done" : "unknown";
 }
+/** What an order acted on, in words. A place is named by the page from its own place list. */
+function targetWords(kind: ActionKind): string {
+  if (kind.startsWith("global-runner-")) return "the standing runner";
+  if (kind === "global-ceiling") return "the daily budget";
+  if (kind.startsWith("global-")) return "the whole system";
+  if (kind.startsWith("setting-")) return "a setting";
+  if (kind === "send-agents" || kind === "cancel-send") return "where the fleet works";
+  if (kind.startsWith("hunt-")) return "a hunt";
+  if (kind.startsWith("target-")) return "a place's target";
+  if (kind.startsWith("data-switch-")) return "who can see a number";
+  return "";
+}
 function mapped(receipt: ActionReceipt, scope: string, confirmation: Confirmation | null = null): V6HistoryReceipt | null {
   const target = receipt.requestedSubject || receipt.subject;
   const kind = gatewayActionKind(receipt.type, { subject: target, says: receipt.says });
@@ -60,8 +72,8 @@ function mapped(receipt: ActionReceipt, scope: string, confirmation: Confirmatio
   return {
     key: receipt.idempotencyKey,
     kind,
-    target: kind.startsWith("global-runner-") ? "runner" : target, targetName: kind.startsWith("global-runner-") ? "the standing runner" : receipt.label, label: receipt.label,
-    scopeKey: place, scopeName: place === "us" ? "United States" : place === "unknown" ? "Place not recorded" : "Selected place", level: place === "us" ? "global" : "local", status,
+    target: kind.startsWith("global-runner-") ? "runner" : target, targetName: targetWords(kind), label: receipt.label,
+    scopeKey: place, scopeName: place === "us" ? "United States" : place === "unknown" ? "Place not recorded" : "—", level: place === "us" ? "global" : "local", status,
     statusWords: status === "queued" ? "Request saved; runner response unknown" :
       status === "refused" ? "Request refused" : confirmed ? "Done" : status === "done" ? "Gateway action recorded" :
       status === "running" ? "Gateway action in progress" : "Outcome unknown",
@@ -132,8 +144,13 @@ function readCursor(query: V6HistoryQuery): ReadCursor | null {
 export async function readV6History(repos: ControlPlaneRepositories, query: V6HistoryQuery): Promise<V6HistorySection> {
   const cursor = readCursor(query);
   const limit = Number.isInteger(query.limit) ? Math.max(1, Math.min(ADMIN_V6_HISTORY_MAX_LIMIT, query.limit!)) : ADMIN_V6_HISTORY_MAX_LIMIT;
-  if (!repos.adminActionHistoryPage) throw new Error("HISTORY_READ_UNAVAILABLE");
-  const rows = await repos.adminActionHistoryPage({ scope: query.scope, limit: limit + 1, beforePosition: cursor?.beforePosition });
+  // Postgres and memory stores read one indexed page; a store without one (the local file store) pages its log in place.
+  const page = repos.adminActionHistoryPage ?? (async (q: { scope: string; limit: number; beforePosition?: number | null }) =>
+    (await repos.adminReceipts.read(ADMIN_RECEIPT_LOG_KEY)).map((receipt, position) => ({ receipt, position }))
+      .filter((row) => (q.scope === "us" || row.receipt.subject === q.scope || row.receipt.requestedSubject === q.scope) &&
+        (q.beforePosition == null || row.position < q.beforePosition))
+      .reverse().slice(0, q.limit));
+  const rows = await page({ scope: query.scope, limit: limit + 1, beforePosition: cursor?.beforePosition });
   const window = rows.slice(0, limit);
   const confirmations = new Map<string, Confirmation>();
   await Promise.all(window.map(async row => { confirmations.set(row.receipt.receiptId, await confirmReceipt(repos, row.receipt)); }));

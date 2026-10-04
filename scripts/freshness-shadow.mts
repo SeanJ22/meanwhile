@@ -148,7 +148,8 @@ import {
 } from "../lib/control-plane/promotion/campaign-site-cycle.ts";
 import { runCandidatePublicationCycle,
   type CandidatePublicationCycleReport } from "../lib/control-plane/promotion/campaign-publication-cycle.ts";
-import { indexVault, readHeldBytes } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { includeVaultCapture, indexVault, readHeldBytes, type HeldVaultArtifact, type VaultIndex } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { VAULT_READ_TIMEOUT_MS } from "../lib/control-plane/evidence/netlify-store.ts";
 import {
   MEETINGS_DISCOVERY_NAMESPACE,
   meetingsDiscoveryObligationId,
@@ -3105,6 +3106,9 @@ let candidatePublications: CandidatePublicationCycleReport | null = null;
 let candidatePublicationsState = "not run: no original-scope candidacy admission";
 const MEETINGS_DISCOVERY_ENABLED = process.env.WTP_MEETINGS_DISCOVERY !== "off";
 let meetingsDiscoveryByOutcome: Record<string, number> = {};
+let roundVaultIndex: VaultIndex | undefined;
+let roundVaultRead: Promise<VaultIndex> | undefined;
+const readRoundVault = (signal?: AbortSignal) => roundVaultRead ??= indexVault(join(ROOT, ...VAULT_DIR), undefined, { signal }).then(index => (roundVaultIndex=index,index));
 try {
 
 /*
@@ -3165,15 +3169,22 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
     if (directoryRegistry && directoryRegistry.kind !== "PROMOTED") throw new Error("Published body directory cannot be read for meeting discovery; its source work remains owed.");
     const meetingHints = directoryRegistry?.kind === "PROMOTED" ? directoryMeetingHints(directoryItems, directoryRegistry.value, ROUTE_HINTS) : ROUTE_HINTS;
     let costSeq = 0;
-    let officialPagesRead: Promise<{canonicalUrl:string;text:string}[]> | undefined;
+    const readOfficialText = async (held: HeldVaultArtifact) => {
+      const signal = AbortSignal.timeout(Math.max(1, Math.min(VAULT_READ_TIMEOUT_MS, discoveryDeadlineMs - Date.now())));
+      try { return new TextDecoder().decode(await readHeldBytes(held, signal)); }
+      catch (error) {
+        if (Date.now() < discoveryDeadlineMs) runtimeConditions.push(`Official-source linking evidence unreadable: ${held.id}`);
+        throw error;
+      }
+    };
+    let officialPagesRead: Promise<{canonicalUrl:string;readText:()=>Promise<string>}[]> | undefined;
     const readOfficialPages = () => officialPagesRead ??= (async () => {
-      const index = await indexVault(join(ROOT, ...VAULT_DIR));
-      const pages: {canonicalUrl:string;text:string}[] = [];
+      const index = await readRoundVault(AbortSignal.timeout(Math.max(1, discoveryDeadlineMs - Date.now())));
+      const pages: {canonicalUrl:string;readText:()=>Promise<string>}[] = [];
       for (const held of index.byId.values()) {
         if (!held.canonicalUrl || held.tier === "RESTRICTED_RAW" || held.retentionPolicy === "DIAGNOSTIC" ||
           held.httpStatus === null || held.httpStatus < 200 || held.httpStatus >= 300 || !/html/i.test(held.contentType)) continue;
-        try { pages.push({canonicalUrl:held.canonicalUrl,text:new TextDecoder().decode(await readHeldBytes(held))}); }
-        catch { runtimeConditions.push(`Official-source linking evidence unreadable: ${held.id}`); }
+        pages.push({ canonicalUrl: held.canonicalUrl, readText: () => readOfficialText(held) });
       }
       return pages;
     })();
@@ -3203,8 +3214,17 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
           };
         },
         spaceOut: spacer,
-        vault: vault.put,
+        vault: async (artifact, bytes) => {
+          const stored=await vault.put(artifact,bytes);
+          if(stored.stored && roundVaultIndex) includeVaultCapture(roundVaultIndex,artifact,stored.where,join(ROOT,...VAULT_DIR));
+          return stored;
+        },
         readOfficialPages,
+        readOfficialPageTextFor: async artifact => {
+          const held = (await readRoundVault()).byHash.get(artifact.contentHash.slice("sha256-".length));
+          if (!held) throw new Error(`Official-source linking capture is not held: ${artifact.id}`);
+          return readOfficialText(held);
+        },
         now: nowIso,
         budget: {
           spent: () => Date.now() >= discoveryDeadlineMs,
@@ -3272,7 +3292,7 @@ if (dry || canary || ONLY !== null || IDS !== null) {
       const holdings = candidateEnrichmentHoldings();
       if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
       const { subjects, linked } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
-      const vaultIndex = await indexVault(join(ROOT, ...VAULT_DIR));
+      const vaultIndex = await readRoundVault();
       /* An unreadable manifest holds only the Marginalia answers back a cycle; the held Scout findings still go through. */
       let stagingManifest: ReturnType<typeof readStagingManifest> = null;
       try {
@@ -3331,7 +3351,7 @@ if (dry || canary || ONLY !== null || IDS !== null || intents.runnerPause.paused
 } else {
   const leavePublications = pending.enter("candidate-publications");
   try {
-    const vaultRead = await indexVault(join(ROOT, ...VAULT_DIR));
+    const vaultRead = await readRoundVault();
     // Once an ACQUIRER begins committing a captured page or a typed blocked
     // disposition, let that repository operation settle. Racing a writer with
     // a wall timer would leave an apparently stopped pass writing in the back.

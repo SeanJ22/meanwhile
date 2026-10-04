@@ -89,9 +89,11 @@ async function plane(t: { after: (fn: () => void) => void }) {
 async function options(repos: ReturnType<typeof createMemoryRepositories>, vaultRoot: string, now: string, gate: Pick<ActivationGateReading, "promotionEnabled" | "openRecordClasses" | "openFields"> = readActivationGate("."), pages = served()) {
   let clock = Date.parse(now);
   const runtime = servedRuntime(pages, now);
-  const recorder = campaignSiteReadRecorder({ repos, vaultRoot, methodVersion: 1, now: () => new Date(clock += 1_000).toISOString(), heldVault: await indexVault(vaultRoot) });
+  const heldVault = await indexVault(vaultRoot);
+  const recorder = campaignSiteReadRecorder({ repos, vaultRoot, methodVersion: 1, now: () => new Date(clock += 1_000).toISOString(), heldVault });
   return {
     runtime,
+    heldVault,
     options: {
       subjects: committedSubjects(), marginalia: [lily], gate, now,
       readLead: async (lead: { url: string; origin: "SCOUT_FINDING" | "MARGINALIA_POINTER" | "RECORDED_SITE"; ref: string }) => {
@@ -114,6 +116,17 @@ test("a held paid-research finding reaches APPROVED with measured checks, clean 
   const { repos, vaultRoot, duarte, kapner } = await plane(t);
   const run = await options(repos, vaultRoot, "2026-09-25T21:00:00.000Z");
   const report = await projectCampaignSiteChains(repos, run.options);
+  const laterRecorder = campaignSiteReadRecorder({ repos, vaultRoot, methodVersion: 1,
+    now: () => "2026-09-25T22:00:00.000Z", heldVault: run.heldVault });
+  const rescannedRecorder = campaignSiteReadRecorder({ repos, vaultRoot, methodVersion: 1,
+    now: () => "2026-09-25T22:00:00.000Z", heldVault: await indexVault(vaultRoot) });
+  const newRecords = (await repos.artifacts.readAll())
+    .filter(artifact => run.heldVault.byId.has(artifact.artifactId));
+  assert.ok(newRecords.length > 0, "this round's captures are visible without rescanning");
+  for (const artifact of newRecords) {
+    assert.deepEqual(await laterRecorder.heldPage(artifact), await rescannedRecorder.heldPage(artifact),
+      "a subsequent publication reader sees the original saved page through the shared index");
+  }
   const states = new Map((await readPipelineStates(repos)).map((s) => [s.itemId, s]));
 
   const d = states.get(duarte.itemId)!;

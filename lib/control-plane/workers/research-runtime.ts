@@ -14,7 +14,6 @@ import type { DeclaredExecutor } from "../scheduler/dispatch.ts";
 import { RESEARCH_BOUNDS } from "../scheduler/research-policy.ts";
 import type { ScheduledObligation } from "../scheduler/obligation.ts";
 import { runAcquirer } from "./acquirer.ts";
-import { runDetective } from "./detective.ts";
 import { runEngineeringWorker } from "./engineering.ts";
 import { researchLearningEntries } from "./field-manual-learnings.ts";
 import { researchVaultResolver } from "./vault-object.ts";
@@ -71,7 +70,7 @@ export function scheduledWorkerObligation(task: RouteTask): ScheduledObligation 
 
 export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRuntimeTools, task: RouteTask, holder: string, root = process.cwd()): DeclaredExecutor {
   const spec = task.workerTask;
-  if (!spec || !["ACQUIRER","DETECTIVE","ENGINEERING"].includes(spec.role)) throw new Error("RESEARCH_ROLE_SPEC_MISSING");
+  if (!spec || !["ACQUIRER","ENGINEERING"].includes(spec.role)) throw new Error("RESEARCH_ROLE_SPEC_MISSING");
   const worker: WorkerRef = {role:spec.role,provider:"we-the-people",version:RESEARCH_WORKER_VERSION,instance:holder};
   return {lane:"DETERMINISTIC",workerFor:()=>worker,run:async ({attemptId,workItemId,routeTaskId,bound}) => {
     const started = performance.now();
@@ -101,10 +100,6 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
           {toolkit,sourceReliability:await readSourceReliability(tools.repos),readVault:researchVaultResolver(tools.repos,tools.store,item.project),
             authorizeInheritedHeld: inherited => authorizeInheritedHeldArtifact(tools.repos,inherited,tools.siblingHeldRootFor)});
         requestCount = toolkit.requestCount; bytesFetched = toolkit.bytesFetched;
-      } else if (spec.role === "DETECTIVE") {
-        if (!spec.detective || spec.detective.question.subjectId !== item.subject) throw new Error("DETECTIVE_TASK_BINDING_REFUSED");
-        result = runDetective({...spec.detective,attemptId,worker,project:item.project,grant,now:tools.now(),
-          evidence:await Promise.all(spec.detective.artifactIds.map(async id => evidenceProjection(await runtime.readEvidence(id))))});
       } else {
         if (!spec.engineering) throw new Error("ENGINEERING_TASK_SPEC_MISSING");
         const validation = await readCompletedWorkerResult(tools.repos,spec.engineering.validation.resultId);

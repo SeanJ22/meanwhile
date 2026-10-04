@@ -433,7 +433,7 @@ export async function advanceHeldWorkerFleet(root: string, runtime: FleetRuntime
   for (const artifact of [...await runtime.repos.artifacts.readAll()].sort((a, b) => a.recordedAt.localeCompare(b.recordedAt))) {
     const item = items.get(artifact.workItemId);
     if (!item) continue;
-    if (item.autonomousPlan?.contract.schemaVersion === 2 && (legacyOnly || item.autonomousPlan.detective.length > 0)) continue;
+    if (item.autonomousPlan?.contract.schemaVersion === 2 && legacyOnly) continue;
     const acquired = successfulAcquisitions.get(`${item.id}\u0000${artifact.artifactId}`);
     const acquisitionMatches = acquired && acquired.contentHash === artifact.contentHash && acquired.canonicalUrl === artifact.canonicalUrl &&
       acquired.byteCount === artifact.byteLength && acquired.acquisitionAttemptId === artifact.attemptId;

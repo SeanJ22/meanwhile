@@ -30,6 +30,7 @@ import {
   SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   ROUTINE_SOURCE_TASKS,
   ROUTINE_SUPERVISOR_STARTED_AT_ENV,
+  routineTaskFromContract,
   readRoutineTaskClocks,
   routineFailureDomainFrontier,
   routineFailureDomainRotationSeed,
@@ -51,6 +52,7 @@ import {
   MEETING_PARTITION_CONTRACTS,
   observableRoutineContracts,
 } from "../lib/civic-data/meeting-partitions.ts";
+import { doorReadModeFromEnv, refreshDoorsForPass } from "../lib/doors/install.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { attestPromotedVersion } from "../lib/civic-data/read-model.ts";
 import { ATTESTED_PROMOTIONS_ENV, serializeAttestedPromotions } from "../lib/civic-data/attested-promotion.ts";
@@ -148,7 +150,24 @@ const ROOT = process.cwd();
 // reads the same held copies as the later source and Reader children.
 const readCacheHost = await startCivicReadCacheHost();
 const FORCE = process.argv.includes("--force");
-const STANDING_SOURCE_TASKS = await withNationalPlaceTasks([...ROUTINE_SOURCE_TASKS, ...AUTOMATIC_REFRESH_TASKS], process.argv.slice(2));
+// DB-13: with WTP_DOORS_READ=registry the meeting work is built from the door
+// registry on every pass; otherwise (the default) the code's list is used as before.
+const CODE_MEETING_PARTITION_IDS = new Set(MEETING_PARTITION_CONTRACTS.map((contract) => contract.id));
+if (doorReadModeFromEnv() === "registry" && controlPlaneUrlFromEnv() !== null) {
+  try {
+    const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, new Date().toISOString(), { skipBootstrap: true });
+    const doorPass = await refreshDoorsForPass(doorRepos.doors);
+    console.log(`RCD_TASK routine-civic-data-runner: meeting doors read from ${doorPass.reading} (${doorPass.partitions?.partitions ?? doorPass.rows} partitions)` +
+      `${doorPass.reason ?? doorPass.partitions?.reason ? ` — ${doorPass.reason ?? doorPass.partitions?.reason}` : ""}`);
+  } catch (error) {
+    console.warn(`RCD_TASK routine-civic-data-runner: the door registry could not be read, the code's meeting list stays in use — ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+const STANDING_SOURCE_TASKS = await withNationalPlaceTasks([
+  ...ROUTINE_SOURCE_TASKS.filter((task) => !CODE_MEETING_PARTITION_IDS.has(task.id)),
+  ...MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract),
+  ...AUTOMATIC_REFRESH_TASKS,
+], process.argv.slice(2));
 const TASK_SELECTION = routineTaskSelection(process.argv.slice(2), [...STANDING_SOURCE_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id }))]);
 const ONLY = TASK_SELECTION.ok ? TASK_SELECTION.only : null;
 const inheritedStartedAt = process.env[ROUTINE_SUPERVISOR_STARTED_AT_ENV];

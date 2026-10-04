@@ -26,6 +26,8 @@
  * is, not a zero. A zero is a measurement; a missing file is not.
  */
 
+import { collectPlaceHistory } from "../lib/control-plane/admin-view/place-history-collect.ts";
+import { readPlaceOwed } from "../lib/control-plane/admin-view/place-owed-read.ts";
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
@@ -769,7 +771,11 @@ async function main(): Promise<void> {
       .map(w => [`${w.itemId}:${w.approvalId}`, w]));
     servedReader = { checkedAt: NOW_ISO, witnesses: [...joined.values()], errors: [...(servedReader?.errors ?? []), ...workerReadback.errors, ...manualReadback.errors] };
   }
-  const snapshot: OwnerSnapshot = { ...buildSnapshot(reads, maptiler, servedReader), providerBilling, billingAttribution };
+  // Daily per-place score points, for places with a saved scope only. A failure keeps the earlier points and never blocks the snapshot.
+  const placeHistory = DRY_RUN ? existing?.value.placeHistory
+    : await collectPlaceHistory({ scopes: reads?.billingScopes ?? null, previous: existing?.value.placeHistory, now: NOW_ISO, read: key => readPlaceOwed(key) })
+      .catch(() => existing?.value.placeHistory);
+  const snapshot: OwnerSnapshot = { ...buildSnapshot(reads, maptiler, servedReader), providerBilling, billingAttribution, ...(placeHistory ? { placeHistory } : {}) };
 
   /* The cheapest place to catch an aggregate-only violation is before it is durable. */
   assertAggregateOnly(snapshot, "owner snapshot");

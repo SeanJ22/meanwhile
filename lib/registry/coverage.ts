@@ -27,6 +27,7 @@ import { WIRED_STATUSES } from "./coverage-client.ts";
 import { indexAudits } from "./audit.ts";
 import { COVERAGE_AUDIT_FILE } from "./coverage-audit.ts";
 import type { PublicBodyAttempt } from "./body-attempt-read.ts";
+import type { BodyFamilyAttempts } from "./attempt-families.ts";
 import type { Meeting } from "../sources/types.ts";
 
 /** A dated cited source hunt is evidence; a registry status alone is not.
@@ -182,8 +183,13 @@ export interface CoveredBody {
    * False means no such receipt is held here, not that nobody has searched.
    */
   lookedAt: boolean;
-  /** Latest exact-body publisher attempt, when the bounded public projection answered. This does not prove an exhaustive source search. */
-  publicationAttempt?: PublicBodyAttempt | null;
+  /**
+   * This body's publisher attempts when the bounded public projection answered, kept within one kind of fact:
+   * a family shows its own latest attempt, last good check and what is published now, and a family with no
+   * attempt is absent. An attempt for one kind of fact is never shown as another's. This does not prove an
+   * exhaustive source search.
+   */
+  publicationAttempts?: BodyFamilyAttempts<PublicBodyAttempt>;
   tier: Tier;
   /**
    * **RULING 71.** This body's territory covers only PART of the zip the reader

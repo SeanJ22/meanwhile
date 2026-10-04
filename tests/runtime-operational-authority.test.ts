@@ -266,10 +266,10 @@ test("the runner opens clocks without the retired method-adoption gate and invok
   assert.doesNotMatch(runner, /scripts\/scout-candidates-rederive\.mts/);
 
   const freshness = readFileSync(join(ROOT, "scripts", "freshness-shadow.mts"), "utf8");
-  assert.ok(
-    freshness.indexOf("readMethodCandidateAuthorityStatus(repos)") < freshness.indexOf("proposeScoutCandidates({"),
-    "a direct Postgres research cycle can write a candidate before checking adoption",
-  );
+  assert.doesNotMatch(freshness, /METHOD_CANDIDATE_AUTHORITY_NOT_ADOPTED|method-candidate-authority/,
+    "the research cycle must not halt on a method-candidate adoption receipt");
+  assert.match(freshness, /candidateStoreUnreadable === null && \(\(result\.refusal/,
+    "an unreadable candidate store skips proposals for the round instead of stopping it");
 
   const readback = readFileSync(join(ROOT, "scripts", "method-candidate.mts"), "utf8");
   assert.match(readback, /repos\.methodCandidates\.read\(METHOD_CANDIDATE_STORE_ID\)/);

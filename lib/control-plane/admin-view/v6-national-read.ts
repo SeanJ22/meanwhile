@@ -18,7 +18,7 @@
  *   hunts        saved lifetime hunts filed under the row (state), or whose ZIP lies inside it
  *   ZIPs worked  ZIPs with a saved ZIP hunt that has spent money or recorded any charge
  *   ZIPs total   ZIPs in the district (the published Census lookup); in a state, ZIPs in the national ZIP index
- *   place score  the capture percentage of everything the place is owed (place-scorecard.ts)
+ *   completeness  the share of what the place owes now, from its core items, that we hold (place-measures.ts)
  *   stuck        stuck rows of the published work index, each counted once
  * ```
  *
@@ -38,7 +38,7 @@ import type { ExpansionScopeDecision } from "../expansion/scopes.ts";
 import type { BillingAttribution } from "../provider-billing-attribution.ts";
 import { US_STATES } from "../readiness/catalog.ts";
 import { placeKeyOfRow, stateOfRow, type StuckRowLike } from "./blocker-causes.ts";
-import { scorePlace, type OwedRowLike } from "./place-scorecard.ts";
+import { placePercent } from "../../coverage/place-measures.ts";
 import { exactHuntAccounting, sectionRevision, validateV6Query, type AdminV6SectionEnvelope, type V6PlaceScope, type V6Refusal } from "./v6-hunts-read.ts";
 import { districtAlways, stateDivisionId, unionDivisions, type DistrictInfo, type DistrictsRead, type NationalDivision } from "./v6-national-geography.ts";
 
@@ -195,6 +195,8 @@ export function nationalRows(inputs: NationalInputs): readonly AdminV6NationalRo
 export interface ScoreTarget {
   readonly placeKey: string;
   readonly divisions: readonly NationalDivision[];
+  /** The ZIPs in the target, so its ZIP-scope items are owed once per ZIP. Absent when they are not known. */
+  readonly zips?: readonly string[];
 }
 
 export interface ScoreDeps {
@@ -215,8 +217,8 @@ export async function scoreTargets(targets: readonly ScoreTarget[], deps: ScoreD
   const now = deps.now();
   const held = await deps.readHeld([...new Set(targets.flatMap((t) => t.divisions.map((d) => d.id)))], now);
   for (const target of targets) {
-    const rows = buildPlaceOwedList({ divisions: target.divisions, subjects: held.subjects, held: held.held, now });
-    out.set(target.placeKey, scorePlace(rows as readonly OwedRowLike[], {}, []).overall.percent);
+    const rows = buildPlaceOwedList({ divisions: target.divisions, subjects: held.subjects, held: held.held, now, ...(target.zips ? { zips: target.zips } : {}) });
+    out.set(target.placeKey, placePercent(rows));
     await tick();
   }
   return out;
@@ -300,12 +302,12 @@ async function targetsOf(scope: V6PlaceScope, districts: readonly DistrictInfo[]
   if (districts === null) return [];
   if (scope.kind === "state") {
     const ids = await deps.zipDivisions(districts.flatMap((d) => d.zips));
-    return districts.map((d) => ({ placeKey: d.placeKey, divisions: unionDivisions(d.zips.map((z) => ids.get(z) ?? []), districtAlways(d)) }));
+    return districts.map((d) => ({ placeKey: d.placeKey, zips: d.zips, divisions: unionDivisions(d.zips.map((z) => ids.get(z) ?? []), districtAlways(d)) }));
   }
   const district = districts.find((d) => d.geoid === scope.geoid && d.state === scope.state);
   if (district === undefined) return [];
   const ids = await deps.zipDivisions(district.zips);
-  return district.zips.map((z) => ({ placeKey: `geo:${district.state}.zcta.${z}`, divisions: unionDivisions([ids.get(z) ?? []], districtAlways(district)) }));
+  return district.zips.map((z) => ({ placeKey: `geo:${district.state}.zcta.${z}`, zips: [z], divisions: unionDivisions([ids.get(z) ?? []], districtAlways(district)) }));
 }
 
 /**

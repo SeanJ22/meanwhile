@@ -2,7 +2,7 @@ import type { CostEntry } from "./cost.ts";
 import type { SpendHold } from "./budget.ts";
 import type { ExpansionScopeDecision } from "./expansion/scopes.ts";
 import type { ProviderReading, ReportingProvider } from "./provider-billing.ts";
-import { ORIGINAL_LIFETIME_HUNT } from "./scheduler/hunt-continuation.ts";
+import { isFundedHunt } from "./scheduler/hunt-continuation.ts";
 
 export interface BillingAttribution {
   readonly readAt: string;
@@ -21,9 +21,6 @@ export function providerBillingAttribution(input: {
   const modelIds = new Set(input.attempts.filter(a => a.worker.provider === "anthropic" || a.worker.version.startsWith("claude-")).map(a => a.id));
   const providerOf = (c: CostEntry): ReportingProvider | null => c.source === "api.exa.ai" ? "exa" : c.source === "api.search.brave.com" ? "brave" : modelIds.has(c.attemptId) || c.byModel?.some(m => m.model.startsWith("claude-")) || c.source === "api.anthropic.com" ? "anthropic-api" : null;
   const scopes = input.scopes?.filter(s => s.budgetStartedAt) ?? [];
-  const exactOriginal = (s:ExpansionScopeDecision) => s.key===ORIGINAL_LIFETIME_HUNT.key &&
-    s.receiptId===ORIGINAL_LIFETIME_HUNT.receiptId && s.budgetStartedAt===ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
-    s.budgetUsd===ORIGINAL_LIFETIME_HUNT.budgetUsd;
   // One actual charge appears in at most one hunt subtotal. Its complete list
   // of beneficiary receipts remains on the ledger; this stable owner is only
   // a reporting allocation, never a waiver of another overlapping cap.
@@ -31,10 +28,10 @@ export function providerBillingAttribution(input: {
     const eligible=scopes.filter(s=>Date.parse(c.recordedAt)>=Date.parse(s.budgetStartedAt!));
     const exact=eligible.filter(s=>c.assignmentRefs?.some(mark=>mark.key===s.key&&mark.ref===s.receiptId));
     if (c.assignmentRefs !== undefined) return exact;
-    // Rows written before exact refs existed still consume the original $50
-    // lifetime hunt. Its immutable receipt and saved member subjects anchor
-    // the legacy join; a later new hunt gets no such inferred allowance.
-    const legacy=eligible.filter(s=>exactOriginal(s) && (c.assignmentKeys?.includes(s.key)===true ||
+    // Rows written before exact refs existed still consume a funded hunt that
+    // was already running. Its immutable receipt and saved member subjects anchor
+    // the legacy join, and only a single match is attributed.
+    const legacy=eligible.filter(s=>isFundedHunt(s) && (c.assignmentKeys?.includes(s.key)===true ||
       (c.jurisdiction!==null && input.scopeMembers?.get(s.key)?.has(c.jurisdiction)===true)));
     return legacy.length===1?legacy:[];
   };

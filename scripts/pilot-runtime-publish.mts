@@ -6,7 +6,7 @@ import type { Sql } from "../lib/control-plane/repository/pg-store.ts";
 // publisher's owner/readiness snapshots and MapTiler digests are outputs, and
 // the runner's liveness beat is read directly by Admin, not by this join.
 const AGGREGATES = ["work_items", "route_tasks", "attempts", "leases",
-  "obligations", "occurrences", "debts", "admin_config", "ask_gap_observations"];
+  "obligations", "occurrences", "debts", "admin_config", "ask_gap_observations", "doors"];
 const LOGS = ["artifacts", "costs", "scout_results", "worker_results", "promotion_pipeline"];
 
 export const CONSOLE_INPUT_SQL = `SELECT md5(jsonb_build_array(

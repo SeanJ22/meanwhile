@@ -124,6 +124,8 @@ jobs:
           CI_EVENT_NAME: ${{ github.event_name }}
           CI_TIER: ${{ steps.tier.outputs.expensive }}
           CI_TEST_PLAN: ${{ steps.tests.outputs.plan }}
+          CI_TEST_SCOPE: ${{ steps.tests.outputs.scope }}
+          CI_DEPLOY_BUILD: ${{ steps.deploy.outputs.build }}
         run: node scripts/ci-selection-summary.mjs
   verify:
     name: verify (lint · types · governance)

@@ -14,8 +14,15 @@ export interface ContinuingHunt {
   readonly dispatched: number;
 }
 
-/** Historical receipt identity for consumers still being migrated by their owners.
- * Execution and continuation select current funded scopes, never this constant. */
+/** A funded Send is a hunt with its own lifetime dollar allowance. Every funded Send gets the same rules:
+ * it continues between ordinary cycles, runs through any scheduled blackout, and its allowance replaces
+ * older rolling limits on the work it covers. */
+export function isFundedHunt(scope: { readonly budgetStartedAt?: string | null; readonly budgetUsd: number }): boolean {
+  return Boolean(scope.budgetStartedAt) && scope.budgetUsd > 0;
+}
+
+/** Historical receipt identity for consumers still being migrated by their owners (the Cochise-only source
+ * rules in manual-producer-invocation.ts). Execution and continuation select current funded scopes, never this constant. */
 export const ORIGINAL_LIFETIME_HUNT = {
   key: "zcta:2020/85635", receiptId: "expansion.scope.set:scope:85635:1yfuc2c:pgfomast",
   budgetStartedAt: "2026-09-27T22:17:50.236Z", budgetUsd: 50,
@@ -36,7 +43,7 @@ function lifetimeHuntContinuation(
   stalledCycles: number,
 ): LifetimeHuntContinuation | null {
   if (expansion === null || assignments === null || !Number.isSafeInteger(stalledCycles) || stalledCycles < 0) return null;
-  const scope = scopes.find(row => Boolean(row.budgetStartedAt) && row.budgetUsd > 0);
+  const scope = scopes.find(isFundedHunt);
   if (!scope) return null;
   const read = expansion.scopes.find(row => row.key === scope.key);
   const assignment = assignments.assignments.find(row => row.key === scope.key && row.ref === scope.receiptId);

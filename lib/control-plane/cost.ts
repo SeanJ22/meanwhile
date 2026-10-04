@@ -249,6 +249,23 @@ export function costEntryModelRequestBound(entry: CostEntry): number | null {
   return Number.isFinite(usd) ? usd : null;
 }
 
+/** CH-02: what an unpriced model charge is counted at when nothing tighter
+ * bounds it. The row's own token counts (or, where it recorded none, the dearest
+ * model's context and output limits for every request it made, at least one),
+ * all at the dearest listed price. Never a measured charge. */
+export function costEntryWorstCaseUsd(entry: CostEntry): number {
+  const requests = boundedTokenCount(entry.cost.requestCount) && entry.cost.requestCount > 0 ? entry.cost.requestCount : 1;
+  const summed = [entry.cost.uncachedInputTokens, entry.cost.cacheReadInputTokens, entry.cost.cacheCreationInputTokens];
+  const input = boundedTokenCount(entry.cost.inputTokens) ? entry.cost.inputTokens
+    : summed.every(boundedTokenCount) ? summed.reduce<number>((n, part) => n + part!, 0)
+      : Math.max(...MODEL_TIERS.map(tier => MODELS[tier].contextWindowTokens)) * requests;
+  const output = boundedTokenCount(entry.cost.outputTokens) ? entry.cost.outputTokens
+    : Math.max(...MODEL_TIERS.map(tier => MODELS[tier].maxOutputTokens)) * requests;
+  const maxInputRate = Math.max(...MODEL_TIERS.map(tier => MODELS[tier].inputUsdPerMillion));
+  const maxOutputRate = Math.max(...MODEL_TIERS.map(tier => MODELS[tier].outputUsdPerMillion));
+  return (input * maxInputRate * CACHE_RATE_MULTIPLIERS.cacheCreation1h + output * maxOutputRate) / 1_000_000;
+}
+
 /** One model's part of a charge (`CostEntry.byModel`): the billed quantities of the requests sent to it. */
 export interface CostModelShare {
   readonly model: string;

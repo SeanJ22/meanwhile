@@ -17,6 +17,10 @@
  * PURE.
  */
 
+import type { RowStatuses } from "../../coverage/place-statuses.ts";
+import { measuresByFamily, notCapturedOf, placeMeasures, type NotCaptured, type PlaceMeasures } from "../../coverage/place-measures.ts";
+import { isCoreChecklistItem, isSummaryChecklistItem, percentOf } from "../../coverage/place-percent.ts";
+
 export type OwedState = "published" | "held" | "unpublished" | "stale" | "missing";
 
 /** The structural part of a place-owed row this module reads. */
@@ -27,6 +31,8 @@ export interface OwedRowLike {
   readonly requirement: string;
   readonly subject: { readonly id: string; readonly kind: string; readonly label: string };
   readonly held: readonly { readonly sourceUrl: string; readonly checkedAt: string; readonly state: string }[];
+  /** The six statuses, when the owed list carries them. */
+  readonly statuses?: RowStatuses;
 }
 
 export interface ScoreCounts {
@@ -47,8 +53,20 @@ export interface GroupScore extends ScoreCounts {
 }
 
 export interface PlaceScore {
+  /** Core items only; the family rows in `groups` add up to it. */
   readonly overall: GroupScore;
   readonly groups: readonly GroupScore[];
+  /** Extension items, counted apart and never part of the headline. Null when the place owes none. */
+  readonly extension: GroupScore | null;
+  /** Summary items whose detail items carry the count: listed, but out of the denominator. Null when none. */
+  readonly summary: GroupScore | null;
+  /** Completeness, freshness and delivery, each with its counts and never blended. */
+  readonly measures: PlaceMeasures;
+  /** What is not captured, split into "hunted, not found" and "nothing hunts this yet". */
+  readonly notCaptured: NotCaptured;
+  readonly familyNotCaptured: readonly ({ readonly group: string } & NotCaptured)[];
+  /** The same three measures for each family. */
+  readonly familyMeasures: readonly { readonly group: string; readonly measures: PlaceMeasures }[];
 }
 
 export const OWED_STATE_WORDS: Readonly<Record<OwedState, string>> = {
@@ -71,14 +89,18 @@ const EMPTY: ScoreCounts = { published: 0, held: 0, unpublished: 0, stale: 0, mi
 function scored(group: string, name: string, counts: ScoreCounts): GroupScore {
   const total = counts.published + counts.held + counts.unpublished + counts.stale + counts.missing;
   const captured = counts.published + counts.held + counts.unpublished;
-  return { group, name, ...counts, total, captured, percent: total === 0 ? null : Math.floor((captured / total) * 1000) / 10 };
+  return { group, name, ...counts, total, captured, percent: percentOf(captured, total) };
 }
 
 /** Counts overall and by group. Groups come out in the checklist's own order (`groupOrder`), then any others. */
 export function scorePlace(rows: readonly OwedRowLike[], groupNames: Readonly<Record<string, string>>, groupOrder: readonly string[]): PlaceScore {
   const by = new Map<string, { -readonly [K in keyof ScoreCounts]: number }>();
   const all = { ...EMPTY } as { -readonly [K in keyof ScoreCounts]: number };
+  const extension = { ...EMPTY } as { -readonly [K in keyof ScoreCounts]: number };
+  const summary = { ...EMPTY } as { -readonly [K in keyof ScoreCounts]: number };
   for (const row of rows) {
+    if (!isCoreChecklistItem(row.checklistId)) { extension[row.state] += 1; continue; }
+    if (isSummaryChecklistItem(row.checklistId)) { summary[row.state] += 1; continue; }
     const g = groupOf(row.checklistId);
     const counts = by.get(g) ?? { ...EMPTY };
     counts[row.state] += 1;
@@ -89,6 +111,12 @@ export function scorePlace(rows: readonly OwedRowLike[], groupNames: Readonly<Re
   return {
     overall: scored("ALL", "Everything this place is owed", all),
     groups: order.map((g) => scored(g, groupNames[g] ?? g, by.get(g)!)),
+    extension: Object.values(extension).some((n) => n > 0) ? scored("EXT", "Extra items beyond the core list", extension) : null,
+    summary: Object.values(summary).some((n) => n > 0) ? scored("SUM", "Summary items counted through their detail items", summary) : null,
+    measures: placeMeasures(rows),
+    notCaptured: notCapturedOf(rows),
+    familyNotCaptured: order.map((group) => ({ group, ...notCapturedOf(rows.filter((row) => groupOf(row.checklistId) === group)) })),
+    familyMeasures: measuresByFamily(rows, groupOrder),
   };
 }
 
@@ -105,6 +133,7 @@ export interface OwedListItem {
   /** The saved source page for this fact when we hold one. */
   readonly sourceUrl: string | null;
   readonly checkedAt: string | null;
+  readonly statuses: RowStatuses | null;
 }
 
 export function owedListItem(row: OwedRowLike): OwedListItem {
@@ -120,6 +149,7 @@ export function owedListItem(row: OwedRowLike): OwedListItem {
     statusWords: OWED_STATE_WORDS[row.state],
     sourceUrl: held?.sourceUrl ?? null,
     checkedAt: held?.checkedAt ?? null,
+    statuses: row.statuses ?? null,
   };
 }
 

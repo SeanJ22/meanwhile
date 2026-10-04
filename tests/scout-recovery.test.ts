@@ -17,18 +17,23 @@ import { sourceFailureRecovery } from '../lib/control-plane/workers/detective.ts
 import type { FreshnessDebt } from '../lib/control-plane/scheduler/debt.ts';
 import type { RouteDescriptor } from '../lib/control-plane/scheduler/registry.ts';
 
-test('source failures reach Detective with the failed route while non-source debts retain their lane',()=>{
+test('a passing outage stays a free retry; a shut door reaches Detective with the failed route',()=>{
  const decision={kind:'DETERMINISTIC' as const,why:'Known HTTP_GET shape',disagreement:null};
  const debt={obligationId:'owed',cause:'UPSTREAM_ERROR',target:'search-provider',detail:'HTTP 504',
    lastFailedAt:'2026-10-01T05:27:35Z',consecutiveFailures:1,retryAt:'2026-10-01T05:42:35Z'} as FreshnessDebt;
- for(const cause of ['REFUSED_BY_HOST','RATE_LIMITED','UPSTREAM_ERROR','TRANSPORT_FAILED','EXTRACTION_FAILED'] as const) {
-  const recovery=sourceFailureRecovery(decision,{...debt,cause});
-  assert.equal(recovery.kind,'BOUNDED_MODEL_WORKER');
-  assert.match(recovery.why,/search-provider.*2026-10-01T05:27:35Z/);assert.match(recovery.why,/HTTP 504/);
+ for(const cause of ['RATE_LIMITED','UPSTREAM_ERROR','TRANSPORT_FAILED'] as const) {
+  assert.equal(sourceFailureRecovery(decision,{...debt,cause}),decision,`${cause} once is a plain retry`);
+  assert.equal(sourceFailureRecovery(decision,{...debt,cause,consecutiveFailures:2}),decision);
+  const shut=sourceFailureRecovery(decision,{...debt,cause,consecutiveFailures:3});
+  assert.equal(shut.kind,'BOUNDED_MODEL_WORKER');
+  assert.match(shut.why,/search-provider.*2026-10-01T05:27:35Z/);assert.match(shut.why,/HTTP 504/);
+  assert.equal(sourceFailureRecovery(decision,{...debt,cause,consecutiveFailures:2},2).kind,'BOUNDED_MODEL_WORKER','the threshold is a parameter');
  }
+ for(const cause of ['REFUSED_BY_HOST','EXTRACTION_FAILED'] as const)
+  assert.equal(sourceFailureRecovery(decision,{...debt,cause}).kind,'BOUNDED_MODEL_WORKER',`${cause} goes at once`);
  for(const cause of ['AWAITING_ADAPTER','AWAITING_ROUTINE_READ','NEVER_DISPATCHED','WORKER_LOST'] as const)
-  assert.equal(sourceFailureRecovery(decision,{...debt,cause}),decision);
- assert.equal(sourceFailureRecovery(decision,{...debt,consecutiveFailures:0}),decision);
+  assert.equal(sourceFailureRecovery(decision,{...debt,cause,consecutiveFailures:9}),decision);
+ assert.equal(sourceFailureRecovery(decision,{...debt,cause:'REFUSED_BY_HOST',consecutiveFailures:0}),decision);
  assert.equal(sourceFailureRecovery(decision,null),decision);
  assert.equal(debt.retryAt,'2026-10-01T05:42:35Z','recovery does not change source backoff');
 });
@@ -36,7 +41,7 @@ test('source failures reach Detective with the failed route while non-source deb
 test('a source failure after discovery reopens Detective; a later solved route remains reusable',async()=>{
  const solved={attemptId:'solved',recordedAt:'2026-10-01T00:00:00Z',refusal:null,candidates:[],findings:[]} as unknown as ScoutResult;
  const debt={obligationId:'owed',cause:'UPSTREAM_ERROR',target:'api.example.gov',detail:'HTTP 504',
-   lastFailedAt:'2026-10-01T01:00:00Z',consecutiveFailures:2} as FreshnessDebt;
+   lastFailedAt:'2026-10-01T01:00:00Z',consecutiveFailures:3} as FreshnessDebt;
  const input={obligation:{obligation:{id:'owed'}},holder:'worker'} as Parameters<NonNullable<ReturnType<typeof failureResponderExecutor>['workerFor']>>[0];
  const make=(recordedAt:string)=>failureResponderExecutor({solved:{...solved,recordedAt},sourceFailure:debt,
   transport:async()=>{throw Error('No model expected in selection');},toolkitFor:()=>{throw Error('No tools');},
@@ -51,7 +56,7 @@ test('a source failure after discovery reopens Detective; a later solved route r
 
 test('failed search sources preserve held alternatives before paid admission and omit failed sources from the handoff',async()=>{
  const debt={obligationId:'owed',cause:'UPSTREAM_ERROR',target:'search-index',detail:'HTTP 504',
-   lastFailedAt:'2026-10-01T01:00:00Z',consecutiveFailures:2} as FreshnessDebt;
+   lastFailedAt:'2026-10-01T01:00:00Z',consecutiveFailures:3} as FreshnessDebt;
  const input={obligation:{obligation:{id:'owed'}},holder:'worker'} as Parameters<NonNullable<ReturnType<typeof failureResponderExecutor>['workerFor']>>[0];
  const candidate=(url:string)=>({url,evidenceArtifactIds:['captured'],routeId:url});
  const solved={attemptId:'solved',recordedAt:'2026-10-01T00:00:00Z',refusal:null,
@@ -80,7 +85,7 @@ test('failed search sources preserve held alternatives before paid admission and
 
 test('source recovery preserves captured facts and separates Legistar tenants',async()=>{
  const debt={obligationId:'owed',cause:'UPSTREAM_ERROR',target:'https://webapi.legistar.com/v1/pima/Events',detail:'HTTP 503',
-   lastFailedAt:'2026-10-01T01:00:00Z',consecutiveFailures:2} as FreshnessDebt;
+   lastFailedAt:'2026-10-01T01:00:00Z',consecutiveFailures:3} as FreshnessDebt;
  const solved={attemptId:'solved',recordedAt:'2026-10-01T00:00:00Z',refusal:null,candidates:[],findings:[
   {kind:'RECORD',field:'name',value:'Meeting',exactQuote:'Meeting',sourceUrl:'https://webapi.legistar.com/v1/tucson/Events',artifactIds:['tucson']},
   {kind:'RECORD',field:'name',value:'Meeting',exactQuote:'Meeting',sourceUrl:'https://webapi.legistar.com/v1/pima/Events',artifactIds:['pima']},

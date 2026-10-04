@@ -62,7 +62,7 @@ test("the original lifetime allowance still refuses concurrent holds and counts 
   assert.equal(second.result.admit, false);
 });
 
-test("a different lifetime scope cannot discard an overlapping rolling budget", () => {
+test("a funded Send replaces an overlapping rolling budget, and two funded Sends each keep their own allowance", () => {
   const anotherKey = "zcta:2020/99999";
   const anotherMember = { ...member, assignments: [
     { assignmentKey: "rolling", ref: "old", relation: "REORDERED", at: started },
@@ -76,7 +76,7 @@ test("a different lifetime scope cannot discard an overlapping rolling budget", 
     ]), worstCaseUsd: 1, costsReadable: true, intentsReadable: true, historyReadAt: now });
   const sends = gate.linesFor(member.id);
   assert.ok("lines" in sends);
-  assert.equal(sends.lines.length, 2);
+  assert.equal(sends.lines.length, 1, "the funded Send's own allowance replaces the rolling limit");
   const areas = new ScopeBudgetGate({ scopes: [
     { key: "older", label: "older", budgetUsd: 0, resolved: true, members: new Set([member.subjectId]),
       states: ["AZ"], historicalUsd: 0 },
@@ -86,7 +86,16 @@ test("a different lifetime scope cannot discard an overlapping rolling budget", 
   ], worstCaseUsd: 1, historyReadAt: now });
   const lines = areas.linesFor(member.subjectId);
   assert.ok("lines" in lines);
-  assert.equal(lines.lines.length, 2);
+  assert.equal(lines.lines.length, 1);
+  assert.equal(lines.lines[0].key, `area:${anotherKey}@${started}`);
+  const twoFunded = new ScopeBudgetGate({ scopes: [
+    { key: "first", label: "first", budgetUsd: 20, lifetime: true, budgetStartedAt: started, receiptId: "r1", resolved: true,
+      members: new Set([member.subjectId]), states: ["AZ"], historicalUsd: 0 },
+    { key: anotherKey, label: "another", budgetUsd: 50, lifetime: true, budgetStartedAt: started, receiptId: "r2", resolved: true,
+      members: new Set([member.subjectId]), states: ["AZ"], historicalUsd: 10 },
+  ], worstCaseUsd: 1, historyReadAt: now }).linesFor(member.subjectId);
+  assert.ok("lines" in twoFunded);
+  assert.equal(twoFunded.lines.length, 2, "each funded Send keeps its own allowance");
 });
 
 test("unpriced usage preserves known hunt and service amounts", () => {

@@ -1341,7 +1341,7 @@ type MeetingCandidateSnapshot = {
     readonly carried?: {
       readonly source: string;
       readonly lastFreshAt: string;
-      readonly reason?: "SOURCE_UNAVAILABLE" | "PARTIAL_SCOPE_UNAVAILABLE" | "UNEXPLAINED_DISAPPEARANCE";
+      readonly reason?: "SOURCE_UNAVAILABLE" | "PARTIAL_SCOPE_UNAVAILABLE" | "UNEXPLAINED_DISAPPEARANCE" | "OUTSIDE_FETCH_WINDOW";
     };
   }[];
   readonly agendaDocuments: readonly { readonly id: string; readonly meetingId: string }[];

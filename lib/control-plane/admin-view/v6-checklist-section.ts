@@ -1,3 +1,5 @@
+import { GROUP_NAMES, PLACE_GROUPS } from "../../coverage/group-names.ts";
+
 export const ADMIN_V6_CHECKLIST_CONTRACT = "admin-v6/checklist@1" as const;
 
 /** Structurally matches Admin v6 model.ts without importing the UI bundle. */
@@ -32,11 +34,4 @@ export interface AdminV6ChecklistEnvelope {
     readonly prevCursor: null };
 }
 
-export const GROUP_NAMES: Readonly<Record<string, string>> = {
-  GEO: "Geography", GOV: "Governments", OFF: "Officeholders", MTG: "Meetings", DOC: "Agendas and documents",
-  LEG: "Laws and votes", ELE: "Elections", CAN: "Candidates", CAM: "Campaign finance", FIN: "Government money",
-  PAR: "Taking part", ASK: "Ask", GATE: "Setup and safety checks", ACQ: "Finding sources", REC: "Recovery",
-  PUB: "Publishing", SAFE: "Safety and privacy", REF: "Reference data", EXE: "Running work",
-  PRL: "Working in parallel", ENG: "Engineering",
-};
-export const PLACE_GROUPS = new Set(["GEO", "GOV", "OFF", "MTG", "DOC", "LEG", "ELE", "CAN", "CAM", "FIN", "PAR", "ASK"]);
+export { GROUP_NAMES, PLACE_GROUPS };

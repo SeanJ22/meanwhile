@@ -36,7 +36,7 @@ test("a repair may write only inside the folder, the kind's fixtures and those t
     "lib/sources/iqm2/parse.ts", "lib/sources/iqm2/new-file.ts", "tests/fixtures/iqm2/page.html", "tests/iqm2-calendar.test.ts",
   ]), []);
   assert.deepEqual(outOfScope(r.scope, [
-    "lib/sources/ical/index.ts", "lib/sources/composite/wiring.ts", "tests/unrelated.test.ts", "lib/sources/iqm2/../ical/index.ts", "/etc/passwd", "lib\\sources\\ical\\index.ts",
+    "lib/sources/ical/index.ts", "lib/sources/composite/wiring.ts", "tests/unrelated.test.ts", "lib/sources/iqm2/../ical/index.ts", "/etc/passwd", ["lib", "sources", "ical", "index.ts"].join(String.fromCharCode(92)),
   ]).length, 6);
 });
 

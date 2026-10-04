@@ -1,13 +1,13 @@
-build_state: waiting
+build_state: active
 worker: hunters
 provider: Claude
-run_id: session_018RBYe1K4Ya5TSyE7CzC2T6
+run_id: session_01Qpgbe3NU8pk5cZ93j7op4s
 lock: none
-heartbeat: 2026-10-04T07:30:52Z
-on_river: none
+heartbeat: 2026-10-04T08:35:00Z
+on_river: CH-02, CH-06, CH-10 part 1, hooks BR-08 and DB-09 (river c7914e8 and earlier; river fold ec495cf)
 ready: CH-02 at 9ae2d28bd8aba50e493664def23666c25a1eef3e; CH-06 at 89c20a3a107df0573005bade4344c8fcee7a953b; hooks BR-08 and DB-09 at 48dca0016542e2a864dd10cb581b06d8a1a9a26b (DB-09 hook adds the doors table to the console-input query, so it must fold after registry DB-09 creates cp_doors); CH-10 part 1 at 19cb8dafd6dfff155348c4cc58165bb475b249aa
 checks: CH-10 part 1: tsc clean; eslint 0 errors on changed files; 336/336 across 28 test files that touch the changed modules plus lease-runtime-once (DATABASE_URL, WTP_ASSET_STORE unset). Two old tests that asserted the single-hunt privilege were rewritten to the funded-Send rule. Not run: full CI selector, live Admin check. CH-02 and CH-06 checks as before.
-working_on: CH-10 remainder, then DB-48
+working_on: CH-03 next; DB-48 built, awaiting READY commit below
 waiting_on: CH-01 live read (needs Admin/production access this sandbox lacks); CH-06 live proof (tasks per hour rising on the same host) needs deploy, River/Admin side. Old per-task runtime stays behind WTP_LEASE_RUNTIME_PER_TASK=1 in the runner env file until live check, then remove.
 returned: hooks BR-08 and DB-09 done at 48dca0016542e2a864dd10cb581b06d8a1a9a26b. Hook BR-05 (shut-door threshold) not done: readSetting and the setting are not on river and nothing in the runner reads a shut threshold yet; it rides CH-03 (re-read AdminConfig each batch) with the code default 3.
 needs_hook: admin: lib/control-plane/gateway/registry.ts:1055-1075 — replace `originalLifetime` (compares to ORIGINAL_LIFETIME_HUNT) with `lifetime` for the "Fleet ceiling does not bind" wording ONLY IF Admin confirms the ceiling really exempts funded work; code in hunters lane does not exempt the Fleet ceiling for any Send, so the safer fix is to use the plain "Fleet ceiling still binds first" sentence for every Send.

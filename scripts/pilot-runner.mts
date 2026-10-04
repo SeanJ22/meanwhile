@@ -171,6 +171,7 @@ import {
   writeRuntimeReleaseHold,
   type RuntimeReleaseInspection,
 } from "../lib/ops/runtime-release-handoff.ts";
+import { discardStagedReleases, stageRuntimeRelease, stagedReleaseIsReady } from "../lib/ops/runtime-release-stage.ts";
 import { fetchServedCommit, PRODUCTION_BASE_URL } from "./post-deploy-observer.mts";
 import {
   acquireProcessSingleton,
@@ -1049,10 +1050,32 @@ async function writeFailedCycleBeat(cycleStartedAt: string): Promise<void> {
 
 let currentCycleErrors = "";
 let researchCycleChild: ChildProcess | null = null;
+const RELEASE_DRAIN_FIRST = process.env.WTP_RELEASE_DRAIN_FIRST === "1";
+const stagingAttempted = new Set<string>();
+let stagingInFlight: string | null = null;
+function startReleaseStaging(targetSha: string): void {
+  if (stagingInFlight !== null) return;
+  stagingInFlight = targetSha;
+  stagingAttempted.add(targetSha);
+  console.log(`  release ${targetSha.slice(0, 8)} is installing in its own checkout; partition admissions continue`);
+  void stageRuntimeRelease({ root: ROOT, targetSha }).then(result => {
+    if (result.state === "READY") console.log(`  release ${targetSha.slice(0, 8)} is installed beside the running one; the switch can now be quick`);
+    else console.error(`  release ${targetSha.slice(0, 8)} could not be installed beside the running one (${result.code ?? "unknown"}); the drain-first path will apply it`);
+  }).catch(error => {
+    console.error(`  staging release ${targetSha.slice(0, 8)} failed (${error instanceof Error ? error.name : "error"}); the drain-first path will apply it`);
+  }).finally(() => { stagingInFlight = null; });
+}
 async function requestQueuedReleaseDrain(): Promise<void> {
   if (!AUTO_RELEASE_HANDOFF || !researchCycleActive || !researchCycleChild?.connected) return;
   const release = await inspectRuntimeRelease();
   if (release.state !== "UPDATE_REQUIRED") return;
+  // DB-48: install the release beside the running one first; admissions continue meanwhile.
+  // WTP_RELEASE_DRAIN_FIRST=1 keeps the old drain-first path until the staged path is checked live.
+  if (!RELEASE_DRAIN_FIRST && release.targetSha !== null && !stagedReleaseIsReady(ROOT, release.targetSha)) {
+    if (!stagingAttempted.has(release.targetSha)) startReleaseStaging(release.targetSha);
+    if (stagingInFlight !== null) return;
+    // Staging already failed once for this target: fall through to the old drain so the release still lands.
+  }
   // Reconciliation still applies only after both the research child and source lanes settle.
   runtimeAdmissionsHeld = true;
   researchCycleChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
@@ -1437,6 +1460,7 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
     return 2;
   }
   if (!await applyRuntimeContracts(final.targetSha)) return 2;
+  await discardStagedReleases(ROOT).catch(() => undefined);
   console.log(`  ${applied.detail}; exiting for the stable Scheduled Task launcher to relaunch this exact code`);
   return 0;
 }

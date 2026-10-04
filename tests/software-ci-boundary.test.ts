@@ -48,7 +48,7 @@ test("push/main/manual/scheduled triggers remain and no workflow hides behind a 
   const build = workflow(BUILD_PATH);
   assert.deepEqual(build.on.push, { branches: ["main"] });
   assert.ok("workflow_dispatch" in build.on);
-  assert.deepEqual(build.on.schedule, [{ cron: "17 */3 * * *" }]);
+  assert.deepEqual(build.on.schedule, [{ cron: "17 9 * * *" }]);
   for (const path of [BUILD_PATH, POST_DEPLOY_PATH]) {
     const source = readFileSync(path, "utf8");
     assert.doesNotMatch(source, /^\s*paths(?:-ignore)?:/m);

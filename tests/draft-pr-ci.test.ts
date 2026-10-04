@@ -70,7 +70,7 @@ test("draft/waiting/full classifier is fail-closed for the complete pull-request
     { what: "missing PR state", eventName: "pull_request", action: "synchronize", draft: null, tier: "full" },
     { what: "push to main", eventName: "push", action: null, draft: null, tier: "full" },
     { what: "manual release proof", eventName: "workflow_dispatch", action: null, draft: null, tier: "full" },
-    { what: "scheduled certification every three hours", eventName: "schedule", action: null, draft: null, tier: "full" },
+    { what: "scheduled certification once a day", eventName: "schedule", action: null, draft: null, tier: "full" },
   ] as const;
 
   for (const row of rows) {
@@ -83,7 +83,7 @@ test("ready_for_review is an explicit trigger and the existing shipping triggers
   assert.deepEqual(buildCheck.on.pull_request.types, ["opened", "synchronize", "reopened", "ready_for_review", "labeled", "auto_merge_enabled"]);
   assert.deepEqual(buildCheck.on.push.branches, ["main"]);
   assert.ok(buildCheck.on.workflow_dispatch !== undefined, "manual shipping certification disappeared");
-  assert.deepEqual(buildCheck.on.schedule, [{ cron: "17 */3 * * *" }], "the three-hourly full run on main is the safety net for affected-only PR tests");
+  assert.deepEqual(buildCheck.on.schedule, [{ cron: "17 9 * * *" }], "the daily full run on main is the safety net for affected-only PR tests");
 });
 
 test("a scheduled run is the full tier: no classifier, preflight, then yes", () => {

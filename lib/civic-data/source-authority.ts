@@ -53,6 +53,24 @@ export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage 
 }
 
 export const SOURCE_AUTHORITIES = {
+  "official-ballot-authorities": {
+    id: "official-ballot-authorities",
+    publisher: "Exact official election authorities in the saved-source receipt",
+    trust: "T2_AUTHORITATIVE_DOCUMENT",
+    sourceClass: "MULTI_PUBLISHER_PRIMARY",
+    routePrefixes: [],
+    jurisdictions: ["US", ...REGISTRATION_TARGETS.map(target => target.jurisdiction)],
+    recordClasses: ["BALLOT_CANDIDACY"],
+    competentFacts: ["election", "contest", "complete listed candidate set", "filed candidate name", "party", "seat count"],
+    expectedIdentifierKeys: ["contest_id", "candidacy_id"],
+    expectedTemporalFields: ["source_through", "collected_at"],
+    horizonSemantics: "Each state/election key contains only source-verified complete contests; no wider coverage or absence is inferred.",
+    parserVersion: "ballot-contests/1",
+    freshnessExpectation: "Recheck saved election lists inside the BALLOT_CONTEST freshness window; source gaps remain owed.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: false,
+    manualReceiptPromotion: { allowedSourceClasses: ["ELECTION_AUTHORITY", "OFFICIAL_PUBLISHER"] },
+  },
   "federal-legislative-records": {
     id: "federal-legislative-records",
     publisher: "U.S. House Clerk, U.S. Senate, and Congress.gov",

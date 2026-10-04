@@ -6,6 +6,7 @@ import { guardAdminRequest } from "../gateway/admin-guard.ts";
 import { controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { openControlPlane } from "../admin-data.ts";
 import { resolveRollingCeiling } from "../fleet-safety.ts";
+import { huntersTheDialBuys } from "../scheduler/research-policy.ts";
 import { fleetSpendCeilingOverrideUsd, type AdminConfig } from "../gateway/admin-config.ts";
 import { ADMIN_V6_SPEND_CONTRACT, SPEND_DAYS, readSpend, type AdminV6SpendView } from "./v6-spend-read.ts";
 import { readV6Sources } from "./v6-money-hunts-route.ts";
@@ -17,18 +18,24 @@ const MEMO_MS = 90_000;
 let memo: { at: number; data: AdminV6SpendView } | null = null;
 
 /** What the summary needs beside the ledger, from the same moment: every open reservation and the daily limit. Each is null when unread. */
-async function limitsAndHolds(readAt: string): Promise<Pick<AdminV6SpendView, "setAsideUsd" | "dailyLimitUsd">> {
+const UNREAD = { setAsideUsd: null, dailyLimitUsd: null, huntersNow: null, worstCaseCharges: null } as const;
+
+async function limitsAndHolds(readAt: string): Promise<Pick<AdminV6SpendView, "setAsideUsd" | "dailyLimitUsd" | "huntersNow" | "worstCaseCharges">> {
   try {
     const opened = await openControlPlane();
-    if (!opened.ok) return { setAsideUsd: null, dailyLimitUsd: null };
-    const sources = await readV6Sources(opened.repos, readAt, false);
+    if (!opened.ok) return UNREAD;
+    const sources = await readV6Sources(opened.repos, readAt, true);
     const hunts = sources.attribution?.hunts ?? null;
     const held = hunts === null || hunts.some((h) => h.reservedUsd === null) ? null : hunts.reduce((n, h) => n + (h.reservedUsd ?? 0), 0);
+    const dailyLimitUsd = sources.adminConfig === null ? null : resolveRollingCeiling(fleetSpendCeilingOverrideUsd(sources.adminConfig as AdminConfig)).rollingCeilingUsd;
+    const rolling = sources.fleetSafety?.rolling24Hours ?? null;
     return {
       setAsideUsd: held === null ? null : Math.round(held * 10_000) / 10_000,
-      dailyLimitUsd: sources.adminConfig === null ? null : resolveRollingCeiling(fleetSpendCeilingOverrideUsd(sources.adminConfig as AdminConfig)).rollingCeilingUsd,
+      dailyLimitUsd,
+      huntersNow: huntersTheDialBuys({ dailyLimitUsd, spentLast24hUsd: rolling?.modelUsd ?? null }),
+      worstCaseCharges: rolling === null ? null : rolling.worstCaseCharges ?? 0,
     };
-  } catch { return { setAsideUsd: null, dailyLimitUsd: null }; }
+  } catch { return UNREAD; }
 }
 
 /** Read-only. Spend is whole-system: the ledger is not split by place, so every scope reads the same figures and says so. */

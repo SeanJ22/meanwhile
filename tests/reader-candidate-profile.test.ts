@@ -37,7 +37,8 @@ test("every current native candidate bio and verified link reaches grounded prof
       assert.equal(record.retrievedAt, cards[key].bioSourceLabel?.match(/\b\d{4}-\d{2}-\d{2}\b/)?.[0]);
       bios++;
     }
-    for (const field of ["email", "phone", "filedAddress"] as const) {
+    assert.ok(answer.records.every(row => !row.id.endsWith(":filedAddress")));
+    for (const field of ["email", "phone"] as const) {
       if (!cards[key]?.[field]) continue;
       const record = answer.records.find(row => row.id === `candidate-contact-field:${key}:${field}`);
       assert.ok(record, `${key}/${field}`);
@@ -60,7 +61,7 @@ test("every current native candidate bio and verified link reaches grounded prof
   }
   assert.equal(bios, Object.values(cards).filter(row => row.bio).length);
   assert.equal(sites, Object.values(links).flatMap(row => [row.official, row.campaign]).filter(Boolean).length);
-  assert.equal(contacts, 135);
+  assert.equal(contacts, Object.values(cards).flatMap(card => [card.email, card.phone]).filter(Boolean).length);
 });
 
 test("official and candidacy profile answers share exact holdings without attaching a namesake's biography", () => {

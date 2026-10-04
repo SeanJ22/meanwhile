@@ -178,7 +178,7 @@ export interface EvidenceRecord {
   accessRule?: { field: "commentPeriod" | "commentPeriodDetail" | "timeLimit" | "signup" | "writtenComment" | "attend"; value: string; standingRule: true };
   /** Exact candidate-card field and source label, without a name-based join. */
   candidateProfile?: {
-    field: "bio" | "official" | "campaign" | "email" | "phone" | "filedAddress";
+    field: "bio" | "official" | "campaign" | "email" | "phone";
     value: string;
     label: string;
     holdingPath: string;
@@ -254,6 +254,8 @@ export interface EvidenceRecord {
   };
   /** The record's own words, or a mechanical read of its fields. Never a summary. */
   text: string;
+  /** Stored plain-English measure meaning, carried with its exact source. */
+  measureMeaning?: { readonly vote: "YES" | "NO"; readonly meaning: string };
   /** ISO date this record is ABOUT, where that is meaningful. */
   occurredAt?: string | null;
   sourceUrl?: string | null;

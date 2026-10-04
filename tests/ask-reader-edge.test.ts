@@ -72,6 +72,7 @@ const fec = requiredRoutineContract("fec-funding");
 const federalVotes = { sourceId: FEDERAL_VOTES_SOURCE_ID };
 const EDGE = { funding: "edge-test:ask:fec", pima: "edge-test:ask:pima", federalVotes: "edge-test:ask:federal-votes" };
 const PROMOTED: Partial<Record<PromotedAuthorityFamily, { value: PromotedFamilyArtifactValue; versionId: string }>> = {
+  "ballot-contests": family([absentEdgeEntry("BALLOT_CANDIDACY", "US:state-election-ballots")], "edge-test:general-ballot-absent"),
   "ballot-az": family([manual("az-sos-ballot", served(await readAzBallotProjection({ store: seedStore, bypassCache: true })), "edge-test:ask:az")], "edge-test:ask:az"),
   "candidate-profiles": family([
     manual("candidate-profiles", served(await readCandidateProfilesProjection({ store: seedStore, bypassCache: true })), "edge-test:ask:profiles"),
@@ -192,6 +193,7 @@ test("with the C20 edge, a cold Mesa question reads the complete identity invent
   assert.equal(payload.trace.sourcesLoaded, "IDENTITY_AND_MEETINGS");
   assert.deepEqual([...databaseReads].sort(), [
     "BALLOT_CANDIDACY:US-AZ:2026-general:supported-ballot",
+    "BALLOT_CANDIDACY:US:state-election-ballots",
     "CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates",
     "CANDIDATE_PUBLICATION:US-AZ+US-NH+US-NJ:2026-supported-candidates",
     "CURATED_READER_RECORD:US:candidate-campaign-sites-derived",

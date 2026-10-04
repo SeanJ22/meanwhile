@@ -108,6 +108,7 @@ const EDGE = {
   stateMoney: (state: string) => `edge-test:ballot:money:${state}`,
 };
 const PROMOTED_BALLOT_FAMILIES: Partial<Record<PromotedAuthorityFamily, { value: PromotedFamilyArtifactValue; versionId: string }>> = {
+  "ballot-contests": promotedFamily([absentEdgeEntry("BALLOT_CANDIDACY", "US:state-election-ballots")], "edge-test:general-ballot-absent"),
   "ballot-az": promotedFamily([manual("az-sos-ballot", azBallot, EDGE.az)], EDGE.az),
   "ballot-nh": promotedFamily([manual("nh-curated-ballot", nhBallot, EDGE.nh)], EDGE.nh),
   "candidate-profiles": promotedFamily([
@@ -218,7 +219,7 @@ async function renderBallot(zip: string): Promise<{ components: Map<string, numb
 
 const MAP_FAMILIES = ["REGISTRY_RUNTIME_BINDING", "FEDERAL_DIRECTORY", "STATE_LEGISLATOR"];
 /** What a cold /ballot?zip=85701 read from the database with only the map's families on the edge (R30). */
-const MOVED_FAMILIES = ["BALLOT_CANDIDACY", "CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION", "CURATED_READER_RECORD", "CURATED_READER_RECORD", "FEC_FUNDING", "STATE_CAMPAIGN_FINANCE"];
+const MOVED_FAMILIES = ["BALLOT_CANDIDACY", "BALLOT_CANDIDACY", "CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION", "CURATED_READER_RECORD", "CURATED_READER_RECORD", "FEC_FUNDING", "STATE_CAMPAIGN_FINANCE"];
 
 test("React renders the page's async components outside the page's context: they see its edge only when handed it", () => {
   // Next's own compiled React Flight server, with the react-server condition it runs under.

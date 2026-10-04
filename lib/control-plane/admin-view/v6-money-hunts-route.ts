@@ -15,7 +15,7 @@ export type V6MoneySnapshotFields = Pick<OwnerSnapshot, "publishedAt" | "billing
 
 export interface V6ReadSources extends V6MoneySources {
   readonly providerBilling: OwnerSnapshot["providerBilling"] | undefined;
-  readonly fleetSafety: { readonly rolling24Hours: { readonly modelUsd: number | null; readonly asOf: string };
+  readonly fleetSafety: { readonly rolling24Hours: { readonly modelUsd: number | null; readonly asOf: string; readonly worstCaseCharges?: number };
     readonly bounds: { readonly rolling24HourModelUsd: number } } | null;
   readonly fleetSafetyGap: string | null;
   readonly adminConfig: Parameters<typeof expansionScopesOf>[0] & { readonly fleetSpendCeiling?: unknown } | null;

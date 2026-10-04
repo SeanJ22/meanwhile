@@ -55,7 +55,7 @@ export const ASSIGNMENT_ATTEMPT_PROJECTION = {
 export const ASSIGNMENT_OBLIGATION_PROJECTION = {
   id: true, recordClass: true, subjectId: true, routeId: true, active: true, readerImpactAt: true,
   meetingStartsAt: true, observedChangeRateHours: true, declaredCycleHours: true, lastWorkedAt: true,
-  absentUntil: true, assignments: true, nextDueAt: true, occurrenceCount: true, openOccurrenceId: true,
+  absentUntil: true, absenceUnlock: true, assignments: true, nextDueAt: true, occurrenceCount: true, openOccurrenceId: true,
   retiredAt: true, retirementReason: true,
 } satisfies RecordProjection;
 

@@ -420,8 +420,10 @@ test("routine FEC target acquisition cannot reopen mutable tracked roster or bal
     );
   }
   assert.match(fec, /const targetFloor = currentFec\?\.payload \?\? bundledFec/);
-  assert.match(fec, /FEC_TARGET_UNIVERSE_HELD:NJ_MORRIS_CANONICAL_BALLOT_NOT_PROMOTED/);
-  assert.match(fec, /canonicalNj\?\.payload\.ballot\.contests/);
+  assert.match(fec, /FEC_TARGET_UNIVERSE_HELD:promoted national congressional membership is unavailable/);
+  assert.match(fec, /promotedCongressTargets\(canonicalCongress\.value\.roster, targetFloor\)/);
+  assert.match(fec, /readFecSendDistricts/);
+  assert.doesNotMatch(fec, /canonicalNj/);
   assert.match(fec, /const lkgFloor = current\?\.payload \?\? bundledFec/);
   assert.match(fec, /BOOTSTRAP_FEC_RECORD_RETAINED/);
 });

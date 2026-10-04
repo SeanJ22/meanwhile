@@ -1,6 +1,7 @@
 import { readerPositionsForKeys, type ReaderPositionAnswer } from "@/lib/corpus/reader-positions";
 import { ReaderPersonIdentityError } from "@/lib/identity/reader-person";
 import { verifiedReaderPersonKeys } from "@/lib/identity/reader-person";
+import { positionIdentityKeys } from "@/lib/identity/position-identity-keys";
 import { unifiedCorpusFromHoldings } from "@/lib/corpus/unified";
 import type { StatementCorpus } from "@/lib/corpus/types";
 import type { CandidateCorpus } from "@/lib/candidates/corpus";
@@ -60,21 +61,22 @@ export type PositionHoldingSettlement =
   | { readonly kind: "IDENTITY_UNRESOLVED"; readonly error: ReaderPersonIdentityError }
   | { readonly kind: "HOLDING_UNAVAILABLE"; readonly unavailableAuthorities: string[] };
 
-async function currentPositionIdentityKeys(subject: string): Promise<string[]> {
-  // The registry is the identity graph. Only after it is held do we inspect
-  // the exact requested relationship and open its supporting authority.
-  await refreshRegistryRuntimeFromPromoted();
-  const related = getRegistryRuntimeReadModel().officialCandidacies.rows.filter((row) =>
-    row.holder.id === subject || row.candidacy?.candidacyId === subject,
-  );
-  const needsFederal = subject.startsWith("congress:")
-    || related.some((row) => row.holder.authority === "FEDERAL_DIRECTORY");
-  const needsAz = subject.startsWith("ballot-az-")
-    || subject.startsWith("statewide:az/")
-    || related.some((row) => row.candidacy?.candidacyId.startsWith("ballot-az-"));
-  if (needsFederal) await refreshFederalDirectoryFromPromoted();
-  if (needsAz) await refreshAzBallotFromPromoted();
-  return verifiedReaderPersonKeys(subject);
+function currentPositionIdentityKeys(subject: string): Promise<string[]> {
+  return positionIdentityKeys(subject, {
+    refreshRegistry: () => refreshRegistryRuntimeFromPromoted(),
+    refreshFederal: () => refreshFederalDirectoryFromPromoted(),
+    refreshAz: () => refreshAzBallotFromPromoted(),
+    relatedAuthorities: (id) => {
+      const related = getRegistryRuntimeReadModel().officialCandidacies.rows.filter((row) =>
+        row.holder.id === id || row.candidacy?.candidacyId === id,
+      );
+      return {
+        federal: related.some((row) => row.holder.authority === "FEDERAL_DIRECTORY"),
+        az: related.some((row) => row.candidacy?.candidacyId.startsWith("ballot-az-")),
+      };
+    },
+    personKeys: verifiedReaderPersonKeys,
+  });
 }
 
 const defaultReaders: PositionHoldingReaders = {

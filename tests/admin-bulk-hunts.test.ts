@@ -150,3 +150,58 @@ test("an Excel workbook is read through the repository's own reader, and a ZIP t
   assert.equal(parsed.paddedZeros, 1);
   assert.equal(parsed.skipped.find((s) => /removed/.test(s.why))?.count, 1);
 });
+
+import { resolveStateScope } from "@/lib/control-plane/expansion/runner-load.ts";
+import { scopeKeyOf, validateScopeGeography, validateScopeKey, withScopeSet } from "@/lib/control-plane/expansion/scopes.ts";
+import { huntPlaceKey, huntRelation, parseV6PlaceKey } from "@/lib/control-plane/admin-view/v6-hunts-read.ts";
+import { loadBootstrapLookup } from "@/lib/census-geography/reader.ts";
+
+const STATE_AZ = { type: "state", geoid: "04", version: "state:2020", label: "Arizona", stateAbbr: "AZ" } as const;
+
+test("a whole state is a scope like any other: it validates, keys and places under the state's own key", () => {
+  const geography = validateScopeGeography(STATE_AZ);
+  assert.ok(geography.ok, geography.ok ? "" : geography.why);
+  assert.equal(scopeKeyOf(STATE_AZ), "state:2020/04");
+  assert.ok(validateScopeKey("state:2020/04").ok);
+  assert.equal(validateScopeGeography({ ...STATE_AZ, version: "county:2020" }).ok, false, "a state needs a state plan version");
+  const decision = withScopeSet([], { geography: STATE_AZ, priority: 1, budgetUsd: 20, huntBudget: true, note: null, decidedAt: NOW, decidedBy: "adm_test", receiptId: "r1" }).scopes[0];
+  assert.equal(huntPlaceKey(decision), "st:az", "the mission is one row on the state's own place, where its score is read");
+  assert.equal(huntRelation(parseV6PlaceKey("st:az")!, decision), "member");
+  assert.equal(huntRelation(parseV6PlaceKey("st:nm")!, decision), "outside");
+  assert.equal(huntRelation({ kind: "country" }, decision), "member");
+});
+
+test("one pick is one mission: a state is sent as one scope with its own budget, not as a pile of ZIPs", async () => {
+  const repos = createMemoryRepositories();
+  const out = await submit(ask("expansion.scope.setMany", "many-key-00000009", { items: [
+    { geography: STATE_AZ, budgetUsd: 40, group: null },
+    { geography: { type: "county", geoid: "04019", version: "county:2020", label: "Pima County, AZ", stateAbbr: "AZ" }, budgetUsd: 10, group: null },
+  ], priority: 1 }), deps(repos));
+  assert.equal(out.ok, true, out.receipt.says);
+  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const scopes = expansionScopesOf(row!.value as never).scopes;
+  assert.deepEqual(scopes.map(s => s.key).sort(), ["county:2020/04019", "state:2020/04"]);
+  assert.equal(scopes.find(s => s.key === "state:2020/04")?.budgetUsd, 40);
+  const twice = await submit(ask("expansion.scope.setMany", "many-key-00000010", { items: [{ geography: STATE_AZ, budgetUsd: 1 }, { geography: STATE_AZ, budgetUsd: 2 }] }), deps(createMemoryRepositories()));
+  assert.match(twice.receipt.says, /Arizona is in the send twice/);
+});
+
+test("the runner resolves a state mission to the ZIPs of its counties, once", async () => {
+  const lookup = loadBootstrapLookup();
+  const counties = await lookup.enumerateGroupings("county");
+  const year = counties.version.key.split(":")[1];
+  const decision = withScopeSet([], { geography: { ...STATE_AZ, version: `state:${year}` }, priority: 1, budgetUsd: 20, huntBudget: true, note: null, decidedAt: NOW, decidedBy: "adm_test", receiptId: "r1" }).scopes[0];
+  const resolved = await resolveStateScope(decision, lookup);
+  assert.equal(resolved.kind, "RESOLVED");
+  if (resolved.kind === "RESOLVED") {
+    assert.ok(resolved.zctas.size > 0);
+    const union = new Set<string>();
+    for (const county of counties.instances.filter(c => c.stateAbbr === "AZ")) for (const o of (await lookup.zctasForGrouping({ type: "county", geoid: county.geoid, version: county.version })).overlaps) union.add(o.zcta5);
+    assert.deepEqual([...resolved.zctas].sort(), [...union].sort(), "the state is exactly the union of its counties' ZIP areas");
+    assert.deepEqual([...resolved.states], ["AZ"]);
+  }
+  const wrongPlan = await resolveStateScope({ ...decision, geography: { ...decision.geography, version: "state:1999" } }, lookup);
+  assert.equal(wrongPlan.kind, "UNRESOLVED");
+  const none = await resolveStateScope({ ...decision, geography: { ...decision.geography, stateAbbr: "ZZ" } }, lookup);
+  assert.equal(none.kind, "UNRESOLVED", "a state with no counties says so; it never resolves to an empty set");
+});

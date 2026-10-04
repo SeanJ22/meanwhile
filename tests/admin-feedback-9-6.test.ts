@@ -4,8 +4,6 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-import { readinessRowOutcome } from "../lib/control-plane/readiness/read.ts";
-import { READINESS_DERIVATION_CONTRACT } from "../lib/control-plane/readiness/model.ts";
 import { plainCount, plainDuration, plainMeaning } from "../lib/control-plane/plain-words.ts";
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import type { WorkerAttemptView, WorkerRoleView } from "../lib/control-plane/workers/readback.ts";
@@ -126,35 +124,6 @@ function attempt(over: Partial<WorkerAttemptView> = {}): WorkerAttemptView {
 /* D — state readiness told the owner to run a command                         */
 /* -------------------------------------------------------------------------- */
 
-test("a superseded readiness snapshot says what happened in owner language, and needs nobody", () => {
-  const out = readinessRowOutcome(
-    { derivationContract: "readiness/instrument-derived@1", publishedAt: "2026-09-07T08:25:05.786Z", publisher: "readiness-refresh.mts" } as never,
-    "control plane (Postgres)",
-    "Arizona",
-    { revision: 25, updatedAt: "2026-09-07T08:25:05.786Z" },
-  );
-  assert.equal(out.kind, "REQUIRES_REPUBLISH");
-  if (out.kind !== "REQUIRES_REPUBLISH") return;
-
-  assert.equal(out.needsYou, false, "a republish is the runner's job every cycle and never the owner's");
-  // The face must not carry the contract identifier, a command, or a module name.
-  for (const field of [out.says, out.next]) {
-    assert.doesNotMatch(field, /instrument-derived/, `the face names the derivation contract: ${field}`);
-    assert.doesNotMatch(field, /\bpnpm [a-z]/, `the face tells the owner to run a command: ${field}`);
-    assert.doesNotMatch(field, /\.mts\b|\blib\//, `the face names a module: ${field}`);
-    assert.doesNotMatch(field, /[A-Z][A-Z0-9]*_[A-Z0-9_]+/, `the face carries a machine constant: ${field}`);
-  }
-  assert.match(out.says, /Arizona/, "the sentence must name the state it is about");
-  assert.match(out.next, /Nothing needs you\./);
-  // And every machine fact is still carried, for the disclosure.
-  assert.equal(out.snapshotContract, "readiness/instrument-derived@1");
-  assert.equal(out.currentContract, READINESS_DERIVATION_CONTRACT);
-  assert.equal(out.legacy.revision, 25);
-  assert.match(out.detail, /superseded/);
-  assert.equal(out.clearedBy.command, "automatic standing-runtime console publisher");
-  assert.doesNotMatch(out.clearedBy.command, /readiness:publish|\bpnpm\b/,
-    "the recovery identity must not restore a retired owner-run command");
-});
 
 test("the console is published before the first cycle, not only after one", () => {
   const runner = readFileSync(join(ROOT, "scripts", "pilot-runner.mts"), "utf8");

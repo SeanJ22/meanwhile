@@ -177,6 +177,11 @@
       "itemId": "ADM-3",
       "reason": "Withdrawn with its surface, not verified. The command center replaced the old Admin pages on 2026-10-01 (69b5edc2, f492c559), and the test that pinned this item was retired with the page it pinned, so no runnable check names it. It counts as fixed again when the command center carries this item's fixed form under a named test.",
       "since": "2026-10-01"
+    },
+    {
+      "itemId": "ADM-1",
+      "reason": "Withdrawn with its code, not verified. SC-18 (2026-10-04) removed the unused readiness snapshot and the dead ZIP planners, and the test that pinned this item went with them, so no runnable check names it. It counts as fixed again when the surface that carries this item's fixed form has a named test.",
+      "since": "2026-10-04"
     }
   ]
 }

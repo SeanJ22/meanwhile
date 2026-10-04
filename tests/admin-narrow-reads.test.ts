@@ -29,8 +29,6 @@ import { readDecisionCards, readSnapshot, SNAPSHOT_ID } from "../lib/control-pla
 import { ADMIN_V6_CAPABILITY_REVISION } from "../lib/control-plane/admin-view/v6-capabilities.ts";
 import { PULSE_CONFIG_REVISION_FIELDS, PULSE_RESEARCH_FIELDS, PULSE_SNAPSHOT_FIELDS, readPulse } from "../lib/control-plane/gateway/pulse-read.ts";
 import type { OwnerSnapshot } from "../lib/control-plane/owner-surface.ts";
-import { READINESS_DERIVATION_CONTRACT, type ReadinessStateSnapshot } from "../lib/control-plane/readiness/model.ts";
-import { READINESS_GRID_FIELDS, readReadinessGridFrom, readinessRowOutcome } from "../lib/control-plane/readiness/read.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { pgAggregateRepository } from "../lib/control-plane/repository/pg-store.ts";
@@ -228,48 +226,6 @@ test("Fleet · Now's decision cards are the snapshot's, in the snapshot read's w
   const src = readFileSync("app/(admin)/admin/page.tsx", "utf8");
   assert.doesNotMatch(src, /readDecisionCards\(/, "the home screen no longer reads the old tracker's decision cards");
   assert.doesNotMatch(src, /readSnapshot\(/, "the page never reads the whole snapshot");
-});
-
-/* ------------------------------------------------------------------ Readiness's grids */
-
-const snapshotOf = (contract: string): ReadinessStateSnapshot =>
-  any({
-    formatVersion: 1,
-    derivationContract: contract,
-    state: "az",
-    stateName: "Arizona",
-    publishedAt: NOW,
-    publishedFromSha: "abc1234",
-    publisher: "the test",
-    summary: { band: "PARTIAL" },
-    capabilities: [{ capabilityId: "c-1", domain: "Meetings and agendas", gates: [{ state: "CURRENT" }, { state: "NOT_WALKED" }] }],
-    zips: Array.from({ length: 300 }, (_, i) => ({ zip: String(85000 + i) })),
-    evidenceWalks: [],
-    delivery: [],
-    monotonicityViolations: [],
-  });
-
-test("a state's grid is its snapshot without the ZIP rows, with the same outcome in every case", async () => {
-  for (const contract of [READINESS_DERIVATION_CONTRACT, "readiness/hand-authored@0"]) {
-    const repos = createMemoryRepositories();
-    await repos.readinessSnapshots.put("az", snapshotOf(contract), NOW);
-    const row = await repos.readinessSnapshots.read("az");
-    const whole = readinessRowOutcome(row?.value ?? null, "pg", "Arizona", row ? { revision: row.revision, updatedAt: row.updatedAt } : null);
-    const grid = await readReadinessGridFrom(repos.readinessSnapshots, "az", "Arizona", "pg");
-    if (whole.kind === "HELD") {
-      const { zips: _zips, ...rest } = whole.snapshot;
-      assert.deepEqual(grid, { ...whole, snapshot: rest });
-    } else {
-      assert.equal(whole.kind, "REQUIRES_REPUBLISH");
-      assert.deepEqual(grid, whole, "a superseded snapshot is quarantined in the same words, with the same record facts");
-    }
-  }
-  const empty = createMemoryRepositories();
-  assert.deepEqual(
-    await readReadinessGridFrom(empty.readinessSnapshots, "az", "Arizona", "pg"),
-    readinessRowOutcome(null, "pg", "Arizona"),
-  );
-  assert.ok(!(READINESS_GRID_FIELDS as readonly string[]).includes("zips"));
 });
 
 /* ------------------------------------------------------------------ the body read */

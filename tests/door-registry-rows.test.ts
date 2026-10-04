@@ -26,7 +26,7 @@ test("the registry's rows are exactly the code's wiring rows", async () => {
   }
 });
 
-test("a registry that differs from the code is not used, and the switch is off by default", async () => {
+test("a registry that holds every door the code names is used, edits included; one that lost a door is not; the switch is off by default", async () => {
   const repos = await seeded();
   assert.equal(doorReadModeFromEnv({}), "code");
   assert.equal(doorReadModeFromEnv({ WTP_DOORS_READ: "Registry" }), "registry");
@@ -42,10 +42,16 @@ test("a registry that differs from the code is not used, and the switch is off b
 
   const bad = (await listDoors(repos.doors)).doors[0];
   await repos.doors.compareAndSet(bad.doorId, (await repos.doors.read(bad.doorId))!.revision, { ...bad, config: { ...bad.config, extra: "x" } }, AT);
-  const mismatch = await installDoorWiringFromRegistry(repos.doors, { mode: "registry" });
-  assert.equal(mismatch.reading, "code");
-  assert.ok(mismatch.differences.length > 0);
-  assert.equal(activeWiring(), SOURCE_WIRING, "a mismatch leaves the code's list in force");
+  const edited = await installDoorWiringFromRegistry(repos.doors, { mode: "registry" });
+  assert.equal(edited.reading, "registry", "a door edited in the registry is read from the next pass (DB-13)");
+  assert.ok(edited.differences.length > 0);
+
+  const partial = createMemoryRepositories();
+  await seedMeetingDoors({ repo: partial.doors, wiring: SOURCE_WIRING.slice(1), derived: [], deriveInputAt: AT, at: AT });
+  const lost = await installDoorWiringFromRegistry(partial.doors, { mode: "registry" });
+  assert.equal(lost.reading, "code", "a registry that lost a door the code names changes nothing");
+  assert.match(lost.reason ?? "", /lost 1 meeting door/);
+  assert.equal(activeWiring(), SOURCE_WIRING);
 
   const empty = await installDoorWiringFromRegistry(createMemoryRepositories().doors, { mode: "registry" });
   assert.equal(empty.reading, "code", "an unseeded registry changes nothing");

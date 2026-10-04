@@ -1,6 +1,7 @@
 import {
   RETIRED_MEETING_ROUTES,
   SOURCE_WIRING,
+  activeWiring,
   meetingSourceNamesForWiring,
   type BodySourceWiring,
 } from "../registry/source-wiring.ts";
@@ -116,9 +117,9 @@ export function meetingAcquisitionFailureDomain(
   return `meeting-upstream:${host}`;
 }
 
-function buildMeetingPartitions(): readonly MeetingPartitionContract[] {
+function buildMeetingPartitions(wirings: readonly BodySourceWiring[]): MeetingPartitionContract[] {
   const { readerConsumers, ...policy } = MEETING_PARTITION_POLICY;
-  const partitions: MeetingPartitionContract[] = SOURCE_WIRING.flatMap((wiring) =>
+  const partitions: MeetingPartitionContract[] = wirings.flatMap((wiring) =>
     meetingSourceNamesForWiring(wiring).map((meetingSource) => ({
       ...policy,
       id: meetingPartitionId(meetingSource, wiring.bodyId),
@@ -183,8 +184,16 @@ function buildMeetingPartitions(): readonly MeetingPartitionContract[] {
   return partitions;
 }
 
-/** One permanent contract and canonical pointer per registered route/body. */
-export const MEETING_PARTITION_CONTRACTS = buildMeetingPartitions();
+/**
+ * One permanent contract and canonical pointer per registered route/body.
+ *
+ * Built from the code's list at load. With the door registry switched on
+ * (lib/doors/install.ts) the runner calls `refreshMeetingPartitions()` at the
+ * start of each pass, which replaces the contents of this array and the lists
+ * built from it IN PLACE, so every importer sees the registry's doors on that
+ * pass and no deploy is needed (DB-13).
+ */
+export const MEETING_PARTITION_CONTRACTS: MeetingPartitionContract[] = buildMeetingPartitions(SOURCE_WIRING);
 
 /**
  * **A RETIRED ROUTE'S LAST PROMOTED VERSION, HELD UNTIL ITS SUCCESSOR PROMOTES.**
@@ -223,8 +232,8 @@ export interface HeldMeetingPartition {
   readonly retiredOn: string;
 }
 
-function buildHeldMeetingPartitions(): readonly HeldMeetingPartition[] {
-  const registered = new Map(MEETING_PARTITION_CONTRACTS.map((partition) => [partition.id, partition]));
+function buildHeldMeetingPartitions(contracts: readonly MeetingPartitionContract[]): HeldMeetingPartition[] {
+  const registered = new Map(contracts.map((partition) => [partition.id, partition]));
   const held = RETIRED_MEETING_ROUTES.flatMap((route) => {
     const id = meetingPartitionId(route.meetingSource, route.bodyId);
     const successorId = meetingPartitionId(route.replacedBy, route.bodyId);
@@ -254,7 +263,7 @@ function buildHeldMeetingPartitions(): readonly HeldMeetingPartition[] {
   return held;
 }
 
-export const HELD_MEETING_PARTITIONS = buildHeldMeetingPartitions();
+export const HELD_MEETING_PARTITIONS: HeldMeetingPartition[] = buildHeldMeetingPartitions(MEETING_PARTITION_CONTRACTS);
 
 /**
  * Retired partitions that hold nothing: the successor was already a wired,
@@ -280,10 +289,10 @@ export function heldMeetingPartitionFor(successorId: string): HeldMeetingPartiti
  * none for any other task. Refused at load, rather than silently cooled to the
  * base cadence, when a followed partition is not registered.
  */
-function buildSittingWindowSources(): ReadonlyMap<string, readonly string[]> {
-  const registered = new Set(MEETING_PARTITION_CONTRACTS.map((partition) => partition.id));
+function buildSittingWindowSources(contracts: readonly MeetingPartitionContract[]): Map<string, readonly string[]> {
+  const registered = new Set(contracts.map((partition) => partition.id));
   const sources = new Map<string, readonly string[]>();
-  for (const partition of MEETING_PARTITION_CONTRACTS) {
+  for (const partition of contracts) {
     if (partition.schedule?.kind === "SITTING_WINDOW") sources.set(partition.id, [partition.id]);
   }
   for (const contract of ROUTINE_SOURCE_CONTRACTS) {
@@ -301,7 +310,41 @@ function buildSittingWindowSources(): ReadonlyMap<string, readonly string[]> {
   return sources;
 }
 
-const SITTING_WINDOW_SOURCES = buildSittingWindowSources();
+const SITTING_WINDOW_SOURCES = buildSittingWindowSources(MEETING_PARTITION_CONTRACTS);
+
+export interface MeetingPartitionRefresh {
+  /** True when the lists now follow `wirings`; false when they were left as they were. */
+  readonly refreshed: boolean;
+  readonly partitions: number;
+  /** Why the lists were left as they were, in a sentence; null when refreshed. */
+  readonly reason: string | null;
+}
+
+/**
+ * DB-13: rebuild the partition lists from the doors in use now (the registry's
+ * rows when installed, else the code's). All three lists are built first and
+ * swapped in only if every check passes, so a door that collides with another,
+ * names a retired route's successor wrongly, or breaks a sitting window leaves
+ * the last good lists in place (last-known-good isolation is unchanged).
+ */
+export function refreshMeetingPartitions(wirings: readonly BodySourceWiring[] = activeWiring()): MeetingPartitionRefresh {
+  try {
+    const contracts = buildMeetingPartitions(wirings);
+    const held = buildHeldMeetingPartitions(contracts);
+    const sources = buildSittingWindowSources(contracts);
+    MEETING_PARTITION_CONTRACTS.splice(0, MEETING_PARTITION_CONTRACTS.length, ...contracts);
+    HELD_MEETING_PARTITIONS.splice(0, HELD_MEETING_PARTITIONS.length, ...held);
+    SITTING_WINDOW_SOURCES.clear();
+    for (const [id, ids] of sources) SITTING_WINDOW_SOURCES.set(id, ids);
+    return { refreshed: true, partitions: contracts.length, reason: null };
+  } catch (error) {
+    return {
+      refreshed: false,
+      partitions: MEETING_PARTITION_CONTRACTS.length,
+      reason: `the registry's doors could not be built into meeting work (${error instanceof Error ? error.message : String(error)}), so the previous list stays in use`,
+    };
+  }
+}
 
 /** The partition ids whose sittings decide whether a task is hot; empty when the task has no sitting window. */
 export function sittingWindowSourceIds(taskId: string): readonly string[] {

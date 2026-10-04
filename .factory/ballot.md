@@ -3,14 +3,14 @@ worker: codex-ballot
 provider: Codex
 run_id: codex-ballot-9378cafcef294004a0aa48621d1a1e44
 lock: codex-ballot-9378cafcef294004a0aa48621d1a1e44
-heartbeat: 2026-10-04T08:29:18Z
+heartbeat: 2026-10-04T08:43:55Z
 on_river: none
 ready: none
-checks: FULL at 3c4617ef12a25edee1cb4eab0cccf784b164ccd9 completed: 9117 tests, 9088 pass, 18 fail, 11 skip (1651s), hung MapTiler child explicitly terminated. All 18 failure cases repaired in focused diagnostics: accounting 42/42, generated/state-manifest 26/26, edge 12/12, finance/source 22/22, browser/visual 13/13, territory/generic 6/6. At 7712b4543 lint 0 errors/68 warnings and types pass. Fresh exact-SHA FULL next; No READY.
-working_on: CA-24/31 inventory and source-preservation regressions repaired; CA-21 saved-byte finance adapters WIP (CSV/search-API/bulk-ZIP); general publication/reader joins and legacy retirement unfinished. CA-32/49 partial; cold live proof pending.
+checks: FULL isolated f049ae93d5650a4409d9f5769412b52e1b5e703c running (1002 files); zero failures reported so far. All 18 failures in earlier 3c4617ef12a25edee1cb4eab0cccf784b164ccd9 FULL repaired and focused checks pass. Generated/state-manifest 26/26, accounting 42/42, browser/visual 13/13, generic/territory 6/6; lint/type pass at 7712b4543. No READY before FULL result.
+working_on: Certifying first ballot/money/Ask batch at f049ae93d. CA-21 local uncommitted finance-door bindings now require exact served jurisdiction, filed candidate name, exact office title and sourced election date/year; 6/6 finance parser/binding diagnostics pass; type repair verified next. Generic finance publication/registry reader hook unfinished.
 waiting_on: CA-25 DB-42 (registry continuing bank); CA-37 BR-24 (measures continuing admin); CA-19 CP-03/CA-33 CP-09 (hunters continuing slide). DB-11 integrated at river 8f6185c54.
 returned: CP-01 Ask privacy hook checkpoint 812f89416; CA-12 own-words hook connected after River cf622f303 integration, 26/26 focused tests pass. No READY before required FULL.
-needs_hook: slide via River: CA-31 PDF/CSV saved-capture admission and BALLOT_CONTEST standing publication hook still needed. Registry/Bank via River: CA-21 exports readFinanceDoor in lib/funding/finance-door-reader.ts for campaign-finance-csv/search-api/bulk-zip; door config fieldMap JSON, exact source hosts/OCD, rowsPath/totalPath/fileName. Wire registry read dispatch when its reader loop lands; generic finance publication/target bridging still ballot-owned WIP.
+needs_hook: hunters continuing slide via River: CA-31 heldPageCopies in worker-publication-evidence.ts:29 still selects HTML only; admit complete saved CSV and PDF-derived text with raw document hash. New completed-parser publication already dispatches via existing task registry. Retained legacy ballot plans still need migration to BALLOT_CONTEST + ballot-contests without guessing a full list. Registry via River: CA-21 readFinanceDoor exports saved-byte CSV/search-API/bulk-ZIP field-map readers; read-kind dispatch/general finance publication remain unfinished.
 needs_Sean: none
 seen_not_fixed: The MapTiler baseline failures reproduce on river 8f6185c54; local-proxy-only harness repair now passes 4/4 with production quota guard unchanged, fake key and non-forwarding instrument. Chromium 151 system substitution reported; pinned 1234 unavailable. Corepack pinned pnpm 10.33.0 uses /workspace/.cache/corepack.
 runs_and_working_minutes: 1 run; minutes not yet measured

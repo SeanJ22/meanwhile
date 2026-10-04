@@ -108,6 +108,7 @@ export function buildReceipt(draft: ReceiptDraft): ActionReceipt {
     authority: draft.authority,
     subjectKind: draft.subjectKind,
     subject: draft.subject,
+    requestedSubject: request.subject,
     inputDigest: inputDigest(request.input),
     caller: request.caller,
     actorRef: request.actorRef,

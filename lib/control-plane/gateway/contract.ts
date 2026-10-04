@@ -183,6 +183,8 @@ export interface ActionReceipt {
   readonly subject: string;
   /** A stable digest of the input, so the record is auditable without storing free text. */
   readonly inputDigest: string;
+  /** Original target, retained when the action's subject becomes a derived intent id. */
+  readonly requestedSubject?: string;
   readonly caller: CallerAuthority;
   readonly actorRef: string;
   /** The revision/SHA the action was rendered against, when it quoted one. */

@@ -10,7 +10,7 @@ export const revalidate = 0;
 export const runtime = "nodejs";
 const headers = { "cache-control": "no-store, no-cache, must-revalidate" };
 
-/** Partial v6 history: only exact, safely mappable global runner requests. */
+/** Durable order history, one bounded page of authoritative receipts. */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const asOf = new Date().toISOString();
   const guard = await guardAdminRequest({ headers: request.headers,

@@ -670,6 +670,8 @@ export interface RecordedTransition {
  * (slow, and it is the one that proves the process may die).
  */
 export interface ControlPlaneRepositories {
+  /** Bounded, newest-first projection joined to its authoritative receipt. */
+  readonly adminActionHistoryPage?: (query: import("./action-history-atomic.ts").ActionHistoryReadQuery) => Promise<readonly import("./action-history-atomic.ts").ActionHistoryReadRow[]>;
   readonly workItems: AggregateRepository<WorkItem>;
   readonly routeTasks: AggregateRepository<RouteTask>;
   readonly attempts: AggregateRepository<Attempt>;

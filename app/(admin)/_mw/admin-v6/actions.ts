@@ -868,3 +868,18 @@ export function actionDef(kind: ActionKind): ActionDef {
 export function connectedKinds(): readonly ActionKind[] {
   return defs.filter((d) => d.gateway !== null).map((d) => d.kind);
 }
+
+/** Read legacy receipts through the same gateway map used to send controls. */
+export function gatewayActionKind(type: string, evidence: { subject?: string; says?: string } = {}): ActionKind | null {
+  if (type === "decision.record" && evidence.subject !== "fix-queue") return null;
+  const candidates = defs.filter(definition => definition.gateway?.type === type);
+  if (!candidates.length) return null;
+  if (candidates.length === 1) return candidates[0].kind;
+  const says = evidence.says ?? "";
+  if (type === "expansion.scope.budget") return /is paused/.test(says) ? "hunt-pause" : /is resumed/.test(says) ? "hunt-resume" : "hunt-limit";
+  if (type === "expansion.scope.setMany") return evidence.subject && /^geo:[a-z]{2}\.zcta\./.test(evidence.subject) ? "hunt-start" : "hunt-start-many";
+  if (type === "config.setDiscoverySearch") return /\bOFF\b|turned off|is off/i.test(says) ? "global-search-off" : "global-search-on";
+  if (type === "config.setPlaceTarget") return /is cleared/.test(says) ? "target-clear" : "target-set";
+  if (type === "config.setDataSwitch") return /\bOFF\b|\boff\b/.test(says) ? "data-switch-off" : "data-switch-on";
+  return candidates[0].kind;
+}

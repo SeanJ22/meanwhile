@@ -992,7 +992,13 @@ const debtsIn = await wakeInstalledAdapterDebts(repos,(canary
 ).filter((debt) => !retiredDebtReasons.has(debt.obligationId)),NOW);
 /* The plain-code lane's queue key reads this debt (`waitingSince`); so does its reading while the cycle runs. */
 const debtAtCycleStart = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
-for (const [id, decision] of decisions) decisions.set(id, sourceFailureRecovery(decision, debtAtCycleStart.get(id)));
+/* A shut door goes to a detective; a passing outage keeps its plain retry. While the paid lane is closed the shut door's plain re-read still runs (DP-02). */
+const plainDecisionBeforeDetective = new Map<string, ExecutorDecision>();
+for (const [id, decision] of decisions) {
+  const recovered = sourceFailureRecovery(decision, debtAtCycleStart.get(id));
+  if (recovered !== decision) plainDecisionBeforeDetective.set(id, decision);
+  decisions.set(id, recovered);
+}
 const modelClassUnits = units.filter((u) => decisions.get(u.obligation.id)?.kind === "BOUNDED_MODEL_WORKER");
 const debtIds = new Set(debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
 const retryNow = new Set(retryable(debtsIn, nowMs).map((d) => d.obligationId));
@@ -2764,7 +2770,7 @@ const cycle = await runCycle({
   /* With no DISPATCH pending (the set above is empty), the selected expansion scopes' due work goes first instead. */
   ...(scopePlaceFirst !== null ? { placeFirst: scopePlaceFirst } : {}),
   research: {
-    decide: (row) => decisionFor(row.obligation.id, row.obligation.routeId),
+    decide: (row) => (!modelLaneEnabled && plainDecisionBeforeDetective.get(row.obligation.id)) || decisionFor(row.obligation.id, row.obligation.routeId),
     /* The same canonical band comparator used for the visible/opening queue reaches the actual Scout pool. */
     compareModelRows: compareScoutRows,
     admitScout: (row) => {

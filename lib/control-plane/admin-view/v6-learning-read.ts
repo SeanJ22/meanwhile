@@ -60,7 +60,7 @@ function trend(trends: LearningTrends, input: {
   };
 }
 
-export function v6LearningView(trends: LearningTrends, doors: DoorFacts | null, bankWriteErrors: number | null = null): LearningView {
+export function v6LearningView(trends: LearningTrends, doors: DoorFacts | null, bankWriteErrors?: number | null): LearningView {
   const s = trends.series;
   const trendList: Trend[] = [];
   if (s.handed.measuredWeeks > 0) {
@@ -102,7 +102,13 @@ export function v6LearningView(trends: LearningTrends, doors: DoorFacts | null, 
   }
 
   const readings: Reading[] = [];
-  readings.push({ question: "Are lessons reaching the Bank?", big: bankWriteErrors === null ? "—" : bankWriteErrors.toLocaleString("en-US"),
+  for (const series of [s.scoutReused, s.detectiveReused]) {
+    const latest = [...series.points].reverse().find(point => point.value !== null);
+    if (latest) readings.push({ question: series.label, big: latest.value!.toLocaleString("en-US"),
+      bigNote: `routes reused in the week of ${latest.week}`, body: "Successful walks through inherited doors, grouped by who first found them.",
+      method: [{ k: "Counted", v: "Only doors with a recorded finder. Older doors with no finder remain unassigned." }] });
+  }
+  if (bankWriteErrors !== undefined) readings.push({ question: "Are lessons reaching the Bank?", big: bankWriteErrors === null ? "—" : bankWriteErrors.toLocaleString("en-US"),
     bigNote: "Bank write errors", body: "Failed writes after their retry attempts.",
     method: [{ k: "Counted", v: "Bank writes that could not be saved after retries. A count unavailable from the store shows —." }] });
   if (doors !== null && doors.walks > 0) {

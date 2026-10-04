@@ -33,3 +33,11 @@ test("nothing recorded yields no trend and says what each unmeasured question ne
   assert.ok(view.notMeasured.length >= 5);
   for (const n of view.notMeasured) assert.ok(n.why.length > 0 && n.needs.length > 0, n.question);
 });
+
+test('Bank write errors show a measured zero, a count, or an unavailable number', () => {
+  const trends = buildLearningTrends([], '2026-10-04T00:00:00Z');
+  for (const count of [0, 3, null]) {
+    const view = v6LearningView(trends, null, count);
+    assert.equal(view.readings.find(r => r.bigNote === 'Bank write errors')!.big, count === null ? '—' : String(count));
+  }
+});

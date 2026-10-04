@@ -13,6 +13,9 @@
  * carries the same fields, status, provenance and honest accounting as any other
  * source's, and one that cannot be built is counted as dropped, never lost.
  *
+ * @freshness-reads-here — collectedAt stamps the moment each door's feed was
+ * actually read, immediately after `kind.read` returns.
+ *
  * Installed kinds are registered once per pass by the same loader that reads
  * Scout adapters (`scheduler/scout-adapters.ts`); with none registered nothing
  * about composite wiring changes.

@@ -52,6 +52,7 @@ import { readHeldBytes, type HeldVaultArtifact } from "../lib/control-plane/evid
 import { heldArtifactCaptures } from "../lib/civic-data/held-artifact-captures.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import type { MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discovery.ts";
+import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { digestValueClosure } from "../lib/ops/generator-digest.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
@@ -208,6 +209,15 @@ async function main(): Promise<void> {
   for (const id of plan.accepted) console.log(`  accepted ${id}`);
   for (const id of plan.renewed) console.log(`  renewed ${id}`);
   for (const h of plan.held) console.log(`  held ${h.jurisdictionId} ${h.route}${h.bodyName ? ` (${h.bodyName})` : ""}: ${h.reason}: ${h.detail}`);
+  /* RULING 159: the run's summary states its denominator, and says why when there is none. */
+  const decided = plan.accepted.length + plan.renewed.length;
+  console.log(floorLine(floored(
+    "meeting bodies accepted or renewed",
+    "this run's crosswalk plan",
+    decided + plan.held.length,
+    decided,
+    reviews.length === 0 ? "no discovery walk was held for any registered government" : "the walks reviewed produced no body to accept, renew or hold",
+  )));
   await finish(derivedCrosswalkCandidate(plan, [
     ...(lkgInput === null ? [] : [lkgInput]),
     ...[...registrations.values()].flatMap((entry) => "input" in entry ? [entry.input] : []),

@@ -1,6 +1,5 @@
 import { createHash } from "node:crypto";
 
-import { officeholderIdentityMayEnterReader } from "../officials/roster-authority.ts";
 import type { SourceSnapshot, StatementCorpus } from "./types.ts";
 
 export const STATEMENT_IDENTITY_FIRST_SEED_FROZEN_BASE_SHA = "fc67e8cd34c489590c403f7b4a0d6008fa755296";
@@ -103,9 +102,9 @@ export interface TrustedLkgStatementIdentityTransfer {
 }
 
 function permanentReaderIdentity(id: string): boolean {
-  // Do not let a test-runner marker reopen retired Plural ids while building
-  // this production-shaped seed.
-  return officeholderIdentityMayEnterReader(id, null, "production");
+  // A Plural id is a state legislator's Open States identity; a statement
+  // keyed only to one is not yet keyed to a permanent registry person.
+  return !id.startsWith("plural:");
 }
 
 function canonical(value: unknown): string {

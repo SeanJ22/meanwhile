@@ -12,7 +12,6 @@ import {
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "../civic-data/read-model.ts";
-import { officeholderIdentityMayEnterReader } from "../officials/roster-authority.ts";
 import {
   transferFrozenStatementIdentities,
   validateStatementIdentityFirstSeedEvidence,
@@ -26,10 +25,6 @@ const CONTRACT = requiredManualProductionContract("officeholder-statements");
 export const OFFICEHOLDER_STATEMENT_SCOPE = CONTRACT.scope;
 const SHA256 = /^[a-f0-9]{64}$/;
 
-function productionEligible(snapshot: SourceSnapshot): boolean {
-  return officeholderIdentityMayEnterReader(snapshot.subjectId, null);
-}
-
 function validate(value: StatementCorpus, version: string): void {
   if (!value || !Array.isArray(value.snapshots) || value.snapshots.length === 0) {
     throw new Error(`Officeholder statement projection ${version} has no snapshots.`);
@@ -38,7 +33,6 @@ function validate(value: StatementCorpus, version: string): void {
   for (const snapshot of value.snapshots) {
     if (!snapshot.id || ids.has(snapshot.id)) throw new Error(`Officeholder statement projection ${version} has an empty or duplicate snapshot id.`);
     ids.add(snapshot.id);
-    if (!productionEligible(snapshot)) throw new Error(`${snapshot.id} is keyed only to a retired intermediary identity.`);
     if (!snapshot.subjectId || !/^https:\/\//.test(snapshot.url) || !SHA256.test(snapshot.contentHash) || !Number.isFinite(Date.parse(snapshot.retrievedAt))) {
       throw new Error(`${snapshot.id} lacks exact subject, HTTPS source, hash, or retrieval time.`);
     }

@@ -11,14 +11,12 @@
  * roster itself is never blocked.
  */
 import { currentCuratedReaderRecords } from "../civic-data/curated-reader-read-model.ts";
-import { officeholderIdentityMayEnterReader } from "./roster-authority.ts";
 import { officesForMember, type MemberOfficeRecord } from "./member-offices.ts";
 
 export { refreshMemberOfficesFromPromoted, settleMemberOfficesRead } from "../civic-data/curated-reader-read-model.ts";
 
 /** One member's held offices, capitol first; empty when none are held or the projection is unread. */
 export function currentMemberOffices(officeholderId: string): readonly MemberOfficeRecord[] {
-  if (!officeholderIdentityMayEnterReader(officeholderId)) return [];
   let records: readonly MemberOfficeRecord[];
   try {
     records = currentCuratedReaderRecords<MemberOfficeRecord>("member-offices", []);

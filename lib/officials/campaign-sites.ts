@@ -1,4 +1,3 @@
-import { officeholderIdentityMayEnterReader } from "./roster-authority.ts";
 import {
   currentCuratedReaderRecords,
   type CampaignSiteProjectionRecord,
@@ -142,7 +141,6 @@ export function campaignSiteFor(
   officeholderId: string,
   projection?: Readonly<Record<string, CampaignSite>>,
 ): CampaignSite | null {
-  if (!officeholderIdentityMayEnterReader(officeholderId)) return null;
   let records = projection;
   if (!records) {
     try {

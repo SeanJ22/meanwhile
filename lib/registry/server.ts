@@ -12,7 +12,7 @@ import {
   type PhotoIndex,
   type SeatHolder,
 } from "../officials/lookup.ts";
-import { mayReadRetiredPluralRoster, officeholderIdentityMayEnterReader, officeholderRosterFiles } from "../officials/roster-authority.ts";
+import { officeholderRosterFiles } from "../officials/roster-authority.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { BODY_TERRITORY_FILE, type BodyTerritoryFile } from "./body-territory.ts";
 import { readPublicBodyAttempts, type PublicBodyAttempt } from "./body-attempt-read.ts";
@@ -292,7 +292,6 @@ async function load(base: RegistryLoaded): Promise<Loaded> {
     };
     const names = new Map<string, string>();
     for (const photo of manifest.photos) {
-      if (!officeholderIdentityMayEnterReader(photo.officeholderId)) continue;
       // Unknown license is not clearable — such a photo never ships (D20).
       if (!photo.license) continue;
       photos.set(photo.officeholderId, photo.url);
@@ -620,7 +619,7 @@ export async function seatHolderById(id: string): Promise<SeatHolder | null> {
   const rosterIdentity = currentRosterMemberReaderDisposition(id);
   if (rosterIdentity?.state === "IDENTITY_UNRESOLVED") return null;
   const canonicalId = rosterIdentity?.canonicalId ?? id;
-  if (!canonicalId.startsWith("congress:") && !mayReadRetiredPluralRoster()) {
+  if (!canonicalId.startsWith("congress:")) {
     const statewide = statewideExecutivesFor(currentStatewideExecutives().map((row) => row.stateOcdId))
       .find((holder) => holder.id === canonicalId);
     if (statewide) return statewide;
@@ -628,7 +627,6 @@ export async function seatHolderById(id: string): Promise<SeatHolder | null> {
       const holder = rosterHoldersForBody(roster.bodyId).find((row) => row.id === canonicalId);
       if (holder) return holder;
     }
-    return null;
   }
   return (await loaded()).officialsById.get(canonicalId) ?? null;
 }
@@ -716,21 +714,11 @@ export async function seatHoldersForDivision(
         const ids = new Set(held.divisions.filter((row) => row.ocdId === ocdId).map((row) => row.officeholderId));
         return held.seats.filter((holder) => ids.has(holder.id)).sort((a, b) => a.name.localeCompare(b.name));
       }
-      if (!mayReadRetiredPluralRoster()) return [];
     } catch (error) {
-      // The old state snapshots remain deterministic test evidence only. A
-      // production Reader must surface a canonical-store outage; Node's
-      // explicit test runner may continue through the already-loaded fixture
-      // so legacy UI contracts can be exercised without inventing a database.
-      if (!mayReadRetiredPluralRoster() || !(error instanceof CivicDataStoreUnavailableError)) throw error;
+      // Open States rows are held for state legislators (rulings §3), so an
+      // unreachable official roster store falls through to them.
+      if (!(error instanceof CivicDataStoreUnavailableError)) throw error;
     }
-  }
-  if (!federalDirectoryAppliesToDivision(ocdId) && !mayReadRetiredPluralRoster()) {
-    // Production's federal directory has no rows for local or state-legislative
-    // divisions. Confirm the canonical registry pointer, then return its honest
-    // no-federal-row result without letting a federal outage take that scope down.
-    await registryLoaded();
-    return [];
   }
   const { officials } = await loaded();
   /*
@@ -905,8 +893,7 @@ export async function seatHoldersForOffice(
   const office = officeIdentity(officeTitle);
   if (office === null) return [];
   if (office !== "us_senator" && office !== "us_representative"
-    && /^ocd-division\/country:us\/state:[a-z]{2}$/.test(ocdId)
-    && !mayReadRetiredPluralRoster()) {
+    && /^ocd-division\/country:us\/state:[a-z]{2}$/.test(ocdId)) {
     await registryLoaded();
     return statewideExecutivesFor([ocdId]).filter((holder) => officeIdentity(holder.officeTitle) === office);
   }

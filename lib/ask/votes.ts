@@ -4,7 +4,6 @@ import { join } from "node:path";
 
 import { nameParts, splitDisplayName } from "../ballot/incumbency.ts";
 import { heldRosterStates } from "../holdings/discovery.ts";
-import { mayReadRetiredPluralRoster } from "../officials/roster-authority.ts";
 import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
 import { formatDateLong } from "../text/format-date.ts";
 import {
@@ -135,20 +134,18 @@ import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
  *
  * The federal roster is the promoted FEDERAL_DIRECTORY authority because it
  * is not a covered STATE — it is national, keyed on `congress:` ids, and its
- * members carry their own `state` on the row. Retired state files can enter
- * only through the explicit node:test fixture gate.
+ * members carry their own `state` on the row. Held Open States state rosters
+ * are read for state legislators (rulings §3).
  */
 type VoteRosterAuthority =
   | { readonly kind: "FEDERAL_DIRECTORY"; readonly state: null }
-  | { readonly kind: "RETIRED_STATE_TEST_FIXTURE"; readonly file: string; readonly state: string };
+  | { readonly kind: "OPEN_STATES_ROSTER"; readonly file: string; readonly state: string };
 
 const ROSTER_SCOPES: Readonly<Record<string, VoteRosterAuthority>> = {
   us: { kind: "FEDERAL_DIRECTORY", state: null },
-  ...(mayReadRetiredPluralRoster()
-    ? Object.fromEntries(
-        heldRosterStates(process.cwd()).map((s) => [s.fips, { kind: "RETIRED_STATE_TEST_FIXTURE" as const, file: `officeholders-${s.fips}.json`, state: s.usps }]),
-      )
-    : {}),
+  ...Object.fromEntries(
+    heldRosterStates(process.cwd()).map((s) => [s.fips, { kind: "OPEN_STATES_ROSTER" as const, file: `officeholders-${s.fips}.json`, state: s.usps }]),
+  ),
 };
 
 interface RosterRow {

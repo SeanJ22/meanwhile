@@ -10,7 +10,6 @@ import type { AnalysesFile } from "../ballot/analyses.ts";
 import type { CandidateCorpus } from "../candidates/corpus.ts";
 import type { StatementCorpus } from "../corpus/types.ts";
 import type { AzIdentityRegistry, LineupReconciliation } from "../identity/types.ts";
-import { officeholderIdentityMayEnterReader } from "../officials/roster-authority.ts";
 import {
   everydayRoutingProjectionFromRecords,
   everydayRoutingProjectionProblems,
@@ -258,17 +257,17 @@ function curatedRecordIssue(
   }
   if (contractId === "campaign-sites") {
     const site = object(row.site);
-    return !officeholderIdentityMayEnterReader(string(row.officeholderId), null) ||
+    return !string(row.officeholderId) ||
         !/^https:\/\//.test(string(site?.url)) ||
         !string(site?.verification) ||
         !Number.isFinite(Date.parse(string(site?.attemptedAt)))
-      ? `${string(row.id)} lacks an eligible exact identity, verified HTTPS site, or attempt date.`
+      ? `${string(row.id)} lacks an exact identity, verified HTTPS site, or attempt date.`
       : null;
   }
   if (contractId === "member-offices") {
     const office = object(row.office);
     return row.kind !== "MEMBER_OFFICE" ||
-        !string(row.officeholderId) || !officeholderIdentityMayEnterReader(string(row.officeholderId), null) ||
+        !string(row.officeholderId) ||
         !["CAPITOL", "DISTRICT"].includes(string(row.officeKind)) ||
         !/^https:\/\//.test(string(row.sourceUrl)) || !string(row.sourceOrg) ||
         !Number.isFinite(Date.parse(string(row.collectedAt))) ||
@@ -386,7 +385,7 @@ function sourceScopedMemberIssue(
     const contentHash = string(row.contentHash);
     const retrievedAt = string(row.retrievedAt);
     const extraction = string(row.extraction);
-    if (!id || !officeholderIdentityMayEnterReader(subjectId, null) || !/^https:\/\//.test(url) ||
+    if (!id || !subjectId || !/^https:\/\//.test(url) ||
         !SHA256_PATTERN.test(contentHash) || !Number.isFinite(Date.parse(retrievedAt)) || !Number.isInteger(row.httpStatus) ||
         !["CAMPAIGN_SITE", "OFFICIAL_PAGE"].includes(string(row.kind)) ||
         !(extraction === "failed" || (extraction === "ok" && string(row.text).trim())) ||
@@ -784,9 +783,6 @@ function officeholderStatementProjection(
       : ["snapshots.id/subjectId/url/contentHash/retrievedAt/httpStatus/extraction"],
     violations: [
       ...duplicateProblems(ids, "Officeholder statement snapshot"),
-      ...(identities.some((identity) => !officeholderIdentityMayEnterReader(identity.subjectId, null))
-        ? ["A statement is keyed only to a retired intermediary officeholder identity."]
-        : []),
     ],
     schemaVersion: "officeholder-statements:1",
     consumerChecks: [
@@ -794,11 +790,6 @@ function officeholderStatementProjection(
         consumer: "/api/positions and Ask statement search",
         passed: snapshots.length > 0 && complete,
         detail: `${snapshots.length} append-only primary-publication snapshot(s).`,
-      },
-      {
-        consumer: "production officeholder identity boundary",
-        passed: identities.every((identity) => officeholderIdentityMayEnterReader(identity.subjectId, null)),
-        detail: "No retired intermediary-only identity can enter the Reader projection.",
       },
     ],
     factKind: "owner-reviewed officeholder-controlled and official primary-publication snapshots",

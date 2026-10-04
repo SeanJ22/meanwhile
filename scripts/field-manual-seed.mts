@@ -31,8 +31,9 @@ import {
   type FieldManualRole,
 } from "../lib/control-plane/field-manual.ts";
 import { leadLine, researchDocEntries, splitMarkdownDocument } from "../lib/method/research-docs.ts";
+import { defaultPlaybookEntries } from "../lib/control-plane/playbooks.ts";
 import { MANIFEST_ROUTES } from "../lib/hunt/branch-manifest.ts";
-import { KNOWN_PLATFORMS } from "../lib/hunt/platform-tenancy.ts";
+import { platformFingerprintEntries } from "../lib/control-plane/platform-fingerprints.ts";
 import { DESCENT_SEEDS } from "../lib/hunt/descent-seeds.ts";
 import { COVERAGE_AUDITS } from "../lib/registry/coverage-audit.ts";
 import { LEGISTAR_CLIENTS } from "../lib/sources/legistar/client-registry.ts";
@@ -127,23 +128,7 @@ function fromManifest(): FieldManualEntry[] {
 }
 
 function fromPlatforms(): FieldManualEntry[] {
-  const src = "lib/hunt/platform-tenancy.ts";
-  return collect(src, KNOWN_PLATFORMS.map((p) => ({
-    id: fieldManualEntryId(src, p.id),
-    role: "SHARED" as FieldManualRole,
-    kind: "PLATFORM_FINGERPRINT",
-    title: `${p.label} tenancy`,
-    summary: `a body on ${p.label} is machine-readable; recognise its host by ${String(p.hostPattern)}`,
-    states: [],
-    recordClasses: ["meetings"],
-    platforms: [p.id],
-    outcome: "REFERENCE" as FieldManualOutcome,
-    url: null,
-    source: src,
-    observedAt: null,
-    tier: null,
-    payload: { id: p.id, label: p.label, hostPattern: String(p.hostPattern) },
-  })));
+  return platformFingerprintEntries();
 }
 
 function fromDescentSeeds(): FieldManualEntry[] {
@@ -510,6 +495,7 @@ async function main(): Promise<void> {
     ...fromCoverageAudits(),
     ...(target === "control-plane" ? await fromMethodCandidates(repos) : []),
     ...fromDocs(),
+    ...defaultPlaybookEntries(["SCOUT", "DETECTIVE", "PARSER", "AUDITOR", "ENGINEER", "VALIDATOR"]),
     ...fromTenantRegistries(),
     ...fromTiers(),
     ...fromDescentResults(),

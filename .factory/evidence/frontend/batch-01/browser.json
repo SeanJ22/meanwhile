@@ -1,0 +1,166 @@
+[
+  {
+    "width": 390,
+    "theme": "dark",
+    "rungs": [
+      {
+        "rung": "display",
+        "size": "24px",
+        "lineHeight": "27.6px"
+      },
+      {
+        "rung": "title",
+        "size": "18px",
+        "lineHeight": "22.5px"
+      },
+      {
+        "rung": "heading",
+        "size": "15px",
+        "lineHeight": "20.25px"
+      },
+      {
+        "rung": "body",
+        "size": "14px",
+        "lineHeight": "21px"
+      },
+      {
+        "rung": "detail",
+        "size": "12px",
+        "lineHeight": "17.4px"
+      },
+      {
+        "rung": "caption",
+        "size": "11px",
+        "lineHeight": "15.4px"
+      }
+    ],
+    "overflow": false,
+    "mapFallbackMs": 558,
+    "WebGLDisabledNavigationAndList": "pass",
+    "sourcesDisclosure": "pass",
+    "closeAction": "pass"
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "rungs": [
+      {
+        "rung": "display",
+        "size": "24px",
+        "lineHeight": "27.6px"
+      },
+      {
+        "rung": "title",
+        "size": "18px",
+        "lineHeight": "22.5px"
+      },
+      {
+        "rung": "heading",
+        "size": "15px",
+        "lineHeight": "20.25px"
+      },
+      {
+        "rung": "body",
+        "size": "14px",
+        "lineHeight": "21px"
+      },
+      {
+        "rung": "detail",
+        "size": "12px",
+        "lineHeight": "17.4px"
+      },
+      {
+        "rung": "caption",
+        "size": "11px",
+        "lineHeight": "15.4px"
+      }
+    ],
+    "overflow": false,
+    "mapFallbackMs": 202,
+    "WebGLDisabledNavigationAndList": "pass",
+    "sourcesDisclosure": "pass",
+    "closeAction": "pass"
+  },
+  {
+    "width": 1280,
+    "theme": "dark",
+    "rungs": [
+      {
+        "rung": "display",
+        "size": "24px",
+        "lineHeight": "27.6px"
+      },
+      {
+        "rung": "title",
+        "size": "18px",
+        "lineHeight": "22.5px"
+      },
+      {
+        "rung": "heading",
+        "size": "15px",
+        "lineHeight": "20.25px"
+      },
+      {
+        "rung": "body",
+        "size": "14px",
+        "lineHeight": "21px"
+      },
+      {
+        "rung": "detail",
+        "size": "12px",
+        "lineHeight": "17.4px"
+      },
+      {
+        "rung": "caption",
+        "size": "11px",
+        "lineHeight": "15.4px"
+      }
+    ],
+    "overflow": false,
+    "mapFallbackMs": 223,
+    "WebGLDisabledNavigationAndList": "pass",
+    "sourcesDisclosure": "pass",
+    "closeAction": "pass"
+  },
+  {
+    "width": 1280,
+    "theme": "light",
+    "rungs": [
+      {
+        "rung": "display",
+        "size": "24px",
+        "lineHeight": "27.6px"
+      },
+      {
+        "rung": "title",
+        "size": "18px",
+        "lineHeight": "22.5px"
+      },
+      {
+        "rung": "heading",
+        "size": "15px",
+        "lineHeight": "20.25px"
+      },
+      {
+        "rung": "body",
+        "size": "14px",
+        "lineHeight": "21px"
+      },
+      {
+        "rung": "detail",
+        "size": "12px",
+        "lineHeight": "17.4px"
+      },
+      {
+        "rung": "caption",
+        "size": "11px",
+        "lineHeight": "15.4px"
+      }
+    ],
+    "overflow": false,
+    "mapFallbackMs": 286,
+    "WebGLDisabledNavigationAndList": "pass",
+    "sourcesDisclosure": "pass",
+    "closeAction": "pass"
+  }
+]

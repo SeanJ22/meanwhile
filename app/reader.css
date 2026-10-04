@@ -1635,6 +1635,8 @@ details.mw-sources > summary {
 
 /* FE-10: the shared reader frame uses the existing Lumen material. */
 .reader-card {
+  display: flex;
+  flex-direction: column;
   border-radius: var(--radius-lg);
   background: var(--panel);
   background-image: radial-gradient(ellipse at top, var(--lumen-peak), var(--lumen-floor));
@@ -1643,13 +1645,18 @@ details.mw-sources > summary {
 }
 .reader-card-header {
   display: flex;
+  flex-shrink: 0;
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-3);
   padding: var(--space-4);
   border-bottom: 1px solid var(--lumen-rim-strong);
 }
-.reader-card-body { padding: var(--space-4); }
+.reader-card-body {
+  padding: var(--space-4);
+  min-height: 0;
+  overflow-y: auto;
+}
 .reader-card-close {
   display: grid;
   place-items: center;

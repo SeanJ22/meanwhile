@@ -1,0 +1,25 @@
+ci-affected-tests · FULL — .factory/frontend.md is not code the import graph follows
+changed:
+  .factory/frontend.md
+  app/ballot/page.tsx
+  app/globals.css
+  app/reader.css
+  components/map/map-canvas.tsx
+  components/map/popup/official-modal.tsx
+  components/map/welcome-overlay.tsx
+  components/ui/card.tsx
+  docs/DESIGN.md
+  lib/design/rhythm.ts
+  lib/map/start-map.ts
+  lib/ocd/tiers.ts
+  lib/ops/chromium-pin.ts
+  scripts/contrast-audit.mts
+  tests/ask-integration.test.ts
+  tests/chromium-pin.test.ts
+  tests/contrast-audit.test.ts
+  tests/map-startup.test.ts
+  tests/office-tiers.test.ts
+  tests/reader-card.test.tsx
+  tests/rhythm-tokens.baseline.json
+  tests/rhythm-tokens.test.ts
+needs_browser=true

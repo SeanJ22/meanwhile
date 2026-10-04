@@ -1,0 +1,30 @@
+{
+  "commit": "33d75c7cb8a140907ee3fd6e603d4d92853ec19d",
+  "status": "failed",
+  "exitCode": 1,
+  "signal": "SIGINT",
+  "elapsedMs": 775175,
+  "startedAt": "2026-10-04T06:53:37.986Z",
+  "selected_files": 989,
+  "recorded_file_results": 526,
+  "complete": false,
+  "failed_files": [
+    {
+      "schemaVersion": 1,
+      "kind": "file",
+      "file": "tests/deploy-paths.test.ts",
+      "durationMs": 145.815365,
+      "success": false,
+      "counts": {
+        "tests": 12,
+        "failed": 1,
+        "passed": 11,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "topLevel": 12,
+        "suites": 0
+      }
+    }
+  ]
+}

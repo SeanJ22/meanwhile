@@ -3,10 +3,10 @@ worker: codex-slide
 provider: Codex
 run_id: 01a10597-8d28-739a-bd97-9da5600d1019
 lock: codex-slide-f2569e34-6011-4e7b-abef-063d88dabacc
-heartbeat: 2026-10-04T07:10:08.225493+00:00
+heartbeat: 2026-10-04T07:16:44.498315+00:00
 on_river: none
 ready: none
-checks: b283fac949540b481f48c266cc7c8ea61da573e6: 66 focused tests passed; TypeScript and lint passed (69 warnings, 0 errors). FULL still collecting: repeated CMS rows and standalone profile headings need CP-19 repairs; one Ask test still expects an address and needs the adopted CP-01 assertion. Cloud-proxy browser failures diagnosed; all 4 local provider guard tests pass with api.maptiler.com appended to NO_PROXY/no_proxy. No READY claim.
+checks: 4717f3e5c4d3da15ecc149783b7cbbfa0b53570b: 69 focused repair tests passed; TypeScript passed; lint passed (69 warnings, 0 errors). Actual selector FULL; full rerun in an isolated fixed checkout with normal generated references and api.maptiler.com local-fixture proxy bypass. Previous full failure evidence saved in .factory/slide-checks.json. No READY claim yet.
 working_on: CP-01 privacy at reader and candidate-profile publication boundaries; CP-19 record-local quote/publication checks repaired for formatted names and non-person records. WIP pending full verification and shared Ask connection.
 waiting_on: CP-01 Ask hook routed by River to ballot; CP-19 investigative routing hook requested from auditors. Full verification in progress. Browser CDN is blocked, but explicit WTP_CHROMIUM_EXECUTABLE=/usr/bin/chromium now runs actual system-browser tests; substitution is reported. 56 place-reference indexes generated through normal postinstall script.
 returned: none

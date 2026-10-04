@@ -5,7 +5,7 @@ worker: river
 provider: Claude (this run: Opus 5.5, selected by Sean with /model at 06:00Z; this run began on Sonnet 5.5)
 run_id: session_01M3CeUks1KpFZttTP6ZTEAq
 lock: river-20261004T060134Z-23a399b0
-heartbeat: 2026-10-04T10:02:25Z
+heartbeat: 2026-10-04T10:03:33Z
 
 ## Launch
 
@@ -33,6 +33,12 @@ heartbeat: 2026-10-04T10:02:25Z
 - Neon MCP is connected with write tools exposed. River uses only read-only queries, as authorized.
 - Netlify MCP: coding-context tool only. No deploy/site-settings reads seen yet.
 - Browser: Chromium runs, at `/opt/pw-browsers/chromium` (Playwright's bundled headless shell 1234 is missing). **This environment's network policy blocks meanwhileusa.com, admin.meanwhileusa.com, api.netlify.com, console.neon.tech and tiles.meanwhilemaps.com**: CONNECT returns 403 at the egress proxy, and WebFetch reports EGRESS_BLOCKED. Only GitHub and package registries are reachable. Until Sean allows those hosts in this cloud environment's network settings, live checks run only through GitHub Actions (post-deploy-integrity reads the deployed site) and the Neon MCP connection (read-only). No rendered page, button or mobile layout can be checked from River. That is an open verification gap, not a pass. Admin also needs Sean's Google sign-in.
+
+## Release verification routes (read-only)
+
+- **Runner adoption:** Neon project `meanwhile-control-plane` (withered-sunset-39821877), `cp_runner_heartbeat` id `pilot-runner`. Its `value.testedSha` and `value.codeIdentity.effectiveExecutableSha` give the code the runner runs. At 10:03Z: 2aac424 (main's last shipping commit, CONSISTENT), beat 10:03:01Z, `lastCycleOk: false` with the cycle still in progress.
+- **Data plane:** Neon project `we-the-people` (tiny-hill-13996172): civic_data_promotions and civic_data_reader_projections.
+- **Deploy:** the post-deploy-integrity workflow on GitHub, reused per SHA (`river.mjs observe`). There is no direct Netlify API from River (egress blocked).
 
 ## Automatic continuation: verified
 

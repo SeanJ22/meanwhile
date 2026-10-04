@@ -172,6 +172,11 @@
       "itemId": "ADM-9",
       "reason": "Withdrawn, not verified. The Meanwhile Admin design (the owner's spec, 2026-09-23) is dark-first and writes no theme — its prototype says the design system ships no light theme of its own — so the header's light/dark toggle went with the old header and the console is always dark. The design ships light values so a port has somewhere to land; whether the toggle returns over them is the owner's call, recorded on the redesign checklist.",
       "since": "2026-09-23"
+    },
+    {
+      "itemId": "ADM-3",
+      "reason": "Withdrawn with its surface, not verified. The command center replaced the old Admin pages on 2026-10-01 (69b5edc2, f492c559), and the test that pinned this item was retired with the page it pinned, so no runnable check names it. It counts as fixed again when the command center carries this item's fixed form under a named test.",
+      "since": "2026-10-01"
     }
   ]
 }

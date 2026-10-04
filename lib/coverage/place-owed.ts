@@ -1,4 +1,5 @@
 import checklist from "../control-plane/readiness/checklist-profile.json" with { type: "json" };
+import { CHECKLIST_GROUPS, DEADLINE_ITEMS, checklistItemApplies } from "./checklist-map.ts";
 
 /** A derived capture view, never a publication decision or a second store. */
 export type PlaceSubjectKind = "division" | "body" | "seat" | "calendar" | "funding" | "contest" | "deadline";
@@ -36,42 +37,12 @@ export interface PlaceOwedItem {
   readonly label: string;
 }
 
-const GROUPS: Readonly<Record<PlaceSubjectKind, readonly string[]>> = {
-  division: ["GEO"], body: ["GOV", "PAR", "ENG"], seat: ["OFF", "LEG", "EXE", "PRL"],
-  calendar: ["MTG", "DOC"], funding: ["CAM", "FIN"], contest: ["ELE", "CAN"], deadline: ["ELE"],
-};
-const DEADLINE_ITEMS = new Set(["ELE-06", "ELE-08", "ELE-09", "ELE-20", "ELE-21", "ELE-22", "ELE-23", "ELE-24"]);
-const CALENDAR_ITEMS = new Set(["MTG-01", "MTG-02", "MTG-03", "MTG-04", "MTG-13", "MTG-15", "MTG-16", "MTG-17", "MTG-20"]);
+const GROUPS = CHECKLIST_GROUPS as Readonly<Record<PlaceSubjectKind, readonly string[]>>;
 
 /** Broad kinds preserve unresolved work; a known record only owes its own facts.
- * A campaign committee has no public budget and a voting date has no polling
- * location. Those remain discovery work for the place, not for this record. */
+ * The rules live in checklist-map.json. */
 function appliesToRecord(subject: PlaceSubject, definition: { id: string; group: string }): boolean {
-  const { id, group } = definition;
-  switch (subject.captureKind) {
-    // ENG measures the app's reactions, privacy, feedback and alert delivery.
-    // It remains in the product checklist, not an acquisition task per body.
-    case "registry-body": return group === "GOV" || group === "PAR";
-    case "federal-legislator": return ["OFF", "LEG", "PRL"].includes(group) && id !== "LEG-22";
-    case "state-legislator": return ["OFF", "LEG"].includes(group) && !["LEG-20", "LEG-21"].includes(id);
-    case "executive": return ["OFF", "EXE"].includes(group);
-    // Local votes belong to the body's meeting actions, not Congress/state
-    // roll calls or federal PRL. A roster can include a mayor, so retain EXE.
-    case "local-officeholder": return ["OFF", "EXE"].includes(group);
-    case "campaign-finance": return group === "CAM";
-    case "federal-campaign-finance": return group === "CAM" && !["CAM-14", "CAM-15"].includes(id);
-    case "state-campaign-finance": return group === "CAM" && !["CAM-13", "CAM-15"].includes(id);
-    case "public-finance": return group === "FIN";
-    case "filing-deadline": return id === "ELE-06";
-    case "voting-deadline": return id === "ELE-08";
-    case "voting-sites": return ["ELE-09", "ELE-21", "ELE-22", "ELE-23", "ELE-24"].includes(id);
-    case "election-navigation": return ["ELE-09", "ELE-20", "ELE-23", "ELE-24"].includes(id);
-    case "candidate": return group === "CAN";
-    case "election-result": return ["ELE-15", "ELE-17", "ELE-18", "ELE-26"].includes(id);
-    case "meeting": return !subject.calendarBodyId || !CALENDAR_ITEMS.has(id);
-    case "body-calendar": return CALENDAR_ITEMS.has(id);
-    default: return true;
-  }
+  return checklistItemApplies(subject.captureKind, subject.calendarBodyId, definition);
 }
 
 /** Canonical identities make a county fact reusable by every ZIP and every job.

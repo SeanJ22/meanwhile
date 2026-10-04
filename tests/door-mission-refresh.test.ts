@@ -15,6 +15,8 @@ import {
 } from "../lib/doors/mission-refresh.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { routineDueRequestFor } from "../lib/civic-data/routine-due-request.ts";
+import { ROUTINE_SOURCE_TASKS } from "../lib/civic-data/runner.ts";
 
 /** DB-56: starting a mission marks every open door already known in the place to be read now. */
 
@@ -117,5 +119,18 @@ describe("DB-56: mission start refreshes the doors already known in the place", 
     assert.deepEqual(doorPartitionIds(hand), [hand.doorId]);
     assert.deepEqual(doorPartitionIds({ ...hand, meeting: { ...hand.meeting!, family: "meetings:derived:US-OH" } }), ["meetings:derived:US-OH"]);
     assert.deepEqual(doorPartitionIds({ ...hand, meeting: null }), []);
+  });
+
+  it("the ordinary pass treats a marked door as due, and the partition's own next attempt spends it", async () => {
+    const repos = await seeded();
+    const task = ROUTINE_SOURCE_TASKS.find((candidate) => candidate.recordClass === "MEETING" && candidate.contract.schedule?.kind === "SITTING_WINDOW" && candidate.id.startsWith("meetings:"))!;
+    const door = (await listDoors(repos.doors)).doors.find((row) => row.doorId === task.id)!;
+    assert.ok(door, "a hand-wired door carries its partition's id");
+    await markDoorsReadNow(repos.doors, [door.ocdId!], MISSION);
+    const requests = readNowDueRequests((await listDoors(repos.doors)).doors, new Set(ROUTINE_SOURCE_TASKS.map(({ id }) => id)), LATER);
+    const nowMs = Date.parse(LATER);
+    assert.equal(routineDueRequestFor(task, undefined, nowMs, requests)?.contractId, task.id);
+    assert.equal(routineDueRequestFor(task, { lastAttemptedAt: "2026-10-04T13:10:00.000Z" }, nowMs, requests), null, "read since the mark: spent");
+    assert.equal(routineDueRequestFor(task, { lastAttemptedAt: "2026-10-04T12:30:00.000Z" }, nowMs, requests)?.contractId, task.id, "an attempt before the mark does not spend it");
   });
 });

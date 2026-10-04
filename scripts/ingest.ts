@@ -31,6 +31,9 @@ import {
   meetingHeldWindowAt,
 } from "../lib/meetings/constants.ts";
 import { meetingFetchedWindowFor } from "../lib/meetings/fetch-window.ts";
+import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
+import { doorReadModeFromEnv } from "../lib/doors/install.ts";
+import { recordFamilyReads } from "../lib/doors/outcome.ts";
 import {
   attributionSummary,
   resolveMeetingBodies,
@@ -778,6 +781,23 @@ async function readDerivedFamilyMember(member: DerivedWiringRecord, fetchImpl: t
 }
 
 /**
+ * DB-21: each member of a derived family records its own last success or failure on its own door (never the
+ * family's, so one failing calendar does not mark its healthy neighbours). Only with the door registry in use; a
+ * registry that cannot be written never changes the read's outcome.
+ */
+async function recordFamilyMemberOutcomes(reads: readonly FamilyMemberRead[]): Promise<void> {
+  const connection = controlPlaneUrlFromEnv();
+  if (connection === null || doorReadModeFromEnv() !== "registry" || reads.length === 0) return;
+  try {
+    const repos = await createPgRepositories(connection, new Date().toISOString(), { skipBootstrap: true });
+    const recorded = await recordFamilyReads(repos.doors, reads, new Date().toISOString());
+    if (recorded !== null) console.log(`  family doors: ${recorded.recorded} member outcome(s) recorded, ${recorded.missing} not in the registry`);
+  } catch (error) {
+    console.warn(`  family doors: member outcomes not recorded — ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
+/**
  * **ONE STATE'S DERIVED MEETING FAMILY, ONE CANDIDATE, EVERY MEMBER ON ITS OWN EVIDENCE** (C16).
  *
  * The members are the promoted meeting-source wiring's rows for the state. Each ACTIVE member is read on its own
@@ -821,6 +841,7 @@ export async function promoteDerivedMeetingFamily(
     console.log(`  ${member.id}: ${read.ok ? `${read.freshMeetings.length} sitting(s) read` : `held: ${read.error}`}`);
     reads.push(read);
   }
+  await recordFamilyMemberOutcomes(reads);
   const versionId = wiring.metadata.versionId;
   const promotedAt = wiring.metadata.promotedAt;
   if (versionId === null || promotedAt === null) {

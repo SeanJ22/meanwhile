@@ -2461,10 +2461,6 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
     const metered = readMeteredUsage(response.usage ?? {});
     const priced = priceMeteredUsage(model, metered, "5m");
     const durationMs = Date.now() - started;
-    if (prewarmHold !== null) {
-      const failed = await spendHolds.settle(prewarmHold.jobId, priced.usd, nowIso());
-      if (failed !== null) runtimeConditions.push(`the pre-warm's budget hold could not be settled (${failed}); it counts in full for its window`);
-    }
     const cost: AttemptCost = {
       inputTokens: metered.uncachedInputTokens === null ? null : metered.uncachedInputTokens + (metered.cacheReadInputTokens ?? 0) + (metered.cacheCreationInputTokens ?? 0),
       outputTokens: metered.outputTokens,
@@ -2486,7 +2482,11 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
         cost, recordedAt: at,
       },
       at,
-    ).catch(() => undefined);
+    );
+    if (prewarmHold !== null) {
+      const failed = await spendHolds.settle(prewarmHold.jobId, priced.usd, nowIso());
+      if (failed !== null) runtimeConditions.push(`the pre-warm's budget hold could not be settled (${failed}); it counts in full for its window`);
+    }
     if (priced.usd !== null) spentThisCycle += priced.usd;
     return { status: "WARMED", at, cacheCreationInputTokens: metered.cacheCreationInputTokens, cacheReadInputTokens: metered.cacheReadInputTokens, uncachedInputTokens: metered.uncachedInputTokens, usd: priced.usd, durationMs };
   } catch (error) {

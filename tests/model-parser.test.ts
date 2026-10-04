@@ -243,3 +243,29 @@ test("an audit that breaks a model-parsed publisher sends the next parse one tie
   assert.deepEqual(seen, [MODEL_FOR_CLASS.sonnet], "the next Parser reads what the Auditor wrote and starts a tier up");
   assert.match(second.review.route.reason, /haiku failed to confirm quotes on www\.exampletonaz\.gov/);
 });
+
+for (const [shape, text] of Object.entries({
+  table: '<table><tr><td>Alice Adams</td><td>Clerk</td><td>alice@example.test</td></tr><tr><td>Bob Brown</td><td>Treasurer</td><td>bob@example.test</td></tr></table>',
+  columns: '<div class="roster"><div class="person-card"><p>Alice Adams</p><p>Clerk</p><p>alice@example.test</p></div><div class="person-card"><p>Bob Brown</p><p>Treasurer</p><p>bob@example.test</p></div></div>',
+  tableColumns: '<table><tr><td>Alice Adams<br>Clerk<br>alice@example.test</td><td>Bob Brown<br>Treasurer<br>bob@example.test</td></tr></table>',
+  paragraphs: 'Alice Adams, Clerk, alice@example.test\n\nBob Brown, Treasurer, bob@example.test',
+  list: '<ul><li>Alice Adams, Clerk, alice@example.test</li><li>Bob Brown, Treasurer, bob@example.test</li></ul>',
+})) {
+  test(`CP-19: ${shape} fields belong to the named person during extraction and replay`, () => {
+    const source = { ...evidence, text, contentHash: contentHash(text) };
+    const roster = { ...contract, recordClass: "OFFICIAL_ROSTER", requiredFields: ["name", "office"], identity: { namespace: "test:roster", keyFields: ["name"] } };
+    const field = (name: string, value: string) => ({ name, value, quote: value });
+    const proposals = [{ windowStart: 0, fields: [field("email", "bob@example.test"), field("name", "Alice Adams"), field("office", "Clerk")] },
+      { windowStart: 0, fields: [field("name", "Bob Brown"), field("office", "Treasurer"), field("email", "bob@example.test")] }];
+    const result = confirmQuotedRecords({ evidence: source, contract: roster }, proposals);
+    assert.equal(result.records.length, 2, "the minimum facts still publish for both people");
+    assert.equal(result.records[0].fields.email, undefined, "Alice never acquires Bob's email");
+    assert.equal(result.records[1].fields.email, "bob@example.test");
+    assert.ok(result.rejections.some(item => item.code === "FIELD_OUTSIDE_RECORD_BLOCK" && item.field === "email"));
+    assert.ok(result.warnings.some(item => item.detail.includes(source.artifactId) && item.detail.includes("bob@example.test")), "retain the quoted finding for investigation");
+    assert.equal(quotesHoldAgainst(result, text).ok, true);
+    const bobEmail = result.spans.find(span => span.field === "email")!;
+    const forged = { records: [{ ...result.records[0], fields: { ...result.records[0].fields, email: "bob@example.test" }, evidenceSpanIds: [...result.records[0].evidenceSpanIds, bobEmail.id] }], spans: result.spans };
+    assert.ok(quotesHoldAgainst(forged, text).failures.some(failure => failure.field === "email"), "replay rejects the old parser's cross-row result");
+  });
+}

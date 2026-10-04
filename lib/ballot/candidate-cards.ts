@@ -56,31 +56,9 @@ export interface CandidateCardData {
    * Null on every card where the contact IS the candidate's own.
    */
   phoneLabel: string | null;
-  /**
-   * **THE ADDRESS THE CANDIDATE FILED WITH THE STATE** (RULING 54, adopted
-   * 2026-08-21, the author's ruling; `NH12`).
-   *
-   * A candidate's filed mailing address is on a public form the candidate
-   * submitted for exactly this purpose — so that the public, and people who
-   * want to reach them about the office they are seeking, can. The state
-   * prints it. The project's standing commitment is that it looks hard enough
-   * to find what is public; having found it, withholding it is the information
-   * asymmetry the display rulings exist to prevent.
-   *
-   * It matters most for the people who have least. For Kathleen Donnelly and
-   * Cynthia Rusis it is the ONLY contact that exists, and their cards offered
-   * no way to reach them at all while their opponents showed phones and sites.
-   * That is a thin card tracking campaign professionalism rather than merit,
-   * which is exactly what the equal-effort rule was written to catch.
-   *
-   * **This does not extend to information that is not on a public filing.**
-   * The scope is the filing, and nothing beyond it.
-   */
+  /** @deprecated Filed addresses are evidence only; reader projections always clear them. */
   filedAddress: string | null;
-  /**
-   * Which filing it came from, rendered with it. A contact without its source
-   * class is a generated claim, same as a blurb without one.
-   */
+  /** @deprecated Kept nullable while the Ask lane removes its legacy field contract. */
   filedAddressSource: string | null;
 }
 
@@ -92,7 +70,13 @@ export interface CandidateCardsFile {
 }
 
 function load(): CandidateCardsFile {
-  return currentCandidateProfilesProjection().cards;
+  const held = currentCandidateProfilesProjection().cards;
+  // Acquisition notes can contain the same filed addresses. They remain in
+  // saved evidence, never in the object passed to a reader or Ask.
+  return { curatedAt: held.curatedAt, note: "", hunts: [],
+    cards: Object.fromEntries(Object.entries(held.cards).map(([key, card]) =>
+      [key, { ...card, filedAddress: null, filedAddressSource: null }])) };
+
 }
 
 /**

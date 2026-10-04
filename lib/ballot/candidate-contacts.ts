@@ -4,7 +4,8 @@ import { currentNjMorrisReadModel, validateBallotFile } from "../sources/ballot-
 export interface CandidateContact {
   candidacyId: string;
   email: string | null;
-  filedAddress: string | null;
+  /** @deprecated Compatibility for Ask; filed addresses never leave evidence. */
+  filedAddress: null;
   sourceUrl: string;
   sourceOrg: string;
   collectedAt: string;
@@ -41,7 +42,7 @@ export function candidateContactCensus(): CandidateContactCensus {
       : null;
     if (reason) { withheld.push({ candidacyId: row.candidacyId, reason }); continue; }
     contacts.push({ candidacyId: row.candidacyId, email: row.email?.trim() || null,
-      filedAddress: row.filedAddress?.trim() || null, sourceUrl: row.sourceUrl,
+      filedAddress: null, sourceUrl: row.sourceUrl,
       sourceOrg: row.sourceOrg, collectedAt: row.collectedAt });
   }
   cachedModel = projection;

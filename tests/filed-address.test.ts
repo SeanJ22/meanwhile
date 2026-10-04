@@ -1,144 +1,64 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import test from "node:test";
+import { allCandidateCards, cardForCandidacy, cardForNominee } from "../lib/ballot/candidate-cards.ts";
+import { candidateContactCensus } from "../lib/ballot/candidate-contacts.ts";
+import { candidateProfileEvidenceFor } from "../lib/ask/candidate-profile.ts";
+import { contactForCandidate } from "../lib/ask/candidate-contact.ts";
+import { contactRecord } from "../lib/ask/contacts.ts";
+import { installCandidateCorpusFirstSeed, installNjMorrisFilingFirstSeed, installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 
-/**
- * **RULING 54 — PUBLIC INFORMATION IS SHOWN.** (Adopted 2026-08-21, the
- * author's ruling; tracker `NH12`.)
- *
- * A candidate's filed mailing address is on a public form the candidate
- * submitted for exactly this purpose. The project's standing commitment is that
- * it looks hard enough to find what is public; having found it, withholding it
- * is the information asymmetry the display rulings exist to prevent.
- *
- * All 47 addresses on Newbury's ballot were hunted, recorded, and written into
- * a prose `note` that nothing renders — so the product held the only working
- * contact for about half of those people and showed none of them.
- *
- * **The scope is the filing and nothing beyond it.** This does not extend to
- * information that is not on a public filing.
- */
+await Promise.all([installCandidateCorpusFirstSeed(), installNjMorrisFilingFirstSeed(), installRegistryRuntimeFirstSeeds()]);
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const read = (...p: string[]) => readFileSync(join(ROOT, ...p), "utf8");
-
-interface Card {
-  filedAddress?: string | null;
-  filedAddressSource?: string | null;
-}
-
-const file = JSON.parse(read("data", "ballot", "candidate-cards-2026.json")) as {
-  cards: Record<string, Card>;
-  hunts: { key: string; name: string; note: string }[];
-};
-
-test("every recorded filed address reached a card — stated N equals rendered rows", () => {
-  /*
-   * The denominator is knowable, so it is asserted rather than trusted. The
-   * lift script's first version used `.find` over a `hunts` array holding 175
-   * records against 92 cards, silently took whichever note came first, and
-   * lifted 4 of 47 — a clean exit and a wrong number. That is the collapsing-
-   * join shape, and this is the check that would have caught it.
-   */
-  const recorded = file.hunts.filter((h) => /FILED CONTACT/.test(h.note ?? "")).length;
-  const rendered = Object.values(file.cards).filter((c) => c.filedAddress).length;
-  assert.ok(recorded > 40, `expected the recorded filings, found ${recorded}`);
-  assert.equal(
-    rendered,
-    recorded,
-    `${recorded} addresses are recorded and ${rendered} reached a card. A partial ` +
-      "lift renders a contact for some candidates and not others on no principle at all",
-  );
+test("filed addresses stay in preserved evidence and never reach candidate card or Ask projections", () => {
+  const sourcePath = "data/ballot/candidate-cards-2026.json";
+  const before = readFileSync(sourcePath, "utf8");
+  const evidence = JSON.parse(before) as { cards: Record<string, { filedAddress?: string }> };
+  const cards = allCandidateCards();
+  const filed = Object.entries(evidence.cards).filter(([, card]) => card.filedAddress);
+  assert.ok(filed.length > 0, "exercise the actual legacy projection, not only empty fields");
+  assert.deepEqual(cards.hunts, [], "acquisition notes remain evidence only");
+  for (const [key, held] of filed) {
+    const split = key.indexOf("|");
+    const card = split < 0 ? cardForCandidacy(key) : cardForNominee(key.slice(0, split), key.slice(split + 1));
+    assert.ok(card);
+    assert.equal(card.filedAddress, null);
+    assert.equal(card.filedAddressSource, null);
+    assert.ok(!JSON.stringify(cards).includes(held.filedAddress!));
+    const answer = candidateProfileEvidenceFor({ kind: "PERSON", id: key, name: "Candidate" });
+    assert.ok(!JSON.stringify(answer).includes(held.filedAddress!));
+  }
+  assert.equal(readFileSync(sourcePath, "utf8"), before, "saved source evidence is unchanged");
 });
 
-test("every filed address carries its source — a contact without one is a generated claim", () => {
-  const naked = Object.entries(file.cards)
-    .filter(([, c]) => c.filedAddress && !c.filedAddressSource)
-    .map(([k]) => k);
-  assert.deepEqual(naked, [], `these render an address with no source: ${naked.join(", ")}`);
-});
-
-test("no address was invented — every one ends in a real state and ZIP", () => {
-  // The parse anchors on `<City> <ST> <zip>`. A value that does not end that way
-  // is a half-read address under a named person's name, which is worse than
-  // an honest gap.
-  //
-  // **The state was hardcoded to `NH` and this guard failed the moment a second
-  // state shipped** (NJ Hunt, 2026-08-22) — fifteen correctly-parsed New Jersey
-  // addresses read as malformed because the assertion knew only one state. The
-  // check that matters is the SHAPE, so it is written as the shape: two capital
-  // letters and a five-digit ZIP. Naming states one at a time would mean this
-  // guard has to be edited before every new jurisdiction can ship, which is a
-  // guard that trains people to edit guards.
-  const malformed = Object.entries(file.cards)
-    .filter(([, c]) => c.filedAddress && !/\b[A-Z]{2}\s+\d{5}(-\d{4})?$/.test(c.filedAddress))
-    .map(([k, c]) => `${k}: ${c.filedAddress}`);
-  assert.deepEqual(malformed, [], `malformed addresses: ${malformed.join(" | ")}`);
-});
-
-test("a filed address is never a bare number — the PO-box truncation cannot return", () => {
-  /*
-   * `P.O. Box 999 Edison NJ 08818` parsed as `999 Edison NJ 08818` on the first
-   * New Jersey run, because the address pattern anchored on a leading digit and
-   * matched from inside the box number. That is a PO box rendered as a street
-   * number: a specific, checkable, WRONG address under a named candidate's
-   * name, which is exactly the class of claim this product cannot survive.
-   *
-   * Two of the fifteen 07866 candidates file a PO box, so it was a sixth of the
-   * down-ballot tier rather than an edge case.
-   */
-  const suspicious = Object.entries(file.cards)
-    .filter(([, c]) => c.filedAddress && /^\d+\s+[A-Z][a-z]+\s+[A-Z]{2}\s+\d{5}/.test(c.filedAddress))
-    .map(([k, c]) => `${k}: ${c.filedAddress}`);
-  assert.deepEqual(
-    suspicious,
-    [],
-    "these read as <number> <City> <ST> <zip> with no street name — the shape a truncated " +
-      `'P.O. Box N' leaves behind: ${suspicious.join(" | ")}`,
-  );
-});
-
-test("the two the ruling names by hand are contactable", () => {
-  /*
-   * RULING 54 names them: "For Kathleen Donnelly and Cynthia Rusis it is the
-   * only contact that exists, and their cards currently offer no way to reach
-   * them while their opponents show phones and sites."
-   */
-  for (const who of ["donnelly", "rusis"]) {
-    const entry = Object.entries(file.cards).find(([k]) => k.toLowerCase().includes(who));
-    assert.ok(entry, `no card found for ${who}`);
-    assert.ok(
-      entry[1].filedAddress,
-      `${who} still has no way for a reader to reach them — RULING 54 is not satisfied`,
-    );
+test("filing email and its source survive while the filed address cannot reach Ask", () => {
+  for (const row of candidateContactCensus().contacts) {
+    assert.equal(row.filedAddress, null);
+    const contact = contactForCandidate(row.candidacyId, "Candidate", "Office")!;
+    assert.equal(contact.filedAddress, null);
+    assert.equal(contact.email, row.email);
+    assert.equal(contactRecord(contact).sourceUrl, row.sourceUrl);
+    assert.ok(!contactRecord(contact).text.includes("filed mailing address"));
   }
 });
 
-test("the card renders the address as a FACT, not as a tappable affordance", () => {
-  /*
-   * **BAL-15 (2026-08-25): it moved, and this test moved WITH it.**
-   *
-   * The filed address rendered on the ballot ROW until 2026-08-25, when Sean
-   * ruled that the campaign site, the email and the mailing address belong in
-   * the battlecard — *the ballot points; the battlecard holds*. RULING 54's
-   * reasoning is untouched and travelled with the markup: the address is still
-   * published, still carries its source, and is still NOT a link.
-   *
-   * The test follows the code rather than being deleted, which is RULING 62's
-   * whole point — a guard that stops existing reports `fail 0`.
-   */
-  const card = read("components", "ballot", "candidate-contact.tsx");
-  assert.match(card, /address &&/, "the card renders it");
-  assert.match(card, /filedAddressSource/, "and renders its source beside it");
-  /*
-   * A `mailto:` or `tel:` is an invitation to act now. A mailing address is a
-   * fact about where someone lives, and dressing it as an affordance would
-   * overstate what it is — and would be a click-to-act gesture on a named
-   * private residence.
-   */
-  const block = card.slice(card.indexOf("{address &&"));
-  const rendered = block.slice(0, block.indexOf("</p>"));
-  assert.ok(!/href=/.test(rendered), "the filed address must not be a link");
+test("both renderers reject legacy address props and retain a filing source even with no public contact", () => {
+  const result = JSON.parse(execFileSync(process.execPath, ["--import", "tsx", "--input-type=module", "-e", `
+    import { createElement } from 'react';
+    import { renderToStaticMarkup } from 'react-dom/server';
+    import { CandidateContact } from './components/ballot/candidate-contact.tsx';
+    import { AskAnswerContacts } from './components/ask/answer-contacts.tsx';
+    const address = '123 Private Lane, Example City';
+    const filing = { candidacyId:'example', email:null, filedAddress:address, sourceUrl:'https://filing.example.gov/list', sourceOrg:'Election office', collectedAt:'2026-10-01' };
+    const card = { filedAddress:address, filedAddressSource:'Source', email:'campaign@example.test' };
+    const contact = { id:'example', name:'Candidate', relationship:'Candidate for office', basis:'SUBJECT_OFFICE', filedAddress:address, email:card.email, sourceUrl:filing.sourceUrl };
+    console.log(JSON.stringify({card:renderToStaticMarkup(createElement(CandidateContact,{card,filing,links:null})), ask:renderToStaticMarkup(createElement(AskAnswerContacts,{contacts:[contact]})), sourceOnly:renderToStaticMarkup(createElement(CandidateContact,{card:null,filing,links:null}))}));
+  `], { encoding: "utf8", timeout: 120_000 }));
+  for (const markup of [result.card, result.ask, result.sourceOnly]) {
+    assert.ok(!markup.includes("123 Private Lane"));
+    assert.ok(markup.includes("https://filing.example.gov/list"));
+  }
+  assert.ok(result.card.includes("mailto:campaign@example.test"));
+  assert.ok(result.ask.includes("mailto:campaign@example.test"));
 });

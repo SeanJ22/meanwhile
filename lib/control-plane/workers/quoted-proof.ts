@@ -13,6 +13,7 @@
  * the Validator, so it may import only types and other pure modules.
  */
 
+import { personNameField, recordBlockAt } from "./record-block.ts";
 import { escapePointer, recordIdentity, RecordEvidenceRefusal } from "./record-evidence.ts";
 import type { EvidenceSpan, ExtractedRecord, FieldValue, GeneralizedCivicExtractionContract, ParserResult, ParserWorkerInput, WorkerEvidence, WorkerFinding } from "./types.ts";
 
@@ -48,7 +49,7 @@ export function locateQuote(text: string, quote: string, from: number): number |
 
 export type RejectionCode =
   | "FIELD_NAME_INVALID" | "QUOTE_NOT_IN_DOCUMENT" | "VALUE_NOT_IN_QUOTE" | "QUOTE_TOO_LONG" | "FIELD_REPEATED"
-  | "REQUIRED_FIELD_UNCONFIRMED" | "IDENTITY_UNCONFIRMED";
+  | "REQUIRED_FIELD_UNCONFIRMED" | "IDENTITY_UNCONFIRMED" | "FIELD_OUTSIDE_RECORD_BLOCK";
 
 export interface Rejection { readonly code: RejectionCode; readonly recordIndex: number; readonly field?: string }
 
@@ -85,12 +86,29 @@ export function confirmQuotedRecords(
     const fields: Record<string, FieldValue> = Object.create(null);
     const kept: { field: string; start: number; end: number; quote: string }[] = [];
     const from = recordFrom.get(proposal.windowStart) ?? proposal.windowStart;
+    const nameField = personNameField(Object.fromEntries(proposal.fields.map(claim => [claim.name, claim.value])));
+    const nameClaim = proposal.fields.find(claim => claim.name === nameField);
+    const nameAt = nameClaim && nameClaim.quote.includes(nameClaim.value) ? locateQuote(text, nameClaim.quote, from) : null;
+    const anchorAt = nameAt !== null && nameClaim ? nameAt + nameClaim.quote.indexOf(nameClaim.value) : null;
+    const block = anchorAt !== null && nameClaim ? recordBlockAt(text, anchorAt, anchorAt + nameClaim.value.length) : null;
     for (const claim of proposal.fields) {
       const reject = (code: RejectionCode) => rejections.push({ code, recordIndex, field: claim.name });
       if (!/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(claim.name)) { reject("FIELD_NAME_INVALID"); continue; }
       if (Object.hasOwn(fields, claim.name)) { reject("FIELD_REPEATED"); continue; }
       if (claim.quote.length > MAX_QUOTE_CHARS) { reject("QUOTE_TOO_LONG"); continue; }
-      const at = claim.quote.trim() === "" ? null : locateQuote(text, claim.quote, from);
+      let at = claim.quote.trim() === "" ? null : locateQuote(text, claim.quote, from);
+      if (nameField && at !== null) {
+        const local = block ? text.indexOf(claim.quote, block.start) : -1;
+        if (!block || local < block.start || local + claim.quote.length > block.end) {
+          reject("FIELD_OUTSIDE_RECORD_BLOCK");
+          warnings.push({ code: "FIELD_OUTSIDE_RECORD_BLOCK", severity: "INFO", field: claim.name,
+            detail: JSON.stringify({ recordIndex, name: nameClaim?.value, value: claim.value, quote: claim.quote,
+              sourceUrl: evidence.canonicalUrl, artifactId: evidence.artifactId, contentHash: evidence.contentHash,
+              reason: "The field is outside the named person's record; investigate the saved finding." }) });
+          continue;
+        }
+        at = local;
+      }
       if (at === null) { reject("QUOTE_NOT_IN_DOCUMENT"); continue; }
       let value = claim.value;
       if (value.trim() === "" || !claim.quote.includes(value)) {
@@ -143,10 +161,16 @@ export function quotesHoldAgainst(result: Pick<ParserResult, "records" | "spans"
   const failures: QuoteFailure[] = [];
   const spanById = new Map(result.spans.map((s) => [s.id, s] as const));
   for (const record of result.records) {
+    const nameField = personNameField(record.fields);
+    const nameSpan = nameField ? record.evidenceSpanIds.map(id => spanById.get(id)).find(span => span?.field === nameField) : null;
+    const name = nameField ? String(record.fields[nameField]) : "";
+    const anchorAt = nameSpan && nameSpan.quote.includes(name) ? nameSpan.start + nameSpan.quote.indexOf(name) : null;
+    const block = anchorAt !== null ? recordBlockAt(documentText, anchorAt, anchorAt + name.length) : null;
     for (const field of Object.keys(record.fields)) {
       const span = record.evidenceSpanIds.map((id) => spanById.get(id)).find((s) => s?.field === field);
       const value = String(record.fields[field]);
       if (!span) { failures.push({ recordId: record.id, field, detail: `${record.id}/${field}: no span` }); continue; }
+      if (nameField && (!block || span.start < block.start || span.end > block.end)) failures.push({ recordId: record.id, field, detail: `${record.id}/${field}: the quote is outside the named person's record` });
       if (documentText.slice(span.start, span.end) !== span.quote) failures.push({ recordId: record.id, field, detail: `${record.id}/${field}: the quote is not at its recorded range` });
       else if (!span.quote.includes(value) && !collapse(span.quote).includes(collapse(value))) failures.push({ recordId: record.id, field, detail: `${record.id}/${field}: the value is not inside its quote` });
     }

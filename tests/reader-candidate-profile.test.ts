@@ -60,7 +60,7 @@ test("every current native candidate bio and verified link reaches grounded prof
   }
   assert.equal(bios, Object.values(cards).filter(row => row.bio).length);
   assert.equal(sites, Object.values(links).flatMap(row => [row.official, row.campaign]).filter(Boolean).length);
-  assert.equal(contacts, 135);
+  assert.equal(contacts, Object.values(cards).reduce((n, card) => n + Number(Boolean(card.email)) + Number(Boolean(card.phone)), 0));
 });
 
 test("official and candidacy profile answers share exact holdings without attaching a namesake's biography", () => {

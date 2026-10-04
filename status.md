@@ -5,7 +5,7 @@ worker: river
 provider: Claude (this run: Opus 5.5, selected by Sean with /model at 06:00Z; this run began on Sonnet 5.5)
 run_id: session_01M3CeUks1KpFZttTP6ZTEAq
 lock: river-20261004T060134Z-23a399b0
-heartbeat: 2026-10-04T06:01:54Z
+heartbeat: 2026-10-04T06:05:59Z
 
 ## Launch
 
@@ -20,6 +20,7 @@ heartbeat: 2026-10-04T06:01:54Z
 - river: created from main @ 0b31938 (which carries #706) at 2026-10-04T06:01Z.
 - board/river: this branch.
 - river-next / release/*: none yet.
+- stream/<lane>: River seeded all eleven builder streams from river @ 0b31938 at 06:03Z. Each has an unlocked `.factory/<lane>.md`. Seeding them started no Actions runs; the only runs since are on main. Netlify cancels branch deploys except `test`, and the stream names don't contain "preview".
 
 ## Capabilities (this River cloud session, observed 2026-10-04)
 
@@ -34,9 +35,9 @@ heartbeat: 2026-10-04T06:01:54Z
 
 ## Release work
 
-- RL-01: in progress.
-- RL-02: not started.
-- RL-03: not started.
+- RL-01: the Oct 3 scheduled failure ran on 022a183c. main @ 0b31938 already floors the crosswalk counts (#705/#706). tests/denominator-floor.test.ts passes 6/6 here. Full `pnpm gates` on 0b31938 is running in the cloud. The next scheduled run on main is 09:17 UTC.
+- RL-02: auto-merge disabled on all 20 ready PRs at 06:05Z (#599, 677, 685-687, 689-696, 698-704); no PR can merge on its own. Per-PR keep/close triage in progress.
+- RL-03: scripts/river.mjs in progress on stream/river.
 - RL-04: #706 merged to main at 0b31938. Build check now runs on schedule once a day at 09:17 UTC. Still to confirm: one scheduled run a day on GitHub.
 - RL-05: not started.
 - RL-06: not started.

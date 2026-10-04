@@ -30,7 +30,7 @@ export interface MeasureRecord {
 export const MEASURE_RECORD_FIRST_SEED = SEED as readonly MeasureRecord[];
 
 export function measureRecordIssue(record: MeasureRecord): string | null {
-  if (!record || !record.contestId || !record.whatItDoes?.trim() ||
+  if (!record || typeof record.contestId !== "string" || !record.contestId || typeof record.whatItDoes !== "string" || !record.whatItDoes.trim() ||
       !/^https:\/\//.test(record.sourceUrl) || !/^[a-f0-9]{64}$/.test(record.sourceHash) ||
       !Number.isFinite(Date.parse(record.writtenAt)) || !Array.isArray(record.parts) ||
       ![record.yesMeans, record.noMeans].every(value => value === null || typeof value === "string")) {
@@ -38,9 +38,9 @@ export function measureRecordIssue(record: MeasureRecord): string | null {
   }
   const ids = new Set<string>();
   for (const part of record.parts) {
-    if (!part || !part.id?.startsWith(`${record.contestId}#`) || ids.has(part.id) ||
+    if (!part || typeof part.id !== "string" || !part.id.startsWith(`${record.contestId}#`) || ids.has(part.id) ||
         !["FUNDING", "PROGRAM", "OVERSIGHT", "SUNSET", "START"].includes(part.kind) ||
-        !part.label?.trim() || !part.what?.trim() ||
+        typeof part.label !== "string" || !part.label.trim() || typeof part.what !== "string" || !part.what.trim() ||
         !(part.number === null || typeof part.number === "string" && part.number.trim())) {
       return "Measure part lacks its stable identity or source text.";
     }

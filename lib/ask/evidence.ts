@@ -178,7 +178,7 @@ export interface EvidenceRecord {
   accessRule?: { field: "commentPeriod" | "commentPeriodDetail" | "timeLimit" | "signup" | "writtenComment" | "attend"; value: string; standingRule: true };
   /** Exact candidate-card field and source label, without a name-based join. */
   candidateProfile?: {
-    field: "bio" | "official" | "campaign" | "email" | "phone" | "filedAddress";
+    field: "bio" | "official" | "campaign" | "email" | "phone";
     value: string;
     label: string;
     holdingPath: string;

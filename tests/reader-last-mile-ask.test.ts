@@ -330,7 +330,7 @@ test("a congressional office's everyday name reaches the same canonical contest 
   }
 });
 
-test("all current filed candidate contacts and addresses survive the exact identity and Ask projection", () => {
+test("filed candidate email and source survive Ask projection while mailing addresses stay out", () => {
   const census = candidateContactCensus();
   assert.equal(census.contacts.length, 275);
   assert.equal(census.withheld.length, 0);
@@ -338,12 +338,12 @@ test("all current filed candidate contacts and addresses survive the exact ident
     const contact = contactForCandidate(row.candidacyId, "Filed candidate", "Filed office");
     assert.ok(contact, row.candidacyId);
     assert.equal(contact.email, row.email);
-    assert.equal(contact.filedAddress, row.filedAddress);
+    assert.equal(Object.hasOwn(contact, "filedAddress"), false);
     const record = contactRecord(contact);
     assert.equal(record.sourceUrl, row.sourceUrl);
     assert.equal(record.retrievedAt, row.collectedAt);
     if (row.email) assert.ok(record.text.includes(row.email));
-    if (row.filedAddress) assert.ok(record.text.includes(row.filedAddress));
+    if (row.filedAddress) assert.ok(!record.text.includes(row.filedAddress));
   }
   assert.equal(candidateContactForCandidacy("ballot-nj-morris:unknown:mejia"), null);
   assert.equal(candidateContactForCandidacy("ballot-az-pima:governor:hobbs-katie"), null);
@@ -354,7 +354,7 @@ test("the real Ask route carries Mejia's published filing contact with its own p
   const record = body.records.find((record) => record.id === "candidate-contact:ballot-nj-morris:us-house-11:mejia");
   assert.ok(record);
   assert.match(record.text, /info@analiliafornj\.com/);
-  assert.match(record.text, /13 Municipal Plaza/);
+  assert.doesNotMatch(record.text, /13 Municipal Plaza/);
   assert.equal(record.sourceOrg, "Morris County Clerk");
   // The contact's own provenance is the held filing document, whichever edition of the clerk's list the
   // seed mirrors (the clerk republished it on 2026-09-24), never a pinned filename that goes stale.

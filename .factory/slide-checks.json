@@ -55,5 +55,131 @@
     "selector": "FULL: .factory/slide.md is not code the import graph follows",
     "fullHistory": true,
     "browser": "system Chromium 151.0.7922.173 (substituted; pinned 1234 unavailable)"
+  },
+  "verifiedBaseline": {
+    "commit": "4717f3e5c4d3da15ecc149783b7cbbfa0b53570b",
+    "tree": "3aecc186c82f12c7899499a5fd4fa5a659fea726",
+    "workingTreeStatus": "",
+    "node": "v24.19.0",
+    "configHash": "92a2fbffa0b49acf5263a95a0c0dcd7e5450daee4d4daa9e8bf4c4d35a6a5808",
+    "suiteHash": "61dfe7115f08e14a7829c24736dc7e305ff562ca53836bca62916eac9ceef1e3",
+    "startedAt": "2026-10-04T07:15:43.138Z",
+    "status": "passed",
+    "exitCode": 0,
+    "elapsedMs": 857464,
+    "selector": {
+      "plan": "full",
+      "files": [],
+      "needsBrowser": true,
+      "reasons": [
+        ".factory/slide-checks.json is not code the import graph follows"
+      ],
+      "changed": [
+        ".factory/slide-checks.json",
+        ".factory/slide.md",
+        "components/ask/answer-contacts.tsx",
+        "components/ballot/candidate-contact.tsx",
+        "lib/ballot/candidate-cards.ts",
+        "lib/ballot/candidate-contacts.ts",
+        "lib/ballot/candidate-reader-privacy.ts",
+        "lib/civic-data/manual-projections.ts",
+        "lib/civic-data/manual-read-models.ts",
+        "lib/control-plane/promotion/section3.ts",
+        "lib/control-plane/workers/quoted-proof.ts",
+        "lib/control-plane/workers/record-block.ts",
+        "lib/ops/chromium-pin.ts",
+        "scripts/build-nj-morris-ballot.mts",
+        "tests/chromium-pin.test.ts",
+        "tests/filed-address.test.ts",
+        "tests/model-parser.test.ts",
+        "tests/reader-candidate-profile.test.ts",
+        "tests/reader-last-mile-ask-render.test.ts",
+        "tests/reader-last-mile-ask.test.ts",
+        "tests/section3.test.ts"
+      ]
+    },
+    "fileCount": 985,
+    "tests": 9023,
+    "passed": 9012,
+    "failed": 0,
+    "skipped": 11,
+    "skips": [
+      {
+        "file": "tests/acquisition-repair-profile.test.ts",
+        "count": 1
+      },
+      {
+        "file": "tests/acquisition-repair-roster.test.ts",
+        "count": 1
+      },
+      {
+        "file": "tests/beacon-guard.test.ts",
+        "count": 1
+      },
+      {
+        "file": "tests/deploy-paths.test.ts",
+        "count": 2
+      },
+      {
+        "file": "tests/feedback.test.ts",
+        "count": 1
+      },
+      {
+        "file": "tests/new-zip-render.test.ts",
+        "count": 1
+      },
+      {
+        "file": "tests/pilot-runtime-config.test.ts",
+        "count": 1
+      },
+      {
+        "file": "tests/pilot-task-installer.test.ts",
+        "count": 2
+      },
+      {
+        "file": "tests/reader-last-mile-trace.test.ts",
+        "count": 1
+      }
+    ],
+    "scope": "CP-01/CP-19 checkpoint before Box and scalar-cell repair; not the latest stream source",
+    "typescript": "passed",
+    "lint": "passed: 69 warnings, 0 errors",
+    "setup": {
+      "fullHistory": true,
+      "generatedPlaceIndexes": 56,
+      "chromium": "system 151.0.7922.173, explicitly SUBSTITUTED for pinned build 1234",
+      "unset": [
+        "CI_TEST_FILES",
+        "DATABASE_URL",
+        "WTP_ASSET_STORE",
+        "WTP_DB_ROLE",
+        "WTP_CONTROL_PLANE_DATABASE_URL"
+      ],
+      "localFixtureProxyBypass": "api.maptiler.com appended to NO_PROXY and no_proxy only in test process; browser DNS maps fixture to loopback"
+    }
+  },
+  "boxCheckpoint": {
+    "commit": "e0415c47397e045cb9ff58f97e6815cecf4d0418",
+    "tests": 5,
+    "passed": 5,
+    "skipped": 0,
+    "typescript": "passed on identical precommit source",
+    "changedFileLint": "passed on identical precommit source",
+    "fullSuite": "not run; not READY; repository/writer/Admin connections pending"
+  },
+  "scalarCellCheckpoint": {
+    "commit": "1d6b42c963ee18c1d0d9ff35664b5cb959352fbb",
+    "files": [
+      "tests/section3.test.ts",
+      "tests/model-parser.test.ts",
+      "tests/box.test.ts",
+      "tests/held-roster-publication.test.ts"
+    ],
+    "tests": 40,
+    "passed": 40,
+    "skipped": 0,
+    "fullSuite": "not run after this change; not READY",
+    "typescript": "passed",
+    "fullLint": "passed: 69 warnings, 0 errors"
   }
 }

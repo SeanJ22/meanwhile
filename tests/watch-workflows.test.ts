@@ -130,11 +130,11 @@ test("the rate is a pair, never a bare percentage", () => {
 
 test("PDC terminal boundary: no job watcher is dispatchable and GitHub owns zero routine clocks", () => {
   const dir = join(ROOT, ".github", "workflows");
-  // Build Check's three-hourly run is a software certification of main (the whole
+  // Build Check's daily run is a software certification of main (the whole
   // suite behind affected-only PR tests), not an operations clock; exempt by
   // exact name and cron only. tests/admin-source-registry.test.ts says why.
   const softwareCertification = (file: string, text: string) =>
-    file === "build-check.yml" && /^\s{2}schedule:\s*\n\s{4}- cron: '17 \*\/3 \* \* \*'\s*$/m.test(text);
+    file === "build-check.yml" && /^\s{2}schedule:\s*\n\s{4}- cron: '17 9 \* \* \*'\s*$/m.test(text);
   const scheduled = readdirSync(dir)
     .filter((file) => /\.ya?ml$/.test(file))
     .filter((file) => {

@@ -433,6 +433,8 @@ export interface PlaceScoreView {
   readonly extension?: ScoreGroup | null;
   /** Summary items whose detail items carry the count: listed, out of the denominator. Null when none. */
   readonly summary?: ScoreGroup | null;
+  /** Governments, bodies, seats and people accounted for against what is expected. */
+  readonly coverage?: { readonly words: readonly string[] };
 }
 
 export interface SystemGroup {

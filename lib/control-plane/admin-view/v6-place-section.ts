@@ -4,6 +4,7 @@ import { OWED_STATE_WORDS, pageOwed, scorePlace, type GroupScore, type OwedListI
 import { GROUP_NAMES, PLACE_GROUPS, ADMIN_V6_CHECKLIST_CONTRACT } from "./v6-checklist-section.ts";
 import type { PlaceOwedRead } from "./place-owed-read.ts";
 import type { RowStatuses } from "../../coverage/place-statuses.ts";
+import { coverageWords, placeCoverage, type PlaceCoverage } from "../../coverage/place-coverage.ts";
 import { US_STATES } from "../readiness/catalog.ts";
 import { sendWordsFor } from "./blocker-causes.ts";
 
@@ -46,6 +47,8 @@ export interface AdminV6PlaceScore {
   readonly extension: GroupScore | null;
   /** Summary items whose detail items carry the count: listed, out of the denominator. Null when none. */
   readonly summary: GroupScore | null;
+  /** Governments, bodies, seats and people accounted for against what is expected; "total unknown" where it cannot be known. */
+  readonly coverage: { readonly words: readonly string[]; readonly figures: PlaceCoverage };
 }
 export interface AdminV6PlaceItem {
   readonly key: string;
@@ -127,6 +130,7 @@ export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, ta
 } {
   const rows = read.rows as readonly OwedRowLike[];
   const score = scorePlace(rows, GROUP_NAMES, GROUP_ORDER);
+  const coverage = placeCoverage(read.rows, read.divisions);
   const windowed = pageOwed(rows, query);
   const placeGroups = score.groups.map((g) => {
     const counts = [0, 0, 0, 0, 0, 0, 0];
@@ -142,7 +146,8 @@ export function v6PlaceSection(read: PlaceOwedRead, query: PlaceSectionQuery, ta
       profileVersion: CHECKLIST_PROFILE.version, definitionCount: CHECKLIST_PROFILE.definitionCount, definitions: DEFINITIONS,
       groupNames: GROUP_NAMES, placeGroups, items: windowed.items.map((i) => itemOf(i, read.placeKey, placeSendWords(read.placeKey, read.label, read.divisions))), systemGroups: SYSTEM_GROUPS,
       score: { placeKey: read.placeKey, placeLabel: read.label, covers: read.covers, observedAt: read.observedAt,
-        divisionCount: read.divisions.length, sendWords: placeSendWords(read.placeKey, read.label, read.divisions), target, overall: score.overall, groups: score.groups, extension: score.extension, summary: score.summary },
+        divisionCount: read.divisions.length, sendWords: placeSendWords(read.placeKey, read.label, read.divisions), target, overall: score.overall, groups: score.groups, extension: score.extension, summary: score.summary,
+          coverage: { words: coverageWords(coverage), figures: coverage } },
     },
     missingParts: [
       "The owed list is what the checklist says a place is owed for the governments, districts and bodies we know about. Governments we haven’t found yet are listed as “discover every …” items, so a total here can grow as agents find more.",

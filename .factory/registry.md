@@ -1,13 +1,13 @@
-build_state: waiting
+build_state: active
 worker: registry
 provider: Claude
-run_id: session_012Br3oqBisWocYf2w8VnPPs (Claude Sonnet 5.5)
-lock: none
-heartbeat: 2026-10-04T07:26:26Z
+run_id: session_01Gzddi9NT9jvbbesVsdSaTU (Claude Sonnet 5.5)
+lock: registry-20261004T080153Z-16054
+heartbeat: 2026-10-04T08:01:53Z
 on_river: none
 ready: DB-09, DB-10, DB-11, DB-12, DB-25 (library only; runner hook pending) — cumulative, exact ready commit 426c69a20759c97ca275009dbbdf0a43879ba41c. Earlier points: DB-09 b8c61d41d47b4d2a2a7137404bc69f8ba619437b, DB-11 165e9536bbadb0f587bfefc897fb71457691a27c, DB-12 713fb9b8eef7280faca1895b0ba34627fd21bda8.
 checks: @ 426c69a20759c97ca275009dbbdf0a43879ba41c: tsc clean; tests/denominator-floor 6/6 (River return fixed: seed script now matches river-next c846a56); seed script on a file store prints "129 of 129" and "78 of 78"; door-registry*.test.ts 15/15 at the DB-25 commit. DB-12 wide run: 248 failures vs 268 on untouched river for the same 659 files, no new failure after the version-key fix.
-working_on: none; lock released at safe handoff. Next run: DB-17, DB-21, DB-13 (chain), then DB-14, DB-15, DB-20; DB-32 -> DB-34/35 -> DP-12.
+working_on: caught up with river 8f6185c; starting DB-17
 waiting_on: none
 returned: 2026-10-04 07:15Z floor on the door import: repaired in this branch (River c846a56 taken verbatim).
 needs_hook: (1) DB-09 Admin door list + receipt log: Admin lane must render lib/doors/registry.ts listDoors(repos.doors) and the door.save receipts in the command center, and add "doors" to the AGGREGATES list in scripts/pilot-runtime-publish.mts (hunters-owned) so the console-input hash moves when a door changes. (2) River: DB-09 bumps BOOTSTRAP_VERSION 18 -> 19 (cp_doors); renumber at integration if another lane also bumped. (3) Registered door.save with one spread (...DOOR_ACTIONS) in lib/control-plane/gateway/registry.ts (admin-owned, 2 lines). (4) DB-10: run `node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/seed-doors-from-meetings.mts --apply` once on the production runner after the cp_doors table exists (not run here: production is read-only for this worker). Derived rows (promoted wiring) could not be read from the cloud session, so only the 129 hand-wired doors were verified here; the script reads them on the runner. (5) DB-12: scripts/ingest.ts (meetings) must call `await installDoorWiringFromRegistry(repos.doors)` (lib/doors/install.ts) at the start of each pass; switch WTP_DOORS_READ=registry stays OFF until checked live. River: DB-12 changed the official-page-events extractor id (re-keys saved methods/wiring rows) because lib/registry/source-wiring.ts is in its closure. Still reading SOURCE_WIRING at module load (need DB-13): lib/civic-data/meeting-partitions.ts, lib/meetings/notice-pages.ts, lib/meetings/history-gaps.ts, lib/registry/curated-bodies.ts, scripts/ingest.ts lines ~218/1430. (6) DB-25: the meeting runner (meetings lane, scripts/ingest.ts / lib/civic-data/runner.ts) should call probeDoors(doors, pacedFetch, now) before each scheduled read, skip the read on UNCHANGED, read on CHANGED/FAILED/NOT_PROBEABLE, and recordProbe() each result; Admin door list shows validators.checkedAt as "last looked".

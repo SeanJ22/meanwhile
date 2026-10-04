@@ -46,6 +46,9 @@ import { fileURLToPath } from "node:url";
 /** A heartbeat younger than this keeps a lock (briefs/common.md, startup step 4). */
 export const STALE_LOCK_MS = 45 * 60 * 1000;
 
+/** Variables cloud sessions set that CI does not; `test` removes them. */
+export const CI_ABSENT_ENV = ["DATABASE_URL", "WTP_ASSET_STORE"];
+
 /** How often `test --heartbeat` refreshes River's lock while gates run. */
 const HEARTBEAT_EVERY_MS = 10 * 60 * 1000;
 
@@ -570,7 +573,16 @@ async function fold(flags) {
     const lane = ready.find((entry) => entry.lane === name);
     const { ready_sha: sha, steps } = lane.ready;
     const message = `River: fold ${name} READY ${short(sha)} (${steps.join(", ") || "no step ids"})`;
-    const merged = gitTry(["merge", "--no-ff", "--no-edit", "-m", message, sha]);
+    let merged = gitTry(["merge", "--no-ff", "--no-edit", "-m", message, sha]);
+    if (!merged.ok) {
+      // A lane's own status file conflicts with river's deletion of it on every
+      // fold after the first (modify/delete). That is not an application
+      // conflict: drop .factory and finish the merge if nothing else is unmerged.
+      git(["rm", "-r", "-q", "-f", "--ignore-unmatch", ".factory"], { allowFail: true });
+      rmSync(join(ROOT, ".factory"), { recursive: true, force: true });
+      const unmerged = git(["diff", "--name-only", "--diff-filter=U"], { allowFail: true });
+      if (!unmerged) merged = gitTry(["commit", "--quiet", "--no-edit", "--no-verify"]);
+    }
     if (!merged.ok) {
       git(["merge", "--abort"], { allowFail: true });
       record.conflict = { lane: name, ready_sha: sha, steps };
@@ -687,7 +699,14 @@ async function test(flags) {
   console.log(`river test: ${command} ${args.join(" ")} on ${short(sha)}`);
   // Output is passed through as it runs and its tail kept, so a failure can be
   // returned to the lane that wrote it with the lines that show it.
-  const child = spawn(command, args, { cwd: ROOT, stdio: ["inherit", "pipe", "pipe"], shell: process.platform === "win32" });
+  // Gates run as CI runs them. Cloud sessions export a real DATABASE_URL and
+  // asset store that CI does not have; with them set, store-reading tests try
+  // the network and fail as STORE_UNREACHABLE. The postinstall projection is
+  // ignored by git, so a fresh worktree needs it rebuilt before tests read it.
+  const env = { ...process.env };
+  for (const name of CI_ABSENT_ENV) delete env[name];
+  spawnSync(process.execPath, ["--experimental-strip-types", "scripts/project-place-references.mts"], { cwd: ROOT, env, stdio: "ignore" });
+  const child = spawn(command, args, { cwd: ROOT, env, stdio: ["inherit", "pipe", "pipe"], shell: process.platform === "win32" });
   const tail = [];
   const keep = (sink) => (chunk) => {
     sink.write(chunk);

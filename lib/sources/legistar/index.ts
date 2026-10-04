@@ -236,6 +236,23 @@ function wallClock(raw: string): { hour: number; minute: number } | null {
  * the word, and looking in one of two possible places is how a real
  * cancellation gets rendered as a meeting going ahead.
  */
+/**
+ * The recording the publisher's own record links for this sitting (BX-10): `EventVideoPath`, only while the
+ * publisher marks the video "Public", and only as a plain https address without credentials. A pointer, never
+ * fetched; null when the record carries none.
+ */
+export function publicVideoUrl(event: LegistarEvent): string | null {
+  if (event.EventVideoStatus?.trim().toLowerCase() !== "public") return null;
+  const raw = event.EventVideoPath?.trim();
+  if (!raw) return null;
+  try {
+    const url = new URL(raw);
+    return url.protocol === "https:" && !url.username && !url.password ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
 function isCanceled(event: LegistarEvent): boolean {
   const fields = [event.EventComment ?? "", event.EventAgendaStatusName ?? ""];
   return fields.some((field) => /\bcancell?ed\b/i.test(field));
@@ -416,6 +433,7 @@ export function normalizeWithDrops(
       ...(online ? { online } : {}),
       ...(venueGap ? { venueGap } : {}),
       agendaUrl: event.EventAgendaFile,
+      ...(publicVideoUrl(event) ? { videoUrl: publicVideoUrl(event)! } : {}),
       /*
        * **THE API RECORD ITSELF IS THE OBSERVED SURFACE.** (ASK-18.)
        *

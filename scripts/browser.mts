@@ -70,6 +70,7 @@ import type {
 import { describeChromium, resolveChromium } from "../lib/ops/chromium-pin.ts";
 import { makeRunId, syntheticRunHeaders, SYNTHETIC_RUN_HEADER } from "../lib/db/run-marker.ts";
 import { confine } from "../lib/ops/origin-confinement.ts";
+import { isLiveWriteRequest } from "../lib/ops/live-write-guard.ts";
 import {
   decideProviderRequest,
   describeLedger,
@@ -137,6 +138,13 @@ export interface GuardedOptions extends LaunchOptions {
    * produced it.
    */
   spendsProviderQuota?: ExternalProvider;
+  /**
+   * FE-01: abort, in the browser, every request that would write to the site
+   * (`/api/log`, `/api/events`, `/api/reactions`, `/api/feedback`, `/api/ask`,
+   * Send posts). Walks of the live site set this, so they read without leaving
+   * search-log or Ask rows. Counted on `GuardedBrowser.writesBlocked`.
+   */
+  blockWrites?: boolean;
 }
 
 /**
@@ -157,6 +165,8 @@ export interface GuardedBrowser {
    * another one. Read it at the end of a run and put the numbers in the report.
    */
   readonly provider: ProviderLedger;
+  /** Write requests this run aborted (FE-01); zero unless `blockWrites` was set. */
+  readonly writesBlocked: { count: number; paths: Set<string> };
   /**
    * Named `context`, not `newContext`, and `page`, not `newPage`.
    *
@@ -187,7 +197,8 @@ export function runIdFor(label: string, now: () => Date = () => new Date()): str
  * ```
  */
 export async function launchGuarded(options: GuardedOptions): Promise<GuardedBrowser> {
-  const { label, now, spendsProviderQuota, ...launchOptions } = options;
+  const { label, now, spendsProviderQuota, blockWrites, ...launchOptions } = options;
+  const writesBlocked = { count: 0, paths: new Set<string>() };
   const runId = runIdFor(label, now);
 
   /*
@@ -368,6 +379,21 @@ export async function launchGuarded(options: GuardedOptions): Promise<GuardedBro
       await route.continue({ headers: decision.headers });
     });
 
+    /* FE-01: registered after the route above, so it runs first (Playwright
+     * runs the latest route first); `fallback` hands everything else on. */
+    if (blockWrites) {
+      await context.route("**/*", async (route) => {
+        const request = route.request();
+        if (!isLiveWriteRequest(request.url(), request.method())) {
+          await route.fallback();
+          return;
+        }
+        writesBlocked.count += 1;
+        writesBlocked.paths.add(new URL(request.url()).pathname);
+        await route.abort("blockedbyclient");
+      });
+    }
+
     await context.addInitScript(KILL_BEACON);
     /*
      * ITEM 4b (g17): the declaration in the page, so it can ride in the BODY.
@@ -390,6 +416,7 @@ export async function launchGuarded(options: GuardedOptions): Promise<GuardedBro
   return {
     runId,
     provider,
+    writesBlocked,
     context: guardedContext,
     async page(contextOptions?: BrowserContextOptions): Promise<Page> {
       const context = await guardedContext(contextOptions);

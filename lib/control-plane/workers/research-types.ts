@@ -1,8 +1,7 @@
 import type { WorkerRef } from "../attempt.ts";
-import type { CapabilityGrant } from "../capability.ts";
 import type { Artifact } from "../evidence/artifact.ts";
 import type { PermissionState, TransportState } from "../../workstate/types.ts";
-import type { WorkerEvidence, WorkerFinding, FieldValue } from "./types.ts";
+import type { WorkerFinding, FieldValue } from "./types.ts";
 
 /** Additive role contracts stored in the existing WorkerResult family. */
 export interface ResearchSpan {
@@ -169,22 +168,6 @@ export interface DetectiveQuestion {
   readonly nextAction: string;
   readonly populationDefinition: string | null;
   readonly denominator: DenominatorQuestion | null;
-}
-export interface DetectiveTaskSpec {
-  readonly question: DetectiveQuestion;
-  readonly artifactIds: readonly string[];
-  readonly walk: readonly EvidenceWalkStep[];
-  readonly walkState: ResearchWalkState;
-}
-export interface DetectiveWorkerInput extends DetectiveTaskSpec {
-  readonly attemptId: string;
-  readonly worker: WorkerRef;
-  readonly project: string;
-  readonly grant: CapabilityGrant;
-  readonly evidence: readonly WorkerEvidence[];
-  readonly now: string;
-  /** Optional model claims never participate in the deterministic evidence calculation. */
-  readonly hypotheses?: readonly string[];
 }
 export interface DetectiveResult {
   readonly role: "DETECTIVE";

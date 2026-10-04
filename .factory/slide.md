@@ -3,10 +3,10 @@ worker: codex-slide
 provider: Codex
 run_id: 01a10597-8d28-739a-bd97-9da5600d1019
 lock: codex-slide-f2569e34-6011-4e7b-abef-063d88dabacc
-heartbeat: 2026-10-04T06:49:49.299995+00:00
+heartbeat: 2026-10-04T06:59:36.009870+00:00
 on_river: none
 ready: none
-checks: 52 focused privacy, parser, publication and generalized validator tests passed after repair; lint passed; TypeScript pending final rerun. Full test attempts stopped for code repairs and environment setup; not ready. System-browser checks: 20 passed, 1 existing test skipped for substituted browser transport; skip is not a pass.
+checks: 66 focused tests passed; full suite running at b283fac949540b481f48c266cc7c8ea61da573e6 with database and asset-store variables unset, full history, normal generated references, and explicitly reported system Chromium substitution. Lint and TypeScript passed on b33f3926; final reruns pending. Existing substituted-browser beacon positive control remains skipped, not passed.
 working_on: CP-01 privacy at reader and candidate-profile publication boundaries; CP-19 record-local quote/publication checks repaired for formatted names and non-person records. WIP pending full verification and shared Ask connection.
 waiting_on: CP-01 Ask hook routed by River to ballot; CP-19 investigative routing hook requested from auditors. Full verification in progress. Browser CDN is blocked, but explicit WTP_CHROMIUM_EXECUTABLE=/usr/bin/chromium now runs actual system-browser tests; substitution is reported. 56 place-reference indexes generated through normal postinstall script.
 returned: none

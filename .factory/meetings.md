@@ -1,9 +1,9 @@
-build_state: waiting
+build_state: active
 worker: meetings
 provider: Claude
-run_id: session_017Rw3AawdT3GKnMm3rMXdPu
-lock: none
-heartbeat: 2026-10-04T08:30:35Z
+run_id: session_01Dw5SZSUvMmcQc6dtK3DSpq
+lock: meetings-20261004T0930Z-s01Dw5SZ
+heartbeat: 2026-10-04T09:18:32Z
 on_river: DB-01 @ 53ffa5b5a (ready 6afc9006d)
 ready: DB-02 @ 8486d71fee533ef3c9624d4e2407953626149f64; BX-08 @ fd0917fa2080bd31aefb35d9241113038d98d383
 checks: tsc clean; eslint clean on changed files; env -u DATABASE_URL -u WTP_ASSET_STORE pnpm test on 31 ingest/venue/firewall files + official-page, 364/364 pass (DB-02 62/62 earlier). New: tests/hand-wired-venue-pins.test.ts. Live pins on the map are River's post-release check.

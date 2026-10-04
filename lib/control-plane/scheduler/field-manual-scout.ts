@@ -13,14 +13,19 @@ import {
   fieldManualEntryId,
   fieldManualPlaceRank,
   normalizeEntry,
+  emptyFieldManual,
+  upsertEntries,
+  readFieldManual,
   projectFieldManual,
   writeFieldManual,
   type FieldManualEntry,
   type FieldManualProjection,
   type FieldManualStore,
+  type FieldManualRepos,
 } from "../field-manual.ts";
 import type { ScoutCandidate, ScoutResult } from "./scout-result.ts";
 import { doorMethodEntries, type SavedDoorPage } from "../bank-methods.ts";
+import { scoutJobCostEntries } from "../bank-job-cost.ts";
 
 /** The source label a scout's own write-backs carry, so a re-observation updates one row. */
 export const SCOUT_DISCOVERY_SOURCE = "scout-discovery";
@@ -170,7 +175,7 @@ export function scoutDiscoveryEntries(result: ScoutResult, stateHint: readonly s
   const methods = discoveries.flatMap(door => doorMethodEntries(door, pages));
   const stamped = discoveries.map(door => ({ ...door, platforms: methods.filter(method =>
     (method.payload as { doorEntryIds: string[] }).doorEntryIds.includes(door.id)).flatMap(method => method.platforms) }));
-  return [...stamped, ...methods, ...(result.sourceDeadEnds ?? []).map(source => ({
+  return [...stamped, ...methods, ...scoutJobCostEntries(result), ...(result.sourceDeadEnds ?? []).map(source => ({
     id: fieldManualEntryId('source-dead-end', `${result.subjectId}:${result.recordClass}:${source.url}`),
     role: 'SHARED' as const, kind: 'SOURCE_DEAD_END', title: `Historical source: ${source.url}`,
     summary: `${source.sourceDate ?? 'Unknown source date'}: ${source.reason}`.slice(0, 300),
@@ -250,4 +255,9 @@ export function usedFieldManualEntryIds(result: ScoutResult, handedIds: readonly
 }
 
 /** A scout's write-back is the shared field-manual write (`writeFieldManual`). */
-export const writeFieldManualDiscoveries = writeFieldManual;
+export async function writeFieldManualDiscoveries(repos: FieldManualRepos, entries: readonly FieldManualEntry[], now: string) {
+  const bank = await readFieldManual(repos);
+  const methods = entries.flatMap(door => doorMethodEntries(door, [], bank.store.entries));
+  const folded = upsertEntries(emptyFieldManual(), [...entries, ...methods], now);
+  return writeFieldManual(repos, folded.entries, now);
+}

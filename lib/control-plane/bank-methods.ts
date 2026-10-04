@@ -13,13 +13,13 @@ export function portableProcedure(procedure: string, doorUrl: string): string {
 }
 
 /** Only observed platform shapes are shared; an unidentified site is not a platform. */
-export function doorMethodEntries(door: FieldManualEntry, pages: readonly SavedDoorPage[] = []): FieldManualEntry[] {
+export function doorMethodEntries(door: FieldManualEntry, pages: readonly SavedDoorPage[] = [], fingerprints?: readonly FieldManualEntry[]): FieldManualEntry[] {
   if (!door.url || !["SCOUT_DISCOVERY", "ROUTE"].includes(door.kind)) return [];
   const payload = door.payload as { procedure?: unknown } | null;
   if (typeof payload?.procedure !== "string" || !payload.procedure.trim()) return [];
   const opened = pages.filter(page => page.url === door.url);
   // A saved, grounded URL can identify a vendor-hosted door; custom domains use saved markup.
-  const hits = opened.length ? opened.flatMap(page => detectTenancy(page.html, page.url)) : detectTenancy(door.url, door.url);
+  const hits = opened.length ? opened.flatMap(page => detectTenancy(page.html, page.url, fingerprints)) : detectTenancy(door.url, door.url, fingerprints);
   const platforms = [...new Set(hits.map(hit => hit.platform))];
   const procedure = portableProcedure(payload.procedure, door.url);
   const places = fieldManualPlaceHints(door.payload).ocdIds;

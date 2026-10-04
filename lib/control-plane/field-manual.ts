@@ -48,6 +48,7 @@ import { createHash } from "node:crypto";
 
 import type { ControlPlaneRepositories } from "./repository/types.ts";
 import { flushBankWriteFailures, recordBankWriteFailure } from "./bank-write-health.ts";
+import { jobCostProfiles } from "./bank-job-cost.ts";
 
 /** Every worker role whose learnings the manual carries. SHARED = every role reads it. */
 export const FIELD_MANUAL_ROLES = [
@@ -187,6 +188,7 @@ export function upsertEntries(
       ...(entry.kind === "METHOD" && prior.kind === "METHOD" ? { payload: unionMethodReach(prior.payload, entry.payload, newerWins) } : {}),
     });
   }
+  for (const profile of jobCostProfiles([...byId.values()], incoming, now)) byId.set(profile.id, profile);
   return { formatVersion: 1, updatedOn: now, entries: [...byId.values()] };
 }
 
@@ -242,6 +244,7 @@ export function fieldManualPlaceRank(entry: FieldManualEntry, query: FieldManual
 function entryMatches(raw: FieldManualEntry, q: FieldManualQuery): boolean {
   // Old investigation rows also gain their recorded place scope on reads.
   const entry = normalizeEntry(raw);
+  if (entry.kind === "JOB_COST") return false;
   if (q.role !== undefined && entry.role !== "SHARED" && entry.role !== q.role) return false;
   if (q.state !== undefined && entry.states.length > 0 && !entry.states.includes(q.state.toLowerCase())) return false;
   if (q.recordClass !== undefined && entry.recordClasses.length > 0 && !entry.recordClasses.includes(q.recordClass.toLowerCase())) return false;

@@ -72,7 +72,7 @@ test("scoutStateHint reads the state from an OCD subject and from an obligation 
 
 test("scoutDiscoveryEntries turns grounded candidates into YIELDED field-manual entries", () => {
   const entries = scoutDiscoveryEntries(result(), ["nj"]);
-  assert.equal(entries.length, 2, "a place door and its reusable method");
+  assert.equal(entries.filter(e => e.kind === "SCOUT_DISCOVERY").length, 1);
   assert.equal(entries[0]!.outcome, "YIELDED");
   assert.equal(entries[0]!.role, "SCOUT");
   assert.deepEqual(entries[0]!.states, ["nj"]);
@@ -83,18 +83,18 @@ test("scoutDiscoveryEntries turns grounded candidates into YIELDED field-manual 
 test("writeFieldManualDiscoveries writes live and is grow-only across a second walk", async () => {
   const repos = createMemoryRepositories();
   const first = await writeFieldManualDiscoveries(repos, scoutDiscoveryEntries(result(), ["nj"]), "2026-09-19T00:01:00.000Z");
-  assert.equal(first.written, 2);
+  assert.equal(first.written, 4, "door, method, cost observation and cost profile");
   let store = (await repos.fieldManual.read("live"))!.value;
-  assert.equal(store.entries.length, 2);
+  assert.equal(store.entries.length, 4);
 
   // A second scout re-discovers the same door: the store refreshes, never forks.
   await writeFieldManualDiscoveries(repos, scoutDiscoveryEntries(result({ attemptId: "att-2" }), ["nj"]), "2026-09-20T00:00:00.000Z");
   store = (await repos.fieldManual.read("live"))!.value;
-  assert.equal(store.entries.length, 2, "a re-discovery updates in place — the store only grows");
+  assert.equal(store.entries.length, 4, "a re-discovery updates in place — the store only grows");
 
   // The next scout inherits it via the projection.
   const projection = scoutFieldManualProjection(store, { subjectId: "ocd-division/country:us/state:nj/county:morris#governing", recordClass: "meetings" });
-  assert.equal(projection.entryIds.length, 2, "the written door is inherited by the next NJ meetings scout");
+  assert.equal(projection.entryIds.length, 3, "the written door is inherited by the next NJ meetings scout");
   assert.ok(fieldManualBriefLines(projection)[0]!.includes("inherited door"));
 });
 

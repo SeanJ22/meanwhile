@@ -38,6 +38,12 @@ Apply rulings §6. Verification means the §3 standard and the §0 tests. Test t
 
 State which evidence shows the result works for readers. Do not report a skipped or failed check as passing. Retire proof steps that protect no reader outcome instead of repeating them. Preserve evidence and working data under §9; use the project's actual data-publishing and software-release processes.
 
+## How code ships: streams → river → main
+
+This describes the release mechanism; it adds no policy. Builders push only their own `stream/<lane>` branch, cut from `river`, and open no pull requests. The one exception is Codex: when publishing a branch needs a PR, keep one draft PR into `river`, never into `main`. After a step's focused checks pass, mark it with a `READY: <step ids>` commit; later WIP commits are not integrated. Name new migrations by step id and leave numbering and the journal to River.
+
+River (`scripts/river.mjs`) folds each lane's exact READY commit into `river-next`, drops `.factory/`, numbers migrations, runs `pnpm gates` once on the combination, and fast-forwards `river` to that tested commit. A couple of times a day it ships `river` to `main` through one `release/<n>` pull request listing its steps. Data never rides the river: facts, doors, settings and playbooks go live as data, without a release.
+
 ## Finish and report
 
 Apply rulings §10. Give a verified win its own space and explain why it matters to a reader. Then briefly report what changed, which §0 test it moves, how it was verified, actual delivery status, and any remaining work with its owner and next action. Use plain English. Admin shows times in Eastern time; schedules reported to Sean use Arizona MST.

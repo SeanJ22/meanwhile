@@ -3,11 +3,11 @@ worker: codex-admin
 provider: Codex
 run_id: codex-admin-20261004T062737Z
 lock: codex-admin-20261004T062737Z-0b5d5bbbf374
-heartbeat: 2026-10-04T06:35:08Z
+heartbeat: 2026-10-04T06:42:01Z
 on_river: none
 ready: none
-checks: node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/admin-settings.test.ts PASS on uncommitted WIP; lint/types and affected selection pending
-working_on: BR-05 WIP: typed settings, persisted before/after and undo; edge CAS publication; focused tests pass; types repair in progress
+checks: Settings focused checks PASS at 2a502155894986b4cedfc5a5a8b7baaa783da885; lint PASS (69 existing warnings); types PASS. Affected selector FULL because .factory/admin.md changed; full 986-file suite running, failures observed outside settings. No READY batch.
+working_on: BR-05 WIP checkpoint pushed; BR-01 bounded projection/receipt reader in isolated local worktree while tests run.
 waiting_on: none
 returned: none
 needs_hook: hunters: re-read AdminConfig each runner pass and call readSetting(config, DETECTIVE_SHUT_THRESHOLD, 3); auditors DP-02: consume this setting for shut-door escalation. River routes shared-file changes. Other lanes register keys with validation and readerFacing metadata.

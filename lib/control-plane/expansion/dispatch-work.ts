@@ -288,6 +288,12 @@ export interface DispatchWorkWorld {
   readonly censusUnitsByState?: ReadonlyMap<string, number> | null;
   /** Registries the promoted bundle carries that the runtime's reader refuses, by lower-case state, with the reason. */
   readonly refusedRegistries?: ReadonlyMap<string, string>;
+  /**
+   * CH-04: the information families already live for a government, from the held place capture
+   * (`liveFamiliesByGovernment`). A government listed here gets no paid discovery Scout for that
+   * family; its refresh and comparison stay on their existing routes. Absent means not read.
+   */
+  readonly liveFamilies?: ReadonlyMap<string, ReadonlySet<string>>;
 }
 
 /* ---------------------------------------------------------- requirements */
@@ -332,11 +338,12 @@ export function requirementsFor(
   need: MeetingsDiscoveryNeed | null,
   meetingPartitions: MeetingPartitionOwnership,
   discoverMissingFamilies = false,
+  liveFamilies?: ReadonlySet<string>,
 ): RequirementInstance[] {
   const out: RequirementInstance[] = [];
   const from = registrySourceOf(reg);
   const bodyId = meetingPartitions.bodyIdFor ? meetingPartitions.bodyIdFor(j.id) : j.bodyId ?? null;
-  for (const r of jurisdictionRequirements(reg, j, meetingPartitions, discoverMissingFamilies)) {
+  for (const r of jurisdictionRequirements(reg, j, meetingPartitions, discoverMissingFamilies, liveFamilies)) {
     const autonomousPlan = discoverMissingFamilies ? r.route.routeId === "coverage-discovery:body-directory"
       ? bodyDirectoryDiscoveryPlan(j, bodyId) : r.source.recordClass === "PUBLIC_COMMENT"
       ? publicCommentDiscoveryPlan(j, bodyId) : jurisdictionDiscoveryPlan(j, r.source, r.route.routeId, bodyId) : null;
@@ -663,7 +670,7 @@ export function planDispatchWork(input: {
     const instances: RequirementInstance[] = [];
     for (const { reg, jurisdiction } of units.placed) {
       instances.push(...requirementsFor(reg, jurisdiction, needOf(reg, jurisdiction.id), world.meetingPartitions,
-        target.kind === "SCOPE" && target.sourceWorkVersion === 1));
+        target.kind === "SCOPE" && target.sourceWorkVersion === 1, world.liveFamilies?.get(jurisdiction.id)));
     }
     /* MW-001: does the row already record this Send, in any relation? */
     const recorded = (row: DurableRowFacts | undefined): boolean => (row?.assignments ?? []).some((a) => a.assignmentKey === target.key && a.ref === target.ref);

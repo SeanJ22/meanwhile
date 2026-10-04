@@ -34,6 +34,12 @@ heartbeat: 2026-10-04T09:06:50Z
 - Netlify MCP: coding-context tool only. No deploy/site-settings reads seen yet.
 - Browser: Chromium runs, at `/opt/pw-browsers/chromium` (Playwright's bundled headless shell 1234 is missing). **This environment's network policy blocks meanwhileusa.com, admin.meanwhileusa.com, api.netlify.com, console.neon.tech and tiles.meanwhilemaps.com**: CONNECT returns 403 at the egress proxy, and WebFetch reports EGRESS_BLOCKED. Only GitHub and package registries are reachable. Until Sean allows those hosts in this cloud environment's network settings, live checks run only through GitHub Actions (post-deploy-integrity reads the deployed site) and the Neon MCP connection (read-only). No rendered page, button or mobile layout can be checked from River. That is an open verification gap, not a pass. Admin also needs Sean's Google sign-in.
 
+## Automatic continuation: verified
+
+- Fresh scheduled cloud runs publish streams, mark READY and resume from saved status. Every Claude lane has done this across more than one hourly run since 06:10Z.
+- Handoff verified: River handed bank (codex-bank stopped 07:34Z) to registry at 08:20Z. By 09:05Z a fresh scheduled registry run had claimed stream/bank under its own lock ("registry (continuing bank after recorded handoff 2026-10-04 08:20Z)"). The other three handoffs (admin→measures, slide→hunters, frontend→auditors) are waiting on those workers' next hourly runs.
+- No verified Codex restart mechanism exists. The Claude fallback is the continuation path.
+
 ## Release work
 
 - RL-01: built and integrated. CI's crosswalk floor was already on main. The local `feedback:sweep` check-debt fix is on river @ 8f6185c. `pnpm gates` passes in the cloud except one trace-sweep test that also fails on main (see Seen, not fixed). Still to do: the next full check on main passes after release 1.

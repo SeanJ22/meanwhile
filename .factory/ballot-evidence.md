@@ -7,8 +7,8 @@ Launch is recorded in `board/river:authorization.md` at 2026-10-04T06:00Z. Only 
 - SHA: `bfc11e7b5ad94530244900c9c1a158427ad65a92`.
 - Subject: `READY: CA-24 CA-20 CA-30 CA-44 CA-45 CA-51; returned Ask hooks`.
 - Local certification checkout: `/workspace/meanwhile-ballot-ready-check`, detached at that exact SHA with a clean tracked tree.
-- Publication: pending exact FULL result; this candidate has not been pushed.
-- FULL: `env -u DATABASE_URL -u WTP_ASSET_STORE -u CI_TEST_FILES -u CI_TEST_SHARD corepack pnpm test`, running; no reported failures so far. 1004/1004 test files selected, as printed by the canonical command. Log: `/tmp/ballot-ready-full.log`.
+- Publication: exact candidate now included in stream/ballot history after all checks passed; later CA-35 WIP stays outside its source tree.
+- FULL: `env -u DATABASE_URL -u WTP_ASSET_STORE -u CI_TEST_FILES -u CI_TEST_SHARD corepack pnpm test`, **PASS**, exit 0: 9124 tests, 9113 passed, 0 failed, 11 skipped, 32 suites, 1597328.412713 ms. 1004/1004 test files selected, as printed by the canonical command. Log: `/tmp/ballot-ready-full.log`.
 - Types: `corepack pnpm exec tsc --noEmit`, exit 0. Log: `/tmp/ballot-ready-types.log`.
 - Lint: `corepack pnpm lint`, exit 0, zero errors and 68 warnings. Log: `/tmp/ballot-ready-lint.log`.
 - Selector: actual merge base with then-current origin/river c7914e8a89f79931c2a946dd8be6d41e9f4a570c, source base `8f6185c5436b2be939c0333101713b6b5263e730`. FULL selected; `needs_browser=true`. Log: `/tmp/ballot-ready-selection.log`. River advanced afterwards; that does not change this tested source SHA.

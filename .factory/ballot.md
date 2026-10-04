@@ -3,13 +3,13 @@ worker: codex-ballot
 provider: Codex
 run_id: codex-ballot-9378cafcef294004a0aa48621d1a1e44
 lock: codex-ballot-9378cafcef294004a0aa48621d1a1e44
-heartbeat: 2026-10-04T09:12:00Z
+heartbeat: 2026-10-04T09:22:41Z
 on_river: none
-ready: none
-checks: FULL f049ae93d5650a4409d9f5769412b52e1b5e703c passed: 9,121 tests, 9,110 pass, 0 fail, 11 skipped; types/lint pass (68 lint warnings). Exact unpublished READY candidate bfc11e7b5ad94530244900c9c1a158427ad65a92: FULL still running; types/lint pass. No READY published until final FULL result. Subsequent CA-35 WIP 3/3 focused tests, types and file lint pass.
-working_on: Certifying exact READY candidate bfc11e7b for CA-24/20/30/44/45/51 and returned hooks. Subsequent CA-35 saved-source polling door adapter is WIP: CSV/JSON/HTML/PDF-text with registered OCD scope, no geocoding or guessed assignments. Mixed known/unknown optional source cells remain held; general publication, dispatch and old source retirement unfinished.
+ready: CA-24 CA-20 CA-30 CA-44 CA-45 CA-51 @ bfc11e7b5ad94530244900c9c1a158427ad65a92
+checks: exact READY bfc11e7b5ad94530244900c9c1a158427ad65a92: FULL corepack pnpm test passed (9124 tests, 9113 passed, 0 failed, 11 skipped, 32 suites, 1597328.412713 ms); tsc --noEmit exit 0; pnpm lint exit 0, zero errors/68 warnings. CI env unsets production stores; system Chromium 151 substitute, not pinned 1234. Later polling WIP focused 3/3/types/file lint pass; not FULL ready. Evidence .factory/ballot-evidence.md.
+working_on: READY batch certified and published. Later CA-35 polling-door WIP remains outside exact READY. General ballot retirement, cold Ask remainder, finance publication and card bridge are unfinished; continue from .factory/ballot-continuation.md.
 waiting_on: CA-25 DB-42 (registry continuing bank); CA-37 BR-24 (measures continuing admin); CA-19 CP-03/CA-33 CP-09 (hunters continuing slide). DB-11 integrated at river 8f6185c54.
-returned: CP-01 Ask privacy hook checkpoint 812f89416; CA-12 own-words hook connected after River cf622f303 integration, 26/26 focused tests pass. No READY before required FULL.
+returned: CP-01 Ask privacy hook 812f894166134c2c1bc56ed3ae8e8347d74850e9; CA-12 own-words hook f8c75b01c4d66c84b048beee520c02683b8a81f0; both included in tested READY. Whole cross-lane steps remain with owners.
 needs_hook: River: CA-35 nullable optional mapped cells need shared record-evidence extractor support; mapped empty CSV cells and even unmapped empty HTML cells currently refuse. Keep known values, unknown coordinates/elections/assignments and full row count, never silently drop rows. hunters continuing slide via River: CA-31 heldPageCopies in worker-publication-evidence.ts:29 still selects HTML only; admit complete saved CSV and PDF-derived text with raw document hash. New completed-parser publication already dispatches via existing task registry. Retained legacy ballot plans still need migration to BALLOT_CONTEST + ballot-contests without guessing a full list. Registry via River: CA-21 readFinanceDoor exports saved-byte CSV/search-API/bulk-ZIP field-map readers; read-kind dispatch/general finance publication remain unfinished.
 needs_Sean: none
 seen_not_fixed: The MapTiler baseline failures reproduce on river 8f6185c54; local-proxy-only harness repair now passes 4/4 with production quota guard unchanged, fake key and non-forwarding instrument. Chromium 151 system substitution reported; pinned 1234 unavailable. Corepack pinned pnpm 10.33.0 uses /workspace/.cache/corepack.

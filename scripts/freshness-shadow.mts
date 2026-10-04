@@ -1514,7 +1514,7 @@ try {
   configRead = { unreadable: error instanceof Error ? error.message : String(error) };
 }
 const { config, holdPaidWork: configHold } = adminConfigForPaidWork(configRead);
-const ceilingOverrideUsd = fleetSpendCeilingOverrideUsd(config);
+let ceilingOverrideUsd = fleetSpendCeilingOverrideUsd(config);
 discoverySearchOn = discoverySearchEnabled(config);
 if (config?.discoverySearch !== undefined && config.discoverySearch !== null) {
   discoverySearchReceiptId = config.discoverySearch.receiptId;
@@ -1528,8 +1528,8 @@ if (configHold !== null) {
       `$${FLEET_SAFETY_BOUNDS.rolling24HourModelUsd.toFixed(2)}, which could be above the owner's dial`,
   );
 }
-const rollingCeiling = resolveRollingCeiling(ceilingOverrideUsd);
-const effectiveCeilingUsd = rollingCeiling.rollingCeilingUsd;
+let rollingCeiling = resolveRollingCeiling(ceilingOverrideUsd);
+let effectiveCeilingUsd = rollingCeiling.rollingCeilingUsd;
 
 /* The intent log was read, and RUN_CYCLE_NOW / DISPATCH honored, above the
    lane ordering — a DISPATCH has to reorder before anything is opened. */
@@ -1658,6 +1658,37 @@ const fleetSafety = new FleetSafetyController({
   rollingCeilingUsd: effectiveCeilingUsd,
   lifetimeHuntWork,
 });
+/**
+ * CH-03: the owner's spend dial is re-read on each admission batch, the way
+ * `refreshPlaceOrder` already re-reads the place order, so raising the ceiling
+ * in Admin lets more paid workers in before this round ends. A read that fails
+ * or is malformed keeps the ceiling already in force: a disappeared ceiling is
+ * never a higher one.
+ */
+const SETTINGS_REFRESH_MIN_MS = 5_000;
+let settingsReadAt = 0;
+let settingsRead: Promise<void> | null = null;
+function refreshOwnerSettings(): Promise<void> {
+  if (settingsRead) return settingsRead;
+  if (Date.now() - settingsReadAt < SETTINGS_REFRESH_MIN_MS) return Promise.resolve();
+  settingsReadAt = Date.now();
+  settingsRead = (async () => {
+    const reread = adminConfigForPaidWork({ row: await repos.adminConfig.read(ADMIN_CONFIG_ID) });
+    if (reread.holdPaidWork !== null) return;
+    const next = resolveRollingCeiling(fleetSpendCeilingOverrideUsd(reread.config));
+    if (next.rollingCeilingUsd === effectiveCeilingUsd) return;
+    console.log(`  Workers: the owner's spend dial changed mid-round: $${effectiveCeilingUsd} -> $${next.rollingCeilingUsd} a day; new admissions use it`);
+    ceilingOverrideUsd = fleetSpendCeilingOverrideUsd(reread.config);
+    rollingCeiling = next;
+    effectiveCeilingUsd = next.rollingCeilingUsd;
+    fleetSafety.setRollingCeilingUsd(ceilingOverrideUsd);
+    paidCapacityHoldSaid = false;
+  })().catch(error => {
+    console.warn(`  owner settings refresh failed; keeping the ceiling in force: ${error instanceof Error ? error.message : String(error)}`);
+  }).finally(() => { settingsRead = null; });
+  return settingsRead;
+}
+
 if (ledgerUnreadable !== null) {
   fleetSafety.defer("all model-backed Fleet work", "UNMEASURED_MODEL_SPEND", `the canonical cost ledger could not be read: ${ledgerUnreadable}`);
 }
@@ -2741,7 +2772,7 @@ const cycle = await runCycle({
   executor: executorFor,
   workerCapacity: Math.max(1, dueDeterministicRows.length),
   placeComparator: async () => {
-    await refreshPlaceOrder();
+    await Promise.all([refreshPlaceOrder(), refreshOwnerSettings()]);
     return (a, b) => (placementRank(a.obligation.id) ?? Infinity) - (placementRank(b.obligation.id) ?? Infinity);
   },
   huntFor: row => {
@@ -3027,7 +3058,7 @@ async function runAutonomousWave() {
     deadlineMs: dispatchDeadlineMs,
     slots: workerSlots,
     config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidWorkerCapacity() > 0,
-      searchEnabled: scoutSearch !== null, ceilingUsd: effectiveCeilingUsd, fundedSubjects: [...lifetimeHuntSubjects] },
+      searchEnabled: scoutSearch !== null, get ceilingUsd() { return effectiveCeilingUsd; }, fundedSubjects: [...lifetimeHuntSubjects] },
     capacity: () => Math.min(taskIds.length, plainTaskIds.size + paidWorkerCapacity(taskIds.length)),
     transportFor: (jurisdiction, taskId) => async request => {
       const task = (await repos.routeTasks.mustRead(taskId)).value;
@@ -3068,7 +3099,7 @@ async function runAutonomousWave() {
     ...(scoutSearch ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime ?? scoutSearch : scoutSearch } : {}),
     reserveEscalation: scoutEscalationReservation(fleetSafety),
     orderPending: async ids => {
-      await refreshPlaceOrder();
+      await Promise.all([refreshPlaceOrder(), refreshOwnerSettings()]);
       const queue = taskQueue ??= readTaskQueue();
       const paidOpen = paidWorkerCapacity() > 0;
       // Only ordering is a wave snapshot. A changed task role must still read

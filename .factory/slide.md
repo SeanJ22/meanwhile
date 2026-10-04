@@ -3,7 +3,7 @@ worker: overflow-2
 provider: Claude (River-run overflow)
 run_id: session_01M3CeUks1KpFZttTP6ZTEAq/overflow-2
 lock: overflow-2-20261004T133242Z-eb0c4996
-heartbeat: 2026-10-04T13:38:56Z
+heartbeat: 2026-10-04T13:50:11Z
 on_river: none of slide's steps; caught up with river ef132988e at 761b3d99c
 ready: none
 checks: FULL at 4717f3e5c4d3da15ecc149783b7cbbfa0b53570b passed: 985 files, 9012 passed tests, 11 skipped, 0 failed; types and lint passed. Later WIP a0e5c7b22892922f8380fa3bb69afed54196515d: 40 focused tests/types/changed-file lint passed. River merge b4a2c902b7eea72bababdfe5dc8fc7e5d950e075: 42 focused tests/types passed; actual selector FULL not run on the latest combination. Exact scope and skips: .factory/slide-checks.json. No READY claim.

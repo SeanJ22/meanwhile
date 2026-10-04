@@ -43,7 +43,7 @@ export interface Contest {
   title: string;
   type: ContestType;
   /** Seats to vote for — mandatory, not an edge case (NH multi-member). */
-  voteFor: number;
+  voteFor: number | null;
   /** Term in years, where the filing states it. */
   termYears: number | null;
   /**

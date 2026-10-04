@@ -384,6 +384,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       ];
     }
     case "BALLOT_CANDIDACY": {
+      if (root.kind === "ballot-contests") return Object.values(object(root.ballots) ?? {}).flatMap(ballot => civicRecordsFor("BALLOT_CANDIDACY", { ballot }));
       const ballot = object(root.ballot) ?? root;
       const lineup = object(root.generalLineup);
       const analyses = object(root.measureAnalyses);

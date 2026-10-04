@@ -558,7 +558,7 @@ async function BallotBattlecard({
    * How many seats this contest fills. The contest-level eligibility gate
    * reconciles the holders a source returns against it (2026-08-28).
    */
-  contestVoteFor: number;
+  contestVoteFor: number | null;
   context: { zip: string; lat: number; lng: number } | null;
   authorityAvailability: BallotAuthorityAvailability;
   /**
@@ -597,7 +597,7 @@ async function BallotBattlecard({
    * three states. A miss is UNKNOWN, never `Challenger`.
    */
   let resolvedStanding: Awaited<ReturnType<typeof contestIncumbency>> | null = null;
-  if (authorityAvailability.officeholders) {
+  if (authorityAvailability.officeholders && contestVoteFor !== null) {
     try {
       resolvedStanding = await withReaderAuthorityEdge(readerEdge, () => contestIncumbency(
         {
@@ -1241,11 +1241,11 @@ export default async function BallotPage({
    */
   const pickableContests =
     set && matched
-      ? [...candidacyContests, ...measureContests].map((contest) => ({
+      ? [...candidacyContests, ...measureContests].filter(contest => contest.voteFor !== null).map((contest) => ({
           contestId: contest.id,
           contestTitle: contest.title,
           contestOcdId: contest.ocdId,
-          voteFor: contest.type === "MEASURE" ? 1 : contest.voteFor,
+          voteFor: contest.type === "MEASURE" ? 1 : contest.voteFor ?? 0,
           options: pickOptionsFor(set, contest),
         }))
       : [];
@@ -2184,7 +2184,7 @@ export default async function BallotPage({
                   )}
                 </h2>
                 <p className="t-eyebrow text-muted">
-                  Vote for {contest.voteFor}
+                  {contest.voteFor !== null ? `Vote for ${contest.voteFor}` : "We’re working on getting this info"}
                   {contest.termYears ? ` · ${contest.termYears}-year term` : ""}
                 </p>
               </div>
@@ -2371,7 +2371,7 @@ export default async function BallotPage({
                 <PickControl
                   contestId={contest.id}
                   contestTitle={contest.title}
-                  voteFor={contest.voteFor}
+                  voteFor={contest.voteFor ?? 0}
                   /* M134: the reaction target for this nominee, so a Yes on
                      the control above becomes the pick here. F01-continued
                      item 8: through the shared builder, so the tally counts
@@ -2533,7 +2533,7 @@ export default async function BallotPage({
                   <PickControl
                     contestId={contest.id}
                     contestTitle={contest.title}
-                    voteFor={contest.voteFor}
+                    voteFor={contest.voteFor ?? 0}
                     /* M134: same, keyed the way this branch keys reactions. */
                     options={pickOptionsFor(set, contest)}
                   />

@@ -425,7 +425,7 @@ export function ballotRecordsFor(
       text:
         `${contest.title} appears on this ballot for ${deps.set.election.name}` +
         ` on ${formatDateLong(deps.set.election.date) ?? deps.set.election.date}.` +
-        ` Voters choose ${contest.voteFor}` +
+        (contest.voteFor === null ? "" : ` Voters choose ${contest.voteFor}`) +
         `${contest.termYears ? `, for a term of ${contest.termYears} years` : ""}.` +
         (scope.currentNote ? ` ${scope.currentNote}` : ""),
       occurredAt: deps.set.election.date,

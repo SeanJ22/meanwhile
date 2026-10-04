@@ -61,3 +61,7 @@ The remaining dependency chains are CA-25→26→27→28→29/50 (DB-42), CA-37�
 ## Certified batch result
 
 Exact READY `bfc11e7b5ad94530244900c9c1a158427ad65a92` completed at 2026-10-04T09:22:41Z: **9124 tests, 9113 passed, 0 failed, 11 skipped, 32 suites, 1597328.412713 ms**; FULL exit 0, types exit 0, lint exit 0 (68 warnings). It is now published on stream/ballot. River folds this SHA, not the later stream tip with polling WIP. Earlier statements about the candidate running are historical preparation notes, superseded by this result and current status. No deployed/live acceptance is claimed by these local checks.
+
+## Safe handoff
+
+This Codex run ended at 2026-10-04T09:23:59Z after publishing the certified batch. Lock released to `none`. River is requested to record the existing paired meetings continuation; until that assignment is recorded, another worker must not claim this lane. A resumed Codex worker must read assignments first and exit without writing if reassigned to Claude. Ready independent work remains, as listed above; this is not BUILD COMPLETE and needs no routine restart by Sean.

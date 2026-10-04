@@ -27,7 +27,7 @@ import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-re
 import type { AdapterVerification, DerivedInputRef } from "../../civic-data/derived-authority.ts";
 import { bodySourceWiringFor, DERIVED_WIRING_SOURCE_NAMES, type DerivedWiringKind, type DerivedWiringRow } from "../../civic-data/derived-meeting-wiring.ts";
 import type { PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
-import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } from "../../meetings/constants.ts";
+import { MEETING_HELD_HORIZON_DAYS, MEETING_HELD_LOOKBACK_DAYS } from "../../meetings/constants.ts";
 import { makeIcalSource, parseIcs } from "../../sources/ical/index.ts";
 import { ZeroRowExtractionError } from "../../sources/normalize-account.ts";
 import { makeOfficialPageEventsSource, officialLinkingPageFrom } from "../../sources/official-page-events/index.ts";
@@ -125,8 +125,8 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
     const nowMs = Date.parse(now);
     const raw = row.kind === "DILIGENT" ? [{ wiring, meetings: JSON.parse(text), collectedAt: reading.evidence.retrievedAt }] : await source.fetch({
       lat: 39.5, lng: -98.35, radiusKm: 5000,
-      startsAfter: new Date(nowMs - CONCLUDED_LOOKBACK_DAYS * 86_400_000).toISOString(),
-      startsBefore: new Date(nowMs + UPCOMING_HORIZON_DAYS * 86_400_000).toISOString(),
+      startsAfter: new Date(nowMs - MEETING_HELD_LOOKBACK_DAYS * 86_400_000).toISOString(),
+      startsBefore: new Date(nowMs + MEETING_HELD_HORIZON_DAYS * 86_400_000).toISOString(),
     });
     meetings = source.normalizeWithDrops(raw as never[], new Date(nowMs)).meetings;
     }

@@ -26,8 +26,8 @@ import {
   type AgendaDocumentStore,
 } from "../lib/meetings/agenda-documents.ts";
 import {
-  CONCLUDED_LOOKBACK_DAYS,
-  UPCOMING_HORIZON_DAYS,
+  MEETING_HELD_HORIZON_DAYS,
+  MEETING_HELD_LOOKBACK_DAYS,
   meetingFetchedWindowAt,
   meetingHeldWindowAt,
 } from "../lib/meetings/constants.ts";
@@ -746,8 +746,8 @@ async function readDerivedFamilyMember(member: DerivedWiringRecord, fetchImpl: t
       lat: 39.5,
       lng: -98.35,
       radiusKm: 5000,
-      startsAfter: new Date(now - CONCLUDED_LOOKBACK_DAYS * 86_400_000).toISOString(),
-      startsBefore: new Date(now + UPCOMING_HORIZON_DAYS * 86_400_000).toISOString(),
+      startsAfter: new Date(now - MEETING_HELD_LOOKBACK_DAYS * 86_400_000).toISOString(),
+      startsBefore: new Date(now + MEETING_HELD_HORIZON_DAYS * 86_400_000).toISOString(),
     });
     const meetings: Meeting[] = resolveAttribution((source as MeetingSource<unknown>).normalize(raw as unknown[]));
     const report = source.lastReport?.children.find((child) => child.source === sourceName);
@@ -969,10 +969,10 @@ async function main() {
     lng: -98.35,
     radiusKm: 5000,
     startsAfter: new Date(
-      now - CONCLUDED_LOOKBACK_DAYS * 86_400_000,
+      now - MEETING_HELD_LOOKBACK_DAYS * 86_400_000,
     ).toISOString(),
     startsBefore: new Date(
-      now + UPCOMING_HORIZON_DAYS * 86_400_000,
+      now + MEETING_HELD_HORIZON_DAYS * 86_400_000,
     ).toISOString(),
   }), "legistar", value => {
     const url = new URL(value);

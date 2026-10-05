@@ -5,7 +5,7 @@ run_id: session_013PW45RsGrmm8TqPnYfTFmb
 lock: measures-session_013PW45R
 heartbeat: 2026-10-05T20:15:15Z
 on_river: SC-01, SC-02, SC-03, SC-04, SC-05, SC-06, SC-07, SC-08, SC-09 (build), SC-11, SC-12, SC-13, SC-16, SC-20, BR-08, BR-21 (River folds through a88a0726c; BR-23 was named in the 940b11c58 fold but scoreboard-read.ts is not on river, so BR-23 is not built)
-ready: BR-23 at 3753c6c126352d642c4426a3baa9577ed1932ed7; BR-14 at 033dd9abf0ea76644b4d100281141f342195fc51; BR-25 at e47bf4a5f4f22ec7d7b69a2a5b7d17a3e385fed6
+ready: BR-23 at 3753c6c126352d642c4426a3baa9577ed1932ed7; BR-14 at 033dd9abf0ea76644b4d100281141f342195fc51; BR-25 at e47bf4a5f4f22ec7d7b69a2a5b7d17a3e385fed6; SC-10 at 8640184bd1746e2d89e8ab55b46ade117f05222f
 checks: SC-10 on the BR-25 base: full suite as CI runs it (env -u DATABASE_URL -u WTP_ASSET_STORE): 9374 tests, 9363 pass, 0 fail, 11 skipped. tsc --noEmit clean; eslint clean on changed files. New: tests/place-growth.test.ts (5). Not viewed live (no Admin sign-in here).
 working_on: SC-14 then BR-33 (both need a 2-line registration in lib/control-plane/gateway/registry.ts, admin-owned; see needs_hook)
 waiting_on: BR-38: RL-05 (river) and CH-01 (hunters). BR-31: BX-06 (slide). BR-32: DB-27, DB-31 (meetings), DB-34 (registry). SC-17: Sean's decision D7 (parked). BR-24 (admin) is on river now, so BR-25, SC-10, BR-33 are ready; BR-06 is on river so SC-14 is ready.

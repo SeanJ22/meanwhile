@@ -207,7 +207,7 @@ export async function publishWorkerReaderResults(input: {
         accepted: delivered.map(row => ({ recordId: row.id, readerId: row.id, value: row, previous: before.find(old => old.id === row.id) })) });
       workerChecksComplete = true;
       const published = await processRegisteredManualCandidate(input.store, input.contractId, candidate, input.now, expectedBaseVersionId);
-      if (published.candidate.receipt?.decision === "GOOD") await recordPublicationFlow(input.repos, candidateId,
+      if (published.candidate.receipt?.decision === "GOOD") await recordPublicationFlow(input.repos, published.candidate.candidate.id,
         { workerResultId: parser.id, stage: "CHECKED", records: changes.recordChanges.length,
           changedRecords: changes.records.added + changes.records.changed, versionId: null }, input.now);
       if (!published.promoted) {
@@ -219,7 +219,7 @@ export async function publishWorkerReaderResults(input: {
         requiredManualProductionContract(input.contractId), published.promoted, input.now);
       if (readback?.status !== "PASS") throw new Error(`WORKER_PUBLICATION_READER_READBACK_FAILED:${readback?.detail ?? "missing receipt"}`);
 
-      await recordPublicationFlow(input.repos, candidateId,
+      await recordPublicationFlow(input.repos, published.candidate.candidate.id,
         { workerResultId: parser.id, stage: "LIVE", records: changes.recordChanges.length,
           changedRecords: published.confirmed ? 0 : changes.records.added + changes.records.changed, versionId }, input.now);
       outcome = { at: input.now, workerResultId: parser.id, status: "PUBLISHED", code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",

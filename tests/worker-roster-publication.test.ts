@@ -185,6 +185,10 @@ async function proveRosterPublication(partial = false, box = false) {
   assert.equal(read.value.officialCandidacies.rows.find(row => row.holder.id === added.id)?.status, "NOT_CHECKED", "unknown candidacy does not hold verified officeholding or assert absence");
   assert.deepEqual(read.value.bodyRosters.filter(roster => roster.bodyId !== body.id), prior.payload.bodyRosters.filter(roster => roster.bodyId !== body.id));
   assert.deepEqual(await publishWorkerRosterResults(input), published, "restart reuses the durable publication receipt");
+  const flow = await h.repos.ownerDigests.read("publication-flow");
+  assert.deepEqual(flow.map(row => row.publicationFlow?.stage).sort(), ["CHECKED", "LIVE"]);
+  for (const row of flow) assert.ok(await store.readCandidate(row.publicationFlow!.candidateId), "flow counts reference a durable publication candidate");
+
   if (partial) {
     assert.ok(!delivered.members.some(member => member.name === "Contact us"), "navigation text never becomes a person");
     assert.match(published[0].outcome.detail, /1 row\(s\) stay open as work/);

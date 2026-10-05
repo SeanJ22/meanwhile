@@ -124,8 +124,8 @@ export async function buildBoxFindings(input: {
       if (tried.has(key)) continue;
       tried.add(key);
       const before = built.length;
-      // The lock covers a shared page/subject even when two Sends reference it.
-      await repos.locks.withLock(`box-build:${fingerprint([first.sourceUrl ?? first.id, first.subjectId])}`, async () => {
+      // The lock covers the whole page: one extraction may carry several people, even when two Sends reference it.
+      await repos.locks.withLock(`box-build:${fingerprint([first.sourceUrl ?? first.id])}`, async () => {
         const pageRows = own.filter(row => row.sourceUrl === first.sourceUrl);
         const origins = await Promise.all(pageRows.flatMap(row => row.origins.filter(origin => origin.workItemId === item.id && origin.kind === "SCOUT")
           .map(async origin => ({ row, finding: (await scoutFor(origin))?.findings[origin.findingIndex] }))));

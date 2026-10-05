@@ -435,7 +435,7 @@ ${readingId}`);
         canonicalJson(prepared.payload.bodyRosters[0]), "ROSTER_READER_FACTS_HELD");
       candidateId = candidate.id;
       const published = await processRegisteredManualCandidate(input.store, "registry-runtime-bindings", candidate, input.now, prior.versionId);
-      if (published.candidate.receipt?.decision === "GOOD") await recordPublicationFlow(input.repos, candidateId,
+      if (published.candidate.receipt?.decision === "GOOD") await recordPublicationFlow(input.repos, published.candidate.candidate.id,
         { workerResultId: readingId, stage: "CHECKED", records: changes.recordChanges.length,
           changedRecords: changes.records.added + changes.records.changed, versionId: null }, input.now);
       if (!published.promoted) { if (published.candidate.failureCode === "PROMOTION_BASE_CHANGED") registry = undefined; throw new Error(`${published.candidate.failureCode === "PROMOTION_BASE_CHANGED" ? "PROMOTION_BASE_CHANGED" : "ROSTER_READER_GATE_HELD"}:${published.candidate.failureDetail ?? published.candidate.state}`); }
@@ -444,7 +444,7 @@ ${readingId}`);
       const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(input.store,
         requiredManualProductionContract("registry-runtime-bindings"), published.promoted, input.now);
       if (readback?.status !== "PASS") throw new Error(`ROSTER_READER_READBACK_FAILED:${readback?.detail ?? "missing typed reader receipt"}`);
-      await recordPublicationFlow(input.repos, candidateId,
+      await recordPublicationFlow(input.repos, published.candidate.candidate.id,
         { workerResultId: readingId, stage: "LIVE", records: changes.recordChanges.length,
           changedRecords: published.confirmed ? 0 : changes.records.added + changes.records.changed, versionId }, input.now);
       registry = acceptedRegistryPrior(published);

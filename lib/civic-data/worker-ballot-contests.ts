@@ -134,11 +134,11 @@ export async function publishWorkerBallotContestsResults(input: {
       const changes = publicationRecordChanges({ previousVersionId: prior?.versionId ?? null,
         accepted: contests.map(contest => ({ recordId: contest.id, readerId: contest.id, value: contest, previous: before.find(old => old.id === contest.id) })) });
       const published = await processRegisteredManualCandidate(input.store, "ballot-contests", candidate, input.now, prior?.versionId ?? null);
-      if (published.candidate.receipt?.decision === "GOOD") await recordPublicationFlow(input.repos, candidateId,
+      if (published.candidate.receipt?.decision === "GOOD") await recordPublicationFlow(input.repos, published.candidate.candidate.id,
         { workerResultId: parser.id, stage: "CHECKED", records: contests.length, changedRecords: changes.records.added + changes.records.changed, versionId: null }, input.now);
       requirePublication(published.promoted && published.readerReadback?.status === "PASS", `BALLOT_READER_HELD:${published.candidate.failureDetail ?? published.candidate.state}`);
       versionId = published.promoted.versionId;
-      await recordPublicationFlow(input.repos, candidateId,
+      await recordPublicationFlow(input.repos, published.candidate.candidate.id,
         { workerResultId: parser.id, stage: "LIVE", records: contests.length, changedRecords: published.confirmed ? 0 : changes.records.added + changes.records.changed, versionId }, input.now);
       outcome = { at: input.now, workerResultId: parser.id, status: checked.heldContests.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
         code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "COMPLETE_BALLOT_CONTESTS_PUBLISHED", candidateId, versionId,

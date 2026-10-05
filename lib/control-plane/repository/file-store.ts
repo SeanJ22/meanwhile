@@ -644,6 +644,12 @@ export function fileAppendOnlyRepository<T>(
       const keys = new Set<string>((await readEveryPartition()).map((line) => line.key));
       return [...keys].sort();
     },
+
+    keysWhere: async (jsonPath: readonly string[], value: string): Promise<readonly string[]> => {
+      const keys = new Set<string>((await readEveryPartition())
+        .filter((line) => jsonTextAtPath(line.record, jsonPath) === value).map((line) => line.key));
+      return [...keys].sort();
+    },
   };
 
   /** Every line in every partition, in filename then append order. */

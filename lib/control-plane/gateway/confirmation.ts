@@ -1,3 +1,4 @@
+import { findReceipt, findScheduledChild } from "./receipts.ts";
 import { ownerDispatchWorkOf, type DispatchWorkReading, type OwnerDispatchWork } from "../expansion/dispatch-work.ts";
 import { confirmHuntScores, type PlaceScoreReader } from "./hunt-score.ts";
 /**
@@ -152,16 +153,17 @@ interface AssignmentReading {
 
 /** Has the runner picked this receipt's action up? Never throws: an unreadable record is "unread". */
 export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number = Date.now(), readPlaceScore?: PlaceScoreReader): Promise<Confirmation> {
-  let core = await confirmCore(repos, receipt);
+  let core = await confirmCore(repos, receipt, nowMs, readPlaceScore);
+  if(receipt.untilDone && core.state === "applied")core=await confirmUntilDone(repos,receipt,core);
   if (receipt.outcome === "REFUSED") return core;
   core = await confirmHuntScores(repos, receipt, core, readPlaceScore);
   let nextRound: string | null = null;
   try {
     const beat = (await repos.runnerHeartbeat.read(RUNNER_ID))?.value ?? null;
     nextRound = beat?.nextCycleDueAt ?? null;
-    if (core.state === "waiting") core = notPickedUp(core, beat, receipt, nowMs);
+    if (core.state === "waiting" && !(receipt.type === "orders.schedule" && core.words.startsWith("Scheduled."))) core = notPickedUp(core, beat, receipt, nowMs);
   } catch { /* the plan says — */ }
-  const result = { ...core, plan: orderPlan(receipt, nextRound), progress: core.progress ?? orderProgress(receipt, core) };
+  const result = { ...core, plan: core.plan ?? orderPlan(receipt, nextRound), progress: core.progress ?? orderProgress(receipt, core) };
   return confirmDispatch(repos, receipt, result);
 }
 
@@ -193,7 +195,7 @@ const SETTING_ACTIONS: ReadonlySet<string> = new Set(["config.setSetting", "conf
 
 /** The plan for an accepted order. Pure. */
 export function orderPlan(receipt: Pick<ActionReceipt, "type" | "openedWork" | "label">, nextRoundAt: string | null): OrderPlan {
-  const runner = INTENT_ACTIONS.has(receipt.type) || ROUND_ACTIONS.has(receipt.type);
+  const runner = INTENT_ACTIONS.has(receipt.type) || ROUND_ACTIONS.has(receipt.type) || receipt.type.startsWith("orders.");
   const created = receipt.openedWork.length;
   return {
     who: runner ? "Runner" : "Admin",
@@ -213,13 +215,39 @@ export function orderProgress(receipt: Pick<ActionReceipt, "type" | "openedWork"
   return { done: null, of: null };
 }
 
-async function confirmCore(repos: ControlPlaneRepositories, receipt: ActionReceipt): Promise<Confirmation> {
+async function confirmCore(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number = Date.now(), readPlaceScore?: PlaceScoreReader): Promise<Confirmation> {
   if (receipt.outcome === "REFUSED") return { state: "not-needed", at: null, words: receipt.says };
   const type = receipt.type;
+  if (type === "orders.schedule") {
+    try {
+      const child=await findScheduledChild(repos,receipt.subject);
+      if(child)return confirmReceipt(repos,child,nowMs,readPlaceScore);
+      const config=(await repos.adminConfig.read("current"))?.value;
+      const scheduled=config?.scheduledOrders?.find(o=>o.id===receipt.subject);
+      if(scheduled && !scheduled.after && nowMs - Date.parse(scheduled.startAt ?? scheduled.decidedAt) > RUNNER_SILENT_MS) return {state:"not-picked-up",at:null,words:"The scheduled time passed, and the timer has not sent this order."};
+      return scheduled?{state:"waiting",at:null,words:"Scheduled. Waiting for its time or the first order to finish.",plan:orderPlan(receipt,scheduled.startAt)}:{state:"not-needed",at:null,words:"Unscheduled; it will not be sent."};
+    }catch{return {state:"unread",at:null,words:"The scheduled order could not be read just now."};}
+  }
+  if(type === "orders.sequence"){
+    try {
+      const children=await Promise.all(receipt.openedWork.filter(w=>w.kind==="order").map(w=>findReceipt(repos,w.id)));
+      if(children.length!==2||children.some(c=>!c||c.type==="orders.sequence"))return {state:"unread",at:null,words:"The two linked orders could not both be read."};
+      const results=await Promise.all(children.map(c=>confirmReceipt(repos,c!,nowMs,readPlaceScore)));
+      const done=results.every(c=>c.state==="applied"||c.state==="not-needed");
+      return {state:done?"applied":"in-progress",at:done?results[1].at:null,words:done?"Done. Both linked orders finished.":"Two linked orders: the second waits until the first is done.",progress:{done:results.filter(c=>c.state==="applied"||c.state==="not-needed").length,of:2}};
+    }catch{return {state:"unread",at:null,words:"The linked orders could not be read just now."};}
+  }
+  if (type === "decision.record") {
+    const id=receipt.openedWork.find(work=>work.kind === "order")?.id;
+    if(id) {
+      try { const child=await findReceipt(repos,id);return child&&child.type!=="decision.record" ? confirmReceipt(repos,child,nowMs,readPlaceScore) : {state:"unread",at:null,words:"The accepted order could not be read just now."}; }
+      catch {return {state:"unread",at:null,words:"The accepted order could not be read just now."};}
+    }
+  }
   if (type === "queue.add") {
     try {
       const item = (await repos.adminConfig.read("current"))?.value.fixList?.find(i=>i.id === receipt.subject);
-      if (item?.dispatch) return confirmCore(repos, { ...receipt, type: "fleet.deployHere", subject: item.dispatch.intentId });
+      if (item?.dispatch) return confirmCore(repos, { ...receipt, type: "fleet.deployHere", subject: item.dispatch.intentId },nowMs,readPlaceScore);
     } catch { return { state: "unread", at: null, words: "Saved. Runner status —" }; }
   }
   const inIntent = INTENT_ACTIONS.has(type);
@@ -268,4 +296,14 @@ async function confirmDispatch(repos: ControlPlaneRepositories, receipt: ActionR
       state: core.state === "applied" && work.deferred > 0 ? "in-progress" : core.state,
       words: core.state === "applied" && work.deferred > 0 ? `${work.created} created; ${work.deferred} waiting for the next round.` : core.words };
   } catch { return { ...core, progress: { done: null, of: null } }; }
+}
+
+/** An explicit “until done” waits for the runner's existing assignment completion; pickup alone is insufficient. */
+async function confirmUntilDone(repos:ControlPlaneRepositories,receipt:ActionReceipt,core:Confirmation):Promise<Confirmation>{
+  try{
+    const state=await repos.researchState.readNarrowed(RESEARCH_STATE_ID,{assignments:true});
+    const rows=(state?.value as {assignments?:{assignments?:readonly {ref?:string;completion?:{kind:string}}[]}}|undefined)?.assignments?.assignments;
+    const own=rows?.find(a=>a.ref===receipt.subject||a.ref===receipt.receiptId);
+    return own?.completion?.kind==="COMPLETE"?core:{...core,state:"in-progress",words:"The runner has the order. Its work is still in progress."};
+  }catch{return {...core,state:"unread",words:"The order was picked up; its completion could not be read."};}
 }

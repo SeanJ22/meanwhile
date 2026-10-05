@@ -147,6 +147,8 @@ export interface ActionInputSource {
   readonly words: string;
   readonly amount: string;
   readonly selected: readonly string[];
+  readonly fields?: Readonly<Record<string,string>>;
+  readonly startAt?: string;
   readonly payload?: Readonly<Record<string, string>>;
 }
 
@@ -160,7 +162,7 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
   const limit = () => (s.amount.trim() === "" ? null : Number(s.amount));
   switch (kind) {
     case "decide":
-      return { decisionId: s.target, option: s.option, words: s.words.trim() || null };
+      return { decisionId: s.target, cardVersion:s.payload?.version, option: s.option, words: s.words.trim() || null, fields:s.fields, startAt:s.startAt };
     case "hunt-start": {
       // A single hunt starts from one ZIP place (`geo:az.zcta.85635`). Anything wider starts from the many-hunts panel.
       const zip = /^geo:([a-z]{2})\.zcta\.(\d{5})$/.exec(s.target);

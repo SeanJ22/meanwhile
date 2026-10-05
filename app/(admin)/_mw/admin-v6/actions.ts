@@ -60,6 +60,7 @@ export interface PreviewOption {
   /** Why this option cannot be chosen, when it cannot. */
   readonly blocked?: string;
   readonly ownWords?: boolean;
+  readonly wordsLabel?: string;
 }
 
 export interface Preview {
@@ -68,6 +69,8 @@ export interface Preview {
   readonly rows: readonly (readonly [string, string])[];
   readonly options?: readonly PreviewOption[];
   readonly items?: readonly PreviewItem[];
+  readonly fields?: readonly {readonly key:string;readonly label:string;readonly kind:"number"|"boolean"|"text";readonly initial:string}[];
+  readonly schedule?: boolean;
   /** A number the owner types (a hunt's lifetime limit). */
   readonly amount?: { readonly label: string; readonly initial: string; readonly text?: boolean };
   /** Offer the optional note box. */
@@ -98,11 +101,6 @@ export interface ActionDef {
 /* ---------------------------------------------------------- dependencies */
 
 export const DEP = {
-  typedPlans: {
-    id: "DEP-ACTION-PLANS",
-    owner: "Codex (gateway)",
-    need: "A typed action in /api/admin/action.",
-  },
   receiptLookup: {
     id: "DEP-RECEIPT-LOOKUP",
     owner: "Codex (gateway)",
@@ -126,25 +124,17 @@ const defs: ActionDef[] = [
     needs: "owner",
     doneWords: "Decision saved.",
     preview: (ctx) => ({
-      title: ctx.decision?.question ?? `Decide about ${ctx.targetName}`,
-      level: "local",
-      rows: [
-        ["Scope", "This item only"],
-      ],
-      options: (ctx.decision?.options ?? []).map((o) => ({
-        id: o.id,
-        label: o.label,
-        note: o.note,
-        ownWords: o.ownWords,
-        blocked: o.outreach && !ctx.outreachAuthorized ? "Needs outreach permission." : undefined,
-      })),
-      invalid: ({ option, words }) => {
-        const chosen = ctx.decision?.options.find((o) => o.id === option);
-        return chosen?.ownWords && !words.trim() ? "Say what you want in the box." : null;
-      },
+      title: ctx.payload?.name ?? ctx.decision?.question ?? "Decide about this recommendation",
+      level: ctx.payload?.global === "true" ? "global" : "local",
+      rows: [["What is happening",ctx.payload?.happening ?? "—"],["Recommendation",ctx.payload?.recommends ?? "—"],["Cost",ctx.payload?.cost ?? "—"],["What it gets",ctx.payload?.gets ?? "—"]],
+      options: [{id:"approve",label:"Approve",note:"Send the recommended order"},{id:"decline",label:"Decline",note:"Keep a record of why",ownWords:true,wordsLabel:"Why are you declining?"},
+        ...(ctx.payload?.fields && ctx.payload.fields !== "[]" ? [{id:"change",label:"Change",note:"Edit the order before sending it"}] : []),
+        ...(ctx.payload?.schedulable === "true" ? [{id:"schedule",label:"Schedule",note:"Send this order at an Eastern time"}] : [])],
+      fields: JSON.parse(ctx.payload?.fields ?? "[]"), schedule:true,
+      invalid: ({option,words}) => option === "decline" && !words.trim() ? "Say why you are declining." : null,
     }),
-    gateway: null,
-    dependency: DEP.typedPlans,
+    gateway: { type: "decision.record", requiresStateVersion:true },
+    dependency: null,
   },
   {
     kind: "hunt-start",

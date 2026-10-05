@@ -145,6 +145,8 @@ export interface ScheduleOrigin { readonly id: string; readonly occurrence: stri
 export interface ActionRequest {
   /** Added by the scheduler; HTTP callers do not supply it. */
   readonly scheduleOrigin?: ScheduleOrigin;
+  /** The owner explicitly asked this order to run until its work is done. */
+  readonly untilDone?: boolean;
   readonly type: string;
   /** What it acts on: a row id, a work item id, a jurisdiction, a SHA. */
   readonly subject: string;
@@ -178,6 +180,8 @@ export type ReceiptOutcome = "DONE" | "REFUSED" | "QUEUED" | "IN_PROGRESS";
  */
 export interface ActionReceipt {
   readonly scheduleOrigin?: ScheduleOrigin;
+  /** The owner explicitly asked this order to run until its work is done. */
+  readonly untilDone?: boolean;
   readonly formatVersion: 1;
   readonly receiptId: string;
   readonly idempotencyKey: string;

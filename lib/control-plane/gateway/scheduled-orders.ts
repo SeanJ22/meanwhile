@@ -13,6 +13,7 @@ export interface ScheduledOrder {
   readonly id: string;
   /** The registered action it will send. */
   readonly orderType: string;
+  readonly subject?: string;
   readonly input: Readonly<Record<string, unknown>>;
   readonly startAt: string | null;
   /** Another scheduled order's id, or a receipt id: this one waits for it to be done. */

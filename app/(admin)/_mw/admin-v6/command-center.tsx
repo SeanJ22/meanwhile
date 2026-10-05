@@ -16,6 +16,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { easternMonth, isPeriod, periodGroups } from "@/lib/control-plane/admin-view/periods.ts";
 
+import { DecisionOrdersPanel } from "./decision-orders-panel.tsx";
 import { ActionDialog, type DialogSend } from "./action-dialog.tsx";
 import { ChangesView } from "./changes-view.tsx";
 import { ChatView } from "./chat-view.tsx";
@@ -189,7 +190,7 @@ export function CommandCenter(props: CommandCenterProps) {
     });
     update(receipt);
     setDialog(null);
-    void props.executor.send(receipt, { def, target, scopeKey, option: send.option, words: send.words, amount: send.amount, selectedItems: send.selected, payload: ref.payload }, update);
+    void props.executor.send(receipt, { def, target, scopeKey, option: send.option, words: send.words, amount: send.amount, selectedItems: send.selected, fields:send.fields, startAt:send.startAt, payload: ref.payload }, update);
   };
 
   const doSendBulk = (send: { readonly items: readonly BulkItem[]; readonly missions: readonly BulkMission[]; readonly priority: number }) => {
@@ -370,7 +371,7 @@ export function CommandCenter(props: CommandCenterProps) {
             <>
               {view === "now" && <><NowScreen key={scopeKey} /><UpdatesPanel /><ReaderDemandPanel /><CaptureHealthPanel /><TopicCountsPanel /><DataSwitchesPanel /></>}
               {view === "workers" && <><WorkersScreen /><RunnerSettingsPanel /><DoorsPanel /></>}
-              {view === "work" && <><ScheduledPanel /><WorkScreen /></>}
+              {view === "work" && <><DecisionOrdersPanel /><ScheduledPanel /><WorkScreen /></>}
               {view === "checklist" && <ChecklistScreen />}
               {view === "money" && <MoneyScreen />}
               {view === "learning" && <LearningScreen />}

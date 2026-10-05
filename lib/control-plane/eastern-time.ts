@@ -137,3 +137,18 @@ export function formatCalendarDate(ymd: string | null | undefined): string {
   if (!Number.isFinite(date.getTime())) return BAD_STAMP;
   return new Intl.DateTimeFormat("en-US", { timeZone: "UTC", year: "numeric", month: "long", day: "numeric" }).format(date);
 }
+
+/** A date/time typed on Admin's calendar is Eastern, even on a computer in another zone.
+ * A spring clock gap is refused; during the repeated fall hour the earlier instant is used. */
+export function easternLocalToIso(local: string): string | null {
+  if (!/^\d{4}-\d\d-\d\dT\d\d:\d\d$/.test(local)) return null;
+  const base = Date.parse(`${local}:00Z`);
+  if (!Number.isFinite(base)) return null;
+  const fmt = new Intl.DateTimeFormat("en-CA", {timeZone:EASTERN_ZONE,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"});
+  for (const offset of [4,5]) {
+    const date = new Date(base + offset * 3_600_000);
+    const parts = Object.fromEntries(fmt.formatToParts(date).map(p=>[p.type,p.value]));
+    if (`${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}` === local) return date.toISOString();
+  }
+  return null;
+}

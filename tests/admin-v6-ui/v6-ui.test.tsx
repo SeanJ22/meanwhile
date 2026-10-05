@@ -57,7 +57,7 @@ test("a finished receipt no longer blocks a new send of the same action", () => 
 
 test("only the kinds a real registry action carries out are wired, each to its own gateway type", () => {
   assert.deepEqual([...connectedKinds()].sort(), [
-    "cancel-send", "data-switch-off", "data-switch-on", "global-ceiling", "global-paid", "global-paid-resume", "global-runner-pause", "global-runner-resume", "global-search-off", "global-search-on", "hunt-limit", "hunt-pause", "hunt-resume", "hunt-start", "hunt-start-many", "hunt-stop", "send-agents", "setting-set", "setting-undo", "target-clear", "target-set",
+    "cancel-send", "data-switch-off", "data-switch-on", "decide", "global-ceiling", "global-paid", "global-paid-resume", "global-runner-pause", "global-runner-resume", "global-search-off", "global-search-on", "hunt-limit", "hunt-pause", "hunt-resume", "hunt-start", "hunt-start-many", "hunt-stop", "send-agents", "setting-set", "setting-undo", "target-clear", "target-set",
   ]);
   assert.equal(actionDef("cancel-send").gateway?.type, "fleet.cancelDispatch");
   assert.equal(actionDef("send-agents").gateway?.type, "fleet.deployHere");
@@ -80,9 +80,10 @@ test("only the kinds a real registry action carries out are wired, each to its o
 test("previews never promise more than the action does", () => {
   const ctx = { target: "x", targetName: "X", scopeName: "Arizona", scopeIsCountry: false, outreachAuthorized: false };
   assert.match(actionDef("decide").doneWords, /Decision saved/);
-  const decide = actionDef("decide").preview({ ...ctx, decision: { id: "d", question: "Q?", options: [{ id: "o", label: "Contact them", note: "", outreach: true }, { id: "other", label: "Something else", note: "", ownWords: true }] } });
-  assert.match(decide.options?.[0].blocked ?? "", /outreach permission/);
-  assert.equal(decide.invalid?.({ option: "other", words: " ", amount: "", selected: 0 }), "Say what you want in the box.");
+  const decide = actionDef("decide").preview({ ...ctx, payload: {name:"Raise the ceiling",happening:"Work is waiting",recommends:"Raise it",cost:"$80 a day",gets:"Waiting work can run",fields:JSON.stringify([{key:"rollingCeilingUsd",label:"Daily ceiling",kind:"number",initial:"80"}]),schedulable:"true"} });
+  assert.deepEqual(decide.options?.map(o=>o.id),["approve","decline","change","schedule"]);
+  assert.equal(decide.invalid?.({option:"decline",words:" ",amount:"",selected:0}),"Say why you are declining.");
+  assert.equal(decide.fields?.[0].initial,"80");
   const limit = actionDef("hunt-limit").preview({ ...ctx, hunt: { id: "h", placeKey: "p", name: "H", startedAt: "", limitUsd: 50, limitSource: "", spentUsd: 15, heldUsd: 6, unpricedEntries: 0, status: "running", researchWorkers: 1 } });
   assert.equal(limit.invalid?.({ option: null, words: "", amount: "20", selected: 0 }), "That’s below what’s already spent or set aside.");
 });

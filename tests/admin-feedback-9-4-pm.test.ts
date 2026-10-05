@@ -239,7 +239,6 @@ test("ADM-16: the page renders the split and receipt, while tracked tracker sync
   assert.equal(consoleReturnPath("https://evil.example/", "/admin"), "/admin");
   assert.equal(consoleReturnPath("/readiness/AZ", "/admin"), "/admin", "the closed list is exact");
   assert.equal(isConsolePath("/admin/sources"), false, "the Sources page is deleted: publication status is on Workers");
-  assert.match(src("app/api/admin/decision/route.ts"), /consoleReturnPath\(/);
   assert.match(src("app/api/admin/research/route.ts"), /consoleReturnPath\(/);
   const canon = src("scripts/canonicalize-owner-decisions.mts");
   assert.match(canon, /openedWork: resolution\.openedWork/, "the twin carries the work opened");
@@ -247,13 +246,8 @@ test("ADM-16: the page renders the split and receipt, while tracked tracker sync
   assert.match(canon, /"Opened by"\] \?\? ""\)\.trim\(\) === DASHBOARD_OPENER/, "work opened is found by the dashboard opener, never guessed");
   const runner = src("scripts/pilot-runner.mts");
   assert.doesNotMatch(runner, /scripts\/apply-owner-decisions\.mts/, "a tracked engineering writer cannot dirty the clean detached production runtime");
-  const apply = src("scripts/apply-owner-decisions.mts");
-  assert.match(apply, /engineering sync, deliberately outside the standing runtime/);
-  assert.match(apply, /owner-decisions-pull\.mts/);
-  assert.match(apply, /"move", "--only=dashboard", "--session=dashboard-decision-nonhunt"/);
-  assert.match(apply, /canonicalize-owner-decisions\.mts/);
   assert.match(src("scripts/tracker.mjs"), /const book = ONLY_DASHBOARD \? null : readWorkbookRows\(\);/, "the unattended sync never imports the workbook");
-  assert.match(src("package.json"), /"decisions:sync":/);
+  assert.doesNotMatch(src("package.json"), /"decisions:sync":/);
 });
 
 
@@ -364,7 +358,6 @@ test("ADM-20: a gap's subject is stable per surface and sentence, and the queue 
 
 
 test("ADM-20: every gap on the console carries the queue button, and the page has the queue with Go fix these", () => {
-  assert.match(src("app/api/admin/decision/route.ts"), /parseFixField\(/);
   assert.deepEqual(parseFixField("Cost — not measured yet"), { where: "Cost", says: "not measured yet", subjectId: fixSubjectId("Cost", "not measured yet"), consequenceShown: "Cost — not measured yet" });
   assert.equal(parseFixField("   "), null);
   assert.match(src("lib/control-plane/gateway/registry.ts"), /const parsed = parseFixField\(combined\);/, "and the gateway's queue.add reads it back with parseFixField");

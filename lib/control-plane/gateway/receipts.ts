@@ -103,6 +103,7 @@ export function buildReceipt(draft: ReceiptDraft): ActionReceipt {
   const { request } = draft;
   return {
     formatVersion: RECEIPT_FORMAT_VERSION,
+    ...(request.untilDone ? {untilDone:true} : {}),
     ...(request.scheduleOrigin ? { scheduleOrigin: request.scheduleOrigin } : {}),
     receiptId: receiptIdFor(request.type, request.idempotencyKey),
     idempotencyKey: request.idempotencyKey,
@@ -157,7 +158,7 @@ export async function findReceipt(
   repos: ControlPlaneRepositories,
   receiptId: string,
 ): Promise<ActionReceipt | null> {
-  const rows = await readReceipts(repos);
+  const rows = await repos.adminReceipts.readWhere(ADMIN_RECEIPT_LOG_KEY, ["receiptId"], receiptId);
   for (const row of rows) if (row.receiptId === receiptId) return row;
   return null;
 }
@@ -194,4 +195,12 @@ export async function appendReceipt(
     // connection string, and this sentence reaches the owner's screen.
     return { ok: false, detail: `the receipt could not be written (${(error as Error)?.name ?? "error"})` };
   }
+}
+
+/** One scheduled occurrence's newest child, bounded and filtered in the store. */
+export async function findScheduledChild(repos:ControlPlaneRepositories,id:string):Promise<ActionReceipt|null>{
+  const fields=["formatVersion","receiptId","idempotencyKey","type","label","authority","subjectKind","subject","requestedSubject","inputDigest","caller","actorRef","stateVersion","codeSha","startedAt","completedAt","outcome","says","refusal","openedWork","readBackAt","undo","change","huntScores","scheduleOrigin","untilDone"];
+  const projection=Object.fromEntries(fields.map(k=>[k,true as const]));
+  const rows=await repos.adminReceipts.readRecentWhere(ADMIN_RECEIPT_LOG_KEY,["scheduleOrigin","id"],id,1,projection);
+  return (rows[0] as ActionReceipt|undefined)??null;
 }

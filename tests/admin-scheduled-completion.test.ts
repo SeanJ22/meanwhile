@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import { submit } from "@/lib/control-plane/gateway/gateway.ts";
+import { confirmReceipt } from "@/lib/control-plane/gateway/confirmation.ts";
 import { fireDueOrders } from "@/lib/control-plane/gateway/scheduled-fire.ts";
 import { ADMIN_CONFIG_ID } from "@/lib/control-plane/gateway/admin-config.ts";
 import { RESEARCH_FORMAT_VERSION, RESEARCH_INTENT_LOG_KEY } from "@/lib/control-plane/scheduler/research-policy.ts";
@@ -29,4 +30,10 @@ test("a repeating config action advances once and restart uses its saved occurre
  const {repos,d}=setup();const scheduled=await schedule(d,"repeat-config-one","config.setSetting",{key:"detective.shutThreshold",value:3},{startAt:NOW,repeat:"hourly"});assert.equal(scheduled.ok,true);
  assert.equal((await fireDueOrders(d,NOW)).length,1);assert.equal((await fireDueOrders(d,"2026-10-05T18:30:00Z")).length,0);assert.equal((await fireDueOrders(d,"2026-10-05T19:00:00Z")).length,1);
  assert.equal((await repos.adminReceipts.readAll()).filter(r=>r.type==="config.setSetting").length,2);
+});
+
+test("a future schedule remains Scheduled; only a past due timer can be not picked up",async()=>{
+ const {repos,d}=setup();const out=await schedule(d,"future-schedule-one","runner.pause",{},{startAt:"2026-10-06T18:00:00Z"});assert.equal(out.ok,true);
+ const waiting=await confirmReceipt(repos,out.receipt,Date.parse("2026-10-05T20:00:00Z"));assert.equal(waiting.state,"waiting");assert.match(waiting.words,/Scheduled/);assert.equal(waiting.plan!.resultsBy,"2026-10-06T18:00:00Z");
+ const late=await confirmReceipt(repos,out.receipt,Date.parse("2026-10-06T19:00:00Z"));assert.equal(late.state,"not-picked-up");assert.match(late.words,/timer/);
 });

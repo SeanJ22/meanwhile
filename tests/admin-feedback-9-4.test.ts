@@ -107,15 +107,6 @@ test("ADM-4: the publisher joins the working store and the registry, and no long
   assert.doesNotMatch(publisher, /"not recorded on this row"/);
 });
 
-test("ADM-4: the decision route accepts an answer in the owner's own words, and the page posts the consequence it showed", () => {
-  const route = src("app/api/admin/decision/route.ts");
-  assert.match(route, /ownerAnswer/);
-  assert.match(route, /ANSWERED_IN_OWN_WORDS/);
-  assert.match(route, /chosenOption === "" && ownerAnswer === null/);
-  const page = src("app/(admin)/admin/page.tsx");
-  // S11 (2026-09-30): the home screen no longer draws the old tracker's decision cards at all.
-  assert.doesNotMatch(page, /splitDecided\(|NextSteps/, "the home screen does not draw the old tracker decisions");
-});
 
 const INTENT = (over: Partial<OwnerDecisionIntent>): OwnerDecisionIntent => ({
   formatVersion: 1,

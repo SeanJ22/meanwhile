@@ -178,7 +178,7 @@ export function applyGatewayReply(prev: UiReceipt, def: ActionDef, httpStatus: n
       return { ...base, status: "unknown", statusWords: STATUS_WORDS.unknown, steps: step("No clear answer"), says: UNKNOWN_SAYS };
     }
     const confirmation = confirmationOf(body);
-    if (r.outcome === "DONE" && confirmation !== null && (confirmation.state === "waiting" || confirmation.state === "unread" || confirmation.state === "not-picked-up")) {
+    if (r.outcome === "DONE" && confirmation !== null && (confirmation.state === "in-progress" || confirmation.state === "waiting" || confirmation.state === "unread" || confirmation.state === "not-picked-up")) {
       return applyConfirmation(
         { ...base, status: "queued", statusWords: STATUS_WORDS.queued, steps: step("Saved"), says: confirmation.words, lifecycle: { ...prev.lifecycle, saved: r.completedAt ?? r.startedAt ?? at } },
         confirmation,

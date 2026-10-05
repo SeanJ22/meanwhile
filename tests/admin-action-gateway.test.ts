@@ -503,7 +503,7 @@ test("ADM-C6 PLANT: a gateway that skipped the idempotency read would be caught 
 
   const blind: ControlPlaneRepositories = {
     ...repos,
-    adminReceipts: { ...repos.adminReceipts, read: async () => [] },
+    adminReceipts: { ...repos.adminReceipts, readWhere: async () => [] },
   };
   await submit(request, deps(blind, { now: tickingClock("2026-09-06T13:00:00.000Z") }));
   assert.equal(
@@ -520,7 +520,7 @@ test("ADM-C6: an unreadable receipt log stops the gateway rather than risking a 
     ...repos,
     adminReceipts: {
       ...repos.adminReceipts,
-      read: async () => {
+      readWhere: async () => {
         throw new Error("the store is not answering");
       },
     },

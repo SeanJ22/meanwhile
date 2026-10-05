@@ -84,20 +84,66 @@ function heldAfterSourceFailure(solved: import('../scheduler/scout-result.ts').S
 
 /** Reuses the research loop and every source tool for failure response. */
 type ScoutExecutorFactory = (deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps) => import('../scheduler/dispatch.ts').DeclaredExecutor;
-export function detectiveExecutor(deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps, executorFactory: ScoutExecutorFactory = scoutExecutor) {
+export function detectiveExecutor(deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps, executorFactory: ScoutExecutorFactory = scoutExecutor,
+  /** DP-31: a line that goes above everything else in the brief (the last fix of a repeat break). */
+  lead: string | null = null) {
   return executorFactory({...deps, role:'DETECTIVE',onResult:async(result,artifacts)=>{
     const recorded={...result,researchRole:'DETECTIVE' as const};
     return deps.onResult ? await deps.onResult(recorded,artifacts) : recorded;
   }, contextFor:row=>{
     const context=deps.contextFor(row);
     return {...context,reason:'DETECTIVE FAILURE RESPONSE: '+context.reason,
-      inherited:{...context.inherited,summary:'Investigate the recorded blank field, blocked route, failed parse or retry loop. Read inherited facts and methods first, then use every available API/tool. Return a reusable new route with field/value/exactQuote data, or a documented dead end naming what was tried and what evidence would reopen it. Never retry the same unchanged failure.\n'+context.inherited.summary}};
+      inherited:{...context.inherited,summary:(lead ? lead+'\n' : '')+'Investigate the recorded blank field, blocked route, failed parse or retry loop. Read inherited facts and methods first, then use every available API/tool. Return a reusable new route with field/value/exactQuote data, or a documented dead end naming what was tried and what evidence would reopen it. Never retry the same unchanged failure.\n'+context.inherited.summary}};
   }});
+}
+
+/**
+ * DP-31: the fixes on record for a subject, newest first. A fix is a result that found a reusable route
+ * (the same test `solvedScoutResult` applies to the latest one). `history` is the subject's history.
+ */
+export function earlierFixes(history: readonly import('../scheduler/scout-result.ts').ScoutResult[]): import('../scheduler/scout-result.ts').ScoutResult[] {
+  return [...history].sort((a,b)=>b.recordedAt.localeCompare(a.recordedAt)).filter(result=>result.refusal===null &&
+    ['ROUTE_CANDIDATE','EVIDENCE_FOUND'].includes(result.outcome) && reusableScoutCandidates(result).length>0);
+}
+
+/** The failure count at which a door first goes to its detective. The plain try of the last fix gets that turn only. */
+function firstInvestigationAt(debt: FreshnessDebt, shutThreshold: number): number {
+  return SHUT_AT_ONCE.includes(debt.cause) ? 1 : shutThreshold;
+}
+
+/**
+ * DP-31: a door that breaks again first tries what fixed it before, in plain code. When the latest fix's
+ * route is the one failing, the newest earlier fix with a route on another source is handed to acquisition
+ * with no model request. It gets the break's first detective turn only: if the door fails again, the
+ * detective runs, with that fix at the top of its brief.
+ */
+export function repeatBreakRetry(fixes: readonly import('../scheduler/scout-result.ts').ScoutResult[],
+  debt: FreshnessDebt | null | undefined, route: RouteDescriptor | null | undefined, shutThreshold: number = DETECTIVE_SHUT_THRESHOLD) {
+  if (!needsSourceInvestigation(debt, shutThreshold) || debt.consecutiveFailures > firstInvestigationAt(debt, shutThreshold)) return null;
+  for (const fix of fixes) {
+    if (Date.parse(fix.recordedAt) > Date.parse(debt.lastFailedAt)) continue;
+    const held = heldAfterSourceFailure(fix, debt, route, shutThreshold);
+    if (held) return held;
+  }
+  return null;
+}
+
+/** The line at the top of a repeat break's detective brief: what fixed it last time, and whether it was tried. */
+export function lastFixBrief(fix: import('../scheduler/scout-result.ts').ScoutResult | null | undefined,
+  debt: FreshnessDebt | null | undefined): string | null {
+  if (!fix) return null;
+  const sources = [...new Set(reusableScoutCandidates(fix).map(c=>c.url))];
+  const shown = sources.slice(0,5).join(', ')+(sources.length>5 ? ` and ${sources.length-5} more` : '');
+  const failedSince = debt && Date.parse(debt.lastFailedAt) >= Date.parse(fix.recordedAt)
+    ? ` Since then ${debt.target} failed at ${debt.lastFailedAt} (${debt.cause}). Check first whether that fix moved or changed shape, then look elsewhere.` : '';
+  return `LAST FIX — this broke before. What fixed it last time (${fix.recordedAt}, attempt ${fix.attemptId}): ${shown}.${failedSince}`;
 }
 
 /** Both Scout lanes use the same failure responder and keep their existing budgets and tools. */
 export function failureResponderExecutor(deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps & {
   solved?: import('../scheduler/scout-result.ts').ScoutResult | null;
+  /** DP-31: this subject and class's recorded results, so a repeat break starts from what fixed it last time. */
+  history?: readonly import('../scheduler/scout-result.ts').ScoutResult[];
   sourceFailure?: FreshnessDebt | null;
   sourceRoute?: RouteDescriptor | null;
   shutThreshold?: number;
@@ -112,7 +158,11 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
   };
   const factory=deps.executorFactory ?? scoutExecutor;
   const shutThreshold=deps.shutThreshold ?? DETECTIVE_SHUT_THRESHOLD;
-  const scout=factory({...deps,contextFor}), detective=detectiveExecutor({...deps,contextFor},factory);
+  const fixes=earlierFixes(deps.history ?? []);
+  // Only a source that broke gets the line: a blank field never "broke before".
+  const lastFix=needsSourceInvestigation(deps.sourceFailure,shutThreshold)
+    ? lastFixBrief(fixes[0] ?? deps.solved,deps.sourceFailure) : null;
+  const scout=factory({...deps,contextFor}), detective=detectiveExecutor({...deps,contextFor},factory,lastFix);
   const choose=(row:Parameters<typeof contextFor>[0])=>{
     try {
       if (needsSourceInvestigation(deps.sourceFailure, shutThreshold)) return detective;
@@ -125,7 +175,9 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
         /\b(?:REFUSED|BLOCKED|NO_PROGRESS|NEEDS_ADAPTER|REQUIRED_FIELD_MISSING)\b|failed parse|blocked route|retry loop|DEBT: [1-9]\d* consecutive failure/i.test(ownHistory) ? detective : scout;
     } catch { return scout; }
   };
-  const held=heldAfterSourceFailure(deps.solved,deps.sourceFailure,deps.sourceRoute,shutThreshold);
+  const solvedHeld=heldAfterSourceFailure(deps.solved,deps.sourceFailure,deps.sourceRoute,shutThreshold);
+  const held=solvedHeld ?? repeatBreakRetry(fixes,deps.sourceFailure,deps.sourceRoute,shutThreshold);
+  const reusedEarlierFix=solvedHeld===null && held!==null;
   return {lane:held?'DETERMINISTIC':'BOUNDED_MODEL_WORKER',
     ...(!held && scout.dispatch && detective.dispatch ? {dispatch: ((input) => choose(input.obligation).dispatch!(input)) as NonNullable<import('../scheduler/dispatch.ts').DeclaredExecutor['dispatch']>} : {}),
     workerFor:input=>held
@@ -137,7 +189,9 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
         cost:{...ZERO_COST,inputTokens:0,outputTokens:0,usd:0,durationMs:0,bytesFetched:0,requestCount:0},
         disposition:{disposition:'DISCOVERED',observation:null,permission:'NOT_APPLICABLE',transport:'REACHABLE',
           note:`Reuse solved subject/class from ${held.attemptId}; acquisition and verification remain owed. Sources: ${reusableScoutCandidates(held).map(c=>c.url).join(', ')}`},
-        detail:`HELD_SUBJECT_REUSED: ${held.attemptId}; no Scout or model request; original observation ${held.recordedAt}`};
+        detail:reusedEarlierFix
+          ? `REPEAT_BREAK_LAST_FIX: ${held.attemptId}; the fix from an earlier break tried first in plain code; no Scout or model request; original observation ${held.recordedAt}`
+          : `HELD_SUBJECT_REUSED: ${held.attemptId}; no Scout or model request; original observation ${held.recordedAt}`};
     }};
 }
 

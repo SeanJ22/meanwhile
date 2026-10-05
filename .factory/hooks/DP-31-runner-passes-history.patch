@@ -1,0 +1,13 @@
+diff --git a/scripts/freshness-shadow.mts b/scripts/freshness-shadow.mts
+index d846bf95..18a004eb 100644
+--- a/scripts/freshness-shadow.mts
++++ b/scripts/freshness-shadow.mts
+@@ -2587,6 +2587,8 @@ const heldScoutFor = (scheduled: ScheduledObligation) => solvedScoutResult([...p
+ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled || heldScoutFor(scheduled)!==null
+   ? failureResponderExecutor({
+       solved:heldScoutFor(scheduled),
++      /* DP-31: a repeat break starts from what fixed it last time, in plain code before any model call. */
++      history:subjectScoutHistory([...priorScoutResults.values()].flat(),scheduled.obligation.subjectId,scheduled.obligation.recordClass),
+       sourceFailure:debtAtCycleStart.get(scheduled.obligation.id),
+       sourceRoute:registry.routeFor(scheduled.obligation.id),
+       shutThreshold,

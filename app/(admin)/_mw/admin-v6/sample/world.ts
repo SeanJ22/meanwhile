@@ -550,7 +550,16 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
       readings: [],
       otherServices: "Search $0.01, estimated from requests. Hosting, database and GitHub are shared platform costs and aren’t assigned to hunts.",
     }, SECTION_DEP.money, SAMPLE_AS_OF),
-    learning: sample({
+    scoreboard: sample({
+      rows: [
+        { id: "Orders", name: "Orders", value: "12", counts: "9 done · 2 in progress · 1 could not be done", says: "The newest 12 orders. Could not be done: The place is not set up yet.", notMeasured: null },
+        { id: "Public delivery", name: "Public delivery", value: "91%", counts: "410 of 450 accepted records seen on the public page", says: "Counts accepted records the page was checked for.", notMeasured: null },
+        { id: "Shut doors", name: "Shut doors", value: "3", counts: "3 shut · 41 open · 2 set aside", says: "How many ways in are shut right now.", notMeasured: null },
+        { id: "Facts live per hour", name: "Facts live per hour", value: null, counts: null, says: "Not measured yet.", notMeasured: "Counted in a later step." },
+      ],
+      gates: null,
+      readiness: [],
+      learning: {
       trends: [
         { question: "What does it cost to find something?", big: "$0.11", bigNote: "per find this week, down from $1.46", series: [{ name: "Dollars per find", color: "blue" }], weeks: wk([[1.46], null, [1.0], [0.6], [0.11]]), format: "usd", max: 1.46, limits: "A find isn’t a delivered result yet.", method: dl("Paid research attempts that found a route into a site, or the record itself", "All tracked states", "Each week (UTC)", "Attempts that found something: 19, none recorded, 58, 164, 147", "Not directly. Each week looked for different records.") },
         { question: "Does it do better after a failure?", big: "92% vs 85%", bigNote: "found something this week: started from earlier notes vs from scratch", series: [{ name: "Started from earlier notes", color: "blue" }, { name: "Started from scratch", color: "amber" }], weeks: wk([[100, 100], null, [60, 46], [78, 96], [92, 85]]), format: "pct", max: 100, limits: "Since Sep 4, both groups are at 79%.", method: dl("Search attempts that found something, split by whether they started from an earlier attempt’s notes", "All tracked states", "Each week (UTC)", "This week: 100 from notes, 65 from scratch", "Only roughly. The two groups looked for different records.") },
@@ -566,7 +575,8 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
         { question: "How much repeated work was avoided?", why: "Reuse is recorded, but not whether it replaced a paid call. No saving is claimed.", needs: "Learning over time" },
         { question: "Do hard-to-read places become routine?", why: "Each place’s recent reads are saved, but nothing adds them up over time.", needs: "Learning over time" },
       ],
-    }, SECTION_DEP.learning, SAMPLE_AS_OF),
+      },
+    }, SECTION_DEP.scoreboard, SAMPLE_AS_OF),
     fixes: sample(f, SECTION_DEP.fixes, SAMPLE_AS_OF),
     decided: sample([
       { title: "Remove the $105 rolling 24-hour ceiling", state: "Decision saved Sep 28 — change pending (waiting for the workers to restart)" },
@@ -665,6 +675,8 @@ export function sampleOutcome(kind: ActionKind, target: string, input: { readonl
     case "job-stop": return { final: "done", says: "Stopped after its current step. The money set aside is returned once its last call settles.", effect: (w) => ({ ...w, jobsStopped: add(w.jobsStopped, target) }) };
     case "cancel-send":
       return { final: "done", statusWords: "Requested", says: "Your request to take it back is saved. It stays a request until the runner records it." };
+    case "order-unschedule":
+      return { final: "done", statusWords: "Cancelled", says: "Sample preview: the scheduled order is cancelled and will not be sent." };
     case "target-set":
     case "target-clear":
       return { final: "done", statusWords: "Saved", says: "Sample preview: the target is saved. The runner reads it on its next round." };

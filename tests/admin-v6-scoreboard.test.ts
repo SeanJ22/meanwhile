@@ -1,0 +1,106 @@
+/**
+ * **THE "IS IT LEARNING" VIEW STATES ONLY WHAT IS MEASURED.** A week with no
+ * record is a gap, never a zero; a question nothing measures is listed as
+ * "not measured yet" with what it needs.
+ */
+import assert from "node:assert/strict";
+import test from "node:test";
+
+import { buildLearningTrends, type WeekLearningRow } from "../lib/control-plane/admin-view/learning-trends.ts";
+import { v6LearningView } from "../lib/control-plane/admin-view/scoreboard-read.ts";
+
+const week = (wk: string, over: Partial<WeekLearningRow> = {}): WeekLearningRow => ({
+  week: wk, walks: 10, pairRecorded: 10, handed: 4, usedRecorded: 4, usedWalks: 2, reusedDoors: 3,
+  rebuiltRecorded: 10, rebuiltRoutes: 1, resumed: 5, resumedFound: 3, fresh: 5, freshFound: 1, found: 4, usd: 2, unpriced: 0, ...over,
+});
+
+test("measured weeks become columns, a week between them is a gap, and the numbers keep their denominators", () => {
+  const trends = buildLearningTrends([week("2026-09-14"), week("2026-09-28")], "2026-09-30T12:00:00.000Z");
+  const view = v6LearningView(trends, { walks: 6, given: 12, used: 5, since: "2026-09-25" });
+  const manual = view.trends.find((t) => t.question.startsWith("Are ways in learned"));
+  assert.ok(manual, "the manual trend is drawn");
+  assert.deepEqual(manual.weeks.map((w) => w.week), ["2026-09-14", "2026-09-21", "2026-09-28"]);
+  assert.equal(manual.weeks[1].values, null, "the week with no walk is a gap, not a zero");
+  assert.deepEqual(manual.weeks[0].values, [40, 50]);
+  assert.equal(manual.format, "pct");
+  assert.equal(view.readings[0].big, "5 of 12");
+});
+
+test("nothing recorded yields no trend and says what each unmeasured question needs", () => {
+  const view = v6LearningView(buildLearningTrends([], "2026-09-30T12:00:00.000Z"), null);
+  assert.equal(view.trends.length, 0);
+  assert.equal(view.readings.length, 0);
+  assert.ok(view.notMeasured.length >= 5);
+  for (const n of view.notMeasured) assert.ok(n.why.length > 0 && n.needs.length > 0, n.question);
+});
+
+test('Bank write errors show a measured zero, a count, or an unavailable number', () => {
+  const trends = buildLearningTrends([], '2026-10-04T00:00:00Z');
+  for (const count of [0, 3, null]) {
+    const view = v6LearningView(trends, null, count);
+    assert.equal(view.readings.find(r => r.bigNote === 'Bank write errors')!.big, count === null ? '—' : String(count));
+  }
+});
+
+import { buildScoreboard, publicationCountsOf, type ScoreboardReadings } from "../lib/control-plane/admin-view/scoreboard-read.ts";
+import type { V6HistoryReceipt } from "../lib/control-plane/admin-view/admin-v6-history.ts";
+import { readGateHealth } from "../lib/control-plane/admin-view/gate-health.ts";
+import { readinessCounts } from "../lib/coverage/readiness-counts.ts";
+import type { PipelineRead } from "../lib/control-plane/admin-view/v6-results-read.ts";
+
+const order = (status: V6HistoryReceipt["status"], says = ""): V6HistoryReceipt => ({ status, says } as V6HistoryReceipt);
+const empty = v6LearningView(buildLearningTrends([], "2026-10-05T00:00:00Z"), null);
+const readings = (over: Partial<ScoreboardReadings> = {}): ScoreboardReadings => ({
+  orders: null, publication: null, shutDoors: null, returning: null, learning: empty, doors: null, gates: null, readiness: readinessCounts({}), ...over,
+});
+
+test("the Scoreboard has one row for every number in the design, in order, and unread rows say so with no value", () => {
+  const view = buildScoreboard(readings());
+  assert.equal(view.rows.length, 20);
+  assert.deepEqual(view.rows.map((r) => r.id).slice(0, 3), ["Orders", "Mission progress", "Checklist completeness"]);
+  for (const r of view.rows) {
+    assert.equal(r.value, null, `${r.id} shows — with nothing read`);
+    assert.ok(r.notMeasured && r.notMeasured.length > 0, `${r.id} says why`);
+  }
+  assert.equal(view.gates, null);
+});
+
+test("wired rows show a value with the counts behind it, and shares never round up", () => {
+  const approved = [
+    { prefix: "x", recordClass: "a", n: 199, witness: "CONFIRMED_FRESH", approvedAt: null, checkedAt: null, url: null },
+    { prefix: "x", recordClass: "a", n: 1, witness: "NOT_OBSERVED", approvedAt: null, checkedAt: null, url: null },
+  ] as unknown as PipelineRead["approved"];
+  const pipeline = { state: "READ", publishedAt: null, revision: null, pending: [], approved } as PipelineRead;
+  const view = buildScoreboard(readings({
+    orders: [order("done"), order("done"), order("running"), order("queued"), order("failed", "The place is not set up.")],
+    publication: publicationCountsOf(pipeline, { readBack: 3, total: 4 }),
+    shutDoors: { shut: 2, open: 40, setAside: 1, unreadable: 0 },
+    returning: { days: 14, readerDays: 30, returningDays: 10 },
+    doors: { walks: 6, given: 12, used: 5, since: "2026-09-25" },
+  }));
+  const by = (id: string) => view.rows.find((r) => r.id === id)!;
+  assert.equal(by("Orders").value, "5");
+  assert.match(by("Orders").counts!, /2 done · 1 in progress · 1 waiting · 1 could not be done/);
+  assert.match(by("Orders").says, /The place is not set up/);
+  assert.equal(by("Public delivery").value, "99%", "199 of 200 is 99%, not 100%");
+  assert.match(by("Public delivery").counts!, /199 of 200/);
+  assert.match(by("Public delivery").says, /3 of 4 kinds of record/);
+  assert.equal(by("Shut doors").value, "2");
+  assert.equal(by("Return visits").value, "33%");
+  assert.equal(by("Head-start hit rate").value, "41%");
+  assert.match(by("Head-start hit rate").counts!, /5 of 12/);
+});
+
+test("freshness, delivery and readiness stay separate rows and groups, and a read that failed is not a zero", () => {
+  const view = buildScoreboard(readings({
+    publication: { seen: 8, stale: 2, notFound: 0, unread: 0, contractsReadBack: null, contracts: null },
+    gates: readGateHealth({ nowIso: "2026-10-05T00:00:00Z", heartbeat: null, databaseReachable: null, lastDispatch: null, spend: null }),
+  }));
+  const fresh = view.rows.find((r) => r.id === "Freshness")!;
+  assert.equal(fresh.value, "80%");
+  assert.match(fresh.counts!, /2 overdue/);
+  assert.equal(view.rows.find((r) => r.id === "Public delivery")!.value, "80%");
+  assert.ok(view.gates && view.gates.notMeasured > 0 && view.gates.pass === 0, "gates with no reading are not measured, never a pass");
+  assert.equal(view.readiness.length, 4);
+  assert.equal(buildScoreboard(readings({ orders: [] })).rows[0].value, "0", "an empty order history is a real zero");
+});

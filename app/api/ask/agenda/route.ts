@@ -201,9 +201,9 @@ export async function POST(request: Request) {
       discoveredDocumentUrl: meeting.agendaUrl, now: Date.now() });
     const sharedAcrossGovernments = publication.documentSharedAcrossGovernments === true;
     const items = newest && !sharedAcrossGovernments ? [...publication.items] : [];
-    const translated = newest?.text && meeting.ocdId && !sharedAcrossGovernments
+    const translated = newest?.text && meeting.ocdId && meeting.bodyId && !sharedAcrossGovernments
       ? await readMeetingTranslation({ kind: "AGENDA", meetingId, ocdId: meeting.ocdId,
-        documentUrl: newest.documentUrl, contentHash: newest.contentHash }).catch(() => null) : null;
+        bodyId: meeting.bodyId, documentUrl: newest.documentUrl, contentHash: newest.contentHash }).catch(() => null) : null;
     const reply: AgendaMeetingReply = {
       mode: "meeting",
       meetingId,

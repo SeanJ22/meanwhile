@@ -8,6 +8,7 @@ import { translationHash } from "./records.ts";
 import { translateMeasure } from "./worker.ts";
 import { publishMeasureTranslation, readTranslations } from "./publication.ts";
 import { priceMeteredUsage, readMeteredUsage } from "../control-plane/model-cost.ts";
+import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
 
 /** Called inside an admitted worker with that worker's Fleet/area transport. */
 export async function runMeasureTranslation(input: {
@@ -23,6 +24,10 @@ export async function runMeasureTranslation(input: {
   try {
     if (!captureIntact(input.primary)) throw new Error("Translation source capture is incomplete.");
     const evidence = input.primary.evidence;
+    const admitted = section3Page({ url: evidence.canonicalUrl, text: evidence.text, retrievedAt: evidence.retrievedAt,
+      linkingPage: linkingPageFrom(evidence.canonicalUrl, input.captures.filter(captureIntact).map(row => row.evidence)),
+      sourcePolicy: input.primary.sourcePolicy }, "BALLOT_MEASURE", input.now);
+    if (!admitted.ok) throw new Error(admitted.reason ?? "Translation source is not admitted.");
     const hash = (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, "");
     const held = await readTranslations([input.subject.ocdId], { store: input.store, now: input.now, bypassCache: true });
     const current = held.find(row => row.kind === "MEASURE" && row.subjectId === input.subject.contestId && row.ocdId === input.subject.ocdId &&

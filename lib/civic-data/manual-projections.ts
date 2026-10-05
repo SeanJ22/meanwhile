@@ -627,12 +627,18 @@ function genericBallotProjection(payload: ManualProjectionPayload): BuiltProject
   const records = ballots.flatMap(ballot => [
     ...ballot.contests.map(record => ({ key: `contest:${record.id}`, record })),
     ...ballot.candidacies.map(record => ({ key: `candidacy:${record.id}`, record })),
+    ...ballot.measures.map(record => ({ key: `measure:${record.id}`, record })),
+    ...(ballot.measureRecords ?? []).map(record => ({ key: `measure-record:${record.contestId}`, record })),
   ]);
   return { payload, records, identities: ballots.flatMap(ballot => [
     ...ballot.contests.map(row => ({ subjectId: row.id, jurisdiction: `US-${ballot.election.state}`,
       identifiers: { contest_id: row.id }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),
     ...ballot.candidacies.map(row => ({ subjectId: row.id, jurisdiction: `US-${ballot.election.state}`,
       identifiers: { candidacy_id: row.id, contest_id: row.contestId }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),
+    ...ballot.measures.map(row => ({ subjectId: row.id, jurisdiction: `US-${ballot.election.state}`,
+      identifiers: { measure_id: row.id, contest_id: row.contestId }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),
+    ...(ballot.measureRecords ?? []).map(row => ({ subjectId: row.contestId, jurisdiction: `US-${ballot.election.state}`,
+      identifiers: { contest_id: row.contestId }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),
   ]), missingRequiredFields: records.length ? [] : ["ballots.contests/candidacies"],
     violations: genericBallotProblems(value), schemaVersion: "ballot-contests:1",
     consumerChecks: [{ consumer: "generic state/election ballot Reader", passed: records.length > 0 && genericBallotProblems(value).length === 0,

@@ -66,7 +66,7 @@ export async function runHeldTextTranslations(input: Pick<Parameters<typeof runT
     }
     // Source admission precedes the attempt and both paid calls.
     const admitted = section3Page({ url: sourceUrl, text: primary.evidence.text, retrievedAt: primary.evidence.retrievedAt,
-      linkingPage: linkingPageFrom(sourceUrl, pages.map(row => row.evidence)) },
+      linkingPage: linkingPageFrom(sourceUrl, pages.map(row => row.evidence)), sourcePolicy: primary.sourcePolicy },
     subject.kind === "AGENDA" || subject.kind === "MINUTES" ? "MEETING" : "OFFICIAL_BOARD_DIRECTORY", input.now);
     if (!admitted.ok) { deferred.push({ subjectId: subject.subjectId, reason: admitted.reason ?? "Source admission failed." }); continue; }
     const attempt: TranslationAttempt = { id: `translation:${translationHash(JSON.stringify([scope, subject.subjectId, sourceHash, sourceTextHash, input.now]))}`,
@@ -133,7 +133,7 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
         deferred.push({ subjectId: contest.id, reason: "Current source captures disagree." }); continue;
       }
       const page = section3Page({ url: primary.evidence.canonicalUrl, text: primary.evidence.text,
-        retrievedAt: primary.evidence.retrievedAt, linkingPage: linkingPageFrom(primary.evidence.canonicalUrl, pages.map(row => row.evidence)) },
+        retrievedAt: primary.evidence.retrievedAt, linkingPage: linkingPageFrom(primary.evidence.canonicalUrl, pages.map(row => row.evidence)), sourcePolicy: primary.sourcePolicy },
       PLAIN_ENGLISH_TRANSLATION_ROUTINE.inputRecordClass, input.now);
       if (!page.ok) { deferred.push({ subjectId: contest.id, reason: page.reason ?? "Source is not yet verified." }); continue; }
       const matchingAttempts = input.attempts.filter(attempt => attempt.scope === scope && attempt.subjectId === contest.id &&

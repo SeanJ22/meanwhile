@@ -22,6 +22,7 @@ export interface CapturedFinanceResponse extends SavedFinanceResponse {
   readonly httpStatus: number | null;
   readonly transport: string;
   readonly partial: boolean;
+  readonly sourcePolicy?: import("../control-plane/promotion/source-kinds.ts").SourcePolicy;
 }
 
 export function campaignFinancePackage(input: {
@@ -43,7 +44,8 @@ export function campaignFinancePackage(input: {
       response.httpStatus !== null && response.httpStatus >= 200 && response.httpStatus < 300 && response.publisher.trim();
     if (!rawVerified && (!capture || !captureIntact(capture))) throw new Error("Finance bytes have no complete saved source capture.");
     const page = section3Page({ url: source.url, text: sourceTexts.get(`${source.url}\n${source.hash}`)!, retrievedAt: source.retrievedAt,
-      linkingPage: linkingPageFrom(source.url, input.captures.filter(captureIntact).map(row => row.evidence)) }, "CAMPAIGN_FINANCE_FILING", input.now);
+      linkingPage: linkingPageFrom(source.url, input.captures.filter(captureIntact).map(row => row.evidence)),
+      sourcePolicy: rawVerified ? response!.sourcePolicy : capture!.sourcePolicy }, "CAMPAIGN_FINANCE_FILING", input.now);
     if (!page.ok) throw new Error(page.reason ?? "Finance source is not verified.");
     return { ...source, publisher: rawVerified ? response!.publisher : capture!.evidence.sourceId,
       httpStatus: rawVerified ? response!.httpStatus! : capture!.httpStatus! };

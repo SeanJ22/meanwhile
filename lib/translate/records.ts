@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
-import type { MeasureRecord } from "../ballot/measure-records.ts";
-import { measureRecordIssue } from "../ballot/measure-records.ts";
+import type { MeasureRecord } from "../ballot/measure-record-contract.ts";
+import { measureRecordIssue } from "../ballot/measure-record-contract.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 
 export const TRANSLATION_SCOPE = "US:plain-english-translations";
@@ -47,6 +47,7 @@ export interface TextTranslation extends TranslationEvidence {
   /** BODY_CLASS names the class, BODY names one body, OFFICE names the state-defined office. */
   readonly label: string;
   readonly text: string;
+  readonly meeting?: { readonly id: string; readonly bodyId: string; readonly documentUrl: string; readonly documentHash: string };
 }
 export type TranslationRecord = MeasureTranslation | TextTranslation;
 
@@ -67,6 +68,9 @@ export function translationRecordIssue(row: TranslationRecord): string | null {
       row.measure.sourceUrl !== row.sourceUrl || row.measure.writtenAt !== row.writtenAt || !row.measure.yesMeans || !row.measure.noMeans)) return "Translation lacks its exact measure identity or vote meanings.";
   if (row.kind !== "MEASURE" && (typeof row.label !== "string" || !row.label.trim() || !row.sourceText.includes(row.label) ||
       typeof row.text !== "string" || !row.text.trim())) return "Translation lacks its source-named subject or text.";
+  if ((row.kind === "AGENDA" || row.kind === "MINUTES") && (!row.meeting?.id || !row.meeting.bodyId ||
+      row.subjectId !== `${row.kind.toLowerCase()}:${row.meeting.id}` || row.meeting.documentUrl !== row.sourceUrl ||
+      row.meeting.documentHash !== row.sourceHash)) return "Meeting translation lacks its exact held body, sitting and document revision.";
   const fieldsAndValues = row.kind === "MEASURE" ? outputFields(row.measure) : [["text", row.text]];
   for (const [field, value] of fieldsAndValues) {
     const sentences = row.sentences.filter(sentence => sentence.field === field);

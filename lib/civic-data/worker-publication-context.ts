@@ -26,7 +26,7 @@ export async function workerPublicationContext(now: string) {
     const partial = artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false;
     return { url: artifact.canonicalUrl, bytes: Buffer.from(bytes), retrievedAt: artifact.retrievedAt,
       rawHash: artifact.contentHash.replace(/^sha256-/, ""), publisher: artifact.sourceId,
-      httpStatus: artifact.httpStatus, transport: artifact.transport, partial,
+      httpStatus: artifact.httpStatus, transport: artifact.transport, partial, sourcePolicy,
       complete: !partial && artifact.transport === "REACHABLE" && artifact.httpStatus !== null && artifact.httpStatus >= 200 && artifact.httpStatus < 300 };
   }, readCapture: async (id: string, records: readonly WorkerResultRecord[]) => {
     const [{ artifact }, input] = await Promise.all([readObject(id), readEvidence(id)]);

@@ -29,6 +29,11 @@ function response(request: ModelRequest, input: unknown): ModelResponse {
   return { model: request.model, stop_reason: "tool_use", content: [{ type: "tool_use", id: "translation", name: request.tools[0].name, input }],
     usage: { input_tokens: 100, output_tokens: 100 } };
 }
+function subject(spec: typeof specs[number], primary = capture(spec)) {
+  return { ...spec, state: "MI", ...(spec.kind === "AGENDA" || spec.kind === "MINUTES" ? {
+    meeting: { id: "library-meeting", bodyId, documentUrl: primary.evidence.canonicalUrl,
+      documentHash: primary.evidence.contentHash.replace(/^sha256-/, "") } } : {}) };
+}
 
 test("legal class, exact body, state office, agenda and minutes publish independently through Slide and exact typed readers", async () => {
   const repos = createMemoryRepositories(), store = new MemoryRoutineDataStore();
@@ -36,7 +41,7 @@ test("legal class, exact body, state office, agenda and minutes publish independ
   for (const spec of specs) {
     const primary = capture(spec), sentences = [{ field: "text", text: spec.text, quote: spec.text }];
     const run = () => runHeldTextTranslations({ repos, store, now, divisions: [stateDivision, division],
-      subjects: [{ subject: { ...spec, state: "MI" }, sourceUrl: primary.evidence.canonicalUrl }], captures: [primary],
+      subjects: [{ subject: subject(spec, primary), sourceUrl: primary.evidence.canonicalUrl }], captures: [primary],
       attempts, saveAttempt: async row => { attempts.push(row); }, transportFor: () => async request => {
         calls++; return response(request, request.tools[0].name === "write_text_translation"
           ? { text: spec.text, sentences } : { checked: sentences.map(({ field, text }) => ({ field, text, supported: true })) });
@@ -65,7 +70,7 @@ test("failed independent checks retain GOOD text and both calls' charges; unchan
   const spec = specs[1], repos = createMemoryRepositories(), store = new MemoryRoutineDataStore();
   let calls = 0, supported = true;
   const run = (primary = capture(spec)) => runTextTranslation({ repos, store, now,
-    subject: { ...spec, state: "MI" }, primary, captures: [primary], transportFor: () => async request => {
+    subject: subject(spec, primary), primary, captures: [primary], transportFor: () => async request => {
       calls++; return response(request, request.tools[0].name === "write_text_translation"
         ? { text: spec.text, sentences: [{ field: "text", text: spec.text, quote: spec.text }] }
         : { checked: [{ field: "text", text: spec.text, supported }] });
@@ -82,7 +87,7 @@ test("failed independent checks retain GOOD text and both calls' charges; unchan
 test("unadmitted, conflicting, stale and partial text captures never spend; attempts persist before model calls and retain retry debt", async () => {
   const spec = specs[3], primary = capture(spec), repos = createMemoryRepositories(), store = new MemoryRoutineDataStore();
   const attempts: TranslationAttempt[] = []; let calls = 0;
-  const input = { repos, store, now, divisions: [division], subjects: [{ subject: { ...spec, state: "MI" }, sourceUrl: primary.evidence.canonicalUrl }],
+  const input = { repos, store, now, divisions: [division], subjects: [{ subject: subject(spec, primary), sourceUrl: primary.evidence.canonicalUrl }],
     captures: [primary], attempts, saveAttempt: async (row: TranslationAttempt) => { attempts.push(row); },
     transportFor: () => async () => { calls++; throw new Error("existing budget paused"); } };
   assert.equal((await runHeldTextTranslations({ ...input, divisions: [stateDivision] })).outcomes.length, 0);

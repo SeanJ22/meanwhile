@@ -61,6 +61,7 @@ export interface TextTranslationSubject {
   readonly label: string;
   readonly ocdId: string;
   readonly state: string;
+  readonly meeting?: TextTranslation["meeting"];
 }
 
 /** Legal class definitions never confer that class's powers on a particular body. */
@@ -72,6 +73,10 @@ export async function translateText(input: {
   readonly now: string;
 }) {
   const { evidence, subject, now } = input;
+  const hash = (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, "");
+  if ((subject.kind === "AGENDA" || subject.kind === "MINUTES") && (!subject.meeting?.id || !subject.meeting.bodyId ||
+      subject.subjectId !== `${subject.kind.toLowerCase()}:${subject.meeting.id}` || subject.meeting.documentUrl !== evidence.canonicalUrl ||
+      subject.meeting.documentHash !== hash)) throw new Error("Meeting translation lacks its held body, sitting and document revision.");
   if (!subject.subjectId.startsWith(`${subject.kind.toLowerCase()}:`) || !subject.label.trim() ||
       !evidence.text.includes(subject.label) || !evidence.text.trim() ||
       evidence.contentHash !== `sha256-${translationHash(evidence.text)}` || !/^https:\/\//.test(evidence.canonicalUrl) ||
@@ -105,7 +110,7 @@ export async function translateText(input: {
   const result = toolResult(checked, checkerTool.name, playbook.checkerModel) as { checked: TextTranslation["checked"] };
   const record: TextTranslation = { id: `translation:${subject.subjectId}`, kind: subject.kind, subjectId: subject.subjectId,
     ocdId: subject.ocdId, label: subject.label, text: proposal.text, sourceUrl: evidence.canonicalUrl,
-    sourceHash: (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, ""),
+    sourceHash: hash, ...(subject.meeting ? { meeting: subject.meeting } : {}),
     sourceText: evidence.text, sourceTextHash: translationHash(evidence.text), retrievedAt: evidence.retrievedAt,
     writtenAt: now, writerModel: canonicalModelId(written.model), checkerModel: canonicalModelId(checked.model),
     playbookVersion: playbook.version, sentences: proposal.sentences, checked: result?.checked };

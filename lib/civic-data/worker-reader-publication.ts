@@ -120,7 +120,7 @@ export function workerReaderPackageWithPulls(input: Parameters<typeof verifiedWo
         requirePublication(document && document.evidence.text.trim(), "BUDGET_DOCUMENT_NOT_HELD");
         const linkingPage = linkingPageFrom(document.evidence.canonicalUrl, input.captures.filter(captureIntact).map(capture => capture.evidence));
         requirePublication(section3Page({ url: document.evidence.canonicalUrl, text: document.evidence.text,
-          retrievedAt: document.observedAt, linkingPage }, kind, input.now).ok, "BUDGET_DOCUMENT_SOURCE_UNVERIFIED");
+          retrievedAt: document.observedAt, linkingPage, sourcePolicy: document.sourcePolicy }, kind, input.now).ok, "BUDGET_DOCUMENT_SOURCE_UNVERIFIED");
         row = { ...common, title: text(f.title), fiscalYear: text(f.fiscalYear), documentUrl: text(f.documentUrl),
           documentHash: (document.evidence.sourceDocument?.contentHash ?? document.evidence.contentHash).replace(/^sha256-/, ""),
           ...(kind === "BUDGET_AMENDMENT" ? { budgetVersion: text(f.budgetVersion) } : {

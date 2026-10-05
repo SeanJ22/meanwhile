@@ -254,7 +254,7 @@ import { failureResponderExecutor, plainRereadSlot, readSubjectScoutHistory, sol
 import { buildScoutToolkit, scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
 import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
-import { MIN_DISTINCT_RUNGS, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
+import { consecutiveTransportFailures, MIN_DISTINCT_RUNGS, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import {
   RESEARCH_BOUNDS,
   RESEARCH_FORMAT_VERSION,
@@ -2294,6 +2294,7 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
     summary: [...manualLines, ...lines].join("\n"),
     provenance,
     priorRungs,
+    transportFailures: consecutiveTransportFailures(all),
     nextRungs: Array.isArray(all.at(-1)?.nextRungs)
       ? all.at(-1)!.nextRungs.filter((value): value is string => typeof value === "string")
       : [],

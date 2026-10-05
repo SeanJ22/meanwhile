@@ -8,6 +8,7 @@ import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { scoutExecutor, type ModelTransport, type ScoutExecutorDeps } from "../scheduler/scout-executor.ts";
 import { buildScoutToolkit } from "../scheduler/scout-tools.ts";
 import type { ScoutToolContext } from "../scheduler/scout-contract.ts";
+import { consecutiveTransportFailures } from "../scheduler/scout-result.ts";
 import { hostSpacer } from "../scheduler/http-executor.ts";
 import { VAULT_DIR } from "../scheduler/vault.ts";
 import { methodFields, standingFleetRuntime } from "./standing.ts";
@@ -193,6 +194,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
             ...history.map(p=>`${p.attemptId}: ${p.outcome}; next ${Array.isArray(p.nextRungs) ? p.nextRungs.filter((value): value is string => typeof value === "string").join(", ") : "stored list unreadable"}`)].join("\n"),
             priorRungs:[...history.flatMap(p=>p.rungs.map(r=>({rung:r.rung,tool:r.tool,target:r.target,observed:r.observed,ok:r.ok??null,at:r.at,attemptId:p.attemptId}))),
               ...walks.map(w=>({rung:w.rung,tool:w.tool,target:w.target,observed:w.observed,ok:w.outcome==="BLOCKED"?false:w.transport==="REACHABLE"?true:null,at:w.at,attemptId:w.attemptId}))],
+            transportFailures:consecutiveTransportFailures(history),
             nextRungs:[...new Set([...(Array.isArray(history.at(-1)?.nextRungs)
               ? history.at(-1)!.nextRungs.filter((value): value is string => typeof value === "string") : []),...walks.flatMap(w=>w.nextRouteIds)])]},
           tools:{spaceOut:tools.spaceOut,vault:async()=>{throw new Error("UNBOUND_SCOUT_VAULT_REFUSED");}},decision:"BOUNDED_MODEL_WORKER" as const};

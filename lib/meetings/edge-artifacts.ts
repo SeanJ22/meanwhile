@@ -352,7 +352,7 @@ export function partitionSnapshotByScope(
       scope,
       ...(scope !== NATIONAL_SCOPE && ocdId ? { ocdId } : {}),
       ...(bounds ? { bounds } : {}),
-      meetingIds: [...new Set([...meetings.map(meeting => meeting.id), ...agenda.map(doc => doc.meetingId)])].sort(),
+      meetingIds: [...new Set([...meetings.flatMap(meeting => [meeting.id, ...(meeting.mergedMeetingIds ?? [])]), ...agenda.map(doc => doc.meetingId)])].sort(),
       generatedAt: snapshot.generatedAt || now,
       counts: countsFor(meetings),
       meetings,

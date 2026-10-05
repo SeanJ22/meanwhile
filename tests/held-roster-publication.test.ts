@@ -170,3 +170,18 @@ test("CP-19/CP-05: another roster row's term cannot supply a date or a published
   assert.equal(result.payload.bodyRosters[0].members[0].termEnd, undefined);
   assert.equal(result.payload.bodyRosters[0].members[0].fieldSources?.termEnd, undefined);
 });
+
+
+test("CP-03: a labeled voter-guide roster is considered from held evidence and keeps its kind", async () => {
+  const base = await prior();
+  const saved = { ...capture(page("Contact the Mayor & Council"), "https://vote411.org/council"), sourcePolicy: { hosts: { "vote411.org": "VOTER_GUIDE" as const }, enabled: { OFFICIAL: true, CAMPAIGN: true, FILING: true, VOTER_GUIDE: true, FORUM: true, NEWS: true, REFERENCE: true, OTHER: true } } };
+  const artifacts = [{ artifactId: saved.evidence.artifactId, contentHash: saved.evidence.contentHash, contentType: "text/html", canonicalUrl: saved.evidence.canonicalUrl, recordedAt: saved.observedAt, partial: false } as ArtifactRecord];
+  const reading = await heldRosterReading({ bodyId: BODY, prior: base, now: NOW, artifacts, readHeld: async () => saved });
+  assert.ok(reading);
+  const published = workerRosterPublication({ bodyId: BODY, prior: base, now: NOW, reading });
+  assert.equal(published.sourceReceipt.sources[0].sourceClass, "VOTER_GUIDE");
+  assert.equal(published.payload.bodyRosters[0].kind, "VOTER_GUIDE");
+  assert.equal(published.payload.bodyRosters[0].members.length, 3);
+  const disabled = { ...saved, sourcePolicy: { ...saved.sourcePolicy, enabled: { ...saved.sourcePolicy.enabled, VOTER_GUIDE: false } } };
+  assert.equal(await heldRosterReading({ bodyId: BODY, prior: base, now: NOW, artifacts, readHeld: async () => disabled }), null);
+});

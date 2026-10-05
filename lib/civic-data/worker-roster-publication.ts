@@ -23,7 +23,7 @@ import { readValidatorManual, writeValidatorLessons, type ValidatorObservation }
 import { readHeldRoster } from "./worker-held-roster.ts";
 import { heldBodySchedule, type HeldBodySchedule } from "./worker-held-meetings.ts";
 import { publicationCaptureReaders } from "./worker-publication-context.ts";
-import { isOfficialSource, type OfficialLinkingPage } from "./source-authority.ts";
+import { type OfficialLinkingPage } from "./source-authority.ts";
 import { linkingPageFrom, pageWords, section3Page, section3Record } from "../control-plane/promotion/section3.ts";
 import { isoTermDate, isoTermDateOnPage } from "./term-dates.ts";
 import { inventoryRecordEvidence } from "../control-plane/workers/record-evidence.ts";
@@ -300,14 +300,14 @@ export async function heldRosterReading(input: {
   if (!body) return null;
   const division = governmentOf(input.prior.payload.registry.divisions, body);
   const seen = new Set<string>();
-  const candidates = [...input.artifacts].filter(a => !a.partial && /html/i.test(a.contentType) && isOfficialSource(a.canonicalUrl))
+  const candidates = [...input.artifacts].filter(a => !a.partial && /html/i.test(a.contentType) && a.canonicalUrl.startsWith("https://"))
     .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt))
     .filter(a => !seen.has(a.contentHash) && Boolean(seen.add(a.contentHash)))
     .slice(0, input.limit ?? 40);
   for (const record of candidates) {
     const capture = await input.readHeld(record);
     if (!capture || !captureIntact(capture)) continue;
-    const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt };
+    const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, sourcePolicy: capture.sourcePolicy, campaign: capture.campaign };
     if (!section3Page(page, "OFFICIAL_ROSTER", input.now).ok || !pageIsAboutBody(capture.evidence.text, body, division?.label ?? null)) continue;
     const roster = readHeldRoster(capture.evidence.text, capture.evidence.canonicalUrl);
     if (!roster?.rows.length) continue;

@@ -32,6 +32,8 @@ test("CP-18: edge composition retains both source ids and an agenda belonging to
   assert.equal(result.meetings[0].startsAt, fresh.startsAt);
   assert.equal(result.agendaDocuments[0].meetingId, fresh.id);
   assert.deepEqual(result.meetings[0].mergedMeetingIds, [old.id, fresh.id]);
+  const artifact = partitionSnapshotByScope(result, at)[0];
+  assert.ok(artifact.meetingIds?.includes(old.id));
   const again = mergeReaderSittings(result.meetings);
   assert.deepEqual(again.rows, result.meetings);
 });

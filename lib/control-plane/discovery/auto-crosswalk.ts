@@ -10,8 +10,9 @@
  * reviewer id names its own code version (`auto-crosswalk-reviewer@<digest>`),
  * never the owner.
  *
- * From each find of kind ICAL (vendor `ical`) or OFFICIAL_PAGE_EVENTS (vendor
- * `official-page-events`) it proposes rows for:
+ * From each find of kind ICAL (vendor `ical`), OFFICIAL_PAGE_EVENTS (vendor
+ * `official-page-events`), DILIGENT (vendor `diligent`) or LEGISTAR (vendor
+ * `legistar-api`) it proposes rows for:
  *
  * - the government's registered body (`<ocdId>#governing`, or `#board` for a
  *   school district), for the events a governing-body name of its kind of

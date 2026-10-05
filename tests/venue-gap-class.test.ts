@@ -316,10 +316,11 @@ test("(a) Pima County Legistar InSite, rooms left out: every grid sitting is pub
   const result = insiteNormalize([PIMA_READING], INSITE_NOW, tenants);
   assert.equal(result.accounting.outcome, "CONSERVED");
   assert.equal(result.accounting.dropped, 0, "0 dropped");
-  assert.equal(result.meetings.length, 30, "the same thirty sittings the recorded portal publishes");
+  // DB-03: the held 120-day window reaches four sittings more than the 90-day window's thirty.
+  assert.equal(result.meetings.length, 34, "the thirty sittings the 90-day window published, and the four the held window adds");
   const unplaced = assertNamedGaps(result.meetings, PIMA_CLERK);
-  assert.equal(unplaced.length, 26);
-  assert.equal(result.drops.unknownVenue, 26);
+  assert.equal(unplaced.length, 29);
+  assert.equal(result.drops.unknownVenue, 29);
   assert.deepEqual(
     [...new Set(unplaced.map((m) => m.venueGap?.publishedText))].sort(),
     ["1 E. Broadway, 4th Floor", "Board of Supervisors' Hearing Room"],
@@ -357,13 +358,14 @@ test("(a) Mesa InSite, rooms left out: every City Council sitting is published w
     "the only rows set aside are other bodies' on the shared grid",
   );
   assert.equal(result.drops.unplaceableInTime, 0);
-  assert.equal(result.meetings.length, 30, "the ten Council Chambers sittings and the twenty held elsewhere");
+  // DB-03: the held 120-day window reaches nine sittings more than the 90-day window's thirty.
+  assert.equal(result.meetings.length, 39, "the ten Council Chambers sittings and the twenty-nine held elsewhere");
   const unplaced = assertNamedGaps(result.meetings, MESA_CLERK);
-  assert.equal(unplaced.length, 30);
-  assert.equal(result.drops.unknownVenue, 30);
+  assert.equal(unplaced.length, 39);
+  assert.equal(result.drops.unknownVenue, 39);
   assert.deepEqual(
     [...new Set(unplaced.map((m) => m.venueGap?.publishedText))].sort(),
-    ["Council Chambers", "Piper Theater at the Mesa Arts Center", "Study Session"],
+    ["Council Chambers", "Inspirian Room at Gateway Library", "Piper Theater at the Mesa Arts Center", "Study Session"],
     "the grid's own location cells, verbatim",
   );
 });
@@ -392,7 +394,7 @@ test("(b) Pima County and Mesa InSite, rooms restored: the same sittings are pla
 
   const pima = insiteNormalize([PIMA_READING], INSITE_NOW, tenants);
   const pimaPlaced = pima.meetings.filter((m) => m.location);
-  assert.equal(pimaPlaced.length, 26);
+  assert.equal(pimaPlaced.length, 29, "twenty-six in the 90-day window and three more the held window adds (DB-03)");
   assert.equal(pimaPlaced.filter((m) => m.id === "legistar-insite:pima:1417572").length, 1);
   for (const m of pimaPlaced) {
     assert.deepEqual(m.location, m.id === "legistar-insite:pima:1417572" ? BROADWAY : HEARING_ROOM, m.id);
@@ -404,12 +406,12 @@ test("(b) Pima County and Mesa InSite, rooms restored: the same sittings are pla
   const mesaPlaced = mesa.meetings.filter((m) => m.location);
   assert.deepEqual(
     mesaPlaced.map((m) => m.id.split(":").pop()).sort(),
-    ["1336055", "1336056", "1336057", "1336058", "1336059", "1336060", "1336061", "1336065", "1336069", "1408112"],
-    "the ten Council Chambers sittings the recorded grid placed before this change",
+    ["1336055", "1336056", "1336057", "1336058", "1336059", "1336060", "1336061", "1336063", "1336064", "1336065", "1336069", "1408112"],
+    "the ten Council Chambers sittings the recorded grid placed before this change, and 1336063 and 1336064 the held window (DB-03) adds",
   );
   for (const m of mesaPlaced) assert.deepEqual(m.location, MESA_CHAMBERS, m.id);
   // The twenty sittings held in rooms nobody has reviewed are still published,
   // now with the grid's own words, where before this change they were dropped.
-  assert.equal(mesa.meetings.length - mesaPlaced.length, 20);
-  assert.equal(mesa.drops.unknownVenue, 20);
+  assert.equal(mesa.meetings.length - mesaPlaced.length, 27);
+  assert.equal(mesa.drops.unknownVenue, 27);
 });

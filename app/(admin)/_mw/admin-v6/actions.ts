@@ -49,6 +49,8 @@ export interface PreviewContext {
   /** The live count, when the server supplies one. */
   readonly waitingCount?: number | null;
   readonly outreachAuthorized: boolean;
+  /** The control's own values (a setting's current value, an undo's earlier value). */
+  readonly payload?: Readonly<Record<string, string>>;
 }
 
 export interface PreviewOption {
@@ -67,7 +69,9 @@ export interface Preview {
   readonly options?: readonly PreviewOption[];
   readonly items?: readonly PreviewItem[];
   /** A number the owner types (a hunt's lifetime limit). */
-  readonly amount?: { readonly label: string; readonly initial: string };
+  readonly amount?: { readonly label: string; readonly initial: string; readonly text?: boolean };
+  /** Offer the optional note box. */
+  readonly note?: boolean;
   /** A problem with what was entered, or null. */
   readonly invalid?: (input: { readonly option: string | null; readonly words: string; readonly amount: string; readonly selected: number }) => string | null;
 }
@@ -506,15 +510,15 @@ const defs: ActionDef[] = [
     label: "Set the daily budget",
     needs: "spend",
     doneWords: "Saved.",
-    preview: () => ({
+    preview: (ctx) => ({
       title: "Set the most the workers may spend in any rolling 24 hours",
       level: "global",
       rows: [
         ["Scope", "Whole system: every hunt, every state"],
         ["What changes", "The ceiling the workers run under"],
-        ["Undo", "Set the old amount again"],
+        ["Undo", "From Settings"],
       ],
-      amount: { label: "New daily budget in dollars (rolling 24 hours)", initial: "" },
+      amount: { label: "New daily budget in dollars (rolling 24 hours)", initial: ctx.payload?.amount ?? "" },
       invalid: ({ amount }) => {
         const n = Number(amount);
         return amount.trim() === "" || !Number.isFinite(n) || n <= 0 ? "Enter an amount above $0." : null;
@@ -777,6 +781,49 @@ const defs: ActionDef[] = [
     dependency: null,
   },
   {
+    kind: "setting-set",
+    label: "Change a setting",
+    needs: "owner",
+    doneWords: "Saved.",
+    preview: (ctx) => {
+      const control = ctx.payload?.control ?? "text";
+      return {
+        title: `Change: ${ctx.payload?.name ?? "—"}`,
+        level: "global",
+        rows: [
+          ["Now", ctx.payload?.now ?? "—"],
+          ["What changes", "The new value is saved with when it changed and the value before"],
+          ["Undo", "From Settings"],
+        ],
+        ...(control === "boolean"
+          ? { options: [{ id: "on", label: "On", note: "" }, { id: "off", label: "Off", note: "" }] }
+          : { amount: { label: control === "number" ? "New value" : control === "json" ? "New value (as data)" : "New wording", initial: ctx.payload?.current ?? "", text: control !== "number" } }),
+        note: true,
+        invalid: ({ amount, option }) => settingValueFromInput(control, amount, option) === undefined
+          ? control === "number" ? "Enter a number." : control === "json" ? "Enter valid data." : control === "boolean" ? null : "Enter the new wording." : null,
+      };
+    },
+    gateway: { type: "config.setSetting" },
+    dependency: null,
+  },
+  {
+    kind: "setting-undo",
+    label: "Undo",
+    needs: "owner",
+    doneWords: "Undone.",
+    preview: (ctx) => ({
+      title: `Undo the last change to: ${ctx.payload?.name ?? "—"}`,
+      level: "global",
+      rows: [
+        ["Now", ctx.payload?.now ?? "—"],
+        ["Goes back to", ctx.payload?.valueWords ?? "—"],
+      ],
+      note: true,
+    }),
+    gateway: { type: "config.setSetting" },
+    dependency: null,
+  },
+  {
     kind: "resume-publish",
     label: "Resume checks and publishing, then recheck the reader card",
     needs: "owner",
@@ -873,4 +920,32 @@ export function actionDef(kind: ActionKind): ActionDef {
 /** The kinds a real executor can carry out today. */
 export function connectedKinds(): readonly ActionKind[] {
   return defs.filter((d) => d.gateway !== null).map((d) => d.kind);
+}
+
+/** Read legacy receipts through the same gateway map used to send controls. */
+export function gatewayActionKind(type: string, evidence: { subject?: string; says?: string } = {}): ActionKind | null {
+  if (type === "decision.record" && evidence.subject !== "fix-queue") return null;
+  const candidates = defs.filter(definition => definition.gateway?.type === type);
+  if (!candidates.length) return null;
+  if (candidates.length === 1) return candidates[0].kind;
+  const says = evidence.says ?? "";
+  if (type === "expansion.scope.budget") return /is paused/.test(says) ? "hunt-pause" : /is resumed/.test(says) ? "hunt-resume" : "hunt-limit";
+  if (type === "expansion.scope.setMany") return evidence.subject && /^geo:[a-z]{2}\.zcta\./.test(evidence.subject) ? "hunt-start" : "hunt-start-many";
+  if (type === "config.setDiscoverySearch") return /\bOFF\b|turned off|is off/i.test(says) ? "global-search-off" : "global-search-on";
+  if (type === "config.setPlaceTarget") return /is cleared/.test(says) ? "target-clear" : "target-set";
+  if (type === "config.setDataSwitch") return /\bOFF\b|\boff\b/.test(says) ? "data-switch-off" : "data-switch-on";
+  if (type === "config.setSetting") return "setting-set";
+  return candidates[0].kind;
+}
+
+/**
+ * A setting's new value from what was typed or chosen, or undefined when it does not parse.
+ * The gateway still validates it against the setting's own rules.
+ */
+export function settingValueFromInput(control: string, amount: string, option: string | null): unknown {
+  const typed = amount.trim();
+  if (control === "boolean") return option === "on" ? true : option === "off" ? false : undefined;
+  if (control === "number") { const n = Number(typed); return typed !== "" && Number.isFinite(n) ? n : undefined; }
+  if (control === "json") { try { return JSON.parse(typed) as unknown; } catch { return undefined; } }
+  return typed === "" ? undefined : typed;
 }

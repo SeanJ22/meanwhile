@@ -669,6 +669,9 @@ export type ScoutEscalationAdmission =
 /** The escalation evidence line is short: a sentence an owner reads, never a transcript. */
 export const SCOUT_ESCALATION_EVIDENCE_MAX_CHARS = 300;
 
+/** CH-30: after this many attempts in a row that the AI service did not answer, the next one starts a tier up. */
+export const OUTAGE_TIER_AFTER = 2;
+
 /**
  * Initial response allowance at the model's dearest token rate. The attempt
  * has no cumulative token cap. This starts the existing job/escalation hold;
@@ -1219,16 +1222,17 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
    * overrides the id only. The escalation target is the registry's, or none
    * when the start is already the top of the ladder.
    */
-  const base = scoutLoopBase(deps.model);
-  const model = base.model;
-  const effort: ModelEffort = base.effort;
+  const defaultBase = scoutLoopBase(deps.model);
+  const model = defaultBase.model;
 
   return {
     lane: "BOUNDED_MODEL_WORKER",
     workerFor: ({ holder }) => ({ role: deps.role ?? "SCOUT", provider: "anthropic", version: model, instance: holder }),
-    run: async ({ obligation: row, routeTaskId, workItemId, attemptId, holder, executor: decidedKind }): Promise<WorkOutcome> => {
+    run: async ({ obligation: row, routeTaskId, workItemId, attemptId, holder, executor: decidedKind, bound: workerBound }): Promise<WorkOutcome> => {
       const startedMs = Date.now();
       const startedAt = clock();
+      /* CH-07: the hunter's wall clock. 0 means no limit stated (tests); every production caller states one. */
+      const wallLimitMs = workerBound?.maxWallMs ?? 0;
       let ctx: ReturnType<ScoutExecutorDeps["contextFor"]>;
       try {
         ctx = deps.contextFor(row);
@@ -1248,6 +1252,23 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         };
       }
       const sourceRecordClass = ctx.sourceRecordClass ?? row.obligation.recordClass;
+      /*
+       * CH-30: when the AI service has not answered the last OUTAGE_TIER_AFTER attempts at this item, the next one
+       * starts on the next tier up (the same guarded ladder an escalation uses), so an outage that is one model's
+       * does not keep the work waiting. An injected test model, the top of the ladder, or a target above the ceiling
+       * leaves the start where it was.
+       */
+      const outageTier = (ctx.inherited.transportFailures ?? 0) >= OUTAGE_TIER_AFTER && deps.model === undefined
+        ? (() => { try { return assertStepMayEscalate(SCOUT_LOOP_STEP, "PROVIDER_UNAVAILABLE", defaultBase.modelClass); } catch { return null; } })()
+        : null;
+      const base = outageTier === null ? defaultBase : {
+        model: outageTier.model,
+        modelClass: outageTier.modelClass,
+        effort: outageTier.effort,
+        why: `${defaultBase.why} Started a tier up: the AI service did not answer the ${defaultBase.modelClass} model on the last ${ctx.inherited.transportFailures} tries.`,
+      };
+      const model = base.model;
+      const effort: ModelEffort = base.effort;
       const toolkit = deps.toolkitFor({
         obligation: row,
         route: ctx.route,
@@ -1419,6 +1440,11 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       }
       const runModelAttempt = async (current: ModelAttemptRun): Promise<void> => {
         while (finish === null && lastRefusal?.[0]?.code !== "SCOUT_GRADUATED_ROUTE") {
+          /* CH-07: out of time. Nothing more is sent; the steps walked so far become the case file below. */
+          if (wallLimitMs > 0 && Date.now() - startedMs >= wallLimitMs) {
+            stoppedBy = "TIMEOUT";
+            break;
+          }
           if (boundNotice !== null && graceUsed >= GRACE_TURNS) break;
           if (boundNotice !== null) graceUsed += 1;
 
@@ -1761,12 +1787,17 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       let escalationEvidence: string | null = null;
       let escalationRefused: ScoutEscalationRefused | null = null;
 
-      const first: ModelAttemptRun = { model, modelClass: base.modelClass, consult: () => assertStepMayInvokeModel(SCOUT_LOOP_STEP) };
+      const first: ModelAttemptRun = {
+        model,
+        modelClass: base.modelClass,
+        consult: () => (outageTier === null ? assertStepMayInvokeModel(SCOUT_LOOP_STEP) : assertStepMayEscalate(SCOUT_LOOP_STEP, "PROVIDER_UNAVAILABLE", defaultBase.modelClass)),
+      };
       await runModelAttempt(first);
       if (!graduated) closeAttempt(first, 1);
 
       let previousAttempt = first;
       for (let rung = 1; rung < MODEL_CLASSES.length; rung++) {
+        if (stoppedBy === "TIMEOUT") break;
         const escalationTarget = escalationTargetFor(SCOUT_LOOP_STEP, previousAttempt.modelClass);
         const observed = escalationTarget === null ? null : observedEscalation();
         if (escalationTarget === null || observed === null) break;
@@ -1998,7 +2029,32 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       if (defectReading) defectTurns.push(...defectReading.turns);
 
       let refusal: ScoutIssue[] | null = null;
-      if (finish === null) {
+      /*
+       * CH-07: a hunter that ran out of time is not a refusal and not an absence. Its result is a
+       * NO_PROGRESS carrying the rungs it walked as the next steps, stoppedBy "TIMEOUT", so the next turn
+       * goes to a detective with what was tried (the existing NO_PROGRESS trigger) and `isArguedAbsence`
+       * never files it as a 30-day absence.
+       */
+      const timedOut = finish === null && stoppedBy === "TIMEOUT";
+      /*
+       * CH-30: an AI service that did not answer is not a thrown-away walk. The steps walked are saved as the case file
+       * (the same shape a timed-out hunter saves), so the next agent resumes from them; the refusal still names the cause.
+       */
+      const walkedSteps = rungs.map((r) => `${r.tool} -> ${r.target}${r.observed ? `: ${String(r.observed).slice(0, 160)}` : ""}`).slice(0, 40);
+      const outageCaseFile: { narrative: string; nextRungs: string[] } | null =
+        finish === null && !timedOut && transportFailure !== null && !policyRefusedBeforeSending && rungs.length > 0
+          ? {
+              narrative: `The AI service did not answer after ${turns} turn(s) and ${rungs.length} step(s); those steps are kept and the next agent resumes from them. Not a finding of absence.`,
+              nextRungs: walkedSteps,
+            }
+          : null;
+      const timeoutCaseFile: { narrative: string; nextRungs: string[] } | null = timedOut
+        ? {
+            narrative: `Stopped at the ${Math.round(wallLimitMs / 1000)}-second time limit after ${turns} turn(s) and ${rungs.length} step(s); not a finding of absence.`,
+            nextRungs: rungs.map((r) => `${r.tool} -> ${r.target}${r.observed ? `: ${String(r.observed).slice(0, 160)}` : ""}`).slice(0, 40),
+          }
+        : null;
+      if (finish === null && !timedOut) {
         refusal =
           transportFailure !== null
             ? [{ code: policyRefusedBeforeSending ? "SCOUT_POLICY_DENIED" : "SCOUT_TRANSPORT_FAILED",
@@ -2054,9 +2110,9 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         distinctEvidenceRungs: distinctEvidenceRungs(rungsAnnotated),
         candidates: accepted ? acceptedCandidates : [],
         findings: accepted?.findings ?? [],
-        nextRungs: accepted?.nextRungs ?? [],
+        nextRungs: accepted?.nextRungs ?? timeoutCaseFile?.nextRungs ?? outageCaseFile?.nextRungs ?? [],
         unverified: accepted?.unverified ?? [],
-        narrative: accepted?.narrative ?? (refusal ? `REFUSED: ${refusal.map((i) => i.code).join(", ")}` : ""),
+        narrative: accepted?.narrative ?? timeoutCaseFile?.narrative ?? outageCaseFile?.narrative ?? (refusal ? `REFUSED: ${refusal.map((i) => i.code).join(", ")}` : ""),
         /* The model whose attempt produced this result; `modelAttempts` names every model that ran. */
         worker: { provider: "anthropic", model: last.model, modelReported },
         usage: {

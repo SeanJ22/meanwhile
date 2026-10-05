@@ -53,7 +53,12 @@ import {
   observableRoutineContracts,
 } from "../lib/civic-data/meeting-partitions.ts";
 import { recordDoorOutcome, type DoorOutcome } from "../lib/doors/outcome.ts";
+import { observedChangeMinutesByDoor } from "../lib/doors/observed-rate.ts";
+import { isDoorRecord } from "../lib/doors/registry.ts";
 import { doorReadModeFromEnv, refreshDoorsForPass } from "../lib/doors/install.ts";
+import { doorSeedOnFromEnv, seedDoorsOnStart } from "../lib/doors/seed-all.ts";
+import { readNowDueRequests, settleReadNow } from "../lib/doors/mission-refresh.ts";
+import { listDoors } from "../lib/doors/registry.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { attestPromotedVersion } from "../lib/civic-data/read-model.ts";
 import { ATTESTED_PROMOTIONS_ENV, serializeAttestedPromotions } from "../lib/civic-data/attested-promotion.ts";
@@ -154,12 +159,17 @@ const FORCE = process.argv.includes("--force");
 // DB-13: with WTP_DOORS_READ=registry the meeting work is built from the door
 // registry on every pass; otherwise (the default) the code's list is used as before.
 const CODE_MEETING_PARTITION_IDS = new Set(MEETING_PARTITION_CONTRACTS.map((contract) => contract.id));
-if (doorReadModeFromEnv() === "registry" && controlPlaneUrlFromEnv() !== null) {
+if ((doorReadModeFromEnv() === "registry" || doorSeedOnFromEnv()) && controlPlaneUrlFromEnv() !== null) {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, new Date().toISOString(), { skipBootstrap: true });
-    const doorPass = await refreshDoorsForPass(doorRepos.doors);
-    console.log(`RCD_TASK routine-civic-data-runner: meeting doors read from ${doorPass.reading} (${doorPass.partitions?.partitions ?? doorPass.rows} partitions)` +
-      `${doorPass.reason ?? doorPass.partitions?.reason ? ` — ${doorPass.reason ?? doorPass.partitions?.reason}` : ""}`);
+    // DB-10/DB-11/DB-23: an empty registry is seeded once from today's doors (WTP_DOORS_SEED=on); otherwise nothing is written.
+    const seeded = await seedDoorsOnStart(doorRepos.doors);
+    console.log(`RCD_TASK routine-civic-data-runner: door registry seed — ${seeded.seeded ? `${seeded.result.total} doors now held` : seeded.reason}`);
+    if (doorReadModeFromEnv() === "registry") {
+      const doorPass = await refreshDoorsForPass(doorRepos.doors);
+      console.log(`RCD_TASK routine-civic-data-runner: meeting doors read from ${doorPass.reading} (${doorPass.partitions?.partitions ?? doorPass.rows} partitions)` +
+        `${doorPass.reason ?? doorPass.partitions?.reason ? ` — ${doorPass.reason ?? doorPass.partitions?.reason}` : ""}`);
+    }
   } catch (error) {
     console.warn(`RCD_TASK routine-civic-data-runner: the door registry could not be read, the code's meeting list stays in use — ${error instanceof Error ? error.message : String(error)}`);
   }
@@ -241,18 +251,36 @@ function releaseChildMemory(id: string): void {
 }
 
 /**
+ * DB-30: how often each open door has been seen to change, by door id (a task's id is its door's id), so a door that
+ * changes faster than its policy is checked as often as it changes. A registry that cannot be read leaves every
+ * task on its policy; it never stops a read.
+ */
+async function readObservedChangeRates(): Promise<ReadonlyMap<string, number>> {
+  const connection = controlPlaneUrlFromEnv();
+  if (connection === null) return new Map();
+  try {
+    doorOutcomeRepos ??= createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
+    const rows = await (await doorOutcomeRepos).doors.list();
+    return observedChangeMinutesByDoor(rows.map((row) => row.value).filter(isDoorRecord));
+  } catch (error) {
+    console.warn(`RCD_DOORS: observed change rates not read — ${error instanceof Error ? error.message : String(error)}; every task stays on its policy cadence`);
+    return new Map();
+  }
+}
+
+/**
  * DB-21: a hand-wired meeting door's last success or failure, from its partition's
  * promotion outcome. A derived family's members are recorded by the family's own
  * child, from each member's result. A door that is not in the registry is left alone,
  * and a registry that cannot be written never changes the outcome of the pass.
  */
 let doorOutcomeRepos: Promise<Awaited<ReturnType<typeof createPgRepositories>>> | null = null;
-async function recordMeetingDoorOutcome(taskId: string, outcome: DoorOutcome): Promise<void> {
+async function recordMeetingDoorOutcome(taskId: string, outcome: DoorOutcome, changed = false): Promise<void> {
   const connection = controlPlaneUrlFromEnv();
   if (connection === null) return;
   try {
     doorOutcomeRepos ??= createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
-    await recordDoorOutcome((await doorOutcomeRepos).doors, taskId, outcome, new Date().toISOString());
+    await recordDoorOutcome((await doorOutcomeRepos).doors, taskId, outcome, new Date().toISOString(), changed);
   } catch (error) {
     console.warn(`RCD_TASK ${taskId}: the door's last ${outcome === "SUCCESS" ? "success" : "failure"} could not be recorded — ${error instanceof Error ? error.message : String(error)}`);
   }
@@ -575,6 +603,20 @@ if (!FORCE) {
     console.log(`RCD_DUE_REQUEST CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; every task keeps its normal schedule`);
   }
 }
+// DB-56: with the door registry in use, a door marked to be read now (a mission started in its place) is the same
+// due request an owner's controlled refresh makes, so the ordinary pass reads it. Spent marks are cleared first.
+if (!FORCE && doorReadModeFromEnv() === "registry" && controlPlaneUrlFromEnv() !== null) {
+  try {
+    const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
+    const settledAt = new Date().toISOString();
+    const cleared = await settleReadNow(doorRepos.doors, settledAt);
+    const marked = readNowDueRequests((await listDoors(doorRepos.doors)).doors, new Set(MEETING_PARTITION_CONTRACTS.map((contract) => contract.id)), settledAt);
+    dueRequests = [...dueRequests, ...marked.filter((request) => !dueRequests.some((held) => held.id === request.id))];
+    if (marked.length > 0 || cleared > 0) console.log(`RCD_DUE_REQUEST doors marked to be read now: ${marked.length} due, ${cleared} settled`);
+  } catch (error) {
+    console.log(`RCD_DUE_REQUEST doors marked to be read now CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; every task keeps its normal schedule`);
+  }
+}
 const honouredDueRequests = new Map<string, RoutineDueRequest>();
 // Newly verified findings need not wait for the hourly fallback clock. This
 // read changes no data; admission uses the same frontier and publication child.
@@ -621,6 +663,7 @@ if (selectedTasks.length > 0) try {
   console.error(`RCD_TASK routine-civic-data-provider-frontier: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
 
+const observedChangeRates = await readObservedChangeRates();
 for (const read of clockReads) {
   const { task } = read;
   if (!read.ok) {
@@ -635,6 +678,8 @@ for (const read of clockReads) {
     continue;
   }
   const sittingHot = sittingSignals.get(task.id);
+  const observedChange = observedChangeRates.get(task.id);
+  const observedEveryMs = observedChange === undefined ? undefined : observedChange * 60_000;
   const dueRequest = FORCE ? null : routineDueRequestFor(task, durableClock, admissionNowMs, dueRequests);
   const publicationDue = campaignPublicationInputsDue(task.id, campaignPublicationInputs);
   if (task.ownerInvocation) {
@@ -643,7 +688,7 @@ for (const read of clockReads) {
     const reused = !task.ownerInvocation.publicationPending && Number.isFinite(succeeded) && succeeded >= Date.parse(task.ownerInvocation.requestedAt) && succeeded <= admissionNowMs;
     publicationInputLines.push(`Send ${task.ownerInvocation.instructions.join(", ")}: shared ${task.id} ${due ? "refresh offered to the normal source frontier" : reused ? "verified shared result reused" : "failed attempt held under retry backoff"}; canonical scope ${task.scope}.`);
   }
-  if (!FORCE && !routineTaskDue(task, durableClock, admissionNowMs, sittingHot) && dueRequest === null && !publicationDue) {
+  if (!FORCE && !routineTaskDue(task, durableClock, admissionNowMs, sittingHot, observedEveryMs) && dueRequest === null && !publicationDue) {
     console.log(`RCD_SKIP ${task.id}: cadence not due${
       sittingSignals.has(task.id) ? ` (sitting window ${sittingHot === false ? "base" : sittingHot ? "hot" : "unknown, read as hot"})` : ""
     }`);
@@ -848,7 +893,7 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
       console.error(`RCD_TASK ${pending.task.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${durableIssue}`);
     } else if (promoted) {
       verifiedSourceSuccesses += 1;
-      await recordMeetingDoorOutcome(pending.task.id, "SUCCESS");
+      await recordMeetingDoorOutcome(pending.task.id, "SUCCESS", receipt.promotedVersion !== null && receipt.confirmedAt === undefined);
       captureTaskReceipt(pending, receipt, "VERIFIED_SOURCE_SUCCESS");
       console.log("RCD_RECEIPT=" + JSON.stringify(receipt));
       console.log(`RCD_TASK ${pending.task.id}: GOOD (${receipt.state})`);

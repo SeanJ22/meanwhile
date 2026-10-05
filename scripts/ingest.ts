@@ -28,9 +28,12 @@ import {
 import {
   MEETING_HELD_HORIZON_DAYS,
   MEETING_HELD_LOOKBACK_DAYS,
-  meetingFetchedWindowAt,
   meetingHeldWindowAt,
 } from "../lib/meetings/constants.ts";
+import { meetingFetchedWindowFor } from "../lib/meetings/fetch-window.ts";
+import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
+import { doorReadModeFromEnv } from "../lib/doors/install.ts";
+import { recordFamilyReads } from "../lib/doors/outcome.ts";
 import {
   attributionSummary,
   resolveMeetingBodies,
@@ -97,6 +100,8 @@ import {
 } from "../lib/civic-data/attested-promotion.ts";
 import type { PromotedCivicDataReadOptions } from "../lib/civic-data/read-model.ts";
 import { readCuratedReaderProjection, refreshVenueResolutionsFromPromoted } from "../lib/civic-data/curated-reader-read-model.ts";
+import type { ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
+import { publishVenueResolutions } from "../lib/meetings/venue-publication.ts";
 import { normalizeFamilyMeetingCitations, placeMeetingsFromCensusVenues, placeMeetingsFromVerifiedVenues, retainPreviouslyVerifiedVenuePoints } from "../lib/meetings/automatic-venue-resolutions.ts";
 import { currentVenueCache, resolveVenue, venueResolutionRecordId, type VenueEntry } from "../lib/meetings/venue-cache.ts";
 import { placeUnplacedFromAgendas } from "./lib/agenda-meeting-location.ts";
@@ -778,6 +783,23 @@ async function readDerivedFamilyMember(member: DerivedWiringRecord, fetchImpl: t
 }
 
 /**
+ * DB-21: each member of a derived family records its own last success or failure on its own door (never the
+ * family's, so one failing calendar does not mark its healthy neighbours). Only with the door registry in use; a
+ * registry that cannot be written never changes the read's outcome.
+ */
+async function recordFamilyMemberOutcomes(reads: readonly FamilyMemberRead[]): Promise<void> {
+  const connection = controlPlaneUrlFromEnv();
+  if (connection === null || doorReadModeFromEnv() !== "registry" || reads.length === 0) return;
+  try {
+    const repos = await createPgRepositories(connection, new Date().toISOString(), { skipBootstrap: true });
+    const recorded = await recordFamilyReads(repos.doors, reads, new Date().toISOString());
+    if (recorded !== null) console.log(`  family doors: ${recorded.recorded} member outcome(s) recorded, ${recorded.missing} not in the registry`);
+  } catch (error) {
+    console.warn(`  family doors: member outcomes not recorded — ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
+/**
  * **ONE STATE'S DERIVED MEETING FAMILY, ONE CANDIDATE, EVERY MEMBER ON ITS OWN EVIDENCE** (C16).
  *
  * The members are the promoted meeting-source wiring's rows for the state. Each ACTIVE member is read on its own
@@ -821,6 +843,7 @@ export async function promoteDerivedMeetingFamily(
     console.log(`  ${member.id}: ${read.ok ? `${read.freshMeetings.length} sitting(s) read` : `held: ${read.error}`}`);
     reads.push(read);
   }
+  await recordFamilyMemberOutcomes(reads);
   const versionId = wiring.metadata.versionId;
   const promotedAt = wiring.metadata.promotedAt;
   if (versionId === null || promotedAt === null) {
@@ -880,11 +903,20 @@ export async function promoteDerivedMeetingFamily(
   // An unchanged family pass is receipted on the pointed version (R23).
   const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, new Date().toISOString(), undefined, { confirmUnchanged: true });
   printMeetingPartitionReceipt(partition, candidate, outcome, outcome.promoted ? null : outcome.candidate.failureDetail);
+  if (outcome.promoted || outcome.confirmed) await publishVenuePins(store, partition.id, census.package);
   console.log(`AUTOMATIC_VENUE_MEETING_RECEIPT=${JSON.stringify({ candidateId: candidate.id,
     placedFromReviewed: fromReviewed.placedCount, placedFromCensus: placed.placedCount,
     retainedFromPrior: retained.filter((meeting, index) => meeting !== cited[index]).length,
     held: census.held.length, decision: outcome.candidate.receipt?.decision ?? null,
     promotedVersion: outcome.promoted?.versionId ?? null })}`);
+}
+
+/** BX-09: the pins this pass matched go into the venue-resolutions pointer on their own; a hold there never stops the pass. */
+async function publishVenuePins(store: RoutineDataStore, partitionId: string, pkg: ManualProjectionPackage | null): Promise<void> {
+  const published = await publishVenueResolutions({ store, package: pkg, now: new Date().toISOString() });
+  if (published.records === 0) return;
+  console.log(`VENUE_RESOLUTIONS_PUBLISHED=${JSON.stringify({ partition: partitionId, records: published.records,
+    promoted: published.outcome?.promoted?.versionId ?? null, held: published.held })}`);
 }
 
 async function main() {
@@ -1339,8 +1371,8 @@ export function reconcileSuccessfulMeetingPartition(input: {
    */
   readonly reviewedVenues?: () => readonly VenueEntry[];
   /**
-   * The dates this read actually fetched. Omitted, the shown 90-day window
-   * each way, which is what every adapter fetches until DB-03 to DB-05.
+   * The dates this read actually fetched. Omitted, the held 120-day window each way for an adapter that fetches it
+   * (`HELD_WINDOW_FETCH_SOURCES`), else the shown 90 days.
    */
   readonly fetchedWindow?: { readonly lowerBound: string; readonly upperBound: string };
   /**
@@ -1351,7 +1383,7 @@ export function reconcileSuccessfulMeetingPartition(input: {
   readonly movedToHistory?: ReadonlyMap<string, MeetingHistoryMoveRecord>;
 }): SuccessfulMeetingPartitionReconciliation {
   const window = meetingHeldWindowAt(input.generatedAt);
-  const fetched = input.fetchedWindow ?? meetingFetchedWindowAt(input.generatedAt);
+  const fetched = input.fetchedWindow ?? meetingFetchedWindowFor(input.sourceName, input.generatedAt);
   if (window === null || fetched === null) throw new Error(`MEETING_RECONCILIATION_CLOCK_INVALID:${input.generatedAt}`);
   const { lowerBound, upperBound } = window;
   const lower = Date.parse(lowerBound);
@@ -1642,16 +1674,19 @@ export async function promoteMeetingPartition(
   removalEvidence: readonly RoutineRemovalEvidence[] = [],
   retainedResponses: readonly RetainedSourceResponse[] = [],
   heldFacts: NonNullable<RoutineCandidate["excludedFacts"]> = [],
+  idSuffix = "",
 ): Promise<{
   readonly candidate: RoutineCandidate;
   readonly outcome: PromotionOutcome;
 }> {
   validateSnapshot(snapshot);
-  const candidate = retainMeetingCandidateEvidence(
+  const built = retainMeetingCandidateEvidence(
     candidateForMeetingPartition(partition, snapshot, additionalViolations, removalEvidence, heldFacts),
     snapshot,
     retainedResponses,
   );
+  // A second attempt on the same readings (DB-06's safety net) needs its own candidate id.
+  const candidate = idSuffix === "" ? built : { ...built, id: `${built.id}${idSuffix}` };
   // An ordinary routine re-check that found nothing new is confirmed on the
   // pointed version, not republished (RULING 283's receipted no-change).
   const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, snapshot.generatedAt, undefined, { confirmUnchanged: true });
@@ -1785,70 +1820,84 @@ export async function promoteMeetingPartitions(input: {
       if (fact.code !== "MEETING_EXCLUDED_BY_PUBLISHER") console.warn(`  ${partition.id}: ${fact.code}: ${fact.detail}`);
     }
     const history = await moveConcludedMeetingsForPartition(input.store, partition, previous, input.generatedAt);
-    const reconciled = reconcileSuccessfulMeetingPartition({
-      sourceName: partition.meetingSource,
-      generatedAt: input.generatedAt,
-      freshMeetings: freshRows,
-      freshAgendaDocuments: freshDocuments,
-      previous: await restoreRemovedHistoryForPartition(input.store, partition, previous, input.generatedAt),
-      publisherExclusions: recurrence.exclusions,
-      reviewedVenues: currentVenueCache,
-      movedToHistory: history.moved,
-    });
-    // BX-08: a hand-wired body's newly published address gets its pin the same way a derived family's does.
-    const acquired = (report.acquisitions ?? []).find((evidence) => evidence.httpStatus >= 200 && evidence.httpStatus < 300);
-    let census: Awaited<ReturnType<typeof placeMeetingsFromCensusVenues>> | null = null;
-    if (acquired) {
-      try {
-        census = await placeMeetingsFromCensusVenues({
-          snapshot: { generatedAt: input.generatedAt, meetings: [...reconciled.meetings],
-            sources: [{ source: partition.meetingSource, acquisitions: report.acquisitions }] } as unknown as MeetingsSnapshot,
-          existingIds: new Set(currentVenueCache().map((venue) => venueResolutionRecordId(venue))),
-          memberRoutes: new Map([[`${partition.meetingSource}:${partition.bodyId}`, acquired.finalUrl]]),
-          fetchImpl: input.venueFetch,
-        });
-        for (const hold of census.held) console.warn(`AUTOMATIC_VENUE_HELD ${hold}`);
-      } catch (error) {
-        console.warn(`AUTOMATIC_VENUE_SKIPPED ${partition.id}: ${error instanceof Error ? error.message : String(error)}`);
+    const restoredPrevious = await restoreRemovedHistoryForPartition(input.store, partition, previous, input.generatedAt);
+    const attempt = async (moved: ReadonlyMap<string, MeetingHistoryMoveRecord>, idSuffix = "") => {
+      const reconciled = reconcileSuccessfulMeetingPartition({
+        sourceName: partition.meetingSource,
+        generatedAt: input.generatedAt,
+        freshMeetings: freshRows,
+        freshAgendaDocuments: freshDocuments,
+        previous: restoredPrevious,
+        publisherExclusions: recurrence.exclusions,
+        reviewedVenues: currentVenueCache,
+        movedToHistory: moved,
+      });
+      // BX-08: a hand-wired body's newly published address gets its pin the same way a derived family's does.
+      const acquired = (report.acquisitions ?? []).find((evidence) => evidence.httpStatus >= 200 && evidence.httpStatus < 300);
+      let census: Awaited<ReturnType<typeof placeMeetingsFromCensusVenues>> | null = null;
+      if (acquired) {
+        try {
+          census = await placeMeetingsFromCensusVenues({
+            snapshot: { generatedAt: input.generatedAt, meetings: [...reconciled.meetings],
+              sources: [{ source: partition.meetingSource, acquisitions: report.acquisitions }] } as unknown as MeetingsSnapshot,
+            existingIds: new Set(currentVenueCache().map((venue) => venueResolutionRecordId(venue))),
+            memberRoutes: new Map([[`${partition.meetingSource}:${partition.bodyId}`, acquired.finalUrl]]),
+            fetchImpl: input.venueFetch,
+          });
+          for (const hold of census.held) console.warn(`AUTOMATIC_VENUE_HELD ${hold}`);
+        } catch (error) {
+          console.warn(`AUTOMATIC_VENUE_SKIPPED ${partition.id}: ${error instanceof Error ? error.message : String(error)}`);
+        }
       }
+      const scopeFailures = [
+        ...(partition.ocdId !== null && report.unreachableOcdIds?.includes(partition.ocdId)
+          ? [`${partition.meetingSource} reported ${partition.ocdId} unreachable.`]
+          : []),
+        ...(report.partialScopes ?? [])
+          .filter((failure) => failure.ocdIds.includes(partition.ocdId))
+          .map((failure) => `${failure.scope} incomplete: ${failure.cause}`),
+      ];
+      const snapshot: MeetingsSnapshot = {
+        formatVersion: 1,
+        generatedAt: input.generatedAt,
+        counts: snapshotCounts(reconciled.meetings, 0),
+        sources: [{
+          source: partition.meetingSource,
+          ok: true,
+          error: null,
+          fetched: freshRows.length,
+          normalized: freshRows.length,
+          ...(reconciled.carriedMeetingIds.length > 0
+            ? { carriedForward: reconciled.carriedMeetingIds.length }
+            : {}),
+          drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
+          ...(report.acquisitions ? { acquisitions: report.acquisitions } : {}),
+        }],
+        meetings: [...(census?.meetings ?? reconciled.meetings)],
+        agendaDocuments: [...reconciled.agendaDocuments],
+        ...(census && census.venueReferenceEvidence.length > 0 ? { venueReferenceEvidence: census.venueReferenceEvidence } : {}),
+      } as MeetingsSnapshot;
+      const { candidate, outcome } = await promoteMeetingPartition(
+        input.store,
+        partition,
+        snapshot,
+        scopeFailures,
+        reconciled.removalEvidence,
+        input.retainedResponses,
+        recurrence.held,
+        idSuffix,
+      );
+      return { reconciled, snapshot, candidate, outcome, census };
+    };
+    let attempted = await attempt(history.moved);
+    // DB-06's safety net: a partition that is refused while sittings are moving to history must not stop its fresh
+    // readings reaching readers, so it is promoted again with every sitting kept, exactly as DB-01 keeps them.
+    if (!attempted.outcome.promoted && !attempted.outcome.confirmed &&
+        attempted.reconciled.removalEvidence.some((row) => row.code === "MOVED_TO_HISTORY")) {
+      console.warn(`  ${partition.id}: refused while sittings were moving to history (${attempted.outcome.candidate.failureDetail ?? attempted.outcome.candidate.state}); promoting again with every sitting kept`);
+      attempted = await attempt(new Map(), "-kept");
     }
-    const scopeFailures = [
-      ...(partition.ocdId !== null && report.unreachableOcdIds?.includes(partition.ocdId)
-        ? [`${partition.meetingSource} reported ${partition.ocdId} unreachable.`]
-        : []),
-      ...(report.partialScopes ?? [])
-        .filter((failure) => failure.ocdIds.includes(partition.ocdId))
-        .map((failure) => `${failure.scope} incomplete: ${failure.cause}`),
-    ];
-    const snapshot: MeetingsSnapshot = {
-      formatVersion: 1,
-      generatedAt: input.generatedAt,
-      counts: snapshotCounts(reconciled.meetings, 0),
-      sources: [{
-        source: partition.meetingSource,
-        ok: true,
-        error: null,
-        fetched: freshRows.length,
-        normalized: freshRows.length,
-        ...(reconciled.carriedMeetingIds.length > 0
-          ? { carriedForward: reconciled.carriedMeetingIds.length }
-          : {}),
-        drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
-        ...(report.acquisitions ? { acquisitions: report.acquisitions } : {}),
-      }],
-      meetings: [...(census?.meetings ?? reconciled.meetings)],
-      agendaDocuments: [...reconciled.agendaDocuments],
-      ...(census && census.venueReferenceEvidence.length > 0 ? { venueReferenceEvidence: census.venueReferenceEvidence } : {}),
-    } as MeetingsSnapshot;
-    const { candidate, outcome } = await promoteMeetingPartition(
-      input.store,
-      partition,
-      snapshot,
-      scopeFailures,
-      reconciled.removalEvidence,
-      input.retainedResponses,
-      recurrence.held,
-    );
+    const { snapshot, candidate, outcome } = attempted;
     printMeetingPartitionReceipt(
       partition,
       candidate,
@@ -1859,6 +1908,7 @@ export async function promoteMeetingPartitions(input: {
     // independent reviews. Its separate durable witness may certify no change.
     const observed: MeetingsSnapshot = { ...snapshot, meetings: [...freshRows], agendaDocuments: [...freshDocuments],
       counts: snapshotCounts(freshRows, 0) };
+    if (outcome.promoted || outcome.confirmed) await publishVenuePins(input.store, partition.id, attempted.census?.package ?? null);
     const research = outcome.promoted ? await offerResearch(partition, snapshot, observed) : null;
     results.push(research ?? { partition, candidate, outcome });
   }

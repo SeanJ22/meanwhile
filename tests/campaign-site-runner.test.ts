@@ -894,10 +894,10 @@ test("the paid lane stays closed under the owner's pause, and the pass is plain 
   }
   /* The runner's pass: after meetings discovery, gated on the cycle kind, the runner pause and the time left, never on the paid lane. */
   const runner = readFileSync(join(ROOT, "scripts", "freshness-shadow.mts"), "utf8");
-  const meetingsEnd = runner.indexOf('finishPhase("meetings-discovery");');
-  const start = runner.indexOf("if (dry || canary || ONLY !== null || IDS !== null) {", meetingsEnd);
-  const end = runner.indexOf('finishPhase("campaign-sites");');
-  assert.ok(start > meetingsEnd && end > start, "the executable pass is its own phase, after meetings discovery");
+  const meetingsEnd = runner.indexOf("const runMeetingsDiscoveryPass");
+  const start = runner.indexOf("const runCampaignSitesPass", meetingsEnd);
+  const end = runner.indexOf("const runCandidatePublicationsPass", start);
+  assert.ok(start > meetingsEnd && end > start, "the executable pass is its own lane, after meetings discovery");
   const block = runner.slice(start, end);
   assert.doesNotMatch(block, /modelLaneEnabled|laneClosure|guardedModelTransport|scoutFor|workerKey/);
   assert.match(block, /intents\.runnerPause\.paused/);

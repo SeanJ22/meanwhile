@@ -96,28 +96,12 @@ export function scoutCapacity(input: {
 
 export type ReaderImpactBand = 1 | 2 | 3;
 
-/**
- * The pilot jurisdictions, as the committed jurisdiction registries name
- * them, keyed by the pilot ZIP each serves. `PILOT_ZIPS` is
- * `lib/health/owner-corpus-compile.ts`'s list; the ids are
- * `data/jurisdictions/<state>.json` entries and the OCD divisions the meeting
- * corpus keys bodies on. A subject id or obligation id containing one of these
- * keys belongs to a pilot jurisdiction.
- */
-export const PILOT_JURISDICTION_KEYS: Readonly<Record<string, readonly string[]>> = {
-  /* Tucson, Pima County. Jurisdiction-shaped keys only: a bare place name would match a candidate's surname. */
-  "85701": ["county-of-pima", "county:pima", "county-pima", "city-of-tucson", "place:tucson", "place-tucson"],
-  "85641": ["county-of-pima", "county:pima", "county-pima", "place:vail", "place-vail", "vail-unified"],
-  "07866": ["county-of-morris", "county:morris", "county-morris", "place:rockaway", "place-rockaway"],
-  "03255": ["county-of-merrimack", "county:merrimack", "county-merrimack", "place:newbury", "place-newbury"],
-};
-
 /** Providers whose obligations are a source-universe denominator (RULING 229). */
 export const UNIVERSE_PROVIDERS: readonly string[] = ["candidate-enrichment", "local-jurisdictions", "campaign-finance"];
 
 export interface OrderingInputs {
-  /** The pilot ZIPs in force. */
-  readonly pilotZips: readonly string[];
+  /** Retired (CH-12): no place is ahead of the line because it was a pilot. Order comes from sends and place targets only. Callers may still pass it; it is ignored. */
+  readonly pilotZips?: readonly string[];
 }
 
 export interface OrderableObligation {
@@ -171,7 +155,8 @@ export interface DispatchOrdering {
   readonly scope: string;
   readonly inputs: {
     readonly readerImpactAt: "FreshnessObligation.readerImpactAt";
-    readonly pilotJurisdictions: string;
+    /** Retired (CH-12). Records written before it was removed still carry it. */
+    readonly pilotJurisdictions?: string;
     readonly universeProviders: readonly string[];
     /** A record written before 2026-09-25 carries the older rule, which ordered by next-due alone. */
     readonly tieBreak: typeof TIE_BREAK | "oldest nextDueAt first within a band";
@@ -184,23 +169,16 @@ export interface DispatchOrdering {
 export const TIE_BREAK = "longest wait first within a band: the next-due, or the end of the backoff after a failed attempt";
 
 export const ORDERING_RULE =
-  "band 1 = feeds a pilot surface (canonical FreshnessObligation.readerImpactAt set or release-pinned pilot jurisdiction); " +
+  "band 1 = a reader is waiting on it (canonical FreshnessObligation.readerImpactAt set); " +
   "band 2 = source-universe completion (RULING 229 universe providers); band 3 = long tail; within a band, the longest wait first " +
   "(a row that failed waits from the end of its backoff)";
 
 export const ORDERING_SCOPE =
   "orders every due model-class row before admission to the bounded Scout pool, so reader-impact priority decides both which rows fit the per-cycle ceiling and which one starts first. The plain-code lane has its own longest-wait-first order";
 
-function pilotKeysFor(zips: readonly string[]): string[] {
-  return [...new Set(zips.flatMap((z) => PILOT_JURISDICTION_KEYS[z] ?? []))];
-}
-
 /** Which band one obligation falls in, and why. Pure. */
-export function bandFor(row: OrderableObligation, inputs: OrderingInputs): { readonly band: ReaderImpactBand; readonly why: string } {
-  const hay = `${row.id} ${row.subjectId}`.toLowerCase();
+export function bandFor(row: OrderableObligation, _inputs: OrderingInputs): { readonly band: ReaderImpactBand; readonly why: string } {
   if (row.readerImpactAt !== null) return { band: 1, why: `readerImpactAt ${row.readerImpactAt} is set by the provider` };
-  const pilotKey = pilotKeysFor(inputs.pilotZips).find((k) => hay.includes(k));
-  if (pilotKey !== undefined) return { band: 1, why: `subject is in a pilot jurisdiction (${pilotKey})` };
   if (row.providerId !== null && UNIVERSE_PROVIDERS.includes(row.providerId)) {
     return { band: 2, why: `provider ${row.providerId} is a source-universe denominator (RULING 229)` };
   }
@@ -250,7 +228,6 @@ export function orderByReaderImpact<T extends OrderableObligation>(
       scope: ORDERING_SCOPE,
       inputs: {
         readerImpactAt: "FreshnessObligation.readerImpactAt",
-        pilotJurisdictions: `PILOT_ZIPS ${inputs.pilotZips.join(", ")} -> PILOT_JURISDICTION_KEYS (lib/control-plane/research-metrics.ts)`,
         universeProviders: UNIVERSE_PROVIDERS,
         tieBreak: TIE_BREAK,
       },

@@ -48,8 +48,8 @@ import { join } from "node:path";
 import {
   installedRegistrationJurisdictionRegistries,
   installRegistrationJurisdictionRegistries,
-  JURISDICTION_REFERENCE_STATES,
 } from "../civic-data/operational-references.ts";
+import { hasReviewedRegistry } from "../civic-data/reviewed-registry-states.ts";
 import type { CivicDataReadResult, PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import type {
   Jurisdiction,
@@ -317,7 +317,7 @@ export async function preloadRegistrationJurisdictions(input: {
 }): Promise<RegistrationJurisdictionsLoad> {
   const held = installedRegistrationJurisdictionRegistries();
   const wanted = [...new Set([...input.states].map((s) => s.trim().toLowerCase()))].filter(
-    (s) => /^[a-z]{2}$/.test(s) && !(JURISDICTION_REFERENCE_STATES as readonly string[]).includes(s) && !held.registries.has(s),
+    (s) => /^[a-z]{2}$/.test(s) && !hasReviewedRegistry(s) && !held.registries.has(s),
   );
   if (wanted.length === 0) return { registries: new Map(), refused: new Map() };
   const load = await loadRegistrationJurisdictions({

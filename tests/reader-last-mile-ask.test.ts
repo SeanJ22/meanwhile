@@ -352,7 +352,7 @@ test("filed candidate email and source survive Ask projection while mailing addr
     assert.equal(record.sourceUrl, row.sourceUrl);
     assert.equal(record.retrievedAt, row.collectedAt);
     if (row.email) assert.ok(record.text.includes(row.email));
-    if (row.filedAddress) assert.ok(!record.text.includes(row.filedAddress));
+    assert.equal(Object.hasOwn(row, "filedAddress"), false, "the reader contact census carries no filed address");
   }
   assert.equal(candidateContactForCandidacy("ballot-nj-morris:unknown:mejia"), null);
   assert.equal(candidateContactForCandidacy("ballot-az-pima:governor:hobbs-katie"), null);
@@ -364,6 +364,7 @@ test("the real Ask route carries Mejia's published filing contact with its own p
   assert.ok(record);
   assert.match(record.text, /info@analiliafornj\.com/);
   assert.doesNotMatch(record.text, /13 Municipal Plaza/);
+  assert.doesNotMatch(JSON.stringify(body), /13 Municipal Plaza/, "CP-01 keeps filed mailing addresses out of the whole Ask answer");
   assert.equal(record.sourceOrg, "Morris County Clerk");
   // The contact's own provenance is the held filing document, whichever edition of the clerk's list the
   // seed mirrors (the clerk republished it on 2026-09-24), never a pinned filename that goes stale.

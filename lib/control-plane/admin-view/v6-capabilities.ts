@@ -54,7 +54,7 @@ export function adminV6ReadCapabilities(input: { readonly configRevision: number
       revision: `workers:${input.configRevision}:${input.researchRevision}:${input.heartbeatRevision ?? "unread"}:${input.sourceProgressId ?? "none"}:${input.workerAgeBucket ?? "clock-unread"}` };
   }
   if (input.historyRevision !== undefined && input.historyRevision !== null) {
-    sections.history = { contract: "admin-v6/history@1", href: "/api/admin/v6/history", revision: `history:${input.historyRevision}` };
+    sections.history = { contract: "admin-v6/history@1", href: "/api/admin/v6/history", revision: `history:${input.historyRevision}:${input.heartbeatRevision ?? "unread"}:${input.workerAgeBucket ?? "clock-unread"}` };
     // The fix queue changes when an action is saved (history moves) and when the decision sync opens a row (the worker clock bucket).
     sections.fixes = { contract: "admin-v6/fixes@1", href: "/api/admin/v6/fixes", revision: `fixes:${input.historyRevision}:${input.workerAgeBucket ?? "clock-unread"}` };
   }

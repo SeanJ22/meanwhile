@@ -186,6 +186,8 @@ export interface StuckItem {
   readonly applies: readonly string[];
   readonly lane: Lane;
   readonly cause: string;
+  /** Why it needs Sean (BR-09): set on every decision-lane item. */
+  readonly needs?: "money" | "platform" | "credentials" | "contract" | "broken";
   readonly age: string;
   readonly ageRank: number;
   readonly tried: string;
@@ -743,7 +745,7 @@ export type ActionKind =
   | "global-ceiling" | "global-search-on" | "global-search-off" | "fix-go"
   | "scope-first" | "scope-recheck" | "doc-request" | "use-url" | "reprocess" | "retry-method" | "resume-publish"
   | "eng-task" | "job-stop" | "focus" | "send-agents" | "cancel-send" | "target-set" | "target-clear"
-  | "data-switch-on" | "data-switch-off";
+  | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo";
 
 export type ReceiptStatus = "queued" | "read" | "running" | "done" | "partial" | "refused" | "failed" | "unknown";
 export const PENDING_STATUSES: readonly ReceiptStatus[] = ["queued", "read", "running", "unknown"];
@@ -798,6 +800,13 @@ export interface UiReceipt {
   readonly gatewayType: string | null;
   readonly gatewayReceiptId: string | null;
   readonly readBackAt: string | null;
+  /** BR-12: the plan the order was accepted with, and its one progress bar. */
+  /** BR-02: saved, overdue and not taken by the runner. Shown red with the reason and three options. */
+  readonly notPickedUp?: boolean;
+  /** BR-13: before and after, shown beside Done. */
+  readonly change?: { readonly before: string; readonly after: string };
+  readonly plan?: import("@/lib/control-plane/gateway/confirmation.ts").OrderPlan;
+  readonly progress?: import("@/lib/control-plane/gateway/confirmation.ts").OrderProgress;
   readonly replayed: boolean;
   readonly sentAt: string;
   readonly words?: string;

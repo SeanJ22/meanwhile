@@ -695,11 +695,16 @@ export function unchangedRoutineProtocolFailure(
     .some(at => Number.isFinite(Date.parse(at ?? "")) && Date.parse(at!) > failedAt && Date.parse(at!) <= nowMs);
 }
 
+/** Rulings §4's hourly floor: a door's observed change rate (DB-30) never makes its check faster than this. Same number as lib/doors/observed-rate.ts. */
+const MIN_OBSERVED_CHECK_MS = 60 * 60_000;
+
 export function routineTaskDue(
   task: RoutineSourceTask,
   clock: RoutineTaskClock | undefined,
   nowMs: number,
   sittingHot?: boolean,
+  /** DB-30: how often this task's door has been seen to change, in ms. The check is the faster of this and the policy. */
+  observedEveryMs?: number,
 ): boolean {
   if (task.ownerInvocation) {
     const requested = Date.parse(task.ownerInvocation.requestedAt);
@@ -722,5 +727,7 @@ export function routineTaskDue(
   // Measuring from the older success would make every pilot cycle retry at
   // once merely because the ordinary cadence had already elapsed.
   if (attempted > succeeded) return nowMs - attempted >= task.retryMs;
-  return nowMs - succeeded >= cadenceMsAt(task.contract, nowMs);
+  const policyMs = cadenceMsAt(task.contract, nowMs);
+  return nowMs - succeeded >= (observedEveryMs === undefined ? policyMs
+    : Math.min(policyMs, Math.max(observedEveryMs, MIN_OBSERVED_CHECK_MS)));
 }

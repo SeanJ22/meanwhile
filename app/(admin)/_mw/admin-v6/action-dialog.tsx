@@ -57,7 +57,7 @@ export function ActionDialog(props: {
   const reason = props.blocked ?? (chosen?.blocked ?? null) ?? invalid;
   const off = sent || needOption || !!reason;
   const global = preview.level === "global";
-  const showWords = !!chosen?.ownWords || def.kind === "global-runner-pause" || def.kind === "global-runner-resume";
+  const showWords = !!chosen?.ownWords || !!preview.note || def.kind === "global-runner-pause" || def.kind === "global-runner-resume";
 
   const send = () => {
     if (off) return;
@@ -121,7 +121,7 @@ export function ActionDialog(props: {
         {preview.amount && (
           <label className={s.stack} style={{ gap: 4 }}>
             <span className={s.small}>{preview.amount.label}</span>
-            <input className={s.input} inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} />
+            <input className={s.input} inputMode={preview.amount.text ? "text" : "decimal"} value={amount} onChange={(e) => setAmount(e.target.value)} />
           </label>
         )}
 

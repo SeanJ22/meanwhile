@@ -11,6 +11,7 @@
  * PURE: no store and no clock. `meetingFactsByDoor` reads the live meeting snapshot the caller already holds.
  */
 import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
+import { checkEveryWithObserved } from "./observed-rate.ts";
 import type { DoorRecord } from "./registry.ts";
 
 const DAY_MS = 86_400_000;
@@ -67,8 +68,10 @@ export interface OverdueDoor {
 /** The check a door owes at `now`. */
 export function checkEveryFor(door: DoorRecord, facts: DoorFacts | undefined): { readonly minutes: number; readonly own: boolean } {
   if (door.checkEveryMinutes !== null) return { minutes: door.checkEveryMinutes, own: true };
-  if (door.meeting != null) return { minutes: facts?.hot ? HOT_CHECK_MINUTES : COLD_CHECK_MINUTES, own: false };
-  return { minutes: STANDING_CHECK_MINUTES, own: false };
+  // DB-30: the faster of the standing check and how often the door has been seen to change. A meeting door's
+  // standing check is already the §4 floor, so an observation can only make it faster, never slower.
+  const standing = door.meeting != null ? (facts?.hot ? HOT_CHECK_MINUTES : COLD_CHECK_MINUTES) : STANDING_CHECK_MINUTES;
+  return { minutes: checkEveryWithObserved(door, standing).minutes, own: false };
 }
 
 /** Open doors whose last success is older than their check, most late first. */

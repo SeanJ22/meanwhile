@@ -1,7 +1,7 @@
 import type { Sql } from "../repository/pg-store.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
 import { US_STATES } from "../readiness/catalog.ts";
-import { ageOf, causeOf, placeKeyOfRow, sendWordsFor, stateOfRow, type BlockerLane, type Cause, type StuckRowLike } from "./blocker-causes.ts";
+import { ageOf, causeOf, NEED_WORDS, placeKeyOfRow, sendWordsFor, stateOfRow, type BlockerLane, type Cause, type StuckRowLike } from "./blocker-causes.ts";
 import { parseV6PlaceKey, type V6PlaceScope } from "./v6-hunts-read.ts";
 
 /**
@@ -96,8 +96,8 @@ export function stuckViews(rows: readonly StuckRowLike[], scopeKey: string, nowI
     const at = place(row);
     const title = [row.label, row.subjectName && row.label && !row.label.includes(row.subjectName) ? row.subjectName : null].filter(Boolean).join(" — ") || row.id;
     const state = stateNameOf(stateOfRow(row));
-    const words = sendWordsFor({ stateNames: state ? [state] : [], subject: row.subjectName, label: row.label, zip: /^geo:[a-z]{2}.zcta.(d{5})$/.exec(at)?.[1] ?? null });
-    return { id: row.id, title, applies: [at], lane: cause.lane, cause: cause.words, age: age.words, ageRank: age.rank,
+    const words = sendWordsFor({ stateNames: state ? [state] : [], subject: row.subjectName, label: row.label, zip: /^geo:[a-z]{2}.zcta.(\d{5})$/.exec(at)?.[1] ?? null });
+    return { id: row.id, title, applies: [at], lane: cause.lane, cause: cause.needs ? `${NEED_WORDS[cause.needs]}: ${cause.words}` : cause.words, ...(cause.needs ? { needs: cause.needs } : {}), age: age.words, ageRank: age.rank,
       tried: row.blocker === null ? "—" : row.blocker, helped: "—", next: row.nextAction ?? cause.next,
       owner: cause.owner, readersAffected: row.band === 1 ? true : undefined, group: cause.key,
       actions: words === null ? [] : [sendAction(at, "Send agents", words)] };

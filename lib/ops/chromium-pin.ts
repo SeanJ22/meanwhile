@@ -35,8 +35,8 @@
  * test that cannot run is reported apart from a test that failed (RULING 24),
  * and neither is allowed to read like a pass.
  */
-import { existsSync, readdirSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { accessSync, constants, existsSync, readdirSync, statSync } from "node:fs";
+import { isAbsolute, join } from "node:path";
 
 /**
  * The Chromium build `playwright@1.62.1` ships against.
@@ -226,6 +226,17 @@ export function resolveChromium(
   }
   const fallback = installed[0];
   if (fallback === undefined) {
+    // Managed images can provide system Chromium without a Playwright cache.
+    // Use only an explicitly selected executable, and report the substitution.
+    const systemBrowser = env.WTP_CHROMIUM_EXECUTABLE?.trim();
+    if (systemBrowser && isAbsolute(systemBrowser)) {
+      try {
+        accessSync(systemBrowser, constants.X_OK);
+        if (statSync(systemBrowser).isFile()) return { kind: "SUBSTITUTED", revision: "system", executablePath: systemBrowser };
+      } catch {
+        // An unusable explicit path is still an absent browser, never a pass.
+      }
+    }
     let sawBuildDirs: string[] = [];
     try {
       sawBuildDirs = readdirSync(root).filter((e) => /^chromium-\d+$/.test(e));

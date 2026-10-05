@@ -27,13 +27,6 @@ export const LANE_WORDS: Readonly<Record<Lane, string>> = {
   software: "Needs a software fix",
 };
 export const LANE_TONE: Readonly<Record<Lane, "warn" | "good" | "slate" | "info">> = { decision: "warn", auto: "good", publisher: "slate", software: "info" };
-export const LANE_MEANS: Readonly<Record<Lane, string>> = {
-  decision: "Only you can move these. There’s no routine approval step.",
-  auto: "The system is repairing these with a plan and a next try time.",
-  publisher: "The source itself hasn’t posted or fixed this yet.",
-  software: "Our code has to change first. Raising priority doesn’t deploy anything.",
-};
-
 export function useScoped() {
   const v = useV6();
   return useMemo(() => {

@@ -80,6 +80,7 @@ export interface FleetInputs {
 
 /** The readings a question can require. Names are the context's field names. */
 export const CONTEXT_READS = [
+  "config",
   "placeStuck",
   "snapshot",
   "heartbeat",
@@ -113,6 +114,7 @@ export interface OperatorContext {
   /** The console path the owner asked from. */
   readonly from: string;
   readonly stateVersion: string | null;
+  readonly adminConfig?: import("../gateway/admin-config.ts").AdminConfig | null;
   readonly placeStuck?: ReadOutcome<import("./place-stuck.ts").PlaceStuckReading>;
   readonly snapshot?: ReadOutcome<OwnerSnapshot>;
   readonly heartbeat?: ReadOutcome<RunnerHeartbeat>;

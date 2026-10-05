@@ -94,6 +94,7 @@ export interface ReceiptDraft {
   readonly readBackAt: string | null;
   readonly undo: string | null;
   readonly change?: { readonly before: string; readonly after: string };
+  readonly huntScores?: ActionReceipt["huntScores"];
   readonly codeSha: string | null;
 }
 
@@ -102,6 +103,7 @@ export function buildReceipt(draft: ReceiptDraft): ActionReceipt {
   const { request } = draft;
   return {
     formatVersion: RECEIPT_FORMAT_VERSION,
+    ...(request.scheduleOrigin ? { scheduleOrigin: request.scheduleOrigin } : {}),
     receiptId: receiptIdFor(request.type, request.idempotencyKey),
     idempotencyKey: request.idempotencyKey,
     type: request.type,
@@ -124,6 +126,7 @@ export function buildReceipt(draft: ReceiptDraft): ActionReceipt {
     readBackAt: draft.readBackAt,
     undo: draft.undo,
     ...(draft.change ? { change: draft.change } : {}),
+    ...(draft.huntScores ? { huntScores: draft.huntScores } : {}),
   };
 }
 

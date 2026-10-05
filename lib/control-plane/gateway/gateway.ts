@@ -75,6 +75,7 @@ import {
 import { lookupAction, type ActionContext, type GatewayDeps, type RegisteredAction } from "./registry.ts";
 import { appendReceipt, buildReceipt, findReceipt } from "./receipts.ts";
 import { sendWakeHint, wakeHintOf } from "./wake-hint.ts";
+import { bindScoreAssignments, scoresAtAcceptance } from "./hunt-score.ts";
 import { withWriteReadback } from "./write-readback.ts";
 
 /**
@@ -246,6 +247,7 @@ export async function submit(request: ActionRequest, deps: GatewayDeps): Promise
 
   /* 8 · EXECUTE. */
   const context: ActionContext = { request: normalised, receiptId, at: deps.now() };
+  const huntScores = await scoresAtAcceptance(type, validated.value, deps.readPlaceScore);
   let result;
   try {
     // Every store write the action makes is read back if it times out, so a timeout never becomes "nothing was recorded" when it may have landed.
@@ -276,6 +278,7 @@ export async function submit(request: ActionRequest, deps: GatewayDeps): Promise
     readBackAt: result.readBackAt ?? null,
     undo: result.undo ?? null,
     ...(result.change ? { change: result.change } : {}),
+    ...(huntScores ? { huntScores: await bindScoreAssignments(deps.repos,huntScores) } : {}),
     codeSha: deps.codeSha,
   });
   const wrote = await appendReceipt(deps.repos, receipt, receipt.completedAt ?? startedAt);

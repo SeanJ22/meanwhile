@@ -126,6 +126,7 @@ export interface GatewayDeps {
   readonly codeSha: string | null;
   /** Tells the runner its controls changed, after an action is durably applied. Absent when the host has no Blobs destination. Never part of an action's result. */
   readonly wake?: WakeHintWriter | null;
+  readonly readPlaceScore?: import("./hunt-score.ts").PlaceScoreReader;
 }
 
 /* --------------------------------------------------------------- results */

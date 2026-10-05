@@ -314,7 +314,7 @@ import { orderPlan, orderProgress } from "../lib/control-plane/gateway/confirmat
 test("BR-12: an order is Accepted with a plan, then a progress bar; the five steps and the one line", () => {
   const receipt = { type: "fleet.deployHere", label: "Send agents here", openedWork: [{ kind: "work", id: "a", title: "t" }, { kind: "work", id: "b", title: "t" }] };
   const plan = orderPlan(receipt, "2026-10-05T18:00:00Z");
-  assert.deepEqual(plan, { who: "Runner", change: "Send agents here", creates: 2, resultsBy: "2026-10-05T18:00:00Z" });
+  assert.deepEqual(plan, { who: "Runner", change: "Send agents here", affects: "Send agents here", creates: 2, resultsBy: "2026-10-05T18:00:00Z" });
   const line = acceptedLine({ plan, scopeName: "Sierra Vista", level: "local" }, () => "2:00 PM ET");
   assert.equal(line, "Accepted · Runner · creates 2 items in Sierra Vista · first results by 2:00 PM ET");
   const lifecycle = { saved: "x", workersReceived: null, workStarted: null, workFinished: null, factsChecked: null, published: null, checkedOnPublicPage: null };

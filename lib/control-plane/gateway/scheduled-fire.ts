@@ -7,6 +7,8 @@
 import { ADMIN_CONFIG_ID, isAdminConfig, type AdminConfig } from "./admin-config.ts";
 import { refreshFixDispatchHonors } from "../fix-list.ts";
 import { migrateQueuedFixes } from "./fix-migrate.ts";
+import { confirmReceipt } from "./confirmation.ts";
+import { ADMIN_RECEIPT_LOG_KEY, type ActionReceipt } from "./contract.ts";
 import { submit } from "./gateway.ts";
 import type { GatewayDeps } from "./registry.ts";
 import { scheduledOrders, type ScheduledOrder } from "./scheduled-orders.ts";
@@ -15,7 +17,7 @@ const REPEAT_MS = { hourly: 3_600_000, daily: 86_400_000, weekly: 7 * 86_400_000
 
 /** The moment this order is next due, or null while it waits on another order, or when it has run out. */
 export function dueAt(order: ScheduledOrder, all: readonly ScheduledOrder[], lastFiredAt: string | null): string | null {
-  if (order.after && all.some((o) => o.id === order.after)) return null;
+  if (order.after) return null; // Completion must be read, never inferred from removal.
   if (order.repeat) {
     const base = lastFiredAt ?? order.startAt ?? order.decidedAt;
     return lastFiredAt ? new Date(Date.parse(base) + REPEAT_MS[order.repeat]).toISOString() : base;
@@ -23,9 +25,9 @@ export function dueAt(order: ScheduledOrder, all: readonly ScheduledOrder[], las
   return order.startAt ?? order.decidedAt;
 }
 
-/** Past its finish-by date with nothing sent: it will never be sent. */
+/** A missed finish-by is late; it must still run and never pauses publishing. */
 export function expired(order: ScheduledOrder, nowMs: number): boolean {
-  return order.finishBy !== null && Date.parse(order.finishBy) < nowMs && !order.repeat;
+  return order.finishBy !== null && Date.parse(order.finishBy) < nowMs;
 }
 
 export interface FiredOrder { readonly id: string; readonly orderType: string; readonly occurrence: string; readonly ok: boolean }
@@ -51,17 +53,37 @@ export async function fireDueOrders(deps: GatewayDeps, nowIso: string, lastFired
   const done = new Set<string>();
   const moved = new Map<string, string>();
   for (const order of all) {
-    if (expired(order, nowMs)) { done.add(order.id); continue; }
-    const due = dueAt(order, all, order.lastFiredAt ?? lastFired.get(order.id) ?? null);
+    const afterDone = order.after ? await completedDependency(deps, order.after, nowMs) : false;
+    const due = order.after && afterDone ? order.startAt ?? order.decidedAt : dueAt(order, all, order.lastFiredAt ?? lastFired.get(order.id) ?? null);
     if (due === null || Date.parse(due) > nowMs) continue;
     const outcome = await submit({ type: order.orderType, subject: "", input: order.input, stateVersion: null,
-      idempotencyKey: occurrenceKey(order.id, due), caller: "OWNER_SESSION", actorRef: order.decidedBy }, deps);
+      idempotencyKey: occurrenceKey(order.id, due), scheduleOrigin: { id: order.id, occurrence: due, finishBy: order.finishBy }, caller: "OWNER_SESSION", actorRef: order.decidedBy }, deps);
     fired.push({ id: order.id, orderType: order.orderType, occurrence: due, ok: outcome.ok });
     if (order.repeat) moved.set(order.id, due); else done.add(order.id);
   }
   if (done.size === 0 && moved.size === 0) return fired;
-  const next: AdminConfig = { ...config, updatedAt: nowIso,
-    scheduledOrders: all.filter((o) => !done.has(o.id)).map((o) => (moved.has(o.id) ? { ...o, lastFiredAt: moved.get(o.id)! } : o)) };
-  try { await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, held.revision, next, nowIso); } catch { /* another timer moved it; the keys keep a re-send from happening */ }
+  // Gateway actions can change this same config. Re-read and merge only schedule fields,
+  // retrying CAS without replacing a setting or a schedule added during the sends.
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const latest = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+    if (!latest || !isAdminConfig(latest.value)) break;
+    const next: AdminConfig = { ...latest.value, updatedAt: nowIso,
+      scheduledOrders: scheduledOrders(latest.value).filter(o => !done.has(o.id)).map(o => moved.has(o.id) ? { ...o, lastFiredAt: moved.get(o.id)! } : o) };
+    try { await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, latest.revision, next, nowIso); break; }
+    catch { /* A concurrent timer uses the same occurrence keys. */ }
+  }
   return fired;
+}
+
+/** A schedule's removal is not Done. Find its child receipt, then use the same confirmation as Admin. */
+async function completedDependency(deps: GatewayDeps, id: string, nowMs: number): Promise<boolean> {
+  const projection = Object.fromEntries(["formatVersion","receiptId","idempotencyKey","type","label","authority","subjectKind","subject","requestedSubject","inputDigest","caller","actorRef","stateVersion","codeSha","startedAt","completedAt","outcome","says","refusal","openedWork","readBackAt","undo","change","huntScores","scheduleOrigin"].map(k => [k,true as const]));
+  try {
+    let rows = await deps.repos.adminReceipts.readRecentWhere(ADMIN_RECEIPT_LOG_KEY,["receiptId"],id,1,projection);
+    if (!rows.length || (rows[0] as ActionReceipt).type === "orders.schedule") rows = await deps.repos.adminReceipts.readRecentWhere(ADMIN_RECEIPT_LOG_KEY,["scheduleOrigin","id"],id,1,projection);
+    const receipt = rows[0] as ActionReceipt | undefined;
+    if (!receipt || receipt.outcome === "REFUSED") return false;
+    const confirmation = await confirmReceipt(deps.repos,receipt,nowMs,deps.readPlaceScore);
+    return confirmation.state === "applied" || confirmation.state === "not-needed";
+  } catch { return false; }
 }

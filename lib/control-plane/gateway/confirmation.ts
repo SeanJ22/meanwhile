@@ -1,3 +1,5 @@
+import { ownerDispatchWorkOf, type DispatchWorkReading, type OwnerDispatchWork } from "../expansion/dispatch-work.ts";
+import { confirmHuntScores, type PlaceScoreReader } from "./hunt-score.ts";
 /**
  * **"DONE" MEANS THE RUNNER SAYS SO.** (S11, rulings §0 test 5 and §6.)
  *
@@ -40,6 +42,7 @@ import { formatEastern } from "../eastern-time.ts";
 export type ConfirmationState =
   /** The runner has picked it up. */
   | "applied"
+  | "in-progress"
   /** Saved, and the runner has not picked it up yet. */
   | "waiting"
   /** Finished inside the console; there is nothing for the runner to do. */
@@ -57,6 +60,7 @@ export interface OrderPlan {
   readonly change: string;
   /** How many items it creates, or null when the order creates none or it is not counted. */
   readonly creates: number | null;
+  readonly affects: string;
   /** When the first results are due: the heartbeat's next round time, or null when unknown. */
   readonly resultsBy: string | null;
 }
@@ -71,6 +75,7 @@ export interface Confirmation {
   readonly state: ConfirmationState;
   readonly plan?: OrderPlan;
   readonly progress?: OrderProgress;
+  readonly change?: ActionReceipt["change"];
   /** When the runner picked it up, when it has. */
   readonly at: string | null;
   /** One plain sentence for the owner. */
@@ -143,16 +148,18 @@ interface AssignmentReading {
 }
 
 /** Has the runner picked this receipt's action up? Never throws: an unreadable record is "unread". */
-export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number = Date.now()): Promise<Confirmation> {
+export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number = Date.now(), readPlaceScore?: PlaceScoreReader): Promise<Confirmation> {
   let core = await confirmCore(repos, receipt);
   if (receipt.outcome === "REFUSED") return core;
+  core = await confirmHuntScores(repos, receipt, core, readPlaceScore);
   let nextRound: string | null = null;
   try {
     const beat = (await repos.runnerHeartbeat.read(RUNNER_ID))?.value ?? null;
     nextRound = beat?.nextCycleDueAt ?? null;
     if (core.state === "waiting") core = notPickedUp(core, beat, receipt, nowMs);
   } catch { /* the plan says — */ }
-  return { ...core, plan: orderPlan(receipt, nextRound), progress: orderProgress(receipt, core) };
+  const result = { ...core, plan: orderPlan(receipt, nextRound), progress: core.progress ?? orderProgress(receipt, core) };
+  return confirmDispatch(repos, receipt, result);
 }
 
 /** A runner that has not beaten for this long is silent. Rounds beat far more often than this. */
@@ -188,6 +195,7 @@ export function orderPlan(receipt: Pick<ActionReceipt, "type" | "openedWork" | "
   return {
     who: runner ? "Runner" : "Admin",
     change: receipt.label,
+    affects: receipt.label,
     creates: created > 0 ? created : null,
     resultsBy: runner ? nextRoundAt : null,
   };
@@ -240,4 +248,21 @@ async function confirmCore(repos: ControlPlaneRepositories, receipt: ActionRecei
   } catch {
     return { state: "unread", at: null, words: "Saved. Runner status —" };
   }
+}
+
+/** Use only this send's runner record. An older send cannot measure a newer one. */
+async function confirmDispatch(repos: ControlPlaneRepositories, receipt: ActionReceipt, core: Confirmation): Promise<Confirmation> {
+  if (receipt.type !== "fleet.deployHere" || receipt.outcome === "REFUSED") return core;
+  try {
+    const held = await repos.researchState.readNarrowed(RESEARCH_STATE_ID, { ownerDispatch: true, dispatchWork: true });
+    const state = held?.value as { ownerDispatch?: { intentId: string; work?: OwnerDispatchWork | null }; dispatchWork?: DispatchWorkReading | null } | undefined;
+    const work = ownerDispatchWorkOf(state?.dispatchWork ?? null, receipt.subject)
+      ?? (state?.ownerDispatch?.intentId === receipt.subject ? state.ownerDispatch.work ?? null : null);
+    if (!work || work.key !== `dispatch:${receipt.subject}`) return core;
+    const of = work.created + work.deferred;
+    return { ...core, progress: { done: work.created, of: of || null },
+      plan: core.plan ? { ...core.plan, creates: of } : undefined,
+      state: core.state === "applied" && work.deferred > 0 ? "in-progress" : core.state,
+      words: core.state === "applied" && work.deferred > 0 ? `${work.created} created; ${work.deferred} waiting for the next round.` : core.words };
+  } catch { return { ...core, progress: { done: null, of: null } }; }
 }

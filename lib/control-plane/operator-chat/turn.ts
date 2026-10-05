@@ -33,6 +33,7 @@
  * so the owner never has to wonder.
  */
 
+import { parsePlainOrder } from "./orders.ts";
 import { classify } from "./router.ts";
 import { answerFor } from "./read-models.ts";
 import { definitionFor, proposeAction, type GatewayBinding } from "./actions.ts";
@@ -71,7 +72,7 @@ export interface ChatDeps {
 function canAnswer(deps: ChatDeps): readonly string[] {
   const questions = [...everyQuestion()];
   for (const definition of deps.gateway?.registry ?? []) {
-    if (authorityPermits(CHAT_CALLER, definition.authority)) questions.push(definition.label);
+    if (authorityPermits(deps.gateway?.caller ?? CHAT_CALLER, definition.authority)) questions.push(definition.label);
   }
   return questions;
 }
@@ -88,7 +89,7 @@ function canAnswer(deps: ChatDeps): readonly string[] {
 export function readsFor(text: string, registry: readonly ActionDefinition[]): readonly ContextRead[] {
   const routed = classify(text, registry);
   if (routed.kind === "TOPIC") return requiredReads(routed.topic);
-  if (routed.kind === "ACTION") return ACTION_READS;
+  if (routed.kind === "ACTION") return routed.actionType === "expansion.scope.set" ? [...ACTION_READS, "config"] : ACTION_READS;
   return [];
 }
 
@@ -160,14 +161,17 @@ export async function respondToOperator(
      * instant is carried across, and it is carried because it is in the
      * idempotency key: confirming one proposal twice must be one action.
      */
+    const plain = parsePlainOrder(text, context);
+    if (plain && "why" in plain) return {kind:"REFUSED",says:plain.why,actionType:definition.type};
     const proposedAt = input.confirm?.proposedAt ?? context.nowIso;
     const outcome = proposeAction({
       definition,
-      subject: routed.subject?.value ?? null,
+      subject: plain?.subject ?? routed.subject?.value ?? null,
       words: text,
       context,
       actorRef: deps.actorRef,
       proposedAt,
+      orderInput: plain?.input, caller: gateway.caller, willDo: plain?.willDo,
     });
     if (!outcome.ok) {
       return { kind: "REFUSED", says: outcome.refusal.says, actionType: outcome.refusal.actionType };

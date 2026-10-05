@@ -140,7 +140,11 @@ export interface ActionDefinition {
 }
 
 /** A submitted action, before the gateway has looked at it. */
+export interface ScheduleOrigin { readonly id: string; readonly occurrence: string; readonly finishBy: string | null }
+
 export interface ActionRequest {
+  /** Added by the scheduler; HTTP callers do not supply it. */
+  readonly scheduleOrigin?: ScheduleOrigin;
   readonly type: string;
   /** What it acts on: a row id, a work item id, a jurisdiction, a SHA. */
   readonly subject: string;
@@ -173,6 +177,7 @@ export type ReceiptOutcome = "DONE" | "REFUSED" | "QUEUED" | "IN_PROGRESS";
  * and what came of it" lives on this record.
  */
 export interface ActionReceipt {
+  readonly scheduleOrigin?: ScheduleOrigin;
   readonly formatVersion: 1;
   readonly receiptId: string;
   readonly idempotencyKey: string;
@@ -205,6 +210,7 @@ export interface ActionReceipt {
   readonly undo: string | null;
   /** BR-13: the value before and after, when the action changed one. */
   readonly change?: { readonly before: string; readonly after: string };
+  readonly huntScores?: readonly import("./hunt-score.ts").HuntAcceptanceScore[];
 }
 
 /** The gateway's answer. One shape for success and refusal alike. */

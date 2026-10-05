@@ -117,8 +117,9 @@ export function confirmationOf(body: unknown): Confirmation | null {
   const c = body && typeof body === "object" ? (body as { confirmation?: unknown }).confirmation : null;
   if (!c || typeof c !== "object") return null;
   const x = c as Partial<Confirmation>;
-  const okState = x.state === "applied" || x.state === "waiting" || x.state === "not-needed" || x.state === "unread" || x.state === "not-picked-up";
+  const okState = x.state === "applied" || x.state === "in-progress" || x.state === "waiting" || x.state === "not-needed" || x.state === "unread" || x.state === "not-picked-up";
   return okState && typeof x.words === "string" ? { state: x.state as Confirmation["state"], at: typeof x.at === "string" ? x.at : null, words: x.words,
+    ...(x.change && typeof x.change === "object" ? { change: x.change } : {}),
     ...(x.plan && typeof x.plan === "object" ? { plan: x.plan } : {}), ...(x.progress && typeof x.progress === "object" ? { progress: x.progress } : {}) } : null;
 }
 
@@ -130,6 +131,9 @@ export function confirmationOf(body: unknown): Confirmation | null {
  */
 export function applyConfirmation(prev: UiReceipt, c: Confirmation, at: string): UiReceipt {
   if (prev.status !== "queued" && prev.status !== "read" && prev.status !== "running") return prev;
+  if (c.state === "in-progress") return { ...prev, status: "running", statusWords: "In progress", says: c.words, notPickedUp: false,
+    ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}), ...(c.change ? { change: c.change } : {}),
+    lifecycle: { ...prev.lifecycle, workersReceived: c.at ?? at, workStarted: c.at ?? at } };
   if (c.state === "applied") {
     return {
       ...prev,
@@ -138,7 +142,7 @@ export function applyConfirmation(prev: UiReceipt, c: Confirmation, at: string):
       steps: [...prev.steps, { label: "Runner confirmed", at: c.at ?? at }],
       says: c.words,
       lifecycle: { ...prev.lifecycle, workersReceived: c.at ?? at },
-      ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}), notPickedUp: false,
+      ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}), ...(c.change ? { change: c.change } : {}), notPickedUp: false,
     };
   }
   if (c.state === "not-picked-up") return { ...prev, status: "queued", statusWords: "Not picked up", says: c.words, notPickedUp: true,

@@ -152,7 +152,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const confirmToken = typeof fields.confirmToken === "string" ? fields.confirmToken : null;
   const proposedAt = typeof fields.proposedAt === "string" ? fields.proposedAt : null;
 
-  const gateway = operatorChatGateway(gatewayDoor(request));
+  const binding = operatorChatGateway(gatewayDoor(request));
+  // A proposal still does nothing. After confirmation, this verified owner session
+  // uses the same authority as the owner pressing the corresponding button.
+  const gateway = binding ? { ...binding, caller: "OWNER_SESSION" as const } : null;
   const nowIso = new Date().toISOString();
   const reads = readsFor(text, gateway?.registry ?? []);
 

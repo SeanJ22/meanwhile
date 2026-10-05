@@ -66,7 +66,7 @@ function mapped(receipt: ActionReceipt, scope: string, confirmation: Confirmatio
   const place = /^(?:us|st:[a-z]{2}|geo:[a-z]{2}\.[a-z_]+\.[0-9A-Za-z]{1,16})$/.test(target) ? target : global ? "us" : "unknown";
   if (scope !== "us" && place !== scope && receipt.subject !== scope) return null;
   const confirmed = confirmation?.state === "applied" && receipt.outcome !== "REFUSED";
-  const status = confirmed ? "done" : statusOf(receipt);
+  const status = confirmed ? "done" : confirmation?.state === "in-progress" ? "running" : receipt.huntScores?.length && receipt.outcome !== "REFUSED" ? "queued" : statusOf(receipt);
   const completed = eventTime(receipt.completedAt);
   const confirmedAt = confirmed ? eventTime(confirmation!.at) ?? completed : null;
   return {
@@ -80,13 +80,13 @@ function mapped(receipt: ActionReceipt, scope: string, confirmation: Confirmatio
     steps: [{ label: "Sent", at: receipt.startedAt },
       ...(completed ? [{ label: status === "refused" ? "Refused" : "Gateway receipt recorded", at: completed }] : []),
       ...(confirmedAt ? [{ label: "Runner confirmed", at: confirmedAt }] : [])],
-    says: confirmed ? confirmation!.words : receipt.says, items: [],
+    says: confirmation?.state === "in-progress" || confirmed ? confirmation!.words : receipt.says, items: [],
     lifecycle: { saved: status === "queued" || status === "done" ? completed : null,
       workersReceived: confirmedAt, workStarted: null, workFinished: null, factsChecked: null,
       published: null, checkedOnPublicPage: null },
     simulated: false, gatewayType: receipt.type, gatewayReceiptId: receipt.receiptId,
     readBackAt: receipt.readBackAt, replayed: false, sentAt: receipt.startedAt,
-    ...(receipt.change ? { change: receipt.change } : {}),
+    ...(confirmation?.change ? { change: confirmation.change } : receipt.change ? { change: receipt.change } : {}),
     ...(confirmation?.plan ? { plan: confirmation.plan } : {}), ...(confirmation?.progress ? { progress: confirmation.progress } : {}),
   };
 }

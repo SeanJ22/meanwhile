@@ -43,13 +43,15 @@ test("editing one role preserves other instructions and learned doors, and stale
   assert.ok((await readFieldManual(repos)).store.entries.some(e => e.id === door.id));
 });
 
-test("multiple imported texts become one edited playbook and every earlier instruction remains in history", async () => {
+test("imported instructions and their source records survive an edit while the next worker reads only the current playbook", async () => {
   const repos = createMemoryRepositories();
   await writeFieldManual(repos, ["one", "two"].map(id => newFieldManualEntry("legacy", id, { role: "SCOUT", kind: "PLAYBOOK", title: id,
     summary: id, outcome: "REFERENCE", payload: { text: id } })), at);
   const before = await readRolePlaybook(repos, "SCOUT");
   await updateRolePlaybook(repos, { role: "SCOUT", text: "Replacement", expectedVersion: before.version, id: "edit", at, why: "" });
   const read = await readFieldManual(repos);
-  assert.equal(read.store.entries.filter(e => e.kind === "PLAYBOOK" && e.role === "SCOUT").length, 1);
+  assert.equal(read.store.entries.filter(e => e.kind === "PLAYBOOK" && e.role === "SCOUT").length, 3);
+  assert.equal(read.store.entries.filter(e => e.source === "legacy").length, 2, "imported record identities and payloads are preserved");
+  assert.equal((await readRolePlaybook(repos, "SCOUT")).text, "Replacement");
   assert.equal(playbookEditView(read.store.entries, "SCOUT").history[0].before, before.text);
 });

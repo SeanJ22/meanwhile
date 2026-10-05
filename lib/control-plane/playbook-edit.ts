@@ -17,10 +17,11 @@ export interface PlaybookEdit {
   readonly role: EditablePlaybookRole; readonly text: string; readonly expectedVersion: string;
   readonly id: string; readonly at: string; readonly why: string; readonly factory?: string; readonly undoOf?: string;
 }
-type EditPayload = { text: string; history: readonly PlaybookChange[] };
+type EditPayload = { text: string; history: readonly PlaybookChange[]; edited: true };
 export function playbookHistory(entries: readonly FieldManualEntry[], role: FieldManualRole): readonly PlaybookChange[] {
-  return entries.filter(e => e.kind === "PLAYBOOK" && e.role === role)
-    .flatMap(e => (e.payload as Partial<EditPayload> | null)?.history ?? []).sort((a, b) => a.at.localeCompare(b.at));
+  const history = entries.filter(e => e.kind === "PLAYBOOK" && e.role === role)
+    .flatMap(e => (e.payload as Partial<EditPayload> | null)?.history ?? []);
+  return [...new Map(history.map(change => [change.id, change])).values()].sort((a, b) => a.at.localeCompare(b.at));
 }
 export function playbookEditView(entries: readonly FieldManualEntry[], role: EditablePlaybookRole) {
   const book = rolePlaybook(entries, role);
@@ -53,9 +54,8 @@ export async function updateRolePlaybook(repos: FieldManualRepos, edit: Playbook
       ...(edit.factory ? { factory: edit.factory } : {}), ...(edit.undoOf ? { undoOf: edit.undoOf } : {}) };
     const entry = newFieldManualEntry("role-playbook", edit.role, { role: edit.role, kind: "PLAYBOOK",
       title: `${edit.role.toLowerCase()} playbook`, summary: "Current written instructions for this role", outcome: "REFERENCE",
-      observedAt: edit.at, payload: { text: edit.text, history: [...history, change] } satisfies EditPayload });
-    // A role can have multiple imported PLAYBOOK entries. Replace them as one edited document to avoid stale appended instructions.
-    const next = { ...store, updatedOn: edit.at, entries: [...store.entries.filter(e => !(e.kind === "PLAYBOOK" && e.role === edit.role)), entry] };
+      observedAt: edit.at, payload: { text: edit.text, history: [...history, change], edited: true } satisfies EditPayload });
+    const next = { ...store, updatedOn: edit.at, entries: [...store.entries.filter(e => e.id !== entry.id), entry] };
     try {
       if (held) await repos.fieldManual.compareAndSet(FIELD_MANUAL_ID, held.revision, next, edit.at);
       else await repos.fieldManual.put(FIELD_MANUAL_ID, next, edit.at);

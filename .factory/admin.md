@@ -1,13 +1,13 @@
-build_state: waiting
+build_state: active
 worker: codex-admin
 provider: Codex
-run_id: codex-admin-97a60c06ff864ac48733751bec7f5663
-lock: none
-heartbeat: 2026-10-05T20:16:50Z
+run_id: codex-admin-5f35abb26ccd4da1bc943c3b604c7b19
+lock: codex-admin-5f35abb26ccd4da1bc943c3b604c7b19
+heartbeat: 2026-10-05T20:50:50Z
 on_river: BR-01 BR-02 BR-03 BR-05 BR-06 BR-09 BR-10 BR-12 BR-15 BR-16 BR-24 BR-37 CH-12 CH-14 @ 85a0ad660c36 (BR-05/16/37 hooks pending)
 ready: none currently foldable — River returned 5f83a8c646140309545da256ed704cc654254d76 and f2ca419ef23849c4c941fc7f6b78752ed9727e97 for conflicts with incoming measures BR-14/23/25. Preserve those tested historical checkpoints; repair after the new batch is promoted to river.
 checks: exact corrected source 94d8f817fc5082a922ce45fa70777665b7aa2cb9 types PASS; focused including repaired absence/select gates 148 PASS; new changed lint 0 errors/warnings (full changed set 0 errors/29 existing warnings). Actual selector FULL. FULL exact 904ca03062e87f87b8580ad8f9f270d24099489a: 9384 tests, 9356 PASS, 16 could-not-run browser failures identical to plain river, 10 SKIP, plus two own UI gates both fixed at 94d8f817f. FULL not called passing. Known leaked recent-vote PID 86042 bounded termination after 64s; timing incomplete/unusable. Prior exact READY checks preserved in admin-checks.md. Upcoming promoted-base merge needs new checks.
-working_on: none ready. Saved final tested application source 94d8f817fc5082a922ce45fa70777665b7aa2cb9; latest stream application identical. BR-13/18 built, BR-12/16 corrected, BR-20 cards built with raising/Queue hook pending, BR-35 cleanup built, generic BR-19 built but required example blocked on BR-22. All remain WIP until the returned fold repair.
+working_on: Returned fold preparation: inspected the incoming measures READY e47bf4a5f without merging it. Verify promoted river before applying repair. Tested source 94d8f817fc5082a922ce45fa70777665b7aa2cb9 unchanged.
 waiting_on: River promotion of measures READY e47bf4a5f (BR-14/23/25) into river before fold repair. Explicit return says merge river, not river-next; fetched river still ecf402600401783b094837c29e0c515eadbdb843. FULL candidate checks continue. BR-17/27/29 then become ready; BR-28 follows BR-27.
 returned: 2026-10-05T20:08:25Z fold failure fix:fc3f3f9a. After promotion merge river, preserve measures BR-14 Queue / BR-23 Scoreboard / BR-25 Now, reconnect BR-07 sendable controls in command-center.tsx, contract.ts, model.ts, screen-now.tsx and tests/admin-v6-ui/v6-ui.test.tsx. Re-run checks and publish fresh READY. Earlier BR-08 state hook and DB-09 DoorsPanel already built.
 needs_hook:

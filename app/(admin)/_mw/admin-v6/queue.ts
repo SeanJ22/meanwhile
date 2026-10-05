@@ -143,7 +143,8 @@ function closedFixRow(c: ClosedFix, returned: boolean): QueueRow {
 /** DP-26: a fix proving itself across places. Once proven it leaves the Queue; its one Proven update shows on Now. */
 function testingRow(t: TestingFix): QueueRow {
   return {
-    key: `testing:${t.id}`, kind: "testing", what: `Testing: ${t.title}`, chip: "Testing", tone: "info", filter: "in-progress", owner: "The team",
+    key: `testing:${t.id}`, kind: "testing", what: `Testing: ${t.title}`, chip: t.brokeSince ? `Proven, broke since ${t.brokeSince}` : "Testing",
+    tone: t.brokeSince ? "warn" : "info", filter: "in-progress", owner: "The team",
     due: null, next: t.next, progress: { done: Math.min(t.works, t.needPlaces), of: Math.max(1, t.needPlaces), words: `Works in ${t.works} of ${t.needPlaces} places needed` },
     actions: [], open: null, at: t.since,
   };

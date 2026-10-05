@@ -773,6 +773,8 @@ export interface TestingFix {
   readonly needPlaces: number;
   readonly next: string;
   readonly since: string;
+  /** DP-34: "Proven, broke since" this day (Eastern), when it was proven and no longer holds. */
+  readonly brokeSince?: string | null;
 }
 
 export interface FixView {

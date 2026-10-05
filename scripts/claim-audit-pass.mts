@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 /**
- * **THE WEEKLY CHECK OF THE TEAM'S OWN CLAIMS.** (DP-33.)
+ * **THE WEEKLY CHECK OF THE TEAM'S OWN CLAIMS, AND THE DAILY CHECK THAT PROVEN STILL HOLDS.** (DP-33, DP-34.)
+ *
+ * Every run (daily): each Proven label is re-measured on today's fix map; one
+ * that no longer holds reads "Proven, broke since", writes its one update and
+ * is back in the Queue.
  *
  * Samples the week's claimed wins and Proven labels, recomputes each from the
  * fix map and the fix list, keeps the pass in the live-audit log, and answers
@@ -17,6 +21,7 @@ import { neon } from "@neondatabase/serverless";
 
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { auditClaims, runClaimAuditWeek } from "../lib/control-plane/workers/claim-audit.ts";
+import { recheckProvenFixes } from "../lib/control-plane/fix-standing.ts";
 import type { AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { createFixMapRepository } from "../lib/method/fix-map.ts";
 import { memoryFixMap } from "../lib/method/fix-map-record.ts";
@@ -47,6 +52,11 @@ if (!url) {
 const repos = await createPgRepositories(url, now, { skipBootstrap: true });
 const sql = neon(url);
 const fixMap = createFixMapRepository(async (text, params) => (await sql.query(text, [...params])) as Record<string, unknown>[]);
+const broke = await recheckProvenFixes(fixMap, repos, now).catch((error: unknown) => {
+  console.error(`proven recheck: could not be done: ${error instanceof Error ? error.message : String(error)}`);
+  return null;
+});
+if (broke !== null) console.log(`proven recheck: ${broke.length} proven fix${broke.length === 1 ? "" : "es"} no longer hold${broke.length === 1 ? "s" : ""} today`);
 const out = await runClaimAuditWeek(repos, fixMap, now);
 if (!out.ran || out.pass === null) {
   console.log("claim audit: this week is already checked, or there is no config row; nothing to do");

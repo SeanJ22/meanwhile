@@ -18,8 +18,11 @@
  */
 import type { ClosedFix, FixView, OpenFix, TestingFix } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import type { FixProofBar, MethodStanding } from "../../method/fix-status.ts";
+import { brokeSince } from "../fix-standing.ts";
 import type { FixQueueItem, FixQueueView } from "../fix-queue.ts";
 import { formatEastern } from "../eastern-time.ts";
+
+const formatEasternDay = (iso: string): string => new Date(iso).toLocaleDateString("en-US", { timeZone: "America/New_York", month: "short", day: "numeric" });
 import type { FixItem } from "../fix-list.ts";
 import { fixEpisodes, fixHistoryLine, type FixItemWithHistory } from "../fix-history.ts";
 
@@ -106,8 +109,10 @@ function listClosed(item: FixItemWithHistory, now: string): ClosedFix {
 /** DP-26: a fix in Testing, in plain words: how far it has got against the proof bar. */
 export function testingFix(s: MethodStanding, bar: FixProofBar): TestingFix {
   const p = (k: number) => `${k.toLocaleString("en-US")} place${k === 1 ? "" : "s"}`;
+  const broke = brokeSince(s);
   return {
     id: s.methodId, title: s.title, works: s.works, tried: s.tried, needPlaces: bar.places, since: s.since,
+    brokeSince: broke === null ? null : formatEasternDay(broke),
     next: `Works in ${p(s.works)} of ${p(s.tried)} tried. Proven once it works in ${p(bar.places)} across more than one district or state, with at least ${Math.round(bar.successShare * 100)}% of tried places working.`,
   };
 }

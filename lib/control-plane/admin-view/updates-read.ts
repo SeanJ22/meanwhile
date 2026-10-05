@@ -28,11 +28,15 @@ export interface UpdatesView {
   readonly observedAt: string;
 }
 
+const easternDay = (iso: string): string => new Date(iso).toLocaleDateString("en-US", { timeZone: "America/New_York", month: "short", day: "numeric" });
+
 export function updatesView(records: readonly UpdateRecord[], observedAt: string): UpdatesView {
   return {
     observedAt,
     updates: [...records].sort((a, b) => b.at.localeCompare(a.at)).map((u) => ({
-      id: u.id, what: u.what, when: formatEastern(u.at), label: UPDATE_LABEL_WORDS[u.label], isWin: u.label !== "EXPECTED" && u.setback !== true,
+      // DP-34: a proven fix that broke reads "Proven, broke since", never a plain Testing or Proven.
+      id: u.id, what: u.what, when: formatEastern(u.at), label: u.setback === true ? `Proven, broke since ${easternDay(u.at)}` : UPDATE_LABEL_WORDS[u.label],
+      isWin: u.label !== "EXPECTED" && u.setback !== true,
       before: u.before, after: u.after, evidenceHref: u.evidenceHref,
     })),
   };

@@ -13,6 +13,12 @@ registerSetting({ key: FIX_PROOF_PLACES, label: "Places where a method must work
 registerSetting({ key: FIX_PROOF_AREAS, label: "Different districts or states needed to prove a method", defaultValue: 2, readerFacing: false, validate: positive });
 registerSetting({ key: FIX_PROOF_SHARE, label: "Share of tried places where a method must work", defaultValue: 0.9, readerFacing: false,
   validate: (v): v is number => typeof v === "number" && Number.isFinite(v) && v > 0 && v <= 1 });
+/** DP-34: how far back "still working today" looks. Older results still count toward the bar, but recent ones must hold it too. */
+export const FIX_PROOF_RECENT_DAYS = "methods.proofRecentDays";
+registerSetting({ key: FIX_PROOF_RECENT_DAYS, label: "Days of recent results a proven method must still pass", defaultValue: 30, unit: "days", readerFacing: false, validate: positive });
+export function readFixProofRecentDays(config: AdminConfig | null): number {
+  return readSetting(config, FIX_PROOF_RECENT_DAYS, 30);
+}
 export function readFixProofBar(config: AdminConfig | null): FixProofBar {
   return { places: readSetting(config, FIX_PROOF_PLACES, 5), areas: readSetting(config, FIX_PROOF_AREAS, 2), successShare: readSetting(config, FIX_PROOF_SHARE, 0.9) };
 }
@@ -43,6 +49,23 @@ export function fixProof(map: readonly FixMapRow[], bar: FixProofBar = DEFAULT_F
     works: works.length, tried, successShare: share, states: states.size, districts: districts.size,
     failingPlaces: failures.map(r => r.placeId).sort() };
 }
+/**
+ * DP-34: a green "Proven" means still working today. The method must pass the bar on its whole map AND its results
+ * from the last `recentDays` must still reach the bar's share; otherwise it is back in Testing. With no recent result
+ * nothing says it stopped, so the whole map decides.
+ */
+export function currentFixProof(map: readonly FixMapRow[], bar: FixProofBar, now: string, recentDays: number, held: FixProofGeography = {}) {
+  const proof = fixProof(map, bar, held);
+  if (proof.status !== "PROVEN") return { ...proof, recentTried: null as number | null, recentWorks: null as number | null };
+  const after = Date.parse(now) - recentDays * 86_400_000;
+  const latest = new Map<string, FixMapRow>();
+  for (const row of map) latest.set(row.placeId, applyFixResult(latest.get(row.placeId) ?? null, row));
+  const recent = [...latest.values()].filter((r) => r.state !== "UNTRIED" && Date.parse(r.triedAt ?? r.updatedAt) >= after);
+  const works = recent.filter((r) => r.state === "WORKS").length;
+  const holds = recent.length === 0 || works / recent.length >= bar.successShare;
+  return { ...proof, status: holds ? proof.status : "TESTING" as const, recentTried: recent.length, recentWorks: works };
+}
+
 export function fixStatus(map: readonly FixMapRow[], bar: FixProofBar = DEFAULT_FIX_PROOF_BAR, held: FixProofGeography = {}): "TESTING" | "PROVEN" {
   return fixProof(map, bar, held).status;
 }
@@ -112,7 +135,7 @@ export function nextStanding(methodId: string, prior: MethodStanding | null, pro
   }
   if (prior?.status === "PROVEN" && ((event.brokeIn ?? 0) > 0 || proof.status === "TESTING")) {
     const standing = keep({ status: proof.status, since: proof.status === prior.status ? prior.since : at, brokeAt: at });
-    const where = (event.brokeIn ?? 0) > 0 ? `stopped working in ${places(event.brokeIn!)} where it had worked` : `failed in new places`;
+    const where = (event.brokeIn ?? 0) > 0 ? `stopped working in ${places(event.brokeIn!)} where it had worked` : `no longer meets the proof bar on recent results`;
     const still = proof.status === "PROVEN" ? "It is still proven" : "It is back in testing";
     return { standing, update: update("BROKE", `A proven fix broke: ${base.title} ${where}. ${still}: works in ${places(proof.works)} of ${places(proof.tried)} tried.`, "TESTING", true) };
   }

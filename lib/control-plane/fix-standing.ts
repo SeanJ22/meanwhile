@@ -14,7 +14,7 @@ import { ADMIN_CONFIG_ID, defaultAdminConfig, isAdminConfig, type AdminConfig } 
 import type { ControlPlaneRepositories } from "./repository/types.ts";
 import { withUpdateAdded } from "./updates.ts";
 import type { FixMapRepository } from "../method/fix-map.ts";
-import { capStandings, fixProof, nextStanding, readFixProofBar, type MethodStanding, type StandingEvent, type StandingUpdate } from "../method/fix-status.ts";
+import { capStandings, currentFixProof, nextStanding, readFixProofBar, readFixProofRecentDays, type MethodStanding, type StandingEvent, type StandingUpdate } from "../method/fix-status.ts";
 
 type Repos = Pick<ControlPlaneRepositories, "adminConfig">;
 
@@ -70,13 +70,14 @@ export async function noteMethodStandings(fixMap: Pick<FixMapRepository, "forMet
   const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
   const config = held && isAdminConfig(held.value) ? held.value : null;
   const bar = readFixProofBar(config);
+  const recentDays = readFixProofRecentDays(config);
   const written: StandingUpdate[] = [];
   const merged = new Map<string, number>();
   for (const t of touched) merged.set(t.methodId, (merged.get(t.methodId) ?? 0) + (t.brokeIn ?? 0));
   for (const [methodId, brokeIn] of merged) {
     const map = await fixMap.forMethod(methodId, 1000);
     if (map.length === 0) continue;
-    const proof = fixProof(map, bar);
+    const proof = currentFixProof(map, bar, at, recentDays);
     let told: StandingUpdate | null = null;
     await mutate(repos, at, (c) => {
       const prior = methodStandings(c).find((s) => s.methodId === methodId) ?? null;
@@ -93,7 +94,8 @@ export async function noteMethodStandings(fixMap: Pick<FixMapRepository, "forMet
 export async function noteMethodLesson(fixMap: Pick<FixMapRepository, "forMethod">, repos: Repos, methodId: string, lesson: string, at: string,
   title: string | null = null): Promise<StandingUpdate | null> {
   const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
-  const proof = fixProof(await fixMap.forMethod(methodId, 1000), readFixProofBar(held && isAdminConfig(held.value) ? held.value : null));
+  const config = held && isAdminConfig(held.value) ? held.value : null;
+  const proof = currentFixProof(await fixMap.forMethod(methodId, 1000), readFixProofBar(config), at, readFixProofRecentDays(config));
   let told: StandingUpdate | null = null;
   const event: StandingEvent = { lesson };
   await mutate(repos, at, (c) => {
@@ -103,6 +105,21 @@ export async function noteMethodLesson(fixMap: Pick<FixMapRepository, "forMethod
     return withStanding(c, standing, update);
   });
   return told;
+}
+
+/**
+ * DP-34: before keeping each Proven label, re-measure it on today's results. One that no longer holds says
+ * "Proven, broke since", writes its one update, and is back in the Queue. Run daily; a label that holds writes nothing.
+ */
+export async function recheckProvenFixes(fixMap: Pick<FixMapRepository, "forMethod">, repos: Repos, now: string): Promise<readonly StandingUpdate[]> {
+  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const proven = methodStandings(held && isAdminConfig(held.value) ? held.value : null).filter((s) => s.status === "PROVEN");
+  return noteMethodStandings(fixMap, repos, proven.map((s) => ({ methodId: s.methodId })), now, (id) => proven.find((s) => s.methodId === id)?.title ?? null);
+}
+
+/** "Proven, broke since <day>" for a fix that was proven and no longer is; null otherwise. */
+export function brokeSince(s: MethodStanding): string | null {
+  return s.status === "TESTING" && s.provenAt !== null && s.brokeAt !== null && s.brokeAt >= s.provenAt ? s.brokeAt : null;
 }
 
 /** The Scoreboard's "Proven fixes" reading. */

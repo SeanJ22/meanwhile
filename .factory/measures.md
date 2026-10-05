@@ -1,14 +1,14 @@
 build_state: waiting
 worker: measures
 provider: Claude
-run_id: session_01M86ZfvLptxS38iHTxUNEYW
+run_id: session_013ivvmB8cYrDJP4suiaWGJd
 lock: none
-heartbeat: 2026-10-05T00:00:00Z
+heartbeat: 2026-10-05T16:20:00Z
 on_river: SC-01, SC-02, SC-03, SC-04, SC-05, SC-06, SC-07, SC-08, SC-09 (build), SC-11, SC-12, SC-13, SC-16, SC-20, BR-08, BR-21 (River folds through a88a0726c; BR-23 was named in the 940b11c58 fold but scoreboard-read.ts is not on river, so BR-23 is not built)
 ready: none new
 checks: On bfcc0475f merged with river 21789c9..: tsc --noEmit clean; eslint clean on changed files; full suite as CI runs it (env -u DATABASE_URL -u WTP_ASSET_STORE, no .next, projection rebuilt): 9118 tests, 9107 pass, 0 fail, 11 skipped. New tests: tests/gate-health.test.ts (7), tests/readiness-counts.test.ts (5), tests/dial-hunters.test.ts (4). Money screen, Now and the send-agents dialog not viewed live (no Admin sign-in or browser network here).
 working_on: none. Everything buildable without the admin lane is on River.
-waiting_on: BR-23: BR-01 (admin lane; admin was handed to me at 08:20Z, but this run's push to stream/admin and read of its worktree were denied by the session's permission classifier, so I did not claim or build admin steps and its lock is untouched; River or Sean needs to allow that, or another worker take BR-01). BR-14: BR-01, BR-03, BR-12 (admin). BR-38: RL-05 (river) and CH-01 (hunters). BR-25, SC-10, BR-33: BR-24 (admin). SC-14: BR-06 (admin). BR-31: BX-06 (slide). BR-32: DB-27, DB-31 (meetings), DB-34 (registry). SC-13 and SC-16 show on the Scoreboard only once BR-23 creates scoreboard-read.ts. BR-30 and SC-19 need BR-23. BR-34 needs BR-14. BR-22: hooks, see needs_hook. SC-09 retirements: see seen_not_fixed. SC-17: Sean's decision D7 (parked).
+waiting_on: BR-23: BR-01 (admin lane: stream/admin carries READY b593ef9b1 for BR-01 and BR-03, 73a952059 BR-24, dadebfafb BR-12 as of 16:10Z but River has not folded them, so river still lacks them; overflow-1 now owns admin. Earlier note: admin was handed to me at 08:20Z, but this run's push to stream/admin and read of its worktree were denied by the session's permission classifier, so I did not claim or build admin steps and its lock is untouched; River or Sean needs to allow that, or another worker take BR-01). BR-14: BR-01, BR-03, BR-12 (admin). BR-38: RL-05 (river) and CH-01 (hunters). BR-25, SC-10, BR-33: BR-24 (admin). SC-14: BR-06 (admin). BR-31: BX-06 (slide). BR-32: DB-27, DB-31 (meetings), DB-34 (registry). SC-13 and SC-16 show on the Scoreboard only once BR-23 creates scoreboard-read.ts. BR-30 and SC-19 need BR-23. BR-34 needs BR-14. BR-22: hooks, see needs_hook. SC-09 retirements: see seen_not_fixed. SC-17: Sean's decision D7 (parked).
 returned: none
 needs_hook: BR-08: no change to registry.ts was needed (the gateway reads scope types from scopes.ts); hunters already made the freshness-shadow hook. | SC-04: hunters-owned scripts/freshness-shadow.mts:1269 builds the place order without ZIPs; to keep the runner order equal to Admin it should pass `zips: [...scope.zctas]` to buildPlaceOwedList (dispatch-work.ts, Admin and the national list already do). Until then the runner order ignores the per-ZIP GEO rows. | BR-22: registry.ts:510 fleet.deployHere and freshness-shadow.mts dispatch filter, same owners.
 needs_Sean: none now. Admin was reassigned to overflow-1 (board/river assignments); BR-01 is not on river yet (river tip ef132988e), so BR-23 and everything behind it still waits.

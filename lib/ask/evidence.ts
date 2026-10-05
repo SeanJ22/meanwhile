@@ -199,6 +199,7 @@ export interface EvidenceRecord {
     jurisdiction: string; filingState: string;
     totals: { receipts: number | null; expenditures: number | null; cashOnHand: number | null; reportCount: number | null; coveringPeriod: string | null };
     registeredName?: string; agency?: string; electionYear?: number; checkedAt?: string;
+    funding?: import("../funding/state-money-funding.ts").StateMoneyFunding;
   };
   /**
    * **WHOSE RECORD THIS IS — the canonical body id.** (2026-08-29.)

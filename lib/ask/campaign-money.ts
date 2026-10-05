@@ -3,6 +3,7 @@ import { formatDateLong } from "../text/format-date.ts";
 import type { StateMoneyRecord } from "../funding/state-money.ts";
 import { stateMoneyRecordsForDisplay } from "../funding/state-money-reader.ts";
 import type { EvidenceGap, EvidenceRecord, EvidenceSubject } from "./evidence.ts";
+import { filedOrganizations, stateSmallDonorSentence } from "../funding/state-money-funding.ts";
 
 const dollars = (amount: number) => `$${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
@@ -15,6 +16,9 @@ function stateText(record: StateMoneyRecord): string {
     record.totals.receipts === null ? null : `raised ${dollars(record.totals.receipts)}`,
     record.totals.expenditures === null ? null : `spent ${dollars(record.totals.expenditures)}`,
     record.totals.cashOnHand === null ? null : `cash on hand ${dollars(record.totals.cashOnHand)}`,
+    ...filedOrganizations(record.funding).map(org => `${org.filedName}${org.filedType ? ` (${org.filedType})` : ""}: ${dollars(org.amount)}`),
+    record.funding?.individualTotal === null || record.funding?.individualTotal === undefined ? null : `individual giving ${dollars(record.funding.individualTotal)}`,
+    stateSmallDonorSentence(record.funding),
   ].filter(Boolean);
   return `${record.registeredName}, ${record.electionYear} election cycle: ${facts.join("; ")}. Filed with the ${record.agency}; read ${asOf}.`;
 }
@@ -55,6 +59,7 @@ export function campaignMoneyEvidenceFor(
       finance: {
         jurisdiction: record.jurisdiction, filingState: record.filingState, totals: record.totals,
         registeredName: record.registeredName.trim(), agency: record.agency, electionYear: record.electionYear, checkedAt: record.checkedAt,
+        ...(record.funding ? { funding: record.funding } : {}),
       },
     });
   }

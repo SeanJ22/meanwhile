@@ -23,9 +23,9 @@ const getPath = (value: unknown, path: string): unknown => path.split(".").reduc
 const literal = (value: unknown) => typeof value === "string" ? value.trim() : typeof value === "number" && Number.isFinite(value) ? String(value) : "";
 function filedNumber(value: unknown): number | null {
   if (value === undefined || value === null || value === "") return null;
-  if (typeof value !== "string" && typeof value !== "number") throw new Error("A government finance number is unreadable.");
+  if (typeof value !== "string" && typeof value !== "number") return null;
   const raw = String(value).trim().replace(/^\$/, "").replaceAll(",", "");
-  if (!/^-?\d+(?:\.\d+)?$/.test(raw) || !Number.isFinite(Number(raw))) throw new Error("A government finance number is unreadable.");
+  if (!/^-?\d+(?:\.\d+)?$/.test(raw) || !Number.isFinite(Number(raw))) return null;
   return Number(raw);
 }
 export function nationalGovernmentFinancePackage(input: {

@@ -41,6 +41,7 @@ import { stateMoneyRecordsForDisplay } from "@/lib/funding/state-money-reader";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 import { formatDateLong } from "@/lib/text/format-date";
+import { filedOrganizations, stateSmallDonorSentence, stateMoneyFundingIssue } from "@/lib/funding/state-money-funding";
 
 const SECTION_LABEL_CLASS = "text-xs font-medium uppercase tracking-wide text-muted-foreground";
 
@@ -71,7 +72,7 @@ function lastFilingDate(coveringPeriod: string | null): string | null {
 
 function AgencyLine({ record }: { record: StateMoneyRecord }) {
   return (
-    <p className="mt-2 text-xs text-muted-foreground">
+    <details className="mt-2 text-xs text-muted-foreground"><summary>Sources</summary><p>
       Filed with the {record.agency}
       {record.filingsUrl ? (
         <>
@@ -87,12 +88,15 @@ function AgencyLine({ record }: { record: StateMoneyRecord }) {
         </>
       ) : null}
       . Read {readableDate(record.checkedAt)}.
-    </p>
+    </p></details>
   );
 }
 
 function FiledRecord({ record }: { record: StateMoneyRecord }) {
   const { totals } = record;
+  const funding = totals.coveringPeriod?.trim() && record.funding && !stateMoneyFundingIssue(record.funding) ? record.funding : undefined;
+  const organizations = filedOrganizations(funding);
+  const smallDonors = stateSmallDonorSentence(funding);
   return (
     <div className="mt-3 first:mt-0">
       <p className="text-sm font-medium">{record.registeredName}</p>
@@ -122,6 +126,19 @@ function FiledRecord({ record }: { record: StateMoneyRecord }) {
           </>
         )}
       </dl>
+      {organizations.length > 0 && <section className="mt-2" aria-label="PACs, committees and organizations">
+        <p className="text-sm font-medium">PACs, committees and organizations</p>
+        <dl className="mt-1 text-sm">{organizations.map((org, index) => <div key={`${org.filedName}:${index}`} className="flex justify-between gap-4">
+          <dt>{org.filedName}{org.filedType ? <span className="ml-1 text-muted-foreground">({org.filedType})</span> : null}</dt>
+          <dd className="tabular-nums">{dollars(org.amount)}</dd>
+        </div>)}</dl>
+      </section>}
+      {funding && <dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+        {([ ["Individual giving", funding.individualTotal], ["Itemized individual giving", funding.individualItemized],
+          ["Unitemized individual giving", funding.individualUnitemized] ] as const).filter(([, value]) => value !== null).map(([label, value]) =>
+          <div key={label} className="contents"><dt className="text-muted-foreground">{label}</dt><dd className="text-right tabular-nums">{dollars(value!)}</dd></div>)}
+      </dl>}
+      {smallDonors && <p className="mt-1 text-sm">{smallDonors}</p>}
       {/*
         PLAIN LANGUAGE, and this line is where it nearly went wrong.
         The first version printed the agency's own form codes and a raw ISO

@@ -36,7 +36,7 @@ import { createElement } from "react";
 import { OfficialFilings } from "../components/ballot/official-filings.tsx";
 import { collectWorkerRosterReadback } from "../lib/control-plane/worker-reader-readback.ts";
 
-async function workerFixture(contractId: WorkerReaderContract | "registry-runtime-bindings", facts: Record<string, string | number> | Record<string, string | number>[] | ((prior: RegistryRuntimePrior, bodyId: string) => Record<string, string | number>[]), classOverride?: "CAMPAIGN_FINANCE_FILING" | "BUDGET_RESPONSIBILITY" | "BUDGET_AMENDMENT") {
+async function workerFixture(contractId: WorkerReaderContract | "registry-runtime-bindings", facts: Record<string, string | number> | Record<string, string | number>[] | ((prior: RegistryRuntimePrior, bodyId: string) => Record<string, string | number>[]), classOverride?: "CAMPAIGN_FINANCE_FILING" | "BUDGET_RESPONSIBILITY" | "BUDGET_AMENDMENT" | "PUBLIC_RECORD") {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
   const store = new MemoryRoutineDataStore();
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
@@ -383,4 +383,23 @@ test("CP-09: an amountless filing reaches its reader as a document without manuf
   const html = renderToStaticMarkup(createElement(OfficialFilings, { rows }));
   assert.ok(html.includes(FIXTURE_URL) && html.includes("Fixture Committee"));
   assert.doesNotMatch(html, /Reported receipts|Reported expenditures|Reported cash/);
+});
+
+
+test("local government finance runs through the existing worker publisher and scoped budget reader", async () => {
+  const f = await workerFixture("government-budgets", { title: "General revenue", kindLabel: "Revenue",
+    sourceSentence: "General revenue is reported for the General fund.", amount: 1234.56,
+    units: "dollars", fiscalPeriod: "FY2027", fundScope: "General fund" }, "PUBLIC_RECORD");
+  const published = await publishWorkerReaderResults(f.input);
+  assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
+  const read = await readGovernmentBudgets(f.body.ocdId!, { store: f.store, now: f.h.now(), bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") throw new Error("Finance missing");
+  const fact = read.value.records.find(row => row.kind === "GOVERNMENT_FINANCE");
+  assert.equal(fact?.kind, "GOVERNMENT_FINANCE");
+  if (fact?.kind !== "GOVERNMENT_FINANCE") throw new Error("Finance missing");
+  assert.deepEqual([fact.category, fact.details.amount, fact.details.units], ["REVENUE", 1234.56, "dollars"]);
+  assert.equal(fact.sourceUrl, FIXTURE_URL);
+  assert.equal(budgetChecklistEvidence(read.value.records, f.body.id, "2026-10-05")["FIN-03"].length, 0,
+    "a revenue record cannot claim an adopted budget");
 });

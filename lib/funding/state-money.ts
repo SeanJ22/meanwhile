@@ -59,6 +59,7 @@
  */
 
 import type { Provenance } from "../sources/types.ts";
+import type { StateMoneyFunding } from "./state-money-funding.ts";
 
 /** The jurisdiction is carried by each sourced money record. */
 export type MoneyJurisdiction = string;
@@ -178,6 +179,8 @@ export interface StateMoneyRecord {
   electionYear: number;
   filingState: FilingState;
   totals: StateMoneyTotals;
+  /** Optional source-reported organization amounts and private giving aggregates. */
+  funding?: StateMoneyFunding;
   /** Which app-side candidates this answers for. Empty on a LEAD. */
   targetKeys: string[];
   match: MatchBasis;

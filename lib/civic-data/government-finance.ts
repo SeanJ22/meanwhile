@@ -26,7 +26,7 @@ export const GOVERNMENT_FINANCE_FIELDS = ["amount", "units", "fundScope", "fisca
   "awardee", "awardDate", "term", "amendments", "approvingAuthority", "repaymentPeriod", "ballotMeasureId",
   "issuingBody", "documentUrl", "findings", "response", "fundingSource", "recipient", "purpose", "publishedTotal"] as const;
 export type GovernmentFinanceField = typeof GOVERNMENT_FINANCE_FIELDS[number];
-export interface GovernmentFinanceFact extends BudgetSource {
+export interface GovernmentFinanceFact extends BudgetSource, Readonly<Record<string, unknown>> {
   readonly kind: "GOVERNMENT_FINANCE";
   readonly detailKind: GovernmentFinanceKind;
   readonly category: typeof GOVERNMENT_FINANCE_KINDS[GovernmentFinanceKind]["category"];
@@ -63,7 +63,8 @@ export function governmentFinanceIssue(value: unknown): string | null {
 export function governmentFinanceFact(input: Omit<GovernmentFinanceFact, "id" | "kind" | "category">): GovernmentFinanceFact {
   const row: GovernmentFinanceFact = { ...input, kind: "GOVERNMENT_FINANCE", category: GOVERNMENT_FINANCE_KINDS[input.detailKind].category,
     id: `government-finance:${createHash("sha256").update(JSON.stringify([input.bodyId, input.detailKind, input.title,
-      input.details.fiscalPeriod ?? null, input.details.identifier ?? null, input.details.fundScope ?? null, input.details.category ?? null, input.sourceUrl])).digest("hex")}` };
+      input.details.fiscalPeriod ?? null, input.details.identifier ?? null, input.details.fundScope ?? null, input.details.budgetVersion ?? null,
+      input.details.category ?? null, input.sourceUrl])).digest("hex")}` };
   const issue = governmentFinanceIssue(row);
   if (issue) throw new Error(issue);
   return row;
@@ -76,7 +77,8 @@ export function governmentFinanceChecklistEvidence(records: readonly GovernmentF
   const has = (row: GovernmentFinanceFact, ...keys: GovernmentFinanceField[]) => keys.every(key =>
     typeof row.details[key] === "number" || typeof row.details[key] === "string" && Boolean(String(row.details[key]).trim()));
   const matching = (kinds: readonly GovernmentFinanceKind[], ...fields: GovernmentFinanceField[]) => held.filter(row => kinds.includes(row.detailKind) && has(row, ...fields));
-  const budgets = matching(["OPERATING_BUDGET", "CAPITAL_BUDGET"], "amount", "units", "fundScope", "fiscalPeriod");
+  const budgets = matching(["OPERATING_BUDGET", "CAPITAL_BUDGET"], "amount", "units", "fundScope", "fiscalPeriod", "budgetVersion")
+    .filter(row => /\badopted\b/i.test(row.sourceSentence) && !/\b(?:proposed|draft|recommended)\b/i.test(row.sourceSentence));
   // Both kinds must share an explicitly stated period, fund and unit. No addition or share is presented.
   const pairedBudgets = budgets.filter(row => budgets.some(other => other.detailKind !== row.detailKind &&
     ["units", "fundScope", "fiscalPeriod"].every(key => row.details[key as GovernmentFinanceField] === other.details[key as GovernmentFinanceField])));

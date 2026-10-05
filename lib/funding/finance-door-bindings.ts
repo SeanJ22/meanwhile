@@ -53,6 +53,7 @@ export function bindFinanceDoorFilings(input: {
       filingState: "FILED", targetKeys: [candidate.id], match,
       totals: { receipts: filing.receipts, expenditures: filing.expenditures, cashOnHand: filing.cashOnHand,
         reportCount: null, coveringPeriod: filing.period },
+      ...(filing.funding ? { funding: filing.funding } : {}),
       checkedAt: filing.retrievedAt.slice(0, 10),
       provenance: { sourceUrl: filing.sourceUrl, sourceOrg: input.agency, collectedAt: filing.retrievedAt, verifiedAt: null },
     } });

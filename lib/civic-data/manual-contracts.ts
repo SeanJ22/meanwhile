@@ -56,7 +56,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     recordClass: "CURATED_READER_RECORD", scope: "US:government-budgets",
     command: ["scripts/promote-manual-civic-projection.mts", "--contract=government-budgets"], parserNormalizerVersion: "curated-reader-records/2",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "curated-reader-primary-sources" }, validationContract: VALIDATION_CHECKS,
-    canonicalProductionStore: STORE, readerProjection: { id: "government-budgets", consumers: ["Admin FIN-01 to FIN-05", "government budget records"] },
+    canonicalProductionStore: STORE, readerProjection: { id: "government-budgets", consumers: ["Admin FIN-01 to FIN-16", "government budget and finance records"] },
     classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
     lkgBehavior: "Source-backed adopted budgets, exact fiscal years, amendments and legal responsibilities publish individually; proposals stay unpublished and prior GOOD facts retain their authority.",
   },

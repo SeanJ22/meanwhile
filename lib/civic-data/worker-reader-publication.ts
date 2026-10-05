@@ -209,7 +209,7 @@ export function workerReaderPackageWithPulls(input: Parameters<typeof verifiedWo
     (documentUrls.has(capture.evidence.canonicalUrl) || checked.sourceReceipt.sources.some(source => source.finalUrl === capture.evidence.canonicalUrl)));
   return { pulledMemberIds, package: { contractId, version: `worker:${input.parser.id}`, sourceThrough: input.now,
     sourceReceipt: contractId === "government-budgets" ? section3SourceReceipt(budgetCaptures, input.now, `section3-validator:${input.parser.id}`,
-      "Every adopted budget or amendment document is a complete saved official capture linked to its exact fiscal year and government.") : checked.sourceReceipt,
+      "Each government budget or finance fact keeps its independently verified source, category and government; adopted budget and amendment documents have complete saved captures.") : checked.sourceReceipt,
     payload: contractId === "everyday-routing"
       ? everydayRoutingProjectionFromRecords(records as unknown as EverydayRoutingRecord[]) : { kind: contractId, records } } };
 }

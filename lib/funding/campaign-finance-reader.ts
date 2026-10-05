@@ -2,6 +2,7 @@ import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import type { StateMoneyRecord } from "./state-money.ts";
+import { stateMoneyFundingIssue } from "./state-money-funding.ts";
 
 export const CAMPAIGN_FINANCE_SCOPE = "US:campaign-finance";
 export const campaignFinanceScope = (ocdId: string) => {
@@ -23,7 +24,9 @@ export interface CampaignFinanceProjection { readonly kind: "campaign-finance"; 
 /** CP-09: unknown amounts or filing periods leave a source document, never a Money figure. */
 export function campaignFinanceRecordKind(record: StateMoneyRecord): CampaignFinanceRecord["kind"] {
   return typeof record.totals.coveringPeriod === "string" && Boolean(record.totals.coveringPeriod.trim()) &&
-    [record.totals.receipts, record.totals.expenditures, record.totals.cashOnHand].some(amount => typeof amount === "number" && Number.isFinite(amount))
+    [record.totals.receipts, record.totals.expenditures, record.totals.cashOnHand, record.funding?.individualTotal,
+      record.funding?.individualItemized, record.funding?.individualUnitemized, ...(record.funding?.organizations.map(row => row.amount) ?? [])]
+      .some(amount => typeof amount === "number" && Number.isFinite(amount))
     ? "CAMPAIGN_FINANCE_FILING" : "CAMPAIGN_FINANCE_DOCUMENT";
 }
 
@@ -44,6 +47,7 @@ export function campaignFinanceRecordIssue(value: unknown): string | null {
       record.checkedAt !== row.collectedAt.slice(0, 10) || !record.totals ||
       [record.totals.receipts, record.totals.expenditures, record.totals.cashOnHand].some(amount => amount !== null &&
         (typeof amount !== "number" || !Number.isFinite(amount)))) return "Campaign filing lacks exact source, report totals or verified candidate/office/cycle/jurisdiction binding.";
+  if (record.funding !== undefined && (stateMoneyFundingIssue(record.funding) || record.funding.organizations.some(org => org.sourceUrl !== row.sourceUrl))) return "Campaign contributors lack their filed entity class, amounts or exact filing source.";
   return row.kind !== campaignFinanceRecordKind(record) ? "Campaign source document does not meet the Money amount and filing-period minimum." : null;
 }
 
@@ -80,7 +84,7 @@ export function campaignFinanceForTarget(targetKey: string): StateMoneyRecord[] 
       // Preserve all source cells in the typed holding; summary consumers show
       // only the document name/link while incomplete Money facts remain owed.
       records.push(row.kind === "CAMPAIGN_FINANCE_DOCUMENT" ? { ...row.record,
-        totals: { ...row.record.totals, receipts: null, expenditures: null, cashOnHand: null } } : row.record);
+        funding: undefined, totals: { ...row.record.totals, receipts: null, expenditures: null, cashOnHand: null } } : row.record);
     }
   }
   return records;

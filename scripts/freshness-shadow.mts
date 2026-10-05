@@ -917,7 +917,9 @@ const heldRouteRead = retirementOutside === null ? null : await (async () => {
     if (divisions.length === 0) return { bodyIdFor, held: new Set<string>() };
     const capture = await readHeldPlaceCapture(divisions, { now: NOW, bypassCache: true });
     const rows = buildPlaceOwedList({ divisions: divisions.map((id) => ({ id, label: id })), subjects: capture.subjects, held: capture.held, now: NOW });
-    return { bodyIdFor, held: heldCalendarRouteBodies(rows) };
+    const held = heldCalendarRouteBodies(rows);
+    console.log(`  retirement evidence: ${heldRouteCandidates.length} government(s) with an old meetings row, ${held.size} body(ies) with a held calendar route`);
+    return { bodyIdFor, held };
   } catch (error) {
     return { unreadable: error instanceof Error ? error.message : String(error) };
   }

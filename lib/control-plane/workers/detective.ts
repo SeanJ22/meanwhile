@@ -3,13 +3,14 @@ import { scoutExecutor } from "../scheduler/scout-executor.ts";
 import { contentHash } from "../ids.ts";
 import { ZERO_COST } from "../attempt.ts";
 import {installedAdapters,installedAdapterVersion} from '../scheduler/scout-adapters.ts';
-import {readFieldManual, type FieldManualEntry} from '../field-manual.ts';
+import {FIELD_MANUAL_ID, readFieldManual, type FieldManualEntry} from '../field-manual.ts';
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { ExecutorDecision } from "../scheduler/dispatch.ts";
 import type { RouteDescriptor } from "../scheduler/registry.ts";
 import { sourceReliabilityKey } from "../scheduler/scout-reliability.ts";
 import { DETECTIVE_SHUT_THRESHOLD_SETTING, readSetting } from "../settings.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
+import { reopenAbsencesForRecentCapabilities } from "../scheduler/absence-reopen.ts";
 
 /** Consecutive failures after which a door counts as shut, when Admin's setting is unset or unreadable. */
 export const DETECTIVE_SHUT_THRESHOLD = 3;
@@ -254,6 +255,12 @@ export async function adapterWaitReasonFromKnowledge(repos:import('../repository
 /** Reopen adapter waits only when a matching installed implementation has not already been tried. */
 export async function wakeInstalledAdapterDebts(repos:import('../repository/types.ts').ControlPlaneRepositories,
   debts:readonly import('../scheduler/debt.ts').FreshnessDebt[],now:string) {
+  // DP-10: a working route, method or adapter the bank gained reopens the dead ends it could solve, in this round.
+  const reopened=await (async()=>reopenAbsencesForRecentCapabilities(repos,(await repos.fieldManual.read(FIELD_MANUAL_ID))?.value.entries??[],now))().catch((error:unknown)=>{
+    console.error(`  dead ends not reopened this round (${error instanceof Error?error.message:String(error)}); the next round tries again`);
+    return [];
+  });
+  if(reopened.length)console.log(`  ${reopened.length} dead end(s) reopened by a new capability`);
   const waiting=debts.filter(debt=>debt.cause==='AWAITING_ADAPTER');
   if(!waiting.length)return debts;
   const adapters=await installedAdapters();

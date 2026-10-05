@@ -302,3 +302,19 @@ test("retired controls and the old instruction box are absent", () => {
   assert.ok(!readdirSync(V6).includes("instruction.ts"));
   assert.ok(!readdirSync(V6).includes("instruction-draft.ts"));
 });
+
+test("BR-39: every Admin view keeps planted code names and raw errors behind Technical details", async()=>{
+  const { stuckViews }=await import("../../lib/control-plane/admin-view/v6-stuck-read.ts");
+  const { hasTechnicalText }=await import("../../lib/control-plane/admin-view/plain-words.ts");
+  const { VIEWS }=await import("../../app/(admin)/_mw/admin-v6/context.tsx");
+  const view=stuckViews([{id:"wi-aabbccdd",state:"BLOCKED",lane:"data",owner:"RUNNER",blocker:"DIRECTORY_NO_READABLE_SAVED_PAGE",label:"Directory",subjectName:null,stateCode:"az",overdue:false,band:null,waitingSince:null,eligibleAt:null,lastActivityAt:null,nextAction:"SCOUT_POLICY_DENIED",assignmentKeys:[]}],"us","2026-10-05T00:00:00Z");
+  const source=(data:unknown):SectionState=>({phase:"live",data,asOf:"2026-10-05T00:00:00Z",revision:"v1",missingParts:[],attempts:0});
+  const snapshot={...waiting,stuck:source(view.items),sameCause:source(view.sameCause),history:source([receipt({status:"failed",says:"SCOUT_POLICY_DENIED: TypeError: unavailable"})])};
+  const visible=(html:string)=>html.replace(/<details\b[^>]*>[\s\S]*?<\/details>/g, block=>/<summary[^>]*>Technical details<\/summary>/.test(block) ? "" : block).replace(/<[^>]*>/g," ");
+  const check=(html:string)=>assert.equal(hasTechnicalText(visible(html)),false);
+  for (const [initialView] of VIEWS) {
+    const html=renderToStaticMarkup(h(CommandCenter,{data:buildLiveBundle(snapshot,ref,workerStatusFromPulse(null)),mode:"live",executor:liveExecutor({capabilities:()=>null}),scopeKey:"us",onScopeChange:()=>{},connection:"live",lastGoodAt:null,recovered:false,access:owner,initialView}));
+    check(html);
+  }
+  assert.throws(()=>check("<p>SCOUT_POLICY_DENIED</p>"),"positive control: leaking an error onto the face fails the check");
+});

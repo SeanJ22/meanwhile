@@ -1,3 +1,4 @@
+import { plainWords } from "./plain-words.ts";
 /**
  * **`admin-v6/fixes@1` — THE FIX LIST VIEW'S READING, FROM THE FIX QUEUE.** (S11;
  * replaces the old Fix list page and its hand-written list, rulings §0.)
@@ -26,7 +27,7 @@ export const FIXES_MISSING_HISTORY = "Fixed and checked, and Came back: only fix
 const FIRST_SENTENCE = /^[^.!?]*[.!?]?/;
 
 function titleOf(says: string): string {
-  const first = (FIRST_SENTENCE.exec(says.trim())?.[0] ?? says).trim();
+  const first = (FIRST_SENTENCE.exec(plainWords(says).trim())?.[0] ?? plainWords(says)).trim();
   return first.length > 120 ? `${first.slice(0, 117)}…` : first;
 }
 
@@ -35,7 +36,7 @@ function openFix(item: FixQueueItem): OpenFix {
   const placeInLine: Record<FixQueueItem["state"], string> = {
     QUEUED: `Queued ${formatEastern(item.queuedAt)}`,
     SENT: "Sent",
-    OPENED: row ? `Work row open (${row.id})` : "Work row open",
+    OPENED: "Work row open",
     REFUSED: item.refusedReason ? `Refused: ${item.refusedReason}` : "Refused",
   };
   return {

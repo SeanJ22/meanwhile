@@ -1,13 +1,13 @@
-build_state: checkpointed_for_continuation
+build_state: active
 worker: codex-ballot
 provider: Codex
-run_id: codex-ballot-46fe3bdbd08c48b2ba1408922a8e1c46
-lock: none
-heartbeat: 2026-10-05T20:49:55Z
+run_id: codex-ballot-edcf6152715b43d5a709a9eaa7410b04
+lock: codex-ballot-edcf6152715b43d5a709a9eaa7410b04
+heartbeat: 2026-10-05T20:51:50Z
 on_river: CA-20 CA-24 CA-30 CA-44 CA-45 CA-51 integrated through release ecf402600401783b094837c29e0c515eadbdb843; returned CA-30/51 repairs retained at 8760257.
 ready: CA-37 CA-52 exact tested SHA 6c874b3ef81c1d2f8b53dbdefbab2853b2778268 (hook pending: registry lib/doors/registry.ts; frontend district-popup.tsx/entity-modal.tsx; measures lib/civic-data/held-place-capture.ts). Includes returned CA-30 CA-51 repairs previously certified at 8760257b34009d057c729bb949d6f882c89c8259. River folds exactly 6c874b3e, never the later finance-count WIP or stream tip.
 checks: Exact 6c874b3e canonical FULL exit 0: 9381 tests, 9370 pass, 0 fail, 11 skip, 41 suites; all 1067 files, two file workers, clean start/end, complete timing inventory. Types exit 0; whole lint exit 0 (69 warnings, no errors); selector FULL/needs_browser=true. Explicit system Chromium 151 substitute, pinned 1234 did not run. Certificate ballot-certificate-6c874b3e.json and ballot-evidence.md preserve exact results and earlier failed attempts. No deployed/live acceptance claimed.
-working_on: Run ended after publishing returned repairs and exact CA-37/52 READY. Remaining own implementation work is preserved for continuation; the lane is NOT complete. Do not interpret lock release as all steps being finished.
+working_on: Resumed by explicit user instruction; complete remaining ready owned work in brief order. First finish CA-25 autonomous admission/scheduling primitive, then finance/source-kind work and downstream ready steps.
 waiting_on: CA-19 CP-03 and CA-33 CP-09 (slide); CA-39 SC-10 (measures); CA-54 FE-13 (frontend). DB-11, DB-42, BR-24, BX-02 integrated and ready.
 returned: CA-12/CP-01 hooks integrated. CA-30 and CA-51 repairs ready at exact 8760257; explicit stored NO line and exact county contest candidates pass original question route regressions; live recheck is River after release.
 needs_hook: River: CA-37 registry data door registration and frontend exact-division PublicRecords caller; CA-52 registry adopted-budget/responsibility/amendment data doors and measures-owned lib/civic-data/held-place-capture.ts FIN-01..05 budgetChecklistEvidence caller; CA-25 slide budget-guarded runMeasureTranslation caller plus its scoped translation edge publication (readTranslations intentionally reads only scope entries present in an existing request edge bundle, never optional DB lookups on a complete cold request). Exact details under translator_hook/collector_hooks. River: CA-35 nullable optional mapped cells need shared record-evidence extractor support; mapped empty CSV cells and even unmapped empty HTML cells currently refuse. Keep known values, unknown coordinates/elections/assignments and full row count, never silently drop rows. codex-slide via River: CA-31 heldPageCopies in worker-publication-evidence.ts:29 still selects HTML only; admit complete saved CSV and PDF-derived text with raw document hash. New completed-parser publication already dispatches via existing task registry. Retained legacy ballot plans still need migration to BALLOT_CONTEST + ballot-contests without guessing a full list. Registry via River: CA-21 readFinanceDoor exports saved-byte CSV/search-API/bulk-ZIP field-map readers; read-kind dispatch/general finance publication remain unfinished.
@@ -16,7 +16,7 @@ seen_not_fixed: The MapTiler baseline failures reproduce on river 8f6185c54; loc
 runs_and_working_minutes: resumed run 2026-10-05T18:21:03Z to 2026-10-05T20:49:55Z; elapsed wall time recorded, active/billed minutes unavailable; prior runs/checkpoints preserved.
 model: actual selected model unavailable in this session; requested GPT-6.1 Sol; prompt does not switch models
 execution_plan: codex-ballot owns ready lane steps; CA-24 first, then CA-31; cross-lane steps wait for integrated prerequisites.
-handoff: Codex run ended with lock:none and complete saved continuation. Current board assignment remains codex-ballot; only River may record a provider handoff. A Claude continuation must wait for that recorded assignment; no restart or routine decision by Sean is needed.
+handoff: Explicit Codex continuation requested; latest board still assigns codex-ballot. Exit without writing if reassigned to Claude.
 needs_River: Startup Netlify account-settings read rejected by automatic approval review as unrequested credential use; repo workflow main-only push filters and draft skips inspected, netlify branch filter inspected; live account settings unverified. No credential changes requested. CA-25/50: all 52 legacy measure parts have unknown official numbers; choose a source-backed mapping or preserve old reaction subjects independently of new official-number translations. Never invent numbering or drop IDs.
 
 translator_WIP: CA-25 writer/checker with live Bank playbook seed and hot edits; same-place source-scoped Slide successor, typed reader, source-hash reuse/rewrite, costs retained on refused checker. Nine focused lifecycle/part-ID tests and final exact 6c874b3e FULL/types/lint pass; normal standing scheduling and legacy-part migration remain unfinished. No production model calls or projection writes made.

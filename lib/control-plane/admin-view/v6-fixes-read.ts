@@ -16,11 +16,12 @@
  * empty and say so (`missingParts`) rather than looking like "nothing was ever
  * fixed". PURE: queue in, view out.
  */
-import type { FixView, OpenFix } from "../../../app/(admin)/_mw/admin-v6/model.ts";
+import type { ClosedFix, FixView, OpenFix } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import type { FixQueueItem, FixQueueView } from "../fix-queue.ts";
 import { formatEastern } from "../eastern-time.ts";
+import type { FixItem } from "../fix-list.ts";
 
-export const FIXES_MISSING_HISTORY = "Fixed and checked, and Came back: —";
+export const FIXES_MISSING_HISTORY = "Fixed and checked, and Came back: only fixes recorded on the fix list";
 
 const FIRST_SENTENCE = /^[^.!?]*[.!?]?/;
 
@@ -54,6 +55,55 @@ function openFix(item: FixQueueItem): OpenFix {
   };
 }
 
-export function v6FixesView(queue: FixQueueView): FixView {
-  return { open: queue.items.map(openFix), closed: [], returned: [] };
+function listOpen(item: FixItem): OpenFix {
+  return {
+    id: item.id,
+    title: titleOf(item.says),
+    tab: item.state === "OPEN" ? "attention" : "fixing",
+    owner: "Engineering",
+    problem: item.says,
+    helps: item.where,
+    placeInLine: item.state === "OPEN" ? `Added ${formatEastern(item.addedAt)}` : `Started ${formatEastern(item.startedAt ?? item.addedAt)}`,
+    resourcesNow: "—",
+    taskStage: null,
+    taskId: null,
+    linkedStuck: [],
+    origin: item.addedBy === "owner" ? "engineering" : "automatic",
+    technical: `Fix list item ${item.id}, state ${item.state}, added ${item.addedAt}.`,
+  };
+}
+
+function listClosed(item: FixItem): ClosedFix {
+  const cameBack = item.state === "CAME_BACK";
+  return {
+    id: item.id,
+    title: titleOf(item.says),
+    changed: item.whatChanged ?? "—",
+    places: item.where,
+    fixedAt: item.fixedAt ?? item.addedAt,
+    origin: item.addedBy === "owner" ? "Engineering fix" : "Automatic repair",
+    learning: cameBack ? "Problem returned" : "Not checked yet",
+    whatChanged: `Before: ${item.before ?? "—"}. After: ${item.after ?? "—"}. Changed by ${item.changedBy ?? "—"}.${item.undo ? " It can be undone." : ""}`,
+    readerRecheck: "—",
+    since: cameBack && item.cameBackAt ? `Came back ${formatEastern(item.cameBackAt)}` : "—",
+    saved: "—",
+    usedBy: "—",
+    ...(cameBack && item.cameBackAt ? { returnedDetail: formatEastern(item.cameBackAt) } : {}),
+    technical: `Fix list item ${item.id}, state ${item.state}.`,
+  };
+}
+
+/**
+ * The Fix list view: the control-plane fix list (Open, Being fixed, Fixed and
+ * checked, Came back), plus any older queued gap still waiting in the decision
+ * log. Items the list already holds are not shown twice.
+ */
+export function v6FixesView(queue: FixQueueView, list: readonly FixItem[] = []): FixView {
+  const held = new Set(list.map((i) => i.id));
+  const legacy = queue.items.filter((i) => !held.has(i.subjectId)).map(openFix);
+  const open = list.filter((i) => i.state === "OPEN" || i.state === "FIXING").map(listOpen);
+  const fixed = list.filter((i) => i.state === "FIXED").sort((a, b) => (b.fixedAt ?? "").localeCompare(a.fixedAt ?? "")).map(listClosed);
+  // A came-back item is also open work again: it reads in both places.
+  const returned = list.filter((i) => i.state === "CAME_BACK");
+  return { open: [...open, ...returned.map(listOpen), ...legacy], closed: fixed, returned: returned.map(listClosed) };
 }

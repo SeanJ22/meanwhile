@@ -37,7 +37,26 @@ export interface StuckRowLike {
   readonly assignmentKeys: readonly string[];
 }
 
+/** BR-09: why a card needs Sean. Every card in the decision lane names exactly one. */
+export const NEEDS = ["money", "platform", "credentials", "contract", "broken"] as const;
+export type Need = (typeof NEEDS)[number];
+export const NEED_WORDS: Readonly<Record<Need, string>> = {
+  money: "Needs money", platform: "Needs a platform", credentials: "Needs a login or key", contract: "Needs a contract or terms", broken: "Needs a fix only you can decide",
+};
+
+/** The reason a row needs Sean, from the words of its blocker. Anything not matching a named reason is "broken". */
+export function needOf(blocker: string | null): Need {
+  const t = blocker ?? "";
+  if (/\b(budget|spend|paid|ceiling|cost|pay|fee|purchase)\b|\$\d/i.test(t)) return "money";
+  if (/credential|token|api key|password|log ?in|sign ?in|secret/i.test(t)) return "credentials";
+  if (/contract|licen[cs]e|terms of|agreement|records request|permission/i.test(t)) return "contract";
+  if (/platform|account|provider access|subscription|vendor/i.test(t)) return "platform";
+  return "broken";
+}
+
 export interface Cause {
+  /** Set exactly when the lane is "decision". */
+  readonly needs: Need | null;
   readonly key: string;
   /** The cause in one plain sentence. */
   readonly words: string;
@@ -49,11 +68,11 @@ export interface Cause {
 }
 
 const LANE_OF_OWNER: Readonly<Record<string, BlockerLane>> = {
-  OWNER: "decision", NOBODY: "decision", SOURCE: "publisher", ENGINEERING: "software",
+  OWNER: "decision", NOBODY: "auto", SOURCE: "publisher", ENGINEERING: "software",
   RUNNER: "auto", SCOUT_LANE: "auto", FLEET: "auto",
 };
 const OWNER_WORDS: Readonly<Record<string, string>> = {
-  OWNER: "You", NOBODY: "Nobody owns it yet", SOURCE: "The publisher", ENGINEERING: "Engineering",
+  OWNER: "You", NOBODY: "The runner (unassigned)", SOURCE: "The publisher", ENGINEERING: "Engineering",
   RUNNER: "The runner (automatic)", SCOUT_LANE: "The Scout lane (automatic)", FLEET: "The fleet (automatic)",
 };
 
@@ -101,7 +120,7 @@ function normalized(text: string): string {
   return text.toLowerCase().replace(/https?:\/\/\S+/g, "").replace(/[0-9a-f]{8,}/g, "#").replace(/\d+/g, "#").replace(/\s+/g, " ").trim().slice(0, 90);
 }
 
-export function causeOf(row: Pick<StuckRowLike, "state" | "owner" | "blocker" | "overdue">): Cause {
+function causeCore(row: Pick<StuckRowLike, "state" | "owner" | "blocker" | "overdue">): Omit<Cause, "needs"> {
   const owner = row.owner ?? "RUNNER";
   const laneByOwner = LANE_OF_OWNER[owner] ?? "auto";
   const blocker = (row.blocker ?? "").trim();
@@ -113,11 +132,16 @@ export function causeOf(row: Pick<StuckRowLike, "state" | "owner" | "blocker" | 
   }
   if (blocker === "") {
     return { key: `no-reason:${row.state.toLowerCase()}`, words: row.overdue === true ? "Overdue, and the record gives no reason."
-      : "Stuck, and the record gives no reason.", lane: laneByOwner, next: "Nothing says what moves it; this needs a look.", owner: OWNER_WORDS[owner] ?? "Nobody owns it yet" };
+      : "Stuck, and the record gives no reason.", lane: laneByOwner, next: "Nothing says what moves it; this needs a look.", owner: OWNER_WORDS[owner] ?? "The runner (unassigned)" };
   }
   const first = blocker.split(/(?<=[.!?])\s/)[0] ?? blocker;
   return { key: `other:${normalized(blocker)}`, words: first.length > 160 ? `${first.slice(0, 157)}…` : first, lane: laneByOwner,
     next: "See the item for what the system says happens next.", owner: OWNER_WORDS[owner] ?? "The runner (automatic)" };
+}
+
+export function causeOf(row: Pick<StuckRowLike, "state" | "owner" | "blocker" | "overdue">): Cause {
+  const core = causeCore(row);
+  return { ...core, needs: core.lane === "decision" ? needOf(row.blocker) : null };
 }
 
 /** The row's state, from its saved state code, else from the structure of its id (never two letters found anywhere in it). */

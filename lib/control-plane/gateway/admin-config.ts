@@ -73,6 +73,8 @@ export const ADMIN_CONFIG_NEVER_WRITTEN = "1970-01-01T00:00:00.000Z";
 
 export interface AdminConfig {
   readonly settings?: Readonly<Record<string, import("../settings.ts").SettingValue>>;
+  /** The fix list (BR-03): broken things and their repairs. */
+  readonly fixList?: readonly import("../fix-list.ts").FixItem[];
   readonly settingHistory?: readonly import("../settings.ts").SettingChange[];
   readonly routineRefreshRequests?: readonly import("../../civic-data/owner-refresh.ts").RoutineRefreshRequest[];
   /**

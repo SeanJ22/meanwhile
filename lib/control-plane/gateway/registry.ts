@@ -42,7 +42,8 @@
  */
 
 import { appendDecisionIntent, RUNNER_ID, SNAPSHOT_ID } from "../admin-data.ts";
-import { ADD_TO_QUEUE_OPTION, fixConsequence, fixSubjectId, parseFixField } from "../fix-queue.ts";
+import { fixConsequence, fixSubjectId, parseFixField, WHERE_SEPARATOR } from "../fix-queue.ts";
+import { addFixItem, completeFixItem, fixItems } from "../fix-list.ts";
 import {
   ANSWERED_IN_OWN_WORDS,
   OWNER_ANSWER_MAX_CHARS,
@@ -351,25 +352,70 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
     async execute(deps, context, input) {
       const subjectId = String(input.subjectId);
-      const intent = decisionIntent({
-        subjectId,
-        chosenOption: ADD_TO_QUEUE_OPTION,
-        consequenceShown: String(input.consequenceShown),
-        ownerAnswer: null,
-        decidedAt: context.at,
-        actorRef: context.request.actorRef,
-      });
-      const wrote = await appendDecisionIntent(deps.repos, intent, context.at);
-      if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", appendFailureSays(wrote.detail));
+      // BR-03: the fix list is a control-plane record, not a decision intent that waits on a local script.
+      const consequence = String(input.consequenceShown);
+      const at = consequence.indexOf(WHERE_SEPARATOR);
+      try {
+        await addFixItem(deps.repos, {
+          where: at < 0 ? "the control centre" : consequence.slice(0, at),
+          says: at < 0 ? consequence : consequence.slice(at + WHERE_SEPARATOR.length),
+          by: "owner", at: context.at,
+        });
+      } catch (error) { return storeRefusal("the fix list", error); }
       return {
         ok: true,
         outcome: "QUEUED",
         subject: subjectId,
-        says: "It is on the queue. Nothing has been fixed yet — the queue is what you send when you are ready.",
+        says: "It is on the fix list as Open.",
         openedWork: [],
         readBackAt: "/admin",
         undo: "Nothing has happened yet, so there is nothing to undo. Decide it differently and the later decision stands.",
       };
+    },
+  },
+
+  /* ---------------------------------------------------------- fix.complete */
+  {
+    definition: {
+      type: "fix.complete",
+      label: "Mark a fix done",
+      does: "Records what broke, what changed, who or what changed it, and the before and after, so the fix list shows it as fixed.",
+      doesNot: "Does not change anything itself.",
+      authority: "REVERSIBLE_NONPRODUCTION",
+      subjectKind: "an item on the fix list",
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const id = text(input.id);
+      const whatChanged = collapse(input.whatChanged);
+      const changedBy = collapse(input.changedBy);
+      const before = collapse(input.before);
+      const after = collapse(input.after);
+      if (!id.startsWith("fix:")) return bad("choose an item on the fix list");
+      if (!whatChanged || !changedBy || !before || !after) return bad("say what changed, who changed it, and the before and after");
+      let undo: { type: string; input: Record<string, unknown> } | null = null;
+      if (input.undo !== undefined && input.undo !== null) {
+        const u = input.undo as { type?: unknown; input?: unknown };
+        if (typeof u.type !== "string" || !u.type || typeof u.input !== "object" || u.input === null) return bad("the undo needs an action and its input");
+        undo = { type: u.type, input: u.input as Record<string, unknown> };
+      }
+      return { ok: true, value: { id, whatChanged, changedBy, before, after, undo } };
+    },
+    async execute(deps, context, input) {
+      const id = String(input.id);
+      try {
+        const held = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const config = held && isAdminConfig(held.value) ? held.value : null;
+        if (!config || !fixItems(config).some((i) => i.id === id)) return refuse("INVALID_INPUT", "That item is not on the fix list.");
+        await completeFixItem(deps.repos, id, {
+          whatChanged: String(input.whatChanged), changedBy: String(input.changedBy),
+          before: String(input.before), after: String(input.after),
+          undo: input.undo as { type: string; input: Record<string, unknown> } | null,
+        }, context.at);
+      } catch (error) { return storeRefusal("the fix list", error); }
+      return { ok: true, outcome: "DONE", subject: id, says: "It is on the fix list as Fixed and checked, with its before and after.",
+        openedWork: [], readBackAt: "/admin?view=fixes", undo: null };
     },
   },
 

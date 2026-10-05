@@ -37,7 +37,7 @@ import { DECISION_LOG_KEY, RUNNER_ID, SNAPSHOT_ID } from "@/lib/control-plane/ad
 import { HUNT_SOURCE_PROGRESS_LOG_KEY } from "@/lib/control-plane/owner-surface.ts";
 import { RESEARCH_INTENT_LOG_KEY, readIntents } from "@/lib/control-plane/scheduler/research-policy.ts";
 import { modelLaneClosure, pendingResearchLaneAcknowledgment } from "@/lib/control-plane/scheduler/model-lane.ts";
-import { ADD_TO_QUEUE_OPTION, fixSubjectId } from "@/lib/control-plane/fix-queue.ts";
+import { fixSubjectId } from "@/lib/control-plane/fix-queue.ts";
 import { POST } from "@/app/api/admin/action/route.ts";
 import { GET } from "@/app/api/admin/live/route.ts";
 import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
@@ -177,11 +177,11 @@ test("ADM-C6 acceptance 1: a permitted action succeeds and leaves a receipt that
     "the receipt names what was actually acted on",
   );
 
-  /* It DELEGATED: the decision log holds the intent, appended by the canonical helper. */
-  const decisions = await repos.ownerDecisions.read(DECISION_LOG_KEY);
-  assert.equal(decisions.length, 1, "the queue add did not reach the decision log");
-  assert.equal(decisions[0].chosenOption, ADD_TO_QUEUE_OPTION);
-  assert.equal(decisions[0].adminSessionRef, "adm_test-session");
+  /* BR-03: the fix list on the control plane holds it, not the decision log. */
+  assert.equal((await repos.ownerDecisions.read(DECISION_LOG_KEY)).length, 0, "the fix list no longer waits on a local script");
+  const held = (await repos.adminConfig.mustRead("current")).value;
+  assert.equal(held.fixList?.length, 1, "the queue add did not reach the fix list");
+  assert.equal(held.fixList?.[0].state, "OPEN");
 
   /* And the receipt is durable, under its derived id. */
   const stored = await findReceipt(repos, receiptIdFor("queue.add", "test-key-000001"));

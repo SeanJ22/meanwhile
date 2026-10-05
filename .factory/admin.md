@@ -5,7 +5,7 @@ run_id: overflow-1 2026-10-05 session_012Ufwyxx6iej1CSEX6khMyg
 lock: overflow-1-20261005T1600Z-c91d
 heartbeat: 2026-10-05T15:58:40Z
 on_river: none
-ready: none yet
+ready: pending SHA (see commit READY: BR-05, BR-06, BR-01, BR-03)
 checks: previous (codex-admin) application SHA 916e446c73f8a2787fc7147cd48d9c01245c23aa: 24 focused tests PASS, tsc PASS, eslint PASS; FULL incomplete. See .factory/admin-checks.md.
 working_on: FULL test run for BR-05/BR-06/BR-01 + hooks; drafting BR-03 fix list and BR-24 updates
 waiting_on: none yet

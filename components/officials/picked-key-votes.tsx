@@ -22,13 +22,13 @@ export function PickedKeyVotesSection({ picks }: { picks: readonly PickedKeyVote
   if (picks.length === 0) return null;
   return (
     <div data-picked-key-votes="">
-      <p className="text-[0.6875rem] leading-relaxed text-voice">Votes Sean picked.</p>
+      <p className="t-caption leading-relaxed text-voice">Votes Sean picked.</p>
       {picks.map((pick) => (
         <div key={pick.rollId} data-picked-vote-id={pick.rollId} className="mt-2 border-b border-[var(--panel-border)] pb-2 last:border-0">
           {pick.roll ? (
             <>
-              <p className="text-[0.75rem] leading-snug">{pick.roll.title}</p>
-              <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.6875rem]">
+              <p className="t-detail leading-snug">{pick.roll.title}</p>
+              <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 t-caption">
                 {pick.position ? (
                   <VotePill tone={POSITION[pick.position].tone}>{POSITION[pick.position].label}</VotePill>
                 ) : (
@@ -39,14 +39,14 @@ export function PickedKeyVotesSection({ picks }: { picks: readonly PickedKeyVote
                   {pick.roll.legisNum ? ` · ${pick.roll.legisNum}` : ""}
                 </span>
               </p>
-              <p className="mt-0.5 text-[0.625rem] text-muted">
+              <p className="mt-0.5 t-caption text-muted">
                 <a className="underline underline-offset-2" href={pick.roll.rollCallUrl} target="_blank" rel="noreferrer">The chamber&rsquo;s roll call ↗</a>
               </p>
             </>
           ) : (
-            <p className="text-[0.75rem] leading-snug">We&rsquo;re working on getting this info.</p>
+            <p className="t-detail leading-snug">We&rsquo;re working on getting this info.</p>
           )}
-          {pick.why && <p className="mt-1 text-[0.6875rem] text-paper-dim">Sean&rsquo;s note: {pick.why}</p>}
+          {pick.why && <p className="mt-1 t-caption text-paper-dim">Sean&rsquo;s note: {pick.why}</p>}
         </div>
       ))}
     </div>

@@ -10,7 +10,9 @@ import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { keysWhere, type ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { dispatchAutonomousTask, nextAutonomousOperation, type AutonomousCoordinatorRuntime } from "../lib/control-plane/workers/coordinator.ts";
-import { readSpendWindowCosts, readSubjectScoutHistoryScoped, readScoutResultsForSubjects, SPEND_WINDOW_READ_SLACK_HOURS } from "../lib/control-plane/workers/scoped-history.ts";
+import { readAuditHistory, readSpendWindowCosts, readSubjectScoutHistoryScoped, readScoutResultsForSubjects, SPEND_WINDOW_READ_SLACK_HOURS } from "../lib/control-plane/workers/scoped-history.ts";
+import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
+import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import { readSubjectScoutHistory } from "../lib/control-plane/workers/detective.ts";
 import { BOOTSTRAP_DDL, BOOTSTRAP_VERSION, SCOPED_HISTORY_INDEXES } from "../lib/control-plane/repository/pg-schema.ts";
 import { pgEnsureOnlineIndex, type Sql } from "../lib/control-plane/repository/pg-store.ts";
@@ -127,14 +129,42 @@ test("CH-26: scoped reads return what the whole-table reads returned, after the 
   const all = await repos.scoutResults.readAll();
   const scoped = await readScoutResultsForSubjects(repos, ["s:1"], true);
   assert.deepEqual(scoped.filter(row => row.subjectId === "s:1"), all.filter(row => row.subjectId === "s:1"));
-  assert.deepEqual(await keysWhere(repos.scoutResults, row => row.obligationId, ["subjectId"], "s:1"), ["a", "c"]);
+  assert.deepEqual(await keysWhere(repos.scoutResults, ["subjectId"], "s:1"), ["a", "c"]);
   for (const subjects of [[{ subjectId: "s:1", recordClass: "OFFICIAL_ROSTER" }], [{ subjectId: "s:3", recordClass: "OFFICIAL_ROSTER" }]]) {
     assert.deepEqual(await readSubjectScoutHistoryScoped(repos, subjects, true), await readSubjectScoutHistory(repos, subjects),
       "the newest-record rule keeps the same logs");
   }
   const { keysWhere: _drop, ...withoutFilter } = repos.scoutResults;
-  assert.deepEqual(await keysWhere({ ...withoutFilter } as typeof repos.scoutResults, row => row.obligationId, ["subjectId"], "s:1"), ["a", "c"],
-    "a store without the filtered read falls back to reading every record");
+  const plain = { ...repos, scoutResults: withoutFilter as typeof repos.scoutResults };
+  assert.equal(await keysWhere(plain.scoutResults, ["subjectId"], "s:1"), null, "a store without the filtered read says so");
+  assert.deepEqual(await readScoutResultsForSubjects(plain, ["s:1"], true), all, "and the scoped read falls back to the whole log");
+});
+
+test("CH-26: an audit's scoped rows are every row its whole-table reads would have used", async () => {
+  const repos = createMemoryRepositories();
+  const at = "2026-10-05T18:00:00.000Z";
+  const item = (id: string, subject: string, inheritsFrom?: string) => ({ id, subject, project: "p",
+    autonomousPlan: { acquisition: inheritsFrom ? [{ held: [{ inheritedFromWorkItemId: inheritsFrom }] }] : [] } }) as unknown as WorkItem;
+  const capture = (artifactId: string, workItemId: string) => ({ artifactId, workItemId, partial: false, canonicalUrl: `https://x.example.gov/${artifactId}` }) as unknown as ArtifactRecord;
+  for (const row of [item("owner", "s:1", "origin"), item("sibling", "s:1"), item("origin", "s:other"), item("stranger", "s:2")]) await repos.workItems.put(row.id, row, at);
+  for (const [key, record] of [["owner", capture("primary", "owner")], ["sibling", capture("sib-page", "sibling")], ["origin", capture("inherited", "origin")],
+    ["stranger", capture("authority", "stranger")], ["stranger-2", capture("unrelated", "stranger-2")], ["held:1", capture("replayed", "sibling")]] as const) {
+    await repos.artifacts.append(key, `${key}:${record.artifactId}`, record, at);
+  }
+  const scoped = (await readAuditHistory(repos, { workItemId: "owner", subjectId: "s:1", requiredArtifactIds: ["primary", "authority"] }))!;
+  const allItems = (await repos.workItems.list()).map(row => row.value);
+  const allArtifacts = await repos.artifacts.readAll();
+  const subjectIds = new Set(allItems.filter(row => row.subject === "s:1").map(row => row.id));
+  assert.deepEqual(scoped.items.filter(row => row.subject === "s:1"), allItems.filter(row => row.subject === "s:1"), "the subject's items, in id order");
+  assert.ok(scoped.items.some(row => row.id === "owner"));
+  assert.deepEqual(scoped.artifacts.filter(row => subjectIds.has(row.workItemId)), allArtifacts.filter(row => subjectIds.has(row.workItemId)),
+    "every same-subject capture, including one recorded under another log key");
+  for (const id of ["primary", "authority"]) assert.deepEqual(scoped.artifacts.find(row => row.artifactId === id), allArtifacts.find(row => row.artifactId === id),
+    "the first capture of a required ID is the same capture");
+  assert.ok(scoped.artifacts.some(row => row.artifactId === "inherited"), "a capture the owner's plan inherits");
+  assert.ok(!scoped.artifacts.some(row => row.artifactId === "unrelated"), "nothing else");
+  const { keysWhere: _drop, ...withoutFilter } = repos.artifacts;
+  assert.equal(await readAuditHistory({ ...repos, artifacts: withoutFilter as typeof repos.artifacts }, { subjectId: "s:1", requiredArtifactIds: [] }), null);
 });
 
 test("CH-26: schema version 20 builds the scoped indexes online, on the exact expressions the reads send", async () => {

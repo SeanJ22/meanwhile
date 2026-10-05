@@ -10,10 +10,11 @@
  * old whole-table one, until the scoped path is checked live.
  */
 import type { CostEntry } from "../cost.ts";
-import type { ControlPlaneRepositories } from "../repository/types.ts";
+import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
 import { keysWhere } from "../repository/types.ts";
 import { RESEARCH_BOUNDS } from "../scheduler/research-policy.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
+import type { WorkItem } from "../work-item.ts";
 import { readSubjectScoutHistory } from "./detective.ts";
 
 /**
@@ -31,16 +32,24 @@ export async function readSpendWindowCosts(repos: ControlPlaneRepositories, nowI
   return repos.costs.readSince(since);
 }
 
-/** Every Scout result recorded for these subjects, in the whole log's key-then-append order; the whole log when not scoped. */
-export async function readScoutResultsForSubjects(repos: ControlPlaneRepositories, subjectIds: readonly string[],
-  scoped: boolean): Promise<readonly ScoutResult[]> {
-  if (!scoped) return repos.scoutResults.readAll();
+/** The Scout logs that ever held a record about one of these subjects, or null when the store cannot say without a full read. */
+async function scoutKeysFor(repos: ControlPlaneRepositories, subjectIds: readonly string[]): Promise<readonly string[] | null> {
   const keys = new Set<string>();
   for (const subject of new Set(subjectIds)) {
-    for (const key of await keysWhere(repos.scoutResults, result => result.obligationId, ["subjectId"], subject)) keys.add(key);
+    const held = await keysWhere(repos.scoutResults, ["subjectId"], subject);
+    if (held === null) return null;
+    for (const key of held) keys.add(key);
   }
+  return [...keys].sort();
+}
+
+/** Every Scout result in the logs that hold these subjects, in the whole log's key-then-append order; the whole log when not scoped. */
+export async function readScoutResultsForSubjects(repos: ControlPlaneRepositories, subjectIds: readonly string[],
+  scoped: boolean): Promise<readonly ScoutResult[]> {
+  const keys = scoped ? await scoutKeysFor(repos, subjectIds) : null;
+  if (keys === null) return repos.scoutResults.readAll();
   const out: ScoutResult[] = [];
-  for (const key of [...keys].sort()) out.push(...await repos.scoutResults.read(key));
+  for (const key of keys) out.push(...await repos.scoutResults.read(key));
   return out;
 }
 
@@ -51,12 +60,34 @@ export async function readScoutResultsForSubjects(repos: ControlPlaneRepositorie
  */
 export async function readSubjectScoutHistoryScoped(repos: ControlPlaneRepositories,
   subjects: readonly { subjectId: string; recordClass: string }[], scoped: boolean): Promise<ScoutResult[]> {
-  if (!scoped) return readSubjectScoutHistory(repos, subjects);
-  const keys = new Set<string>();
-  for (const subject of new Set(subjects.map(row => row.subjectId))) {
-    for (const key of await keysWhere(repos.scoutResults, result => result.obligationId, ["subjectId"], subject)) keys.add(key);
-  }
+  const keys = scoped ? await scoutKeysFor(repos, subjects.map(row => row.subjectId)) : null;
+  if (keys === null) return readSubjectScoutHistory(repos, subjects);
   const narrowed: ControlPlaneRepositories["scoutResults"] = Object.assign(Object.create(repos.scoutResults) as ControlPlaneRepositories["scoutResults"],
-    { keys: async () => [...keys].sort() });
+    { keys: async () => keys });
   return readSubjectScoutHistory({ ...repos, scoutResults: narrowed }, subjects);
+}
+
+/**
+ * An audit's work items and captures (`generalizedIndependentContext`): the owner and every item about the
+ * contract's subject, and every capture recorded for one of them, for a work item the owner's plan says it
+ * inherited from, or under one of the audit's required artifact IDs. That is every row the audit reads; the
+ * logs are read in the whole log's key order so "the first capture of an ID" is the same capture. Null when the
+ * store cannot answer the filtered reads (the caller then reads every row as before).
+ */
+export async function readAuditHistory(repos: ControlPlaneRepositories, input: { readonly workItemId?: string;
+  readonly subjectId: string; readonly requiredArtifactIds: readonly string[] }): Promise<{ readonly artifacts: readonly ArtifactRecord[]; readonly items: readonly WorkItem[] } | null> {
+  if (!repos.artifacts.keysWhere) return null;
+  const byId = new Map<string, WorkItem>();
+  const owner = input.workItemId === undefined ? null : await repos.workItems.read(input.workItemId);
+  if (owner) byId.set(owner.id, owner.value);
+  for (const row of await repos.workItems.listWhere(["subject"], input.subjectId)) byId.set(row.id, row.value);
+  const items = [...byId.values()].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+  const itemIds = new Set(items.map(item => item.id));
+  for (const acquisition of owner?.value.autonomousPlan?.acquisition ?? []) for (const held of acquisition.held) if (held.inheritedFromWorkItemId) itemIds.add(held.inheritedFromWorkItemId);
+  const keys = new Set<string>();
+  for (const id of itemIds) for (const key of await repos.artifacts.keysWhere(["workItemId"], id)) keys.add(key);
+  for (const id of new Set(input.requiredArtifactIds)) for (const key of await repos.artifacts.keysWhere(["artifactId"], id)) keys.add(key);
+  const artifacts: ArtifactRecord[] = [];
+  for (const key of [...keys].sort()) artifacts.push(...await repos.artifacts.read(key));
+  return { artifacts, items };
 }

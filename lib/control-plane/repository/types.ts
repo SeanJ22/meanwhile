@@ -464,18 +464,14 @@ export interface AppendOnlyRepository<T> {
    * `keys()` narrowed to those keys: Postgres answers from an index on that
    * expression where one exists (CH-26), the file and memory providers filter
    * their own records. Optional so a test double need not carry it; callers
-   * use `keysWhere` in this file, which falls back to a full read.
+   * use `keysWhere` in this file, which says when it is missing.
    */
   keysWhere?(path: readonly string[], value: string): Promise<readonly string[]>;
 }
 
-/** The keys of a log holding a record whose value at `path` equals `value`; a full read when the provider has no filtered one. */
-export async function keysWhere<T>(log: AppendOnlyRepository<T>, keyOf: (record: T) => string,
-  path: readonly string[], value: string): Promise<readonly string[]> {
-  if (log.keysWhere) return log.keysWhere(path, value);
-  const keys = new Set<string>();
-  for (const record of await log.readAll()) if (jsonTextAtPath(record, path) === value) keys.add(keyOf(record));
-  return [...keys].sort();
+/** The keys of a log holding a record whose value at `path` equals `value`, or null when the provider has no filtered read (the caller then reads as before). */
+export async function keysWhere<T>(log: AppendOnlyRepository<T>, path: readonly string[], value: string): Promise<readonly string[] | null> {
+  return log.keysWhere ? log.keysWhere(path, value) : null;
 }
 
 /**

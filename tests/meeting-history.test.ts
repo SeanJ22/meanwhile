@@ -314,3 +314,28 @@ test("DB-55: nothing is restored unless it is asked for, and a restore is idempo
   const holding = [...live.meetings, ...history.meetings].filter(({ id }) => id === oldRecord.id);
   assert.equal(holding.length, 1, "restored once, in one place");
 });
+
+class HistoryHiddenFromTheDoor extends MemoryRoutineDataStore {
+  override async readPromotion<T = unknown>(recordClass: Parameters<MemoryRoutineDataStore["readPromotion"]>[0], scope: string) {
+    // The history pointer exists, but the partition door cannot see it: the removal cannot be proved.
+    return scope.endsWith(":history") ? null : super.readPromotion<T>(recordClass, scope);
+  }
+}
+
+test("DB-06: a partition refused while sittings were moving to history is promoted again with every sitting kept", async () => {
+  const store = new HistoryHiddenFromTheDoor();
+  const [seeded] = await promoteMeetingPartitions({
+    store, partitions: [legistar], meetings: [oldRecord], agendaDocuments: [],
+    reports: [report(SEED)], generatedAt: SEED,
+  });
+  assert.equal(seeded?.outcome.candidate.state, "PROMOTED");
+  const [result] = await promoteMeetingPartitions({
+    store, partitions: [legistar], meetings: [meeting("fresh", daysBefore(-5))], agendaDocuments: [],
+    reports: [report(NOW)], generatedAt: NOW,
+  });
+  assert.equal(result?.outcome.candidate.state, "PROMOTED", result?.outcome.candidate.failureDetail ?? "fresh readings still reach readers");
+  const live = (await promotedRows(store, legistar.scope))!;
+  assert.ok(live.meetings.some(({ id }) => id === oldRecord.id), "the sitting stayed in its partition");
+  assert.ok(live.meetings.some(({ id }) => id === "legistar:fresh"), "and the fresh reading was published");
+  assert.equal(result?.candidate.removalEvidence?.some((row) => row.code === "MOVED_TO_HISTORY") ?? false, false);
+});

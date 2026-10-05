@@ -480,6 +480,8 @@ test("R8: a board whose schedule places nothing yields its concluded sittings fr
   ];
   const { meetings, accounting } = source.normalizeWithDrops(raw, R8_NOW);
   assert.deepEqual(meetings.map((m) => m.id), [
+    // DB-05: the Past Agendas list holds the held 120 days back, so IDA's 18 June agenda is in.
+    "clerksboards:43:2026-06-18",
     "clerksboards:43:2026-07-16",
     "clerksboards:43:2026-07-28",
     "clerksboards:43:2026-08-20",
@@ -504,7 +506,7 @@ test("R8: a board whose schedule places nothing yields its concluded sittings fr
   // schedules published that the window does not serve (2026-09-25) — IDA's 8
   // dates and the Commission's 2 dates before the window, and the Commission's
   // "July and October 2026 TBD", two months told of and never dated.
-  assert.equal(accounting.logicalInput, 17);
+  assert.equal(accounting.logicalInput, 18, "17 before the held window added IDA's 18 June agenda from the list (DB-05)");
   assert.equal(accounting.outOfWindow, 10);
 
   // Without the list the same pages extract nothing, and that is now a counted

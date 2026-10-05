@@ -192,6 +192,7 @@ import {
 } from "../lib/control-plane/expansion/dispatch-work.ts";
 import { readHeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
+import { missionPartCounts, missionPartsOf } from "../lib/control-plane/expansion/mission-parts.ts";
 import { liveFamiliesByGovernment } from "../lib/control-plane/expansion/live-families.ts";
 import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
 import { evidenceProjection } from "../lib/control-plane/workers/evidence-projection.ts";
@@ -1278,6 +1279,8 @@ const lifetimeHuntWorkIds = new Set(sync.all.filter(o => lifetimeHuntSubjects.ha
 const lifetimeHuntWork = (work: string): boolean => lifetimeHuntSubjects.has(work) || lifetimeHuntWorkIds.has(work);
 const hasLifetimeHunt = lifetimeHuntSubjects.size > 0;
 let placeOrder: readonly string[] = [];
+/* CH-17: each Send's open blanks by mission part, read with the place order every wave. */
+let squadReading: { open: ReadonlyMap<string, ReadonlyMap<string, number>>; parts: ReturnType<typeof missionPartsOf> } | null = null;
 let placeOrderDirty = true;
 let placeOrderRead: Promise<void> | null = null;
 async function refreshPlaceOrder(): Promise<void> {
@@ -1294,12 +1297,16 @@ async function refreshPlaceOrder(): Promise<void> {
       readHeldPlaceCapture(divisionIds, { now: nowIso(), bypassCache: true })]);
     const shortType: Readonly<Record<string, string>> = { zcta: "zcta", county: "county", congressional_district: "cd",
       cbsa: "cbsa", state_leg_upper: "sldu", state_leg_lower: "sldl", state: "state" };
-    placeOrder = orderPlaceWork(row?.value, scopes.map(scope => ({
+    const places = scopes.map(scope => ({
       key: `${scope.decision.geography.stateAbbr.toLowerCase()}.${shortType[scope.decision.geography.type] ?? scope.decision.geography.type}.${scope.decision.geography.geoid.toLowerCase()}`,
       receiptId: scope.decision.receiptId,
       items: buildPlaceOwedList({ divisions: (divisionsByReceipt.get(scope.decision.receiptId) ?? []).map(id => ({ id, label: id })),
         subjects: capture.subjects, held: capture.held, now: nowIso() }),
-    })));
+    }));
+    placeOrder = orderPlaceWork(row?.value, places);
+    const parts = missionPartsOf(row !== null && isAdminConfig(row.value) ? row.value : null);
+    squadReading = { parts, open: new Map(places.map(place => [place.receiptId,
+      new Map(missionPartCounts(place.items, parts).map(count => [count.part, count.open] as const))] as const)) };
   })().catch(error => {
     const detail = `place priority refresh failed; keeping last order: ${error instanceof Error ? error.message : String(error)}`;
     runtimeConditions.push(detail);
@@ -3070,7 +3077,8 @@ async function runAutonomousWave() {
   const workItemsById = new Map<string, WorkItem>();
   const planned = await runAutonomousCoordinator(fleet, { planOnly: true,
     onSelectionSnapshot: items => { for (const item of items) workItemsById.set(item.id, item); },
-    prioritizedInstructions: placeOrder.map((receiptId, priority) => ({ receiptId, priority })) });
+    prioritizedInstructions: placeOrder.map((receiptId, priority) => ({ receiptId, priority })),
+    ...(squadReading ? { squads: squadReading } : {}) });
   const plannedTasks = planned.decisions.filter(row => row.task && (row.action === "WORKER" ||
     (row.action === "SCOUT" && paidWorkerCapacity() > 0))).map(row => row.task!);
   const taskIds = [...new Set([...held.map(task => task.id),
@@ -3081,6 +3089,12 @@ async function runAutonomousWave() {
   const plainTaskIds = new Set([...held.filter(task => !["SCOUT", "DETECTIVE"].includes(task.workerTask?.role ?? "")).map(task => task.id),
     ...planned.decisions.filter(row => row.task && row.action === "WORKER" &&
       !["SCOUT", "DETECTIVE"].includes(row.task.workerTask?.role ?? "")).map(row => row.task!.id)]);
+  if (planned.squadWeights.length > 0) {
+    console.log(`  squads: ${planned.squadWeights.filter(row => row.send !== "standing").map(row =>
+      `${row.send} ${row.part} open ${row.open ?? "unread"} detective ${row.detectiveTurns} debts ${row.openDebts} weight ${row.weight.toFixed(2)}`).join("; ")}`);
+  }
+  /* CH-17: the coordinator's (Send, part) order breaks ties among a Send's pending tasks. */
+  const plannedOrder = new Map(planned.decisions.filter(row => row.task).map((row, index) => [row.task!.id, index] as const));
   const failedTaskIds = new Set<string>();
   const queueFailures: DispatchResult[] = [];
   const failedQueueRead = (id: string, error: unknown) => {
@@ -3130,7 +3144,8 @@ async function runAutonomousWave() {
       }));
       return ids.filter((id, index) => !failedTaskIds.has(id) &&
         (paidOpen || !["SCOUT", "DETECTIVE"].includes(tasks[index]?.value.workerTask?.role ?? "")))
-        .sort((a, b) => queue.compareRound(a, b) || queue.rank(a) - queue.rank(b));
+        .sort((a, b) => queue.compareRound(a, b) || queue.rank(a) - queue.rank(b) ||
+          (plannedOrder.get(a) ?? Number.MAX_SAFE_INTEGER) - (plannedOrder.get(b) ?? Number.MAX_SAFE_INTEGER));
     },
     onDispatched: result => {
       placeOrderDirty = true;

@@ -1,11 +1,13 @@
-import { createRequire } from 'node:module';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
-const root='/workspace/meanwhile';
-const require=createRequire(root+'/package.json');
-const {build}=require('esbuild');
-const postcss=require(require.resolve('postcss',{paths:[require.resolve('@tailwindcss/postcss')]}));
-const tailwind=require('@tailwindcss/postcss');
+import { createRequire } from 'node:module';
+import { build } from 'esbuild';
+import tailwind from '@tailwindcss/postcss';
+import { chromium } from 'playwright';
+const root=process.cwd();
+const packageResolver=createRequire(import.meta.url);
+const postcssModule=await import(pathToFileURL(packageResolver.resolve('postcss', {paths:[packageResolver.resolve('@tailwindcss/postcss')]})).href);
+const postcss=postcssModule.default;
 const dir='/tmp/frontend-proof';mkdirSync(dir,{recursive:true});
 const css=await postcss([tailwind()]).process(readFileSync(root+'/app/globals.css','utf8')+'\n'+readFileSync(root+'/app/reader.css','utf8'),{from:root+'/app/globals.css'});
 writeFileSync(dir+'/style.css',css.css);
@@ -35,7 +37,6 @@ const server=createServer((req,res)=>{
  try {res.setHeader('content-type',file.endsWith('.css')?'text/css':file.endsWith('.js')?'application/javascript':'text/html');res.end(readFileSync(file));}catch{res.statusCode=404;res.end();}
 });
 await new Promise(resolve=>server.listen(3187,'127.0.0.1',resolve));
-const {chromium}=require('playwright');
 const browser=await chromium.launch({headless:true,executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
 const page=await browser.newPage();
 const result=[];

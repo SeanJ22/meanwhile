@@ -45,8 +45,28 @@ export type ConfirmationState =
   /** The runner's records could not be read, so nothing is claimed either way. */
   | "unread";
 
+/** BR-12: what accepting an order means, in four plain parts. Built only from data already read. */
+export interface OrderPlan {
+  /** Who does it: "Runner" or "Admin". */
+  readonly who: string;
+  /** What changes, one phrase. */
+  readonly change: string;
+  /** How many items it creates, or null when the order creates none or it is not counted. */
+  readonly creates: number | null;
+  /** When the first results are due: the heartbeat's next round time, or null when unknown. */
+  readonly resultsBy: string | null;
+}
+
+/** One progress bar per order: setting is one step; a send is created out of created plus deferred; a hunt is the place's score change. */
+export interface OrderProgress {
+  readonly done: number | null;
+  readonly of: number | null;
+}
+
 export interface Confirmation {
   readonly state: ConfirmationState;
+  readonly plan?: OrderPlan;
+  readonly progress?: OrderProgress;
   /** When the runner picked it up, when it has. */
   readonly at: string | null;
   /** One plain sentence for the owner. */
@@ -120,6 +140,37 @@ interface AssignmentReading {
 
 /** Has the runner picked this receipt's action up? Never throws: an unreadable record is "unread". */
 export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: ActionReceipt): Promise<Confirmation> {
+  const core = await confirmCore(repos, receipt);
+  if (receipt.outcome === "REFUSED") return core;
+  let nextRound: string | null = null;
+  try { nextRound = (await repos.runnerHeartbeat.read(RUNNER_ID))?.value?.nextCycleDueAt ?? null; } catch { /* the plan says — */ }
+  return { ...core, plan: orderPlan(receipt, nextRound), progress: orderProgress(receipt, core) };
+}
+
+const SETTING_ACTIONS: ReadonlySet<string> = new Set(["config.setSetting", "config.setFleetSpendCeiling", "config.setPlaceTarget", "config.setDiscoverySearch", "config.setDataSwitch"]);
+
+/** The plan for an accepted order. Pure. */
+export function orderPlan(receipt: Pick<ActionReceipt, "type" | "openedWork" | "label">, nextRoundAt: string | null): OrderPlan {
+  const runner = INTENT_ACTIONS.has(receipt.type) || ROUND_ACTIONS.has(receipt.type);
+  const created = receipt.openedWork.length;
+  return {
+    who: runner ? "Runner" : "Admin",
+    change: receipt.label,
+    creates: created > 0 ? created : null,
+    resultsBy: runner ? nextRoundAt : null,
+  };
+}
+
+/** Progress per order type, from what the confirmation already says. Pure. */
+export function orderProgress(receipt: Pick<ActionReceipt, "type" | "openedWork">, confirmation: Pick<Confirmation, "state">): OrderProgress {
+  const finished = confirmation.state === "applied" || confirmation.state === "not-needed";
+  if (SETTING_ACTIONS.has(receipt.type)) return { done: finished ? 1 : 0, of: 1 };
+  if (receipt.type === "fleet.deployHere") return { done: finished ? receipt.openedWork.length : 0, of: receipt.openedWork.length || null };
+  // A hunt or mission is measured by the place's score since it was accepted; no score is held here.
+  return { done: null, of: null };
+}
+
+async function confirmCore(repos: ControlPlaneRepositories, receipt: ActionReceipt): Promise<Confirmation> {
   if (receipt.outcome === "REFUSED") return { state: "not-needed", at: null, words: receipt.says };
   const type = receipt.type;
   const inIntent = INTENT_ACTIONS.has(type);

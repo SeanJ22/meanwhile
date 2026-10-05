@@ -798,6 +798,9 @@ export interface UiReceipt {
   readonly gatewayType: string | null;
   readonly gatewayReceiptId: string | null;
   readonly readBackAt: string | null;
+  /** BR-12: the plan the order was accepted with, and its one progress bar. */
+  readonly plan?: import("@/lib/control-plane/gateway/confirmation.ts").OrderPlan;
+  readonly progress?: import("@/lib/control-plane/gateway/confirmation.ts").OrderProgress;
   readonly replayed: boolean;
   readonly sentAt: string;
   readonly words?: string;

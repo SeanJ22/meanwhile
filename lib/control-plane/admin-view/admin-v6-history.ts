@@ -86,6 +86,7 @@ function mapped(receipt: ActionReceipt, scope: string, confirmation: Confirmatio
       published: null, checkedOnPublicPage: null },
     simulated: false, gatewayType: receipt.type, gatewayReceiptId: receipt.receiptId,
     readBackAt: receipt.readBackAt, replayed: false, sentAt: receipt.startedAt,
+    ...(confirmation?.plan ? { plan: confirmation.plan } : {}), ...(confirmation?.progress ? { progress: confirmation.progress } : {}),
   };
 }
 function token(cursor: Cursor): string { return Buffer.from(JSON.stringify(cursor)).toString("base64url"); }

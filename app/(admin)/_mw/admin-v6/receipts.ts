@@ -117,7 +117,8 @@ export function confirmationOf(body: unknown): Confirmation | null {
   if (!c || typeof c !== "object") return null;
   const x = c as Partial<Confirmation>;
   const okState = x.state === "applied" || x.state === "waiting" || x.state === "not-needed" || x.state === "unread";
-  return okState && typeof x.words === "string" ? { state: x.state as Confirmation["state"], at: typeof x.at === "string" ? x.at : null, words: x.words } : null;
+  return okState && typeof x.words === "string" ? { state: x.state as Confirmation["state"], at: typeof x.at === "string" ? x.at : null, words: x.words,
+    ...(x.plan && typeof x.plan === "object" ? { plan: x.plan } : {}), ...(x.progress && typeof x.progress === "object" ? { progress: x.progress } : {}) } : null;
 }
 
 /**
@@ -136,9 +137,11 @@ export function applyConfirmation(prev: UiReceipt, c: Confirmation, at: string):
       steps: [...prev.steps, { label: "Runner confirmed", at: c.at ?? at }],
       says: c.words,
       lifecycle: { ...prev.lifecycle, workersReceived: c.at ?? at },
+      ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}),
     };
   }
-  if (c.state === "waiting" || c.state === "unread") return { ...prev, status: "queued", statusWords: STATUS_WORDS.queued, says: c.words };
+  if (c.state === "waiting" || c.state === "unread") return { ...prev, status: "queued", statusWords: STATUS_WORDS.queued, says: c.words,
+    ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}) };
   return prev;
 }
 
@@ -208,3 +211,27 @@ export const HISTORY_FILTERS: readonly { readonly id: string; readonly label: st
   { id: "bad", label: "Refused or failed", statuses: ["refused", "failed"] },
   { id: "unknown", label: "Result unknown", statuses: ["unknown"] },
 ];
+
+/** The five steps an order walks. Received is the saved receipt; the rest come from what the runner reported. */
+export const ORDER_STEPS = ["Received", "Accepted", "Scheduled", "In progress", "Done"] as const;
+
+/**
+ * How far an order has got, as the count of steps reached (0 to 5), from the receipt's own status and plan.
+ * Accepted needs a plan; Scheduled needs a time the work is due; In progress needs the work to have started.
+ */
+export function orderStepsReached(r: Pick<UiReceipt, "status" | "plan" | "lifecycle">): number {
+  if (r.status === "refused" || r.status === "failed") return 0;
+  if (r.status === "done" || r.status === "partial") return 5;
+  if (r.status === "running" || r.lifecycle.workStarted) return 4;
+  if (r.plan?.resultsBy) return 3;
+  if (r.plan) return 2;
+  return r.lifecycle.saved || r.status === "queued" || r.status === "read" ? 1 : 0;
+}
+
+/** The one-line acceptance: "Accepted · Runner · creates 4 items in Place · first results by <ET time>". Parts that are not known are left out. */
+export function acceptedLine(r: Pick<UiReceipt, "plan" | "scopeName" | "level">, format: (iso: string) => string): string | null {
+  if (!r.plan) return null;
+  const where = r.level === "local" && r.scopeName && r.scopeName !== "—" ? ` in ${r.scopeName}` : "";
+  return ["Accepted", r.plan.who, r.plan.creates !== null ? `creates ${r.plan.creates} ${r.plan.creates === 1 ? "item" : "items"}${where}` : r.plan.change,
+    ...(r.plan.resultsBy ? [`first results by ${format(r.plan.resultsBy)}`] : [])].join(" · ");
+}

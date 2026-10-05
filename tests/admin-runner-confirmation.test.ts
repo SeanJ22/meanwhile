@@ -305,3 +305,24 @@ test("paid research can be paused and resumed, and each is Done only when the ru
   assert.match(done.words, /Paid research resumed/);
   assert.equal((await confirmReceipt(repos, paused.receipt)).state, "waiting", "the pause is a different intent and is still waiting");
 });
+
+import { acceptedLine, orderStepsReached } from "../app/(admin)/_mw/admin-v6/receipts.ts";
+import { orderPlan, orderProgress } from "../lib/control-plane/gateway/confirmation.ts";
+
+test("BR-12: an order is Accepted with a plan, then a progress bar; the five steps and the one line", () => {
+  const receipt = { type: "fleet.deployHere", label: "Send agents here", openedWork: [{ kind: "work", id: "a", title: "t" }, { kind: "work", id: "b", title: "t" }] };
+  const plan = orderPlan(receipt, "2026-10-05T18:00:00Z");
+  assert.deepEqual(plan, { who: "Runner", change: "Send agents here", creates: 2, resultsBy: "2026-10-05T18:00:00Z" });
+  const line = acceptedLine({ plan, scopeName: "Sierra Vista", level: "local" }, () => "2:00 PM ET");
+  assert.equal(line, "Accepted · Runner · creates 2 items in Sierra Vista · first results by 2:00 PM ET");
+  const lifecycle = { saved: "x", workersReceived: null, workStarted: null, workFinished: null, factsChecked: null, published: null, checkedOnPublicPage: null };
+  assert.equal(orderStepsReached({ status: "queued", plan: undefined, lifecycle }), 1, "received only");
+  assert.equal(orderStepsReached({ status: "queued", plan: { ...plan, resultsBy: null }, lifecycle }), 2, "accepted with a plan");
+  assert.equal(orderStepsReached({ status: "queued", plan, lifecycle }), 3, "scheduled for a round");
+  assert.equal(orderStepsReached({ status: "running", plan, lifecycle }), 4);
+  assert.equal(orderStepsReached({ status: "done", plan, lifecycle }), 5);
+  assert.deepEqual(orderProgress(receipt, { state: "waiting" }), { done: 0, of: 2 });
+  assert.deepEqual(orderProgress(receipt, { state: "applied" }), { done: 2, of: 2 });
+  assert.deepEqual(orderProgress({ type: "config.setSetting", openedWork: [] }, { state: "applied" }), { done: 1, of: 1 });
+  assert.deepEqual(orderProgress({ type: "expansion.scope.set", openedWork: [] }, { state: "applied" }), { done: null, of: null }, "no score held: shown as —");
+});

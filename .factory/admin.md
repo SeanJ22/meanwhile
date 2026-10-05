@@ -1,9 +1,9 @@
 build_state: active
 worker: overflow-1
 provider: Claude (River-run overflow)
-run_id: session_01M3CeUks1KpFZttTP6ZTEAq/overflow-1
-lock: overflow-1-20261004T1332Z-7f3a
-heartbeat: 2026-10-04T13:54:51Z
+run_id: overflow-1 2026-10-05 session_012Ufwyxx6iej1CSEX6khMyg
+lock: overflow-1-20261005T1600Z-c91d
+heartbeat: 2026-10-05T15:58:40Z
 on_river: none
 ready: none yet
 checks: previous (codex-admin) application SHA 916e446c73f8a2787fc7147cd48d9c01245c23aa: 24 focused tests PASS, tsc PASS, eslint PASS; FULL incomplete. See .factory/admin-checks.md.

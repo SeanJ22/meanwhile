@@ -50,7 +50,6 @@ import { createHash } from "node:crypto";
 
 import type { ControlPlaneRepositories } from "./repository/types.ts";
 import { flushBankWriteFailures, recordBankWriteFailure } from "./bank-write-health.ts";
-import { capabilitiesFromEntries, reopenAbsencesFor } from "./scheduler/absence-reopen.ts";
 import { jobCostProfiles } from "./bank-job-cost.ts";
 
 /** Every worker role whose learnings the manual carries. SHARED = every role reads it. */
@@ -399,22 +398,6 @@ export function newFieldManualEntry(
 }
 
 /**
- * DP-10: a working route, method or adapter just written reopens every dead end it could solve, so
- * those obligations are owed now instead of waiting out their hold. Only when the caller's store
- * carries obligations; a failure here is reported beside the write, never undoes it.
- */
-async function reopenUnlockedAbsences(repos: FieldManualRepos, entries: readonly FieldManualEntry[], now: string) {
-  const capabilities = capabilitiesFromEntries(entries);
-  const obligations = (repos as Partial<Pick<ControlPlaneRepositories, "obligations">>).obligations;
-  if (capabilities.length === 0 || !obligations) return {};
-  try {
-    return { reopened: (await reopenAbsencesFor({ obligations }, capabilities, now)).length };
-  } catch (error) {
-    return { reopenError: error instanceof Error ? error.message : String(error) };
-  }
-}
-
-/**
  * **THE ONE WRITE.** Fold what a role just learned into the live manual, grow-only,
  * using the store's own compare-and-set to survive a concurrent writer. A write
  * failure is returned, never thrown: it must not lose the result that was
@@ -424,7 +407,7 @@ export async function writeFieldManual(
   repos: FieldManualRepos,
   entries: readonly FieldManualEntry[],
   now: string,
-): Promise<{ readonly written: number; readonly error?: string; readonly reopened?: number; readonly reopenError?: string }> {
+): Promise<{ readonly written: number; readonly error?: string }> {
   if (entries.length === 0) return { written: 0 };
   for (let attempt = 0; attempt < 4; attempt += 1) {
     try {
@@ -433,7 +416,7 @@ export async function writeFieldManual(
       if (current === null) await repos.fieldManual.put(FIELD_MANUAL_ID, next, now);
       else await repos.fieldManual.compareAndSet(FIELD_MANUAL_ID, current.revision, next, now);
       await flushBankWriteFailures(repos, now);
-      return { written: entries.length, ...await reopenUnlockedAbsences(repos, entries, now) };
+      return { written: entries.length };
     } catch (error) {
       if (attempt === 3) {
         await recordBankWriteFailure(repos, now);

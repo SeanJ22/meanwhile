@@ -47,3 +47,17 @@ Observed failures (incomplete run):
 - the ceiling is hard, and a run that blows it fails rather than reporting a result (1.949695ms)
 
 The in-memory history adapter failure was repaired in the application checkpoint and the existing runner-confirmation test now passes in the 24-test focused run. Browser, build-trace and generated-artifact failures remain seen-not-fixed for River. Trace input `.next` was pre-existing; no current build or live Admin verification is claimed.
+
+## 2026-10-05 Codex BR-07 verification
+
+Exact tested READY SHA: f2ca419ef23849c4c941fc7f6b78752ed9727e97. River baseline: ecf402600401783b094837c29e0c515eadbdb843.
+
+- `env -u DATABASE_URL -u WTP_ASSET_STORE COREPACK_HOME=/tmp/meanwhile-corepack corepack pnpm exec tsc --noEmit`: PASS.
+- Same environment, `pnpm exec eslint .`: PASS, zero errors, existing screen-now unused N warning.
+- Same environment, pnpm test selection admin-v6-ui/v6-ui.test.tsx and live-sync.test.ts: 37 PASS.
+- `CI_TIER=yes CI_EVENT_NAME=pull_request CI_BASE_SHA=<merge-base with origin/river> node scripts/ci-affected-tests.mjs`: FULL (coordination markdown outside code graph).
+- Same environment `pnpm test` at the exact READY SHA: 9,360 tests; 9,334 PASS; 16 could-not-run browser failures; 10 SKIP. Missing Playwright browser build 1234; no build root. Every failing file was repeated on untouched origin/river with the same missing-browser failure. The recent-vote expansion file leaks its fixture server when launch fails before try/finally, on both branches. Terminated only that stuck FULL test worker to finish the run; baseline bounded at 20 seconds. The timing artifact is incomplete and not scheduling evidence. No new code failures.
+
+Local logs: /tmp/meanwhile-admin-ready-types.log, ready-lint.log, selection-network.txt, ready-full-network.log; baseline-browser.log, baseline-other-browser.log, baseline-beacon.log and baseline-vote-browser.log, all with the prefix /tmp/meanwhile-admin-. The publication includes this exact summary so a later environment need not have local files. Full logs remain local; no credentials were printed.
+
+Only stream/admin is published. No PR, main/river push, auto-merge, production data write, spending change or notification.

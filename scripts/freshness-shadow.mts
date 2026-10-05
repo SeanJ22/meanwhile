@@ -1,6 +1,5 @@
 import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
-import { createHash } from "node:crypto";
 import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
 import { RESEARCH_PARENT_PEAK_MIB, reportingWorkerSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
@@ -199,9 +198,10 @@ import { evidenceProjection } from "../lib/control-plane/workers/evidence-projec
 import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
 import { factChainLines } from "../lib/control-plane/promotion/fact-chain.ts";
 import { createPermanentMeetingFreshness } from "../lib/control-plane/promotion/meeting-freshness.ts";
-import { preloadAzOperationalReferenceBundle, preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
+import { preloadAzOperationalReferenceBundle, preloadOperationalReferenceBundle, requiredJurisdictionRegistry } from "../lib/civic-data/operational-references.ts";
 import { methodMaturityFromManual } from "../lib/control-plane/scheduler/maturity.ts";
-import { GAP_LEDGER_PATH, recordedMeetingsDiscovery } from "../lib/hunt/meetings-discovery.ts";
+import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
+import { heldCalendarRouteBodies, missionMeetingsDiscoveryNeeds } from "../lib/hunt/mission-meetings-discovery.ts";
 import {
   discoveryNeedsToWalk,
   runMeetingsDiscovery,
@@ -217,7 +217,8 @@ import { huntSearchScope } from "../lib/control-plane/discovery/hunt-search-scop
 import { fingerprint } from "../lib/control-plane/ids.ts";
 import {
   closeAbandonedOccurrences,
-  planMovedToGapLedger,
+  jurisdictionMeetingsSubject,
+  planHeldRouteRetirement,
   scanOccurrences,
   planRetiredResidue,
   planSupersededRetirement,
@@ -849,9 +850,9 @@ if (canonicalCandidateCounts === null) {
  * one apply (`settleRetirements`):
  *
  * - **A jurisdiction meetings row** (`freshness:jurisdiction:<id>#meetings-N`)
- *   is retired only when the committed gap ledger lists its jurisdiction as
- *   owed meetings discovery, and its reason names that entry
- *   (`planMovedToGapLedger`). The superseded planner never sees one.
+ *   is retired only when its government's exact body holds a calendar route on
+ *   the owed rows, and its reason names that body (`planHeldRouteRetirement`,
+ *   CH-21). The superseded planner never sees one.
  * - **A row the registry stopped emitting** is retired only when its provider
  *   read cleanly and the drop stays inside the bound
  *   (`planSupersededRetirement`). Otherwise it is held back by name.
@@ -871,23 +872,6 @@ const retirementOutside = sync.outside !== null && ONLY === null && IDS === null
 const residueItems = retirementOutside === null ? [] : planRetiredResidue(retirementOutside);
 const corpusUnits = allUnits.map((u) => ({ providerId: u.providerId, obligationId: u.obligation.id }));
 /*
- * The committed gap ledger, read once. It is the only evidence on which a
- * jurisdiction meetings row retires (an unreadable ledger retires none), and
- * the only list the meetings-discovery phase walks.
- */
-const gapLedgerRead = (() => {
-  try {
-    const text = readFileSync(join(ROOT, GAP_LEDGER_PATH), "utf8");
-    const read = recordedMeetingsDiscovery(JSON.parse(text));
-    if ("unreadable" in read) return read;
-    /* Each need carries the ledger it was read from, so a route found from its address can be attested later (NH330). */
-    const addressSource = { source: "GAP_LEDGER" as const, versionId: createHash("sha256").update(text).digest("hex") };
-    return { ...read, needs: read.needs.map((need) => ({ ...need, addressSource })) };
-  } catch (error) {
-    return { unreadable: `${GAP_LEDGER_PATH} could not be read (${error instanceof Error ? error.message : String(error)})` };
-  }
-})();
-/*
  * The meetings discovery the owner's dispatch materialized (MW-028). Each
  * government's need is derived from its promoted registry, as the provider
  * derives it. The free walk goes first on these even where the committed ledger
@@ -897,11 +881,18 @@ const gapLedgerRead = (() => {
  */
 const dispatchedDiscoveryIds = sync.all.map((o) => o.id).filter((id) => id.startsWith(MEETINGS_DISCOVERY_NAMESPACE));
 const dispatchedDiscovery = materializedDiscoveryNeeds(dispatchedDiscoveryIds);
-/* A dispatched need's address comes from the promoted jurisdiction reference, or its state's registration; it carries that version (NH330). */
-const dispatchedNeeds = new Map(
-  dispatchedDiscovery.entries.map((e) => [e.need.jurisdictionId, { ...e.need, addressSource: dispatchedAddressSource(e.reg,
-    (e.reg.stateCode.toLowerCase() === "az" ? azOperationalReference ?? legacyOperationalReference : legacyOperationalReference)?.metadata.versionId ?? null) }]),
-);
+/* A dispatched or mission need's address comes from the promoted jurisdiction reference, or its state's registration; it carries that version (NH330). */
+const withAddressSource = (e: { readonly need: MeetingsDiscoveryNeed; readonly reg: Parameters<typeof dispatchedAddressSource>[0] }): MeetingsDiscoveryNeed =>
+  ({ ...e.need, addressSource: dispatchedAddressSource(e.reg,
+    (e.reg.stateCode.toLowerCase() === "az" ? azOperationalReference ?? legacyOperationalReference : legacyOperationalReference)?.metadata.versionId ?? null) });
+const dispatchedNeeds = new Map(dispatchedDiscovery.entries.map((e) => [e.need.jurisdictionId, withAddressSource(e)]));
+/*
+ * CH-21: the calendar blanks of every Send's mission map, read with the place order each wave
+ * (`refreshPlaceOrder`): each government in a mission place whose body holds no calendar route. The free walk
+ * takes them after the dispatched needs, in any state, with no dispatch.
+ */
+let missionDiscoveryNeeds = new Map<string, MeetingsDiscoveryNeed>();
+let missionDiscoveryHeld = 0;
 const freeWalkSubjects: readonly FreeWalkSubject[] = [
   ...new Set(dispatchedDiscoveryIds.flatMap((id) => parseMeetingsDiscoveryId(id)?.jurisdictionId ?? [])),
 ].map((jurisdictionId) => {
@@ -909,15 +900,36 @@ const freeWalkSubjects: readonly FreeWalkSubject[] = [
   return { jurisdictionId, walkable: need === undefined ? null : walkableByFreeWalk(need) };
 });
 let freeWalks: FreeDiscoveryWalks = UNREAD_FREE_DISCOVERY_WALKS;
-const gapLedger = retirementOutside === null ? null : gapLedgerRead;
+/*
+ * CH-21: the evidence an old jurisdiction meetings row retires on. Only the governments with an active row outside
+ * the corpus are read: each one's exact body, and that body's division's owed rows for a held calendar route.
+ */
+const corpusIds = new Set(corpusUnits.map((u) => u.obligationId));
+const heldRouteCandidates = retirementOutside === null ? [] : [...new Set(retirementOutside
+  .filter((row) => row.active && !corpusIds.has(row.id))
+  .flatMap((row) => jurisdictionMeetingsSubject(row.id) ?? []))];
+const heldRouteRead = retirementOutside === null ? null : await (async () => {
+  try {
+    if (heldRouteCandidates.length === 0) return { bodyIdFor: () => null, held: new Set<string>() };
+    await meetingPartitions.readStates(heldRouteCandidates.map((id) => id.split(":")[0] ?? ""));
+    const bodyIdFor = (id: string): string | null => meetingPartitions.bodyIdFor?.(id) ?? null;
+    const divisions = [...new Set(heldRouteCandidates.flatMap((id) => bodyIdFor(id)?.split("#")[0] ?? []))];
+    if (divisions.length === 0) return { bodyIdFor, held: new Set<string>() };
+    const capture = await readHeldPlaceCapture(divisions, { now: NOW, bypassCache: true });
+    const rows = buildPlaceOwedList({ divisions: divisions.map((id) => ({ id, label: id })), subjects: capture.subjects, held: capture.held, now: NOW });
+    return { bodyIdFor, held: heldCalendarRouteBodies(rows) };
+  } catch (error) {
+    return { unreadable: error instanceof Error ? error.message : String(error) };
+  }
+})();
 const movedPlan =
-  retirementOutside === null || gapLedger === null
+  retirementOutside === null || heldRouteRead === null
     ? null
-    : planMovedToGapLedger({
+    : planHeldRouteRetirement({
         outside: retirementOutside,
         corpus: corpusUnits,
         providers: registry.byProvider,
-        ledger: { path: GAP_LEDGER_PATH, recorded: gapLedger },
+        routes: heldRouteRead,
       });
 const supersededPlan =
   retirementOutside === null || movedPlan === null
@@ -946,7 +958,7 @@ const retiredDebtReasons = new Map<string, string>();
 if (movedPlan !== null && supersededPlan !== null && retirementOutside !== null) {
   const items = [...residueItems, ...supersededPlan.retire, ...movedPlan.retire];
   console.log(
-    `  retirement: ${movedPlan.retire.length} moved to the gap ledger, ${supersededPlan.retire.length} superseded, ` +
+    `  retirement: ${movedPlan.retire.length} with a held calendar route, ${supersededPlan.retire.length} superseded, ` +
       `${residueItems.length} retired row(s) still holding an occurrence` +
       (retirementHeldBack.length > 0 ? `; held back ${JSON.stringify(retirementHolds)}` : "") +
       (retirementWrites ? "" : " (plan only: this cycle writes nothing)"),
@@ -984,7 +996,7 @@ const movedIds = new Set((movedPlan?.retire ?? []).map((item) => item.obligation
 const movedThisCycle = (retirementApplied?.retired ?? []).filter((id) => movedIds.has(id)).length;
 const movedRemaining = movedIds.size - movedThisCycle;
 if (movedIds.size > 0) {
-  console.log(`  retirement: moved to the gap ledger ${movedThisCycle} this cycle, ${movedRemaining} remain`);
+  console.log(`  retirement: ${movedThisCycle} row(s) with a held calendar route retired this cycle, ${movedRemaining} remain`);
 }
 finishPhase("retirement");
 const occurrenceByObligation = new Map<string, { id: string; routeTaskId: string }>();
@@ -1312,6 +1324,16 @@ async function refreshPlaceOrder(): Promise<void> {
       new Map(missionPartCounts(place.items, parts).map(count => [count.part, count.open] as const))] as const)) };
     missionMaps = new Map(places.map(place => [place.receiptId, missionMapCount(place.items, null)] as const));
     missionMapUnread = null;
+    /* CH-21: every government in a mission place whose body holds no calendar route is owed discovery. */
+    const mission = missionMeetingsDiscoveryNeeds({
+      jurisdictionIds: scopes.flatMap(scope => [...scope.members]),
+      registryFor: requiredJurisdictionRegistry,
+      bodyIdFor: (id) => meetingPartitions.bodyIdFor?.(id) ?? null,
+      heldRoutes: heldCalendarRouteBodies(places.flatMap(place => place.items)),
+    });
+    missionDiscoveryNeeds = new Map(mission.entries.map(e => [e.need.jurisdictionId, withAddressSource(e)] as const));
+    missionDiscoveryHeld = mission.heldRoute.length;
+    for (const failure of mission.failures) if (!runtimeConditions.includes(failure)) runtimeConditions.push(failure);
   })().catch(error => {
     const detail = `place priority refresh failed; keeping last order: ${error instanceof Error ? error.message : String(error)}`;
     if (missionMaps.size === 0) missionMapUnread = detail;
@@ -3218,7 +3240,7 @@ try {
 /*
  * **THE UNPAID MEETINGS-DISCOVERY EXECUTOR.** (2026-09-23.)
  *
- * Walks the gap ledger's meetings-discovery needs: robots first on every host,
+ * Walks the dispatched and mission-map meetings-discovery needs (CH-21): robots first on every host,
  * no model, a find confirmed by content and recorded as a candidate
  * (`lib/control-plane/discovery/meetings-discovery-executor.ts`). OFF unless
  * WTP_MEETINGS_DISCOVERY is "on": it is a new production writer and new
@@ -3246,12 +3268,17 @@ const DISCOVERY_NO_PROGRESS_LIMIT = 5;
  * raise them within 0..1000.
  */
 const runMeetingsDiscoveryPass = async (discoveryDeadlineMs: number, maxWalks: number): Promise<void> => {
+  /* CH-21: the owner's dispatch first, then every Send's mission map's calendar blanks, as read this wave. */
+  const discoveryToWalk = discoveryNeedsToWalk([...missionDiscoveryNeeds.values()], [...dispatchedNeeds.values()], need => {
+    const id = meetingsDiscoveryObligationId(need);
+    return (ONLY === null || id.startsWith(ONLY)) && (IDS === null || IDS.has(id));
+  });
   if (!MEETINGS_DISCOVERY_ENABLED) {
     meetingsDiscoveryState = "OFF: WTP_MEETINGS_DISCOVERY=off, the kill switch";
   } else if (dry || canary) {
     meetingsDiscoveryState = "not run: a dry or canary cycle walks nothing";
-  } else if ("unreadable" in gapLedgerRead) {
-    meetingsDiscoveryState = `not run: ${gapLedgerRead.unreadable}`;
+  } else if (discoveryToWalk.length === 0) {
+    meetingsDiscoveryState = `not run: no government is owed meetings discovery (${missionMapUnread ?? "no mission place has a calendar blank and no dispatch is open"})`;
   } else {
     /* The caller sets the deadline: 60 s on the serial path, the time left in the round on its own lane. */
     const openDiscovery = fleetSafety.guardedOpenBytes("discovery-web", "meetings-discovery", fetch, { followRedirects: false });
@@ -3296,10 +3323,7 @@ const runMeetingsDiscoveryPass = async (discoveryDeadlineMs: number, maxWalks: n
         return pages;
       })();
       meetingsDiscovery = await runMeetingsDiscovery(repos, {
-        needs: discoveryNeedsToWalk(gapLedgerRead.needs, [...dispatchedNeeds.values()], need => {
-          const id = meetingsDiscoveryObligationId(need);
-          return (ONLY === null || id.startsWith(ONLY)) && (IDS === null || IDS.has(id));
-        }),
+        needs: discoveryToWalk,
         cycleIndex: Math.floor(Date.parse(NOW) / 3_600_000),
         maxWalks, rotationStep: MEETINGS_DISCOVERY_MAX_WALKS, noProgressLimit: DISCOVERY_NO_PROGRESS_LIMIT,
         /* An owner-dispatched meetings-discovery obligation goes first; one with an open occurrence is another executor's. */
@@ -3969,7 +3993,7 @@ const lines = [
     ? []
     : [
         `  retired            ${retirementApplied?.retired.length ?? 0} of ${movedPlan.retire.length + supersededPlan.retire.length} planned obligation(s) · ` +
-          `moved to the gap ledger ${movedThisCycle} this cycle, ${movedRemaining} remain · ` +
+          `${movedThisCycle} with a held calendar route this cycle, ${movedRemaining} remain · ` +
           `${supersededPlan.retire.length} planned that the registry no longer emits · ` +
           `${retirementApplied?.occurrencesClosed.length ?? 0} open occurrence(s) closed unresolved · ` +
           `${persisted.clearedAsRetired.length} debt(s) tombstoned as retired` +
@@ -3980,7 +4004,7 @@ const lines = [
       ]),
   `  discovery          meetings: ${meetingsDiscoveryState}` +
     (meetingsDiscovery === null
-      ? ` · ${"unreadable" in gapLedgerRead ? "the gap ledger could not be read" : `${gapLedgerRead.needs.filter((n) => n.basis === "SOURCE_DISCOVERY_OWED").length} site(s) owed discovery in the gap ledger`}`
+      ? ` · ${missionDiscoveryNeeds.size} mission government(s) owed discovery, ${missionDiscoveryHeld} with a held calendar route, ${dispatchedNeeds.size} dispatched`
       : ` · ${meetingsDiscovery.walked.length} walked (${meetingsDiscoveryByOutcome.FOUND ?? 0} found, ${meetingsDiscoveryByOutcome.LEAD ?? 0} lead, ` +
         `${meetingsDiscoveryByOutcome.NOTHING_DETECTED ?? 0} nothing detected, ${meetingsDiscoveryByOutcome.BLOCKED ?? 0} blocked, ` +
         `${meetingsDiscoveryByOutcome.COULD_NOT_READ ?? 0} could not read) · ${meetingsDiscovery.notDue.length} not yet due · ` +
@@ -4086,6 +4110,8 @@ const runRecord = {
       meetingsDiscovery: {
         enabled: MEETINGS_DISCOVERY_ENABLED,
         state: meetingsDiscoveryState,
+        /* CH-21: the governments in mission places owed discovery, and those whose body holds a calendar route. */
+        mission: { owed: [...missionDiscoveryNeeds.keys()], heldCalendarRoute: missionDiscoveryHeld },
         walked: (meetingsDiscovery?.walked ?? []).map((a) => ({
           jurisdictionId: a.jurisdictionId,
           attemptId: a.attemptId,
@@ -4138,16 +4164,16 @@ const runRecord = {
       candidatePublications: { state: candidatePublicationsState, report: candidatePublications },
       /* Rows outside the corpus: what was planned, held back by code, and actually written (2026-09-23). */
       retirement:
-        movedPlan === null || supersededPlan === null || gapLedger === null
+        movedPlan === null || supersededPlan === null || heldRouteRead === null
           ? null
           : {
-              movedToGapLedger: movedPlan.retire.map((item) => item.obligationId),
+              heldCalendarRoute: movedPlan.retire.map((item) => item.obligationId),
               movedThisCycle,
               movedRemaining,
-              gapLedger:
-                "unreadable" in gapLedger
-                  ? { path: GAP_LEDGER_PATH, unreadable: gapLedger.unreadable }
-                  : { path: GAP_LEDGER_PATH, jurisdictionsRecorded: gapLedger.jurisdictionIds.size },
+              heldRouteEvidence:
+                "unreadable" in heldRouteRead
+                  ? { unreadable: heldRouteRead.unreadable }
+                  : { governmentsRead: heldRouteCandidates.length, bodiesWithHeldRoute: heldRouteRead.held.size },
               superseded: supersededPlan.retire.map((item) => item.obligationId),
               residue: residueItems.map((item) => item.obligationId),
               heldBackByCode: retirementHolds,

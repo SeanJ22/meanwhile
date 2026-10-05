@@ -544,27 +544,28 @@ export function planSupersededRetirement(input: {
 }
 
 /**
- * **A NEED THAT MOVED RETIRES NAMING WHERE IT NOW LIVES.** (2026-09-23.)
+ * **AN OLD JURISDICTION MEETINGS ROW RETIRES ON A HELD CALENDAR ROUTE.**
+ * (2026-09-23; evidence replaced by CH-21, 2026-10-05.)
  *
  * Since 902f5c50 the local-jurisdictions provider opens no MEETINGS source, so
  * no freshness clock carries a jurisdiction's meetings discovery, and the old
- * `freshness:jurisdiction:<id>#meetings-N` rows sit outside the corpus. On
- * 2026-09-23, 484 were still active. That was more than
- * `SUPERSEDED_RETIREMENT_BOUND` allows, so `planSupersededRetirement` held
- * them all. They are not superseded: the need did not end. The committed gap
- * ledger now records it (`meetingsDiscovery.needs`).
+ * `freshness:jurisdiction:<id>#meetings-N` rows sit outside the corpus. They
+ * are not superseded: the need ends only when the government's meetings have a
+ * route. Until CH-21 the committed gap ledger was the evidence; it was a
+ * snapshot that recorded the need, not its end. The evidence now is the mission
+ * map's own: the government's exact body has a held calendar route on the owed
+ * rows (`heldCalendarRouteBodies`, `lib/hunt/mission-meetings-discovery.ts`).
  *
  * This planner owns every such row outside the corpus, and
  * `planSupersededRetirement` is given none of them. A row is RETIRED, with a
- * reason naming the ledger entry, only when all of these hold:
+ * reason naming the body and its route, only when all of these hold:
  *
  * - it is active;
  * - the provider that owns `freshness:jurisdiction:` read cleanly this cycle;
- * - the ledger could be read, and lists the row's jurisdiction.
+ * - the owed rows were read, and the government's exact body holds a calendar route.
  *
- * Every other such row stays active and is held back by name. A retirement
- * discovers nothing and says so: no scheduler walks the ledger's needs yet.
- * If a provider emits the id again, `syncObligations` writes the row live.
+ * Every other such row stays active and is held back by name. If a provider
+ * emits the id again, `syncObligations` writes the row live.
  */
 const JURISDICTION_MEETINGS_OBLIGATION = /^freshness:jurisdiction:([^#]+)#meetings-\d+$/;
 
@@ -573,37 +574,36 @@ export function jurisdictionMeetingsSubject(id: string): string | null {
   return JURISDICTION_MEETINGS_OBLIGATION.exec(id)?.[1] ?? null;
 }
 
-export type MovedHold = SupersededHold | "LEDGER_UNREADABLE" | "NOT_RECORDED_IN_LEDGER";
+export type HeldRouteHold = SupersededHold | "ROUTES_UNREAD" | "NO_EXACT_BODY" | "NO_HELD_CALENDAR_ROUTE";
 
-/** Why a jurisdiction meetings row was retired, naming the ledger entry that now records the need. */
-export function movedToGapLedgerReason(ledgerPath: string, jurisdictionId: string): string {
+/** Why a jurisdiction meetings row was retired, naming the body whose calendar route is held. */
+export function heldCalendarRouteReason(jurisdictionId: string, bodyId: string): string {
   return (
-    `MOVED TO THE GAP LEDGER: this jurisdiction's meetings discovery is still owed. ${ledgerPath} records it ` +
-    `(meetingsDiscovery.needs, ${jurisdictionId}), and no freshness clock carries it. Nothing was discovered`
+    `CALENDAR ROUTE HELD: ${jurisdictionId}'s body ${bodyId} has a held calendar route on the mission map ` +
+    "(its publisher route or a meeting captured from it), so its meetings are owed through that route and this old discovery row ends"
   );
 }
 
-export function planMovedToGapLedger(input: {
+export function planHeldRouteRetirement(input: {
   readonly outside: readonly StandingObligation[];
   readonly corpus: readonly { readonly providerId: string; readonly obligationId: string }[];
   readonly providers: readonly ProviderReading[];
-  /** The committed ledger's path, and the jurisdictions it lists or why it could not be read. */
-  readonly ledger: {
-    readonly path: string;
-    readonly recorded: { readonly jurisdictionIds: ReadonlySet<string> } | { readonly unreadable: string };
-  };
+  /** The exact government/body join, and the bodies whose calendar route the owed rows hold, or why they were not read. */
+  readonly routes:
+    | { readonly bodyIdFor: (jurisdictionId: string) => string | null; readonly held: ReadonlySet<string> }
+    | { readonly unreadable: string };
 }): {
   /** Every row this planner owns. None of them is given to `planSupersededRetirement`. */
   readonly owned: ReadonlySet<string>;
   readonly retire: readonly RetirementItem[];
-  readonly heldBack: readonly { readonly obligationId: string; readonly code: MovedHold; readonly why: string }[];
+  readonly heldBack: readonly { readonly obligationId: string; readonly code: HeldRouteHold; readonly why: string }[];
 } {
   const inCorpus = new Set(input.corpus.map((u) => u.obligationId));
   const ownerOf = cleanOwnerOf(input.corpus, input.providers);
-  const { path, recorded } = input.ledger;
+  const { routes } = input;
   const owned = new Set<string>();
   const retire: RetirementItem[] = [];
-  const heldBack: { obligationId: string; code: MovedHold; why: string }[] = [];
+  const heldBack: { obligationId: string; code: HeldRouteHold; why: string }[] = [];
   for (const row of input.outside) {
     const jurisdictionId = jurisdictionMeetingsSubject(row.id);
     if (jurisdictionId === null || inCorpus.has(row.id)) continue;
@@ -612,20 +612,31 @@ export function planMovedToGapLedger(input: {
     const owner = ownerOf(row.id);
     if ("code" in owner) {
       heldBack.push({ obligationId: row.id, ...owner });
-    } else if ("unreadable" in recorded) {
+      continue;
+    }
+    if ("unreadable" in routes) {
       heldBack.push({
         obligationId: row.id,
-        code: "LEDGER_UNREADABLE",
-        why: `the gap ledger could not be read (${recorded.unreadable}), so nothing shows this need is recorded`,
+        code: "ROUTES_UNREAD",
+        why: `the owed rows could not be read (${routes.unreadable}), so nothing shows this government's meetings have a route`,
       });
-    } else if (!recorded.jurisdictionIds.has(jurisdictionId)) {
+      continue;
+    }
+    const bodyId = routes.bodyIdFor(jurisdictionId);
+    if (bodyId === null) {
       heldBack.push({
         obligationId: row.id,
-        code: "NOT_RECORDED_IN_LEDGER",
-        why: `${path} does not list ${jurisdictionId}, so retiring this row would drop a need nothing records`,
+        code: "NO_EXACT_BODY",
+        why: `${jurisdictionId} has no exact governing-body join, so no calendar row shows its meetings have a route`,
+      });
+    } else if (!routes.held.has(bodyId)) {
+      heldBack.push({
+        obligationId: row.id,
+        code: "NO_HELD_CALENDAR_ROUTE",
+        why: `${bodyId} holds no calendar route on the owed rows, so retiring this row would drop a need nothing has met`,
       });
     } else {
-      retire.push({ obligationId: row.id, reason: movedToGapLedgerReason(path, jurisdictionId) });
+      retire.push({ obligationId: row.id, reason: heldCalendarRouteReason(jurisdictionId, bodyId) });
     }
   }
   retire.sort((a, b) => (a.obligationId < b.obligationId ? -1 : a.obligationId > b.obligationId ? 1 : 0));

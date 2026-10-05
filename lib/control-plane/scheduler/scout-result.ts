@@ -193,6 +193,9 @@ export interface ScoutCandidate {
 
 /** An evidence finding: the record itself, or a pointer to it, was acquired. */
 export interface ScoutFinding {
+  /** The finding's target, which may differ from the Scout's starting subject. */
+  readonly subjectId?: string;
+  readonly missionPart?: string;
   /** A captured fact, never an inferred summary. Older findings may lack these fields. */
   readonly field?: string;
   readonly value?: string | number | boolean | null;

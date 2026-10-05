@@ -1,5 +1,6 @@
 import { workAdapterQueue } from "./engineering-adapter.ts";
 import { detectiveExecutor, heldRecoveryBrief, investigationRole, subjectScoutHistory } from "./detective.ts";
+import { outsideRecordBlockBriefs } from "./record-block.ts";
 import { readFieldManual, writeFieldManual, newFieldManualEntry } from "../field-manual.ts";
 import { isAbsolute, join, relative, resolve, sep } from "node:path";
 import { readFile } from "node:fs/promises";
@@ -128,13 +129,16 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
       return { evidence: evidenceProjection(await heldRuntime.readEvidence(id)), permission: artifact.permission, transport: artifact.transport,
         httpStatus: artifact.httpStatus, partial: artifact.httpStatus === 206 || Boolean(artifact.headers["content-range"]) || artifact.retentionPolicy === "DIAGNOSTIC" };
     } });
+  // CP-19: a field dropped for sitting outside its person's row goes to a detective (DP-03); the kept record still publishes.
+  const outsideBlockLines=(workItemId:string)=>outsideRecordBlockBriefs(priorWorkers.filter(w=>w.workItemId===workItemId)
+    .flatMap(w=>"warnings" in w.result?w.result.warnings:w.result.findings));
   const runtime:AutonomousCoordinatorRuntime={...heldRuntime,
     beginTask:async task=>{ const fresh=await readCompletedWorkerResults(input.repos,task.workItemId);
       priorWorkers=[...priorWorkers.filter(w=>w.workItemId!==task.workItemId),...fresh]; },
     rollingCeilingUsd:input.auditCeilingUsd??0,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",
     authorizedSiblingHeldArtifactIdsFor:item=>sharedHeldByRoot.get(item.id)??[],
     roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder,input.root),
-    ...(input.transport?{scoutFor:(item,task,currentHistory)=>(investigationRole(subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass),task.routeLabel.includes('UNRESOLVED_INVESTIGATION') || heldRecoveryBrief(item.publicationOutcome)!==null || priorWorkers.some(w=>w.workItemId===item.id && (!["ACQUIRED","EXTRACTED","PASS","SUPPORTED","SURVIVED","CANDIDATE_PROVED"].includes(w.result.verdict) || ("warnings" in w.result ? w.result.warnings : w.result.findings).some(f=>f.severity==="BLOCKING")))) === "DETECTIVE" ? detectiveExecutor : scoutExecutor)({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,
+    ...(input.transport?{scoutFor:(item,task,currentHistory)=>(investigationRole(subjectScoutHistory(currentHistory??prior,item.subject,item.autonomousPlan!.contract.recordClass),task.routeLabel.includes('UNRESOLVED_INVESTIGATION') || heldRecoveryBrief(item.publicationOutcome)!==null || outsideBlockLines(item.id).length>0 || priorWorkers.some(w=>w.workItemId===item.id && (!["ACQUIRED","EXTRACTED","PASS","SUPPORTED","SURVIVED","CANDIDATE_PROVED"].includes(w.result.verdict) || ("warnings" in w.result ? w.result.warnings : w.result.findings).some(f=>f.severity==="BLOCKING")))) === "DETECTIVE" ? detectiveExecutor : scoutExecutor)({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,
       ...(input.reserveScoutEscalation?{reserveEscalation:input.reserveScoutEscalation}:{}),
       toolkitFor:ctx=>buildScoutToolkit({...ctx,root:input.root,
         obligation:{...ctx.obligation,obligation:{...ctx.obligation.obligation,autonomousPlan:item.autonomousPlan}},
@@ -184,6 +188,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
             ...manualLines,
             ...planRepairFailureBrief(item),
             ...(heldRecoveryBrief(item.publicationOutcome) ? [heldRecoveryBrief(item.publicationOutcome)!] : item.publicationOutcome && item.publicationOutcome.status !== "PUBLISHED" ? [`Publication repair remains owed: ${item.publicationOutcome.code}. ${item.publicationOutcome.detail}`] : []),
+            ...outsideBlockLines(item.id),
             `Inherited method version ${knowledge.version}. Walk applicable known methods before novelty; the fourteen retrieval rungs are a floor, never a completion ceiling.`,
             ...floor.routes.map(r=>`${r.routeId}: ${r.obligation}; ${r.proof}; ${r.label}; target ${r.target}; applicability ${r.grade}`),
             ...workers.map(w=>{

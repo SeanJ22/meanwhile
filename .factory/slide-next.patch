@@ -1,698 +1,1878 @@
-diff --git a/lib/civic-data/held-place-families.ts b/lib/civic-data/held-place-families.ts
-index 38d656210..25bea959d 100644
---- a/lib/civic-data/held-place-families.ts
-+++ b/lib/civic-data/held-place-families.ts
-@@ -320,8 +320,8 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
-     if (record.totals.cashOnHand !== null) add("CAM-07", { cashOnHand: record.totals.cashOnHand, period: record.totals.coveringPeriod });
-   }
-   for (const filing of families.filings ?? []) {
--    if (officialFilingIssue(filing) !== null || !subject(filing.id, filing.kind === "CAMPAIGN_FINANCE_FILING" ? "funding" : "contest", [filing.ocdId], filing.bodyName,
--      filing.kind === "CAMPAIGN_FINANCE_FILING" ? "campaign-finance" : "candidate")) continue;
-+    if (officialFilingIssue(filing) !== null || !subject(filing.id, filing.kind !== "CANDIDATE_FILING_DOCUMENT" ? "funding" : "contest", [filing.ocdId], filing.bodyName,
-+      filing.kind !== "CANDIDATE_FILING_DOCUMENT" ? "campaign-finance" : "candidate")) continue;
-     const add = (id: string, item: unknown) => field(filing.id, id, item, filing.documentUrl, filing.collectedAt, FRESHNESS_HOURS.daily);
-     if (filing.kind === "CANDIDATE_FILING_DOCUMENT") {
-       add("CAN-01", { name: filing.facts.candidateName, document: filing.documentUrl });
-diff --git a/lib/civic-data/official-filings.ts b/lib/civic-data/official-filings.ts
-index 45c1b3817..321adaa2f 100644
---- a/lib/civic-data/official-filings.ts
-+++ b/lib/civic-data/official-filings.ts
-@@ -1,6 +1,6 @@
- /** Source filing facts, kept separate from certified ballot membership and
-  * candidate/committee joins. Those existing publishers retain their burdens. */
--export const OFFICIAL_FILING_CLASSES = ["CANDIDATE_FILING_DOCUMENT", "CAMPAIGN_FINANCE_FILING"] as const;
-+export const OFFICIAL_FILING_CLASSES = ["CANDIDATE_FILING_DOCUMENT", "CAMPAIGN_FINANCE_FILING", "CAMPAIGN_FINANCE_DOCUMENT"] as const;
- export type OfficialFilingClass = typeof OFFICIAL_FILING_CLASSES[number];
- export interface OfficialFiling {
-   readonly id: string;
-@@ -15,9 +15,11 @@ export interface OfficialFiling {
-   readonly verifiedAt: string;
-   readonly facts: Readonly<Record<string, string | number>>;
+diff --git a/.factory/slide-next.patch b/.factory/slide-next.patch
+index 7e7ba48fa..e69de29bb 100644
+--- a/.factory/slide-next.patch
++++ b/.factory/slide-next.patch
+@@ -1,698 +0,0 @@
+-diff --git a/lib/civic-data/held-place-families.ts b/lib/civic-data/held-place-families.ts
+-index 38d656210..25bea959d 100644
+---- a/lib/civic-data/held-place-families.ts
+-+++ b/lib/civic-data/held-place-families.ts
+-@@ -320,8 +320,8 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
+-     if (record.totals.cashOnHand !== null) add("CAM-07", { cashOnHand: record.totals.cashOnHand, period: record.totals.coveringPeriod });
+-   }
+-   for (const filing of families.filings ?? []) {
+--    if (officialFilingIssue(filing) !== null || !subject(filing.id, filing.kind === "CAMPAIGN_FINANCE_FILING" ? "funding" : "contest", [filing.ocdId], filing.bodyName,
+--      filing.kind === "CAMPAIGN_FINANCE_FILING" ? "campaign-finance" : "candidate")) continue;
+-+    if (officialFilingIssue(filing) !== null || !subject(filing.id, filing.kind !== "CANDIDATE_FILING_DOCUMENT" ? "funding" : "contest", [filing.ocdId], filing.bodyName,
+-+      filing.kind !== "CANDIDATE_FILING_DOCUMENT" ? "campaign-finance" : "candidate")) continue;
+-     const add = (id: string, item: unknown) => field(filing.id, id, item, filing.documentUrl, filing.collectedAt, FRESHNESS_HOURS.daily);
+-     if (filing.kind === "CANDIDATE_FILING_DOCUMENT") {
+-       add("CAN-01", { name: filing.facts.candidateName, document: filing.documentUrl });
+-diff --git a/lib/civic-data/official-filings.ts b/lib/civic-data/official-filings.ts
+-index 45c1b3817..321adaa2f 100644
+---- a/lib/civic-data/official-filings.ts
+-+++ b/lib/civic-data/official-filings.ts
+-@@ -1,6 +1,6 @@
+- /** Source filing facts, kept separate from certified ballot membership and
+-  * candidate/committee joins. Those existing publishers retain their burdens. */
+--export const OFFICIAL_FILING_CLASSES = ["CANDIDATE_FILING_DOCUMENT", "CAMPAIGN_FINANCE_FILING"] as const;
+-+export const OFFICIAL_FILING_CLASSES = ["CANDIDATE_FILING_DOCUMENT", "CAMPAIGN_FINANCE_FILING", "CAMPAIGN_FINANCE_DOCUMENT"] as const;
+- export type OfficialFilingClass = typeof OFFICIAL_FILING_CLASSES[number];
+- export interface OfficialFiling {
+-   readonly id: string;
+-@@ -15,9 +15,11 @@ export interface OfficialFiling {
+-   readonly verifiedAt: string;
+-   readonly facts: Readonly<Record<string, string | number>>;
+- }
+-+const financeFields = ["candidateName", "committeeName", "committeeId", "filingPeriod", "filingDate", "reportType", "currency", "amount", "receipts", "expenditures", "cashOnHand"];
+- const fields = {
+-   CANDIDATE_FILING_DOCUMENT: ["candidateName", "office", "electionDate", "filingDate", "filingStatus", "party"],
+--  CAMPAIGN_FINANCE_FILING: ["committeeName", "committeeId", "filingPeriod", "filingDate", "reportType", "currency", "receipts", "expenditures", "cashOnHand"],
+-+  CAMPAIGN_FINANCE_FILING: financeFields,
+-+  CAMPAIGN_FINANCE_DOCUMENT: financeFields,
+- } as const;
+- export function officialFilingIssue(value: unknown): string | null {
+-   if (!value || typeof value !== "object") return "Filing is not an object.";
+-@@ -33,9 +35,13 @@ export function officialFilingIssue(value: unknown): string | null {
+-   const allowed = fields[row.kind] as readonly string[];
+-   if (Object.entries(row.facts).some(([key, value]) => !allowed.includes(key) ||
+-     !(typeof value === "string" && value.trim() || typeof value === "number" && Number.isFinite(value)))) return "Filing has an unsupported or empty fact.";
+--  const required = row.kind === "CANDIDATE_FILING_DOCUMENT" ? ["candidateName", "office"] : ["committeeName", "filingPeriod"];
+-+  const required = row.kind === "CANDIDATE_FILING_DOCUMENT" ? ["candidateName", "office"]
+-+    : row.kind === "CAMPAIGN_FINANCE_FILING" ? ["filingPeriod"] : [];
+-+  if (row.kind !== "CANDIDATE_FILING_DOCUMENT" && !["candidateName", "committeeName"].some(key => typeof row.facts[key] === "string" && String(row.facts[key]).trim())) return "Filing subject is missing.";
+-   if (required.some(key => typeof row.facts[key] !== "string" || !String(row.facts[key]).trim())) return "Filing required facts are missing.";
+--  const amounts = ["receipts", "expenditures", "cashOnHand"].filter(key => row.facts[key] !== undefined);
+-+  const amounts = ["amount", "receipts", "expenditures", "cashOnHand"].filter(key => row.facts[key] !== undefined);
+-+  if (row.kind === "CAMPAIGN_FINANCE_FILING" && amounts.length === 0) return "Money amount is missing; publish the filing document instead.";
+-+  if (row.kind === "CAMPAIGN_FINANCE_DOCUMENT" && amounts.length > 0) return "Filing document cannot carry incomplete Money facts.";
+-   if (amounts.length && (row.facts.currency !== "USD" || amounts.some(key => typeof row.facts[key] !== "number"))) return "Financial amounts require numeric values and a verified USD currency.";
+-   return null;
+- }
+-diff --git a/lib/civic-data/publish-now.ts b/lib/civic-data/publish-now.ts
+-new file mode 100644
+-index 000000000..605b340dd
+---- /dev/null
+-+++ b/lib/civic-data/publish-now.ts
+-@@ -0,0 +1,39 @@
+-+import type { IndependentRuntimeLane } from "../ops/independent-runtime-pass.ts";
+-+import type { RoutineSourceTask } from "./runner.ts";
+-+import type { WorkItem } from "../control-plane/work-item.ts";
+-+import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
+-+import type { DoorRecord } from "../doors/registry.ts";
+-+import { doorPartitionIds } from "../doors/mission-refresh.ts";
+-+import { workerPublicationTasks } from "./worker-publication-tasks.ts";
+-+import { latestParserResult } from "./worker-publication-evidence.ts";
+-+
+-+export const PUBLISH_NOW_INTERVAL_MS = 60_000;
+-+export const PUBLISH_NOW_SINGLETON_PORT = 49_373;
+-+/** Register on the parent's independent scheduler, beside its routine lane. */
+-+export function publishNowLane(run: () => Promise<void>): IndependentRuntimeLane {
+-+  return { id: "publish-now", everyMs: PUBLISH_NOW_INTERVAL_MS, run };
+-+}
+-+
+-+/** Parser results are already a durable, non-expiring outbox. Their exact ids
+-+ * are acknowledged by publicationOutcome.workerResultId; a crash cannot eat a
+-+ * request. The hourly held-page scan stays on the routine lane. */
+-+export function publishNowWorkerTasks(items: readonly WorkItem[], results: readonly WorkerResultRecord[], now: string): RoutineSourceTask[] {
+-+  return workerPublicationTasks(items.filter(item => latestParserResult(results, item.id) !== undefined), results, now);
+-+}
+-+
+-+/** Probe changes stay pending until a successful read; no due-request expiry
+-+ * can discard them. The ordinary source executor retains its retry interval. */
+-+export function publishNowDoorTasks(doors: readonly DoorRecord[], tasks: readonly RoutineSourceTask[], now: string): RoutineSourceTask[] {
+-+  const requests = new Map<string, string>();
+-+  for (const door of doors) {
+-+    const at = door.validators?.changedAt;
+-+    if (door.status !== "OPEN" || !at || !Number.isFinite(Date.parse(at)) || Date.parse(at) > Date.parse(now) ||
+-+      (door.lastSuccessAt !== null && Date.parse(door.lastSuccessAt) >= Date.parse(at))) continue;
+-+    for (const id of doorPartitionIds(door)) if (!requests.has(id) || requests.get(id)! < at) requests.set(id, at);
+-+  }
+-+  return tasks.flatMap(task => {
+-+    const requestedAt = requests.get(task.id);
+-+    return requestedAt ? [{ ...task, ownerInvocation: { publicationPending: true, requestedAt,
+-+      instructions: ["publish-now:source-changed"] } }] : [];
+-+  });
+-+}
+-diff --git a/lib/civic-data/worker-publication-context.ts b/lib/civic-data/worker-publication-context.ts
+-index ab355bc98..daf5178c3 100644
+---- a/lib/civic-data/worker-publication-context.ts
+-+++ b/lib/civic-data/worker-publication-context.ts
+-@@ -1,3 +1,4 @@
+-+import { publicationSourcePolicy } from "../control-plane/promotion/source-settings.ts";
+- import { join } from "node:path";
+- import { controlPlaneUrlFromEnv, createPgRepositories } from "../control-plane/repository/pg-store.ts";
+- import { DurableEvidenceStore } from "../control-plane/evidence/durable-store.ts";
+-@@ -15,6 +16,7 @@ export async function workerPublicationContext(now: string) {
+-   const connection = controlPlaneUrlFromEnv();
+-   if (!connection) throw new Error("WORKER_PUBLICATION_CONTROL_PLANE_UNAVAILABLE");
+-   const repos = await createPgRepositories(connection, now, { skipBootstrap: true });
+-+  const sourcePolicy = publicationSourcePolicy((await repos.adminConfig.read("current"))?.value ?? null);
+-   const vault = new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
+-   const readObject = researchVaultResolver(repos, vault, "freshness");
+-   const readEvidence = workerVaultResolver(repos, vault, "freshness", { snapshot: true });
+-@@ -27,7 +29,7 @@ export async function workerPublicationContext(now: string) {
+-         ? result.walk.filter(step => step.rung === result.source.retrieval && step.target === evidence.canonicalUrl &&
+-           step.transport === "REACHABLE" && step.outcome === "WALKED_AND_FOUND" && step.artifactIds.includes(id)).map(step => step.at) : [];
+-     });
+--    return { evidence, observedAt: [evidence.retrievedAt, ...observations].sort().at(-1)!, httpStatus: artifact.httpStatus,
+-+    return { evidence, sourcePolicy, observedAt: [evidence.retrievedAt, ...observations].sort().at(-1)!, httpStatus: artifact.httpStatus,
+-       transport: artifact.transport, partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false };
+-   } };
+- }
+-diff --git a/lib/civic-data/worker-publication-evidence.ts b/lib/civic-data/worker-publication-evidence.ts
+-index e05bca558..1225bea17 100644
+---- a/lib/civic-data/worker-publication-evidence.ts
+-+++ b/lib/civic-data/worker-publication-evidence.ts
+-@@ -84,7 +84,8 @@ export function verifiedWorkerRecords(input: {
+-   const primary = input.captures.find(c => c.evidence.artifactId === extraction.artifactId);
+-   requirePublication(primary && captureIntact(primary), "PRIMARY_CAPTURE_MISSING_OR_INCOMPLETE");
+-   const linkingPage = linkingPageFrom(primary.evidence.canonicalUrl, input.captures.filter(captureIntact).map(c => c.evidence));
+--  const page = { url: primary.evidence.canonicalUrl, text: primary.evidence.text, retrievedAt: primary.observedAt, linkingPage };
+-+  const page = { url: primary.evidence.canonicalUrl, text: primary.evidence.text, retrievedAt: primary.observedAt, linkingPage, sourcePolicy: primary.sourcePolicy,
+-+    citations: input.captures.filter(c => c !== primary && captureIntact(c)).map(c => ({ url: c.evidence.canonicalUrl, text: c.evidence.text, retrievedAt: c.observedAt })) };
+-   const pageVerdict = section3Page(page, contract.recordClass, now);
+-   requirePublication(pageVerdict.ok, pageVerdict.reason ?? "PAGE_UNVERIFIED");
+-   const minimums = SECTION3_MINIMUMS[contract.recordClass] ?? contract.requiredFields;
+-@@ -102,7 +103,12 @@ ${f.field}`));
+-     if (input.pullRemoves && pulled && (pulled.all || pulled.recordIds.has(record.id))) { pulledRecords.push(record); heldRecordIds.push(record.id); continue; }
+-     const fields = Object.fromEntries(Object.entries(record.fields).filter(([field]) => !badFields.has(`${record.id}
+- ${field}`)));
+--    const verdict = section3Record({ recordClass: contract.recordClass, fields, page, now, pageVerdict, minimums });
+-+    let verdict = section3Record({ recordClass: contract.recordClass, fields, page, now, pageVerdict, minimums });
+-+    // An unverified amount leaves the filing document available; it cannot
+-+    // become a Money record. Recheck the independent document minimum.
+-+    if (!verdict.live && contract.recordClass === "CAMPAIGN_FINANCE_FILING") {
+-+      verdict = section3Record({ recordClass: "CAMPAIGN_FINANCE_DOCUMENT", fields, page, now, pageVerdict });
+-+    }
+-     if (heldIds.has(record.id) || pulled?.recordIds.has(record.id) || !verdict.live) { heldRecordIds.push(record.id); continue; }
+-     // Only verified values publish; the rest stay blank and owed.
+-     records.push({ ...record, fields: Object.fromEntries(Object.entries(record.fields).filter(([field]) => verdict.verifiedFields.includes(field))) });
+-diff --git a/lib/civic-data/worker-reader-publication.ts b/lib/civic-data/worker-reader-publication.ts
+-index b2ff96887..4d00e8d8a 100644
+---- a/lib/civic-data/worker-reader-publication.ts
+-+++ b/lib/civic-data/worker-reader-publication.ts
+-@@ -96,7 +96,11 @@ export function workerReaderPackageWithPulls(input: Parameters<typeof verifiedWo
+-       const facts = Object.fromEntries(Object.entries(f).filter(([key]) => !["bodyName", "documentUrl", "jurisdictionName"].includes(key)));
+-       const id = `official-filing:${createHash("sha256").update(canonicalJson([body.id, territories[0].ocdId, checked.contract.recordClass, f.documentUrl,
+-         f.candidateName ?? f.committeeName, f.office ?? f.filingPeriod])).digest("hex")}`;
+--      const row = { id, kind: checked.contract.recordClass, bodyId: body.id, ocdId: territories[0].ocdId, bodyName: body.name, jurisdictionName: territories[0].label,
+-+      const moneyFields = ["amount", "receipts", "expenditures", "cashOnHand"];
+-+      const hasMoney = moneyFields.some(field => typeof facts[field] === "number") && typeof facts.filingPeriod === "string";
+-+      const kind = checked.contract.recordClass === "CAMPAIGN_FINANCE_FILING" && !hasMoney ? "CAMPAIGN_FINANCE_DOCUMENT" : checked.contract.recordClass;
+-+      if (kind === "CAMPAIGN_FINANCE_DOCUMENT") for (const field of moneyFields) delete facts[field];
+-+      const row = { id, kind, bodyId: body.id, ocdId: territories[0].ocdId, bodyName: body.name, jurisdictionName: territories[0].label,
+-         sourceUrl: checked.primary.evidence.canonicalUrl, documentUrl: f.documentUrl, collectedAt: checked.primary.observedAt, verifiedAt: input.now, facts };
+-       requirePublication(officialFilingIssue(row) === null, `FILING_FIELDS_UNVERIFIED:${officialFilingIssue(row)}`);
+-       return row;
+-diff --git a/lib/civic-data/worker-roster-publication.ts b/lib/civic-data/worker-roster-publication.ts
+-index 524836f42..90fe4a468 100644
+---- a/lib/civic-data/worker-roster-publication.ts
+-+++ b/lib/civic-data/worker-roster-publication.ts
+-@@ -29,6 +29,7 @@ import { compareCandidateWithSource } from "../control-plane/workers/record-veri
+- import { recordPublishedPageDoor } from "./worker-page-doors.ts";
+- 
+- export interface WorkerPublicationCapture {
+-+  readonly sourcePolicy?: import("../control-plane/promotion/source-kinds.ts").SourcePolicy;
+-   readonly evidence: WorkerEvidence;
+-   /** Latest successful network observation, not the time an old blob was replayed. */
+-   readonly observedAt: string;
+-@@ -121,7 +122,7 @@ export function workerRosterPublication(input: {
+-   const { reading, prior, now } = input;
+-   const capture = reading.capture;
+-   requireThat(captureIntact(capture), "ROSTER_CAPTURE_INCOMPLETE");
+--  const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: reading.linkingPage };
+-+  const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: reading.linkingPage, sourcePolicy: capture.sourcePolicy };
+-   const pageVerdict = section3Page(page, "OFFICIAL_ROSTER", now);
+-   requireThat(pageVerdict.ok, `ROSTER_PAGE_UNVERIFIED:${pageVerdict.reason}`);
+-   const body = prior.payload.registry.bodies.find(row => row.id === input.bodyId);
+-diff --git a/lib/control-plane/promotion/section3.ts b/lib/control-plane/promotion/section3.ts
+-index e40b7575b..5ff9efc47 100644
+---- a/lib/control-plane/promotion/section3.ts
+-+++ b/lib/control-plane/promotion/section3.ts
+-@@ -1,6 +1,6 @@
+- /**
+-  * The §3 standard, in code (docs/rulings.md §3). A fact passes when its value
+-- * appears on a saved official page from the right place, captured inside that
+-+ * appears on a saved source page from the right place, captured inside that
+-  * kind of fact's freshness window, and code confirms the value is on the page.
+-  * Evidence captured by any job counts. A second, independent source is needed
+-  * only for judgment calls: portraits, summaries of a person's statements or
+-@@ -9,6 +9,8 @@
+-  * A record goes live when its minimum facts pass; every other fact attaches
+-  * when it passes, and every blank stays open as work.
+-  */
+-+import { DEFAULT_SOURCE_POLICY, hostSourceKind, type SourceKind, type SourcePolicy } from "./source-kinds.ts";
+-+export type { SourceKind, SourcePolicy } from "./source-kinds.ts";
+- import { personNameField, personRecordBlocks } from "../workers/record-block.ts";
+- import { isOfficialSource, type OfficialLinkingPage } from "../../civic-data/source-authority.ts";
+- 
+-@@ -19,6 +21,12 @@ export interface Section3Page {
+-   readonly retrievedAt: string;
+-   /** An official page that links this one, when this one is not `.gov`. */
+-   readonly linkingPage?: OfficialLinkingPage | null;
+-+  /** The current Admin settings, supplied by the publisher, never by the model. */
+-+  readonly sourcePolicy?: SourcePolicy;
+-+  /** Canonical candidate identity from the work item; the page must name all three. */
+-+  readonly campaign?: { readonly name: string; readonly office: string; readonly cycle: string };
+-+  /** Intact saved documents linked by this page, for re-proving an unknown publisher's values. */
+-+  readonly citations?: readonly Section3Page[];
+- }
+- 
+- /**
+-@@ -30,7 +38,11 @@ export const SECTION3_MINIMUMS: Readonly<Record<string, readonly string[]>> = {
+-   OFFICIAL_BOARD_DIRECTORY: ["bodyName", "bodyClass"],
+-   MEETING: ["bodyName", "date", "time"],
+-   CANDIDATE_FILING_DOCUMENT: ["jurisdictionName", "office", "candidateName"],
+--  CAMPAIGN_FINANCE_FILING: ["jurisdictionName", "committeeName", "documentUrl"],
+-+  CAMPAIGN_FINANCE_FILING: ["candidateName|committeeName", "amount|receipts|expenditures|cashOnHand", "filingPeriod", "documentUrl"],
+-+  CAMPAIGN_FINANCE_DOCUMENT: ["candidateName|committeeName", "documentUrl"],
+-+  VOTE: ["person", "subject", "position", "date"],
+-+  STANCE: ["personId", "quote", "date"],
+-+  BALLOT_MEASURE: ["election", "number|title", "textUrl"],
+-   VOTER_ACCESS_ROUTE: ["kind", "url"],
+-   PUBLIC_COMMENT_RULE: ["commentPeriod"],
+-   SERVICE_CONTACT: ["service"],
+-@@ -78,6 +90,7 @@ export const FRESHNESS_WINDOW_HOURS: Readonly<Record<string, number>> = {
+-   VOTER_ACCESS_ROUTE: 7 * DAY,
+-   CANDIDATE_FILING_DOCUMENT: 7 * DAY,
+-   CAMPAIGN_FINANCE_FILING: 7 * DAY,
+-+  CAMPAIGN_FINANCE_DOCUMENT: 7 * DAY,
+-   OFFICIAL_ROSTER: 30 * DAY,
+-   OFFICIAL_BOARD_DIRECTORY: 30 * DAY,
+-   PUBLIC_COMMENT_RULE: 30 * DAY,
+-@@ -120,18 +133,49 @@ export function valueOnPage(value: unknown, text: string, words: string = pageWo
+- }
+- 
+- export interface Section3PageVerdict {
+-+  readonly kind: SourceKind;
+-   readonly ok: boolean;
+-   readonly reason: string | null;
+- }
+- 
+--/** The page half of §3: an official page from the right place, inside its window. */
+-+/** Resolve only actual links to saved source pages. No page-text mention counts as a citation. */
+-+export function pageLinksTo(page: Section3Page, url: string): boolean {
+-+  const clean = (value: string) => value.replace(/&amp;/g, "&").split("#")[0];
+-+  for (const match of page.text.matchAll(/\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi)) {
+-+    let href = clean(match[1] ?? match[2] ?? match[3]);
+-+    if (href.startsWith("//")) href = "https:" + href;
+-+    else if (href.startsWith("/")) href = (/^https?:\/\/[^/]+/i.exec(page.url)?.[0] ?? "") + href;
+-+    else if (!/^[a-z][a-z0-9+.-]*:/i.test(href)) href = page.url.replace(/[?#].*$/, "").replace(/[^/]*$/, "") + href;
+-+    if (href === clean(url)) return true;
+-+  }
+-+  return false;
+-+}
+-+
+-+function campaignPageMatches(page: Section3Page): boolean {
+-+  const candidate = page.campaign;
+-+  if (!candidate || !candidate.name.trim() || !candidate.office.trim() || !candidate.cycle.trim()) return false;
+-+  const heading = [...page.text.matchAll(/<(?:title|h1)\b[^>]*>([\s\S]*?)<\/(?:title|h1)>/gi)].map(match => match[1]).join(" ");
+-+  return valueOnPage(candidate.name, heading) && valueOnPage(candidate.office, page.text) && valueOnPage(candidate.cycle, page.text);
+-+}
+-+
+-+/** Label first; only enabled kinds with the required source evidence may publish. */
+- export function section3Page(page: Section3Page, recordClass: string, now: string): Section3PageVerdict {
+--  if (!isOfficialSource(page.url, page.linkingPage)) return { ok: false, reason: `NOT_OFFICIAL_SOURCE: ${page.url} is not .gov and no official page links it` };
+-+  const policy = page.sourcePolicy ?? DEFAULT_SOURCE_POLICY;
+-+  const official = isOfficialSource(page.url, page.linkingPage);
+-+  const kind: SourceKind = official ? (/FILING/.test(recordClass) ? "FILING" : "OFFICIAL")
+-+    : page.campaign || hostSourceKind(page.url, policy) === "CAMPAIGN" ? "CAMPAIGN" : hostSourceKind(page.url, policy);
+-+  const refuse = (reason: string): Section3PageVerdict => ({ ok: false, kind, reason });
+-+  if (!policy.enabled[kind]) return refuse(`SOURCE_KIND_DISABLED: ${kind}`);
+-   const age = Date.parse(now) - Date.parse(page.retrievedAt);
+-   const window = FRESHNESS_WINDOW_HOURS[recordClass] ?? DEFAULT_WINDOW_HOURS;
+--  if (!Number.isFinite(age) || age < 0) return { ok: false, reason: `CAPTURE_TIME_INVALID: ${page.retrievedAt}` };
+--  if (age > window * 3_600_000) return { ok: false, reason: `OUTSIDE_FRESHNESS_WINDOW: captured ${page.retrievedAt}, window ${window}h` };
+--  return { ok: true, reason: null };
+-+  if (!Number.isFinite(age) || age < 0) return refuse(`CAPTURE_TIME_INVALID: ${page.retrievedAt}`);
+-+  if (age > window * 3_600_000) return refuse(`OUTSIDE_FRESHNESS_WINDOW: captured ${page.retrievedAt}, window ${window}h`);
+-+  if (kind === "CAMPAIGN" && !campaignPageMatches(page)) return refuse("CAMPAIGN_IDENTITY_UNVERIFIED: the candidate, office and cycle must be on their own page");
+-+  if (kind === "OTHER" && !(page.citations ?? []).some(citation => citation.url !== page.url && pageLinksTo(page, citation.url) &&
+-+    section3Page({ ...citation, sourcePolicy: policy, citations: [] }, recordClass, now).ok)) {
+-+    return refuse("LINKED_SOURCE_UNVERIFIED: no linked, saved source confirms this page");
+-+  }
+-+  return { ok: true, kind, reason: null };
+- }
+- 
+- export interface Section3RecordVerdict {
+-@@ -161,14 +205,20 @@ export function section3Record(input: {
+-   const page = input.pageVerdict ?? section3Page(input.page, input.recordClass, input.now);
+-   const present = Object.entries(input.fields).filter(([, value]) => value !== null && value !== undefined && value !== "").map(([field]) => field);
+-   if (!page.ok) return { live: false, verifiedFields: [], openFields: present, reason: page.reason };
+-+  if (page.kind === "CAMPAIGN") {
+-+    const name = input.fields.name ?? input.fields.candidateName ?? input.fields.person;
+-+    if (typeof name !== "string" || pageWords(name) !== pageWords(input.page.campaign?.name ?? "")) {
+-+      return { live: false, verifiedFields: [], openFields: present, reason: "CAMPAIGN_OTHER_SUBJECT: campaign sources only establish facts about their own candidate" };
+-+    }
+-+  }
+-   const nameField = personNameField(input.fields, input.recordClass);
+-   const anchorField = nameField ? input.derived?.[nameField] ?? nameField : null;
+-   const blocks = anchorField ? personRecordBlocks(input.page.text, String(input.fields[anchorField]), (name, text) => pageWords(text).includes(pageWords(name))) : [];
+-   // Repeated names are resolved by the record's other minimums, never by
+-   // pooling contact fields from several rows belonging to different people.
+-   const minimums = input.minimums ?? SECTION3_MINIMUMS[input.recordClass] ?? [];
+--  const matching = [...new Map(blocks.filter(block => minimums.every(field =>
+--    SECTION3_LABEL_FIELDS.includes(field) || input.derived?.[field] || valueOnPage(input.fields[field], input.page.text.slice(block.start, block.end))))
+-+  const matching = [...new Map(blocks.filter(block => minimums.every(requirement => requirement.split("|").some(field =>
+-+    SECTION3_LABEL_FIELDS.includes(field) || input.derived?.[field] || valueOnPage(input.fields[field], input.page.text.slice(block.start, block.end)))))
+-     // CMS pages may repeat the exact same row for desktop and mobile. This
+-     // is one record twice, not permission to combine differing rows.
+-     .map(block => [input.page.text.slice(block.start, block.end), block])).values()];
+-@@ -181,7 +231,16 @@ export function section3Record(input: {
+-     if (valueOnPage(input.fields[field], recordText, words)) verified.add(field);
+-   }
+-   for (const [field, from] of Object.entries(input.derived ?? {})) if (present.includes(field) && verified.has(from)) verified.add(field);
+--  const missing = minimums.filter((field) => !verified.has(field));
+-+  if (page.kind === "OTHER") {
+-+    const citations = (input.page.citations ?? []).filter(citation => citation.url !== input.page.url && pageLinksTo(input.page, citation.url) &&
+-+      section3Page({ ...citation, sourcePolicy: input.page.sourcePolicy, citations: [] }, input.recordClass, input.now).ok);
+-+    // Re-prove the whole record against each linked copy, preserving the same
+-+    // person's block rule instead of pooling a value from somebody else's row.
+-+    const supported = new Set(citations.flatMap(citation => section3Record({ ...input,
+-+      page: { ...citation, sourcePolicy: input.page.sourcePolicy, citations: [] }, pageVerdict: undefined }).verifiedFields));
+-+    for (const field of verified) if (!supported.has(field)) verified.delete(field);
+-+  }
+-+  const missing = minimums.filter(requirement => !requirement.split("|").some(field => verified.has(field)));
+-   return {
+-     live: missing.length === 0,
+-     verifiedFields: [...verified].sort(),
+-diff --git a/lib/control-plane/promotion/source-kinds.ts b/lib/control-plane/promotion/source-kinds.ts
+-new file mode 100644
+-index 000000000..315b72b1b
+---- /dev/null
+-+++ b/lib/control-plane/promotion/source-kinds.ts
+-@@ -0,0 +1,35 @@
+-+/** CP-02: source labels and their code defaults. Pure, including in the isolated Validator. */
+-+export const SOURCE_KINDS = ["OFFICIAL", "CAMPAIGN", "FILING", "VOTER_GUIDE", "FORUM", "NEWS", "REFERENCE", "OTHER"] as const;
+-+export type SourceKind = (typeof SOURCE_KINDS)[number];
+-+export interface SourcePolicy {
+-+  readonly hosts: Readonly<Record<string, SourceKind>>;
+-+  readonly enabled: Readonly<Record<SourceKind, boolean>>;
+-+}
+-+export const DEFAULT_SOURCE_HOSTS: SourcePolicy["hosts"] = {
+-+  "openstates.org": "REFERENCE", "wikipedia.org": "REFERENCE", "ballotpedia.org": "REFERENCE",
+-+  "vote411.org": "VOTER_GUIDE", "votesmart.org": "VOTER_GUIDE",
+-+};
+-+export const DEFAULT_SOURCE_KINDS = Object.fromEntries(SOURCE_KINDS.map(kind => [kind, true])) as Record<SourceKind, boolean>;
+-+export const DEFAULT_SOURCE_POLICY: SourcePolicy = { hosts: DEFAULT_SOURCE_HOSTS, enabled: DEFAULT_SOURCE_KINDS };
+-+export const SOURCE_HOSTS_SETTING = "publication.sourceHosts";
+-+export const SOURCE_KINDS_SETTING = "publication.sourceKinds";
+-+export function sourceHost(url: string): string | null {
+-+  const match = /^https?:\/\/([a-z0-9.-]+)(?::\d+)?(?:[/?#]|$)/i.exec(url);
+-+  return match?.[1].toLowerCase().replace(/^www\./, "") ?? null;
+-+}
+-+export function hostSourceKind(url: string, policy: SourcePolicy = DEFAULT_SOURCE_POLICY): SourceKind {
+-+  const host = sourceHost(url);
+-+  if (!host) return "OTHER";
+-+  // Longest entry wins, so a specific subdomain can have its own kind.
+-+  const entry = Object.entries(policy.hosts).sort(([a], [b]) => b.length - a.length)
+-+    .find(([key]) => host === key || host.endsWith(`.${key}`));
+-+  return entry?.[1] ?? "OTHER";
+-+}
+-+export function validSourceHosts(value: unknown): value is SourcePolicy["hosts"] {
+-+  return value !== null && typeof value === "object" && !Array.isArray(value) &&
+-+    Object.entries(value).every(([host, kind]) => sourceHost(`https://${host}/`) === host && SOURCE_KINDS.includes(kind as SourceKind));
+-+}
+-+export function validSourceKinds(value: unknown): value is SourcePolicy["enabled"] {
+-+  return value !== null && typeof value === "object" && !Array.isArray(value) &&
+-+    Object.keys(value).length === SOURCE_KINDS.length && SOURCE_KINDS.every(kind => typeof (value as Record<string, unknown>)[kind] === "boolean");
+-+}
+-diff --git a/lib/control-plane/promotion/source-settings.ts b/lib/control-plane/promotion/source-settings.ts
+-new file mode 100644
+-index 000000000..410f4f575
+---- /dev/null
+-+++ b/lib/control-plane/promotion/source-settings.ts
+-@@ -0,0 +1,14 @@
+-+import type { AdminConfig } from "../gateway/admin-config.ts";
+-+import { readSetting, registerSetting } from "../settings.ts";
+-+import { DEFAULT_SOURCE_HOSTS, DEFAULT_SOURCE_KINDS, SOURCE_HOSTS_SETTING, SOURCE_KINDS_SETTING,
+-+  validSourceHosts, validSourceKinds, type SourcePolicy } from "./source-kinds.ts";
+-+
+-+registerSetting({ key: SOURCE_HOSTS_SETTING, label: "Kinds of sources by website", defaultValue: DEFAULT_SOURCE_HOSTS,
+-+  readerFacing: false, control: "json", validate: validSourceHosts });
+-+registerSetting({ key: SOURCE_KINDS_SETTING, label: "Which source kinds count", defaultValue: DEFAULT_SOURCE_KINDS,
+-+  readerFacing: false, control: "json", validate: validSourceKinds });
+-+
+-+export function publicationSourcePolicy(config: AdminConfig | null): SourcePolicy {
+-+  return { hosts: readSetting(config, SOURCE_HOSTS_SETTING, DEFAULT_SOURCE_HOSTS),
+-+    enabled: readSetting(config, SOURCE_KINDS_SETTING, DEFAULT_SOURCE_KINDS) };
+-+}
+-diff --git a/lib/control-plane/workers/generalized-validator.ts b/lib/control-plane/workers/generalized-validator.ts
+-index 6c8ea20af..11b2a8eda 100644
+---- a/lib/control-plane/workers/generalized-validator.ts
+-+++ b/lib/control-plane/workers/generalized-validator.ts
+-@@ -18,7 +18,7 @@ export function validateGeneralizedExtraction(input: ValidatorWorkerInput, contr
+-   const findings: WorkerFinding[] = [];
+-   // The Validator confirms what the extraction claims; each reader door then requires its class's §3 minimums.
+-   const mapped = new Set([...Object.keys("fields" in contract.extraction ? contract.extraction.fields : {}), ...contract.requiredFields]);
+--  const classMinimums = (SECTION3_MINIMUMS[contract.recordClass] ?? []).filter(field => mapped.has(field));
+-+  const classMinimums = (SECTION3_MINIMUMS[contract.recordClass] ?? []).filter(requirement => requirement.split("|").some(field => mapped.has(field)));
+-   const minimums = classMinimums.length ? classMinimums : contract.requiredFields;
+-   if (input.worker.role !== "VALIDATOR" || input.producer.role !== "PARSER" || !input.worker.instance || !input.producer.instance || input.worker.instance === input.producer.instance || input.attemptId === input.producerAttemptId) findings.push(issue("SELF_VALIDATION_REFUSED", "Validator and parser must have distinct machine actors and Attempts."));
+-   if (input.candidate.attemptId !== input.producerAttemptId || !input.worker.provider || !input.worker.version || !input.producer.provider || !input.producer.version) findings.push(issue("MACHINE_PROVENANCE_MISMATCH", "Candidate and worker identities must match machine-issued producer provenance."));
+-@@ -55,7 +55,8 @@ export function validateGeneralizedExtraction(input: ValidatorWorkerInput, contr
+-   const held = new Set(findings.filter(recordScoped).map(f => f.recordId!));
+-   const validatedRecordIds = overall !== "PASS" ? [] : input.candidate.records.flatMap(record => {
+-     if (held.has(record.id)) return [];
+--    const verdict = section3Record({ recordClass: contract.recordClass, fields: record.fields, page, now, pageVerdict, minimums });
+-+    let verdict = section3Record({ recordClass: contract.recordClass, fields: record.fields, page, now, pageVerdict, minimums });
+-+    if (!verdict.live && contract.recordClass === "CAMPAIGN_FINANCE_FILING") verdict = section3Record({ recordClass: "CAMPAIGN_FINANCE_DOCUMENT", fields: record.fields, page, now, pageVerdict });
+-     if (verdict.live) return [record.id];
+-     findings.push(issue("MINIMUM_FACTS_UNVERIFIED", verdict.reason ?? "The record's minimum facts are not on the page.", "INFO", record.id));
+-     return [];
+-diff --git a/scripts/publish-now-runner.mts b/scripts/publish-now-runner.mts
+-new file mode 100644
+-index 000000000..cecfe9e30
+---- /dev/null
+-+++ b/scripts/publish-now-runner.mts
+-@@ -0,0 +1,5 @@
+-+/** BX-12: same authorized source executors and receipts, on an independent
+-+ * minute clock. This entry runs only saved parser results and changed doors. */
+-+if (!process.argv.includes("--publish-now")) process.argv.push("--publish-now");
+-+await import("./routine-civic-data-runner.mts");
+-+export {};
+-diff --git a/scripts/routine-civic-data-runner.mts b/scripts/routine-civic-data-runner.mts
+-index 3d4ba0b39..35fa6e962 100644
+---- a/scripts/routine-civic-data-runner.mts
+-+++ b/scripts/routine-civic-data-runner.mts
+-@@ -93,6 +93,7 @@ import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
+- import { loadPublishedLookupState } from "../lib/census-geography/reader.ts";
+- import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
+- import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
+-+import { PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowWorkerTasks } from "../lib/civic-data/publish-now.ts";
+- import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
+- import { WORKER_PUBLICATION_TASK_IDS } from "../lib/civic-data/worker-reader-contracts.ts";
+- import { readCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
+-@@ -156,6 +157,8 @@ const ROOT = process.cwd();
+- // reads the same held copies as the later source and Reader children.
+- const readCacheHost = await startCivicReadCacheHost();
+- const FORCE = process.argv.includes("--force");
+-+const PUBLISH_NOW = process.argv.includes("--publish-now");
+-+if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
+- // DB-13: with WTP_DOORS_READ=registry the meeting work is built from the door
+- // registry on every pass; otherwise (the default) the code's list is used as before.
+- const CODE_MEETING_PARTITION_IDS = new Set(MEETING_PARTITION_CONTRACTS.map((contract) => contract.id));
+-@@ -174,7 +177,7 @@ if ((doorReadModeFromEnv() === "registry" || doorSeedOnFromEnv()) && controlPlan
+-     console.warn(`RCD_TASK routine-civic-data-runner: the door registry could not be read, the code's meeting list stays in use — ${error instanceof Error ? error.message : String(error)}`);
+-   }
+- }
+--const STANDING_SOURCE_TASKS = await withNationalPlaceTasks([
+-+const STANDING_SOURCE_TASKS: readonly RoutineSourceTask[] = PUBLISH_NOW ? [] : await withNationalPlaceTasks([
+-   ...ROUTINE_SOURCE_TASKS.filter((task) => !CODE_MEETING_PARTITION_IDS.has(task.id)),
+-   ...MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract),
+-   ...AUTOMATIC_REFRESH_TASKS,
+-@@ -215,8 +218,8 @@ step = "taking the host-local singleton";
+- const ROUTINE_DATA_PROCESS_LEASE = TASK_SELECTION.ok ? await (async () => {
+-   try {
+-     return await acquireProcessSingleton(
+--      "routine-civic-data-runner",
+--      ROUTINE_DATA_RUNNER_SINGLETON_PORT,
+-+      PUBLISH_NOW ? "publish-now-runner" : "routine-civic-data-runner",
+-+      PUBLISH_NOW ? PUBLISH_NOW_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT,
+-     );
+-   } catch (error) {
+-     if (!(error instanceof ProcessSingletonHeldError)) throw error;
+-@@ -404,7 +407,9 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
+-   if (intents.runnerPause.paused) return [];
+-   const items = (await repos.workItems.list()).map(row => row.value);
+-   const workers = items.some(item => item.autonomousPlan?.publication) ? await readCompletedWorkerResults(repos) : [];
+--  const publication = workerPublicationTasks(items, workers, RUN_STARTED_AT);
+-+  const publication = PUBLISH_NOW ? publishNowWorkerTasks(items, workers, RUN_STARTED_AT) : workerPublicationTasks(items, workers, RUN_STARTED_AT);
+-+  if (PUBLISH_NOW) return [...publication, ...publishNowDoorTasks((await listDoors(repos.doors)).doors,
+-+    MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract), RUN_STARTED_AT)];
+-   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+-   if (row === null) return publication;
+-   if (!isAdminConfig(row.value)) throw new Error("the owner's policy row is unreadable");
+-@@ -979,7 +984,7 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
+- const readerContracts = selectedReaderRepairContracts([
+-   ...observableRoutineContracts(),
+-   ...MANUAL_PRODUCTION_SOURCE_CONTRACTS,
+--], ONLY === null ? null : selectedTasks);
+-+], !PUBLISH_NOW && ONLY === null ? null : selectedTasks);
+- const readerDomains = routineReaderRepairDomains(readerContracts);
+- const readerReadbackReferences: RoutineCivicDataReaderReadbackReference[] = readerContracts
+-   .filter(({ readerProjection }) => readerProjection === null)
+-@@ -1037,7 +1042,7 @@ function settleReaderDomain(domain: RoutineReaderRepairDomain, run: BoundedChild
+- // waiting for the next pass (C6; lib/civic-data/hot-read-catch-up.ts). The
+- // repair starts once every such read beside the source reads has settled, and
+- // launches the repairs a read could race first; catch-up resumes when they settle.
+--const hotReadTasks = FORCE
+-+const hotReadTasks = FORCE || PUBLISH_NOW
+-   ? []
+-   : clockReads.flatMap((read) => read.ok && read.task.contract.schedule?.kind === "SITTING_WINDOW" ? [read.task] : []);
+- const hotReadTaskIds = new Set(hotReadTasks.map(({ id }) => id));
+-@@ -1178,7 +1183,7 @@ for (const error of pass.errors) {
+- const readerRuns = pass.repair;
+- // Source settlement publishes serving copies even when a readback child fails.
+- step = "publishing changed reader edge copies";
+--const readerEdge = await publishSupervisorReaderEdge(store, new Date().toISOString(), ONLY === null ? null : selectedTasks);
+-+const readerEdge = await publishSupervisorReaderEdge(store, new Date().toISOString(), !PUBLISH_NOW && ONLY === null ? null : selectedTasks);
+- const readerEdgeFailure = readerEdgeSupervisorFailure(readerEdge);
+- if (readerEdgeFailure) supervisorFailures.push(readerEdgeFailure);
+- for (const run of readerRuns) {
+-@@ -1255,6 +1260,7 @@ try {
+-     kind: "ROUTINE_CIVIC_DATA_SUPERVISOR",
+-     state: supervisorFailures.length === 0 ? "SUCCEEDED" : "FAILED",
+-     cycleId,
+-+    lane: PUBLISH_NOW ? "publish-now" : "routine-civic-data",
+-     readerEdge,
+-     exactTaskReceipts: verifiedTaskReceipts.length,
+-     durable: true,
+-@@ -1280,6 +1286,7 @@ const attemptedCount = floored(
+-   attempted,
+- );
+- console.log("RCD_RUN=" + JSON.stringify({
+-+  lane: PUBLISH_NOW ? "publish-now" : "routine-civic-data",
+-   attempted: attemptedCount.matched,
+-   denominator: attemptedCount.denominator,
+-   failed:
+-diff --git a/tests/held-roster-publication.test.ts b/tests/held-roster-publication.test.ts
+-index 9b242c860..ecb1a31ea 100644
+---- a/tests/held-roster-publication.test.ts
+-+++ b/tests/held-roster-publication.test.ts
+-@@ -74,7 +74,7 @@ test("the wrong page, a stale page and an unlinked non-government page never pub
+-     members: readHeldRoster(c.evidence.text, c.evidence.canonicalUrl)!.rows.map((row, i) => ({ recordId: `r${i}`, fields: { ...row } })) });
+-   assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Boards"))), prior: base, now: NOW }), /ROSTER_PAGE_NOT_THIS_BODY/);
+-   assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Contact the Mayor & Council"), URL_, "2026-07-01T00:00:00.000Z")), prior: base, now: NOW }), /OUTSIDE_FRESHNESS_WINDOW/);
+--  assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Contact the Mayor & Council"), "https://benson-az.example.com/council")), prior: base, now: NOW }), /NOT_OFFICIAL_SOURCE/);
+-+  assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Contact the Mayor & Council"), "https://benson-az.example.com/council")), prior: base, now: NOW }), /LINKED_SOURCE_UNVERIFIED/);
+- });
+- 
+- test("a complete official roster records a departure; a partial one keeps the prior member on its own source", async () => {
+-diff --git a/tests/routine-civic-data-runner.test.ts b/tests/routine-civic-data-runner.test.ts
+-index 9883bc3af..eca0af637 100644
+---- a/tests/routine-civic-data-runner.test.ts
+-+++ b/tests/routine-civic-data-runner.test.ts
+-@@ -1255,7 +1255,7 @@ test("Reader readback repair covers the observable registry independently of sou
+-   assert.match(child, /const attestor = readerVerifierClosureAttestor\(\);/);
+-   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract, observedAt, undefined, \{ attestor \}\)/);
+-   assert.doesNotMatch(child, /preparePublishedMeetingSnapshot|publishReaderEdgeArtifacts/);
+--  assert.match(runner, /publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), ONLY === null \? null : selectedTasks\)/);
+-+  assert.match(runner, /publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), !PUBLISH_NOW && ONLY === null \? null : selectedTasks\)/);
+-   assert.equal(child.match(/readMeetingsProjection\(/g)?.length, 1, "the child composes in one place");
+-   assert.match(child, /serializeRoutineReaderRepairRecord/);
+-   assert.doesNotMatch(child, /processRegisteredRoutineCandidate|promoteMeetingPartitions|\.promote\(/);
+-diff --git a/tests/section3-source-kinds.test.ts b/tests/section3-source-kinds.test.ts
+-new file mode 100644
+-index 000000000..70f5e5f71
+---- /dev/null
+-+++ b/tests/section3-source-kinds.test.ts
+-@@ -0,0 +1,58 @@
+-+import assert from "node:assert/strict";
+-+import test from "node:test";
+-+import { section3Page, section3Record, type Section3Page } from "../lib/control-plane/promotion/section3.ts";
+-+import { DEFAULT_SOURCE_POLICY, SOURCE_KINDS, SOURCE_KINDS_SETTING } from "../lib/control-plane/promotion/source-kinds.ts";
+-+import { publicationSourcePolicy } from "../lib/control-plane/promotion/source-settings.ts";
+-+import { defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+-+import { withSetting, settingUndo } from "../lib/control-plane/settings.ts";
+-+const NOW = "2026-10-05T12:00:00.000Z";
+-+const source = (url: string, text = "<p>Alice Adams Clerk alice@example.test</p>"): Section3Page => ({ url, text, retrievedAt: NOW });
+-+
+-+test("CP-02: labels preserve official links, filing documents and the known-host table", () => {
+-+  for (const [page, recordClass, expected] of [
+-+    [source("https://town.gov/roster"), "OFFICIAL_ROSTER", "OFFICIAL"],
+-+    [source("https://town.gov/filing.pdf"), "CANDIDATE_FILING_DOCUMENT", "FILING"],
+-+    [source("https://openstates.org/people/alice"), "OFFICIAL_ROSTER", "REFERENCE"],
+-+    [source("https://www.vote411.org/guide"), "OFFICIAL_ROSTER", "VOTER_GUIDE"],
+-+    [{ ...source("https://town.legistar.com/roster"), linkingPage: { url: "https://town.gov/", html: '<a href="https://town.legistar.com/">Meetings</a>' } }, "OFFICIAL_ROSTER", "OFFICIAL"],
+-+  ] as const) {
+-+    assert.deepEqual(section3Page(page, recordClass, NOW), { ok: true, kind: expected, reason: null });
+-+  }
+-+  assert.equal(section3Page(source("https://openstates.org.evil.test/"), "OFFICIAL_ROSTER", NOW).ok, false);
+-+});
+-+
+-+test("CP-02: unknown publishers must link saved, fresh evidence of each value from the same person's row", () => {
+-+  const official = source("https://town.gov/roster", '<table><tr><td>Alice Adams</td><td>Clerk</td><td>alice@example.test</td></tr><tr><td>Bob Brown</td><td>Mayor</td><td>bob@example.test</td></tr></table>');
+-+  const primary = { ...source("https://local-paper.example/people", '<p>Alice Adams Clerk bob@example.test</p><a href="https://town.gov/roster">Source</a>'), citations: [official] };
+-+  const verdict = section3Record({ recordClass: "OFFICIAL_ROSTER", page: primary, now: NOW,
+-+    fields: { name: "Alice Adams", office: "Clerk", email: "bob@example.test" } });
+-+  assert.equal(verdict.live, true);
+-+  assert.deepEqual(verdict.openFields, ["email"]);
+-+  assert.equal(section3Page({ ...primary, text: "Alice Adams Clerk https://town.gov/roster" }, "OFFICIAL_ROSTER", NOW).ok, false);
+-+  assert.equal(section3Page({ ...primary, citations: [{ ...official, retrievedAt: "2025-01-01" }] }, "OFFICIAL_ROSTER", NOW).ok, false);
+-+  assert.equal(section3Page({ ...primary, citations: [] }, "OFFICIAL_ROSTER", NOW).kind, "OTHER");
+-+});
+-+
+-+test("CP-02: a campaign establishes its own candidate's facts and never its opponent's", () => {
+-+  const page = { ...source("https://alice.example/", '<title>Alice Adams for Clerk 2026</title><p>Alice Adams Clerk alice@example.test</p><p>Bob Brown Mayor bob@example.test</p>'),
+-+    campaign: { name: "Alice Adams", office: "Clerk", cycle: "2026" } };
+-+  assert.equal(section3Page(page, "OFFICIAL_ROSTER", NOW).kind, "CAMPAIGN");
+-+  assert.equal(section3Record({ recordClass: "OFFICIAL_ROSTER", page, now: NOW,
+-+    fields: { name: "Alice Adams", office: "Clerk", email: "alice@example.test" } }).live, true);
+-+  assert.equal(section3Record({ recordClass: "OFFICIAL_ROSTER", page, now: NOW,
+-+    fields: { name: "Bob Brown", office: "Mayor", email: "bob@example.test" } }).live, false);
+-+  assert.equal(section3Page({ ...page, campaign: { ...page.campaign, cycle: "2028" } }, "OFFICIAL_ROSTER", NOW).ok, false);
+-+  assert.equal(section3Page({ ...page, campaign: undefined, sourcePolicy: { ...DEFAULT_SOURCE_POLICY, hosts: { "alice.example": "CAMPAIGN" } } }, "OFFICIAL_ROSTER", NOW).ok, false);
+-+});
+-+
+-+test("CP-02: all kinds start enabled; a logged setting disables publication but preserves its label", () => {
+-+  const initial = defaultAdminConfig();
+-+  assert.ok(SOURCE_KINDS.every(kind => publicationSourcePolicy(initial).enabled[kind]));
+-+  const configured = withSetting(initial, { id: "disable-reference", key: SOURCE_KINDS_SETTING,
+-+    after: { ...DEFAULT_SOURCE_POLICY.enabled, REFERENCE: false }, at: NOW, why: "source setting" });
+-+  const verdict = section3Page({ ...source("https://openstates.org/people/alice"), sourcePolicy: publicationSourcePolicy(configured) }, "OFFICIAL_ROSTER", NOW);
+-+  assert.equal(verdict.ok, false);
+-+  assert.equal(verdict.kind, "REFERENCE");
+-+  assert.match(verdict.reason!, /SOURCE_KIND_DISABLED/);
+-+  assert.deepEqual(settingUndo(configured, "disable-reference")?.value, DEFAULT_SOURCE_POLICY.enabled);
+-+});
+-diff --git a/tests/section3.test.ts b/tests/section3.test.ts
+-index 4307ae684..aabb9d73e 100644
+---- a/tests/section3.test.ts
+-+++ b/tests/section3.test.ts
+-@@ -9,7 +9,7 @@ const LIST = `<h1>2026 General Election — Candidate List</h1><table><tr><td>Sh
+- test("the page half: an official page inside its window passes; a stale or unofficial one does not", () => {
+-   assert.equal(section3Page(page(LIST), "BALLOT_CONTEST", NOW).ok, true);
+-   assert.match(section3Page(page(LIST, undefined, "2026-09-01T00:00:00.000Z"), "BALLOT_CONTEST", NOW).reason!, /OUTSIDE_FRESHNESS_WINDOW/);
+--  assert.match(section3Page(page(LIST, "https://candidates.example.com/list"), "BALLOT_CONTEST", NOW).reason!, /NOT_OFFICIAL_SOURCE/);
+-+  assert.match(section3Page(page(LIST, "https://candidates.example.com/list"), "BALLOT_CONTEST", NOW).reason!, /LINKED_SOURCE_UNVERIFIED/);
+- });
+- 
+- test("the record half: minimum facts put a record live; other fields attach only when on the page", () => {
+-@@ -88,3 +88,27 @@ test("CP-19: markup formatting a scalar name cell does not detach its own office
+-     assert.deepEqual(verdict.verifiedFields, ["email", "name", "office"]);
+-   }
+- });
+-+
+-+test("CP-09: votes, stances and ballot measures require their own minimums", () => {
+-+  for (const [recordClass, fields] of [
+-+    ["VOTE", { person: "Alice Adams", subject: "Budget", position: "Yes", date: "2026-09-28" }],
+-+    ["STANCE", { personId: "alice", quote: "I support parks", date: "2026-09-28" }],
+-+    ["BALLOT_MEASURE", { election: "2026 General", title: "Parks bond", textUrl: "https://town.gov/text" }],
+-+    ["BALLOT_MEASURE", { election: "2026 General", number: "101", textUrl: "https://town.gov/text" }],
+-+  ] as const) {
+-+    const capture = page(JSON.stringify(fields));
+-+    assert.equal(section3Record({ recordClass, fields, page: capture, now: NOW }).live, true);
+-+    const entries = Object.entries(fields);
+-+    const missing = Object.fromEntries(entries.slice(0, -1));
+-+    assert.equal(section3Record({ recordClass, fields: missing, page: capture, now: NOW }).live, false);
+-+  }
+-+});
+-+
+-+test("CP-09: a Money record needs an amount and period; its filing document can publish independently", () => {
+-+  const fields = { committeeName: "Friends of Parks", documentUrl: "https://town.gov/filing", filingPeriod: "2026" };
+-+  const capture = page(JSON.stringify(fields));
+-+  assert.equal(section3Record({ recordClass: "CAMPAIGN_FINANCE_FILING", fields, page: capture, now: NOW }).live, false);
+-+  assert.equal(section3Record({ recordClass: "CAMPAIGN_FINANCE_DOCUMENT", fields, page: capture, now: NOW }).live, true);
+-+  const money = { ...fields, amount: 0 };
+-+  assert.equal(section3Record({ recordClass: "CAMPAIGN_FINANCE_FILING", fields: money, page: page(JSON.stringify(money)), now: NOW }).live, true, "a verified zero is an amount");
+-+});
+-diff --git a/tests/worker-reader-publication.test.ts b/tests/worker-reader-publication.test.ts
+-index ed591004d..679896d9f 100644
+---- a/tests/worker-reader-publication.test.ts
+-+++ b/tests/worker-reader-publication.test.ts
+-@@ -230,7 +230,7 @@ test("independent normal workers automatically publish public-comment rules thro
+-   const captures = await Promise.all([parser.result.role === "PARSER" ? parser.result.artifactId : "", artifact.id].map(input.readCapture));
+-   const checked = { plan: ready, parser, captures, registry: prior, now: h.now() };
+-   assert.throws(() => workerReaderPackage({ ...checked, captures: captures.map(c => ({ ...c, partial: true })) }), /PRIMARY_CAPTURE_MISSING_OR_INCOMPLETE/);
+--  assert.throws(() => workerReaderPackage({ ...checked, captures: captures.map(c => ({ ...c, evidence: { ...c.evidence, canonicalUrl: "https://mirror.example.com/rules" } })) }), /NOT_OFFICIAL_SOURCE/);
+-+  assert.throws(() => workerReaderPackage({ ...checked, captures: captures.map(c => ({ ...c, evidence: { ...c.evidence, canonicalUrl: "https://mirror.example.com/rules" } })) }), /LINKED_SOURCE_UNVERIFIED/);
+-   assert.throws(() => workerReaderPackage({ ...checked, plan: { ...ready, publication: { contractId: "comment-access", bodyId: "unknown-body" } } }), /CANONICAL_BODY_MISSING/);
+-   // The current evidence can omit a detail without suppressing its verified
+-   // neighbours or deleting independently proven last-good instructions.
+-@@ -306,3 +306,19 @@ test("a BROKE audit names the published reader members it takes out of the next
+-   assert.deepEqual([...built.pulledMemberIds], [live.value.records[0].id as string], "the pull names the exact published member");
+-   assert.equal((built.package.payload as CuratedReaderProjection).records.length, 0, "the pulled record is not republished");
+- });
+-+
+-+test("CP-09: an amountless filing reaches its reader as a document without manufacturing Money", async () => {
+-+  const f = await workerFixture("official-filings", { committeeName: "Fixture Committee", committeeId: "123", documentUrl: FIXTURE_URL }, "CAMPAIGN_FINANCE_FILING");
+-+  const published = await publishWorkerReaderResults(f.input);
+-+  assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
+-+  const projection = await readCuratedReaderProjection("official-filings", { store: f.store, now: f.h.now(), bypassCache: true });
+-+  assert.equal(projection.kind, "PROMOTED");
+-+  if (projection.kind !== "PROMOTED") throw Error("fixture reader");
+-+  const rows = filingsForDivisions(projection.value.records as unknown as OfficialFiling[], [f.body.ocdId!]);
+-+  assert.equal(rows.length, 1);
+-+  assert.equal(rows[0].kind, "CAMPAIGN_FINANCE_DOCUMENT");
+-+  assert.equal(officialFilingIssue(rows[0]), null);
+-+  const html = renderToStaticMarkup(createElement(OfficialFilings, { rows }));
+-+  assert.ok(html.includes(FIXTURE_URL) && html.includes("Fixture Committee"));
+-+  assert.doesNotMatch(html, /Reported receipts|Reported expenditures|Reported cash/);
+-+});
+diff --git a/components/officials/card-sources-list.tsx b/components/officials/card-sources-list.tsx
+index e29965fad..ff70b6ab8 100644
+--- a/components/officials/card-sources-list.tsx
++++ b/components/officials/card-sources-list.tsx
+@@ -1,5 +1,5 @@
+ import type { CardSource } from "@/lib/officials/card-sources";
+-import { verificationOf } from "@/lib/officials/verification";
++import { verificationOf, provenanceKind, PROVENANCE_KIND_LABELS } from "@/lib/officials/verification";
+ 
+ import { NoValue, PopupRow } from "@/components/map/popup/popup-card";
+ 
+@@ -20,7 +20,7 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
+     <>
+       {sources.map((entry, i) => (
+         <div key={`${entry.what}-${i}`} className="account-modal-person">
+-          <p className="text-[0.8125rem] text-paper">{entry.what}</p>
++          <p className="text-[0.8125rem] text-paper">{PROVENANCE_KIND_LABELS[provenanceKind(entry.provenance)]} · {entry.what}</p>
+ 
+           <PopupRow label="Published by">
+             {entry.provenance.sourceOrg || <NoValue />}
+@@ -41,6 +41,8 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
+             )}
+           </PopupRow>
+ 
++          {entry.provenance.quote && <p className="text-sm text-muted">“{entry.provenance.quote}”</p>}
++
+           <PopupRow label="Collected" mono>
+             {entry.provenance.collectedAt ? (
+               entry.provenance.collectedAt.slice(0, 10)
+diff --git a/lib/civic-data/campaign-site-publication.ts b/lib/civic-data/campaign-site-publication.ts
+index 09cbe8d13..18496d575 100644
+--- a/lib/civic-data/campaign-site-publication.ts
++++ b/lib/civic-data/campaign-site-publication.ts
+@@ -176,7 +176,7 @@ export function planCampaignSitePublication(input: {
+         rawHash: site.evidence.sha256,
+         reviewedEvidence:
+           `${site.verification} Chain ${chosen.chain.scouted} → ${chosen.recordId}: robots-first read ${site.evidence.artifactId} by ` +
+-          `ACQUIRER Attempt ${site.evidence.attemptId}; five checks PASS; audit (${site.audit.startedFrom.join(", ")}) ${site.audit.secondSignal}.`,
++          `ACQUIRER Attempt ${site.evidence.attemptId}; candidate, office and cycle verified on the saved page.`,
+       };
+       sources.set(`${review.finalUrl}\n${review.rawHash}`, review);
+       published.push({ key, candidacyId, url: site.url, approvalRecordId: chosen.recordId });
+diff --git a/lib/civic-data/derived-campaign-site-writer.ts b/lib/civic-data/derived-campaign-site-writer.ts
+index 66cfe6e60..a05cf3d12 100644
+--- a/lib/civic-data/derived-campaign-site-writer.ts
++++ b/lib/civic-data/derived-campaign-site-writer.ts
+@@ -101,7 +101,7 @@ export interface PublishableCampaignSiteApproval {
+       readonly readAt: string;
+       readonly cycleSource?: CampaignSiteSourceReference;
+     };
+-    readonly audit: { readonly secondSignal: string };
++    readonly audit?: { readonly secondSignal: string };
+     readonly publicationDoor: string;
+   };
  }
-+const financeFields = ["candidateName", "committeeName", "committeeId", "filingPeriod", "filingDate", "reportType", "currency", "amount", "receipts", "expenditures", "cashOnHand"];
- const fields = {
-   CANDIDATE_FILING_DOCUMENT: ["candidateName", "office", "electionDate", "filingDate", "filingStatus", "party"],
--  CAMPAIGN_FINANCE_FILING: ["committeeName", "committeeId", "filingPeriod", "filingDate", "reportType", "currency", "receipts", "expenditures", "cashOnHand"],
-+  CAMPAIGN_FINANCE_FILING: financeFields,
-+  CAMPAIGN_FINANCE_DOCUMENT: financeFields,
- } as const;
- export function officialFilingIssue(value: unknown): string | null {
-   if (!value || typeof value !== "object") return "Filing is not an object.";
-@@ -33,9 +35,13 @@ export function officialFilingIssue(value: unknown): string | null {
-   const allowed = fields[row.kind] as readonly string[];
-   if (Object.entries(row.facts).some(([key, value]) => !allowed.includes(key) ||
-     !(typeof value === "string" && value.trim() || typeof value === "number" && Number.isFinite(value)))) return "Filing has an unsupported or empty fact.";
--  const required = row.kind === "CANDIDATE_FILING_DOCUMENT" ? ["candidateName", "office"] : ["committeeName", "filingPeriod"];
-+  const required = row.kind === "CANDIDATE_FILING_DOCUMENT" ? ["candidateName", "office"]
-+    : row.kind === "CAMPAIGN_FINANCE_FILING" ? ["filingPeriod"] : [];
-+  if (row.kind !== "CANDIDATE_FILING_DOCUMENT" && !["candidateName", "committeeName"].some(key => typeof row.facts[key] === "string" && String(row.facts[key]).trim())) return "Filing subject is missing.";
-   if (required.some(key => typeof row.facts[key] !== "string" || !String(row.facts[key]).trim())) return "Filing required facts are missing.";
--  const amounts = ["receipts", "expenditures", "cashOnHand"].filter(key => row.facts[key] !== undefined);
-+  const amounts = ["amount", "receipts", "expenditures", "cashOnHand"].filter(key => row.facts[key] !== undefined);
-+  if (row.kind === "CAMPAIGN_FINANCE_FILING" && amounts.length === 0) return "Money amount is missing; publish the filing document instead.";
-+  if (row.kind === "CAMPAIGN_FINANCE_DOCUMENT" && amounts.length > 0) return "Filing document cannot carry incomplete Money facts.";
-   if (amounts.length && (row.facts.currency !== "USD" || amounts.some(key => typeof row.facts[key] !== "number"))) return "Financial amounts require numeric values and a verified USD currency.";
-   return null;
+@@ -159,7 +159,7 @@ export function isPublishableCampaignSiteApproval(value: unknown): value is Publ
+     typeof identity.ocdId === "string" && text(identity.stateCode) && typeof identity.cycle === "number" &&
+     evidence !== undefined && text(evidence.artifactId) && text(evidence.attemptId) && text(evidence.sha256) && text(evidence.requestedUrl) &&
+     text(evidence.finalUrl) && typeof evidence.httpStatus === "number" && typeof evidence.contentType === "string" && text(evidence.readAt) &&
+-    text(evidence.verifierId) && site.audit !== undefined && typeof site.audit.secondSignal === "string";
++    text(evidence.verifierId);
  }
-diff --git a/lib/civic-data/publish-now.ts b/lib/civic-data/publish-now.ts
+ 
+ export const DERIVED_CAMPAIGN_SITE_HOLDS = [
+@@ -220,7 +220,7 @@ export async function heldCampaignSiteReads(vault: VaultIndex | ((artifactId: st
+ function publicationEvidence(record: PublishableCampaignSiteApproval): DerivedCampaignSiteEvidence {
+   const site = record.campaignSite;
+   return { ...site.evidence, approvalItemId: record.itemId, approvalRecordId: record.recordId,
+-    approvedAt: record.at, secondSignal: site.audit.secondSignal };
++    approvedAt: record.at, ...(site.audit ? { secondSignal: site.audit.secondSignal } : {}) };
+ }
+ 
+ export interface DerivedCampaignSitesPlan {
+@@ -489,7 +489,7 @@ export function planDerivedCampaignSites(input: {
+             approvalItemId: chosen.record.itemId,
+             approvalRecordId: chosen.record.recordId,
+             approvedAt: chosen.record.at,
+-            secondSignal: site.audit.secondSignal,
++            ...(site.audit ? { secondSignal: site.audit.secondSignal } : {}),
+           },
+         },
+       });
+diff --git a/lib/civic-data/derived-campaign-sites.ts b/lib/civic-data/derived-campaign-sites.ts
+index a3187141f..68eb99bfd 100644
+--- a/lib/civic-data/derived-campaign-sites.ts
++++ b/lib/civic-data/derived-campaign-sites.ts
+@@ -80,7 +80,8 @@ export interface DerivedCampaignSiteEvidence {
+   readonly approvalRecordId: string;
+   readonly approvedAt: string;
+   /** The audit's independent second signal, as it recorded it. */
+-  readonly secondSignal: string;
++  /** Historical evidence only; the campaign page identity is sufficient. */
++  readonly secondSignal?: string;
+ }
+ 
+ /** A deeper page inherits publisher identity from a separately approved site
+@@ -180,7 +181,7 @@ export function derivedCampaignSitesProjectionIssue(value: unknown): string | nu
+     if (!evidence || !SHA256.test(evidence.sha256 ?? "") || !text(evidence.artifactId) || !text(evidence.attemptId) || !text(evidence.verifierId) ||
+         !instant(evidence.readAt) || evidence.readAt.slice(0, 10) !== link.attemptedAt || !https(evidence.finalUrl) || !text(evidence.requestedUrl) ||
+         !Number.isInteger(evidence.httpStatus) || evidence.httpStatus < 200 || evidence.httpStatus >= 300 ||
+-        !text(evidence.approvalItemId) || !text(evidence.approvalRecordId) || !instant(evidence.approvedAt) || !text(evidence.secondSignal)) {
++        !text(evidence.approvalItemId) || !text(evidence.approvalRecordId) || !instant(evidence.approvedAt)) {
+       return `${record.id}: its evidence does not name its vaulted read and its approval exactly`;
+     }
+     /* One person, one campaign link: every key of one candidacy carries the same site. */
+@@ -222,7 +223,7 @@ export function derivedCampaignSitesProjectionIssue(value: unknown): string | nu
+               !https(e.sourceUrl) || !Number.isSafeInteger(e.hrefStart) || !Number.isSafeInteger(e.hrefEnd) ||
+               e.hrefStart < 0 || e.hrefEnd <= e.hrefStart || !text(e.hrefQuote) || e.offsetUnit !== "UTF16_CODE_UNITS" ||
+               !https(e.requestedUrl) || new URL(e.sourceUrl).hostname !== new URL(d.documentUrl).hostname
+-            : !text(e.secondSignal) || !instant(e.approvedAt)) ||
++            : !instant(e.approvedAt)) ||
+           e.httpStatus < 200 || e.httpStatus >= 300) return `${record.id}: candidate publication lacks exact text, identity or captured-byte evidence`;
+       documentIds.add(d.id);
+       if (revision) revisions.set(revision.revisionId, d);
+diff --git a/lib/civic-data/field-sources.ts b/lib/civic-data/field-sources.ts
 new file mode 100644
-index 000000000..605b340dd
+index 000000000..8750776ca
 --- /dev/null
-+++ b/lib/civic-data/publish-now.ts
-@@ -0,0 +1,39 @@
-+import type { IndependentRuntimeLane } from "../ops/independent-runtime-pass.ts";
-+import type { RoutineSourceTask } from "./runner.ts";
-+import type { WorkItem } from "../control-plane/work-item.ts";
-+import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
-+import type { DoorRecord } from "../doors/registry.ts";
-+import { doorPartitionIds } from "../doors/mission-refresh.ts";
-+import { workerPublicationTasks } from "./worker-publication-tasks.ts";
-+import { latestParserResult } from "./worker-publication-evidence.ts";
++++ b/lib/civic-data/field-sources.ts
+@@ -0,0 +1,21 @@
++import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
++import type { EvidenceSpan, FieldValue } from "../control-plane/workers/types.ts";
++import type { Provenance } from "../sources/types.ts";
++import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 +
-+export const PUBLISH_NOW_INTERVAL_MS = 60_000;
-+export const PUBLISH_NOW_SINGLETON_PORT = 49_373;
-+/** Register on the parent's independent scheduler, beside its routine lane. */
-+export function publishNowLane(run: () => Promise<void>): IndependentRuntimeLane {
-+  return { id: "publish-now", everyMs: PUBLISH_NOW_INTERVAL_MS, run };
-+}
-+
-+/** Parser results are already a durable, non-expiring outbox. Their exact ids
-+ * are acknowledged by publicationOutcome.workerResultId; a crash cannot eat a
-+ * request. The hourly held-page scan stays on the routine lane. */
-+export function publishNowWorkerTasks(items: readonly WorkItem[], results: readonly WorkerResultRecord[], now: string): RoutineSourceTask[] {
-+  return workerPublicationTasks(items.filter(item => latestParserResult(results, item.id) !== undefined), results, now);
-+}
-+
-+/** Probe changes stay pending until a successful read; no due-request expiry
-+ * can discard them. The ordinary source executor retains its retry interval. */
-+export function publishNowDoorTasks(doors: readonly DoorRecord[], tasks: readonly RoutineSourceTask[], now: string): RoutineSourceTask[] {
-+  const requests = new Map<string, string>();
-+  for (const door of doors) {
-+    const at = door.validators?.changedAt;
-+    if (door.status !== "OPEN" || !at || !Number.isFinite(Date.parse(at)) || Date.parse(at) > Date.parse(now) ||
-+      (door.lastSuccessAt !== null && Date.parse(door.lastSuccessAt) >= Date.parse(at))) continue;
-+    for (const id of doorPartitionIds(door)) if (!requests.has(id) || requests.get(id)! < at) requests.set(id, at);
++/** Keep only the parser's exact saved span, bound to this published field and
++ * capture. A summary or another record's span can never become its quote. */
++export function parserFieldSources(recordId: string, fields: Readonly<Record<string, FieldValue | unknown>>,
++  spans: readonly EvidenceSpan[], captures: readonly WorkerPublicationCapture[], now: string): Record<string, Provenance> {
++  const sources: Record<string, Provenance> = {};
++  for (const span of spans) {
++    if (span.recordId !== recordId || fields[span.field] === undefined || fields[span.field] === null || !span.quote) continue;
++    const capture = captures.find(c => c.evidence.artifactId === span.artifactId && c.evidence.contentHash === span.contentHash);
++    if (!capture || span.start < 0 || span.end <= span.start || capture.evidence.text.slice(span.start, span.end) !== span.quote) continue;
++    sources[span.field] = { sourceUrl: capture.evidence.canonicalUrl, sourceOrg: capture.evidence.sourceId,
++      collectedAt: capture.observedAt, verifiedAt: now,
++      kind: section3Page({ url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt,
++        sourcePolicy: capture.sourcePolicy, campaign: capture.campaign, linkingPage: linkingPageFrom(capture.evidence.canonicalUrl, captures.map(c => c.evidence)) }, "", now).kind, quote: span.quote };
 +  }
-+  return tasks.flatMap(task => {
-+    const requestedAt = requests.get(task.id);
-+    return requestedAt ? [{ ...task, ownerInvocation: { publicationPending: true, requestedAt,
-+      instructions: ["publish-now:source-changed"] } }] : [];
-+  });
++  return sources;
 +}
-diff --git a/lib/civic-data/worker-publication-context.ts b/lib/civic-data/worker-publication-context.ts
-index ab355bc98..daf5178c3 100644
---- a/lib/civic-data/worker-publication-context.ts
-+++ b/lib/civic-data/worker-publication-context.ts
-@@ -1,3 +1,4 @@
-+import { publicationSourcePolicy } from "../control-plane/promotion/source-settings.ts";
- import { join } from "node:path";
- import { controlPlaneUrlFromEnv, createPgRepositories } from "../control-plane/repository/pg-store.ts";
- import { DurableEvidenceStore } from "../control-plane/evidence/durable-store.ts";
-@@ -15,6 +16,7 @@ export async function workerPublicationContext(now: string) {
-   const connection = controlPlaneUrlFromEnv();
-   if (!connection) throw new Error("WORKER_PUBLICATION_CONTROL_PLANE_UNAVAILABLE");
-   const repos = await createPgRepositories(connection, now, { skipBootstrap: true });
-+  const sourcePolicy = publicationSourcePolicy((await repos.adminConfig.read("current"))?.value ?? null);
-   const vault = new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
-   const readObject = researchVaultResolver(repos, vault, "freshness");
-   const readEvidence = workerVaultResolver(repos, vault, "freshness", { snapshot: true });
-@@ -27,7 +29,7 @@ export async function workerPublicationContext(now: string) {
-         ? result.walk.filter(step => step.rung === result.source.retrieval && step.target === evidence.canonicalUrl &&
-           step.transport === "REACHABLE" && step.outcome === "WALKED_AND_FOUND" && step.artifactIds.includes(id)).map(step => step.at) : [];
-     });
--    return { evidence, observedAt: [evidence.retrievedAt, ...observations].sort().at(-1)!, httpStatus: artifact.httpStatus,
-+    return { evidence, sourcePolicy, observedAt: [evidence.retrievedAt, ...observations].sort().at(-1)!, httpStatus: artifact.httpStatus,
-       transport: artifact.transport, partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false };
-   } };
+diff --git a/lib/civic-data/meeting-research-evidence.ts b/lib/civic-data/meeting-research-evidence.ts
+index 9b8fea5ed..b11638b6a 100644
+--- a/lib/civic-data/meeting-research-evidence.ts
++++ b/lib/civic-data/meeting-research-evidence.ts
+@@ -73,7 +73,7 @@ interface FactStage {
+   readonly survived?: boolean;
+   readonly readerMeeting?: unknown;
+   readonly publicationDoor?: string;
+-  readonly chain?: { readonly scouted: string; readonly confirmed: string; readonly verified: string; readonly audited: string };
++  readonly chain?: { readonly scouted: string; readonly confirmed: string; readonly verified: string; readonly audited?: string };
  }
+ interface WorkerWitness {
+   readonly id: string; readonly endedAt: string; readonly inputResultIds: readonly string[]; readonly inputArtifactIds: readonly string[];
+diff --git a/lib/civic-data/source-authority.ts b/lib/civic-data/source-authority.ts
+index 681ea0321..16828abab 100644
+--- a/lib/civic-data/source-authority.ts
++++ b/lib/civic-data/source-authority.ts
+@@ -132,7 +132,7 @@ export const SOURCE_AUTHORITIES = {
+     freshnessExpectation: "Explicit owner invocation after a reviewed source package changes; no standing clock.",
+     absencePolicy: { kind: "NEVER_FROM_ZERO" },
+     routineAutoPromotion: false,
+-    manualReceiptPromotion: { allowedSourceClasses: ["OFFICIAL_PUBLISHER", "ELECTION_AUTHORITY", "REFERENCE_PUBLISHER"] },
++    manualReceiptPromotion: { allowedSourceClasses: MANUAL_SOURCE_CLASSES },
+   },
+   "curated-reader-primary-sources": {
+     id: "curated-reader-primary-sources",
+@@ -162,7 +162,7 @@ export const SOURCE_AUTHORITIES = {
+     absencePolicy: { kind: "NEVER_FROM_ZERO" },
+     routineAutoPromotion: false,
+     manualReceiptPromotion: {
+-      allowedSourceClasses: ["ELECTION_AUTHORITY", "CANDIDATE_CONTROLLED", "OFFICIAL_PUBLISHER", "REFERENCE_PUBLISHER"],
++      allowedSourceClasses: MANUAL_SOURCE_CLASSES,
+     },
+   },
+   "voting-sites": {
+diff --git a/lib/civic-data/types.ts b/lib/civic-data/types.ts
+index 64e373797..73d189c8a 100644
+--- a/lib/civic-data/types.ts
++++ b/lib/civic-data/types.ts
+@@ -145,6 +145,7 @@ export const MANUAL_SOURCE_CLASSES = [
+   "CANDIDATE_CONTROLLED",
+   "OFFICIAL_PUBLISHER",
+   "REFERENCE_PUBLISHER",
++  "FILING", "NEWS", "VOTER_GUIDE", "FORUM", "OTHER",
+ ] as const;
+ export type ManualSourceClass = (typeof MANUAL_SOURCE_CLASSES)[number];
+ 
+diff --git a/lib/civic-data/worker-body-directory.ts b/lib/civic-data/worker-body-directory.ts
+index 44e14371f..15ae7f7e3 100644
+--- a/lib/civic-data/worker-body-directory.ts
++++ b/lib/civic-data/worker-body-directory.ts
+@@ -1,3 +1,4 @@
++import { parserFieldSources } from "./field-sources.ts";
+ import { canonicalJson, type ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+ import { createWorkItem, type WorkItem } from "../control-plane/work-item.ts";
+ import { registerWorkItem } from "../control-plane/repository/coordinator.ts";
+@@ -105,6 +106,8 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
+         homepageUrl: url?.href ?? prior?.homepageUrl ?? null, bodyOrigin: "SOURCED", sourceDataset: "GOV_DIRECTORY",
+         ...(typeof f.meetingCadence === "string" ? { meetingCadence: f.meetingCadence } : {}),
+         ...(address ? { officeAddress: address } : {}), ...(phone ? { officePhone: phone } : {}),
++        ...("held" in input ? {} : { fieldSources: parserFieldSources(record.id, f,
++          input.parser.result.role === "PARSER" ? input.parser.result.spans : [], input.captures, input.now) }),
+         provenance: { sourceUrl: (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl, sourceOrg: checked.contract.sourceScope.publisher,
+           collectedAt: (checked.sourceOf?.get(record.id) ?? checked.primary).observedAt, verifiedAt: input.now } });
+     } catch (error) {
+@@ -150,7 +153,7 @@ export async function heldDirectoryReading(input: {
+     if (readUrls.has(artifact.canonicalUrl)) continue;
+     const capture = await input.readHeld(artifact);
+     if (!capture || !captureIntact(capture)) continue;
+-    const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt };
++    const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, sourcePolicy: capture.sourcePolicy, campaign: capture.campaign };
+     const pageVerdict = section3Page(page, contract.recordClass, input.now);
+     // The right place: the government's own page names that government.
+     if (!pageVerdict.ok || !pageWords(capture.evidence.text).includes(division.label.toLowerCase())) continue;
 diff --git a/lib/civic-data/worker-publication-evidence.ts b/lib/civic-data/worker-publication-evidence.ts
-index e05bca558..1225bea17 100644
+index 1225bea17..67b4e2ab2 100644
 --- a/lib/civic-data/worker-publication-evidence.ts
 +++ b/lib/civic-data/worker-publication-evidence.ts
-@@ -84,7 +84,8 @@ export function verifiedWorkerRecords(input: {
+@@ -1,9 +1,10 @@
++import { manualClassForKind } from "../control-plane/promotion/source-kinds.ts";
+ import { createHash } from "node:crypto";
+ import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
+ import type { ParserResult, WorkerResultRecord } from "../control-plane/workers/types.ts";
+ import { inventoryRecordEvidence } from "../control-plane/workers/record-evidence.ts";
+ import { compareCandidateWithSource } from "../control-plane/workers/record-verification.ts";
+-import { linkingPageFrom, SECTION3_MINIMUMS, section3Page, section3Record } from "../control-plane/promotion/section3.ts";
++import { linkingPageFrom, pageLinksTo, SECTION3_MINIMUMS, section3Page, section3Record } from "../control-plane/promotion/section3.ts";
+ import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
+ import type { ManualSourceSetReceipt } from "./types.ts";
+ import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+@@ -18,7 +19,7 @@ export function requirePublication(value: unknown, reason: string): asserts valu
+ const COVERAGE_CODES = new Set(["COMPLETENESS_SOURCE_ROW_OMITTED", "DECLARED_COUNT_MISMATCH"]);
+ 
+ /**
+- * Any job's saved official HTML pages to read in code, newest first: each
++ * Any job's saved HTML pages to read in code, newest first: each
+  * distinct content once, and at most `pages` distinct pages. Every saved copy
+  * of a page is kept, so a reader can pass over a later "Access Denied" copy
+  * to the good one saved before it.
+@@ -26,7 +27,7 @@ const COVERAGE_CODES = new Set(["COMPLETENESS_SOURCE_ROW_OMITTED", "DECLARED_COU
+ export function heldPageCopies(artifacts: readonly ArtifactRecord[], pages: number): readonly ArtifactRecord[] {
+   const hashes = new Set<string>(), urls = new Set<string>();
+   // Only HTTPS copies: the publication door accepts no other source, and a page it would refuse must not hold the facts beside it.
+-  return [...artifacts].filter(a => !a.partial && /html/i.test(a.contentType) && a.canonicalUrl.startsWith("https://") && isOfficialSource(a.canonicalUrl))
++  return [...artifacts].filter(a => !a.partial && /html/i.test(a.contentType) && a.canonicalUrl.startsWith("https://"))
+     .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt))
+     .filter(a => !hashes.has(a.contentHash) && Boolean(hashes.add(a.contentHash)))
+     .filter(a => urls.has(a.canonicalUrl) || (urls.size < pages && Boolean(urls.add(a.canonicalUrl))));
+@@ -48,10 +49,11 @@ export function captureProblem(capture: WorkerPublicationCapture): string | null
+ }
+ 
+ /** One reader-facing source receipt for the saved pages a publication rests on. */
+-export function section3SourceReceipt(captures: readonly WorkerPublicationCapture[], now: string, reviewedBy: string, reviewedEvidence: string): ManualSourceSetReceipt {
++export function section3SourceReceipt(captures: readonly WorkerPublicationCapture[], now: string, reviewedBy: string, reviewedEvidence: string, recordClass = ""): ManualSourceSetReceipt {
+   return { contractVersion: 1, reviewedAt: now, reviewedBy,
+     sources: captures.map(c => ({ requestedUrl: c.evidence.canonicalUrl, finalUrl: c.evidence.canonicalUrl, publisher: c.evidence.sourceId,
+-      sourceClass: "OFFICIAL_PUBLISHER", retrievedAt: c.observedAt, httpStatus: c.httpStatus!,
++      sourceClass: manualClassForKind(section3Page({ url: c.evidence.canonicalUrl, text: c.evidence.text, retrievedAt: c.observedAt,
++        sourcePolicy: c.sourcePolicy, campaign: c.campaign, linkingPage: linkingPageFrom(c.evidence.canonicalUrl, captures.map(copy => copy.evidence)) }, recordClass, now).kind), retrievedAt: c.observedAt, httpStatus: c.httpStatus!,
+       rawHash: (c.evidence.sourceDocument?.contentHash ?? c.evidence.contentHash).slice(7), reviewOutcome: "SUPPORTED", reviewedEvidence })) };
+ }
+ 
+@@ -84,7 +86,7 @@ export function verifiedWorkerRecords(input: {
    const primary = input.captures.find(c => c.evidence.artifactId === extraction.artifactId);
    requirePublication(primary && captureIntact(primary), "PRIMARY_CAPTURE_MISSING_OR_INCOMPLETE");
    const linkingPage = linkingPageFrom(primary.evidence.canonicalUrl, input.captures.filter(captureIntact).map(c => c.evidence));
--  const page = { url: primary.evidence.canonicalUrl, text: primary.evidence.text, retrievedAt: primary.observedAt, linkingPage };
-+  const page = { url: primary.evidence.canonicalUrl, text: primary.evidence.text, retrievedAt: primary.observedAt, linkingPage, sourcePolicy: primary.sourcePolicy,
-+    citations: input.captures.filter(c => c !== primary && captureIntact(c)).map(c => ({ url: c.evidence.canonicalUrl, text: c.evidence.text, retrievedAt: c.observedAt })) };
+-  const page = { url: primary.evidence.canonicalUrl, text: primary.evidence.text, retrievedAt: primary.observedAt, linkingPage, sourcePolicy: primary.sourcePolicy,
++  const page = { url: primary.evidence.canonicalUrl, text: primary.evidence.text, retrievedAt: primary.observedAt, linkingPage, sourcePolicy: primary.sourcePolicy, campaign: primary.campaign,
+     citations: input.captures.filter(c => c !== primary && captureIntact(c)).map(c => ({ url: c.evidence.canonicalUrl, text: c.evidence.text, retrievedAt: c.observedAt })) };
    const pageVerdict = section3Page(page, contract.recordClass, now);
    requirePublication(pageVerdict.ok, pageVerdict.reason ?? "PAGE_UNVERIFIED");
-   const minimums = SECTION3_MINIMUMS[contract.recordClass] ?? contract.requiredFields;
-@@ -102,7 +103,12 @@ ${f.field}`));
-     if (input.pullRemoves && pulled && (pulled.all || pulled.recordIds.has(record.id))) { pulledRecords.push(record); heldRecordIds.push(record.id); continue; }
-     const fields = Object.fromEntries(Object.entries(record.fields).filter(([field]) => !badFields.has(`${record.id}
- ${field}`)));
--    const verdict = section3Record({ recordClass: contract.recordClass, fields, page, now, pageVerdict, minimums });
-+    let verdict = section3Record({ recordClass: contract.recordClass, fields, page, now, pageVerdict, minimums });
-+    // An unverified amount leaves the filing document available; it cannot
-+    // become a Money record. Recheck the independent document minimum.
-+    if (!verdict.live && contract.recordClass === "CAMPAIGN_FINANCE_FILING") {
-+      verdict = section3Record({ recordClass: "CAMPAIGN_FINANCE_DOCUMENT", fields, page, now, pageVerdict });
-+    }
-     if (heldIds.has(record.id) || pulled?.recordIds.has(record.id) || !verdict.live) { heldRecordIds.push(record.id); continue; }
-     // Only verified values publish; the rest stay blank and owed.
+@@ -114,9 +116,10 @@ ${field}`)));
      records.push({ ...record, fields: Object.fromEntries(Object.entries(record.fields).filter(([field]) => verdict.verifiedFields.includes(field))) });
+   }
+   requirePublication(records.length > 0 || pulledRecords.length > 0, `NO_RECORD_MEETS_MINIMUMS:${minimums.join(",")}`);
+-  const captures = linkingPage ? [primary, ...input.captures.filter(c => c.evidence.canonicalUrl === linkingPage.url).slice(0, 1)] : [primary];
++  const captures = [primary, ...input.captures.filter(c => c !== primary && captureIntact(c) &&
++    (c.evidence.canonicalUrl === linkingPage?.url || pageLinksTo(page, c.evidence.canonicalUrl)))];
+   const sourceReceipt = section3SourceReceipt(captures, now, `section3-validator:${parser.id}`,
+-    `Parser result ${parser.id}: ${records.length} record(s) found on the saved official page inside its freshness window (§3).`);
++    `Parser result ${parser.id}: ${records.length} record(s) found on the saved page inside its freshness window (§3).`, contract.recordClass);
+   return { contract, extraction: { ...extraction, records }, primary, captures, sourceReceipt, heldRecordIds, pulledRecords };
+ }
+ 
+@@ -141,7 +144,7 @@ export async function capturesForPublication(input: {
+   const primary = await input.readCapture(input.primaryId, input.results);
+   if (isOfficialSource(primary.evidence.canonicalUrl)) return [primary];
+   const own = (await input.repos.artifacts.read(input.workItemId))
+-    .filter(a => a.artifactId !== input.primaryId && !a.partial && /html/i.test(a.contentType) && isOfficialSource(a.canonicalUrl)).slice(-10).map(a => a.artifactId);
++    .filter(a => a.artifactId !== input.primaryId && !a.partial && /html/i.test(a.contentType)).slice(-10).map(a => a.artifactId);
+   const learned = input.officialLinks?.get(hostOfUrl(primary.evidence.canonicalUrl) ?? "")?.slice(0, 3) ?? [];
+   const read = await Promise.all([...new Set([...learned, ...own])].map(id => input.readCapture(id, input.results).catch(() => null)));
+   return [primary, ...read.filter((c): c is WorkerPublicationCapture => c !== null)];
 diff --git a/lib/civic-data/worker-reader-publication.ts b/lib/civic-data/worker-reader-publication.ts
-index b2ff96887..4d00e8d8a 100644
+index 4d00e8d8a..bee819a9e 100644
 --- a/lib/civic-data/worker-reader-publication.ts
 +++ b/lib/civic-data/worker-reader-publication.ts
-@@ -96,7 +96,11 @@ export function workerReaderPackageWithPulls(input: Parameters<typeof verifiedWo
-       const facts = Object.fromEntries(Object.entries(f).filter(([key]) => !["bodyName", "documentUrl", "jurisdictionName"].includes(key)));
-       const id = `official-filing:${createHash("sha256").update(canonicalJson([body.id, territories[0].ocdId, checked.contract.recordClass, f.documentUrl,
-         f.candidateName ?? f.committeeName, f.office ?? f.filingPeriod])).digest("hex")}`;
--      const row = { id, kind: checked.contract.recordClass, bodyId: body.id, ocdId: territories[0].ocdId, bodyName: body.name, jurisdictionName: territories[0].label,
-+      const moneyFields = ["amount", "receipts", "expenditures", "cashOnHand"];
-+      const hasMoney = moneyFields.some(field => typeof facts[field] === "number") && typeof facts.filingPeriod === "string";
-+      const kind = checked.contract.recordClass === "CAMPAIGN_FINANCE_FILING" && !hasMoney ? "CAMPAIGN_FINANCE_DOCUMENT" : checked.contract.recordClass;
-+      if (kind === "CAMPAIGN_FINANCE_DOCUMENT") for (const field of moneyFields) delete facts[field];
-+      const row = { id, kind, bodyId: body.id, ocdId: territories[0].ocdId, bodyName: body.name, jurisdictionName: territories[0].label,
-         sourceUrl: checked.primary.evidence.canonicalUrl, documentUrl: f.documentUrl, collectedAt: checked.primary.observedAt, verifiedAt: input.now, facts };
-       requirePublication(officialFilingIssue(row) === null, `FILING_FIELDS_UNVERIFIED:${officialFilingIssue(row)}`);
-       return row;
+@@ -1,3 +1,4 @@
++import { parserFieldSources } from "./field-sources.ts";
+ import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
+ import type { WorkerResultRecord, FieldValue } from "../control-plane/workers/types.ts";
+ import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+@@ -52,11 +53,11 @@ export function inheritVerifiedCommentDetails(input: ManualProjectionPackage, pr
+         requirePublication(prior?.sourceReceipt.sources.some(source => source.reviewOutcome !== "BLOCKED" &&
+           [source.requestedUrl, source.finalUrl].includes(sourceUrl)), "PRIOR_FIELD_AUTHORITY_MISSING");
+         fields[field] = old[field];
+-        fieldSources[field] = { sourceUrl, collectedAt: priorField?.collectedAt ?? String(old.collectedAt),
++        fieldSources[field] = { ...priorField, sourceUrl, collectedAt: priorField?.collectedAt ?? String(old.collectedAt),
+           verifiedAt: priorField?.verifiedAt ?? (typeof old.verifiedAt === "string" ? old.verifiedAt : null), retainedFromVersion: prior!.versionId };
+         retainedUrls.add(sourceUrl);
+       } else if (row[field] !== null && row[field] !== undefined) {
+-        fieldSources[field] = { sourceUrl: String(row.sourceUrl), collectedAt: String(row.collectedAt), verifiedAt: String(row.verifiedAt) };
++        fieldSources[field] = { ...(row.fieldSources as CommentAccess["fieldSources"])?.[field], sourceUrl: String(row.sourceUrl), collectedAt: String(row.collectedAt), verifiedAt: String(row.verifiedAt) };
+       }
+     }
+     return { ...fields, id: String(fields.id), fieldSources };
+@@ -139,7 +140,8 @@ export function workerReaderPackageWithPulls(input: Parameters<typeof verifiedWo
+         signup: f.signup ?? null, writtenComment: f.writtenComment ?? null, attend: f.attend ?? null, timeLimit: f.timeLimit ?? null,
+         sourceUrl: checked.primary.evidence.canonicalUrl, collectedAt: checked.primary.observedAt, verifiedAt: input.now };
+   };
+-  const records = checked.extraction.records.map(rowFor);
++  const records = checked.extraction.records.map(record => ({ ...rowFor(record),
++    fieldSources: parserFieldSources(record.id, record.fields, checked.extraction.spans, input.captures, input.now) }));
+   requirePublication(records.length === checked.extraction.records.length && new Set(records.map(r => r.id)).size === records.length, "READER_IDENTITY_COLLISION");
+   // A pulled record that cannot be turned into a row never reached the version, so it has nothing to remove.
+   const pulledMemberIds = new Set(checked.pulledRecords.flatMap(record => { try { return [String(rowFor(record).id)]; } catch { return []; } }));
 diff --git a/lib/civic-data/worker-roster-publication.ts b/lib/civic-data/worker-roster-publication.ts
-index 524836f42..90fe4a468 100644
+index 90fe4a468..ef920fa1a 100644
 --- a/lib/civic-data/worker-roster-publication.ts
 +++ b/lib/civic-data/worker-roster-publication.ts
-@@ -29,6 +29,7 @@ import { compareCandidateWithSource } from "../control-plane/workers/record-veri
+@@ -1,3 +1,4 @@
++import { parserFieldSources } from "./field-sources.ts";
+ import { createHash } from "node:crypto";
+ import { canonicalJson } from "../control-plane/repository/types.ts";
+ import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+@@ -29,6 +30,7 @@ import { compareCandidateWithSource } from "../control-plane/workers/record-veri
  import { recordPublishedPageDoor } from "./worker-page-doors.ts";
  
  export interface WorkerPublicationCapture {
-+  readonly sourcePolicy?: import("../control-plane/promotion/source-kinds.ts").SourcePolicy;
++  readonly campaign?: import("../control-plane/promotion/section3.ts").Section3Page["campaign"];
+   readonly sourcePolicy?: import("../control-plane/promotion/source-kinds.ts").SourcePolicy;
    readonly evidence: WorkerEvidence;
    /** Latest successful network observation, not the time an old blob was replayed. */
-   readonly observedAt: string;
-@@ -121,7 +122,7 @@ export function workerRosterPublication(input: {
+@@ -44,7 +46,7 @@ export interface RosterReading {
+   readonly id: string;
+   readonly capture: WorkerPublicationCapture;
+   readonly linkingPage: OfficialLinkingPage | null;
+-  readonly members: readonly { readonly recordId: string; readonly fields: Readonly<Record<string, unknown>> }[];
++  readonly members: readonly { readonly recordId: string; readonly fields: Readonly<Record<string, unknown>>; readonly fieldSources?: Record<string, import("../sources/types.ts").Provenance> }[];
+   /** Every member row on the page was read, so a prior member absent from it has left. */
+   readonly complete: boolean;
+   readonly method: string;
+@@ -122,7 +124,7 @@ export function workerRosterPublication(input: {
    const { reading, prior, now } = input;
    const capture = reading.capture;
    requireThat(captureIntact(capture), "ROSTER_CAPTURE_INCOMPLETE");
--  const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: reading.linkingPage };
-+  const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: reading.linkingPage, sourcePolicy: capture.sourcePolicy };
+-  const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: reading.linkingPage, sourcePolicy: capture.sourcePolicy };
++  const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: reading.linkingPage, sourcePolicy: capture.sourcePolicy, campaign: capture.campaign };
    const pageVerdict = section3Page(page, "OFFICIAL_ROSTER", now);
    requireThat(pageVerdict.ok, `ROSTER_PAGE_UNVERIFIED:${pageVerdict.reason}`);
    const body = prior.payload.registry.bodies.find(row => row.id === input.bodyId);
-diff --git a/lib/control-plane/promotion/section3.ts b/lib/control-plane/promotion/section3.ts
-index e40b7575b..5ff9efc47 100644
---- a/lib/control-plane/promotion/section3.ts
-+++ b/lib/control-plane/promotion/section3.ts
-@@ -1,6 +1,6 @@
- /**
-  * The §3 standard, in code (docs/rulings.md §3). A fact passes when its value
-- * appears on a saved official page from the right place, captured inside that
-+ * appears on a saved source page from the right place, captured inside that
-  * kind of fact's freshness window, and code confirms the value is on the page.
-  * Evidence captured by any job counts. A second, independent source is needed
-  * only for judgment calls: portraits, summaries of a person's statements or
-@@ -9,6 +9,8 @@
-  * A record goes live when its minimum facts pass; every other fact attaches
-  * when it passes, and every blank stays open as work.
-  */
-+import { DEFAULT_SOURCE_POLICY, hostSourceKind, type SourceKind, type SourcePolicy } from "./source-kinds.ts";
-+export type { SourceKind, SourcePolicy } from "./source-kinds.ts";
- import { personNameField, personRecordBlocks } from "../workers/record-block.ts";
- import { isOfficialSource, type OfficialLinkingPage } from "../../civic-data/source-authority.ts";
- 
-@@ -19,6 +21,12 @@ export interface Section3Page {
-   readonly retrievedAt: string;
-   /** An official page that links this one, when this one is not `.gov`. */
-   readonly linkingPage?: OfficialLinkingPage | null;
-+  /** The current Admin settings, supplied by the publisher, never by the model. */
-+  readonly sourcePolicy?: SourcePolicy;
-+  /** Canonical candidate identity from the work item; the page must name all three. */
-+  readonly campaign?: { readonly name: string; readonly office: string; readonly cycle: string };
-+  /** Intact saved documents linked by this page, for re-proving an unknown publisher's values. */
-+  readonly citations?: readonly Section3Page[];
+@@ -185,7 +187,8 @@ export function workerRosterPublication(input: {
+     const phone = value("phone", publicContact), email = value("email", publicContact);
+     const freshContact = publicContact && (verifiedValue(member, "phone") !== null || verifiedValue(member, "email") !== null);
+     accepted.push({ recordId: member.recordId, memberId: identity.id });
+-    return { ...identity, name, officeTitle, termNote: value("termNote"), ...(termStart ? { termStart } : {}), ...(termEnd ? { termEnd } : {}), email, phone, websiteUrl: value("websiteUrl"),
++    return { ...identity, name, officeTitle,
++      fieldSources: Object.fromEntries(Object.entries(member.fieldSources ?? {}).filter(([field]) => verifiedValue(member, field) !== null)), termNote: value("termNote"), ...(termStart ? { termStart } : {}), ...(termEnd ? { termEnd } : {}), email, phone, websiteUrl: value("websiteUrl"),
+       ...(freshContact ? { contactKind: "PUBLIC_OFFICE" as const } : old?.contactKind ? { contactKind: old.contactKind } : {}),
+       ...(phone && freshContact ? { contactScope: (phones.get(phone) ?? 0) > 1 ? "SHARED_OFFICE" as const : old?.contactScope ?? "INDIVIDUAL_OFFICE" as const }
+         : old?.contactScope ? { contactScope: old.contactScope } : {}),
+@@ -258,7 +261,7 @@ function parserReading(parser: WorkerResultRecord, contract: NonNullable<WorkIte
+   const replay = compareCandidateWithSource(extraction, contract, capture.evidence, inventoryRecordEvidence(capture.evidence, contract.extraction));
+   return { id: parser.id, capture, linkingPage: linkingPageFrom(capture.evidence.canonicalUrl, captures.map(c => c.evidence)),
+     members: extraction.records.filter(record => !replay.some(f => f.recordId === record.id && (!f.field || ["name", "office"].includes(f.field))))
+-      .map(record => ({ recordId: record.id, fields: record.fields })),
++      .map(record => ({ recordId: record.id, fields: record.fields, fieldSources: parserFieldSources(record.id, record.fields, extraction.spans, captures, parser.endedAt) })),
+     complete: !replay.some(f => f.code.startsWith("COMPLETENESS_") || f.code === "DECLARED_COUNT_MISMATCH"), method: `Parser result ${parser.id}` };
  }
  
- /**
-@@ -30,7 +38,11 @@ export const SECTION3_MINIMUMS: Readonly<Record<string, readonly string[]>> = {
-   OFFICIAL_BOARD_DIRECTORY: ["bodyName", "bodyClass"],
-   MEETING: ["bodyName", "date", "time"],
-   CANDIDATE_FILING_DOCUMENT: ["jurisdictionName", "office", "candidateName"],
--  CAMPAIGN_FINANCE_FILING: ["jurisdictionName", "committeeName", "documentUrl"],
-+  CAMPAIGN_FINANCE_FILING: ["candidateName|committeeName", "amount|receipts|expenditures|cashOnHand", "filingPeriod", "documentUrl"],
-+  CAMPAIGN_FINANCE_DOCUMENT: ["candidateName|committeeName", "documentUrl"],
-+  VOTE: ["person", "subject", "position", "date"],
-+  STANCE: ["personId", "quote", "date"],
-+  BALLOT_MEASURE: ["election", "number|title", "textUrl"],
-   VOTER_ACCESS_ROUTE: ["kind", "url"],
-   PUBLIC_COMMENT_RULE: ["commentPeriod"],
-   SERVICE_CONTACT: ["service"],
-@@ -78,6 +90,7 @@ export const FRESHNESS_WINDOW_HOURS: Readonly<Record<string, number>> = {
-   VOTER_ACCESS_ROUTE: 7 * DAY,
-   CANDIDATE_FILING_DOCUMENT: 7 * DAY,
-   CAMPAIGN_FINANCE_FILING: 7 * DAY,
-+  CAMPAIGN_FINANCE_DOCUMENT: 7 * DAY,
-   OFFICIAL_ROSTER: 30 * DAY,
-   OFFICIAL_BOARD_DIRECTORY: 30 * DAY,
-   PUBLIC_COMMENT_RULE: 30 * DAY,
-@@ -120,18 +133,49 @@ export function valueOnPage(value: unknown, text: string, words: string = pageWo
+diff --git a/lib/control-plane/delivery-trail.ts b/lib/control-plane/delivery-trail.ts
+index 8a1a855ea..d7f8cbf19 100644
+--- a/lib/control-plane/delivery-trail.ts
++++ b/lib/control-plane/delivery-trail.ts
+@@ -87,7 +87,7 @@ export interface DeliveryPromotionRow {
+     readonly scouted: string;
+     readonly confirmed: string;
+     readonly verified: string;
+-    readonly audited: string;
++    readonly audited?: string;
+   };
+   /** When the record was approved for promotion. Absent only on snapshots published before it was named truthfully. */
+   readonly approvedAt?: string;
+diff --git a/lib/control-plane/promotion/campaign-site-chain.ts b/lib/control-plane/promotion/campaign-site-chain.ts
+index 18ecfbc2e..1f7524efb 100644
+--- a/lib/control-plane/promotion/campaign-site-chain.ts
++++ b/lib/control-plane/promotion/campaign-site-chain.ts
+@@ -1,55 +1,8 @@
+-/**
+- * **THE COMPLETE CHAIN FOR A CAMPAIGN SITE: SCOUTED → CONFIRMED → VERIFIED →
+- * AUDITED → APPROVED.** (2026-09-25.)
+- *
+- * Paid research held 582 candidate-enrichment items at SCOUTED: the generic
+- * worker offer (`workers/pipeline.ts`) leaves three of five checks
+- * NOT_IMPLEMENTED and the audit's controls NOT MEASURED, so nothing could
+- * reach a reader. This module completes the chain for ONE field of that
+- * class — the candidate's campaign site — with plain code. Every transition is
+- * OFFERED through `appendTransition`, the one gated path; nothing here writes a
+- * record the pipeline's own rules did not accept or refuse.
+- *
+- * ```
+- *   SCOUTED    a held Scout finding (the item paid research already created), or
+- *              a Marginalia POINTER (DISCOVERY_POINTER), subject = the canonical
+- *              candidacy id
+- *   CONFIRMED  OUR OWN robots-first read of the lead by a deterministic ACQUIRER
+- *              Attempt, vaulted; its page, through the campaign-site verifier,
+- *              states the same fact. A page that names the candidate but is
+- *              refused (past cycle, no year, not their site) is offered and
+- *              REFUSED as CONFIRMATION_FACT_CONFLICT with the typed reason — the
+- *              item holds, it is never skipped
+- *   VERIFIED   the five checks, MEASURED from the vaulted bytes (never from the
+- *              read's summary): spans, identity uniqueness, the class burdens,
+- *              rendering symmetry, false-zero
+- *   AUDITED    an independent re-derivation from the vault, known-answer
+- *              controls planted on the same bytes, and ONE independent second
+- *              signal (below). No second signal: offered and refused
+- *              (AUDIT_DID_NOT_SURVIVE); the missing source stays owed
+- *   APPROVED   a machine RELEASE_ORCHESTRATOR, once every burden passes,
+- *              including that the gate opens this class FOR THIS FIELD
+- * ```
+- *
+- * **WHAT THE AUDIT PROVES, AND WHAT IT DOES NOT.** It proves that (1) the
+- * vaulted bytes themselves — re-read by content address, not the VERIFIED
+- * record's text — name the candidate, the office or district and the current
+- * cycle; (2) on those bytes the matcher states every known-present fact and
+- * states neither a fabricated control name nor the candidate's surname under a
+- * fabricated given name (the controls); and (3) one signal independent of our
+- * read agrees: a saved current profile on a different publisher names this
+- * candidacy and links the campaign site whose bytes independently verify, or
+- * the candidate's own current filing names the site's domain (its
+- * website, or its contact address's domain — only the domain is ever read). It
+- * does NOT prove who controls the site (no registrar or ownership record is
+- * consulted), that it is the candidate's only site, that anything the site says
+- * is true, or that the site will stay up. A reader sees a link we read and
+- * verified, labelled as the campaign's, and nothing more is claimed.
+- */
++/** Campaign sites publish after their saved page verifies the candidate,
++ * office and cycle. Live auditors sample afterward; no planted-control stage
++ * or independent second signal holds a verified site. */
+ import { contentHash, fingerprint } from "../ids.ts";
+ import { accessControlIn } from "../../hunt/access-control.ts";
+-import { controlsClean } from "./fact-verification.ts";
+-import { scoreControls, type ControlFact, type ControlObservation, type ControlScore } from "../../health/control-fact.ts";
+ import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
+ import type { WorkerRole } from "../attempt.ts";
+ import type { AuditEvidenceBase } from "../audit.ts";
+@@ -60,7 +13,6 @@ import {
+   type ActivationGateReading,
+   type ApprovalBurden,
+   type ApprovedRecord,
+-  type AuditedRecord,
+   type ConfirmedRecord,
+   type PipelineItemState,
+   type PipelineStage,
+@@ -99,10 +51,9 @@ import {
+ export { profileCampaignSiteLeads } from "../../candidates/campaign-site-verifier.ts";
+ import { normalizeMarginaliaSearch } from "../scheduler/promotion-tail.ts";
+ 
+-export const CAMPAIGN_SITE_CHAIN_VERSION = "campaign-site-chain/1";
++export const CAMPAIGN_SITE_CHAIN_VERSION = "campaign-site-chain/2";
+ export const CAMPAIGN_SITE_RECORD_CLASS = "candidate-enrichment";
+ export const CAMPAIGN_SITE_FIELD = "campaignSite";
+-export const CAMPAIGN_SITE_AUDITOR_ID = "campaign-site-auditor/1";
+ export const CAMPAIGN_SITE_APPROVER_ID = "campaign-site-approver/1";
+ export const MARGINALIA_ROUTE_ID = "candidate-marginalia-index";
+ /** An approval rests on a verifying read no older than this. */
+@@ -194,7 +145,8 @@ export interface CampaignSiteApproval {
+     readonly readAt: string;
+     readonly cycleSource?: CampaignSiteSourceReference;
+   };
+-  readonly audit: { readonly startedFrom: readonly AuditEvidenceBase[]; readonly secondSignal: string };
++  /** Retained only when reading historical approvals. */
++  readonly audit?: { readonly startedFrom: readonly AuditEvidenceBase[]; readonly secondSignal: string };
+   readonly publicationDoor: typeof CAMPAIGN_SITE_PUBLICATION_DOOR;
  }
  
- export interface Section3PageVerdict {
-+  readonly kind: SourceKind;
-   readonly ok: boolean;
-   readonly reason: string | null;
+@@ -405,53 +357,6 @@ function decoy(seed: string, n: number): string {
+   return `Qz${letters.slice(0, 6)}`;
  }
  
--/** The page half of §3: an official page from the right place, inside its window. */
-+/** Resolve only actual links to saved source pages. No page-text mention counts as a citation. */
-+export function pageLinksTo(page: Section3Page, url: string): boolean {
-+  const clean = (value: string) => value.replace(/&amp;/g, "&").split("#")[0];
-+  for (const match of page.text.matchAll(/\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi)) {
-+    let href = clean(match[1] ?? match[2] ?? match[3]);
-+    if (href.startsWith("//")) href = "https:" + href;
-+    else if (href.startsWith("/")) href = (/^https?:\/\/[^/]+/i.exec(page.url)?.[0] ?? "") + href;
-+    else if (!/^[a-z][a-z0-9+.-]*:/i.test(href)) href = page.url.replace(/[?#].*$/, "").replace(/[^/]*$/, "") + href;
-+    if (href === clean(url)) return true;
-+  }
-+  return false;
-+}
-+
-+function campaignPageMatches(page: Section3Page): boolean {
-+  const candidate = page.campaign;
-+  if (!candidate || !candidate.name.trim() || !candidate.office.trim() || !candidate.cycle.trim()) return false;
-+  const heading = [...page.text.matchAll(/<(?:title|h1)\b[^>]*>([\s\S]*?)<\/(?:title|h1)>/gi)].map(match => match[1]).join(" ");
-+  return valueOnPage(candidate.name, heading) && valueOnPage(candidate.office, page.text) && valueOnPage(candidate.cycle, page.text);
-+}
-+
-+/** Label first; only enabled kinds with the required source evidence may publish. */
- export function section3Page(page: Section3Page, recordClass: string, now: string): Section3PageVerdict {
--  if (!isOfficialSource(page.url, page.linkingPage)) return { ok: false, reason: `NOT_OFFICIAL_SOURCE: ${page.url} is not .gov and no official page links it` };
-+  const policy = page.sourcePolicy ?? DEFAULT_SOURCE_POLICY;
-+  const official = isOfficialSource(page.url, page.linkingPage);
-+  const kind: SourceKind = official ? (/FILING/.test(recordClass) ? "FILING" : "OFFICIAL")
-+    : page.campaign || hostSourceKind(page.url, policy) === "CAMPAIGN" ? "CAMPAIGN" : hostSourceKind(page.url, policy);
-+  const refuse = (reason: string): Section3PageVerdict => ({ ok: false, kind, reason });
-+  if (!policy.enabled[kind]) return refuse(`SOURCE_KIND_DISABLED: ${kind}`);
-   const age = Date.parse(now) - Date.parse(page.retrievedAt);
-   const window = FRESHNESS_WINDOW_HOURS[recordClass] ?? DEFAULT_WINDOW_HOURS;
--  if (!Number.isFinite(age) || age < 0) return { ok: false, reason: `CAPTURE_TIME_INVALID: ${page.retrievedAt}` };
--  if (age > window * 3_600_000) return { ok: false, reason: `OUTSIDE_FRESHNESS_WINDOW: captured ${page.retrievedAt}, window ${window}h` };
--  return { ok: true, reason: null };
-+  if (!Number.isFinite(age) || age < 0) return refuse(`CAPTURE_TIME_INVALID: ${page.retrievedAt}`);
-+  if (age > window * 3_600_000) return refuse(`OUTSIDE_FRESHNESS_WINDOW: captured ${page.retrievedAt}, window ${window}h`);
-+  if (kind === "CAMPAIGN" && !campaignPageMatches(page)) return refuse("CAMPAIGN_IDENTITY_UNVERIFIED: the candidate, office and cycle must be on their own page");
-+  if (kind === "OTHER" && !(page.citations ?? []).some(citation => citation.url !== page.url && pageLinksTo(page, citation.url) &&
-+    section3Page({ ...citation, sourcePolicy: policy, citations: [] }, recordClass, now).ok)) {
-+    return refuse("LINKED_SOURCE_UNVERIFIED: no linked, saved source confirms this page");
-+  }
-+  return { ok: true, kind, reason: null };
- }
+-/**
+- * Known-answer controls planted on the SAME vaulted bytes: the claims the
+- * VERIFIED record makes are known-present; a fabricated control name and the
+- * candidate's surname under a fabricated given name are known-absent, each
+- * verified absent by an exact search of the page before it is planted.
+- */
+-export function measureCampaignSiteControls(subject: CampaignSiteSubject, read: CampaignSitePageRead, artifact: ArtifactRecord, at: string,
+-  supporting?: CampaignSiteSupportingRead): { readonly score: ControlScore; readonly instrument: string } {
+-  const text = comparisonText(pageVisibleText(read.body));
+-  const verified = { verification_source: `vaulted artifact ${artifact.artifactId} (${artifact.contentHash}), re-read by content address`, verified_by: `${CAMPAIGN_SITE_AUDITOR_ID} exact search`, verified_date: at.slice(0, 10) };
+-  const lead: CampaignSiteLead = { url: artifact.canonicalUrl, origin: "RECORDED_SITE", ref: `control:${artifact.artifactId}` };
+-  const m = verifyCampaignSitePage(subject, lead, read, supporting).measurement;
+-  const facts: ControlFact[] = [];
+-  const observations: ControlObservation[] = [];
+-  const present = (statement: string, stated: boolean, verificationSource = verified.verification_source) => {
+-    facts.push({ statement, fact_class: "known_present", expected_truth: { kind: "proposition", proposition: statement }, ...verified, verification_source: verificationSource });
+-    observations.push({ statement, observed: stated ? "FACT_STATED" : "ABSENCE_ASSERTED" });
+-  };
+-  const absent = (statement: string, form: string, identity: CampaignSiteIdentity) => {
+-    if (` ${text} `.includes(` ${comparisonText(form)} `)) return false;
+-    const pm = verifyCampaignSitePage(identity, lead, read).measurement;
+-    facts.push({ statement, fact_class: "known_absence", expected_truth: { kind: "proposition", proposition: statement },
+-      authority: "the vaulted page bytes", period: `this read, ${read.retrievedAt}`, verified_through: "exact search of the normalized page text before planting", ...verified });
+-    observations.push({ statement, observed: pm !== null && pm.name !== null ? "FACT_STATED" : "ABSENCE_ASSERTED" });
+-    return true;
+-  };
+-  present(`${artifact.contentHash} names ${displayName(subject)}`, m !== null && m.name !== null);
+-  present(`${artifact.contentHash} names the office or district of ${subject.officeTitle}`, m !== null && (m.office !== null || m.district !== null));
+-  const cycleSource = m?.cycle.source;
+-  present(`${cycleSource ? `sha256-${cycleSource.sha256}` : artifact.contentHash} evidences the ${subject.cycle} election`,
+-    m !== null && m.cycle.state === "CURRENT", cycleSource
+-      ? `vaulted artifact ${cycleSource.artifactId} (sha256-${cycleSource.sha256}), re-read by content address at ${cycleSource.finalUrl}` : verified.verification_source);
+-  for (let n = 0, planted = 0; n < 8 && planted < 1; n++) {
+-    const given = decoy(`${subject.candidacyId}|given`, n);
+-    const family = decoy(`${subject.candidacyId}|family`, n);
+-    if (absent(`${artifact.contentHash} names the control candidate ${given} ${family}`, `${given} ${family}`, { ...subject, givenName: given, familyName: family })) planted++;
+-  }
+-  for (let n = 0, planted = 0; n < 8 && planted < 1; n++) {
+-    const given = decoy(`${subject.candidacyId}|surname-only`, n);
+-    if (absent(`${artifact.contentHash} names ${given} ${subject.familyName} (the candidate's surname under a control given name)`, `${given} ${subject.familyName}`, { ...subject, givenName: given })) planted++;
+-  }
+-  return {
+-    score: scoreControls(facts, observations),
+-    instrument: `${CAMPAIGN_SITE_AUDITOR_ID}: ${facts.length} control(s) planted on ${artifact.artifactId}`,
+-  };
+-}
+-
+ /* ---------------------------------------------------------- the projection */
  
- export interface Section3RecordVerdict {
-@@ -161,14 +205,20 @@ export function section3Record(input: {
-   const page = input.pageVerdict ?? section3Page(input.page, input.recordClass, input.now);
-   const present = Object.entries(input.fields).filter(([, value]) => value !== null && value !== undefined && value !== "").map(([field]) => field);
-   if (!page.ok) return { live: false, verifiedFields: [], openFields: present, reason: page.reason };
-+  if (page.kind === "CAMPAIGN") {
-+    const name = input.fields.name ?? input.fields.candidateName ?? input.fields.person;
-+    if (typeof name !== "string" || pageWords(name) !== pageWords(input.page.campaign?.name ?? "")) {
-+      return { live: false, verifiedFields: [], openFields: present, reason: "CAMPAIGN_OTHER_SUBJECT: campaign sources only establish facts about their own candidate" };
-+    }
-+  }
-   const nameField = personNameField(input.fields, input.recordClass);
-   const anchorField = nameField ? input.derived?.[nameField] ?? nameField : null;
-   const blocks = anchorField ? personRecordBlocks(input.page.text, String(input.fields[anchorField]), (name, text) => pageWords(text).includes(pageWords(name))) : [];
-   // Repeated names are resolved by the record's other minimums, never by
-   // pooling contact fields from several rows belonging to different people.
-   const minimums = input.minimums ?? SECTION3_MINIMUMS[input.recordClass] ?? [];
--  const matching = [...new Map(blocks.filter(block => minimums.every(field =>
--    SECTION3_LABEL_FIELDS.includes(field) || input.derived?.[field] || valueOnPage(input.fields[field], input.page.text.slice(block.start, block.end))))
-+  const matching = [...new Map(blocks.filter(block => minimums.every(requirement => requirement.split("|").some(field =>
-+    SECTION3_LABEL_FIELDS.includes(field) || input.derived?.[field] || valueOnPage(input.fields[field], input.page.text.slice(block.start, block.end)))))
-     // CMS pages may repeat the exact same row for desktop and mobile. This
-     // is one record twice, not permission to combine differing rows.
-     .map(block => [input.page.text.slice(block.start, block.end), block])).values()];
-@@ -181,7 +231,16 @@ export function section3Record(input: {
-     if (valueOnPage(input.fields[field], recordText, words)) verified.add(field);
-   }
-   for (const [field, from] of Object.entries(input.derived ?? {})) if (present.includes(field) && verified.has(from)) verified.add(field);
--  const missing = minimums.filter((field) => !verified.has(field));
-+  if (page.kind === "OTHER") {
-+    const citations = (input.page.citations ?? []).filter(citation => citation.url !== input.page.url && pageLinksTo(input.page, citation.url) &&
-+      section3Page({ ...citation, sourcePolicy: input.page.sourcePolicy, citations: [] }, input.recordClass, input.now).ok);
-+    // Re-prove the whole record against each linked copy, preserving the same
-+    // person's block rule instead of pooling a value from somebody else's row.
-+    const supported = new Set(citations.flatMap(citation => section3Record({ ...input,
-+      page: { ...citation, sourcePolicy: input.page.sourcePolicy, citations: [] }, pageVerdict: undefined }).verifiedFields));
-+    for (const field of verified) if (!supported.has(field)) verified.delete(field);
-+  }
-+  const missing = minimums.filter(requirement => !requirement.split("|").some(field => verified.has(field)));
-   return {
-     live: missing.length === 0,
-     verifiedFields: [...verified].sort(),
+ function zeroStages(): Record<PipelineStage, number> {
+@@ -593,48 +498,10 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
+       state = await offer(verifiedRecord);
+     }
+ 
+-    if (state.stage === "VERIFIED") {
+-      const host = siteHost(artifact.canonicalUrl) ?? "";
+-      const reRead = verdict.verdict === "VERIFIED";
+-      let controls: ControlScore | null = null;
+-      let controlLine: string;
+-      try {
+-        const measured = measureCampaignSiteControls(subject, read, artifact, options.now, independent?.supporting);
+-        controls = measured.score;
+-        controlLine = `${measured.instrument}; ${controlsClean(measured.score).detail}`;
+-      } catch (error) {
+-        controlLine = `controls NOT MEASURED: ${error instanceof Error ? error.message : String(error)}`;
+-      }
+-      // Identity matching needs two publishers, not two clocks on one page.
+-      const filing = subject.filingDomains.includes(registrableDomain(host));
+-      const second = independent?.artifact ?? null;
+-      const startedFrom: AuditEvidenceBase[] = ["EVIDENCE_VAULT", "CANONICAL_SUBJECT_IDENTITY"];
+-      if (filing) startedFrom.push("PUBLISHER_SOURCE_UNIVERSE");
+-      const signal = second !== null
+-        ? `INDEPENDENT_PROFILE: ${second.artifactId} (${second.canonicalUrl}, ${second.contentHash}) names ${displayName(subject)}, the office or district and ${subject.cycle}, and links the campaign host ${host}; its saved source agrees with the independently verified primary page`
+-        : filing ? `FILING_DOMAIN: the candidate's own ${subject.cycle} filing names ${registrableDomain(host)}` : null;
+-      const clean = controls === null ? { clean: false, detail: "controls NOT MEASURED" } : controlsClean(controls);
+-      const findings = [
+-        reRead ? `RE_READ: the vaulted bytes ${artifact.contentHash} verify again for ${subject.candidacyId}` : `RE_READ_BROKE: the vaulted bytes no longer verify (${verdict.verdict === "REFUSED" ? verdict.refusals.map((r) => r.code).join(", ") : ""})`,
+-        signal ?? `NO_INDEPENDENT_SECOND_SIGNAL: no saved current candidate profile links ${host}, and no ${subject.cycle} filing names ${registrableDomain(host)}; an independent source remains owed`,
+-        controlLine,
+-      ];
+-      const audited: AuditedRecord = {
+-        formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION,
+-        recordId: `${state.itemId}:audited:${fingerprint([CAMPAIGN_SITE_AUDITOR_ID, artifact.artifactId, second?.artifactId ?? "", second?.contentHash ?? "", filing ? "filing" : ""])}`,
+-        itemId: state.itemId, at: second !== null && second.recordedAt > artifact.recordedAt ? second.recordedAt : artifact.recordedAt,
+-        actor: { role: "ADVERSARIAL_AUDITOR", lane: "DETERMINISTIC", instance: `${CAMPAIGN_SITE_AUDITOR_ID}@${state.itemId}` },
+-        stage: "AUDITED", startedFrom, survived: reRead && signal !== null && clean.clean, controls, findings,
+-      };
+-      state = await offer(audited);
+-    }
+-
+-    if (state.stage === "AUDITED" && verdict.verdict === "VERIFIED") {
++    if ((state.stage === "VERIFIED" || state.stage === "AUDITED") && verdict.verdict === "VERIFIED") {
+       const scouted = state.byStage.SCOUTED!;
+       const verifiedRecord = state.byStage.VERIFIED!;
+-      const audited = state.byStage.AUDITED!;
+       const failedChecks = verifiedRecord.checks.filter((c) => c.result !== "PASS").map((c) => c.name);
+-      const clean = audited.controls === null ? { clean: false, detail: "controls NOT MEASURED" } : controlsClean(audited.controls);
+       const host = siteHost(artifact.canonicalUrl) ?? "";
+       /*
+        * A later read of THIS PAGE that no longer verifies contradicts it. Another page of the same site (its donate or
+@@ -647,19 +514,17 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
+       const age = Date.parse(options.now) - Date.parse(verdict.measurement.retrievedAt);
+       const burdens: ApprovalBurden[] = [
+         { name: "CHAIN_CHECKS_PASS", result: failedChecks.length === 0 ? "PASS" : "FAIL", detail: failedChecks.length === 0 ? `all ${verifiedRecord.checks.length} checks PASS on ${verifiedRecord.recordId}` : `${failedChecks.join(", ")} not PASS on ${verifiedRecord.recordId}` },
+-        { name: "CONTROLS_MEASURED_CLEAN", result: clean.clean ? "PASS" : "FAIL", detail: clean.detail },
+         { name: "FACT_CURRENT", result: newerVerdict !== null && newerVerdict.verdict !== "VERIFIED" ? "FAIL" : "PASS",
+           detail: newerVerdict === null ? `no later read of ${artifact.canonicalUrl} by our own Attempt contradicts ${artifact.artifactId}` : `the newest read ${newer!.artifactId} of ${artifact.canonicalUrl} ${newerVerdict.verdict === "VERIFIED" ? "agrees" : `no longer verifies (${newerVerdict.refusals.map((r) => r.code).join(", ")})`}` },
+         { name: "FRESHNESS_NOT_STALE", result: age <= MAX_READ_AGE_MS ? "PASS" : "FAIL", detail: `the verifying read is ${Math.round(age / 3_600_000)}h old; the bound is ${MAX_READ_AGE_MS / 86_400_000} days` },
+         { name: "RECORD_CLASS_CANDIDATE", result: classFieldOpen(options.gate, CAMPAIGN_SITE_RECORD_CLASS, CAMPAIGN_SITE_FIELD) ? "PASS" : "FAIL",
+           detail: `${CAMPAIGN_SITE_RECORD_CLASS}.${CAMPAIGN_SITE_FIELD} ${classFieldOpen(options.gate, CAMPAIGN_SITE_RECORD_CLASS, CAMPAIGN_SITE_FIELD) ? "is" : "is not"} open at the activation gate` },
+       ];
+-      const signal = audited.findings.find((f) => /^(INDEPENDENT_PROFILE|FILING_DOMAIN):/.test(f)) ?? "";
+       const record: CampaignSiteApprovedRecord = {
+-        formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION, recordId: `${state.itemId}:approved:${audited.recordId}`, itemId: state.itemId, at: audited.at,
++        formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION, recordId: `${state.itemId}:approved:${verifiedRecord.recordId}`, itemId: state.itemId, at: verifiedRecord.at,
+         actor: { role: "RELEASE_ORCHESTRATOR", lane: "DETERMINISTIC", instance: `${CAMPAIGN_SITE_APPROVER_ID}@${state.itemId}` },
+         stage: "APPROVED_FOR_PROMOTION",
+-        chain: { scouted: scouted.recordId, confirmed: confirmed.recordId, verified: verifiedRecord.recordId, audited: audited.recordId },
++        chain: { scouted: scouted.recordId, confirmed: confirmed.recordId, verified: verifiedRecord.recordId },
+         recordClass: CAMPAIGN_SITE_RECORD_CLASS, burdens, field: CAMPAIGN_SITE_FIELD,
+         campaignSite: {
+           field: CAMPAIGN_SITE_FIELD,
+@@ -685,7 +550,6 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
+             readAt: verdict.measurement.retrievedAt,
+             ...(verdict.measurement.cycle.source ? { cycleSource: verdict.measurement.cycle.source } : {}),
+           },
+-          audit: { startedFrom: audited.startedFrom, secondSignal: signal },
+           publicationDoor: CAMPAIGN_SITE_PUBLICATION_DOOR,
+         },
+       };
+diff --git a/lib/control-plane/promotion/pipeline.ts b/lib/control-plane/promotion/pipeline.ts
+index 27c157339..c3287e6e1 100644
+--- a/lib/control-plane/promotion/pipeline.ts
++++ b/lib/control-plane/promotion/pipeline.ts
+@@ -264,7 +264,8 @@ function approvalReasons(state: PipelineItemState, offered: ApprovedRecord): Pip
+     ["SCOUTED", offered.chain.scouted],
+     ["CONFIRMED", offered.chain.confirmed],
+     ["VERIFIED", offered.chain.verified],
+-    ["AUDITED", offered.chain.audited],
++    ...(offered.recordClass === "candidate-enrichment" && offered.field === "campaignSite" && offered.chain.audited === undefined
++      ? [] : [["AUDITED", offered.chain.audited ?? ""] as const]),
+   ];
+   for (const [stage, id] of expect) {
+     const held: TransitionRecord | undefined = state.byStage[stage];
+@@ -295,7 +296,9 @@ export function validateTransition(
+   ctx: PipelineContext,
+ ): { readonly ok: true; readonly record: TransitionRecord } | { readonly ok: false; readonly record: RefusedRecord } {
+   const reasons: PipelineRefusalReason[] = [];
+-  const preceding = PRECEDING_STAGE[offered.stage];
++  const preceding = offered.stage === "APPROVED_FOR_PROMOTION" && offered.recordClass === "candidate-enrichment" &&
++    offered.field === "campaignSite" && offered.chain.audited === undefined && state.stage === "VERIFIED"
++    ? "VERIFIED" : PRECEDING_STAGE[offered.stage];
+   const held: TransitionRecord | undefined = state.byStage[offered.stage];
+   if (held !== undefined) {
+     if (held.recordId === offered.recordId && canonicalJson(held) === canonicalJson(offered)) {
 diff --git a/lib/control-plane/promotion/source-kinds.ts b/lib/control-plane/promotion/source-kinds.ts
-new file mode 100644
-index 000000000..315b72b1b
---- /dev/null
+index 315b72b1b..bf72563c8 100644
+--- a/lib/control-plane/promotion/source-kinds.ts
 +++ b/lib/control-plane/promotion/source-kinds.ts
-@@ -0,0 +1,35 @@
-+/** CP-02: source labels and their code defaults. Pure, including in the isolated Validator. */
-+export const SOURCE_KINDS = ["OFFICIAL", "CAMPAIGN", "FILING", "VOTER_GUIDE", "FORUM", "NEWS", "REFERENCE", "OTHER"] as const;
-+export type SourceKind = (typeof SOURCE_KINDS)[number];
-+export interface SourcePolicy {
-+  readonly hosts: Readonly<Record<string, SourceKind>>;
-+  readonly enabled: Readonly<Record<SourceKind, boolean>>;
-+}
-+export const DEFAULT_SOURCE_HOSTS: SourcePolicy["hosts"] = {
-+  "openstates.org": "REFERENCE", "wikipedia.org": "REFERENCE", "ballotpedia.org": "REFERENCE",
-+  "vote411.org": "VOTER_GUIDE", "votesmart.org": "VOTER_GUIDE",
-+};
-+export const DEFAULT_SOURCE_KINDS = Object.fromEntries(SOURCE_KINDS.map(kind => [kind, true])) as Record<SourceKind, boolean>;
-+export const DEFAULT_SOURCE_POLICY: SourcePolicy = { hosts: DEFAULT_SOURCE_HOSTS, enabled: DEFAULT_SOURCE_KINDS };
-+export const SOURCE_HOSTS_SETTING = "publication.sourceHosts";
-+export const SOURCE_KINDS_SETTING = "publication.sourceKinds";
-+export function sourceHost(url: string): string | null {
-+  const match = /^https?:\/\/([a-z0-9.-]+)(?::\d+)?(?:[/?#]|$)/i.exec(url);
-+  return match?.[1].toLowerCase().replace(/^www\./, "") ?? null;
-+}
-+export function hostSourceKind(url: string, policy: SourcePolicy = DEFAULT_SOURCE_POLICY): SourceKind {
-+  const host = sourceHost(url);
-+  if (!host) return "OTHER";
-+  // Longest entry wins, so a specific subdomain can have its own kind.
-+  const entry = Object.entries(policy.hosts).sort(([a], [b]) => b.length - a.length)
-+    .find(([key]) => host === key || host.endsWith(`.${key}`));
-+  return entry?.[1] ?? "OTHER";
-+}
-+export function validSourceHosts(value: unknown): value is SourcePolicy["hosts"] {
-+  return value !== null && typeof value === "object" && !Array.isArray(value) &&
-+    Object.entries(value).every(([host, kind]) => sourceHost(`https://${host}/`) === host && SOURCE_KINDS.includes(kind as SourceKind));
-+}
-+export function validSourceKinds(value: unknown): value is SourcePolicy["enabled"] {
-+  return value !== null && typeof value === "object" && !Array.isArray(value) &&
-+    Object.keys(value).length === SOURCE_KINDS.length && SOURCE_KINDS.every(kind => typeof (value as Record<string, unknown>)[kind] === "boolean");
-+}
-diff --git a/lib/control-plane/promotion/source-settings.ts b/lib/control-plane/promotion/source-settings.ts
-new file mode 100644
-index 000000000..410f4f575
---- /dev/null
-+++ b/lib/control-plane/promotion/source-settings.ts
-@@ -0,0 +1,14 @@
-+import type { AdminConfig } from "../gateway/admin-config.ts";
-+import { readSetting, registerSetting } from "../settings.ts";
-+import { DEFAULT_SOURCE_HOSTS, DEFAULT_SOURCE_KINDS, SOURCE_HOSTS_SETTING, SOURCE_KINDS_SETTING,
-+  validSourceHosts, validSourceKinds, type SourcePolicy } from "./source-kinds.ts";
-+
-+registerSetting({ key: SOURCE_HOSTS_SETTING, label: "Kinds of sources by website", defaultValue: DEFAULT_SOURCE_HOSTS,
-+  readerFacing: false, control: "json", validate: validSourceHosts });
-+registerSetting({ key: SOURCE_KINDS_SETTING, label: "Which source kinds count", defaultValue: DEFAULT_SOURCE_KINDS,
-+  readerFacing: false, control: "json", validate: validSourceKinds });
-+
-+export function publicationSourcePolicy(config: AdminConfig | null): SourcePolicy {
-+  return { hosts: readSetting(config, SOURCE_HOSTS_SETTING, DEFAULT_SOURCE_HOSTS),
-+    enabled: readSetting(config, SOURCE_KINDS_SETTING, DEFAULT_SOURCE_KINDS) };
-+}
-diff --git a/lib/control-plane/workers/generalized-validator.ts b/lib/control-plane/workers/generalized-validator.ts
-index 6c8ea20af..11b2a8eda 100644
---- a/lib/control-plane/workers/generalized-validator.ts
-+++ b/lib/control-plane/workers/generalized-validator.ts
-@@ -18,7 +18,7 @@ export function validateGeneralizedExtraction(input: ValidatorWorkerInput, contr
-   const findings: WorkerFinding[] = [];
-   // The Validator confirms what the extraction claims; each reader door then requires its class's §3 minimums.
-   const mapped = new Set([...Object.keys("fields" in contract.extraction ? contract.extraction.fields : {}), ...contract.requiredFields]);
--  const classMinimums = (SECTION3_MINIMUMS[contract.recordClass] ?? []).filter(field => mapped.has(field));
-+  const classMinimums = (SECTION3_MINIMUMS[contract.recordClass] ?? []).filter(requirement => requirement.split("|").some(field => mapped.has(field)));
-   const minimums = classMinimums.length ? classMinimums : contract.requiredFields;
-   if (input.worker.role !== "VALIDATOR" || input.producer.role !== "PARSER" || !input.worker.instance || !input.producer.instance || input.worker.instance === input.producer.instance || input.attemptId === input.producerAttemptId) findings.push(issue("SELF_VALIDATION_REFUSED", "Validator and parser must have distinct machine actors and Attempts."));
-   if (input.candidate.attemptId !== input.producerAttemptId || !input.worker.provider || !input.worker.version || !input.producer.provider || !input.producer.version) findings.push(issue("MACHINE_PROVENANCE_MISMATCH", "Candidate and worker identities must match machine-issued producer provenance."));
-@@ -55,7 +55,8 @@ export function validateGeneralizedExtraction(input: ValidatorWorkerInput, contr
-   const held = new Set(findings.filter(recordScoped).map(f => f.recordId!));
-   const validatedRecordIds = overall !== "PASS" ? [] : input.candidate.records.flatMap(record => {
-     if (held.has(record.id)) return [];
--    const verdict = section3Record({ recordClass: contract.recordClass, fields: record.fields, page, now, pageVerdict, minimums });
-+    let verdict = section3Record({ recordClass: contract.recordClass, fields: record.fields, page, now, pageVerdict, minimums });
-+    if (!verdict.live && contract.recordClass === "CAMPAIGN_FINANCE_FILING") verdict = section3Record({ recordClass: "CAMPAIGN_FINANCE_DOCUMENT", fields: record.fields, page, now, pageVerdict });
-     if (verdict.live) return [record.id];
-     findings.push(issue("MINIMUM_FACTS_UNVERIFIED", verdict.reason ?? "The record's minimum facts are not on the page.", "INFO", record.id));
-     return [];
-diff --git a/scripts/publish-now-runner.mts b/scripts/publish-now-runner.mts
-new file mode 100644
-index 000000000..cecfe9e30
---- /dev/null
-+++ b/scripts/publish-now-runner.mts
-@@ -0,0 +1,5 @@
-+/** BX-12: same authorized source executors and receipts, on an independent
-+ * minute clock. This entry runs only saved parser results and changed doors. */
-+if (!process.argv.includes("--publish-now")) process.argv.push("--publish-now");
-+await import("./routine-civic-data-runner.mts");
-+export {};
-diff --git a/scripts/routine-civic-data-runner.mts b/scripts/routine-civic-data-runner.mts
-index 3d4ba0b39..35fa6e962 100644
---- a/scripts/routine-civic-data-runner.mts
-+++ b/scripts/routine-civic-data-runner.mts
-@@ -93,6 +93,7 @@ import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
- import { loadPublishedLookupState } from "../lib/census-geography/reader.ts";
- import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
- import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
-+import { PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowWorkerTasks } from "../lib/civic-data/publish-now.ts";
- import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
- import { WORKER_PUBLICATION_TASK_IDS } from "../lib/civic-data/worker-reader-contracts.ts";
- import { readCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
-@@ -156,6 +157,8 @@ const ROOT = process.cwd();
- // reads the same held copies as the later source and Reader children.
- const readCacheHost = await startCivicReadCacheHost();
- const FORCE = process.argv.includes("--force");
-+const PUBLISH_NOW = process.argv.includes("--publish-now");
-+if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
- // DB-13: with WTP_DOORS_READ=registry the meeting work is built from the door
- // registry on every pass; otherwise (the default) the code's list is used as before.
- const CODE_MEETING_PARTITION_IDS = new Set(MEETING_PARTITION_CONTRACTS.map((contract) => contract.id));
-@@ -174,7 +177,7 @@ if ((doorReadModeFromEnv() === "registry" || doorSeedOnFromEnv()) && controlPlan
-     console.warn(`RCD_TASK routine-civic-data-runner: the door registry could not be read, the code's meeting list stays in use — ${error instanceof Error ? error.message : String(error)}`);
-   }
+@@ -33,3 +33,9 @@ export function validSourceKinds(value: unknown): value is SourcePolicy["enabled
+   return value !== null && typeof value === "object" && !Array.isArray(value) &&
+     Object.keys(value).length === SOURCE_KINDS.length && SOURCE_KINDS.every(kind => typeof (value as Record<string, unknown>)[kind] === "boolean");
  }
--const STANDING_SOURCE_TASKS = await withNationalPlaceTasks([
-+const STANDING_SOURCE_TASKS: readonly RoutineSourceTask[] = PUBLISH_NOW ? [] : await withNationalPlaceTasks([
-   ...ROUTINE_SOURCE_TASKS.filter((task) => !CODE_MEETING_PARTITION_IDS.has(task.id)),
-   ...MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract),
-   ...AUTOMATIC_REFRESH_TASKS,
-@@ -215,8 +218,8 @@ step = "taking the host-local singleton";
- const ROUTINE_DATA_PROCESS_LEASE = TASK_SELECTION.ok ? await (async () => {
-   try {
-     return await acquireProcessSingleton(
--      "routine-civic-data-runner",
--      ROUTINE_DATA_RUNNER_SINGLETON_PORT,
-+      PUBLISH_NOW ? "publish-now-runner" : "routine-civic-data-runner",
-+      PUBLISH_NOW ? PUBLISH_NOW_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT,
-     );
-   } catch (error) {
-     if (!(error instanceof ProcessSingletonHeldError)) throw error;
-@@ -404,7 +407,9 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
-   if (intents.runnerPause.paused) return [];
-   const items = (await repos.workItems.list()).map(row => row.value);
-   const workers = items.some(item => item.autonomousPlan?.publication) ? await readCompletedWorkerResults(repos) : [];
--  const publication = workerPublicationTasks(items, workers, RUN_STARTED_AT);
-+  const publication = PUBLISH_NOW ? publishNowWorkerTasks(items, workers, RUN_STARTED_AT) : workerPublicationTasks(items, workers, RUN_STARTED_AT);
-+  if (PUBLISH_NOW) return [...publication, ...publishNowDoorTasks((await listDoors(repos.doors)).doors,
-+    MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract), RUN_STARTED_AT)];
-   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
-   if (row === null) return publication;
-   if (!isAdminConfig(row.value)) throw new Error("the owner's policy row is unreadable");
-@@ -979,7 +984,7 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
- const readerContracts = selectedReaderRepairContracts([
-   ...observableRoutineContracts(),
-   ...MANUAL_PRODUCTION_SOURCE_CONTRACTS,
--], ONLY === null ? null : selectedTasks);
-+], !PUBLISH_NOW && ONLY === null ? null : selectedTasks);
- const readerDomains = routineReaderRepairDomains(readerContracts);
- const readerReadbackReferences: RoutineCivicDataReaderReadbackReference[] = readerContracts
-   .filter(({ readerProjection }) => readerProjection === null)
-@@ -1037,7 +1042,7 @@ function settleReaderDomain(domain: RoutineReaderRepairDomain, run: BoundedChild
- // waiting for the next pass (C6; lib/civic-data/hot-read-catch-up.ts). The
- // repair starts once every such read beside the source reads has settled, and
- // launches the repairs a read could race first; catch-up resumes when they settle.
--const hotReadTasks = FORCE
-+const hotReadTasks = FORCE || PUBLISH_NOW
-   ? []
-   : clockReads.flatMap((read) => read.ok && read.task.contract.schedule?.kind === "SITTING_WINDOW" ? [read.task] : []);
- const hotReadTaskIds = new Set(hotReadTasks.map(({ id }) => id));
-@@ -1178,7 +1183,7 @@ for (const error of pass.errors) {
- const readerRuns = pass.repair;
- // Source settlement publishes serving copies even when a readback child fails.
- step = "publishing changed reader edge copies";
--const readerEdge = await publishSupervisorReaderEdge(store, new Date().toISOString(), ONLY === null ? null : selectedTasks);
-+const readerEdge = await publishSupervisorReaderEdge(store, new Date().toISOString(), !PUBLISH_NOW && ONLY === null ? null : selectedTasks);
- const readerEdgeFailure = readerEdgeSupervisorFailure(readerEdge);
- if (readerEdgeFailure) supervisorFailures.push(readerEdgeFailure);
- for (const run of readerRuns) {
-@@ -1255,6 +1260,7 @@ try {
-     kind: "ROUTINE_CIVIC_DATA_SUPERVISOR",
-     state: supervisorFailures.length === 0 ? "SUCCEEDED" : "FAILED",
-     cycleId,
-+    lane: PUBLISH_NOW ? "publish-now" : "routine-civic-data",
-     readerEdge,
-     exactTaskReceipts: verifiedTaskReceipts.length,
-     durable: true,
-@@ -1280,6 +1286,7 @@ const attemptedCount = floored(
-   attempted,
- );
- console.log("RCD_RUN=" + JSON.stringify({
-+  lane: PUBLISH_NOW ? "publish-now" : "routine-civic-data",
-   attempted: attemptedCount.matched,
-   denominator: attemptedCount.denominator,
-   failed:
-diff --git a/tests/held-roster-publication.test.ts b/tests/held-roster-publication.test.ts
-index 9b242c860..ecb1a31ea 100644
---- a/tests/held-roster-publication.test.ts
-+++ b/tests/held-roster-publication.test.ts
-@@ -74,7 +74,7 @@ test("the wrong page, a stale page and an unlinked non-government page never pub
-     members: readHeldRoster(c.evidence.text, c.evidence.canonicalUrl)!.rows.map((row, i) => ({ recordId: `r${i}`, fields: { ...row } })) });
-   assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Boards"))), prior: base, now: NOW }), /ROSTER_PAGE_NOT_THIS_BODY/);
-   assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Contact the Mayor & Council"), URL_, "2026-07-01T00:00:00.000Z")), prior: base, now: NOW }), /OUTSIDE_FRESHNESS_WINDOW/);
--  assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Contact the Mayor & Council"), "https://benson-az.example.com/council")), prior: base, now: NOW }), /NOT_OFFICIAL_SOURCE/);
-+  assert.throws(() => workerRosterPublication({ bodyId: BODY, reading: reading(capture(page("Contact the Mayor & Council"), "https://benson-az.example.com/council")), prior: base, now: NOW }), /LINKED_SOURCE_UNVERIFIED/);
++
++/** Preserve the source-kind label in the existing receipt vocabulary. */
++export function manualClassForKind(kind: SourceKind): import("../../civic-data/types.ts").ManualSourceClass {
++  return ({ OFFICIAL: "OFFICIAL_PUBLISHER", CAMPAIGN: "CANDIDATE_CONTROLLED", REFERENCE: "REFERENCE_PUBLISHER" } as const)[kind as "OFFICIAL" | "CAMPAIGN" | "REFERENCE"] ??
++    kind as import("../../civic-data/types.ts").ManualSourceClass;
++}
+diff --git a/lib/control-plane/promotion/types.ts b/lib/control-plane/promotion/types.ts
+index 89f61c0c9..4819a613f 100644
+--- a/lib/control-plane/promotion/types.ts
++++ b/lib/control-plane/promotion/types.ts
+@@ -271,7 +271,7 @@ export interface ApprovedRecord extends RecordBase {
+     readonly scouted: string;
+     readonly confirmed: string;
+     readonly verified: string;
+-    readonly audited: string;
++    readonly audited?: string;
+   };
+   readonly recordClass: string;
+   /** PRDY-3/5: measured at offer time; absent on approvals written before the burdens existed. */
+diff --git a/lib/officials/card-sources.ts b/lib/officials/card-sources.ts
+index f7230e582..ab441457a 100644
+--- a/lib/officials/card-sources.ts
++++ b/lib/officials/card-sources.ts
+@@ -67,7 +67,7 @@ export const BOUNDARY_PROVENANCE: Provenance = {
+ 
+ /** Merge key: two rows from the same publisher and page are one source. */
+ function keyOf(provenance: Provenance): string {
+-  return `${provenance.sourceOrg}|${provenance.sourceUrl ?? ""}`;
++  return `${provenance.sourceOrg}|${provenance.sourceUrl ?? ""}|${provenance.quote ?? ""}`;
+ }
+ 
+ /**
+@@ -116,12 +116,12 @@ function holderSource(holder: SeatHolder, what: string): CardSource | null {
+ }
+ 
+ function retainedHolderSources(holder: SeatHolder): CardSource[] {
+-  return Object.entries(holder.retainedFieldSources ?? {}).flatMap(([field, source]) => {
++  return [...Object.entries(holder.fieldSources ?? {}).map(([field, provenance]) => ({ what: `${holder.name} — ${field}`, provenance })), ...Object.entries(holder.retainedFieldSources ?? {}).flatMap(([field, source]) => {
+     if (!source) return [];
+     const label = { termNote: "term wording", termStart: "term start date", termEnd: "term end date", email: "office email", phone: "office phone", websiteUrl: "official page link" }[field] ?? field;
+     return [{ what: `${holder.name}'s previously verified ${label}, retained after an incomplete update`,
+       provenance: { ...source, verifiedAt: null } }];
+-  });
++  })];
+ }
+ 
+ /**
+diff --git a/lib/officials/verification.ts b/lib/officials/verification.ts
+index 44ac76821..f488bffc0 100644
+--- a/lib/officials/verification.ts
++++ b/lib/officials/verification.ts
+@@ -1,154 +1,40 @@
+-import { activeWiring } from "../registry/source-wiring.ts";
+-
+-/**
+- * What we may honestly say about a source's verification — g3 item 5
+- * (2026-08-16).
+- *
+- * ## The defect
+- *
+- * Katie Hobbs' Sources tab read:
+- *
+- *     Read from    azgovernor.gov
+- *     Collected    2026-08-14
+- *     Verified     not yet
+- *
+- * Three rows, and the third one contradicted the first two. The fact came off
+- * the Governor of Arizona's own office's website, on a stated date, with the
+- * link right there — and the card told the reader we had not checked it. That
+- * is not a cautious understatement; it is the product slandering its own best
+- * evidence, on the one surface whose entire job is to say where a claim came
+- * from. A reader who believes that row believes we are guessing about a
+- * sitting governor.
+- *
+- * ## The ruling
+- *
+- * **A fact read from the subject's own official source IS verified — the read
+- * is the verification**, by that source, on the read date. "Not yet" is
+- * RESERVED for genuinely unverified provenance: an aggregator, a third-party
+- * page, a social feed — somewhere a second rung is still owed.
+- *
+- * Nothing about the underlying provenance model changes. `verifiedAt` still
+- * means what it meant (a human went and looked), the source URL and collected
+- * date are untouched, and no record gains a field. This is vocabulary and
+- * rendering.
+- *
+- * ## How "official" is decided, and why not by hand
+- *
+- * A hand-kept allow-list would rot and would encode somebody's opinion. These
+- * three rules are each checkable against something outside us:
+- *
+- * 1. **`.gov` and `.mil`.** The `.gov` TLD is restricted by CISA to United
+- *    States government organizations; you cannot buy one. `CLAUDE.md`'s photo
+- *    door 4 already rests on exactly this ("anything on a `.gov` site is
+- *    official, by the author's ruling").
+- * 2. **The `.us` locality space** — `warner.nh.us`, `ci.tucson.az.us`,
+- *    `k12` district domains. RFC 1480 delegates those branches to the
+- *    governments they name.
+- * 3. **A body's own page as the source wiring already records it.** Some
+- *    public bodies — most school districts — publish on a `.org`. The
+- *    `SCHEDULEPAGE` adapter is defined as "the body publishes its own
+- *    sittings on its own site, with no portal in the path", so the hosts of
+- *    those rows are, by the registry's own typing, bodies' own sites.
+- *    Deriving the list from the wiring means it grows when coverage grows and
+- *    never disagrees with it.
+- *
+- * A VENDOR portal is deliberately NOT on this list. Granicus hosting Tucson's
+- * agendas is Tucson's publication channel and the records are Tucson's, but
+- * the ruling says "the subject's own official source", and a vendor is a
+- * third party under any plain reading of that sentence. Those rows keep
+- * saying "not yet" until a human checks one, which is the conservative
+- * direction and the one that keeps this row meaning something.
+- */
++import { isOfficialSource } from "../civic-data/source-authority.ts";
++import { hostSourceKind, type SourceKind } from "../control-plane/promotion/source-kinds.ts";
+ 
+ export type Verification =
+-  | {
+-      /** A human went and looked. The strongest claim, and it keeps its date. */
+-      kind: "confirmed";
+-      date: string;
+-    }
+-  | {
+-      /** Read from the subject's own official publisher — the read IS the check. */
+-      kind: "official";
+-      date: string;
+-      by: string;
+-    }
+-  | {
+-      /** A second rung is still owed: an aggregator, a third party, a feed. */
+-      kind: "unverified";
+-    };
++  | { kind: "confirmed"; date: string }
++  | { kind: "official"; date: string; by: string }
++  | { kind: "unverified" };
+ 
+ export interface VerifiableProvenance {
++  kind?: SourceKind;
+   sourceUrl: string | null;
+   collectedAt: string | null;
+   verifiedAt: string | null;
+ }
+ 
+-/**
+- * The host of a URL, lowercased and `www.`-stripped, or null.
+- *
+- * Exported 2026-08-23 (item 3) because `components/ballot/candidate-card.tsx`
+- * needs the same answer to NAME a bio's source from the URL already on the
+- * row. A second copy of this is the duplicate-implementation class RULING 103
+- * governs — three copies of an initials function is how `Thomas J. Haynes III`
+- * came out as `TI`.
+- */
+ export function hostOf(url: string | null): string | null {
+   if (!url) return null;
+-  try {
+-    return new URL(url).host.toLowerCase().replace(/^www\./, "");
+-  } catch {
+-    return null;
+-  }
++  try { return new URL(url).host.toLowerCase().replace(/^www\./, ""); }
++  catch { return null; }
+ }
+ 
+-/**
+- * Hosts the source wiring itself types as a body's own page.
+- *
+- * Computed once. `SCHEDULEPAGE` is the only adapter whose contract is "no
+- * portal in the path", so it is the only one whose hosts qualify.
+- */
+-let ownPages: Set<string> | null = null;
+-function bodyOwnPageHosts(): Set<string> {
+-  if (ownPages) return ownPages;
+-  ownPages = new Set<string>();
+-  for (const row of activeWiring()) {
+-    if (row.agendaSourceType !== "SCHEDULEPAGE") continue;
+-    for (const url of [
+-      row.config.schedulePage,
+-      row.config.documentsPage,
+-      row.noticeUrl,
+-    ]) {
+-      const host = hostOf(url ?? null);
+-      if (host) ownPages.add(host);
+-    }
+-  }
+-  return ownPages;
++/** Publication carries the verified label, including government-linked vendor
++ * portals. Legacy sources still receive a label from the shared source table. */
++export function provenanceKind(provenance: Pick<VerifiableProvenance, "kind" | "sourceUrl">): SourceKind {
++  if (provenance.kind) return provenance.kind;
++  return provenance.sourceUrl && isOfficialSource(provenance.sourceUrl) ? "OFFICIAL" : hostSourceKind(provenance.sourceUrl ?? "");
+ }
+ 
+-/** A two-letter state label immediately under `.us` — RFC 1480's locality space. */
+-const US_LOCALITY = /\.[a-z]{2}\.us$/;
+-
+-export function isOfficialHost(host: string | null): boolean {
+-  if (!host) return false;
+-  if (/\.(gov|mil)$/.test(host)) return true;
+-  if (US_LOCALITY.test(host)) return true;
+-  return bodyOwnPageHosts().has(host);
+-}
++export const PROVENANCE_KIND_LABELS: Readonly<Record<SourceKind, string>> = {
++  OFFICIAL: "Official", CAMPAIGN: "Campaign", FILING: "Filing", VOTER_GUIDE: "Voter guide",
++  FORUM: "Forum", NEWS: "News", REFERENCE: "Reference", OTHER: "Other",
++};
+ 
+ export function verificationOf(provenance: VerifiableProvenance): Verification {
+-  if (provenance.verifiedAt) {
+-    return { kind: "confirmed", date: provenance.verifiedAt.slice(0, 10) };
+-  }
+-  const host = hostOf(provenance.sourceUrl);
+-  // A read with no date behind it cannot be dated as a verification, however
+-  // official the host. That is the render-default rule: a missing date may not
+-  // be filled in with a plausible one.
+-  if (host && isOfficialHost(host) && provenance.collectedAt) {
+-    return {
+-      kind: "official",
+-      date: provenance.collectedAt.slice(0, 10),
+-      by: host,
+-    };
++  if (provenance.verifiedAt) return { kind: "confirmed", date: provenance.verifiedAt.slice(0, 10) };
++  if (provenanceKind(provenance) === "OFFICIAL" && provenance.collectedAt) {
++    return { kind: "official", date: provenance.collectedAt.slice(0, 10), by: hostOf(provenance.sourceUrl) ?? "the publishing body" };
+   }
+   return { kind: "unverified" };
+ }
+diff --git a/lib/registry/body-rosters.ts b/lib/registry/body-rosters.ts
+index f6546d987..8fc11e850 100644
+--- a/lib/registry/body-rosters.ts
++++ b/lib/registry/body-rosters.ts
+@@ -23,6 +23,7 @@ import { AZ_CAWCD_ROSTERS } from "./cawcd-rosters.ts";
+ import { NJ_MORRIS_ROSTERS } from "./rosters-nj-morris.ts";
+ 
+ export interface RosterMember {
++  fieldSources?: Record<string, Provenance>;
+   /** An unresolved update must retain an older member on its actual source/date. */
+   membershipSource?: { sourceUrl: string; sourceOrg: string; collectedAt: string };
+   /** Optional facts kept from an earlier verified read when this update omits them. */
+@@ -2579,6 +2580,7 @@ export interface RosterHolder {
+   phone: string | null;
+   contactKind?: "PUBLIC_OFFICE" | "PERSONAL";
+   contactScope?: "SHARED_OFFICE" | "INDIVIDUAL_OFFICE";
++  fieldSources?: RosterMember["fieldSources"];
+   retainedFieldSources?: RosterMember["retainedFieldSources"];
+   contactFormUrl: null;
+   photoUrl: string | null;
+@@ -2647,6 +2649,7 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
+     phone: member.phone,
+     contactKind: member.contactKind,
+     contactScope: member.contactScope,
++    fieldSources: member.fieldSources,
+     retainedFieldSources: member.retainedFieldSources,
+     contactFormUrl: null,
+     photoUrl: photos[member.id] ?? null,
+diff --git a/lib/registry/comment-access-client.ts b/lib/registry/comment-access-client.ts
+index c8e62d75d..aa3950819 100644
+--- a/lib/registry/comment-access-client.ts
++++ b/lib/registry/comment-access-client.ts
+@@ -16,7 +16,7 @@ export interface CommentAccess {
+   verifiedAt: string | null;
+   /** Field attribution when complementary verified captures are combined. */
+   fieldSources?: Partial<Record<"commentPeriod" | "commentPeriodDetail" | "signup" | "writtenComment" | "attend" | "timeLimit", {
+-    sourceUrl: string; collectedAt: string; verifiedAt: string | null; retainedFromVersion?: string;
++    quote?: string; sourceUrl: string; collectedAt: string; verifiedAt: string | null; retainedFromVersion?: string;
+   }>>;
+ }
+ 
+diff --git a/lib/registry/types.ts b/lib/registry/types.ts
+index de52ca014..54e726255 100644
+--- a/lib/registry/types.ts
++++ b/lib/registry/types.ts
+@@ -405,6 +405,7 @@ export interface Division {
+ }
+ 
+ export interface Body {
++  fieldSources?: Record<string, import("../sources/types.ts").Provenance>;
+   /** Stable within the registry: `<ocdId>#<slot>`. */
+   id: string;
+   /**
+diff --git a/lib/sources/types.ts b/lib/sources/types.ts
+index e1ae50ee3..2ac442fc3 100644
+--- a/lib/sources/types.ts
++++ b/lib/sources/types.ts
+@@ -29,6 +29,9 @@ export type OcdId = string;
+  * never inferred.
+  */
+ export interface Provenance {
++  kind?: import("../control-plane/promotion/source-kinds.ts").SourceKind;
++  /** Exact saved source span supporting this field. */
++  quote?: string;
+   /**
+    * The exact page or endpoint this record was read from.
+    *
+diff --git a/tests/campaign-site-chain.test.ts b/tests/campaign-site-chain.test.ts
+index d8cc08df8..8209a838c 100644
+--- a/tests/campaign-site-chain.test.ts
++++ b/tests/campaign-site-chain.test.ts
+@@ -143,10 +143,7 @@ test("a held paid-research finding reaches APPROVED with measured checks, clean
+   assert.notEqual(d.byStage.CONFIRMED!.actor.instance, SCOUT_ATTEMPT);
+   assert.equal(d.byStage.VERIFIED!.checks.length, VERIFICATION_CHECKS.length);
+   assert.ok(d.byStage.VERIFIED!.checks.every((c) => c.result === "PASS"), JSON.stringify(d.byStage.VERIFIED!.checks));
+-  const audited = d.byStage.AUDITED!;
+-  assert.ok(audited.survived && audited.startedFrom.includes("EVIDENCE_VAULT"));
+-  assert.ok(audited.findings.some((f) => f.startsWith("INDEPENDENT_PROFILE: ar-profile-duarte")), audited.findings.join(" | "));
+-  assert.ok(audited.controls !== null && audited.controls.recall === 1 && audited.controls.falsePresences === 0 && audited.controls.knownAbsenceCount === 2);
++  assert.equal(d.byStage.AUDITED, undefined, "CP-11: publication writes no planted-control audit stage");
+   const approved = d.byStage.APPROVED_FOR_PROMOTION!;
+   assert.equal(approved.field, CAMPAIGN_SITE_FIELD);
+   assert.ok(approved.burdens!.every((b) => b.result === "PASS"), JSON.stringify(approved.burdens));
+@@ -162,33 +159,31 @@ test("a held paid-research finding reaches APPROVED with measured checks, clean
+   assert.deepEqual(k.refused?.reasons.map((r) => r.code), ["CONFIRMATION_FACT_CONFLICT"]);
+   assert.match(k.refused!.reasons[0]!.detail, /CYCLE_NOT_EVIDENCED/);
+ 
+-  /* A Marginalia pointer: read and verified, then held at VERIFIED — no second signal yet. */
++  /* CP-12: its own candidate, office and cycle publish without a second signal. */
+   const pointer = states.get(discoveryPointerItemId(TANG_WILLIAMS, LILY))!;
+   assert.equal(pointer.byStage.SCOUTED!.source.kind, "DISCOVERY_POINTER");
+   assert.equal(pointer.byStage.CONFIRMED!.basis, "SECOND_ACQUISITION");
+-  assert.equal(pointer.stage, "VERIFIED");
+-  assert.deepEqual(pointer.refused?.reasons.map((r) => r.code), ["AUDIT_DID_NOT_SURVIVE"]);
+-  assert.match(pointer.refused!.reasons[0]!.detail, /NO_INDEPENDENT_SECOND_SIGNAL/);
++  assert.equal(pointer.stage, "APPROVED_FOR_PROMOTION");
++  assert.equal(pointer.byStage.AUDITED, undefined);
+   assert.ok(report.leads.some((l) => l.lead.origin === "MARGINALIA_POINTER" && l.outcome === "REFUSED" && l.refusals[0]?.code === "AGGREGATOR"));
+ 
+-  /* More clocks on the same page do not add an independent source. */
++  /* Later supporting sources do not delay or duplicate the existing approval. */
+   const later = await options(repos, vaultRoot, "2026-09-25T23:00:00.000Z");
+   const noSource = await projectCampaignSiteChains(repos, later.options);
+-  assert.equal((await readPipelineStates(repos)).find(s => s.itemId === pointer.itemId)!.stage, "VERIFIED");
++  assert.equal((await readPipelineStates(repos)).find(s => s.itemId === pointer.itemId)!.stage, "APPROVED_FOR_PROMOTION");
+   assert.equal(noSource.rereadsUsed, 0);
+   await repos.artifacts.append(`held:${lilyProfile.attemptId}`, lilyProfile.artifactId, heldArtifactRecord(lilyProfile), lilyProfile.retrievedAt);
+   const second = await projectCampaignSiteChains(repos, later.options);
+   const after = (await readPipelineStates(repos)).find((s) => s.itemId === pointer.itemId)!;
+   assert.equal(after.stage, "APPROVED_FOR_PROMOTION", JSON.stringify(second.offers.filter((o) => o.itemId === pointer.itemId)));
+-  assert.ok(after.byStage.AUDITED!.startedFrom.includes("EVIDENCE_VAULT"));
+-  assert.ok(after.byStage.AUDITED!.findings.some((f) => /^INDEPENDENT_PROFILE: ar-profile-lily/.test(f)));
++  assert.equal(after.byStage.AUDITED, undefined);
+   assert.equal(second.approved.length, 2);
+   /* Re-running offers nothing new for an approved item. */
+   const third = await projectCampaignSiteChains(repos, (await options(repos, vaultRoot, "2026-09-25T23:30:00.000Z")).options);
+   assert.ok(third.offers.filter((o) => o.itemId === duarte.itemId).length === 0);
  });
  
- test("a complete official roster records a departure; a partial one keeps the prior member on its own source", async () => {
-diff --git a/tests/routine-civic-data-runner.test.ts b/tests/routine-civic-data-runner.test.ts
-index 9883bc3af..eca0af637 100644
---- a/tests/routine-civic-data-runner.test.ts
-+++ b/tests/routine-civic-data-runner.test.ts
-@@ -1255,7 +1255,7 @@ test("Reader readback repair covers the observable registry independently of sou
-   assert.match(child, /const attestor = readerVerifierClosureAttestor\(\);/);
-   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract, observedAt, undefined, \{ attestor \}\)/);
-   assert.doesNotMatch(child, /preparePublishedMeetingSnapshot|publishReaderEdgeArtifacts/);
--  assert.match(runner, /publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), ONLY === null \? null : selectedTasks\)/);
-+  assert.match(runner, /publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), !PUBLISH_NOW && ONLY === null \? null : selectedTasks\)/);
-   assert.equal(child.match(/readMeetingsProjection\(/g)?.length, 1, "the child composes in one place");
-   assert.match(child, /serializeRoutineReaderRepairRecord/);
-   assert.doesNotMatch(child, /processRegisteredRoutineCandidate|promoteMeetingPartitions|\.promote\(/);
-diff --git a/tests/section3-source-kinds.test.ts b/tests/section3-source-kinds.test.ts
-new file mode 100644
-index 000000000..70f5e5f71
---- /dev/null
-+++ b/tests/section3-source-kinds.test.ts
-@@ -0,0 +1,58 @@
-+import assert from "node:assert/strict";
-+import test from "node:test";
-+import { section3Page, section3Record, type Section3Page } from "../lib/control-plane/promotion/section3.ts";
-+import { DEFAULT_SOURCE_POLICY, SOURCE_KINDS, SOURCE_KINDS_SETTING } from "../lib/control-plane/promotion/source-kinds.ts";
-+import { publicationSourcePolicy } from "../lib/control-plane/promotion/source-settings.ts";
-+import { defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
-+import { withSetting, settingUndo } from "../lib/control-plane/settings.ts";
-+const NOW = "2026-10-05T12:00:00.000Z";
-+const source = (url: string, text = "<p>Alice Adams Clerk alice@example.test</p>"): Section3Page => ({ url, text, retrievedAt: NOW });
-+
-+test("CP-02: labels preserve official links, filing documents and the known-host table", () => {
-+  for (const [page, recordClass, expected] of [
-+    [source("https://town.gov/roster"), "OFFICIAL_ROSTER", "OFFICIAL"],
-+    [source("https://town.gov/filing.pdf"), "CANDIDATE_FILING_DOCUMENT", "FILING"],
-+    [source("https://openstates.org/people/alice"), "OFFICIAL_ROSTER", "REFERENCE"],
-+    [source("https://www.vote411.org/guide"), "OFFICIAL_ROSTER", "VOTER_GUIDE"],
-+    [{ ...source("https://town.legistar.com/roster"), linkingPage: { url: "https://town.gov/", html: '<a href="https://town.legistar.com/">Meetings</a>' } }, "OFFICIAL_ROSTER", "OFFICIAL"],
-+  ] as const) {
-+    assert.deepEqual(section3Page(page, recordClass, NOW), { ok: true, kind: expected, reason: null });
-+  }
-+  assert.equal(section3Page(source("https://openstates.org.evil.test/"), "OFFICIAL_ROSTER", NOW).ok, false);
-+});
-+
-+test("CP-02: unknown publishers must link saved, fresh evidence of each value from the same person's row", () => {
-+  const official = source("https://town.gov/roster", '<table><tr><td>Alice Adams</td><td>Clerk</td><td>alice@example.test</td></tr><tr><td>Bob Brown</td><td>Mayor</td><td>bob@example.test</td></tr></table>');
-+  const primary = { ...source("https://local-paper.example/people", '<p>Alice Adams Clerk bob@example.test</p><a href="https://town.gov/roster">Source</a>'), citations: [official] };
-+  const verdict = section3Record({ recordClass: "OFFICIAL_ROSTER", page: primary, now: NOW,
-+    fields: { name: "Alice Adams", office: "Clerk", email: "bob@example.test" } });
-+  assert.equal(verdict.live, true);
-+  assert.deepEqual(verdict.openFields, ["email"]);
-+  assert.equal(section3Page({ ...primary, text: "Alice Adams Clerk https://town.gov/roster" }, "OFFICIAL_ROSTER", NOW).ok, false);
-+  assert.equal(section3Page({ ...primary, citations: [{ ...official, retrievedAt: "2025-01-01" }] }, "OFFICIAL_ROSTER", NOW).ok, false);
-+  assert.equal(section3Page({ ...primary, citations: [] }, "OFFICIAL_ROSTER", NOW).kind, "OTHER");
-+});
-+
-+test("CP-02: a campaign establishes its own candidate's facts and never its opponent's", () => {
-+  const page = { ...source("https://alice.example/", '<title>Alice Adams for Clerk 2026</title><p>Alice Adams Clerk alice@example.test</p><p>Bob Brown Mayor bob@example.test</p>'),
-+    campaign: { name: "Alice Adams", office: "Clerk", cycle: "2026" } };
-+  assert.equal(section3Page(page, "OFFICIAL_ROSTER", NOW).kind, "CAMPAIGN");
-+  assert.equal(section3Record({ recordClass: "OFFICIAL_ROSTER", page, now: NOW,
-+    fields: { name: "Alice Adams", office: "Clerk", email: "alice@example.test" } }).live, true);
-+  assert.equal(section3Record({ recordClass: "OFFICIAL_ROSTER", page, now: NOW,
-+    fields: { name: "Bob Brown", office: "Mayor", email: "bob@example.test" } }).live, false);
-+  assert.equal(section3Page({ ...page, campaign: { ...page.campaign, cycle: "2028" } }, "OFFICIAL_ROSTER", NOW).ok, false);
-+  assert.equal(section3Page({ ...page, campaign: undefined, sourcePolicy: { ...DEFAULT_SOURCE_POLICY, hosts: { "alice.example": "CAMPAIGN" } } }, "OFFICIAL_ROSTER", NOW).ok, false);
-+});
-+
-+test("CP-02: all kinds start enabled; a logged setting disables publication but preserves its label", () => {
-+  const initial = defaultAdminConfig();
-+  assert.ok(SOURCE_KINDS.every(kind => publicationSourcePolicy(initial).enabled[kind]));
-+  const configured = withSetting(initial, { id: "disable-reference", key: SOURCE_KINDS_SETTING,
-+    after: { ...DEFAULT_SOURCE_POLICY.enabled, REFERENCE: false }, at: NOW, why: "source setting" });
-+  const verdict = section3Page({ ...source("https://openstates.org/people/alice"), sourcePolicy: publicationSourcePolicy(configured) }, "OFFICIAL_ROSTER", NOW);
-+  assert.equal(verdict.ok, false);
-+  assert.equal(verdict.kind, "REFERENCE");
-+  assert.match(verdict.reason!, /SOURCE_KIND_DISABLED/);
-+  assert.deepEqual(settingUndo(configured, "disable-reference")?.value, DEFAULT_SOURCE_POLICY.enabled);
-+});
-diff --git a/tests/section3.test.ts b/tests/section3.test.ts
-index 4307ae684..aabb9d73e 100644
---- a/tests/section3.test.ts
-+++ b/tests/section3.test.ts
-@@ -9,7 +9,7 @@ const LIST = `<h1>2026 General Election — Candidate List</h1><table><tr><td>Sh
- test("the page half: an official page inside its window passes; a stale or unofficial one does not", () => {
-   assert.equal(section3Page(page(LIST), "BALLOT_CONTEST", NOW).ok, true);
-   assert.match(section3Page(page(LIST, undefined, "2026-09-01T00:00:00.000Z"), "BALLOT_CONTEST", NOW).reason!, /OUTSIDE_FRESHNESS_WINDOW/);
--  assert.match(section3Page(page(LIST, "https://candidates.example.com/list"), "BALLOT_CONTEST", NOW).reason!, /NOT_OFFICIAL_SOURCE/);
-+  assert.match(section3Page(page(LIST, "https://candidates.example.com/list"), "BALLOT_CONTEST", NOW).reason!, /LINKED_SOURCE_UNVERIFIED/);
+-test("an unchanged digest label cannot certify profile bytes that do not match the saved artifact", async t => {
++test("a self-identifying campaign publishes without relying on altered supplemental profile bytes", async t => {
+   const { repos, vaultRoot, duarte } = await plane(t);
+   const run = await options(repos, vaultRoot, "2026-09-25T21:00:00.000Z");
+   const report = await projectCampaignSiteChains(repos, { ...run.options, heldPage: async artifact => {
+@@ -196,8 +191,8 @@ test("an unchanged digest label cannot certify profile bytes that do not match t
+     return artifact.artifactId === duarteProfile.artifactId && page
+       ? { ...page, body: `${page.body}<p>Altered bytes.</p>` } : page;
+   } });
+-  assert.equal((await readPipelineStates(repos)).find(s => s.itemId === duarte.itemId)!.stage, "VERIFIED");
+-  assert.equal(report.approved.length, 0);
++  assert.equal((await readPipelineStates(repos)).find(s => s.itemId === duarte.itemId)!.stage, "APPROVED_FOR_PROMOTION");
++  assert.ok(report.approved.some(row => row.itemId === duarte.itemId));
  });
  
- test("the record half: minimum facts put a record live; other fields attach only when on the page", () => {
-@@ -88,3 +88,27 @@ test("CP-19: markup formatting a scalar name cell does not detach its own office
-     assert.deepEqual(verdict.verifiedFields, ["email", "name", "office"]);
+ test("omitting a middle given name never resolves a collision between full canonical names", async t => {
+@@ -218,7 +213,7 @@ test("with the gate closed (the state before this change) nothing is approved: t
+   const run = await options(repos, vaultRoot, "2026-09-25T21:00:00.000Z", { promotionEnabled: false, openRecordClasses: [] });
+   const report = await projectCampaignSiteChains(repos, run.options);
+   const d = (await readPipelineStates(repos)).find((s) => s.itemId === duarte.itemId)!;
+-  assert.equal(d.stage, "AUDITED");
++  assert.equal(d.stage, "VERIFIED");
+   assert.equal(d.refused?.atStage, "APPROVED_FOR_PROMOTION");
+   assert.ok(d.refused!.reasons.some((r) => r.code === "APPROVAL_BURDEN_FAILED" && /RECORD_CLASS_CANDIDATE/.test(r.detail)));
+   assert.equal(report.approved.length, 0);
+diff --git a/tests/campaign-site-runner.test.ts b/tests/campaign-site-runner.test.ts
+index da5cb4c42..f038721a7 100644
+--- a/tests/campaign-site-runner.test.ts
++++ b/tests/campaign-site-runner.test.ts
+@@ -134,9 +134,7 @@ test("a persisted facts-only Scout with no parser reaches the existing campaign-
+   assert.ok(!p.requests.includes(PROFILE), "the profile's captured bytes are reused without a new request");
+   assert.equal(first.report.chain.approved.length, 1, "independent saved profile and primary campaign page publish in the same pass");
+   const approval = first.report.chain.approved[0]!;
+-  assert.match(approval.campaignSite.audit.secondSignal, /^INDEPENDENT_PROFILE:/);
+-  assert.ok(approval.campaignSite.audit.secondSignal.includes(artifact.contentHash));
+-  assert.deepEqual(approval.campaignSite.audit.startedFrom, ["EVIDENCE_VAULT", "CANONICAL_SUBJECT_IDENTITY"]);
++  assert.equal(approval.campaignSite.audit, undefined, "identity evidence is enough; no independent audit record is manufactured");
+   assert.equal(first.report.chain.rereadsUsed, 0);
+   assert.equal(approval.campaignSite.evidence.cycleSource?.artifactId, artifact.id);
+   assert.match(approval.campaignSite.verification, /; https:\/\/www.ballotready.org\/people\/lily-tang-williams identifies the 2026 election/);
+@@ -193,7 +191,7 @@ async function captureProfile(p: Plane, body = PROFILE_HTML, now = T1, sourceUrl
+   return artifact;
+ }
+ 
+-test("saved profiles cannot certify a different person, office, cycle, campaign URL or publisher", async t => {
++test("conflicting supplemental profiles cannot hold a campaign page that independently identifies its own candidate", async t => {
+   for (const { body, sourceUrl = PROFILE, at = T1 } of [
+     { body: PROFILE_HTML.replaceAll("Lily Tang Williams", "Someone Else") },
+     { body: PROFILE_HTML.replace("Representative in Congress - District 2", "Governor") },
+@@ -208,9 +206,9 @@ test("saved profiles cannot certify a different person, office, cycle, campaign
+     await captureProfile(p, body, at, sourceUrl);
+     const report = await cycle(p, T1);
+     const state = (await readPipelineStates(p.repos)).find(s => s.itemId === discoveryPointerItemId(TANG_WILLIAMS, LILY))!;
+-    assert.equal(state.stage, "VERIFIED", `the primary can verify, but conflicting or stale profile bytes cannot certify identity: ${body}`);
+-    assert.match(state.refused!.reasons[0]!.detail, /NO_INDEPENDENT_SECOND_SIGNAL/);
+-    assert.equal(report.report.chain.approved.length, 0);
++    assert.equal(state.stage, "APPROVED_FOR_PROMOTION");
++    assert.equal(report.report.chain.approved.length, 1);
++    assert.equal(report.report.chain.approved[0].campaignSite.evidence.cycleSource, undefined, "an unrelated profile never becomes the source of the cycle");
    }
  });
+ 
+@@ -725,7 +723,7 @@ test("read bounds hold without a pass deadline; held independent sources publish
+   /* A clock change does not turn the same site into an independent source. */
+   const held = await cycle(p, T2, { maxReads: 0 }, pages);
+   assert.equal(held.report.chain.rereadsUsed, 0);
+-  assert.equal(held.report.chain.approved.length, 0);
++  assert.equal(held.report.chain.approved.length, 1);
+   await captureProfile(p, PROFILE_HTML, T2);
+   const reread = await cycle(p, "2026-09-24T23:30:00.000Z", { maxReads: 0 }, pages);
+   assert.equal(reread.report.chain.readsUsed, 0, "held independent evidence does not need a new request");
+@@ -808,7 +806,7 @@ test("held independent evidence advances before new leads and slow backlog reads
+   const p = await plane(t);
+   const pointer = discoveryPointerItemId(TANG_WILLIAMS, LILY);
+   await cycle(p, T1);
+-  assert.equal((await readPipelineStates(p.repos)).find((s) => s.itemId === pointer)?.stage, "VERIFIED", "a real independent source remains owed");
++  assert.equal((await readPipelineStates(p.repos)).find((s) => s.itemId === pointer)?.stage, "APPROVED_FOR_PROMOTION", "CP-12: its own identity published in the first pass");
+   await captureProfile(p, PROFILE_HTML, T2);
+   const { pages } = await backlog(p);
+ 
+diff --git a/tests/officeholders.test.ts b/tests/officeholders.test.ts
+index 730e3db8f..75008dbe5 100644
+--- a/tests/officeholders.test.ts
++++ b/tests/officeholders.test.ts
+@@ -1,6 +1,6 @@
+ import assert from "node:assert/strict";
+ import { test } from "node:test";
+-import { isOfficialHost } from "../lib/officials/verification.ts";
++import { provenanceKind } from "../lib/officials/verification.ts";
+ 
+ import {
+   CONGRESS_ROSTER_FLOOR,
+@@ -135,7 +135,7 @@ test("every officeholder carries provenance naming where it was read", () => {
+       }
+     })();
+     assert.ok(
+-      host !== null && isOfficialHost(host),
++      host !== null && provenanceKind({ sourceUrl: `https://${host}` }) === "OFFICIAL",
+       `${person.name}: verifiedAt is set but the page it names (${person.websiteUrl ?? "none"}) ` +
+         "is not an official host. A read is the verification only when it is the " +
+         "subject's OWN official source; anywhere else a second rung is still owed.",
+diff --git a/tests/verification-vocabulary.test.ts b/tests/verification-vocabulary.test.ts
+index 93d291133..5a2b82291 100644
+--- a/tests/verification-vocabulary.test.ts
++++ b/tests/verification-vocabulary.test.ts
+@@ -3,7 +3,7 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
+ import { join } from "node:path";
+ import test from "node:test";
+ 
+-import { isOfficialHost, verificationOf } from "../lib/officials/verification.ts";
++import { provenanceKind, verificationOf } from "../lib/officials/verification.ts";
+ 
+ /**
+  * The sources vocabulary — g3 item 5 (2026-08-16).
+@@ -21,11 +21,10 @@ const OFFICIAL = [
+   "www.congress.gov",
+   "clerk.house.gov",
+   "sos.nh.gov",
+-  "warner.nh.us",
+-  "ci.tucson.az.us",
+ ];
+ 
+ const NOT_OFFICIAL = [
++  "warner.nh.us", "ci.tucson.az.us",
+   "ballotpedia.org",
+   "facebook.com",
+   "x.com",
+@@ -36,12 +35,12 @@ const NOT_OFFICIAL = [
+ test("an official host is recognized, and a third party is not", () => {
+   for (const host of OFFICIAL) {
+     assert.ok(
+-      isOfficialHost(host.replace(/^www\./, "")),
++      provenanceKind({ sourceUrl: `https://${host}` }) === "OFFICIAL",
+       `${host} should be an official publisher`,
+     );
+   }
+   for (const host of NOT_OFFICIAL) {
+-    assert.ok(!isOfficialHost(host), `${host} must not be treated as official`);
++    assert.ok(provenanceKind({ sourceUrl: `https://${host}` }) !== "OFFICIAL", `${host} must not be treated as official`);
+   }
+ });
+ 
+@@ -49,8 +48,8 @@ test("a body's own page is official even off a .gov, because the wiring types it
+   // kearsarge.org is a public school district publishing its own board's
+   // sittings on its own site — a SCHEDULEPAGE row, which the adapter defines
+   // as "no portal in the path". Derived from the wiring, not hand-listed.
+-  assert.ok(isOfficialHost("kearsarge.org"));
+-  assert.ok(isOfficialHost("newbury.nh.gov"));
++  assert.equal(provenanceKind({ sourceUrl: "https://kearsarge.org", kind: "OFFICIAL" }), "OFFICIAL");
++  assert.equal(provenanceKind({ sourceUrl: "https://newbury.nh.gov" }), "OFFICIAL");
+ });
+ 
+ test("the Hobbs row: an official read renders as verified, by its source, on the read date", () => {
+@@ -132,3 +131,10 @@ test("only the sources list renders the not-yet sentence", () => {
+       "through verificationOf() so an official read is never called unverified",
+   );
+ });
 +
-+test("CP-09: votes, stances and ballot measures require their own minimums", () => {
-+  for (const [recordClass, fields] of [
-+    ["VOTE", { person: "Alice Adams", subject: "Budget", position: "Yes", date: "2026-09-28" }],
-+    ["STANCE", { personId: "alice", quote: "I support parks", date: "2026-09-28" }],
-+    ["BALLOT_MEASURE", { election: "2026 General", title: "Parks bond", textUrl: "https://town.gov/text" }],
-+    ["BALLOT_MEASURE", { election: "2026 General", number: "101", textUrl: "https://town.gov/text" }],
-+  ] as const) {
-+    const capture = page(JSON.stringify(fields));
-+    assert.equal(section3Record({ recordClass, fields, page: capture, now: NOW }).live, true);
-+    const entries = Object.entries(fields);
-+    const missing = Object.fromEntries(entries.slice(0, -1));
-+    assert.equal(section3Record({ recordClass, fields: missing, page: capture, now: NOW }).live, false);
-+  }
-+});
 +
-+test("CP-09: a Money record needs an amount and period; its filing document can publish independently", () => {
-+  const fields = { committeeName: "Friends of Parks", documentUrl: "https://town.gov/filing", filingPeriod: "2026" };
-+  const capture = page(JSON.stringify(fields));
-+  assert.equal(section3Record({ recordClass: "CAMPAIGN_FINANCE_FILING", fields, page: capture, now: NOW }).live, false);
-+  assert.equal(section3Record({ recordClass: "CAMPAIGN_FINANCE_DOCUMENT", fields, page: capture, now: NOW }).live, true);
-+  const money = { ...fields, amount: 0 };
-+  assert.equal(section3Record({ recordClass: "CAMPAIGN_FINANCE_FILING", fields: money, page: page(JSON.stringify(money)), now: NOW }).live, true, "a verified zero is an amount");
++test("CP-04: the saved official kind verifies a government-linked vendor portal", () => {
++  assert.deepEqual(verificationOf({ kind: "OFFICIAL", sourceUrl: "https://council.legistar.com/calendar", collectedAt: "2026-10-05", verifiedAt: null }),
++    { kind: "official", date: "2026-10-05", by: "council.legistar.com" });
++  assert.equal(provenanceKind({ kind: "CAMPAIGN", sourceUrl: "https://candidate.example" }), "CAMPAIGN");
 +});
 diff --git a/tests/worker-reader-publication.test.ts b/tests/worker-reader-publication.test.ts
-index ed591004d..679896d9f 100644
+index 679896d9f..f092639e8 100644
 --- a/tests/worker-reader-publication.test.ts
 +++ b/tests/worker-reader-publication.test.ts
-@@ -230,7 +230,7 @@ test("independent normal workers automatically publish public-comment rules thro
-   const captures = await Promise.all([parser.result.role === "PARSER" ? parser.result.artifactId : "", artifact.id].map(input.readCapture));
-   const checked = { plan: ready, parser, captures, registry: prior, now: h.now() };
-   assert.throws(() => workerReaderPackage({ ...checked, captures: captures.map(c => ({ ...c, partial: true })) }), /PRIMARY_CAPTURE_MISSING_OR_INCOMPLETE/);
--  assert.throws(() => workerReaderPackage({ ...checked, captures: captures.map(c => ({ ...c, evidence: { ...c.evidence, canonicalUrl: "https://mirror.example.com/rules" } })) }), /NOT_OFFICIAL_SOURCE/);
-+  assert.throws(() => workerReaderPackage({ ...checked, captures: captures.map(c => ({ ...c, evidence: { ...c.evidence, canonicalUrl: "https://mirror.example.com/rules" } })) }), /LINKED_SOURCE_UNVERIFIED/);
-   assert.throws(() => workerReaderPackage({ ...checked, plan: { ...ready, publication: { contractId: "comment-access", bodyId: "unknown-body" } } }), /CANONICAL_BODY_MISSING/);
-   // The current evidence can omit a detail without suppressing its verified
-   // neighbours or deleting independently proven last-good instructions.
-@@ -306,3 +306,19 @@ test("a BROKE audit names the published reader members it takes out of the next
-   assert.deepEqual([...built.pulledMemberIds], [live.value.records[0].id as string], "the pull names the exact published member");
-   assert.equal((built.package.payload as CuratedReaderProjection).records.length, 0, "the pulled record is not republished");
- });
-+
-+test("CP-09: an amountless filing reaches its reader as a document without manufacturing Money", async () => {
-+  const f = await workerFixture("official-filings", { committeeName: "Fixture Committee", committeeId: "123", documentUrl: FIXTURE_URL }, "CAMPAIGN_FINANCE_FILING");
-+  const published = await publishWorkerReaderResults(f.input);
-+  assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
-+  const projection = await readCuratedReaderProjection("official-filings", { store: f.store, now: f.h.now(), bypassCache: true });
-+  assert.equal(projection.kind, "PROMOTED");
-+  if (projection.kind !== "PROMOTED") throw Error("fixture reader");
-+  const rows = filingsForDivisions(projection.value.records as unknown as OfficialFiling[], [f.body.ocdId!]);
-+  assert.equal(rows.length, 1);
-+  assert.equal(rows[0].kind, "CAMPAIGN_FINANCE_DOCUMENT");
-+  assert.equal(officialFilingIssue(rows[0]), null);
-+  const html = renderToStaticMarkup(createElement(OfficialFilings, { rows }));
-+  assert.ok(html.includes(FIXTURE_URL) && html.includes("Fixture Committee"));
-+  assert.doesNotMatch(html, /Reported receipts|Reported expenditures|Reported cash/);
-+});
+@@ -224,6 +224,7 @@ test("independent normal workers automatically publish public-comment rules thro
+   if (read.kind !== "PROMOTED") throw new Error("reader missing");
+   const rendered = projectedCommentAccessFor(body.ocdId ?? null, body.name ?? undefined, body.id, read.value.records as unknown as CommentAccess[]);
+   assert.equal(rendered?.signup, rows[0]["signup"]);
++  assert.ok(rendered?.fieldSources?.signup?.quote?.includes("Sign up before the meeting."), "CP-05: the parser's saved quote survives publication and the typed reader");
+   assert.deepEqual(await publishWorkerReaderResults(input), published, "restart reuses the publication and spends nothing");
+   assert.equal(workerPublicationTasks([(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).length, 0, "a published extraction is not offered again");
+   const parser = results.find(row => row.result.role === "PARSER")!;

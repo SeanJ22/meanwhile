@@ -128,3 +128,5 @@ One line per batch folded into river.
 - 2026-10-05T17:26:09Z · meetings · BX-09, DB-30 · ready cd567d362830 · river 85a0ad660c36 · pnpm gates pass on 85a0ad660c36
 - 2026-10-05T17:26:09Z · admin · BR-05, BR-06, BR-01, BR-03, BR-24, BR-12, BR-15, BR-09, BR-02, BR-10, BR-16, BR-37, CH-12, CH-14 · ready ae9ff83485e5 · river 85a0ad660c36 · pnpm gates pass on 85a0ad660c36
 - 2026-10-05T17:26:09Z · slide · CP-01, CP-19 · ready 6921176ca005 · river 85a0ad660c36 · pnpm gates pass on 85a0ad660c36
+
+- 2026-10-05 19:06Z: river-next replaced by fold 92fda9c (base river ecf4026; measures BR-23, registry DB-34/35, hunters CH-11/BR-05/BR-16/BR-37/CH-24/CH-26, meetings DB-28, people CA-01, admin BR-07, slide reader-edge-publication-return). Previous remote river-next tip was 150a8728 (older BX-09/DB-30 fold, already integrated).

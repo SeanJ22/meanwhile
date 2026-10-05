@@ -1,6 +1,6 @@
-import { attemptBatchJournal, backgroundBatchTransport, batchEnabledFor, batchRequestHash } from "../lib/control-plane/model-batch.ts";
+import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
-import { createHash, randomUUID } from "node:crypto";
+import { createHash } from "node:crypto";
 import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
 import { RESEARCH_PARENT_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
@@ -12,6 +12,7 @@ import { persistVerifiedPublicationAnchors, selectStandingLineages, standingLine
 import { browseWithPlaywright } from "./scout-browse.mts";
 import { autonomousCycleAllowed, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { MODELS } from "../lib/models.ts";
+import { paidWorkGuards } from "../lib/control-plane/workers/paid-work-guards.ts";
 import { paidWorkerSlots, researchPaidWorkerCapacity } from "../lib/control-plane/scheduler/research-policy.ts";
 import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
@@ -249,7 +250,7 @@ import {
   type RunWork,
   type WorkArtifact,
 } from "../lib/control-plane/scheduler/dispatch.ts";
-import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutJobWorstCaseUsd, scoutPrewarmPlan, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutJobWorstCaseUsd, scoutPrewarmPlan } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { DETECTIVE_SHUT_THRESHOLD, failureResponderExecutor, plainRereadSlot, readSubjectScoutHistory, solvedScoutResult, sourceFailureRecovery, subjectScoutHistory, wakeInstalledAdapterDebts } from '../lib/control-plane/workers/detective.ts';
 import { buildScoutToolkit, scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
@@ -365,12 +366,8 @@ import {
   DurableSpendHolds,
   JobSpend,
   SendBudgetRefusal,
-  areaGuardedTransport,
-  type AutonomousJurisdiction,
   budgetGuardedTransport,
   hasBudgetLines,
-  type BudgetLine,
-  type BudgetLines,
 } from "../lib/control-plane/expansion/spend-holds.ts";
 import { evaluateAssignmentFromRecords, memberRecordsForSend } from "../lib/control-plane/assignment-completion.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
@@ -1701,7 +1698,7 @@ function refreshOwnerSettings(): Promise<void> {
     rollingCeiling = next;
     effectiveCeilingUsd = next.rollingCeilingUsd;
     fleetSafety.setRollingCeilingUsd(ceilingOverrideUsd);
-    paidCapacityHoldSaid = false;
+    guards.capacityNoticeReset();
   })().catch(error => {
     console.warn(`  owner settings refresh failed; keeping the ceiling in force: ${error instanceof Error ? error.message : String(error)}`);
   }).finally(() => { settingsRead = null; });
@@ -2042,40 +2039,12 @@ const jobSpend = new Map<string, JobSpend>();
 /** Each held job's subject, so a pre-warm charged to it names the same jurisdiction. */
 const jobSubject = new Map<string, string>();
 let scoutJobSeq = 0;
-/** The Send and area lines one obligation's paid work is held against, or why it cannot be checked. */
-const budgetLinesFor = (obligationId: string, subjectId: string): { readonly lines: BudgetLines } | { readonly code: string; readonly why: string } => {
-  const sends = assignmentBudget.linesFor(obligationId);
-  if ("refusal" in sends) return { code: sends.refusal.code, why: sends.refusal.why };
-  const areas = expansionBudget === null ? { lines: [] as readonly BudgetLine[] } : expansionBudget.gate.linesFor(subjectId);
-  if ("refusal" in areas) return { code: areas.refusal.code, why: areas.refusal.why };
-  return { lines: { sends: sends.lines, areas: areas.lines } };
-};
-/*
- * The autonomous Fleet's Scouts and auditor belong to no Send: each request
- * must fit the Fleet ceiling (the wrapped guard) and the area budget(s)
- * covering the jurisdiction the job researches, by the Scouts' own matching
- * rule — never another Send's budget (`areaGuardedTransport`). An area that
- * cannot be read, or the ledger, refuses.
- */
-let autonomousHoldSeq = 0;
-const guardedMessagesFor = (work: string, transport: ModelTransport = workerMessages): ModelTransport =>
-  providerQueue.transport(fleetSafety.guardedModelTransport("anthropic", work, transport));
-const autonomousTransportFor = (transport: ModelTransport) => (jurisdiction: AutonomousJurisdiction): ModelTransport =>
-  areaGuardedTransport({
-    transport: guardedMessagesFor(jurisdiction.subjectId, transport),
-    holds: spendHolds,
-    jurisdiction,
-    areasFor: (j) => {
-      if (expansionBudget === null) return { areas: [] };
-      const found = expansionBudget.gate.linesFor(j.subjectId, j.state);
-      return "refusal" in found ? { code: found.refusal.code, why: found.refusal.why } : { areas: found.lines };
-    },
-    worstCaseOf: modelRequestWorstCaseUsd,
-    priceOf: modelResponseUsd,
-    nextHoldId: () => `autonomous:${NOW}:${(autonomousHoldSeq += 1)}`,
-    now: nowIso,
-    refusedBeforeSending: (error) => error instanceof FleetPreSendRefusal,
-  });
+/* CH-24: the paid-work guards are built in one module, so a standing lease-worker lane builds the same ones (paid-work-guards.ts). */
+const guards = paidWorkGuards({ repos, now: nowIso, armedAt: NOW, fleetSafety, providerQueue, spendHolds, assignmentBudget, expansionBudget,
+  messages: workerMessages, batch: workerBatch, modelLaneEnabled, ceilingUsd: () => effectiveCeilingUsd,
+  ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}),
+  onCondition: sentence => { runtimeConditions.push(sentence); } });
+const { budgetLinesFor, guardedMessagesFor, autonomousTransportFor, paidWorkerCapacity } = guards;
 const spacer = serializeHostSpacing(hostSpacer());
 let releaseDrainRequested = false;
 process.on("message", message => {
@@ -2084,29 +2053,6 @@ process.on("message", message => {
     console.log("  runtime release requested: current wave finishes normally; no new autonomous wave will start");
   }
 });
-let paidCapacityHoldSaid = false;
-const paidWorkerCapacity = (readyWork?: number) => {
-  const limits = providerQueue.limits(MODELS.haiku.model);
-  const spent = fleetSafety.admissionSpendUsd();
-  const providerHeld = fleetSafety.snapshot(nowIso()).providerCircuits.some(circuit =>
-    circuit.provider === "anthropic" && Date.parse(circuit.eligibleAt) > Date.parse(nowIso()));
-  const capacity = researchPaidWorkerCapacity({
-    modelEnabled: modelLaneEnabled && !providerHeld,
-    spentUsd: spent, ceilingUsd: effectiveCeilingUsd,
-    ...(readyWork === undefined ? {} : { readyWork }),
-    requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
-    requestsPerMinute: limits?.requestsPerMinute ?? (process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) : undefined),
-    inputTokensPerMinute: limits?.inputTokensPerMinute ?? undefined,
-    outputTokensPerMinute: limits?.outputTokensPerMinute ?? undefined,
-    inputTokensPerRequest: 8192, outputTokensPerRequest: RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn });
-  if (modelLaneEnabled && capacity === 0 && !paidCapacityHoldSaid) {
-    paidCapacityHoldSaid = true;
-    const reason = `paid model capacity is closed by ${providerHeld ? "the Anthropic provider circuit" : "the remaining budget or provider rate limits"}; held and plain-code work continue`;
-    runtimeConditions.push(reason);
-    console.log(`  Workers: ${reason}`);
-  }
-  return capacity;
-};
 // Paid admission happens before handing out a Scout. Held evidence and ordinary
 // code can still use the existing memory slots while the paid lane is closed.
 const dispatchDeadlineMs = Date.now() + 15 * 60_000;
@@ -3154,42 +3100,7 @@ async function runAutonomousWave() {
     config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidWorkerCapacity() > 0,
       searchEnabled: scoutSearch !== null, get ceilingUsd() { return effectiveCeilingUsd; }, fundedSubjects: [...lifetimeHuntSubjects] },
     capacity: () => Math.min(taskIds.length, plainTaskIds.size + paidWorkerCapacity(taskIds.length)),
-    transportFor: (jurisdiction, taskId) => async request => {
-      const task = (await repos.routeTasks.mustRead(taskId)).value;
-      const batching = task.workerTask?.role === "ADVERSARIAL_AUDITOR" ? batchEnabledFor("background-worker-audit")
-        : task.workerTask?.role === "PARSER" && batchEnabledFor("background-worker-parse");
-      const journal = attemptBatchJournal(repos, taskId, nowIso);
-      const requestJobId = `worker-request:${taskId}:${batching ? batchRequestHash(request) : randomUUID()}`;
-      if (batching && await journal.read(batchRequestHash(request))) {
-        // Recovery reads an already submitted request, so it neither reserves
-        // nor spends a second request allowance. Settle its original hold.
-        const response = await workerBatch.withJournal(journal)(request);
-        const measured = modelResponseUsd(response);
-        if (measured !== null) await spendHolds.settle(requestJobId, measured, nowIso());
-        return response;
-      }
-      const occurrences = await repos.occurrences.listWhere(["workItemId"], task.workItemId);
-      const owner = occurrences.find(row => row.value.routeTaskId === task.id) ?? (occurrences.length === 1 ? occurrences[0] : null);
-      const found = budgetLinesFor(owner?.value.obligationId ?? task.id, jurisdiction.subjectId);
-      if ("code" in found) throw new SendBudgetRefusal(found.code, found.why);
-      const job = new JobSpend(spendHolds, requestJobId, owner?.value.obligationId ?? task.id, found.lines);
-      const transport = budgetGuardedTransport({ job: () => job,
-        transport: batching ? fleetSafety.guardedModelTransport("anthropic", jurisdiction.subjectId,
-          workerBatch.withJournal(journal)) : guardedMessagesFor(jurisdiction.subjectId),
-        worstCaseOf: modelRequestWorstCaseUsd, priceOf: modelResponseUsd });
-      let response;
-      try { response = await transport(request); }
-      catch (error) {
-        if (error instanceof FleetPreSendRefusal || error instanceof SendBudgetRefusal) {
-          const failed = await spendHolds.settle(job.jobId, 0, nowIso());
-          if (failed !== null) runtimeConditions.push(`unsent request hold ${job.jobId} release failed: ${failed}`);
-        }
-        throw error;
-      }
-      const measured = modelResponseUsd(response);
-      if (measured !== null) await spendHolds.settle(job.jobId, measured, nowIso());
-      return response;
-    },
+    transportFor: guards.workerTransportFor,
     ...(scoutSearch ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime ?? scoutSearch : scoutSearch } : {}),
     reserveEscalation: scoutEscalationReservation(fleetSafety),
     orderPending: async ids => {

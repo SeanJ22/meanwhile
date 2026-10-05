@@ -104,3 +104,16 @@ test("local council, board, commission and district offices are matched from the
   assert.equal(ballotQuestionShape("Who is running for parks commission?", local), null);
   assert.equal(ballotQuestionShape("Who is running for city council ward 3?", local), null);
 });
+
+test("a local office's division supplies a county omitted by its publisher's title", () => {
+  const held = [contest("county-board", "Member of the Board of County Commissioners", "ocd-division/country:us/state:nj/county:morris")];
+  for (const question of ["Who is running for Morris County Board of County Commissioners?", "Who is running for county commissioner?"]) {
+    const shape = ballotQuestionShape(question, held);
+    assert.ok(shape?.kind === "OFFICE", question);
+    const result = composeOfficeField({ ...shape, contests: held, election: ELECTION,
+      nominees: () => [], candidacies: [candidacy("one", "county-board", "Avery", "Example", "Republican")], removedCandidacyIds: new Set() });
+    assert.match(result!.answer, /Avery Example/);
+  }
+  assert.equal(ballotQuestionShape("Who is running for Essex County Board of County Commissioners?", held), null);
+  assert.equal(ballotQuestionShape("Who is running for Morris County sheriff?", held), null);
+});

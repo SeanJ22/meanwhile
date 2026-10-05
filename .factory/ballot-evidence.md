@@ -36,3 +36,7 @@ CA-35 saved polling reader checkpoint `1f87e3190`; focused tests and whole-tree 
 See `ballot-continuation.md` and current `ballot.md` for ordered remaining work, dependencies, hooks and lock state. All checkpoints remain on the stream; no force push.
 
 Lock released at 2026-10-04T09:23:59Z at the certified batch handoff. Stream preserves exact READY, subsequent polling WIP and all source checkpoints. Current assignment remains River's authority.
+
+## Codex handback returned reader repairs
+
+Original CA-51 question reproduced using the held county contest; correction admits only recorded jurisdiction words. Original CA-30 question returns the official NO sentence character for character from the hash-matched ballot source. Explicit sentences are extracted in code; no model invents an absent meaning. Focused 35 tests pass across ask-ballot-summary, measure-meaning, reader-last-mile-ask. File lint passes. First type check failed because existing .next named River-deleted routes; preserved generated build outside the source tree and rebuilt place-reference projection before repeating types. Production stores unset for tests. Netlify settings read rejected by automatic approval review; River owns follow-up.

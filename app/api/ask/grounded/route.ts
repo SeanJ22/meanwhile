@@ -60,7 +60,7 @@ import { composeBallotOnlyAnswer } from "@/lib/ask/ballot-only-answer";
 import { ballotQuestionHint, ballotQuestionShape, composeBallotSummary, composeOfficeField, contestsForBallotAsk } from "@/lib/ask/ballot-summary";
 import { composeSittingAnswerWithBasis, settleSittingComposition, sittingVenue, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
 import { composeOwnWordsAnswer } from "@/lib/ask/own-words";
-import { composeMeasureMeaningAnswer } from "@/lib/ask/measure-meaning";
+import { composeMeasureMeaningAnswer, requestedMeasureVotes } from "@/lib/ask/measure-meaning";
 import { composeGroupMoneyAnswer, composeMoneyAnswer, composeNoRaceMoneyAnswer, contestFitsBody, moneyQuestionShape } from "@/lib/ask/money-answer";
 import { codeBestReading, speculationVerdict, type ReadingOutcome } from "@/lib/ask/speculative-reading";
 import { resolveInterpretation } from "@/lib/ask/resolve";
@@ -1192,6 +1192,7 @@ export async function POST(request: Request) {
     try {
       const path = await answerPath(structuredClone(reading.interpretation), emptyTrace());
       if (path.kind !== "PACK" || path.composed || !packHasEvidence(path.pack) ||
+        path.pack.subject?.kind === "MEASURE" && requestedMeasureVotes(question).length > 0 ||
         stanceAnswerability(path.pack) === "UNVERIFIED_PERSONAL_STANCE") return { started: false, why: "code-reading-needs-no-writer", ...guess };
       const outcome = readingOutcome(path);
       const cached = synthesisCache.get(synthesisCacheKey(path.pack, ladderKey.model, ladderKey.effort));
@@ -2918,11 +2919,13 @@ export async function POST(request: Request) {
    * `synthesizeWithLadder` in lib/ask/synthesize.ts.
    */
   const synthesisKey = composed ? null : synthesisCacheKey(pack, ladderKey.model, ladderKey.effort);
-  const cachedSynthesis = synthesisKey && stanceAnswerability(pack) !== "UNVERIFIED_PERSONAL_STANCE"
+  const missingMeasureMeaning = subject?.kind === "MEASURE" && requestedMeasureVotes(question).length > 0 &&
+    !composeMeasureMeaningAnswer({ subject, question, records: packRecords });
+  const cachedSynthesis = !missingMeasureMeaning && synthesisKey && stanceAnswerability(pack) !== "UNVERIFIED_PERSONAL_STANCE"
     ? synthesisCache.get(synthesisKey) : null;
   const keepSpeculative = settleSpeculation(outcome?.kind !== "READ" ? "MODEL_READING_UNAVAILABLE"
     : composed ? "MODEL_READING_NEEDS_NO_WRITER" : readingOutcome(path));
-  const written = composed ? null : cachedSynthesis ?? (keepSpeculative && speculation?.started ? await speculation.writing : await synthesizeWithLadder(pack, {
+  const written = composed || missingMeasureMeaning ? null : cachedSynthesis ?? (keepSpeculative && speculation?.started ? await speculation.writing : await synthesizeWithLadder(pack, {
     allowCall,
     callerKey,
     validate: (text, urls) => validateAnswer(text, urls, pack, bodies),
@@ -2949,6 +2952,11 @@ export async function POST(request: Request) {
      off-subject and gated out is NO_EVIDENCE, honestly, not a structured answer
      built from records the reader will never see. */
   let mode: AnswerMode = packRecords.length > 0 ? "STRUCTURED_GROUNDED" : "NO_EVIDENCE";
+
+  if (missingMeasureMeaning) {
+    answer = "We're working on getting this info";
+    trace.synthesis = { ran: false, why: "measure-vote-meaning-not-held", ms: 0 };
+  }
 
   if (composed) {
     trace.synthesis = { ran: false, why: composedWhy, ms: 0 };

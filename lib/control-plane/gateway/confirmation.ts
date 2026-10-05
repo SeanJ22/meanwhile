@@ -34,6 +34,8 @@ import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { RESEARCH_INTENT_LOG_KEY, RESEARCH_STATE_ID, type ResearchIntent } from "../scheduler/research-policy.ts";
 import { RUNNER_ID } from "../admin-data.ts";
 import type { ActionReceipt } from "./contract.ts";
+import type { RunnerHeartbeat } from "../owner-surface.ts";
+import { formatEastern } from "../eastern-time.ts";
 
 export type ConfirmationState =
   /** The runner has picked it up. */
@@ -43,7 +45,9 @@ export type ConfirmationState =
   /** Finished inside the console; there is nothing for the runner to do. */
   | "not-needed"
   /** The runner's records could not be read, so nothing is claimed either way. */
-  | "unread";
+  | "unread"
+  /** Saved, the runner has not taken it, and it is overdue: its heartbeat is silent or a round due after the save has passed. */
+  | "not-picked-up";
 
 /** BR-12: what accepting an order means, in four plain parts. Built only from data already read. */
 export interface OrderPlan {
@@ -139,12 +143,40 @@ interface AssignmentReading {
 }
 
 /** Has the runner picked this receipt's action up? Never throws: an unreadable record is "unread". */
-export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: ActionReceipt): Promise<Confirmation> {
-  const core = await confirmCore(repos, receipt);
+export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number = Date.now()): Promise<Confirmation> {
+  let core = await confirmCore(repos, receipt);
   if (receipt.outcome === "REFUSED") return core;
   let nextRound: string | null = null;
-  try { nextRound = (await repos.runnerHeartbeat.read(RUNNER_ID))?.value?.nextCycleDueAt ?? null; } catch { /* the plan says — */ }
+  try {
+    const beat = (await repos.runnerHeartbeat.read(RUNNER_ID))?.value ?? null;
+    nextRound = beat?.nextCycleDueAt ?? null;
+    if (core.state === "waiting") core = notPickedUp(core, beat, receipt, nowMs);
+  } catch { /* the plan says — */ }
   return { ...core, plan: orderPlan(receipt, nextRound), progress: orderProgress(receipt, core) };
+}
+
+/** A runner that has not beaten for this long is silent. Rounds beat far more often than this. */
+export const RUNNER_SILENT_MS = 15 * 60 * 1000;
+
+/**
+ * BR-02: a waiting order that is overdue says why. Overdue means the runner's last beat is old, or a round that was
+ * due after the save has come and gone with nothing picking the order up. Pure.
+ */
+export function notPickedUp(
+  waiting: Confirmation,
+  beat: Pick<RunnerHeartbeat, "beatAt" | "nextCycleDueAt"> | null,
+  receipt: Pick<ActionReceipt, "completedAt" | "startedAt">,
+  nowMs: number,
+): Confirmation {
+  const savedAt = Date.parse(receipt.completedAt ?? receipt.startedAt);
+  const beatAt = beat ? Date.parse(beat.beatAt) : NaN;
+  // A runner that has never beaten is silent once the order has waited as long as a beat may be late.
+  const silent = Number.isFinite(beatAt) ? nowMs - beatAt > RUNNER_SILENT_MS : nowMs - savedAt > RUNNER_SILENT_MS;
+  const due = beat?.nextCycleDueAt ? Date.parse(beat.nextCycleDueAt) : NaN;
+  const roundPassed = Number.isFinite(due) && due > savedAt && due < nowMs;
+  if (!silent && !roundPassed) return waiting;
+  const since = Number.isFinite(beatAt) && beat ? formatEastern(beat.beatAt) : null;
+  return { state: "not-picked-up", at: null, words: since ? `The runner hasn't checked in since ${since}.` : "The runner hasn't checked in yet." };
 }
 
 const SETTING_ACTIONS: ReadonlySet<string> = new Set(["config.setSetting", "config.setFleetSpendCeiling", "config.setPlaceTarget", "config.setDiscoverySearch", "config.setDataSwitch"]);

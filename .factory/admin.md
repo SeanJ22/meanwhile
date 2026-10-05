@@ -3,7 +3,7 @@ worker: overflow-1
 provider: Claude (River-run overflow)
 run_id: overflow-1 2026-10-05 session_012Ufwyxx6iej1CSEX6khMyg
 lock: overflow-1-20261005T1600Z-c91d
-heartbeat: 2026-10-05T16:13:51Z
+heartbeat: 2026-10-05T16:23:00Z
 on_river: none
 ready: pending SHA (see commit READY: BR-05, BR-06, BR-01, BR-03)
 checks: previous (codex-admin) application SHA 916e446c73f8a2787fc7147cd48d9c01245c23aa: 24 focused tests PASS, tsc PASS, eslint PASS; FULL incomplete. See .factory/admin-checks.md.

@@ -116,7 +116,7 @@ export function confirmationOf(body: unknown): Confirmation | null {
   const c = body && typeof body === "object" ? (body as { confirmation?: unknown }).confirmation : null;
   if (!c || typeof c !== "object") return null;
   const x = c as Partial<Confirmation>;
-  const okState = x.state === "applied" || x.state === "waiting" || x.state === "not-needed" || x.state === "unread";
+  const okState = x.state === "applied" || x.state === "waiting" || x.state === "not-needed" || x.state === "unread" || x.state === "not-picked-up";
   return okState && typeof x.words === "string" ? { state: x.state as Confirmation["state"], at: typeof x.at === "string" ? x.at : null, words: x.words,
     ...(x.plan && typeof x.plan === "object" ? { plan: x.plan } : {}), ...(x.progress && typeof x.progress === "object" ? { progress: x.progress } : {}) } : null;
 }
@@ -137,10 +137,12 @@ export function applyConfirmation(prev: UiReceipt, c: Confirmation, at: string):
       steps: [...prev.steps, { label: "Runner confirmed", at: c.at ?? at }],
       says: c.words,
       lifecycle: { ...prev.lifecycle, workersReceived: c.at ?? at },
-      ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}),
+      ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}), notPickedUp: false,
     };
   }
-  if (c.state === "waiting" || c.state === "unread") return { ...prev, status: "queued", statusWords: STATUS_WORDS.queued, says: c.words,
+  if (c.state === "not-picked-up") return { ...prev, status: "queued", statusWords: "Not picked up", says: c.words, notPickedUp: true,
+    ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}) };
+  if (c.state === "waiting" || c.state === "unread") return { ...prev, status: "queued", statusWords: STATUS_WORDS.queued, says: c.words, notPickedUp: false,
     ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}) };
   return prev;
 }
@@ -171,7 +173,7 @@ export function applyGatewayReply(prev: UiReceipt, def: ActionDef, httpStatus: n
       return { ...base, status: "unknown", statusWords: STATUS_WORDS.unknown, steps: step("No clear answer"), says: UNKNOWN_SAYS };
     }
     const confirmation = confirmationOf(body);
-    if (r.outcome === "DONE" && confirmation !== null && (confirmation.state === "waiting" || confirmation.state === "unread")) {
+    if (r.outcome === "DONE" && confirmation !== null && (confirmation.state === "waiting" || confirmation.state === "unread" || confirmation.state === "not-picked-up")) {
       return applyConfirmation(
         { ...base, status: "queued", statusWords: STATUS_WORDS.queued, steps: step("Saved"), says: confirmation.words, lifecycle: { ...prev.lifecycle, saved: r.completedAt ?? r.startedAt ?? at } },
         confirmation,
@@ -235,3 +237,11 @@ export function acceptedLine(r: Pick<UiReceipt, "plan" | "scopeName" | "level">,
   return ["Accepted", r.plan.who, r.plan.creates !== null ? `creates ${r.plan.creates} ${r.plan.creates === 1 ? "item" : "items"}${where}` : r.plan.change,
     ...(r.plan.resultsBy ? [`first results by ${format(r.plan.resultsBy)}`] : [])].join(" · ");
 }
+
+/** The action that takes an order back, for the orders that have an opposite. Null where nothing takes it back. */
+export const TAKE_BACK: Readonly<Partial<Record<UiReceipt["kind"], UiReceipt["kind"]>>> = {
+  "global-runner-pause": "global-runner-resume",
+  "global-runner-resume": "global-runner-pause",
+  "global-paid": "global-paid-resume",
+  "global-paid-resume": "global-paid",
+};

@@ -8,7 +8,7 @@ import type { ReactElement } from "react";
 
 import { useV6 } from "./context.tsx";
 import { mst, type UiReceipt } from "./model.ts";
-import { acceptedLine, ORDER_STEPS, orderStepsReached, STATUS_TONE } from "./receipts.ts";
+import { acceptedLine, ORDER_STEPS, orderStepsReached, STATUS_TONE, TAKE_BACK } from "./receipts.ts";
 import { ActionButton, cx, ReceiptChip, Technical } from "./ui.tsx";
 import s from "./v6.module.css";
 
@@ -26,6 +26,12 @@ export function ReceiptCard(props: { readonly receipt: UiReceipt; readonly compa
   if ((r.status === "failed" || r.status === "refused") && r.kind !== "decide") follow.push(<ActionButton key="again" action={{ kind: r.kind, target: r.target }} label="Try again" />);
   if (r.kind === "decide" && r.status === "refused") follow.push(<ActionButton key="other" action={{ kind: "decide", target: r.target }} label="Choose another option" />);
   if (r.kind === "contain" && r.status === "done") follow.push(<ActionButton key="undo" action={{ kind: "uncontain", target: r.target }} label="Undo" />);
+  if (r.notPickedUp) {
+    const back = TAKE_BACK[r.kind];
+    if (back) follow.push(<ActionButton key="back" action={{ kind: back, target: r.target }} label="Take it back" />);
+    follow.push(<ActionButton key="retry" action={{ kind: r.kind, target: r.target }} label="Try again" />);
+    follow.push(<button key="workers" type="button" className={s.btn} onClick={() => v.go("workers")}>See Workers</button>);
+  }
   const readBack = r.readBackAt; // a console path, not a time
   return (
     <article className={s.row} aria-label={`${r.label}: ${r.statusWords}`}>
@@ -34,7 +40,7 @@ export function ReceiptCard(props: { readonly receipt: UiReceipt; readonly compa
         <ReceiptChip receipt={r} />
       </div>
       <span className={s.meta}>{r.level === "global" ? "Whole system" : "Local"} · {r.scopeName} · sent {mst(r.sentAt)}{r.simulated ? " · sample receipt" : ""}</span>
-      <p className={cx(s.p, s.small)} role={r.status === "unknown" || r.status === "failed" ? "alert" : undefined}>{r.says}{r.words ? ` Your words: “${r.words}”` : ""}</p>
+      <p className={cx(s.p, s.small)} role={r.status === "unknown" || r.status === "failed" || r.notPickedUp ? "alert" : undefined}>{r.says}{r.words ? ` Your words: “${r.words}”` : ""}</p>
       {!!r.items.length && (
         <ul className={s.stack} style={{ gap: 4, margin: 0, paddingLeft: 0, listStyle: "none" }} aria-label="Result for each item">
           {r.items.map((it, i) => (

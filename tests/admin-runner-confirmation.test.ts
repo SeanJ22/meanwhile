@@ -26,6 +26,8 @@ import { V6_CAPABILITY_VERSION, RECEIPT_LOOKUP_CONTRACT } from "../app/(admin)/_
  */
 
 const T0 = "2026-09-30T18:00:00.000Z";
+/** A minute after the saves below: an order that has just been saved is waiting, not overdue. */
+const SOON = Date.parse(T0) + 60_000;
 const clock = (from = T0) => {
   let ms = Date.parse(from);
   return () => {
@@ -69,12 +71,12 @@ test("a pause is waiting until the runner honors it, then done, on the same rece
   const out = await submit(ask("runner.pause", "pause-key-000001", { note: "testing" }), deps(repos));
   assert.equal(out.ok, true);
   assert.equal(out.receipt.outcome, "QUEUED");
-  const before = await confirmReceipt(repos, out.receipt);
+  const before = await confirmReceipt(repos, out.receipt, SOON);
   assert.equal(before.state, "waiting");
   assert.match(before.words, /Waiting for the runner/);
 
   await runnerHonors(repos, out.receipt.subject, "PAUSE_RUNNER", "2026-09-30T18:00:30.000Z");
-  const after = await confirmReceipt(repos, out.receipt);
+  const after = await confirmReceipt(repos, out.receipt, SOON);
   assert.equal(after.state, "applied");
   assert.equal(after.at, "2026-09-30T18:00:30.000Z");
   assert.match(after.words, /^Paused\./);
@@ -84,23 +86,23 @@ test("a record that honors a DIFFERENT intent does not confirm this one (the pla
   const repos = createMemoryRepositories();
   const out = await submit(ask("runner.pause", "pause-key-000002"), deps(repos));
   await runnerHonors(repos, "PAUSE_RUNNER:1999-01-01T00:00:00.000Z", "PAUSE_RUNNER", "2026-09-30T18:00:30.000Z");
-  assert.equal((await confirmReceipt(repos, out.receipt)).state, "waiting");
+  assert.equal((await confirmReceipt(repos, out.receipt, SOON)).state, "waiting");
 });
 
 test("a refused request and a console-only action need nothing from the runner", async () => {
   const repos = createMemoryRepositories();
   const refused = await submit(ask("runner.pause", "pause-key-000003", { note: "x".repeat(400) }), deps(repos));
   assert.equal(refused.ok, false);
-  assert.equal((await confirmReceipt(repos, refused.receipt)).state, "not-needed");
+  assert.equal((await confirmReceipt(repos, refused.receipt, SOON)).state, "not-needed");
   const readback = await submit(ask("fleet.requestReadback", "readback-key-0001", { subject: "runner" }), deps(repos));
-  assert.equal((await confirmReceipt(repos, readback.receipt)).state, "not-needed");
+  assert.equal((await confirmReceipt(repos, readback.receipt, SOON)).state, "not-needed");
 });
 
 test("a setting the runner reads at round start is waiting until a round starts after the save", async () => {
   const repos = createMemoryRepositories();
   const out = await submit(ask("config.setFleetSpendCeiling", "ceiling-key-00001", { rollingCeilingUsd: 40 }), deps(repos));
   assert.equal(out.receipt.outcome, "DONE");
-  assert.equal((await confirmReceipt(repos, out.receipt)).state, "waiting");
+  assert.equal((await confirmReceipt(repos, out.receipt, SOON)).state, "waiting");
   const beat = (lastCycleStartedAt: string): RunnerHeartbeat => ({
     formatVersion: OWNER_SURFACE_FORMAT_VERSION,
     beatAt: lastCycleStartedAt,
@@ -111,11 +113,11 @@ test("a setting the runner reads at round start is waiting until a round starts 
     testedSha: null,
     host: "test",
   });
-  await repos.runnerHeartbeat.put(RUNNER_ID, beat("2026-09-30T17:00:00.000Z"), T0);
-  assert.equal((await confirmReceipt(repos, out.receipt)).state, "waiting", "a round that started BEFORE the save proves nothing");
+  await repos.runnerHeartbeat.put(RUNNER_ID, beat("2026-09-30T17:59:00.000Z"), T0);
+  assert.equal((await confirmReceipt(repos, out.receipt, SOON)).state, "waiting", "a round that started BEFORE the save proves nothing");
   const held = await repos.runnerHeartbeat.read(RUNNER_ID);
   await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, held!.revision, beat("2026-09-30T19:00:00.000Z"), T0);
-  assert.equal((await confirmReceipt(repos, out.receipt)).state, "applied");
+  assert.equal((await confirmReceipt(repos, out.receipt, SOON)).state, "applied");
 });
 
 test("a failing read is unread, never applied", async () => {
@@ -130,7 +132,7 @@ test("a failing read is unread, never applied", async () => {
       },
     },
   } as ControlPlaneRepositories;
-  assert.equal((await confirmReceipt(broken, out.receipt)).state, "unread");
+  assert.equal((await confirmReceipt(broken, out.receipt, SOON)).state, "unread");
 });
 
 test("the v6 history shows a pause as done only once the runner honored it", async () => {
@@ -211,7 +213,7 @@ test("follow-up asks are quick at first and stop after about fifteen minutes", (
   assert.equal(followUpDelayMs(0), 3_000);
   assert.equal(followUpDelayMs(29), 3_000);
   assert.equal(followUpDelayMs(30), 15_000);
-  assert.equal(followUpDelayMs(86), null);
+  assert.equal(followUpDelayMs(86), 60_000, "BR-02: no cutoff, the order keeps asking");
 });
 
 /* ------------------------------------------------------------------ S7's finding: a timed-out write is read back */
@@ -298,12 +300,12 @@ test("paid research can be paused and resumed, and each is Done only when the ru
   const paused = await submit(ask("research.pause", "paid-pause-key-001"), deps(repos));
   const resumed = await submit(ask("research.resume", "paid-resume-key-01"), deps(repos));
   assert.equal(paused.ok && resumed.ok, true, resumed.receipt.says);
-  assert.equal((await confirmReceipt(repos, resumed.receipt)).state, "waiting");
+  assert.equal((await confirmReceipt(repos, resumed.receipt, SOON)).state, "waiting");
   await runnerHonors(repos, resumed.receipt.subject, "PAUSE", "2026-09-30T18:05:00.000Z");
-  const done = await confirmReceipt(repos, resumed.receipt);
+  const done = await confirmReceipt(repos, resumed.receipt, SOON);
   assert.equal(done.state, "applied");
   assert.match(done.words, /Paid research resumed/);
-  assert.equal((await confirmReceipt(repos, paused.receipt)).state, "waiting", "the pause is a different intent and is still waiting");
+  assert.equal((await confirmReceipt(repos, paused.receipt, SOON)).state, "waiting", "the pause is a different intent and is still waiting");
 });
 
 import { acceptedLine, orderStepsReached } from "../app/(admin)/_mw/admin-v6/receipts.ts";
@@ -325,4 +327,20 @@ test("BR-12: an order is Accepted with a plan, then a progress bar; the five ste
   assert.deepEqual(orderProgress(receipt, { state: "applied" }), { done: 2, of: 2 });
   assert.deepEqual(orderProgress({ type: "config.setSetting", openedWork: [] }, { state: "applied" }), { done: 1, of: 1 });
   assert.deepEqual(orderProgress({ type: "expansion.scope.set", openedWork: [] }, { state: "applied" }), { done: null, of: null }, "no score held: shown as —");
+});
+
+import { notPickedUp } from "../lib/control-plane/gateway/confirmation.ts";
+test("BR-02: a waiting order turns red with the reason when the runner is silent or a due round passed; fresh stays waiting", () => {
+  const waiting = { state: "waiting" as const, at: null, words: "Saved. Waiting for the runner." };
+  const receipt = { startedAt: "2026-10-05T10:00:00Z", completedAt: "2026-10-05T10:00:01Z" };
+  const now = Date.parse("2026-10-05T12:00:00Z");
+  const silent = notPickedUp(waiting, { beatAt: "2026-10-05T10:30:00Z", nextCycleDueAt: null }, receipt, now);
+  assert.equal(silent.state, "not-picked-up");
+  assert.match(silent.words, /The runner hasn't checked in since .*ET|The runner hasn't checked in since /);
+  const passed = notPickedUp(waiting, { beatAt: "2026-10-05T11:59:00Z", nextCycleDueAt: "2026-10-05T11:30:00Z" }, receipt, now);
+  assert.equal(passed.state, "not-picked-up");
+  const fresh = notPickedUp(waiting, { beatAt: "2026-10-05T11:59:00Z", nextCycleDueAt: "2026-10-05T12:30:00Z" }, receipt, now);
+  assert.equal(fresh.state, "waiting");
+  assert.equal(notPickedUp(waiting, null, receipt, now).words, "The runner hasn't checked in yet.");
+  assert.equal(notPickedUp(waiting, null, receipt, Date.parse("2026-10-05T10:05:00Z")).state, "waiting", "just saved, no beat yet");
 });

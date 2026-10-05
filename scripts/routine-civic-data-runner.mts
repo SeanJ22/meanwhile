@@ -421,7 +421,7 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
   }
   const admitted = admittedHuntSourceScopes(resolved.scopes, RUN_STARTED_AT);
   if (admitted.length === 0) return publication;
-  return [...huntSourceTasks(admitted, RUN_STARTED_AT, items), ...publication];
+  return [...huntSourceTasks(admitted, RUN_STARTED_AT), ...publication];
 }
 
 function newestConsideredAt(

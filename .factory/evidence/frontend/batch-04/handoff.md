@@ -22,7 +22,7 @@ FE-19 / River: obtain actual live rendered screenshot pairs through an already a
 - FE-12: CP-16 (slide) must be integrated, then unify meeting card/Sources.
 - FE-35: CA-07 (people) must be integrated, then offices pins/directions; BX-08 is integrated.
 - FE-36: CA-37 (ballot) must be integrated, then plain record card.
-- FE-14: CP-16 and own FE-12 must be integrated/ready, then ballot/money Sources.
+- FE-14: CP-16 must be integrated; own FE-42 is already READY. FE-12 is not a FE-14 prerequisite. Then finish ballot/money Sources.
 - FE-33: CA-14 (people) must be integrated; CA-15 already integrated. Own FE-11 is in this batch.
 - FE-22: own FE-12/14 plus FE-15 prerequisites; auditors FE-16 already integrated. Add leak instrumentation only once the migration prerequisite is complete; do not disguise existing meeting/ballot faces as complete.
 
@@ -43,3 +43,5 @@ Batch-03 full: 9356 pass,10 fail,11 skip; every failure investigated and repaire
 No routine questions or notifications to Sean. Put necessary hooks/access needs in status for River. No new credential or owner spending decision is currently requested. River is responsible for deploy/live readback and production data mutations through existing authorized paths.
 
 Final refs at 2026-10-05T20:18Z: river/main unchanged ecf4026; board/river 250908c34. River reports CP-16 only on untested river-next; do not catch up there. Frontend assignment remains Codex. Current lane work is waiting on listed integrated prerequisites and owner hooks/captures. Lock released with all artifacts committed on stream/frontend.
+
+Resume check 2026-10-05T20:50:48Z: river still ecf4026; no new frontend returns or integrated prerequisites. FE-14 dependency corrected directly from approved plan: CP-16 and FE-42, not FE-12. See ../resume-2026-10-05/check.json.

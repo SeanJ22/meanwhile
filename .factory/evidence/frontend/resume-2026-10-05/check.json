@@ -1,0 +1,38 @@
+{
+  "at": "2026-10-05T20:50:48Z",
+  "assignment": "codex-frontend/Codex; lock reclaimed then released",
+  "refs": {
+    "origin/main": "ecf402600401783b094837c29e0c515eadbdb843",
+    "origin/river": "ecf402600401783b094837c29e0c515eadbdb843",
+    "origin/board/briefs": "e076cd0c3d400174c188cbe0446cb059f3111f0a",
+    "origin/board/river": "bd996ac82e237a403a86de52bb96ca35cecdbfc2"
+  },
+  "returns": "no new frontend return beyond saved FE-39 repair and standing instructions",
+  "missingIntegratedPrerequisites": {
+    "CP-16": [],
+    "CA-07": [],
+    "CA-37": [],
+    "CA-14": []
+  },
+  "CP-16": "River status says only untested river-next batch; not consumed",
+  "remaining": {
+    "FE-19": "live screenshot pairs; lane CONNECT403, River accessible route",
+    "FE-12": "CP-16",
+    "FE-14": "CP-16; FE-42 already READY; FE-12 is NOT its prerequisite",
+    "FE-22": "FE-12/14 plus completed FE-15 and integrated FE-16",
+    "FE-35": "CA-07",
+    "FE-36": "CA-37",
+    "FE-33": "CA-14"
+  },
+  "hooksPending": {
+    "FE-32": "Admin reader-copy registry imports",
+    "FE-28": "Bank actual DB-51 sweep projection"
+  },
+  "readyShasPreserved": [
+    "a5e7197a1855aae9d7aeafc537f417e29bb09fe6",
+    "de644b38c2bf3e4c8f33fe97c220f6c5976a83b5"
+  ],
+  "sourceChanges": false,
+  "newReadySteps": [],
+  "checks": "read-only refs/returns/plan/rulings/prerequisites and live access recheck; no application change or new READY batch, no repeated build/full test required"
+}

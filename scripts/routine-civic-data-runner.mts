@@ -97,6 +97,8 @@ import { loadPublishedLookupState } from "../lib/census-geography/reader.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
 import { PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowWorkerTasks } from "../lib/civic-data/publish-now.ts";
+import { doorProbesOn, runHourlyProbes } from "../lib/doors/hourly-check.ts";
+import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
 import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
 import { WORKER_PUBLICATION_TASK_IDS } from "../lib/civic-data/worker-reader-contracts.ts";
 import { readCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
@@ -397,6 +399,27 @@ async function readRoutineDueRequests(): Promise<{ readonly requests: readonly R
   return parseRoutineDueRequests(row?.value.routineDueRequests);
 }
 
+/**
+ * DB-26: the meeting partitions that are hot right now (a sitting in the next seven days or one held in the last
+ * seven), from the same clocks and stated sitting ends the routine pass admits on. A partition whose sittings cannot
+ * be read counts as hot, as it does for admission.
+ */
+async function hotMeetingPartitions(): Promise<ReadonlySet<string>> {
+  const nowMs = Date.now();
+  const tasks = MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract);
+  const clocks = new PostgresRoutineDataStore();
+  const reads = await readRoutineTaskClocks(tasks, (task) => clocks.clock(task.sourceId, task.recordClass, task.scope));
+  let ends: ReadonlyMap<string, ReadonlyMap<string, number>> = new Map();
+  try {
+    const byScope = statedSittingEndsByScope(await statedSittingEndsRead(getDb()));
+    ends = new Map(tasks.flatMap((task) => byScope.has(task.scope) ? [[task.id, byScope.get(task.scope)!] as const] : []));
+  } catch {
+    // The day bound decides, as in the routine pass.
+  }
+  const signals = sittingWindowSignals(reads, nowMs, ends);
+  return new Set([...signals].filter(([, hot]) => hot !== false).map(([id]) => id));
+}
+
 /** Resolve the actual Admin Send for hunt work. Publication of work that
  * already meets §3 needs no Send (it is not paid work); a paused runner or an
  * unreadable control still admits nothing. */
@@ -411,8 +434,21 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
   const items = (await repos.workItems.list()).map(row => row.value);
   const workers = items.some(item => item.autonomousPlan?.publication) ? await readCompletedWorkerResults(repos) : [];
   const publication = PUBLISH_NOW ? publishNowWorkerTasks(items, workers, RUN_STARTED_AT) : workerPublicationTasks(items, workers, RUN_STARTED_AT);
-  if (PUBLISH_NOW) return [...publication, ...publishNowDoorTasks((await listDoors(repos.doors)).doors,
-    MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract), RUN_STARTED_AT)];
+  if (PUBLISH_NOW) {
+    // DB-26: the hourly first look. Each hot door's page or feed is looked at once an hour; a change is stored on the
+    // door and read below at once. A look that cannot be made never stops the read of a door already known to have changed.
+    if (doorProbesOn()) {
+      try {
+        const listed = (await listDoors(repos.doors)).doors;
+        const report = await runHourlyProbes(repos.doors, listed, await hotMeetingPartitions(), pacedProbeFetch(), new Date().toISOString());
+        if (report.looked > 0 || report.deferred > 0) console.log(`RCD_PROBE ${report.looked} door(s) looked at (${report.requests} request(s)): ${report.changed} changed, ${report.unchanged} the same, ${report.failed} failed; ${report.deferred} waiting`);
+      } catch (error) {
+        console.log(`RCD_PROBE CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; doors keep their routine schedule`);
+      }
+    }
+    return [...publication, ...publishNowDoorTasks((await listDoors(repos.doors)).doors,
+      MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract), RUN_STARTED_AT)];
+  }
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
   if (row === null) return publication;
   if (!isAdminConfig(row.value)) throw new Error("the owner's policy row is unreadable");

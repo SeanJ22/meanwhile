@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useId, useState, type ReactNode } from "react";
-import { CardSourceContext } from "./card-source-context";
+import { useId, type ReactNode } from "react";
+import { CardSourceContext, useCardSourceRegistry } from "./card-source-context";
 import { X } from "lucide-react";
 import type { CardSource } from "@/lib/officials/card-sources";
 import { CardSourcesList } from "@/components/officials/card-sources-list";
@@ -25,11 +25,7 @@ export function Card({
   titleVisible?: boolean;
 }) {
   const titleId = useId();
-  const [contributed, setContributed] = useState<Readonly<Record<string, readonly CardSource[]>>>({});
-  const register = useCallback((key: string, rows: readonly CardSource[]) => {
-    setContributed(previous => JSON.stringify(previous[key]) === JSON.stringify(rows) ? previous : { ...previous, [key]: rows });
-  }, []);
-  const allSources = [...new Map([...sources, ...Object.values(contributed).flat()].map(row => [JSON.stringify(row), row])).values()];
+  const { register, sources: allSources } = useCardSourceRegistry(sources, title);
   return (
     <CardSourceContext.Provider value={register}><article className={`reader-card ${className}`} aria-labelledby={titleId}>
       <header className="reader-card-header">
@@ -47,7 +43,7 @@ export function Card({
         <CardSectionGroup independent={independent}>
           {children}
           <div data-card-sources="">
-            <CardSection title="Sources" meta={allSources.length ? String(allSources.length) : null}>
+            <CardSection title="Sources" keepMounted meta={allSources.length ? String(allSources.length) : null}>
               {allSources.length > 0 && <CardSourcesList sources={allSources} />}
               {sourcesContent}
               {!allSources.length && !sourcesContent && <WorkingOnIt />}

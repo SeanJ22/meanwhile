@@ -133,6 +133,8 @@ export function OfficialModal({
     >
       <PersonCard
         title={holder.name}
+        identityKey={holder.id}
+        subject={{ type: "CANDIDATE", id: holder.id }}
         eyebrow={<span style={{ color: `var(--accent-${tier})` }}>{TIER_LABEL[tier]}</span>}
         onClose={embedded ? undefined : onClose}
         className={embedded ? "account-modal mw-entity mw-person" : "account-modal"}

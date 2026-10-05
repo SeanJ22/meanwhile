@@ -2803,19 +2803,7 @@ function bodySubject(
               value: (
                 <>
                   {body.meetingCadence.text}
-                  {body.meetingCadence.sourceUrl ? (
-                    <>
-                      {" "}
-                      <a
-                        href={body.meetingCadence.sourceUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-                      >
-                        {new URL(body.meetingCadence.sourceUrl).hostname.replace(/^www\./, "")} →
-                      </a>
-                    </>
-                  ) : null}
+
                 </>
               ),
             },
@@ -2834,7 +2822,7 @@ function bodySubject(
      */
     representationNote: representationNoteForClaim(claim),
     meetings,
-    sources: districtCardSources(roster, meetings, body.officeContact?.provenance),
+    sources: [...districtCardSources(roster, meetings, body.officeContact?.provenance), ...(body.meetingCadence ? [{ what: "Regular meeting cadence", provenance: { sourceOrg: body.name ?? "", sourceUrl: body.meetingCadence.sourceUrl, collectedAt: "", verifiedAt: null } }] : [])],
     // M136 (2026-08-18): the seven sections. Every one renders for every
     // body — content where the product holds it, the section's own honest
     // absence line where it does not, and never a hidden section.

@@ -1,3 +1,4 @@
+import { CheckedLink } from "@/components/ui/checked-link";
 import type { CardSource } from "@/lib/officials/card-sources";
 import { verificationOf } from "@/lib/officials/verification";
 
@@ -28,14 +29,14 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
 
           <PopupRow label="Read from">
             {entry.provenance.sourceUrl ? (
-              <a
+              <CheckedLink
                 href={entry.provenance.sourceUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="text-link hover:underline"
               >
                 {hostOf(entry.provenance.sourceUrl)}
-              </a>
+              </CheckedLink>
             ) : (
               <NoValue>no published page</NoValue>
             )}
@@ -82,13 +83,13 @@ function VerifiedRow({ provenance }: { provenance: CardSource["provenance"] }) {
   return (
     <PopupRow label="Verified" mono>
       {verification.kind === "confirmed" && verification.date}
-      {verification.kind === "official" && (
+      {verification.kind === "official" && verification.date && (
         <>
           {verification.date}
           <span className="text-muted"> by {verification.by}</span>
         </>
       )}
-      {verification.kind === "unverified" && <NoValue>not yet</NoValue>}
+      {(verification.kind === "unverified" || !verification.date) && <NoValue>not yet</NoValue>}
     </PopupRow>
   );
 }

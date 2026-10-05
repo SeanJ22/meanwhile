@@ -1,5 +1,8 @@
 "use client";
 
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import { WorkingOnIt } from "@/components/demand/working-on-it";
+
 import { personInitials } from "@/lib/officials/person-name";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { useEffect, useState } from "react";
@@ -287,7 +290,7 @@ function RecentVotesInner({
   // "Recent votes" heading, which reads as "this person does not vote". An
   // official state record that isn't live yet (absent, from the fetch's catch)
   // renders the same nothing rather than a self-referential failure line.
-  if (!hasVoteRecord(holder.id) || absent) return null;
+  if (!hasVoteRecord(holder.id) || absent) return contentOnly ? <WorkingOnIt /> : null;
 
   const visibleVotes = votes?.slice(0, showAll ? undefined : VOTE_LIMIT) ?? null;
   const history = /^congress:[A-Z]\d{6}$/.test(holder.id) && votes !== null ? <>
@@ -418,29 +421,11 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
           {/* D49 (2026-08-15): the CC BY 4.0 attribution LegiScan's licence
               requires, wherever its data appears. Sent with the rows so it
               cannot drift from the store it describes. */}
-          {attribution && (
-            <p className="mt-0.5 t-caption leading-relaxed text-muted">
-              Vote records from{" "}
-              <a
-                href={attribution.url}
-                target="_blank"
-                rel="noreferrer"
-                className="underline decoration-dotted hover:text-signal"
-              >
-                {attribution.text}
-              </a>
-              , under{" "}
-              <a
-                href={attribution.licenceUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="underline decoration-dotted hover:text-signal"
-              >
-                {attribution.licence}
-              </a>
-              .
-            </p>
-          )}
+
+          <CardSourcesContribution id="recent-votes" sources={[
+            ...(attribution ? [{ what: `Vote data attribution and ${attribution.licence} licence`, provenance: { sourceUrl: attribution.url, sourceOrg: attribution.text, collectedAt: "", verifiedAt: null } }, { what: "Vote data licence", provenance: { sourceUrl: attribution.licenceUrl, sourceOrg: attribution.text, collectedAt: "", verifiedAt: null } }] : []),
+            ...votes.map(vote => ({ what: `Roll call: ${vote.title}`, provenance: { sourceUrl: vote.rollCallUrl, sourceOrg: attribution?.text ?? "", collectedAt: "", verifiedAt: null } })),
+          ]} />
           {votes.map((vote) => {
             const explainer = explainVoteQuestion(vote.question);
             return (
@@ -451,9 +436,7 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
               >
                 {/* Plain words first — the official title, never ours. */}
                 <p className="t-detail leading-snug">{vote.title}</p>
-                {vote.historicalVersionId && <p className="mt-0.5 t-caption text-muted">
-                  Earlier source window{vote.historicalSourceThrough ? ` · source through ${vote.historicalSourceThrough}` : ""}.
-                </p>}
+
                 <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 t-caption">
                   {/* Item 5: the position as a filled pill, in both views. */}
                   <VotePill tone={POSITION_STYLE[vote.position].tone as "yes" | "no" | "neutral"}>
@@ -502,29 +485,7 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
                   summary={vote.billSummary}
                   pending={vote.billSummaryPending}
                 />
-                <p className="mt-0.5 t-caption">
-                  <a
-                    href={vote.rollCallUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-muted underline decoration-dotted hover:text-signal"
-                  >
-                    roll call
-                  </a>
-                  {vote.billUrl && (
-                    <>
-                      {" · "}
-                      <a
-                        href={vote.billUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-muted underline decoration-dotted hover:text-signal"
-                      >
-                        the bill and its official summary
-                      </a>
-                    </>
-                  )}
-                </p>
+
                 {/* The sensor (P03): asked after the record, never before it.
                     6c: the compact frame — as prominent as the ballot's, not
                     as large, because a card carries a dozen of these. */}
@@ -793,7 +754,7 @@ export function OfficeBlurb({
     holder.officeTitle,
     holder.officeJurisdictionOcdId,
   );
-  if (!blurb) return null;
+  if (!blurb) return <WorkingOnIt />;
   return (
     <>
       {!bare && <PopupSectionLabel>What this office does</PopupSectionLabel>}

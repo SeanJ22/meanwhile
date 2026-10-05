@@ -11,7 +11,6 @@ import type { ReactionViewContext } from "@/lib/reactions/client";
 import {
   FundingAbsence,
   FundingDisplay,
-  StateFundingNote,
 } from "./funding-section";
 import { StateMoneySection } from "./state-money-section";
 
@@ -46,7 +45,6 @@ function FundingBlockInner({
   reactionContext: ReactionViewContext | null;
   bare?: boolean;
 }) {
-  const isFederal = holder.id.startsWith("congress:");
   const [answer, setAnswer] = useState<CampaignMoneyApiResponse | null>(null);
   const [loadFailed, setLoadFailed] = useState(false);
 
@@ -70,7 +68,7 @@ function FundingBlockInner({
     return () => controller.abort();
   }, [holder.id]);
 
-  if (loadFailed) return <StateFundingNote note="We couldn’t load our campaign-finance records just now." />;
+  if (loadFailed) return <WorkingOnIt subject={{ type: "CANDIDATE", id: holder.id }} />;
   // A visible loading line (approved design): an empty open section reads as
   // "nothing here", which is a claim, while the records are still on the way.
   if (!answer) return <p className="mw-loading-inline" role="status">Loading campaign money…</p>;
@@ -86,7 +84,7 @@ function FundingBlockInner({
     <StateMoneySection records={answer.state.records} bare={bare} context={reactionContext} />
   </>;
   else if (answer.kind === "state") content = <StateMoneySection records={answer.data.records} bare={bare} context={reactionContext} />;
-  else if (answer.kind === "identity-unresolved") content = <StateFundingNote note={answer.statement} />;
+  else if (answer.kind === "identity-unresolved") content = <WorkingOnIt subject={{ type: "CANDIDATE", id: holder.id }} />;
   else if (answer.kind === "none") content = <WorkingOnIt />;
   else if (answer.kind === "absence") content = <FundingAbsence data={answer.data} />;
   else content = <FundingDisplay data={answer.data} context={reactionContext} bare={bare} />;

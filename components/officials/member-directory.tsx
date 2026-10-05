@@ -1,6 +1,7 @@
 "use client";
 
 
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { ExternalLink } from "lucide-react";
 
@@ -379,20 +380,7 @@ function CommitteeRow({ node, sub = false }: { node: CommitteeNode; sub?: boolea
           <p className="mt-1 t-caption leading-relaxed text-voice">
             {seat.jurisdiction}
           </p>
-          {seat.jurisdictionSource && (
-            <p className="mt-0.5 t-caption text-muted">
-              Jurisdiction text from{" "}
-              <a
-                href={seat.jurisdictionSource}
-                target="_blank"
-                rel="noreferrer"
-                className="underline decoration-dotted hover:text-link"
-              >
-                the committee&apos;s own statement
-              </a>
-              .
-            </p>
-          )}
+          {seat.jurisdictionSource && <CardSourcesContribution id={`jurisdiction:${seat.committeeId}`} sources={[{ what: `What ${label} handles`, provenance: { sourceUrl: seat.jurisdictionSource, sourceOrg: label, collectedAt: "", verifiedAt: null } }]} />}
         </details>
       ) : (
         <WorkingOnIt />

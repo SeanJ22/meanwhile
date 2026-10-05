@@ -13,7 +13,7 @@ import type { SeatHolder } from "../lib/officials/lookup.ts";
 
 /** Keep the canonical Node test runner; compile the actual TSX leaf in a child. */
 function renderTermNotes(holders: readonly SeatHolder[]): string[] {
-  const output = execFileSync(process.execPath, ["--import", "tsx", "--input-type=module", "-e", `
+  const output = execFileSync(process.execPath, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "--input-type=module", "-e", `
     import { readFileSync } from 'node:fs';
     import { createElement } from 'react';
     import { renderToStaticMarkup } from 'react-dom/server';
@@ -68,7 +68,7 @@ test("roster-source link label never supplies a missing note, publisher or read 
   const escapedNote = renderToStaticMarkup(createElement("span", null, holder.termNote)).slice(6, -7);
   assert.ok(markup.includes(escapedNote), "The held note survives the missing publisher field");
   assert.ok(markup.includes(`href="${holder.sourceUrl!.replaceAll("&", "&amp;")}"`));
-  assert.ok(markup.includes(">Published roster</a>"), "A generic label describes only the existing source link");
+  assert.ok(markup.includes("data-card-sources"), "The observed URL remains inside Sources");
   assert.ok(!markup.includes(holder.provenance!.sourceOrg), "No organization is borrowed from another field or record");
   assert.ok(!markup.includes("Read "), "No read date is invented from missing provenance");
   assert.equal(withoutNote, "");

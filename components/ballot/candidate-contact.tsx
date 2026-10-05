@@ -1,4 +1,5 @@
 /** Public campaign links and email, with the filing link retained in Sources. */
+import { CheckedLink } from "@/components/ui/checked-link";
 import type { CandidateCardData } from "@/lib/ballot/candidate-cards";
 import type { CandidateLinks } from "@/lib/ballot/candidate-sites";
 import type { CandidateContact as FilingContact } from "@/lib/ballot/candidate-contacts";
@@ -32,28 +33,28 @@ export function CandidateContact({
     <div data-candidate-contact className="contact-pill-row">
       {filing && (
         <div data-filed-contact={filing.candidacyId} className="space-y-1 t-detail">
-          {filing.email && <p><a href={`mailto:${filing.email}`} className="contact-pill">{filing.email}</a></p>}
+          {filing.email && <p><CheckedLink href={`mailto:${filing.email}`} className="contact-pill">{filing.email}</CheckedLink></p>}
         </div>
       )}
       {(campaign || email) && (
         <p className="flex flex-wrap gap-x-3 gap-y-0.5 t-detail">
           {campaign && (
-            <a
+            <CheckedLink
               href={campaign.url}
               target="_blank"
               rel="noreferrer"
               className="contact-pill"
             >
               {campaign.label ?? "campaign site"}
-            </a>
+            </CheckedLink>
           )}
           {email && (
-            <a
+            <CheckedLink
               href={`mailto:${email}`}
               className="contact-pill"
             >
               {email}
-            </a>
+            </CheckedLink>
           )}
         </p>
       )}

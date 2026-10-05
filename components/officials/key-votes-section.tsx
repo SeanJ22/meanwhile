@@ -6,7 +6,7 @@ import {
 } from "@/lib/votes/key-votes";
 import { votedCount } from "@/lib/votes/participation";
 import type { VotePosition } from "@/lib/votes/types";
-import { formatDateMDY } from "@/lib/map/format";
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 
 import { VotePill } from "@/components/map/popup/official-popup";
 
@@ -243,6 +243,7 @@ export function KeyVoteGroupBlock({
 }) {
   return (
     <div>
+      <CardSourcesContribution id={`key-votes:${chamber}:${rows.map(row => row.entry.id).join(",")}`} sources={rows.flatMap(row => row.refs.map(ref => ({ what: row.entry.title, provenance: { sourceUrl: ref.url, sourceOrg: chamber === "house" ? "U.S. House of Representatives" : "U.S. Senate", collectedAt: ref.verifiedAt ?? "", verifiedAt: ref.verifiedAt } })))} />
       <ul>
         {rows.map((row) => (
           <li
@@ -298,13 +299,7 @@ export function KeyVoteGroupBlock({
                       // about the member's tenure; the second is a fact about
                       // OUR research. Collapsing either into a position colour
                       // is how a null becomes an assertion.
-                      return (
-                        <VotePill tone="gap">
-                          {row.held?.[i]
-                            ? "Not in this chamber for this vote"
-                            : "We haven't recorded this vote yet"}
-                        </VotePill>
-                      );
+                      return row.held?.[i] ? <VotePill tone="gap">Not in this chamber for this vote</VotePill> : <WorkingOnIt inline />;
                     })()}
                     {ref.tally && (
                       <span className="text-muted"> · the vote was {ref.tally}</span>
@@ -312,25 +307,7 @@ export function KeyVoteGroupBlock({
                     {row.breakdowns[i] && (
                       <span className="text-muted"> · {row.breakdowns[i]}</span>
                     )}
-                    {ref.url && (
-                      <>
-                        {" "}
-                        <a
-                          href={ref.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="trailing-space-trimmed-10 source-tag font-mono t-caption uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
-                        >
-                          the roll call
-                        </a>
-                      </>
-                    )}
-                    {ref.verifiedAt && (
-                      <span className="text-muted">
-                        {" "}
-                        · read {formatDateMDY(ref.verifiedAt)}
-                      </span>
-                    )}
+
                   </p>
                 ))}
                 {/* The Senate voted the four April 2024 bills as one. A

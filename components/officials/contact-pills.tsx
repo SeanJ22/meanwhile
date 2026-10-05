@@ -1,5 +1,6 @@
 "use client";
 
+import { CheckedLink } from "@/components/ui/checked-link";
 import { useState } from "react";
 
 import { isFederalMember, useMemberDirectory } from "@/hooks/use-member-directory";
@@ -65,7 +66,7 @@ interface PillProps {
 
 function Pill({ href, label, mark, external = true, title }: PillProps) {
   return (
-    <a
+    <CheckedLink
       href={href}
       title={title ?? label}
       className="contact-pill"
@@ -73,7 +74,7 @@ function Pill({ href, label, mark, external = true, title }: PillProps) {
     >
       {mark}
       <span>{label}</span>
-    </a>
+    </CheckedLink>
   );
 }
 

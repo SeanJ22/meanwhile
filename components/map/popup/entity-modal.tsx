@@ -1,5 +1,9 @@
 "use client";
 
+import { CardSubjectContext } from "@/components/ui/card-subject-context";
+import { CheckedLink } from "@/components/ui/checked-link";
+import { CardSourceContext, useCardSourceRegistry } from "@/components/ui/card-source-context";
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
@@ -30,6 +34,7 @@ import { readerPartyLabel } from "@/lib/text/reader-names";
 import {
   sourceCountLabel,
   type CardSource,
+  meetingCardSources,
 } from "@/lib/officials/card-sources";
 import type { Meeting } from "@/lib/sources/types";
 
@@ -115,22 +120,7 @@ function DefinitionBlock({ definition }: { definition: BodyDefinitionText }) {
   return (
     <>
       <p className="t-body leading-relaxed text-paper-dim">{definition.text}</p>
-      <p className="mt-1.5 t-caption text-muted">
-        Powers defined in:{" "}
-        {definition.basisUrl ? (
-          <a
-            href={definition.basisUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="underline decoration-dotted hover:text-link"
-          >
-            {definition.basis}
-          </a>
-        ) : (
-          definition.basis
-        )}
-        , read {definition.readOn}
-      </p>
+      <CardSourcesContribution id={`definition:${definition.basis}`} sources={[{ what: "What this body does", provenance: { sourceOrg: definition.basis, sourceUrl: definition.basisUrl, collectedAt: definition.readOn, verifiedAt: null } }]} />
     </>
   );
 }
@@ -418,9 +408,7 @@ function PlaceSections({
       </PopupSectionLabel>
 
       {card.bodies.length === 0 ? (
-        <p className="mt-1.5 t-detail leading-relaxed text-muted">
-          {card.absence}
-        </p>
+        <WorkingOnIt />
       ) : (
         <ul className="mt-1.5 flex flex-col gap-1">
           {card.bodies.map((body) => (
@@ -576,14 +564,14 @@ function BodySections({
             {card.contact.map((row) => (
               <PopupRow key={row.label} label={row.label}>
                 {row.href ? (
-                  <a
+                  <CheckedLink
                     href={row.href}
                     target="_blank"
                     rel="noreferrer"
                     className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
                   >
                     {row.value}
-                  </a>
+                  </CheckedLink>
                 ) : (
                   row.value
                 )}
@@ -682,7 +670,8 @@ export function EntityModal({
   useCardVisibility(cardRef, `${subject.subjectKind}:${subject.subjectId}`, subject.subjectKind);
   const tab = initialTab;
   const listingCount = readerMeetingCount(subject.meetings, useMeetingListingIdentity());
-  const sourceCount = sourceCountLabel(subject.sources);
+  const { register, sources: allSources } = useCardSourceRegistry(subject.sources, `${subject.subjectKind}:${subject.subjectId}`);
+  const sourceCount = sourceCountLabel(allSources);
 
   useEffect(() => {
     if (embedded) return;
@@ -754,21 +743,7 @@ export function EntityModal({
                         <p className="mt-1.5 t-detail leading-relaxed text-paper-dim">
                           {blurb.text}
                         </p>
-                        <p className="mt-1 t-caption text-muted">
-                          Powers defined in:{" "}
-                          {blurb.basisUrl ? (
-                            <a
-                              href={blurb.basisUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="underline decoration-dotted hover:text-link"
-                            >
-                              {blurb.basis}
-                            </a>
-                          ) : (
-                            blurb.basis
-                          )}
-                        </p>
+                        <CardSourcesContribution id={`definition:${blurb.basis}`} sources={[{ what: "What this office does", provenance: { sourceOrg: blurb.basis, sourceUrl: blurb.basisUrl, collectedAt: "", verifiedAt: null } }]} />
                       </>
                     );
                   })()}
@@ -842,7 +817,7 @@ export function EntityModal({
     ) : null;
 
   return (
-    <div
+    <CardSubjectContext.Provider value={subject.subjectKind === "BODY" ? { type: "BODY", id: subject.subjectId } : null}><CardSourceContext.Provider value={register}><div
       ref={cardRef}
       className={embedded ? "account-modal-overlay mw-embedded" : "account-modal-overlay"}
       role={embedded ? undefined : "dialog"}
@@ -907,7 +882,7 @@ export function EntityModal({
         )}
 
         {subject.bodyCard ? (
-          <BodySections subject={subject} onOpenHolder={onOpenHolder} />
+          <BodySections subject={{ ...subject, sources: allSources }} onOpenHolder={onOpenHolder} />
         ) : subject.placeCard ? (
           <PlaceSections subject={subject} onOpenPlaceBody={onOpenPlaceBody} />
         ) : (
@@ -919,7 +894,7 @@ export function EntityModal({
                 onOpenHolder={onOpenHolder} showTopOffices={runsSomething(subject.divisionKind)} />
             </CardSection>
             {subject.subjectKind !== "MEETING" && <CardSection title={listingCount.heading}><Meetings meetings={subject.meetings} /></CardSection>}
-            <CardSection title="Sources" meta={sourceCount}><Sources sources={subject.sources} /></CardSection>
+            <CardSection title="Sources" meta={sourceCount}><Sources sources={allSources} /></CardSection>
           </CardSectionGroup>
         </div>
         )}
@@ -1032,7 +1007,7 @@ export function EntityModal({
           </div>
         )}
       </div>
-    </div>
+    </div></CardSourceContext.Provider></CardSubjectContext.Provider>
   );
 }
 
@@ -1147,14 +1122,14 @@ export function Representation({
                   {holder.name}
                 </button>
               ) : holder.websiteUrl ? (
-                <a
+                <CheckedLink
                   href={holder.websiteUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="hover:text-signal hover:underline"
                 >
                   {holder.name}
-                </a>
+                </CheckedLink>
               ) : (
                 holder.name
               )}
@@ -1168,33 +1143,8 @@ export function Representation({
             </span>
           </div>
 
-          {/*
-            Provenance inline, not behind a link. This is the tab where a reader
-            asks "says who?", and making them navigate to find out defeats it.
-          */}
-          <p className="mt-1 t-caption text-muted">
-            {/* 3a: the party label wears its color; the rest of the
-                provenance line stays muted. */}
-            {holder.partyLabel ? (
-              <span style={{ color: partyColorVar(holder.partyLabel) }}>
-                {readerPartyLabel(holder.partyLabel)} ·{" "}
-              </span>
-            ) : (
-              ""
-            )}
-            {holder.sourceUrl ? (
-              <a
-                href={holder.sourceUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="hover:text-signal hover:underline"
-              >
-                source
-              </a>
-            ) : (
-              <NoValue>no source recorded</NoValue>
-            )}
-          </p>
+          {holder.partyLabel && <p className="mt-1 t-caption" style={{ color: partyColorVar(holder.partyLabel) }}>{readerPartyLabel(holder.partyLabel)}</p>}
+          <CardSourcesContribution id={`holder:${holder.id}`} sources={holder.provenance ? [{ what: `Who represents it — ${holder.name}`, provenance: holder.provenance }] : holder.sourceUrl ? [{ what: `Who represents it — ${holder.name}`, provenance: { sourceUrl: holder.sourceUrl, sourceOrg: "", collectedAt: "", verifiedAt: null } }] : []} />
           </div>
         </div>
       ))}
@@ -1269,7 +1219,7 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
                   const directions = venueLink(meeting.location);
                   if (!directions) return null;
                   return (
-                    <a
+                    <CheckedLink
                       href={directions.url}
                       target="_blank"
                       rel="noreferrer"
@@ -1277,7 +1227,7 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
                       className="trailing-space-trimmed-14 mt-1 inline-flex items-baseline gap-1 font-mono t-caption uppercase tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
                     >
                       Directions
-                    </a>
+                    </CheckedLink>
                   );
                 })()}
             </div>
@@ -1290,6 +1240,7 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
           footnote marker that used to sit on every row pointing at them. */}
       <MeetingSourceCredit
         credit={credit}
+        sources={meetings.flatMap(meeting => meetingCardSources(meeting, []))}
         className="mt-3 border-t border-[var(--panel-border)] pt-2.5"
       />
     </>

@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import type { ReaderOfficialActions } from "@/lib/officials/reader-actions";
-import { formatDateLong } from "@/lib/text/format-date";
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { CardSection } from "./card-section";
 
 export function OfficialActions({ subjectId }: { subjectId: string }) {
@@ -20,7 +21,7 @@ function ActionsForIdentity({ subjectId }: { subjectId: string }) {
       .catch(() => { if (!controller.signal.aborted) setFailed(true); });
     return () => controller.abort();
   }, [subjectId]);
-  if (failed) return <CardSection title="Official actions"><p className="t-body">We couldn’t check our official-action records just now.</p></CardSection>;
+  if (failed) return <CardSection title="Official actions"><WorkingOnIt subject={{ type: "CANDIDATE", id: subjectId }} /></CardSection>;
   if (!answer || (!answer.count && answer.status !== "IDENTITY_UNRESOLVED")) return null;
   return <CardSection title="Official actions"><OfficialActionsContent answer={answer} /></CardSection>;
 }
@@ -28,17 +29,14 @@ function ActionsForIdentity({ subjectId }: { subjectId: string }) {
 /** Shared actual leaf for map, ballot, and exhaustive census render proof. */
 export function OfficialActionsContent({ answer }: { answer: ReaderOfficialActions }) {
   return <div data-official-actions-subject={answer.subjectId} data-official-actions-target={answer.resolvedTargetId} data-official-actions-count={answer.count} className="space-y-3 t-body">
-    {answer.status === "IDENTITY_UNRESOLVED" && <p>We haven’t resolved which official these action records belong to.</p>}
-    {answer.count > 0 && <p>{answer.count} records in our holdings. This is a partial record of published actions.</p>}
+    {answer.status === "IDENTITY_UNRESOLVED" && <WorkingOnIt subject={{ type: "CANDIDATE", id: answer.subjectId }} />}
+    {answer.count > 0 && <p>{answer.count} published action records held.</p>}
     <ol className="max-h-96 space-y-4 overflow-y-auto overscroll-contain">
       {answer.records.map(record => <li key={record.id} data-official-action-id={record.id} data-official-id={record.officialId}>
         <p>{record.text}</p>
-        <p className="mt-1 t-detail text-muted-foreground">
-          <a className="underline underline-offset-2" href={record.sourceUrl} target="_blank" rel="noreferrer">{record.sourceOrg}</a>
-          {record.documentUrl && <> · <a className="underline underline-offset-2" href={record.documentUrl} target="_blank" rel="noreferrer">Source document</a></>}
-          {" · "}Read {formatDateLong(record.collectedAt.slice(0, 10))}.
-        </p>
+
       </li>)}
     </ol>
+    <CardSourcesContribution id={`actions:${answer.subjectId}`} sources={answer.records.flatMap(record => [record.sourceUrl, record.documentUrl].filter((url): url is string => Boolean(url)).map(sourceUrl => ({ what: "Official action records", provenance: { sourceUrl, sourceOrg: record.sourceOrg, collectedAt: record.collectedAt, verifiedAt: null } })))} />
   </div>;
 }

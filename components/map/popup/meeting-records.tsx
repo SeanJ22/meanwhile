@@ -1,18 +1,16 @@
 import type { MeetingReaderRecords } from "@/lib/meetings/reader-records";
-import { formatDateMDY } from "@/lib/map/format";
+import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 
 /** Actions and named votes retain their separate source record classes. */
 export function MeetingRecords({ records }: { records: MeetingReaderRecords | null }) {
-  if (!records || records.status === "NOT_HELD") return null;
-  if (records.status === "HOLDING_UNAVAILABLE") return <p className="t-detail leading-relaxed text-muted" data-meeting-records-status="HOLDING_UNAVAILABLE">
-    We couldn&apos;t check the separately held meeting outcome records just now. This does not affect the meeting or agenda above.
-  </p>;
-  if (records.status === "IDENTITY_UNRESOLVED") return <p className="t-detail leading-relaxed text-muted" data-meeting-records-status="IDENTITY_UNRESOLVED">
-    We could not verify that the held outcome records belong to this exact sitting, so none are attached here.
-  </p>;
+  if (!records || records.status !== "HELD") return <WorkingOnIt attrs={{ "data-meeting-records-status": records?.status ?? "NOT_HELD" }} subject={records?.bodyId ? { type: "BODY", id: records.bodyId } : undefined} />;
   const titles = new Map(records.agenda.map((row) => [row.eventItemId, row.title]));
   return <div data-meeting-records={records.meetingId} className="space-y-3 t-detail leading-relaxed">
-    {records.sourceUrl && <p className="text-muted">Meeting record: <a href={records.sourceUrl} target="_blank" rel="noreferrer noopener" className="text-signal underline decoration-dotted">{records.sourceOrg}</a></p>}
+    <CardSourcesContribution id={`meeting-records:${records.meetingId}`} sources={[
+      ...(records.sourceUrl ? [{ what: "Meeting outcome records", provenance: { sourceUrl: records.sourceUrl, sourceOrg: records.sourceOrg ?? "", collectedAt: "", verifiedAt: null } }] : []),
+      ...[...records.agenda, ...records.actions, ...records.rollCalls].map(row => ({ what: `Meeting record: ${row.recordClass}`, provenance: { sourceUrl: row.provenance.endpoint, sourceOrg: row.provenance.sourceOrg, collectedAt: String(row.provenance.readOn), verifiedAt: null } })),
+    ]} />
     {records.agenda.length > 0 && <details>
       <summary className="cursor-pointer text-signal">Recorded agenda items ({records.counts.agenda})</summary>
       <ol className="mt-2 max-h-72 space-y-2 overflow-y-auto">
@@ -26,8 +24,7 @@ export function MeetingRecords({ records }: { records: MeetingReaderRecords | nu
           {(titles.get(row.eventItemId) || row.matterFile) && <p className="font-semibold">{titles.get(row.eventItemId) ?? row.matterFile}</p>}
           <p>{row.action}{row.tallyText && <> · {row.tallyText}</>}</p>
           {row.dispositionConflict && <p className="text-muted">{row.dispositionConflict}</p>}
-          <a href={row.provenance.endpoint} target="_blank" rel="noreferrer" className="text-signal underline decoration-dotted">{row.provenance.sourceOrg}</a>
-          <span className="text-muted"> · read {formatDateMDY(String(row.provenance.readOn))}</span>
+
         </li>)}
       </ol>
     </details>}
@@ -37,10 +34,10 @@ export function MeetingRecords({ records }: { records: MeetingReaderRecords | nu
         {records.rollCalls.map((row) => <li key={row.eventItemId} data-roll-call-record={row.eventItemId}>
           {titles.get(row.eventItemId) && <p className="font-semibold">{titles.get(row.eventItemId)}</p>}
           <ul>{row.votes.map((vote, index) => <li key={`${vote.personId}:${index}`} data-recorded-vote>
-            {vote.personName ?? "Member name unavailable"}: {" "}
-            {vote.value ?? "Vote value unavailable"}
+            {vote.personName ?? <WorkingOnIt inline />}: {" "}
+            {vote.value ?? <WorkingOnIt inline />}
           </li>)}</ul>
-          <a href={row.provenance.endpoint} target="_blank" rel="noreferrer" className="text-signal underline decoration-dotted">{row.provenance.sourceOrg}</a>
+
         </li>)}
       </ol>
     </details>}

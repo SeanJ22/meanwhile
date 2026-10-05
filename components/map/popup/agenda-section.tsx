@@ -1,5 +1,6 @@
 "use client";
 
+import { CheckedLink } from "@/components/ui/checked-link";
 import { useEffect, useState } from "react";
 import { agendaSentenceFor } from "@/lib/ask/agenda-sentence";
 import type { AgendaPublicationReading } from "@/lib/ask/agenda-publication";
@@ -143,14 +144,14 @@ function AgendaForMeeting({
         {agendaUrl && (
           <>
             {" "}
-            <a
+            <CheckedLink
               href={agendaUrl}
               target="_blank"
               rel="noreferrer"
               className="text-signal hover:underline"
             >
               Read it at the source
-            </a>
+            </CheckedLink>
             .
           </>
         )}
@@ -172,7 +173,7 @@ function AgendaForMeeting({
     </p>}
     <MinutesRecord meetingId={meetingId} />
     <MeetingRecords records={records} />
-    {holdingUnavailable ? <p className="mt-1.5 t-detail text-muted">The stored document is unavailable here.{agendaUrl && <> <a className="text-signal underline" href={agendaUrl} target="_blank" rel="noreferrer">Read the source document</a>.</>}</p>
+    {holdingUnavailable ? <p className="mt-1.5 t-detail text-muted">The stored document is unavailable here.{agendaUrl && <> <CheckedLink className="text-signal underline" href={agendaUrl} target="_blank" rel="noreferrer">Read the source document</CheckedLink>.</>}</p>
       : <AgendaDocuments documents={documents} meetingId={meetingId} agendaUrl={agendaUrl} agendaSentence={agendaState.sentence} publication={publication} />}
   </>;
 }
@@ -183,7 +184,7 @@ function MinutesRecord({ meetingId }: { meetingId: string }) {
   return <details className="mb-3 t-detail leading-relaxed" open data-minutes-summary={meetingId}>
     <summary className="cursor-pointer text-signal">What happened — plain language</summary>
     <p className="mt-2 font-semibold">{summary.summary}</p>
-    <p className="mt-1 text-muted">Our paraphrase of <a href={summary.minutesUrl} target="_blank" rel="noreferrer" className="text-signal underline">the {summary.sourceOrg} minutes</a> · read {formatDateMDY(summary.readAt)}.</p>
+    <p className="mt-1 text-muted">Our paraphrase of <CheckedLink href={summary.minutesUrl} target="_blank" rel="noreferrer" className="text-signal underline">the {summary.sourceOrg} minutes</CheckedLink> · read {formatDateMDY(summary.readAt)}.</p>
   </details>;
 }
 
@@ -220,7 +221,7 @@ function VersionsOnFile({ documents, publication }: {
       return <span key={document.id ?? `${document.contentHash}:${document.retrievedAt}`} data-agenda-version={document.id ?? document.contentHash}>
         {index > 0 && ", "}
         {link
-          ? <a href={document.documentUrl} target="_blank" rel="noreferrer" className="underline decoration-dotted hover:text-signal">{label}</a>
+          ? <CheckedLink href={document.documentUrl} target="_blank" rel="noreferrer" className="underline decoration-dotted hover:text-signal">{label}</CheckedLink>
           : label}
       </span>;
     })}
@@ -241,10 +242,10 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
       document.documentUrl !== latest.documentUrl &&
       all.findIndex((candidate) => candidate.documentUrl === document.documentUrl) === index);
     return <div data-agenda-publication="ACQUIRED_IS_PUBLICATION_INDEX" className="mt-1.5 t-detail leading-relaxed text-muted">
-      <p>{publication.gap?.statement} <a href={latest.documentUrl} target="_blank" rel="noreferrer" className="text-signal underline">{publication.documentSharedAcrossGovernments ? "Inspect the stored link" : "Open the publisher's agenda portal"}</a>.</p>
+      <p>{publication.gap?.statement} <CheckedLink href={latest.documentUrl} target="_blank" rel="noreferrer" className="text-signal underline">{publication.documentSharedAcrossGovernments ? "Inspect the stored link" : "Open the publisher's agenda portal"}</CheckedLink>.</p>
       <p className="mt-1 t-caption">{publication.documentSharedAcrossGovernments ? "Unresolved source link" : `From ${latest.sourceOrg}`} · read {formatDateMDY(latest.retrievedAt.slice(0, 10))}.
         {otherListingPages.map((document) => <span key={document.documentUrl} data-agenda-listing-page={document.id ?? document.documentUrl}>
-          {" "}Also held: <a href={document.documentUrl} target="_blank" rel="noreferrer" className="underline decoration-dotted hover:text-signal">another listing page, read {formatDateMDY(document.retrievedAt.slice(0, 10))}</a>.
+          {" "}Also held: <CheckedLink href={document.documentUrl} target="_blank" rel="noreferrer" className="underline decoration-dotted hover:text-signal">another listing page, read {formatDateMDY(document.retrievedAt.slice(0, 10))}</CheckedLink>.
         </span>)}
       </p>
     </div>;
@@ -256,14 +257,14 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
         {agendaUrl ? (
           <>
             We haven&apos;t stored this agenda&apos;s text yet —{" "}
-            <a
+            <CheckedLink
               href={agendaUrl}
               target="_blank"
               rel="noreferrer"
               className="text-signal hover:underline"
             >
               read it at the source
-            </a>
+            </CheckedLink>
             .
           </>
         ) : (
@@ -285,14 +286,14 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
           named as ours.
         */}
         text ({latest.extractionNote ?? (latest.text ? "the stored extraction contains document bytes rather than readable text" : "we haven't recorded why")}).{" "}
-        <a
+        <CheckedLink
           href={latest.documentUrl}
           target="_blank"
           rel="noreferrer"
           className="text-signal hover:underline"
         >
           Open the document
-        </a>
+        </CheckedLink>
         . From {latest.sourceOrg} · read {formatDateMDY(latest.retrievedAt.slice(0, 10))}
         <VersionsOnFile documents={documents} publication={publication} />.
       </p>
@@ -376,14 +377,14 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
       </p>
       <p className="mt-1 t-caption text-muted">
         From{" "}
-        <a
+        <CheckedLink
           href={latest.documentUrl}
           target="_blank"
           rel="noreferrer"
           className="underline decoration-dotted hover:text-signal"
         >
           the {latest.sourceOrg} document
-        </a>{" "}
+        </CheckedLink>{" "}
         · read {formatDateMDY(latest.retrievedAt.slice(0, 10))}
         <VersionsOnFile documents={documents} publication={publication} />
       </p>

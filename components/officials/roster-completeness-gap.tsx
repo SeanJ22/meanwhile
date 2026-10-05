@@ -1,5 +1,5 @@
 import type { RosterReaderGap } from "@/lib/registry/body-rosters";
-import { formatDateMDY } from "@/lib/map/format";
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 
 /** A partial verified roster remains useful; the unresolved identity stays explicit. */
 export function RosterCompletenessGaps({ gaps }: { gaps: readonly RosterReaderGap[] }) {
@@ -7,6 +7,6 @@ export function RosterCompletenessGaps({ gaps }: { gaps: readonly RosterReaderGa
     data-verified-members={gap.verifiedMembers} data-expected-members={gap.expectedMembers}
     className="my-2 space-y-1 t-detail leading-relaxed text-muted">
     <p>{gap.statement}</p>
-    <p className="t-caption"><a href={gap.sourceUrl} target="_blank" rel="noreferrer noopener" className="text-link underline decoration-dotted underline-offset-2">{gap.sourceOrg}</a> · Read {formatDateMDY(gap.readAt.slice(0, 10))}</p>
+    <CardSourcesContribution id={`roster-gap:${gap.bodyId}`} sources={[{ what: "Roster member identities", provenance: { sourceUrl: gap.sourceUrl, sourceOrg: gap.sourceOrg, collectedAt: gap.readAt, verifiedAt: null } }]} />
   </div>)}</>;
 }

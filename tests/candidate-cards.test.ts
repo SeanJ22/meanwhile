@@ -1,19 +1,11 @@
 import assert from "node:assert/strict";
-import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { join, relative, sep } from "node:path";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { test } from "node:test";
 
 import { allCandidateCards } from "../lib/ballot/candidate-cards.ts";
 import { ballotPath } from "../lib/holdings/files.ts";
 
-/** Every .ts/.tsx file under a directory, so a class sweep cannot miss a file by naming it. */
-function* walkFiles(dir: string): Generator<string> {
-  for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    const full = join(dir, entry.name);
-    if (entry.isDirectory()) yield* walkFiles(full);
-    else if (entry.name.endsWith(".ts") || entry.name.endsWith(".tsx")) yield full;
-  }
-}
 
 /**
  * 2b (2026-08-17): the Kelly-standard candidate cards. Every card's claims

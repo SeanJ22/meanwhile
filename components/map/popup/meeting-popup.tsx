@@ -1,5 +1,6 @@
 "use client";
 
+import { CheckedLink } from "@/components/ui/checked-link";
 import { WorkingOnIt } from "@/components/demand/working-on-it";
 import type { PublicBodyAttempt } from "@/lib/registry/body-attempt-read";
 import { ExternalLink } from "lucide-react";
@@ -203,14 +204,14 @@ export function MeetingPopup({
       {onlineAccess && (
         <PopupRow label="How to join">
           {onlineAccess.joinUrl ? (
-            <a
+            <CheckedLink
               href={onlineAccess.joinUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="underline"
             >
               {onlineAccess.label}
-            </a>
+            </CheckedLink>
           ) : (
             /*
              * The render-default rule, exactly. The body published a location
@@ -275,14 +276,14 @@ export function MeetingPopup({
               </p>
               <p className="mt-0.5 t-caption leading-relaxed text-muted">
                 Our paraphrase of{" "}
-                <a
+                <CheckedLink
                   href={minutes.minutesUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="underline decoration-dotted"
                 >
                   the {minutes.sourceOrg} minutes
-                </a>{" "}
+                </CheckedLink>{" "}
                 — read {minutes.readAt}.
               </p>
             </details>
@@ -291,13 +292,13 @@ export function MeetingPopup({
           )}
           {officePhone && (
             <PopupRow label="Office">
-              <a
+              <CheckedLink
                 href={`tel:${officePhone.phone.replace(/[^\d+]/g, "")}`}
                 title={`Published on the ${officePhone.sourceOrg} page`}
                 className="text-signal hover:underline"
               >
                 {officePhone.phone}
-              </a>
+              </CheckedLink>
             </PopupRow>
           )}
         </>
@@ -368,7 +369,7 @@ function LinkLadder({
     <ul className="mt-1.5 space-y-1">
       {links.map((link) => (
         <li key={link.rung} className="flex items-baseline justify-between gap-3">
-          <a
+          <CheckedLink
             href={link.url}
             target="_blank"
             rel="noreferrer"
@@ -377,7 +378,7 @@ function LinkLadder({
           >
             <span className="truncate">{link.label}</span>
             <ExternalLink className="size-3 shrink-0 translate-y-0.5" />
-          </a>
+          </CheckedLink>
           {link.kind === "DERIVED" && (
             // A derived link is a convenience built from coordinates we hold,
             // not evidence about the meeting. It is marked so it can never be

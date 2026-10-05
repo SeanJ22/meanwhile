@@ -1,5 +1,7 @@
 "use client";
 
+import { useContext } from "react";
+import { CardSubjectContext } from "@/components/ui/card-subject-context";
 import { DemandPill, type DemandSubjectType } from "./demand-pill";
 import { mayShowNotFound, type SweepRecord } from "@/lib/corpus/statement-sweep";
 import { copy } from "@/lib/design/copy";
@@ -47,6 +49,8 @@ export function WorkingOnIt({
 }) {
   const Frame = inline ? "span" : "div";
   const Text = inline ? "span" : "p";
+  const inheritedSubject = useContext(CardSubjectContext);
+  const demandSubject = subject === undefined ? inheritedSubject : subject;
   const readerCopy = useReaderCopy();
   const searched = state?.kind === "searched" && mayShowNotFound(state.sweep, state.topic) ? state : null;
   const searchedSources: CardSource[] = searched ? (searched.sweep.topics.find(row => row.topic === searched.topic)?.sourcesSearched ?? []).map(source => ({
@@ -61,7 +65,7 @@ export function WorkingOnIt({
         {about && (!state || state.kind === "not-searched") ? `${line} on ${about}.` : `${line}.`}
       </Text>
       {searched && !insideCard && !inline && <div data-card-sources><details><summary>Sources</summary><CardSourcesList sources={searchedSources} /></details></div>}
-      {subject ? <DemandPill subjectType={subject.type} subjectId={subject.id} className="mt-1" /> : null}
+      {demandSubject ? <DemandPill subjectType={demandSubject.type} subjectId={demandSubject.id} className="mt-1" /> : null}
     </Frame>
   );
 }

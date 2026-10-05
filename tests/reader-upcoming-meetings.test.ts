@@ -247,9 +247,9 @@ test("every reader surface that lists meetings renders the upcoming sittings, wi
     const row = text(rowMarkup(html("duffy"), id));
     // The body's own published words, per row ("Via Zoom Webinar", "Via Zoom").
     const label = byId.get(id)?.online?.label;
-    check(row.includes("We haven't recorded an agenda for this meeting yet"), `Duffy panel: ${id} does not name its agenda gap`);
+    check(/data-working-on-it=/.test(row), `Duffy panel: ${id} does not name its agenda gap`);
     check(/data-status="online"/.test(rowMarkup(html("duffy"), id)), `Duffy panel: ${id} carries no online mark`);
-    check(Boolean(label) && row.includes(`${label} — the body hasn't published a join link`), `Duffy panel: ${id} does not quote "${label}" or say whose gap the join link is`);
+    check(Boolean(label) && row.includes(label!) && /data-working-on-it=/.test(row), `Duffy panel: ${id} does not quote "${label}" or say whose gap the join link is`);
   }
   check(/Read the agenda/.test(duffy), "Duffy panel: no agenda link renders at all");
 
@@ -267,7 +267,7 @@ test("every reader surface that lists meetings renders the upcoming sittings, wi
   // ── The meeting's own card. ──
   const popup = text(html("popup503"));
   check(popup.includes("Online only — there is no room to attend in person."), "503 card: the online sentence is missing");
-  check(popup.includes("Via Zoom Webinar — the body hasn't published a join link"), "503 card: the join-link gap is missing");
+  check(popup.includes("Via Zoom Webinar") && /data-working-on-it=/.test(popup), "503 card: the join-link gap is missing");
 
   // ── The missing-location path: listed, never "online", gap named. ──
   const unrecordedRow = rowMarkup(html("unrecordedList"), UNRECORDED);
@@ -275,7 +275,7 @@ test("every reader surface that lists meetings renders the upcoming sittings, wi
   check(!/data-status="online"/.test(unrecordedRow), "no-place sitting: marked online in the meeting list");
   check(/data-meeting-where="unrecorded"/.test(unrecordedRow), "no-place sitting: the list row names no gap");
   const unrecordedPopup = text(html("unrecordedPopup"));
-  check(unrecordedPopup.includes("We haven't recorded a place for this meeting yet."), "no-place sitting: the card names no gap");
+  check(/data-working-on-it=/.test(unrecordedPopup), "no-place sitting: the card names no gap");
   check(!unrecordedPopup.includes("Online only"), "no-place sitting: the card calls it online");
   check(rowIds(html("unrecordedDuffy")).includes(UNRECORDED), "no-place sitting: dropped from the body's pin panel");
   check(/data-meeting-where="unrecorded"/.test(rowMarkup(html("unrecordedDuffy"), UNRECORDED)), "no-place sitting: the pin panel names no gap");

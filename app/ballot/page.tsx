@@ -218,9 +218,6 @@ const AUXILIARY_READER_LABEL: Record<BallotAuxiliaryFamily, string> = {
  * than as a disclaimer defending it — the author's distinction, and the same
  * one rule 4g drew when it cut "that's not a bias, it's a record".
  */
-const NEUTRAL_NOTE =
-  "The official ballot order either hasn't been drawn yet or wasn't machine-readable from the authority's filings. Candidates with a photo are listed first, then the rest, alphabetically by surname within each group — a photo is what lets someone tell two names apart. Party labels and slogans appear as filed. Nothing on this page is a recommendation.";
-
 /**
  * **BAL-48 (2026-09-02): the length at which a contest's scope note is
  * "extended election-mechanics text" and collapses behind "More info".**
@@ -2859,13 +2856,7 @@ export default async function BallotPage({
                           </p>
                         </div>
                       ) : (
-                        <p
-                          className="mt-3 text-[0.75rem] leading-relaxed text-muted"
-                          data-measure-statement="GAP_OURS"
-                        >
-                          We have not recorded an official statement for this
-                          question.
-                        </p>
+                        <WorkingOnIt className="mt-3" attrs={{ "data-measure-statement": "GAP_OURS" }} />
                       )}
                     </div>
                   </details>
@@ -3096,9 +3087,7 @@ export default async function BallotPage({
             </div>
           )}
 
-          <p className="mt-6 text-[0.75rem] leading-relaxed text-voice lg:max-w-2xl">
-            {NEUTRAL_NOTE}
-          </p>
+
 
           {/* RULING 42: the page-level disclosure, once, at the bottom. It
               renders inside this block because this block is what renders

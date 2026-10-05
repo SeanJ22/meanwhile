@@ -1703,7 +1703,6 @@ export function CoverageNotice({
   // committed rosters.
   if (!shouldRenderNotice(tier, coverage)) return null;
 
-  const near = formatMiles(requestedRadiusKm);
   const wide = formatMiles(radiusKm);
 
   const isEmpty = tier === "none";

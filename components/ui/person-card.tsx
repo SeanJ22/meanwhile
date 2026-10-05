@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { Card } from "./card";
+import { CardSubjectContext } from "./card-subject-context";
 import { CardSection } from "@/components/officials/card-section";
 import { WorkingOnIt } from "@/components/demand/working-on-it";
 import type { DemandSubjectType } from "@/components/demand/demand-pill";
@@ -10,9 +11,10 @@ import type { CardSource } from "@/lib/officials/card-sources";
 
 /** One frame and reading order for an officeholder or a candidate. */
 export function PersonCard({ title, eyebrow, identity, contact, sections, sources = [], afterSections,
-  onClose, className, independent = false, subject,
+  onClose, className, independent = false, subject, identityKey,
 }: {
   title: string;
+  identityKey?: string;
   eyebrow?: ReactNode;
   identity: ReactNode;
   contact: ReactNode;
@@ -25,7 +27,7 @@ export function PersonCard({ title, eyebrow, identity, contact, sections, source
   subject?: { type: DemandSubjectType; id: string };
 }) {
   return (
-    <Card key={subject?.id ?? title} title={title} titleVisible={false} eyebrow={eyebrow} sources={sources}
+    <CardSubjectContext.Provider value={subject ?? null}><Card key={identityKey ?? subject?.id ?? title} title={title} titleVisible={false} eyebrow={eyebrow} sources={sources}
       sourcesContent={sections.sources} onClose={onClose} className={className} independent={independent}>
       <div data-person-identity>{identity}</div>
       <div data-person-contact>{contact ?? <WorkingOnIt subject={subject} />}</div>
@@ -35,6 +37,6 @@ export function PersonCard({ title, eyebrow, identity, contact, sections, source
         </CardSection>
       ))}
       {afterSections}
-    </Card>
+    </Card></CardSubjectContext.Provider>
   );
 }

@@ -3,10 +3,10 @@ worker: codex-frontend
 provider: Codex
 run_id: codex-frontend-850fdfa0f13e4db6b51134b4664c9011
 lock: codex-frontend-850fdfa0f13e4db6b51134b4664c9011
-heartbeat: 2026-10-05T18:23:48Z
+heartbeat: 2026-10-05T18:32:17Z
 on_river: none
 ready: none
-checks: WIP 8554b65db9f1c43522f36c54557378271ed22951: 84/84 focused assertions, tsc, lint (0 errors, 70 warnings), browser fixture at 390/1280 dark/light passed. Fresh production build passed with unchanged budgets; source working tree committed at that SHA. Selector FULL. Full run at unpublished 33d75c7cb failed and was interrupted after diagnosis (526/989 file results); not complete. Evidence: .factory/evidence/frontend/batch-01/checks.json and handoff.md. Actual model identifier unavailable; recommended GPT Sol 6.1 not confirmed.
+checks: current batch-02 FULL running on 337ad670e; tsc passed and lint passed (0 errors, 70 baseline warnings); 390/1280 dark/light Card/WebGL fixture passed. First failures being repaired, never claimed passing.
 working_on: Returned FE-39 first; resume preserved batch-01 WIP and follow current River FULL guidance.
 waiting_on: none; ready work resumes
 returned: none; board/river has no returns/frontend.md

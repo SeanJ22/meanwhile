@@ -22,6 +22,7 @@ import type { ReadinessCount } from "../../coverage/readiness-counts.ts";
 import type { GateHealthRow } from "./gate-health.ts";
 import { summarizeGateHealth } from "./gate-health.ts";
 import type { LearningSeries, LearningTrends } from "./learning-trends.ts";
+import { doorRows, type DoorNumberReadings } from "./door-numbers.ts";
 import type { V6HistoryReceipt } from "./admin-v6-history.ts";
 import type { PipelineRead } from "./v6-results-read.ts";
 
@@ -194,6 +195,8 @@ export interface ScoreboardReadings {
   readonly learning: LearningView;
   readonly doors: DoorFacts | null;
   readonly gates: readonly GateHealthRow[] | null;
+  /** BR-32: overdue doors, posting-to-live and the repair log; null when none could be read. */
+  readonly doorNumbers?: Omit<DoorNumberReadings, "shutDoors"> | null;
   readonly readiness: readonly ReadinessCount[];
 }
 
@@ -369,16 +372,6 @@ function freshnessRow(p: PublicationCounts | null, places: readonly ScoreboardPl
   return row(id, name, { value: share(p.seen, checked), counts: `${n(p.seen)} of ${n(checked)} seen on the page recently · ${n(p.stale)} overdue`, says: "Counts records last seen on the public page within the allowed time; records never seen there are counted under Public delivery." });
 }
 
-function shutDoorsRow(d: ScoreboardReadings["shutDoors"]): ScoreboardRow {
-  const id = "Shut doors", name = "Shut doors";
-  if (d === null) return unmeasured(id, name, "The door registry could not be read just now, so no door is called shut.");
-  return row(id, name, {
-    value: n(d.shut),
-    counts: `${n(d.shut)} shut · ${n(d.open)} open · ${n(d.setAside)} set aside${d.unreadable > 0 ? ` · ${n(d.unreadable)} unreadable` : ""}`,
-    says: "How many ways in are shut right now. How long each took to reopen is not recorded yet.",
-  });
-}
-
 function returnsRow(r: ScoreboardReadings["returning"]): ScoreboardRow {
   const id = "Return visits", name = "Return visits";
   if (r === null) return unmeasured(id, name, "Reader counts could not be read just now.");
@@ -404,11 +397,8 @@ const GATE_ROWS: readonly { id: string; name: string; why: string }[] = [
   { id: "Facts live per hour", name: "Facts live per hour", why: "Counted in a later step, once each fact carries when it went live." },
   { id: "Cost per fact", name: "Cost per fact", why: "Counted in a later step, from the same record as facts live per hour." },
   { id: "Audit accuracy", name: "Audit accuracy", why: "The auditors' green and red flags are not recorded here yet." },
-  { id: "Posted to live", name: "Posted to live", why: "The time from a body posting to our page showing it is not recorded yet." },
   { id: "Look and feel", name: "Look and feel", why: "The front-end flags are not recorded here yet." },
   { id: "Site speed and reliability", name: "Site speed and reliability", why: "Page load times and errors are not recorded here yet." },
-  { id: "Time to repair", name: "Time to repair", why: "The time from breaking to working again is not recorded yet." },
-  { id: "Repairs without code", name: "Repairs without code", why: "Which repairs needed no code change is not recorded yet." },
   { id: "Proven fixes", name: "Proven fixes", why: "Fixes proved across places are not recorded yet." },
   { id: "Report accuracy", name: "Report accuracy", why: "Auditor confirmation of the team's claimed wins is not recorded yet." },
 ];
@@ -424,13 +414,13 @@ export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
     ["Time to core information live", coreRow(r)],
     ["Public delivery", deliveryRow(r.publication, r.places ?? [])],
     ["Freshness", freshnessRow(r.publication, r.places ?? [])],
-    ["Shut doors", shutDoorsRow(r.shutDoors)],
     ["Return visits", returnsRow(r.returning)],
     ["Head-start hit rate", headStartRow(r.doors)],
+    ...doorRows({ now: r.doorNumbers?.now ?? "", shutDoors: r.shutDoors, overdue: r.doorNumbers?.overdue ?? null, posting: r.doorNumbers?.posting ?? null, fixes: r.doorNumbers?.fixes ?? null }),
     ...GATE_ROWS.map((g): [string, ScoreboardRow] => [g.id, unmeasured(g.id, g.name, g.why)]),
   ]);
   const ORDER = ["Orders", "Mission progress", "Checklist completeness", "Coverage", "Public delivery", "People coverage", "Facts live per hour", "Cost per fact", "Audit accuracy",
-    "Freshness", "Shut doors", "Posted to live", "Time to core information live", "Look and feel", "Site speed and reliability", "Return visits", "Time to repair", "Repairs without code", "Proven fixes", "Report accuracy", "Head-start hit rate"];
+    "Freshness", "Shut doors", "Posted to live", "Overdue doors", "Time to core information live", "Look and feel", "Site speed and reliability", "Return visits", "Time to repair", "Repairs without code", "Proven fixes", "Report accuracy", "Head-start hit rate"];
   const rows = ORDER.map((id) => byId.get(id)!);
   const gateRows: ScoreboardGateRow[] | null = r.gates === null ? null : r.gates.map((g) => ({ name: g.name, state: g.state, sentence: g.sentence }));
   const gateSummary = r.gates === null ? null : summarizeGateHealth(r.gates);

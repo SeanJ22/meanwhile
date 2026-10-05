@@ -23,6 +23,7 @@ import { readSwitchConfig } from "@/lib/control-plane/data-business/switches.ts"
 import { adminGet } from "@/lib/control-plane/gateway/admin-get.ts";
 import { controlPlaneUrlFromEnv } from "@/lib/control-plane/repository/pg-store.ts";
 import { listDoors } from "@/lib/doors/registry.ts";
+import { readDoorNumbers } from "@/lib/control-plane/admin-view/door-numbers-read.ts";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -42,11 +43,13 @@ export async function GET(request: NextRequest) {
     const configRow = opened ? await attempt(() => opened.adminConfig.read(ADMIN_CONFIG_ID)) : null;
     const config = configRow !== null && configRow !== undefined && isAdminConfig(configRow.value) ? configRow.value : null;
     const coreIds = new Set(readSetting(config, CORE_ITEMS_SETTING, CORE_ITEMS_DEFAULT));
-    const [learningRead, history, doors, heartbeat, pipeline, contracts, capture, sentPlaces] = await Promise.all([
+    const doorList = opened ? await attempt(async () => (await listDoors(opened.doors)).doors) : null;
+    const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces] = await Promise.all([
       attempt(async () => { const r = await loadLearningTrends(observedAt); return r.kind === "UNREAD" ? null : r.facts; }),
       attempt(async () => (opened ? (await readV6History(opened, { scope: "us", asOf: observedAt, limit: 50 })).data : null)),
       attempt(async () => (opened ? projectDoors({ ...(await listDoors(opened.doors)), saves: [], observedAt }).counts : null)),
       attempt(async () => (opened ? (await opened.runnerHeartbeat.read(RUNNER_ID))?.value ?? null : null)),
+      attempt(() => readDoorNumbers({ now: observedAt, doors: doorList, config })),
       attempt(async () => { if (!url) return null; const r = await readPipeline(neon(url), observedAt); return r.state === "READ" ? r : null; }),
       attempt(async () => { const r = await readRoutinePublicationStatus(); if (r.kind !== "HELD") return null; const v = publicationView(r.view); return { readBack: v.counts.find((c) => c.verdict === "READER_VISIBLE")?.count ?? 0, total: v.total }; }),
       attempt(async () => {
@@ -72,6 +75,7 @@ export async function GET(request: NextRequest) {
       returning: capture === null ? null : { days: capture.length, readerDays: capture.reduce((a, d) => a + d.readers, 0), returningDays: capture.reduce((a, d) => a + d.returning, 0) },
       learning: v6LearningView(learning?.trends ?? buildLearningTrends([], observedAt), learning?.doors ?? null, learning === null ? null : learning.bankWriteErrors),
       doors: learning?.doors ?? null,
+      doorNumbers,
       gates: opened === null ? null : readGateHealth({ nowIso: observedAt, heartbeat, databaseReachable: null, lastDispatch: null, spend: null }),
       readiness: readinessCounts(recoveryWitnesses({
         bankEntriesInherited: learning?.doors.given ?? null, bankEntriesUsed: learning?.doors.used ?? null,

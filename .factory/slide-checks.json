@@ -689,6 +689,7 @@
     },
     "browser": "Chromium151 substituted for pinned1234; 11 skips preserved",
     "scope": "BX-01 canonical providers and owned runtime index connected; schema/migration River, separate Scout writer hunters, Admin counts admin still hooks pending",
-    "liveReturn": "unresolved; production control-plane connection absent, exact failure arrays requested through River;79/79 local receipt/frontier diagnostic tests pass, not live repair evidence"
+    "liveReturn": "unresolved; production control-plane connection absent, exact failure arrays requested through River;79/79 local receipt/frontier diagnostic tests pass, not live repair evidence",
+    "ready": "3aa215913aaa84c572cf781c43ccfd0578dca3cd"
   }
 }

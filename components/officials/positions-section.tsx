@@ -6,7 +6,6 @@ import { useEffect, useId, useRef, useState } from "react";
 import { CardSection } from "@/components/officials/card-section";
 import { useStanceTopics } from "@/hooks/use-stance-topics";
 import type { PositionAnswer } from "@/lib/corpus/positions";
-import { formatDateMDY } from "@/lib/map/format";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { sourceKindLabel } from "@/lib/corpus/source-kinds";
 

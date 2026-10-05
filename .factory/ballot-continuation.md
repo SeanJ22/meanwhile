@@ -1,6 +1,14 @@
-Current check update: exact 6c874b3ef81c1d2f8b53dbdefbab2853b2778268 remains UNPUBLISHED. Types and whole-tree lint pass (69 warnings). The four concurrent local shards overloaded the available CPUs and hit timer assertions plus a governance generator timeout; it was stopped, logs and manifests preserved. The same timer assertions reproduce on plain River. The source tree stayed clean. The full canonical command now runs without CI_TEST_SHARD or CI_TEST_FILES, with its standard two-file concurrency; /tmp/ballot-collector-final-canonical-full.log. Read current status/evidence for its final result, not an earlier partial run.
+## Latest certified boundary, 2026-10-05 20:46Z
 
-Latest certification update: c6ba was superseded after a new test reproduced rejection of normal legal role words. The fix normalizes only source-stated unambiguous words. A full end-to-end proof now publishes four roles and two amendments, showing only the amendment linked to the current adopted budget and leaving expired years blank. Final exact candidate is 6c874b3ef81c1d2f8b53dbdefbab2853b2778268, UNPUBLISHED and not yet ready, in /workspace/meanwhile-ballot-final-check. Canonical FULL shards 1/4..4/4, types and lint are running. Older running-candidate text below is historical. Read current status/evidence for the outcome.
+This supersedes historical candidate-running notes below. Exact READY **6c874b3ef81c1d2f8b53dbdefbab2853b2778268** passed canonical FULL: 9381 tests, 9370 passed, zero failed, 11 skipped, 41 suites, all 1067 files with standard two-file concurrency. Exact types and whole lint pass (69 warnings). Certificate and ballot-evidence.md retain results. System Chromium 151 is an explicit substitute; pinned 1234 did not run. No live acceptance claim.
+
+River folds 6c874b3e, whose tree includes returned CA-30/51 repairs certified separately at 8760257b34009d057c729bb949d6f882c89c8259. CA-37/52 are READY with exact registry/frontend/measures hooks in ballot.md. Normal worker-results publication is connected; only those other-owner calls remain. The later finance-count guard 7e5ba7e3c is excluded from this READY tree and has only focused 4/4 evidence. CA-25 normal scheduling, budget-guarded Slide transport/edge publication and legacy-part migration remain WIP. Preserve all 52 legacy unnumbered reaction IDs.
+
+Failed a344/d54/c6ba candidates remain recovery branches and are never fold boundaries. The overloaded four-shard run was stopped; canonical standard-concurrency FULL subsequently passed its timer/governance/keep-warm cases. No timeout, assertion, quota or production control changed. There are no ongoing certification processes.
+
+Before resuming, fetch explicit main/board refs and read current assignments/returns. Exit without writing if reassigned to Claude. Read ballot.md for the current token or lock:none; normal-push only stream/ballot, no force, no main/river/board writes. Latest assignment at board 295adad2d remains codex-ballot; returns unchanged through 17:40Z. Sean receives no routine questions; route how decisions under needs_River.
+
+Historical notes below preserve work and checkpoints; their running/assignment claims do not override this section or current ballot.md.
 
 ## Current Codex handback run, 2026-10-05
 

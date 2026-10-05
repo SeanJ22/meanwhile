@@ -1,0 +1,125 @@
+{
+  "commit": "6c874b3ef81c1d2f8b53dbdefbab2853b2778268",
+  "tree": "efcf1b641e33bd73a9e687225a6040e8677de19d",
+  "node": "v24.19.0",
+  "configHash": "7e213bb4b77d74c5005427c7a18e94443cf468469fa5b4d0c175f0b055d36602",
+  "suiteHash": "4fc0896483c04de30a2db67ad5ccb84b080f04eb40d82d18c072962daac45af1",
+  "startedAt": "2026-10-05T20:10:52.977Z",
+  "status": "passed",
+  "exitCode": 0,
+  "elapsedMs": 1520683,
+  "workingTreeStatus": "",
+  "concurrency": {
+    "available": 4,
+    "effective": 2
+  },
+  "shard": {
+    "index": 1,
+    "count": 1
+  },
+  "selectedFileCount": 1067,
+  "testFileInventoryHash": "7235c77e92bb576168c5e9e8fd22a39469535dbc896f5958b951abefd3b240ec",
+  "counts": {
+    "tests": 9381,
+    "failed": 0,
+    "passed": 9370,
+    "cancelled": 0,
+    "skipped": 11,
+    "todo": 0,
+    "topLevel": 9244,
+    "suites": 41
+  },
+  "testDurationMs": 1520468.768133,
+  "timingComplete": true,
+  "timingIssues": [],
+  "skippedFiles": [
+    {
+      "file": "tests/acquisition-repair-profile.test.ts",
+      "skipped": 1
+    },
+    {
+      "file": "tests/acquisition-repair-roster.test.ts",
+      "skipped": 1
+    },
+    {
+      "file": "tests/beacon-guard.test.ts",
+      "skipped": 1
+    },
+    {
+      "file": "tests/deploy-paths.test.ts",
+      "skipped": 2
+    },
+    {
+      "file": "tests/feedback.test.ts",
+      "skipped": 1
+    },
+    {
+      "file": "tests/new-zip-render.test.ts",
+      "skipped": 1
+    },
+    {
+      "file": "tests/pilot-runtime-config.test.ts",
+      "skipped": 1
+    },
+    {
+      "file": "tests/pilot-task-installer.test.ts",
+      "skipped": 2
+    },
+    {
+      "file": "tests/reader-last-mile-trace.test.ts",
+      "skipped": 1
+    }
+  ],
+  "selector": {
+    "plan": "FULL",
+    "needsBrowser": true,
+    "log": "/tmp/ballot-collector-final-selector.log"
+  },
+  "types": {
+    "command": "corepack pnpm exec tsc --noEmit",
+    "exitCode": 0
+  },
+  "lint": {
+    "command": "corepack pnpm exec eslint .",
+    "exitCode": 0,
+    "errors": 0,
+    "warnings": 69
+  },
+  "environment": {
+    "unset": [
+      "DATABASE_URL",
+      "WTP_ASSET_STORE"
+    ],
+    "noNextBuild": true,
+    "placeReferencesRebuilt": true,
+    "fullHistory": true
+  },
+  "browser": {
+    "kind": "EXPLICIT_SYSTEM_SUBSTITUTE",
+    "executable": "/usr/lib/chromium/chromium",
+    "pinnedBuild1234Ran": false
+  },
+  "readySteps": [
+    "CA-37",
+    "CA-52"
+  ],
+  "hooksPending": {
+    "CA-37": [
+      "registry: lib/doors/registry.ts",
+      "frontend: components/map/popup/district-popup.tsx and entity-modal.tsx"
+    ],
+    "CA-52": [
+      "registry: lib/doors/registry.ts",
+      "measures: lib/civic-data/held-place-capture.ts (Admin FIN evidence)"
+    ]
+  },
+  "notClaimed": [
+    "deployed/live acceptance",
+    "CA-25 completion",
+    "CA-21 completion",
+    "all cold section11 questions under three seconds"
+  ],
+  "laterWipExcluded": [
+    "7e5ba7e3c: CA-21 publisher count guard"
+  ]
+}

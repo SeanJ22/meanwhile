@@ -474,7 +474,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     readerProjection: { id: "reviewed-venue-resolutions", consumers: ["meetings acquisition adapters", "map"] },
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: ["lib/meetings/venue-cache.ts"],
-    lkgBehavior: "A bad address, coordinate, scope key, or source receipt holds only venue resolutions and leaves their prior GOOD version available to meeting acquisition.",
+    lkgBehavior: "Pins are promoted by the meeting passes themselves from automatic Census matches (BX-09). A bad address, coordinate, scope key, or source receipt holds only venue resolutions and leaves their prior GOOD version available to meeting acquisition.",
   },
   {
     id: "meeting-body-crosswalk",

@@ -711,6 +711,7 @@ export async function abandonAttempt(
     ? denyByPolicy(taskRow.value, closedAttempt, input.reason.includes("AUDIT_ROLLING_COST_CEILING")
       ? "The existing rolling-cost window must permit admission; never raise the ceiling to clear this refusal."
       : input.reason.includes("AUDIT_MODEL_TRANSPORT_UNAVAILABLE") ? "The configured audit model transport must become available."
+        : input.reason.includes("SCOUT_POLICY_DENIED") ? "Our own spending guard refused the request before anything was sent; the work is checked again on a fixed pace and goes back in line when the guard permits it."
         : "The named capability or policy refusal must be resolved under current project law before reauthorization.")
     : reclaim(taskRow.value, closedAttempt);
   const task =

@@ -42,6 +42,7 @@ import {
   cacheTtlOrderProblems,
   withCacheBreakpoints,
   scoutExecutor,
+  OUTAGE_TIER_AFTER,
   ModelTransportError,
   dispositionForScout,
   type ModelRequest,
@@ -49,7 +50,7 @@ import {
   type ModelTransport,
 } from "../lib/control-plane/scheduler/scout-executor.ts";
 import type { ArtifactProvenance, InheritedEvidence, ScoutToolkit, ScoutToolContext } from "../lib/control-plane/scheduler/scout-contract.ts";
-import { MIN_DISTINCT_RUNGS, classifyPriorRung, validateScoutFinish, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
+import { MIN_DISTINCT_RUNGS, classifyPriorRung, consecutiveTransportFailures, validateScoutFinish, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import {
   RESEARCH_BOUNDS,
   researchWorkerCapacity,
@@ -792,6 +793,60 @@ test("CH-07: a hunter past its wall clock stops, saves the steps walked as a NO_
   assert.equal(slow.requests.length, 1, "no further model request is sent after the limit");
   assert.match(result.detail, /\(TIMEOUT\)/);
   assert.equal(isArguedAbsence({ ...r, researchRole: "DETECTIVE" }, 1), false, "a timeout is never filed as a 30-day absence");
+});
+
+/* -------------------------------------------------------------- 5a-2 (CH-30 AI service outage) */
+
+test("CH-30: when the AI service stops answering mid-walk, the steps walked are kept as the case file", async () => {
+  const { repos, task } = await registered();
+  const scripted = scriptedTransport([
+    [toolUse("u1", "fetch_public", { url: "https://a.gov/", rung: "primary-site-navigation", why: "start" })],
+  ]);
+  let calls = 0;
+  const outage: ModelTransport & { requests: ModelRequest[] } = Object.assign(
+    async (request: ModelRequest) => {
+      calls += 1;
+      if (calls === 1) return scripted(request);
+      throw new Error('HTTP 529: {"type":"error","error":{"type":"overloaded_error","message":"Overloaded"}}');
+    },
+    { requests: scripted.requests },
+  );
+  const { exec, results } = executorWith(outage, fakeToolkit(), { minRungs: 1 });
+  await dispatchOne(repos, {
+    obligation: scheduledFixture(OBLIGATION, NOW_MS),
+    routeTaskId: task.id,
+    holder: "t",
+    now: NOW,
+    leaseTtlMs: 60_000,
+    maturity: () => "UNGRADUATED",
+    executor: exec,
+  });
+  const r = results[0];
+  assert.equal(r.refusal?.[0].code, "SCOUT_TRANSPORT_FAILED", "the cause is still named");
+  assert.equal(r.rungs.length, 1, "the step walked before the outage is kept");
+  assert.match(r.nextRungs[0], /fetch_public.*a\.gov/, "the next agent resumes from it");
+  assert.match(r.narrative, /kept/);
+  assert.equal(consecutiveTransportFailures([r]), 1);
+  assert.equal(consecutiveTransportFailures([{ refusal: null }, r, r]), 2);
+  assert.equal(consecutiveTransportFailures([r, { refusal: null }]), 0, "any other ending stops the count");
+});
+
+test("CH-30: after repeated AI service failures the next attempt starts a tier up, and a healthy history stays put", async () => {
+  const startModel = async (transportFailures: number | undefined) => {
+    const { repos, task } = await registered();
+    const scripted = scriptedTransport([[finish("f", "NO_PROGRESS", { rungsWalked: [], nextRungs: ["x"] })]]);
+    const { exec, results } = executorWith(scripted, fakeToolkit(), {
+      minRungs: 0,
+      inherited: { artifactIds: [], summary: "none", ...(transportFailures === undefined ? {} : { transportFailures }) },
+    });
+    await dispatchOne(repos, { obligation: scheduledFixture(OBLIGATION, NOW_MS), routeTaskId: task.id, holder: "t", now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec });
+    return { model: scripted.requests[0]?.model, klass: results[0]?.modelClass };
+  };
+  const steady = await startModel(1);
+  const moved = await startModel(OUTAGE_TIER_AFTER);
+  assert.notEqual(moved.klass, steady.klass, "two failures in a row move the start");
+  assert.notEqual(moved.model, steady.model);
+  assert.equal((await startModel(undefined)).klass, steady.klass);
 });
 
 /* -------------------------------------------------------------- 5b (early stop) */

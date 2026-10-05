@@ -312,7 +312,7 @@ test("BOUND: within its band a row gets a Scout within ⌈(A + 1) / c⌉ cycles,
 });
 
 test("BAND ORDER STANDS: a band-1 row whose backoff just ended still goes ahead of the longest-waiting band-2 row", () => {
-  const pilot = row("pima-walled", TIE, "az:county:county-of-pima");
+  const pilot = { ...row("pima-walled", TIE, "az:county:county-of-pima"), readerImpactAt: "2026-09-01T00:00:00.000Z" };
   const nowMs = START_MS;
   const debt = recordFailure(null, { obligationId: pilot.id, cause: "UPSTREAM_ERROR", detail: "x", target: pilot.id, dueAt: TIE, now: new Date(nowMs - 20 * 60_000).toISOString() });
   const due = dueNow(scheduleAll([pilot, NEVER_TRIED, EARLY[0]!], nowMs), nowMs);

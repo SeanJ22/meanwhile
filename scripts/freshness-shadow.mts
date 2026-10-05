@@ -254,7 +254,7 @@ import { failureResponderExecutor, plainRereadSlot, readSubjectScoutHistory, sol
 import { buildScoutToolkit, scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
 import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
-import { MIN_DISTINCT_RUNGS, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
+import { consecutiveTransportFailures, MIN_DISTINCT_RUNGS, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import {
   RESEARCH_BOUNDS,
   RESEARCH_FORMAT_VERSION,
@@ -371,6 +371,7 @@ import {
 } from "../lib/control-plane/expansion/spend-holds.ts";
 import { evaluateAssignmentFromRecords, memberRecordsForSend } from "../lib/control-plane/assignment-completion.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
+import { runIndependentRuntimePass, type IndependentRuntimeOutcome } from "../lib/ops/independent-runtime-pass.ts";
 import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/connect-retry.ts";
 import {
   isControlPlaneRequestTimeout,
@@ -1779,9 +1780,8 @@ let expansionReading: ExpansionCycleReading | null = expansionBudget === null ||
  * The targets: this cycle's DISPATCH intents, the DISPATCH targets an earlier
  * cycle left with work still owed, and every selected expansion scope. For each
  * government in them, every requirement the promoted registry defines that no
- * clock carries is written as a standing obligation, marked OWNER_DISPATCH, at
- * most DISPATCH_WORK_WRITE_BUDGET rows this cycle and DISPATCH_WORK_TARGET_CAP
- * for one target; the rest is deferred and counted. The new rows join the
+ * clock carries is written as a standing obligation, marked OWNER_DISPATCH.
+ * There is no write budget and no per-target cap in the code. The new rows join the
  * corpus next cycle through their providers. Nothing here calls a model,
  * appends an intent, or reads a ceiling it could raise: created model-class
  * work waits behind the same lane, the same Fleet ceiling and the same scope
@@ -2293,6 +2293,7 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
     summary: [...manualLines, ...lines].join("\n"),
     provenance,
     priorRungs,
+    transportFailures: consecutiveTransportFailures(all),
     nextRungs: Array.isArray(all.at(-1)?.nextRungs)
       ? all.at(-1)!.nextRungs.filter((value): value is string => typeof value === "string")
       : [],
@@ -3214,17 +3215,26 @@ async function runAutonomousProcesses() {
   }
   return report;
 }
-let meetingsDiscovery: MeetingsDiscoveryPass | null = null;
+let meetingsDiscovery = null as MeetingsDiscoveryPass | null;
 let meetingsDiscoveryState = "not run: the meetings discovery pass has not started";
-let campaignSites: CampaignSiteCycleReport | null = null;
+let campaignSites = null as CampaignSiteCycleReport | null;
 let campaignSitesState = "not run: the campaign-site pass has not started";
-let candidatePublications: CandidatePublicationCycleReport | null = null;
+let candidatePublications = null as CandidatePublicationCycleReport | null;
 let candidatePublicationsState = "not run: no original-scope candidacy admission";
 const MEETINGS_DISCOVERY_ENABLED = process.env.WTP_MEETINGS_DISCOVERY !== "off";
 let meetingsDiscoveryByOutcome: Record<string, number> = {};
 let roundVaultIndex: VaultIndex | undefined;
 let roundVaultRead: Promise<VaultIndex> | undefined;
-const readRoundVault = (signal?: AbortSignal) => roundVaultRead ??= indexVault(join(ROOT, ...VAULT_DIR), undefined, { signal }).then(index => (roundVaultIndex=index,index));
+let discoveryLaneRun: Promise<readonly IndependentRuntimeOutcome[]> | null = null;
+/* One full listing per round; later captures join it through includeVaultCapture. The step is timed once in the round's phases. */
+const readRoundVault = (signal?: AbortSignal) => roundVaultRead ??= (async () => {
+  const startedMs = Date.now();
+  const index = await indexVault(join(ROOT, ...VAULT_DIR), undefined, { signal });
+  roundVaultIndex = index;
+  const phase = cycleObservation.note("vault-index", Date.now() - startedMs);
+  console.log(`  phase ${phase.name}: ${phase.durationMs}ms`);
+  return index;
+})();
 try {
 
 /*
@@ -3248,6 +3258,8 @@ try {
 /* On unless the kill switch says off (NS28, decided by the owner 2026-09-24: meetings discovery is always on). */
 const MEETINGS_DISCOVERY_MAX_WALKS = 12;
 const MEETINGS_DISCOVERY_BUDGET_MS = 60_000;
+/* The meetings lane's own no-progress limit: this many walks in a row that fail or run out of time and the lane stops; the rest stay due. */
+const DISCOVERY_NO_PROGRESS_LIMIT = 5;
 /*
  * The search rung's caps (Brave and Exa combined, pointers only) are
  * SEARCH_PER_CYCLE / SEARCH_PER_DAY, set with the one paid-search budget at
@@ -3255,131 +3267,132 @@ const MEETINGS_DISCOVERY_BUDGET_MS = 60_000;
  * conservative dial agreed with the data-plane owner; an env value may lower or
  * raise them within 0..1000.
  */
-if (!MEETINGS_DISCOVERY_ENABLED) {
-  meetingsDiscoveryState = "OFF: WTP_MEETINGS_DISCOVERY=off, the kill switch";
-} else if (dry || canary) {
-  meetingsDiscoveryState = "not run: a dry or canary cycle walks nothing";
-} else if ("unreadable" in gapLedgerRead) {
-  meetingsDiscoveryState = `not run: ${gapLedgerRead.unreadable}`;
-} else {
-  const discoveryDeadlineMs = Date.now() + MEETINGS_DISCOVERY_BUDGET_MS;
-  const openDiscovery = fleetSafety.guardedOpenBytes("discovery-web", "meetings-discovery", fetch, { followRedirects: false });
-  /* Named to the stall diagnostic while it runs: its waits on government sites are not store calls, so nothing else would name them. */
-  const leaveDiscovery = pending.enter("meetings-discovery");
-  try {
-    /* The saved methods live in the field manual; the runner consults them on every walk. */
-    const manual = await repos.fieldManual.read("live");
-    /*
-     * Search: pointers only, and PAID, so it exists only while the owner's switch in Admin allows it
-     * (`AdminConfig.discoverySearch`, read at cycle start). Otherwise no search step is built at all: no request,
-     * no refusal, no budget-ledger write. When it is on, the env caps bind it per cycle and per day, on FleetSafety's
-     * own key, and every request sent is charged. `searchBudget` is the one budget the Scout tool also draws on.
-     */
-    const discoverySearch = searchBudget === null ? null : makeDiscoverySearch({
-      braveKey: process.env.BRAVE_SEARCH_API_KEY,
-      exaKey: process.env.EXA_API_KEY,
-      budget: searchBudget,
-    });
-    const directoryItems = (await repos.workItems.list()).map(row => row.value).filter(item => item.publicationOutcome?.bodyIds?.length);
-    const directoryRegistry = directoryItems.length ? await readRegistryRuntimeProjection({ bypassCache: true }) : null;
-    if (directoryRegistry && directoryRegistry.kind !== "PROMOTED") throw new Error("Published body directory cannot be read for meeting discovery; its source work remains owed.");
-    const meetingHints = directoryRegistry?.kind === "PROMOTED" ? directoryMeetingHints(directoryItems, directoryRegistry.value, ROUTE_HINTS) : ROUTE_HINTS;
-    let costSeq = 0;
-    const readOfficialText = async (held: HeldVaultArtifact) => {
-      const signal = AbortSignal.timeout(Math.max(1, Math.min(VAULT_READ_TIMEOUT_MS, discoveryDeadlineMs - Date.now())));
-      try { return new TextDecoder().decode(await readHeldBytes(held, signal)); }
-      catch (error) {
-        if (Date.now() < discoveryDeadlineMs) runtimeConditions.push(`Official-source linking evidence unreadable: ${held.id}`);
-        throw error;
-      }
-    };
-    let officialPagesRead: Promise<{canonicalUrl:string;readText:()=>Promise<string>}[]> | undefined;
-    const readOfficialPages = () => officialPagesRead ??= (async () => {
-      const index = await readRoundVault(AbortSignal.timeout(Math.max(1, discoveryDeadlineMs - Date.now())));
-      const pages: {canonicalUrl:string;readText:()=>Promise<string>}[] = [];
-      for (const held of index.byId.values()) {
-        if (!held.canonicalUrl || held.tier === "RESTRICTED_RAW" || held.retentionPolicy === "DIAGNOSTIC" ||
-          held.httpStatus === null || held.httpStatus < 200 || held.httpStatus >= 300 || !/html/i.test(held.contentType)) continue;
-        pages.push({ canonicalUrl: held.canonicalUrl, readText: () => readOfficialText(held) });
-      }
-      return pages;
-    })();
-    meetingsDiscovery = await runMeetingsDiscovery(repos, {
-      needs: discoveryNeedsToWalk(gapLedgerRead.needs, [...dispatchedNeeds.values()], need => {
-        const id = meetingsDiscoveryObligationId(need);
-        return (ONLY === null || id.startsWith(ONLY)) && (IDS === null || IDS.has(id));
-      }),
-      cycleIndex: Math.floor(Date.parse(NOW) / 3_600_000),
-      maxWalks: MEETINGS_DISCOVERY_MAX_WALKS,
-      /* An owner-dispatched meetings-discovery obligation goes first; one with an open occurrence is another executor's. */
-      firstIds: new Set(sync.all.filter((o) => o.id.startsWith("freshness:meetings-discovery:")).map((o) => o.subjectId)),
-      skipIds: new Set(
-        sync.all.filter((o) => o.id.startsWith("freshness:meetings-discovery:") && o.openOccurrenceId !== null).map((o) => o.subjectId),
-      ),
-      runtime: {
-        websiteSize,
-        open: async ({ url, headers, timeoutMs }) => {
-          const got = await openDiscovery({ url, headers, timeoutMs });
-          return {
-            status: got.status,
-            body: new TextDecoder().decode(got.bytes),
-            bytes: got.bytes.byteLength,
-            contentType: got.contentType,
-            location: got.location ?? null,
-            transportError: got.transportError,
-          };
+const runMeetingsDiscoveryPass = async (discoveryDeadlineMs: number, maxWalks: number): Promise<void> => {
+  if (!MEETINGS_DISCOVERY_ENABLED) {
+    meetingsDiscoveryState = "OFF: WTP_MEETINGS_DISCOVERY=off, the kill switch";
+  } else if (dry || canary) {
+    meetingsDiscoveryState = "not run: a dry or canary cycle walks nothing";
+  } else if ("unreadable" in gapLedgerRead) {
+    meetingsDiscoveryState = `not run: ${gapLedgerRead.unreadable}`;
+  } else {
+    /* The caller sets the deadline: 60 s on the serial path, the time left in the round on its own lane. */
+    const openDiscovery = fleetSafety.guardedOpenBytes("discovery-web", "meetings-discovery", fetch, { followRedirects: false });
+    /* Named to the stall diagnostic while it runs: its waits on government sites are not store calls, so nothing else would name them. */
+    const leaveDiscovery = pending.enter("meetings-discovery");
+    try {
+      /* The saved methods live in the field manual; the runner consults them on every walk. */
+      const manual = await repos.fieldManual.read("live");
+      /*
+       * Search: pointers only, and PAID, so it exists only while the owner's switch in Admin allows it
+       * (`AdminConfig.discoverySearch`, read at cycle start). Otherwise no search step is built at all: no request,
+       * no refusal, no budget-ledger write. When it is on, the env caps bind it per cycle and per day, on FleetSafety's
+       * own key, and every request sent is charged. `searchBudget` is the one budget the Scout tool also draws on.
+       */
+      const discoverySearch = searchBudget === null ? null : makeDiscoverySearch({
+        braveKey: process.env.BRAVE_SEARCH_API_KEY,
+        exaKey: process.env.EXA_API_KEY,
+        budget: searchBudget,
+      });
+      const directoryItems = (await repos.workItems.list()).map(row => row.value).filter(item => item.publicationOutcome?.bodyIds?.length);
+      const directoryRegistry = directoryItems.length ? await readRegistryRuntimeProjection({ bypassCache: true }) : null;
+      if (directoryRegistry && directoryRegistry.kind !== "PROMOTED") throw new Error("Published body directory cannot be read for meeting discovery; its source work remains owed.");
+      const meetingHints = directoryRegistry?.kind === "PROMOTED" ? directoryMeetingHints(directoryItems, directoryRegistry.value, ROUTE_HINTS) : ROUTE_HINTS;
+      let costSeq = 0;
+      const readOfficialText = async (held: HeldVaultArtifact) => {
+        const signal = AbortSignal.timeout(Math.max(1, Math.min(VAULT_READ_TIMEOUT_MS, discoveryDeadlineMs - Date.now())));
+        try { return new TextDecoder().decode(await readHeldBytes(held, signal)); }
+        catch (error) {
+          if (Date.now() < discoveryDeadlineMs) runtimeConditions.push(`Official-source linking evidence unreadable: ${held.id}`);
+          throw error;
+        }
+      };
+      let officialPagesRead: Promise<{canonicalUrl:string;readText:()=>Promise<string>}[]> | undefined;
+      const readOfficialPages = () => officialPagesRead ??= (async () => {
+        const index = await readRoundVault(AbortSignal.timeout(Math.max(1, discoveryDeadlineMs - Date.now())));
+        const pages: {canonicalUrl:string;readText:()=>Promise<string>}[] = [];
+        for (const held of index.byId.values()) {
+          if (!held.canonicalUrl || held.tier === "RESTRICTED_RAW" || held.retentionPolicy === "DIAGNOSTIC" ||
+            held.httpStatus === null || held.httpStatus < 200 || held.httpStatus >= 300 || !/html/i.test(held.contentType)) continue;
+          pages.push({ canonicalUrl: held.canonicalUrl, readText: () => readOfficialText(held) });
+        }
+        return pages;
+      })();
+      meetingsDiscovery = await runMeetingsDiscovery(repos, {
+        needs: discoveryNeedsToWalk(gapLedgerRead.needs, [...dispatchedNeeds.values()], need => {
+          const id = meetingsDiscoveryObligationId(need);
+          return (ONLY === null || id.startsWith(ONLY)) && (IDS === null || IDS.has(id));
+        }),
+        cycleIndex: Math.floor(Date.parse(NOW) / 3_600_000),
+        maxWalks, rotationStep: MEETINGS_DISCOVERY_MAX_WALKS, noProgressLimit: DISCOVERY_NO_PROGRESS_LIMIT,
+        /* An owner-dispatched meetings-discovery obligation goes first; one with an open occurrence is another executor's. */
+        firstIds: new Set(sync.all.filter((o) => o.id.startsWith("freshness:meetings-discovery:")).map((o) => o.subjectId)),
+        skipIds: new Set(
+          sync.all.filter((o) => o.id.startsWith("freshness:meetings-discovery:") && o.openOccurrenceId !== null).map((o) => o.subjectId),
+        ),
+        runtime: {
+          websiteSize,
+          open: async ({ url, headers, timeoutMs }) => {
+            const got = await openDiscovery({ url, headers, timeoutMs });
+            return {
+              status: got.status,
+              body: new TextDecoder().decode(got.bytes),
+              bytes: got.bytes.byteLength,
+              contentType: got.contentType,
+              location: got.location ?? null,
+              transportError: got.transportError,
+            };
+          },
+          spaceOut: spacer,
+          vault: async (artifact, bytes) => {
+            const stored=await vault.put(artifact,bytes);
+            if(stored.stored && roundVaultIndex) includeVaultCapture(roundVaultIndex,artifact,stored.where,join(ROOT,...VAULT_DIR));
+            return stored;
+          },
+          readOfficialPages,
+          readOfficialPageTextFor: async artifact => {
+            const held = (await readRoundVault()).byHash.get(artifact.contentHash.slice("sha256-".length));
+            if (!held) throw new Error(`Official-source linking capture is not held: ${artifact.id}`);
+            return readOfficialText(held);
+          },
+          now: nowIso,
+          budget: {
+            spent: () => Date.now() >= discoveryDeadlineMs,
+            remainingMs: () => Math.max(0, discoveryDeadlineMs - Date.now()),
+          },
+          recipes: knownRecipes(manual?.value.entries ?? []),
+          /* Committed route hints: the current official site where the recorded address is stale, and routes found on a government's own publications. */
+          routeHints: meetingHints,
+          ...(discoverySearch === null ? {} : { search: discoverySearch }),
+          searchScopeFor: (subjectId) => huntSearchScope({ selected: config?.expansionScopes ?? [], plan: expansionPlan, subjectId }),
+          recordCost: async (entry) => {
+            costSeq += 1;
+            await repos.costs.append(entry.workItemId, `ce-ds-${fingerprint([entry.attemptId, entry.source, entry.recordedAt, costSeq])}`,
+              costEntryWithModel(entry, null), nowIso());
+          },
         },
-        spaceOut: spacer,
-        vault: async (artifact, bytes) => {
-          const stored=await vault.put(artifact,bytes);
-          if(stored.stored && roundVaultIndex) includeVaultCapture(roundVaultIndex,artifact,stored.where,join(ROOT,...VAULT_DIR));
-          return stored;
-        },
-        readOfficialPages,
-        readOfficialPageTextFor: async artifact => {
-          const held = (await readRoundVault()).byHash.get(artifact.contentHash.slice("sha256-".length));
-          if (!held) throw new Error(`Official-source linking capture is not held: ${artifact.id}`);
-          return readOfficialText(held);
-        },
-        now: nowIso,
-        budget: {
-          spent: () => Date.now() >= discoveryDeadlineMs,
-          remainingMs: () => Math.max(0, discoveryDeadlineMs - Date.now()),
-        },
-        recipes: knownRecipes(manual?.value.entries ?? []),
-        /* Committed route hints: the current official site where the recorded address is stale, and routes found on a government's own publications. */
-        routeHints: meetingHints,
-        ...(discoverySearch === null ? {} : { search: discoverySearch }),
-        searchScopeFor: (subjectId) => huntSearchScope({ selected: config?.expansionScopes ?? [], plan: expansionPlan, subjectId }),
-        recordCost: async (entry) => {
-          costSeq += 1;
-          await repos.costs.append(entry.workItemId, `ce-ds-${fingerprint([entry.attemptId, entry.source, entry.recordedAt, costSeq])}`,
-            costEntryWithModel(entry, null), nowIso());
-        },
-      },
-    });
-    meetingsDiscoveryState = "ran";
-  } catch (error) {
-    meetingsDiscoveryState = `could not run: ${error instanceof Error ? error.message : String(error)}`;
-    runtimeConditions.push(`meetings discovery ${meetingsDiscoveryState}`);
-  } finally {
-    leaveDiscovery();
+      });
+      meetingsDiscoveryState = "ran";
+    } catch (error) {
+      meetingsDiscoveryState = `could not run: ${error instanceof Error ? error.message : String(error)}`;
+      runtimeConditions.push(`meetings discovery ${meetingsDiscoveryState}`);
+    } finally {
+      leaveDiscovery();
+    }
   }
-}
-meetingsDiscoveryByOutcome = (meetingsDiscovery?.walked ?? []).reduce<Record<string, number>>(
-  (m, a) => ((m[a.outcome] = (m[a.outcome] ?? 0) + 1), m),
-  {},
-);
-console.log(
-  `  meetings discovery: ${meetingsDiscoveryState}` +
-    (meetingsDiscovery === null
-      ? ""
-      : ` · ${meetingsDiscovery.walked.length} walked ${JSON.stringify(meetingsDiscoveryByOutcome)} · ` +
-        `${meetingsDiscovery.notDue.length} not yet due · ${meetingsDiscovery.deferred.length} deferred (budget)` +
-        (meetingsDiscovery.cutShort.length > 0 ? `, ${meetingsDiscovery.cutShort.length} of them cut short before any find` : "") +
-        (meetingsDiscovery.walkFailures.length > 0 ? ` · ${meetingsDiscovery.walkFailures.length} walk(s) failed on our side: ${meetingsDiscovery.walkFailures.map((f) => f.jurisdictionId).join(", ")}` : "")),
-);
-finishPhase("meetings-discovery");
+  meetingsDiscoveryByOutcome = (meetingsDiscovery?.walked ?? []).reduce<Record<string, number>>(
+    (m, a) => ((m[a.outcome] = (m[a.outcome] ?? 0) + 1), m),
+    {},
+  );
+  console.log(
+    `  meetings discovery: ${meetingsDiscoveryState}` +
+      (meetingsDiscovery === null
+        ? ""
+        : ` · ${meetingsDiscovery.walked.length} walked ${JSON.stringify(meetingsDiscoveryByOutcome)} · ` +
+          `${meetingsDiscovery.notDue.length} not yet due · ${meetingsDiscovery.deferred.length} deferred (budget)` +
+          (meetingsDiscovery.cutShort.length > 0 ? `, ${meetingsDiscovery.cutShort.length} of them cut short before any find` : "") +
+          (meetingsDiscovery.walkFailures.length > 0 ? ` · ${meetingsDiscovery.walkFailures.length} walk(s) failed on our side: ${meetingsDiscovery.walkFailures.map((f) => f.jurisdictionId).join(", ")}` : "")),
+  );
+};
 
 /*
  * **THE CAMPAIGN-SITE PASS: HELD RESEARCH REACHES THE PUBLICATION DOOR, FREE.**
@@ -3395,105 +3408,134 @@ finishPhase("meetings-discovery");
  * its approvals publish through the derived routine contract
  * `candidate-campaign-sites-derived`, with no owner step.
  */
-if (dry || canary || ONLY !== null || IDS !== null) {
-  campaignSitesState = "not run: a dry, canary, filtered cycle reads nothing";
-} else if (intents.runnerPause.paused) {
-  campaignSitesState = "not run: the owner has paused the runner";
-} else {
-  const leaveCampaignSites = pending.enter("campaign-sites");
-  /* Loading is included in elapsed-time reporting. */
-  const campaignStartedMs = Date.now();
-  try {
-    const pass = await (async () => {
-      const holdings = candidateEnrichmentHoldings();
-      if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
-      const { subjects, linked } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
-      const vaultIndex = await readRoundVault();
-      /* An unreadable manifest holds only the Marginalia answers back a cycle; the held Scout findings still go through. */
-      let stagingManifest: ReturnType<typeof readStagingManifest> = null;
-      try {
-        stagingManifest = readStagingManifest(ROOT);
-      } catch (error) {
-        runtimeConditions.push(`campaign sites: the staging manifest could not be read (${error instanceof Error ? error.message : String(error)}); held Marginalia answers wait for the next cycle`);
-      }
-      const held = await heldMarginaliaFromManifest(ROOT, stagingManifest, vaultIndex, nowIso());
-      const openCampaignSite = fleetSafety.guardedOpenBytes("discovery-web", "campaign-site-chain", fetch, { followRedirects: false });
-      const report = await runCampaignSiteCycle({
-        startedAtMs: campaignStartedMs,
-        repos,
-        subjects,
-        /* Their leads are read last: a site approved for a candidacy that already carries a campaign link is held, never published. */
-        linkedCandidacies: linked,
-        marginalia: held.responses,
-        gate: readActivationGate(ROOT),
-        now: nowIso(),
-        clock: () => Date.now(),
-        sleep: (ms) => new Promise((done) => setTimeout(done, ms)),
-        open: async ({ url, headers, timeoutMs }) => {
-          const got = await openCampaignSite({ url, headers, timeoutMs });
-          return { status: got.status, body: got.bytes, contentType: got.contentType, location: got.location ?? null, transportError: got.transportError };
-        },
-        spaceOut: spacer,
-        vaultRoot: join(ROOT, ...VAULT_DIR),
-        heldVault: vaultIndex,
-        methodVersion: (await readMethodKnowledge(repos)).version,
-      });
-      return {
-        report,
-        state:
-          `ran over ${subjects.size} canonical candidacies (${linked.size} already carrying a campaign link, read last) and ${held.responses.length} held Marginalia answer(s) of ${held.entries} staged` +
-          (held.unreadable > 0 ? ` (${held.unreadable} answer(s) the vault could not produce)` : ""),
-      };
-    })();
-      campaignSites = pass.report;
-      campaignSitesState = pass.state;
-  } catch (error) {
-    campaignSitesState = `could not run: ${error instanceof Error ? error.message : String(error)}`;
-    runtimeConditions.push(`campaign-site pass ${campaignSitesState}`);
-  } finally {
-    leaveCampaignSites();
+const runCampaignSitesPass = async (): Promise<void> => {
+  if (dry || canary || ONLY !== null || IDS !== null) {
+    campaignSitesState = "not run: a dry, canary, filtered cycle reads nothing";
+  } else if (intents.runnerPause.paused) {
+    campaignSitesState = "not run: the owner has paused the runner";
+  } else {
+    const leaveCampaignSites = pending.enter("campaign-sites");
+    /* Loading is included in elapsed-time reporting. */
+    const campaignStartedMs = Date.now();
+    try {
+      const pass = await (async () => {
+        const holdings = candidateEnrichmentHoldings();
+        if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
+        const { subjects, linked } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
+        const vaultIndex = await readRoundVault();
+        /* An unreadable manifest holds only the Marginalia answers back a cycle; the held Scout findings still go through. */
+        let stagingManifest: ReturnType<typeof readStagingManifest> = null;
+        try {
+          stagingManifest = readStagingManifest(ROOT);
+        } catch (error) {
+          runtimeConditions.push(`campaign sites: the staging manifest could not be read (${error instanceof Error ? error.message : String(error)}); held Marginalia answers wait for the next cycle`);
+        }
+        const held = await heldMarginaliaFromManifest(ROOT, stagingManifest, vaultIndex, nowIso());
+        const openCampaignSite = fleetSafety.guardedOpenBytes("discovery-web", "campaign-site-chain", fetch, { followRedirects: false });
+        const report = await runCampaignSiteCycle({
+          startedAtMs: campaignStartedMs,
+          repos,
+          subjects,
+          /* Their leads are read last: a site approved for a candidacy that already carries a campaign link is held, never published. */
+          linkedCandidacies: linked,
+          marginalia: held.responses,
+          gate: readActivationGate(ROOT),
+          now: nowIso(),
+          clock: () => Date.now(),
+          sleep: (ms) => new Promise((done) => setTimeout(done, ms)),
+          open: async ({ url, headers, timeoutMs }) => {
+            const got = await openCampaignSite({ url, headers, timeoutMs });
+            return { status: got.status, body: got.bytes, contentType: got.contentType, location: got.location ?? null, transportError: got.transportError };
+          },
+          spaceOut: spacer,
+          vaultRoot: join(ROOT, ...VAULT_DIR),
+          heldVault: vaultIndex,
+          methodVersion: (await readMethodKnowledge(repos)).version,
+        });
+        return {
+          report,
+          state:
+            `ran over ${subjects.size} canonical candidacies (${linked.size} already carrying a campaign link, read last) and ${held.responses.length} held Marginalia answer(s) of ${held.entries} staged` +
+            (held.unreadable > 0 ? ` (${held.unreadable} answer(s) the vault could not produce)` : ""),
+        };
+      })();
+        campaignSites = pass.report;
+        campaignSitesState = pass.state;
+    } catch (error) {
+      campaignSitesState = `could not run: ${error instanceof Error ? error.message : String(error)}`;
+      runtimeConditions.push(`campaign-site pass ${campaignSitesState}`);
+    } finally {
+      leaveCampaignSites();
+    }
   }
-}
-console.log(campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSiteCycleLine(campaignSites)} · ${campaignSitesState}`);
-finishPhase("campaign-sites");
+  console.log(campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSiteCycleLine(campaignSites)} · ${campaignSitesState}`);
+};
 
 /* Linked publication pages are a separate bounded deterministic pass. Its
  * candidates are exact members of the selected hunt receipts; a
  * broadly tracked candidate universe does not itself authorize a new walk. */
-if (dry || canary || ONLY !== null || IDS !== null || intents.runnerPause.paused) {
-  candidatePublicationsState = "not run: dry, canary, filtered or paused cycle";
-} else if (!hasLifetimeHunt) {
-  candidatePublicationsState = "not run: exact selected hunt receipt is unavailable";
+const runCandidatePublicationsPass = async (): Promise<void> => {
+  if (dry || canary || ONLY !== null || IDS !== null || intents.runnerPause.paused) {
+    candidatePublicationsState = "not run: dry, canary, filtered or paused cycle";
+  } else if (!hasLifetimeHunt) {
+    candidatePublicationsState = "not run: exact selected hunt receipt is unavailable";
+  } else {
+    const leavePublications = pending.enter("candidate-publications");
+    try {
+      const vaultRead = await readRoundVault();
+      // Once an ACQUIRER begins committing a captured page or a typed blocked
+      // disposition, let that repository operation settle. Racing a writer with
+      // a wall timer would leave an apparently stopped pass writing in the back.
+      const pass = await runCandidatePublicationCycle({
+        repos, eligibleCandidacyIds: lifetimeHuntSubjects,
+        heldVault: vaultRead, vaultRoot: join(ROOT, ...VAULT_DIR),
+        methodVersion: (await readMethodKnowledge(repos)).version,
+        clock: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)), spaceOut: spacer,
+        openFor: candidacyId => {
+          const opened = fleetSafety.guardedOpenBytes("public-web", candidacyId, fetch, { followRedirects: false });
+          return async ({ url, headers, timeoutMs }) => {
+            const got = await opened({ url, headers, timeoutMs });
+            return { status: got.status, body: got.bytes, contentType: got.contentType,
+              location: got.location ?? null, transportError: got.transportError };
+          };
+        },
+      });
+      candidatePublications = pass;
+      candidatePublicationsState = `ran: ${pass.acquired} acquired, ${pass.deferred} deferred, ${pass.failed} failed of ${pass.due} due linked pages`;
+    } catch (error) {
+      candidatePublicationsState = `failed: ${error instanceof Error ? error.message : String(error)}`;
+      runtimeConditions.push(`candidate publication acquisition ${candidatePublicationsState}`);
+    } finally { leavePublications(); }
+  }
+  console.log(`  candidate documents ${candidatePublicationsState}`);
+};
+
+/*
+ * CH-08. Each pass is its own lane. The serial path (WTP_DISCOVERY_SERIAL=1) runs them in turn before the worker
+ * wave, as before: 12 walks, 60 s. Otherwise they start at once beside the worker wave, each contained to its own
+ * outcome, and the round joins them before it finalizes; a slow site holds up only its own lane, and the walk is
+ * bounded by the time left in the round.
+ */
+const DISCOVERY_SERIAL = process.env.WTP_DISCOVERY_SERIAL === "1";
+if (DISCOVERY_SERIAL) {
+  await runMeetingsDiscoveryPass(Date.now() + MEETINGS_DISCOVERY_BUDGET_MS, MEETINGS_DISCOVERY_MAX_WALKS);
+  finishPhase("meetings-discovery");
+  await runCampaignSitesPass();
+  finishPhase("campaign-sites");
+  await runCandidatePublicationsPass();
+  finishPhase("candidate-publications");
 } else {
-  const leavePublications = pending.enter("candidate-publications");
-  try {
-    const vaultRead = await readRoundVault();
-    // Once an ACQUIRER begins committing a captured page or a typed blocked
-    // disposition, let that repository operation settle. Racing a writer with
-    // a wall timer would leave an apparently stopped pass writing in the back.
-    const pass = await runCandidatePublicationCycle({
-      repos, eligibleCandidacyIds: lifetimeHuntSubjects,
-      heldVault: vaultRead, vaultRoot: join(ROOT, ...VAULT_DIR),
-      methodVersion: (await readMethodKnowledge(repos)).version,
-      clock: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)), spaceOut: spacer,
-      openFor: candidacyId => {
-        const opened = fleetSafety.guardedOpenBytes("public-web", candidacyId, fetch, { followRedirects: false });
-        return async ({ url, headers, timeoutMs }) => {
-          const got = await opened({ url, headers, timeoutMs });
-          return { status: got.status, body: got.bytes, contentType: got.contentType,
-            location: got.location ?? null, transportError: got.transportError };
-        };
-      },
-    });
-    candidatePublications = pass;
-    candidatePublicationsState = `ran: ${pass.acquired} acquired, ${pass.deferred} deferred, ${pass.failed} failed of ${pass.due} due linked pages`;
-  } catch (error) {
-    candidatePublicationsState = `failed: ${error instanceof Error ? error.message : String(error)}`;
-    runtimeConditions.push(`candidate publication acquisition ${candidatePublicationsState}`);
-  } finally { leavePublications(); }
+  const lanesStartedMs = Date.now();
+  const timed = (id: string, run: () => Promise<void>) => ({ id, run: async () => {
+    try { await run(); } finally { console.log(`  lane ${id}: ${Date.now() - lanesStartedMs}ms`); }
+  } });
+  discoveryLaneRun = runIndependentRuntimePass([
+    timed("meetings-discovery", () => runMeetingsDiscoveryPass(dispatchDeadlineMs, Number.MAX_SAFE_INTEGER)),
+    timed("campaign-sites", runCampaignSitesPass),
+    timed("candidate-publications", runCandidatePublicationsPass),
+  ]);
 }
-console.log(`  candidate documents ${candidatePublicationsState}`);
-finishPhase("candidate-publications");
+
 
 /*
  * RULING 52/53: a scout that argued a record absent this cycle (a proper walk
@@ -3562,6 +3604,12 @@ if (autonomousCycleOpen) {
   } catch (error) {
     runtimeConditions.push(`worker processes failed: ${error instanceof Error ? error.message : String(error)}; work remains owed`);
   } finally { leaveAutonomous(); }
+}
+if (discoveryLaneRun !== null) {
+  for (const outcome of await discoveryLaneRun) {
+    if (outcome.state === "FAILED") runtimeConditions.push(`${outcome.id} lane failed: ${outcome.error}`);
+  }
+  finishPhase("discovery-lanes");
 }
 
 /* ------------------------------------------------------- the promotion tail --- */

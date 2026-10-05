@@ -712,8 +712,35 @@ export interface ScoreboardReadinessRow {
   readonly of: number;
 }
 
+/** A count behind a share, for a table row: "3 of 4". */
+export interface ScoreboardFraction { readonly n: number; readonly of: number }
+
+export interface ScoreboardPlaceRow {
+  readonly label: string;
+  readonly completeness: ScoreboardFraction;
+  readonly freshness: ScoreboardFraction;
+  readonly delivery: ScoreboardFraction;
+  /** "Up from 31% on Oct 4 · good", or why there is no trend. */
+  readonly trend: string;
+}
+
+export interface ScoreboardFamilyRow { readonly name: string; readonly completeness: ScoreboardFraction }
+
+export interface ScoreboardMissionRow {
+  readonly label: string;
+  readonly startedAt: string;
+  /** "42 minutes", "Already held when it started", or "Not yet: 3 of 5 core items held". */
+  readonly coreLive: string;
+  readonly withinHour: boolean | null;
+}
+
 export interface ScoreboardView {
   readonly rows: readonly ScoreboardRow[];
+  /** Completeness by place and by family, with the counts behind each; empty until a place has been sent. */
+  readonly byPlace: readonly ScoreboardPlaceRow[];
+  readonly byFamily: readonly ScoreboardFamilyRow[];
+  /** Time from each recent mission's start to its core information live (SC-19). */
+  readonly missions: readonly ScoreboardMissionRow[];
   /** Launch gates as health checks; they never hold anything back. Null when the readings could not be taken. */
   readonly gates: { readonly rows: readonly ScoreboardGateRow[]; readonly pass: number; readonly attention: number; readonly notMeasured: number } | null;
   /** Operational readiness, counted apart from what any place is owed. */

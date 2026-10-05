@@ -557,6 +557,7 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
         { id: "Shut doors", name: "Shut doors", value: "3", counts: "3 shut · 41 open · 2 set aside", says: "How many ways in are shut right now.", notMeasured: null },
         { id: "Facts live per hour", name: "Facts live per hour", value: null, counts: null, says: "Not measured yet.", notMeasured: "Counted in a later step." },
       ],
+      byPlace: [], byFamily: [], missions: [],
       gates: null,
       readiness: [],
       learning: {

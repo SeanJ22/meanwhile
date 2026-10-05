@@ -55,7 +55,7 @@ import { venueLink } from "@/lib/registry/links";
 import { BrowsingSubjectLine } from "./district-popup";
 import { CalendarLinks } from "./calendar-links";
 import { AgendaSection } from "./agenda-section";
-import { NoValue, PopupRow, PopupSectionLabel } from "./popup-card";
+import { PopupRow, PopupSectionLabel } from "./popup-card";
 
 /**
  * The port of EdiaStratMap's `.account-modal`.

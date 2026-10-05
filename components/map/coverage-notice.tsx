@@ -1665,7 +1665,6 @@ export function CoverageNotice({
   tier,
   zip,
   radiusKm,
-  requestedRadiusKm,
   count,
   listingCount,
   coverage,

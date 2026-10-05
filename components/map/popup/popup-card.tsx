@@ -1,6 +1,5 @@
 "use client";
 
-import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { Maximize2, Minus, X } from "lucide-react";
 import { useRef, type ReactNode } from "react";
 
@@ -186,23 +185,7 @@ export function PopupCard({
   );
 }
 
-/** One key/value line. `mono` is Edia's `.pv.money` — digits and identifiers. */
-export function PopupRow({
-  label,
-  children,
-  mono = false,
-}: {
-  label: string;
-  children: ReactNode;
-  mono?: boolean;
-}) {
-  return (
-    <div className="popup-row">
-      <span className="pk">{label}</span>
-      <span className={mono ? "pv mono" : "pv"}>{children}</span>
-    </div>
-  );
-}
+export { PopupRow, NoValue } from "./popup-row";
 
 export function PopupSectionLabel({ children }: { children: ReactNode }) {
   return <p className="popup-section-label">{children}</p>;
@@ -214,14 +197,3 @@ export function PopupSectionLabel({ children }: { children: ReactNode }) {
  * expansion, never clipboard.
  */
 
-/**
- * A value the app does not have.
- *
- * Its own component so "we don't hold this" always renders the same way and is
- * never mistaken for a blank. Phase 5 keeps proving this matters: an empty
- * string reads as a bug, and worse, a plausible-looking placeholder reads as a
- * fact.
- */
-export function NoValue(_props: { children?: ReactNode }) {
-  return <WorkingOnIt inline />;
-}

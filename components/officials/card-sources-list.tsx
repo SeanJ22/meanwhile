@@ -2,7 +2,7 @@ import { CheckedLink } from "@/components/ui/checked-link";
 import type { CardSource } from "@/lib/officials/card-sources";
 import { verificationOf } from "@/lib/officials/verification";
 
-import { NoValue, PopupRow } from "@/components/map/popup/popup-card";
+import { NoValue, PopupRow } from "@/components/map/popup/popup-row";
 
 /**
  * The rendered form of a card's source list — ONE component, for the

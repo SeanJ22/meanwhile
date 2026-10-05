@@ -53,7 +53,7 @@ export const V6_CAPABILITY_VERSION = 1;
 
 export type SectionId = keyof AdminV6Data;
 export const SECTION_IDS: readonly SectionId[] = [
-  "places", "hunts", "national", "results", "stuck", "sameCause", "workRows", "history", "workers", "checklist", "agents", "spend", "sends", "reliability", "publication", "money", "learning", "fixes", "decided",
+  "places", "hunts", "national", "results", "stuck", "sameCause", "workRows", "history", "workers", "checklist", "agents", "spend", "sends", "reliability", "publication", "money", "scoreboard", "fixes", "decided",
 ];
 
 export function sectionContract(id: SectionId): string {
@@ -160,21 +160,6 @@ export interface ActionInputSource {
 export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Record<string, unknown>> {
   const limit = () => (s.amount.trim() === "" ? null : Number(s.amount));
   switch (kind) {
-    case "contain":
-    case "uncontain":
-    case "stopmethod":
-      return { itemId: s.target };
-    case "recheck":
-      return { resultId: s.target };
-    case "workfirst":
-      return { workItemId: s.target };
-    case "fixfirst":
-      return { fixId: s.target };
-    case "scope-stop":
-    case "retry-method":
-      return { scope: s.target || s.scopeKey, itemIds: [...s.selected] };
-    case "stoprepeats":
-      return { scope: "us" };
     case "decide":
       return { decisionId: s.target, option: s.option, words: s.words.trim() || null };
     case "hunt-start": {
@@ -216,21 +201,6 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return { enabled: true, confirmed: true };
     case "global-search-off":
       return { enabled: false };
-    case "scope-first":
-    case "scope-recheck":
-    case "reprocess":
-    case "resume-publish":
-      return { scope: s.target };
-    case "doc-request":
-      return { artifactId: s.target };
-    case "use-url":
-      return { body: s.target, url: s.payload?.url ?? null };
-    case "eng-task":
-      return { fixId: s.target, itemId: s.payload?.item ?? null };
-    case "job-stop":
-      return { jobId: s.target };
-    case "focus":
-      return { fixId: s.target, resource: s.option };
     case "cancel-send":
       return { intentId: s.target };
     case "setting-set":

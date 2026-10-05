@@ -99,10 +99,12 @@ import type { WorkItem } from "../work-item.ts";
 
 import { budgetRepositoryFrom } from "./shared.ts";
 import {
-  ARTIFACT_SOURCE_INDEX_DDL,
+  ARTIFACT_SOURCE_INDEX,
   BOOTSTRAP_DDL,
   BOOTSTRAP_VERSION,
+  ONLINE_INDEXES,
   recordVersionStatement,
+  type OnlineIndex,
 } from "./pg-schema.ts";
 import {
   CONTROL_PLANE_CONNECT_MAX_ATTEMPTS,
@@ -881,6 +883,19 @@ export function pgAppendOnlyRepository<T>(
       )) as Record<string, unknown>[];
       return rows.map((r) => String(r.log_key));
     },
+
+    async keysWhere(path, value) {
+      /* `keys()` narrowed in the database, on the same `#>>` expression the
+         version-20 log indexes are built on (CH-26). */
+      const jsonPath = jsonPathLiteral(table, path);
+      const rows = (await run(
+        "keysWhere",
+        "PAGE",
+        `SELECT DISTINCT log_key FROM ${table} WHERE record #>> '${jsonPath}' = $1 ORDER BY log_key ASC`,
+        [value],
+      )) as Record<string, unknown>[];
+      return rows.map((r) => String(r.log_key));
+    },
   };
 }
 
@@ -927,39 +942,49 @@ function pgLockManager(connectionString: string): LockManager {
 // Online index builds scan inside Postgres, not into the runner. Give this DDL
 // its own bounded build time rather than cancelling it at the small-row bound.
 const SOURCE_INDEX_BUILD_MS = 15 * 60_000;
-const SOURCE_INDEX_STATUS_SQL = `SELECT i.indisvalid AS valid,
+const indexStatusSql = (name: string) => `SELECT i.indisvalid AS valid,
   EXISTS (SELECT 1 FROM pg_stat_progress_create_index p WHERE p.index_relid = i.indexrelid) AS building
-  FROM pg_index i WHERE i.indexrelid = to_regclass('cp_log_artifacts_source_url')`;
+  FROM pg_index i WHERE i.indexrelid = to_regclass('${name}')`;
 
 /** A pinned autocommit session is required; neither DDL runs in a transaction. */
 export async function pgEnsureArtifactSourceIndex(
   sql: Sql,
   bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS,
 ): Promise<void> {
-  const run = boundedRunner(sql, "cp_schema.artifactSourceIndex", bounds);
+  return pgEnsureOnlineIndex(sql, ARTIFACT_SOURCE_INDEX, bounds);
+}
+
+/** Build one index online: an existing valid index is kept, an interrupted one is rebuilt, another builder is left alone. */
+export async function pgEnsureOnlineIndex(
+  sql: Sql,
+  index: OnlineIndex,
+  bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS,
+): Promise<void> {
+  const run = boundedRunner(sql, `cp_schema.${index.name}`, bounds);
+  const statusSql = indexStatusSql(index.name);
   // Existing valid indexes need no socket or session lock. If DDL is owed,
   // switch to a pinned connection and re-read after acquiring its session lock.
-  const current = await run("status", "POINT", SOURCE_INDEX_STATUS_SQL) as { valid: boolean }[];
+  const current = await run("status", "POINT", statusSql) as { valid: boolean }[];
   if (current[0]?.valid === true) return;
-  if (sql.withPinnedConnection) return sql.withPinnedConnection(pinned => pgEnsureArtifactSourceIndex(pinned, bounds));
-  const key = advisoryLockKey("cp_schema.cp_log_artifacts_source_url").toString();
+  if (sql.withPinnedConnection) return sql.withPinnedConnection(pinned => pgEnsureOnlineIndex(pinned, index, bounds));
+  const key = advisoryLockKey(`cp_schema.${index.name}`).toString();
   const locks = await run("lock", "POINT", "SELECT pg_try_advisory_lock($1::bigint) AS locked", [key]) as { locked: boolean }[];
   if (locks[0]?.locked !== true) {
-    throw new Error("CONTROL_PLANE_SOURCE_INDEX_BUILD_IN_PROGRESS: another bootstrap owns cp_log_artifacts_source_url; retry on the next runner cycle");
+    throw new Error(`${index.inProgressCode}: another bootstrap owns ${index.name}; retry on the next runner cycle`);
   }
   try {
-    const status = await run("statusLocked", "POINT", SOURCE_INDEX_STATUS_SQL) as { valid: boolean; building: boolean }[];
+    const status = await run("statusLocked", "POINT", statusSql) as { valid: boolean; building: boolean }[];
     if (status[0]?.valid === true) return;
     // An in-progress concurrent build is temporarily INVALID too. Do not drop it.
     if (status[0]?.building === true) {
-      throw new Error("CONTROL_PLANE_SOURCE_INDEX_BUILD_IN_PROGRESS: cp_log_artifacts_source_url has an active builder; retry on the next runner cycle");
+      throw new Error(`${index.inProgressCode}: ${index.name} has an active builder; retry on the next runner cycle`);
     }
-    const ddlRun = boundedRunner(sql, "cp_schema.artifactSourceIndex", { ...bounds, POINT: SOURCE_INDEX_BUILD_MS });
+    const ddlRun = boundedRunner(sql, `cp_schema.${index.name}`, { ...bounds, POINT: SOURCE_INDEX_BUILD_MS });
     await run("buildTimeout", "POINT", `SET statement_timeout = ${SOURCE_INDEX_BUILD_MS}`);
     if (status[0]?.valid === false) {
-      await ddlRun("dropInvalid", "POINT", "DROP INDEX CONCURRENTLY IF EXISTS cp_log_artifacts_source_url");
+      await ddlRun("dropInvalid", "POINT", `DROP INDEX CONCURRENTLY IF EXISTS ${index.name}`);
     }
-    await ddlRun("create", "POINT", ARTIFACT_SOURCE_INDEX_DDL);
+    await ddlRun("create", "POINT", index.ddl);
   } finally {
     // A failed build retains its original error. The caller destroys the pinned
     // session as well, releasing the session lock even after a transport failure.
@@ -980,7 +1005,8 @@ export async function bootstrap(
 ): Promise<void> {
   const run = boundedRunner(sql, "cp_schema", bounds);
   for (const statement of BOOTSTRAP_DDL) {
-    if (statement === ARTIFACT_SOURCE_INDEX_DDL) await pgEnsureArtifactSourceIndex(sql, bounds);
+    const online = ONLINE_INDEXES.get(statement);
+    if (online) await pgEnsureOnlineIndex(sql, online, bounds);
     else await run("bootstrap", "POINT", statement);
   }
   await run("recordVersion", "POINT", recordVersionStatement(BOOTSTRAP_VERSION, nowIso));

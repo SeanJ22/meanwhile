@@ -24,7 +24,7 @@ import type { CommentAccess } from "../registry/comment-access-client.ts";
 import type { ArtifactRecord } from "../control-plane/repository/types.ts";
 import { publishHeldElectionOffices } from "./worker-held-elections.ts";
 import { localHeldCaptureReader } from "./worker-publication-context.ts";
-import { recordPublishedPageDoor } from "./worker-page-doors.ts";
+import { recordPublishedPageDoor, withPageDoor } from "./worker-page-doors.ts";
 import { workerBallotContestsPackage, publishWorkerBallotContestsResults } from "./worker-ballot-contests.ts";
 import { EVERYDAY_TOPIC_IDS, everydayRoutingProjectionFromRecords, type EverydayRoutingRecord } from "../routing/everyday.ts";
 const text = (value: FieldValue | undefined) => typeof value === "string" ? value : "";
@@ -212,6 +212,7 @@ export async function publishWorkerReaderResults(input: {
       outcome = { at: input.now, workerResultId: parser.id, status: "HELD", code: detail.split(":")[0],
         detail: `${detail}. ${recovery === "WORKER" ? "Automatic evidence or contract repair remains owed" : "The existing publisher retries the retained result"}; no manual approval is required.`, recovery, candidateId, versionId };
     }
+    if (plan) outcome = withPageDoor(outcome, captures[0], plan.contract.recordClass);
     const latest = await input.repos.workItems.mustRead(id);
     await input.repos.workItems.compareAndSet(id, latest.revision, { ...latest.value, publicationOutcome: outcome }, input.now);
     report.push({ workItemId: id, outcome });

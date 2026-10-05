@@ -119,6 +119,21 @@
  * partial history instead of demanding a companion from those providers. */
 // Version 18 adds the exact source-URL artifact index, online while captures continue.
 // Version 19 adds the Door Registry table (DB-09).
+/*
+ * ## What version 20 adds, and why (each task reads only its own history, CH-26, 2026-10-05)
+ *
+ * Indexes for the reads a task makes about its own work item, subject and
+ * lineage, so those reads stop scanning whole tables as history grows
+ * (rulings §5: nothing loads the whole country). Each index is on the exact
+ * expression the repository's filtered read sends (`value #>> '{path}'` for an
+ * aggregate's `listWhere`, `record #>> '{path}'` for a log's `keysWhere`), since
+ * Postgres matches an expression index only to the same expression: the older
+ * `->>` indexes do not serve `listWhere`. `cp_work_items_repair_parent` is the
+ * lineage index: a work item's repair children, found without listing every
+ * work item. Every index is built online (`CREATE INDEX CONCURRENTLY`), the way
+ * version 18's source-URL index is, so captures and leases continue while it
+ * builds. Additive: no table, column or statement moved.
+ */
 // Version 21 adds the live-audit log (DP-13): results, corrections and pulls. Additive.
 export const BOOTSTRAP_VERSION = 21;
 
@@ -486,6 +501,34 @@ function appendOnlyTable(name: string): readonly string[] {
 export const ARTIFACT_SOURCE_INDEX_DDL = `CREATE INDEX CONCURRENTLY IF NOT EXISTS cp_log_artifacts_source_url
      ON cp_log_artifacts (md5(record->>'canonicalUrl'), (record->>'recordedAt') DESC NULLS LAST, (record->>'artifactId') ASC);`;
 
+/** One index the bootstrap builds online, with the name its catalog status is read by. */
+export interface OnlineIndex { readonly name: string; readonly ddl: string; readonly inProgressCode: string }
+
+export const ARTIFACT_SOURCE_INDEX: OnlineIndex = { name: "cp_log_artifacts_source_url", ddl: ARTIFACT_SOURCE_INDEX_DDL,
+  inProgressCode: "CONTROL_PLANE_SOURCE_INDEX_BUILD_IN_PROGRESS" };
+
+function onlineIndex(name: string, on: string): OnlineIndex {
+  return { name, ddl: `CREATE INDEX CONCURRENTLY IF NOT EXISTS ${name} ON ${on};`, inProgressCode: "CONTROL_PLANE_INDEX_BUILD_IN_PROGRESS" };
+}
+
+/** Version 20 (CH-26): the scoped history reads' indexes, each on the exact expression its read sends. */
+export const SCOPED_HISTORY_INDEXES: readonly OnlineIndex[] = [
+  onlineIndex("cp_attempts_work_item", "cp_attempts ((value #>> '{workItemId}'))"),
+  onlineIndex("cp_route_tasks_work_item", "cp_route_tasks ((value #>> '{workItemId}'))"),
+  onlineIndex("cp_occurrences_work_item", "cp_occurrences ((value #>> '{workItemId}'))"),
+  onlineIndex("cp_occurrences_obligation_path", "cp_occurrences ((value #>> '{obligationId}'))"),
+  onlineIndex("cp_work_items_repair_parent", "cp_work_items ((value #>> '{planRepair,parentWorkItemId}'))"),
+  onlineIndex("cp_work_items_subject", "cp_work_items ((value #>> '{subject}'))"),
+  onlineIndex("cp_log_scout_results_subject", "cp_log_scout_results ((record #>> '{subjectId}'))"),
+  onlineIndex("cp_log_artifacts_work_item", "cp_log_artifacts ((record #>> '{workItemId}'))"),
+  onlineIndex("cp_log_artifacts_artifact_id", "cp_log_artifacts ((record #>> '{artifactId}'))"),
+  onlineIndex("cp_log_costs_recorded_at", "cp_log_costs (recorded_at)"),
+];
+
+/** Every index the bootstrap builds online, by its DDL statement. */
+export const ONLINE_INDEXES: ReadonlyMap<string, OnlineIndex> = new Map(
+  [ARTIFACT_SOURCE_INDEX, ...SCOPED_HISTORY_INDEXES].map(index => [index.ddl, index] as const));
+
 export const BOOTSTRAP_DDL: readonly string[] = [
   `CREATE TABLE IF NOT EXISTS cp_schema_version (
      singleton   boolean PRIMARY KEY DEFAULT true CHECK (singleton),
@@ -723,6 +766,8 @@ END $$;`,
      ON cp_debts ((value->>'retryAt'));`,
   `CREATE INDEX IF NOT EXISTS cp_occurrences_obligation
      ON cp_occurrences ((value->>'obligationId'));`,
+  // Version 20 (CH-26): built online, after every table they index exists.
+  ...SCOPED_HISTORY_INDEXES.map(index => index.ddl),
 ];
 
 /**

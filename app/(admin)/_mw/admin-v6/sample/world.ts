@@ -241,14 +241,30 @@ function sampleStuck(w: SampleWorld): readonly StuckItem[] {
   const stopped = (id: string) => w.stoppedItems.includes(id);
   const decided = (id: string) => w.decisions[id];
   const items: StuckItem[] = [
-    { id: "i-wrong", applies: [K.cochiseBos, K.z85635], lane: "software", title: "The Cochise County card shows another county’s meetings", cause: "The card picks its bodies too broadly, so 280 meetings from Tucson and Pima County bodies are attached to it.", age: "since Sep 28, 12:10 AM", ageRank: 2, tried: "Nothing yet", helped: "—", next: "Publishing engineering fixes how a county card chooses its bodies. Meanwhile you can hide the wrong meetings from this card.", owner: "Publishing engineering", resultId: "r-cochise-mtg", readersAffected: !w.contained, fixId: "MW-061", unlocks: 1, actions: [w.contained ? a("uncontain", "i-wrong") : a("contain", "i-wrong"), a("recheck", "r-cochise-mtg"), a("fixfirst", "MW-061")], latest: w.contained ? "Wrong meetings hidden (can be undone)" : undefined },
-    { id: "i-cochise-held", applies: [K.cochiseBos, K.z85635], lane: "software", title: "Cochise meeting files are saved but never read", cause: "The calendar feed and Agenda Center page were saved and checked, but the software that pulls out facts can’t reach saved files.", age: "6 h 20 m", ageRank: 2, tried: "1 discovery · plain code, $0", helped: "Files saved, nothing delivered", next: "Collection engineering lets that software read saved files. Then the normal line runs it, with no new search.", owner: "Collection engineering", resultId: "r-cochise-mtg", fixId: "MW-060", unlocks: 2, group: "held", actions: [a("workfirst", "w-cochise"), a("fixfirst", "MW-060")], latest: w.workFirst.includes("w-cochise") ? "Put first" : undefined },
-    { id: "i-sv-held", applies: [K.svCouncil], lane: "software", title: "Sierra Vista’s meeting list is saved but never read", cause: "Same cause as Cochise. The page has been saved since Sep 26.", age: "44 h", ageRank: 3, tried: "1 discovery · plain code, $0", helped: "Page saved, nothing delivered", next: "The same fix clears both.", owner: "Collection engineering", resultId: "r-sv-mtg", fixId: "MW-060", unlocks: 1, group: "held", actions: [a("workfirst", "w-sv"), a("fixfirst", "MW-060")], latest: w.workFirst.includes("w-sv") ? "Put first" : undefined },
-    { id: "i-az-fin", applies: [K.az], lane: "publisher", title: "Arizona’s finance file dropped 37 committees", cause: "The Secretary of State’s new file leaves out 37 committees the last one had, with no explanation. New filings were published. The 37 were kept as they were and marked retained.", age: "25 min", ageRank: 1, tried: "Publishing refused once, then a partial publish", helped: "Yes: new filings are live", next: "Automatic recheck of the source at 6:00 AM. If they’re still missing, it becomes a question for the publisher.", owner: "Waiting for the AZ Secretary of State", resultId: "r-az-fin", actions: [a("recheck", "r-az-fin")] },
-    { id: "i-unpriced", applies: [K.z85635], lane: "software", title: "154 AI charges in this hunt were saved without a price", cause: "They were recorded without a cost. Some may be refused or free calls, so the unknown amount is $0 or more.", age: "since the hunt started", ageRank: 2, tried: "None", helped: "—", next: "Cost engineering prices charges when they’re written and fills in these 154.", owner: "Cost engineering", fixId: "MW-063", actions: [a("fixfirst", "MW-063")] },
-    { id: "i-pima", applies: [K.pima], lane: "software", title: "Pima County Prop 423 finance: page format we can’t read", cause: "We found the records but have no reader for this format. It kept retrying: 8 of 9 attempts were retries.", age: "3 days", ageRank: 3, tried: "9 attempts · $1.63", helped: "No", next: "Stop this method, keep it owed, and add a reader for the format.", owner: "Collection engineering", fixId: "MW-062", group: "fmt", actions: [a("stopmethod", "i-pima"), a("fixfirst", "MW-062")], latest: stopped("i-pima") ? "Method stopped · still owed · repair scheduled" : undefined },
-    { id: "i-avondale", applies: [K.az], lane: "software", title: "City of Avondale finance: page format we can’t read", cause: "Same missing reader. Plain code, so no AI cost.", age: "5 days", ageRank: 3, tried: "plain code · $0", helped: "No", next: "Add a reader for the format.", owner: "Collection engineering", fixId: "MW-062", group: "fmt", actions: [a("stopmethod", "i-avondale"), a("fixfirst", "MW-062")], latest: stopped("i-avondale") ? "Method stopped · still owed · repair scheduled" : undefined },
-    { id: "i-cassidy", applies: [K.merrimack], lane: "software", title: "Candidate Frank Cassidy: page format we can’t read", cause: "11 of 13 attempts were retries of the same method.", age: "4 days", ageRank: 3, tried: "13 attempts · $4.91", helped: "No", next: "Stop this method, keep it owed, and add a reader.", owner: "Collection engineering", fixId: "MW-062", group: "fmt", actions: [a("stopmethod", "i-cassidy"), a("fixfirst", "MW-062")], latest: stopped("i-cassidy") ? "Method stopped · still owed · repair scheduled" : undefined },
+    { id: "i-wrong", applies: [K.cochiseBos, K.z85635], lane: "software", title: "The Cochise County card shows another county’s meetings", cause: "The card picks its bodies too broadly, so 280 meetings from Tucson and Pima County bodies are attached to it.", age: "since Sep 28, 12:10 AM", ageRank: 2, tried: "Nothing yet", helped: "—", next: "Publishing engineering fixes how a county card chooses its bodies. Meanwhile you can hide the wrong meetings from this card.", owner: "Publishing engineering", resultId: "r-cochise-mtg", readersAffected: !w.contained, fixId: "MW-061", unlocks: 1, actions: [
+
+], latest: w.contained ? "Wrong meetings hidden (can be undone)" : undefined },
+    { id: "i-cochise-held", applies: [K.cochiseBos, K.z85635], lane: "software", title: "Cochise meeting files are saved but never read", cause: "The calendar feed and Agenda Center page were saved and checked, but the software that pulls out facts can’t reach saved files.", age: "6 h 20 m", ageRank: 2, tried: "1 discovery · plain code, $0", helped: "Files saved, nothing delivered", next: "Collection engineering lets that software read saved files. Then the normal line runs it, with no new search.", owner: "Collection engineering", resultId: "r-cochise-mtg", fixId: "MW-060", unlocks: 2, group: "held", actions: [
+
+], latest: w.workFirst.includes("w-cochise") ? "Put first" : undefined },
+    { id: "i-sv-held", applies: [K.svCouncil], lane: "software", title: "Sierra Vista’s meeting list is saved but never read", cause: "Same cause as Cochise. The page has been saved since Sep 26.", age: "44 h", ageRank: 3, tried: "1 discovery · plain code, $0", helped: "Page saved, nothing delivered", next: "The same fix clears both.", owner: "Collection engineering", resultId: "r-sv-mtg", fixId: "MW-060", unlocks: 1, group: "held", actions: [
+
+], latest: w.workFirst.includes("w-sv") ? "Put first" : undefined },
+    { id: "i-az-fin", applies: [K.az], lane: "publisher", title: "Arizona’s finance file dropped 37 committees", cause: "The Secretary of State’s new file leaves out 37 committees the last one had, with no explanation. New filings were published. The 37 were kept as they were and marked retained.", age: "25 min", ageRank: 1, tried: "Publishing refused once, then a partial publish", helped: "Yes: new filings are live", next: "Automatic recheck of the source at 6:00 AM. If they’re still missing, it becomes a question for the publisher.", owner: "Waiting for the AZ Secretary of State", resultId: "r-az-fin", actions: [
+
+] },
+    { id: "i-unpriced", applies: [K.z85635], lane: "software", title: "154 AI charges in this hunt were saved without a price", cause: "They were recorded without a cost. Some may be refused or free calls, so the unknown amount is $0 or more.", age: "since the hunt started", ageRank: 2, tried: "None", helped: "—", next: "Cost engineering prices charges when they’re written and fills in these 154.", owner: "Cost engineering", fixId: "MW-063", actions: [
+
+] },
+    { id: "i-pima", applies: [K.pima], lane: "software", title: "Pima County Prop 423 finance: page format we can’t read", cause: "We found the records but have no reader for this format. It kept retrying: 8 of 9 attempts were retries.", age: "3 days", ageRank: 3, tried: "9 attempts · $1.63", helped: "No", next: "Stop this method, keep it owed, and add a reader for the format.", owner: "Collection engineering", fixId: "MW-062", group: "fmt", actions: [
+
+], latest: stopped("i-pima") ? "Method stopped · still owed · repair scheduled" : undefined },
+    { id: "i-avondale", applies: [K.az], lane: "software", title: "City of Avondale finance: page format we can’t read", cause: "Same missing reader. Plain code, so no AI cost.", age: "5 days", ageRank: 3, tried: "plain code · $0", helped: "No", next: "Add a reader for the format.", owner: "Collection engineering", fixId: "MW-062", group: "fmt", actions: [
+
+], latest: stopped("i-avondale") ? "Method stopped · still owed · repair scheduled" : undefined },
+    { id: "i-cassidy", applies: [K.merrimack], lane: "software", title: "Candidate Frank Cassidy: page format we can’t read", cause: "11 of 13 attempts were retries of the same method.", age: "4 days", ageRank: 3, tried: "13 attempts · $4.91", helped: "No", next: "Stop this method, keep it owed, and add a reader.", owner: "Collection engineering", fixId: "MW-062", group: "fmt", actions: [
+
+], latest: stopped("i-cassidy") ? "Method stopped · still owed · repair scheduled" : undefined },
     { id: "i-davis", applies: [K.merrimack], lane: decided("davis") ? "auto" : "decision", title: "Candidate Erica Davis: automatic routes can’t find her own information", cause: "Every automatic route tried so far has failed. 16 of 17 attempts were retries.", age: "6 days", ageRank: 3, tried: "17 attempts · $7.25", helped: "No", next: "Your decision. You can look for another route, contact the campaign (needs outreach permission), or record it as unavailable with evidence.", owner: decided("davis") ? "Automatic, after your decision" : "You", unlocks: 1, group: "person", actions: [a("decide", "davis")], latest: decided("davis") ? `Decision saved: ${decided("davis")}` : undefined,
       decision: { id: "davis", question: "How should we get Erica Davis’s information?", options: [
         { id: "route", label: "Look for another route automatically", note: "Research workers try routes not yet tried, including the state filing office. Paid work stays within limits." },
@@ -264,8 +280,12 @@ function sampleStuck(w: SampleWorld): readonly StuckItem[] {
         { id: "third", label: "Look for a third official source", note: "Automatic. The dates stay marked “being checked” meanwhile." },
         { id: "other", label: "Something else", note: "Say it in your own words.", ownWords: true },
       ] } },
-    { id: "i-marana", applies: [K.az], lane: "auto", title: "Marana Unified School District board: site can’t be reached", cause: "The site has timed out for 3 days. The system retries with longer gaps and tries the district’s second calendar address.", age: "3 days", ageRank: 3, tried: "5 tries · plain code, $0", helped: "Not yet", next: "Next try 6:00 AM. After 2 more failures it switches to the county’s posted notices.", owner: "Automatic repair", actions: [a("recheck", "i-marana")] },
-    { id: "i-retry", applies: [K.us], lane: "auto", title: "731 failed rows are retrying on their own", cause: "319 of them repeat the same method and get the same result. 412 are changing method between tries.", age: "mixed", ageRank: 2, tried: "Automatic retries", helped: "Not measured", next: "Stop the 319 repeats, keep them owed, and send them to repair. Keep the other 412 retrying.", owner: "Operations engineering", group: "retry", actions: [a("stoprepeats", "i-retry")] },
+    { id: "i-marana", applies: [K.az], lane: "auto", title: "Marana Unified School District board: site can’t be reached", cause: "The site has timed out for 3 days. The system retries with longer gaps and tries the district’s second calendar address.", age: "3 days", ageRank: 3, tried: "5 tries · plain code, $0", helped: "Not yet", next: "Next try 6:00 AM. After 2 more failures it switches to the county’s posted notices.", owner: "Automatic repair", actions: [
+
+] },
+    { id: "i-retry", applies: [K.us], lane: "auto", title: "731 failed rows are retrying on their own", cause: "319 of them repeat the same method and get the same result. 412 are changing method between tries.", age: "mixed", ageRank: 2, tried: "Automatic retries", helped: "Not measured", next: "Stop the 319 repeats, keep them owed, and send them to repair. Keep the other 412 retrying.", owner: "Operations engineering", group: "retry", actions: [
+
+] },
   ];
   return items;
 }
@@ -319,8 +339,12 @@ function sampleJobs(w: SampleWorld): readonly WorkerJob[] {
 function sampleWaiting(): readonly WaitingItem[] {
   return [
     { kind: "Scheduled", title: "Arizona finance: recheck the 37 dropped committees", why: "Waiting for the Secretary of State’s next update, so nothing is running yet.", nextTime: "6:00 AM", owner: "Automatic", applies: [K.az], actions: [] },
-    { kind: "Waiting on a fix", title: "Cochise meeting extraction", why: "The software that pulls out facts can’t read saved files yet.", nextTime: "when that fix is in use by the workers", owner: "Collection engineering", applies: [K.cochiseBos, K.z85635], actions: [a("fixfirst", "MW-060")] },
-    { kind: "Method", title: "Pima County Prop 423 finance", why: "No reader for this page format. The method is stopped and the requirement stays owed.", nextTime: "when the reader ships", owner: "Collection engineering", applies: [K.pima], actions: [a("fixfirst", "MW-062")] },
+    { kind: "Waiting on a fix", title: "Cochise meeting extraction", why: "The software that pulls out facts can’t read saved files yet.", nextTime: "when that fix is in use by the workers", owner: "Collection engineering", applies: [K.cochiseBos, K.z85635], actions: [
+
+] },
+    { kind: "Method", title: "Pima County Prop 423 finance", why: "No reader for this page format. The method is stopped and the requirement stays owed.", nextTime: "when the reader ships", owner: "Collection engineering", applies: [K.pima], actions: [
+
+] },
     { kind: "Website", title: "Marana USD calendar", why: "The district’s site keeps timing out.", nextTime: "next try 6:00 AM", owner: "Automatic repair", applies: [K.az], actions: [] },
     { kind: "Setting", title: "Paid work in every hunt", why: "The $105-a-day spending restriction still applies to the workers. $17.33 used today, so nothing is paused now.", nextTime: "when the workers restart with the update", owner: "Operations engineering", applies: [K.us], actions: [] },
     { kind: "Permission", title: "Contacting Erica Davis’s campaign", why: "Outreach isn’t authorized.", nextTime: "once outreach is authorized", owner: "You", applies: [K.merrimack], actions: [a("decide", "davis")] },
@@ -408,7 +432,13 @@ export function sampleItems(scope: string, defs: readonly Definition[]): readonl
             : "No proof recorded for this part yet.",
         })),
         resultId: gi === 0 ? "r-cochise-mtg" : gi === 1 ? "r-sv-mtg" : undefined,
-        actions: status === "needs-fix" ? [a("fixfirst", "MW-062")] : gi < 2 ? [a("workfirst", gi === 0 ? "w-cochise" : "w-sv")] : [a("scope-first", scope)],
+        actions: status === "needs-fix" ? [
+
+] : gi < 2 ? [
+
+] : [
+
+],
       });
     }
   }
@@ -509,10 +539,10 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
     results: sample(sampleResults(w), SECTION_DEP.results, SAMPLE_AS_OF),
     stuck: sample(stuck, SECTION_DEP.stuck, SAMPLE_AS_OF),
     sameCause: sample([
-      { key: "fmt", cause: "Page formats we can’t read", lane: "software", count: "3", itemIds: ["i-pima", "i-avondale", "i-cassidy"], action: a("scope-stop", "") },
-      { key: "held", cause: "Saved files that were never read", lane: "software", count: "2", itemIds: ["i-cochise-held", "i-sv-held"], action: a("fixfirst", "MW-060") },
+      { key: "fmt", cause: "Page formats we can’t read", lane: "software", count: "3", itemIds: ["i-pima", "i-avondale", "i-cassidy"],},
+      { key: "held", cause: "Saved files that were never read", lane: "software", count: "2", itemIds: ["i-cochise-held", "i-sv-held"],},
       { key: "person", cause: "Automatic routes tried and failed", lane: "decision", count: "1", itemIds: ["i-davis"], action: a("decide", "davis") },
-      { key: "retry", cause: "Retries repeating the same failure", lane: "auto", count: "319", itemIds: ["i-retry"], action: a("stoprepeats", "i-retry") },
+      { key: "retry", cause: "Retries repeating the same failure", lane: "auto", count: "319", itemIds: ["i-retry"],},
     ], SECTION_DEP.stuck, SAMPLE_AS_OF),
     workRows: sample({ rows: sampleRows(), totals: [{ stage: "waiting", total: 932 }, { stage: "stuck", total: 78 }, { stage: "retrying", total: 731 }, { stage: "done", total: 1069 }, { stage: "retired", total: 591 }] }, SECTION_DEP.work, SAMPLE_AS_OF),
     agents: sample([], SECTION_DEP.agents, SAMPLE_AS_OF),
@@ -550,7 +580,16 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
       readings: [],
       otherServices: "Search $0.01, estimated from requests. Hosting, database and GitHub are shared platform costs and aren’t assigned to hunts.",
     }, SECTION_DEP.money, SAMPLE_AS_OF),
-    learning: sample({
+    scoreboard: sample({
+      rows: [
+        { id: "Orders", name: "Orders", value: "12", counts: "9 done · 2 in progress · 1 could not be done", says: "The newest 12 orders. Could not be done: The place is not set up yet.", notMeasured: null },
+        { id: "Public delivery", name: "Public delivery", value: "91%", counts: "410 of 450 accepted records seen on the public page", says: "Counts accepted records the page was checked for.", notMeasured: null },
+        { id: "Shut doors", name: "Shut doors", value: "3", counts: "3 shut · 41 open · 2 set aside", says: "How many ways in are shut right now.", notMeasured: null },
+        { id: "Facts live per hour", name: "Facts live per hour", value: null, counts: null, says: "Not measured yet.", notMeasured: "Counted in a later step." },
+      ],
+      gates: null,
+      readiness: [],
+      learning: {
       trends: [
         { question: "What does it cost to find something?", big: "$0.11", bigNote: "per find this week, down from $1.46", series: [{ name: "Dollars per find", color: "blue" }], weeks: wk([[1.46], null, [1.0], [0.6], [0.11]]), format: "usd", max: 1.46, limits: "A find isn’t a delivered result yet.", method: dl("Paid research attempts that found a route into a site, or the record itself", "All tracked states", "Each week (UTC)", "Attempts that found something: 19, none recorded, 58, 164, 147", "Not directly. Each week looked for different records.") },
         { question: "Does it do better after a failure?", big: "92% vs 85%", bigNote: "found something this week: started from earlier notes vs from scratch", series: [{ name: "Started from earlier notes", color: "blue" }, { name: "Started from scratch", color: "amber" }], weeks: wk([[100, 100], null, [60, 46], [78, 96], [92, 85]]), format: "pct", max: 100, limits: "Since Sep 4, both groups are at 79%.", method: dl("Search attempts that found something, split by whether they started from an earlier attempt’s notes", "All tracked states", "Each week (UTC)", "This week: 100 from notes, 65 from scratch", "Only roughly. The two groups looked for different records.") },
@@ -566,7 +605,8 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
         { question: "How much repeated work was avoided?", why: "Reuse is recorded, but not whether it replaced a paid call. No saving is claimed.", needs: "Learning over time" },
         { question: "Do hard-to-read places become routine?", why: "Each place’s recent reads are saved, but nothing adds them up over time.", needs: "Learning over time" },
       ],
-    }, SECTION_DEP.learning, SAMPLE_AS_OF),
+      },
+    }, SECTION_DEP.scoreboard, SAMPLE_AS_OF),
     fixes: sample(f, SECTION_DEP.fixes, SAMPLE_AS_OF),
     decided: sample([
       { title: "Remove the $105 rolling 24-hour ceiling", state: "Decision saved Sep 28 — change pending (waiting for the workers to restart)" },
@@ -589,8 +629,7 @@ function receipt(p: Partial<UiReceipt> & Pick<UiReceipt, "key" | "kind" | "targe
 
 function sampleHistory(): readonly UiReceipt[] {
   return [
-    receipt({ key: "rc-4", kind: "doc-request", target: "doc-cochise-agenda", targetName: "Cochise Agenda Center page (saved copy)", label: "Open the saved copy", scopeKey: K.cochise, scopeName: "Cochise County, AZ", status: "failed", statusWords: "Failed", says: "Failed: the storage read timed out. Nothing was opened. You can try again.", sentAt: "2026-09-28T06:58:00.000Z", steps: [{ label: "Sent", at: "2026-09-28T06:58:00.000Z" }, { label: "Failed", at: "2026-09-28T06:58:20.000Z" }] }),
-    receipt({ key: "rc-3", kind: "recheck", target: "r-congress", targetName: "Members of Congress directory", label: "Check the public page now", scopeKey: K.us, scopeName: "United States", status: "unknown", statusWords: "Result unknown", says: "The checker didn’t answer within 30 seconds. It may still have run. Check what happened before trying again.", sentAt: "2026-09-28T06:20:00.000Z", steps: [{ label: "Sent", at: "2026-09-28T06:20:00.000Z" }, { label: "Read by the workers", at: "2026-09-28T06:20:05.000Z" }, { label: "No clear answer", at: "2026-09-28T06:21:00.000Z" }] }),
+    receipt({ key: "rc-3", kind: "send-agents", target: "r-congress", targetName: "Members of Congress directory", label: "Check the public page now", scopeKey: K.us, scopeName: "United States", status: "unknown", statusWords: "Result unknown", says: "The checker didn’t answer within 30 seconds. It may still have run. Check what happened before trying again.", sentAt: "2026-09-28T06:20:00.000Z", steps: [{ label: "Sent", at: "2026-09-28T06:20:00.000Z" }, { label: "Read by the workers", at: "2026-09-28T06:20:05.000Z" }, { label: "No clear answer", at: "2026-09-28T06:21:00.000Z" }] }),
     receipt({ key: "rc-2", kind: "decide", target: "ceiling", targetName: "$105 rolling 24-hour ceiling", label: "Decide: remove it", scopeKey: K.us, scopeName: "Whole system", level: "global", status: "done", statusWords: "Decision saved — change pending", says: "Approved: remove it. The change is released but waiting for the workers to restart. The ceiling stays in force until then.", sentAt: "2026-09-28T07:05:00.000Z", steps: [{ label: "Sent", at: "2026-09-28T07:05:00.000Z" }, { label: "Saved", at: "2026-09-28T07:05:01.000Z" }], lifecycle: { ...EMPTY_LIFECYCLE, saved: "2026-09-28T07:05:01.000Z" } }),
     receipt({ key: "rc-1", kind: "hunt-start", target: K.z85635, targetName: "ZIP 85635", label: "Start a hunt here", scopeKey: K.z85635, scopeName: "ZIP 85635 · Sierra Vista", status: "done", statusWords: "Hunt started", says: "Hunt started. The workers created 62 of 65 required items for 11 governments and moved 132 existing items first. Done means the hunt started, not that it’s finished.", sentAt: "2026-09-27T22:17:00.000Z", steps: [{ label: "Sent", at: "2026-09-27T22:17:00.000Z" }, { label: "Read by the workers", at: "2026-09-28T06:39:00.000Z" }, { label: "Running", at: "2026-09-28T06:39:10.000Z" }, { label: "Done", at: "2026-09-28T06:39:30.000Z" }], lifecycle: { ...EMPTY_LIFECYCLE, saved: "2026-09-27T22:17:00.000Z", workersReceived: "2026-09-28T06:39:00.000Z", workStarted: "2026-09-28T06:39:10.000Z" } }),
   ];
@@ -606,32 +645,10 @@ export interface SampleOutcome {
   readonly effect?: (w: SampleWorld) => SampleWorld;
 }
 
-const ENG_REFUSE: Readonly<Record<string, string>> = {
-  "MW-064": "the code is already released. It’s waiting for the workers to restart, not for engineering time.",
-  "A-1": "this problem is a website timing out, so the automatic repair handles it, not engineers.",
-};
-
 /** The natural result of each control against the sample world. */
 export function sampleOutcome(kind: ActionKind, target: string, input: { readonly option: string | null; readonly words: string; readonly amount: string; readonly selected: readonly string[] }, ctx: { readonly names: (id: string) => string }): SampleOutcome {
-  const { option, words, amount, selected } = input;
-  const add = <T,>(list: readonly T[], v: T) => (list.includes(v) ? list : [...list, v]);
+  const { option, words, amount } = input;
   switch (kind) {
-    case "contain": return { final: "done", says: "Hidden on the card. The exact card was checked again and now says local meetings aren’t available yet. The 280 meetings still show on their own cards.", effect: (w) => ({ ...w, contained: true }) };
-    case "uncontain": return { final: "done", says: "Shown again. The card is back to its earlier state.", effect: (w) => ({ ...w, contained: false }) };
-    case "recheck": return target === "r-az-fin" || target === "i-az-fin"
-      ? { final: "unknown", says: "The checker didn’t answer within 30 seconds. It may still have run. Check what happened before trying again." }
-      : { final: "done", says: target === "r-nh-exec" ? "Matches the published version (v2). Seen just now." : "Checked. The result is on the trail." };
-    case "workfirst": return { final: "done", says: "Moved 1 item to the front. Created 0, because it was already in line. It still can’t run until the saved-file fix is in use.", effect: (w) => ({ ...w, workFirst: add(w.workFirst, target) }) };
-    case "fixfirst": return { final: "done", says: "Moved to the top of the team’s list. Nothing was deployed.", effect: (w) => ({ ...w, fixRank: add(w.fixRank, target) }) };
-    case "stopmethod": return { final: "done", says: "Stopped. The requirement is still owed and a repair is scheduled.", effect: (w) => ({ ...w, stoppedItems: add(w.stoppedItems, target) }) };
-    case "scope-stop": {
-      const items: ReceiptItem[] = selected.map((id, n) => (n === selected.length - 1 && selected.length > 1
-        ? { name: ctx.names(id), status: "running", note: "An attempt was running. It stops when that attempt finishes." }
-        : { name: ctx.names(id), status: "done", note: "Stopped. Repair scheduled." }));
-      const doneIds = selected.filter((_, n) => !(n === selected.length - 1 && selected.length > 1));
-      return { final: selected.length > 1 ? "partial" : "done", says: selected.length > 1 ? "Stopped on most items. One was mid-attempt and stops when it finishes." : "Stopped. The requirement is still owed.", items, effect: (w) => ({ ...w, stoppedItems: [...new Set([...w.stoppedItems, ...doneIds])] }) };
-    }
-    case "stoprepeats": return { final: "partial", says: "301 stopped now. 18 will stop when their current attempt ends.", items: [{ name: "301 rows", status: "done", note: "Stopped" }, { name: "18 rows", status: "running", note: "An attempt was running; they stop when it ends" }] };
     case "decide": {
       if (option === "outreach") return { final: "refused", says: "Refused: outreach isn’t authorized for this account. Nothing was sent. Ask for outreach permission, or choose another option." };
       const label = option === "other" ? `“${words.trim()}”` : ({ route: "look for another route", absent: "record as not available", clerk: "trust the clerk’s list", roster: "trust the roster", both: "show both dates", third: "look for a third source" } as Record<string, string>)[option ?? ""] ?? "recorded";
@@ -651,18 +668,6 @@ export function sampleOutcome(kind: ActionKind, target: string, input: { readonl
     case "global-paid": return { final: "done", says: "Saved. Paid research pauses everywhere at the start of the next round.", effect: (w) => ({ ...w, paidPaused: !w.paidPaused }) };
     case "global-runner-pause": return { final: "done", statusWords: "Pause saved", says: "Pause saved. The workers stop after the round they are in.", effect: (w) => ({ ...w, runnerPaused: true }) };
     case "global-runner-resume": return { final: "done", statusWords: "Saved", says: "Saved. The workers may start rounds again.", effect: (w) => ({ ...w, runnerPaused: false }) };
-    case "scope-first": return { final: "done", says: "Moved the waiting work here to the front. Created 0 items." };
-    case "scope-recheck": return { final: "done", says: "Rechecked. Any mismatch is now listed under What’s stuck." };
-    case "doc-request": return target === "doc-cochise-agenda" ? { final: "failed", says: "Failed: the storage read timed out. Nothing was opened. You can try again." } : { final: "done", says: "Ready. The saved copy is open below.", effect: (w) => ({ ...w, docReady: add(w.docReady, target) }) };
-    case "use-url": return { final: "done", says: `Added for ${ctx.names(target)}. The workers will look there on their next round. The public page won’t change until new records are checked and published.` };
-    case "reprocess": return { final: "refused", says: "Refused for now: the software that pulls out facts can’t read saved files until that fix is released. Nothing was spent. It runs automatically once the fix is in use." };
-    case "retry-method": {
-      const items: ReceiptItem[] = selected.map((id, n) => (n === 0 ? { name: ctx.names(id), status: "refused", note: "No other permitted method. Sent to a software fix." } : { name: ctx.names(id), status: "done", note: "Switched to the next method." }));
-      return { final: selected.length > 1 ? "partial" : "refused", says: "Switched where another method exists. The rest went to a software fix.", items, effect: (w) => ({ ...w, stoppedItems: [...new Set([...w.stoppedItems, ...selected.slice(1)])] }) };
-    }
-    case "resume-publish": return { final: "unknown", says: "No answer within 30 seconds. It may still have run. Check what happened before trying again." };
-    case "eng-task": return { final: "done", statusWords: "Task created", says: "Task created. Waiting for an engineer to accept it. Later stages come only from the tracker.", effect: (w) => ({ ...w, tasks: [...w.tasks, { fixId: target, id: `ET-${20 + w.tasks.length}` }] }) };
-    case "job-stop": return { final: "done", says: "Stopped after its current step. The money set aside is returned once its last call settles.", effect: (w) => ({ ...w, jobsStopped: add(w.jobsStopped, target) }) };
     case "cancel-send":
       return { final: "done", statusWords: "Requested", says: "Your request to take it back is saved. It stays a request until the runner records it." };
     case "target-set":
@@ -676,41 +681,22 @@ export function sampleOutcome(kind: ActionKind, target: string, input: { readonl
       return { final: "done", statusWords: "Saved", says: "Sample preview: the setting is saved with its earlier value." };
     case "send-agents":
       return { final: "done", statusWords: "Sent", says: "The fleet was told where to go. The runner puts it first on its next round." };
-    case "focus": {
-      if (option === "eng" && ENG_REFUSE[target]) return { final: "refused", says: `Refused: ${ENG_REFUSE[target]} Nothing was changed or spent.` };
-      if ((option === "research" || option === "model") && target !== "A-1") return { final: "refused", says: `Refused: ${option === "research" ? "this is waiting on a code change, so more workers wouldn’t make it faster" : "a code fix doesn’t use AI models"}. Nothing was changed or spent.` };
-      if (option === "model") return { final: "unknown", says: "The scheduler didn’t confirm within 30 seconds. It may have been applied. Check what happened before trying again." };
-      if (option === "research") return { final: "done", statusWords: "Assigned", says: "The workers assigned 2 more slots. A new job is trying the county’s posted notices now — see Workers.", effect: (w) => ({ ...w, focus: { ...w.focus, [target]: "research" } }) };
-      if (target === "MW-060") return { final: "partial", says: "Partly done. A second engineer was assigned to tests and review. The code stays with one engineer so work doesn’t overlap.", items: [{ name: "Tests and review", status: "done", note: "A second engineer starts after their current task" }, { name: "The code change itself", status: "refused", note: "Only one engineer changes the same code at a time" }], effect: (w) => ({ ...w, focus: { ...w.focus, [target]: "eng" } }) };
-      return { final: "done", statusWords: "Assigned", says: "Engineering accepted one more person. They start after their current task.", effect: (w) => ({ ...w, focus: { ...w.focus, [target]: "eng" } }) };
-    }
   }
 }
 
 /** What "Check what happened" finds in the sample: the earlier send had finished. */
-export function sampleCheck(kind: ActionKind): SampleOutcome {
-  return { final: "done", says: kind === "focus" ? "Checked: it had been applied. It can now move up to Sonnet 5.5 when needed. Nothing was sent twice." : "Checked: it had finished. Nothing was sent twice." };
+export function sampleCheck(_kind: ActionKind): SampleOutcome {
+  return { final: "done", says: "Checked: it had finished. Nothing was sent twice." };
 }
 
 /** Item-state reasons in the sample world (rule 5 of the eligibility order). */
 export function sampleItemState(w: SampleWorld, kind: ActionKind, target: string, extra: { readonly hunts: readonly Hunt[]; readonly placeKind: string | null }): string | null {
-  if (kind === "contain" && w.contained) return "Already hidden. You can undo it.";
   if (kind === "hunt-start") {
     if (extra.placeKind === "Country" || extra.placeKind === null) return "Choose a state, county, ZIP or body. A nationwide hunt isn’t offered.";
     const h = extra.hunts.find((x) => x.placeKey === target && x.status !== "stopped");
     if (h) return `A hunt is already running here (${h.name}). Change it on its card.`;
   }
-  if (kind === "fixfirst" && w.fixRank.includes(target)) return "Already at the top of its list.";
-  if (kind === "stopmethod" && w.stoppedItems.includes(target)) return "Already stopped. It stays owed with a repair scheduled.";
   if (kind === "decide" && w.decisions[target]) return `Decided: ${w.decisions[target]}.`;
-  if (kind === "workfirst" && w.workFirst.includes(target)) return "Already at the front.";
-  if (kind === "eng-task" && (["MW-060", "MW-061", "MW-064"].includes(target) || w.tasks.some((t) => t.fixId === target))) return "A task already exists for this fix.";
-  if (kind === "focus" && w.focus[target]) return "Already has extra resources.";
-  if (kind === "job-stop" && w.jobsStopped.includes(target)) return "Already stopped.";
-  if (kind === "doc-request") {
-    if (target === "doc-az-fin") return "No saved copy: the export is larger than we store.";
-    if (w.docReady.includes(target)) return "Already open.";
-  }
   if (kind === "global-runner-pause" && w.runnerPaused) return "The workers are already paused.";
   if (kind === "global-runner-resume" && !w.runnerPaused) return "The workers aren’t paused.";
   if (["hunt-pause", "hunt-resume", "hunt-limit", "hunt-stop"].includes(kind)) {

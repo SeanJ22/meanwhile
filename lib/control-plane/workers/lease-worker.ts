@@ -5,6 +5,7 @@ import type { ModelResponse, ScoutEscalationAdmission } from "../scheduler/scout
 import { FleetSafetyController } from "../fleet-safety.ts";
 import { websiteSizeForObligation, type WebsiteSizeForUrl } from "../scheduler/host-supervision.ts";
 import { autonomousStandingRuntime } from "./standing-runtime.ts";
+import { observeCyclePhases } from "../scheduler/cycle-phases.ts";
 import { dispatchAutonomousTask } from "./coordinator.ts";
 import { browseWithPlaywright } from "../../../scripts/scout-browse.mts";
 import { workerBroker } from "./worker-broker.ts";
@@ -16,8 +17,11 @@ const broker = workerBroker<LeaseWorkerConfig>(work);
 async function work(config: LeaseWorkerConfig): Promise<void> {
   const url = config.postgres ? controlPlaneUrlFromEnv() : null;
   if (config.postgres && !url) throw new Error("CONTROL_PLANE_DATABASE_UNCONFIGURED");
-  const repos = url ? await createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true })
+  const stores = url ? await createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true })
     : await createFileRepositories(config.fileStoreRoot ?? join(config.root, ".runtime/control-plane/freshness-shadow"));
+  // CH-26: each result carries the repository calls its task made, so the round can show them per task.
+  const observer = observeCyclePhases(stores);
+  const repos = observer.repos;
   let websiteSize: WebsiteSizeForUrl = () => null;
   const safety = new FleetSafetyController({ now: new Date().toISOString(), costs: [], rollingCeilingUsd: config.ceilingUsd,
     websiteSize: url => websiteSize(url) });
@@ -25,6 +29,8 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
   // (a process runs one lease at a time). `subject` is only set on the old per-task path.
   let current = "";
   const perTask = process.env.WTP_LEASE_RUNTIME_PER_TASK === "1";
+  // CH-26: each task reads only its own history. Off until the scoped path is checked live (WTP_SCOPED_TASK_READS=1 turns it on).
+  const scopedReads = process.env.WTP_SCOPED_TASK_READS === "1";
   let shared: Awaited<ReturnType<typeof autonomousStandingRuntime>> | undefined;
   const buildRuntime = (subject: string | null) => autonomousStandingRuntime({ root: config.root, repos, environment: process.env,
     browse: browseWithPlaywright,
@@ -37,7 +43,7 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
         return response.admit ? { ...response, draw: usd => broker.send("draw", response.reservationId, usd), release: () => broker.send("release", response.reservationId, null) } : response;
       } } : {}),
     ...(config.searchEnabled ? { search: request => broker.call("search", request) } : {}),
-    auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => config.fundedSubjects.includes(subject) });
+    auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => config.fundedSubjects.includes(subject), scopedReads });
   const pending = new Set(config.taskIds);
   // Each process runs one live lease at a time, always pulling current task state.
   // The first process to claim wins in the existing repository dispatcher.
@@ -61,9 +67,10 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
         // Old path (one runtime per task) stays behind WTP_LEASE_RUNTIME_PER_TASK=1 until the shared runtime is checked live.
         const runtime = perTask ? await buildRuntime(item.subject)
           : (shared ??= await buildRuntime(null));
+        observer.finish("runtime");
         await runtime.beginTask?.(task);
         const result = await dispatchAutonomousTask(runtime, task);
-        broker.send("result", "", result);
+        broker.send("result", "", { ...result, repositoryCalls: observer.finish("task").repositoryCalls });
         ran = true;
       } catch (error) {
         if (!(error instanceof RepositoryLockHeld) && !(error instanceof Error && error.message === "WORKER_TASK_NOT_DISPATCHABLE")) {

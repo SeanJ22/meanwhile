@@ -680,6 +680,44 @@ export interface LearningView {
   readonly notMeasured: readonly NotMeasured[];
 }
 
+/* ------------------------------------------------------------ scoreboard */
+
+/** One Scoreboard number. A number we do not have has `value: null` (shown "—") and says why in `notMeasured`. Never blended with another row. */
+export interface ScoreboardRow {
+  /** The design's name for the number; shown only behind Technical details. */
+  readonly id: string;
+  readonly name: string;
+  readonly value: string | null;
+  /** The counts behind the value, e.g. "412 of 480". Null when none are held. */
+  readonly counts: string | null;
+  readonly says: string;
+  readonly notMeasured: string | null;
+}
+
+export interface ScoreboardGateRow {
+  readonly name: string;
+  readonly state: "pass" | "attention" | "not_measured";
+  readonly sentence: string;
+}
+
+export interface ScoreboardReadinessRow {
+  readonly name: string;
+  readonly witnessed: number;
+  readonly failing: number;
+  readonly notMeasured: number;
+  readonly of: number;
+}
+
+export interface ScoreboardView {
+  readonly rows: readonly ScoreboardRow[];
+  /** Launch gates as health checks; they never hold anything back. Null when the readings could not be taken. */
+  readonly gates: { readonly rows: readonly ScoreboardGateRow[]; readonly pass: number; readonly attention: number; readonly notMeasured: number } | null;
+  /** Operational readiness, counted apart from what any place is owed. */
+  readonly readiness: readonly ScoreboardReadinessRow[];
+  /** The weekly series that used to be "Is it learning". */
+  readonly learning: LearningView;
+}
+
 /* ------------------------------------------------------------------ fixes */
 
 export type FixTab = "attention" | "fixing" | "update" | "done" | "returned";
@@ -739,13 +777,7 @@ export interface FixView {
 /* --------------------------------------------------------------- actions */
 
 export type ActionKind =
-  | "contain" | "uncontain" | "recheck" | "workfirst" | "fixfirst" | "stopmethod" | "scope-stop" | "stoprepeats"
-  | "decide" | "hunt-start" | "hunt-start-many" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop"
-  | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume"
-  | "global-ceiling" | "global-search-on" | "global-search-off" | "fix-go"
-  | "scope-first" | "scope-recheck" | "doc-request" | "use-url" | "reprocess" | "retry-method" | "resume-publish"
-  | "eng-task" | "job-stop" | "focus" | "send-agents" | "cancel-send" | "target-set" | "target-clear"
-  | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo";
+  "decide" | "hunt-start" | "hunt-start-many" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop" | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume" | "global-ceiling" | "global-search-on" | "global-search-off" | "fix-go" | "send-agents" | "cancel-send" | "target-set" | "target-clear" | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo";
 
 export type ReceiptStatus = "queued" | "read" | "running" | "done" | "partial" | "refused" | "failed" | "unknown";
 export const PENDING_STATUSES: readonly ReceiptStatus[] = ["queued", "read", "running", "unknown"];
@@ -835,7 +867,7 @@ export interface AdminV6Data {
   readonly reliability: Sourced<readonly SourceReliabilityRow[]>;
   readonly publication: Sourced<PublicationView>;
   readonly money: Sourced<MoneyView>;
-  readonly learning: Sourced<LearningView>;
+  readonly scoreboard: Sourced<ScoreboardView>;
   readonly fixes: Sourced<FixView>;
   readonly decided: Sourced<readonly { readonly title: string; readonly state: string }[]>;
 }

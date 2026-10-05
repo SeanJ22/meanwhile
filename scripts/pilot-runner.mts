@@ -185,6 +185,8 @@ import { installConnectAttemptWindow } from "../lib/ops/connect-attempt-window.t
 import { releaseWindowLeaseOfExitedLocalHolder } from "../lib/control-plane/promotion/window.ts";
 import { ADMIN_COPY_POLL_MS, runAuthorizedAdminCopyTick } from "../lib/control-plane/evidence/admin-copy-runner.ts";
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
+import { fireDueOrders } from "../lib/control-plane/gateway/scheduled-fire.ts";
+import { wakeHintWriterFromEnv } from "../lib/control-plane/gateway/wake-hint.ts";
 
 /* Before anything connects: a per-address connect window that fits this host,
    for this process and, through NODE_OPTIONS, every child (connect-attempt-window.ts). */
@@ -1168,6 +1170,8 @@ let runtimeAdmissionsHeld = false;
 let standingRuntimeTimer: ReturnType<typeof setInterval> | null = null;
 let ownerControlTimer: ReturnType<typeof setInterval> | null = null;
 let adminCopyTimer: ReturnType<typeof setInterval> | null = null;
+let scheduledOrderTimer: ReturnType<typeof setInterval> | null = null;
+let scheduledOrderWork: Promise<void> | null = null;
 let adminCopyWork: Promise<void> | null = null;
 let researchCycleActive = false;
 let ownerWakePending = false;
@@ -1241,6 +1245,40 @@ async function readRunnerControls(repos: ControlPlaneRepositories, force = false
   return controlReader.read(force);
 }
 
+/**
+ * BR-16/BR-37: Sean's scheduled orders fire on time from this parent process,
+ * between rounds and during them, on a clock separate from the owner-control
+ * read. It fires once as the clock opens (process start and after each release
+ * handoff) so an order that came due while the runner was down goes at once.
+ * Each occurrence carries one idempotency key, so a restart never sends twice.
+ */
+const SCHEDULED_ORDER_POLL_MS = 60_000;
+function runScheduledOrderTick(): void {
+  if (runtimeAdmissionsHeld || scheduledOrderWork || provider !== "postgres" || canary) return;
+  scheduledOrderWork = (async () => {
+    const repos = await ownerRepositories();
+    if (!repos) return;
+    const fired = await fireDueOrders({ repos, now: () => new Date().toISOString(), currentStateVersion: null,
+      codeSha: RUNNING_CODE_SHA, wake: wakeHintWriterFromEnv() }, new Date().toISOString());
+    for (const order of fired) {
+      console.log(`  scheduled order ${order.id} (${order.orderType}) due ${order.occurrence}: ${order.ok ? "sent" : "refused by the gateway"}`);
+    }
+  })().catch(error => {
+    console.error(`  scheduled orders could not be checked (${error instanceof Error ? error.name : "error"}); the next tick tries again`);
+  }).finally(() => { scheduledOrderWork = null; });
+}
+
+function startScheduledOrderClock(): void {
+  if (runtimeAdmissionsHeld || scheduledOrderTimer !== null || provider !== "postgres" || canary) return;
+  runScheduledOrderTick();
+  scheduledOrderTimer = setInterval(runScheduledOrderTick, SCHEDULED_ORDER_POLL_MS);
+}
+
+async function stopScheduledOrderClock(): Promise<void> {
+  if (scheduledOrderTimer !== null) { clearInterval(scheduledOrderTimer); scheduledOrderTimer = null; }
+  if (scheduledOrderWork) await scheduledOrderWork;
+}
+
 /*
  * Routine civic data and intake observations share this standing host, but
  * they do not share the research cycle's failure domain or pause control. The
@@ -1258,6 +1296,7 @@ function runStandingRuntimeTick(reason: string, force = false): void {
 
 function startStandingRuntimeClock(): void {
   if (runtimeAdmissionsHeld || standingRuntimeTimer !== null) return;
+  startScheduledOrderClock();
   runStandingRuntimeTick("independent standing clock startup", true);
   standingRuntimeTimer = setInterval(
     () => {
@@ -1290,6 +1329,7 @@ async function holdStandingRuntimeAtQuiescence(): Promise<void> {
   try {
     await waitForRuntimeQuiescence(async () => {
       await stopAdminCopyClock();
+      await stopScheduledOrderClock();
       await activeControlRead;
       await standingRuntimeScheduler.waitForIdle();
     }, { reason: "release handoff quiescence" });
@@ -2109,6 +2149,7 @@ if (!standingDrainFailed) {
   try {
     await waitForRuntimeQuiescence(async () => {
       await stopAdminCopyClock();
+      await stopScheduledOrderClock();
       await activeControlRead;
       await standingRuntimeScheduler.waitForIdle();
     }, { reason: "runner shutdown" });

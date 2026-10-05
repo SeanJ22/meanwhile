@@ -132,7 +132,7 @@ import { startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
 import { placeSourceLaunchOrder, withNationalPlaceTasks } from "../lib/hunt/place-source-admission.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
-import { publishRoutineReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
+import { publishSupervisorReaderEdge, readerEdgeSupervisorFailure, type ReaderEdgePublicationOutcome } from "../lib/civic-data/reader-edge-publication.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { readFieldManual } from "../lib/control-plane/field-manual.ts";
@@ -419,7 +419,7 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
   }
   const admitted = admittedHuntSourceScopes(resolved.scopes, RUN_STARTED_AT);
   if (admitted.length === 0) return publication;
-  return [...huntSourceTasks(admitted, RUN_STARTED_AT, items), ...publication];
+  return [...huntSourceTasks(admitted, RUN_STARTED_AT), ...publication];
 }
 
 function newestConsideredAt(
@@ -432,6 +432,7 @@ function newestConsideredAt(
 }
 
 async function persistSupervisorOutcome(input: {
+  readonly readerEdge: ReaderEdgePublicationOutcome;
   readonly campaignPublicationApprovalsAttempted?: number;
   readonly failures: readonly SupervisorFailure[];
   readonly attemptedTasks: number;
@@ -473,6 +474,7 @@ async function persistSupervisorOutcome(input: {
     attemptedTasks: input.attemptedTasks,
     verifiedSourceSuccesses: input.verifiedSourceSuccesses,
     verifiedSourceFailures: input.verifiedSourceFailures,
+    readerEdge: input.readerEdge,
     failures: input.failures,
     taskReceipts: input.taskReceipts,
     readerReadback: input.readerReadback,
@@ -1176,9 +1178,9 @@ for (const error of pass.errors) {
 const readerRuns = pass.repair;
 // Source settlement publishes serving copies even when a readback child fails.
 step = "publishing changed reader edge copies";
-if (!await publishRoutineReaderEdge(store, new Date().toISOString(), ONLY === null ? null : selectedTasks)) {
-  supervisorFailures.push({ taskId: "reader-edge-publication", code: "READER_EDGE_PUBLISH_FAILED", detail: "Reader edge publication failed; the previous serving copies remain available." });
-}
+const readerEdge = await publishSupervisorReaderEdge(store, new Date().toISOString(), ONLY === null ? null : selectedTasks);
+const readerEdgeFailure = readerEdgeSupervisorFailure(readerEdge);
+if (readerEdgeFailure) supervisorFailures.push(readerEdgeFailure);
 for (const run of readerRuns) {
   if (run.settlementErrorMessage === null) continue;
   const detail = safeFailure(run.settlementErrorMessage ?? "unknown Reader settlement failure");
@@ -1231,6 +1233,7 @@ try {
   const cycleId = await persistSupervisorOutcome({
     ...(campaignPublicationInputs !== null && verifiedTaskReceipts.some(row => row.taskId === CAMPAIGN_PUBLICATION_TASK)
       ? { campaignPublicationApprovalsAttempted: campaignPublicationInputs.approvals } : {}),
+    readerEdge,
     failures: supervisorFailures,
     attemptedTasks: attempted,
     verifiedSourceSuccesses,
@@ -1252,6 +1255,7 @@ try {
     kind: "ROUTINE_CIVIC_DATA_SUPERVISOR",
     state: supervisorFailures.length === 0 ? "SUCCEEDED" : "FAILED",
     cycleId,
+    readerEdge,
     exactTaskReceipts: verifiedTaskReceipts.length,
     durable: true,
   }));
@@ -1285,6 +1289,7 @@ console.log("RCD_RUN=" + JSON.stringify({
     readerReadbacksCurrentFail,
   verifiedSourceSuccesses,
   verifiedSourceFailures,
+  readerEdge,
   supervisorFailures: supervisorFailures.length,
   readerReadbacksRecordedPass,
   readerReadbacksRecordedFail,

@@ -59,3 +59,27 @@ test("a fixed item reported again came back; starting moves Open to Being fixed"
   assert.equal(view.returned.length, 1);
   assert.equal(view.open.length, 1);
 });
+
+test("BR-24: a completed fix is one update on Now with its label and before/after, then gone; Expected is never a win", async () => {
+  const { takeUnshownUpdates, addUpdate } = await import("../lib/control-plane/updates.ts");
+  const { updatesView, updatesFromChanges } = await import("../lib/control-plane/admin-view/updates-read.ts");
+  const repos = createMemoryRepositories();
+  const d = deps(repos);
+  await submit({ type: "queue.add", subject: "", input: { where: "Pages", says: "Spend by day is not measured" }, stateVersion: null,
+    idempotencyKey: "upd-add-1", caller: "OWNER_SESSION", actorRef: "s" }, d);
+  const id = fixItems(await read(repos))[0].id;
+  await submit({ type: "fix.complete", subject: id, input: { id, whatChanged: "Spend is counted by day", changedBy: "Engineering", before: "none", after: "daily" },
+    stateVersion: null, idempotencyKey: "upd-done-1", caller: "OWNER_SESSION", actorRef: "s" }, d);
+  await addUpdate(repos, { id: "soon:1", what: "Door reopening soon", at, label: "EXPECTED" });
+  const first = await takeUnshownUpdates(repos, at);
+  assert.equal(first.length, 2);
+  const view = updatesView(first, at);
+  const fixed = view.updates.find((u) => u.what.startsWith("Fixed"))!;
+  assert.equal(fixed.label, "Testing");
+  assert.equal(fixed.before, "none");
+  assert.equal(fixed.isWin, true);
+  assert.equal(view.updates.find((u) => u.what.startsWith("Door"))!.isWin, false);
+  assert.equal((await takeUnshownUpdates(repos, at)).length, 0, "it leaves Now after one showing");
+  const rows = updatesFromChanges([{ number: 1, session: null, line: "Faster pages", status: "live", statusWords: "Live", why: "", url: "u", at }], Date.parse(at));
+  assert.equal(rows[0].label, "TESTING");
+});

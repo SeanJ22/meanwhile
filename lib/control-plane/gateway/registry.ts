@@ -44,6 +44,7 @@
 import { appendDecisionIntent, RUNNER_ID, SNAPSHOT_ID } from "../admin-data.ts";
 import { fixConsequence, fixSubjectId, parseFixField, WHERE_SEPARATOR } from "../fix-queue.ts";
 import { addFixItem, completeFixItem, fixItems } from "../fix-list.ts";
+import { addUpdate } from "../updates.ts";
 import {
   ANSWERED_IN_OWN_WORDS,
   OWNER_ANSWER_MAX_CHARS,
@@ -400,7 +401,8 @@ const REGISTRY: readonly RegisteredAction[] = [
         if (typeof u.type !== "string" || !u.type || typeof u.input !== "object" || u.input === null) return bad("the undo needs an action and its input");
         undo = { type: u.type, input: u.input as Record<string, unknown> };
       }
-      return { ok: true, value: { id, whatChanged, changedBy, before, after, undo } };
+      const label = input.label === "PROVEN" || input.label === "TESTING" ? input.label : undefined;
+      return { ok: true, value: { id, whatChanged, changedBy, before, after, undo, ...(label ? { label } : {}) } };
     },
     async execute(deps, context, input) {
       const id = String(input.id);
@@ -414,6 +416,12 @@ const REGISTRY: readonly RegisteredAction[] = [
           undo: input.undo as { type: string; input: Record<string, unknown> } | null,
         }, context.at);
       } catch (error) { return storeRefusal("the fix list", error); }
+      // BR-24: a completed fix is an update on Now, once. It is Testing until it has been proven.
+      try {
+        await addUpdate(deps.repos, { id: `fix:${id}:${context.at}`, what: `Fixed: ${String(input.whatChanged)}`, at: context.at,
+          label: input.label === "PROVEN" ? "PROVEN" : "TESTING", evidenceHref: `/admin?view=fix`,
+          before: String(input.before), after: String(input.after) });
+      } catch (error) { return storeRefusal("the updates feed", error); }
       return { ok: true, outcome: "DONE", subject: id, says: "It is on the fix list as Fixed and checked, with its before and after.",
         openedWork: [], readBackAt: "/admin?view=fixes", undo: null };
     },

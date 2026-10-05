@@ -43,6 +43,7 @@ import { CaptureHealthPanel } from "./capture-health.tsx";
 import { ReportsView } from "./reports-view.tsx";
 import { RunnerSettingsPanel, SettingsScreen } from "./screen-settings.tsx";
 import { DoorsPanel } from "./doors-panel.tsx";
+import { UpdatesPanel } from "./updates-panel.tsx";
 import { WorkScreen } from "./screen-work.tsx";
 import { WorkersScreen } from "./screen-workers.tsx";
 import { cx } from "./ui.tsx";
@@ -383,7 +384,7 @@ export function CommandCenter(props: CommandCenterProps) {
           )}
           {detail ? <DetailPanel detail={detail} /> : (
             <>
-              {view === "now" && <><NowScreen key={scopeKey} /><ReaderDemandPanel /><CaptureHealthPanel /><TopicCountsPanel /><DataSwitchesPanel /></>}
+              {view === "now" && <><NowScreen key={scopeKey} /><UpdatesPanel /><ReaderDemandPanel /><CaptureHealthPanel /><TopicCountsPanel /><DataSwitchesPanel /></>}
               {view === "workers" && <><WorkersScreen /><RunnerSettingsPanel /><DoorsPanel /></>}
               {view === "work" && <WorkScreen />}
               {view === "checklist" && <ChecklistScreen />}

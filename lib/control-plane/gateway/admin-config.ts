@@ -75,6 +75,8 @@ export interface AdminConfig {
   readonly settings?: Readonly<Record<string, import("../settings.ts").SettingValue>>;
   /** The fix list (BR-03): broken things and their repairs. */
   readonly fixList?: readonly import("../fix-list.ts").FixItem[];
+  /** The updates feed (BR-24). */
+  readonly updates?: readonly import("../updates.ts").UpdateRecord[];
   readonly settingHistory?: readonly import("../settings.ts").SettingChange[];
   readonly routineRefreshRequests?: readonly import("../../civic-data/owner-refresh.ts").RoutineRefreshRequest[];
   /**

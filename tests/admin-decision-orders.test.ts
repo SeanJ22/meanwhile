@@ -46,3 +46,11 @@ test("the retired route and local sync are gone; schedule times are Eastern acro
  assert.equal(existsSync("app/api/admin/decision/route.ts"),false);assert.equal(existsSync("scripts/apply-owner-decisions.mts"),false);assert.doesNotMatch(readFileSync("package.json","utf8"),/"decisions:sync"/);
  assert.equal(easternLocalToIso("2026-07-05T09:00"),"2026-07-05T13:00:00.000Z");assert.equal(easternLocalToIso("2026-01-05T09:00"),"2026-01-05T14:00:00.000Z");assert.equal(easternLocalToIso("2026-03-08T02:30"),null);
 });
+
+test("competing owner sessions send only one order for the same card",async()=>{
+ const s=await setup();
+ const results=await Promise.all([s.decide("card-race-approve","approve"),s.decide("card-race-change","change",{fields:{rollingCeilingUsd:50}})]);
+ assert.equal(results.filter(r=>r.ok).length,1);
+ assert.equal((await s.repos.adminReceipts.readAll()).filter(r=>r.type==="config.setFleetSpendCeiling"&&r.outcome!=="REFUSED").length,1);
+ assert.ok(decisionOrders((await s.repos.adminConfig.read(ADMIN_CONFIG_ID))!.value)[0].resolution);
+});

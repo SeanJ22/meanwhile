@@ -23,6 +23,8 @@ export interface DecisionOrderCard {
   readonly schedulable: boolean;
   readonly raisedAt: string;
   readonly version: string;
+  /** Keeps competing owner sessions from sending two orders for one card. */
+  readonly claimedBy?: string;
   readonly resolution?: { readonly choice: string; readonly reason: string | null; readonly at: string; readonly receiptId: string | null };
 }
 export interface DecisionOrdersView { readonly cards: readonly DecisionOrderCard[]; readonly observedAt: string }
@@ -61,23 +63,42 @@ export async function executeDecisionOrder(deps:GatewayDeps,context:ActionContex
   const choice=String(input.option);const reason=typeof input.words==="string"?input.words.trim():"";
   if(choice==="decline"&&!reason)return refused("INVALID_INPUT","Say why you are declining this recommendation.");
   if(!["approve","decline","change","schedule"].includes(choice))return refused("INVALID_INPUT","Approve, decline, change or schedule this recommendation.");
+  // Claim before submitting a child. A retry of this receipt can finish the
+  // same order after a crash; a different decision cannot send another one.
+  let claimed=false;
+  for(let attempt=0;attempt<4;attempt++){
+    const latest=await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+    const current=latest&&isAdminConfig(latest.value)?decisionOrders(latest.value).find(c=>c.id===card.id):null;
+    if(!latest||!current||current.version!==card.version||current.resolution)return refused("STALE_STATE","That card changed or already has a decision; read it again.");
+    if(current.claimedBy&&current.claimedBy!==context.receiptId)return refused("STALE_STATE","Another decision is being saved for this card. Check its recorded order before deciding again.");
+    if(current.claimedBy===context.receiptId){claimed=true;break;}
+    try{await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID,latest.revision,{...latest.value,decisionOrders:decisionOrders(latest.value).map(c=>c.id===card.id?{...c,claimedBy:context.receiptId}:c)},context.at);claimed=true;break;}catch(error){if(attempt===3)throw error;}
+  }
+  if(!claimed)return refused("STALE_STATE","The card is being updated; read it again.");
+  const releaseClaim=async()=>{
+    for(let attempt=0;attempt<4;attempt++){
+      const latest=await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);if(!latest||!isAdminConfig(latest.value))return;
+      const current=decisionOrders(latest.value).find(c=>c.id===card.id);if(current?.claimedBy!==context.receiptId||current.resolution)return;
+      try{await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID,latest.revision,{...latest.value,decisionOrders:decisionOrders(latest.value).map(c=>c.id===card.id?{...c,claimedBy:undefined}:c)},context.at);return;}catch(error){if(attempt===3)throw error;}
+    }
+  };
   let childId:string|null=null;
   if(choice!=="decline"){
     const orderInput={...card.order.input};
     if(choice==="change"){
       const values=input.fields as Record<string,unknown>|undefined;
       for(const field of card.fields){
-        if(!values||!(field.key in values))return refused("INVALID_INPUT",`Give the new ${field.label.toLowerCase()}.`);
+        if(!values||!(field.key in values)){await releaseClaim();return refused("INVALID_INPUT",`Give the new ${field.label.toLowerCase()}.`);}
         const raw=values[field.key];
-        if(field.kind==="boolean"&&raw!==true&&raw!==false&&raw!=="true"&&raw!=="false")return refused("INVALID_INPUT",`Choose on or off for ${field.label.toLowerCase()}.`);
+        if(field.kind==="boolean"&&raw!==true&&raw!==false&&raw!=="true"&&raw!=="false"){await releaseClaim();return refused("INVALID_INPUT",`Choose on or off for ${field.label.toLowerCase()}.`);}
         orderInput[field.key]=field.kind==="number"?Number(raw):field.kind==="boolean"?raw===true||raw==="true":String(raw);
-        if(field.kind==="number"&&(String(raw).trim()===""||!Number.isFinite(orderInput[field.key] as number)))return refused("INVALID_INPUT",`Give ${field.label.toLowerCase()} as a number.`);
+        if(field.kind==="number"&&(String(raw).trim()===""||!Number.isFinite(orderInput[field.key] as number))){await releaseClaim();return refused("INVALID_INPUT",`Give ${field.label.toLowerCase()} as a number.`);}
       }
     }
     const {submit}=await import("./gateway/gateway.ts");
     const request=choice==="schedule"?{type:"orders.schedule",subject:"",input:{orderType:card.order.type,subject:card.order.subject,input:orderInput,startAt:input.startAt}}:{type:card.order.type,subject:card.order.subject,input:orderInput};
     const child=await submit({...request,stateVersion:deps.currentStateVersion,idempotencyKey:fingerprint(["decision-order",context.receiptId]),caller:context.request.caller,actorRef:context.request.actorRef},deps);
-    if(!child.ok)return refused("DOWNSTREAM_REFUSED",child.receipt.says);
+    if(!child.ok){await releaseClaim();return refused("DOWNSTREAM_REFUSED",child.receipt.says);}
     childId=child.receipt.receiptId;
   }
   // The child is idempotent: if the resolution write loses a race or the process
@@ -88,7 +109,7 @@ export async function executeDecisionOrder(deps:GatewayDeps,context:ActionContex
     const cards=decisionOrders(latest.value);const same=cards.find(c=>c.id===card.id);
     if(same?.resolution){if(same.resolution.receiptId!==childId)return refused("STALE_STATE","Another decision has already been recorded for this card.");break;}
     const resolution={choice,reason:reason||null,at:context.at,receiptId:childId};
-    try{await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID,latest.revision,{...latest.value,updatedAt:context.at,decisionOrders:cards.map(c=>c.id===card.id?{...c,resolution}:c)},context.at);break;}catch(error){if(attempt===3)throw error;}
+    try{await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID,latest.revision,{...latest.value,updatedAt:context.at,decisionOrders:cards.map(c=>c.id===card.id?{...c,claimedBy:undefined,resolution}:c)},context.at);break;}catch(error){if(attempt===3)throw error;}
   }
   return {ok:true,outcome:childId?"QUEUED":"DONE",subject:card.id,says:childId?"Accepted. The recommendation is now an order; its progress is shown with your orders.":"Declined. Your reason is saved on the card.",openedWork:childId?[{kind:"order",id:childId,title:card.recommends}]:[],readBackAt:"/admin?view=work",undo:null};
 }

@@ -3,7 +3,7 @@ worker: codex-admin
 provider: Codex
 run_id: codex-admin-97a60c06ff864ac48733751bec7f5663
 lock: codex-admin-97a60c06ff864ac48733751bec7f5663
-heartbeat: 2026-10-05T18:44:50Z
+heartbeat: 2026-10-05T18:56:04Z
 on_river: BR-01 BR-02 BR-03 BR-05 BR-06 BR-09 BR-10 BR-12 BR-15 BR-16 BR-24 BR-37 CH-12 CH-14 @ 85a0ad660c36 (BR-05/16/37 hooks pending)
 ready: BR-05 BR-06 BR-01 BR-03 @ b593ef9b1; BR-24 @ 73a952059; BR-12 @ dadebfafb; BR-15 @ cfb115b24; BR-05 test fix @ c53405a83; BR-09 @ 87e72a077; BR-02 @ a4a64e1f7; BR-10 @ b318ac51b; BR-16 BR-37 (library half, hook pending pilot-runner) @ 3945aff27; CH-12 @ 1408acfe5; CH-14 @ ae9ff8348. Not READY: BR-13 (WIP 2a2db11c2, ceiling/setting before-after built, hunt score half open). Take the latest READY commit on stream/admin; it contains all of the above.
 checks: tsc PASS and eslint PASS (0 errors) on every READY commit; focused tests PASS; at the last READY commit all 659 tests in tests/admin*.test.ts, tests/admin-v6-ui, operator-chat, execution-accountability-admin-v6-history and absence-defaults PASS. FULL CI-style run at b593ef9b1: 9296 of 9312 pass, 5 fail: two were mine and are fixed (absence-defaults, v6-ui connected kinds) and pass; three are load-timing (control-plane-request-bounds x2, reader-last-mile-officeholder-identity) and each PASSES alone on my branch (the first also on origin/river). No FULL re-run at the final SHA.

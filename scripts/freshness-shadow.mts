@@ -250,7 +250,7 @@ import {
   type WorkArtifact,
 } from "../lib/control-plane/scheduler/dispatch.ts";
 import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutJobWorstCaseUsd, scoutPrewarmPlan, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { failureResponderExecutor, plainRereadSlot, readSubjectScoutHistory, solvedScoutResult, sourceFailureRecovery, subjectScoutHistory, wakeInstalledAdapterDebts } from '../lib/control-plane/workers/detective.ts';
+import { DETECTIVE_SHUT_THRESHOLD, failureResponderExecutor, plainRereadSlot, readSubjectScoutHistory, solvedScoutResult, sourceFailureRecovery, subjectScoutHistory, wakeInstalledAdapterDebts } from '../lib/control-plane/workers/detective.ts';
 import { buildScoutToolkit, scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
 import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
@@ -336,8 +336,11 @@ import {
   adminConfigForPaidWork,
   discoverySearchEnabled,
   fleetSpendCeilingOverrideUsd,
+  isAdminConfig,
+  type AdminConfig,
   type AdminConfigRead,
 } from "../lib/control-plane/gateway/admin-config.ts";
+import { DETECTIVE_SHUT_THRESHOLD_SETTING, readSetting, runnerSettingsEcho } from "../lib/control-plane/settings.ts";
 import { installNeonCircuitBreaker, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
 import { modelLaneClosure, pendingResearchLaneAcknowledgment } from "../lib/control-plane/scheduler/model-lane.ts";
@@ -997,13 +1000,25 @@ const debtsIn = await wakeInstalledAdapterDebts(repos,(canary
 ).filter((debt) => !retiredDebtReasons.has(debt.obligationId)),NOW);
 /* The plain-code lane's queue key reads this debt (`waitingSince`); so does its reading while the cycle runs. */
 const debtAtCycleStart = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
+/*
+ * BR-05: Admin's shut-door threshold, read from the config as this round starts (no process-wide snapshot).
+ * An unreadable or invalid value is the code default 3. What was applied goes into the heartbeat's `settings`.
+ */
+let settingsConfig: AdminConfig | null = null;
+try {
+  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  settingsConfig = row !== null && isAdminConfig(row.value) ? row.value : null;
+} catch (error) {
+  runtimeConditions.push(`Admin settings could not be read; code defaults apply this round: ${error instanceof Error ? error.message : String(error)}`);
+}
+const shutThreshold = readSetting(settingsConfig, DETECTIVE_SHUT_THRESHOLD_SETTING, DETECTIVE_SHUT_THRESHOLD);
 /* A shut door goes to a detective; a passing outage keeps its plain retry. While the paid lane is closed the shut door's plain re-read still runs (DP-02). */
 const plainDecisionBeforeDetective = new Map<string, ExecutorDecision>();
 for (const [id, decision] of decisions) {
   const debt = debtAtCycleStart.get(id);
-  const recovered = sourceFailureRecovery(decision, debt);
+  const recovered = sourceFailureRecovery(decision, debt, shutThreshold);
   if (recovered !== decision) plainDecisionBeforeDetective.set(id, decision);
-  decisions.set(id, plainRereadSlot(debt, nowMs) ? decision : recovered);
+  decisions.set(id, plainRereadSlot(debt, nowMs, shutThreshold) ? decision : recovered);
 }
 const modelClassUnits = units.filter((u) => decisions.get(u.obligation.id)?.kind === "BOUNDED_MODEL_WORKER");
 const debtIds = new Set(debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
@@ -2624,6 +2639,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
       solved:heldScoutFor(scheduled),
       sourceFailure:debtAtCycleStart.get(scheduled.obligation.id),
       sourceRoute:registry.routeFor(scheduled.obligation.id),
+      shutThreshold,
       toolkitFor: buildScoutToolkit,
       executorFactory: deps => scoutProcessExecutor({ root: ROOT, postgres: wantsPostgres,
         fileStoreRoot: CONTROL_PLANE_ROOT, slots: paidScoutSlots,
@@ -3899,6 +3915,8 @@ const heartbeat: RunnerHeartbeat = {
     appliedAt: NOW,
     detail: discoverySearchDecision,
   },
+  /* BR-05: the runner-side settings this round applied, so Admin can say a saved value is in force. */
+  settings: runnerSettingsEcho(settingsConfig, NOW),
 };
 try {
   await finalStep("heartbeat", async () => {

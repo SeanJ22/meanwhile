@@ -9,7 +9,7 @@ import type { ExecutorDecision } from "../scheduler/dispatch.ts";
 import type { RouteDescriptor } from "../scheduler/registry.ts";
 import { sourceReliabilityKey } from "../scheduler/scout-reliability.ts";
 
-/** Consecutive failures after which a door counts as shut. Becomes an Admin setting once BR-05 lands. */
+/** Consecutive failures after which a door counts as shut: the code default for Admin's `detective.shutThreshold` setting (BR-05). */
 export const DETECTIVE_SHUT_THRESHOLD = 3;
 
 /**
@@ -55,9 +55,9 @@ export function plainRereadSlot(debt: FreshnessDebt | null | undefined, nowMs: n
 
 /** A failed discovery provider does not invalidate another source already found for the subject. */
 function heldAfterSourceFailure(solved: import('../scheduler/scout-result.ts').ScoutResult | null | undefined,
-  debt: FreshnessDebt | null | undefined, route: RouteDescriptor | null | undefined) {
+  debt: FreshnessDebt | null | undefined, route: RouteDescriptor | null | undefined, shutThreshold: number = DETECTIVE_SHUT_THRESHOLD) {
   if (!solved) return null;
-  if (!needsSourceInvestigation(debt) || Date.parse(debt.lastFailedAt) < Date.parse(solved.recordedAt)) return solved;
+  if (!needsSourceInvestigation(debt, shutThreshold) || Date.parse(debt.lastFailedAt) < Date.parse(solved.recordedAt)) return solved;
   const open = route?.open;
   const failedUrl = open?.kind === 'HTTP_GET' || open?.kind === 'HTTP_POST' ? open.url : debt.target;
   const sourceKey = (url: string) => {
@@ -93,6 +93,8 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
   sourceFailure?: FreshnessDebt | null;
   sourceRoute?: RouteDescriptor | null;
   executorFactory?: ScoutExecutorFactory;
+  /** Admin's shut-door threshold as this round read it (BR-05); the code default when absent. */
+  shutThreshold?: number;
 }): import('../scheduler/dispatch.ts').DeclaredExecutor {
   const contexts=new Map<string,{value?:ReturnType<typeof deps.contextFor>;error?:unknown}>();
   const contextFor: typeof deps.contextFor = row=>{
@@ -105,7 +107,7 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
   const scout=factory({...deps,contextFor}), detective=detectiveExecutor({...deps,contextFor},factory);
   const choose=(row:Parameters<typeof contextFor>[0])=>{
     try {
-      if (needsSourceInvestigation(deps.sourceFailure)) return detective;
+      if (needsSourceInvestigation(deps.sourceFailure, deps.shutThreshold)) return detective;
       const inherited=contextFor(row).inherited;
       // Shared manual failures are knowledge, not failures of this job. Its
       // projected entries/instructions are indented; keep actual prior-result
@@ -115,7 +117,7 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
         /\b(?:REFUSED|BLOCKED|NO_PROGRESS|NEEDS_ADAPTER|REQUIRED_FIELD_MISSING)\b|failed parse|blocked route|retry loop|DEBT: [1-9]\d* consecutive failure/i.test(ownHistory) ? detective : scout;
     } catch { return scout; }
   };
-  const held=heldAfterSourceFailure(deps.solved,deps.sourceFailure,deps.sourceRoute);
+  const held=heldAfterSourceFailure(deps.solved,deps.sourceFailure,deps.sourceRoute,deps.shutThreshold);
   return {lane:held?'DETERMINISTIC':'BOUNDED_MODEL_WORKER',
     ...(!held && scout.dispatch && detective.dispatch ? {dispatch: ((input) => choose(input.obligation).dispatch!(input)) as NonNullable<import('../scheduler/dispatch.ts').DeclaredExecutor['dispatch']>} : {}),
     workerFor:input=>held

@@ -18,7 +18,7 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import type { CoveredBody } from "@/lib/registry/coverage";
 import { linksForMeeting, type OutboundLink } from "@/lib/registry/links";
 import { carriedRowClause, relativeAge } from "@/lib/meetings/freshness";
-import { joinLine, onlineAccessFor, placelessWhereLine } from "@/lib/meetings/online";
+import { isPlaceUnrecorded, onlineAccessFor, placelessWhereLine } from "@/lib/meetings/online";
 import { minutesSummaryForMeeting } from "@/lib/meetings/minutes-summaries";
 import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
 import { useMeetingBadge } from "@/hooks/use-meeting-badge";
@@ -196,7 +196,7 @@ export function MeetingPopup({
               for one claim about a government's meeting. 2026-09-23: the
               online sentence only where the body published an online access;
               otherwise our own named gap for a place we do not hold. */}
-          {placelessWhereLine(meeting)}
+          {isPlaceUnrecorded(meeting) ? <WorkingOnIt inline subject={body ? { type: "BODY", id: body.bodyId } : null} /> : placelessWhereLine(meeting)}
         </PopupRow>
       )}
 
@@ -219,7 +219,7 @@ export function MeetingPopup({
              * — the body's homepage, the portal, the agenda — would look like
              * a way in and not be one.
              */
-            <span className="text-muted">{joinLine(onlineAccess)}</span>
+            <WorkingOnIt inline subject={body ? { type: "BODY", id: body.bodyId } : null} />
           )}
         </PopupRow>
       )}

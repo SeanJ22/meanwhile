@@ -1,3 +1,4 @@
+import { copy } from "../design/copy.ts";
 import type { Meeting, MeetingLocation, MeetingVenueGap, OnlineAccess } from "@/lib/sources/types";
 
 /**
@@ -149,7 +150,7 @@ export const ONLINE_ONLY_LINE = "Online only — there is no room to attend in p
  * because nothing we hold says whether the body has published a place — the
  * same default `lib/ask/agenda-sentence.ts` applies to a missing agenda.
  */
-export const PLACE_UNRECORDED_LINE = "We haven't recorded a place for this meeting yet.";
+export const PLACE_UNRECORDED_LINE = copy("copy.working");
 
 /** The same gap, short enough for a list row's metadata line. */
 export const PLACE_UNRECORDED_MARK = "place not recorded yet";

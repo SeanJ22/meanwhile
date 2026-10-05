@@ -1,5 +1,7 @@
 "use client";
 
+import { WorkingOnIt } from "@/components/demand/working-on-it";
+
 import { useBodyOfficeLocations } from "@/hooks/use-body-office-locations";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { forgetCamera } from "@/lib/map/camera-memory";
@@ -53,7 +55,7 @@ import { groupByVenue, placelessSittingsOfVenueBodies, type Venue } from "@/lib/
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { lastReadByDivision, snapshotInView } from "@/lib/meetings/freshness";
 import type { MeetingListingIdentityReadback } from "@/lib/meetings/listing-identity";
-import { joinLine, onlineAccessFor, placelessWhereLine } from "@/lib/meetings/online";
+import { isPlaceUnrecorded, onlineAccessFor, placelessWhereLine } from "@/lib/meetings/online";
 import type { Meeting } from "@/lib/sources/types";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import {
@@ -2635,12 +2637,12 @@ function meetingSubject(
             // the online sentence only where the body published an online
             // access; a sitting whose place we do not hold says so instead.
             label: "Where",
-            value: placelessWhereLine(meeting),
+            value: isPlaceUnrecorded(meeting) ? <WorkingOnIt inline subject={body ? { type: "BODY", id: body.bodyId } : null} /> : placelessWhereLine(meeting),
           },
       ...(() => {
         const access = onlineAccessFor(meeting);
         return access
-          ? [{ label: "How to join", value: access.joinUrl ?? joinLine(access) }]
+          ? [{ label: "How to join", value: access.joinUrl ? <a href={access.joinUrl} target="_blank" rel="noreferrer">Join online</a> : <WorkingOnIt inline subject={body ? { type: "BODY", id: body.bodyId } : null} /> }]
           : [];
       })(),
       { label: "Status", value: STATUS_LABEL[meeting.status] },

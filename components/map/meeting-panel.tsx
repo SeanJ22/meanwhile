@@ -31,14 +31,11 @@ import type { Venue } from "@/lib/meetings/venues";
 import { projectedCommentAccessFor } from "@/lib/registry/comment-access-client";
 import { venueLink } from "@/lib/registry/links";
 import type { Meeting } from "@/lib/sources/types";
-import { agendaSentenceFor } from "@/lib/ask/agenda-sentence";
 import {
   hasPhysicalLocation,
   isOnlineOnly,
   isPlaceUnrecorded,
-  joinLine,
   onlineAccessFor,
-  PLACE_UNRECORDED_LINE,
   statedVenueText,
   venueGapLine,
   venueGapOf,
@@ -366,7 +363,6 @@ function MeetingEntry({
    * what a null means, and it attributes the gap to the publisher ONLY where a
    * fresh first-party observation measured the publisher's own empty slot.
    */
-  const agendaState = agendaSentenceFor(meeting);
   // The carried row's reason, decided once for both surfaces that state it.
   const carriedClause = carriedRowClause(meeting.carried);
   const { location } = useShellData();
@@ -612,13 +608,13 @@ function PlacelessWhere({ meeting }: { meeting: Meeting }) {
               {access.label}
             </a>
           ) : (
-            <span>{joinLine(access)}</span>
+            <WorkingOnIt inline subject={meeting.bodyId ? { type: "BODY", id: meeting.bodyId } : null} />
           )}
         </>
       ) : gap ? (
         <span>{venueGapLine(gap)}</span>
       ) : (
-        <span>{PLACE_UNRECORDED_LINE}</span>
+        <WorkingOnIt inline subject={meeting.bodyId ? { type: "BODY", id: meeting.bodyId } : null} />
       )}
     </p>
   );

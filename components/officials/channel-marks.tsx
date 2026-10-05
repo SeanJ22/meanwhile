@@ -63,6 +63,39 @@ export function MastodonMark() {
   );
 }
 
+export function LinkedInMark() {
+  return (
+    <svg {...S} fill="currentColor">
+      <path d="M4.5 9h3.2v10.5H4.5zM6.1 4a1.85 1.85 0 1 1 0 3.7 1.85 1.85 0 0 1 0-3.7M9.8 9h3v1.45c.45-.85 1.55-1.7 3.2-1.7 3.2 0 3.8 2.1 3.8 4.85v5.9h-3.2v-5.2c0-1.25 0-2.85-1.75-2.85S13 14.1 13 15.4v4.1H9.8z" />
+    </svg>
+  );
+}
+
+export function TikTokMark() {
+  return (
+    <svg {...S} fill="currentColor">
+      <path d="M16.6 3h-3.1v11.9a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.2a5.7 5.7 0 1 0 4.9 5.6V9.1a7.3 7.3 0 0 0 4.2 1.4V7.4a4.3 4.3 0 0 1-4.2-4.4z" />
+    </svg>
+  );
+}
+
+/**
+ * The mark for a platform's `iconKey`. A key with no mark of its own (a
+ * platform added in Admin) draws the generic globe, so its pill still shows.
+ */
+export function SocialMark({ iconKey }: { iconKey: string }) {
+  switch (iconKey) {
+    case "x": return <XMark />;
+    case "facebook": return <FacebookMark />;
+    case "youtube": return <YouTubeMark />;
+    case "instagram": return <InstagramMark />;
+    case "mastodon": return <MastodonMark />;
+    case "linkedin": return <LinkedInMark />;
+    case "tiktok": return <TikTokMark />;
+    default: return <GlobeMark />;
+  }
+}
+
 export function PhoneMark() {
   return (
     <svg {...S} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

@@ -78,14 +78,10 @@ test("the contact pills stack in one column, primary channels only", () => {
 
   // "primary" really drops the extended social row, and really keeps the
   // reachable channels including X.
-  for (const gated of [
-    "if (full && social.facebook)",
-    "if (full && (social.youtube || social.youtubeId))",
-    "if (full && social.instagram)",
-    "if (full && social.mastodon)",
-  ]) {
-    assert.ok(PILLS.includes(gated), `the primary scope must gate: ${gated}`);
-  }
+  assert.ok(
+    PILLS.includes("if (!full && platform.id !== PRIMARY_SOCIAL_PLATFORM_ID) continue;"),
+    "the primary scope must keep only the primary platform's pill",
+  );
   for (const kept of [
     // R39 (2026-08-17) collapsed the per-number pills into one; the phone is
     // still a primary channel and still on the small popup, it just branches
@@ -96,7 +92,6 @@ test("the contact pills stack in one column, primary channels only", () => {
     "if (holder.contactFormUrl)",
     "if (holder.websiteUrl)",
     "if (holder.campaignUrl)",
-    "if (social.twitter)",
   ]) {
     assert.ok(PILLS.includes(kept), `the primary scope must keep: ${kept}`);
   }

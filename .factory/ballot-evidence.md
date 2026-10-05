@@ -67,3 +67,9 @@ Failed/superseded candidates a344, d54 and c6ba were never published as READY. T
 
 
 Final remote verification and release: exact 6c874b3ef81c1d2f8b53dbdefbab2853b2778268 and prior 8760257b34009d057c729bb949d6f882c89c8259 are ancestors of published stream/ballot 4d93c45abf59318d0c0d4e10f20bfcc378ef260b. Remote lock remained this run's token and board 295adad2d still assigns codex-ballot. Final status releases lock:none at 2026-10-05T20:49:55Z because the run is ending; remaining implementation work is explicitly preserved, not declared complete. No main, river or board push and no PR.
+
+## Exact connected translator / finance / general-measure certification
+
+READY `f984126b50e2e404449aaf15bf638c66ee360212`, tree `4a354c13578d8c49b7f25d7faff86dbf3a1528b9`, clean immutable worktree `/workspace/meanwhile-ballot-integrated-batch-check`. Canonical FULL started 2026-10-05T22:26:14.778Z and completed with runner status passed / exit 0: 9495 tests, 9484 passed, 0 failed, 11 skipped, 46 suites; 1096 exact-once files, two file workers, complete timing inventory, 1273600ms elapsed. Exact types and whole lint pass (68 warnings); selector FULL / browser needed. Explicit system Chromium 151 substituted; pinned 1234 did not run. Certificate `ballot-certificate-f984126b.json` saves manifest, every file result, command identity and log hashes. No deployed acceptance claim.
+
+This boundary covers CA-21/25/26/27/28/33 with the exact other-owner hooks in ballot.md. Later runtime kinds, government finance and contributor detail WIP is excluded. All old certificates and failed recovery candidates remain preserved.

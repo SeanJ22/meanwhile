@@ -126,8 +126,12 @@ async function proveRosterPublication(partial = false) {
   assert.equal(delivered.sourceUrl, FIXTURE_URL);
   for (const previous of existing.members) {
     const retained = delivered.members.find(member => member.id === previous.id)!;
-    const { membershipSource: _source, retainedFieldSources: _fieldSources, ...facts } = retained;
+    const { membershipSource: _source, retainedFieldSources: _fieldSources, fieldSources: captured, ...facts } = retained;
     assert.deepEqual(facts, previous, "independent existing fields and stable identities survive");
+    if (rows.some(row => row.id === previous.id)) {
+      assert.ok(captured?.name?.quote?.includes(previous.name), "CP-05: the new parser quote travels with the unchanged name");
+      assert.equal(captured?.name?.sourceUrl, FIXTURE_URL);
+    }
     const earlierSource = { sourceUrl: existing.sourceUrl, sourceOrg: existing.sourceOrg, collectedAt: existing.collectedAt };
     if (retained.membershipSource) {
       assert.deepEqual(retained.membershipSource, earlierSource, "a wholly omitted member retains the earlier roster authority");

@@ -62,7 +62,9 @@ export async function prepareManualProjectionSuccessor(
     });
     const conflicts = resolved.flatMap(result => result.conflicts);
     if (conflicts.length) {
-      const sources = [...input.sourceReceipt.sources, ...priorReceipt.sources.filter(source => source.reviewOutcome !== "BLOCKED")];
+      // The current review wins receipt deduplication for identical bytes; losing
+      // facts retain their actual earlier date in the conflict provenance.
+      const sources = [...priorReceipt.sources.filter(source => source.reviewOutcome !== "BLOCKED"), ...input.sourceReceipt.sources];
       const merged = { ...input, sourceReceipt: { ...input.sourceReceipt,
         sources: sources.filter((source, index) => sources.findIndex(other => canonicalCivicDataJson(other) === canonicalCivicDataJson(source)) === index) },
         payload: { ...(input.payload as CuratedReaderProjection), records: resolved.map(result => result.record) } };

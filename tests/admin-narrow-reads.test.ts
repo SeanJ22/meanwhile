@@ -171,7 +171,7 @@ test("a saved owner policy and snapshot announce Money and Hunts on the existing
   const before = await readPulse(repos, NOW);
   assert.equal(before.v6?.sections.hunts, undefined, "an unread owner policy cannot claim a hunt list");
   assert.equal(before.v6?.sections.money, undefined, "an unread owner policy cannot claim the money read");
-  assert.deepEqual(Object.keys(before.v6?.sections ?? {}).sort(), ["agents", "checklist", "fixes", "history", "learning", "publication", "reliability", "results", "sameCause", "sends", "spend", "stuck"],
+  assert.deepEqual(Object.keys(before.v6?.sections ?? {}).sort(), ["agents", "checklist", "fixes", "history", "publication", "reliability", "results", "sameCause", "scoreboard", "sends", "spend", "stuck"],
     "the place score, blockers, agents and spend need only the published snapshot; saved receipts can still claim History, and the weekly learning series needs neither");
   await repos.adminConfig.put("current", any({ expansionScopes: [], fleetSpendCeiling: null }), NOW);
   const after = await readPulse(repos, NOW);

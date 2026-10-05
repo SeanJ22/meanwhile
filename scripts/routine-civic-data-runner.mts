@@ -58,6 +58,7 @@ import { isDoorRecord } from "../lib/doors/registry.ts";
 import { doorReadModeFromEnv, refreshDoorsForPass } from "../lib/doors/install.ts";
 import { doorSeedOnFromEnv, seedDoorsOnStart } from "../lib/doors/seed-all.ts";
 import { readNowDueRequests, settleReadNow } from "../lib/doors/mission-refresh.ts";
+import { meetingReadQuietMs } from "../lib/civic-data/meeting-lanes.ts";
 import { listDoors } from "../lib/doors/registry.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { attestPromotedVersion } from "../lib/civic-data/read-model.ts";
@@ -801,6 +802,8 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
       })),
       ...(pending.kind === "MEETING_PARTITION" ? meetingChildAttestations : {}),
     },
+    // DB-58, behind WTP_MEETING_LANES: a host that goes quiet pauses its own read early.
+    ...(pending.kind === "MEETING_PARTITION" && meetingReadQuietMs() !== undefined ? { timeoutMs: meetingReadQuietMs()! } : {}),
   };
 }
 

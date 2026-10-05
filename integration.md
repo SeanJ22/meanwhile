@@ -123,3 +123,8 @@ One line per batch folded into river.
 - Evidence: pnpm gates on 4dd5c7b (CI env): 12/12 PASS; 9286 tests pass, 0 fail, 11 skipped. main (dcddcf5) reconciled into river as ef13298 with zero tree change.
 - hunters: CH-08 · ready ec8eb4982
 - meetings: DB-06 safety net · ready 4ca547ae4
+- 2026-10-05T17:26:09Z · registry · DB-10, DB-11, DB-23 · ready 93a5669a07a4 · river 85a0ad660c36 · pnpm gates pass on 85a0ad660c36
+- 2026-10-05T17:26:09Z · hunters · CH-09, CH-13, CH-29, CH-30 · ready dc3017d4d18d · river 85a0ad660c36 · pnpm gates pass on 85a0ad660c36
+- 2026-10-05T17:26:09Z · meetings · BX-09, DB-30 · ready cd567d362830 · river 85a0ad660c36 · pnpm gates pass on 85a0ad660c36
+- 2026-10-05T17:26:09Z · admin · BR-05, BR-06, BR-01, BR-03, BR-24, BR-12, BR-15, BR-09, BR-02, BR-10, BR-16, BR-37, CH-12, CH-14 · ready ae9ff83485e5 · river 85a0ad660c36 · pnpm gates pass on 85a0ad660c36
+- 2026-10-05T17:26:09Z · slide · CP-01, CP-19 · ready 6921176ca005 · river 85a0ad660c36 · pnpm gates pass on 85a0ad660c36

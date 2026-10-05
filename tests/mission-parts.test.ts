@@ -11,8 +11,14 @@ import { ROUTINE_RECORD_CLASSES } from "../lib/civic-data/types.ts";
 import { RECORD_CLASSES } from "../lib/answerability/record-class.ts";
 import { buildPlaceOwedList, type PlaceSubject } from "../lib/coverage/place-owed.ts";
 import { openBlanksOf } from "../lib/coverage/open-blanks.ts";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { requirementsFor } from "../lib/control-plane/expansion/dispatch-work.ts";
+import { UNREAD_MEETING_PARTITIONS } from "../lib/control-plane/scheduler/provider-inputs.ts";
+import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
+import { bodyDirectoryDiscoveryPlan, publicCommentDiscoveryPlan, type AutonomousWorkPlan } from "../lib/control-plane/workers/autonomous-plan.ts";
 import {
-  DEFAULT_MISSION_PARTS, MISSION_PARTS_SETTING, missionPartCounts, missionPartOf, missionPartsOf, squadsOf, validMissionParts,
+  DEFAULT_MISSION_PARTS, missionPartOfPlan, missionWorkCounts, MISSION_PARTS_SETTING, missionPartCounts, missionPartOf, missionPartsOf, squadsOf, validMissionParts,
 } from "../lib/control-plane/expansion/mission-parts.ts";
 
 const at = "2026-10-05T21:00:00Z";
@@ -88,4 +94,32 @@ test("a place's owed list is grouped by part, with counts, and its open blanks f
     const grouped = [...(open.bySquad.get(row.part)?.values() ?? [])].flat().length;
     assert.equal(grouped, row.open, row.part);
   }
+});
+
+test("CH-16: every plan built for a government's owed families carries its mission part", () => {
+  const reg = JSON.parse(readFileSync(join(import.meta.dirname, "..", "data/states/az/jurisdictions/az.json"), "utf8")) as JurisdictionRegistry;
+  const government = { ...reg.jurisdictions.find((j) => j.govClass === "SCHOOL_DISTRICT")!, sourceIds: [], bodyId: "fixture:registered-school-board" };
+  const plans = requirementsFor(reg, government, null, UNREAD_MEETING_PARTITIONS, true)
+    .map((r) => r.obligation.autonomousPlan).filter((plan): plan is AutonomousWorkPlan => plan !== undefined);
+  assert.ok(plans.length >= 5);
+  const byClass = Object.fromEntries(plans.map((plan) => [plan.contract.recordClass, plan.missionPart]));
+  assert.deepEqual(byClass, {
+    OFFICIAL_BOARD_DIRECTORY: "governments-meetings", OFFICIAL_ROSTER: "people-money", SERVICE_CONTACT: "governments-meetings",
+    VOTER_ACCESS_ROUTE: "ballot", BALLOT_CONTEST: "ballot", CAMPAIGN_FINANCE_FILING: "people-money", PUBLIC_COMMENT_RULE: "governments-meetings",
+  });
+  const comment = publicCommentDiscoveryPlan(government, "fixture:body")!;
+  assert.equal(comment.missionPart, "governments-meetings", "a comment plan built from a roster template is re-parted by its own class");
+  assert.equal(bodyDirectoryDiscoveryPlan(government, null).missionPart, "governments-meetings");
+});
+
+test("CH-16: a mission's work is counted by part; held plans from before CH-16 are parted by their record class", () => {
+  const plan = (recordClass: string, missionPart?: string) => ({ autonomousPlan: { contract: { recordClass }, ...(missionPart ? { missionPart } : {}) } });
+  const work = [plan("OFFICIAL_ROSTER", "people-money"), plan("OFFICIAL_ROSTER"), plan("MEETING"), plan("BALLOT_CONTEST"), plan("UNKNOWN_CLASS"), {}];
+  assert.deepEqual(missionWorkCounts(work).map((row) => [row.part, row.work]),
+    [["governments-meetings", 1], ["people-money", 2], ["ballot", 1], ["other", 2]]);
+  assert.equal(missionPartOfPlan({ contract: { recordClass: "UNKNOWN_CLASS" }, missionPart: "ballot" }), "ballot", "the stored part stands where the setting places no class");
+  const finance = { ...DEFAULT_MISSION_PARTS, parts: [...DEFAULT_MISSION_PARTS.parts, { id: "finance", label: "Money" }],
+    recordClasses: { ...DEFAULT_MISSION_PARTS.recordClasses, CAMPAIGN_FINANCE_FILING: "finance" } };
+  assert.equal(missionPartOfPlan({ contract: { recordClass: "CAMPAIGN_FINANCE_FILING" }, missionPart: "people-money" }, finance), "finance",
+    "a changed setting re-parts held work without rewriting it");
 });

@@ -57,13 +57,16 @@ export const DEFAULT_MISSION_PARTS: MissionPartsSetting = {
     MINUTES: GOVERNMENTS, ACTION_SUMMARY: GOVERNMENTS, RECORDING_OR_TRANSCRIPT: GOVERNMENTS,
     CENSUS_GEOGRAPHY: GOVERNMENTS, CENSUS_REFERENCE: GOVERNMENTS, DOTGOV_REFERENCE: GOVERNMENTS, REGISTRATION: GOVERNMENTS,
     REGISTRY_RUNTIME_BINDING: GOVERNMENTS, OPERATIONAL_REFERENCE: GOVERNMENTS,
+    MEETINGS: GOVERNMENTS, LEGISTAR_EVENTS: GOVERNMENTS, CIVICCLERK_EVENTS: GOVERNMENTS, OFFICIAL_BOARD_DIRECTORY: GOVERNMENTS,
+    PUBLIC_SERVICES: GOVERNMENTS, SERVICE_CONTACT: GOVERNMENTS, PUBLIC_COMMENT: GOVERNMENTS, PUBLIC_COMMENT_RULE: GOVERNMENTS,
     // Officeholders, votes, executive actions, statements, candidates and campaign money.
     ROSTER: PEOPLE, ROLL_CALL: PEOPLE, STATE_ROLL_CALL: PEOPLE, STATE_LEGISLATOR: PEOPLE, STATE_LEGISLATOR_VOTES: PEOPLE,
     FEDERAL_ROLL_CALL: PEOPLE, FEDERAL_KEY_VOTE: PEOPLE, FEDERAL_DIRECTORY: PEOPLE, STATE_EXECUTIVE_ACTION: PEOPLE,
     OFFICEHOLDER_STATEMENT: PEOPLE, PRL_PROFILE: PEOPLE, CANDIDATE_PROFILE: PEOPLE, CANDIDATE_PUBLICATION: PEOPLE,
     BALLOT_CANDIDACY: PEOPLE, FEC_FUNDING: PEOPLE, STATE_CAMPAIGN_FINANCE: PEOPLE, LOCAL_CAMPAIGN_FINANCE: PEOPLE,
+    OFFICEHOLDERS: PEOPLE, OFFICIAL_ROSTER: PEOPLE, CAMPAIGN_FINANCE: PEOPLE, CAMPAIGN_FINANCE_FILING: PEOPLE, CANDIDATE_FILING_DOCUMENT: PEOPLE,
     // Elections, the ballot itself (contests and measures) and where to vote.
-    BALLOT_FILING: BALLOT, VOTING_SITE: BALLOT,
+    BALLOT_FILING: BALLOT, VOTING_SITE: BALLOT, BALLOT_AND_CANDIDATES: BALLOT, BALLOT_CONTEST: BALLOT, VOTER_ACCESS: BALLOT, VOTER_ACCESS_ROUTE: BALLOT,
   },
   weightByGovernmentClass: [GOVERNMENTS],
 };
@@ -120,6 +123,18 @@ export function missionPartOf(work: { readonly checklistId?: string | null; read
   return null;
 }
 
+/**
+ * The part of a work plan (CH-16). Plans built since CH-16 carry `missionPart`
+ * from the starting parts; older plans carry none. Given the parts in force,
+ * the plan's record class decides, so a changed setting re-parts held work
+ * without rewriting it; the stored part is the fallback for a record class the
+ * setting does not place.
+ */
+export function missionPartOfPlan(plan: { readonly missionPart?: string; readonly contract: { readonly recordClass: string } },
+  parts: MissionPartsSetting = DEFAULT_MISSION_PARTS): string | null {
+  return missionPartOf({ recordClass: plan.contract.recordClass }, parts) ?? plan.missionPart ?? null;
+}
+
 /** The family → part map, in the shape the open-blanks grouping takes as its squads. */
 export function squadsOf(parts: MissionPartsSetting): Readonly<Record<string, string>> {
   return parts.families;
@@ -154,4 +169,17 @@ export function missionPartCounts(items: readonly PlaceOwedItem[], parts: Missio
   const labels = new Map(parts.parts.map((part) => [part.id, part.label]));
   return [...tally].filter(([part, row]) => part !== OTHER_SQUAD || row.owed > 0)
     .map(([part, row]) => ({ part, label: labels.get(part) ?? OTHER_PART_LABEL, ...row }));
+}
+
+/** A mission's work counted by part (CH-16): every work item once, under its plan's part; work with no plan or no part under "other". */
+export function missionWorkCounts(items: readonly { readonly autonomousPlan?: { readonly missionPart?: string; readonly contract: { readonly recordClass: string } } }[],
+  parts: MissionPartsSetting = DEFAULT_MISSION_PARTS): readonly { readonly part: string; readonly label: string; readonly work: number }[] {
+  const tally = new Map<string, number>(parts.parts.map((part) => [part.id, 0]));
+  for (const item of items) {
+    const part = (item.autonomousPlan ? missionPartOfPlan(item.autonomousPlan, parts) : null) ?? OTHER_SQUAD;
+    tally.set(part, (tally.get(part) ?? 0) + 1);
+  }
+  const labels = new Map(parts.parts.map((part) => [part.id, part.label]));
+  return [...tally].filter(([part, work]) => part !== OTHER_SQUAD || work > 0)
+    .map(([part, work]) => ({ part, label: labels.get(part) ?? OTHER_PART_LABEL, work }));
 }

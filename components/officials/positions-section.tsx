@@ -1,11 +1,13 @@
 "use client";
 
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { useEffect, useId, useRef, useState } from "react";
 
 import { CardSection } from "@/components/officials/card-section";
 import { useStanceTopics } from "@/hooks/use-stance-topics";
 import type { PositionAnswer } from "@/lib/corpus/positions";
 import { formatDateMDY } from "@/lib/map/format";
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { sourceKindLabel } from "@/lib/corpus/source-kinds";
 
 /**
@@ -104,11 +106,13 @@ export function PositionsSection({
 
   const content = (
       <div data-positions-section>
+        {answer?.kind === "MATCHED" && <CardSourcesContribution id={`positions:${subjectId}:${answer.topic}`} sources={answer.passages.map(passage => ({ what: `Published passages mentioning ${answer.topic}`, provenance: { sourceUrl: passage.url, sourceOrg: `${subjectName} · ${sourceKindLabel(passage.kind)}`, collectedAt: passage.retrievedAt, verifiedAt: null } }))} />}
+
         {/* The register here is PLAYFUL — this is an interaction surface, and
             everything it produces below is level. The seam is the rule. */}
         <label
           htmlFor={inputId}
-          className="block text-[0.75rem] leading-relaxed text-voice"
+          className="block t-detail leading-relaxed text-voice"
         >
           Look through what {subjectName} has published, in their own words.
           Type a topic, or pick one.
@@ -120,7 +124,7 @@ export function PositionsSection({
           value={topic}
           onChange={(e) => void look(e.target.value)}
           placeholder="housing, water, schools…"
-          className="mt-1.5 w-full rounded-md border border-[var(--panel-border)] bg-[var(--bg)] px-3 py-2 text-[0.875rem] placeholder:text-muted focus:border-[var(--signal)] focus:outline-none"
+          className="mt-1.5 w-full rounded-md border border-[var(--panel-border)] bg-[var(--bg)] px-3 py-2 t-body placeholder:text-muted focus:border-[var(--signal)] focus:outline-none"
         />
         <div className="mt-1.5 flex flex-wrap gap-1.5">
           {stanceTopics.map((t) => (
@@ -128,7 +132,7 @@ export function PositionsSection({
               key={t}
               type="button"
               onClick={() => void look(t)}
-              className="cursor-pointer rounded-full border border-[var(--panel-border)] px-2.5 py-1 text-[0.6875rem] text-voice hover:border-[var(--signal)] hover:text-signal"
+              className="cursor-pointer rounded-full border border-[var(--panel-border)] px-2.5 py-1 t-caption text-voice hover:border-[var(--signal)] hover:text-signal"
             >
               {t}
             </button>
@@ -136,31 +140,17 @@ export function PositionsSection({
         </div>
 
         {asking && (
-          <p className="mt-2.5 text-[0.75rem] text-muted" aria-live="polite">
+          <p className="mt-2.5 t-detail text-muted" aria-live="polite">
             Reading their pages…
           </p>
         )}
 
-        {failed && (
-          <p className="mt-2.5 text-[0.75rem] leading-relaxed text-signal">
-            We could not read our record of their pages just now. That is a
-            failure on our side — it is not a statement about what they have
-            said. Try again in a moment.
-          </p>
-        )}
+        {failed && <WorkingOnIt className="mt-2.5" subject={{ type: "CANDIDATE", id: subjectId }} attrs={{ "data-positions-answer": "FAILED" }} />}
 
         {answer && !asking && (
           <div className="mt-2.5">
-            {answer.holdingStatus === "PARTIAL" && (
-              <p
-                className="mb-2 text-[0.6875rem] leading-relaxed text-signal"
-                data-positions-holding-status="PARTIAL"
-              >
-                These passages are held and source-linked, but an independent
-                statement or identity holding is unavailable. This is not a
-                complete count; unavailable: {(answer.unavailableAuthorities ?? []).join(", ")}.
-              </p>
-            )}
+            {answer.holdingStatus === "PARTIAL" && <WorkingOnIt className="mb-2" subject={{ type: "CANDIDATE", id: subjectId }} attrs={{ "data-positions-holding-status": "PARTIAL" }} />}
+
             {answer.kind === "MATCHED" && (
               <div data-positions-answer="MATCHED">
                 {answer.passages.map((p) => (
@@ -170,32 +160,10 @@ export function PositionsSection({
                   >
                     {/* Verbatim, and marked as a quotation so a screen reader
                         knows these are not our words either. */}
-                    <blockquote className="t-record text-[0.8125rem] leading-relaxed text-paper">
+                    <blockquote className="t-record t-body leading-relaxed text-paper">
                       &ldquo;{p.quote}&rdquo;
                     </blockquote>
-                    <figcaption className="mt-1.5 text-[0.625rem] leading-relaxed text-muted">
-                      <a
-                        href={p.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="underline decoration-dotted underline-offset-2 hover:text-link"
-                      >
-                        {sourceKindLabel(p.kind)}
-                      </a>{" "}
-                      · last checked {formatDateMDY(p.retrievedAt.slice(0, 10))}
-                      {p.changedSince && (
-                        // THAT it changed, and when we last saw it different.
-                        // Never what changed, and never what it means.
-                        <>
-                          {" "}
-                          ·{" "}
-                          <span className="text-signal">
-                            this page changed since{" "}
-                            {formatDateMDY(p.changedSince.slice(0, 10))}
-                          </span>
-                        </>
-                      )}
-                    </figcaption>
+
                   </figure>
                 ))}
                 {/*
@@ -213,114 +181,18 @@ export function PositionsSection({
                   publish. The reader draws the inference, with the link right
                   there.
                 */}
-                <p className="mt-2 text-[0.625rem] leading-relaxed text-muted">
+                <p className="mt-2 t-caption leading-relaxed text-muted">
                   {answer.holdingStatus === "PARTIAL" ? "Showing" : `Showing ${answer.passages.length} of`} {answer.totalMatches}{" "}
                   passage{answer.totalMatches === 1 ? "" : "s"} that{" "}
                   {answer.totalMatches === 1 ? "mentions" : "mention"} &ldquo;
                   {answer.topic}&rdquo;, across {answer.searched.pages} page
                   {answer.searched.pages === 1 ? "" : "s"} of theirs we hold.
-                  These are passages from pages they publish — a mention is not
-                  the same as a position on it, and we quote and link rather
-                  than characterise either way.
                 </p>
               </div>
             )}
 
-            {answer.kind === "SEARCHED_NOTHING_MATCHED" && (
-              // OUR search, bounded by its own denominator. Never "no position".
-              <p
-                data-positions-answer="SEARCHED_NOTHING_MATCHED"
-                className="text-[0.75rem] leading-relaxed text-voice"
-              >
-                {answer.searched.presentButUnquotable > 0 ? (
-                  <>
-                    {/*
-                      ITEM 13 (2026-08-19). The two outcomes are DIFFERENT
-                      FACTS and used to render as one sentence.
-
-                      "None of their pages mentions it" is a claim about
-                      them. "It is on their page, in a block we will not
-                      quote" is a claim about US — our passage rules. A press
-                      release rail is a run of headlines with no full stop,
-                      so it is one enormous passage, and quoting a clip of it
-                      would break a word (RULING 7) and attribute template
-                      chrome to a person (RULING 6). Declining is right;
-                      saying they never mentioned it was not.
-                    */}
-                    &ldquo;{answer.topic}&rdquo; does appear on{" "}
-                    {answer.searched.presentButUnquotable === 1
-                      ? "a page"
-                      : `${answer.searched.presentButUnquotable} places on pages`}{" "}
-                    we hold from {subjectName} — but only inside a block we
-                    won&apos;t quote from, like a run of headlines or a list
-                    of links with no sentence in it. Those aren&apos;t their
-                    words about the topic, so we don&apos;t show them as such.
-                    We read {answer.searched.pages} page
-                    {answer.searched.pages === 1 ? "" : "s"} of theirs and
-                    found nothing quotable on it.
-                  </>
-                ) : (
-                  <>
-                    We read {answer.searched.pages} page
-                    {answer.searched.pages === 1 ? "" : "s"} of theirs (
-                    {answer.searched.snapshots} snapshot
-                    {answer.searched.snapshots === 1 ? "" : "s"}) and none of
-                    them mentions &ldquo;{answer.topic}&rdquo;.
-                  </>
-                )}
-                {answer.searched.unreadable > 0 && (
-                  <>
-                    {" "}
-                    {answer.searched.unreadable} more page
-                    {answer.searched.unreadable === 1 ? "" : "s"} we hold could
-                    not be read, so {answer.searched.unreadable === 1 ? "it was" : "they were"}{" "}
-                    not searched.
-                  </>
-                )}
-                {answer.theirPage && (
-                  <>
-                    {" "}
-                    <a
-                      href={answer.theirPage}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-link underline decoration-dotted underline-offset-2"
-                    >
-                      Their own page
-                    </a>{" "}
-                    is the place to look next.
-                  </>
-                )}
-              </p>
-            )}
-
-            {answer.kind === "NOT_YET_COLLECTED" && (
-              // A DIFFERENT sentence, about a different thing: our collection,
-              // not our search. These two may never read alike.
-              <p
-                data-positions-answer="NOT_YET_COLLECTED"
-                className="text-[0.75rem] leading-relaxed text-voice"
-              >
-                We haven&apos;t collected anything {subjectName} has published
-                yet, so there was nothing here to search.
-                {answer.theirPage ? (
-                  <>
-                    {" "}
-                    <a
-                      href={answer.theirPage}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-link underline decoration-dotted underline-offset-2"
-                    >
-                      Their own page
-                    </a>{" "}
-                    is where to read them in the meantime.
-                  </>
-                ) : (
-                  <> We haven&apos;t found a page of theirs to link to either.</>
-                )}
-              </p>
-            )}
+            {answer.kind === "SEARCHED_NOTHING_MATCHED" && <WorkingOnIt subject={{ type: "CANDIDATE", id: subjectId }} attrs={{ "data-positions-answer": "SEARCHED_NOTHING_MATCHED" }} />}
+            {answer.kind === "NOT_YET_COLLECTED" && <WorkingOnIt subject={{ type: "CANDIDATE", id: subjectId }} attrs={{ "data-positions-answer": "NOT_YET_COLLECTED" }} />}
           </div>
         )}
       </div>

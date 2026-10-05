@@ -1,6 +1,8 @@
 "use client";
 
 
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { ExternalLink } from "lucide-react";
 
 import { useMemberDirectory, type MemberDirectory as DirectoryPayload } from "@/hooks/use-member-directory";
@@ -130,15 +132,13 @@ export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
     return (
       <>
         {failed ? (
-          <p className="text-[0.75rem] leading-relaxed text-muted">
+          <p className="t-detail leading-relaxed text-muted">
             Couldn&apos;t load the committee record just now.
           </p>
         ) : committees === null ? (
-          <p className="text-[0.75rem] leading-relaxed text-muted">Loading…</p>
+          <p className="t-detail leading-relaxed text-muted">Loading…</p>
         ) : committees.length === 0 ? (
-          <p className="text-[0.75rem] leading-relaxed text-muted">
-            No committee seat on record for this member.
-          </p>
+          <WorkingOnIt />
         ) : (
           /* F01 4.2 (2026-08-19): PARENTS AND SUBCOMMITTEES, TOLD APART.
              The list was flat, so "Senate Committee on Armed Services" and
@@ -176,18 +176,16 @@ export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
   return (
     <>
         {failed ? (
-          <p className="text-[0.75rem] leading-relaxed text-muted">
+          <p className="t-detail leading-relaxed text-muted">
             Couldn&apos;t load the office list just now.
           </p>
         ) : offices === null ? (
-          <p className="text-[0.75rem] leading-relaxed text-muted">Loading…</p>
+          <p className="t-detail leading-relaxed text-muted">Loading…</p>
         ) : offices.length === 0 ? (
-          <p className="text-[0.75rem] leading-relaxed text-muted">
-            No district office on record for this member.
-          </p>
+          <WorkingOnIt />
         ) : (
           <>
-            <p className="mb-1.5 text-[0.6875rem] leading-relaxed text-voice">
+            <p className="mb-1.5 t-caption leading-relaxed text-voice">
               {details
                 ? <>Where to reach this legislator in person: their office at the capitol and in the district, as Open States lists them.{details.some((d) => !d.official) ? " Not yet checked against the legislature’s own site." : ""}</>
                 : <>These are the member&apos;s offices in the district, not the one in Washington. They are usually the ones that answer.</>}
@@ -199,7 +197,7 @@ export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
                   data-directory-office={i}
                   className="border-b border-[var(--panel-border)] py-2 last:border-0"
                 >
-                  <p className="text-[0.8125rem] font-medium text-paper">
+                  <p className="t-body font-medium text-paper">
                     {details?.[i] ? (details[i].officeKind === "CAPITOL" ? "Capitol office" : "District office") + (office.city ? " · " : "") : ""}
                     {office.city}
                     {office.state ? `, ${office.state}` : ""}
@@ -230,7 +228,7 @@ export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
                           target="_blank"
                           rel="noreferrer"
                           title={`Directions to the ${office.city ?? "district"} office (Google Maps)`}
-                          className="mt-0.5 inline-flex items-baseline gap-1 text-[0.75rem] leading-relaxed text-paper-dim underline decoration-dotted underline-offset-2 hover:text-link hover:decoration-solid"
+                          className="mt-0.5 inline-flex items-baseline gap-1 t-detail leading-relaxed text-paper-dim underline decoration-dotted underline-offset-2 hover:text-link hover:decoration-solid"
                         >
                           {text}
                           <ExternalLink
@@ -239,7 +237,7 @@ export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
                           />
                         </a>
                       ) : (
-                        <p className="mt-0.5 text-[0.75rem] leading-relaxed text-paper-dim">
+                        <p className="mt-0.5 t-detail leading-relaxed text-paper-dim">
                           {text}
                         </p>
                       );
@@ -247,7 +245,7 @@ export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
                   {office.phone && (
                     <a
                       href={`tel:${office.phone.replace(/[^\d+]/g, "")}`}
-                      className="mt-1 inline-flex text-[0.75rem] text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+                      className="mt-1 inline-flex t-detail text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
                     >
                       {office.phone}
                     </a>
@@ -309,7 +307,7 @@ function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
         {inScope ? (
           <DirectoryContent holder={holder} only="committees" />
         ) : (
-          <p className="text-[0.75rem] leading-relaxed text-muted">
+          <p className="t-detail leading-relaxed text-muted">
             {sectionEmptyLine("committees")}
           </p>
         )}
@@ -322,7 +320,7 @@ function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
         {officesInScope ? (
           <DirectoryContent holder={holder} only="offices" />
         ) : (
-          <p className="text-[0.75rem] leading-relaxed text-muted">
+          <p className="t-detail leading-relaxed text-muted">
             {sectionEmptyLine("offices")}
           </p>
         )}
@@ -362,8 +360,8 @@ function CommitteeRow({ node, sub = false }: { node: CommitteeNode; sub?: boolea
       <p
         className={
           sub
-            ? "text-[0.75rem] leading-snug text-paper-dim"
-            : "text-[0.8125rem] leading-snug text-paper"
+            ? "t-detail leading-snug text-paper-dim"
+            : "t-body leading-snug text-paper"
         }
       >
         {/* Names AS FILED, and the title in front of the committee the way the
@@ -376,31 +374,16 @@ function CommitteeRow({ node, sub = false }: { node: CommitteeNode; sub?: boolea
       </p>
       {seat.jurisdiction ? (
         <details className="mt-1">
-          <summary className="cursor-pointer text-[0.6875rem] text-paper-dim underline decoration-dotted hover:text-link">
+          <summary className="cursor-pointer t-caption text-paper-dim underline decoration-dotted hover:text-link">
             What this committee handles
           </summary>
-          <p className="mt-1 text-[0.6875rem] leading-relaxed text-voice">
+          <p className="mt-1 t-caption leading-relaxed text-voice">
             {seat.jurisdiction}
           </p>
-          {seat.jurisdictionSource && (
-            <p className="mt-0.5 text-[0.625rem] text-muted">
-              Jurisdiction text from{" "}
-              <a
-                href={seat.jurisdictionSource}
-                target="_blank"
-                rel="noreferrer"
-                className="underline decoration-dotted hover:text-link"
-              >
-                the committee&apos;s own statement
-              </a>
-              .
-            </p>
-          )}
+          {seat.jurisdictionSource && <CardSourcesContribution id={`jurisdiction:${seat.committeeId}`} sources={[{ what: `What ${label} handles`, provenance: { sourceUrl: seat.jurisdictionSource, sourceOrg: label, collectedAt: "", verifiedAt: null } }]} />}
         </details>
       ) : (
-        <p className="mt-0.5 text-[0.625rem] leading-relaxed text-muted">
-          We’re working on getting this info.
-        </p>
+        <WorkingOnIt />
       )}
     </>
   );

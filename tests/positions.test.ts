@@ -203,40 +203,27 @@ test("D35: the surface renders three different sentences, in the gap's own regis
     "NOT_YET_COLLECTED",
   ]) {
     assert.ok(
-      surface.includes(`data-positions-answer="${kind}"`),
+      surface.includes(`data-positions-answer${kind === "MATCHED" ? '="MATCHED"' : `": "${kind}"`}`),
       `the surface does not mark the ${kind} answer`,
     );
   }
 
-  // The two gaps say WHOSE gap they are, in different words.
-  //
-  // The whitespace is `\s+` rather than a fixed wrap since 2026-08-19 (item
-  // 13). The sentence moved into a branch when the surface learned to
-  // distinguish "their pages don't mention it" from "it IS on their page,
-  // inside a block we won't quote", so it re-indented — and a guard pinned to
-  // a wrap depth fails on a reformat while passing on a deletion, which is
-  // the wrong way round. What is guarded is the SENTENCE.
-  assert.match(surface, /none of\s+them mentions/);
-  assert.doesNotMatch(surface, /\{subjectName\}\s+has no\s+position on it/, "never a claim that the person has no position");
-
-  // …and the third sentence that branch produces, which is a claim about OUR
-  // passage rules and must never collapse into either of the other two.
-  assert.match(surface, /only inside a block we\s+won&apos;t quote from/);
-  assert.match(surface, /We haven&apos;t collected anything \{subjectName\} has published/);
-
-  // A failed retrieval is reported as a failed retrieval — never as an
-  // absence. This is the transparency mandate applied to our own fetch.
-  assert.match(surface, /That is a\s*\n?\s*failure on our side/);
+  // FE-30: these internal search states lack a full equal-effort sweep.
+  // They keep WorkingOnIt rather than making a finding about the person.
+  assert.match(surface, /answer.kind === "SEARCHED_NOTHING_MATCHED" && <WorkingOnIt/);
+  assert.match(surface, /answer.kind === "NOT_YET_COLLECTED" && <WorkingOnIt/);
+  assert.match(surface, /failed && <WorkingOnIt/);
+  assert.doesNotMatch(surface, /none of\s+them mentions|has no\s+position on it/);
 
   // Absence never wears a present value's styling: only MATCHED renders the
   // quote block.
   const matchedBlock = surface.slice(
     surface.indexOf('data-positions-answer="MATCHED"'),
-    surface.indexOf('data-positions-answer="SEARCHED_NOTHING_MATCHED"'),
+    surface.indexOf('answer.kind === "SEARCHED_NOTHING_MATCHED"'),
   );
   assert.ok(matchedBlock.includes("<blockquote"));
   const gapBlocks = surface.slice(
-    surface.indexOf('data-positions-answer="SEARCHED_NOTHING_MATCHED"'),
+    surface.indexOf('answer.kind === "SEARCHED_NOTHING_MATCHED"'),
   );
   assert.ok(
     !gapBlocks.includes("<blockquote"),

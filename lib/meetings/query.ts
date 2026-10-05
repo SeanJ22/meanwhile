@@ -1,3 +1,4 @@
+import { readReaderMeetingSettings } from "./reader-settings.ts";
 import { haversineKm } from "../geo/distance.ts";
 import type { CoverageSummary } from "../registry/coverage.ts";
 import type { Meeting } from "../sources/types.ts";
@@ -256,6 +257,7 @@ export async function searchMeetings(
    * it and gets the active source for the environment.
    */
   injectedSource?: ResolvedMeetingSource,
+  shownSettings?: Pick<import("./settings.ts").MeetingSettings, "shownBackDays" | "shownAheadDays">,
 ): Promise<MeetingSearchResult> {
   const source = injectedSource ?? getMeetingSource();
   const center = { lat, lng };
@@ -268,8 +270,9 @@ export async function searchMeetings(
 
   // One fetch at the widest radius; the rungs are filters over it. Saves the
   // real adapter from three round trips to the same upstream.
-  const horizonMs = UPCOMING_HORIZON_DAYS * 86_400_000;
-  const lookbackMs = CONCLUDED_LOOKBACK_DAYS * 86_400_000;
+  const shown = shownSettings ?? await readReaderMeetingSettings();
+  const horizonMs = shown.shownAheadDays * 86_400_000;
+  const lookbackMs = shown.shownBackDays * 86_400_000;
 
   const all = (
     await source.load(

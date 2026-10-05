@@ -1,3 +1,7 @@
+import { loadAdapterRepairScope } from "./adapter-repair-load.ts";
+import { checkAdapterRepair } from "./adapter-repair-check.ts";
+import { outOfScope, repairBrief, type RepairScope } from "./adapter-repair-scope.ts";
+import { detectTenancy } from "../../hunt/platform-tenancy.ts";
 import { readRolePlaybook, workerSystemPrompt } from "../playbooks.ts";
 /**
  * Engineer publishes source adapters. Under the `pr` publication route it opens a
@@ -24,9 +28,9 @@ import {SendBudgetRefusal} from '../expansion/spend-holds.ts';
 export const ENGINEER_ADAPTER_PREFIX = 'lib/sources/platform-adapters/';
 export interface AdapterFile {path:string;content:string}
 export interface AdapterPullRequest {url:string;number:number;branch:string}
-function adapterFiles(value:unknown): value is AdapterFile[] {
+function adapterFiles(value:unknown, scope?:RepairScope): value is AdapterFile[] {
   return Array.isArray(value) && value.length>0 && value.every(file=>file && typeof file.path==='string' &&
-    typeof file.content==='string' && file.content.trim() && file.path.startsWith(ENGINEER_ADAPTER_PREFIX) &&
+    typeof file.content==='string' && file.content.trim() && (scope ? outOfScope(scope,[file.path]).length===0 : file.path.startsWith(ENGINEER_ADAPTER_PREFIX)) &&
     !file.path.includes('..') && !file.path.includes('\\') && /\.(?:ts|mjs)$/.test(file.path));
 }
 type GitRef = {object:{sha:string}};
@@ -54,10 +58,11 @@ export function adapterBranchKey(platform:string):string {
   return platform.toLowerCase().replace(/[^a-z0-9-]+/g,'-').replace(/^-|-$/g,'').slice(0,70);
 }
 /** Platform-wide implementation; one branch per platform prevents one PR per subject. */
-export async function publishAdapterPullRequest(input:{platform:string;files:readonly AdapterFile[];reason:string;request?:GitHubRequest;repo?:string}):Promise<AdapterPullRequest> {
+export async function publishAdapterPullRequest(input:{platform:string;files:readonly AdapterFile[];reason:string;request?:GitHubRequest;repo?:string;scope?:RepairScope;check?:AdapterChecker}):Promise<AdapterPullRequest> {
   const request=input.request??githubRequest,repo=input.repo??'SeanJ22/meanwhile';
   const platform=adapterBranchKey(input.platform);
-  if(!platform || !adapterFiles(input.files)) throw new Error('ENGINEER_ADAPTER_FILES_ONLY');
+  if(!platform || !adapterFiles(input.files,input.scope) || (input.scope && input.scope.kind!==platform)) throw new Error('ENGINEER_ADAPTER_FILES_ONLY');
+  if(input.scope) { const checked=await (input.check ? input.check(input.files) : checkAdapterRepair(input.files,input.scope)); if(!checked.ok)throw new Error('ENGINEER_ADAPTER_CHECK_FAILED: '+checked.summary); }
   const branch='engineer-adapter/'+platform;
   const existing=await request('GET',`repos/${repo}/pulls?state=open&head=${encodeURIComponent(repo.split('/')[0]+':'+branch)}`) as GitPull[];
   if(existing.length){await request('POST',`repos/${repo}/issues/${existing[0].number}/labels`,{labels:['engineer-adapter']});return {url:existing[0].html_url,number:existing[0].number,branch};}
@@ -84,9 +89,10 @@ const isTestFile=(path:string)=>/\.test\.(?:ts|mjs)$/.test(path);
  * at least one implementation and one colocated test. The full suite is
  * River's `pnpm gates` on the fold, which the status record says plainly.
  */
-export function adapterOwnCheck(files:readonly AdapterFile[]):AdapterCheck {
-  if(!adapterFiles(files))return {ok:false,summary:'files outside lib/sources/platform-adapters/*.ts|mjs or empty'};
+export function adapterOwnCheck(files:readonly AdapterFile[], scope?:RepairScope):AdapterCheck {
+  if(!adapterFiles(files,scope))return {ok:false,summary:'files outside lib/sources/platform-adapters/*.ts|mjs or empty'};
   const tests=files.filter(f=>isTestFile(f.path)).length,impl=files.length-tests;
+  if(scope)return impl>0?{ok:true,summary:`${scope.kind} repair: adapter-only paths; ${scope.testFiles.length} fixture and composite checks required`}:{ok:false,summary:'repair needs an implementation change'};
   if(!tests||!impl)return {ok:false,summary:`needs an implementation and a colocated test (implementation ${impl}, tests ${tests})`};
   return {ok:true,summary:`engineer check pass: ${impl} implementation, ${tests} colocated test file(s), adapter-only paths`};
 }
@@ -109,12 +115,12 @@ export function adapterStatusRecord(input:{kind:string;readySha:string;check:Ada
  * absent. Never forced; a moved branch fails and is retried next cycle. Opens no PR.
  */
 export async function publishAdapterStream(input:{platform:string;files:readonly AdapterFile[];reason:string;runId:string;now:string;
-  request?:GitHubRequest;repo?:string;check?:AdapterChecker}):Promise<AdapterStreamPublication> {
+  request?:GitHubRequest;repo?:string;check?:AdapterChecker;scope?:RepairScope}):Promise<AdapterStreamPublication> {
   const request=input.request??githubRequest,repo=input.repo??'SeanJ22/meanwhile';
   const kind=adapterBranchKey(input.platform);
-  if(!kind || !adapterFiles(input.files)) throw new Error('ENGINEER_ADAPTER_FILES_ONLY');
-  const own=adapterOwnCheck(input.files);
-  const extra=own.ok && input.check?await input.check(input.files):null;
+  if(!kind || !adapterFiles(input.files,input.scope) || (input.scope && input.scope.kind!==kind)) throw new Error('ENGINEER_ADAPTER_FILES_ONLY');
+  const own=adapterOwnCheck(input.files,input.scope);
+  const extra=own.ok ? input.check?await input.check(input.files):input.scope?await checkAdapterRepair(input.files,input.scope):null : null;
   const check=!own.ok?own:extra?{ok:extra.ok,summary:own.summary+'; '+extra.summary}:own;
   if(!check.ok)throw new Error('ENGINEER_ADAPTER_CHECK_FAILED: '+check.summary);
   const branch=ADAPTER_STREAM_PREFIX+kind;
@@ -177,7 +183,8 @@ export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;res
   transportFor?:(result:ScoutResult)=>ModelTransport; readEvidence?:(id:string)=>Promise<WorkerEvidence>;
   now:string;request?:GitHubRequest;
   /** Publication route; absent reads the RL-06 switch (`WTP_ADAPTER_PUBLICATION`, else the committed default). */
-  mode?:AdapterPublicationMode;check?:AdapterChecker}):Promise<AdapterPublished[]> {
+  mode?:AdapterPublicationMode;check?:AdapterChecker;
+  repairScopeFor?:typeof loadAdapterRepairScope}):Promise<AdapterPublished[]> {
   const manual=await learnInstalledAdapters(input.repos,input.now);
   const publication=input.mode?{mode:input.mode,problem:null}:readAdapterPublication(process.env);
   const opened:AdapterPublished[]=[];
@@ -191,7 +198,7 @@ export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;res
     const platform=adapterBranchKey(plain?.platform ?? result.candidates[0]?.routeId ?? result.recordClass);
     if(done.has(platform) || installed.has(platform) || hasUntriedAdapter(result,[...installed],manual.store.entries))continue;
     try {
-    let candidate=plain;
+    let candidate:({platform:string;files:AdapterFile[];scope?:RepairScope})|null=plain;
     if(!candidate && input.transportFor && input.readEvidence) {
       // Exhausted code generation waits for new evidence, rather than buying the same three answers every cycle.
       if(manual.store.entries.some(e=>e.kind==='ENGINEER_INVESTIGATION' && e.title===platform &&
@@ -201,8 +208,15 @@ export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;res
         try { evidence.push(await input.readEvidence(id)); } catch { /* Missing bytes are not invented. */ }
       }
       if(!evidence.length)continue;
+      const kinds=[...new Set([...evidence.flatMap(e=>detectTenancy(e.text,e.canonicalUrl,manual.store.entries).map(hit=>hit.platform)),platform])];
+      let scope:RepairScope|undefined;
+      for(const kind of kinds) {
+        const loaded=(input.repairScopeFor??loadAdapterRepairScope)(kind,{savedBytes:evidence.map(e=>e.text).join('\n\n'),failure:result.narrative});
+        if(loaded) { if(!loaded.ok)throw new Error(loaded.why); scope=loaded.scope; break; }
+      }
+      const repairPlatform=scope?.kind??platform;
       const transport=input.transportFor(result);
-      const messages:Parameters<ModelTransport>[0]['messages'][number][]=[{role:'user',content:JSON.stringify({platform,
+      const messages:Parameters<ModelTransport>[0]['messages'][number][]=[{role:'user',content:scope?repairBrief(scope):JSON.stringify({platform,
         investigation:{narrative:result.narrative,routes:result.candidates,facts:result.findings,tried:result.rungs,next:result.nextRungs},
         knowledge:manual.projection.lines,evidence:evidence.map(e=>({sourceUrl:e.canonicalUrl,text:e.text,artifactId:e.artifactId}))})}];
       const tried:string[]=[];
@@ -229,9 +243,9 @@ export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;res
         const text=response.content.filter(block=>block.type==='text').map(block=>(block as {text:string}).text).join('');
         let parsed: {files?:unknown}|null=null;
         try {parsed=JSON.parse(text.replace(/^```(?:json)?\s*|\s*```$/g,''));}catch{ /* The next tier sees the malformed response. */ }
-        if(adapterFiles(parsed?.files) && parsed.files.some(f=>/\.test\.(?:ts|mjs)$/.test(f.path)) &&
+        if(adapterFiles(parsed?.files,scope) && (scope || parsed.files.some(f=>/\.test\.(?:ts|mjs)$/.test(f.path))) &&
           parsed.files.some(f=>! /\.test\.(?:ts|mjs)$/.test(f.path))) {
-          candidate={platform,files:parsed.files};break;
+          candidate={platform:repairPlatform,files:parsed.files,...(scope?{scope}:{})};break;
         }
         const reason=`${tier} returned no usable adapter implementation with a colocated behavioral test`;
         tried.push(reason);
@@ -248,7 +262,7 @@ export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;res
     // One publisher at a time: the river route never opens a pull request.
     const published:AdapterPublished=publication.mode==='river'
       ?await publishAdapterStream({...candidate,reason,request:input.request,check:input.check,runId:`engineer:${result.attemptId}`,now:input.now})
-      :await publishAdapterPullRequest({...candidate,request:input.request,reason});
+      :await publishAdapterPullRequest({...candidate,request:input.request,reason,check:input.check});
     opened.push(published);done.add(platform);
     const route='number' in published?{pr:published}:{stream:{branch:published.branch,readySha:published.readySha,statusSha:published.statusSha,check:published.check.summary}};
     await writeFieldManual(input.repos,[newFieldManualEntry('engineer-adapter',platform,{role:'SHARED',kind:'ENGINEER_ADAPTER_PR',title:platform,

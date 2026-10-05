@@ -1,6 +1,8 @@
 import type { VotesSnapshot } from "@/lib/votes/types";
 import { getVotesSnapshot, readFederalRollCallsProjection } from "@/lib/votes/snapshot";
 import { partyBreakdownFor } from "@/lib/votes/party-breakdown";
+import { pickedKeyVotesFor } from "@/lib/votes/key-vote-picks";
+import { readKeyVotePicks } from "@/lib/votes/key-vote-picks-read";
 import { keyVotesForMember, type MemberKeyVotes } from "@/lib/votes/key-votes-reader";
 import { KEY_VOTES_CRITERIA } from "@/lib/votes/key-votes";
 import { partyByOfficeholderId } from "@/lib/registry/server";
@@ -337,5 +339,6 @@ export async function GET(request: Request) {
     keyVotes,
     keyVotesHoldingStatus: supporting.keyVotesHoldingStatus,
     keyVotesCriteria: keyVotes.length > 0 ? KEY_VOTES_CRITERIA : null,
+    pickedKeyVotes: pickedKeyVotesFor(await readKeyVotePicks(), chamber, snap.votes, snap.positions, member),
   });
 }

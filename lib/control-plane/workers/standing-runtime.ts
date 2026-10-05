@@ -51,6 +51,8 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   /** The rolling ceiling in force; the auditor admits against it (model-audit.ts). */
   auditCeilingUsd?:number;
   lifetimeHuntSubject?:(subjectId:string)=>boolean;
+  /** CH-26: each task's history reads are scoped to its own work item, subject and lineage. */
+  scopedReads?:boolean;
   /** MW-033: the rolling-ceiling hold a Scout escalation must win before its frontier attempt; absent, every escalation is refused NOT_RESERVED. */
   reserveScoutEscalation?:ScoutExecutorDeps["reserveEscalation"];
   /** MW-021 (2026-09-25): the transport for the work on one jurisdiction, so its requests are held on the area budget covering it; absent, `transport` serves all. */

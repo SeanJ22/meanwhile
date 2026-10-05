@@ -45,7 +45,7 @@ import { candidateProfileEvidenceFor } from "@/lib/ask/candidate-profile";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyConflictCardForFiling, reconciledCandidacyIdForCard, type PartyConflictFiling } from "@/lib/identity/az-2026";
 import { meetingOutcomeEvidenceFor, outcomeSittingsOnDate, meetingRecordQuestionClass, type HeldMeetingAction } from "@/lib/ask/meeting-outcomes";
-import { minutesSummaryEvidenceFor, commentAccessEvidenceFor, noticeSummaryEvidenceFor, meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
+import { minutesSummaryEvidenceFor, commentAccessEvidenceFor, noticeSummaryEvidenceFor, meetingListingKnowledgeFor, translatedMeetingEvidenceFor } from "@/lib/ask/meeting-knowledge";
 import { officeholderEvidence } from "@/lib/ask/officeholder";
 import { rosterGapEvidenceFor } from "@/lib/ask/roster-gaps";
 import { formatDateLong } from "@/lib/text/format-date";
@@ -2008,8 +2008,11 @@ export async function POST(request: Request) {
         denominators.publisherPublicationObservationsForThatMeeting =
           (denominators.publisherPublicationObservationsForThatMeeting ?? 0) + publisherObservations.length;
         const outcome = meetingOutcomeEvidenceFor({ bodyId: subject.id, meetingId: chosen.id, startsAt: chosen.startsAt, question });
-        const minutes = minutesSummaryEvidenceFor(subject.id, chosen.id, question, () => snapshot);
-        const notice = noticeSummaryEvidenceFor(subject.id, chosen.id, question, () => snapshot);
+        const translated = await translatedMeetingEvidenceFor(subject.id, chosen.id, question, snapshot);
+        const minutes = translated.records.some(row => row.kind === "MEETING_MINUTES_SUMMARY") ? translated
+          : minutesSummaryEvidenceFor(subject.id, chosen.id, question, () => snapshot);
+        const notice = translated.records.some(row => row.kind === "MEETING_NOTICE_SUMMARY") ? translated
+          : noticeSummaryEvidenceFor(subject.id, chosen.id, question, () => snapshot);
         // A document extraction gap is not an absence of the separately held
         // structured agenda for this exact sitting.
         if (publication.gap && !outcome.records.some((record) => record.kind === "AGENDA_ITEM")) {

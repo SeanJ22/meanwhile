@@ -10,6 +10,7 @@ import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
 import type { ArtifactRecord } from "../control-plane/repository/types.ts";
 import { datePath, type EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
+import type { CapturedFinanceResponse } from "../funding/campaign-finance.ts";
 
 /** Server-side publisher reads the same durable evidence used by the workers. */
 export async function workerPublicationContext(now: string) {
@@ -20,7 +21,14 @@ export async function workerPublicationContext(now: string) {
   const vault = new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
   const readObject = researchVaultResolver(repos, vault, "freshness");
   const readEvidence = workerVaultResolver(repos, vault, "freshness", { snapshot: true });
-  return { repos, readCapture: async (id: string, records: readonly WorkerResultRecord[]) => {
+  return { repos, readSavedFinanceResponse: async (id: string): Promise<CapturedFinanceResponse> => {
+    const { artifact, bytes } = await readObject(id);
+    const partial = artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false;
+    return { url: artifact.canonicalUrl, bytes: Buffer.from(bytes), retrievedAt: artifact.retrievedAt,
+      rawHash: artifact.contentHash.replace(/^sha256-/, ""), publisher: artifact.sourceId,
+      httpStatus: artifact.httpStatus, transport: artifact.transport, partial, sourcePolicy,
+      complete: !partial && artifact.transport === "REACHABLE" && artifact.httpStatus !== null && artifact.httpStatus >= 200 && artifact.httpStatus < 300 };
+  }, readCapture: async (id: string, records: readonly WorkerResultRecord[]) => {
     const [{ artifact }, input] = await Promise.all([readObject(id), readEvidence(id)]);
     const evidence = evidenceProjection(input);
     const observations = records.flatMap(record => {

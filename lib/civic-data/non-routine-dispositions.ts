@@ -327,7 +327,8 @@ export const MANUAL_PRODUCTION_INVENTORY_BINDINGS: readonly ManualProductionInve
   },
   {
     inventorySourceId: "az-sos-ballot", contractId: "az-sos-ballot", contractSourceId: "az-election-authorities",
-    additionalContracts: [{ contractId: "ballot-contests", contractSourceId: "official-ballot-authorities" }],
+    additionalContracts: [{ contractId: "ballot-contests", contractSourceId: "official-ballot-authorities" },
+      { contractId: "plain-english-translations", contractSourceId: "curated-reader-primary-sources" }],
     reason: "The first-seed ballot contract and its general official-authority worker replacement own canonical Reader projections; tracked holdings remain first-seed evidence only.",
   },
   {
@@ -353,6 +354,7 @@ export const MANUAL_PRODUCTION_INVENTORY_BINDINGS: readonly ManualProductionInve
   },
   {
     inventorySourceId: "az-sos-campaign-finance", contractId: "az-sos-campaign-finance", contractSourceId: "az-sos-campaign-finance",
+    additionalContracts: [{ contractId: "campaign-finance", contractSourceId: "curated-reader-primary-sources" }],
     reason: "Owner-invoked SeeTheMoney acquisition promotes validated 2026 records and exact changes to the canonical plane; tracked state-money/corpus files are test and first-seed evidence only.",
   },
   {
@@ -428,6 +430,8 @@ export const PDC7_RESOLVED_SPLIT_BINDINGS: readonly ResolvedSplitInventoryBindin
     inventorySourceId: "curated-reader-records",
     addedProductionPaths: [
       { path: "lib/civic-data/official-filings.ts", disposition: "PRODUCTION_DATA_PLANE", contractId: "official-filings", contractSourceId: "curated-reader-primary-sources", reason: "Independently verified filing facts use the existing curated source, candidate/event/promotion and Reader checks. Added after the frozen cutover; neither the historical paths nor the 42-family denominator is rewritten." },
+      { path: "lib/civic-data/public-records.ts", disposition: "PRODUCTION_DATA_PLANE", contractId: "public-records", contractSourceId: "curated-reader-primary-sources", reason: "Source-worded public records use the existing saved-evidence worker and normal Slide; frozen inventory families are unchanged." },
+      { path: "lib/civic-data/government-budgets.ts", disposition: "PRODUCTION_DATA_PLANE", contractId: "government-budgets", contractSourceId: "curated-reader-primary-sources", reason: "Official adopted budget facts use the normal source-backed worker and Slide; frozen inventory families are unchanged." },
       { path: "lib/officials/member-offices.ts", disposition: "PRODUCTION_DATA_PLANE", contractId: "member-offices", contractSourceId: "curated-reader-primary-sources", reason: "State legislators' capitol and district offices are refreshed daily from Open States (owner decision 2026-10-01), joined to each official roster, and read only from the canonical member-offices pointer. Added after the frozen cutover; neither the historical paths nor the 42-family denominator is rewritten." },
     ],
     paths: [

@@ -447,7 +447,8 @@ ${readingId}`, outcome);
     // The data operation is already durable; failing to store this receipt never marks it published.
     const current = await input.repos.workItems.mustRead(id);
     const pages = captures.length ? captures : [reading?.capture ?? heldDirectory?.checked.primary].filter((c): c is WorkerPublicationCapture => Boolean(c));
-    await input.repos.workItems.compareAndSet(id, current.revision, { ...current.value, publicationOutcome: withPageDoor(outcome, pages[0], plan.contract.recordClass) }, input.now);
+    outcome = withPageDoor(outcome, pages[0], plan.contract.recordClass);
+    await input.repos.workItems.compareAndSet(id, current.revision, { ...current.value, publicationOutcome: outcome }, input.now);
     report.push({ workItemId: id, outcome });
     if (outcome.code !== "VERIFIED_RESULT_REUSED") await recordPublishedPageDoor({ repos: input.repos, page: pages[0], recordClass: plan.contract.recordClass, bodyId, published: wentLive, now: input.now });
     if (outcome.code !== "VERIFIED_RESULT_REUSED") learned.push(validatorObservation({ plan, workItemId: id, page: pages[0], captures: pages, published: wentLive, outcome }));

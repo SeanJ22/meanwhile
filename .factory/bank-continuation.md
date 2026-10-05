@@ -1,0 +1,51 @@
+# Bank continuation
+
+Current assignment: Codex, primary logical lane `bank`, only `stream/bank` may be pushed. Re-read `board/briefs`, `board/river` assignments and returns, and the remote lock before writing. No launch, hunt, budget, notification or policy changes are needed.
+
+The previous 21 Bank steps are integrated. The current batch adds DB-44, DB-46 and DP-23 plus repairs for DB-57 and a prepared DP-19 migration. These have focused code checks; runtime hooks remain the owning lanes' work. River owns deployment and live acceptance. The SHA and final checks belong in `bank.md`; earlier status and READY commits remain in Git history.
+
+## Connections River must route
+
+| Owner | Step | Exact connecting work |
+|---|---|---|
+| River | DP-19 | Number `lib/db/migrations/DP-19_fix_map.sql`, register the expand phase/journal and target the control-plane database correctly. The existing CP bootstrap is in `repository/pg-schema.ts`; the migration must actually reach that database. Expose `createFixMapRepository(query)` from `lib/method/fix-map.ts` through CP repositories. Admin reads one method's map through `forMethod`, workers read through `forPlace`; preserve scope and disclose a bounded/incomplete map when measuring proof. |
+| River | DB-49 | Call `adapterTestSelection({changed, tests, readText})` from `lib/ops/adapter-test-selection.ts` in `scripts/ci-affected-tests.mjs`, before the broad import graph. Use the returned own-kind and composite files for a one-kind-only diff; fall back to the existing selector otherwise. Check the file share stays below 5%. |
+| Admin | DB-44 | Add `playbookUpdateAction` from `gateway/playbook-action.ts` to the existing registry. Settings reads `/api/admin/v6/playbooks`; mount `PlaybookEditor` keyed by `row.version`. Its `onSend` uses the existing preview/Send and `playbook.update` input, then reloads after the receipt. No direct write endpoint was added. `updateRolePlaybook` preserves imported entries, current cached-system text, receipt identity, history and stale-edit/undo checks. |
+| Admin | DB-46, DP-23 | Import `lib/control-plane/bank-settings.ts` in the gateway and settings publication entrypoint so the definitions exist even in a process that hasn't run a feature consumer. The existing registered-setting Change/Undo handles the new keys and publishes reader-facing ones. |
+| Ballot | DB-46 | Wrap Ask POST handlers in `withReaderFeatures(() => handler(request))` from `lib/civic-data/reader-feature-context.ts`. It reads the published edge once, sets request-local synchronous feature values, and never retries the handler. All four non-Ask intake POST handlers are already connected. Any separately dispatched `classifyReaderEventTopic` also needs this context. |
+| Hunters | DB-46 | Each runner pass freshly reads AdminConfig, then calls its work within `withFeatures(config.settings ?? {}, () => pass())`, or passes config explicitly to `readFeature(name, fallback, config)`. Emergency ripcord env values still win. Do not cache one config for the process lifetime. |
+| River / auditors | DP-23 | Read `readFixProofBar(config)` from `lib/method/fix-status.ts` on each status reading and call `fixStatus`/`fixProof` with one method's complete current map. Supply held district/state geography for opaque place IDs and `multipleStates: true` when that kind exists across states. Failing places stay visible for detective work. Replace the existing hard-coded proof-label use in `earnedPortability` callers; portability is not itself a live-success measurement. |
+| Hunters / slide | DP-20 | After each Scout/detective result call `recordAttempts(repos.fixMap, [attemptFromScoutResult(result, placeId)])`. Route runs, acquirer verdicts and audits supply their own `MethodAttempt` to the same writer. Fix-map write failures are returned separately and must be shown as stuck work, without blocking verified facts. |
+| Hunters / slide | DP-21 | Pass `fixMapRows: await repos.fixMap.forPlace(placeId)` into the Scout's FieldManualQuery. Keep the combined mission and method brief within its current `limit`. |
+| Expansion / hunters | DP-24 | Call `planSpread` from `lib/method/spread.ts` after first success. Execute the plain list under pacing; enqueue paid trials only inside an existing Send and its unchanged dial. This is by door kind or random selection, never a next-test place. Record all outcomes with DP-20. |
+| Admin | DP-27 | Read a scoped method map and the registry/tenancy traits already held; call `studyLosses` and show its plain result in the existing learning view. Unknown traits remain unknown. |
+| Slide / auditors | DP-28 | After fix-map updates call `respondToLosses({fixMap, placeTraits, now, openVariantMethodIds, engineerMethodIds})` from `lib/method/loss-response.ts`. Write lessons with `writeFieldManual`, predictions with fix-map `put`, open the returned variant detective cases with their briefs, and add engineer items to the existing fix queue. |
+| Hunters | DB-51 | Schedule `scripts/link-sweep.mts --apply` hourly in the parent. It is plain code, preserves small-publisher hourly pacing and Retry-After, and writes link health beside door records. |
+| Admin | DB-51 | Show `links:*` registry health by surface in the existing door view. |
+| Hunters / meetings | DB-50 | Call `await installFeedKindsFromAdapters()` at each pass start before composite wiring. An installed kind's door uses the uppercase/underscored `meeting.agendaSourceType`; no engineer adapter yet declares a live feed. |
+| Slide | DB-42, DB-40, DP-07, DP-09 | In standing-runtime, provide `playbookFor: role => readRolePlaybook(repos, role)`, pass saved sanitized pages to `scoutDiscoveryEntries`, write `scoutJobCostEntries` on all attempts including no-candidate failures, and set `foundBy` on investigation results. |
+| Hunters | DB-42 | Scout prewarm uses current SCOUT playbook text. |
+| Auditors | DB-42 | Remove detective.ts's old procedural string once the shared loader supplies its current playbook. |
+
+DB-57 now calls repairScope/repairBrief through the actual engineer queue. The default checker clones the installed code locally, writes only scoped proposed files, and executes the kind's fixture and composite checks without production credentials. The composite contract may be run but cannot be edited. The existing Fleet/Send transport and cost accounting stay in place. No real model repair, adapter publication or production check was run by this worker.
+
+## Remaining steps and resume actions
+
+| Step | Dependency / next action |
+|---|---|
+| DB-39 | Conditional: River reads Bank write-error health. If it is nonzero, build row-per-entry storage and coordinate River-owned schema/provider changes; otherwise leave the migration unstarted. No count was invented. |
+| DB-45 | DB-26 must be integrated first. Preparation is `.factory/bank-db45.patch`; apply with `git apply --check` and then `git apply`, resolve only the affected Bank/meeting readers against current river, and add `import "../meetings/settings.ts"` to bank-settings.ts. The patch contains setting definitions, published reader window reads, query/edge changes and tests. Request meetings' schedule/held-window readers and Admin's Scoreboard target connections through River, using the same freshly read settings. Preserve permanent meeting history and do not slow cadence. Run the selector and required checks before READY. |
+| DB-47 | Wait for measures BR-14 integration, then use its deployed-release records and contract-migration compatibility to prepare the existing-token rollback action. Token restore scope must be observed, never guessed; only a real missing credential goes through River to Sean. |
+| DB-52 | Wait for slide BX-06 integration, then connect the four measures to actual delivery events plus existing attributed route reuse. Missing measures remain unknown. |
+
+## Reproducible checks in this cloud environment
+
+Use tool execution permissions that allow child processes; the default restricted sandbox here returned `spawnSync EPERM` with an apparent zero exit and empty worker output. Those earlier launcher exits were rejected as evidence. The corrected command setup is:
+
+```sh
+env -u DATABASE_URL -u WTP_ASSET_STORE \
+  WTP_CHROMIUM_EXECUTABLE=/usr/bin/chromium \
+  COREPACK_HOME=/tmp/bank-corepack corepack pnpm test
+```
+
+The retained Corepack setup at `/workspace/.setup-tools/corepack` is another supported cache. No dependency install or model subscription change is required. Full Git history is present. Generate place references once when needed; keep stale `.next` out of the test leg. The current ready batch's selector says FULL. Keep its actual pass/fail/skip counts and tested SHA, never report a cancelled run as passing. For an affected selection, pass the actual newline-separated paths to `CI_TEST_FILES`.

@@ -183,7 +183,7 @@ test("national delivery names the final roster candidate after earlier geography
   assert.deepEqual([delivered.candidateId, delivered.versionId, delivered.records], ["cv-roster", "cv-roster", 1]);
 });
 
-test('state portrait publishes through the existing blob path and registry binding after two saved sources confirm its identity and permitted use', async () => {
+test('state portrait publishes through the existing blob path and registry binding with its named official source and attribution', async () => {
   const s=await store();
   const imageUrl='https://images.example.org/allison-russo.jpg';
   const officialUrl='https://ohiohouse.gov/members/allison-russo';
@@ -201,7 +201,7 @@ test('state portrait publishes through the existing blob path and registry bindi
   const holder=after.payload.bodyRosters.find(r=>r.bodyId===`${OH}/sldl:7#seat`)!.members[0];
   const photo=after.payload.officialPhotos.photos.find(p=>p.officeholderId===holder.id)!;
   assert.ok(photo);assert.match(photo.url,/^\/api\/portraits\/officials\/[a-f0-9]{64}\.jpg$/);
-  assert.equal(photo.verification?.sources.length,2);assert.match(photo.license ?? '',/official government portrait/);
+  assert.equal(photo.verification?.basis,'OWN_PAGE');assert.equal(photo.license,null);assert.equal(photo.attribution,`Portrait: ${officialUrl}`);
   assert.equal(after.payload.rosterPhotos[holder.id],photo.url);assert.equal(reads,1);assert.equal(writes.size,1);
   assert.deepEqual(writes.values().next().value,image);
   const changed = registryRuntimeCandidate({contractId:'registry-runtime-bindings',scope:'MEMBERS',version:'unverified-photo-replacement',sourceThrough:NOW,
@@ -210,15 +210,15 @@ test('state portrait publishes through the existing blob path and registry bindi
       officialCandidacies:{...after.payload.officialCandidacies,rows:[]},officialPhotos:{photos:[{...photo,url:'/api/portraits/officials/replaced.jpg',verification:undefined}]},
       rosterPhotos:{[holder.id]:'/api/portraits/officials/replaced.jpg'}}},{prior:after});
   assert.equal((changed.readModel as typeof after.payload).rosterPhotos[holder.id],photo.url,'an uncorroborated replacement retains the published portrait');
-  assert.ok(changed.excludedFacts?.some(f=>f.key===`official-photo:${holder.id}` && /second-source/.test(f.detail ?? '')));
+  assert.ok(changed.excludedFacts?.some(f=>f.key===`official-photo:${holder.id}` && /portrait binding/.test(f.detail ?? '')));
 });
 
-test('a portrait without corroboration stays a gap while its official still publishes', async () => {
+test('a non-official portrait without corroboration stays a gap while its official still publishes', async () => {
     const s=await store(),imageUrl='https://images.example.org/allison-russo.jpg',officialUrl='https://ohiohouse.gov/members/allison-russo';
     const page=capture(`<h1>Representative Allison Russo</h1><p>District 7</p><img alt="Allison Russo" src="${imageUrl}">`,officialUrl);
     const result=await publishNationalPlaceSources({store:s,now:NOW,divisions,geographyCaptures:geography,
       sources:{officials:[{discoveryId:'russo',divisionId:`${OH}/sldl:7`,name:'Allison Russo',officeTitle:'Representative',officialUrl,
-        document:{url:officialUrl,capture:page},portrait:{imageUrl,captures:[page]}}]},
+        document:{url:officialUrl,capture:page},portrait:{imageUrl,captures:[capture(`<h1>Allison Russo</h1><img alt="Allison Russo" src="${imageUrl}">`,"https://portraits.example/people/russo")]}}]},
       portraitRuntime:{read:async()=>{throw Error('An unverified photo must not be downloaded');},put:async()=>{throw Error('must not store');}}});
     assert.ok(result.members.some(m=>m.discoveryIds.includes('russo')));
     assert.ok(result.gaps.some(g=>g.key==='portrait:russo' && g.detail==='PORTRAIT_SECOND_SOURCE_MISSING'),JSON.stringify(result.gaps));

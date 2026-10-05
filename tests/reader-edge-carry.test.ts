@@ -176,5 +176,4 @@ test("R28: shared publication decides the meeting carry before it reads the prep
   assert.match(child, /pointer\.recordClass === "REGISTRY_RUNTIME_BINDING"/, "registry publication prepares the meeting dependency");
   assert.ok(carry < current && current < rowRead && rowRead < publish, "the prepared row is read only past the carry");
   assert.equal(child.match(/readPreparedMeetingsProjection\(/g)?.length, 1, "one prepared-row read, on the publish path");
-  assert.match(child, /if \(artifactStore === null\) \{\s*console\.log\(JSON\.stringify\(\{ readerEdge: "SKIPPED_NO_STORE" \}\)\);/);
 });

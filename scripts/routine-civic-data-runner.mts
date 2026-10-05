@@ -96,6 +96,7 @@ import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
 import { loadPublishedLookupState } from "../lib/census-geography/reader.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
+import { PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowWorkerTasks } from "../lib/civic-data/publish-now.ts";
 import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
 import { WORKER_PUBLICATION_TASK_IDS } from "../lib/civic-data/worker-reader-contracts.ts";
 import { readCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
@@ -135,7 +136,7 @@ import { startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
 import { placeSourceLaunchOrder, withNationalPlaceTasks } from "../lib/hunt/place-source-admission.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
-import { publishRoutineReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
+import { publishSupervisorReaderEdge, readerEdgeSupervisorFailure, type ReaderEdgePublicationOutcome } from "../lib/civic-data/reader-edge-publication.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { readFieldManual } from "../lib/control-plane/field-manual.ts";
@@ -159,6 +160,8 @@ const ROOT = process.cwd();
 // reads the same held copies as the later source and Reader children.
 const readCacheHost = await startCivicReadCacheHost();
 const FORCE = process.argv.includes("--force");
+const PUBLISH_NOW = process.argv.includes("--publish-now");
+if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
 // DB-13: with WTP_DOORS_READ=registry the meeting work is built from the door
 // registry on every pass; otherwise (the default) the code's list is used as before.
 const CODE_MEETING_PARTITION_IDS = new Set(MEETING_PARTITION_CONTRACTS.map((contract) => contract.id));
@@ -177,7 +180,7 @@ if ((doorReadModeFromEnv() === "registry" || doorSeedOnFromEnv()) && controlPlan
     console.warn(`RCD_TASK routine-civic-data-runner: the door registry could not be read, the code's meeting list stays in use — ${error instanceof Error ? error.message : String(error)}`);
   }
 }
-const STANDING_SOURCE_TASKS = await withNationalPlaceTasks([
+const STANDING_SOURCE_TASKS: readonly RoutineSourceTask[] = PUBLISH_NOW ? [] : await withNationalPlaceTasks([
   ...ROUTINE_SOURCE_TASKS.filter((task) => !CODE_MEETING_PARTITION_IDS.has(task.id)),
   ...MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract),
   ...AUTOMATIC_REFRESH_TASKS,
@@ -218,8 +221,8 @@ step = "taking the host-local singleton";
 const ROUTINE_DATA_PROCESS_LEASE = TASK_SELECTION.ok ? await (async () => {
   try {
     return await acquireProcessSingleton(
-      "routine-civic-data-runner",
-      ROUTINE_DATA_RUNNER_SINGLETON_PORT,
+      PUBLISH_NOW ? "publish-now-runner" : "routine-civic-data-runner",
+      PUBLISH_NOW ? PUBLISH_NOW_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT,
     );
   } catch (error) {
     if (!(error instanceof ProcessSingletonHeldError)) throw error;
@@ -407,7 +410,9 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
   if (intents.runnerPause.paused) return [];
   const items = (await repos.workItems.list()).map(row => row.value);
   const workers = items.some(item => item.autonomousPlan?.publication) ? await readCompletedWorkerResults(repos) : [];
-  const publication = workerPublicationTasks(items, workers, RUN_STARTED_AT);
+  const publication = PUBLISH_NOW ? publishNowWorkerTasks(items, workers, RUN_STARTED_AT) : workerPublicationTasks(items, workers, RUN_STARTED_AT);
+  if (PUBLISH_NOW) return [...publication, ...publishNowDoorTasks((await listDoors(repos.doors)).doors,
+    MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract), RUN_STARTED_AT)];
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
   if (row === null) return publication;
   if (!isAdminConfig(row.value)) throw new Error("the owner's policy row is unreadable");
@@ -435,6 +440,7 @@ function newestConsideredAt(
 }
 
 async function persistSupervisorOutcome(input: {
+  readonly readerEdge: ReaderEdgePublicationOutcome;
   readonly campaignPublicationApprovalsAttempted?: number;
   readonly failures: readonly SupervisorFailure[];
   readonly attemptedTasks: number;
@@ -465,6 +471,7 @@ async function persistSupervisorOutcome(input: {
   assertDurableRepositories(repos, "routine civic-data supervisor outcomes");
   const cycleId = SUPERVISOR_CYCLE_ID;
   const outcome = routineCivicDataSupervisorOutcome({
+    lane: PUBLISH_NOW ? "publish-now" : "routine-civic-data",
     ...(input.campaignPublicationApprovalsAttempted !== undefined ? { campaignPublicationApprovalsAttempted: input.campaignPublicationApprovalsAttempted } : {}),
     cycleId,
     startedAt: RUN_STARTED_AT,
@@ -476,6 +483,7 @@ async function persistSupervisorOutcome(input: {
     attemptedTasks: input.attemptedTasks,
     verifiedSourceSuccesses: input.verifiedSourceSuccesses,
     verifiedSourceFailures: input.verifiedSourceFailures,
+    readerEdge: input.readerEdge,
     failures: input.failures,
     taskReceipts: input.taskReceipts,
     readerReadback: input.readerReadback,
@@ -984,7 +992,7 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
 const readerContracts = selectedReaderRepairContracts([
   ...observableRoutineContracts(),
   ...MANUAL_PRODUCTION_SOURCE_CONTRACTS,
-], ONLY === null ? null : selectedTasks);
+], !PUBLISH_NOW && ONLY === null ? null : selectedTasks);
 const readerDomains = routineReaderRepairDomains(readerContracts);
 const readerReadbackReferences: RoutineCivicDataReaderReadbackReference[] = readerContracts
   .filter(({ readerProjection }) => readerProjection === null)
@@ -1042,7 +1050,7 @@ function settleReaderDomain(domain: RoutineReaderRepairDomain, run: BoundedChild
 // waiting for the next pass (C6; lib/civic-data/hot-read-catch-up.ts). The
 // repair starts once every such read beside the source reads has settled, and
 // launches the repairs a read could race first; catch-up resumes when they settle.
-const hotReadTasks = FORCE
+const hotReadTasks = FORCE || PUBLISH_NOW
   ? []
   : clockReads.flatMap((read) => read.ok && read.task.contract.schedule?.kind === "SITTING_WINDOW" ? [read.task] : []);
 const hotReadTaskIds = new Set(hotReadTasks.map(({ id }) => id));
@@ -1183,9 +1191,9 @@ for (const error of pass.errors) {
 const readerRuns = pass.repair;
 // Source settlement publishes serving copies even when a readback child fails.
 step = "publishing changed reader edge copies";
-if (!await publishRoutineReaderEdge(store, new Date().toISOString(), ONLY === null ? null : selectedTasks)) {
-  supervisorFailures.push({ taskId: "reader-edge-publication", code: "READER_EDGE_PUBLISH_FAILED", detail: "Reader edge publication failed; the previous serving copies remain available." });
-}
+const readerEdge = await publishSupervisorReaderEdge(store, new Date().toISOString(), !PUBLISH_NOW && ONLY === null ? null : selectedTasks);
+const readerEdgeFailure = readerEdgeSupervisorFailure(readerEdge);
+if (readerEdgeFailure) supervisorFailures.push(readerEdgeFailure);
 for (const run of readerRuns) {
   if (run.settlementErrorMessage === null) continue;
   const detail = safeFailure(run.settlementErrorMessage ?? "unknown Reader settlement failure");
@@ -1238,6 +1246,7 @@ try {
   const cycleId = await persistSupervisorOutcome({
     ...(campaignPublicationInputs !== null && verifiedTaskReceipts.some(row => row.taskId === CAMPAIGN_PUBLICATION_TASK)
       ? { campaignPublicationApprovalsAttempted: campaignPublicationInputs.approvals } : {}),
+    readerEdge,
     failures: supervisorFailures,
     attemptedTasks: attempted,
     verifiedSourceSuccesses,
@@ -1259,6 +1268,8 @@ try {
     kind: "ROUTINE_CIVIC_DATA_SUPERVISOR",
     state: supervisorFailures.length === 0 ? "SUCCEEDED" : "FAILED",
     cycleId,
+    lane: PUBLISH_NOW ? "publish-now" : "routine-civic-data",
+    readerEdge,
     exactTaskReceipts: verifiedTaskReceipts.length,
     durable: true,
   }));
@@ -1283,6 +1294,7 @@ const attemptedCount = floored(
   attempted,
 );
 console.log("RCD_RUN=" + JSON.stringify({
+  lane: PUBLISH_NOW ? "publish-now" : "routine-civic-data",
   attempted: attemptedCount.matched,
   denominator: attemptedCount.denominator,
   failed:
@@ -1292,6 +1304,7 @@ console.log("RCD_RUN=" + JSON.stringify({
     readerReadbacksCurrentFail,
   verifiedSourceSuccesses,
   verifiedSourceFailures,
+  readerEdge,
   supervisorFailures: supervisorFailures.length,
   readerReadbacksRecordedPass,
   readerReadbacksRecordedFail,

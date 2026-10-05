@@ -38,7 +38,8 @@ test("BX-10: no video, a video that is not public, or an unsafe address yields n
 test("BX-10: the meeting card's Sources names the publisher record the recording is linked from", () => {
   const meeting = normalizeOne({ EventVideoStatus: "Public", EventVideoPath: VIDEO });
   const sources = meetingCardSources(meeting, []);
-  assert.equal(sources.length, 1, "the recording and the sitting share one publisher record");
+  assert.equal(sources.length, 2, "the recording and sitting share one publisher record; the agenda has its own source URL");
+  assert.equal(sources[1]!.provenance.sourceUrl, meeting.agendaUrl);
   assert.equal(sources[0]!.provenance.sourceUrl, meeting.provenance.sourceUrl);
   assert.match(sources[0]!.what, /and 1 more from this source/, "the recording is counted behind that record");
   const without = meetingCardSources(normalizeOne({ EventVideoPath: null }), []);

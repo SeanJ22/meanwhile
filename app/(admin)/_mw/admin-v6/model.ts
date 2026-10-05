@@ -692,6 +692,10 @@ export interface ScoreboardRow {
   readonly counts: string | null;
   readonly says: string;
   readonly notMeasured: string | null;
+  /** A short plain list under the row, e.g. the facts an audit led us to fix. */
+  readonly items?: readonly string[];
+  /** Detail kept behind Technical details, e.g. the fixed facts' IDs. */
+  readonly technical?: readonly string[];
 }
 
 export interface ScoreboardGateRow {

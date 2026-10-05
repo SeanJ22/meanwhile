@@ -6,6 +6,8 @@ import { openControlPlane, RUNNER_ID } from "@/lib/control-plane/admin-data.ts";
 import { readV6History } from "@/lib/control-plane/admin-view/admin-v6-history.ts";
 import { readGateHealth } from "@/lib/control-plane/admin-view/gate-health.ts";
 import { buildLearningTrends } from "@/lib/control-plane/admin-view/learning-trends.ts";
+import { weeklyAuditAccuracy } from "@/lib/control-plane/admin-view/v6-audit-read.ts";
+import { readAuditWeek } from "@/lib/control-plane/live-audit-log.ts";
 import { buildScoreboard, publicationCountsOf, v6LearningView, type ScoreboardReadings } from "@/lib/control-plane/admin-view/scoreboard-read.ts";
 import { captureWindow, readCaptureHealth } from "@/lib/control-plane/admin-view/v6-capture-health.ts";
 import { projectDoors } from "@/lib/control-plane/admin-view/v6-doors-read.ts";
@@ -34,7 +36,7 @@ export async function GET(request: NextRequest) {
     const now = new Date(observedAt);
     const opened = await attempt(async () => { const o = await openControlPlane(); return o.ok ? o.repos : null; });
     const url = controlPlaneUrlFromEnv();
-    const [learningRead, history, doors, heartbeat, pipeline, contracts, capture] = await Promise.all([
+    const [learningRead, history, doors, heartbeat, pipeline, contracts, capture, audit] = await Promise.all([
       attempt(async () => { const r = await loadLearningTrends(observedAt); return r.kind === "UNREAD" ? null : r.facts; }),
       attempt(async () => (opened ? (await readV6History(opened, { scope: "us", asOf: observedAt, limit: 50 })).data : null)),
       attempt(async () => (opened ? projectDoors({ ...(await listDoors(opened.doors)), saves: [], observedAt }).counts : null)),
@@ -47,6 +49,8 @@ export async function GET(request: NextRequest) {
         const view = await readCaptureHealth({ sources: liveSources(), switchOn: () => true }, config, failures, now);
         return view.readers.kind === "READ" ? view.readers.rows : null;
       }),
+      // DP-18: the week's live audits, read by day key (seven keys), never the whole log.
+      attempt(async () => (opened ? weeklyAuditAccuracy({ ...(await readAuditWeek(opened, observedAt)), now: observedAt }) : null)),
     ]);
     const learning = learningRead === null ? null : { trends: buildLearningTrends(learningRead.weeks, observedAt), doors: learningRead.doors, bankWriteErrors: learningRead.bankWriteErrors };
     const readings: ScoreboardReadings = {
@@ -56,6 +60,7 @@ export async function GET(request: NextRequest) {
       returning: capture === null ? null : { days: capture.length, readerDays: capture.reduce((a, d) => a + d.readers, 0), returningDays: capture.reduce((a, d) => a + d.returning, 0) },
       learning: v6LearningView(learning?.trends ?? buildLearningTrends([], observedAt), learning?.doors ?? null, learning === null ? null : learning.bankWriteErrors),
       doors: learning?.doors ?? null,
+      audit,
       gates: opened === null ? null : readGateHealth({ nowIso: observedAt, heartbeat, databaseReachable: null, lastDispatch: null, spend: null }),
       readiness: readinessCounts(recoveryWitnesses({
         bankEntriesInherited: learning?.doors.given ?? null, bankEntriesUsed: learning?.doors.used ?? null,

@@ -2623,6 +2623,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
       solved:heldScoutFor(scheduled),
       sourceFailure:debtAtCycleStart.get(scheduled.obligation.id),
       sourceRoute:registry.routeFor(scheduled.obligation.id),
+      shutThreshold,
       toolkitFor: buildScoutToolkit,
       executorFactory: deps => scoutProcessExecutor({ root: ROOT, postgres: wantsPostgres,
         fileStoreRoot: CONTROL_PLANE_ROOT, slots: paidScoutSlots,

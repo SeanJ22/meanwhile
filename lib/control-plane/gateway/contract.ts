@@ -203,6 +203,8 @@ export interface ActionReceipt {
   readonly readBackAt: string | null;
   /** What would undo this, when anything would. */
   readonly undo: string | null;
+  /** BR-13: the value before and after, when the action changed one. */
+  readonly change?: { readonly before: string; readonly after: string };
 }
 
 /** The gateway's answer. One shape for success and refusal alike. */

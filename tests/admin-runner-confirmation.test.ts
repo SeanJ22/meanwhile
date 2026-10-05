@@ -344,3 +344,14 @@ test("BR-02: a waiting order turns red with the reason when the runner is silent
   assert.equal(notPickedUp(waiting, null, receipt, now).words, "The runner hasn't checked in yet.");
   assert.equal(notPickedUp(waiting, null, receipt, Date.parse("2026-10-05T10:05:00Z")).state, "waiting", "just saved, no beat yet");
 });
+
+import { doneWithChange } from "../app/(admin)/_mw/admin-v6/receipts.ts";
+test("BR-13: a ceiling change finishes as Done with the before and after, kept on the saved receipt", async () => {
+  const repos = createMemoryRepositories();
+  const first = await submit(ask("config.setFleetSpendCeiling", "ceiling-key-br13a", { rollingCeilingUsd: 50 }), deps(repos));
+  assert.equal(first.ok, true);
+  const out = await submit(ask("config.setFleetSpendCeiling", "ceiling-key-br13b", { rollingCeilingUsd: 80 }), deps(repos));
+  assert.deepEqual(out.receipt.change, { before: "$50.00", after: "$80.00" });
+  assert.equal(doneWithChange({ status: "done", change: out.receipt.change }), "Done · $50.00 → $80.00");
+  assert.equal(doneWithChange({ status: "queued", change: out.receipt.change }), null);
+});

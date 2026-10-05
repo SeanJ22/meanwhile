@@ -152,6 +152,8 @@ export interface ActionEffect {
   readonly openedWork?: readonly { readonly kind: string; readonly id: string; readonly title: string }[];
   readonly readBackAt?: string | null;
   readonly undo?: string | null;
+  /** BR-13: the value before and after, in the words the screen prints ("$50.00" and "$80.00"). */
+  readonly change?: { readonly before: string; readonly after: string };
 }
 
 export interface ActionRefusal {
@@ -320,7 +322,9 @@ const REGISTRY: readonly RegisteredAction[] = [
         try { published = await publishReaderSettings(next, revision); } catch { published = false; }
       }
       const words = settingValueWords(input.value as SettingValue, definition.unit);
+      const beforeValue = (next.settingHistory ?? []).find((h) => h.id === context.receiptId)?.before;
       return { ok: true, outcome: published ? "DONE" : "QUEUED", subject: key,
+        ...(beforeValue !== undefined ? { change: { before: settingValueWords(beforeValue as SettingValue, definition.unit), after: words } } : {}),
         says: published ? `${definition.label} is now ${words}.` : `${definition.label} is saved as ${words}; readers get it on the next publish.`,
         readBackAt: "/admin?view=settings", undo: null };
     },
@@ -987,6 +991,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         openedWork: [],
         readBackAt: "/admin",
         undo: `Set it back to $${previousUsd.toFixed(2)}.`,
+        change: { before: `$${previousUsd.toFixed(2)}`, after: `$${rollingCeilingUsd.toFixed(2)}` },
       };
     },
   },

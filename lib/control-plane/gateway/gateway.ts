@@ -275,6 +275,7 @@ export async function submit(request: ActionRequest, deps: GatewayDeps): Promise
     openedWork: result.openedWork ?? [],
     readBackAt: result.readBackAt ?? null,
     undo: result.undo ?? null,
+    ...(result.change ? { change: result.change } : {}),
     codeSha: deps.codeSha,
   });
   const wrote = await appendReceipt(deps.repos, receipt, receipt.completedAt ?? startedAt);

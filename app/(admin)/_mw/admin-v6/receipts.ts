@@ -165,7 +165,7 @@ export function applyGatewayReply(prev: UiReceipt, def: ActionDef, httpStatus: n
   }
   if (httpStatus !== null && httpStatus >= 200 && httpStatus < 300 && isOutcome(body)) {
     const r = body.receipt;
-    const base = { ...prev, gatewayReceiptId: r.receiptId, readBackAt: r.readBackAt, replayed: body.replayed === true };
+    const base = { ...prev, gatewayReceiptId: r.receiptId, readBackAt: r.readBackAt, replayed: body.replayed === true, ...(r.change ? { change: r.change } : {}) };
     if (r.outcome === "REFUSED") {
       return { ...base, status: "refused", statusWords: STATUS_WORDS.refused, steps: step("Refused"), says: r.says };
     }
@@ -245,3 +245,8 @@ export const TAKE_BACK: Readonly<Partial<Record<UiReceipt["kind"], UiReceipt["ki
   "global-paid": "global-paid-resume",
   "global-paid-resume": "global-paid",
 };
+
+/** "Done · $50.00 → $80.00" for a finished order that changed a value; null otherwise. */
+export function doneWithChange(r: Pick<UiReceipt, "status" | "change">): string | null {
+  return r.status === "done" && r.change ? `Done · ${r.change.before} → ${r.change.after}` : null;
+}

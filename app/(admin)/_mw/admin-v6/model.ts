@@ -803,6 +803,8 @@ export interface UiReceipt {
   /** BR-12: the plan the order was accepted with, and its one progress bar. */
   /** BR-02: saved, overdue and not taken by the runner. Shown red with the reason and three options. */
   readonly notPickedUp?: boolean;
+  /** BR-13: before and after, shown beside Done. */
+  readonly change?: { readonly before: string; readonly after: string };
   readonly plan?: import("@/lib/control-plane/gateway/confirmation.ts").OrderPlan;
   readonly progress?: import("@/lib/control-plane/gateway/confirmation.ts").OrderProgress;
   readonly replayed: boolean;

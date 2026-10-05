@@ -93,6 +93,7 @@ export interface ReceiptDraft {
   readonly openedWork: readonly { readonly kind: string; readonly id: string; readonly title: string }[];
   readonly readBackAt: string | null;
   readonly undo: string | null;
+  readonly change?: { readonly before: string; readonly after: string };
   readonly codeSha: string | null;
 }
 
@@ -122,6 +123,7 @@ export function buildReceipt(draft: ReceiptDraft): ActionReceipt {
     openedWork: draft.openedWork,
     readBackAt: draft.readBackAt,
     undo: draft.undo,
+    ...(draft.change ? { change: draft.change } : {}),
   };
 }
 

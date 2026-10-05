@@ -16,6 +16,7 @@
  */
 
 import { isDoorRecord, type DoorRecord, type DoorRepository } from "./registry.ts";
+import { completeReopenedDoorFix, openShutDoorFix, type FixRepos } from "./shut-repair.ts";
 
 /** Three failed reads in a row, so one flaky pass never shuts a door. */
 export const SHUT_AFTER_TRANSPORT_FAILURES = 3;
@@ -74,7 +75,7 @@ export interface DoorEvidenceResult {
 }
 
 /** Judge one door's own result and write the outcome on its record. No such door: nothing is invented. */
-export async function recordDoorEvidence(repo: DoorRepository, doorId: string, evidence: DoorEvidence, at: string): Promise<DoorEvidenceResult> {
+export async function recordDoorEvidence(repo: DoorRepository, doorId: string, evidence: DoorEvidence, at: string, fixes?: FixRepos): Promise<DoorEvidenceResult> {
   for (let attempt = 0; attempt < 2; attempt += 1) {
     const row = await repo.read(doorId);
     if (row === null || !isDoorRecord(row.value)) return { written: false, change: "NONE" };
@@ -91,10 +92,15 @@ export async function recordDoorEvidence(repo: DoorRepository, doorId: string, e
     };
     try {
       await repo.compareAndSet(doorId, row.revision, next, at);
-      return { written: true, change: verdict.change };
     } catch (error) {
       if (attempt === 1) throw error;
+      continue;
     }
+    // DB-34: the fix list hears of a shut or a reopening once the door write has landed; a list that
+    // cannot be written never undoes the door's own state (the next judgement of a shut door finds the item).
+    if (fixes && verdict.change === "SHUT") await openShutDoorFix(fixes, next, at).catch(() => undefined);
+    if (fixes && verdict.change === "REOPENED") await completeReopenedDoorFix(fixes, door, next, at).catch(() => undefined);
+    return { written: true, change: verdict.change };
   }
   return { written: false, change: "NONE" };
 }

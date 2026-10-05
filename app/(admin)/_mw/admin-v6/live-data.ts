@@ -121,7 +121,7 @@ export function buildLiveBundle(snapshot: Readonly<Record<SectionId, SectionStat
     reliability: src("reliability", SECTION_DEP.reliability),
     publication: src("publication", SECTION_DEP.publication),
     money: src("money", SECTION_DEP.money),
-    learning: src("learning", SECTION_DEP.learning),
+    scoreboard: src("scoreboard", SECTION_DEP.scoreboard),
     fixes: src("fixes", SECTION_DEP.fixes),
     decided: src("decided", SECTION_DEP.decided),
   };

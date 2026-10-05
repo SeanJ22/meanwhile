@@ -9,7 +9,7 @@ heartbeat: 2026-10-05T22:33:24Z
 
 ## Next River run
 
-1. **Runner adoption of release 3 (6af6f8a):** check cp_runner_heartbeat testedSha. At 22:13Z it was still ecf4026, mid-cycle. After adoption, check the reader-edge store guard (supervisor/log names the store) and whether supervisor failures dropped.
+1. **Release 3 runner side:** adopted 6af6f8a (cycle started 22:34:59Z). Check the first supervisor pass on 6af6f8a: does the reader-edge outcome name its store, and what is the failure count? It swings between passes on ecf4026 (25 at 21:55Z, 530 at 22:34Z), so compare several passes before judging slide's return.
 2. **Research crash (top priority, returned to hunters with a diagnosis):** 128 crashes since Oct 3 05:42Z. A 15-minute worker-slot wait (freshness-shadow.mts:2058) exceeds the 10-minute no-progress watchdog (pilot-runtime-child.mts:5). Fold hunters' fix as soon as it is READY and ship it as an urgent release (a halted runner qualifies).
 3. Fold held lanes when they mark new READY on top of river 6af6f8a: people CA-01, auditors, admin (see returns).
 4. **Notification rule (Sean, decisions.md):** one push per river promotion naming the Codex lanes to Continue; otherwise only releases and real decisions.

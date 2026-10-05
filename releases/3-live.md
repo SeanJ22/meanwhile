@@ -2,7 +2,7 @@
 
 - **Merged:** #709 at 22:03:42Z as 6af6f8a. Its tree is identical to tested river 13d29c5, and river is fast-forwarded to 6af6f8a. **CI:** run 37377643973 passed every job (admission, verify, build default and standalone, test 1-4, gates). The earlier run 37377627379 was cancelled by the concurrency group; see the PR comment.
 - **Deployed:** `/api/build` reported 6af6f8a at 22:06:05Z. **Post-deploy integrity:** run 37380007629 succeeded (reused by `river.mjs observe`, not dispatched).
-- **Runner adoption:** pending. At 22:13Z the heartbeat was still ecf4026, with a cycle in progress since 21:55:26Z.
+- **Runner adoption:** adopted. At 22:39Z the heartbeat read testedSha and effectiveExecutableSha 6af6f8a, with a cycle started 22:34:59Z. No supervisor pass had finished on 6af6f8a yet: the last two on ecf4026 reported 25 failures (21:55Z) and 530 (22:34Z).
 - **Browser:** Playwright with Chromium pinned to the agent-proxy CA through its SPKI (`--ignore-certificate-errors-spki-list`, which trusts only that CA). Public pages only, no Admin sign-in. The basemap is unavailable here (api.maptiler.com is blocked in this environment).
 
 | Step | State | Evidence |

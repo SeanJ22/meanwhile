@@ -11,13 +11,12 @@ import { periodLabel } from "@/lib/control-plane/admin-view/periods.ts";
 
 import { StatusBar, StatusLegend, StatusTable } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
-import { INSTRUCTION_EXAMPLES, parseInstruction, type Parsed } from "./instruction.ts";
 import { count, huntLeftUsd, mst, ITEM_STATUS_ORDER, pctDown, usd, type Hunt, type Lane, type ReaderResult, type StateRow, type StuckItem } from "./model.ts";
 import { TILE_LAYOUT } from "./national-layout.ts";
 import { COUNTRY_KEY, huntAt, huntsWithin, isWithin, nationalDepth, relation } from "./places.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
 import { ageWords, roundReading, runningCount, systemRunningCount, usePageClock } from "./screen-workers.tsx";
-import { ActionButton, Actions, Card, cx, Empty, Loading, Pill, StageDots } from "./ui.tsx";
+import { Actions, Card, cx, Empty, Loading, Pill, StageDots } from "./ui.tsx";
 import s from "./v6.module.css";
 
 export const LANE_WORDS: Readonly<Record<Lane, string>> = {
@@ -48,7 +47,6 @@ export function NowScreen() {
       {/* The control Sean uses most (daily budget, paid search, start a hunt): first under the header, one click to open. */}
       <DirectWork />
       {nationalDepth(v.scopeKey) !== null && <National />}
-      <Instruction />
       <NextSteps />
       {loading ? <Loading what="this place" /> : <SixAnswers />}
       <Readers />
@@ -174,59 +172,6 @@ function National() {
             </div>
           </div>
           {table}
-        </div>
-      )}
-    </Card>
-  );
-}
-
-/* ------------------------------------------------------------ instruction */
-
-function Instruction() {
-  const v = useV6();
-  const { text, chosenBody } = v.instructionDraft;
-  const setText = (next: string) => v.setInstructionDraft({ text: next, chosenBody: null });
-  const setChosenBody = (next: string | null) => v.setInstructionDraft({ text, chosenBody: next });
-  const [parsed, setParsed] = useState<Parsed | null>(null);
-  const readBack = (t = text, body = chosenBody) => {
-    if (!t.trim()) return;
-    setParsed(parseInstruction({ text: t, scope: v.scopeKey, places: v.places, index: v.index, stuck: v.data.stuck.data ?? [], chosenBody: body }));
-  };
-  const acts = (parsed?.actions ?? []).map((a) => ({ a, def: v.defOf({ kind: a.kind, target: a.target }), why: v.whyNot({ kind: a.kind, target: a.target, payload: a.payload }) }));
-  return (
-    <Card id="v6-instruct" title="Tell it what to do">
-      <label className={s.srOnly} htmlFor="v6-instruct-input">Your instruction</label>
-      <textarea id="v6-instruct-input" className={s.textarea} value={text} placeholder="For example: Reprocess the files we already saved" onChange={(e) => { setText(e.target.value); setParsed(null); }} />
-      <div className={s.inline}>
-        <button type="button" className={cx(s.btn, s.btnPrimary)} aria-disabled={!text.trim() ? "true" : undefined} onClick={() => readBack()}>Read it back</button>
-        <span className={s.meta}>Examples:</span>
-        {INSTRUCTION_EXAMPLES.slice(0, 4).map((ex) => <button key={ex} type="button" className={cx(s.btn, s.btnGhost)} style={{ whiteSpace: "normal", textAlign: "left", overflowWrap: "anywhere" }} onClick={() => { setText(ex); setParsed(null); }}>{ex}</button>)}
-      </div>
-      {parsed && (
-        <div className={s.stack} role="region" aria-label="Read-back" aria-live="polite">
-          <p className={cx(s.p, s.small)}>Read back from: “{parsed.text}”</p>
-          {parsed.unsupported && <p className={s.why}>No matching action.</p>}
-          {parsed.clarify && (
-            <div className={s.row}>
-              <strong className={s.small}>{parsed.clarify.question}</strong>
-              {parsed.clarify.options.length ? (
-                <select className={s.select} value={chosenBody ?? ""} onChange={(e) => { setChosenBody(e.target.value || null); readBack(text, e.target.value || null); }}>
-                  <option value="">Choose one</option>
-                  {parsed.clarify.options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-                </select>
-              ) : <span className={s.meta}>No matching item in {v.place.name}.</span>}
-            </div>
-          )}
-          {acts.map(({ a, def, why }) => {
-            const pv = def.preview({ target: a.target, targetName: v.nameOf(a.target), scopeName: v.index.get(a.target)?.name ?? v.place.name, scopeIsCountry: a.target === COUNTRY_KEY, url: a.payload?.url, outreachAuthorized: v.access.outreachAuthorized });
-            return (
-              <div key={`${a.kind}|${a.target}`} className={s.row}>
-                <div className={s.spread}><strong className={s.small}>{def.label}</strong><Pill tone={pv.level === "global" ? "warn" : "neutral"}>{pv.level === "global" ? "Whole system" : "Local"}</Pill></div>
-                {pv.rows.slice(0, 3).map(([k, val]) => <span key={k} className={s.small}><span className={s.dim}>{k}:</span> {val}</span>)}
-                {why ? <p className={s.why}>Won’t be sent: {why}</p> : <div><ActionButton action={{ kind: a.kind, target: a.target, payload: a.payload }} label="Preview and send" primary /></div>}
-              </div>
-            );
-          })}
         </div>
       )}
     </Card>
@@ -553,7 +498,6 @@ function DirectWork() {
         </div>
         <div className={s.row}>
           <strong className={s.small}>In {v.place.name}</strong>
-          <Actions actions={[{ kind: "scope-first", target: v.scopeKey }, { kind: "scope-recheck", target: v.scopeKey }, { kind: "scope-stop", target: v.scopeKey }]} />
         </div>
         <div className={cx(s.row, s.cardGlobal)}>
           <strong className={s.small}>Whole system</strong>

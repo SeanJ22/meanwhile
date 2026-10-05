@@ -1780,9 +1780,8 @@ let expansionReading: ExpansionCycleReading | null = expansionBudget === null ||
  * The targets: this cycle's DISPATCH intents, the DISPATCH targets an earlier
  * cycle left with work still owed, and every selected expansion scope. For each
  * government in them, every requirement the promoted registry defines that no
- * clock carries is written as a standing obligation, marked OWNER_DISPATCH, at
- * most DISPATCH_WORK_WRITE_BUDGET rows this cycle and DISPATCH_WORK_TARGET_CAP
- * for one target; the rest is deferred and counted. The new rows join the
+ * clock carries is written as a standing obligation, marked OWNER_DISPATCH.
+ * There is no write budget and no per-target cap in the code. The new rows join the
  * corpus next cycle through their providers. Nothing here calls a model,
  * appends an intent, or reads a ceiling it could raise: created model-class
  * work waits behind the same lane, the same Fleet ceiling and the same scope

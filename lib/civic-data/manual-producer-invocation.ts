@@ -11,7 +11,7 @@ interface Rule { readonly mode: ManualProducerMode; readonly state?: string; rea
 const RULES = {
   "ballot-contests": { mode: "VERIFIED_WORKER_RESULT", reason: "The saved official candidate list passes section 3 and each complete contest publishes with all of its candidates." },
   "congress-bulk-roster": { mode: "DIRECT_SOURCE", reason: "National congressional directory acquired from its registered public source." },
-  "registry-runtime-bindings": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker roster publication runs only after a completed independent audit." },
+  "registry-runtime-bindings": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker roster publication runs once it meets the section 3 standard; the audit follows and repairs what it finds." },
   "congress-rollcalls": { mode: "DIRECT_SOURCE", reason: "National recent roll calls acquired from their registered public source." },
   "federal-key-votes": { mode: "DIRECT_SOURCE", reason: "Reviewed national key-vote selection has an executable official acquisition." },
   "az-sos-ballot": { mode: "REVIEWED_INPUT", state: "AZ", reason: "Projection command requires a separately acquired and reviewed Arizona ballot input." },
@@ -28,14 +28,14 @@ const RULES = {
   "voting-sites": { mode: "SCOPED_ADAPTER_OWED", reason: "The implemented sources cover Pima, Morris and selected New Hampshire towns, not every selected ZIP." },
   "prl": { mode: "DIRECT_SOURCE", originalOnly: true, reason: "The licensed national PRL archive is acquired and attributed for the original authorized Send." },
   "az-official-actions": { mode: "REVIEWED_INPUT", state: "AZ", reason: "Promotion requires a reviewed action projection, exact source-set receipt and source-through argument." },
-  "official-filings": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output must pass independent verification and audit before publication." },
-  "comment-access": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output must pass independent verification and audit before publication." },
-  "ballot-navigation": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output must pass independent verification and audit before publication." },
+  "official-filings": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output publishes once it meets the section 3 standard; audits run afterward and repair what they find." },
+  "comment-access": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output publishes once it meets the section 3 standard; audits run afterward and repair what they find." },
+  "ballot-navigation": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output publishes once it meets the section 3 standard; audits run afterward and repair what they find." },
   "campaign-sites": { mode: "EXISTING_DERIVED", reason: "The separate derived campaign-site routine verifies current publications and promotes its reader projection." },
   "member-offices": { mode: "EXISTING_DERIVED", reason: "The daily member-office refresh reads every official state roster and Open States file and promotes its reader projection." },
   "venue-resolutions": { mode: "REVIEWED_INPUT", reason: "Venue projection requires meeting-specific location evidence and an exact body/venue join." },
   "meeting-body-crosswalk": { mode: "EXISTING_DERIVED", reason: "The existing meeting source-wiring session owns the normal held meeting/body binding and publication path." },
-  "everyday-routing": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output must pass independent verification and audit before publication." },
+  "everyday-routing": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output publishes once it meets the section 3 standard; audits run afterward and repair what they find." },
 } as const satisfies Record<ManualProductionContractId, Rule>;
 
 export interface ManualProducerInvocation {

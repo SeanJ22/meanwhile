@@ -5,7 +5,7 @@ run_id: session_013PW45RsGrmm8TqPnYfTFmb
 lock: measures-session_013PW45R
 heartbeat: 2026-10-05T20:49:02Z
 on_river: SC-01, SC-02, SC-03, SC-04, SC-05, SC-06, SC-07, SC-08, SC-09 (build), SC-11, SC-12, SC-13, SC-16, SC-20, BR-08, BR-21 (River folds through a88a0726c; BR-23 was named in the 940b11c58 fold but scoreboard-read.ts is not on river, so BR-23 is not built)
-ready: BR-23 at 3753c6c126352d642c4426a3baa9577ed1932ed7; BR-14 at 033dd9abf0ea76644b4d100281141f342195fc51; BR-25 at e47bf4a5f4f22ec7d7b69a2a5b7d17a3e385fed6; SC-10 at 8640184bd1746e2d89e8ab55b46ade117f05222f
+ready: BR-23 at 3753c6c126352d642c4426a3baa9577ed1932ed7; BR-14 at 033dd9abf0ea76644b4d100281141f342195fc51; BR-25 at e47bf4a5f4f22ec7d7b69a2a5b7d17a3e385fed6; SC-10 at 8640184bd1746e2d89e8ab55b46ade117f05222f; SC-14, BR-33 at fa1299e1d8bc78cf6d31d313e3b021498824dc30
 checks: SC-14 and BR-33 on the SC-10 base: full suite as CI runs it (env -u DATABASE_URL -u WTP_ASSET_STORE): 9367 tests, 9366 pass, 1 fail, 11 skipped; the 1 failure was an absence-default in my new action previews, fixed, and that test plus v6-ui and tests/owed-overlay.test.ts (4) re-run: all pass. tsc --noEmit clean; eslint clean on changed files. Not viewed live (no Admin sign-in here).
 working_on: BR-30, then SC-19, BR-22, BR-34
 waiting_on: BR-38: RL-05 (river) and CH-01 (hunters). BR-31: BX-06 (slide). BR-32: DB-27, DB-31 (meetings), DB-34 (registry). SC-17: Sean's decision D7 (parked). BR-24 (admin) is on river now, so BR-25, SC-10, BR-33 are ready; BR-06 is on river so SC-14 is ready.

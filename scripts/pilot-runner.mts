@@ -170,7 +170,8 @@ import {
   writeRuntimeReleaseHold,
   type RuntimeReleaseInspection,
 } from "../lib/ops/runtime-release-handoff.ts";
-import { discardStagedReleases, stageRuntimeRelease, stagedReleaseIsReady } from "../lib/ops/runtime-release-stage.ts";
+import { discardStagedReleases, defaultAsyncRunCommand, stageRuntimeRelease, stagedReleaseDirectory, stagedReleaseIsReady } from "../lib/ops/runtime-release-stage.ts";
+import { parentCodeChanged } from "../lib/ops/runtime-release-switch.ts";
 import { fetchServedCommit, PRODUCTION_BASE_URL } from "./post-deploy-observer.mts";
 import {
   acquireProcessSingleton,
@@ -243,8 +244,15 @@ const PILOT_PROCESS_LEASE = await acquireProcessSingleton(
   PILOT_RUNNER_SINGLETON_PORT,
 );
 
-/** Loaded-code identity, captured before a handoff can move the checkout. */
-const RUNNING_CODE_SHA = headSha(ROOT);
+/** The parent's own loaded code, captured before a handoff can move the checkout. */
+const PARENT_CODE_SHA = headSha(ROOT);
+/**
+ * The code new children start from. It is the parent's own until DB-53's quick
+ * switch moves new children to a staged release whose change leaves the
+ * parent's code alone; then it names that release and its checkout.
+ */
+let RUNNING_CODE_SHA = PARENT_CODE_SHA;
+let CODE_ROOT = ROOT;
 const cyclesArg = argv.find((a) => a.startsWith("--cycles="));
 const CYCLES = cyclesArg ? Number(cyclesArg.slice("--cycles=".length)) : Infinity;
 const intervalArg = argv.find((a) => a.startsWith("--interval="));
@@ -415,7 +423,7 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     args,
     env: standingChildEnvironment("RESEARCH_CYCLE"),
   }], {
-    cwd: ROOT,
+    cwd: CODE_ROOT,
     env: process.env,
     maxBufferBytes: 64 * 1024 * 1024,
     noProgressMs: RUNTIME_NO_PROGRESS_MS,
@@ -742,7 +750,7 @@ async function publishConsoleChildren(): Promise<boolean> {
       args: ["--experimental-strip-types", ...publisher.args],
       env: standingChildEnvironment("CONSOLE_PUBLISHER", process.env, publisher.name === "owner snapshot"),
     }], {
-      cwd: ROOT,
+      cwd: CODE_ROOT,
       env: process.env,
 
       maxBufferBytes: 16 * 1024 * 1024,
@@ -791,7 +799,7 @@ async function runRoutineCivicData(): Promise<void> {
     args: ["--experimental-strip-types", "scripts/routine-civic-data-runner.mts", ...(ownerRefresh?.args ?? [])],
     env: childEnvironment,
   }], {
-    cwd: ROOT,
+    cwd: CODE_ROOT,
     env: process.env,
 
     maxBufferBytes: 64 * 1024 * 1024,
@@ -917,7 +925,7 @@ async function runIntakeRuntime(): Promise<void> {
     args: ["--experimental-strip-types", "scripts/intake-tripwire.mts"],
     env: standingChildEnvironment("INTAKE_RUNTIME"),
   }], {
-    cwd: ROOT,
+    cwd: CODE_ROOT,
     env: process.env,
 
     maxBufferBytes: 16 * 1024 * 1024,
@@ -986,7 +994,7 @@ async function runIntakeRuntime(): Promise<void> {
         lastCycleOk: null,
         testedSha: RUNNING_CODE_SHA,
         host: hostname(),
-        codeIdentity: readCodeIdentity({ cwd: ROOT, runnerTestedSha: RUNNING_CODE_SHA, now: observation.observedAt, fetch: false }),
+        codeIdentity: readCodeIdentity({ cwd: CODE_ROOT, runnerTestedSha: RUNNING_CODE_SHA, now: observation.observedAt, fetch: false }),
       };
       const next: RunnerHeartbeat = { ...base, intakeRuntime: observation };
       if (current === null) await repos.runnerHeartbeat.put(RUNNER_ID, next, observation.observedAt);
@@ -1025,7 +1033,7 @@ async function writeFailedCycleBeat(cycleStartedAt: string): Promise<void> {
     const finishedAt = new Date().toISOString();
     let codeIdentity: RunnerHeartbeat["codeIdentity"] = null;
     try {
-      codeIdentity = readCodeIdentity({ cwd: ROOT, runnerTestedSha: RUNNING_CODE_SHA, now: finishedAt, fetch: false });
+      codeIdentity = readCodeIdentity({ cwd: CODE_ROOT, runnerTestedSha: RUNNING_CODE_SHA, now: finishedAt, fetch: false });
     } catch {
       /* a beat that cannot read git still says the cycle ran; keep codeIdentity null */
     }
@@ -1051,6 +1059,13 @@ async function writeFailedCycleBeat(cycleStartedAt: string): Promise<void> {
 let currentCycleErrors = "";
 let researchCycleChild: ChildProcess | null = null;
 const RELEASE_DRAIN_FIRST = process.env.WTP_RELEASE_DRAIN_FIRST === "1";
+/*
+ * DB-53: with WTP_RELEASE_QUICK_SWITCH=1 a staged release whose change leaves
+ * the parent's own code alone is loaded by pointing new children at its
+ * checkout; nothing drains and admissions never close. The drain-everything
+ * path stays the default until this one is checked live.
+ */
+const RELEASE_QUICK_SWITCH = process.env.WTP_RELEASE_QUICK_SWITCH === "1";
 const stagingAttempted = new Set<string>();
 let stagingInFlight: string | null = null;
 function startReleaseStaging(targetSha: string): void {
@@ -1058,24 +1073,55 @@ function startReleaseStaging(targetSha: string): void {
   stagingInFlight = targetSha;
   stagingAttempted.add(targetSha);
   console.log(`  release ${targetSha.slice(0, 8)} is installing in its own checkout; partition admissions continue`);
-  void stageRuntimeRelease({ root: ROOT, targetSha }).then(result => {
+  void stageRuntimeRelease({ root: ROOT, targetSha, keep: CODE_ROOT === ROOT ? [] : [CODE_ROOT] }).then(result => {
     if (result.state === "READY") console.log(`  release ${targetSha.slice(0, 8)} is installed beside the running one; the switch can now be quick`);
     else console.error(`  release ${targetSha.slice(0, 8)} could not be installed beside the running one (${result.code ?? "unknown"}); the drain-first path will apply it`);
   }).catch(error => {
     console.error(`  staging release ${targetSha.slice(0, 8)} failed (${error instanceof Error ? error.name : "error"}); the drain-first path will apply it`);
   }).finally(() => { stagingInFlight = null; });
 }
+
+/**
+ * STAGING: the release is still installing beside the running one; keep working.
+ * SWITCHED: new children start from the release; running ones finish on theirs.
+ * DRAIN: the parent's own code changed, or staging failed; the old path applies it.
+ */
+type StagedReleaseStep = "STAGING" | "SWITCHED" | "DRAIN";
+const parentChangeReported = new Set<string>();
+async function advanceStagedRelease(targetSha: string): Promise<StagedReleaseStep> {
+  if (RELEASE_DRAIN_FIRST) return "DRAIN";
+  if (!stagedReleaseIsReady(ROOT, targetSha)) {
+    if (!stagingAttempted.has(targetSha)) startReleaseStaging(targetSha);
+    // Staging already failed once for this target: the old drain still lands the release.
+    return stagingInFlight !== null ? "STAGING" : "DRAIN";
+  }
+  if (!RELEASE_QUICK_SWITCH || PARENT_CODE_SHA === null) return "DRAIN";
+  const parent = await parentCodeChanged({ root: ROOT, parentSha: PARENT_CODE_SHA, targetSha, run: defaultAsyncRunCommand });
+  if (parent.changed) {
+    if (!parentChangeReported.has(targetSha)) {
+      parentChangeReported.add(targetSha);
+      console.log(`  release ${targetSha.slice(0, 8)} changes the runner's own code (${parent.why.slice(0, 3).join(", ")}${parent.why.length > 3 ? ", …" : ""}); it loads by the drain-and-restart path`);
+    }
+    return "DRAIN";
+  }
+  const directory = stagedReleaseDirectory(ROOT, targetSha);
+  // Contract migrations stay at the switch point, run from the new code.
+  if (!await applyRuntimeContracts(targetSha, directory)) return "DRAIN";
+  const previous = RUNNING_CODE_SHA;
+  CODE_ROOT = directory;
+  RUNNING_CODE_SHA = targetSha;
+  console.log(`  release ${targetSha.slice(0, 8)} switched without a drain: new children start from it; children already running finish on ${previous?.slice(0, 8) ?? "the code they loaded"}; partition admissions continued`);
+  return "SWITCHED";
+}
+
 async function requestQueuedReleaseDrain(): Promise<void> {
   if (!AUTO_RELEASE_HANDOFF || !researchCycleActive || !researchCycleChild?.connected) return;
   const release = await inspectRuntimeRelease();
   if (release.state !== "UPDATE_REQUIRED") return;
   // DB-48: install the release beside the running one first; admissions continue meanwhile.
   // WTP_RELEASE_DRAIN_FIRST=1 keeps the old drain-first path until the staged path is checked live.
-  if (!RELEASE_DRAIN_FIRST && release.targetSha !== null && !stagedReleaseIsReady(ROOT, release.targetSha)) {
-    if (!stagingAttempted.has(release.targetSha)) startReleaseStaging(release.targetSha);
-    if (stagingInFlight !== null) return;
-    // Staging already failed once for this target: fall through to the old drain so the release still lands.
-  }
+  if (release.targetSha !== null && await advanceStagedRelease(release.targetSha) !== "DRAIN") return;
+  if (!researchCycleChild?.connected) return;
   // Reconciliation still applies only after both the research child and source lanes settle.
   runtimeAdmissionsHeld = true;
   researchCycleChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
@@ -1456,6 +1502,13 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
   // timer is already live, so that exact prior state may be restored.
   const reopenStandingClock = standingRuntimeTimer !== null;
   const reopenAdminCopyClock = adminCopyTimer !== null;
+  // DB-53: between rounds, a release that leaves the parent's code alone loads
+  // without closing admissions. At process start nothing runs yet, so the
+  // ordinary restart path is already gap-free.
+  if (RELEASE_QUICK_SWITCH && first.state === "UPDATE_REQUIRED" && first.targetSha !== null && reopenStandingClock && !runtimeAdmissionsHeld) {
+    const step = await advanceStagedRelease(first.targetSha);
+    if (step !== "DRAIN") return null;
+  }
   try { await holdStandingRuntimeAtQuiescence(); }
   catch (error) {
     await persistRuntimeBoundaryFailure(releaseInspectionRefusal("RUNTIME_DRAIN_NO_PROGRESS",
@@ -1504,12 +1557,12 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
 }
 
 const runtimeContractsApplied = new Set<string>();
-async function applyRuntimeContracts(sha: string | null): Promise<boolean> {
+async function applyRuntimeContracts(sha: string | null, cwd: string = CODE_ROOT): Promise<boolean> {
   if (sha === null || runtimeContractsApplied.has(sha)) return sha !== null;
   const [result] = await runRuntimeChildren([{ id: "production-contract-migrations", executable: process.execPath,
     args: ["--experimental-strip-types", "scripts/db-apply.mts", "--target=production", "--phase=contract",
       "--production-runtime", `--runtime-commit=${sha}`] }], {
-    cwd: ROOT, env: process.env, maxBufferBytes: 16 * 1024 * 1024,
+    cwd, env: process.env, maxBufferBytes: 16 * 1024 * 1024,
     onStdout: (_id, output) => process.stdout.write(output),
     onStderr: (_id, output) => process.stderr.write(output),
   });
@@ -1591,7 +1644,7 @@ async function beatWhilePaused(repos: ControlPlaneRepositories, intent: Research
     testedSha: RUNNING_CODE_SHA,
     host: hostname(),
     /* PRDY-1: a paused runner still says which code it holds; no fetch while idling. */
-    codeIdentity: readCodeIdentity({ cwd: ROOT, runnerTestedSha: RUNNING_CODE_SHA, now, fetch: false }),
+    codeIdentity: readCodeIdentity({ cwd: CODE_ROOT, runnerTestedSha: RUNNING_CODE_SHA, now, fetch: false }),
   };
   const next: RunnerHeartbeat = {
     ...base,
@@ -1815,7 +1868,7 @@ async function runNightlyWindow(trigger: string): Promise<void> {
     args: ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "scripts/nightly-window.mts", "--shadow", trigger === "WAKEUP" ? "--force" : "", `--trigger=${trigger}`].filter((a) => a !== ""),
     env: standingChildEnvironment("NIGHTLY_RESEARCH"),
   }], {
-    cwd: ROOT,
+    cwd: CODE_ROOT,
     env: process.env,
 
     maxBufferBytes: 64 * 1024 * 1024,

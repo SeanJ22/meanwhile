@@ -122,3 +122,41 @@ test("a translation for another exact district remains separate and same-place p
   assert.equal((await readTranslations([elsewhere], { store, now, bypassCache: true })).length, 1);
   assert.equal((await readTranslations([subject.ocdId], { store, now, bypassCache: true })).length, 2);
 });
+
+test("officially numbered parts retain their reaction identities on a checked rewrite", async () => {
+  const original = `${source}\n1. Funding. The levy funds library services.\n2. Oversight. The board reviews spending each year.`;
+  const primary = { ...evidence, text: original, contentHash: `sha256-${translationHash(original)}` };
+  const parts = [
+    { id: `${measure.contestId}#funding`, number: "1", kind: "FUNDING" as const, label: "Funding", what: "The levy funds library services." },
+    { id: `${measure.contestId}#oversight`, number: "2", kind: "OVERSIGHT" as const, label: "Oversight", what: "The board reviews spending each year." },
+  ];
+  const proposed = { ...measure, sourceHash: translationHash(original), parts };
+  const support = [...sentences, ...parts.flatMap(part => [
+    { field: `parts.${part.id}.label`, text: part.label, quote: part.label },
+    { field: `parts.${part.id}.what`, text: part.what, quote: part.what },
+  ])];
+  const result = await translateMeasure({ repos: createMemoryRepositories(), evidence: primary, subject: { ...subject, prior: proposed }, now,
+    transportFor: () => async request => response(request, request.tools[0].name === "write_measure_translation"
+      ? { measure: proposed, sentences: support } : { checked: support.map(({ field, text }) => ({ field, text, supported: true })) }) });
+  assert.deepEqual(result.record.measure.parts.map(part => [part.id, part.number]), parts.map(part => [part.id, part.number]));
+});
+
+test("an independent checker cannot authorize an invented official part number", async () => {
+  const part = { id: `${measure.contestId}#funding`, number: "7", kind: "FUNDING" as const, label: "Funding", what: measure.whatItDoes };
+  const support = [...sentences, { field: `parts.${part.id}.label`, text: part.label, quote: "funds" },
+    { field: `parts.${part.id}.what`, text: part.what, quote: part.what }];
+  await assert.rejects(translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now,
+    transportFor: () => async request => response(request, request.tools[0].name === "write_measure_translation"
+      ? { measure: { ...measure, parts: [part] }, sentences: support }
+      : { checked: support.map(({ field, text }) => ({ field, text, supported: true })) }) }), /unique numbering/);
+});
+
+test("a rewrite cannot drop or move a prior reaction identity to another official number", async () => {
+  const prior = { ...measure, parts: [{ id: `${measure.contestId}#funding`, number: "1", kind: "FUNDING" as const, label: "Funding", what: measure.whatItDoes }] };
+  for (const parts of [[], [{ ...prior.parts[0], number: "2" }]]) {
+    let calls = 0;
+    await assert.rejects(translateMeasure({ repos: createMemoryRepositories(), evidence, subject: { ...subject, prior }, now,
+      transportFor: () => async request => { calls++; return response(request, { measure: { ...measure, parts }, sentences }); } }), /reaction identity/);
+    assert.equal(calls, 1, "unsupported identity rewrites stop before another paid model call");
+  }
+});

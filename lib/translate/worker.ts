@@ -91,7 +91,8 @@ export async function translateMeasure(input: {
   if (!proposal || measureRecordIssue(proposal.measure) || proposal.measure.contestId !== subject.contestId ||
       proposal.measure.sourceUrl !== evidence.canonicalUrl || proposal.measure.sourceHash !== sourceHash || proposal.measure.writtenAt !== now ||
       !Array.isArray(proposal.sentences) || proposal.sentences.some(sentence => !sentence || typeof sentence.quote !== "string" || !evidence.text.includes(sentence.quote))) throw new Error("Translation writer returned unsupported fields or source passages.");
-  if (subject.prior?.parts.some(part => !proposal.measure.parts.some(proposed => proposed.id === part.id))) throw new Error("Translation would lose an existing measure part's reaction identity.");
+  if (subject.prior?.parts.some(part => !proposal.measure.parts.some(proposed => proposed.id === part.id &&
+      (part.number === null || proposed.number === part.number)))) throw new Error("Translation would lose or reassign an existing measure part's reaction identity.");
   const checker = await send(request(playbook.checkerModel, checkerTool, { originalSource: evidence.text, subject,
     proposal, instruction: "Check every written sentence and its qualifications against the original source. Every official part number must appear there. Return a false check for any unsupported sentence." }));
   const result = toolResult(checker, checkerTool.name, playbook.checkerModel) as { checked: MeasureTranslation["checked"] };

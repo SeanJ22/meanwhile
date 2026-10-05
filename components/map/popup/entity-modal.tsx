@@ -1,5 +1,6 @@
 "use client";
 
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { X } from "lucide-react";
@@ -71,13 +72,7 @@ export type ModalTab =
   | "activity"
   | "sources";
 
-const TABS: { id: ModalTab; label: string }[] = [
-  { id: "overview", label: "Overview" },
-  { id: "representation", label: "Representation" },
-  { id: "meetings", label: "Meetings" },
-  { id: "activity", label: "Activity" },
-  { id: "sources", label: "Sources" },
-];
+
 
 /**
  * One collapsible section of a body's battlecard (M136, 2026-08-18).
@@ -119,8 +114,8 @@ export interface BodyCardSection {
 function DefinitionBlock({ definition }: { definition: BodyDefinitionText }) {
   return (
     <>
-      <p className="text-[0.8125rem] leading-relaxed text-paper-dim">{definition.text}</p>
-      <p className="mt-1.5 text-[0.625rem] text-muted">
+      <p className="t-body leading-relaxed text-paper-dim">{definition.text}</p>
+      <p className="mt-1.5 t-caption text-muted">
         Powers defined in:{" "}
         {definition.basisUrl ? (
           <a
@@ -423,7 +418,7 @@ function PlaceSections({
       </PopupSectionLabel>
 
       {card.bodies.length === 0 ? (
-        <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
+        <p className="mt-1.5 t-detail leading-relaxed text-muted">
           {card.absence}
         </p>
       ) : (
@@ -435,11 +430,11 @@ function PlaceSections({
                 onClick={() => onOpenPlaceBody?.(body.key)}
                 className="flex w-full items-baseline justify-between gap-2 rounded border border-[var(--panel-border)] px-2.5 py-1.5 text-left hover:border-[var(--accent-local)]"
               >
-                <span className="min-w-0 truncate text-[0.8125rem] text-paper">
+                <span className="min-w-0 truncate t-body text-paper">
                   {body.name}
                 </span>
                 <span
-                  className="trailing-space-trimmed shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em]"
+                  className="trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em]"
                   style={{ color: `var(--accent-${body.tier})` }}
                 >
                   {TIER_LABEL[body.tier]}
@@ -512,7 +507,7 @@ function BodySections({
               description that has already been given.
             */}
             {card.whatItDoes.unreadNote && (
-              <p className="mt-2 text-[0.6875rem] leading-relaxed text-muted">
+              <p className="mt-2 t-caption leading-relaxed text-muted">
                 {card.whatItDoes.unreadNote}
               </p>
             )}
@@ -570,7 +565,7 @@ function BodySections({
       title: listingCount.heading,
       meta: meetings.length > 0 ? `${upcoming} upcoming${listingCount.unresolved ? " listings" : ""}` : undefined,
       content: meetings.length > 0 ? <Meetings meetings={meetings} /> : null,
-      absence: "We’re working on getting this info.",
+      absence: "",
     },
     {
       id: "contact",
@@ -596,7 +591,7 @@ function BodySections({
             ))}
           </>
         ) : null,
-      absence: "We’re working on getting this info.",
+      absence: "",
     },
     {
       id: "jurisdiction",
@@ -611,7 +606,7 @@ function BodySections({
             ))}
           </>
         ) : null,
-      absence: "We’re working on getting this info.",
+      absence: "",
     },
     {
       id: "sources",
@@ -619,7 +614,7 @@ function BodySections({
       meta: sourceCountLabel(subject.sources) ?? undefined,
       content:
         subject.sources.length > 0 ? <Sources sources={subject.sources} /> : null,
-      absence: "We’re working on getting this info.",
+      absence: "",
     },
   ];
 
@@ -663,7 +658,7 @@ function BodySections({
               while the body card's was fine.
             */}
             <CardSection title={section.title} meta={section.meta}>
-              {section.content ?? <Empty>{section.absence}</Empty>}
+              {section.content ?? <WorkingOnIt subject={subject.subjectKind === "BODY" ? { type: "BODY", id: subject.subjectId } : null} />}
             </CardSection>
           </Fragment>
         ))}
@@ -685,7 +680,7 @@ export function EntityModal({
 }: EntityModalProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   useCardVisibility(cardRef, `${subject.subjectKind}:${subject.subjectId}`, subject.subjectKind);
-  const [tab, setTab] = useState<ModalTab>(initialTab);
+  const tab = initialTab;
   const listingCount = readerMeetingCount(subject.meetings, useMeetingListingIdentity());
   const sourceCount = sourceCountLabel(subject.sources);
 
@@ -756,10 +751,10 @@ export function EntityModal({
                             ? "What this body does"
                             : "What the person who represents this district does"}
                         </PopupSectionLabel>
-                        <p className="mt-1.5 text-[0.75rem] leading-relaxed text-paper-dim">
+                        <p className="mt-1.5 t-detail leading-relaxed text-paper-dim">
                           {blurb.text}
                         </p>
-                        <p className="mt-1 text-[0.625rem] text-muted">
+                        <p className="mt-1 t-caption text-muted">
                           Powers defined in:{" "}
                           {blurb.basisUrl ? (
                             <a
@@ -916,95 +911,17 @@ export function EntityModal({
         ) : subject.placeCard ? (
           <PlaceSections subject={subject} onOpenPlaceBody={onOpenPlaceBody} />
         ) : (
-        embedded ? (
         <div className="account-modal-body mw-sections">
-          {overview}
-          {meetingLinks}
-          <section className="mw-section">
-            <h3 className="mw-section-title">
-              {subject.subjectKind === "MEETING" || subject.divisionOcdId == null
-                ? "Who sits on it"
-                : "Representation"}
-            </h3>
-            <Representation
-              holders={subject.representation}
-              gaps={subject.rosterGaps}
-              note={subject.representationNote}
-              onOpenHolder={onOpenHolder}
-              showTopOffices={runsSomething(subject.divisionKind)}
-            />
-          </section>
-          {subject.subjectKind !== "MEETING" && (
-            <section className="mw-section">
-              <h3 className="mw-section-title">{listingCount.heading}</h3>
-              <Meetings meetings={subject.meetings} />
-            </section>
-          )}
-          <details className="mw-section mw-sources">
-            <summary className="mw-section-title">
-              Sources{sourceCount ? ` (${sourceCount})` : ""}
-            </summary>
-            <Sources sources={subject.sources} />
-          </details>
+          <CardSectionGroup independent={embedded}>
+            <CardSection title="What this body does">{overview}{meetingLinks}</CardSection>
+            <CardSection title={subject.subjectKind === "MEETING" || subject.divisionOcdId == null ? "Who sits on it" : "Representation"}>
+              <Representation holders={subject.representation} gaps={subject.rosterGaps} note={subject.representationNote}
+                onOpenHolder={onOpenHolder} showTopOffices={runsSomething(subject.divisionKind)} />
+            </CardSection>
+            {subject.subjectKind !== "MEETING" && <CardSection title={listingCount.heading}><Meetings meetings={subject.meetings} /></CardSection>}
+            <CardSection title="Sources" meta={sourceCount}><Sources sources={subject.sources} /></CardSection>
+          </CardSectionGroup>
         </div>
-        ) : (
-        <>
-        <div className="account-modal-tabs" role="tablist">
-          {TABS.map((entry) => (
-            <button
-              key={entry.id}
-              role="tab"
-              type="button"
-              aria-selected={tab === entry.id}
-              className="account-modal-tab"
-              data-active={String(tab === entry.id)}
-              onClick={() => setTab(entry.id)}
-            >
-              {entry.id === "meetings" ? listingCount.heading : entry.label}
-              {/* Item 1 (2026-08-16): the stated N, computed from the SAME
-                  array the tab maps over. A count derived a second way is how
-                  a number comes to disagree with what is on screen. */}
-              {entry.id === "sources" && sourceCount && (
-                <span className="account-modal-tab-count">{sourceCount}</span>
-              )}
-            </button>
-          ))}
-        </div>
-
-        <div className="account-modal-body" role="tabpanel">
-          {tab === "overview" && overview}
-
-          {tab === "representation" && (
-            <Representation
-              holders={subject.representation}
-              gaps={subject.rosterGaps}
-              note={subject.representationNote}
-              onOpenHolder={onOpenHolder}
-              /* LBL-1: removed, not renamed, where nothing is run. */
-              showTopOffices={runsSomething(subject.divisionKind)}
-            />
-          )}
-
-          {/* F01 3.1 (2026-08-19): this tab used to render `subject.meetings`
-              RAW — the one meetings surface that never called the shared
-              ordering — so a division card opened on Meetings showed June
-              sittings above everything a reader could still attend. It now
-              renders the same three groups the venue panel does. */}
-          {tab === "meetings" && <Meetings meetings={subject.meetings} />}
-
-          {tab === "activity" && (
-            <Empty>
-              Civic engagement tracking arrives in Phase 7 — marking that you
-              attended, commented, or are watching an item. It stays on this
-              device and is never aggregated or licensed.
-            </Empty>
-          )}
-
-          {tab === "sources" && <Sources sources={subject.sources} />}
-        </div>
-
-        </>
-        )
         )}
 
         {/*
@@ -1169,7 +1086,7 @@ export function Representation({
           {topOffices.map((office) => (
             <p
               key={`top:${office.holder.id}`}
-              className="mt-1 text-[0.8125rem] leading-snug text-paper"
+              className="mt-1 t-body leading-snug text-paper"
             >
               {onOpenHolder ? (
                 <button
@@ -1191,7 +1108,7 @@ export function Representation({
         </div>
       )}
       {showTopOffices && topOffices.length === 0 && (
-        <p className="mb-2.5 border-b border-[var(--panel-border)] pb-2.5 text-[0.6875rem] leading-relaxed text-muted">
+        <p className="mb-2.5 border-b border-[var(--panel-border)] pb-2.5 t-caption leading-relaxed text-muted">
           {TOP_OFFICES_GAP}
         </p>
       )}
@@ -1218,7 +1135,7 @@ export function Representation({
 
           <div className="min-w-0 flex-1">
           <div className="flex items-baseline justify-between gap-3">
-            <span className="text-[0.875rem] font-medium text-paper">
+            <span className="t-body font-medium text-paper">
               {onOpenHolder ? (
                 // The name opens the full card — contact, office blurb —
                 // rather than navigating away.
@@ -1246,7 +1163,7 @@ export function Representation({
                 letter, and this span sits hard against the row edge with
                 shrink-0 — so a right-edge clip takes the space and then the
                 glyph. trailing-space-trimmed removes the space from the box. */}
-            <span className="trailing-space-trimmed shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+            <span className="trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em] text-muted">
               {readerOfficeTitle(holder.officeTitle)}
             </span>
           </div>
@@ -1255,7 +1172,7 @@ export function Representation({
             Provenance inline, not behind a link. This is the tab where a reader
             asks "says who?", and making them navigate to find out defeats it.
           */}
-          <p className="mt-1 text-[0.6875rem] text-muted">
+          <p className="mt-1 t-caption text-muted">
             {/* 3a: the party label wears its color; the rest of the
                 provenance line stays muted. */}
             {holder.partyLabel ? (
@@ -1325,14 +1242,14 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
           {group.meetings.map((meeting) => (
             <div key={meeting.id} className="account-modal-person">
               <div className="flex items-baseline justify-between gap-3">
-                <span className="text-[0.875rem] text-paper">
+                <span className="t-body text-paper">
                   {meeting.title}
                 </span>
-                <span className="shrink-0 font-mono text-[0.6875rem] text-muted">
+                <span className="shrink-0 font-mono t-caption text-muted">
                   {formatMeetingDate(meeting)}
                 </span>
               </div>
-              <p className="mt-0.5 text-[0.6875rem] text-muted">
+              <p className="mt-0.5 t-caption text-muted">
                 {formatMeetingTime(meeting)}
               </p>
               {/* 3i (2026-08-19): calendar links on every upcoming-meeting
@@ -1357,7 +1274,7 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
                       target="_blank"
                       rel="noreferrer"
                       title={directions.hint}
-                      className="trailing-space-trimmed-14 mt-1 inline-flex items-baseline gap-1 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
+                      className="trailing-space-trimmed-14 mt-1 inline-flex items-baseline gap-1 font-mono t-caption uppercase tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
                     >
                       Directions
                     </a>
@@ -1388,17 +1305,13 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
  */
 function Sources({ sources }: { sources: CardSource[] }) {
   if (sources.length === 0) {
-    return <Empty>We’re working on getting this info.</Empty>;
+    return <WorkingOnIt />;
   }
   return <CardSourcesList sources={sources} />;
 }
 
-function Empty({ children }: { children: ReactNode }) {
-  return (
-    <p className="px-1 py-3 text-[0.8125rem] leading-relaxed text-muted">
-      {children}
-    </p>
-  );
+function Empty(_props: { children: ReactNode }) {
+  return <WorkingOnIt className="px-1 py-3" />;
 }
 
 /* `hostOf` REMOVED (F01 3.2, 2026-08-19). Its only caller was the per-row

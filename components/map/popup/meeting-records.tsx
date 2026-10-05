@@ -4,14 +4,14 @@ import { formatDateMDY } from "@/lib/map/format";
 /** Actions and named votes retain their separate source record classes. */
 export function MeetingRecords({ records }: { records: MeetingReaderRecords | null }) {
   if (!records || records.status === "NOT_HELD") return null;
-  if (records.status === "HOLDING_UNAVAILABLE") return <p className="text-[0.75rem] leading-relaxed text-muted" data-meeting-records-status="HOLDING_UNAVAILABLE">
+  if (records.status === "HOLDING_UNAVAILABLE") return <p className="t-detail leading-relaxed text-muted" data-meeting-records-status="HOLDING_UNAVAILABLE">
     We couldn&apos;t check the separately held meeting outcome records just now. This does not affect the meeting or agenda above.
   </p>;
-  if (records.status === "IDENTITY_UNRESOLVED") return <p className="text-[0.75rem] leading-relaxed text-muted" data-meeting-records-status="IDENTITY_UNRESOLVED">
+  if (records.status === "IDENTITY_UNRESOLVED") return <p className="t-detail leading-relaxed text-muted" data-meeting-records-status="IDENTITY_UNRESOLVED">
     We could not verify that the held outcome records belong to this exact sitting, so none are attached here.
   </p>;
   const titles = new Map(records.agenda.map((row) => [row.eventItemId, row.title]));
-  return <div data-meeting-records={records.meetingId} className="space-y-3 text-[0.75rem] leading-relaxed">
+  return <div data-meeting-records={records.meetingId} className="space-y-3 t-detail leading-relaxed">
     {records.sourceUrl && <p className="text-muted">Meeting record: <a href={records.sourceUrl} target="_blank" rel="noreferrer noopener" className="text-signal underline decoration-dotted">{records.sourceOrg}</a></p>}
     {records.agenda.length > 0 && <details>
       <summary className="cursor-pointer text-signal">Recorded agenda items ({records.counts.agenda})</summary>

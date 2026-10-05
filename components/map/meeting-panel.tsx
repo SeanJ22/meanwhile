@@ -1,5 +1,7 @@
 "use client";
 
+import { WorkingOnIt } from "@/components/demand/working-on-it";
+
 import { ExternalLink, X } from "lucide-react";
 import { useState } from "react";
 
@@ -115,12 +117,8 @@ export function MeetingPanel({
     groups.flatMap((group) => group.meetings),
   );
 
-  // A venue is a group of meetings at one building, so any of them carries the
-  // building's coordinates. `groupByVenue` keys on them, so they agree.
-  // A venue is a group of meetings at one building, so any of them carries
-  // the building's coordinates — and a venue never holds an online meeting,
-  // because `groupByVenue` keys on coordinates and skips the ones with none
-  // (D18). The null check is the type being honest, not a case that occurs.
+  // An ONLINE_ONLY venue orients the reader at the body's office. It has
+  // no physical directions action; joining online is the primary action.
   const first = venue.meetings[0];
   const directions = first?.location ? venueLink(first.location) : null;
   // MTG-6/MTG-7/MTG-8: one descent, read once, and the rows below read its
@@ -173,7 +171,7 @@ export function MeetingPanel({
               its note in `lib/map/format.ts` for why a distinct-`bodyName`
               count was the wrong question, and for the rung MTG-9 added when a
               shared `bodyName` turned out to name a sitting. */}
-          <h2 className="font-display text-lg font-semibold leading-snug tracking-tight text-paper">
+          <h2 className="font-display t-title font-semibold leading-snug tracking-tight text-paper">
             {cardTitle.title}
             {/* MTG-15 (2026-09-02): the level tag right after the body name, so
                 a reader knows whether this is a local, state or federal body
@@ -189,7 +187,8 @@ export function MeetingPanel({
               Recreation pattern, used as the reference. Where the
               building IS the title there is nothing left to repeat under it,
               so the address stands alone rather than printing twice. */}
-          <p className="mt-1 text-[0.8125rem] leading-snug text-muted">
+          <p className="mt-1 t-body leading-snug text-muted">
+            {venue.kind === "ONLINE_ONLY" && <><MeetingStatusPill status="online" /> Body’s office: </>}
             {cardTitle.basis === "venue"
               ? (venue.address ?? "")
               : locationLine(venue.name, venue.address)}
@@ -319,7 +318,7 @@ export function MeetingSourceCredit({
   if (credit.kind === "none") return null;
   return (
     <div className={className}>
-      <p className="text-[0.6875rem] leading-relaxed text-muted">
+      <p className="t-caption leading-relaxed text-muted">
         {credit.lead}
       </p>
       {/* The multi-source list, still at the bottom, each source verbatim.
@@ -330,7 +329,7 @@ export function MeetingSourceCredit({
           {credit.sources.map((note) => (
             <li
               key={`${note.jurisdiction} ${note.sourceOrg}`}
-              className="text-[0.6875rem] leading-relaxed text-muted"
+              className="t-caption leading-relaxed text-muted"
             >
               <span className="text-paper-dim">{note.jurisdiction}</span>
               {" — "}
@@ -372,10 +371,12 @@ function MeetingEntry({
   const carriedClause = carriedRowClause(meeting.carried);
   const { location } = useShellData();
   const { badgeOf, bodyClassOf } = useMeetingBadge();
+  const nearby = useShellData().result?.readerScope?.nearbyMeetingIds.includes(meeting.id) ?? false;
   const jurisdiction = badgeOf(meeting);
 
   return (
     <article className="px-5 py-4" data-meeting-id={meeting.id}>
+      {nearby && <span className="t-detail text-muted" data-meeting-nearby>Nearby</span>}
       <div className="flex items-baseline gap-2.5">
         <span
           aria-hidden="true"
@@ -390,13 +391,13 @@ function MeetingEntry({
             <button
               type="button"
               onClick={() => onOpen(meeting)}
-              className="text-left font-display text-[0.95rem] font-semibold leading-snug tracking-tight text-paper hover:text-signal"
+              className="text-left font-display t-heading font-semibold leading-snug tracking-tight text-paper hover:text-signal"
             >
               {meetingEntryTitle(meeting, { bodyShown })}
             </button>
           </h3>
         ) : (
-          <h3 className="font-display text-[0.95rem] font-semibold leading-snug tracking-tight text-paper">
+          <h3 className="font-display t-heading font-semibold leading-snug tracking-tight text-paper">
             {meetingEntryTitle(meeting, { bodyShown })}
           </h3>
         )}
@@ -411,7 +412,7 @@ function MeetingEntry({
           `meetingSubline` asks the question that matters — what does the
           headline NOT already say — and answers "Work Session". */}
       {meetingSubline(meeting) && (
-        <p className="mt-1 pl-[1rem] text-sm leading-snug text-paper-dim">
+        <p className="mt-1 pl-4 t-body leading-snug text-paper-dim">
           {meetingSubline(meeting)}
         </p>
       )}
@@ -441,7 +442,7 @@ function MeetingEntry({
       */}
       {!hasPhysicalLocation(meeting) && <PlacelessWhere meeting={meeting} />}
 
-      <dl className="mt-3 pl-4 font-mono text-[0.8125rem] tabular-nums">
+      <dl className="mt-3 pl-4 font-mono t-body tabular-nums">
         <div className="flex gap-2">
           <dt className="sr-only">Date</dt>
           <dd className={concluded ? "text-concluded" : "text-signal"}>
@@ -472,7 +473,7 @@ function MeetingEntry({
           </a>
         ) : (
           <p className="trailing-space-trimmed-14 font-mono t-detail uppercase tracking-[0.14em] text-muted">
-            {agendaState.sentence}
+            <WorkingOnIt inline state={meeting.agendaSlotObservedEmpty ? { kind: "not-published", item: "Agenda" } : undefined} />
           </p>
         )}
         {/* BX-10: a concluded sitting links the recording its publisher's own record gives; its source is the card's Sources. */}
@@ -514,7 +515,7 @@ function MeetingEntry({
             the provenance that is genuinely PER ROW — second-hand sourcing and
             the carry-forward stamp — which varies from meeting to meeting and
             would be a lie if collapsed. */}
-        <p className="font-mono text-[0.6875rem] leading-relaxed text-muted">
+        <p className="font-mono t-caption leading-relaxed text-muted">
           {/*
             6f2 (2026-08-15): "Not independently
             verified" is RETIRED where the source is the body's own site or
@@ -652,7 +653,7 @@ export function HowToBeHeard({
   if (access.commentPeriod === "UNKNOWN") {
     return (
       <div className="mt-3 pl-4">
-        <p className="font-mono text-[0.6875rem] leading-relaxed text-muted">
+        <p className="font-mono t-caption leading-relaxed text-muted">
           {/* Item 4 (2026-08-14 second session): renamed to a call to
               action — the tester's words, verbatim. */}
           <span className="trailing-space-trimmed-14 uppercase tracking-[0.14em] text-paper-dim">
@@ -710,7 +711,7 @@ export function HowToBeHeard({
    */
   return (
     <details className="how-to-be-heard mt-3 pl-4">
-      <summary className="trailing-space-trimmed-14 how-to-be-heard-summary font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-paper-dim">
+      <summary className="trailing-space-trimmed-14 how-to-be-heard-summary font-mono t-caption uppercase tracking-[0.14em] text-paper-dim">
         Make your voice heard
       </summary>
       <ul className="mt-1 space-y-1 t-detail leading-relaxed text-paper-dim">
@@ -722,7 +723,7 @@ export function HowToBeHeard({
         href={access.sourceUrl}
         target="_blank"
         rel="noreferrer noopener"
-        className="trailing-space-trimmed-14 mt-1 inline-block font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
+        className="trailing-space-trimmed-14 mt-1 inline-block font-mono t-caption uppercase tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
       >
         source
       </a>

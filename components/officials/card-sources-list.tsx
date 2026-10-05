@@ -20,7 +20,7 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
     <>
       {sources.map((entry, i) => (
         <div key={`${entry.what}-${i}`} className="account-modal-person">
-          <p className="text-[0.8125rem] text-paper">{entry.what}</p>
+          <p className="t-body text-paper">{entry.what}</p>
 
           <PopupRow label="Published by">
             {entry.provenance.sourceOrg || <NoValue />}
@@ -41,7 +41,7 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
             )}
           </PopupRow>
 
-          <PopupRow label="Collected" mono>
+          <PopupRow label="Last checked" mono>
             {entry.provenance.collectedAt ? (
               entry.provenance.collectedAt.slice(0, 10)
             ) : (

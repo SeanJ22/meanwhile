@@ -41,6 +41,7 @@
  * the prior version was kept.
  */
 
+import { copy } from "../design/copy.ts";
 import {
   excerptAround,
   looksLikeChrome,
@@ -446,12 +447,7 @@ export function answerFor(
  * believes, and it never characterizes a passage.
  */
 export function answerSentence(answer: CandidateAnswer, topicLabel: string): string {
-  if (answer.kind === "NOTHING_COLLECTED") {
-    return (
-      `We haven't collected anything this candidate has published, so we ` +
-      `can't answer this yet. This is not a statement about them.`
-    );
-  }
+  if (answer.kind === "NOTHING_COLLECTED") return copy("copy.working");
   const n = answer.scope.documents.length;
   const dates = [...new Set(answer.scope.documents.map((d) => d.retrievedAt.slice(0, 10)))]
     .sort()

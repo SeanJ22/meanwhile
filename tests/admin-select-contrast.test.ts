@@ -23,7 +23,7 @@ import { sourceFilesUnder } from "./read-code.ts";
  *   app/(admin)/layout.tsx         the pages that kept their content (research,
  *                                  sources, release review and the rest); its
  *                                  selects follow the page's dark or light theme
- *   app/(admin)/_mw/mw.module.css  the redesigned shell — the scope select in
+ *   app/(admin)/_mw/admin-v6/v6.module.css  the redesigned shell — the scope select in
  *                                  the header and the Work composer's pickers;
  *                                  always dark, so its selects are pinned dark
  * ```
@@ -60,14 +60,14 @@ function assertSelectIsThemed(src: string, where: string): void {
 
 /** The shell's select: pinned dark, a Canvas surface under its light text, and the popup pinned to the same scheme. */
 function assertShellSelectIsDark(css: string, where: string): void {
-  const rule = /(^|\n)\.select\s*\{([^}]*)\}/.exec(css)?.[2] ?? "";
+  const rule = /(^|\n)\.legacySelect\s*\{([^}]*)\}/.exec(css)?.[2] ?? "";
   assert.ok(rule.length > 0, `${where}: no .select rule`);
   assert.match(rule, /color-scheme:\s*dark/, `${where}: the select does not pin the dark scheme, so its popup can open light`);
   assert.match(rule, /background-color:\s*Canvas/, `${where}: no scheme surface under the select`);
   assert.match(rule, /(^|[;\s])color:\s*var\(--mw-text\)/, `${where}: the select's text is not the shell's light text`);
   assert.match(
     css,
-    /\.select option,\s*\.select optgroup\s*\{[^}]*background-color:\s*Canvas[^}]*color:\s*CanvasText/,
+    /\.legacySelect option,\s*\.legacySelect optgroup\s*\{[^}]*background-color:\s*Canvas[^}]*color:\s*CanvasText/,
     `${where}: the <option> popup is not pinned to the scheme colours`,
   );
 }
@@ -77,7 +77,7 @@ test("the kept pages' selects are theme-pinned (dark and light)", () => {
 });
 
 test("the redesigned shell's selects are pinned dark, and every select it draws carries that rule", () => {
-  assertShellSelectIsDark(styleText("app/(admin)/_mw/mw.module.css"), "shell stylesheet");
+  assertShellSelectIsDark(styleText("app/(admin)/_mw/admin-v6/v6.module.css"), "shell stylesheet");
   // A select that does not carry the class falls back to the UA's chrome — the original defect.
   const drawn: string[] = [];
   for (const abs of sourceFilesUnder([".tsx"], "app", "(admin)", "_mw")) {
@@ -106,7 +106,7 @@ test("POSITIVE CONTROL: stripping the themed surface fails the checker", () => {
 });
 
 test("POSITIVE CONTROL: a shell select that stops pinning the dark scheme fails the checker", () => {
-  const unpinned = styleText("app/(admin)/_mw/mw.module.css").replace(/(\n\.select\s*\{[^}]*?)color-scheme:\s*dark;/, "$1");
-  assert.notEqual(unpinned, styleText("app/(admin)/_mw/mw.module.css"), "the control must actually remove the declaration");
+  const unpinned = styleText("app/(admin)/_mw/admin-v6/v6.module.css").replace(/(\n\.legacySelect\s*\{[^}]*?)color-scheme:\s*dark;/, "$1");
+  assert.notEqual(unpinned, styleText("app/(admin)/_mw/admin-v6/v6.module.css"), "the control must actually remove the declaration");
   assert.throws(() => assertShellSelectIsDark(unpinned, "shell"), /does not pin the dark scheme/);
 });

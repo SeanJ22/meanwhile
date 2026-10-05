@@ -1,5 +1,7 @@
 "use client";
 
+import { useShellData } from "@/lib/state/data";
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { staleDivisionRead, type DivisionRead } from "@/lib/meetings/freshness";
 import type { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
@@ -245,7 +247,7 @@ function SubjectLine({
   return (
     <p
       data-home-subject={zip}
-      className="mt-1 text-[0.6875rem] leading-relaxed text-muted"
+      className="mt-1 t-caption leading-relaxed text-muted"
     >
       {standing === "ADDRESS_RESOLVED" ? (
         <>Your area — {zip}, narrowed by the address you gave.</>
@@ -304,7 +306,7 @@ function OverlapMark({ zip }: { zip: string }) {
   return (
     <span
       data-standing="OVERLAP_NOT_RULED_OUT"
-      className="ml-1.5 shrink-0 text-[0.625rem] leading-none text-muted"
+      className="ml-1.5 shrink-0 t-caption leading-none text-muted"
     >
       may also cover you — your address named a different one in {zip}
     </span>
@@ -355,7 +357,7 @@ function SeatRow({
          disarm the guard. WGH-22 adds the sourcing for the same reason. */
       data-seat-standing={seat.standing}
       data-seat-sourcing={seat.sourcing}
-      className="text-[0.75rem] leading-snug"
+      className="t-detail leading-snug"
     >
       <span className={TYPE_LABEL_CLASS}>
         {seat.label ?? (
@@ -759,7 +761,7 @@ function CoverageBody({
   const lead =
     kind === "unmapped" ? (
       <>
-        We&rsquo;re working on getting this info for {zip}.
+        <WorkingOnIt inline about={zip} />
       </>
     ) : kind === "none-scheduled" ? (
       <>
@@ -778,16 +780,14 @@ function CoverageBody({
             ? "One body governs the area around "
             : `${g.total} bodies govern the area around `}
           {zip}.{" "}
-          We&rsquo;re working on getting this info on{" "}
-          {g.total === 1 ? "its calendar" : "their calendars"}.
+          <WorkingOnIt inline about={g.total === 1 ? "its calendar" : "their calendars"} />
         </>
       ) : (
         <>
           We track the {g.withSource === 1 ? "calendar" : "calendars"} of{" "}
           {g.withSource} of the {g.total} bodies that govern the area around{" "}
           {zip}.{" "}
-          We&rsquo;re working on getting this info on{" "}
-          {g.total - g.withSource === 1 ? "the other one" : `the other ${g.total - g.withSource}`}.
+          <WorkingOnIt inline about={g.total - g.withSource === 1 ? "the other calendar" : `the other ${g.total - g.withSource} calendars`} />
         </>
       )
     ) : kind === "all-wired" ? (
@@ -803,13 +803,8 @@ function CoverageBody({
       <>
         {g.total === 1 ? "One body governs" : `${g.total} bodies govern`} the
         area around {zip}.{" "}
-        {g.withSource === 0
-          ? `We’re working on getting this info on ${g.total === 1 ? "its calendar" : "their calendars"}.`
-          : `We track ${g.withSource === 1 ? "the calendar" : "the calendars"} of ${g.withSource}. We’re working on getting this info on ${
-              g.total - g.withSource === 1
-                ? "the other one"
-                : `the other ${g.total - g.withSource}`
-            }.`}
+        {g.withSource > 0 && <>We track {g.withSource} calendars. </>}
+        <WorkingOnIt inline about={g.total - g.withSource === 1 ? "the remaining calendar" : "the remaining calendars"} />
       </>
     );
 
@@ -828,13 +823,12 @@ function CoverageBody({
             : `${othersWithSource} more board and committee ${othersWithSource === 1 ? "calendar" : "calendars"} here`}
           .
           {othersWithSource < others &&
-            ` We’re working on getting this info on ${others - othersWithSource} more.`}
+            <WorkingOnIt inline about={`${others - othersWithSource} more calendars`} />}
         </>
       ) : (
         <>
-          {others === 1
-            ? "One more board, committee or commission serves the area. We’re working on getting this info on it."
-            : `${others} more boards, committees and commissions serve the area. We’re working on getting this info on them.`}
+          {others} more boards, committees and commissions serve the area. {" "}
+          <WorkingOnIt inline about="their calendars" />
         </>
       )
     ) : null;
@@ -844,7 +838,7 @@ function CoverageBody({
       {unincorporated && (
         // The no-mayor case is a stated fact, not an empty slot (5b): say
         // what this place has instead of what it lacks.
-        <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-voice">
+        <p className="mt-1.5 t-body leading-relaxed text-voice">
           <span className="text-signal">
             This area isn&apos;t a city or town
           </span>{" "}
@@ -860,14 +854,14 @@ function CoverageBody({
 
       {/* The app's voice (design pass): coverage explanation is guidance,
           not record — it renders in the voice register. */}
-      <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-voice">
+      <p className="mt-1.5 t-body leading-relaxed text-voice">
         {lead}
       </p>
 
       {/* What Meanwhile holds for this ZIP, level by level, so a blank reads as
           "not collected yet" and never as "nothing here". Counts come from the
           same arrays the sections below render. */}
-      <p className="mt-1 text-[0.75rem] leading-relaxed text-voice" data-mw-covers>
+      <p className="mt-1 t-detail leading-relaxed text-voice" data-mw-covers>
         <strong className="font-semibold text-voice">What Meanwhile has for {zip}:</strong>{" "}
         {[
           seats.some((seat) => seat.tier === "national" && seat.representatives.length > 0) || senators.length > 0
@@ -909,7 +903,7 @@ function CoverageBody({
       */}
 
       {othersLine && (
-        <p className="mt-1 text-[0.75rem] leading-relaxed text-voice">
+        <p className="mt-1 t-detail leading-relaxed text-voice">
           {othersLine}
         </p>
       )}
@@ -934,7 +928,7 @@ function CoverageBody({
       */}
       {derived.otherRows.length > 0 && (
         <details className="mt-1" data-other-bodies-disclosure="">
-          <summary className="cursor-pointer text-[0.6875rem] text-link">
+          <summary className="cursor-pointer t-caption text-link">
             See the rest ({derived.otherRows.length})
           </summary>
           <ul className="mt-1 space-y-1">
@@ -947,7 +941,7 @@ function CoverageBody({
                 <button
                   type="button"
                   onClick={onOpenBody ? () => onOpenBody(body) : undefined}
-                  className="min-w-0 flex-1 truncate text-left text-[0.75rem] leading-snug text-paper hover:underline"
+                  className="min-w-0 flex-1 truncate text-left t-detail leading-snug text-paper hover:underline"
                 >
                   {bodyDisplayName(body)}
                 </button>
@@ -988,7 +982,7 @@ function CoverageBody({
       */}
       {shown.length > 0 && (
         <details className="mt-1">
-          <summary className="cursor-pointer text-[0.6875rem] text-link">
+          <summary className="cursor-pointer t-caption text-link">
             Why these {shown.length}?
           </summary>
           {/*
@@ -1019,7 +1013,7 @@ function CoverageBody({
             them, which is what `CLAUDE.md`'s neutral-criterion rule requires
             of any ordering that reaches a reader.
           */}
-          <p className="mt-1 text-[0.6875rem] leading-relaxed text-voice">
+          <p className="mt-1 t-caption leading-relaxed text-voice">
             {shown.length === 1
               ? "This is the government whose boundary covers this area"
               : `These are ${shown.length} of the governments whose boundaries cover this area`}{" "}
@@ -1090,12 +1084,12 @@ function CoverageBody({
                     type="button"
                     onClick={() => onOpenBody(body)}
                     title={`More about ${bodyDisplayName(body)}`}
-                    className="cursor-pointer text-left text-[0.8125rem] leading-snug text-paper hover:text-link hover:underline"
+                    className="cursor-pointer text-left t-body leading-snug text-paper hover:text-link hover:underline"
                   >
                     {bodyDisplayName(body)}
                   </button>
                 ) : (
-                  <span className="text-[0.8125rem] leading-snug">
+                  <span className="t-body leading-snug">
                     {bodyDisplayName(body)}
                   </span>
                 )}
@@ -1137,7 +1131,7 @@ function CoverageBody({
                 {marksOverlap(body.standing) && <OverlapMark zip={zip} />}
               </span>
               <span
-                className={`trailing-space-trimmed shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] ${TYPE_LABEL_CLASS}`}
+                className={`trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em] ${TYPE_LABEL_CLASS}`}
               >
                 {/* A derived row is the division's government and tags by
                     division type. A curated row tags by what it is — the PHA
@@ -1201,7 +1195,7 @@ function CoverageBody({
             return [
               <li
                 key={`${body.bodyId}-selectboard-fact`}
-                className="pb-1 text-[0.75rem] leading-relaxed text-paper-dim"
+                className="pb-1 t-detail leading-relaxed text-paper-dim"
               >
                 <span className="text-signal">
                   {townName} isn&apos;t a city — it has no mayor.
@@ -1211,7 +1205,7 @@ function CoverageBody({
               ...board.map((holder) => (
                 <li
                   key={holder.id}
-                  className="flex items-baseline justify-between gap-3 pb-1 text-[0.75rem] leading-snug"
+                  className="flex items-baseline justify-between gap-3 pb-1 t-detail leading-snug"
                 >
                   <span className={TYPE_LABEL_CLASS}>{readerOfficeTitle(holder.officeTitle)}</span>
                   <span className="block person-under-heading">
@@ -1335,7 +1329,7 @@ function CoverageBody({
       ).map((footnote) => (
         <p
           key={`source-stale:${footnote.subjects}`}
-          className="mt-1.5 text-[0.6875rem] leading-relaxed text-signal"
+          className="mt-1.5 t-caption leading-relaxed text-signal"
         >
           <span className="text-paper-dim">{footnote.subjects}</span> —{" "}
           {footnote.note}
@@ -1354,7 +1348,7 @@ function CoverageBody({
       ).map((footnote) => (
         <p
           key={`source-failed:${footnote.subjects}`}
-          className="mt-1.5 text-[0.6875rem] leading-relaxed text-signal"
+          className="mt-1.5 t-caption leading-relaxed text-signal"
         >
           <span className="text-paper-dim">{footnote.subjects}</span> —{" "}
           {footnote.note}
@@ -1383,7 +1377,7 @@ function CoverageBody({
       ).map((footnote) => (
         <p
           key={`source-read:${footnote.subjects}`}
-          className="mt-1.5 text-[0.6875rem] leading-relaxed text-signal"
+          className="mt-1.5 t-caption leading-relaxed text-signal"
         >
           <span className="text-paper-dim">{footnote.subjects}</span> —{" "}
           {footnote.note}
@@ -1395,7 +1389,7 @@ function CoverageBody({
       ).map((footnote) => (
         <p
           key={`absence:${footnote.subjects}`}
-          className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted"
+          className="mt-1.5 t-caption leading-relaxed text-muted"
         >
           <span className="text-paper-dim">{footnote.subjects}</span> —{" "}
           {footnote.note}
@@ -1404,7 +1398,7 @@ function CoverageBody({
 
       {seats.length > 0 && seatCounts.named === 0 ? (
         // Nothing sourced for any seat — the original wording, still true.
-        <p className="mt-2.5 text-[0.75rem] leading-relaxed text-voice">
+        <p className="mt-2.5 t-detail leading-relaxed text-voice">
           You&apos;re also represented in {seatLine}.
         </p>
       ) : (
@@ -1433,7 +1427,7 @@ function CoverageBody({
                 {statewideExecutives.map((holder) => (
                   <li
                     key={holder.id}
-                    className="text-[0.75rem] leading-snug"
+                    className="t-detail leading-snug"
                   >
                     <span className={TYPE_LABEL_CLASS}>{readerOfficeTitle(holder.officeTitle)}</span>
                     <span className="block person-under-heading">
@@ -1530,7 +1524,7 @@ function CoverageBody({
                 ).map((group) => (
                   <li
                     key={group.members[0].id}
-                    className="text-[0.75rem] leading-snug"
+                    className="t-detail leading-snug"
                   >
                     <span className={TYPE_LABEL_CLASS}>{group.label}</span>
                     <span className="block person-under-heading">
@@ -1577,7 +1571,7 @@ function CoverageBody({
           key={`state-legislator-authority:${authority.scope}`}
           data-state-legislator-authority={authority.kind}
           data-state-legislator-scope={authority.scope}
-          className={`mt-2.5 text-[0.6875rem] leading-relaxed ${
+          className={`mt-2.5 t-caption leading-relaxed ${
             authority.kind === "STORE_UNREACHABLE" ? "text-signal" : "text-voice"
           }`}
         >
@@ -1596,7 +1590,7 @@ function CoverageBody({
         // to claim we had sourced no names at all, which stopped being true the
         // moment the federal roster landed — AZ-6 has a name on it. Claiming
         // otherwise beside a rendered name is its own small lie.
-        <p className="mt-2.5 text-[0.6875rem] leading-relaxed text-voice">
+        <p className="mt-2.5 t-caption leading-relaxed text-voice">
           {counts.withoutSource > 0 && (
             <>
               We know these bodies exist because the district boundaries do. We
@@ -1654,7 +1648,7 @@ function CoverageBody({
 
       {/* 7 (2026-08-17): the mover's page, one tap from who-governs. */}
       {/^\d{5}$/.test(zip) && (
-        <p className="mt-2 text-[0.75rem]">
+        <p className="mt-2 t-detail">
           <a
             href={`/about-area?zip=${zip}`}
             className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
@@ -1690,6 +1684,7 @@ export function CoverageNotice({
   embedded = false,
 }: CoverageNoticeProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const { result } = useShellData();
   // Item 1 (2026-08-15): a press outside minimizes the card, the way a native
   // sheet does. It MINIMIZES rather than closing — the card's collapsed form
   // is its corner bubble, and there is no state in which it is gone, so the
@@ -1763,7 +1758,7 @@ export function CoverageNotice({
           below it cannot be scrolled away. */}
       <div className="coverage-notice-head">
         <p
-          className={`font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] ${accent}`}
+          className={`font-mono t-caption uppercase trailing-space-trimmed-20 tracking-[0.2em] ${accent}`}
         >
           {label}
         </p>
@@ -1791,7 +1786,7 @@ export function CoverageNotice({
           (clusterElsewhere ? null : (
             <a
               href={ballotZip ? `/ballot?zip=${ballotZip}` : "/ballot"}
-              className="coverage-notice-ballot mt-2 flex items-center justify-between gap-2 rounded border border-[var(--signal)]/45 bg-[var(--signal)]/5 px-2.5 py-2 text-[0.8125rem] leading-snug text-paper hover:border-[var(--signal)]"
+              className="coverage-notice-ballot mt-2 flex items-center justify-between gap-2 rounded border border-[var(--signal)]/45 bg-[var(--signal)]/5 px-2.5 py-2 t-body leading-snug text-paper hover:border-[var(--signal)]"
             >
               <span className="font-semibold">What&apos;s on the ballot</span>
               <span aria-hidden="true" className="shrink-0 text-signal">
@@ -1804,19 +1799,25 @@ export function CoverageNotice({
       <div className="coverage-notice-body">
       <MeetingListingNotice groups={listingCount?.groups ?? []} />
       {tier === "widened" && (
-        <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
-          Nothing scheduled within {near} miles of {zip}. Showing the{" "}
-          {listingCount?.unresolved ? `${count} ${listingCount.unit}` : count === 1 ? "one meeting" : `${count} meetings`} within {wide}{" "}
-          miles.
+        <p className="mt-1.5 t-body leading-relaxed text-paper-dim">
+          Nearby results: {listingCount?.unresolved ? `${count} ${listingCount.unit}` : count === 1 ? "one meeting" : `${count} meetings`} within {wide} miles of {zip}.
+
         </p>
       )}
 
-      {tier === "concluded" && (
-        <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
-          No upcoming meetings within {wide} miles of {zip}. These already
-          happened — the agendas still show what was decided.
-        </p>
+      {result?.readerScope?.governments && result.readerScope.governments.length > 0 && (
+        <section className="mt-3" aria-label="Upcoming meetings of the place’s governments" data-place-government-meetings>
+          <h3 className="t-heading text-paper">Governments at this place</h3>
+          <ul className="mt-2 space-y-2">
+            {result.readerScope.governments.map(body => <li key={body.bodyId} data-upcoming-body={body.bodyId}>
+              <span className="t-body text-paper">{body.name}</span>
+              {body.upcoming > 0 ? <p className="t-detail text-muted">{body.upcoming} upcoming {body.upcoming === 1 ? "meeting" : "meetings"} held · {body.agendasLinked} {body.agendasLinked === 1 ? "agenda" : "agendas"} linked</p>
+                : <WorkingOnIt subject={{ type: "BODY", id: body.bodyId }} />}
+            </li>)}
+          </ul>
+        </section>
       )}
+      {tier === "concluded" && <p className="mt-2 t-body text-paper-dim">Concluded meetings within {wide} miles of {zip}.</p>}
 
       {/*
         The coverage block rides *alongside* the cascade's explanation rather
@@ -1844,7 +1845,7 @@ export function CoverageNotice({
         isEmpty && (
           // The registry could not be read. Fall back to what the cascade alone
           // knows rather than inventing a coverage claim.
-          <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
+          <p className="mt-1.5 t-body leading-relaxed text-paper-dim">
             No meetings on file near {zip} yet. We&apos;re still checking
             local calendars. A meeting may be listed before its agenda is posted.
           </p>

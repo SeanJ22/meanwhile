@@ -3,7 +3,7 @@ import { formatDateMDY } from "@/lib/map/format";
 
 export function PollingLookupFallback({ links }: { links: readonly PollingPlaceLink[] }) {
   if (!links.length) return null;
-  return <div className="mt-3 text-[0.75rem] leading-relaxed" data-polling-lookup-fallback>
+  return <div className="mt-3 t-detail leading-relaxed" data-polling-lookup-fallback>
     <p>Official voting lookups</p>
     <ul className="mt-1 space-y-3">
       {links.map((link) => <li key={link.state} data-polling-lookup-state={link.state}>

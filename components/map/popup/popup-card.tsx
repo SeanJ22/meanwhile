@@ -1,5 +1,6 @@
 "use client";
 
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { Maximize2, Minus, X } from "lucide-react";
 import { useRef, type ReactNode } from "react";
 
@@ -175,7 +176,7 @@ export function PopupCard({
           type="button"
           onClick={onExpand}
           aria-label={expandLabel ?? `More about ${title}`}
-          className="popup-card-more mt-3 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded border border-[var(--panel-border)] px-3 py-2 text-[0.75rem] font-medium text-paper hover:border-[var(--signal)] hover:text-signal"
+          className="popup-card-more mt-3 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded border border-[var(--panel-border)] px-3 py-2 t-detail font-medium text-paper hover:border-[var(--signal)] hover:text-signal"
         >
           More
           <Maximize2 className="size-3" />
@@ -221,6 +222,6 @@ export function PopupSectionLabel({ children }: { children: ReactNode }) {
  * string reads as a bug, and worse, a plausible-looking placeholder reads as a
  * fact.
  */
-export function NoValue({ children = "not recorded" }: { children?: ReactNode }) {
-  return <span className="text-muted">{children}</span>;
+export function NoValue(_props: { children?: ReactNode }) {
+  return <WorkingOnIt inline />;
 }

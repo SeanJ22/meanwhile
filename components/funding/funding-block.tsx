@@ -1,5 +1,6 @@
 "use client";
 
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { useEffect, useState } from "react";
 
 import type { CampaignMoneyApiResponse } from "@/lib/funding/campaign-money";
@@ -22,8 +23,7 @@ import { StateMoneySection } from "./state-money-section";
  * on; the section simply isn't there, the same as before it existed.
  */
 
-const NONFEDERAL_OFFICIAL_NOTE =
-  "We’re working on getting this info.";
+
 
 export function FundingBlock(props: {
   holder: SeatHolder;
@@ -87,10 +87,10 @@ function FundingBlockInner({
   </>;
   else if (answer.kind === "state") content = <StateMoneySection records={answer.data.records} bare={bare} context={reactionContext} />;
   else if (answer.kind === "identity-unresolved") content = <StateFundingNote note={answer.statement} />;
-  else if (answer.kind === "none") content = isFederal ? null : <StateFundingNote note={NONFEDERAL_OFFICIAL_NOTE} />;
+  else if (answer.kind === "none") content = <WorkingOnIt />;
   else if (answer.kind === "absence") content = <FundingAbsence data={answer.data} />;
   else content = <FundingDisplay data={answer.data} context={reactionContext} bare={bare} />;
-  if (!freshness && content === null) return null;
+  if (!freshness && content === null) return <WorkingOnIt />;
   return <>
     {freshness && <p className="funding-data-freshness">{freshness}</p>}
     {content}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useBodyOfficeLocations } from "@/hooks/use-body-office-locations";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { forgetCamera } from "@/lib/map/camera-memory";
 
@@ -168,6 +169,9 @@ interface ViewTarget {
    */
   radiusKm?: number;
 }
+
+const EMPTY_COVERED_BODIES: CoveredBody[] = [];
+const EMPTY_MEETINGS: Meeting[] = [];
 
 export function MapEntry() {
   return (
@@ -644,7 +648,8 @@ function MapEntryInner() {
     [pinned, ui, view],
   );
 
-  const venues = useMemo<Venue[]>(() => groupByVenue(meetings, pinned?.listingIdentity), [meetings, pinned?.listingIdentity]);
+  const officeLocations = useBodyOfficeLocations(pinned?.coverage?.bodies ?? EMPTY_COVERED_BODIES, pinned?.meetings ?? EMPTY_MEETINGS);
+  const venues = useMemo<Venue[]>(() => groupByVenue(meetings, pinned?.listingIdentity, officeLocations), [meetings, pinned?.listingIdentity, officeLocations]);
 
   /*
    * **P-001 · TWO LISTS, AND THE MAP NEEDS BOTH.**
@@ -666,8 +671,8 @@ function MapEntryInner() {
    * collapsing them back into one.
    */
   const allVenues = useMemo<Venue[]>(
-    () => (pinned ? groupByVenue(pinned.meetings, pinned.listingIdentity) : []),
-    [pinned],
+    () => (pinned ? groupByVenue(pinned.meetings, pinned.listingIdentity, officeLocations) : []),
+    [pinned, officeLocations],
   );
   const visibleVenueKeys = useMemo(
     () => new Set(venues.map((v) => v.key)),
@@ -2996,7 +3001,7 @@ function placeSubject(
            A reader needs to know this absence is OURS and that it is not a
            finding about the place — neither of which requires the app to grade
            its own coverage in the middle of the sentence. */
-        "We’re working on getting this info.",
+        "",
     },
     // A place has no roster of its own — the people are on the bodies' cards,
     // one level down, and saying so is better than an empty tab.
@@ -3258,16 +3263,16 @@ function SearchFailedNotice({
 }) {
   return (
     <div className="panel pointer-events-auto max-w-md px-4 py-3.5">
-      <p className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-danger">
+      <p className="font-mono t-caption uppercase trailing-space-trimmed-20 tracking-[0.2em] text-danger">
         Search failed
       </p>
-      <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-text-dim">
+      <p className="mt-1.5 t-body leading-relaxed text-text-dim">
         We couldn&apos;t check this area — the meetings service didn&apos;t
         answer. That doesn&apos;t mean nothing is happening here.
       </p>
       {/* The failure names itself: this line is what turns the next
           screenshot of this card into a diagnosis (2a). */}
-      <p className="mt-1 font-mono text-[0.625rem] text-muted">
+      <p className="mt-1 font-mono t-caption text-muted">
         {failure.status !== null
           ? `The service answered ${failure.status}.`
           : "The request never got an answer."}
@@ -3275,7 +3280,7 @@ function SearchFailedNotice({
       <button
         type="button"
         onClick={onRetry}
-        className="mt-2.5 cursor-pointer rounded border border-[var(--panel-border)] px-3 py-1.5 text-[0.75rem] text-paper hover:border-[var(--signal)] hover:text-signal"
+        className="mt-2.5 cursor-pointer rounded border border-[var(--panel-border)] px-3 py-1.5 t-detail text-paper hover:border-[var(--signal)] hover:text-signal"
       >
         Try again
       </button>
@@ -3286,7 +3291,7 @@ function SearchFailedNotice({
 function TileNotice() {
   return (
     <div className="panel pointer-events-auto max-w-md px-4 py-3.5">
-      <p className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-danger">
+      <p className="font-mono t-caption uppercase trailing-space-trimmed-20 tracking-[0.2em] text-danger">
         Basemap unavailable
       </p>
       {/*
@@ -3302,7 +3307,7 @@ function TileNotice() {
         do — which is the whole of what a reader needs from a notice about our
         own infrastructure.
       */}
-      <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-text-dim">
+      <p className="mt-1.5 t-body leading-relaxed text-text-dim">
         The map&apos;s background image isn&apos;t loading right now. Everything else
         works — the pins are in the right places, and meeting details still open.
         Reloading often fixes it.

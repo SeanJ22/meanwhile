@@ -291,31 +291,31 @@ function RecentVotesInner({
 
   const visibleVotes = votes?.slice(0, showAll ? undefined : VOTE_LIMIT) ?? null;
   const history = /^congress:[A-Z]\d{6}$/.test(holder.id) && votes !== null ? <>
-    <p className="mb-1.5 text-[0.6875rem] leading-relaxed text-voice">
+    <p className="mb-1.5 t-caption leading-relaxed text-voice">
       Earlier recorded votes from verified prior source windows. These are separate from the current Recent list; each row links to its official roll call.
     </p>
     {historicalVotes.length > 0 ? <RecentVoteRecords votes={historicalVotes} attribution={null} failed={false} reactionContext={null} /> :
-      <p className="text-[0.6875rem] text-muted">
+      <p className="t-caption text-muted">
         {historyStatus === "LOADING" ? "Checking earlier source windows…" :
           historyStatus === "COMPLETE" ? "No earlier recorded votes were found in the verified source history." :
           historyStatus === "MORE" ? "No earlier votes in the checked versions yet; more source versions remain." :
           "Earlier vote history could not be checked just now."}
       </p>}
     {historyStatus === "UNAVAILABLE" && historicalVotes.length > 0 &&
-      <p className="mt-2 text-[0.6875rem] text-muted">More earlier records could not be checked just now.</p>}
+      <p className="mt-2 t-caption text-muted">More earlier records could not be checked just now.</p>}
     {historyStatus === "MORE" && historyCursor && <button type="button" onClick={() => void loadMoreHistory()}
-      disabled={historyLoadingMore} className="mt-2 text-[0.75rem] text-link underline decoration-dotted underline-offset-2">
+      disabled={historyLoadingMore} className="mt-2 t-detail text-link underline decoration-dotted underline-offset-2">
       {historyLoadingMore ? "Checking more earlier records…" : "Load more earlier records"}
     </button>}
   </> : null;
   const recent = <>
     <RecentVoteRecords votes={visibleVotes} attribution={attribution} failed={failed} reactionContext={reactionContext} />
     {(columns || contentOnly) && votes && votes.length > 0 && <>
-      <p className="mt-2 text-[0.6875rem] text-muted" data-recent-vote-count={visibleVotes!.length}>
+      <p className="mt-2 t-caption text-muted" data-recent-vote-count={visibleVotes!.length}>
         Showing {visibleVotes!.length} of {votes.length} recorded votes.
       </p>
       {votes.length > VOTE_LIMIT && <button type="button" data-recent-votes-expand
-        className="mt-1 text-[0.75rem] text-link underline decoration-dotted underline-offset-2"
+        className="mt-1 t-detail text-link underline decoration-dotted underline-offset-2"
         onClick={() => setShowAll(value => !value)}>
         {showAll ? `Show latest ${VOTE_LIMIT}` : `Show all ${votes.length} recorded votes`}
       </button>}
@@ -332,7 +332,7 @@ function RecentVotesInner({
       <>
         <PopupSectionLabel>Recent votes</PopupSectionLabel>
         {recent}
-        {history && <details className="mt-2"><summary className="cursor-pointer text-[0.75rem] text-link">Earlier recorded votes</summary>{history}</details>}
+        {history && <details className="mt-2"><summary className="cursor-pointer t-detail text-link">Earlier recorded votes</summary>{history}</details>}
       </>
     );
   }
@@ -396,22 +396,22 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
   return (
     <>
       {failed ? (
-        <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
+        <p className="mt-1.5 t-caption leading-relaxed text-muted">
           Couldn&apos;t load the vote record just now.
         </p>
       ) : votes === null ? (
-        <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
+        <p className="mt-1.5 t-caption leading-relaxed text-muted">
           Loading…
         </p>
       ) : votes.length === 0 ? (
-        <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
+        <p className="mt-1.5 t-caption leading-relaxed text-muted">
           No recorded votes on file in our current window yet.
         </p>
       ) : (
         <>
           {/* 5c (2026-08-17): attribution once, TOS pattern — stated at the
               top of the section instead of repeated under every bill. */}
-          <p className="mt-1 text-[0.5625rem] leading-relaxed text-muted">
+          <p className="mt-1 t-caption leading-relaxed text-muted">
             Plain-language bill summaries below are ours — each paraphrases
             the bill&apos;s official summary, linked on its row.
           </p>
@@ -419,7 +419,7 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
               requires, wherever its data appears. Sent with the rows so it
               cannot drift from the store it describes. */}
           {attribution && (
-            <p className="mt-0.5 text-[0.5625rem] leading-relaxed text-muted">
+            <p className="mt-0.5 t-caption leading-relaxed text-muted">
               Vote records from{" "}
               <a
                 href={attribution.url}
@@ -450,11 +450,11 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
                 className="mt-2 border-b border-[var(--panel-border)] pb-2 last:border-0"
               >
                 {/* Plain words first — the official title, never ours. */}
-                <p className="text-[0.75rem] leading-snug">{vote.title}</p>
-                {vote.historicalVersionId && <p className="mt-0.5 text-[0.625rem] text-muted">
+                <p className="t-detail leading-snug">{vote.title}</p>
+                {vote.historicalVersionId && <p className="mt-0.5 t-caption text-muted">
                   Earlier source window{vote.historicalSourceThrough ? ` · source through ${vote.historicalSourceThrough}` : ""}.
                 </p>}
-                <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.6875rem]">
+                <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 t-caption">
                   {/* Item 5: the position as a filled pill, in both views. */}
                   <VotePill tone={POSITION_STYLE[vote.position].tone as "yes" | "no" | "neutral"}>
                     {POSITION_STYLE[vote.position].label}
@@ -470,7 +470,7 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
                     the recorded tally. Numbers only — no "party-line"
                     labels, no "crossed the aisle"; the reader concludes. */}
                 {vote.partyBreakdown ? (
-                  <p className="mt-1 text-[0.6875rem] leading-relaxed text-paper-dim">
+                  <p className="mt-1 t-caption leading-relaxed text-paper-dim">
                     How the parties voted:{" "}
                     {vote.partyBreakdown.map((t, j) => (
                       <span key={t.party}>
@@ -480,7 +480,7 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
                     ))}
                   </p>
                 ) : (
-                  <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
+                  <p className="mt-1 t-caption leading-relaxed text-muted">
                     A party-by-party count isn&apos;t available for this
                     vote.
                   </p>
@@ -492,7 +492,7 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
                   // 5b (2026-08-17): plus the mechanical meaning of a No on
                   // this vote type, from the same data file — never
                   // evaluative.
-                  <p className="mt-1 text-[0.6875rem] leading-relaxed text-paper-dim">
+                  <p className="mt-1 t-caption leading-relaxed text-paper-dim">
                     {explainer.plain}{" "}
                     <span className="text-muted">{explainer.noMeans}</span>
                   </p>
@@ -502,7 +502,7 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
                   summary={vote.billSummary}
                   pending={vote.billSummaryPending}
                 />
-                <p className="mt-0.5 text-[0.625rem]">
+                <p className="mt-0.5 t-caption">
                   <a
                     href={vote.rollCallUrl}
                     target="_blank"
@@ -538,7 +538,7 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
               </div>
             );
           })}
-          <p className="mt-2 text-[0.5625rem] leading-relaxed text-muted">
+          <p className="mt-2 t-caption leading-relaxed text-muted">
             Colors state their vote — green for yes, red for no, gray for
             present or not voting — never our opinion of it. Titles are the
             official record&apos;s words.
@@ -615,7 +615,7 @@ function VotingRecordViews({
 
       {view === "recent" ? (
         <div className="vote-view-body">
-          <p className="mb-1.5 text-[0.6875rem] leading-relaxed text-voice">
+          <p className="mb-1.5 t-caption leading-relaxed text-voice">
             Every roll call they cast, newest first — including the procedural
             ones. Voting to set a bill aside is a way of deciding it.
           </p>
@@ -649,7 +649,7 @@ export function BillPlainSummary({
   if (!summary && !pending) return null;
   if (!summary) {
     return (
-      <p className="mt-1 text-[0.625rem] leading-relaxed text-muted">
+      <p className="mt-1 t-caption leading-relaxed text-muted">
         Official summary at the bill link — plain-language version coming.
       </p>
     );
@@ -660,11 +660,11 @@ export function BillPlainSummary({
   // section top; the per-bill basis stays in the data file.
   return (
     <details className="mt-1" open>
-      <summary className="cursor-pointer text-[0.6875rem] text-paper-dim underline decoration-dotted hover:text-signal">
+      <summary className="cursor-pointer t-caption text-paper-dim underline decoration-dotted hover:text-signal">
         What this bill does — plain language
       </summary>
       {/* 3b: the product's voice renders BOLD. */}
-      <p className="mt-1 text-[0.6875rem] font-semibold leading-relaxed text-paper-dim">
+      <p className="mt-1 t-caption font-semibold leading-relaxed text-paper-dim">
         {summary.summary}
       </p>
     </details>
@@ -697,7 +697,7 @@ export function OfficialIdentity({
       ) : (
         <div
           aria-hidden="true"
-          className={`flex shrink-0 items-center justify-center rounded border border-[var(--panel-border)] bg-[var(--surface)] font-mono text-lg text-muted ${
+          className={`flex shrink-0 items-center justify-center rounded border border-[var(--panel-border)] bg-[var(--surface)] font-mono t-title text-muted ${
             large ? "h-[127px] w-[104px]" : "h-[78px] w-16"
           }`}
         >
@@ -706,7 +706,7 @@ export function OfficialIdentity({
       )}
 
       <div className="min-w-0">
-        <p className="text-[0.8125rem] leading-snug">
+        <p className="t-body leading-snug">
           {readerOfficeTitle(holder.officeTitle)}
           {/* A seat label identical to the title ("Mayor · Mayor") is
               noise, not information — caught on the item-1 gate
@@ -719,7 +719,7 @@ export function OfficialIdentity({
           // Display only. Nothing infers anything from it. Colored per the
           // party palette (3a) — the color states the label, never a view.
           <p
-            className="mt-0.5 text-[0.75rem]"
+            className="mt-0.5 t-detail"
             style={{ color: partyColorVar(holder.partyLabel) }}
           >
             {readerPartyLabel(holder.partyLabel)}
@@ -741,7 +741,7 @@ export function OfficialIdentity({
           const age = large ? ageFrom(holder.birthDate, new Date()) : null;
           if (!until && age === null) return null;
           return (
-            <p className="mt-0.5 flex flex-wrap gap-x-2 text-[0.75rem] text-label">
+            <p className="mt-0.5 flex flex-wrap gap-x-2 t-detail text-label">
               {until && (
                 <span>
                   In seat until{" "}
@@ -797,10 +797,10 @@ export function OfficeBlurb({
   return (
     <>
       {!bare && <PopupSectionLabel>What this office does</PopupSectionLabel>}
-      <p className="mt-1.5 text-[0.75rem] leading-relaxed text-paper-dim">
+      <p className="mt-1.5 t-detail leading-relaxed text-paper-dim">
         {blurb.text}
       </p>
-      <p className="mt-1 text-[0.625rem] text-muted">
+      <p className="mt-1 t-caption text-muted">
         Powers defined in:{" "}
         {blurb.basisUrl ? (
           <a

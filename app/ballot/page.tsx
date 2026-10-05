@@ -1,3 +1,5 @@
+import { ContactPills } from "@/components/officials/contact-pills";
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { measureRecordsForBallot } from "@/lib/ballot/measure-records";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -44,7 +46,6 @@ import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
 import { JurisdictionMark, JurisdictionNote } from "@/components/ballot/jurisdiction-note";
 import { jurisdictionNameFromOcdId } from "@/lib/ballot/could-govern";
 import { photosFirst } from "@/lib/ballot/photo-order";
-import { COLLECTION_NOTE } from "@/lib/ballot/collection-note";
 import { FilingNote } from "@/components/ballot/filing-note";
 import { CandidateBattlecard } from "@/components/ballot/candidate-battlecard";
 import { StateMoneySection } from "@/components/funding/state-money-section";
@@ -134,7 +135,7 @@ import type {
   Contest,
   Measure,
 } from "@/lib/ballot/types";
-import { CandidateContact, TAGLINE_SOURCE_NOTE } from "@/components/ballot/candidate-contact";
+import { CandidateContact, CandidateContactSources } from "@/components/ballot/candidate-contact";
 import { candidateContactForCandidacy } from "@/lib/ballot/candidate-contacts";
 import { reconciledCandidacyIdForCard } from "@/lib/identity/az-2026";
 import { groupAbsences } from "@/lib/ballot/absence-grouping";
@@ -687,7 +688,7 @@ async function BallotBattlecard({
       name={name}
       /* The contest's real government tier for the modal's tier ring — derived
          from the contest OCD id, never guessed; null stays neutral. */
-      tier={tierForOcdId(contestOcdId)}
+      tier={tierForOffice(contestTitle, contestOcdId)}
       partyLine={partyLine}
       partyLabel={partyLabel}
       photoUrl={card?.photoUrl ?? null}
@@ -722,6 +723,7 @@ async function BallotBattlecard({
        * is available everywhere".
        */
       contactHolder={recordHolder}
+      contact={<><CandidateContact card={card ?? null} links={links} filing={filingContact} />{recordHolder && <ContactPills holder={recordHolder} scope="primary" />}{!card?.email && !links?.campaign && !filingContact?.email && !recordHolder && <WorkingOnIt subject={{ type: "CANDIDATE", id: targetKey }} />}</>}
       sections={{
         /* BC-6: mandatory for every candidate and every elected official.
            Somebody voting for governor needs to know what a governor does. */
@@ -839,10 +841,8 @@ async function BallotBattlecard({
           <>
             {!authorityAvailability.candidateProfiles && unavailableHolding("candidate-profile")}
             {holder && <CandidateSources holder={holder} />}
-            <CandidateContact card={card ?? null} links={links} filing={filingContact} />
-            <p className="mt-2 text-[0.6875rem] leading-relaxed text-muted">
-              {TAGLINE_SOURCE_NOTE}
-            </p>
+            <CandidateContactSources links={links} filing={filingContact} />
+            
           </>
         ),
       }}
@@ -878,11 +878,7 @@ interface BallotAuthorityAvailability {
 }
 
 function unavailableHolding(family: string) {
-  return (
-    <p className="t-body leading-relaxed text-voice" data-ballot-authority-unavailable={family}>
-      Our canonical {family} holding could not be read for this request. This is an unknown holding state, not evidence that no record exists.
-    </p>
-  );
+  return <WorkingOnIt attrs={{ "data-ballot-authority-unavailable": family }} />;
 }
 
 
@@ -1910,29 +1906,15 @@ export default async function BallotPage({
       )}
 
       {attempted && !matched && ballotLoaderFailures.length > 0 && (
-        <p
-          className="mt-6 t-body leading-relaxed text-muted lg:max-w-2xl"
-          data-ballot-authority-unavailable={ballotLoaderFailures.join(",")}
-        >
-          The canonical ballot authority for this area could not be read. This is an unknown holding state, not evidence that no candidates or ballot items exist.
-        </p>
+        <WorkingOnIt className="mt-6 lg:max-w-2xl" />
       )}
 
       {attempted && !matched && ballotLoaderFailures.length === 0 && divisionHoldingUnavailable && (
-        <p
-          className="mt-6 t-body leading-relaxed text-muted lg:max-w-2xl"
-          data-ballot-division-authority-unavailable
-        >
-          The canonical division registry could not be read, so this request could not be assigned to a ballot authority. This is an unknown holding state, not evidence that no ballot exists.
-        </p>
+        <WorkingOnIt className="mt-6 lg:max-w-2xl" />
       )}
 
       {attempted && !matched && ballotLoaderFailures.length === 0 && !divisionHoldingUnavailable && (
-        <p className="mt-6 t-body leading-relaxed text-muted lg:max-w-2xl">
-          We&apos;re working on getting this info. Ballot coverage
-          currently reaches Pima County AZ, Morris County NJ, and Merrimack
-          County NH. This is not a statement that nothing is on your ballot.
-        </p>
+        <WorkingOnIt className="mt-6 lg:max-w-2xl" />
       )}
 
       {/*
@@ -2184,7 +2166,7 @@ export default async function BallotPage({
                   )}
                 </h2>
                 <p className="t-eyebrow text-muted">
-                  {contest.voteFor !== null ? `Vote for ${contest.voteFor}` : "We're working on getting this info"}
+                  {contest.voteFor !== null ? `Vote for ${contest.voteFor}` : <WorkingOnIt inline />}
                   {contest.termYears ? ` · ${contest.termYears}-year term` : ""}
                 </p>
               </div>
@@ -3029,9 +3011,7 @@ export default async function BallotPage({
           data-ballot-no-local-races
         >
           <h2 className="t-structure text-paper-dim">County, city and school-board races</h2>
-          <p className="mt-2 t-body leading-relaxed text-voice">
-            We&apos;re working on getting this info. The state and federal races above are read from the official filings; the county, city, town and school-district contests that share this ballot appear here once their election office publishes them and we have read them. Your county election office has the complete ballot for your address.
-          </p>
+          <WorkingOnIt className="mt-6 lg:max-w-2xl" />
         </section>
       )}
 
@@ -3124,12 +3104,7 @@ export default async function BallotPage({
               renders inside this block because this block is what renders
               when contests render — a note about the cards on a page with no
               cards would be a claim about nothing. */}
-          <p
-            data-collection-note
-            className="mt-3 text-[0.75rem] leading-relaxed text-voice lg:max-w-2xl"
-          >
-            {COLLECTION_NOTE}
-          </p>
+          
         </>
       )}
 

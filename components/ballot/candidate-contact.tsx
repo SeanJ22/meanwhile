@@ -2,7 +2,7 @@
 import type { CandidateCardData } from "@/lib/ballot/candidate-cards";
 import type { CandidateLinks } from "@/lib/ballot/candidate-sites";
 import type { CandidateContact as FilingContact } from "@/lib/ballot/candidate-contacts";
-import { formatDateMDY } from "@/lib/map/format";
+import { CardSourcesList } from "@/components/officials/card-sources-list";
 
 /**
  * What the Sources section says about the line a reader saw on the ballot.
@@ -29,21 +29,20 @@ export function CandidateContact({
   if (!campaign && !email && !filing) return null;
 
   return (
-    <div data-candidate-contact className="mt-1 space-y-1.5">
+    <div data-candidate-contact className="contact-pill-row">
       {filing && (
-        <div data-filed-contact={filing.candidacyId} className="space-y-1 text-[0.75rem]">
-          {filing.email && <p><a href={`mailto:${filing.email}`} className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid">{filing.email}</a></p>}
-          <p className="text-[0.6875rem] text-muted">Published filing contact — <a href={filing.sourceUrl} target="_blank" rel="noreferrer noopener" className="text-link underline decoration-dotted underline-offset-2">{filing.sourceOrg}</a>; read {formatDateMDY(filing.collectedAt)}.</p>
+        <div data-filed-contact={filing.candidacyId} className="space-y-1 t-detail">
+          {filing.email && <p><a href={`mailto:${filing.email}`} className="contact-pill">{filing.email}</a></p>}
         </div>
       )}
       {(campaign || email) && (
-        <p className="flex flex-wrap gap-x-3 gap-y-0.5 text-[0.75rem]">
+        <p className="flex flex-wrap gap-x-3 gap-y-0.5 t-detail">
           {campaign && (
             <a
               href={campaign.url}
               target="_blank"
               rel="noreferrer"
-              className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+              className="contact-pill"
             >
               {campaign.label ?? "campaign site"}
             </a>
@@ -51,7 +50,7 @@ export function CandidateContact({
           {email && (
             <a
               href={`mailto:${email}`}
-              className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+              className="contact-pill"
             >
               {email}
             </a>
@@ -61,4 +60,13 @@ export function CandidateContact({
 
     </div>
   );
+}
+
+/** Campaign and filing attribution belongs to the person card's Sources section. */
+export function CandidateContactSources({ links, filing }: { links: CandidateLinks | null; filing?: FilingContact | null }) {
+  const sources = [
+    ...(links?.campaign ? [{ what: "Campaign contacts and website", provenance: { sourceOrg: links.campaign.label ?? "Campaign", sourceUrl: links.campaign.url, collectedAt: links.campaign.attemptedAt, verifiedAt: links.campaign.attemptedAt } }] : []),
+    ...(filing ? [{ what: "Published filing contact", provenance: { sourceOrg: filing.sourceOrg, sourceUrl: filing.sourceUrl, collectedAt: filing.collectedAt, verifiedAt: null } }] : []),
+  ];
+  return sources.length ? <CardSourcesList sources={sources} /> : null;
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import type { PublicBodyAttempt } from "@/lib/registry/body-attempt-read";
 import { ExternalLink } from "lucide-react";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
@@ -265,14 +266,14 @@ export function MeetingPopup({
           <PopupSectionLabel>What happened</PopupSectionLabel>
           {minutes ? (
             <details className="mt-1" open>
-              <summary className="cursor-pointer text-[0.6875rem] text-paper-dim underline decoration-dotted hover:text-signal">
+              <summary className="cursor-pointer t-caption text-paper-dim underline decoration-dotted hover:text-signal">
                 What happened — plain language
               </summary>
               {/* 3b: the product's voice renders BOLD. */}
-              <p className="mt-1 text-[0.6875rem] font-semibold leading-relaxed text-paper-dim">
+              <p className="mt-1 t-caption font-semibold leading-relaxed text-paper-dim">
                 {minutes.summary}
               </p>
-              <p className="mt-0.5 text-[0.5625rem] leading-relaxed text-muted">
+              <p className="mt-0.5 t-caption leading-relaxed text-muted">
                 Our paraphrase of{" "}
                 <a
                   href={minutes.minutesUrl}
@@ -286,11 +287,7 @@ export function MeetingPopup({
               </p>
             </details>
           ) : (
-            <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
-              Minutes not posted yet, or not yet read by us — what happened
-              here isn&apos;t summarized. The links below go to the body&apos;s
-              own records.
-            </p>
+            <WorkingOnIt subject={body ? { type: "BODY", id: body.bodyId } : null} />
           )}
           {officePhone && (
             <PopupRow label="Office">
@@ -317,7 +314,7 @@ export function MeetingPopup({
           </PopupRow>
         ))
       ) : (
-        <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
+        <p className="mt-1.5 t-caption leading-relaxed text-muted">
           We haven&apos;t sourced who sits on this body yet. The people we hold
           for this area represent it in Congress and the state legislature, which
           is a different thing — they are on the district card, not here.
@@ -357,7 +354,7 @@ function LinkLadder({
 }) {
   if (links.length === 0) {
     return (
-      <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
+      <p className="mt-1.5 t-caption leading-relaxed text-muted">
         {publicationAttempt
           ? `A source publication attempt for this body was ${publicationAttempt.status === "HELD" ? "held" : publicationAttempt.status === "PARTIALLY_PUBLISHED" ? "partly published" : "published"} on ${publicationAttempt.at.slice(0, 10)}. No agenda link is held here; this attempt does not establish whether the body posts one.`
           : lookedAt
@@ -376,7 +373,7 @@ function LinkLadder({
             target="_blank"
             rel="noreferrer"
             title={link.hint}
-            className="inline-flex min-w-0 items-baseline gap-1 truncate text-[0.8125rem] text-signal hover:underline"
+            className="inline-flex min-w-0 items-baseline gap-1 truncate t-body text-signal hover:underline"
           >
             <span className="truncate">{link.label}</span>
             <ExternalLink className="size-3 shrink-0 translate-y-0.5" />
@@ -387,7 +384,7 @@ function LinkLadder({
             // read as a citation sitting in a list of sourced links.
             <span
               title="Built from coordinates we hold — not a source"
-              className="trailing-space-trimmed shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted"
+              className="trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em] text-muted"
             >
               derived
             </span>

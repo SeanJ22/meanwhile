@@ -1,3 +1,4 @@
+import { WorkingOnIt } from "@/components/demand/working-on-it";
 import {
   APRIL_2024_SENATE_NOTE,
   KEY_VOTES_CRITERIA,
@@ -153,7 +154,7 @@ export function KeyVotesSection({
       {/* Requirement 2: the rule the list was picked by, on the surface,
           verbatim. Not a link to it, not a summary of it. At the head of the
           column, per item 6b. */}
-      <p className="text-[0.6875rem] leading-relaxed text-voice">
+      <p className="t-caption leading-relaxed text-voice">
         {KEY_VOTES_CRITERIA}
       </p>
 
@@ -210,7 +211,7 @@ export function KeyVotesSection({
         // One header, one sentence behind it. Never sixteen rows of the same
         // sentence — but open, because the sentence IS the answer.
         <CardSection title="Votes on people" meta="none" level="sub">
-          <p className="text-[0.75rem] leading-relaxed text-voice">
+          <p className="t-detail leading-relaxed text-voice">
             {houseNominationsLine}
           </p>
         </CardSection>
@@ -249,17 +250,17 @@ export function KeyVoteGroupBlock({
             data-key-vote={row.entry.id}
             className="border-b border-[var(--panel-border)] py-2 last:border-0"
           >
-            <p className="text-[0.8125rem] font-medium leading-snug text-paper">
+            <p className="t-body font-medium leading-snug text-paper">
               {row.entry.title}
               {row.entry.pending && (
-                <span className="ml-1.5 rounded-full border border-[var(--panel-border)] px-1.5 py-0.5 text-[0.5625rem] font-semibold uppercase trailing-space-trimmed-6 tracking-[0.06em] text-muted">
+                <span className="ml-1.5 rounded-full border border-[var(--panel-border)] px-1.5 py-0.5 t-caption font-semibold uppercase trailing-space-trimmed-6 tracking-[0.06em] text-muted">
                   not law yet
                 </span>
               )}
             </p>
             {/* The explainer: LEVEL register, anchored to the bill's own
                 contents. The title never does the explaining. */}
-            <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-voice">
+            <p className="mt-0.5 t-caption leading-relaxed text-voice">
               {row.entry.explainer}
             </p>
 
@@ -268,7 +269,7 @@ export function KeyVoteGroupBlock({
                 {row.refs.map((ref, i) => (
                   <p
                     key={`${ref.congress}-${ref.session}-${ref.rollNumber}`}
-                    className="mt-1 text-[0.75rem]"
+                    className="mt-1 t-detail"
                   >
                     {/*
                       A NULL POSITION IS NOT "Did not vote" (fixed 2026-08-15,
@@ -318,7 +319,7 @@ export function KeyVoteGroupBlock({
                           href={ref.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="trailing-space-trimmed-10 source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
+                          className="trailing-space-trimmed-10 source-tag font-mono t-caption uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
                         >
                           the roll call
                         </a>
@@ -336,18 +337,17 @@ export function KeyVoteGroupBlock({
                     senator's card says so rather than showing four rows the
                     Senate never took. */}
                 {chamber === "senate" && row.entry.siblingGroup === "april-2024" && (
-                  <p className="mt-0.5 text-[0.625rem] leading-relaxed text-muted">
+                  <p className="mt-0.5 t-caption leading-relaxed text-muted">
                     {APRIL_2024_SENATE_NOTE}
                   </p>
                 )}
               </>
             ) : (
-              <p className="mt-1 text-[0.75rem] leading-relaxed text-muted">
+              <p className="mt-1 t-detail leading-relaxed text-muted">
                 {/* Requirement 4. A stated note is a fact about the
                     legislature; its absence is a fact about us, and they are
                     never allowed to render as the same sentence. */}
-                {row.note ??
-                  "We’re working on getting this info."}
+                {row.note ?? <WorkingOnIt inline />}
               </p>
             )}
           </li>

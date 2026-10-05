@@ -109,7 +109,7 @@ export function PositionsSection({
             everything it produces below is level. The seam is the rule. */}
         <label
           htmlFor={inputId}
-          className="block text-[0.75rem] leading-relaxed text-voice"
+          className="block t-detail leading-relaxed text-voice"
         >
           Look through what {subjectName} has published, in their own words.
           Type a topic, or pick one.
@@ -121,7 +121,7 @@ export function PositionsSection({
           value={topic}
           onChange={(e) => void look(e.target.value)}
           placeholder="housing, water, schools…"
-          className="mt-1.5 w-full rounded-md border border-[var(--panel-border)] bg-[var(--bg)] px-3 py-2 text-[0.875rem] placeholder:text-muted focus:border-[var(--signal)] focus:outline-none"
+          className="mt-1.5 w-full rounded-md border border-[var(--panel-border)] bg-[var(--bg)] px-3 py-2 t-body placeholder:text-muted focus:border-[var(--signal)] focus:outline-none"
         />
         <div className="mt-1.5 flex flex-wrap gap-1.5">
           {POSITION_TOPICS.map((t) => (
@@ -129,7 +129,7 @@ export function PositionsSection({
               key={t}
               type="button"
               onClick={() => void look(t)}
-              className="cursor-pointer rounded-full border border-[var(--panel-border)] px-2.5 py-1 text-[0.6875rem] text-voice hover:border-[var(--signal)] hover:text-signal"
+              className="cursor-pointer rounded-full border border-[var(--panel-border)] px-2.5 py-1 t-caption text-voice hover:border-[var(--signal)] hover:text-signal"
             >
               {t}
             </button>
@@ -137,13 +137,13 @@ export function PositionsSection({
         </div>
 
         {asking && (
-          <p className="mt-2.5 text-[0.75rem] text-muted" aria-live="polite">
+          <p className="mt-2.5 t-detail text-muted" aria-live="polite">
             Reading their pages…
           </p>
         )}
 
         {failed && (
-          <p className="mt-2.5 text-[0.75rem] leading-relaxed text-signal">
+          <p className="mt-2.5 t-detail leading-relaxed text-signal">
             We could not read our record of their pages just now. That is a
             failure on our side — it is not a statement about what they have
             said. Try again in a moment.
@@ -154,7 +154,7 @@ export function PositionsSection({
           <div className="mt-2.5">
             {answer.holdingStatus === "PARTIAL" && (
               <p
-                className="mb-2 text-[0.6875rem] leading-relaxed text-signal"
+                className="mb-2 t-caption leading-relaxed text-signal"
                 data-positions-holding-status="PARTIAL"
               >
                 These passages are held and source-linked, but an independent
@@ -171,10 +171,10 @@ export function PositionsSection({
                   >
                     {/* Verbatim, and marked as a quotation so a screen reader
                         knows these are not our words either. */}
-                    <blockquote className="t-record text-[0.8125rem] leading-relaxed text-paper">
+                    <blockquote className="t-record t-body leading-relaxed text-paper">
                       &ldquo;{p.quote}&rdquo;
                     </blockquote>
-                    <figcaption className="mt-1.5 text-[0.625rem] leading-relaxed text-muted">
+                    <figcaption className="mt-1.5 t-caption leading-relaxed text-muted">
                       <a
                         href={p.url}
                         target="_blank"
@@ -214,7 +214,7 @@ export function PositionsSection({
                   publish. The reader draws the inference, with the link right
                   there.
                 */}
-                <p className="mt-2 text-[0.625rem] leading-relaxed text-muted">
+                <p className="mt-2 t-caption leading-relaxed text-muted">
                   {answer.holdingStatus === "PARTIAL" ? "Showing" : `Showing ${answer.passages.length} of`} {answer.totalMatches}{" "}
                   passage{answer.totalMatches === 1 ? "" : "s"} that{" "}
                   {answer.totalMatches === 1 ? "mentions" : "mention"} &ldquo;
@@ -231,7 +231,7 @@ export function PositionsSection({
               // OUR search, bounded by its own denominator. Never "no position".
               <p
                 data-positions-answer="SEARCHED_NOTHING_MATCHED"
-                className="text-[0.75rem] leading-relaxed text-voice"
+                className="t-detail leading-relaxed text-voice"
               >
                 {answer.searched.presentButUnquotable > 0 ? (
                   <>
@@ -300,7 +300,7 @@ export function PositionsSection({
               // not our search. These two may never read alike.
               <p
                 data-positions-answer="NOT_YET_COLLECTED"
-                className="text-[0.75rem] leading-relaxed text-voice"
+                className="t-detail leading-relaxed text-voice"
               >
                 We haven&apos;t collected anything {subjectName} has published
                 yet, so there was nothing here to search.

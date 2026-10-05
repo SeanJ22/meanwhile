@@ -138,7 +138,7 @@ function AgendaForMeeting({
   if (failed) {
     // Couldn't check ≠ none — the standing rule, here too.
     return (
-      <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
+      <p className="mt-1.5 t-detail leading-relaxed text-muted">
         Couldn&apos;t check for the agenda just now.
         {agendaUrl && (
           <>
@@ -160,19 +160,19 @@ function AgendaForMeeting({
 
   if (documents === null) {
     return (
-      <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
+      <p className="mt-1.5 t-detail leading-relaxed text-muted">
         Looking for the agenda…
       </p>
     );
   }
 
   return <>
-    {unavailableAuthorities.length > 0 && <p className="mb-2 text-[0.6875rem] leading-relaxed text-muted" data-agenda-supporting-holding="PARTIAL">
+    {unavailableAuthorities.length > 0 && <p className="mb-2 t-caption leading-relaxed text-muted" data-agenda-supporting-holding="PARTIAL">
       The meeting and agenda remain available, but these supporting records could not be checked: {unavailableAuthorities.join(", ")}.
     </p>}
     <MinutesRecord meetingId={meetingId} />
     <MeetingRecords records={records} />
-    {holdingUnavailable ? <p className="mt-1.5 text-[0.75rem] text-muted">The stored document is unavailable here.{agendaUrl && <> <a className="text-signal underline" href={agendaUrl} target="_blank" rel="noreferrer">Read the source document</a>.</>}</p>
+    {holdingUnavailable ? <p className="mt-1.5 t-detail text-muted">The stored document is unavailable here.{agendaUrl && <> <a className="text-signal underline" href={agendaUrl} target="_blank" rel="noreferrer">Read the source document</a>.</>}</p>
       : <AgendaDocuments documents={documents} meetingId={meetingId} agendaUrl={agendaUrl} agendaSentence={agendaState.sentence} publication={publication} />}
   </>;
 }
@@ -180,7 +180,7 @@ function AgendaForMeeting({
 function MinutesRecord({ meetingId }: { meetingId: string }) {
   const summary = minutesSummaryForMeeting(meetingId);
   if (!summary) return null;
-  return <details className="mb-3 text-[0.75rem] leading-relaxed" open data-minutes-summary={meetingId}>
+  return <details className="mb-3 t-detail leading-relaxed" open data-minutes-summary={meetingId}>
     <summary className="cursor-pointer text-signal">What happened — plain language</summary>
     <p className="mt-2 font-semibold">{summary.summary}</p>
     <p className="mt-1 text-muted">Our paraphrase of <a href={summary.minutesUrl} target="_blank" rel="noreferrer" className="text-signal underline">the {summary.sourceOrg} minutes</a> · read {formatDateMDY(summary.readAt)}.</p>
@@ -240,9 +240,9 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
     const otherListingPages = documents.filter((document, index, all) =>
       document.documentUrl !== latest.documentUrl &&
       all.findIndex((candidate) => candidate.documentUrl === document.documentUrl) === index);
-    return <div data-agenda-publication="ACQUIRED_IS_PUBLICATION_INDEX" className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
+    return <div data-agenda-publication="ACQUIRED_IS_PUBLICATION_INDEX" className="mt-1.5 t-detail leading-relaxed text-muted">
       <p>{publication.gap?.statement} <a href={latest.documentUrl} target="_blank" rel="noreferrer" className="text-signal underline">{publication.documentSharedAcrossGovernments ? "Inspect the stored link" : "Open the publisher's agenda portal"}</a>.</p>
-      <p className="mt-1 text-[0.625rem]">{publication.documentSharedAcrossGovernments ? "Unresolved source link" : `From ${latest.sourceOrg}`} · read {formatDateMDY(latest.retrievedAt.slice(0, 10))}.
+      <p className="mt-1 t-caption">{publication.documentSharedAcrossGovernments ? "Unresolved source link" : `From ${latest.sourceOrg}`} · read {formatDateMDY(latest.retrievedAt.slice(0, 10))}.
         {otherListingPages.map((document) => <span key={document.documentUrl} data-agenda-listing-page={document.id ?? document.documentUrl}>
           {" "}Also held: <a href={document.documentUrl} target="_blank" rel="noreferrer" className="underline decoration-dotted hover:text-signal">another listing page, read {formatDateMDY(document.retrievedAt.slice(0, 10))}</a>.
         </span>)}
@@ -252,7 +252,7 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
 
   if (!latest) {
     return (
-      <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
+      <p className="mt-1.5 t-detail leading-relaxed text-muted">
         {agendaUrl ? (
           <>
             We haven&apos;t stored this agenda&apos;s text yet —{" "}
@@ -275,7 +275,7 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
 
   if (!latest.text || publication?.acquisition === "ACQUIRED_NOT_READABLE") {
     return (
-      <p data-agenda-publication="ACQUIRED_NOT_READABLE" className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
+      <p data-agenda-publication="ACQUIRED_NOT_READABLE" className="mt-1.5 t-detail leading-relaxed text-muted">
         We fetched this meeting&apos;s document but couldn&apos;t read its
         {/*
           **A REASON WE DO NOT HOLD IS NOT "extraction failed"**
@@ -331,20 +331,20 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
     <div className="mt-1.5">
       {items.length > 0 && (
         <div className="mb-2">
-          <p className="trailing-space-trimmed-15 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+          <p className="trailing-space-trimmed-15 font-mono t-caption uppercase tracking-[0.15em] text-muted">
             On the docket — the agenda&apos;s own items, in its words
           </p>
           <ol className="mt-1.5 space-y-1">
             {items.map((item) => (
               <li
                 key={item}
-                className="text-[0.75rem] leading-relaxed text-paper-dim"
+                className="t-detail leading-relaxed text-paper-dim"
               >
                 {item}
               </li>
             ))}
           </ol>
-          <p className="mt-1 text-[0.625rem] text-muted">
+          <p className="mt-1 t-caption text-muted">
             Read straight off the document below — nothing here is
             summarised, and the full text is the record.
           </p>
@@ -354,11 +354,11 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
         // Curated from this exact document version (4d): labeled, above,
         // never replacing the official text below.
         <div className="mb-2 rounded bg-[var(--surface,rgba(255,255,255,0.04))] p-3">
-          <p className="trailing-space-trimmed-15 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+          <p className="trailing-space-trimmed-15 font-mono t-caption uppercase tracking-[0.15em] text-muted">
             Plain-language summary — read the official text below
           </p>
           {/* 3b: the product's voice renders BOLD. */}
-          <p className="mt-1.5 text-[0.75rem] font-semibold leading-relaxed">
+          <p className="mt-1.5 t-detail font-semibold leading-relaxed">
             {summary.summary}
           </p>
         </div>
@@ -366,15 +366,15 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
       {hasPublicHearing(latest.text) && (
         // The thing a reader most needs called out: the meeting takes
         // public input on something specific.
-        <p className="mb-2 rounded border border-[var(--signal)] px-3 py-2 text-[0.75rem] font-semibold text-signal">
+        <p className="mb-2 rounded border border-[var(--signal)] px-3 py-2 t-detail font-semibold text-signal">
           This meeting includes a public hearing — a set time when members of
           the public can speak on a listed item.
         </p>
       )}
-      <p className="max-h-56 overflow-y-auto whitespace-pre-line rounded border border-[var(--panel-border)] p-3 text-[0.75rem] leading-relaxed text-paper-dim">
+      <p className="max-h-56 overflow-y-auto whitespace-pre-line rounded border border-[var(--panel-border)] p-3 t-detail leading-relaxed text-paper-dim">
         {sanitizeStoredText(latest.text)}
       </p>
-      <p className="mt-1 text-[0.625rem] text-muted">
+      <p className="mt-1 t-caption text-muted">
         From{" "}
         <a
           href={latest.documentUrl}

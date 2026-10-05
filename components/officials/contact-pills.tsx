@@ -361,7 +361,7 @@ export function ContactPills({
 
   if (pills.length === 0) {
     return (
-      <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
+      <p className="mt-1.5 t-detail leading-relaxed text-muted">
         No published contact on record yet.
       </p>
     );

@@ -5,9 +5,9 @@ import { formatDateMDY } from "@/lib/map/format";
 export function OfficialTermNote({ holder }: { holder: SeatHolder }) {
   if (!holder.termNote) return null;
   return (
-    <div data-official-term-note={holder.id} className="my-2 space-y-1 text-[0.75rem] leading-relaxed text-paper-dim">
+    <div data-official-term-note={holder.id} className="my-2 space-y-1 t-detail leading-relaxed text-paper-dim">
       <p>Roster term or appointment note: “{holder.termNote}”</p>
-      <p className="text-[0.625rem] text-muted">
+      <p className="t-caption text-muted">
         {holder.sourceUrl ? <a href={holder.sourceUrl} target="_blank" rel="noreferrer noopener" className="text-link underline decoration-dotted underline-offset-2">{holder.provenance?.sourceOrg ?? "Published roster"}</a> : holder.provenance?.sourceOrg}
         {holder.provenance?.collectedAt && <> · Read {formatDateMDY(holder.provenance.collectedAt.slice(0, 10))}</>}
       </p>

@@ -698,7 +698,7 @@
       "BX-06"
     ],
     "testedCommit": "0863000be3d8cbadf2a9ae1baee4635a6fca2c98",
-    "state": "FULL running; not READY",
+    "state": "FULL completed with own failure, repaired; exact committed repair checks pending",
     "selector": {
       "plan": "full",
       "files": [],
@@ -846,8 +846,22 @@
     },
     "full": {
       "log": "/tmp/slide-bx0206-full.log",
-      "files": 1076,
-      "state": "running"
+      "source": "0863000be3d8cbadf2a9ae1baee4635a6fca2c98",
+      "summary": {
+        "files": 1076,
+        "tests": 9408,
+        "failed": 1,
+        "passed": 9396,
+        "cancelled": 0,
+        "skipped": 11,
+        "todo": 0,
+        "topLevel": 9271,
+        "suites": 41,
+        "durationMs": 1087720.742648,
+        "exitCode": 1,
+        "logSha256": "3c914937fa366f8d0989697cdcafaeaa512a7e013aab958a9bd40215dc88da59"
+      },
+      "failure": "tests/worker-fleet-novelty.test.ts: first Scout misses newly installed adapter route because field manual snapshot preceded adapter queue"
     },
     "interrupted": {
       "source": "8d52972b34498d1c3abba1d1ea60d72073316851",
@@ -867,6 +881,14 @@
       "exitCode": 1,
       "reason": "Earlier interrupted Node test descendants survived wrapper termination and overlapped timing output. Both exact test process trees were then killed and confirmed stopped. No passing FULL evidence claimed.",
       "log": "/tmp/slide-bx0206-interrupted-overlap.log"
+    },
+    "repair": {
+      "change": "Move the field-manual snapshot after workAdapterQueue, preserving Box-before-paid-work ordering",
+      "files": [
+        "lib/control-plane/workers/standing-runtime.ts"
+      ],
+      "precommitFocused": "25/25 complete runtime-reference tests pass; final committed runner check pending",
+      "excludedRun": "Initial direct focused repair invocation inherited cloud DATABASE_URL and produced2store errors; not used as passing evidence. Clean CI environment run passed25/25."
     }
   }
 }

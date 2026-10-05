@@ -250,7 +250,7 @@ import {
   type WorkArtifact,
 } from "../lib/control-plane/scheduler/dispatch.ts";
 import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutJobWorstCaseUsd, scoutPrewarmPlan, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { failureResponderExecutor, plainRereadSlot, readSubjectScoutHistory, solvedScoutResult, sourceFailureRecovery, subjectScoutHistory, wakeInstalledAdapterDebts } from '../lib/control-plane/workers/detective.ts';
+import { failureResponderExecutor, plainRereadSlot, readSubjectScoutHistory, shutThresholdFrom, solvedScoutResult, sourceFailureRecovery, subjectScoutHistory, wakeInstalledAdapterDebts } from '../lib/control-plane/workers/detective.ts';
 import { buildScoutToolkit, scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
 import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
@@ -998,12 +998,15 @@ const debtsIn = await wakeInstalledAdapterDebts(repos,(canary
 /* The plain-code lane's queue key reads this debt (`waitingSince`); so does its reading while the cycle runs. */
 const debtAtCycleStart = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
 /* A shut door goes to a detective; a passing outage keeps its plain retry. While the paid lane is closed the shut door's plain re-read still runs (DP-02). */
+/* The shut threshold is the owner's Admin setting, read from this cycle's config row; unset or unreadable reads the code default (3). */
+const shutThreshold = shutThresholdFrom(adminConfigForPaidWork(await repos.adminConfig.read(ADMIN_CONFIG_ID)
+  .then((row): AdminConfigRead => ({ row }), (error): AdminConfigRead => ({ unreadable: String(error) }))).config);
 const plainDecisionBeforeDetective = new Map<string, ExecutorDecision>();
 for (const [id, decision] of decisions) {
   const debt = debtAtCycleStart.get(id);
-  const recovered = sourceFailureRecovery(decision, debt);
+  const recovered = sourceFailureRecovery(decision, debt, shutThreshold);
   if (recovered !== decision) plainDecisionBeforeDetective.set(id, decision);
-  decisions.set(id, plainRereadSlot(debt, nowMs) ? decision : recovered);
+  decisions.set(id, plainRereadSlot(debt, nowMs, shutThreshold) ? decision : recovered);
 }
 const modelClassUnits = units.filter((u) => decisions.get(u.obligation.id)?.kind === "BOUNDED_MODEL_WORKER");
 const debtIds = new Set(debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
@@ -2624,6 +2627,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
       solved:heldScoutFor(scheduled),
       sourceFailure:debtAtCycleStart.get(scheduled.obligation.id),
       sourceRoute:registry.routeFor(scheduled.obligation.id),
+      shutThreshold,
       toolkitFor: buildScoutToolkit,
       executorFactory: deps => scoutProcessExecutor({ root: ROOT, postgres: wantsPostgres,
         fileStoreRoot: CONTROL_PLANE_ROOT, slots: paidScoutSlots,

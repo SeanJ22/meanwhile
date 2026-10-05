@@ -8,9 +8,16 @@ import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { ExecutorDecision } from "../scheduler/dispatch.ts";
 import type { RouteDescriptor } from "../scheduler/registry.ts";
 import { sourceReliabilityKey } from "../scheduler/scout-reliability.ts";
+import { DETECTIVE_SHUT_THRESHOLD_SETTING, readSetting } from "../settings.ts";
+import type { AdminConfig } from "../gateway/admin-config.ts";
 
-/** Consecutive failures after which a door counts as shut. Becomes an Admin setting once BR-05 lands. */
+/** Consecutive failures after which a door counts as shut, when Admin's setting is unset or unreadable. */
 export const DETECTIVE_SHUT_THRESHOLD = 3;
+
+/** The owner's shut threshold from Admin (`detective.shutThreshold`), read from the config row of this cycle. */
+export function shutThresholdFrom(config: AdminConfig | null): number {
+  return readSetting(config, DETECTIVE_SHUT_THRESHOLD_SETTING, DETECTIVE_SHUT_THRESHOLD);
+}
 
 /**
  * A shut door needs a new route, not another replay of the same HTTP shape. A passing outage
@@ -55,9 +62,9 @@ export function plainRereadSlot(debt: FreshnessDebt | null | undefined, nowMs: n
 
 /** A failed discovery provider does not invalidate another source already found for the subject. */
 function heldAfterSourceFailure(solved: import('../scheduler/scout-result.ts').ScoutResult | null | undefined,
-  debt: FreshnessDebt | null | undefined, route: RouteDescriptor | null | undefined) {
+  debt: FreshnessDebt | null | undefined, route: RouteDescriptor | null | undefined, shutThreshold: number) {
   if (!solved) return null;
-  if (!needsSourceInvestigation(debt) || Date.parse(debt.lastFailedAt) < Date.parse(solved.recordedAt)) return solved;
+  if (!needsSourceInvestigation(debt, shutThreshold) || Date.parse(debt.lastFailedAt) < Date.parse(solved.recordedAt)) return solved;
   const open = route?.open;
   const failedUrl = open?.kind === 'HTTP_GET' || open?.kind === 'HTTP_POST' ? open.url : debt.target;
   const sourceKey = (url: string) => {
@@ -92,6 +99,7 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
   solved?: import('../scheduler/scout-result.ts').ScoutResult | null;
   sourceFailure?: FreshnessDebt | null;
   sourceRoute?: RouteDescriptor | null;
+  shutThreshold?: number;
   executorFactory?: ScoutExecutorFactory;
 }): import('../scheduler/dispatch.ts').DeclaredExecutor {
   const contexts=new Map<string,{value?:ReturnType<typeof deps.contextFor>;error?:unknown}>();
@@ -102,10 +110,11 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
     return saved.value;
   };
   const factory=deps.executorFactory ?? scoutExecutor;
+  const shutThreshold=deps.shutThreshold ?? DETECTIVE_SHUT_THRESHOLD;
   const scout=factory({...deps,contextFor}), detective=detectiveExecutor({...deps,contextFor},factory);
   const choose=(row:Parameters<typeof contextFor>[0])=>{
     try {
-      if (needsSourceInvestigation(deps.sourceFailure)) return detective;
+      if (needsSourceInvestigation(deps.sourceFailure, shutThreshold)) return detective;
       const inherited=contextFor(row).inherited;
       // Shared manual failures are knowledge, not failures of this job. Its
       // projected entries/instructions are indented; keep actual prior-result
@@ -115,7 +124,7 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
         /\b(?:REFUSED|BLOCKED|NO_PROGRESS|NEEDS_ADAPTER|REQUIRED_FIELD_MISSING)\b|failed parse|blocked route|retry loop|DEBT: [1-9]\d* consecutive failure/i.test(ownHistory) ? detective : scout;
     } catch { return scout; }
   };
-  const held=heldAfterSourceFailure(deps.solved,deps.sourceFailure,deps.sourceRoute);
+  const held=heldAfterSourceFailure(deps.solved,deps.sourceFailure,deps.sourceRoute,shutThreshold);
   return {lane:held?'DETERMINISTIC':'BOUNDED_MODEL_WORKER',
     ...(!held && scout.dispatch && detective.dispatch ? {dispatch: ((input) => choose(input.obligation).dispatch!(input)) as NonNullable<import('../scheduler/dispatch.ts').DeclaredExecutor['dispatch']>} : {}),
     workerFor:input=>held

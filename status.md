@@ -5,16 +5,24 @@ worker: river
 provider: Claude (this run: Opus 5.5 per session; scheduled resume)
 run_id: session_01NH24r1XGQSiiPDzK2fFJSp
 lock: river-20261005T1857Z-01NH24
-heartbeat: 2026-10-05T19:42:09Z
+heartbeat: 2026-10-05T20:09:36Z
 
 ## Next River run
 
-1. Recheck the runner. Is the next research cycle running on ecf4026, with lastCycleOk and testedSha updated?
-2. Has Sean fixed the runner's reader-edge store? Check `/api/reader/manifest` sequence > 2979 and `/api/meetings` snapshot.generatedAt current.
-3. Scan and fold new READY work. The Codex lanes are back with Codex; check whether they resumed, and hand a lane back to its paired Claude worker if it stops again.
-4. Live-check release 2's runner-side steps after adoption.
+1. If gates on river-next f2f11fe passed (or were repaired), promote river to it, record integration.json, and decide on release 3 (normal batching; no deadline exception left).
+2. Fold the held lanes after their returns: people CA-01 (stale state manifests + parser version key), auditors (schema v21, shut threshold, and its READY carries CA-01), admin (BR-07 vs measures BR-14/23/25 on the Admin Now screen).
+3. Recheck the runner: the 18:48Z cycle on ecf4026 was still running at 19:01Z.
 
-## Current (2026-10-05 17:35Z, hour 35.4)
+## Current (2026-10-05 ~20:40Z, after hour 36)
+
+- **Batch 3 in gates:** river-next f2f11fe from river ecf4026: measures BR-14, BR-23, BR-25; registry DB-34, DB-35, DB-36, DP-12; hunters CH-11, CH-24, CH-26, DB-53 and hooks BR-05, BR-16, BR-37; meetings DB-28, DB-58; slide CP-02, CP-06, CP-09, CP-10, CP-13, CP-16, BX-03, BX-12, BX-13 and the reader-edge publication guard; ballot CA-30, CA-51; bank DB-44, DB-46, DB-57, DP-23; frontend FE-05, FE-06, FE-07, FE-10, FE-39, FE-43, FE-44. Fold repair: an import-only conflict in scripts/routine-civic-data-runner.mts (both imports kept).
+- **Held and returned:** people CA-01 (gates red: 3 stale state manifests and the official-page-events version key); auditors (pg-schema v20/v21 and a duplicate shut-threshold read in freshness-shadow.mts; its newer READY merged untested river-next); admin (its Admin Now screen conflicts with measures' BR-25).
+- **First gates attempt (92fda9c, with people):** 10/12 green. Five other test failures came from this session's shallow clone; they pass with full history.
+- **Codex lanes resumed** after Sean's handback: all five had heartbeats under 15 minutes at 18:58Z, and ballot, bank, frontend, slide and admin have published READY work. No handoff is needed.
+- **Runner:** adopted ecf4026 (testedSha and effectiveExecutableSha). The cycle started 18:48:43Z and was still in progress at 19:01Z; lastCycleOk false refers to the 18:31Z cycle.
+- **Lesson:** builders caught up from a pushed river-next. Pushed river-next is untested; builders catch up only from river.
+
+## Earlier (2026-10-05 17:35Z, hour 35.4)
 
 - **River was down for 26 hours.** The previous River session's last write was 2026-10-04 13:55Z, and its overflow workers stopped with it. This scheduled run claimed the lock at 15:57Z.
 - **Integrated this run:** river ef13298 → 85a0ad6. That covers hunters CH-08, CH-09, CH-13, CH-29, CH-30; meetings BX-09, DB-30, DB-06 safety net; registry DB-10, DB-11, DB-23 (returned repairs); admin BR-01, 02, 03, 05, 06, 09, 10, 12, 15, 16, 24, 37, CH-12, CH-14 (overflow-1); slide CP-01, CP-19 (overflow-2). Evidence is in .scratch and #708. Gates: 10/12 on the full run. The 2 failures were live-check scratch files in the repo root, and both reran clean on the same SHA.

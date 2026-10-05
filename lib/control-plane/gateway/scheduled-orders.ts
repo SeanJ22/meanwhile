@@ -24,6 +24,8 @@ export interface ScheduledOrder {
   readonly receiptId: string;
   /** Plain words for the order, shown while it waits. */
   readonly label: string;
+  /** For a repeating order: the occurrence last sent. */
+  readonly lastFiredAt?: string | null;
 }
 
 export const SCHEDULED_ORDERS_MAX = 100;

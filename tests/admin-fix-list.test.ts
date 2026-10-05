@@ -103,3 +103,23 @@ test("BR-15: a scheduled order is saved with its time, shows Scheduled, survives
   assert.equal(gone.ok, true);
   assert.equal(scheduledView(await read(repos), at).rows.length, 0);
 });
+
+test("BR-16/BR-37: due scheduled orders are sent once through the gateway, even if the timer runs twice or restarts", async () => {
+  const { fireDueOrders } = await import("../lib/control-plane/gateway/scheduled-fire.ts");
+  const repos = createMemoryRepositories();
+  const d = deps(repos);
+  const sched = (key: string, extra: Record<string, unknown>) => submit({ type: "orders.schedule", subject: "", input: { orderType: "runner.pause", input: {}, ...extra },
+    stateVersion: null, idempotencyKey: key, caller: "OWNER_SESSION", actorRef: "s" }, d);
+  const once = await sched("fire-once-1", { startAt: "2026-10-05T17:00:00Z" });
+  const later = await sched("fire-later-1", { startAt: "2026-10-06T17:00:00Z" });
+  assert.equal(once.ok && later.ok, true);
+  assert.deepEqual(await fireDueOrders(d, "2026-10-05T16:30:00Z"), [], "nothing is due yet");
+  const first = await fireDueOrders(d, "2026-10-05T17:01:00Z");
+  assert.equal(first.length, 1);
+  assert.equal(first[0].ok, true);
+  assert.deepEqual(await fireDueOrders(d, "2026-10-05T17:02:00Z"), [], "a one-time order is sent once");
+  const left = (await read(repos)).scheduledOrders ?? [];
+  assert.equal(left.length, 1, "the later one still waits");
+  const receipts = await repos.adminReceipts.readAll();
+  assert.equal(receipts.filter((r) => r.type === "runner.pause").length, 1);
+});

@@ -448,6 +448,7 @@ const REGISTRY: readonly RegisteredAction[] = [
       const orderType = text(input.orderType);
       const target = lookupAction(orderType);
       if (!target || orderType.startsWith("orders.") || target.definition.authority === "PROHIBITED") return bad("choose an order that can be sent");
+      if (target.definition.requiresStateVersion) return bad("this order depends on what the screen showed, so it can only be sent now");
       const when = parseWhen(input);
       if (!when.ok) return bad(when.why);
       const inner = (typeof input.input === "object" && input.input !== null ? input.input : {}) as Record<string, unknown>;

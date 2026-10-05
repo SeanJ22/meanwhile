@@ -112,6 +112,12 @@ export async function buildBoxFindings(input: {
     const contract = item.autonomousPlan?.contract;
     if (!item.autonomousPlan?.publication || contract?.schemaVersion !== 2) continue;
     const own = rows.filter(row => row.origins.some(origin => origin.workItemId === item.id));
+    if (!Number.isSafeInteger(contract.methodVersion) || contract.methodVersion < 1 || !contract.sourceScope.routeIds.length ||
+        !contract.sourceScope.canonicalUrls.length || !contract.sourceScope.observationArtifactIds.length) {
+      for (const row of own.filter(row => pending.includes(row))) waiting.push({ findingId: row.id,
+        reason: "The work item's source instructions are not resolved yet; its saved finding remains owed." });
+      continue;
+    }
     const tried = new Set<string>();
     for (const first of pending.filter(row => !handled.has(row.id) && own.includes(row))) {
       const key = first.sourceUrl ?? first.id;
@@ -123,7 +129,7 @@ export async function buildBoxFindings(input: {
         const pageRows = own.filter(row => row.sourceUrl === first.sourceUrl);
         const origins = await Promise.all(pageRows.flatMap(row => row.origins.filter(origin => origin.workItemId === item.id && origin.kind === "SCOUT")
           .map(async origin => ({ row, finding: (await scoutFor(origin))?.findings[origin.findingIndex] }))));
-        const artifactId = origins.find(({ row, finding }) => row.id === first.id && finding?.field)?.finding?.artifactIds[0];
+        const artifactId = origins.find(({ row, finding }) => pending.includes(row) && finding?.field && finding.exactQuote)?.finding?.artifactIds[0];
         if (!artifactId) { waiting.push({ findingId: first.id, reason: "No structured field and saved-page reference; the original finding remains owed." }); return; }
         const relevant = origins.filter(({ finding }) => finding?.artifactIds.includes(artifactId));
         const findings = relevant.map(({ finding }) => finding!);

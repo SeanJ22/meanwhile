@@ -1,3 +1,6 @@
+import { buildBoxFindings } from "./scout-extraction.ts";
+import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../scheduler/research-policy.ts";
+import { publicationSourcePolicy } from "../promotion/source-settings.ts";
 import { backfillBox, boxIndexEnabled, indexScoutFindings } from "../box.ts";
 import { workAdapterQueue } from "./engineering-adapter.ts";
 import { detectiveExecutor, heldRecoveryBrief, investigationRole, subjectScoutHistory } from "./detective.ts";
@@ -83,9 +86,6 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const inheritedManualStores = new Map<string, FieldManualStore>();
   const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly availableIds: readonly string[]; readonly lines: readonly string[] }>();
   const heldRuntime = standingFleetRuntime({...input,method:knowledge,siblingHeldRootFor: held=>siblingHeldRootFor(held)});
-  // Held data and plain adapters first; generated adapters use the same guarded area transport as research.
-  await workAdapterQueue({repos:input.repos,results:prior,now:now(),readEvidence:async id=>evidenceProjection(await heldRuntime.readEvidence(id)),
-    ...(input.transportFor?{transportFor:result=>input.transportFor!({subjectId:result.subjectId,state:scoutStateHint(result.subjectId,result.obligationId)[0]??null})}:{})});
   const fmRead = await readFieldManual(input.repos,{role:"SCOUT"});
   let fieldManual: FieldManualStore = fmRead.store;
   let fieldManualRevision = fmRead.revision ?? 0;
@@ -108,6 +108,21 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
       artifacts: new Map(allArtifactRows.map(artifact => [artifact.artifactId, artifact])) }, now());
   }
   const allWork=allWorkRows.map(row=>row.value);
+  if (indexFindings && !readIntents([...(await input.repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]).runnerPause.paused) {
+    const sourcePolicy = publicationSourcePolicy((await input.repos.adminConfig.read("current"))?.value ?? null);
+    const built = await buildBoxFindings({ repos: input.repos, items: allWork, now, leaseMs: 120_000,
+      readCapture: async id => {
+        const [{ artifact }, evidence] = await Promise.all([readRepairCapture(id), heldRuntime.readEvidence(id)]);
+        return { evidence: evidenceProjection(evidence), sourcePolicy, observedAt: artifact.retrievedAt,
+          httpStatus: artifact.httpStatus, transport: artifact.transport,
+          partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false };
+      } });
+    if (built.built.length) priorWorkers = await readCompletedWorkerResults(input.repos);
+  }
+  // Held data and plain adapters first; generated adapters use the same guarded area transport as research.
+  await workAdapterQueue({repos:input.repos,results:prior,now:now(),readEvidence:async id=>evidenceProjection(await heldRuntime.readEvidence(id)),
+    ...(input.transportFor?{transportFor:result=>input.transportFor!({subjectId:result.subjectId,state:scoutStateHint(result.subjectId,result.obligationId)[0]??null})}:{})});
+
   const lineages=selectStandingLineages({occurrences:allOccurrenceRows.map(row=>row.value),workItems:allWork,
     artifacts:allArtifactRows,attempts:allAttemptRows.map(row=>row.value),workerResults:priorWorkers});
   const sharedHeldByRoot=new Map<string,string[]>();

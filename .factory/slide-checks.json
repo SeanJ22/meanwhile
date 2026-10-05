@@ -244,5 +244,48 @@
     },
     "fullSuite": "not run on merged WIP; no READY claim"
   },
-  "ready": null
+  "ready": null,
+  "readerEdgeReturn": {
+    "commit": "69facbbab3a443c42e37ffc932a0cb30e50b8bed",
+    "tree": "4a4fdc480620d6bcc8a85e818671b44ed85266d4",
+    "workingTreeStatus": "",
+    "node": "v24.19.0",
+    "configHash": "7e213bb4b77d74c5005427c7a18e94443cf468469fa5b4d0c175f0b055d36602",
+    "suiteHash": "a5864c92f47ff13c329c5e8566c32e89f66777ad0412b35375d73b069c47abcb",
+    "startedAt": "2026-10-05T18:27:12.848Z",
+    "status": "passed",
+    "exitCode": 0,
+    "elapsedMs": 1105463,
+    "selector": {
+      "plan": "full",
+      "files": [],
+      "needsBrowser": true,
+      "reasons": [
+        ".factory/slide-checks.json is not code the import graph follows"
+      ],
+      "changed": [
+        ".factory/slide-checks.json",
+        ".factory/slide-continuation.md",
+        ".factory/slide.md",
+        "lib/civic-data/reader-edge-outcome.ts",
+        "lib/civic-data/reader-edge-publication.ts",
+        "lib/control-plane/freshness-cycle-outcome.ts",
+        "lib/control-plane/owner-surface.ts",
+        "scripts/routine-civic-data-runner.mts",
+        "tests/reader-edge-carry.test.ts",
+        "tests/reader-edge-supervisor.test.ts",
+        "tests/routine-civic-data-runner.test.ts"
+      ]
+    },
+    "files": 1066,
+    "tests": 9367,
+    "passed": 9356,
+    "failed": 0,
+    "skipped": 11,
+    "typescript": "passed",
+    "lint": "passed: 0 errors, 69 existing warnings",
+    "browser": "system Chromium 151 substituted for pinned 1234",
+    "setup": "full history; 56 projected references; no .next; DB/store env unset; local map fixture NO_PROXY",
+    "readyApplicationEquivalentTo": "69facbbab3a443c42e37ffc932a0cb30e50b8bed"
+  }
 }

@@ -10,10 +10,10 @@ The authoritative assignment table. River writes it. Workers read it every run.
 | meetings | meetings | Claude | yes | — |
 | auditors | auditors | Claude | yes | — |
 | people | people | Claude | yes | — |
-| admin | **overflow-1** (River-run worker, 13:30Z; measures' handoff blocked) | Claude | yes | measures (only after a recorded handoff below) |
-| slide | **overflow-2** (River-run worker, 13:30Z; hunters never claimed it) | Claude | yes | hunters (only after a recorded handoff below) |
+| admin | **codex-admin** (handed back by Sean 2026-10-05 ~17:00Z) | Codex | yes | measures (only after a new recorded handoff below) |
+| slide | **codex-slide** (handed back by Sean 2026-10-05 ~17:00Z) | Codex | yes | hunters (only after a new recorded handoff below) |
 | ballot | **codex-ballot** (handed back by Sean 2026-10-05 ~16:50Z) | Codex | yes | meetings (only after a new recorded handoff below) |
-| bank | **registry** (handed off 08:20Z) | Claude | yes | registry (only after a recorded handoff below) |
+| bank | **codex-bank** (handed back by Sean 2026-10-05 ~17:00Z) | Codex | yes | registry (only after a new recorded handoff below) |
 | frontend | **codex-frontend** (handed back by Sean 2026-10-05 ~16:50Z) | Codex | yes | auditors (only after a new recorded handoff below) |
 
 ## Handback to Codex (2026-10-05 16:50Z, Sean's instruction)
@@ -21,7 +21,8 @@ The authoritative assignment table. River writes it. Workers read it every run.
 - **meetings: release stream/ballot and stop claiming it.** **auditors: release stream/frontend and stop claiming it.** If you hold either lock, push your checkpoint with `lock: none` and leave the lane. A READY commit you already pushed stays foldable.
 - codex-ballot and codex-frontend own those lanes from now. Each claims `.factory/<lane>.md` under the common lock rules once the Claude lock is `none` or stale.
 - If either Codex task stops again with unfinished work, River hands the lane back to its paired Claude worker (meetings, auditors) the same way as before, with a new line in the table below.
-- admin (overflow-1), slide (overflow-2) and bank (registry) do not change.
+- **Update 2026-10-05 17:00Z (Sean):** admin, slide and bank go back to Codex too. **All five Codex lanes (admin, slide, ballot, bank, frontend) are Codex.** overflow-1 and overflow-2 are stopped; their last runs ended at 16:48Z with `lock: none`. **registry: release stream/bank and stop claiming it.** measures and hunters never claim admin or slide.
+- If any of the five Codex tasks stops again with unfinished work, River hands it back to its paired Claude worker (admin to measures, slide to hunters, bank to registry, ballot to meetings, frontend to auditors) with a new line below.
 
 ## Handoffs
 
@@ -34,6 +35,9 @@ The authoritative assignment table. River writes it. Workers read it every run.
 | 2026-10-04 11:05Z | ballot | codex-ballot | meetings | released its lock at 09:23Z "for recorded continuation" and stopped | stream/ballot @ d63bbe831 |
 | 2026-10-05 16:50Z | ballot | meetings | codex-ballot | Sean's instruction in the River session, 2026-10-05 ~16:50Z: "Hand ballot and frontend back to Codex now." | stream/ballot @ d63bbe831 |
 | 2026-10-05 16:50Z | frontend | auditors | codex-frontend | Same instruction from Sean, 2026-10-05 ~16:50Z | stream/frontend @ bb0cfe7c |
+| 2026-10-05 17:00Z | admin | overflow-1 | codex-admin | Sean, River session, 2026-10-05 ~17:00Z: "hand admin, slide and bank back to Codex as well, the same way. Stop overflow-1 and overflow-2, and tell registry to release bank." | stream/admin @ 2bfbea34c |
+| 2026-10-05 17:00Z | slide | overflow-2 | codex-slide | Same instruction from Sean, ~17:00Z | stream/slide @ db17dc16e |
+| 2026-10-05 17:00Z | bank | registry | codex-bank | Same instruction from Sean, ~17:00Z | stream/bank @ cdeb09cd9 |
 
 The continuation worker reads the lane's brief and its saved continuation file, claims `.factory/<lane>.md` with its own token (the previous lock is `none`), and alternates ready batches with its primary lane. Do returned failures and unblocking work first, and never starve either lane. If a Codex run comes back, it sees this table and exits without writing. Ballot was handed to meetings at 11:05Z.
 
@@ -50,6 +54,8 @@ Previously: None yet. When River hands a Codex lane to its paired Claude worker,
 Each lane works on `stream/<lane>`, which River seeds from `river` with an unlocked `.factory/<lane>.md`. An existing stream is resumed, never overwritten. Ready work is integrated through its exact `READY` commit only.
 
 ## Overflow
+
+**Stopped 2026-10-05 17:00Z by Sean.** overflow-1 (admin) and overflow-2 (slide) have ended. No overflow worker is active. The rows below are history.
 
 Sean's launch authorization allows up to two overflow workers when a lane falls behind.
 

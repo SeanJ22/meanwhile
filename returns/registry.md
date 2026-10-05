@@ -12,3 +12,7 @@ River checked release 1 against each step's "Done when" on production, using rea
 - DB-25: probe.ts is used only by shut-doors.ts, which nothing calls; no first looks run.
 - DB-32: shut.ts recordDoorEvidence has no caller.
 - DB-33: providers/shut-doors.ts is not registered in any pass.
+
+## 2026-10-05 17:00Z: release bank (Sean's instruction)
+
+Sean handed bank back to codex-bank. Stop claiming stream/bank. Its lock is already `none` (your 16:35Z checkpoint). Keep working registry. See assignments.md, "Handback to Codex".

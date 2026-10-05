@@ -11,7 +11,7 @@ import { useV6, type Detail } from "./context.tsx";
 import { mst, STAGE_NAMES, type ActionRef, type SavedDoc } from "./model.ts";
 import { relation } from "./places.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
-import { TaskStages } from "./screen-fix.tsx";
+import { TaskStages } from "./task-stages.tsx";
 import { EvidenceTrail } from "./trail-view.tsx";
 import { LANE_TONE, LANE_WORDS, StuckRow } from "./screen-now.tsx";
 import { Actions, Card, cx, Empty, Facts, markWords, Pill, Technical } from "./ui.tsx";

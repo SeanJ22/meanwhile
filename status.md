@@ -4,14 +4,21 @@ build_state: integrating
 worker: river
 provider: Claude (this run: Sonnet 5.5 per session; scheduled resume)
 run_id: session_012Ufwyxx6iej1CSEX6khMyg
-lock: river-20261005T155735Z-5286feec
-heartbeat: 2026-10-05T18:18:00Z
+lock: none
+heartbeat: 2026-10-05T18:50:00Z
+
+## Next River run
+
+1. Recheck the runner. Is the next research cycle running on ecf4026, with lastCycleOk and testedSha updated?
+2. Has Sean fixed the runner's reader-edge store? Check `/api/reader/manifest` sequence > 2979 and `/api/meetings` snapshot.generatedAt current.
+3. Scan and fold new READY work. The Codex lanes are back with Codex; check whether they resumed, and hand a lane back to its paired Claude worker if it stops again.
+4. Live-check release 2's runner-side steps after adoption.
 
 ## Current (2026-10-05 17:35Z, hour 35.4)
 
 - **River was down for 26 hours.** The previous River session's last write was 2026-10-04 13:55Z, and its overflow workers stopped with it. This scheduled run claimed the lock at 15:57Z.
 - **Integrated this run:** river ef13298 → 85a0ad6. That covers hunters CH-08, CH-09, CH-13, CH-29, CH-30; meetings BX-09, DB-30, DB-06 safety net; registry DB-10, DB-11, DB-23 (returned repairs); admin BR-01, 02, 03, 05, 06, 09, 10, 12, 15, 16, 24, 37, CH-12, CH-14 (overflow-1); slide CP-01, CP-19 (overflow-2). Evidence is in .scratch and #708. Gates: 10/12 on the full run. The 2 failures were live-check scratch files in the repo root, and both reran clean on the same SHA.
-- **Release 2:** #708 merged at 18:07:38Z as ecf4026, before hour 36. CI run 37348532384 was all green. Deployed 18:09:53Z, before hour 36; post-deploy run 37353604926 succeeded; CP-01 checked live (releases/2-live.md); runner adoption pending at 18:16Z. Deadline status sent to Sean at 18:18Z.
+- **Release 2:** #708 merged at 18:07:38Z as ecf4026, before hour 36. CI run 37348532384 was all green. Deployed 18:09:53Z, before hour 36; post-deploy run 37353604926 succeeded; CP-01 checked live (releases/2-live.md); runner adopted ecf4026 after 18:31Z (next research cycle overdue at 18:48Z; recheck). Deadline status sent to Sean at 18:18Z.
 - **Steps integrated:** about 147 of 314 build steps. Most of the rest are the five Codex lanes, all handed back to Codex by Sean at 16:50Z and 17:00Z.
 - **Release 1 browser check (releases/1-live-browser.md):** 7 checked live, **4 failed live** (FE-39, CA-30, CA-51, DB-55), 15 proving over time, 59 not screen-checked (55 need Admin sign-in).
 - **Reader harm (stale snapshot), cause corrected 2026-10-05 18:20Z:** reader pages have served the 2026-09-29T05:38Z snapshot (manifest seq 2979). The cause was `WTP_READER_EDGE_DIR=/var/lib/meanwhile/reader-edge` in /etc/meanwhile/runner.env. `resolveReaderArtifactWriteStore()` (lib/meetings/edge-store.ts) returns the local file store whenever that variable is set, before it looks at NETLIFY_SITE_ID or the token. So the runner wrote to a folder on the droplet and logged PUBLISHED at sequences 113 to 117 while production stayed at 2979. **The earlier staging-site theory was wrong:** NETLIFY_SITE_ID and WTP_BLOBS_SITE_ID were already the live site, and the token was set. **Sean fixed the runner at 11:08 AM MST (18:08Z)** by commenting out WTP_READER_EDGE_DIR. The needs_Sean item is cleared. Code fixes assigned (no owner input needed): hunters removes the WTP_READER_EDGE_DIR default from deploy/runner/setup.ps1; slide makes the runner log the store it published to and makes a local-folder publish on the production runner a visible failure in Admin (returns files, 18:20Z). Live check: pending the next runner cycle; see "Stale snapshot live check" below. CA-30: Ask gives wrong Prop 425 NO figures.

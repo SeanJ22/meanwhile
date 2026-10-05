@@ -38,5 +38,5 @@
     "DB-06 safety net"
   ],
   "deploy": "live 2026-10-05T18:09:53Z; post-deploy run 37353604926 success",
-  "runner_adoption": "pending at 18:16Z (dcddcf5)"
+  "runner_adoption": "adopted: heartbeat codeIdentity.effectiveExecutableSha ecf4026 after the 18:31:00Z cycle end; national-place route tasks claimed by new runner pids from 18:34Z. Next research cycle was due 18:41Z and had not started at 18:48Z (recheck)."
 }

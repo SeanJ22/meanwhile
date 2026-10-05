@@ -1,7 +1,7 @@
 # Release 2 (ecf4026) live check
 
 - **Merged:** 18:07:38Z (#708). **Deployed:** `/api/build` reported ecf4026 at 18:09:53Z, before hour 36 (18:10Z). **Post-deploy integrity:** run 37353604926 succeeded (reused, not dispatched).
-- **Runner adoption:** pending. At 18:16Z the heartbeat still ran dcddcf5 (cycle started 18:10Z).
+- **Runner adoption:** adopted. After the 18:31Z cycle end the heartbeat's effectiveExecutableSha is ecf4026, and national-place tasks run under new pids from 18:34Z. The previous cycle ended with RESEARCH_CHILD_NO_PROGRESS (600 s with no progress, child killed). The next research cycle was due 18:41Z and still hadn't started at 18:48Z. Next River run: recheck.
 
 | Step | State | Evidence |
 |---|---|---|

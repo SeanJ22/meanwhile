@@ -35,11 +35,11 @@ test("BAL-41/MTG-15: the level tag is ONE component, tier-derived, colour from t
   assert.match(src, /TIER_LABEL\[tier\]/, "the tag word is the shared TIER_LABEL");
 });
 
-test("BAL-41: the ballot wires the tag onto every race, every measure, and the section headers, from OCD identity", () => {
+test("BAL-41: the ballot wires the tag onto every race, every measure, and the section headers, from office and OCD identity (FE-44)", () => {
   const page = read("app/ballot/page.tsx");
-  // Tier is resolved from the contest's OCD id, never the office/measure title.
-  assert.match(page, /import \{ tierForOcdId \} from "@\/lib\/ocd\/tiers"/);
-  assert.match(page, /<LevelTag tier=\{tierForOcdId\(contest\.ocdId\)\} \/>/);
+  // FE-44: national offices override the state/local division holding their race.
+  assert.match(page, /import \{[^}]*tierForOcdId[^}]*tierForOffice[^}]*\} from "@\/lib\/ocd\/tiers"/);
+  assert.match(page, /<LevelTag tier=\{tierForOffice\(contest\.title, contest\.ocdId\)\} \/>/);
   // The two measure section headers carry the tier's colour outright.
   assert.match(page, /data-level-heading=\{group\.tier\}/);
   assert.match(page, /--level-heading-color/);

@@ -9,7 +9,8 @@
 
 import type { ActionResult, RegisteredAction } from "../control-plane/gateway/registry.ts";
 import { writeFailureSays } from "../control-plane/gateway/write-readback.ts";
-import { applyManualEdit, checkDoorDraft, editableFieldsOf, isDoorRecord, type DoorRecord } from "./registry.ts";
+import { repairDoor } from "./repair.ts";
+import { applyManualEdit, checkDoorDraft, editableFieldsOf, isDoorRecord, type DoorDraft, type DoorRecord } from "./registry.ts";
 
 const bad = (why: string) => ({ ok: false as const, why });
 const refuse = (says: string): ActionResult => ({ ok: false, refusal: "DOWNSTREAM_REFUSED", says });
@@ -65,6 +66,48 @@ export const DOOR_ACTIONS: readonly RegisteredAction[] = [
           previous === null
             ? `Set ${id} aside; doors are never deleted, so its history stays.`
             : `Save ${id} again with its earlier fields: ${JSON.stringify(editableFieldsOf(previous))}.`,
+      };
+    },
+  },
+  {
+    definition: {
+      type: "door.update",
+      label: "Repair a door",
+      does: "Changes the fields you name on one door's record (for example the website it reads) and has it read at the next check. If the door is shut it stays shut until a read of the new record works; then it reopens and its repair is recorded.",
+      doesNot: "Does not need a release, does not touch any field you leave out, and does not reopen a shut door by itself.",
+      authority: "REVERSIBLE_NONPRODUCTION",
+      subjectKind: "a door",
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const id = typeof input.doorId === "string" ? input.doorId.trim() : "";
+      if (id === "") return bad("name the door to repair");
+      const why = typeof input.why === "string" ? input.why.trim() : "";
+      if (why === "") return bad("say why the door is being changed");
+      if (why.length > 2000) return bad("keep the note to 2,000 characters");
+      const { doorId: _d, why: _w, ...changes } = input;
+      const checked = checkDoorDraft({ kind: "x", ...changes, doorId: id });
+      if (!checked.ok) return bad(checked.why);
+      return { ok: true, value: { ...input, doorId: id, why } };
+    },
+    async execute(deps, context, input) {
+      const { doorId, why, ...changes } = input as Record<string, unknown> & { doorId: string; why: string };
+      let repaired;
+      try {
+        repaired = await repairDoor(deps.repos, doorId, changes as Partial<DoorDraft>, context.at);
+      } catch (error) {
+        return refuse(writeFailureSays("your door repair", error));
+      }
+      if (!repaired.ok) return refuse(repaired.says);
+      return {
+        ok: true,
+        outcome: "DONE",
+        subject: doorId,
+        says: `Repaired ${wordsFor(repaired.next)}${repaired.changed.length > 0 ? ` (changed: ${repaired.changed.join(", ")})` : ""} because ${why}. It is read at the next check with no release.`,
+        openedWork: [],
+        readBackAt: "/admin/doors",
+        undo: `Repair ${doorId} again with its earlier fields: ${JSON.stringify(editableFieldsOf(repaired.previous))}.`,
       };
     },
   },

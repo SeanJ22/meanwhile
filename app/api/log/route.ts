@@ -1,3 +1,4 @@
+import { withReaderFeatures } from "@/lib/civic-data/reader-feature-context.ts";
 import { markerFromRequestWithBody } from "@/lib/db/run-marker";
 import { raiseWriteAlarm } from "@/lib/db/write-alarm";
 import {
@@ -52,7 +53,7 @@ function getIpLimiter() {
   return ipLimiter;
 }
 
-export async function POST(request: Request) {
+async function postWithSettings(request: Request) {
   // The master ripcord (T08): one switch closes every intake write path.
   if (ripcordPulled("ripcord.reactionIntake")) {
     return Response.json({ error: "intake is closed" }, { status: 503 });
@@ -169,4 +170,8 @@ export async function POST(request: Request) {
     await raiseWriteAlarm("search_log", error);
     return Response.json({ error: String((error as Error).message) }, { status: 400 });
   }
+}
+
+export async function POST(request: Request) {
+  return withReaderFeatures(() => postWithSettings(request));
 }

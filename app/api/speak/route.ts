@@ -1,3 +1,4 @@
+import { withReaderFeatures } from "@/lib/civic-data/reader-feature-context.ts";
 import { writeSpeakYourMind, SPEAK_MAX_CHARS } from "@/lib/db/speak";
 import { raiseWriteAlarm } from "@/lib/db/write-alarm";
 import { noteSubmission } from "@/lib/db/intake-limiter";
@@ -47,7 +48,7 @@ export const runtime = "nodejs";
 const MAX_BODY_BYTES = 8192;
 const SUBJECT_TYPES = new Set(["OFFICIAL", "BODY", "MEETING", "CANDIDATE"]);
 
-export async function POST(request: Request) {
+async function postWithSettings(request: Request) {
   // The master intake ripcord closes this surface with everything else it
   // closes. A new collection point outside the kill switch would be a
   // ripcord that stopped covering the product it was built for.
@@ -184,4 +185,8 @@ export async function POST(request: Request) {
     await raiseWriteAlarm("speak_your_mind", error);
     return Response.json({ error: "could not record that" }, { status: 500 });
   }
+}
+
+export async function POST(request: Request) {
+  return withReaderFeatures(() => postWithSettings(request));
 }

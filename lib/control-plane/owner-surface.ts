@@ -636,6 +636,7 @@ export interface RoutineCivicDataReaderReadbackReference {
 }
 
 export interface RoutineCivicDataSupervisorOutcome {
+  readonly readerEdge?: import("../civic-data/reader-edge-outcome.ts").ReaderEdgePublicationOutcome;
   /** Committed input snapshot attempted through an exact campaign publication receipt; not a publication count. */
   readonly campaignPublicationApprovalsAttempted?: number;
   readonly kind: "ROUTINE_CIVIC_DATA_SUPERVISOR";
@@ -903,6 +904,12 @@ export function ownerDigestAttention(digest: OwnerDigestRecord): OwnerDigestAtte
   if (outcome.kind === "ROUTINE_CIVIC_DATA_SUPERVISOR") {
     const supervisorFailed = outcome.state === "FAILED" || outcome.failures.length > 0 || digest.cycleOk === false;
     if (supervisorFailed) {
+      const readerFailure = outcome.failures.find(failure => failure.code === "READER_EDGE_PUBLISH_FAILED");
+      if (readerFailure) return {
+        level: "RED", headline: "Reader pages could not be updated",
+        happened: "Readers are still seeing the earlier copy.", needsYou: false,
+        action: "Restore reader publication and retry the update.",
+      };
       return {
         level: "RED",
         headline: "Routine civic-data supervision needs attention",

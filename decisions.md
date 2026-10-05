@@ -29,3 +29,12 @@ Sean, same session, word for word:
 > Answer hunters: CH-24, go ahead. Extract the shared spending-guard module behind a runner switch, keep the old path as the default until it's checked live, and prove in tests that the guards behave identically. Check it live after the next release. CH-26, go ahead with the lineage-keyed index. You number the migration.
 
 River's engineering choice (not Sean's decision): CH-26 takes control-plane schema version 20. Details are in returns/hunters.md.
+
+## 2026-10-05 ~21:00Z — Sean: River's notifications (in the River session)
+
+Sean's words: "Each time river moves forward to a new tested batch, send me one push notification. Say in one line which Codex lanes (admin, slide, ballot, bank, frontend) now have ready work or a new return, so I can send those Codex tasks "Continue." Send nothing else to me unless it is a release or a real decision I have to make."
+
+How River applies it, every run:
+- After each `river promote` (river fast-forwards to a tested batch), send exactly one push notification. Its one line names the Codex lanes that now have something to do: a new or open return in `returns/<lane>.md` addressed since the last notification, or a newly integrated batch to catch up on and continue from. Example: "River moved to <sha>: Codex Continue → admin (return), slide (return), ballot, bank, frontend." If none, say "no Codex lane needs Continue."
+- The only other notifications are a release (PR opened, merged or failed live) and a real owner decision. No status, no-change or progress pushes.
+- This replaces the per-event reporting in the river brief for Sean's phone. Board status files still record everything.

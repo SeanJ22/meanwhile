@@ -99,7 +99,7 @@ registerSetting({
 
 /** The parts in force: the setting when one is set, else the starting value. Families the setting leaves out keep the overlay's squad. */
 export function missionPartsOf(config: AdminConfig | null): MissionPartsSetting {
-  const set = readSetting(config, MISSION_PARTS_SETTING, DEFAULT_MISSION_PARTS as MissionPartsSetting & SettingValue);
+  const set: MissionPartsSetting = readSetting(config, MISSION_PARTS_SETTING, DEFAULT_MISSION_PARTS as MissionPartsSetting & SettingValue);
   const ids = new Set(set.parts.map((part) => part.id));
   const overlay = Object.fromEntries(Object.entries(SQUAD_START).filter(([, part]) => ids.has(part)));
   return { ...set, families: { ...overlay, ...set.families } };

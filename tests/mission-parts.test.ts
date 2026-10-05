@@ -5,7 +5,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
-import { settingDefinition, withSetting } from "../lib/control-plane/settings.ts";
+import { settingDefinition, withSetting, type SettingValue } from "../lib/control-plane/settings.ts";
 import { CHECKLIST_FAMILIES, SQUAD_START } from "../lib/coverage/checklist-map.ts";
 import { ROUTINE_RECORD_CLASSES } from "../lib/civic-data/types.ts";
 import { RECORD_CLASSES } from "../lib/answerability/record-class.ts";
@@ -53,7 +53,7 @@ test("the setting overrides the overlay and is read live from the config", () =>
   assert.deepEqual(missionPartsOf(config), DEFAULT_MISSION_PARTS);
   const changed = withSetting(config, { id: "c1", key: MISSION_PARTS_SETTING, at, why: "",
     after: { parts: [...DEFAULT_MISSION_PARTS.parts, { id: "finance", label: "Government money" }],
-      families: { FIN: "finance" }, recordClasses: {}, weightByGovernmentClass: [] } });
+      families: { FIN: "finance" }, recordClasses: {}, weightByGovernmentClass: [] } as unknown as SettingValue });
   const parts = missionPartsOf(changed);
   assert.equal(missionPartOf({ checklistId: "FIN-01" }, parts), "finance");
   assert.equal(missionPartOf({ checklistId: "OFF-01" }, parts), "people-money", "a family the setting leaves out keeps the overlay's squad");

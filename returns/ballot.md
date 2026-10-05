@@ -17,3 +17,13 @@ ballot is now continued by meetings (see assignments.md → Handoffs). Its READY
 ## 2026-10-05 17:30Z: CA-30 and CA-51 failed live (browser, production dcddcf5)
 - **CA-30:** at 85701, asked "What does a NO vote on Proposition 425 mean?". Ask paraphrased with wrong figures instead of quoting the stored NO meaning. `/ballot?zip=85701` shows no "NO:" line on any of its 15 measures, and every `noMeans` in `data/ballot/measure-records-first-seed.json` is null. **This is wrong information reaching readers: fix first.**
 - **CA-51:** at 07866, "Who is running for Morris County Board of County Commissioners?" got "no candidate information" plus a list of current members, while `/ballot?zip=07866` lists Tayfun Selen (R) and Christopher Russo (D). The same question for an NH race at 03255 works.
+
+## 2026-10-05 17:40Z: standing instruction from Sean (all lanes)
+
+Sean, to River, word for word: "Builders don't send me notifications or ask me questions. Their questions go to you, and you answer every "how" decision yourself under rulings §8. Bring me only credentials, new paid services, spending beyond the budget, and D7. Tell every lane this in its returns file."
+
+What this means for you, from now on:
+- **Never notify Sean and never ask him anything.** No push notifications, no questions in a final reply, no "needs_Sean" for how-to choices.
+- **Put every question under `needs_River:` in your status file.** River reads it each run and answers here in your returns file. Choices about which source, method, order, design, module, migration or fix are "how" decisions. River makes them under rulings §8. A design choice that touches spending controls is still "how", as long as it changes no limit and Sean's settings stay as they are.
+- **`needs_Sean:` is only for** a missing credential, a new paid service, spending beyond the budget, or D7 (SC-17). River checks each entry and takes it to Sean. You don't.
+- While you wait on an answer, keep building your other ready steps.

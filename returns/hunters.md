@@ -25,3 +25,28 @@ The control-plane `cp_runner_heartbeat` (pilot-runner) shows `lastCycleOk: false
 ## 2026-10-05 16:55Z: hooks from admin (overflow-1)
 
 Admin BR-05 and BR-16/BR-37 are folding into river (gates running). Two runner connections are yours in scripts/pilot-runner.mts. See hooks.md, rows dated 2026-10-05 16:55Z. With these wired, BR-05, BR-16 and BR-37 count as connected.
+
+## 2026-10-05 17:40Z: standing instruction from Sean (all lanes)
+
+Sean, to River, word for word: "Builders don't send me notifications or ask me questions. Their questions go to you, and you answer every "how" decision yourself under rulings §8. Bring me only credentials, new paid services, spending beyond the budget, and D7. Tell every lane this in its returns file."
+
+What this means for you, from now on:
+- **Never notify Sean and never ask him anything.** No push notifications, no questions in a final reply, no "needs_Sean" for how-to choices.
+- **Put every question under `needs_River:` in your status file.** River reads it each run and answers here in your returns file. Choices about which source, method, order, design, module, migration or fix are "how" decisions. River makes them under rulings §8. A design choice that touches spending controls is still "how", as long as it changes no limit and Sean's settings stay as they are.
+- **`needs_Sean:` is only for** a missing credential, a new paid service, spending beyond the budget, or D7 (SC-17). River checks each entry and takes it to Sean. You don't.
+- While you wait on an answer, keep building your other ready steps.
+
+## 2026-10-05 17:40Z: answers to your CH-24 and CH-26 questions (Sean, through River)
+
+Sean, word for word: "Answer hunters: CH-24, go ahead. Extract the shared spending-guard module behind a runner switch, keep the old path as the default until it's checked live, and prove in tests that the guards behave identically. Check it live after the next release. CH-26, go ahead with the lineage-keyed index. You number the migration."
+
+**CH-24: go ahead.**
+- Extract the paid-work guards into one shared module: spendHolds, assignmentBudget, areaGuardedTransport, fleetSafety, expansionBudget and place order, now built inside the research child (`scripts/freshness-shadow.mts` ~1089–2105). Both the research child and the new standing lease-worker lane in `scripts/pilot-runner.mts` build from it, reading the durable stores (budget ledger, intent log, expansion plan).
+- Put the new lane behind a runner switch in the runner's environment file. **The old path stays the default.** Nothing changes in production until the switch is turned on after a live check.
+- Prove in tests that the guards behave identically. For the same durable-store state, the extracted module must reach the same allow and refuse decisions, with the same amounts, as the current in-child code. Cover the refusal cases: ceiling reached, hold active, area guard, fleet safety, expansion budget. Spending limits and Admin settings don't change.
+- River checks it live after the next release that carries it, then turns on the switch. CH-27 and CH-28 stay behind CH-24's live check, as the plan says.
+
+**CH-26: go ahead with the lineage-keyed index.**
+- **Migration number: control-plane schema version 20** (`BOOTSTRAP_VERSION = 20` in `lib/control-plane/repository/pg-schema.ts`). Version 19, DB-09's door registry, is the highest on river, release/2 and every stream. No other lane has claimed 20. Add a "What version 20 adds" note. Build the index online (`CREATE INDEX CONCURRENTLY IF NOT EXISTS`), the way version 18's source-URL index is built. If you also need a Drizzle migration on the data-plane database, name it `CH-26_<name>.sql` and River numbers it at the fold (the next free number is 0035).
+- Scoped reads go behind a runner switch. The old whole-table path stays the default until the live check (repository calls per task stay flat as history grows).
+- Put the read-count evidence in your status. River does the live read after release.

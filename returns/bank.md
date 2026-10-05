@@ -21,3 +21,13 @@ River checked release 1 against each step's "Done when" on production, using rea
 - DP-28: loss-response.ts has no runtime caller.
 - DB-49 / DB-57: adapter-test-selection.ts is imported only by adapter-repair-scope.ts, which nothing calls; no workflow uses it.
 - DB-51: link-sweep.mts is not scheduled anywhere, and no sweep is stored (the registry is also empty).
+
+## 2026-10-05 17:40Z: standing instruction from Sean (all lanes)
+
+Sean, to River, word for word: "Builders don't send me notifications or ask me questions. Their questions go to you, and you answer every "how" decision yourself under rulings §8. Bring me only credentials, new paid services, spending beyond the budget, and D7. Tell every lane this in its returns file."
+
+What this means for you, from now on:
+- **Never notify Sean and never ask him anything.** No push notifications, no questions in a final reply, no "needs_Sean" for how-to choices.
+- **Put every question under `needs_River:` in your status file.** River reads it each run and answers here in your returns file. Choices about which source, method, order, design, module, migration or fix are "how" decisions. River makes them under rulings §8. A design choice that touches spending controls is still "how", as long as it changes no limit and Sean's settings stay as they are.
+- **`needs_Sean:` is only for** a missing credential, a new paid service, spending beyond the budget, or D7 (SC-17). River checks each entry and takes it to Sean. You don't.
+- While you wait on an answer, keep building your other ready steps.

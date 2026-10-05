@@ -675,6 +675,10 @@ export function sampleOutcome(kind: ActionKind, target: string, input: { readonl
     case "job-stop": return { final: "done", says: "Stopped after its current step. The money set aside is returned once its last call settles.", effect: (w) => ({ ...w, jobsStopped: add(w.jobsStopped, target) }) };
     case "cancel-send":
       return { final: "done", statusWords: "Requested", says: "Your request to take it back is saved. It stays a request until the runner records it." };
+    case "owed-add":
+    case "owed-decline":
+    case "owed-undo":
+      return { final: "done", statusWords: "Saved", says: "Sample preview: the change to what is owed is saved with its reason." };
     case "order-unschedule":
       return { final: "done", statusWords: "Cancelled", says: "Sample preview: the scheduled order is cancelled and will not be sent." };
     case "target-set":

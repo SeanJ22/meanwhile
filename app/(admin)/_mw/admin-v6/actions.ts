@@ -13,6 +13,7 @@
  */
 import type { ActionKind, DecisionSpec, Dependency, Hunt } from "./model.ts";
 import { usd } from "./model.ts";
+import { addableFamilies } from "@/lib/coverage/owed-overlay.ts";
 import { RECIPES } from "@/lib/control-plane/data-business/recipes.ts";
 import { audienceWords } from "@/lib/control-plane/data-business/types.ts";
 
@@ -796,6 +797,64 @@ const defs: ActionDef[] = [
       ],
     }),
     gateway: { type: "orders.unschedule" },
+    dependency: null,
+  },
+  {
+    kind: "owed-add",
+    label: "Add to what is owed",
+    needs: "owner",
+    doneWords: "Added.",
+    preview: () => ({
+      title: "Add to what every place is owed",
+      level: "global",
+      rows: [
+        ["What changes", "The item is owed wherever its family applies, and counts in the score from the next read"],
+        ["Cost", "Nothing is started; agents are sent separately"],
+        ["Undo", "From the log in Settings"],
+      ],
+      options: addableFamilies().map((f) => ({ id: f.group, label: f.name, note: "" })),
+      amount: { label: "What is owed", initial: "", text: true },
+      note: true,
+      invalid: ({ option, amount, words }) => option === null ? "Choose a family."
+        : amount.trim().length < 4 ? "Say what is owed."
+        : words.trim() === "" ? "Give the reason it is owed." : null,
+    }),
+    gateway: { type: "owed.add" },
+    dependency: null,
+  },
+  {
+    kind: "owed-decline",
+    label: "Decline",
+    needs: "owner",
+    doneWords: "Declined.",
+    preview: (ctx) => ({
+      title: `Decline what was added to ${ctx.targetName || "this place"}`,
+      level: "local",
+      rows: [
+        ["Affects", ctx.payload?.what ?? "The items that were added"],
+        ["What changes", "They are no longer owed there. Nothing we hold is deleted"],
+        ["Undo", "From the log in Settings"],
+      ],
+      note: true,
+      invalid: ({ words }) => (words.trim() === "" ? "Give the reason." : null),
+    }),
+    gateway: { type: "owed.decline" },
+    dependency: null,
+  },
+  {
+    kind: "owed-undo",
+    label: "Undo",
+    needs: "owner",
+    doneWords: "Undone.",
+    preview: (ctx) => ({
+      title: "Undo a change to what is owed",
+      level: "global",
+      rows: [
+        ["Undoes", ctx.payload?.what ?? "An earlier change"],
+        ["What changes", "The next read counts what is owed as it was before"],
+      ],
+    }),
+    gateway: { type: "owed.undo" },
     dependency: null,
   },
   {

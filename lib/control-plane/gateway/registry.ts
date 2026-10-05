@@ -45,6 +45,7 @@ import { appendDecisionIntent, RUNNER_ID, SNAPSHOT_ID } from "../admin-data.ts";
 import { fixConsequence, fixSubjectId, parseFixField, WHERE_SEPARATOR } from "../fix-queue.ts";
 import { addFixItem, completeFixItem, fixItems } from "../fix-list.ts";
 import { addUpdate } from "../updates.ts";
+import { OWED_ACTIONS } from "./owed-actions.ts";
 import { parseWhen, scheduledOrders, withScheduled, withoutScheduled, type ScheduledOrder } from "./scheduled-orders.ts";
 import {
   ANSWERED_IN_OWN_WORDS,
@@ -1469,6 +1470,7 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
+  ...OWED_ACTIONS,
 ];
 
 /**

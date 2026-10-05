@@ -85,7 +85,7 @@ export interface AdminV6PlaceItem {
   readonly nextCheckAt: string | null;
   /** When this blank started being owed, shown only when it was added after the mission started; null otherwise. */
   readonly addedAt: string | null;
-  readonly actions: readonly { readonly kind: "send-agents"; readonly target: string; readonly label: string; readonly payload: { readonly words: string } }[];
+  readonly actions: readonly { readonly kind: "send-agents" | "owed-decline"; readonly target: string; readonly label: string; readonly payload: Readonly<Record<string, string>> }[];
 }
 export interface AdminV6PlaceChecklistView {
   readonly profileVersion: string;
@@ -137,7 +137,12 @@ function itemOf(item: OwedListItem, placeKey: string, words: string | null, miss
     sourceUrl: item.sourceUrl,
     statuses: item.statuses, nextCheckAt: item.statuses?.nextCheck ?? null,
     addedAt: item.owedSince !== null && missionStart !== null && !onStartingList(item, missionStart) ? item.owedSince : null,
-    actions: open && words !== null ? [{ kind: "send-agents", target: placeKey, label: "Send agents", payload: { words } }] : [],
+    actions: [
+      ...(open && words !== null ? [{ kind: "send-agents" as const, target: placeKey, label: "Send agents", payload: { words } }] : []),
+      // A blank added after the mission started can be declined, with a reason; the starting list's own blanks cannot.
+      ...(item.owedSince !== null && missionStart !== null && !onStartingList(item, missionStart)
+        ? [{ kind: "owed-decline" as const, target: placeKey, label: "Decline", payload: { rows: JSON.stringify([{ rowId: item.key, subjectLabel: item.subject, requirement: item.requirement }]), what: item.requirement.split(" — ")[0] ?? item.requirement } }] : []),
+    ],
   };
 }
 

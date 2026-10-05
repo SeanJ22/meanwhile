@@ -39,6 +39,7 @@ import { MoneyScreen } from "./screen-money.tsx";
 import { DataBusinessScreen } from "./screen-data.tsx";
 import { NowScreen, Readers } from "./screen-now.tsx";
 import { ReportsView } from "./reports-view.tsx";
+import { OwedPanel } from "./owed-panel.tsx";
 import { RunnerSettingsPanel, SettingsScreen } from "./screen-settings.tsx";
 import { DoorsPanel } from "./doors-panel.tsx";
 import { UpdatesPanel } from "./updates-panel.tsx";
@@ -392,7 +393,7 @@ export function CommandCenter(props: CommandCenterProps) {
               {view === "queue" && <QueueScreen />}
               {view === "scoreboard" && <ScoreboardScreen />}
               {view === "fix" && <><FixQueueControls /><FixScreen /></>}
-              {view === "settings" && <SettingsScreen />}
+              {view === "settings" && <><SettingsScreen /><OwedPanel /></>}
               {view === "reports" && <ReportsView />}
               {view === "changes" && <ChangesView />}
               {view === "chat" && <ChatView controls={props.chatControls ?? []} />}

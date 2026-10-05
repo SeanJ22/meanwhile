@@ -27,7 +27,7 @@ const RULES = {
   "nh-sos-campaign-finance": { mode: "SCOPED_ADAPTER_OWED", state: "NH", reason: "The current projection requires promoted New Hampshire ballot identity and narrows to Merrimack; bind the selected area before invocation." },
   "nj-elec-campaign-finance": { mode: "SCOPED_ADAPTER_OWED", state: "NJ", reason: "The current projection requires promoted New Jersey ballot identity and narrows to Morris; bind the selected area before invocation." },
   "az-pima-local-finance": { mode: "SCOPED_ADAPTER_OWED", state: "AZ", reason: "The adapter covers Pima County only; Arizona state membership alone does not establish Pima applicability." },
-  "voting-sites": { mode: "DIRECT_SOURCE", reason: "One automatic pass acquires every voting-site source we can read; a place no source covers stays an open blank for hunters." },
+  "voting-sites": { mode: "VERIFIED_WORKER_RESULT", reason: "Registered election-authority polling doors publish their saved rows through the normal worker Slide; the previous automatic adapter stays available until live replacement is verified." },
   "prl": { mode: "DIRECT_SOURCE", reason: "The licensed national PRL archive is acquired and attributed for every Send, like any national source (the licence covers every place)." },
   "az-official-actions": { mode: "REVIEWED_INPUT", state: "AZ", reason: "Promotion requires a reviewed action projection, exact source-set receipt and source-through argument." },
   "official-filings": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output publishes once it meets the section 3 standard; audits run afterward and repair what they find." },

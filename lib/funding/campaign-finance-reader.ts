@@ -1,3 +1,4 @@
+import { validFinanceDoorDetailSource } from "./finance-detail-source.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
@@ -47,6 +48,7 @@ export function campaignFinanceRecordIssue(value: unknown): string | null {
       record.checkedAt !== row.collectedAt.slice(0, 10) || !record.totals ||
       [record.totals.receipts, record.totals.expenditures, record.totals.cashOnHand].some(amount => amount !== null &&
         (typeof amount !== "number" || !Number.isFinite(amount)))) return "Campaign filing lacks exact source, report totals or verified candidate/office/cycle/jurisdiction binding.";
+  if (record.detailSource !== undefined && (!validFinanceDoorDetailSource(record.detailSource) || record.detailSource.ocdId !== row.ocdId || record.detailSource.committeeId !== record.committeeId || record.detailSource.candidateName !== record.candidateNameAsFiled || record.detailSource.office !== record.officeSought || record.detailSource.electionYear !== record.electionYear || !record.detailSource.hosts.includes(new URL(row.sourceUrl).hostname))) return "Finance detail source crosses its held filing identity.";
   if (record.funding !== undefined && (stateMoneyFundingIssue(record.funding) || record.funding.organizations.some(org => org.sourceUrl !== row.sourceUrl))) return "Campaign contributors lack their filed entity class, amounts or exact filing source.";
   return row.kind !== campaignFinanceRecordKind(record) ? "Campaign source document does not meet the Money amount and filing-period minimum." : null;
 }

@@ -163,6 +163,8 @@ export interface StateMoneyTotals {
 }
 
 export interface StateMoneyRecord {
+  /** Held source descriptor and key reference; never a credential value. */
+  detailSource?: import("./finance-detail-source.ts").FinanceDoorDetailSource;
   dataClass: "STATE_COMMITTEE";
   jurisdiction: MoneyJurisdiction;
   /** The agency's own name, rendered to readers verbatim. */

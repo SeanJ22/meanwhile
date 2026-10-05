@@ -1,3 +1,4 @@
+import { publishWorkerPollingResults } from "./worker-polling-publication.ts";
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
 import type { WorkerResultRecord, FieldValue } from "../control-plane/workers/types.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
@@ -85,7 +86,8 @@ export function workerReaderPackageWithPulls(input: Parameters<typeof verifiedWo
   if (input.plan.publication?.contractId === "ballot-contests") return { package: workerBallotContestsPackage(input).package, pulledMemberIds: new Set() };
   const target = input.plan.publication;
   requirePublication(target && isWorkerReaderContract(target.contractId), "READER_CONTRACT_UNRESOLVED");
-  const contractId = target.contractId as Exclude<WorkerReaderContract, "ballot-contests">;
+  requirePublication(target.contractId !== "voting-sites", "POLLING_USES_REGISTERED_DOOR_PUBLICATION");
+  const contractId = target.contractId as Exclude<WorkerReaderContract, "ballot-contests" | "voting-sites">;
   const checked = verifiedWorkerRecords({ ...input, pullRemoves: true });
   requirePublication(workerReaderClassMatches(contractId, checked.contract.recordClass), "READER_CLASS_MISMATCH");
   const body = input.registry?.payload.registry.bodies.find(body => body.id === target.bodyId);
@@ -221,6 +223,7 @@ export async function publishWorkerReaderResults(input: {
   readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
 }) {
   if (input.contractId === "ballot-contests") return publishWorkerBallotContestsResults(input);
+  if (input.contractId === "voting-sites") return publishWorkerPollingResults(input);
   const results = await readCompletedWorkerResults(input.repos);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   // Owed election work with no extraction yet: the government's saved election pages are read in code.

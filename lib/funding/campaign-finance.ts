@@ -1,3 +1,5 @@
+import { readCampaignFinance } from "./campaign-finance-reader.ts";
+import { financeDoorDetailSource } from "./finance-detail-source.ts";
 import { campaignFinanceRecordIssue, campaignFinanceRecordKind, type CampaignFinanceRecord } from "./campaign-finance-reader.ts";
 import type { BallotSet } from "../ballot/types.ts";
 import type { DoorRecord } from "../doors/registry.ts";
@@ -55,7 +57,7 @@ export function campaignFinancePackage(input: {
   const records: CampaignFinanceRecord[] = bound.bound.map(({ filing, record }) => ({
     id: filing.id, kind: campaignFinanceRecordKind(record), ocdId: filing.ocdId, sourceUrl: filing.sourceUrl, sourceHash: filing.sourceHash,
     collectedAt: filing.retrievedAt, reportId: filing.reportId,
-    record: { ...record, provenance: { ...record.provenance, verifiedAt: input.now } },
+    record: { ...record, detailSource: financeDoorDetailSource(input.door, { committeeId: filing.committeeId, candidateName: filing.candidateName!, office: filing.office!, electionYear: filing.electionYear }), provenance: { ...record.provenance, verifiedAt: input.now } },
   }));
   if (!records.length) throw new Error("No filed candidate/office/cycle/jurisdiction identity is verified; unmatched rows remain owed work.");
   for (const row of records) { const issue = campaignFinanceRecordIssue(row); if (issue) throw new Error(issue); }
@@ -103,7 +105,9 @@ export async function runFinanceDoorPublication(input: Parameters<typeof campaig
     const published = await publishCampaignFinance(input.store, input);
     candidateId = published.candidate.candidate.id;
     versionId = published.promoted?.versionId ?? null;
-    if (!published.promoted || published.readerReadback?.status !== "PASS") throw new Error(published.candidate.failureDetail ?? "Campaign finance has not reached its typed reader.");
+    const confirmedRead = published.confirmed ? await readCampaignFinance(input.door.ocdId!, { store: input.store, now: input.now, bypassCache: true }) : null;
+    const readback = published.readerReadback?.status === "PASS" || confirmedRead?.kind === "PROMOTED" && confirmedRead.metadata.versionId === versionId;
+    if (!published.promoted || !readback) throw new Error(published.candidate.failureDetail ?? "Campaign finance has not reached its typed reader.");
     outcome = { at: input.now, workerResultId: input.workerResultId, candidateId, versionId,
       status: published.unbound.length || published.documentsWithOwedMoney.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
       code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "FILED_CAMPAIGN_FINANCE_PUBLISHED",

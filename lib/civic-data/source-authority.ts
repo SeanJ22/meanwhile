@@ -176,8 +176,7 @@ export const SOURCE_AUTHORITIES = {
     // Transport routes are data. The candidate applies §3 to each site's
     // publisher URL and saves the official linking page for non-.gov sources.
     routePrefixes: ["https://"],
-    jurisdictions: REGISTRATION_TARGETS.filter(target => FIPS_TO_STATE[target.fips].prefix !== "territory")
-      .map(target => target.jurisdiction),
+    jurisdictions: REGISTRATION_TARGETS.map(target => target.jurisdiction),
     recordClasses: ["VOTING_SITE"],
     competentFacts: [
       "official voting-site identity and address",

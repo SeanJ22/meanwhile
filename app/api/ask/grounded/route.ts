@@ -40,6 +40,7 @@ import { snapshotEntities, titleCaseName } from "@/lib/ask/inventory";
 import { bodyIdentityIndex, canonicalBodyIdentity } from "@/lib/ask/body-identity";
 import { statementEvidenceFor } from "@/lib/ask/statements";
 import { stanceAnswerability } from "@/lib/ask/stance-answerability";
+import { fetchThroughKey, composeFinanceDetail } from "@/lib/ask/fetch-through-key";
 import { campaignMoneyEvidenceFor } from "@/lib/ask/campaign-money";
 import { candidateProfileEvidenceFor } from "@/lib/ask/candidate-profile";
 import type { SeatHolder } from "@/lib/officials/lookup";
@@ -2627,6 +2628,13 @@ export async function POST(request: Request) {
      * drops one that is not. A null subject — the ballot-at-large question — gates
      * nothing.
      */
+    const financeDetail = subject?.kind === "PERSON" && financeAsked
+      ? await fetchThroughKey({ question, subject, records, deadlineMs: started + 2800 }) : null;
+    if (financeDetail) {
+      records.push(...financeDetail.records);
+      denominators.financeDetailRowsReturned = financeDetail.records.length;
+      denominators.financeDetailComplete = financeDetail.complete ? 1 : 0;
+    }
     const relevant = gateRecordsToSubject(subject, records, comparedIds);
     denominators.recordsExcludedOffSubject = relevant.excluded.length;
     const packRecords = relevant.records;
@@ -2735,7 +2743,7 @@ export async function POST(request: Request) {
       ? moneyShapeForBoundPerson(question, inventory, subject.id, officeOf) : null;
     const moneyOther = moneyShape?.otherId ? ballotInventory.subjects.get(moneyShape.otherId)?.name ?? inventory.find((entity) => entity.id === moneyShape.otherId)?.name ?? null : null;
     const moneySettled = settleSittingComposition(
-      moneyShape && subject && (moneyShape.otherId === null || (moneyOther && comparedIds.has(moneyShape.otherId)))
+      financeDetail ? composeFinanceDetail(financeDetail) : moneyShape && subject && (moneyShape.otherId === null || (moneyOther && comparedIds.has(moneyShape.otherId)))
         ? composeMoneyAnswer({
           ask: moneyShape.ask,
           // A party-conflict card's money is its filing's: stated under the filing's id, after both parties and their authorities.

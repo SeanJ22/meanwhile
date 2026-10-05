@@ -56,6 +56,7 @@ export function campaignMoneyEvidenceFor(
       subjectId: subject.id, canonicalSubjectId: money.state.resolvedTargetKey ?? targetKey,
       text: stateText(record), sourceUrl: record.filingsUrl ?? record.provenance.sourceUrl,
       sourceOrg: record.provenance.sourceOrg, retrievedAt: record.checkedAt,
+      ...(record.detailSource ? { stateDetailSource: record.detailSource } : {}),
       finance: {
         jurisdiction: record.jurisdiction, filingState: record.filingState, totals: record.totals,
         registeredName: record.registeredName.trim(), agency: record.agency, electionYear: record.electionYear, checkedAt: record.checkedAt,
@@ -68,7 +69,8 @@ export function campaignMoneyEvidenceFor(
     const record = money.federal.data;
     records.push({ kind: "FINANCE_SUMMARY", id: `fec:${record.fecCandidateId}`, subjectId: subject.id,
       canonicalSubjectId: record.fecCandidateId, text: record.sentences.join(" "),
-      sourceUrl: record.sourceUrl, sourceOrg: record.sourceOrg, retrievedAt: record.collectedAt });
+      sourceUrl: record.sourceUrl, sourceOrg: record.sourceOrg, retrievedAt: record.collectedAt,
+      ...(record.detailSource ? { fecDetailSource: record.detailSource } : {}) });
     denominators.federalFinanceRecordsReturned = 1;
   } else if (money.federal.kind === "absence") {
     const absence = money.federal.data;

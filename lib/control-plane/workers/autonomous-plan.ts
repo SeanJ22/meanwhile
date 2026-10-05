@@ -25,6 +25,8 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
       ? { recordClass: "BALLOT_MEASURE", fields: ["election", "title", "jurisdictionName", "textUrl"] }
     : source.recordClass === "GOVERNMENT_FINANCE"
       ? { recordClass: "PUBLIC_RECORD", fields: ["bodyName", "title", "kindLabel", "sourceSentence"] }
+    : source.recordClass === "POLLING_PLACES"
+      ? { recordClass: "VOTING_SITE", fields: ["jurisdictionName", "model", "name", "address", "kind"] }
     : source.recordClass === "PUBLIC_RECORDS"
       ? { recordClass: "PUBLIC_RECORD", fields: ["bodyName", "title", "kindLabel", "sourceSentence"] }
     : source.recordClass === "ADOPTED_BUDGETS"
@@ -43,6 +45,7 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
     sourceRegistryReferences: [jurisdiction.id, routeId], seedUrls, sources: [], acquisition: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
     ...(source.recordClass === "OFFICEHOLDERS" && bodyId ? { publication: { contractId: "registry-runtime-bindings" as const, bodyId } } : {}),
     ...(source.recordClass === "PUBLIC_SERVICES" && bodyId ? { publication: { contractId: "everyday-routing" as const, bodyId } } : {}),
+    ...(source.recordClass === "POLLING_PLACES" && bodyId ? { publication: { contractId: "voting-sites" as const, bodyId } } : {}),
     ...(source.recordClass === "VOTER_ACCESS" && bodyId ? { publication: { contractId: "ballot-navigation" as const, bodyId } } : {}),
     ...(["BALLOT_CONTEST", "BALLOT_MEASURE"].includes(spec.recordClass) && bodyId ? { publication: { contractId: "ballot-contests" as const, bodyId } } : {}),
     ...(spec.recordClass === "PUBLIC_RECORD" && bodyId ? { publication: { contractId: source.recordClass === "GOVERNMENT_FINANCE" ? "government-budgets" as const : "public-records" as const, bodyId } } : {}),

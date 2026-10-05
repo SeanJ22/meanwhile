@@ -70,6 +70,7 @@ export type JurisdictionRecordClass =
   | "OFFICEHOLDERS"
   | "PUBLIC_COMMENT"
   | "PUBLIC_SERVICES"
+  | "POLLING_PLACES"
   | "VOTER_ACCESS"
   | "PUBLIC_RECORDS"
   | "BALLOT_MEASURES"

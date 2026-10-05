@@ -1,5 +1,6 @@
 /** Existing publication doors and their executable worker record contracts. */
 export const WORKER_READER_CLASSES = {
+  "voting-sites": "VOTING_SITE",
   "government-budgets": "ADOPTED_BUDGET",
   "public-records": "PUBLIC_RECORD",
   "ballot-contests": "BALLOT_CONTEST",

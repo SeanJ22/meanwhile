@@ -1,3 +1,4 @@
+import { readGovernmentBudgets } from "./government-budgets.ts";
 import { createHash } from "node:crypto";
 import { parseCsv } from "../reference/index.ts";
 import { readZip } from "../sources/legiscan/zip.ts";
@@ -11,6 +12,9 @@ import type { ManualProjectionPackage, CuratedReaderProjection } from "./manual-
 import { prepareManualProjectionSuccessor } from "./manual-successor.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
 import type { RoutineDataStore } from "./store.ts";
+import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+import type { WorkItem } from "../control-plane/work-item.ts";
+import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
 /** Door field maps carry the source's codebook and government key, so Census,
  * FAC and USAspending are read in ordinary code before any paid local work. */
@@ -121,4 +125,39 @@ export async function publishNationalGovernmentFinance(store: RoutineDataStore, 
   const built = nationalGovernmentFinancePackage(input);
   const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(built, store, input.now);
   return processRegisteredManualCandidate(store, "government-budgets", candidate, input.now, expectedBaseVersionId);
+}
+
+/** Normal admitted door lease, before any paid local blank-filling. The outcome
+ * stays on the existing work item, including a failed read that retains GOOD. */
+export async function runNationalGovernmentFinancePublication(input: Parameters<typeof nationalGovernmentFinancePackage>[0] & {
+  readonly repos: Pick<ControlPlaneRepositories, "workItems">; readonly store: RoutineDataStore;
+  readonly workItemId: string; readonly workerResultId: string;
+}) {
+  const item = await input.repos.workItems.mustRead(input.workItemId), plan = item.value.autonomousPlan;
+  if (!plan || plan.contract.schemaVersion !== 2 || plan.publication?.contractId !== "government-budgets" ||
+      plan.publication.bodyId !== input.government.bodyId || (plan.contract.jurisdiction.canonicalId !== input.government.ocdId && !input.government.bodyId.startsWith(`${input.government.ocdId}#`)) ||
+      !["PUBLIC_RECORD", "ADOPTED_BUDGET"].includes(plan.contract.recordClass)) throw new Error("National finance must stay with its admitted exact government publication.");
+  if (item.value.publicationOutcome?.workerResultId === input.workerResultId && item.value.publicationOutcome.status === "PUBLISHED") {
+    return { workItemId: input.workItemId, outcome: item.value.publicationOutcome };
+  }
+  let candidateId: string | null = null, versionId: string | null = null;
+  let outcome: NonNullable<WorkItem["publicationOutcome"]>;
+  try {
+    const built = nationalGovernmentFinancePackage(input);
+    const published = await publishNationalGovernmentFinance(input.store, input);
+    candidateId = published.candidate.candidate.id; versionId = published.promoted?.versionId ?? null;
+    const confirmedRead = published.confirmed ? await readGovernmentBudgets(input.government.ocdId, { store: input.store, now: input.now, bypassCache: true }) : null;
+    const readback = published.readerReadback?.status === "PASS" || confirmedRead?.kind === "PROMOTED" && confirmedRead.metadata.versionId === versionId;
+    if (!published.promoted || !readback) throw new Error(published.candidate.failureDetail ?? "National finance has not reached its scoped typed reader.");
+    outcome = { at: input.now, workerResultId: input.workerResultId, candidateId, versionId, status: "PUBLISHED",
+      code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "NATIONAL_GOVERNMENT_FINANCE_PUBLISHED",
+      acceptedRecordIds: built.payload.records.map(row => String(row.id)),
+      detail: "Source-bound national finance facts published for this exact government; unknown finance fields remain owed." };
+  } catch (error) {
+    outcome = { at: input.now, workerResultId: input.workerResultId, candidateId, versionId, status: "HELD",
+      code: "NATIONAL_GOVERNMENT_FINANCE_HELD", detail: sanitizedErrorDiagnostic(error), recovery: candidateId ? "PUBLISHER" : "WORKER" };
+  }
+  const latest = await input.repos.workItems.mustRead(input.workItemId);
+  if (!await input.repos.workItems.compareAndSet(input.workItemId, latest.revision, { ...latest.value, publicationOutcome: outcome }, input.now)) throw new Error("National finance outcome changed during retention.");
+  return { workItemId: input.workItemId, outcome };
 }

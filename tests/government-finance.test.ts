@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
-import { nationalGovernmentFinancePackage, publishNationalGovernmentFinance } from "../lib/civic-data/national-government-finance.ts";
+import { nationalGovernmentFinancePackage, publishNationalGovernmentFinance, runNationalGovernmentFinancePublication } from "../lib/civic-data/national-government-finance.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { createWorkItem, type WorkItem } from "../lib/control-plane/work-item.ts";
 import { governmentFinanceChecklistEvidence, governmentFinanceFact, type GovernmentFinanceFact } from "../lib/civic-data/government-finance.ts";
 import { readGovernmentBudgets } from "../lib/civic-data/government-budgets.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -45,6 +47,17 @@ test("Census, FAC and USAspending saved rows publish to the exact scoped typed r
     assert.equal(governmentFinanceChecklistEvidence([record], government.bodyId)["FIN-08"].length, 0, "unheld reconciliation stays owed");
     await assert.rejects(publishNationalGovernmentFinance(store, { ...input, responses: [{ ...response, partial: true }] }));
     assert.equal((await readGovernmentBudgets(ocdId, { store, now, bypassCache: true })).kind, "PROMOTED", "failed acquisition preserves GOOD");
+    const repos = createMemoryRepositories();
+    const item = createWorkItem({ project: "fixture", subject: government.bodyId, obligation: "government finance", why: "Held national finance first", now });
+    const plan = { contract: { schemaVersion: 2, recordClass: "PUBLIC_RECORD", jurisdiction: { canonicalId: ocdId } },
+      publication: { contractId: "government-budgets", bodyId: government.bodyId } } as unknown as NonNullable<WorkItem["autonomousPlan"]>;
+    await repos.workItems.put(item.id, { ...item, autonomousPlan: plan }, now);
+    const publishedWork = await runNationalGovernmentFinancePublication({ ...input, repos, store, workItemId: item.id, workerResultId: "saved-national-read" });
+    assert.equal(publishedWork.outcome.status, "PUBLISHED", publishedWork.outcome.detail);
+    assert.deepEqual((await repos.workItems.mustRead(item.id)).value.publicationOutcome, publishedWork.outcome);
+    const failedWork = await runNationalGovernmentFinancePublication({ ...input, responses: [{ ...response, partial: true }], repos, store, workItemId: item.id, workerResultId: "partial-national-read" });
+    assert.equal(failedWork.outcome.status, "HELD");
+    await assert.rejects(runNationalGovernmentFinancePublication({ ...input, government: { ...government, ocdId: `${ocdId}/place:foreign` }, repos, store, workItemId: item.id, workerResultId: "foreign" }), /admitted exact government/);
   }
 });
 

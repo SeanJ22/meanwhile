@@ -1,3 +1,5 @@
+import { fetchThroughKey } from "../lib/ask/fetch-through-key.ts";
+import { financeQuestionAsked } from "../lib/ask/local-finance.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { createWorkItem, type WorkItem } from "../lib/control-plane/work-item.ts";
 import assert from "node:assert/strict";
@@ -232,4 +234,17 @@ test("filed organizations and aggregate private giving reach cards and Ask, with
   assert.match(answer.answer, /Neighbors PAC/);
   assert.doesNotMatch(answer.answer, /not the identities|name no donors|Private Donor/);
   assert.deepEqual(answer.citedUrls, [url]);
+  assert.equal(financeQuestionAsked("List every PAC that gave to Avery Example this year"), true);
+  const detail = await fetchThroughKey({ question: "List all campaign contributors to Avery Example", subject, records: evidence.records,
+    deadlineMs: Date.now() + 1000, apiOptions: { fetchImpl: async (requested, init) => {
+      assert.equal(requested, url); assert.equal(init?.redirect, "error");
+      return new Response(bytes, { status: 200 });
+    } } });
+  assert.equal(detail?.status, "COMPLETE"); assert.equal(detail.records.length, 3);
+  assert.doesNotMatch(JSON.stringify(detail), /Private Donor|Private Lane|Private Road|Unclassified Person/);
+  assert.ok(detail.records.every(row => row.sourceUrl === url && row.subjectId === subject.id));
+  const foreignText = text.replace('"Candidate":"Avery Example"', '"Candidate":"Other Person"');
+  const foreign = await fetchThroughKey({ question: "List all campaign contributors to Avery Example", subject, records: evidence.records,
+    deadlineMs: Date.now() + 1000, apiOptions: { fetchImpl: async () => new Response(foreignText) } });
+  assert.equal(foreign?.status, "UNAVAILABLE"); assert.equal(foreign?.records.length, 0);
 });

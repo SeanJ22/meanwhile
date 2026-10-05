@@ -195,6 +195,8 @@ export interface EvidenceRecord {
    */
   /** A roll call's own fields, beside its sentence (2026-09-29): what a composed vote answer states without re-reading the text. */
   rollCall?: { position: string; what: string; when: string; result: string };
+  stateDetailSource?: import("../funding/finance-detail-source.ts").FinanceDoorDetailSource;
+  fecDetailSource?: import("./fetch-through-key.ts").FinanceDetailSource;
   finance?: {
     jurisdiction: string; filingState: string;
     totals: { receipts: number | null; expenditures: number | null; cashOnHand: number | null; reportCount: number | null; coveringPeriod: string | null };

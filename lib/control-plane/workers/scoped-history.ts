@@ -15,6 +15,10 @@ import { keysWhere } from "../repository/types.ts";
 import { RESEARCH_BOUNDS } from "../scheduler/research-policy.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { WorkItem } from "../work-item.ts";
+import type { Attempt } from "../attempt.ts";
+import type { FreshnessOccurrence } from "../scheduler/durable.ts";
+import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
+import type { WorkerResultRecord } from "./types.ts";
 import { readSubjectScoutHistory } from "./detective.ts";
 
 /**
@@ -90,4 +94,59 @@ export async function readAuditHistory(repos: ControlPlaneRepositories, input: {
   const artifacts: ArtifactRecord[] = [];
   for (const key of [...keys].sort()) artifacts.push(...await repos.artifacts.read(key));
   return { artifacts, items };
+}
+
+type LinkedWorkItem = WorkItem & { readonly planRepair?: { readonly parentWorkItemId?: string } };
+
+/**
+ * Everything `selectStandingLineages` and `brokeredSiblingCaptures` read for the lineage one work item belongs to:
+ * the occurrences of every standing obligation the item (or a repair ancestor) was opened for, the items those
+ * occurrences opened and their repair families (found through the version-20 lineage index), and those items'
+ * captures, attempts, completed worker results and their subjects' Scout results. A lineage is one obligation's
+ * occurrences, so its group, ranking and brokered captures come out as the whole-table computation gives them.
+ * Null when the store cannot answer the filtered reads.
+ */
+export async function readLineageHistory(repos: ControlPlaneRepositories, workItemId: string) {
+  if (!repos.artifacts.keysWhere || !repos.scoutResults.keysWhere) return null;
+  const items = new Map<string, WorkItem>();
+  const readItem = async (id: string) => {
+    if (!items.has(id)) { const row = await repos.workItems.read(id); if (row) items.set(id, row.value); }
+    return items.get(id) ?? null;
+  };
+  const ancestors: string[] = [];
+  for (let cursor = await readItem(workItemId); cursor && !ancestors.includes(cursor.id);) {
+    ancestors.push(cursor.id);
+    const parent = (cursor as LinkedWorkItem).planRepair?.parentWorkItemId;
+    cursor = parent ? await readItem(parent) : null;
+  }
+  const obligationIds = new Set<string>();
+  for (const id of ancestors) for (const row of await repos.occurrences.listWhere(["workItemId"], id)) obligationIds.add(row.value.obligationId);
+  const occurrences = new Map<string, FreshnessOccurrence>();
+  for (const id of obligationIds) for (const row of await repos.occurrences.listWhere(["obligationId"], id)) occurrences.set(row.id, row.value);
+  // Every occurrence's item and its whole repair family, through the lineage index.
+  const queue = [...new Set([...occurrences.values()].map(occurrence => occurrence.workItemId))];
+  const visited = new Set<string>();
+  while (queue.length) {
+    const id = queue.shift()!;
+    if (visited.has(id)) continue;
+    visited.add(id);
+    await readItem(id);
+    for (const child of await repos.workItems.listWhere(["planRepair", "parentWorkItemId"], id)) { items.set(child.id, child.value); queue.push(child.id); }
+  }
+  const byId = <T extends { readonly id: string }>(rows: Iterable<T>) => [...rows].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+  const artifactKeys = new Set<string>();
+  const attempts = new Map<string, Attempt>();
+  const workerResults: WorkerResultRecord[] = [];
+  for (const id of [...items.keys()].sort()) {
+    for (const key of await repos.artifacts.keysWhere(["workItemId"], id)) artifactKeys.add(key);
+    for (const row of await repos.attempts.listWhere(["workItemId"], id)) attempts.set(row.id, row.value);
+    workerResults.push(...await readCompletedWorkerResults(repos, id));
+  }
+  const artifacts: ArtifactRecord[] = [];
+  for (const key of [...artifactKeys].sort()) artifacts.push(...await repos.artifacts.read(key));
+  return {
+    occurrences: [...occurrences.entries()].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([, value]) => value),
+    workItems: byId(items.values()), artifacts, attempts: byId(attempts.values()), workerResults,
+    scouts: await readScoutResultsForSubjects(repos, [...new Set([...items.values()].map(item => item.subject))], true),
+  };
 }

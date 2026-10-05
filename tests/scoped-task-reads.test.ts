@@ -19,6 +19,18 @@ import { pgEnsureOnlineIndex, type Sql } from "../lib/control-plane/repository/p
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import { autonomousHarness } from "./helpers/autonomous-fleet.ts";
+import { readLineageHistory } from "../lib/control-plane/workers/scoped-history.ts";
+import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
+import { writeFieldManual } from "../lib/control-plane/field-manual.ts";
+import { knowledgeEntries, methodVersionEntry } from "./method-store-fixture.ts";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { selectStandingLineages } from "../lib/control-plane/workers/standing-lineage.ts";
+import { readCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
+import { createWorkItem } from "../lib/control-plane/work-item.ts";
+import { registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
+import type { FreshnessOccurrence } from "../lib/control-plane/scheduler/durable.ts";
 
 const WHOLE_TABLE = new Set(["list", "listNarrowed", "readAll", "keys"]);
 
@@ -165,6 +177,54 @@ test("CH-26: an audit's scoped rows are every row its whole-table reads would ha
   assert.ok(!scoped.artifacts.some(row => row.artifactId === "unrelated"), "nothing else");
   const { keysWhere: _drop, ...withoutFilter } = repos.artifacts;
   assert.equal(await readAuditHistory({ ...repos, artifacts: withoutFilter as typeof repos.artifacts }, { subjectId: "s:1", requiredArtifactIds: [] }), null);
+});
+
+test("CH-26: a task's lineage, read through the lineage index, is the lineage the whole store gives", async () => {
+  const h = await autonomousHarness();
+  const first = (await h.repos.workItems.mustRead(h.item.id)).value;
+  const second = { ...createWorkItem({ project: first.project, subject: first.subject, obligation: "same source period, second round", why: "retry", now: h.now() }),
+    autonomousPlan: first.autonomousPlan };
+  const child = { ...createWorkItem({ project: first.project, subject: first.subject, obligation: "linked repair child", why: "repair", now: h.now() }),
+    autonomousPlan: first.autonomousPlan, planRepair: { parentWorkItemId: first.id, rootWorkItemId: first.id, depth: 1, proposalHash: "p",
+      scoutAttemptId: "a", sourceArtifactId: "x", retainedEvidenceIds: [], admittedAt: h.now(), authority: "WORK_INSTRUCTIONS_ONLY" as const, unresolved: [] } };
+  const stranger = { ...createWorkItem({ project: first.project, subject: "fixture:nh:other", obligation: "another government", why: "other", now: h.now() }),
+    autonomousPlan: first.autonomousPlan };
+  for (const item of [second, child, stranger]) await registerWorkItem(h.repos, item as typeof first, h.now());
+  const dueAt = "2026-09-03T18:00:00.000Z";
+  const occurrence = (id: string, obligationId: string, workItemId: string, openedAt: string): FreshnessOccurrence => ({ id, obligationId, sequence: 1, dueAt,
+    workItemId, routeTaskId: `route-${id}`, openedAt, closedAt: openedAt, disposition: null, unresolvedReason: "owed" });
+  for (const row of [occurrence("round-1", "obligation-a", first.id, "2026-09-03T18:01:00.000Z"), occurrence("round-2", "obligation-a", second.id, "2026-09-03T19:01:00.000Z"),
+    occurrence("round-x", "obligation-b", stranger.id, "2026-09-03T18:30:00.000Z")]) await h.repos.occurrences.put(row.id, row, dueAt);
+
+  const history = (await readLineageHistory(h.repos, child.id))!;
+  assert.deepEqual(new Set(history.workItems.map(item => item.id)), new Set([first.id, second.id, child.id]), "the lineage and its repair family, nothing else");
+  assert.deepEqual(history.occurrences.map(row => row.id), ["round-1", "round-2"]);
+  const whole = selectStandingLineages({ occurrences: (await h.repos.occurrences.list()).map(row => row.value),
+    workItems: (await h.repos.workItems.list()).map(row => row.value), artifacts: await h.repos.artifacts.readAll(),
+    attempts: (await h.repos.attempts.list()).map(row => row.value), workerResults: await readCompletedWorkerResults(h.repos) });
+  const mine = whole.filter(lineage => lineage.siblingRootIds.includes(first.id));
+  assert.deepEqual(mine.map(lineage => new Set(lineage.siblingRootIds)), [new Set([first.id, second.id])], "a real two-root lineage");
+  assert.deepEqual(selectStandingLineages(history), mine);
+});
+
+test("CH-26: a lease worker's scoped runtime builds and begins a task without listing a whole table", async t => {
+  const counter = counted(createMemoryRepositories());
+  const h = await autonomousHarness({ repos: counter.repos });
+  const root = await mkdtemp(join(tmpdir(), "scoped-runtime-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const method = { version: 56, updatedOn: "2026-09-03", routes: [] };
+  await writeFieldManual(h.repos, [...knowledgeEntries(method), methodVersionEntry(method)], h.now());
+  counter.reset();
+  const runtime = await autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, scopedReads: true });
+  assert.deepEqual(counter.whole(), [], "the build reads no whole table");
+  for (const row of (await h.repos.routeTasks.listWhere(["workItemId"], h.item.id))) {
+    counter.reset();
+    await runtime.beginTask!(row.value);
+    assert.deepEqual(counter.whole(), [], "beginning a task reads only its own lineage");
+  }
+  counter.reset();
+  await autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1 });
+  assert.ok(counter.whole().length > 0, "the round's unscoped build still does the whole-store upkeep");
 });
 
 test("CH-26: schema version 20 builds the scoped indexes online, on the exact expressions the reads send", async () => {

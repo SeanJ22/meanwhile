@@ -32,3 +32,6 @@ River checked release 1 against each step's "Done when" on production, using rea
 ## 2026-10-05 16:50Z: release ballot (Sean's instruction)
 
 Sean handed ballot back to codex-ballot. Stop claiming stream/ballot. If you hold its lock, push your checkpoint with `lock: none` and leave it. Keep working your primary lane. See assignments.md, "Handback to Codex".
+
+## 2026-10-05 17:30Z: DB-55 failed live (production dcddcf5)
+No concluded meeting older than 2026-07-07 appears in /api/meetings for 85701, 85641, 03255 or 07866. `/api/agenda?meetingId=legistar:pima:<id>` returns NOT_HELD for 13 older Pima ids (1700–1819). Ask about a June Pima Board of Supervisors meeting says it isn't recorded. Related: readers are served a reader snapshot from 2026-09-29T05:38:58Z on every ZIP. River is tracing that (status.md).

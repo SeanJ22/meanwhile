@@ -42,6 +42,7 @@ import {
   billSummariesForRollCallAcquisition,
   readFederalRollCallsProjection,
 } from "../lib/votes/snapshot.ts";
+import { windowStart } from "../lib/votes/catch-up.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
@@ -152,9 +153,14 @@ const billNums = new Set<string>();
 let houseMatched = 0;
 let houseTotal = 0;
 
+// DB-08: each window reaches back to the roll after the previous version's newest, so none is skipped between versions.
+const heldWindow = previous.kind === "PROMOTED" || previous.kind === "BOOTSTRAP" ? previous.value.snapshot.window : null;
+const newestHeld = (rolls: readonly number[] | undefined): number | null => rolls !== undefined && rolls.length > 0 ? Math.max(...rolls) : null;
 const latestHouse = await latestHouseRoll();
+const houseWindow = windowStart({ latest: latestHouse, previousNewest: newestHeld(heldWindow?.houseRolls), window: WINDOW });
+if (houseWindow.unreached > 0) console.warn(`  House: ${houseWindow.unreached} roll(s) between the held version and this window were not reached; the next run continues from here`);
 const houseRolls: number[] = [];
-for (let n = Math.max(1, latestHouse - WINDOW + 1); n <= latestHouse; n++) {
+for (let n = houseWindow.start; n <= latestHouse; n++) {
   houseRolls.push(n);
 }
 
@@ -231,7 +237,10 @@ const menuEntries = [...menu.matchAll(/<vote>[\s\S]*?<\/vote>/g)].map((m) => {
   };
 });
 menuEntries.sort((a, b) => a.number - b.number);
-const senateWindow = menuEntries.slice(-WINDOW);
+const latestSenate = menuEntries.at(-1)?.number ?? 0;
+const senateStart = windowStart({ latest: latestSenate, previousNewest: newestHeld(heldWindow?.senateRolls), window: WINDOW });
+if (senateStart.unreached > 0) console.warn(`  Senate: ${senateStart.unreached} roll(s) between the held version and this window were not reached; the next run continues from here`);
+const senateWindow = menuEntries.filter((entry) => entry.number >= senateStart.start);
 
 let senateMatched = 0;
 let senateTotal = 0;

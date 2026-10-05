@@ -54,6 +54,8 @@ import {
 } from "../lib/civic-data/meeting-partitions.ts";
 import { recordDoorOutcome, type DoorOutcome } from "../lib/doors/outcome.ts";
 import { doorReadModeFromEnv, refreshDoorsForPass } from "../lib/doors/install.ts";
+import { readNowDueRequests, settleReadNow } from "../lib/doors/mission-refresh.ts";
+import { listDoors } from "../lib/doors/registry.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { attestPromotedVersion } from "../lib/civic-data/read-model.ts";
 import { ATTESTED_PROMOTIONS_ENV, serializeAttestedPromotions } from "../lib/civic-data/attested-promotion.ts";
@@ -573,6 +575,20 @@ if (!FORCE) {
     for (const issue of read.issues) console.log(`RCD_DUE_REQUEST ignored — ${safeFailure(issue)}`);
   } catch (error) {
     console.log(`RCD_DUE_REQUEST CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; every task keeps its normal schedule`);
+  }
+}
+// DB-56: with the door registry in use, a door marked to be read now (a mission started in its place) is the same
+// due request an owner's controlled refresh makes, so the ordinary pass reads it. Spent marks are cleared first.
+if (!FORCE && doorReadModeFromEnv() === "registry" && controlPlaneUrlFromEnv() !== null) {
+  try {
+    const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
+    const settledAt = new Date().toISOString();
+    const cleared = await settleReadNow(doorRepos.doors, settledAt);
+    const marked = readNowDueRequests((await listDoors(doorRepos.doors)).doors, new Set(MEETING_PARTITION_CONTRACTS.map((contract) => contract.id)), settledAt);
+    dueRequests = [...dueRequests, ...marked.filter((request) => !dueRequests.some((held) => held.id === request.id))];
+    if (marked.length > 0 || cleared > 0) console.log(`RCD_DUE_REQUEST doors marked to be read now: ${marked.length} due, ${cleared} settled`);
+  } catch (error) {
+    console.log(`RCD_DUE_REQUEST doors marked to be read now CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; every task keeps its normal schedule`);
   }
 }
 const honouredDueRequests = new Map<string, RoutineDueRequest>();

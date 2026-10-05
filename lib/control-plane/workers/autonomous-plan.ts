@@ -1,5 +1,5 @@
 import type { CivicExtractionContract } from "./types.ts";
-import type { AcquirerTaskSpec, DetectiveTaskSpec, ObservedResearchRoute } from "./research-types.ts";
+import type { AcquirerTaskSpec, ObservedResearchRoute } from "./research-types.ts";
 import type { EngineeringTaskSpec } from "./engineering-types.ts";
 import { scheduleObligation, type FreshnessObligation } from "../scheduler/obligation.ts";
 import type { AcquirerResult } from "./research-types.ts";
@@ -28,7 +28,7 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
   }))];
   return {
     version: 1, capability: source.recordClass === "OFFICEHOLDERS" ? "officials/offices" : source.recordClass, jurisdiction: jurisdiction.id.split(":")[0].toUpperCase(),
-    sourceRegistryReferences: [jurisdiction.id, routeId], seedUrls, sources: [], acquisition: [], detective: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
+    sourceRegistryReferences: [jurisdiction.id, routeId], seedUrls, sources: [], acquisition: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
     ...(source.recordClass === "OFFICEHOLDERS" && bodyId ? { publication: { contractId: "registry-runtime-bindings" as const, bodyId } } : {}),
     ...(source.recordClass === "PUBLIC_SERVICES" && bodyId ? { publication: { contractId: "everyday-routing" as const, bodyId } } : {}),
     ...(source.recordClass === "VOTER_ACCESS" && bodyId ? { publication: { contractId: "ballot-navigation" as const, bodyId } } : {}),
@@ -122,7 +122,6 @@ export interface AutonomousWorkPlan {
   readonly seedUrls: readonly string[];
   readonly sources: readonly ObservedResearchRoute[];
   readonly acquisition: readonly AcquirerTaskSpec[];
-  readonly detective: readonly DetectiveTaskSpec[];
   readonly engineering: readonly EngineeringTaskSpec[];
   readonly auditScope: "CAPTURED_ARTIFACT" | "SOURCE_UNIVERSE";
 }

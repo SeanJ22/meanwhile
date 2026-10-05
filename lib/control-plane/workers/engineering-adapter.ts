@@ -225,7 +225,8 @@ export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;res
         // The same existing transport admits every request, including each escalation, against live budgets.
         let response:Awaited<ReturnType<ModelTransport>>|undefined,transportError:unknown;
         try {response=await transport({model,max_tokens:8000,
-          system:[{type:'text',text:workerSystemPrompt("ENGINEER", (await readRolePlaybook(input.repos, "ENGINEER")).text),cache_control:{type:"ephemeral"}}],
+          system:[{type:'text',text:workerSystemPrompt("ENGINEER", (await readRolePlaybook(input.repos, "ENGINEER")).text)+
+            (scope?'\nThis request repairs an existing adapter. Its supplied repair scope governs allowed paths; playbook instructions about new-adapter paths apply only to new adapters. The composite contract is read-only.':''),cache_control:{type:"ephemeral"}}],
           messages,tools:[],tool_choice:{type:'auto'}});} catch(error) {
           if(error instanceof FleetPreSendRefusal || error instanceof SendBudgetRefusal)throw error;
           transportError=error;

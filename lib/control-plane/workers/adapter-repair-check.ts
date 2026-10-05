@@ -7,7 +7,7 @@ import { outOfScope, type RepairScope } from "./adapter-repair-scope.ts";
 import type { AdapterFile, AdapterCheck } from "./engineering-adapter.ts";
 
 const exec = promisify(execFile);
-/** Run this kind's fixture tests and composite contract in an isolated local checkout. No network or production writes. */
+/** Run this kind's fixture tests and composite contract in a local checkout without production credentials. */
 export async function checkAdapterRepair(files: readonly AdapterFile[], scope: RepairScope, root = process.cwd()): Promise<AdapterCheck> {
   const forbidden = outOfScope(scope, files.map(f => f.path));
   if (forbidden.length) return { ok: false, summary: "repair proposed changes outside its adapter" };
@@ -21,8 +21,10 @@ export async function checkAdapterRepair(files: readonly AdapterFile[], scope: R
       await mkdir(dirname(path), { recursive: true });
       await writeFile(path, file.content);
     }
-    const env: NodeJS.ProcessEnv = { ...process.env, CI_TEST_FILES: scope.testFiles.join("\n") };
-    delete env.DATABASE_URL; delete env.WTP_ASSET_STORE;
+    const env: NodeJS.ProcessEnv = { CI_TEST_FILES: scope.testFiles.join("\n"), NODE_ENV: "test", NEXT_TELEMETRY_DISABLED: "1" };
+    for (const key of ["PATH", "TMPDIR", "TEMP", "TMP", "SYSTEMROOT", "COMSPEC", "PATHEXT", "NODE_OPTIONS"]) {
+      if (process.env[key] !== undefined) env[key] = process.env[key];
+    }
     await exec(process.execPath, ["scripts/ci-tests.mjs"], { cwd: checkout, env, timeout: 120_000, maxBuffer: 4 * 1024 * 1024 });
     return { ok: true, summary: `${scope.kind}: ${scope.testFiles.length} fixture and composite test files passed` };
   } catch {

@@ -481,10 +481,45 @@ index 44e14371f..7dbed69fe 100644
      // The right place: the government's own page names that government.
      if (!pageVerdict.ok || !pageWords(capture.evidence.text).includes(division.label.toLowerCase())) continue;
 diff --git a/lib/civic-data/worker-publication-context.ts b/lib/civic-data/worker-publication-context.ts
-index daf5178c3..e8491e18a 100644
+index daf5178c3..20d31103b 100644
 --- a/lib/civic-data/worker-publication-context.ts
 +++ b/lib/civic-data/worker-publication-context.ts
-@@ -66,3 +66,14 @@ export function heldCaptureReader(store: EvidenceStore, project = "freshness") {
+@@ -8,7 +8,8 @@ import { workerVaultResolver } from "../control-plane/workers/vault.ts";
+ import { evidenceProjection } from "../control-plane/workers/evidence-projection.ts";
+ import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
+ import type { ArtifactRecord } from "../control-plane/repository/types.ts";
+-import { datePath, type EvidenceStore } from "../control-plane/evidence/store.ts";
++import type { Artifact } from "../control-plane/evidence/artifact.ts";
++import { datePath, readForParser, type EvidenceStore } from "../control-plane/evidence/store.ts";
+ import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
+ 
+ /** Server-side publisher reads the same durable evidence used by the workers. */
+@@ -53,10 +54,20 @@ export function heldCaptureReader(store: EvidenceStore, project = "freshness") {
+       const object = await store.get(key);
+       const m = object?.meta.custom;
+       if (!object || !m || object.meta.contentHash !== record.contentHash) return null;
+-      const text = new TextDecoder().decode(object.bytes);
+-      return { evidence: { artifactId: record.artifactId, contentHash: record.contentHash, text, acquiredByAttemptId: record.attemptId,
+-        canonicalUrl: record.canonicalUrl, retrievedAt: m.retrievedAt ?? record.recordedAt, sourceId: m.sourceId ?? host, methodRouteId: m.methodRouteId ?? "held" },
+-        observedAt: m.retrievedAt ?? record.recordedAt, httpStatus: Number(m.httpStatus ?? 0) || null, transport: m.transport ?? "UNKNOWN", partial: record.partial };
++      if (m.tier !== record.tier || m.canonicalUrl !== record.canonicalUrl || record.partial) return null;
++      const artifact: Artifact = { id: record.artifactId, tier: record.tier, contentHash: record.contentHash, byteLength: record.byteLength,
++        contentType: record.contentType, canonicalUrl: record.canonicalUrl, retrievalUrl: m.retrievalUrl ?? record.canonicalUrl,
++        retrievedAt: m.retrievedAt ?? record.recordedAt, httpStatus: Number(m.httpStatus), headers: {}, sourceId: m.sourceId,
++        methodRouteId: m.methodRouteId, workItemId: m.workItemId, attemptId: m.attemptId,
++        permission: m.permission as Artifact["permission"], transport: m.transport as Artifact["transport"],
++        retentionPolicy: m.retentionPolicy as Artifact["retentionPolicy"],
++        ...(m.extraction ? { extraction: JSON.parse(m.extraction) as Artifact["extraction"] } : {}) };
++      try {
++        const { input } = await readForParser(store, project, artifact);
++        return { evidence: evidenceProjection(input), observedAt: artifact.retrievedAt,
++          httpStatus: artifact.httpStatus, transport: artifact.transport,
++          partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false };
++      } catch { return null; }
+     }
+     return null;
+   };
+@@ -66,3 +77,14 @@ export function heldCaptureReader(store: EvidenceStore, project = "freshness") {
  export function localHeldCaptureReader() {
    return heldCaptureReader(new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)));
  }
@@ -500,7 +535,7 @@ index daf5178c3..e8491e18a 100644
 +  };
 +}
 diff --git a/lib/civic-data/worker-publication-evidence.ts b/lib/civic-data/worker-publication-evidence.ts
-index 1225bea17..67b4e2ab2 100644
+index 1225bea17..1f51490b4 100644
 --- a/lib/civic-data/worker-publication-evidence.ts
 +++ b/lib/civic-data/worker-publication-evidence.ts
 @@ -1,9 +1,10 @@
@@ -520,7 +555,7 @@ index 1225bea17..67b4e2ab2 100644
  
  /**
 - * Any job's saved official HTML pages to read in code, newest first: each
-+ * Any job's saved HTML pages to read in code, newest first: each
++ * Any job's saved text pages, CSV and extracted PDF text to read in code, newest first: each
   * distinct content once, and at most `pages` distinct pages. Every saved copy
   * of a page is kept, so a reader can pass over a later "Access Denied" copy
   * to the good one saved before it.
@@ -529,7 +564,7 @@ index 1225bea17..67b4e2ab2 100644
    const hashes = new Set<string>(), urls = new Set<string>();
    // Only HTTPS copies: the publication door accepts no other source, and a page it would refuse must not hold the facts beside it.
 -  return [...artifacts].filter(a => !a.partial && /html/i.test(a.contentType) && a.canonicalUrl.startsWith("https://") && isOfficialSource(a.canonicalUrl))
-+  return [...artifacts].filter(a => !a.partial && /html/i.test(a.contentType) && a.canonicalUrl.startsWith("https://"))
++  return [...artifacts].filter(a => !a.partial && /^(?:text\/(?:html|plain|csv|tab-separated-values)|application\/(?:xhtml\+xml|json|csv))(?:;|$)/i.test(a.contentType) && a.canonicalUrl.startsWith("https://"))
      .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt))
      .filter(a => !hashes.has(a.contentHash) && Boolean(hashes.add(a.contentHash)))
      .filter(a => urls.has(a.canonicalUrl) || (urls.size < pages && Boolean(urls.add(a.canonicalUrl))));
@@ -574,7 +609,7 @@ index 1225bea17..67b4e2ab2 100644
    if (isOfficialSource(primary.evidence.canonicalUrl)) return [primary];
    const own = (await input.repos.artifacts.read(input.workItemId))
 -    .filter(a => a.artifactId !== input.primaryId && !a.partial && /html/i.test(a.contentType) && isOfficialSource(a.canonicalUrl)).slice(-10).map(a => a.artifactId);
-+    .filter(a => a.artifactId !== input.primaryId && !a.partial && /html/i.test(a.contentType)).slice(-10).map(a => a.artifactId);
++    .filter(a => a.artifactId !== input.primaryId && !a.partial && /^(?:text\/(?:html|plain|csv|tab-separated-values)|application\/(?:xhtml\+xml|json|csv))(?:;|$)/i.test(a.contentType)).slice(-10).map(a => a.artifactId);
    const learned = input.officialLinks?.get(hostOfUrl(primary.evidence.canonicalUrl) ?? "")?.slice(0, 3) ?? [];
    const read = await Promise.all([...new Set([...learned, ...own])].map(id => input.readCapture(id, input.results).catch(() => null)));
    return [primary, ...read.filter((c): c is WorkerPublicationCapture => c !== null)];
@@ -1535,10 +1570,10 @@ index 51fd4083c..ab19bcf71 100644
  }
 diff --git a/lib/meetings/sitting-merge.ts b/lib/meetings/sitting-merge.ts
 new file mode 100644
-index 000000000..a90fbfc26
+index 000000000..68dcfab8c
 --- /dev/null
 +++ b/lib/meetings/sitting-merge.ts
-@@ -0,0 +1,79 @@
+@@ -0,0 +1,81 @@
 +import { localWallClock, sittingKey } from "../sources/event-identity.ts";
 +import type { Meeting, Provenance } from "../sources/types.ts";
 +import { preferCurrentSource } from "../civic-data/source-conflicts.ts";
@@ -1606,6 +1641,8 @@ index 000000000..a90fbfc26
 +      merge(timing); merge(venue);
 +      const keys = new Set(candidates.flatMap(row => Object.keys(row)));
 +      for (const key of keys) if (!meta.has(key) && !timing.includes(key) && !venue.includes(key)) merge([key]);
++      if (result.actingBodies) result.actingBodies = result.actingBodies.map(row => ({ ...row, meetingId: result.id }));
++      if (result.agendaUrl) delete result.agendaSlotObservedEmpty;
 +      result.fieldSources = fieldSources;
 +      result.mergedMeetingIds = [...new Set(candidates.flatMap(row => [row.id, ...(row.mergedMeetingIds ?? [])]))].sort();
 +      result.publicationConflicts = [...new Map(excluded.map(row => [canonicalCivicDataJson(row), row])).values()];
@@ -1956,10 +1993,18 @@ index 213413b6e..00dfbfff2 100644
      ...(options.prior && (inherited.size > 0 || retainedRosterSources.length > 0)
        ? {
 diff --git a/lib/registry/types.ts b/lib/registry/types.ts
-index de52ca014..54e726255 100644
+index de52ca014..955cfdbde 100644
 --- a/lib/registry/types.ts
 +++ b/lib/registry/types.ts
-@@ -405,6 +405,7 @@ export interface Division {
+@@ -353,6 +353,7 @@ export type CanonicalGap =
+   | "UNDETERMINED";
+ 
+ export interface RegistryProvenance {
++  kind?: import("../control-plane/promotion/source-kinds.ts").SourceKind;
+   sourceUrl: string | null;
+   sourceOrg: string;
+   collectedAt: string;
+@@ -405,6 +406,7 @@ export interface Division {
  }
  
  export interface Body {
@@ -2288,6 +2333,41 @@ index 000000000..9c07cb8f9
 +  }
 +  assert.equal(workerDoorForRecord("UNKNOWN"), null);
 +  assert.deepEqual(checklistPublicationDoors("GEO"), []);
++});
+diff --git a/tests/held-document-publication.test.ts b/tests/held-document-publication.test.ts
+new file mode 100644
+index 000000000..a01bee5ed
+--- /dev/null
++++ b/tests/held-document-publication.test.ts
+@@ -0,0 +1,29 @@
++import assert from "node:assert/strict";
++import test from "node:test";
++import { artifactId, recordAcquisition, type Artifact } from "../lib/control-plane/evidence/artifact.ts";
++import { contentHash } from "../lib/control-plane/ids.ts";
++import { MemoryEvidenceStore, putArtifact } from "../lib/control-plane/evidence/store.ts";
++import { heldCaptureReader } from "../lib/civic-data/worker-publication-context.ts";
++import { heldPageCopies, section3SourceReceipt, captureIntact } from "../lib/civic-data/worker-publication-evidence.ts";
++import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
++const at = "2026-10-05T12:00:00Z";
++const record = (a: Artifact): ArtifactRecord => ({ artifactId: a.id, workItemId: a.workItemId, routeTaskId: null, attemptId: a.attemptId, tier: a.tier, contentHash: a.contentHash, byteLength: a.byteLength, contentType: a.contentType, canonicalUrl: a.canonicalUrl, partial: false, recordedAt: at });
++const acquire = (text: string, contentType: string) => recordAcquisition({ canonicalUrl: "https://clerk.gov/filing.pdf", retrievedAt: at, httpStatus: 200, contentType, sourceId: "clerk.gov", methodRouteId: "fetch", workItemId: "work", attemptId: "attempt", permission: "ALLOWED", transport: "REACHABLE" }, text).artifact;
++test("CA-31 hook: held PDF transcription retains its raw document receipt and CSV is discoverable", async () => {
++  const store = new MemoryEvidenceStore();
++  const raw = "%PDF-1.7 held fixture bytes", text = "Candidate,Office\nAlice Example,Mayor\n";
++  const parent = acquire(raw, "application/pdf");
++  const hash = contentHash(text);
++  const extracted: Artifact = { ...parent, id: artifactId("EXTRACTED_DERIVED", hash), tier: "EXTRACTED_DERIVED", contentHash: hash,
++    byteLength: Buffer.byteLength(text), contentType: "text/plain", extraction: { kind: "PDF_TEXT", version: "pdf-transcription/1", complete: true, pages: 1, parent } };
++  await putArtifact(store, "freshness", parent, Buffer.from(raw));
++  await putArtifact(store, "freshness", extracted, Buffer.from(text));
++  const csv = acquire(text + "Bob Example,Council\n", "text/csv");
++  assert.deepEqual(heldPageCopies([record(parent), record(extracted), record(csv)], 3).map(row => row.artifactId).sort(), [extracted.id, csv.id].sort());
++  const capture = await heldCaptureReader(store)(record(extracted));
++  assert.ok(capture && captureIntact(capture));
++  assert.equal(capture.evidence.text, text);
++  assert.equal(capture.evidence.sourceDocument?.contentHash, parent.contentHash);
++  assert.equal(section3SourceReceipt([capture], at, "section3-validator", "Exact saved transcription").sources[0].rawHash, parent.contentHash.slice(7));
++  assert.equal(await heldCaptureReader(store)({ ...record(extracted), partial: true }), null);
 +});
 diff --git a/tests/held-roster-publication.test.ts b/tests/held-roster-publication.test.ts
 index ecb1a31ea..d5e1406c8 100644

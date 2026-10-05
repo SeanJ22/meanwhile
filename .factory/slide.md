@@ -3,7 +3,7 @@ worker: codex-slide
 provider: Codex
 run_id: codex-slide-005c2146fa5b46a1b890f9f80e2de516
 lock: codex-slide-005c2146fa5b46a1b890f9f80e2de516
-heartbeat: 2026-10-05T19:34:00.818433+00:00
+heartbeat: 2026-10-05T19:41:15.554898+00:00
 on_river: CP-01, CP-19 via 85a0ad6, released on main ecf402600401783b094837c29e0c515eadbdb843
 ready: reader-edge-publication-return 5ce7136828fbb24dd80f53c6678e29be7d00ebd5 ( application tested at 69facbbab3a443c42e37ffc932a0cb30e50b8bed; hook pending Admin digest screen)
 checks: reader-edge return FULL: 1066 files, 9356 passed, 11 skipped, 0 failed at 69facbbab3a443c42e37ffc932a0cb30e50b8bed; types pass; full lint 0 errors/69 warnings. READY differs only in .factory coordination.
@@ -42,3 +42,5 @@ needs_River (CP-17): scoreboard wording is repaired. Curated worker scopes still
 
 CP-18 WIP: reader partition composition and edge assembly now call mergeReaderSittings. Same-body/day joins across doors are conservative when either door lists multiple sittings. Field sources, original meeting ids, agenda documents and CONFLICT_SUPERSEDED values survive; 65 connected tests pass, types fixture spelling repaired. Admin hook: show runtimeOutcome.readerEdge.supersededMeetingFields when present (unknown when omitted) and read meeting.publicationConflicts for detail; combine with CP-08 receipt counts without treating conflicts as blocked. River live check must exercise a newly composed snapshot after release.
 CP-14 additional WIP: promotion-tail and window no longer consult class/field lists; research-progression drops PROMOTION_CLASS_NOT_ACTIVATED. CP-15 drops AUDIT_NOT_RECORDED. Shared runner/snapshot callers still pending. Gate-focused checks 56/56 pass.
+
+READY batch: CP-02, CP-09, BX-12/BX-03, CP-10, CP-13, CP-16, CP-06, BX-13 at this commit. Hooks above remain pending. FULL source 25c70d702: 9373 pass, 1 old wording assertion failure, 11 skipped; the sole failing file now passes 10/10 at 9619b65a2 after changing only that assertion. All application source is unchanged from FULL. Types pass; full lint 0 errors/69 warnings. Exact evidence in slide-checks.json. Later connected changes remain saved patch WIP, not application source at this READY.
